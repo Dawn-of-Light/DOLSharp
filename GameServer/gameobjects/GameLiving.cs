@@ -962,6 +962,17 @@ namespace DOL.GS
 		}
 
         /// <summary>
+        /// Whether this living is crowd controlled.
+        /// </summary>
+        public virtual bool IsCrowdControlled
+        {
+            get
+            {
+                return (IsStunned || IsMezzed);
+            }
+        }
+
+        /// <summary>
         /// Whether this living can actually do anything.
         /// </summary>
         public virtual bool IsIncapacitated
@@ -1730,7 +1741,7 @@ namespace DOL.GS
 				Message.SystemToArea(ad.Attacker, message, eChatType.CT_OthersCombat, (GameObject[])excludes.ToArray(typeof(GameObject)));
 			}
 
-			ad.Target.StartInterruptTimer(interruptDuration, ad.AttackType, this);
+			ad.Target.StartInterruptTimer(ad, interruptDuration);
 
 			if (ad.Target is GamePlayer &&
 				((ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerAlb
@@ -1744,108 +1755,124 @@ namespace DOL.GS
 			return ad;
 		}
 
-		/// <summary>
-		/// Starts interrupt timer on this living
-		/// </summary>
-		/// <param name="duration">The full interrupt duration in milliseconds</param>
-		/// <param name="attackType">The type of attack</param>
-		/// <param name="attacker">The source of interrupts</param>
-		public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
+        private RegionAction InterruptTimer { get; set; }
+
+        /// <summary>
+        /// Starts the interrupt timer on this living.
+        /// </summary>
+        /// <param name="attack"></param>
+        /// <param name="duration"></param>
+		public virtual void StartInterruptTimer(AttackData attack, int duration)
 		{
             if (!IsAlive || ObjectState != eObjectState.Active)
-            {
-                InterruptTime = 0;
                 return;
-            }
-            if (InterruptTime < CurrentRegion.Time + duration)
-                InterruptTime = CurrentRegion.Time + duration;
 
-            if (CurrentSpellHandler != null)
-                CurrentSpellHandler.CasterIsAttacked(attacker);
-            if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-                OnInterruptTick(attacker, attackType);
+            InterruptTimer = new InterruptAction(attack, duration);
+            InterruptTimer.Start(1);
 		}
 
-		/// <summary>
-		/// Interrupts the target for the specified duration
-		/// </summary>
-		/*protected class InterruptAction : RegionAction
-		{
-			/// <summary>
-			/// Holds the interrupt source
-			/// </summary>
-			protected readonly GameLiving m_attacker;
-			/// <summary>
-			/// The full duration of interrupts in milliseconds
-			/// </summary>
-			protected int m_duration;
-			/// <summary>
-			/// Holds the interrupt attack data
-			/// </summary>
-			protected AttackData.eAttackType m_attackType;
+        /// <summary>
+        /// Starts the interrupt timer on this living.
+        /// </summary>
+        /// <param name="duration"></param>
+        /// <param name="attackType"></param>
+        /// <param name="attacker"></param>
+        public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
+        {
+            if (!IsAlive || ObjectState != eObjectState.Active)
+                return;
 
-			/// <summary>
-			/// Constructs a new interrupt action
-			/// </summary>
-			/// <param name="target">The interrupt target</param>
-			/// <param name="attacker">The attacker that is interrupting</param>
-			/// <param name="duration">The interrupt duration in milliseconds</param>
-			/// <param name="attackType">the type of attack</param>
-			public InterruptAction(GameLiving target, GameLiving attacker, int duration, AttackData.eAttackType attackType)
-				: base(target)
+            InterruptTimer = new InterruptAction(this, attacker, attackType, duration);
+            InterruptTimer.Start(1);
+        }
+
+		/// <summary>
+		/// Interrupts the target every second for the specified duration.
+		/// </summary>
+		protected class InterruptAction : RegionAction
+		{
+            /// <summary>
+            /// Creates a new interrupt action.
+            /// </summary>
+            /// <param name="attack"></param>
+            /// <param name="duration"></param>
+			public InterruptAction(AttackData attack, int duration)
+				: base(attack.Target)
 			{
-				if (attacker == null)
+				if (attack.Attacker == null)
 					throw new ArgumentNullException("attacker");
-				m_attacker = attacker;
-				m_duration = duration;
-				m_attackType = attackType;
+
+                Attacker = attack.Attacker;
+                AttackType = attack.AttackType;
+				Duration = duration;	
 				Interval = 1000;
 			}
+
+            /// <summary>
+            /// Creates a new interrupt action.
+            /// </summary>
+            /// <param name="target"></param>
+            /// <param name="attacker"></param>
+            /// <param name="attackType"></param>
+            /// <param name="duration"></param>
+            public InterruptAction(GameLiving target, GameLiving attacker, AttackData.eAttackType attackType, int duration)
+                : base(target)
+            {
+                if (attacker == null)
+                    throw new ArgumentNullException("attacker");
+
+                Attacker = attacker;
+                AttackType = attackType;
+                Duration = duration;
+                Interval = 1000;
+            }
+
+            private GameLiving Attacker { get; set; }
+            private int Duration { get; set; }
+            private AttackData.eAttackType AttackType { get; set; }
 
 			/// <summary>
 			/// Called on every timer tick
 			/// </summary>
 			protected override void OnTick()
-			{
-				GameLiving target = (GameLiving)m_actionSource;
-				if (!target.IsAlive || target.ObjectState != eObjectState.Active)
-				{
-					Stop();
-					target.IsBeingInterrupted = false;
-					return;
-				}
+            {
+                GameLiving target = (GameLiving)m_actionSource;
+                Duration -= Interval;
 
-				m_duration -= Interval;
-				if (m_duration <= 0)
-					Interval = 0;
+                if (Duration <= 0)
+                {
+                    Stop();
+                    Interrupt(target);
+                    target.IsBeingInterrupted = false;
+                    target.Notify(GameLivingEvent.InterruptExpired, target);
+                    return;
+                }
 
-				if (target.CurrentSpellHandler != null)
-					target.CurrentSpellHandler.CasterIsAttacked(m_attacker);
-				if (target.AttackState && target.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-					target.OnInterruptTick(m_attacker, m_attackType);
-				if (Interval == 0)
-					target.IsBeingInterrupted = false;
-			}
-		}*/
+                Interrupt(target);
+            }
 
-		/// <summary>
-		/// Keeps track of an interrupt action running on this living.
-		/// </summary>
-		protected bool m_isBeingInterrupted = false;
-        protected long m_interruptTime = 0;
+            private void Interrupt(GameLiving target)
+            {
+                if (!target.IsAlive || target.ObjectState == eObjectState.Active)
+                    return;
 
-        public long InterruptTime
-        {
-            get { return m_interruptTime; }
-            set { m_interruptTime = value; }
-        }
+                if (target.CurrentSpellHandler != null)
+                    target.CurrentSpellHandler.CasterIsAttacked(Attacker);
+
+                if (target.AttackState && target.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+                    target.OnInterruptTick(Attacker, AttackType);
+
+                target.Notify(GameLivingEvent.Interrupted, target);
+            }
+		}
+
+
+        public long InterruptTime { get; protected set; }
+
 		/// <summary>
 		/// Yields true if interrupt action is running on this living.
 		/// </summary>
-		public bool IsBeingInterrupted
-		{
-            get { return (m_interruptTime > CurrentRegion.Time); }
-		}
+        public bool IsBeingInterrupted { get; protected set; }
 
 		/// <summary>
 		/// Does needed interrupt checks and interrupts this living
@@ -5904,6 +5931,27 @@ namespace DOL.GS
 				return;
 			}
 		}
+
+        /// <summary>
+        /// Whether or not the living can cast a harmful spell 
+        /// at the moment.
+        /// </summary>
+        public virtual bool CanCastHarmfulSpells
+        {
+            get
+            {
+                return (!IsIncapacitated);
+            }
+        }
+
+        public virtual IList<Spell> HarmfulSpells
+        {
+            get
+            {
+                return new List<Spell>();
+            }
+        }
+
 		#endregion
 		#region LoadCalculators
 		/// <summary>
