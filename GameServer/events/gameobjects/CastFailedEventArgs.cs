@@ -35,7 +35,7 @@ namespace DOL.Events
 		{
 			TargetTooFarAway,
 			TargetNotInView,
-			AllReadyCasting,
+			AlreadyCasting,
 			CrowdControlled
 		};
 				

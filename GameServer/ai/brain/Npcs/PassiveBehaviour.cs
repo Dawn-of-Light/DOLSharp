@@ -5,13 +5,12 @@ using DOL.GS;
 
 namespace DOL.AI.Brain
 {
-    public class StayPutBehaviour : IAttackBehaviour
+    public class PassiveBehaviour : IAttackBehaviour
     {
         #region IAttackBehaviour Members
 
-        public bool Attack(GameObject target)
+        public void Attack(GameObject target)
         {
-            return true;
         }
 
         public void Retreat()

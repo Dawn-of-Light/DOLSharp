@@ -16,10 +16,10 @@ namespace DOL.AI.Brain
 
         #region IAttackBehaviour Members
 
-        public bool Attack(GameObject target)
+        public void Attack(GameObject target)
         {
-            Body.StartAttack(target);
-            return true;
+            if (target != Body.TargetObject)
+                Body.StartAttack(target);
         }
 
         public void Retreat()

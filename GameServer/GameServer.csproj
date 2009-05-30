@@ -143,7 +143,7 @@
     <Compile Include="ai\brain\Npcs\IAttackBehaviour.cs" />
     <Compile Include="ai\brain\Npcs\MeleeBehaviour.cs" />
     <Compile Include="ai\brain\Npcs\SocialBrain.cs" />
-    <Compile Include="ai\brain\Npcs\StayPutBehaviour.cs" />
+    <Compile Include="ai\brain\Npcs\PassiveBehaviour.cs" />
     <Compile Include="ai\brain\ProcPetBrain.cs" />
     <Compile Include="ai\brain\RetrieverMobBrain.cs" />
     <Compile Include="ai\brain\RoundsBrain.cs">
