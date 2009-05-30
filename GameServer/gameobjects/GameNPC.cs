@@ -3773,6 +3773,42 @@ namespace DOL.GS
 		#endregion
 
 		#region Spell
+
+        /// <summary>
+        /// Whether or not the NPC can cast harmful spells
+        /// at the moment.
+        /// </summary>
+        public override bool CanCastHarmfulSpells
+        {
+            get
+            {
+                if (!base.CanCastHarmfulSpells)
+                    return false;
+
+                IList<Spell> harmfulSpells = HarmfulSpells;
+
+                foreach (Spell harmfulSpell in harmfulSpells)
+                    if (harmfulSpell.CastTime == 0)
+                        return true;
+
+                return (harmfulSpells.Count > 0 && !IsBeingInterrupted);
+            }
+        }
+
+        public override IList<Spell> HarmfulSpells
+        {
+            get
+            {
+                IList<Spell> harmfulSpells = new List<Spell>();
+
+                foreach (Spell spell in Spells)
+                    if (spell.IsHarmful)
+                        harmfulSpells.Add(spell);
+
+                return harmfulSpells;
+            }
+        }
+
 		private IList m_spells = new ArrayList(1);
 		/// <summary>
 		/// property of spell array of NPC
