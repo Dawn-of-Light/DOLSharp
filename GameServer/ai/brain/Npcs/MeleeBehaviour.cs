@@ -10,6 +10,7 @@ namespace DOL.AI.Brain
         public MeleeBehaviour(GameLiving body)
         {
             Body = body;
+            Body.TargetObject = null;
         }
 
         private GameLiving Body { get; set; }
