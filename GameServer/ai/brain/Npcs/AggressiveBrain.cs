@@ -41,6 +41,10 @@ namespace DOL.AI.Brain
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+        public AggressiveBrain()
+        {           
+        }
+
         /// <summary>
         /// Mobs will all use a 1000ms think interval; aggro level is a chance
         /// to aggro on a living, it won't change the think interval anymore.
@@ -48,6 +52,26 @@ namespace DOL.AI.Brain
         public override int ThinkInterval
         {
             get { return 1000; }
+        }
+
+        private IAttackBehaviour m_attackBehaviour = new StayPutBehaviour();
+
+        /// <summary>
+        /// The way attacks are carried out.
+        /// </summary>
+        protected IAttackBehaviour AttackBehaviour
+        {
+            get
+            {
+                lock (m_attackBehaviour)
+                    return m_attackBehaviour;
+            }
+
+            set
+            {
+                lock (m_attackBehaviour)
+                    m_attackBehaviour = value;
+            }
         }
 
         /// <summary>
@@ -127,25 +151,20 @@ namespace DOL.AI.Brain
 
             if (target == null)
             {
-                Body.StopAttack();
+                AttackBehaviour.Retreat();
                 Aggression.Clear();
                 Body.TargetObject = null;
                 Body.WalkToSpawn();
             }
             else
             {
-                if (target != Body.TargetObject)
-                    SwitchTarget(target);
-            }
-        }
+                AttackBehaviour = (Body.CanCastHarmfulSpells)
+                    ? (IAttackBehaviour)new CastingBehaviour(Body)
+                    : (IAttackBehaviour)new MeleeBehaviour(Body);
 
-        /// <summary>
-        /// Switch the target.
-        /// </summary>
-        /// <param name="living"></param>
-        private void SwitchTarget(GameLiving target)
-        {
-            Body.StartAttack(target);
+                if (target != Body.TargetObject)
+                    AttackBehaviour.Attack(target);
+            }
         }
 
         /// <summary>
@@ -267,6 +286,20 @@ namespace DOL.AI.Brain
                 if (e == GameNPCEvent.ArriveAtSpawnPoint)
                 {
                     Body.TurnTo(Body.SpawnHeading);
+                    return;
+                }
+
+                if (e == GameLivingEvent.Interrupted || e == GameLivingEvent.CastFailed)
+                {
+                    AttackBehaviour = new MeleeBehaviour(Body);
+                    return;
+                }
+
+                if (e == GameLivingEvent.InterruptExpired)
+                {
+                    if (Util.Chance(25))
+                        AttackBehaviour = new CastingBehaviour(Body);
+
                     return;
                 }
 
