@@ -50,7 +50,7 @@ namespace DOL.GS
 		/// </summary>
 		public class GameCommand
 		{
-			public string[] m_usage;
+            public String[] Usage { get; set; }
 			public string m_cmd;
 			public uint m_lvl;
 			public string m_desc;
@@ -231,7 +231,7 @@ namespace DOL.GS
 								log.Debug("ScriptMgr: Command - '" + attrib.Cmd + "' - (" + attrib.Description + ") required plvl:" + attrib.Level);
 							GameCommand cmd = new GameCommand();
 
-							cmd.m_usage = attrib.Usage;
+							cmd.Usage = attrib.Usage;
 							cmd.m_cmd = attrib.Cmd;
 							cmd.m_lvl = attrib.Level;
 							cmd.m_desc = attrib.Description;
