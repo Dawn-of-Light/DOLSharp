@@ -19,6 +19,7 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Commands
 {
@@ -31,64 +32,64 @@ namespace DOL.GS.Commands
 		"'/cmdhelp <cmd>' displays the usage for cmd")]
 	public class CmdHelpCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		private static string[] cmds; 
 		public void OnCommand(GameClient client, string[] args)
 		{
-			ePrivLevel plvl = (ePrivLevel)client.Account.PrivLevel;
-			bool iscmd = true;
+			ePrivLevel privilegeLevel = (ePrivLevel)client.Account.PrivLevel;
+			bool isCommand = true;
 
 			if (args.Length > 1)
 			{
 				try
 				{
-					plvl = (ePrivLevel)Convert.ToUInt32(args[1]);
+					privilegeLevel = (ePrivLevel)Convert.ToUInt32(args[1]);
 				}
 				catch (Exception)
 				{
-					iscmd = false;
+					isCommand = false;
 				}
 			}
 
-			if (iscmd)
+			if (isCommand)
 			{
-				if (cmds == null)
-				{
-					cmds = ScriptMgr.GetCommandList(plvl, true);
-					Array.Sort(cmds);
-				}
-				
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.PlvlCommands", plvl.ToString()));
+                String[] commandList = GetCommandList(privilegeLevel);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.PlvlCommands", privilegeLevel.ToString()));
 
-				foreach (string s in cmds)
-				{
-					DisplayMessage(client, s);
-				}
+                foreach (String command in commandList)
+					DisplayMessage(client, command);
 			}
 			else
 			{
-				string arg = args[1];
+				string command = args[1];
 
-				if (arg[0] != '&')
+				if (command[0] != '&')
+					command = "&" + command;
+
+				ScriptMgr.GameCommand gameCommand = ScriptMgr.GetCommand(command);
+
+				if (gameCommand == null)
+                    DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.NoCommand", command));
+                else
 				{
-					arg = "&" + arg;
-				}
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.Usage", command));
 
-				ScriptMgr.GameCommand cmd = ScriptMgr.GetCommand(arg);
-
-				if (cmd != null)
-				{
-					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.Usage", arg));
-
-					foreach (string s in cmd.m_usage)
-					{
-						DisplayMessage(client, s);
-					}
-				}
-				else
-				{
-					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.NoCommand", arg));
+					foreach (String usage in gameCommand.Usage)
+						DisplayMessage(client, usage);
 				}
 			}
 		}
-	}
+
+        private static IDictionary<ePrivLevel, String[]> m_commandLists = new Dictionary<ePrivLevel, String[]>();
+
+        private String[] GetCommandList(ePrivLevel privilegeLevel)
+        {
+            if (!m_commandLists.Keys.Contains(privilegeLevel))
+            {
+                String[] commandList = ScriptMgr.GetCommandList(privilegeLevel, true);
+                Array.Sort(commandList);
+                m_commandLists.Add(privilegeLevel, commandList);
+            }
+
+            return m_commandLists[privilegeLevel];
+        }
+    }
 }
