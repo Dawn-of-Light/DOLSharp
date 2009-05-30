@@ -80,9 +80,9 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GameLivingEvent AttackedByEnemy = new GameLivingEvent("GameLiving.AttackedByEnemy");
 		/// <summary>
-		/// The AttackedEnemy event is fired whenever the living makes attack
+        /// The AttackFinished event is fired whenever the living finishes an attack
 		/// </summary>
-		public static readonly GameLivingEvent AttackFinished = new GameLivingEvent("GameLiving.AttackedEnemy");
+        public static readonly GameLivingEvent AttackFinished = new GameLivingEvent("GameLiving.AttackFinished");
 		/// <summary>
 		/// The EnemyKilled event is fired whenever the living kill something
 		/// </summary>
