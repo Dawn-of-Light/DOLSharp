@@ -79,17 +79,21 @@ namespace DOL.GS.Commands
 		}
 
         private static IDictionary<ePrivLevel, String[]> m_commandLists = new Dictionary<ePrivLevel, String[]>();
+        private static object m_syncObject = new object();
 
         private String[] GetCommandList(ePrivLevel privilegeLevel)
         {
-            if (!m_commandLists.Keys.Contains(privilegeLevel))
+            lock (m_syncObject)
             {
-                String[] commandList = ScriptMgr.GetCommandList(privilegeLevel, true);
-                Array.Sort(commandList);
-                m_commandLists.Add(privilegeLevel, commandList);
-            }
+                if (!m_commandLists.Keys.Contains(privilegeLevel))
+                {
+                    String[] commandList = ScriptMgr.GetCommandList(privilegeLevel, true);
+                    Array.Sort(commandList);
+                    m_commandLists.Add(privilegeLevel, commandList);
+                }
 
-            return m_commandLists[privilegeLevel];
+                return m_commandLists[privilegeLevel];
+            }
         }
     }
 }
