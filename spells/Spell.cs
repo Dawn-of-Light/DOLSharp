@@ -284,6 +284,19 @@ namespace DOL.GS
 		{
 			get { return m_isfocus; }
 		}
+
+        /// <summary>
+        /// Whether or not this spell is harmful.
+        /// </summary>
+        public bool IsHarmful
+        {
+            get
+            {
+                return (Target.ToLower() == "enemy" || Target.ToLower() == "area" ||
+                    Target.ToLower() == "cone");
+            }
+        }
+
 		#endregion
 
 		/// <summary>
