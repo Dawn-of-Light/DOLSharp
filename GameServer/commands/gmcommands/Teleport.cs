@@ -57,7 +57,7 @@ namespace DOL.GS.Commands
             {
                 case "add":
                     {
-                        if (args.Length != 4)
+                        if (args.Length < 3)
                         {
                             DisplaySyntax(client);
                             return;
@@ -69,7 +69,10 @@ namespace DOL.GS.Commands
                             return;
                         }
 
-                        AddTeleport(client, args[2], args[3]);
+                        String teleportType = (args.Length < 4)
+                            ? "" : args[3];
+
+                        AddTeleport(client, args[2], teleportType);
                     }
                     break;
                 default:
