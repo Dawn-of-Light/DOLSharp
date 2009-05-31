@@ -10,7 +10,6 @@ namespace DOL.AI.Brain
         public MeleeBehaviour(GameLiving body)
         {
             Body = body;
-            Body.TargetObject = null;
         }
 
         private GameLiving Body { get; set; }
@@ -19,8 +18,7 @@ namespace DOL.AI.Brain
 
         public void Attack(GameObject target)
         {
-            if (target != Body.TargetObject)
-                Body.StartAttack(target);
+            Body.StartAttack(target);
         }
 
         public void Retreat()

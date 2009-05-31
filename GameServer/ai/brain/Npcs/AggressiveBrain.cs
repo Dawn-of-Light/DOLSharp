@@ -54,26 +54,6 @@ namespace DOL.AI.Brain
             get { return 1000; }
         }
 
-        private IAttackBehaviour m_attackBehaviour = new PassiveBehaviour();
-
-        /// <summary>
-        /// The way attacks are carried out.
-        /// </summary>
-        protected IAttackBehaviour AttackBehaviour
-        {
-            get
-            {
-                lock (m_attackBehaviour)
-                    return m_attackBehaviour;
-            }
-
-            set
-            {
-                lock (m_attackBehaviour)
-                    m_attackBehaviour = value;
-            }
-        }
-
         /// <summary>
         /// Make some decisions.
         /// </summary>
@@ -87,6 +67,85 @@ namespace DOL.AI.Brain
             else
                 OnIdle();
         }
+
+        #region Behaviour
+
+        private object m_syncBehaviour = new object();
+
+        private IAttackBehaviour m_passiveBehaviour;
+
+        private IAttackBehaviour PassiveBehaviour
+        {
+            get
+            {
+                lock (m_syncBehaviour)
+                {
+                    if (m_passiveBehaviour == null)
+                        m_passiveBehaviour = new PassiveBehaviour();
+                }
+
+                return m_passiveBehaviour;
+            }
+        }
+
+        private IAttackBehaviour m_meleeBehaviour;
+
+        private IAttackBehaviour MeleeBehaviour
+        {
+            get
+            {
+                lock (m_syncBehaviour)
+                {
+                    if (m_meleeBehaviour == null)
+                        m_meleeBehaviour = new MeleeBehaviour(Body);
+                }
+
+                return m_meleeBehaviour;
+            }
+        }
+
+        private IAttackBehaviour m_castingBehaviour;
+
+        private IAttackBehaviour CastingBehaviour
+        {
+            get
+            {
+                lock (m_syncBehaviour)
+                {
+                    if (m_castingBehaviour == null)
+                        m_castingBehaviour = new CastingBehaviour(Body);
+                }
+
+                return m_castingBehaviour;
+            }
+        }
+
+        private IAttackBehaviour m_attackBehaviour;
+
+        /// <summary>
+        /// The way attacks are carried out.
+        /// </summary>
+        protected IAttackBehaviour AttackBehaviour
+        {
+            get
+            {
+                lock (m_syncBehaviour)
+                {
+                    if (m_attackBehaviour == null)
+                        m_attackBehaviour = PassiveBehaviour;
+                }
+
+                return m_attackBehaviour;
+            }
+
+            set
+            {
+                lock (m_syncBehaviour)
+                    m_attackBehaviour = value;
+            }
+        }
+
+        #endregion
 
         #region Idle handler.
 
@@ -157,7 +216,7 @@ namespace DOL.AI.Brain
                 AttackBehaviour.Retreat();
                 Aggression.Clear();
                 Body.TargetObject = null;
-                AttackBehaviour = new PassiveBehaviour();
+                AttackBehaviour = PassiveBehaviour;
                 Body.WalkToSpawn();
             }
             else
@@ -165,14 +224,14 @@ namespace DOL.AI.Brain
                 if (AttackBehaviour is PassiveBehaviour)
                 {
                     AttackBehaviour = (Body.CanCastHarmfulSpells)
-                        ? (IAttackBehaviour)new CastingBehaviour(Body)
-                        : (IAttackBehaviour)new MeleeBehaviour(Body);
+                        ? CastingBehaviour
+                        : MeleeBehaviour;
                 }
                 else
                 {
                     if (AttackBehaviour is MeleeBehaviour)
                         if (Body.CanCastHarmfulSpells && Util.Chance(25))
-                            AttackBehaviour = new CastingBehaviour(Body);
+                            AttackBehaviour = CastingBehaviour;
                 }
 
                 AttackBehaviour.Attack(target);
@@ -304,7 +363,7 @@ namespace DOL.AI.Brain
                 if (e == GameLivingEvent.Interrupted || e == GameLivingEvent.CastFailed ||
                     e == GameNPCEvent.CastFailed)
                 {
-                    AttackBehaviour = new MeleeBehaviour(Body);
+                    AttackBehaviour = MeleeBehaviour;
                     PickTarget();
                     return;
                 }
