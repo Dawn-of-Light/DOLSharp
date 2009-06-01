@@ -45,6 +45,7 @@ namespace DOL.GS
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
 			GamePlayer player = source as GamePlayer;
+
 			if (player != null)
 			{
 				lock (QuestListToGive.SyncRoot)
