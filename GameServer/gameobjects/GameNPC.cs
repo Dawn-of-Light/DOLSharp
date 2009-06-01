@@ -1588,14 +1588,17 @@ namespace DOL.GS
 
             if( this.IsWithinRadius( CurrentWayPoint, 100 ) )
 			{
-				if (CurrentWayPoint.Type == ePathType.Path_Reverse && CurrentWayPoint.FiredFlag)
-					CurrentWayPoint = CurrentWayPoint.Prev;
-				else
-					CurrentWayPoint = CurrentWayPoint.Next;
-
-				if ((CurrentWayPoint.Type == ePathType.Loop) && (CurrentWayPoint.Next == null))
-					CurrentWayPoint = MovementMgr.FindFirstPathPoint(CurrentWayPoint);
+                if (CurrentWayPoint.Type == ePathType.Path_Reverse && CurrentWayPoint.FiredFlag)
+                    CurrentWayPoint = CurrentWayPoint.Prev;
+                else
+                {
+                    if ((CurrentWayPoint.Type == ePathType.Loop) && (CurrentWayPoint.Next == null))
+                        CurrentWayPoint = MovementMgr.FindFirstPathPoint(CurrentWayPoint);
+                    else
+                        CurrentWayPoint = CurrentWayPoint.Next;     
+                }
 			}
+
 			if (CurrentWayPoint != null)
 			{
                 GameEventMgr.AddHandler(this, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnArriveAtWaypoint));
