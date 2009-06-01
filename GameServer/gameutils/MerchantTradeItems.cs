@@ -146,18 +146,23 @@ namespace DOL.GS
 					foreach (MerchantItem merchantitem in itemList)
 					{
 						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);
-						if (item != null)
-						{
-							ItemTemplate slotItem = (ItemTemplate)itemsInPage[merchantitem.SlotPosition];
-							if (slotItem == null)
-							{
-								itemsInPage.Add(merchantitem.SlotPosition, item);
-							}
-							else
-							{
-								log.ErrorFormat("two merchant items on same page/slot: listID={0} page={1} slot={2}", m_itemsListID, page, merchantitem.SlotPosition);
-							}
-						}
+                        if (item != null)
+                        {
+                            ItemTemplate slotItem = (ItemTemplate)itemsInPage[merchantitem.SlotPosition];
+                            if (slotItem == null)
+                            {
+                                itemsInPage.Add(merchantitem.SlotPosition, item);
+                            }
+                            else
+                            {
+                                log.ErrorFormat("two merchant items on same page/slot: listID={0} page={1} slot={2}", m_itemsListID, page, merchantitem.SlotPosition);
+                            }
+                        }
+                        else
+                        {
+                            log.ErrorFormat("Item template with ID = '{0}' not found for merchant item list '{1}'", 
+                                merchantitem.ItemTemplateID, ItemsListID);
+                        }
 					}
 				}
 				lock (m_usedItemsTemplates.SyncRoot)

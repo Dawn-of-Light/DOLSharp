@@ -488,6 +488,22 @@ namespace DOL.GS
 			return null;
 		}
 
+        /// <summary>
+        /// Grant bounty point credit for an artifact.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="artifactID"></param>
+        /// <returns></returns>
+        public static bool GrantArtifactBountyCredit(GamePlayer player, String bountyCredit)
+        {
+            lock (m_artifacts)
+                foreach (Artifact artifact in m_artifacts.Values)
+                    if (artifact.Credit == bountyCredit)
+                        return GrantArtifactCredit(player, artifact.ArtifactID);
+
+            return false;
+        }
+
 		/// <summary>
 		/// Grant credit for an artifact.
 		/// </summary>
@@ -510,14 +526,19 @@ namespace DOL.GS
 			if (artifact == null)
 				return false;
 
-			Type questType = GetQuestType(artifact.EncounterID);
-			if (questType == null)
+			Type encounterType = GetQuestType(artifact.EncounterID);
+			if (encounterType == null)
 				return false;
 
-			if (player.HasFinishedQuest(questType) > 0)
+            Type artifactQuestType = GetQuestType(artifact.QuestID);
+            if (artifactQuestType == null)
+                return false;
+
+			if (player.HasFinishedQuest(encounterType) > 0 || 
+                player.HasFinishedQuest(artifactQuestType) > 0)
 				return false;
 
-			AbstractQuest quest = (AbstractQuest)(System.Activator.CreateInstance(questType,
+			AbstractQuest quest = (AbstractQuest)(System.Activator.CreateInstance(encounterType,
 				new object[] { player }));
 
 			if (quest == null)
