@@ -46,6 +46,7 @@ namespace DOL.Database
 		private String m_messageUse;
 		private String m_messageCombineScrolls, m_messageCombineBook;
 		private String m_messageReceiveScrolls, m_messageReceiveBook;
+        private String m_credit;
 
         /// <summary>
         /// Create a new artifact object.
@@ -385,5 +386,19 @@ namespace DOL.Database
 				m_messageReceiveBook = value;
 			}
 		}
+
+        /// <summary>
+        /// The bounty point credit for this artifact.
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public String Credit
+        {
+            get { return m_credit; }
+            set
+            {
+                Dirty = true;
+                m_credit = value;
+            }
+        }
     }
 }
