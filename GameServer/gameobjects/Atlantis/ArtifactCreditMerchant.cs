@@ -96,9 +96,6 @@ namespace DOL.GS
         /// <returns></returns>
         public override bool ReceiveItem(GameLiving source, InventoryItem item)
         {
-            if (base.ReceiveItem(source, item))
-                return true;
-
             GamePlayer player = source as GamePlayer;
 
             if (player != null && item != null && item.Name.EndsWith("Credit"))
@@ -112,7 +109,7 @@ namespace DOL.GS
                 }
             }
 
-            return false;
+            return base.ReceiveItem(source, item);
         }
     }
 }

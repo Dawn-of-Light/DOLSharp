@@ -4011,12 +4011,6 @@ namespace DOL.GS
 			if (brain != null)
 				brain.Notify(e, sender, args);
 
-            if (e == GameLivingEvent.Interrupted && args != null)
-            {
-                if (CurrentSpellHandler != null)
-                    CurrentSpellHandler.CasterIsAttacked((args as InterruptedEventArgs).Attacker);
-            }
-
             if (e == GameNPCEvent.ArriveAtTarget)
             {
                 if (IsReturningToSpawnPoint)

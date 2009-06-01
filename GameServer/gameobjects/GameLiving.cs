@@ -5785,6 +5785,26 @@ namespace DOL.GS
 		}
 
 		#endregion
+
+        /// <summary>
+        /// Handle event notifications.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public override void Notify(DOLEvent e, object sender, EventArgs args)
+        {
+            if (e == GameLivingEvent.Interrupted && args != null)
+            {
+                if (CurrentSpellHandler != null)
+                    CurrentSpellHandler.CasterIsAttacked((args as InterruptedEventArgs).Attacker);
+
+                return;
+            }
+
+            base.Notify(e, sender, args);
+        }
+
 		#region Spell Cast
 
 		// /// <summary>
