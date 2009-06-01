@@ -1862,7 +1862,7 @@ namespace DOL.GS
                 if (target.AttackState && target.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
                     target.OnInterruptTick(Attacker, AttackType);
 
-                target.Notify(GameLivingEvent.Interrupted, target);
+                target.Notify(GameLivingEvent.Interrupted, target, new InterruptedEventArgs(Attacker));
             }
 		}
 
