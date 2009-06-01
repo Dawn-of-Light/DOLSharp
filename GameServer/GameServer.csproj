@@ -317,6 +317,7 @@
     <Compile Include="Crafting\ArmorCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="events\gameobjects\InterruptedEventArgs.cs" />
     <Compile Include="events\gameobjects\NextCraftingTierReachedEventArgs.cs" />
     <Compile Include="gameobjects\Atlantis\ArtifactCreditMerchant.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\PermanentDjinn.cs" />
