@@ -180,12 +180,35 @@ namespace DOL.GS
             if (!base.Interact(player))
                 return false;
 
-            String intro = String.Format("According to the rules set down by the Atlantean [masters], {0} {1} {2} {3}",
+            String intro = String.Format("According to the rules set down by the Atlantean [masters], {0} {1} ",
                 "you are authorized for expeditious transport to your homeland or any of the Havens. Please state",
-                "your destination: [Castle Sauvage], [Oceanus], [Stygia], [Volcanus], [Aerus], the [dungeons of Atlantis],",
-                "[Snowdonia Fortress], [Camelot], [Gothwaite Harbor], [Inconnu Crypt], your [Guild] house, your",
-                "[Personal] house, your [Hearth] bind, or to the [Caerwent] housing area?");
-            SayTo(player, intro);
+                "your destination:");
+
+            String destinations;
+
+            switch (player.Realm)
+            {
+                case eRealm.Albion:
+                    destinations = String.Format("[Castle Sauvage], [Oceanus], [Stygia], [Volcanus], [Aerus], the [dungeons of Atlantis], {0} {1}",
+                        "[Snowdonia Fortress], [Camelot], [Gothwaite Harbor], [Inconnu Crypt], your [Guild] house, your",
+                        "[Personal] house, your [Hearth] bind, or to the [Caerwent] housing area?");
+                    break;
+                case eRealm.Midgard:
+                    destinations = String.Format("[Svasud Faste], [Oceanus], [Stygia], [Volcanus], [Aerus], the [dungeons of Atlantis], {0} {1}",
+                        "[Vindsaul Faste], [Jordheim], [Aegirhamn], [Kobold] Undercity, your [Guild] house, your",
+                        "[Personal] house, your [Hearth] bind, or to the [Erikstaad] housing area?");
+                    break;
+                case eRealm.Hibernia:
+                    destinations = String.Format("[Druim Ligen], [Oceanus], [Stygia], [Volcanus], [Aerus], the [dungeons of Atlantis], {0} {1}",
+                        "[Druim Cain], the [Grove of Domnann], [Tir na Nog], [Shar Labyrinth], your [Guild] house, your",
+                        "[Personal] house, your [Hearth] bind, or to the [Meath] housing area?");
+                    break;
+                default:
+                    SayTo(player, "I don't know you, which realm are you from?");
+                    return true;
+            }
+
+            SayTo(player, String.Format("{0}{1}", intro, destinations));
             return true;
         }
 
