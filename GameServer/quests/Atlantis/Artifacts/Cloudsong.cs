@@ -126,18 +126,29 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			if (player == null || scholar == null)
 				return false;
 
-			// TODO: I accidentally skipped the part for [story], check on live!
-			if (Step == 1 && text.ToLower() == ArtifactID.ToLower())
-			{
-				String reply = String.Format("Do you have the story that goes with Cloudsong? {0} {1} {2}",
-					"I'd very much like to read it. If you don't, go, get the scrolls and use them.",
-					"Then, when you've translated them into a book, return the book to me, and I will",
-					"give you the artifact. Do you have the [story]?");
-				scholar.TurnTo(player);
-				scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
-				Step = 2;
-				return true;
-			}
+            if (Step == 1)
+            {
+                if (text.ToLower() == ArtifactID.ToLower())
+                {
+                    String reply = String.Format("Do you have the story that goes with Cloudsong? {0} {1} {2}",
+                        "I'd very much like to read it. If you don't, go, get the scrolls and use them.",
+                        "Then, when you've translated them into a book, return the book to me, and I will",
+                        "give you the artifact. Do you have the [story]?");
+                    scholar.TurnTo(player);
+                    scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+                    Step = 2;
+                    return true;
+                }
+
+                if (text.ToLower() == "story")
+                {
+                    scholar.TurnTo(player);
+                    scholar.SayTo(player, eChatLoc.CL_PopupWindow, 
+                        "Well, hand me the story. If you don't have it, go out and get it!");
+                    return true;
+                }
+
+            }
 
 			return false;
 		}
