@@ -65,15 +65,47 @@ namespace DOL.GS.Quests.Atlantis
 			String[] scholars = ArtifactMgr.GetScholars(artifactID);
 			if (scholars != null)
 			{
-				int realm = 1;
+                eRealm realm = eRealm.Albion;
 				GameNPC[] npcs;
+
 				foreach (String scholar in scholars)
 				{
-					npcs = WorldMgr.GetNPCsByName(String.Format("Scholar {0}", scholar), (eRealm)realm);
+                    String title;
+
+                    switch (realm)
+                    {
+                        case eRealm.Albion:
+                            title = "Scholar";
+                            npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", 
+                                title, scholar), realm);
+                            break;
+                        case eRealm.Midgard:
+                            title = "Loremaster";
+                            npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", 
+                                title, scholar), realm);
+
+                            if (npcs.Length == 0)
+                            {
+                                title = "Loremistress";
+                                npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", 
+                                    title, scholar), realm);
+                            }
+                            break;
+                        case eRealm.Hibernia:
+                            title = "Sage";
+                            npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", 
+                                title, scholar), realm);
+                            break;
+                        default:
+                            title = "<unknown title>";
+                            npcs = new GameNPC[0];
+                            break;
+                    }
+
 					if (npcs.Length == 0)
 					{
-						log.Warn(String.Format("Scholar {0} not found in {1}",
-							scholar, GlobalConstants.RealmToName((eRealm)realm)));
+						log.Warn(String.Format("{0} {1} not found in {1}",
+							title, scholar, GlobalConstants.RealmToName((eRealm)realm)));
 					}
 					else
 					{
