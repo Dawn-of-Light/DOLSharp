@@ -213,9 +213,8 @@ namespace DOL.GS
 			if (player.Client.Account.PrivLevel > 1)
 				player.Out.SendMessage("Uni-Portal spell not found.",
 					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-
-			player.MoveTo((ushort)destination.RegionID, destination.X, destination.Y, destination.Z,
-				(ushort)destination.Heading);
+			
+			this.OnTeleport(player, destination);
 		}
 
 		/// <summary>
