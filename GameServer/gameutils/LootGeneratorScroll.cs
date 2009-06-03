@@ -31,7 +31,7 @@ namespace DOL.GS
     /// Basically, any mob in ToA can drop scrolls, which scroll they
     /// drop, will depend on the level of the mob,
     /// level 45-50: 1 of 3
-    /// level 50-55: 2 of 3
+    /// level 51-54: 2 of 3
     /// level 55+: 3 of 3
     /// </summary>
     /// <author>Aredhel</author>
