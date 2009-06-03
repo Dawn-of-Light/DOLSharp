@@ -105,7 +105,7 @@ namespace DOL.GS.Quests.Atlantis
 					if (npcs.Length == 0)
 					{
 						log.Warn(String.Format("{0} {1} not found in {1}",
-							title, scholar, GlobalConstants.RealmToName((eRealm)realm)));
+							title, scholar, GlobalConstants.RealmToName(realm)));
 					}
 					else
 					{
