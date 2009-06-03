@@ -359,6 +359,11 @@ namespace DOL.GS
 					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
 				}
                 String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
+				if (teleportList.ContainsKey(teleportKey))
+				{
+					log.Error("WorldMgr.EarlyInit teleporters - Cannot add " + teleportKey + " already exists");
+					continue;
+				}
 				teleportList.Add(teleportKey, teleport);
 				if (teleport.Realm >= 1 && teleport.Realm <= 3)
 					numTeleports[teleport.Realm - 1]++;
