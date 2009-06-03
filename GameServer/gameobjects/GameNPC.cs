@@ -2254,6 +2254,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Should the NPC show a quest indicator, this can be overriden for custom handling
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns>True if the NPC should show quest indicator, false otherwise</returns>
+		public virtual bool ShowQuestIndicator(GamePlayer player)
+		{
+			return CanGiveOneQuest(player);
+		}
+
+		/// <summary>
 		/// Check if the npc can give one quest to a player
 		/// </summary>
 		/// <param name="player">The player to check</param>
