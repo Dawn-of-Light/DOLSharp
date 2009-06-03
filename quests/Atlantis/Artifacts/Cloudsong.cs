@@ -78,9 +78,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// <returns></returns>
 		public override bool ReceiveItem(GameLiving source, GameLiving target, InventoryItem item)
 		{
-			if (base.ReceiveItem(source, target, item))
-				return true;
-
 			GamePlayer player = source as GamePlayer;
 			Scholar scholar = target as Scholar;
 			if (player == null || scholar == null)
@@ -106,7 +103,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				}
 			}
 
-			return false;
+            return base.ReceiveItem(source, target, item);
 		}
 
 		/// <summary>
@@ -139,15 +136,14 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
                     Step = 2;
                     return true;
                 }
+            }
 
-                if (text.ToLower() == "story")
-                {
-                    scholar.TurnTo(player);
-                    scholar.SayTo(player, eChatLoc.CL_PopupWindow, 
-                        "Well, hand me the story. If you don't have it, go out and get it!");
-                    return true;
-                }
-
+            if (text.ToLower() == "story" && Step > 1)
+            {
+                scholar.TurnTo(player);
+                scholar.SayTo(player, eChatLoc.CL_PopupWindow,
+                    "Well, hand me the story. If you don't have it, go out and get it!");
+                return true;
             }
 
 			return false;
