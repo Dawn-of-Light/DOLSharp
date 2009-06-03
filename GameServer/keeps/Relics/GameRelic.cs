@@ -27,20 +27,30 @@ namespace DOL.GS
 
 		public const string PLAYER_CARRY_RELIC_WEAK = "IAmCarryingARelic";
 		protected const int CarrierEffectInterval = 4000;
+		protected int ReturnRelicInterval = ServerProperties.Properties.RELIC_RETURN_TIME * 1000;
 
 		#region declarations
 		InventoryItem m_item;
 		GamePlayer m_currentCarrier = null;
-		GameRelicPad m_currentRelicPad = null;
+		GameRelicPad m_currentRelicPad = null;	
+		GameRelicPad m_returnRelicPad = null;
 		RegionTimer m_currentCarrierTimer;
 		DBRelic m_dbRelic;
 		eRelicType m_relicType;
-
-
-
+		RegionTimer m_returnRelicTimer;
 
 		/// <summary>
-		/// Get the RelicType (melee or magic) 
+		/// The place were the relic should go if it is lost by players
+		/// after the expiration timer
+		/// </summary>
+		public virtual GameRelicPad ReturnRelicPad
+		{
+			get { return m_returnRelicPad; }
+			set { m_returnRelicPad = value; }
+		}
+		
+		/// <summary>
+		/// Get the RelicType (melee or magic)
 		/// </summary>
 		public eRelicType RelicType
 		{
@@ -205,6 +215,7 @@ namespace DOL.GS
 				{
 					m_currentRelicPad.RemoveRelic(this);
 					m_currentRelicPad = null;
+					ReturnRelicPad = CurrentRelicPad;
 				}
 
 				RemoveFromWorld();
@@ -212,6 +223,8 @@ namespace DOL.GS
 				Realm = 0;
 				SetHandlers(player, true);
 				StartPlayerTimer(player);
+				if (m_returnRelicTimer != null)
+					m_returnRelicTimer.Stop();
 
 			}
 			else
@@ -250,6 +263,8 @@ namespace DOL.GS
 			SetHandlers(player, false);
 			//kill the pulsingEffectTimer on the player
 			StartPlayerTimer(null);
+			// launch the reset timer
+			m_returnRelicTimer = new RegionTimer (this, new RegionTimerCallback(ReturnRelicTick),ReturnRelicInterval);
 			// remove the CarryingWeak
 			player.TempProperties.removeProperty(PLAYER_CARRY_RELIC_WEAK);
 			m_currentCarrier = null;
@@ -257,7 +272,18 @@ namespace DOL.GS
 			AddToWorld();
 		}
 
-
+		/// <summary>
+		/// when the relic is lost and ReturnRelicInterval is elapsed
+		/// </summary>
+		protected virtual int ReturnRelicTick(RegionTimer timer)
+		{
+			log.Info("Relic " + this.Name + " is lost and returns to " + ReturnRelicPad.ToString());
+			ReturnRelicPad.MountRelic(this);
+			m_returnRelicTimer.Stop();
+			m_returnRelicTimer=null;
+			return 0;
+		}
+		
 		/// <summary>
 		/// Starts the "signalising effect" sequence on the carrier.
 		/// </summary>
@@ -392,12 +418,12 @@ namespace DOL.GS
 
 
 			ItemTemplate m_itemTemp;
-			//generate itemtemplate for invetoryitem
+			//generate itemtemplate for inventoryitem
 			m_itemTemp = new ItemTemplate();
 			m_itemTemp.Name = Name;
 			m_itemTemp.Object_Type = (int)eObjectType.Magical;
 			m_itemTemp.Model = Model;
-			m_itemTemp.IsDropable = true;
+			m_itemTemp.IsDropable = false;
 			m_itemTemp.IsPickable = false;
 			m_itemTemp.Level = 99;
 			m_itemTemp.Quality = 100;
@@ -405,6 +431,7 @@ namespace DOL.GS
 			m_itemTemp.AutoSave = false;
 			m_itemTemp.Weight = 1000;
 			m_itemTemp.Id_nb = "ARelic";
+			m_itemTemp.IsTradable = false;
 			m_item = new InventoryItem(m_itemTemp);
 			//m_item.ObjectId = System.Guid.NewGuid().ToString();
 		}
