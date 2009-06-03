@@ -76,7 +76,7 @@ namespace DOL.GS.ServerRules
         /// <param name="args"></param>
         public virtual void OnGameEntered(DOLEvent e, object sender, EventArgs args)
         {
-            SetImmunity((GamePlayer)sender, (ServerProperties.Properties.Timer_Region_Changed / 3)*1000); //Timer when a player enters game.
+            SetImmunity((GamePlayer)sender, (ServerProperties.Properties.TIMER_REGION_CHANGED / 3)*1000); //Timer when a player enters game.
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace DOL.GS.ServerRules
         /// <param name="args"></param>
         public virtual void OnRegionChanged(DOLEvent e, object sender, EventArgs args)
         {
-            SetImmunity((GamePlayer)sender, ServerProperties.Properties.Timer_Region_Changed*1000);//When a player changes Regions
+            SetImmunity((GamePlayer)sender, ServerProperties.Properties.TIMER_REGION_CHANGED*1000);//When a player changes Regions
         }
 
         /// <summary>
@@ -102,11 +102,11 @@ namespace DOL.GS.ServerRules
             if (player.TempProperties.getObjectProperty(KILLED_BY_PLAYER_PROP, null) != null)
             {
                 player.TempProperties.removeProperty(KILLED_BY_PLAYER_PROP);
-                SetImmunity(player, ServerProperties.Properties.Timer_Killed_By_Player*1000);//When Killed by a Player
+                SetImmunity(player, ServerProperties.Properties.TIMER_KILLED_BY_PLAYER*1000);//When Killed by a Player
             }
             else
             {
-                SetImmunity(player, ServerProperties.Properties.Timer_Killed_By_Mob*1000);//When Killed by a Mob
+                SetImmunity(player, ServerProperties.Properties.TIMER_KILLED_BY_MOB*1000);//When Killed by a Mob
             }
         }
 
