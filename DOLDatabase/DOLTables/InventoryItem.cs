@@ -272,6 +272,17 @@ namespace DOL.Database
 			}
 		}
 
+        /// <summary>
+        /// Repair cost for this item in the current state.
+        /// </summary>
+        public virtual long RepairCost
+        {
+            get
+            {
+                return ((MaxCondition - Condition) * Value) / MaxCondition;
+            }
+        }
+
         public void CopyFrom(InventoryItem template)
 		{
 			CopyFrom((ItemTemplate)template);
