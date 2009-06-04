@@ -124,6 +124,17 @@ namespace DOL.GS
 			}
 		}
 
+        /// <summary>
+        /// Repair cost for this artifact in the current state.
+        /// </summary>
+        public override long RepairCost
+        {
+            get
+            {
+                return (MaxCondition - Condition) / 100;
+            }
+        }
+
 		/// <summary>
 		/// Add all abilities for this level.
 		/// </summary>

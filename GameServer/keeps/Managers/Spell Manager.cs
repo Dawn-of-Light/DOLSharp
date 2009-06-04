@@ -40,6 +40,8 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		public static void CheckAreaForHeals(GameKeepGuard guard)
 		{
+            // Only players have a 100% chance to get a heal.
+
 			GameLiving target = null;
 			foreach (GamePlayer player in guard.GetPlayersInRadius(2000))
 			{
@@ -53,6 +55,12 @@ namespace DOL.GS.Keeps
 					}
 				}
 			}
+
+            // Everything else only gets a 25% chance - stop the bloody healing spam!
+
+            if (Util.Chance(75))
+                return;
+
 			if (target == null)
 			{
 				foreach (GameNPC npc in guard.GetNPCsInRadius(2000))
