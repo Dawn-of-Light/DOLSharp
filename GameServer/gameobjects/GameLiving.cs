@@ -1853,7 +1853,7 @@ namespace DOL.GS
 
             private void Interrupt(GameLiving target)
             {
-                if (!target.IsAlive || target.ObjectState == eObjectState.Active)
+                if (!target.IsAlive || target.ObjectState != eObjectState.Active)
                     return;
 
                 if (target.CurrentSpellHandler != null)
