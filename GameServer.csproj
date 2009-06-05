@@ -1026,6 +1026,7 @@
     <Compile Include="quests\Atlantis\Artifacts\EnyaliosBoots.cs" />
     <Compile Include="quests\Atlantis\Artifacts\GuardOfValor.cs" />
     <Compile Include="quests\Atlantis\Artifacts\MalicesAxe.cs" />
+    <Compile Include="quests\Atlantis\Artifacts\ShadesOfMist.cs" />
     <Compile Include="quests\Atlantis\Artifacts\ShieldOfKhaos.cs" />
     <Compile Include="quests\Atlantis\Artifacts\Snatcher.cs" />
     <Compile Include="quests\Atlantis\ArtifactTurnInQuest.cs" />
