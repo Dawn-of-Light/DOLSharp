@@ -115,10 +115,13 @@ namespace DOL.GS
 				{
 					if (text.ToLower() == quest.ArtifactID.ToLower())
 					{
-						if (quest.CheckQuestQualification(player))
-							GiveArtifactQuest(player, quest.GetType());
-						else
-							DenyArtifactQuest(player);
+                        if (quest.CheckQuestQualification(player))
+                            if (player.CanReceiveArtifact(quest.ArtifactID))
+                                GiveArtifactQuest(player, quest.GetType());
+                            else
+                                RefuseArtifact(player);
+                        else
+                            DenyArtifactQuest(player);
 						return false;
 					}
 				}
@@ -144,18 +147,36 @@ namespace DOL.GS
 		{
 			if (player != null)
 			{
-				String reply = String.Format("{0} I cannot activate that artifact for you. {1} {2} {3} {4} {5}",
-					player.Name,
-					"This could be because you have already activated it, or you are in the",
-					"process of activating it, or you may not have completed everything",
-					"you need to do. Remember that the activation process requires you to",
-					"have credit for the artifact's encounter, as well as the artifact's",
-					"complete book of scrolls.");
+                String reply = String.Format("{0} I cannot activate that artifact for you. {1} {2} {3} {4} {5}",
+                     player.Name,
+                     "This could be because you have already activated it, or you are in the",
+                     "process of activating it, or you may not have completed everything",
+                     "you need to do. Remember that the activation process requires you to",
+                     "have credit for the artifact's encounter, as well as the artifact's",
+                     "complete book of scrolls.");
 				TurnTo(player);
 				SayTo(player, eChatLoc.CL_PopupWindow, reply);
 			}
 			return;
 		}
+
+        /// <summary>
+        /// This is used when the player is ready to receive the artifact,
+        /// but is not of a class who can accept this artifact.
+        /// </summary>
+        /// <param name="player"></param>
+        private void RefuseArtifact(GamePlayer player)
+        {
+            if (player != null)
+            {
+                String reply = String.Format("I'm sorry, but I shouldn't recreate this artifact for you, {1} {2}",
+                     "as it wouldn't make proper use of your abilities. There are other artifacts",
+                     "in Atlantis better suited to your needs.");
+                TurnTo(player);
+                SayTo(player, eChatLoc.CL_PopupWindow, reply);
+            }
+            return;
+        }
 
 		/// <summary>
 		/// Give the artifact quest to the player.
