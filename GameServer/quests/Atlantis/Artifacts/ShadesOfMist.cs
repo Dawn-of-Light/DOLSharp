@@ -24,6 +24,10 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
+    /// <summary>
+    /// Quest for the ShadesOfMist artifact.
+    /// </summary>
+    /// <author>Aredhel</author>
     public class ShadesOfMist : ArtifactQuest
     {
         public ShadesOfMist()
