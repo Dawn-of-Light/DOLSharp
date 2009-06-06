@@ -1023,6 +1023,7 @@
     <Compile Include="quests\Atlantis\Artifacts\Bruiser.cs" />
     <Compile Include="quests\Atlantis\Artifacts\CeremonialBracers.cs" />
     <Compile Include="quests\Atlantis\Artifacts\Cloudsong.cs" />
+    <Compile Include="quests\Atlantis\Artifacts\EirenesHauberk.cs" />
     <Compile Include="quests\Atlantis\Artifacts\EnyaliosBoots.cs" />
     <Compile Include="quests\Atlantis\Artifacts\GuardOfValor.cs" />
     <Compile Include="quests\Atlantis\Artifacts\MalicesAxe.cs" />
@@ -1044,6 +1045,7 @@
     <Compile Include="quests\Atlantis\Encounters\DreamSphere.cs" />
     <Compile Include="quests\Atlantis\Encounters\EerieDarknessStone.cs" />
     <Compile Include="quests\Atlantis\Encounters\EggOfYouth.cs" />
+    <Compile Include="quests\Atlantis\Encounters\EirenesHauberk.cs" />
     <Compile Include="quests\Atlantis\Encounters\EnyaliosBoots.cs" />
     <Compile Include="quests\Atlantis\Encounters\ErinysCharm.cs" />
     <Compile Include="quests\Atlantis\Encounters\GuardOfValor.cs" />
