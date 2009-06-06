@@ -1048,6 +1048,7 @@
     <Compile Include="quests\Atlantis\Encounters\ErinysCharm.cs" />
     <Compile Include="quests\Atlantis\Encounters\GuardOfValor.cs" />
     <Compile Include="quests\Atlantis\Encounters\MalicesAxe.cs" />
+    <Compile Include="quests\Atlantis\Encounters\ShadesOfMist.cs" />
     <Compile Include="quests\Atlantis\Encounters\ShieldOfKhaos.cs" />
     <Compile Include="quests\Atlantis\Encounters\Snatcher.cs" />
     <Compile Include="quests\Atlantis\Encounters\StoneOfAtlantis.cs" />
