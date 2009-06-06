@@ -32,6 +32,7 @@ namespace DOL.AI.Brain
                 if (target is GameLiving && GameLiving.HasEffect(target as GameLiving, spell))
                     continue;
 
+                Body.StopMoving();
                 Body.TargetObject = target;
                 Body.TurnTo(target);
                 Body.CastSpell(spell, SpellLine);
