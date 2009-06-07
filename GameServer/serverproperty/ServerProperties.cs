@@ -682,7 +682,8 @@ namespace DOL.GS.ServerProperties
 			catch (Exception e)
 			{
 				log.Error("Exception in ServerProperties Load: ", e);
-				return null;
+                log.Error("Trying to load " + key + " value is " + property.Value);
+                return null;
 			}
 		}
 

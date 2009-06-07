@@ -858,6 +858,10 @@ namespace DOL.GS
 		/// Property entry on follow timer, wether the follow target is in range
 		/// </summary>
 		protected static readonly string FOLLOW_TARGET_IN_RANGE = "FollowTargetInRange";
+        /// <summary>
+        /// At what health percent will npc give up range attack and rush the attacker
+        /// </summary>
+        protected const int MINHEALTHPERCENTFORRANGEDATTACK = 70;
 
 		private string m_pathID;
 		public string PathID
@@ -1202,7 +1206,7 @@ namespace DOL.GS
             if (speed <= 0)
                 return;
 
-            Target = target;
+            Target = target; // this also saves the current position
 
             if (IsWithinRadius(Target, CONST_WALKTOTOLERANCE))
             {
@@ -1213,7 +1217,6 @@ namespace DOL.GS
             }
 
             CancelWalkToTimer();
-            SaveCurrentPosition();
 
             m_Heading = GetHeading(Target);
             m_currentSpeed = speed; 
@@ -1334,7 +1337,7 @@ namespace DOL.GS
             BroadcastUpdate();
         }
 
-        private const int StickMinimumRange = 90;
+        private const int StickMinimumRange = 100;
         private const int StickMaximumRange = 5000;
 
 		/// <summary>
@@ -1454,10 +1457,10 @@ namespace DOL.GS
              }
              int newX, newY, newZ;
 
-             //Check for any formations
              if (this.Brain is StandardMobBrain)
              {
                 StandardMobBrain brain = this.Brain as StandardMobBrain;
+
                 //if the npc hasn't hit or been hit in a while, stop following and return home
                 if (!(Brain is IControlledBrain))
                 {
@@ -1476,6 +1479,7 @@ namespace DOL.GS
                       }
                    }
                 }
+
                 //If we're part of a formation, we can get out early.
                 newX = followTarget.X;
                 newY = followTarget.Y;
@@ -3094,10 +3098,18 @@ namespace DOL.GS
 
 			if (AttackState)
 			{
-				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance && IsMoving)
-					StopFollowing();
-				else
-					Follow(target, StickMinimumRange, StickMaximumRange);
+                // if we're moving we need to lock down the current position
+                if (IsMoving)
+                    SaveCurrentPosition();
+
+                if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+                {
+                    Follow(target, AttackRange, StickMaximumRange);
+                }
+                else
+                {
+                    Follow(target, StickMinimumRange, StickMaximumRange);
+                }
 			}
 		}
 
@@ -3366,7 +3378,11 @@ namespace DOL.GS
 		/// <param name="target"></param>
 		public void SwitchToMelee(GameObject target)
 		{
-			InventoryItem twohand = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+            // Tolakram: Order is important here.  First StopAttack, then switch weapon
+            StopAttack();
+            StopMoving();
+
+            InventoryItem twohand = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
 			InventoryItem righthand = Inventory.GetItem(eInventorySlot.RightHandWeapon);
 
 			if (twohand != null && righthand == null)
@@ -3377,9 +3393,9 @@ namespace DOL.GS
 					SwitchWeapon(eActiveWeaponSlot.TwoHanded);
 				else SwitchWeapon(eActiveWeaponSlot.Standard);
 			}
-			else SwitchWeapon(eActiveWeaponSlot.Standard);
-			StopAttack();
-			StopMoving();
+			else 
+                SwitchWeapon(eActiveWeaponSlot.Standard);
+
 			StartAttack(target);
 		}
 
@@ -3411,8 +3427,11 @@ namespace DOL.GS
 				}
 			}
 
-			StopAttack();
-			SwitchToMelee(attacker);
+            // Experimental - this prevents interrupts from causing ranged attacks to always switch to melee
+            if (AttackState && HealthPercent < MINHEALTHPERCENTFORRANGEDATTACK) 
+            {
+                SwitchToMelee(attacker);
+            }
 
 			return base.OnInterruptTick(attacker, attackType);
 		}
@@ -3594,7 +3613,7 @@ namespace DOL.GS
 		{
 			if (m_attackAction != null && target != null)
 			{
-				Follow(target, 90, MaxDistance);
+				Follow(target, StickMinimumRange, MaxDistance);
 				m_attackAction.Start(1);
 			}
 		}
@@ -3606,7 +3625,11 @@ namespace DOL.GS
 		{
 			base.StopAttack();
 			StopFollowing();
-		}
+
+            // Tolakram: If npc has a distance weapon it needs to be made active after attack is stopped
+            if (Inventory != null && Inventory.GetItem(eInventorySlot.DistanceWeapon) != null && ActiveWeaponSlot != eActiveWeaponSlot.Distance)
+                SwitchWeapon(eActiveWeaponSlot.Distance);
+        }
 
 		/// <summary>
 		/// This method is called to drop loot after this mob dies
@@ -3925,7 +3948,7 @@ namespace DOL.GS
 				else
 				{
 					//If we aren't a distance NPC, lets make sure we are in range to attack the target!
-					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius( owner.TargetObject, 90 ) )
+					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius( owner.TargetObject, StickMinimumRange ) )
 						((GameNPC)owner).Follow(owner.TargetObject, StickMinimumRange, StickMaximumRange);
 				}
 				Interval = 500;
