@@ -1967,6 +1967,44 @@ namespace DOL.GS
 			list[i].Level = i + 1;
 		}
 
+        public static bool AddSpellToSpellLine(string spellLineID, Spell spellparam)
+        {
+            if (spellparam == null)
+                return false;
+
+            List<Spell> list = null;
+
+            if (m_spellLists.ContainsKey(spellLineID))
+                list = m_spellLists[spellLineID];
+
+            // Make a copy of the spell passed in, making this a unique spell so we can set the level
+            Spell newspell = spellparam.Copy();
+
+            if (list != null)
+            {
+                if (list.Count > 49)
+                    return false;  // can only have spells up to level 50
+
+                foreach (Spell spell in list)
+                {
+                    if (spell.Name == spellparam.Name)
+                        return false; // spell already in spellline
+                }
+
+                newspell.Level = list.Count + 1;
+                list.Add(newspell);
+            }
+            else
+            {
+                list = new List<Spell>();
+                newspell.Level = 1;
+                list.Add(newspell);
+                m_spellLists[spellLineID] = list;
+            }
+
+            return true;
+        }
+
 		/// <summary>
 		///
 		/// </summary>
