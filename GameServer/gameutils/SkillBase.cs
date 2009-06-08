@@ -1726,9 +1726,9 @@ namespace DOL.GS
 
 			// magical damage (Heat, Cold, Matter, Energy)
 			// Leather
-			WriteMagicResists(eRealm.Albion, eObjectType.Leather, 15, -10, -5, 0);
-			WriteMagicResists(eRealm.Hibernia, eObjectType.Leather, 15, -10, -5, 0);
-			WriteMagicResists(eRealm.Midgard, eObjectType.Leather, 15, -10, -5, 0);
+			WriteMagicResists(eRealm.Albion, eObjectType.Leather, 5, -10, -5, 0);
+			WriteMagicResists(eRealm.Hibernia, eObjectType.Leather, 5, -10, -5, 0);
+			WriteMagicResists(eRealm.Midgard, eObjectType.Leather, 5, -10, -5, 0);
 
 			// Reinforced/Studded
 			WriteMagicResists(eRealm.Albion, eObjectType.Studded, -10, 5, 5, 5);
@@ -1736,12 +1736,12 @@ namespace DOL.GS
 			WriteMagicResists(eRealm.Midgard, eObjectType.Studded, -10, 5, 5, 5);
 
 			// Chain
-			WriteMagicResists(eRealm.Albion, eObjectType.Chain, -10, 0, 0, 10);
-			WriteMagicResists(eRealm.Midgard, eObjectType.Chain, -10, 0, 0, 10);
+			WriteMagicResists(eRealm.Albion, eObjectType.Chain, -10, 0, 0, 5);
+			WriteMagicResists(eRealm.Midgard, eObjectType.Chain, -10, 0, 0, 5);
 
 			// Scale/Plate
-			WriteMagicResists(eRealm.Albion, eObjectType.Plate, -10, 10, -10, 10);
-			WriteMagicResists(eRealm.Hibernia, eObjectType.Scale, -10, 10, -10, 10);
+			WriteMagicResists(eRealm.Albion, eObjectType.Plate, -10, 5, -10, 5);
+			WriteMagicResists(eRealm.Hibernia, eObjectType.Scale, -10, 5, -10, 5);
 		}
 
 		private static void WriteMeleeResists(eRealm realm, eObjectType armorType, int slash, int crush, int thrust)
