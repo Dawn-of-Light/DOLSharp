@@ -267,7 +267,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				method = 6;
 			else if (orgitem.Object_Type == 53 || orgitem.Object_Type == 55 || orgitem.Object_Type == 68)
 				method = 5;
-			else if (orgitem.Object_Type == 54)
+			else if (orgitem.Object_Type == (int)eObjectType.HouseVault)
 				method = 7;
             int pos;
 			switch (method)
@@ -458,7 +458,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (house.GetHookpointLocation((uint)position) == null)
 						{
-                            client.Player.Inventory.RemoveItem(orgitem);
+							client.Out.SendInventorySlotsUpdate(new int[] { slot });
                             client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointID", + position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointCloser"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"), new CustomDialogResponse(LogLocation));
@@ -529,6 +529,15 @@ namespace DOL.GS.PacketHandler.Client.v168
                     house.SendUpdate();
                     break;
 				case 7: // House vault.
+					if (house.GetHookpointLocation((uint)position) == null)
+					{
+						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+						client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointID", +position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointCloser"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"), new CustomDialogResponse(LogLocation));
+						return 1;
+
+					}
 					int vaultIndex = house.GetFreeVaultNumber();
 					if (vaultIndex < 0)
 					{
@@ -570,7 +579,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (player.CurrentHouse == null)
 				return;
 
-			log.Error("Position: " + position + " Offset: " + (player.X - player.CurrentHouse.X) + ", " + (player.Y - player.CurrentHouse.Y) + ", " + (player.Z - 25000) + ", " + (player.Heading - player.CurrentHouse.Heading));
+			log.Error("House Model: " + player.CurrentHouse.Model + " Position: " + position + " Offset: " + (player.X - player.CurrentHouse.X) + ", " + (player.Y - player.CurrentHouse.Y) + ", " + (player.Z - 25000) + ", " + (player.Heading - player.CurrentHouse.Heading));
 
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
