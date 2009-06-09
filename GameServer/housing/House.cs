@@ -1324,24 +1324,6 @@ namespace DOL.GS.Housing
 						sItem.AddToWorld();
 						break;
 					}
-				//case eObjectType.HouseVault:
-				//    {
-				//        //0:08:07.734 S=>C 0xD9 item/door create v171 (oid:0x0DDC emblem:0x0000 heading:0x0145 x:596823 y:530336 z:24718 model:0x05D3 health:  0% flags:0x04(realm:0) extraBytes:0 unk1_171:0x0096220C name:"Hibernia vault")
-				//        if (vaultNumber == 0)
-				//            vaultNumber = GetFreeVaultNumber();
-				//        sItem = new GameHouseVault(vaultNumber);
-				//        sItem.CurrentHouse = this;
-				//        sItem.InHouse = true;
-				//        sItem.X = x;
-				//        sItem.Y = y;
-				//        sItem.Z = z;
-				//        sItem.Heading = heading;
-				//        sItem.CurrentRegionID = RegionID;
-				//        sItem.Name = item.Name;
-				//        sItem.Model = (ushort)item.Model;
-				//        sItem.AddToWorld();
-				//        break;
-				//    }
 			}
 			return sItem;
 		}
@@ -1435,7 +1417,7 @@ namespace DOL.GS.Housing
 				// NOTHING : Lot
 				null,
 				// ALB Cottage (model 1)
-				new int[19][]
+				new int[25][]
 					{
 	/* Position 0 */	new int[4] {-196, -858, -305, -105},
 						null,
@@ -1445,7 +1427,7 @@ namespace DOL.GS.Housing
 	/* Position 5 */	new int[4] {349, 430, 30, 858},
 						null,
 						null,
-						null,
+/*8 new - old=5*/		new int[4] {349, 430, 30, 858},
 	/* Position 9 */	new int[4] {-163, 166, 30, 3246},
 	/* Position 10 */	new int[4] {306, 249, -307, 1310},
 	/* Position 11 */	new int[4] {-218, 299, 30, 3068},
@@ -1453,9 +1435,15 @@ namespace DOL.GS.Housing
 						null,
 						null,
 	/* Position 15 */	new int[4] {370, -39, -306, 725},
+/*16 new - old=9*/		new int[4] {-163, 166, 30, 3246},
+/*17 new - old=10*/		new int[4] {306, 249, -307, 1310},
+/*18 new - old=11*/ 	new int[4] {-218, 299, 30, 3068},
 						null,
 						null,
-	                	null
+						null,
+						null,
+						null,
+/*24 new -  old=15*/	new int[4] {370, -39, -306, 725},
 					},
 				// ALB (model 2)
 				new int[19][]
