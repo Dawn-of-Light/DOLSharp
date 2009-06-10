@@ -1550,10 +1550,9 @@ namespace DOL.GS
 					}
 				}
 
-				//We've added all the styles to their respective lists.  Now lets go through and short them by their level
-				Dictionary<string, List<Style>>.Enumerator enumer = m_styleLists.GetEnumerator();
-				while (enumer.MoveNext())
-					enumer.Current.Value.Sort(delegate(Style style1, Style style2) { return style1.SpecLevelRequirement.CompareTo(style2.SpecLevelRequirement); });
+				// We've added all the styles to their respective lists.  Now lets go through and sort them by their level
+
+                SortStylesByLevel();
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Length : 0));
@@ -1843,6 +1842,53 @@ namespace DOL.GS
 			else
 				m_spellLinesByName.Add(line.KeyName, line);
 		}
+
+        /// <summary>
+        /// Add a new style to a specialization.  If the specialization does not exist it will be created.
+        /// After adding all styles call SortStyles to sort the list by level
+        /// </summary>
+        /// <param name="style"></param>
+        public static void AddStyle(Specialization spec, DBStyle style)
+        {
+            string hashKey = string.Format("{0}|{1}", style.SpecKeyName, style.ClassId);
+            List<Style> styleList;
+            if (!m_styleLists.TryGetValue(hashKey, out styleList))
+            {
+                styleList = new List<Style>();
+                m_styleLists.Add(hashKey, styleList);
+            }
+
+            Style st = new Style(style);
+
+            //(procs) Add procs to the style, 0 is used for normal style
+            if (m_styleSpells.ContainsKey(st.ID))
+            {
+                // now we add every proc to the style (even if ClassID != 0)
+                foreach (byte classID in Enum.GetValues(typeof(eCharacterClass)))
+                {
+                    if (m_styleSpells[st.ID].ContainsKey(classID))
+                    {
+                        foreach (DBStyleXSpell styleSpells in m_styleSpells[st.ID][classID])
+                            st.Procs.Add(styleSpells);
+                    }
+                }
+            }
+            styleList.Add(st);
+
+            long styleKey = ((long)st.ID << 32) | (uint)style.ClassId;
+            if (!m_stylesByIDClass.ContainsKey(styleKey))
+                m_stylesByIDClass.Add(styleKey, st);
+
+            if (!m_specsByName.ContainsKey(spec.KeyName))
+                RegisterSpec(spec);
+        }
+
+        public static void SortStylesByLevel()
+        {
+            Dictionary<string, List<Style>>.Enumerator enumer = m_styleLists.GetEnumerator();
+            while (enumer.MoveNext())
+                enumer.Current.Value.Sort(delegate(Style style1, Style style2) { return style1.SpecLevelRequirement.CompareTo(style2.SpecLevelRequirement); });
+        }
 
 		public static void RegisterSpec(Specialization spec)
 		{
