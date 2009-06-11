@@ -579,8 +579,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (player.CurrentHouse == null)
 				return;
 
-			log.Error("House Model: " + player.CurrentHouse.Model + " Position: " + position + " Offset: " + (player.X - player.CurrentHouse.X) + ", " + (player.Y - player.CurrentHouse.Y) + ", " + (player.Z - 25000) + ", " + (player.Heading - player.CurrentHouse.Heading));
-
+			HouseHookpointOffset a = new HouseHookpointOffset();
+			a.Model = player.CurrentHouse.Model;
+			a.Hookpoint = position;
+			a.OffX = player.X - player.CurrentHouse.X;
+			a.OffY = player.Y - player.CurrentHouse.Y;
+			a.OffZ = player.Z - 25000;
+			a.OffH = player.Heading - player.CurrentHouse.Heading;
+			GameServer.Database.AddNewObject(a);
+			House.AddNewOffset(a);
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
         protected static void HouseRemovalDialogue(GamePlayer player, byte response)
