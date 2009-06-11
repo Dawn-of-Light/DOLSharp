@@ -418,6 +418,36 @@ namespace DOL.GS.PacketHandler.Client.v168
 									}
 							}
 						}
+						//only players(plvl 1) are disabled. GMs and Admins can still be toa race.
+						if (Properties.DISABLE_TOA_RACE && client.Account.PrivLevel == 1)
+						{
+							switch ((eRace)ch.Race)
+							{
+								case eRace.HalfOgre:
+								case eRace.Frostalf:
+								case eRace.Shar:
+									{
+										log.Error(client.Account.Name + " tried to create a toa race, creation of them is disabled");
+										client.Out.SendCharacterOverview((eRealm)ch.Realm);
+										return 1;
+									}
+							}
+						}
+						//only players(plvl 1) are disabled. GMs and Admins can still be si race.
+						if (Properties.DISABLE_SI_RACE && client.Account.PrivLevel == 1)
+						{
+							switch ((eRace)ch.Race)
+							{
+								case eRace.Inconnu:
+								case eRace.Valkyn:
+								case eRace.Sylvan:
+									{
+										log.Error(client.Account.Name + " tried to create a si race, creation of them is disabled");
+										client.Out.SendCharacterOverview((eRealm)ch.Realm);
+										return 1;
+									}
+							}
+						}
 						ch.Gender = ((startRaceGender >> 4) & 0x01);
 						//DOLConsole.WriteLine("startRaceGender="+startRaceGender+"; Race="+ch.Race+"; Gender="+ch.Gender);
 
