@@ -884,6 +884,9 @@ namespace DOL.GS
 			m_propertyNames.Add(eProperty.StyleAbsorb, "Style Absorb");
 			m_propertyNames.Add(eProperty.ArcaneSyphon, "Arcane Syphon");
 			m_propertyNames.Add(eProperty.RealmPoints, "Realm Points");
+            //[Freya] Nidel
+            m_propertyNames.Add(eProperty.BountyPoints, "Bounty Points");
+            m_propertyNames.Add(eProperty.XpPoints, "Xp points");
 
 			// skills
 			m_propertyNames.Add(eProperty.Skill_Two_Handed, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
