@@ -1649,7 +1649,10 @@ Type    Description           Id
 							|| bonusCat == (int)eProperty.Conversion
 							|| bonusCat == (int)eProperty.ExtraHP
 							|| bonusCat == (int)eProperty.RealmPoints
-							|| bonusCat == (int)eProperty.StyleAbsorb)
+							|| bonusCat == (int)eProperty.StyleAbsorb
+                            || bonusCat == (int)eProperty.ArcaneSyphon
+                            || bonusCat == (int)eProperty.BountyPoints
+                            || bonusCat == (int)eProperty.XpPoints)
 						? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
 							: LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.Points")
 					));

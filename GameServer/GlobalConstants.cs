@@ -788,6 +788,9 @@ namespace DOL.GS
 		ResCapBonus_Last = 229,
         #endregion
 
+        //[Freya] Nidel: 
+        BountyPoints = 247,
+        XpPoints = 248,
 		//Eden - new bonus
 		Resist_Natural = 249,
 		ExtraHP = 250,
@@ -795,8 +798,7 @@ namespace DOL.GS
 		StyleAbsorb = 252,
 		RealmPoints = 253,
 		ArcaneSyphon = 254,
-
-        MaxProperty = 255,
+        MaxProperty = 255
 	}
 
 	/// <summary>

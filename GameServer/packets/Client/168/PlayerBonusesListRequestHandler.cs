@@ -76,7 +76,7 @@ namespace DOL.GS.PacketHandler.Client.v168
             //cap at 25 with no chance of going over
             //DebuffEffectivness, BuffEffectiveness, HealingEffectiveness
             //SpellDuration
-            if (iBonusType == (int)eProperty.DebuffEffectivness || iBonusType == (int)eProperty.BuffEffectiveness || iBonusType == (int)eProperty.HealingEffectiveness || iBonusType == (int)eProperty.SpellDuration)
+            if (iBonusType == (int)eProperty.DebuffEffectivness || iBonusType == (int)eProperty.BuffEffectiveness || iBonusType == (int)eProperty.HealingEffectiveness || iBonusType == (int)eProperty.SpellDuration || iBonusType == (int)eProperty.ArcaneSyphon)
             {
                 if (iBonus > 25)
                     iBonus = 25;
@@ -164,9 +164,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			info.Add(" ");
 			info.Add(LanguageMgr.GetTranslation(client, "PlayerBonusesListRequestHandler.HandlePacket.Special"));
 			
-			GamePlayer player = client.Player;
-			int[] bonusToBeDisplayed;//This is an Array of the bonuses that show up in the Bonuns Snapshot on Live, the only ones that really need to be there.
-			bonusToBeDisplayed = new int[30] { 10, 150, 151, 153, 154, 155, 173, 174, 179, 180, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 210 };
+            //This is an Array of the bonuses that show up in the Bonuns Snapshot on Live, the only ones that really need to be there.
+			int[] bonusToBeDisplayed = new int[36] { 10, 150, 151, 153, 154, 155, 173, 174, 179, 180, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 247, 248, 251, 252, 253, 254, 210 };
 			for (int i = 0; i < (int)eProperty.MaxProperty; i++)
 			{
 				if ((client.Player.ItemBonus[i] > 0) && ((Array.BinarySearch(bonusToBeDisplayed, i)) >= 0)) //Tiny edit here to add the binary serach to weed out the non essential bonuses

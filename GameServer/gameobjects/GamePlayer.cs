@@ -3389,7 +3389,14 @@ namespace DOL.GS
 				//rp rate modifier
 				double modifier = ServerProperties.Properties.RP_RATE;
 				if (modifier != -1)
-					amount = (long)((double)amount * modifier);
+					amount = (long)(amount * modifier);
+
+                //[Freya] Nidel: ToA Rp Bonus
+			    long rpBonus = GetModified(eProperty.RealmPoints);
+                if (rpBonus > 0)
+                {
+                    amount += (amount*rpBonus)/100;
+                }
 			}
 
 			base.GainRealmPoints(amount);
@@ -3501,7 +3508,14 @@ namespace DOL.GS
 				//bp rate modifier
 				double modifier = ServerProperties.Properties.BP_RATE;
 				if (modifier != -1)
-					amount = (long)((double)amount * modifier);
+					amount = (long)(amount * modifier);
+
+                //[Freya] Nidel: ToA Bp Bonus
+			    long bpBonus = GetModified(eProperty.BountyPoints);
+                if (bpBonus > 0)
+                {
+                    amount += (amount*bpBonus)/100;
+                }
 			}
 
 			base.GainBountyPoints(amount);
@@ -3965,6 +3979,13 @@ namespace DOL.GS
 				expTotal += expOutpostBonus;
 				expTotal += expGroupBonus;
 				expTotal += expCampBonus;
+
+                // [Freya] Nidel: ToA Xp Bonus
+                long xpBonus = GetModified(eProperty.XpPoints);
+                if (xpBonus > 0)
+                {
+                    expTotal += (expTotal*xpBonus)/100;
+                }
 			}
 
 			// Get Champion Experience too

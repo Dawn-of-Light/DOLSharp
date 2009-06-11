@@ -956,9 +956,20 @@ namespace DOL.GS.Spells
 			{
 				if (FungalUnion != null && Util.Chance(10))
 					return 0;
-			}
+            }
 
-			double basepower = m_spell.Power; //<== defined a basevar first then modified this base-var to tell %-costs from absolut-costs
+            #region [Freya] Nidel: Arcane Syphon chance
+		    int syphon = Caster.GetModified(eProperty.ArcaneSyphon);
+            if (syphon > 0)
+            {
+                if(Util.Chance(syphon))
+                {
+                    return 0;
+                }
+            }
+            #endregion
+
+            double basepower = m_spell.Power; //<== defined a basevar first then modified this base-var to tell %-costs from absolut-costs
 
 			// percent of maxPower if less than zero
 			if (basepower < 0)
