@@ -42,6 +42,7 @@ namespace DOL.GS.Housing
 
 		public static bool Start()
 		{
+			House.LoadHookpointOffsets();
 			m_houselists = new Hashtable();
 			m_idlist = new Hashtable();
 			int regions = 0;

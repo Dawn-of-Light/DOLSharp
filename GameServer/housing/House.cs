@@ -1409,295 +1409,58 @@ namespace DOL.GS.Housing
 		}
 
 		#region Housepoint location
+
+		public static void AddNewOffset(HouseHookpointOffset o)
+		{
+			RELATIVE_HOOKPOINTS_COORDS[o.Model][o.Hookpoint] = new int[] { o.OffX, o.OffY, o.OffZ, o.OffH };
+		}
+		public static void LoadHookpointOffsets()
+		{
+			//initialise array
+			for (int i = 12; i > 0; i--)
+			{
+				for (int j = 1; j < House.RELATIVE_HOOKPOINTS_COORDS[i].Length; j++)
+				{
+					House.RELATIVE_HOOKPOINTS_COORDS[i][j] = null;
+				}
+			}
+			HouseHookpointOffset[] objs = (HouseHookpointOffset[])GameServer.Database.SelectAllObjects(typeof(HouseHookpointOffset));
+			foreach (HouseHookpointOffset o in objs)
+			{
+				AddNewOffset(o);
+			}
+		}
 		/// <summary>
 		/// Housing hookpoint coordinates offset relative to a house
 		/// </summary>
-		protected static readonly int[][][] RELATIVE_HOOKPOINTS_COORDS = new int[][][]
+		private static readonly int[][][] RELATIVE_HOOKPOINTS_COORDS = new int[][][]
 			{
 				// NOTHING : Lot
 				null,
 				// ALB Cottage (model 1)
-				new int[25][]
-					{
-	/* Position 0 */	new int[4] {-196, -858, -305, -105},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {349, 430, 30, 858},
-						null,
-						null,
-/*8 new - old=5*/		new int[4] {349, 430, 30, 858},
-	/* Position 9 */	new int[4] {-163, 166, 30, 3246},
-	/* Position 10 */	new int[4] {306, 249, -307, 1310},
-	/* Position 11 */	new int[4] {-218, 299, 30, 3068},
-						null,
-						null,
-						null,
-	/* Position 15 */	new int[4] {370, -39, -306, 725},
-/*16 new - old=9*/		new int[4] {-163, 166, 30, 3246},
-/*17 new - old=10*/		new int[4] {306, 249, -307, 1310},
-/*18 new - old=11*/ 	new int[4] {-218, 299, 30, 3068},
-						null,
-						null,
-						null,
-						null,
-						null,
-/*24 new -  old=15*/	new int[4] {370, -39, -306, 725},
-					},
+				new int[25][],
 				// ALB (model 2)
-				new int[19][]
-					{
-	/* Position 0 */	new int[4] {7, -855, -429, 3837},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {-542, 437, -95, 2877},
-						new int[4] {-518, 175, 175, 3584},
-						null,
-						null,
-	/* Position 9 */	new int[4] {-27, 166, -95, 708},
-	/* Position 10 */	new int[4] {-496, 250, -432, 2696},
-	/* Position 11 */	new int[4] {-19, 684, 173, 1419},
-						new int[4] {17, 320, -90, 744},
-						null,
-						null,
-	/* Position 15 */	new int[4] {327, -106, -430, -166},
-						new int[4] {469, -108, -431, 3826},
-						null,
-	                	null
-					},
+				new int[25][],
 				// ALB Villa(model 3)
-				new int[19][]
-					{
-	/* Position 0 */	new int[4] {68, -850, -542, 3886},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {88, 687, -209, 1661},
-						new int[4] {89, 836, 60, 1926},
-						new int[4] {-432, 920, 318, 2896},
-						null,
-	/* Position 9 */	new int[4] {-462, 144, -208, 3399},
-	/* Position 10 */	new int[4] {-489, -9092, -542, 3350},
-	/* Position 11 */	new int[4] {-620, 980, 60, 2350},
-						new int[4] {-479, 131, 320, 3252},
-						new int[4] {-490, 955, -202, 2402},
-						null,
-	/* Position 15 */	new int[4] {377, -98, -541, -143},
-						new int[4] {574, 121, -541, 845},
-						new int[4] {558, 321, -540, 1232},
-	                	null
-					},
+				new int[25][],
 				// ALB Mansion(model 4)
-				new int[19][]
-					{
-	/* Position 0 */	new int[4] {-2058, -868, -1065, 2924},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {-31, 967, 750, 1204},
-						new int[4] {-591, 807, -76, 2511},
-						new int[4] {-616, 107, 198, 3310},
-						null,
-	/* Position 9 */	new int[4] {-102, 44, -344, 755},
-	/* Position 10 */	new int[4] {-579, 127, -680, 2540},
-	/* Position 11 */	new int[4] {-211, -102, -74, 3819},
-						new int[4] {-87, 568, 199, 1414},
-						new int[4] {-41, 382, 749, 236},
-						new int[4] {-600, 318, -345, 2896},
-	/* Position 15 */	new int[4] {246, -225, -679, 3859},
-						new int[4] {389, -232, -679, 4141},
-						new int[4] {245, 185, -680, 1882},
-	                	new int[4] {389, 186, -679, 1968}
-					},
+				new int[25][],
 				// MID Cottage (model 5)
-				new int[19][]
-					{
-	/* Position 0 */	new int[4] {-302, -514, -279, -175},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {-119, 226, 101, 2887},
-						null,
-						null,
-						null,
-	/* Position 9 */	new int[4] {607, 156, 99, 829},
-	/* Position 10 */	new int[4] {-143, 289, -315, 901},
-	/* Position 11 */	new int[4] {589, 321, 99, 829},
-						null,
-						null,
-						null,
-	/* Position 15 */	new int[4] {-101, -426, -319, 797},
-						null,
-						null,
-	                	null
-					},
+				new int[25][],
 				// MID (model 6)
-				new int[19][]
-					{
-	/* Position 0 */	new int[4] {-528, -819, -680, -112},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {286, 692, -297, 1378},
-						new int[4] {-532, 298, -34, 2264},
-						null,
-						null,
-	/* Position 9 */	new int[4] {-545, -361, -295, 3391},
-	/* Position 10 */	new int[4] {299, -217, -708, -156},
-	/* Position 11 */	new int[4] {-317, -607, -31, 3232},
-						new int[4] {-458, -460, -299, 3297},
-						null,
-						null,
-	/* Position 15 */	new int[4] {-469, 653, -720, 1846},
-						new int[4] {-668, 650, -720, 2287},
-						null,
-	                	null
-					},
+				new int[25][],
 				// MID (model 7)
-				new int[19][]
-					{
-	/* Position 0 */	new int[4] {-929, 403, -681, 3009},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {-442, 363, -288, 2815},
-						new int[4] {-79, -613, -30, -141},
-						new int[4] {-421, 450, 204, 2333},
-						null,
-	/* Position 9 */	new int[4] {301, -464, -290, 380},
-	/* Position 10 */	new int[4] {-411, 476, -34, 2216},
-	/* Position 11 */	new int[4] {120, -441, 205, -40},
-						new int[4] {-268, -412, -708, 2884},
-						new int[4] {403, -230, -294, 590},
-						null,
-	/* Position 15 */	new int[4] {521, 415, -720, 903},
-						new int[4] {438, 538, -720, 1283},
-						new int[4] {519, 297, -720, 714},
-	                	null
-					},
+				new int[25][],
 				// MID (model 8)
-				new int[19][]
-					{
-	/* Position 0 */	null,
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {-589, -241, 461, 3526},
-						new int[4] {416, 401, -47, 1116},
-						new int[4] {-578, 430, 224, 2798},
-						null,
-	/* Position 9 */	new int[4] {358, -495, -318, 308},
-	/* Position 10 */	new int[4] {380, -318, -48, 469},
-	/* Position 11 */	new int[4] {-535, -302, 227, 3805},
-						new int[4] {162, -158, 459, 583},
-						new int[4] {526, 45, -731, 1508},
-						new int[4] {-590, 109, -319, 2851},
-	/* Position 15 */	new int[4] {478, -912, -1076, 18},
-						new int[4] {569, -823, -1077, 357},
-						new int[4] {140, -1035, -1077, -27},
-	                	new int[4] {359, -959, -1077, -42}
-					},
+				new int[25][],
 				// MID (model 9)
-				new int[19][]
-					{
-	/* Position 0 */	new int[4] {-537, -515, -272, 3278},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {691, 252, 155, 936},
-						null,
-						null,
-						null,
-	/* Position 9 */	new int[4] {145, 450, 156, 2777},
-	/* Position 10 */	new int[4] {-226, 2, -278, 2303},
-	/* Position 11 */	new int[4] {201, 528, 155, 2388},
-						null,
-						null,
-						null,
-	/* Position 15 */	new int[4] {86, -356, -277, 201},
-						null,
-						null,
-	                	null,
-					},
+				new int[25][],
 				// MID (model 10)
-				new int[19][]
-					{
-	/* Position 0 */	new int[4] {-535, -451, -370, 3294},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {618, 65, 62, 384},
-						new int[4] {551, 520, 242, 1208},
-						null,
-						null,
-	/* Position 9 */	new int[4] {146, 510, 62, 2921},
-	/* Position 10 */	new int[4] {-223, 64, -372, 2380},
-	/* Position 11 */	new int[4] {186, 90, 243, 3273},
-						new int[4] {136, 361, 64, 2848},
-						null,
-						null,
-	/* Position 15 */	new int[4] {157, -635, -370, 3407},
-						new int[4] {399, -434, -370, 1336},
-						null,
-	                	null,
-					},
+				new int[25][],
 				// MID (model 11)
-				new int[19][]
-					{
-	/* Position 0 */	new int[4] {-529, -511, -531, 3361},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {661, -36, -98, 673},
-						new int[4] {143, 354, 127, 2945},
-						new int[4] {651, 375, 291, 900},
-						null,
-	/* Position 9 */	new int[4] {647, 726, -97, 1571},
-	/* Position 10 */	new int[4] {-218, 16, -532, 2289},
-	/* Position 11 */	new int[4] {418, -52, 128, -116},
-						new int[4] {219, 712, 290, 2815},
-						new int[4] {578, 759, -95, 1712},
-						null,
-	/* Position 15 */	new int[4] {164, -682, -531, 3430},
-						new int[4] {412, -474, -531, 1208},
-						new int[4] {396, -695, -531, 282},
-	                	null,
-					},
+				new int[25][],
 				// MID (model 12)
-				new int[19][]
-					{
-	/* Position 0 */	new int[4] {-909, -1301, -593, 2897},
-						null,
-						null,
-						null,
-						null,
-	/* Position 5 */	new int[4] {129, -17, 549, 1058},
-						new int[4] {-249, -111, 45, 2659},
-						new int[4] {-233, 41, -137, 2394},
-						null,
-	/* Position 9 */	new int[4] {-70, -521, 549, 3910},
-	/* Position 10 */	new int[4] {239, -495, 44, 636},
-	/* Position 11 */	new int[4] {243, -496, -136, 465},
-						new int[4] {-242, -615, -404, 3594},
-						new int[4] {428, -422, -852, 644},
-						new int[4] {288, 201, -404, 795},
-	/* Position 15 */	new int[4] {352, 591, -642, 3862},
-						new int[4] {696, 591, -644, -130},
-						new int[4] {347, 942, -643, 1865},
-	                	new int[4] {678, 938, -644, 1952},
-					},
+				new int[25][],
 			};
 
 		public Point3D GetHookpointLocation(uint n)
