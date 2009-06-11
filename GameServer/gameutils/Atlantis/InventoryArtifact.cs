@@ -577,6 +577,8 @@ namespace DOL.GS
 				return true;
 			if ((bonusType >= (int)eProperty.EvadeChance) && (bonusType <= (int)eProperty.SpeedDecreaseDuration))
 				return true;
+            if ((bonusType >= (int)eProperty.BountyPoints) && (bonusType <= (int)eProperty.ArcaneSyphon))
+                return true;
 			return false;
 		}
 

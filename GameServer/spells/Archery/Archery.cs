@@ -199,7 +199,20 @@ namespace DOL.GS.Spells
 
         public override int CalculateNeededPower(GameLiving target) { return 0; }
 
-        public override int CalculateEnduranceCost() { return (int)(Caster.MaxEndurance * (Spell.Power * .01)); }
+        public override int CalculateEnduranceCost()
+        {
+            #region [Freya] Nidel: Arcane Syphon chance
+		    int syphon = Caster.GetModified(eProperty.ArcaneSyphon);
+            if (syphon > 0)
+            {
+                if(Util.Chance(syphon))
+                {
+                    return 0;
+                }
+            }
+            #endregion
+            return (int)(Caster.MaxEndurance * (Spell.Power * .01));
+        }
 		
         public override bool CasterIsAttacked(GameLiving attacker)
         {
