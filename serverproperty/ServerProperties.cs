@@ -211,6 +211,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("disable_minotaurs", "Disable minotaurs from being created", false)]
 		public static readonly bool DISABLE_MINOTAURS;
+		
+		/// <summary>
+		/// Disable si race from being created
+		/// </summary>
+		[ServerProperty("disable_si_race", "Disable si race from being created", false)]
+		public static readonly bool DISABLE_SI_RACE;
+		
+		/// <summary>
+		/// Disable toa race from being created
+		/// </summary>
+		[ServerProperty("disable_toa_race", "Disable toa race from being created", false)]
+		public static readonly bool DISABLE_TOA_RACE;
 
 		/// <summary>
 		/// Should the server load the example scripts
