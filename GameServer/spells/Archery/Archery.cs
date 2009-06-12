@@ -197,7 +197,7 @@ namespace DOL.GS.Spells
             return base.CalculateCastingTime();
         }
 
-        public override int CalculateNeededPower(GameLiving target) { return 0; }
+        public override int PowerCost(GameLiving target) { return 0; }
 
         public override int CalculateEnduranceCost()
         {

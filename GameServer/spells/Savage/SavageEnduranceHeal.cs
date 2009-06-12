@@ -35,7 +35,7 @@ namespace DOL.GS.Spells
 			m_caster.Health -= value;
 		}
 
-		public override int CalculateNeededPower(GameLiving target)
+		public override int PowerCost(GameLiving target)
 		{
 			int cost = 0;
 			if (m_spell.Power < 0)
@@ -47,7 +47,7 @@ namespace DOL.GS.Spells
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			int cost = CalculateNeededPower(Caster);
+			int cost = PowerCost(Caster);
 			if (Caster.Health < cost)
 			{
 				MessageToCaster("You do not have enough health to cast that!", eChatType.CT_SpellResisted);

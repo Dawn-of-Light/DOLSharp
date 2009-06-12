@@ -74,7 +74,7 @@ namespace DOL.GS.Spells
 			if (FSTarget != Caster)
 			{
 				GameEventMgr.AddHandler(FSTarget, GameLivingEvent.AttackFinished, new DOLEventHandler(CancelSpell));
-				GameEventMgr.AddHandler(FSTarget, GameLivingEvent.CastSpell, new DOLEventHandler(CancelSpell));
+				GameEventMgr.AddHandler(FSTarget, GameLivingEvent.CastStarting, new DOLEventHandler(CancelSpell));
 			}
 
 			//Send the spell messages
@@ -99,7 +99,7 @@ namespace DOL.GS.Spells
 			if (FSTarget != Caster)
 			{
 				GameEventMgr.RemoveHandler(FSTarget, GameLivingEvent.AttackFinished, new DOLEventHandler(CancelSpell));
-				GameEventMgr.RemoveHandler(FSTarget, GameLivingEvent.CastSpell, new DOLEventHandler(CancelSpell));
+				GameEventMgr.RemoveHandler(FSTarget, GameLivingEvent.CastStarting, new DOLEventHandler(CancelSpell));
 			}
 
 			timer.Stop();
@@ -141,7 +141,7 @@ namespace DOL.GS.Spells
 
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= CalculateNeededPower(target);
+			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
