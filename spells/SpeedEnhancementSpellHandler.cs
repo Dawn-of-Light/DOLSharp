@@ -36,7 +36,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			Caster.Mana -= CalculateNeededPower(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -155,7 +155,7 @@ namespace DOL.GS.Spells
 			if (living == null) return;
 			AttackedByEnemyEventArgs attackedByEnemy = arguments as AttackedByEnemyEventArgs;
 			AttackFinishedEventArgs attackFinished = arguments as AttackFinishedEventArgs;
-			CastSpellEventArgs castFinished = arguments as CastSpellEventArgs;
+			CastStartingEventArgs castFinished = arguments as CastStartingEventArgs;
 			AttackData ad = null;
 			ISpellHandler sp = null;
 			if (attackedByEnemy != null)

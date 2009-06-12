@@ -25,7 +25,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= CalculateNeededPower(target);
+            m_caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -64,7 +64,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= CalculateNeededPower(target);
+            m_caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
         public override void OnEffectStart(GameSpellEffect effect)

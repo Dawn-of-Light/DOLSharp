@@ -51,7 +51,7 @@ namespace DOL.GS.Spells
         protected virtual void BeginEffect()
         {
             GameEventMgr.AddHandler(m_caster, GamePlayerEvent.AttackFinished, new DOLEventHandler(EventAction));
-            GameEventMgr.AddHandler(m_caster, GamePlayerEvent.CastSpell, new DOLEventHandler(EventAction));
+            GameEventMgr.AddHandler(m_caster, GamePlayerEvent.CastStarting, new DOLEventHandler(EventAction));
             GameEventMgr.AddHandler(m_caster, GamePlayerEvent.Moving, new DOLEventHandler(EventAction));
             GameEventMgr.AddHandler(m_caster, GamePlayerEvent.Dying, new DOLEventHandler(EventAction));
             GameEventMgr.AddHandler(m_caster, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(EventAction));
@@ -83,7 +83,7 @@ namespace DOL.GS.Spells
                 CancelPulsingSpell(Caster, Spell.SpellType);
 
             GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.AttackFinished, new DOLEventHandler(EventAction));
-            GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.CastSpell, new DOLEventHandler(EventAction));
+            GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.CastStarting, new DOLEventHandler(EventAction));
             GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.Moving, new DOLEventHandler(EventAction));
             GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.Dying, new DOLEventHandler(EventAction));
             GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(EventAction));

@@ -52,7 +52,7 @@ namespace DOL.GS
 		/// Sets the controlled object for this player
 		/// </summary>
 		/// <param name="controlledNpc"></param>
-		public override void SetControlledNpc(DOL.AI.Brain.IControlledBrain controlledNpc)
+		public override void SetControlledNpc(IControlledBrain controlledNpc)
 		{
 			m_savedPetHealthPercent = (ControlledNpc != null)
 				? (int)ControlledNpc.Body.HealthPercent : 0;
@@ -227,5 +227,28 @@ namespace DOL.GS
 			//We need to clear the spell effect too!
 			Shade(false);
 		}
+
+        public override void Notify(DOLEvent e, object sender, EventArgs args)
+        {
+            GameNPC pet = ControlledNpc.Body;
+
+            if (pet != null && sender == pet && e == GameLivingEvent.CastStarting &&
+                args is CastStartingEventArgs)
+            {
+                ISpellHandler spellHandler = (args as CastStartingEventArgs).SpellHandler;
+
+                if (spellHandler != null)
+                {
+                    int powerCost = spellHandler.PowerCost(this);
+
+                    if (powerCost > 0)
+                        ChangeMana(this, eManaChangeType.Spell, -powerCost);
+                }
+
+                return;
+            }
+
+            base.Notify(e, sender, args);
+        }
 	}
 }

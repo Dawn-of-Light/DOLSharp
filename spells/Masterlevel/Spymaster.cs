@@ -45,7 +45,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= CalculateNeededPower(target);
+			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 		public override bool IsOverwritable(GameSpellEffect compare)
@@ -434,7 +434,7 @@ namespace DOL.GS.Spells
 					//effect.Owner.BuffBonusCategory1[(int)eProperty.Skill_Stealth] += 80;
 					GameEventMgr.AddHandler(playerTarget, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
 					GameEventMgr.AddHandler(playerTarget, GamePlayerEvent.AttackFinished, new DOLEventHandler(PlayerAction));
-					GameEventMgr.AddHandler(playerTarget, GamePlayerEvent.CastSpell, new DOLEventHandler(PlayerAction));
+					GameEventMgr.AddHandler(playerTarget, GamePlayerEvent.CastStarting, new DOLEventHandler(PlayerAction));
 					GameEventMgr.AddHandler(playerTarget, GamePlayerEvent.Dying, new DOLEventHandler(PlayerAction));
 				}
 			}
@@ -454,7 +454,7 @@ namespace DOL.GS.Spells
 				//effect.Owner.BuffBonusCategory1[(int)eProperty.Skill_Stealth] -= 80;
 				GamePlayer playerTarget = effect.Owner as GamePlayer;
 				GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.AttackFinished, new DOLEventHandler(PlayerAction));
-				GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.CastSpell, new DOLEventHandler(PlayerAction));
+				GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.CastStarting, new DOLEventHandler(PlayerAction));
 				GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
 				GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.Dying, new DOLEventHandler(PlayerAction));
 				playerTarget.Stealth(false);
@@ -476,9 +476,9 @@ namespace DOL.GS.Spells
 				OnEffectExpires(m_effect, false);
 				return;
 			}
-			if (args is CastSpellEventArgs)
+			if (args is CastStartingEventArgs)
 			{
-				if ((args as CastSpellEventArgs).SpellHandler.Caster != Caster)
+				if ((args as CastStartingEventArgs).SpellHandler.Caster != Caster)
 					return;
 				MessageToLiving((GameLiving)player, "You are casting a spell. Your camouflage fades!", eChatType.CT_SpellResisted);
 				OnEffectExpires(m_effect, true);

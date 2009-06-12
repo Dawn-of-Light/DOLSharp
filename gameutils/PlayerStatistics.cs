@@ -297,7 +297,7 @@ namespace DOL.GS.GameEvents
 		public static void FinishCastSpellCallback(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer caster = sender as GamePlayer;
-			CastSpellEventArgs fargs = args as CastSpellEventArgs;
+			CastStartingEventArgs fargs = args as CastStartingEventArgs;
 
 			if (caster == null || fargs == null)
 				return;

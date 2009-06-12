@@ -275,7 +275,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= CalculateNeededPower(target);
+            m_caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
         public override bool IsOverwritable(GameSpellEffect compare)
@@ -296,7 +296,7 @@ namespace DOL.GS.Spells
                 {
                     GameEventMgr.AddHandler(casterPlayer, GamePlayerEvent.Moving, new DOLEventHandler(PlayerMoves));
                     GameEventMgr.AddHandler(warder, GameLivingEvent.Dying, new DOLEventHandler(BattleWarderDie));
-                    GameEventMgr.AddHandler(casterPlayer, GamePlayerEvent.CastSpell, new DOLEventHandler(PlayerMoves));
+                    GameEventMgr.AddHandler(casterPlayer, GamePlayerEvent.CastStarting, new DOLEventHandler(PlayerMoves));
                     GameEventMgr.AddHandler(casterPlayer, GamePlayerEvent.AttackFinished, new DOLEventHandler(PlayerMoves));
                     warder.X = casterPlayer.GroundTarget.X;
                     warder.Y = casterPlayer.GroundTarget.Y;
@@ -324,7 +324,7 @@ namespace DOL.GS.Spells
             {
                 GamePlayer casterPlayer = effect.Owner as GamePlayer;
                 GameEventMgr.RemoveHandler(casterPlayer, GamePlayerEvent.Moving, new DOLEventHandler(PlayerMoves));
-                GameEventMgr.RemoveHandler(casterPlayer, GamePlayerEvent.CastSpell, new DOLEventHandler(PlayerMoves));
+                GameEventMgr.RemoveHandler(casterPlayer, GamePlayerEvent.CastStarting, new DOLEventHandler(PlayerMoves));
                 GameEventMgr.RemoveHandler(casterPlayer, GamePlayerEvent.AttackFinished, new DOLEventHandler(PlayerMoves));
             }
             effect.Owner.EffectList.Remove(effect);
@@ -450,7 +450,7 @@ namespace DOL.GS.Spells
         /// </summary>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= CalculateNeededPower(target);
+            m_caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -598,7 +598,7 @@ namespace DOL.GS.Spells
         /// </summary>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= CalculateNeededPower(target);
+            m_caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -725,7 +725,7 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= CalculateNeededPower(target);
+            m_caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
