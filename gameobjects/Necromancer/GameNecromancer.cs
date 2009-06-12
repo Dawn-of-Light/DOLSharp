@@ -230,22 +230,25 @@ namespace DOL.GS
 
         public override void Notify(DOLEvent e, object sender, EventArgs args)
         {
-            GameNPC pet = ControlledNpc.Body;
-
-            if (pet != null && sender == pet && e == GameLivingEvent.CastStarting &&
-                args is CastStartingEventArgs)
+            if (ControlledNpc != null)
             {
-                ISpellHandler spellHandler = (args as CastStartingEventArgs).SpellHandler;
+                GameNPC pet = ControlledNpc.Body;
 
-                if (spellHandler != null)
+                if (pet != null && sender == pet && e == GameLivingEvent.CastStarting &&
+                    args is CastStartingEventArgs)
                 {
-                    int powerCost = spellHandler.PowerCost(this);
+                    ISpellHandler spellHandler = (args as CastStartingEventArgs).SpellHandler;
 
-                    if (powerCost > 0)
-                        ChangeMana(this, eManaChangeType.Spell, -powerCost);
+                    if (spellHandler != null)
+                    {
+                        int powerCost = spellHandler.PowerCost(this);
+
+                        if (powerCost > 0)
+                            ChangeMana(this, eManaChangeType.Spell, -powerCost);
+                    }
+
+                    return;
                 }
-
-                return;
             }
 
             base.Notify(e, sender, args);

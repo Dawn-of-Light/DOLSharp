@@ -110,15 +110,12 @@ namespace DOL.GS.Spells
 		public override void FinishSpellCast(GameLiving target)
 		{
 			GamePlayer player = Caster as GamePlayer;
-			if (player == null || player.ControlledNpc == null) return;
 
-			// Now deduct mana for the spell (the pet will cast for free,
-			// mana pool is *not* shared).
+			if (player == null || player.ControlledNpc == null) 
+                return;
 
-			int powerCost = PowerCost(Caster);
-			if (powerCost > 0)
-				Caster.ChangeMana(Caster, DOL.GS.GameLiving.eManaChangeType.Spell, -powerCost);
-
+            // No power cost, we'll drain power on the caster when
+            // the pet actually starts casting it.
 			// If there is an ID, create a sub spell for the pet.
 
 			ControlledNpc petBrain = player.ControlledNpc as ControlledNpc;
@@ -133,23 +130,19 @@ namespace DOL.GS.Spells
                 }
 			}
 
-            //For Facilitate Painworking
-            if (m_spell.RecastDelay > 0 && m_startReuseTimer)
+            // Facilitate Painworking.
+
+            if (Spell.RecastDelay > 0 && m_startReuseTimer)
             {
-                if (m_caster is GamePlayer)
+                foreach (Spell spell in SkillBase.GetSpellList(SpellLine.KeyName))
                 {
-                    foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
-                    {
-                        if (sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay && sp.Group == m_spell.Group)
-                        {
-                            m_caster.DisableSkill(sp, sp.RecastDelay);
-                        }
-                    }
+                    if (spell.SpellType == Spell.SpellType && 
+                        spell.RecastDelay == Spell.RecastDelay 
+                        && spell.Group == Spell.Group)
+                        Caster.DisableSkill(spell, spell.RecastDelay);
                 }
-                else if (m_caster is GameNPC)
-                    m_caster.DisableSkill(m_spell, m_spell.RecastDelay);
             }
-		}
+        }
 
 		/// <summary>
 		/// Creates a new pet spell handler.

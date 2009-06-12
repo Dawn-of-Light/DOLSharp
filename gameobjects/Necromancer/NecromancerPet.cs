@@ -500,7 +500,6 @@ namespace DOL.GS
 
 		#endregion
 
-
 		public override bool SayReceive(GameLiving source, string str)
 		{
 			return WhisperReceive(source, str);
