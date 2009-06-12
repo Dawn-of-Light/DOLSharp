@@ -80,90 +80,95 @@ namespace DOL.AI.Brain
                 else
                     MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.CastSpellAfterAction", Body.Name), eChatType.CT_System);
 			}
-			else if (e == GameNPCEvent.CastFinished)
-			{
+            else if (e == GameNPCEvent.CastFinished)
+            {
                 // Remove the spell that has finished casting from the queue, if
                 // there are more, keep casting.
 
-				RemoveSpellFromQueue();
-				if (SpellsQueued)
-					CheckSpellQueue();
-				else
-					AttackMostWanted();
+                RemoveSpellFromQueue();
+                if (SpellsQueued)
+                    CheckSpellQueue();
+                else
+                    AttackMostWanted();
 
-				Owner.Notify(GamePlayerEvent.CastFinished, Owner, args);
-			}
-			else if (e == GameNPCEvent.CastFailed)
-			{
-				// Tell owner why cast has failed.
+                Owner.Notify(GamePlayerEvent.CastFinished, Owner, args);
+            }
+            else if (e == GameNPCEvent.CastFailed)
+            {
+                // Tell owner why cast has failed.
 
-				switch ((args as CastFailedEventArgs).Reason)
-				{
-					case CastFailedEventArgs.Reasons.TargetTooFarAway:
+                switch ((args as CastFailedEventArgs).Reason)
+                {
+                    case CastFailedEventArgs.Reasons.TargetTooFarAway:
                         MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.ServantFarAwayToCast"), eChatType.CT_SpellResisted);
-						break;
-					case CastFailedEventArgs.Reasons.TargetNotInView:
+                        break;
+                    case CastFailedEventArgs.Reasons.TargetNotInView:
                         MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetCantSeeTarget", Body.Name), eChatType.CT_SpellResisted);
-						break;
-				}
-			}
-			else if (e == GameNPCEvent.CastSucceeded)
-			{
-				// The spell will cast.
+                        break;
+                }
+            }
+            else if (e == GameNPCEvent.CastSucceeded)
+            {
+                // The spell will cast.
 
-				PetSpellEventArgs spellArgs = args as PetSpellEventArgs;
-				GameLiving target = spellArgs.Target;
-				SpellLine spellLine = spellArgs.SpellLine;
+                PetSpellEventArgs spellArgs = args as PetSpellEventArgs;
+                GameLiving target = spellArgs.Target;
+                SpellLine spellLine = spellArgs.SpellLine;
 
-				// This message is for spells from the spell queue only, so suppress
-				// it for insta cast buffs coming from the pet itself.
+                // This message is for spells from the spell queue only, so suppress
+                // it for insta cast buffs coming from the pet itself.
 
-				if (spellLine.Name != (Body as NecromancerPet).PetInstaSpellLine)
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetCastingSpell", Body.Name), eChatType.CT_System);
+                if (spellLine.Name != (Body as NecromancerPet).PetInstaSpellLine)
+                {
+                    Owner.Notify(GameLivingEvent.CastStarting, this,
+                        new CastStartingEventArgs(Body.CurrentSpellHandler));
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                        "AI.Brain.Necromancer.PetCastingSpell", Body.Name), eChatType.CT_System);
+                }
 
-				// If pet is casting an offensive spell and is not set to
-				// passive, put target on its aggro list; that way, even with
-				// no attack directive from the owner it will start an attack
-				// after the cast has finished.
+                // If pet is casting an offensive spell and is not set to
+                // passive, put target on its aggro list; that way, even with
+                // no attack directive from the owner it will start an attack
+                // after the cast has finished.
 
-				if (target != Body && spellArgs.Spell.Target == "Enemy")
-				{
-					if (target != null)
-					{
-						if (!Body.AttackState && AggressionState != eAggressionState.Passive)
-						{
-							//Body.StartAttack(target);
-							//Body.StopAttack();
-							Body.SetAttackState();
-							(Owner as GamePlayer).Out.SendObjectUpdate(Body);
-							AddToAggroList(target, 1);
-						}
-					}
-				}
-			}
-			else if (e == GameNPCEvent.AttackFinished)
-			{
-				// If there are spells in the queue, hold the melee attack
-				// and start casting.
+                if (target != Body && spellArgs.Spell.Target == "Enemy")
+                {
+                    if (target != null)
+                    {
+                        if (!Body.AttackState && AggressionState != eAggressionState.Passive)
+                        {
+                            //Body.StartAttack(target);
+                            //Body.StopAttack();
+                            Body.SetAttackState();
+                            (Owner as GamePlayer).Out.SendObjectUpdate(Body);
+                            AddToAggroList(target, 1);
+                        }
+                    }
+                }
+            }
+            else if (e == GameNPCEvent.AttackFinished)
+            {
+                // If there are spells in the queue, hold the melee attack
+                // and start casting.
 
-				if (SpellsQueued)
-					CheckSpellQueue();
-				else
-					AttackMostWanted();
+                if (SpellsQueued)
+                    CheckSpellQueue();
+                else
+                    AttackMostWanted();
 
-				Owner.Notify(GamePlayerEvent.AttackFinished, Owner, args);
-			}
+                Owner.Notify(GamePlayerEvent.AttackFinished, Owner, args);
+            }
             else if (e == GameNPCEvent.OutOfTetherRange)
             {
                 // Pet past its tether, update effect icon (remaining time) and send 
                 // warnings to owner at t = 10 seconds and t = 5 seconds.
 
-				int secondsRemaining = (args as TetherEventArgs).Seconds;
-				(Owner as GameNecromancer).SetTetherTimer(secondsRemaining);
+                int secondsRemaining = (args as TetherEventArgs).Seconds;
+                (Owner as GameNecromancer).SetTetherTimer(secondsRemaining);
 
-				if (secondsRemaining == 10)
+                if (secondsRemaining == 10)
                     MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetTooFarBeLostSecIm", secondsRemaining), eChatType.CT_System);
-				else if (secondsRemaining == 5)
+                else if (secondsRemaining == 5)
                     MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetTooFarBeLostSec", secondsRemaining), eChatType.CT_System);
             }
             else if (e == GameNPCEvent.PetLost)
@@ -223,7 +228,6 @@ namespace DOL.AI.Brain
 				// Cast spell on the target, but don't automatically
 				// make it our new target.
 
-				//Hopefully this will fix the server crashes - this may be a temporary fix when we gain more information
                 if ((spellTarget != null && spellTarget.IsAlive) || spell.Target.ToLower() == "self")
 				{
 					Body.TargetObject = spellTarget;
@@ -238,7 +242,6 @@ namespace DOL.AI.Brain
 				}
 				else
 				{
-					//This spell will have no affect - lets remove it so we don't crash the system
 					RemoveSpellFromQueue();
 				}
 			}
@@ -333,9 +336,11 @@ namespace DOL.AI.Brain
 			lock (m_spellQueue)
 			{
 				if (m_spellQueue.Count >= 2)
-				{
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.SpellNoLongerInQueue", (m_spellQueue.Dequeue()).Spell.Name, Body.Name), eChatType.CT_Spell);
-				}
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                        "AI.Brain.Necromancer.SpellNoLongerInQueue", 
+                        (m_spellQueue.Dequeue()).Spell.Name, Body.Name), 
+                        eChatType.CT_Spell);
+
 				m_spellQueue.Enqueue(new SpellQueueEntry(spell, spellLine, target));
 			}
 		}
