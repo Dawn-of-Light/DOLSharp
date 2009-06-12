@@ -11,7 +11,7 @@ namespace DOL.GS.Spells
 		public VampiirStealthDetection(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= CalculateNeededPower(target);
+			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 

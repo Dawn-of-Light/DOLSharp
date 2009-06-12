@@ -17,7 +17,7 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= CalculateNeededPower(target);
+            m_caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -57,7 +57,7 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= CalculateNeededPower(target);
+            m_caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 

@@ -266,15 +266,15 @@ namespace DOL.GS.Spells
 
 		public virtual bool CastSpell(GameLiving targetObject)
 		{
-			m_caster.Notify(GameLivingEvent.CastSpell, m_caster, new CastSpellEventArgs(this));
-			// nightshade is unstealthed even if no target, target is same realm, target is too far
+			Caster.Notify(GameLivingEvent.CastStarting, m_caster, new CastStartingEventArgs(this));
+			
 			if (Caster is GamePlayer && Spell.SpellType != "Archery")
 				((GamePlayer)Caster).Stealth(false);
 
-			// cancel engage effect if exist
-			if (m_caster.IsEngaging)
+			if (Caster.IsEngaging)
 			{
 				EngageEffect effect = (EngageEffect)Caster.EffectList.GetOfType(typeof(EngageEffect));
+
 				if (effect != null)
 					effect.Cancel(false);
 			}
@@ -655,7 +655,7 @@ namespace DOL.GS.Spells
 			}
 
 			//Ryan: don't want mobs to have reductions in mana
-			if (Spell.Power != 0 && m_caster is GamePlayer && (m_caster as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Savage && m_caster.Mana < CalculateNeededPower(selectedTarget) && Spell.SpellType != "Archery")
+			if (Spell.Power != 0 && m_caster is GamePlayer && (m_caster as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Savage && m_caster.Mana < PowerCost(selectedTarget) && Spell.SpellType != "Archery")
 			{
 				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
@@ -911,7 +911,7 @@ namespace DOL.GS.Spells
 				MessageToCaster("You have exhausted all of your power and cannot cast spells!", eChatType.CT_SpellResisted);
 				return false;
 			}
-			if (Spell.Power != 0 && m_caster.Mana < CalculateNeededPower(target) && Spell.SpellType != "Archery")
+			if (Spell.Power != 0 && m_caster.Mana < PowerCost(target) && Spell.SpellType != "Archery")
 			{
 				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
@@ -939,7 +939,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public virtual int CalculateNeededPower(GameLiving target)
+		public virtual int PowerCost(GameLiving target)
 		{
 			// warlock
 			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(m_caster, "Powerless");
@@ -1371,7 +1371,7 @@ namespace DOL.GS.Spells
 					m_caster.DisableSkill(m_spell, m_spell.RecastDelay);
 			}
 
-			GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastSpellEventArgs(this, target));
+			GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastStartingEventArgs(this, target));
 		}
 
 		/// <summary>
@@ -2118,7 +2118,7 @@ namespace DOL.GS.Spells
 			{
 				Caster.TempProperties.setProperty(FOCUS_SPELL, effect);
 				GameEventMgr.AddHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(FocusSpellAction));
-				GameEventMgr.AddHandler(Caster, GameLivingEvent.CastSpell, new DOLEventHandler(FocusSpellAction));
+				GameEventMgr.AddHandler(Caster, GameLivingEvent.CastStarting, new DOLEventHandler(FocusSpellAction));
 				GameEventMgr.AddHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(FocusSpellAction));
 				GameEventMgr.AddHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
 				GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
@@ -2279,16 +2279,16 @@ namespace DOL.GS.Spells
 			GameSpellEffect currentEffect = (GameSpellEffect)living.TempProperties.getObjectProperty(FOCUS_SPELL, null);
 			if (currentEffect == null) return;
 
-			if (args is CastSpellEventArgs)
+			if (args is CastStartingEventArgs)
 			{
-				if ((args as CastSpellEventArgs).SpellHandler.Caster != Caster)
+				if ((args as CastStartingEventArgs).SpellHandler.Caster != Caster)
 					return;
-				if ((args as CastSpellEventArgs).SpellHandler.Spell.SpellType == currentEffect.Spell.SpellType)
+				if ((args as CastStartingEventArgs).SpellHandler.Spell.SpellType == currentEffect.Spell.SpellType)
 					return;
 			}
 
 			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(FocusSpellAction));
-			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.CastSpell, new DOLEventHandler(FocusSpellAction));
+			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.CastStarting, new DOLEventHandler(FocusSpellAction));
 			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(FocusSpellAction));
 			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
 			GameEventMgr.RemoveHandler(currentEffect.Owner, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));

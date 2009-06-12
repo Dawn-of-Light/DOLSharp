@@ -129,6 +129,13 @@ namespace DOL.GS.Spells
 		/// </summary>
 		GameLiving Caster { get; }
 
+        /// <summary>
+        /// The power cost for this spell.
+        /// </summary>
+        /// <param name="caster"></param>
+        /// <returns></returns>
+        int PowerCost(GameLiving caster);
+
 		/// <summary>
 		/// The ability casting the spell
 		/// </summary>

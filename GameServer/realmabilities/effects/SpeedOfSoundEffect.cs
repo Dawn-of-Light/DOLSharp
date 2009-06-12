@@ -45,7 +45,7 @@ namespace DOL.GS.Effects
 			GamePlayer player = (GamePlayer)sender;
 			if (e == GameLivingEvent.CastFinished)
 			{
-				CastSpellEventArgs cfea = args as CastSpellEventArgs;
+				CastStartingEventArgs cfea = args as CastStartingEventArgs;
 
 				if (cfea.SpellHandler.Caster != player)
 					return;

@@ -25,7 +25,7 @@ namespace DOL.Events
 	/// <summary>
 	/// Holds the arguments for the CastSpell event of GameLivings
 	/// </summary>
-	public class CastSpellEventArgs : EventArgs
+	public class CastStartingEventArgs : EventArgs
 	{
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Constructs a new cast event args
 		/// </summary>
-		public CastSpellEventArgs(ISpellHandler handler)
+		public CastStartingEventArgs(ISpellHandler handler)
 		{
 			this.m_handler = handler;
 		}
@@ -49,7 +49,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Constructs a new cast event args
 		/// </summary>
-		public CastSpellEventArgs(ISpellHandler handler, GameLiving target)
+		public CastStartingEventArgs(ISpellHandler handler, GameLiving target)
 		{
 			this.m_handler = handler;
 			this.m_target = target;
