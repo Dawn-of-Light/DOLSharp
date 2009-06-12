@@ -39,7 +39,7 @@ namespace DOL.GS.Spells
 
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= CalculateNeededPower(target);
+			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -82,7 +82,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public override int CalculateNeededPower(GameLiving target)
+		public override int PowerCost(GameLiving target)
 		{
 			float factor = Math.Max (0.1f, 0.5f + (target.Level - m_caster.Level) / (float)m_caster.Level);
 
@@ -140,7 +140,7 @@ namespace DOL.GS.Spells
 					{
 						player.Out.SendMessage("You decline to be resurrected.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						//refund mana
-						m_caster.Mana += CalculateNeededPower(player);
+						m_caster.Mana += PowerCost(player);
 					}
 				}
 			}
@@ -247,7 +247,7 @@ namespace DOL.GS.Spells
 
             //Lifeflight, the base call to Checkbegincast uses its own power check, which is bad for rez spells
             //so I added another check here.
-            if (m_caster.Mana < CalculateNeededPower(target))
+            if (m_caster.Mana < PowerCost(target))
             {
                 MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;

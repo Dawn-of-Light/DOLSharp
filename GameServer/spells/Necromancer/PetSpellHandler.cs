@@ -115,7 +115,7 @@ namespace DOL.GS.Spells
 			// Now deduct mana for the spell (the pet will cast for free,
 			// mana pool is *not* shared).
 
-			int powerCost = CalculateNeededPower(Caster);
+			int powerCost = PowerCost(Caster);
 			if (powerCost > 0)
 				Caster.ChangeMana(Caster, DOL.GS.GameLiving.eManaChangeType.Spell, -powerCost);
 

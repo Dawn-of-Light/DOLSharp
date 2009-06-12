@@ -56,7 +56,7 @@ namespace DOL.GS.Spells
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.Casting.CastsASpell", m_caster.GetName(0, true)), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 			}
 
-			m_caster.Mana -= CalculateNeededPower(target);
+			m_caster.Mana -= PowerCost(target);
 
 			base.FinishSpellCast(target);
 
