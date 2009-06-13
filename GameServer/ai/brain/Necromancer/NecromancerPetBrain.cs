@@ -163,6 +163,14 @@ namespace DOL.AI.Brain
                     }
                 }
             }
+            else if (e == GameNPCEvent.SwitchedTarget && sender == Body.TargetObject &&
+                sender is GameNPC && !(sender as GameNPC).IsCrowdControlled)
+            {
+                // Target has started attacking someone else.
+
+                if (Body.EffectList.GetOfType(typeof(TauntEffect)) != null)
+                    (Body as NecromancerPet).Taunt();            
+            }
             else if (e == GameNPCEvent.AttackFinished)
             {
                 // If there are spells in the queue, hold the melee attack
@@ -184,48 +192,19 @@ namespace DOL.AI.Brain
                 (Owner as GameNecromancer).SetTetherTimer(secondsRemaining);
 
                 if (secondsRemaining == 10)
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
                         "AI.Brain.Necromancer.PetTooFarBeLostSecIm", secondsRemaining), eChatType.CT_System);
                 else if (secondsRemaining == 5)
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
                         "AI.Brain.Necromancer.PetTooFarBeLostSec", secondsRemaining), eChatType.CT_System);
             }
             else if (e == GameNPCEvent.PetLost)
             {
                 // Pet despawn is imminent, notify owner.
 
-                MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
                     "AI.Brain.Necromancer.HaveLostBondToPet"), eChatType.CT_System);
             }
-		}
-
-		#endregion
-
-		#region Taunt
-
-		/// <summary>
-		/// Whether or not taunt mode is activated.
-		/// </summary>
-		private bool TauntMode
-		{
-			get { return (Body.EffectList.GetOfType(typeof(TauntEffect)) != null); }
-		}
-
-		/// <summary>
-		/// In addition to attacking the next target, taunt it if we
-		/// we were told to do so and we don't have the attention of our
-		/// target yet.
-		/// </summary>
-		protected override void AttackMostWanted()
-		{
-			base.AttackMostWanted();
-			if (Body.TargetObject is GameNPC && TauntMode)
-			{
-                if ((Body.TargetObject as GameNPC).TargetObject != Body && ((Body.TargetObject as GameNPC).IsAlive))
-                {
-                    (Body as NecromancerPet).Taunt();
-                }
-			}
 		}
 
 		#endregion

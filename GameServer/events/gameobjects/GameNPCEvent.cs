@@ -117,5 +117,9 @@ namespace DOL.Events
 		/// Fired when pet is lost (necromancer).
 		/// </summary>
 		public static readonly GameNPCEvent PetLost = new GameNPCEvent("GameNPC.PetLost");
+        /// <summary>
+        /// The SwitchedTarget event is fired when an NPC changes its target.
+        /// </summary>
+        public static readonly GameLivingEvent SwitchedTarget = new GameNPCEvent("GameNPC.SwitchedTarget");
 	}
 }
