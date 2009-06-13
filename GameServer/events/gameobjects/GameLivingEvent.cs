@@ -162,5 +162,9 @@ namespace DOL.Events
         /// The InterruptExpired event is fired when a living's interrupt timer expires.
         /// </summary>
         public static readonly GameLivingEvent InterruptExpired = new GameLivingEvent("GameLiving.InterruptExpired");
-	}
+        /// <summary>
+        /// The SwitchedTarget event is fired when a living changes its target.
+        /// </summary>
+        public static readonly GameLivingEvent SwitchedTarget = new GameLivingEvent("GameLiving.SwitchedTarget");
+    }
 }
