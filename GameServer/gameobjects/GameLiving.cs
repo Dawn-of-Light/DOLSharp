@@ -5065,7 +5065,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the target of this living
 		/// </summary>
-		public GameObject TargetObject
+		public virtual GameObject TargetObject
 		{
 			get
 			{
