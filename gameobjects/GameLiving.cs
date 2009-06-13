@@ -2691,9 +2691,12 @@ namespace DOL.GS
 			}
 		}
 
-		public void SetAttackState()    // Deprecated.
+		public void SetAttackState()
 		{
 			AttackState = true;
+
+            foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                player.Out.SendObjectUpdate(this);
 		}
 
 		/// <summary>
