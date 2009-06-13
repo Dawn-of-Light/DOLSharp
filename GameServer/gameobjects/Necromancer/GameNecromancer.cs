@@ -234,6 +234,11 @@ namespace DOL.GS
             {
                 GameNPC pet = ControlledNpc.Body;
 
+                bool petNotNull = (pet != null);
+                bool senderIsPet = (sender == pet);
+                bool castStarting = (e == GameLivingEvent.CastStarting);
+                bool castStartingArgs = (args is CastStartingEventArgs);
+
                 if (pet != null && sender == pet && e == GameLivingEvent.CastStarting &&
                     args is CastStartingEventArgs)
                 {
