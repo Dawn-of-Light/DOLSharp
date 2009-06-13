@@ -223,8 +223,7 @@ namespace DOL.GS
 		{
 			// Force caster form when creating this player in the world.
 
-			//Model = (ushort)client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
-			//We need to clear the spell effect too!
+			Model = (ushort)client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
 			Shade(false);
 		}
 
@@ -233,11 +232,6 @@ namespace DOL.GS
             if (ControlledNpc != null)
             {
                 GameNPC pet = ControlledNpc.Body;
-
-                bool petNotNull = (pet != null);
-                bool senderIsPet = (sender == pet);
-                bool castStarting = (e == GameLivingEvent.CastStarting);
-                bool castStartingArgs = (args is CastStartingEventArgs);
 
                 if (pet != null && sender == pet && e == GameLivingEvent.CastStarting &&
                     args is CastStartingEventArgs)

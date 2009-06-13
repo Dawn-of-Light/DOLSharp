@@ -3967,6 +3967,15 @@ namespace DOL.GS
 		/// <param name="line"></param>
 		public override void CastSpell(Spell spell, SpellLine line)
 		{
+            // Aredhel: Waiting on the LOS check completely f* up Facilitate
+            // Painworking timing, avoid LOS checks for necro pets AT ALL!
+
+            if (this is NecromancerPet)
+            {
+                base.CastSpell(spell, line);
+                return;
+            }
+
 			// Let's do a few checks to make sure it doesn't just wait on the LOS check
 			int tempProp = TempProperties.getIntProperty(LOSTEMPCHECKER, 0);
 

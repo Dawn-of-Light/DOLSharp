@@ -343,6 +343,22 @@ namespace DOL.GS
 
 		#region Melee
 
+        /// <summary>
+        /// Draw the weapon, but don't actually start a melee attack.
+        /// </summary>
+        public void DrawWeapon()
+        {
+            if (!AttackState)
+            {
+                AttackState = true;
+
+                foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                    player.Out.SendObjectUpdate(this);
+
+                AttackState = false;
+            }
+        }
+
 		/// <summary>
 		/// Whether or not pet can use left hand weapon.
 		/// </summary>

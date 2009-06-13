@@ -75,45 +75,65 @@ namespace DOL.AI.Brain
 				// If we're not currently casting or meleeing, cast 
 				// right away.
 
+                if (!Body.IsCasting && Body.AttackState)
+                {
+                    DebugMessageToOwner(String.Format("Spell '{0}' relayed from shade, but pet in melee",
+                        petSpell.Spell.Name));
+                }
+
                 if (!Body.IsCasting && !Body.AttackState)
                     CheckSpellQueue();
                 else
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.CastSpellAfterAction", Body.Name), eChatType.CT_System);
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                        "AI.Brain.Necromancer.CastSpellAfterAction", Body.Name), eChatType.CT_System);
 			}
-            else if (e == GameNPCEvent.CastFinished)
+            else if (e == GameLivingEvent.CastFinished)
             {
                 // Remove the spell that has finished casting from the queue, if
                 // there are more, keep casting.
 
                 RemoveSpellFromQueue();
                 if (SpellsQueued)
+                {
+                    DebugMessageToOwner("More spells to cast, grab the next one");
                     CheckSpellQueue();
+                }
                 else
+                {
+                    DebugMessageToOwner("No more spells to cast, start melee");
                     AttackMostWanted();
+                }
 
                 Owner.Notify(GamePlayerEvent.CastFinished, Owner, args);
             }
-            else if (e == GameNPCEvent.CastFailed)
+            else if (e == GameLivingEvent.CastFailed)
             {
                 // Tell owner why cast has failed.
+
+                DebugMessageToOwner(String.Format("Cast failed for '{0}')",
+                    (args as CastFailedEventArgs).SpellHandler.Spell.Name));
 
                 switch ((args as CastFailedEventArgs).Reason)
                 {
                     case CastFailedEventArgs.Reasons.TargetTooFarAway:
-                        MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.ServantFarAwayToCast"), eChatType.CT_SpellResisted);
+                        MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                            "AI.Brain.Necromancer.ServantFarAwayToCast"), eChatType.CT_SpellResisted);
                         break;
                     case CastFailedEventArgs.Reasons.TargetNotInView:
-                        MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetCantSeeTarget", Body.Name), eChatType.CT_SpellResisted);
+                        MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                            "AI.Brain.Necromancer.PetCantSeeTarget", Body.Name), eChatType.CT_SpellResisted);
                         break;
                 }
             }
-            else if (e == GameNPCEvent.CastSucceeded)
+            else if (e == GameLivingEvent.CastSucceeded)
             {
                 // The spell will cast.
 
                 PetSpellEventArgs spellArgs = args as PetSpellEventArgs;
                 GameLiving target = spellArgs.Target;
                 SpellLine spellLine = spellArgs.SpellLine;
+
+                DebugMessageToOwner(String.Format("Now casting '{0}'", spellArgs.Spell.Name));
 
                 // This message is for spells from the spell queue only, so suppress
                 // it for insta cast buffs coming from the pet itself.
@@ -137,7 +157,7 @@ namespace DOL.AI.Brain
                     {
                         if (!Body.AttackState && AggressionState != eAggressionState.Passive)
                         {
-                            Body.SetAttackState();
+                            (Body as NecromancerPet).DrawWeapon();
                             AddToAggroList(target, 1);
                         }
                     }
@@ -164,15 +184,18 @@ namespace DOL.AI.Brain
                 (Owner as GameNecromancer).SetTetherTimer(secondsRemaining);
 
                 if (secondsRemaining == 10)
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetTooFarBeLostSecIm", secondsRemaining), eChatType.CT_System);
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                        "AI.Brain.Necromancer.PetTooFarBeLostSecIm", secondsRemaining), eChatType.CT_System);
                 else if (secondsRemaining == 5)
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetTooFarBeLostSec", secondsRemaining), eChatType.CT_System);
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                        "AI.Brain.Necromancer.PetTooFarBeLostSec", secondsRemaining), eChatType.CT_System);
             }
             else if (e == GameNPCEvent.PetLost)
             {
                 // Pet despawn is imminent, notify owner.
 
-                MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.HaveLostBondToPet"), eChatType.CT_System);
+                MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                    "AI.Brain.Necromancer.HaveLostBondToPet"), eChatType.CT_System);
             }
 		}
 
@@ -239,6 +262,9 @@ namespace DOL.AI.Brain
 				}
 				else
 				{
+                    DebugMessageToOwner(String.Format("Invalid target for spell '{0}', removing it...",
+                        m_spellQueue.Peek().Spell.Name));
+
 					RemoveSpellFromQueue();
 				}
 			}
@@ -291,8 +317,13 @@ namespace DOL.AI.Brain
 		{
 			lock (m_spellQueue)
 			{
-				if (m_spellQueue.Count > 0)
-					return m_spellQueue.Peek();
+                if (m_spellQueue.Count > 0)
+                {
+                    DebugMessageToOwner(String.Format("Grabbing spell '{0}' from the start of the queue in order to cast it",
+                        m_spellQueue.Peek().Spell.Name));
+
+                    return m_spellQueue.Peek();
+                }
 			}
 			return null;
 		}
@@ -316,8 +347,13 @@ namespace DOL.AI.Brain
 		{
 			lock (m_spellQueue)
 			{
-				if (m_spellQueue.Count > 0)
-					m_spellQueue.Dequeue();
+                if (m_spellQueue.Count > 0)
+                {
+                    DebugMessageToOwner(String.Format("Removing spell '{0}' from the start of the queue",
+                        m_spellQueue.Peek().Spell.Name));
+
+                    m_spellQueue.Dequeue();
+                }
 			}
 		}
 
@@ -338,6 +374,7 @@ namespace DOL.AI.Brain
                         (m_spellQueue.Dequeue()).Spell.Name, Body.Name), 
                         eChatType.CT_Spell);
 
+                DebugMessageToOwner(String.Format("Adding spell '{0}' to the end of the queue", spell.Name));
 				m_spellQueue.Enqueue(new SpellQueueEntry(spell, spellLine, target));
 			}
 		}
@@ -433,6 +470,22 @@ namespace DOL.AI.Brain
 			if ((owner != null) && (message.Length > 0))
 				owner.Out.SendMessage(message, chatType, eChatLoc.CL_SystemWindow);
 		}
+
+        /// <summary>
+        /// For debugging purposes only.
+        /// </summary>
+        /// <param name="message"></param>
+        private void DebugMessageToOwner(String message)
+        {
+#if DEBUG
+            int tick = Environment.TickCount;
+            int seconds = tick / 1000;
+            int minutes = seconds / 60;
+
+            MessageToOwner(String.Format("[{0:00}:{1:00}.{2:0000}] {3}", 
+                minutes % 60, seconds % 60, tick % 1000, message), eChatType.CT_Guild);
+#endif
+        }
 
 		#endregion
 	}
