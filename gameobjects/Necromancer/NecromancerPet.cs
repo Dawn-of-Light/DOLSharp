@@ -495,6 +495,9 @@ namespace DOL.GS
 		/// </summary>
 		public void Taunt()
 		{
+            if (IsIncapacitated)
+                return;
+
 			SpellLine chantsLine = SkillBase.GetSpellLine("Chants");
 			if (chantsLine == null)
 				return;
@@ -580,10 +583,9 @@ namespace DOL.GS
 						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					}
 					return true;
-                //Temporarily disabled until a suitable fix can be found.
-				/*case "taunt":
+				case "taunt":
 					ToggleTauntMode();
-                    return true;*/
+                    return true;
 				case "weapons":
 					{
 						if (Name != "abomination")
