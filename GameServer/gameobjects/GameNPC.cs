@@ -903,10 +903,14 @@ namespace DOL.GS
             }
             set
             {
-                if (TargetObject != null && value != TargetObject)
-                    TargetObject.Notify(GameLivingEvent.SwitchedTarget, this);
+                GameObject previousTarget = TargetObject;
+                GameObject newTarget = value;
 
-                base.TargetObject = value;
+                base.TargetObject = newTarget;
+
+                if (previousTarget != null && newTarget != previousTarget)
+                    previousTarget.Notify(GameNPCEvent.SwitchedTarget, this,
+                        new SwitchedTargetEventArgs(previousTarget, newTarget));           
             }
         }
 

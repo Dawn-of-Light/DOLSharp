@@ -319,6 +319,7 @@
     </Compile>
     <Compile Include="events\gameobjects\InterruptedEventArgs.cs" />
     <Compile Include="events\gameobjects\NextCraftingTierReachedEventArgs.cs" />
+    <Compile Include="events\gameobjects\SwitchedTargetEventArgs.cs" />
     <Compile Include="gameobjects\Atlantis\ArtifactCreditMerchant.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\PermanentDjinn.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\SpawnDjinnStone.cs" />
