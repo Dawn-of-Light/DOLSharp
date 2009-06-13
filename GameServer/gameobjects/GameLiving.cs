@@ -911,7 +911,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the attack-state of this living
 		/// </summary>
-		public virtual bool AttackState { get; private set; }
+		public virtual bool AttackState { get; protected set; }
 
         /// <summary>
         /// Whether or not the living can be attacked.
@@ -1857,7 +1857,10 @@ namespace DOL.GS
                     return;
 
                 if (target.CurrentSpellHandler != null)
-                    target.CurrentSpellHandler.CasterIsAttacked(Attacker);
+                {
+                    if (!target.CurrentSpellHandler.CasterIsAttacked(Attacker))
+                        return;
+                }
 
                 if (target.AttackState && target.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
                     target.OnInterruptTick(Attacker, AttackType);
@@ -2689,14 +2692,6 @@ namespace DOL.GS
 						spellHandler.StartSpell(ad.Target);
 				}
 			}
-		}
-
-		public void SetAttackState()
-		{
-			AttackState = true;
-
-            foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                player.Out.SendObjectUpdate(this);
 		}
 
 		/// <summary>
