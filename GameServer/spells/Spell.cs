@@ -418,5 +418,16 @@ namespace DOL.GS
 
 			delve.Add(String.Format("Target: {0}", target));
 		}
+
+        /// <summary>
+        /// Whether or not the spell is instant cast.
+        /// </summary>
+        public bool IsInstantCast
+        {
+            get
+            {
+                return (CastTime <= 0);
+            }
+        }
 	}
 }
