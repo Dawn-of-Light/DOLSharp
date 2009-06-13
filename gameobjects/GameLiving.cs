@@ -5922,7 +5922,7 @@ namespace DOL.GS
 		/// <param name="line">Spell line of the spell (for bonus calculations)</param>
 		public virtual void CastSpell(Spell spell, SpellLine line)
 		{
-			if ((this.IsStunned || this.IsMezzed))
+			if (IsStunned || IsMezzed)
 			{
 				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.CrowdControlled));
 				return;

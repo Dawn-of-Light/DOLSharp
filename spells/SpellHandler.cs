@@ -310,7 +310,6 @@ namespace DOL.GS.Spells
 
 			if (Spell.Pulse != 0 && CancelPulsingSpell(Caster, Spell.SpellType))
 			{
-				// is done even if caster is sitting
 				if (Spell.InstrumentRequirement == 0)
 					MessageToCaster("You cancel your effect.", eChatType.CT_Spell);
 				else
@@ -324,48 +323,31 @@ namespace DOL.GS.Spells
 					(m_caster as GamePlayer).IsOnHorse = false;
 				}
 
-				if (Spell.CastTime > 0)
+				if (!Spell.IsInstantCast)
 				{
-					// no instant cast
 					m_interrupted = false;
 					SendSpellMessages();
 
-					//set the time when casting to can not quickcast during a minimum time
-					//if (m_caster is GamePlayer && ((GamePlayer)m_caster).IsQuickCasting)
-					//	((GamePlayer)m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, GameTimer.CurrentTick);
-
 					m_castTimer = new DelayedCastTimer(Caster, this, target);
 					m_castTimer.Start(1 + CalculateCastingTime());
+
 					SendCastAnimation();
 
-					if (m_caster is GamePlayer && ((GamePlayer)m_caster).IsStrafing)
-					{
+					if ((Caster is GamePlayer && (Caster as GamePlayer).IsStrafing) || Caster.IsMoving)
 						CasterMoves();
-					}
-
-					if (m_caster.IsMoving)
-					{
-						CasterMoves();
-					}
 				}
 				else
 				{
-                   // instant cast
-                    bool sendcast = true;
-		        	if (m_caster.ControlledNpc!=null && m_caster.ControlledNpc.Body!=null && m_caster.ControlledNpc.Body is NecromancerPet)
-		        		sendcast = false;
+		        	if (Caster.ControlledNpc == null || Caster.ControlledNpc.Body == null || !(Caster.ControlledNpc.Body is NecromancerPet))
+                        SendCastAnimation(0);
 
-                    if(sendcast) SendCastAnimation(0);
 					FinishSpellCast(target);
 				}
 			}
-			else
-			{
-				if (!IsCasting)	OnAfterSpellCastSequence();
-				return false;
-			}
 			
-			if (!IsCasting)	OnAfterSpellCastSequence();
+			if (!IsCasting)	
+                OnAfterSpellCastSequence();
+
 			return true;
 		}
 
@@ -375,9 +357,11 @@ namespace DOL.GS.Spells
 		public virtual void CasterMoves()
 		{
 			if (Spell.InstrumentRequirement != 0)
-				return; // song can be played while moving
+				return;
+
 			if (Spell.MoveCast)
 				return;
+
 			MessageToCaster("You move and interrupt your spellcast!", eChatType.CT_System);
 			InterruptCasting();
 		}
@@ -1155,10 +1139,10 @@ namespace DOL.GS.Spells
 				}
 			}
 			double percent = 1.0;
-			int dex = m_caster.GetModified(eProperty.Dexterity);
+			int dex = Caster.GetModified(eProperty.Dexterity);
 			if(SpellLine.KeyName.Contains("Champion Abilities")) dex=100; //Vico: No casting time diminution for CL Spells
 			
-			if (m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
+			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
 			{
 				return 2000; //always 2 sec
 			}
