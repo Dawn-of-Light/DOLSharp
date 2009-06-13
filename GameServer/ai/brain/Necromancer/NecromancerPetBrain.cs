@@ -120,7 +120,7 @@ namespace DOL.AI.Brain
 
                 if (spellLine.Name != (Body as NecromancerPet).PetInstaSpellLine)
                 {
-                    Owner.Notify(GameLivingEvent.CastStarting, this,
+                    Owner.Notify(GameLivingEvent.CastStarting, Body,
                         new CastStartingEventArgs(Body.CurrentSpellHandler));
                     MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
                         "AI.Brain.Necromancer.PetCastingSpell", Body.Name), eChatType.CT_System);
@@ -137,10 +137,7 @@ namespace DOL.AI.Brain
                     {
                         if (!Body.AttackState && AggressionState != eAggressionState.Passive)
                         {
-                            //Body.StartAttack(target);
-                            //Body.StopAttack();
                             Body.SetAttackState();
-                            (Owner as GamePlayer).Out.SendObjectUpdate(Body);
                             AddToAggroList(target, 1);
                         }
                     }
