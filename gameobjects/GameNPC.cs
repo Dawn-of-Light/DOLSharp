@@ -892,6 +892,24 @@ namespace DOL.GS
             }
         }
 
+        /// <summary>
+        /// The target object.
+        /// </summary>
+        public override GameObject TargetObject
+        {
+            get
+            {
+                return base.TargetObject;
+            }
+            set
+            {
+                if (TargetObject != null && value != TargetObject)
+                    TargetObject.Notify(GameLivingEvent.SwitchedTarget, this);
+
+                base.TargetObject = value;
+            }
+        }
+
 		/// <summary>
 		/// Updates the tick speed for this living.
         /// </summary>
