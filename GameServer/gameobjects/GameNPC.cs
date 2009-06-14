@@ -1914,6 +1914,8 @@ namespace DOL.GS
 			m_maxdistance = npc.MaxDistance;
 			m_roamingRange = npc.RoamingRange;
             m_isCloakHoodUp = npc.IsCloakHoodUp;
+
+            Gender = (Gender)npc.Gender;
 		}
 
 		/// <summary>
@@ -2889,6 +2891,61 @@ namespace DOL.GS
 			return LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.TowardsYou", aggroLevelString);
 		}
 
+        /// <summary>
+        /// Gets the proper pronoun including capitalization.
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="capitalize"></param>
+        /// <returns></returns>
+        public override string GetPronoun(int form, bool capitalize)
+        {
+            String language = ServerProperties.Properties.DB_LANGUAGE;
+
+            switch (Gender)
+            {
+                case Gender.Male:
+                    switch (form)
+                    {
+                        case 1:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
+                                "GameLiving.Pronoun.Male.Possessive"));
+                        case 2:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
+                                "GameLiving.Pronoun.Male.Objective"));
+                        default:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+                                "GameLiving.Pronoun.Male.Subjective"));
+                    }
+
+                case Gender.Female:
+                    switch (form)
+                    {
+                        case 1:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
+                                "GameLiving.Pronoun.Female.Possessive"));
+                        case 2:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
+                                "GameLiving.Pronoun.Female.Objective"));
+                        default:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+                                "GameLiving.Pronoun.Female.Subjective"));
+                    }
+                default:
+                    switch (form)
+                    {
+                        case 1:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
+                                "GameLiving.Pronoun.Neutral.Possessive"));
+                        case 2:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
+                                "GameLiving.Pronoun.Neutral.Objective"));
+                        default:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+                                "GameLiving.Pronoun.Neutral.Subjective"));
+                    }
+            }
+        }
+
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
 		/// </summary>
@@ -2897,7 +2954,9 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = base.GetExamineMessages(player);
-			list.Add(LanguageMgr.GetTranslation(player.Client, "GameNPC.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameNPC.GetExamineMessages.YouExamine", 
+                GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+
 			return list;
 		}
 
@@ -4207,6 +4266,11 @@ namespace DOL.GS
 			else if (Strength < (20 + Level * 6))
 				Strength = (short)(20 + Level * 6);
 		}
+
+        /// <summary>
+        /// Gender of this NPC.
+        /// </summary>
+        public override Gender Gender { get; set; }
 
 		private string m_boatowner_id;
 		/// <summary>

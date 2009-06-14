@@ -104,6 +104,7 @@ namespace DOL.Database
             m_Charisma = 30;
             m_boat_ownerid = "";
 			m_roamingRange = -1;
+            m_gender = 0;
 		}
 
 		/// <summary>
@@ -714,6 +715,25 @@ namespace DOL.Database
             {
                 m_isCloakHoodUp = value;
                 Dirty = true;
+            }
+        }
+
+        private byte m_gender = 0;
+
+        /// <summary>
+        /// Gender of this mob.
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public byte Gender
+        {
+            get { return m_gender; }
+            set
+            {
+                if (m_gender < 3)
+                {
+                    m_gender = value;
+                    Dirty = true;
+                }
             }
         }
     }
