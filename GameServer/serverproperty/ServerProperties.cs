@@ -237,6 +237,12 @@ namespace DOL.GS.ServerProperties
 		public static readonly string DISABLED_REGIONS;
 
 		/// <summary>
+		/// A serialised list of RegionIDs that will load objects
+		/// </summary>
+		[ServerProperty("load_regions", "a serialised list of region IDs that will load objects, separated by ; (no value will load objects in all regions)", "")]
+		public static readonly string LOAD_REGIONS;
+
+		/// <summary>
 		/// A serialised list of disabled expansion IDs
 		/// </summary>
 		[ServerProperty("disabled_expansions", "a serialised list of disabled expansions IDs, expansion IDs are client type seperated by ;", "")]
