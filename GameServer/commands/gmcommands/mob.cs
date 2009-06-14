@@ -2016,7 +2016,9 @@ namespace DOL.GS.Commands
 
                 targetMob.Gender = (Gender)gender;
                 targetMob.SaveIntoDatabase();
-                client.Out.SendMessage("Mob gender changed to " + targetMob.Gender, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(String.Format("Mob gender changed to {0}.", 
+                    targetMob.Gender.ToString().ToLower()), 
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
             catch (Exception)
             {
