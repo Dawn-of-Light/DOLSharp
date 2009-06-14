@@ -11172,38 +11172,27 @@ namespace DOL.GS
 				}
 		}
 
-		public string SetFirstUppercase(bool firstLetterUppercase, string text)
-		{
-			if (!firstLetterUppercase) return text;
-
-			string result = "";
-			if (text == null || text.Length <= 0) return result;
-			result = text[0].ToString().ToUpper();
-			if (text.Length > 1) result += text.Substring(1, text.Length - 1);
-			return result;
-		}
-
-		public string GetPronoun(GameClient Client, int form, bool firstLetterUppercase)
+		public string GetPronoun(GameClient Client, int form, bool capitalize)
 		{
 			if (PlayerCharacter.Gender == 0)
 				switch (form)
 				{
 					default:
-						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Male.Subjective"));
+						return Capitalize(capitalize, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Male.Subjective"));
 					case 1:
-						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Male.Possessive"));
+						return Capitalize(capitalize, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Male.Possessive"));
 					case 2:
-						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Male.Objective"));
+						return Capitalize(capitalize, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Male.Objective"));
 				}
 			else
 				switch (form)
 				{
 					default:
-						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Female.Subjective"));
+						return Capitalize(capitalize, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Female.Subjective"));
 					case 1:
-						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Female.Possessive"));
+						return Capitalize(capitalize, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Female.Possessive"));
 					case 2:
-						return SetFirstUppercase(firstLetterUppercase, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Female.Objective"));
+						return Capitalize(capitalize, LanguageMgr.GetTranslation(Client, "GamePlayer.Pronoun.Female.Objective"));
 				}
 		}
 

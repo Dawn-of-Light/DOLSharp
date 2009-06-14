@@ -958,6 +958,16 @@ namespace DOL.GS
 		Wood = 4,
 	}
 
+    /// <summary>
+    /// The gender.
+    /// </summary>
+    public enum Gender : byte
+    {
+        Neutral = 0,
+        Male = 1,
+        Female = 2
+    }
+
 	/// <summary>
 	/// strong name constants of spell line used in the world (poison, proc ect ...)
 	/// </summary>
