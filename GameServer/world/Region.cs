@@ -180,7 +180,26 @@ namespace DOL.GS
 
 			m_timeManager = time;
 
-			string[] list = ServerProperties.Properties.DISABLED_REGIONS.Split(';');
+			string[] list = null; 
+
+			if (ServerProperties.Properties.LOAD_REGIONS != string.Empty)
+				list = ServerProperties.Properties.LOAD_REGIONS.Split(';');
+
+			if (list != null && list.Length > 0)
+			{
+				m_loadObjects = false;
+
+				foreach (string region in list)
+				{
+					if (region.ToString() == ID.ToString())
+					{
+						m_loadObjects = true;
+						break;
+					}
+				}
+			}
+
+			list = ServerProperties.Properties.DISABLED_REGIONS.Split(';');
 			foreach (string region in list)
 			{
 				if (region.ToString() == ID.ToString())
@@ -229,7 +248,7 @@ namespace DOL.GS
 					default:
 						return false;
 				}
-			}
+			} 
 		}
 
 		/// <summary>
@@ -399,7 +418,16 @@ namespace DOL.GS
 			get { return m_isDisabled; }
 		}
 
-        //Dinberg: Added this for instances.
+		private bool m_loadObjects = true;
+		/// <summary>
+		/// Will this region load objects
+		/// </summary>
+		public bool LoadObjects
+		{
+			get { return m_loadObjects; }
+		}
+
+		//Dinberg: Added this for instances.
         /// <summary>
         /// Added to allow instances; the 'appearance' of the region, the map the GameClient uses.
         /// </summary>
@@ -461,6 +489,9 @@ namespace DOL.GS
 		/// <param name="bindCount"></param>
 		public void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
 		{
+			if (!LoadObjects)
+				return;
+
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 			WorldObject[] staticObjs = (WorldObject[])GameServer.Database.SelectObjects(typeof(WorldObject), "Region = " + ID);
 			BindPoint[] bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region = " + ID);
