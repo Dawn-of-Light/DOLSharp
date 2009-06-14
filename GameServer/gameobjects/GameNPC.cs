@@ -1993,6 +1993,7 @@ namespace DOL.GS
 			mob.PathID = PathID;
 			mob.MaxDistance = m_maxdistance;
             mob.IsCloakHoodUp = m_isCloakHoodUp;
+            mob.Gender = (byte)Gender;
 
 			if (InternalID == null)
 			{
