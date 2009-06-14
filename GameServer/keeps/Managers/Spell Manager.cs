@@ -106,6 +106,11 @@ namespace DOL.GS.Keeps
 		/// <param name="lord">The lord object</param>
 		public static void LordCastHealSpell(GameKeepGuard lord)
 		{
+            // Aredhel: No more self-healing. If 3 players can't kill a lord
+            // because of excessive heal spam, then something is amiss.
+
+            return;
+
 			//decide which healing spell
 			Spell spell = GetLordHealSpell((eRealm)lord.Realm);
 			//cast the healing spell
