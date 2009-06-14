@@ -457,12 +457,12 @@ namespace DOL.AI.Brain
         private void DebugMessageToOwner(String message)
         {
 #if DEBUG
-            int tick = Environment.TickCount;
-            int seconds = tick / 1000;
-            int minutes = seconds / 60;
+            //int tick = Environment.TickCount;
+            //int seconds = tick / 1000;
+            //int minutes = seconds / 60;
 
-            MessageToOwner(String.Format("[{0:00}:{1:00}.{2:0000}] {3}", 
-                minutes % 60, seconds % 60, tick % 1000, message), eChatType.CT_Guild);
+            //MessageToOwner(String.Format("[{0:00}:{1:00}.{2:000}] {3}", 
+            //    minutes % 60, seconds % 60, tick % 1000, message), eChatType.CT_Guild);
 #endif
         }
 
