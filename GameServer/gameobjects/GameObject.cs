@@ -591,6 +591,17 @@ namespace DOL.GS
 				}
 		}
 
+        public String Capitalize(bool capitalize, String text)
+        {
+            if (!capitalize) return text;
+
+            string result = "";
+            if (text == null || text.Length <= 0) return result;
+            result = text[0].ToString().ToUpper();
+            if (text.Length > 1) result += text.Substring(1, text.Length - 1);
+            return result;
+        }
+
 		/// <summary>
 		/// Pronoun of this object in case you need to refer it in 3rd person
 		/// http://webster.commnet.edu/grammar/cases.htm
@@ -1448,6 +1459,15 @@ namespace DOL.GS
 				.Append(" loc=").Append(X.ToString()).Append(',').Append(Y.ToString()).Append(',').Append(Z.ToString())
 				.ToString();
 		}
+
+        /// <summary>
+        /// All objects are neutral.
+        /// </summary>
+        public virtual Gender Gender
+        {
+            get { return Gender.Neutral; }
+            set { }
+        }
 
 		/// <summary>
 		/// Constructs a new empty GameObject

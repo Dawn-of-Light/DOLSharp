@@ -90,7 +90,8 @@ namespace DOL.GS.Commands
         "'/mob tether <tether range>' set mob tether range (>0: check, <=0: no check)",
         "'/mob hood' toggle cloak hood visibility",
         "'/mob cloak' toggle cloak visibility",
-        "'/mob bodytype <ID>' changing the mob's bodytype"
+        "'/mob bodytype <ID>' changing the mob's bodytype",
+        "'/mob gender <0 = neutral | 1 = male | 2 = female>' set gender for this mob"
     )]
     public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
     {
@@ -187,7 +188,7 @@ namespace DOL.GS.Commands
                 case "hood": hood( client, targetMob, args ); break;
                 case "cloak": cloak( client, targetMob, args ); break;
                 case "bodytype": bodytype(client, targetMob, args); break;
-
+                case "gender": gender(client, targetMob, args); break;
                 default:
                     DisplaySyntax( client );
                     return;
@@ -1998,6 +1999,29 @@ namespace DOL.GS.Commands
 	        {
  				DisplaySyntax( client, args[1] );
 	        }
+        }
+
+        private void gender(GameClient client, GameNPC targetMob, string[] args)
+        {
+            byte gender;
+            try
+            {
+                gender = Convert.ToByte(args[2]);
+
+                if (gender > 2)
+                {
+                    DisplaySyntax(client, args[1]);
+                    return;
+                }
+
+                targetMob.Gender = (Gender)gender;
+                targetMob.SaveIntoDatabase();
+                client.Out.SendMessage("Mob gender changed to " + targetMob.Gender, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            catch (Exception)
+            {
+                DisplaySyntax(client, args[1]);
+            }
         }
 
         private string CheckName( string name, GameClient client )
