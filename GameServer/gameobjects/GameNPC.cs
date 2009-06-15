@@ -4299,7 +4299,7 @@ namespace DOL.GS
 			m_followMaxDist = 3000;
 			m_flags = 0;
 			m_maxdistance = 0;
-			m_roamingRange = -1; // default to normal roaming mob
+			m_roamingRange = 0; // default to non roaming - tolakram
 			m_boatowner_id = "";
 
             if ( m_spawnPoint == null )

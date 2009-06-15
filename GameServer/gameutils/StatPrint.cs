@@ -44,7 +44,6 @@ namespace DOL.GS.GameEvents
 		private static long m_lastPacketsIn = 0;
 		private static long m_lastPacketsOut = 0;
 		private static long m_lastMeasureTick = DateTime.Now.Ticks;
-		private static int m_statFrequency = 30000; // 30s
 
 		private static PerformanceCounter m_systemCpuUsedCounter;
 		private static PerformanceCounter m_processCpuUsedCounter;
@@ -219,7 +218,7 @@ namespace DOL.GS.GameEvents
 				{
 					if (m_timer != null)
 					{
-						m_timer.Change(m_statFrequency, 0);
+						m_timer.Change(ServerProperties.Properties.STATPRINT_FREQUENCY, 0);
 					}
 				}
 			}
