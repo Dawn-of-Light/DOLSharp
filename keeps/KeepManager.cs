@@ -55,6 +55,9 @@ namespace DOL.GS.Keeps
             //Dinberg - moved this here, battlegrounds must be loaded before keepcomponents are.
             LoadBattlegroundCaps();
 
+			if (!ServerProperties.Properties.LOAD_KEEPS)
+				return true;
+
 			lock (m_keeps.SyncRoot)
 			{
 				m_keeps.Clear();
@@ -158,6 +161,9 @@ namespace DOL.GS.Keeps
 
 		private static void LoadHookPoints()
 		{
+			if (!ServerProperties.Properties.LOAD_KEEPS)
+				return;
+
 			Hashtable hookPointList = new Hashtable();
 
 			DBKeepHookPoint[] dbkeepHookPoints = (DBKeepHookPoint[])GameServer.Database.SelectAllObjects(typeof(DBKeepHookPoint));

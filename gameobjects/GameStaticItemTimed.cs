@@ -28,7 +28,7 @@ namespace DOL.GS
 		/// <summary>
 		/// How long this object can stay in the world without being removed
 		/// </summary>
-		protected int m_removeDelay = 120000; //Currently 2 mins
+		protected uint m_removeDelay = 120000; //Currently 2 mins
 		/// <summary>
 		/// The timer that will remove this object from the world after a delay
 		/// </summary>
@@ -46,7 +46,7 @@ namespace DOL.GS
 		/// tick-count
 		/// </summary>
 		/// <param name="vanishTicks">milliseconds after which the item will vanish</param>
-		public GameStaticItemTimed(int vanishTicks): this()
+		public GameStaticItemTimed(uint vanishTicks): this()
 		{
 			if(vanishTicks > 0)
 				m_removeDelay = vanishTicks;
@@ -55,7 +55,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets the delay in gameticks after which this object is removed
 		/// </summary>
-		public int RemoveDelay
+		public uint RemoveDelay
 		{
 			get 
 			{
@@ -66,7 +66,7 @@ namespace DOL.GS
 				if(value>0)
 					m_removeDelay=value;
 				if(m_removeItemAction.IsAlive)
-					m_removeItemAction.Start(m_removeDelay);
+					m_removeItemAction.Start((int)m_removeDelay);
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace DOL.GS
 			if(!base.AddToWorld()) return false;
 			if (m_removeItemAction == null)
 				m_removeItemAction = new RemoveItemAction(this);
-			m_removeItemAction.Start(m_removeDelay);
+			m_removeItemAction.Start((int)m_removeDelay);
 			return true;
 		}
 

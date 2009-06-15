@@ -56,7 +56,7 @@ namespace DOL.GS.Housing
 			{
 				return false;
 			}
-            if (HouseMgr.GetRealHouseByPlayer(player) != null)
+            if (!ServerProperties.Properties.HOUSING_DEBUG_ALLOW_MULTIPLE && HouseMgr.GetRealHouseByPlayer(player) != null)
 			{
 				player.Out.SendMessage("You already own a house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -85,7 +85,7 @@ namespace DOL.GS.Housing
 			lock (DatabaseItem) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (DatabaseItem.OwnerIDs != null && DatabaseItem.OwnerIDs != "") return;
-				if (HouseMgr.GetHouseNumberByPlayer(player) != 0 && player.Client.Account.PrivLevel == 1)
+				if (HouseMgr.GetHouseNumberByPlayer(player) != 0 && player.Client.Account.PrivLevel == 1 && !ServerProperties.Properties.HOUSING_DEBUG_ALLOW_MULTIPLE)
 				{
 					player.Out.SendMessage("You already own another lot or house (Number " + HouseMgr.GetHouseNumberByPlayer(player) + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 					return;
