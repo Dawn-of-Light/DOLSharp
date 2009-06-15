@@ -255,7 +255,7 @@ namespace DOL.GS.Housing
 
 		public static void RemoveHouse(House house)
 		{
-			Logger.Debug("House " + house.UniqueID + " removed");
+			Logger.Warn("House " + house.UniqueID + " removed");
 			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
 			if (hash == null) return;
 			house.OutdoorItems.Clear();
@@ -519,30 +519,19 @@ namespace DOL.GS.Housing
             return house.OwnerIDs;
         }
 
-        //public static long GetRentByModel(int Model)
-        //{
-        //    if ((Model == 1) || (Model == 5) || (Model == 9))
-        //        return 20 * 10000;
-        //    if ((Model == 2) || (Model == 6) || (Model == 10))
-        //        return 35 * 10000;
-        //    if ((Model == 3) || (Model == 7) || (Model == 11))
-        //        return 60 * 10000;
-        //    //if ((Model == 4) || (Model == 8) || (Model == 12))
-        //    return 100 * 10000;
-        //}
-
         public static long GetRentByModel(int Model)
         {
             switch (Model % 4)
             {
-                case 0: return 100 * 10000;
-                case 1: return 20 * 10000;
-                case 2: return 35 * 10000;
-                case 3: return 60 * 10000;
-                default: return 0;   // Unreachable code, but compiler wants it.
+				case 0: return ServerProperties.Properties.HOUSING_RENT_MANSION;
+				case 1: return ServerProperties.Properties.HOUSING_RENT_COTTAGE;
+				case 2: return ServerProperties.Properties.HOUSING_RENT_HOUSE;
+				case 3: return ServerProperties.Properties.HOUSING_RENT_VILLA;
             }
-        }
 
+			return 0;
+        }
+        
 		public static void CheckRents(object state)
 		{
 			Logger.Debug("Time to check Rents !");
@@ -557,10 +546,10 @@ namespace DOL.GS.Housing
 					if ((house.OwnerIDs == null && house.OwnerIDs == "") || house.NoPurge) // Replaced OR by AND to fix table problems due to old method bugs
 						continue;
 					Diff = DateTime.Now - house.LastPaid;
-					if (Diff.Days >= 7)
+					long Rent = GetRentByModel(house.Model);
+					if (Rent > 0L && Diff.Days >= 7)
 					{
 						Logger.Debug("House " + house.UniqueID + " must pay !");
-						long Rent = GetRentByModel(house.Model);
 						if (house.KeptMoney >= Rent)
 						{
 							house.KeptMoney -= Rent;

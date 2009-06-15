@@ -279,6 +279,7 @@ namespace DOL.GS
 			else if (id >= 266 && id <= 267) return eRealm.Midgard;
 			else if (id >= 213 && id <= 219) return eRealm.Hibernia;
 			else if (id >= 272 && id <= 273) return eRealm.Hibernia;
+			else if (id == 225) return eRealm.Hibernia;
 			//old frontiers
 			else if (id >= 11 && id <= 15) return eRealm.Albion;
 			else if (id >= 111 & id <= 115) return eRealm.Midgard;

@@ -33,17 +33,13 @@ namespace DOL.GS.Housing
 			CheckNPCTemplates();
 		}
 
-		public static int LOT_PRICE_PER_HOUR = (int) (1.2*1000*100*100); //1.2p
-		public static int LOT_PRICE_MINIMUM = (300*100*100); //300g
-		public static int LOT_PRICE_START = (95*1000*100*100); //95p
-
-		public static int GetLotPrice(DBHouse house)
+		public static long GetLotPrice(DBHouse house)
 		{
 			TimeSpan diff = (DateTime.Now - house.CreationTime);
-			int price = LOT_PRICE_START - (int)(diff.TotalHours*LOT_PRICE_PER_HOUR);
-			if (price < LOT_PRICE_MINIMUM)
+			long price = ServerProperties.Properties.HOUSING_LOT_PRICE_START - (long)(diff.TotalHours * ServerProperties.Properties.HOUSING_LOT_PRICE_PER_HOUR);
+			if (price < ServerProperties.Properties.HOUSING_LOT_PRICE_MINIMUM)
 			{
-				return LOT_PRICE_MINIMUM;
+				return ServerProperties.Properties.HOUSING_LOT_PRICE_MINIMUM;
 			}
 			return price;
 		}
@@ -185,7 +181,6 @@ namespace DOL.GS.Housing
 						found = true;
 						break;
 					}
-					slot += 1;
 				}
 				if (!found)
 				{
@@ -195,8 +190,8 @@ namespace DOL.GS.Housing
 					newitem.SlotPosition = (slot%30);
 					newitem.PageNumber = (slot/30);
 					GameServer.Database.AddNewObject(newitem);
-					slot += 1;
 				}
+				slot += 1;
 			}
 		}
 

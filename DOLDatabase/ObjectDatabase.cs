@@ -340,7 +340,7 @@ namespace DOL.Database
 
 		/// <summary>
 		/// insert a new object into the db
-		/// and save it if its autosave=true
+		/// and save it
 		/// </summary>
 		/// <param name="dataObject"></param>
 		public void AddNewObject(DataObject dataObject)

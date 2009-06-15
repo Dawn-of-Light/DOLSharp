@@ -38,15 +38,6 @@ namespace DOL.GS
 
 		#region Variables
 		/// <summary>
-		/// The interval in which the weather chance will be tested, in milliseconds
-		/// </summary>
-		private const int CHECK_INTERVAL = 5 * 60 * 1000;
-		/// <summary>
-		/// The chance to start the weather.
-		/// Will be tested every CHECK_INTERVAL milliseconds
-		/// </summary>
-		private const int CHANCE = 5;
-		/// <summary>
 		/// The width of zone
 		/// </summary>
 		private const int ZONE_WIDTH = 1048575;//0xFFFFF
@@ -98,7 +89,7 @@ namespace DOL.GS
 		private WeatherMgr(ushort regionID)
 		{
 			this.m_regionID = regionID;
-			this.m_weatherTimer = new Timer(new TimerCallback(CheckWeatherTimerCallback), null, 10000, CHECK_INTERVAL);
+			this.m_weatherTimer = new Timer(new TimerCallback(CheckWeatherTimerCallback), null, 10000, ServerProperties.Properties.WEATHER_CHECK_INTERVAL);
 		}
 		#endregion
 
@@ -202,13 +193,13 @@ namespace DOL.GS
 			m_weatherStartTick = 0;
 
 			//Test our chance to start the weather
-			if (!Util.Chance(CHANCE))
+			if (!Util.Chance(ServerProperties.Properties.WEATHER_CHANCE))
 				return;
 
 			//Start the weather
 			StartStorm();
 
-			m_weatherTimer.Change(CHECK_INTERVAL + ZONE_WIDTH * 1000 / m_speed, CHECK_INTERVAL);
+			m_weatherTimer.Change(ServerProperties.Properties.WEATHER_CHECK_INTERVAL + ZONE_WIDTH * 1000 / m_speed, ServerProperties.Properties.WEATHER_CHECK_INTERVAL);
 			return; //0xFFFFF/speed*10 to wait time of storm  before check
 		}
 
@@ -221,8 +212,8 @@ namespace DOL.GS
 			StartStorm(1,
 					   (uint)Util.Random(25000, 90000),
 					   (ushort)Util.Random(100, 700),
-					   16000,
-					   (ushort)Util.Random(30, 120));
+					   (ushort)Util.Random(16000, 32000),
+					   (ushort)Util.Random(30, 100));
 		}
 
 		/// <summary>
@@ -231,7 +222,7 @@ namespace DOL.GS
 		public void RestartStorm()
 		{
 			StartStorm(m_startX, m_width, m_speed, m_fogDiffusion, m_intensity);
-			m_weatherTimer.Change(ZONE_WIDTH * 1000 / m_speed, CHECK_INTERVAL);
+			m_weatherTimer.Change(ZONE_WIDTH * 1000 / m_speed, ServerProperties.Properties.WEATHER_CHECK_INTERVAL);
 		}
 
 		/// <summary>
@@ -253,8 +244,9 @@ namespace DOL.GS
 
 			foreach (GameClient cl in WorldMgr.GetClientsOfRegion(m_regionID))
 				cl.Out.SendWeather(m_startX, m_width, m_speed, m_fogDiffusion, m_intensity);
-			if (log.IsInfoEnabled)
-				log.Info("It starts to rain in " + WorldMgr.GetRegion(m_regionID).Description);
+
+			if (log.IsInfoEnabled && ServerProperties.Properties.WEATHER_LOG_EVENTS)
+				log.Info(string.Format("It starts to rain in {0} ({1})", WorldMgr.GetRegion(m_regionID).Description, m_regionID));
 		}
 
 
@@ -276,8 +268,8 @@ namespace DOL.GS
 				if (cl.Player.X > (currentLine - m_width) && cl.Player.X < (currentLine + m_width))
 					cl.Out.SendMessage("The sky clears up again as the storm clouds disperse!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
-			m_weatherTimer.Change(CHECK_INTERVAL, CHECK_INTERVAL);
-			if (log.IsInfoEnabled)
+			m_weatherTimer.Change(ServerProperties.Properties.WEATHER_CHECK_INTERVAL, ServerProperties.Properties.WEATHER_CHECK_INTERVAL);
+            if (log.IsInfoEnabled && ServerProperties.Properties.WEATHER_LOG_EVENTS)
 				log.Info("Rain was stopped in " + WorldMgr.GetRegion(m_regionID).Description);
 		}
 
@@ -311,12 +303,12 @@ namespace DOL.GS
 						case 2://Albion housing
 						case 51://Albion SI
 						case 70://Albion TOA
-						case 71://Albion TOA
 						case 73://Albion TOA
 						case 100://Midgard main
 						case 102://Midgard housing
 						case 151://Midgard SI
 						case 30://Midgard TOA
+						case 71://Midgard TOA
 						case 200://Hibernia main
 						case 202://Hibernia housing
 						case 181://Hibernia SI
@@ -337,8 +329,10 @@ namespace DOL.GS
 							break;
 					}
 				}
+
+				// start weather 2 minutes after server starts
 				foreach (WeatherMgr weather in m_weathers.Values)
-					weather.m_weatherTimer.Change(CHECK_INTERVAL, CHECK_INTERVAL);
+					weather.m_weatherTimer.Change(120000, ServerProperties.Properties.WEATHER_CHECK_INTERVAL);
 			}
 			return true;
 		}
