@@ -371,13 +371,30 @@ namespace DOL.GS
 			log.Info(String.Format("Loaded {0} Albion, {1} Midgard and {2} Hibernia teleport locations",
 				numTeleports[0], numTeleports[1], numTeleports[2]));
 
+			objs = null;
+
 			// sort the regions by mob count
 
 			log.Debug("loading mobs from DB...");
-			objs = GameServer.Database.SelectAllObjects(typeof(Mob));
+
+			List<Mob> mobList = new List<Mob>();
+
+			if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
+			{
+				string[] astr = ServerProperties.Properties.DEBUG_LOAD_REGIONS.Split(';');
+
+				foreach (string loadRegion in astr)
+				{
+					mobList.AddRange((Mob[])GameServer.Database.SelectObjects(typeof(Mob), "region = " + loadRegion));
+				}
+			}
+			else
+			{
+				mobList.AddRange((Mob[])GameServer.Database.SelectAllObjects(typeof(Mob)));
+			}
 
 			Hashtable mobsByRegionId = new Hashtable(512);
-			foreach (Mob mob in objs)
+			foreach (Mob mob in mobList)
 			{
 				ArrayList list = (ArrayList)mobsByRegionId[mob.Region];
 				if (list == null)
@@ -387,7 +404,6 @@ namespace DOL.GS
 				}
 				list.Add(mob);
 			}
-			objs = null;
 
 			ArrayList regions = new ArrayList(512);
 			foreach (DictionaryEntry entry in regionCfg.Children)
@@ -511,8 +527,8 @@ namespace DOL.GS
 				m_NPCUpdateThread.IsBackground = true;
 				m_NPCUpdateThread.Start();
 
-				m_dayIncrement = 24;
-				m_dayStartTick = Environment.TickCount - (int)(DAY / m_dayIncrement / 2); // set start time to 12am
+				m_dayIncrement = Math.Max(1, Math.Min(512, ServerProperties.Properties.WORLD_DAY_INCREMENT)); // increments > 512 do not render smoothly on clients
+				m_dayStartTick = Environment.TickCount - (int)(DAY / m_dayIncrement / 2); // set start time to 12pm
 				m_dayResetTimer = new Timer(new TimerCallback(DayReset), null, DAY / m_dayIncrement / 2, DAY / m_dayIncrement);
 
 				m_pingCheckTimer = new Timer(new TimerCallback(PingCheck), null, 10 * 1000, 0); // every 10s a check
@@ -744,16 +760,7 @@ namespace DOL.GS
 									{
 										if (npc == null) continue;
 										narray[npc.ObjectID - 1] = true;
-										/*
-										if(npc.IsMoving
-											&& npc.IsOnTarget()
-											&& !npc.HasArriveOnTargetHandlers()
-											&& !npc.HasCloseToTargetHandlers())
-										{
-											npc.StopMoving();
-										}
-										else*/
-										if ((uint)Environment.TickCount - npc.LastUpdateTickCount > 30000)
+										if ((uint)Environment.TickCount - npc.LastUpdateTickCount > (ServerProperties.Properties.WORLD_NPC_UPDATE_INTERVAL >= 1000 ? ServerProperties.Properties.WORLD_NPC_UPDATE_INTERVAL : 1000))
 										{
 											npc.BroadcastUpdate();
 										}

@@ -75,6 +75,8 @@ namespace DOL.Database
 
         private bool m_isCloakHoodUp;
 
+		public static readonly string DEFAULT_NPC_CLASSTYPE = "DOL.GS.GameNPC";
+
 		static bool m_autoSave;
 
 		/// <summary>
@@ -83,7 +85,7 @@ namespace DOL.Database
 		public Mob()
 		{
 			m_autoSave = false;
-			m_type = "DOL.GS.GameNPC";
+			m_type = DEFAULT_NPC_CLASSTYPE;
 			m_equipmentTemplateID = "";
 			m_npcTemplateID = -1;
 			m_meleeDamageType = 2; // slash by default

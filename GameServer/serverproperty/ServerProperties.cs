@@ -239,8 +239,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// A serialised list of RegionIDs that will load objects
 		/// </summary>
-		[ServerProperty("load_regions", "a serialised list of region IDs that will load objects, separated by ; (no value will load objects in all regions)", "")]
-		public static readonly string LOAD_REGIONS;
+		[ServerProperty("debug_load_regions", "a serialised list of region IDs that will load objects, separated by ; (leave this blank to load all regions normally)", "")]
+		public static readonly string DEBUG_LOAD_REGIONS;
 
 		/// <summary>
 		/// A serialised list of disabled expansion IDs
@@ -429,6 +429,13 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool LOAD_HOOKPOINTS;
 
 		/// <summary>
+		/// Load Keeps
+		/// </summary>
+		[ServerProperty("load_keeps", "Load keeps", true)]
+		public static readonly bool LOAD_KEEPS;
+
+
+		/// <summary>
 		/// Save QuestItems into Database
 		/// </summary>
 		[ServerProperty("save_questitems_into_database", "set false if you don't want this", true)]
@@ -502,13 +509,70 @@ namespace DOL.GS.ServerProperties
         [ServerProperty("indoor_items_depend_on_size", "If true the max number of allowed House indoor items are set like live (40, 60, 80, 100)", true)]
         public static readonly bool INDOOR_ITEMS_DEPEND_ON_SIZE;
 
+
+		[ServerProperty("housing_rent_cottage", "Rent price for a cottage.", 200000L)]
+		public static readonly long HOUSING_RENT_COTTAGE;
+
+		[ServerProperty("housing_rent_house", "Rent price for a house.", 350000L)]
+		public static readonly long HOUSING_RENT_HOUSE;
+
+		[ServerProperty("housing_rent_villa", "Rent price for a villa.", 600000L)]
+		public static readonly long HOUSING_RENT_VILLA;
+
+		[ServerProperty("housing_rent_mansion", "Rent price for a mansion.", 1000000L)]
+		public static readonly long HOUSING_RENT_MANSION;
+
+		[ServerProperty("housing_lot_price_start", "Starting lot price before per hour reductions", 95L * 1000L * 100L * 100L)] // 95p
+		public static readonly long HOUSING_LOT_PRICE_START;
+
+		[ServerProperty("housing_lot_price_per_hour", "Lot price reduction per hour.", (long)(1.2 * 1000 * 100 * 100))] // 1.2p
+		public static readonly long HOUSING_LOT_PRICE_PER_HOUR;
+
+		[ServerProperty("housing_lot_price_minimum", "Minimum lot price.", 300L * 100L * 100L)] // 300g
+		public static readonly long HOUSING_LOT_PRICE_MINIMUM;
+
+		[ServerProperty("housing_debug_allow_multiple", "Allow the player to own more than 1 house.  This breaks some housing commands.", false)]
+		public static readonly bool HOUSING_DEBUG_ALLOW_MULTIPLE;
+
+
+		[ServerProperty("statprint_frequency", "How often (milliseconds) should statistics be printed on the server console.", 30000)]
+		public static readonly int STATPRINT_FREQUENCY;
+
+
+		[ServerProperty("world_item_decay_time", "How long (milliseconds) will an item dropped on the ground stay in the world.", (uint)180000)]
+		public static readonly uint WORLD_ITEM_DECAY_TIME;
+
+		[ServerProperty("world_day_increment", "Day Increment (0 to 512, default is 24).  Larger increments make shorter days.", (uint)24)]
+		public static readonly uint WORLD_DAY_INCREMENT;
+
+		[ServerProperty("world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second).", (uint)30000)]
+		public static readonly uint WORLD_NPC_UPDATE_INTERVAL;
+
+
+		[ServerProperty("weather_check_interval", "How often (milliseconds) will weather be checked for a chance to start a storm.", 5 * 60 * 1000)]
+		public static readonly int WEATHER_CHECK_INTERVAL;
+
+		[ServerProperty("weather_chance", "What is the chance of starting a storm.", 5)]
+		public static readonly int WEATHER_CHANCE;
+
+		[ServerProperty("weather_log_events", "Should weather events be shown in the log (and on the console).", true)]
+		public static readonly bool WEATHER_LOG_EVENTS;
+
+
+
         /// <summary>
         /// This is to set the baseHP For NPCs
         /// </summary>
         [ServerProperty("gamenpc_base_hp", "GameNPC's base HP * level", 500)]
         public static readonly int GAMENPC_BASE_HP;
 
-        /// <summary>
+		/// <summary>
+		/// Override the classtype of any npc with a classtype of DOL.GS.GameNPC
+		/// </summary>
+		[ServerProperty("gamenpc_default_classtype", "Change the classtype of any npc of classtype DOL.GS.GameNPC to this.", "DOL.GS.GameNPC")]
+		public static readonly string GAMENPC_DEFAULT_CLASSTYPE;
+
+		/// <summary>
         /// This will Allow/Disallow dual loggins
         /// </summary>
         [ServerProperty("allow_dual_logins", "Disable to disallow players to connect with more than 1 account at a time.", true)]
@@ -667,8 +731,8 @@ namespace DOL.GS.ServerProperties
         /// </summary>
         [ServerProperty("Relic_Return_Time", "A lost relic will automatically returns to its defined point, in seconds", 20*60)] //20 mins default
         public static readonly int RELIC_RETURN_TIME;
-        
-        /// <summary>
+
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
@@ -720,7 +784,7 @@ namespace DOL.GS.ServerProperties
 				if (attribs.Length == 0)
 					continue;
 				ServerPropertyAttribute attrib = (ServerPropertyAttribute)attribs[0];
-        f.SetValue(null, Load(attrib));
+		        f.SetValue(null, Load(attrib));
 			}
 		}
 

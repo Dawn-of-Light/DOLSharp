@@ -182,8 +182,8 @@ namespace DOL.GS
 
 			string[] list = null; 
 
-			if (ServerProperties.Properties.LOAD_REGIONS != string.Empty)
-				list = ServerProperties.Properties.LOAD_REGIONS.Split(';');
+			if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
+				list = ServerProperties.Properties.DEBUG_LOAD_REGIONS.Split(';');
 
 			if (list != null && list.Length > 0)
 			{
@@ -501,11 +501,14 @@ namespace DOL.GS
 			int myMobCount = 0;
 			int myMerchantCount = 0;
 			int myBindCount = bindPoints.Length;
+			string allErrors = string.Empty;
+
 			if (mobObjs.Length > 0)
 			{
 				foreach (Mob mob in mobObjs)
 				{
 					GameNPC myMob = null;
+					string error = string.Empty;
 
 					if (mob.Guild.Length > 0 && mob.Realm >= 0 && mob.Realm <= (int)eRealm._Last)
 					{
@@ -538,38 +541,50 @@ namespace DOL.GS
 
 					if (myMob == null)
 					{
-						if (mob.ClassType != null && mob.ClassType.Length > 0)
+						string classtype = ServerProperties.Properties.GAMENPC_DEFAULT_CLASSTYPE;
+
+						if (mob.ClassType != null && mob.ClassType.Length > 0 && mob.ClassType != Mob.DEFAULT_NPC_CLASSTYPE)
 						{
-							try
+							classtype = mob.ClassType;
+						}
+
+						try
+						{
+							myMob = (GameNPC)gasm.CreateInstance(classtype, false);
+						}
+						catch
+						{
+							error = classtype;
+						}
+
+						if (myMob == null)
+						{
+							foreach (Assembly asm in ScriptMgr.Scripts)
 							{
-								myMob = (GameNPC)gasm.CreateInstance(mob.ClassType, false);
+								try
+								{
+									myMob = (GameNPC)asm.CreateInstance(classtype, false);
+									error = string.Empty;
+								}
+								catch
+								{
+									error = classtype;
+								}
+
+								if (myMob != null)
+									break;
 							}
-							catch
-							{
-							}
+
 							if (myMob == null)
 							{
-								foreach (Assembly asm in ScriptMgr.Scripts)
-								{
-									try
-									{
-										myMob = (GameNPC)asm.CreateInstance(mob.ClassType, false);
-									}
-									catch
-									{
-									}
-									if (myMob != null)
-										break;
-								}
-								if (myMob == null)
-									myMob = new GameNPC();
+								myMob = new GameNPC();
+								error = classtype;
 							}
 						}
-						else
-						{
-							myMob = new GameNPC();
-						}
 					}
+
+					if (!allErrors.Contains(error))
+						allErrors += " " + error + ",";
 
 					if (myMob != null)
 					{
@@ -592,10 +607,8 @@ namespace DOL.GS
 								log.Error("Failed: " + myMob.GetType().FullName + ":LoadFromDatabase(" + mob.GetType().FullName + ");", e);
 							throw e;
 						}
-						myMob.AddToWorld();
 
-						//						if (!myMob.AddToWorld()) // seems like some people store inactive NPCs in db and active them later
-						//							log.ErrorFormat("Failed to add the mob to the world: {0}", myMob.ToString());
+						myMob.AddToWorld();
 					}
 				}
 			}
@@ -656,10 +669,14 @@ namespace DOL.GS
 			if (myMobCount + myItemCount + myMerchantCount + myBindCount > 0)
 			{
 				if (log.IsInfoEnabled)
-					log.Info(String.Format("Region: {0} loaded {1} mobs, {2} merchants, {3} items {4} bindpoints, from DB ({5})", Description, myMobCount, myMerchantCount, myItemCount, myBindCount, TimeManager.Name));
-				//WorldMgr.GCAction();
+					log.Info(String.Format("Region: {0} ({1}) loaded {2} mobs, {3} merchants, {4} items {5} bindpoints, from DB ({6})", Description, ID, myMobCount, myMerchantCount, myItemCount, myBindCount, TimeManager.Name));
+
 				log.Debug("Used Memory: " + GC.GetTotalMemory(false) / 1024 + "KB");
-				Thread.Sleep(0);
+
+				if (allErrors != string.Empty)
+					log.Warn("Error loading the following NPC ClassType(s), GameNPC used instead:" + allErrors.TrimEnd(','));
+
+				Thread.Sleep(0);  // tolakram - why is this here?
 			}
 			mobCount += myMobCount;
 			merchantCount += myMerchantCount;
