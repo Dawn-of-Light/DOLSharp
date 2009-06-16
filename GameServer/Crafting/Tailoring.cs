@@ -23,10 +23,11 @@ using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
+using System;
 
 namespace DOL.GS
 {
-    public class Tailoring : AbstractCraftingSkill
+    public class Tailoring : AbstractProfession
     {
         public Tailoring()
         {
@@ -42,6 +43,15 @@ namespace DOL.GS
 				return "Tailor's";
 			}
 		}
+
+        protected override String Profession
+        {
+            get
+            {
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE,
+                    "CraftersProfession.Tailor");
+            }
+        }
 
         /// <summary>
         /// Check if  the player own all needed tools

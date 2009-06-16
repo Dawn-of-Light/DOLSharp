@@ -33,7 +33,6 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class AbstractCraftingSkill
 	{
-
 		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Declaration

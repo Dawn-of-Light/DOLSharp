@@ -308,6 +308,7 @@
     <Compile Include="Crafting\AbstractCraftingSkill.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Crafting\AbstractProfession.cs" />
     <Compile Include="Crafting\AdvancedCraftingSkill.cs">
       <SubType>Code</SubType>
     </Compile>
