@@ -53,10 +53,10 @@ CraftLevelToCraftTitle.LegendaryGrandmaster:		Legendary Grandmaster
 
 # /CraftersTitle (NEW)
 CraftersTitle.Helper:						{0}'s Helper
-CraftersTitle.JuniorApprentice:				{0}'s Junior Apprentice
-CraftersTitle.Apprentice:					{0}'s Apprentice
+CraftersTitle.JuniorApprentice:				Junior Apprentice {0}
+CraftersTitle.Apprentice:					Apprentice {0}
 CraftersTitle.Neophyte:						Neophyte {0}
-CraftersTitle.Assistant:					{0}'s Assistant
+CraftersTitle.Assistant:					Assistant {0}
 CraftersTitle.Junior:						Junior {0}
 CraftersTitle.Journeyman:					Journeyman {0}
 CraftersTitle.Senior:						Senior {0}
