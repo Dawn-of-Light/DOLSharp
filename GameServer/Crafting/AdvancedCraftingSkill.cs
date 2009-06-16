@@ -23,17 +23,18 @@ using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
+using System;
 
 namespace DOL.GS
 {
 	/// <summary>
 	/// AdvancedCraftingSkill is the skill for alchemy and spellcrafting whitch add all combine system
 	/// </summary>
-	public abstract class AdvancedCraftingSkill : AbstractCraftingSkill
-	{
-		#region Classic craft function
+	public abstract class AdvancedCraftingSkill : AbstractProfession
+    {
+        #region Classic craft function
 
-		/// <summary>
+        /// <summary>
 		/// Check if  the player own all needed tools
 		/// </summary>
 		/// <param name="player">the crafting player</param>

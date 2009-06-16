@@ -23,6 +23,7 @@ using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
+using System;
 
 namespace DOL.GS
 {
@@ -41,6 +42,15 @@ namespace DOL.GS
 				return "Alchemist's";
 			}
 		}
+
+        protected override String Profession
+        {
+            get 
+            { 
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, 
+                    "CraftersProfession.Alchemist"); 
+            }
+        }
 
 		#region Classic craft functions
 		protected override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)

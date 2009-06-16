@@ -243,7 +243,7 @@ namespace DOL.GS.Commands
 			{
 				result.Append(" ");
 				AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(player.CraftingPrimarySkill);
-				result.Append(player.CraftTitle + " " + skill.Name);
+				result.Append(player.CraftTitle);
 			}
 			else
 			{

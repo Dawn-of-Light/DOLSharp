@@ -19,10 +19,11 @@
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
+using System;
 
 namespace DOL.GS
 {
-	public class SiegeCrafting : AbstractCraftingSkill
+	public class SiegeCrafting : AbstractProfession
 	{
 		public SiegeCrafting()
 			: base()
@@ -38,6 +39,15 @@ namespace DOL.GS
 				return "Siegecrafter";
 			}
 		}
+
+        protected override String Profession
+        {
+            get
+            {
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE,
+                    "CraftersProfession.Siegecrafter");
+            }
+        }
 
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
