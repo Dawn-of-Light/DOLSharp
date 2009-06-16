@@ -40,7 +40,7 @@ namespace DOL.GS
 
             String language = ServerProperties.Properties.SERV_LANGUAGE;
 
-            switch ((int)(skillLevel / 100))
+            switch (skillLevel / 100)
             {
                 case 0: return LanguageMgr.GetTranslation(language, "CraftersTitle.Helper");
                 case 1: return LanguageMgr.GetTranslation(language, "CraftersTitle.JuniorApprentice");
