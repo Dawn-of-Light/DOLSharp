@@ -37,7 +37,7 @@ Crafting.Name.Tailoring:				Tailoring
 Crafting.Name.Weaponcraft:				Weaponcraft
 Crafting.Name.Woodworking:				Woodworking
 
-# /CraftLevelToCraftTitle
+# /CraftLevelToCraftTitle (OLD)
 CraftLevelToCraftTitle.Helper:				Helper
 CraftLevelToCraftTitle.JuniorApprentice:		Junior Apprentice
 CraftLevelToCraftTitle.Apprentice:			Apprentice
@@ -50,6 +50,30 @@ CraftLevelToCraftTitle.Master:				Master
 CraftLevelToCraftTitle.Grandmaster:			Grandmaster
 CraftLevelToCraftTitle.Legendary:			Legendary
 CraftLevelToCraftTitle.LegendaryGrandmaster:		Legendary Grandmaster
+
+# /CraftersTitle (NEW)
+CraftersTitle.Helper:						{0}'s Helper
+CraftersTitle.JuniorApprentice:				{0}'s Junior Apprentice
+CraftersTitle.Apprentice:					{0}'s Apprentice
+CraftersTitle.Neophyte:						Neophyte {0}
+CraftersTitle.Assistant:					{0}'s Assistant
+CraftersTitle.Junior:						Junior {0}
+CraftersTitle.Journeyman:					Journeyman {0}
+CraftersTitle.Senior:						Senior {0}
+CraftersTitle.Master:						Master {0}
+CraftersTitle.Grandmaster:					Grandmaster {0}
+CraftersTitle.Legendary:					Legendary {0}
+CraftersTitle.LegendaryGrandmaster:			Legendary Grandmaster {0}
+
+# /CraftersProfession (NEW)
+CraftersProfession.Alchemist:				Alchemist
+CraftersProfession.Armorer:					Armorer
+CraftersProfession.Spellcrafter:			Spellcrafter
+CraftersProfession.Fletcher:				Fletcher
+CraftersProfession.Tailor:					Tailor
+CraftersProfession.Weaponcrafter:			Weaponcrafter
+CraftersProfession.Siegecrafter:			Siegecrafter
+
 
 # /AbstractCraftingSkill
 AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Your backpack is full. {0} is created on the ground.

@@ -35,6 +35,15 @@ namespace DOL.GS
 			}
 		}
 
+        protected override String Profession
+        {
+            get
+            {
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE,
+                    "CraftersProfession.Spellcrafter");
+            }
+        }
+
         private static readonly int[,] itemMaxBonusLevel =  // taken from mythic Spellcraft calculator
 		{
 			{0,1,1,1,1,1,1},

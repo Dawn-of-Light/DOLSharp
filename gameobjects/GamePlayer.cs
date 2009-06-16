@@ -11951,7 +11951,13 @@ namespace DOL.GS
 					return "";
 				}
 
-				return ((AbstractCraftingSkill)CraftingMgr.getSkillbyEnum(CraftingPrimarySkill)).CRAFTER_TITLE_PREFIX+" "+GlobalConstants.CraftLevelToCraftTitle((int)craftingSkills[(int)CraftingPrimarySkill]);
+                AbstractCraftingSkill craftingSkill = CraftingMgr.getSkillbyEnum(CraftingPrimarySkill);
+
+                return (craftingSkill is AbstractProfession)
+                    ? (craftingSkill as AbstractProfession).GetTitle((int)craftingSkills[(int)CraftingPrimarySkill])
+                    : "";
+
+				//return ((AbstractCraftingSkill)CraftingMgr.getSkillbyEnum(CraftingPrimarySkill)).CRAFTER_TITLE_PREFIX+" "+GlobalConstants.CraftLevelToCraftTitle((int)craftingSkills[(int)CraftingPrimarySkill]);
 			}
 		}
 
