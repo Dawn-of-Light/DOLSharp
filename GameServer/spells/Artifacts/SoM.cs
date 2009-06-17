@@ -38,7 +38,7 @@ namespace DOL.GS.Spells
  			if(effect.Owner is GamePlayer)
             {
 	            GamePlayer player = effect.Owner as GamePlayer; 				
-				player.Shade(true);
+				player.Shade(false);
 				player.Out.SendUpdatePlayer();
     		}	          
             return base.OnEffectExpires(effect, noMessages);

@@ -2026,6 +2026,9 @@
     <Compile Include="spells\Artifacts\CommonArtifactSpells.cs" />
     <Compile Include="spells\Artifacts\DreamSphere.cs" />
     <Compile Include="spells\Artifacts\Ereine.cs" />
+    <Compile Include="spells\Artifacts\Flask.cs" />
+    <Compile Include="spells\Artifacts\GoldenSpearJavelin.cs" />
+    <Compile Include="spells\Artifacts\HarpyFeatherCloak.cs" />
     <Compile Include="spells\Artifacts\HpPwrEndRegen.cs" />
     <Compile Include="spells\Artifacts\MaddeningScalars.cs" />
     <Compile Include="spells\Artifacts\RealmLore.cs" />
@@ -2084,6 +2087,7 @@
     <Compile Include="spells\FocusShellHandler.cs" />
     <Compile Include="spells\Fury.cs" />
     <Compile Include="spells\Hunter\SummonHunterPet.cs" />
+    <Compile Include="spells\PetLifedrainSpellHandler.cs" />
     <Compile Include="spells\Savage\SavageEnduranceHeal.cs" />
     <Compile Include="spells\SpeedOfTheRealmHandler.cs" />
     <Compile Include="spells\Spirit Master\SummonSpiritFighter.cs" />

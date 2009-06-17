@@ -1,4 +1,4 @@
- /*
+/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -16,42 +16,51 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Reflection;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using log4net;
-
 namespace DOL.GS.Spells
 {
-    [SpellHandlerAttribute("CloudsongAura")]
-    public class CloudsongAuraSpellHandler : PropertyChangingSpell
+    [SpellHandler("CloudsongAura")]
+    public class CloudsongAuraSpellHandler : DualStatBuff
     {
-        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        public CloudsongAuraSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
         {
-            base.ApplyEffectOnTarget(target, effectiveness);
         }
 
-        public override void OnEffectPulse(GameSpellEffect effect)
-        {
-            SendEffectAnimation(effect.Owner, 0, false, 1);
-            base.OnEffectPulse(effect);
-        }
+        /// <summary>
+        /// SpecBuffBonusCategory
+        /// </summary>
+		public override int BonusCategory1 { get { return 2; } }
+
+        /// <summary>
+        /// BaseBuffBonusCategory
+        /// </summary>
+		public override int BonusCategory2 { get { return 1; } }
 
         public override eProperty Property1
         {
-            get
-            {
-                return eProperty.SpellRange;
-            }
-        }
-        public override eProperty Property2
-        {
-            get
-            {
-                return eProperty.ResistPierce;
-            }
+            get { return eProperty.SpellRange; }
         }
 
-        public CloudsongAuraSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+        public override eProperty Property2
+        {
+            get { return eProperty.ResistPierce; }
+        }
+
+    }
+
+    /// <summary>
+    /// [Freya] Nidel : Handler for Fall damage reduction.
+    /// Calcul located in PlayerPositionUpdateHandler.cs
+    /// </summary>
+    [SpellHandler("CloudsongFall")]
+    public class CloudsongFallSpellHandler : SpellHandler
+    {
+        public CloudsongFallSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+        {
+        }
+
+        public override bool HasPositiveEffect
+        {
+            get { return true; }
+        }
     }
 }
