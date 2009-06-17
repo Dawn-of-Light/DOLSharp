@@ -4668,22 +4668,14 @@ namespace DOL.GS
 				return 0;
 			}
 
-			int variance = m_healthRegenerationPeriod / 1000;
-			int periodVariance = Util.Random(-variance, variance);
-
 			if (InCombat)
 			{
-				return m_healthRegenerationPeriod * 2 + periodVariance;
-			}
-
-			//Sitting livings heal faster
-			if (IsSitting)
-			{
-				return m_healthRegenerationPeriod / 2 + periodVariance;
+				// in combat each tic is 6 seconds
+				return m_healthRegenerationPeriod * 2;
 			}
 
 			//Heal at standard rate
-			return m_healthRegenerationPeriod + periodVariance;
+			return m_healthRegenerationPeriod;
 		}
 		/// <summary>
 		/// Callback for the power regenerationTimer
@@ -4693,8 +4685,6 @@ namespace DOL.GS
 		{
 			if (this is GamePlayer && (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir
 			 || (((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63)))
-			//|| (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)
-			// || (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Mauler_Mid)))
 			{
 				double MinMana = MaxMana * 0.15;
 				if (Mana < MinMana) return 0;
@@ -4722,23 +4712,15 @@ namespace DOL.GS
 				}
 			}
 
-			int variance = m_powerRegenerationPeriod / 1000;
-			int periodVariance = Util.Random(-variance, variance);
-
 			//If we were hit before we regenerated, we regenerate slower the next time
 			if (InCombat)
 			{
-				return m_powerRegenerationPeriod * 2 + periodVariance;
-			}
-
-			//Sitting livings regen faster
-			if (IsSitting)
-			{
-				return m_powerRegenerationPeriod / 2 + periodVariance;
+				// rate in combat is 10 seconds per tic
+				return (int)(m_powerRegenerationPeriod * 3.333);
 			}
 
 			//regen at standard rate
-			return m_powerRegenerationPeriod + periodVariance;
+			return m_powerRegenerationPeriod;
 		}
 		/// <summary>
 		/// Callback for the endurance regenerationTimer
@@ -6137,8 +6119,8 @@ namespace DOL.GS
 			m_activeQuiverSlot = eActiveQuiverSlot.None;
 			m_rangeAttackState = eRangedAttackState.None;
 			m_rangeAttackType = eRangedAttackType.Normal;
-			m_healthRegenerationPeriod = 6000;
-			m_powerRegenerationPeriod = 6000;
+			m_healthRegenerationPeriod = 3000;
+			m_powerRegenerationPeriod = 3000;
 			m_enduRegenerationPeriod = 1000;
 			m_xpGainers = new HybridDictionary();
 			m_effects = CreateEffectsList();
