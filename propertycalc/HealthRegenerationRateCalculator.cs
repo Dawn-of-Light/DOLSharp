@@ -48,23 +48,15 @@ namespace DOL.GS.PropertyCalc
 				return 0; // no HP regen if diseased
 			if (living is GameKeepDoor)
 				return (int)(living.MaxHealth *0.05);//5% each time for keep door
-
-			double regen = living.Level * 0.15 + 3;
-			if (living.Level > 15) 
-			{
-				regen += ((living.Level-15) * 0.2);
-			}
 			
 			/* PATCH 1.87 COMBAT AND REGENERATION
 			  - While in combat, health and power regeneration ticks will happen twice as often.
     		  - Each tick of health and power is now twice as effective.
               - All health and power regeneration aids are now twice as effective.
              */
-            if (living.InCombat)
-				regen +=2;
-            else
-            	regen +=4;
-            
+
+			double regen = 20;
+
 			if (regen != 0 && ServerProperties.Properties.HEALTH_REGEN_RATE != 1)
 				regen *= ServerProperties.Properties.HEALTH_REGEN_RATE;
 
