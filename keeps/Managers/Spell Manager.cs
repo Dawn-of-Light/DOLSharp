@@ -40,8 +40,6 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		public static void CheckAreaForHeals(GameKeepGuard guard)
 		{
-            // Only players have a 100% chance to get a heal.
-
 			GameLiving target = null;
 			foreach (GamePlayer player in guard.GetPlayersInRadius(2000))
 			{
@@ -55,11 +53,6 @@ namespace DOL.GS.Keeps
 					}
 				}
 			}
-
-            // Everything else only gets a 25% chance - stop the bloody healing spam!
-
-            if (Util.Chance(75))
-                return;
 
 			if (target == null)
 			{
@@ -106,11 +99,6 @@ namespace DOL.GS.Keeps
 		/// <param name="lord">The lord object</param>
 		public static void LordCastHealSpell(GameKeepGuard lord)
 		{
-            // Aredhel: No more self-healing. If 3 players can't kill a lord
-            // because of excessive heal spam, then something is amiss.
-
-            return;
-
 			//decide which healing spell
 			Spell spell = GetLordHealSpell((eRealm)lord.Realm);
 			//cast the healing spell
@@ -129,12 +117,6 @@ namespace DOL.GS.Keeps
 		/// <param name="target">The spell target</param>
 		public static void CastHealSpell(GameNPC guard, GameLiving target)
 		{
-            // Aredhel: No more self-healing. If 3 players can't kill a lord
-            // because of excessive heal spam, then something is amiss.
-
-            if (target == guard)
-                return;
-
 			//decide which healing spell
 			Spell spell = GetGuardHealSmallSpell((eRealm)guard.Realm);
 			//cast the healing spell

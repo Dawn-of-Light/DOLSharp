@@ -1060,8 +1060,9 @@ namespace DOL.AI.Brain
 
 				#region Heals
 				case "Heal":
-					// Heal self when dropping below 30%.
-					if (Body.HealthPercent < 30)
+					// Chance to heal self when dropping below 30%, do NOT spam it.
+
+					if (Body.HealthPercent < 30 && Util.Chance(10))
 					{
 						Body.TargetObject = Body;
 						break;
