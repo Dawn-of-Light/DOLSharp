@@ -2053,7 +2053,7 @@ namespace DOL.GS
              */
             if (CharacterClass.ManaStat != eStat.UNDEFINED || CharacterClass.ID == (int)eCharacterClass.Vampiir)
 			{
-				maxpower = (level * 5) + (manastat - 50);
+				maxpower = (level * 6) + (manastat - 50);
 			}
 			if (maxpower < 0)
 				maxpower = 0;
