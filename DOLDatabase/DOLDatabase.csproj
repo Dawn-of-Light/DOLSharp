@@ -83,7 +83,7 @@
       <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data">
-      <HintPath>MySQL ADO.NET\MySql.Data.dll</HintPath>
+      <HintPath>..\sharedModules\MySQL\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

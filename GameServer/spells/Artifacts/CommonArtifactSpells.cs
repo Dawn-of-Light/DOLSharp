@@ -270,8 +270,9 @@ namespace DOL.GS.Spells
         {
            if(effect.Owner is GamePlayer)
             {
-            	GamePlayer player = effect.Owner as GamePlayer;    
- 				player.Model = (ushort)player.Client.Account.Characters[player.Client.ActiveCharIndex].CreationModel;            	
+            	GamePlayer player = effect.Owner as GamePlayer;
+                GameClient client = player.Client;
+ 				player.Model = (ushort)client.Account.Characters[client.ActiveCharIndex].CreationModel;            	
  				player.Out.SendUpdatePlayer();  
             }                       
             return base.OnEffectExpires(effect, noMessages);         	
@@ -283,11 +284,8 @@ namespace DOL.GS.Spells
     /// Arcane leadership spell handler (range+resist pierce)
     /// </summary>
     [SpellHandlerAttribute("ArcaneLeadership")]
-    public class ArcaneLeadership : DualStatBuff
+    public class ArcaneLeadership : CloudsongAuraSpellHandler
     {
-		public override eProperty Property1 { get { return eProperty.SpellRange; } }	
-		public override eProperty Property2 { get { return eProperty.ResistPierce; } }			
-    	
     	public ArcaneLeadership(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }   
 }

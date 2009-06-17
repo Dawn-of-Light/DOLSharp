@@ -3610,6 +3610,26 @@ namespace DOL.GS
 			}
 
 			bool wasAlive = IsAlive;
+
+            //[Freya] Nidel: Use2's Flask
+            if(this is GamePlayer)
+            {
+                bool welcomeToDie = (Health - (damageAmount + criticalAmount)) <= 0;
+                if (welcomeToDie)
+                {
+                    GameSpellEffect deadFlask = SpellHandler.FindEffectOnTarget(this, "DeadFlask");
+                    if(deadFlask != null)
+                    {
+                        if(Util.Chance((int)deadFlask.Spell.Value))
+                        {
+                            if (IsLowHealth)
+                                Notify(GameLivingEvent.LowHealth, this, null);
+                            return;
+                        }
+                    }
+                }
+            }
+
 			Health -= damageAmount + criticalAmount;
 
             if (!IsAlive)
