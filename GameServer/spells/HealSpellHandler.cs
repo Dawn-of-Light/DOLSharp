@@ -23,6 +23,8 @@ using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Spells
 {
+    using Effects;
+
     /// <summary>
     /// 
     /// </summary>
@@ -136,6 +138,13 @@ namespace DOL.GS.Spells
                 criticalvalue = Util.Random(amount / 10, amount / 2 + 1);
 
             amount += criticalvalue;
+
+            GameSpellEffect flaskHeal = FindEffectOnTarget(target, "HealFlask");
+
+            if(flaskHeal != null)
+            {
+                amount += (int) ((amount*flaskHeal.Spell.Value)*0.01);
+            }
 
             int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);
 

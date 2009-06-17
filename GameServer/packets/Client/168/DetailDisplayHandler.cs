@@ -994,21 +994,18 @@ Type    Description           Id
 			{
 				output.AddRange(spellHandler.DelveInfo);
 				//Subspells
-				if (spell.SubSpellID > 0)
+				if(spell.SubSpellID > 0)
 				{
 					Spell s = SkillBase.GetSpellByID(spell.SubSpellID);
-					if (spell != null)
-					{
-						output.Add(" ");
-						ISpellHandler sh = ScriptMgr.CreateSpellHandler(client.Player, s, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-						output.AddRange(sh.DelveInfo);
-					}
+					output.Add(" ");
+					ISpellHandler sh = ScriptMgr.CreateSpellHandler(client.Player, s, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+					output.AddRange(sh.DelveInfo);
 				}
 			}
 			if (client.Account.PrivLevel > 1 )
 			{
 				output.Add("----------Technical informations----------");
-				output.Add("Line: " + spellHandler == null ? spellLine.KeyName : spellHandler.SpellLine.Name);
+				output.Add("Line: " + (spellHandler == null ? spellLine.KeyName : spellHandler.SpellLine.Name));
 				output.Add("SpellID: " + spell.ID);
 				output.Add("ClientEffect: " + spell.ClientEffect);
 				output.Add("Icon: " + spell.ClientEffect);

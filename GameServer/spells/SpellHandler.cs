@@ -2727,6 +2727,17 @@ namespace DOL.GS.Spells
 				// level mod
 				hitchance -= (int)(m_caster.GetConLevel(target) * 10);
 			}
+
+            // [Freya] Nidel: Harpy Cloak : They have less chance of landing melee attacks, and spells have a greater chance of affecting them. 
+            if((target is GamePlayer))
+            {
+                GameSpellEffect harpyCloak = FindEffectOnTarget(target, "HarpyFeatherCloak");
+                if(harpyCloak != null)
+                {
+                    hitchance += (int) ((hitchance*harpyCloak.Spell.Value)*0.01);
+                }
+            }
+
 			return hitchance;
 		}
 

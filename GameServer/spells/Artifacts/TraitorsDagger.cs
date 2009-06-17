@@ -20,7 +20,6 @@ using System;
 using DOL.GS.Effects;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
@@ -52,79 +51,81 @@ namespace DOL.GS.Spells
 		public TraitorsDaggerProc(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 
-	[SpellHandlerAttribute("TraitorsDaggerSummon")]
-	public class TraitorsDaggerSummon : SummonSpellHandler
-	{
-		private DBSpell dbs;
-		private Spell s;
-		private SpellLine sl;
-		private ISpellHandler trap;
+    [SpellHandler("DdtProcDd")]
+    public class DdtProcDd:DirectDamageSpellHandler
+    {
+        public DdtProcDd(GameLiving caster,Spell spell,SpellLine line) : base(caster,spell,line) { }
 
-		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
-		{
-			base.ApplyEffectOnTarget(target, effectiveness);
+        public override void OnDirectEffect(GameLiving target,double effectiveness)
+        {
+            base.OnDirectEffect(target,effectiveness);
+            Caster.ChangeHealth(Caster,GameLiving.eHealthChangeType.Spell,-Spell.ResurrectHealth);
+        }
+    }
 
-			(pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
-			(pet.Brain as ProcPetBrain).Think();
-		}
+    [SpellHandler("TraitorsDaggerSummon")]
+    public class TraitorsDaggerSummon : SummonSpellHandler
+    {
+        private ISpellHandler _trap;
 
-		protected override GamePet GetGamePet(INpcTemplate template)
-		{
-			return new TraitorDaggerPet(template);
-		}
+        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            //Set pet infos & Brain
+            base.ApplyEffectOnTarget(target, effectiveness);
+            ProcPetBrain petBrain = (ProcPetBrain) pet.Brain;
+            petBrain.AddToAggroList(target, 1);
+            petBrain.Think();
+        }
 
-		protected override IControlledBrain GetPetBrain(GameLiving owner)
-		{
-			return new ProcPetBrain(owner);
-		}
-		
-		protected override void SetBrainToOwner(IControlledBrain brain)
-		{
-		}
+        protected override GamePet GetGamePet(INpcTemplate template) { return new TraitorDaggerPet(template); }
+        protected override IControlledBrain GetPetBrain(GameLiving owner) { return new ProcPetBrain(owner); }
+        protected override void SetBrainToOwner(IControlledBrain brain) { }
+        protected override void AddHandlers() { GameEventMgr.AddHandler(pet, GameLivingEvent.AttackFinished, EventHandler); }
 
-		protected override void AddHandlers()
-		{
-			GameEventMgr.AddHandler(pet, GameLivingEvent.AttackFinished, new DOLEventHandler(EventHandler));
-		}
+        protected void EventHandler(DOLEvent e, object sender, EventArgs arguments)
+        {
+            AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;
+            if(args == null || args.AttackData == null)
+                return;
+            // Spirit procs lifetap when hitting ennemy
+            if(_trap == null)
+            {
+                _trap = MakeTrap();
+            }
+            if(Util.Chance(50))
+            {
+                _trap.CastSpell(args.AttackData.Target);
+            }
+        }
 
-		protected void EventHandler(DOLEvent e, object sender, EventArgs arguments)
-		{
-			AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;
-			if (args == null || args.AttackData == null)
-				return;
+        private ISpellHandler MakeTrap()
+        {
+            DBSpell dbs = new DBSpell();
+            dbs.Name = "Increased Essence Consumption";
+            dbs.Icon = 11020;
+            dbs.ClientEffect = 11020;
+            dbs.DamageType = 10;
+            dbs.Target = "Enemy";
+            dbs.Radius = 0;
+            dbs.Type = "PetLifedrain";
+            dbs.Damage = 70;
+            dbs.LifeDrainReturn = 100;
+            dbs.Value = -100;
+            dbs.Duration = 0;
+            dbs.Frequency = 0;
+            dbs.Pulse = 0;
+            dbs.PulsePower = 0;
+            dbs.Power = 0;
+            dbs.CastTime = 0;
+            dbs.Range = 350;
+            Spell s = new Spell(dbs, 50);
+            SpellLine sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
+            return ScriptMgr.CreateSpellHandler(pet, s, sl);
+        }
 
-			// Spirit procs lifetap when hitting ennemy
-			if (trap != null && Util.Chance(50))
-                trap.CastSpell(args.AttackData.Target);
-				//trap.StartSpell(args.AttackData.Target);
-		}
-
-		public TraitorsDaggerSummon(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-			dbs = new DBSpell();
-			dbs.Name = "Increased Essence Consumption";
-			dbs.Icon = 661;
-			dbs.ClientEffect = 661;
-			dbs.DamageType = 10;
-			dbs.Target = "Enemy";
-			dbs.Radius = 0;
-			dbs.Type = "Lifedrain";
-			dbs.Damage = 50;
-			dbs.LifeDrainReturn = 100;
-			dbs.Value = -100;
-			dbs.Duration = 0;
-			dbs.Frequency = 0;
-			dbs.Pulse = 0;
-			dbs.PulsePower = 0;
-			dbs.Power = 0;
-			dbs.CastTime = 0;
-			dbs.Range = 350;
-			s = new Spell(dbs, 1);
-			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-			trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
-		}
-	}
+        public TraitorsDaggerSummon(GameLiving caster, Spell spell, SpellLine line)
+            : base(caster, spell, line) { }
+    }
 }
 
 namespace DOL.GS
