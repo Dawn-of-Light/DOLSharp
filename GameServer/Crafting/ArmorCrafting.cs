@@ -16,13 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
-using System.Collections.Specialized;
-using System.Reflection;
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
-using log4net;
 using System;
 
 namespace DOL.GS
@@ -32,16 +28,9 @@ namespace DOL.GS
 		public ArmorCrafting()
 		{
 			Icon = 0x02;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Armorcraft");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, 
+                "Crafting.Name.Armorcraft");
 			eSkill = eCraftingSkill.ArmorCrafting;
-		}
-
-		public override string CRAFTER_TITLE_PREFIX
-		{
-			get
-			{
-				return "Armorer's";
-			}
 		}
 
         protected override String Profession
@@ -59,24 +48,27 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		protected override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
                 if (item.Name == "forge" || item.Model == 478) // Forge
-                {
 					return true;
-				}
 			}
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindForge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
+                "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), 
+                eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, 
+                "Crafting.CheckTool.FindForge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 			return false;
 		}
 
 		/// <summary>
 		/// Calculate the minumum needed secondary crafting skill level to make the item
 		/// </summary>
-		public override int CalculateSecondCraftingSkillMinimumLevel(DBCraftedItem item)
+		public override int GetSecondaryCraftingSkillMinimumLevel(DBCraftedItem item)
 		{
 			switch(item.ItemTemplate.Object_Type)
 			{
@@ -88,7 +80,7 @@ namespace DOL.GS
 					return item.CraftingLevel - 60;
 			}
 
-			return base.CalculateSecondCraftingSkillMinimumLevel(item);
+			return base.GetSecondaryCraftingSkillMinimumLevel(item);
 		}
 
 		/// <summary>

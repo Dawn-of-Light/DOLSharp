@@ -26,15 +26,6 @@ namespace DOL.GS
 {
 	public class SpellCrafting : AdvancedCraftingSkill
 	{
-
-		public override string CRAFTER_TITLE_PREFIX
-		{
-			get
-			{
-				return "Spellcrafter's";
-			}
-		}
-
         protected override String Profession
         {
             get
@@ -99,15 +90,14 @@ namespace DOL.GS
 			{10,15,18,21,24,28,32},
 		};
 
-        // Luhz Crafting Update:
-        // The formula for OC overcharge success has changed - Patch 1.87
         private static readonly int[] OCStartPercentages = { 0, 10, 20, 30, 50, 70 };
         private static readonly int[] ItemQualOCModifiers = { 0, 0, 6, 8, 10, 18, 26 };
 
 		public SpellCrafting()
 		{
 			Icon = 0x0D;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Evocation");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, 
+				"Crafting.Name.Evocation");
 			eSkill = eCraftingSkill.SpellCrafting;
 		}
 
@@ -119,9 +109,9 @@ namespace DOL.GS
 		/// <param name="player">the crafting player</param>
 		/// <param name="craftItemData">the object in construction</param>
 		/// <returns>true if the player hold all needed tools</returns>
-		protected override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
 		{
-            return base.CheckTool(player, craftItemData);
+            return base.CheckForTools(player, craftItemData);
 		}
 
 		/// <summary>
@@ -138,10 +128,9 @@ namespace DOL.GS
                 for (int ii = 0; ii < item.RawMaterials.Length-1; ii++)
                 {
                     if (player.GetCraftingSkillValue(eCraftingSkill.GemCutting) < subSkillCap)
-                    {
                         player.GainCraftingSkill(eCraftingSkill.GemCutting, 1);
-                    }
                 }
+
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}
@@ -163,7 +152,10 @@ namespace DOL.GS
 			{
 				if (item.Level < 15)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.IsAllowedToCombine.NoEnchanted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
+						"SpellCrafting.IsAllowedToCombine.NoEnchanted"), eChatType.CT_System, 
+						eChatLoc.CL_SystemWindow);
+
 					return false;
 				}
 
@@ -173,7 +165,11 @@ namespace DOL.GS
 					{
 						if (materialToCombine.Model != 525)
 						{
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.IsAllowedToCombine.FalseMaterial", materialToCombine.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
+								"SpellCrafting.IsAllowedToCombine.FalseMaterial", 
+								materialToCombine.Name), 
+								eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 							return false;
 						}
 					}
