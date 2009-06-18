@@ -16,13 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
-using System.Collections.Specialized;
-using System.Reflection;
 using DOL.Database;
 using DOL.Language;
-using DOL.GS.PacketHandler;
-using log4net;
 using System;
 
 namespace DOL.GS
@@ -32,15 +27,9 @@ namespace DOL.GS
 		public Alchemy()
 		{
 			Icon = 0x04;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Alchemy");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, 
+                "Crafting.Name.Alchemy");
 			eSkill = eCraftingSkill.Alchemy;
-		}
-		public override string CRAFTER_TITLE_PREFIX
-		{
-			get
-			{
-				return "Alchemist's";
-			}
 		}
 
         protected override String Profession
@@ -52,30 +41,33 @@ namespace DOL.GS
             }
         }
 
-		#region Classic craft functions
-		protected override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+		#region Classic Crafting Overrides
+
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
 		{
-            return base.CheckTool(player, craftItemData);
+            return base.CheckForTools(player, craftItemData);
 		}
 
 		/// <summary>
-		/// Select craft to gain point and increase it
+		/// Select craft to gain a point in and increase it
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
 		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
 		{
-			if(Util.Chance( CalculateChanceToGainPoint(player, item)))
+			if (Util.Chance( CalculateChanceToGainPoint(player, item)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.Alchemy, 1);
-                // one of the raw materials gains the point for main skill, thats why we item.RawMaterials.Length - 1
-                for (int ii = 0; ii < item.RawMaterials.Length - 1; ii++)
+
+                // One of the raw materials gains the point for main skill, 
+                // thats why we item.RawMaterials.Length - 1
+
+                for (int materials = 0; materials < item.RawMaterials.Length - 1; materials++)
                 {
                     if (player.GetCraftingSkillValue(eCraftingSkill.HerbalCrafting) < subSkillCap)
-                    {
                         player.GainCraftingSkill(eCraftingSkill.HerbalCrafting, 1);
-                    }
                 }
+
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}
@@ -91,23 +83,34 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public override bool IsAllowedToCombine(GamePlayer player, InventoryItem item)
 		{
-			if(! base.IsAllowedToCombine(player, item)) return false;
+			if (!base.IsAllowedToCombine(player, item)) 
+                return false;
 			
-			if(((InventoryItem)player.TradeWindow.TradeItems[0]).Object_Type != (int)eObjectType.AlchemyTincture)
+			if (((InventoryItem)player.TradeWindow.TradeItems[0]).Object_Type != 
+                (int)eObjectType.AlchemyTincture)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Alchemy.IsAllowedToCombine.AlchemyTinctures"), PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
+                    "Alchemy.IsAllowedToCombine.AlchemyTinctures"), PacketHandler.eChatType.CT_System, 
+                    PacketHandler.eChatLoc.CL_SystemWindow);
+				
+                return false;
+			}
+
+			if (player.TradeWindow.ItemsCount > 1)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client,
+                    "Alchemy.IsAllowedToCombine.OneTincture"), PacketHandler.eChatType.CT_System, 
+                    PacketHandler.eChatLoc.CL_SystemWindow);
+
 				return false;
 			}
 
-			if(player.TradeWindow.ItemsCount > 1)
+			if (item.ProcSpellID != 0 || item.SpellID != 0)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Alchemy.IsAllowedToCombine.OneTincture"), PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
-				return false;
-			}
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
+                    "Alchemy.IsAllowedToCombine.AlreadyImbued", item.Name), 
+                    PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 
-			if(item.ProcSpellID != 0 || item.SpellID != 0)
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Alchemy.IsAllowedToCombine.AlreadyImbued", item.Name), PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -127,7 +130,11 @@ namespace DOL.GS
 		protected override void ApplyMagicalEffect(GamePlayer player, InventoryItem item)
 		{
 			InventoryItem tincture = (InventoryItem)player.TradeWindow.TradeItems[0];
-			if(item == null || tincture == null) return ; // be sure at least one item in each side
+
+            // One item each side of the trade window.
+
+			if (item == null || tincture == null) 
+                return ;
 			
 			if(tincture.ProcSpellID != 0)
 			{
@@ -145,7 +152,6 @@ namespace DOL.GS
 
 		#endregion
 
-		#region Calcul functions
 		/// <summary>
 		/// Get the maximum charge the item will have
 		/// </summary>
@@ -161,8 +167,5 @@ namespace DOL.GS
 			else if (item.Quality <= 99) return 7;
 			else return 10;
 		}
-
-		#endregion
-
 	}
 }

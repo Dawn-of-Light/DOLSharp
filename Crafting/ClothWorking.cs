@@ -16,13 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
-using System.Collections.Specialized;
-using System.Reflection;
 using DOL.Database;
 using DOL.Language;
-using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS
 {
@@ -31,7 +26,8 @@ namespace DOL.GS
 		public ClothWorking()
 		{
 			Icon = 0x08;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Clothworking");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, 
+                "Crafting.Name.Clothworking");
 			eSkill = eCraftingSkill.ClothWorking;
 		}
 
@@ -46,7 +42,6 @@ namespace DOL.GS
                     player.Out.SendUpdateCraftingSkills();
                 }
 			}
-
 		}
 	}
 }

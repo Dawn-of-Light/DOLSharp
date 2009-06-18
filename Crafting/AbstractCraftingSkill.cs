@@ -160,7 +160,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (!CheckTool(player, item))
+			if (!CheckForTools(player, item))
 			{
 				return false;
 			}
@@ -230,7 +230,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="craftItemData"></param>
-		protected virtual bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+		protected virtual bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
 		{
 			return true;
 		}
@@ -243,7 +243,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool CheckSecondCraftingSkillRequirement(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			int minimumLevel = CalculateSecondCraftingSkillMinimumLevel(craftItemData);
+			int minimumLevel = GetSecondaryCraftingSkillMinimumLevel(craftItemData);
 
 			if (minimumLevel <= 0)
 				return true; // no requirement needed
@@ -737,7 +737,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate the minumum needed secondary crafting skill level to make the item
 		/// </summary>
-		public virtual int CalculateSecondCraftingSkillMinimumLevel(DBCraftedItem item)
+		public virtual int GetSecondaryCraftingSkillMinimumLevel(DBCraftedItem item)
 		{
 			return 0;
 		}
