@@ -13,7 +13,7 @@ using DOL.GS.Scripts;
 namespace DOL.GS.Spells
 {
     [SpellHandler("Som")]
-    public class Som : DefensiveProcSpellHandler
+    public class ShadeOfMist : DefensiveProcSpellHandler
     {
         public override void OnEffectStart(GameSpellEffect effect)
         {
@@ -49,7 +49,7 @@ namespace DOL.GS.Spells
         /// <param name="caster"></param>
         /// <param name="spell"></param>
         /// <param name="line"></param>
-        public Som(GameLiving caster, Spell spell, SpellLine line)
+        public ShadeOfMist(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
         }
