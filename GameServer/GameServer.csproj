@@ -2032,10 +2032,10 @@
     <Compile Include="spells\Artifacts\HpPwrEndRegen.cs" />
     <Compile Include="spells\Artifacts\MaddeningScalars.cs" />
     <Compile Include="spells\Artifacts\RealmLore.cs" />
-    <Compile Include="spells\Artifacts\SoM.cs" />
+    <Compile Include="spells\Artifacts\ShadesOfMist.cs" />
     <Compile Include="spells\Artifacts\ScarabVest.cs" />
     <Compile Include="spells\Artifacts\BandofStars.cs" />
-    <Compile Include="spells\Artifacts\snakecharmer.cs" />
+    <Compile Include="spells\Artifacts\SnakeCharmersWeapon.cs" />
     <Compile Include="spells\Artifacts\StyleDmgAbs.cs">
     </Compile>
     <Compile Include="spells\Artifacts\TartarosGift.cs" />

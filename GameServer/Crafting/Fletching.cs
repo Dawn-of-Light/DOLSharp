@@ -16,27 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
-using System.Collections.Specialized;
-using System.Reflection;
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
-using log4net;
 using System;
 
 namespace DOL.GS
 {
 	public class Fletching : AbstractProfession
 	{
-		public override string CRAFTER_TITLE_PREFIX
-		{
-			get
-			{
-				return "Fletcher's";
-			}
-		}
-
         protected override String Profession
         {
             get
@@ -49,27 +37,35 @@ namespace DOL.GS
 		public Fletching()
 		{
 			Icon = 0x0C;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Fletching");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, 
+                "Crafting.Name.Fletching");
 			eSkill = eCraftingSkill.Fletching;
 		}
-		protected override bool CheckTool(GamePlayer player, DBCraftedItem craftItemData)
+
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			if (craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Arrow && craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Bolt)
+			if (craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Arrow && 
+                craftItemData.ItemTemplate.Object_Type != (int)eObjectType.Bolt)
 			{
 				foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 				{
 					if (item.Model == 481) // Lathe
-					{
 						return true;
-					}
 				}
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindLathe"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
+                    "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), 
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, 
+                    "Crafting.CheckTool.FindLathe"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 				return false;
 			}
 			return true;
 		}
-		public override int CalculateSecondCraftingSkillMinimumLevel(DBCraftedItem item)
+
+		public override int GetSecondaryCraftingSkillMinimumLevel(DBCraftedItem item)
 		{
 			switch (item.ItemTemplate.Object_Type)
 			{
@@ -90,7 +86,7 @@ namespace DOL.GS
 					return item.CraftingLevel - 35;
 			}
 
-			return base.CalculateSecondCraftingSkillMinimumLevel(item);
+			return base.GetSecondaryCraftingSkillMinimumLevel(item);
 		}
 
 		/// <summary>
