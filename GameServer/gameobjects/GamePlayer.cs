@@ -2230,7 +2230,7 @@ namespace DOL.GS
 		/// Gets or sets this player's race id
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		epublic int Race
+		public int Race
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.Race : 0; }
 			set { if (PlayerCharacter != null) PlayerCharacter.Race = value; }
