@@ -972,7 +972,14 @@ namespace DOL.GS
 		{
 			Character character = PlayerCharacter;
 			if (character == null) return;
-
+			
+			// check if valid housebind
+			if (releaseCommand == eReleaseType.House && character.BindHouseRegion > 0)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.NoValidBindpoint"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				releaseCommand = eReleaseType.Bind;
+			}
+			
 			//battlegrounds caps
 			Battleground bg = KeepMgr.GetBattleground(CurrentRegionID);
 			if (bg != null && releaseCommand == eReleaseType.RvR)
@@ -2223,7 +2230,7 @@ namespace DOL.GS
 		/// Gets or sets this player's race id
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int Race
+		epublic int Race
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.Race : 0; }
 			set { if (PlayerCharacter != null) PlayerCharacter.Race = value; }
