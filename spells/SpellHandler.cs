@@ -2586,16 +2586,7 @@ namespace DOL.GS.Spells
 			}
 			else if (m_caster is GamePlayer)
 			{
-				int a = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
-				if (m_spellLine.Name == "Archery")
-				{
-					if (a >= 45)
-						speclevel = 45;
-					else
-						speclevel = a;
-				}
-				else
-					speclevel = a;
+				speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
 			}
 			min = 1.25;
 			max = 1.25;
@@ -2672,9 +2663,6 @@ namespace DOL.GS.Spells
 					spellDamage *= (manaStatValue + 200) / 275.0;
 				}
 			}
-
-			if (Spell.SpellType == "Archery")
-				spellDamage /= 1.5;
 
 			if (spellDamage < 0)
 				spellDamage = 0;
