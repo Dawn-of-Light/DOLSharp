@@ -200,7 +200,7 @@ namespace DOL.GS
 				if (ControlledNpc != null)
 					(ControlledNpc as ControlledNpc).Stop();
 
-				Health = MaxHealth * Math.Max(10, m_savedPetHealthPercent) / 100;
+				Health = Math.Min(Health, MaxHealth * Math.Max(10, m_savedPetHealthPercent) / 100);
 			}
 		}
 
@@ -217,6 +217,17 @@ namespace DOL.GS
 
 			return base.RemoveFromWorld();
 		}
+
+        /// <summary>
+        /// Drop shade first, this in turn will release the pet.
+        /// </summary>
+        /// <param name="killer"></param>
+        public override void Die(GameObject killer)
+        {
+            Shade(false);
+
+            base.Die(killer);
+        }
 
 		public GameNecromancer(GameClient client, Character theChar)
 			: base(client, theChar)
