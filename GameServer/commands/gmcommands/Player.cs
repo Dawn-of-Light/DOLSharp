@@ -57,7 +57,8 @@ namespace DOL.GS.Commands
      "/player info",
      "/player showgroup",
      "/player showeffects",
-     "/player articredit"
+     "/player articredit",
+	 "/player allchars [PlayerName]"
    )]
 
     public class PlayerCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -101,7 +102,7 @@ namespace DOL.GS.Commands
                             DisplaySyntax(client);
                             return;
                         }
-                        
+
                         if (player == null)
                            	player = client.Player;
                             
@@ -121,7 +122,7 @@ namespace DOL.GS.Commands
                             DisplaySyntax(client);
                             return;
                         }
-                        
+
                         if (player == null)
                            	player = client.Player;
                             
@@ -161,7 +162,7 @@ namespace DOL.GS.Commands
                                 DisplaySyntax(client);
                                 return;
                             }
-                            
+
                             if (player == null)
                             	player = client.Player;
                             
@@ -1522,7 +1523,38 @@ namespace DOL.GS.Commands
                         break;
                     }
                 #endregion
-            }
+
+				#region allcharacters
+				case "allchars":
+					GamePlayer targetPlayer = client.Player.TargetObject as GamePlayer;
+					GameClient targetClient = targetPlayer == null ? null : targetPlayer.Client;
+
+					if ( args.Length > 2 )
+					{
+						targetClient = WorldMgr.GetClientByPlayerName( args[2], true, false );
+					}
+
+					if ( targetClient == null )
+					{
+						DisplaySyntax( client, args[1] );
+						return;
+					}
+					else
+					{
+						string characterNames = string.Empty;
+
+						foreach ( Character acctChar in targetClient.Account.Characters )
+						{
+							if ( acctChar != null )
+								characterNames += acctChar.Name + " " + acctChar.LastName + "\n";
+						}
+
+						client.Out.SendMessage( characterNames, eChatType.CT_Say, eChatLoc.CL_PopupWindow );
+					}
+
+					break;
+				#endregion allcharacters
+			}
         }
 
         private void SendResistEffect(GamePlayer target)

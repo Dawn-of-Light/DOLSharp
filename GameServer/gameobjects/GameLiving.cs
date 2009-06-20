@@ -38,9 +38,6 @@ using log4net;
 
 namespace DOL.GS
 {
-
-	
-
 	/// <summary>
 	/// This class holds all information that each
 	/// living object in the world uses
@@ -54,9 +51,15 @@ namespace DOL.GS
 
 		#region Combat
 		/// <summary>
-		/// Holds the Attack Data object of last attack
+		/// Holds the AttackData object of last attack
 		/// </summary>
 		public const string LAST_ATTACK_DATA = "LastAttackData";
+
+		/// <summary>
+		/// Holds the AttackData object of the last left-hand attack
+		/// </summary>
+		public const string LAST_ATTACK_DATA_LH = "LastAttackDataLH";
+
 		/// <summary>
 		/// Holds the property for the result the last enemy
 		/// </summary>
@@ -355,19 +358,19 @@ namespace DOL.GS
 		/// <summary>
 		/// The state of the ranged attack
 		/// </summary>
-		protected eRangedAttackState m_rangeAttackState;
+		protected eRangedAttackState m_rangedAttackState;
 		/// <summary>
 		/// The gtype of the ranged attack
 		/// </summary>
-		protected eRangedAttackType m_rangeAttackType;
+		protected eRangedAttackType m_rangedAttackType;
 
 		/// <summary>
 		/// Gets or Sets the state of a ranged attack
 		/// </summary>
 		public eRangedAttackState RangedAttackState
 		{
-			get { return m_rangeAttackState; }
-			set { m_rangeAttackState = value; }
+			get { return m_rangedAttackState; }
+			set { m_rangedAttackState = value; }
 		}
 
 		/// <summary>
@@ -375,8 +378,8 @@ namespace DOL.GS
 		/// </summary>
 		public eRangedAttackType RangedAttackType
 		{
-			get { return m_rangeAttackType; }
-			set { m_rangeAttackType = value; }
+			get { return m_rangedAttackType; }
+			set { m_rangedAttackType = value; }
 		}
 
 		/// <summary>
@@ -2459,7 +2462,10 @@ namespace DOL.GS
 				owner.SendAttackingCombatMessages(mainHandAD);
 
 				//Notify ourself about the attack
-				owner.Notify(GameLivingEvent.AttackFinished, owner, new AttackFinishedEventArgs(mainHandAD));
+				owner.Notify( GameLivingEvent.AttackFinished, owner, new AttackFinishedEventArgs( mainHandAD ) );
+
+                // remove the left-hand AttackData from the previous attack
+                owner.TempProperties.removeProperty( LAST_ATTACK_DATA_LH );
 
 				//now left hand damage
 				if (leftHandSwingCount > 0)
@@ -2477,9 +2483,11 @@ namespace DOL.GS
 								if (m_target is GameLiving && (((GameLiving)m_target).IsAlive == false || ((GameLiving)m_target).ObjectState != eObjectState.Active))
 									break;
 
-								leftHandAD = (i % 2 == 0) ? //Savage swings - main,left,main,left.
-	owner.MakeAttack(m_target, leftWeapon, null, m_effectiveness, m_interruptDuration, true) :
-	owner.MakeAttack(m_target, mainWeapon, null, m_effectiveness, m_interruptDuration, true);
+								// Savage swings - main,left,main,left.
+								if ( i % 2 == 0 )
+									leftHandAD = owner.MakeAttack( m_target, leftWeapon, null, m_effectiveness, m_interruptDuration, true );
+								else
+									leftHandAD = owner.MakeAttack( m_target, mainWeapon, null, m_effectiveness, m_interruptDuration, true );
 
 								//Notify the target of our attack (sends damage messages, should be before damage)
 								if (leftHandAD.Target != null)
@@ -2494,6 +2502,9 @@ namespace DOL.GS
 										owner.CheckWeaponMagicalEffect(leftHandAD, leftWeapon);
 									}
 								}
+
+								owner.TempProperties.setProperty( LAST_ATTACK_DATA_LH, leftHandAD );
+
 								//Send messages about our left hand attack now
 								owner.SendAttackingCombatMessages(leftHandAD);
 
@@ -2791,7 +2802,7 @@ namespace DOL.GS
 			if (Util.Chance(AttackCriticalChance(weapon)))
 			{
                 int maxCriticalDamage = (attackData.Target is GamePlayer)
-                    ? attackData.Damage >> 1
+                    ? attackData.Damage / 2
                     : attackData.Damage;
 
                 int minCriticalDamage = (int)(attackData.Damage * MinMeleeCriticalDamage);
@@ -3614,8 +3625,9 @@ namespace DOL.GS
             //[Freya] Nidel: Use2's Flask
             if(this is GamePlayer)
             {
-                bool welcomeToDie = (Health - (damageAmount + criticalAmount)) <= 0;
-                if (welcomeToDie)
+                bool isFatalBlow = (damageAmount + criticalAmount) >= Health;
+
+                if (isFatalBlow)
                 {
                     GameSpellEffect deadFlask = SpellHandler.FindEffectOnTarget(this, "DeadFlask");
                     if(deadFlask != null)
@@ -5124,10 +5136,6 @@ namespace DOL.GS
 
 		#endregion
 		#region Movement
-		/// The tick when the movement started.
-		/// </summary>
-		private int m_movementStartTick;
-
 		/// <summary>
 		/// The tick speed in X direction.
 		/// </summary>
@@ -6137,8 +6145,8 @@ namespace DOL.GS
 			//Set all combat properties
 			m_activeWeaponSlot = eActiveWeaponSlot.Standard;
 			m_activeQuiverSlot = eActiveQuiverSlot.None;
-			m_rangeAttackState = eRangedAttackState.None;
-			m_rangeAttackType = eRangedAttackType.Normal;
+			m_rangedAttackState = eRangedAttackState.None;
+			m_rangedAttackType = eRangedAttackType.Normal;
 			m_healthRegenerationPeriod = 3000;
 			m_powerRegenerationPeriod = 3000;
 			m_enduRegenerationPeriod = 1000;

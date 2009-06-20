@@ -203,8 +203,15 @@ namespace DOL.GS.Commands
 
             if ( args.Length > 2 )
                 theType = args[2];
-            if ( args.Length > 3 )
-                realm = Convert.ToByte( args[3] );
+
+			if ( args.Length > 3 )
+			{
+				if ( !byte.TryParse( args[3], out realm ) )
+				{
+					DisplaySyntax( client, args[1] );
+					return;
+				}
+			}
 
             //Create a new mob
             GameNPC mob = null;
@@ -907,6 +914,16 @@ namespace DOL.GS.Commands
 			info.Add( " + Parry %: " + targetMob.ParryChance );
 			info.Add( " + Evade %: " + targetMob.EvadeChance );
 			info.Add( " + Left Swing %: " + targetMob.LeftHandSwingChance );
+
+			if ( targetMob.Abilities != null && targetMob.Abilities.Count > 0 )
+				info.Add( " + Abilities: " + targetMob.Abilities.Count );
+
+			if ( targetMob.Spells != null && targetMob.Spells.Count > 0 )
+				info.Add( " + Spells: " + targetMob.Spells.Count );
+
+			if ( targetMob.Styles != null && targetMob.Styles.Count > 0 )
+				info.Add( " + Styles: " + targetMob.Styles.Count );
+
             info.Add( " " );
 
             info.Add( " + Damage type: " + targetMob.MeleeDamageType );
@@ -1170,7 +1187,7 @@ namespace DOL.GS.Commands
 
                         if ( !load.LoadFromDatabase( args[3] ) )
                         {
-                            client.Out.SendMessage( "Error loading equipment template \"" + args[2] + "\"", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+                            client.Out.SendMessage( "Error loading equipment template \"" + args[3] + "\"", eChatType.CT_System, eChatLoc.CL_SystemWindow );
                             return;
                         }
 
@@ -1311,12 +1328,24 @@ namespace DOL.GS.Commands
                     {
                         if ( args.Length > 3 )
                         {
-                            bool replace = ( args.Length > 4 && args[4].ToLower() == "replace" ) ? true : false;
+                            bool replace = ( args.Length > 4 && args[4].ToLower() == "replace" );
 
-                            if ( !replace && null != GameServer.Database.SelectObject( typeof( NPCEquipment ), "TemplateID = '" + GameServer.Database.Escape( args[3] ) + "'" ) )
+							DataObject[] existingTemplates = GameServer.Database.SelectObjects( typeof( NPCEquipment ), "TemplateID = '" + GameServer.Database.Escape( args[3] ) + "'" );
+
+                            if ( existingTemplates.Length > 0 )
                             {
-                                client.Out.SendMessage( "Template with name '" + args[3] + "' already exists. Use 'replace' flag if you want to overwrite it.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
-                                return;
+								if ( replace )
+								{
+									foreach ( DataObject templateToDelete in existingTemplates )
+									{
+										GameServer.Database.DeleteObject( templateToDelete );
+									}
+								}
+								else
+								{
+									client.Out.SendMessage( "Template with name '" + args[3] + "' already exists. Use the 'replace' parameter if you want to overwrite it.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+									return;
+								}
                             }
 
                             if ( !targetMob.Inventory.SaveIntoDatabase( args[3] ) )
@@ -1853,16 +1882,20 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			bool replace = args[args.Length - 1].Equals( "replace" );
+
 			NpcTemplate template = NpcTemplateMgr.GetTemplate( id );
 
-			if ( template != null )
+			if ( template != null && replace == false )
 			{
 				DisplayMessage( client, "A template with the ID " + id + " already exists." );
 				return;
 			}
 
 			template = new NpcTemplate( targetMob );
+			template.TemplateId = id;
 			template.SaveIntoDatabase();
+			DisplayMessage( client, "NPCTemplate saved with ID = " + id + "." );
 		}
 
         private void path( GameClient client, GameNPC targetMob, string[] args )
