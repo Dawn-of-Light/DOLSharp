@@ -54,7 +54,7 @@ namespace DOL.GS.Commands
 
 			GameStaticItem targetObject = client.Player.TargetObject as GameStaticItem;
 
-			if (args[1] != "create" && args[1] != "fastcreate" && targetObject == null)
+			if ( targetObject == null && args[1] != "create" && args[1] != "fastcreate" && args[1] != "target" )
 			{
 				client.Out.SendMessage("Type /object for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

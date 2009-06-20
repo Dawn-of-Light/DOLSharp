@@ -516,14 +516,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallPercent", fallPercent), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
 							client.Player.Endurance -= client.Player.MaxEndurance * fallPercent / 100;
-						    double damages = (0.01*fallPercent*(client.Player.MaxHealth - 1));
-                            // [Freya] Nidel: CloundSong Fall damage reduction
-						    Effects.GameSpellEffect cloundSongFall = Spells.SpellHandler.FindEffectOnTarget(client.Player, "CloudsongFall");
-                            if(cloundSongFall != null)
+						    double damage = (0.01 * fallPercent * (client.Player.MaxHealth - 1));
+                            // [Freya] Nidel: CloudSong falling damage reduction
+						    Effects.GameSpellEffect cloudSongFall = Spells.SpellHandler.FindEffectOnTarget(client.Player, "CloudsongFall");
+                            if(cloudSongFall != null)
                             {
-                                damages -= (damages*cloundSongFall.Spell.Value)*0.01;
+                                damage -= (damage * cloudSongFall.Spell.Value ) * 0.01;
                             }
-							client.Player.TakeDamage(null, eDamageType.Falling, (int)damages, 0);
+							client.Player.TakeDamage(null, eDamageType.Falling, (int)damage, 0);
 
 							//Update the player's health to all other players around
 							foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))

@@ -1681,6 +1681,40 @@ namespace DOL.GS
 			}
 		}
 
+
+		public enum eSize : ushort
+		{
+			Short = 0x800,
+			Average = 0x1000,
+			Tall = 0x1800
+		}
+
+
+		public eSize Size
+		{
+			get
+			{
+				ushort size = (ushort)( Model & (ushort)eSize.Tall );
+
+				switch ( size )
+				{
+					case 0x800: return eSize.Short;
+					case 0x1800: return eSize.Tall;
+					default: return eSize.Average;
+				}
+			}
+
+			set
+			{
+				if ( value != Size )
+				{
+					ushort modelID = (ushort)( Model & 0x7FF );
+
+					Model = (ushort)( modelID | (ushort)value );
+				}
+			}
+		}
+
 		#endregion
 
 		#region Stats
@@ -12568,8 +12602,8 @@ namespace DOL.GS
         }
         #endregion
 
-        #region Siege Weapon
-        private GameSiegeWeapon m_siegeWeapon;
+		#region Siege Weapon
+		private GameSiegeWeapon m_siegeWeapon;
 
 		public GameSiegeWeapon SiegeWeapon
 		{
@@ -13032,7 +13066,7 @@ namespace DOL.GS
 		}
 
 		protected bool m_isOnHorse;
-		virtual public bool IsOnHorse
+		public virtual bool IsOnHorse
 		{
 			get { return m_isOnHorse; }
 			set

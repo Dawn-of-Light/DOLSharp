@@ -40,8 +40,6 @@ namespace DOL.GS
 		/// <returns>true if the player hold all needed tools</returns>
 		protected override bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
 		{
-			bool result = false;
-
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
 				if (item.Name == "forge" || item.Model == 478) // Forge

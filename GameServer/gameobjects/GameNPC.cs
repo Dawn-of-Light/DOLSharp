@@ -4273,6 +4273,123 @@ namespace DOL.GS
         /// </summary>
         public override Gender Gender { get; set; }
 
+		public GameNPC Copy()
+		{
+			return Copy( null );
+		}
+
+
+		/// <summary>
+		/// Create a copy of the GameNPC
+		/// </summary>
+		/// <param name="copyTarget">A GameNPC to copy this GameNPC to (can be null)</param>
+		/// <returns>The GameNPC this GameNPC was copied to</returns>
+		public GameNPC Copy( GameNPC copyTarget )
+		{
+			if ( copyTarget == null )
+				copyTarget = new GameNPC();
+
+			copyTarget.BlockChance = BlockChance;
+			copyTarget.BodyType = BodyType;
+			copyTarget.CanUseLefthandedWeapon = CanUseLefthandedWeapon;
+			copyTarget.Charisma = Charisma;
+			copyTarget.Constitution = Constitution;
+			copyTarget.CurrentRegion = CurrentRegion;
+			copyTarget.Dexterity = Dexterity;
+			copyTarget.Empathy = Empathy;
+			copyTarget.Endurance = Endurance;
+			copyTarget.EquipmentTemplateID = EquipmentTemplateID;
+			copyTarget.EvadeChance = EvadeChance;
+			copyTarget.Faction = Faction;
+			copyTarget.Flags = Flags;
+			copyTarget.GuildName = GuildName;
+			copyTarget.Heading = Heading;
+			copyTarget.Intelligence = Intelligence;
+			copyTarget.IsCloakHoodUp = IsCloakHoodUp;
+			copyTarget.IsCloakInvisible = IsCloakInvisible;
+			copyTarget.IsHelmInvisible = IsHelmInvisible;
+			copyTarget.IsImmuneToMagic = IsImmuneToMagic;
+			copyTarget.IsImmuneToMelee = IsImmuneToMelee;
+			copyTarget.LeftHandSwingChance = LeftHandSwingChance;
+			copyTarget.Level = Level;
+			copyTarget.LoadedFromScript = LoadedFromScript;
+			copyTarget.MaxSpeedBase = MaxSpeedBase;
+			copyTarget.MeleeDamageType = MeleeDamageType;
+			copyTarget.Model = Model;
+			copyTarget.Name = Name;
+			copyTarget.NPCTemplate = NPCTemplate;
+			copyTarget.ParryChance = ParryChance;
+			copyTarget.PathID = PathID;
+			copyTarget.PathingNormalSpeed = PathingNormalSpeed;
+			copyTarget.Quickness = Quickness;
+			copyTarget.Piety = Piety;
+			copyTarget.Realm = Realm;
+			copyTarget.RespawnInterval = RespawnInterval;
+			copyTarget.RoamingRange = RoamingRange;
+			copyTarget.Size = Size;
+			copyTarget.SaveInDB = SaveInDB;
+			copyTarget.Strength = Strength;
+			copyTarget.TetherRange = TetherRange;
+			copyTarget.MaxDistance = MaxDistance;
+			copyTarget.X = X;
+			copyTarget.Y = Y;
+			copyTarget.Z = Z;
+
+			if ( Abilities != null && Abilities.Count > 0 )
+			{
+				foreach ( Ability targetAbility in Abilities )
+				{
+					if ( targetAbility != null )
+						copyTarget.AddAbility( targetAbility );
+				}
+			}
+
+			ABrain brain = null;
+			foreach ( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() )
+			{
+				brain = (ABrain)assembly.CreateInstance( Brain.GetType().FullName, true );
+				if ( brain != null )
+					break;
+			}
+
+			if ( brain == null )
+			{
+				log.Warn( "GameNPC.Copy():  Unable to create brain:  " + Brain.GetType().FullName + ", using StandardMobBrain." );
+				brain = new StandardMobBrain();
+			}
+
+			StandardMobBrain newBrainSMB = brain as StandardMobBrain;
+			StandardMobBrain thisBrainSMB = this.Brain as StandardMobBrain;
+
+			if ( newBrainSMB != null && thisBrainSMB != null )
+			{
+				newBrainSMB.AggroLevel = thisBrainSMB.AggroLevel;
+				newBrainSMB.AggroRange = thisBrainSMB.AggroRange;
+			}
+
+			copyTarget.SetOwnBrain( brain );
+
+			if ( Inventory != null && Inventory.AllItems.Count > 0 )
+			{
+				GameNpcInventoryTemplate inventoryTemplate = Inventory as GameNpcInventoryTemplate;
+
+				if( inventoryTemplate != null )
+					copyTarget.Inventory = inventoryTemplate.CloneTemplate();
+			}
+
+			if ( Spells != null && Spells.Count > 0 )
+				copyTarget.Spells = new ArrayList( Spells );
+
+			if ( Styles != null && Styles.Count > 0 )
+				copyTarget.Styles = new ArrayList( Styles );
+
+			if ( copyTarget.Inventory != null )
+				copyTarget.SwitchWeapon( ActiveWeaponSlot );
+
+			return copyTarget;
+		}
+
+
 		private string m_boatowner_id;
 		/// <summary>
 		/// Constructs a NPC

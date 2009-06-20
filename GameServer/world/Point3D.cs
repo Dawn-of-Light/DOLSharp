@@ -215,7 +215,7 @@ namespace DOL.GS
 			return true;
         }
 
-        public void Clear()
+        public override void Clear()
         {
             base.Clear();
             Z = 0;

@@ -72,15 +72,7 @@ namespace DOL.GS.Spells
 
 			int bleedValue = effect.Owner.TempProperties.getIntProperty(BLEED_VALUE_PROPERTY, 0);
 
-			AttackData ad = new AttackData();
-			ad.Attacker = Caster;
-			ad.Target = effect.Owner;
-			ad.AttackType = AttackData.eAttackType.Spell;
-			ad.Modifier = bleedValue * ad.Target.GetResist(Spell.DamageType) / -100;
-			ad.Damage = bleedValue + ad.Modifier;
-			ad.DamageType = Spell.DamageType;
-			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-			ad.SpellHandler = this;
+			AttackData ad = CalculateDamageToTarget( effect.Owner, 1.0 );
 
 			SendDamageMessages(ad);
 
@@ -107,6 +99,23 @@ namespace DOL.GS.Spells
 		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
 		{
 			return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), Spell.Frequency, effectiveness);
+		}
+
+		public override AttackData CalculateDamageToTarget( GameLiving target, double effectiveness )
+		{
+			int bleedValue = target.TempProperties.getIntProperty( BLEED_VALUE_PROPERTY, 0 );
+
+			AttackData ad = new AttackData();
+			ad.Attacker = Caster;
+			ad.Target = target;
+			ad.AttackType = AttackData.eAttackType.Spell;
+			ad.Modifier = bleedValue * ad.Target.GetResist( Spell.DamageType ) / -100;
+			ad.Damage = bleedValue + ad.Modifier;
+			ad.DamageType = Spell.DamageType;
+			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+			ad.SpellHandler = this;
+
+			return ad;
 		}
 
 		/// <summary>
