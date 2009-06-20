@@ -47,7 +47,7 @@ namespace DOL.GS.Spells.Atlantis
             effect.Owner.BaseBuffBonusCategory[(int)eProperty.Quickness] += (int)m_spell.Value;
             effect.Owner.BaseBuffBonusCategory[(int)eProperty.Intelligence] += (int)m_spell.Value;
             effect.Owner.BaseBuffBonusCategory[(int)eProperty.Charisma] += (int)m_spell.Value;
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorbtion] += (int)m_spell.Value;                       
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] += (int)m_spell.Value;                       
             
             if (effect.Owner is GamePlayer)
             {
@@ -70,7 +70,7 @@ namespace DOL.GS.Spells.Atlantis
             effect.Owner.BaseBuffBonusCategory[(int)eProperty.Quickness] -= (int)m_spell.Value;
             effect.Owner.BaseBuffBonusCategory[(int)eProperty.Intelligence] -= (int)m_spell.Value;
             effect.Owner.BaseBuffBonusCategory[(int)eProperty.Charisma] -= (int)m_spell.Value;
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorbtion] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] -= (int)m_spell.Value;
              
             if (effect.Owner is GamePlayer)
             {
@@ -97,7 +97,7 @@ namespace DOL.GS.Spells.Atlantis
             player.DebuffCategory[(int)eProperty.Quickness] += (int)m_spell.Value;
             player.DebuffCategory[(int)eProperty.Intelligence] += (int)m_spell.Value;
             player.DebuffCategory[(int)eProperty.Charisma] += (int)m_spell.Value;
-            player.DebuffCategory[(int)eProperty.ArmorAbsorbtion] += (int)m_spell.Value;
+            player.DebuffCategory[(int)eProperty.ArmorAbsorption] += (int)m_spell.Value;
             
             player.Out.SendCharStatsUpdate();
             player.UpdateEncumberance();
@@ -118,7 +118,7 @@ namespace DOL.GS.Spells.Atlantis
 	            playertarget.DebuffCategory[(int)eProperty.Quickness] -= (int)m_spell.Value;;
 	            playertarget.DebuffCategory[(int)eProperty.Intelligence] -= (int)m_spell.Value;;
 	            playertarget.DebuffCategory[(int)eProperty.Charisma] -= (int)m_spell.Value;;
-	            playertarget.DebuffCategory[(int)eProperty.ArmorAbsorbtion] -= (int)m_spell.Value;;
+	            playertarget.DebuffCategory[(int)eProperty.ArmorAbsorption] -= (int)m_spell.Value;;
 	            
             	playertarget.Out.SendCharStatsUpdate();
             	playertarget.UpdateEncumberance();

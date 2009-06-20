@@ -6028,7 +6028,7 @@ namespace DOL.GS
 			InventoryItem item = Inventory.GetItem((eInventorySlot)slot);
 			if (item == null) return 0;
 			// vampiir random armor debuff change ~
-			double eaf = (item.SPD_ABS + GetModified(eProperty.ArmorAbsorbtion)) * 0.01;
+			double eaf = (item.SPD_ABS + GetModified(eProperty.ArmorAbsorption)) * 0.01;
 			/*GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, typeof(VampiirArmorDebuff));
 			if (effect != null && slot == (effect.SpellHandler as VampiirArmorDebuff).Slot)
 			{
@@ -6691,7 +6691,7 @@ namespace DOL.GS
 				case eResist.Heat:
 				case eResist.Matter:
 				case eResist.Spirit:
-					res += BaseBuffBonusCategory[(int)eProperty.MagicAbsorbtion];
+					res += BaseBuffBonusCategory[(int)eProperty.MagicAbsorption];
 					break;
 				default:
 					break;

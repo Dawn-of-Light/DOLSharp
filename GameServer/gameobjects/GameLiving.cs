@@ -854,7 +854,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual double GetArmorAbsorb(eArmorSlot slot)
 		{
-			return GetModified(eProperty.ArmorAbsorbtion) * 0.01;
+			return GetModified(eProperty.ArmorAbsorption) * 0.01;
 		}
 
 		/// <summary>
