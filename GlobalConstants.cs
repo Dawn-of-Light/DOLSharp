@@ -71,7 +71,7 @@ namespace DOL.GS
 		Door = 6,	
 	};
 	/// <summary>
-	/// The priveledge level of the client
+	/// The privilege level of the client
 	/// </summary>
 	public enum ePrivLevel : uint
 	{

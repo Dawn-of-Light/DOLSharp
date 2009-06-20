@@ -3389,7 +3389,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMarketExplorerWindow(List<InventoryItem> items, byte page, byte maxpage)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MarketExplorerWindow);            
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MarketExplorerWindow);
 			pak.WriteByte((byte)items.Count);
 			pak.WriteByte(page);
 			pak.WriteByte(maxpage);

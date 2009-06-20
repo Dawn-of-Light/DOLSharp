@@ -2071,8 +2071,7 @@
     <Compile Include="spells\ConcentrationList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\ConfusionSpellHandler.cs">
-    </Compile>
+    <Compile Include="spells\ConfusionSpellHandler.cs" />
     <Compile Include="spells\Conversion.cs" />
     <Compile Include="spells\ConvertPet.cs" />
     <Compile Include="spells\CureAllSpellHandler.cs" />
