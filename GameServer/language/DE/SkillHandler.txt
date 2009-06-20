@@ -27,7 +27,7 @@ SkillBase.RegisterPropertyNames.BodyMagic:		Körpermagie
 SkillBase.RegisterPropertyNames.BodyMagicFocus:		Körpermagie
 SkillBase.RegisterPropertyNames.BoneArmy:		Knochenarmee
 SkillBase.RegisterPropertyNames.BoneArmyFocus:		Knochenarmee
-SkillBase.RegisterPropertyNames.BonusToArmorAbsorption:	Absorbtionsbonus
+SkillBase.RegisterPropertyNames.BonusToArmorAbsorption:	Absorptionsbonus
 SkillBase.RegisterPropertyNames.BonusToArmorFactor:	Rüstungsfaktor-Bonus
 SkillBase.RegisterPropertyNames.CastingSpeed:		Zaubergeschwindigkeitsbonus
 SkillBase.RegisterPropertyNames.CaveMagic:		Höhlenmagie

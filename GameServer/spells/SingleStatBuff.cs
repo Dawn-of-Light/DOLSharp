@@ -196,12 +196,12 @@ namespace DOL.GS.Spells
 	}
 
 	/// <summary>
-	/// Armor absorbtion buff
+	/// Armor Absorption buff
 	/// </summary>
-	[SpellHandlerAttribute("ArmorAbsorbtionBuff")]
-	public class ArmorAbsorbtionBuff : SingleStatBuff
+	[SpellHandlerAttribute("ArmorAbsorptionBuff")]
+	public class ArmorAbsorptionBuff : SingleStatBuff
 	{
-		public override eProperty Property1 { get { return eProperty.ArmorAbsorbtion; } }
+		public override eProperty Property1 { get { return eProperty.ArmorAbsorption; } }
 
 		/// <summary>
 		/// send updates about the changes
@@ -212,7 +212,7 @@ namespace DOL.GS.Spells
 		}
 
 		// constructor
-		public ArmorAbsorbtionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public ArmorAbsorptionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 
 	/// <summary>
@@ -402,7 +402,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("MagicResistsBuff")]
 	public class MagicResistsBuff : SingleStatBuff
 	{
-		public override eProperty Property1 { get { return eProperty.MagicAbsorbtion; } }
+		public override eProperty Property1 { get { return eProperty.MagicAbsorption; } }
 
 		// constructor
 		public MagicResistsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}

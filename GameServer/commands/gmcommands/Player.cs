@@ -1661,7 +1661,7 @@ namespace DOL.GS.Commands
             text.Add("  - Current " + sTitle + " : " + sCurrent);
 
             text.Add("  - Maximum Health : " + player.MaxHealth);
-            text.Add("  - Current AF and ABS : " + player.GetModified(eProperty.ArmorFactor) + " AF, " + player.GetModified(eProperty.ArmorAbsorbtion) + " ABS");
+            text.Add("  - Current AF and ABS : " + player.GetModified(eProperty.ArmorFactor) + " AF, " + player.GetModified(eProperty.ArmorAbsorption) + " ABS");
             text.Add(" ");
             text.Add("SPECCING INFORMATIONS ");
             text.Add("  - Respecs availables : " + player.RespecAmountDOL + " dol, " + player.RespecAmountSingleSkill + " single, " + player.RespecAmountAllSkill + " full");

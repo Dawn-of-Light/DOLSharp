@@ -151,7 +151,7 @@ namespace DOL.GS.Spells
                     }
                     else if (this is ConstitutionBuff)
                     {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
+                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorption] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
                         (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Body] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
                         (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Energy] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
                         (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Cold] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
@@ -161,11 +161,11 @@ namespace DOL.GS.Spells
                     }
                     else if (this is ArmorFactorBuff)
                     {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
+                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorption] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
                     }
                     else if (this is DexterityBuff)
                     {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
+                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorption] += (int)(((Spell.Value / 100) * Spell.Level) / 4);
                     }
                     else if (this is QuicknessBuff)
                     {
@@ -183,7 +183,7 @@ namespace DOL.GS.Spells
                     }
                     else if (this is DexterityQuiBuff)
                     {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] += (int)(((Spell.Value / 100) * Spell.Level) / 8);
+                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorption] += (int)(((Spell.Value / 100) * Spell.Level) / 8);
                         (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.MeleeSpeed] += (int)(((Spell.Value / 100) * Spell.Level) / 6);
                     }
                     //Decrease Pet's ArmorAbsorb/MagicAbsorb with DeBuffs
@@ -193,7 +193,7 @@ namespace DOL.GS.Spells
                     }
                     else if (this is ConstitutionDebuff)
                     {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
+                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorption] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
                         (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Body] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
                         (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Energy] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
                         (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.Resist_Cold] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
@@ -203,11 +203,11 @@ namespace DOL.GS.Spells
                     }
                     else if (this is ArmorFactorDebuff)
                     {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
+                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorption] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
                     }
                     else if (this is DexterityDebuff)
                     {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
+                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorption] -= (int)(((Spell.Value / 100) * Spell.Level) / 4);
                     }
                     else if (this is QuicknessDebuff)
                     {
@@ -225,7 +225,7 @@ namespace DOL.GS.Spells
                     }
                     else if (this is DexterityQuiDebuff)
                     {
-                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorbtion] -= (int)(((Spell.Value / 100) * Spell.Level) / 8);
+                        (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.ArmorAbsorption] -= (int)(((Spell.Value / 100) * Spell.Level) / 8);
                         (effect.Owner as GameNPC).AbilityBonus[(int)eProperty.MeleeSpeed] -= (int)(((Spell.Value / 100) * Spell.Level) / 6);
                     }
                 }

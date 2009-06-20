@@ -21,7 +21,7 @@ using System;
 namespace DOL.GS.PropertyCalc
 {
 	/// <summary>
-	/// The Armor Absorbtion calculator
+	/// The Armor Absorption calculator
 	/// 
 	/// BuffBonusCategory1 is used for buffs, uncapped
 	/// BuffBonusCategory2 unused
@@ -29,8 +29,8 @@ namespace DOL.GS.PropertyCalc
 	/// BuffBonusCategory4 unused
 	/// BuffBonusMultCategory1 unused
 	/// </summary>
-	[PropertyCalculator(eProperty.ArmorAbsorbtion)]
-	public class ArmorAbsorbtionCalculator : PropertyCalculator
+	[PropertyCalculator(eProperty.ArmorAbsorption)]
+	public class ArmorAbsorptionCalculator : PropertyCalculator
 	{
 		public override int CalcValue(GameLiving living, eProperty property)
 		{

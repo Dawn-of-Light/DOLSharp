@@ -42,8 +42,8 @@ namespace DOL.GS.Spells
             living.AbilityBonus[(int)eProperty.Quickness] += (int)m_spell.Value;
             living.AbilityBonus[(int)eProperty.Intelligence] += (int)m_spell.Value;
             living.AbilityBonus[(int)eProperty.Charisma] += (int)m_spell.Value;   
-            living.AbilityBonus[(int)eProperty.ArmorAbsorbtion] += (int)m_spell.Value; 
-            living.AbilityBonus[(int)eProperty.MagicAbsorbtion] += (int)m_spell.Value; 
+            living.AbilityBonus[(int)eProperty.ArmorAbsorption] += (int)m_spell.Value; 
+            living.AbilityBonus[(int)eProperty.MagicAbsorption] += (int)m_spell.Value; 
             
             if(effect.Owner is GamePlayer)
             {
@@ -66,8 +66,8 @@ namespace DOL.GS.Spells
             living.AbilityBonus[(int)eProperty.Quickness] -= (int)m_spell.Value;
             living.AbilityBonus[(int)eProperty.Intelligence] -= (int)m_spell.Value;
             living.AbilityBonus[(int)eProperty.Charisma] -= (int)m_spell.Value;        
-            living.AbilityBonus[(int)eProperty.ArmorAbsorbtion] -= (int)m_spell.Value; 
-            living.AbilityBonus[(int)eProperty.MagicAbsorbtion] -= (int)m_spell.Value; 
+            living.AbilityBonus[(int)eProperty.ArmorAbsorption] -= (int)m_spell.Value; 
+            living.AbilityBonus[(int)eProperty.MagicAbsorption] -= (int)m_spell.Value; 
  
             if(effect.Owner is GamePlayer)
             {

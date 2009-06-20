@@ -144,12 +144,12 @@ namespace DOL.GS.Spells
 	}
 
 	/// <summary>
-	/// Armor absorbtion debuff
+	/// Armor Absorption debuff
 	/// </summary>
-	[SpellHandlerAttribute("ArmorAbsorbtionDebuff")]
-	public class ArmorAbsorbtionDebuff : SingleStatDebuff
+	[SpellHandlerAttribute("ArmorAbsorptionDebuff")]
+	public class ArmorAbsorptionDebuff : SingleStatDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.ArmorAbsorbtion; } }
+		public override eProperty Property1 { get { return eProperty.ArmorAbsorption; } }
 
 		/// <summary>
 		/// send updates about the changes
@@ -160,7 +160,7 @@ namespace DOL.GS.Spells
 		}
 
 		// constructor
-		public ArmorAbsorbtionDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public ArmorAbsorptionDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 
 	/// <summary>
