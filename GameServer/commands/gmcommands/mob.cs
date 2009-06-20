@@ -975,7 +975,7 @@ namespace DOL.GS.Commands
             info.Add( "" );
             info.Add( String.Format( "Maximum Health: {0}", targetMob.MaxHealth ) );
             info.Add( String.Format( "Armor Factor (AF): {0}", targetMob.GetModified( eProperty.ArmorFactor ) ) );
-            info.Add( String.Format( "Absorption (ABS): {0}", targetMob.GetModified( eProperty.ArmorAbsorbtion ) ) );
+            info.Add( String.Format( "Absorption (ABS): {0}", targetMob.GetModified( eProperty.ArmorAbsorption ) ) );
             client.Out.SendCustomTextWindow( "[ " + targetMob.Name + " ]", info );
             return;
         }

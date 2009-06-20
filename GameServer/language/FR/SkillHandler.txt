@@ -26,7 +26,7 @@ SkillBase.RegisterPropertyNames.BodyMagic:            Alitération
 SkillBase.RegisterPropertyNames.BodyMagicFocus:         Focus : Alitération
 SkillBase.RegisterPropertyNames.BoneArmy:            Armée Squelettique
 SkillBase.RegisterPropertyNames.BoneArmyFocus:        Focus : Armée Squelettique
-SkillBase.RegisterPropertyNames.BonusToArmorAbsorption:   Bonus d'absorbtion (Abs)
+SkillBase.RegisterPropertyNames.BonusToArmorAbsorption:   Bonus d'Absorption (Abs)
 SkillBase.RegisterPropertyNames.BonusToArmorFactor:      Bonus au facteur d'armure (AF)
 SkillBase.RegisterPropertyNames.CastingSpeed:         Bonus à la vitesse d'incantation
 SkillBase.RegisterPropertyNames.CaveMagic:            Magie Abyssale

@@ -1134,7 +1134,7 @@ namespace DOL.GS.Spells
 					    || m_spellLine.KeyName == "Cursing Spec")
 					    && (Spell.SpellType != "ArmorFactorBuff"
 					    && Spell.SpellType != "Bladeturn"
-					    && Spell.SpellType != "ArmorAbsorbtionBuff"))
+					    && Spell.SpellType != "ArmorAbsorptionBuff"))
 						return ticks;
 				}
 			}
