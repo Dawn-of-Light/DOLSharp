@@ -33,7 +33,7 @@ namespace DOL.GS.Effects
                     p.Out.SendSpellEffectAnimation(player, player, Icon, 0, false, 1);
                 }
             }
-            owner.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorbtion] += m_currentBonus;
+            owner.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] += m_currentBonus;
         }
 
 		public override string Name { get { return "Ferocious Will"; } }
@@ -42,7 +42,7 @@ namespace DOL.GS.Effects
 
 		public override void Stop()
 		{
-			owner.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorbtion] -= m_currentBonus;
+			owner.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] -= m_currentBonus;
 			base.Stop();
 		}
 

@@ -678,7 +678,7 @@ namespace DOL.GS
 		MaxConcentration = 147,
 
 		ArmorFactor = 148,
-		ArmorAbsorbtion = 149,
+		ArmorAbsorption = 149,
 
 		HealthRegenerationRate = 150,
 		PowerRegenerationRate = 151,
@@ -690,7 +690,7 @@ namespace DOL.GS
 		MeleeSpeed = 155,
 		Acuity = 156,
 		DPS = 230,
-		MagicAbsorbtion = 231,
+		MagicAbsorption = 231,
 
 		AllMagicSkills = 163,
 		AllMeleeWeaponSkills = 164,

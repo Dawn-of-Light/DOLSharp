@@ -996,7 +996,7 @@ namespace DOL.AI.Brain
 				case "DexterityBuff":
 				case "ConstitutionBuff":
 				case "ArmorFactorBuff":
-				case "ArmorAbsorbtionBuff":
+				case "ArmorAbsorptionBuff":
 				case "CombatSpeedBuff":
 				case "MeleeDamageBuff":
 				case "AcuityBuff":

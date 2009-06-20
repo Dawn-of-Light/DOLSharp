@@ -91,7 +91,7 @@ namespace DOL.AI.Brain
 			{
 				case "HeatColdMatterBuff":
 				case "BodySpiritEnergyBuff":
-				case "ArmorAbsorbtionBuff":
+				case "ArmorAbsorptionBuff":
 				case "AblativeArmor":
 				  TrustCast(spell, eCheckSpellType.Defensive);
 					return true;
