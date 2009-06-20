@@ -297,14 +297,13 @@ namespace DOL.GS.PacketHandler
 		Rofl = 0x41,
 		Mememe = 0x42,
 		Horse_whistle = 0x43,
-		Kowtow = 0x44,
+		Worship = 0x44,
 		PlayerPrepare = 0x45,
 		PlayerPickup = 0x46,
 		PlayerListen = 0x47,
 		BindAlb = 0x49,
 		BindMid = 0x4a,
 		BindHib = 0x4b,
-		Worship = 68,
 	};
 
 	public enum eMerchantWindowType : byte

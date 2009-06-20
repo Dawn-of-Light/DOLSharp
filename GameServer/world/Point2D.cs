@@ -261,7 +261,7 @@ namespace DOL.GS
             return p1.GetHeading( p2 );
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             X = 0;
             Y = 0;

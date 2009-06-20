@@ -327,9 +327,13 @@ namespace DOL.GS.Spells
 								}
 							}
 							else
-								handler.StartSpell(player);
-                        }
-                    }
+								handler.StartSpell( player );
+						}
+					}
+					else
+					{
+						log.Warn( "Skipping " + m_procSpell.Target + " proc " + m_procSpell.Name + " on " + ad.Target.Name + "; Realm = " + ad.Target.Realm );
+					}
                 }
             }
         }

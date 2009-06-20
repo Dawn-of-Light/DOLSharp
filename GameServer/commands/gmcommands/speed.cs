@@ -24,39 +24,58 @@ namespace DOL.GS.Commands
 	[CmdAttribute(
 		"&speed",
 		ePrivLevel.GM,
-		"Change speed",
-		"/speed <newSpeed>")]
+		"Change base speed of target (no parameter to see current speed)",
+		"/speed [newSpeed]")]
 	public class SpeedCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+            GamePlayer player = client.Player;
+            GameLiving target = player.TargetObject as GameLiving;
+
+            if ( target == null )
+            {
+                DisplayMessage( client, "You have not selected a valid target" );
+                return;
+            }
+
 			if (args.Length == 1)
 			{
-				DisplaySyntax(client);
+                DisplayMessage( player, ( player == target ? "Your" : target.Name ) + " maximum speed is " + target.MaxSpeedBase );
 				return;
 			}
-			ushort speed;
-			try
-			{
-				speed = Convert.ToUInt16(args[1]);
 
-				GamePlayer obj = client.Player.TargetObject as GamePlayer;
+            ushort speed;
 
-				if (obj != null)
-				{
-					obj.MaxSpeedBase = speed;
-					obj.Out.SendUpdateMaxSpeed();
-					DisplayMessage(obj, (client.Player == obj ? "Your" : obj.Name) + " maximum speed is now " + speed.ToString());
-				}
-				else
-				{
-					DisplayMessage(client, "You have not selected a valid target");
-				}
-			}
-			catch (Exception)
-			{
-				DisplaySyntax(client);
-			}
-		}
+            if ( ushort.TryParse( args[1], out speed ) )
+            {
+                target.MaxSpeedBase = speed;
+
+                GameNPC npc = target as GameNPC;
+
+                if ( npc == null )
+                {
+                    GamePlayer targetPlayer = target as GamePlayer;
+
+                    if ( targetPlayer != null )
+                    {
+                        targetPlayer.Out.SendUpdateMaxSpeed();
+                    }
+                }
+                else
+                {
+                    if ( npc.LoadedFromScript == false )
+                    {
+                        npc.SaveIntoDatabase();
+                    }
+                }
+
+                DisplayMessage( player, ( player == target ? "Your" : target.Name ) + " maximum speed is now " + target.MaxSpeedBase );
+            }
+            else
+            {
+                DisplaySyntax( client );
+            }
+        }
 	}
 }

@@ -29,7 +29,7 @@ namespace DOL.Events
 	/// why a particular spell cast failed.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class CastFailedEventArgs : CastStartingEventArgs
+	public class CastFailedEventArgs : CastStartingEventArgs
 	{
 		public enum Reasons
 		{

@@ -886,7 +886,7 @@ namespace DOL.GS
 			m_propertyNames.Add(eProperty.RealmPoints, "Realm Points");
 			//[Freya] Nidel
 			m_propertyNames.Add(eProperty.BountyPoints, "Bounty Points");
-			m_propertyNames.Add(eProperty.XpPoints, "Xp points");
+			m_propertyNames.Add(eProperty.XpPoints, "Experience Points");
 
 			// skills
 			m_propertyNames.Add(eProperty.Skill_Two_Handed, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
@@ -2086,8 +2086,12 @@ namespace DOL.GS
 		public static List<Style> GetStyleList(string specID, int classId)
 		{
 			List<Style> list;
-			if (m_styleLists.TryGetValue(specID + "|" + classId, out list))
-				return list;
+			if( m_styleLists.TryGetValue( specID + "|" + classId, out list ) )
+			{
+				// Do *NOT* permit random write access to this list!
+				// All access should be controlled and ensured to be thread-safe
+				return new List<Style>( list );
+			}
 			else
 				return new List<Style>(0);
 		}
@@ -2132,7 +2136,7 @@ namespace DOL.GS
 			long key = ((long)styleID << 32) | (uint)classId;
 			Style style;
 			if (m_stylesByIDClass.TryGetValue(key, out style))
-				return style;
+				return (Style)style.Clone();
 			return null;
 		}
 
@@ -2196,7 +2200,7 @@ namespace DOL.GS
 			string res = null;
 			if (!m_objectTypeToSpec.TryGetValue(objectType, out res))
 				if (log.IsWarnEnabled)
-				log.Warn("Not found spec for object type " + objectType);
+					log.Warn("Not found spec for object type " + objectType);
 			return res;
 		}
 
