@@ -318,6 +318,7 @@
     <Compile Include="Crafting\ArmorCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="effects\DummyEffect.cs" />
     <Compile Include="events\gameobjects\InterruptedEventArgs.cs" />
     <Compile Include="events\gameobjects\NextCraftingTierReachedEventArgs.cs" />
     <Compile Include="events\gameobjects\SwitchedTargetEventArgs.cs" />
@@ -2034,6 +2035,7 @@
     <Compile Include="spells\Artifacts\RealmLore.cs" />
     <Compile Include="spells\Artifacts\ScarabVest.cs" />
     <Compile Include="spells\Artifacts\BandofStars.cs" />
+    <Compile Include="spells\Artifacts\ShadesOfMist.cs" />
     <Compile Include="spells\Artifacts\SnakeCharmersWeapon.cs" />
     <Compile Include="spells\Artifacts\StyleDmgAbs.cs">
     </Compile>

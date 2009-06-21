@@ -1,74 +1,70 @@
-//Andraste v2.0 - Vico
-
-using System;
-using System.Text;
-using DOL.GS;
-using DOL.GS.PacketHandler;
+﻿/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using DOL.GS.Effects;
-using DOL.Events;
-using System.Collections;
-using DOL.Database;
-using DOL.GS.Scripts;
 
 namespace DOL.GS.Spells
 {
-    [SpellHandler("Som")]
-    public class ShadeOfMist : DefensiveProcSpellHandler
+    /// <summary>
+    /// Shades of Mist spell handler: Shape change (shade) on self with
+    /// a defensive proc (200 pt. melee health buffer).
+    /// </summary>
+    /// <author>Aredhel</author>
+    [SpellHandler("ShadesOfMist")]
+    public class ShadesOfMist : DefensiveProcSpellHandler
     {
+        /// <summary>
+        /// Effect starting.
+        /// </summary>
+        /// <param name="effect"></param>
         public override void OnEffectStart(GameSpellEffect effect)
         {
             base.OnEffectStart(effect);
-            if(effect.Owner is GamePlayer)
-            {
-	            GamePlayer player = effect.Owner as GamePlayer;
-	   			player.Shade(true);
-	   			player.Out.SendUpdatePlayer();
-   			}           
+
+            GamePlayer player = effect.Owner as GamePlayer;
+
+            if (player != null)
+                player.Model = player.ShadeModel;        
         }
 
         /// <summary>
-        /// When an applied effect expires.
-        /// Duration spells only.
+        /// Effect expiring (duration spells only).
         /// </summary>
-        /// <param name="effect">The expired effect</param>
-        /// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-        /// <returns>immunity duration in milliseconds</returns>
+        /// <param name="effect"></param>
+        /// <param name="noMessages"></param>
+        /// <returns>Immunity duration in milliseconds.</returns>
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
- 			if(effect.Owner is GamePlayer)
-            {
-	            GamePlayer player = effect.Owner as GamePlayer; 				
-				player.Shade(false);
-				player.Out.SendUpdatePlayer();
-    		}	          
+            GamePlayer player = effect.Owner as GamePlayer;
+
+            if (player != null)
+                player.Model = player.CreationModel;      
+      
             return base.OnEffectExpires(effect, noMessages);
         }
+
         /// <summary>
-        /// Constructs a new UnbreakableSpeedDecreaseSpellHandler
+        /// Creates a new ShadesOfMist spell handler.
         /// </summary>
         /// <param name="caster"></param>
         /// <param name="spell"></param>
         /// <param name="line"></param>
-        public ShadeOfMist(GameLiving caster, Spell spell, SpellLine line)
-            : base(caster, spell, line)
-        {
-        }
+        public ShadesOfMist(GameLiving caster, Spell spell, SpellLine line)
+            : base(caster, spell, line) { }
     }
-	
-	[SpellHandlerAttribute("SomArmorAbsorbtionBuff")]
-	public class SomArmorAbsorbtionBuff : SingleStatBuff
-	{
-		public override eProperty Property1 { get { return eProperty.ArmorAbsorbtion; } }
-
-		/// <summary>
-		/// send updates about the changes
-		/// </summary>
-		/// <param name="target"></param>
-		protected override void SendUpdates(GameLiving target)
-		{
-		}
-
-		// constructor
-		public SomArmorAbsorbtionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-	}
 }

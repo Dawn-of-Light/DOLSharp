@@ -22,6 +22,7 @@ using DOL.GS;
 using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using DOL.GS.Effects;
 
 namespace DOL.GS.Commands
 {
@@ -36,78 +37,83 @@ namespace DOL.GS.Commands
         {
             if (args.Length < 2)
             {
-            DisplaySyntax(client);
+                DisplaySyntax(client);
                 return;
             }
 
             string type = args[1].ToLower();
 
-         int id = 0;
-         try
-         {
-            id = Convert.ToInt32(args[2]);
-         }
-         catch
-         {
-            DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.InvalidId"));
-            return;
-         }
-         if (id < 0)
-         {
-            DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.IdNegative"));
-            return;
-         }
+            int id = 0;
+            try
+            {
+                id = Convert.ToInt32(args[2]);
+            }
+            catch
+            {
+                DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.InvalidId"));
+                return;
+            }
+            if (id < 0)
+            {
+                DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.IdNegative"));
+                return;
+            }
 
-         GameLiving target = client.Player.TargetObject as GameLiving;
-         if (target == null)
-            target = client.Player as GameLiving;
+            GameLiving target = client.Player.TargetObject as GameLiving;
+            if (target == null)
+                target = client.Player as GameLiving;
 
             switch (type)
-         {
-            #region Effect
-            case "effect":
-               {
-                  DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.EffectExecuted", id.ToString()));
-                  foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                     player.Out.SendSpellEffectAnimation(client.Player, target, (ushort)id, 0, false, 1);
-                  break;
-               }
-            #endregion Effect
-            #region Cast
-            case "cast":
-               {
-                  DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.CastExecuted", id.ToString()));
-                  foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                     player.Out.SendSpellCastAnimation(client.Player, (ushort)id, 30);
-                  break;
-               }
-            #endregion Cast
-            #region Spell
-            case "spell":
-               {
-                  Spell spell = SkillBase.GetSpellByID(id);
-                  SpellLine line = new SpellLine("GMCast", "GM Cast", "unknown", false);
-                  if (spell != null)
-                  {
-                     if ((target is GamePlayer) && (target != client.Player) && (spell.Target.ToLower() != "self"))
-                     {
-                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.CastOnLiving", spell.Name, target.Name));
-                        DisplayMessage(((GamePlayer)target).Client, LanguageMgr.GetTranslation(((GamePlayer)target).Client, "GMCommands.Cast.Spell.GMCastOnYou", ((client.Account.PrivLevel == 2) ? "GM" : "Admin"), client.Player.Name));
-                     }
-                     else if ((target == client.Player) || (spell.Target.ToLower() == "self"))
-                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.CastOnSelf", spell.Name));
+            {
+                #region Effect
+                case "effect":
+                    {
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.EffectExecuted", id.ToString()));
 
-                     ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, line);
-                     if (spellHandler != null)
-                        spellHandler.StartSpell(target);
-                  }
-                  else
-                  {
-                     DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.Inexistent", id.ToString()));
-                  }
-                  break;
-               }
-            #endregion Spell
+                        DummyEffect effect = new DummyEffect((ushort)id);
+                        effect.Start(client.Player);
+
+                        foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                            player.Out.SendSpellEffectAnimation(client.Player, target, (ushort)id, 0, false, 1);
+
+                        break;
+                    }
+                #endregion Effect
+                #region Cast
+                case "cast":
+                    {
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.CastExecuted", id.ToString()));
+                        foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                            player.Out.SendSpellCastAnimation(client.Player, (ushort)id, 30);
+                        break;
+                    }
+                #endregion Cast
+                #region Spell
+                case "spell":
+                    {
+                        Spell spell = SkillBase.GetSpellByID(id);
+                        SpellLine line = new SpellLine("GMCast", "GM Cast", "unknown", false);
+                        if (spell != null)
+                        {
+                            if ((target is GamePlayer) && (target != client.Player) && (spell.Target.ToLower() != "self"))
+                            {
+                                DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.CastOnLiving", spell.Name, target.Name));
+                                DisplayMessage(((GamePlayer)target).Client, LanguageMgr.GetTranslation(((GamePlayer)target).Client, "GMCommands.Cast.Spell.GMCastOnYou", ((client.Account.PrivLevel == 2) ? "GM" : "Admin"), client.Player.Name));
+                            }
+                            else if ((target == client.Player) || (spell.Target.ToLower() == "self"))
+                                DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.CastOnSelf", spell.Name));
+
+                            ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, line);
+                            if (spellHandler != null)
+                                spellHandler.StartSpell(target);
+                        }
+                        else
+                        {
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.Inexistent", id.ToString()));
+                        }
+                        break;
+                    }
+                #endregion Spell
                 #region Sound
                 case "sound":
                     DisplayMessage(client,
@@ -117,12 +123,12 @@ namespace DOL.GS.Commands
                 #endregion
                 #region Default
                 default:
-               {
-                  DisplaySyntax(client);
-                  break;
-               }
-            #endregion Default
-         }
+                    {
+                        DisplaySyntax(client);
+                        break;
+                    }
+                #endregion Default
+            }
         }
     }
 }
