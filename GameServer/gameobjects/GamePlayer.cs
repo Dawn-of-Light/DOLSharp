@@ -12496,6 +12496,64 @@ namespace DOL.GS
 			return new ShadeEffect();
 		}
 
+        /// <summary>
+        /// The model ID used on character creation.
+        /// </summary>
+        public ushort CreationModel
+        {
+            get
+            {
+                return (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
+            }
+        }
+
+        /// <summary>
+        /// The model ID used for shade morphs.
+        /// </summary>
+        public ushort ShadeModel
+        {
+            get
+            {
+                // Aredhel: Bit fishy, necro in caster from could use
+                // Traitor's Dagger... FIXME!
+
+                if (CharacterClass.ID == (int)eCharacterClass.Necromancer) 
+                    return 822;
+
+                switch (RaceName)
+                {
+                    // Albion Models.
+
+                    case "Inconnu": return (ushort)(PlayerCharacter.Gender + 1351);
+                    case "Briton": return (ushort)(PlayerCharacter.Gender + 1353);
+                    case "Highlander": return (ushort)(PlayerCharacter.Gender + 1355);
+                    case "Saracen": return (ushort)(PlayerCharacter.Gender + 1357);
+                    case "Avalonian": return (ushort)(PlayerCharacter.Gender + 1359);
+                    case "Half Ogre": return (ushort)(PlayerCharacter.Gender + 1361);
+
+                    // Midgard Models.
+
+                    case "Troll": return (ushort)(PlayerCharacter.Gender + 1363);
+                    case "Norse": return (ushort)(PlayerCharacter.Gender + 1365);
+                    case "Kobold": return (ushort)(PlayerCharacter.Gender + 1367);
+                    case "Dwarf": return (ushort)(PlayerCharacter.Gender + 1369);
+                    case "Valkyn": return (ushort)(PlayerCharacter.Gender + 1371);
+                    case "Frostalf": return (ushort)(PlayerCharacter.Gender + 1373);
+
+                    // Hibernia Models.
+
+                    case "Firbolg": return (ushort)(PlayerCharacter.Gender + 1375);
+                    case "Celt": return (ushort)(PlayerCharacter.Gender + 1377);
+                    case "Lurikeen": return (ushort)(PlayerCharacter.Gender + 1379);
+                    case "Elf": return (ushort)(PlayerCharacter.Gender + 1381);
+                    case "Sylvan": return (ushort)(PlayerCharacter.Gender + 1383);
+                    case "Shar": return (ushort)(PlayerCharacter.Gender + 1385); 
+                }
+
+                return Model;
+            }
+        }
+
 		/// <summary>
 		/// Changes shade state of the player.
 		/// </summary>
@@ -12513,80 +12571,7 @@ namespace DOL.GS
 			if (state)
 			{
 				// Turn into a shade.
-                if(CharacterClass.ID  == (int)eCharacterClass.Necromancer) Model = 822;
-                else
-                {
-                    switch(PlayerCharacter.Gender)
-                    {
-                        //Male
-                        case 0:
-                            {
-                                switch(RaceName)
-                                {
-                                    #region Albion Shade Models
-                                    case "Inconnu": Model = 1351; break;
-                                    case "Briton": Model = 1353; break;
-                                    case "Highlander": Model = 1355; break;
-                                    case "Saracen": Model = 1357; break;
-                                    case "Avalonian": Model = 1359; break;
-                                    case "Half Ogre": Model = 1361; break;
-                                    #endregion
-
-                                    #region Midgard Shade Models
-                                    case "Troll": Model = 1363; break;
-                                    case "Norse": Model = 1365; break;
-                                    case "Kobold": Model = 1367; break;
-                                    case "Dwarf": Model = 1369; break;
-                                    case "Valkyn": Model = 1371; break;
-                                    case "Frostalf": Model = 1373; break;
-                                    #endregion
-
-                                    #region Hibernia Shade Models
-                                    case "Firbolg": Model = 1375; break;
-                                    case "Celt": Model = 1377; break;
-                                    case "Lurikeen": Model = 1379; break;
-                                    case "Elf": Model = 1381; break;
-                                    case "Sylvan": Model = 1383; break;
-                                    case "Shar": Model = 1385; break;
-                                    #endregion
-                                }
-                            }
-                            break;
-                        case 1:
-                            {
-                                switch(RaceName)
-                                {
-                                    #region Albion Shade Models
-                                    case "Inconnu": Model = 1352; break;
-                                    case "Briton": Model = 1354; break;
-                                    case "Highlander": Model = 1356; break;
-                                    case "Saracen": Model = 1358; break;
-                                    case "Avalonian": Model = 1360; break;
-                                    case "Half Ogre": Model = 1362; break;
-                                    #endregion
-
-                                    #region Midgard Shade Models
-                                    case "Troll": Model = 1364; break;
-                                    case "Norse": Model = 1366; break;
-                                    case "Kobold": Model = 1368; break;
-                                    case "Dwarf": Model = 1370; break;
-                                    case "Valkyn": Model = 1372; break;
-                                    case "Frostalf": Model = 1374; break;
-                                    #endregion
-
-                                    #region Hibernia Shade Models
-                                    case "Firbolg": Model = 1376; break;
-                                    case "Celt": Model = 1378; break;
-                                    case "Lurikeen": Model = 1380; break;
-                                    case "Elf": Model = 1382; break;
-                                    case "Sylvan": Model = 1384; break;
-                                    case "Shar": Model = 1386; break;
-                                    #endregion
-                                }
-                            }
-                            break;
-                    }
-                }
+                Model = ShadeModel;
 			    m_ShadeEffect = CreateShadeEffect();
 				m_ShadeEffect.Start(this);
 			}
@@ -12595,7 +12580,7 @@ namespace DOL.GS
 				// Drop shade form.
 				m_ShadeEffect.Stop();
 				m_ShadeEffect = null;
-				Model = (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
+				Model = CreationModel;
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.NoLongerShade"),
 					eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
