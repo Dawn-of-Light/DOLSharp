@@ -1920,9 +1920,38 @@ namespace DOL.GS
 		/// <returns>the new time</returns>
 		protected override int HealthRegenerationTimerCallback(RegionTimer callingTimer)
 		{
+			// I'm not sure what the point of this is.
 			if (Client.ClientState != GameClient.eClientState.Playing)
 				return m_healthRegenerationPeriod;
-			return base.HealthRegenerationTimerCallback(callingTimer);
+
+			// adjust timer based on Live testing of player
+
+			if (Health < MaxHealth)
+			{
+				ChangeHealth(this, eHealthChangeType.Regenerate, GetModified(eProperty.HealthRegenerationRate));
+			}
+
+			//If we are fully healed, we stop the timer
+			if (Health >= MaxHealth)
+			{
+				//We clean all damagedealers if we are fully healed,
+				//no special XP calculations need to be done
+				lock (m_xpGainers.SyncRoot)
+				{
+					m_xpGainers.Clear();
+				}
+
+				return 0;
+			}
+
+			if (InCombat)
+			{
+				// in combat each tic is aprox 6 seconds - tolakram
+				return m_healthRegenerationPeriod * 2;
+			}
+
+			//Heal at standard rate
+			return m_healthRegenerationPeriod;
 		}
 
 		/// <summary>
