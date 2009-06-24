@@ -490,7 +490,9 @@ namespace DOL.GS.Spells
 					if (!(player.CharacterClass is PlayerClass.ClassVampiir)
 					    && !(player.CharacterClass is PlayerClass.ClassMaulerAlb)
 					    && !(player.CharacterClass is PlayerClass.ClassMaulerMid)
-					    && !(player.CharacterClass is PlayerClass.ClassMaulerHib))
+					    && !(player.CharacterClass is PlayerClass.ClassMaulerHib)
+					    && !(player.CharacterClass is PlayerClass.ClassWarden && Spell.SpellType == "HealOverTime")
+					    && !(player.CharacterClass is PlayerClass.ClassFriar && Spell.SpellType == "HealOverTime"))
 					{
 						m_caster.StopAttack();
 						return false;
