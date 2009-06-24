@@ -42,7 +42,10 @@ namespace DOL.GS.PropertyCalc
               - All health and power regeneration aids are now twice as effective.
              */
 
-			double regen = 15; // tested by SAND
+			double regen = 5 + (living.Level / 5);
+
+			if (living is GameNPC && living.InCombat)
+				regen /= 2.0;
 
 			// tolakram - there is no difference per tic between combat and non combat
 
