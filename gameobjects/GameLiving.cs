@@ -4702,8 +4702,8 @@ namespace DOL.GS
 
 			if (InCombat)
 			{
-				// in combat each tic is 6 seconds
-				return m_healthRegenerationPeriod * 2;
+				// in combat each tic is aprox 15 seconds - tolakram
+				return m_healthRegenerationPeriod * 5;
 			}
 
 			//Heal at standard rate
