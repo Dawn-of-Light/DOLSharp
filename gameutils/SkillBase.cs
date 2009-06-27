@@ -1697,55 +1697,54 @@ namespace DOL.GS
 
 		private static void InitArmorResists()
 		{
-			const int value_high 	= 10;
-			const int value_low 	= 5;
-			const int value_neutral = 0;
+			const int resistant		= 10;
+			const int vulnerable	= -5;
 
 			// melee resists (slash, crush, thrust)
 
 			// alb armor - neutral to slash
 			// plate and leather resistant to thrust
 			// chain and studded vulnerable to thrust
-			WriteMeleeResists(eRealm.Albion, eObjectType.Leather, value_neutral, -value_low, value_high);
-			WriteMeleeResists(eRealm.Albion, eObjectType.Plate,   value_neutral, -value_low, value_high);
-			WriteMeleeResists(eRealm.Albion, eObjectType.Studded, value_neutral, value_high, -value_low);
-			WriteMeleeResists(eRealm.Albion, eObjectType.Chain,   value_neutral, value_high, -value_low);
+			WriteMeleeResists(eRealm.Albion, eObjectType.Leather, 0, vulnerable, resistant);
+			WriteMeleeResists(eRealm.Albion, eObjectType.Plate,   0, vulnerable, resistant);
+			WriteMeleeResists(eRealm.Albion, eObjectType.Studded, 0, resistant,  vulnerable);
+			WriteMeleeResists(eRealm.Albion, eObjectType.Chain,   0, resistant,  vulnerable);
 
 
 			// hib armor - neutral to thrust
 			// reinforced and leather vulnerable to crush
 			// scale resistant to crush
-			WriteMeleeResists(eRealm.Hibernia, eObjectType.Reinforced, value_high, -value_low, value_neutral);
-			WriteMeleeResists(eRealm.Hibernia, eObjectType.Leather,    value_high, -value_low, value_neutral);
-			WriteMeleeResists(eRealm.Hibernia, eObjectType.Scale,      -value_low, value_high, value_neutral);
+			WriteMeleeResists( eRealm.Hibernia, eObjectType.Leather,    resistant,  vulnerable, 0 );
+			WriteMeleeResists( eRealm.Hibernia, eObjectType.Reinforced, resistant,  vulnerable, 0 );
+			WriteMeleeResists(eRealm.Hibernia,  eObjectType.Scale,      vulnerable, resistant, 0);
 
 
 			// mid armor - neutral to crush
 			// studded and leather resistant to thrust
 			// chain vulnerabel to thrust
-			WriteMeleeResists(eRealm.Midgard, eObjectType.Studded, -value_low, value_neutral, value_high);
-			WriteMeleeResists(eRealm.Midgard, eObjectType.Leather, -value_low, value_neutral, value_high);
-			WriteMeleeResists(eRealm.Midgard, eObjectType.Chain,   value_high, value_neutral, -value_low);
+			WriteMeleeResists(eRealm.Midgard, eObjectType.Studded, vulnerable, 0, resistant);
+			WriteMeleeResists(eRealm.Midgard, eObjectType.Leather, vulnerable, 0, resistant);
+			WriteMeleeResists(eRealm.Midgard, eObjectType.Chain,   resistant,  0, vulnerable);
 
 
 			// magical damage (Heat, Cold, Matter, Energy)
 			// Leather
-			WriteMagicResists(eRealm.Albion,   eObjectType.Leather, -value_low, value_high, value_low, value_neutral);
-			WriteMagicResists(eRealm.Hibernia, eObjectType.Leather, -value_low, value_high, value_low, value_neutral);
-			WriteMagicResists(eRealm.Midgard,  eObjectType.Leather, -value_low, value_high, value_low, value_neutral);
+			WriteMagicResists(eRealm.Albion,   eObjectType.Leather, vulnerable, resistant, vulnerable, 0);
+			WriteMagicResists(eRealm.Hibernia, eObjectType.Leather, vulnerable, resistant, vulnerable, 0);
+			WriteMagicResists(eRealm.Midgard,  eObjectType.Leather, vulnerable, resistant, vulnerable, 0);
 
 			// Reinforced/Studded
-			WriteMagicResists(eRealm.Albion,   eObjectType.Studded,    value_high, -value_low, -value_low, -value_low);
-			WriteMagicResists(eRealm.Hibernia, eObjectType.Reinforced, value_high, -value_low, -value_low, -value_low);
-			WriteMagicResists(eRealm.Midgard,  eObjectType.Studded,    value_high, -value_low, -value_low, -value_low);
+			WriteMagicResists(eRealm.Albion,   eObjectType.Studded,    resistant, vulnerable, vulnerable, vulnerable);
+			WriteMagicResists(eRealm.Hibernia, eObjectType.Reinforced, resistant, vulnerable, vulnerable, vulnerable);
+			WriteMagicResists(eRealm.Midgard,  eObjectType.Studded,    resistant, vulnerable, vulnerable, vulnerable);
 
 			// Chain
-			WriteMagicResists(eRealm.Albion,  eObjectType.Chain, value_high, value_neutral, value_neutral, -value_low);
-			WriteMagicResists(eRealm.Midgard, eObjectType.Chain, value_high, value_neutral, value_neutral, -value_low);
+			WriteMagicResists(eRealm.Albion,  eObjectType.Chain, resistant, 0, 0, vulnerable);
+			WriteMagicResists(eRealm.Midgard, eObjectType.Chain, resistant, 0, 0, vulnerable);
 
 			// Scale/Plate
-			WriteMagicResists(eRealm.Albion,   eObjectType.Plate, value_high, -value_low, value_high, -value_low);
-			WriteMagicResists(eRealm.Hibernia, eObjectType.Scale, value_high, -value_low, value_high, -value_low);
+			WriteMagicResists(eRealm.Albion,   eObjectType.Plate, resistant, vulnerable, resistant, vulnerable);
+			WriteMagicResists(eRealm.Hibernia, eObjectType.Scale, resistant, vulnerable, resistant, vulnerable);
 		}
 
 		private static void WriteMeleeResists(eRealm realm, eObjectType armorType, int slash, int crush, int thrust)
@@ -1771,10 +1770,10 @@ namespace DOL.GS
 
 			int off = (realm - eRealm._First) << (DAMAGETYPE_BITCOUNT + ARMORTYPE_BITCOUNT);
 			off |= (armorType - eObjectType._FirstArmor) << DAMAGETYPE_BITCOUNT;
-			m_armorResists[off + (eDamageType.Heat - eDamageType._FirstResist)] = -heat;
-			m_armorResists[off + (eDamageType.Cold - eDamageType._FirstResist)] = -cold;
-			m_armorResists[off + (eDamageType.Matter - eDamageType._FirstResist)] = -matter;
-			m_armorResists[off + (eDamageType.Energy - eDamageType._FirstResist)] = -energy;
+			m_armorResists[off + (eDamageType.Heat - eDamageType._FirstResist)] = heat;
+			m_armorResists[off + (eDamageType.Cold - eDamageType._FirstResist)] = cold;
+			m_armorResists[off + (eDamageType.Matter - eDamageType._FirstResist)] = matter;
+			m_armorResists[off + (eDamageType.Energy - eDamageType._FirstResist)] = energy;
 		}
 
 		#endregion
@@ -2093,7 +2092,7 @@ namespace DOL.GS
 				return new List<Style>( list );
 			}
 			else
-				return new List<Style>(0);
+				return new List<Style>( 0 );
 		}
 
 		/// <summary>
