@@ -4042,20 +4042,23 @@ namespace DOL.GS
 				expTotal -= expGroupBonus;
 				expTotal -= expCampBonus;
 				expTotal -= expOutpostBonus;
+
 				if (this.CurrentRegion.IsRvR)
 					expTotal = (long)(expTotal * ServerProperties.Properties.RvR_XP_RATE);
 				else
 					expTotal = (long)(expTotal * ServerProperties.Properties.XP_RATE);
+
+				// [Freya] Nidel: ToA Xp Bonus
+				long xpBonus = GetModified(eProperty.XpPoints);
+				if (xpBonus != 0)
+				{
+					expTotal += (expTotal * xpBonus) / 100;
+				}
+
 				expTotal += expOutpostBonus;
 				expTotal += expGroupBonus;
 				expTotal += expCampBonus;
 
-                // [Freya] Nidel: ToA Xp Bonus
-                long xpBonus = GetModified(eProperty.XpPoints);
-                if (xpBonus > 0)
-                {
-                    expTotal += (expTotal*xpBonus)/100;
-                }
 			}
 
 			// Get Champion Experience too
