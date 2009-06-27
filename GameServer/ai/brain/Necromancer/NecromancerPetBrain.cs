@@ -133,7 +133,9 @@ namespace DOL.AI.Brain
                 GameLiving target = spellArgs.Target;
                 SpellLine spellLine = spellArgs.SpellLine;
 
-                DebugMessageToOwner(String.Format("Now casting '{0}'", spellArgs.Spell.Name));
+				if (spellArgs != null && spellArgs.Spell != null)
+					DebugMessageToOwner(String.Format("Now casting '{0}'", spellArgs.Spell.Name));
+
 
                 // This message is for spells from the spell queue only, so suppress
                 // it for insta cast buffs coming from the pet itself.
