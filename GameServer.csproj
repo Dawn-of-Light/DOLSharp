@@ -1016,6 +1016,7 @@
     <Compile Include="propertycalc\StyleAbsorbPercentCalculator.cs" />
     <Compile Include="propertycalc\WaterSpeedCalculator.cs" />
     <Compile Include="propertycalc\WeaponSkillCalculator.cs" />
+    <Compile Include="propertycalc\XPPointsCalculator.cs" />
     <Compile Include="quests\Atlantis\ArtifactEncounter.cs" />
     <Compile Include="quests\Atlantis\ArtifactQuest.cs" />
     <Compile Include="quests\Atlantis\Artifacts\AHealersEmbrace.cs" />
