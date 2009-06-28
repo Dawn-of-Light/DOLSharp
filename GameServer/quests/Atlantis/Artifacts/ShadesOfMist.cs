@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using DOL.Database;
@@ -90,7 +91,9 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 
 				if (versions.Count > 0 && RemoveItem(player, item))
 				{
-					GiveItem(scholar, player, ArtifactID, versions[";;"]);
+					IDictionaryEnumerator versionsEnum = versions.GetEnumerator();
+					versionsEnum.MoveNext();
+					GiveItem(scholar, player, ArtifactID, versionsEnum.Value as ItemTemplate);
 					String reply = String.Format("Here is your cloak. Do not lose it, it is irreplaceable.");
 					scholar.TurnTo(player);
 					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
