@@ -109,9 +109,9 @@ namespace DOL.AI.Brain
             else if (e == GameLivingEvent.CastFailed)
             {
                 // Tell owner why cast has failed.
-
-                DebugMessageToOwner(String.Format("Cast failed for '{0}')",
-                    (args as CastFailedEventArgs).SpellHandler.Spell.Name));
+				// this can crash, spell not always defined - tolakram
+				//DebugMessageToOwner(String.Format("Cast failed for '{0}')",
+				//    (args as CastFailedEventArgs).SpellHandler.Spell.Name));
 
                 switch ((args as CastFailedEventArgs).Reason)
                 {
