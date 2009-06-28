@@ -169,7 +169,7 @@ namespace DOL.GS
         {
             if (player != null)
             {
-                String reply = String.Format("I'm sorry, but I shouldn't recreate this artifact for you, {1} {2}",
+                String reply = String.Format("I'm sorry, but I shouldn't recreate this artifact for you, {0} {1}",
                      "as it wouldn't make proper use of your abilities. There are other artifacts",
                      "in Atlantis better suited to your needs.");
                 TurnTo(player);
@@ -215,10 +215,18 @@ namespace DOL.GS
 			{
 				lock (QuestListToGive.SyncRoot)
 				{
-					foreach (AbstractQuest quest in player.QuestList)
-						if (quest is ArtifactQuest && (HasQuest(quest.GetType()) != null))
-							if ((quest as ArtifactQuest).ReceiveItem(player, this, item))
-								return true;
+					try
+					{
+						foreach (AbstractQuest quest in player.QuestList)
+							if (quest is ArtifactQuest && (HasQuest(quest.GetType()) != null))
+								if ((quest as ArtifactQuest).ReceiveItem(player, this, item))
+									return true;
+					}
+					catch (Exception ex)
+					{
+						log.Error("Scholar ReceiveItem Error: ", ex);
+						SayTo(player, eChatLoc.CL_PopupWindow, "I'm very sorry but I'm having trouble locating an artifact for you.  Please /report this problem to my superiors.");
+					}
 				}
 			}
 

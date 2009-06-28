@@ -112,7 +112,7 @@ namespace DOL.GS
 				lock (QuestListToGive.SyncRoot)
 				{
 					// See if they player has the quest first
-					foreach (ArtifactQuest quest in player.QuestList)
+					foreach (AbstractQuest quest in player.QuestList)
 					{
 						if (quest is ArtifactTurnInQuest && HasQuest(quest.GetType()) != null)
 							if ((quest as ArtifactTurnInQuest).Interact(player, this))
