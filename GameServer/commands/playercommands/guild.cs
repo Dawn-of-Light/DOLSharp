@@ -977,13 +977,15 @@ namespace DOL.GS.Commands
                                     }
                                     else
                                     {
-                                        Guild newGuild = GuildMgr.CreateGuild(client.Player, guildname);
-                                        if (newGuild == null)
+										Guild newGuild = GuildMgr.CreateGuild(client.Player, guildname);
+
+										if( newGuild == null )
                                         {
                                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.UnableToCreateLead", guildname, client.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                         }
                                         else
                                         {
+											newGuild.AddPlayer( client.Player );
                                             client.Player.GuildRank = client.Player.Guild.GetRankByID(0); //creator is leader
                                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.GuildCreated", guildname, client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                         }
