@@ -1,4 +1,4 @@
-Healer.GetExamineMessages.Text1:	Es interessiert Euch {0}. {0} steht Euch {2} und kann andere Leute heilen.
+Healer.GetExamineMessages.Text1:	Es interessiert Euch {0}. {1} steht Euch {2} und kann andere Leute heilen.
 Healer.HealerDialogResponse.Text1:	{0} ist zu weit entfernt!
 Healer.HealerDialogResponse.Text2:	Ihr lehnt es ab, Konstitutionspunkte wieder zu bekommen.
 Healer.HealerDialogResponse.Text3:	{0} stellt Eure verlorene Konstitution wieder vollständig her. Ihr gebt ihm eine Spende in Höhe von {1}.
