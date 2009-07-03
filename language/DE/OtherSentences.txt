@@ -18,7 +18,7 @@ PropertyCalc.MaxSpeed.YouAreEncumbered:			Ihr seit überlastet und könnt euch nic
 GameGravestone.GameGravestone.Grave:			Grabstein von {0}
 
 # GAMEGUARD
-GameGuard.GetExamineMessages.Examine:			Es interessiert Euch {0}. {0} steht Euch {2} und gehört der Reichswache an.
+GameGuard.GetExamineMessages.Examine:			Es interessiert Euch {0}. {1} steht Euch {2} und gehört der Reichswache an.
 
 # GAMESTAICITEM
 GameStaticItem.GetName.Article1:			{0}

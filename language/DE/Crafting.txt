@@ -36,7 +36,7 @@ Crafting.Name.Tailoring:				Schneiderei
 Crafting.Name.Weaponcraft:				Waffenschmied
 Crafting.Name.Woodworking:				Schreinerei
 
-# /CraftLevelToCraftTitle
+# /CraftLevelToCraftTitle (OLD)
 CraftLevelToCraftTitle.Helper:				Handwerkergehilfe
 CraftLevelToCraftTitle.JuniorApprentice:		Handwerkerlehrling
 CraftLevelToCraftTitle.Apprentice:			Handwerkergeselle
@@ -49,6 +49,20 @@ CraftLevelToCraftTitle.Master:				Handwerker-Meister
 CraftLevelToCraftTitle.Grandmaster:			Handwerker-Groﬂmeister
 CraftLevelToCraftTitle.Legendary:			Legend‰rer Handwerker-Meister
 CraftLevelToCraftTitle.LegendaryGrandmaster:		Legend‰rer Handwerker-Groﬂmeister
+
+# /CraftersTitle (NEW)
+CraftersTitle.Helper:					{0}gehilfe
+CraftersTitle.JuniorApprentice:				{0}lehrling
+CraftersTitle.Apprentice:				{0}geselle
+CraftersTitle.Neophyte:					Wandernder {0}
+CraftersTitle.Assistant:				Hilfs{0}
+CraftersTitle.Junior:					Jung{0}
+CraftersTitle.Journeyman:				Niedergelassener {0}
+CraftersTitle.Senior:					Innungs{0}
+CraftersTitle.Master:					{0}-Meister
+CraftersTitle.Grandmaster:				{0}-Groﬂmeister
+CraftersTitle.Legendary:				Legend‰rer {0}-Meister
+CraftersTitle.LegendaryGrandmaster:			Legend‰rer {0}-Groﬂmeister
 
 # /AbstractCraftingSkill
 AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Euer Rucksack ist voll. {0} wurde auf dem Boden abgelegt.
@@ -68,7 +82,7 @@ AbstractCraftingSkill.CraftItem.BeginWork:		Ihr macht Euch an die Arbeit, {0} ni
 AbstractCraftingSkill.CraftItem.ChanceToGainPoint:	Die Chance Punkte in Eurem prim‰ren Handwerk zu erhalten betr‰gt {0}%.
 AbstractCraftingSkill.CraftItem.CurrentlyMaking:	Stelle {0} her...
 AbstractCraftingSkill.CraftItem.MoveAndInterrupt:	Ihr bewegt Euch und unterbrecht damit Eure Arbeit.
-AbstractCraftingSkill.CraftItem.StopWork:		Ihr brecht Eure momentane Arbeit ab.
+AbstractCraftingSkill.CraftItem.StopWork:		Ihr arbeitet nicht l‰nger an "{0}".
 AbstractCraftingSkill.LooseRawMaterial.Count:		Ihr verliert ({0}) {1}.
 AbstractCraftingSkill.LooseRawMaterial.Materials:	Ihr habt die Herstellung von {0} nicht geschafft und verliert einiges Material!
 AbstractCraftingSkill.MakeItem.LoseNoMaterials:		Ihr habt die Herstellung von {0} nicht geschafft, aber verliert kein Material!
