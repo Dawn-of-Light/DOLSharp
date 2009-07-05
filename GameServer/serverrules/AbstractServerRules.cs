@@ -683,26 +683,33 @@ namespace DOL.GS.ServerRules
 				float totalDamage = 0;
 				Dictionary<Group, int> plrGrpExp = new Dictionary<Group, int>();
 				GamePlayer highestPlayer = null;
+				bool isGroupInRange = false;
 				//Collect the total damage
 				foreach (DictionaryEntry de in killedNPC.XPGainers)
 				{
 					totalDamage += (float)de.Value;
 					GamePlayer player = de.Key as GamePlayer;
 
-					//Check stipulations
+					//Check stipulations (this will ignore all pet damage)
 					if (player == null || player.ObjectState != GameObject.eObjectState.Active || !player.IsWithinRadius(killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 						continue;
 
 					if (player.Group != null)
 					{
+						// checking to see if any group members are in range of the killer
+						if (player != (killer as GamePlayer))
+							isGroupInRange = true;
+
 						if (plrGrpExp.ContainsKey(player.Group))
 							plrGrpExp[player.Group] += 1;
 						else
 							plrGrpExp[player.Group] = 1;
+
+						// tolakram: only prepare for xp challenge code if player is in a group
+						if (highestPlayer == null || (player.Level > highestPlayer.Level))
+							highestPlayer = player;
 					}
 
-					if (highestPlayer == null || (player.Level > highestPlayer.Level))
-						highestPlayer = player;
 				}
 				#endregion
 
@@ -766,23 +773,44 @@ namespace DOL.GS.ServerRules
 						xpReward = npcExpValue;
 
 					// exp cap
-					/*That cap, by the way, is defined as yellow + 10%, aka low orange, and applies to everyone - even solo artists.*/
-					long expCap = (long)(living.ExperienceValue * 1.1);
+					/*
+					
+					http://support.darkageofcamelot.com/kb/article.php?id=438					 
+					 
+					Experience clamps have been raised from 1.1x a same level kill to 1.25x a same level kill. 
+					This change has two effects: it will allow lower level players in a group to gain more experience faster (15% faster), 
+					and it will also let higher level players (the 35-50s who tend to hit this clamp more often) to gain experience faster.
+					*/
+					long expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(player.Level) * ServerProperties.Properties.XP_CAP_PERCENT / 100);
+					if (player != null && player.Group != null && isGroupInRange)
+					{
+						// Optional group cap can be set different from standard player cap
+						expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(player.Level) * ServerProperties.Properties.XP_GROUP_CAP_PERCENT / 100);
+					}
 
 					#region Challenge Code
 					//let's check the con, for example if a level 50 kills a green, we want our level 1 to get green xp too
 					/*
 					 * http://www.camelotherald.com/more/110.shtml
-					 * All group experience is divided evenly amongst group members, if they are in the same level range. What's a level range? One color range. If everyone in the group cons yellow to each other (or high blue, or low orange), experience will be shared out exactly evenly, with no leftover points. How can you determine a color range? Simple - Level divided by ten plus one. So, to a level 40 player (40/10 + 1), 36-40 is yellow, 31-35 is blue, 26-30 is green, and 25-less is gray.
-					 * But for everyone in the group to get the maximum amount of experience possible, the encounter must be a challenge to the group.
-					 * If the group has two people, the monster must at least be (con) yellow to the highest level member. If the group has four people, the monster must at least be orange. If the group has eight, the monster must at least be red.
+					 * All group experience is divided evenly amongst group members, if they are in the same level range. What's a level range? One color range. 
+					 * If everyone in the group cons yellow to each other (or high blue, or low orange), experience will be shared out exactly evenly, with no leftover points. 
+					 * How can you determine a color range? Simple - Level divided by ten plus one. So, to a level 40 player (40/10 + 1), 36-40 is yellow, 31-35 is blue, 
+					 * 26-30 is green, and 25-less is gray. But for everyone in the group to get the maximum amount of experience possible, the encounter must be a challenge to 
+					 * the group. If the group has two people, the monster must at least be (con) yellow to the highest level member. If the group has four people, the monster 
+					 * must at least be orange. If the group has eight, the monster must at least be red.
 					 *
-					 * If "challenge code" has been activated, then the experience is divided roughly like so in a group of two (adjust the colors up if the group is bigger): If the monster was blue to the highest level player, each lower level group member will ROUGHLY receive experience as if they soloed a blue monster. Ditto for green. As everyone knows, a monster that cons gray to the highest level player will result in no exp for anyone. If the monster was high blue, challenge code may not kick in. It could also kick in if the monster is low yellow to the high level player, depending on the group strength of the pair.
+					 * If "challenge code" has been activated, then the experience is divided roughly like so in a group of two (adjust the colors up if the group is bigger): If 
+					 * the monster was blue to the highest level player, each lower level group member will ROUGHLY receive experience as if they soloed a blue monster. 
+					 * Ditto for green. As everyone knows, a monster that cons gray to the highest level player will result in no exp for anyone. If the monster was high blue, 
+					 * challenge code may not kick in. It could also kick in if the monster is low yellow to the high level player, depending on the group strength of the pair.
 					 */
 					//xp challenge
-					if (highestPlayer != null &&  highestConValue < 0)
+					if (highestPlayer != null && highestConValue < 0)
+					{
 						//challenge success, the xp needs to be reduced to the proper con
-						expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(GameObject.GetLevelFromCon(living.Level, highestConValue)));
+						expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(GameObject.GetLevelFromCon(player.Level, highestConValue)));
+					}
+
 
 					#endregion
 
@@ -847,8 +875,9 @@ namespace DOL.GS.ServerRules
 							if (player.Group != null && plrGrpExp.ContainsKey(player.Group))
 								groupExp += (long)(0.125 * xpReward * (int)plrGrpExp[player.Group]);
 
-							if (player.ControlledNpc != null)
-								xpReward = (long)(xpReward * 0.75);
+							// tolakram - remove this for now.  Correct calculation should be reduced XP based on damage pet did, not a flat reduction
+							//if (player.ControlledNpc != null)
+							//    xpReward = (long)(xpReward * 0.75);
 						}
 
 						//Ok we've calculated all the base experience.  Now let's add them all together.
@@ -1157,7 +1186,7 @@ namespace DOL.GS.ServerRules
 					// TODO: pets take 25% and owner gets 75%
 					long xpReward = (long)(playerExpValue * damagePercent); // exp for damage percent
 
-					long expCap = (long)(living.ExperienceValue * 1.25);
+					long expCap = (long)(living.ExperienceValue * ServerProperties.Properties.XP_PVP_CAP_PERCENT / 100);
 					if (xpReward > expCap)
 						xpReward = expCap;
 

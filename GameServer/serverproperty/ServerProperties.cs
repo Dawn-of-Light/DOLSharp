@@ -733,6 +733,24 @@ namespace DOL.GS.ServerProperties
         public static readonly int RELIC_RETURN_TIME;
 
 		/// <summary>
+		/// Xp Cap for a player.  Given in percent of level.  Default is 125%
+		/// </summary>
+		[ServerProperty("XP_Cap_Percent", "Maximum XP a player can earn given in percent of their level. Default is 125%", 125)]
+		public static readonly int XP_CAP_PERCENT;
+
+		/// <summary>
+		/// Xp Cap for a player in a group.  Given in percent of level.  Default is 125%
+		/// </summary>
+		[ServerProperty("XP_Group_Cap_Percent", "Maximum XP a player can earn while in a group, given in percent of their level. Default is 125%", 125)]
+		public static readonly int XP_GROUP_CAP_PERCENT;
+
+		/// <summary>
+		/// Xp Cap for a player vs player kill.  Given in percent of level.  Default is 125%
+		/// </summary>
+		[ServerProperty("XP_PVP_Cap_Percent", "Maximum XP a player can earn killing another player, given in percent of their level. Default is 125%", 125)]
+		public static readonly int XP_PVP_CAP_PERCENT;
+
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
