@@ -24,6 +24,7 @@ using System.Net;
 using System.Reflection;
 
 using DOL.Database;
+using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -727,6 +728,13 @@ namespace DOL.GS.ServerRules
 				{
 					GameLiving living = de.Key as GameLiving;
 					GamePlayer player = living as GamePlayer;
+
+					if (living is NecromancerPet)
+					{
+						NecromancerPet necroPet = living as NecromancerPet;
+						player = ((necroPet.Brain as IControlledBrain).Owner) as GamePlayer;
+					}
+
 					//Check stipulations
 					if (living == null || living.ObjectState != GameObject.eObjectState.Active || !living.IsWithinRadius(killedNPC, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 						continue;
@@ -781,11 +789,17 @@ namespace DOL.GS.ServerRules
 					This change has two effects: it will allow lower level players in a group to gain more experience faster (15% faster), 
 					and it will also let higher level players (the 35-50s who tend to hit this clamp more often) to gain experience faster.
 					*/
-					long expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(player.Level) * ServerProperties.Properties.XP_CAP_PERCENT / 100);
-					if (player != null && player.Group != null && isGroupInRange)
+					long expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(living.Level) * ServerProperties.Properties.XP_CAP_PERCENT / 100);
+
+					if (player != null)
 					{
-						// Optional group cap can be set different from standard player cap
-						expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(player.Level) * ServerProperties.Properties.XP_GROUP_CAP_PERCENT / 100);
+						expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(player.Level) * ServerProperties.Properties.XP_CAP_PERCENT / 100);
+
+						if (player.Group != null && isGroupInRange)
+						{
+							// Optional group cap can be set different from standard player cap
+							expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(player.Level) * ServerProperties.Properties.XP_GROUP_CAP_PERCENT / 100);
+						}
 					}
 
 					#region Challenge Code
@@ -805,7 +819,7 @@ namespace DOL.GS.ServerRules
 					 * challenge code may not kick in. It could also kick in if the monster is low yellow to the high level player, depending on the group strength of the pair.
 					 */
 					//xp challenge
-					if (highestPlayer != null && highestConValue < 0)
+					if (player != null && highestPlayer != null && highestConValue < 0)
 					{
 						//challenge success, the xp needs to be reduced to the proper con
 						expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(GameObject.GetLevelFromCon(player.Level, highestConValue)));
