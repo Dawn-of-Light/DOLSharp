@@ -493,6 +493,7 @@ namespace DOL.GS.Keeps
 		public override bool AddToWorld()
 		{
 			base.RoamingRange = 0;
+			base.TetherRange = 10000;
 			
 			if (!base.AddToWorld())
 				return false;
@@ -563,7 +564,7 @@ namespace DOL.GS.Keeps
 				string text = "";
 				if (this.Component.Keep.Level > 1 && this.Component.Keep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
                     text = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.Keep.Level);
-                if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.Keep.Region == 163)
+                if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.Keep.Region == 163 && !(this.Component.Keep is GameKeepTower))
                     text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.Keep.BaseLevel - 50).ToString());
                 if (text != "")
 					list.Add(text);
@@ -728,5 +729,14 @@ namespace DOL.GS.Keeps
 				PatrolGroup.GetMovementOffset(this, out offX, out offY);
 			base.WalkTo(tx - offX, ty - offY, tz, speed);
 		}
+
+		/// <summary>
+		/// Walk to the spawn point, always max speed for keep guards
+		/// </summary>
+		public override void WalkToSpawn()
+		{
+			WalkToSpawn(MaxSpeed);
+		}
+
 	}
 }
