@@ -37,6 +37,7 @@ namespace DOL.GS.Keeps
 			SetGuardSpeed(guard);
 			SetGuardLevel(guard);
 			SetGuardResists(guard);
+			SetGuardStats(guard);
 			ClothingMgr.EquipGuard(guard);
 			ClothingMgr.SetEmblem(guard);
 		}
@@ -70,14 +71,18 @@ namespace DOL.GS.Keeps
 			{
 				if (guard is GuardLord)
 					return 75;
-				else return 65;
+				else 
+					return 65;
 			}
+
 			if (guard is GuardLord)
 			{
 				if (guard.Component.Keep is GameKeep)
 					return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1) * 2);
-				else return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1));
+				else 
+					return (byte)(guard.Component.Keep.BaseLevel + 2);
 			}
+
 			return guard.Component.Keep.BaseLevel;
 		}
 
@@ -90,10 +95,17 @@ namespace DOL.GS.Keeps
 			else
 			{
 				int bonusLevel = 0;
+				double multiplier = 1.5;
+
 				if (guard.Component != null)
+				{
 					bonusLevel = guard.Component.Keep.Level;
-				//guard.Level = (byte)(GetBaseLevel(guard) + bonusLevel);
-				guard.Level = (byte)(GetBaseLevel(guard) + (bonusLevel*1.5));
+
+					if (guard.Component.Keep is GameKeepTower)
+						multiplier = 1.0;
+				}
+
+				guard.Level = (byte)(GetBaseLevel(guard) + (bonusLevel * multiplier));
 			}
 		}
 
@@ -908,6 +920,18 @@ namespace DOL.GS.Keeps
 				if (guard is GuardLord)
 					guard.BaseBuffBonusCategory[i] = 35;
 				else guard.BaseBuffBonusCategory[i] = 26;
+			}
+		}
+
+		/// <summary>
+		/// Sets a guards stats
+		/// </summary>
+		/// <param name="guard">The guard object</param>
+		private static void SetGuardStats(GameKeepGuard guard)
+		{
+			if (guard is GuardLord)
+			{
+				guard.Strength = (short)(guard.Level * 6 + 50);
 			}
 		}
 	}
