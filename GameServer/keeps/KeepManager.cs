@@ -681,9 +681,10 @@ namespace DOL.GS.Keeps
 		public static int GetRealmBonusLevel(eRealm realm)
 		{
 			int keep = 7 - GetKeepCountByRealm(realm);
-			int tower = (28 - GetTowerCountByRealm(realm)) / 4;
-			return keep + tower;
+			// int tower = (28 - GetTowerCountByRealm(realm)) / 4;
+			return keep; // +tower;
 
+			//tolakram - removed tower count, and yes I kept the code commented for now
 			//for every extra keep, lose a level, for every missing keep gain a level
 			//for every extra 4 towers, lose a level, for every missing 4 towers gain a level
 		}
@@ -694,7 +695,7 @@ namespace DOL.GS.Keeps
 			{
 				foreach (AbstractGameKeep keep in m_keeps.Values)
 				{
-					if (keep.Region != 163) continue;
+					if (keep.Region != 163 || keep is GameKeepTower) continue; // tolakram - remove balancing of towers
 					keep.BaseLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmBonusLevel((eRealm)keep.Realm));
 					foreach (GameKeepGuard guard in keep.Guards.Values)
 					{
