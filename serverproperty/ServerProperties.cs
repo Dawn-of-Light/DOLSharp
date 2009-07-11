@@ -751,6 +751,13 @@ namespace DOL.GS.ServerProperties
 		public static readonly int XP_PVP_CAP_PERCENT;
 
 		/// <summary>
+		/// Hardcap XP a player can earn after all other adjustments are applied.  Given in percent of level, default is 500%  There is no live value that corresponds to this cap.
+		/// </summary>
+		[ServerProperty("XP_HardCap_Percent", "Hardcap XP a player can earn after all other adjustments are applied. Given in percent of their level. Default is 500%", 500)]
+		public static readonly int XP_HARDCAP_PERCENT;
+
+
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value

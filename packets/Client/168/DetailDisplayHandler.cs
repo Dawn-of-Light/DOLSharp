@@ -56,18 +56,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort objectID = packet.ReadShort();
 			string caption = "";
 			ArrayList objectInfo = new ArrayList();
+
 			/*
-Type    Description           Id
-1       Inventory item        Slot (ie. 0xC for 2 handed weapon)
-2       Spell                 spell level + spell line ID * 100 (starting from 0)
-3       ???
-4       Merchant item         Slot (divide by 30 to get page)
-5       Buff/effect           The buff id (each buff has a unique id)
-6       Style                 style list index = ID-100-abilities count
-7       Trade window          position in trade window (starting form 0)
-8       Ability               100+position in players abilities list (?)
-9       Trainers skill        position in trainers window list
+			Type    Description           Id
+			1       Inventory item        Slot (ie. 0xC for 2 handed weapon)
+			2       Spell                 spell level + spell line ID * 100 (starting from 0)
+			3       ???
+			4       Merchant item         Slot (divide by 30 to get page)
+			5       Buff/effect           The buff id (each buff has a unique id)
+			6       Style                 style list index = ID-100-abilities count
+			7       Trade window          position in trade window (starting form 0)
+			8       Ability               100+position in players abilities list (?)
+			9       Trainers skill        position in trainers window list
+			10		Market Search		  slot?
 			*/
+
 			switch (objectType)
 			{
 				#region Inventory Item
@@ -75,38 +78,39 @@ Type    Description           Id
 				case 10: // market search
                     {
                         InventoryItem item = null;
+
                         if (objectType == 1)
                         {
                             item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
                             if (item == null)
                             {
-                                if (client.Player.ActiveConMerchant != null)
-                                {
-                                    Consignment con = client.Player.ActiveConMerchant;
-                                    item = con.ConInventory[objectID];
-                                    if (item == null)
-                                        return 1;
-                                }
-                                else
-                                    return 1;
+								if (client.Player.ActiveConMerchant != null)
+								{
+									Consignment con = client.Player.ActiveConMerchant;
+									item = con.ConInventory[objectID];
+									if (item == null)
+										return 1;
+								}
+								else
+								{
+									return 1;
+								}
                             }
 
                         }
                         else if (objectType == 10)
                         {
                             List<InventoryItem> list = client.Player.TempProperties.getObjectProperty(DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.EXPLORER_LIST, null) as List<InventoryItem>;
-                            if (list == null)
-                                return 1;
-                            item = list[objectID];
-                            if (item == null)
-                                return 1;
-                        }
-                        else
-                        {
-                            List<InventoryItem> list = client.Player.TempProperties.getObjectProperty("TempSearchKey", null) as List<InventoryItem>;
-                            item = list[objectID];
-                            if (item == null)
-                                return 1;
+							if (list == null)
+							{
+								list = client.Player.TempProperties.getObjectProperty("TempSearchKey", null) as List<InventoryItem>;
+								if (list == null)
+									return 1;
+							}
+
+							item = list[objectID];
+							if (item == null)
+								return 1;
                         }
 
 						caption = item.Name;
