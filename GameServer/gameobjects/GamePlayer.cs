@@ -4055,6 +4055,11 @@ namespace DOL.GS
 					expTotal += (expTotal * xpBonus) / 100;
 				}
 
+				long hardXPCap = (long)(GameServer.ServerRules.GetExperienceForLiving(Level) * ServerProperties.Properties.XP_HARDCAP_PERCENT / 100);
+
+				if (expTotal > hardXPCap)
+					expTotal = hardXPCap;
+
 				expTotal += expOutpostBonus;
 				expTotal += expGroupBonus;
 				expTotal += expCampBonus;
