@@ -548,6 +548,8 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second).", (uint)30000)]
 		public static readonly uint WORLD_NPC_UPDATE_INTERVAL;
 
+		[ServerProperty("world_player_update_interval", "How often (milliseconds) will players be checked for updates. Minimum allowed = 100 (100 milliseconds).", (uint)300)]
+		public static readonly uint WORLD_PLAYER_UPDATE_INTERVAL;
 
 		[ServerProperty("weather_check_interval", "How often (milliseconds) will weather be checked for a chance to start a storm.", 5 * 60 * 1000)]
 		public static readonly int WEATHER_CHECK_INTERVAL;
