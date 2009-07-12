@@ -93,10 +93,6 @@ namespace DOL.GS
 		/// </summary>
 		public const int OBJ_UPDATE_DISTANCE = 4096;
 		/// <summary>
-		/// How often players are updated
-		/// </summary>
-		public const int PLAYER_UPDATE_TIME = 300;
-		/// <summary>
 		/// How close a player can be to pick up loot
 		/// </summary>
 		public const int PICKUP_DISTANCE = 256;
@@ -747,7 +743,7 @@ namespace DOL.GS
 						if (player.ObjectState != GameObject.eObjectState.Active)
 							continue;
 
-						if (Environment.TickCount - player.LastNPCUpdate > PLAYER_UPDATE_TIME)
+						if (Environment.TickCount - player.LastNPCUpdate > (int)(ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL >= 100 ? ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL : 100))
 						{
 							BitArray carray = player.CurrentUpdateArray;
 							BitArray narray = player.NewUpdateArray;
