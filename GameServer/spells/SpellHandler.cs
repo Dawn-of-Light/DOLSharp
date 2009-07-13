@@ -2711,12 +2711,21 @@ namespace DOL.GS.Spells
 			GameSpellEffect resPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
 			if (resPierce != null)
 				bonustohit += (int)resPierce.Spell.Value;
+
+			/*
+			http://www.camelotherald.com/news/news_article.php?storyid=704
+
+			A: Here's the answer, straight from the desk of the spell designer:
+
+			"Spells have a factor of (spell level / 2) added to their chance to hit. (Spell level defined as the level the spell is awarded, chance to hit defined as 
+			the chance of avoiding the "Your target resists the spell!" message.) Subtracted from the modified to-hit chance is the target's (level / 2). 
+			So a L50 caster casting a L30 spell at a L50 monster or player, they have a base chance of 85% to hit, plus 15%, minus 25% for a net chance to hit of 75%. 
+			If the chance to hit goes over 100% damage or duration is increased, and if it goes below 55%, you still have a 55% chance to hit but your damage 
+			or duration is penalized. If the chance to hit goes below 0, you cannot hit at all. Once the spell hits, damage and duration are further modified 
+			by resistances.
+			*/
+
 			int hitchance = 85 + ((spellLevel - target.Level) >> 1) + bonustohit;
-			if (!(caster is GamePlayer && target is GamePlayer))
-			{
-				// level mod
-				hitchance -= (int)(m_caster.GetConLevel(target) * 10);
-			}
 
             // [Freya] Nidel: Harpy Cloak : They have less chance of landing melee attacks, and spells have a greater chance of affecting them. 
             if((target is GamePlayer))
