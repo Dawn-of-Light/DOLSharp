@@ -233,12 +233,27 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-			if (guard.TargetObject is GamePlayer == false)
-				return;
+			GamePlayer player = null;
 
-			GamePlayer player = guard.TargetObject as GamePlayer;
+			if (guard.TargetObject is GamePlayer)
+			{
+				player = guard.TargetObject as GamePlayer;
+			}
+			else if (guard.TargetObject is GameNPC)
+			{
+				GameNPC npc = (guard.TargetObject as GameNPC);
 
-			player.Out.SendCheckLOS(guard, player, new CheckLOSResponse(guard.GuardStopAttackCheckLOS));
+				if (npc.Brain != null && ((npc is GameKeepGuard) == false) && npc.Brain is IControlledBrain)
+				{
+					player = (npc.Brain as IControlledBrain).GetPlayerOwner();
+				}
+			}
+
+
+			if (player != null)
+			{
+				player.Out.SendCheckLOS(guard, guard.TargetObject, new CheckLOSResponse(guard.GuardStopAttackCheckLOS));
+			}
 		}
 
 		public const string Last_LOS_Target_Property = "last_LOS_checkTarget";
@@ -278,14 +293,18 @@ namespace DOL.GS.Keeps
 					return;
 			}
 
-
 			GamePlayer LOSChecker = null;
 			if (attackTarget is GamePlayer)
 			{
 				LOSChecker = attackTarget as GamePlayer;
 			}
+			else if (attackTarget is GameNPC && (attackTarget as GameNPC).Brain is IControlledBrain)
+			{
+				LOSChecker = ((attackTarget as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+			}
 			else
 			{
+				// try to find another player to use for checking line of site
 				foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					LOSChecker = player;
@@ -293,8 +312,12 @@ namespace DOL.GS.Keeps
 				}
 			}
 
+
+
 			if (LOSChecker == null)
+			{
 				return;
+			}
 
 			this.TempProperties.setProperty(Last_LOS_Target_Property, attackTarget);
 			this.TempProperties.setProperty(Last_LOS_Tick_Property, CurrentRegion.Time);
@@ -731,11 +754,27 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// Walk to the spawn point, always max speed for keep guards
+		/// Walk to the spawn point, always max speed for keep guards, or continue patrol.
 		/// </summary>
 		public override void WalkToSpawn()
 		{
-			WalkToSpawn(MaxSpeed);
+			if (PatrolGroup != null)
+			{
+				StopAttack();
+				StopFollowing();
+
+				StandardMobBrain brain = Brain as StandardMobBrain;
+				if (brain != null && brain.IsAggroing)
+				{
+					brain.ClearAggroList();
+				}
+
+				PatrolGroup.StartPatrol();
+			}
+			else
+			{
+				WalkToSpawn(MaxSpeed);
+			}
 		}
 
 	}
