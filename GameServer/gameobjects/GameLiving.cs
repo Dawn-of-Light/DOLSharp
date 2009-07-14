@@ -1588,8 +1588,11 @@ namespace DOL.GS
 				case eAttackResult.HitUnstyled:
 				case eAttackResult.HitStyle:
 					{
-						// intercept messages
-						if (target != null && target != ad.Target)
+						if (ad.Target is GameKeepComponent || ad.Target is GameKeepDoor)
+						{
+							broadcast = false;
+						}
+						else if (target != null && target != ad.Target)
 						{
 							message = string.Format("{0} attacks {1} but hits {2}!", ad.Attacker.GetName(0, true), target.GetName(0, false), ad.Target.GetName(0, false));
 							excludes.Add(target);
@@ -1662,8 +1665,7 @@ namespace DOL.GS
 				if (brain != null)
 				{
 					GamePlayer owner = brain.GetPlayerOwner();
-					//theurgists and animists need the following commented out
-					if (owner != null /*&& owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body*/)
+					if (owner != null)
 					{
 						excludes.Add(owner);
 						switch (ad.AttackResult)
@@ -1671,15 +1673,18 @@ namespace DOL.GS
 							case eAttackResult.HitStyle:
 							case eAttackResult.HitUnstyled:
 								{
-									string modmessage = "";
-									if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
-									if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
-									string attackTypeMsg = "attacks";
-									if (ad.Attacker.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-										attackTypeMsg = "shoots";
-									owner.Out.SendMessage(string.Format("Your {0} {1} {2} and hits for {3}{4} damage!", ad.Attacker.Name, attackTypeMsg, ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-									if (ad.CriticalDamage > 0)
-										owner.Out.SendMessage("Your " + ad.Attacker.Name + " critically hits " + ad.Target.GetName(0, false) + " for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+									if (!(ad.Target is GameKeepComponent || ad.Target is GameKeepDoor))
+									{
+										string modmessage = "";
+										if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
+										if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
+										string attackTypeMsg = "attacks";
+										if (ad.Attacker.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+											attackTypeMsg = "shoots";
+										owner.Out.SendMessage(string.Format("Your {0} {1} {2} and hits for {3}{4} damage!", ad.Attacker.Name, attackTypeMsg, ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+										if (ad.CriticalDamage > 0)
+											owner.Out.SendMessage("Your " + ad.Attacker.Name + " critically hits " + ad.Target.GetName(0, false) + " for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+									}
 									break;
 								}
 							default:
