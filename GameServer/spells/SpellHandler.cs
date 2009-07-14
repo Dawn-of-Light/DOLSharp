@@ -2727,6 +2727,12 @@ namespace DOL.GS.Spells
 
 			int hitchance = 85 + ((spellLevel - target.Level) >> 1) + bonustohit;
 
+			if (!(caster is GamePlayer && target is GamePlayer))
+			{
+				// level mod
+				hitchance -= (int)(m_caster.GetConLevel(target) * ServerProperties.Properties.PVE_SPELL_CONHITPERCENT);
+			}
+
             // [Freya] Nidel: Harpy Cloak : They have less chance of landing melee attacks, and spells have a greater chance of affecting them. 
             if((target is GamePlayer))
             {
