@@ -123,12 +123,14 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void StartPatrol()
 		{
-			PatrolPath = PositionMgr.LoadPatrolPath(PatrolID, Component);
+			if (PatrolPath == null)
+				PatrolPath = PositionMgr.LoadPatrolPath(PatrolID, Component);
 
 			foreach (GameKeepGuard guard in PatrolGuards)
 			{
 				if (guard.CurrentWayPoint == null)
 					guard.CurrentWayPoint = PatrolPath;
+
 				guard.MoveOnPath(PATROL_SPEED);
 			}
 		}

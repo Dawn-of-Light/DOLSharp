@@ -297,6 +297,7 @@ namespace DOL.GS.ServerRules
 		public virtual bool IsAllowedToCastSpell(GameLiving caster, GameLiving target, Spell spell, SpellLine spellLine)
 		{
 			//we only allow certain spell targets to be cast when targeting a keep component
+			//tolakram - live allows most damage spells to be cast on doors. This should be handled in spell handlers
 			if (target is GameKeepComponent || target is GameKeepDoor)
 			{
 				switch (spell.Target.ToLower())
@@ -304,9 +305,14 @@ namespace DOL.GS.ServerRules
 					case "self":
 					case "group":
 					case "pet":
+					case "enemy":
 						break;
 					default: return false;
 				}
+
+				// never allow AOE spells to be cast on Keeps Components
+				if (spell.Radius > 0)
+					return false;
 			}
 			return true;
 		}

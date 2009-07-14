@@ -80,8 +80,11 @@ namespace DOL.GS.Keeps
 				if (guard.Component.Keep is GameKeep)
 					return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1) * 2);
 				else 
-					return (byte)(guard.Component.Keep.BaseLevel + 2);
+					return (byte)(guard.Component.Keep.BaseLevel + 1);
 			}
+
+			if (guard.Component.Keep is GameKeep)
+				return (byte)(guard.Component.Keep.BaseLevel + 1);
 
 			return guard.Component.Keep.BaseLevel;
 		}
@@ -95,7 +98,7 @@ namespace DOL.GS.Keeps
 			else
 			{
 				int bonusLevel = 0;
-				double multiplier = 1.5;
+				double multiplier = 1.6;
 
 				if (guard.Component != null)
 				{
