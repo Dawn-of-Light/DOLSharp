@@ -22,6 +22,7 @@ using System.Collections;
 using System.Text;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 
 namespace DOL.GS.Keeps
@@ -469,10 +470,30 @@ namespace DOL.GS.Keeps
 		{
 			// graveen: ml2 bm to add or put this is a better section (AttackData?)
 			if (source is GamePlayer)
-			{		
-				damageAmount = ((damageAmount-(damageAmount*5*this.Keep.Level)/100)*ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS/100)/2;
+			{
+				damageAmount = ((damageAmount - (damageAmount * 5 * this.Keep.Level) / 100) * ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS / 100) / 2;
 				criticalAmount = 0;
+				((GamePlayer)source).Out.SendMessage(String.Format("You hit {0} for {1} damage!", GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
+			else if (source is GameNPC)
+			{
+				damageAmount = ((damageAmount - (damageAmount * 5 * this.Keep.Level) / 100) * ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS / 100) / 2;
+				criticalAmount = 0;
+
+				if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
+				{
+					GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
+					if (player != null)
+					{
+						// special considerations for pet spam classes
+						if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
+							damageAmount /= 2; // serverproperty goes here
+
+						player.Out.SendMessage(String.Format("Your {0} hits {1} for {2} damage!", source.Name, GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					}
+				}
+			}
+
 			this.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 			//only on hp change

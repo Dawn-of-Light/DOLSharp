@@ -257,11 +257,36 @@ namespace DOL.GS.Keeps
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			// graveen: ml2 bm to add or put this is a better section (AttackData?)
+
 			if (source is GamePlayer)
 			{
-				damageAmount = (damageAmount-(damageAmount*5*this.Component.Keep.Level/100))*ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS/100;
+				damageAmount = (damageAmount - (damageAmount * 5 * this.Component.Keep.Level / 100)) * ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS / 100;
 				criticalAmount = 0;
+				((GamePlayer)source).Out.SendMessage(String.Format("You hit {0} for {1} damage!", GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
+			else if (source is GameNPC)
+			{
+				// reduce damage for all npcs - this is targeted mainly at controlled pets
+				// I'm using values that are less than live since I don't know the exact formula - tolakram
+				//damageAmount /= 2;
+
+				damageAmount = (damageAmount - (damageAmount * 5 * this.Component.Keep.Level / 100)) * ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS / 100;
+				criticalAmount = 0;
+
+				if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
+				{
+					GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
+					if (player != null)
+					{
+						// special considerations for pet spam classes
+						if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
+							damageAmount /= 2; // serverproperty goes here
+
+						player.Out.SendMessage(String.Format("Your {0} hits {1} for {2} damage!", source.Name, GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					}
+				}
+			}
+
 			
 			this.Component.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
 			//only on hp change
@@ -277,12 +302,6 @@ namespace DOL.GS.Keeps
 
 		public override int ChangeHealth(GameObject changeSource, GameLiving.eHealthChangeType healthChangeType, int changeAmount)
 		{
-			if (healthChangeType == eHealthChangeType.Spell)
-			{
-				if (changeSource is GamePlayer)
-					(changeSource as GamePlayer).Out.SendMessage("Your spell has no effect on the door!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-				return 0;
-			}
 			return base.ChangeHealth(changeSource, healthChangeType, changeAmount);
 		}
 

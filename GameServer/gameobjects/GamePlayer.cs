@@ -5294,6 +5294,12 @@ namespace DOL.GS
 				case eAttackResult.Fumbled: Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.Fumble"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
 				case eAttackResult.HitStyle:
 				case eAttackResult.HitUnstyled:
+					if (ad.Target is GameKeepComponent || ad.Target is GameKeepDoor)
+					{
+						// messages for keep components are sent in the component
+						break;
+					}
+
 					string modmessage = "";
 					if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
 					if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";

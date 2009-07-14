@@ -1946,9 +1946,9 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if ((target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent) && Spell.SpellType!="SiegeArrow")
+			if ((target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent) && ((Spell.SpellType != "SiegeArrow" && Spell.SpellType != "DirectDamage") || Spell.Radius != 0))
 			{
-				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
+				MessageToCaster(String.Format("Your spell has no effect on the {0}!", target.Name), eChatType.CT_SpellResisted);
 				return;
 			}
 			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName == GlobalSpellsLines.Potions_Effects || m_spellLine.KeyName == Specs.Savagery || m_spellLine.KeyName == GlobalSpellsLines.Character_Abilities || m_spellLine.KeyName == "OffensiveProc")
@@ -2920,6 +2920,10 @@ namespace DOL.GS.Spells
 		/// <param name="ad"></param>
 		public virtual void SendDamageMessages(AttackData ad)
 		{
+			// tolakram - Keep components handle all damage messages
+			if (ad.Target is Keeps.GameKeepDoor || ad.Target is Keeps.GameKeepComponent)
+				return;
+
 			string modmessage = "";
 			if (ad.Modifier > 0)
 				modmessage = " (+" + ad.Modifier + ")";
