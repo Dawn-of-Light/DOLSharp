@@ -687,7 +687,7 @@ namespace DOL.GS.Keeps
 
 		public static int GetRealmTowerBonusLevel(eRealm realm)
 		{
-			int tower = (28 - GetTowerCountByRealm(realm)) / 10;
+			int tower = (28 - GetTowerCountByRealm(realm)) / 8;
 			return tower;
 		}
 
