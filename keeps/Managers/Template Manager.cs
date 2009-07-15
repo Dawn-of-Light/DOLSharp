@@ -80,7 +80,7 @@ namespace DOL.GS.Keeps
 				if (guard.Component.Keep is GameKeep)
 					return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1) * 2);
 				else 
-					return (byte)(guard.Component.Keep.BaseLevel + 1);
+					return (byte)(guard.Component.Keep.BaseLevel + 2); // flat increase for tower captains
 			}
 
 			if (guard.Component.Keep is GameKeep)
