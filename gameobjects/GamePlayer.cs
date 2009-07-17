@@ -974,7 +974,7 @@ namespace DOL.GS
 			if (character == null) return;
 			
 			// check if valid housebind
-			if (releaseCommand == eReleaseType.House && character.BindHouseRegion > 0)
+			if (releaseCommand == eReleaseType.House && !(character.BindHouseRegion > 0))
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Release.NoValidBindpoint"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				releaseCommand = eReleaseType.Bind;
