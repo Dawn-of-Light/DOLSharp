@@ -41,6 +41,7 @@ namespace DOL
 			private String m_mail;
 			private string m_lastLoginIP;
 			private string m_language;
+			private string m_lastClientVersion;
 			
 			private static bool m_autoSave;
 
@@ -201,6 +202,16 @@ namespace DOL
 			{
 				get { return m_lastLoginIP; }
 				set { m_lastLoginIP = value; }
+			}
+
+			/// <summary>
+			/// The last Client Version used
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public string LastClientVersion
+			{
+				get { return m_lastClientVersion; }
+				set { m_lastClientVersion = value; }
 			}
 
 			/// <summary>

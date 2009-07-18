@@ -1617,7 +1617,8 @@ namespace DOL.GS.Commands
             text.Add("ACCOUNT INFORMATION ");
             text.Add("  - Account Name & IP : " + player.Client.Account.Name + " from " + player.Client.Account.LastLoginIP);
             text.Add("  - Priv. Level : " + player.Client.Account.PrivLevel);
-            text.Add(" ");
+			text.Add("  - Client Version: " + player.Client.Account.LastClientVersion);
+			text.Add(" ");
             text.Add("CHARACTER STATS ");
 
             ArrayList info = new ArrayList();

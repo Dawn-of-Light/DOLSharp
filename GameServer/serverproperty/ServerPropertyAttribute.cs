@@ -26,6 +26,7 @@ namespace DOL.GS.ServerProperties
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	public class ServerPropertyAttribute : Attribute
 	{
+		private string m_area;
 		private string m_key;
 		private string m_description;
 		private object m_defaultValue;
@@ -38,9 +39,30 @@ namespace DOL.GS.ServerProperties
 		/// <param name="defaultValue">The property default value</param>
 		public ServerPropertyAttribute(string key, string description, object defaultValue)
 		{
+			m_area = "";
 			m_key = key;
 			m_description = description;
 			m_defaultValue = defaultValue;
+		}
+
+		public ServerPropertyAttribute(string area, string key, string description, object defaultValue)
+		{
+			m_area = area;
+			m_key = key;
+			m_description = description;
+			m_defaultValue = defaultValue;
+		}
+
+
+		/// <summary>
+		/// The property area
+		/// </summary>
+		public string Area
+		{
+			get
+			{
+				return m_area;
+			}
 		}
 
 		/// <summary>

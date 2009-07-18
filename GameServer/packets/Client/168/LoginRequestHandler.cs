@@ -249,6 +249,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								playerAccount.CreationDate = DateTime.Now;
 								playerAccount.LastLogin = DateTime.Now;
 								playerAccount.LastLoginIP = ipAddress;
+								playerAccount.LastClientVersion = ((int)client.Version).ToString();
 								playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
 								playerAccount.PrivLevel = 1;
 								if (log.IsInfoEnabled)
@@ -291,6 +292,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							// save player infos
 							playerAccount.LastLogin = DateTime.Now;
 							playerAccount.LastLoginIP = ipAddress;
+							playerAccount.LastClientVersion = ((int)client.Version).ToString();
 							if (playerAccount.Language == null || playerAccount.Language == "")
 								playerAccount.Language = ServerProperties.Properties.SERV_LANGUAGE;
 
