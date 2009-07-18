@@ -674,12 +674,52 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("set_difficulty_on_epic_encounters", "Tune encounters taggued <Epic Encounter>. 0 means auto adaptative, others values are % of the initial difficulty (100%=initial difficulty)", 100)]
 		public static int SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
 
+
 		/// <summary>
-		/// Define toughness for doors (keepwalls are 2x doors): 100 is 100% player's damages infliged.
+		/// Define toughness for keep and tower walls: 100 is 100% player's damages inflicted.
 		/// </summary>
-		[ServerProperty("set_structures_toughness", "This value is % of total damages infliged to level 1 door. Walls are 2 times more solid than doors (100=full damages)", 100)]
+		[ServerProperty("keeps", "set_structures_toughness", "This value is % of total damages inflicted to walls. (100=full damages)", 100)]
 		public static int SET_STRUCTURES_TOUGHNESS;
-	
+
+		/// <summary>
+		/// Define toughness for keep doors: 100 is 100% player's damages inflicted.
+		/// </summary>
+		[ServerProperty("keeps", "set_keep_door_toughness", "This value is % of total damages inflicted to level 1 door. (100=full damages)", 100)]
+		public static int SET_KEEP_DOOR_TOUGHNESS;
+
+		/// <summary>
+		/// Define toughness for tower doors: 100 is 100% player's damages inflicted.
+		/// </summary>
+		[ServerProperty("keeps", "set_tower_door_toughness", "This value is % of total damages inflicted to level 1 door. (100=full damages)", 100)]
+		public static int SET_TOWER_DOOR_TOUGHNESS;
+
+		/// <summary>
+		/// Allow player pets to attack keep walls
+		/// </summary>
+		[ServerProperty("keeps", "structures_allowpetattack", "Allow player pets to attack keep and tower walls?", true)]
+		public static bool STRUCTURES_ALLOWPETATTACK;
+
+		/// <summary>
+		/// Allow player pets to attack keep and tower doors
+		/// </summary>
+		[ServerProperty("keeps", "doors_allowpetattack", "Allow player pets to attack keep and tower doors?", true)]
+		public static bool DOORS_ALLOWPETATTACK;
+
+		/// <summary>
+		/// Multiplier used in determining RP reward for towers.
+		/// </summary>
+		[ServerProperty("keeps", "tower_rp_multiplier", "Multiplier used in determining RP reward for towers.", 100)]
+		public static int TOWER_RP_MULTIPLIER;
+
+		/// <summary>
+		/// Multiplier used in determining RP reward for keeps.
+		/// </summary>
+		[ServerProperty("keeps", "keep_rp_multiplier", "Multiplier used in determining RP reward for keeps.", 1250)]
+		public static int KEEP_RP_MULTIPLIER;
+
+
+
+
 		/// <summary>
 		/// Allow or disallow /irc in RvR zones, while allowed in pve zone
 		/// </summary>
@@ -699,7 +739,7 @@ namespace DOL.GS.ServerProperties
         public static readonly bool ENABLE_WARMAPMGR;
 
         /// <summary>
-        /// Use new Keeps
+		/// Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.
         /// </summary>
         [ServerProperty("use_new_keeps", "Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.", 2)]
         public static readonly int USE_NEW_KEEPS;
@@ -779,6 +819,7 @@ namespace DOL.GS.ServerProperties
 			if (property == null)
 			{
 				property = new ServerProperty();
+				property.Area = attrib.Area;
 				property.Key = attrib.Key;
 				property.Description = attrib.Description;
 				property.DefaultValue = attrib.DefaultValue.ToString();

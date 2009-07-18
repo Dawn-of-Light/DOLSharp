@@ -26,6 +26,7 @@ namespace DOL.Database
 	[DataTable(TableName = "ServerProperty")]
 	public class ServerProperty: DataObject
 	{
+		private string m_area;
 		private string m_key;
 		private string m_description;
 		private string m_defaultValue;
@@ -35,6 +36,7 @@ namespace DOL.Database
 
 		public ServerProperty()
 		{
+			m_area = "";
 			m_key = "";
 			m_description = "";
 
@@ -55,6 +57,20 @@ namespace DOL.Database
 			set
 			{
 				m_autoSave = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public string Area
+		{
+			get
+			{
+				return m_area;
+			}
+			set
+			{
+				m_area = value;
+				Dirty = true;
 			}
 		}
 
