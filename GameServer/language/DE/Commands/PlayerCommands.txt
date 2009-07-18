@@ -298,10 +298,10 @@ Scripts.Player.Guild.DepositTooMuch:			Ihr habt dafür nicht genug Geld!
 Scripts.Player.Guild.DuesOff:				Es werden zur Zeit keine Gildenabgaben gefordert.
 Scripts.Player.Guild.DuesOn:				Die Gildenabgaben belaufen sich zur Zeit auf {0} Prozent.
 Scripts.Player.Guild.EmailSet:				Ihr habt die E-Mail-Adresse für die Gilde auf {0} geändert.
-Scripts.Player.Guild.EmblemAlready:			Eure Gilde hat bereits ein Abzeichen, aber Ihr könnt es für einen stattlichen Betrag von 100 Gold ändern. Wenn Ihr das dennoch zu tun wünscht, sprecht noch einmal mit dem Abzeichenmacher.	
+Scripts.Player.Guild.EmblemAlready:			Eure Gilde hat bereits ein Abzeichen, aber Ihr könnt es für einen stattlichen Betrag von 100 Gold ändern. Wenn Ihr das dennoch zu tun wünscht, sprecht noch einmal mit dem Siegelmacher.	
 Scripts.Player.Guild.EmblemNeedGold:			Ihr benötigt 200 Gold für ein neues Gildenabzeichen.
-Scripts.Player.Guild.EmblemNeedNPC:			Ihr müßt mit dem Abzeichenmacher sprechen.
-Scripts.Player.Guild.EmblemNPCNotSelected:		Ihr müßt mit dem Abzeichenmacher sprechen.	
+Scripts.Player.Guild.EmblemNeedNPC:			Ihr müßt mit dem Siegelmacher sprechen.
+Scripts.Player.Guild.EmblemNPCNotSelected:		Ihr müßt mit dem Siegelmacher sprechen.	
 Scripts.Player.Guild.EmblemRedo:			Wollt Ihr ein neues Gildenabzeichen für 100 Gold erwerben?
 Scripts.Player.Guild.FormNoGroup:			Ihr müßt einer Gruppe angehören um eine Gilde zu gründen.
 Scripts.Player.Guild.FormNoMembers:			Ihr benötigt {0} Spieler in Eurer Gruppe, um eine Gilde zu gründen.
