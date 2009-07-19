@@ -323,7 +323,6 @@ namespace DOL
 					return;
 				}
 				sock = m_listen.EndAccept(ar);
-#warning People using mono should comment this line
 				sock.SendBufferSize = SEND_BUFF_SIZE;
 
 				ClientBase client = null;
