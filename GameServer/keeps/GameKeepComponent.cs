@@ -477,31 +477,52 @@ namespace DOL.GS.Keeps
 			}
 			else if (source is GameNPC)
 			{
-				damageAmount = ((damageAmount - (damageAmount * 5 * this.Keep.Level) / 100) * ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS / 100) / 2;
-				criticalAmount = 0;
-
-				if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
+				if (!ServerProperties.Properties.STRUCTURES_ALLOWPETATTACK)
 				{
-					GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
-					if (player != null)
-					{
-						// special considerations for pet spam classes
-						if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
-							damageAmount /= 2; // serverproperty goes here
+					damageAmount = 0;
+					criticalAmount = 0;
 
-						player.Out.SendMessage(String.Format("Your {0} hits {1} for {2} damage!", source.Name, GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
+					{
+						GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
+						if (player != null)
+						{
+							player.Out.SendMessage(String.Format("Your {0} has no effect on {1}!", source.Name, GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						}
+					}
+				}
+				else
+				{
+					damageAmount = ((damageAmount - (damageAmount * 5 * this.Keep.Level) / 100) * ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS / 100) / 2;
+					criticalAmount = 0;
+
+					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
+					{
+						GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
+						if (player != null)
+						{
+							// special considerations for pet spam classes
+							if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
+								damageAmount /= 2; // serverproperty goes here
+
+							player.Out.SendMessage(String.Format("Your {0} hits {1} for {2} damage!", source.Name, GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						}
 					}
 				}
 			}
 
-			this.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
-			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
-			//only on hp change
-			if (m_oldHealthPercent == this.HealthPercent) return;
-			m_oldHealthPercent = this.HealthPercent;
+			if (damageAmount > 0)
+			{
 
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
-				client.Out.SendKeepComponentDetailUpdate(this);
+				this.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
+				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
+				//only on hp change
+				if (m_oldHealthPercent == this.HealthPercent) return;
+				m_oldHealthPercent = this.HealthPercent;
+
+				foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
+					client.Out.SendKeepComponentDetailUpdate(this);
+			}
 		}
 
 		public override void Die(GameObject killer)
@@ -625,25 +646,28 @@ namespace DOL.GS.Keeps
 
 		public void Repair(int amount)
 		{
-			byte oldStatus = Status;
-			Health += amount;
-			m_oldHealthPercent = HealthPercent;
-			if (oldStatus != Status)
+			if (amount > 0)
 			{
-				foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
+				byte oldStatus = Status;
+				Health += amount;
+				m_oldHealthPercent = HealthPercent;
+				if (oldStatus != Status)
 				{
-					client.Out.SendKeepComponentDetailUpdate(this);
+					foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
+					{
+						client.Out.SendKeepComponentDetailUpdate(this);
+					}
 				}
-			}
 
-			//if a tower is repaired reload the guards so they arent on the floor
-			if (Keep is GameKeepTower && oldStatus == 0x02 && oldStatus != Status)
-			{
-				foreach (GameKeepComponent component in Keep.KeepComponents)
-					component.FillPositions();
-			}
+				//if a tower is repaired reload the guards so they arent on the floor
+				if (Keep is GameKeepTower && oldStatus == 0x02 && oldStatus != Status)
+				{
+					foreach (GameKeepComponent component in Keep.KeepComponents)
+						component.FillPositions();
+				}
 
-			RepairedHealth = Health;
+				RepairedHealth = Health;
+			}
 		}
 
 		public override string ToString()
