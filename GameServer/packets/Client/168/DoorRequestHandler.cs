@@ -215,7 +215,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							if (player.IsWithinRadius(mydoor, WorldMgr.PICKUP_DISTANCE))
+							if (player.IsWithinRadius(mydoor, GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE))
 							{
 								if (m_doorState == 0x01)
 									mydoor.Open();

@@ -54,8 +54,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <remarks>
 		/// This helps to reduce the turning of an npc while fighting or returning to a spawn
+		/// Minimum client resolution is 100, should never be below this.
 		/// </remarks>
-		public const int CONST_WALKTOTOLERANCE = 5;
+		public const int CONST_WALKTOTOLERANCE = 100;
 
 		#region Formations/Spacing
 
@@ -1144,6 +1145,7 @@ namespace DOL.GS
 
 		  /// <summary>
 		  /// This function is called when the Mob arrives at its target spot
+		  /// This time was estimated using walking speed and distance.
 		  /// It fires the ArriveAtTarget event
 		  /// </summary>
           protected override void OnTick()
@@ -3730,6 +3732,16 @@ namespace DOL.GS
 
 				ItemTemplate[] lootTemplates = LootMgr.GetLoot(this, killer);
 
+				// tolakram - calculate a decent Z to drop the loot at.  Trying to avoid loot below ground, unreachable
+
+				int lootZ = Z;
+
+				foreach (GamePlayer killers in GetPlayersInRadius((ushort)(GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE * 2)))
+				{
+					if (killers.Z > lootZ)
+						lootZ = killers.Z;
+				}
+
 				foreach (ItemTemplate lootTemplate in lootTemplates)
 				{
 					if(lootTemplate==null) continue;
@@ -3762,7 +3774,7 @@ namespace DOL.GS
 						loot = ArtifactMgr.CreateScroll(artifactID, pageNumber);
 						loot.X = X;
 						loot.Y = Y;
-						loot.Z = Z;
+						loot.Z = lootZ;
 						loot.Heading = Heading;
 						loot.CurrentRegion = CurrentRegion;
 					}
@@ -3771,7 +3783,7 @@ namespace DOL.GS
 						loot = new GameInventoryItem(new InventoryItem(lootTemplate));
 						loot.X = X;
 						loot.Y = Y;
-						loot.Z = Z;
+						loot.Z = lootZ;
 						loot.Heading = Heading;
 						loot.CurrentRegion = CurrentRegion;
 
