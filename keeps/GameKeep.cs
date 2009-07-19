@@ -113,7 +113,7 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public override int CalculRP()
 		{
-			return 1000 * DifficultyLevel;
+			return ServerProperties.Properties.KEEP_RP_MULTIPLIER * DifficultyLevel;
 		}
 
 		/// <summary>

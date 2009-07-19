@@ -258,52 +258,69 @@ namespace DOL.GS.Keeps
 		{
 			// graveen: ml2 bm to add or put this is a better section (AttackData?)
 
+			int toughness = ServerProperties.Properties.SET_KEEP_DOOR_TOUGHNESS;
+
+			if (this.Component.Keep is GameKeepTower)
+				toughness = ServerProperties.Properties.SET_TOWER_DOOR_TOUGHNESS;
+
+
 			if (source is GamePlayer)
 			{
-				damageAmount = (damageAmount - (damageAmount * 5 * this.Component.Keep.Level / 100)) * ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS / 100;
+				damageAmount = (damageAmount - (damageAmount * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
 				criticalAmount = 0;
 				((GamePlayer)source).Out.SendMessage(String.Format("You hit {0} for {1} damage!", GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
 			else if (source is GameNPC)
 			{
-				// reduce damage for all npcs - this is targeted mainly at controlled pets
-				// I'm using values that are less than live since I don't know the exact formula - tolakram
-				//damageAmount /= 2;
-
-				damageAmount = (damageAmount - (damageAmount * 5 * this.Component.Keep.Level / 100)) * ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS / 100;
-				criticalAmount = 0;
-
-				if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
+				if (!ServerProperties.Properties.DOORS_ALLOWPETATTACK)
 				{
-					GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
-					if (player != null)
-					{
-						// special considerations for pet spam classes
-						if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
-							damageAmount /= 2; // serverproperty goes here
+					damageAmount = 0;
+					criticalAmount = 0;
 
-						player.Out.SendMessage(String.Format("Your {0} hits {1} for {2} damage!", source.Name, GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
+					{
+						GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
+						if (player != null)
+						{
+							player.Out.SendMessage(String.Format("Your {0} has no effect on {1}!", source.Name, GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						}
+					}
+				}
+				else
+				{
+					damageAmount = (damageAmount - (damageAmount * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
+					criticalAmount = 0;
+
+					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
+					{
+						GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
+						if (player != null)
+						{
+							// special considerations for pet spam classes
+							if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
+								damageAmount /= 2; // serverproperty goes here
+
+							player.Out.SendMessage(String.Format("Your {0} hits {1} for {2} damage!", source.Name, GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						}
 					}
 				}
 			}
 
-			
-			this.Component.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
-			//only on hp change
-			if (m_oldHealthPercent != HealthPercent)
+			if (damageAmount > 0)
 			{
-				m_oldHealthPercent = HealthPercent;
-				foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
-					client.Out.SendObjectUpdate(this);
+				this.Component.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
+				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
+
+				//only on hp change
+				if (m_oldHealthPercent != HealthPercent)
+				{
+					m_oldHealthPercent = HealthPercent;
+					foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
+						client.Out.SendObjectUpdate(this);
+				}
 			}
-
-			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 		}
 
-		public override int ChangeHealth(GameObject changeSource, GameLiving.eHealthChangeType healthChangeType, int changeAmount)
-		{
-			return base.ChangeHealth(changeSource, healthChangeType, changeAmount);
-		}
 
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler
