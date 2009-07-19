@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -17,5 +17,14 @@
  *
  */
 using System.Reflection;
-[assembly : AssemblyTitle("DOLServer")]
-[assembly : AssemblyDescription("Main entrypoint for the server")]
+
+[assembly: AssemblyTitle("Dawn of Light - DOLServer")]
+[assembly: AssemblyDescription("Main entrypoint for starting the server")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Dawn of Light Development Team")]
+[assembly: AssemblyProduct("DAoC Server Side Emulation Package - Dawn of Light")]
+[assembly: AssemblyCopyright("Dawn of Light Development Team")]
+[assembly: AssemblyTrademark("Dawn of Light Development Team")]
+[assembly: AssemblyCulture("")]
+
+[assembly: AssemblyVersion("1.9.1.1752")]
