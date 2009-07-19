@@ -127,11 +127,19 @@ namespace DOL.GS.Keeps
 				DBKeepComponent[] keepcomponents = (DBKeepComponent[])GameServer.Database.SelectAllObjects(typeof(DBKeepComponent));
 				foreach (DBKeepComponent component in keepcomponents)
 				{
+					// if use old keeps don't try to load new components
+					if (ServerProperties.Properties.USE_NEW_KEEPS == 0 && IsNewKeepComponent(component.Skin))
+						continue;
+					
+					// if use new keeps don't try and load old components
+					if (ServerProperties.Properties.USE_NEW_KEEPS == 1 && !IsNewKeepComponent(component.Skin))
+						continue;
+
 					AbstractGameKeep keep = getKeepByID(component.KeepID);
 					if (keep == null)
 					{
 						if (Logger.IsWarnEnabled)
-							Logger.WarnFormat("Keep with ID {0} not loaded, possibly old/new keeptype; see server proporties (component ID {1})", component.KeepID, component.ID);
+							Logger.WarnFormat("Keep with ID {0} not found while loading component with ID {1}, possibly old/new keeptype; see server properties", component.KeepID, component.ID);
 						continue;
 					}
 					GameKeepComponent gamecomponent = new GameKeepComponent();
@@ -158,6 +166,16 @@ namespace DOL.GS.Keeps
 
 			return true;
 		}
+
+
+		public static bool IsNewKeepComponent(int skin)
+		{
+			if (skin > 20) 
+				return true;
+
+			return false;
+		}
+
 
 		private static void LoadHookPoints()
 		{

@@ -545,16 +545,19 @@ namespace DOL.GS.ServerProperties
 		public static readonly int STATPRINT_FREQUENCY;
 
 
-		[ServerProperty("world_item_decay_time", "How long (milliseconds) will an item dropped on the ground stay in the world.", (uint)180000)]
+		[ServerProperty("world", "world_item_decay_time", "How long (milliseconds) will an item dropped on the ground stay in the world.", (uint)180000)]
 		public static readonly uint WORLD_ITEM_DECAY_TIME;
 
-		[ServerProperty("world_day_increment", "Day Increment (0 to 512, default is 24).  Larger increments make shorter days.", (uint)24)]
+		[ServerProperty("world", "world_pickup_distance", "How far before you can no longer pick up an object (loot for example).", 256)]
+		public static readonly int WORLD_PICKUP_DISTANCE;
+
+		[ServerProperty("world", "world_day_increment", "Day Increment (0 to 512, default is 24).  Larger increments make shorter days.", (uint)24)]
 		public static readonly uint WORLD_DAY_INCREMENT;
 
-		[ServerProperty("world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second).", (uint)30000)]
+		[ServerProperty("world", "world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second).", (uint)30000)]
 		public static readonly uint WORLD_NPC_UPDATE_INTERVAL;
 
-		[ServerProperty("world_player_update_interval", "How often (milliseconds) will players be checked for updates. Minimum allowed = 100 (100 milliseconds).", (uint)300)]
+		[ServerProperty("world", "world_player_update_interval", "How often (milliseconds) will players be checked for updates. Minimum allowed = 100 (100 milliseconds).", (uint)300)]
 		public static readonly uint WORLD_PLAYER_UPDATE_INTERVAL;
 
 		[ServerProperty("weather_check_interval", "How often (milliseconds) will weather be checked for a chance to start a storm.", 5 * 60 * 1000)]
@@ -571,13 +574,19 @@ namespace DOL.GS.ServerProperties
         /// <summary>
         /// This is to set the baseHP For NPCs
         /// </summary>
-        [ServerProperty("gamenpc_base_hp", "GameNPC's base HP * level", 500)]
+        [ServerProperty("npc", "gamenpc_base_hp", "GameNPC's base HP * level", 500)]
         public static readonly int GAMENPC_BASE_HP;
+
+		/// <summary>
+		/// Chance for NPC to random walk. Default is 20
+		/// </summary>
+		[ServerProperty("npc", "gamenpc_randomwalk_chance", "Chance for NPC to random walk. Default is 20", 20)]
+		public static readonly int GAMENPC_RANDOMWALK_CHANCE;
 
 		/// <summary>
 		/// Override the classtype of any npc with a classtype of DOL.GS.GameNPC
 		/// </summary>
-		[ServerProperty("gamenpc_default_classtype", "Change the classtype of any npc of classtype DOL.GS.GameNPC to this.", "DOL.GS.GameNPC")]
+		[ServerProperty("npc", "gamenpc_default_classtype", "Change the classtype of any npc of classtype DOL.GS.GameNPC to this.", "DOL.GS.GameNPC")]
 		public static readonly string GAMENPC_DEFAULT_CLASSTYPE;
 
 		/// <summary>

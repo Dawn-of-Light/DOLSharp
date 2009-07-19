@@ -108,7 +108,7 @@ namespace DOL.AI.Brain
 			}
 
             //If this NPC can randomly walk around, we allow it to walk around
-            if (!Body.AttackState && CanRandomWalk && Util.Chance(20))
+            if (!Body.AttackState && CanRandomWalk && Util.Chance(DOL.GS.ServerProperties.Properties.GAMENPC_RANDOMWALK_CHANCE))
             {
                 IPoint3D target = CalcRandomWalkTarget();
                 if (target != null && !Util.IsNearDistance(target.X, target.Y, target.Z, 
