@@ -92,10 +92,6 @@ namespace DOL.GS
 		/// Holds the distance at which objects are updated
 		/// </summary>
 		public const int OBJ_UPDATE_DISTANCE = 4096;
-		/// <summary>
-		/// How close a player can be to pick up loot
-		/// </summary>
-		public const int PICKUP_DISTANCE = 256;
 
 		/// <summary>
 		/// This will store available teleport destinations as read from the 'teleport' table.  These are 

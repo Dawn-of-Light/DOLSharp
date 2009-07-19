@@ -674,9 +674,9 @@ namespace DOL.GS
 				log.Debug("Used Memory: " + GC.GetTotalMemory(false) / 1024 + "KB");
 
 				if (allErrors != string.Empty)
-					log.Warn("Error loading the following NPC ClassType(s), GameNPC used instead:" + allErrors.TrimEnd(','));
+					log.Error("Error loading the following NPC ClassType(s), GameNPC used instead:" + allErrors.TrimEnd(','));
 
-				Thread.Sleep(0);  // tolakram - why is this here?
+				Thread.Sleep(0);  // give up remaining thread time to other resources
 			}
 			mobCount += myMobCount;
 			merchantCount += myMerchantCount;

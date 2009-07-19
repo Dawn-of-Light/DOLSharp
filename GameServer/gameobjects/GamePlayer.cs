@@ -10343,7 +10343,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if ((floorObject is GameBoat == false) && !checkRange && !floorObject.IsWithinRadius(this, WorldMgr.PICKUP_DISTANCE))
+			if ((floorObject is GameBoat == false) && !checkRange && !floorObject.IsWithinRadius(this, GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE))
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.ObjectTooFarAway", floorObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

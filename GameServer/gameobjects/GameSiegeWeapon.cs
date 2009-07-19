@@ -52,7 +52,7 @@ namespace DOL.GS
 			m_enableToMove = true;
 			MaxSpeedBase = 100;
 		}
-		public const int SIEGE_WEAPON_CONTROLE_DISTANCE = WorldMgr.PICKUP_DISTANCE;
+		public const int SIEGE_WEAPON_CONTROLE_DISTANCE = 256;
 		public const int TIME_TO_DECAY = 60 * 1000 * 3; //3 min
 		public const int DECAYPERIOD = 240000; //ms
 		#region enum

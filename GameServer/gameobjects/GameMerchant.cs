@@ -244,7 +244,7 @@ namespace DOL.GS
 				return;
 			}
 
-			if (!this.IsWithinRadius(player, WorldMgr.PICKUP_DISTANCE)) // tested
+			if (!this.IsWithinRadius(player, GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE)) // tested
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerSell.TooFarAway", GetName(0, true)), eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return;
