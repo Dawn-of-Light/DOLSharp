@@ -1,18 +1,14 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("DOLConfig")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Dawn of Light - DOLConfig")]
+[assembly: AssemblyDescription("Configuration GUI for Dawn of Light")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DOLConfig")]
-[assembly: AssemblyCopyright("Copyright ©  2007")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyCompany("Dawn of Light Development Team")]
+[assembly: AssemblyProduct("DAoC Server Side Emulation Package - Dawn of Light")]
+[assembly: AssemblyCopyright("Dawn of Light Development Team")]
+[assembly: AssemblyTrademark("Dawn of Light Development Team")]
+[assembly: AssemblyCulture("")]		
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -29,5 +25,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.9.1.1752")]
