@@ -116,16 +116,28 @@ namespace DOL.GS.Commands
 				&& args[1] != "copy"
                 && targetMob == null )
             {
+				// it is not a mob
                 if ( client.Player.TargetObject != null )
                 {
                     client.Out.SendMessage( "Cannot use " + client.Player.TargetObject + " for /mob command.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
-                }
-                else
-                {
-                    client.Out.SendMessage( "You must have an NPC selected!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+					return;
                 }
                 
-                return;
+				// nothing selected
+				if ( client.Player.TargetObject == null )
+                {
+					// try to target another mob in radius 100 units
+					foreach(GameNPC wantedMob in client.Player.GetNPCsInRadius (100))
+							if (wantedMob == null)
+							{
+								client.Out.SendMessage( "You must have an NPC selected, or stand near an NPC!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+								return;
+							}
+							else
+							{
+								client.Player.TargetObject = wantedMob;
+							}
+                }
             }
 
             switch (args[1])
