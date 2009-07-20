@@ -163,7 +163,7 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  	<!-- Graveen: the following is replacing the rev number in the asembly.info file by the SVN rev number of the current project. -->
+  	<!-- Graveen: the following is replacing the rev number in the AssemblyInfo.cs file by the SVN rev number of the current project. -->
 	<!-- You must work on project under SVN version control, have msbuild community tasks assemblies installed and subversion client -->
 	<!-- The path of the tools should either be corrected below, or matched. In case you lack one of theses prereqs, rev number 'll not be changed. --> 
 	<Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\')"/>
