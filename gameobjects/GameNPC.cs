@@ -54,9 +54,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <remarks>
 		/// This helps to reduce the turning of an npc while fighting or returning to a spawn
-		/// Minimum client resolution is 100, should never be below this.
+		/// Tested - min distance for mob sticking within combat range to player is 25
 		/// </remarks>
-		public const int CONST_WALKTOTOLERANCE = 100;
+		public const int CONST_WALKTOTOLERANCE = 25;
 
 		#region Formations/Spacing
 
