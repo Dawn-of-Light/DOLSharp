@@ -11074,6 +11074,10 @@ namespace DOL.GS
 					break;
 				}
 			}
+
+			// check the account for the Muted flag
+			if (Client.Account.IsMuted)
+				IsMuted = true;
 		}
 
 		/// <summary>

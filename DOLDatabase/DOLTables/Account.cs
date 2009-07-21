@@ -42,6 +42,7 @@ namespace DOL
 			private string m_lastLoginIP;
 			private string m_language;
 			private string m_lastClientVersion;
+			private bool m_isMuted;
 			
 			private static bool m_autoSave;
 
@@ -55,6 +56,7 @@ namespace DOL
 				m_creationDate = DateTime.Now;
 				m_plvl = 1;
 				m_realm = 0;
+				m_isMuted = false;
 				//m_autoSave = true;
 				m_autoSave = false;
 			}
@@ -223,7 +225,17 @@ namespace DOL
 				get { return m_language; }
 				set { Dirty = true; m_language = value; }
 			}
-			
+
+			/// <summary>
+			/// Is this account muted from public channels?
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public bool IsMuted
+			{
+				get { return m_isMuted; }
+				set { Dirty = true; m_isMuted = value; }
+			}
+
 			/// <summary>
 			/// List of charcter the account own
 			/// </summary>
