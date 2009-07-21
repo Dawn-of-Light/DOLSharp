@@ -135,7 +135,9 @@ namespace DOL.GS.Commands
 							}
 							else
 							{
+								client.Out.SendMessage( "You have autoselected the mob with OID " + wantedMob.ObjectID.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow );
 								client.Player.TargetObject = wantedMob;
+								targetMob = wantedMob;
 							}
                 }
             }
