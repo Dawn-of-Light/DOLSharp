@@ -24,8 +24,8 @@ namespace DOL.GS.Commands
 	[Cmd(
 		"&mute",
 		ePrivLevel.GM,
-		"Command to mute annoying players.",
-        "/mute <playername>")]
+		"Command to mute annoying players.  Player mutes are temporary, account mutes are set until another account mute command turns it off.",
+        "/mute [account] <playername>")]
     public class MuteCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -35,24 +35,67 @@ namespace DOL.GS.Commands
 				DisplaySyntax(client);
                 return;
             }
-			GameClient clientc = WorldMgr.GetClientByPlayerName(args[1], true, false);
 
-			if (clientc == null)
+			GameClient playerClient = null;
+			bool mutedAccount = false;
+
+			if (args[1].ToLower() == "account")
+			{
+				if (args.Length < 3)
+				{
+					DisplaySyntax(client);
+					return;
+				}
+
+				playerClient = WorldMgr.GetClientByPlayerName(args[2], true, false);
+
+				if (playerClient != null)
+				{
+					playerClient.Account.IsMuted = !playerClient.Account.IsMuted;
+					playerClient.Player.IsMuted = playerClient.Account.IsMuted;
+					GameServer.Database.SaveObject(playerClient.Account);
+					mutedAccount = true;
+				}
+			}
+			else
+			{
+				playerClient = WorldMgr.GetClientByPlayerName(args[1], true, false);
+				if (playerClient != null)
+				{
+					if (playerClient.Account.IsMuted)
+					{
+						DisplayMessage(client, "This player has an account mute which must be removed first.");
+						return;
+					}
+
+					playerClient.Player.IsMuted = !playerClient.Player.IsMuted;
+				}
+			}
+
+			if (playerClient == null)
 			{
 				DisplayMessage(client, "No player found for name '" + args[1] + "'");
 				return;
 			}
 
-			clientc.Player.IsMuted = !clientc.Player.IsMuted;
-			if (clientc.Player.IsMuted)
+			if (playerClient.Player.IsMuted)
 			{
-				clientc.Player.Out.SendMessage("You have been muted from public channels by staff member " + client.Player.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Player.Out.SendMessage("You have muted player " + clientc.Player.Name + " from public channels!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				playerClient.Player.Out.SendMessage("You have been muted from public channels by staff member " + client.Player.Name + "!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage("You have muted player " + playerClient.Player.Name + " from public channels!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				if (mutedAccount)
+				{
+					playerClient.Player.Out.SendMessage("This mute has been placed on all characters for this account.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+					client.Player.Out.SendMessage("This action was done to the players account.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				}
 			}
 			else
 			{
-				clientc.Player.Out.SendMessage("You have been unmuted from public channels by staff member " + client.Player.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Player.Out.SendMessage("You have unmuted player " + clientc.Player.Name + " from public channels!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				playerClient.Player.Out.SendMessage("You have been unmuted from public channels by staff member " + client.Player.Name + "!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage("You have unmuted player " + playerClient.Player.Name + " from public channels!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				if (mutedAccount)
+				{
+					client.Player.Out.SendMessage("This action was done to the players account.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				}
 			}
             return;
         }
