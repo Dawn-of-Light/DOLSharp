@@ -62,7 +62,11 @@ namespace DOL.GS.Scripts.Commands
             DBSpecialization dbSpec = (DBSpecialization)GameServer.Database.
                 SelectObject(typeof(DBSpecialization), string.Format("KeyName LIKE \"{0}%\"", line));
 
-            Specialization spec = client.Player.GetSpecialization(dbSpec.KeyName);
+			Specialization spec = null;
+
+			if (dbSpec != null)
+				spec = client.Player.GetSpecialization(dbSpec.KeyName);
+
             if(spec == null)
             {
                 client.Out.SendMessage("The provided skill could not be found.", 
@@ -127,12 +131,24 @@ namespace DOL.GS.Scripts.Commands
 
             if (changed == true)
             {
-                client.Player.SkillSpecialtyPoints -= skillspecialtypoints;
-                spec.Level += speclevel;
-                client.Player.OnSkillTrained(spec);
-                client.Out.SendUpdatePoints();
-                client.Out.SendTrainerWindow();
-                client.Out.SendMessage("Training complete!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				// tolakram - add some additional error checking to avoid overflow error
+				if (client.Player.SkillSpecialtyPoints >= skillspecialtypoints)
+				{
+					client.Player.SkillSpecialtyPoints -= skillspecialtypoints;
+					spec.Level += speclevel;
+					client.Player.OnSkillTrained(spec);
+					client.Out.SendUpdatePoints();
+					client.Out.SendTrainerWindow();
+					client.Out.SendMessage("Training complete!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					StringBuilder sb = new StringBuilder();
+					sb.AppendLine("That specialization costs " + (spec.Level + 1) + " specialization points!");
+					sb.AppendLine("You don't have that many specialization points left for this level.");
+
+					client.Out.SendMessage(sb.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
             }
         }
     }
