@@ -456,7 +456,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Crafting speed bonus in capital cities
 		/// </summary>
-		[ServerProperty("capital_city_crafting_speed_bonus", "Crafting speed bonus in capital cities; 2 = 2x, 3 = 3x, ..., 1 = standard", 1)]
+		[ServerProperty("capital_city_crafting_speed_bonus", "Crafting speed bonus in capital cities; 2 = 2x, 3 = 3x, ..., 1 = standard", 1.0)]
 		public static readonly double CAPITAL_CITY_CRAFTING_SPEED_BONUS;
 
 		/// <summary>
