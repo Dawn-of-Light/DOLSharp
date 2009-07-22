@@ -77,7 +77,7 @@ namespace DOL.GS.Commands
 
 			if ((obj as GameLiving).InCombat)
 			{
-				DisplayMessage(player, "You can't repair object while it under attack!");
+				DisplayMessage(player, "You can't repair object while it is under attack!");
 				return false;
 			}
 
@@ -85,7 +85,7 @@ namespace DOL.GS.Commands
 			{
 				if (obj.CurrentRegion.Time - obj.LastAttackedByEnemyTick <= 60 * 1000)
 				{
-					DisplayMessage(player, "You can't repair the keep component while it under attack!");
+					DisplayMessage(player, "You can't repair the keep component while it is under attack!");
 					return false;
 				}
 			}
