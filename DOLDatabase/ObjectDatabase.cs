@@ -837,6 +837,8 @@ namespace DOL.Database
 					else
 						table.Columns.Add(myMembers[i].Name, ((FieldInfo) myMembers[i]).FieldType);
 
+					table.Columns[myMembers[i].Name].AutoIncrement = ((Attributes.PrimaryKey)myAttributes[0]).AutoIncrement;
+
 					DataColumn[] index = new DataColumn[1];
 					index[0] = table.Columns[myMembers[i].Name];
 					primaryIndexMember = myMembers[i];

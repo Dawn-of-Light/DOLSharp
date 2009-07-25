@@ -46,6 +46,11 @@ namespace DOL.GS.Keeps
 			if (player == null)
 				return false;
 
+			if (!GameServer.ServerRules.IsSameRealm(this, player, true))
+			{
+				return false;
+			}
+
 			switch (str.ToLower())
 			{
 				case "realm":

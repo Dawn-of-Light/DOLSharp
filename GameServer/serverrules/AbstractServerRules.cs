@@ -307,11 +307,12 @@ namespace DOL.GS.ServerRules
 					case "pet":
 					case "enemy":
 						break;
-					default: return false;
+					default:
+						return false;
 				}
 
-				// never allow AOE spells to be cast on Keeps Components
-				if (spell.Radius > 0)
+				// some special checks to prevent AOE's and item spells from damaging the component
+				if (spell.Power == 0 || spell.Radius > 0)
 					return false;
 			}
 			return true;
