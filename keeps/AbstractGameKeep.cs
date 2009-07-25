@@ -61,7 +61,34 @@ namespace DOL.GS.Keeps
 		public long LastAttackedByEnemyTick
 		{
 			get { return m_lastAttackedByEnemyTick; }
-			set { m_lastAttackedByEnemyTick = value; }
+			set 
+			{
+				// if we aren't currently in combat then treat this attack as the beginning of combat
+				if (!InCombat)
+				{
+					bool underAttack = false;
+					foreach (GameKeepDoor door in this.Doors.Values)
+					{
+						if (door.State == eDoorState.Open)
+						{
+							underAttack = true;
+							break;
+						}
+					}
+
+					if (!underAttack || StartCombatTick == 0)
+						StartCombatTick = value;
+				}
+
+				m_lastAttackedByEnemyTick = value;
+			}
+		}
+
+		private long m_startCombatTick = 0;
+		public long StartCombatTick
+		{
+			get { return m_startCombatTick; }
+			set { m_startCombatTick = value; }
 		}
 
 		public bool InCombat
@@ -922,6 +949,7 @@ namespace DOL.GS.Keeps
 		public virtual void Reset(eRealm realm)
 		{
 			LastAttackedByEnemyTick = 0;
+			StartCombatTick = 0;
 
 			Realm = realm;
 
@@ -963,7 +991,13 @@ namespace DOL.GS.Keeps
 			foreach (GameKeepGuard guard in Guards.Values)
 			{
 				if (guard is GuardLord == false)
+				{
+					// force Mission masters to respawn in 10 seconds
+					if (guard is MissionMaster)
+						guard.RespawnInterval = 10000;
+
 					guard.Die(guard);
+				}
 			}
 
 			//we reset the banners
@@ -983,6 +1017,7 @@ namespace DOL.GS.Keeps
 			SaveIntoDatabase();
 
 			GameEventMgr.Notify(KeepEvent.KeepTaken, new KeepEventArgs(this));
+
 		}
 
 		/// <summary>

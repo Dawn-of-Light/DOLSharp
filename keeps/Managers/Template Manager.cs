@@ -60,9 +60,12 @@ namespace DOL.GS.Keeps
 
 		private static void SetGuardRespawn(GameKeepGuard guard)
 		{
-			if (guard is GuardLord || guard is FrontierHastener || guard is MissionMaster)
-				guard.RespawnInterval = 1000;
-			else guard.RespawnInterval = Util.Random(5, 25) * 60 * 1000;
+			if (guard is GuardLord || guard is FrontierHastener)
+				guard.RespawnInterval = 5000; // 5 seconds
+			else if (guard is MissionMaster)
+				guard.RespawnInterval = 5 * 60 * 1000; // 5 minutes
+			else 
+				guard.RespawnInterval = Util.Random(5, 25) * 60 * 1000;
 		}
 
 		private static byte GetBaseLevel(GameKeepGuard guard)
@@ -883,17 +886,24 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		public static void SetGuardBrain(GameKeepGuard guard)
 		{
-			if (guard.Brain is KeepGuardBrain)
-				return;
-			KeepGuardBrain brain = new KeepGuardBrain();
-			if (guard is GuardCaster)
-				brain = new CasterBrain();
-			else if (guard is GuardHealer)
-				brain = new HealerBrain();
-			else if (guard is GuardLord)
-				brain = new LordBrain();
-			guard.AddBrain(brain);
-			brain.guard = guard;
+			if (guard.Brain is KeepGuardBrain == false)
+			{
+				KeepGuardBrain brain = new KeepGuardBrain();
+				if (guard is GuardCaster)
+					brain = new CasterBrain();
+				else if (guard is GuardHealer)
+					brain = new HealerBrain();
+				else if (guard is GuardLord)
+					brain = new LordBrain();
+
+				guard.AddBrain(brain);
+				brain.guard = guard;
+			}
+
+			if (guard is MissionMaster)
+			{
+				(guard.Brain as KeepGuardBrain).SetAggression(90, 400);
+			}
 		}
 
 		/// <summary>
@@ -934,7 +944,13 @@ namespace DOL.GS.Keeps
 		{
 			if (guard is GuardLord)
 			{
-				guard.Strength = (short)(guard.Level * 6 + 50);
+				guard.Strength = (short)(guard.Level * 6 + 75);
+				guard.Dexterity = (short)(guard.Level * 2);
+			}
+			else
+			{
+				guard.Strength = (short)(guard.Level * 6 + 25);
+				guard.Dexterity = (short)(guard.Level);
 			}
 		}
 	}

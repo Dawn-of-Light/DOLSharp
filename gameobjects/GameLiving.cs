@@ -1391,6 +1391,19 @@ namespace DOL.GS
 				return ad;
 			}
 
+			bool allowCritical = true;
+
+			// Do not allow styles or critical damage to keep doors
+			if (ad.Target is GameKeepComponent || ad.Target is GameKeepDoor)
+			{
+				// cancel all style requests
+				ad.Style = null;
+				NextCombatStyle = null;
+				NextCombatBackupStyle = null;
+				allowCritical = false;
+			}
+
+
 			// check region
 			if (ad.Target.CurrentRegionID != CurrentRegionID || ad.Target.ObjectState != eObjectState.Active)
 			{
@@ -1513,7 +1526,7 @@ namespace DOL.GS
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_DAMAGE);
 				ad.UncappedDamage = ad.Damage;
 
-				//Eden - Conversion Bonus (Crocodile Ring)
+				//Eden - Conversion Bonus (Crocodile Ring)  - tolakram - critical damage is always 0 here, needs to be moved
 				if (ad.Target is GamePlayer && ad.Target.GetModified(eProperty.Conversion) > 0)
 				{
 					int manaconversion = (int)Math.Round(((double)ad.Damage + (double)ad.CriticalDamage) * (double)ad.Target.GetModified(eProperty.Conversion) / 100);
@@ -1544,8 +1557,7 @@ namespace DOL.GS
 				ad.AttackResult = GameLiving.eAttackResult.HitStyle;
 			}
 
-			if (ad.AttackResult == eAttackResult.HitUnstyled
-				|| ad.AttackResult == eAttackResult.HitStyle)
+			if (allowCritical && (ad.AttackResult == eAttackResult.HitUnstyled || ad.AttackResult == eAttackResult.HitStyle))
 			{
 				ad.CriticalDamage = GetMeleeCriticalDamage(ad, weapon);
 			}
@@ -2628,13 +2640,17 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Check if we can make a proc on a weapon go off.
+		/// Check if we can make a proc on a weapon go off.  Weapon Procs
 		/// </summary>
 		/// <param name="ad"></param>
 		/// <param name="weapon"></param>
 		protected virtual void CheckWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
 		{
 			if (weapon == null)
+				return;
+
+			// do not allow procs on keeps
+			if (ad.Target is GameKeepComponent || ad.Target is GameKeepDoor)
 				return;
 
 			// Proc chance is 2.5% per SPD, i.e. 10% for a 4.0 SPD weapon.
