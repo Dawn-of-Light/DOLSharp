@@ -28,6 +28,12 @@ namespace DOL.AI.Brain
 			AggroRange = 1500;
 		}
 
+		public void SetAggression(int aggroLevel, int aggroRange)
+		{
+			AggroLevel = aggroLevel;
+			AggroRange = aggroRange;
+		}
+
 		public override int ThinkInterval
 		{
 			get
@@ -87,8 +93,6 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override void CheckPlayerAggro()
 		{
-			if (Body is MissionMaster)
-				return;
 			if (Body.AttackState || Body.CurrentSpellHandler != null)
 				return;
 
@@ -117,8 +121,6 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override void CheckNPCAggro()
 		{
-			if (Body is MissionMaster)
-				return;
 			if (Body.AttackState || Body.CurrentSpellHandler != null)
 				return;
 

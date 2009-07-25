@@ -519,6 +519,10 @@ namespace DOL.Database.Connection
 					{
 						column += " NOT NULL";
 					}
+					if (table.Columns[i].AutoIncrement)
+					{
+						column += " AUTO_INCREMENT";
+					}
 
 					columnDefs.Add(column);
 

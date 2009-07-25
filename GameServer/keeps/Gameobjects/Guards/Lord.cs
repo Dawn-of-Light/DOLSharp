@@ -2,6 +2,7 @@ using DOL.Events;
 using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.PacketHandler;
+using log4net;
 
 namespace DOL.GS.Keeps
 {
@@ -10,6 +11,8 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class GuardLord : GameKeepGuard
 	{
+		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Lord needs more health at the moment
 		/// </summary>
@@ -52,6 +55,32 @@ namespace DOL.GS.Keeps
 		/// <param name="killer">The killer object</param>
 		public override void Die(GameObject killer)
 		{
+			if (ServerProperties.Properties.LOG_KEEP_CAPTURES)
+			{
+				try
+				{
+					DOL.Database.KeepCaptureLog keeplog = new DOL.Database.KeepCaptureLog();
+					keeplog.KeepName = Component.Keep.Name;
+
+					if (Component.Keep is GameKeep)
+						keeplog.KeepType = "Keep";
+					else
+						keeplog.KeepType = "Tower";
+
+					keeplog.NumEnemies = GetEnemyCountInArea();
+					keeplog.RPReward = RealmPointsValue;
+
+					if (Component.Keep.StartCombatTick > 0)
+						keeplog.CombatTime = (int)((Component.Keep.CurrentRegion.Time - Component.Keep.StartCombatTick) / 1000 / 60);
+
+					GameServer.Database.AddNewObject(keeplog);
+				}
+				catch (System.Exception ex)
+				{
+					log.Error(ex);
+				}
+			}
+
 			if (this.Component != null)
 				GameServer.ServerRules.ResetKeep(this, killer);
 
@@ -86,8 +115,10 @@ namespace DOL.GS.Keeps
 		{
 			int distance = 0;
 			if (this.Component != null && this.Component.Keep != null && this.Component.Keep is GameKeep)
-				distance = 750;
-			else distance = 350;
+				distance = 500;
+			else 
+				distance = 350;
+
             if ( !this.IsWithinRadius( source, distance ) )
 			{
 				if (source is GamePlayer)
@@ -101,6 +132,12 @@ namespace DOL.GS.Keeps
             if (!base.WhisperReceive(source, str)) return false;
             if (!(source is GamePlayer)) return false;
             GamePlayer player = (GamePlayer)source;
+
+			if (!GameServer.ServerRules.IsSameRealm(this, player, true))
+			{
+				return false;
+			}
+
             byte flag = 0;
             switch (str)
             {

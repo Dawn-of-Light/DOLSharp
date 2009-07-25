@@ -726,6 +726,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("keeps", "keep_rp_multiplier", "Multiplier used in determining RP reward for keeps.", 1250)]
 		public static int KEEP_RP_MULTIPLIER;
 
+		/// <summary>
+		/// Turn on logging of keep captures
+		/// </summary>
+		[ServerProperty("keeps", "log_keep_captures", "Turn on logging of keep captures?", false)]
+		public static bool LOG_KEEP_CAPTURES;
+
 
 
 

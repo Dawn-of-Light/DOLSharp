@@ -27,11 +27,31 @@ namespace DOL.Database.Attributes
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public class PrimaryKey : Attribute
 	{
+		private bool m_autoIncrement;
 		/// <summary>
 		/// Constructor for Attribute
 		/// </summary>
 		public PrimaryKey()
 		{
+			m_autoIncrement = false;
 		}
+
+		/// <summary>
+		/// Indicates if this column will auto increment
+		/// </summary>
+		/// <value><c>true</c> if <c>null</c> is allowed</value>
+		public bool AutoIncrement
+		{
+			get
+			{
+				return m_autoIncrement;
+			}
+			set
+			{
+				m_autoIncrement = value;
+			}
+		}
+
+
 	}
 }
