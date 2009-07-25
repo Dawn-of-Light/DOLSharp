@@ -23,11 +23,11 @@ namespace DOL.GS.Keeps
 
 		public override void OnPlayerEnter(GamePlayer player)
 		{
-		//[Ganrod] Nidel: NPE
-      if(player == null || Keep == null)
-      {
-        return;
-      }
+			//[Ganrod] Nidel: NPE
+			if (player == null || Keep == null)
+			{
+				return;
+			}
 			base.OnPlayerEnter(player);
 			if (Keep.Guild != null)
 				player.Out.SendMessage("Controlled by " + Keep.Guild.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);

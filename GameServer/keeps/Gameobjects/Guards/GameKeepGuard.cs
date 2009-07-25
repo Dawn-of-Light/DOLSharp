@@ -122,6 +122,12 @@ namespace DOL.GS.Keeps
 			get { return 50000; }
 		}
 
+		public override int MaxHealth
+		{
+			get { return GetModified(eProperty.MaxHealth) + (base.Level * 4); }
+		}
+
+
 		#region Combat
 
 		/// <summary>
@@ -534,6 +540,11 @@ namespace DOL.GS.Keeps
 				CurrentWayPoint = PatrolGroup.PatrolPath;
 				MoveOnPath(Patrol.PATROL_SPEED);
 			}
+
+			// execute a turn to in order to force guards to the correct Z on the client
+			TurnTo(100);
+			TurnTo(500);
+			TurnTo(SpawnHeading);
 			return true;
 		}
 
