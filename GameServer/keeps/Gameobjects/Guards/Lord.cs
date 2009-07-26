@@ -73,7 +73,7 @@ namespace DOL.GS.Keeps
 					if (Component.Keep.StartCombatTick > 0)
 						keeplog.CombatTime = (int)((Component.Keep.CurrentRegion.Time - Component.Keep.StartCombatTick) / 1000 / 60);
 
-					keeplog.CapturedBy = GlobalConstants.RealmToName(Realm);
+					keeplog.CapturedBy = GlobalConstants.RealmToName(killer.Realm);
 
 					GameServer.Database.AddNewObject(keeplog);
 				}
