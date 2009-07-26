@@ -819,7 +819,6 @@
     <Compile Include="gameutils\XFireSupport.cs" />
     <Compile Include="housing\IHouseHookpointItem.cs" />
     <Compile Include="ai\brain\Npcs\IAggressiveBrain.cs" />
-    <Compile Include="keeps\KeepCaptureLog.cs" />
     <Compile Include="keeps\Gameobjects\FrontiersPortalStone.cs" />
     <Compile Include="keeps\Gameobjects\GameRelicDoor.cs" />
     <Compile Include="keeps\Gameobjects\Guards\Archer.cs" />

@@ -32,7 +32,7 @@ namespace DOL.GS.Keeps
 					return 5000;
 				else
 				{
-					int value = this.Component.Keep.BaseLevel * 4 * (this.Component.Keep.Level + 1);
+					int value = (this.Component.Keep.BaseLevel * 4 * (this.Component.Keep.Level + 2)) + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.KEEP_RP_MULTIPLIER);
 					if (this.Component.Keep is GameKeep)
 						value *= 4;
 					return value;
@@ -72,6 +72,8 @@ namespace DOL.GS.Keeps
 
 					if (Component.Keep.StartCombatTick > 0)
 						keeplog.CombatTime = (int)((Component.Keep.CurrentRegion.Time - Component.Keep.StartCombatTick) / 1000 / 60);
+
+					keeplog.CapturedBy = GlobalConstants.RealmToName(Realm);
 
 					GameServer.Database.AddNewObject(keeplog);
 				}
@@ -115,9 +117,9 @@ namespace DOL.GS.Keeps
 		{
 			int distance = 0;
 			if (this.Component != null && this.Component.Keep != null && this.Component.Keep is GameKeep)
-				distance = 500;
+				distance = 400;
 			else 
-				distance = 350;
+				distance = 300;
 
             if ( !this.IsWithinRadius( source, distance ) )
 			{
