@@ -1391,8 +1391,6 @@ namespace DOL.GS
 				return ad;
 			}
 
-			bool allowCritical = true;
-
 			// Do not allow styles or critical damage to keep doors
 			if (ad.Target is GameKeepComponent || ad.Target is GameKeepDoor)
 			{
@@ -1400,7 +1398,6 @@ namespace DOL.GS
 				ad.Style = null;
 				NextCombatStyle = null;
 				NextCombatBackupStyle = null;
-				allowCritical = false;
 			}
 
 
@@ -1557,7 +1554,7 @@ namespace DOL.GS
 				ad.AttackResult = GameLiving.eAttackResult.HitStyle;
 			}
 
-			if (allowCritical && (ad.AttackResult == eAttackResult.HitUnstyled || ad.AttackResult == eAttackResult.HitStyle))
+			if ((ad.AttackResult == eAttackResult.HitUnstyled || ad.AttackResult == eAttackResult.HitStyle))
 			{
 				ad.CriticalDamage = GetMeleeCriticalDamage(ad, weapon);
 			}
