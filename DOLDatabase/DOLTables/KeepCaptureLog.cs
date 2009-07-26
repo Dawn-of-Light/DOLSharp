@@ -1,8 +1,5 @@
 using System;
-using DOL.Database;
 using DOL.Database.Attributes;
-using DOL.Events;
-using DOL.GS;
 
 namespace DOL.Database
 {
@@ -16,6 +13,7 @@ namespace DOL.Database
 		int m_numEnemies;
 		int m_rpReward;
 		int m_combatTime;
+		string m_capturedBy;
 		private bool m_autoSave;
 
 		public KeepCaptureLog()
@@ -104,6 +102,17 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_rpReward = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public string CapturedBy
+		{
+			get { return m_capturedBy; }
+			set
+			{
+				Dirty = true;
+				m_capturedBy = value;
 			}
 		}
 	}

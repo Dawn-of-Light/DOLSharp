@@ -715,22 +715,58 @@ namespace DOL.GS.ServerProperties
 		public static bool DOORS_ALLOWPETATTACK;
 
 		/// <summary>
-		/// Multiplier used in determining RP reward for towers.
+		/// Multiplier used in determining RP reward for claiming towers.
 		/// </summary>
-		[ServerProperty("keeps", "tower_rp_multiplier", "Multiplier used in determining RP reward for towers.", 100)]
-		public static int TOWER_RP_MULTIPLIER;
+		[ServerProperty("keeps", "tower_rp_claim_multiplier", "Integer multiplier used in determining RP reward for claiming towers.", 100)]
+		public static int TOWER_RP_CLAIM_MULTIPLIER;
 
 		/// <summary>
 		/// Multiplier used in determining RP reward for keeps.
 		/// </summary>
-		[ServerProperty("keeps", "keep_rp_multiplier", "Multiplier used in determining RP reward for keeps.", 1250)]
-		public static int KEEP_RP_MULTIPLIER;
+		[ServerProperty("keeps", "keep_rp_claim_multiplier", "Integer multiplier used in determining RP reward for claiming keeps.", 1000)]
+		public static int KEEP_RP_CLAIM_MULTIPLIER;
 
 		/// <summary>
 		/// Turn on logging of keep captures
 		/// </summary>
 		[ServerProperty("keeps", "log_keep_captures", "Turn on logging of keep captures?", false)]
 		public static bool LOG_KEEP_CAPTURES;
+
+		/// <summary>
+		/// Multiplier used to add or subtract RP worth based on keep/tower level difference from 50. 
+		/// </summary>
+		[ServerProperty("keeps", "keep_rp_multiplier", "Integer multiplier used to increase/decrease RP worth based on keep/tower level difference from 50.", 0)]
+		public static int KEEP_RP_MULTIPLIER;
+
+		/// <summary>
+		/// Multiplier used to determine keep level changes when balancing.  For each keep above or below normal multiply by this.
+		/// </summary>
+		[ServerProperty("keeps", "keep_balance_multiplier", "Multiplier used to determine keep level changes when balancing.  For each keep above or below normal multiply by this.", 1.0)]
+		public static double KEEP_BALANCE_MULTIPLIER;
+
+		/// <summary>
+		/// Multiplier used to determine keep level changes when balancing.  For each keep above or below normal multiply by this.
+		/// </summary>
+		[ServerProperty("keeps", "tower_balance_multiplier", "Multiplier used to determine tower level changes when balancing.  For each keep above or below normal multiply by this.", 0.15)]
+		public static double TOWER_BALANCE_MULTIPLIER;
+
+		/// <summary>
+		/// Balance Towers and Keeps separately
+		/// </summary>
+		[ServerProperty("keeps", "balance_towers_separate", "Balance Towers and Keeps separately?", true)]
+		public static bool BALANCE_TOWERS_SEPARATE;
+
+		/// <summary>
+		/// Multiplier used to determine keep guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.
+		/// </summary>
+		[ServerProperty("keeps", "keep_guard_level_multiplier", "Multiplier used to determine keep guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.", 1.6)]
+		public static double KEEP_GUARD_LEVEL_MULTIPLIER;
+
+		/// <summary>
+		/// Multiplier used to determine keep guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.
+		/// </summary>
+		[ServerProperty("keeps", "tower_guard_level_multiplier", "Multiplier used to determine tower guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.", 1.0)]
+		public static double TOWER_GUARD_LEVEL_MULTIPLIER;
 
 
 
