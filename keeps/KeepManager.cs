@@ -699,14 +699,13 @@ namespace DOL.GS.Keeps
 		public static int GetRealmKeepBonusLevel(eRealm realm)
 		{
 			int keep = 7 - GetKeepCountByRealm(realm);
-			return keep;
-			//for every extra keep, lose a level, for every missing keep gain a level
+			return (int)(keep * ServerProperties.Properties.KEEP_BALANCE_MULTIPLIER);
 		}
 
 		public static int GetRealmTowerBonusLevel(eRealm realm)
 		{
-			int tower = (28 - GetTowerCountByRealm(realm)) / 8;
-			return tower;
+			int tower = 28 - GetTowerCountByRealm(realm);
+			return (int)(tower * ServerProperties.Properties.TOWER_BALANCE_MULTIPLIER);
 		}
 
 		public static void UpdateBaseLevels()
@@ -718,10 +717,18 @@ namespace DOL.GS.Keeps
 					if (keep.Region != 163) 
 						continue;
 
-					if (keep is GameKeepTower)
-						keep.BaseLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmTowerBonusLevel((eRealm)keep.Realm));
+					if (ServerProperties.Properties.BALANCE_TOWERS_SEPARATE)
+					{
+						if (keep is GameKeepTower)
+							keep.BaseLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmTowerBonusLevel((eRealm)keep.Realm));
+						else
+							keep.BaseLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmKeepBonusLevel((eRealm)keep.Realm));
+					}
 					else
-						keep.BaseLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmKeepBonusLevel((eRealm)keep.Realm));
+					{
+						keep.BaseLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmKeepBonusLevel((eRealm)keep.Realm) + KeepMgr.GetRealmTowerBonusLevel((eRealm)keep.Realm));
+					}
+
 
 					foreach (GameKeepGuard guard in keep.Guards.Values)
 					{

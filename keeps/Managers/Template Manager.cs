@@ -101,14 +101,15 @@ namespace DOL.GS.Keeps
 			else
 			{
 				int bonusLevel = 0;
-				double multiplier = 1.6;
+				double multiplier = ServerProperties.Properties.KEEP_GUARD_LEVEL_MULTIPLIER;
 
 				if (guard.Component != null)
 				{
+					// level is usually 4 unless upgraded, BaseLevel is usually 50
 					bonusLevel = guard.Component.Keep.Level;
 
 					if (guard.Component.Keep is GameKeepTower)
-						multiplier = 1.0;
+						multiplier = ServerProperties.Properties.TOWER_GUARD_LEVEL_MULTIPLIER;
 				}
 
 				guard.Level = (byte)(GetBaseLevel(guard) + (bonusLevel * multiplier));
@@ -931,7 +932,7 @@ namespace DOL.GS.Keeps
 			for (int i = (int)eProperty.Resist_First; i <= (int)eProperty.Resist_Last; i++)
 			{
 				if (guard is GuardLord)
-					guard.BaseBuffBonusCategory[i] = 35;
+					guard.BaseBuffBonusCategory[i] = 40;
 				else guard.BaseBuffBonusCategory[i] = 26;
 			}
 		}
