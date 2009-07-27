@@ -41,7 +41,8 @@ namespace DOL.AI.Brain
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public static readonly short MIN_OWNER_FOLLOW_DIST = 100;
+		// note that a minimum distance is inforced in GameNPC
+		public static readonly short MIN_OWNER_FOLLOW_DIST = 50;
 		//4000 - rough guess, needs to be confirmed
 		public static readonly short MAX_OWNER_FOLLOW_DIST = 5000; // setting this to max stick distance
 		public static readonly short MIN_ENEMY_FOLLOW_DIST = 90;
