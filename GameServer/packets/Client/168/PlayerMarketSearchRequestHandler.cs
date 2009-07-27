@@ -70,7 +70,22 @@ namespace DOL.GS.PacketHandler.Client.v168
             byte page = (byte)packet.ReadByte();
             byte unk1 = (byte)packet.ReadByte();
             short unk2 = (short)packet.ReadShort();
-
+			if(client.Version >= GameClient.eClientVersion.Version198)
+			{
+				// Dunnerholl 2009-07-28 Version 1.98 introduced new options to Market search. 12 Bytes were added, but only 7 are in usage so far in my findings.
+				// update this, when packets change and keep in mind, that this code reflects only the 1.98 changes
+				byte armorType = page; // page is now used for the armorType (still has to be logged, i just checked that 2 means leather, 0 = standard
+				byte damageType = (byte)packet.ReadByte(); // 1=crush, 2=slash, 3=thrust
+				// 3 bytes unused
+				packet.Skip(3);
+				byte playerCrafted = (byte)packet.ReadByte(); // 1 = show only Player crafted, 0 = all
+				// 3 bytes unused
+				packet.Skip(3);
+				page = (byte)packet.ReadByte(); // page is now sent here
+				byte unknown = (byte)packet.ReadByte(); // always been 0xE5, if u page it is 0x4B, tested on alb only
+				byte unknown2 = (byte)packet.ReadByte(); //always been 0x12, if u page it is 0x7C, tested on alb only
+				byte unknown3 = (byte)packet.ReadByte(); //always been 0x00, if u page it is 0x1B, tested on alb only
+			}
             int requestedPage = (int)page;
 
             int firstSlot = 0 + (requestedPage * 20);
