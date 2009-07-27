@@ -831,10 +831,6 @@ namespace DOL.GS
 		/// </summary>
 		protected ArriveAtTargetAction m_arriveAtTargetAction;
 		/// <summary>
-		/// The interval between follow checks, in milliseconds
-		/// </summary>
-		protected const int FOLLOWCHECKTICKS = 500;
-		/// <summary>
 		/// Timer to be set if an OnCloseToTarget
 		/// handler is set before calling the WalkTo function
 		/// </summary>
@@ -859,7 +855,15 @@ namespace DOL.GS
 		/// Property entry on follow timer, wether the follow target is in range
 		/// </summary>
 		protected static readonly string FOLLOW_TARGET_IN_RANGE = "FollowTargetInRange";
-        /// <summary>
+		/// <summary>
+		/// Minimum allowed attacker follow distance to avoid issues with client / server resolution (herky jerky motion)
+		/// </summary>
+		protected static readonly int MIN_ALLOWED_FOLLOW_DISTANCE = 100;
+		/// <summary>
+		/// Minimum allowed pet follow distance
+		/// </summary>
+		protected static readonly int MIN_ALLOWED_PET_FOLLOW_DISTANCE = 90;
+		/// <summary>
         /// At what health percent will npc give up range attack and rush the attacker
         /// </summary>
         protected const int MINHEALTHPERCENTFORRANGEDATTACK = 70;
@@ -1381,7 +1385,7 @@ namespace DOL.GS
 			m_followMaxDist = maxDistance;
 			m_followMinDist = minDistance;
 			m_followTarget.Target = target;
-			m_followTimer.Start(1);
+			m_followTimer.Start(100);
 		}
 
 		/// <summary>
@@ -1439,7 +1443,8 @@ namespace DOL.GS
           protected virtual int FollowTimerCallback(RegionTimer callingTimer)
           {
              if (IsCasting)
-                return FOLLOWCHECKTICKS;
+                return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
+
              bool wasInRange = m_followTimer.Properties.getProperty(FOLLOW_TARGET_IN_RANGE, false);
              m_followTimer.Properties.removeProperty(FOLLOW_TARGET_IN_RANGE);
 
@@ -1511,12 +1516,19 @@ namespace DOL.GS
                 if (brain.CheckFormation(ref newX, ref newY, ref newZ))
                 {
                    WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
-                   return FOLLOWCHECKTICKS;
+				   return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
                 }
              }
 
-             //Are we in range yet?  Tolakram - Distances under 100 do not calculate correctly leading to the mob always being told to walkto
-             if ((int)distance <= (m_followMinDist < 100 ? 100 : m_followMinDist))
+			 // Tolakram - Distances under 100 do not calculate correctly leading to the mob always being told to walkto
+			 int minAllowedFollowDistance = MIN_ALLOWED_FOLLOW_DISTANCE;
+
+			  // pets can follow closer.  need to implement /fdistance command to make this adjustable
+			 if (this.Brain is IControlledBrain)
+				 minAllowedFollowDistance = MIN_ALLOWED_PET_FOLLOW_DISTANCE;
+
+             //Are we in range yet?  
+			 if ((int)distance <= (m_followMinDist < minAllowedFollowDistance ? minAllowedFollowDistance : m_followMinDist))
              {
                 StopMoving();
                 TurnTo(followTarget);
@@ -1525,7 +1537,7 @@ namespace DOL.GS
                    m_followTimer.Properties.setProperty(FOLLOW_TARGET_IN_RANGE, true);
                    FollowTargetInRange();
                 }
-                return FOLLOWCHECKTICKS;
+				return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
              }
 
              // follow on distance
@@ -1539,7 +1551,7 @@ namespace DOL.GS
              newY = (int)(followTarget.Y - diffy);
              newZ = (int)(followTarget.Z - diffz);
              WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
-             return FOLLOWCHECKTICKS;
+			 return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
           }
 
 		/// <summary>
