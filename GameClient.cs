@@ -562,7 +562,8 @@ namespace DOL
 				Version196 = 196,
 				Version197 = 197,
 				Version198 = 198,
-				_LastVersion = 198,
+				Version199 = 199,
+				_LastVersion = 199,
 			}
 			protected eClientVersion m_clientVersion;
 			/// <summary>
