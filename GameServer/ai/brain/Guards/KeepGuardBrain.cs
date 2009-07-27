@@ -134,7 +134,7 @@ namespace DOL.AI.Brain
 				if (player == null)
 					continue;
 
-				if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false))
+				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, false))
 				{
 					if ((Body as GameKeepGuard).Component != null && !KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
 					{

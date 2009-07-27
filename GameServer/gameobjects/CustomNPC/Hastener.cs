@@ -37,8 +37,18 @@ namespace DOL.GS
 
 		public override bool Interact(GamePlayer player)
 		{
-			if (player != null)
+			if (player == null)
+				return false;
+
+			if (base.Interact(player))
 			{
+				if (CurrentRegion.IsRvR)
+				{
+					// RvR hasteners just gives out speed, no talking
+					TargetObject = this;
+					CastSpell(SkillBase.GetSpellByID(SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
+					return true;
+				}
 				string message2 = "";
 				string message3 = "  I can also grant you extra [strength] to help you carry your wares throughout the city.";
 				string message4 = "";
@@ -57,45 +67,55 @@ namespace DOL.GS
 						message2 = "  I am here to assist with travel across our fair lands.  Just say the word and I will gladly increase your rate of [movement] to aid your adventures!";
 						break;
 				}
+
 				SayTo(player, string.Format("Greetings, {0}.{1}{2}{3}", player.CharacterClass.Name, message2, player.CurrentRegion.IsCapitalCity ? message3 : "", message4));
+
 				return true;
 			}
-			return base.Interact(player);
+
+			return false;
 		}
 
 		public override bool WhisperReceive(GameLiving source, string str)
 		{
-			if (source != null && source is GamePlayer && ((source as GamePlayer).Realm == this.Realm || !CurrentRegion.IsRvR))
+			if (base.WhisperReceive(source, str))
 			{
 				GamePlayer player = source as GamePlayer;
-				switch (str.ToLower())
+				if (source == null)
+					return false;
+
+				if (source != null && GameServer.ServerRules.IsSameRealm(this, player, true))
 				{
-					case "movement":
-						TargetObject = this;
-						CastSpell(SkillBase.GetSpellByID(SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
-						break;
-					case "strength":
-						if (player.CurrentRegion.IsCapitalCity)
-						{
+					switch (str.ToLower())
+					{
+						case "movement":
 							TargetObject = this;
-							CastSpell(SkillBase.GetSpellByID(STROFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
-						}
-						break;
-					case "borderkeep":
-						if ((player.CurrentRegion.IsCapitalCity || IsSICity(player.CurrentZone.ID) && player.Level < 10))
-						{
-							AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
-							if (portalKeep != null)
+							CastSpell(SkillBase.GetSpellByID(SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
+							break;
+						case "strength":
+							if (player.CurrentRegion.IsCapitalCity)
 							{
-								player.MoveTo((ushort)portalKeep.Region, portalKeep.X, portalKeep.Y, portalKeep.Z, (ushort)portalKeep.Heading);
-								return true;
+								TargetObject = this;
+								CastSpell(SkillBase.GetSpellByID(STROFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
 							}
-						}
-						break;
+							break;
+						case "borderkeep":
+							if ((player.CurrentRegion.IsCapitalCity || IsSICity(player.CurrentZone.ID) && player.Level < 10))
+							{
+								AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
+								if (portalKeep != null)
+								{
+									player.MoveTo((ushort)portalKeep.Region, portalKeep.X, portalKeep.Y, portalKeep.Z, (ushort)portalKeep.Heading);
+								}
+							}
+							break;
+					}
 				}
+
 				return true;
 			}
-			return base.WhisperReceive(source, str);
+
+			return false;
 		}
 
 		public override IList GetExamineMessages(GamePlayer player)
