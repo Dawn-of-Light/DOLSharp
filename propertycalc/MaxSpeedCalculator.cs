@@ -112,14 +112,18 @@ namespace DOL.GS.PropertyCalc
 						GamePlayer owner = brain.GetPlayerOwner();
 						if (owner != null)
 						{
+							// ignore owner speed if not following owner - tolakram
 							if (owner == brain.Body.CurrentFollowTarget)
+							{
 								speed *= 1.25;
-							if (owner.IsSprinting)
-								speed *= 1.3;
-							if (owner.IsOnHorse)
-								speed *= 1.45;
-							if (owner.IsOnHorse && owner.IsSprinting)
-								speed *= 1.7;
+
+								if (owner.IsSprinting)
+									speed *= 1.3;
+								if (owner.IsOnHorse)
+									speed *= 1.45;
+								if (owner.IsOnHorse && owner.IsSprinting)
+									speed *= 1.7;
+							}
 						}
 					}
 				}

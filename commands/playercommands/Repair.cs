@@ -185,7 +185,7 @@ namespace DOL.GS.Commands
 
 			if (Util.ChanceDouble(CalculateRepairChance(player,obj)))
 			{
-				int start = obj.Health;
+				int start = obj.HealthPercent;
 				if (obj is GameKeepDoor)
 				{
 					GameKeepDoor door = obj as GameKeepDoor;
@@ -201,7 +201,7 @@ namespace DOL.GS.Commands
 					GameSiegeWeapon weapon = obj as GameSiegeWeapon;
 					weapon.Repair();
 				}
-				int finish = obj.Health;
+				int finish = obj.HealthPercent;
 				CalculatePlayersWood(player, (GetTotalWoodForLevel(obj.Level + 1)));
 				DisplayMessage(player, "You successfully repair the component by 15%!");
 				/*
@@ -209,8 +209,9 @@ namespace DOL.GS.Commands
 				 * Players will receive approximately 10% of the amount repaired in realm points. 
 				 * (Note that realm points for repairing a door or outpost piece will not work in the battlegrounds.)
 				 */
-				int amount = finish - start;
-				player.GainRealmPoints(amount / 10);
+				// tolakram - we have no idea how many hit points a live door has so this code is not accurate
+				int amount = (finish - start) * obj.Level;  // level of non claimed keep is 4
+				player.GainRealmPoints(Math.Min(150, amount));
 			}
 			else
 			{

@@ -48,109 +48,109 @@ namespace DOL.GS.ServerProperties
 		/// The Experience Rate
 		/// </summary>
 		[ServerProperty("xp_rate", "The Experience Points Rate Modifier - Edit this to change the rate at which you gain experience points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
-		public static readonly double XP_RATE;
+		public static double XP_RATE;
 
 		/// <summary>
 		/// RvR Zones XP Rate
 		/// </summary>
 		[ServerProperty("rvr_zones_xp_rate", "The RvR zones Experience Points Rate Modifier", 1.0)]
-		public static readonly double RvR_XP_RATE;
+		public static double RvR_XP_RATE;
 
 		/// <summary>
 		/// The Realm Points Rate
 		/// </summary>
 		[ServerProperty("rp_rate", "The Realm Points Rate Modifier - Edit this to change the rate at which you gain realm points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
-		public static readonly double RP_RATE;
+		public static double RP_RATE;
 
 		/// <summary>
 		/// The Bounty Points Rate
 		/// </summary>
 		[ServerProperty("bp_rate", "The Bounty Points Rate Modifier - Edit this to change the rate at which you gain bounty points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
-		public static readonly double BP_RATE;
+		public static double BP_RATE;
 
 		/// <summary>
 		/// The Server Message of the Day
 		/// </summary>
 		[ServerProperty("motd", "The Server Message of the Day - Edit this to set what is displayed when a level 2+ character enters the game for the first time, set to \"\" for nothing", "Welcome to a Dawn of Light server, please edit this MOTD")]
-		public static readonly string MOTD;
+		public static string MOTD;
 
 		/// <summary>
 		/// The damage players do against monsters
 		/// </summary>
 		[ServerProperty("pve_damage", "The PvE Damage Modifier - Edit this to change the amount of damage done when fighting mobs e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
-		public static readonly double PVE_DAMAGE;
+		public static double PVE_DAMAGE;
 
 		/// <summary>
 		/// The percent per con difference (-1 = blue, 0 = yellow, 1 = OJ, 2 = red ...) subtracted to hitchance for spells in PVE.  0 is none, 5 is 5% per con, etc.  Default is 10%
 		/// </summary>
 		[ServerProperty("pve_spell_conhitpercent", "The percent per con (1 = OJ, 2 = red ...) subtracted to hitchance for spells in PVE  Must be >= 0.  0 is none, 5 is 5% per level, etc.  Default is 10%", (uint)10)]
-		public static readonly uint PVE_SPELL_CONHITPERCENT;
+		public static uint PVE_SPELL_CONHITPERCENT;
 
 		/// <summary>
 		/// The damage players do against players
 		/// </summary>
 		[ServerProperty("pvp_damage", "The PvP Damage Modifier - Edit this to change the amountof damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
-		public static readonly double PVP_DAMAGE;
+		public static double PVP_DAMAGE;
 
 		/// <summary>
 		/// The message players get when they enter the game past level 1
 		/// </summary>
 		[ServerProperty("starting_msg", "The Starting Mesage - Edit this to set what is displayed when a level 1 character enters the game for the first time, set to \"\" for nothing", "Welcome for your first time to a Dawn of Light server, please edit this Starter Message")]
-		public static readonly string STARTING_MSG;
+		public static string STARTING_MSG;
 
 		/// <summary>
 		/// The amount of copper a player starts with
 		/// </summary>
 		[ServerProperty("starting_money", "Starting Money - Edit this to change the amount in copper of money new characters start the game with, max 214 plat", 0)]
-		public static readonly long STARTING_MONEY;
+		public static long STARTING_MONEY;
 
 		/// <summary>
 		/// The level of experience a player should start with
 		/// </summary>
 		[ServerProperty("starting_level", "Starting Level - Edit this to set which levels experience a new player start the game with", 1)]
-		public static readonly int STARTING_LEVEL;
+		public static int STARTING_LEVEL;
 
 		/// <summary>
 		/// The message players get when they enter the game at level 1
 		/// </summary>
 		[ServerProperty("starting_realm_level", "Starting Realm level - Edit this to set which realm level a new player starts the game with", 0)]
-		public static readonly int STARTING_REALM_LEVEL;
+		public static int STARTING_REALM_LEVEL;
 
 		/// <summary>
 		/// The a starting guild should be used
 		/// </summary>
 		[ServerProperty("starting_guild", "Starter Guild - Edit this to change the starter guild options, values True,False", true)]
-		public static readonly bool STARTING_GUILD;
+		public static bool STARTING_GUILD;
 
 		/// <summary>
 		/// The crafting speed modifier
 		/// </summary>
 		[ServerProperty("crafting_speed", "Crafting Speed Modifier - Edit this to change the speed at which you craft e.g 1.5 is 50% faster 2.0 is twice as fast (100%) 0.5 is half the speed (50%)", 1.0)]
-		public static readonly double CRAFTING_SPEED;
+		public static double CRAFTING_SPEED;
 
 		/// <summary>
 		/// The money drop modifier
 		/// </summary>
 		[ServerProperty("money_drop", "Money Drop Modifier - Edit this to change the amount of money which is dropped e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
-		public static readonly double MONEY_DROP;
+		public static double MONEY_DROP;
 
 		/// <summary>
 		/// The broadcast type
 		/// </summary>
 		[ServerProperty("broadcast_type", "Broadcast Type - Edit this to change what /b does, values 0 = disabled, 1 = area, 2 = visibility distance, 3 = zone, 4 = region, 5 = realm, 6 = server", 1)]
-		public static readonly int BROADCAST_TYPE;
+		public static int BROADCAST_TYPE;
 
 		/// <summary>
 		/// The max number of guilds in an alliance
 		/// </summary>
 		[ServerProperty("alliance_max", "Max Guilds In Alliance - Edit this to change the maximum number of guilds in an alliance -1 = unlimited, 0=disable alliances", -1)]
-		public static readonly int ALLIANCE_MAX;
+		public static int ALLIANCE_MAX;
 
 		/// <summary>
 		/// The number of players needed for claiming
 		/// </summary>
 		[ServerProperty("claim_num", "Players Needed For Claim - Edit this to change the amount of players required to claim a keep, towers are half this amount", 8)]
-		public static readonly int CLAIM_NUM;
+		public static int CLAIM_NUM;
 
 		/// <summary>
 		/// The number of players needed to form a guild
@@ -162,13 +162,13 @@ namespace DOL.GS.ServerProperties
 		/// If the server should only accept connections from staff
 		/// </summary>
 		[ServerProperty("staff_login", "Staff Login Only - Edit this to set weather you wish staff to be the only ones allowed to log in values True,False", false)]
-		public static readonly bool STAFF_LOGIN;
+		public static bool STAFF_LOGIN;
 
 		/// <summary>
 		/// The max number of players on the server
 		/// </summary>
 		[ServerProperty("max_players", "Max Players - Edit this to set the maximum players allowed to connect at the same time set 0 for unlimited", 0)]
-		public static readonly int MAX_PLAYERS;
+		public static int MAX_PLAYERS;
 
 		/// <summary>
 		/// The time until a player is worth rps again after death
@@ -180,13 +180,13 @@ namespace DOL.GS.ServerProperties
 		/// The minimum client version required to connect
 		/// </summary>
 		[ServerProperty("client_version_min", "Minimum Client Version - Edit this to change which client version at the least have to be used: -1 = any, 1.80 = 180", -1)]
-		public static readonly int CLIENT_VERSION_MIN;
+		public static int CLIENT_VERSION_MIN;
 
 		/// <summary>
 		/// The maximum client version required to connect
 		/// </summary>
 		[ServerProperty("client_version_max", "Maximum Client Version - Edit this to change which client version at the most have to be used: -1 = any, 1.80 = 180", -1)]
-		public static readonly int CLIENT_VERSION_MAX;
+		public static int CLIENT_VERSION_MAX;
 
 		/// <summary>
 		/// Should the server load quests
@@ -198,7 +198,7 @@ namespace DOL.GS.ServerProperties
 		/// Should the server log trades
 		/// </summary>
 		[ServerProperty("log_trades", "Should the server log all trades a player makes, values True,False", false)]
-		public static readonly bool LOG_TRADES;
+		public static bool LOG_TRADES;
 
 		/// <summary>
 		/// What class should the server use for players
@@ -210,25 +210,25 @@ namespace DOL.GS.ServerProperties
 		/// What is the maximum client type allowed to connect
 		/// </summary>
 		[ServerProperty("client_type_max", "What is the maximum client type allowed to connect", -1)]
-		public static readonly int CLIENT_TYPE_MAX;
+		public static int CLIENT_TYPE_MAX;
 
 		/// <summary>
 		/// Disable minotaurs from being created
 		/// </summary>
 		[ServerProperty("disable_minotaurs", "Disable minotaurs from being created", false)]
-		public static readonly bool DISABLE_MINOTAURS;
+		public static bool DISABLE_MINOTAURS;
 		
 		/// <summary>
 		/// Disable si race from being created
 		/// </summary>
 		[ServerProperty("disable_si_race", "Disable si race from being created", false)]
-		public static readonly bool DISABLE_SI_RACE;
+		public static bool DISABLE_SI_RACE;
 		
 		/// <summary>
 		/// Disable toa race from being created
 		/// </summary>
 		[ServerProperty("disable_toa_race", "Disable toa race from being created", false)]
-		public static readonly bool DISABLE_TOA_RACE;
+		public static bool DISABLE_TOA_RACE;
 
 		/// <summary>
 		/// Should the server load the example scripts
@@ -258,25 +258,25 @@ namespace DOL.GS.ServerProperties
 		/// Should the server disable the tutorial zone
 		/// </summary>
 		[ServerProperty("disable_tutorial", "should the server disable the tutorial zone", false)]
-		public static readonly bool DISABLE_TUTORIAL;
+		public static bool DISABLE_TUTORIAL;
 
 		/// <summary>
 		/// Should users be able to create characters in all realms using the same account
 		/// </summary>
 		[ServerProperty("allow_all_realms", "should we allow characters to be created on all realms using a single account", false)]
-		public static readonly bool ALLOW_ALL_REALMS;
+		public static bool ALLOW_ALL_REALMS;
 
 		/// <summary>
 		/// Should users be allowed to create catacombs classes
 		/// </summary>
 		[ServerProperty("disable_catacombs_classes", "should we disable catacombs classes", false)]
-		public static readonly bool DISABLE_CATACOMBS_CLASSES;
+		public static bool DISABLE_CATACOMBS_CLASSES;
 
 		/// <summary>
 		/// Days before your elligable for a free level
 		/// </summary>
 		[ServerProperty("freelevel_days", "days before your elligable for a free level, use -1 to deactivate", 7)]
-		public static readonly int FREELEVEL_DAYS;
+		public static int FREELEVEL_DAYS;
 
 		/// <summary>
 		/// Server Language
@@ -294,25 +294,25 @@ namespace DOL.GS.ServerProperties
 		/// StatSave Interval
 		/// </summary>
 		[ServerProperty("statsave_interval", "Interval between each DB Stats store in minutes. -1 for deactivated.", -1)]
-		public static readonly int STATSAVE_INTERVAL;
+		public static int STATSAVE_INTERVAL;
 
 		/// <summary>
 		/// Anon Modifier
 		/// </summary>
 		[ServerProperty("anon_modifier", "Various modifying options for anon, 0 = default, 1 = /who shows player but as ANON, -1 = disabled", 0)]
-		public static readonly int ANON_MODIFIER;
+		public static int ANON_MODIFIER;
 
 		/// <summary>
-		/// Buff Range
+		/// Buff Range, 0 for unlimited
 		/// </summary>
-		[ServerProperty("buff_range", "The range that concentration buffs can last from the owner before it expires", 0)]
-		public static readonly int BUFF_RANGE;
+		[ServerProperty("buff_range", "The range that concentration buffs can last from the owner before it expires.  0 for unlimited.", 0)]
+		public static int BUFF_RANGE;
 
 		/// <summary>
 		/// Disable Bug Reports
 		/// </summary>
 		[ServerProperty("disable_bug_reports", "Set to true to disable bug reporting, and false to enable bug reporting", true)]
-		public static readonly bool DISABLE_BUG_REPORTS;
+		public static bool DISABLE_BUG_REPORTS;
 
 		/// <summary>
 		/// Use Custom Start Locations
@@ -323,26 +323,26 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Use Keep Balancing
 		/// </summary>
-		[ServerProperty("use_keep_balancing", "Set to true if you want keeps to be higher level in NF the less you have, and lower level the more you have", false)]
-		public static readonly bool USE_KEEP_BALANCING;
+		[ServerProperty("keeps", "use_keep_balancing", "Set to true if you want keeps to be higher level in NF the less you have, and lower level the more you have", false)]
+		public static bool USE_KEEP_BALANCING;
 
 		/// <summary>
 		/// Use Live Keep Bonuses
 		/// </summary>
-		[ServerProperty("use_live_keep_bonuses", "Set to true if you want to use the live keeps bonuses, for example 3% extra xp", false)]
-		public static readonly bool USE_LIVE_KEEP_BONUSES;
+		[ServerProperty("keeps", "use_live_keep_bonuses", "Set to true if you want to use the live keeps bonuses, for example 3% extra xp", false)]
+		public static bool USE_LIVE_KEEP_BONUSES;
 
 		/// <summary>
 		/// Use Supply Chain
 		/// </summary>
-		[ServerProperty("use_supply_chain", "Set to true if you want to use the live supply chain for keep teleporting, set to false to allow teleporting to any keep that your realm controls (and towers)", false)]
-		public static readonly bool USE_SUPPLY_CHAIN;
+		[ServerProperty("keeps", "use_supply_chain", "Set to true if you want to use the live supply chain for keep teleporting, set to false to allow teleporting to any keep that your realm controls (and towers)", false)]
+		public static bool USE_SUPPLY_CHAIN;
 
 		/// <summary>
 		/// Death Messages All Realms
 		/// </summary>
 		[ServerProperty("death_messages_all_realms", "Set to true if you want all realms to see other realms death and kill messages", false)]
-		public static readonly bool DEATH_MESSAGES_ALL_REALMS;
+		public static bool DEATH_MESSAGES_ALL_REALMS;
 
 		/// <summary>
 		/// Log Email Addresses
@@ -360,13 +360,13 @@ namespace DOL.GS.ServerProperties
 		/// Allow Cata Slash Level
 		/// </summary>
 		[ServerProperty("allow_cata_slash_level", "Allow catacombs classes to use /level command", false)]
-		public static readonly bool ALLOW_CATA_SLASH_LEVEL;
+		public static bool ALLOW_CATA_SLASH_LEVEL;
 
 		/// <summary>
 		/// Allow Roam
 		/// </summary>
 		[ServerProperty("allow_roam", "Allow mobs to roam on the server", true)]
-		public static readonly bool ALLOW_ROAM;
+		public static bool ALLOW_ROAM;
 
 		/// <summary>
 		/// Allow Maulers
@@ -402,7 +402,7 @@ namespace DOL.GS.ServerProperties
 		/// Max camp bonus
 		/// </summary>
 		[ServerProperty("max_camp_bonus", "Max camp bonus", 2.0)]
-		public static readonly double MAX_CAMP_BONUS;
+		public static double MAX_CAMP_BONUS;
 
 		/// <summary>
 		/// Disable Instances
@@ -414,19 +414,19 @@ namespace DOL.GS.ServerProperties
 		/// Health Regen Rate
 		/// </summary>
 		[ServerProperty("health_regen_rate", "Health regen rate", 1.0)]
-		public static readonly double HEALTH_REGEN_RATE;
+		public static double HEALTH_REGEN_RATE;
 
 		/// <summary>
 		/// Health Regen Rate
 		/// </summary>
 		[ServerProperty("endurance_regen_rate", "Endurance regen rate", 1.0)]
-		public static readonly double ENDURANCE_REGEN_RATE;
+		public static double ENDURANCE_REGEN_RATE;
 
 		/// <summary>
 		/// Health Regen Rate
 		/// </summary>
 		[ServerProperty("mana_regen_rate", "Mana regen rate", 1.0)]
-		public static readonly double MANA_REGEN_RATE;
+		public static double MANA_REGEN_RATE;
 
 		/// <summary>
 		/// Load Hookpoints
@@ -445,52 +445,52 @@ namespace DOL.GS.ServerProperties
 		/// Save QuestItems into Database
 		/// </summary>
 		[ServerProperty("save_questitems_into_database", "set false if you don't want this", true)]
-		public static readonly bool SAVE_QUESTITEMS_INTO_DATABASE;
+		public static bool SAVE_QUESTITEMS_INTO_DATABASE;
 
 		/// <summary>
 		/// Crafting skill gain bonus in capital cities
 		/// </summary>
 		[ServerProperty("capital_city_crafting_skill_gain_bonus", "Crafting skill gain bonus % in capital cities; 5 = 5%", 5)]
-		public static readonly int CAPITAL_CITY_CRAFTING_SKILL_GAIN_BONUS;
+		public static int CAPITAL_CITY_CRAFTING_SKILL_GAIN_BONUS;
 
 		/// <summary>
 		/// Crafting speed bonus in capital cities
 		/// </summary>
 		[ServerProperty("capital_city_crafting_speed_bonus", "Crafting speed bonus in capital cities; 2 = 2x, 3 = 3x, ..., 1 = standard", 1.0)]
-		public static readonly double CAPITAL_CITY_CRAFTING_SPEED_BONUS;
+		public static double CAPITAL_CITY_CRAFTING_SPEED_BONUS;
 
 		/// <summary>
 		/// Allow Bounty Points to be gained in Battlegrounds
 		/// </summary>
 		[ServerProperty("allow_bps_in_bgs", "Allow bounty points to be gained in battlegrounds", false)]
-		public static readonly bool ALLOW_BPS_IN_BGS;
+		public static bool ALLOW_BPS_IN_BGS;
 
         /// <summary>
         /// Sets the Cap for Player Turrets
         /// </summary>
         [ServerProperty("turret_player_cap_count", "Sets the cap of turrets for a Player", 5)]
-        public static readonly int TURRET_PLAYER_CAP_COUNT;
+        public static int TURRET_PLAYER_CAP_COUNT;
 
         /// <summary>
         /// Sets the Area Cap for Turrets
         /// </summary>
         [ServerProperty("turret_area_cap_count", "Sets the cap of the Area for turrets", 10)]
-        public static readonly int TURRET_AREA_CAP_COUNT;
+        public static int TURRET_AREA_CAP_COUNT;
 
         /// <summary>
         /// Sets the Circle of the Area to check for Turrets
         /// </summary>
         [ServerProperty("turret_area_cap_radius", "Sets the Radius which is checked for the turretareacap", 1000)]
-        public static readonly int TURRET_AREA_CAP_RADIUS;
+        public static int TURRET_AREA_CAP_RADIUS;
 
 		[ServerProperty("theurgist_pet_cap", "Sets the maximum number of pets a Theurgist can summon", 16)]
-		public static readonly int THEURGIST_PET_CAP;
+		public static int THEURGIST_PET_CAP;
 
         /// <summary>
         /// This specifies the max amount of people in one battlegroup.
         /// </summary>
         [ServerProperty("battlegroup_max_member", "Max number of members allowed in a battlegroup.", 64)]
-        public static readonly int BATTLEGROUP_MAX_MEMBER;
+        public static int BATTLEGROUP_MAX_MEMBER;
         
         /// <summary>
         /// This if the server battleground zones are open to players
@@ -509,65 +509,65 @@ namespace DOL.GS.ServerProperties
         /// If Outdoor is increased past 30, they vanish. It seems to be hardcoded in client
         /// </summary>
         [ServerProperty("max_indoor_house_items", "Max number of items allowed inside a players house.", 40)]
-        public static readonly int MAX_INDOOR_HOUSE_ITEMS;
+        public static int MAX_INDOOR_HOUSE_ITEMS;
         [ServerProperty("max_outdoor_house_items", "Max number of items allowed in a players garden.", 30)]
-        public static readonly int MAX_OUTDOOR_HOUSE_ITEMS;
+        public static int MAX_OUTDOOR_HOUSE_ITEMS;
         [ServerProperty("indoor_items_depend_on_size", "If true the max number of allowed House indoor items are set like live (40, 60, 80, 100)", true)]
-        public static readonly bool INDOOR_ITEMS_DEPEND_ON_SIZE;
+        public static bool INDOOR_ITEMS_DEPEND_ON_SIZE;
 
 
 		[ServerProperty("housing_rent_cottage", "Rent price for a cottage.", 200000L)]
-		public static readonly long HOUSING_RENT_COTTAGE;
+		public static long HOUSING_RENT_COTTAGE;
 
 		[ServerProperty("housing_rent_house", "Rent price for a house.", 350000L)]
-		public static readonly long HOUSING_RENT_HOUSE;
+		public static long HOUSING_RENT_HOUSE;
 
 		[ServerProperty("housing_rent_villa", "Rent price for a villa.", 600000L)]
-		public static readonly long HOUSING_RENT_VILLA;
+		public static long HOUSING_RENT_VILLA;
 
 		[ServerProperty("housing_rent_mansion", "Rent price for a mansion.", 1000000L)]
-		public static readonly long HOUSING_RENT_MANSION;
+		public static long HOUSING_RENT_MANSION;
 
 		[ServerProperty("housing_lot_price_start", "Starting lot price before per hour reductions", 95L * 1000L * 100L * 100L)] // 95p
-		public static readonly long HOUSING_LOT_PRICE_START;
+		public static long HOUSING_LOT_PRICE_START;
 
 		[ServerProperty("housing_lot_price_per_hour", "Lot price reduction per hour.", (long)(1.2 * 1000 * 100 * 100))] // 1.2p
-		public static readonly long HOUSING_LOT_PRICE_PER_HOUR;
+		public static long HOUSING_LOT_PRICE_PER_HOUR;
 
 		[ServerProperty("housing_lot_price_minimum", "Minimum lot price.", 300L * 100L * 100L)] // 300g
-		public static readonly long HOUSING_LOT_PRICE_MINIMUM;
+		public static long HOUSING_LOT_PRICE_MINIMUM;
 
 		[ServerProperty("housing_debug_allow_multiple", "Allow the player to own more than 1 house.  This breaks some housing commands.", false)]
-		public static readonly bool HOUSING_DEBUG_ALLOW_MULTIPLE;
+		public static bool HOUSING_DEBUG_ALLOW_MULTIPLE;
 
 
 		[ServerProperty("statprint_frequency", "How often (milliseconds) should statistics be printed on the server console.", 30000)]
-		public static readonly int STATPRINT_FREQUENCY;
+		public static int STATPRINT_FREQUENCY;
 
 
 		[ServerProperty("world", "world_item_decay_time", "How long (milliseconds) will an item dropped on the ground stay in the world.", (uint)180000)]
-		public static readonly uint WORLD_ITEM_DECAY_TIME;
+		public static uint WORLD_ITEM_DECAY_TIME;
 
 		[ServerProperty("world", "world_pickup_distance", "How far before you can no longer pick up an object (loot for example).", 256)]
-		public static readonly int WORLD_PICKUP_DISTANCE;
+		public static int WORLD_PICKUP_DISTANCE;
 
 		[ServerProperty("world", "world_day_increment", "Day Increment (0 to 512, default is 24).  Larger increments make shorter days.", (uint)24)]
-		public static readonly uint WORLD_DAY_INCREMENT;
+		public static uint WORLD_DAY_INCREMENT;
 
 		[ServerProperty("world", "world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second).", (uint)30000)]
-		public static readonly uint WORLD_NPC_UPDATE_INTERVAL;
+		public static uint WORLD_NPC_UPDATE_INTERVAL;
 
 		[ServerProperty("world", "world_player_update_interval", "How often (milliseconds) will players be checked for updates. Minimum allowed = 100 (100 milliseconds).", (uint)300)]
-		public static readonly uint WORLD_PLAYER_UPDATE_INTERVAL;
+		public static uint WORLD_PLAYER_UPDATE_INTERVAL;
 
 		[ServerProperty("weather_check_interval", "How often (milliseconds) will weather be checked for a chance to start a storm.", 5 * 60 * 1000)]
-		public static readonly int WEATHER_CHECK_INTERVAL;
+		public static int WEATHER_CHECK_INTERVAL;
 
 		[ServerProperty("weather_chance", "What is the chance of starting a storm.", 5)]
-		public static readonly int WEATHER_CHANCE;
+		public static int WEATHER_CHANCE;
 
 		[ServerProperty("weather_log_events", "Should weather events be shown in the log (and on the console).", true)]
-		public static readonly bool WEATHER_LOG_EVENTS;
+		public static bool WEATHER_LOG_EVENTS;
 
 
 
@@ -575,13 +575,19 @@ namespace DOL.GS.ServerProperties
         /// This is to set the baseHP For NPCs
         /// </summary>
         [ServerProperty("npc", "gamenpc_base_hp", "GameNPC's base HP * level", 500)]
-        public static readonly int GAMENPC_BASE_HP;
+        public static int GAMENPC_BASE_HP;
 
 		/// <summary>
 		/// Chance for NPC to random walk. Default is 20
 		/// </summary>
 		[ServerProperty("npc", "gamenpc_randomwalk_chance", "Chance for NPC to random walk. Default is 20", 20)]
-		public static readonly int GAMENPC_RANDOMWALK_CHANCE;
+		public static int GAMENPC_RANDOMWALK_CHANCE;
+
+		/// <summary>
+		/// How often, in milliseconds, to check follow distance.  Lower numbers make NPC follow closer but increase load on server.
+		/// </summary>
+		[ServerProperty("npc", "gamenpc_followcheck_time", "How often, in milliseconds, to check follow distance. Lower numbers make NPC follow closer but increase load on server.", 500)]
+		public static int GAMENPC_FOLLOWCHECK_TIME;
 
 		/// <summary>
 		/// Override the classtype of any npc with a classtype of DOL.GS.GameNPC
@@ -614,25 +620,25 @@ namespace DOL.GS.ServerProperties
 		/// Do we allow guild members from other realms
 		/// </summary>
 		[ServerProperty("allow_cross_realm_guilds","Do we allow guild members from other realms?", false)]
-		public static readonly bool ALLOW_CROSS_REALM_GUILDS;
+		public static bool ALLOW_CROSS_REALM_GUILDS;
 
 		/// <summary>
 		/// Do we want to allow items to be equipped regardless of realm?
 		/// </summary>
 		[ServerProperty("allow_cross_realm_items", "Do we want to allow items to be equipped regardless of realm?", false)]
-		public static readonly bool ALLOW_CROSS_REALM_ITEMS;
+		public static bool ALLOW_CROSS_REALM_ITEMS;
 
 		/// <summary>
 		/// What level should /level bring you to?
 		/// </summary>
 		[ServerProperty("slash_level_target", "What level should /level bring you to? ", 20)]
-		public static readonly int SLASH_LEVEL_TARGET;
+		public static int SLASH_LEVEL_TARGET;
 
 		/// <summary>
 		/// What level should you have on your account to be able to use /level?
 		/// </summary>
 		[ServerProperty("slash_level_requirement", "What level should you have on your account be able to use /level?", 50)]
-		public static readonly int SLASH_LEVEL_REQUIREMENT;
+		public static int SLASH_LEVEL_REQUIREMENT;
 
 		/// <summary>
 		/// How many players are required on the relic pad to trigger the pillar?
@@ -644,25 +650,25 @@ namespace DOL.GS.ServerProperties
         /// What levels did we allow a DOL respec ? serialized
         /// </summary>
         [ServerProperty("give_dol_respec_at_level", "What levels does we give a DOL respec? (serialized)", "0")]
-        public static readonly string GIVE_DOL_RESPEC_AT_LEVEL;
+        public static string GIVE_DOL_RESPEC_AT_LEVEL;
 
 		/// <summary>
 		/// How many things do we allow guilds to claim?
 		/// </summary>
 		[ServerProperty("guilds_claim_limit", "How many things do we allow guilds to claim?", 1)]
-		public static readonly int GUILDS_CLAIM_LIMIT;
+		public static int GUILDS_CLAIM_LIMIT;
 
         /// <summary>
         /// The level keeps return to when claimed.
         /// </summary>
-        [ServerProperty("starting_keep_level", "The default level of a keep when captured that it reverts to. Set to 0 for typical new frontiers, though Dinberg would suggest a value of 1!", 0)]
-        public static readonly int STARTING_KEEP_LEVEL;
+        [ServerProperty("keeps", "starting_keep_level", "The default level of a keep when captured that it reverts to. Set to 0 for typical new frontiers, though Dinberg would suggest a value of 1!", 0)]
+        public static int STARTING_KEEP_LEVEL;
 
         /// <summary>
         /// Record news in database
         /// </summary>
         [ServerProperty("record_news", "Record News in database?", true)]
-        public static readonly bool RECORD_NEWS;
+        public static bool RECORD_NEWS;
 
 		/// <summary>
 		/// Whether to use the sync timer utility or not
@@ -674,7 +680,7 @@ namespace DOL.GS.ServerProperties
 		/// Ignore too long outcoming packet or not
 		/// </summary>
 		[ServerProperty("ignore_too_long_outcoming_packet", "Shall we ignore too long outcoming packet ?", false)]
-		public static readonly bool IGNORE_TOO_LONG_OUTCOMING_PACKET;
+		public static bool IGNORE_TOO_LONG_OUTCOMING_PACKET;
 
 		
 		/// <summary>
@@ -787,7 +793,7 @@ namespace DOL.GS.ServerProperties
         /// Enable WarMap manager
         /// </summary>
         [ServerProperty("enable_warmapmgr", "Shall we enable the WarMap manager ?", false)]
-        public static readonly bool ENABLE_WARMAPMGR;
+        public static bool ENABLE_WARMAPMGR;
 
         /// <summary>
 		/// Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.
@@ -805,55 +811,55 @@ namespace DOL.GS.ServerProperties
 		/// Account bombing prevention
 		/// </summary>
 		[ServerProperty("time_between_account_creation", "The time in minutes between 2 accounts creation. This avoid account bombing with dynamic ip. 0 to disable", 2)]
-		public static readonly int TIME_BETWEEN_ACCOUNT_CREATION;
+		public static int TIME_BETWEEN_ACCOUNT_CREATION;
         
         /// <summary>
         /// PvP Immunity Timer - Killed by Player
         /// </summary>
         [ServerProperty("Timer_Killed_By_Player", "Immunity Timer When player killed in PvP, in seconds", 120)] //2 min default
-        public static readonly int TIMER_KILLED_BY_PLAYER;
+        public static int TIMER_KILLED_BY_PLAYER;
 
         /// <summary>
         /// PvP Immunity Timer - Killed by Mobs
         /// </summary>
         [ServerProperty("Timer_Killed_By_Mob", "Immunity Timer When player killed in PvP, in seconds", 30)] //30 seconds default
-        public static readonly int TIMER_KILLED_BY_MOB;
+        public static int TIMER_KILLED_BY_MOB;
 
         /// <summary>
         /// PvP Immunity Timer - Region Changed (Enter World Timer Divided by 3 of this)
         /// </summary>
         [ServerProperty("Timer_Region_Changed", "Immunity Timer when player changes regions, in seconds", 30)] //30 seconds default
-        public static readonly int TIMER_REGION_CHANGED;
+        public static int TIMER_REGION_CHANGED;
 
         /// <summary>
         /// Time after a relic lost in nature is returning to his ReturnRelicPad pad
         /// </summary>
         [ServerProperty("Relic_Return_Time", "A lost relic will automatically returns to its defined point, in seconds", 20*60)] //20 mins default
-        public static readonly int RELIC_RETURN_TIME;
+        public static int RELIC_RETURN_TIME;
 
 		/// <summary>
 		/// Xp Cap for a player.  Given in percent of level.  Default is 125%
 		/// </summary>
 		[ServerProperty("XP_Cap_Percent", "Maximum XP a player can earn given in percent of their level. Default is 125%", 125)]
-		public static readonly int XP_CAP_PERCENT;
+		public static int XP_CAP_PERCENT;
 
 		/// <summary>
 		/// Xp Cap for a player in a group.  Given in percent of level.  Default is 125%
 		/// </summary>
 		[ServerProperty("XP_Group_Cap_Percent", "Maximum XP a player can earn while in a group, given in percent of their level. Default is 125%", 125)]
-		public static readonly int XP_GROUP_CAP_PERCENT;
+		public static int XP_GROUP_CAP_PERCENT;
 
 		/// <summary>
 		/// Xp Cap for a player vs player kill.  Given in percent of level.  Default is 125%
 		/// </summary>
 		[ServerProperty("XP_PVP_Cap_Percent", "Maximum XP a player can earn killing another player, given in percent of their level. Default is 125%", 125)]
-		public static readonly int XP_PVP_CAP_PERCENT;
+		public static int XP_PVP_CAP_PERCENT;
 
 		/// <summary>
 		/// Hardcap XP a player can earn after all other adjustments are applied.  Given in percent of level, default is 500%  There is no live value that corresponds to this cap.
 		/// </summary>
 		[ServerProperty("XP_HardCap_Percent", "Hardcap XP a player can earn after all other adjustments are applied. Given in percent of their level. Default is 500%", 500)]
-		public static readonly int XP_HARDCAP_PERCENT;
+		public static int XP_HARDCAP_PERCENT;
 
 
 		/// <summary>

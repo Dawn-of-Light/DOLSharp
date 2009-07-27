@@ -300,21 +300,30 @@ namespace DOL.GS.ServerRules
 			//tolakram - live allows most damage spells to be cast on doors. This should be handled in spell handlers
 			if (target is GameKeepComponent || target is GameKeepDoor)
 			{
+				bool isAllowed = false;
+
 				switch (spell.Target.ToLower())
 				{
 					case "self":
 					case "group":
 					case "pet":
-					case "enemy":
+						isAllowed = true;
 						break;
-					default:
-						return false;
+
+					case "enemy":
+
+						if (spell.Radius == 0 && spell.SpellType == "DirectDamage")
+							isAllowed = true;
+
+						break;
 				}
 
-				// some special checks to prevent AOE's and item spells from damaging the component
-				if (spell.Power == 0 || spell.Radius > 0)
-					return false;
+				if (!isAllowed && caster is GamePlayer)
+					(caster as GamePlayer).Client.Out.SendMessage("You can't cast this spell on the " + target.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				return isAllowed;
 			}
+
 			return true;
 		}
 
