@@ -597,7 +597,7 @@ namespace DOL.GS.Commands
                                     case "2": //enable/disable social windows
                                         {
                                             // "P,ShowGuildWindow,ShowAllianceWindow,?,ShowLFGuildWindow(only with guild),0,0" // news and friend windows always showed
-                                            client.Out.SendMessage("P," + (client.Player.Guild == null ? "0" : "1") + ",0,0,0,0,0", eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+                                            client.Out.SendMessage("P," + (client.Player.Guild == null ? "0" : "1") + (client.Player.Guild.AllianceId!=string.Empty?"0":"1") + ",0,0,0,0", eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
                                             break;
                                         }
                                     default:
@@ -1352,7 +1352,7 @@ namespace DOL.GS.Commands
 											}
 											buffer[i]=member.ToString((i + 1) + (page - 1) * 10, finalList.Count);
 										}
-										client.Out.SendMessage("TE," + page.ToString() + ","+i.ToString()+"," + finalList.Count, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+										client.Out.SendMessage("TE," + page.ToString() + "," + finalList.Count + "," + i.ToString(), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
 										foreach(string member in buffer)
 											client.Player.Out.SendMessage(member, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
 
