@@ -298,7 +298,10 @@ namespace DOL.GS.Keeps
 						{
 							// special considerations for pet spam classes
 							if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
-								damageAmount /= 2; // serverproperty goes here
+								damageAmount = (int)(damageAmount * ServerProperties.Properties.PET_SPAM_DAMAGE_MULTIPLIER);
+							else
+								damageAmount = (int)(damageAmount * ServerProperties.Properties.PET_DAMAGE_MULTIPLIER);
+
 
 							player.Out.SendMessage(String.Format("Your {0} hits {1} for {2} damage!", source.Name, GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						}
