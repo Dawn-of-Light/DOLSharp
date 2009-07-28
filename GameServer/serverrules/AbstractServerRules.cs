@@ -312,8 +312,21 @@ namespace DOL.GS.ServerRules
 
 					case "enemy":
 
-						if (spell.Radius == 0 && spell.SpellType == "DirectDamage")
-							isAllowed = true;
+						if (spell.Radius == 0)
+						{
+							switch (spell.SpellType.ToLower())
+							{
+								case "bolt":
+								case "bomber":
+								case "damagespeeddecrease":
+								case "directdamage":
+								case "magicalstrike":
+								case "siegearrow":
+								case "summontheurgistpet":
+									isAllowed = true;
+									break;
+							}
+						}
 
 						break;
 				}
