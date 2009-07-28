@@ -769,19 +769,23 @@ namespace DOL.GS.ServerProperties
 		public static double KEEP_GUARD_LEVEL_MULTIPLIER;
 
 		/// <summary>
+		/// Modifier used to adjust damage for pets on keep components
+		/// </summary>
+		[ServerProperty("keeps", "pet_damage_multiplier", "Modifier used to adjust damage for pets classes.", 1.0)]
+		public static double PET_DAMAGE_MULTIPLIER;
+
+		/// <summary>
+		/// Modifier used to adjust damage for pet spam classes (currently animist and theurgist) on keep components
+		/// </summary>
+		[ServerProperty("keeps", "pet_spam_damage_multiplier", "Modifier used to adjust damage for pet spam classes (currently animist and theurgist).", 1.0)]
+		public static double PET_SPAM_DAMAGE_MULTIPLIER;
+
+		/// <summary>
 		/// Multiplier used to determine keep guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.
 		/// </summary>
 		[ServerProperty("keeps", "tower_guard_level_multiplier", "Multiplier used to determine tower guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.", 1.0)]
 		public static double TOWER_GUARD_LEVEL_MULTIPLIER;
 
-
-
-
-		/// <summary>
-		/// Allow or disallow /irc in RvR zones, while allowed in pve zone
-		/// </summary>
-		[ServerProperty("allow_irc_in_rvr", "Allow players to send/receive irc when in RvR zone", true)]
-		public static bool ALLOW_IRC_IN_RVR;
 
         /// <summary>
         /// Ignore too long outcoming packet or not
@@ -860,6 +864,16 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("XP_HardCap_Percent", "Hardcap XP a player can earn after all other adjustments are applied. Given in percent of their level. Default is 500%", 500)]
 		public static int XP_HARDCAP_PERCENT;
+
+
+		// custom properties below this
+
+		/// <summary>
+		/// List of users allowed to send from IRC
+		/// </summary>
+		[ServerProperty("Custom", "irc_allowed_sendlist", "Allow players to send/receive irc when in RvR zone", "")]
+		public static string IRC_ALLOWED_SENDLIST;
+
 
 
 		/// <summary>
