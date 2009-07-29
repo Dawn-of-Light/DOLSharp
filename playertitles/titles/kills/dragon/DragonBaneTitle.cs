@@ -17,20 +17,13 @@
  *
  */
 
-/*
- * Suncheck: [19.06.2007]
- *   - Corrected
- *   - Sorted
- *   - Added missing (+language support)
- */
-
 using System;
 using DOL.Language;
 using DOL.Events;
 
 namespace DOL.GS.PlayerTitles
 {
-	public class DuelMasterTitle : EventPlayerTitle
+	public class DragonBaneTitle : EventPlayerTitle
 	{
 		/// <summary>
 		/// The title description, shown in "Titles" window.
@@ -39,7 +32,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "Titles.Solokills.DuelMaster");
+			return "Dragon Bane";
 		}
 
 		/// <summary>
@@ -49,16 +42,18 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title value.</returns>
 		public override string GetValue(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "Titles.Solokills.DuelMaster");
+			return this.GetDescription(player);
 		}
+
 
 		/// <summary>
 		/// The event to hook.
 		/// </summary>
 		public override DOLEvent Event
 		{
-			get { return GamePlayerEvent.KillsTotalSoloChanged; }
+			get { return GamePlayerEvent.KillsDragonChanged; }
 		}
+
 		/// <summary>
 		/// Verify whether the player is suitable for this title.
 		/// </summary>
@@ -66,25 +61,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>true if the player is suitable for this title.</returns>
 		public override bool IsSuitable(GamePlayer player)
 		{
-			//25000+
-			return (player.KillsAlbionSolo + player.KillsHiberniaSolo + player.KillsMidgardSolo) >= 25000;
-		}
-		
-		/// <summary>
-		/// The event callback.
-		/// </summary>
-		/// <param name="e">The event fired.</param>
-		/// <param name="sender">The event sender.</param>
-		/// <param name="arguments">The event arguments.</param>
-		protected override void EventCallback(DOLEvent e, object sender, EventArgs arguments)
-		{
-			GamePlayer p = sender as GamePlayer;
-			if (p != null && p.Titles.Contains(this))
-			{
-				p.UpdateCurrentTitle();
-				return;
-			}
-			base.EventCallback(e, sender, arguments);
+			return player.KillsDragon >= 500;
 		}
 	}
 }
