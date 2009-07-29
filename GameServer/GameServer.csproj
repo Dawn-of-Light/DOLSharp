@@ -971,6 +971,7 @@
     <Compile Include="playerclasses\albion\ClassMaulerAlb.cs" />
     <Compile Include="playerclasses\hibernia\ClassMaulerHib.cs" />
     <Compile Include="playerclasses\midgard\ClassMaulerMid.cs" />
+    <Compile Include="playertitles\titles\claim\frontier\FrontierProtectorTitle.cs" />
     <Compile Include="playertitles\titles\claim\frontier\FrontierChallengerTitle.cs" />
     <Compile Include="playertitles\titles\claim\frontier\FrontierVindicatorTitle.cs" />
     <Compile Include="playertitles\titles\claim\stronghold\StrongholdChiefTitle.cs" />
@@ -978,6 +979,7 @@
     <Compile Include="playertitles\titles\deathblows\BattleEnforcerTitle.cs" />
     <Compile Include="playertitles\titles\deathblows\BattleMasterTitle.cs" />
     <Compile Include="playertitles\titles\kills\albion\BaneOfAlbionTitle.cs" />
+    <Compile Include="playertitles\titles\kills\albion\SlayerOfAlbionTitle.cs" />
     <Compile Include="playertitles\titles\kills\albion\ScourgeOfAlbionTitle.cs" />
     <Compile Include="playertitles\titles\kills\all\MasterAssassineTitle.cs" />
     <Compile Include="playertitles\titles\kills\all\MasterEnforcerTitle.cs" />
@@ -986,14 +988,17 @@
     <Compile Include="playertitles\titles\kills\demon\DemonScourgeTitle.cs" />
     <Compile Include="playertitles\titles\kills\demon\DemonSlayerTitle.cs" />
     <Compile Include="playertitles\titles\kills\demon\DreadVanquisherTitle.cs" />
+    <Compile Include="playertitles\titles\kills\dragon\DragonBaneTitle.cs" />
     <Compile Include="playertitles\titles\kills\dragon\DragonFoeTitle.cs" />
     <Compile Include="playertitles\titles\kills\dragon\DragonScourgeTitle.cs" />
     <Compile Include="playertitles\titles\kills\dragon\DragonSlayerTitle.cs" />
     <Compile Include="playertitles\titles\kills\epicmob\EpicChallengerTitle.cs" />
     <Compile Include="playertitles\titles\kills\epicmob\EpicVictorTitle.cs" />
     <Compile Include="playertitles\titles\kills\hibernia\BaneOfHiberniaTitle.cs" />
+    <Compile Include="playertitles\titles\kills\hibernia\SlayerOfHiberniaTitle.cs" />
     <Compile Include="playertitles\titles\kills\hibernia\ScourgeOfHiberniaTitle.cs" />
     <Compile Include="playertitles\titles\kills\midgard\BaneOfMidgardTitle.cs" />
+    <Compile Include="playertitles\titles\kills\midgard\SlayerOfMidgardTitle.cs" />
     <Compile Include="playertitles\titles\kills\midgard\ScourgeOfMidgardTitle.cs" />
     <Compile Include="playertitles\titles\level\ChampionTitle.cs" />
     <Compile Include="playertitles\titles\level\Level20Title.cs" />
