@@ -17,21 +17,12 @@
  *
  */
 
-/*
- * Suncheck: [19.06.2007]
- *   - Corrected
- *   - Sorted
- *   - Added missing (+language support)
- */
 using System;
 using DOL.Language;
 using DOL.Events;
 
 namespace DOL.GS.PlayerTitles
 {
-	/// <summary>
-	/// "Battle Enforcer" title granted to everyone who killed 2000+ players with death blow.
-	/// </summary>
 	public class BattleMaster: EventPlayerTitle
 	{
 		/// <summary>
