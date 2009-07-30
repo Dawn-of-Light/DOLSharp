@@ -288,7 +288,7 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// The Keep Level linked to the DBKeep
+		/// The Keep Level linked to the DBKeep (0 - 10)
 		/// </summary>
 		public byte Level
 		{
@@ -299,7 +299,7 @@ namespace DOL.GS.Keeps
 		private byte m_baseLevel = 0;
 
 		/// <summary>
-		/// The Base Keep Level
+		/// The Base Keep Level, typically 50 or the BG cap level
 		/// </summary>
 		public byte BaseLevel
 		{
@@ -660,7 +660,7 @@ namespace DOL.GS.Keeps
 			if (ServerProperties.Properties.GUILDS_CLAIM_LIMIT > 1)
 				player.Guild.SendMessageToGuildMembers("Your guild has currently claimed " + player.Guild.ClaimedKeeps.Count + " keeps of a maximum of " + ServerProperties.Properties.GUILDS_CLAIM_LIMIT, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 
-			ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
+			ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_CLAIM_LEVEL);
 
 			PlayerMgr.BroadcastClaim(this);
 
@@ -905,9 +905,9 @@ namespace DOL.GS.Keeps
 						return 5 * 60 * 1000;
 				}
 			}
-			if (Level<10&&m_guild!=null)
+			if (Level < 10 && m_guild != null)
 				ChangeLevel((byte)(this.Level + 1));
-			else if(Level>1&&m_guild==null)
+			else if (Level > 1 && m_guild == null)
 				ChangeLevel((byte)(this.Level - 1));
 
 			if (this.Level != 10 && this.Level != 1)

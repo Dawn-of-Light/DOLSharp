@@ -316,6 +316,7 @@ namespace DOL.GS.ServerRules
 						{
 							switch (spell.SpellType.ToLower())
 							{
+								case "archery":
 								case "bolt":
 								case "bomber":
 								case "damagespeeddecrease":
