@@ -659,12 +659,6 @@ namespace DOL.GS.ServerProperties
 		public static int GUILDS_CLAIM_LIMIT;
 
         /// <summary>
-        /// The level keeps return to when claimed.
-        /// </summary>
-        [ServerProperty("keeps", "starting_keep_level", "The default level of a keep when captured that it reverts to. Set to 0 for typical new frontiers, though Dinberg would suggest a value of 1!", 0)]
-        public static int STARTING_KEEP_LEVEL;
-
-        /// <summary>
         /// Record news in database
         /// </summary>
         [ServerProperty("record_news", "Record News in database?", true)]
@@ -689,6 +683,18 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("set_difficulty_on_epic_encounters", "Tune encounters taggued <Epic Encounter>. 0 means auto adaptative, others values are % of the initial difficulty (100%=initial difficulty)", 100)]
 		public static int SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
 
+
+		/// <summary>
+		/// The level keeps start at when not claimed
+		/// </summary>
+		[ServerProperty("keeps", "starting_keep_level", "The level an unclaimed keep starts at.", 0)]
+		public static int STARTING_KEEP_LEVEL;
+
+		/// <summary>
+		/// The level keeps start at when claimed
+		/// </summary>
+		[ServerProperty("keeps", "starting_keep_claim_level", "The level a claimed keep starts at.", 0)]
+		public static int STARTING_KEEP_CLAIM_LEVEL;
 
 		/// <summary>
 		/// Define toughness for keep and tower walls: 100 is 100% player's damages inflicted.
@@ -739,10 +745,34 @@ namespace DOL.GS.ServerProperties
 		public static bool LOG_KEEP_CAPTURES;
 
 		/// <summary>
-		/// Multiplier used to add or subtract RP worth based on keep/tower level difference from 50. 
+		/// Base RP value of a keep
 		/// </summary>
-		[ServerProperty("keeps", "keep_rp_multiplier", "Integer multiplier used to increase/decrease RP worth based on keep/tower level difference from 50.", 0)]
+		[ServerProperty("keeps", "keep_rp_base", "Base RP value of a keep", 4500)]
+		public static int KEEP_RP_BASE;
+
+		/// <summary>
+		/// Base RP value of a tower
+		/// </summary>
+		[ServerProperty("keeps", "tower_rp_base", "Base RP value of a tower", 500)]
+		public static int TOWER_RP_BASE;
+
+		/// <summary>
+		/// Multiplier used to add or subtract RP worth based on keep level difference from 50. 
+		/// </summary>
+		[ServerProperty("keeps", "keep_rp_multiplier", "Integer multiplier used to increase/decrease RP worth based on keep level difference from 50.", 50)]
 		public static int KEEP_RP_MULTIPLIER;
+
+		/// <summary>
+		/// Multiplier used to add or subtract RP worth based on tower level difference from 50. 
+		/// </summary>
+		[ServerProperty("keeps", "tower_rp_multiplier", "Integer multiplier used to increase/decrease RP worth based on tower level difference from 50.", 50)]
+		public static int TOWER_RP_MULTIPLIER;
+
+		/// <summary>
+		/// Multiplier used to add or subtract RP worth based on upgrade level > 1
+		/// </summary>
+		[ServerProperty("keeps", "upgrade_multiplier", "Integer multiplier used to increase/decrease RP worth based on upgrade level (0..10)", 100)]
+		public static int UPGRADE_MULTIPLIER;
 
 		/// <summary>
 		/// Multiplier used to determine keep level changes when balancing.  For each keep above or below normal multiply by this.

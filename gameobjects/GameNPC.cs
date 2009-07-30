@@ -3744,16 +3744,6 @@ namespace DOL.GS
 
 				ItemTemplate[] lootTemplates = LootMgr.GetLoot(this, killer);
 
-				// tolakram - calculate a decent Z to drop the loot at.  Trying to avoid loot below ground, unreachable
-
-				int lootZ = Z;
-
-				foreach (GamePlayer killers in GetPlayersInRadius((ushort)(GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE * 2)))
-				{
-					if (killers.Z > lootZ)
-						lootZ = killers.Z;
-				}
-
 				foreach (ItemTemplate lootTemplate in lootTemplates)
 				{
 					if(lootTemplate==null) continue;
@@ -3786,7 +3776,7 @@ namespace DOL.GS
 						loot = ArtifactMgr.CreateScroll(artifactID, pageNumber);
 						loot.X = X;
 						loot.Y = Y;
-						loot.Z = lootZ;
+						loot.Z = Z;
 						loot.Heading = Heading;
 						loot.CurrentRegion = CurrentRegion;
 					}
@@ -3795,7 +3785,7 @@ namespace DOL.GS
 						loot = new GameInventoryItem(new InventoryItem(lootTemplate));
 						loot.X = X;
 						loot.Y = Y;
-						loot.Z = lootZ;
+						loot.Z = Z;
 						loot.Heading = Heading;
 						loot.CurrentRegion = CurrentRegion;
 

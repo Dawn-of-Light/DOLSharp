@@ -1087,17 +1087,12 @@ namespace DOL.GS
 				return false;
 			}
 
+			int zDiff = z1 - z2;
+			dist += ((long)zDiff) * zDiff;
 
-			//SH: Removed Z checks when one of the two Z values is zero (on ground)
-			if ((z1 != 0) && (z2 != 0))
+			if (dist > sqDistance)
 			{
-				int zDiff = z1 - z2;
-				dist += ((long)zDiff) * zDiff;
-
-				if (dist > sqDistance)
-				{
-					return false;
-				}
+				return false;
 			}
 
 			return true;

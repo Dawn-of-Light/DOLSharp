@@ -64,6 +64,18 @@ namespace DOL.AI.Brain
 			return base.ToString() + ", m_aggroLevel=" + m_aggroLevel.ToString() + ", m_aggroMaxRange=" + m_aggroMaxRange.ToString();
 		}
 
+		public override bool Stop()
+		{
+			// tolakram - when the brain stops, due to either death or no players in the vicinity, clear the aggro list
+			if (base.Stop())
+			{
+				ClearAggroList();
+				return true;
+			}
+
+			return false;
+		}
+
 		#region AI
 
 		/// <summary>

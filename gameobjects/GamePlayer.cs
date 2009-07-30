@@ -10343,19 +10343,19 @@ namespace DOL.GS
 				return false;
 			}
 
-			if ((floorObject is GameBoat == false) && !checkRange && !floorObject.IsWithinRadius(this, GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE))
+			if ((floorObject is GameBoat == false) && !checkRange && !floorObject.IsWithinRadius(this, GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE, true))
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.ObjectTooFarAway", floorObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				try
-				{
-					log.Error(string.Format("Pickup error: {0}  object x{1}, y{2}, z{3}, r{4} - player x{5}, y{6}, z{7}, r{8}", 
-											Name,
-											floorObject.X, floorObject.Y, floorObject.Z, floorObject.CurrentRegionID,
-											X, Y, Z, CurrentRegionID));
-				}
-				catch
-				{
-				}
+				//try
+				//{
+				//    log.Error(string.Format("Pickup error: {0}  object x{1}, y{2}, z{3}, r{4} - player x{5}, y{6}, z{7}, r{8}", 
+				//                            Name,
+				//                            floorObject.X, floorObject.Y, floorObject.Z, floorObject.CurrentRegionID,
+				//                            X, Y, Z, CurrentRegionID));
+				//}
+				//catch
+				//{
+				//}
 				return false;
 			}
 

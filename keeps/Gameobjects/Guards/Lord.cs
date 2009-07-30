@@ -32,9 +32,19 @@ namespace DOL.GS.Keeps
 					return 5000;
 				else
 				{
-					int value = (this.Component.Keep.BaseLevel * 4 * (this.Component.Keep.Level + 2)) + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.KEEP_RP_MULTIPLIER);
+					int value = 0;
+
 					if (this.Component.Keep is GameKeep)
-						value *= 4;
+					{
+						value = ServerProperties.Properties.KEEP_RP_BASE + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.KEEP_RP_MULTIPLIER);
+					}
+					else
+					{
+						value = ServerProperties.Properties.TOWER_RP_BASE + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.TOWER_RP_MULTIPLIER);
+					}
+
+					value += (this.Component.Keep.Level * ServerProperties.Properties.UPGRADE_MULTIPLIER);
+
 					return value;
 				}
 			}
