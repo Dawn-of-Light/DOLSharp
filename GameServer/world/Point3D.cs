@@ -132,12 +132,6 @@ namespace DOL.GS
         /// <returns>Distance to point</returns>
         public virtual int GetDistanceTo( IPoint3D point )
         {
-			//SH: Removed Z checks when one of the two Z values is zero (on ground)
-			if ( m_z == 0 || point.Z == 0 )
-			{
-				return base.GetDistance( point );
-			}
-
 			double dx = (double)this.X - point.X;
             double dy = (double)this.Y - point.Y;
             double dz = (double)this.Z - point.Z;
@@ -153,12 +147,6 @@ namespace DOL.GS
         /// <returns>Adjusted distance to point</returns>
         public virtual int GetDistanceTo( IPoint3D point, double zfactor )
         {
-			//SH: Removed Z checks when one of the two Z values is zero (on ground)
-			if ( m_z == 0 || point.Z == 0 )
-			{
-				return base.GetDistance( point );
-			}
-
             double dx = (double)this.X - point.X;
             double dy = (double)this.Y - point.Y;
             double dz = (double)( ( this.Z - point.Z ) * zfactor );
@@ -172,11 +160,24 @@ namespace DOL.GS
         /// <param name="point">Target point</param>
         /// <param name="radius">Radius</param>
         /// <returns>True if the point is within the radius, otherwise false</returns>
-        public bool IsWithinRadius( IPoint3D point, int radius )
+		public bool IsWithinRadius(IPoint3D point, int radius)
+		{
+			return IsWithinRadius(point, radius, false);
+		}
+
+
+        /// <summary>
+        /// Determine if another point is within a given radius, optionally ignoring Z values
+        /// </summary>
+        /// <param name="point">Target point</param>
+        /// <param name="radius">Radius</param>
+		/// <param name="ignoreZ">ignore Z</param>
+		/// <returns>True if the point is within the radius, otherwise false</returns>
+        public bool IsWithinRadius( IPoint3D point, int radius, bool ignoreZ )
         {
 			if ( radius > ushort.MaxValue )
 			{
-				return GetDistanceTo( point ) <= radius;
+				return GetDistanceTo(point, ignoreZ ? 0.0 : 1.0 ) <= radius;
 			}
 
 			uint rsquared = (uint)radius * (uint)radius;
@@ -200,13 +201,16 @@ namespace DOL.GS
 			}
 
 			//SH: Removed Z checks when one of the two Z values is zero (on ground)
-			if ( m_z != 0 && point.Z != 0 )
+			// Tolakram - again, no ... 0 is not the ground, we really don't know where the ground is. 
+			// Leaving this comment so the mistake doesn't happen again :)
+
+			if (!ignoreZ)
 			{
 				int dz = this.Z - point.Z;
 
-				dist += ( (long)dz ) * dz;
+				dist += ((long)dz) * dz;
 
-				if ( dist > rsquared )
+				if (dist > rsquared)
 				{
 					return false;
 				}

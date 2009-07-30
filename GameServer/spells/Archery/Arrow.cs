@@ -40,11 +40,11 @@ namespace DOL.GS.Spells
 		public override void FinishSpellCast(GameLiving target)
 		{
             m_caster.Endurance -= CalculateEnduranceCost();
-			if ((target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent) && Spell.SpellType != "SiegeArrow")
-			{
-				MessageToCaster(String.Format("Your spell has no effect on the {0}!", target.Name), eChatType.CT_SpellResisted);
-				return;
-			}
+			//if ((target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent) && Spell.SpellType != "SiegeArrow")
+			//{
+			//    MessageToCaster(String.Format("Your spell has no effect on the {0}!", target.Name), eChatType.CT_SpellResisted);
+			//    return;
+			//}
 			base.FinishSpellCast(target);
 		}
 

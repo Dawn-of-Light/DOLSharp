@@ -1274,9 +1274,6 @@ namespace DOL.GS
         {
             long xdiff = (long)x1 - x2;
             long ydiff = (long)y1 - y2;
-            //SH: Removed Z checks when one of the two Z values is zero(on ground)
-            if ( z1 == 0 || z2 == 0 )
-                return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff );
 
             long zdiff = (long)z1 - z2;
             return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff + zdiff * zdiff );
@@ -1298,9 +1295,6 @@ namespace DOL.GS
         {
             long xdiff = (long)x1 - x2;
             long ydiff = (long)y1 - y2;
-            //SH: Removed Z checks when one of the two Z values is zero(on ground)
-            if ( z1 == 0 || z2 == 0 )
-                return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff );
 
             long zdiff = (long)( ( z1 - z2 ) * zfactor );
             return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff + zdiff * zdiff );
@@ -1353,9 +1347,6 @@ namespace DOL.GS
 		{
 			long xdiff = (long)x1 - x2;
 			long ydiff = (long)y1 - y2;
-			//SH: Removed Z checks when one of the two Z values is zero(on ground)
-			if (z1 == 0 || z2 == 0)
-				return (xdiff * xdiff + ydiff * ydiff <= squareRadius);
 			long zdiff = (long)z1 - z2;
 			return (xdiff * xdiff + ydiff * ydiff + zdiff * zdiff <= squareRadius);
 		}
