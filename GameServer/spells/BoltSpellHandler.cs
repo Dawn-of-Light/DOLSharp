@@ -266,8 +266,12 @@ namespace DOL.GS.Spells
 				}
 
 				// apply total damage cap	
-				ad.UncappedDamage = ad.Damage;
-				ad.Damage = (int)Math.Min(ad.Damage, m_handler.Spell.Damage * 3);
+				// tolakram - do not apply to siege shot (how aweful is this?)
+				if (m_handler is SiegeArrow == false)
+				{
+					ad.UncappedDamage = ad.Damage;
+					ad.Damage = (int)Math.Min(ad.Damage, m_handler.Spell.Damage * 3);
+				}
 
 				if(caster is GamePlayer)
 					ad.Damage = (int)(ad.Damage*((GamePlayer)caster).Effectiveness);

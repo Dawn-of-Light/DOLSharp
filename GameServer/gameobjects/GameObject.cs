@@ -278,16 +278,29 @@ namespace DOL.GS
         /// <param name="obj">Target object</param>
         /// <param name="radius">Radius</param>
         /// <returns>False if the object is null, in a different region, or outside the radius; otherwise true</returns>
-        public bool IsWithinRadius( GameObject obj, int radius )
+        public bool IsWithinRadius( GameObject obj, int radius)
         {
-            if ( obj == null )
-                return false;
-
-            if ( this.CurrentRegionID != obj.CurrentRegionID )
-                return false;
-
-			return base.IsWithinRadius( obj, radius );
+			return IsWithinRadius(obj, radius, false);
 		}
+
+		/// <summary>
+		/// Checks if an object is within a given radius, optionally ignoring z values
+		/// </summary>
+		/// <param name="obj">Target object</param>
+		/// <param name="radius">Radius</param>
+		/// <param name="ignoreZ">Ignore Z values</param>
+		/// <returns>False if the object is null, in a different region, or outside the radius; otherwise true</returns>
+		public bool IsWithinRadius(GameObject obj, int radius, bool ignoreZ)
+		{
+			if (obj == null)
+				return false;
+
+			if (this.CurrentRegionID != obj.CurrentRegionID)
+				return false;
+
+			return base.IsWithinRadius(obj, radius);
+		}
+
 
 		/// <summary>
 		/// determines wether a target object is front

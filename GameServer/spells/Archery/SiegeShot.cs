@@ -16,9 +16,13 @@ namespace DOL.GS.Spells
         {
             if (Caster != null && Caster is GamePlayer && Caster.AttackWeapon != null && (Caster.AttackWeapon.Object_Type == 15 || Caster.AttackWeapon.Object_Type == 18 || Caster.AttackWeapon.Object_Type == 9)) 
 			{
-                if (!(selectedTarget is GameKeepComponent || selectedTarget is Keeps.GameKeepDoor)) { MessageToCaster("You must have a Keep Component targeted for this spell!", eChatType.CT_Spell); return false; }
-				if (!Caster.IsWithinRadius( selectedTarget, Spell.Range )) { MessageToCaster("That target is too far away!", eChatType.CT_Spell); return false; }
-				return true;
+                if (!(selectedTarget is GameKeepComponent || selectedTarget is Keeps.GameKeepDoor)) 
+				{ 
+					MessageToCaster("You must have a Keep Component targeted for this spell!", eChatType.CT_Spell); 
+					return false; 
+				}
+				return base.CheckBeginCast(selectedTarget);
+				//if (!Caster.IsWithinRadius( selectedTarget, Spell.Range )) { MessageToCaster("That target is too far away!", eChatType.CT_Spell); return false; }
             } 
 			return false;
         }
@@ -37,9 +41,17 @@ namespace DOL.GS.Spells
         public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
 		{
             AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
-            ad.Damage *= 10;
-            return ad;
+            ad.Damage *= 50;  // actual value unknown
+			return ad;
         }
+
+		public override int CalculateToHitChance(GameLiving target)
+		{
+			if ((target is GameKeepComponent || target is Keeps.GameKeepDoor))
+				return 100;
+
+			return 0;
+		}
 
         public override int PowerCost(GameLiving target) { return 0; }
 
