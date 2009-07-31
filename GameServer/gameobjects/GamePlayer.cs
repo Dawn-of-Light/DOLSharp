@@ -550,8 +550,23 @@ namespace DOL.GS
 			if (Group != null)
 				Group.UpdateMember(this, false, false);
 
+			CheckIfNearEnemyKeepAndAddToRvRLinkDeathListIfNecessary();
+
 			//Notify our event handlers (if any)
 			Notify(GamePlayerEvent.Linkdeath, this);
+		}
+
+		private void CheckIfNearEnemyKeepAndAddToRvRLinkDeathListIfNecessary()
+		{
+			AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(this.CurrentRegionID, this, WorldMgr.VISIBILITY_DISTANCE);
+			if(keep != null && this.Client.Account.PrivLevel == 1 && KeepMgr.IsEnemy(keep, this))
+			{
+				if(WorldMgr.RvRLinkDeadPlayers.ContainsKey(this.m_InternalID))
+				{
+					WorldMgr.RvRLinkDeadPlayers.Remove(this.m_InternalID);
+				}
+				WorldMgr.RvRLinkDeadPlayers.Add(this.m_InternalID, DateTime.Now);
+			}
 		}
 
 		/// <summary>
