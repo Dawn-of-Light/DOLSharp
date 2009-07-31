@@ -553,18 +553,22 @@ namespace DOL.GS.PacketHandler
 		public override void SendQuestUpdate(AbstractQuest quest)
 		{
 			int questIndex = 1;
-			lock (m_gameClient.Player.QuestList)
+			// add check for null due to LD
+			if (m_gameClient != null && m_gameClient.Player != null && m_gameClient.Player.QuestList != null)
 			{
-				foreach (AbstractQuest q in m_gameClient.Player.QuestList)
+				lock (m_gameClient.Player.QuestList)
 				{
-					if (q == quest)
+					foreach (AbstractQuest q in m_gameClient.Player.QuestList)
 					{
-						SendQuestPacket(q, questIndex);
-						break;
-					}
+						if (q == quest)
+						{
+							SendQuestPacket(q, questIndex);
+							break;
+						}
 
-					if (q.Step != -1)
-						questIndex++;
+						if (q.Step != -1)
+							questIndex++;
+					}
 				}
 			}
 		}
