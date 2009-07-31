@@ -528,9 +528,6 @@ namespace DOL.AI.Brain
 			{
 				m_aggroTable.Remove(living);
 			}
-			//This makes no sense to put here - this function just removes something from a list.
-			//It shouldn't make the thing start attacking something.
-			//AttackMostWanted();
 		}
 
 		/// <summary>
@@ -723,7 +720,7 @@ namespace DOL.AI.Brain
 					ClearAggroList();
 					return;
 				}
-				else if (e == GameNPCEvent.FollowLostTarget)
+				else if (e == GameNPCEvent.FollowLostTarget) // this means we lost the target
 				{
 					FollowLostTargetEventArgs eArgs = args as FollowLostTargetEventArgs;
 					if (eArgs == null) return;
