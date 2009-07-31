@@ -22,9 +22,6 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-    /// <summary>
-    /// 
-    /// </summary>
     [SpellHandlerAttribute("Lifedrain")]
     public class LifedrainSpellHandler : DirectDamageSpellHandler
     {

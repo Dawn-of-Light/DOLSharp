@@ -29,19 +29,17 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler to summon a bonedancer pet.
-	/// </summary>
-	/// <author>IST</author>
 	[SpellHandler("SummonSpiritFighter")]
 	public class SummonSpiritFighter : SummonSpellHandler
 	{
 		public SummonSpiritFighter(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line) { }
+			: base(caster, spell, line)
+		{
+		}
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null)
+			if(Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null)
 			{
 				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
 				return false;

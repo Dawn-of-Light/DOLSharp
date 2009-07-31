@@ -904,6 +904,8 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("Custom", "irc_allowed_sendlist", "Allow players to send/receive irc when in RvR zone", "")]
 		public static string IRC_ALLOWED_SENDLIST;
 
+		[ServerProperty("RvRLinkDeathRelogGracePeriod","The Grace Period in minutes, to allow to relog near enemy structure after a link death.","20")]
+		public static string RVR_LINK_DEATH_RELOG_GRACE_PERIOD;
 
 
 		/// <summary>
