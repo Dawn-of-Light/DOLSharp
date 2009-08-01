@@ -794,6 +794,13 @@ namespace DOL.GS.Keeps
 
 			KeepGuildMgr.SendLevelChangeMessage(this);
 			ResetPlayersOfKeep();
+
+			foreach (GameKeepGuard guard in this.Guards.Values)
+			{
+				if (guard.PatrolGroup == null)
+					guard.FixPosition();
+			}
+
 			this.SaveIntoDatabase();
 		}
 
@@ -803,16 +810,15 @@ namespace DOL.GS.Keeps
 		/// <param name="targetLevel">The target level</param>
 		public void StartChangeLevel(byte targetLevel)
 		{
-			//don't allow upgrading for now
-			return;
-			/* un-comment this to work on allowing upgrading
-			if (this.Level == targetLevel)
-				return;
-			//this.TargetLevel = targetLevel;
-			StartChangeLevelTimer();
-			if (this.Guild != null)
-				KeepGuildMgr.SendChangeLevelTimeMessage(this);
-			 */
+			if (ServerProperties.Properties.ENABLE_KEEP_UPGRADE_TIMER)
+			{
+				if (this.Level == targetLevel)
+					return;
+				//this.TargetLevel = targetLevel;
+				StartChangeLevelTimer();
+				if (this.Guild != null)
+					KeepGuildMgr.SendChangeLevelTimeMessage(this);
+			}
 		}
 
 		/// <summary>

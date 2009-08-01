@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
@@ -125,12 +126,15 @@ namespace DOL.GS.Keeps
 				if (component.Keep.Guild != null)
 				{
 					ChangeGuild();
+					Z += 1000;
 					this.AddToWorld();
 				}
 			}
 			else
 			{
 				ChangeRealm();
+				Z += 1000;	// this works around an issue where all banners are at keep level instead of on top
+							// with a z value > height of the keep the banners show correctly - tolakram
 				this.AddToWorld();
 			}
 		}

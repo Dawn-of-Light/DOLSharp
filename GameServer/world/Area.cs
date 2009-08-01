@@ -144,6 +144,16 @@ namespace DOL.GS
 				if (m_ydiff < 0 || m_ydiff > Height)
 					return false;
 
+				/*
+				//SH: Removed Z checks when one of the two Z values is zero(on ground)
+				if (Z != 0 && spotZ != 0)
+				{
+					long m_zdiff = (long) spotZ - Z;
+					if (m_zdiff> Radius)
+						return false;
+				}
+				*/
+
 				return true;
 			}
 
@@ -277,7 +287,8 @@ namespace DOL.GS
 				// check if spot is in circle
 				m_distSq = m_xdiff * m_xdiff + m_ydiff * m_ydiff;
 
-				if (checkZ)
+				//SH: Removed Z checks when one of the two Z values is zero(on ground)
+				if (Z != 0 && z != 0 && checkZ)
 				{
 					long m_zdiff = (long)z - Z;
 					m_distSq += m_zdiff * m_zdiff;

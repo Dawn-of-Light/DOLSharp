@@ -17,7 +17,7 @@ namespace DOL.GS.Quests
 			Keep = 2,
 		}
 
-		public CaptureMission(eCaptureType type, object owner)
+		public CaptureMission(eCaptureType type, object owner, string hint)
 			: base(owner)
 		{
 			eRealm realm = eRealm.None;
@@ -69,7 +69,22 @@ namespace DOL.GS.Quests
 			}
 
 			if (list.Count > 0)
-				m_keep = list[Util.Random(list.Count - 1)] as AbstractGameKeep;
+			{
+				if (hint != "")
+				{
+					foreach (AbstractGameKeep keep in list)
+					{
+						if (keep.Name.ToLower().Contains(hint))
+						{
+							m_keep = keep;
+							break;
+						}
+					}
+				}
+
+				if (m_keep == null)
+					m_keep = list[Util.Random(list.Count - 1)] as AbstractGameKeep;
+			}
 
 			GameEventMgr.AddHandler(KeepEvent.KeepTaken, new DOLEventHandler(Notify));
 		}
@@ -95,7 +110,9 @@ namespace DOL.GS.Quests
 				foreach (AbstractArea area in testPlayer.CurrentAreas)
 				{
 					if (area is KeepArea && (area as KeepArea).Keep == m_keep)
+					{
 						FinishMission();
+					}
 				}
 			}
 

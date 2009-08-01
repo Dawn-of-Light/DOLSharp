@@ -156,7 +156,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)keep.KeepID);
 			pak.WriteByte(flag);//0-Info,1-KeepTargetLevel,2-KeepLordType,4-Release
 			pak.WriteByte((byte)keep.KeepType);//Keep Lord Type: 1-Melee,2-Magic,4-Stealth
-			pak.WriteByte(0x0A);//target level not suported for moment
+			pak.WriteByte((byte)ServerProperties.Properties.MAX_KEEP_LEVEL);
 			pak.WriteByte((byte)keep.Level);
 			SendTCP(pak);
 		}
