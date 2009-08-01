@@ -51,187 +51,198 @@ namespace DOL.GS.Keeps
 				return false;
 			}
 
-			switch (str.ToLower())
+			if (str.ToLower().StartsWith("tower capture"))
 			{
-				case "realm":
-					{
-						if (Component == null)
-							SayTo(player, "We all must do our part. How would you like to assist the cause? I have [personal missions], [group missions], and [guild missions] available.");
-						else SayTo(player, "Excellent! We all must do our part. How would you like to assist the cause? I have [personal missions] and [group missions] available."); 
-						break;
-					}
-				case "personal missions":
-					{
-						SayTo(player, "We have several personal missions from which to choose. Would you like to claim the bounty on some [realm guards], or claim the bounties on some [enemies of the realm]? Perhaps a frontal assault isn't your style? If so, we also have missions that require you to [reconnoiter] an enemy realm, or elimate the thread of an impending [assassination]?");
-						break;
-					}
-				case "realm guards":
-					{
-						if (player.Mission != null)
-							player.Mission.ExpireMission();
-						player.Mission = new KillMission(typeof(GameKeepGuard), 15, "enemy realm guards", player);
-						break;
-					}
-				case "enemies of the realm":
-					{
-						if (player.Mission != null)
-							player.Mission.ExpireMission();
-						player.Mission = new KillMission(typeof(GamePlayer), 5, "enemy players", player);
-						break;
-					}
-				case "reconnoiter":
-					{
-						if (player.Mission != null)
-							player.Mission.ExpireMission();
-						player.Mission = new ScoutMission(player);
-						break;
-					}
-				case "assassination":
-					{
-						SayTo(player, "This type of mission is not yet implemented");
-						break;
-					}
-				case "group missions":
-					{
-						if (player.Group == null)
-						{
-							SayTo(player, "You are not in a group!");
-							break;
-						}
+				if (player.Group == null)
+				{
+					SayTo(player, "You are not in a group!");
+				}
+				else if (player.Group.Leader != player)
+				{
+					SayTo(player, "You are not the leader of your group!");
+				}
+				else
+				{
+					if (player.Group.Mission != null)
+						player.Group.Mission.ExpireMission();
 
-						if (player.Group.Leader != player)
-						{
-							SayTo(player, "You are not the leader of your group!");
-							break;
-						}
+					player.Group.Mission = new CaptureMission(CaptureMission.eCaptureType.Tower, player.Group, str.ToLower().Replace("tower capture", "").Trim());
+				}
+			}
+			else if (str.ToLower().StartsWith("keep capture"))
+			{
+				if (player.Group == null)
+				{
+					SayTo(player, "You are not in a group!");
+				}
+				else if (player.Group.Leader != player)
+				{
+					SayTo(player, "You are not the leader of your group!");
+				}
+				else
+				{
+					if (player.Group.Mission != null)
+						player.Group.Mission.ExpireMission();
 
-						SayTo(player, "Would your group like to help with a [tower capture], a [keep capture], or a [caravan] raid? Should those choices fail to appeal to you, I also have bounty missions on [enemy guards] and [realm enemies] if that is your preference.");
-						break;
-					}
-				case "tower raize":
-					{
-						if (player.Group == null)
+					player.Group.Mission = new CaptureMission(CaptureMission.eCaptureType.Keep, player.Group, str.ToLower().Replace("keep capture", "").Trim());
+				}
+			}
+			else
+			{
+				switch (str.ToLower())
+				{
+					case "realm":
 						{
-							SayTo(player, "You are not in a group!");
+							if (Component == null)
+								SayTo(player, "We all must do our part. How would you like to assist the cause? I have [personal missions], [group missions], and [guild missions] available.");
+							else SayTo(player, "Excellent! We all must do our part. How would you like to assist the cause? I have [personal missions] and [group missions] available.");
 							break;
 						}
+					case "personal missions":
+						{
+							SayTo(player, "We have several personal missions from which to choose. Would you like to claim the bounty on some [realm guards], or claim the bounties on some [enemies of the realm]? Perhaps a frontal assault isn't your style? If so, we also have missions that require you to [reconnoiter] an enemy realm, or elimate the thread of an impending [assassination]?");
+							break;
+						}
+					case "realm guards":
+						{
+							if (player.Mission != null)
+								player.Mission.ExpireMission();
+							player.Mission = new KillMission(typeof(GameKeepGuard), 15, "enemy realm guards", player);
+							break;
+						}
+					case "enemies of the realm":
+						{
+							if (player.Mission != null)
+								player.Mission.ExpireMission();
+							player.Mission = new KillMission(typeof(GamePlayer), 5, "enemy players", player);
+							break;
+						}
+					case "reconnoiter":
+						{
+							if (player.Mission != null)
+								player.Mission.ExpireMission();
+							player.Mission = new ScoutMission(player);
+							break;
+						}
+					case "assassination":
+						{
+							SayTo(player, "This type of mission is not yet implemented");
+							break;
+						}
+					case "group missions":
+						{
+							if (player.Group == null)
+							{
+								SayTo(player, "You are not in a group!");
+								break;
+							}
 
-						if (player.Group.Leader != player)
-						{
-							SayTo(player, "You are not the leader of your group!");
-							break;
-						}
-						player.Group.Mission = new RaizeMission(player.Group);
-						break;
-					}
-				case "tower capture":
-					{
-						if (player.Group == null)
-						{
-							SayTo(player, "You are not in a group!");
-							break;
-						}
+							if (player.Group.Leader != player)
+							{
+								SayTo(player, "You are not the leader of your group!");
+								break;
+							}
 
-						if (player.Group.Leader != player)
-						{
-							SayTo(player, "You are not the leader of your group!");
+							SayTo(player, "Would your group like to help with a [tower capture], a [keep capture], or a [caravan] raid? Should those choices fail to appeal to you, I also have bounty missions on [enemy guards] and [realm enemies] if that is your preference.");
 							break;
 						}
-						if (player.Group.Mission != null)
-							player.Group.Mission.ExpireMission();
-						player.Group.Mission = new CaptureMission(CaptureMission.eCaptureType.Tower, player.Group);
-						break;
-					}
-				case "keep capture":
-					{
-						if (player.Group == null)
+					case "tower raize":
 						{
-							SayTo(player, "You are not in a group!");
-							break;
-						}
+							if (player.Group == null)
+							{
+								SayTo(player, "You are not in a group!");
+								break;
+							}
 
-						if (player.Group.Leader != player)
-						{
-							SayTo(player, "You are not the leader of your group!");
+							if (player.Group.Leader != player)
+							{
+								SayTo(player, "You are not the leader of your group!");
+								break;
+							}
+							player.Group.Mission = new RaizeMission(player.Group);
 							break;
 						}
-						if (player.Group.Mission != null)
-							player.Group.Mission.ExpireMission();
-						player.Group.Mission = new CaptureMission(CaptureMission.eCaptureType.Keep, player.Group);
-						break;
-					}
-				case "caravan":
-					{
-						if (player.Group == null)
+					case "tower capture":
 						{
-							SayTo(player, "You are not in a group!");
 							break;
 						}
+					case "keep capture":
+						{
+							break;
+						}
+					case "caravan":
+						{
+							if (player.Group == null)
+							{
+								SayTo(player, "You are not in a group!");
+								break;
+							}
 
-						if (player.Group.Leader != player)
-						{
-							SayTo(player, "You are not the leader of your group!");
+							if (player.Group.Leader != player)
+							{
+								SayTo(player, "You are not the leader of your group!");
+								break;
+							}
+							SayTo(player, "This type of mission is not yet implemented");
 							break;
 						}
-						SayTo(player, "This type of mission is not yet implemented");
-						break;
-					}
-				case "enemy guards":
-					{
-						if (player.Group == null)
+					case "enemy guards":
 						{
-							SayTo(player, "You are not in a group!");
-							break;
-						}
+							if (player.Group == null)
+							{
+								SayTo(player, "You are not in a group!");
+								break;
+							}
 
-						if (player.Group.Leader != player)
-						{
-							SayTo(player, "You are not the leader of your group!");
+							if (player.Group.Leader != player)
+							{
+								SayTo(player, "You are not the leader of your group!");
+								break;
+							}
+							if (player.Group.Mission != null)
+								player.Group.Mission.ExpireMission();
+							player.Group.Mission = new KillMission(typeof(GameKeepGuard), 25, "enemy realm guards", player.Group);
 							break;
 						}
-						if (player.Group.Mission != null)
-							player.Group.Mission.ExpireMission();
-						player.Group.Mission = new KillMission(typeof(GameKeepGuard), 25, "enemy realm guards", player.Group);
-						break;
-					}
-				case "realm enemies":
-					{
-						if (player.Group == null)
+					case "realm enemies":
 						{
-							SayTo(player, "You are not in a group!");
-							break;
-						}
+							if (player.Group == null)
+							{
+								SayTo(player, "You are not in a group!");
+								break;
+							}
 
-						if (player.Group.Leader != player)
-						{
-							SayTo(player, "You are not the leader of your group!");
+							if (player.Group.Leader != player)
+							{
+								SayTo(player, "You are not the leader of your group!");
+								break;
+							}
+							if (player.Group.Mission != null)
+								player.Group.Mission.ExpireMission();
+							player.Group.Mission = new KillMission(typeof(GamePlayer), 15, "enemy players", player.Group);
 							break;
 						}
-						if (player.Group.Mission != null)
-							player.Group.Mission.ExpireMission();
-						player.Group.Mission = new KillMission(typeof(GamePlayer), 15, "enemy players", player.Group);
-						break;
-					}
-				case "guild missions":
-					{
-						if (Component != null)
-							break;
-						if (player.Guild == null)
+					case "guild missions":
 						{
-							SayTo(player, "You have no guild!");
-							return false;
-						}
+							if (Component != null)
+								break;
+							if (player.Guild == null)
+							{
+								SayTo(player, "You have no guild!");
+								return false;
+							}
 
-						if (!player.Guild.GotAccess(player, eGuildRank.OcSpeak))
-						{
-							SayTo(player, "You are not high enough rank in your guild!");
-							return false;
+							if (!player.Guild.GotAccess(player, eGuildRank.OcSpeak))
+							{
+								SayTo(player, "You are not high enough rank in your guild!");
+								return false;
+							}
+							//TODO: implement guild missions
+							SayTo(player, "This type of mission is not yet implemented");
+							SayTo(player, "Outstanding, we can always use help from organized guilds. Would you like to press the attack on the realm of [Albion] or the realm of [Hibernia].");
+							break;
 						}
-						//TODO: implement guild missions
-						SayTo(player, "This type of mission is not yet implemented");
-						SayTo(player, "Outstanding, we can always use help from organized guilds. Would you like to press the attack on the realm of [Albion] or the realm of [Hibernia].");
-						break;
-					}
+				}
 			}
 
 			if (player.Mission != null)

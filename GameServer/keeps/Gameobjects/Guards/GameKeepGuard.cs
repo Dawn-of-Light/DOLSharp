@@ -540,12 +540,26 @@ namespace DOL.GS.Keeps
 				CurrentWayPoint = PatrolGroup.PatrolPath;
 				MoveOnPath(Patrol.PATROL_SPEED);
 			}
+			else
+			{
+				FixPosition();
+			}
 
-			// execute a turn to in order to force guards to the correct Z on the client
-			TurnTo(100);
-			TurnTo(500);
-			TurnTo(SpawnHeading);
 			return true;
+		}
+
+		/// <summary>
+		/// Force the guard to update it's position in the keep
+		/// </summary>
+		public virtual void FixPosition()
+		{
+			//if (this is GuardLord == false)
+			//{
+			//    int oldZ = Z;
+			//    Z += 500;
+			//    BroadcastUpdate();
+			//    Z = oldZ;
+			//}
 		}
 
 		/// <summary>
@@ -726,6 +740,8 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void ChangeGuild()
 		{
+			ClothingMgr.EquipGuard(this);
+
 			Guild guild = this.Component.Keep.Guild;
 			string guildname = "";
 			if (guild != null)
@@ -745,7 +761,13 @@ namespace DOL.GS.Keeps
 
 			InventoryItem cloak = this.Inventory.GetItem(eInventorySlot.Cloak);
 			if (cloak != null)
+			{
 				cloak.Emblem = emblem;
+
+				if (cloak.Emblem != 0)
+					cloak.Model = 558; // change to a model that looks ok with an emblem
+
+			}
 			this.UpdateNPCEquipmentAppearance();
 		}
 
