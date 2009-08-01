@@ -604,6 +604,9 @@ namespace DOL.GS.Keeps
 			if (cloak != null)
 			{
 				cloak.Emblem = emblem;
+
+				if (cloak.Emblem != 0)
+					cloak.Model = 558; // change to a model that looks ok with an emblem
 			}
 			InventoryItem shield = guard.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 			if (shield != null)
