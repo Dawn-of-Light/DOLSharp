@@ -687,14 +687,26 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// The level keeps start at when not claimed
 		/// </summary>
-		[ServerProperty("keeps", "starting_keep_level", "The level an unclaimed keep starts at.", 0)]
+		[ServerProperty("keeps", "starting_keep_level", "The level an unclaimed keep starts at.", 1)]
 		public static int STARTING_KEEP_LEVEL;
 
 		/// <summary>
 		/// The level keeps start at when claimed
 		/// </summary>
-		[ServerProperty("keeps", "starting_keep_claim_level", "The level a claimed keep starts at.", 0)]
+		[ServerProperty("keeps", "starting_keep_claim_level", "The level a claimed keep starts at.", 1)]
 		public static int STARTING_KEEP_CLAIM_LEVEL;
+
+		/// <summary>
+		/// The maximum keep level
+		/// </summary>
+		[ServerProperty("keeps", "max_keep_level", "The maximum keep level.", 10)]
+		public static int MAX_KEEP_LEVEL;
+
+		/// <summary>
+		/// Enable the keep upgrade timer to slowly raise keep levels
+		/// </summary>
+		[ServerProperty("keeps", "enable_keep_upgrade_timer", "Enable the keep upgrade timer to slowly raise keep levels?", false)]
+		public static bool ENABLE_KEEP_UPGRADE_TIMER;
 
 		/// <summary>
 		/// Define toughness for keep and tower walls: 100 is 100% player's damages inflicted.

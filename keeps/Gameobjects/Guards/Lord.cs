@@ -131,14 +131,35 @@ namespace DOL.GS.Keeps
 			else 
 				distance = 300;
 
-            if ( !this.IsWithinRadius( source, distance ) )
+			// check to make sure pets and pet casters are in range
+			GamePlayer attacker = null;
+			if (source is GamePlayer)
 			{
-				if (source is GamePlayer)
-					(source as GamePlayer).Out.SendMessage(this.Name + " is immune to damage from this range", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				attacker = source as GamePlayer;
+			}
+			else if (source is GameNPC && (source as GameNPC).Brain != null && (source as GameNPC).Brain is IControlledBrain && (((source as GameNPC).Brain as IControlledBrain).Owner) is GamePlayer)
+			{
+				attacker = ((source as GameNPC).Brain as IControlledBrain).Owner as GamePlayer;
+			}
+
+			if ((attacker != null && IsWithinRadius(attacker, distance) == false) || IsWithinRadius(source, distance) == false)
+			{
+				if (attacker != null)
+					attacker.Out.SendMessage(this.Name + " is immune to damage from this range", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 		}
+
+		public override void OnAttackedByEnemy(AttackData ad)
+		{
+			if (this.Component != null && this.Component.Keep != null)
+				this.Component.Keep.LastAttackedByEnemyTick = CurrentRegion.Time; // light up the keep/tower
+
+			base.OnAttackedByEnemy(ad);
+		}
+
         public override bool WhisperReceive(GameLiving source, string str)
         {
             if (!base.WhisperReceive(source, str)) return false;
