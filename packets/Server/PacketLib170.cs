@@ -170,7 +170,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(component.HealthPercent);
 
 			pak.WriteByte(component.Keep.EffectiveLevel(component.Keep.Level));
-			pak.WriteByte(component.Keep.EffectiveLevel(0x0A));
+			pak.WriteByte(component.Keep.EffectiveLevel((byte)ServerProperties.Properties.MAX_KEEP_LEVEL));
 			//guild
 			pak.WriteByte((byte)component.Keep.KeepType);
 

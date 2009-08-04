@@ -170,24 +170,28 @@ namespace DOL.GS.Spells
 			if(Caster is GamePlayer&&Caster.IsStealthed)
 				(Caster as GamePlayer).Stealth(false);
 
-            if (Spell.Target.ToLower() == "area")
-                foreach (GameLiving npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius ))
-                    if (npc.Realm == 0 || Caster.Realm == 0)
-                    {
-				        npc.LastAttackedByEnemyTickPvE = npc.CurrentRegion.Time;
-                        Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
-			        }
-			else
-			    if (target.Realm == 0 || Caster.Realm == 0)
-			    {
-				    target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
-                    Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
-			    }
-			    else
-			    {
-				    target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
-                    Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
-			    }
+			if (Spell.Target.ToLower() == "area")
+			{
+				foreach (GameLiving npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+					if (npc.Realm == 0 || Caster.Realm == 0)
+					{
+						npc.LastAttackedByEnemyTickPvE = npc.CurrentRegion.Time;
+						Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+					}
+			}
+			else if (target != null)
+			{
+				if (target.Realm == 0 || Caster.Realm == 0)
+				{
+					target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
+					Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+				}
+				else
+				{
+					target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
+					Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+				}
+			}
 			base.FinishSpellCast(target);
 		}
 

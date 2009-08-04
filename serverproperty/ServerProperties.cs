@@ -685,21 +685,21 @@ namespace DOL.GS.ServerProperties
 
 
 		/// <summary>
-		/// The level keeps start at when not claimed
+		/// The level keeps start at when not claimed - please note only levels 4 and 5 are supported correctly at this time
 		/// </summary>
-		[ServerProperty("keeps", "starting_keep_level", "The level an unclaimed keep starts at.", 1)]
+		[ServerProperty("keeps", "starting_keep_level", "The level an unclaimed keep starts at.", 4)]
 		public static int STARTING_KEEP_LEVEL;
 
 		/// <summary>
-		/// The level keeps start at when claimed
+		/// The level keeps start at when claimed - please note only levels 4 and 5 are supported correctly at this time
 		/// </summary>
-		[ServerProperty("keeps", "starting_keep_claim_level", "The level a claimed keep starts at.", 1)]
+		[ServerProperty("keeps", "starting_keep_claim_level", "The level a claimed keep starts at.", 5)]
 		public static int STARTING_KEEP_CLAIM_LEVEL;
 
 		/// <summary>
-		/// The maximum keep level
+		/// The maximum keep level - please note only levels 4 and 5 are supported correctly at this time
 		/// </summary>
-		[ServerProperty("keeps", "max_keep_level", "The maximum keep level.", 10)]
+		[ServerProperty("keeps", "max_keep_level", "The maximum keep level.", 5)]
 		public static int MAX_KEEP_LEVEL;
 
 		/// <summary>
@@ -906,6 +906,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("XP_HardCap_Percent", "Hardcap XP a player can earn after all other adjustments are applied. Given in percent of their level. Default is 500%", 500)]
 		public static int XP_HARDCAP_PERCENT;
+
+		/// <summary>
+		/// Enable Debug mode - used to alter some features during server startup to make debugging easier
+		/// </summary>
+		[ServerProperty("debug", "enable_debug", "Enable Debug mode? Used to alter some features during server startup to make debugging easier", false)]
+		public static readonly bool ENABLE_DEBUG;
 
 
 		// custom properties below this

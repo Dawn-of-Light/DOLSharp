@@ -124,6 +124,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (Properties.STARTING_MSG != "")
 						player.Out.SendMessage(Properties.STARTING_MSG, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
+
+				if (ServerProperties.Properties.ENABLE_DEBUG)
+					player.Out.SendMessage("Server is running in DEBUG mode!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
                 player.Out.SendPlayerFreeLevelUpdate();
 				if (player.FreeLevelState == 2)
 				{

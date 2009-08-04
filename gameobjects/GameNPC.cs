@@ -2222,6 +2222,17 @@ namespace DOL.GS
 			}
 		}
 
+		protected bool m_canAcceptUndroppableItems = false;
+
+		/// <summary>
+		/// Can this NPC accept items that aren't droppable?  Use for repair / swap / fixer type npc's
+		/// </summary>
+		public bool CanAcceptUndroppableItems
+		{
+			get { return m_canAcceptUndroppableItems; }
+			protected set { m_canAcceptUndroppableItems = value; }
+		}
+
 		#endregion
 		#region Quest
 		/// <summary>
@@ -2529,6 +2540,9 @@ namespace DOL.GS
 				List<GamePlayer> list = new List<GamePlayer>(MAX_PASSENGERS);
 				for (int i = 0; i < MAX_PASSENGERS; i++)
 				{
+					if (Riders == null || i >= Riders.Length)
+						break;
+
 					GamePlayer player = Riders[i];
 					if (player != null)
 						list.Add(player);
