@@ -54,8 +54,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 
 				GamePlayer tradeTarget = null;
-				//If our target is another player we set the tradetarget
-				if(obj is GamePlayer)
+				// If our target is another player we set the tradetarget
+				// trade permissions are done in GamePlayer
+				if (obj is GamePlayer)
 				{
 					tradeTarget = (GamePlayer) obj;
 					if(tradeTarget.Client.ClientState != GameClient.eClientState.Playing)
@@ -110,7 +111,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return 0;
 					}
 
-					if (!item.IsDropable && !(obj is GameNPC && (obj is Blacksmith || obj is Recharger)))
+					if (!item.IsDropable && !(obj is GameNPC && (obj is Blacksmith || obj is Recharger || (obj as GameNPC).CanAcceptUndroppableItems)))
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
 						client.Out.SendMessage("You can not remove this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -151,7 +152,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if(client.Version >= GameClient.eClientVersion.Version178) // add it back for proper slot update...
 						fromSlot += eInventorySlot.Mithril178 - eInventorySlot.Mithril;
 
-					if(!obj.IsWithinRadius(client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
+					if (!obj.IsWithinRadius(client.Player, WorldMgr.GIVE_ITEM_DISTANCE))
 					{
                         if (obj is GamePlayer)
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerMoveItemRequestHandler.TooFarAway", client.Player.GetName((GamePlayer)obj)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -228,20 +229,19 @@ namespace DOL.GS.PacketHandler.Client.v168
                 }
             }
 
-            // Move an item from, to or inside a vault.
-            if ((fromSlot >= (ushort)eInventorySlot.HousingInventory_First &&
-                fromSlot <= (ushort)eInventorySlot.HousingInventory_Last) ||
-                (toSlot >= (ushort)eInventorySlot.HousingInventory_First &&
-                toSlot <= (ushort)eInventorySlot.HousingInventory_Last))
-            {
-                GameHouseVault houseVault = client.Player.ActiveVault;
+			bool fromHousing = (fromSlot >= (ushort)eInventorySlot.HousingInventory_First && fromSlot <= (ushort)eInventorySlot.HousingInventory_Last);
+			bool toHousing = (toSlot >= (ushort)eInventorySlot.HousingInventory_First && toSlot <= (ushort)eInventorySlot.HousingInventory_Last);
+
+			// Move an item from, to or inside a vault.
+			if (fromHousing || toHousing)
+			{
+				GameHouseVault houseVault = client.Player.ActiveVault;
                 if (fromSlot >= (ushort)eInventorySlot.FirstBackpack && fromSlot <= (ushort)eInventorySlot.LastBackpack)
                 {
                     InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
                     if (!item.IsTradable)
                     {
-                        client.Out.SendMessage("You can not put this Item into a House Vault!",
-                            eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Out.SendMessage("You can not put this Item into a House Vault!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         client.Out.SendInventoryItemsUpdate(null);
                         return 0;
                     }
