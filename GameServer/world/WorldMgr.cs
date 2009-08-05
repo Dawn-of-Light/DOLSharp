@@ -1722,6 +1722,24 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Gets a count of ALL clients no matter at what state they are
+		/// </summary>
+		/// <returns>ArrayList of GameClients</returns>
+		public static int GetAllClientsCount()
+		{
+			int count = 0;
+			lock (m_clients.SyncRoot)
+			{
+				foreach (GameClient client in m_clients)
+				{
+					if (client != null)
+						count++;
+				}
+			}
+			return count;
+		}
+
+		/// <summary>
 		/// Fetch an Object from a specific Region by it's ID
 		/// </summary>
 		/// <param name="regionID">Region ID of Region to search through</param>
