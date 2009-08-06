@@ -1400,7 +1400,7 @@ namespace DOL.GS.ServerRules
 		/// </summary>
 		/// <param name="player">The player to read statistics from.</param>
 		/// <returns>List of strings.</returns>
-		public IList FormatPlayerStatistics(GamePlayer player)
+		public virtual IList FormatPlayerStatistics(GamePlayer player)
 		{
 			ArrayList stat = new ArrayList();
 			int total = 0;
