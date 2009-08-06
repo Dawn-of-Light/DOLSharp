@@ -21,45 +21,48 @@ using System;
 namespace DOL
 {
 	/// <summary>
-	/// This class is a weakreference wrapper
-	/// because mono gc crashes with null targets
+	/// WeakReference wrapper that handles null targets.
 	/// </summary>
+	/// <remarks>A flaw in the Mono GC crashes the Mono runtime when you provide 
+	/// a null target to WeakReference.</remarks>
 	public class WeakRef : WeakReference
 	{
-		private class NullValue {};
-		private static readonly NullValue NULL = new NullValue();
+		private class NullValue { };
+		private static readonly NullValue Null = new NullValue();
 
 		/// <summary>
-		/// Creates a new weak reference wrapper for MONO because
-		/// MONO gc crashes with null targets
+		/// Creates a new weak reference to the given target.
 		/// </summary>
 		/// <param name="target">The target of this weak reference</param>
-		public WeakRef(object target) : base((target==null) ? NULL : target) {
-		}
-
-		/// <summary>
-		/// Creates a new weak reference wrapper for MONO because
-		/// MONO gc crashes with null targets
-		/// </summary>
-		/// <param name="target">The target of this weak reference</param>
-		/// <param name="trackResurrection">Track the resurrection of the target</param>
-		public WeakRef(object target, bool trackResurrection) : base((target==null) ? NULL : target, trackResurrection) 
+		public WeakRef(object target)
+			: base(target ?? Null)
 		{
 		}
 
 		/// <summary>
-		/// Gets or sets the target of this weak reference
+		/// Creates a new weak reference to the given target, taking into consideration 
+		/// resurrection tracking.
+		/// </summary>
+		/// <param name="target">The target of this weak reference</param>
+		/// <param name="trackResurrection">Track the resurrection of the target</param>
+		public WeakRef(object target, bool trackResurrection)
+			: base(target ?? Null, trackResurrection)
+		{
+		}
+
+		/// <summary>
+		/// Gets or sets the currently referenced target.
 		/// </summary>
 		public override object Target
 		{
 			get
 			{
 				object o = base.Target;
-				return ((o==NULL) ? null : o);
+				return ((o == Null) ? null : o);
 			}
 			set
 			{
-				base.Target = (value==null) ? NULL : value;
+				base.Target = value ?? Null;
 			}
 		}
 	}
