@@ -31,4 +31,4 @@ using System.Reflection;
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("")]
 
-[assembly: AssemblyVersion("1.9.1.1758")]
+[assembly: AssemblyVersion("1.9.1.1780")]
