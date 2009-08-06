@@ -17,10 +17,8 @@
  *
  */
 using System;
-using System.Collections.Specialized;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Threading;
-using log4net;
 
 namespace DOL.Events
 {
@@ -40,98 +38,86 @@ namespace DOL.Events
 	public class DOLEventHandlerCollection
 	{
 		/// <summary>
-		/// Defines a logger for this class.
+		/// How long to wait for a lock acquisition before failing.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		protected const int LOCK_TIMEOUT = 3000;
 
 		/// <summary>
-		/// How long to wait for a lock before failing!
+		/// Holds a mapping of any delegates bound to any DOLEvent
 		/// </summary>
-		protected const int TIMEOUT = 3000;
+		protected readonly Dictionary<DOLEvent, WeakMulticastDelegate> _events;
+
 		/// <summary>
-		/// A reader writer lock used to lock event list
+		/// Reader/writer lock for synchronizing access to the event handler map
 		/// </summary>
-		protected readonly ReaderWriterLock m_lock = null;
-		/// <summary>
-		///We use a HybridDictionary here to hold all event delegates
-		/// </summary>
-		protected readonly HybridDictionary m_events = null;
+		protected readonly ReaderWriterLockSlim _lock;
 
 		/// <summary>
 		/// Constructs a new DOLEventHandler collection
 		/// </summary>
 		public DOLEventHandlerCollection()
 		{
-			m_lock = new ReaderWriterLock();
-			m_events = new HybridDictionary();
+			_lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+			_events = new Dictionary<DOLEvent, WeakMulticastDelegate>();
 		}
+
 		/// <summary>
-		/// Adds an event handler to the list
+		/// Adds an event handler to the list.
 		/// </summary>
 		/// <param name="e">The event from which we add a handler</param>
 		/// <param name="del">The callback method</param>
 		public void AddHandler(DOLEvent e, DOLEventHandler del)
-		{			
-			try
+		{
+			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
-				m_lock.AcquireWriterLock(TIMEOUT);
 				try
 				{
-					WeakMulticastDelegate deleg = (WeakMulticastDelegate) m_events[e];
-					if(deleg==null)
+					WeakMulticastDelegate deleg;
+
+					if(!_events.TryGetValue(e, out deleg))
 					{
-						m_events[e] = new WeakMulticastDelegate(del);
+						_events.Add(e, new WeakMulticastDelegate(del));
 					}
 					else
 					{
-						m_events[e] = WeakMulticastDelegate.Combine(deleg,del);
+						_events[e] = WeakMulticastDelegate.Combine(deleg, del);
 					}
 				}
 				finally
 				{
-					m_lock.ReleaseWriterLock();
+					_lock.ExitWriteLock();
 				}
-			}
-			catch (ApplicationException ex)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Failed to add event handler!", ex);
 			}
 		}
 
-        /// <summary>
-        /// Adds an event handler to the list, if it's already added do nothing
-        /// </summary>
-        /// <param name="e">The event from which we add a handler</param>
-        /// <param name="del">The callback method</param>
-        public void AddHandlerUnique(DOLEvent e, DOLEventHandler del)
-        {
-            try
-            {
-                m_lock.AcquireWriterLock(TIMEOUT);
-                try
-                {
-                    WeakMulticastDelegate deleg = (WeakMulticastDelegate)m_events[e];
-                    if (deleg == null)
-                    {
-                        m_events[e] = new WeakMulticastDelegate(del);
-                    }
-                    else
-                    {
-                        m_events[e] = WeakMulticastDelegate.CombineUnique(deleg, del);
-                    }
-                }
-                finally
-                {
-                    m_lock.ReleaseWriterLock();
-                }
-            }
-            catch (ApplicationException ex)
-            {
-                if (log.IsErrorEnabled)
-                    log.Error("Failed to add event handler!", ex);
-            }
-        }
+		/// <summary>
+		/// Adds an event handler to the list, if it's already added do nothing
+		/// </summary>
+		/// <param name="e">The event from which we add a handler</param>
+		/// <param name="del">The callback method</param>
+		public void AddHandlerUnique(DOLEvent e, DOLEventHandler del)
+		{
+			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
+			{
+				try
+				{
+					WeakMulticastDelegate deleg;
+
+					if(!_events.TryGetValue(e, out deleg))
+					{
+						_events.Add(e, new WeakMulticastDelegate(del));
+					}
+					else
+					{
+						_events[e] = WeakMulticastDelegate.CombineUnique(deleg, del);
+					}
+				}
+				finally
+				{
+					_lock.ExitWriteLock();
+				}
+			}
+		}
 
 		/// <summary>
 		/// Removes an event handler from the list
@@ -140,30 +126,33 @@ namespace DOL.Events
 		/// <param name="del">The callback method to remove</param>
 		public void RemoveHandler(DOLEvent e, DOLEventHandler del)
 		{
-			try
+			if(e == null)
+				return;
+
+			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
-				m_lock.AcquireWriterLock(TIMEOUT);
 				try
 				{
-					WeakMulticastDelegate deleg = (WeakMulticastDelegate) m_events[e];
-					if(deleg!=null) 
+					WeakMulticastDelegate deleg;
+
+					if(_events.TryGetValue(e, out deleg))
 					{
-						deleg = WeakMulticastDelegate.Remove(deleg,del);
-						if(deleg==null)
-							m_events.Remove(e);
+						deleg = WeakMulticastDelegate.Remove(deleg, del);
+
+						if(deleg == null)
+						{
+							_events.Remove(e);
+						}
 						else
-							m_events[e] = deleg;
+						{
+							_events[e] = deleg;
+						}
 					}
 				}
 				finally
 				{
-					m_lock.ReleaseWriterLock();
+					_lock.ExitWriteLock();
 				}
-			}
-			catch (ApplicationException ex)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Failed to remove event handler!", ex);
 			}
 		}
 
@@ -173,22 +162,19 @@ namespace DOL.Events
 		/// <param name="e">The event from which to remove all handlers</param>
 		public void RemoveAllHandlers(DOLEvent e)
 		{
-			try
+			if(e == null)
+				return;
+
+			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
-				m_lock.AcquireWriterLock(TIMEOUT);
 				try
 				{
-					m_events.Remove(e);
+					_events.Remove(e);
 				}
 				finally
 				{
-					m_lock.ReleaseWriterLock();
+					_lock.ExitWriteLock();
 				}
-			}
-			catch (ApplicationException ex)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Failed to remove event handlers!", ex);
 			}
 		}
 
@@ -197,22 +183,16 @@ namespace DOL.Events
 		/// </summary>
 		public void RemoveAllHandlers()
 		{
-			try
+			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
-				m_lock.AcquireWriterLock(TIMEOUT);
 				try
 				{
-					m_events.Clear();
+					_events.Clear();
 				}
 				finally
 				{
-					m_lock.ReleaseWriterLock();
+					_lock.ExitWriteLock();
 				}
-			}
-			catch (ApplicationException ex)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Failed to remove all event handlers!", ex);
 			}
 		}
 
@@ -245,7 +225,7 @@ namespace DOL.Events
 		{
 			Notify(e, null, args);
 		}
-		
+
 		/// <summary>
 		/// Notifies all registered event handlers of the occurance of an event!
 		/// </summary>
@@ -255,26 +235,22 @@ namespace DOL.Events
 		/// <remarks>Overwrite the EventArgs class to set own arguments</remarks>
 		public void Notify(DOLEvent e, object sender, EventArgs eArgs)
 		{
-			try
+			WeakMulticastDelegate eventDelegate = null;
+
+			if(_lock.TryEnterReadLock(LOCK_TIMEOUT))
 			{
-				m_lock.AcquireReaderLock(TIMEOUT);
-				WeakMulticastDelegate eventDelegate;
 				try
 				{
-					eventDelegate = (WeakMulticastDelegate) m_events[e];
+					if(!_events.TryGetValue(e, out eventDelegate))
+						return;
 				}
 				finally
 				{
-					m_lock.ReleaseReaderLock();
+					_lock.ExitReadLock();
 				}
-				if(eventDelegate==null) return;
-				eventDelegate.InvokeSafe(new object[] {e, sender, eArgs});
 			}
-			catch (ApplicationException ex)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Failed to notify event handler!", ex);
-			}
+
+			eventDelegate.InvokeSafe(new[] { e, sender, eArgs });
 		}
 	}
 }
