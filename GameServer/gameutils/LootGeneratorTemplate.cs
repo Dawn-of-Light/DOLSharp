@@ -211,6 +211,7 @@ namespace DOL.GS
 			else
 			{
 				// Look up all possible drops for each entry in MobXLoot.
+				// GenerateLootFromTemplate decides if an item can drop for this player or group
 
 				lootTemplates = new ArrayList();
 				foreach (DBMobXLootTemplate mobXLootTemplate in mobXLootTemplates)
@@ -223,8 +224,7 @@ namespace DOL.GS
 			{
 				foreach (DBLootTemplate lootTemplate in lootTemplates)
 				{
-					if (lootTemplate.ItemTemplate.Realm == 0 || lootTemplate.ItemTemplate.Realm == (int)killer.Realm || ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
-						loot.AddRandom(lootTemplate.Chance, lootTemplate.ItemTemplate);
+					loot.AddRandom(lootTemplate.Chance, lootTemplate.ItemTemplate);
 				}
 			}
 
@@ -253,6 +253,12 @@ namespace DOL.GS
 					player = killer as GamePlayer;
 				else if (killer is GameNPC && (killer as GameNPC).Brain is IControlledBrain)
 					player = ((killer as GameNPC).Brain as ControlledNpc).GetPlayerOwner();
+
+				// allow the leader to decide the loot realm
+				if (player != null && player.Group != null)
+				{
+					player = player.Group.Leader;
+				}
 
 				foreach (DBLootTemplate lootTemplate in templateList)
 				{
