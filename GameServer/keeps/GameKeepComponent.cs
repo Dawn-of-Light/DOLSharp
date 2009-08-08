@@ -229,6 +229,20 @@ namespace DOL.GS.Keeps
 			get { return 1000; }
 		}
 
+
+		public override IList GetExamineMessages(GamePlayer player)
+		{
+			IList list = base.GetExamineMessages(player);
+
+			if (player.Client.Account.PrivLevel > 1)
+			{
+				list.Add(Name + " with a Z of " + Z.ToString());
+			}
+
+			return list;
+		}
+
+
 		/// <summary>
 		/// do not regen
 		/// </summary>
@@ -296,8 +310,17 @@ namespace DOL.GS.Keeps
             //Dinberg - removing hard-coded bgness.
             Battleground bg = KeepMgr.GetBattleground(CurrentRegionID);
 
-
 			this.Positions.Clear();
+
+			//foreach (Patrol p in this.Keep.Patrols.Values)
+			//{
+			//    foreach (GameKeepGuard g in p.PatrolGuards)
+			//    {
+			//        g.Delete();
+			//    }
+			//}
+
+			//this.Keep.Patrols.Clear();
 
 			string query = "`ComponentSkin` = '" + this.Skin + "'";
 			if (Skin != (int)eComponentSkin.Keep && Skin != (int)eComponentSkin.Tower && Skin != (int)eComponentSkin.Gate)
@@ -347,12 +370,15 @@ namespace DOL.GS.Keeps
 						}
 						else if (position.ClassType == "DOL.GS.Keeps.Patrol")
 						{
-							if (this.Keep.Patrols[position.TemplateID] == null)
+							if (position.KeepType == (int)AbstractGameKeep.eKeepType.Any || position.KeepType == (int)Keep.KeepType)
 							{
-								Patrol p = new Patrol(this);
-								p.SpawnPosition = position;
-								p.PatrolID = position.TemplateID;
-								p.InitialiseGuards();
+								if (this.Keep.Patrols[position.TemplateID] == null)
+								{
+									Patrol p = new Patrol(this);
+									p.SpawnPosition = position;
+									p.PatrolID = position.TemplateID;
+									p.InitialiseGuards();
+								}
 							}
 							continue;
 						}
@@ -368,6 +394,15 @@ namespace DOL.GS.Keeps
 							IKeepItem obj = (IKeepItem)asm.CreateInstance(position.ClassType, true);
 							if (obj != null)
 								obj.LoadFromPosition(position, this);
+
+							if (ServerProperties.Properties.ENABLE_DEBUG)
+							{
+								if (obj is GameLiving)
+									(obj as GameLiving).Name += " is living, component " + obj.Component.ID;
+								else if (obj is GameObject)
+									(obj as GameObject).Name += " is object, component " + obj.Component.ID;
+							}
+								
 						}
 						else
 						{

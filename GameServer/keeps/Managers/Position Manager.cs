@@ -192,11 +192,12 @@ namespace DOL.GS.Keeps
 		/// <param name="component">The component object</param>
 		/// <param name="player">The player object</param>
 		/// <returns>The position object</returns>
-		public static DBKeepPosition CreatePatrolPosition(string guardID, GameKeepComponent component, GamePlayer player)
+		public static DBKeepPosition CreatePatrolPosition(string guardID, GameKeepComponent component, GamePlayer player, AbstractGameKeep.eKeepType keepType)
 		{
 			DBKeepPosition pos = CreatePosition(guardID, component, player);
 			pos.Height = 0;
 			pos.ClassType = "DOL.GS.Keeps.Patrol";
+			pos.KeepType = (int)keepType;
 			GameServer.Database.AddNewObject(pos);
 			return pos;
 		}

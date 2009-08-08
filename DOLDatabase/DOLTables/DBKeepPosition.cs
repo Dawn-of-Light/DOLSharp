@@ -20,6 +20,7 @@ namespace DOL.Database
 		private int m_h;
 		private string m_classType;
 		private int m_templateType;
+		private int m_keepType;
 
 		private bool m_autoSave;
 
@@ -28,6 +29,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBKeepPosition()
 		{
+			m_keepType = 0; // default to any keep type
 			m_autoSave = true;
 		}
 
@@ -211,6 +213,23 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_templateType = value;
+			}
+		}
+
+		/// <summary>
+		/// The keep type this position belongs too
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int KeepType
+		{
+			get
+			{
+				return m_keepType;
+			}
+			set
+			{
+				Dirty = true;
+				m_keepType = value;
 			}
 		}
 	}

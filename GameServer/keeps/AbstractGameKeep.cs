@@ -111,25 +111,28 @@ namespace DOL.GS.Keeps
 
 		/// <summary>
 		/// The Keep Type
+		/// This enum holds type of keep related to shape - Repurposed this due to game changes that eliminated melee/magic... keep types
 		/// </summary>
 		public enum eKeepType: byte
 		{
-			/// <summary>
-			/// default type when not claimed, it is like melee
-			/// </summary>
-			Generic = 0x00,
-			/// <summary>
-			///  some guard inside the keep are Armsman (when claimed)
-			/// </summary>
-			Melee = 0x01,
-			/// <summary>
-			///  some guard inside the keep are wizard (when claimed)
-			/// </summary>
-			Magic = 0x02,
-			/// <summary>
-			///  some guard inside the keep are scout (when claimed)
-			/// </summary>
-			Stealth = 0x04,
+			/*
+				update keep set keeptype = 0 where keeptype = 1;
+				update keep set keeptype = 1 where name = 'Dun Crauchon' or name = 'Bledmeer Faste' or name = 'Caer Benowyc';
+				update keep set keeptype = 2 where name = 'Dun Crimthain' or name = 'Nottmoor Faste' or name = 'Caer Berkstead';
+				update keep set keeptype = 3 where name = 'Dun Bolg' or name = 'Hlidskialf Faste' or name = 'Caer Erasleigh';
+				update keep set keeptype = 4 where name = 'Dun nGed' or name = 'Glenlock Faste' or name = 'Caer Boldiam';
+				update keep set keeptype = 5 where name = 'Dun Da Behnn' or name = 'Blendrake Faste' or name = 'Caer Sursbrooke';
+				update keep set keeptype = 6 where name = 'Dun Scathaig' or name = 'Fensalir Faste' or name = 'Caer Renaris';
+				update keep set keeptype = 7 where name = 'Dun Ailinne' or name = 'Arvakr Faste' or name = 'Caer Hurbury';
+			*/
+			Any = 0,
+			Crauchon_Bledmeer_Benowyc = 1,
+			Crimthain_Nottmoor_Berkstead = 2,
+			Bolg_Hlidskialf_Erasleigh = 3,
+			nGed_Glenlock_Boldiam = 4,
+			DaBehnn_Blendrake_Sursbrooke = 5,
+			Scathaig_Fensalir_Renaris = 6,
+			Ailinne_Arvakr_Hurbury = 7,
 		}
 
 		#region Properties
@@ -414,7 +417,6 @@ namespace DOL.GS.Keeps
 			set
 			{
 				DBKeep.KeepType = (int)value;
-				//todo : update all guard
 			}
 		}
 
@@ -530,10 +532,10 @@ namespace DOL.GS.Keeps
 					StartDeductionTimer();
 				}
 			}
-			if(Level<10&&m_guild!=null)
-				StartChangeLevel(10);
-			else if(Level<=10&&Level>1&&m_guild==null)
-				StartChangeLevel(1);
+			if (Level < ServerProperties.Properties.MAX_KEEP_LEVEL && m_guild != null)
+				StartChangeLevel((byte)ServerProperties.Properties.MAX_KEEP_LEVEL);
+			else if (Level <= ServerProperties.Properties.MAX_KEEP_LEVEL && Level > ServerProperties.Properties.STARTING_KEEP_LEVEL && m_guild == null)
+				StartChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
 		}
 
 		/// <summary>
@@ -769,6 +771,15 @@ namespace DOL.GS.Keeps
 		public void ChangeLevel(byte targetLevel)
 		{
 			this.Level = targetLevel;
+
+			foreach (GameKeepComponent comp in this.KeepComponents)
+			{
+				comp.UpdateLevel();
+				foreach (GameClient cln in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+					cln.Out.SendKeepComponentDetailUpdate(comp);
+				comp.FillPositions();
+			}
+
 			foreach (GameKeepGuard guard in this.Guards.Values)
 			{
 				TemplateMgr.SetGuardLevel(guard);
@@ -779,14 +790,6 @@ namespace DOL.GS.Keeps
 				p.ChangePatrolLevel();
 			}
 
-			foreach (GameKeepComponent comp in this.KeepComponents)
-			{
-				comp.UpdateLevel();
-				foreach (GameClient cln in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
-					cln.Out.SendKeepComponentDetailUpdate(comp);
-				comp.FillPositions();
-			}
-
 			foreach (GameKeepDoor door in this.Doors.Values)
 			{
 				door.UpdateLevel();
@@ -794,12 +797,7 @@ namespace DOL.GS.Keeps
 
 			KeepGuildMgr.SendLevelChangeMessage(this);
 			ResetPlayersOfKeep();
-
-			foreach (GameKeepGuard guard in this.Guards.Values)
-			{
-				if (guard.PatrolGroup == null)
-					guard.FixPosition();
-			}
+			ResetNPCsOfKeep();
 
 			this.SaveIntoDatabase();
 		}
@@ -962,7 +960,7 @@ namespace DOL.GS.Keeps
 			PlayerMgr.BroadcastCapture(this);
 
             Level = (byte)ServerProperties.Properties.STARTING_KEEP_LEVEL;
-			KeepType = eKeepType.Melee;
+
 			//if a guild holds the keep, we release it
 			if (Guild != null)
 			{
@@ -1083,6 +1081,71 @@ namespace DOL.GS.Keeps
 					player.MoveTo(player.CurrentRegionID, player.X, player.Y, z, player.Heading);
 			}
 		}
+
+		public void ResetNPCsOfKeep()
+		{
+			// tolakram - disabled this kludge  for now while trying to get guard position levels to work
+			// all this code should be removed once keepposition code is working
+			return;
+
+			// fix the roof guards position
+			int lordZ = this.Z;
+
+			// find the lord and use it's Z to determine what guards are on the roof
+			foreach (GameKeepGuard g in this.Guards.Values)
+			{
+				if (g is GuardLord)
+				{
+					lordZ = g.Z;
+					break;
+				}
+			}
+
+
+			int id = 0;
+			if (this is GameKeepTower)
+			{
+				id = 11;
+			}
+			else
+			{
+				id = 10;
+			}
+
+			GameKeepComponent component = null;
+			foreach (GameKeepComponent c in this.KeepComponents)
+			{
+				if (c.Skin == id)
+				{
+					component = c;
+					break;
+				}
+			}
+			if (component == null)
+				return;
+
+			GameKeepHookPoint hookpoint = component.HookPoints[97] as GameKeepHookPoint;
+
+			if (hookpoint == null)
+				return;
+
+			//calculate target height
+			int height = KeepMgr.GetHeightFromLevel(this.Level);
+
+			//predict Z
+			DBKeepHookPoint hp = (DBKeepHookPoint)GameServer.Database.SelectObject(typeof(DBKeepHookPoint), "HookPointID = '97' and Height = '" + height + "'");
+			if (hp == null)
+				return;
+			int z = component.Z + hp.Z;
+
+			foreach (GameKeepGuard guard in this.Guards.Values)
+			{
+
+				if (guard.PatrolGroup == null)
+					guard.UpdatePosition(lordZ, z);
+			}
+		}
+
 		#endregion
 
 		/// <summary>
