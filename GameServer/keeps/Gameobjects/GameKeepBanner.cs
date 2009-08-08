@@ -126,7 +126,7 @@ namespace DOL.GS.Keeps
 				if (component.Keep.Guild != null)
 				{
 					ChangeGuild();
-					Z += 1000;
+					Z += 1500;
 					this.AddToWorld();
 				}
 			}
@@ -142,7 +142,11 @@ namespace DOL.GS.Keeps
 		public void MoveToPosition(DBKeepPosition position)
 		{
 			PositionMgr.LoadKeepItemPosition(position, this);
-			this.MoveTo(this.CurrentRegionID, this.X, this.Y, this.Z, this.Heading);
+			int zAdd = 1000;
+			if (BannerType == eBannerType.Guild)
+				zAdd = 1500;
+
+			this.MoveTo(this.CurrentRegionID, this.X, this.Y, this.Z + zAdd, this.Heading);
 		}
 
 		public void ChangeRealm()
