@@ -38,6 +38,7 @@ namespace DOL.GS.Keeps
 			SetGuardLevel(guard);
 			SetGuardResists(guard);
 			SetGuardStats(guard);
+			SetGuardAggression(guard);
 			ClothingMgr.EquipGuard(guard);
 			ClothingMgr.SetEmblem(guard);
 		}
@@ -66,6 +67,18 @@ namespace DOL.GS.Keeps
 				guard.RespawnInterval = 5 * 60 * 1000; // 5 minutes
 			else 
 				guard.RespawnInterval = Util.Random(5, 25) * 60 * 1000;
+		}
+
+		private static void SetGuardAggression(GameKeepGuard guard)
+		{
+			if (guard is GuardStaticCaster)
+			{
+				(guard.Brain as KeepGuardBrain).SetAggression(99, 1850);
+			}
+			else if (guard is GuardStaticArcher)
+			{
+				(guard.Brain as KeepGuardBrain).SetAggression(99, 2100);
+			}
 		}
 
 		private static byte GetBaseLevel(GameKeepGuard guard)
@@ -650,7 +663,7 @@ namespace DOL.GS.Keeps
 		}
 
         /// <summary>
-        /// Gets shord name of keeps
+        /// Gets short name of keeps
         /// </summary>
         /// <param name="KeepName">Complete name of the Keep</param>
         private static string GetKeepShortName(string KeepName)
