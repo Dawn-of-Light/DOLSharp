@@ -540,26 +540,28 @@ namespace DOL.GS.Keeps
 				CurrentWayPoint = PatrolGroup.PatrolPath;
 				MoveOnPath(Patrol.PATROL_SPEED);
 			}
-			else
-			{
-				FixPosition();
-			}
 
 			return true;
 		}
 
 		/// <summary>
-		/// Force the guard to update it's position in the keep
+		/// Try and update the position of the guard
 		/// </summary>
-		public virtual void FixPosition()
+		public virtual void UpdatePosition(int lordZ, int roofZ)
 		{
-			//if (this is GuardLord == false)
-			//{
-			//    int oldZ = Z;
-			//    Z += 500;
-			//    BroadcastUpdate();
-			//    Z = oldZ;
-			//}
+			int newZ = SpawnPoint.Z;
+
+			if (newZ > lordZ)
+			{
+				// we assume that any guards above the lord are on the roof, 
+				// so we want to move them to the new roof position
+
+				newZ = roofZ;
+				if (this is GuardArcher)
+					newZ += 100; // up on corner towers
+			}
+
+			MoveTo(CurrentRegionID, SpawnPoint.X, SpawnPoint.Y, newZ, Heading);
 		}
 
 		/// <summary>

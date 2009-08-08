@@ -55,7 +55,7 @@ namespace DOL.Database
 			m_albionDifficultyLevel = 1;
 			m_midgardDifficultyLevel = 1;
 			m_hiberniaDifficultyLevel = 1;
-			m_type = 0; //by default melee
+			m_type = 0; // Default = Any
 		}
 
 		/// <summary>

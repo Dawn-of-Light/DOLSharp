@@ -38,17 +38,29 @@ namespace DOL.GS.Keeps
 		{
 			get { return m_component; }
 		}
+
+		/// <summary>
+		/// What type of keep should this patrol spawn at?
+		/// </summary>
+		AbstractGameKeep.eKeepType m_keepType = AbstractGameKeep.eKeepType.Any;
+		public AbstractGameKeep.eKeepType KeepType
+		{
+			get { return m_keepType; }
+			set { m_keepType = value; }
+		}
+
+
 		/// <summary>
 		/// The Patrol ID, consider this a template ID
 		/// </summary>
-		public string PatrolID = "";
+		public string PatrolID = DOL.Database.UniqueID.IdGenerator.generateId();
 		/// <summary>
 		/// The Guard Types that make up the Patrol
 		/// </summary>
-		public static Type[] GuardTypes = new Type[] { typeof(GuardFighter), typeof(GuardArcher), typeof(GuardHealer), typeof(GuardFighter), typeof(GuardArcher) };
+		public static Type[] GuardTypes = new Type[] { typeof(GuardFighter), typeof(GuardArcher), typeof(GuardHealer), typeof(GuardFighter), typeof(GuardArcher), typeof(GuardFighter) };
 
 		/// <summary>
-		/// An ArrayList of all the Guards
+		/// A list of all the Guards
 		/// </summary>
 		public List<GameKeepGuard> PatrolGuards = new List<GameKeepGuard>();
 		/// <summary>
@@ -67,30 +79,58 @@ namespace DOL.GS.Keeps
 		public void InitialiseGuards()
 		{
 			Component.Keep.Patrols[PatrolID] = this;
+
 			//need this here becuase it's checked in add to world
 			PatrolPath = PositionMgr.LoadPatrolPath(PatrolID, Component);
 
-			Assembly asm = Assembly.GetAssembly(typeof(GameServer));
+			int guardsOnPatrol = 1;
 
-			//one guard for now
-			for (int i = 0; i < 1; i++)
+			if (Component != null && Component.Keep != null && Component.Keep is GameKeep)
 			{
-				GameKeepGuard guard = (GameKeepGuard)asm.CreateInstance(GuardTypes[i].FullName, true);
-				PatrolGuards.Add(guard);
-				guard.TemplateID = PatrolID;
-				guard.Component = Component;
-				guard.PatrolGroup = this;
-				TemplateMgr.RefreshTemplate(guard);
-				Component.Keep.Guards.Add(DOL.Database.UniqueID.IdGenerator.generateId(), guard);
+				guardsOnPatrol++;
+
+				if (Component.Keep.Level > 4)
+					guardsOnPatrol++;
 			}
 
+			if (PatrolGuards.Count < guardsOnPatrol)
+			{
+				for (int i = 0; i < guardsOnPatrol; i++)
+				{
+					CreatePatrolGuard(i);
+				}
+			}
+
+			// tolakram - this might be redundant
 			foreach (GameKeepGuard guard in PatrolGuards)
 			{
 				PositionMgr.LoadGuardPosition(SpawnPosition, guard);
-				guard.AddToWorld();
 			}
+
 			ChangePatrolLevel();
-			StartPatrol();
+		}
+
+		private void CreatePatrolGuard(int type)
+		{
+			Assembly asm = Assembly.GetAssembly(typeof(GameServer));
+
+			if (type < 0) type = 0;
+			if (type > GuardTypes.Length - 1) type = GuardTypes.Length - 1;
+
+			GameKeepGuard guard = (GameKeepGuard)asm.CreateInstance(GuardTypes[type].FullName, true);
+			guard.TemplateID = PatrolID;
+			guard.Component = Component;
+			guard.PatrolGroup = this;
+			PositionMgr.LoadGuardPosition(SpawnPosition, guard);
+			TemplateMgr.RefreshTemplate(guard);
+			PatrolGuards.Add(guard);
+			Component.Keep.Guards.Add(DOL.Database.UniqueID.IdGenerator.generateId(), guard);
+			guard.AddToWorld();
+
+			if (ServerProperties.Properties.ENABLE_DEBUG)
+			{
+				guard.Name += " PatrolID " + PatrolID;
+			}
 		}
 
 		/// <summary>
@@ -100,20 +140,65 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void ChangePatrolLevel()
 		{
-			//#warning Etaew: deactivated for now
-			//return;
-			byte level = (byte)(Component.Keep.Level / 2);
+			int guardsToPatrol = 1;
+
+			if (Component != null && Component.Keep != null && Component.Keep is GameKeep)
+			{
+				guardsToPatrol++;
+
+				if (Component.Keep.Level > 4)
+					guardsToPatrol++;
+			}
+
+			PatrolPath = PositionMgr.LoadPatrolPath(PatrolID, Component);
+
+			// Console.WriteLine(PatrolID + " guardstopatrol = " + guardsToPatrol + ", count = " + PatrolGuards.Count);
+
+			while (guardsToPatrol > PatrolGuards.Count)
+			{
+				CreatePatrolGuard(PatrolGuards.Count);
+			}
+
+			int x = 0;
+			int y = 0;
+
+			List<GameKeepGuard> guardsToKeep = new List<GameKeepGuard>();
+
 			for (int i = 0; i < PatrolGuards.Count; i++)
 			{
 				GameKeepGuard guard = PatrolGuards[i] as GameKeepGuard;
-				if (i <= level)
-					guard.AddToWorld();
+
+				// Console.WriteLine(PatrolID + " loading guard " + guard.Name);
+
+				if (i < guardsToPatrol)
+				{
+					// we need to reposition the patrol at their spawn point plus variation
+					if (x == 0)
+					{
+						x = guard.SpawnPoint.X;
+						y = guard.SpawnPoint.Y;
+					}
+					else
+					{
+						x += Util.Random(150, 250);
+						y += Util.Random(150, 250);
+					}
+
+					if (guard.IsMovingOnPath)
+						guard.StopMovingOnPath();
+
+					guard.MoveTo(guard.CurrentRegionID, x, y, guard.SpawnPoint.Z, guard.SpawnHeading);
+					guardsToKeep.Add(guard);
+				}
 				else
 				{
-					PositionMgr.LoadGuardPosition(SpawnPosition, guard);
-					guard.RemoveFromWorld();
+					guard.Delete();
 				}
 			}
+
+			PatrolGuards = guardsToKeep;
+
+			StartPatrol();
 		}
 
 		/// <summary>

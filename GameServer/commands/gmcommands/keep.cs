@@ -53,36 +53,36 @@ namespace DOL.GS.Commands
 		protected string TEMP_KEEP_LAST = "TEMP_KEEP_LAST";
 		public enum eKeepTypes : int
 		{
-			DunCrauchonBledmeerFasteCaerBenowyc = 0,
-			DunCrimthainnNottmoorFasteCaerBerkstead = 1,
-			DunBolgHlidskialfFasteCaerErasleigh = 2,
-			DunnGedGlenlockFasteCaerBoldiam = 3,
-			DundaBehnnBlendrakeFasteCaerSursbrooke = 4,
-			DunScathaigFensalirFasteCaerRenaris = 5,
-			DunAilinneArvakrFasteCaerHurbury = 6,
-			FortBrolorn = 7,
-			BG1_4 = 8,
-			ClaimBG5_9 = 9,
-			BG5_9 = 10,
-			CaerClaret = 11,
-			BG10_14 = 12,
-			CKBG15_19 = 13,
-			BG15_19 = 14,
-			CKBG20_24 = 15,
-			BG20_24 = 16,
-			CKBG25_29 = 17,
-			BG25_29 = 18,
-			CKBG30_34 = 19,
-			BG30_34 = 20,
-			CKBG35_39 = 21,
-			BG35_39 = 22,
-			TBG35_39 = 23,
-			TestCKBG40_44 = 24,
-			TestBG40_44 = 25,
-			TestTBG40_44 = 26,
-			CKBG40_44 = 27,
-			BG40_44 = 28,
-			TBG40_44 = 29,
+			DunCrauchonBledmeerFasteCaerBenowyc = 1,
+			DunCrimthainnNottmoorFasteCaerBerkstead = 2,
+			DunBolgHlidskialfFasteCaerErasleigh = 3,
+			DunnGedGlenlockFasteCaerBoldiam = 4,
+			DundaBehnnBlendrakeFasteCaerSursbrooke = 5,
+			DunScathaigFensalirFasteCaerRenaris = 6,
+			DunAilinneArvakrFasteCaerHurbury = 7,
+			FortBrolorn = 8,
+			BG1_4 = 9,
+			ClaimBG5_9 = 10,
+			BG5_9 = 11,
+			CaerClaret = 12,
+			BG10_14 = 13,
+			CKBG15_19 = 14,
+			BG15_19 = 15,
+			CKBG20_24 = 16,
+			BG20_24 = 17,
+			CKBG25_29 = 18,
+			BG25_29 = 19,
+			CKBG30_34 = 20,
+			BG30_34 = 21,
+			CKBG35_39 = 22,
+			BG35_39 = 23,
+			TBG35_39 = 24,
+			TestCKBG40_44 = 25,
+			TestBG40_44 = 26,
+			TestTBG40_44 = 27,
+			CKBG40_44 = 28,
+			BG40_44 = 29,
+			TBG40_44 = 30,
 		}
 
 		public void OnCommand(GameClient client, string[] args)
@@ -141,6 +141,9 @@ namespace DOL.GS.Commands
 						keep.Y = client.Player.Y;
 						keep.Z = client.Player.Z;
 						keep.Heading = client.Player.Heading;
+						if ((int)keepType < 8)
+							keep.KeepType = (AbstractGameKeep.eKeepType)keepType;
+
 						// TODO: Add keep component to list in keep classB
 						GameKeepComponent keepComp = null;
 						

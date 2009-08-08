@@ -288,10 +288,15 @@ namespace DOL.GS.Keeps
 				Keeps.TemplateMgr.RefreshTemplate(hookPointObj as GameKeepGuard);
 			}
 			if (hookPointObj is GameNPC)
+			{
 				((GameNPC)hookPointObj).RespawnInterval = -1;//do not respawn
+			}
 			hookPointObj.AddToWorld();
 			if (hookPointObj is GameKeepGuard)
+			{
 				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
+				((GameNPC)hookPointObj).RespawnInterval = Util.Random(10, 30) * 60 * 1000;
+			}
 			hookpoint.Object = hookPointObj;
 
 			//create the db entry
@@ -306,6 +311,7 @@ namespace DOL.GS.Keeps
 
 			GameLiving hookPointObj = CreateHPInstance(objectType);
 			if (hookPointObj == null) return;
+
 			//use default value so no need to load
 			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);
 			hookPointObj.CurrentRegion = hookpoint.Component.CurrentRegion;
@@ -313,6 +319,7 @@ namespace DOL.GS.Keeps
 
 			if (hookPointObj is GameSiegeWeapon)
 				((GameSiegeWeapon)hookPointObj).EnableToMove = false;
+
 			hookPointObj.X = hookpoint.X;
 			hookPointObj.Y = hookpoint.Y;
 			hookPointObj.Z = hookpoint.Z;
@@ -329,11 +336,20 @@ namespace DOL.GS.Keeps
 				(hookPointObj as GameKeepGuard).HookPoint = hookpoint;
 				Keeps.TemplateMgr.RefreshTemplate(hookPointObj as GameKeepGuard);
 			}
+
+			if (ServerProperties.Properties.ENABLE_DEBUG)
+				hookPointObj.Name += " hookpoint " + hookpoint.ID.ToString();
+
 			if (hookPointObj is GameNPC)
+			{
 				((GameNPC)hookPointObj).RespawnInterval = -1;//do not respawn
+			}
 			hookPointObj.AddToWorld();
 			if (hookPointObj is GameKeepGuard)
+			{
 				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
+				((GameNPC)hookPointObj).RespawnInterval = Util.Random(10, 30) * 60 * 1000;
+			}
 			hookpoint.Object = hookPointObj;
 		}
 
