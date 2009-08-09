@@ -165,17 +165,20 @@ namespace DOL.GS
 
         private bool isItemInMerchantList(InventoryItem item)
         {
-            foreach (DictionaryEntry de in m_tradeItems.GetAllItems())
-            {
-                ItemTemplate compareItem = de.Value as ItemTemplate;
-                if (compareItem != null)
-                {
-                    if (compareItem.Id_nb == item.Id_nb)
-                    {
-                        return true;
-                    }
-                }
-            }
+			if (m_tradeItems != null)
+			{
+				foreach (DictionaryEntry de in m_tradeItems.GetAllItems())
+				{
+					ItemTemplate compareItem = de.Value as ItemTemplate;
+					if (compareItem != null)
+					{
+						if (compareItem.Id_nb == item.Id_nb)
+						{
+							return true;
+						}
+					}
+				}
+			}
             return false;
         }    
 
