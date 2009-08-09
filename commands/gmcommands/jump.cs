@@ -80,7 +80,8 @@ namespace DOL.GS.Commands
 				clientc = WorldMgr.GetClientByPlayerName(args[2], false, true);
 				if (clientc == null)
 				{
-					int realm = int.Parse(args[3]);
+					int realm = 0;
+					int.TryParse(args[3], out realm);
 
 					GameNPC[] npcs = WorldMgr.GetNPCsByName(args[2], (eRealm)realm);
 					if (npcs.Length > 0)
