@@ -287,7 +287,10 @@ namespace DOL.GS
 
 			// Using Name + Realm (if ALLOW_CROSS_REALM_ITEMS) for the key to try and prevent duplicate drops
 
-			Dictionary<string, DBLootTemplate> templateList = m_LootTemplates[mobXLootTemplate.LootTemplateName.ToLower()];
+			Dictionary<string, DBLootTemplate> templateList = null;
+
+			if (m_LootTemplates.ContainsKey(mobXLootTemplate.LootTemplateName.ToLower()))
+				templateList = m_LootTemplates[mobXLootTemplate.LootTemplateName.ToLower()];
 
 			if (templateList != null)
 			{
