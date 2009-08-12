@@ -35,22 +35,22 @@ namespace DOL.Events
 	/// </summary>
 	/// <remarks>This class is lazy initialized, meaning as long as you don't add any
 	/// handlers, the memory usage will be very low!</remarks>
-	public class DOLEventHandlerCollection
+	public sealed class DOLEventHandlerCollection
 	{
 		/// <summary>
 		/// How long to wait for a lock acquisition before failing.
 		/// </summary>
-		protected const int LOCK_TIMEOUT = 3000;
+		private const int LOCK_TIMEOUT = 3000;
 
 		/// <summary>
 		/// Holds a mapping of any delegates bound to any DOLEvent
 		/// </summary>
-		protected readonly Dictionary<DOLEvent, WeakMulticastDelegate> _events;
+		private readonly Dictionary<DOLEvent, WeakMulticastDelegate> _events;
 
 		/// <summary>
 		/// Reader/writer lock for synchronizing access to the event handler map
 		/// </summary>
-		protected readonly ReaderWriterLockSlim _lock;
+		private readonly ReaderWriterLockSlim _lock;
 
 		/// <summary>
 		/// Constructs a new DOLEventHandler collection
@@ -126,9 +126,6 @@ namespace DOL.Events
 		/// <param name="del">The callback method to remove</param>
 		public void RemoveHandler(DOLEvent e, DOLEventHandler del)
 		{
-			if(e == null)
-				return;
-
 			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
 				try
@@ -162,9 +159,6 @@ namespace DOL.Events
 		/// <param name="e">The event from which to remove all handlers</param>
 		public void RemoveAllHandlers(DOLEvent e)
 		{
-			if(e == null)
-				return;
-
 			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
 				try

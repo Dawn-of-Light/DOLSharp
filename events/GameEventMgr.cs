@@ -17,7 +17,7 @@
  *
  */
 using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using log4net;
@@ -25,34 +25,41 @@ using log4net;
 namespace DOL.Events
 {
 	/// <summary>
-	/// This manager is used to handle all events of the game
-	/// and of individual GameObjects
+	/// Manages per-object and global event handlers.
 	/// </summary>
-	public sealed class GameEventMgr
+	public static class GameEventMgr
 	{
+		/// <summary>
+		/// How long to wait for a lock acquisition before failing.
+		/// </summary>
+		private const int LOCK_TIMEOUT = 3000;
+
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Holds a list of event handler collections for single gameobjects
 		/// </summary>
-		private static readonly HybridDictionary m_GameObjectEventCollections = new HybridDictionary();
-
-		/// <summary>
-		/// A lock used to access the event collections of livings
-		/// </summary>
-		private static readonly ReaderWriterLock m_lock = new ReaderWriterLock();
-		/// <summary>
-		/// Timeout for lock operations
-		/// </summary>
-		private const int TIMEOUT = 3000;
+		private static readonly Dictionary<object, DOLEventHandlerCollection> GameObjectEventCollections;
 
 		/// <summary>
 		/// Holds a list of all global eventhandlers
 		/// </summary>
-		private static DOLEventHandlerCollection m_GlobalHandlerCollection = new DOLEventHandlerCollection();
+		private static readonly DOLEventHandlerCollection GlobalHandlerCollection;
+
+		/// <summary>
+		/// A lock used to access the event collections of livings
+		/// </summary>
+		private static readonly ReaderWriterLockSlim Lock;
+
+		static GameEventMgr()
+		{
+			Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+			GameObjectEventCollections = new Dictionary<object, DOLEventHandlerCollection>();
+			GlobalHandlerCollection = new DOLEventHandlerCollection();
+		}
 
 		/// <summary>
 		/// Registers some global events that are specified by attributes
@@ -63,30 +70,31 @@ namespace DOL.Events
 		/// <exception cref="ArgumentNullException">If one of the parameters is null</exception>
 		public static void RegisterGlobalEvents(Assembly asm, Type attribute, DOLEvent e)
 		{
-			if (asm == null)
+			if(asm == null)
 				throw new ArgumentNullException("asm", "No assembly given to search for global event handlers!");
-			if (attribute == null)
+
+			if(attribute == null)
 				throw new ArgumentNullException("attribute", "No attribute given!");
-			if (e == null)
+
+			if(e == null)
 				throw new ArgumentNullException("e", "No event type given!");
 
-
-			foreach (Type type in asm.GetTypes())
+			foreach(Type type in asm.GetTypes())
 			{
-				if (!type.IsClass) continue;
-				foreach (MethodInfo mInfo in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
+				if(!type.IsClass) continue;
+				foreach(MethodInfo mInfo in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
 				{
 					object[] myAttribs = mInfo.GetCustomAttributes(attribute, false);
-					if (myAttribs.Length != 0)
+					if(myAttribs.Length != 0)
 					{
 						try
 						{
-							m_GlobalHandlerCollection.AddHandler(e, (DOLEventHandler)Delegate.CreateDelegate(typeof(DOLEventHandler), mInfo));
+							GlobalHandlerCollection.AddHandler(e, (DOLEventHandler) Delegate.CreateDelegate(typeof(DOLEventHandler), mInfo));
 						}
-						catch (Exception ex)
+						catch(Exception ex)
 						{
-							if (log.IsErrorEnabled)
-								log.Error("Error registering global event. Method: " + type.FullName + "." + mInfo.Name, ex);
+							if(Log.IsErrorEnabled)
+								Log.Error("Error registering global event. Method: " + type.FullName + "." + mInfo.Name, ex);
 						}
 					}
 				}
@@ -134,15 +142,20 @@ namespace DOL.Events
 		/// <exception cref="ArgumentNullException">If one of the parameters is null</exception>
 		private static void AddHandler(DOLEvent e, DOLEventHandler del, bool unique)
 		{
-			if (e == null)
+			if(e == null)
 				throw new ArgumentNullException("e", "No event type given!");
-			if (del == null)
+
+			if(del == null)
 				throw new ArgumentNullException("del", "No event handler given!");
 
-			if (unique)
-				m_GlobalHandlerCollection.AddHandlerUnique(e, del);
+			if(unique)
+			{
+				GlobalHandlerCollection.AddHandlerUnique(e, del);
+			}
 			else
-				m_GlobalHandlerCollection.AddHandler(e, del);
+			{
+				GlobalHandlerCollection.AddHandler(e, del);
+			}
 		}
 
 		/// <summary>
@@ -172,28 +185,6 @@ namespace DOL.Events
 		/// "sender" parameter in the Notify method equals
 		/// the object for which a local event handler was
 		/// registered.
-		/// If a equal handler has already been added, nothin will be done
-		/// </summary>
-		/// <remarks>
-		/// Certain events will never have a local event handler.
-		/// This happens if the Notify method is called without
-		/// a sender parameter for example!
-		/// </remarks>
-		/// <param name="obj">The object that needs to be the sender of events</param>
-		/// <param name="e">The event type to register for</param>
-		/// <param name="del">The event handler to register for this event type</param>
-		/// <exception cref="ArgumentNullException">If one of the parameters is null</exception>
-		public static void AddHandlerUnique(object obj, DOLEvent e, DOLEventHandler del)
-		{
-			AddHandler(obj, e, del, true);
-		}
-
-		/// <summary>
-		/// Registers a single local event handler.
-		/// Local event handlers will only be called if the
-		/// "sender" parameter in the Notify method equals
-		/// the object for which a local event handler was
-		/// registered.
 		/// </summary>
 		/// <remarks>
 		/// Certain events will never have a local event handler.
@@ -207,50 +198,54 @@ namespace DOL.Events
 		/// <exception cref="ArgumentNullException">If one of the parameters is null</exception>
 		private static void AddHandler(object obj, DOLEvent e, DOLEventHandler del, bool unique)
 		{
-			//Test the parameters
-			if (obj == null)
+			if(obj == null)
 				throw new ArgumentNullException("obj", "No object given!");
-			if (e == null)
+
+			if(e == null)
 				throw new ArgumentNullException("e", "No event type given!");
-			if (del == null)
+
+			if(del == null)
 				throw new ArgumentNullException("del", "No event handler given!");
 
-			if (!e.IsValidFor(obj))
+			if(!e.IsValidFor(obj))
 				throw new ArgumentException("Object is not valid for this event type", "obj");
 
-			try
+			if(Lock.TryEnterUpgradeableReadLock(LOCK_TIMEOUT))
 			{
-				m_lock.AcquireReaderLock(TIMEOUT);
 				try
 				{
-					DOLEventHandlerCollection col = (DOLEventHandlerCollection)m_GameObjectEventCollections[obj];
-					if (col == null)
+					DOLEventHandlerCollection col;
+
+					if(!GameObjectEventCollections.TryGetValue(obj, out col))
 					{
 						col = new DOLEventHandlerCollection();
-						LockCookie lc = m_lock.UpgradeToWriterLock(TIMEOUT);
-						try
+
+						if(Lock.TryEnterWriteLock(LOCK_TIMEOUT))
 						{
-							m_GameObjectEventCollections[obj] = col;
-						}
-						finally
-						{
-							m_lock.DowngradeFromWriterLock(ref lc);
+							try
+							{
+								GameObjectEventCollections.Add(obj, col);
+							}
+							finally
+							{
+								Lock.ExitWriteLock();
+							}
 						}
 					}
-					if (unique)
+
+					if(unique)
+					{
 						col.AddHandlerUnique(e, del);
+					}
 					else
+					{
 						col.AddHandler(e, del);
+					}
 				}
 				finally
 				{
-					m_lock.ReleaseReaderLock();
+					Lock.ExitUpgradeableReadLock();
 				}
-			}
-			catch (ApplicationException ex)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Failed to add local event handler!", ex);
 			}
 		}
 
@@ -263,12 +258,13 @@ namespace DOL.Events
 		/// <exception cref="ArgumentNullException">If one of the parameters is null</exception>
 		public static void RemoveHandler(DOLEvent e, DOLEventHandler del)
 		{
-			//Test the parameters
-			if (e == null)
+			if(e == null)
 				throw new ArgumentNullException("e", "No event type given!");
-			if (del == null)
+
+			if(del == null)
 				throw new ArgumentNullException("del", "No event handler given!");
-			m_GlobalHandlerCollection.RemoveHandler(e, del);
+
+			GlobalHandlerCollection.RemoveHandler(e, del);
 		}
 
 		/// <summary>
@@ -282,106 +278,31 @@ namespace DOL.Events
 		/// <exception cref="ArgumentNullException">If one of the parameters is null</exception>
 		public static void RemoveHandler(object obj, DOLEvent e, DOLEventHandler del)
 		{
-			//Test the parameters
-			if (obj == null)
+			if(obj == null)
 				throw new ArgumentNullException("obj", "No object given!");
-			if (e == null)
+
+			if(e == null)
 				throw new ArgumentNullException("e", "No event type given!");
-			if (del == null)
+
+			if(del == null)
 				throw new ArgumentNullException("del", "No event handler given!");
 
-			try
+			DOLEventHandlerCollection col = null;
+
+			if(Lock.TryEnterReadLock(LOCK_TIMEOUT))
 			{
-				m_lock.AcquireReaderLock(TIMEOUT);
 				try
 				{
-					DOLEventHandlerCollection col = (DOLEventHandlerCollection)m_GameObjectEventCollections[obj];
-					if (col != null)
-						col.RemoveHandler(e, del);
+					GameObjectEventCollections.TryGetValue(obj, out col);
 				}
 				finally
 				{
-					m_lock.ReleaseReaderLock();
+					Lock.ExitReadLock();
 				}
 			}
-			catch (ApplicationException ex)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Failed to remove local event handler!", ex);
-			}
-		}
 
-		/// <summary>
-		/// Removes all global event handlers for a specific event type
-		/// </summary>
-		/// <param name="e">The event type from which to deregister all handlers</param>
-		/// <param name="deep">Specifies if all local registered event handlers
-		/// should be removed as well.</param>
-		/// <exception cref="ArgumentNullException">If no event type given</exception>
-		public static void RemoveAllHandlers(DOLEvent e, bool deep)
-		{
-			//Test the parameters
-			if (e == null)
-				throw new ArgumentNullException("e", "No event type given!");
-
-			if (deep)
-			{
-				try
-				{
-					m_lock.AcquireReaderLock(TIMEOUT);
-					try
-					{
-						foreach (DOLEventHandlerCollection col in m_GameObjectEventCollections.Values)
-							col.RemoveAllHandlers(e);
-					}
-					finally
-					{
-						m_lock.ReleaseReaderLock();
-					}
-				}
-				catch (ApplicationException ex)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Failed to add local event handlers!", ex);
-				}
-			}
-			m_GlobalHandlerCollection.RemoveAllHandlers(e);
-		}
-
-		/// <summary>
-		/// Removes all event handlers of a specific type
-		/// from a specific object
-		/// </summary>
-		/// <param name="obj">The object from which to remove the handlers</param>
-		/// <param name="e">The event type from which to deregister all handlers</param>
-		/// <exception cref="ArgumentNullException">If no event type given</exception>
-		public static void RemoveAllHandlers(object obj, DOLEvent e)
-		{
-			//Test the parameters
-			if (obj == null)
-				throw new ArgumentNullException("obj", "No object given!");
-			if (e == null)
-				throw new ArgumentNullException("e", "No event type given!");
-
-			try
-			{
-				m_lock.AcquireReaderLock(TIMEOUT);
-				try
-				{
-					DOLEventHandlerCollection col = (DOLEventHandlerCollection)m_GameObjectEventCollections[obj];
-					if (col != null)
-						col.RemoveAllHandlers(e);
-				}
-				finally
-				{
-					m_lock.ReleaseReaderLock();
-				}
-			}
-			catch (ApplicationException ex)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Failed to remove local event handlers!", ex);
-			}
+			if(col != null)
+				col.RemoveHandler(e, del);
 		}
 
 		/// <summary>
@@ -391,27 +312,22 @@ namespace DOL.Events
 		/// should also be removed</param>
 		public static void RemoveAllHandlers(bool deep)
 		{
-			if (deep)
+			if(deep)
 			{
-				try
+				if(Lock.TryEnterWriteLock(LOCK_TIMEOUT))
 				{
-					m_lock.AcquireWriterLock(TIMEOUT);
 					try
 					{
-						m_GameObjectEventCollections.Clear();
+						GameObjectEventCollections.Clear();
 					}
 					finally
 					{
-						m_lock.ReleaseWriterLock();
+						Lock.ExitWriteLock();
 					}
 				}
-				catch (ApplicationException ex)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Failed to remove all local event handlers!", ex);
-				}
 			}
-			m_GlobalHandlerCollection.RemoveAllHandlers();
+
+			GlobalHandlerCollection.RemoveAllHandlers();
 		}
 
 		/// <summary>
@@ -460,36 +376,32 @@ namespace DOL.Events
 		/// <remarks>Overwrite the EventArgs class to set own arguments</remarks>
 		public static void Notify(DOLEvent e, object sender, EventArgs eArgs)
 		{
-			//Test the parameters
-			if (e == null)
+			if(e == null)
 				throw new ArgumentNullException("e", "No event type given!");
 
-			//Notify the local event handlers first
-			if (sender != null)
+			// notify handlers bounded specifically to the sender
+			if(sender != null)
 			{
-				try
+				DOLEventHandlerCollection col;
+
+				if(Lock.TryEnterReadLock(LOCK_TIMEOUT))
 				{
-					DOLEventHandlerCollection col = null;
-					m_lock.AcquireReaderLock(TIMEOUT);
 					try
 					{
-						col = (DOLEventHandlerCollection)m_GameObjectEventCollections[sender];
+						GameObjectEventCollections.TryGetValue(sender, out col);
 					}
 					finally
 					{
-						m_lock.ReleaseReaderLock();
+						Lock.ExitReadLock();
 					}
-					if (col != null)
+
+					if(col != null)
 						col.Notify(e, sender, eArgs);
 				}
-				catch (ApplicationException ex)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Failed to notify local event handler!", ex);
-				}
 			}
-			//Notify the global ones later
-			m_GlobalHandlerCollection.Notify(e, sender, eArgs);
+
+			// notify globally-bound handler
+			GlobalHandlerCollection.Notify(e, sender, eArgs);
 		}
 	}
 }
