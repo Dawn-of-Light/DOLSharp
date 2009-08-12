@@ -65,7 +65,7 @@ namespace DOL.GS.Keeps
 				guard.RespawnInterval = 5000; // 5 seconds
 			else if (guard is MissionMaster)
 				guard.RespawnInterval = 5 * 60 * 1000; // 5 minutes
-			else 
+			else
 				guard.RespawnInterval = Util.Random(5, 25) * 60 * 1000;
 		}
 
