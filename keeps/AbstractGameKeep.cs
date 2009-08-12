@@ -797,7 +797,6 @@ namespace DOL.GS.Keeps
 
 			KeepGuildMgr.SendLevelChangeMessage(this);
 			ResetPlayersOfKeep();
-			ResetNPCsOfKeep();
 
 			this.SaveIntoDatabase();
 		}
@@ -1082,69 +1081,6 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public void ResetNPCsOfKeep()
-		{
-			// tolakram - disabled this kludge  for now while trying to get guard position levels to work
-			// all this code should be removed once keepposition code is working
-			return;
-
-			// fix the roof guards position
-			int lordZ = this.Z;
-
-			// find the lord and use it's Z to determine what guards are on the roof
-			foreach (GameKeepGuard g in this.Guards.Values)
-			{
-				if (g is GuardLord)
-				{
-					lordZ = g.Z;
-					break;
-				}
-			}
-
-
-			int id = 0;
-			if (this is GameKeepTower)
-			{
-				id = 11;
-			}
-			else
-			{
-				id = 10;
-			}
-
-			GameKeepComponent component = null;
-			foreach (GameKeepComponent c in this.KeepComponents)
-			{
-				if (c.Skin == id)
-				{
-					component = c;
-					break;
-				}
-			}
-			if (component == null)
-				return;
-
-			GameKeepHookPoint hookpoint = component.HookPoints[97] as GameKeepHookPoint;
-
-			if (hookpoint == null)
-				return;
-
-			//calculate target height
-			int height = KeepMgr.GetHeightFromLevel(this.Level);
-
-			//predict Z
-			DBKeepHookPoint hp = (DBKeepHookPoint)GameServer.Database.SelectObject(typeof(DBKeepHookPoint), "HookPointID = '97' and Height = '" + height + "'");
-			if (hp == null)
-				return;
-			int z = component.Z + hp.Z;
-
-			foreach (GameKeepGuard guard in this.Guards.Values)
-			{
-
-				if (guard.PatrolGroup == null)
-					guard.UpdatePosition(lordZ, z);
-			}
-		}
 
 		#endregion
 
