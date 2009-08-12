@@ -127,6 +127,8 @@ namespace DOL.GS.Keeps
 			get { return GetModified(eProperty.MaxHealth) + (base.Level * 4); }
 		}
 
+		private bool m_changingPositions = false;
+
 
 		#region Combat
 
@@ -535,33 +537,29 @@ namespace DOL.GS.Keeps
 			
 			GameEventMgr.AddHandler(this, GameNPCEvent.AttackFinished, new DOLEventHandler(AttackFinished));
 
-			if (PatrolGroup != null)
+			if (PatrolGroup != null && !m_changingPositions)
 			{
-				CurrentWayPoint = PatrolGroup.PatrolPath;
+				bool foundGuard = false;
+				foreach (GameKeepGuard guard in PatrolGroup.PatrolGuards)
+				{
+					if (guard.IsAlive && guard.CurrentWayPoint != null)
+					{
+						CurrentWayPoint = guard.CurrentWayPoint;
+						m_changingPositions = true;
+						MoveTo(guard.CurrentRegionID, guard.X - Util.Random(200, 350), guard.Y - Util.Random(200, 350), guard.Z, guard.Heading);
+						m_changingPositions = false;
+						foundGuard = true;
+						break;
+					}
+				}
+
+				if (!foundGuard)
+					CurrentWayPoint = PatrolGroup.PatrolPath;
+
 				MoveOnPath(Patrol.PATROL_SPEED);
 			}
 
 			return true;
-		}
-
-		/// <summary>
-		/// Try and update the position of the guard
-		/// </summary>
-		public virtual void UpdatePosition(int lordZ, int roofZ)
-		{
-			int newZ = SpawnPoint.Z;
-
-			if (newZ > lordZ)
-			{
-				// we assume that any guards above the lord are on the roof, 
-				// so we want to move them to the new roof position
-
-				newZ = roofZ;
-				if (this is GuardArcher)
-					newZ += 100; // up on corner towers
-			}
-
-			MoveTo(CurrentRegionID, SpawnPoint.X, SpawnPoint.Y, newZ, Heading);
 		}
 
 		/// <summary>

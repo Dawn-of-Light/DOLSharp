@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using DOL.GS;
 using DOL.GS.Movement;
 using DOL.Events;
@@ -15,6 +16,7 @@ namespace DOL.GS.Keeps
 	public class Patrol
 	{
 		public const int PATROL_SPEED = 250;
+
 		public Patrol(GameKeepComponent component)
 		{
 			m_component = component;
@@ -184,10 +186,15 @@ namespace DOL.GS.Keeps
 						y += Util.Random(150, 250);
 					}
 
-					if (guard.IsMovingOnPath)
-						guard.StopMovingOnPath();
+					if (guard.IsAlive)
+					{
 
-					guard.MoveTo(guard.CurrentRegionID, x, y, guard.SpawnPoint.Z, guard.SpawnHeading);
+						if (guard.IsMovingOnPath)
+							guard.StopMovingOnPath();
+
+						guard.MoveTo(guard.CurrentRegionID, x, y, guard.SpawnPoint.Z, guard.SpawnHeading);
+					}
+
 					guardsToKeep.Add(guard);
 				}
 				else
@@ -219,6 +226,7 @@ namespace DOL.GS.Keeps
 				guard.MoveOnPath(PATROL_SPEED);
 			}
 		}
+		
 
 		public void GetMovementOffset(GameKeepGuard guard, out int x, out int y)
 		{

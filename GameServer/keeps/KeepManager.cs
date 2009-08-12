@@ -156,15 +156,6 @@ namespace DOL.GS.Keeps
 				}
 				LoadHookPoints();
 
-				if (m_keeps.Count != 0)
-				{
-					foreach (AbstractGameKeep keep in m_keeps.Values)
-					{
-						// make sure npc's are positioned correctly
-						keep.ResetNPCsOfKeep();
-					}
-				}
-
 				Logger.Info("Loaded " + m_keeps.Count + " keeps successfully");
 			}
 
