@@ -547,7 +547,13 @@ namespace DOL.GS
 				{
 					compiler = new CSharpCodeProvider();
 				}
-				CompilerParameters param = new CompilerParameters(asm_names, dllName, true);
+				
+				// Graveen: allow script compilation in debug or release mode
+				#if DEBUG
+					CompilerParameters param = new CompilerParameters(asm_names, dllName, true);
+				#else
+					CompilerParameters param = new CompilerParameters(asm_names, dllName, false);
+				#endif
 				param.GenerateExecutable = false;
 				param.GenerateInMemory = false;
 				param.WarningLevel = 2;
