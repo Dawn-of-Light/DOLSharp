@@ -2424,6 +2424,8 @@ namespace DOL.GS
 					}
 				}
 
+				owner.TempProperties.setProperty( LAST_ATTACK_DATA, mainHandAD );
+
 				//Notify the target of our attack (sends damage messages, should be before damage)
 				// ...but certainly not if the attack never took place, like when the living
 				// is out of range!
@@ -2453,24 +2455,26 @@ namespace DOL.GS
 						}
 					}
 				}
-            //CMH
-            // 1.89:
-            // - Characters who are attacked by stealthed archers will now target the attacking archer if the attacked player does not already have a target.
-            if (mainHandAD.Attacker.IsStealthed
-               && mainHandAD.AttackType == AttackData.eAttackType.Ranged
-               && (mainHandAD.AttackResult == eAttackResult.HitUnstyled || mainHandAD.AttackResult == eAttackResult.HitStyle))
-            {
-               if (mainHandAD.Target.TargetObject == null) {
-                  if (mainHandAD.Target is GamePlayer) {
-                     GameClient targetClient = WorldMgr.GetClientByPlayerID(mainHandAD.Target.InternalID,false,false);
-                     if (targetClient != null) {
-                        targetClient.Out.SendChangeTarget(mainHandAD.Attacker);
-                     }
-                  }
-               }
-            }
 
-			owner.TempProperties.setProperty(LAST_ATTACK_DATA, mainHandAD);
+				//CMH
+				// 1.89:
+				// - Characters who are attacked by stealthed archers will now target the attacking archer if the attacked player does not already have a target.
+				if( mainHandAD.Attacker.IsStealthed
+				   && mainHandAD.AttackType == AttackData.eAttackType.Ranged
+				   && ( mainHandAD.AttackResult == eAttackResult.HitUnstyled || mainHandAD.AttackResult == eAttackResult.HitStyle ) )
+				{
+					if( mainHandAD.Target.TargetObject == null )
+					{
+						if( mainHandAD.Target is GamePlayer )
+						{
+							GameClient targetClient = WorldMgr.GetClientByPlayerID( mainHandAD.Target.InternalID, false, false );
+							if( targetClient != null )
+							{
+								targetClient.Out.SendChangeTarget( mainHandAD.Attacker );
+							}
+						}
+					}
+				}
 
 				//Send the proper attacking messages to ourself
 				owner.SendAttackingCombatMessages(mainHandAD);
@@ -2478,8 +2482,8 @@ namespace DOL.GS
 				//Notify ourself about the attack
 				owner.Notify( GameLivingEvent.AttackFinished, owner, new AttackFinishedEventArgs( mainHandAD ) );
 
-                // remove the left-hand AttackData from the previous attack
-                owner.TempProperties.removeProperty( LAST_ATTACK_DATA_LH );
+				// remove the left-hand AttackData from the previous attack
+				owner.TempProperties.removeProperty( LAST_ATTACK_DATA_LH );
 
 				//now left hand damage
 				if (leftHandSwingCount > 0)
