@@ -75,10 +75,17 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			int targetLevel = ServerProperties.Properties.SLASH_LEVEL_TARGET;
+
+			if( targetLevel < 1 || targetLevel > 50 )
+				targetLevel = 20;
+
 			long newXP;
-			//calculate xp to level 20 from current level..
-			newXP = GamePlayer.XPLevel[19] - client.Player.Experience;
-			if (newXP < 0) newXP = 0;
+			newXP = GamePlayer.XPLevel[targetLevel - 1] - client.Player.Experience;
+
+			if (newXP < 0)
+				newXP = 0;
+
 			client.Player.GainExperience(newXP);
 			client.Player.PlayerCharacter.UsedLevelCommand = true;
 			client.Player.Out.SendMessage("You have been rewarded enough Experience to reach level " + ServerProperties.Properties.SLASH_LEVEL_TARGET + ", right click on your trainer to gain levels!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
