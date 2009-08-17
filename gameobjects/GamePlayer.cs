@@ -3492,7 +3492,7 @@ namespace DOL.GS
             if (sendMessage == true && amount > 0)
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			
-			while (RealmPoints >= CalculateRPsFromRealmLevel(RealmLevel + 1) && RealmLevel < 120)
+			while (RealmPoints >= CalculateRPsFromRealmLevel(RealmLevel + 1) && RealmLevel < ( REALMPOINTS_FOR_LEVEL.Length - 1 ) )
 			{
 				RealmLevel++;
 				RealmSpecialtyPoints++;
@@ -3760,28 +3760,21 @@ namespace DOL.GS
 		/// Calculates realm level from realm points. SLOW.
 		/// </summary>
 		/// <param name="realmPoints">amount of realm points</param>
-		/// <returns>realm level: RR5L3 = 43, RR1L2 = 2; capped at 99</returns>
+		/// <returns>realm level: RR5L3 = 43, RR1L2 = 2</returns>
 		protected virtual int CalculateRealmLevelFromRPs(long realmPoints)
 		{
 			if (realmPoints == 0)
 				return 0;
 
-			int i = REALMPOINTS_FOR_LEVEL.Length - 1;
-			for (; i > 0; i--)
+			int i;
+
+			for (i = REALMPOINTS_FOR_LEVEL.Length - 1; i > 0; i--)
 			{
 				if (REALMPOINTS_FOR_LEVEL[i] <= realmPoints)
 					break;
 			}
 
-			if (i > 120)
-				return 120;
 			return i;
-
-
-			// thanks to Linulo from http://daoc.foren.4players.de/viewtopic.php?t=40839&postdays=0&postorder=asc&start=30
-			//			double z = Math.Pow(1620.0 * realmPoints + 15.0 * Math.Sqrt(-1875.0 + 11664.0 * realmPoints*realmPoints), 1.0/3.0);
-			//			double rr = z / 30.0 + 5.0 / 2.0 / z + 0.5;
-			//			return Math.Min(99, (int)rr);
 		}
 
 		/// <summary>
