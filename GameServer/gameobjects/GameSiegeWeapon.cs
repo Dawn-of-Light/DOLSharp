@@ -382,7 +382,7 @@ namespace DOL.GS
 			Owner.SalvageSiegeWeapon(this);
 		}
 		#endregion
-		#region private methode
+		#region private methods
 		private void BroadcastAnimation()
 		{
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
