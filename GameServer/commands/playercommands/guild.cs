@@ -617,7 +617,7 @@ namespace DOL.GS.Commands
                             if (client.Player.Guild == null)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
+                                return; 
                             }
                             if (client.Player.Guild.GuildBanner)
                             {
@@ -2205,7 +2205,8 @@ namespace DOL.GS.Commands
                     #region Default
                     default:
                         {
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.UnknownCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.UnknownCommand", args[1]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							this.DisplayHelp(client);
                         }
                         break;
                     #endregion
