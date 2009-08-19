@@ -731,7 +731,7 @@ Scripts.Player.Guild.RankWithdrawSet:			You have {0} the Withdraw of the rank {1
 Scripts.Player.Guild.ThirdArgNotNum:			The third argument must be a number.	
 Scripts.Player.Guild.UnableToCreate:			The guild {0} was unable to be created.	
 Scripts.Player.Guild.UnableToCreateLead:		The guild {0} was unable to be created {1} as leader.	
-Scripts.Player.Guild.UnknownCommand:			Unknown command. Type /gc help for info.	
+Scripts.Player.Guild.UnknownCommand:			{0} is not a valid command:	
 Scripts.Player.Guild.UpgradeNoLevel:			You must specify a level to target for upgrade.	
 Scripts.Player.Guild.UpgradeScndArg:			The second argument must be a number.	
 Scripts.Player.Guild.WebpageSet:				You have set the guild webpage to {0}.	
