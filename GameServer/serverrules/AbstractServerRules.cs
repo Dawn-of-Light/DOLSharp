@@ -894,7 +894,7 @@ namespace DOL.GS.ServerRules
 						if (keep != null)
 						{
 							byte bonus = 0;
-							if (keep.Guild != null && keep.Guild == (living as GamePlayer).Guild)
+							if (keep.Guild != null && keep.Guild == player.Guild)
 								bonus = 20;
 							else if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal &&
 								keep.Realm == living.Realm)
