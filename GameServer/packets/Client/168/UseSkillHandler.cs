@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS.Styles;
 using log4net;
@@ -117,29 +118,39 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							IList spelllines = player.GetSpellLines();
-							if (index < skillList.Count + styles.Count + player.GetAmountOfSpell())
+							List<SpellLine> spelllines = player.GetSpellLines();
+							if (index < skillList.Count + styles.Count + player.GetSpellCount())
 							{
 								index -= (skillList.Count + styles.Count);
 								Spell spell = null;
 								SpellLine spellline = null;
-								lock (spelllines.SyncRoot)
+
+								lock (player.lockSpellLinesList)
 								{
-									foreach (SpellLine line in spelllines)
+									Dictionary<string, KeyValuePair<Spell, SpellLine>> spelllist = player.GetUsableSpells(spelllines, false);
+
+									if (index >= spelllist.Count)
 									{
-										IList spells = player.GetUsableSpellsOfLine(line);
-										if (index >= spells.Count)
+										index -= spelllist.Count;
+									}
+									else
+									{
+										Dictionary<string, KeyValuePair<Spell, SpellLine>>.ValueCollection.Enumerator spellenum = spelllist.Values.GetEnumerator();
+										int i = 0;
+										while (spellenum.MoveNext())
 										{
-											index -= spells.Count;
-										}
-										else
-										{
-											spell = (Spell)spells[index];
-											spellline = line;
-											break;
+											if (i == index)
+											{
+												spell = spellenum.Current.Key;
+												spellline = spellenum.Current.Value;
+												break;
+											}
+
+											i++;
 										}
 									}
 								}
+
 								if (spell != null)
 								{
 									player.CastSpell(spell, spellline);

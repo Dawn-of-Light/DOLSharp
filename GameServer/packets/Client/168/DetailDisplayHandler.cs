@@ -270,25 +270,32 @@ namespace DOL.GS.PacketHandler.Client.v168
 						IList styles = client.Player.GetStyleList();
 						int index = objectID - skillList.Count - styles.Count - 100;
 
-						IList spelllines = client.Player.GetSpellLines();
+						List<SpellLine> spelllines = client.Player.GetSpellLines();
 						if (spelllines == null || index < 0)
 							break;
 
-						lock (spelllines.SyncRoot)
+						lock (client.Player.lockSpellLinesList)
 						{
-							foreach (SpellLine spellline in spelllines)
+							Dictionary<string, KeyValuePair<Spell, SpellLine>> spelllist = client.Player.GetUsableSpells(spelllines, false);
+
+							if (index >= spelllist.Count)
 							{
-								IList spells = client.Player.GetUsableSpellsOfLine(spellline);
-								if (index >= spells.Count)
+								index -= spelllist.Count;
+							}
+							else
+							{
+								Dictionary<string, KeyValuePair<Spell, SpellLine>>.ValueCollection.Enumerator spellenum = spelllist.Values.GetEnumerator();
+								int i = 0;
+								while (spellenum.MoveNext())
 								{
-									index -= spells.Count;
-								}
-								else
-								{
-									Spell spell = (Spell)spells[index];
-									caption = spell.Name;
-									WriteSpellInfo(objectInfo, spell, spellline, client);
-									break;
+									if (i == index)
+									{
+										caption = spellenum.Current.Key.Name;
+										WriteSpellInfo(objectInfo, spellenum.Current.Key, spellenum.Current.Value, client);
+										break;
+									}
+
+									i++;
 								}
 							}
 						}
