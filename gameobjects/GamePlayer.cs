@@ -2382,7 +2382,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the Spell lines the player can use
 		/// </summary>
-		protected readonly ArrayList m_spelllines = new ArrayList();
+		protected readonly List<SpellLine> m_spelllines = new List<SpellLine>();
+
+		/// <summary>
+		/// Object to use when locking the SpellLines list
+		/// </summary>
+		public Object lockSpellLinesList = new Object();
 
 		/// <summary>
 		/// Holds all styles of the player
@@ -2528,7 +2533,7 @@ namespace DOL.GS
 		{
 			if (!m_spelllines.Contains(line))
 				return false;
-			lock (m_spelllines.SyncRoot)
+			lock (lockSpellLinesList)
 			{
 				m_spelllines.Remove(line);
 			}
@@ -2792,7 +2797,7 @@ namespace DOL.GS
 		public void RemoveAllSpellLines()
 		{
 			ArrayList lines = new ArrayList();
-			lock (m_spelllines.SyncRoot)
+			lock (lockSpellLinesList)
 			{
 				foreach (SpellLine line in m_spelllines)
 				{
@@ -2944,7 +2949,7 @@ namespace DOL.GS
 			SpellLine oldline = GetSpellLine(line.KeyName);
 			if (oldline == null)
 			{
-				lock (m_spelllines.SyncRoot)
+				lock (lockSpellLinesList)
 				{
 					m_spelllines.Add(line);
 				}
@@ -2964,7 +2969,7 @@ namespace DOL.GS
 		/// iterate only with locking SyncRoot on the list!
 		/// </summary>
 		/// <returns></returns>
-		public IList GetSpellLines()
+		public List<SpellLine> GetSpellLines()
 		{
 			return m_spelllines;
 		}
@@ -2976,7 +2981,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public SpellLine GetSpellLine(string keyname)
 		{
-			lock (m_spelllines.SyncRoot)
+			lock (lockSpellLinesList)
 			{
 				foreach (SpellLine line in m_spelllines)
 				{
@@ -2997,96 +3002,185 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Return the amount of spell the player can use
+		/// Return the count of all spells the player can use
+		/// This is for hybrid classes only
 		/// </summary>
 		/// <returns></returns>
-		public int GetAmountOfSpell()
+		public int GetSpellCount()
 		{
-			int spellcount = 0;
-			lock (m_spelllines.SyncRoot)
+			lock (lockSpellLinesList)
 			{
-				foreach (SpellLine line in m_spelllines)
-				{
-					spellcount += GetUsableSpellsOfLine(line).Count;
-				}
+				return GetUsableSpells(m_spelllines, true).Count;
 			}
-			return spellcount;
 		}
 
+
 		/// <summary>
-		/// Return a list of spells usable in the specified SpellLine
+		/// Should we allow multiple versions of each spell type in this spell line
+		/// Used for hybrid classes
 		/// </summary>
-		/// <param name="line">the line of spell</param>
-		/// <returns>list of Spells</returns>
-		public virtual IList GetUsableSpellsOfLine(SpellLine line)
+		/// <param name="line"></param>
+		/// <returns></returns>
+		virtual protected bool AllowMultipleSpellVersions(SpellLine line)
 		{
-			IList spells = new ArrayList();
-            Hashtable table_spells1 = new Hashtable();
-            Hashtable table_spells2 = new Hashtable();
-            foreach (Spell spell in SkillBase.GetSpellList(line.KeyName))
+			bool allow = false;
+
+			switch (line.Spec)
 			{
-				if (spell.Level <= line.Level)
+				case Specs.Augmentation:
+				case Specs.Mending:
+					allow = true;
+					break;
+
+				case Specs.Enhancement:
+				case Specs.Rejuvenation:
+					if (line.IsBaseLine || CharacterClass.ID == (int)eCharacterClass.Cleric)
+						allow = true;
+
+					break;
+
+				case Specs.Nurture:
+				case Specs.Regrowth:
+					if (line.IsBaseLine || CharacterClass.ID == (int)eCharacterClass.Druid)
+						allow = true;
+
+					break;
+			}
+
+			return allow;
+		}
+
+
+		/// <summary>
+		/// A list of all usable spells for this player.  This list is maintained as long as the player is active
+		/// with new spells always added to the end of the list.  This is used for all hybrid classes
+		/// Structure of this list: uniquekey-Spell-SpellLine
+		/// </summary>
+		protected Dictionary<string, KeyValuePair<Spell, SpellLine>> m_usableSpells = null;
+
+
+		/// <summary>
+		/// Return a list of spells usable for all spell lines provided.  This is used for hybrid classes.
+		/// This list should return the highest level spell of each spell type (or spell group, if provided)
+		/// </summary>
+		/// <param name="spelllines">list of spellLines</param>
+		/// <returns>list of Spells</returns>
+		public virtual Dictionary<string, KeyValuePair<Spell, SpellLine>> GetUsableSpells(List<SpellLine> spellLines, bool update)
+		{
+			if (m_usableSpells == null)
+			{
+				m_usableSpells = new Dictionary<string, KeyValuePair<Spell, SpellLine>>();
+			}
+
+			foreach (KeyValuePair<Spell, SpellLine> spell in m_usableSpells.Values)
+			{
+				if (spell.Key.Level > spell.Value.Level)
 				{
-					object key;
-					if (spell.Group == 0)
+					// this is probably due to a respec, wipe list and rebuild
+					// this will cause the quick bars to jumble, no idea how to avoid it
+					m_usableSpells = new Dictionary<string, KeyValuePair<Spell, SpellLine>>();
+					update = true;
+					break;
+				}
+			}
+
+			if (update)
+			{
+				Dictionary<string, KeyValuePair<Spell, SpellLine>> usableSpells1 = new Dictionary<string, KeyValuePair<Spell, SpellLine>>(); // highest level of spell type or group
+				Dictionary<string, KeyValuePair<Spell, SpellLine>> usableSpells2 = new Dictionary<string, KeyValuePair<Spell, SpellLine>>(); // second highest level of spell type or group
+				List<KeyValuePair<Spell, SpellLine>> spells = new List<KeyValuePair<Spell, SpellLine>>();
+
+				foreach (SpellLine line in spellLines)
+				{
+					foreach (Spell spell in SkillBase.GetSpellList(line.KeyName))
 					{
-						//Give out different versions of spreadheal
-						//if (spell.SpellType == "SpreadHeal")
-							//key = spell.SpellType + "+" + spell.Target + "+" + spell.CastTime + "+" + spell.RecastDelay + spell.Radius + spell.Level;
-						//else
-						key = spell.SpellType + "+" + spell.Target + "+" + spell.CastTime;// + "+" + spell.RecastDelay;// + spell.Radius;
-						
-						if (spell.Radius > 0)
+						if (spell.Level <= line.Level)
+							spells.Add(new KeyValuePair<Spell, SpellLine>(spell, line));
+					}
+				}
+
+				foreach (KeyValuePair<Spell, SpellLine> spell in spells)
+				{
+					string key;
+
+					if (spell.Key.Group == 0)
+					{
+						// Tolakram:
+						// This is an attempt to order to make sure all the correct spells are provided. 
+						// If there is a special rule for a spelltype then all spells of that spelltype should be provided with 
+						// a unique spellgroup to ensure it gets included in the list.
+
+						key = spell.Value.KeyName + "+" + spell.Key.SpellType + "+" + spell.Key.Target;
+
+						if (spell.Key.Radius > 0)
 						{
 							key = key + "+AOE";
 						}
 					}
 					else
-						key = spell.Group;
-						
-					if (!table_spells1.ContainsKey(key))
 					{
-						table_spells1.Add(key, spell);
+						key = spell.Key.Group.ToString();
+					}
+
+					string key1 = "1:" + key;
+					string key2 = "2:" + key;
+
+					if (usableSpells1.ContainsKey(key1))
+					{
+						if (spell.Key.Level > usableSpells1[key1].Key.Level)
+						{
+							if (AllowMultipleSpellVersions(spell.Value))
+							{
+								// add or replace in the secondary list
+								if (usableSpells2.ContainsKey(key2))
+								{
+									usableSpells2[key2] = usableSpells1[key1];
+								}
+								else
+								{
+									usableSpells2.Add(key2, usableSpells1[key1]);
+								}
+							}
+
+							usableSpells1[key1] = spell;
+						}
 					}
 					else
 					{
-						Spell oldspell1 = (Spell)table_spells1[key];
-						if (spell.Level > oldspell1.Level)
-						{
-							if(spell.Group==0)
-								table_spells2[key] = oldspell1;
-							table_spells1[key] = spell;
-						}
+						usableSpells1.Add(key1, spell);
+					}
+				}
+
+				// Replace any existing spells or adding new ones to the end of the list
+
+				foreach (KeyValuePair<string, KeyValuePair<Spell, SpellLine>> spell in usableSpells1)
+				{
+					if (m_usableSpells.ContainsKey(spell.Key))
+					{
+						m_usableSpells[spell.Key] = spell.Value;
+					}
+					else
+					{
+						m_usableSpells.Add(spell.Key, spell.Value);
+					}
+				}
+
+				foreach (KeyValuePair<string, KeyValuePair<Spell, SpellLine>> spell in usableSpells2)
+				{
+					if (m_usableSpells.ContainsKey(spell.Key))
+					{
+						m_usableSpells[spell.Key] = spell.Value;
+					}
+					else
+					{
+						m_usableSpells.Add(spell.Key, spell.Value);
 					}
 				}
 			}
 
-            foreach (DictionaryEntry spell in table_spells1)
-            {
-                try
-                {
-                    spells.Add(spell.Value);
-                }
-                catch (Exception e)
-                {
-                    if (log.IsErrorEnabled)
-                        log.Error("GetUsableSpellsOfLine", e);
-                }
-            }
-            foreach (DictionaryEntry spell in table_spells2)
-            {
-                try
-                {
-                    spells.Add(spell.Value);
-                }
-                catch (Exception e)
-                {
-                    if (log.IsErrorEnabled)
-                        log.Error("GetUsableSpellsOfLine", e);
-                }
-            }
-            return spells;
+			return m_usableSpells;
 		}
+
 
 		/// <summary>
 		/// updates the list of available styles
@@ -3185,7 +3279,7 @@ namespace DOL.GS
 		/// <param name="sendMessages">sends "You gain power" messages if true</param>
 		public virtual void UpdateSpellLineLevels(bool sendMessages)
 		{
-			lock (GetSpellLines().SyncRoot)
+			lock (lockSpellLinesList)
 			{
 				foreach (SpellLine line in GetSpellLines())
 				{
@@ -10683,7 +10777,7 @@ namespace DOL.GS
 				}
 			}
 			StringBuilder spellLines = new StringBuilder();
-			lock (m_spelllines.SyncRoot)
+			lock (lockSpellLinesList)
 			{
 				foreach (SpellLine line in m_spelllines)
 				{
@@ -10812,7 +10906,7 @@ namespace DOL.GS
 			}
 
 			//Load the spell lines and then check to see if an spells in the spell lines should be disabled
-			lock (m_spelllines.SyncRoot)
+			lock (lockSpellLinesList)
 			{
 				m_spelllines.Clear();
 				tmpStr = character.SerializedSpellLines;

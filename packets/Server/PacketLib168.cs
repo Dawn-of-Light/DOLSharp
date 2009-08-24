@@ -2090,7 +2090,7 @@ namespace DOL.GS.PacketHandler
 			IList specs = m_gameClient.Player.GetSpecList();
 			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
 			IList styles = m_gameClient.Player.GetStyleList();
-			IList spelllines = m_gameClient.Player.GetSpellLines();
+			List<SpellLine> spelllines = m_gameClient.Player.GetSpellLines();
 			Hashtable m_styleId = new Hashtable();
 			int maxSkills = 0;
 			int firstSkills = 0;
@@ -2106,11 +2106,11 @@ namespace DOL.GS.PacketHandler
 				{
 					lock (specs.SyncRoot)
 					{
-						lock (spelllines.SyncRoot)
+						lock (m_gameClient.Player.lockSpellLinesList)
 						{
 							int skillCount = specs.Count + skills.Count + styles.Count;
 							if (flagSendHybrid)
-								skillCount += m_gameClient.Player.GetAmountOfSpell();
+								skillCount += m_gameClient.Player.GetSpellCount();
 
 							pak.WriteByte(0x01); //subcode
 							pak.WriteByte((byte)skillCount); //number of entry
@@ -2195,32 +2195,32 @@ namespace DOL.GS.PacketHandler
 							}
 							if (flagSendHybrid)
 							{
-								foreach (SpellLine spellline in spelllines)
+								Dictionary<string, KeyValuePair<Spell, SpellLine>> spells = m_gameClient.Player.GetUsableSpells(spelllines, false);
+
+								foreach (KeyValuePair<string, KeyValuePair<Spell, SpellLine>> spell in spells)
 								{
-									int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spellline.Spec));
+									CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
+
+									int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spell.Value.Value.Spec));
 									if (spec_index == -1)
 										spec_index = 0xFE; // Nightshade special value
-									IList spells = m_gameClient.Player.GetUsableSpellsOfLine(spellline);
-									foreach (Spell spell in spells)
+
+									pak.WriteByte((byte)spell.Value.Key.Level);
+									if (spell.Value.Key.InstrumentRequirement == 0)
 									{
-										CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-										pak.WriteByte((byte)spell.Level);
-										if (spell.InstrumentRequirement == 0)
-										{
-											pak.WriteByte((byte)eSkillPage.Spells);
-											pak.WriteByte(0);
-											pak.WriteByte((byte)spec_index);
-										}
-										else
-										{
-											pak.WriteByte((byte)eSkillPage.Songs);
-											pak.WriteByte(0);
-											pak.WriteByte(0xFF);
-										}
+										pak.WriteByte((byte)eSkillPage.Spells);
 										pak.WriteByte(0);
-										pak.WriteShort(spell.Icon);
-										pak.WritePascalString(spell.Name);
+										pak.WriteByte((byte)spec_index);
 									}
+									else
+									{
+										pak.WriteByte((byte)eSkillPage.Songs);
+										pak.WriteByte(0);
+										pak.WriteByte(0xFF);
+									}
+									pak.WriteByte(0);
+									pak.WriteShort(spell.Value.Key.Icon);
+									pak.WritePascalString(spell.Value.Key.Name);
 								}
 							}
 						}
@@ -2665,28 +2665,25 @@ namespace DOL.GS.PacketHandler
 				else
 				{
 					int skillsCount = m_gameClient.Player.GetNonTrainableSkillList().Count + m_gameClient.Player.GetStyleList().Count;
-					IList lines = m_gameClient.Player.GetSpellLines();
+					List<SpellLine> lines = m_gameClient.Player.GetSpellLines();
 					int index = -1;
-					lock (lines.SyncRoot)
+
+					lock (m_gameClient.Player.lockSpellLinesList)
 					{
+						Dictionary<string, KeyValuePair<Spell, SpellLine>> spelllist = m_gameClient.Player.GetUsableSpells(lines, false);
+
 						int searchIndex = 0;
-						foreach (SpellLine line in lines)
+						foreach (KeyValuePair<Spell, SpellLine> spell in spelllist.Values)
 						{
-							IList spells = m_gameClient.Player.GetUsableSpellsOfLine(line);
-							foreach (Spell spell in spells)
+							if (spell.Key == skill)
 							{
-								if (spell == skill)
-								{
-									index = searchIndex;
-									//DOLConsole.LogLine("disable spell "+skill.Name+" in line "+line.Name);
-									break;
-								}
-								searchIndex++;
-							}
-							if (index >= 0)
+								index = searchIndex;
 								break;
+							}
+							searchIndex++;
 						}
 					}
+
 					if (index < 0)
 						return;
 					pak.WriteShort(0);
