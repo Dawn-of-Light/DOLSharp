@@ -19,6 +19,7 @@
 #define NOENCRYPTION
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.GS.RealmAbilities;
@@ -221,7 +222,7 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.Position = 4;
 				pak.WriteByte((byte)(maxSkills - first));
-				pak.WriteByte((byte)(first == 0 ? 99 : 0x03)); //subtype
+				pak.WriteByte(0x03); //subtype
 				pak.WriteByte((byte)first);
 				SendTCP(pak);
 				pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
@@ -241,7 +242,7 @@ namespace DOL.GS.PacketHandler
 			IList specs = m_gameClient.Player.GetSpecList();
 			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
 			IList styles = m_gameClient.Player.GetStyleList();
-			IList spelllines = m_gameClient.Player.GetSpellLines();
+			List<SpellLine> spelllines = m_gameClient.Player.GetSpellLines();
 			Hashtable m_styleId = new Hashtable();
 			int maxSkills = 0;
 			int firstSkills = 0;
@@ -257,11 +258,11 @@ namespace DOL.GS.PacketHandler
 				{
 					lock (specs.SyncRoot)
 					{
-						lock (spelllines.SyncRoot)
+						lock (m_gameClient.Player.lockSpellLinesList)
 						{
 							int skillCount = specs.Count + skills.Count + styles.Count;
 							if (flagSendHybrid)
-								skillCount += m_gameClient.Player.GetAmountOfSpell();
+								skillCount += m_gameClient.Player.GetSpellCount();
 
 							pak.WriteByte(0x01); //subcode
 							pak.WriteByte((byte)skillCount); //number of entry
@@ -346,32 +347,32 @@ namespace DOL.GS.PacketHandler
 							}
 							if (flagSendHybrid)
 							{
-								foreach (SpellLine spellline in spelllines)
+								Dictionary<string, KeyValuePair<Spell, SpellLine>> spells = m_gameClient.Player.GetUsableSpells(spelllines, false);
+
+								foreach (KeyValuePair<string, KeyValuePair<Spell, SpellLine>> spell in spells)
 								{
-									int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spellline.Spec));
+									CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
+
+									int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spell.Value.Value.Spec));
 									if (spec_index == -1)
 										spec_index = 0xFE; // Nightshade special value
-									IList spells = m_gameClient.Player.GetUsableSpellsOfLine(spellline);
-									foreach (Spell spell in spells)
+
+									pak.WriteByte((byte)spell.Value.Key.Level);
+									if (spell.Value.Key.InstrumentRequirement == 0)
 									{
-										CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-										pak.WriteByte((byte)spell.Level);
-										if (spell.InstrumentRequirement == 0)
-										{
-											pak.WriteByte((byte)eSkillPage.Spells);
-											pak.WriteByte(0);
-											pak.WriteByte((byte)spec_index);
-										}
-										else
-										{
-											pak.WriteByte((byte)eSkillPage.Songs);
-											pak.WriteByte(0);
-											pak.WriteByte(0xFF);
-										}
+										pak.WriteByte((byte)eSkillPage.Spells);
 										pak.WriteByte(0);
-										pak.WriteShort(spell.Icon);
-										pak.WritePascalString(spell.Name);
+										pak.WriteByte((byte)spec_index);
 									}
+									else
+									{
+										pak.WriteByte((byte)eSkillPage.Songs);
+										pak.WriteByte(0);
+										pak.WriteByte(0xFF);
+									}
+									pak.WriteByte(0);
+									pak.WriteShort(spell.Value.Key.Icon);
+									pak.WritePascalString(spell.Value.Key.Name);
 								}
 							}
 						}
@@ -386,8 +387,9 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)firstSkills);
 				SendTCP(pak);
 			}
-			//if (!flagSendHybrid)
+
 			SendListCastersSpell();
 		}
+
 	}
 }
