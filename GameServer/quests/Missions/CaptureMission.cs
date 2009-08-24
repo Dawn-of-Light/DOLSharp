@@ -61,7 +61,7 @@ namespace DOL.GS.Quests
 						{
 							if (keep.IsPortalKeep)
 								continue;
-							if (keep is GameKeep && keep.Realm != realm && keep.Level < 5)
+							if (keep is GameKeep && keep.Realm != realm)
 								list.Add(keep);
 						}
 						break;

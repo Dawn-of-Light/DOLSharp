@@ -179,9 +179,9 @@ namespace DOL.GS.Spells
 				}
 				effect.Cancel(false);
 
-				foreach(Spell oSpell in caster.GetUsableSpellsOfLine(chamber.SpellLine))
+				foreach (Spell oSpell in SkillBase.GetSpellList(chamber.SpellLine.KeyName))
 				{
-					if(oSpell.SpellType.ToLower()=="chamber")
+					if (oSpell.Level <= caster.GetSpellLine(chamber.SpellLine.KeyName).Level && oSpell.SpellType.ToLower() == "chamber")
 					{
 						caster.DisableSkill(oSpell, 4);
 					}
