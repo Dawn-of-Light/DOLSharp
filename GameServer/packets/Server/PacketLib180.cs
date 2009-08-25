@@ -388,7 +388,7 @@ namespace DOL.GS.PacketHandler
 				SendTCP(pak);
 			}
 
-			SendListCastersSpell();
+			SendSpellList();
 		}
 
 	}
