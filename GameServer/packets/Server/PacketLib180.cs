@@ -218,7 +218,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first)
 		{
-			if(pak.Length > 1000)
+			if(pak.Length > 1500)
 			{
 				pak.Position = 4;
 				pak.WriteByte((byte)(maxSkills - first));
