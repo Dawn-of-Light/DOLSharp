@@ -562,7 +562,7 @@ namespace DOL.GS.PacketHandler
 		void SendSetControlledHorse(GamePlayer player);
 		void SendControlledHorse(GamePlayer player, bool flag);
 		void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first);
-		void SendListCastersSpell();
+		void SendSpellList();
 		void SendCrash(string str);
 		void SendRegionColorSheme();
 		void SendRegionColorSheme(byte color);

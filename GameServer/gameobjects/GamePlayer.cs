@@ -2382,7 +2382,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the Spell lines the player can use
 		/// </summary>
-		protected readonly List<SpellLine> m_spelllines = new List<SpellLine>();
+		protected readonly List<SpellLine> m_spellLines = new List<SpellLine>();
 
 		/// <summary>
 		/// Object to use when locking the SpellLines list
@@ -2531,11 +2531,11 @@ namespace DOL.GS
 		/// <returns>true if removed</returns>
 		private bool RemoveSpellLine(SpellLine line)
 		{
-			if (!m_spelllines.Contains(line))
+			if (!m_spellLines.Contains(line))
 				return false;
 			lock (lockSpellLinesList)
 			{
-				m_spelllines.Remove(line);
+				m_spellLines.Remove(line);
 			}
 			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.RemoveSpellLine.YouLose", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;
@@ -2799,14 +2799,14 @@ namespace DOL.GS
 			ArrayList lines = new ArrayList();
 			lock (lockSpellLinesList)
 			{
-				foreach (SpellLine line in m_spelllines)
+				foreach (SpellLine line in m_spellLines)
 				{
 					lines.Add(line);
 				}
 
 				foreach (SpellLine line in lines)
 				{
-					m_spelllines.Remove(line);
+					m_spellLines.Remove(line);
 				}
 			}
 		}
@@ -2951,7 +2951,7 @@ namespace DOL.GS
 			{
 				lock (lockSpellLinesList)
 				{
-					m_spelllines.Add(line);
+					m_spellLines.Add(line);
 				}
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.AddSpellLine.YouLearn", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
@@ -2971,7 +2971,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public List<SpellLine> GetSpellLines()
 		{
-			return m_spelllines;
+			return m_spellLines;
 		}
 
 		/// <summary>
@@ -2983,7 +2983,7 @@ namespace DOL.GS
 		{
 			lock (lockSpellLinesList)
 			{
-				foreach (SpellLine line in m_spelllines)
+				foreach (SpellLine line in m_spellLines)
 				{
 					if (line.KeyName == keyname)
 						return line;
@@ -3010,7 +3010,7 @@ namespace DOL.GS
 		{
 			lock (lockSpellLinesList)
 			{
-				return GetUsableSpells(m_spelllines, true).Count;
+				return GetUsableSpells(m_spellLines, true).Count;
 			}
 		}
 
@@ -3050,6 +3050,29 @@ namespace DOL.GS
 			return allow;
 		}
 
+		/// <summary>
+		/// Is this a Champion or ML SpellLine
+		/// </summary>
+		/// <param name="line"></param>
+		/// <returns></returns>
+		public virtual bool IsAdvancedSpellLine(SpellLine line)
+		{
+			switch (line.KeyName)
+			{
+				case "champion abilities":
+				case "convoker":
+				case "banelord":
+				case "stormlord":
+				case "perfecter":
+				case "sojourner":
+				case "spymaster":
+				case "battlemaster":
+				case "warlord":
+					return true;
+			}
+
+			return false;
+		}
 
 		/// <summary>
 		/// A list of all usable spells for this player.  This list is maintained as long as the player is active
@@ -3092,10 +3115,14 @@ namespace DOL.GS
 
 				foreach (SpellLine line in spellLines)
 				{
-					foreach (Spell spell in SkillBase.GetSpellList(line.KeyName))
+					// Do not place advanced spell lines in this list
+					if (IsAdvancedSpellLine(line) == false)
 					{
-						if (spell.Level <= line.Level)
-							spells.Add(new KeyValuePair<Spell, SpellLine>(spell, line));
+						foreach (Spell spell in SkillBase.GetSpellList(line.KeyName))
+						{
+							if (spell.Level <= line.Level)
+								spells.Add(new KeyValuePair<Spell, SpellLine>(spell, line));
+						}
 					}
 				}
 
@@ -10779,7 +10806,7 @@ namespace DOL.GS
 			StringBuilder spellLines = new StringBuilder();
 			lock (lockSpellLinesList)
 			{
-				foreach (SpellLine line in m_spelllines)
+				foreach (SpellLine line in m_spellLines)
 				{
 					if (spellLines.Length > 0)
 						spellLines.Append(';');
@@ -10908,7 +10935,7 @@ namespace DOL.GS
 			//Load the spell lines and then check to see if an spells in the spell lines should be disabled
 			lock (lockSpellLinesList)
 			{
-				m_spelllines.Clear();
+				m_spellLines.Clear();
 				tmpStr = character.SerializedSpellLines;
 				if (tmpStr != null && tmpStr.Length > 0)
 				{
