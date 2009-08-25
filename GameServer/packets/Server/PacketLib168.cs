@@ -2235,36 +2235,35 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)firstSkills);
 				SendTCP(pak);
 			}
-			//if (!flagSendHybrid)
-			SendListCastersSpell();
+
+			SendSpellList();
 		}
 
-		public virtual void SendListCastersSpell()
+		/// <summary>
+		/// Send spell list to client.  This includes list caster spells and advanced (Champion, ML ...) spell lines
+		/// Hybrid spells are handled in SendUpdatePlayerSkills()
+		/// </summary>
+		public virtual void SendSpellList()
 		{
 			GSTCPPacketOut pak;// = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
 			IList spelllines = m_gameClient.Player.GetSpellLines();
 			byte linenumber = 0;
 
-			bool flagSendHybrid = true;
+			bool isHybrid = true;
 			if(m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
-				flagSendHybrid = false;
+				isHybrid = false;
 
 			lock (spelllines.SyncRoot)
 			{
 				foreach (SpellLine line in spelllines)
 				{
-					string linename=line.Name.ToLower();
-					if (flagSendHybrid && (!linename.StartsWith(GlobalSpellsLines.Champion_Spells)
-							||linename!="convoker"
-							||linename!="banelord"
-							||linename!="stormlord"
-							||linename!="perfecter"
-							||linename!="sojourner"
-							||linename!="spymaster"
-							||linename!="battlemaster"
-							||linename!="warlord")) continue;
+					// for hybrids only send the advanced spell lines here
+					if (isHybrid && m_gameClient.Player.IsAdvancedSpellLine(line) == false)
+						continue;
 
-					List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
+					// make a copy
+					List<Spell> spells = new List<Spell>(SkillBase.GetSpellList(line.KeyName));
+
 					int spellcount = 0;
 					for (int i = 0; i < spells.Count; i++)
 					{
