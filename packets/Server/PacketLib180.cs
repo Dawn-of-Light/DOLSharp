@@ -222,7 +222,7 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.Position = 4;
 				pak.WriteByte((byte)(maxSkills - first));
-				pak.WriteByte(0x03); //subtype
+				pak.WriteByte( (byte)( first == 0 ? 99 : 0x03 ) ); //subtype
 				pak.WriteByte((byte)first);
 				SendTCP(pak);
 				pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
