@@ -108,7 +108,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 									return 1;
 							}
 
+							if (objectID >= list.Count)
+								return 1;
+
 							item = list[objectID];
+
 							if (item == null)
 								return 1;
                         }
