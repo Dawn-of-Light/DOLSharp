@@ -113,7 +113,7 @@
 	<Region037>
 		<description>Temple of Twilight</description>
 		<isDivingEnabled>True</isDivingEnabled>
-		<waterLevel>15930</waterLevel>
+		<waterLevel>17669</waterLevel>
 		<id>37</id>
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
@@ -349,7 +349,7 @@
 	<Region080>
 		<description>Temple of Twilight</description>
 		<isDivingEnabled>True</isDivingEnabled>
-		<waterLevel>15930</waterLevel>
+		<waterLevel>17669</waterLevel>
 		<id>80</id>
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
@@ -602,7 +602,7 @@
 	<Region137>
 		<description>Temple of Twilight</description>
 		<isDivingEnabled>True</isDivingEnabled>
-		<waterLevel>15930</waterLevel>
+		<waterLevel>17669</waterLevel>
 		<id>137</id>
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
