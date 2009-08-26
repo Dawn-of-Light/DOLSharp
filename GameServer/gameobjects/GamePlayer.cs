@@ -3028,19 +3028,16 @@ namespace DOL.GS
 			switch (line.Spec)
 			{
 				case Specs.Augmentation:
-				case Specs.Mending:
 					allow = true;
 					break;
 
 				case Specs.Enhancement:
-				case Specs.Rejuvenation:
 					if (line.IsBaseLine || CharacterClass.ID == (int)eCharacterClass.Cleric)
 						allow = true;
 
 					break;
 
 				case Specs.Nurture:
-				case Specs.Regrowth:
 					if (line.IsBaseLine || CharacterClass.ID == (int)eCharacterClass.Druid)
 						allow = true;
 
