@@ -3139,6 +3139,11 @@ namespace DOL.GS
 
 						key = spell.Value.KeyName + "+" + spell.Key.SpellType + "+" + spell.Key.Target;
 
+						if (spell.Key.CastTime == 0)
+						{
+							key = key + "+INSTANT";
+						}
+
 						if (spell.Key.Radius > 0)
 						{
 							key = key + "+AOE";
