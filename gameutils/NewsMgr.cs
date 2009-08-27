@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using DOL.Database;
 using DOL.Events;
@@ -51,15 +52,16 @@ namespace DOL.GS
 				string realm = "";
 				//we can see all captures
 				if (type > 0)
-					realm = " AND (`Realm` = '0' OR `Realm` = '" + client.Player.Realm + "')";
+					realm = " AND (Realm = 0 OR Realm = " + ((int)client.Player.Realm).ToString() + " ) ";
 
 				DBNews[] newsList = (DBNews[])GameServer.Database.SelectObjects(typeof(DBNews), "`Type` = '" + type + "'" + realm + " ORDER BY `CreationDate` DESC LIMIT 5");
 
-				foreach (DBNews news in newsList)
-				{
-					if (index > 4)
-						break;
+				int n = newsList.Length;
 
+				while (n > 0)
+				{
+					n--;
+					DBNews news = newsList[n];
 					client.Out.SendMessage(string.Format("N,{0},{1},{2},\"{3}\"", news.Type, index++, RetElapsedTime(news.CreationDate), news.Text), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
 				}
 			}
