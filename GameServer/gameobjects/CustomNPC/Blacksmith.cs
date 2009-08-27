@@ -176,6 +176,11 @@ namespace DOL.GS
                 item.Condition = item.MaxCondition;
                 item.Durability = item.MaxDurability;
             }
+			else if (item.Name.ToLower().Contains("dragonslayer")) // tolakram - hack, this should be a field in itemtemplate
+			{
+                item.Condition = item.MaxCondition;
+                item.Durability = item.MaxDurability;
+			}
             else
             {
                 if (ToRecoverCond + 1 >= item.Durability)
