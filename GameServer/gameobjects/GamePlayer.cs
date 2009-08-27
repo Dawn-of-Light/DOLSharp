@@ -3138,12 +3138,17 @@ namespace DOL.GS
 
 						if (spell.Key.CastTime == 0)
 						{
-							key = key + "+INSTANT";
+							key += "+INSTANT";
 						}
 
 						if (spell.Key.Radius > 0)
 						{
-							key = key + "+AOE";
+							key += "+AOE";
+						}
+
+						if (spell.Key.SubSpellID > 0)
+						{
+							key += "+SUB";
 						}
 					}
 					else
