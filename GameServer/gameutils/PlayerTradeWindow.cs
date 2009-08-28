@@ -564,10 +564,38 @@ namespace DOL.GS
 
 					// remove all items first to make sure there is enough space
 					// if inventory is full but removed items count >= received count
-					foreach(InventoryItem item in ownerTradeItems)
-						m_owner.Inventory.RemoveItem(item);
-					foreach(InventoryItem item in partnerTradeItems)
-						partner.Inventory.RemoveItem(item);
+                    foreach (InventoryItem item in ownerTradeItems)
+                    {
+                        lock (m_owner.Inventory)
+                        {
+                            if (!m_owner.Inventory.RemoveItem(item))
+                            {
+                                if (logTrade)
+                                    GameServer.Instance.LogGMAction("   NOTItem: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+
+                                //BOT.Ban(m_owner, "Trade Hack");
+                                //BOT.Ban(partner, "Trade Hack");
+
+                                return false;
+                            }
+                        }
+                    }
+                    foreach (InventoryItem item in partnerTradeItems)
+                    {
+                        lock (partner.Inventory)
+                        {
+                            if (!partner.Inventory.RemoveItem(item))
+                            {
+                                if (logTrade)
+                                    GameServer.Instance.LogGMAction("   NOTItem: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+
+                                //BOT.Ban(m_owner, "Trade Hack");
+                                //BOT.Ban(partner, "Trade Hack");
+
+                                return false;
+                            }
+                        }
+                    }
 
 					foreach(InventoryItem item in ownerTradeItems)
 					{
