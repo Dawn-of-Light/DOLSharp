@@ -102,6 +102,8 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		protected static int MAX_ITEMS_PER_SEND = 32;
+
 		/// <summary>
 		/// New inventory update handler. This handler takes into account that
 		/// a slot on the client isn't necessarily the same as a slot on the
@@ -122,12 +124,10 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 
-			// Send packets with a maximum of 32 items.
-
 			foreach (int slot in updateItems.Keys)
 			{
 				items.Add(slot, updateItems[slot]);
-				if (items.Count >= 32)
+				if (items.Count >= MAX_ITEMS_PER_SEND)
 				{
 					SendInventoryItemsPartialUpdate(items, windowType);
 					items.Clear();
@@ -140,7 +140,7 @@ namespace DOL.GS.PacketHandler
 		}
 
 		/// <summary>
-		/// New inventory update (32 slots max).
+		/// New inventory update.
 		/// </summary>
 		/// <param name="items"></param>
 		/// <param name="windowType"></param>
@@ -167,7 +167,7 @@ namespace DOL.GS.PacketHandler
 		}
 
 		/// <summary>
-		/// Legacy inventory update (32 slots max). This handler silently
+		/// Legacy inventory update. This handler silently
 		/// assumes that a slot on the client matches a slot on the server.
 		/// </summary>
 		/// <param name="slots"></param>
@@ -199,6 +199,8 @@ namespace DOL.GS.PacketHandler
 			}
 			SendTCP(pak);
 		}
+
+		protected static int MAX_NAME_LENGTH = 55;
 
 		protected void WriteItemData(GSTCPPacketOut pak, InventoryItem item)
 		{
@@ -353,8 +355,12 @@ namespace DOL.GS.PacketHandler
                 if (ConsignmentMoney.UseBP)
                     name += "[" + item.SellPrice.ToString() + " BP]";
                 else
-                    name += "[" + Money.GetString(item.SellPrice) + "]";
+                    name += "[" + Money.GetShortString(item.SellPrice) + "]";
             }
+
+			if (name.Length > MAX_NAME_LENGTH)
+				name = name.Substring(0, MAX_NAME_LENGTH);
+
 			pak.WritePascalString(name);
 		}
 

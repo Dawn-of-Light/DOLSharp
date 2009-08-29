@@ -114,5 +114,51 @@ namespace DOL.GS
 
 			return res.ToString();
 		}	
+
+
+		public static string GetShortString(long money) 
+		{
+			if (money == 0)
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text1");
+
+			int copper = Money.GetCopper(money);
+			int silver = Money.GetSilver(money);
+			int gold = Money.GetGold(money);
+			int platin = Money.GetPlatinum(money);
+			int mithril = Money.GetMithril(money);
+
+			StringBuilder res = new StringBuilder();
+			if (mithril != 0)
+			{
+				res.Append(mithril);
+                res.Append("m, ");
+            }
+			if (platin != 0)
+			{
+				res.Append(platin);
+                res.Append("p, ");
+            }
+			if (gold != 0)
+			{
+				res.Append(gold);
+                res.Append("g, ");
+            }
+			if (silver != 0)
+			{
+				res.Append(silver);
+                res.Append("s, ");
+            }
+			if (copper != 0)
+			{
+				res.Append(copper);
+                res.Append("c, ");
+            }
+
+			// remove last comma
+			if(res.Length > 1)
+				res.Length -= 2;
+
+			return res.ToString();
+		}	
 	}
 }
