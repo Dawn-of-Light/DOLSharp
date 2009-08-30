@@ -119,9 +119,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			
 			if (DOOR == null)
 			{
-								
-				if(doorType != 9 && client.Account.PrivLevel > 1)
-					client.Player.Out.SendCustomDialog("This door is not in the database. Place yourself nearest to this door and clic Accept", new CustomDialogResponse(AddingDoor));
+
+				if (doorType != 9 && client.Account.PrivLevel > 1 && !client.Player.CurrentRegion.IsRvR)
+				{
+					client.Player.Out.SendCustomDialog("This door is not in the database. Place yourself nearest to this door and click Accept to add it.", new CustomDialogResponse(AddingDoor));
+				}
 
 				new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
 				return 1;
@@ -215,7 +217,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							if (player.IsWithinRadius(mydoor, GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE))
+							if (player.IsWithinRadius(mydoor, GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE * 2))
 							{
 								if (m_doorState == 0x01)
 									mydoor.Open();
@@ -225,6 +227,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 						}
 					}
+
 					if (!success)
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "DoorRequestHandler.OnTick.TooFarAway", doorList[0].Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
