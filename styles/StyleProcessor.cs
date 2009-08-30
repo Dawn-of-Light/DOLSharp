@@ -489,29 +489,34 @@ namespace DOL.GS.Styles
 						// the class-specific proc instead of the ClassID=0 proc
 						if (!attackData.Style.RandomProc)
 						{
-							DBStyleXSpell procToExecute = null;
+							List<DBStyleXSpell> procsToExecute = new List<DBStyleXSpell>();
+							bool onlyExecuteClassSpecific = false;
 
 							foreach (DBStyleXSpell proc in attackData.Style.Procs)
 							{
-								// if a proc was previously selected, don't replace it with a ClassID=0 proc
-								if ( procToExecute == null && proc.ClassID == 0 )
-									procToExecute = proc;
-
-								// if there are multiple procs for a given ClassID, only the last one will be used
-								// Should multiple procs be applied? Is Spell.SubSpellID the proper way to handle multiple effects?
-								if ( player != null && proc.ClassID == player.CharacterClass.ID )
-									procToExecute = proc;
-								else if ( proc.ClassID == attackData.Style.ClassID )
-									procToExecute = proc;
+								if (player != null && proc.ClassID == player.CharacterClass.ID)
+								{
+									procsToExecute.Add(proc);
+									onlyExecuteClassSpecific = true;
+								}
+								else if (proc.ClassID == attackData.Style.ClassID || proc.ClassID == 0)
+								{
+									procsToExecute.Add(proc);
+								}
 							}
 
-							//Add the procs to the styleEffects
-							if ( procToExecute != null && Util.Chance( procToExecute.Chance ) )
+							foreach (DBStyleXSpell procToExecute in procsToExecute)
 							{
-								effect = CreateMagicEffect( living, attackData.Target, procToExecute.SpellID );
-								//effect could be null if the SpellID is bigger than ushort
-								if ( effect != null )
-									attackData.StyleEffects.Add( effect );
+								if (onlyExecuteClassSpecific && procToExecute.ClassID == 0)
+									continue;
+
+								if (Util.Chance(procToExecute.Chance))
+								{
+									effect = CreateMagicEffect(living, attackData.Target, procToExecute.SpellID);
+									//effect could be null if the SpellID is bigger than ushort
+									if (effect != null)
+										attackData.StyleEffects.Add(effect);
+								}
 							}
 						}
 						else
