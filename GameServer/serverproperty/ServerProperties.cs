@@ -850,10 +850,22 @@ namespace DOL.GS.ServerProperties
         /// <summary>
         /// Perform checklos on client with each mob
         /// </summary>
-        [ServerProperty("always_check_los", "Perform a LoS check before aggroing. This can involve a huge lag, handle with care!", false)]
+        [ServerProperty("World", "always_check_los", "Perform a LoS check before aggroing. This can involve a huge lag, handle with care!", false)]
         public static bool ALWAYS_CHECK_LOS;
-		
-        /// <summary>
+
+		/// <summary>
+		/// Perform LOS check between controlled NPC's and players
+		/// </summary>
+		[ServerProperty("World", "always_check_pet_los", "Should we perform LOS checks between controlled NPC's and players?", false)]
+		public static bool ALWAYS_CHECK_PET_LOS;
+
+		/// <summary>
+		/// LOS check frequency; how often are we allowed to check LOS on the same player (seconds)
+		/// </summary>
+		[ServerProperty("World", "los_player_check_frequency", "How often are we allowed to check LOS on the same player (seconds)", (ushort)5)]
+		public static ushort LOS_PLAYER_CHECK_FREQUENCY;
+
+		/// <summary>
 		/// Account bombing prevention
 		/// </summary>
 		[ServerProperty("time_between_account_creation", "The time in minutes between 2 accounts creation. This avoid account bombing with dynamic ip. 0 to disable", 2)]

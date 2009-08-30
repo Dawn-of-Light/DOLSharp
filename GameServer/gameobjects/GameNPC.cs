@@ -2588,6 +2588,7 @@ namespace DOL.GS
 		public override bool AddToWorld()
 		{
 			if (!base.AddToWorld()) return false;
+
 			if (MAX_PASSENGERS > 0)
 				Riders = new GamePlayer[MAX_PASSENGERS];
 
@@ -2668,6 +2669,7 @@ namespace DOL.GS
 					player.Out.SendObjectRemove(this);
 			}
 			if (!base.RemoveFromWorld()) return false;
+
 			lock (BrainSync)
 			{
 				ABrain brain = Brain;
@@ -3174,6 +3176,9 @@ namespace DOL.GS
 		/// </summary>
 		public const int CHARMED_NOEXP_TIMEOUT = 60000;
 
+		public const string Last_LOS_Target_Property = "last_LOS_checkTarget";
+		public const string Last_LOS_Tick_Property = "last_LOS_checkTick";
+
 		/// <summary>
 		/// Starts a melee attack on a target
 		/// </summary>
@@ -3183,12 +3188,82 @@ namespace DOL.GS
 			if (target == null)
 				return;
 
+			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS && 
+				Brain != null && 
+				Brain is IControlledBrain && 
+				(target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain != null && (target as GameNPC).Brain is IControlledBrain)))
+			{
+				GameObject lastTarget = (GameObject)this.TempProperties.getObjectProperty(Last_LOS_Target_Property, null);
+				if (lastTarget != null && lastTarget == target)
+				{
+					long lastTick = this.TempProperties.getLongProperty(Last_LOS_Tick_Property, 0);
+					if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
+						return;
+				}
+
+				GamePlayer losChecker = null;
+				if (target is GamePlayer)
+				{
+					losChecker = target as GamePlayer;
+				}
+				else if (target is GameNPC && (target as GameNPC).Brain is IControlledBrain)
+				{
+					losChecker = ((target as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+				}
+				else
+				{
+					// try to find another player to use for checking line of site
+					foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
+						losChecker = player;
+						break;
+					}
+				}
+
+				if (losChecker == null)
+				{
+					return;
+				}
+
+				this.TempProperties.setProperty(Last_LOS_Target_Property, target);
+				this.TempProperties.setProperty(Last_LOS_Tick_Property, CurrentRegion.Time);
+				TargetObject = target;
+				losChecker.Out.SendCheckLOS(this, target, new CheckLOSResponse(this.NPCStartAttackCheckLOS));
+				if (ServerProperties.Properties.ENABLE_DEBUG)
+				{
+					log.Debug(Name + " sent LOS check to player " + losChecker.Name);
+				}
+				return;
+			}
+
+			ContinueStartAttack(target);
+		}
+
+		/// <summary>
+		/// We only attack if we have LOS
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="response"></param>
+		/// <param name="targetOID"></param>
+		public void NPCStartAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
+		{
+			if ((response & 0x100) == 0x100)
+			{
+				ContinueStartAttack(TargetObject);
+			}
+			else if (ServerProperties.Properties.ENABLE_DEBUG)
+			{
+				log.Debug(Name + " FAILED start attack LOS check to player " + player.Name);
+			}
+		}
+
+
+		public virtual void ContinueStartAttack(GameObject target)
+		{
 			if (IsMovingOnPath)
 				StopMovingOnPath();
 
-            // Aredhel: More brain code that doesn't belong here. If the pet is put on
-            // passive, why fire StartAttack at all?
-			if (Brain is IControlledBrain)  
+			if (Brain != null && Brain is IControlledBrain)
 			{
 				if ((Brain as IControlledBrain).AggressionState == eAggressionState.Passive)
 					return;
@@ -3201,27 +3276,84 @@ namespace DOL.GS
 
 			TargetObject = target;
 
-            SetLastMeleeAttackTick();
-            StartMeleeAttackTimer();
+			SetLastMeleeAttackTick();
+			StartMeleeAttackTimer();
 
 			base.StartAttack(target);
 
 			if (AttackState)
 			{
-                // if we're moving we need to lock down the current position
-                if (IsMoving)
-                    SaveCurrentPosition();
+				// if we're moving we need to lock down the current position
+				if (IsMoving)
+					SaveCurrentPosition();
 
-                if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-                {
-                    Follow(target, AttackRange, StickMaximumRange);
-                }
-                else
-                {
-                    Follow(target, StickMinimumRange, StickMaximumRange);
-                }
+				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+				{
+					Follow(target, AttackRange, StickMaximumRange);
+				}
+				else
+				{
+					Follow(target, StickMinimumRange, StickMaximumRange);
+				}
+			}
+
+		}
+
+
+		public override void RangedAttackFinished()
+		{
+			base.RangedAttackFinished();
+
+			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
+				Brain != null &&
+				Brain is IControlledBrain &&
+				(TargetObject is GamePlayer || (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)))
+			{
+				GamePlayer player = null;
+
+				if (TargetObject is GamePlayer)
+				{
+					player = TargetObject as GamePlayer;
+				}
+				else if (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)
+				{
+					if (((TargetObject as GameNPC).Brain as IControlledBrain).Owner is GamePlayer)
+					{
+						player = ((TargetObject as GameNPC).Brain as IControlledBrain).Owner as GamePlayer;
+					}
+				}
+
+				if (player != null)
+				{
+					player.Out.SendCheckLOS(this, TargetObject, new CheckLOSResponse(NPCStopRangedAttackCheckLOS));
+					if (ServerProperties.Properties.ENABLE_DEBUG)
+					{
+						log.Debug(Name + " sent LOS check to player " + player.Name);
+					}
+				}
 			}
 		}
+
+
+		/// <summary>
+		/// If we don't have LOS we stop attack
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="response"></param>
+		/// <param name="targetOID"></param>
+		public void NPCStopRangedAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
+		{
+			if ((response & 0x100) != 0x100)
+			{
+				if (ServerProperties.Properties.ENABLE_DEBUG)
+				{
+					log.Debug(Name + " FAILED stop ranged attack LOS check to player " + player.Name);
+				}
+
+				StopAttack();
+			}
+		}
+
 
         private void SetLastMeleeAttackTick()
         {
