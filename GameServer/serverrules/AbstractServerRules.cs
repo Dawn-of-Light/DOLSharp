@@ -1145,6 +1145,8 @@ namespace DOL.GS.ServerRules
 					playerBPValue = killedPlayer.BountyPointsValue;
 				long playerMoneyValue = killedPlayer.MoneyValue;
 
+				List<KeyValuePair<GamePlayer, int>> playerKillers = new List<KeyValuePair<GamePlayer,int>>();
+
 				//Now deal the XP and RPs to all livings
 				foreach (DictionaryEntry de in killedPlayer.XPGainers)
 				{
@@ -1200,7 +1202,11 @@ namespace DOL.GS.ServerRules
 						if (realmPoints > 0)
 						{
 							if (living is GamePlayer)
+							{
 								killedPlayer.LastDeathRealmPoints += realmPoints;
+								playerKillers.Add(new KeyValuePair<GamePlayer, int>(living as GamePlayer, realmPoints));
+							}
+
 							living.GainRealmPoints(realmPoints);
 						}
 					}
@@ -1310,6 +1316,34 @@ namespace DOL.GS.ServerRules
 								break;
 						}
 						killedPlayer.DeathsPvP++;
+					}
+				}
+
+				if (ServerProperties.Properties.LOG_PVP_KILLS && playerKillers.Count > 0)
+				{
+					try
+					{
+						foreach (KeyValuePair<GamePlayer, int> pair in playerKillers)
+						{
+
+							DOL.Database.PvPKillsLog killLog = new DOL.Database.PvPKillsLog();
+							killLog.KilledIP = killedPlayer.Client.TCPEndpointAddress;
+							killLog.KilledName = killedPlayer.Name;
+							killLog.KilledRealm = GlobalConstants.RealmToName(killedPlayer.Realm);
+							killLog.KillerIP = pair.Key.Client.TCPEndpointAddress;
+							killLog.KillerName = pair.Key.Name;
+							killLog.KillerRealm = GlobalConstants.RealmToName(pair.Key.Realm);
+							killLog.RPReward = pair.Value;
+
+							if (killedPlayer.Client.TCPEndpointAddress == pair.Key.Client.TCPEndpointAddress)
+								killLog.SameIP = 1;
+
+							GameServer.Database.AddNewObject(killLog);
+						}
+					}
+					catch (System.Exception ex)
+					{
+						log.Error(ex);
 					}
 				}
 			}
