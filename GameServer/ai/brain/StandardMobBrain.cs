@@ -43,7 +43,7 @@ namespace DOL.AI.Brain
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		public const int MAX_AGGRO_DISTANCE = 3600;
+		public const int MAX_AGGRO_DISTANCE = 512; // Tolakram - Live test with caby pet - I was extremely close before auto aggro
 
 		/// <summary>
 		/// Constructs a new StandardMobBrain

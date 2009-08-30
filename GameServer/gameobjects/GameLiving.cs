@@ -2533,6 +2533,9 @@ namespace DOL.GS
 					}
 				}
 
+				if (mainHandAD.AttackType == AttackData.eAttackType.Ranged)
+					owner.RangedAttackFinished();
+
 				switch (mainHandAD.AttackResult)
 				{
 					case eAttackResult.NoTarget:
@@ -2765,6 +2768,13 @@ namespace DOL.GS
 						m_attackAction.Start(500);
 				}
 			}
+		}
+
+		/// <summary>
+		/// When a ranged attack is finished this is called in order to check LOS for next attack
+		/// </summary>
+		public virtual void RangedAttackFinished()
+		{
 		}
 
         /// <summary>
