@@ -264,9 +264,6 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public const string Last_LOS_Target_Property = "last_LOS_checkTarget";
-		public const string Last_LOS_Tick_Property = "last_LOS_checkTick";
-
 		/// <summary>
 		/// Override for StartAttack which chooses Ranged or Melee attack
 		/// </summary>
@@ -431,8 +428,7 @@ namespace DOL.GS.Keeps
 			if (MaxSpeedBase == 0)
 			{
 				//if we are currently fighting in melee
-				if (ActiveWeaponSlot == eActiveWeaponSlot.Standard ||
-	ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
+				if (ActiveWeaponSlot == eActiveWeaponSlot.Standard || ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
 				{
 					//if we are targeting something, and the distance to the target object is greater than the attack range
                     if( TargetObject != null && !this.IsWithinRadius( TargetObject, AttackRange ) )
@@ -568,8 +564,13 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public override bool RemoveFromWorld()
 		{
-			GameEventMgr.RemoveHandler(this, GameNPCEvent.AttackFinished, new DOLEventHandler(AttackFinished));
-			return base.RemoveFromWorld();
+			if (base.RemoveFromWorld())
+			{
+				GameEventMgr.RemoveHandler(this, GameNPCEvent.AttackFinished, new DOLEventHandler(AttackFinished));
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>

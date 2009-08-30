@@ -81,16 +81,19 @@ namespace DOL.GS
 			if (base.WhisperReceive(source, str))
 			{
 				GamePlayer player = source as GamePlayer;
-				if (source == null)
+				if (player == null)
 					return false;
 
-				if (source != null && GameServer.ServerRules.IsSameRealm(this, player, true))
+				if (GameServer.ServerRules.IsSameRealm(this, player, true))
 				{
 					switch (str.ToLower())
 					{
 						case "movement":
-							TargetObject = this;
-							CastSpell(SkillBase.GetSpellByID(SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
+							if (!player.CurrentRegion.IsRvR || (player.CurrentRegion.IsRvR && player.Realm == Realm))
+							{
+								TargetObject = this;
+								CastSpell(SkillBase.GetSpellByID(SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
+							}
 							break;
 						case "strength":
 							if (player.CurrentRegion.IsCapitalCity)
