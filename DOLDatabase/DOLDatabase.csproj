@@ -149,6 +149,7 @@
     </Compile>
     <Compile Include="DOLTables\ClassXRealmAbility.cs" />
     <Compile Include="DOLTables\Battleground.cs" />
+    <Compile Include="DOLTables\PvPKillsLog.cs" />
     <Compile Include="DOLTables\HouseHookpointOffset.cs" />
     <Compile Include="DOLTables\DBHouseMerchant.cs" />
     <Compile Include="DOLTables\DBInstanceXElement.cs" />

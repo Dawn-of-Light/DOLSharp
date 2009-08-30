@@ -3130,9 +3130,9 @@ namespace DOL.GS
 					if (spell.Key.Group == 0)
 					{
 						// Tolakram:
-						// This is an attempt to order to make sure all the correct spells are provided. 
-						// If there is a special rule for a spelltype then all spells of that spelltype should be provided with 
-						// a unique spellgroup to ensure it gets included in the list.
+						// This is an attempt to make sure all the correct spells are provided. 
+						// If there is a special rule for a spelltype then spells of that spelltype should be provided with 
+						// a unique spellgroup number to ensure they get included in the list.
 
 						key = spell.Value.KeyName + "+" + spell.Key.SpellType + "+" + spell.Key.Target;
 
