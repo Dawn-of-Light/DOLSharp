@@ -850,19 +850,19 @@ namespace DOL.GS.ServerProperties
         /// <summary>
         /// Perform checklos on client with each mob
         /// </summary>
-        [ServerProperty("World", "always_check_los", "Perform a LoS check before aggroing. This can involve a huge lag, handle with care!", false)]
+        [ServerProperty("world", "always_check_los", "Perform a LoS check before aggroing. This can involve a huge lag, handle with care!", false)]
         public static bool ALWAYS_CHECK_LOS;
 
 		/// <summary>
 		/// Perform LOS check between controlled NPC's and players
 		/// </summary>
-		[ServerProperty("World", "always_check_pet_los", "Should we perform LOS checks between controlled NPC's and players?", false)]
+		[ServerProperty("world", "always_check_pet_los", "Should we perform LOS checks between controlled NPC's and players?", false)]
 		public static bool ALWAYS_CHECK_PET_LOS;
 
 		/// <summary>
 		/// LOS check frequency; how often are we allowed to check LOS on the same player (seconds)
 		/// </summary>
-		[ServerProperty("World", "los_player_check_frequency", "How often are we allowed to check LOS on the same player (seconds)", (ushort)5)]
+		[ServerProperty("world", "los_player_check_frequency", "How often are we allowed to check LOS on the same player (seconds)", (ushort)5)]
 		public static ushort LOS_PLAYER_CHECK_FREQUENCY;
 
 		/// <summary>
@@ -924,6 +924,14 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("debug", "enable_debug", "Enable Debug mode? Used to alter some features during server startup to make debugging easier", false)]
 		public static readonly bool ENABLE_DEBUG;
+
+
+		/// <summary>
+		/// Turn on logging of player vs player kills
+		/// </summary>
+		[ServerProperty("logging", "log_pvp_kills", "Turn on logging of pvp kills?", false)]
+		public static bool LOG_PVP_KILLS;
+
 
 
 		// custom properties below this
