@@ -154,7 +154,7 @@ namespace DOL.GS.Keeps
 
 		public override void OnAttackedByEnemy(AttackData ad)
 		{
-			if (this.Component != null && this.Component.Keep != null)
+			if (this.Component != null && this.Component.Keep != null && IsAlive && !GameServer.ServerRules.IsSameRealm(this, ad.Attacker, true))
 				this.Component.Keep.LastAttackedByEnemyTick = CurrentRegion.Time; // light up the keep/tower
 
 			base.OnAttackedByEnemy(ad);
