@@ -218,7 +218,7 @@ PlayerPositionUpdateHandler.UnknownZone:		Unknown zone, moving to bind point.
 # QUESTS
 # /Atlantis
 # /ArtifactQuest
-ArtifactQuest.GiveItem.BackpackFull:			Your backpack is full, {0} is dropped on the ground.
+ArtifactQuest.GiveItem.BackpackFull:			Your backpack is full, please make room and try again.
 
 # /ArtifactTurnInQuest
 ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artifact Scholar
