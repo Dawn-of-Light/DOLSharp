@@ -43,7 +43,8 @@ namespace DOL.AI.Brain
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		public const int MAX_AGGRO_DISTANCE = 512; // Tolakram - Live test with caby pet - I was extremely close before auto aggro
+		public const int MAX_AGGRO_DISTANCE = 3600;
+		public const int MAX_PET_AGGRO_DISTANCE = 512; // Tolakram - Live test with caby pet - I was extremely close before auto aggro
 
 		/// <summary>
 		/// Constructs a new StandardMobBrain
@@ -596,7 +597,6 @@ namespace DOL.AI.Brain
 						continue;
 
 					long amount = (long)aggros.Value;
-					//DOLConsole.WriteLine(this.Name+": check aggro "+living.Name+" "+amount);
 
 					if (living.IsAlive
 						&& amount > maxAggro
@@ -604,7 +604,9 @@ namespace DOL.AI.Brain
 						&& living.ObjectState == GameObject.eObjectState.Active)
 					{
                         int distance = Body.GetDistanceTo( living );
-						if (distance < MAX_AGGRO_DISTANCE)
+						int maxAggroDistance = (this is IControlledBrain) ? MAX_PET_AGGRO_DISTANCE : MAX_AGGRO_DISTANCE;
+
+						if (distance <= maxAggroDistance)
 						{
 							double aggro = amount * Math.Min(500.0 / distance, 1);
 							if (aggro > maxAggro)
@@ -612,7 +614,6 @@ namespace DOL.AI.Brain
 								maxAggroObject = living;
 								maxAggro = aggro;
 							}
-							//DOLConsole.WriteLine(this.Name+": max aggro "+living.Name+" "+amount);
 						}
 					}
 				}
