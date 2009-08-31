@@ -57,8 +57,8 @@ namespace DOL.GS.Commands
      "/player info",
      "/player showgroup",
      "/player showeffects",
-     "/player articredit",
-	 "/player allchars [PlayerName]"
+     "/player articredit <artifact>",
+	 "/player allchars <PlayerName>"
    )]
 
     public class PlayerCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -1523,7 +1523,6 @@ namespace DOL.GS.Commands
                         break;
                     }
                 #endregion
-
 				#region allcharacters
 				case "allchars":
 					GamePlayer targetPlayer = client.Player.TargetObject as GamePlayer;
@@ -1589,13 +1588,13 @@ namespace DOL.GS.Commands
 
             foreach (InventoryItem item in player.Inventory.EquippedItems)
             {
-                text.Add("     [" + GlobalConstants.SlotToName(item.Item_Type) + "] " + item.Name);
+                text.Add("     [" + GlobalConstants.SlotToName(item.Item_Type) + "] " + item.Name + " (" + item.Id_nb + ")");
             }
             text.Add(" ");
             text.Add("  ----- BAG");
             foreach (InventoryItem item in player.Inventory.AllItems)
             {
-                if (item.SlotPosition >= 30) text.Add("    " + item.Name);
+				if (item.SlotPosition >= 30) text.Add("    " + item.Name + " (" + item.Id_nb + ")");
             }
             client.Out.SendCustomTextWindow("~*PLAYER INVENTORY LISTING*~", text);
         }

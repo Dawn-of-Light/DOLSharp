@@ -171,13 +171,16 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 								return false;
 							}
 							ItemTemplate template = versions[versionID];
-							GiveItem(scholar, player, ArtifactID, template);
-							String reply = String.Format("May Bruiser serve you well. Do not lose {0}",
-								"this, for I can only unlock the artifact's powers once.");
-							scholar.TurnTo(player);
-							scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
-							FinishQuest();
-							return true;
+							if (GiveItem(scholar, player, ArtifactID, template))
+							{
+								String reply = String.Format("May Bruiser serve you well. Do not lose {0}",
+									"this, for I can only unlock the artifact's powers once.");
+								scholar.TurnTo(player);
+								scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+								FinishQuest();
+								return true;
+							}
+							return false;
 						}
 				}
 				return false;
