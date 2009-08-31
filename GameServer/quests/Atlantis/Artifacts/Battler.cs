@@ -177,13 +177,15 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 								log.Warn(String.Format("Artifact version {0} not found", versionID));
 								return false;
 							}
-							GiveItem(scholar, player, ArtifactID, template);
-							String reply = String.Format("Here you are. Do not lose {0}, for it is irreplaceable.",
-								template.Name);
-							scholar.TurnTo(player);
-							scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
-							FinishQuest();
-							return true;
+							if (GiveItem(scholar, player, ArtifactID, template))
+							{
+								String reply = String.Format("Here you are. Do not lose {0}, for it is irreplaceable.",	template.Name);
+								scholar.TurnTo(player);
+								scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+								FinishQuest();
+								return true;
+							}
+							return false;
 						}
 				}
 				return false;

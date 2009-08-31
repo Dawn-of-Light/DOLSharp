@@ -162,13 +162,16 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 								log.Warn(String.Format("Artifact version {0} not found", versionID));
 								return false;
 							}
-							GiveItem(scholar, player, ArtifactID, template);
-							String reply = String.Format("You have made your choice. Here is your {0}",
-								"bracer. Do not lose it. It is irreplaceable.");
-							scholar.TurnTo(player);
-							scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
-							FinishQuest();
-							return true;
+							if (GiveItem(scholar, player, ArtifactID, template))
+							{
+								String reply = String.Format("You have made your choice. Here is your {0}",
+									"bracer. Do not lose it. It is irreplaceable.");
+								scholar.TurnTo(player);
+								scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+								FinishQuest();
+								return true;
+							}
+							return false;
 						}
 				}
 				return false;
