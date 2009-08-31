@@ -10514,6 +10514,7 @@ namespace DOL.GS
                         Out.SendMessage("You must wait another " + floorItem.GetPickupTime / 1000 + " seconds to pick up " + floorItem.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         return false;
                     }
+
 					Group group = Group;
 					BattleGroup mybattlegroup = (BattleGroup)TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
 					if (mybattlegroup != null
@@ -10543,7 +10544,8 @@ namespace DOL.GS
 					}
 					else if (group != null && group.AutosplitLoot)
 					{
-						ArrayList eligibleMembers = new ArrayList(8);
+						List<GameObject> owners = new List<GameObject>((GameObject[])floorItem.Owners);
+						List<GamePlayer> eligibleMembers = new List<GamePlayer>(8);
 						foreach (GamePlayer ply in group.GetPlayersInTheGroup())
 						{
 							if (ply.IsAlive
@@ -10551,6 +10553,7 @@ namespace DOL.GS
                                 && this.IsWithinRadius( ply, WorldMgr.MAX_EXPFORKILL_DISTANCE )
 								&& (ply.ObjectState == eObjectState.Active)
 								&& (ply.AutoSplitLoot)
+								&& (owners.Contains(ply) || owners.Count == 0)
 								&& (ply.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != eInventorySlot.Invalid))
 							{
 								eligibleMembers.Add(ply);
@@ -10564,7 +10567,7 @@ namespace DOL.GS
 						}
 
 						int i = Util.Random(0, eligibleMembers.Count - 1);
-						GamePlayer eligibleMember = eligibleMembers[i] as GamePlayer;
+						GamePlayer eligibleMember = eligibleMembers[i];
 						if (eligibleMember != null)
 						{
 							bool good = false;
