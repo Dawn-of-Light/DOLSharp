@@ -178,15 +178,16 @@ namespace DOL.GS.Quests.Atlantis
 		/// <param name="player"></param>
 		/// <param name="artifactID"></param>
 		/// <param name="itemTemplate"></param>
-		protected static void GiveItem(GameLiving source, GamePlayer player, String artifactID, 
-			ItemTemplate itemTemplate)
+		protected static bool GiveItem(GameLiving source, GamePlayer player, String artifactID, ItemTemplate itemTemplate)
 		{
 			InventoryItem item = new InventoryArtifact(itemTemplate);
 			if (!player.ReceiveItem(source, item))
 			{
-				player.CreateItemOnTheGround(item);
-				player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactQuest.GiveItem.BackpackFull", itemTemplate.Name)), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactQuest.GiveItem.BackpackFull"), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+				return false;
 			}
+
+			return true;
 		}
 
 		/// <summary>

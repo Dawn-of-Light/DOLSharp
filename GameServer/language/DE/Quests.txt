@@ -1,6 +1,6 @@
 ﻿# /Atlantis
 # /ArtifactQuest
-ArtifactQuest.GiveItem.BackpackFull:			Euer Rucksack ist voll. {0} wurde auf dem Boden abgelegt
+ArtifactQuest.GiveItem.BackpackFull:			Euer Rucksack ist voll. bitte Platz machen und versuchen es erneut.
 
 # /ArtifactTurnInQuest
 ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artefaktgelehrter

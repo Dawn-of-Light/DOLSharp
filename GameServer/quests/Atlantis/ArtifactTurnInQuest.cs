@@ -378,14 +378,37 @@ namespace DOL.GS.Quests.Atlantis
 						log.Warn(String.Format("Artifact version {0} not found", m_chosenTypes));
 						return false;
 					}
-					GiveItem(player, template);
-					scholar.SayTo(player, eChatLoc.CL_PopupWindow, string.Format("Here is your {0}, {1}. May it serve you well!", ArtifactID, player.CharacterClass.Name));
-					FinishQuest();
-					return true;
+					if (GiveItem(player, template))
+					{
+						scholar.SayTo(player, eChatLoc.CL_PopupWindow, string.Format("Here is your {0}, {1}. May it serve you well!", ArtifactID, player.CharacterClass.Name));
+						FinishQuest();
+						return true;
+					}
+					return false;
 				}
 			}
 			return base.WhisperReceive(source, target, text);
 		}
+
+
+		/// <summary>
+		/// Hand out an artifact.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="player"></param>
+		/// <param name="artifactID"></param>
+		/// <param name="itemTemplate"></param>
+		protected new static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate)
+		{
+			InventoryItem item = new InventoryItem(itemTemplate);
+			if (!player.ReceiveItem(null, item))
+			{
+				player.Out.SendMessage(String.Format("Your backpack is full, please make some room and try again."), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+			}
+
+			return true;
+		}
+
 
 		/// <summary>
 		/// Called from ArtifactScholar when he is interacted on
