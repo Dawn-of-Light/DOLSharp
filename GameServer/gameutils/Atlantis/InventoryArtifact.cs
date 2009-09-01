@@ -44,6 +44,7 @@ namespace DOL.GS
 		private String m_artifactID;
 		private int m_artifactLevel;
 		private int[] m_levelRequirements;
+		private bool m_isChecked = false;
 
 		/// <summary>
 		/// This constructor shouldn't be called, so we prevent anyone
@@ -87,6 +88,7 @@ namespace DOL.GS
 				ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(Id_nb);
 				ArtifactLevel = ArtifactMgr.GetCurrentLevel(this);
 				m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
+				CheckAbilities();
 			}
 		}
 
@@ -109,6 +111,14 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Has this artifact been checked for all the correct abilities
+		/// </summary>
+		public bool IsChecked
+		{
+			get { return m_isChecked; }
+		}
+
+		/// <summary>
 		/// Called from ArtifactMgr when this artifact has gained a level.
 		/// </summary>
 		/// <param name="player"></param>
@@ -119,8 +129,7 @@ namespace DOL.GS
 			{
 				ArtifactLevel = artifactLevel;
 				if (AddAbilities(player, ArtifactLevel) && player != null)
-					player.Out.SendMessage(String.Format("Your {0} has gained a new ability!", Name),
-						eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(String.Format("Your {0} has gained a new ability!", Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -135,6 +144,32 @@ namespace DOL.GS
             }
         }
 
+
+		/// <summary>
+		/// Verify that this artifact has all the correct abilities
+		/// </summary>
+		private void CheckAbilities()
+		{
+			if (IsChecked)
+				return;
+
+			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Id_nb);
+
+			if (template == null)
+				return;
+
+			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.Min; bonusID <= ArtifactBonus.ID.Max; ++bonusID)
+			{
+				if (m_levelRequirements[(int)bonusID] <= ArtifactLevel)
+				{
+					SetBonusType(bonusID, template.GetBonusType(bonusID));
+					SetBonusAmount(bonusID, template.GetBonusAmount(bonusID));
+				}
+			}
+
+			m_isChecked = true;
+		}
+
 		/// <summary>
 		/// Add all abilities for this level.
 		/// </summary>
@@ -143,8 +178,7 @@ namespace DOL.GS
 		/// <returns>True, if artifact gained 1 or more abilities, else false.</returns>
 		private bool AddAbilities(GamePlayer player, int artifactLevel)
 		{
-			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), 
-				Id_nb);
+			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Id_nb);
 
 			if (template == null)
 			{
@@ -162,8 +196,7 @@ namespace DOL.GS
 					SetBonusAmount(bonusID, template.GetBonusAmount(bonusID));
 
 					if (bonusID <= ArtifactBonus.ID.MaxStat)
-						player.Notify(PlayerInventoryEvent.ItemBonusChanged, this,
-							new ItemBonusChangedEventArgs(GetBonusType(bonusID), GetBonusAmount(bonusID)));
+						player.Notify(PlayerInventoryEvent.ItemBonusChanged, this, new ItemBonusChangedEventArgs(GetBonusType(bonusID), GetBonusAmount(bonusID)));
 
 					abilityGained = true;
 				}

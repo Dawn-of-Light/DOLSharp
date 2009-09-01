@@ -40,6 +40,17 @@ namespace DOL.GS.Quests.Atlantis
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+
+		/// <summary>
+		/// if quest qualification fails use this string to store the reason why
+		/// </summary>
+		protected string m_reasonFailQualification = "";
+		public string ReasonFailQualification
+		{
+			get { return m_reasonFailQualification; }
+		}
+
+
 		public ArtifactQuest()
 			: base() { }
 
@@ -135,16 +146,53 @@ namespace DOL.GS.Quests.Atlantis
 			// Must have the encounter, must have the book; must not be on the quest
 			// and must not have the quest finished either.
 
-			Type encounterType = 
-				ArtifactMgr.GetEncounterType(ArtifactID);
+			Type encounterType = ArtifactMgr.GetEncounterType(ArtifactID);
 
-			return (player != null &&
-				encounterType != null &&
-				player.Level >= Level &&
-                ArtifactMgr.HasBook(player, ArtifactID) &&
-				player.HasFinishedQuest(encounterType) > 0 &&
-				player.IsDoingQuest(this.GetType()) == null &&
-				player.HasFinishedQuest(this.GetType()) == 0);
+			if (encounterType == null)
+			{
+				m_reasonFailQualification = "It does not appear this encounter type is set up correctly.";
+				log.Error("ArtifactQuest: EncounterType is null for ArtifactID " + ArtifactID);
+				return false;
+			}
+
+			if (player == null)
+			{
+				m_reasonFailQualification = "Player is null for quest, serious error!";
+				log.Error("ArtifactQuest: Player is null for ArtifactID " + ArtifactID + " encounterType " + encounterType.FullName);
+				return false;
+			}
+
+			if (player.Level < Level)
+			{
+				m_reasonFailQualification = "You must be at least level " + Level + " in order to complete this quest.";
+				return false;
+			}
+
+			if (player.HasFinishedQuest(encounterType) <= 0)
+			{
+				m_reasonFailQualification = "You must first get the encounter credit for this artifact.";
+				return false;
+			}
+
+			if (!ArtifactMgr.HasBook(player, ArtifactID))
+			{
+				m_reasonFailQualification = "You are missing the correct book for this artifact.";
+				return false;
+			}
+
+			if (player.IsDoingQuest(this.GetType()) != null)
+			{
+				m_reasonFailQualification = "You've already started the quest for this artifact.";
+				return false;
+			}
+
+			if (player.HasFinishedQuest(this.GetType()) != 0)
+			{
+				m_reasonFailQualification = "You've already completed the quest for this artifact.";
+				return false;
+			}
+
+			return true;
 		}
 
 		/// <summary>

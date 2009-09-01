@@ -73,6 +73,7 @@ namespace DOL.GS
 					{
 						if (quests.Count > 1 && numQuests < quests.Count)
 							intro += (numQuests == 1) ? ", or " : ", ";
+
 						intro += String.Format("[{0}]", quest.ArtifactID);
 						--numQuests;
 					}
@@ -115,13 +116,21 @@ namespace DOL.GS
 				{
 					if (text.ToLower() == quest.ArtifactID.ToLower())
 					{
-                        if (quest.CheckQuestQualification(player))
-                            if (player.CanReceiveArtifact(quest.ArtifactID))
-                                GiveArtifactQuest(player, quest.GetType());
-                            else
-                                RefuseArtifact(player);
-                        else
-                            DenyArtifactQuest(player);
+						if (quest.CheckQuestQualification(player))
+						{
+							if (player.CanReceiveArtifact(quest.ArtifactID))
+							{
+								GiveArtifactQuest(player, quest.GetType());
+							}
+							else
+							{
+								RefuseArtifact(player);
+							}
+						}
+						else
+						{
+							DenyArtifactQuest(player, quest.ReasonFailQualification);
+						}
 						return false;
 					}
 				}
@@ -143,17 +152,18 @@ namespace DOL.GS
 		/// Deny a quest to a player.
 		/// </summary>
 		/// <param name="player"></param>
-		private void DenyArtifactQuest(GamePlayer player)
+		private void DenyArtifactQuest(GamePlayer player, string reason)
 		{
 			if (player != null)
 			{
-                String reply = String.Format("{0} I cannot activate that artifact for you. {1} {2} {3} {4} {5}",
+                String reply = String.Format("{0} I cannot activate that artifact for you. {1} {2} {3} {4} {5} \n\nHint: {6}",
                      player.Name,
                      "This could be because you have already activated it, or you are in the",
                      "process of activating it, or you may not have completed everything",
                      "you need to do. Remember that the activation process requires you to",
                      "have credit for the artifact's encounter, as well as the artifact's",
-                     "complete book of scrolls.");
+                     "complete book of scrolls.",
+					 reason);
 				TurnTo(player);
 				SayTo(player, eChatLoc.CL_PopupWindow, reply);
 			}
@@ -169,9 +179,10 @@ namespace DOL.GS
         {
             if (player != null)
             {
-                String reply = String.Format("I'm sorry, but I shouldn't recreate this artifact for you, {0} {1}",
-                     "as it wouldn't make proper use of your abilities. There are other artifacts",
-                     "in Atlantis better suited to your needs.");
+				String reply = String.Format("I'm sorry, but I shouldn't recreate this artifact for you, {0} {1} {2}",
+											"as it wouldn't make proper use of your abilities. There are other artifacts",
+											"in Atlantis better suited to your needs.",
+											"If you feel like your class qualifies for this artifact please /report this error to my superiors.");
                 TurnTo(player);
                 SayTo(player, eChatLoc.CL_PopupWindow, reply);
             }
