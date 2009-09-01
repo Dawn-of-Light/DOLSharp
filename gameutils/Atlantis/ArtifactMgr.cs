@@ -306,8 +306,7 @@ namespace DOL.GS
 
 			// Only currently equipped artifacts can gain experience.
 
-			ICollection equippedItems = player.Inventory.GetItemRange(eInventorySlot.MinEquipable,
-				eInventorySlot.MaxEquipable);
+			ICollection equippedItems = player.Inventory.GetItemRange(eInventorySlot.MinEquipable, eInventorySlot.MaxEquipable);
 
 			foreach (InventoryItem item in equippedItems)
 				if (item != null && item is InventoryArtifact)
@@ -326,8 +325,18 @@ namespace DOL.GS
 				return;
 
 			long artifactXPOld = item.Experience;
-			if (artifactXPOld >= m_xpForLevel[10])	// Can't go past level 10.
+
+			// Can't go past level 10, but check to make sure we are level 10 if we have the XP
+			if (artifactXPOld >= m_xpForLevel[10])
+			{
+				while (item.ArtifactLevel < 10)
+				{
+					player.Out.SendMessage(String.Format("Your {0} has gained a level!", item.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					item.OnLevelGained(player, item.ArtifactLevel + 1);
+				}
+
 				return;
+			}
 
 			// All artifacts share the same XP table, we make them level
 			// at different rates by tweaking the XP rate.
@@ -342,23 +351,23 @@ namespace DOL.GS
 				xpRate = artifact.XPRate;
 			}
 
-			long artifactXPNew = (long)(artifactXPOld + (xpAmount * xpRate)/350);
+			long artifactXPNew = (long)(artifactXPOld + (xpAmount * xpRate) / ServerProperties.Properties.ARTIFACT_XP_RATE);
 			item.Experience = artifactXPNew;
 
-			player.Out.SendMessage(String.Format("Your {0} has gained experience.", item.Name),
-				eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(String.Format("Your {0} has gained experience.", item.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 			// Now let's see if this artifact has gained a new level yet.
 
 			for (int level = 1; level <= 10; ++level)
 			{
-				if (artifactXPOld < m_xpForLevel[level] && artifactXPNew >= m_xpForLevel[level])
-				{
-					player.Out.SendMessage(String.Format("Your {0} has gained a level!", item.Name),
-						eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					item.OnLevelGained(player, level);
-					return;
-				}
+				if (artifactXPNew < m_xpForLevel[level])
+					break;
+
+				if (artifactXPOld > m_xpForLevel[level])
+					continue;
+
+				player.Out.SendMessage(String.Format("Your {0} has gained a level!", item.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				item.OnLevelGained(player, level);
 			}
 		}
 
@@ -414,13 +423,11 @@ namespace DOL.GS
                 ItemTemplate itemTemplate;
                 foreach (ArtifactXItem version in allVersions)
                 {
-                    itemTemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),
-                        version.ItemID);
+                    itemTemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), version.ItemID);
 
                     if (itemTemplate == null)
                     {
-                        log.Warn(String.Format("Artifact item template '{0}' is missing",
-                            version.ItemID));
+                        log.Warn(String.Format("Artifact item template '{0}' is missing", version.ItemID));
                     }
                     else
                     {
@@ -437,8 +444,7 @@ namespace DOL.GS
                             }
                             catch
                             {
-                                log.Warn(String.Format("Invalid class ID '{0}' for item template '{1}'",
-                                    classID, itemTemplate.Id_nb));
+                                log.Warn(String.Format("Invalid class ID '{0}' for item template '{1}'", classID, itemTemplate.Id_nb));
                             }
                         }
                     }
