@@ -13978,11 +13978,11 @@ namespace DOL.GS
         /// <returns>True when at least one version exists, false when no versions are available.</returns>
         public bool CanReceiveArtifact(string artifactID)
         {
-            Dictionary<String, ItemTemplate> possibleVersions = ArtifactMgr.GetArtifactVersions(artifactID,
-    (eCharacterClass)CharacterClass.ID, Realm);
+            Dictionary<String, ItemTemplate> possibleVersions = ArtifactMgr.GetArtifactVersions(artifactID, (eCharacterClass)CharacterClass.ID, Realm);
 
             if (possibleVersions.Count == 0)
                 return false;
+
             return true;
         }
 

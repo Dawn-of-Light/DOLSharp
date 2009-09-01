@@ -178,7 +178,7 @@ GMCommands.Item.Usage.Proc1				'/item proc1 <SpellID> [slot #]' - Change item pr
 GMCommands.Item.Usage.Quality:				'/item quality <qua> [slot #]' - Change the quality of an item
 GMCommands.Item.Usage.Realm:				'/item realm <num> [slot #]' - Change items realm
 GMCommands.Item.Usage.SaveTemplate:			'/item savetemplate <TemplateID> [slot #]' - Create a new template	
-GMCommands.Item.Usage.Scroll:				'/items scroll <ArtifactID> <PageNumber>' - Create an artifact scroll
+GMCommands.Item.Usage.Scroll:				'/item scroll <ArtifactID> <PageNumber>' - Create an artifact scroll
 GMCommands.Item.Usage.SPD_ABS:				'/item spd_abs <NewSPD_ABS> [slot #]' - Change item SPD_ABS
 GMCommands.Item.Usage.Spell:				'/item spell <Charges> <MaxCharges> <SpellID> [slot #]' - Change item spell charges #0
 GMCommands.Item.Usage.Spell1:				'/item spell1 <Charges> <MaxCharges> <SpellID> [slot #]' - Change item spell charges #1
