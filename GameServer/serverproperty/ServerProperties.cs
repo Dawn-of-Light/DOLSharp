@@ -925,12 +925,18 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("debug", "enable_debug", "Enable Debug mode? Used to alter some features during server startup to make debugging easier", false)]
 		public static readonly bool ENABLE_DEBUG;
 
-
 		/// <summary>
 		/// Turn on logging of player vs player kills
 		/// </summary>
 		[ServerProperty("logging", "log_pvp_kills", "Turn on logging of pvp kills?", false)]
 		public static bool LOG_PVP_KILLS;
+
+		/// <summary>
+		/// TOA Artifact XP rate
+		/// </summary>
+		[ServerProperty("toa", "artifact_xp_rate", "Adjust the rate at which all artifacts gain xp.  Higher numbers mean slower XP gain. XP / this = result", 350)]
+		public static int ARTIFACT_XP_RATE;
+
 
 
 

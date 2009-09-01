@@ -3179,6 +3179,8 @@ namespace DOL.GS
 		public const string Last_LOS_Target_Property = "last_LOS_checkTarget";
 		public const string Last_LOS_Tick_Property = "last_LOS_checkTick";
 
+		private GameObject m_targetLOSObject = null;
+
 		/// <summary>
 		/// Starts a melee attack on a target
 		/// </summary>
@@ -3187,6 +3189,8 @@ namespace DOL.GS
 		{
 			if (target == null)
 				return;
+
+			TargetObject = target;
 
 			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS && 
 				Brain != null && 
@@ -3227,12 +3231,13 @@ namespace DOL.GS
 
 				this.TempProperties.setProperty(Last_LOS_Target_Property, target);
 				this.TempProperties.setProperty(Last_LOS_Tick_Property, CurrentRegion.Time);
-				TargetObject = target;
+				m_targetLOSObject = target;
 				losChecker.Out.SendCheckLOS(this, target, new CheckLOSResponse(this.NPCStartAttackCheckLOS));
 				if (ServerProperties.Properties.ENABLE_DEBUG)
 				{
 					log.Debug(Name + " sent LOS check to player " + losChecker.Name);
 				}
+
 				return;
 			}
 
@@ -3249,7 +3254,9 @@ namespace DOL.GS
 		{
 			if ((response & 0x100) == 0x100)
 			{
-				ContinueStartAttack(TargetObject);
+				// make sure we didn't switch targets
+				if (TargetObject != null && m_targetLOSObject != null && TargetObject == m_targetLOSObject)
+					ContinueStartAttack(m_targetLOSObject);
 			}
 			else if (ServerProperties.Properties.ENABLE_DEBUG)
 			{
@@ -3273,8 +3280,6 @@ namespace DOL.GS
 				if ((owner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
 					owner.Stealth(false);
 			}
-
-			TargetObject = target;
 
 			SetLastMeleeAttackTick();
 			StartMeleeAttackTimer();
