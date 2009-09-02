@@ -70,9 +70,16 @@ namespace DOL.GS.Commands
         "GMCommands.Item.Usage.SaveTemplate",
         "GMCommands.Item.Usage.TemplateID",
         "GMCommands.Item.Usage.FindID",
-        "GMCommands.Item.Usage.FindName")]
+        "GMCommands.Item.Usage.FindName",
+		"/item load <id_nb> - Load an item from the DB and replace or add item to the ItemTemplate cache")]
     public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
     {
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+
         public void OnCommand(GameClient client, string[] args)
         {
             if (args.Length < 2)
@@ -1385,7 +1392,24 @@ namespace DOL.GS.Commands
                             break;
                         }
                     #endregion FindName
-                }
+					#region Load
+					case "load":
+						{
+							if (GameServer.Database.UpdateObjectInPreCache(typeof(ItemTemplate), args[2]))
+							{
+								log.DebugFormat("Item {0} updated or added to ItemTemplate cache.", args[2]);
+								DisplayMessage(client, "Item {0} updated or added to ItemTemplate cache.", args[2]);
+							}
+							else
+							{
+								log.DebugFormat("Item {0} not found.", args[2]);
+								DisplayMessage(client, "Item {0} not found.", args[2]);
+							}
+							break;
+						}
+					#endregion Load
+
+				}
             }
             catch
             {
