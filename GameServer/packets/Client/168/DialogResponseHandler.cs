@@ -224,11 +224,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 										player.Out.SendMessage("The group is full.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return;
 									}
-									if (groupLeader.Group.IsGroupInCombat())
-									{
-										player.Out.SendMessage("You can't join a group that is in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										return;
-									}
 									groupLeader.Group.AddMember(player);
 									GameEventMgr.Notify(GamePlayerEvent.AcceptGroup, player);
 									return;
