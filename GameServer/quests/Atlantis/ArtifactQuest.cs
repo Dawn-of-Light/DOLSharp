@@ -162,6 +162,12 @@ namespace DOL.GS.Quests.Atlantis
 				return false;
 			}
 
+			if (player.CanReceiveArtifact(ArtifactID) == false)
+			{
+				m_reasonFailQualification = "Your class is not eligible for this artifact.";
+				return false;
+			}
+
 			if (player.Level < Level)
 			{
 				m_reasonFailQualification = "You must be at least level " + Level + " in order to complete this quest.";

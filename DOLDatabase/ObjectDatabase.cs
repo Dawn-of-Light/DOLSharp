@@ -1012,6 +1012,51 @@ namespace DOL.Database
 			handler.SetCacheObject(obj.ObjectId, null);
 		}
 
+		/// <summary>
+		/// Selects object from the db and updates or adds entry in the pre-cache
+		/// </summary>
+		/// <param name="objectType"></param>
+		/// <param name="key"></param>
+		public bool UpdateObjectInPreCache(Type objectType, object key)
+		{
+			MemberInfo[] members = objectType.GetMembers();
+			DataObject ret = (DataObject)Activator.CreateInstance(objectType);
+			string tableName = ret.TableName;
+			DataTableHandler dth = tableDatasets[tableName] as DataTableHandler;
+			string whereClause = null;
+
+			if (!dth.UsesPreCaching || objectType == null || key == null)
+				return false;
+
+			// Escape PK value
+			key = Escape(key.ToString());
+
+			for (int i = 0; i < members.Length; i++)
+			{
+				object[] keyAttrib = members[i].GetCustomAttributes(typeof(DOL.Database.Attributes.PrimaryKey), true);
+				if (keyAttrib.Length > 0)
+				{
+					whereClause = "`" + members[i].Name + "` = '" + key.ToString() + "'";
+					break;
+				}
+			}
+
+			if (whereClause == null)
+			{
+				whereClause = "`" + ret.TableName + "_ID` = '" + key.ToString() + "'";
+			}
+
+			DataObject[] objs = SQLSelectObjects(objectType, whereClause);
+
+			if (objs.Length > 0)
+			{
+				dth.SetPreCachedObject(key, objs[0]);
+				return true;
+			}
+
+			return false;
+		}
+
 		private void FillRowWithObject(DataObject DataObject, DataRow row)
 		{
 			bool relation = false;
