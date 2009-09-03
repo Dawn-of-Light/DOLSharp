@@ -303,13 +303,15 @@ namespace DOL.GS.Quests.Atlantis
 	        {
 				//Lets see if they gave us a valid artifact
 	            string ArtID = ArtifactMgr.GetArtifactIDFromItemID(item.Id_nb);
-				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtID, 
-					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtID, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				//If this artifact has more than one option for them, give them the quest
 				if (versions.Count > 1 && RemoveItem(player, item))
 				{
 					m_artifactID = ArtID;
 					SetCustomProperty("Art", ArtifactID);
+					SetCustomProperty("Id_nb", item.Id_nb);
+					SetCustomProperty("AXP", (item as InventoryArtifact).Experience.ToString());
+					SetCustomProperty("ALevel", (item as InventoryArtifact).ArtifactLevel.ToString());
 
 					GetNextOptions(versions);
 
@@ -353,8 +355,7 @@ namespace DOL.GS.Quests.Atlantis
 
 				//Lets get the next set of options
 				//Get the versions of this art
-				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID, 
-					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				GetNextOptions(versions);
 
 				//If we still have more options, give it to them
@@ -371,23 +372,48 @@ namespace DOL.GS.Quests.Atlantis
 				{
 					scholar.TurnTo(player);
 					//Attempt to get the right version of the artifact
-					ItemTemplate template = versions[m_chosenTypes] as ItemTemplate;
 
-					if (template == null)
+					m_chosenTypes = m_chosenTypes.Replace(";;", ";");
+
+					if (!versions.ContainsKey(m_chosenTypes))
 					{
 						log.Warn(String.Format("Artifact version {0} not found", m_chosenTypes));
-						return false;
-					}
-					if (GiveItem(player, template))
-					{
-						scholar.SayTo(player, eChatLoc.CL_PopupWindow, string.Format("Here is your {0}, {1}. May it serve you well!", ArtifactID, player.CharacterClass.Name));
-						FinishQuest();
+						scholar.SayTo(player, eChatLoc.CL_PopupWindow, "I can't find your chosen replacement, it may not be available for your class. Please try again.");
+						ReturnArtifact(player);
 						return true;
 					}
+
+					ItemTemplate template = versions[m_chosenTypes] as ItemTemplate;
+
+					if (GiveItem(player, template))
+					{
+						FinishQuest();
+						scholar.SayTo(player, eChatLoc.CL_PopupWindow, string.Format("Here is your {0}, {1}. May it serve you well!", ArtifactID, player.CharacterClass.Name));
+						return true;
+					}
+
 					return false;
 				}
 			}
 			return base.WhisperReceive(source, target, text);
+		}
+
+
+		protected void ReturnArtifact(GamePlayer player)
+		{
+            ItemTemplate itemTemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GetCustomProperty("Id_nb"));
+			InventoryArtifact artifact = new InventoryArtifact(itemTemplate);
+			artifact.ArtifactLevel = Convert.ToInt32(GetCustomProperty("ALevel"));
+			artifact.Experience = Convert.ToInt64(GetCustomProperty("AXP"));
+			artifact.CheckAbilities();
+
+			if (!player.ReceiveItem(null, artifact))
+			{
+				player.Out.SendMessage(String.Format("Your backpack is full, please make some room and try again.  You may have to relog to get to complete this quest."), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+				return;
+			}
+
+			FinishQuest();
 		}
 
 
@@ -400,10 +426,11 @@ namespace DOL.GS.Quests.Atlantis
 		/// <param name="itemTemplate"></param>
 		protected new static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate)
 		{
-			InventoryItem item = new InventoryItem(itemTemplate);
+			InventoryArtifact item = new InventoryArtifact(itemTemplate);
 			if (!player.ReceiveItem(null, item))
 			{
 				player.Out.SendMessage(String.Format("Your backpack is full, please make some room and try again."), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+				return false;
 			}
 
 			return true;
@@ -426,9 +453,17 @@ namespace DOL.GS.Quests.Atlantis
 
 			//If the player is already doing the quest, we look if he has the items:
 			if (Step == 0)
+			{
 				scholar.SayTo(player, "Since you are still interested, simply hand me your Artifact and I shall begin.");
+			}
 			else
-				scholar.SayTo(player, "Chose your options I mentioned earlier and I shall begin.");
+			{
+				string options = "";
+				foreach (string str in m_curTypes)
+					options += "[" + str + "] ";
+
+				scholar.SayTo(player, "Choose your options I mentioned earlier and I shall begin.\n\nYour options are: " + options);
+			}
 
 			return true;
 		}
@@ -492,7 +527,7 @@ namespace DOL.GS.Quests.Atlantis
 			string options = "";
 			foreach (string str in m_curTypes)
 			{
-				options = string.Format("{0} {1}", options, str);
+				options = string.Format("{0}|{1}", options, str);
 			}
 			SetCustomProperty("Types", options);
 
@@ -513,7 +548,7 @@ namespace DOL.GS.Quests.Atlantis
 			string combinedOptions = GetCustomProperty("Types");
 			if (combinedOptions != null)
 			{
-				string[] options = combinedOptions.Split(' ');
+				string[] options = combinedOptions.TrimStart().TrimEnd().Split('|');
 				foreach (string str in options)
 					if (str != " " && str != "")
 						m_curTypes.Add(str);
