@@ -409,8 +409,7 @@ namespace DOL.GS
         /// <param name="charClass"></param>
 		/// <param name="realm"></param>
         /// <returns></returns>
-		public static Dictionary<String, ItemTemplate> GetArtifactVersions(String artifactID, 
-			eCharacterClass charClass, eRealm realm)
+		public static Dictionary<String, ItemTemplate> GetArtifactVersions(String artifactID, eCharacterClass charClass, eRealm realm)
         {
             if (artifactID == null)
                 return null;

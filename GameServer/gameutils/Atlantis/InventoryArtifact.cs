@@ -44,7 +44,6 @@ namespace DOL.GS
 		private String m_artifactID;
 		private int m_artifactLevel;
 		private int[] m_levelRequirements;
-		private bool m_isChecked = false;
 
 		/// <summary>
 		/// This constructor shouldn't be called, so we prevent anyone
@@ -107,15 +106,7 @@ namespace DOL.GS
 		public int ArtifactLevel
 		{
 			get { return m_artifactLevel; }
-			protected set { m_artifactLevel = value; }
-		}
-
-		/// <summary>
-		/// Has this artifact been checked for all the correct abilities
-		/// </summary>
-		public bool IsChecked
-		{
-			get { return m_isChecked; }
+			set { m_artifactLevel = value; }
 		}
 
 		/// <summary>
@@ -148,11 +139,8 @@ namespace DOL.GS
 		/// <summary>
 		/// Verify that this artifact has all the correct abilities
 		/// </summary>
-		private void CheckAbilities()
+		public void CheckAbilities()
 		{
-			if (IsChecked)
-				return;
-
 			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Id_nb);
 
 			if (template == null)
@@ -166,8 +154,6 @@ namespace DOL.GS
 					SetBonusAmount(bonusID, template.GetBonusAmount(bonusID));
 				}
 			}
-
-			m_isChecked = true;
 		}
 
 		/// <summary>
