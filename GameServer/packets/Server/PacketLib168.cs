@@ -1061,7 +1061,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)(m_gameClient.Player.MaxSpeed * 100 / GamePlayer.PLAYER_BASE_SPEED));
 			pak.WriteByte((byte)(m_gameClient.Player.IsTurningDisabled ? 0x01 : 0x00));
 			// water speed in % of land speed if its over 0 i think
-			pak.WriteByte((byte)((m_gameClient.Player.MaxSpeed * 100 / GamePlayer.PLAYER_BASE_SPEED) * (m_gameClient.Player.GetModified(eProperty.WaterSpeed) * .01)));
+			pak.WriteByte((byte)Math.Min(byte.MaxValue, ((m_gameClient.Player.MaxSpeed * 100 / GamePlayer.PLAYER_BASE_SPEED) * (m_gameClient.Player.GetModified(eProperty.WaterSpeed) * .01))));
 			SendTCP(pak);
 		}
 
