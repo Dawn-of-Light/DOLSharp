@@ -920,6 +920,12 @@ namespace DOL.GS.ServerProperties
 		public static int XP_HARDCAP_PERCENT;
 
 		/// <summary>
+		/// Grace period in minutes to allow relog near enemy structure after link death
+		/// </summary>
+		[ServerProperty("RvRLinkDeathRelogGracePeriod", "The Grace Period in minutes, to allow to relog near enemy structure after a link death.", "20")]
+		public static string RVR_LINK_DEATH_RELOG_GRACE_PERIOD;
+
+		/// <summary>
 		/// Enable Debug mode - used to alter some features during server startup to make debugging easier
 		/// </summary>
 		[ServerProperty("debug", "enable_debug", "Enable Debug mode? Used to alter some features during server startup to make debugging easier", false)]
@@ -936,21 +942,22 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("toa", "artifact_xp_rate", "Adjust the rate at which all artifacts gain xp.  Higher numbers mean slower XP gain. XP / this = result", 350)]
 		public static int ARTIFACT_XP_RATE;
+		
+		/// <summary>
+		/// TOA Scroll drop rate
+		/// </summary>
+		[ServerProperty("toa", "scroll_drop_rate", "Adjust the drop rate (percent chance) for scrolls.", 25)]
+		public static int SCROLL_DROP_RATE;
 
+		
+		// custom properties below this  //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-		// custom properties below this
-
+		
 		/// <summary>
 		/// List of users allowed to send from IRC
 		/// </summary>
 		[ServerProperty("Custom", "irc_allowed_sendlist", "Allow players to send/receive irc when in RvR zone", "")]
 		public static string IRC_ALLOWED_SENDLIST;
-
-		[ServerProperty("RvRLinkDeathRelogGracePeriod","The Grace Period in minutes, to allow to relog near enemy structure after a link death.","20")]
-		public static string RVR_LINK_DEATH_RELOG_GRACE_PERIOD;
-
 
 		/// <summary>
 		/// This method loads the property from the database and returns

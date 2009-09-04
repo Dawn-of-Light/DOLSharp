@@ -57,27 +57,44 @@ namespace DOL.GS
             if (!base.Interact(player)) 
                 return false;
 
-            String intro = String.Format("Which artifact may I assist you with, {0}? {1} ",
-                player.CharacterClass.Name,
-                "I study the lore and magic of the following artifacts:");
-
 			IList quests = QuestListToGive;
-			if (quests.Count == 0)
-				intro += " It seems your database does not provide any artifact quests for me";
-			else
+			int count = 0;
+			string artifacts = "";
+			if (quests.Count > 0)
 			{
 				lock (quests.SyncRoot)
 				{
 					int numQuests = quests.Count;
 					foreach (ArtifactQuest quest in quests)
 					{
-						if (quests.Count > 1 && numQuests < quests.Count)
-							intro += (numQuests == 1) ? ", or " : ", ";
+						if (player.CanReceiveArtifact(quest.ArtifactID))
+						{
+							if (count > 0 && numQuests < quests.Count)
+								artifacts += (numQuests == 1) ? ", or " : ", ";
 
-						intro += String.Format("[{0}]", quest.ArtifactID);
+							artifacts += String.Format("[{0}]", quest.ArtifactID);
+
+							++count;
+						}
+
 						--numQuests;
 					}
 				}
+			}
+
+			String intro = "";
+
+			if (count == 0)
+			{
+				intro = "I have no artifacts available for your class";
+			}
+			else
+			{
+				intro = String.Format("Which artifact may I assist you with, {0}? {1} {2}",
+					player.CharacterClass.Name,
+					"I study the lore and magic of the following artifacts:",
+					artifacts);
+
 			}
 
 			intro += ".";
@@ -182,7 +199,7 @@ namespace DOL.GS
 				String reply = String.Format("I'm sorry, but I shouldn't recreate this artifact for you, {0} {1} {2}",
 											"as it wouldn't make proper use of your abilities. There are other artifacts",
 											"in Atlantis better suited to your needs.",
-											"If you feel like your class qualifies for this artifact please /report this error to my superiors.");
+											"\n\nIf you feel like your class qualifies for this artifact please /report this error to my superiors.");
                 TurnTo(player);
                 SayTo(player, eChatLoc.CL_PopupWindow, reply);
             }
