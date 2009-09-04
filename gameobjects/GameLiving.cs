@@ -1518,9 +1518,19 @@ namespace DOL.GS
 				ad.Damage = Math.Min(ad.Damage, (int)(UnstyledDamageCap(weapon) * effectiveness));
 
 				if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GamePlayer)
+				{
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_DAMAGE);
+				}
 				else if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GameNPC)
+				{
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_DAMAGE);
+				}
+				else if (this is GameNPC && (this as GameNPC).Brain is IControlledBrain == false)
+				{
+					if (Level > ServerProperties.Properties.MOB_DAMAGE_INCREASE_STARTLEVEL)
+						ad.Damage += (int)(ServerProperties.Properties.MOB_DAMAGE_INCREASE_PERLEVEL * (Level - ServerProperties.Properties.MOB_DAMAGE_INCREASE_STARTLEVEL));
+				}
+
 				ad.UncappedDamage = ad.Damage;
 
 				//Eden - Conversion Bonus (Crocodile Ring)  - tolakram - critical damage is always 0 here, needs to be moved
