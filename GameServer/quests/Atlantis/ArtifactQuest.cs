@@ -174,6 +174,12 @@ namespace DOL.GS.Quests.Atlantis
 				return false;
 			}
 
+			if (player.HasFinishedQuest(this.GetType()) != 0)
+			{
+				m_reasonFailQualification = "You've already completed the quest for this artifact.";
+				return false;
+			}
+
 			if (player.HasFinishedQuest(encounterType) <= 0)
 			{
 				m_reasonFailQualification = "You must first get the encounter credit for this artifact.";
@@ -189,12 +195,6 @@ namespace DOL.GS.Quests.Atlantis
 			if (player.IsDoingQuest(this.GetType()) != null)
 			{
 				m_reasonFailQualification = "You've already started the quest for this artifact.";
-				return false;
-			}
-
-			if (player.HasFinishedQuest(this.GetType()) != 0)
-			{
-				m_reasonFailQualification = "You've already completed the quest for this artifact.";
 				return false;
 			}
 

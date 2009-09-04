@@ -520,6 +520,9 @@ namespace DOL.GS
 			if (player == null || artifactID == null)
 				return false;
 
+			if (!player.CanReceiveArtifact(artifactID))
+				return false;
+
 			Artifact artifact;
 			lock (m_artifacts)
 			{

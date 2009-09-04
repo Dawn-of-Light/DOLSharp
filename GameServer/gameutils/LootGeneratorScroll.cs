@@ -49,7 +49,7 @@ namespace DOL.GS
         {
             LootList lootList = new LootList();
             
-            if (mob.CurrentRegion.Description == "Atlantis" && mob.Level >= 45 && Util.Chance(25))
+            if (mob.CurrentRegion.Description == "Atlantis" && mob.Level >= 45 && Util.Chance(ServerProperties.Properties.SCROLL_DROP_RATE))
             {
                 List<Artifact> artifacts = new List<Artifact>();
                 switch (mob.CurrentZone.Description)
@@ -77,8 +77,7 @@ namespace DOL.GS
 
                 if (artifacts.Count > 0)
                 {
-					String artifactID = 
-						(artifacts[Util.Random(artifacts.Count-1)]).ArtifactID;
+					String artifactID = (artifacts[Util.Random(artifacts.Count-1)]).ArtifactID;
                     int pageNumber;
 
                     if (mob.Level >= 55)

@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DOL.Database;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -39,12 +40,12 @@ namespace DOL.GS
             if (!base.Interact(player))
                 return false;
 
-            String intro = String.Format("You're {0}, right? Please tell me you're here to share your [tales of battle] in the frontiers.",
-                player.Name);
+            String intro = String.Format("You're {0}, right? Please tell me you're here to share your [tales of battle] in the frontiers.", player.Name);
 
             SayTo(player, intro);
             return true;
         }
+
 
         /// <summary>
         /// Merchant has received a /whisper.
@@ -100,13 +101,27 @@ namespace DOL.GS
 
             if (player != null && item != null && item.Name.EndsWith("Credit"))
             {
-                if (ArtifactMgr.GrantArtifactBountyCredit(player, item.Name))
-                {
-                    lock (player.Inventory)
-                        player.Inventory.RemoveItem(item);
+				if (ArtifactMgr.GrantArtifactBountyCredit(player, item.Name))
+				{
+					lock (player.Inventory)
+						player.Inventory.RemoveItem(item);
 
-                    return true;
-                }
+					return true;
+				}
+				else
+				{
+					// refund bounty points
+
+					lock (player.Inventory)
+						player.Inventory.RemoveItem(item);
+
+					long totalValue = item.Value;
+					player.BountyPoints += totalValue;
+					player.Out.SendUpdatePoints();
+					player.Out.SendMessage(totalValue + " Bounty Points refunded", eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage("You already have this credit or your class is not eligible to receive this artifact. " + totalValue + " Bounty Points refunded!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+					return true;
+				}
             }
 
             return base.ReceiveItem(source, item);
