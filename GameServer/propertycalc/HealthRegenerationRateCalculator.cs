@@ -47,8 +47,7 @@ namespace DOL.GS.PropertyCalc
 			if (living.IsDiseased)
 				return 0; // no HP regen if diseased
 			if (living is GameKeepDoor)
-				return (int)(living.MaxHealth *0.05);//5% each time for keep door
-
+				return (int)(living.MaxHealth * 0.05); //5% each time for keep door
 
 			double regen = 1;
 
@@ -60,11 +59,11 @@ namespace DOL.GS.PropertyCalc
 
 			if (living.Level < 26)
 			{
-				regen = 13 + (living.Level * 0.2);
+				regen = 10 + (living.Level * 0.2);
 			}
 			else
 			{
-				regen = living.Level * 0.7;
+				regen = living.Level * 0.6;
 			}
 
 			// assumes NPC regen is now half as effective as GamePlayer (as noted above) - tolakram

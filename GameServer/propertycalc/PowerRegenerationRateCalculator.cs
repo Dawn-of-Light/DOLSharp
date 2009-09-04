@@ -42,7 +42,7 @@ namespace DOL.GS.PropertyCalc
               - All health and power regeneration aids are now twice as effective.
              */
 
-			double regen = 5 + (living.Level / 2.5);
+			double regen = 5 + (living.Level / 2.75);
 
 			if (living is GameNPC && living.InCombat)
 				regen /= 2.0;
