@@ -949,7 +949,21 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("toa", "scroll_drop_rate", "Adjust the drop rate (percent chance) for scrolls.", 25)]
 		public static int SCROLL_DROP_RATE;
 
-		
+		/// <summary>
+		/// What level to start increasing mob damage
+		/// </summary>
+		[ServerProperty("npc", "mob_damage_increase_startlevel", "What level to start increasing mob damage.", 30)]
+		public static int MOB_DAMAGE_INCREASE_STARTLEVEL;
+
+		/// <summary>
+		/// How much damage to increase per level
+		/// </summary>
+		[ServerProperty("npc", "mob_damage_increase_perlevel", "How much damage to increase per level", 0.0)]
+		public static double MOB_DAMAGE_INCREASE_PERLEVEL;
+
+
+
+
 		// custom properties below this  //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		
