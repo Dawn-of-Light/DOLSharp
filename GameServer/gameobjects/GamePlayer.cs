@@ -6763,7 +6763,6 @@ namespace DOL.GS
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DeathN1"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 							xpLossPercent /= 3;
 							break;
-						//FIXME: And if DeathCount > 1 ??? (VaNaTiC)
 						case 1:
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DeathN2"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 							xpLossPercent = xpLossPercent * 2 / 3;
@@ -13668,37 +13667,34 @@ namespace DOL.GS
 		/// <param name="experience">Amount of Experience</param>
 		public virtual void GainChampionExperience(long experience)
 		{
-			if (ChampionExperience >= 320000) { ChampionExperience = 320000; return; }
-			// Do not gain experience if champion not activated or if champion max level reached
-			if (!Champion || ChampionLevel == CL_MAX_LEVEL)
-				return;
-
-			if (experience > 0)
+			if (ChampionExperience >= 320000)
 			{
-				double modifier = ServerProperties.Properties.XP_RATE;
-				// 1 CLXP point per 333K normal XP
-				if (this.CurrentRegion.IsRvR)
-					experience = (long)((double)experience * modifier / 333000);
-				else // 1 CLXP point per 2 Million normal XP
-					experience = (long)((double)experience * modifier / 2000000);
+				ChampionExperience = 320000;
+				return;
 			}
-			System.Globalization.NumberFormatInfo format = System.Globalization.NumberFormatInfo.InvariantInfo;
-			string totalexp = experience.ToString("N0", format);
+			
+			// Do not gain experience:
+			// - if champion not activated
+			// - if champion max level reached
+			// - if experience is negative
+			if (!Champion || ChampionLevel == CL_MAX_LEVEL || experience <=0)
+				return;
+			
+			double modifier = ServerProperties.Properties.XP_RATE;
+			// 1 CLXP point per 333K normal XP
+			if (this.CurrentRegion.IsRvR)
+				experience = (long)((double)experience * modifier / 333000);
+			else // 1 CLXP point per 2 Million normal XP
+				experience = (long)((double)experience * modifier / 2000000);
 
 			// Wtf this screws up level 0
 			if (ChampionExperience + experience < ChampionExperienceForCurrentLevel)
 				experience = ChampionExperienceForCurrentLevel - ChampionExperience;
-
-			if (experience > 0)
-			{
-				System.Globalization.NumberFormatInfo format2 = System.Globalization.NumberFormatInfo.InvariantInfo;
-				string totalXP = experience.ToString("N0", format2);
-
-				Out.SendMessage("You get " + totalXP + " champion experience points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			}
+			
+			System.Globalization.NumberFormatInfo format = System.Globalization.NumberFormatInfo.InvariantInfo;
+			Out.SendMessage("You get " + experience.ToString("N0", format) + " champion experience points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 			ChampionExperience += experience; // force usage of this method, Experience property cannot be set
-
 			Out.SendUpdatePoints();
 		}
 		/// <summary>
