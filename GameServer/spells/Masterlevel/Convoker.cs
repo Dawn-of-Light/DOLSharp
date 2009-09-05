@@ -13,6 +13,8 @@ using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Spells
 {
+    //http://www.camelotherald.com/masterlevels/ma.php?ml=Convoker
+    //no shared timer
     #region Convoker-1
     [SpellHandlerAttribute("SummonWood")]
     public class SummonWoodSpellHandler : SummonItemSpellHandler
@@ -35,6 +37,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Convoker-2
     [SpellHandlerAttribute("PrescienceNode")]
     public class PrescienceNodeSpellHandler : FontSpellHandler
@@ -112,6 +115,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Convoker-3
     [SpellHandlerAttribute("PowerTrap")]
     public class PowerTrapSpellHandler : MineSpellHandler
@@ -159,6 +163,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Convoker-4
     [SpellHandlerAttribute("SpeedWrapWard")]
     public class SpeedWrapWardSpellHandler : FontSpellHandler
@@ -231,6 +236,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 1
     #region Convoker-5
     [SpellHandlerAttribute("SummonWarcrystal")]
     public class SummonWarcrystalSpellHandler : SummonItemSpellHandler
@@ -263,6 +269,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 1
     #region Convoker-6
     [SpellHandlerAttribute("Battlewarder")]
     public class BattlewarderSpellHandler : SpellHandler
@@ -386,6 +393,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Convoker-7
     [SpellHandlerAttribute("DissonanceTrap")]
     public class DissonanceTrapSpellHandler : MineSpellHandler
@@ -433,6 +441,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Convoker-8
     [SpellHandler("BriddleGuard")]
     public class BriddleGuardSpellHandler : MasterlevelHandling
@@ -528,6 +537,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Convoker-9
     [SpellHandlerAttribute("SummonMastery")]
     public class Convoker9Handler : MasterlevelHandling
@@ -575,6 +585,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Convoker-10
     [SpellHandler("SummonTitan")]
     public class Convoker10SpellHandler : MasterlevelHandling
@@ -716,11 +727,13 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+
     #region PowerRend
     [SpellHandlerAttribute("PowerRend")]
     public class PowerRendSpellHandler : SpellHandler
     {
         public PowerRendSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
 
 
         public override void FinishSpellCast(GameLiving target)
@@ -729,40 +742,23 @@ namespace DOL.GS.Spells
             base.FinishSpellCast(target);
         }
 
-
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {
             if (target == null) return;
             if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
+            //spell damage shood be 50-100 (thats the ammmount power tapped on use)
+            int mana = (int)(Spell.Damage);
+            target.ChangeMana(target, GameLiving.eManaChangeType.Spell, (-mana)
 
-            int end = (int)(Spell.Damage);
-            target.ChangeMana(target, GameLiving.eManaChangeType.Spell, (-end));
-
-            if (target is GamePlayer)
-            {
-                ((GamePlayer)target).Out.SendMessage(m_caster.Name + " steal you for " + end + " power!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-            }
-
-            StealEndurance(target, end);
             target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
         }
 
-
-        public virtual void StealEndurance(GameLiving target, int end)
+        public virtual void SendCasterMessage(GameLiving target, int mana)
         {
-            if (!m_caster.IsAlive) return;
-            m_caster.ChangeMana(target, GameLiving.eManaChangeType.Spell, end);
-            SendCasterMessage(target, end);
-
-        }
-
-
-        public virtual void SendCasterMessage(GameLiving target, int end)
-        {
-            MessageToCaster(string.Format("You steal {0} for {1} power!", target.Name, end), eChatType.CT_YouHit);
-            if (end > 0)
+            MessageToCaster(string.Format("You steal {0} for {1} power!", target.Name, mana), eChatType.CT_YouHit);
+            if (mana > 0)
             {
-                MessageToCaster("You steal " + end + " power points" + (end == 1 ? "." : "s."), eChatType.CT_Spell);
+                MessageToCaster("You steal " + mana + " power points" + (mana == 1 ? "." : "s."), eChatType.CT_Spell);
             }
             else
             {

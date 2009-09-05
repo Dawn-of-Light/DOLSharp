@@ -11,10 +11,17 @@ using System.Collections.Specialized;
 
 namespace DOL.GS.Spells
 {
+    //http://www.camelotherald.com/masterlevels/ma.php?ml=Sojourner
+    //no shared timer
     #region Sojourner-1
     //Gameplayer - MaxEncumbrance
     #endregion
 
+    //ML2 Unending Breath - already handled in another area
+
+    //ML3 Reveal Crystalseed - already handled in another area
+
+    //no shared timer
     #region Sojourner-4
     [SpellHandlerAttribute("UnmakeCrystalseed")]
     public class UnmakeCrystalseedSpellHandler : SpellHandler
@@ -53,6 +60,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Sojourner-5
     [SpellHandlerAttribute("AncientTransmuter")]
     public class AncientTransmuterSpellHandler : SpellHandler
@@ -108,6 +116,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Sojourner-6
     [SpellHandlerAttribute("Port")]
     public class Port : MasterlevelHandling
@@ -138,7 +147,8 @@ namespace DOL.GS.Spells
         }
     }
     #endregion
-	
+
+    //no shared timer
 	#region Sojourner-7
 	[SpellHandlerAttribute("EssenceResist")]
 	public class EssenceResistHandler : AbstractResistBuff
@@ -149,6 +159,7 @@ namespace DOL.GS.Spells
 	}
 	#endregion Sojourner-7
 
+    //no shared timer
     #region Sojourner-8
     [SpellHandlerAttribute("Zephyr")]
     public class FZSpellHandler : MasterlevelHandling
@@ -324,6 +335,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Sojourner-9
     [SpellHandlerAttribute("Phaseshift")]
     public class PhaseshiftHandler : MasterlevelHandling
@@ -392,6 +404,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Sojourner-10
     [SpellHandlerAttribute("Groupport")]
     public class Groupport : MasterlevelHandling
