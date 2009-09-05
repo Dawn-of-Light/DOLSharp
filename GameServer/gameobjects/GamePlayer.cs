@@ -1438,7 +1438,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the praying-state of this living
 		/// </summary>
-		public virtual bool PrayState
+		public virtual bool IsPraying
 		{
 			get { return m_prayAction != null && m_prayAction.IsAlive; }
 		}
@@ -1482,7 +1482,7 @@ namespace DOL.GS
 				return;
 			}
 
-			if (PrayState)
+			if (IsPraying)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.AlreadyPraying"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -1508,7 +1508,7 @@ namespace DOL.GS
 		/// </summary>
 		public void PrayTimerStop()
 		{
-			if (!PrayState)
+			if (!IsPraying)
 				return;
 			m_prayAction.Stop();
 			m_prayAction = null;
@@ -9861,7 +9861,7 @@ namespace DOL.GS
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Sit.NoLongerWaitingQuit"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				//Stop praying if the player stands up...
-				if (PrayState)
+				if (IsPraying)
 				{
 					m_prayAction.Stop();
 				}
@@ -13677,7 +13677,8 @@ namespace DOL.GS
 			// - if champion not activated
 			// - if champion max level reached
 			// - if experience is negative
-			if (!Champion || ChampionLevel == CL_MAX_LEVEL || experience <=0)
+			// - if praying at your grave 
+			if (!Champion || ChampionLevel == CL_MAX_LEVEL || experience <=0 || IsPraying )
 				return;
 			
 			double modifier = ServerProperties.Properties.XP_RATE;
