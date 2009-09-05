@@ -38,7 +38,7 @@ namespace DOL.GS.Spells
 
             int heal = (ad.Damage + ad.CriticalDamage) * m_spell.LifeDrainReturn / 100;
             // Return the spell power? + % calculated on HP value and caster maxmana
-			double manareturned = (heal * m_caster.MaxMana / 100);
+			double manareturned = m_spell.Power + (heal * m_caster.MaxMana / 100);
             
             if (heal <= 0) return;
             heal = m_caster.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, (int)manareturned);
