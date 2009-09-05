@@ -25,6 +25,15 @@ using DOL.Database;
 
 namespace DOL.GS.Spells
 {
+    //http://www.camelotherald.com/masterlevels/ma.php?ml=Perfector
+    //the link isnt corrently working so correct me if you see any timers wrong.
+
+
+    //ML1 Cure NS - already handled in another area
+
+    //ML2 GRP Cure Disease - already handled in another area
+
+    //shared timer 1
     #region Perfecter-3
     [SpellHandlerAttribute("FOH")]
     public class FOHSpellHandler : FontSpellHandler
@@ -78,6 +87,9 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //ML4 Greatness - passive increases 20% concentration
+
+    //shared timer 1
     #region Perfecter-5
     [SpellHandlerAttribute("FOP")]
     public class FOPSpellHandler : FontSpellHandler
@@ -131,6 +143,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 1
     #region Perfecter-6
     [SpellHandlerAttribute("FOR")]
     public class FORSpellHandler : FontSpellHandler
@@ -181,6 +194,10 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 2
+    //ML7 Leaping Health - already handled in another area
+
+    //no shared timer
     #region Perfecter-8
     [SpellHandlerAttribute("SickHeal")]
     public class SickHealSpellHandler : RemoveSpellEffectHandler
@@ -195,6 +212,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 1
     #region Perfecter-9
     [SpellHandlerAttribute("FOD")]
     public class FODSpellHandler : FontSpellHandler
@@ -243,6 +261,9 @@ namespace DOL.GS.Spells
         }
     }	
     #endregion
+
+    //shared timer 2
+    //ML10 Rampant Healing - already handled in another area
 
     #region PoT
     [SpellHandlerAttribute("PowerOverTime")]

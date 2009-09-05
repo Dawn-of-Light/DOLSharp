@@ -26,6 +26,8 @@ using DOL.Events;
 
 namespace DOL.GS.Spells
 {
+    //http://www.camelotherald.com/masterlevels/ma.php?ml=Stormlord
+    //shared timer 1
     #region Stormlord-1
     [SpellHandlerAttribute("DazzlingArray")]
     public class DazzlingArraySpellHandler : StormSpellHandler
@@ -71,6 +73,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Stormlord-2
     [SpellHandlerAttribute("VacuumVortex")]
     public class VacuumVortexSpellHandler : SpellHandler
@@ -112,6 +115,7 @@ namespace DOL.GS.Spells
     }	
     #endregion
 
+    //shared timer 2
     #region Stormlord-3
     [SpellHandlerAttribute("EnervatingGas")]
     public class EnervatingGasSpellHandler : StormSpellHandler
@@ -157,6 +161,7 @@ namespace DOL.GS.Spells
     }	
     #endregion
 
+    //shared timer 1
     #region Stormlord-4
     [SpellHandlerAttribute("InebriatingFumes")]
     public class InebriatingFumesSpellHandler : StormSpellHandler
@@ -202,6 +207,7 @@ namespace DOL.GS.Spells
     }	
     #endregion
 
+    //shared timer 2
     #region Stormlord-5
     [SpellHandlerAttribute("MentalSiphon")]
     public class MentalSiphonSpellHandler : StormSpellHandler
@@ -247,6 +253,7 @@ namespace DOL.GS.Spells
     }	
     #endregion
 
+    //no shared timer
     #region Stormlord-6
     [SpellHandlerAttribute("FocusingWinds")]
     public class FocusingWindsSpellHandler : SpellHandler
@@ -290,6 +297,7 @@ namespace DOL.GS.Spells
     }	
     #endregion
 
+    //shared timer 1
     #region Stormlord-7
     [SpellHandlerAttribute("ChokingVapors")]
     public class ChokingVaporsSpellHandler : StormSpellHandler
@@ -335,6 +343,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 1
     #region Stormlord-8
     [SpellHandlerAttribute("SenseDullingCloud")]
     public class SenseDullingCloudSpellHandler : StormSpellHandler
@@ -380,6 +389,7 @@ namespace DOL.GS.Spells
     }	
     #endregion
 
+    //no shared timer
     #region Stormlord-9
     [SpellHandlerAttribute("EnergyTempest")]
     public class EnergyTempestSpellHandler : StormSpellHandler
@@ -424,4 +434,6 @@ namespace DOL.GS.Spells
         }
     }	
     #endregion
+
+    //ML 10 Arcing Power - already handled in another area
 }

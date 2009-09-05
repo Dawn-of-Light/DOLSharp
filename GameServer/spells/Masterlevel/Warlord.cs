@@ -29,11 +29,13 @@ using DOL.Events;
 using System.Collections.Specialized;
 
 namespace DOL.GS.Spells
-{
+{    
+    //http://www.camelotherald.com/masterlevels/ma.php?ml=Warlord
     #region Warlord-1
     //Gamesiegeweapon - getactiondelay
     #endregion
 
+    //shared timer 1 for 2 - shared timer 4 for 8
     #region Warlord-2/8
     [SpellHandlerAttribute("PBAEHeal")]
     public class PBAEHealHandler : MasterlevelHandling
@@ -125,6 +127,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 2
     #region Warlord-3
     [SpellHandlerAttribute("CoweringBellow")]
     public class CoweringBellowSpellHandler : FearSpellHandler
@@ -149,6 +152,9 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //ML4~     //shared timer 3
+
+    //shared timer 3
     #region Warlord-5
     [SpellHandlerAttribute("Critical")]
     public class CriticalDamageBuff : MasterlevelDualBuffHandling
@@ -159,7 +165,10 @@ namespace DOL.GS.Spells
         public CriticalDamageBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     #endregion  
-        
+       
+    //ML6~     //shared timer 4
+
+    //shared timer 3
     #region Warlord-7
     [SpellHandlerAttribute("CleansingAura")]
     public class CleansingAurauraSpellHandler : SpellHandler
@@ -173,6 +182,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 5
     #region Warlord-9
     [SpellHandlerAttribute("EffectivenessBuff")]
     public class EffectivenessBuff : MasterlevelHandling
@@ -230,6 +240,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 5
     #region Warlord-10
     [SpellHandlerAttribute("MLABSBuff")]
     public class MLABSBuff : MasterlevelBuffHandling
