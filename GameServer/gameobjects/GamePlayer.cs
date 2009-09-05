@@ -2230,7 +2230,7 @@ namespace DOL.GS
 		/// </summary>
 		public override int MaxEndurance
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.MaxEndurance : base.MaxEndurance; }
+			get { return GetModified(eProperty.Fatigue); }
 			set
 			{
 				//If it is already set, don't do anything
