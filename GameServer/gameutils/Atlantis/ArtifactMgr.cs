@@ -296,6 +296,9 @@ namespace DOL.GS
 			GainedExperienceEventArgs xpArgs = args as GainedExperienceEventArgs;
 			if (player == null || xpArgs == null)
 				return;
+			
+			if (player.IsPraying)
+				return;
 
 			// Suffice to calculate total XP once for all artifacts.
 
@@ -323,7 +326,7 @@ namespace DOL.GS
 		{
 			if (player == null || item == null)
 				return;
-
+			
 			long artifactXPOld = item.Experience;
 
 			// Can't go past level 10, but check to make sure we are level 10 if we have the XP
