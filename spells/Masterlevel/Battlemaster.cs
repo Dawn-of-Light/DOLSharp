@@ -5,9 +5,11 @@ using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using DOL.Events;
 
 namespace DOL.GS.Spells
 {
+    //http://www.camelotherald.com/masterlevels/ma.php?ml=Battlemaster
     #region Battlemaster-1
     [SpellHandlerAttribute("MLEndudrain")]
     public class MLEndudrain : MasterlevelHandling
@@ -26,7 +28,7 @@ namespace DOL.GS.Spells
         {
             if (target == null) return;
             if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
-
+            //spell damage should 25;
             int end = (int)(Spell.Damage);
             target.ChangeEndurance(target, GameLiving.eEnduranceChangeType.Spell, (-end));
 
@@ -66,6 +68,7 @@ namespace DOL.GS.Spells
             if (target == null) return;
             if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
 
+            //spell damage shood be 50-100 (thats the amount power tapped on use) i recommend 90 i think thats it but cood be wrong
             int mana = (int)(Spell.Damage);
             target.ChangeMana(target, GameLiving.eManaChangeType.Spell, (-mana));
 
@@ -157,7 +160,95 @@ namespace DOL.GS.Spells
         public Grapple(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     #endregion
-	
+
+    //ml5 in database Target shood be Group if PvP..Realm if RvR..Value = spell proc'd (a.k the 80value dd proc)
+    #region Battlemaster-5
+    [SpellHandler("EssenceFlamesProc")]
+    public class EssenceFlamesProcSpellHandler : OffensiveProcSpellHandler
+    {
+        private DBSpell dbs;
+        private Spell s;
+        private SpellLine sl;
+        private ISpellHandler strike;
+
+        /// <summary>
+        /// Handler fired whenever effect target is attacked
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="arguments"></param>
+        protected override void EventHandler(DOLEvent e, object sender, EventArgs arguments)
+        {
+            AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;
+            if (args == null || args.AttackData == null)
+            {
+                return;
+            }
+            AttackData ad = args.AttackData;
+            if (ad.AttackResult != GameLiving.eAttackResult.HitUnstyled && ad.AttackResult != GameLiving.eAttackResult.HitStyle)
+                return;
+
+            int baseChance = Spell.Frequency / 100;
+
+            if (ad.IsMeleeAttack)
+            {
+                if (sender is GamePlayer)
+                {
+                    GamePlayer player = (GamePlayer)sender;
+                    InventoryItem leftWeapon = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+                    // if we can use left weapon, we have currently a weapon in left hand and we still have endurance,
+                    // we can assume that we are using the two weapons.
+                    if (player.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield)
+                    {
+                        baseChance /= 2;
+                    }
+                }
+            }
+
+            if (baseChance < 1)
+                baseChance = 1;
+
+            if (Util.Chance(baseChance))
+            {
+                ISpellHandler handler = ScriptMgr.CreateSpellHandler((GameLiving)sender, m_procSpell, m_procSpellLine);
+                if (handler != null)
+                {
+                    if (m_procSpell.Target.ToLower() == "enemy")
+                        handler.StartSpell(ad.Target);
+                    else if (m_procSpell.Target.ToLower() == "self")
+                        handler.StartSpell(ad.Attacker);
+                    else if (m_procSpell.Target.ToLower() == "group")
+                    {
+                        GamePlayer player = Caster as GamePlayer;
+                        if (Caster is GamePlayer)
+                        {
+                            if (player.Group != null)
+                            {
+                                foreach (GameLiving groupPlayer in player.Group.GetMembersInTheGroup())
+                                {
+                                    if (player.IsWithinRadius(groupPlayer, m_procSpell.Range))
+                                    {
+                                        handler.StartSpell(groupPlayer);
+                                    }
+                                }
+                            }
+                            else
+                                handler.StartSpell(player);
+                        }
+                    }
+                    else
+                    {
+                        log.Warn("Skipping " + m_procSpell.Target + " proc " + m_procSpell.Name + " on " + ad.Target.Name + "; Realm = " + ad.Target.Realm);
+                    }
+                }
+            }
+        }
+
+        // constructor
+        public EssenceFlamesProcSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+    #endregion
+
 	#region Battlemaster-6
 	// LifeFlight
     public class ThrowWeaponSpellHandler : DirectDamageSpellHandler
@@ -506,6 +597,68 @@ namespace DOL.GS.Spells
 	}
 	#endregion
 
+    //essence debuff
+    #region Battlemaster-7
+    [SpellHandlerAttribute("EssenceSearHandler")]
+    public class EssenceSearHandler : SpellHandler
+    {
+        public override int CalculateSpellResistChance(GameLiving target) { return 0; }
+
+        public override void OnEffectStart(GameSpellEffect effect)
+        {
+            base.OnEffectStart(effect);
+            GameLiving living = effect.Owner as GameLiving;
+            //value should be 15 to reduce Essence resist
+            living.DebuffCategory[(int)eProperty.Resist_Natural] += (int)m_spell.Value;
+
+            if (effect.Owner is GamePlayer)
+            {
+                GamePlayer player = effect.Owner as GamePlayer;
+                player.Out.SendCharStatsUpdate();
+                player.UpdateEncumberance();
+                player.UpdatePlayerStatus();
+                player.Out.SendUpdatePlayer();
+            }
+        }
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            GameLiving living = effect.Owner as GameLiving;
+            living.DebuffCategory[(int)eProperty.Resist_Natural] -= (int)m_spell.Value;
+
+            if (effect.Owner is GamePlayer)
+            {
+                GamePlayer player = effect.Owner as GamePlayer;
+                player.Out.SendCharStatsUpdate();
+                player.UpdatePlayerStatus();
+                player.Out.SendUpdatePlayer();
+            }
+            return base.OnEffectExpires(effect, noMessages);
+        }
+
+        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            base.ApplyEffectOnTarget(target, effectiveness);
+            if (target.Realm == 0 || Caster.Realm == 0)
+            {
+                target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
+                Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+            }
+            else
+            {
+                target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
+                Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+            }
+            if (target is GameNPC)
+            {
+                IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
+                if (aggroBrain != null)
+                    aggroBrain.AddToAggroList(Caster, (int)Spell.Value);
+            }
+        }
+        public EssenceSearHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+    #endregion
+
     #region Battlemaster-8
     [SpellHandlerAttribute("BodyguardHandler")]
     public class BodyguardHandler : SpellHandler
@@ -522,6 +675,77 @@ namespace DOL.GS.Spells
         public BodyguardHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     #endregion
+
+    //for ML9 in the database u have to add  EssenceDampenHandler  in type (its a new method customly made) 
+    #region Battlemaster-9
+    [SpellHandlerAttribute("EssenceDampenHandler")]
+    public class EssenceDampenHandler : SpellHandler
+    {
+        protected int DexDebuff = 0;
+        protected int QuiDebuff = 0;
+        public override int CalculateSpellResistChance(GameLiving target) { return 0; }
+
+        public override void OnEffectStart(GameSpellEffect effect)
+        {
+            base.OnEffectStart(effect);
+            double percentValue = (m_spell.Value) / 100;
+            DexDebuff = (int)((double)effect.Owner.GetModified(eProperty.Dexterity) * percentValue);
+            QuiDebuff = (int)((double)effect.Owner.GetModified(eProperty.Quickness) * percentValue);
+            GameLiving living = effect.Owner as GameLiving;
+            //value shood be -15 (for 15%)
+            GamePlayer target = Caster.TargetObject as GamePlayer;
+            living.DebuffCategory[(int)eProperty.Dexterity] += DexDebuff;
+            living.DebuffCategory[(int)eProperty.Quickness] += QuiDebuff;
+
+            if (effect.Owner is GamePlayer)
+            {
+                GamePlayer player = effect.Owner as GamePlayer;
+                player.Out.SendCharStatsUpdate();
+                player.UpdatePlayerStatus();
+                player.Out.SendUpdatePlayer();
+            }
+        }
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            GameLiving living = effect.Owner as GameLiving;
+            living.DebuffCategory[(int)eProperty.Dexterity] -= DexDebuff;
+            living.DebuffCategory[(int)eProperty.Quickness] -= QuiDebuff;
+
+            if (effect.Owner is GamePlayer)
+            {
+                GamePlayer player = effect.Owner as GamePlayer;
+                player.Out.SendCharStatsUpdate();
+                player.UpdatePlayerStatus();
+                player.Out.SendUpdatePlayer();
+            }
+            return base.OnEffectExpires(effect, noMessages);
+        }
+
+        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            base.ApplyEffectOnTarget(target, effectiveness);
+            if (target.Realm == 0 || Caster.Realm == 0)
+            {
+                target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
+                Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+            }
+            else
+            {
+                target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
+                Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+            }
+            if (target is GameNPC)
+            {
+                IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
+                if (aggroBrain != null)
+                    aggroBrain.AddToAggroList(Caster, (int)Spell.Value);
+            }
+        }
+        public EssenceDampenHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+    #endregion
+
+    //ml10 in database Type shood be RandomBuffShear
 
     #region Stylhandler
     [SpellHandlerAttribute("StyleHandler")]

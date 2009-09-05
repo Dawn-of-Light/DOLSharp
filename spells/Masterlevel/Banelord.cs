@@ -9,6 +9,8 @@ using DOL.Events;
 
 namespace DOL.GS.Spells
 {
+    //http://www.camelotherald.com/masterlevels/ma.php?ml=Banelord
+    //shared timer 1
     #region Banelord-1
     [SpellHandlerAttribute("CastingSpeedDebuff")]
     public class CastingSpeedDebuff : MasterlevelDebuffHandling
@@ -26,6 +28,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 5 for ml2 - shared timer 3 for ml8
     #region Banelord-2/8
     [SpellHandlerAttribute("PBAEDamage")]
     public class PBAEDamage : MasterlevelHandling
@@ -103,6 +106,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 3
     #region Banelord-3
     [SpellHandlerAttribute("Oppression")]
     public class OppressionSpellHandler : MasterlevelHandling
@@ -146,6 +150,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 1
     #region Banelord-4
     [SpellHandler("MLFatDebuff")]
     public class MLFatDebuffHandler : MasterlevelDebuffHandling
@@ -179,6 +184,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 5
     #region Banelord-5
     [SpellHandlerAttribute("MissHit")]
     public class MissHit : MasterlevelBuffHandling
@@ -190,6 +196,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 1
     #region Banelord-6
     #region ML6Snare
     [SpellHandler("MLUnbreakableSnare")]
@@ -327,6 +334,7 @@ namespace DOL.GS.Spells
     #endregion
     #endregion
 
+    //shared timer 3
     #region Banelord-7
     [SpellHandlerAttribute("BLToHit")]
     public class BLToHit : MasterlevelBuffHandling
@@ -338,6 +346,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //shared timer 5
     #region Banelord-9
     [SpellHandlerAttribute("EffectivenessDebuff")]
     public class EffectivenessDeBuff : MasterlevelHandling
@@ -391,6 +400,7 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+    //no shared timer
     #region Banelord-10
     [SpellHandlerAttribute("Banespike")]
     public class BanespikeHandler : MasterlevelBuffHandling

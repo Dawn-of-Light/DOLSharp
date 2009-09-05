@@ -29,6 +29,7 @@ using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
+    //http://www.camelotherald.com/masterlevels/ma.php?ml=Spymaster
 	#region Spymaster-1
 	//AbstractServerRules OnPlayerKilled
 	#endregion
@@ -157,6 +158,7 @@ namespace DOL.GS.Spells
 	}
 	#endregion
 
+    //shared timer 1
 	#region Spymaster-5
 	[SpellHandlerAttribute("TangleSnare")]
 	public class TangleSnareSpellHandler : MineSpellHandler
@@ -206,6 +208,7 @@ namespace DOL.GS.Spells
 	}
 	#endregion
 
+    //shared timer 1
 	#region Spymaster-6
 	[SpellHandlerAttribute("PoisonSpike")]
 	public class PoisonSpikeSpellHandler : MineSpellHandler
@@ -316,6 +319,7 @@ namespace DOL.GS.Spells
 	}
 	#endregion
 
+    //shared timer 1
 	#region Spymaster-8
 	[SpellHandlerAttribute("SiegeWrecker")]
 	public class SiegeWreckerSpellHandler : MineSpellHandler
