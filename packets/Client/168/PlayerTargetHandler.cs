@@ -119,7 +119,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.Out.SendObjectUpdate(myTarget);
 				}
 
-				if (player.PrayState)
+				if (player.IsPraying)
 				{
 					GameGravestone gravestone = myTarget as GameGravestone;
 					if (gravestone == null || !gravestone.InternalID.Equals(player.InternalID))
