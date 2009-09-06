@@ -30,8 +30,8 @@ namespace DOL.GS.GameEvents
 	public class TutorialJumpPointHandler : IJumpPointHandler
 	{
 		/// <summary>
-		/// Decides whether player can jump to the target point.
-		/// All messages with reasons must be sent here.
+		/// Decides whether player cans with reasons must jump to the target point.
+		/// All message be sent here.
 		/// Can change destination too.
 		/// </summary>
 		/// <param name="targetPoint">The jump destination</param>

@@ -50,13 +50,14 @@ namespace DOL.GS
 			if (!base.Interact(player))
 				return false;
 
-			String intro = String.Format("Greetings. I can channel the energies of this place to send you {0} {1} {2} {3} {4} {5}",
-				"to far away lands. If you wish to fight in the Frontiers I can send you to [Cruachan Gorge] or to the",
-				"border keeps [Druim Ligen] and [Druim Cain]. Maybe you wish to undertake the Trials of",
-				"Atlantis in [Oceanus] haven or wish to visit the mysterious Grove of [Domnann] and the [Shrouded Isles]?",
-				"You could explore the [Shannon Estuary] or perhaps you would prefer the comforts of the [housing] regions.",
-				"Perhaps the fierce [Battlegrounds] are more to your liking or do you wish to meet the citizens inside",
-				"the great city of [Tir na Nog] or the [Shar Labyrinth]?");
+			String intro = String.Format("Greetings. I can channel the energies of this place to send you {0} {1} {2} {3} {4} {5} {6}",
+			                             "to far away lands. If you wish to fight in the Frontiers I can send you to [Cruachan Gorge] or to the",
+			                             "border keeps [Druim Ligen] and [Druim Cain]. Maybe you wish to undertake the Trials of",
+			                             "Atlantis in [Oceanus] haven or wish to visit the mysterious Grove of [Domnann] and the [Shrouded Isles]?",
+			                             "You could explore the [Shannon Estuary] or perhaps you would prefer the comforts of the [housing] regions.",
+			                             "Perhaps the fierce [Battlegrounds] are more to your liking or do you wish to meet the citizens inside",
+			                             "the great city of [Tir na Nog] or the [Shar Labyrinth]?",
+			                             "Or perhaps you are interested in porting to our training camp [Fintain]?");
 			SayTo(player, intro);
 			return true;
 		}
@@ -73,18 +74,18 @@ namespace DOL.GS
 				case "shrouded isles":
 					{
 						String reply = String.Format("The isles of Hy Brasil are an excellent choice. {0} {1}",
-							"Would you prefer the grove of [Domnann] or perhaps one of the outlying towns",
-							"like [Droighaid], [Aalid Feie], or [Necht]?");
+						                             "Would you prefer the grove of [Domnann] or perhaps one of the outlying towns",
+						                             "like [Droighaid], [Aalid Feie], or [Necht]?");
 						SayTo(player, reply);
 						return;
 					}
 				case "housing":
 					{
 						String reply = String.Format("I can send you to your [personal] house. If you do {0} {1} {2} {3}",
-							"not have a personal house or wish to be sent to the housing [entrance] then you will",
-							"arrive just inside the housing area. I can also send you to your [guild] house. If your",
-							"guild does not own a house then you will not be transported. You may go to your [Hearth] bind",
-							"as well if you are bound inside a house.");
+						                             "not have a personal house or wish to be sent to the housing [entrance] then you will",
+						                             "arrive just inside the housing area. I can also send you to your [guild] house. If your",
+						                             "guild does not own a house then you will not be transported. You may go to your [Hearth] bind",
+						                             "as well if you are bound inside a house.");
 						SayTo(player, reply);
 						return;
 					}
@@ -141,13 +142,18 @@ namespace DOL.GS
 					if (player.HasFinishedQuest(typeof(SharLabyrinth)) <= 0)
 					{
 						SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
-							"city. Seek out the path to the city and in future times I will aid you in",
-							"this journey."));
+						                            "city. Seek out the path to the city and in future times I will aid you in",
+						                            "this journey."));
 						return;
 					}
 					break;
 				case "tir na nog":
 					SayTo(player, "The great city awaits!");
+					break;
+				case "fintain":
+					if (player.Level > 10)
+						SayTo(player,"Sorry, you are far too experienced to enjoy this place !");
+					return;
 					break;
 				default:
 					SayTo(player, "This destination is not yet supported.");
