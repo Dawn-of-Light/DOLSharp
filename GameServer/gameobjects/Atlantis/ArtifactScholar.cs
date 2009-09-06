@@ -89,10 +89,10 @@ namespace DOL.GS
 
 					// ...or continuing a quest?
 
-					foreach (ArtifactTurnInQuest quest in player.QuestList)
+					foreach (AbstractQuest quest in player.QuestList)
 					{
-						if (HasQuest(quest.GetType()) != null)
-							if (quest.WhisperReceive(player, this, text))
+						if (quest is ArtifactTurnInQuest && HasQuest(quest.GetType()) != null)
+							if ((quest as ArtifactTurnInQuest).WhisperReceive(player, this, text))
 								return true;
 					}
 				}
