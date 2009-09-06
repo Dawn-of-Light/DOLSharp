@@ -248,10 +248,11 @@ namespace DOL.GS.PacketHandler
 						break;
 					default: break;
 				}
-				if ((int)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
-					cap += m_gameClient.Player.ItemBonus[(int)eProperty.AcuCapBonus];
-    			itemCaps[i] = Math.Min(cap, itemCap + bonusCap);
 
+				if( updateStats[i] == m_gameClient.Player.CharacterClass.ManaStat )
+					cap += m_gameClient.Player.ItemBonus[(int)eProperty.AcuCapBonus];
+
+    			itemCaps[i] = Math.Min(cap, itemCap + bonusCap);
 			}
 
 
@@ -270,17 +271,24 @@ namespace DOL.GS.PacketHandler
 			for (int i = 0; i < updateStats.Length; i++)
 			{
 				modStats[i] = m_gameClient.Player.GetModified((eProperty)updateStats[i]);
+
 				if (updateStats[i] == eStat.CON)
 					modStats[i] += m_gameClient.Player.TotalConstitutionLostAtDeath; // not included in debuffs
+
 				int abilityBonus = m_gameClient.Player.AbilityBonus[(int)updateStats[i]];
+
 				int acuityItemBonus = 0;
-				if ((int)(eProperty)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
+				if ( updateStats[i] ==  m_gameClient.Player.CharacterClass.ManaStat )
 				{
 					abilityBonus += m_gameClient.Player.AbilityBonus[(int)eProperty.Acuity];
-					if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
+
+					if( m_gameClient.Player.CharacterClass.ClassType != eClassType.PureTank )
 						acuityItemBonus = m_gameClient.Player.ItemBonus[(int)eProperty.Acuity];
 				}
-				int buff = modStats[i] - baseStats[i] - Math.Min(itemCaps[i], m_gameClient.Player.ItemBonus[(int)updateStats[i]] + acuityItemBonus) - abilityBonus;
+
+				int buff = modStats[i] - baseStats[i];
+				buff -= abilityBonus;
+				buff -= Math.Min( itemCaps[i], m_gameClient.Player.ItemBonus[(int)updateStats[i]] + acuityItemBonus );
 
 				pak.WriteShort((ushort)buff);
 			}
@@ -291,9 +299,14 @@ namespace DOL.GS.PacketHandler
 			for (int i = 0; i < updateStats.Length; i++)
 			{
 				int acuityItemBonus = 0;
-				if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster && (int)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
-					acuityItemBonus = m_gameClient.Player.ItemBonus[(int)eProperty.Acuity];
-				pak.WriteShort((ushort)(m_gameClient.Player.ItemBonus[(int)updateStats[i]]+acuityItemBonus));
+
+				if( updateStats[i] == m_gameClient.Player.CharacterClass.ManaStat )
+				{
+					if( m_gameClient.Player.CharacterClass.ClassType != eClassType.PureTank )
+						acuityItemBonus = m_gameClient.Player.ItemBonus[(int)eProperty.Acuity];
+				}
+
+				pak.WriteShort( (ushort)(m_gameClient.Player.ItemBonus[(int)updateStats[i]] + acuityItemBonus) );
 			}
 
 			pak.WriteShort(0);
@@ -310,7 +323,7 @@ namespace DOL.GS.PacketHandler
 			for (int i = 0; i < updateStats.Length; i++)
 			{
 				int acuityItemBonus = 0;
-				if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster && (int)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
+				if (m_gameClient.Player.CharacterClass.ClassType != eClassType.PureTank && (int)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
 					acuityItemBonus = m_gameClient.Player.AbilityBonus[(int)eProperty.Acuity];
 				pak.WriteByte((byte)(m_gameClient.Player.AbilityBonus[(int)updateStats[i]] + acuityItemBonus));
 			}
