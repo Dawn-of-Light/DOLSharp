@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
@@ -205,6 +206,20 @@ namespace DOL.GS
 		/// <param name="killer">The living that got the killing blow.</param>
 		public override void Die(GameObject killer)
 		{
+			// debug
+			if (killer == null)
+				log.Error("Dragon Killed: killer is null!");
+			else
+				log.Debug("Dragon Killed: killer is " + killer.Name + ", attackers:");
+
+			ArrayList clone = m_attackers.Clone() as ArrayList;
+
+			foreach (GameLiving attacker in clone)
+			{
+				if (attacker != null)
+					log.Debug(attacker.Name);
+			}
+
 			base.Die(killer);
 			foreach (String message in m_deathAnnounce)
 				BroadcastMessage(String.Format(message, Name));
