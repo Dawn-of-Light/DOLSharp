@@ -52,7 +52,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public static void Init()
 		{
-			ArtifactQuest.Init("Eirene's Hauberk", typeof(EirenesHauberk));
+			ArtifactQuest.Init("Eirene's Chestpiece", typeof(EirenesHauberk));
 		}
 
         /// <summary>
