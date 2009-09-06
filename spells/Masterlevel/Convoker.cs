@@ -748,7 +748,7 @@ namespace DOL.GS.Spells
             if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
             //spell damage shood be 50-100 (thats the ammmount power tapped on use)
             int mana = (int)(Spell.Damage);
-            target.ChangeMana(target, GameLiving.eManaChangeType.Spell, (-mana)
+			target.ChangeMana(target, GameLiving.eManaChangeType.Spell, (-mana));
 
             target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
         }
