@@ -191,13 +191,11 @@ namespace DOL.GS
 			get { return base.Level; }
 			set
 			{
-				byte oldlevel = base.Level;
 				base.Level = value;
-				CheckStats(); // make sure stats are sane
 
-				//MaxHealth = (ushort)(value * 20 + 20);	// MaxHealth depends from mob level
 				if (!InCombat)
 					m_health = MaxHealth;
+
 				if (ObjectState == eObjectState.Active)
 				{
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -1846,9 +1844,6 @@ namespace DOL.GS
 			Level = npc.Level;	// health changes when GameNPC.Level changes
 			Flags = npc.Flags;
 
-			// Copy stats from the table, we'll do a sanity check
-			// afterwards.
-
 			Strength = (short)npc.Strength;
 			Constitution = (short)npc.Constitution;
 			Dexterity = (short)npc.Dexterity;
@@ -1857,7 +1852,6 @@ namespace DOL.GS
 			Piety = (short)npc.Piety;
 			Charisma = (short)npc.Charisma;
 			Empathy = (short)npc.Empathy;
-			CheckStats();
 
 			MeleeDamageType = (eDamageType)npc.MeleeDamageType;
 			if (MeleeDamageType == 0)
@@ -4414,24 +4408,6 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Check whether current stats for this mob are sane.
-		/// </summary>
-		private void CheckStats()
-		{
-			// Mob stats should be a minimum of 30 each and strength should
-			// be on par with that of a templated player.
-			// This is only changed if values are 0 or less, allowing for unusually slow mobs
-
-			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
-				if (m_charStat[stat - eStat._First] <= 0) m_charStat[stat - eStat._First] = 30;
-
-			// primary weapon stat for npc's is Strength and this should be adjusted for level and added to original template
-			if (m_template != null && m_template.Strength < m_template.Strength + 20 + Level * 6)
-				Strength = (short)(m_template.Strength + 20 + Level * 6);
-			else if (Strength < (20 + Level * 6))
-				Strength = (short)(20 + Level * 6);
-		}
 
         /// <summary>
         /// Gender of this NPC.
@@ -4635,8 +4611,6 @@ namespace DOL.GS
 			Piety = (short)template.Piety;
 			Charisma = (short)template.Charisma;
 			Empathy = (short)template.Empathy;
-
-			CheckStats();
 
 			m_boatowner_id = "";
 		}
