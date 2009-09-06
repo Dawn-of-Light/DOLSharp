@@ -135,7 +135,7 @@ namespace DOL.GS.Spells
 				//Description
 				list.Add("Damages the target. A portion of damage is returned to the caster as health, power, and endurance.\n");
 				list.Add("Damage: " + Spell.Damage);
-                list.Add("Health returned: " + Spell.LifeDrainReturn + "% of damage dealt \n Power returned: " + Spell.ResurrectHealth + "% of damage dealt \n Endurance returned: "+ Spell.ResurrectMana +"% of damage dealt");
+                list.Add("Health returned: " + Spell.LifeDrainReturn + "% of damage dealt \n Power returned: " + Spell.ResurrectMana  + "% of damage dealt \n Endurance returned: "+ Spell.ResurrectHealth  +"% of damage dealt");
 				list.Add("Target: " + Spell.Target);
 				if (Spell.Range != 0) list.Add("Range: " + Spell.Range);
 				list.Add("Casting time: " + (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
