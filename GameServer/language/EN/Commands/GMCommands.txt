@@ -165,7 +165,7 @@ GMCommands.Item.Usage.Scroll:				'/item scroll <ArtifactID> <PageNumber>' - Crea
 GMCommands.Item.Usage.Spell:				'/item spell <Charges> <MaxCharges> <SpellID> [slot #]' - Change item spell charges #0
 GMCommands.Item.Usage.Spell1:				'/item spell1 <Charges> <MaxCharges> <SpellID> [slot #]' - Change item spell charges #1
 GMCommands.Item.Usage.Proc:					'/item proc <SpellID> [slot #]' - Change item proc #0
-GMCommands.Item.Usage.Proc1					'/item proc1 <SpellID> [slot #]' - Change item proc #1
+GMCommands.Item.Usage.Proc1:				'/item proc1 <SpellID> [slot #]' - Change item proc #1
 GMCommands.Item.Usage.Poison:				'/item poison <Charges> <MaxCharges> <SpellID> [slot #]' - Change item poison
 GMCommands.Item.Usage.Realm:				'/item realm <num> [slot #]' - Change items realm
 GMCommands.Item.Usage.SaveTemplate:			'/item savetemplate <TemplateID> [slot #]' - Create a new template
