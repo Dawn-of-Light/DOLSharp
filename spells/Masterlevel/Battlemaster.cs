@@ -166,11 +166,6 @@ namespace DOL.GS.Spells
     [SpellHandler("EssenceFlamesProc")]
     public class EssenceFlamesProcSpellHandler : OffensiveProcSpellHandler
     {
-        private DBSpell dbs;
-        private Spell s;
-        private SpellLine sl;
-        private ISpellHandler strike;
-
         /// <summary>
         /// Handler fired whenever effect target is attacked
         /// </summary>
