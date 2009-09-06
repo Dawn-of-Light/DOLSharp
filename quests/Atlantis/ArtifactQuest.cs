@@ -76,47 +76,42 @@ namespace DOL.GS.Quests.Atlantis
 			String[] scholars = ArtifactMgr.GetScholars(artifactID);
 			if (scholars != null)
 			{
-                eRealm realm = eRealm.Albion;
+				eRealm realm = eRealm.Albion;
 				GameNPC[] npcs;
 
 				foreach (String scholar in scholars)
 				{
-                    String title;
+					String title;
 
-                    switch (realm)
-                    {
-                        case eRealm.Albion:
-                            title = "Scholar";
-                            npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", 
-                                title, scholar), realm);
-                            break;
-                        case eRealm.Midgard:
-                            title = "Loremaster";
-                            npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", 
-                                title, scholar), realm);
+					switch (realm)
+					{
+						case eRealm.Albion:
+							title = "Scholar";
+							npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", title, scholar), realm);
+							break;
+						case eRealm.Midgard:
+							title = "Loremaster";
+							npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", title, scholar), realm);
 
-                            if (npcs.Length == 0)
-                            {
-                                title = "Loremistress";
-                                npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", 
-                                    title, scholar), realm);
-                            }
-                            break;
-                        case eRealm.Hibernia:
-                            title = "Sage";
-                            npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", 
-                                title, scholar), realm);
-                            break;
-                        default:
-                            title = "<unknown title>";
-                            npcs = new GameNPC[0];
-                            break;
-                    }
+							if (npcs.Length == 0)
+							{
+								title = "Loremistress";
+								npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", title, scholar), realm);
+							}
+							break;
+						case eRealm.Hibernia:
+							title = "Sage";
+							npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", title, scholar), realm);
+							break;
+						default:
+							title = "<unknown title>";
+							npcs = new GameNPC[0];
+							break;
+					}
 
 					if (npcs.Length == 0)
 					{
-						log.Warn(String.Format("{0} {1} not found in {1}",
-							title, scholar, GlobalConstants.RealmToName(realm)));
+						log.Error(String.Format("ARTIFACTQUEST: {0} {1} not found in {2} for artifact {3}", title, scholar, GlobalConstants.RealmToName(realm), artifactID));
 					}
 					else
 					{
@@ -125,6 +120,11 @@ namespace DOL.GS.Quests.Atlantis
 
 					++realm;
 				}
+			}
+			else
+			{
+				log.Error("ARTIFACTQUEST: scholars is null for artifact " + artifactID);
+
 			}
 		}
 
