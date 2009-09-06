@@ -1010,6 +1010,8 @@
     <Compile Include="playertitles\titles\time\char\VeteranTitle.cs" />
     <Compile Include="propertycalc\ArcaneSyphonCalculator.cs" />
     <Compile Include="propertycalc\ConversionPercentCalculator.cs" />
+    <Compile Include="propertycalc\BountPointsCalculator.cs" />
+    <Compile Include="propertycalc\RealmPointsCalculator.cs" />
     <Compile Include="propertycalc\FatigueCalculator.cs" />
     <Compile Include="propertycalc\CriticalSpellHitChanceCalculator.cs" />
     <Compile Include="propertycalc\CriticalArcheryHitChanceCalculator.cs" />
