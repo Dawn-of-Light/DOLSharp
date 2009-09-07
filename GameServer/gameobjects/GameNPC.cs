@@ -193,6 +193,11 @@ namespace DOL.GS
 			{
 				base.Level = value;
 
+				if( Strength + Constitution + Dexterity + Quickness + Intelligence + Piety + Empathy + Charisma <= 0 )
+				{
+					AutoSetStats();
+				}
+
 				if (!InCombat)
 					m_health = MaxHealth;
 
@@ -207,6 +212,19 @@ namespace DOL.GS
 					BroadcastUpdate();
 				}
 			}
+		}
+
+		public void AutoSetStats()
+		{
+			Strength = (short)( 20 + Level * 5 );
+			Constitution = (short)( 20 + Level * 3 );
+			Dexterity = (short)( 20 + Level * 2 );
+			Quickness = (short)Math.Min( 150, 5 + ( Level * 2 ) );
+
+			Intelligence = (short)( 20 + Level * 4 );
+			Empathy = (short)( 20 + Level * 4 );
+			Piety = (short)( 20 + Level * 4 );
+			Charisma = (short)( 20 + Level * 4 );
 		}
 
 		/// <summary>
@@ -4563,16 +4581,6 @@ namespace DOL.GS
             if ( m_spawnPoint == null )
                 m_spawnPoint = new Point3D();
 
-			// Mob stats should be a minimum of 30 each and strength should
-			// be on par with that of a templated player.
-
-			if (Strength <= 0)
-				Strength = (short)(20 + Level * 6);
-
-			for (eStat stat = eStat._First; stat <= eStat.CHR; ++stat)
-				if (m_charStat[stat - eStat._First] <= 0) m_charStat[stat - eStat._First] = 30;
-
-
 			//m_factionName = "";
 			LinkedFactions = new ArrayList(1);
 			if (m_ownBrain == null)
@@ -4596,12 +4604,7 @@ namespace DOL.GS
 			// save the original template so we can do calculations off the original values
 			m_template = template;
 
-			// Load template.
-
 			LoadTemplate(template);
-
-			// Copy stats from template, we'll do a sanity check
-			// afterwards.
 
 			Strength = (short)template.Strength;
 			Constitution = (short)template.Constitution;
@@ -4614,6 +4617,5 @@ namespace DOL.GS
 
 			m_boatowner_id = "";
 		}
-
 	}
 }

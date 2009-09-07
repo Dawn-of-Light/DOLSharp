@@ -545,7 +545,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					compiler = new CSharpCodeProvider();
+					compiler = new CSharpCodeProvider( new Dictionary<string, string> { { "CompilerVersion", "v3.5" } } );
 				}
 				
 				// Graveen: allow script compilation in debug or release mode

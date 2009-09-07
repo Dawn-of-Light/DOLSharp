@@ -49,7 +49,7 @@ namespace DOL.GS.Commands
      "/player model <reset|[change]> <modelid>",
      "/player friend <list|playerName>",
      "/player <rez|kill> <albs|mids|hibs|self|all>", // if realm not specified, it will rez target.
-     "/player jump <group|guild|cg> <name>", // to jump a group to you, just type in a player's name and his or her entire group will come with.
+     "/player jump <group|guild|cg|bg> <name>", // to jump a group to you, just type in a player's name and his or her entire group will come with.
      "/player kick <all>",
      "/player save <all>",
      "/player purge",
@@ -58,7 +58,7 @@ namespace DOL.GS.Commands
      "/player showgroup",
      "/player showeffects",
      "/player articredit <artifact>",
-	 "/player allchars <PlayerName>"
+	 "/player allchars [PlayerName]"
    )]
 
     public class PlayerCommandHandler : AbstractCommandHandler, ICommandHandler
