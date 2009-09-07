@@ -2915,7 +2915,7 @@ namespace DOL.GS
 			// ML effects
 			GameSpellEffect phaseshift = null;
 			GameSpellEffect grapple = null;
-			GameSpellEffect briddleguard = null;
+			GameSpellEffect brittleguard = null;
 
 			AttackData lastAD = (AttackData)TempProperties.getObjectProperty(LAST_ATTACK_DATA, null);
 			bool defenseDisabled = ad.Target.IsMezzed | ad.Target.IsStunned | ad.Target.IsSitting;
@@ -2969,9 +2969,9 @@ namespace DOL.GS
 								if (grapple == null)
 									grapple = (GameSpellEffect)effect;
 								continue;
-							case "BriddleGuard":
-								if (briddleguard == null)
-									briddleguard = (GameSpellEffect)effect;
+							case "BrittleGuard":
+								if (brittleguard == null)
+									brittleguard = (GameSpellEffect)effect;
 								continue;
 							case "Bladeturn":
 								if (bladeturn == null)
@@ -3003,7 +3003,7 @@ namespace DOL.GS
 				defenseDisabled = true;
 				//Eden - brittle guard should not intercept PA
 				intercept = null;
-				briddleguard = null;
+				brittleguard = null;
 			}
 
             // Bodyguard - the Aredhel way. Alas, this is not perfect yet as clearly,
@@ -3046,26 +3046,22 @@ namespace DOL.GS
                 }
             }
 
-			// PhaseShift
 			if (phaseshift != null)
 				return eAttackResult.Missed;
 
-			// Grapple
 			if (grapple != null)
 				return eAttackResult.Grappled;
 
-			// Briddle Guard
-			if (briddleguard != null)
+			if (brittleguard != null)
 			{
 				if (this is GamePlayer)
 					((GamePlayer)this).Out.SendMessage("The blow was intercepted by Brittle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				if (ad.Attacker is GamePlayer)
 					((GamePlayer)ad.Attacker).Out.SendMessage("Your strike was intercepted by a Brittle Guard!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-				briddleguard.Cancel(false);
+				brittleguard.Cancel(false);
 				return eAttackResult.Missed;
 			}
 
-			// Intercept
 			if (intercept != null && !stealthStyle)
 			{
 				ad.Target = intercept.InterceptSource;
