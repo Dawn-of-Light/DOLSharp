@@ -356,10 +356,9 @@ namespace DOL.GS.Quests.Atlantis
 				//Lets get the next set of options
 				//Get the versions of this art
 				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
-				GetNextOptions(versions);
 
 				//If we still have more options, give it to them
-				if (virtualStep < MAXNUMOFSTEPS)
+				if (GetNextOptions(versions) && virtualStep < MAXNUMOFSTEPS)
 				{
 					SaveProperties();
 
@@ -468,7 +467,7 @@ namespace DOL.GS.Quests.Atlantis
 			return true;
 		}
 
-		private void GetNextOptions(Dictionary<String, ItemTemplate> versions)
+		private bool GetNextOptions(Dictionary<String, ItemTemplate> versions)
 		{
 			//Clear the current types since we are going to be offering more
 			m_curTypes.Clear();
@@ -481,6 +480,10 @@ namespace DOL.GS.Quests.Atlantis
 				{
 					//Used as the key to store the option in the database
 					string[] splitVersion = str.Split(';');
+
+					// multiple versions may not available
+					if (splitVersion == null || splitVersion.Length <= virtualStep)
+						return false;
 
 					//Get the current option using our virtual step.  This gets the right option in the DT;WT;STAT; list
 					string type = splitVersion[virtualStep];
@@ -507,6 +510,7 @@ namespace DOL.GS.Quests.Atlantis
 				//Increment our virtual step, if this loops again it will proceed to the next set of options
 				virtualStep++;
 			}
+			return true;
 		}
 
 		private void ClearCustomOptions()
