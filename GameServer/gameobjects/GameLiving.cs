@@ -1479,6 +1479,16 @@ namespace DOL.GS
 			{
 				double damage = AttackDamage(weapon) * effectiveness;
 
+				if (Level > ServerProperties.Properties.MOB_DAMAGE_INCREASE_STARTLEVEL &&
+					ServerProperties.Properties.MOB_DAMAGE_INCREASE_PERLEVEL > 0 &&
+					damage > 0 &&
+					this is GameNPC && (this as GameNPC).Brain is IControlledBrain == false)
+				{
+					double modifiedDamage = ServerProperties.Properties.MOB_DAMAGE_INCREASE_PERLEVEL * (Level - ServerProperties.Properties.MOB_DAMAGE_INCREASE_STARTLEVEL);
+					Console.WriteLine(Name + " modified damage = " + modifiedDamage);
+					damage += (modifiedDamage * effectiveness);
+				}
+
 				InventoryItem armor = null;
 				if (ad.Target.Inventory != null)
 					armor = ad.Target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
@@ -1524,11 +1534,6 @@ namespace DOL.GS
 				else if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GameNPC)
 				{
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_DAMAGE);
-				}
-				else if (this is GameNPC && (this as GameNPC).Brain is IControlledBrain == false)
-				{
-					if (Level > ServerProperties.Properties.MOB_DAMAGE_INCREASE_STARTLEVEL)
-						ad.Damage += (int)(ServerProperties.Properties.MOB_DAMAGE_INCREASE_PERLEVEL * (Level - ServerProperties.Properties.MOB_DAMAGE_INCREASE_STARTLEVEL));
 				}
 
 				ad.UncappedDamage = ad.Damage;
