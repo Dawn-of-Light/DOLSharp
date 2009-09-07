@@ -2859,7 +2859,7 @@ namespace DOL.GS
 			return 0;
 		}
 
-        private bool IsValidTarget
+        protected bool IsValidTarget
         {
             get
             {
@@ -2867,7 +2867,7 @@ namespace DOL.GS
             }
         }
 
-        protected GamePlayer GetPlayerAttacker(GameLiving living)
+        public GamePlayer GetPlayerAttacker(GameLiving living)
         {
             if (living is GamePlayer)
                 return living as GamePlayer;
@@ -2977,7 +2977,7 @@ namespace DOL.GS
 									bladeturn = (GameSpellEffect)effect;
 								continue;
 						}
-					}				
+					}
 
 					// We check if interceptor can intercept
 
@@ -3005,11 +3005,11 @@ namespace DOL.GS
 				brittleguard = null;
 			}
 
-            // Bodyguard - the Aredhel way. Alas, this is not perfect yet as clearly,
-            // this code belongs in GamePlayer, but it's a start to end this clutter.
-            // Temporarily saving the below information here.
-            // Defensive chances (evade/parry) are reduced by 20%, but target of bodyguard 
-            // can't be attacked in melee until bodyguard is killed or moves out of range.
+			// Bodyguard - the Aredhel way. Alas, this is not perfect yet as clearly,
+			// this code belongs in GamePlayer, but it's a start to end this clutter.
+			// Temporarily saving the below information here.
+			// Defensive chances (evade/parry) are reduced by 20%, but target of bodyguard 
+			// can't be attacked in melee until bodyguard is killed or moves out of range.
 
             if (this is GamePlayer)
             {
@@ -3074,270 +3074,86 @@ namespace DOL.GS
 			double attackerConLevel = -GetConLevel(ad.Attacker);
 			//			double levelModifier = -((ad.Attacker.Level - Level) / (Level / 10.0 + 1));
 
+			int attackerCount = m_attackers.Count;
 
 			if (!defenseDisabled)
 			{
-				// Evade
-				// 1. A: It isn't possible to give a simple answer. The formula includes such elements as your level, your target's level, your level of evade, your QUI, your DEX, your buffs to QUI and DEX, the number of people attacking you, your target's weapon level, your target's spec in the weapon he is wielding, the kind of attack (DW, range, etc), attack radius, angle of attack, the style you used most recently, target's offensive RA, debuffs, and a few others. (The type of weapon - large, 1H, etc - doesn't matter.) ...."
-				double evadeChance = 0;
-				GamePlayer player = this as GamePlayer;
+				double evadeChance = TryEvade( ad, lastAD, attackerConLevel, attackerCount );
 
-				GameSpellEffect evade = SpellHandler.FindEffectOnTarget(this, "EvadeBuff");
-				if (evade == null)
-					evade = SpellHandler.FindEffectOnTarget(this, "SavageEvadeBuff");
+				if( Util.ChanceDouble( evadeChance ) )
+					return eAttackResult.Evaded;
 
-				GameSpellEffect parry = SpellHandler.FindEffectOnTarget(this, "ParryBuff");
-				if (parry == null) 
-					parry = SpellHandler.FindEffectOnTarget(this, "SavageParryBuff");
-
-				if (player != null)
+				if( ad.IsMeleeAttack )
 				{
-					if (player.HasAbility(Abilities.Advanced_Evade) || player.EffectList.GetOfType(typeof(CombatAwarenessEffect)) != null || player.EffectList.GetOfType(typeof(RuneOfUtterAgilityEffect)) != null)
-						evadeChance = GetModified(eProperty.EvadeChance);
-					else if (IsObjectInFront(ad.Attacker, 180) && (evade != null || player.HasAbility(Abilities.Evade)))
-					{
-						int res = GetModified(eProperty.EvadeChance);
-						if (res > 0)
-							evadeChance = res;
-					}
-				}
-				else if (this is GameNPC && IsObjectInFront(ad.Attacker, 180))
-					evadeChance = GetModified(eProperty.EvadeChance);
+					double parryChance = TryParry( ad, lastAD, attackerConLevel, attackerCount );
 
-				if (evadeChance > 0 && !ad.Target.IsStunned && !ad.Target.IsSitting)
-				{
-					if (m_attackers.Count > 1)
-						evadeChance -= (m_attackers.Count - 1) * 0.03;
-
-					evadeChance *= 0.001;
-					evadeChance += 0.01 * attackerConLevel; // 1% per con level distance multiplied by evade level
-
-					if (lastAD != null && lastAD.Style != null)
-					{
-						evadeChance += lastAD.Style.BonusToDefense * 0.01;
-					}
-
-					if (ad.AttackType == AttackData.eAttackType.Ranged)
-						evadeChance /= 5.0;
-
-					if (evadeChance < 0.01)
-						evadeChance = 0.01;
-					else if (evadeChance > 0.50 && ad.Attacker is GamePlayer && ad.Target is GamePlayer)
-						evadeChance = 0.50; //50% evade cap RvR only; http://www.camelotherald.com/more/664.shtml
-					else if (evadeChance > 0.995)
-						evadeChance = 0.995;
-
-					if (Util.ChanceDouble(evadeChance))
-						return eAttackResult.Evaded;
+					if( Util.ChanceDouble( parryChance ) )
+						return eAttackResult.Parried;
 				}
 
-				// Parry
-				//1.  Dual wielding does not grant more chances to parry than a single weapon. – Grab Bag 9/12/03
-				//2.  There is no hard cap on ability to Parry. – Grab Bag 8/13/02
-				//3.  Your chances of doing so are best when you are solo, trying to block or parry a style from someone who is also solo. The chances of doing so decrease with grouped, simultaneous attackers. – Grab Bag 7/19/02
-				//4.  The parry chance is divided up amongst the attackers, such that if you had a 50% chance to parry normally, and were under attack by two targets, you would get a 25% chance to parry one, and a 25% chance to parry the other. So, the more people or monsters attacking you, the lower your chances to parry any one attacker. -  – Grab Bag 11/05/04
-				//Your chance to parry is affected by the number of attackers, the size of the weapon you’re using, and your spec in parry.
-				//Parry % = (5% + 0.5% * Parry) / # of Attackers
-				//Parry: (((Dex*2)-100)/40)+(Parry/2)+(Mastery of P*3)+5. < Possible relation to buffs
-				//So, if you have parry of 20 you will have a chance of parrying 15% if there is one attacker. If you have parry of 20 you will have a chance of parrying 7.5%, if there are two attackers.
-				//From Grab Bag: "Dual wielders throw an extra wrinkle in. You have half the chance of shield blocking a dual wielder as you do a player using only one weapon. Your chance to parry is halved if you are facing a two handed weapon, as opposed to a one handed weapon."
-				//So, when facing a 2H weapon, you may see a penalty to your evade.
-				//
-				//http://www.camelotherald.com/more/453.php
-				//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc – to determine that arc, make a 120 degree angle, and put yourself at the point.
-				if (ad.IsMeleeAttack)
+				double blockChance = TryBlock( ad, lastAD, attackerConLevel, attackerCount, engage );
+
+				if( Util.ChanceDouble( blockChance ) )
 				{
-                    BladeBarrierEffect BladeBarrier = null;
-
-					double parryChance = 0;
-
-					if (player != null)
+					if( Inventory != null && Inventory.GetItem( eInventorySlot.LeftHandWeapon ) != null )
 					{
-                        //BladeBarrier overwrites all parrying, 90% chance to parry any attack, does not consider other bonuses to parry
-                        BladeBarrier = (BladeBarrierEffect)player.EffectList.GetOfType(typeof(BladeBarrierEffect));
-                        //They still need an active weapon to parry with BladeBarrier
-                        if (BladeBarrier != null && (AttackWeapon != null))
-                        {
-                            parryChance = 0.90;
-                        }
-						else if (IsObjectInFront(ad.Attacker, 120))
+						InventoryItem reactiveitem = Inventory.GetItem( eInventorySlot.LeftHandWeapon );
+
+						if( reactiveitem != null && reactiveitem.Object_Type == (int)eObjectType.Shield )
 						{
-							if ((player.HasSpecialization(Specs.Parry) || parry != null) && (AttackWeapon != null))
-								parryChance = GetModified(eProperty.ParryChance);
-						}
-					}
-					else if (this is GameNPC && IsObjectInFront(ad.Attacker, 120))
-						parryChance = GetModified(eProperty.ParryChance);
+							//Start some sweet boolean logic
+							//See if we use the proc upfront
+							bool useProc1 = reactiveitem.ProcSpellID != 0 && Util.Chance( 10 );
+							bool useProc2 = reactiveitem.ProcSpellID1 != 0 && Util.Chance( 10 );
 
-                    //If BladeBarrier is up, do not adjust the parry chance.
-                    if (BladeBarrier != null && !ad.Target.IsStunned && !ad.Target.IsSitting)
-                    {
-                        if (Util.ChanceDouble(parryChance))
-                            return eAttackResult.Parried;
-                    }
-					else if (parryChance > 0 && !ad.Target.IsStunned && !ad.Target.IsSitting)
-					{
-						if (m_attackers.Count > 1) parryChance /= m_attackers.Count / 2;
-						
-						parryChance *= 0.001;
-						parryChance += 0.05 * attackerConLevel;
-						
-						if (parryChance < 0.01)
-							parryChance = 0.01;
-						else if (parryChance > 0.50 && ad.Attacker is GamePlayer && ad.Target is GamePlayer)
-							parryChance = 0.50;
-						else if (parryChance > 0.995 )
-							parryChance = 0.995;
-						
-						if (Util.ChanceDouble(parryChance))
-							return eAttackResult.Parried;
-					}
-				}
-
-				// Block
-				//1.Quality does not affect the chance to block at this time. – Grab Bag 3/7/03
-				//2.Condition and enchantment increases the chance to block – Grab Bag 2/27/03
-				//3.There is currently no hard cap on chance to block – Grab Bag 2/27/03 and 8/16/02
-				//4.Dual Wielders (enemy) decrease the chance to block – Grab Bag 10/18/02
-				//5.Block formula: Shield = base 5% + .5% per spec point. Then modified by dex (.1% per point of dex above 60 and below 300?). Further modified by condition, bonus and shield level
-				//8.The shield’s size only makes a difference when multiple things are attacking you – a small shield can block one attacker, a medium shield can block two at once, and a large shield can block three. – Grab Bag 4/4/03
-				//Your chance to block is affected by the number of attackers, the size of the shield you’re using, and your spec in block.
-				//Shield% = (5% + 0.5% * Shield)
-				//Small Shield = 1 attacker
-				//Medium Shield = 2 attacker
-				//Large Shield = 3 attacker
-				//Each attacker above these numbers will reduce your chance to block.
-				//From Grab Bag: "Dual wielders throw an extra wrinkle in. You have half the chance of shield blocking a dual wielder as you do a player using only one weapon. Your chance to parry is halved if you are facing a two handed weapon, as opposed to a one handed weapon."
-				//Block: (((Dex*2)-100)/40)+(Shield/2)+(Mastery of B*3)+5. < Possible relation to buffs
-				//
-				//http://www.camelotherald.com/more/453.php
-				//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc – to determine that arc, make a 120 degree angle, and put yourself at the point.
-				//your friend is most likely using a player crafted shield. The quality of the player crafted item will make a significant difference – try it and see.
-				double blockChance = 0;
-				InventoryItem lefthand = null;
-				if (this is GamePlayer && player != null && IsObjectInFront(ad.Attacker, 120) && player.HasAbility(Abilities.Shield))
-				{
-					lefthand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-					if (lefthand != null && (player.AttackWeapon == null || player.AttackWeapon.Item_Type == Slot.RIGHTHAND || player.AttackWeapon.Item_Type == Slot.LEFTHAND))
-					{
-						if (lefthand.Object_Type == (int)eObjectType.Shield && IsObjectInFront(ad.Attacker, 120))
-							blockChance = GetModified(eProperty.BlockChance) * lefthand.Quality * 0.01;
-					}
-				}
-				else if (this is GameNPC && IsObjectInFront(ad.Attacker, 120))
-				{
-					int res = GetModified(eProperty.BlockChance);
-					if (res != 0)
-						blockChance = res;
-				}
-				if (blockChance > 0 && IsObjectInFront(ad.Attacker, 120) && !ad.Target.IsStunned && !ad.Target.IsSitting)
-				{
-					// Reduce block chance if the shield used is too small (valable only for player because npc inventory does not store the shield size but only the model of item)
-					int shieldSize = 0;
-					if (lefthand != null)
-						shieldSize = lefthand.Type_Damage;
-					if (player != null && m_attackers.Count > shieldSize)
-						blockChance /= (m_attackers.Count - shieldSize + 1);
-
-					blockChance *= 0.001;
-					// no chance bonus with ranged attacks?
-					//					if (ad.Attacker.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
-					//						blockChance += 0.25;
-					blockChance += attackerConLevel * 0.05;
-					
-					if( blockChance < 0.01 )
-						blockChance = 0.01;
-					else if( blockChance > 0.60 && ad.Attacker is GamePlayer && ad.Target is GamePlayer )
-						blockChance = 0.60;
-					else if( blockChance > 0.995 )
-						blockChance = 0.995;
-
-					// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate
-					if (engage != null && AttackState && engage.EngageTarget == ad.Attacker)
-					{
-						// You cannot engage a mob that was attacked within the last X seconds...
-						if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK)
-						{
-							if (engage.Owner is GamePlayer)
-								(engage.Owner as GamePlayer).Out.SendMessage(engage.EngageTarget.GetName(0, true) + " has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}
-						// Check if player has enough endurance left to engage
-						else if (engage.Owner.Endurance >= EngageAbilityHandler.ENGAGE_DURATION_LOST)
-						{
-							engage.Owner.Endurance -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
-							if (engage.Owner is GamePlayer)
-								(engage.Owner as GamePlayer).Out.SendMessage("You concentrate on blocking the blow!", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-
-							if (blockChance < 0.85)
-								blockChance = 0.85;
-						}
-						// if player ran out of endurance cancel engage effect
-						else
-							engage.Cancel(false);
-					}
-
-					if (Util.ChanceDouble(blockChance))
-					{
-						if (Inventory != null && Inventory.GetItem(eInventorySlot.LeftHandWeapon) != null)
-						{
-							InventoryItem reactiveitem = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-							
-							if (reactiveitem != null && reactiveitem.Object_Type == (int)eObjectType.Shield)
+							//If we are procing at all lets search
+							if( useProc1 || useProc2 )
 							{
-								//Start some sweet boolean logic
-								//See if we use the proc upfront
-								bool useProc1 = reactiveitem.ProcSpellID != 0 && Util.Chance(10);
-								bool useProc2 = reactiveitem.ProcSpellID1 != 0 && Util.Chance(10);
-
-								//If we are procing at all lets search
-								if (useProc1 || useProc2)
+								SpellLine reactiveEffectLine = SkillBase.GetSpellLine( GlobalSpellsLines.Item_Effects );
+								if( reactiveEffectLine != null )
 								{
-									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-									if (reactiveEffectLine != null)
+									//Ok while we loop we will track if we've found the spells
+									//If we aren't using the proc set it to true!
+									bool found1 = !useProc1;
+									bool found2 = !useProc2;
+									List<Spell> spells = SkillBase.GetSpellList( reactiveEffectLine.KeyName );
+									//Start the one and only loop
+									foreach( Spell spell in spells )
 									{
-										//Ok while we loop we will track if we've found the spells
-										//If we aren't using the proc set it to true!
-										bool found1 = !useProc1;
-										bool found2 = !useProc2;
-										List<Spell> spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
-										//Start the one and only loop
-										foreach (Spell spell in spells)
+										//Check for proc one
+										if( useProc1 && spell.ID == reactiveitem.ProcSpellID )
 										{
-											//Check for proc one
-											if (useProc1 && spell.ID == reactiveitem.ProcSpellID)
+											if( spell.Level <= Level )
 											{
-												if (spell.Level <= Level)
-												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-													if (spellHandler != null)
-														spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target);
-												}
-												found1 = true;
+												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler( this, spell, reactiveEffectLine );
+												if( spellHandler != null )
+													spellHandler.StartSpell( spell.Target == "Enemy" ? ad.Attacker : ad.Target );
 											}
-
-											//Check for proc two
-											if (useProc2 && spell.ID == reactiveitem.ProcSpellID1)
-											{
-												if (spell.Level <= Level)
-												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-													if (spellHandler != null)
-														spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target);
-												}
-												found2 = true;
-											}
-
-											//Break if we've found both
-											if (found1 && found2)
-												break;
+											found1 = true;
 										}
+
+										//Check for proc two
+										if( useProc2 && spell.ID == reactiveitem.ProcSpellID1 )
+										{
+											if( spell.Level <= Level )
+											{
+												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler( this, spell, reactiveEffectLine );
+												if( spellHandler != null )
+													spellHandler.StartSpell( spell.Target == "Enemy" ? ad.Attacker : ad.Target );
+											}
+											found2 = true;
+										}
+
+										//Break if we've found both
+										if( found1 && found2 )
+											break;
 									}
 								}
 							}
 						}
-
-						return eAttackResult.Blocked;
 					}
+
+					return eAttackResult.Blocked;
 				}
 			}
 
@@ -3592,6 +3408,227 @@ namespace DOL.GS
 				((GamePlayer)this).IsOnHorse = false;
 
 			return eAttackResult.HitUnstyled;
+		}
+
+		protected virtual double TryEvade( AttackData ad, AttackData lastAD, double attackerConLevel, int attackerCount )
+		{
+			// Evade
+			// 1. A: It isn't possible to give a simple answer. The formula includes such elements
+			// as your level, your target's level, your level of evade, your QUI, your DEX, your
+			// buffs to QUI and DEX, the number of people attacking you, your target's weapon
+			// level, your target's spec in the weapon he is wielding, the kind of attack (DW,
+			// ranged, etc), attack radius, angle of attack, the style you used most recently,
+			// target's offensive RA, debuffs, and a few others. (The type of weapon - large, 1H,
+			// etc - doesn't matter.) ...."
+
+			double evadeChance = 0;
+			GamePlayer player = this as GamePlayer;
+
+			GameSpellEffect evadeBuff = SpellHandler.FindEffectOnTarget( this, "EvadeBuff" );
+			if( evadeBuff == null )
+				evadeBuff = SpellHandler.FindEffectOnTarget( this, "SavageEvadeBuff" );
+
+			if( player != null )
+			{
+				if( player.HasAbility( Abilities.Advanced_Evade ) || player.EffectList.GetOfType( typeof( CombatAwarenessEffect ) ) != null || player.EffectList.GetOfType( typeof( RuneOfUtterAgilityEffect ) ) != null )
+					evadeChance = GetModified( eProperty.EvadeChance );
+				else if( IsObjectInFront( ad.Attacker, 180 ) && ( evadeBuff != null || player.HasAbility( Abilities.Evade ) ) )
+				{
+					int res = GetModified( eProperty.EvadeChance );
+					if( res > 0 )
+						evadeChance = res;
+				}
+			}
+			else if( this is GameNPC && IsObjectInFront( ad.Attacker, 180 ) )
+				evadeChance = GetModified( eProperty.EvadeChance );
+
+			if( evadeChance > 0 && !ad.Target.IsStunned && !ad.Target.IsSitting )
+			{
+				if( attackerCount > 1 )
+					evadeChance -= ( attackerCount - 1 ) * 0.03;
+
+				evadeChance *= 0.001;
+				evadeChance += 0.01 * attackerConLevel; // 1% per con level distance multiplied by evade level
+
+				if( lastAD != null && lastAD.Style != null )
+				{
+					evadeChance += lastAD.Style.BonusToDefense * 0.01;
+				}
+
+				if( ad.AttackType == AttackData.eAttackType.Ranged )
+					evadeChance /= 5.0;
+
+				if( evadeChance < 0.01 )
+					evadeChance = 0.01;
+				else if( evadeChance > 0.50 && ad.Attacker is GamePlayer && ad.Target is GamePlayer )
+					evadeChance = 0.50; //50% evade cap RvR only; http://www.camelotherald.com/more/664.shtml
+				else if( evadeChance > 0.995 )
+					evadeChance = 0.995;
+			}
+
+			return evadeChance;
+		}
+
+		protected virtual double TryParry( AttackData ad, AttackData lastAD, double attackerConLevel, int attackerCount )
+		{
+			// Parry
+			//1.  Dual wielding does not grant more chances to parry than a single weapon. – Grab Bag 9/12/03
+			//2.  There is no hard cap on ability to Parry. – Grab Bag 8/13/02
+			//3.  Your chances of doing so are best when you are solo, trying to block or parry a style from someone who is also solo. The chances of doing so decrease with grouped, simultaneous attackers. – Grab Bag 7/19/02
+			//4.  The parry chance is divided up amongst the attackers, such that if you had a 50% chance to parry normally, and were under attack by two targets, you would get a 25% chance to parry one, and a 25% chance to parry the other. So, the more people or monsters attacking you, the lower your chances to parry any one attacker. -  – Grab Bag 11/05/04
+			//Your chance to parry is affected by the number of attackers, the size of the weapon you’re using, and your spec in parry.
+			//Parry % = (5% + 0.5% * Parry) / # of Attackers
+			//Parry: (((Dex*2)-100)/40)+(Parry/2)+(Mastery of P*3)+5. < Possible relation to buffs
+			//So, if you have parry of 20 you will have a chance of parrying 15% if there is one attacker. If you have parry of 20 you will have a chance of parrying 7.5%, if there are two attackers.
+			//From Grab Bag: "Dual wielders throw an extra wrinkle in. You have half the chance of shield blocking a dual wielder as you do a player using only one weapon. Your chance to parry is halved if you are facing a two handed weapon, as opposed to a one handed weapon."
+			//So, when facing a 2H weapon, you may see a penalty to your evade.
+			//
+			//http://www.camelotherald.com/more/453.php
+			//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc – to determine that arc, make a 120 degree angle, and put yourself at the point.
+
+			double parryChance = 0;
+
+			if( ad.IsMeleeAttack )
+			{
+				GamePlayer player = this as GamePlayer;
+				BladeBarrierEffect BladeBarrier = null;
+
+				GameSpellEffect parryBuff = SpellHandler.FindEffectOnTarget( this, "ParryBuff" );
+				if( parryBuff == null )
+					parryBuff = SpellHandler.FindEffectOnTarget( this, "SavageParryBuff" );
+
+				if( player != null )
+				{
+					//BladeBarrier overwrites all parrying, 90% chance to parry any attack, does not consider other bonuses to parry
+					BladeBarrier = (BladeBarrierEffect)player.EffectList.GetOfType( typeof( BladeBarrierEffect ) );
+					//They still need an active weapon to parry with BladeBarrier
+					if( BladeBarrier != null && ( AttackWeapon != null ) )
+					{
+						parryChance = 0.90;
+					}
+					else if( IsObjectInFront( ad.Attacker, 120 ) )
+					{
+						if( ( player.HasSpecialization( Specs.Parry ) || parryBuff != null ) && ( AttackWeapon != null ) )
+							parryChance = GetModified( eProperty.ParryChance );
+					}
+				}
+				else if( this is GameNPC && IsObjectInFront( ad.Attacker, 120 ) )
+					parryChance = GetModified( eProperty.ParryChance );
+
+				//If BladeBarrier is up, do not adjust the parry chance.
+				if( BladeBarrier != null && !ad.Target.IsStunned && !ad.Target.IsSitting )
+				{
+					return parryChance;
+				}
+				else if( parryChance > 0 && !ad.Target.IsStunned && !ad.Target.IsSitting )
+				{
+					if( attackerCount > 1 )
+						parryChance /= attackerCount / 2;
+
+					parryChance *= 0.001;
+					parryChance += 0.05 * attackerConLevel;
+
+					if( parryChance < 0.01 )
+						parryChance = 0.01;
+					else if( parryChance > 0.50 && ad.Attacker is GamePlayer && ad.Target is GamePlayer )
+						parryChance = 0.50;
+					else if( parryChance > 0.995 )
+						parryChance = 0.995;
+				}
+			}
+
+			return parryChance;
+		}
+
+		protected virtual double TryBlock( AttackData ad, AttackData lastAD, double attackerConLevel, int attackerCount, EngageEffect engage )
+		{
+			// Block
+			//1.Quality does not affect the chance to block at this time. – Grab Bag 3/7/03
+			//2.Condition and enchantment increases the chance to block – Grab Bag 2/27/03
+			//3.There is currently no hard cap on chance to block – Grab Bag 2/27/03 and 8/16/02
+			//4.Dual Wielders (enemy) decrease the chance to block – Grab Bag 10/18/02
+			//5.Block formula: Shield = base 5% + .5% per spec point. Then modified by dex (.1% per point of dex above 60 and below 300?). Further modified by condition, bonus and shield level
+			//8.The shield’s size only makes a difference when multiple things are attacking you – a small shield can block one attacker, a medium shield can block two at once, and a large shield can block three. – Grab Bag 4/4/03
+			//Your chance to block is affected by the number of attackers, the size of the shield you’re using, and your spec in block.
+			//Shield% = (5% + 0.5% * Shield)
+			//Small Shield = 1 attacker
+			//Medium Shield = 2 attacker
+			//Large Shield = 3 attacker
+			//Each attacker above these numbers will reduce your chance to block.
+			//From Grab Bag: "Dual wielders throw an extra wrinkle in. You have half the chance of shield blocking a dual wielder as you do a player using only one weapon. Your chance to parry is halved if you are facing a two handed weapon, as opposed to a one handed weapon."
+			//Block: (((Dex*2)-100)/40)+(Shield/2)+(Mastery of B*3)+5. < Possible relation to buffs
+			//
+			//http://www.camelotherald.com/more/453.php
+			//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc – to determine that arc, make a 120 degree angle, and put yourself at the point.
+			//your friend is most likely using a player crafted shield. The quality of the player crafted item will make a significant difference – try it and see.
+
+			double blockChance = 0;
+			GamePlayer player = this as GamePlayer;
+			InventoryItem lefthand = null;
+
+			if( this is GamePlayer && player != null && IsObjectInFront( ad.Attacker, 120 ) && player.HasAbility( Abilities.Shield ) )
+			{
+				lefthand = Inventory.GetItem( eInventorySlot.LeftHandWeapon );
+				if( lefthand != null && ( player.AttackWeapon == null || player.AttackWeapon.Item_Type == Slot.RIGHTHAND || player.AttackWeapon.Item_Type == Slot.LEFTHAND ) )
+				{
+					if( lefthand.Object_Type == (int)eObjectType.Shield && IsObjectInFront( ad.Attacker, 120 ) )
+						blockChance = GetModified( eProperty.BlockChance ) * lefthand.Quality * 0.01;
+				}
+			}
+			else if( this is GameNPC && IsObjectInFront( ad.Attacker, 120 ) )
+			{
+				int res = GetModified( eProperty.BlockChance );
+				if( res != 0 )
+					blockChance = res;
+			}
+			if( blockChance > 0 && IsObjectInFront( ad.Attacker, 120 ) && !ad.Target.IsStunned && !ad.Target.IsSitting )
+			{
+				// Reduce block chance if the shield used is too small (valable only for player because npc inventory does not store the shield size but only the model of item)
+				int shieldSize = 0;
+				if( lefthand != null )
+					shieldSize = lefthand.Type_Damage;
+				if( player != null && attackerCount > shieldSize )
+					blockChance /= ( attackerCount - shieldSize + 1 );
+
+				blockChance *= 0.001;
+				// no chance bonus with ranged attacks?
+				//					if (ad.Attacker.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
+				//						blockChance += 0.25;
+				blockChance += attackerConLevel * 0.05;
+
+				if( blockChance < 0.01 )
+					blockChance = 0.01;
+				else if( blockChance > 0.60 && ad.Attacker is GamePlayer && ad.Target is GamePlayer )
+					blockChance = 0.60;
+				else if( blockChance > 0.995 )
+					blockChance = 0.995;
+
+				// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate
+				if( engage != null && AttackState && engage.EngageTarget == ad.Attacker )
+				{
+					// You cannot engage a mob that was attacked within the last X seconds...
+					if( engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK )
+					{
+						if( engage.Owner is GamePlayer )
+							( engage.Owner as GamePlayer ).Out.SendMessage( engage.EngageTarget.GetName( 0, true ) + " has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+					}
+					// Check if player has enough endurance left to engage
+					else if( engage.Owner.Endurance >= EngageAbilityHandler.ENGAGE_DURATION_LOST )
+					{
+						engage.Owner.Endurance -= EngageAbilityHandler.ENGAGE_DURATION_LOST;
+						if( engage.Owner is GamePlayer )
+							( engage.Owner as GamePlayer ).Out.SendMessage( "You concentrate on blocking the blow!", eChatType.CT_Skill, eChatLoc.CL_SystemWindow );
+
+						if( blockChance < 0.85 )
+							blockChance = 0.85;
+					}
+					// if player ran out of endurance cancel engage effect
+					else
+						engage.Cancel( false );
+				}
+			}
+
+			return blockChance;
 		}
 
         /// <summary>
