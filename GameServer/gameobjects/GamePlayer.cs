@@ -4387,15 +4387,11 @@ namespace DOL.GS
 			}
 
 			// Graveen: give a DOL respec on the GIVE_DOL_RESPEC_ON_LEVELS levels
-			Byte level_respec =0;
+			byte level_respec = 0;
 			foreach (string str in ServerProperties.Properties.GIVE_DOL_RESPEC_AT_LEVEL.Split(';'))
 			{
-				try	{
-					level_respec = Convert.ToByte(str);
-				}
-				catch {
+				if( !byte.TryParse( str, out level_respec ) )
 					level_respec = 0;
-				}
 
 				if (Level == level_respec)
 				{
