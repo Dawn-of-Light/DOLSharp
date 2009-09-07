@@ -67,6 +67,15 @@ namespace DOL.GS
 					int numQuests = quests.Count;
 					foreach (ArtifactQuest quest in quests)
 					{
+						// if continuing a quest and on a step that requires input then 
+						// let the quest handle the interaction
+						ArtifactQuest playerQuest = (ArtifactQuest)player.IsDoingQuest(quest.GetType());
+						if (playerQuest != null)
+						{
+							if (playerQuest.Interact(this, player))
+								return true;
+						}
+
 						if (player.CanReceiveArtifact(quest.ArtifactID))
 						{
 							if (count > 0 && numQuests < quests.Count)
