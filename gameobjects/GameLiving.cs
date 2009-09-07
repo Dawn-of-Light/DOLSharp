@@ -1485,7 +1485,6 @@ namespace DOL.GS
 					this is GameNPC && (this as GameNPC).Brain is IControlledBrain == false)
 				{
 					double modifiedDamage = ServerProperties.Properties.MOB_DAMAGE_INCREASE_PERLEVEL * (Level - ServerProperties.Properties.MOB_DAMAGE_INCREASE_STARTLEVEL);
-					Console.WriteLine(Name + " modified damage = " + modifiedDamage);
 					damage += (modifiedDamage * effectiveness);
 				}
 

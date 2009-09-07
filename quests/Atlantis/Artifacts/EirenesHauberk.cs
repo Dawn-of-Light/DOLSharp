@@ -33,6 +33,12 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	/// <author>Aredhel</author>
 	class EirenesHauberk : ArtifactQuest
 	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+
 		public EirenesHauberk()
 			: base() { }
 
@@ -68,6 +74,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
             return (player.Level >= 45);
         }
 
+
 		/// <summary>
 		/// Handle an item given to the scholar.
 		/// </summary>
@@ -87,25 +94,72 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 
 			if (Step == 2 && ArtifactMgr.GetArtifactID(item.Name) == ArtifactID)
 			{
-				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID,
-					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
-
-				if (versions.Count > 0 && RemoveItem(player, item))
+				scholar.TurnTo(player);
+				if (RemoveItem(player, item))
 				{
-					GiveItem(scholar, player, ArtifactID, versions[";;"]);
-					String reply = String.Format("The magic of Eirene's Chestpiece is unlocked {0} {1}. {2} {3} {4} {5}, {1}!",
-						"and linked now to you,", player.CharacterClass.Name,
-						"Please know that if you lose or destroy this Chestpiece, it will be gone",
-                        "from you forever. I hope it will help you succeed in the trials.",
-                        "Bring glory to", GlobalConstants.RealmToName(player.Realm));
-					scholar.TurnTo(player);
-					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
-					FinishQuest();
-					return true;
+					Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+
+					String reply = "";
+
+					if (versions.Count > 1)
+					{
+						reply = "Great! ";
+						DisplayStep3(scholar, player, reply);
+						Step = 3;
+						return true;
+					}
+					else
+					{
+						reply = String.Format("The magic of Eirene's Chestpiece is unlocked {0} {1}. {2} {3} {4} {5}, {1}!",
+							"and linked now to you,", player.CharacterClass.Name,
+							"Please know that if you lose or destroy this Chestpiece, it will be gone",
+							"from you forever. I hope it will help you succeed in the trials.",
+							"Bring glory to", GlobalConstants.RealmToName(player.Realm));
+
+						Dictionary<String, ItemTemplate>.Enumerator venum = versions.GetEnumerator();
+						venum.MoveNext();
+
+						if (GiveItem(scholar, player, ArtifactID, venum.Current.Value))
+						{
+							scholar.TurnTo(player);
+							scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+							FinishQuest();
+							return true;
+						}
+					}
 				}
 			}
 
 			return false;
+		}
+
+		public override bool Interact(Scholar scholar, GamePlayer player)
+		{
+			if (Step == 3)
+			{
+				string reply = "";
+				DisplayStep3(scholar, player, reply);
+			}
+
+			return false;
+		}
+
+		public void DisplayStep3(Scholar scholar, GamePlayer player, string reply)
+		{
+			Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+
+			reply += "Now you need to decide what version of " + ArtifactID + " you would like.  The following are available to you, please choose wisely. ";
+
+			// versions will be in the format Name;  ... strip the ; when displaying, add it back when searching
+
+			foreach (string version in versions.Keys)
+			{
+				reply += " [" + version.Replace(";", "") + "],";
+			}
+
+			reply = reply.TrimEnd(',');
+
+			scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 		}
 
 		/// <summary>
@@ -135,6 +189,28 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 				Step = 2;
 				return true;
+			}
+
+			if (Step == 3)
+			{
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+				string version = text;
+
+				if (versions.ContainsKey(version + ";"))
+				{
+					if (GiveItem(scholar, player, ArtifactID, versions[version]))
+					{
+						String reply = String.Format("The magic of Eirene's Chestpiece is unlocked {0} {1}. {2} {3} {4} {5}, {1}!",
+							"and linked now to you,", player.CharacterClass.Name,
+							"Please know that if you lose or destroy this Chestpiece, it will be gone",
+							"from you forever. I hope it will help you succeed in the trials.",
+							"Bring glory to", GlobalConstants.RealmToName(player.Realm));
+						scholar.TurnTo(player);
+						scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
+						FinishQuest();
+						return true;
+					}
+				}
 			}
 
 			return false;
