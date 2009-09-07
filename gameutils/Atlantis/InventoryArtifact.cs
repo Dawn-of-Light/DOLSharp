@@ -87,7 +87,7 @@ namespace DOL.GS
 				ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(Id_nb);
 				ArtifactLevel = ArtifactMgr.GetCurrentLevel(this);
 				m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
-				CheckAbilities();
+				UpdateArtifact();
 			}
 		}
 
@@ -136,10 +136,51 @@ namespace DOL.GS
         }
 
 
+		public void UpdateArtifact()
+		{
+			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Id_nb);
+
+			if (template != null)
+			{
+				Name = template.Name;
+				ProcSpellID = template.ProcSpellID;
+				ProcSpellID1 = template.ProcSpellID1;
+				SpellID = template.SpellID;
+				SpellID1 = template.SpellID1;
+				Level = template.Level;
+				Quality = template.Quality;
+				Realm = template.Realm;
+				DPS_AF = template.DPS_AF;
+				SPD_ABS = template.SPD_ABS;
+				Hand = template.Hand;
+				Type_Damage = template.Type_Damage;
+				Object_Type = template.Object_Type;
+				Item_Type = template.Item_Type;
+				Effect = template.Effect;
+				Weight = template.Weight;
+				Model = template.Model;
+				Extension = template.Extension;
+				IsPickable = template.IsPickable;
+				IsDropable = template.IsDropable;
+				IsTradable = template.IsTradable;
+				Charges = template.Charges;
+				Charges1 = template.Charges1;
+				MaxCharges = template.MaxCharges;
+				MaxCharges1 = template.MaxCharges1;
+				Durability = template.Durability;
+				MaxDurability = template.MaxDurability;
+				MaxCondition = template.MaxCondition;
+				AllowedClasses = template.AllowedClasses;
+				CanUseEvery = template.CanUseEvery;
+			}
+
+			UpdateAbilities();
+		}
+
 		/// <summary>
 		/// Verify that this artifact has all the correct abilities
 		/// </summary>
-		public void CheckAbilities()
+		public void UpdateAbilities()
 		{
 			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Id_nb);
 
@@ -152,6 +193,11 @@ namespace DOL.GS
 				{
 					SetBonusType(bonusID, template.GetBonusType(bonusID));
 					SetBonusAmount(bonusID, template.GetBonusAmount(bonusID));
+				}
+				else
+				{
+					SetBonusType(bonusID, 0);
+					SetBonusAmount(bonusID, 0);
 				}
 			}
 		}
@@ -264,6 +310,10 @@ namespace DOL.GS
 				delve.Add(String.Format("Can use item every {0} min", 
 					reuseTimeSpan.ToString().Substring(3)));
 			}
+
+			if (player.Client.Account.PrivLevel > 1)
+				WriteTechnicalInfo(delve);
+				
 		}
 
 		/// <summary>
@@ -485,6 +535,77 @@ namespace DOL.GS
 				effectiveAF = af * Quality / 100.0 * Condition / MaxCondition * (1 + SPD_ABS / 100.0);
 				delve.Add(LanguageMgr.GetTranslation(player.Client, 
 					"DetailDisplayHandler.WriteClassicArmorInfos.Factor", (int)effectiveAF));
+			}
+		}
+
+		/// <summary>
+		/// Write item technical info
+		/// </summary>
+		/// <param name="output"></param>
+		/// <param name="item"></param>
+		public void WriteTechnicalInfo(List<String> delve)
+		{
+			delve.Add(" ");
+			delve.Add("--- Artifact/Item technical information ---");
+			delve.Add(" ");
+			delve.Add("Item Template: " + Id_nb);
+			delve.Add("         Name: " + Name);
+			delve.Add("   Experience: " + Experience);
+			delve.Add("       Object: " + GlobalConstants.ObjectTypeToName(Object_Type) + " (" + Object_Type + ")");
+			delve.Add("         Type: " + GlobalConstants.SlotToName(Item_Type) + " (" + Item_Type + ")");
+			delve.Add("    Extension: " + Extension);
+			delve.Add("        Model: " + Model);
+			delve.Add("        Color: " + Color);
+			delve.Add("       Emblem: " + Emblem);
+			delve.Add("       Effect: " + Effect);
+			delve.Add("  Value/Price: " + Platinum + "p " + Gold + "g " + Silver + "s " + Copper + "c");
+			delve.Add("       Weight: " + (Weight / 10.0f) + "lbs");
+			delve.Add("      Quality: " + Quality + "%");
+			delve.Add("   Durability: " + Durability + "/" + MaxDurability + "(max)");
+			delve.Add("    Condition: " + Condition + "/" + MaxCondition + "(max)");
+			delve.Add("        Realm: " + Realm);
+			delve.Add("  Is dropable: " + (IsDropable ? "yes" : "no"));
+			delve.Add("  Is pickable: " + (IsPickable ? "yes" : "no"));
+			delve.Add(" Is stackable: " + (IsStackable ? "yes" : "no"));
+			delve.Add(" Is tradeable: " + (IsTradable ? "yes" : "no"));
+			delve.Add("  ProcSpellID: " + ProcSpellID);
+			delve.Add(" ProcSpellID1: " + ProcSpellID1);
+			delve.Add("      SpellID: " + SpellID + " (" + Charges + "/" + MaxCharges + ")");
+			delve.Add("     SpellID1: " + SpellID1 + " (" + Charges1 + "/" + MaxCharges1 + ")");
+			delve.Add("PoisonSpellID: " + PoisonSpellID + " (" + PoisonCharges + "/" + PoisonMaxCharges + ") ");
+
+			if (GlobalConstants.IsWeapon(Object_Type))
+			{
+				delve.Add("         Hand: " + GlobalConstants.ItemHandToName(Hand) + " (" + Hand + ")");
+				delve.Add("Damage/Second: " + (DPS_AF / 10.0f));
+				delve.Add("        Speed: " + (SPD_ABS / 10.0f));
+				delve.Add("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(Type_Damage) + " (" + Type_Damage + ")");
+				delve.Add("        Bonus: " + Bonus);
+			}
+			else if (GlobalConstants.IsArmor(Object_Type))
+			{
+				delve.Add("  Armorfactor: " + DPS_AF);
+				delve.Add("   Absorption: " + SPD_ABS);
+				delve.Add("        Bonus: " + Bonus);
+			}
+			else if (Object_Type == (int)eObjectType.Shield)
+			{
+				delve.Add("Damage/Second: " + (DPS_AF / 10.0f));
+				delve.Add("        Speed: " + (SPD_ABS / 10.0f));
+				delve.Add("  Shield type: " + GlobalConstants.ShieldTypeToName(Type_Damage) + " (" + Type_Damage + ")");
+				delve.Add("        Bonus: " + Bonus);
+			}
+			else if (Object_Type == (int)eObjectType.Arrow || Object_Type == (int)eObjectType.Bolt)
+			{
+				delve.Add(" Ammunition #: " + DPS_AF);
+				delve.Add("       Damage: " + GlobalConstants.AmmunitionTypeToDamageName(SPD_ABS));
+				delve.Add("        Range: " + GlobalConstants.AmmunitionTypeToRangeName(SPD_ABS));
+				delve.Add("     Accuracy: " + GlobalConstants.AmmunitionTypeToAccuracyName(SPD_ABS));
+				delve.Add("        Bonus: " + Bonus);
+			}
+			else if (Object_Type == (int)eObjectType.Instrument)
+			{
+				delve.Add("   Instrument: " + GlobalConstants.InstrumentTypeToName(DPS_AF));
 			}
 		}
 
