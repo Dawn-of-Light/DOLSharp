@@ -269,6 +269,19 @@ namespace DOL.GS.Quests.Atlantis
 		}
 
 		/// <summary>
+		/// Handle interaction with the scholar.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="text"></param>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		public virtual bool Interact(Scholar scholar, GamePlayer player)
+		{
+			return false;
+		}
+
+
+		/// <summary>
 		/// Remove an item from the player's inventory.
 		/// </summary>
 		/// <param name="player"></param>
@@ -288,8 +301,7 @@ namespace DOL.GS.Quests.Atlantis
 		{
 			base.FinishQuest();
 
-			Type encounterType =
-				ArtifactMgr.GetEncounterType(ArtifactID);
+			Type encounterType = ArtifactMgr.GetEncounterType(ArtifactID);
 
 			QuestPlayer.RemoveEncounterCredit(encounterType);
 		}
