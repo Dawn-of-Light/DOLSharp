@@ -65,6 +65,8 @@ namespace DOL.GS.Keeps
 		/// <param name="killer">The killer object</param>
 		public override void Die(GameObject killer)
 		{
+			m_lastRealm = eRealm.None;
+
 			if (ServerProperties.Properties.LOG_KEEP_CAPTURES)
 			{
 				try
@@ -116,6 +118,20 @@ namespace DOL.GS.Keeps
             return true;
 		}
 
+		public override bool AddToWorld()
+		{
+			if (base.AddToWorld())
+			{
+				m_lastRealm = Realm;
+				return true;
+			}
+
+			return false;
+		}
+
+
+		eRealm m_lastRealm = eRealm.None;
+
 		/// <summary>
 		/// From a great distance, damage does not harm lord
 		/// </summary>
@@ -149,15 +165,13 @@ namespace DOL.GS.Keeps
 				return;
 			}
 
+			if (attacker != null && this.Component != null && this.Component.Keep != null && IsAlive && !GameServer.ServerRules.IsSameRealm(this, attacker, true))
+			{
+				if (Realm == m_lastRealm && m_lastRealm != eRealm.None)
+					this.Component.Keep.LastAttackedByEnemyTick = CurrentRegion.Time; // light up the keep/tower
+			}
+
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
-		}
-
-		public override void OnAttackedByEnemy(AttackData ad)
-		{
-			if (this.Component != null && this.Component.Keep != null && IsAlive && !GameServer.ServerRules.IsSameRealm(this, ad.Attacker, true))
-				this.Component.Keep.LastAttackedByEnemyTick = CurrentRegion.Time; // light up the keep/tower
-
-			base.OnAttackedByEnemy(ad);
 		}
 
         public override bool WhisperReceive(GameLiving source, string str)
