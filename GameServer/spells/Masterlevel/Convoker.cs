@@ -443,12 +443,12 @@ namespace DOL.GS.Spells
 
     //no shared timer
     #region Convoker-8
-    [SpellHandler("BriddleGuard")]
-    public class BriddleGuardSpellHandler : MasterlevelHandling
+    [SpellHandler("BrittleGuard")]
+    public class BrittleGuardSpellHandler : MasterlevelHandling
     {
     	GameNPC summoned = null;
     	GameSpellEffect beffect = null;
-        public BriddleGuardSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+        public BrittleGuardSpellHandler(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
 
@@ -490,7 +490,7 @@ namespace DOL.GS.Spells
             {
                 summonloc = target.GetPointFromHeading( target.Heading, 64 );
 
-                BriddleBrain controlledBrain = new BriddleBrain(player);
+                BrittleBrain controlledBrain = new BrittleBrain(player);
                 controlledBrain.IsMainPet = false;
                 summoned = new GameNPC(template);
                 summoned.SetOwnBrain(controlledBrain);
@@ -769,12 +769,12 @@ namespace DOL.GS.Spells
     #endregion
 }
 
-#region BriddleBrain
+#region BrittleBrain
 namespace DOL.AI.Brain
 {
-    public class BriddleBrain : ControlledNpc
+    public class BrittleBrain : ControlledNpc
     {
-        public BriddleBrain(GameLiving owner)
+        public BrittleBrain(GameLiving owner)
             : base(owner)
         {
             if (owner == null)
