@@ -152,8 +152,10 @@ namespace DOL.GS
 					break;
 				case "fintain":
 					if (player.Level > 10)
+					{
 						SayTo(player,"Sorry, you are far too experienced to enjoy this place !");
-					return;
+						return;
+					}
 					break;
 				default:
 					SayTo(player, "This destination is not yet supported.");
