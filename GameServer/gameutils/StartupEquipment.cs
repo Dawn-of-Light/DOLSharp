@@ -34,7 +34,8 @@ namespace DOL.GS
 		{
 			Hashtable usedSlots = new Hashtable();
 
-			StarterEquipment[] items = (StarterEquipment[])GameServer.Database.SelectObjects(typeof(StarterEquipment), "`Class` = '0' OR `Class` = '" + c.Class + "'");
+			// 0 = for all classes, then quickcheck if it contains the classid
+			StarterEquipment[] items = (StarterEquipment[])GameServer.Database.SelectObjects(typeof(StarterEquipment), "`Class` = '0' OR `Class` LIKE '%" + c.Class + "%'");
 
 			foreach (StarterEquipment item in items)
 			{
@@ -43,7 +44,26 @@ namespace DOL.GS
 					GameServer.Instance.Logger.Error("StartupEquipment.cs error adding starter equipment for class " + c.Class + " cannot find itemtemplate for " + item.TemplateID);
 					continue;
 				}
-
+				
+				// deeper check if item is suitable to classid
+				if (!string.IsNullOrEmpty(item.Class))
+				{
+					int charClass;
+					bool isFind = false;
+					string [] charList = item.Class.Split(';');
+					foreach (string currentItem in charList)
+					{
+						int.TryParse(currentItem, out charClass);
+						if (charClass == c.Class)
+						{
+							isFind = true;
+							break;
+						}
+					}
+					if (!isFind)
+						continue;
+				}
+				
 				InventoryItem inventoryItem = new InventoryItem(item.Template);
 				inventoryItem.OwnerID = c.ObjectId;
 				inventoryItem.Realm = c.Realm;
