@@ -29,7 +29,7 @@ namespace DOL.Database
 	[DataTable(TableName = "StarterEquipment")]
 	public class StarterEquipment : DataObject
 	{
-		private byte m_class;
+		private string m_class;
 		private string m_templateID;
 
 		private static bool m_autoSave;
@@ -50,10 +50,11 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// The class this item should be given to, 0 for all
+		/// Serialized classes this item should be given to (separator ':')
+		/// 0 for all classes
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public byte Class
+		public string Class
 		{
 			get
 			{

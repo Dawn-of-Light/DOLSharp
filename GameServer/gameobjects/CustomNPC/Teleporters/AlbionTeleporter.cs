@@ -169,13 +169,15 @@ namespace DOL.GS
 				case "snowdonia fortress":
 					SayTo(player, "Snowdonia Fortress is what you seek, and Snowdonia Fortress is what you shall find.");
 					break;
-					// text for the following ?
+				// text for the following ?
 				case "wearyall":
 					break;
 				case "holtham":
 					if (player.Level > 10)
+					{
 						SayTo(player,"Sorry, you are far too experienced to enjoy this place !");
-					return;
+						return;
+					}
 					break;
 				default:
 					SayTo(player, "This destination is not yet supported.");
