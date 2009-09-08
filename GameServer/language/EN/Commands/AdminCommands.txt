@@ -7,16 +7,18 @@ AdminCommands.ServerProperties.PropertiesRefreshed:	Refreshed server properties!
 
 
 # /plvl Command
-AdminCommands.plvl.Description:						Change privilege level and add single permision to player
-AdminCommands.plvl.Usage:							/plvl <newPlvl>
-AdminCommands.plvl.Usage.Single:					/plvl single <command>
-AdminCommands.plvl.Usage.Remove:					/plvl remove <command>
-AdminCommands.plvl.NoSelectPlayer:					You must select a player to changes permission on him
+AdminCommands.plvl.Description:						Change privilege level and add single permission to player
+AdminCommands.plvl.Usage:							/plvl <newPlvl> [PlayerName]
+AdminCommands.plvl.Usage.Single:					/plvl single <command> [PlayerName]
+AdminCommands.plvl.Usage.SingleAccount:				/plvl singleaccount <command> [AccountName]
+AdminCommands.plvl.Usage.Remove:					/plvl remove <command> [PlayerName]
+AdminCommands.plvl.NoSelectPlayer:					You must select a player to changes permission on him.
 AdminCommands.plvl.AddedSinglePermission:			You add the single permission to {0} for {1} command.
-AdminCommands.plvl.RemoveSinglePermission:			You remove the single permission of {0} for {1} command.
+AdminCommands.plvl.AddedSingleAccountPermission:	You add the single permission to account {0} for {1} command.
+AdminCommands.plvl.RemoveSinglePermission:			You removed the single permission of {0} for {1} command.
 AdminCommands.plvl.NoPermissionForCommand:			There is no permission of {0} for {1} command.
-AdminCommands.plvl.YourPlvlHasBeenSetted:			Your privilege level has been set to {0}
-AdminCommands.plvl.PlayerPlvlHasBeenSetted:			{0} privilege level has been set to {1}
+AdminCommands.plvl.YourPlvlHasBeenSetted:			Your privilege level has been set to {0}.
+AdminCommands.plvl.PlayerPlvlHasBeenSetted:			{0} privilege level has been set to {1}.
 
 # /code Command
 AdminCommands.Code.Description:						Executes custom code!

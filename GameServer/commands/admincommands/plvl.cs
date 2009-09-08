@@ -28,6 +28,7 @@ namespace DOL.GS.Commands
 		"AdminCommands.plvl.Description",
 		"AdminCommands.plvl.Usage",
 		"AdminCommands.plvl.Usage.Single",
+		"AdminCommands.plvl.Usage.SingleAccount",
 		"AdminCommands.plvl.Usage.Remove")]
 	public class PlvlCommand : AbstractCommandHandler, ICommandHandler
 	{
@@ -39,104 +40,119 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			uint plvl;
+			GamePlayer target = client.Player;
+
 			switch (args[1])
 			{
 				#region Single
 				case "single":
 					{
-						GamePlayer target = client.Player.TargetObject as GamePlayer;
-						if (target == null)
+						if( args.Length < 3 )
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.NoSelectPlayer"));
+							DisplaySyntax( client );
 							return;
 						}
-						if (args.Length != 3)
+
+						if( args.Length > 3 )
 						{
-							DisplaySyntax(client);
-							return;
+							GameClient targetClient = WorldMgr.GetClientByPlayerName( args[3], true, true );
+
+							if( targetClient != null )
+								target = targetClient.Player;
 						}
+
 						SinglePermission.setPermission(target, args[2]);
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.AddedSinglePermission", target.Name, args[2]));
+
 						break;
 					}
 				#endregion Single
+
 				#region Single Account
 				case "singleaccount":
 					{
-						GamePlayer target = client.Player.TargetObject as GamePlayer;
-						if (target == null)
+						if( args.Length < 3 )
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.NoSelectPlayer"));
+							DisplaySyntax( client );
 							return;
 						}
-						if (args.Length != 3)
+
+						if( args.Length > 3 )
 						{
-							DisplaySyntax(client);
-							return;
+							GameClient targetClient = WorldMgr.GetClientByPlayerName( args[3], true, true );
+
+							if( targetClient != null )
+								target = targetClient.Player;
 						}
-						SinglePermission.setPermissionAccount(target, args[2]);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.AddedSinglePermission", target.Name, args[2]));
+
+						SinglePermission.setPermissionAccount( target, args[2] );
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.AddedSingleAccountPermission", target.Client.Account.Name, args[2]));
+
 						break;
 					}
 				#endregion
+
 				#region Remove
 				case "remove":
 					{
-						GamePlayer player = client.Player.TargetObject as GamePlayer;
-						if (player == null)
+						if( args.Length < 2 )
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.NoSelectPlayer"));
+							DisplaySyntax( client );
 							return;
 						}
-						if (args.Length != 3)
+
+						if( args.Length > 3 )
 						{
-							DisplaySyntax(client);
-							return;
+							GameClient targetClient = WorldMgr.GetClientByPlayerName( args[3], true, true );
+
+							if( targetClient != null )
+								target = targetClient.Player;
 						}
-						if (SinglePermission.removePermission(player, args[2]))
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.RemoveSinglePermission", player.Name, args[2]));
+
+						if( SinglePermission.removePermission( target, args[2] ) )
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.RemoveSinglePermission", target.Name, args[2]));
 						else
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.NoPermissionForCommand", player.Name, args[2]));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.NoPermissionForCommand", target.Name, args[2]));
+
 						break;
 					}
 				#endregion Remove
+
 				#region Default
 				default:
 					{
-						try
-						{
-							plvl = Convert.ToUInt16(args[1]);
+						uint plvl = 1;
 
-							GamePlayer target = client.Player.TargetObject as GamePlayer;
-							if (target == null)
+						if( !UInt32.TryParse( args[1], out plvl ) )
+						{
+							DisplaySyntax( client );
+							return;
+						}
+
+						if( args.Length > 2 )
 							{
-								target = client.Player;
+							GameClient targetClient = WorldMgr.GetClientByPlayerName( args[2], true, true );
+
+							if( targetClient != null )
+								target = targetClient.Player;
 							}
 
-							if (target != null)
-							{
-								if (target.Client.Account != null)
-								{
 									target.Client.Account.PrivLevel = plvl;
-									GameServer.Database.SaveObject(target.Client.Account);
-									foreach (GameNPC npc in client.Player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						GameServer.Database.SaveObject( target.Client.Account );
+
+						foreach( GameNPC npc in client.Player.GetNPCsInRadius( WorldMgr.VISIBILITY_DISTANCE ) )
 									{
-										if ((npc.Flags & (int)GameNPC.eFlags.CANTTARGET) != 0 || (npc.Flags & (int)GameNPC.eFlags.DONTSHOWNAME) != 0)
+							if( ( npc.Flags & (int)GameNPC.eFlags.CANTTARGET ) != 0 || ( npc.Flags & (int)GameNPC.eFlags.DONTSHOWNAME ) != 0 )
 										{
-											client.Out.SendNPCCreate(npc);
+								client.Out.SendNPCCreate( npc );
 										}
 									}
-									target.Client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.plvl.YourPlvlHasBeenSetted", plvl.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-									if (target != client.Player)
-										client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.plvl.PlayerPlvlHasBeenSetted", target.Name, plvl.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-								}
-							}
-						}
-						catch (Exception)
-						{
-							DisplaySyntax(client);
-						}
+
+						target.Client.Out.SendMessage( LanguageMgr.GetTranslation( client, "AdminCommands.plvl.YourPlvlHasBeenSetted", plvl.ToString() ), eChatType.CT_Important, eChatLoc.CL_SystemWindow );
+
+						if( target != client.Player )
+							client.Out.SendMessage( LanguageMgr.GetTranslation( client, "AdminCommands.plvl.PlayerPlvlHasBeenSetted", target.Name, plvl.ToString() ), eChatType.CT_Important, eChatLoc.CL_SystemWindow );
+
 						break;
 					}
 				#endregion Default
