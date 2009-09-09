@@ -181,8 +181,6 @@ namespace DOL.GS.Effects
 		/// <param name="playerCanceled">true if canceled by the player</param>
 		public virtual void Cancel(bool playerCanceled)
 		{
-			if (log.IsDebugEnabled)
-				log.Debug(Owner.Name+": CancelEffect playerCanceled="+playerCanceled+"  SpellType="+Spell.SpellType);
 			if (playerCanceled && !m_handler.HasPositiveEffect) {
 				if (Owner is GamePlayer)
 					((GamePlayer)Owner).Out.SendMessage(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "Effects.GameSpellEffect.CantRemoveEffect"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -197,11 +195,7 @@ namespace DOL.GS.Effects
 				m_expired = true;
 				StopTimers();
 				if(m_owner != null) {
-//					if (log.IsDebugEnabled)
-//						log.Debug("Effect, remove from effect list");
 					m_owner.EffectList.Remove(this);
-//					if (log.IsDebugEnabled)
-//						log.Debug("Effect, removed");
 					if (Spell.Concentration > 0) 
 					{
 						SpellHandler.Caster.ConcentrationEffects.Remove(this);
@@ -212,7 +206,6 @@ namespace DOL.GS.Effects
 						m_handler.OnEffectExpires(this, false);
 				}
 			}
-			//DOLConsole.WriteLine("done cancel effect on "+Owner.Name);
 		}
 
 		/// <summary>
@@ -222,7 +215,6 @@ namespace DOL.GS.Effects
 		/// <param name="effect">the new effect</param>
 		public void Overwrite(GameSpellEffect effect)
 		{
-			//DOLConsole.WriteLine("overwrite effect on "+Owner.Name+" effect "+effect.Spell.Name);
 			if (Spell.Concentration > 0) 
 			{
 
@@ -252,7 +244,6 @@ namespace DOL.GS.Effects
 				m_owner.EffectList.OnEffectsChanged(this);
 				m_handler.OnEffectStart(this);
 				m_handler.OnEffectPulse(this);
-				//DOLConsole.WriteLine("done overwrite effect on "+Owner.Name);
 				m_expired = false;
 			}
 		}
