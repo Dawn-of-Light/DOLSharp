@@ -151,6 +151,11 @@ namespace DOL.GS
 					SayTo(player, "The great city awaits!");
 					break;
 				case "fintain":
+					if (ServerProperties.Properties.DISABLE_TUTORIAL)
+					{
+						SayTo(player,"Sorry, this place is not available for now !");
+						return;
+					}
 					if (player.Level > 10)
 					{
 						SayTo(player,"Sorry, you are far too experienced to enjoy this place !");
