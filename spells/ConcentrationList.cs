@@ -152,8 +152,6 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public void CancelAll(bool leaveself)
 		{
-			if (log.IsDebugEnabled)
-				log.Debug("(" + m_owner.Name + ") cancels all conc spells leaveself: " + leaveself);
 			ArrayList spells = null;
 			if (m_concSpells == null) return;
 			spells = (ArrayList)m_concSpells.Clone();
