@@ -110,6 +110,15 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("starting_level", "Starting Level - Edit this to set which levels experience a new player start the game with", 1)]
 		public static int STARTING_LEVEL;
 
+        [ServerProperty("spell_interrupt_duration", "", 4500)]
+        public static int SPELL_INTERRUPT_DURATION;
+
+        [ServerProperty("spell_interrupt_recast", "", 2000)]
+        public static int SPELL_INTERRUPT_RECAST;
+
+        [ServerProperty("spell_interrupt_again", "", 100)]
+        public static int SPELL_INTERRUPT_AGAIN;
+
 		/// <summary>
 		/// The message players get when they enter the game at level 1
 		/// </summary>
