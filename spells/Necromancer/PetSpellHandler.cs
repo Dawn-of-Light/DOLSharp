@@ -49,8 +49,29 @@ namespace DOL.GS.Spells
                 {
                     m_interrupted = false;
                     SendSpellMessages();
-                    m_castTimer = new DelayedCastTimer(Caster, this, target);
-                    m_castTimer.Start(1 + CalculateCastingTime());
+
+                    int time = CalculateCastingTime();
+
+                    int step1 = time / 3;
+                    if (step1 > 1000)
+                        step1 = 1000;
+                    if (step1 < 1)
+                        step1 = 1;
+
+                    int step3 = time / 3;
+                    if (step3 > 1000)
+                        step3 = 1000;
+                    if (step3 < 1)
+                        step3 = 1;
+
+                    int step2 = time - step1 - step3;
+                    if (step2 < 1)
+                        step2 = 1;
+
+                    m_castTimer = new DelayedCastTimer(Caster, this, target, step2, step3);
+                    m_castTimer.Start(step1);
+                    m_started = Caster.CurrentRegion.Time;
+
                     SendCastAnimation();
 
                     if (m_caster.IsMoving || m_caster.IsStrafing)
