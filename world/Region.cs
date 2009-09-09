@@ -884,10 +884,6 @@ namespace DOL.GS
 					}
 				}
 
-
-				if (log.IsDebugEnabled)
-					log.Debug("RemoveObject: OID" + obj.ObjectID + " " + obj.Name + "(R" + obj.CurrentRegionID + ") from " + Description);
-
 				GameObject inPlace = m_objects[obj.ObjectID - 1];
 				if (inPlace == null)
 				{
