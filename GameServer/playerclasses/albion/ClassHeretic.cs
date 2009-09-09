@@ -71,6 +71,8 @@ namespace DOL.GS.PlayerClass
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Crush));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 				player.AddSpellLine(SkillBase.GetSpellLine("Heretic Rejuvenation Spec"));
+				player.RemoveSpellLine("Enhancement");
+				player.AddSpellLine(SkillBase.GetSpellLine("Heretic Enhancement"));
 				player.AddSpellLine(SkillBase.GetSpellLine("Heretic Enhancement Spec"));
 			}
 			if (player.Level >= 15)
