@@ -24,7 +24,6 @@ namespace DOL.GS.PropertyCalc
 {
 	/// <summary>
 	/// Calculator for XP % bonus
-	/// For now this is capped at 10%, not sure of live cap - tolakram
 	/// </summary>
 	[PropertyCalculator(eProperty.XpPoints)]
 	public class XpPointsCalculator : PropertyCalculator
