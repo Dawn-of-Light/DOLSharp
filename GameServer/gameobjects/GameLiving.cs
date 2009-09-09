@@ -55,6 +55,13 @@ namespace DOL.GS
 		/// </summary>
 		public const string LAST_ATTACK_DATA = "LastAttackData";
 
+        protected string m_lastInterruptMessage;
+        public string LastInterruptMessage
+        {
+            get { return m_lastInterruptMessage; }
+            set { m_lastInterruptMessage = value; }
+        }
+
 		/// <summary>
 		/// Holds the AttackData object of the last left-hand attack
 		/// </summary>
@@ -1796,10 +1803,23 @@ namespace DOL.GS
 		public virtual void StartInterruptTimer(AttackData attack, int duration)
 		{
             if (!IsAlive || ObjectState != eObjectState.Active)
+            {
+                InterruptTime = 0;
+                InterruptAction = 0;
                 return;
+            }
+            if (InterruptTime < CurrentRegion.Time + duration)
+                InterruptTime = CurrentRegion.Time + duration;
 
-            InterruptTimer = new InterruptAction(attack, duration);
-            InterruptTimer.Start(1);
+            //new InterruptAction(this, attacker, duration, attackType).Start(1);
+
+            if (attack != null && attack.Attacker != null)
+            {
+                if (CurrentSpellHandler != null)
+                    CurrentSpellHandler.CasterIsAttacked(attack.Attacker);
+                if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+                    OnInterruptTick(attack.Attacker, attack.AttackType);
+            }
 		}
 
         /// <summary>
@@ -1811,16 +1831,26 @@ namespace DOL.GS
         public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
         {
             if (!IsAlive || ObjectState != eObjectState.Active)
+            {
+                InterruptTime = 0;
+                InterruptAction = 0;
                 return;
+            }
+            if (InterruptTime < CurrentRegion.Time + duration)
+                InterruptTime = CurrentRegion.Time + duration;
 
-            InterruptTimer = new InterruptAction(this, attacker, attackType, duration);
-            InterruptTimer.Start(1);
+            //new InterruptAction(this, attacker, duration, attackType).Start(1);
+
+            if (CurrentSpellHandler != null)
+                CurrentSpellHandler.CasterIsAttacked(attacker);
+            if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+                OnInterruptTick(attacker, attackType);
         }
 
 		/// <summary>
 		/// Interrupts the target every second for the specified duration.
 		/// </summary>
-		protected class InterruptAction : RegionAction
+		/*protected class InterruptAction : RegionAction
 		{
             /// <summary>
             /// Creates a new interrupt action.
@@ -1898,15 +1928,34 @@ namespace DOL.GS
 
                 target.Notify(GameLivingEvent.Interrupted, target, new InterruptedEventArgs(Attacker));
             }
-		}
+		}*/
 
 
-        public long InterruptTime { get; protected set; }
+        protected long m_interruptTime = 0;
+        public long InterruptTime
+        {
+            get { return m_interruptTime; }
+            set
+            {
+                InterruptAction = CurrentRegion.Time;
+                m_interruptTime = value;
+            }
+        }
+
+        protected long m_interruptAction = 0;
+        public long InterruptAction
+        {
+            get { return m_interruptAction; }
+            set { m_interruptAction = value; }
+        }
 
 		/// <summary>
 		/// Yields true if interrupt action is running on this living.
 		/// </summary>
-        public bool IsBeingInterrupted { get; protected set; }
+        public bool IsBeingInterrupted
+        {
+            get { return (m_interruptTime > CurrentRegion.Time); }
+        }
 
 		/// <summary>
 		/// Does needed interrupt checks and interrupts this living

@@ -64,14 +64,23 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected GameLiving m_caster;
 		/// <summary>
-        /// Has the Casting Start Time
-        /// </summary>
-        protected long m_castStartTime;
-		/// <summary>
 		/// Has the spell been interrupted
 		/// </summary>
 		protected bool m_interrupted = false;
-		/// <summary>
+        /// <summary>
+		/// Delayedcast Stage
+		/// </summary>
+        public int Stage
+        {
+            get { return m_stage; }
+            set { m_stage = value; }
+        }
+		protected int m_stage = 0;
+        /// <summary>
+		/// Use to store Time when the delayedcast started
+		/// </summary>
+		protected long m_started = 0;
+        /// <summary>
 		/// Shall we start the reuse timer
 		/// </summary>
 		protected bool m_startReuseTimer = true;
@@ -93,9 +102,25 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// The duration for the spell interrupt duration
 		/// </summary>
-		protected const int SPELL_INTERRUPT_DURATION = 3000; //3 sec for all spells!
-
-		/// <summary>
+        public static int SPELL_INTERRUPT_DURATION
+        {
+            get { return ServerProperties.Properties.SPELL_INTERRUPT_DURATION; }
+        }
+        /// <summary>
+		/// The recast delay after interrupted spell
+		/// </summary>
+        public static int SPELL_INTERRUPT_RECAST
+        {
+            get { return ServerProperties.Properties.SPELL_INTERRUPT_RECAST; }
+        }
+        /// <summary>
+		/// The additionnal interrupt timer
+		/// </summary>
+        public static int SPELL_INTERRUPT_AGAIN
+        {
+            get { return ServerProperties.Properties.SPELL_INTERRUPT_AGAIN; }
+        }
+        /// <summary>
 		/// The property key for focus spells
 		/// </summary>
 		protected const string FOCUS_SPELL = "FOCUSING_A_SPELL";
@@ -328,9 +353,30 @@ namespace DOL.GS.Spells
 					m_interrupted = false;
 					SendSpellMessages();
 
-					m_castTimer = new DelayedCastTimer(Caster, this, target);
-					m_castTimer.Start(1 + CalculateCastingTime());
+					int time = CalculateCastingTime();
+                    
+                    int step1 = time / 3;
+                    if (step1 > 1000)
+                        step1 = 1000;
+                    if (step1 < 1)
+                        step1 = 1;
+                    
+                    int step3 = time / 3;
+                    if (step3 > 1000)
+                        step3 = 1000;
+                    if (step3 < 1)
+                        step3 = 1;
 
+                    int step2 = time - step1 - step3;
+                    if (step2 < 1)
+                        step2 = 1;
+
+                    if (Caster is GamePlayer && (Caster as GamePlayer).Client.Account.PrivLevel >= 3)
+                        (Caster as GamePlayer).Out.SendMessage("[DEBUG] step1=" + step1 + "   step2=" + step2 + "   step3=" + step3, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    
+                    m_castTimer = new DelayedCastTimer(Caster, this, target, step2, step3);
+					m_castTimer.Start(step1);
+                    m_started = Caster.CurrentRegion.Time;
 					SendCastAnimation();
 
 					if ((Caster is GamePlayer && (Caster as GamePlayer).IsStrafing) || Caster.IsMoving)
@@ -394,9 +440,7 @@ namespace DOL.GS.Spells
 				return false;
 			if (Caster.EffectList.GetOfType(typeof(FacilitatePainworkingEffect)) != null)
 				return false;
-			if (CheckMiddleCast())
-                return false;
-			if (IsCasting)
+			if (IsCasting && Stage < 2)
 			{
 				double mod = Caster.GetConLevel(attacker);
 				double chance = 65;
@@ -406,8 +450,8 @@ namespace DOL.GS.Spells
 				if(attacker is GamePlayer) chance=99;
 				if (Util.Chance((int)chance))
 				{
-					Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + SPELL_INTERRUPT_DURATION);
-					MessageToLiving(Caster, attacker.GetName(0, true) + " attacks you and your spell is interrupted!", eChatType.CT_SpellResisted);
+					Caster.LastInterruptMessage = attacker.GetName(0, true) + " attacks you and your spell is interrupted!";
+					MessageToLiving(Caster, Caster.LastInterruptMessage, eChatType.CT_SpellResisted);
 					InterruptCasting(); // always interrupt at the moment
 					return true;
 				}
@@ -417,12 +461,17 @@ namespace DOL.GS.Spells
 
 		#region begin & end cast check
 
+        public virtual bool CheckBeginCast(GameLiving selectedTarget)
+        {
+            return CheckBeginCast(selectedTarget, false);
+        }
+
 		/// <summary>
 		/// All checks before any casting begins
 		/// </summary>
 		/// <param name="selectedTarget"></param>
 		/// <returns></returns>
-		public virtual bool CheckBeginCast(GameLiving selectedTarget)
+		public virtual bool CheckBeginCast(GameLiving selectedTarget, bool quiet)
 		{
 			if (m_caster.ObjectState != GameLiving.eObjectState.Active)
 			{
@@ -431,14 +480,14 @@ namespace DOL.GS.Spells
 
 			if (!m_caster.IsAlive)
 			{
-				MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
+				if(!quiet) MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
 				return false;
 			}
 
 			GameSpellEffect Phaseshift = FindEffectOnTarget(Caster, "Phaseshift");
 			if (Phaseshift != null && (Spell.InstrumentRequirement == 0 || Spell.SpellType == "Mesmerize"))
 			{
-				MessageToCaster("You're phaseshifted and can't cast a spell", eChatType.CT_System);
+                if (!quiet) MessageToCaster("You're phaseshifted and can't cast a spell", eChatType.CT_System);
 				return false;
 			}
 
@@ -451,7 +500,7 @@ namespace DOL.GS.Spells
 					GameLiving EffectOwner = SelectiveBlindness.EffectSource;
 					if(EffectOwner==selectedTarget)
 					{
-						if (m_caster is GamePlayer)
+						if (m_caster is GamePlayer && !quiet)
 							((GamePlayer)m_caster).Out.SendMessage(string.Format("{0} is invisible to you!", selectedTarget.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 
 						return false;
@@ -461,7 +510,7 @@ namespace DOL.GS.Spells
 
             if (selectedTarget!=null && selectedTarget.HasAbility("DamageImmunity") && Spell.SpellType == "DirectDamage" && Spell.Radius == 0)
             {
-                MessageToCaster(selectedTarget.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
+                if (!quiet) MessageToCaster(selectedTarget.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
                 return false;
             }
 
@@ -469,7 +518,7 @@ namespace DOL.GS.Spells
 			{
 				if (!CheckInstrument())
 				{
-					MessageToCaster("You are not wielding the right type of instrument!",
+                    if (!quiet) MessageToCaster("You are not wielding the right type of instrument!",
 						eChatType.CT_SpellResisted);
 					return false;
 				}
@@ -478,7 +527,7 @@ namespace DOL.GS.Spells
 			{
 				//Purge can be cast while sitting but only if player has negative effect that
 				//don't allow standing up (like stun or mez)
-				MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
+                if (!quiet) MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
 				return false;
 			}
 
@@ -500,17 +549,13 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null)
+			if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null && m_caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) == null)
 			{
-				long leftseconds = Math.Max(
-				    Caster.TempProperties.getLongProperty(INTERRUPT_TIMEOUT_PROPERTY, 0) - Caster.CurrentRegion.Time,
-				    Caster.SwingTimeLeft);
-				if (leftseconds > 0)
-				{
-					MessageToCaster("You must wait " + (leftseconds / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_System);
-					return false;
-				}
-				Caster.TempProperties.removeProperty(INTERRUPT_TIMEOUT_PROPERTY);
+				if (Caster.InterruptAction > 0 && Caster.InterruptAction + SPELL_INTERRUPT_RECAST > Caster.CurrentRegion.Time)
+                {
+                    if (!quiet) MessageToCaster("You must wait " + (((Caster.InterruptAction + SPELL_INTERRUPT_RECAST) - Caster.CurrentRegion.Time) / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
+                    return false;
+                }
 			}
 
 			if (m_spell.RecastDelay > 0)
@@ -518,13 +563,12 @@ namespace DOL.GS.Spells
 				int left = m_caster.GetSkillDisabledDuration(m_spell);
 				if (left > 0)
 				{
-					MessageToCaster("You must wait " + (left / 1000 + 1).ToString() + " seconds to use this spell!", eChatType.CT_System);
+                    if (!quiet) MessageToCaster("You must wait " + (left / 1000 + 1).ToString() + " seconds to use this spell!", eChatType.CT_System);
 					return false;
 				}
 			}
 
 			String targetType = m_spell.Target.ToLower();
-			m_castStartTime = (int)Caster.CurrentRegion.Time;
 			
       //[Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
             if (targetType.Equals("pet"))
@@ -537,7 +581,7 @@ namespace DOL.GS.Spells
                     }
                     else
                     {
-					  MessageToCaster("You must cast this spell on a creature you are controlling.",
+                        if (!quiet) MessageToCaster("You must cast this spell on a creature you are controlling.",
                                         eChatType.CT_System);
                         return false;
                     }
@@ -547,7 +591,7 @@ namespace DOL.GS.Spells
 			{
 				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
 				{
-					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
+                    if (!quiet) MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
 				}
 				//				if (!Caster.GroundTargetInView)
@@ -563,14 +607,14 @@ namespace DOL.GS.Spells
 
 				if (selectedTarget == null || selectedTarget.ObjectState != GameLiving.eObjectState.Active)
 				{
-					MessageToCaster("You must select a target for this spell!",
+                    if (!quiet) MessageToCaster("You must select a target for this spell!",
 						eChatType.CT_SpellResisted);
 					return false;
 				}
 
 				if (!m_caster.IsWithinRadius(selectedTarget, CalculateSpellRange()))
 				{
-					if(Caster is GamePlayer) MessageToCaster("That target is too far away!",
+					if(Caster is GamePlayer && !quiet) MessageToCaster("That target is too far away!",
 						eChatType.CT_SpellResisted);
 					Caster.Notify(GameLivingEvent.CastFailed,
 						new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetTooFarAway));
@@ -582,13 +626,13 @@ namespace DOL.GS.Spells
 					case "enemy":
 						if (selectedTarget == m_caster)
 						{
-							MessageToCaster("You can't attack yourself! ", eChatType.CT_System);
+                            if (!quiet) MessageToCaster("You can't attack yourself! ", eChatType.CT_System);
 							return false;
 						}
 
 						if (FindStaticEffectOnTarget(selectedTarget, typeof(NecromancerShadeEffect)) != null)
 						{
-							MessageToCaster("Invalid target.", eChatType.CT_System);
+                            if (!quiet) MessageToCaster("Invalid target.", eChatType.CT_System);
 							return false;
 						}
 
@@ -596,13 +640,13 @@ namespace DOL.GS.Spells
 						if (!(m_caster.IsObjectInFront(selectedTarget, 180) && m_caster.TargetInView))
 						{
 							if(m_spell.SpellType=="Charm" && m_spell.CastTime==0 && m_spell.Pulse!=0) break;
-							MessageToCaster("Your target is not in view!", eChatType.CT_System);
+                            if (!quiet) MessageToCaster("Your target is not in view!", eChatType.CT_System);
 							Caster.Notify(GameLivingEvent.CastFailed,
 								new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
 							return false;
 						}
 
-						if (!GameServer.ServerRules.IsAllowedToAttack(Caster, selectedTarget, false))
+						if (!GameServer.ServerRules.IsAllowedToAttack(Caster, selectedTarget, quiet))
 						{
 							return false;
 						}
@@ -611,7 +655,7 @@ namespace DOL.GS.Spells
 					case "corpse":
 						if (selectedTarget.IsAlive || !GameServer.ServerRules.IsSameRealm(Caster, selectedTarget, true))
 						{
-							MessageToCaster("This spell only works on dead members of your realm!", eChatType.CT_SpellResisted);
+                            if (!quiet) MessageToCaster("This spell only works on dead members of your realm!", eChatType.CT_SpellResisted);
 							return false;
 						}
 						break;
@@ -627,7 +671,7 @@ namespace DOL.GS.Spells
 				//heals/buffs/rez need LOS only to start casting
 				if (!m_caster.TargetInView && m_spell.Target.ToLower() != "pet")
 				{
-					MessageToCaster("Your target is not in view!", eChatType.CT_System);
+                    if (!quiet) MessageToCaster("Your target is not in view!", eChatType.CT_System);
 					Caster.Notify(GameLivingEvent.CastFailed,
 								new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
 					return false;
@@ -635,7 +679,7 @@ namespace DOL.GS.Spells
 
 				if (m_spell.Target.ToLower() != "corpse" && !selectedTarget.IsAlive)
 				{
-					MessageToCaster(selectedTarget.GetName(0, true) + " is dead!", eChatType.CT_SpellResisted);
+                    if (!quiet) MessageToCaster(selectedTarget.GetName(0, true) + " is dead!", eChatType.CT_SpellResisted);
 					return false;
 				}
 			}
@@ -643,21 +687,21 @@ namespace DOL.GS.Spells
 			//Ryan: don't want mobs to have reductions in mana
 			if (Spell.Power != 0 && m_caster is GamePlayer && (m_caster as GamePlayer).CharacterClass.ID != (int)eCharacterClass.Savage && m_caster.Mana < PowerCost(selectedTarget) && Spell.SpellType != "Archery")
 			{
-				MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
+                if (!quiet) MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
 			}
 
-			if (m_spell.Concentration > 0)
+			if (m_caster is GamePlayer && m_spell.Concentration > 0)
 			{
 				if (m_caster.Concentration < m_spell.Concentration)
 				{
-					MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
+                    if (!quiet) MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
 					return false;
 				}
 
 				if (m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
 				{
-					MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
+                    if (!quiet) MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
 					return false;
 				}
 			}
@@ -734,29 +778,6 @@ namespace DOL.GS.Spells
 			MessageToLiving(player, "Your pet can't see the target!", eChatType.CT_SpellResisted);
 			InterruptCasting(); // break;
 		}
-		
-        /// <summary>
-        /// Additional Check for the new interrupt System.
-        /// Spells can not be canceled after 66% of their spells cast time.
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool CheckMiddleCast()
-        {
-            if (Caster.IsCasting)
-            {
-                long c_time = (long)(Spell.CastTime* 0.66);
-                if ((m_castStartTime + c_time) <= Caster.CurrentRegion.Time)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-		
 		/// <summary>
 		/// Checks after casting before spell is executed
 		/// </summary>
@@ -764,11 +785,6 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual bool CheckEndCast(GameLiving target)
 		{
-			if (m_interrupted)
-			{
-				return false;
-			}
-
 			if (m_caster.ObjectState != GameLiving.eObjectState.Active)
 			{
 				return false;
@@ -903,13 +919,13 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (m_caster.Concentration < m_spell.Concentration)
+			if (m_caster is GamePlayer && m_caster.Concentration < m_spell.Concentration)
 			{
 				MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
 				return false;
 			}
 
-			if (m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
+			if (m_caster is GamePlayer && m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
 			{
 				MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
 				return false;
@@ -917,6 +933,376 @@ namespace DOL.GS.Spells
 
 			return true;
 		}
+
+        public virtual bool CheckDuringCast(GameLiving target)
+        {
+            return CheckDuringCast(target, false);
+        }
+		public virtual bool CheckDuringCast(GameLiving target, bool quiet)
+        {
+            if (m_interrupted)
+			{
+				return false;
+			}
+
+            if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null && m_caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) == null)
+            {
+                if(Caster.InterruptTime > 0 && Caster.InterruptTime > m_started)
+                {
+                    if (!quiet)
+                    {
+                        if (Caster.LastInterruptMessage != "") MessageToCaster(Caster.LastInterruptMessage, eChatType.CT_SpellResisted);
+                        else MessageToCaster("You are interrupted and must wait " + ((Caster.InterruptTime - m_started) / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
+                    }
+                    return false;
+                }
+            }
+
+            if (m_caster.ObjectState != GameLiving.eObjectState.Active)
+            {
+                return false;
+            }
+
+            if (!m_caster.IsAlive)
+            {
+                if(!quiet) MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
+                return false;
+            }
+
+            if (m_spell.InstrumentRequirement != 0)
+            {
+                if (!CheckInstrument())
+                {
+                    if (!quiet) MessageToCaster("You are not wielding the right type of instrument!", eChatType.CT_SpellResisted);
+                    return false;
+                }
+            }
+            else if (m_caster.IsSitting) // songs can be played if sitting
+            {
+                //Purge can be cast while sitting but only if player has negative effect that
+                //don't allow standing up (like stun or mez)
+                if (!quiet) MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            if (m_spell.Target.ToLower() == "area")
+            {
+                if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
+                {
+                    if (!quiet) MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
+                    return false;
+                }
+                //				if (!Caster.GroundTargetInView)
+                //				{
+                //					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
+                //					return false;
+                //				}
+            }
+            else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
+            {
+                if (m_spell.Target.ToLower() != "pet")
+                {
+                    //all other spells that need a target
+                    if (target == null || target.ObjectState != GameObject.eObjectState.Active)
+                    {
+                        if (Caster is GamePlayer && !quiet)
+                            MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
+                        return false;
+                    }
+
+                    if (Caster is GamePlayer && !m_caster.IsWithinRadius(target, CalculateSpellRange()))
+                    {
+                        if (!quiet) MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
+                        return false;
+                    }
+                }
+
+                switch (m_spell.Target)
+                {
+                    case "Enemy":
+                        //enemys have to be in front and in view for targeted spells
+                        if (Caster is GamePlayer && !(m_caster.IsObjectInFront(target, 180) /*&& m_caster.TargetInView*/) && !Caster.IsWithinRadius(target, 50))
+                        {
+                            if (!quiet) MessageToCaster("Your target is not in view. The spell fails.", eChatType.CT_SpellResisted);
+                            return false;
+                        }
+
+                        if (!GameServer.ServerRules.IsAllowedToAttack(Caster, target, quiet))
+                        {
+                            return false;
+                        }
+                        break;
+
+                    case "Corpse":
+                        if (target.IsAlive || !GameServer.ServerRules.IsSameRealm(Caster, target, quiet))
+                        {
+                            if (!quiet) MessageToCaster("This spell only works on dead members of your realm!",
+                                            eChatType.CT_SpellResisted);
+                            return false;
+                        }
+                        break;
+
+                    case "Realm":
+                        if (!GameServer.ServerRules.IsSameRealm(Caster, target, quiet))
+                        {
+                            return false;
+                        }
+                        break;
+
+                    case "Pet":
+                        /*
+                         * [Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
+                         * -If caster target's isn't own pet.
+                         *  -check if caster have controlled pet, select this automatically
+                         *  -check if target isn't null
+                         * -check if target isn't too far away
+                         * If all checks isn't true, return false.
+                         */
+                        if (target == null || !Caster.GetItsControlledNpc(target as GameNPC))
+                        {
+                            if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+                            {
+                                target = Caster.ControlledNpc.Body;
+                            }
+                            else
+                            {
+                                if (!quiet) MessageToCaster("You must cast this spell on a creature you are controlling.", eChatType.CT_System);
+                                return false;
+                            }
+                        }
+                        //Now check distance for own pet
+                        if (!m_caster.IsWithinRadius(target, CalculateSpellRange()))
+                        {
+                            if (!quiet) MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
+                            return false;
+                        }
+                        break;
+                }
+            }
+
+            if (m_caster.Mana <= 0 && Spell.Power != 0 && Spell.SpellType != "Archery")
+            {
+                if (!quiet) MessageToCaster("You have exhausted all of your power and cannot cast spells!", eChatType.CT_SpellResisted);
+                return false;
+            }
+            if (Spell.Power != 0 && m_caster.Mana < PowerCost(target) && Spell.SpellType != "Archery")
+            {
+                if (!quiet) MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            if (m_caster is GamePlayer && m_caster.Concentration < m_spell.Concentration)
+            {
+                if (!quiet) MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            if (m_caster is GamePlayer && m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
+            {
+                if (!quiet) MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            /*if (m_caster.Concentration < m_spell.Concentration)
+            {
+                MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
+                return false;
+            }*/
+
+            /*if (m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
+            {
+                MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
+                return false;
+            }*/
+
+            return true;
+        }
+
+        public virtual bool CheckAfterCast(GameLiving target)
+        {
+            return CheckAfterCast(target, false);
+        }
+        public virtual bool CheckAfterCast(GameLiving target, bool quiet)
+        {
+            if (m_interrupted)
+            {
+                return false;
+            }
+
+            if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null && m_caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) == null)
+            {
+                if (Caster.InterruptTime > 0 && Caster.InterruptTime > m_started)
+                {
+                    if (!quiet)
+                    {
+                        if(Caster.LastInterruptMessage != "") MessageToCaster(Caster.LastInterruptMessage, eChatType.CT_SpellResisted);
+                        else MessageToCaster("You are interrupted and must wait " + ((Caster.InterruptTime - m_started) / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
+                    }
+                    Caster.InterruptAction = Caster.CurrentRegion.Time - SPELL_INTERRUPT_AGAIN;
+                    return false;
+                }
+            }
+
+            if (m_caster.ObjectState != GameLiving.eObjectState.Active)
+            {
+                return false;
+            }
+
+            if (!m_caster.IsAlive)
+            {
+                if (!quiet) MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
+                return false;
+            }
+
+            if (m_spell.InstrumentRequirement != 0)
+            {
+                if (!CheckInstrument())
+                {
+                    if (!quiet) MessageToCaster("You are not wielding the right type of instrument!", eChatType.CT_SpellResisted);
+                    return false;
+                }
+            }
+            else if (m_caster.IsSitting) // songs can be played if sitting
+            {
+                //Purge can be cast while sitting but only if player has negative effect that
+                //don't allow standing up (like stun or mez)
+                if (!quiet) MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            if (m_spell.Target.ToLower() == "area")
+            {
+                if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
+                {
+                    if (!quiet) MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
+                    return false;
+                }
+                //				if (!Caster.GroundTargetInView)
+                //				{
+                //					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
+                //					return false;
+                //				}
+            }
+            else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
+            {
+                if (m_spell.Target.ToLower() != "pet")
+                {
+                    //all other spells that need a target
+                    if (target == null || target.ObjectState != GameObject.eObjectState.Active)
+                    {
+                        if (Caster is GamePlayer && !quiet)
+                            MessageToCaster("You must select a target for this spell!", eChatType.CT_SpellResisted);
+                        return false;
+                    }
+
+                    if (Caster is GamePlayer && !m_caster.IsWithinRadius(target, CalculateSpellRange()))
+                    {
+                        if (!quiet) MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
+                        return false;
+                    }
+                }
+
+                switch (m_spell.Target)
+                {
+                    case "Enemy":
+                        //enemys have to be in front and in view for targeted spells
+                        if (Caster is GamePlayer && !(m_caster.IsObjectInFront(target, 180) /*&& m_caster.TargetInView*/) && !Caster.IsWithinRadius(target, 50))
+                        {
+                            if (!quiet) MessageToCaster("Your target is not in view. The spell fails.", eChatType.CT_SpellResisted);
+                            return false;
+                        }
+
+                        if (!GameServer.ServerRules.IsAllowedToAttack(Caster, target, quiet))
+                        {
+                            return false;
+                        }
+                        break;
+
+                    case "Corpse":
+                        if (target.IsAlive || !GameServer.ServerRules.IsSameRealm(Caster, target, quiet))
+                        {
+                            if (!quiet) MessageToCaster("This spell only works on dead members of your realm!",
+                                            eChatType.CT_SpellResisted);
+                            return false;
+                        }
+                        break;
+
+                    case "Realm":
+                        if (!GameServer.ServerRules.IsSameRealm(Caster, target, quiet))
+                        {
+                            return false;
+                        }
+                        break;
+
+                    case "Pet":
+                        /*
+                         * [Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
+                         * -If caster target's isn't own pet.
+                         *  -check if caster have controlled pet, select this automatically
+                         *  -check if target isn't null
+                         * -check if target isn't too far away
+                         * If all checks isn't true, return false.
+                         */
+                        if (target == null || !Caster.GetItsControlledNpc(target as GameNPC))
+                        {
+                            if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+                            {
+                                target = Caster.ControlledNpc.Body;
+                            }
+                            else
+                            {
+                                if (!quiet) MessageToCaster("You must cast this spell on a creature you are controlling.", eChatType.CT_System);
+                                return false;
+                            }
+                        }
+                        //Now check distance for own pet
+                        if (!m_caster.IsWithinRadius(target, CalculateSpellRange()))
+                        {
+                            if (!quiet) MessageToCaster("That target is too far away!", eChatType.CT_SpellResisted);
+                            return false;
+                        }
+                        break;
+                }
+            }
+
+            if (m_caster.Mana <= 0 && Spell.Power != 0 && Spell.SpellType != "Archery")
+            {
+                if (!quiet) MessageToCaster("You have exhausted all of your power and cannot cast spells!", eChatType.CT_SpellResisted);
+                return false;
+            }
+            if (Spell.Power != 0 && m_caster.Mana < PowerCost(target) && Spell.SpellType != "Archery")
+            {
+                if (!quiet) MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            if (m_caster is GamePlayer && m_caster.Concentration < m_spell.Concentration)
+            {
+                if (!quiet) MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            if (m_caster is GamePlayer && m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
+            {
+                if (!quiet) MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
+                return false;
+            }
+
+            /*if (m_caster.Concentration < m_spell.Concentration)
+            {
+                MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
+                return false;
+            }*/
+
+            /*if (m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
+            {
+                MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
+                return false;
+            }*/
+
+            return true;
+        }
+
 
 		#endregion
 
@@ -1026,6 +1412,8 @@ namespace DOL.GS.Spells
 			if (m_interrupted || !IsCasting)
 				return;
 
+            m_interrupted = true;
+
 			if (IsCasting)
 			{
 				foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -1034,7 +1422,6 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			m_interrupted = true;
 			if (m_castTimer != null)
 			{
 				m_castTimer.Stop();
@@ -1061,6 +1448,9 @@ namespace DOL.GS.Spells
 			/// The target object at the moment of CastSpell call
 			/// </summary>
 			private readonly GameLiving m_target;
+            private byte m_stage;
+            private readonly int m_delay1;
+            private readonly int m_delay2;
 
 			/// <summary>
 			/// Constructs a new DelayedSpellTimer
@@ -1068,35 +1458,71 @@ namespace DOL.GS.Spells
 			/// <param name="actionSource">The caster</param>
 			/// <param name="handler">The spell handler</param>
 			/// <param name="target">The target object</param>
-			public DelayedCastTimer(GameLiving actionSource, SpellHandler handler, GameLiving target)
+			public DelayedCastTimer(GameLiving actionSource, SpellHandler handler, GameLiving target, int delay1, int delay2)
 				: base(actionSource.CurrentRegion.TimeManager)
 			{
 				if (handler == null)
 					throw new ArgumentNullException("handler");
 				m_handler = handler;
 				m_target = target;
-			}
+                m_stage = 0;
+                m_delay1 = delay1;
+                m_delay2 = delay2;
+            }
 
 			/// <summary>
 			/// Called on every timer tick
 			/// </summary>
 			protected override void OnTick()
 			{
-				GameLiving target = m_target;
+                try
+                {
+                    if (m_stage == 0)
+                    {
+                        if (!m_handler.CheckAfterCast(m_target))
+                        {
+                            Interval = 0;
+                            m_handler.InterruptCasting();
+                            m_handler.OnAfterSpellCastSequence();
+                            return;
+                        }
+                        m_stage = 1;
+                        m_handler.Stage = 1;
+                        Interval = m_delay1;
+                        return;
+                    }
+                    else if (m_stage == 1)
+                    {
+                        if (!m_handler.CheckDuringCast(m_target))
+                        {
+                            Interval = 0;
+                            m_handler.InterruptCasting();
+                            m_handler.OnAfterSpellCastSequence();
+                            return;
+                        }
+                        m_stage = 2;
+                        m_handler.Stage = 2;
+                        Interval = m_delay2;
+                        return;
+                    }
+                    else if (m_stage == 2)
+                    {
+                        m_stage = 3;
+                        m_handler.Stage = 3;
 
-				try
-				{
-					if (m_handler.CheckEndCast(target))
-					{
-						m_handler.FinishSpellCast(target);
-					}
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error(ToString(), e);
-				}
+                        if (m_handler.CheckEndCast(m_target))
+                        {
+                            m_handler.FinishSpellCast(m_target);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (log.IsErrorEnabled)
+                        log.Error(ToString(), e);
+                }
 				m_handler.OnAfterSpellCastSequence();
+                Interval = 0;
 			}
 
 			/// <summary>
