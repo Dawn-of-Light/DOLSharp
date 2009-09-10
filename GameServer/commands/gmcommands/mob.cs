@@ -160,6 +160,7 @@ namespace DOL.GS.Commands
 					case "noname": noname( client, targetMob, args ); break;
 					case "notarget": notarget( client, targetMob, args ); break;
 					case "kill": kill( client, targetMob, args ); break;
+					case "flags": flags(client, targetMob, args); break;
 				case "regen":  // deprecated, use "heal"
 					case "heal": heal( client, targetMob, args ); break;
 					case "attack": attack( client, targetMob, args ); break;
@@ -485,45 +486,13 @@ namespace DOL.GS.Commands
 
 		private void model( GameClient client, GameNPC targetMob, string[] args )
 		{
-			if ( targetMob == null )
+			if (args.Length == 4)
+				targetMob = FindOID(client, targetMob, args);
+			
+			if ( targetMob == null)
 			{
-				if ( args.Length < 4 )
-				{
 					DisplaySyntax( client, args[1] );
 					return;
-				}
-				else
-				{
-					ushort mobOID;
-
-					if ( ushort.TryParse( args[3], out mobOID ) )
-					{
-						GameObject obj = client.Player.CurrentRegion.GetObject( mobOID );
-
-						if ( obj == null )
-						{
-							client.Out.SendMessage( "No object with OID: " + args[1] + " in current Region.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
-							return;
-						}
-						else
-						{
-							if ( obj is GameNPC )
-							{
-								targetMob = (GameNPC)obj;
-							}
-							else
-							{
-								client.Out.SendMessage( "Object " + mobOID + " is a " + obj.GetType().ToString() + ", not a GameNPC.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
-								return;
-							}
-						}
-					}
-					else
-					{
-						DisplaySyntax( client, args[1] );
-						return;
-					}
-				}
 			}
 
 			ushort model;
@@ -539,6 +508,28 @@ namespace DOL.GS.Commands
 			{
 				DisplaySyntax( client, args[1] );
 				return;
+			}
+		}
+
+		GameNPC FindOID(GameClient client, GameNPC targetMob, string[] args)
+		{
+			ushort mobOID;
+			if (ushort.TryParse(args[3], out mobOID)) {
+				GameObject obj = client.Player.CurrentRegion.GetObject(mobOID);
+				if (obj == null) {
+					client.Out.SendMessage("No object with OID: " + args[1] + " in current Region.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return null;
+				} else {
+					if (obj is GameNPC) {
+						return (GameNPC)obj;
+					} else {
+						client.Out.SendMessage("Object " + mobOID + " is a " + obj.GetType().ToString() + ", not a GameNPC.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return null;
+					}
+				}
+			} else {
+				DisplaySyntax(client, args[1]);
+				return null;
 			}
 		}
 
@@ -755,6 +746,25 @@ namespace DOL.GS.Commands
 			client.Out.SendMessage( "Target Mob removed from DB.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
 		}
 
+		private void flags( GameClient client, GameNPC targetMob, string[] args )
+		{
+			if (args.Length == 4)
+				targetMob = FindOID(client, targetMob, args);
+			
+			if ( targetMob == null)
+			{
+					DisplaySyntax( client, args[1] );
+					return;
+			}
+
+			uint flag;
+			uint.TryParse(args[2], out flag);
+			
+			targetMob.Flags =flag;
+			targetMob.SaveIntoDatabase();
+			client.Out.SendMessage( "Mob flags are set to " + targetMob.Flags.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+		}
+		
 		private void ghost( GameClient client, GameNPC targetMob, string[] args )
 		{
 			targetMob.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
