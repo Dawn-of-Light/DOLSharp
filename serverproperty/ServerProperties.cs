@@ -970,17 +970,13 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("npc", "mob_damage_increase_perlevel", "How much damage to increase per level", 0.0)]
 		public static double MOB_DAMAGE_INCREASE_PERLEVEL;
 
-
-
-
-		// custom properties below this  //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		
 		/// <summary>
-		/// List of users allowed to send from IRC
+		/// Minimum respawn time for npc's without a set respawninterval
 		/// </summary>
-		[ServerProperty("Custom", "irc_allowed_sendlist", "Allow players to send/receive irc when in RvR zone", "")]
-		public static string IRC_ALLOWED_SENDLIST;
+		[ServerProperty("npc", "npc_min_respawn_interval", "Minimum respawn time, in minutes, for npc's without a set respawninterval", 5)]
+		public static int NPC_MIN_RESPAWN_INTERVAL;
+
+
 
 		/// <summary>
 		/// This method loads the property from the database and returns
