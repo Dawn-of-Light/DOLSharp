@@ -352,8 +352,12 @@ namespace DOL.GS
 		{
 			lock(Sync)
 			{
-				if(!itemForTrade.IsDropable || !itemForTrade.IsPickable)
-					return false;
+				// allow admin and gm account opened windows to trade any item
+				if (this.m_owner.Client.Account.PrivLevel == 1)
+				{
+					if (!itemForTrade.IsDropable || !itemForTrade.IsPickable)
+						return false;
+				}
 				if (TradeItems.Contains(itemForTrade))
 					return false;
 				if (TradeItems.Count >= MAX_ITEMS)
@@ -361,7 +365,6 @@ namespace DOL.GS
 					TradeUpdate();
 					return false;
 				}
-
 				TradeItems.Add(itemForTrade);
 				TradeUpdate();
 				return true;
