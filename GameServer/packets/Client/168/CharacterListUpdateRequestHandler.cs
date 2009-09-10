@@ -1032,7 +1032,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.AlbionRogue, 	// AlbionRogue = 17,
 						(int)eCharacterClass.Mage, 			// Mage = 18,
 						(int)eCharacterClass.Reaver, 		// Reaver = 19,
-						(int)eCharacterClass.Disciple } ,   // Disciple = 20,
+						(int)eCharacterClass.Disciple,	   // Disciple = 20,
+						(int)eCharacterClass.Heretic, 		// Heretic = 33,
+						(int)eCharacterClass.Mauler_Alb },	// Mauler_Alb = 60,
 					new int[]{
 						(int)eCharacterClass.Thane, 		// Thane = 21,
 						(int)eCharacterClass.Warrior, 		// Warrior = 22,
@@ -1046,12 +1048,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Bonedancer, 	// Bonedancer = 30,
 						(int)eCharacterClass.Berserker, 	// Berserker = 31,
 						(int)eCharacterClass.Savage, 		// Savage = 32,
-						(int)eCharacterClass.Heretic, 		// Heretic = 33,
 						(int)eCharacterClass.Valkyrie, 		// Valkyrie = 34,
 						(int)eCharacterClass.Viking, 		// Viking = 35,
 						(int)eCharacterClass.Mystic, 		// Mystic = 36,
 						(int)eCharacterClass.Seer, 			// Seer = 37,
-						(int)eCharacterClass.MidgardRogue } ,	// MidgardRogue = 38,
+						(int)eCharacterClass.MidgardRogue,	// MidgardRogue = 38,
+						(int)eCharacterClass.Warlock, 		// Warlock = 59,
+						(int)eCharacterClass.Mauler_Mid }, 	// Mauler_Mid = 61,
 					new int[]{
 						(int)eCharacterClass.Bainshee, 		// Bainshee = 39,
 						(int)eCharacterClass.Eldritch, 		// Eldritch = 40,
@@ -1073,10 +1076,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Valewalker, 	// Valewalker = 56,
 						(int)eCharacterClass.Forester, 		// Forester = 57,
 						(int)eCharacterClass.Vampiir, 		// Vampiir = 58,
-						(int)eCharacterClass.Warlock, 		// Warlock = 59,
-						(int)eCharacterClass.Mauler_Alb, 		// Mauler_Alb = 60,
-						(int)eCharacterClass.Mauler_Mid, 		// Mauler_Mid = 61,
-						(int)eCharacterClass.Mauler_Hib }, 		// Mauler_Hib = 62,
+						(int)eCharacterClass.Mauler_Hib } 	// Mauler_Hib = 62,
 				};
 
 				RACES_CLASSES = new int[][]
