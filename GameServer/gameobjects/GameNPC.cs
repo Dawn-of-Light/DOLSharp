@@ -3717,10 +3717,9 @@ namespace DOL.GS
 				if ( m_respawnInterval > 0 || m_respawnInterval < 0 )
 					return m_respawnInterval;
 
-				//Standard 5-8 mins
 				if (Level <= 65 || Realm != 0)
 				{
-					return Util.Random(5 * 60000) + 3 * 60000;
+					return Util.Random(ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL * 60000) + 3 * 60000;
 				}
 				else
 				{
