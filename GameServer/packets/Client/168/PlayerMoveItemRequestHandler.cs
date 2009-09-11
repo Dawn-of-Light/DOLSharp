@@ -111,14 +111,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return 0;
 					}
 
-					if (!item.IsDropable && !(obj is GameNPC && (obj is Blacksmith || obj is Recharger || (obj as GameNPC).CanAcceptUndroppableItems)))
+
+					if(client.Account.PrivLevel == (uint)ePrivLevel.Player && tradeTarget.Client.Account.PrivLevel != (uint)ePrivLevel.Player)
 					{
-						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
-						client.Out.SendMessage("You can not remove this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 0;
+						if(!item.IsDropable && !(obj is GameNPC && (obj is Blacksmith || obj is Recharger || (obj as GameNPC).CanAcceptUndroppableItems)))
+						{
+							client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
+							client.Out.SendMessage("You can not remove this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return 0;
+						}
 					}
 
-					if (tradeTarget != null)
+					if(tradeTarget != null)
 					{
 						tradeTarget.ReceiveTradeItem(client.Player, item);
 						client.Out.SendInventorySlotsUpdate(new int[] { fromSlot });
