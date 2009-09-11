@@ -1330,20 +1330,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Armsman,
 						(int)eCharacterClass.Mercenary,
 						(int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte },//AlbionMenotaur
+						(int)eCharacterClass.Acolyte },//AlbMinotaur
 					new int[] {
 						(int)eCharacterClass.Berserker,
 						(int)eCharacterClass.Mauler_Mid,
 						(int)eCharacterClass.Thane,
 						(int)eCharacterClass.Viking,
-						(int)eCharacterClass.Seer }, //MidgardMenotaur
+						(int)eCharacterClass.Warrior }, //MidMinotaur
 					new int[] {
 						(int)eCharacterClass.Hero,
 						(int)eCharacterClass.Blademaster,
 						(int)eCharacterClass.Mauler_Hib,
 						(int)eCharacterClass.Warden,
 						(int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Naturalist }, //HiberniaMenotaur
+						(int)eCharacterClass.Naturalist }, //HibMinotaur
 				};
 			}
 		}
