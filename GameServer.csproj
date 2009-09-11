@@ -223,6 +223,7 @@
     <Compile Include="commands\PlayerCommands\chatgroup.cs" />
     <Compile Include="commands\PlayerCommands\cloak.cs" />
     <Compile Include="commands\PlayerCommands\cmdhelp.cs" />
+    <Compile Include="commands\PlayerCommands\filter.cs" />
     <Compile Include="commands\playercommands\realm.cs" />
     <Compile Include="commands\playercommands\relic.cs" />
     <Compile Include="commands\PlayerCommands\roleplay.cs" />
