@@ -214,17 +214,17 @@ namespace DOL.GS
 			}
 		}
 
-		public void AutoSetStats()
+		public virtual void AutoSetStats()
 		{
-			Strength = (short)( 20 + Level * 5 );
-			Constitution = (short)( 20 + Level * 3 );
-			Dexterity = (short)( 20 + Level * 2 );
-			Quickness = (short)Math.Min( 150, 5 + ( Level * 2 ) );
+			Strength = (short)( 20 + Level * 6 );
+			Constitution = 30;
+			Dexterity = 30;
+			Quickness = 30;
 
-			Intelligence = (short)( 20 + Level * 4 );
-			Empathy = (short)( 20 + Level * 4 );
-			Piety = (short)( 20 + Level * 4 );
-			Charisma = (short)( 20 + Level * 4 );
+			Intelligence = 30;
+			Empathy = 30;
+			Piety = 30;
+			Charisma = 30;
 		}
 
 		/// <summary>
