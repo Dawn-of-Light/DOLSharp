@@ -206,9 +206,13 @@ namespace DOL.GS
 				((GamePlayer)living).Out.SendQuestListUpdate();
 			}
 			UpdateGroupWindow();
-			if (living is GamePlayer)
-				((GamePlayer)living).Out.SendMessage("You leave your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			SendMessageToGroupMembers(living.Name + " has left the group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            if (living is GamePlayer)
+            {
+                GamePlayer player = (GamePlayer)living;
+                player.Out.SendMessage("You leave your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Notify(GamePlayerEvent.LeaveGroup, player);
+            }
+            SendMessageToGroupMembers(living.Name + " has left the group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			// only one player left?
 			if (MemberCount == 1)

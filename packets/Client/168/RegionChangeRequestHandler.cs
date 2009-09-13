@@ -65,18 +65,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Account.PrivLevel > 1)
 				client.Out.SendMessage("JumpSpotID = " + JumpSpotID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-			Region reg = WorldMgr.GetRegion(zonePoint.Region);
-			if (reg != null)
-			{
-				if (reg.IsDisabled)
-				{
-					if ((client.Player.Mission is Quests.TaskDungeonMission && (client.Player.Mission as Quests.TaskDungeonMission).TaskRegion.Description == reg.Description) == false)
-					{
-						client.Out.SendMessage("This region has been disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
-					}
-				}
-			}
+            //Dinberg: Fix - some jump points are handled code side, such as instances.
+            //As such, region MAY be zero in the database, so this causes an issue.
+            if (zonePoint.Region != 0)
+            {
+                Region reg = WorldMgr.GetRegion(zonePoint.Region);
+                if (reg != null)
+                {
+                    if (reg.IsDisabled)
+                    {
+                        if ((client.Player.Mission is Quests.TaskDungeonMission && (client.Player.Mission as Quests.TaskDungeonMission).TaskRegion.Skin == reg.Skin) == false)
+                        {
+                            client.Out.SendMessage("This region has been disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                    }
+                }
+            }
 
 			//check caps for battleground
 			Battleground bg = Keeps.KeepMgr.GetBattleground(zonePoint.Region);
@@ -190,18 +195,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return;
 					}
 				}
-				//Region r = WorldMgr.GetRegion(m_zonePoint.Region);
-
-                //Dinberg - marked this for deletion.
-                //Seeking to remove MoveToInstance, because its effectively just MoveTo at the moment.
-
-				//if (r != null && r.IsInstance && player.Mission is Quests.TaskDungeonMission)
-				//	player.MoveToInstance((player.Mission as Quests.TaskDungeonMission).TaskRegion, m_zonePoint.X, m_zonePoint.Y, m_zonePoint.Z, m_zonePoint.Heading);
-				//else
-				//{
-                    //Mission expiring is handled within the instance zoning handler now.
-					player.MoveTo(m_zonePoint.Region, m_zonePoint.X, m_zonePoint.Y, m_zonePoint.Z, m_zonePoint.Heading);
-				//}
+				player.MoveTo(m_zonePoint.Region, m_zonePoint.X, m_zonePoint.Y, m_zonePoint.Z, m_zonePoint.Heading);
 			}
 		}
 	}
