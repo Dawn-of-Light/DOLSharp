@@ -371,7 +371,7 @@ namespace DOL.GS.Spells
                     if (step2 < 1)
                         step2 = 1;
 
-                    if (Caster is GamePlayer && (Caster as GamePlayer).Client.Account.PrivLevel >= 3)
+                    if (Caster is GamePlayer && (Caster as GamePlayer).Client.Account.PrivLevel >= 3 && ServerProperties.Properties.ENABLE_DEBUG)
                         (Caster as GamePlayer).Out.SendMessage("[DEBUG] step1=" + step1 + "   step2=" + step2 + "   step3=" + step3, eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     
                     m_castTimer = new DelayedCastTimer(Caster, this, target, step2, step3);
@@ -2988,7 +2988,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual double GetLevelModFactor()
 		{
-			return 0.085; // 8.5% diff per level distance
+			return 0.02;  // Live testing done Summer 2009 by Bluraven, Tolakram  Levels 40, 45, 50, 55, 60, 65, 70
 		}
 
 		/// <summary>
@@ -3034,19 +3034,20 @@ namespace DOL.GS.Spells
 			// add level mod
 			if (m_caster is GamePlayer)
 			{
-				min += GetLevelModFactor() * (m_caster.Level - target.Level);
-				max += GetLevelModFactor() * (m_caster.Level - target.Level);
+			    min += GetLevelModFactor() * (m_caster.Level - target.Level);
+			    max += GetLevelModFactor() * (m_caster.Level - target.Level);
 			}
 			else if (m_caster is GameNPC && ((GameNPC)m_caster).Brain is IControlledBrain)
 			{
-				//Get the root owner
-				GamePlayer owner = ((IControlledBrain)((GameNPC)m_caster).Brain).GetPlayerOwner();
-				if (owner != null)
-				{
-					min += GetLevelModFactor() * (owner.Level - target.Level);
-					max += GetLevelModFactor() * (owner.Level - target.Level);
-				}
+			    //Get the root owner
+			    GamePlayer owner = ((IControlledBrain)((GameNPC)m_caster).Brain).GetPlayerOwner();
+			    if (owner != null)
+			    {
+			        min += GetLevelModFactor() * (owner.Level - target.Level);
+			        max += GetLevelModFactor() * (owner.Level - target.Level);
+			    }
 			}
+
 			if (max < 0.25)
 				max = 0.25;
 			if (min > max)
@@ -3117,22 +3118,20 @@ namespace DOL.GS.Spells
 			if (spellLevel > 50)
 				spellLevel = 50;
 
+			GameSpellEffect effect = FindEffectOnTarget(m_caster, "HereticPiercingMagic");
+			spellLevel = Spell.Level;
+			if (effect != null)
+			{
+				spellLevel += (int)effect.Spell.Value;
+			}
+
 			//Andraste
 			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect
 				|| m_spellLine.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
 					spellLevel = 50; // why not have spell in db at 50 level ?
 
-			int speclevel = 1;
-			int manastat = 0;
 			int bonustohit = m_caster.GetModified(eProperty.ToHitBonus);
-			if (caster is GamePlayer)
-			{
-				GamePlayer player = caster as GamePlayer;
-				speclevel = player.GetBaseSpecLevel(m_spellLine.Spec);
-				if (player.CharacterClass.ManaStat != eStat.UNDEFINED)
-					manastat = player.GetModified((eProperty)player.CharacterClass.ManaStat);
-				bonustohit += (int)(speclevel * 0.1 + manastat * 0.01);
-			}
+
 			//Piercing Magic affects to-hit bonus too
 			GameSpellEffect resPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
 			if (resPierce != null)
@@ -3140,6 +3139,8 @@ namespace DOL.GS.Spells
 
 			/*
 			http://www.camelotherald.com/news/news_article.php?storyid=704
+			
+			Q: Spell resists. Can you give me more details as to how the system works?
 
 			A: Here's the answer, straight from the desk of the spell designer:
 
@@ -3149,13 +3150,15 @@ namespace DOL.GS.Spells
 			If the chance to hit goes over 100% damage or duration is increased, and if it goes below 55%, you still have a 55% chance to hit but your damage 
 			or duration is penalized. If the chance to hit goes below 0, you cannot hit at all. Once the spell hits, damage and duration are further modified 
 			by resistances.
+			
+			Note:  The last section about maintaining a chance to hit of 55% has been proven incorrect with live testing.  The code below is very close to live like.
+					- Tolakram
 			*/
 
 			int hitchance = 85 + ((spellLevel - target.Level) >> 1) + bonustohit;
 
 			if (!(caster is GamePlayer && target is GamePlayer))
 			{
-				// level mod
 				hitchance -= (int)(m_caster.GetConLevel(target) * ServerProperties.Properties.PVE_SPELL_CONHITPERCENT);
 			}
 
@@ -3207,24 +3210,21 @@ namespace DOL.GS.Spells
 				effectiveness += m_caster.GetModified((Spell.SpellType != "Archery" ? eProperty.SpellDamage : eProperty.RangedDamage)) * 0.01;
 
 			spellDamage *= m_caster.Effectiveness;
+
 			int finalDamage = Util.Random((int)(minVariance * spellDamage), (int)(maxVariance * spellDamage));
 
+			// Live testing done Summer 2009 by Bluraven, Tolakram  Levels 40, 45, 50, 55, 60, 65, 70
+			// Damage reduced by chance < 55, no extra damage increase noted with hitchance > 100
 			int hitChance = CalculateToHitChance(ad.Target);
 			if (hitChance < 55)
 			{
-				finalDamage += (int)(finalDamage * (hitChance - 55) * 0.01);
-				hitChance = 55;
-
-			}
-			else if (hitChance > 100)
-			{
-				finalDamage += (int)(finalDamage * (hitChance - 100) * 0.01);
-				hitChance = 100;
+				finalDamage += (int)(finalDamage * (hitChance - 55) * 4.3 * 0.01);
 
 			}
 
 			// apply effectiveness
 			finalDamage = (int)(finalDamage * effectiveness);
+
 			if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)))
 			{
 				if (target is GamePlayer)

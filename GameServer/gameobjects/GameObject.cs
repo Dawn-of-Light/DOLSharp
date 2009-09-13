@@ -943,21 +943,21 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Calculate con-level against other compareLevel
-		/// &lt;=-3 = grey
+		/// -3- = grey
 		/// -2 = green
 		/// -1 = blue  (compareLevel is 1 con lower)
 		/// 0 = yellow (same level)
 		/// 1 = orange (compareLevel is 1 con higher)
 		/// 2 = red
-		/// &gt;=3 = violet
+		/// 3+ = violet
 		/// </summary>
 		/// <returns>conlevel</returns>
 		public static double GetConLevel(int level, int compareLevel)
 		{
 			int constep = Math.Max(1, (level + 9) / 10);
 			double stepping = 1.0 / constep;
-			int leveldiff = level - compareLevel + 1;
-			return 1.0 - leveldiff * stepping;
+			int leveldiff = level - compareLevel;
+			return 0 - leveldiff * stepping;
 		}
 
 		/// <summary>
