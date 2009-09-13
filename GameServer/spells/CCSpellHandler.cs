@@ -129,6 +129,28 @@ namespace DOL.GS.Spells
 					mocFactor = System.Math.Round((double)ra.Level * 25 / 100, 2);
 				duration = (double)Math.Round(duration * mocFactor);
 			}
+
+
+			if (Spell.SpellType.ToLower() != "stylestun")
+			{
+				// capping duration adjustment to 100%, live cap unknown - Tolakram
+				int hitChance = Math.Min(200, CalculateToHitChance(target));
+
+				if (hitChance <= 0)
+				{
+					duration = 0;
+				}
+				else if (hitChance < 55)
+				{
+					duration -= (int)(duration * (55 - hitChance) * 0.01);
+				}
+				else if (hitChance > 100)
+				{
+					duration += (int)(duration * (hitChance - 100) * 0.01);
+				}
+			}
+
+
 			return (int)duration;
 		}
 
@@ -149,8 +171,11 @@ namespace DOL.GS.Spells
                 return 0;
             if (HasPositiveEffect)
                 return 0;
+
+			int hitchance = CalculateToHitChance(target);
+
             //Calculate the Resistchance
-            resistvalue = (100 - CalculateToHitChance(target) + resist);
+            resistvalue = (100 - hitchance + resist);
             if (resistvalue > 100)
                 resistvalue = 100;
 			//use ResurrectHealth=1 if the CC should not be resisted

@@ -16,24 +16,6 @@ namespace DOL.GS.Spells
             base.FinishSpellCast(target);
             focustarget = target;
         }
-		public override int CalculateToHitChance(GameLiving target)
-		{
-			GameSpellEffect effect = FindEffectOnTarget(m_caster, "HereticPiercingMagic");
-			int spellLevel;
-			spellLevel = Spell.Level;
-			if(effect != null)
-			{
-				spellLevel += (int)effect.Spell.Value;
-			}
-		
-			int hitchance = 85 + ((spellLevel - target.Level) >> 1);
-			if (!(m_caster is GamePlayer && target is GamePlayer)) 
-			{
-				// level mod
-				hitchance -= (int)(m_caster.GetConLevel(target)*10);
-			}
-			return hitchance;
-		}
         public override void OnEffectStart(GameSpellEffect effect)
         {
             base.OnEffectStart(effect);
