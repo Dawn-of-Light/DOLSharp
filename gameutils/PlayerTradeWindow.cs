@@ -552,6 +552,11 @@ namespace DOL.GS
 
 						//Update our tradewindow and return
 						TradeUpdate();
+
+                        //This was already removed above, needs to be returned to the players on trade failure.
+                        m_owner.AddMoney(TradeMoney);
+                        partner.AddMoney(m_partnerWindow.TradeMoney);
+
 						return false;
 					}
 
