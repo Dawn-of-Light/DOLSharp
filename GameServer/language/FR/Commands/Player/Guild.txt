@@ -63,7 +63,7 @@ Scripts.Player.Guild.GuildLeave:			Vous venez de quitter la guilde.
 Scripts.Player.Guild.GuildLevelReq:			Votre guilde n'est pas assez haut niveau pour cette commande.	
 Scripts.Player.Guild.GuildNotExist:			Cette guilde n'existe pas.	
 Scripts.Player.Guild.Help.GuildACancel:			'/gc acancel' Annule une invitation au sein d'une alliance.	
-Scripts.Player.Guild.Help.GuildAccept:			'/gc aaccept' Accepte une invitation au sein d'une alliance.
+Scripts.Player.Guild.Help.GuildAAccept:			'/gc aaccept' Accepte une invitation au sein d'une alliance.
 Scripts.Player.Guild.Help.GuildAccept:			'/gc accept ' Accepte une invitation au sein d'une guilde.	
 Scripts.Player.Guild.Help.GuildADecline:		'/gc adecline' Décline une invitation au sein d'une alliance.	
 Scripts.Player.Guild.Help.GuildAInvite:			'/gc ainvite' Invite une autre guilde à rejoindre l'alliance.	
