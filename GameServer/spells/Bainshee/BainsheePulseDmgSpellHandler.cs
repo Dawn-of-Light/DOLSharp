@@ -205,17 +205,6 @@ namespace DOL.GS.Spells
 		}
 		#endregion
 
-		/// <summary>
-		/// Calculates chance of spell getting resisted
-		/// </summary>
-		/// <param name="target">the target of the spell</param>
-		/// <returns>chance that spell will be resisted for specific target</returns>
-        public override int CalculateSpellResistChance(GameLiving target)
-        {
-			// hit chance can't be lower than 55% (?)
-			return Math.Min(45, 100-CalculateToHitChance(target));
-		}
-
 		// constructor
         public BainsheePulseDmgSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
