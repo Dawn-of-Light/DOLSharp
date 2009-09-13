@@ -25,13 +25,13 @@ namespace DOL.Events
 	/// </summary>
 	public class WhisperEventArgs : SayEventArgs
 	{
-		private GameLiving target;
+		private GameObject target;
 		/// <summary>
 		/// Constructs a new WhisperEventArgs
 		/// </summary>
 		/// <param name="target">the target of the whisper</param>
 		/// <param name="text">the text being whispered</param>
-		public WhisperEventArgs(GameLiving target, string text) : base(text)
+		public WhisperEventArgs(GameObject target, string text) : base(text)
 		{
 			this.target = target;
 		}
@@ -39,7 +39,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the target of the whisper
 		/// </summary>
-		public GameLiving Target
+		public GameObject Target
 		{
 			get { return target; }
 		}

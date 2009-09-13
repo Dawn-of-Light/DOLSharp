@@ -47,10 +47,6 @@ namespace DOL.GS.Commands
 
             int result = 0;
             GameClient fclient = WorldMgr.GuessClientByPlayerNameAndRealm(name, 0, false, out result);
-            if (fclient != null && !GameServer.ServerRules.IsSameRealm(fclient.Player, client.Player, true))
-            {
-                fclient = null;
-            }
 
             if (fclient == null)
             {

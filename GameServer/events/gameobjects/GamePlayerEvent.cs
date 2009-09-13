@@ -146,6 +146,10 @@ namespace DOL.Events
         /// The AcceptGroup event is fired whenever the player accept a Group invitation.
         /// </summary>
         public static readonly GamePlayerEvent AcceptGroup = new GamePlayerEvent("GamePlayer.AcceptGroup");
+        /// <summary>
+        /// The LeaveGroup event is fired when the player disbands/is removed from a group.
+        /// </summary>
+        public static readonly GamePlayerEvent LeaveGroup = new GamePlayerEvent("GamePlayer.LeaveGroup");
 
 		public static readonly GamePlayerEvent NextCraftingTierReached = new GamePlayerEvent("GamePlayer.ReachedNewCraftTitle");
 
