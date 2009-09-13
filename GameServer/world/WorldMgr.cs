@@ -2011,7 +2011,7 @@ namespace DOL.GS
                 return null;
             }
 
-            Instance instance = null;
+            BaseInstance instance = null;
 
             //To create the instance, we need to select the region relevant to the SkinID.
             RegionData data = (RegionData)m_regionData[skinID];
@@ -2077,7 +2077,7 @@ namespace DOL.GS
                 //Having selected the data we need, create the Instance.
                 try
                 {
-                    instance = (Instance)info.Invoke(new object[] { ID, time, data });//new Instance(ID, time, data); 
+                    instance = (BaseInstance)info.Invoke(new object[] { ID, time, data });//new Instance(ID, time, data); 
                     m_regions.Add(ID, instance);
                 }
                 catch (Exception e)

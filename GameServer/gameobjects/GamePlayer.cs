@@ -8492,7 +8492,7 @@ namespace DOL.GS
 		/// <param name="target">GameLiving to whisper to</param>
 		/// <param name="str">string to whisper</param>
 		/// <returns>true if whispered successfully</returns>
-		public override bool Whisper(GameLiving target, string str)
+		public override bool Whisper(GameObject target, string str)
 		{
 			if (target == null)
 			{
@@ -8683,9 +8683,9 @@ namespace DOL.GS
 				SpecPointsOk = true;
 			}
 
-			//Dinberg, instance change.
-			if (CurrentRegion is Instance)
-				((Instance)CurrentRegion).OnPlayerEnterInstance(this);
+            //Dinberg, instance change.
+            if (CurrentRegion is BaseInstance)
+                ((BaseInstance)CurrentRegion).OnPlayerEnterInstance(this);
 
 			return true;
 		}
@@ -8726,9 +8726,9 @@ namespace DOL.GS
 			if (IsOnHorse)
 				IsOnHorse = false;
 
-			//Dinberg, instance change.
-			if (CurrentRegion is Instance)
-				((Instance)CurrentRegion).OnPlayerLeaveInstance(this);
+            //Dinberg, instance change.
+            if (CurrentRegion is BaseInstance)
+                ((BaseInstance)CurrentRegion).OnPlayerLeaveInstance(this);
 
 			return true;
 		}

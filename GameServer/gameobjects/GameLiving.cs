@@ -5537,13 +5537,13 @@ namespace DOL.GS
 		/// <param name="target">The target of the whisper</param>
 		/// <param name="str">text to whisper (without any "xxx whispers:" in front!!!)</param>
 		/// <returns>true if text was whispered successfully</returns>
-		public virtual bool Whisper(GameLiving target, string str)
+		public virtual bool Whisper(GameObject target, string str)
 		{
 			if (target == null || str == null) return false;
 			if (!this.IsWithinRadius(target, WorldMgr.WHISPER_DISTANCE))
 				return false;
 			Notify(GameLivingEvent.Whisper, this, new WhisperEventArgs(target, str));
-			return target.WhisperReceive(this, str);
+            return (target is GameLiving) ? ((GameLiving)target).WhisperReceive(this, str) : false;
 		}
 		/// <summary>
 		/// Makes this living do an emote-animation
