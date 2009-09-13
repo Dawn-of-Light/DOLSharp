@@ -603,10 +603,11 @@ Scripts.Player.Guild.GuildLeave:			You have left your guild.
 Scripts.Player.Guild.GuildLevelReq:			Your guild is not high enough level for this command.	
 Scripts.Player.Guild.GuildNotExist:			That guild does not exist.	
 Scripts.Player.Guild.Help.GuildACancel:			'/gc acancel' to cancel an alliance invitation	
-Scripts.Player.Guild.Help.GuildAccept:			'/gc aaccept' to accept an alliance invitation	
+Scripts.Player.Guild.Help.GuildAAccept:			'/gc aaccept' to accept an alliance invitation	
 Scripts.Player.Guild.Help.GuildAccept:			'/gc accept ' to accept invite to guild	
 Scripts.Player.Guild.Help.GuildADecline:		'/gc adecline' to decline an alliance invitation	
 Scripts.Player.Guild.Help.GuildAInvite:			'/gc ainvite' to invite another guild to join your alliance	
+Scripts.Player.Guild.Help.GuildALeave:			'/gc aleave' to remove your guild from an alliance
 Scripts.Player.Guild.Help.GuildAlli:			'/gc alliance' to show information on the alliance	
 Scripts.Player.Guild.Help.GuildAMotd:			'/gc amotd <text>' to set the message of the day of the alliance's guild	
 Scripts.Player.Guild.Help.GuildARemove:			'/gc aremove' to removes your entire guild from an alliance	
