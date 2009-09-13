@@ -25,7 +25,8 @@ namespace DOL.GS.Commands
 		"&heal",
 		ePrivLevel.GM,
 		"GMCommands.Heal.Description",
-		"GMCommands.Heal.Usage")]
+		"GMCommands.Heal.Usage",
+		"/heal me - heals self")]
 	public class HealCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -34,7 +35,7 @@ namespace DOL.GS.Commands
 			{
 				GameLiving target = client.Player.TargetObject as GameLiving;
 				
-				if (target == null)
+				if (target == null || (args.Length > 1 && args[1].ToLower() == "me"))
 					target = (GameLiving)client.Player;
 
 				target.Health = target.MaxHealth;
