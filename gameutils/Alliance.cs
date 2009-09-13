@@ -80,14 +80,34 @@ namespace DOL.GS
 			lock (Guilds.SyncRoot)
 			{
 				myguild.alliance = null;
-				Guilds.Remove(myguild);
 				myguild.AllianceId = "";
-				m_dballiance.DBguilds = null;
-				GameServer.Database.SaveObject(m_dballiance);
-				GameServer.Database.FillObjectRelations(m_dballiance);
+                Guilds.Remove(myguild);
+                if (myguild.GuildID == m_dballiance.DBguildleader.GuildID)
+                {
+                    SendMessageToAllianceMembers(myguild.Name + " has disbanded the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+                    ArrayList mgl = new ArrayList(Guilds);
+                    foreach (Guild mg in mgl)
+                    {
+                        try
+                        {
+                            RemoveGuild(mg);
+                        }
+                        catch (Exception e)
+                        {
+                        }
+                    }
+                    GameServer.Database.DeleteObject(m_dballiance);
+                }
+                else
+                {
+                    m_dballiance.DBguilds = null;
+                    GameServer.Database.SaveObject(m_dballiance);
+                    GameServer.Database.FillObjectRelations(m_dballiance);
+                }
 				//sirru 23.12.06 save changes to db for each guild
 				myguild.SaveIntoDatabase();
-				SendMessageToAllianceMembers(myguild.Name + " has left the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+                myguild.SendMessageToGuildMembers(myguild.Name + " has left the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+                SendMessageToAllianceMembers(myguild.Name + " has left the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
 		}
 		public void Clear()
