@@ -90,6 +90,7 @@ namespace DOL.GS
                             //move to the next entry, nothing more to do here...
                             continue;
                         }
+                    case "region": continue; //This is used to save the regionID as NPCTemplate.
                     case "DOL.GS.GameNPC": break;
                     default: theType = entry.ClassType; break;
                 }

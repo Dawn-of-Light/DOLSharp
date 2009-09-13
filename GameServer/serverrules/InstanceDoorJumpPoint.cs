@@ -39,7 +39,7 @@ namespace DOL.GS.ServerRules
         public bool IsAllowedToJump(ZonePoint targetPoint, GamePlayer player)
         {
             if (player.CurrentRegion is BaseInstance == false)
-                return false;
+                return true;
 
             if (((BaseInstance)player.CurrentRegion).OnInstanceDoor(player, targetPoint.Id))
                 return true;
