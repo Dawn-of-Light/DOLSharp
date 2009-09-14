@@ -93,7 +93,9 @@ namespace DOL.GS.Commands
 	     "'/mob cloak' toggle cloak visibility",
 	     "'/mob bodytype <ID>' changing the mob's bodytype",
 	     "'/mob gender <0 = neutral | 1 = male | 2 = female>' set gender for this mob",
-	     "'/mob select' select the mob within 100 radius (used for selection of non-targettable GameNPC)"
+	     "'/mob select' select the mob within 100 radius (used for selection of non-targettable GameNPC)",
+         "'/mob reload <name>' reload the targetted or named mob(s) from the database",
+         "'/mob findname <name> <#>' search for a mob with a name like <name> with maximum <#> (def. 10) matches"
 	    )]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -119,6 +121,8 @@ namespace DOL.GS.Commands
 			    && args[1] != "model"
 			    && args[1] != "copy"
 			    && args[1] != "select"
+                && args[1] != "reload"
+                && args[1] != "findname"
 			    && targetMob == null )
 			{
 				// it is not a mob
@@ -138,54 +142,54 @@ namespace DOL.GS.Commands
 
 			switch (args[1])
 			{
-					case "create": create( client, args ); break;
-					case "fastcreate": fastcreate( client, args ); break;
-					case "nfastcreate": nfastcreate( client, args ); break;
-					case "nrandcreate": nrandcreate( client, args ); break;
-					case "model": model( client, targetMob, args ); break;
-					case "size": size( client, targetMob, args ); break;
-					case "name": name( client, targetMob, args ); break;
-					case "guild": guild( client, targetMob, args ); break;
-					case "peace": peace( client, targetMob, args ); break;
-					case "aggro": aggro( client, targetMob, args ); break;
-					case "range": range( client, targetMob, args ); break;
-					case "distance": distance( client, targetMob, args ); break;
-					case "roaming": roaming( client, targetMob, args ); break;
-					case "damagetype": damagetype( client, targetMob, args ); break;
-					case "movehere": movehere( client, targetMob, args ); break;
-					case "remove": remove( client, targetMob, args ); break;
+				case "create": create( client, args ); break;
+				case "fastcreate": fastcreate( client, args ); break;
+				case "nfastcreate": nfastcreate( client, args ); break;
+				case "nrandcreate": nrandcreate( client, args ); break;
+				case "model": model( client, targetMob, args ); break;
+				case "size": size( client, targetMob, args ); break;
+				case "name": name( client, targetMob, args ); break;
+				case "guild": guild( client, targetMob, args ); break;
+				case "peace": peace( client, targetMob, args ); break;
+				case "aggro": aggro( client, targetMob, args ); break;
+				case "range": range( client, targetMob, args ); break;
+				case "distance": distance( client, targetMob, args ); break;
+				case "roaming": roaming( client, targetMob, args ); break;
+				case "damagetype": damagetype( client, targetMob, args ); break;
+				case "movehere": movehere( client, targetMob, args ); break;
+				case "remove": remove( client, targetMob, args ); break;
 				case "transparent": // deprecated, use "ghost"
-					case "ghost": ghost( client, targetMob, args ); break;
-					case "stealth": stealth( client, targetMob, args ); break;
-					case "fly": fly( client, targetMob, args ); break;
-					case "noname": noname( client, targetMob, args ); break;
-					case "notarget": notarget( client, targetMob, args ); break;
-					case "kill": kill( client, targetMob, args ); break;
-					case "flags": flags(client, targetMob, args); break;
+				case "ghost": ghost( client, targetMob, args ); break;
+				case "stealth": stealth( client, targetMob, args ); break;
+				case "fly": fly( client, targetMob, args ); break;
+				case "noname": noname( client, targetMob, args ); break;
+				case "notarget": notarget( client, targetMob, args ); break;
+				case "kill": kill( client, targetMob, args ); break;
+				case "flags": flags(client, targetMob, args); break;
 				case "regen":  // deprecated, use "heal"
-					case "heal": heal( client, targetMob, args ); break;
-					case "attack": attack( client, targetMob, args ); break;
-					case "info": info( client, targetMob, args ); break;
-					case "stats": stats( client, targetMob, args ); break;
-					case "realm": realm( client, targetMob, args ); break;
-					case "speed": speed( client, targetMob, args ); break;
-					case "level": level( client, targetMob, args ); break;
-					case "levela": levela(client, targetMob, args); break;
-					case "brain": brain(client, targetMob, args); break;
-					case "respawn": respawn( client, targetMob, args ); break;
-					case "questinfo": questinfo( client, targetMob, args ); break;
-					case "equipinfo": equipinfo( client, targetMob, args ); break;
-					case "equiptemplate": equiptemplate( client, targetMob, args ); break;
-					case "dropcount": dropcount( client, targetMob, args ); break;
-					case "addloot": addloot( client, targetMob, args ); break;
-					case "viewloot": viewloot( client, targetMob, args ); break;
-					case "removeloot": removeloot( client, targetMob, args ); break;
-					case "refreshloot": refreshloot( client, targetMob, args ); break;
-					case "copy": copy( client, targetMob, args ); break;
-					case "npctemplate": npctemplate( client, targetMob, args ); break;
-					case "class": setClass( client, targetMob, args ); break;
-					case "path": path( client, targetMob, args ); break;
-					case "house": house( client, targetMob, args ); break;
+				case "heal": heal( client, targetMob, args ); break;
+				case "attack": attack( client, targetMob, args ); break;
+				case "info": info( client, targetMob, args ); break;
+				case "stats": stats( client, targetMob, args ); break;
+				case "realm": realm( client, targetMob, args ); break;
+				case "speed": speed( client, targetMob, args ); break;
+				case "level": level( client, targetMob, args ); break;
+				case "levela": levela(client, targetMob, args); break;
+				case "brain": brain(client, targetMob, args); break;
+				case "respawn": respawn( client, targetMob, args ); break;
+				case "questinfo": questinfo( client, targetMob, args ); break;
+				case "equipinfo": equipinfo( client, targetMob, args ); break;
+				case "equiptemplate": equiptemplate( client, targetMob, args ); break;
+				case "dropcount": dropcount( client, targetMob, args ); break;
+				case "addloot": addloot( client, targetMob, args ); break;
+				case "viewloot": viewloot( client, targetMob, args ); break;
+				case "removeloot": removeloot( client, targetMob, args ); break;
+				case "refreshloot": refreshloot( client, targetMob, args ); break;
+				case "copy": copy( client, targetMob, args ); break;
+				case "npctemplate": npctemplate( client, targetMob, args ); break;
+				case "class": setClass( client, targetMob, args ); break;
+				case "path": path( client, targetMob, args ); break;
+				case "house": house( client, targetMob, args ); break;
 				case "str":
 				case "con":
 				case "dex":
@@ -193,13 +197,15 @@ namespace DOL.GS.Commands
 				case "int":
 				case "emp":
 				case "pie":
-					case "cha": stat( client, targetMob, args ); break;
-					case "tether": tether( client, targetMob, args ); break;
-					case "hood": hood( client, targetMob, args ); break;
-					case "cloak": cloak( client, targetMob, args ); break;
-					case "bodytype": bodytype(client, targetMob, args); break;
-					case "gender": gender(client, targetMob, args); break;
-					case "select": select(AUTOSELECT_RADIUS, client);break;
+				case "cha": stat( client, targetMob, args ); break;
+				case "tether": tether( client, targetMob, args ); break;
+				case "hood": hood( client, targetMob, args ); break;
+				case "cloak": cloak( client, targetMob, args ); break;
+				case "bodytype": bodytype(client, targetMob, args); break;
+				case "gender": gender(client, targetMob, args); break;
+				case "select": select(AUTOSELECT_RADIUS, client);break;
+                case "reload": reload(client, targetMob, args); break;
+                case "findname": findname(client, args); break;
 				default:
 					DisplaySyntax( client );
 					return;
@@ -2129,5 +2135,69 @@ namespace DOL.GS.Commands
 			}
 			return null;
 		}
+
+        private void reload(GameClient client, GameNPC targetMob, string[] args)
+        {
+            ArrayList mobs = new ArrayList();
+            // Find the mob(s) to reload.
+            if (args.Length > 2)
+            {
+                // Reload the mob(s)
+                for (eRealm i = eRealm._First; i <= eRealm._Last; i++)
+                {
+                    mobs.Add(WorldMgr.GetNPCsByName(args[2], i));
+                }
+                foreach (GameNPC[] ma in mobs)
+                {
+                    foreach (GameNPC n in ma)
+                    {
+                        n.RemoveFromWorld();
+                        n.LoadFromDatabase(GameServer.Database.FindObjectByKey(typeof(Mob), n.InternalID));
+                        n.AddToWorld();
+                        client.Player.Out.SendMessage(n.Name + " reloaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
+                }
+            }
+            else if (targetMob != null)
+            {
+                // Reload the target
+                targetMob.RemoveFromWorld();
+                targetMob.LoadFromDatabase(GameServer.Database.FindObjectByKey(typeof(Mob), targetMob.InternalID));
+                targetMob.AddToWorld();
+                client.Player.Out.SendMessage(targetMob.Name + " reloaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+        }
+
+        private void findname(GameClient client, string[] args)
+        {
+            if (args.Length < 3)
+                return;
+
+            int maxreturn;
+            try
+            {
+                maxreturn = Convert.ToInt32(args[3]);
+                maxreturn = Math.Min(60, maxreturn); //Too much would probably packet overflow anyway.
+            }
+            catch (Exception)
+            {
+                maxreturn = 10;
+            }
+
+            Mob[] mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob), "name like '%" + GameServer.Database.Escape(args[2]) + "%' order by level desc limit " + maxreturn.ToString());
+            if (mobs != null && mobs.Length > 0)
+            {
+                string mnames = "Found : \n";
+                for (int i = 0; i < mobs.Length; i++)
+                {
+                    mnames = mnames + mobs[i].Name + "\n";
+                }
+                client.Player.Out.SendMessage(mnames, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            else
+            {
+                client.Player.Out.SendMessage("No matches found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+        }
 	}
 }
