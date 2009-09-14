@@ -4876,7 +4876,7 @@ namespace DOL.GS
 			if (InCombat)
 			{
 				// rate in combat is 10 seconds per tic
-				return (int)(m_powerRegenerationPeriod * 3.333);
+				return (int)(10000);
 			}
 
 			//regen at standard rate
