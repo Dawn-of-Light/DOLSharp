@@ -60,6 +60,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					//If the charname is empty, skip the other bytes
 					packet.Skip(160);
+					if (client.Version >= GameClient.eClientVersion.Version199)
+					{
+						// skip 4 bytes added in 1.99
+						packet.Skip(4);
+					}
 				}
 				else
 				{
@@ -128,7 +133,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 								stats[6] = (byte)packet.ReadByte(); // Empathy
 								stats[7] = (byte)packet.ReadByte(); // Charisma
 								packet.Skip(43);// armor models/armor color/weapon models/active weapon slots/siZone
-								//stats[1] = (byte)packet.ReadByte(); // Constitution
+								if (client.Version >= GameClient.eClientVersion.Version199)
+								{
+									// skip 4 bytes added in 1.99
+									packet.Skip(4);
+								}
 								byte newConstitution = (byte)packet.ReadByte();
 								if (newConstitution > 0)
 									stats[1] = newConstitution;
@@ -224,7 +233,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 												return 1;
 											}
 										}
-										if (valid/* && client.Account.PrivLevel > 1*/)
+										if (valid)
 										{
 											character.Strength = (byte)stats[0];
 											character.Constitution = (byte)stats[1];
@@ -275,6 +284,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 							else
 							{
 								packet.Skip(58); // skip all other things
+								if (client.Version >= GameClient.eClientVersion.Version199)
+								{
+									// skip 4 bytes added in 1.99
+									packet.Skip(4);
+								}
 							}
 							if (customization == 2) // change player customization
 							{
@@ -458,7 +472,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						ch.Region = packet.ReadByte();
 						packet.Skip(1); //TODO second byte of region unused currently
 						packet.Skip(4); //TODO Unknown Int / last used?
-						//packet.Skip(8); //TODO stats
 						ch.Strength = (byte)packet.ReadByte();
 						ch.Dexterity = (byte)packet.ReadByte();
 						ch.Constitution = (byte)packet.ReadByte();
@@ -468,7 +481,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 						ch.Empathy = (byte)packet.ReadByte();
 						ch.Charisma = (byte)packet.ReadByte();
 						packet.Skip(44); //TODO equipment
-
+						if (client.Version >= GameClient.eClientVersion.Version199)
+						{
+							// skip 4 bytes added in 1.99
+							packet.Skip(4);
+						}
 						// check if client tried to create invalid char
 						if (!CheckCharacter.IsCharacterValid(ch))
 						{
