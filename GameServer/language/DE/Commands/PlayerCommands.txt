@@ -312,7 +312,7 @@ Scripts.Player.Guild.GuildLeave:			Ihr habt Eure Gilde verlassen.
 Scripts.Player.Guild.GuildLevelReq:			Eure Gilde ist nicht befugt, diesen Befehl auszuführen.
 Scripts.Player.Guild.GuildNotExist:			Diese Gilde gibt es nicht.
 Scripts.Player.Guild.Help.GuildACancel:			/gc acancel - eine Einladung für eine Allianz zurückziehen	
-Scripts.Player.Guild.Help.GuildAccept:			/gc aaccept - eine Einladung für eine Allianz annehmen	
+Scripts.Player.Guild.Help.GuildAAccept:			/gc aaccept - eine Einladung für eine Allianz annehmen	
 Scripts.Player.Guild.Help.GuildAccept:			/gc accept - eine Einladung für eine Gilde annehmen	
 Scripts.Player.Guild.Help.GuildADecline:		/gc adecline - eine Einladung für eine Allianz ausschlagen	
 Scripts.Player.Guild.Help.GuildAInvite:			/gc ainvite - eine andere Gilde in Eure Allianz einladen	
