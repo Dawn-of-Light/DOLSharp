@@ -89,7 +89,7 @@ namespace DOL.GS.ServerRules
 			GameClient.eClientVersion max = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MAX;
 			if (max != GameClient.eClientVersion.VersionNotChecked && client.Version > max)
 			{
-				client.Out.SendLoginDenied(eLoginError.ClientVersionTooLow);
+				client.Out.SendLoginDenied(eLoginError.NotAuthorizedToUseExpansionVersion);
 				return false;
 			}
 
