@@ -127,7 +127,7 @@ namespace DOL.GS.Commands
 			int count = 1;
 			foreach (Character chr in chars)
 			{
-				toplist.Add("\n" + count.ToString() + " - [ " + chr.Name + " ] with " + chr.RealmPoints.ToString() + " RP - [ " + (((chr.RealmLevel + 10) / 10) + "L" + ((chr.RealmLevel + 10) % 10)) + " ]");
+				toplist.Add( "\n" + count.ToString() + " - [ " + chr.Name + " ] with " + String.Format( "{0:0,0}", chr.RealmPoints ) + " RP - [ " + ( ( ( chr.RealmLevel + 10 ) / 10 ) + "L" + ( ( chr.RealmLevel + 10 ) % 10 ) ) + " ]" );
 				count++; if (count > 20) break;
 			}
 			#endregion /stats top
