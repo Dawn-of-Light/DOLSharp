@@ -32,13 +32,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-//			log.Info("UDP Init Request !!!");
 			string localIP = packet.ReadString(22);
 			ushort localPort = packet.ReadShort();
 			client.LocalIP = localIP;
-//			client.UDPConfirm = true;
 			client.Out.SendUDPInitReply();
-			if (client.Account.PrivLevel > 1)
+			if (client.Account.PrivLevel > 1 && ServerProperties.Properties.ENABLE_DEBUG)
 			{
 				client.Out.SendDebugMessage("local IP:{0} port:{1}", localIP, localPort);
 			}
