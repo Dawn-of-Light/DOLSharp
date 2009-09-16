@@ -1044,14 +1044,13 @@ namespace DOL.GS.Commands
 		{
 			byte level;
 
-			try
+			if( args.Length > 2 && byte.TryParse( args[2], out level ) )
 			{
-				level = Convert.ToByte( args[2] );
 				targetMob.Level = level;
 				targetMob.SaveIntoDatabase();
 				client.Out.SendMessage( "Mob level changed to: " + targetMob.Level, eChatType.CT_System, eChatLoc.CL_SystemWindow );
 			}
-			catch ( Exception )
+			else
 			{
 				DisplaySyntax( client, args[1] );
 			}
@@ -1400,6 +1399,7 @@ namespace DOL.GS.Commands
 
 							targetMob.EquipmentTemplateID = args[3];
 							targetMob.SaveIntoDatabase();
+							GameNpcInventoryTemplate.Init();
 							client.Out.SendMessage( "Target mob equipment template is saved as '" + args[3] + "'", eChatType.CT_System, eChatLoc.CL_SystemWindow );
 							return;
 						}
@@ -2065,14 +2065,14 @@ namespace DOL.GS.Commands
 		private void bodytype ( GameClient client, GameNPC targetMob, string[] args )
 		{
 			int type;
-			try
+
+			if( args.Length > 2 && int.TryParse( args[2], out type ) )
 			{
-				type = Convert.ToInt32(args[2]);
 				targetMob.BodyType = type;
 				targetMob.SaveIntoDatabase();
 				client.Out.SendMessage("Mob BodyType changed to " + targetMob.BodyType, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			catch (Exception)
+	        else
 			{
 				DisplaySyntax( client, args[1] );
 			}
