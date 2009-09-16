@@ -65,7 +65,7 @@ namespace DOL.GS.PacketHandler
 			Character[] characters = m_gameClient.Account.Characters;
 			if (characters == null)
 			{
-				pak.Fill(0x0, 1970);
+				pak.Fill(0x0, 1880);
 			}
 			else
 			{
