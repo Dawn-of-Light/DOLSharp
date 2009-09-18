@@ -7961,9 +7961,28 @@ namespace DOL.GS
 							if (Client.Account.PrivLevel == 1 && nextPotionAvailTime > CurrentRegion.Time)
 							{
 								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustWaitBeforeUse", (nextPotionAvailTime - CurrentRegion.Time) / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
+							}							
 							else
 							{
+								if (spellItem.SpellType == "Costume")
+								{
+									switch (CurrentRegionID)
+									{
+										case 10:  //City of Camelot
+										case 101: //Jordheim
+										case 201: //Tir Na Nog
+
+										case 2:	  //Albion Housing
+										case 102: //Midgard Housing
+										case 202: //Hibernia Housing
+											break;
+										default:
+											Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantFire"), eChatType.CT_System, eChatLoc.CL_SystemWindow);	
+											Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+											return;
+									}
+								}
+
 								SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
 								if (useItem.Item_Type == 41)
 									potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
@@ -7975,24 +7994,24 @@ namespace DOL.GS
 									{
 										if (spell.ID == useItem.SpellID)
 										{
-											if(spell.Level <= Level)
+											if (spell.Level <= Level)
 											{
-												if(spell.CastTime > 0 && AttackState)
+												if (spell.CastTime > 0 && AttackState)
 												{
 													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												}
 												//Eden
-												else if((IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || IsMezzed || !IsAlive)
+												else if ((IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || IsMezzed || !IsAlive)
 												{
 													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseState", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												}
 												else
 												{
 													SpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine) as SpellHandler;
-													if(spellHandler != null)
+													if (spellHandler != null)
 													{
 														Stealth(false);
-														if(useItem.Item_Type == (int) eInventorySlot.FirstBackpack)
+														if (useItem.Item_Type == (int)eInventorySlot.FirstBackpack)
 														{
 															Emote(eEmote.Drink);
 														}
@@ -8002,14 +8021,14 @@ namespace DOL.GS
 														//SubSpells
 														spellHandler.CastSubSpells(target, spellHandler.SpellLine);
 
-														if(useItem.Count > 1)
+														if (useItem.Count > 1)
 														{
 															Inventory.RemoveCountFromStack(useItem, 1);
 														}
 														else
 														{
 															useItem.Charges--;
-															if(useItem.Charges < 1)
+															if (useItem.Charges < 1)
 															{
 																Inventory.RemoveCountFromStack(useItem, 1);
 															}
