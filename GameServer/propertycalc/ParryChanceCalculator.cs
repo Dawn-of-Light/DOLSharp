@@ -39,22 +39,20 @@ namespace DOL.GS.PropertyCalc
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				int buff = player.BaseBuffBonusCategory[(int)property] * 10
-				+ player.SpecBuffBonusCategory[(int)property] * 10
-				- player.DebuffCategory[(int)property] * 10
-				+ player.BuffBonusCategory4[(int)property] * 10
-				+ player.AbilityBonus[(int)property] * 10;
+				int buff = (player.BaseBuffBonusCategory[(int)property]
+							+ player.SpecBuffBonusCategory[(int)property]
+							- player.DebuffCategory[(int)property]
+							+ player.BuffBonusCategory4[(int)property]
+							+ player.AbilityBonus[(int)property]) * 10;
 				int parrySpec = 0;
 				if (player.HasSpecialization(Specs.Parry))
 				{					
-					parrySpec = (player.Dexterity * 2 - 100) / 4 + (player.GetModifiedSpecLevel(Specs.Parry) - 1) * (10 / 2) + 50;
+					parrySpec = Math.Min((player.Dexterity * 2 - 100) / 4 + (player.GetModifiedSpecLevel(Specs.Parry) - 1) * (10 / 2) + 50, 500);
+					buff += Math.Min(10, player.ItemBonus[(int)property]) * 10;
 				}
-                if (parrySpec > 500)
-                {
-                    parrySpec = 500;
-                }
 				return parrySpec + buff;
 			}
+
 			NecromancerPet pet = living as NecromancerPet;
 			if (pet != null)
 			{
