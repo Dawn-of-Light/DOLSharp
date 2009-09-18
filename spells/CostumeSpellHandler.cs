@@ -89,7 +89,7 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
-		/// Creates a new ShadesOfMist spell handler.
+		/// Creates a new Costume spell handler.
 		/// </summary>
 		/// <param name="caster"></param>
 		/// <param name="spell"></param>
