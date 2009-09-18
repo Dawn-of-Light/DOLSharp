@@ -443,7 +443,7 @@ namespace DOL.GS
 								valid = false;
 								m_player.Out.SendMessage(fromItem.GetName(0, true) + " can't go there!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							if (valid && fromItem.Level > 0 && fromItem.Level > m_player.ChampionLevel)
+							if (valid && fromItem.Type_Damage > m_player.ChampionLevel)
 							{
 								valid = false;
 								m_player.Out.SendMessage("You can't use " + fromItem.GetName(0, true) + " , you should increase your champion level.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -619,7 +619,7 @@ namespace DOL.GS
 								valid = false;
 								m_player.Out.SendMessage(toItem.GetName(0, true) + " can't go there!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							if (valid && toItem.Level > 0 && toItem.Level > m_player.ChampionLevel)
+							if (valid && toItem.Type_Damage > m_player.ChampionLevel)
 							{
 								valid = false;
 								m_player.Out.SendMessage("You can't use " + toItem.GetName(0, true) + " , you should increase your champion level.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
