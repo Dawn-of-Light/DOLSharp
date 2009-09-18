@@ -92,7 +92,7 @@ namespace DOL.GS
                         {
                             RemoveGuild(mg);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                         }
                     }
