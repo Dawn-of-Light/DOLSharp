@@ -77,8 +77,22 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			// cancel all protect effects by this player before adding a new one
-			foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof(ProtectEffect)))
+			// check if someone is protecting the target
+			foreach (ProtectEffect protect in protectTarget.EffectList.GetAllOfType(typeof (ProtectEffect)))
+			{
+				if (protect.ProtectTarget != protectTarget)
+					continue;
+				if (protect.ProtectSource == player)
+				{
+					protect.Cancel(false);
+					return;
+				}
+				player.Out.SendMessage(string.Format("{0} is already protecting {1}!", protect.ProtectSource.GetName(0, true), protect.ProtectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
+			// cancel all guard effects by this player before adding a new one
+			foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof (ProtectEffect)))
 			{
 				if (protect.ProtectSource == player)
 					protect.Cancel(false);
