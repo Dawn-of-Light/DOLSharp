@@ -68,16 +68,18 @@ namespace DOL.GS.PlayerClass
 		/// </summary>
 		/// <param name="player"></param>
 		public override void OnLevelUp(GamePlayer player) 
-		{		
+		{
 			base.OnLevelUp(player);
-
-			if (player.Level >= 5) 
+			if (player.Level >= 1) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrown));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
-				player.AddAbility(SkillBase.GetAbility(Abilities.TauntingShout));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Thrown_Weapons));
+			}
+			if(player.Level >= 5)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.TauntingShout));
 			}
 			if (player.Level >= 7) 
 			{
