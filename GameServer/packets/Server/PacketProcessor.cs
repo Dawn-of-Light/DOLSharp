@@ -96,16 +96,6 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		protected readonly Queue m_lastPackets = new Queue(MAX_LAST_PACKETS);
 
-//		/// <summary>
-//		/// Holds the packets that were received last
-//		/// </summary>
-//		protected readonly Queue m_receivedPackets = new Queue(MAX_LAST_PACKETS);
-//
-//		/// <summary>
-//		/// Holds the packets that were sent last
-//		/// </summary>
-//		protected readonly Queue m_sentPackets = new Queue(MAX_LAST_PACKETS);
-
 		/// <summary>
 		/// Saves the sent packet for debugging
 		/// </summary>
@@ -118,12 +108,6 @@ namespace DOL.GS.PacketHandler
 					m_lastPackets.Dequeue();
 				m_lastPackets.Enqueue(pak);
 			}
-//			lock (m_sentPackets.SyncRoot)
-//			{
-//				while (m_sentPackets.Count >= MAX_LAST_PACKETS)
-//					m_sentPackets.Dequeue();
-//				m_sentPackets.Enqueue(pak);
-//			}
 		}
 
 		/// <summary>
@@ -138,12 +122,6 @@ namespace DOL.GS.PacketHandler
 					m_lastPackets.Dequeue();
 				m_lastPackets.Enqueue(pak);
 			}
-//			lock (m_receivedPackets.SyncRoot)
-//			{
-//				while (m_receivedPackets.Count >= MAX_LAST_PACKETS)
-//					m_receivedPackets.Dequeue();
-//				m_receivedPackets.Enqueue(pak);
-//			}
 		}
 
 		/// <summary>
@@ -159,34 +137,6 @@ namespace DOL.GS.PacketHandler
 				return res;
 			}
 		}
-
-//		/// <summary>
-//		/// Makes a copy of last sent packets. Most recent packet has highest index.
-//		/// </summary>
-//		/// <returns>The copy of last sent packets</returns>
-//		public PacketOut[] GetSentPackets()
-//		{
-//			lock (m_sentPackets.SyncRoot)
-//			{
-//				PacketOut[] sent = new PacketOut[m_sentPackets.Count];
-//				m_sentPackets.CopyTo(sent, 0);
-//				return sent;
-//			}
-//		}
-//
-//		/// <summary>
-//		/// Makes a copy of last received packets. Most recent packet has highest index.
-//		/// </summary>
-//		/// <returns>The copy of last received packets</returns>
-//		public GSPacketIn[] GetReceivedPackets()
-//		{
-//			lock (m_receivedPackets.SyncRoot)
-//			{
-//				GSPacketIn[] received = new GSPacketIn[m_receivedPackets.Count];
-//				m_receivedPackets.CopyTo(received, 0);
-//				return received;
-//			}
-//		}
 
 		#endregion
 
