@@ -31,6 +31,32 @@ namespace DOL.GS.Spells
 	class CostumeSpellHandler : SpellHandler
 	{
 		/// <summary>
+		/// All checks before any casting begins
+		/// </summary>
+		/// <param name="selectedTarget"></param>
+		/// <returns></returns>
+		public override bool CheckBeginCast(GameLiving selectedTarget, bool quiet)
+		{
+			if (m_caster is GamePlayer)
+			{
+				switch (m_caster.CurrentRegionID)
+				{
+					case 10:  //City of Camelot
+					case 101: //Jordheim
+					case 201: //Tir Na Nog
+
+					case 2:	  //Albion Housing
+					case 102: //Midgard Housing
+					case 202: //Hibernia Housing
+						break;
+					default:
+						return false;
+				}
+			}
+			return base.CheckBeginCast(selectedTarget, true);
+		}
+
+		/// <summary>
 		/// Effect starting.
 		/// </summary>
 		/// <param name="effect"></param>

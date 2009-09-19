@@ -91,104 +91,172 @@ namespace DOL.GS.PacketHandler.Client.v168
             int firstSlot = 0 + (requestedPage * 20);
             int lastSlot = 19 + (requestedPage * 20);
 
-            List<InventoryItem> list = new List<InventoryItem>();
-            List<InventoryItem> ausgabe = new List<InventoryItem>();
             StringBuilder sql = new StringBuilder();
 
             sql.Append("SlotPosition > '1499'");
 
             if (filter != null && filter != "")
                 sql.Append(" AND Name LIKE '%" + filter + "%'");
-            #region slot
-            if (slot != -1)
-            {
-                switch (slot)
-                {
-                    case 0:
-                        sql.Append(" AND Item_Type = '22'");
-                        break;
-                    case 1:
-                        sql.Append(" AND Item_Type = '23'");
-                        break;
-                    case 2:
-                        sql.Append(" AND Item_Type = '21'");
-                        break;
-                    case 3:
-                        sql.Append(" AND Item_Type = '28'");
-                        break;
-                    case 4:
-                        sql.Append(" AND Item_Type = '27'");
-                        break;
-                    case 5:
-                        sql.Append(" AND Item_Type = '25'");
-                        break;
-                    case 6:
-                        sql.Append(" AND Item_Type IN (35, 36)");
-                        break;
-                    case 7:
-                        sql.Append(" AND Item_Type IN (33, 34)");
-                        break;
-                    case 8:
-                        sql.Append(" AND Item_Type = '32'");
-                        break;
-                    case 9:
-                        sql.Append(" AND Item_Type = '29'");
-                        break;
-                    case 10:
-                        sql.Append(" AND Item_Type = '26'");
-                        break;
-                    case 11:
-                        sql.Append(" AND Item_Type = '24'");
-                        break;
-                    case 12:
-                        sql.Append(" AND Item_Type IN (10, 11)");
-                        break;
-                    case 13:
-                        sql.Append(" AND Object_Type = '42'");
-                        break;
-                    case 14:
-                        sql.Append(" AND Item_Type = '12'");
-                        break;
-                    case 15:
-                        sql.Append(" AND Item_Type = '13'");
-                        break;
-                    case 16:
-                        sql.Append(" AND Item_Type = '11'");
-                        break;
-                    case 17:
-                        sql.Append(" AND Object_Type = '45'");
-                        break;
-                    case 18:
-                        sql.Append(" AND (Item_Type = '0' OR Object_Type = '0')");
-                        break;
-                }
-            }
-            #endregion
-            string qryString = sql.ToString();
 
-            DataObject[] obj = GameServer.Database.SelectObjects(typeof(InventoryItem), qryString);
 
-            foreach (InventoryItem item in obj)
-            {
-                list.Add(item);
-            }
-            int itemCount = list.Count;
-            int pageCount = (int)Math.Ceiling((double)itemCount / 20) - 1;
-            lock (list)
-            {
-                foreach (InventoryItem i in list)
-                {
-                    if (list.IndexOf(i) >= firstSlot && list.IndexOf(i) <= lastSlot)
-                        ausgabe.Add(i);
-                }
-            }
-            int itemsOnPage = ausgabe.Count;
+			#region Slot
+			if (slot != -1)
+			{
+				switch (slot)
+				{
+					case 0:
+						sql.Append(" AND Item_Type = '22'");
+						break;
+					case 1:
+						sql.Append(" AND Item_Type = '23'");
+						break;
+					case 2:
+						sql.Append(" AND Item_Type = '21'");
+						break;
+					case 3:
+						sql.Append(" AND Item_Type = '28'");
+						break;
+					case 4:
+						sql.Append(" AND Item_Type = '27'");
+						break;
+					case 5:
+						sql.Append(" AND Item_Type = '25'");
+						break;
+					case 6:
+						sql.Append(" AND Item_Type IN (35, 36)");
+						break;
+					case 7:
+						sql.Append(" AND Item_Type IN (33, 34)");
+						break;
+					case 8:
+						sql.Append(" AND Item_Type = '32'");
+						break;
+					case 9:
+						sql.Append(" AND Item_Type = '29'");
+						break;
+					case 10:
+						sql.Append(" AND Item_Type = '26'");
+						break;
+					case 11:
+						sql.Append(" AND Item_Type = '24'");
+						break;
+					case 12:
+						sql.Append(" AND Item_Type IN (10, 11)");
+						break;
+					case 13:
+						sql.Append(" AND Object_Type = '42'");
+						break;
+					case 14:
+						sql.Append(" AND Item_Type = '12'");
+						break;
+					case 15:
+						sql.Append(" AND Item_Type = '13'");
+						break;
+					case 16:
+						sql.Append(" AND Item_Type = '11'");
+						break;
+					case 17:
+						sql.Append(" AND Object_Type = '45'");
+						break;
+					case 18:
+						sql.Append(" AND (Item_Type = '0' OR Object_Type = '0')");
+						break;
+				}
+			}
+			#endregion
+
+			#region Bonus
+			if (bonus > 0)
+				sql.Append(" AND (Bonus >= '" + bonus + "')");
+			#endregion
+
+			#region Price
+			if (priceMax > 0 && priceMin < priceMax)
+				sql.Append(" AND (SellPrice >= '" + priceMin + "' AND SellPrice <= '" + priceMax + "')");
+			#endregion
+
+			#region Level
+			if (levelMax > 0 && levelMin < levelMax)
+				sql.Append(" AND (Level >= '" + levelMin + "' AND Level <= '" + levelMax + "')");
+			#endregion
+
+			#region Visual Effect
+			if (visual > 0)
+				sql.Append(" AND (Effect > '0')");
+			#endregion
+
+			#region Skill
+			if (skill > 0)
+			sql.Append(" AND (Bonus1Type = '" + skill + "' OR " +
+								"Bonus2Type = '" + skill + "' OR " +
+								"Bonus3Type = '" + skill + "' OR " +
+								"Bonus4Type = '" + skill + "' OR " +
+								"Bonus5Type = '" + skill + "' OR " +
+								"Bonus6Type = '" + skill + "' OR " +
+								"Bonus7Type = '" + skill + "' OR " +
+								"Bonus8Type = '" + skill + "' OR " +
+								"Bonus9Type = '" + skill + "' OR " +
+								"Bonus10Type = '" + skill + "' OR " +
+								"ExtraBonusType = '" + skill + "')");
+			#endregion
+
+			#region Resist
+			if(resist > 0)
+			sql.Append(" AND (Bonus1Type = '" + resist + "' OR " +
+								"Bonus2Type = '" + resist + "' OR " +
+								"Bonus3Type = '" + resist + "' OR " +
+								"Bonus4Type = '" + resist + "' OR " +
+								"Bonus5Type = '" + resist + "' OR " +
+								"Bonus6Type = '" + resist + "' OR " +
+								"Bonus7Type = '" + resist + "' OR " +
+								"Bonus8Type = '" + resist + "' OR " +
+								"Bonus9Type = '" + resist + "' OR " +
+								"Bonus10Type = '" + resist + "' OR " +
+								"ExtraBonusType = '" + resist + "')");
+			#endregion
+
+			#region Health
+			if(hp > 0)
+			sql.Append(" AND (Bonus1Type = '" + eProperty.MaxHealth + "' AND Bonus1 >= '" + hp + "' OR " +
+								"Bonus2Type = '" + eProperty.MaxHealth + "' AND Bonus2 >= '" + hp + "' OR " +
+								"Bonus3Type = '" + eProperty.MaxHealth + "' AND Bonus3 >= '" + hp + "' OR " +
+								"Bonus4Type = '" + eProperty.MaxHealth + "' AND Bonus4 >= '" + hp + "' OR " +
+								"Bonus5Type = '" + eProperty.MaxHealth + "' AND Bonus5 >= '" + hp + "' OR " +
+								"Bonus6Type = '" + eProperty.MaxHealth + "' AND Bonus6 >= '" + hp + "' OR " +
+								"Bonus7Type = '" + eProperty.MaxHealth + "' AND Bonus7 >= '" + hp + "' OR " +
+								"Bonus8Type = '" + eProperty.MaxHealth + "' AND Bonus8 >= '" + hp + "' OR " +
+								"Bonus9Type = '" + eProperty.MaxHealth + "' AND Bonus9 >= '" + hp + "' OR " +
+								"Bonus10Type = '" + eProperty.MaxHealth + "' AND Bonus10 >= '" + hp + "' OR " +
+								"ExtraBonusType = '" + eProperty.MaxHealth + "' AND ExtraBonus >= '" + hp + "')");
+			#endregion
+
+			#region Power
+			if(power > 0)
+			sql.Append(" AND (Bonus1Type = '" + eProperty.MaxMana + "' AND Bonus1 >= '" + power + "' OR " +
+								"Bonus2Type = '" + eProperty.MaxMana + "' AND Bonus2 >= '" + power + "' OR " +
+								"Bonus3Type = '" + eProperty.MaxMana + "' AND Bonus3 >= '" + power + "' OR " +
+								"Bonus4Type = '" + eProperty.MaxMana + "' AND Bonus4 >= '" + power + "' OR " +
+								"Bonus5Type = '" + eProperty.MaxMana + "' AND Bonus5 >= '" + power + "' OR " +
+								"Bonus6Type = '" + eProperty.MaxMana + "' AND Bonus6 >= '" + power + "' OR " +
+								"Bonus7Type = '" + eProperty.MaxMana + "' AND Bonus7 >= '" + power + "' OR " +
+								"Bonus8Type = '" + eProperty.MaxMana + "' AND Bonus8 >= '" + power + "' OR " +
+								"Bonus9Type = '" + eProperty.MaxMana + "' AND Bonus9 >= '" + power + "' OR " +
+								"Bonus10Type = '" + eProperty.MaxMana + "' AND Bonus10 >= '" + power + "' OR " +
+								"ExtraBonusType = '" + eProperty.MaxMana + "' AND ExtraBonus >= '" + power + "')");
+			#endregion
+
+			string qryString = sql.ToString();
+
+            InventoryItem[] items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), qryString);
+			int itemsOnPage = page < (int)Math.Ceiling((double)items.Length / 20) ? 20 : items.Length % 20;
             if (itemsOnPage > 0)
             {
-                client.Player.Out.SendMarketExplorerWindow(ausgabe, page, (byte)pageCount);
+				int itemCount = items.Length;
+				int pageCount = (int)Math.Ceiling((double)itemCount / 20) - 1;
+				client.Player.Out.SendMarketExplorerWindow(items, page, (byte)pageCount);
                 client.Player.Out.SendMessage(itemsOnPage.ToString() + " Results found for page " + (page + 1) + ".", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
                 client.Player.TempProperties.removeProperty(EXPLORER_LIST);
-                client.Player.TempProperties.setProperty(EXPLORER_LIST, ausgabe);
+				client.Player.TempProperties.setProperty(EXPLORER_LIST, items);
             }
             else
                 client.Player.Out.SendMessage("No Items found", eChatType.CT_Important, eChatLoc.CL_ChatWindow);

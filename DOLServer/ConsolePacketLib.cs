@@ -228,7 +228,7 @@ namespace DOLGameServerConsole
 		public void SendVampireEffect(GameLiving living, bool show) { }
 		public void SendXFireInfo(byte flag) { }
 		public void SendMarketExplorerWindow() { }
-		public void SendMarketExplorerWindow(List<InventoryItem> items, byte page, byte maxpage) { }
+		public void SendMarketExplorerWindow(InventoryItem[] items, byte page, byte maxpage) { }
 		public void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper) { }
         public void SendMinotaurRelicMapRemove(byte id) { }
         public void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z) { }
