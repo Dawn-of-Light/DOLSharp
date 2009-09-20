@@ -2138,10 +2138,11 @@ namespace DOL.GS
 			 */
 			if (CharacterClass.ManaStat != eStat.UNDEFINED || CharacterClass.ID == (int)eCharacterClass.Vampiir)
 			{
-				maxpower = (level * 6) + (manastat - 50);
+				maxpower = (level * 5) + (manastat - 50);
 			}
 			if (maxpower < 0)
 				maxpower = 0;
+
 			return maxpower;
 		}
 
@@ -3569,7 +3570,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Called when this living gains realm points
+		/// Called when this player gains realm points
 		/// </summary>
 		/// <param name="amount">The amount of realm points gained</param>
 		public override void GainRealmPoints(long amount)
@@ -3587,12 +3588,24 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Called when this living gains realm points
+		/// Called when this player gains realm points
+		/// </summary>
+		/// <param name="amount"></param>
+		/// <param name="modify"></param>
+		/// <param name="sendMessage"></param>
+		public void GainRealmPoints(long amount, bool modify, bool sendMessage)
+		{
+			GainRealmPoints(amount, modify, true, true);
+		}
+
+		/// <summary>
+		/// Called when this player gains realm points
 		/// </summary>
 		/// <param name="amount">The amount of realm points gained</param>
 		/// <param name="modify">Should we apply the rp modifer</param>
 		/// <param name="sendMessage">Wether to send a message like "You have gained N realmpoints"</param>
-		public void GainRealmPoints(long amount, bool modify, bool sendMessage)
+		/// <param name="notify"></param>
+		public void GainRealmPoints(long amount, bool modify, bool sendMessage, bool notify)
 		{
 			if (!GainRP)
 				return;
@@ -3608,14 +3621,17 @@ namespace DOL.GS
 				long rpBonus = GetModified(eProperty.RealmPoints);
 				if (rpBonus > 0)
 				{
-					amount += (amount*rpBonus)/100;
+					amount += (amount * rpBonus) / 100;
 				}
 			}
 
-			base.GainRealmPoints(amount);
+			if (notify)
+				base.GainRealmPoints(amount);
+
 			RealmPoints += amount;
+
 			if (m_guild != null && Client.Account.PrivLevel == 1)
-				m_guild.RealmPoints+=amount;
+				m_guild.RealmPoints += amount;
 
 			if (sendMessage == true && amount > 0)
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -3709,12 +3725,24 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Called when this living gains bounty points
+		/// Called when player gains bounty points
+		/// </summary>
+		/// <param name="amount"></param>
+		/// <param name="modify"></param>
+		/// <param name="sendMessage"></param>
+		public void GainBountyPoints(long amount, bool modify, bool sendMessage)
+		{
+			GainBountyPoints(amount, modify, true, true);
+		}
+
+
+		/// <summary>
+		/// Called when player gains bounty points
 		/// </summary>
 		/// <param name="amount">The amount of bounty points gained</param>
 		/// <param name="multiply">Should this amount be multiplied by the BP Rate</param>
 		/// <param name="sendMessage">Wether to send a message like "You have gained N bountypoints"</param>
-		public void GainBountyPoints(long amount, bool modify, bool sendMessage)
+		public void GainBountyPoints(long amount, bool modify, bool sendMessage, bool notify)
 		{
 			if (modify)
 			{
@@ -3725,16 +3753,20 @@ namespace DOL.GS
 
 				//[Freya] Nidel: ToA Bp Bonus
 				long bpBonus = GetModified(eProperty.BountyPoints);
+
 				if (bpBonus > 0)
 				{
-					amount += (amount*bpBonus)/100;
+					amount += (amount * bpBonus) / 100;
 				}
 			}
 
-			base.GainBountyPoints(amount);
+			if (notify)
+				base.GainBountyPoints(amount);
+
 			BountyPoints += amount;
+
 			if (m_guild != null && Client.Account.PrivLevel == 1)
-				m_guild.BountyPoints+=amount;
+				m_guild.BountyPoints += amount;
 
 			if(sendMessage == true)
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainBountyPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -4166,7 +4198,22 @@ namespace DOL.GS
 		/// <param name="expOutpostBonus"></param>
 		/// <param name="sendMessage"></param>
 		/// <param name="allowMultiply"></param>
-		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
+		public void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
+		{
+			GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply, true);
+		}
+
+		/// <summary>
+		/// Called whenever this player gains experience
+		/// </summary>
+		/// <param name="expTotal"></param>
+		/// <param name="expCampBonus"></param>
+		/// <param name="expGroupBonus"></param>
+		/// <param name="expOutpostBonus"></param>
+		/// <param name="sendMessage"></param>
+		/// <param name="allowMultiply"></param>
+		/// <param name="notify"></param>
+		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply, bool notify)
 		{
 			if (!GainXP && expTotal > 0)
 				return;
@@ -4227,7 +4274,7 @@ namespace DOL.GS
 					}
 			}
 
-			base.GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply);
+			base.GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply, notify);
 
 			if (IsLevelSecondStage)
 			{
