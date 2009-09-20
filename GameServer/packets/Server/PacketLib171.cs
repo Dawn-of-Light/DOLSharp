@@ -184,7 +184,12 @@ namespace DOL.GS.PacketHandler
 				if (m_gameClient.Account.PrivLevel > 1) add += "-NON"; // indicates NON flag for GMs
 				else flags2 |= 0x02;
 			if ((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags2 |= 0x04;
-			if (npc.ShowQuestIndicator(m_gameClient.Player)) flags2 |= 0x08;
+
+			if( ( npc.Flags & (uint)GameNPC.eFlags.STEALTH ) != 0 )
+				flags2 |= 0x44;
+
+			if( npc.ShowQuestIndicator( m_gameClient.Player ) )
+				flags2 |= 0x08;
 
 			pak.WriteByte(flags2); // 4 high bits seems unused (new in 1.71)
 			pak.WriteShort(0x00); // new in 1.71
