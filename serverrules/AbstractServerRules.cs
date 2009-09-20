@@ -931,7 +931,7 @@ namespace DOL.GS.ServerRules
 							xpReward = (long)(xpReward * 0.25);
 
 						//XP Rate is handled in GainExperience
-						living.GainExperience(xpReward, campBonus, groupExp, outpostXP, true, true);
+						living.GainExperience(xpReward, campBonus, groupExp, outpostXP, true, true, true);
 					}
 				}
 			}
