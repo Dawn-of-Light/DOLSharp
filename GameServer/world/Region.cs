@@ -244,6 +244,7 @@ namespace DOL.GS
 					case 242://40to44BG and Test BG
 					case 244://Frontiers RvR dungeon
 					case 249://Darkness Falls - RvR dungeon
+					case 489://lvl5-9 Demons breach
 						return true;
 					default:
 						return false;
