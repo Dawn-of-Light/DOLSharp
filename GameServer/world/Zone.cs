@@ -389,6 +389,7 @@ namespace DOL.GS
 					case 397:
 					case 415:
 					case 443:
+					case 489://lvl5-9 Demons breach
 						return true;
 					default:
 						return false;
