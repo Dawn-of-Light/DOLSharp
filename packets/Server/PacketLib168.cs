@@ -926,7 +926,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(npc.Level);
 
 			byte flags = (byte)(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, npc) << 6);
-			if ((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags |= 0x01;
+			if ((npc.Flags & (uint)GameNPC.eFlags.GHOST) != 0) flags |= 0x01;
 			if (npc.Inventory != null) flags |= 0x02; //If mob has equipment, then only show it after the client gets the 0xBD packet
 			if ((npc.Flags & (uint)GameNPC.eFlags.PEACE) != 0) flags |= 0x10;
 			if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0) flags |= 0x20;

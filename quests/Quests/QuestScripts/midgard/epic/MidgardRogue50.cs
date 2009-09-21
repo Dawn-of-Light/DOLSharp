@@ -147,7 +147,7 @@ namespace DOL.GS.Quests.Midgard
 				Oona.Y = 786850;
 				Oona.Z = 4384;
 				Oona.Heading = 3891;
-				Oona.Flags ^= (uint) GameNPC.eFlags.TRANSPARENT;
+				Oona.Flags ^= (uint) GameNPC.eFlags.GHOST;
 				Oona.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
