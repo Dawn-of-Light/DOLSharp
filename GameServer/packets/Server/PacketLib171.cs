@@ -158,7 +158,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(npc.Level);
 
 			byte flags = (byte)(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, npc) << 6);
-			if ((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags |= 0x01;
+			if ((npc.Flags & (uint)GameNPC.eFlags.GHOST) != 0) flags |= 0x01;
 			if (npc.Inventory != null) flags |= 0x02; //If mob has equipment, then only show it after the client gets the 0xBD packet
 			if ((npc.Flags & (uint)GameNPC.eFlags.PEACE) != 0) flags |= 0x10;
 			if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0) flags |= 0x20;
@@ -183,10 +183,9 @@ namespace DOL.GS.PacketHandler
 			if ((npc.Flags & (uint)GameNPC.eFlags.DONTSHOWNAME) != 0)
 				if (m_gameClient.Account.PrivLevel > 1) add += "-NON"; // indicates NON flag for GMs
 				else flags2 |= 0x02;
-			if ((npc.Flags & (uint)GameNPC.eFlags.TRANSPARENT) != 0) flags2 |= 0x04;
 
-			if( ( npc.Flags & (uint)GameNPC.eFlags.STEALTH ) != 0 )
-				flags2 |= 0x44;
+			if( ( npc.Flags & (uint)GameNPC.eFlags.STEALTH ) > 0 )
+				flags2 |= 0x04;
 
 			if( npc.ShowQuestIndicator( m_gameClient.Player ) )
 				flags2 |= 0x08;
@@ -209,15 +208,6 @@ namespace DOL.GS.PacketHandler
 
 			pak.WriteByte(0x00);
 			SendTCP(pak);
-
-			//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
-//			{
-//				if (brain != null)
-//				{
-//					GamePlayer playerowner = brain.GetPlayerOwner();
-//					SendObjectGuildID(npc, playerowner.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
-//				}
-//			}
 		}
 
 		public override void SendFindGroupWindowUpdate(GamePlayer[] list)

@@ -217,7 +217,7 @@ namespace DOL.GS.Keeps
 						{
 							guard.Model = MidgardHastener;
 							guard.Size = 50;
-							guard.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
+							guard.Flags ^= (uint)GameNPC.eFlags.GHOST;
 							break;
 						}
 					case eRealm.Hibernia:
