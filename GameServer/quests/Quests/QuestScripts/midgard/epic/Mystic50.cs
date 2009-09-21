@@ -162,7 +162,7 @@ namespace DOL.GS.Quests.Midgard
 				Kelic.Y = 745848;
 				Kelic.Z = 4593;
 				Kelic.Heading = 3538;
-				Kelic.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
+				Kelic.Flags ^= (uint)GameNPC.eFlags.GHOST;
 				Kelic.MaxSpeedBase = 200;
 				Kelic.AddToWorld();
 				if (SAVE_INTO_DATABASE)

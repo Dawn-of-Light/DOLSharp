@@ -14084,6 +14084,7 @@ namespace DOL.GS
 			m_objectUpdates[1] = new BitArray(Region.MAXOBJECTS);
 			m_housingUpdateArray = null;
 			m_lastUpdateArray = 0;
+			m_canFly = false;
 			m_lastNPCUpdate = Environment.TickCount;
 			m_inventory = new GamePlayerInventory(this);
 			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemEquipped, new DOLEventHandler(OnItemEquipped));

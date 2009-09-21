@@ -518,7 +518,7 @@ namespace DOL.GS
 			/// <summary>
 			/// The npc is a ghost, see through, transparent
 			/// </summary>
-			TRANSPARENT = 0x01,
+			GHOST = 0x01,
 			/// <summary>
 			/// The npc is stealth (new since 1.71)
 			/// </summary>
@@ -539,6 +539,10 @@ namespace DOL.GS
 			/// The npc is flying (z above ground permitted)
 			/// </summary>
 			FLYING = 0x20,
+			/// <summary>
+			/// npc's torch is lit
+			/// </summary>
+			TORCH = 0x40,
 		}
 		/// <summary>
 		/// Holds various flags of this npc
@@ -572,13 +576,7 @@ namespace DOL.GS
 				m_flags = value;
 				if (ObjectState == eObjectState.Active)
 				{
-					bool ghostChanged = (oldflags & (byte)eFlags.TRANSPARENT) != (value & (byte)eFlags.TRANSPARENT);
-					bool stealthChanged = (oldflags & (byte)eFlags.STEALTH) != (value & (byte)eFlags.STEALTH);
-					bool cantTargetChanged = (oldflags & (byte)eFlags.CANTTARGET) != (value & (byte)eFlags.CANTTARGET);
-					bool dontShowNameChanged = (oldflags & (byte)eFlags.DONTSHOWNAME) != (value & (byte)eFlags.DONTSHOWNAME);
-					bool peaceChanged = (oldflags & (byte)eFlags.PEACE) != (value & (byte)eFlags.PEACE);
-					bool flyingChanged = (oldflags & (byte)eFlags.FLYING) != (value & (byte)eFlags.FLYING);
-					if (ghostChanged || stealthChanged || cantTargetChanged || dontShowNameChanged || peaceChanged || flyingChanged)
+					if (oldflags!=m_flags)
 					{
 						foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
@@ -775,8 +773,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				//return (Flags & (uint)eFlags.TRANSPARENT) != 0;//TODO
-				return false; // can't charm transparent mobs? that's not the right way
+				return (Flags & (uint)eFlags.STEALTH) > 0;
 			}
 		}
 
