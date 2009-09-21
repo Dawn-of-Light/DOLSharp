@@ -775,9 +775,9 @@ namespace DOL.GS.Commands
 		
 		private void ghost( GameClient client, GameNPC targetMob, string[] args )
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.TRANSPARENT;
+			targetMob.Flags ^= (uint)GameNPC.eFlags.GHOST;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage( "Mob TRANSPARENT flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.TRANSPARENT ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+			client.Out.SendMessage( "Mob TRANSPARENT flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.GHOST ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
 		}
 
 		private void stealth( GameClient client, GameNPC targetMob, string[] args )
