@@ -29,15 +29,26 @@ namespace DOL.GS.ServerRules
 	{
 		public bool IsAllowedToJump(ZonePoint targetPoint, GamePlayer player)
 		{
-			return player.Level < 5;
+			if(player.Level < 5)
+			{
+				return true;
+			}
+			player.Client.Out.SendMessage("You do not meet the requirements to enter this region!", eChatType.CT_System, eChatLoc.CL_ChatWindow);
+			return false;
 		}
+		
 	}
 
 	public class BalbansBreachJumpPoint : IJumpPointHandler
 	{
 		public bool IsAllowedToJump(ZonePoint targetPoint, GamePlayer player)
 		{
-			return player.Level < 10 && player.Level > 4;
+			if(player.Level < 10 && player.Level > 4)
+			{
+				return true;
+			}
+			player.Client.Out.SendMessage("You do not meet the requirements to enter this region!", eChatType.CT_System, eChatLoc.CL_ChatWindow);
+			return false;
 		}
 	}
 }
