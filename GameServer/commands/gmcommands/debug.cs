@@ -38,6 +38,7 @@ namespace DOL.GS.Commands
 			if (args[1].ToLower().Equals("on"))
 			{
 				client.Player.TempProperties.setProperty(GamePlayer.DEBUG_MODE_PROPERTY, this);
+				client.Player.CanFly = true;
 				client.Out.SendDebugMode(true);
 				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Debug.ModeON"));
 			}
