@@ -339,6 +339,22 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// if player uses debug before (to prevent hack client fly mode for players using debug and then turning it off)
+		/// </summary>
+		protected bool m_canFly;
+		public bool CanFly
+		{
+			get
+			{
+				return m_canFly;
+			}
+			set
+			{
+				m_canFly = value;
+			}
+		}
+
+		/// <summary>
 		/// quit timer
 		/// </summary>
 		protected RegionTimer m_quitTimer;
