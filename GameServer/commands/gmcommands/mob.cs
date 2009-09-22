@@ -53,7 +53,8 @@ namespace DOL.GS.Commands
 	     "'/mob remove [true]' to remove this mob from the DB; specify true to also remove loot templates (if no other mobs of same name exist)",
 	     "'/mob ghost' makes this mob ghost-like",
 	     "'/mob stealth' makes the mob stealthed (invisible)",
-	     "'/mob fly [height]' makes this mob able to fly by changing the Z coordinate; moves mob up by height",
+		 "'/mob torch' turns this mobs torch on and off",
+		 "'/mob fly [height]' makes this mob able to fly by changing the Z coordinate; moves mob up by height",
 	     "'/mob noname' still possible to target this mob, but removes the name from above mob",
 	     "'/mob notarget' makes it impossible to target this mob and removes the name from above it",
 	     "'/mob kill' kills the mob without removing it from the DB",
@@ -161,7 +162,8 @@ namespace DOL.GS.Commands
 				case "transparent": // deprecated, use "ghost"
 				case "ghost": ghost( client, targetMob, args ); break;
 				case "stealth": stealth( client, targetMob, args ); break;
-				case "fly": fly( client, targetMob, args ); break;
+				case "torch": torch(client, targetMob, args); break;
+				case "fly": fly(client, targetMob, args); break;
 				case "noname": noname( client, targetMob, args ); break;
 				case "notarget": notarget( client, targetMob, args ); break;
 				case "kill": kill( client, targetMob, args ); break;
@@ -787,7 +789,14 @@ namespace DOL.GS.Commands
 			client.Out.SendMessage( "Mob STEALTH flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.STEALTH ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
 		}
 
-		private void fly( GameClient client, GameNPC targetMob, string[] args )
+		private void torch(GameClient client, GameNPC targetMob, string[] args)
+		{
+			targetMob.Flags ^= (uint)GameNPC.eFlags.TORCH;
+			targetMob.SaveIntoDatabase();
+			client.Out.SendMessage("Mob TORCH flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.TORCH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+		}
+
+		private void fly(GameClient client, GameNPC targetMob, string[] args)
 		{
 			int height = 0;
 
