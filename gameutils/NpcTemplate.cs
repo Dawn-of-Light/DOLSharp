@@ -66,6 +66,7 @@ namespace DOL.GS
 		protected IList m_abilities;
 		protected byte m_aggroLevel;
 		protected int m_aggroRange;
+		protected int m_race;
 		protected int m_bodyType;
 		protected int m_maxdistance;
 		protected int m_tetherRange;
@@ -480,6 +481,12 @@ namespace DOL.GS
 		{
 			get { return m_aggroRange; }
 			set { m_aggroRange = value; }
+		}
+
+		public int Race
+		{
+			get { return m_race; }
+			set { m_race = value; }
 		}
 
 		public int BodyType

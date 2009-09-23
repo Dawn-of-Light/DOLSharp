@@ -362,6 +362,13 @@ namespace DOL.GS
             }
         }
 
+		protected int m_race;
+		public virtual int Race
+		{
+			get { return m_race; }
+			set { m_race = value; }
+		}
+
 		/// <summary>
 		/// The state of the ranged attack
 		/// </summary>
@@ -4613,13 +4620,13 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// get the resistance to damage by type
+		/// Get the resistance to damage by resist type
 		/// </summary>
-		/// <param name="property">the property type</param>
+		/// <param name="property">one of the Resist_XXX properties</param>
 		/// <returns>the resist value</returns>
 		public virtual int GetDamageResist(eProperty property)
 		{
-			return 0;
+			return SkillBase.GetRaceResist( m_race, (eResist)property );
 		}
 
 		/// <summary>

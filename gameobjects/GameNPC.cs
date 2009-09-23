@@ -516,11 +516,11 @@ namespace DOL.GS
 		public enum eFlags : byte
 		{
 			/// <summary>
-			/// The npc is a ghost, see through, transparent
+			/// The npc is translucent (like a ghost)
 			/// </summary>
 			GHOST = 0x01,
 			/// <summary>
-			/// The npc is stealth (new since 1.71)
+			/// The npc is stealthed (nearly invisible, like a stealthed player; new since 1.71)
 			/// </summary>
 			STEALTH = 0x02,
 			/// <summary>
@@ -1932,6 +1932,8 @@ namespace DOL.GS
 					aggroBrain.AggroRange = npc.AggroRange;
 				}
 			}
+
+			m_race = npc.Race;
 			m_bodyType = npc.BodyType;
 			m_houseNumber = npc.HouseNumber;
 			m_maxdistance = npc.MaxDistance;
@@ -2008,11 +2010,17 @@ namespace DOL.GS
 				mob.AggroRange = aggroBrain.AggroRange;
 			}
 			mob.EquipmentTemplateID = EquipmentTemplateID;
+
 			if (m_faction != null)
 				mob.FactionID = m_faction.ID;
+
 			mob.MeleeDamageType = (int)MeleeDamageType;
+
 			if (NPCTemplate != null)
 				mob.NPCTemplateID = NPCTemplate.TemplateId;
+
+			mob.Race = Race;
+			mob.BodyType = BodyType;
 			mob.PathID = PathID;
 			mob.MaxDistance = m_maxdistance;
             mob.IsCloakHoodUp = m_isCloakHoodUp;
@@ -2091,6 +2099,7 @@ namespace DOL.GS
 			#region Misc Stats
 			this.MaxDistance = template.MaxDistance;
 			this.TetherRange = template.TetherRange;
+			this.Race = template.Race;
 			this.BodyType = template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = template.Flags;

@@ -2325,7 +2325,7 @@ namespace DOL.GS
 		/// Gets or sets this player's race id
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int Race
+		public override int Race
 		{
 			get { return PlayerCharacter != null ? PlayerCharacter.Race : 0; }
 			set { if (PlayerCharacter != null) PlayerCharacter.Race = value; }
