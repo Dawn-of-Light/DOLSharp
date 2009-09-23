@@ -53,12 +53,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return 0;
 				}
 
-				GamePlayer tradeTarget = null;
+				GamePlayer tradeTarget = obj as GamePlayer;
 				// If our target is another player we set the tradetarget
 				// trade permissions are done in GamePlayer
-				if (obj is GamePlayer)
+				if (tradeTarget != null)
 				{
-					tradeTarget = (GamePlayer) obj;
 					if(tradeTarget.Client.ClientState != GameClient.eClientState.Playing)
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] {fromSlot});
@@ -112,7 +111,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 
 
-					if(client.Account.PrivLevel == (uint)ePrivLevel.Player && tradeTarget.Client.Account.PrivLevel != (uint)ePrivLevel.Player)
+					if(client.Account.PrivLevel == (uint)ePrivLevel.Player && tradeTarget != null && tradeTarget.Client.Account.PrivLevel != (uint)ePrivLevel.Player)
 					{
 						if(!item.IsDropable && !(obj is GameNPC && (obj is Blacksmith || obj is Recharger || (obj as GameNPC).CanAcceptUndroppableItems)))
 						{
