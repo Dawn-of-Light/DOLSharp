@@ -164,6 +164,8 @@ namespace DOL.GS
 		/// </summary>
 		int AggroRange { get;}
 
+		int Race { get; }
+
 		/// <summary>
 		/// Gets the body type of the npc
 		/// </summary>

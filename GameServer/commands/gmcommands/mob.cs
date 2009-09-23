@@ -92,6 +92,8 @@ namespace DOL.GS.Commands
 	     "'/mob tether <tether range>' set mob tether range (>0: check, <=0: no check)",
 	     "'/mob hood' toggle cloak hood visibility",
 	     "'/mob cloak' toggle cloak visibility",
+		"'/mob race [ID]' view or set NPC's race (ID can be # or name)",
+		"'/mob race reload' reload race resists from the database",
 	     "'/mob bodytype <ID>' changing the mob's bodytype",
 	     "'/mob gender <0 = neutral | 1 = male | 2 = female>' set gender for this mob",
 	     "'/mob select' select the mob within 100 radius (used for selection of non-targettable GameNPC)",
@@ -204,6 +206,7 @@ namespace DOL.GS.Commands
 				case "hood": hood( client, targetMob, args ); break;
 				case "cloak": cloak( client, targetMob, args ); break;
 				case "bodytype": bodytype(client, targetMob, args); break;
+				case "race": race( client, targetMob, args ); break;
 				case "gender": gender(client, targetMob, args); break;
 				case "select": select(AUTOSELECT_RADIUS, client);break;
                 case "reload": reload(client, targetMob, args); break;
@@ -643,6 +646,51 @@ namespace DOL.GS.Commands
 				DisplayMessage( client, "Selected mob does not have an aggressive brain." );
 		}
 
+		private void race( GameClient client, GameNPC targetMob, string[] args )
+		{
+			if( args.Length < 3 )
+			{
+				DisplayMessage( client, targetMob.Name + "'s race is " + targetMob.Race + "." );
+				return;
+			}
+
+
+			bool reloadResists = args[2].ToLower().Equals( "reload" );
+
+			if( reloadResists )
+			{
+				SkillBase.InitializeRaceResists();
+				DisplayMessage( client, "Race resists reloaded from database." );
+				return;
+			}
+
+
+			int raceID = 0;
+
+			if( !int.TryParse( args[2], out raceID ) )
+			{
+				string raceName = string.Join( " ", args, 2, args.Length - 2 );
+
+				Race npcRace = GameServer.Database.SelectObject( typeof( Race ), "`Name` = '" + GameServer.Database.Escape( raceName ) + "'" ) as Race;
+
+				if( npcRace == null )
+				{
+					DisplayMessage( client, "No race found named:  " + raceName );
+				}
+				else
+				{
+					raceID = npcRace.ID;
+				}
+			}
+
+			if( raceID != 0 )
+			{
+				targetMob.Race = raceID;
+				targetMob.SaveIntoDatabase();
+				DisplayMessage( client, targetMob.Name + "'s race set to " + raceID );
+			}
+		}
+
 		private void range( GameClient client, GameNPC targetMob, string[] args )
 		{
 			try
@@ -779,7 +827,7 @@ namespace DOL.GS.Commands
 		{
 			targetMob.Flags ^= (uint)GameNPC.eFlags.GHOST;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage( "Mob TRANSPARENT flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.GHOST ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+            client.Out.SendMessage( "Mob GHOST flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.GHOST ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
 		}
 
 		private void stealth( GameClient client, GameNPC targetMob, string[] args )
@@ -932,22 +980,17 @@ namespace DOL.GS.Commands
 					hours = respawn.Hours + " hours ";
 
 				info.Add( " + Respawn: " + days + hours + respawn.Minutes + " minutes " + respawn.Seconds + " seconds" );
-				info.Add( " + SpawnPoint: X=" + targetMob.SpawnPoint.X + " Y=" + targetMob.SpawnPoint.Y + " Z=" + targetMob.SpawnPoint.Z );
+				info.Add( " + SpawnPoint:  " + targetMob.SpawnPoint.X + ", " + targetMob.SpawnPoint.Y + ", " + targetMob.SpawnPoint.Z );
 			}
 
 			info.Add( " " );
-			info.Add( " + Mob Stats:" );
-			info.Add( " + Strength: " + targetMob.Strength );
-			info.Add( " + Constitution: " + targetMob.Constitution );
-			info.Add( " + Dexterity: " + targetMob.Dexterity );
-			info.Add( " + Quickness: " + targetMob.Quickness );
-			info.Add( " + Intelligence: " + targetMob.Intelligence );
-			info.Add( " + Empathy: " + targetMob.Empathy );
-			info.Add( " + Piety: " + targetMob.Piety );
-			info.Add( " + Charisma: " + targetMob.Charisma );
-			info.Add( " + Block %: " + targetMob.BlockChance );
-			info.Add( " + Parry %: " + targetMob.ParryChance );
-			info.Add( " + Evade %: " + targetMob.EvadeChance );
+			info.Add( " + STR  /  CON  /  DEX  /  QUI" );
+			info.Add( " + " + targetMob.Strength + "  /  " + targetMob.Constitution + "  /  " + targetMob.Dexterity + "  /  " + targetMob.Quickness );
+			info.Add( " + INT  /  EMP  /  PIE  /  CHR" );
+			info.Add( " + " + targetMob.Intelligence + "  /  " + targetMob.Empathy + "  /  " + targetMob.Piety + "  /  " + targetMob.Charisma );
+			info.Add( " + Block / Parry / Evade %:  " + targetMob.BlockChance + " / " + targetMob.ParryChance + " / " + targetMob.EvadeChance );
+
+			if( targetMob.LeftHandSwingChance > 0 )
 			info.Add( " + Left Swing %: " + targetMob.LeftHandSwingChance );
 
 			if ( targetMob.Abilities != null && targetMob.Abilities.Count > 0 )
@@ -961,25 +1004,50 @@ namespace DOL.GS.Commands
 
 			info.Add( " " );
 
+			info.Add( " + Model:  " + targetMob.Model + " sized to " + targetMob.Size );
 			info.Add( " + Damage type: " + targetMob.MeleeDamageType );
-			info.Add( " + Position: X=" + targetMob.X + " Y=" + targetMob.Y + " Z=" + targetMob.Z );
+
+			if( targetMob.Race > 0 )
+				info.Add( " + Race:  " + targetMob.Race );
+
+			if( targetMob.BodyType > 0 )
+				info.Add( " + Body Type:  " + targetMob.BodyType );
+
+			info.Add( " + Resist Crush/Slash/Thrust:  " + targetMob.GetDamageResist( eProperty.Resist_Crush )
+				+ " / " + targetMob.GetDamageResist( eProperty.Resist_Slash )
+				+ " / " + targetMob.GetDamageResist( eProperty.Resist_Thrust ) );
+			info.Add( " +  -- Heat/Cold/Matter/Natural:  " + targetMob.GetDamageResist( eProperty.Resist_Heat )
+				+ " / " + targetMob.GetDamageResist( eProperty.Resist_Cold )
+				+ " / " + targetMob.GetDamageResist( eProperty.Resist_Matter )
+				+ " / " + targetMob.GetDamageResist( eProperty.Resist_Natural ) );
+			info.Add( " +  -- Body/Spirit/Energy:  " + targetMob.GetDamageResist( eProperty.Resist_Body )
+				+ " / " + targetMob.GetDamageResist( eProperty.Resist_Spirit )
+				+ " / " + targetMob.GetDamageResist( eProperty.Resist_Energy ) );
+            info.Add( " + Position:  " + targetMob.X + ", " + targetMob.Y + ", " + targetMob.Z );
+
+			if( targetMob.GuildName != null && targetMob.GuildName.Length > 0 )
 			info.Add( " + Guild: " + targetMob.GuildName );
-			info.Add( " + Model: " + targetMob.Model + " sized to " + targetMob.Size );
+
 			info.Add( string.Format( " + Flags: {0} (0x{1})", ( (GameNPC.eFlags)targetMob.Flags ).ToString( "G" ), targetMob.Flags.ToString( "X" ) ) );
 			info.Add( " + OID: " + targetMob.ObjectID );
 			info.Add( " + Active weapon slot: " + targetMob.ActiveWeaponSlot );
 			info.Add( " + Visible weapon slot: " + targetMob.VisibleActiveWeaponSlots );
 			info.Add( " + Speed(current/max): " + targetMob.CurrentSpeed + "/" + targetMob.MaxSpeedBase );
 			info.Add( " + Health: " + targetMob.Health + "/" + targetMob.MaxHealth );
+
+			if( targetMob.EquipmentTemplateID != null && targetMob.EquipmentTemplateID.Length > 0 )
 			info.Add( " + Equipment Template ID: " + targetMob.EquipmentTemplateID );
+
+			if( targetMob.Inventory != null )
 			info.Add( " + Inventory: " + targetMob.Inventory );
-			info.Add( " + CanGiveQuest: " + targetMob.QuestListToGive.Count );
+
+            info.Add( " + Quests to give:  " + targetMob.QuestListToGive.Count );
+
+			if( targetMob.PathID != null && targetMob.PathID.Length > 0 )
 			info.Add( " + Path: " + targetMob.PathID );
 
-			if ( targetMob.BoatOwnerID != null )
-			{
+            if ( targetMob.BoatOwnerID != null && targetMob.BoatOwnerID.Length > 0 )
 				info.Add( " + Boat OwnerID: " + targetMob.BoatOwnerID );
-			}
 
 			client.Out.SendCustomTextWindow( "[ " + targetMob.Name + " ]", info );
 		}

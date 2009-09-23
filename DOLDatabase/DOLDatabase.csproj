@@ -155,6 +155,7 @@
     <Compile Include="DOLTables\DBInstanceXElement.cs" />
     <Compile Include="DOLTables\DBMinotaurRelic.cs" />
     <Compile Include="DOLTables\KeepCaptureLog.cs" />
+    <Compile Include="DOLTables\Race.cs" />
     <Compile Include="DOLTables\StarterEquipment.cs" />
     <Compile Include="DOLTables\DBBoat.cs" />
     <Compile Include="DOLTables\DBChampSpec.cs" />
