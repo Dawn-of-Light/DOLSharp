@@ -376,7 +376,7 @@ namespace DOL.GS.PacketHandler
 			// racial resists
 			for (int i = 0; i < updateResists.Length; i++)
 			{
-				racial[i] = SkillBase.GetRaceResist((eRace)m_gameClient.Player.Race, updateResists[i]);
+				racial[i] = SkillBase.GetRaceResist(m_gameClient.Player.Race, updateResists[i]);
 				pak.WriteShort((ushort)racial[i]);
 			}
 

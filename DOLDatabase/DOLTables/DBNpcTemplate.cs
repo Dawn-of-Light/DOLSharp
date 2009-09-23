@@ -63,6 +63,7 @@ namespace DOL.Database
 		private string m_abilities = "";
 		private byte m_aggroLevel = 0;
 		private int m_aggroRange = 0;
+		private int m_race = 0;
 		private int m_bodyType = 0;
 		private int m_maxdistance = 0;
 		private int m_tetherRange = 0;
@@ -442,6 +443,17 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_aggroRange = value;
+			}
+		}
+
+		[DataElement( AllowDbNull = true )]
+		public int Race
+		{
+			get { return m_race; }
+			set
+			{
+				Dirty = true;
+				m_race = value;
 			}
 		}
 

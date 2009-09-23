@@ -63,6 +63,7 @@ namespace DOL.Database
 		private string m_itemsListTemplateID;
 
 		private int m_npcTemplateID;
+		private int m_race;
 		private int m_bodyType;
 
 		private int m_inHouse;
@@ -526,6 +527,20 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_npcTemplateID = value;
+			}
+		}
+
+		[DataElement( AllowDbNull = true )]
+		public int Race
+		{
+			get
+			{
+				return m_race;
+			}
+			set
+			{
+				Dirty = true;
+				m_race = value;
 			}
 		}
 
