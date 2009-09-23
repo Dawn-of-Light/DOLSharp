@@ -68,11 +68,8 @@ namespace DOL.GS.PlayerClass
 			player.AddSpellLine(SkillBase.GetSpellLine("Spirit Suppression"));
 			player.AddSpellLine(SkillBase.GetSpellLine("Spirit Enhancement"));
 
-			if(player.Level >= 5)
-			{
-				// Abilities
-				player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-			}
+			// Abilities
+			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
 		}
 
 		public override bool HasAdvancedFromBaseClass()

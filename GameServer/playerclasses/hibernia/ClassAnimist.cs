@@ -72,10 +72,7 @@ namespace DOL.GS.PlayerClass
 			player.AddSpellLine(SkillBase.GetSpellLine("Creeping Path Spec")); //spec
 			player.AddSpellLine(SkillBase.GetSpellLine("Verdant Path Spec")); //spec
 
-			if (player.Level >= 5) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-			}
+			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
 		}
 
 		public override bool HasAdvancedFromBaseClass()

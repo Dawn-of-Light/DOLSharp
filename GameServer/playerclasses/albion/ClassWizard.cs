@@ -71,10 +71,7 @@ namespace DOL.GS.PlayerClass
 			player.AddSpellLine(SkillBase.GetSpellLine("Liquifaction"));
 			player.AddSpellLine(SkillBase.GetSpellLine("Pyromancy"));
 
-			if (player.Level >= 5) 
-			{				
-				player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-			}
+			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
 		}
 
 		public override bool HasAdvancedFromBaseClass()

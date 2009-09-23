@@ -69,10 +69,7 @@ namespace DOL.GS.PlayerClass
 			player.AddSpellLine(SkillBase.GetSpellLine("Illusions"));
 			player.AddSpellLine(SkillBase.GetSpellLine("Mind Mastery"));
 
-			if (player.Level >= 5) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-			}
+			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
 		}
 
 		public override bool HasAdvancedFromBaseClass()

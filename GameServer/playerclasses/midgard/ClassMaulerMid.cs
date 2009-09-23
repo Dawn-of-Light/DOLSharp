@@ -80,35 +80,33 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_MaulerStaff));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_FistWraps));
- 
-                player.RemoveSpecialization(Specs.Sword);
-                player.RemoveSpecialization(Specs.Hammer);
-                player.RemoveSpecialization(Specs.Axe);
-                player.RemoveSpecialization(Specs.Parry);
-                player.RemoveAllStyles();
-                player.RemoveAbility(Abilities.MidArmor);
-				player.RemoveAbility(Abilities.Weapon_Axes);
-				player.RemoveAbility(Abilities.Weapon_Hammers);
-				player.RemoveAbility(Abilities.Weapon_Swords);
-                player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
-   
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_MaulerStaff));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_FistWraps));
 
-				player.AddSpellLine(SkillBase.GetSpellLine("Aura Manipulation"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Magnetism"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Power Strikes"));
+            player.RemoveSpecialization(Specs.Sword);
+            player.RemoveSpecialization(Specs.Hammer);
+            player.RemoveSpecialization(Specs.Axe);
+            player.RemoveSpecialization(Specs.Parry);
+            player.RemoveAllStyles();
+            player.RemoveAbility(Abilities.MidArmor);
+			player.RemoveAbility(Abilities.Weapon_Axes);
+			player.RemoveAbility(Abilities.Weapon_Hammers);
+			player.RemoveAbility(Abilities.Weapon_Swords);
+            player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
 
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Aura_Manipulation));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Magnetism));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Power_Strikes));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mauler_Staff));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Fist_Wraps));
-			}
+			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
+
+			player.AddSpellLine(SkillBase.GetSpellLine("Aura Manipulation"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Magnetism"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Power Strikes"));
+
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Aura_Manipulation));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Magnetism));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Power_Strikes));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mauler_Staff));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Fist_Wraps));
+
 			if (player.Level >= 7)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
