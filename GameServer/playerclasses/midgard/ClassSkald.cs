@@ -66,15 +66,10 @@ namespace DOL.GS.PlayerClass
 
 			base.OnLevelUp(player);
 
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Battlesongs));
+			player.AddSpellLine(SkillBase.GetSpellLine("Battlesongs"));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 
-
-
-			if (player.Level >= 5)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Battlesongs));
-				player.AddSpellLine(SkillBase.GetSpellLine("Battlesongs"));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
-			}
 			if (player.Level >= 12)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));

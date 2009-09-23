@@ -69,10 +69,7 @@ namespace DOL.GS.PlayerClass
 			player.AddSpellLine(SkillBase.GetSpellLine("Vacuumancy"));
 			player.AddSpellLine(SkillBase.GetSpellLine("Void Mastery"));
 
-			if (player.Level >= 5) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-			}
+			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
 		}
 
 		public override bool HasAdvancedFromBaseClass()

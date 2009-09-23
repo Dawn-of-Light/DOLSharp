@@ -62,13 +62,11 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Staff));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Staff));
 
-				player.AddSpellLine(SkillBase.GetSpellLine("Rebirth"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Friar Enhancement Spec"));
-			}
+			player.AddSpellLine(SkillBase.GetSpellLine("Rebirth"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Friar Enhancement Spec"));
+
 			if (player.Level >=10)
 			{
 				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
