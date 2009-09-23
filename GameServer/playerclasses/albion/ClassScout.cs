@@ -73,15 +73,12 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-                player.AddSpecialization(SkillBase.GetSpecialization(Specs.Archery));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-                player.AddSpellLine(SkillBase.GetSpellLine("Archery"));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Longbows));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
+            player.AddSpecialization(SkillBase.GetSpecialization(Specs.Archery));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
+            player.AddSpellLine(SkillBase.GetSpellLine("Archery"));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Longbows));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 
-			}
 			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));

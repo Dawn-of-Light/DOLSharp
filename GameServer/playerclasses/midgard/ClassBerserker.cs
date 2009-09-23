@@ -65,15 +65,13 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5) 
-			{				
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LeftAxes));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Left_Axe));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LeftAxes));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Left_Axe));
 
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrown));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Berserk, 1));
-			}
+			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrown));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Berserk, 1));
+
 			if (player.Level >= 10) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));

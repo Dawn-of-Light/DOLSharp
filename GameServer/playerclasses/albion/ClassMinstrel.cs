@@ -73,13 +73,11 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Instruments));
-				player.AddSpellLine(SkillBase.GetSpellLine("Instruments"));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Instruments));
-			}
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Instruments));
+			player.AddSpellLine(SkillBase.GetSpellLine("Instruments"));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Instruments));
+
 			if (player.Level >= 10)
 			{				
 				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));

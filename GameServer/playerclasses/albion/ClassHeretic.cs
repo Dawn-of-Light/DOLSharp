@@ -62,19 +62,17 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-				player.RemoveAbility(Abilities.AlbArmor);
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Cloth));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Flexible));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Flexible));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Crush));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-				player.AddSpellLine(SkillBase.GetSpellLine("Heretic Rejuvenation Spec"));
-				player.RemoveSpellLine("Enhancement");
-				player.AddSpellLine(SkillBase.GetSpellLine("Heretic Enhancement"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Heretic Enhancement Spec"));
-			}
+			player.RemoveAbility(Abilities.AlbArmor);
+			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Cloth));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Flexible));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Flexible));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Crush));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
+			player.AddSpellLine(SkillBase.GetSpellLine("Heretic Rejuvenation Spec"));
+			player.RemoveSpellLine("Enhancement");
+			player.AddSpellLine(SkillBase.GetSpellLine("Heretic Enhancement"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Heretic Enhancement Spec"));
+
 			if (player.Level >= 15)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));

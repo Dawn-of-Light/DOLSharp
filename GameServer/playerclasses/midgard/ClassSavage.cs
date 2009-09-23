@@ -64,16 +64,14 @@ namespace DOL.GS.PlayerClass
 
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_HandToHand));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.HandToHand));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_HandToHand));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.HandToHand));
 
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Savagery));
-				player.AddSpellLine(SkillBase.GetSpellLine("Savagery"));
-			}
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Savagery));
+			player.AddSpellLine(SkillBase.GetSpellLine("Savagery"));
+
 			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));

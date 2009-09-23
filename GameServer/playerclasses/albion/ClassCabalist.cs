@@ -66,11 +66,8 @@ namespace DOL.GS.PlayerClass
 			player.AddSpellLine(SkillBase.GetSpellLine("Essence Manipulation"));
 			player.AddSpellLine(SkillBase.GetSpellLine("Vivification"));
 			
-			if(player.Level >= 5)
-			{
-				// Abilities
-				player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-			}
+			// Abilities
+			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
 		}
 
 		public override bool HasAdvancedFromBaseClass()

@@ -83,10 +83,10 @@ namespace DOL.GS.PlayerClass
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Critical_Strike));
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Envenom));
 			player.AddSpellLine(SkillBase.GetSpellLine("Nightshade"));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));	
 		
 			if (player.Level >= 5) 
 			{			
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));	
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
 			}
 			if (player.Level >= 10) 

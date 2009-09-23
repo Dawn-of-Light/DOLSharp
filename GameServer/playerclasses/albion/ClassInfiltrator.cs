@@ -71,13 +71,14 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Critical_Strike));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Dual_Wield));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Envenom));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crossbow));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
+
 			if (player.Level >= 5)
 			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Critical_Strike));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Dual_Wield));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Envenom));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crossbow));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
 			}
 			if (player.Level >= 10)

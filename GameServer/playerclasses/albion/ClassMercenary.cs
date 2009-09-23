@@ -74,11 +74,9 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Dual_Wield));
-			}
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Dual_Wield));
+
 			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));

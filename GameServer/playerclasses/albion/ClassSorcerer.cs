@@ -66,11 +66,8 @@ namespace DOL.GS.PlayerClass
 			player.AddSpellLine(SkillBase.GetSpellLine("Disorientation"));
 			player.AddSpellLine(SkillBase.GetSpellLine("Domination"));
 
-			if(player.Level >= 5)
-			{
-				// Abilities
-				player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-			}
+			// Abilities
+			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
 		}
 		public override bool HasAdvancedFromBaseClass()
 		{

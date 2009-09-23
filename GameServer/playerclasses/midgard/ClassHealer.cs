@@ -60,15 +60,13 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5) 
-			{				
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Pacification));
-				
-				player.AddSpellLine(SkillBase.GetSpellLine("Pacification"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Healer Mending Spec"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Healer Augmentation Spec"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Pacification Spec"));
-			}
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Pacification));
+			
+			player.AddSpellLine(SkillBase.GetSpellLine("Pacification"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Healer Mending Spec"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Healer Augmentation Spec"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Pacification Spec"));
+
 			if (player.Level >= 10) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Studded));
