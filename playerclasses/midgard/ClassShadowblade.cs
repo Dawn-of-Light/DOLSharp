@@ -75,20 +75,17 @@ namespace DOL.GS.PlayerClass
 
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Critical_Strike));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Axe));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Left_Axe));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Envenom));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Critical_Strike));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Axe));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Left_Axe));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Envenom));
 
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrown));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LeftAxes));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrown));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LeftAxes));
 
-			}
 			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));

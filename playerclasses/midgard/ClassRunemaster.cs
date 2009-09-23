@@ -68,11 +68,8 @@ namespace DOL.GS.PlayerClass
 			player.AddSpellLine(SkillBase.GetSpellLine("Runes of Suppression"));
 			player.AddSpellLine(SkillBase.GetSpellLine("Runes of Destruction"));
 
-			if(player.Level >= 5)
-			{
-				// Abilities
-				player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-			}
+			// Abilities
+			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
 		}
 
 		public override bool HasAdvancedFromBaseClass()

@@ -76,14 +76,12 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Chants));
-				player.AddSpellLine(SkillBase.GetSpellLine("Chants"));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Two_Handed));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_TwoHanded));
-			}
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Chants));
+			player.AddSpellLine(SkillBase.GetSpellLine("Chants"));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Two_Handed));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_TwoHanded));
+
 			if (player.Level >=9)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));

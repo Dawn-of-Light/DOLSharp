@@ -61,15 +61,12 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5) 
-			{	
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Death_Servant));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Death_Servant));
 
-				player.AddSpellLine(SkillBase.GetSpellLine("Painworking"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Deathsight Spec"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Painworking Spec"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Death Servant Spec"));
-			}
+			player.AddSpellLine(SkillBase.GetSpellLine("Painworking"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Deathsight Spec"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Painworking Spec"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Death Servant Spec"));
 		}
 
 		public override bool HasAdvancedFromBaseClass()

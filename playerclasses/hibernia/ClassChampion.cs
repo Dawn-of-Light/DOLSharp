@@ -68,18 +68,16 @@ namespace DOL.GS.PlayerClass
 		{		
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 
 
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LargeWeapons));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Large_Weapons));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LargeWeapons));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Large_Weapons));
 
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Valor));
-				player.AddSpellLine(SkillBase.GetSpellLine("Valor"));
-			}
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Valor));
+			player.AddSpellLine(SkillBase.GetSpellLine("Valor"));
+
 			if (player.Level >= 15) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));

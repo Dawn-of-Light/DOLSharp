@@ -77,16 +77,14 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Flexible));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Flexible));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Flexible));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Flexible));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
 
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Soulrending));
-				player.AddSpellLine(SkillBase.GetSpellLine("Soulrending"));
-			}
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Soulrending));
+			player.AddSpellLine(SkillBase.GetSpellLine("Soulrending"));
+
 			if (player.Level >= 9)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));

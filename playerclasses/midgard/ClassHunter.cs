@@ -73,16 +73,14 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Archery));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Beastcraft));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Spear));
-                player.AddSpellLine(SkillBase.GetSpellLine("Archery"));
-                player.AddSpellLine(SkillBase.GetSpellLine("Beastcraft"));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_CompositeBows));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Spears));
-			}
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Archery));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Beastcraft));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Spear));
+            player.AddSpellLine(SkillBase.GetSpellLine("Archery"));
+            player.AddSpellLine(SkillBase.GetSpellLine("Beastcraft"));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_CompositeBows));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Spears));
+
 			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Studded));

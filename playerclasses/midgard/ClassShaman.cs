@@ -60,15 +60,13 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5) 
-			{				
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Subterranean));
-				
-				player.AddSpellLine(SkillBase.GetSpellLine("Subterranean Incantations"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Shaman Mend Spec"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Shaman Augmentation Spec"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Subterranean Spec"));				
-			}
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Subterranean));
+			
+			player.AddSpellLine(SkillBase.GetSpellLine("Subterranean Incantations"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Shaman Mend Spec"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Shaman Augmentation Spec"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Subterranean Spec"));				
+
 			if (player.Level >= 10) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Studded));
