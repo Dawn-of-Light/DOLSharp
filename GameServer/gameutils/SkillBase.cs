@@ -28,6 +28,7 @@ using DOL.GS.RealmAbilities;
 using DOL.GS.Styles;
 using DOL.Language;
 using log4net;
+using System.Threading;
 
 namespace DOL.GS
 {
@@ -296,7 +297,8 @@ namespace DOL.GS
 		/// <summary>
 		/// Table to hold the race resists
 		/// </summary>
-		protected static Dictionary<eResist, int>[] m_raceResists = new Dictionary<eResist,int>[(int)eRace._Last + 3];
+		protected static Dictionary<int, int[]> m_raceResists;
+		private static ReaderWriterLockSlim raceResistLock = new ReaderWriterLockSlim();
 
 		/// <summary>
 		/// Initialize the object type hashtable
@@ -698,128 +700,64 @@ namespace DOL.GS
 		/// <summary>
 		/// Initializes the race resist table
 		/// </summary>
-		private static void InitializeRaceResists()
+		public static void InitializeRaceResists()
 		{
-			#region Albion
 			// http://camelot.allakhazam.com/Start_Stats.html
-			// Alb
-			m_raceResists[(int)eRace.Avalonian] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Avalonian].Add(eResist.Crush, 2);
-			m_raceResists[(int)eRace.Avalonian].Add(eResist.Slash, 3);
-			m_raceResists[(int)eRace.Avalonian].Add(eResist.Spirit, 5);
+			DataObject[] races;
 
-			m_raceResists[(int)eRace.Briton] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Briton].Add(eResist.Crush, 2);
-			m_raceResists[(int)eRace.Briton].Add(eResist.Slash, 3);
-			m_raceResists[(int)eRace.Briton].Add(eResist.Matter, 5);
+			try
+			{
+				races = GameServer.Database.SelectAllObjects( typeof( Race ) );
+			}
+			catch( Exception e )
+			{
+				raceResistLock.EnterWriteLock();
 
-			m_raceResists[(int)eRace.Highlander] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Highlander].Add(eResist.Crush, 3);
-			m_raceResists[(int)eRace.Highlander].Add(eResist.Slash, 2);
-			m_raceResists[(int)eRace.Highlander].Add(eResist.Cold, 5);
+				try
+				{
+					m_raceResists = new Dictionary<int, int[]>( 1 );
+				}
+				finally
+				{
+					raceResistLock.ExitWriteLock();
+				}
 
-			m_raceResists[(int)eRace.Saracen] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Saracen].Add(eResist.Slash, 2);
-			m_raceResists[(int)eRace.Saracen].Add(eResist.Thrust, 3);
-			m_raceResists[(int)eRace.Saracen].Add(eResist.Heat, 5);
+				log.Error( e.StackTrace, e );
+				return;
+			}
 
-			m_raceResists[(int)eRace.Inconnu] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Inconnu].Add(eResist.Crush, 2);
-			m_raceResists[(int)eRace.Inconnu].Add(eResist.Thrust, 3);
-			m_raceResists[(int)eRace.Inconnu].Add(eResist.Heat, 5);
-			m_raceResists[(int)eRace.Inconnu].Add(eResist.Spirit, 5);
+			raceResistLock.EnterWriteLock();
 
-			m_raceResists[(int)eRace.HalfOgre] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.HalfOgre].Add(eResist.Thrust, 2);
-			m_raceResists[(int)eRace.HalfOgre].Add(eResist.Slash, 3);
-			m_raceResists[(int)eRace.HalfOgre].Add(eResist.Matter, 5);
+			try
+			{
+				if( m_raceResists == null )
+				{
+					m_raceResists = new Dictionary<int, int[]>( races.Length );
+				}
+				else
+				{
+					m_raceResists.Clear();
+				}
 
-			#endregion
-
-			#region Hibernia
-
-			// Hib
-			m_raceResists[(int)eRace.Celt] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Celt].Add(eResist.Crush, 2);
-			m_raceResists[(int)eRace.Celt].Add(eResist.Slash, 3);
-			m_raceResists[(int)eRace.Celt].Add(eResist.Spirit, 5);
-
-			m_raceResists[(int)eRace.Elf] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Elf].Add(eResist.Slash, 2);
-			m_raceResists[(int)eRace.Elf].Add(eResist.Thrust, 3);
-			m_raceResists[(int)eRace.Elf].Add(eResist.Spirit, 5);
-
-			m_raceResists[(int)eRace.Firbolg] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Firbolg].Add(eResist.Crush, 3);
-			m_raceResists[(int)eRace.Firbolg].Add(eResist.Slash, 2);
-			m_raceResists[(int)eRace.Firbolg].Add(eResist.Heat, 5);
-
-			m_raceResists[(int)eRace.Lurikeen] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Lurikeen].Add(eResist.Crush, 5);
-			m_raceResists[(int)eRace.Lurikeen].Add(eResist.Energy, 5);
-
-			m_raceResists[(int)eRace.Sylvan] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Sylvan].Add(eResist.Crush, 3);
-			m_raceResists[(int)eRace.Sylvan].Add(eResist.Thrust, 2);
-			m_raceResists[(int)eRace.Sylvan].Add(eResist.Matter, 5);
-			m_raceResists[(int)eRace.Sylvan].Add(eResist.Energy, 5);
-
-			m_raceResists[(int)eRace.Shar] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Shar].Add(eResist.Crush, 5);
-			m_raceResists[(int)eRace.Shar].Add(eResist.Energy, 5);
-
-			#endregion
-
-			#region Midgard
-			// Mid
-			m_raceResists[(int)eRace.Dwarf] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Dwarf].Add(eResist.Slash, 2);
-			m_raceResists[(int)eRace.Dwarf].Add(eResist.Thrust, 3);
-			m_raceResists[(int)eRace.Dwarf].Add(eResist.Body, 5);
-
-			m_raceResists[(int)eRace.Kobold] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Kobold].Add(eResist.Crush, 5);
-			m_raceResists[(int)eRace.Kobold].Add(eResist.Matter, 5);
-
-			m_raceResists[(int)eRace.Troll] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Troll].Add(eResist.Slash, 3);
-			m_raceResists[(int)eRace.Troll].Add(eResist.Thrust, 2);
-			m_raceResists[(int)eRace.Troll].Add(eResist.Matter, 5);
-
-			m_raceResists[(int)eRace.Norseman] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Norseman].Add(eResist.Crush, 2);
-			m_raceResists[(int)eRace.Norseman].Add(eResist.Slash, 3);
-			m_raceResists[(int)eRace.Norseman].Add(eResist.Cold, 5);
-
-			m_raceResists[(int)eRace.Valkyn] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Valkyn].Add(eResist.Slash, 3);
-			m_raceResists[(int)eRace.Valkyn].Add(eResist.Thrust, 2);
-			m_raceResists[(int)eRace.Valkyn].Add(eResist.Cold, 5);
-			m_raceResists[(int)eRace.Valkyn].Add(eResist.Body, 5);
-
-			m_raceResists[(int)eRace.Frostalf] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.Frostalf].Add(eResist.Slash, 2);
-			m_raceResists[(int)eRace.Frostalf].Add(eResist.Thrust, 3);
-			m_raceResists[(int)eRace.Frostalf].Add(eResist.Spirit, 5);
-
-			#endregion
-
-			m_raceResists[(int)eRace.AlbionMinotaur] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.AlbionMinotaur].Add(eResist.Crush, 4);
-			m_raceResists[(int)eRace.AlbionMinotaur].Add(eResist.Cold, 3);
-			m_raceResists[(int)eRace.AlbionMinotaur].Add(eResist.Heat, 3);
-
-			m_raceResists[(int)eRace.MidgardMinotaur] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.MidgardMinotaur].Add(eResist.Crush, 4);
-			m_raceResists[(int)eRace.MidgardMinotaur].Add(eResist.Cold, 3);
-			m_raceResists[(int)eRace.MidgardMinotaur].Add(eResist.Heat, 3);
-
-			m_raceResists[(int)eRace.HiberniaMinotaur] = new Dictionary<eResist, int>();
-			m_raceResists[(int)eRace.HiberniaMinotaur].Add(eResist.Crush, 4);
-			m_raceResists[(int)eRace.HiberniaMinotaur].Add(eResist.Cold, 3);
-			m_raceResists[(int)eRace.HiberniaMinotaur].Add(eResist.Heat, 3);
-
-
+				foreach( Race race in races )
+				{
+					m_raceResists.Add( race.ID, new int[10] );
+					m_raceResists[race.ID][0] = race.ResistBody;
+					m_raceResists[race.ID][1] = race.ResistCold;
+					m_raceResists[race.ID][2] = race.ResistCrush;
+					m_raceResists[race.ID][3] = race.ResistEnergy;
+					m_raceResists[race.ID][4] = race.ResistHeat;
+					m_raceResists[race.ID][5] = race.ResistMatter;
+					m_raceResists[race.ID][6] = race.ResistSlash;
+					m_raceResists[race.ID][7] = race.ResistSpirit;
+					m_raceResists[race.ID][8] = race.ResistThrust;
+					m_raceResists[race.ID][9] = race.ResistNatural;
+				}
+			}
+			finally
+			{
+				raceResistLock.ExitWriteLock();
+			}
 		}
 
 		private static void RegisterPropertyNames()
@@ -2168,25 +2106,51 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// determine race dependend base resist
+		/// determine race-dependent base resist
 		/// </summary>
-		/// <param name="race"></param>
+		/// <param name="race">Value must be greater than 0</param>
 		/// <param name="type"></param>
 		/// <returns></returns>
-		public static int GetRaceResist(eRace race, eResist type)
+		public static int GetRaceResist(int race, eResist type)
 		{
-			Dictionary<eResist, int> resists = m_raceResists[(int)race];
-			if (resists == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("No resists for race " + race + " defined");
+			if( race == 0 )
 				return 0;
+
+			int resistValue = 0;
+
+			raceResistLock.EnterReadLock();
+
+			try
+			{
+				if( m_raceResists.ContainsKey( race ) )
+				{
+					int resistIndex;
+
+					if( type == eResist.Natural )
+						resistIndex = 9;
+					else
+						resistIndex = (int)type - (int)eProperty.Resist_First;
+
+					if( resistIndex < m_raceResists[race].Length )
+					{
+						resistValue = m_raceResists[race][resistIndex];
+					}
+					else
+			{
+						log.Warn( "No resists defined for type:  " + type.ToString() );
+					}
+				}
+				else
+				{
+					log.Warn( "No resists defined for race:  " + race );
+				}
+			}
+			finally
+			{
+				raceResistLock.ExitReadLock();
 			}
 
-			if (!resists.ContainsKey(type))
-				return 0;
-
-			return resists[type];
+			return resistValue;
 		}
 
 		/// <summary>
