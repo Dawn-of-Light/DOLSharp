@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Collections;
 using DOL.Database;
 
@@ -44,9 +45,9 @@ namespace DOL.GS
 					GameServer.Instance.Logger.Error("StartupEquipment.cs error adding starter equipment for class " + c.Class + " cannot find itemtemplate for " + item.TemplateID);
 					continue;
 				}
-				
+
 				// deeper check if item is suitable to classid
-				if (!string.IsNullOrEmpty(item.Class))
+				if (!string.IsNullOrEmpty(item.Class) && item.Class != "0")
 				{
 					int charClass;
 					bool isFind = false;

@@ -32,7 +32,7 @@ namespace DOL.GS.Commands
 		{
 			if (ServerProperties.Properties.SLASH_LEVEL_TARGET <= 1)
 			{
-				DisplayMessage(client, "/level is disabled on this server currently!");
+				DisplayMessage(client, "/level is disabled on this server.");
 				return;
 			}
 
