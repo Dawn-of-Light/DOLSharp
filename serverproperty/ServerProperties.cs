@@ -638,9 +638,9 @@ namespace DOL.GS.ServerProperties
 		public static bool ALLOW_CROSS_REALM_ITEMS;
 
 		/// <summary>
-		/// What level should /level bring you to?
+		/// What level should /level bring you to? 0 to disable
 		/// </summary>
-		[ServerProperty("slash_level_target", "What level should /level bring you to? ", 20)]
+		[ServerProperty("slash_level_target", "What level should /level bring you to? 0 is disabled.", 0)]
 		public static int SLASH_LEVEL_TARGET;
 
 		/// <summary>
