@@ -155,7 +155,12 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(speedZ);
 			pak.WriteShort(npc.Model);
 			pak.WriteByte(npc.Size);
-			pak.WriteByte(npc.Level);
+			byte level = npc.Level;
+			if((npc.Flags&(uint)GameNPC.eFlags.STATUE)!=0)
+			{
+				level |= 0x80;
+			}
+			pak.WriteByte(level);
 
 			byte flags = (byte)(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, npc) << 6);
 			if ((npc.Flags & (uint)GameNPC.eFlags.GHOST) != 0) flags |= 0x01;

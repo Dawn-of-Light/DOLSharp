@@ -543,6 +543,10 @@ namespace DOL.GS
 			/// npc's torch is lit
 			/// </summary>
 			TORCH = 0x40,
+			/// <summary>
+			/// npc is a statue (no idle animation, no target...)
+			/// </summary>
+			STATUE = 0x80,
 		}
 		/// <summary>
 		/// Holds various flags of this npc
