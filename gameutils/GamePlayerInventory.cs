@@ -100,20 +100,28 @@ namespace DOL.GS
 						// up item type checks and implement item delve information in
 						// a natural way, i.e. through inheritance.
 
-						if (ArtifactMgr.IsArtifact(item))
+						if(ArtifactMgr.IsArtifact(item))
+						{
 							m_items.Add(item.SlotPosition, new InventoryArtifact(item));
+						}
 						else
+						{
 							m_items.Add(item.SlotPosition, item);
-
-						if (GlobalConstants.IsWeapon(item.Object_Type)
-							&& item.Type_Damage == 0
-							&& item.Object_Type != (int)eObjectType.CompositeBow
-							&& item.Object_Type != (int)eObjectType.Crossbow
-							&& item.Object_Type != (int)eObjectType.Longbow
-							&& item.Object_Type != (int)eObjectType.Fired
-							&& item.Object_Type != (int)eObjectType.RecurvedBow) // bows don't use damage type - no warning needed
-							if (log.IsWarnEnabled)
+						}
+						if(log.IsWarnEnabled)
+						{
+							// bows don't use damage type - no warning needed
+							if(GlobalConstants.IsWeapon(item.Object_Type)
+								&& item.Type_Damage == 0
+								&& item.Object_Type != (int)eObjectType.CompositeBow
+								&& item.Object_Type != (int)eObjectType.Crossbow
+								&& item.Object_Type != (int)eObjectType.Longbow
+								&& item.Object_Type != (int)eObjectType.Fired
+								&& item.Object_Type != (int)eObjectType.RecurvedBow) 
+							{
 								log.Warn(Player.Name + ": weapon with damage type 0 is loaded \"" + item.Name + "\" (" + item.ObjectId + ")");
+							}
+						}
 					}
 
 					// notify handlers that the item was just equipped
@@ -429,10 +437,7 @@ namespace DOL.GS
 						if (!valid)	m_player.Out.SendMessage("Your class cannot use this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
-				
-				
-
-				if (valid == true)
+				if (valid)
 				{
 					switch (toSlot)
 					{
@@ -456,13 +461,6 @@ namespace DOL.GS
 								valid = false;
 								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							/*
-							if (valid && fromItem.Level > 0 && fromItem.Level >= m_player.ChampionLevel)
-							{
-								valid = false;
-								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							 */
 							break;
 						case eInventorySlot.HorseArmor:
 							if (fromItem.Item_Type != (int)eInventorySlot.HorseArmor)
@@ -470,13 +468,6 @@ namespace DOL.GS
 								valid = false;
 								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active horse armor slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							/*
-							if (valid && fromItem.Level > 0 && fromItem.Level >= m_player.ChampionLevel)
-							{
-								valid = false;
-								m_player.Out.SendMessage("You can't put " + fromItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							 */
 							break;
 						case eInventorySlot.Horse:
 							if (fromItem.Item_Type != (int)eInventorySlot.Horse)
@@ -632,13 +623,6 @@ namespace DOL.GS
 								valid = false;
 								m_player.Out.SendMessage("You can't put " + toItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							/*
-							if (valid && toItem.Level > 0 && toItem.Level >= m_player.ChampionLevel)
-							{
-								valid = false;
-								m_player.Out.SendMessage("You can't put " + toItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							 */
 							break;
 						case eInventorySlot.HorseArmor:
 							if (toItem.Item_Type != (int)eInventorySlot.HorseArmor)
@@ -646,13 +630,6 @@ namespace DOL.GS
 								valid = false;
 								m_player.Out.SendMessage("You can't put " + toItem.GetName(0, true) + " in your active horse armor slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							/*
-							if (valid && toItem.Level > 0 && toItem.Level >= m_player.ChampionLevel)
-							{
-								valid = false;
-								m_player.Out.SendMessage("You can't put " + toItem.GetName(0, true) + " in your active barding slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							 */
 							break;
 						case eInventorySlot.Horse:
 							if (toItem.Item_Type != (int)eInventorySlot.Horse)
