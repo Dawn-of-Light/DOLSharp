@@ -10,6 +10,6 @@ Scripts.Blacksmith.ObjectRatherOld:			Uhh, {0} ist schon ziemlich alt. Ich werde
 Scripts.Blacksmith.RepairCostAccept:			Es wird Euch {0} kosten, {1} reparieren zu lassen. Seid Ihr damit einverstanden?
 Scripts.Blacksmith.Say:					Ich kann Eure Waffen und Rüstungen reparieren. Gebt mir einfach die Gegenstände, die ich reparieren soll, und ich will sehen, was ich tun kann. Keine Sorge, ich verlange nicht viel für meine Dienste.
 Scripts.Blacksmith.StackedObjets:			{0} kann immer nur einen Gegenstand reparieren.
-Scripts.Blacksmith.YouExamine:				Es interessiert Euch {0}. {0} steht Euch {2} und arbeitet als Schmied.
+Scripts.Blacksmith.YouExamine:				Es interessiert Euch {0}. {1} ist Euch {2} gesonnen und arbeitet als Schmied.
 Scripts.Blacksmith.YouPay:				{0} erhält von Euch {1}.
 Scripts.Blacksmith.YouTarget:				Es wird {0} als Ziel erfasst.

@@ -1,2 +1,2 @@
 # /GameHousingHastener
-GameHousingHastener.GetExamineMessages.Examine:		Es interessiert Euch {0}. {0} steht Euch {2} und treibt Handel.
+GameHousingHastener.GetExamineMessages.Examine:		Es interessiert Euch {0}. {1} ist Euch {2} gesonnen und treibt Handel.
