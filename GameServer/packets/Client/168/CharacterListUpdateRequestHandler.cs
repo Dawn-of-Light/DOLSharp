@@ -1193,6 +1193,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Seer }, // Troll
 					new int[] {
 						(int)eCharacterClass.Healer,
+						(int)eCharacterClass.Thane,
 						(int)eCharacterClass.Berserker,
 						(int)eCharacterClass.Warrior,
 						(int)eCharacterClass.Savage,
