@@ -73,9 +73,6 @@ namespace DOL.GS.PropertyCalc
 			{
 				if (living.InCombat)
 					regen /= 2.0;
-				else
-					regen *= 2.0;
-
 			}
             
 			if (regen != 0 && ServerProperties.Properties.HEALTH_REGEN_RATE != 1)
