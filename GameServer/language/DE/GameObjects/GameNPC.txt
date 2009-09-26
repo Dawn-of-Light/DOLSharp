@@ -8,8 +8,8 @@ GameNPC.GetAggroLevelString.Hostile1:		feindlich
 GameNPC.GetAggroLevelString.Hostile2:		Feindlich
 GameNPC.GetAggroLevelString.Neutral1:		neutral
 GameNPC.GetAggroLevelString.Neutral2:		Neutral
-GameNPC.GetAggroLevelString.TowardsYou:		{0} gegenüber
-GameNPC.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht Euch {2}.
+GameNPC.GetAggroLevelString.TowardsYou:		{0}
+GameNPC.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} ist Euch {2} gesonnen.
 GameNPC.Interact.AlreadyRiding:			Ihr fahrt bereits mit {0}.
 GameNPC.Interact.DirtyLook:			{0} wirft Euch einen bösen Blick zu.
 GameNPC.Interact.IsFull:			Es ist kein Platz mehr frei.
