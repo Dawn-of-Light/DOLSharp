@@ -1,6 +1,6 @@
 # ATLANTIS
 # /Researcher
-Researcher.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} steht Euch {2} gegenüber.
+Researcher.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} ist Euch {2} gesonnen.
 Researcher.GetExamineMessages.She:			Sie
 Researcher.GetExamineMessages.He:			Er
 
