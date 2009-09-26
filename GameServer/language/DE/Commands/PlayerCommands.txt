@@ -316,6 +316,7 @@ Scripts.Player.Guild.Help.GuildAAccept:			/gc aaccept - eine Einladung für eine
 Scripts.Player.Guild.Help.GuildAccept:			/gc accept - eine Einladung für eine Gilde annehmen	
 Scripts.Player.Guild.Help.GuildADecline:		/gc adecline - eine Einladung für eine Allianz ausschlagen	
 Scripts.Player.Guild.Help.GuildAInvite:			/gc ainvite - eine andere Gilde in Eure Allianz einladen	
+Scripts.Player.Guild.Help.GuildALeave:			/gc aleave - eure Gilde aus der Allianz entfernen
 Scripts.Player.Guild.Help.GuildAlli:			/gc alliance - Informationen zu einer Allianz anzeigen	
 Scripts.Player.Guild.Help.GuildAMotd:			/gc amotd <text> - Willkommensbotschaft für eine Allianz ändern	
 Scripts.Player.Guild.Help.GuildARemove:			/gc aremove - aus der Allianz austreten (betrifft alle in der Gilde)	
