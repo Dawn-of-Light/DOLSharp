@@ -80,7 +80,7 @@ namespace DOL.GS.Commands
 			string[] parameters = GameServer.Instance.Configuration.ScriptAssemblies.Split(',');
 			foreach (string param in parameters)
 				cp.ReferencedAssemblies.Add(param); //includes
-			cp.ReferencedAssemblies.Add("lib\\GameServerScripts.dll");
+			cp.ReferencedAssemblies.Add(GameServer.Instance.Configuration.ScriptCompilationTarget);
 			cp.CompilerOptions = @"/lib:." + Path.DirectorySeparatorChar + "lib";
 			CompilerResults cr = provider.CompileAssemblyFromSource(cp, text.ToString());
 

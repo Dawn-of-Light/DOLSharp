@@ -55,7 +55,8 @@ namespace DOL.GS.Commands
      "/player purge",
      "/player update",
      "/player info",
-     "/player showgroup",
+	 "/player location - write a location string to the chat window",
+	 "/player showgroup",
      "/player showeffects",
      "/player articredit <artifact>",
 	 "/player allchars [PlayerName]"
@@ -1442,8 +1443,24 @@ namespace DOL.GS.Commands
                     }
                     break;
                 #endregion
-                #region show group - effects
-                case "showgroup":
+				#region location
+				case "location":
+					{
+						GamePlayer player = client.Player.TargetObject as GamePlayer;
+
+						client.Out.SendMessage("\"" + player.Name + "\", " +
+												player.CurrentRegionID + ", " +
+												player.X + ", " +
+												player.Y + ", " +
+												player.Z + ", " +
+												player.Heading,
+												eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+					}
+					break;
+				#endregion
+				#region show group - effects
+				case "showgroup":
                     {
                         GamePlayer player = client.Player.TargetObject as GamePlayer;
 
