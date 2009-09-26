@@ -50,7 +50,8 @@ namespace DOL.GS.Commands
 	     "'/mob roaming <distance>' set mob random range radius (0=noroaming, -1=standard, >0=individual)",
 	     "'/mob damagetype <eDamageType>' set mob damage type",
 	     "'/mob movehere' move mob to player's location",
-	     "'/mob remove [true]' to remove this mob from the DB; specify true to also remove loot templates (if no other mobs of same name exist)",
+		 "'/mob location' say location information in the chat window",
+		 "'/mob remove [true]' to remove this mob from the DB; specify true to also remove loot templates (if no other mobs of same name exist)",
 	     "'/mob ghost' makes this mob ghost-like",
 	     "'/mob stealth' makes the mob stealthed (invisible)",
 		 "'/mob torch' turns this mobs torch on and off",
@@ -68,7 +69,7 @@ namespace DOL.GS.Commands
 		 "'/mob levela <level>' set the mob's level and auto adjust stats",
 		 "'/mob brain <ClassName>' set the mob's brain",
 	     "'/mob respawn <duration>' set the mob's respawn time (in ms)",
-	     "'/mob questinfo' show mob's quest info",
+		 "'/mob questinfo' show mob's quest info",
 	     "'/mob equipinfo' show mob's inventory info",
 	     "'/mob equiptemplate load <EquipmentTemplateID>' to load the inventory template from the database, it is open for modification after",
 	     "'/mob equiptemplate create' to create an empty inventory template",
@@ -160,7 +161,8 @@ namespace DOL.GS.Commands
 				case "roaming": roaming( client, targetMob, args ); break;
 				case "damagetype": damagetype( client, targetMob, args ); break;
 				case "movehere": movehere( client, targetMob, args ); break;
-				case "remove": remove( client, targetMob, args ); break;
+				case "location": location(client, targetMob, args); break;
+				case "remove": remove(client, targetMob, args); break;
 				case "transparent": // deprecated, use "ghost"
 				case "ghost": ghost( client, targetMob, args ); break;
 				case "stealth": stealth( client, targetMob, args ); break;
@@ -181,7 +183,7 @@ namespace DOL.GS.Commands
 				case "levela": levela(client, targetMob, args); break;
 				case "brain": brain(client, targetMob, args); break;
 				case "respawn": respawn( client, targetMob, args ); break;
-				case "questinfo": questinfo( client, targetMob, args ); break;
+				case "questinfo": questinfo(client, targetMob, args); break;
 				case "equipinfo": equipinfo( client, targetMob, args ); break;
 				case "equiptemplate": equiptemplate( client, targetMob, args ); break;
 				case "dropcount": dropcount( client, targetMob, args ); break;
@@ -772,7 +774,18 @@ namespace DOL.GS.Commands
 			client.Out.SendMessage( "Target Mob '" + targetMob.Name + "' moved to your location!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
 		}
 
-		private void remove( GameClient client, GameNPC targetMob, string[] args )
+		private void location(GameClient client, GameNPC targetMob, string[] args)
+		{
+			client.Out.SendMessage("\"" + targetMob.Name + "\", " + 
+									targetMob.CurrentRegionID + ", " +
+									targetMob.X + ", " +
+									targetMob.Y + ", " +
+									targetMob.Z + ", " +
+									targetMob.Heading,
+									eChatType.CT_System, eChatLoc.CL_SystemWindow);
+		}
+
+		private void remove(GameClient client, GameNPC targetMob, string[] args)
 		{
 			string mobName = targetMob.Name;
 
@@ -1039,7 +1052,7 @@ namespace DOL.GS.Commands
 			info.Add( " + Equipment Template ID: " + targetMob.EquipmentTemplateID );
 
 			if( targetMob.Inventory != null )
-			info.Add( " + Inventory: " + targetMob.Inventory );
+			info.Add( " + Inventory: " + targetMob.Inventory.AllItems.Count + " items" );
 
             info.Add( " + Quests to give:  " + targetMob.QuestListToGive.Count );
 
@@ -1215,7 +1228,7 @@ namespace DOL.GS.Commands
 			}
 		}
 
-		private void questinfo( GameClient client, GameNPC targetMob, string[] args )
+		private void questinfo(GameClient client, GameNPC targetMob, string[] args)
 		{
 			if ( targetMob.QuestListToGive.Count == 0 )
 			{
