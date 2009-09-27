@@ -16,6 +16,8 @@ namespace DOL.Database
 		string m_killedRealm;
 		int m_rpReward;
 		byte m_sameIP = 0;
+		string m_regionName = "";
+		bool m_isInstance = false;
 
 		private bool m_autoSave;
 
@@ -138,6 +140,28 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_sameIP = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public string RegionName
+		{
+			get { return m_regionName; }
+			set
+			{
+				Dirty = true;
+				m_regionName = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public bool IsInstance
+		{
+			get { return m_isInstance; }
+			set
+			{
+				Dirty = true;
+				m_isInstance = value;
 			}
 		}
 

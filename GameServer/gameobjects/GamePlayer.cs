@@ -9118,7 +9118,10 @@ namespace DOL.GS
 				}
 				return false;
 			}
-			MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
+
+			if (GameServer.ServerRules.IsAllowedToMoveToBind(this))
+				MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
+
 			return true;
 		}
 
