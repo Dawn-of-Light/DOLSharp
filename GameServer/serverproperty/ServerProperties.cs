@@ -1040,7 +1040,7 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		public static void Refresh()
 		{
-			log.Info("Refreshing server properties!");
+			log.Info("Refreshing server properties...");
 			Init(typeof(Properties));
 		}
 	}
