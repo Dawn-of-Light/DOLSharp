@@ -118,7 +118,6 @@ namespace DOL.GS.Spells
 				//targets hp percent after heal is same as mostInjuredLiving
 				double targetHealPercent = bestHealPercent + mostInjuredPercent - targetHealthPercent;
 				int targetHeal = (int) (healTarget.MaxHealth * targetHealPercent);
-				//DOLConsole.WriteLine("SpreadHeal: targetHealPercent=" + targetHealPercent + "; uncapped targetHeal=" + targetHeal + "; bestHealPercent=" + bestHealPercent + "; mostInjuredPercent=" + mostInjuredPercent + "; targetHealthPercent=" + targetHealthPercent);
 
 				if (targetHeal > 0)
 				{
@@ -137,12 +136,7 @@ namespace DOL.GS.Spells
 
 				//heal target
 				base.HealTarget(healTarget, reducedHeal);
-
-				if (log.IsDebugEnabled)
-					log.Debug("SpreadHeal: " + target.GetName(0, false) + " heal for " + reducedHeal + "; HP percent after heal=" + target.Health / (float) target.MaxHealth);
 			}
-			if (log.IsDebugEnabled)
-				log.Debug("SpreadHeal: totalHealed=" + totalHealed + "; targetHealCap=" + targetHealCap + "; groupHealCap=" + groupHealCap);
 
 			return true;
 		}
