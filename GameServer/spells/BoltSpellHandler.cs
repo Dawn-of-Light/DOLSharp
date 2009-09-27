@@ -143,18 +143,17 @@ namespace DOL.GS.Spells
 				if (target.ObjectState != GameObject.eObjectState.Active) return;
 				if (!target.IsAlive) return;
 
-// TODO: find out how exactly this works
-//				if (target is GamePlayer && target.AttackState && target.InCombat)
-//				{
-//					MessageToCaster(target.GetName(0, false) + " is in combat.", eChatType.CT_YouHit);
-//					return;
-//				}
+				// Related to PvP hitchance
+				// http://www.camelotherald.com/news/news_article.php?storyid=2444
+				// No information on bolt hitchance against npc's
+				// Bolts are treated as physical attacks for the purpose of ABS only
+				// Based on this I am normalizing the miss rate for npc's to be that of a standard spell
 
-				// Missrate
-				int missrate = (caster is GamePlayer) ? 20 : 25;
+
+				int missrate = (caster is GamePlayer) ? 20 : 15;
 				if (target is GameNPC || caster is GameNPC)
 				{
-					missrate += (int)(5 * caster.GetConLevel(target));
+					missrate += (int)(ServerProperties.Properties.PVE_SPELL_CONHITPERCENT * caster.GetConLevel(target));
 				}
 
 				// add defence bonus from last executed style if any
