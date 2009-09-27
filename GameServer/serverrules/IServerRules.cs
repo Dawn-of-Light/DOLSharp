@@ -43,6 +43,14 @@ namespace DOL.GS.ServerRules
 		bool IsAllowedToConnect(GameClient client, string username);
 
 		/// <summary>
+		/// Is this player allowed to be sent to the bindpoint.  For custom bind locations
+		/// override this, send player to custom bind, and return false
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		bool IsAllowedToMoveToBind(GamePlayer player);
+
+		/// <summary>
 		/// Is attacker allowed to attack defender.
 		/// </summary>
 		/// <param name="attacker">living that makes attack</param>

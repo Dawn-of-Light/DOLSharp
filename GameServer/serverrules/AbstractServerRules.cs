@@ -186,6 +186,11 @@ namespace DOL.GS.ServerRules
 		public abstract bool IsAllowedToUnderstand(GameLiving source, GamePlayer target);
 		public abstract string RulesDescription();
 
+		public virtual bool IsAllowedToMoveToBind(GamePlayer player)
+		{
+			return true;
+		}
+
 		public virtual bool CountsTowardsSlashLevel(Character player)
 		{
 			return true;
@@ -1334,6 +1339,8 @@ namespace DOL.GS.ServerRules
 							killLog.KillerName = pair.Key.Name;
 							killLog.KillerRealm = GlobalConstants.RealmToName(pair.Key.Realm);
 							killLog.RPReward = pair.Value;
+							killLog.RegionName = killedPlayer.CurrentRegion.Description;
+							killLog.IsInstance = killedPlayer.CurrentRegion.IsInstance;
 
 							if (killedPlayer.Client.TCPEndpointAddress == pair.Key.Client.TCPEndpointAddress)
 								killLog.SameIP = 1;
