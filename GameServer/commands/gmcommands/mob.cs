@@ -952,8 +952,8 @@ namespace DOL.GS.Commands
 				info.Add( " + Loaded: from Database" );
 
 			info.Add( " + Class: " + targetMob.GetType().ToString() );
-			info.Add( " + Realm: " + targetMob.Realm );
-			info.Add( " + Level: " + targetMob.Level );
+            info.Add(" + Realm: " + GlobalConstants.RealmToName(targetMob.Realm));
+            info.Add( " + Level: " + targetMob.Level );
 			info.Add( " + Brain: " + ( targetMob.Brain == null ? "(null)" : targetMob.Brain.GetType().ToString() ) );
 
 			IOldAggressiveBrain aggroBrain = targetMob.Brain as IOldAggressiveBrain;
