@@ -269,13 +269,6 @@ namespace DOL.GS
 			}
 		}
 
-		protected bool m_HealthMultiplicator = false;
-		public bool HealthMultiplicator
-		{
-			get { return m_HealthMultiplicator; }
-			set { m_HealthMultiplicator = value; }
-		}
-
 		/// <summary>
 		/// Gets or sets the name of this npc
 		/// </summary>

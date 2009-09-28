@@ -494,7 +494,6 @@ namespace DOL.GS.Spells
                 controlledBrain.IsMainPet = false;
                 summoned = new GameNPC(template);
                 summoned.SetOwnBrain(controlledBrain);
-                summoned.HealthMultiplicator = true;
                 summoned.X = summonloc.X;
                 summoned.Y = summonloc.Y;
                 summoned.Z = target.Z;
