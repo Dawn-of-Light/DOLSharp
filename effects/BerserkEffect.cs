@@ -47,19 +47,19 @@ namespace DOL.GS.Effects
 			base.Start(living);
 			m_startModel = living.Model;
 
-            if (living is GamePlayer)
-            {
-				
-				if ((living as GamePlayer).Race == (int)eRace.Dwarf)
-					living.Model = 2032;
-				else
-					living.Model = 582;
-
-				living.Emote(eEmote.MidgardFrenzy);
-            }
-
-			if (living is GamePlayer)
+			if(living is GamePlayer)
+			{
 				(living as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((living as GamePlayer).Client, "Effects.BerserkEffect.GoBerserkerFrenzy"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				living.Emote(eEmote.MidgardFrenzy);
+				if((living as GamePlayer).Race == (int)eRace.Dwarf)
+				{
+					living.Model = 2032;
+				}
+				else
+				{
+					living.Model = 582;
+				}
+			}
 		}
 
 		public override void Stop()
@@ -68,20 +68,20 @@ namespace DOL.GS.Effects
 			m_owner.Model = m_startModel;
 
 			// there is no animation on end of the effect
-			if (m_owner is GamePlayer)
+			if(m_owner is GamePlayer)
 				(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.BerserkEffect.BerserkerFrenzyEnds"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BerserkEffect.Name"); } }
-
-		/// <summary>
-		/// Icon to show on players, can be id
-		/// TODO find correct icon for berserk
-		/// </summary>
-		public override ushort Icon { get { return 479; } }
+		public override string Name
+		{
+			get
+			{
+				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BerserkEffect.Name");
+			}
+		}
 
 		/// <summary>
 		/// Delve Info
@@ -94,16 +94,16 @@ namespace DOL.GS.Effects
 				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BerserkEffect.InfoEffect"));
 
 				int seconds = RemainingTime / 1000;
-				if (seconds > 0)
+				if(seconds > 0)
 				{
 					delveInfoList.Add(" "); //empty line
-					if (seconds > 60)
+					if(seconds > 60)
 						delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.MinutesRemaining", (seconds / 60), ((seconds % 60).ToString("00"))));
 					else
 						delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.SecondsRemaining", seconds));
 				}
 
-				return delveInfoList; 
+				return delveInfoList;
 			}
 		}
 	}
