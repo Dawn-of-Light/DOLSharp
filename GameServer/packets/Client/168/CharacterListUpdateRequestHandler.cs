@@ -1198,6 +1198,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Warrior,
 						(int)eCharacterClass.Savage,
 						(int)eCharacterClass.Skald,
+						(int)eCharacterClass.Thane,
 						(int)eCharacterClass.Valkyrie,
 						(int)eCharacterClass.Runemaster,
 						(int)eCharacterClass.Hunter,
