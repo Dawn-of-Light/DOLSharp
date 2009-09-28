@@ -1105,8 +1105,8 @@ namespace DOL.GS.Commands
 				realm = Convert.ToByte( args[2] );
 				targetMob.Realm = (eRealm)realm;
 				targetMob.SaveIntoDatabase();
-				client.Out.SendMessage( "Mob realm changed to: " + targetMob.Realm, eChatType.CT_System, eChatLoc.CL_SystemWindow );
-			}
+                client.Out.SendMessage("Mob realm changed to: " + GlobalConstants.RealmToName(targetMob.Realm), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
 			catch ( Exception )
 			{
 				DisplaySyntax( client, args[1] );
