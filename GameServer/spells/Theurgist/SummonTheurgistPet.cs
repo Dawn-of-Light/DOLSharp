@@ -62,8 +62,6 @@ namespace DOL.GS.Spells
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
 
-			pet.HealthMultiplicator = true;
-
             pet.TempProperties.setProperty("target", target);
             (pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
 			(pet.Brain as TheurgistPetBrain).Think();
