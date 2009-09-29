@@ -4484,6 +4484,7 @@ namespace DOL.GS
 			copyTarget.PathingNormalSpeed = PathingNormalSpeed;
 			copyTarget.Quickness = Quickness;
 			copyTarget.Piety = Piety;
+			copyTarget.Race = Race;
 			copyTarget.Realm = Realm;
 			copyTarget.RespawnInterval = RespawnInterval;
 			copyTarget.RoamingRange = RoamingRange;
