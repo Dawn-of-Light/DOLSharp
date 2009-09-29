@@ -149,8 +149,15 @@ namespace DOL.GS.Spells
 				// Bolts are treated as physical attacks for the purpose of ABS only
 				// Based on this I am normalizing the miss rate for npc's to be that of a standard spell
 
+				int missrate = (caster is GameNPC) ? 25 : 15;
 
-				int missrate = (caster is GamePlayer) ? 20 : 15;
+				if (caster is GamePlayer && target is GamePlayer)
+				{
+					// note: Need to check attackers and attackers distance to determine correct combat penalty.  See article above.
+					if (target.InCombat)
+						missrate += 5;
+				}
+
 				if (target is GameNPC || caster is GameNPC)
 				{
 					missrate += (int)(ServerProperties.Properties.PVE_SPELL_CONHITPERCENT * caster.GetConLevel(target));
