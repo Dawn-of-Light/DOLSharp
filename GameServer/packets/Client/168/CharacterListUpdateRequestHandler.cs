@@ -41,17 +41,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 			string accountName = packet.ReadString(24);
 			if (!accountName.StartsWith(client.Account.Name))// TODO more correctly check, client send accountName as account-S, -N, -H (if it not fit in 20, then only account)
 			{
-				DBBannedAccount b = new DBBannedAccount();
-				b.Author = "SERVER";
-				b.Ip = client.TcpEndpoint;
-				b.Account = client.Account.Name;
-				b.DateBan = DateTime.Now;
-				b.Type = "B";
-				b.Reason = String.Format("Autoban wrong Account '{0}'", GameServer.Database.Escape(accountName));
-				GameServer.Database.AddNewObject(b);
-				GameServer.Database.SaveObject(b);
-				client.Disconnect(); return 0;
+				if( ServerProperties.Properties.BAN_HACKERS )
+				{
+					DBBannedAccount b = new DBBannedAccount();
+					b.Author = "SERVER";
+					b.Ip = client.TcpEndpoint;
+					b.Account = client.Account.Name;
+					b.DateBan = DateTime.Now;
+					b.Type = "B";
+					b.Reason = String.Format( "Autoban wrong Account '{0}'", GameServer.Database.Escape( accountName ) );
+					GameServer.Database.AddNewObject( b );
+					GameServer.Database.SaveObject( b );
+				}
+
+				client.Disconnect();
+				return 0;
 			}
+
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
 			for (int i = 0; i < charsCount; i++)
 			{
@@ -73,15 +79,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if(charname.Length<3 || !nameCheck.IsMatch(charname))
 						if (client.Account.PrivLevel==1)
 					{
-						DBBannedAccount b = new DBBannedAccount();
-						b.Author = "SERVER";
-						b.Ip = client.TcpEndpoint;
-						b.Account = client.Account.Name;
-						b.DateBan = DateTime.Now;
-						b.Type = "B";
-						b.Reason = String.Format("Autoban bad CharName '{0}'", GameServer.Database.Escape(charname));
-						GameServer.Database.AddNewObject(b);
-						GameServer.Database.SaveObject(b);
+						if( ServerProperties.Properties.BAN_HACKERS )
+						{
+							DBBannedAccount b = new DBBannedAccount();
+							b.Author = "SERVER";
+							b.Ip = client.TcpEndpoint;
+							b.Account = client.Account.Name;
+							b.DateBan = DateTime.Now;
+							b.Type = "B";
+							b.Reason = String.Format( "Autoban bad CharName '{0}'", GameServer.Database.Escape( charname ) );
+							GameServer.Database.AddNewObject( b );
+							GameServer.Database.SaveObject( b );
+						}
+
 						client.Disconnect();
 						return 1;
 					}
@@ -200,15 +210,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 												valid = false;
 												if (client.Account.PrivLevel == 1)
 												{
-													DBBannedAccount b = new DBBannedAccount();
-													b.Author = "SERVER";
-													b.Ip = client.TcpEndpoint;
-													b.Account = client.Account.Name;
-													b.DateBan = DateTime.Now;
-													b.Type = "B";
-													b.Reason = String.Format("Autoban Hack char update : Wrong {0} point:{1}", (stat == eStat.STR) ? "STR" : stat.ToString(), result);
-													GameServer.Database.AddNewObject(b);
-													GameServer.Database.SaveObject(b);
+													if( ServerProperties.Properties.BAN_HACKERS )
+													{
+														DBBannedAccount b = new DBBannedAccount();
+														b.Author = "SERVER";
+														b.Ip = client.TcpEndpoint;
+														b.Account = client.Account.Name;
+														b.DateBan = DateTime.Now;
+														b.Type = "B";
+														b.Reason = String.Format( "Autoban Hack char update : Wrong {0} point:{1}", ( stat == eStat.STR ) ? "STR" : stat.ToString(), result );
+														GameServer.Database.AddNewObject( b );
+														GameServer.Database.SaveObject( b );
+													}
+
 													client.Disconnect();
 													return 1;
 												}
@@ -220,15 +234,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 											valid = false;
 											if (client.Account.PrivLevel == 1)
 											{
-												DBBannedAccount b = new DBBannedAccount();
-												b.Author = "SERVER";
-												b.Ip = client.TcpEndpoint;
-												b.Account = client.Account.Name;
-												b.DateBan = DateTime.Now;
-												b.Type = "B";
-												b.Reason = String.Format("Autoban Hack char update : Wrong total points used:{0}", points);
-												GameServer.Database.AddNewObject(b);
-												GameServer.Database.SaveObject(b);
+												if( ServerProperties.Properties.BAN_HACKERS )
+												{
+													DBBannedAccount b = new DBBannedAccount();
+													b.Author = "SERVER";
+													b.Ip = client.TcpEndpoint;
+													b.Account = client.Account.Name;
+													b.DateBan = DateTime.Now;
+													b.Type = "B";
+													b.Reason = String.Format( "Autoban Hack char update : Wrong total points used:{0}", points );
+													GameServer.Database.AddNewObject( b );
+													GameServer.Database.SaveObject( b );
+												}
+
 												client.Disconnect();
 												return 1;
 											}
