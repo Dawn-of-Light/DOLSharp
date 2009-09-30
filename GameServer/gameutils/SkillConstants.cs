@@ -460,7 +460,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Shortbow Weapon Spec
 		/// </summary>
-		public const string ShortBow = "Shorbow";
+		public const string ShortBow = "Shortbow";
 		/// <summary>
 		/// Longbow Weapon Spec
 		/// </summary>
