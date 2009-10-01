@@ -102,6 +102,9 @@ namespace DOL.Database
 		protected int m_realm;
 		private string m_allowedClasses = "";
 		private int m_canUseEvery;
+		private int m_flags;
+		private int m_bonusLevel;
+		private string m_packageID;
 		static bool m_autoSave;
 
 		public ItemTemplate()
@@ -174,6 +177,8 @@ namespace DOL.Database
 			m_realm = 0;
 			m_autoSave = false;
             m_allowedClasses = "0";
+			m_flags = 0;
+			m_bonusLevel = 0;
 		}
 
 		[PrimaryKey]
@@ -1090,6 +1095,48 @@ namespace DOL.Database
 			{
 				m_canUseEvery = value;
 				Dirty = true;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int Flags
+		{
+			get
+			{
+				return this.m_flags;
+			}
+			set
+			{
+				this.m_flags = value;
+				this.Dirty = true;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int BonusLevel
+		{
+			get
+			{
+				return this.m_bonusLevel;
+			}
+			set
+			{
+				this.m_bonusLevel = value;
+				this.Dirty = true;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public string PackageID
+		{
+			get
+			{
+				return this.m_packageID;
+			}
+			set
+			{
+				this.m_packageID = value;
+				this.Dirty = true;
 			}
 		}
 
