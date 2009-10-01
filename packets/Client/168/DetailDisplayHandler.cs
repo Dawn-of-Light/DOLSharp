@@ -232,8 +232,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (item.MaxDurability == 0)
 							objectInfo.Add("Cannot be destroyed.");
 
-						objectInfo.Add(string.Format("Bonus Level: {0}", item.BonusLevel));
-
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
 						{
