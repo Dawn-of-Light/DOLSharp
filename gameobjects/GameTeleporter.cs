@@ -94,43 +94,48 @@ namespace DOL.GS
 			
 			// Battlegrounds are specials, as the teleport location depends on
 			// the level of the player, so let's deal with that first.
-
-			if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
-				SayTo(player,"Upon orders of the King, your destination is unavailable for now.");
-			else
 			if (text.ToLower() == "battlegrounds")
 			{
-				AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
-				if (portalKeep != null)
+				if(!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
 				{
-					Teleport teleport = new Teleport();
-					teleport.TeleportID = "battlegrounds";
-					teleport.Realm = (byte)portalKeep.Realm;
-					teleport.RegionID = portalKeep.Region;
-					teleport.X = portalKeep.X;
-					teleport.Y = portalKeep.Y;
-					teleport.Z = portalKeep.Z;
-					teleport.Heading = 0;
-					OnDestinationPicked(player, teleport);
-					return true;
+					SayTo(player, "Upon orders of the King, your destination is unavailable for now.");
 				}
 				else
 				{
-					if (player.Client.Account.PrivLevel > (uint)ePrivLevel.Player)
-						player.Out.SendMessage("No portal keep found.",
-							eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-					return true;
+					AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
+					if(portalKeep != null)
+					{
+						Teleport teleport = new Teleport();
+						teleport.TeleportID = "battlegrounds";
+						teleport.Realm = (byte)portalKeep.Realm;
+						teleport.RegionID = portalKeep.Region;
+						teleport.X = portalKeep.X;
+						teleport.Y = portalKeep.Y;
+						teleport.Z = portalKeep.Z;
+						teleport.Heading = 0;
+						OnDestinationPicked(player, teleport);
+						return true;
+					}
+					else
+					{
+						if(player.Client.Account.PrivLevel > (uint)ePrivLevel.Player)
+						{
+							player.Out.SendMessage("No portal keep found.", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+						}
+						return true;
+					}
 				}
 			}
 
 			// Another special case is personal house, as there is no location
 			// that will work for every player.
-
 			if (text.ToLower() == "personal")
 			{
 				House house = HouseMgr.GetHouseByPlayer(player);
-				if (house == null)
+				if(house == null)
+				{
 					text = "entrance";	// Fall through, port to housing entrance.
+				}
 				else
 				{
 					IGameLocation location = house.OutdoorJumpPoint;
@@ -148,17 +153,17 @@ namespace DOL.GS
 			}
 
 			// Find the teleport location in the database.
-
 			Teleport port = WorldMgr.GetTeleportLocation(DestinationRealm, String.Format("{0}:{1}", Type, text));
 			if (port != null)
 			{
-				if (port.RegionID == 0 &&
-						port.X == 0 &&
-						port.Y == 0 &&
-						port.Z == 0)
+				if(port.RegionID == 0 && port.X == 0 && port.Y == 0 && port.Z == 0)
+				{
 					OnSubSelectionPicked(player, port);
+				}
 				else
+				{
 					OnDestinationPicked(player, port);
+				}
 				return false;
 			}
 
