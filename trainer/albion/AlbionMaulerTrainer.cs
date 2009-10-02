@@ -33,10 +33,6 @@ namespace DOL.GS.Trainer
         {
             get { return eCharacterClass.Mauler_Alb; }
         }
-        public AlbionMaulerTrainer()
-            : base()
-        {
-        }
 
         /// <summary>
         /// Interact with trainer
