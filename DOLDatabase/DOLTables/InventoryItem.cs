@@ -365,6 +365,9 @@ namespace DOL.Database
 			Realm = template.Realm;
 			AllowedClasses = template.AllowedClasses;
 			CanUseEvery = template.CanUseEvery;
+			Flags = template.Flags;
+			BonusLevel = template.BonusLevel;
+			Description = template.Description;
 		}
 	}
 }
