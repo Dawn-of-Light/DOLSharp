@@ -295,7 +295,9 @@ namespace DOL.GS.ServerRules
 				case eObjectType.ThrustWeapon    : abilityCheck = Abilities.Weapon_Thrusting; break;
 				case eObjectType.TwoHandedWeapon : abilityCheck = Abilities.Weapon_TwoHanded; break;
 				case eObjectType.PolearmWeapon   : abilityCheck = Abilities.Weapon_Polearms; break;
-				case eObjectType.Longbow         : abilityCheck = Abilities.Weapon_Longbows; break;
+				case eObjectType.Longbow:
+					otherCheck = new string[] { Abilities.Weapon_Longbows, Abilities.Weapon_Archery };
+					break;
 				case eObjectType.Crossbow        : abilityCheck = Abilities.Weapon_Crossbow; break;
 				case eObjectType.Flexible        : abilityCheck = Abilities.Weapon_Flexible; break;
 				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;
@@ -306,12 +308,16 @@ namespace DOL.GS.ServerRules
 				case eObjectType.LeftAxe:
 				case eObjectType.Axe             : abilityCheck = Abilities.Weapon_Axes; break;
 				case eObjectType.Spear           : abilityCheck = Abilities.Weapon_Spears; break;
-				case eObjectType.CompositeBow    : abilityCheck = Abilities.Weapon_CompositeBows; break;
+				case eObjectType.CompositeBow:	
+					otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Archery };	
+					break;
 				case eObjectType.Thrown          : abilityCheck = Abilities.Weapon_Thrown; break;
 				case eObjectType.HandToHand      : abilityCheck = Abilities.Weapon_HandToHand; break;
 
 					//hib
-				case eObjectType.RecurvedBow     : abilityCheck = Abilities.Weapon_RecurvedBows; break;
+				case eObjectType.RecurvedBow: 
+					otherCheck = new string[] { Abilities.Weapon_RecurvedBows, Abilities.Weapon_Archery };
+					break;
 				case eObjectType.Blades          : abilityCheck = Abilities.Weapon_Blades; break;
 				case eObjectType.Blunt           : abilityCheck = Abilities.Weapon_Blunt; break;
 				case eObjectType.Piercing        : abilityCheck = Abilities.Weapon_Piercing; break;

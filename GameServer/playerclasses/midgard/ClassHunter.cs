@@ -78,7 +78,7 @@ namespace DOL.GS.PlayerClass
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Spear));
             player.AddSpellLine(SkillBase.GetSpellLine("Archery"));
             player.AddSpellLine(SkillBase.GetSpellLine("Beastcraft"));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_CompositeBows));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Archery));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Spears));
 
 			if (player.Level >= 10)
