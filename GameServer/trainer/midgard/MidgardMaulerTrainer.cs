@@ -33,10 +33,6 @@ namespace DOL.GS.Trainer
         {
             get { return eCharacterClass.Mauler_Mid; }
         }
-        public MidgardMaulerTrainer()
-            : base()
-        {
-        }
 
         /// <summary>
         /// Interact with trainer
