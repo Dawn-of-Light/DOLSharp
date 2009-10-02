@@ -1997,12 +1997,26 @@ namespace DOL.GS
         /// </summary>
         private static Dictionary<ushort, List<ZoneData>> m_zonesData;
 
-        /// <summary>
-        /// Creates a new instance, with the given 'skin' (the regionID to display client side).
-        /// </summary>
-        /// <param name="skinID"></param>
-        /// <returns></returns>
-        public static BaseInstance CreateInstance(ushort skinID, Type instanceType)
+
+		/// <summary>
+		/// Creates a new instance, with the given 'skin' (the regionID to display client side).
+		/// </summary>
+		/// <param name="skinID"></param>
+		/// <returns></returns>
+		public static BaseInstance CreateInstance(ushort skinID, Type instanceType)
+		{
+			return CreateInstance(0, skinID, instanceType);
+		}
+
+
+		/// <summary>
+		/// Tries to create an instance with the suggested ID and a given 'skin' (the regionID to display client side).
+		/// </summary>
+		/// <param name="requestedID">0 for random</param>
+		/// <param name="skinID"></param>
+		/// <param name="instanceType"></param>
+		/// <returns></returns>
+        public static BaseInstance CreateInstance(ushort requestedID, ushort skinID, Type instanceType)
         {
             //TODO: Typeof field so TaskDungeonInstance, QuestInstance etc can be created.
             if ((instanceType.IsSubclassOf(typeof(BaseInstance)) || instanceType == typeof(BaseInstance)) == false)
@@ -2046,8 +2060,9 @@ namespace DOL.GS
                 return null;
             }
 
-            ushort ID = 0;
-            //Get the unique ID for this instance.
+			ushort ID = requestedID;
+
+            //Get the unique ID for this instance or try to create an instance at the requested ID
 
             //We need to keep the lock over this whole area until we have successfully inserted the instance, 
             //incase a parallel thread also receives a request to create an instance. We cant have the two colliding!
@@ -2057,15 +2072,22 @@ namespace DOL.GS
             //              -Dinberg.
             lock (m_regions.SyncRoot)
             {
-                while (ID < ushort.MaxValue)
-                {
-                    //Look for a space in the regions table...
-                    if (!m_regions.ContainsKey(ID))
-                        break;
-                    //If no space here, no worries - move quickly to the next ID and continue.
-                    ID++;
-                }
-
+				if (ID == 0)
+				{
+					while (ID < ushort.MaxValue)
+					{
+						//Look for a space in the regions table...
+						if (!m_regions.ContainsKey(ID))
+							break;
+						//If no space here, no worries - move quickly to the next ID and continue.
+						ID++;
+					}
+				}
+				else if (m_regions.ContainsKey(ID))
+				{
+					// requested ID is in use
+					return null;
+				}
 
                 //In the unlikely event of 65535 regions, I'd still like to be warned!
                 if (ID == ushort.MaxValue)

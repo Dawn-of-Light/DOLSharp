@@ -29,35 +29,49 @@ namespace DOL.GS.Commands
         "&instance",
         ePrivLevel.GM,
         "This command assists in the creation of instances.",
-        "/instance",
-        "/instance key <instancekey>",
-        "/instance entry <ClassType> [<NpcTemplateID>]",
-        "/instance delete (please target the element to remove)")]
+        "/instance key <instancekey> (this sets the id of the instance you want to work with)",
+        "/instance entry <ClassType> [<NpcTemplateID>] (add elements to the instance)",
+        "/instance remove (please target the element to remove)",
+		"/instance create <skin> (skin is the region id to copy)",
+		"/instance test (enter a created instance)",
+		"/instance close (delete the instance on the server)",
+		"/instance exit")]
     public class InstanceCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public const string INSTANCE_KEY = "INSTANCE_KEY_TEMP";
 
         public void OnCommand(GameClient client, string[] args)
         {
-            if (args.Length < 2)
+			if (client.Player == null)
+				return;
+
+			GamePlayer player = client.Player;
+
+			string key = GetInstanceKey(player);
+
+			if (args.Length < 2)
             {
-                DisplaySyntax(client);
+				if (key != "")
+					SendMessage(client, "Current instance key is " + key);
+					
+				DisplaySyntax(client);
                 return;
             }
 
-            string key = GetInstanceKey(client);
             if (key == "" && args[1] != "key")
             {
                 SendMessage(client, "You must first assign an instance to work with using /instance key <ID>.");
                 return;
             }
 
-            switch (args[1])
+            switch (args[1].ToLower())
             {
                 #region SetInstanceID
                 case "key":
-                    client.Player.TempProperties.setProperty(INSTANCE_KEY, args[2]);
-                    break;
+					string newKey = string.Join(" ", args, 2, args.Length - 2);
+                    client.Player.TempProperties.setProperty(INSTANCE_KEY, newKey);
+					SendMessage(client, "Instance key set to " + newKey);
+					break;
                 #endregion
                 #region Create Entry
                 case "entry":
@@ -148,7 +162,9 @@ namespace DOL.GS.Commands
                         }
                     }
                     break;
-                case "delete":
+				#endregion
+				#region remove
+				case "remove":
                     {
                         GameObject obj = client.Player.TargetObject;
                         if (obj == null)
@@ -163,7 +179,7 @@ namespace DOL.GS.Commands
                         }
 
                         GameServer.Database.DeleteObject(o);
-                        client.Out.SendMessage("Object delected!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+                        client.Out.SendMessage("Object removed!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 
                         //Remove object...
                         obj.RemoveFromWorld();
@@ -171,18 +187,175 @@ namespace DOL.GS.Commands
                         obj.DeleteFromDatabase();
                     }
                     break;
-                #endregion
-            }
+				#endregion
+				#region create
+				case "create":
+					{
+						if (player.CurrentRegion.IsInstance)
+						{
+							SendMessage(client, "You are already in an instance, use /instance exit to get out.");
+							return;
+						}
+
+						try
+						{
+							if (args.Length < 3)
+							{
+								throw new Exception("You need to provide a skin id.  A skin is the ID of the region you want this instance to look like.");
+							}
+
+							Instance newInstance = player.TempProperties.getObjectProperty(key, null) as Instance;
+
+							if (newInstance != null)
+							{
+								throw new Exception("You already have an instance '" + key + "' created, please close it before creating another.");
+							}
+
+							ushort skinID = Convert.ToUInt16(args[2]);
+
+							newInstance = (Instance)WorldMgr.CreateInstance(skinID, typeof(Instance));
+
+							if (newInstance == null)
+							{
+								SendMessage(client, "Instance creation failed.");
+							}
+							else
+							{
+								SendMessage(client, "Instance created, now loading elements for instance '" + key + "' from the DB.");
+								newInstance.LoadFromDatabase(key);
+								player.TempProperties.setProperty(key, newInstance);
+							}
+						}
+						catch (Exception ex)
+						{
+							SendMessage(client, ex.Message);
+							return;
+						}
+					}
+					break;
+				#endregion
+				#region close
+				case "close":
+					{
+						if (player.CurrentRegion.IsInstance)
+						{
+							SendMessage(client, "Probably not a good idea to use this command while in an instance.");
+							return;
+						}
+
+						Instance newInstance = player.TempProperties.getObjectProperty(key, null) as Instance;
+
+						if (newInstance == null)
+						{
+							SendMessage(client, "Can't find an instance to delete.");
+						}
+						else if (newInstance.NumPlayers > 0)
+						{
+							SendMessage(client, "Instance has players, can't delete.");
+						}
+						else
+						{
+							player.TempProperties.removeProperty(key);
+							newInstance.BeginAutoClosureCountdown(0);
+							SendMessage(client, "Instance closed.");
+						}
+					}
+					break;
+				#endregion
+				#region test
+				case "test":
+					{
+						if (player.CurrentRegion.IsInstance)
+						{
+							SendMessage(client, "You are already in an instance, use /instance exit to get out.");
+							return;
+						}
+
+						Instance newInstance = player.TempProperties.getObjectProperty(key, null) as Instance;
+
+						if (newInstance == null)
+						{
+							SendMessage(client, "Can't find an instance to test, you will need to create one first.");
+						}
+						else
+						{
+							// start with some generic coordinates that seem to work well in many instance zones
+							int x = 32361;
+							int y = 31744;
+							int z = 16003;
+							ushort heading = 1075;
+
+							// If you're having trouble zoning into an instance then try adding an entrance element so it can be used here
+							if (newInstance.InstanceEntranceLocation != null)
+							{
+								x = newInstance.InstanceEntranceLocation.X;
+								y = newInstance.InstanceEntranceLocation.Y;
+								z = newInstance.InstanceEntranceLocation.Z;
+								heading = newInstance.InstanceEntranceLocation.Heading;
+							}
+
+							// save current position for use with /instance exit
+							GameLocation saveLocation = new GameLocation(player.Name + "_exit", player.CurrentRegionID, player.X, player.Y, player.Z);
+							player.TempProperties.setProperty(saveLocation.Name, saveLocation);
+
+							bool success = true;
+
+							if (!player.MoveTo(newInstance.ID, x, y, z, heading))
+							{
+								SendMessage(client, "MoveTo to entrance failed, now trying to move to current location inside the instance.");
+
+								if (!player.MoveTo(newInstance.ID, player.X, player.Y, player.Z, player.Heading))
+								{
+									SendMessage(client, "That failed as well.  Either add an entrance to this instance or move in the world to a corresponding instance location.");
+									success = false;
+								}
+							}
+
+							if (success)
+							{
+								SendMessage(client, "Welcome to Instance ID " + newInstance.ID + ", Skin: " + newInstance.Skin + ", with " + newInstance.Zones.Count + " zones and " + newInstance.Objects.Length + " objects inside the region!");
+								SendMessage(client, "Use '/instance exit' to leave if you get stuck.");
+							}
+						}
+					}
+					break;
+				#endregion
+				#region exit
+				case "exit":
+					{
+						if (!player.CurrentRegion.IsInstance)
+						{
+							SendMessage(client, "You need to be in an instance to use this command.");
+							return;
+						}
+
+						GameLocation saveLocation = player.TempProperties.getObjectProperty(player.Name + "_exit", null) as GameLocation;
+
+						if (saveLocation == null)
+						{
+							ushort sourceRegion = (player.CurrentRegion as BaseInstance).Skin;
+
+							if (!player.MoveTo(sourceRegion, player.X, player.Y, player.Z, player.Heading))
+								player.MoveToBind();
+						}
+						else
+						{
+							player.MoveTo(saveLocation.RegionID, saveLocation.X, saveLocation.Y, saveLocation.Z, saveLocation.Heading);
+						}
+					}
+					break;
+				#endregion
+			}
 
             return;
         }
 
-        public string GetInstanceKey(GameClient c)
+        public string GetInstanceKey(GamePlayer p)
         {
             string str = "";
             try
             {
-                str = (string)c.Player.TempProperties.getObjectProperty(INSTANCE_KEY, "");
+                str = (string)p.TempProperties.getObjectProperty(INSTANCE_KEY, "");
             }
             catch { return ""; }
             return str;
@@ -190,7 +363,7 @@ namespace DOL.GS.Commands
 
         public void SendMessage(GameClient c, string str)
         {
-                            c.Out.SendMessage(str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			c.Out.SendMessage(str, eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
     }
 }

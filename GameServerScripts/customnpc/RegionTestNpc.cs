@@ -8,6 +8,11 @@ namespace DOL.GS
 {
     public class RegionTestNpc : GameNPC
     {
+		public override bool WhisperReceive(GameLiving source, string text)
+		{
+			return SayReceive(source, text);
+		}
+
         public override bool SayReceive(GameLiving source, string str)
         {
             if (!base.SayReceive(source, str))
@@ -34,8 +39,9 @@ namespace DOL.GS
                     //Try and load a template from the db...
                     if (split.Length > 2)
                     {
-                        string load = split[2];
-                        m_instance.LoadFromDatabase(load);
+						string load = split[2];
+						Say("Trying to load instance '" + load + "' template from DB");
+						m_instance.LoadFromDatabase(load);
                     }
                    
                     break;
@@ -45,22 +51,33 @@ namespace DOL.GS
                     else
                     {
                         int x = 32361;
-                            int y = 31744;
+                        int y = 31744;
                         int z = 16003;
                         ushort heading = 1075;
 
                         if (m_instance.InstanceEntranceLocation != null)
                         {
-                            x = m_instance.InstanceEntranceLocation.X;
+							x = m_instance.InstanceEntranceLocation.X;
                             y = m_instance.InstanceEntranceLocation.Y;
                             z = m_instance.InstanceEntranceLocation.Z;
                             heading = m_instance.InstanceEntranceLocation.Heading;
                         }
 
-                        Say("Instance ID " + m_instance + ", Skin: " + m_instance.Skin + ", with " + m_instance.Zones.Count + " zones inside the region.");
-                        if (!source.MoveTo(m_instance.ID, x, y, z, heading))
-                            Say("Source could not be moved to the target location; MoveTo returned false.");
-                        
+						// save current position so player can use /instance exit
+						GameLocation saveLocation = new GameLocation(source.Name + "_exit", source.CurrentRegionID, source.X, source.Y, source.Z);
+						source.TempProperties.setProperty(saveLocation.Name, saveLocation);
+
+                        Say("Instance ID " + m_instance.ID + ", Skin: " + m_instance.Skin + ", with " + m_instance.Zones.Count + " zones inside the region.");
+
+						if (!source.MoveTo(m_instance.ID, x, y, z, heading))
+						{
+							Say("Source could not be moved to instance entrance; MoveTo returned false.  Now trying to move to current location inside the instance.");
+
+							if (!source.MoveTo(m_instance.ID, source.X, source.Y, source.Z, source.Heading))
+							{
+								Say("Sorry, that failed as well.");
+							}
+						}
                     }
                     break;
             }
