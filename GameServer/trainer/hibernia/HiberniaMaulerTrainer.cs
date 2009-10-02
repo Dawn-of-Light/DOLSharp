@@ -33,10 +33,6 @@ namespace DOL.GS.Trainer
         {
             get { return eCharacterClass.Mauler_Hib; }
         }
-        public HiberniaMaulerTrainer()
-            : base()
-        {
-        }
 
         public const string WEAPON_ID1 = "maulerhib_item_staff";
         public const string WEAPON_ID2 = "maulerhib_item_fist";
