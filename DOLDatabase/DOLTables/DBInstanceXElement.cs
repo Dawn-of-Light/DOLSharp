@@ -23,30 +23,37 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
     /// <summary>
-    /// 
+    /// This table represents instances, with an entry for each element (instance type, objects, mobs, entrances, etc) in an instance.
     /// </summary>
     [DataTable(TableName = "InstanceXElement")]
     public class DBInstanceXElement : DataObject
     {
-        public DBInstanceXElement()
+		protected string m_instanceID;
+		protected string m_classType;
+		protected int m_X, m_Y, m_Z;
+		protected ushort m_Heading;
+		protected int m_NPCTemplate;
+
+		public DBInstanceXElement()
         {
         }
 
-        /// <summary>
-        /// The unqiue name of this instance. Eg 'TaskDungeon001' or 'Quest_FlayingTheLol'
+		override public bool AutoSave
+		{
+			get { return true; }
+			set { }
+		}
+
+		/// <summary>
+        /// The unique name of this instance. Eg 'My Task Dungeon'
         /// </summary>
-        [DataElement(AllowDbNull = false)]
+        [DataElement(AllowDbNull = false, Index = true)]
         public String InstanceID
         {
             get { return m_instanceID; }
             set { m_instanceID = value; }
         }
 
-        protected string m_instanceID;
-
-        /// <summary>
-        /// The ClassType of this element!
-        /// </summary>
         [DataElement(AllowDbNull = true)]
         public String ClassType
         {
@@ -54,43 +61,43 @@ namespace DOL.Database
             set { m_classType = value; }
         }
 
-        protected string m_classType;
-
-        protected int m_X, m_Y, m_Z;
-        protected ushort m_Heading;
-
         [DataElement(AllowDbNull = false)]
         public int X
-        { get { return m_X; } set { m_X = value; } }
+        { 
+			get { return m_X; } 
+			set { m_X = value; } 
+		}
 
         [DataElement(AllowDbNull = false)]
         public int Y
-        { get { return m_Y; } set { m_Y = value; } }
+        { 
+			get { return m_Y; } 
+			set { m_Y = value; }
+		}
 
         [DataElement(AllowDbNull = false)]
         public int Z
-        { get { return m_Z; } set { m_Z = value; } }
+        { 
+			get { return m_Z; } 
+			set { m_Z = value; } 
+		}
 
         [DataElement(AllowDbNull = false)]
         public ushort Heading
-        { get { return m_Heading; } set { m_Heading = value; } }
-
-        private int m_NPCTemplate;
+        { 
+			get { return m_Heading; } 
+			set { m_Heading = value; } 
+		}
 
         /// <summary>
         /// Where applicable, the npc template to create this mob from.
         /// </summary>
         [DataElement(AllowDbNull = false)]
         public int NPCTemplate
-        { get { return m_NPCTemplate; } set { m_NPCTemplate = value; } }
+        { 
+			get { return m_NPCTemplate; } 
+			set { m_NPCTemplate = value; }
+		}
 
-        override public bool AutoSave
-        {
-            get { return true; }
-            set { }
-        }
-
-        [Relation(LocalField = "PathID", RemoteField = "PathID", AutoLoad = true, AutoDelete = true)]
-        public DBPathPoint[] PathPoints;
     }
 }
