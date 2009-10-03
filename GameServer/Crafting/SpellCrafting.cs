@@ -403,12 +403,7 @@ namespace DOL.GS
 				}
 
 				player.Emote(eEmote.SpellGoBoom);
-                // Luhz Crafting Update:
-                // Without stopping regen, player goes into undead state (Health > 0 => IsAlive == True)
-                player.StopHealthRegeneration();
-                player.StopPowerRegeneration();
-                player.StopEnduranceRegeneration();
-                // -------------------------------------------------------------------------------------
+				player.Health = 0;
 				player.Die(player); // On official you take damages
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ApplySpellcraftGems.Failed"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
@@ -417,6 +412,7 @@ namespace DOL.GS
 					if (Util.Chance(40))
 					{
 						tradePartner.Emote(eEmote.SpellGoBoom);
+						tradePartner.Health = 0;
 						tradePartner.Die(player);
 					}
 					tradePartner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "SpellCrafting.ApplySpellcraftGems.Failed"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
