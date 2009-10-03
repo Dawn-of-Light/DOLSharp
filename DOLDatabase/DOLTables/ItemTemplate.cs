@@ -102,7 +102,7 @@ namespace DOL.Database
 		protected int m_realm;
 		protected string m_allowedClasses = "";
 		protected int m_canUseEvery;
-		protected int m_flags;
+		protected int m_flags = 0;
 		protected int m_bonusLevel= 0;
 		protected string m_packageID = "";
 		protected string m_description = "";
@@ -1102,7 +1102,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = true)]
 		public int Flags
 		{
 			get
@@ -1116,7 +1116,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = true)]
 		public int BonusLevel
 		{
 			get
