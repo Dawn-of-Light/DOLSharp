@@ -145,7 +145,7 @@ namespace DOL.GS
             log.Info("A player is now leaving " + Name + ".");
 
             //If no more players remain, remove and clean up the instance...
-            if (m_playersInInstance == 0)
+            if (m_playersInInstance == 0 && DestroyWhenEmpty)
             {
                 log.Warn("Instance now empty, destroying instance " + Description + ", ID: " + ID + ".");
                 WorldMgr.RemoveInstance(this);
