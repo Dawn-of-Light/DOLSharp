@@ -5932,12 +5932,6 @@ namespace DOL.GS
 						break;
 					}
 			}
-			// Mauler
-			if (CharacterClass.ID > 59 && CharacterClass.ID < 63)
-			{
-				this.Mana += (7 * this.MaxMana) / 100;
-			}
-
 			// vampiir
 			if (CharacterClass is PlayerClass.ClassVampiir)
 			{
@@ -5967,6 +5961,15 @@ namespace DOL.GS
 				return true;
 			}
 			return false;
+		}
+
+		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
+		{
+			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
+			if(this.HasAbility(Abilities.DefensiveCombatPowerRegeneration))
+			{
+				this.Mana += (int)((damageAmount + criticalAmount) * 0.25);
+			}
 		}
 
 		/// <summary>
