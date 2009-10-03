@@ -1098,6 +1098,7 @@
     <Compile Include="quests\Atlantis\Encounters\FoppishSleeves.cs" />
     <Compile Include="quests\Atlantis\Encounters\GemofLostMemories.cs" />
     <Compile Include="quests\Atlantis\Encounters\GoddessNecklace.cs" />
+    <Compile Include="quests\Atlantis\Encounters\GoldenScarabVest.cs" />
     <Compile Include="quests\Atlantis\Encounters\GoldenSpear.cs" />
     <Compile Include="quests\Atlantis\Encounters\GuardOfValor.cs" />
     <Compile Include="quests\Atlantis\Encounters\HarpyFeatherCloak.cs" />
