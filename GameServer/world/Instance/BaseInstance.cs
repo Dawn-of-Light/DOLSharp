@@ -64,7 +64,6 @@ namespace DOL.GS
         public override ushort ID
         { get { return m_regionID; } }
 
-        private ushort m_skinID;
 
         public override string Description
         {
@@ -74,7 +73,8 @@ namespace DOL.GS
             }
         }
 
-        /// <summary>
+		private ushort m_skinID;
+		/// <summary>
         /// Gets the SkinID of the instance - the 'look' of the instance.
         /// </summary>
         public override ushort Skin
@@ -89,6 +89,28 @@ namespace DOL.GS
         public override bool IsInstance
         { get { return true; } }
 
+
+		private bool m_destroyWhenEmpty = true;
+
+		/// <summary>
+		/// If this is true the instance will be destroyed as soon as the last player leaves.
+		/// </summary>
+		public bool DestroyWhenEmpty
+		{
+			get { return m_destroyWhenEmpty; }
+			set 
+			{ 
+				m_destroyWhenEmpty = value;
+
+				//If no more players remain, remove and clean up the instance...
+				if (m_destroyWhenEmpty && m_playersInInstance == 0)
+				{
+					log.Warn("Instance now empty, destroying instance " + Description + ", ID: " + ID + ".");
+					WorldMgr.RemoveInstance(this);
+				}
+			}
+		}
+
         #endregion
 
         #region Instance specific
@@ -99,6 +121,11 @@ namespace DOL.GS
 
         private int m_playersInInstance;
 
+		protected int PlayersInInstance
+		{
+			get { return m_playersInInstance; }
+		}
+
         public virtual void OnPlayerEnterInstance(GamePlayer player)
         { 
         //Increment the amount of players.
@@ -107,7 +134,7 @@ namespace DOL.GS
             log.Info("A player is now entering " + Name + ".");
 
             //Stop the timer to prevent the region's removal.
-            m_CloseRegionTimer.Stop();
+            m_autoCloseRegionTimer.Stop();
         }
 
         public virtual void OnPlayerLeaveInstance(GamePlayer player)
@@ -157,18 +184,35 @@ namespace DOL.GS
         public virtual void OnCollapse()
         { }
 
-        private AutoRemoveregionTimer m_CloseRegionTimer;
+        private AutoCloseRegionTimer m_autoCloseRegionTimer;
+		private DelayCloseRegionTimer m_delayCloseRegionTimer;
 
         public void BeginAutoClosureCountdown(int minutes)
         {
-            m_CloseRegionTimer = new AutoRemoveregionTimer(TimeManager, this);
-            m_CloseRegionTimer.Interval = minutes * 60000;
-            m_CloseRegionTimer.Start(minutes * 60000);
+            m_autoCloseRegionTimer = new AutoCloseRegionTimer(TimeManager, this);
+            m_autoCloseRegionTimer.Interval = minutes * 60000;
+            m_autoCloseRegionTimer.Start(minutes * 60000);
         }
 
-        protected class AutoRemoveregionTimer : GameTimer
+		/// <summary>
+		/// Setting this will ensure the instance stays around x minutes.  After that the region will be destroyed when empty
+		/// </summary>
+		/// <param name="minutes"></param>
+		public void BeginDelayCloseCountdown(int minutes)
+		{
+			DestroyWhenEmpty = false;
+
+			if (m_delayCloseRegionTimer != null)
+				m_delayCloseRegionTimer.Stop();
+
+			m_delayCloseRegionTimer = new DelayCloseRegionTimer(TimeManager, this);
+			m_delayCloseRegionTimer.Interval = minutes * 60000;
+			m_delayCloseRegionTimer.Start(minutes * 60000);
+		}
+
+		protected class AutoCloseRegionTimer : GameTimer
         {
-            public AutoRemoveregionTimer(TimeManager time, BaseInstance i)
+            public AutoCloseRegionTimer(TimeManager time, BaseInstance i)
                 : base(time)
             {
                 m_instance = i;
@@ -207,6 +251,31 @@ namespace DOL.GS
 
         }
 
+		protected class DelayCloseRegionTimer : GameTimer
+		{
+			public DelayCloseRegionTimer(TimeManager time, BaseInstance i)
+				: base(time)
+			{
+				m_instance = i;
+			}
+
+			//The instance to remove...
+			BaseInstance m_instance;
+
+			protected override void OnTick()
+			{
+				if (m_instance == null)
+				{
+					log.Warn("DelayCloseRegionTimer is not being stopped once the instance is destroyed!");
+					Stop();
+					return;
+				}
+
+				Stop();
+				m_instance.DestroyWhenEmpty = true;
+			}
+
+		}
 
         #endregion
 
