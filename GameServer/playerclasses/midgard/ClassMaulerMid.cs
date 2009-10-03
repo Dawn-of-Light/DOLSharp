@@ -94,6 +94,7 @@ namespace DOL.GS.PlayerClass
 			player.RemoveAbility(Abilities.Weapon_Hammers);
 			player.RemoveAbility(Abilities.Weapon_Swords);
             player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
+			player.AddAbility(SkillBase.GetAbility(Abilities.DefensiveCombatPowerRegeneration, 1));
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 

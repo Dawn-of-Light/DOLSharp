@@ -23,13 +23,9 @@ using System.Collections;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	///
-	/// </summary>
 	[PlayerClassAttribute((int)eCharacterClass.Shadowblade, "Shadowblade", "MidgardRogue")]
 	public class ClassShadowblade : ClassMidgardRogue
 	{
-
 		public ClassShadowblade() : base()
 		{
 			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.Loki");
@@ -109,6 +105,7 @@ namespace DOL.GS.PlayerClass
 			if (player.Level >= 50)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 7));
+				player.AddAbility(SkillBase.GetAbility(Abilities.BloodRage));
 			}
 		}
 

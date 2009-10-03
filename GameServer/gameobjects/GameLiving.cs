@@ -72,6 +72,7 @@ namespace DOL.GS
 		/// </summary>
 		public const string LAST_ENEMY_ATTACK_RESULT = "LastEnemyAttackResult";
 
+
 		#region enums
 
 		/// <summary>
@@ -1787,15 +1788,6 @@ namespace DOL.GS
 			}
 
 			ad.Target.StartInterruptTimer(ad, interruptDuration);
-
-			if (ad.Target is GamePlayer &&
-				((ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerAlb
-				|| (ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerMid
-				|| (ad.Target as GamePlayer).CharacterClass is PlayerClass.ClassMaulerHib)
-				&& ad.Damage > 0)
-			{
-				ad.Target.Mana += ad.Damage / 5;
-			}
 			//Return the result
 			return ad;
 		}
@@ -3711,13 +3703,9 @@ namespace DOL.GS
 			GamePlayer attackerPlayer = source as GamePlayer;
 			if (attackerPlayer != null && attackerPlayer != this)
 			{
-                // Aredhel: Ugh. Really, this isn't the place to modify damage,
-                // when we arrive here the damage is final, hence the name
-                // TakeDamage. Refactor asap.
-
 				// Apply Mauler RA5L
 				GiftOfPerizorEffect GiftOfPerizor = (GiftOfPerizorEffect)this.EffectList.GetOfType(typeof(GiftOfPerizorEffect));
-				if (GiftOfPerizor == null)
+				if (GiftOfPerizor != null)
 				{
 					int difference = (int)(0.25 * damageDealt); // RA absorb 25% damage
 					damageDealt -= difference;
@@ -3925,11 +3913,6 @@ namespace DOL.GS
 				{
 					m_xpGainers.Add( xpGainer, 0.0f );
 				}
-				/*if (m_xpGainers[xpGainer] == null)
-				{
-					m_xpGainers[xpGainer] = (float)0;
-				}*/
-				
 				m_xpGainers[xpGainer] = (float)m_xpGainers[xpGainer] + damageAmount;
 			}
 		}
@@ -4854,15 +4837,25 @@ namespace DOL.GS
 			 || (((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63)))
 			{
 				double MinMana = MaxMana * 0.15;
-				if (Mana < MinMana) return 0;
-				else if (!InCombat) ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
-
+				if(Mana < MinMana)
+				{
+					return 0;
+				}
 				if (!InCombat)
 				{
-					if (ManaPercent > 80)
+					if(Mana - GetModified(eProperty.PowerRegenerationRate) < MinMana)
+					{
+						return 0;
+					}
+					ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
+					if(ManaPercent > 80)
+					{
 						return 1000;
+					}
 					else
+					{
 						return 1500;
+					}
 				}
 			}
 			else
@@ -4978,13 +4971,15 @@ namespace DOL.GS
 
 		public virtual int Mana
 		{
-			get { return m_mana; }
+			get 
+			{ 
+				return m_mana; 
+			}
 			set
-			{
+			{	
 				int maxmana = MaxMana;
 				m_mana = Math.Min(value, maxmana);
 				m_mana = Math.Max(m_mana, 0);
-
 				if (IsAlive && (m_mana < maxmana || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir)
 					   || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63)))
 				{
