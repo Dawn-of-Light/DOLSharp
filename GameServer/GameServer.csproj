@@ -1114,7 +1114,6 @@
     <Compile Include="quests\Atlantis\Encounters\RingofDances.cs" />
     <Compile Include="quests\Atlantis\Encounters\RingofFire.cs" />
     <Compile Include="quests\Atlantis\Encounters\RingofUnyieldingWill.cs" />
-    <Compile Include="quests\Atlantis\Encounters\ScarabWingVest.cs" />
     <Compile Include="quests\Atlantis\Encounters\ScepteroftheMeritorious.cs" />
     <Compile Include="quests\Atlantis\Encounters\ScorpionsTail.cs" />
     <Compile Include="quests\Atlantis\Encounters\ShadesOfMist.cs" />
