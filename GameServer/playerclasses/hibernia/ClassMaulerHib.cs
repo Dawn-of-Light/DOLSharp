@@ -83,6 +83,7 @@ namespace DOL.GS.PlayerClass
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_MaulerStaff));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_FistWraps));
+			player.AddAbility(SkillBase.GetAbility(Abilities.DefensiveCombatPowerRegeneration,1));
 
             player.RemoveSpecialization(Specs.Blades);
             player.RemoveSpecialization(Specs.Piercing);

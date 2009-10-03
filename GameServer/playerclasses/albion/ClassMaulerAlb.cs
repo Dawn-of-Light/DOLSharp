@@ -95,6 +95,7 @@ namespace DOL.GS.PlayerClass
 			player.RemoveAbility(Abilities.Weapon_Thrusting);
 			player.RemoveAbility(Abilities.Weapon_Crushing);
             player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
+			player.AddAbility(SkillBase.GetAbility(Abilities.DefensiveCombatPowerRegeneration, 1));
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 

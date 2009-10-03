@@ -303,6 +303,8 @@ namespace DOL.GS
 		/// </summary>
 		public const string Volley = "Volley";
 
+		public const string BloodRage = "Blood Rage";
+
 		//new maintank skills with 1.81
 		/// <summary>
 		/// Scars of Battle Ability
@@ -344,6 +346,8 @@ namespace DOL.GS
 		/// Taunting Shout Ability
 		/// </summary>	        
         public const string TauntingShout = "Taunting Shout";
+
+		public const string DefensiveCombatPowerRegeneration = "Defensive Combat Power Regeneration";
 		//NPC only abilities
 		/// <summary>
 		/// Crowd Control Immunity - NPC Only ability
