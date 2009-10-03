@@ -102,6 +102,22 @@ namespace DOL.GS
 			{ 
 				m_destroyWhenEmpty = value;
 
+				if (!m_destroyWhenEmpty)
+				{
+					if (m_autoCloseRegionTimer != null)
+					{
+						m_autoCloseRegionTimer.Stop();
+						m_autoCloseRegionTimer = null;
+					}
+
+					if (m_delayCloseRegionTimer != null)
+					{
+						m_delayCloseRegionTimer.Stop();
+						m_delayCloseRegionTimer = null;
+					}
+
+				}
+
 				//If no more players remain, remove and clean up the instance...
 				if (m_destroyWhenEmpty && m_playersInInstance == 0)
 				{
@@ -134,7 +150,8 @@ namespace DOL.GS
             log.Info("A player is now entering " + Name + ".");
 
             //Stop the timer to prevent the region's removal.
-            m_autoCloseRegionTimer.Stop();
+			if (m_autoCloseRegionTimer != null)
+				m_autoCloseRegionTimer.Stop();
         }
 
         public virtual void OnPlayerLeaveInstance(GamePlayer player)
@@ -189,6 +206,11 @@ namespace DOL.GS
 
         public void BeginAutoClosureCountdown(int minutes)
         {
+			if (m_autoCloseRegionTimer != null)
+			{
+				m_autoCloseRegionTimer.Stop();
+			}
+
             m_autoCloseRegionTimer = new AutoCloseRegionTimer(TimeManager, this);
             m_autoCloseRegionTimer.Interval = minutes * 60000;
             m_autoCloseRegionTimer.Start(minutes * 60000);
@@ -201,9 +223,6 @@ namespace DOL.GS
 		public void BeginDelayCloseCountdown(int minutes)
 		{
 			DestroyWhenEmpty = false;
-
-			if (m_delayCloseRegionTimer != null)
-				m_delayCloseRegionTimer.Stop();
 
 			m_delayCloseRegionTimer = new DelayCloseRegionTimer(TimeManager, this);
 			m_delayCloseRegionTimer.Interval = minutes * 60000;
