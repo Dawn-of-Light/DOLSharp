@@ -57,24 +57,19 @@ namespace DOL.Database
         private int m_Piety;
         private int m_Empathy;
         private int m_Charisma;
-
 		private string m_equipmentTemplateID;
-
 		private string m_itemsListTemplateID;
-
 		private int m_npcTemplateID;
 		private int m_race;
 		private int m_bodyType;
-
 		private int m_inHouse;
-		
 		private string m_brain;
 		private string m_pathID;
 		private int m_maxdistance;
         private string m_boat_ownerid;
 		private int m_roamingRange;
-
         private bool m_isCloakHoodUp;
+		private string m_packageID;
 
 		public static readonly string DEFAULT_NPC_CLASSTYPE = "DOL.GS.GameNPC";
 
@@ -753,6 +748,20 @@ namespace DOL.Database
                 }
             }
         }
+
+		[DataElement(AllowDbNull = true)]
+		public string PackageID
+		{
+			get
+			{
+				return this.m_packageID;
+			}
+			set
+			{
+				this.m_packageID = value;
+				this.Dirty = true;
+			}
+		}
     }
 }
 

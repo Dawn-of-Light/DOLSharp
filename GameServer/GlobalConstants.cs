@@ -70,6 +70,16 @@ namespace DOL.GS
 		/// </summary>
 		Door = 6,	
 	};
+
+	public enum eItemFlags
+	{
+		CannotBeSoldToMerchants = 0x1,
+		CannotBeDestroyed = 0x2,
+		CannotBeTradedToOtherPlayers = 0x4,
+		CannotBeDropped = 0x8,
+		CanBeDroppedAsLoot = 0x10,
+	}
+
 	/// <summary>
 	/// The privilege level of the client
 	/// </summary>
