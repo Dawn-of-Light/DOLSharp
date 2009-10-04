@@ -587,6 +587,19 @@ namespace DOL.GS.ServerProperties
         public static int GAMENPC_BASE_HP;
 
 		/// <summary>
+		/// How many hitpoints per point of CON above gamenpc_base_con should an NPC gain.
+		/// This modification is applied prior to any buffs
+		/// </summary>
+		[ServerProperty("npc", "gamenpc_hp_gain_per_con", "How many hitpoints per point of CON above gamenpc_base_con should an NPC gain", 2)]
+		public static int GAMENPC_HP_GAIN_PER_CON;
+
+		/// <summary>
+		/// What is the base contitution for npc's
+		/// </summary>
+		[ServerProperty("npc", "gamenpc_base_con", "GameNPC's base Constitution", 30)]
+		public static int GAMENPC_BASE_CON;
+
+		/// <summary>
 		/// Chance for NPC to random walk. Default is 20
 		/// </summary>
 		[ServerProperty("npc", "gamenpc_randomwalk_chance", "Chance for NPC to random walk. Default is 20", 20)]
