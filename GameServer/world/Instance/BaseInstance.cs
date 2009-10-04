@@ -102,7 +102,7 @@ namespace DOL.GS
 			{ 
 				m_destroyWhenEmpty = value;
 
-				if (!m_destroyWhenEmpty)
+				if (m_destroyWhenEmpty)
 				{
 					if (m_autoCloseRegionTimer != null)
 					{
@@ -115,7 +115,6 @@ namespace DOL.GS
 						m_delayCloseRegionTimer.Stop();
 						m_delayCloseRegionTimer = null;
 					}
-
 				}
 
 				//If no more players remain, remove and clean up the instance...
@@ -159,7 +158,7 @@ namespace DOL.GS
             //Decrease the amount of players
             m_playersInInstance--;
 
-            log.Info("A player is now leaving " + Name + ". " + m_playersInInstance + " remain.");
+            log.Debug("A player is now leaving " + Name + ". " + m_playersInInstance + " remain.");
 
             //If no more players remain, remove and clean up the instance...
             if (m_playersInInstance < 1 && DestroyWhenEmpty)
