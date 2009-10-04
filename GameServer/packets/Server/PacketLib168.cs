@@ -707,7 +707,11 @@ namespace DOL.GS.PacketHandler
 					if ((npc.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0)
 						flags |= 0x01;
 					if ((npc.Flags & (uint)GameNPC.eFlags.DONTSHOWNAME) != 0)
-						flags |= 0x02;
+						flags |= 0x02;	
+				}
+				if((npc.Flags & (uint)GameNPC.eFlags.STATUE) != 0)
+				{
+					flags |= 0x01;
 				}
 				if (npc.IsUnderwater)
 					flags |= 0x10;
