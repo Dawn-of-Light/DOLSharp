@@ -67,8 +67,14 @@ namespace DOL.GS.PropertyCalc
 				int basecon = (living as GameNPC).Constitution;
 				int conmod = 20; // at level 50 +75 con ~= +300 hit points
 
-				if (basecon < 30) // any mob with less than 30 base con will have reduced hitpoints (this is a DOL specific hack to reduce hitpoints)
-					hp = (int)Math.Ceiling(hp / ((31 - (living as GameNPC).Constitution) * 0.75));
+				// first adjust hitpoints based on base CON
+
+				if (basecon != ServerProperties.Properties.GAMENPC_BASE_CON)
+				{
+					hp = Math.Max(1, hp + ((basecon - ServerProperties.Properties.GAMENPC_BASE_CON) * ServerProperties.Properties.GAMENPC_HP_GAIN_PER_CON));
+				}
+
+				// Now adjust for buffs
 
 				// adjust hit points based on constitution difference from base con
 				// modified from http://www.btinternet.com/~challand/hp_calculator.htm
