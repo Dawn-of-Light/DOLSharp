@@ -2095,7 +2095,10 @@ namespace DOL.GS.Commands
 				switch ( statType )
 				{
 						case "STR": targetMob.Strength = statval; break;
-						case "CON": targetMob.Constitution = statval; break;
+						case "CON": 
+							targetMob.Constitution = statval;
+							targetMob.Health = targetMob.MaxHealth;
+							break;
 						case "DEX": targetMob.Dexterity = statval; break;
 						case "QUI": targetMob.Quickness = statval; break;
 						case "INT": targetMob.Intelligence = statval; break;
