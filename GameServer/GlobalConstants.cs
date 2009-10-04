@@ -24,8 +24,6 @@ using DOL.Language;
 
 namespace DOL.GS
 {
-
-
 	/// <summary>
 	/// Defines the realms for various packets and search functions etc.
 	/// </summary>
@@ -1722,5 +1720,9 @@ namespace DOL.GS
 				return m_PvERezIllness;
 			}
 		}
+	}
+	public static class Constants
+	{
+		public static int USE_AUTOVALUES = -1;
 	}
 }
