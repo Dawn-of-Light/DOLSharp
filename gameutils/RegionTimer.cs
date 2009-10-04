@@ -111,7 +111,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="timerOwner">The game object that is starting the timer</param>
 		/// <param name="callback">The callback function to call</param>
-		/// <param name="delay">The interval in milliseconds when to call the callback</param>
+		/// <param name="delay">The interval in milliseconds when to call the callback (>0)</param>
 		public RegionTimer(GameObject timerOwner, RegionTimerCallback callback, int delay)
 			: this(timerOwner, callback)
 		{

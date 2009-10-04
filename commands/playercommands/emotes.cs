@@ -610,7 +610,7 @@ namespace DOL.GS.Commands
 		};
 		private readonly string[] EMOTE_MESSAGES_YAWN = {
 			"You yawn.",
-			"{0} yanws.",
+			"{0} yawns.",
 			"You yawn at {0}.",
 			"{0} yawns at {1}.",
 		};
