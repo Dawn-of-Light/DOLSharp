@@ -1901,7 +1901,7 @@ namespace DOL.GS
 			IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 			{
-				if (npc.AggroRange == 0)
+				if (npc.AggroRange == Constants.USE_AUTOVALUES)
 				{
 					if (Realm == eRealm.None)
 					{
