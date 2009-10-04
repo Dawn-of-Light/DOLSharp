@@ -1901,32 +1901,42 @@ namespace DOL.GS
 			IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 			{
-				if (npc.AggroRange == Constants.USE_AUTOVALUES)
+				aggroBrain.AggroLevel = npc.AggroLevel;
+				aggroBrain.AggroRange = npc.AggroRange;
+				if(aggroBrain.AggroRange == Constants.USE_AUTOVALUES)
 				{
 					if (Realm == eRealm.None)
 					{
-						if (CurrentRegion.IsDungeon)
+						aggroBrain.AggroRange = 400;
+						if(CurrentRegion.IsDungeon)
+						{
 							aggroBrain.AggroRange = 300;
-						else if (Name != Name.ToLower())
+						}
+						if(Name != Name.ToLower())
+						{
 							aggroBrain.AggroRange = 500;
-						else
-							aggroBrain.AggroRange = 400;
-
-						if (Name != Name.ToLower())
-							aggroBrain.AggroLevel = 30;
-						else
-							aggroBrain.AggroLevel = (Level > 5) ? 30 : 0;
+						}
 					}
-					else if (Realm != eRealm.None)
+					if (Realm != eRealm.None)
 					{
 						aggroBrain.AggroRange = 500;
-						aggroBrain.AggroLevel = 60;
 					}
 				}
-				else
+				if(aggroBrain.AggroLevel == Constants.USE_AUTOVALUES)
 				{
-					aggroBrain.AggroLevel = npc.AggroLevel;
-					aggroBrain.AggroRange = npc.AggroRange;
+					aggroBrain.AggroLevel = 0;
+					if(Level > 5)
+					{
+						aggroBrain.AggroLevel = 30;
+					}
+					if(Name != Name.ToLower())
+					{
+						aggroBrain.AggroLevel = 30;
+					}
+					if(Realm != eRealm.None)
+					{
+						aggroBrain.AggroLevel = 60;
+					}
 				}
 			}
 
