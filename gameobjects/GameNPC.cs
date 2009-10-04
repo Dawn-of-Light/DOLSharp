@@ -1959,15 +1959,29 @@ namespace DOL.GS
 		/// </summary>
 		public override void SaveIntoDatabase()
 		{
+			// do not allow saving in an instanced region
+			if (CurrentRegion.IsInstance)
+			{
+				return;
+			}
+
 			Mob mob = null;
 			if (InternalID != null)
+			{
 				mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+			}
 
 			if (mob == null)
+			{
 				if (LoadedFromScript == false)
+				{
 					mob = new Mob();
+				}
 				else
+				{
 					return;
+				}
+			}
 
 			mob.Name = Name;
 			mob.Guild = GuildName;
