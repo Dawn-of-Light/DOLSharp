@@ -1908,16 +1908,16 @@ namespace DOL.GS
 					if (Realm == eRealm.None)
 					{
 						aggroBrain.AggroRange = 400;
-						if(CurrentRegion.IsDungeon)
-						{
-							aggroBrain.AggroRange = 300;
-						}
 						if(Name != Name.ToLower())
 						{
 							aggroBrain.AggroRange = 500;
 						}
+						if(CurrentRegion.IsDungeon)
+						{
+							aggroBrain.AggroRange = 300;
+						}
 					}
-					if (Realm != eRealm.None)
+					else
 					{
 						aggroBrain.AggroRange = 500;
 					}
