@@ -35,6 +35,8 @@ namespace DOL.GS
 	{
 		private static Dictionary<int, List<IDoor>> m_doors = new Dictionary<int, List<IDoor>>();
 
+		public const string WANT_TO_ADD_DOORS = "WantToAddDoors";
+
 		/// <summary>
 		/// this function load all door from DB
 		/// </summary>	

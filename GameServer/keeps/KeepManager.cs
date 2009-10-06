@@ -39,6 +39,8 @@ namespace DOL.GS.Keeps
 		private static readonly Hashtable m_keeps = new Hashtable();
 		private static readonly List<Battleground> m_battlegrounds = new List<Battleground>();
 
+		public const int NEW_FRONTIERS = 163;
+
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
@@ -287,7 +289,7 @@ namespace DOL.GS.Keeps
 			SortedList keepsByID = new SortedList();
 			foreach (AbstractGameKeep keep in m_keeps.Values)
 			{
-				if (keep.CurrentRegion.ID != 163)
+				if (keep.CurrentRegion.ID != NEW_FRONTIERS)
 					continue;
 				if (((keep.KeepID & 0xFF) / 25 - 1) == map)
 					keepsByID.Add(keep.KeepID, keep);
@@ -311,7 +313,7 @@ namespace DOL.GS.Keeps
 			foreach (AbstractGameKeep keep in m_keeps.Values)
 			{
 				// find keeps in the battlegrounds that arent portal keeps
-				if (keep.Region != 163 && !keep.IsPortalKeep) continue;
+				if (keep.Region != NEW_FRONTIERS && !keep.IsPortalKeep) continue;
 				Battleground bg = GetBattleground(keep.Region);
 				if (bg == null) continue;
 				if (player.Level >= bg.MinLevel &&
@@ -337,7 +339,7 @@ namespace DOL.GS.Keeps
 
 		public static ICollection<AbstractGameKeep> GetNFKeeps()
 		{
-			return GetKeepsOfRegion(163);
+			return GetKeepsOfRegion(NEW_FRONTIERS);
 		}
 
 		public static ICollection<AbstractGameKeep> GetKeepsOfRegion(ushort region)
@@ -428,7 +430,7 @@ namespace DOL.GS.Keeps
 			{
 				foreach (AbstractGameKeep keep in m_keeps.Values)
 				{
-					if (keep.Region != 163) continue;
+					if (keep.Region != NEW_FRONTIERS) continue;
 					if (((eRealm)keep.Realm == realm) && (keep is GameKeepTower))
 						index++;
 				}
@@ -451,7 +453,7 @@ namespace DOL.GS.Keeps
 			{
 				foreach (AbstractGameKeep keep in m_keeps.Values)
 				{
-					if (keep.Region == 163 && keep is GameKeepTower)
+					if (keep.Region == NEW_FRONTIERS && keep is GameKeepTower)
 					{
 						realmXTower[keep.Realm] += 1;
 					}
@@ -477,7 +479,7 @@ namespace DOL.GS.Keeps
 			{
 				foreach (AbstractGameKeep keep in m_keeps.Values)
 				{
-					if (keep.Region == 163 && keep is GameKeepTower && zones.Contains(keep.CurrentZone.ID))
+					if (keep.Region == NEW_FRONTIERS && keep is GameKeepTower && zones.Contains(keep.CurrentZone.ID))
 					{
 						realmXTower[keep.Realm] += 1;
 					}
@@ -499,7 +501,7 @@ namespace DOL.GS.Keeps
 			{
 				foreach (AbstractGameKeep keep in m_keeps.Values)
 				{
-					if (keep.Region != 163) continue;
+					if (keep.Region != NEW_FRONTIERS) continue;
 					if (((eRealm)keep.Realm == realm) && (keep is GameKeep))
 						index++;
 				}
@@ -715,7 +717,7 @@ namespace DOL.GS.Keeps
 			{
 				foreach (AbstractGameKeep keep in m_keeps.Values)
 				{
-					if (keep.Region != 163) 
+					if (keep.Region != NEW_FRONTIERS) 
 						continue;
 
 					if (ServerProperties.Properties.BALANCE_TOWERS_SEPARATE)

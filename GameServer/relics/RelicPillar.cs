@@ -59,7 +59,7 @@ namespace DOL.GS.Relics
 		/// <summary>
 		/// Pillars behave like regular doors.
 		/// </summary>
-		public int Flag
+		public uint Flag
 		{
 			get { return 0; }
 		}

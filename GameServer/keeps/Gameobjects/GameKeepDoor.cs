@@ -84,7 +84,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This flag is send in packet(keep door = 4, regular door = 0)
 		/// </summary>
-		public int Flag
+		public uint Flag
 		{
 			get
 			{
