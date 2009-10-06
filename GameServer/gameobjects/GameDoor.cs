@@ -47,10 +47,14 @@ namespace DOL.GS
 		private static Timer m_timer;
 		protected volatile uint m_lastUpdateTickCount = uint.MinValue;
 		private readonly object m_LockObject = new object();
+		private uint m_flags = 0;
+
+
 		/// <summary>
 		/// The time interval after which door will be closed, in milliseconds
+		/// On live this is usually 5 seconds
 		/// </summary>
-		protected const int CLOSE_DOOR_TIME = 10000;
+		protected const int CLOSE_DOOR_TIME = 8000;
 		/// <summary>
 		/// The timed action that will close the door
 		/// </summary>
@@ -92,7 +96,8 @@ namespace DOL.GS
             m_health = m_dbdoor.MaxHealth;
             m_maxHealth = m_dbdoor.MaxHealth;
 			m_locked = m_dbdoor.Locked;
-			//m_model = m_dbdoor.Model;
+			m_flags = m_dbdoor.Flags;
+
 			this.AddToWorld();
 		}
 		/// <summary>
@@ -106,13 +111,10 @@ namespace DOL.GS
 			if (obj == null)
 				obj = new DBDoor();
 			obj.Name = this.Name;
-		//	obj.Heading = this.Heading;
-		//	obj.X = this.X;
-		//	obj.Y = this.Y;
-		//	obj.Z = this.Z;
 			obj.InternalID = this.DoorID;
 			obj.Type = DoorID / 100000000;
             obj.Guild = this.Guild;
+			obj.Flags = this.Flag;
             obj.Realm = (byte)this.Realm;
             obj.Level = this.Level;
             obj.MaxHealth = this.MaxHealth;
@@ -164,11 +166,12 @@ namespace DOL.GS
 			set { m_type = value; }
 		}
 		/// <summary>
-		/// this is flag for packet (0 for regular door and 4 for keep door)
+		/// This is used to identify what sound a door makes when open / close
 		/// </summary>
-		public int Flag
+		public uint Flag
 		{
-			get { return 0; }
+			get { return m_flags; }
+			set { m_flags = value; }
 		}
 
 		/// <summary>
@@ -302,10 +305,10 @@ namespace DOL.GS
 		public override void Die(GameObject killer)
 		{
 			base.Die(killer);
-			StartHealthRegeneration ();
+			StartHealthRegeneration();
 		}
 		
-		public virtual void BroadcastUpdate ()
+		public virtual void BroadcastUpdate()
 		{
 			if( ObjectState != eObjectState.Active ) return;
 			foreach( GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE) )
