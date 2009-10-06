@@ -35,7 +35,7 @@ namespace DOL.GS
 	public interface IDoor : IPoint3D
 	{
 		string Name	{get;}
-		int Flag {get;}
+		uint Flag {get;}
 		ushort Heading	{get;}
 		eRealm Realm {get;}
 		int DoorID	{get;}

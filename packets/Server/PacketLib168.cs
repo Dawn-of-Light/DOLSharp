@@ -1814,7 +1814,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteInt((uint)door.DoorID);
 			pak.WriteByte((byte)(door.State == eDoorState.Open ? 0x01 : 0x00));
 			pak.WriteByte((byte)door.Flag);
-			pak.Fill(0x0, 2);
+			pak.WriteByte(0xFF);
+			pak.WriteByte(0x0);
 			SendTCP(pak);
 		}
 
