@@ -1220,7 +1220,7 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		private IEnumerable GetInRadius(Zone.eGameObjectType type, int x, int y, int z, ushort radius, bool withDistance)
+		protected IEnumerable GetInRadius(Zone.eGameObjectType type, int x, int y, int z, ushort radius, bool withDistance)
 		{
 			// check if we are around borders of a zone
 			Zone startingZone = GetZone(x, y);
@@ -1377,7 +1377,7 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		public IEnumerable GetDoorsInRadius(int x, int y, int z, ushort radius, bool withDistance)
+		public virtual IEnumerable GetDoorsInRadius(int x, int y, int z, ushort radius, bool withDistance)
 		{
 			return GetInRadius(Zone.eGameObjectType.DOOR, x, y, z, radius, withDistance);
 		}

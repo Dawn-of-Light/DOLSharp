@@ -38,6 +38,7 @@ namespace DOL.GS.Commands
 		"&door",
 		ePrivLevel.GM,
 		"GMCommands.door.Description",
+		"'/door show' toggle enable/disable add dialog when targeting doors", 
 		"GMCommands.door.Add",
 		"GMCommands.door.Update",
 		"GMCommands.door.Delete",
@@ -45,6 +46,7 @@ namespace DOL.GS.Commands
 		"GMCommands.door.Level",
 		"GMCommands.door.Realm",
 		"GMCommands.door.Guild",
+		"'/door sound <soundid>'",
 		"GMCommands.door.Info",
 		"GMCommands.door.Heal",
 		"GMCommands.door.Locked",
@@ -57,6 +59,22 @@ namespace DOL.GS.Commands
 		public void OnCommand(GameClient client, string[] args)
 		{
 			GameDoor targetDoor = null;
+
+			if (args.Length > 1 && args[1] == "show" && client.Player != null)
+			{
+				if (client.Player.TempProperties.getProperty(DoorMgr.WANT_TO_ADD_DOORS, false))
+				{
+					client.Player.TempProperties.removeProperty(DoorMgr.WANT_TO_ADD_DOORS);
+					client.Out.SendMessage("You will no longer be shown the add door dialog.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					client.Player.TempProperties.setProperty(DoorMgr.WANT_TO_ADD_DOORS, true);
+					client.Out.SendMessage("You will now be shown the add door dialog if door is not found in the DB.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+
+				return;
+			}
 			
 			if ( client.Player.TargetObject == null )
 			{
@@ -97,6 +115,7 @@ namespace DOL.GS.Commands
 				case "delete": delete(client, targetDoor); break;
 				case "add": add(client, targetDoor); break;
 				case "update": update(client, targetDoor); break;
+				case "sound": sound(client, targetDoor, args); break;
 				   
                 default:
                     DisplaySyntax( client );
@@ -205,8 +224,32 @@ namespace DOL.GS.Commands
 				DisplaySyntax( client, args[1] );
 			}
 		}
-		
-		private void guild( GameClient client, GameDoor targetDoor, string[] args )
+
+		private void sound(GameClient client, GameDoor targetDoor, string[] args)
+		{
+			uint doorSound = 0;
+
+			try
+			{
+				if (args.Length > 2)
+				{
+					doorSound = Convert.ToUInt16(args[2]);
+					targetDoor.Flag = doorSound;
+					targetDoor.SaveIntoDatabase();
+					client.Out.SendMessage("You set the door sound to " + doorSound, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					DisplaySyntax(client, args[1]);
+				}
+			}
+			catch
+			{
+				DisplaySyntax(client, args[1]);
+			}
+		}
+
+		private void guild(GameClient client, GameDoor targetDoor, string[] args)
         {
             string guildName = "";
 
