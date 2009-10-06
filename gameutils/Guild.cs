@@ -193,8 +193,6 @@ namespace DOL.GS
 
             donating.RemoveMoney(long.Parse(amount.ToString()));
             donating.Out.SendUpdatePlayer();
-            donating.SaveIntoDatabase();
-            donating.Guild.SaveIntoDatabase();
 			return;
 		}
 		public void WithdrawGuildBank(GamePlayer withdraw, double amount)
