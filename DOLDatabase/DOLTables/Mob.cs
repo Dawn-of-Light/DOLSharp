@@ -70,6 +70,7 @@ namespace DOL.Database
 		private int m_roamingRange;
         private bool m_isCloakHoodUp;
 		private string m_packageID;
+		private byte m_visibleWeaponSlots;
 
 		public static readonly string DEFAULT_NPC_CLASSTYPE = "DOL.GS.GameNPC";
 
@@ -759,6 +760,20 @@ namespace DOL.Database
 			set
 			{
 				this.m_packageID = value;
+				this.Dirty = true;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public byte VisibleWeaponSlots
+		{
+			get
+			{
+				return this.m_visibleWeaponSlots;
+			}
+			set
+			{
+				this.m_visibleWeaponSlots = value;
 				this.Dirty = true;
 			}
 		}
