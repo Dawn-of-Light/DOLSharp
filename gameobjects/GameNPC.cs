@@ -1946,7 +1946,7 @@ namespace DOL.GS
 			m_maxdistance = npc.MaxDistance;
 			m_roamingRange = npc.RoamingRange;
             m_isCloakHoodUp = npc.IsCloakHoodUp;
-
+			m_visibleActiveWeaponSlots = npc.VisibleWeaponSlots;
             Gender = (Gender)npc.Gender;
 		}
 
@@ -2046,6 +2046,7 @@ namespace DOL.GS
 			mob.MaxDistance = m_maxdistance;
             mob.IsCloakHoodUp = m_isCloakHoodUp;
             mob.Gender = (byte)Gender;
+			mob.VisibleWeaponSlots = this.m_visibleActiveWeaponSlots;
 
 			if (InternalID == null)
 			{
