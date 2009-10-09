@@ -29,15 +29,14 @@ namespace DOL.Database.Attributes
 		private bool allowDbNull;
 		private bool unique;
 		private bool index;
+		private byte m_varchar;
 
-		/// <summary>
-		/// Constructor that sets Options of the Column to AllowDBNull and not Unique
-		/// </summary>
 		public DataElement()
 		{
 			allowDbNull = true;
 			unique = false;
 			index = false;
+			m_varchar = 0;
 		}
 
 		/// <summary>
@@ -87,5 +86,22 @@ namespace DOL.Database.Attributes
 				index = value;
 			}
 		}
+
+		/// <summary>
+		/// Indicates that a string column will be created as type VarChar with the length provided
+		/// Varchar = 0 will force creation of TEXT datatype
+		/// </summary>
+		public byte Varchar
+		{
+			get
+			{
+				return m_varchar;
+			}
+			set
+			{
+				m_varchar = value;
+			}
+		}
+
 	}
 }

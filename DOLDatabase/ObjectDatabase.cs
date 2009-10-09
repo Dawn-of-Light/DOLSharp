@@ -870,6 +870,11 @@ namespace DOL.Database
 					{
 						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEX", true);
 					}
+					if (((Attributes.DataElement)myAttributes[0]).Varchar > 0)
+					{
+						table.Columns[myMembers[i].Name].ExtendedProperties.Add("VARCHAR", ((Attributes.DataElement)myAttributes[0]).Varchar);
+					}
+
 					//if(myAttributes[0] is Attributes.PrimaryKey)
 					myAttributes = GetRelationAttributes(myMembers[i]);
 
