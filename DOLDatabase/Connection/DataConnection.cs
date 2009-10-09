@@ -446,6 +446,7 @@ namespace DOL.Database.Connection
 					string column = "";
 
 					column += "`" + table.Columns[i].ColumnName + "` ";
+
 					if (systype == typeof(System.Char))
 					{
 						column += "SMALLINT UNSIGNED";
@@ -502,9 +503,17 @@ namespace DOL.Database.Connection
 					{
 						if (primaryKeys[table.Columns[i].ColumnName] != null ||
 							table.Columns[i].ExtendedProperties.ContainsKey("INDEX") ||
+							table.Columns[i].ExtendedProperties.ContainsKey("VARCHAR") ||
 							table.Columns[i].Unique)
 						{
-							column += "VARCHAR(255)";
+							if (table.Columns[i].ExtendedProperties.ContainsKey("VARCHAR"))
+							{
+								column += "VARCHAR(" + table.Columns[i].ExtendedProperties["VARCHAR"] + ")";
+							}
+							else
+							{
+								column += "VARCHAR(255)";
+							}
 						}
 						else
 						{
