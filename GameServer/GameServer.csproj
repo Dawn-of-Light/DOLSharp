@@ -2158,7 +2158,11 @@
     <Compile Include="spells\FocusShellHandler.cs" />
     <Compile Include="spells\Fury.cs" />
     <Compile Include="spells\Hunter\SummonHunterPet.cs" />
+    <Compile Include="spells\Necromancer\PowerTransfer.cs" />
+    <Compile Include="spells\Necromancer\PowerDrain.cs" />
     <Compile Include="spells\PetLifedrainSpellHandler.cs" />
+    <Compile Include="spells\PowerDrain.cs" />
+    <Compile Include="spells\PowerTransfer.cs" />
     <Compile Include="spells\Savage\SavageEnduranceHeal.cs" />
     <Compile Include="spells\SpeedOfTheRealmHandler.cs" />
     <Compile Include="spells\Spirit Master\SummonSpiritFighter.cs" />
@@ -2183,14 +2187,11 @@
     <Compile Include="spells\MetalGuardSpellHandler.cs" />
     <Compile Include="spells\Necromancer\FacilitatePainworking.cs" />
     <Compile Include="spells\Necromancer\PetSpellHandler.cs" />
-    <Compile Include="spells\Necromancer\PowerDrain.cs" />
-    <Compile Include="spells\Necromancer\PowerTransfer.cs" />
     <Compile Include="spells\Necromancer\SummonNecromancerPet.cs" />
     <Compile Include="spells\NoVarianceSpells.cs" />
     <Compile Include="spells\OmniLifedrainSpellHandler.cs" />
     <Compile Include="spells\PetMesmerizeSpellHandler.cs" />
     <Compile Include="spells\PowerHealSpellHandler.cs" />
-    <Compile Include="spells\PowerTransferSpellHandler.cs" />
     <Compile Include="spells\RampageSpellHandler.cs" />
     <Compile Include="spells\Savage\SavageBuff.cs" />
     <Compile Include="spells\SilenceSpellHandler.cs" />
