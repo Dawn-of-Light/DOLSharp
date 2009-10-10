@@ -177,7 +177,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This hold the state of door
 		/// </summary>
-		private eDoorState m_state;
+		protected eDoorState m_state;
 
 		/// <summary>
 		/// The state of door (open or close)

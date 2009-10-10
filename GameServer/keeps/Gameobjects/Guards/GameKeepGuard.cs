@@ -24,6 +24,10 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
+using System.Reflection;
+using log4net;
+
+
 namespace DOL.GS.Keeps
 {
 	/// <summary>
@@ -31,6 +35,8 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class GameKeepGuard : GameNPC, IKeepItem
 	{
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		private Patrol m_Patrol = null;
 		public Patrol PatrolGroup
 		{
@@ -686,6 +692,7 @@ namespace DOL.GS.Keeps
 					break;
 				}
 			}
+
 			TemplateMgr.RefreshTemplate(this);
 		}
 
@@ -700,7 +707,7 @@ namespace DOL.GS.Keeps
 		{
 			foreach (AbstractArea area in this.CurrentAreas)
 			{
-				if (area is KeepArea)
+				if (area is KeepArea && Component != null)
 				{
 					Component.Keep.Guards.Remove(this.InternalID);
 					break;

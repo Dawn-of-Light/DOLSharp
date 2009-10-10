@@ -45,19 +45,19 @@ namespace DOL.GS.Keeps
 		/// The time interval in milliseconds that defines how
 		/// often guild bounty points should be removed
 		/// </summary>
-		private readonly int CLAIM_CALLBACK_INTERVAL = 60 * 60 * 1000;
+		protected readonly int CLAIM_CALLBACK_INTERVAL = 60 * 60 * 1000;
 
 		/// <summary>
 		/// Timer to remove bounty point and add realm point to guild which own keep
 		/// </summary>
-		private RegionTimer m_claimTimer;
+		protected RegionTimer m_claimTimer;
 
 		/// <summary>
 		/// Timerto upgrade the keep level
 		/// </summary>
-		private RegionTimer m_changeLevelTimer;
+		protected RegionTimer m_changeLevelTimer;
 
-		private long m_lastAttackedByEnemyTick = 0;
+		protected long m_lastAttackedByEnemyTick = 0;
 		public long LastAttackedByEnemyTick
 		{
 			get { return m_lastAttackedByEnemyTick; }
@@ -84,7 +84,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		private long m_startCombatTick = 0;
+		protected long m_startCombatTick = 0;
 		public long StartCombatTick
 		{
 			get { return m_startCombatTick; }
@@ -140,7 +140,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This hold all keep components
 		/// </summary>
-		private List<GameKeepComponent> m_keepComponents;
+		protected List<GameKeepComponent> m_keepComponents;
 
 		/// <summary>
 		/// Keep components ( wall, tower, gate,...)
@@ -154,8 +154,8 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This hold list of all keep doors
 		/// </summary>
-		//private ArrayList m_doors;
-		private Hashtable m_doors;
+		//protected ArrayList m_doors;
+		protected Hashtable m_doors;
 
 		/// <summary>
 		/// keep doors
@@ -170,7 +170,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// the keep db object
 		/// </summary>
-		private DBKeep m_dbkeep;
+		protected DBKeep m_dbkeep;
 
 		/// <summary>
 		/// the keepdb object
@@ -184,7 +184,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This hold list of all guards of keep
 		/// </summary>
-		private Hashtable m_guards;
+		protected Hashtable m_guards;
 
 		/// <summary>
 		/// List of all guards of keep
@@ -197,7 +197,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// List of all banners
 		/// </summary>
-		private Hashtable m_banners;
+		protected Hashtable m_banners;
 
 		/// <summary>
 		/// List of all banners
@@ -208,7 +208,7 @@ namespace DOL.GS.Keeps
 			set	{ m_banners = value; }
 		}
 
-		private Hashtable m_patrols;
+		protected Hashtable m_patrols;
 		/// <summary>
 		/// List of all patrols
 		/// </summary>
@@ -221,7 +221,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// region of the keep
 		/// </summary>
-		private Region m_currentRegion;
+		protected Region m_currentRegion;
 
 		/// <summary>
 		/// region of the keep
@@ -250,7 +250,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This hold the guild which has claimed the keep
 		/// </summary>
-		private Guild m_guild = null;
+		protected Guild m_guild = null;
 
 		/// <summary>
 		/// The guild which has claimed the keep
@@ -265,7 +265,7 @@ namespace DOL.GS.Keeps
 		/// Difficulty level of keep for each realm
 		/// the keep is more difficult the guild which have claimed gain more bonus
 		/// </summary>
-		private int[] m_difficultyLevel = new int[3];
+		protected int[] m_difficultyLevel = new int[3];
 
 		/// <summary>
 		/// Difficulty level of keep for each realm
@@ -299,7 +299,7 @@ namespace DOL.GS.Keeps
 			set	{ DBKeep.Level = value; }
 		}
 
-		private byte m_baseLevel = 0;
+		protected byte m_baseLevel = 0;
 
 		/// <summary>
 		/// The Base Keep Level, typically 50 or the BG cap level
@@ -398,7 +398,7 @@ namespace DOL.GS.Keeps
 			get	{ return (eRealm)DBKeep.OriginalRealm; }
 		}
 
-		private string m_InternalID;
+		protected string m_InternalID;
 		/// <summary>
 		/// The Keep Internal ID
 		/// </summary>
@@ -442,7 +442,7 @@ namespace DOL.GS.Keeps
 		/// load keep from Db object and load keep component and object of keep
 		/// </summary>
 		/// <param name="keep"></param>
-		public void Load(DBKeep keep)
+		public virtual void Load(DBKeep keep)
 		{
 			CurrentRegion = WorldMgr.GetRegion((ushort)keep.Region);
 			InitialiseTimers();
@@ -472,7 +472,7 @@ namespace DOL.GS.Keeps
 			this.Area = area;
 		}
 
-		public void Unload(KeepArea area)
+		public virtual void Unload(KeepArea area)
 		{
 			foreach (GameKeepGuard guard in (m_guards.Clone() as Hashtable).Values)
 			{
@@ -515,7 +515,7 @@ namespace DOL.GS.Keeps
 		/// load keep from DB
 		/// </summary>
 		/// <param name="keep"></param>
-		public void LoadFromDatabase(DataObject keep)
+		public virtual void LoadFromDatabase(DataObject keep)
 		{
 			m_dbkeep = keep as DBKeep;
 			InternalID = keep.ObjectId;
@@ -541,7 +541,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// remove keep from DB
 		/// </summary>
-		public void RemoveFromDatabase()
+		public virtual void RemoveFromDatabase()
 		{
 			GameServer.Database.DeleteObject(m_dbkeep);
 		}
@@ -549,7 +549,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// save keep in DB
 		/// </summary>
-		public void SaveIntoDatabase()
+		public virtual void SaveIntoDatabase()
 		{
 			if (m_guild != null)
 				m_dbkeep.ClaimedGuildName = m_guild.Name;
@@ -696,7 +696,7 @@ namespace DOL.GS.Keeps
 			m_claimTimer.Stop();
 		}
 
-		private void InitialiseTimers()
+		protected void InitialiseTimers()
 		{
 			m_changeLevelTimer = new RegionTimer(CurrentRegion.TimeManager);
 			m_changeLevelTimer.Callback = new RegionTimerCallback(ChangeLevelTimerCallback);
@@ -705,7 +705,7 @@ namespace DOL.GS.Keeps
 			m_claimTimer.Interval = CLAIM_CALLBACK_INTERVAL;
 		}
 
-		private void UnloadTimers()
+		protected void UnloadTimers()
 		{
 			m_changeLevelTimer.Stop();
 			m_claimTimer.Stop();
@@ -1028,7 +1028,7 @@ namespace DOL.GS.Keeps
 		/// if they are on the top of a keep when it is captured because
 		/// the keep size will reset
 		/// </summary>
-		private void ResetPlayersOfKeep()
+		protected void ResetPlayersOfKeep()
 		{
 			ushort distance = 0;
 			int id = 0;

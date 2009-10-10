@@ -2152,7 +2152,9 @@ namespace DOL.GS
         /// <param name="instance"></param>
         public static void RemoveInstance(BaseInstance instance)
         {
-            //Delete objects
+			instance.OnCollapse();
+
+			//Delete objects
             foreach (GameObject obj in instance.Objects)
             {
                 if (obj == null) //Odd error, dont ask!

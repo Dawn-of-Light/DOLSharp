@@ -58,20 +58,20 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public const ushort HiberniaGuildModel = 680;
 
-		private string m_templateID = "";
+		protected string m_templateID = "";
 		public string TemplateID
 		{
 			get { return m_templateID; }
 		}
 
-		private GameKeepComponent m_component;
+		protected GameKeepComponent m_component;
 		public GameKeepComponent Component
 		{
 			get { return m_component; }
 			set { m_component = value; }
 		}
 
-		private DBKeepPosition m_position;
+		protected DBKeepPosition m_position;
 		public DBKeepPosition Position
 		{
 			get { return m_position; }
@@ -113,7 +113,7 @@ namespace DOL.GS.Keeps
 			base.DeleteFromDatabase();
 		}
 
-		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
+		public virtual void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{
 			m_templateID = pos.TemplateID;
 			m_component = component;

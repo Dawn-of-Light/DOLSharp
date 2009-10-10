@@ -680,7 +680,7 @@ namespace DOL.GS.PacketHandler
 			if (z == null)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("SendObjectUpdate: obj zone == null:" + obj.InternalID);
+					log.Warn("SendObjectUpdate: obj zone == null: " + obj.Name + " (" + obj.InternalID + ")");
 				return;
 			}
 

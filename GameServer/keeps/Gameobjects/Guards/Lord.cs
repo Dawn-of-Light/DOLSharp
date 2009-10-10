@@ -114,7 +114,11 @@ namespace DOL.GS.Keeps
 			if (this.Component == null)
 				return false;
 
-            player.Out.SendMessage("Would you like to [Claim Keep] now? Or maybe [Release Keep]?", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+			if (GameServer.ServerRules.IsAllowedToClaim(player, CurrentRegion))
+			{
+				player.Out.SendMessage("Would you like to [Claim Keep] now? Or maybe [Release Keep]?", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+			}
+
             return true;
 		}
 
@@ -180,7 +184,7 @@ namespace DOL.GS.Keeps
             if (!(source is GamePlayer)) return false;
             GamePlayer player = (GamePlayer)source;
 
-			if (!GameServer.ServerRules.IsSameRealm(this, player, true))
+			if (!GameServer.ServerRules.IsSameRealm(this, player, true) || !GameServer.ServerRules.IsAllowedToClaim(player, CurrentRegion))
 			{
 				return false;
 			}

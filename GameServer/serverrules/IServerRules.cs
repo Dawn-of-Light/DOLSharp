@@ -137,6 +137,14 @@ namespace DOL.GS.ServerRules
 		bool IsAllowedToCraft(GamePlayer player, ItemTemplate item);
 
 		/// <summary>
+		/// Is player allowed to claim in this region
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="region"></param>
+		/// <returns></returns>
+		bool IsAllowedToClaim(GamePlayer player, Region region);
+
+		/// <summary>
 		/// Is this player allowed to move to this region
 		/// </summary>
 		/// <param name="player">The player trying to move</param>
