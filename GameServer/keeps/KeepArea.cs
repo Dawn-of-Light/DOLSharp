@@ -7,9 +7,9 @@ namespace DOL.GS.Keeps
 	public class KeepArea : Area.Circle
 	{
 		public AbstractGameKeep Keep = null;
-		private const int PK_RADIUS = 4000;
-		private const int KEEP_RADIUS = 3000;
-		private const int TOWER_RADIUS = 1500;
+		private const int PK_RADIUS = 5000;
+		private const int KEEP_RADIUS = 3250;
+		private const int TOWER_RADIUS = 1600;
 
 		public KeepArea()
 			: base()
