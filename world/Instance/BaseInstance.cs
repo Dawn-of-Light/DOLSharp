@@ -91,6 +91,7 @@ namespace DOL.GS
 
 
 		private bool m_destroyWhenEmpty = true;
+		private bool m_persistent = false;
 
 		/// <summary>
 		/// If this is true the instance will be destroyed as soon as the last player leaves.
@@ -102,6 +103,7 @@ namespace DOL.GS
 			{ 
 				m_destroyWhenEmpty = value;
 
+				// Instance will be destroyed as soon as all players leave
 				if (m_destroyWhenEmpty)
 				{
 					if (m_autoCloseRegionTimer != null)
@@ -122,6 +124,39 @@ namespace DOL.GS
 				{
 					log.Warn("Instance now empty, destroying instance " + Description + ", ID: " + ID + ".");
 					WorldMgr.RemoveInstance(this);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Persistent instances never close
+		/// </summary>
+		public bool Persistent
+		{
+			get { return m_persistent; }
+
+			set
+			{
+				m_persistent = value;
+
+				// This instance is persistent, stop all clsoe timers
+				if (m_persistent)
+				{
+					if (m_autoCloseRegionTimer != null)
+					{
+						m_autoCloseRegionTimer.Stop();
+						m_autoCloseRegionTimer = null;
+					}
+
+					if (m_delayCloseRegionTimer != null)
+					{
+						m_delayCloseRegionTimer.Stop();
+						m_delayCloseRegionTimer = null;
+					}
+				}
+				else
+				{
+					DestroyWhenEmpty = true;
 				}
 			}
 		}
@@ -198,7 +233,8 @@ namespace DOL.GS
         /// Examples of use: Expire task on task dungeons.
         /// </summary>
         public virtual void OnCollapse()
-        { }
+        {
+		}
 
         private AutoCloseRegionTimer m_autoCloseRegionTimer;
 		private DelayCloseRegionTimer m_delayCloseRegionTimer;
@@ -261,7 +297,6 @@ namespace DOL.GS
                     //Collapse the zone!
                     //Thats my favourite bit ;)
                     log.Info(m_instance.Name + " (ID: " + m_instance.ID + ") just reached the timeout for the removal timer. The region is empty, and will now be demolished and removed from the world. Entering OnCollapse!");
-                    m_instance.OnCollapse();
                     Stop();
                     WorldMgr.RemoveInstance(m_instance);
                 }                

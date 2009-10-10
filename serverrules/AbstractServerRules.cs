@@ -378,6 +378,22 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
+		/// <summary>
+		/// Is player allowed to claim in this region
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="region"></param>
+		/// <returns></returns>
+		public virtual bool IsAllowedToClaim(GamePlayer player, Region region)
+		{
+			if (region.IsInstance)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 		public virtual bool IsAllowedToZone(GamePlayer player, Region region)
 		{
 			return true;

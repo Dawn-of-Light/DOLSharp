@@ -42,11 +42,11 @@ namespace DOL.GS.Keeps
 
 		#region properties
 
-		private int m_oldMaxHealth;
+		protected int m_oldMaxHealth;
 
-		private byte m_oldHealthPercent;
+		protected byte m_oldHealthPercent;
 
-		private int m_doorID;
+		protected int m_doorID;
 		/// <summary>
 		/// The door index which is unique
 		/// </summary>
@@ -106,7 +106,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// door state (open or closed)
 		/// </summary>
-		private eDoorState m_state;
+		protected eDoorState m_state;
 
 		/// <summary>
 		/// door state (open or closed)
@@ -223,20 +223,20 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		private string m_templateID;
+		protected string m_templateID;
 		public string TemplateID
 		{
 			get { return m_templateID; }
 		}
 
-		private GameKeepComponent m_component;
+		protected GameKeepComponent m_component;
 		public GameKeepComponent Component
 		{
 			get { return m_component; }
 			set { m_component = value; }
 		}
 
-		private DBKeepPosition m_position;
+		protected DBKeepPosition m_position;
 		public DBKeepPosition Position
 		{
 			get { return m_position; }
@@ -523,7 +523,7 @@ namespace DOL.GS.Keeps
 			DoorMgr.RegisterDoor(this);
 		}
 
-		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
+		public virtual void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{
 			m_templateID = pos.TemplateID;
 			m_component = component;
@@ -551,15 +551,21 @@ namespace DOL.GS.Keeps
 			int doortype = 7;
 			int ownerKeepID = 0;
 			int towerIndex = 0;
+
 			if (m_component.Keep is GameKeepTower)
 			{
 				GameKeepTower tower = m_component.Keep as GameKeepTower;
 				if (tower.Keep != null)
+				{
 					ownerKeepID = tower.Keep.KeepID;
+				}
 				towerIndex = tower.KeepID >> 8;
 			}
 			else
+			{
 				ownerKeepID = m_component.Keep.KeepID;
+			}
+
 			int componentID = m_component.ID;
 
 			//index not sure yet
@@ -625,8 +631,8 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		private RegionTimer m_repairTimer;
-		private static int repairInterval = 30 * 60 * 1000;
+		protected RegionTimer m_repairTimer;
+		protected static int repairInterval = 30 * 60 * 1000;
 
 		public int RepairTimerCallback(RegionTimer timer)
 		{
