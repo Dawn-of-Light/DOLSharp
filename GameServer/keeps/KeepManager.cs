@@ -109,21 +109,32 @@ namespace DOL.GS.Keeps
 
 					AbstractGameKeep keep;
 					if ((datakeep.KeepID >> 8) != 0)
+					{
 						keep = new GameKeepTower();
+					}
 					else
+					{
 						keep = new GameKeep();
+					}
+
 					keep.Load(datakeep);
 					m_keeps.Add(datakeep.KeepID, keep);
 				}
+
+				// This adds owner keeps to towers / portal keeps
 				foreach (AbstractGameKeep keep in m_keeps.Values)
 				{
 					GameKeepTower tower = keep as GameKeepTower;
-					if (tower == null) continue;
-					int index = tower.KeepID & 0xFF;
-					GameKeep mykeep = getKeepByID(index) as GameKeep;
-					if (mykeep != null)
-						mykeep.AddTower(tower);
-					tower.Keep = mykeep;
+					if (tower != null)
+					{
+						int index = tower.KeepID & 0xFF;
+						GameKeep ownerKeep = getKeepByID(index) as GameKeep;
+						if (ownerKeep != null)
+						{
+							ownerKeep.AddTower(tower);
+						}
+						tower.Keep = ownerKeep;
+					}
 				}
 
 				DBKeepComponent[] keepcomponents = (DBKeepComponent[])GameServer.Database.SelectAllObjects(typeof(DBKeepComponent));
@@ -141,7 +152,9 @@ namespace DOL.GS.Keeps
 					if (keep == null)
 					{
 						if (Logger.IsWarnEnabled)
+						{
 							Logger.WarnFormat("Keep with ID {0} not found while loading component with ID {1}, possibly old/new keeptype; see server properties", component.KeepID, component.ID);
+						}
 						continue;
 					}
 					GameKeepComponent gamecomponent = new GameKeepComponent();
