@@ -812,6 +812,9 @@ namespace DOL.Database
 
 		public void RegisterDataObject(Type dataObjectType)
 		{
+			if (tableDatasets.ContainsKey(DataObject.GetTableName(dataObjectType)))
+				return;
+
 			bool primary = false;
 			bool relations = false;
 			MemberInfo primaryIndexMember = null;

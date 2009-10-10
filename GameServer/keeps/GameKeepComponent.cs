@@ -24,6 +24,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
+using log4net;
 
 namespace DOL.GS.Keeps
 {
@@ -33,7 +34,10 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class GameKeepComponent : GameLiving, IComparable
 	{
-		private readonly ushort INVISIBLE_MODEL = 150;
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+
+		protected readonly ushort INVISIBLE_MODEL = 150;
 
 		public enum eComponentSkin : byte
 		{
@@ -155,7 +159,7 @@ namespace DOL.GS.Keeps
 			set { m_componentHeading = value; }
 		}
 
-		private int m_oldMaxHealth;
+		protected int m_oldMaxHealth;
 
 		/// <summary>
 		/// Level of component
@@ -175,7 +179,7 @@ namespace DOL.GS.Keeps
 		}
 
 		private Hashtable m_hookPoints;
-		private byte m_oldHealthPercent;
+		protected byte m_oldHealthPercent;
 		private bool m_isRaized;
 
 		public Hashtable HookPoints
@@ -266,7 +270,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// load component from db object
 		/// </summary>
-		public void LoadFromDatabase(DBKeepComponent component, AbstractGameKeep keep)
+		public virtual void LoadFromDatabase(DBKeepComponent component, AbstractGameKeep keep)
 		{
 			Region myregion = WorldMgr.GetRegion((ushort)keep.Region);
 			if (myregion == null)
@@ -305,22 +309,12 @@ namespace DOL.GS.Keeps
 			StartHealthRegeneration();
 		}
 
-		public void LoadPositions()
+		public virtual void LoadPositions()
 		{
             //Dinberg - removing hard-coded bgness.
             Battleground bg = KeepMgr.GetBattleground(CurrentRegionID);
 
 			this.Positions.Clear();
-
-			//foreach (Patrol p in this.Keep.Patrols.Values)
-			//{
-			//    foreach (GameKeepGuard g in p.PatrolGuards)
-			//    {
-			//        g.Delete();
-			//    }
-			//}
-
-			//this.Keep.Patrols.Clear();
 
 			string query = "`ComponentSkin` = '" + this.Skin + "'";
 			if (Skin != (int)eComponentSkin.Keep && Skin != (int)eComponentSkin.Tower && Skin != (int)eComponentSkin.Gate)
@@ -328,8 +322,8 @@ namespace DOL.GS.Keeps
             if (bg != null)
                 query = query + " AND `ClassType` = 'DOL.GS.Keeps.GameKeepDoor'"; //Battlegrounds, ignore all but GameKeepDoor
 
-
 			DBKeepPosition[] DBPositions = (DBKeepPosition[])GameServer.Database.SelectObjects(typeof(DBKeepPosition), query);
+
 			foreach (DBKeepPosition position in DBPositions)
 			{
 				DBKeepPosition[] list = this.Positions[position.TemplateID] as DBKeepPosition[];
@@ -338,12 +332,12 @@ namespace DOL.GS.Keeps
 					list = new DBKeepPosition[4];
 					this.Positions[position.TemplateID] = list;
 				}
-				//list.SetValue(position, position.Height);
+
 				list[position.Height] = position;
 			}
 		}
 
-		public void FillPositions()
+		public virtual void FillPositions()
 		{
 			foreach (DBKeepPosition[] positionGroup in this.Positions.Values)
 			{
@@ -594,6 +588,8 @@ namespace DOL.GS.Keeps
 				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), this.InternalID);
 			if (obj != null)
 				GameServer.Database.DeleteObject(obj);
+
+			log.Warn("Keep Component deleted from database: " + obj.ID);
 			//todo find a packet to remove the keep
 		}
 
