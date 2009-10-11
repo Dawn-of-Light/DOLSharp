@@ -928,15 +928,15 @@ namespace DOL.GS.Keeps
 			{
 				guard.Strength = (short)(guard.Level * 6 + 75);
 				guard.Dexterity = (short)(guard.Level * 2);
-				guard.Constitution = 60;
+				guard.Constitution = (short)(DOL.GS.ServerProperties.Properties.GAMENPC_BASE_CON + 30);
 				guard.Quickness = 60;
 			}
 			else
 			{
 				guard.Strength = (short)(guard.Level * 6 + 25);
 				guard.Dexterity = (short)(guard.Level);
-				guard.Constitution = 60;
-				guard.Quickness = 60;
+				guard.Constitution = (short)(DOL.GS.ServerProperties.Properties.GAMENPC_BASE_CON + 15);
+				guard.Quickness = 40;
 			}
 		}
 	}
