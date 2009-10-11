@@ -895,13 +895,21 @@ namespace DOL.GS.Keeps
 		public static void SetGuardSpeed(GameKeepGuard guard)
 		{
 			if (guard.IsPortalKeepGuard)
+			{
 				guard.MaxSpeedBase = 575;
-			if ((guard is GuardLord && guard.Component != null)||
-	guard is GuardStaticArcher ||
-	guard is GuardStaticCaster)
+			}
+			if ((guard is GuardLord && guard.Component != null) || guard is GuardStaticArcher || guard is GuardStaticCaster)
+			{
 				guard.MaxSpeedBase = 0;
-			else if(guard.Level<250) guard.MaxSpeedBase = 350;
-			else guard.MaxSpeedBase=575;
+			}
+			else if (guard.Level < 250)
+			{
+				guard.MaxSpeedBase = 275;
+			}
+			else
+			{
+				guard.MaxSpeedBase = 575;
+			}
 		}
 
 		/// <summary>
