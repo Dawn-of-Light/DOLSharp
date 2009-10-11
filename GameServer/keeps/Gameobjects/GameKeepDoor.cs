@@ -324,6 +324,18 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		/// <summary>
+		/// Take Damage and don't modify the values (simply calls base.TakeDamage)
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="damageType"></param>
+		/// <param name="damageAmount"></param>
+		/// <param name="criticalAmount"></param>
+		public void TakeUnmodifiedDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
+		{
+			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
+		}
+
 
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler
