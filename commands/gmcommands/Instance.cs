@@ -237,27 +237,24 @@ namespace DOL.GS.Commands
 				#region close
 				case "close":
 					{
-						if (player.CurrentRegion.IsInstance)
-						{
-							SendMessage(client, "Probably not a good idea to use this command while in an instance.");
-							return;
-						}
-
 						Instance newInstance = player.TempProperties.getObjectProperty(key, null) as Instance;
 
 						if (newInstance == null)
 						{
 							SendMessage(client, "Can't find an instance to delete.");
 						}
-						else if (newInstance.NumPlayers > 0)
-						{
-							SendMessage(client, "Instance has players, can't delete.");
-						}
 						else
 						{
 							player.TempProperties.removeProperty(key);
-							newInstance.BeginAutoClosureCountdown(0);
-							SendMessage(client, "Instance closed.");
+							newInstance.DestroyWhenEmpty = true;
+							if (newInstance.NumPlayers == 0)
+							{
+								SendMessage(client, "Instance closed.");
+							}
+							else
+							{
+								SendMessage(client, "Instance will close once all players leave.");
+							}
 						}
 					}
 					break;
