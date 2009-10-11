@@ -61,12 +61,22 @@ namespace DOL.GS.Keeps
 
 		private static void SetGuardRespawn(GameKeepGuard guard)
 		{
-			if (guard is GuardLord || guard is FrontierHastener)
+			if (guard is FrontierHastener)
+			{
 				guard.RespawnInterval = 5000; // 5 seconds
+			}
+			else if (guard is GuardLord)
+			{
+				guard.RespawnInterval = ServerProperties.Properties.GUARDLORD_RESPAWN_INTERVAL;
+			}
 			else if (guard is MissionMaster)
-				guard.RespawnInterval = 5 * 60 * 1000; // 5 minutes
+			{
+				guard.RespawnInterval = 10000; // 10 seconds
+			}
 			else
+			{
 				guard.RespawnInterval = Util.Random(5, 25) * 60 * 1000;
+			}
 		}
 
 		private static void SetGuardAggression(GameKeepGuard guard)
@@ -81,52 +91,10 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		private static byte GetBaseLevel(GameKeepGuard guard)
-		{
-			if (guard.Component == null)
-			{
-				if (guard is GuardLord)
-					return 75;
-				else 
-					return 65;
-			}
-
-			if (guard is GuardLord)
-			{
-				if (guard.Component.Keep is GameKeep)
-					return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1) * 2);
-				else 
-					return (byte)(guard.Component.Keep.BaseLevel + 2); // flat increase for tower captains
-			}
-
-			if (guard.Component.Keep is GameKeep)
-				return (byte)(guard.Component.Keep.BaseLevel + 1);
-
-			return guard.Component.Keep.BaseLevel;
-		}
-
 		public static void SetGuardLevel(GameKeepGuard guard)
 		{
-			if (guard is FrontierHastener)
-			{
-				guard.Level = 1;
-			}
-			else
-			{
-				int bonusLevel = 0;
-				double multiplier = ServerProperties.Properties.KEEP_GUARD_LEVEL_MULTIPLIER;
-
-				if (guard.Component != null)
-				{
-					// level is usually 4 unless upgraded, BaseLevel is usually 50
-					bonusLevel = guard.Component.Keep.Level;
-
-					if (guard.Component.Keep is GameKeepTower)
-						multiplier = ServerProperties.Properties.TOWER_GUARD_LEVEL_MULTIPLIER;
-				}
-
-				guard.Level = (byte)(GetBaseLevel(guard) + (bonusLevel * multiplier));
-			}
+			if (guard.Component != null)
+				guard.Component.Keep.SetGuardLevel(guard);
 		}
 
 		private static void SetGuardGender(GameKeepGuard guard)

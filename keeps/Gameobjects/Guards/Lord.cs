@@ -36,11 +36,11 @@ namespace DOL.GS.Keeps
 
 					if (this.Component.Keep is GameKeep)
 					{
-						value = ServerProperties.Properties.KEEP_RP_BASE + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.KEEP_RP_MULTIPLIER);
+						value = this.Component.Keep.RealmPointsValue() + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.KEEP_RP_MULTIPLIER);
 					}
 					else
 					{
-						value = ServerProperties.Properties.TOWER_RP_BASE + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.TOWER_RP_MULTIPLIER);
+						value = this.Component.Keep.RealmPointsValue() + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.TOWER_RP_MULTIPLIER);
 					}
 
 					value += (this.Component.Keep.Level * ServerProperties.Properties.UPGRADE_MULTIPLIER);
