@@ -6,7 +6,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				return 2000;
+				return 2100;
 			}
 		}
 	}

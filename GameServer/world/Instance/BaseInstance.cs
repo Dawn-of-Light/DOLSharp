@@ -139,9 +139,11 @@ namespace DOL.GS
 			{
 				m_persistent = value;
 
-				// This instance is persistent, stop all clsoe timers
+				// This instance is persistent, stop all close timers
 				if (m_persistent)
 				{
+					DestroyWhenEmpty = false;
+
 					if (m_autoCloseRegionTimer != null)
 					{
 						m_autoCloseRegionTimer.Stop();
