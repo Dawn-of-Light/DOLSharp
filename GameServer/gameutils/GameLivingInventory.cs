@@ -570,7 +570,7 @@ namespace DOL.GS
 				{
 					if(item.Count+count > item.MaxCount) return false;
 
-					item.Weight += item.Weight/item.Count*count;
+					item.Weight += item.Weight / Math.Max(1, item.Count * count);
 					item.Count += count;
 
 					if (!m_changedSlots.Contains(item.SlotPosition))
