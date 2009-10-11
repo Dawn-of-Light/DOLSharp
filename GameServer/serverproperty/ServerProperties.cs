@@ -851,7 +851,13 @@ namespace DOL.GS.ServerProperties
 		public static double TOWER_GUARD_LEVEL_MULTIPLIER;
 
 
-        /// <summary>
+		/// <summary>
+		/// How long before a new lord of a keep or tower respawns in milliseconds
+		/// </summary>
+		[ServerProperty("keeps", "guardlord_respawn_interval", "How long before a new lord of a keep or tower respawns in milliseconds.", 5 * 60 * 1000)]
+		public static int GUARDLORD_RESPAWN_INTERVAL;
+
+		/// <summary>
         /// Ignore too long outcoming packet or not
         /// </summary>
         [ServerProperty("enable_minotaur_relics", "Shall we enable Minotaur Relics ?", false)]
