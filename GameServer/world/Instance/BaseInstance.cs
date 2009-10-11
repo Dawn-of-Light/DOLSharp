@@ -259,6 +259,18 @@ namespace DOL.GS
 		{
 			DestroyWhenEmpty = false;
 
+			if (m_autoCloseRegionTimer != null)
+			{
+				m_autoCloseRegionTimer.Stop();
+				m_autoCloseRegionTimer = null;
+			}
+
+			if (m_delayCloseRegionTimer != null)
+			{
+				m_delayCloseRegionTimer.Stop();
+				m_delayCloseRegionTimer = null;
+			}
+
 			m_delayCloseRegionTimer = new DelayCloseRegionTimer(TimeManager, this);
 			m_delayCloseRegionTimer.Interval = minutes * 60000;
 			m_delayCloseRegionTimer.Start(minutes * 60000);
