@@ -7,17 +7,17 @@ namespace DOL.GS.Keeps
 	public class KeepArea : Area.Circle
 	{
 		public AbstractGameKeep Keep = null;
-		private const int PK_RADIUS = 5000;
-		private const int KEEP_RADIUS = 3250;
-		private const int TOWER_RADIUS = 1600;
+		private const int PK_RADIUS = 4000;
+		private const int KEEP_RADIUS = 3000;
+		private const int TOWER_RADIUS = 1500;
 
 		public KeepArea()
 			: base()
 		{ }
 
 		public KeepArea(AbstractGameKeep keep)
-			: base(keep.Name, keep.X, keep.Y, 0, keep is GameKeep ? (keep.IsPortalKeep ? PK_RADIUS : KEEP_RADIUS) : TOWER_RADIUS)
-		{
+			: base(keep.Name, keep.X, keep.Y, 0, keep.IsPortalKeep ? PK_RADIUS : (keep is GameKeepTower ? TOWER_RADIUS : KEEP_RADIUS)
+)		{
 			Keep = keep;
 		}
 
