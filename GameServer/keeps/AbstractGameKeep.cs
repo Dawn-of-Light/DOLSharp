@@ -279,6 +279,18 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public virtual int RealmPointsValue()
+		{
+			if (this is GameKeepTower)
+			{
+				return ServerProperties.Properties.TOWER_RP_BASE;
+			}
+			else
+			{
+				return ServerProperties.Properties.KEEP_RP_BASE;
+			}
+		}
+
 
 		#region DBKeep Properties
 		/// <summary>
@@ -782,7 +794,7 @@ namespace DOL.GS.Keeps
 
 			foreach (GameKeepGuard guard in this.Guards.Values)
 			{
-				TemplateMgr.SetGuardLevel(guard);
+				SetGuardLevel(guard);
 			}
 
 			foreach (Patrol p in this.Patrols.Values)
@@ -800,6 +812,57 @@ namespace DOL.GS.Keeps
 
 			this.SaveIntoDatabase();
 		}
+
+
+		public virtual byte GetBaseLevel(GameKeepGuard guard)
+		{
+			if (guard.Component == null)
+			{
+				if (guard is GuardLord)
+					return 75;
+				else
+					return 65;
+			}
+
+			if (guard is GuardLord)
+			{
+				if (guard.Component.Keep is GameKeep)
+					return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1) * 2);
+				else
+					return (byte)(guard.Component.Keep.BaseLevel + 2); // flat increase for tower captains
+			}
+
+			if (guard.Component.Keep is GameKeep)
+				return (byte)(guard.Component.Keep.BaseLevel + 1);
+
+			return guard.Component.Keep.BaseLevel;
+		}
+
+
+		public virtual void SetGuardLevel(GameKeepGuard guard)
+		{
+			if (guard is FrontierHastener)
+			{
+				guard.Level = 1;
+			}
+			else
+			{
+				int bonusLevel = 0;
+				double multiplier = ServerProperties.Properties.KEEP_GUARD_LEVEL_MULTIPLIER;
+
+				if (guard.Component != null)
+				{
+					// level is usually 4 unless upgraded, BaseLevel is usually 50
+					bonusLevel = guard.Component.Keep.Level;
+
+					if (guard.Component.Keep is GameKeepTower)
+						multiplier = ServerProperties.Properties.TOWER_GUARD_LEVEL_MULTIPLIER;
+				}
+
+				guard.Level = (byte)(GetBaseLevel(guard) + (bonusLevel * multiplier));
+			}
+		}
+
 
 		/// <summary>
 		/// Start changing the keeps level to a target level
@@ -995,10 +1058,6 @@ namespace DOL.GS.Keeps
 			{
 				if (guard is GuardLord == false)
 				{
-					// force Mission masters to respawn in 10 seconds
-					if (guard is MissionMaster)
-						guard.RespawnInterval = 10000;
-
 					guard.Die(guard);
 				}
 			}
