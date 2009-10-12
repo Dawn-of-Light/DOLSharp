@@ -506,7 +506,7 @@ namespace DOL.GS
 		/// Various flags for this npc
 		/// </summary>
 		[Flags]
-		public enum eFlags : byte
+		public enum eFlags : int
 		{
 			/// <summary>
 			/// The npc is translucent (like a ghost)
@@ -540,7 +540,9 @@ namespace DOL.GS
 			/// npc is a statue (no idle animation, no target...)
 			/// </summary>
 			STATUE = 0x80,
+			UNDERWATER = 0x100
 		}
+
 		/// <summary>
 		/// Holds various flags of this npc
 		/// </summary>
@@ -586,6 +588,19 @@ namespace DOL.GS
 				}
 			}
 		}
+
+
+		public override bool IsUnderwater
+		{
+			get
+			{
+				if ( ( m_flags & (int)eFlags.UNDERWATER ) == (int)eFlags.UNDERWATER )
+					return true;
+				else
+					return base.IsUnderwater;
+			}
+		}
+
 
 		/// <summary>
 		/// Shows wether any player sees that mob
