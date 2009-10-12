@@ -340,7 +340,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Checks if object is underwater
 		/// </summary>
-		public bool IsUnderwater
+		public virtual bool IsUnderwater
 		{
 			get
 			{
