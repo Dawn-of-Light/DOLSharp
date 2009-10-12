@@ -212,7 +212,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				WorldMgr.RvRLinkDeadPlayers.Keys.CopyTo(linkDeadPlayerIds,0);
 				foreach(string playerId in linkDeadPlayerIds)
 				{
-					if(DateTime.Now.Subtract(new TimeSpan(0, gracePeriodInMinutes, 0)) > WorldMgr.RvRLinkDeadPlayers[playerId])
+					if (playerId != null && DateTime.Now.Subtract(new TimeSpan(0, gracePeriodInMinutes, 0)) > WorldMgr.RvRLinkDeadPlayers[playerId])
 					{
 						WorldMgr.RvRLinkDeadPlayers.Remove(playerId);
 					}
