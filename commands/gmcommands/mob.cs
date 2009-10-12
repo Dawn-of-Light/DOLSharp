@@ -55,7 +55,9 @@ namespace DOL.GS.Commands
 	     "'/mob ghost' makes this mob ghost-like",
 	     "'/mob stealth' makes the mob stealthed (invisible)",
 		 "'/mob torch' turns this mobs torch on and off",
+		"'/mob statue' toggles statue effect",
 		 "'/mob fly [height]' makes this mob able to fly by changing the Z coordinate; moves mob up by height",
+		"'/mob underwater' toggles mob's underwater flag (helpful for flying mobs)",
 	     "'/mob noname' still possible to target this mob, but removes the name from above mob",
 	     "'/mob notarget' makes it impossible to target this mob and removes the name from above it",
 	     "'/mob kill' kills the mob without removing it from the DB",
@@ -167,7 +169,9 @@ namespace DOL.GS.Commands
 				case "ghost": ghost( client, targetMob, args ); break;
 				case "stealth": stealth( client, targetMob, args ); break;
 				case "torch": torch(client, targetMob, args); break;
-				case "fly": fly(client, targetMob, args); break;
+				case "statue": statue( client, targetMob, args ); break;
+                case "fly": fly( client, targetMob, args ); break;
+				case "underwater": underwater( client, targetMob, args ); break;
 				case "noname": noname( client, targetMob, args ); break;
 				case "notarget": notarget( client, targetMob, args ); break;
 				case "kill": kill( client, targetMob, args ); break;
@@ -857,17 +861,25 @@ namespace DOL.GS.Commands
 			client.Out.SendMessage("Mob TORCH flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.TORCH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
+		private void statue( GameClient client, GameNPC targetMob, string[] args )
+		{
+			targetMob.Flags ^= (uint)GameNPC.eFlags.STATUE;
+			targetMob.SaveIntoDatabase();
+
+			if( ( targetMob.Flags & (uint)GameNPC.eFlags.STATUE ) > 0 )
+				client.Out.SendMessage( "You have set the STATUE flag - you will need to use \"/debug on\" to target this NPC.", eChatType.CT_Important, eChatLoc.CL_SystemWindow );
+
+			client.Out.SendMessage( targetMob.Name + "'s STATUE flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.STATUE ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+		}
+
 		private void fly(GameClient client, GameNPC targetMob, string[] args)
 		{
 			int height = 0;
 
 			if ( args.Length > 2 )
 			{
-				try
-				{
-					height = Convert.ToInt32( args[2] );
-				}
-				catch ( Exception )
+
+				if( !int.TryParse( args[2], out height ) )
 				{
 					DisplaySyntax( client, args[1] );
 					return;
@@ -881,7 +893,7 @@ namespace DOL.GS.Commands
 
 			targetMob.SaveIntoDatabase();
 			
-			client.Out.SendMessage( "Mob FLYING flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.FLYING ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+			client.Out.SendMessage( targetMob.Name + "'s FLYING flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.FLYING ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
 		}
 
 		private void noname( GameClient client, GameNPC targetMob, string[] args )
@@ -1640,6 +1652,13 @@ namespace DOL.GS.Commands
 			{
 				DisplaySyntax( client, args[1] );
 			}
+		}
+
+		private void underwater( GameClient client, GameNPC targetMob, string[] args )
+		{
+			targetMob.Flags ^= (uint)GameNPC.eFlags.UNDERWATER;
+			targetMob.SaveIntoDatabase();
+			client.Out.SendMessage( "Mob UNDERWATER flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.UNDERWATER ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
 		}
 
 		private void viewloot( GameClient client, GameNPC targetMob, string[] args )
