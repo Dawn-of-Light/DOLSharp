@@ -182,6 +182,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			private static void CheckIfPlayerLogsNearEnemyKeepAndMoveIfNecessary(GamePlayer player)
 			{
+				if (player.CurrentRegion.IsInstance)
+				{
+					if (WorldMgr.RvRLinkDeadPlayers.ContainsKey(player.InternalID))
+					{
+						WorldMgr.RvRLinkDeadPlayers.Remove(player.InternalID);
+					}
+					return;
+				}
+
 				int gracePeriodInMinutes = 0;
 				Int32.TryParse(ServerProperties.Properties.RVR_LINK_DEATH_RELOG_GRACE_PERIOD, out gracePeriodInMinutes);
 				AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
