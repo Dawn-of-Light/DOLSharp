@@ -368,35 +368,6 @@ namespace DOL.GS
 		#endregion
 		#region Stats
 
-		/// <summary>
-		/// Calculates the maximum health for a specific npclevel and constitution
-		/// </summary>
-		/// <param name="level">The level of the npc</param>
-		/// <param name="constitution">The constitution of the npc</param>
-		/// <returns></returns>
-		public virtual int CalculateMaxHealth(int level, int constitution)
-		{
-			constitution -= 50;
-			if (constitution < 0)
-				constitution *= 2;
-			int hp1 = ServerProperties.Properties.GAMENPC_BASE_HP * (20 + 20 + level);
-			int hp2 = hp1 * constitution / 10000;
-			return Math.Max(1, 20 + hp1 / 50 + hp2);
-		}
-
-
-		/// <summary>
-		/// Calculates MaxHealth of an NPC
-		/// </summary>
-		/// <returns>maxpower of npc</returns>
-		public virtual int CalculateMaxMana(int level, int manastat)
-		{
-			int maxpower = 0;
-			maxpower = (level * (20 + 20 + 5)) + (this.Intelligence - 50);
-			if (maxpower < 0)
-				maxpower = 0;
-			return maxpower;
-		}
 
 		/// <summary>
 		/// Change a stat value
