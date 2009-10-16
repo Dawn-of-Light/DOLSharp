@@ -221,9 +221,20 @@ namespace DOL.GS
 			}
 
 			base.Die(killer);
+
 			foreach (String message in m_deathAnnounce)
+			{
 				BroadcastMessage(String.Format(message, Name));
+			}
+
 			ReportNews(killer);
+
+			// due to issues with attackers the following code will send a notify to all in area in order to force quest credit
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				Notify(GameLivingEvent.EnemyKilled, this, new EnemyKilledEventArgs(player));
+			}
+
 		}
 
 		#region Damage & Heal Events
