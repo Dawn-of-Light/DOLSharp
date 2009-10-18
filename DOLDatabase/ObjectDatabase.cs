@@ -92,7 +92,7 @@ namespace DOL.Database
 			return 0;
 		}
 
-		private void SQLAddNewObject(DataObject dataObject)
+		private bool SQLAddNewObject(DataObject dataObject)
 		{
 			try
 			{
@@ -170,7 +170,7 @@ namespace DOL.Database
 				{
 					if (log.IsErrorEnabled)
 						log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId + "Query = " + sql);
-					return;
+					return false;
 				}
 
 				if (hasRelations)
@@ -180,6 +180,7 @@ namespace DOL.Database
 
 				dataObject.Dirty = false;
 				dataObject.IsValid = true;
+				return true;
 
 			}
 			catch (Exception e)
@@ -187,6 +188,8 @@ namespace DOL.Database
 				if(log.IsErrorEnabled)
 					log.Error("Error while adding dataobject " + dataObject.TableName + " " + dataObject.ObjectId,e);
 			}
+
+			return false;
 		}
 
 		public void MoveObject(Type targetType, Type sourceType, string query)
@@ -249,12 +252,11 @@ namespace DOL.Database
 		/// and save it
 		/// </summary>
 		/// <param name="dataObject"></param>
-		public void AddNewObject(DataObject dataObject)
+		public bool AddNewObject(DataObject dataObject)
 		{
 			if (connection.IsSQLConnection)
 			{
-				SQLAddNewObject(dataObject);
-				return;
+				return SQLAddNewObject(dataObject);
 			}
 
 			DataTable table = null;
@@ -280,7 +282,7 @@ namespace DOL.Database
 
 				dataObject.Dirty = false;
 				dataObject.IsValid = true;
-				return;
+				return true;
 			}
 
 			catch (Exception e)

@@ -234,6 +234,8 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		private static bool m_loaded = false;
+
 		protected static readonly Dictionary<string, Specialization> m_specsByName = new Dictionary<string, Specialization>();
 		protected static readonly Dictionary<string, DBAbility> m_abilitiesByName = new Dictionary<string, DBAbility>();
 		protected static readonly Dictionary<string, SpellLine> m_spellLinesByName = new Dictionary<string, SpellLine>();
@@ -266,6 +268,10 @@ namespace DOL.GS
 
 		// all spells by id
 		protected static readonly Dictionary<int, Spell> m_spells = new Dictionary<int, Spell>(5000);
+
+		// all DB Spells by id
+		protected static Dictionary<int, DBSpell> m_dbSpells = new Dictionary<int, DBSpell>();
+
 
 		#region Initialization Tables
 
@@ -1242,21 +1248,37 @@ namespace DOL.GS
 			InitializeRaceResists();
 		}
 
+
 		public static void LoadSkills()
 		{
-			#region Load Spells
+			if (!m_loaded)
+			{
+				LoadSpells();
+				LoadSpellLines();
+				LoadAbilities();
+				LoadClassRealmAbilities();
+				LoadProcs();
+				LoadSpecAbility();
+				LoadSpecializations();
+				LoadAbilityHandlers();
+				LoadSkillHandlers();
+				m_loaded = true;
+			}
+		}
 
+		public static void LoadSpells()
+		{
 			//load all spells
 			if (log.IsInfoEnabled)
 				log.Info("Loading spells...");
 
 			DataObject[] spelldb = GameServer.Database.SelectAllObjects(typeof(DBSpell));
 
-			Dictionary<int, DBSpell> spells = new Dictionary<int, DBSpell>(spelldb.Length);
+			m_dbSpells = new Dictionary<int, DBSpell>(spelldb.Length);
 
 			foreach (DBSpell spell in spelldb)
 			{
-				spells.Add(spell.SpellID, spell);
+				m_dbSpells.Add(spell.SpellID, spell);
 				try
 				{
 					m_spells.Add(spell.SpellID, new Spell(spell, 1));
@@ -1269,10 +1291,10 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Spells loaded: " + spelldb.Length);
 
-			#endregion
+		}
 
-			#region Load Spell Lines
-
+		public static void LoadSpellLines()
+		{
 			// load all spell lines
 			DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(DBSpellLine));
 
@@ -1285,7 +1307,7 @@ namespace DOL.GS
 				foreach (DBLineXSpell lxs in dbo2)
 				{
 					DBSpell spell;
-					if (!spells.TryGetValue(lxs.SpellID, out spell))
+					if (!m_dbSpells.TryGetValue(lxs.SpellID, out spell))
 					{
 						log.WarnFormat("Spell with ID {0} not found but is referenced from LineXSpell table", lxs.SpellID);
 						continue;
@@ -1303,10 +1325,10 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Total spell lines loaded: " + dbo.Length);
 
-			#endregion
+		}
 
-			#region Load Abilities
-
+		private static void LoadAbilities()
+		{
 			// load Abilities
 			log.Info("Loading Abilities...");
 			DataObject[] abilities = GameServer.Database.SelectAllObjects(typeof(DBAbility));
@@ -1334,11 +1356,10 @@ namespace DOL.GS
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Total abilities loaded: " + ((abilities != null) ? abilities.Length : 0));
+		}
 
-			#endregion
-
-			#region Load Class To Realm Ability
-
+		private static void LoadClassRealmAbilities()
+		{
 			log.Info("Loading class to realm ability associations...");
 			DataObject[] classxra = GameServer.Database.SelectAllObjects(typeof(ClassXRealmAbility));
 
@@ -1370,11 +1391,10 @@ namespace DOL.GS
 				}
 			}
 			log.Info("Realm Abilities assigned to classes!");
+		}
 
-			#endregion
-
-			#region Load Procs
-
+		public static void LoadProcs()
+		{
 			//(procs) load all Procs
 			if (log.IsInfoEnabled)
 				log.Info("Loading procs...");
@@ -1407,10 +1427,10 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Total procs loaded: " + ((stylespells != null) ? stylespells.Length : 0));
 
-			#endregion
+		}
 
-			#region Load Spec To Ability
-
+		public static void LoadSpecAbility()
+		{
 			// load Specialization & styles
 			if (log.IsInfoEnabled)
 				log.Info("Loading specialization & styles...");
@@ -1433,11 +1453,10 @@ namespace DOL.GS
 						log.Warn("Associated ability " + sxa.AbilityKey + " for specialization " + sxa.Spec + " not found!");
 				}
 			}
+		}
 
-			#endregion
-
-			#region Load Specializations
-
+		public static void LoadSpecializations()
+		{
 			DataObject[] specs = GameServer.Database.SelectAllObjects(typeof(DBSpecialization));
 			if (specs != null)
 			{
@@ -1497,11 +1516,10 @@ namespace DOL.GS
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Length : 0));
+		}
 
-			#endregion
-
-			#region Load Ability Handlers
-
+		private static void LoadAbilityHandlers()
+		{
 			// load skill action handlers
 			//Search for ability handlers in the gameserver first
 			if (log.IsInfoEnabled)
@@ -1549,15 +1567,14 @@ namespace DOL.GS
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Total ability handlers loaded: " + m_abilityActionHandler.Keys.Count);
+		}
 
-			#endregion
-
-			#region Load Skill Handlers
-
+		private static void LoadSkillHandlers()
+		{
 			//Search for skill handlers in gameserver first
 			if (log.IsInfoEnabled)
 				log.Info("Searching skill handlers in GameServer.");
-			ht = ScriptMgr.FindAllSpecActionHandler(Assembly.GetExecutingAssembly());
+			Hashtable ht = ScriptMgr.FindAllSpecActionHandler(Assembly.GetExecutingAssembly());
 			foreach (DictionaryEntry entry in ht)
 			{
 				string key = (string)entry.Key;
@@ -1599,9 +1616,6 @@ namespace DOL.GS
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Total skill handlers loaded: " + m_specActionHandler.Keys.Count);
-
-			#endregion
-
 		}
 
 		#region Armor resists

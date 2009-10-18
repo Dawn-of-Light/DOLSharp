@@ -529,6 +529,14 @@ namespace DOL.GS.PacketHandler.Client.v168
                     house.SendUpdate();
                     break;
 				case 7: // House vault.
+
+					if (position > House.MAX_HOOKPOINT_LOCATIONS)
+					{
+						client.Player.Out.SendMessage("This hookpoint position is unknown, error logged.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						log.Error("HOUSING: " + client.Player.Name + " working with invalid position " + position + " in house " + house.HouseNumber + " model " + house.Model);
+						return 1;
+					}
+
 					if (house.GetHookpointLocation((uint)position) == null)
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] { slot });
@@ -541,11 +549,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 					int vaultIndex = house.GetFreeVaultNumber();
 					if (vaultIndex < 0)
 					{
-						client.Player.Out.SendMessage("You can't add any more vaults to this house!",
-							eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Player.Out.SendMessage("You can't add any more vaults to this house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
+
+					log.Debug("HOUSING: " + client.Player.Name + " placing house vault at position " + position + " in house " + house.HouseNumber + " model " + house.Model);
+
 					GameHouseVault houseVault = new GameHouseVault(orgitem, vaultIndex);
 					houseVault.Attach(house, (uint)position, (ushort)((client.Player.Heading + 2048) % 4096));
 					client.Player.Inventory.RemoveItem(orgitem);
@@ -586,10 +596,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 			a.OffY = player.Y - player.CurrentHouse.Y;
 			a.OffZ = player.Z - 25000;
 			a.OffH = player.Heading - player.CurrentHouse.Heading;
-			GameServer.Database.AddNewObject(a);
-			House.AddNewOffset(a);
-            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        }
+			if (GameServer.Database.AddNewObject(a))
+			{
+				House.AddNewOffset(a);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				log.Debug(string.Format("HOUSING: {0} logged new HouseHookpointOffset for model {1}, position {2}, offset {3}, {4}, {5}", player.Name, a.Model, a.Hookpoint, a.OffX, a.OffY, a.OffZ));
+			}
+			else
+			{
+				log.Error(string.Format("HOUSING: Player {0} error adding HouseHookpointOffset for model {1}, position {2}, offset {3}, {4}, {5}", player.Name, a.Model, a.Hookpoint, a.OffX, a.OffY, a.OffZ));
+				player.Out.SendMessage("Error adding position " + position + ", error recorded in server error log.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+		}
         protected static void HouseRemovalDialogue(GamePlayer player, byte response)
         {
             if (response != 0x01)

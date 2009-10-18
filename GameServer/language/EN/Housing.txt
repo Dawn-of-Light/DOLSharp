@@ -56,7 +56,7 @@ Scripts.Player.Housing.HookPointAlready: 		That HookPoint already has an item!
 Scripts.Player.Housing.HookPointCleared: 		That HookPoint has been cleared.	
 Scripts.Player.Housing.HookPointCloser:			Stand as close to the housepoint as possible and face the proper direction and press accept.
 Scripts.Player.Housing.HookPointID:			The hookpoint ID is: {0}
-Scripts.Player.Housing.HookPointLogged:			Logged hookpoint position {0} in error.log!
+Scripts.Player.Housing.HookPointLogged:			Logged hookpoint position {0}!
 Scripts.Player.Housing.HookPointLogLoc:			Log this housepoint location?
 Scripts.Player.Housing.HookPointNot:			That is not a hookpoint item!
 Scripts.Player.Housing.HookPointNotPlaced:		That hookpoint item was not placed.	
