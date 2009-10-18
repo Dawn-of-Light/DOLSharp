@@ -300,7 +300,7 @@ namespace DOL.GS.Keeps
 			if (lastTarget != null && lastTarget == attackTarget)
 			{
 				long lastTick = this.TempProperties.getLongProperty(Last_LOS_Tick_Property, 0);
-				if (lastTick != 0 && CurrentRegion.Time - lastTick < 5 * 1000)
+				if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.KEEP_GUARD_LOS_CHECK_TIME * 1000)
 					return;
 			}
 

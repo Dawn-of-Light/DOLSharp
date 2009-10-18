@@ -995,6 +995,13 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("npc", "npc_min_respawn_interval", "Minimum respawn time, in minutes, for npc's without a set respawninterval", 5)]
 		public static int NPC_MIN_RESPAWN_INTERVAL;
 
+		/// <summary>
+		/// Number of seconds between allowed LOS checks for keep guards
+		/// </summary>
+		[ServerProperty("keeps", "keep_guard_los_check_time", "Number of seconds between allowed LOS checks for keep guards", 5)]
+		public static int KEEP_GUARD_LOS_CHECK_TIME;
+
+
 
 
 		/// <summary>
