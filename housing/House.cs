@@ -49,6 +49,10 @@ namespace DOL.GS.Housing
 		public const string HOUSEFORHOUSERENT = "HouseForHouseRent";
 		public const string MONEYFORHOUSERENT = "MoneyForHouseRent";
 		public const string BPSFORHOUSERENT = "BPsForHouseRent";
+
+		public const int MAX_HOOKPOINT_LOCATIONS = 25;
+
+
 		#region Properties
 		public int HouseNumber
 		{
@@ -1414,6 +1418,7 @@ namespace DOL.GS.Housing
 		{
 			RELATIVE_HOOKPOINTS_COORDS[o.Model][o.Hookpoint] = new int[] { o.OffX, o.OffY, o.OffZ, o.OffH };
 		}
+
 		public static void LoadHookpointOffsets()
 		{
 			//initialise array
@@ -1430,37 +1435,39 @@ namespace DOL.GS.Housing
 				AddNewOffset(o);
 			}
 		}
+
 		/// <summary>
 		/// Housing hookpoint coordinates offset relative to a house
+		/// Note that this is using 1 as a base instead of 0
 		/// </summary>
 		private static readonly int[][][] RELATIVE_HOOKPOINTS_COORDS = new int[][][]
 			{
 				// NOTHING : Lot
 				null,
 				// ALB Cottage (model 1)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// ALB (model 2)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// ALB Villa(model 3)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// ALB Mansion(model 4)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// MID Cottage (model 5)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// MID (model 6)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// MID (model 7)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// MID (model 8)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// MID (model 9)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// MID (model 10)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// MID (model 11)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 				// MID (model 12)
-				new int[25][],
+				new int[MAX_HOOKPOINT_LOCATIONS + 1][],
 			};
 
 		public Point3D GetHookpointLocation(uint n)

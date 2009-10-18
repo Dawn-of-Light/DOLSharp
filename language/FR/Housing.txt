@@ -56,7 +56,7 @@ Scripts.Player.Housing.HookPointAlready:		Cet ancrage possède déjà un objet!
 Scripts.Player.Housing.HookPointCleared:		Le point d'ancrage est maintenant vide.
 Scripts.Player.Housing.HookPointCloser:			Tenez vous le plus près possible du lot désiré et appuyez sur "accepter".
 Scripts.Player.Housing.HookPointID:				L'id du point d'ancrage est : {0}
-Scripts.Player.Housing.HookPointLogged:			La position du point d'ancrage {0} est dans error.log !
+Scripts.Player.Housing.HookPointLogged:			La position du point d'ancrage {0}!
 Scripts.Player.Housing.HookPointLogLoc:			Afficher les points d'ancrage ?
 Scripts.Player.Housing.HookPointNot:			Ce n'est pas un objet utilisable sur les ancrages!
 Scripts.Player.Housing.HookPointNotPlaced:		L'objet n'a pas été placé sur cet ancrage.

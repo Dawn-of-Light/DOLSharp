@@ -151,7 +151,7 @@ Scripts.Player.Housing.HookPointAlready:		Dieser Stellplatz ist bereits belegt!
 Scripts.Player.Housing.HookPointCleared:		Der Stellplatz wurde geräumt.		
 Scripts.Player.Housing.HookPointCloser:			Geht so nahe an den Stellplatz heran wie möglich, blickt in die richtige Richtung und akzeptiert.	
 Scripts.Player.Housing.HookPointID:			Die Stellplatz-ID ist: {0}	
-Scripts.Player.Housing.HookPointLogged:			Die Position von Stellplatz {0} wurde ins error.log geschrieben!	
+Scripts.Player.Housing.HookPointLogged:			Die Position von Stellplatz {0}!	
 Scripts.Player.Housing.HookPointLogLoc:			Wollt Ihr die Position dieses Stellplatzes in die Logdatei schreiben?	
 Scripts.Player.Housing.HookPointNot:			Dieser Gegenstand ist nicht für einen Stellplatz bestimmt!	
 Scripts.Player.Housing.HookPointNotPlaced:		Der Gegenstand wurde nicht aufgestellt.		
