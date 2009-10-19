@@ -223,7 +223,7 @@ namespace DOL.GS
 			// due to issues with attackers the following code will send a notify to all in area in order to force quest credit
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				Notify(GameLivingEvent.EnemyKilled, killer, new EnemyKilledEventArgs(player));
+				player.Notify(GameLivingEvent.EnemyKilled, killer, new EnemyKilledEventArgs(this));
 			}
 
 			base.Die(killer);
