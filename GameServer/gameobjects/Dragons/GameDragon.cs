@@ -220,6 +220,12 @@ namespace DOL.GS
 					log.Debug(attacker.Name);
 			}
 
+			// due to issues with attackers the following code will send a notify to all in area in order to force quest credit
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				Notify(GameLivingEvent.EnemyKilled, killer, new EnemyKilledEventArgs(player));
+			}
+
 			base.Die(killer);
 
 			foreach (String message in m_deathAnnounce)
@@ -228,13 +234,6 @@ namespace DOL.GS
 			}
 
 			ReportNews(killer);
-
-			// due to issues with attackers the following code will send a notify to all in area in order to force quest credit
-			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				Notify(GameLivingEvent.EnemyKilled, this, new EnemyKilledEventArgs(player));
-			}
-
 		}
 
 		#region Damage & Heal Events
