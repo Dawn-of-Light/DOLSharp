@@ -18,27 +18,30 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
-using DOL.GS;
+
 using DOL.Database;
+using DOL.GS;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute("&object", //command to handle
-		 ePrivLevel.GM, //minimum privelege level
-		"Various Object commands!", //command description
-		//usage
-		 "'/object info' to get information about the object",
-		 "'/object movehere' to move object to your location",
-		 "'/object create [ObjectClassName]' to create a default object",
-		 "'/object fastcreate [name] [modelID]' to create the specified object",
-		 "'/object model <newModel>' to set the model to newModel",
-		 "'/object emblem <newEmblem>' to set the emblem to newEmblem",
-		 "'/object name <newName>' to set the targeted object name to newName",
-		 "'/object remove' to remove the targeted object",
-		 "'/object save' to save the object",
-		 "'/object target' to automatically target the nearest object")]
+	              ePrivLevel.GM, //minimum privelege level
+	              "Various Object commands!", //command description
+	              //usage
+	              "'/object info' to get information about the object",
+	              "'/object movehere' to move object to your location",
+	              "'/object create [ObjectClassName]' to create a default object",
+	              "'/object fastcreate [name] [modelID]' to create the specified object",
+	              "'/object model <newModel>' to set the model to newModel",
+	              "'/object emblem <newEmblem>' to set the emblem to newEmblem",
+	              "'/object name <newName>' to set the targeted object name to newName",
+	              "'/object noname' to remove the targeted object name",
+	              "'/object remove' to remove the targeted object",
+	              "'/object save' to save the object",
+	              "'/object target' to automatically target the nearest object")]
 	public class ObjectCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -64,18 +67,24 @@ namespace DOL.GS.Commands
 			{
 				case "info":
 					{
-						client.Out.SendMessage("[ " + " " + targetObject.Name + " " + " ]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Out.SendMessage(" + Model: " + targetObject.Model, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Out.SendMessage(" + Emblem: " + targetObject.Emblem, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Out.SendMessage( " + Class: " + client.Player.TargetObject.GetType(), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+						List<string> Object_Info = new List<string>();
+						
+						string o_name = "(blank name)";
+						if (!string.IsNullOrEmpty(targetObject.Name))
+							o_name = targetObject.Name;
+						
+						Object_Info.Add(" OID: " + targetObject.ObjectID);
+						Object_Info.Add(" Model: " + targetObject.Model);
+						Object_Info.Add (" Class: " + client.Player.TargetObject.GetType());
 
 						GameInventoryItem invItem = client.Player.TargetObject as GameInventoryItem;
 						if( invItem != null )
 						{
-							client.Out.SendMessage( " + Count: " + invItem.Item.Count, eChatType.CT_System, eChatLoc.CL_SystemWindow );
+							Object_Info.Add (" Count: " + invItem.Item.Count);
 						}
 
-						client.Out.SendMessage(" + [X]: " + targetObject.X + " [Y]: " + targetObject.Y + " [Z]: " + targetObject.Z, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Object_Info.Add(" Location: X= " + targetObject.X + " ,Y= " + targetObject.Y + " ,Z= " + targetObject.Z);
+						client.Out.SendCustomTextWindow( "[ " + o_name + " ]", Object_Info );
 						break;
 					}
 				case "movehere":
@@ -164,6 +173,13 @@ namespace DOL.GS.Commands
 							targetObject.SaveIntoDatabase();
 							DisplayMessage(client, "Object name changed to: " + targetObject.Name);
 						}
+						break;
+					}
+				case "noname":
+					{
+						targetObject.Name = "";
+						targetObject.SaveIntoDatabase();
+						DisplayMessage(client, "Object name removed");
 						break;
 					}
 				case "save":
