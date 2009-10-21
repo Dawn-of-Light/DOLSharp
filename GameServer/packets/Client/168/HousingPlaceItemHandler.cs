@@ -596,9 +596,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			a.OffY = player.Y - player.CurrentHouse.Y;
 			a.OffZ = player.Z - 25000;
 			a.OffH = player.Heading - player.CurrentHouse.Heading;
-			if (GameServer.Database.AddNewObject(a))
+			if (GameServer.Database.AddNewObject(a) && House.AddNewOffset(a))
 			{
-				House.AddNewOffset(a);
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				log.Debug(string.Format("HOUSING: {0} logged new HouseHookpointOffset for model {1}, position {2}, offset {3}, {4}, {5}", player.Name, a.Model, a.Hookpoint, a.OffX, a.OffY, a.OffZ));
 			}
