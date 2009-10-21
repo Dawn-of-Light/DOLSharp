@@ -1414,9 +1414,18 @@ namespace DOL.GS.Housing
 
 		#region Housepoint location
 
-		public static void AddNewOffset(HouseHookpointOffset o)
+		public static bool AddNewOffset(HouseHookpointOffset o)
 		{
-			RELATIVE_HOOKPOINTS_COORDS[o.Model][o.Hookpoint] = new int[] { o.OffX, o.OffY, o.OffZ, o.OffH };
+			if (o.Hookpoint <= MAX_HOOKPOINT_LOCATIONS)
+			{
+				RELATIVE_HOOKPOINTS_COORDS[o.Model][o.Hookpoint] = new int[] { o.OffX, o.OffY, o.OffZ, o.OffH };
+				return true;
+			}
+			else
+			{
+				log.Error("HOUSING: HouseHookPointOffset exceeds array size.  Model " + o.Model + " hookpoint " + o.Hookpoint);
+				return false;
+			}
 		}
 
 		public static void LoadHookpointOffsets()
