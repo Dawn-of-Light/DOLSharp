@@ -304,7 +304,7 @@ namespace DOL.GS
 		/// Table to hold the race resists
 		/// </summary>
 		protected static Dictionary<int, int[]> m_raceResists;
-		private static ReaderWriterLockSlim raceResistLock = new ReaderWriterLockSlim();
+		private static ReaderWriterLockSlim m_raceResistLock = new ReaderWriterLockSlim();
 
 		/// <summary>
 		/// Initialize the object type hashtable
@@ -717,7 +717,7 @@ namespace DOL.GS
 			}
 			catch( Exception e )
 			{
-				raceResistLock.EnterWriteLock();
+				m_raceResistLock.EnterWriteLock();
 
 				try
 				{
@@ -725,14 +725,14 @@ namespace DOL.GS
 				}
 				finally
 				{
-					raceResistLock.ExitWriteLock();
+					m_raceResistLock.ExitWriteLock();
 				}
 
 				log.Error( e.StackTrace, e );
 				return;
 			}
 
-			raceResistLock.EnterWriteLock();
+			m_raceResistLock.EnterWriteLock();
 
 			try
 			{
@@ -762,7 +762,7 @@ namespace DOL.GS
 			}
 			finally
 			{
-				raceResistLock.ExitWriteLock();
+				m_raceResistLock.ExitWriteLock();
 			}
 		}
 
@@ -2132,7 +2132,7 @@ namespace DOL.GS
 
 			int resistValue = 0;
 
-			raceResistLock.EnterReadLock();
+			m_raceResistLock.EnterReadLock();
 
 			try
 			{
@@ -2161,7 +2161,7 @@ namespace DOL.GS
 			}
 			finally
 			{
-				raceResistLock.ExitReadLock();
+				m_raceResistLock.ExitReadLock();
 			}
 
 			return resistValue;

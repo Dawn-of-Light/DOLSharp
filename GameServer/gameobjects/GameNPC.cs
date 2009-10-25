@@ -511,7 +511,7 @@ namespace DOL.GS
 			/// npc is a statue (no idle animation, no target...)
 			/// </summary>
 			STATUE = 0x80,
-			UNDERWATER = 0x100
+			SWIMMING = 0x100
 		}
 
 		/// <summary>
@@ -565,7 +565,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if ( ( m_flags & (int)eFlags.UNDERWATER ) == (int)eFlags.UNDERWATER )
+				if ( ( m_flags & (int)eFlags.SWIMMING ) == (int)eFlags.SWIMMING )
 					return true;
 				else
 					return base.IsUnderwater;

@@ -3155,7 +3155,7 @@ namespace DOL.GS.Spells
 					- Tolakram
 			*/
 
-			int hitchance = 85 + ((spellLevel - target.Level) >> 1) + bonustohit;
+			int hitchance = 85 + ((spellLevel - target.Level) / 2) + bonustohit;
 
 			if (!(caster is GamePlayer && target is GamePlayer))
 			{
