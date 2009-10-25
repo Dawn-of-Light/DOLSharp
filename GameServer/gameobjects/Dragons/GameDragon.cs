@@ -85,9 +85,6 @@ namespace DOL.GS
 			m_DragonStrength = ServerProperties.Properties.SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
 		}
 
-		/// <summary>
-		/// Radius of the lair.
-		/// </summary>
 		public ushort LairRadius
 		{
 			get { return 2000; }
@@ -106,30 +103,17 @@ namespace DOL.GS
 				X, Y, 0, LairRadius + 200));
 		}
 
-		/// <summary>
-		/// Melee attack Range.
-		/// </summary>
 		public override int AttackRange
 		{
 			get { return 400; }
 			set { }
 		}
 
-		/// <summary>
-		/// Returns the dragon's AF for a given armor slot.
-		/// </summary>
-		/// <param name="slot"></param>
-		/// <returns></returns>
 		public override double GetArmorAF(eArmorSlot slot)
 		{
 			return 1000*m_DragonStrength/100;
 		}
 
-		/// <summary>
-		/// Returns the dragon's armor absorb level.
-		/// </summary>
-		/// <param name="slot"></param>
-		/// <returns></returns>
 		public override double GetArmorAbsorb(eArmorSlot slot)
 		{
 			// 85% ABS is cap.
@@ -155,9 +139,6 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// The dragon's maximum health.
-		/// </summary>
 		public override int MaxHealth
 		{
 			get
@@ -166,29 +147,17 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// The damage this dragon deals on an attack.
-		/// </summary>
-		/// <param name="weapon"></param>
-		/// <returns></returns>
 		public override double AttackDamage(InventoryItem weapon)
 		{
 			return base.AttackDamage(weapon) * 1.0 *m_DragonStrength/100;
 		}
 
-		/// <summary>
-		/// Gets or sets the base maxspeed of this dragon.
-		/// </summary>
 		public override int MaxSpeedBase
 		{
 			get { return 191 + (Level * 2); }
 			set { m_maxSpeedBase = value; }
 		}
 
-		/// <summary>
-		/// The respawn interval of this dragon.
-		/// </summary>
-		/// 
 		public override int RespawnInterval
 		{
 			get
