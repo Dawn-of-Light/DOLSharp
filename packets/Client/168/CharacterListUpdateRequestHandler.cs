@@ -102,17 +102,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						if (character.AccountName != client.Account.Name)
 						{
-							DBBannedAccount b = new DBBannedAccount();
-							b.Author = "SERVER";
-							b.Ip = client.TcpEndpoint;
-							b.Account = client.Account.Name;
-							b.DateBan = DateTime.Now;
-							b.Type = "B";
-							b.Reason = String.Format("Autoban CharName '{0}' on wrong Account '{1}'", GameServer.Database.Escape(charname), GameServer.Database.Escape(client.Account.Name));
-							GameServer.Database.AddNewObject(b);
-							GameServer.Database.SaveObject(b);
-							client.Disconnect(); return 1;
+							if( Properties.BAN_HACKERS == true )
+							{
+								DBBannedAccount b = new DBBannedAccount();
+								b.Author = "SERVER";
+								b.Ip = client.TcpEndpoint;
+								b.Account = client.Account.Name;
+								b.DateBan = DateTime.Now;
+								b.Type = "B";
+								b.Reason = String.Format( "Autoban CharName '{0}' on wrong Account '{1}'", GameServer.Database.Escape( charname ), GameServer.Database.Escape( client.Account.Name ) );
+								GameServer.Database.AddNewObject( b );
+								GameServer.Database.SaveObject( b );
+							}
+
+							client.Disconnect();
+							return 1;
 						}
+
 						// update old character
 						byte customization = (byte)packet.ReadByte();
 						int newModel = character.CurrentModel;

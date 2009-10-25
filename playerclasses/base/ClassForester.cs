@@ -54,7 +54,7 @@ namespace DOL.GS.PlayerClass
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Arboreal_Path));
 
 			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Arborial Path"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Arboreal Path"));
 
 			// Abilities
 			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
