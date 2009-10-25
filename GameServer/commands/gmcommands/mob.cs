@@ -57,7 +57,7 @@ namespace DOL.GS.Commands
 		 "'/mob torch' turns this mobs torch on and off",
 		"'/mob statue' toggles statue effect",
 		 "'/mob fly [height]' makes this mob able to fly by changing the Z coordinate; moves mob up by height",
-		"'/mob underwater' toggles mob's underwater flag (helpful for flying mobs)",
+		"'/mob swimming' toggles mob's swimming flag (helpful for flying mobs)",
 	     "'/mob noname' still possible to target this mob, but removes the name from above mob",
 	     "'/mob notarget' makes it impossible to target this mob and removes the name from above it",
 	     "'/mob kill' kills the mob without removing it from the DB",
@@ -171,7 +171,7 @@ namespace DOL.GS.Commands
 				case "torch": torch(client, targetMob, args); break;
 				case "statue": statue( client, targetMob, args ); break;
                 case "fly": fly( client, targetMob, args ); break;
-				case "underwater": underwater( client, targetMob, args ); break;
+				case "swimming": swimming( client, targetMob, args ); break;
 				case "noname": noname( client, targetMob, args ); break;
 				case "notarget": notarget( client, targetMob, args ); break;
 				case "kill": kill( client, targetMob, args ); break;
@@ -1654,11 +1654,11 @@ namespace DOL.GS.Commands
 			}
 		}
 
-		private void underwater( GameClient client, GameNPC targetMob, string[] args )
+		private void swimming( GameClient client, GameNPC targetMob, string[] args )
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.UNDERWATER;
+			targetMob.Flags ^= (uint)GameNPC.eFlags.SWIMMING;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage( "Mob UNDERWATER flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.UNDERWATER ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+			client.Out.SendMessage( "Mob SWIMMING flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.SWIMMING ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
 		}
 
 		private void viewloot( GameClient client, GameNPC targetMob, string[] args )

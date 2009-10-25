@@ -68,7 +68,7 @@ namespace DOL.GS.PlayerClass
 			// Spell lines
 			player.AddSpellLine(SkillBase.GetSpellLine("Creeping Path")); //base
 			player.AddSpellLine(SkillBase.GetSpellLine("Verdant Path")); //base
-			player.AddSpellLine(SkillBase.GetSpellLine("Arborial Mastery")); //spec
+			player.AddSpellLine(SkillBase.GetSpellLine("Arboreal Mastery")); //spec
 			player.AddSpellLine(SkillBase.GetSpellLine("Creeping Path Spec")); //spec
 			player.AddSpellLine(SkillBase.GetSpellLine("Verdant Path Spec")); //spec
 

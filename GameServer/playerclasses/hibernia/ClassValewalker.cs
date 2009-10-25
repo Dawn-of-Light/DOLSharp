@@ -72,7 +72,7 @@ namespace DOL.GS.PlayerClass
 
 			// Spell lines
 			player.AddSpellLine(SkillBase.GetSpellLine("Valewalker Arb Path Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Valewalker Arborial Path Base ")); //immolation spells
+			player.AddSpellLine(SkillBase.GetSpellLine("Valewalker Arboreal Path Base ")); //immolation spells
 			
 			if (player.Level >= 5)
 			{
