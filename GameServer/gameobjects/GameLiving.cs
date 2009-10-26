@@ -3342,6 +3342,13 @@ namespace DOL.GS
 			{
 				missrate += (int)(5 * ad.Attacker.GetConLevel(this));
 			}
+
+			// experimental missrate adjustment for number of attackers
+			if (ad.Attacker is GameNPC && ((ad.Attacker as GameNPC).Brain is IControlledBrain == false))
+			{
+				missrate -= ((Attackers.Count - 1) * ServerProperties.Properties.MISSRATE_REDUCTION_PER_ATTACKERS);
+			}
+
 			// weapon/armor bonus
 			int armorBonus = 0;
 			if (ad.Target is GamePlayer)

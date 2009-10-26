@@ -1001,6 +1001,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("keeps", "keep_guard_los_check_time", "Number of seconds between allowed LOS checks for keep guards", 5)]
 		public static int KEEP_GUARD_LOS_CHECK_TIME;
 
+		/// <summary>
+		/// Adjustment to missrate per number of attackers
+		/// </summary>
+		[ServerProperty("pve", "missrate_reduction_per_attackers", "Adjustment to missrate per number of attackers", 0)]
+		public static int MISSRATE_REDUCTION_PER_ATTACKERS;
+
 
 
 
