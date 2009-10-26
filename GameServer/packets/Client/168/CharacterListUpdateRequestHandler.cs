@@ -76,26 +76,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					// Graveen: changed the following to allow GMs to have special chars in their names (_,-, etc..)
 					Regex nameCheck = new Regex ("^[A-Z][a-zA-Z]");
-					if(charname.Length<3 || !nameCheck.IsMatch(charname))
-						if (client.Account.PrivLevel==1)
+					if (charname.Length < 3 || !nameCheck.IsMatch(charname))
 					{
-						if( ServerProperties.Properties.BAN_HACKERS )
+						if (client.Account.PrivLevel == 1)
 						{
-							DBBannedAccount b = new DBBannedAccount();
-							b.Author = "SERVER";
-							b.Ip = client.TcpEndpoint;
-							b.Account = client.Account.Name;
-							b.DateBan = DateTime.Now;
-							b.Type = "B";
-							b.Reason = String.Format( "Autoban bad CharName '{0}'", GameServer.Database.Escape( charname ) );
-							GameServer.Database.AddNewObject( b );
-							GameServer.Database.SaveObject( b );
-						}
+							if (ServerProperties.Properties.BAN_HACKERS)
+							{
+								DBBannedAccount b = new DBBannedAccount();
+								b.Author = "SERVER";
+								b.Ip = client.TcpEndpoint;
+								b.Account = client.Account.Name;
+								b.DateBan = DateTime.Now;
+								b.Type = "B";
+								b.Reason = String.Format("Autoban bad CharName '{0}'", GameServer.Database.Escape(charname));
+								GameServer.Database.AddNewObject(b);
+								GameServer.Database.SaveObject(b);
+							}
 
-						client.Disconnect();
-						return 1;
+							client.Disconnect();
+							return 1;
+						}
 					}
-					
+
 					String select = String.Format("Name = '{0}'", GameServer.Database.Escape(charname));
 					Character character = (Character)GameServer.Database.SelectObject(typeof(Character), select);
 					if (character != null)
