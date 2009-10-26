@@ -106,11 +106,21 @@ namespace DOL.GS.Commands
 
                         if (player == null)
                            	player = client.Player;
-                            
+
+						String select = String.Format("Name = '{0}'", GameServer.Database.Escape(args[2]));
+						Character character = (Character)GameServer.Database.SelectObject(typeof(Character), select);
+
+						if (character != null)
+						{
+							client.Out.SendMessage("Duplicate Name!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return;
+						}
+
                         player.Name = args[2];
                         player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your name to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                         client.Out.SendMessage("You successfully changed this players name to " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                        player.SaveIntoDatabase();
+						client.Out.SendMessage("Tell the player to log out and back in to complete the change.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						player.SaveIntoDatabase();
                         break;
                     }
 				#endregion
