@@ -55,9 +55,9 @@ namespace DOL.GS.Spells
 				{
 					GameSpellEffect currentEffect = (GameSpellEffect)Caster.TempProperties.getObjectProperty(FOCUS_SPELL, null);
 
-					if (currentEffect != null)
+					if (currentEffect != null && currentEffect.SpellHandler is FocusShellHandler)
 					{
-						currentEffect.Cancel(false);
+						(currentEffect.SpellHandler as FocusShellHandler).FocusSpellAction(null, Caster, null);
 					}
 
 					FSTarget = selectedTarget as GamePlayer;
