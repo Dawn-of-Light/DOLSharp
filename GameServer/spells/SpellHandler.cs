@@ -2689,7 +2689,8 @@ namespace DOL.GS.Spells
 			if (living == null) return;
 
 			GameSpellEffect currentEffect = (GameSpellEffect)living.TempProperties.getObjectProperty(FOCUS_SPELL, null);
-			if (currentEffect == null) return;
+			if (currentEffect == null)
+				return;
 
 			if (args is CastStartingEventArgs)
 			{
@@ -2706,10 +2707,13 @@ namespace DOL.GS.Spells
 			GameEventMgr.RemoveHandler(currentEffect.Owner, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
 			Caster.TempProperties.removeProperty(FOCUS_SPELL);
 
-			if (currentEffect.Spell.Pulse != 0) CancelPulsingSpell(Caster, currentEffect.Spell.SpellType);
-			else currentEffect.Cancel(false);
+			if (currentEffect.Spell.Pulse != 0)
+				CancelPulsingSpell(Caster, currentEffect.Spell.SpellType);
+			else 
+				currentEffect.Cancel(false);
 
 			MessageToCaster(String.Format("You lose your focus on your {0} spell.", currentEffect.Spell.Name), eChatType.CT_SpellExpires);
+
 			if (e == GameLivingEvent.Moving)
 				MessageToCaster("You move and interrupt your focus!", eChatType.CT_System);
 		}
