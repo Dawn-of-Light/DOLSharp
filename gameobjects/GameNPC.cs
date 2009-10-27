@@ -3731,13 +3731,17 @@ namespace DOL.GS
 				if ( m_respawnInterval > 0 || m_respawnInterval < 0 )
 					return m_respawnInterval;
 
-				if (Level <= 65 || Realm != 0)
+				if (Level <= 65 && Realm == 0)
 				{
-					return Util.Random(ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL * 60000) + 3 * 60000;
+					return Util.Random(ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL, ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL + 5) * 60000;
+				}
+				else if (Realm != 0)
+				{
+					return Util.Random(5 * 60000);
 				}
 				else
 				{
-					int minutes = Level - 65 + 15;
+					int minutes = (Level - 65) + ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL + 10;
 					return minutes * 60000;
 				}
 			}
