@@ -50,10 +50,22 @@ namespace DOL.GS.Spells
 					MessageToCaster("This spell may not be cast on pets!", eChatType.CT_SpellResisted);
 					return false;
 				}
-				else if (selectedTarget is GamePlayer)
+
+				if (selectedTarget is GamePlayer)
+				{
+					GameSpellEffect currentEffect = (GameSpellEffect)Caster.TempProperties.getObjectProperty(FOCUS_SPELL, null);
+
+					if (currentEffect != null)
+					{
+						currentEffect.Cancel(false);
+					}
+
 					FSTarget = selectedTarget as GamePlayer;
+				}
 				else
+				{
 					return false;
+				}
 			}
 			else
 			{
@@ -156,27 +168,27 @@ namespace DOL.GS.Spells
 		private class FSTimer : RegionAction
 		{
 			//The handler for this timer
-			FocusShellHandler handler;
+			FocusShellHandler m_handler;
 
 			public FSTimer(GameObject actionSource, FocusShellHandler handler) : base(actionSource)
 			{
-				this.handler = handler;
+				m_handler = handler;
 				Interval = handler.Spell.Frequency;
 			}
 
 			protected override void OnTick()
 			{
 				//If the target is still in range
-				if (handler.Caster.Mana >= handler.Spell.PulsePower && handler.Caster.IsWithinRadius(handler.FSTarget, handler.Spell.Range))
+				if (m_handler.Caster.Mana >= m_handler.Spell.PulsePower && m_handler.Caster.IsWithinRadius(m_handler.FSTarget, m_handler.Spell.Range))
 				{
-					handler.Caster.Mana -= handler.Spell.PulsePower;
-					handler.Caster.LastAttackTickPvP = handler.Caster.CurrentRegion.Time;
+					m_handler.Caster.Mana -= m_handler.Spell.PulsePower;
+					m_handler.Caster.LastAttackTickPvP = m_handler.Caster.CurrentRegion.Time;
 				}
 				//Target went out of range, stop the spell
 				else
 				{
 					//Cancel spell
-					handler.CancelSpell(null, handler.Caster, null);
+					m_handler.CancelSpell(null, m_handler.Caster, null);
 					Stop();
 				}
 			}
