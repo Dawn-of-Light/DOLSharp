@@ -67,8 +67,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			protected override void OnTick()
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
+
 				if (log.IsDebugEnabled)
 					log.DebugFormat("Client {0}({1}) entering world: pid->{2} oid->{3}", player.Client.Account.Name, player.Name, player.Client.SessionID, player.ObjectID);
+
 				player.Out.SendUpdatePoints();
 				player.TargetObject = null;
 				player.LastNPCUpdate = Environment.TickCount; 
@@ -79,12 +81,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 				int mobs = SendMobsAndMobEquipmentToPlayer(player);
 				player.Out.SendTime();
 				WeatherMgr.UpdatePlayerWeather(player);
+
+				bool checkInstanceLogin = false;
+
 				if (!player.EnteredGame)
 				{
 					player.EnteredGame = true;
 					player.Notify(GamePlayerEvent.GameEntered, player);
 					NotifyFriendsOfLoginIfNotAnonymous(player);
 					player.EffectList.RestoreAllEffects();
+					checkInstanceLogin = true;
 				}
 				else
 				{
@@ -138,6 +144,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.Out.SendMessage("Dawn of Light " + an.Name + " Version: " + an.Version, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				CheckIfPlayerLogsNearEnemyKeepAndMoveIfNecessary(player);
 				CheckBGLevelCapForPlayerAndMoveIfNecessary(player);
+
+				if (checkInstanceLogin && player.CurrentRegion.IsInstance)
+				{
+					player.MoveToBind();
+				}
+
 				if(player.IsUnderwater)
 				{
 					player.IsDiving = true;
