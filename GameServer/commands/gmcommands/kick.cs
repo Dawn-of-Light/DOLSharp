@@ -18,7 +18,10 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			GameClient clientc = WorldMgr.GetClientByPlayerName(args[1], true, false);
+			if (string.IsNullOrEmpty(args[1]))
+			    return;
+			    
+			GameClient clientc = WorldMgr.GetClientByPlayerName(args[1], false, false);
 			
 			if (clientc == null)
 			{
