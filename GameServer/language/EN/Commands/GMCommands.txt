@@ -26,10 +26,10 @@ GMCommands.Area.AreaCreated:				Area created - Description: {0}, X={1}, Y={2}, Z
 
 # /ban Command
 GMCommands.Ban.Description:					Usage of /ban command: 
-GMCommands.Ban.Usage.IP:					'/ban ip <reason>' Ban target's IP adress
-GMCommands.Ban.Usage.Account:				'/ban account <reason>' Ban target's account
-GMCommands.Ban.Usage.Both:					'/ban both <reason>' Ban target's account and its related IP adress
-GMCommands.Ban.MustTarget:					You must select a target!
+GMCommands.Ban.Usage.IP:					'/ban ip <account or player name> <reason>' Ban selected IP adress
+GMCommands.Ban.Usage.Account:				'/ban account <player name> <reason>' Ban selected account
+GMCommands.Ban.Usage.Both:					'/ban both <player name> <reason>' Ban selected account and its related IP adress
+GMCommands.Ban.UnableToFindPlayer:			Unable to find player!
 GMCommands.Ban.AAlreadyBanned:				This account has already been banned.
 GMCommands.Ban.ABanned:						Account {0} has been banned.
 GMCommands.Ban.IAlreadyBanned:				This IP has already been banned.
