@@ -58,8 +58,6 @@ namespace DOL.GS.ServerRules
 			if (!client.Socket.Connected)
 				return false;
 
-			string accip = ((IPEndPoint)client.Socket.RemoteEndPoint).Address.ToString();
-
 			// Ban account
 			DataObject[] objs;
             objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
@@ -69,8 +67,9 @@ namespace DOL.GS.ServerRules
 				return false;
 			}
 
-			// Ban IP Adress
-            objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+			// Ban IP Adress		
+			string accip = GameServer.Database.Escape(((IPEndPoint)client.Socket.RemoteEndPoint).Address.ToString());
+			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount),"((Type='I' OR Type='B') AND Ip LIKE '" + accip + "%')");
 			if (objs.Length > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
