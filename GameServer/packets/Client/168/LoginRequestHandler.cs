@@ -188,7 +188,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							//check autocreate ...
 							
-							if (GameServer.Instance.Configuration.AutoAccountCreation)
+							if (GameServer.Instance.Configuration.AutoAccountCreation && ServerProperties.Properties.ALLOW_AUTO_ACCOUNT_CREATION)
 							{
 								// autocreate account
                                 if (password == null || password == "")
