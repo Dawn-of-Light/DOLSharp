@@ -42,16 +42,16 @@ namespace DOL.GS.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length < 2)
+			if (args.Length < 3)
 			{
 				DisplaySyntax(client);
 				return;
 			}
 
-			GamePlayer player = client.Player.TargetObject as GamePlayer;
-			if (player == null)
+			GameClient gc = WorldMgr.GetClientByPlayerName(args[2],false,false);		
+			if (gc == null)
 			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.MustTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.UnableToFindPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -59,11 +59,11 @@ namespace DOL.GS.Commands
 			{
 				DataObject[] objs;
 				DBBannedAccount b = new DBBannedAccount();
-				string accip = ((IPEndPoint)player.Client.Socket.RemoteEndPoint).Address.ToString();
-				string accname = GameServer.Database.Escape(player.Client.Account.Name);
+				string accip = ((IPEndPoint)gc.Socket.RemoteEndPoint).Address.ToString();
+				string accname = GameServer.Database.Escape(gc.Account.Name);
 				string reason;
 
-				if (args.Length >= 3)
+				if (args.Length >= 4)
 					reason = String.Join(" ", args, 2, args.Length - 2);
 				else reason = "No Reason.";
 
