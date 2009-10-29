@@ -45,7 +45,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					DBBannedAccount b = new DBBannedAccount();
 					b.Author = "SERVER";
-					b.Ip = client.TcpEndpoint;
+					b.Ip = client.TCPEndpointAddress;
 					b.Account = client.Account.Name;
 					b.DateBan = DateTime.Now;
 					b.Type = "B";
@@ -82,15 +82,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							if (ServerProperties.Properties.BAN_HACKERS)
 							{
-								DBBannedAccount b = new DBBannedAccount();
-								b.Author = "SERVER";
-								b.Ip = client.TcpEndpoint;
-								b.Account = client.Account.Name;
-								b.DateBan = DateTime.Now;
-								b.Type = "B";
-								b.Reason = String.Format("Autoban bad CharName '{0}'", GameServer.Database.Escape(charname));
-								GameServer.Database.AddNewObject(b);
-								GameServer.Database.SaveObject(b);
+							DBBannedAccount b = new DBBannedAccount();
+							b.Author = "SERVER";
+							b.Ip = client.TCPEndpointAddress;
+							b.Account = client.Account.Name;
+							b.DateBan = DateTime.Now;
+							b.Type = "B";
+							b.Reason = String.Format( "Autoban bad CharName '{0}'", GameServer.Database.Escape( charname ) );
+							GameServer.Database.AddNewObject( b );
+							GameServer.Database.SaveObject( b );
 							}
 
 							client.Disconnect();
@@ -108,7 +108,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								DBBannedAccount b = new DBBannedAccount();
 								b.Author = "SERVER";
-								b.Ip = client.TcpEndpoint;
+								b.Ip = client.TCPEndpointAddress;
 								b.Account = client.Account.Name;
 								b.DateBan = DateTime.Now;
 								b.Type = "B";
@@ -222,7 +222,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 													{
 														DBBannedAccount b = new DBBannedAccount();
 														b.Author = "SERVER";
-														b.Ip = client.TcpEndpoint;
+														b.Ip = client.TCPEndpointAddress;
 														b.Account = client.Account.Name;
 														b.DateBan = DateTime.Now;
 														b.Type = "B";
@@ -246,7 +246,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 												{
 													DBBannedAccount b = new DBBannedAccount();
 													b.Author = "SERVER";
-													b.Ip = client.TcpEndpoint;
+													b.Ip = client.TCPEndpointAddress;
 													b.Account = client.Account.Name;
 													b.DateBan = DateTime.Now;
 													b.Type = "B";
@@ -322,7 +322,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								{
 									DBBannedAccount b = new DBBannedAccount();
 									b.Author = "SERVER";
-									b.Ip = client.TcpEndpoint;
+									b.Ip = client.TCPEndpointAddress;
 									b.Account = client.Account.Name;
 									b.DateBan = DateTime.Now;
 									b.Type = "B";
@@ -418,7 +418,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								DBBannedAccount b = new DBBannedAccount();
 								b.Author = "SERVER";
-								b.Ip = client.TcpEndpoint;
+								b.Ip = client.TCPEndpointAddress;
 								b.Account = client.Account.Name;
 								b.DateBan = DateTime.Now;
 								b.Type = "B";
