@@ -26,7 +26,7 @@ namespace DOL.Database
 	[DataTable(TableName = "ServerProperty")]
 	public class ServerProperty: DataObject
 	{
-		private string m_area;
+		private int m_category;
 		private string m_key;
 		private string m_description;
 		private string m_defaultValue;
@@ -36,7 +36,7 @@ namespace DOL.Database
 
 		public ServerProperty()
 		{
-			m_area = "";
+			m_category = 1;
 			m_key = "";
 			m_description = "";
 
@@ -61,15 +61,15 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public string Area
+		public int Category
 		{
 			get
 			{
-				return m_area;
+				return m_category;
 			}
 			set
 			{
-				m_area = value;
+				m_category = value;
 				Dirty = true;
 			}
 		}
