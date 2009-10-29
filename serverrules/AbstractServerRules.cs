@@ -68,7 +68,7 @@ namespace DOL.GS.ServerRules
 			}
 
 			// Ban IP Adress		
-			string accip = GameServer.Database.Escape(((IPEndPoint)client.Socket.RemoteEndPoint).Address.ToString());
+			string accip = GameServer.Database.Escape(client.TCPEndpointAddress);
 			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount),"((Type='I' OR Type='B') AND Ip LIKE '" + accip + "%')");
 			if (objs.Length > 0)
 			{
