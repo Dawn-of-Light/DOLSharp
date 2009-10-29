@@ -41,6 +41,11 @@ namespace DOL.GS.Commands
 				DisplayMessage(client, "You don't have permission to speak on the on guild line.");
 				return;
 			}
+			if (client.Player.IsMuted)
+			{
+				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				return;
+			}
 			string message = "[Guild] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
 			client.Player.Guild.SendMessageToGuildMembers(message, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 		}
@@ -65,6 +70,11 @@ namespace DOL.GS.Commands
 			if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.OcSpeak))
 			{
 				DisplayMessage(client, "You don't have permission to speak on the officer line.");
+				return;
+			}
+			if (client.Player.IsMuted)
+			{
+				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			string message = "[Officers] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
@@ -104,6 +114,12 @@ namespace DOL.GS.Commands
 			if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.AcSpeak))
 			{
 				DisplayMessage(client, "You can not speak on alliance chan.");
+				return;
+			}
+
+			if (client.Player.IsMuted)
+			{
+				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				return;
 			}
 

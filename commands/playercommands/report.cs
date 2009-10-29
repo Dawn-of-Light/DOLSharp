@@ -48,6 +48,12 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (client.Player.IsMuted)
+			{
+				client.Player.Out.SendMessage("You have been muted and are not allowed to submit bug reports.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			string message = string.Join(" ", args, 1, args.Length - 1);
 			BugReport report = new BugReport();
 			
