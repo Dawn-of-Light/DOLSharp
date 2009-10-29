@@ -68,6 +68,20 @@ namespace DOL.Database
 			return myType.Name;
 		}
 
+		public static string GetViewName(Type myType)
+		{
+			object[] attri = myType.GetCustomAttributes(typeof(DataTable), true);
+
+			if((attri.Length >= 1) && (attri[0] is DataTable))
+			{
+				DataTable tab = attri[0] as DataTable;					
+				string name = tab.ViewName;
+				if(name != null)
+					return name;
+			}
+
+			return null;
+		}		
 		/// <summary>
 		/// Returns the Tablename for an Objecttype. 
 		/// Reads the DataTable-Attribute or if

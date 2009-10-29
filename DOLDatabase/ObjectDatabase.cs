@@ -56,6 +56,33 @@ namespace DOL.Database
 
 		}
 
+		/// <summary>
+		/// Primary Key ID of a view
+		/// </summary>
+		/// <param name="objectType"></param>
+		/// <returns></returns>
+		public string GetTableOrViewName(Type objectType)
+		{				
+			// Graveen: introducing view selection hack (before rewriting the layer :D)
+			// basically, a view must exist and is created with the following:
+			//
+			//	[DataTable(TableName="InventoryItem",ViewName = "MarketItem")]
+    		//	public class SomeMarketItems : InventoryItem {};
+    		//
+    		//  here, we rely on the view called MarketItem,
+    		//  based on the InventoryItem table. We have to tell to the code
+    		//  only to bypass the id generated with FROM by the above
+    		//  code.
+    		// 
+			string name = DataObject.GetViewName(objectType);
+			
+			// if not a view, we use tablename, else viewname
+    		if (string.IsNullOrEmpty(name))
+    			return DataObject.GetTableName(objectType);
+    		
+    		return name;
+		}
+		
 		public string[] GetTableNameList()
 		{
 			string[] ar = new string[tableDatasets.Count];
@@ -81,7 +108,7 @@ namespace DOL.Database
 			string tableName = DataObject.GetTableName(objectType);
 			if (connection.IsSQLConnection)
 			{
-				string query = "SELECT COUNT(*) FROM " + tableName;
+				string query = "SELECT COUNT(*) FROM " + GetTableOrViewName(objectType);
 				if (where != "")
 					query += " WHERE " + where;
 				object count = connection.ExecuteScalar(query);
@@ -223,8 +250,6 @@ namespace DOL.Database
 			insertQuery += ") SELECT ";
 
 			//column values
-
-
 			string shortName = sourceTableName.Substring(0, 1).ToLower();
 
 			for (int i = 0; i < targetTable.Columns.Count; i++)
@@ -625,7 +650,7 @@ namespace DOL.Database
 					sb.Append("`" + bindingInfo[i].Member.Name + "`");
 				}
 			}
-			sb.Append(" FROM `" + tableName + "`");
+			sb.Append(" FROM `" + GetTableOrViewName(objectType) + "`");
 
 			if ( whereClause != null && whereClause.Trim().Length > 0 )
 			{
