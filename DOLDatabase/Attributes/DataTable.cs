@@ -29,6 +29,7 @@ namespace DOL.Database.Attributes
 	{
 		private string tableName;
 		private bool precaching;
+		private string viewName;
 
 		/// <summary>
 		/// Constrctor of DataTable sets the TableName-Property to null.
@@ -52,6 +53,21 @@ namespace DOL.Database.Attributes
 			set
 			{
 				tableName=value;
+			}
+		}
+		
+		/// <summary>
+		/// The view is based on the ViewTarget table
+		/// </summary>
+		public string ViewName
+		{
+			get
+			{
+				return viewName;
+			}
+			set
+			{
+				viewName=value;
 			}
 		}
 
