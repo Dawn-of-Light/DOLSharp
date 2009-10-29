@@ -31,6 +31,12 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (client.Player.IsMuted)
+			{
+				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			client.Player.Advisor = !client.Player.Advisor;
 			if (client.Player.Advisor)
 				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Advisor.On"));
