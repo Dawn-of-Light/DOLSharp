@@ -354,7 +354,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								{
 									DBBannedAccount b = new DBBannedAccount();
 									b.Author = "SERVER";
-									b.Ip = client.TcpEndpoint;
+									b.Ip = client.TCPEndpointAddress;
 									b.Account = client.Account.Name;
 									b.DateBan = DateTime.Now;
 									b.Type = "B";
@@ -424,7 +424,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						DBBannedAccount b = new DBBannedAccount();
 						b.Author = "SERVER";
-						b.Ip = client.TcpEndpoint;
+						b.Ip = client.TCPEndpointAddress;
 						b.Account = client.Account.Name;
 						b.DateBan = DateTime.Now;
 						b.Type = "B";
