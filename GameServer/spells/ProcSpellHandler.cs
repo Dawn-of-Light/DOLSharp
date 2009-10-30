@@ -307,15 +307,19 @@ namespace DOL.GS.Spells
                 ISpellHandler handler = ScriptMgr.CreateSpellHandler((GameLiving)sender, m_procSpell, m_procSpellLine);
                 if (handler != null)
                 {
-                    if (m_procSpell.Target.ToLower() == "enemy")
-                        handler.StartSpell(ad.Target);
-                    else if (m_procSpell.Target.ToLower() == "self")
-                        handler.StartSpell(ad.Attacker);
-                    else if (m_procSpell.Target.ToLower() == "group")
-                    {
-                        GamePlayer player = Caster as GamePlayer;
-                        if (Caster is GamePlayer)
-                        {
+					if (m_procSpell.Target.ToLower() == "enemy")
+					{
+						handler.StartSpell(ad.Target);
+					}
+					else if (m_procSpell.Target.ToLower() == "self")
+					{
+						handler.StartSpell(ad.Attacker);
+					}
+					else if (m_procSpell.Target.ToLower() == "group")
+					{
+						GamePlayer player = Caster as GamePlayer;
+						if (Caster is GamePlayer)
+						{
 							if (player.Group != null)
 							{
 								foreach (GameLiving groupPlayer in player.Group.GetMembersInTheGroup())
@@ -327,12 +331,28 @@ namespace DOL.GS.Spells
 								}
 							}
 							else
-								handler.StartSpell( player );
+							{
+								handler.StartSpell(player);
+							}
+						}
+					}
+					else if (m_procSpell.Target.ToLower() == "realm")
+					{
+						GamePlayer player = Caster as GamePlayer;
+						if (player != null)
+						{
+							foreach (GameLiving realmPlayer in player.GetPlayersInRadius((ushort)m_procSpell.Radius))
+							{
+								if (GameServer.ServerRules.IsSameRealm(player, realmPlayer, true))
+								{
+									handler.StartSpell(realmPlayer);
+								}
+							}
 						}
 					}
 					else
 					{
-						log.Warn( "Skipping " + m_procSpell.Target + " proc " + m_procSpell.Name + " on " + ad.Target.Name + "; Realm = " + ad.Target.Realm );
+						log.Warn("Unknown spell target; skipping " + m_procSpell.Target + " proc " + m_procSpell.Name + " on " + ad.Target.Name + "; Realm = " + ad.Target.Realm);
 					}
                 }
             }
