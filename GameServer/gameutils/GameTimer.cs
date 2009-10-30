@@ -867,7 +867,7 @@ namespace DOL.GS
 									}
 #endif
 
-									if (GetTickCount() - callbackStart > 100) 
+									if (GetTickCount() - callbackStart > 250) 
 									{
 										if (log.IsWarnEnabled)
 										{
