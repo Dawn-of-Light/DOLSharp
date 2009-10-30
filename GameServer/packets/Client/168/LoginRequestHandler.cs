@@ -42,7 +42,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			string ipAddress = client.TcpEndpoint;
+			string ipAddress = client.TCPEndpointAddress;
 
 			packet.Skip(2); //Skip the client_type byte
 			byte major = (byte)packet.ReadByte();
