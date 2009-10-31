@@ -17,18 +17,26 @@
  *
  */
 using System;
+using System.Collections;
 using DOL.GS.PacketHandler;
+
+using System.Reflection;
+using log4net;
 
 namespace DOL.GS.Commands
 {
 	[Cmd(
 		"&mute",
 		ePrivLevel.GM,
-		"Command to mute annoying players.  Player mutes are temporary, account mutes are set until another account mute command turns it off.",
-        "/mute [account] <playername>")]
+		"Command to mute annoying players.  Player mutes are temporary, allchars are set on an account and must be removed.",
+		"/mute <playername or #ClientID> - example /mute #24  to mute player on client id 24",
+		"/mute <playername or #ClientID> allchars - this applies an account mute to this player",
+		"/mute <playername or #ClientID> remove - remove all mutes from this players account")]
     public class MuteCommandHandler : AbstractCommandHandler, ICommandHandler
     {
-        public void OnCommand(GameClient client, string[] args)
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		public void OnCommand(GameClient client, string[] args)
         {
             if (args.Length < 2)
             {
@@ -37,45 +45,64 @@ namespace DOL.GS.Commands
             }
 
 			GameClient playerClient = null;
+
+			if (args[1].StartsWith("#"))
+			{
+				try
+				{
+					int sessionID = Convert.ToInt32(args[1].Substring(1));
+					playerClient = WorldMgr.GetClientFromID(sessionID);
+				}
+				catch
+				{
+					DisplayMessage(client, "Invalid client ID");
+				}
+			}
+			else
+			{
+				playerClient = WorldMgr.GetClientByPlayerName(args[1], true, false);
+			}
+
+			if (playerClient == null)
+			{
+				DisplayMessage(client, "No player found for '" + args[1] + "'");
+				return;
+			}
+
 			bool mutedAccount = false;
 
-			if (args[1].ToLower() == "account")
+			if (args.Length > 2 && (args[2].ToLower() == "account" || args[2].ToLower() == "allchars"))
 			{
-				if (args.Length < 3)
-				{
-					DisplaySyntax(client);
-					return;
-				}
-
-				playerClient = WorldMgr.GetClientByPlayerName(args[2], true, false);
-
 				if (playerClient != null)
 				{
-					playerClient.Account.IsMuted = !playerClient.Account.IsMuted;
-					playerClient.Player.IsMuted = playerClient.Account.IsMuted;
+					playerClient.Account.IsMuted = true;
+					playerClient.Player.IsMuted = true;
+					GameServer.Database.SaveObject(playerClient.Account);
+					mutedAccount = true;
+				}
+			}
+			else if (args.Length > 2 && args[2].ToLower() == "remove")
+			{
+				if (playerClient != null)
+				{
+					playerClient.Account.IsMuted = false;
+					playerClient.Player.IsMuted = false;
 					GameServer.Database.SaveObject(playerClient.Account);
 					mutedAccount = true;
 				}
 			}
 			else
 			{
-				playerClient = WorldMgr.GetClientByPlayerName(args[1], true, false);
 				if (playerClient != null)
 				{
 					if (playerClient.Account.IsMuted)
 					{
-						DisplayMessage(client, "This player has an account mute which must be removed first.");
+						DisplayMessage(client, "This player has an allchars mute which must be removed first.");
 						return;
 					}
 
 					playerClient.Player.IsMuted = !playerClient.Player.IsMuted;
 				}
-			}
-
-			if (playerClient == null)
-			{
-				DisplayMessage(client, "No player found for name '" + args[1] + "'");
-				return;
 			}
 
 			if (playerClient.Player.IsMuted)
@@ -87,6 +114,8 @@ namespace DOL.GS.Commands
 					playerClient.Player.Out.SendMessage("This mute has been placed on all characters for this account.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 					client.Player.Out.SendMessage("This action was done to the players account.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				}
+
+				log.Warn(client.Player.Name + " muted " + playerClient.Player.Name);
 			}
 			else
 			{
@@ -96,6 +125,8 @@ namespace DOL.GS.Commands
 				{
 					client.Player.Out.SendMessage("This action was done to the players account.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				}
+
+				log.Warn(client.Player.Name + " un-muted " + playerClient.Player.Name);
 			}
             return;
         }

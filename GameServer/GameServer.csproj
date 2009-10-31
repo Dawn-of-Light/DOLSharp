@@ -173,6 +173,7 @@
     <Compile Include="commands\GMCommands\area.cs" />
     <Compile Include="commands\GMCommands\Ban.cs" />
     <Compile Include="commands\GMCommands\cast.cs" />
+    <Compile Include="commands\GMCommands\ClientList.cs" />
     <Compile Include="commands\GMCommands\crafting.cs" />
     <Compile Include="commands\GMCommands\debug.cs" />
     <Compile Include="commands\GMCommands\debugjump.cs" />
