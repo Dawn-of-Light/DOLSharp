@@ -26,10 +26,10 @@ namespace DOL.GS.ServerProperties
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	public class ServerPropertyAttribute : Attribute
 	{
-		private string 	m_key;
-		private string 	m_description;
-		private object 	m_defaultValue;
-		private int 	m_category;
+		private string m_category;
+		private string m_key;
+		private string m_description;
+		private object m_defaultValue;
 
 		/// <summary>
 		/// Constructor of serverproperty
@@ -38,25 +38,26 @@ namespace DOL.GS.ServerProperties
 		/// <param name="description">property desc</param>
 		/// <param name="defaultValue">property default value</param>
 		/// <param name="category">property category (previously area)</param>
-		public ServerPropertyAttribute(int category, string key, string description, object defaultValue)
-		{
-			m_key = key;
-			m_description = description;
-			m_defaultValue = defaultValue;
-			m_category = category;
-		}
 		public ServerPropertyAttribute(string key, string description, object defaultValue)
 		{
+			m_category = "";
 			m_key = key;
 			m_description = description;
 			m_defaultValue = defaultValue;
-			m_category = 1;
+		}
+
+		public ServerPropertyAttribute(string category, string key, string description, object defaultValue)
+		{
+			m_category = category;
+			m_key = key;
+			m_description = description;
+			m_defaultValue = defaultValue;
 		}
 
 		/// <summary>
 		/// The property category
 		/// </summary>
-		public int Category
+		public string Category
 		{
 			get
 			{

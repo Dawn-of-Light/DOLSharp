@@ -44,6 +44,7 @@ namespace DOL.GS.ServerProperties
 			Init(typeof(Properties));
 		}
 
+		#region Properties list
 		/// <summary>
 		/// The Experience Rate
 		/// </summary>
@@ -110,6 +111,9 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("starting_level", "Starting Level - Edit this to set which levels experience a new player start the game with", 1)]
 		public static int STARTING_LEVEL;
 
+		/// <summary>
+		/// Spells-related properties
+		/// </summary>
 		[ServerProperty("spell_interrupt_duration", "", 4500)]
 		public static int SPELL_INTERRUPT_DURATION;
 
@@ -332,19 +336,19 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Use Keep Balancing
 		/// </summary>
-		[ServerProperty(10, "use_keep_balancing", "Set to true if you want keeps to be higher level in NF the less you have, and lower level the more you have", false)]
+		[ServerProperty("keeps", "use_keep_balancing", "Set to true if you want keeps to be higher level in NF the less you have, and lower level the more you have", false)]
 		public static bool USE_KEEP_BALANCING;
 
 		/// <summary>
 		/// Use Live Keep Bonuses
 		/// </summary>
-		[ServerProperty(10, "use_live_keep_bonuses", "Set to true if you want to use the live keeps bonuses, for example 3% extra xp", false)]
+		[ServerProperty("keeps", "use_live_keep_bonuses", "Set to true if you want to use the live keeps bonuses, for example 3% extra xp", false)]
 		public static bool USE_LIVE_KEEP_BONUSES;
 
 		/// <summary>
 		/// Use Supply Chain
 		/// </summary>
-		[ServerProperty(10, "use_supply_chain", "Set to true if you want to use the live supply chain for keep teleporting, set to false to allow teleporting to any keep that your realm controls (and towers)", false)]
+		[ServerProperty("keeps", "use_supply_chain", "Set to true if you want to use the live supply chain for keep teleporting, set to false to allow teleporting to any keep that your realm controls (and towers)", false)]
 		public static bool USE_SUPPLY_CHAIN;
 
 		/// <summary>
@@ -449,7 +453,6 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("load_keeps", "Load keeps", true)]
 		public static readonly bool LOAD_KEEPS;
 
-
 		/// <summary>
 		/// Save QuestItems into Database
 		/// </summary>
@@ -519,11 +522,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("max_indoor_house_items", "Max number of items allowed inside a players house.", 40)]
 		public static int MAX_INDOOR_HOUSE_ITEMS;
+
 		[ServerProperty("max_outdoor_house_items", "Max number of items allowed in a players garden.", 30)]
 		public static int MAX_OUTDOOR_HOUSE_ITEMS;
+		
 		[ServerProperty("indoor_items_depend_on_size", "If true the max number of allowed House indoor items are set like live (40, 60, 80, 100)", true)]
 		public static bool INDOOR_ITEMS_DEPEND_ON_SIZE;
-
 
 		[ServerProperty("housing_rent_cottage", "Rent price for a cottage.", 200000L)]
 		public static long HOUSING_RENT_COTTAGE;
@@ -549,24 +553,22 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("housing_debug_allow_multiple", "Allow the player to own more than 1 house.  This breaks some housing commands.", false)]
 		public static bool HOUSING_DEBUG_ALLOW_MULTIPLE;
 
-
 		[ServerProperty("statprint_frequency", "How often (milliseconds) should statistics be printed on the server console.", 30000)]
 		public static int STATPRINT_FREQUENCY;
 
-
-		[ServerProperty(13, "world_item_decay_time", "How long (milliseconds) will an item dropped on the ground stay in the world.", (uint)180000)]
+		[ServerProperty("world", "world_item_decay_time", "How long (milliseconds) will an item dropped on the ground stay in the world.", (uint)180000)]
 		public static uint WORLD_ITEM_DECAY_TIME;
 
-		[ServerProperty(13, "world_pickup_distance", "How far before you can no longer pick up an object (loot for example).", 256)]
+		[ServerProperty("world", "world_pickup_distance", "How far before you can no longer pick up an object (loot for example).", 256)]
 		public static int WORLD_PICKUP_DISTANCE;
 
-		[ServerProperty(13, "world_day_increment", "Day Increment (0 to 512, default is 24).  Larger increments make shorter days.", (uint)24)]
+		[ServerProperty("world", "world_day_increment", "Day Increment (0 to 512, default is 24).  Larger increments make shorter days.", (uint)24)]
 		public static uint WORLD_DAY_INCREMENT;
 
-		[ServerProperty(13, "world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second).", (uint)30000)]
+		[ServerProperty("world", "world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second).", (uint)30000)]
 		public static uint WORLD_NPC_UPDATE_INTERVAL;
 
-		[ServerProperty(13, "world_player_update_interval", "How often (milliseconds) will players be checked for updates. Minimum allowed = 100 (100 milliseconds).", (uint)300)]
+		[ServerProperty("world", "world_player_update_interval", "How often (milliseconds) will players be checked for updates. Minimum allowed = 100 (100 milliseconds).", (uint)300)]
 		public static uint WORLD_PLAYER_UPDATE_INTERVAL;
 
 		[ServerProperty("weather_check_interval", "How often (milliseconds) will weather be checked for a chance to start a storm.", 5 * 60 * 1000)]
@@ -578,43 +580,41 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("weather_log_events", "Should weather events be shown in the log (and on the console).", true)]
 		public static bool WEATHER_LOG_EVENTS;
 
-
-
 		/// <summary>
 		/// This is to set the baseHP For NPCs
 		/// </summary>
-		[ServerProperty(12, "gamenpc_base_hp", "GameNPC's base HP * level", 500)]
+		[ServerProperty("npc", "gamenpc_base_hp", "GameNPC's base HP * level", 500)]
 		public static int GAMENPC_BASE_HP;
 
 		/// <summary>
 		/// How many hitpoints per point of CON above gamenpc_base_con should an NPC gain.
 		/// This modification is applied prior to any buffs
 		/// </summary>
-		[ServerProperty(12, "gamenpc_hp_gain_per_con", "How many hitpoints per point of CON above gamenpc_base_con should an NPC gain", 2)]
+		[ServerProperty("npc", "gamenpc_hp_gain_per_con", "How many hitpoints per point of CON above gamenpc_base_con should an NPC gain", 2)]
 		public static int GAMENPC_HP_GAIN_PER_CON;
 
 		/// <summary>
 		/// What is the base contitution for npc's
 		/// </summary>
-		[ServerProperty(12, "gamenpc_base_con", "GameNPC's base Constitution", 30)]
+		[ServerProperty("npc", "gamenpc_base_con", "GameNPC's base Constitution", 30)]
 		public static int GAMENPC_BASE_CON;
 
 		/// <summary>
 		/// Chance for NPC to random walk. Default is 20
 		/// </summary>
-		[ServerProperty(12, "gamenpc_randomwalk_chance", "Chance for NPC to random walk. Default is 20", 20)]
+		[ServerProperty("npc", "gamenpc_randomwalk_chance", "Chance for NPC to random walk. Default is 20", 20)]
 		public static int GAMENPC_RANDOMWALK_CHANCE;
 
 		/// <summary>
 		/// How often, in milliseconds, to check follow distance.  Lower numbers make NPC follow closer but increase load on server.
 		/// </summary>
-		[ServerProperty(12, "gamenpc_followcheck_time", "How often, in milliseconds, to check follow distance. Lower numbers make NPC follow closer but increase load on server.", 500)]
+		[ServerProperty("npc", "gamenpc_followcheck_time", "How often, in milliseconds, to check follow distance. Lower numbers make NPC follow closer but increase load on server.", 500)]
 		public static int GAMENPC_FOLLOWCHECK_TIME;
 
 		/// <summary>
 		/// Override the classtype of any npc with a classtype of DOL.GS.GameNPC
 		/// </summary>
-		[ServerProperty(12, "gamenpc_default_classtype", "Change the classtype of any npc of classtype DOL.GS.GameNPC to this.", "DOL.GS.GameNPC")]
+		[ServerProperty("npc", "gamenpc_default_classtype", "Change the classtype of any npc of classtype DOL.GS.GameNPC to this.", "DOL.GS.GameNPC")]
 		public static readonly string GAMENPC_DEFAULT_CLASSTYPE;
 
 		/// <summary>
@@ -625,9 +625,6 @@ namespace DOL.GS.ServerProperties
 
 		/// <summary>
 		/// Minimum privilege level to be able to enter Atlantis through teleporters.
-		/// 1 = anyone can enter Atlantis,
-		/// 2 = only GMs and admins can enter Atlantis,
-		/// 3 = only admins can enter Atlantis.
 		/// </summary>
 		[ServerProperty("atlantis_teleport_plvl", "Set the minimum privilege level required to enter Atlantis zones.", 2)]
 		public static int ATLANTIS_TELEPORT_PLVL;
@@ -697,7 +694,6 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("ignore_too_long_outcoming_packet", "Shall we ignore too long outcoming packet ?", false)]
 		public static bool IGNORE_TOO_LONG_OUTCOMING_PACKET;
-
 		
 		/// <summary>
 		/// Epic encounters strength: 100 is 100% base strength
@@ -705,156 +701,154 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("set_difficulty_on_epic_encounters", "Tune encounters taggued <Epic Encounter>. 0 means auto adaptative, others values are % of the initial difficulty (100%=initial difficulty)", 100)]
 		public static int SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
 
-
 		/// <summary>
 		/// The level keeps start at when not claimed - please note only levels 4 and 5 are supported correctly at this time
 		/// </summary>
-		[ServerProperty(10, "starting_keep_level", "The level an unclaimed keep starts at.", 4)]
+		[ServerProperty("keeps", "starting_keep_level", "The level an unclaimed keep starts at.", 4)]
 		public static int STARTING_KEEP_LEVEL;
 
 		/// <summary>
 		/// The level keeps start at when claimed - please note only levels 4 and 5 are supported correctly at this time
 		/// </summary>
-		[ServerProperty(10, "starting_keep_claim_level", "The level a claimed keep starts at.", 5)]
+		[ServerProperty("keeps", "starting_keep_claim_level", "The level a claimed keep starts at.", 5)]
 		public static int STARTING_KEEP_CLAIM_LEVEL;
 
 		/// <summary>
 		/// The maximum keep level - please note only levels 4 and 5 are supported correctly at this time
 		/// </summary>
-		[ServerProperty(10, "max_keep_level", "The maximum keep level.", 5)]
+		[ServerProperty("keeps", "max_keep_level", "The maximum keep level.", 5)]
 		public static int MAX_KEEP_LEVEL;
 
 		/// <summary>
 		/// Enable the keep upgrade timer to slowly raise keep levels
 		/// </summary>
-		[ServerProperty(10, "enable_keep_upgrade_timer", "Enable the keep upgrade timer to slowly raise keep levels?", false)]
+		[ServerProperty("keeps", "enable_keep_upgrade_timer", "Enable the keep upgrade timer to slowly raise keep levels?", false)]
 		public static bool ENABLE_KEEP_UPGRADE_TIMER;
 
 		/// <summary>
 		/// Define toughness for keep and tower walls: 100 is 100% player's damages inflicted.
 		/// </summary>
-		[ServerProperty(10, "set_structures_toughness", "This value is % of total damages inflicted to walls. (100=full damages)", 100)]
+		[ServerProperty("keeps", "set_structures_toughness", "This value is % of total damages inflicted to walls. (100=full damages)", 100)]
 		public static int SET_STRUCTURES_TOUGHNESS;
 
 		/// <summary>
 		/// Define toughness for keep doors: 100 is 100% player's damages inflicted.
 		/// </summary>
-		[ServerProperty(10, "set_keep_door_toughness", "This value is % of total damages inflicted to level 1 door. (100=full damages)", 100)]
+		[ServerProperty("keeps", "set_keep_door_toughness", "This value is % of total damages inflicted to level 1 door. (100=full damages)", 100)]
 		public static int SET_KEEP_DOOR_TOUGHNESS;
 
 		/// <summary>
 		/// Define toughness for tower doors: 100 is 100% player's damages inflicted.
 		/// </summary>
-		[ServerProperty(10, "set_tower_door_toughness", "This value is % of total damages inflicted to level 1 door. (100=full damages)", 100)]
+		[ServerProperty("keeps", "set_tower_door_toughness", "This value is % of total damages inflicted to level 1 door. (100=full damages)", 100)]
 		public static int SET_TOWER_DOOR_TOUGHNESS;
 
 		/// <summary>
 		/// Allow player pets to attack keep walls
 		/// </summary>
-		[ServerProperty(10, "structures_allowpetattack", "Allow player pets to attack keep and tower walls?", true)]
+		[ServerProperty("keeps", "structures_allowpetattack", "Allow player pets to attack keep and tower walls?", true)]
 		public static bool STRUCTURES_ALLOWPETATTACK;
 
 		/// <summary>
 		/// Allow player pets to attack keep and tower doors
 		/// </summary>
-		[ServerProperty(10, "doors_allowpetattack", "Allow player pets to attack keep and tower doors?", true)]
+		[ServerProperty("keeps", "doors_allowpetattack", "Allow player pets to attack keep and tower doors?", true)]
 		public static bool DOORS_ALLOWPETATTACK;
 
 		/// <summary>
 		/// Multiplier used in determining RP reward for claiming towers.
 		/// </summary>
-		[ServerProperty(10, "tower_rp_claim_multiplier", "Integer multiplier used in determining RP reward for claiming towers.", 100)]
+		[ServerProperty("keeps", "tower_rp_claim_multiplier", "Integer multiplier used in determining RP reward for claiming towers.", 100)]
 		public static int TOWER_RP_CLAIM_MULTIPLIER;
 
 		/// <summary>
 		/// Multiplier used in determining RP reward for keeps.
 		/// </summary>
-		[ServerProperty(10, "keep_rp_claim_multiplier", "Integer multiplier used in determining RP reward for claiming keeps.", 1000)]
+		[ServerProperty("keeps", "keep_rp_claim_multiplier", "Integer multiplier used in determining RP reward for claiming keeps.", 1000)]
 		public static int KEEP_RP_CLAIM_MULTIPLIER;
 
 		/// <summary>
 		/// Turn on logging of keep captures
 		/// </summary>
-		[ServerProperty(10, "log_keep_captures", "Turn on logging of keep captures?", false)]
+		[ServerProperty("keeps", "log_keep_captures", "Turn on logging of keep captures?", false)]
 		public static bool LOG_KEEP_CAPTURES;
 
 		/// <summary>
 		/// Base RP value of a keep
 		/// </summary>
-		[ServerProperty(10, "keep_rp_base", "Base RP value of a keep", 4500)]
+		[ServerProperty("keeps", "keep_rp_base", "Base RP value of a keep", 4500)]
 		public static int KEEP_RP_BASE;
 
 		/// <summary>
 		/// Base RP value of a tower
 		/// </summary>
-		[ServerProperty(10, "tower_rp_base", "Base RP value of a tower", 500)]
+		[ServerProperty("keeps", "tower_rp_base", "Base RP value of a tower", 500)]
 		public static int TOWER_RP_BASE;
 
 		/// <summary>
 		/// Multiplier used to add or subtract RP worth based on keep level difference from 50.
 		/// </summary>
-		[ServerProperty(10, "keep_rp_multiplier", "Integer multiplier used to increase/decrease RP worth based on keep level difference from 50.", 50)]
+		[ServerProperty("keeps", "keep_rp_multiplier", "Integer multiplier used to increase/decrease RP worth based on keep level difference from 50.", 50)]
 		public static int KEEP_RP_MULTIPLIER;
 
 		/// <summary>
 		/// Multiplier used to add or subtract RP worth based on tower level difference from 50.
 		/// </summary>
-		[ServerProperty(10, "tower_rp_multiplier", "Integer multiplier used to increase/decrease RP worth based on tower level difference from 50.", 50)]
+		[ServerProperty("keeps", "tower_rp_multiplier", "Integer multiplier used to increase/decrease RP worth based on tower level difference from 50.", 50)]
 		public static int TOWER_RP_MULTIPLIER;
 
 		/// <summary>
 		/// Multiplier used to add or subtract RP worth based on upgrade level > 1
 		/// </summary>
-		[ServerProperty(10, "upgrade_multiplier", "Integer multiplier used to increase/decrease RP worth based on upgrade level (0..10)", 100)]
+		[ServerProperty("keeps", "upgrade_multiplier", "Integer multiplier used to increase/decrease RP worth based on upgrade level (0..10)", 100)]
 		public static int UPGRADE_MULTIPLIER;
 
 		/// <summary>
 		/// Multiplier used to determine keep level changes when balancing.  For each keep above or below normal multiply by this.
 		/// </summary>
-		[ServerProperty(10, "keep_balance_multiplier", "Multiplier used to determine keep level changes when balancing.  For each keep above or below normal multiply by this.", 1.0)]
+		[ServerProperty("keeps", "keep_balance_multiplier", "Multiplier used to determine keep level changes when balancing.  For each keep above or below normal multiply by this.", 1.0)]
 		public static double KEEP_BALANCE_MULTIPLIER;
 
 		/// <summary>
 		/// Multiplier used to determine keep level changes when balancing.  For each keep above or below normal multiply by this.
 		/// </summary>
-		[ServerProperty(10, "tower_balance_multiplier", "Multiplier used to determine tower level changes when balancing.  For each keep above or below normal multiply by this.", 0.15)]
+		[ServerProperty("keeps", "tower_balance_multiplier", "Multiplier used to determine tower level changes when balancing.  For each keep above or below normal multiply by this.", 0.15)]
 		public static double TOWER_BALANCE_MULTIPLIER;
 
 		/// <summary>
 		/// Balance Towers and Keeps separately
 		/// </summary>
-		[ServerProperty(10, "balance_towers_separate", "Balance Towers and Keeps separately?", true)]
+		[ServerProperty("keeps", "balance_towers_separate", "Balance Towers and Keeps separately?", true)]
 		public static bool BALANCE_TOWERS_SEPARATE;
 
 		/// <summary>
 		/// Multiplier used to determine keep guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.
 		/// </summary>
-		[ServerProperty(10, "keep_guard_level_multiplier", "Multiplier used to determine keep guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.", 1.6)]
+		[ServerProperty("keeps", "keep_guard_level_multiplier", "Multiplier used to determine keep guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.", 1.6)]
 		public static double KEEP_GUARD_LEVEL_MULTIPLIER;
 
 		/// <summary>
 		/// Modifier used to adjust damage for pets on keep components
 		/// </summary>
-		[ServerProperty(10, "pet_damage_multiplier", "Modifier used to adjust damage for pets classes.", 1.0)]
+		[ServerProperty("keeps", "pet_damage_multiplier", "Modifier used to adjust damage for pets classes.", 1.0)]
 		public static double PET_DAMAGE_MULTIPLIER;
 
 		/// <summary>
 		/// Modifier used to adjust damage for pet spam classes (currently animist and theurgist) on keep components
 		/// </summary>
-		[ServerProperty(10, "pet_spam_damage_multiplier", "Modifier used to adjust damage for pet spam classes (currently animist and theurgist).", 1.0)]
+		[ServerProperty("keeps", "pet_spam_damage_multiplier", "Modifier used to adjust damage for pet spam classes (currently animist and theurgist).", 1.0)]
 		public static double PET_SPAM_DAMAGE_MULTIPLIER;
 
 		/// <summary>
 		/// Multiplier used to determine keep guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.
 		/// </summary>
-		[ServerProperty(10, "tower_guard_level_multiplier", "Multiplier used to determine tower guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.", 1.0)]
+		[ServerProperty("keeps", "tower_guard_level_multiplier", "Multiplier used to determine tower guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.", 1.0)]
 		public static double TOWER_GUARD_LEVEL_MULTIPLIER;
-
 
 		/// <summary>
 		/// How long before a new lord of a keep or tower respawns in milliseconds
 		/// </summary>
-		[ServerProperty(10, "guardlord_respawn_interval", "How long before a new lord of a keep or tower respawns in milliseconds.", 5 * 60 * 1000)]
+		[ServerProperty("keeps", "guardlord_respawn_interval", "How long before a new lord of a keep or tower respawns in milliseconds.", 5 * 60 * 1000)]
 		public static int GUARDLORD_RESPAWN_INTERVAL;
 
 		/// <summary>
@@ -878,19 +872,19 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Perform checklos on client with each mob
 		/// </summary>
-		[ServerProperty(13, "always_check_los", "Perform a LoS check before aggroing. This can involve a huge lag, handle with care!", false)]
+		[ServerProperty("world", "always_check_los", "Perform a LoS check before aggroing. This can involve a huge lag, handle with care!", false)]
 		public static bool ALWAYS_CHECK_LOS;
 
 		/// <summary>
 		/// Perform LOS check between controlled NPC's and players
 		/// </summary>
-		[ServerProperty(13, "always_check_pet_los", "Should we perform LOS checks between controlled NPC's and players?", false)]
+		[ServerProperty("world", "always_check_pet_los", "Should we perform LOS checks between controlled NPC's and players?", false)]
 		public static bool ALWAYS_CHECK_PET_LOS;
 
 		/// <summary>
 		/// LOS check frequency; how often are we allowed to check LOS on the same player (seconds)
 		/// </summary>
-		[ServerProperty(13, "los_player_check_frequency", "How often are we allowed to check LOS on the same player (seconds)", (ushort)5)]
+		[ServerProperty("world", "los_player_check_frequency", "How often are we allowed to check LOS on the same player (seconds)", (ushort)5)]
 		public static ushort LOS_PLAYER_CHECK_FREQUENCY;
 
 		/// <summary>
@@ -956,65 +950,63 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Enable Debug mode - used to alter some features during server startup to make debugging easier
 		/// </summary>
-		[ServerProperty(14, "enable_debug", "Enable Debug mode? Used to alter some features during server startup to make debugging easier", false)]
+		[ServerProperty("debug", "enable_debug", "Enable Debug mode? Used to alter some features during server startup to make debugging easier", false)]
 		public static readonly bool ENABLE_DEBUG;
 
 		/// <summary>
 		/// Turn on logging of player vs player kills
 		/// </summary>
-		[ServerProperty(15, "log_pvp_kills", "Turn on logging of pvp kills?", false)]
+		[ServerProperty("logging", "log_pvp_kills", "Turn on logging of pvp kills?", false)]
 		public static bool LOG_PVP_KILLS;
 
 		/// <summary>
 		/// TOA Artifact XP rate
 		/// </summary>
-		[ServerProperty(11, "artifact_xp_rate", "Adjust the rate at which all artifacts gain xp.  Higher numbers mean slower XP gain. XP / this = result", 350)]
+		[ServerProperty("toa", "artifact_xp_rate", "Adjust the rate at which all artifacts gain xp.  Higher numbers mean slower XP gain. XP / this = result", 350)]
 		public static int ARTIFACT_XP_RATE;
 		
 		/// <summary>
 		/// TOA Scroll drop rate
 		/// </summary>
-		[ServerProperty(11, "scroll_drop_rate", "Adjust the drop rate (percent chance) for scrolls.", 25)]
+		[ServerProperty("toa", "scroll_drop_rate", "Adjust the drop rate (percent chance) for scrolls.", 25)]
 		public static int SCROLL_DROP_RATE;
 
 		/// <summary>
 		/// What level to start increasing mob damage
 		/// </summary>
-		[ServerProperty(12, "mob_damage_increase_startlevel", "What level to start increasing mob damage.", 30)]
+		[ServerProperty("npc", "mob_damage_increase_startlevel", "What level to start increasing mob damage.", 30)]
 		public static int MOB_DAMAGE_INCREASE_STARTLEVEL;
 
 		/// <summary>
 		/// How much damage to increase per level
 		/// </summary>
-		[ServerProperty(12, "mob_damage_increase_perlevel", "How much damage to increase per level", 0.0)]
+		[ServerProperty("npc", "mob_damage_increase_perlevel", "How much damage to increase per level", 0.0)]
 		public static double MOB_DAMAGE_INCREASE_PERLEVEL;
 
 		/// <summary>
 		/// Minimum respawn time for npc's without a set respawninterval
 		/// </summary>
-		[ServerProperty(12, "npc_min_respawn_interval", "Minimum respawn time, in minutes, for npc's without a set respawninterval", 5)]
+		[ServerProperty("npc", "npc_min_respawn_interval", "Minimum respawn time, in minutes, for npc's without a set respawninterval", 5)]
 		public static int NPC_MIN_RESPAWN_INTERVAL;
 
 		/// <summary>
 		/// Number of seconds between allowed LOS checks for keep guards
 		/// </summary>
-		[ServerProperty(10, "keep_guard_los_check_time", "Number of seconds between allowed LOS checks for keep guards", 5)]
+		[ServerProperty("keeps", "keep_guard_los_check_time", "Number of seconds between allowed LOS checks for keep guards", 5)]
 		public static int KEEP_GUARD_LOS_CHECK_TIME;
 
 		/// <summary>
 		/// Adjustment to missrate per number of attackers
 		/// </summary>
-		[ServerProperty(4, "missrate_reduction_per_attackers", "Adjustment to missrate per number of attackers", 0)]
+		[ServerProperty("pve", "missrate_reduction_per_attackers", "Adjustment to missrate per number of attackers", 0)]
 		public static int MISSRATE_REDUCTION_PER_ATTACKERS;
-
 
 		/// <summary>
 		/// Allow auto-account creation  This is also set in serverconfig.xml and must be enabled for this property to work.
 		/// </summary>
-		[ServerProperty(3, "allow_auto_account_creation", "Allow auto-account creation  This is also set in serverconfig.xml and must be enabled for this property to work.", true)]
+		[ServerProperty("server", "allow_auto_account_creation", "Allow auto-account creation  This is also set in serverconfig.xml and must be enabled for this property to work.", true)]
 		public static bool ALLOW_AUTO_ACCOUNT_CREATION;
-
-
+		#endregion
 
 		/// <summary>
 		/// This method loads the property from the database and returns
