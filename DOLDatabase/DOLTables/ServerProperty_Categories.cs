@@ -23,34 +23,43 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "serverproperty_categories")]
-	public class ServerPropertyCategories: DataObject
+	[DataTable(TableName = "serverproperty_category")]
+	public class ServerPropertyCategory: DataObject
 	{
-		private string 	m_name;
-		private int 	m_parent;
+		private string 	m_base_cat;
+		private string 	m_parent_cat;
+		private string 	m_display_name;
 		
-		private static bool m_autoSave;		
+		private static bool m_autoSave;
 		public override bool AutoSave {
 			get { return m_autoSave; }
 			set { m_autoSave = value; }
 		}
 
-		public ServerPropertyCategories()
+		public ServerPropertyCategory()
 		{
-			m_name = null;
-			m_parent = 0;
+			m_base_cat = null;
+			m_parent_cat = null;
+			m_display_name = null;
+
+		}
+		
+		[DataElement(AllowDbNull = false)]
+		public string BaseCategory {
+			get { return m_base_cat; }
+			set { m_base_cat = value;Dirty=true;}
 		}
 
-		[DataElement(AllowDbNull = false)]
-		public string Name {
-			get { return m_name; }
-			set { m_name = value; Dirty=true;}
+		[DataElement(AllowDbNull = true)]
+		public string ParentCategory {
+			get { return m_parent_cat; }
+			set { m_parent_cat = value; }
 		}
-
+		
 		[DataElement(AllowDbNull = false)]
-		public int Parent {
-			get { return m_parent; }
-			set { m_parent = value; }
+		public string DisplayName {
+			get { return m_display_name; }
+			set { m_display_name = value;}
 		}
 	}
 }
