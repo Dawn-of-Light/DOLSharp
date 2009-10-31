@@ -12,7 +12,10 @@ namespace DOLConfig
 	{
 		public Form1()
 		{
-			InitializeComponent();
+			InitializeComponent();		
+
+			databaseTypeComboBox_SelectionChangeCommitted(null,null);
+			spTvCat.Nodes.Clear();
 		}
 
 		private void button2_Click(object sender, EventArgs e)
@@ -23,6 +26,7 @@ namespace DOLConfig
 		private void saveButton_Click(object sender, EventArgs e)
 		{
 			Program.SaveSettings();
+			Program.LoadProperties();
 		}
 
 		private void serverTypeComboBox_MouseEnter(object sender, EventArgs e)
@@ -88,6 +92,7 @@ namespace DOLConfig
 				mysqlHostTextBox.Enabled = false;
 				mysqlPasswordTextBox.Enabled = false;
 				mysqlUsernameTextBox.Enabled = false;
+				this.Height = 220;
 			}
 			else
 			{
@@ -95,7 +100,13 @@ namespace DOLConfig
 				mysqlHostTextBox.Enabled = true;
 				mysqlPasswordTextBox.Enabled = true;
 				mysqlUsernameTextBox.Enabled = true;
+				this.Height = 565;
 			}
+		}
+		
+		void SpTvCatNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
+			Program.SelectProperty(e.Node.Text);
 		}
 	}
 }
