@@ -38,7 +38,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private readonly Dictionary<string, LockCount> m_locks = new Dictionary<string, LockCount>();
-		private static DateTime? last_Account_Creation;
+		private static DateTime m_lastAccountCreateTime;
 		
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
@@ -152,12 +152,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						GameServer.Instance.Disconnect(client);
 						return 1;
 					}
-					/*
-					if (loggerUsing)
-						client.LoggerUsing = true;
-					else
-						client.LoggerUsing = false;
-					 */
 
 					bool goodname = true;
 					foreach (char c in userName.ToLower().ToCharArray())
@@ -174,6 +168,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						if (log.IsInfoEnabled)
 							log.Info("Invalid symbols in account name \"" + userName + "\" found!");
+
 						client.Out.SendLoginDenied(eLoginError.AccountInvalid);
 						GameServer.Instance.Disconnect(client);
 						return 1;
@@ -202,46 +197,43 @@ namespace DOL.GS.PacketHandler.Client.v168
                                 
                                 // check for account bombing
                                 TimeSpan ts;
-                                // per ip - 3 accounts allowed before checking if 10 minutes between creation
     							Account[] allAccByIp = (Account[])GameServer.Database.SelectObjects(typeof(Account), "LastLoginIP = '" + ipAddress + "'");
                                 int totalacc = 0;
                                 foreach (Account ac in allAccByIp)
                                 {
                                     ts = DateTime.Now - ac.CreationDate;
-                                    if (ts.Minutes < 10 && totalacc > 2)
+                                    if (ts.Minutes < ServerProperties.Properties.TIME_BETWEEN_ACCOUNT_CREATION_SAMEIP && totalacc > 1)
                                     {
-                                    	log.Warn("Account creation: too many time between creation - " + userName);
-                                        client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
+										log.Warn("Account creation: too many from same IP within set minutes - " + userName + " : " + ipAddress);
+                                        client.Out.SendLoginDenied(eLoginError.PersonalAccountIsOutOfTime);
                                         GameServer.Instance.Disconnect(client);
                                         return 1;
                                     }
                                     totalacc++;
                                 }
-                                if (totalacc >= 20)
+                                if (totalacc >= ServerProperties.Properties.TOTAL_ACCOUNTS_ALLOWED_SAMEIP)
   {
-                                    log.Warn("Account creation: too many accounts created from same ip - " + userName);
+                                    log.Warn("Account creation: too many accounts created from same ip - " + userName + " : " + ipAddress);
                                     client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
                                     GameServer.Instance.Disconnect(client);
                                     return 1;
                                 }
                                 
                                 // per timeslice - for preventing account bombing via different ip
-                                if (ServerProperties.Properties.TIME_BETWEEN_ACCOUNT_CREATION > 0)
-	                                if (!last_Account_Creation.HasValue)
-	                                	last_Account_Creation = DateTime.Now;
-	                                else
-	                                {
-	                                	ts = DateTime.Now - last_Account_Creation.Value;
-	                                	if (ts.Minutes < ServerProperties.Properties.TIME_BETWEEN_ACCOUNT_CREATION)
-	                                	{
-	                                		log.Warn("Account creation: timeslice between creation not matched - " + userName);
-	                                		client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
-                                    		GameServer.Instance.Disconnect(client);
-                                            return 1;
-	                                	}
-	                                }
+								if (ServerProperties.Properties.TIME_BETWEEN_ACCOUNT_CREATION > 0)
+								{
+									ts = DateTime.Now - m_lastAccountCreateTime;
+									if (ts.Minutes < ServerProperties.Properties.TIME_BETWEEN_ACCOUNT_CREATION)
+									{
+										log.Warn("Account creation: time between account creation too small - " + userName + " : " + ipAddress);
+										client.Out.SendLoginDenied(eLoginError.PersonalAccountIsOutOfTime);
+										GameServer.Instance.Disconnect(client);
+										return 1;
+									}
+								}
 
-                                // seems ok, effective account creation
+								m_lastAccountCreateTime = DateTime.Now;
+
 								playerAccount = new Account();
 								playerAccount.Name = userName;
 								playerAccount.Password = CryptPassword(password);
@@ -268,14 +260,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-//							// autoconvert all
-//							foreach (Account acc in GameServer.Database.SelectAllObjects(typeof(Account))) {
-//								if (acc.Password != null && !acc.Password.StartsWith("##")) {
-//									acc.Password = CryptPassword(acc.Password);
-//									GameServer.Database.SaveObject(acc);
-//								}
-//							}
-
 							// check password
 							if (!playerAccount.Password.StartsWith("##"))
 							{
