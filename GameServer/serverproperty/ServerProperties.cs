@@ -276,7 +276,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Should users be able to create characters in all realms using the same account
 		/// </summary>
-		[ServerProperty("allow_all_realms", "should we allow characters to be created on all realms using a single account", false)]
+		[ServerProperty("account", "allow_all_realms", "should we allow characters to be created on all realms using a single account", false)]
 		public static bool ALLOW_ALL_REALMS;
 
 		/// <summary>
@@ -620,7 +620,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// This will Allow/Disallow dual loggins
 		/// </summary>
-		[ServerProperty("allow_dual_logins", "Disable to disallow players to connect with more than 1 account at a time.", true)]
+		[ServerProperty("account", "allow_dual_logins", "Disable to disallow players to connect with more than 1 account at a time.", true)]
 		public static bool ALLOW_DUAL_LOGINS;
 
 		/// <summary>
@@ -890,9 +890,21 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Account bombing prevention
 		/// </summary>
-		[ServerProperty("time_between_account_creation", "The time in minutes between 2 accounts creation. This avoid account bombing with dynamic ip. 0 to disable", 2)]
+		[ServerProperty("account", "time_between_account_creation", "The time in minutes between 2 accounts creation. This avoid account bombing with dynamic ip. 0 to disable", 2)]
 		public static int TIME_BETWEEN_ACCOUNT_CREATION;
-		
+
+		/// <summary>
+		/// Account IP bombing prevention
+		/// </summary>
+		[ServerProperty("account", "time_between_account_creation_sameip", "The time in minutes between accounts creation from the same ip after 2 creations.", 15)]
+		public static int TIME_BETWEEN_ACCOUNT_CREATION_SAMEIP;
+
+		/// <summary>
+		/// Total number of account allowed for the same IP
+		/// </summary>
+		[ServerProperty("account", "total_accounts_allowed_sameip", "Total number of account allowed for the same IP", 20)]
+		public static int TOTAL_ACCOUNTS_ALLOWED_SAMEIP;
+
 		/// <summary>
 		/// PvP Immunity Timer - Killed by Player
 		/// </summary>
@@ -1004,7 +1016,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Allow auto-account creation  This is also set in serverconfig.xml and must be enabled for this property to work.
 		/// </summary>
-		[ServerProperty("server", "allow_auto_account_creation", "Allow auto-account creation  This is also set in serverconfig.xml and must be enabled for this property to work.", true)]
+		[ServerProperty("account", "allow_auto_account_creation", "Allow auto-account creation  This is also set in serverconfig.xml and must be enabled for this property to work.", true)]
 		public static bool ALLOW_AUTO_ACCOUNT_CREATION;
 		#endregion
 

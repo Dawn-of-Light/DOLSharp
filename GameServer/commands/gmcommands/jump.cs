@@ -28,6 +28,7 @@ namespace DOL.GS.Commands
 		"GMCommands.Jump.Description",
 		"GMCommands.Jump.Information",
 		"GMCommands.Jump.Usage.ToPlayerName",
+		"/jump to <#ClientID> ex. /jump to #10",
 		"GMCommands.Jump.Usage.ToNameRealmID",
 		"GMCommands.Jump.Usage.ToXYZRegionID",
 		"GMCommands.Jump.Usage.PlayerNameToXYZ",
@@ -51,11 +52,26 @@ namespace DOL.GS.Commands
 				return;
 			}
 			#endregion Jump to GT
-			#region Jump to PlayerName
+			#region Jump to PlayerName or ClientID
 			if (args.Length == 3 && args[1] == "to")
 			{
-				GameClient clientc;
-				clientc = WorldMgr.GetClientByPlayerName(args[2], false, true);
+				GameClient clientc = null;
+				if (args[2].StartsWith("#"))
+				{
+					try
+					{
+						int sessionID = Convert.ToInt32(args[2].Substring(1));
+						clientc = WorldMgr.GetClientFromID(sessionID);
+					}
+					catch
+					{
+					}
+				}
+				else
+				{
+					clientc = WorldMgr.GetClientByPlayerName(args[2], false, true);
+				}
+
 				if (clientc == null)
 				{
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.CannotBeFound", args[2]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
