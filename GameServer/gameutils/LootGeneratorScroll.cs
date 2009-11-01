@@ -56,19 +56,19 @@ namespace DOL.GS
                 {
                     case "Oceanus Hesperos":
                     case "Mesothalassa":
+                    case "Oceanus Notos":
+                    case "Oceanus Boreal":
+                    case "Oceanus Anatole":
                         artifacts = ArtifactMgr.GetArtifacts("Oceanus");
                         break;
-                    case "Oceanus Boreal":
                     case "Stygian Delta":
                     case "Land of Atum":
                         artifacts = ArtifactMgr.GetArtifacts("Stygia");
                         break;
-                    case "Oceanus Notos":
                     case "Arbor Glen":
                     case "Green Glades":
                         artifacts = ArtifactMgr.GetArtifacts("Aerus");
                         break;
-                    case "Oceanus Anatole":
                     case "Typhon's Reach":
                     case "Ashen Isles":
                         artifacts = ArtifactMgr.GetArtifacts("Volcanus");
