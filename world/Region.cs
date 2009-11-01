@@ -224,7 +224,7 @@ namespace DOL.GS
 
 		#region Properties
 
-		public bool IsRvR
+		public virtual bool IsRvR
 		{
 			get
 			{
