@@ -509,7 +509,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("bg_zones_open", "Can the players teleport to battleground", true)]
 		public static bool BG_ZONES_OPENED;
-		
+
+		/// <summary>
+		/// Message to display to player if BG zones are closed
+		/// </summary>
+		[ServerProperty("bg_zones_closed_message", "Message to display to player if BG zones are closed", "The battlegrounds are not open on this server.")]
+		public static string BG_ZONES_CLOSED_MESSAGE;
+
 		/// <summary>
 		/// This enables or disables new guild dues. Live standard is 2% dues
 		/// </summary>

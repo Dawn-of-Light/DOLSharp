@@ -105,6 +105,11 @@ namespace DOL.GS
 				case "aalid feie":
 					break;	// No text?
 				case "battlegrounds":
+					if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+					{
+						SayTo(player, ServerProperties.Properties.BG_ZONES_CLOSED_MESSAGE);
+						return;
+					}
 					SayTo(player, "I will teleport you to the appropriate battleground for your level and Realm Rank. If you exceed the Realm Rank for a battleground, you will not teleport. Please gain more experience to go to the next battleground.");
 					break;
 				case "cruachan gorge":
