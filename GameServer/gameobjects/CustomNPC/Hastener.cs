@@ -103,12 +103,19 @@ namespace DOL.GS
 							}
 							break;
 						case "borderkeep":
-							if ((player.CurrentRegion.IsCapitalCity || IsSICity(player.CurrentZone.ID) && player.Level < 10))
+							if ((player.CurrentRegion.IsCapitalCity || IsSICity(player.CurrentZone.ID)) && player.Level < 10)
 							{
-								AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
-								if (portalKeep != null)
+								if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
 								{
-									player.MoveTo((ushort)portalKeep.Region, portalKeep.X, portalKeep.Y, portalKeep.Z, (ushort)portalKeep.Heading);
+									SayTo(player, ServerProperties.Properties.BG_ZONES_CLOSED_MESSAGE);
+								}
+								else
+								{
+									AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
+									if (portalKeep != null)
+									{
+										player.MoveTo((ushort)portalKeep.Region, portalKeep.X, portalKeep.Y, portalKeep.Z, (ushort)portalKeep.Heading);
+									}
 								}
 							}
 							break;

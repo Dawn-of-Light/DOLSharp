@@ -98,7 +98,7 @@ namespace DOL.GS
 			{
 				if(!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
 				{
-					SayTo(player, "Upon orders of the King, your destination is unavailable for now.");
+					SayTo(player, ServerProperties.Properties.BG_ZONES_CLOSED_MESSAGE);
 				}
 				else
 				{
