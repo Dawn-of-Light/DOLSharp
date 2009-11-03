@@ -641,7 +641,11 @@ namespace DOL.GS.Keeps
             {
                 ShortName = KeepName.Substring(5);
             }
-            else if (KeepName.StartsWith("Dun"))//Hibernia
+			else if (KeepName.StartsWith("Fort"))
+			{
+				ShortName = KeepName.Substring(5);
+			}
+			else if (KeepName.StartsWith("Dun"))//Hibernia
             {
                 if (KeepName == "Dun nGed")
                 {
