@@ -217,9 +217,24 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
+				string name = "";
+
 				if (IsAttackableDoor)
-					return "Keep Door";
-				else return "Postern Door";
+				{
+					name = "Keep Door";
+				}
+				else
+				{
+					name = "Postern Door";
+				}
+
+				if (ServerProperties.Properties.ENABLE_DEBUG)
+				{
+					name += " ( C:" + ComponentID + " T:" + TemplateID + ")";
+
+				}
+
+				return name;
 			}
 		}
 

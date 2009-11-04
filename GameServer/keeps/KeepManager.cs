@@ -195,7 +195,7 @@ namespace DOL.GS.Keeps
 
 		private static void LoadHookPoints()
 		{
-			if (!ServerProperties.Properties.LOAD_KEEPS)
+			if (!ServerProperties.Properties.LOAD_KEEPS || !ServerProperties.Properties.LOAD_HOOKPOINTS)
 				return;
 
 			Hashtable hookPointList = new Hashtable();
