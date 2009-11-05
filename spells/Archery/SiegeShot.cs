@@ -34,6 +34,10 @@ namespace DOL.GS.Spells
 				MessageToCaster("Your target must be a Keep Component!", eChatType.CT_SpellResisted);
 				return;
 			}
+
+			target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
+			Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+
 			base.FinishSpellCast(target);
 		}
 
