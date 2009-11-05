@@ -139,8 +139,19 @@ namespace DOL.GS
 				Dictionary<int, InventoryItem> inventory = new Dictionary<int, InventoryItem>();
 				int slotOffset = - FirstSlot + (int)(eInventorySlot.HousingInventory_First);
 				foreach (InventoryItem item in Items)
+				{
 					if (item != null)
-						inventory.Add(item.SlotPosition + slotOffset, item);
+					{
+						if (!inventory.ContainsKey(item.SlotPosition + slotOffset))
+						{
+							inventory.Add(item.SlotPosition + slotOffset, item);
+						}
+						else
+						{
+							log.Error("HOUSING: Duplicate item in house vault for house number " + this.CurrentHouse.HouseNumber + ", " + item.Name + ", Position  " + (item.SlotPosition + slotOffset));
+						}
+					}
+				}
 				return inventory;
 			}
 		}
