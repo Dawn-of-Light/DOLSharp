@@ -10582,8 +10582,7 @@ namespace DOL.GS
 
 					Group group = Group;
 					BattleGroup mybattlegroup = (BattleGroup)TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
-					if (mybattlegroup != null
-					    && mybattlegroup.GetBGLootType() == true)
+					if (mybattlegroup != null && mybattlegroup.GetBGLootType() == true && mybattlegroup.GetBGTreasurer() != null)
 					{
 						GamePlayer theTreasurer = mybattlegroup.GetBGTreasurer();
 						if (theTreasurer.CanSeeObject(mybattlegroup.GetBGTreasurer(), floorObject))
