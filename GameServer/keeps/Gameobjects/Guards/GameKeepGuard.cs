@@ -776,7 +776,10 @@ namespace DOL.GS.Keeps
 					cloak.Model = 558; // change to a model that looks ok with an emblem
 
 			}
-			this.UpdateNPCEquipmentAppearance();
+			if (IsAlive)
+			{
+				UpdateNPCEquipmentAppearance();
+			}
 		}
 
 		/// <summary>

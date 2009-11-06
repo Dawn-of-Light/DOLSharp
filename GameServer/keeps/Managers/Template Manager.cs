@@ -841,9 +841,8 @@ namespace DOL.GS.Keeps
 		{
 			if (guard is GuardLord || guard is MissionMaster)
 			{
-				guard.BlockChance = 10;
-				guard.EvadeChance = 10;
-				guard.ParryChance = 10;
+				guard.BlockChance = 20;
+				guard.ParryChance = 20;
 			}
 			else if (guard is GuardStealther)
 			{
@@ -861,8 +860,11 @@ namespace DOL.GS.Keeps
 			else if (guard is GuardArcher)
 			{
 				if (guard.Realm == eRealm.Albion)
+				{
 					guard.BlockChance = 10;
-				guard.EvadeChance = 10;
+				}
+
+				guard.EvadeChance = 15;
 			}
 		}
 
@@ -925,8 +927,13 @@ namespace DOL.GS.Keeps
 			for (int i = (int)eProperty.Resist_First; i <= (int)eProperty.Resist_Last; i++)
 			{
 				if (guard is GuardLord)
+				{
 					guard.BaseBuffBonusCategory[i] = 40;
-				else guard.BaseBuffBonusCategory[i] = 26;
+				}
+				else
+				{
+					guard.BaseBuffBonusCategory[i] = 26;
+				}
 			}
 		}
 
@@ -938,16 +945,16 @@ namespace DOL.GS.Keeps
 		{
 			if (guard is GuardLord)
 			{
-				guard.Strength = (short)(20 + (guard.Level * 7));
+				guard.Strength = (short)(20 + (guard.Level * 8));
 				guard.Dexterity = (short)(guard.Level * 2);
-				guard.Constitution = (short)(DOL.GS.ServerProperties.Properties.GAMENPC_BASE_CON + 30);
+				guard.Constitution = (short)(DOL.GS.ServerProperties.Properties.GAMENPC_BASE_CON);
 				guard.Quickness = 60;
 			}
 			else
 			{
-				guard.Strength = (short)(20 + (guard.Level * 6.5));
+				guard.Strength = (short)(20 + (guard.Level * 7));
 				guard.Dexterity = (short)(guard.Level);
-				guard.Constitution = (short)(DOL.GS.ServerProperties.Properties.GAMENPC_BASE_CON + 15);
+				guard.Constitution = (short)(DOL.GS.ServerProperties.Properties.GAMENPC_BASE_CON);
 				guard.Quickness = 40;
 			}
 		}
