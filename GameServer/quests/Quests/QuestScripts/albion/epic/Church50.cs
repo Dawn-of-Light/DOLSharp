@@ -940,12 +940,15 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
-				if (gArgs.Target.Name == Blythe.Name)
+				if (gArgs != null && gArgs.Target != null && Blythe != null)
 				{
-					m_questPlayer.Out.SendMessage("As you search the dead body of sister Blythe, you find a sacred " + statue_of_arawn.Name + ", bring it to " + Roben.Name + " has proof of your success.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(m_questPlayer, statue_of_arawn);
-					Step = 2;
-					return;
+					if (gArgs.Target.Name == Blythe.Name)
+					{
+						m_questPlayer.Out.SendMessage("As you search the dead body of sister Blythe, you find a sacred " + statue_of_arawn.Name + ", bring it to " + Roben.Name + " has proof of your success.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						GiveItem(m_questPlayer, statue_of_arawn);
+						Step = 2;
+						return;
+					}
 				}
 			}
 
@@ -955,7 +958,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target.Name == Roben.Name && gArgs.Item.Id_nb == statue_of_arawn.Id_nb)
 				{
 					RemoveItem(player, statue_of_arawn, true);
-					Roben.SayTo(player, "You have earned this Epic Armour, wear it with honour!");
+					Roben.SayTo(player, "You have earned this Epic Armor, wear it with honor!");
 
 					FinishQuest();
 					return;

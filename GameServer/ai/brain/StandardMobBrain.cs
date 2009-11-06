@@ -496,9 +496,15 @@ namespace DOL.AI.Brain
 					}
 				}
 
-				//This shouldn't be called here either.  Just let a function do exactly
-				//what it says.  We can call this after the function call if we want.
-				//AttackMostWanted();
+				if (DOL.GS.ServerProperties.Properties.ENABLE_DEBUG && (this is IControlledBrain) == false)
+				{
+					foreach (GameLiving aliv in m_aggroTable.Keys)
+					{
+						Body.Say((long)m_aggroTable[aliv] + ": " + aliv.Name);
+					}
+
+					Body.Say("-");
+				}
 			}
 		}
 
@@ -690,9 +696,14 @@ namespace DOL.AI.Brain
 					EnemyHealedEventArgs eArgs = args as EnemyHealedEventArgs;
 					if (eArgs != null && eArgs.HealSource is GameLiving)
 					{
-						//Higher Aggro amount and NO peace flag npcs!
-						if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
-							AddToAggroList((GameLiving)eArgs.HealSource, (eArgs.HealAmount * 2));
+						// first check to see if the healer is in our aggrolist so we don't go attacking anyone who heals
+						if (m_aggroTable[(GameLiving)eArgs.HealSource] != null)
+						{
+							if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
+							{
+								AddToAggroList((GameLiving)eArgs.HealSource, eArgs.HealAmount);
+							}
+						}
 					}
 					return;
 				}
