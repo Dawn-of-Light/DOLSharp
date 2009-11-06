@@ -1309,6 +1309,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
+				if (gArgs != null && gArgs.Target != null && Bechard != null && Silcharde != null)
 				{
 					if (gArgs.Target.Name == Bechard.Name || gArgs.Target.Name == Silcharde.Name)
 					{
@@ -1329,7 +1330,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target.Name == Ferowl.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
 					RemoveItem(Ferowl, player, sealed_pouch);
-					Ferowl.SayTo(player, "You have earned this Epic Armour, wear it with honor!");
+					Ferowl.SayTo(player, "You have earned this Epic Armor, wear it with honor!");
 					FinishQuest();
 					return;
 				}
