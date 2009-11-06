@@ -896,7 +896,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Account bombing prevention
 		/// </summary>
-		[ServerProperty("account", "time_between_account_creation", "The time in minutes between 2 accounts creation. This avoid account bombing with dynamic ip. 0 to disable", 2)]
+		[ServerProperty("account", "time_between_account_creation", "The time in minutes between 2 accounts creation. This avoid account bombing with dynamic ip. 0 to disable", 0)]
 		public static int TIME_BETWEEN_ACCOUNT_CREATION;
 
 		/// <summary>
