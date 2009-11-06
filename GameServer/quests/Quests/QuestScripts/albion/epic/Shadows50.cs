@@ -1931,12 +1931,15 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-				if (gArgs.Target.Name == Uragaig.Name)
+				if (gArgs != null && gArgs.Target != null && Uragaig != null)
 				{
-					m_questPlayer.Out.SendMessage("Take the pouch to Lidmann Halsey", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					GiveItem(m_questPlayer, sealed_pouch);
-					Step = 2;
-					return;
+					if (gArgs.Target.Name == Uragaig.Name)
+					{
+						m_questPlayer.Out.SendMessage("Take the pouch to Lidmann Halsey", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						GiveItem(m_questPlayer, sealed_pouch);
+						Step = 2;
+						return;
+					}
 				}
 			}
 
@@ -1946,7 +1949,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
 					RemoveItem(Lidmann, player, sealed_pouch);
-					Lidmann.SayTo(player, "You have earned this Epic Armour!");
+					Lidmann.SayTo(player, "You have earned this Epic Armor, wear it with honor!");
 					FinishQuest();
 					return;
 				}

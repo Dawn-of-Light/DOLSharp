@@ -1415,6 +1415,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
+				if (gArgs != null && gArgs.Target != null && Uragaig != null)
 				{
 					if (gArgs.Target.Name == Uragaig.Name)
 					{
@@ -1430,8 +1431,6 @@ namespace DOL.GS.Quests.Albion
             {
                 // Graveen: if not existing maulerepic in DB
                 // player is not allowed to finish this quest until we fix this problem
-//                if (MaulerAlbEpicArms == null || MaulerAlbEpicBoots == null || MaulerAlbEpicGloves == null ||
-//                    MaulerAlbEpicHelm == null || MaulerAlbEpicLegs == null || MaulerAlbEpicVest == null)
                 if (MaulerAlbEpicArms == null || MaulerAlbEpicBoots == null || MaulerAlbEpicGloves == null ||
                     MaulerAlbEpicHelm == null || MaulerAlbEpicLegs == null || MaulerAlbEpicVest == null)
                     {
@@ -1443,7 +1442,7 @@ namespace DOL.GS.Quests.Albion
 				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
 					RemoveItem(Lidmann, player, sealed_pouch);
-					Lidmann.SayTo(player, "You have earned this Epic Armour!");
+					Lidmann.SayTo(player, "You have earned this Epic Armor, wear it with honor!");
 					FinishQuest();
 					return;
 				}
