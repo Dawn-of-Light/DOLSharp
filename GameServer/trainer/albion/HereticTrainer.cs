@@ -116,12 +116,5 @@ namespace DOL.GS.Trainer
 			}
 			return true;
 		}
-
-		public override bool AddToWorld()
-		{
-			if (ServerProperties.Properties.DISABLE_CATACOMBS_CLASSES)
-				return false;
-			return base.AddToWorld();
-		}
 	}
 }

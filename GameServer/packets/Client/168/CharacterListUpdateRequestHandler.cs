@@ -17,13 +17,16 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using System.Reflection;
-using DOL.GS;
-using DOL.Events;
+using System.Text.RegularExpressions;
+using System.Linq;
+
 using DOL.Database;
+using DOL.Events;
+using DOL.GS;
 using DOL.GS.ServerProperties;
 using log4net;
-using System.Text.RegularExpressions;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -82,15 +85,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							if (ServerProperties.Properties.BAN_HACKERS)
 							{
-							DBBannedAccount b = new DBBannedAccount();
-							b.Author = "SERVER";
-							b.Ip = client.TCPEndpointAddress;
-							b.Account = client.Account.Name;
-							b.DateBan = DateTime.Now;
-							b.Type = "B";
-							b.Reason = String.Format( "Autoban bad CharName '{0}'", GameServer.Database.Escape( charname ) );
-							GameServer.Database.AddNewObject( b );
-							GameServer.Database.SaveObject( b );
+								DBBannedAccount b = new DBBannedAccount();
+								b.Author = "SERVER";
+								b.Ip = client.TCPEndpointAddress;
+								b.Account = client.Account.Name;
+								b.DateBan = DateTime.Now;
+								b.Type = "B";
+								b.Reason = String.Format( "Autoban bad CharName '{0}'", GameServer.Database.Escape( charname ) );
+								GameServer.Database.AddNewObject( b );
+								GameServer.Database.SaveObject( b );
 							}
 
 							client.Disconnect();
@@ -368,7 +371,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// create new character
 
 						Account account = client.Account;
-						//TODO new db framework
 						Character ch = new Character();
 						ch.AccountName = account.Name;
 						ch.Name = charname;
@@ -406,6 +408,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (log.IsDebugEnabled)
 							log.Debug ("Creation " + client.Version + " character, class:" + ch.Class + ", realm:" + ch.Realm);
 						
+						// Is class disabled ?
+						int occurences = 0;
+						List<string> disabled_classes = new List<string>(Properties.DISABLED_CLASSES.Split(';'));
+						occurences = (from j in disabled_classes
+						              where j == ch.Class.ToString()
+						              select j).Count();
+						if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
+						{
+							log.Debug("Client " + client.Account.Name + " tried to create a disabled classe: " + (eCharacterClass)ch.Class);
+							client.Out.SendCharacterOverview((eRealm)ch.Realm);
+							return 1;
+						}
+
 						if (client.Version >= GameClient.eClientVersion.Version193)
 							CheckCharacter.init_post193_tables();
 						else
@@ -443,51 +458,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						ch.Race = (startRaceGender & 0x0F) + ((startRaceGender & 0x40) >> 2);
 						
-						//only players(plvl 1) are disabled. GMs and Admins can still be Minotaurs.
-						if (Properties.DISABLE_MINOTAURS && client.Account.PrivLevel == 1)
+						List<string> disabled_races = new List<string>(Properties.DISABLED_RACES.Split(';'));
+						occurences = (from j in disabled_races
+						              where j == ch.Race.ToString()
+						              select j).Count();
+						if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
 						{
-							switch ((eRace)ch.Race)
-							{
-								case eRace.AlbionMinotaur:
-								case eRace.HiberniaMinotaur:
-								case eRace.MidgardMinotaur:
-									{
-										log.Error(client.Account.Name + " tried to create a minotaur, creation of them is disabled");
-										client.Out.SendCharacterOverview((eRealm)ch.Realm);
-										return 1;
-									}
-							}
+							log.Debug("Client " + client.Account.Name + " tried to create a disabled race: " + (eRace)ch.Race);
+							client.Out.SendCharacterOverview((eRealm)ch.Realm);
+							return 1;
 						}
-						//only players(plvl 1) are disabled. GMs and Admins can still be toa race.
-						if (Properties.DISABLE_TOA_RACE && client.Account.PrivLevel == 1)
-						{
-							switch ((eRace)ch.Race)
-							{
-								case eRace.HalfOgre:
-								case eRace.Frostalf:
-								case eRace.Shar:
-									{
-										log.Error(client.Account.Name + " tried to create a toa race, creation of them is disabled");
-										client.Out.SendCharacterOverview((eRealm)ch.Realm);
-										return 1;
-									}
-							}
-						}
-						//only players(plvl 1) are disabled. GMs and Admins can still be si race.
-						if (Properties.DISABLE_SI_RACE && client.Account.PrivLevel == 1)
-						{
-							switch ((eRace)ch.Race)
-							{
-								case eRace.Inconnu:
-								case eRace.Valkyn:
-								case eRace.Sylvan:
-									{
-										log.Error(client.Account.Name + " tried to create a si race, creation of them is disabled");
-										client.Out.SendCharacterOverview((eRealm)ch.Realm);
-										return 1;
-									}
-							}
-						}
+						
 						ch.Gender = ((startRaceGender >> 4) & 0x01);
 						//DOLConsole.WriteLine("startRaceGender="+startRaceGender+"; Race="+ch.Race+"; Gender="+ch.Gender);
 
