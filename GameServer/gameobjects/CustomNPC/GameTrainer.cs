@@ -17,14 +17,16 @@
  *
  */
 using System;
-using System.Text;
 using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.Language;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -33,6 +35,9 @@ namespace DOL.GS
 	/// </summary>
 	public class GameTrainer : GameNPC
 	{
+		// List of disabled classes
+		private static List<string> disabled_classes = null;
+		
 		// Values from live servers
 		public enum CLTrainerTypes : int
 		{
@@ -50,7 +55,7 @@ namespace DOL.GS
 			Naturalist = 10,
 			Seer = 8,
 			Stalker = 2,
-			Viking = 1,			
+			Viking = 1,
 		}
 		
 		// Current trainer type, 0 is for normal trainers.
@@ -71,7 +76,7 @@ namespace DOL.GS
 		/// </summary>
 		public GameTrainer(int CLTrainerType)
 		{
-			TrainerType	= CLTrainerType;		
+			TrainerType	= CLTrainerType;
 		}
 		#region GetExamineMessages
 		/// <summary>
@@ -121,7 +126,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <returns></returns>
 		public override bool Interact(GamePlayer player)
-		{			
+		{
 			if (!base.Interact(player)) return false;
 
 			player.GainExperience(0);//levelup
@@ -143,7 +148,7 @@ namespace DOL.GS
 			if (TrainerType > 0 && player.Level >= 50)
 				player.Out.SendChampionTrainerWindow(TrainerType);
 
-            return true;
+			return true;
 		}
 
 		/// <summary>
@@ -203,38 +208,38 @@ namespace DOL.GS
 		protected virtual void OfferRespecialize(GamePlayer player)
 		{
 			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation
-				(player.Client, "GameTrainer.Interact.Respecialize", this.Name, player.Name)),
-				eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+			                                     (player.Client, "GameTrainer.Interact.Respecialize", this.Name, player.Name)),
+			                       eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 		}
 
-        /// <summary>
-        /// Check Ability to use Item
-        /// </summary>
-        /// <param name="player"></param>
-        protected virtual void CheckAbilityToUseItem(GamePlayer player)
-        {
-            // drop any equiped-non usable item, in inventory or on the ground if full
-            lock (player.Inventory)
-            {
-                foreach (InventoryItem item in player.Inventory.EquippedItems)
-                {
-                    if (!player.HasAbilityToUseItem(item))
-                        if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == true)
-                        {
-                            player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
-                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.CheckAbilityToUseItem.Text1", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        else
-                        {
-                            player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
-                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.CheckAbilityToUseItem.Text1", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                }
-            }
-        }
+		/// <summary>
+		/// Check Ability to use Item
+		/// </summary>
+		/// <param name="player"></param>
+		protected virtual void CheckAbilityToUseItem(GamePlayer player)
+		{
+			// drop any equiped-non usable item, in inventory or on the ground if full
+			lock (player.Inventory)
+			{
+				foreach (InventoryItem item in player.Inventory.EquippedItems)
+				{
+					if (!player.HasAbilityToUseItem(item))
+						if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == true)
+					{
+						player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.CheckAbilityToUseItem.Text1", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					else
+					{
+						player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.CheckAbilityToUseItem.Text1", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+			}
+		}
 
 		/// <summary>
-		/// For Recieving Respec Stones. 
+		/// For Recieving Respec Stones.
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="item"></param>
@@ -268,7 +273,7 @@ namespace DOL.GS
 							player.RespecAmountRealmSkill++;
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecRealm"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
-						}						
+						}
 				}
 			}
 			return base.ReceiveItem(source, item);
@@ -349,25 +354,45 @@ namespace DOL.GS
 			return true;
 		}
 
-        /// <summary>
-        /// Dismiss a player.
-        /// </summary>
-        /// <param name="player"></param>
-        protected virtual void DismissPlayer(GamePlayer player)
-        {
-            SayTo(player, eChatLoc.CL_ChatWindow,
-                LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.SeekElsewhere"));
-        }
+		/// <summary>
+		/// Dismiss a player.
+		/// </summary>
+		/// <param name="player"></param>
+		protected virtual void DismissPlayer(GamePlayer player)
+		{
+			SayTo(player, eChatLoc.CL_ChatWindow,
+			      LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.SeekElsewhere"));
+		}
 
-        /// <summary>
-        /// Offer training to the player.
-        /// </summary>
-        /// <param name="player"></param>
-        protected virtual void OfferTraining(GamePlayer player)
-        {
-            SayTo(player, eChatLoc.CL_ChatWindow, 
-                LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.WouldYouLikeTo"));
+		/// <summary>
+		/// Offer training to the player.
+		/// </summary>
+		/// <param name="player"></param>
+		protected virtual void OfferTraining(GamePlayer player)
+		{
+			SayTo(player, eChatLoc.CL_ChatWindow,
+			      LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.WouldYouLikeTo"));
 			player.Out.SendTrainerWindow();
-        }
+		}
+		
+		/// <summary>
+		/// No trainer for disabled classes
+		/// </summary>
+		/// <returns></returns>
+		public override bool AddToWorld()
+		{
+			if (!string.IsNullOrEmpty(ServerProperties.Properties.DISABLED_CLASSES))
+			{
+				if (disabled_classes == null)
+				{
+					// creation of disabled_classes list.
+					disabled_classes = new List<string>(ServerProperties.Properties.DISABLED_CLASSES.Split(';'));
+				}
+
+				if (disabled_classes.Contains(TrainedClass.ToString()))
+					return false;
+			}
+			return base.AddToWorld();
+		}
 	}
 }

@@ -226,45 +226,39 @@ namespace DOL.GS.ServerProperties
 		public static int CLIENT_TYPE_MAX;
 
 		/// <summary>
-		/// Disable minotaurs from being created
+		/// Disable some classes from being created
 		/// </summary>
-		[ServerProperty("disable_minotaurs", "Disable minotaurs from being created", false)]
-		public static bool DISABLE_MINOTAURS;
+		[ServerProperty("server","disabled_classes", "Serialized list of disabled classes, separated by semi-colon", "")]
+		public static string DISABLED_CLASSES;
 		
 		/// <summary>
-		/// Disable si race from being created
+		/// Disable some races from being created
 		/// </summary>
-		[ServerProperty("disable_si_race", "Disable si race from being created", false)]
-		public static bool DISABLE_SI_RACE;
+		[ServerProperty("server","disabled_races", "Serialized list of disabled races, separated by semi-colon", "")]
+		public static string DISABLED_RACES;
 		
-		/// <summary>
-		/// Disable toa race from being created
-		/// </summary>
-		[ServerProperty("disable_toa_race", "Disable toa race from being created", false)]
-		public static bool DISABLE_TOA_RACE;
-
 		/// <summary>
 		/// Should the server load the example scripts
 		/// </summary>
-		[ServerProperty("load_examples", "should the server load the example scripts", true)]
+		[ServerProperty("load_examples", "Should the server load the example scripts", true)]
 		public static readonly bool LOAD_EXAMPLES;
 
 		/// <summary>
 		/// A serialised list of disabled RegionIDs
 		/// </summary>
-		[ServerProperty("disabled_regions", "a serialised list of disabled region IDs seperated by ;", "")]
+		[ServerProperty("disabled_regions", "Serialized list of disabled region IDs, separated by semi-colon", "")]
 		public static readonly string DISABLED_REGIONS;
 
 		/// <summary>
 		/// A serialised list of RegionIDs that will load objects
 		/// </summary>
-		[ServerProperty("debug_load_regions", "a serialised list of region IDs that will load objects, separated by ; (leave this blank to load all regions normally)", "")]
+		[ServerProperty("debug_load_regions", "Serialized list of region IDs that will load objects, separated by semi-colon (leave this blank to load all regions normally)", "")]
 		public static readonly string DEBUG_LOAD_REGIONS;
 
 		/// <summary>
 		/// A serialised list of disabled expansion IDs
 		/// </summary>
-		[ServerProperty("disabled_expansions", "a serialised list of disabled expansions IDs, expansion IDs are client type seperated by ;", "")]
+		[ServerProperty("disabled_expansions", "Serialized list of disabled expansions IDs, expansion IDs are client type seperated by ;", "")]
 		public static readonly string DISABLED_EXPANSIONS;
 
 		/// <summary>
@@ -278,12 +272,6 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("account", "allow_all_realms", "should we allow characters to be created on all realms using a single account", false)]
 		public static bool ALLOW_ALL_REALMS;
-
-		/// <summary>
-		/// Should users be allowed to create catacombs classes
-		/// </summary>
-		[ServerProperty("disable_catacombs_classes", "should we disable catacombs classes", false)]
-		public static bool DISABLE_CATACOMBS_CLASSES;
 
 		/// <summary>
 		/// Days before your elligable for a free level
@@ -638,7 +626,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Sets the disabled commands for the server split by ;
 		/// </summary>
-		[ServerProperty("disabled_commands", "Sets the disabled commands for the server split by ;, example /realm;/toon;/quit", "")]
+		[ServerProperty("server","disabled_commands", "Serialized list of disabled commands separated by semi-colon, example /realm;/toon;/quit", "")]
 		public static readonly string DISABLED_COMMANDS;
 
 		/// <summary>
