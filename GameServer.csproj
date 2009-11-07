@@ -2626,6 +2626,9 @@
     <None Include="language\DE\Trainer.txt" />
     <None Include="language\DE\World.txt" />
     <None Include="language\FR\Commands\GMcommand.txt" />
+    <None Include="language\FR\Keeps.txt" />
+    <None Include="language\FR\Keeps\Guards.txt" />
+    <None Include="language\FR\Quests\Quest.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="language\CZ\Language-CZ.txt" />
@@ -2665,8 +2668,6 @@
     <Content Include="language\EN\World.txt" />
     <Content Include="language\ES\Language-ES.txt" />
     <Content Include="language\FR\AI.txt" />
-    <Content Include="language\FR\Quest\Atlantis.txt" />
-    <Content Include="language\FR\Quest\Behaviour.txt" />
     <Content Include="language\FR\Commands\AdminCommands.txt" />
     <Content Include="language\FR\Commands\Player\Battlegroup.txt" />
     <Content Include="language\FR\Commands\Player\Chatgroup.txt" />
@@ -2698,7 +2699,6 @@
     <Content Include="language\FR\Quests\Behaviour.txt" />
     <Content Include="language\FR\Quests\Hibernia\ImportantDelivery.txt" />
     <Content Include="language\FR\Quests\ML.txt" />
-    <Content Include="language\FR\Quests\Quests.txt" />
     <Content Include="language\FR\RealmAbilities.txt" />
     <Content Include="language\FR\Relic.txt" />
     <Content Include="language\FR\SkillHandler.txt" />
@@ -2711,6 +2711,9 @@
     <Content Include="language\IT\Commands\GMCommands.txt" />
     <Content Include="language\IT\Effects.txt" />
     <Content Include="language\IT\Language-IT.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="language\FR\Keeps" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
