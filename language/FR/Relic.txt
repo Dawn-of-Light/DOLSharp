@@ -1,5 +1,5 @@
 
 # Relics/GameRelicPad
 GameRelicPad.MountRelic.Captured:			{0} a capturé: {1}.
-GameRelicPad.MountRelic.Stored:				{0} from {1} has stored the {2} to the {3}.
-GameRelicPad.RemoveRelic.Removed:			{0} from {1} has removed the {2} from the {3}.
+GameRelicPad.MountRelic.Stored:				{0} de {1} a capturé {2} to the {3}.
+GameRelicPad.RemoveRelic.Removed:			{0} de {1} a retiré {2} de {3}.
