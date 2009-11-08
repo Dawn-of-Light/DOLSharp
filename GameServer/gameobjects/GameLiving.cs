@@ -3228,20 +3228,29 @@ namespace DOL.GS
 						// insert actual formula for guarding here, this is just a guessed one based on block.
 						int guardLevel = guard.GuardSource.GetAbilityLevel(Abilities.Guard); // multiply by 3 to be a bit qorse than block (block woudl be 5 since you get guard I with shield 5, guard II with shield 10 and guard III with shield 15)
 						double guardchance = 0;
-						if (guard.GuardSource is GameNPC) guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * 0.001;
-						else guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * leftHand.Quality * 0.00001;
-						guardchance *= guardLevel * 0.25 + 0.05;
+						if (guard.GuardSource is GameNPC) 
+                            guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * 0.001;
+						else 
+                            guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * leftHand.Quality * 0.00001;
+						guardchance *= guardLevel * 0.3 + 0.05;
 						guardchance += attackerConLevel * 0.05;
-
-						if (guardchance > 0.99) guardchance = 0.99;
-						if (guardchance < 0.01) guardchance = 0.01;
-
-						int shieldSize = 0;
+      					int shieldSize = 0;
 						if (leftHand != null)
 							shieldSize = leftHand.Type_Damage;
-						if (guard.GuardSource is GameNPC) shieldSize = 1;
-						if (m_attackers.Count > shieldSize)
-							guardchance /= (m_attackers.Count - shieldSize + 1);
+						if (guard.GuardSource is GameNPC) 
+                            shieldSize = 1;
+
+                        if (guardchance < 0.01)
+                            guardchance = 0.01;
+                        else if (ad.Attacker is GamePlayer && guardchance > .6)
+                            guardchance = .6;
+                        else if (shieldSize == 1 && ad.Attacker is GameNPC && guardchance > .8)
+                            guardchance = .8;
+                        else if (shieldSize == 2 && ad.Attacker is GameNPC && guardchance > .9)
+                            guardchance = .9;
+                        else if (shieldSize == 3 && ad.Attacker is GameNPC && guardchance > .99)
+                            guardchance = .99;
+
 						if (ad.AttackType == AttackData.eAttackType.MeleeDualWield) guardchance /= 2;
 						if (Util.ChanceDouble(guardchance))
 						{
@@ -3651,12 +3660,16 @@ namespace DOL.GS
 				//						blockChance += 0.25;
 				blockChance += attackerConLevel * 0.05;
 
-				if( blockChance < 0.01 )
+				if (blockChance < 0.01)
 					blockChance = 0.01;
-				else if( blockChance > 0.60 && ad.Attacker is GamePlayer && ad.Target is GamePlayer )
+				else if (blockChance > 0.60 && ad.Attacker is GamePlayer)
 					blockChance = 0.60;
-				else if( blockChance > 0.995 )
-					blockChance = 0.995;
+                else if (shieldSize == 1 && ad.Attacker is GameNPC && blockChance > .8)
+                    blockChance = .8;
+                else if (shieldSize == 2 && ad.Attacker is GameNPC && blockChance > .9)
+                    blockChance = .9;
+                else if (shieldSize == 3 && ad.Attacker is GameNPC && blockChance > .99)
+                    blockChance = .99;
 
 				// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate
 				if( engage != null && AttackState && engage.EngageTarget == ad.Attacker )
