@@ -1,16 +1,16 @@
 
 # /serverproperties Command
-AdminCommands.ServerProperties.Description:			Reloads server properties from the database
+AdminCommands.ServerProperties.Description:			Recharger les Propriétés de la database via le serveur
 AdminCommands.ServerProperties.Usage:				/serverproperties
 AdminCommands.ServerProperties.DataBaseXML:			XML is cached sorry, you cannot refresh server properties unless using MySQL!
-AdminCommands.ServerProperties.PropertiesRefreshed:	Refreshed server properties!
+AdminCommands.ServerProperties.PropertiesRefreshed:	Les Propriétés ont été recharger
 
 
 # /plvl Command
 AdminCommands.plvl.Description:						Change le niveau de privileges de l'utilisateur et l'utilisation de commandes
-AdminCommands.plvl.Usage:							/plvl <newPlvl>
-AdminCommands.plvl.Usage.Single:					/plvl single <command>
-AdminCommands.plvl.Usage.Remove:					/plvl remove <command>
+AdminCommands.plvl.Usage:							/plvl <Nouveau rang>
+AdminCommands.plvl.Usage.Single:					/plvl single <commande>
+AdminCommands.plvl.Usage.Remove:					/plvl remove <commande>
 AdminCommands.plvl.NoSelectPlayer:					Vous devez selectionner un joueur.
 AdminCommands.plvl.AddedSinglePermission:			Vous autorisez {0} a utiliser la commande: {1} .
 AdminCommands.plvl.RemoveSinglePermission:			Vous retirez a {0} l'utilisation de la commande: {1} .
@@ -21,20 +21,20 @@ AdminCommands.plvl.PlayerPlvlHasBeenSetted:			Le niveau de privileges de {0} est
 # /code Command
 AdminCommands.Code.Description:						Permet l'execution de code a partir du jeu!
 AdminCommands.Code.Usage:							/code <codesnippet>
-AdminCommands.Code.ErrorCompiling:					Error Compiling Expression:
+AdminCommands.Code.ErrorCompiling:					Erreur de Complication de l'Expression:
 AdminCommands.Code.CodeExecuted:					Code executed...
 
 
 # /account Command
 AdminCommands.Account.Description:					Commande de modification de compte
-AdminCommands.Account.Usage.ChangePassword:			/account changepassword <AccountName> <NewPassword>
-AdminCommands.Account.Usage.Delete:					/account delete <AccountName>
-AdminCommands.Account.Usage.DeleteChar:				/account deletecharacter <CharacterName>
-AdminCommands.Account.Usage.MoveChar:				/account movecharacter <CharacterName> <NewAccountName>
-AdminCommands.Account.AccountNotFound:				Account {0} inexistant!
-AdminCommands.Account.AccountDeleted:				Account {0} supprimé!
-AdminCommands.Account.CharacterNotFound:			Character {0} inexistant!
-AdminCommands.Account.CharacterDeleted:				Character {0} supprimé!
-AdminCommands.Account.CharNotFromValidRealm:		The character is not from a valid realm!
+AdminCommands.Account.Usage.ChangePassword:			/account changepassword <Nom du Compte> <Nouveau Mot de Passe>
+AdminCommands.Account.Usage.Delete:					/account delete <Nom du Compte>
+AdminCommands.Account.Usage.DeleteChar:				/account deletecharacter <Nom du Personnage>
+AdminCommands.Account.Usage.MoveChar:				/account movecharacter <Nom du Personnage> <Nouveau Compte>
+AdminCommands.Account.AccountNotFound:				Le Compte "{0}" est introuvable!
+AdminCommands.Account.AccountDeleted:				le Compte "{0}" a été supprimé!
+AdminCommands.Account.CharacterNotFound:			Le Personnage "{0}" est introuvable!
+AdminCommands.Account.CharacterDeleted:				Le Personnage "{0}" a été supprimé!
+AdminCommands.Account.CharNotFromValidRealm:		Le personnage n'est pas d'un royaume valide.
 AdminCommands.Account.AccountHasNoFreeSlots:		Account {0} has no free character slots for this realm anymore!
-AdminCommands.Account.CharacterMovedToAccount:		Perso {0} deplacé sur le compte {1}!
+AdminCommands.Account.CharacterMovedToAccount:		Le Personage "{0}" a été déplacer sur le compte "{1}".

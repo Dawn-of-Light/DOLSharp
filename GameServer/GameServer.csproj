@@ -2625,6 +2625,7 @@
     <None Include="language\DE\Styles.txt" />
     <None Include="language\DE\Trainer.txt" />
     <None Include="language\DE\World.txt" />
+    <None Include="language\FR\Atlantis.txt" />
     <None Include="language\FR\Commands\GMcommand.txt" />
     <None Include="language\FR\Keeps.txt" />
     <None Include="language\FR\Keeps\Guards.txt" />
