@@ -3652,7 +3652,7 @@ namespace DOL.GS
 				if( lefthand != null )
 					shieldSize = lefthand.Type_Damage;
 				if( player != null && attackerCount > shieldSize )
-					blockChance /= ( attackerCount - shieldSize + 1 );
+                    blockChance *= (shieldSize / attackerCount);
 
 				blockChance *= 0.001;
 				// no chance bonus with ranged attacks?
