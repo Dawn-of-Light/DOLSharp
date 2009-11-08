@@ -15,7 +15,7 @@ GMCommands.HookPoint.NoGKCTarget:			You are not targeting a GameKeepComponent!
 
 
 # /annunce Command
-GMCommands.Announce.Description:			Envoiyer un Message à tous les joueurs connectés
+GMCommands.Announce.Description:			Envoyer un Message à tous les joueurs connectés
 GMCommands.Announce.Usage:					/announce <log|window|send|center|confirm> <message>
 GMCommands.Announce.LogAnnounce:			[Announce]: {0}
 GMCommands.Announce.WindowAnnounce:			Annonce de {0}
