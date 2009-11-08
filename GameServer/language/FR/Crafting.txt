@@ -5,7 +5,7 @@ Crafting.CheckTool.AlchemyKit:            Kit d'alchimie
 Crafting.CheckTool.FindAlchemyKit:			Vous devez trouver un kit d'alchimie!
 Crafting.CheckTool.FindAlchemyTable:         Vous devez trouver une table d'alchimie!
 Crafting.CheckTool.FindForge:            Vous devez trouver une forge!
-Crafting.CheckTool.FindLathe:            Vous devez trouver une tour!
+Crafting.CheckTool.FindLathe:            Vous devez trouver un tour!
 Crafting.CheckTool.FindMortarPestle:		Vous devez trouver un mortier et un pilon!
 Crafting.CheckTool.FindPlaningTool:         Vous devez trouver un outil de rabotage!
 Crafting.CheckTool.FindSewingKit:         Vous devez trouver un kit de couture!
@@ -15,7 +15,7 @@ Crafting.CheckTool.MortarAndPestle:         Mortier et pilon
 Crafting.CheckTool.NotHaveTools:         Vous n'avez pas les outils pour le {0}.
 Crafting.CheckTool.PlaningTool:            Outil de rabotage
 Crafting.CheckTool.SewingKit:            Kit de couture
-Crafting.CheckTool.SmithsHammer:         Le marteau de forgeron
+Crafting.CheckTool.SmithsHammer:         Marteau de forgeron
 Crafting.CheckTool.SpellcraftKit:         Kit d'arcanisme
 Crafting.GainCraftingSkillPoints.RaiseAlchemy:		Vous devez voir votre entraîneur pour augmenter votre niveau en Alchimie!
 Crafting.GainCraftingSkillPoints.RaiseArmorcraft:   Vous devez voir votre entraîneur pour augmenter votre niveau en Armurerie!
@@ -26,18 +26,18 @@ Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:   Vous devez voir votre entra
 Crafting.Name.Alchemy:					Alchimie
 Crafting.Name.Armorcraft:				Armurerie
 Crafting.Name.BasicCrafting:			Métier de base
-Crafting.Name.Clothworking:				Tisseran
-Crafting.Name.Evocation:				Arcanisme
+Crafting.Name.Clothworking:				Tissage
+Crafting.Name.Evocation:				Arcanes
 Crafting.Name.Fletching:				Empennage
-Crafting.Name.Gemcutting:				Lapidaire
-Crafting.Name.Herbcrafting:				Herboriste
-Crafting.Name.Jewelcraft:				Joillier
-Crafting.Name.Leathercrafting:				Artisan du cuir
-Crafting.Name.Metalworking:				Métallurgiste
-Crafting.Name.Siegecraft:				Ingénieur
+Crafting.Name.Gemcutting:				Gemmes
+Crafting.Name.Herbcrafting:				Herboristerie
+Crafting.Name.Jewelcraft:				Joaillier
+Crafting.Name.Leathercrafting:				Maroquinerie
+Crafting.Name.Metalworking:				Métallurgie
+Crafting.Name.Siegecraft:				Ingénieurie
 Crafting.Name.Tailoring:				Couture
-Crafting.Name.Weaponcraft:				Forgeron
-Crafting.Name.Woodworking:				Menuisier
+Crafting.Name.Weaponcraft:				Forge
+Crafting.Name.Woodworking:				Menuiserie
 
 # /CraftLevelToCraftTitle
 CraftLevelToCraftTitle.Helper:				Aide
@@ -61,20 +61,20 @@ AbstractCraftingSkill.CheckRawMaterial.NoIngredients:   Vous n'avez pas les ingr
 AbstractCraftingSkill.CheckRawMaterial.RawMaterial:	Impossible de trouver l'objet avec l'ID de {0}, veuillez nous contacter!
 AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:   Il vous manque :
 
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence en Armurie ({0}) Pour confectionner le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:   Vous n'avez pas le niveau minimum dans la compétence  en Couture ({0}) Pour confectionner le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  en Ingénierie ({0}) Pour confectionner le {1}!
-AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence  en Forge ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence Tissage ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:   Vous n'avez pas le niveau minimum dans la compétence Maroquinerie ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence Métallurgie ({0}) Pour confectionner le {1}!
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence Menuiserie ({0}) Pour confectionner le {1}!
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.Rawmaterial:			Impossible de trouver l'objet avec l'ID de {0}, veuillez nous contacter!
 
 AbstractCraftingSkill.CraftItem.BeginWork:      Vous commencez à travailler sur le {0} ({1}%).
 AbstractCraftingSkill.CraftItem.ChanceToGainPoint:   Chance de gagner des points sur votre compétence primaire {0}%.
-AbstractCraftingSkill.CraftItem.CurrentlyMaking:   En train de faire: {0}
+AbstractCraftingSkill.CraftItem.CurrentlyMaking:   Artisanat en cours: {0}
 AbstractCraftingSkill.CraftItem.MoveAndInterrupt:   Vous bougez et interrompez votre travail.
 AbstractCraftingSkill.CraftItem.StopWork:      Vous arrêtez votre travail.
 AbstractCraftingSkill.LooseRawMaterial.Count:      Vous perdez ({0}) {1}.
 AbstractCraftingSkill.LooseRawMaterial.Materials:   Vous n'arrivez pas à faire le {0}, et perdez des matériaux!
-AbstractCraftingSkill.MakeItem.LoseNoMaterials:      Vous n'arrivez pas à faire le {0} mais ne perdez pas de matériaux!
+AbstractCraftingSkill.MakeItem.LoseNoMaterials:      Vous n'arrivez pas à faire le {0} mais ne perdez aucun matériaux!
 AbstractCraftingSkill.MakeItem.NotAllMaterials:      Vous n'avez pas tout les composants nécessaires à la confection de cet objet.
 
 # /AdvancedCraftingSkill
@@ -110,7 +110,7 @@ Repair.ProceedSiegeWeapon.FailRepair:			Vous échouez dans la réparation de {0}!
 # /Salvage
 Salvage.BeginWork.BeginSalvage:				Vous commencez le démontage de {0}.
 Salvage.BeginWork.InterruptSalvage:			Vous bougez et interrompez votre démontage.
-Salvage.BeginWork.NoRoom:				Vous n'avez pas assez de place dans votre inventaire...
+Salvage.BeginWork.NoRoom:				Vous n'avez pas assez de place dans votre inventaire.
 Salvage.BeginWork.NoSalvage:				Vous ne pouvez pas démonter {0}!
 Salvage.BeginWork.Salvaging:				Démontage: {0}
 Salvage.IsAllowedToBeginWork.BackpackItems:		Vous pouvez seulement démonter les objets qui se trouvent dans votre sac à dos!
@@ -119,7 +119,7 @@ Salvage.IsAllowedToBeginWork.NotEnoughSkill:		Vous n'avez pas assez de connaissa
 Salvage.Proceed.GetBackMaterial:			Vous obtenez {0} {1} après le démontage de {2}.
 
 # /SpellCrafting
-SpellCrafting.ApplySpellcraftGems.ImbuedItem:		{0} imprégne 1 objet.
+SpellCrafting.ApplySpellcraftGems.ImbuedItem:		{0} à imprégné un objet.
 SpellCrafting.ApplySpellcraftGems.Failed:		L'imprégnation a échoué!
 SpellCrafting.ApplySpellcraftGems.PowerExplodes:	Le pouvoir contenu dans l'enchantement vous explose aux yeux!
 SpellCrafting.IsAllowedToCombine.AlreadyImbued:		{0} est déjà imprégné avec 4 différents enchantements!
@@ -137,5 +137,5 @@ SpellCrafting.ShowSpellCraftingInfos.Losing:		{0}% de perdu durant l'imprégnatio
 SpellCrafting.ShowSpellCraftingInfos.Modified:		(Cette pénalité est modifiée par la qualité de l'objet ainsi que par votre compétence!)
 SpellCrafting.ShowSpellCraftingInfos.Penality:		{0} pénalité de surcharge.
 SpellCrafting.ShowSpellCraftingInfos.Success:		{0}% surcharge effectuée.
-SpellCrafting.ShowSpellCraftingInfos.TotalImbue:	Imprégnation {0} ({1} total des poitns imprégnés).
+SpellCrafting.ShowSpellCraftingInfos.TotalImbue:	Imprégnation {0} ({1} total des points imprégnés).
 
