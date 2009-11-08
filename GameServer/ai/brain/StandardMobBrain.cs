@@ -574,6 +574,8 @@ namespace DOL.AI.Brain
 			{
 				if (!Body.AttackState || target != Body.TargetObject)
 				{
+					Body.TargetObject = target;
+
 					if (!CheckSpells(eCheckSpellType.Offensive))
 						Body.StartAttack(target);
 				}
@@ -1154,7 +1156,9 @@ namespace DOL.AI.Brain
 				case "Mez":
 				case "Taunt":
 					if (!LivingHasEffect(lastTarget as GameLiving, spell))
+					{
 						Body.TargetObject = lastTarget;
+					}
 					break;
 				#endregion
 
@@ -1167,8 +1171,11 @@ namespace DOL.AI.Brain
 				case "CombatSpeedBuff":
 				case "AblativeArmor":
 				case "Bladeturn":
+				case "OffensiveProc":
 					if (!LivingHasEffect(Body, spell))
+					{
 						Body.TargetObject = Body;
+					}
 					break;
 				#endregion
 			}
@@ -1177,7 +1184,6 @@ namespace DOL.AI.Brain
 			{
 				Body.CastSpell(spell, m_mobSpellLine);
 				Body.TargetObject = lastTarget;
-
 				return true;
 			}
 
