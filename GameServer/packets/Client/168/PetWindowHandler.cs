@@ -22,7 +22,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x8A,"Handles pet window commands")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x8A, "Handles pet window commands")]
 	public class PetWindowHandler : IPacketHandler
 	{
 		/// <summary>
@@ -34,32 +34,29 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			if (client.Player == null) return 0;
 
-		  byte aggroState = (byte)packet.ReadByte(); 	// 1-Aggressive, 2-Deffensive, 3-Passive
+			byte aggroState = (byte)packet.ReadByte(); 	// 1-Aggressive, 2-Deffensive, 3-Passive
 			byte walkState = (byte)packet.ReadByte(); 	// 1-Follow, 2-Stay, 3-GoTarg, 4-Here
 			byte command = (byte)packet.ReadByte();		// 1-Attack, 2-Release
 
-			//packet.LogDump();
-			//log.Debug(string.Format("PetWindowHandler: aggro={0} walk={1} command={2}", aggroState, walkState, command));
+			//[Ganrod] Nidel: Animist can removed his TurretFnF without MainPet.
+			if (client.Player.TargetObject != null && command.Equals(2) && client.Player.ControlledNpc == null && client.Player.CharacterClass.ID == (int)eCharacterClass.Animist)
+			{
+				TurretPet turret = client.Player.TargetObject as TurretPet;
+				if (turret != null && turret.Brain is TurretFNFBrain && client.Player.GetItsControlledNpc(turret))
+				{
+					//release
+					new HandlePetCommandAction(client.Player, 0, 0, 2).Start(1);
+					return 1;
+				}
+			}
+			//[Ganrod] Nidel: Call only if player has controllednpc
+			if (client.Player.ControlledNpc != null)
+			{
+				new HandlePetCommandAction(client.Player, aggroState, walkState, command).Start(1);
+				return 1;
+			}
 
-      //[Ganrod] Nidel: Animist can removed his TurretFnF without MainPet.
-      if (client.Player.TargetObject != null && command.Equals(2) && client.Player.ControlledNpc == null && client.Player.CharacterClass.ID == (int)eCharacterClass.Animist)
-      {
-        TurretPet turret = client.Player.TargetObject as TurretPet;
-		if (turret != null && turret.Brain is TurretFNFBrain && client.Player.GetItsControlledNpc(turret))
-        {
-          //release
-          new HandlePetCommandAction(client.Player, 0, 0, 2).Start(1);
-          return 1;
-        }
-      }
-      //[Ganrod] Nidel: Call only if player has controllednpc
-      if (client.Player.ControlledNpc != null)
-      {
-        new HandlePetCommandAction(client.Player, aggroState, walkState, command).Start(1);
-        return 1;
-      }
-
-		  return 0;
+			return 0;
 		}
 
 		/// <summary>
@@ -87,7 +84,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="aggroState">The pet aggro state</param>
 			/// <param name="walkState">The pet walk state</param>
 			/// <param name="command">The pet command</param>
-			public HandlePetCommandAction(GamePlayer actionSource, int aggroState, int walkState, int command) : base(actionSource)
+			public HandlePetCommandAction(GamePlayer actionSource, int aggroState, int walkState, int command)
+				: base(actionSource)
 			{
 				m_aggroState = aggroState;
 				m_walkState = walkState;
@@ -109,7 +107,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case 3: player.CommandNpcPassive(); break;
 					default:
 						if (log.IsWarnEnabled)
-							log.Warn("unknown aggro state "+m_aggroState+", player="+player.Name+"  version="+player.Client.Version+"  client type="+player.Client.ClientType);
+							log.Warn("unknown aggro state " + m_aggroState + ", player=" + player.Name + "  version=" + player.Client.Version + "  client type=" + player.Client.ClientType);
 						break;
 				}
 				switch (m_walkState)
@@ -121,7 +119,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case 4: player.CommandNpcComeHere(); break;
 					default:
 						if (log.IsWarnEnabled)
-							log.Warn("unknown walk state "+m_walkState+", player="+player.Name+"  version="+player.Client.Version+"  client type="+player.Client.ClientType);
+							log.Warn("unknown walk state " + m_walkState + ", player=" + player.Name + "  version=" + player.Client.Version + "  client type=" + player.Client.ClientType);
 						break;
 				}
 				switch (m_command)
@@ -131,7 +129,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case 2: player.CommandNpcRelease(); break;
 					default:
 						if (log.IsWarnEnabled)
-							log.Warn("unknown command state "+m_command+", player="+player.Name+"  version="+player.Client.Version+"  client type="+player.Client.ClientType);
+							log.Warn("unknown command state " + m_command + ", player=" + player.Name + "  version=" + player.Client.Version + "  client type=" + player.Client.ClientType);
 						break;
 				}
 			}

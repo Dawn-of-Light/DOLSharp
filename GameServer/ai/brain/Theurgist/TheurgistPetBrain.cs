@@ -84,6 +84,8 @@ namespace DOL.AI.Brain
 			GameLiving target = m_target;
 			if (target != null && target.IsAlive)
 			{
+				Body.TargetObject = target;
+
 				if (!CheckSpells(eCheckSpellType.Offensive))
 					Body.StartAttack(target);
 			}
@@ -131,7 +133,9 @@ namespace DOL.AI.Brain
 							}
 						}
 						else
+						{
 							CheckInstantSpells(spell);
+						}
 					}
 				}
 			}
