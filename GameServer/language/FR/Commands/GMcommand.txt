@@ -3,7 +3,7 @@ GMCommands.Error:							Erreur: {0}
 
 
 # /addbind Command
-GMCommands.AddBind.Description:				Ajout du point de Bind.
+GMCommands.AddBind.Description:				Ajout d'un point de bind
 GMCommands.AddBind.Usage:					/addbind [radius=750]
 GMCommands.AddBind.BindPointAdded:			Point de Bind ajouté en: X={0}, Y={1}, Z={2}, Radius={3}, Region={4}
 
@@ -15,7 +15,7 @@ GMCommands.HookPoint.NoGKCTarget:			You are not targeting a GameKeepComponent!
 
 
 # /annunce Command
-GMCommands.Announce.Description:			Envoi un message a tous les joueurs
+GMCommands.Announce.Description:			Envoiyer un Message à tous les joueurs connectés
 GMCommands.Announce.Usage:					/announce <log|window|send|center|confirm> <message>
 GMCommands.Announce.LogAnnounce:			[Announce]: {0}
 GMCommands.Announce.WindowAnnounce:			Annonce de {0}
@@ -24,7 +24,7 @@ GMCommands.Announce.ConfirmAnnounce:		Annonce dem {0}: {1}
 
 
 # /area Command
-GMCommands.Area.Description:				Commande pour la creation d'Area
+GMCommands.Area.Description:				Création d'un "aréa"
 GMCommands.Area.Usage.Create:				/area create <name> <type(circle|square)> <radius> <broadcast(y|n)> <soundid>
 GMCommands.Area.AreaCreated:				Area created - Description: {0}, X={1}, Y={2}, Z={3}, Radius={4}, Broadcast={5}, Sound={6}.
 
@@ -36,11 +36,11 @@ GMCommands.Ban.Usage.IP:					'/ban ip <reason>' Ban l'addresse IP de la cible
 GMCommands.Ban.Usage.Account:				'/ban account <reason>' Ban le compte de la cible
 GMCommands.Ban.Usage.Both:					'/ban both <reason>' Ban le compte et l'ip
 Scripts.GM.Ban.AAlreadyBanned:				Ce compte a déjà été banni.
-Scripts.GM.Ban.ABanned:						Le compte {0} a été banni.
+Scripts.GM.Ban.ABanned:						Le compte "{0}" a été banni.
 Scripts.GM.Ban.BAlreadyBanned:				Ce compte et cette IP ont déjà été bannis.
-Scripts.GM.Ban.BBanned:						Le compte {0} et l'adresse IP {1} ont été bannis.
+Scripts.GM.Ban.BBanned:						Le compte "{0}" et l'adresse IP "{1}" ont été bannis.
 Scripts.GM.Ban.IAlreadyBanned:				Cette adresse IP a déjà été bannie.
-Scripts.GM.Ban.IBanned:						L'adresse IP {0} a été bannie.
+Scripts.GM.Ban.IBanned:						L'adresse IP "{0}" a été bannie.
 Scripts.GM.Ban.MustTarget:					Vous devez sélectionner une cible !
 
 
@@ -103,20 +103,20 @@ GMCommands.door.Delete:					'/door delete 'supprime la porte ciblée.
 GMCommands.door.Add:					'/door add' ajoute une porte
 
 # /faction Command
-GMCommands.Faction.Description:				Create a faction and assign friend and enemy faction
-GMCommands.Faction.Usage.Create:			'/faction create <name> <base aggro level>' to create a faction
-GMCommands.Faction.Usage.Assign:			'/faction assign' to assign the faction to the target mob
-GMCommands.Faction.Usage.AddFriend:			'/faction addfriend <factionid>' to add faction friend to current faction
-GMCommands.Faction.Usage.AddEnemy:			'/faction addenemy  <factionid>' to add enemy to the current faction
-GMCommands.Faction.Usage.List:				'/faction list' to have a list of all faction
-GMCommands.Faction.Usage.Select:			'/faction select <factionid>' to select the faction with this id
-GMCommands.Faction.MustSelectFaction:		You must select a faction first.
-GMCommands.Faction.IndexMustBeNumber:		The index must be a number.
-GMCommands.Faction.FactionNotLoaded:		This Faction is not loaded
-GMCommands.Faction.Create.BAMustBeNumber:	The baseAggro must be a number.
-GMCommands.Faction.Create.NewCreated:		New faction created
-GMCommands.Faction.Assign.MustSelectMob:	You must select a mob first.
-GMCommands.Faction.Assign.MobHasJoinedFact:	The mob {0} has joined the faction of {1}.
+GMCommands.Faction.Description:				Créer une faction et assigner ami et ennemi de faction
+GMCommands.Faction.Usage.Create:			'/faction create <name> <base aggro level>' pour crée une faction
+GMCommands.Faction.Usage.Assign:			'/faction assign' pour assigner le NPC à une faction
+GMCommands.Faction.Usage.AddFriend:			'/faction addfriend <factionid>' ajouter une faction allier à une autre faction
+GMCommands.Faction.Usage.AddEnemy:			'/faction addenemy  <factionid>' ajouter une faction ennemi à une autre faction
+GMCommands.Faction.Usage.List:				'/faction list' pour afficher la liste des factions
+GMCommands.Faction.Usage.Select:			'/faction select <factionid>' pour séléctioner une faction
+GMCommands.Faction.MustSelectFaction:		Vous devez d'abord  séléctioner une faction.
+GMCommands.Faction.IndexMustBeNumber:		Seulement des nombres.
+GMCommands.Faction.FactionNotLoaded:		La faction n'est pas charger.
+GMCommands.Faction.Create.BAMustBeNumber:	Le "baseaggro" doit etre un nombre.
+GMCommands.Faction.Create.NewCreated:		Nouvelle faction crée
+GMCommands.Faction.Assign.MustSelectMob:	Vous devez d'abord  séléctioner un NPC
+GMCommands.Faction.Assign.MobHasJoinedFact: Le NPC "{0}" à rejoint la faction de "{1}".
 
 
 # /gmrelic Command
