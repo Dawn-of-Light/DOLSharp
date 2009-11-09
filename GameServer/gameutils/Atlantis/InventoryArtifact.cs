@@ -345,6 +345,20 @@ namespace DOL.GS
 					levelTag,
 					SkillBase.GetPropertyName((eProperty)bonusType),
 					bonusAmount.ToString("+0;-0;0")));
+			else if (IsFocusBonus(bonusType))
+			{
+				delve.Add(String.Format("- {0}{1}: {2} lvls",
+					levelTag,
+					SkillBase.GetPropertyName((eProperty)bonusType),
+					bonusAmount));
+			}
+			else
+			{
+				delve.Add(String.Format("- {0}{1}: {2}",
+					levelTag,
+					SkillBase.GetPropertyName((eProperty)bonusType),
+					bonusAmount));
+			}
 		}
 
 		/// <summary>
