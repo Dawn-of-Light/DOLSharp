@@ -352,7 +352,7 @@ namespace DOL.GS
 					SkillBase.GetPropertyName((eProperty)bonusType),
 					bonusAmount));
 			}
-			else
+			else if (bonusType > 0)
 			{
 				delve.Add(String.Format("- {0}{1}: {2}",
 					levelTag,
