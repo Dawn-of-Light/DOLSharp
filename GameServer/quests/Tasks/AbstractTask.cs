@@ -107,7 +107,7 @@ namespace DOL.GS.Quests
 			if (dbTask==null)
 			{
 				dbTask = new DBTask();
-				dbTask.CharName = taskPlayer.Name;
+				dbTask.Character_ID = taskPlayer.InternalID;
 			}
 
 			dbTask.TaskType = GetType().FullName;

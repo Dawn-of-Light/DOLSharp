@@ -30,7 +30,7 @@ namespace DOL.Database
 	public class DBQuest : DataObject
 	{
 		private string		m_name;
-		private	string		m_charname;
+		private	string		m_characterid;
 		private	int			m_step;
 		private string		m_customPropertiesString;
 
@@ -53,7 +53,7 @@ namespace DOL.Database
 		{
 			m_name = name;
 			m_step = step;
-			m_charname = charname;
+			m_characterid = charname;
 		}
 
 		/// <summary>
@@ -109,16 +109,16 @@ namespace DOL.Database
 		/// Character Name
 		/// </summary>
 		[DataElement(AllowDbNull=false,Unique=false)]
-		public string CharName
+		public string Character_ID
 		{
 			get
 			{
-				return m_charname;
+				return m_characterid;
 			}
 			set
 			{
 				Dirty = true;
-				m_charname = value;
+				m_characterid = value;
 			}
 		}
 
