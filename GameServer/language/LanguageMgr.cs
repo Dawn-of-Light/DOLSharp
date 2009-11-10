@@ -96,7 +96,7 @@ namespace DOL.Language
 				if (!FilePath.EndsWith(".txt"))
 					continue;
 
-				string[] lines = File.ReadAllLines(FilePath, Encoding.GetEncoding(1252));
+				string[] lines = File.ReadAllLines(FilePath, Encoding.GetEncoding("utf-8"));
 				IList textList = new ArrayList(lines);
 				
 				foreach (string line in textList)
