@@ -1292,7 +1292,7 @@ namespace DOL.GS
 					long lastDeathExpLoss = TempProperties.getLongProperty(DEATH_EXP_LOSS_PROPERTY, 0);
 					TempProperties.removeProperty(DEATH_EXP_LOSS_PROPERTY);
 
-					GainExperience(-lastDeathExpLoss);
+					GainExperience(GameLiving.eXPSource.Other, -lastDeathExpLoss);
 					lostExp -= Experience;
 
 					// raise only the gravestone if xp has to be stored in it
@@ -1565,7 +1565,7 @@ namespace DOL.GS
 				if (xp > 0)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Pray.GainBack"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					player.GainExperience(xp);
+					player.GainExperience(eXPSource.Praying, xp);
 				}
 				m_gravestone.Delete();
 			}
@@ -4200,9 +4200,9 @@ namespace DOL.GS
 		/// <param name="expGroupBonus"></param>
 		/// <param name="expOutpostBonus"></param>
 		/// <param name="sendMessage"></param>
-		public void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage)
+		public void GainExperience(eXPSource xpSource, long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage)
 		{
-			GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, true);
+			GainExperience(xpSource, expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, true);
 		}
 
 		/// <summary>
@@ -4214,9 +4214,9 @@ namespace DOL.GS
 		/// <param name="expOutpostBonus"></param>
 		/// <param name="sendMessage"></param>
 		/// <param name="allowMultiply"></param>
-		public void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
+		public void GainExperience(eXPSource xpSource, long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply)
 		{
-			GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply, true);
+			GainExperience(xpSource, expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply, true);
 		}
 
 		/// <summary>
@@ -4229,7 +4229,7 @@ namespace DOL.GS
 		/// <param name="sendMessage"></param>
 		/// <param name="allowMultiply"></param>
 		/// <param name="notify"></param>
-		public override void GainExperience(long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply, bool notify)
+		public override void GainExperience(eXPSource xpSource, long expTotal, long expCampBonus, long expGroupBonus, long expOutpostBonus, bool sendMessage, bool allowMultiply, bool notify)
 		{
 			if (!GainXP && expTotal > 0)
 				return;
@@ -4290,7 +4290,7 @@ namespace DOL.GS
 					}
 			}
 
-			base.GainExperience(expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply, notify);
+			base.GainExperience(xpSource, expTotal, expCampBonus, expGroupBonus, expOutpostBonus, sendMessage, allowMultiply, notify);
 
 			if (IsLevelSecondStage)
 			{
@@ -6835,7 +6835,7 @@ namespace DOL.GS
 					PlayerCharacter.DeathCount++;
 
 					long xpLoss = (ExperienceForNextLevel - ExperienceForCurrentLevel) * xpLossPercent / 1000;
-					GainExperience(-xpLoss, 0, 0, 0, false, true);
+					GainExperience(eXPSource.Other, -xpLoss, 0, 0, 0, false, true);
 					TempProperties.setProperty(DEATH_EXP_LOSS_PROPERTY, xpLoss);
 
 					int conLoss = PlayerCharacter.DeathCount;

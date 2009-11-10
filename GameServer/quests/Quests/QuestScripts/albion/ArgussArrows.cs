@@ -603,7 +603,7 @@ namespace DOL.GS.Quests.Albion
             //Give reward to player here ...
             GiveItem(argusBowman, m_questPlayer, dullBlackGem);
 
-            m_questPlayer.GainExperience(160, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 160, true);
             m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 10, 30 + Util.Random(50)), "You are awarded 10 silver and some copper!");
 
         }

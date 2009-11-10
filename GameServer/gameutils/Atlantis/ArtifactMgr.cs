@@ -296,6 +296,10 @@ namespace DOL.GS
 			GainedExperienceEventArgs xpArgs = args as GainedExperienceEventArgs;
 			if (player == null || xpArgs == null)
 				return;
+
+			// Atrifacts only gain XP on NPC and player kills
+			if (xpArgs.XPSource != GameLiving.eXPSource.Player && xpArgs.XPSource != GameLiving.eXPSource.NPC)
+				return;
 			
 			if (player.IsPraying)
 				return;

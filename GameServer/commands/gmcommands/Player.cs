@@ -42,7 +42,7 @@ namespace DOL.GS.Commands
      "/player level <newLevel>",
      "/player realm <newRealm>",
      "/player inventory",
-     "/player <rps|bps|xp|clxp> <amount>",
+     "/player <rps|bps|xp|xpa|clxp> <amount>",
      "/player stat <typeofStat> <value>",
      "/player money <copp|silv|gold|plat|mith> <amount>",
 	 "/player respec <all|line|realm|dol|champion> <amount=1>",
@@ -188,7 +188,7 @@ namespace DOL.GS.Commands
                             bool curSecondStage = player.IsLevelSecondStage;
                             if (newLevel > curLevel && curSecondStage)
                             {
-                                player.GainExperience(player.GetExperienceValueForLevel(++curLevel));
+								player.GainExperience(GameLiving.eXPSource.Other, player.GetExperienceValueForLevel(++curLevel));
                             }
                             if (newLevel != curLevel || !curSecondStage)
                                 player.Level = newLevel;
@@ -441,6 +441,7 @@ namespace DOL.GS.Commands
 
 
                 case "xp":
+				case "xpa":
                     {
                         GamePlayer player = client.Player.TargetObject as GamePlayer;
                         try
@@ -453,9 +454,15 @@ namespace DOL.GS.Commands
 
                             if (player == null)
                             	player = client.Player;
+
+							GameLiving.eXPSource xpSource = GameLiving.eXPSource.Other;
+							if (args[1].ToLower() == "xpa")
+							{
+								xpSource = GameLiving.eXPSource.NPC;
+							}
                             
                             long amount = long.Parse(args[2]);
-                            player.GainExperience(amount, false);
+							player.GainExperience(xpSource, amount, false);
                             client.Out.SendMessage("You gave " + player.Name + " " + amount + " experience succesfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                             player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you " + amount + " experience!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                             player.SaveIntoDatabase();

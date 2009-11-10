@@ -1072,7 +1072,7 @@ namespace DOL.GS.Quests.Midgard
 				GiveItem(m_questPlayer, HealerEpicVest);
 			}
 
-			m_questPlayer.GainExperience(1937768448, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
 			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
 		}
 

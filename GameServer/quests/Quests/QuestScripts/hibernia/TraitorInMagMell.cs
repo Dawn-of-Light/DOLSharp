@@ -857,7 +857,7 @@ namespace DOL.GS.Quests.Hibernia
 			else
 				GiveItem(addrir, m_questPlayer, recruitsQuiltedBoots);
 
-			m_questPlayer.GainExperience(40, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 40, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 4, Util.Random(50)), "You recieve {0} as a reward.");
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));

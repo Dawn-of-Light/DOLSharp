@@ -1075,7 +1075,7 @@ namespace DOL.GS.Quests.Hibernia
 				GiveItem(freagus, player, chestOfCoins);
 				GiveItem(freagus, player, scrollHylvian);
 				GiveItem(freagus, player, ticketToTirnaNog);
-				player.GainExperience(7, true);
+				player.GainExperience(GameLiving.eXPSource.Quest, 7, true);
 
 				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 				GameEventMgr.AddHandler(player, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
@@ -1211,7 +1211,7 @@ namespace DOL.GS.Quests.Hibernia
 			RemoveItem(m_questPlayer, ticketToTirnaNog, false);
 
 			// remove the 7 xp you get on quest start for beeing so nice to bombard again.
-			m_questPlayer.GainExperience(-7, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, -7, true);
 
 			if (assistantTimer != null)
 			{
@@ -1232,7 +1232,7 @@ namespace DOL.GS.Quests.Hibernia
 			else
 				GiveItem(addrir, m_questPlayer, recruitsBracer);
 
-			m_questPlayer.GainExperience(26, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 26, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You recieve {0} as a reward.");
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
