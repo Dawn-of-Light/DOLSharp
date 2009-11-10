@@ -134,173 +134,174 @@
     <Compile Include="DataTableHandler.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\Account.cs">
+    <Compile Include="Tables\Account.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\Artifact.cs" />
-    <Compile Include="DOLTables\ArtifactBonus.cs" />
-    <Compile Include="DOLTables\ArtifactXItem.cs" />
-    <Compile Include="DOLTables\BindPoint.cs">
+    <Compile Include="Tables\Artifact.cs" />
+    <Compile Include="Tables\ArtifactBonus.cs" />
+    <Compile Include="Tables\ArtifactXItem.cs" />
+    <Compile Include="Tables\BindPoint.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\BugReport.cs" />
-    <Compile Include="DOLTables\Character.cs">
+    <Compile Include="Tables\BugReport.cs" />
+    <Compile Include="Tables\DOLCharacters.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\ClassXRealmAbility.cs" />
-    <Compile Include="DOLTables\Battleground.cs" />
-    <Compile Include="DOLTables\PvPKillsLog.cs" />
-    <Compile Include="DOLTables\HouseHookpointOffset.cs" />
-    <Compile Include="DOLTables\DBHouseMerchant.cs" />
-    <Compile Include="DOLTables\DBInstanceXElement.cs" />
-    <Compile Include="DOLTables\DBMinotaurRelic.cs" />
-    <Compile Include="DOLTables\KeepCaptureLog.cs" />
-    <Compile Include="DOLTables\Race.cs" />
-    <Compile Include="DOLTables\ServerProperty_Categories.cs" />
-    <Compile Include="DOLTables\StarterEquipment.cs" />
-    <Compile Include="DOLTables\DBBoat.cs" />
-    <Compile Include="DOLTables\DBChampSpec.cs" />
-    <Compile Include="DOLTables\DBCharacterXMasterLevel.cs" />
-    <Compile Include="DOLTables\DBHousepointItem.cs" />
-    <Compile Include="DOLTables\DBHouseCharsXPerms.cs" />
-    <Compile Include="DOLTables\DBHousePermissions.cs" />
-    <Compile Include="DOLTables\DBKeepHookPointItem.cs" />
-    <Compile Include="DOLTables\DBKeepPosition.cs" />
-    <Compile Include="DOLTables\DBNews.cs" />
-    <Compile Include="DOLTables\DBRelic.cs" />
-    <Compile Include="DOLTables\DBStyleXSpell.cs">
+    <Compile Include="Tables\ClassXRealmAbility.cs" />
+    <Compile Include="Tables\Battleground.cs" />
+    <Compile Include="Tables\PvPKillsLog.cs" />
+    <Compile Include="Tables\HouseHookpointOffset.cs" />
+    <Compile Include="Tables\DBHouseMerchant.cs" />
+    <Compile Include="Tables\InstanceXElement.cs" />
+    <Compile Include="Tables\MinotaurRelic.cs" />
+    <Compile Include="Tables\KeepCaptureLog.cs" />
+    <Compile Include="Tables\Race.cs" />
+    <Compile Include="Tables\ServerProperty_Category.cs" />
+    <Compile Include="Tables\StarterEquipment.cs" />
+    <Compile Include="Tables\PlayerBoats.cs" />
+    <Compile Include="Tables\ChampSpec.cs" />
+    <Compile Include="Tables\CharacterXMasterLevel.cs" />
+    <Compile Include="Tables\HousepointItem.cs" />
+    <Compile Include="Tables\DBHouseCharsXPerms.cs" />
+    <Compile Include="Tables\DBHousePermissions.cs">
+    </Compile>
+    <Compile Include="Tables\KeepHookPointItem.cs" />
+    <Compile Include="Tables\KeepPosition.cs" />
+    <Compile Include="Tables\News.cs" />
+    <Compile Include="Tables\Relic.cs" />
+    <Compile Include="Tables\StyleXSpell.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBPlayerXEffect.cs" />
-    <Compile Include="DOLTables\ServerProperty.cs" />
-    <Compile Include="DOLTables\DBAbility.cs">
+    <Compile Include="Tables\PlayerXEffect.cs" />
+    <Compile Include="Tables\ServerProperty.cs" />
+    <Compile Include="Tables\Ability.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBAlliance.cs">
+    <Compile Include="Tables\GuildAlliance.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBArea.cs">
+    <Compile Include="Tables\Area.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBBanedAccount.cs">
+    <Compile Include="Tables\Ban.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBCraftedItem.cs">
+    <Compile Include="Tables\CraftedItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBCraftedXItem.cs">
+    <Compile Include="Tables\CraftedXItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBDoor.cs">
+    <Compile Include="Tables\Door.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBFaction.cs">
+    <Compile Include="Tables\Faction.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBFactionAggroLevel.cs">
+    <Compile Include="Tables\FactionAggroLevel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBguild.cs">
+    <Compile Include="Tables\Guild.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBHouse.cs">
+    <Compile Include="Tables\DBHouse.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBHouseIndoorItem.cs">
+    <Compile Include="Tables\DBHouseIndoorItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBHouseOutdoorItem.cs">
+    <Compile Include="Tables\DBHouseOutdoorItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBKeep.cs">
+    <Compile Include="Tables\Keep.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBKeepComponent.cs">
+    <Compile Include="Tables\KeepComponent.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBKeepHookPoint.cs">
+    <Compile Include="Tables\KeepHookPoint.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBLineXSpell.cs">
+    <Compile Include="Tables\LineXSpell.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBLinkedFaction.cs">
+    <Compile Include="Tables\LinkedFaction.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBLootGenerator.cs">
+    <Compile Include="Tables\LootGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBLootOTD.cs">
+    <Compile Include="Tables\LootOTD.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBLootTemplate.cs">
+    <Compile Include="Tables\LootTemplate.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBMobXLootTemplate.cs">
+    <Compile Include="Tables\MobXLootTemplate.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBNpcTemplate.cs">
+    <Compile Include="Tables\NpcTemplate.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBOTDXCharacter.cs">
+    <Compile Include="Tables\OTDXCharacter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBPath.cs">
+    <Compile Include="Tables\Path.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBPathPoint.cs">
+    <Compile Include="Tables\PathPoints.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBQuest.cs">
+    <Compile Include="Tables\Quest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBRank.cs">
+    <Compile Include="Tables\GuildRank.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBSalvage.cs">
+    <Compile Include="Tables\Salvage.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBSinglePermission.cs">
+    <Compile Include="Tables\SinglePermission.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBSpecialization.cs">
+    <Compile Include="Tables\Specialization.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBSpecXAbility.cs">
+    <Compile Include="Tables\SpecXAbility.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBSpell.cs">
+    <Compile Include="Tables\Spell.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBSpellLine.cs">
+    <Compile Include="Tables\SpellLine.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBStyle.cs">
+    <Compile Include="Tables\Style.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\DBTask.cs">
+    <Compile Include="Tables\Task.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\InventoryItem.cs">
+    <Compile Include="Tables\InventoryItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\ItemTemplate.cs">
+    <Compile Include="Tables\ItemTemplate.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\MerchantItem.cs">
+    <Compile Include="Tables\MerchantItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\Mob.cs">
+    <Compile Include="Tables\Mob.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\NPCEquipment.cs">
+    <Compile Include="Tables\NPCEquipment.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\Teleport.cs" />
-    <Compile Include="DOLTables\WorldObject.cs">
+    <Compile Include="Tables\Teleport.cs" />
+    <Compile Include="Tables\WorldObject.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DOLTables\ZonePoint.cs">
+    <Compile Include="Tables\ZonePoint.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ObjectDatabase.cs">

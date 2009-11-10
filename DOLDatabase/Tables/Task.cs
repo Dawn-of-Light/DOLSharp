@@ -35,7 +35,7 @@ namespace DOL.Database
 	[DataTable(TableName="Task")]
 	public class DBTask : DataObject
 	{
-		protected string	m_charName = "Empty";		
+		protected string	m_characterid = "";		
 		protected DateTime	m_TimeOut = DateTime.Now.AddHours(2);
 		protected String	m_TaskType = null;		// name of classname		
 		protected int		m_TasksDone = 0;
@@ -53,15 +53,14 @@ namespace DOL.Database
 			set	{m_autoSave = value;}
 		}
 
-		//[DataElement(AllowDbNull=false,Unique=true)]
 		[PrimaryKey]
-		public string CharName
+		public string Character_ID
 		{
-			get {return m_charName;}
+			get {return m_characterid;}
 			set	
 			{
 				Dirty = true;
-				m_charName = value;
+				m_characterid = value;
 			}
 		}		
 
