@@ -27,7 +27,7 @@ using System.Reflection;
 [assembly: AssemblyTrademark("Dawn of Light Development Team")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.9.3.1792")]
+[assembly: AssemblyVersion("1.9.3.2000")]
 
 [assembly : AssemblyDelaySign(false)]
 [assembly : AssemblyKeyFile("")]
