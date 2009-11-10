@@ -82,7 +82,7 @@ namespace DOL.GS.Quests
 			m_questPlayer = questingPlayer;
 			
 			DBQuest dbQuest = new DBQuest();
-			dbQuest.CharName = questingPlayer.Name;
+			dbQuest.Character_ID = questingPlayer.InternalID;
 			dbQuest.Name = GetType().FullName;
 			dbQuest.Step = step;
 			m_dbQuest = dbQuest;
@@ -168,7 +168,7 @@ namespace DOL.GS.Quests
 			set	
 			{ 
 				m_questPlayer = value;
-				m_dbQuest.CharName = QuestPlayer.Name;
+				m_dbQuest.Character_ID = QuestPlayer.InternalID;
 			}
 		}
 
