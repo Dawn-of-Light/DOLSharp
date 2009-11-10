@@ -957,7 +957,7 @@ namespace DOL.GS.ServerRules
 							xpReward = (long)(xpReward * 0.25);
 
 						//XP Rate is handled in GainExperience
-						living.GainExperience(xpReward, campBonus, groupExp, outpostXP, true, true, true);
+						living.GainExperience(GameLiving.eXPSource.NPC, xpReward, campBonus, groupExp, outpostXP, true, true, true);
 					}
 				}
 			}
@@ -1080,8 +1080,14 @@ namespace DOL.GS.ServerRules
 					if (xpReward > expCap)
 						xpReward = expCap;
 
+					GameLiving.eXPSource xpSource = GameLiving.eXPSource.NPC;
+					if (killedLiving is GamePlayer)
+					{
+						xpSource = GameLiving.eXPSource.Player;
+					}
+
 					if (xpReward > 0)
-						living.GainExperience(xpReward);
+						living.GainExperience(xpSource, xpReward);
 
 				}
 			}
@@ -1292,7 +1298,7 @@ namespace DOL.GS.ServerRules
 					}
 					xpReward += outpostXP;
 
-					living.GainExperience(xpReward);
+					living.GainExperience(GameLiving.eXPSource.Player, xpReward);
 
 					//gold
                     if (living is GamePlayer)

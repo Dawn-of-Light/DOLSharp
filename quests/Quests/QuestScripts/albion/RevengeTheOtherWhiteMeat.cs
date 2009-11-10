@@ -480,7 +480,7 @@ namespace DOL.GS.Quests.Albion
 						player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0x00, 0x00, 0x00, 0x00, eDialogType.Ok, true, "You've succeeded in killing Wilbur. In the \ndistance you hear the angry voice of \na pig herder. Make your escape!");
 						Step = 3;
 
-						player.GainExperience(player.ExperienceForNextLevel / 25, true);
+						player.GainExperience(GameLiving.eXPSource.Quest, player.ExperienceForNextLevel / 25, true);
 						
 						GameNPC pigHerderWyatt = new GameNPC();
 						pigHerderWyatt.Model = 39;
@@ -557,7 +557,7 @@ namespace DOL.GS.Quests.Albion
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...
-			m_questPlayer.GainExperience(m_questPlayer.ExperienceForNextLevel / 25, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, m_questPlayer.ExperienceForNextLevel / 25, true);
 			long money = Money.GetMoney(0, 0, 0, 0, m_questPlayer.Level * 10 + 30);
 			m_questPlayer.AddMoney(money, "You are awarded " + Money.GetString(money) + "!");
 		}

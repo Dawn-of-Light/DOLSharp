@@ -215,7 +215,7 @@ namespace DOL.GS.Quests
 		{
 			base.FinishQuest();
 			QuestPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
-			QuestPlayer.GainExperience(Rewards.Experience);
+			QuestPlayer.GainExperience(GameLiving.eXPSource.Quest, Rewards.Experience);
             //k109: Could not get ReceiveMoney to work...trying AddMoney...
             QuestPlayer.AddMoney(Rewards.Money);
             //QuestPlayer.ReceiveMoney(QuestGiver, Rewards.Money);

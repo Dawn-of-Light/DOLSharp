@@ -654,7 +654,7 @@ namespace DOL.GS.Quests.Albion
 
 			GiveItem(godelevaDowden, m_questPlayer, reedBracer);
 
-			m_questPlayer.GainExperience(40 + (m_questPlayer.Level - 1) * 4, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 40 + (m_questPlayer.Level - 1) * 4, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 7, Util.Random(50)), "You are awarded 7 silver and some copper!");
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));

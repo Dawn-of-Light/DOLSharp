@@ -523,7 +523,7 @@ namespace DOL.GS.Quests.Albion
 							elvarTambor.SayTo(player, "If you are traveling back that way, would you mind delivering this letter to Ydenia for me?  I would be ever so appreciative.");
 							if (quest.Step == 2)
 							{
-								player.GainExperience(10, true);
+								player.GainExperience(GameLiving.eXPSource.Quest, 10, true);
 								player.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You are awarded 2 silver and some copper!");
 
 								// give letter                
@@ -706,7 +706,7 @@ namespace DOL.GS.Quests.Albion
 
 			GiveItem(ydeniaPhilpott, m_questPlayer, silverRingOfHealth);
 
-			m_questPlayer.GainExperience(20 + (m_questPlayer.Level - 1) * 5, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 20 + (m_questPlayer.Level - 1) * 5, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 5, Util.Random(50)), "You are awarded 5 silver and some copper!");
 		}
 	}

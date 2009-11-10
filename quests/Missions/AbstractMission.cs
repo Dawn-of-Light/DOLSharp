@@ -207,7 +207,7 @@ namespace DOL.GS.Quests
 						continue;
 				}
 				if (RewardXP > 0)
-					player.GainExperience(RewardXP);
+					player.GainExperience(GameLiving.eXPSource.Mission, RewardXP);
 
 				if (RewardMoney > 0)
 					player.AddMoney(RewardMoney, "You recieve {0} for completing your task.");

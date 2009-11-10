@@ -1774,7 +1774,7 @@ namespace DOL.GS.Quests.Hibernia
             base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
             //k109: xp and money Rewards...
-            m_questPlayer.GainExperience(2, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 2, true);
             m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), LanguageMgr.GetTranslation(m_questPlayer.Client, "ChildsPlay.FinishQuest.Text1"));
         }
     }

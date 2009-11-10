@@ -1108,7 +1108,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 				GiveItem(dalikor, m_questPlayer, recruitsPants);
 
-			m_questPlayer.GainExperience(240, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 240, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 5, Util.Random(50)), "You recieve {0} as a reward.");
 
 		}
