@@ -1679,7 +1679,7 @@ namespace DOL.GS.Quests.Albion
 
 			RemoveItem(trevian, m_questPlayer, treviansHoodedCloak);
 
-			m_questPlayer.GainExperience(500000, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 500000, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, Util.Random(10) + 40, Util.Random(50)), "You recieve {0} as a reward for helping Trevian.");
 
 		}

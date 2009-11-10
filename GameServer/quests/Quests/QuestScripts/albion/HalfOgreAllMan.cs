@@ -626,8 +626,8 @@ namespace DOL.GS.Quests.Albion
 
 								case "half ogre":
 									madissair.SayTo(player, "I have a friend in Camelot who is training to be a spellcrafter. Occasionally, he brings me a prototype of something that he's working on.  When I told him about my dilemma, he gave me a [magical orb] to help me decide what to do.");
-									
-									player.GainExperience((long)((player.ExperienceForNextLevel / (player.Level * 9)) * 1.7), true); //202 xp
+
+									player.GainExperience(GameLiving.eXPSource.Quest, (long)((player.ExperienceForNextLevel / (player.Level * 9)) * 1.7), true); //202 xp
 
 									quest.Step = 20;
 									break;
@@ -649,8 +649,8 @@ namespace DOL.GS.Quests.Albion
 
 								case "love":
 									madissair.SayTo(player, "I have a friend in Camelot who is training to be a spellcrafter. Occasionally, he brings me a prototype of something that he's working on.  When I told him about my dilemma, he gave me a [magical orb] to help me decide what to do.");
-									
-									player.GainExperience((long)((player.ExperienceForNextLevel / (player.Level * 9)) * 1.35), true); //162 xp
+
+									player.GainExperience(GameLiving.eXPSource.Quest, (long)((player.ExperienceForNextLevel / (player.Level * 9)) * 1.35), true); //162 xp
 
 									quest.Step = 20;
 									break;
@@ -667,8 +667,8 @@ namespace DOL.GS.Quests.Albion
 
 								case "half ogre":
 									madissair.SayTo(player, "I have a friend in Camelot who is training to be a spellcrafter. Occasionally, he brings me a prototype of something that he's working on.  When I told him about my dilemma, he gave me a [magical orb] to help me decide what to do.");
-									
-									player.GainExperience((long)((player.ExperienceForNextLevel / (player.Level * 9)) * 1.7), true); //202 xp
+
+									player.GainExperience(GameLiving.eXPSource.Quest, (long)((player.ExperienceForNextLevel / (player.Level * 9)) * 1.7), true); //202 xp
 
 									quest.Step = 20;
 									break;
@@ -691,8 +691,8 @@ namespace DOL.GS.Quests.Albion
 
 								case "love":
 									madissair.SayTo(player, "I have a friend in Camelot who is training to be a spellcrafter. Occasionally, he brings me a prototype of something that he's working on.  When I told him about my dilemma, he gave me a [magical orb] to help me decide what to do.");
-									
-									player.GainExperience((long)(player.ExperienceForNextLevel / (player.Level * 9)), true); //121 xp
+
+									player.GainExperience(GameLiving.eXPSource.Quest, (long)(player.ExperienceForNextLevel / (player.Level * 9)), true); //121 xp
 
 									quest.Step = 20;
 									break;

@@ -344,7 +344,18 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public string Name
 		{
-			get	{ return DBKeep.Name; }
+			get	
+			{
+				string name = DBKeep.Name;
+
+				if (ServerProperties.Properties.ENABLE_DEBUG)
+				{
+					name += string.Format(" KID: {0}", KeepID);
+				}
+
+				return name;
+
+			}
 			set	{ DBKeep.Name = value; }
 		}
 

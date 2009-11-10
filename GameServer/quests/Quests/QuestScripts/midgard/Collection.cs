@@ -806,7 +806,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 				GiveItem(dalikor, m_questPlayer, recruitsSleeves);
 
-			m_questPlayer.GainExperience(240, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 240, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 6, Util.Random(50)), "You recieve {0} as a reward.");
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));

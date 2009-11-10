@@ -271,14 +271,15 @@ namespace DOL.GS
 			delve.Add("Magical Bonuses:");
 
 			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.MinStat; bonusID <= ArtifactBonus.ID.MaxStat; ++bonusID)
-				DelveMagicalBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID),
-					m_levelRequirements[(int)bonusID]);
+				DelveMagicalBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID), m_levelRequirements[(int)bonusID]);
+
+			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.MinStat; bonusID <= ArtifactBonus.ID.MaxStat; ++bonusID)
+				DelveFocusBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID), m_levelRequirements[(int)bonusID]);
 
 			delve.Add("");
 
 			for (ArtifactBonus.ID bonusID = ArtifactBonus.ID.MinStat; bonusID <= ArtifactBonus.ID.MaxStat; ++bonusID)
-				DelveBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID),
-					m_levelRequirements[(int)bonusID]);
+				DelveBonus(delve, GetBonusAmount(bonusID), GetBonusType(bonusID), m_levelRequirements[(int)bonusID]);
 
 			// Spells & Procs
 
@@ -323,38 +324,54 @@ namespace DOL.GS
 		/// <param name="bonusAmount"></param>
 		/// <param name="bonusType"></param>
 		/// <param name="levelRequirement"></param>
-		protected virtual void DelveMagicalBonus(List<String> delve, int bonusAmount, int bonusType,
-			int levelRequirement)
+		protected virtual void DelveMagicalBonus(List<String> delve, int bonusAmount, int bonusType, int levelRequirement)
 		{
 			String levelTag = (levelRequirement > 0) 
 				? String.Format("[L{0}]: ", levelRequirement) 
 				: "";
 
 			if (IsStatBonus(bonusType) || IsSkillBonus(bonusType))
+			{
 				delve.Add(String.Format("- {0}{1}: {2} pts",
 					levelTag,
 					SkillBase.GetPropertyName((eProperty)bonusType),
 					bonusAmount.ToString("+0;-0;0")));
+			}
 			else if (IsResistBonus(bonusType))
+			{
 				delve.Add(String.Format("- {0}{1}: {2}%",
 					levelTag,
 					SkillBase.GetPropertyName((eProperty)bonusType),
 					bonusAmount.ToString("+0;-0;0")));
+			}
 			else if (bonusType == (int)eProperty.PowerPool)
+			{
 				delve.Add(String.Format("- {0}{1}: {2}% of power pool.",
 					levelTag,
 					SkillBase.GetPropertyName((eProperty)bonusType),
 					bonusAmount.ToString("+0;-0;0")));
-			else if (IsFocusBonus(bonusType))
-			{
-				delve.Add(String.Format("- {0}{1}: {2} lvls",
-					levelTag,
-					SkillBase.GetPropertyName((eProperty)bonusType),
-					bonusAmount));
 			}
-			else if (bonusType > 0)
+		}
+
+
+		protected virtual void DelveFocusBonus(List<String> delve, int bonusAmount, int bonusType, int levelRequirement)
+		{
+			String levelTag = (levelRequirement > 0)
+				? String.Format("[L{0}]: ", levelRequirement)
+				: "";
+
+			bool addedFocusDescription = false;
+
+			if (IsFocusBonus(bonusType))
 			{
-				delve.Add(String.Format("- {0}{1}: {2}",
+				if (!addedFocusDescription)
+				{
+					delve.Add("");
+					delve.Add("Focus Bonuses:");
+					addedFocusDescription = true;
+				}
+
+				delve.Add(String.Format("- {0}{1}: {2} lvls",
 					levelTag,
 					SkillBase.GetPropertyName((eProperty)bonusType),
 					bonusAmount));
