@@ -1340,7 +1340,7 @@ namespace DOL.GS
     }
     #endregion
 
-    #region Gamestorm
+    #region GameStorm
     public class GameStorm : GameMovingObject
     {
         public GameStorm()

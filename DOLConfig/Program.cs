@@ -111,12 +111,20 @@ namespace DOLConfig
 		public static void LoadProperties()
 		{
 			// open data connection
-			DataConnection dc = new DataConnection(Config.DBType, Config.DBConnectionString);
-			if (!dc.IsSQLConnection)
+			ServerProperty[] sp;
+			ServerPropertyCategory[] sc;
+			try
+			{
+				DataConnection dc = new DataConnection(Config.DBType, Config.DBConnectionString);
+				ObjectDatabase db = new ObjectDatabase(dc);
+				sp = (ServerProperty[])db.SelectAllObjects(typeof(ServerProperty));
+				sc = (ServerPropertyCategory[])db.SelectAllObjects(typeof(ServerPropertyCategory));
+			}
+			catch
+			{
+				MainForm.toolStripStatusLabel1.Text="Unable to connect/read SQL database !";
 				return;
-			ObjectDatabase db = new ObjectDatabase(dc);
-			ServerProperty[] sp = (ServerProperty[])db.SelectAllObjects(typeof(ServerProperty));
-			ServerPropertyCategory[] sc = (ServerPropertyCategory[])db.SelectAllObjects(typeof(ServerPropertyCategory));
+			}
 			
 			// bufferisation of the datas
 			spList.Clear();
@@ -127,27 +135,44 @@ namespace DOLConfig
 				scList.Add(current);
 			
 			// creation of the nodemap
-			foreach (var current in scList)
+			foreach(var current in scList)
 			{
 				if (string.IsNullOrEmpty(current.ParentCategory) && !string.IsNullOrEmpty(current.BaseCategory))
-				{
-					MainForm.spTvCat.Nodes.Add(current.DisplayName);
-					MainForm.spTvCat.Nodes[MainForm.spTvCat.Nodes.Count -1].ForeColor = Color.Green;
-				}
+					CreateMap(MainForm.spTvCat.Nodes, current.BaseCategory, current.ObjectId);
 			}
 			
-			// assign the sp into the nodemap
+			// filling the nodemap
+			//FillMap();
+			
+			// how many SP we have ? 1.6millions ? :D
+			//MainForm.toolStripStatusLabel1.Text ="Loaded: " + spList.Count() + " server properties."; //result.Count() + " properties on " + (from i in sp select i).Count() + " total.";
+		}
+
+		static void CreateMap(TreeNodeCollection nodes, string parent, string id)
+		{
+			// create root node
+			foreach (var current in scList)
+			{
+				if (current.ParentCategory == parent && current.ObjectId != id)
+				{
+					nodes.Add(current.BaseCategory);
+					nodes[nodes.Count - 1].ForeColor = Color.Green;
+					CreateMap(nodes, current.ParentCategory, current.ObjectId);
+				}
+			}
+		}
+		
+		static void FillMap()
+		{
+			// attach sps to root node
 			foreach (var current in spList)
 			{
 				if (string.IsNullOrEmpty(current.Category))
 				{
 					MainForm.spTvCat.Nodes.Add(current.Key);
-					MainForm.spTvCat.Nodes[MainForm.spTvCat.Nodes.Count -1].ForeColor = Color.Blue;
+					MainForm.spTvCat.Nodes[MainForm.spTvCat.Nodes.Count - 1].ForeColor = Color.Blue;
 				}
 			}
-			
-			// how many SP we have ? 1.6millions ? :D
-			MainForm.toolStripStatusLabel1.Text ="Loaded: " + spList.Count() + " server properties."; //result.Count() + " properties on " + (from i in sp select i).Count() + " total.";
 		}
 		
 		public static void SelectProperty(string spkey)
@@ -157,7 +182,7 @@ namespace DOLConfig
 			MainForm.spLblKey.Text = target.Key.ToUpper();
 			MainForm.spLblDesc.Text = target.Description;
 			MainForm.spLblDefault.Text = target.DefaultValue;
-			MainForm.spCbValue.Text = target.Value;			
+			MainForm.spCbValue.Text = target.Value;
 		}
 	}
 }
