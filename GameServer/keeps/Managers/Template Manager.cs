@@ -842,7 +842,7 @@ namespace DOL.GS.Keeps
 			if (guard is GuardLord || guard is MissionMaster)
 			{
 				guard.BlockChance = 20;
-				guard.ParryChance = 20;
+				guard.ParryChance = 15;
 			}
 			else if (guard is GuardStealther)
 			{
@@ -855,16 +855,19 @@ namespace DOL.GS.Keeps
 			}
 			else if (guard is GuardHealer)
 			{
-				guard.BlockChance = 10;
+				guard.BlockChance = 5;
 			}
 			else if (guard is GuardArcher)
 			{
 				if (guard.Realm == eRealm.Albion)
 				{
 					guard.BlockChance = 10;
+					guard.EvadeChance = 10;
 				}
-
-				guard.EvadeChance = 15;
+				else
+				{
+					guard.EvadeChance = 15;
+				}
 			}
 		}
 
