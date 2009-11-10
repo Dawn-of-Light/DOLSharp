@@ -994,7 +994,7 @@ namespace DOL.GS.Quests.Midgard
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...              
-			m_questPlayer.GainExperience(507, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 507, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 7, Util.Random(50)), "You recieve {0} as a reward.");
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));

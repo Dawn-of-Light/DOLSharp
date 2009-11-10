@@ -660,7 +660,7 @@ namespace DOL.GS.Quests.Albion
             if (dye != null)
                 GiveItem(arleighPenn, m_questPlayer, dye);
 
-            m_questPlayer.GainExperience(2560, true);
+			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 2560, true);
             m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 30 + Util.Random(50)), "You recieve {0} for your service.");
 
         }
