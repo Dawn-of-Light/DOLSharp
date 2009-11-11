@@ -50,9 +50,18 @@ namespace DOL.GS
 			{
 				lock (QuestListToGive.SyncRoot)
 				{
-					foreach (ArtifactQuest quest in player.QuestList)
-						if (HasQuest(quest.GetType()) != null && quest.ReceiveItem(player, this, item))
-							return true;
+					foreach (AbstractQuest quest in player.QuestList)
+					{
+						if (quest is ArtifactTurnInQuest)
+						{
+							ArtifactTurnInQuest aquest = quest as ArtifactTurnInQuest;
+
+							if (HasQuest(aquest.GetType()) != null && aquest.ReceiveItem(player, this, item))
+							{
+								return true;
+							}
+						}
+					}
 				}
 			}
 
