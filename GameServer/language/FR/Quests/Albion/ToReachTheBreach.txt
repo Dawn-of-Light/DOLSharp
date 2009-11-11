@@ -1,9 +1,19 @@
-Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text1:	Bon, allez maintenant allez là-bas et finissez votre travail!
-Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text2:	Echec de la Quête {0}. Vous pouvez recommencer de nouveau si vous voulez.
-Alb.ToReachTheBreach.Conclusion.Text1:			Vous avez trouvé le chemin dans la  Demon's Breach, eh?  La marque c'est bien l'endroit, {0}, car votre assistance peut être nécessaire làbas un jour.  Nous ne pouvons pas nous permettre de permettre à des hordes de démons, Hiberniens or Midgardiens se rependre sur nos terrains.
+ï»¿Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text1:	Bon, allez maintenant allez lÃ -bas et finissez votre travail!
+
+Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text2:	Echec de la QuÃªte {0}. Vous pouvez recommencer de nouveau si vous voulez.
+
+Alb.ToReachTheBreach.Conclusion.Text1:			Vous avez trouvÃ© le chemin dans la  Demon's Breach, eh?  La marque c'est bien l'endroit, {0}, car votre assistance peut Ãªtre nÃ©cessaire lÃ bas un jour.  Nous ne pouvons pas nous permettre de permettre Ã  des hordes de dÃ©mons, Hiberniens or Midgardiens se rependre sur nos terrains.
+
 Alb.ToReachTheBreach.Init.Text1:			Recruit's Intelligent Belt
+
 Alb.ToReachTheBreach.Init.Text2:			Recruit's Mighty Belt
+
 Alb.ToReachTheBreach.Init.Text3:			Recruit's Pious Belt
-Alb.ToReachTheBreach.Init.Text4:			Trouvez l'entrée de Demon's Breach
-Alb.ToReachTheBreach.Story:				Sa fait longtemps que nous savons que des créatures diaboliques se cachent ci-dessous.  Darkness Falls n'est pas le seul exemple.  Dernièrement, des manifestation plus serieuse sont remonter a la surface.  Quand les Directeurs de l'Académie ont déplacé le portail de Shrouded Isles c'est arrivé à Cotswold, ils ont involontairement créé une déchirure dans l'étoffe de la réalité.  Cette déchirure a permis aux griffes du Mal d'emprunter une voie vers la surface!\n\nHeureusement, cela a été remarqué immédiatement par une Sorcière impliquée dans le projet,et le trou a été bouché, en refusant l'entrée des démons dans notre monde.  Jusqu'à ce qu'une solution permanente ne soit trouvée, il y a l'inquiétude qu'ils amasseront leurs forces dans un effort de s'évader.  Certains de nos citadins l'ont pris sur eux pour penetrer à l'intérieur afin de réduire le nombre de démons.  Alarmant, il y a des rapports de rencontre avec nos ennemis de Hibernia et de Midgard dedans, aussi.\n\nVous devez vous familiariser avec l'entrée de Demon's Breach, pour que vous sachiez où aller garder les forces de mal, Hibernia et Midgard en plus.\n\n
-Alb.ToReachTheBreach.Summary:				Trouver l'entrée du Demon's Breach. Retourner voir Lady Grynoch dès que vous avez visité la Breach.
+
+Alb.ToReachTheBreach.Init.Text4:			Trouvez l'entrÃ©e de Demon's Breach
+
+Alb.ToReachTheBreach.Story:				Sa fait longtemps que nous savons que des crÃ©atures diaboliques se cachent ci-dessous.  Darkness Falls n'est pas le seul exemple.  DerniÃ¨rement, des manifestation plus serieuse sont remonter a la surface.  Quand les Directeurs de l'AcadÃ©mie ont dÃ©placÃ© le portail de Shrouded Isles c'est arrivÃ© Ã  Cotswold, ils ont involontairement crÃ©Ã© une dÃ©chirure dans l'Ã©toffe de la rÃ©alitÃ©.  Cette dÃ©chirure a permis aux griffes du Mal d'emprunter une voie vers la surface!\n\nHeureusement, cela a Ã©tÃ© remarquÃ© immÃ©diatement par une SorciÃ¨re impliquÃ©e dans le projet,et le trou a Ã©tÃ© bouchÃ©, en refusant l'entrÃ©e des dÃ©mons dans notre monde.  Jusqu'Ã  ce qu'une solution permanente ne soit trouvÃ©e, il y a l'inquiÃ©tude qu'ils amasseront leurs forces dans un effort de s'Ã©vader.  Certains de nos citadins l'ont pris sur eux pour penetrer Ã  l'intÃ©rieur afin de rÃ©duire le nombre de dÃ©mons.  Alarmant, il y a des rapports de rencontre avec nos ennemis de Hibernia et de Midgard dedans, aussi.\n\nVous devez vous familiariser avec l'entrÃ©e de Demon's Breach, pour que vous sachiez oÃ¹ aller garder les forces de mal, Hibernia et Midgard en plus.\n\n
+
+Alb.ToReachTheBreach.Summary:				Trouver l'entrÃ©e du Demon's Breach. Retourner voir Lady Grynoch dÃ¨s que vous avez visitÃ© la Breach.
+
+

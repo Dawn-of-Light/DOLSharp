@@ -1,8 +1,17 @@
+ï»¿
 
 # KING THRONE NPC
-CLWeaponNPC.ReceiveItem.RespecCL:				Merci, j'ai recu une possibilité de re-spécialisation des compétences de champion. Pour l'utiliser : /respec cl.
-KingNPC.WhisperReceive.IsNowChampion:			Vous êtes maintenant un Champion du royaume !
-KingNPC.WhisperReceive.AlreadyChampion:			Vous êtes déjà un Champion du royaume !
+
+CLWeaponNPC.ReceiveItem.RespecCL:				Merci, j'ai recu une possibilitÃ© de re-spÃ©cialisation des compÃ©tences de champion. Pour l'utiliser : /respec cl.
+
+KingNPC.WhisperReceive.IsNowChampion:			Vous Ãªtes maintenant un Champion du royaume !
+
+KingNPC.WhisperReceive.AlreadyChampion:			Vous Ãªtes dÃ©jÃ  un Champion du royaume !
+
 KingNPC.WhisperReceive.AskForChampion:			Souaitez-vous faire partie des [Champions] de notre royaume?
-ThroneTeleporterNPC.Interact.AskForAudience		{0} dit, "Bonjour, citoyen. Avez-vous besoin d'entrer dans la salle du trône ?"\n\nVotre réponse : [{1}] ou [{2}]
-ThroneTeleporterNPC.Interact.AskForExit			{0} dit, Désirez-vous quitter la salle du trône et retourner à [{0}]?
+
+ThroneTeleporterNPC.Interact.AskForAudience		{0} dit, "Bonjour, citoyen. Avez-vous besoin d'entrer dans la salle du trÃ´ne ?"\n\nVotre rÃ©ponse : [{1}] ou [{2}]
+
+ThroneTeleporterNPC.Interact.AskForExit			{0} dit, DÃ©sirez-vous quitter la salle du trÃ´ne et retourner Ã  [{0}]?
+
+

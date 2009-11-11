@@ -1,12 +1,25 @@
-Hib.MagicalBacklash.CheckPlayerAbortQuest.Text1:	Good, now go out there and finish your work!
+﻿Hib.MagicalBacklash.CheckPlayerAbortQuest.Text1:	Good, now go out there and finish your work!
+
 Hib.MagicalBacklash.CheckPlayerAbortQuest.Text2:	Aborting Quest {0}. You can start over again if you want.
+
 Hib.MagicalBacklash.Conclusion.Text1:			Thank you.  I couldn't bear the thought of going near that place.  Your much braver then I'll ever be.  You should go speak with some of the other locals.  I'm sure they could use your help.
+
 Hib.MagicalBacklash.Init.Text1:				Recruit's Short Sword
+
 Hib.MagicalBacklash.Init.Text2:				Recruit's Dirk
+
 Hib.MagicalBacklash.Init.Text3:				Recruit's Club
+
 Hib.MagicalBacklash.Init.Text4:				Recruit's Staff
+
 Hib.MagicalBacklash.Init.Text5:				Orchard Nipper Wing
+
 Hib.MagicalBacklash.Init.Text6:				Kill orchard nippers for wings.
+
 Hib.MagicalBacklash.Notify.Text1:			orchard nipper
+
 Hib.MagicalBacklash.Story:				Have you come in for safety? Living in a land full of magic makes you more aware of your surroundings, but that same magic has caused us problems. Mag Mell isn't the peaceful village it once was. We're plagued with one problem after the next, some of which were cause by carelessness.\n\nOnce, while toying with unrefined magic, those careless Shar tore a hole in the Veil leading into Hibernia. The overload of magical energy turned many of our creatures mad. Little was left untainted by this magical backlash. Even the magic of the burrows and mounds shifted.\n\nThey say the Cursed Burrow dwellers are venturing beyond their domain. Taskmaster Sevinia, our local dungeon scholar, asked me to slay some of the orchard nippers near the lair. I'm sorry to say I'll not go near it. The Cursed Burrow terrifies me, but I can't back out of a community duty, and I can't have her, Fagan, or anyone else thinking I'm gutless or that I'm shirking responsibility.\n\n
+
 Hib.MagicalBacklash.Summary:				Find the Cursed Burrow and slay orchard nippers near the entrance until you receive a set of wings. Return to Josson one you collect a set of Orchard Nipper wings to show proof that you completed the task.
+
+

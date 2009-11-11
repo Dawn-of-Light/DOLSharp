@@ -1,141 +1,283 @@
-# General Sentences
+Ôªø# General Sentences
+
 GMCommands.Error:							Erreur: {0}
 
 
+
+
+
 # /addbind Command
+
 GMCommands.AddBind.Description:				Ajout d'un point de bind
+
 GMCommands.AddBind.Usage:					/addbind [radius=750]
-GMCommands.AddBind.BindPointAdded:			Point de Bind ajoutÈ en: X={0}, Y={1}, Z={2}, Radius={3}, Region={4}
+
+GMCommands.AddBind.BindPointAdded:			Point de Bind ajout√© en: X={0}, Y={1}, Z={2}, Radius={3}, Region={4}
+
+
+
 
 
 # /addhookpoint Command
+
 GMCommands.HookPoint.Description:			Add hookpoint on a keep component.
+
 GMCommands.HookPoint.Usage:					'/addhookpoint <skin> <id>' to add a hookpoint (select the GameKeepComponent)
+
 GMCommands.HookPoint.NoGKCTarget:			You are not targeting a GameKeepComponent!
 
 
+
+
+
 # /annunce Command
-GMCommands.Announce.Description:			Envoyer un Message ‡ tous les joueurs connectÈs
+
+GMCommands.Announce.Description:			Envoyer un Message √† tous les joueurs connect√©s
+
 GMCommands.Announce.Usage:					/announce <log|window|send|center|confirm> <message>
+
 GMCommands.Announce.LogAnnounce:			[Announce]: {0}
+
 GMCommands.Announce.WindowAnnounce:			Annonce de {0}
+
 GMCommands.Announce.SendAnnounce:			[Announce]: {0}
+
 GMCommands.Announce.ConfirmAnnounce:		Annonce dem {0}: {1}
 
 
+
+
+
 # /area Command
-GMCommands.Area.Description:				CrÈation d'un "arÈa"
+
+GMCommands.Area.Description:				Cr√©ation d'un "ar√©a"
+
 GMCommands.Area.Usage.Create:				/area create <name> <type(circle|square)> <radius> <broadcast(y|n)> <soundid>
+
 GMCommands.Area.AreaCreated:				Area created - Description: {0}, X={1}, Y={2}, Z={3}, Radius={4}, Broadcast={5}, Sound={6}.
 
 
+
+
+
 # GMCommands
+
 # /ban
+
 GMCommands.Ban.Description:					Utilisation de la commande /ban: 
+
 GMCommands.Ban.Usage.IP:					'/ban ip <reason>' Ban l'addresse IP de la cible
+
 GMCommands.Ban.Usage.Account:				'/ban account <reason>' Ban le compte de la cible
+
 GMCommands.Ban.Usage.Both:					'/ban both <reason>' Ban le compte et l'ip
-Scripts.GM.Ban.AAlreadyBanned:				Ce compte a dÈj‡ ÈtÈ banni.
-Scripts.GM.Ban.ABanned:						Le compte "{0}" a ÈtÈ banni.
-Scripts.GM.Ban.BAlreadyBanned:				Ce compte et cette IP ont dÈj‡ ÈtÈ bannis.
-Scripts.GM.Ban.BBanned:						Le compte "{0}" et l'adresse IP "{1}" ont ÈtÈ bannis.
-Scripts.GM.Ban.IAlreadyBanned:				Cette adresse IP a dÈj‡ ÈtÈ bannie.
-Scripts.GM.Ban.IBanned:						L'adresse IP "{0}" a ÈtÈ bannie.
-Scripts.GM.Ban.MustTarget:					Vous devez sÈlectionner une cible !
+
+Scripts.GM.Ban.AAlreadyBanned:				Ce compte a d√©j√† √©t√© banni.
+
+Scripts.GM.Ban.ABanned:						Le compte "{0}" a √©t√© banni.
+
+Scripts.GM.Ban.BAlreadyBanned:				Ce compte et cette IP ont d√©j√† √©t√© bannis.
+
+Scripts.GM.Ban.BBanned:						Le compte "{0}" et l'adresse IP "{1}" ont √©t√© bannis.
+
+Scripts.GM.Ban.IAlreadyBanned:				Cette adresse IP a d√©j√† √©t√© bannie.
+
+Scripts.GM.Ban.IBanned:						L'adresse IP "{0}" a √©t√© bannie.
+
+Scripts.GM.Ban.MustTarget:					Vous devez s√©lectionner une cible !
+
+
+
 
 
 # /cast Command
+
 GMCommands.Cast.Description:				Lance l'effet visuel d'un sort
+
 GMCommands.Cast.Usage:						'/cast <id> <effect|cast|spell>' Cast the Spell/VisualEffect associated with <SpellID>
+
 GMCommands.Cast.InvalidId:					ID invalide.
+
 GMCommands.Cast.IdNegative:					L'ID ne peut etre negative.
+
 GMCommands.Cast.EffectExecuted:				Effect animation executed. Id={0}
+
 GMCommands.Cast.CastExecuted:				Cast animation executed. Id={0}
+
 GMCommands.Cast.Spell.CastOnLiving:			You cast {0} on {1}.
+
 GMCommands.Cast.Spell.CastOnSelf:			You cast {0} on self.
+
 GMCommands.Cast.Spell.GMCastOnYou:			{0} {1} cast {2} on you.
+
 GMCommands.Cast.Spell.Inexistent:			Spell inexistent. Id={0}
 
 
+
+
+
 # /crafting Command
+
 GMCommands.Crafting.Description:			Change the crafting level of your target
+
 GMCommands.Crafting.Usage.Add:				'/crafting add <craftingSkillID> <startLevel>' To add a new crating skill to your target
+
 GMCommands.Crafting.Usage.Change:			'/crafting change <craftingSkillID> <amount>' To increase or decrease the crafting skill level of your target
+
 GMCommands.Crafting.Usage.List:				'/crafting list' To have the list of all crafting skill with their id
+
 GMCommands.Crafting.SkillDescription:		Crafting Skill ID description:
+
 GMCommands.Crafting.NoPlayerTarget:			Vous devez selectionner un joueur.
+
 GMCommands.Crafting.InvalidSkill:			You must enter a valid crafting skill id, type /crafting for command overview.
+
 GMCommands.Crafting.SkillAdded:				Crafting skill {0} correctly added.
+
 GMCommands.Crafting.AlreadyHaveSkill:		{0} already have the crafting skill {1}.
+
 GMCommands.Crafting.NotHaveSkillAddIt:		{0} does not have the crafting skill {1}, add it first.
+
 GMCommands.Crafting.SkillChanged:			Crafting skill {1} correctly changed.
+
 GMCommands.Crafting.NowHasSkillPoints:		{0} now has {} in {}.
 
 
+
+
+
 # /debug Command
+
 GMCommands.Debug.Description:				Active ou desactive le mode Debug
+
 GMCommands.Debug.Usage:						/debug <on/off>
+
 GMCommands.Debug.ModeON:					Debug mode ON
+
 GMCommands.Debug.ModeOFF:					Debug mode OFF
 
 
+
+
+
 # ]jump Command
-GMCommands.DebugJump.Description:			Teleporte au coordonnÈes specifiÈes.
+
+GMCommands.DebugJump.Description:			Teleporte au coordonn√©es specifi√©es.
+
 GMCommands.DebugJump.Usage:					']jump <zoneID> <locX> <locY> <locZ> <heading>' Autoused for *jump in debug mode
+
 GMCommands.DebugJump.InvalidZoneID:			Zone Id: {0} non valide.
+
 GMCommands.DebugJump.UnknownZoneID:			Zone Id: {0} Inconnue.
+
 GMCommands.DebugJump.UnknownRegion:			Region({0}) Inconnue.
-GMCommands.DebugJump.RegionNotSuppByClient:	La region ({0}) n'est pas supportÈe par votre client.
+
+GMCommands.DebugJump.RegionNotSuppByClient:	La region ({0}) n'est pas support√©e par votre client.
+
+
 
 # /Door Command
+
 GMCommands.door.Description:				Modfication des portes
+
 GMCommands.door.Name:					'/door name <texte>'change le nom de la porte.
+
 GMCommands.door.Level:					'/door level <valeur>'change le level de la porte. 
-GMCommands.door.Realm:					'/door realm <valeur>'change le realm de la porte. ! Attention si realm 0 la porte ne s'ouvre pas tant qu'elle est pas tuÈe
+
+GMCommands.door.Realm:					'/door realm <valeur>'change le realm de la porte. ! Attention si realm 0 la porte ne s'ouvre pas tant qu'elle est pas tu√©e
+
 GMCommands.door.Guild:					'/door guild <texte>'change la guilde de la porte.
+
 GMCommands.door.Info:					'/door info' donne les info de la porte.
+
 GMCommands.door.Heal:					'/door heal' redonne le maximum de vie a la porte.
+
 GMCommands.door.Kill:					'/door kill' "tue la porte".
+
 GMCommands.door.Locked:					'/door locked 'verouille completement la porte.
+
 GMCommands.door.Unlocked:				'/door unlocked 'deverouille la porte.
+
 GMCommands.door.Update:					'/door update 'maj de la porte avec X Y Z de l'admin.
-GMCommands.door.Delete:					'/door delete 'supprime la porte ciblÈe.
+
+GMCommands.door.Delete:					'/door delete 'supprime la porte cibl√©e.
+
 GMCommands.door.Add:					'/door add' ajoute une porte
 
+
+
 # /faction Command
-GMCommands.Faction.Description:				CrÈer une faction et assigner ami et ennemi de faction
-GMCommands.Faction.Usage.Create:			'/faction create <name> <base aggro level>' pour crÈe une faction
-GMCommands.Faction.Usage.Assign:			'/faction assign' pour assigner le NPC ‡ une faction
-GMCommands.Faction.Usage.AddFriend:			'/faction addfriend <factionid>' ajouter une faction allier ‡ une autre faction
-GMCommands.Faction.Usage.AddEnemy:			'/faction addenemy  <factionid>' ajouter une faction ennemi ‡ une autre faction
+
+GMCommands.Faction.Description:				Cr√©er une faction et assigner ami et ennemi de faction
+
+GMCommands.Faction.Usage.Create:			'/faction create <name> <base aggro level>' pour cr√©e une faction
+
+GMCommands.Faction.Usage.Assign:			'/faction assign' pour assigner le NPC √† une faction
+
+GMCommands.Faction.Usage.AddFriend:			'/faction addfriend <factionid>' ajouter une faction allier √† une autre faction
+
+GMCommands.Faction.Usage.AddEnemy:			'/faction addenemy  <factionid>' ajouter une faction ennemi √† une autre faction
+
 GMCommands.Faction.Usage.List:				'/faction list' pour afficher la liste des factions
-GMCommands.Faction.Usage.Select:			'/faction select <factionid>' pour sÈlÈctioner une faction
-GMCommands.Faction.MustSelectFaction:		Vous devez d'abord  sÈlÈctioner une faction.
+
+GMCommands.Faction.Usage.Select:			'/faction select <factionid>' pour s√©l√©ctioner une faction
+
+GMCommands.Faction.MustSelectFaction:		Vous devez d'abord  s√©l√©ctioner une faction.
+
 GMCommands.Faction.IndexMustBeNumber:		Seulement des nombres.
+
 GMCommands.Faction.FactionNotLoaded:		La faction n'est pas charger.
+
 GMCommands.Faction.Create.BAMustBeNumber:	Le "baseaggro" doit etre un nombre.
-GMCommands.Faction.Create.NewCreated:		Nouvelle faction crÈe
-GMCommands.Faction.Assign.MustSelectMob:	Vous devez d'abord  sÈlÈctioner un NPC
-GMCommands.Faction.Assign.MobHasJoinedFact: Le NPC "{0}" ‡ rejoint la faction de "{1}".
+
+GMCommands.Faction.Create.NewCreated:		Nouvelle faction cr√©e
+
+GMCommands.Faction.Assign.MustSelectMob:	Vous devez d'abord  s√©l√©ctioner un NPC
+
+GMCommands.Faction.Assign.MobHasJoinedFact: Le NPC "{0}" √† rejoint la faction de "{1}".
+
+
+
 
 
 # /gmrelic Command
-GMCommands.GMRelic.Description:				CrÈation de relique
+
+GMCommands.GMRelic.Description:				Cr√©ation de relique
+
 GMCommands.GMRelic.Usage:					/gmrelic <magic|strength> <realm>
 
 
+
+
+
 # /gmrelicpad Command
-GMCommands.GMRelicPad.Description:			CrÈation de RelicPad
+
+GMCommands.GMRelicPad.Description:			Cr√©ation de RelicPad
+
 GMCommands.GMRelicPad.Usage:				/gmrelic <magic|strength> <name> <realm>
 
 
+
+
+
 # /harm Command
+
 GMCommands.Harm.Description:				Blesse votre cible (health)
+
 GMCommands.Harm.Usage:						/harm <amount>
+
 GMCommands.Harm.InvalidTarget:				Vous n'avez pas de cible valide.
 
+
+
 # /heal Command
+
 GMCommands.Heal.Description:				Soigne votre cible (health, endu, mana)
+
 GMCommands.Heal.Usage:						/heal
+
+
+
+
 
 

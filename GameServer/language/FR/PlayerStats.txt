@@ -1,33 +1,67 @@
+ï»¿
+
 
 
 # PLAYER STATISTIC
+
 # /Kills
-PlayerStatistic.Kill.Title: Ennemis tués
-PlayerStatistic.Kill.AlbionPlayer: Albionnais tués
-PlayerStatistic.Kill.HiberniaPlayer: Hiberniens tués
-PlayerStatistic.Kill.MidgardPlayer: Midgardiens tués
-PlayerStatistic.Kill.TotalPlayers: Total d'ennemis tués
+
+PlayerStatistic.Kill.Title: Ennemis tuÃ©s
+
+PlayerStatistic.Kill.AlbionPlayer: Albionnais tuÃ©s
+
+PlayerStatistic.Kill.HiberniaPlayer: Hiberniens tuÃ©s
+
+PlayerStatistic.Kill.MidgardPlayer: Midgardiens tuÃ©s
+
+PlayerStatistic.Kill.TotalPlayers: Total d'ennemis tuÃ©s
+
+
 
 # /Deathblows
+
 PlayerStatistic.Deathblows.AlbionPlayer: Coups fatals, Albion
+
 PlayerStatistic.Deathblows.HiberniaPlayer: Coups fatals, Hibernia
+
 PlayerStatistic.Deathblows.MidgardPlayer: Coups fatals, Midgard
+
 PlayerStatistic.Deathblows.TotalPlayers: Total Coups fatals
 
+
+
 # /Solo
-PlayerStatistic.Solo.AlbionPlayer: Albionnais tués seul
-PlayerStatistic.Solo.HiberniaPlayer: Hiberniens tués seul
-PlayerStatistic.Solo.MidgardPlayer: Midgardiens tués seul
-PlayerStatistic.Solo.TotalPlayers: Total d'ennemis tués seul
+
+PlayerStatistic.Solo.AlbionPlayer: Albionnais tuÃ©s seul
+
+PlayerStatistic.Solo.HiberniaPlayer: Hiberniens tuÃ©s seul
+
+PlayerStatistic.Solo.MidgardPlayer: Midgardiens tuÃ©s seul
+
+PlayerStatistic.Solo.TotalPlayers: Total d'ennemis tuÃ©s seul
+
+
 
 # /Capture
+
 PlayerStatistic.Capture.Title: Captures de fort
-PlayerStatistic.Capture.Keeps: Forts capturés
-PlayerStatistic.Capture.Towers: Tours capturées
+
+PlayerStatistic.Capture.Keeps: Forts capturÃ©s
+
+PlayerStatistic.Capture.Towers: Tours capturÃ©es
+
+
 
 # /PvE
+
 PlayerStatistic.PvE.Title: Reports PvE
-PlayerStatistic.PvE.KillsDragon: Nombre de Dragons tués
-PlayerStatistic.PvE.KillsEpic: Nombre de Boss épiques tués
-PlayerStatistic.PvE.KillsLegion: Nombre de Legion tués
+
+PlayerStatistic.PvE.KillsDragon: Nombre de Dragons tuÃ©s
+
+PlayerStatistic.PvE.KillsEpic: Nombre de Boss Ã©piques tuÃ©s
+
+PlayerStatistic.PvE.KillsLegion: Nombre de Legion tuÃ©s
+
+
+
 

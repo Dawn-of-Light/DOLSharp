@@ -1,12 +1,25 @@
-Alb.WhenBloodSpeaks.CheckPlayerAbortQuest.Text1:	Good, now go out there and finish your work!
+﻿Alb.WhenBloodSpeaks.CheckPlayerAbortQuest.Text1:	Good, now go out there and finish your work!
+
 Alb.WhenBloodSpeaks.CheckPlayerAbortQuest.Text2:	Aborting Quest {0}. You can start over again if you want.
+
 Alb.WhenBloodSpeaks.Conclusion.Text1:			Ah, you got the spriggarn blood, excellent! Hopefully it's only a matter of time now before I'm able to put the pieces of all this together. Thank you for your help, {0}!
+
 Alb.WhenBloodSpeaks.Init.Text1:				Recruit's Quilted Pants
+
 Alb.WhenBloodSpeaks.Init.Text2:				Recruit's Leather Leggings
+
 Alb.WhenBloodSpeaks.Init.Text3:				Recruit's Studded Legs
+
 Alb.WhenBloodSpeaks.Init.Text4:				Spriggarn Blood
+
 Alb.WhenBloodSpeaks.Init.Text5:				Kill 2 spriggarns
+
 Alb.WhenBloodSpeaks.Notify.Text1:			spriggarn
+
 Alb.WhenBloodSpeaks.ScriptLoaded.Text1:			Master Kless
+
 Alb.WhenBloodSpeaks.Story:				My research into the cause of some of the change in behavior of some of the fae creatures in our area is going fairly well. Still, I've not come to any conclusive results.  All the while, their malevolent antics have increased in frequency. I fear that if a cause or solution is not found soon, the Church will begin to take matters into its hands, and that will not bode well for any creature of the Old Ways.\n\n  I would attempt consulting with members of the druidic faith in nearby Salisbury Plains, but they're not the most social lot, and many of them are not fond of those of us that making our homes near the city.  I've had a series of unfortunate encounters with them, myself, in the past.\n\nSo, I guess I will keep plugging away at it in hopes of discovering something of note.  If I could go to the druids with concrete evidence, they may listen to what I have to say.  To that end I could use your assistance, would you be inclined to help?
+
 Alb.WhenBloodSpeaks.Summary:				Master Kless needs spriggarn blood to use in a spell that will help determine if they are under a malevolent influence.  Kill two of them, and return to him with their blood.
+
+

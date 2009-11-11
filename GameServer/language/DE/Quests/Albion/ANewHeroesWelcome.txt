@@ -1,13 +1,25 @@
-# Willkommensfeier eines neuen Helden
+ï»¿# Willkommensfeier eines neuen Helden
+
 Alb.ANewHeroesWelcome.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
-Alb.ANewHeroesWelcome.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+
+Alb.ANewHeroesWelcome.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr kÃ¶nnt jeder Zeit wieder beginnen.
+
 Alb.ANewHeroesWelcome.Conclusion.Text1:			Danke, {0}.
-Alb.ANewHeroesWelcome.Conclusion.Text2:			Ich werde einen Boten zu den Heilern der südlichen Schwarzberge entsenden. Der Krieg zehrt an unseren Ressourcen und wir haben an allen Fronten viel zu tun. In der Tat habe ich mehr zu tun, als es mir möglich ist. Lasst es mich wissen, falls Ihr helfen könnt.
+
+Alb.ANewHeroesWelcome.Conclusion.Text2:			Ich werde einen Boten zu den Heilern der sÃ¼dlichen Schwarzberge entsenden. Der Krieg zehrt an unseren Ressourcen und wir haben an allen Fronten viel zu tun. In der Tat habe ich mehr zu tun, als es mir mÃ¶glich ist. Lasst es mich wissen, falls Ihr helfen kÃ¶nnt.
+
 Alb.ANewHeroesWelcome.Init.Text1:			Rekruten-Umhang
-Alb.ANewHeroesWelcome.Init.Text2:			Nachricht für Stadtschreier Pompin
+
+Alb.ANewHeroesWelcome.Init.Text2:			Nachricht fÃ¼r Stadtschreier Pompin
+
 Alb.ANewHeroesWelcome.Init.Text3:			Bringt die Nachricht zu Stadtschreier Pompin
+
 Alb.ANewHeroesWelcome.ScriptLoaded.Text1:		Meister Claistan
+
 Alb.ANewHeroesWelcome.ScriptLoaded.Text2:		Stadtschreier Pompin
-Alb.ANewHeroesWelcome.Story:				Willkommen in Cotswold! Wie ich sehe, seid Ihr einer der Neuankömmlinge. Solltet Ihr hier sein, um den Reich zu dienen, seid Ihr höchst willkommen. Es freut mich, meinen Beitrag zu leisten, indem ich Euch darauf vorbereite.\n\nKönig Constantine hat durch die Plagen, die Albion quälen, alle Hände voll zu tun. Es sind dunkle Zeiten, aber wir sind ein standhaftes Volk und glücklich über einen König, der das Wohlergehen seines Volkes ernst nimmt. Dennoch werden wir von vielen Gefahren bedrängt. Aus Midgard und Hibernia droht uns eine Invasion und es gibt dunkle Mächte, die im Hintergrund agieren und nur auf eine Gelegenheit warten zuzuschlagen.\n\nDer Kampf der Reiche fordert einen Tribut. Die Gildenanführer haben uns darüber informiert, dass sie mehr Heiler für das Grenzland rekrutieren wollen. Ich brauche Euch, um Stadtschreier Pompin eine Nachricht hierüber zu überbringen. Er wird dafür sorgen, dass sie in die richtigen Hände gelangt. Vielleicht hat er auch etwas für Euch zu tun.
-Alb.ANewHeroesWelcome.Summary:				Überbringt Stadtschreier Pompin die Nachricht Eures Ausbilders. Er ist immer auf dem Laufenden über aktuelle Ereignisse, über die er Euch informieren kann, und hat vielleicht auch eine weitere Aufgabe für Euch.
-Alb.ANewHeroesWelcome.TalkToPompinTheCrier:		Seid gegrüßt. Willkommen in Cotswold.
+
+Alb.ANewHeroesWelcome.Story:				Willkommen in Cotswold! Wie ich sehe, seid Ihr einer der NeuankÃ¶mmlinge. Solltet Ihr hier sein, um den Reich zu dienen, seid Ihr hÃ¶chst willkommen. Es freut mich, meinen Beitrag zu leisten, indem ich Euch darauf vorbereite.\n\nKÃ¶nig Constantine hat durch die Plagen, die Albion quÃ¤len, alle HÃ¤nde voll zu tun. Es sind dunkle Zeiten, aber wir sind ein standhaftes Volk und glÃ¼cklich Ã¼ber einen KÃ¶nig, der das Wohlergehen seines Volkes ernst nimmt. Dennoch werden wir von vielen Gefahren bedrÃ¤ngt. Aus Midgard und Hibernia droht uns eine Invasion und es gibt dunkle MÃ¤chte, die im Hintergrund agieren und nur auf eine Gelegenheit warten zuzuschlagen.\n\nDer Kampf der Reiche fordert einen Tribut. Die GildenanfÃ¼hrer haben uns darÃ¼ber informiert, dass sie mehr Heiler fÃ¼r das Grenzland rekrutieren wollen. Ich brauche Euch, um Stadtschreier Pompin eine Nachricht hierÃ¼ber zu Ã¼berbringen. Er wird dafÃ¼r sorgen, dass sie in die richtigen HÃ¤nde gelangt. Vielleicht hat er auch etwas fÃ¼r Euch zu tun.
+
+Alb.ANewHeroesWelcome.Summary:				Ãœberbringt Stadtschreier Pompin die Nachricht Eures Ausbilders. Er ist immer auf dem Laufenden Ã¼ber aktuelle Ereignisse, Ã¼ber die er Euch informieren kann, und hat vielleicht auch eine weitere Aufgabe fÃ¼r Euch.
+
+Alb.ANewHeroesWelcome.TalkToPompinTheCrier:		Seid gegrÃ¼ÃŸt. Willkommen in Cotswold.
