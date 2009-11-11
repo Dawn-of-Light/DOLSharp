@@ -1,3 +1,5 @@
-# AbstractArea
-AbstractArea.Entered:						(Region) Vous êtes entré(e) dans {0}!
-AbstractArea.Left:							(Region) Vous avez quitté {0}!
+ï»¿# AbstractArea
+
+AbstractArea.Entered:						(Region) Vous Ãªtes entrÃ©(e) dans {0}!
+
+AbstractArea.Left:							(Region) Vous avez quittÃ© {0}!

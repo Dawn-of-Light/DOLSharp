@@ -1,7 +1,15 @@
-# /ArtifactQuest
-ArtifactQuest.GiveItem.BackpackFull:			Votre sac est plein, S'il vous plaît faire de la place et essayez à nouveau.
+ï»¿# /ArtifactQuest
+
+ArtifactQuest.GiveItem.BackpackFull:			Votre sac est plein, S'il vous plaÃ®t faire de la place et essayez Ã  nouveau.
+
+
 
 # /ArtifactTurnInQuest
+
 ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artifact Scholar
+
 ArtifactTurnInQuest.Init.ArtifactScholarFemale:		Artifact Scholar
-ArtifactTurnInQuest.FinishQuest.Completed:		Vous avez terminé la quête: {0}!
+
+ArtifactTurnInQuest.FinishQuest.Completed:		Vous avez terminÃ© la quÃªte: {0}!
+
+

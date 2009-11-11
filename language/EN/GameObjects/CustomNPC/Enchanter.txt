@@ -1,14 +1,29 @@
-Enchanter.EnchanterDialogResponse.Text1:	Invalid item.
+﻿Enchanter.EnchanterDialogResponse.Text1:	Invalid item.
+
 Enchanter.EnchanterDialogResponse.Text2:	I need {0} to enchant that.
+
 Enchanter.EnchanterDialogResponse.Text3:	bright
+
 Enchanter.EnchanterDialogResponse.Text4:	You give {0} {1}.
+
 Enchanter.EnchanterDialogResponse.Text5:	There, it is now {0}!
+
 Enchanter.GetExamineMessages.Text1:		You target {0}.
+
 Enchanter.GetExamineMessages.Text2:		You examine {0}. {1} is {2} and is an enchanter.
+
 Enchanter.Interact.Text1:			quartz
+
 Enchanter.Interact.Text2:			steel
+
 Enchanter.Interact.Text3:			I can enchant weapons or armor that are of {0} or better material. Just hand me the weapon you would like enchanted and I will work my magic upon it, for a fee.
+
 Enchanter.ReceiveItem.Text1:			It will cost {0} \x000ato enchant that. Do you accept?
+
 Enchanter.ReceiveItem.Text2:			This item is already enchanted!
+
 Enchanter.ReceiveItem.Text3:			This item can't be enchanted!
+
 Enchanter.ReceiveItem.Text4:			I can't enchant that material.
+
+

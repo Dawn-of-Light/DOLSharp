@@ -1,46 +1,93 @@
+﻿
+
 
 
 Quests.Albion.AFewRepairs.Title:							A Few Repairs
+
 Quests.Albion.AFewRepairs.Description.Step1:				Continue talking to Brice Yarley.
+
 Quests.Albion.AFewRepairs.Description.Step2:				There are some elder beeches to the north just inside the tree line beyond the fallen tower. Slay a few of them to gather the wood that you need.
+
 Quests.Albion.AFewRepairs.Description.Step3:				Slay one more elder beech. It can be found in the woods to the north of the Yarley's farm.
+
 Quests.Albion.AFewRepairs.Description.Step4:				Take the elder wood to Patrick Yarley. You can find him along the fence in Western Cornwall.
+
 Quests.Albion.AFewRepairs.Description.Step5:				Give the rest of the Elder Wood to Patrick Yarley.
+
 Quests.Albion.AFewRepairs.Description.Step6:				Ask Patrick Yarley about a {0}.
+
 Quests.Albion.AFewRepairs.Description.Step7:				Find a moor boogey on the hill to the east of the Yarley farm and collect its teeth.
+
 Quests.Albion.AFewRepairs.Description.Step8:				Return to Patrick Yarley with the Boogey Teeth.
+
 Quests.Albion.AFewRepairs.Notify.ReceiveElderWood:			You receive the Elder Wood from the elder beech! \nYour journal has been updated.
+
 Quests.Albion.AFewRepairs.Notify.ReceiveBoogeyTeeth:		You receive the Boogey Teeth from the moor boogey! \nYour journal has been updated.
+
 Quests.Albion.AFewRepairs.Notify.Step4:						This should do the trick. Were you able to get any more wood?
+
 Quests.Albion.AFewRepairs.Notify.Step5:						That is more than enough wood. There is one other thing I will need to complete this project. Would you be able to help out with this {0}?
+
 Quests.Albion.AFewRepairs.Notify.Step8:						I will get started on the repairs immediately. Here is your reward for a job well done.
+
 Quests.Albion.AFewRepairs.FinishQuest.AwardedMoney:			You are awarded 81 silver and some copper!
+
 Quests.Albion.AFewRepairs.AbortQuest.Ok:					Good, now go out there and finish your work!
+
 Quests.Albion.AFewRepairs.AbortQuest.No:					Aborting Quest {0}. You can start over again if you want.
+
 Quests.Albion.AFewRepairs.AcceptQuest.Ok:					Excellent, there are some {0} creatures to the north just inside the tree line beyond the fallen tower. If you cut down a few of them they should yield enough wood for the project.
+
 Quests.Albion.AFewRepairs.AcceptQuest.No:					Oh well, if you change your mind, please come back!
+
 Quests.Albion.AFewRepairs.BriceYarley.Const0:				elder beech
+
 Quests.Albion.AFewRepairs.BriceYarley.Const1:				problem
+
 Quests.Albion.AFewRepairs.BriceYarley.Const2:				mastering the arts
+
 Quests.Albion.AFewRepairs.BriceYarley.Const3:				moor boogeys
+
 Quests.Albion.AFewRepairs.BriceYarley.Const4:				maintain this fence
+
 Quests.Albion.AFewRepairs.BriceYarley.Const5:				gathering
+
 Quests.Albion.AFewRepairs.BriceYarley.Const6:				abort
+
 Quests.Albion.AFewRepairs.BriceYarley.Step1:				There are some {0} creatures to the north just inside the tree line beyond the fallen tower. If you cut down a few of them they should yield enough wood for the project.
+
 Quests.Albion.AFewRepairs.BriceYarley.Start:				Welcome to Cornwall, {0}. My family has a bit of a {0} and we would be grateful if you could lend a hand.
+
 Quests.Albion.AFewRepairs.BriceYarley.Problem:				We Yarleys raise these giant rooters which we bring to markets all across Albion. Perhaps you have tried some of our sausages at Ye Mug in Camelot? Well anyway we do a pretty good business here and the hours aren't too bad. It is a satisfying life but one that does not leave much time for {0} of magic or swordplay.
+
 Quests.Albion.AFewRepairs.BriceYarley.MasteringTheArts:		Raising your livestock a stone's throw from a dungeon of undead and other unsavory critters has its drawbacks as you might imagine. We are constantly on the lookout for {0} that seem to have a genuine dislike for our rooters. Now our animals can hold their own in a fight, but we have enough to do around here without having to heal the hogs every other day.
+
 Quests.Albion.AFewRepairs.BriceYarley.MoorBoogeys:			We have tried to kill off these pests but there always seems to be more of them. We {0} to keep rooters in and the boogeys out.
+
 Quests.Albion.AFewRepairs.BriceYarley.MaintainThisFence:	This old barrier is in need of some repair but we are a bit low on lumber at the moment. Would you be interested in {0} some supplies for our fence?
+
 Quests.Albion.AFewRepairs.BriceYarley.Gathering:			Will you help the Yarleys with a few repairs? [Levels 35-37]
+
 Quests.Albion.AFewRepairs.BriceYarley.Abort:				Do you really want to abort this quest, all items gained during quest will be lost?
+
 Quests.Albion.AFewRepairs.BriceYarley.ElderBeech:			Bring the lumber to my brother, Patrick. You will find him along the fence to the east. I will make sure he knows to expect your return.
+
 Quests.Albion.AFewRepairs.PatrickYarley.Const1:				last errand
+
 Quests.Albion.AFewRepairs.PatrickYarley.Const2:				complete
+
 Quests.Albion.AFewRepairs.PatrickYarley.Step4:				That was quick. Do you have the wood that my brother requested? Please give it to me now.
+
 Quests.Albion.AFewRepairs.PatrickYarley.Step5:				Were you able to get any more wood?
+
 Quests.Albion.AFewRepairs.PatrickYarley.Step6:				That is more than enough wood. There is one other thing I will need to complete this project. Would you be able to help out with this {0}?
+
 Quests.Albion.AFewRepairs.PatrickYarley.Step7:				Do you have the boogey teeth?
+
 Quests.Albion.AFewRepairs.PatrickYarley.LastErrand:			The last thing I need is something to hold the boards in place. You may find this ironic but the best place to find these spikes is from the very creatures we are trying to keep out with this fence. It turns out that their long teeth make excellent nails for holding the elder wood in place. If you can slay one of these moor boogeys then it should provide enough for the job at hand. Return to me with these teeth and your task will be {0}.
+
 Quests.Albion.AFewRepairs.PatrickYarley.Complete:			You may find the moor boogeys roaming the hill to the east.
+
+
+
 

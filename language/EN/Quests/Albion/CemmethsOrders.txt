@@ -1,14 +1,29 @@
-Alb.CemmethsOrders.CheckPlayerAbortQuest.Text1:	Good, now go out there and finish your work!
+﻿Alb.CemmethsOrders.CheckPlayerAbortQuest.Text1:	Good, now go out there and finish your work!
+
 Alb.CemmethsOrders.CheckPlayerAbortQuest.Text2:	Aborting Quest {0}. You can start over again if you want.
+
 Alb.CemmethsOrders.Conclusion.Text1:		Well done, {0}, well done! We've certainly got our work cut out for us, what with all the unliving vermin stomping about.  You've set a fine example for the other would-be heroes and adventurers, my friend.  Please accept this small token of appreciation.
+
 Alb.CemmethsOrders.Init.Text1:			Recruit's Quilted Vest
+
 Alb.CemmethsOrders.Init.Text2:			Recruit's Leather Jerkin
+
 Alb.CemmethsOrders.Init.Text3:			Recruit's Studded Vest
+
 Alb.CemmethsOrders.Init.Text4:			Skeleton Skull
+
 Alb.CemmethsOrders.Init.Text5:			Decayed Zombie Skin
+
 Alb.CemmethsOrders.Init.Text6:			Kill 1 Skeleton
+
 Alb.CemmethsOrders.Init.Text7:			Kill 1 Decayed Zombie
+
 Alb.CemmethsOrders.Notify.Text1:		skeleton
+
 Alb.CemmethsOrders.Notify.Text2:		decayed zombie
+
 Alb.CemmethsOrders.Story:			Brother Lawrence recently called a meeting with the local militia leaders to discuss his concerns about the rise in the number of undead in our region, and how it may relate to the recent incident leading to the forming of the entrances into Demons' Breach. I must say, his concerns trouble me. I don't pretend to know much about the how or why of it, but I do know that if these creatures pose a threat to our citizens, they must be put down.\n\nAccording to our reports, skeletons and decayed zombies are apparently two of the more dangerous things to worry about near Prydwen Ossuary. Their numbers and aggressive posture seem to be increasing. I fear that if they go unchallenged, we may find ourselves in quite a predicament. We mustn't have the undead legions gallivanting about Camelot Hills, after all!\n\nWhat say you?  Will you help to make our countryside safer by sending those vermin back to their resting places? Bring me proof of your deed should you embark upon this task.\n\n
+
 Alb.CemmethsOrders.Summary:			Travel to Prydwen Ossuary. There are a variety of undead in the surrounding area. Kill a skeleton for a skull and a decayed zombie for some flesh. Return to Cemmeth Budgwold when you're done.
+
+
