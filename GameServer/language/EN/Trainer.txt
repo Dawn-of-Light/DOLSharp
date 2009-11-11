@@ -1,93 +1,187 @@
-## Albion
+﻿## Albion
+
 # /FriarTrainer
+
 FriarTrainer.Interact.Text1:				{0} says, "Do you desire to [join the Defenders of Albion] and defend our realm as a Friar?"
+
 FriarTrainer.Interact.Text2:				{0} says, "insert english text"
+
 FriarTrainer.Interact.Text3:				{0} says, "insert english text"
+
 FriarTrainer.Interact.Text4:				{0} says, "insert english text"
+
 FriarTrainer.ReceiveItem.Text1:				{0} says, "insert english text"
+
 FriarTrainer.WhisperReceive.Text1:			We welcome you into our society as an equal! We are at your disposal. We will now issue your Robes of the Novice. Wear them always and let it serve to remind you of your faith. When you have reached the title of Lesser Chaplain, return them to me. We shall then see if you require another.
+
 FriarTrainer.WhisperReceiveCase.Text1:			join the defenders of albion
 
+
+
 ## Hibernia
+
 # /AnimistTrainer
+
 AnimistTrainer.Interact.Text1:				{0} says, "Is the [Path of Affinity] the path you desire to walk?"
+
 AnimistTrainer.Interact.Text2:
+
 AnimistTrainer.Interact.Text3:
+
 AnimistTrainer.Interact.Text4:
+
 AnimistTrainer.WhisperReceive.Text1:			You are now an Animist, {0}. Welcome to the Path of Affinity.
+
 AnimistTrainer.WhisperReceiveCase.Text1:		path of affinity
 
+
+
 # /BainsheeTrainer
+
 BainsheeTrainer.Interact.Text1:				{0} says, "Do you wish to train as a [Bainshee] and walk the Path of Affinity?"
+
 BainsheeTrainer.Interact.Text2:				{0} says, "Our way is a hard one, {1}. I can only train you in skills. You must gain knowledge and wisdom on your own."
+
 BainsheeTrainer.Interact.Text3:
+
 BainsheeTrainer.Interact.Text4:
+
 BainsheeTrainer.WhisperReceive.Text1:			Well met then, {0}. It is a hard road, but I see hardness is no stranger to you. Welcome, Bainshee, welcome. Here, take this. It will aid you in your first encounters as a Bainshee.
+
 BainsheeTrainer.WhisperReceiveCase.Text1:		bainshee
 
+
+
 # /EnchanterTrainer
+
 EnchanterTrainer.Interact.Text1:			{0} says, "Do you choose to train as an Enchanter and follow the Path of Essence? Life as an [Enchanter] is as rewarding as it is dangerous, but it is yours for the asking."
+
 EnchanterTrainer.Interact.Text2:			{0} says, "You are a quick study, {1}. But do not be too hasty. There is always more to learn."
+
 EnchanterTrainer.Interact.Text3:
+
 EnchanterTrainer.Interact.Text4:
+
 EnchanterTrainer.WhisperReceive.Text1:			Welcome, {0}. From this day forth you shall be known as an Enchanter. Here, {0}. Take this gift to aid you on your path.
+
 EnchanterTrainer.WhisperReceiveCase.Text1:		enchanter
 
+
+
 # /HeroTrainer
+
 HeroTrainer.Interact.Text1:				{0} says, "You wish for the life of a [hero]? You wish to walk the Path of Focus?"
+
 HeroTrainer.Interact.Text2:				{0} says, "Training makes for a strong, healthy Hero! Keep up the good work, {1}!"
+
 HeroTrainer.Interact.Text3:
+
 HeroTrainer.Interact.Text4:
+
 HeroTrainer.WhisperReceive.Text1:			Let me welcome you then, {0}. Go, honor us with your deeds. Here is a gift for you. Try not to drop it, eh Hero.
+
 HeroTrainer.WhisperReceiveCase.Text1:			hero
 
+
+
 # /MaulerHibTrainer
+
 MaulerHibTrainer.Interact.Text1:			{0} says, "Do you desire to [join the Temple of the Iron Fist] and fight for the glorious realm of Hibernia?"
+
 MaulerHibTrainer.Interact.Text2:			
+
 MaulerHibTrainer.Interact.Text3:			
+
 MaulerHibTrainer.Interact.Text4:			
+
 MaulerHibTrainer.ReceiveItem.Text1:			
+
 MaulerHibTrainer.WhisperReceive.Text1:			Welcome young Mauler. May your time in Hibernia be rewarding. Would you prefer to fight with a [staff] or with [fist]?
+
 MaulerHibTrainer.WhisperReceive.Text2:			You get a gift by Laresh.
+
 MaulerHibTrainer.WhisperReceiveCase.Text1:		join the temple of the iron fist
+
 MaulerHibTrainer.WhisperReceiveCase.Text2:		staff
+
 MaulerHibTrainer.WhisperReceiveCase.Text3:		fist
 
+
+
 # /MentalistTrainer
+
 MentalistTrainer.Interact.Text1:			{0} says, "Do you wish to train as a [Mentalist] and walk the Path of Harmony?"
+
 MentalistTrainer.Interact.Text2:			{0} says, "Our way is a hard one, {1}. I can only train you in skills. You must gain knowledge and wisdom on your own."
+
 MentalistTrainer.Interact.Text3:
+
 MentalistTrainer.Interact.Text4:
+
 MentalistTrainer.WhisperReceive.Text1:			Well met then, {0}. It is a hard road, but I see hardness is no stranger to you. Welcome, Mentalist, welcome. Here, take this. It will aid you in your first encounters as a Mentalist.
+
 MentalistTrainer.WhisperReceiveCase.Text1:		mentalist
 
+
+
 ## Midgard
+
 # /BonedancerTrainer
+
 BonedancerTrainer.Interact.Text1:			{0} says, "Do you desire to [join the House of Bodgar] and defend our realm as a Bonedancer?"
+
 BonedancerTrainer.Interact.Text2:			{0} says, "insert english text"
+
 BonedancerTrainer.Interact.Text3:		
+
 BonedancerTrainer.Interact.Text4:		
+
 BonedancerTrainer.ReceiveItem.Text1:		
+
 BonedancerTrainer.WhisperReceive.Text1:			Welcome young warrior! May your time in Midgard army be rewarding!
+
 BonedancerTrainer.WhisperReceiveCase.Text1:		join the house of bodgar
 
+
+
 # /Spiritmaster
+
 SpiritmasterTrainer.Interact.Text1:			{0} says, "Do you desire to [join the House of Hel] and defend our realm as a Spiritmaster?"	
+
 SpiritmasterTrainer.Interact.Text2:				
+
 SpiritmasterTrainer.Interact.Text3:				
+
 SpiritmasterTrainer.Interact.Text4:				
+
 SpiritmasterTrainer.ReceiveItem.Text1:			
+
 SpiritmasterTrainer.WhisperReceive.Text1:		Welcome young Spiritmaster! May your time in Midgard army be rewarding!	
+
 SpiritmasterTrainer.WhisperReceiveCase.Text1:		join the house of hel
 
+
+
 # /Valkyrie
+
 ValkyrieTrainer.Interact.Text1:				{0} says, "Do you desire to [join the House of Odin] and defend our realm as a Valkyrie?"
+
 ValkyrieTrainer.Interact.Text2:				
+
 ValkyrieTrainer.Interact.Text3:				
+
 ValkyrieTrainer.Interact.Text4:				
+
 ValkyrieTrainer.ReceiveItem.Text1:			
+
 ValkyrieTrainer.WhisperReceive.Text1:			Welcome young Valkyrie! May your time in Midgard army be rewarding! Would you prefer to fight with a [sword] or with a [spear]?
+
 ValkyrieTrainer.WhisperReceive.Text2:			You get a gift by Odin.
+
 ValkyrieTrainer.WhisperReceiveCase.Text1:		join the house of odin
+
 ValkyrieTrainer.WhisperReceiveCase.Text2:		sword
+
 ValkyrieTrainer.WhisperReceiveCase.Text3:		spear
+
+

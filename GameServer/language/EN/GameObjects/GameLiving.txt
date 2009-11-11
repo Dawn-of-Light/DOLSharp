@@ -1,14 +1,29 @@
-# GAMELIVING
+﻿# GAMELIVING
+
 GameLiving.ReceiveItem:					{0} doesn't want this item!
+
 GameLiving.ReceiveMoney:				{0} doesn't want your money!
 
+
+
 GameLiving.Pronoun.Neutral.Objective:		it		
+
 GameLiving.Pronoun.Neutral.Possessive:		its		
+
 GameLiving.Pronoun.Neutral.Subjective:		it	
+
 GameLiving.Pronoun.Male.Objective:			him		
+
 GameLiving.Pronoun.Male.Possessive:			his		
+
 GameLiving.Pronoun.Male.Subjective:			he	
+
 GameLiving.Pronoun.Female.Objective:		her		
+
 GameLiving.Pronoun.Female.Possessive:		her		
+
 GameLiving.Pronoun.Female.Subjective:		she		
+
+
+
 

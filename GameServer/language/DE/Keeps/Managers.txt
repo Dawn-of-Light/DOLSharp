@@ -1,45 +1,91 @@
-#TemplateManager
+ï»¿#TemplateManager
+
 #All
+
 SetGuardName.Commander:		Kommandant von {0}
+
 SetGuardName.Hastener:		Antreiber
+
 #SetGuardName.Renegade:		Renegade {0}
+
 SetGuardName.TowerCaptain:	Turmhauptmann
 
+
+
 #Albion
+
 SetGuardName.Armsman:		Waffenmeister
+
 SetGuardName.Armswoman:		Waffenmeisterin
+
 SetGuardName.BowmanCommander:	Bogner-Kommandant
+
 SetGuardName.CaptainCommander:	Hauptmann-Kommandant
+
 SetGuardName.Cleric:		Kleriker
+
 SetGuardName.Infiltrator:	Infiltrator
+
 SetGuardName.KnightCommander:	Ritter-Kommandant
+
 SetGuardName.Lady:		Lady {0}
+
 SetGuardName.Lord:		Lord {0}
+
 SetGuardName.MasterWizard:	Meisterzauberer
+
 SetGuardName.Scout:		Kundschafter
+
 SetGuardName.Wizard:		Zauberer
 
+
+
 #Midgard
+
 SetGuardName.Healer:		Heiler
+
 SetGuardName.HersirCommander:	Hersir-Kommandant
-SetGuardName.Hunter:		Jäger
+
+SetGuardName.Hunter:		JÃ¤ger
+
 SetGuardName.Huscarl:		Huscarl
+
 SetGuardName.Jarl:		Jarl {0}
+
 SetGuardName.MasterRunes:	Meister der Runen
-SetGuardName.NordicHunter:	Nordmann-Jäger
+
+SetGuardName.NordicHunter:	Nordmann-JÃ¤ger
+
 SetGuardName.NordicJarl:	Nordmann-Jarl
+
 SetGuardName.Runemaster:	Runenmeister
+
 SetGuardName.Shadowblade:	Schattenklinge
 
+
+
 #Hibernia
+
 SetGuardName.Champion:		Champion
+
 SetGuardName.ChampionCommander:	Champion-Kommandant
-SetGuardName.Chieftain:		Klanfürst {0}
-SetGuardName.Chieftess:		Klanfürstin {0}
+
+SetGuardName.Chieftain:		KlanfÃ¼rst {0}
+
+SetGuardName.Chieftess:		KlanfÃ¼rstin {0}
+
 SetGuardName.Druid:		Druide
+
 SetGuardName.Eldritch:		Eldritch
-SetGuardName.Guardian:		Wächter
+
+SetGuardName.Guardian:		WÃ¤chter
+
 SetGuardName.MasterEldritch:	Meistereldritch
-SetGuardName.MasterRanger:	Meisterwaldläufer
+
+SetGuardName.MasterRanger:	MeisterwaldlÃ¤ufer
+
 SetGuardName.Nightshade:	Nachtschatten
-SetGuardName.Ranger:		Waldläufer
+
+SetGuardName.Ranger:		WaldlÃ¤ufer
+
+
