@@ -1,7 +1,15 @@
-Money.GetString.Text1:	0 Kupfer
+﻿Money.GetString.Text1:	0 Kupfer
+
 Money.GetString.Text2:	Mithril,
+
 Money.GetString.Text3:	Platinum,
+
 Money.GetString.Text4:	Gold,
+
 Money.GetString.Text5:	Silver,
+
 Money.GetString.Text6:	Kupfer,
+
 Money.GetString.Text7:	
+
+

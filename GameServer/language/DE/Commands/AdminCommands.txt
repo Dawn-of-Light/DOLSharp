@@ -1,46 +1,93 @@
-# /serverproperties Command
+﻿# /serverproperties Command
+
 AdminCommands.ServerProperties.DataBaseXML:		XML is cached sorry, you cannot refresh server properties unless using MySQL!
+
 AdminCommands.ServerProperties.Description:		Reloads server properties from the database
+
 AdminCommands.ServerProperties.PropertiesRefreshed:	Refreshed server properties!
+
 AdminCommands.ServerProperties.Usage:			/serverproperties
 
+
+
 # /plvl Command
+
 AdminCommands.plvl.AddedSinglePermission:		You add the single permission to {0} for {1} command.
+
 AdminCommands.plvl.Description:				Change privilege level and add single permision to player
+
 AdminCommands.plvl.NoPermissionForCommand:		There is no permission of {0} for {1} command.
+
 AdminCommands.plvl.NoSelectPlayer:			You must select a player to changes permission on him
+
 AdminCommands.plvl.PlayerPlvlHasBeenSetted:		{0} privilege level has been set to {1}
+
 AdminCommands.plvl.RemoveSinglePermission:		You remove the single permission of {0} for {1} command.
+
 AdminCommands.plvl.Usage:				/plvl <newPlvl>
+
 AdminCommands.plvl.Usage.Remove:			/plvl remove <command>
+
 AdminCommands.plvl.Usage.Single:			/plvl single <command>
+
 AdminCommands.plvl.YourPlvlHasBeenSetted:		Your privilege level has been set to {0}
 
+
+
 # /code Command
+
 AdminCommands.Code.CodeExecuted:			Code executed...
+
 AdminCommands.Code.Description:				Executes custom code!
+
 AdminCommands.Code.ErrorCompiling:			Error Compiling Expression:
+
 AdminCommands.Code.Usage:				/code <codesnippet>
 
+
+
 # /account Command
+
 AdminCommands.Account.AccNameForChar:			Account name for character {0} is: {1} 
+
 AdminCommands.Account.AccountCreated:			Account created! 
+
 AdminCommands.Account.AccountDeleted:			Account {0} deleted!
+
 AdminCommands.Account.AccountHasNoFreeSlots:		Account {0} has no free character slots for this realm anymore!
+
 AdminCommands.Account.AccountNameAlreadyRegistered:	This account name is already registered. 
+
 AdminCommands.Account.AccountNotFound:			Account {0} not found!
+
 AdminCommands.Account.CharacterDeleted:			Character {0} deleted!
+
 AdminCommands.Account.CharacterMovedToAccount:		Character {0} moved to Account {1}!
+
 AdminCommands.Account.CharacterNotFound:		Character {0} not found!
+
 AdminCommands.Account.CharNotFromValidRealm:		The character is not from a valid realm!
+
 AdminCommands.Account.Description:			Account modification command
+
 AdminCommands.Account.InvalidAccountName:		Invalid account name. 
+
 AdminCommands.Account.InvalidAccountNameOrPassword:	Account name and password must be at least 4 letters. 
+
 AdminCommands.Account.Usage.AccountName:		/account accountname <CharacterName> 
+
 AdminCommands.Account.Usage.ChangePassword:		/account changepassword <AccountName> <NewPassword>
+
 AdminCommands.Account.Usage.Create:			/account create <AccountName> <Password>
+
 AdminCommands.Account.Usage.Delete:			/account delete <AccountName>
+
 AdminCommands.Account.Usage.DeleteChar:			/account deletecharacter <CharacterName>
+
 AdminCommands.Account.Usage.MoveChar:			/account movecharacter <CharacterName> <NewAccountName>
+
 AdminCommands.Account.Usage.Status:			/account status <AccountName> <Level> 
+
 AdminCommands.Account.Usage.UnBan:			/account unban <AccountName> 
+
+
