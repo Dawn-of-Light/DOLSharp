@@ -29,7 +29,7 @@ namespace DOL.Database
 	[DataTable(TableName="CharacterXMasterLevel")]
 	public class DBCharacterXMasterLevel : DataObject
 	{
-		protected string m_charname;
+		protected string m_character_id;
 		protected int m_mllevel;				// ML number
         protected int m_step;					// ML step number
    		protected bool m_stepcompleted;			// ML completition flag
@@ -51,13 +51,13 @@ namespace DOL.Database
 		}
         // Owner ID
         [DataElement(AllowDbNull = false)]
-        public string CharName
+        public string Character_ID
         {
-            get { return m_charname; }
+            get { return m_character_id; }
             set
             {
                 Dirty = true;
-                m_charname = value;
+                m_character_id = value;
             }
         }
  
