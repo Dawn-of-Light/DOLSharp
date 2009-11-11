@@ -11256,7 +11256,7 @@ namespace DOL.GS
 			}
 
 			// Load ML steps of player ...
-			DBCharacterXMasterLevel[] mlsteps = (DBCharacterXMasterLevel[])GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "CharName ='" + GameServer.Database.Escape(Name) + "'");
+			DBCharacterXMasterLevel[] mlsteps = (DBCharacterXMasterLevel[])GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
 			if (mlsteps.Length > 0)
 			{
 				foreach (DBCharacterXMasterLevel mlstep in mlsteps)
@@ -13984,7 +13984,7 @@ namespace DOL.GS
 
 			// Register new step
 			DBCharacterXMasterLevel newstep = new DBCharacterXMasterLevel();
-			newstep.CharName = Name;
+			newstep.Character_ID = Name;
 			newstep.MLLevel = mllevel;
 			newstep.MLStep = step;
 			newstep.StepCompleted = true;
