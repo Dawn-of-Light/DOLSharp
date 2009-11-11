@@ -11230,7 +11230,7 @@ namespace DOL.GS
 			#endregion
 
 			//Load the quests for this player
-			DBQuest[] quests = (DBQuest[])GameServer.Database.SelectObjects(typeof(DBQuest), "CharName ='" + GameServer.Database.Escape(Name) + "'");
+			DBQuest[] quests = (DBQuest[])GameServer.Database.SelectObjects(typeof(DBQuest), "Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
 			foreach (DBQuest dbquest in quests)
 			{
 				AbstractQuest quest = AbstractQuest.LoadFromDatabase(this, dbquest);
@@ -11244,7 +11244,7 @@ namespace DOL.GS
 			}
 
 			// Load Task object of player ...
-			DBTask[] tasks = (DBTask[])GameServer.Database.SelectObjects(typeof(DBTask), "CharName ='" + GameServer.Database.Escape(Name) + "'");
+			DBTask[] tasks = (DBTask[])GameServer.Database.SelectObjects(typeof(DBTask), "Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
 			if (tasks.Length == 1)
 			{
 				m_task = AbstractTask.LoadFromDatabase(this, tasks[0]);

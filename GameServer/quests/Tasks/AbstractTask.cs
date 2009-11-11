@@ -91,7 +91,7 @@ namespace DOL.GS.Quests
 			else // if player has no active task, load dbtask an use tasksdone
 			{
 				// Load Task object of player ...
-				DBTask[] tasks = (DBTask[]) GameServer.Database.SelectObjects(typeof(DBTask),"CharName ='"+GameServer.Database.Escape(taskPlayer.Name)+"'");
+				DBTask[] tasks = (DBTask[]) GameServer.Database.SelectObjects(typeof(DBTask),"Character_ID ='"+GameServer.Database.Escape(taskPlayer.InternalID)+"'");
 				if (tasks.Length==1)
 				{
 					dbTask = tasks[0];
