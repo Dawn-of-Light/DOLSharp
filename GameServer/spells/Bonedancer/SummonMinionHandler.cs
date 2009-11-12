@@ -83,6 +83,9 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
+			if (Caster == null || Caster.ControlledNpc == null)
+				return;
+
 			GameNPC temppet = Caster.ControlledNpc.Body;
 			//Lets let NPC's able to cast minions.  Here we make sure that the Caster is a GameNPC
 			//and that m_controlledNpc is initialized (since we aren't thread safe).
