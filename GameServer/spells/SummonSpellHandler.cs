@@ -106,7 +106,7 @@ namespace DOL.GS.Spells
 			if (level > Spell.Value)
 				level = (byte)Spell.Value;
 
-			return level;
+			return Math.Max((byte)1, level);
 		}
 
 		protected virtual void AddHandlers()
