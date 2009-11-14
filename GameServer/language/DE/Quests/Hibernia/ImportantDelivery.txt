@@ -1,0 +1,97 @@
+﻿# Wichtige Lieferung
+
+Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+
+Hib.ImportantDelivery.CheckPlayerAbortQuest.NoAbort:	Gut, macht also weiter und beendet Eure Aufgabe!
+
+Hib.ImportantDelivery.CheckPlayerAcceptQuest.Accept:	Ich gratuliere Euch! Ihr seid nun einen Schritt weiter, um die Welt von Hibernia zu verstehen. In dieser Phase der Ausbildung werde ich Euch in verschiedene Teile des Reiches schicken, um einige bestellte Sachen bei bestimmten Leuten abzuliefern. Ihr solltet von Zeit zu Zeit Eure NOTIZEN aufschlagen, um zu sehen, welcher Schritt als nächstes getan werden muss, um Eure Aufgabe zuerledigen. Ihr könnt auf diese über die BEFEHLE-Taste in Eurem [Charakterbogen] zugreifen.
+
+Hib.ImportantDelivery.CheckPlayerAcceptQuest.NoAccept:	Auch gut. Kommt bitte zurück, falls Ihr Eure Meinung ändern solltet.
+
+Hib.ImportantDelivery.DefineItems.CrateOfVegetables:	Kiste mit Gemüse
+
+Hib.ImportantDelivery.DefineItems.RecruitsCloak:	Rekruten-Umhang
+
+Hib.ImportantDelivery.DefineItems.RecruitsDiary:	Rekruten-Tagebuch
+
+Hib.ImportantDelivery.DefineItems.SackOfSupplies:	Sack mit Vorräten
+
+Hib.ImportantDelivery.Description.Step1:		Schritt 1: Hört Addrir zu, wie er Eure Mission beschreibt.Falls er aufhört mit Reden, fragt ihn, was er Euch geben kann, um die Ausbildung zu [beschleunigen].
+
+Hib.ImportantDelivery.Description.Step2:		Schritt 2: Hört den Ausführungen von Addrir über Euer Tagebuch zu. Wenn er aufhört mit Euch zu reden, dann fragt ihn, wie das Tagebuch Euch helfen kann, die Erledigung Eurer Aufträge zu [beschleunigen].
+
+Hib.ImportantDelivery.Description.Step3:		Schritt 3: Geht den Weg südwestlich von Addrir. Sucht Stallmeister Rumdor am Haupteingang des Pferdestalles und gebt ihm Euer Ticket.
+
+Hib.ImportantDelivery.Description.Step4:		Schritt 4: Gebt den Sack mit Vorräten Aethic in Tir na mBeo. Er steht links neben dem höchsten Gebäude der Stadt. Ihr könnt ihm den Sack genauso geben, wie Ihr Rumdor das Ticket ausgehändigt habt.
+
+Hib.ImportantDelivery.Description.Step5:		Schritt 5: Hört zu, was Aethic Euch zu sagen hat.
+
+Hib.ImportantDelivery.Description.Step6:		Schritt 6: Nehmt das Ticket von Aethic und gebt es Stallmeister Truichon. Macht das genauso wieder, wie vorhin mit den Vorräten für Aethic. Ihr findet den Stall von Truichon, wenn Ihr nach Norden geht. Ihr habt dort vorhin Euer Pferd abgegeben.
+
+Hib.ImportantDelivery.Description.Step7:		Schritt 7: Gebt Stallmeister Freagus die Kiste mit Gemüse.
+
+Hib.ImportantDelivery.Description.Step8:		Schritt 8: Hört Stallmeister Freagus eine Weile zu. Falls er aufhört, mit Euch zu reden, fragt ihn nach Eurer [Belohnung] für die harte Arbeit und Eure Dienste für Hibernia.
+
+Hib.ImportantDelivery.FinishQuest.RecieveReward:	Ihr erhaltet {0} als Belohnung.
+
+Hib.ImportantDelivery.Notify.RentingHorse:		Guten Tag, {0}. Falls Ihr daran interessiert seid ein Reitpferd zu mieten, dann kauft ein Ticket und gebt es mir. Ich wünsche Euch einen sicheren Weg!
+
+Hib.ImportantDelivery.Notify.Supplies:			Ah! Die Vorräte, auf die ich schon warte. Ich danke Euch {0}. Diese werden uns auf alle Fälle in den kommenden Wochen weiter helfen. Ich habe einen weiteren [Auftrag]. Seit Ihr daran interessiert?
+
+Hib.ImportantDelivery.Notify.Vegetables:		Ah! Das muss von Aethic aus Tir na mBeo sein. Ich habe schon eine ganze Weile auf gutes Gemüse gewartet. Meine Familie, mein Pferd und ich werden eine ganze Zeit damit auskommen. Meinen Dank an Euch. Hier nehmt diese [Belohnung] für Eure harte Arbeit.
+
+Hib.ImportantDelivery.TalkToAddrir.Abort:		Wollt Ihr wirklich diese Aufgabe abbrechen, wobei Euch alle damit verbundenen Gegenstände verloren gehen?
+
+Hib.ImportantDelivery.TalkToAddrir.CaseCharSheet:	Charakterbogen
+
+Hib.ImportantDelivery.TalkToAddrir.CaseExpedite:	beschleunigen
+
+Hib.ImportantDelivery.TalkToAddrir.CaseHorseTicket:	Pferdeticket
+
+Hib.ImportantDelivery.TalkToAddrir.CaseInformation:	Informationen
+
+Hib.ImportantDelivery.TalkToAddrir.CaseJournal:		Tagebuch
+
+Hib.ImportantDelivery.TalkToAddrir.CaseQuestion:	Frage
+
+Hib.ImportantDelivery.TalkToAddrir.CaseTraining:	Eurer Ausbildung fortzufahren
+
+Hib.ImportantDelivery.TalkToAddrir.CharSheet:		Euer Charakterbogen beinhaltet alle Informationen Eures Charakters, wie zum Beispiel Attribute, Waffenfähigkeit, Startklasse und Beruf. Wenn Ihr Euch diese Werte Eures Charakters ansehen wollt, klickt in der Menüleiste auf das linke Symbol. Es sieht aus wie eine Figur mit einem Kreis darum. Ihr erhaltet dort mehr [Informationen].
+
+Hib.ImportantDelivery.TalkToAddrir.Expedite:		Nun, da Ihr eine kurze Einführung in die Welt von Hibernia erhalten habt, ist es an der Zeit für Eure erste Aufgabe. Ich möchte, dass Ihr diese Vorräte zu Aethic in Tir na mBeo bringt. Keine Sorge, ich habe ein besonderes [Pferdeticket] für Euch.
+
+Hib.ImportantDelivery.TalkToAddrir.Greetings:		Seid willkommen junger Rekrut. Ich bin Addrir und hier, um Euch zu helfen, Euren Weg in diesem ausgedehnten Reich zu finden. Dabei werdet Ihr die Gelegenheit haben, Waffen, Rüstungen, Geld und Erfahrung zu erlangen. Ihr werdet Eure Ausbildung mit einer einfachen [Frage] beginnen.
+
+Hib.ImportantDelivery.TalkToAddrir.HorseTicket:		Alles was Ihr tun müsst, ist dieses Pferdeticket zu Stallmeister Rumdor hier in Mag Mell zu bringen. Gebt ihm das Ticket und schon seid Ihr auf dem Weg nach Tir na mBeo. Beeilt Euch, denn die Zeit ist kostbar.
+
+Hib.ImportantDelivery.TalkToAddrir.Information:		Ich weiß, das alles scheint ein wenig zu viel zu sein, aber ich habe einen besonderen Gegenstand für Euch, der die Eingewöhnung vereinfachen wird. Bitte nehmt dieses [Tagebuch] für Rekruten.
+
+Hib.ImportantDelivery.TalkToAddrir.Journal:		Das Tagebuch wird Euch bei den verschiedenen Aufgaben, die ich Euch stellen werde, helfen. Ich nenne es gerne ein schlaues Tagebuch. Es wurde für Neulinge wie Euch von Eldritch-Meistern hergestellt und wird Euch helfen, Eure Ausbildung zu [beschleunigen].
+
+Hib.ImportantDelivery.TalkToAddrir.OneStepCloser:	Ich gratuliere Euch! Ihr seid nun einen Schritt weiter, um die Welt von Hibernia zu verstehen. In dieser Phase der Ausbildung werde ich Euch in verschiedene Teile des Reiches schicken, um einige bestellte Sachen bei bestimmten Leuten abzuliefern. Ihr solltet von Zeit zu Zeit Eure NOTIZEN aufschlagen, um zu sehen, welcher Schritt als nächstes getan werden muss, um Eure Aufgabe zuerledigen. Ihr könnt auf diese über die BEFEHLE-Taste in Eurem [Charakterbogen] zugreifen.
+
+Hib.ImportantDelivery.TalkToAddrir.Question:		Ich werde Euch fragen, ob Ihr mit Eurer Ausbildung weiter machen wollt. Es wird sich dann ein Dialog zeigen. Alles was Ihr tun solltet, ist zuzustimmen oder abzulehnen. Seid Ihr bereit, mit [Eurer Ausbildung fortzufahren]?
+
+Hib.ImportantDelivery.TalkToAddrir.Training:		Seid Ihr bereit Eure Ausbildung zu beginnen?
+
+Hib.ImportantDelivery.TalkToAethic.CaseErrand:		Auftrag
+
+Hib.ImportantDelivery.TalkToAethic.Errand:		Ich brauche Euch, um diese Kiste mit Gemüse zu Freagus nach Ardee zu bringen. Ich bin sicher, dass Ihr geeignet seid für diese Aufgabe. Nehmt dieses Pferdeticket und gebt es Stallmeister Truichon. Und nun beeilt Euch, bevor dieses Gemüse verdirbt.
+
+Hib.ImportantDelivery.TalkToAethic.Greetings:		Seid gegrüßt, Reisender. Ich habe Euch vorher noch nie hier gesehen. Ihr müsst ein neuer Rekrut sein. Wie auch immer, womit kann ich Euch helfen?
+
+Hib.ImportantDelivery.TalkToAethic.Supplies:		Ah! Die Vorräte, auf die ich schon warte. Ich danke Euch {0}. Diese werden uns auf alle Fälle in den kommenden Wochen weiter helfen. Ich habe einen weiteren [Auftrag]. Seit Ihr daran interessiert?
+
+Hib.ImportantDelivery.TalkToAethic.Vegetables:		Ich brauche Euch, um diese Kiste mit Gemüse zu Freagus nach Ardee zu bringen. Ich bin sicher, dass Ihr geeignet seid für diese Aufgabe. Nehmt dieses Pferdeticket und gebt es Stallmeister Truichon. Und nun beeilt Euch, bevor dieses Gemüse verdirbt.
+
+Hib.ImportantDelivery.TalkToFreagus.CaseReward:		Belohnung
+
+Hib.ImportantDelivery.TalkToFreagus.Errand:		Geht nicht gleich wieder weg, Freund. Ich habe noch einen anderen Auftrag für Euch.
+
+Hib.ImportantDelivery.TalkToFreagus.GoodCrop:		Ah! Das muss von Aethic aus Tir na mBeo sein. Ich habe schon eine ganze Weile auf gutes Gemüse gewartet. Meine Familie, mein Pferd und ich werden eine ganze Zeit damit auskommen. Meinen Dank an Euch {0}. Hier nehmt diese [Belohnung] für Eure harte Arbeit.
+
+Hib.ImportantDelivery.TalkToFreagus.Reward:		Es ist zwar nur ein kleiner Lumpen, aber er wird Euch warm halten in den kalten Monaten. Nochmals Dank {0}.
+
+Hib.ImportantDelivery.TalkToFreagus.Welcome:		Willkommen in meinem Pferdestall, Freund. Was kann ich heute für Euch tun?
+
+
