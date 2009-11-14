@@ -1,0 +1,31 @@
+﻿GameObject.Casting.CastsASpell:				{0} zaubert!
+
+GameObject.GetExamineMessages.YouTarget:		Es wird {0} als Ziel erfasst.
+
+GameObject.GetName.Article1:				{0}
+
+GameObject.GetName.Article2:				{0}
+
+GameObject.GetName.Article3:				{0}
+
+GameObject.GetName.Article4:				{0}
+
+GameObject.GetName.Article5:				{0}
+
+GameObject.GetName.Article6:				{0}
+
+GameObject.GetPronoun.Pronoun1:				Man
+
+GameObject.GetPronoun.Pronoun2:				man
+
+GameObject.GetPronoun.Pronoun3:				Man ist
+
+GameObject.GetPronoun.Pronoun4:				man ist
+
+GameObject.GetPronoun.Pronoun5:				Man
+
+GameObject.GetPronoun.Pronoun6:				man
+
+GameObject.Interact.TooFarAway:				{0} ist zu weit entfernt.
+
+

@@ -1,0 +1,23 @@
+﻿Alb.AfterTheAccident.CheckPlayerAbortQuest.Text1:	Good, now go out there and finish your work!
+
+Alb.AfterTheAccident.CheckPlayerAbortQuest.Text2:	Aborting Quest {0}. You can start over again if you want.
+
+Alb.AfterTheAccident.Conclusion.Text1:			You have done well. Here is your reward, and my thanks for serving Camelot!
+
+Alb.AfterTheAccident.Init.Text1:			Recruit's Necklace of Might
+
+Alb.AfterTheAccident.Init.Text2:			Recruit's Necklace of Insight
+
+Alb.AfterTheAccident.Init.Text3:			Recruit's Necklace of Faith
+
+Alb.AfterTheAccident.Init.Text4:			Puny Skeleton Skull
+
+Alb.AfterTheAccident.Init.Text5:			Puny skeleton skulls
+
+Alb.AfterTheAccident.Notify.Text1:			puny skeleton
+
+Alb.AfterTheAccident.Story:				During my patrols of Cotswold, I've seen many things that gravely concern me, my friend. The dead, are restless, and walk aboveground when they should be resting peacefully below. While this isn't quite a new phenomenon, there are more and more sightings of skeletons, zombies, and the like since that accursed accident.\nYou've likely heard by now about the tear in the fabric of reality that happened accidentally when the finger-wagglers at the Academy moved the portal leading to the Shrouded Isles from Avalon Marsh to here in Cotswold. They opened a door into hell, and I don't think anyone knows just yet what that means. They think they capped it, but I'm not so sure.\nWhile I can't be certain about what foul magic brings these 'things' forth from their final resting places, I do know these abominations can't be allowed to roam the countryside. I'm authorized to pay a bounty to anyone who puts them down and returns to me with proof of the deed.
+
+Alb.AfterTheAccident.Summary:				Kill two puny skeletons. Return to Sir Prescott with two Puny Skeleton Skulls as proof that you completed this task.
+
+

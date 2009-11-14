@@ -1,0 +1,219 @@
+﻿
+
+Effects.DelveInfo.MinutesRemaining:				- {0}: {1} minutes remaining.
+
+Effects.DelveInfo.SecondsRemaining:				- {0} seconds remaining.
+
+
+
+Effects.Necro.TauntEffect.SeemsChange:			{0} seems to change in demeanor, appearing more aggressive than before.
+
+Effects.Necro.TauntEffect.SeemsLessAgg:			{0} seems to be less aggressive than before.
+
+
+
+Effects.BerserkEffect.GoBerserkerFrenzy:		You go into a berserker frenzy!
+
+Effects.BerserkEffect.BerserkerFrenzyEnds:		Your berserker frenzy ends.
+
+Effects.BerserkEffect.Name:						Berserk
+
+Effects.BerserkEffect.InfoEffect:				This ability transforms the player into a Vendo beast and makes each hit that lands a critical hit, at the expense of any defensive abilities. It can be used one every seven minutes.
+
+
+
+Effects.BodyguardEffect.NowBGXButSC:			You are now Bodyguarding {0}, but you must stand closer.
+
+Effects.BodyguardEffect.XNowBGYouButSC:			{0} is now Bodyguarding you, but you must stand closer.
+
+Effects.BodyguardEffect.YouAreNowBGX:			You are now Bodyguarding {0}.
+
+Effects.BodyguardEffect.XIsBGYou:				{0} is now Bodyguarding you.
+
+Effects.BodyguardEffect.YouAreNoLongerBGX:		You are no longer Bodyguarding {0}.
+
+Effects.BodyguardEffect.XIsNoLongerBGYou:		{0} is no longer Bodyguarding you.
+
+Effects.BodyguardEffect.XIsBodyguardingY:		{0} is Bodyguarding {1}
+
+Effects.BodyguardEffect.BodyguardedByName:		{0} bodyguarded by {1}
+
+Effects.BodyguardEffect.Name:					Bodyguard
+
+Effects.BodyguardEffect.InfoEffect:				Ability that if successful will guard an attack meant for the ability's target. You will block in the target's place.
+
+
+
+Effects.CamouflageEffect.YouAreCamouflaged:		You are now camouflaged!
+
+Effects.CamouflageEffect.YourCFIsGone:			Your camouflage is gone.
+
+Effects.CamouflageEffect.Name:					Camouflage
+
+Effects.CamouflageEffect.InfoEffect:			Available to the archer classes. This ability will make the archer undectable to the Mastery of Stealth Realm Ability for a period of time. Drawing a weapon or engaging in combat will cancel the effect and cause the player to be visible. This does not modify stealth skill.
+
+
+
+Effects.EngageEffect.ConcOnBlockingX:			You concentrate on blocking the blows of {0}!
+
+Effects.EngageEffect.YouNoConcOnBlock:			You no longer concentrate on blocking the blows!
+
+Effects.EngageEffect.YouNoAttemptToEngageT:		You are no longer attempting to engage a target!
+
+Effects.EngageEffect.XEngagesY:					{0} engages {1}
+
+Effects.EngageEffect.EngageName:				Engage: {0}
+
+Effects.EngageEffect.Name:						Engage
+
+Effects.EngageEffect.InfoEffect:				Endurance is drained in return for a significantly increased blocking rate. Engage can only be used at range, or while closing to attack. Once you attack, it is disabled.
+
+
+
+Effects.GameSpellEffect.CantRemoveEffect:		You can't remove this effect!
+
+
+
+Effects.GuardEffect.YouAreNowGuardingYBut:		You are now guarding {0}, but you must stand closer.
+
+Effects.GuardEffect.XIsNowGuardingYouBut:		{0} is now guarding you, but you must stand closer.
+
+Effects.GuardEffect.YouAreNowGuardingY:			You are now guarding {0}.
+
+Effects.GuardEffect.XIsNowGuardingYou:			{0} is now guarding you.
+
+Effects.GuardEffect.YourNoLongerGuardingY:		You are no longer guarding {0}.
+
+Effects.GuardEffect.XNoLongerGuardingYoy:		{0} is no longer guarding you.
+
+Effects.GuardEffect.InfoEffect:					Ability that if successful will guard an attack meant for the ability's target. You will block in the target's place.
+
+Effects.GuardEffect.GuardedByName:				{0} guarded by {1}
+
+Effects.GuardEffect.Name:						Guard
+
+Effects.GuardEffect.XIsGuardingY:				{0} is guarding {1}
+
+
+
+Effects.BannerOfWardingEffect.Name:				Banner of Warding
+
+Effects.BannerOfWardingEffect.Description:		Grants a 10% bonus to all magical resists.
+
+
+
+Effects.BannerOfShieldingEffect.Name			Banner of Shielding
+
+Effects.BannerOfShieldingEffect.Description:	Grants a 6% bonus to all melee resists.
+
+
+
+Effects.BannerOfFreedomEffect.Name				Banner of Freedom
+
+Effects.BannerOfFreedomEffect.Description:		Reduces all Crowd Controls by 6%.
+
+
+
+Effects.BannerOfBesiegingEffect.Name:			Banner of Besieging
+
+Effects.BannerOfBesiegingEffect.Description:	Reduces the fireing speed of siegeweapons by 6%.
+
+
+
+Effects.InterceptEffect.YouAttemtInterceptYBut:	You are now attempting to intercept an attack for {0}, but you must stand closer.
+
+Effects.InterceptEffect.XAttemtInterceptYouBut:	{0} is now attempting to intercept an attack for you, but you must stand closer.
+
+Effects.InterceptEffect.YouAttemtInterceptY:	You are now attempting to intercept an attack for {0}.
+
+Effects.InterceptEffect.XAttemptInterceptYou:	{0} is now attempting to intercept an attack for you.
+
+Effects.InterceptEffect.YouNoAttemptInterceptY:	You are no longer attempting to intercept an attack for {0}.
+
+Effects.InterceptEffect.XNoAttemptInterceptYou:	{0} is no longer attempting to intercept an attack for you.
+
+Effects.InterceptEffect.InterceptedByName:		{0} intercepted by {1}
+
+Effects.InterceptEffect.Name:					Intercept
+
+Effects.InterceptEffect.InfoEffect:				Ability that if successful will intercept an attack meant for the ability's target. You will take damage in the target's place.
+
+Effects.InterceptEffect.XInterceptingY:			{0} is intercepting for {0}
+
+
+
+Effects.ProtectEffect.YouProtectingYBut:		You are now protecting {0}, but you must stand closer.
+
+Effects.ProtectEffect.XProtectingYouBut:		{0} is now protecting you, but you must stand closer.
+
+Effects.ProtectEffect.YouProtectingY:			You are now protecting {0}.
+
+Effects.ProtectEffect.XProtectingYou:			{0} is now protecting you.
+
+Effects.ProtectEffect.YouNoProtectY:			You are no longer protecting {0}.
+
+Effects.ProtectEffect.XNoProtectYou:			{0} is no longer protecting you.
+
+Effects.ProtectEffect.ProtectByName:			{0} protected by {1}
+
+Effects.ProtectEffect.Name:						Protect
+
+Effects.ProtectEffect.InfoEffect:				Ability that if successful will protect an attack meant for the ability's target. You reduce tha aggro an action would have caused.
+
+Effects.ProtectEffect.XProtectingY:				{0} is protecting {1}
+
+
+
+Effects.QuickCastEffect.YouActivatedQC:			You have activated quickcast.
+
+Effects.QuickCastEffect.YourNextSpellNoQCed:	Your next spell will not be quickcasted.
+
+Effects.QuickCastEffect.Name:					QuickCast
+
+Effects.QuickCastEffect.InfoEffect:				This allows them to cast a single spell with a quickened casting time, but costs twice the power. It cannot be interrupted by melee or spells. The only exception to this is the Necromancer form of Quickcast (Facilitate Painworking). It allows the Necromancer's summoned undead pet to have six seconds of uninterrupted casting time.
+
+
+
+Effects.RapidFireEffect.YouSwitchRFMode:		You switch to rapid fire mode!
+
+Effects.RapidFireEffect.Name:					Rapid Fire
+
+
+
+Effects.ShadeEffect.Name:						Shade
+
+Effects.SprintEffect.Name:						Sprint
+
+
+
+Effects.StagEffect.HuntsSpiritChannel:			You channel the spirit of the Hunt!
+
+Effects.StagEffect.YourHuntsSpiritEnds:			Your Spirit of the Hunt ends.
+
+Effects.StagEffect.Name:						Stag
+
+Effects.StagEffect.InfoEffect:					Hero-only ability, that transforms a player into a stag-headed Huntsman. This lasts 30 seconds, and gives the player a burst in hitpoints. May be used once every 30 minutes. Initiate = 20% bonus to hitpoints. Member =30%, Leader = 40%, Master = 50%
+
+
+
+Effects.StaticEffect.YouCantRemoveThisEffect:	You can't remove this effect!
+
+Effects.StealthEffect.Name:						Hidden
+
+
+
+Effects.SureShotEffect.YouSwitchToSSMode:		You switch to sure shot mode!
+
+Effects.SureShotEffect.Name:					Sure Shot
+
+
+
+Effects.TripleWieldEffect.MBHitsExtraDamage:	Your magical blade hits {0} for {1} extra damage!
+
+Effects.TripleWieldEffect.XMBExtraDamageToYou:	{0}'s magical blade does {1} extra damage to you!
+
+Effects.TripleWieldEffect.Name:					Triple Wield
+
+Effects.TripleWieldEffect.InfoEffect:			Magical blade that does additional damage.
+
+

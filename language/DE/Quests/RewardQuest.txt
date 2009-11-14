@@ -1,0 +1,7 @@
+﻿RewardQuest.Description:	Questziel: {0} ({1}/{2})
+
+RewardQuest.Notify:		Ihr müsst eine gültige Belohnung auswählen!
+
+RewardQuest.OnQuestAssigned:	Ihr habt die Quest "{0}" angenommen.
+
+

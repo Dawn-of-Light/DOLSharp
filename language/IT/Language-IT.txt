@@ -1,0 +1,1927 @@
+﻿# Language file for DOL
+
+# Language used : ITALIAN
+
+#
+
+# #-Beginning and Empty lines are ignored
+
+# TABS are ignored at the left of ':' too.
+
+# {0} etc. are for args, don't remove them !
+
+#
+
+# Please try to keep ID's alphabetical order
+
+
+
+# LANGUAGEMGR
+
+System.LanguagesName.English:				Inglese
+
+System.LanguagesName.French:				Francese
+
+System.LanguagesName.German:				Tedesco
+
+System.LanguagesName.Spanish:				Spagnolo
+
+System.LanguagesName.Czech:					Cecoslovacco
+
+System.LanguagesName.Italian:				Italiano
+
+
+
+# SYSTEM
+
+System.NoSense:								Non ha senso!
+
+System.MustSelectTarget:					Devi selezionare un bersaglio!
+
+System.ReleaseTimer:						Release Timer
+
+
+
+# CRAFTING
+
+# (All)
+
+Crafting.CheckTool.FindAlchemyTable:			Devi trovare una alchemy table!
+
+Crafting.CheckTool.FindForge:				Devi trovare una forge!
+
+Crafting.CheckTool.FindLathe:				Devi trovare un lathe!
+
+Crafting.CheckTool.FindPlaningTool:			Devi trovare un planing tool!
+
+Crafting.CheckTool.FindSewingKit:			Devi trovare un sewing kit!
+
+Crafting.CheckTool.FindSmithTool:			Devi trovare uno smith tool!
+
+Crafting.CheckTool.FindSpellcraftKit:			Devi trovare uno spellcraft kit!
+
+Crafting.CheckTool.NotHaveTools:			Non hai gli strumenti per creare il {0}.
+
+Crafting.GainCraftingSkillPoints.RaiseArmorcraft:	Devi recarti dal tuo allenatore per aumentare ancora Armorcraft!
+
+Crafting.GainCraftingSkillPoints.RaiseFletching:	Devi recarti dal tuo allenatore per aumentare ancora Fletching!
+
+Crafting.GainCraftingSkillPoints.RaiseSpellcraft:	Devi recarti dal tuo allenatore per aumentare ancora Spellcraft!
+
+Crafting.GainCraftingSkillPoints.RaiseTailoring:	Devi recarti dal tuo allenatore per aumentare ancora Tailoring!
+
+Crafting.GainCraftingSkillPoints.RaiseWeaponcraft:	Devi recarti dal tuo allenatore per aumentare ancora Weaponcraft!
+
+
+
+# /AbstractCraftingSkill
+
+AbstractCraftingSkill.BuildCraftedItem.Masterpiece:	Congratulazioni, hai creato un capolavoro !
+
+AbstractCraftingSkill.BuildCraftedItem.Successfully:	Hai creato con successo il {0}! ({1})
+
+AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	Non hai gli ingredienti per creare il {0}.
+
+AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:	Ti mancano :
+
+
+
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:		Non hai l'abilita' minima necessaria in Clothworking ({0}) per creare il {1}!
+
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:	Non hai l'abilita' minima necessaria in Leathercrafting ({0}) per creare il {1}!
+
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:		Non hai l'abilita' minima necessaria in Metalworking ({0}) per creare il {1}!
+
+AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:		Non hai l'abilita' minima necessaria in Woodworking ({0}) per creare il {1}!
+
+
+
+AbstractCraftingSkill.CraftItem.BeginWork:		Cominci a lavorare sul {0} ({1}%).
+
+AbstractCraftingSkill.CraftItem.ChanceToGainPoint:	La probabilita' di ottenere un punto nella tua abilita' primaria di craft e' {0}%.
+
+AbstractCraftingSkill.CraftItem.CurrentlyMaking:	Lavorazione in corso: {0}
+
+AbstractCraftingSkill.CraftItem.MoveAndInterrupt:	Ti muovi e interrompi la lavorazione.
+
+AbstractCraftingSkill.CraftItem.StopWork:		Interrompi la lavorazione corrente.
+
+AbstractCraftingSkill.LooseRawMaterial.Count:		Hai perso ({0}) {1}.
+
+AbstractCraftingSkill.LooseRawMaterial.Materials:	Non sei riuscito a creare il {0}, e hai perso qualche materiale!
+
+AbstractCraftingSkill.MakeItem.LoseNoMaterials:		Non sei riuscito a creare il {0} ma non hai perso alcun materiale!
+
+AbstractCraftingSkill.MakeItem.NotAllMaterials:		Non hai tutte le materie prime per creare questo oggetto.
+
+
+
+# GAMELIVING
+
+GameLiving.ReceiveItem:					{0} non vuole questo oggetto!
+
+GameLiving.ReceiveMoney:				{0} non vuole i tuoi soldi!
+
+
+
+# GAMEMERCHANT
+
+GameMerchant.GetExamineMessages.BuyItemsFor:		{0} dice, "Puoi comprare questi oggetti per {1}."
+
+GameMerchant.GetExamineMessages.Nothing:		niente
+
+GameMerchant.GetExamineMessages.RightClick:		[Clicca col pulsante destro per visualizzare gli articoli]
+
+GameMerchant.GetExamineMessages.YouExamine:		Esamini {0}. {1} e' {2} ed e' un mercante.
+
+GameMerchant.OnPlayerAppraise.Offers:			{0} ti offre {1} per {2}.
+
+GameMerchant.OnPlayerBuy.Bought:			Hai comprato {0} per {1}.
+
+GameMerchant.OnPlayerBuy.Bought2:			Hai comprato {0} per {1} {2}.
+
+GameMerchant.OnPlayerBuy.BoughtBP:			Hai comprato {0} per {1} BPs.
+
+GameMerchant.OnPlayerBuy.BoughtPieces:			Hai comprato {0} pieces of {1} per {2}.
+
+GameMerchant.OnPlayerBuy.BoughtPieces2:			Hai comprato {0} pieces of {1} per {2} {3}.
+
+GameMerchant.OnPlayerBuy.BoughtPiecesBP:		Hai comprato {0} pieces of {1} per {0} BPs.
+
+GameMerchant.OnPlayerBuy.NotInventorySpace:		Non hai abbastanza spazio nell'inventario per comprare questo oggetto.
+
+GameMerchant.OnPlayerBuy.YouNeed:			Hai bisogno di {0} per comprare questo oggetto.
+
+GameMerchant.OnPlayerBuy.YouNeed2:			Hai bisogno di {0} {1} per comprare questo oggetto.
+
+GameMerchant.OnPlayerBuy.YouNeedBP:			Hai bisogno di {0} BPs per comprare questo oggetto.
+
+GameMerchant.OnPlayerSell.CantBeSold:			Questo oggetto non puo' essere venduto.
+
+GameMerchant.OnPlayerSell.GivesYou:			{0} ti da' {1} per {2}.
+
+GameMerchant.OnPlayerSell.IsntInterested:		{0} non e' interessato a {1}.
+
+GameMerchant.OnPlayerSell.TooFarAway:			{0} e' troppo lontano!
+
+
+
+# GAMENPC
+
+GameNPC.GetAggroLevelString.Aggressive1:		aggressivo
+
+GameNPC.GetAggroLevelString.Aggressive2:		Aggressivo
+
+GameNPC.GetAggroLevelString.Friendly1:			amichevole
+
+GameNPC.GetAggroLevelString.Friendly2:			Amichevole
+
+GameNPC.GetAggroLevelString.Hostile1:			ostile
+
+GameNPC.GetAggroLevelString.Hostile2:			Ostile
+
+GameNPC.GetAggroLevelString.Neutral1:			neutrale
+
+GameNPC.GetAggroLevelString.Neutral2:			Neutrale
+
+GameNPC.GetAggroLevelString.TowardsYou:			{0} verso di te
+
+GameNPC.GetExamineMessages.YouExamine:			Esamini {0}. {1} e' {2}.
+
+
+
+
+
+# GAMEOBJECT
+
+GameObject.GetExamineMessages.YouTarget:		Selezioni [{0}].
+
+GameObject.GetName.Article1:				Il {0}
+
+GameObject.GetName.Article2:				il {0}
+
+GameObject.GetName.Article3:				Un {0}
+
+GameObject.GetName.Article4:				un {0}
+
+GameObject.GetName.Article5:				Un {0}
+
+GameObject.GetName.Article6:				un {0}
+
+GameObject.GetPronoun.Pronoun1:				Esso
+
+GameObject.GetPronoun.Pronoun2:				esso
+
+GameObject.GetPronoun.Pronoun3:				Il suo
+
+GameObject.GetPronoun.Pronoun4:				il suo
+
+GameObject.GetPronoun.Pronoun5:				Esso
+
+GameObject.GetPronoun.Pronoun6:				esso
+
+GameObject.Interact.TooFarAway:				Sei troppo lontano per interagire con {0}.
+
+
+
+# GAMEPLAYER
+
+GamePlayer.AddAbility.YouLearn:				Impari l'abilita' {0} !
+
+GamePlayer.AddSpecialisation.YouLearn:		Impari lo stile {0} !
+
+GamePlayer.AddSpellLine.YouLearn:			Impari gli incantesimi {0} !
+
+GamePlayer.ApplyPoison.CantApplyRecentCombat:	Sei stato in combattimento di recente e non puoi ancora applicare veleni!
+
+GamePlayer.ApplyPoison.CantPoisonWeapon:	Non puoi avvelenare quest'arma!
+
+GamePlayer.ApplyPoison.CantUsePoison:		Non puoi usare questo veleno.
+
+GamePlayer.ApplyPoison.CantUsePoisons:		Non puoi usare veleni.
+
+GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	I veleni possono essere usati solamente sulle armi.
+
+GamePlayer.Attack.AlreadyDead:				{0} e' gia' morto!
+
+GamePlayer.Attack.Blocked:					{0} blocca il tuo attacco!
+
+GamePlayer.Attack.CantBeAttacked:			Non puo' essere attaccato!
+
+GamePlayer.Attack.CantCritical:				Non puoi effettuare un colpo critico su questo bersaglio, cambi la modalita' in colpo normale.
+
+GamePlayer.Attack.CantSeeTarget:			Non riesci a vedere il tuo bersaglio!
+
+GamePlayer.Attack.CantUseQuiver:			Non puoi usare i colpi nella tua faretra con l'arma che stai usando!
+
+GamePlayer.Attack.CouldRepair:				Il tuo {0} puo' usare riparazioni.
+
+GamePlayer.Attack.Critical:					Colpisci criticamente di {0} per un danno addizionale di {1} !
+
+GamePlayer.Attack.Evade:					{0} ti attacca e schivi il colpo!
+
+GamePlayer.Attack.Evaded:					{0} schiva il tuo colpo!
+
+GamePlayer.Attack.Fumble:					Sbagli l'attacco e prendi tempo per recuperare!
+
+GamePlayer.Attack.Fumbled:					{0} annaspa!
+
+GamePlayer.Attack.HitsYour:					{0} ti colpisce {1} per un danno di {2}{3} !
+
+GamePlayer.Attack.HitsYou:					{0} ti colpisce per un danno di {1}{2} !
+
+GamePlayer.Attack.HitsYouCritical:			{0} ti colpisce criticamente per un danno di {1} !
+
+GamePlayer.Attack.InterceptHit:				{0} {1}{2} e colpisce per un danno di {3}{4} !
+
+GamePlayer.Attack.Intercepted:				{0} si mette di fronte a {1} e intercetta il colpo!
+
+GamePlayer.Attack.InterceptedHit:			{0} {1}{2} ma colpisce {3} per un danno di {4}{5} !
+
+GamePlayer.Attack.Interrupted:				{0} ti sta attacando e il tuo {1} viene interrotto!
+
+GamePlayer.Attack.Location.Torso:			il torso
+
+GamePlayer.Attack.Location.Arm:				le braccia
+
+GamePlayer.Attack.Location.Head:			la testa
+
+GamePlayer.Attack.Location.Leg:				le gambe
+
+GamePlayer.Attack.Location.Hand:			le mani
+
+GamePlayer.Attack.Location.Foot:			i piedi
+
+GamePlayer.Attack.Miss:						Manchi il colpo!
+
+GamePlayer.Attack.Missed:					{0} ti attacca e ti manca!
+
+GamePlayer.Attack.MustSelectQuiver:			Devi selezionare lo slot della faretra da usare!
+
+GamePlayer.Attack.NeedRepair:				{0} ha bisogno di riparazioni.
+
+GamePlayer.Attack.NeedRepairDire:			{0} ha veramente bisogno di riparazioni.
+
+GamePlayer.Attack.NeedTarget:				Devi selezionare un bersaglio da attaccare!
+
+GamePlayer.Attack.NotInView:				{0} non e' in vista!
+
+GamePlayer.Attack.Parried:					{0} para il tuo attacco!
+
+GamePlayer.Attack.Parry:					{0} ti attacca e tu pari il colpo!
+
+GamePlayer.Attack.ReadyToFire:				Sei pronto a colpire!
+
+GamePlayer.Attack.StrafMiss:				Ti stavi spostando lateralmente in combattimento e hai mancato!
+
+GamePlayer.Attack.TooFarAway:				{0} e' troppo lontano per essere attaccato!
+
+GamePlayer.Attack.TooTired:					Sei troppo stanco per continuare a trattenere il colpo!
+
+GamePlayer.Attack.Type.Shot:				colpisci
+
+GamePlayer.Attack.Type.Throw:				lanci
+
+GamePlayer.Attack.WithYour:					con il tuo
+
+GamePlayer.Attack.YouAttack:				Attacchi
+
+GamePlayer.Attack.YouShot:					Colpisci		
+
+GamePlayer.Bind.LastBindPoint:				Ultimo punto di rinascita : {0}.
+
+GamePlayer.Bind.CantBindDead:				Non puoi impostare un punto di rinascita quando sei morto!
+
+GamePlayer.Bind.MustWait:					Devi aspettare {0} secondi per poter impostare un nuovo punto di rinascita!
+
+GamePlayer.Bind.Bound:						Hai impostato il tuo punto di rinascita in questo luogo.
+
+GamePlayer.Bind.CantHere:					Non puoi impostare un punto di rinascita in questo luogo!
+
+GamePlayer.CastSpell.CantCastStunned:		Non puoi lanciare incantesimi quando sei bloccato!
+
+GamePlayer.CastSpell.CantCastMezzed:		Non puoi lanciare incantesimi quando sei incantato!
+
+GamePlayer.CastSpell.AlreadyPlaySong:		Stai gia' suonando una canzone!
+
+GamePlayer.CastSpell.AlreadyCastFollow:		Stai gia' lanciando un incantesimo! Prepari questo incantesimo come seguente!
+
+GamePlayer.CastSpell.AlreadyCastNoQueue:	Stai gia' lanciando un incantesimo, per abilitare la successione di incantesimi digita '/noqueue'!
+
+GamePlayer.CommandNpcAttack.TooFarAwayForPet:			Il tuo bersaglio e' troppo lontano per poter essere attaccato dal tuo pet!
+
+GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Devi scegliere una destinazione per il tuo pet.
+
+GamePlayer.CraftItem.DontHaveAbilityMake:	Non hai l'abilita' di costruire questo oggetto.
+
+GamePlayer.CurrentTitle.TitleCleared:		Il tuo titolo e' stato reimpostato.
+
+GamePlayer.Die.CorpseLies:					{0} e' morto. {1} cadavere giace sul terreno.
+
+GamePlayer.Die.DeadRVR:						Sei morto combattendo per il tuo reame e non perdi esperienza!
+
+GamePlayer.Die.DeathN1:						Questa e' la tua prima morte per questo livello. La tua perdita di esperienza e costituzione sono notevolmente ridotte.
+
+GamePlayer.Die.DeathN2:						Questa e' la tua seconda morte per questo livello. La tua perdita di esperienza e costituzione sono ridotte.
+
+GamePlayer.Die.DuelDefeated:				{0} e' stato sconfitto in duello da {1} !
+
+GamePlayer.Die.Killed:						{0} e' stato ucciso !
+
+GamePlayer.Die.KilledBy:					{0} e' stato ucciso da {1}.
+
+GamePlayer.Die.KilledByLocation:			{0} e' stato ucciso da {1} a {2}.
+
+GamePlayer.Die.KilledLocation:				{0} e' stato ucciso a {1} !
+
+GamePlayer.Die.LoseExperience:				Perdi un po' di esperienza!
+
+GamePlayer.Die.ReleaseToReturn:				Sei stato ucciso.  Digita '/release' per ritornare al tuo ultimo punto di rinascita.
+
+GamePlayer.Die.YouKilled:					Hai ucciso {0}!
+
+GamePlayer.DrowningTimerCallback.CannotBreath:				Non puoi respirare sottacqua e subisci un danno!
+
+GamePlayer.DrowningTimerCallback.Take5%Damage:				Subisci il 5% dei tuoi punti ferita massimi di danno.
+
+GamePlayer.DuelStop.DuelEnds:				Il tuo duello e' finito!
+
+GamePlayer.GainBountyPoints.YouGet:			Ottieni {0} punti taglia!
+
+GamePlayer.GainExperience.CampBonus:			({0} camp bonus)
+
+GamePlayer.GainExperience.CannotRaise:		Non puoi reclamare il livello 6 finche' non scegli una classe!
+
+GamePlayer.GainExperience.GroupBonus:			({0} group bonus)
+
+GamePlayer.GainExperience.OutpostBonus:			({0} outpost bonus)
+
+GamePlayer.GainExperience.TalkToTrainer:	Parla con il tuo allenatore per ricevere maggiori informazioni.
+
+GamePlayer.GainExperience.YouGet:			Ottieni {0} punti esperienza.
+
+GamePlayer.GainRealmPoints.Earned:			{0} ha guadagnato 1.000.000 di punti reame a {1}
+
+GamePlayer.GainRealmPoints.GainBonus:		Ottieni un bonus di +{0} in tutte le specializzazioni!
+
+GamePlayer.GainRealmPoints.GainedLevel:		Hai ottenuto un livello reame!
+
+GamePlayer.GainRealmPoints.GainedRank:		Hai ottenuto un nuovo rango e titolo reame!
+
+GamePlayer.GainRealmPoints.NewRealmTitle:	Il tuo nuovo titolo reame e' {0}!
+
+GamePlayer.GainRealmPoints.ReachedRank:		{0} ha raggiunto il rango reame {1:#L#} a {2}!
+
+GamePlayer.GainRealmPoints.YouGet:			Ottieni {0} punti reame!
+
+GamePlayer.GetExamineMessages.EnemyRealmMember:		Esamini {0}. {1} e' un membro di un reame nemico!
+
+GamePlayer.GetExamineMessages.NeutralMember:		Esamini {0}. {1} e' un membro neutrale senza alleanza di gilda.
+
+GamePlayer.GetExamineMessages.OtherGuildMember:		Esamini {0}. {1} e' un membro della gilda {2}.
+
+GamePlayer.GetExamineMessages.RealmMember:		Esamini {0}. {1} e' un membro della classe {2} nel tuo reame.
+
+GamePlayer.GetExamineMessages.YouExamine:		Esamini {0}.
+
+GamePlayer.GetExamineMessages.YourGuildMember:		Esamini {0}. {1} e' un membro della classe {2} nella tua gilda.
+
+GamePlayer.IsCloakHoodUp.NowWear:			Abbassi il cappuccio sul tuo capo.
+
+GamePlayer.IsCloakHoodUp.NoLongerWear:		Alzi il cappuccio dal tuo capo.
+
+GamePlayer.IsCloakInvisible.Visible:			Ora vedrai il tuo mantello.
+
+GamePlayer.IsCloakInvisible.Invisible:			Ora non vedrai il tuo mantello.
+
+GamePlayer.IsHelmInvisible.Visible:			Ora vedrai il tuo elmo.
+
+GamePlayer.IsHelmInvisible.Invisible:			Ora non vedrai il tuo elmo.
+
+GamePlayer.IsOnHorse.DismountSteed:			Smonti dalla cavalcatura.
+
+GamePlayer.IsOnHorse.MountSteed:			Monti sulla cavalcatura.
+
+GamePlayer.OnItemEquipped.Magic:			La magia di {0} scorre dentro di te.
+
+GamePlayer.OnItemEquipped.WieldBothHands:		Impugni {0} con entrambe le mani.
+
+GamePlayer.OnItemEquipped.WieldLeftHand:		Impugni {0} nella tua mano sinistra.
+
+GamePlayer.OnItemEquipped.WieldRightHand:		Impugni {0} nella tua mano destra.
+
+GamePlayer.OnItemUnequipped.BothHandsFree:		Rinfoderi {0}. Entrambe le tue mani sono ora libere.
+
+GamePlayer.OnItemUnequipped.LeftHandFree:		Rinfoderi {0} dalla tua mano sinistra.
+
+GamePlayer.OnItemUnequipped.RightHandFree:		Rinfoderi {0} dalla tua mano destra.
+
+GamePlayer.OnLevelUp.YouRaise:				Il tuo livello sale a {0}!
+
+GamePlayer.OnLevelUp.YouAchived:			Hai raggiunto il livello {0}!
+
+GamePlayer.OnLevelUp.FreeLevelEligible:		Ora puoi acquisire un livello gratuito! Clicca sul tuo allenatore per riceverlo (oppure digita '/freelevel decline' per rinunciare al livello gratuito).
+
+GamePlayer.OnLevelUp.Reached:				{0} ha raggiunto il livello {1} a {2}!
+
+GamePlayer.OnLevelUp.StatRaise:				Le tue statistiche aumentano!
+
+GamePlayer.OnLevelUp.AttainedRank:			Sei stato eletto al rango {0}!
+
+GamePlayer.OnLevelUp.YouGetSpec:			Hai ottenuto altri {0} punti specializzazione da spendere in questo livello!
+
+GamePlayer.OnLevelUp.HitsRaise:				I tuoi punti ferita aumentano di {0}.
+
+GamePlayer.OnLevelUp.PowerRaise:			I tuoi punti potere aumentano di {0}.
+
+GamePlayer.OnLevelUp.SecondStage:			Sali al livello {0} Stage 2!
+
+GamePlayer.OnLinkdeath.Linkdead:			{0} ha perso la connessione!
+
+GamePlayer.OnPlayerMove.InterruptCrafting:	Ti muovi e interrompi la costruzione.
+
+GamePlayer.OnPlayerMove.CannotCallMount:	Ti muovi e non puoi chiamare la tua cavalcatura.
+
+GamePlayer.OnSkillTrained.YouSpend:			Spendi {0} punti e ti specializzi maggiormente in {1}
+
+GamePlayer.OnSkillTrained.YouHave:			Ti sono rimasti {0} punti di specializzazione per questo livello.
+
+GamePlayer.OnSkillTrained.TrainsInVarious:	{0} impara in varie specializzazioni.
+
+GamePlayer.OpenSelfCraft.AlreadySelfCrafting:			Stai gia' costruendo.
+
+GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:			Puoi costruire solamente oggetti nel tuo zaino!
+
+GamePlayer.PickupObject.Autosplit:			(Autosplit) {0} assegnato a {1}.
+
+GamePlayer.PickupObject.BackpackFull:			Il tuo zaino e' pieno. Devi prima lasciare qualcosa.
+
+GamePlayer.PickupObject.CantGetThat:			Non puoi prenderlo!
+
+GamePlayer.PickupObject.GroupMemberPicksUp:		{0} raccoglie {1}.
+
+GamePlayer.PickupObject.LootDoesntBelongYou:		Questo oggetto non ti appartiene - non puoi raccoglierlo.
+
+GamePlayer.PickupObject.MustHaveTarget:			Devi avere un bersaglio per raccogliere qualcosa!
+
+GamePlayer.PickupObject.NoOneGroupWantsMoney:		Nessuno nel gruppo vuole denaro.
+
+GamePlayer.PickupObject.NoOneWantsThis:			Nessuno nel gruppo vuole l'oggetto {0}.
+
+GamePlayer.PickupObject.ObjectTooFarAway:		L'oggetto {0} e' troppo lontano per essere raccolto!
+
+GamePlayer.PickupObject.TooFarFromBoat:			Sei troppo lontano dalla nave per salirvi!
+
+GamePlayer.PickupObject.YouGet:				Prendi {0} e lo metti nel tuo zaino.
+
+GamePlayer.PickupObject.YouPickUp:			Raccogli {0}.
+
+GamePlayer.PickupObject.YourLootShare:			La tua parte di bottino e' {0}.
+
+GamePlayer.Pray.CantPrayNow:				Non puoi pregare adesso!
+
+GamePlayer.Pray.NeedTarget:					Devi selezionare una tomba sulla quale pregare!
+
+GamePlayer.Pray.SelectGrave:				Seleziona la tua tomba sulla quale pregare!
+
+GamePlayer.Pray.MustGetCloser:				Devi avvicinarti di piu' alla tua tomba per sederti e pregare!
+
+GamePlayer.Pray.MustStandingStill:			Devi essere in piedi per pregare.
+
+GamePlayer.Pray.AlreadyPraying:				Stai gia' pregando!
+
+GamePlayer.Pray.Begin:						Incominci le tue preghiere!
+
+GamePlayer.Pray.GainBack:					Preghi sulla tua tomba e recuperi l'esperienza perduta!
+
+GamePlayer.Pronoun.Male.Subjective:			lui
+
+GamePlayer.Pronoun.Male.Possessive:			suo
+
+GamePlayer.Pronoun.Male.Objective:			lo
+
+GamePlayer.Pronoun.Female.Subjective:		lei
+
+GamePlayer.Pronoun.Female.Possessive:		suo
+
+GamePlayer.Pronoun.Female.Objective:		la
+
+GamePlayer.Quit.CantQuitCrafting:			Non puoi uscire mentre costruisci.
+
+GamePlayer.Quit.CantQuitDead:				Non puoi uscire adesso, sei morto.  Digita '/release' per rilasciare il tuo cadavere.
+
+GamePlayer.Quit.CantQuitMount:				Devi smontare prima di uscire.
+
+GamePlayer.Quit.CantQuitStanding:			Devi rimanere ancora in piedi per uscire.
+
+GamePlayer.Quit.RecentlyInCombat:			Sei stato recentemente in combattimento e devi aspettare ancora per poter uscire.
+
+GamePlayer.Quit.YouWillQuit1:				Uscirai dopo essere rimasto seduto per {0} secondi...
+
+GamePlayer.Quit.YouWillQuit2:				Uscirai dopo essere rimasto seduto per {0} secondi.  Digita '/stand' oppure muoviti se non vuoi uscire.
+
+GamePlayer.RealmTitle.UnknownRealm:			Reame non valido
+
+GamePlayer.ReceiveTradeItem.StillSelfcrafting:	Stai gia' costruendo.
+
+GamePlayer.ReceiveTradeItem.CantTrade:		Non puoi vendere questo oggetto!
+
+GamePlayer.RefreshSpec.YouLearn:			Impari lo stile di combattimento {0} !
+
+GamePlayer.RefreshSpec.AfterStyle:			Questo stile puo' essere usato solamente dopo {0}.
+
+GamePlayer.RefreshSpec.AfterMissed:			Questo stile e' usato meglio dopo che il tuo ultimo attacco e' stato mancato.
+
+GamePlayer.RefreshSpec.AfterParried:		Questo stile e' usato meglio dopo che il tuo ultimo attacco e' stato parato.
+
+GamePlayer.RefreshSpec.AfterBlocked:		Questo stile e' usato meglio dopo che il tuo ultimo attacco e' stato bloccato.
+
+GamePlayer.RefreshSpec.AfterEvaded:			Questo stile e' usato meglio dopo che il tuo ultimo attacco e' stato schivato.
+
+GamePlayer.RefreshSpec.AfterFumbles:		Questo stile e' usato meglio dopo che il tuo ultimo attacco e' stato annaspato.
+
+GamePlayer.RefreshSpec.TargetMisses:		Questo stile e' usato meglio dopo che l'ultimo attacco del tuo bersaglio e' stato mancato.
+
+GamePlayer.RefreshSpec.TargetHits:			Questo stile e' usato meglio dopo che l'ultimo attacco del tuo bersaglio ti colpisce.
+
+GamePlayer.RefreshSpec.TargetParried:		Questo stile e' usato meglio dopo che l'ultimo attacco del tuo bersaglio e' stato parato.
+
+GamePlayer.RefreshSpec.TargetBlocked:		Questo stile e' usato meglio dopo che l'ultimo attacco del tuo bersaglio e' stato bloccato.
+
+GamePlayer.RefreshSpec.TargetEvaded:		Questo stile e' usato meglio dopo che l'ultimo attacco del tuo bersaglio e' stato schivato.
+
+GamePlayer.RefreshSpec.TargetFumbles:		Questo stile e' usato meglio dopo che l'ultimo attacco del tuo bersaglio e' stato annaspato.
+
+GamePlayer.RefreshSpec.TargetStyle:			Questo stile e' usato meglio dopo che l'ultimo attacco del tuo bersaglio e' uno stile di combattimento.
+
+GamePlayer.Release.NotDead:					Non sei morto!
+
+GamePlayer.Release.CantReleaseDuel:			Non puoi modificare il tuo rilascio durante un duello!
+
+GamePlayer.Release.NoLongerReleaseAuto:		Non verrai piu' rilasciato automaticamente. (ancora {0} secondi)
+
+GamePlayer.Release.WillReleaseAuto:			Ora verrai rilasciato automaticamente tra {0} secondi!
+
+GamePlayer.Release.WillReleaseAutoCity:		Ora verrai rilasciato automaticamente nella tua citta' di appartenenza tra {0} secondi!
+
+GamePlayer.Release.YouRelease:				Rilasci il tuo corpo nella morte.
+
+GamePlayer.Release.GraveErected:			Una tomba e' stata eretta dove sei caduto.
+
+GamePlayer.Release.ReturnToPray:			Ritorna qui e digita '/pray' sulla tua tomba per recuperare l'esperienza perduta.
+
+GamePlayer.Release.LostConstitution:		Hai perso costituzione, vai da un guaritore per recuperarla!
+
+GamePlayer.Release.SurroundingChange:		Il paesaggio intorno a te cambia improvvisamente!
+
+GamePlayer.Release.NoValidBindpoint:		Non hai impostato un punto di rinascita valido! Rinascerai qui!
+
+GamePlayer.Release.WillReleaseIn:			Sarai rilasciato automaticamente tra {0} secondi.
+
+GamePlayer.RemoveSpecialization.YouLose:	Perdi lo stile {0} !
+
+GamePlayer.RemoveSpellLine.YouLose:			Perdi gli incantesimi {0} !
+
+GamePlayer.RemoveAbility.YouLose:			Perdi l'abilita' {0} !
+
+GamePlayer.SaveIntoDatabase.CharacterSaved:	Il tuo personaggio e' stato salvato.
+
+GamePlayer.Say.YouSay:					Dici, "{0}"
+
+GamePlayer.SayReceive.Says:				{0} dice, "{1}"
+
+GamePlayer.SayReceive.FalseLanguage:			{0} dice qualcosa in un linguaggio che non comprendi.
+
+GamePlayer.SendReceive.sends:				{0} dice, {1}
+
+GamePlayer.SendReceive.FalseLanguage:			{0} dice qualcosa in una lingua che non capisci.
+
+GamePlayer.SendReceive.Afk:				{0} e' attualmente AFK.
+
+GamePlayer.SendReceive.AfkMessage:			<AFK> {0} dice, "{1}"
+
+GamePlayer.Send.target.DontUnderstandYou:		{0} sembra che non ti capisca!
+
+GamePlayer.Send.YouSendTo:				Dici, "{0}" a {1}.
+
+GamePlayer.SetControlledNpc.ReleaseTarget:				Rilasci il controllo del tuo bersaglio.
+
+GamePlayer.Shade.AlreadyShade:				Sei gia' un'ombra!
+
+GamePlayer.Shade.NoLongerShade:				Non sei piu' un'ombra!
+
+GamePlayer.Sit.AlreadySitting:				Sei gia' seduto!
+
+GamePlayer.Sit.CantSitDead:					Non puoi sederti quando sei morto!
+
+GamePlayer.Sit.CantSitStunned:				Non puoi riposarti quando sei bloccato!
+
+GamePlayer.Sit.CantSitMezzed:				Non puoi riposarti quando sei incantato!
+
+GamePlayer.Sit.InterruptCallMount:			Tenti di sederti e interrompi la chiamata della cavalcatura!
+
+GamePlayer.Sit.MustDismount:				Devi prima smontare dalla cavalcatura.
+
+GamePlayer.Sit.MustStandingStill:			Devi rimanere ancora in piedi prima di poterti sedere.
+
+GamePlayer.Sit.NoLongerWaitingQuit:			Non stai piu' aspettando di uscire.
+
+GamePlayer.Sit.NotSitting:					Non sei seduto!
+
+GamePlayer.Sit.YouSitDown:					Ti siedi.  Digita '/stand' oppure muoviti per alzarti.
+
+GamePlayer.Sit.YouStandUp:					Ti alzi.
+
+GamePlayer.Spell.NotEnoughPowerful:			Non sei abbastanza potente da poter utilizzare l'incantesimo di questo oggetto.
+
+GamePlayer.Spell.NotImplemented:			{0} ({1}) non ancora implementato su questo server.
+
+GamePlayer.Spell.Proc.NotImplemented:		L'effetto reattivo con ID {0} non e' ancora implementato su questo server.
+
+GamePlayer.Sprint.CantSprintDead:			Non puoi scattare quando sei morto!
+
+GamePlayer.Sprint.CantSprintHidden:			Non puoi scattare mentre sei invisibile!
+
+GamePlayer.Sprint.NoLongerReady:			Smetti di scattare.
+
+GamePlayer.Sprint.PrepareSprint:			Ti prepari a scattare!
+
+GamePlayer.Sprint.TooFatigued:				Sei troppo affaticato per scattare!
+
+GamePlayer.StartAttack.CannotMelee:			Non puoi entrare in corpo-a-corpo con uno strumento musicale!
+
+GamePlayer.StartAttack.CannotWithoutWeapon:	Non puoi entrare in combattimento senza un'arma!
+
+GamePlayer.StartAttack.CantAttackmesmerized:Non puoi attaccare quando sei incantato!
+
+GamePlayer.StartAttack.CantAttackStunned:	Non puoi attaccare quando sei bloccato!
+
+GamePlayer.StartAttack.CantUseQuiver:		Non puoi utilizzare i colpi della faretra con quest'arma!
+
+GamePlayer.StartAttack.CombatNoTarget:		Entri in combattimento ma non hai alcun bersaglio selezionato!
+
+GamePlayer.StartAttack.CombatTarget:		Entri in combattimento e selezioni [{0}]
+
+GamePlayer.StartAttack.SelectQuiver:		Devi selezionare lo slot della faretra da usare!
+
+GamePlayer.StartAttack.SpellCancelled:		Il tuo incantesimo e' stato annullato!
+
+GamePlayer.StartAttack.TargetInRange:		, il bersaglio e' nel raggio
+
+GamePlayer.StartAttack.TargetOutOfRange:	, il bersaglio e' fuori dal raggio
+
+GamePlayer.StartAttack.TiredShot:			Sei troppo stanco per poter effettuare un colpo critico!
+
+GamePlayer.StartAttack.TiredUse:			Sei troppo stanco per poter usare {0}!
+
+GamePlayer.StartAttack.YouCantCombat:		Non puoi entrare in combattimento quando giaci a terra!
+
+GamePlayer.StartAttack.YouMustWait:			Devi aspettare altri {0} secondi per tentare un nuovo attacco!
+
+GamePlayer.StartAttack.YouMustWaitAgain:	Devi aspettare altri {0} secondi prima di poter attaccare nuovamente.
+
+GamePlayer.StartAttack.YouPrepare:			Prepari {0} ({1}.{2}s per colpire{3})
+
+GamePlayer.Stealth.NoLongerHidden:			Non sei piu' invisibile!
+
+GamePlayer.Stealth.NowHidden:				Ora sei invisibile!
+
+GamePlayer.SwitchQuiver.ShootWith:			Colpirai con: {0}.
+
+GamePlayer.SwitchQuiver.NoMoreAmmo:			Non hai piu' colpi nella tua faretra!
+
+GamePlayer.SwitchQuiver.NotUseQuiver:		Non usi piu' la tua faretra.
+
+GamePlayer.SwitchWeapon.SpellCancelled:		Il tuo incantesimo e' stato annullato!
+
+GamePlayer.UpdateEncumberance.Encumbered:	Sei sovrappeso!
+
+GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:		Sei sovrappeso e ti muovi piu' lentamente.
+
+GamePlayer.UpdateSpellLine.GainPower:		Acquisisci potere negli incantesimi {0} !
+
+GamePlayer.UseSlot.AttemptToUse:			Cerchi di usare {0}.
+
+GamePlayer.UseSlot.AutoReleaseShot:			Rilasci automaticamente il colpo.
+
+GamePlayer.UseSlot.AutoReleaseShotReload:	Rilasci automaticamente il colpo e ricarichi.
+
+GamePlayer.UseSlot.CantFire:				Non puoi usare questo oggetto!
+
+GamePlayer.UseSlot.CantCallMountSeated:		Non puoi richiamare la cavalcatura mentre stai seduto.
+
+GamePlayer.UseSlot.CantMountCombat:			Non puoi montare sulla cavalcatura mentre sei in combattimento.
+
+GamePlayer.UseSlot.CantMountMoving:			Non puoi montare sulla cavalcatura mentre ti muovi.
+
+GamePlayer.UseSlot.CantMountSteath:			Non puoi montare sulla cavalcatura mentre sei invisibile.
+
+GamePlayer.UseSlot.CantMountWhileDead:		Non puoi montare sulla cavalcatura quando sei morto.
+
+GamePlayer.UseSlot.CantSeeTarget:			Non riesci a vedere il bersaglio!
+
+GamePlayer.UseSlot.CantSummonRvR:			Non puoi richiamare questa cavalcatura nelle zone RvR.
+
+GamePlayer.UseSlot.CantUseFromBackpack:	Non puoi usare questo oggetto direttamente dal tuo zaino. Devi prima indossarlo!
+
+GamePlayer.UseSlot.CantUseInCombat:			Non puoi usare questo oggetto in combattimento!
+
+GamePlayer.UseSlot.IllegalSourceObject:		Oggetto non valido. Preparato {0}.
+
+GamePlayer.UseSlot.MustDismountBefore:		Devi prima smontare dalla cavalcatura.
+
+GamePlayer.UseSlot.NoAutoReleaseShotReload:	Non rilasci piu' automaticamente il colpo o ricarichi.
+
+GamePlayer.UseSlot.NotEnouthPower:			Non sei abbastanza potente da poter utilizzare l'incantesimo di questo oggetto.
+
+GamePlayer.UseSlot.OutOfCharges:			Il {0} ha finito le cariche.
+
+GamePlayer.UseSlot.StopCallingMount:		Smetti di richiamare la tua cavalcatura.
+
+GamePlayer.UseSlot.WhistleMount:			Fischi per richiamare la tua cavalcatura.
+
+GamePlayer.Whisper.SelectTarget:			Seleziona il bersaglio a cui sussurrare!
+
+
+
+# GAMESTAICITEM
+
+GameStaticItem.GetName.Article1:			Il {0}
+
+GameStaticItem.GetName.Article2:			il {0}
+
+
+
+# HOUSING
+
+HouseEnterLeave.TooFarAway:					Sei troppo lontano per poter entrare nella casa {0}.
+
+HouseEnterLeave.CantEnter:					Non puoi entrare nella casa {0}.
+
+HousingDecorationRotate.Rotated:			La decorazione interna e' stata ruotata da {0} a {1} gradi.
+
+HousingPickupItemHandler.GardenRemoved:		Oggetto giardino rimosso.
+
+HousingPickupItemHandler.PickUp:			Prendi {0} e lo metti nello zaino.
+
+HousingPlaceItemHandler.30objects:			Hai gia' posizionato 30 oggetti. Non puoi metterne altri.
+
+HousingPlaceItemHandler.40objects:			Hai gia' posizionato 40 oggetti. Non puoi metterne altri.
+
+HousingPlaceItemHandler.CantFloor:			Questo oggetto non puo' essere messo sul pavimento !
+
+HousingPlaceItemHandler.CantWall:			Questo oggetto non puo' essere messo su un muro !
+
+HousingPlaceItemHandler.DropOnFloor:		Lasci cadere {0} sul pavimento della tua casa !
+
+HousingPlaceItemHandler.DropOnGarden:		Lasci cadere {0} sul tuo giardino !
+
+HousingPlaceItemHandler.DropOnWall:			Appendi {0} sul muro della tua casa !
+
+HousingPlaceItemHandler.GardenObjectPlaced:	Oggetto giardino posizionato. {0} slot rimanenti.
+
+HousingPlaceItemHandler.HasPorch:			Questa casa ha gia' un balcone !
+
+HousingPlaceItemHandler.HasNoPorch:			Questa casa non ha balcone !
+
+HousingPlaceItemHandler.IndoorObjectPlaced:	Oggetto interno posizionato. {0} slot rimanenti.
+
+HousingPlaceItemHandler.NoHookpoint:		Ora non ci sono hookpoints !
+
+HousingPlaceItemHandler.PutMoney:			Depositi il denaro nella tua casa.
+
+
+
+# Styles
+
+# /StyleProcessor
+
+StyleProcessor.ExecuteStyle.BackStrike:			Infliggi un colpo critico alle spalle del tuo bersaglio
+
+StyleProcessor.ExecuteStyle.ExecuteFail:		Non sei riuscito ad eseguire {0} perfettamente!
+
+StyleProcessor.ExecuteStyle.PerformPerfectly:		Esegui {0} perfettamente! {1}
+
+StyleProcessor.ExecuteStyle.PerformsPerfectly:		Il tuo {0} esegue {1} perfettamente! {2}
+
+StyleProcessor.ExecuteStyle.ThroatStrike:		Infliggi un colpo critico nella gola del tuo bersaglio 
+
+StyleProcessor.TryToUseStyle.AlreadyPreparing:		Ti stai gia' preparando ad usare questo stile! Digita /cancelstyle per abilitare l'annullamento dello stile.
+
+StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	Hai gia' scelto lo stile per questo turno!
+
+StyleProcessor.TryToUseStyle.BackupStyle:		Ti prepari ad eseguire lo stile {0} come riserva per {1}!
+
+StyleProcessor.TryToUseStyle.CantCombatMode:		Non puoi entrare in combattimento mentre sei a terra!
+
+StyleProcessor.TryToUseStyle.CantMeleeCombat:		Non puoi entrare in combattimento con un'arma sguainata!
+
+StyleProcessor.TryToUseStyle.DualWielding:		Devi utilizzare due armi per utilizzare questo stile!
+
+StyleProcessor.TryToUseStyle.Fatigued:			Sei troppo affaticato per usare questo stile!
+
+StyleProcessor.TryToUseStyle.MustHaveTarget:		Devi selezionare un bersaglio per il tuo prossimo stile di attacco!
+
+StyleProcessor.TryToUseStyle.NoLongerPreparing:		Non ti stai piu' preparando ad usare lo stile {0}!
+
+StyleProcessor.TryToUseStyle.PerformStyleBefore:	Devi eseguire lo stile {0} prima di questo!
+
+StyleProcessor.TryToUseStyle.PreparePerform:		Ti prepari ad eseguire {0}!
+
+StyleProcessor.TryToUseStyle.StyleRequires:		Questo stile richiede un'arma {0}!
+
+
+
+# TRAINER
+
+# /GameTrainer
+
+GameTrainer.AddGift.NotEnoughSpace:			Non hai spazio nell'inventario per ricevere il tuo dono. Per favore recupera lo spazio.
+
+GameTrainer.GetExamineMessages.RightClick:		[Clicca col pulsante destro per visualizzare la finestra di allenamento]
+
+GameTrainer.GetExamineMessages.YouExamine:		Esamini {0}. {1} e' {2} ed allena i membri della classe {3}.
+
+GameTrainer.GetExamineMessages.YouTarget:		Selezioni [{0}].
+
+GameTrainer.PromotePlayer.Accepted:			Sei stato accettato da {0}!
+
+GameTrainer.PromotePlayer.Says:				{0} dice: "{1}"
+
+GameTrainer.PromotePlayer.Upgraded:			Sei stato promosso alla classe {0}!
+
+GameTrainer.ReceiveItem.RespecFull:			Un simpatico {0}! Ti ho aggiunto un full respec da usare con /respec all.
+
+GameTrainer.ReceiveItem.RespecRealm:			Grazie, ti ho aggiunto un realm respec da usare con /respec realm.
+
+GameTrainer.ReceiveItem.RespecSingle:			Grazie, ti ho aggiunto un single spec respec da usare con /respec <linename>
+
+GameTrainer.Train.SeekElsewhere:			{0} dice, "Devi cercare altro per allenarti."
+
+
+
+# /EnchanterTrainer
+
+EnchanterTrainer.Interact.PathOfEssence:		{0} dice, "Scegli di allenarti come Enchanter e seguire il Percorso dell'Essenza? La vita da [Enchanter] e' tanto gratificante quanto pericolosa, ma sara' tua se la scegli."
+
+EnchanterTrainer.Interact.SmallTalk:			{0} dice, "Impari velocemente, {1}. Ma non essere troppo affrettato. C'e' sempre altro da imparare."
+
+EnchanterTrainer.WhisperReceive.CaseEnchanter:		Enchanter
+
+EnchanterTrainer.WhisperReceive.Welcome:		Benvenuto, {0}. Da oggi in poi sarai riconosciuto come Enchanter. Ecco, {0}. Prendi questo dono per aiutarti nel tuo percorso.
+
+
+
+# /gameobjects/CustomNPC
+
+# /GameStableMaster
+
+GameStableMaster.ReceiveItem.HorseName:			cavallo
+
+GameStableMaster.ReceiveItem.UnknownWay:		Il mio cavallo non conosce ancora la strada per {0}.
+
+
+
+# /packets/Client/168
+
+# /DetailDisplayHandler
+
+DetailDisplayHandler.GetShortItemInfo.CrafterName:	Crafter : {0}
+
+DetailDisplayHandler.GetShortItemInfo.NoDrop:		 Non puo' essere Lasciato a terra.
+
+DetailDisplayHandler.GetShortItemInfo.NoSell:		 Non puo' essere Venduto.
+
+DetailDisplayHandler.GetShortItemInfo.NoTrade:		 Non puo' essere Scambiato.
+
+DetailDisplayHandler.HandlePacket.Any:			Qualsiasi
+
+DetailDisplayHandler.HandlePacket.Back:			(Indietro)
+
+DetailDisplayHandler.HandlePacket.CannotDropped:	Non puo' essere Lasciato a terra o nella tua banca.
+
+DetailDisplayHandler.HandlePacket.CannotSold:		Non puo' essere Venduto ai mercanti.
+
+DetailDisplayHandler.HandlePacket.CannotTraded:		Non puo' essere Scambiato con gli altri giocatori.
+
+DetailDisplayHandler.HandlePacket.ChampionLevel:	 - Richiede: Champion Level {0}
+
+DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Oggetto: "{1}"
+
+DetailDisplayHandler.HandlePacket.CrafterName:		Crafter : {0}
+
+DetailDisplayHandler.HandlePacket.Damage:		Danno: 
+
+DetailDisplayHandler.HandlePacket.Defense:		Difesa: 
+
+DetailDisplayHandler.HandlePacket.DontBelongGuild:	Non fai parte di alcuna gilda.
+
+DetailDisplayHandler.HandlePacket.FatigueCost:		Costo in fatica: 
+
+DetailDisplayHandler.HandlePacket.FollowupStyle:	Stile successivo: {0}
+
+DetailDisplayHandler.HandlePacket.Front:		(Front)	
+
+DetailDisplayHandler.HandlePacket.GuildItem:		[Gilda] {0}/Oggetto: "{1}"
+
+DetailDisplayHandler.HandlePacket.High:			Alto
+
+DetailDisplayHandler.HandlePacket.HighBonus:		Alto Bonus
+
+DetailDisplayHandler.HandlePacket.HighPenalty:		Alta Penalita'
+
+DetailDisplayHandler.HandlePacket.Item:			{0}/Oggetto: "{1}
+
+DetailDisplayHandler.HandlePacket.LevName:		Liv   Nome
+
+DetailDisplayHandler.HandlePacket.Low:			Basso
+
+DetailDisplayHandler.HandlePacket.LowBonus:		Basso Bonus
+
+DetailDisplayHandler.HandlePacket.LowPenalty:		Bassa Penalita'
+
+DetailDisplayHandler.HandlePacket.Medium:		Medio
+
+DetailDisplayHandler.HandlePacket.MediumBonus:		Medio Bonus
+
+DetailDisplayHandler.HandlePacket.MediumPenalty:	Media Penalita'
+
+DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	Devi essere in una chat.
+
+DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	Devi essere in una battle.
+
+DetailDisplayHandler.HandlePacket.NoBonus:		Nessun bonus Bonus
+
+DetailDisplayHandler.HandlePacket.NoGroup:		Non fai parte di un gruppo.
+
+DetailDisplayHandler.HandlePacket.NoInformation:	Nessuna informazione speciale!
+
+DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	Non hai il permesso di parlare nella chat di gilda.
+
+DetailDisplayHandler.HandlePacket.OnlyModerator:	Solamente un moderatore puo' parlare in questa chat.
+
+DetailDisplayHandler.HandlePacket.Opening:		Apertura: 
+
+DetailDisplayHandler.HandlePacket.OpeningStyle:		Stile di Apertura: 
+
+DetailDisplayHandler.HandlePacket.Or:			 oppure {0}
+
+DetailDisplayHandler.HandlePacket.Positional:		Posizionale 
+
+DetailDisplayHandler.HandlePacket.Side:			(Lato)
+
+DetailDisplayHandler.HandlePacket.TargetBlocks:		Il bersaglio blocca
+
+DetailDisplayHandler.HandlePacket.TargetEffect:		Effetto del bersaglio: 
+
+DetailDisplayHandler.HandlePacket.TargetEvades:		Il bersaglio Evita
+
+DetailDisplayHandler.HandlePacket.TargetFumbles:	Il bersaglio Annaspa
+
+DetailDisplayHandler.HandlePacket.TargetHits:		Il bersaglio Colpisce
+
+DetailDisplayHandler.HandlePacket.TargetMisses:		Il bersaglio Manca l'attacco
+
+DetailDisplayHandler.HandlePacket.TargetParrys:		Il bersaglio Para
+
+DetailDisplayHandler.HandlePacket.TargetStyle:		Il bersaglio Stila
+
+DetailDisplayHandler.HandlePacket.ToHit:		Per Colpire: 
+
+DetailDisplayHandler.HandlePacket.VeryHigh:		Molto Alto
+
+DetailDisplayHandler.HandlePacket.VeryHighBonus:	Bonus Molto Alto	
+
+DetailDisplayHandler.HandlePacket.VeryHighPenalty:	Penaltita' Molto Alta
+
+DetailDisplayHandler.HandlePacket.VeryLow:		Molto Basso
+
+DetailDisplayHandler.HandlePacket.VeryLowBonus:		Bonus Molto Basso
+
+DetailDisplayHandler.HandlePacket.VeryLowPenalty:	Penalita' Molto Bassa
+
+DetailDisplayHandler.HandlePacket.VeryStrange:		E' molto strano, non riesco a riconoscere questo oggetto.
+
+DetailDisplayHandler.HandlePacket.WeaponType:		Tipo di Arma: {0}
+
+DetailDisplayHandler.HandlePacket.YouBlock:		Tu Blocchi
+
+DetailDisplayHandler.HandlePacket.YouEvade:		Tu Eviti
+
+DetailDisplayHandler.HandlePacket.YouFumble:		Tu Annaspi
+
+DetailDisplayHandler.HandlePacket.YouHit:		Tu Colpisci
+
+DetailDisplayHandler.HandlePacket.YouMiss:		Tu Manchi l'attacco
+
+DetailDisplayHandler.HandlePacket.YouParry:		Tu Pari
+
+DetailDisplayHandler.WriteClassicArmorInfos.Absorption:	- {0}% Assorbimento
+
+DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod:	Modificatori all'Armatura:
+
+DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor:	- {0} Fattore Base
+
+DetailDisplayHandler.WriteClassicArmorInfos.ClampFact:	- {0} Fattore Forzato
+
+DetailDisplayHandler.WriteClassicArmorInfos.Condition:	- {0}% Condizione
+
+DetailDisplayHandler.WriteClassicArmorInfos.EffArmor:	Armatura Effettiva:
+
+DetailDisplayHandler.WriteClassicArmorInfos.Factor:	- {0} Fattore
+
+DetailDisplayHandler.WriteClassicArmorInfos.Quality:	- {0}% Qualita'
+
+DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS:	- {0} DPS Base
+
+DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS:	- {0} DPS Forzato
+
+DetailDisplayHandler.WriteClassicShieldInfos.DamageMod:	Modificatori del Danno (quando usato con stili di scudo):
+
+DetailDisplayHandler.WriteClassicShieldInfos.Large:	- Misura dello Scudo: Grande
+
+DetailDisplayHandler.WriteClassicShieldInfos.Medium:	- Misura dello Scudo: Medio
+
+DetailDisplayHandler.WriteClassicShieldInfos.Small:	- Misura dello Scudo: Piccolo
+
+DetailDisplayHandler.WriteClassicShieldInfos.SPD:	- {0} Velocita' dello Scudo
+
+DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS:	- {0} DPS Base
+
+DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS:	- {0} DPS Forzato
+
+DetailDisplayHandler.WriteClassicWeaponInfos.Condition:	- {0}% Condizione
+
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod:	Modificatori del Danno:
+
+DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:Tipo del Danno: {0}
+
+DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage:	Danno Effettivo:
+
+DetailDisplayHandler.WriteClassicWeaponInfos.Quality:	- {0}% Qualita'
+
+DetailDisplayHandler.WriteClassicWeaponInfos.SPD:	- {0} Velocita' dell'Arma
+
+DetailDisplayHandler.WriteHorseInfo.AdvancedHorse:	Questo e' un cavallo avanzato.
+
+DetailDisplayHandler.WriteHorseInfo.Armor:		- Armatura: {0}
+
+DetailDisplayHandler.WriteHorseInfo.Barding:		- Bardatura: Nessuna
+
+DetailDisplayHandler.WriteHorseInfo.BasicHorse:		Questo e' un cavallo di base.
+
+DetailDisplayHandler.WriteHorseInfo.Food:		- Cibo preferito: Fieno e occasionalmente mele
+
+DetailDisplayHandler.WriteHorseInfo.MountWindow:	Per rendere questo cavallo come tua cavalcatura attiva, posiziona questa icona nello slot appropriato della tua finestra Mount.
+
+DetailDisplayHandler.WriteHorseInfo.Name:		- Nome: {0}.
+
+DetailDisplayHandler.WriteHorseInfo.NameMount:		  (Usa /namemount per dare un nome al tuo cavallo.)
+
+DetailDisplayHandler.WriteHorseInfo.Quickbar:		Per richiamare questo tuo cavallo, dalla tua finestra Mount trascina l'icona del cavallo sulla tua quickbar, e richiamalo cliccando sull'icona nella quickbar.
+
+DetailDisplayHandler.WriteHorseInfo.RvRZzones:		Non puo' essere richiamato nelle zone RvR.
+
+DetailDisplayHandler.WriteHorseInfo.Speed1:		(+35% velocita')
+
+DetailDisplayHandler.WriteHorseInfo.Speed2:		(+45% velocita')
+
+DetailDisplayHandler.WriteHorseInfo.Summon:		Clicca questa icona nella tua quickbar per richiamare (oppure smontare) il tuo cavallo.
+
+DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic:	Abilita' Magica a Cariche:
+
+DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Cariche
+
+DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Bonus di Focalizzazione:
+
+DetailDisplayHandler.WriteMagicalBonuses.Level:		- {0} Livello
+
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Livello Richiesto
+
+DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Abilita' Magica:
+
+DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Bonus Magici:
+
+DetailDisplayHandler.WriteMagicalBonuses.MaxCharges:	- {0} Max
+
+DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor:	- L'incantesimo ha una possibilita' di essere lanciato quando il nemico colpisce questo pezzo di armatura.
+
+DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy:	- L'incantesimo ha una possibilita' di essere lanciato quando questa arma colpisce un nemico.
+
+DetailDisplayHandler.WriteMagicalBonuses.UsedItem:	- L'incantesimo ha una possibilita' di essere lanciato quando questo oggetto e' usato.
+
+DetailDisplayHandler.WriteMagicalBonuses.UseItem1:	Puoi usare l'oggetto ogni: {0}
+
+DetailDisplayHandler.WriteMagicalBonuses.UseItem2:	Puoi usare l'oggetto ogni: 3:00 min.
+
+DetailDisplayHandler.WriteMagicalBonuses.UseItem3:	Puoi riusarlo entro: {0}.
+
+DetailDisplayHandler.WritePoisonInfo.Charges:		- {0} Cariche
+
+DetailDisplayHandler.WritePoisonInfo.Level:		- {0} Livello
+
+DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Livello Richiesto:
+
+DetailDisplayHandler.WritePoisonInfo.MaxCharges:	- {0} Max
+
+DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Abilita' Proc Offensivo:
+
+DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Abilita' Magica a Cariche:
+
+DetailDisplayHandler.WritePotionInfo.Charges:		- {0} Cariche
+
+DetailDisplayHandler.WritePotionInfo.Level:		- {0} Livello
+
+DetailDisplayHandler.WritePotionInfo.LevelRequired:	Livello Richiesto:
+
+DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
+
+DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Non puo' essere usato in combattimento
+
+DetailDisplayHandler.WritePotionInfo.UseItem2:		Puoi usare l'oggetto ogni: 1:00 min
+
+DetailDisplayHandler.WritePotionInfo.UseItem3:		Puoi riusarlo entro: {0}.
+
+DetailDisplayHandler.WriteUsableClasses.UsableBy:	Utilizzabile da: 
+
+
+
+# /DoorRequestHandler.cs
+
+DoorRequestHandler.OnTick.TooFarAway:                   La {0} e' troppo lontana!
+
+
+
+# /PlayerInitRequestHandler
+
+PlayerInitRequestHandler.AllianceMessage:		Messaggio di Alleanza: {0}
+
+PlayerInitRequestHandler.FreeLevel:				Sei idoneo per un livello gratuito! Clicca sul tuo allenatore per riceverlo (oppure digita /freelevel decline per rifiutarlo).
+
+PlayerInitRequestHandler.GuildMessage:			Messaggio di Gilda: 
+
+PlayerInitRequestHandler.LevelCap:				Hai superato il limite massimo del livello di questo battleground!
+
+PlayerInitRequestHandler.OfficerMessage:		Messaggio degli Ufficiali: {0}
+
+PlayerInitRequestHandler.SaferLocation:			Quest'area non e' attualmente sicura e stai per essere trasportato in un luogo piu' sicuro.
+
+
+
+# /PlayerMoveItemRequestHandler
+
+PlayerMoveItemRequestHandler.TooFarAway:		Sei troppo lontano per dare qualcosa a {0}.
+
+
+
+# /PlayerPositionUpdateHandler
+
+PlayerPositionUpdateHandler.Endurance:			Perdi endurance!
+
+PlayerPositionUpdateHandler.Entered:			Sei entrato in {0}.
+
+PlayerPositionUpdateHandler.FallingDamage:		Ricevi danni per la caduta!
+
+PlayerPositionUpdateHandler.FallPercent:		Perdi il {0}% dei tuoi punti ferita massimi per il danno.
+
+PlayerPositionUpdateHandler.SafeFall:			Il danno e' stato diminuito dalla tua abilita' Safe Fall!
+
+PlayerPositionUpdateHandler.UnknownZone:		Zona sconosciuta, stai per essere trasportato al tuo punto di rinascita.
+
+
+
+# GameServer\world
+
+# AbstractArea
+
+AbstractArea.Entered:						(Regione) Sei entrato in {0}!
+
+AbstractArea.Left:							(Regione) Hai lasciato {0}!
+
+
+
+# SCRIPTS
+
+# CustomNPC
+
+# /Blacksmith
+
+Scripts.Blacksmith.AbortRepair:				Rifiuti di riparare il {0}.
+
+Scripts.Blacksmith.CantRepairThat:			Non posso ripararlo.
+
+Scripts.Blacksmith.GiveObject:				[Dai un oggetto a {0} per ripararlo]
+
+Scripts.Blacksmith.InvalidItem:				Oggetto non valido.
+
+Scripts.Blacksmith.ItsDone:				Fatto. Il tuo {0} e' pronto per la battaglia!
+
+Scripts.Blacksmith.NoNeedRepair:			Questo oggetto non ha bisogno di essere riparato.
+
+Scripts.Blacksmith.NotEnoughMoney:			Non hai abbastanza denaro.
+
+Scripts.Blacksmith.ObjectCantRepaired:			Questo oggetto non puo' essere riparato.
+
+Scripts.Blacksmith.ObjectRatherOld:			Uhh, questo {0} e' gia' troppo usurato, non saro' piu' in grado di ripararlo ancora, quindi stai attento!
+
+Scripts.Blacksmith.RepairCostAccept:			Costa {0} riparare il {1}. Accetti?
+
+Scripts.Blacksmith.Say:							Posso riparare le tue armi e armature, basta passarmi l'oggetto che vuoi riparare e vedro' cosa posso fare, per un piccolo compenso ovviamente.
+
+Scripts.Blacksmith.StackedObjets:			{0} non puo' riparare oggetti impilati.
+
+Scripts.Blacksmith.YouExamine:					Esamini {0}. {1} e' {2} ed e' un fabbro.
+
+Scripts.Blacksmith.YouPay:				Paghi {0} {1}.
+
+Scripts.Blacksmith.YouTarget:				Selezioni [{0}].
+
+
+
+# GameEvents
+
+# /Playerenterexit
+
+Scripts.Events.PlayerEnterExit.Entered:			{0} e' appena entrato in gioco!
+
+Scripts.Events.PlayerEnterExit.Left:			{0} e' appena uscito dal gioco!
+
+Scripts.Events.PlayerEnterExit.Staff:			[Staff Member] {0}
+
+
+
+# GMCommands
+
+# /Ban
+
+Scripts.GM.Ban.AAlreadyBanned:				Questo account e' gia' stato bannato.
+
+Scripts.GM.Ban.ABanned:					L'account {0} e' stato bannato.
+
+Scripts.GM.Ban.BAlreadyBanned:				Questi account e IP sono stati bannati.
+
+Scripts.GM.Ban.BBanned:					L'account {0} e l'IP {1} sono stati bannati.
+
+Scripts.GM.Ban.IAlreadyBanned:				Questo IP e' gia' stato bannato.
+
+Scripts.GM.Ban.IBanned:					L'IP {0} e' stato bannato.
+
+Scripts.GM.Ban.MustTarget:				Devi selezionare un bersaglio!
+
+
+
+# PlayerCommands
+
+# /Advice
+
+Scripts.Players.Advice.Advice:				[ADVICE{0}] {1}: "{2}"
+
+Scripts.Players.Advice.AdvicersOn:			Ci sono {0} advisors online!
+
+
+
+# /Advisor
+
+Scripts.Players.Advisor.Off:				Non riceverai piu' messaggi dal canale advice.
+
+Scripts.Players.Advisor.On:				Da ora riceverai i messaggi dal canale advice.
+
+
+
+# /Afk
+
+Scripts.Players.Afk.Off:						Non sei piu' segnalato come AFK.
+
+Scripts.Players.Afk.On:							Ora sei segnalato come AFK.
+
+
+
+# /Anonymous
+
+Scripts.Players.Anonymous.Error:				La modalita' Anonimo e' disabilitata.
+
+Scripts.Players.Anonymous.Off:					Non sei piu' segnalato come Anonimo.
+
+Scripts.Players.Anonymous.On:					Ora sei segnalato come Anonimo.
+
+
+
+# /Assist
+
+Scripts.Players.Assist.CantAssistYourself:		Non puoi assistere te stesso.
+
+Scripts.Players.Assist.DoesntHaveTarget:		non ha attualmente un bersaglio.
+
+Scripts.Players.Assist.DontSee:					Non vedi {0} qui intorno!
+
+Scripts.Players.Assist.NoTarget:				Non hai un bersaglio.
+
+Scripts.Players.Assist.NotValid:				Il bersaglio non e' valido.
+
+Scripts.Players.Assist.YouAssist:				Assisti {0}.
+
+
+
+# /Autoloot
+
+Scripts.Players.Autoloot.Off:					Il tuo autoloot e' disattivato. Non tenterai piu' di raccogliere automaticamente qualsiasi oggetto lasciato cadere nell'area.
+
+Scripts.Players.Autoloot.On:					Your autoloot is on. Ora tenterai di raccogliere automaticamente qualsiasi oggetto lasciato cadere nell'area.
+
+
+
+# /Autosplit
+
+Scripts.Players.Autosplit.Coins:				Il leader ha cambiato 
+
+Scripts.Players.Autosplit.InGroup:				Devi essere in un gruppo per usare questo comando.
+
+Scripts.Players.Autosplit.Leader:				Devi essere il leader del gruppo per usare questo comando.
+
+Scripts.Players.Autosplit.Loot:					Il leader ha cambiato 
+
+Scripts.Players.Autosplit.Off:					Il leader ha disattivato l'autosplit.
+
+Scripts.Players.Autosplit.On:					Il leader ha attivato l'autosplit.
+
+Scripts.Players.Autosplit.Self:					{0} cambiato 
+
+
+
+# /Boot
+
+Scripts.Players.Boot.InHouseError:				Devi essere nella tua casa per usare questo comando!
+
+Scripts.Players.Boot.NoHouseError:				Non possiedi una casa!
+
+Scripts.Players.Boot.NoOneOnline:				Nessuno con quel nome e' online per essere espulso!
+
+Scripts.Players.Boot.YouRemoved:				Sei stato espulso dalla casa da {0}!
+
+
+
+# /Bountyrent
+
+Scripts.Players.Bountyrent.InHouseError:		Devi essere nella tua casa per usare questo comando!
+
+Scripts.Players.Bountyrent.NoHouseError:		Non possiedi una casa!
+
+
+
+# /Broadcast
+
+Scripts.Players.Broadcast.Message:				[Broadcast] {0} : {1}
+
+Scripts.Players.Broadcast.NoHere:				Non puoi inviare messaggi broadcast qui.
+
+Scripts.Players.Broadcast.NoText:				Devi scrivere il testo da inviare in broadcast...
+
+
+
+# /Cancelstyle
+
+Scripts.Players.Cancelstyle.Set:				Annulla Stile e' ora impostato su {0}.
+
+
+
+# /Chatgroup
+
+Scripts.Players.Chatgroup.Help.Help:			/cg help - Mostra tutti i comandi del chat group
+
+Scripts.Players.Chatgroup.Help.Invite:			/cg invite [playername] - Invita il giocatore specificato al chat group
+
+Scripts.Players.Chatgroup.Help.JoinPrivate:		/cg join [moderator name] [password] - Partecipa ad un chat group privato che ha una password impostata
+
+Scripts.Players.Chatgroup.Help.JoinPublic:		/cg join [moderator name] - Partecipa ad un chat group pubblico dal nome del moderatore
+
+Scripts.Players.Chatgroup.Help.Leader:			/cg leader <name> - Dichiara un altro membro del chat group come leader; Questo giocatore puo' invitare altri giocatori nel chat group e parlare quando il chat group e' impostata in modalita' ascolto.
+
+Scripts.Players.Chatgroup.Help.Leave:			/cg leave - Abbandona il chat group
+
+Scripts.Players.Chatgroup.Help.Listen:			/cg listen - Imposta il chat group in modalita' ascolto; solamente only il moderatore e i leader possono parlare
+
+Scripts.Players.Chatgroup.Help.PasswordClear:	/cg password clear - Rimuove la password corrente (solamente il moderator)
+
+Scripts.Players.Chatgroup.Help.PasswordDisplay:	/cg password - Visualizza la password corrente per partecipare al chat group (solamente il moderator)
+
+Scripts.Players.Chatgroup.Help.PasswordNew:		/cg password [new password]	- Cambia la password corrente per partecipare al chat group (solamente il moderator)
+
+Scripts.Players.Chatgroup.Help.Private:			/cg private - Il chat group e' solo ad invito oppure con accesso tramite password
+
+Scripts.Players.Chatgroup.Help.Public:			/cg public - Il chat group e' public e chiunque puo' partecipare digitando /cg join
+
+Scripts.Players.Chatgroup.Help.Remove:			/cg remove [playername] - Espelli il giocatore specificato dal chat group
+
+Scripts.Players.Chatgroup.Help.Usage:			/cg usage:
+
+Scripts.Players.Chatgroup.Help.Who:				/cg who - Elenca tutti i membri del chat group
+
+Scripts.Players.Chatgroup.InChatGroup:			Devi essere in un chat group per usare questo comando.
+
+Scripts.Players.Chatgroup.InviteYourself:		Non puoi invitare te stesso al chat group.	
+
+Scripts.Players.Chatgroup.JoinChatGroup:		Vuoi partecipare al chat group di {0}?	
+
+Scripts.Players.Chatgroup.LeaderCommand:		Devi essere un leader del chat group per usare questo comando.	
+
+Scripts.Players.Chatgroup.LeaderInvite:			Devi essere il leader per invitare un giocatore a partecipare al chat group.
+
+Scripts.Players.Chatgroup.ListenMode:			La modalita' ascolto del chat group e' stata cambiata 
+
+Scripts.Players.Chatgroup.Moderator:			{0} diventa un moderatore.
+
+Scripts.Players.Chatgroup.NoPlayer:				Non ci sono giocatori con quel nome.
+
+Scripts.Players.Chatgroup.NotChatGroupLeader:	Questo giocatore non e' un leader del chat group.
+
+Scripts.Players.Chatgroup.NotChatGroupMember:	Questo giocatore non e' un membro del chat group.
+
+Scripts.Players.Chatgroup.NotPublic:			Questo chat group non e' publico.
+
+Scripts.Players.Chatgroup.OnlyModerator:		Solamente il moderatore puo' parlare in questo chat group.	
+
+Scripts.Players.Chatgroup.OwnChatGroup:			Non puoi entrare a far parte del tuo stesso chat group.
+
+Scripts.Players.Chatgroup.Password:				Password del Chat group: {0}.
+
+Scripts.Players.Chatgroup.PasswordChanged:		Hai cambiato la password del chat group in: {0}.	
+
+Scripts.Players.Chatgroup.PlayerInChatgroup:	{0} e' gia' in un chat group.	
+
+Scripts.Players.Chatgroup.Private:				Il chat group e' ora privato.
+
+Scripts.Players.Chatgroup.Public:				Il chat group e' ora publico.
+
+Scripts.Players.Chatgroup.Usage:				Utilizzo: /c <text>
+
+Scripts.Players.Chatgroup.UsageInvite:			Utilizzo: /cg invite <playername>"
+
+
+
+# /Cmdhelp
+
+Scripts.Players.Cmdhelp.NoCommand:				Il comando {0} non esiste.
+
+Scripts.Players.Cmdhelp.PlvlCommands:			<----------Comandi disponibili per plvl {0}---------->
+
+Scripts.Players.Cmdhelp.Usage:				>----------Utilizzo di {0}----------<
+
+
+
+# /Disband
+
+Scripts.Players.Disband.Disbanded:			{o} e' stato espulso dal gruppo.
+
+Scripts.Players.Disband.NoPlayer:			Non ci sono giocatori nel gruppo con quel nome.
+
+Scripts.Players.Disband.NotInGroup:			Non sei in un gruppo.
+
+Scripts.Players.Disband.NotLeader:			Non sei leader del tuo gruppo.
+
+Scripts.Players.Disband.NoYourself:			Non puoi uscire dal gruppo in questo modo.
+
+
+
+# /Dismount
+
+Scripts.Players.Dismount:					Non stai montando alcuna cavalcatura!
+
+
+
+# /Duel
+
+Scripts.Players.Duel.ChallengesYou:			{0} ti sfida in duello! /duel accept per iniziare, /duel decline per rifiutare.
+
+Scripts.Players.Duel.DuelOptions:			Le opzioni di /duel sono challenge/decline/cancel/surrender/accept
+
+Scripts.Players.Duel.EnemyRealm:			Non puoi sfidare in duello i nemici del tuo reame.
+
+Scripts.Players.Duel.NeedTarget:			Devi selezionare il bersaglio da sfidare in duello!
+
+Scripts.Players.Duel.ConsideringDuel:		Non hai attualmente duelli da accettare.
+
+Scripts.Players.Duel.NotInDuel:				Non sei in duello!
+
+Scripts.Players.Duel.PlayerVsPlayer:		{0} si arrende a {1}!
+
+Scripts.Players.Duel.SafeZone:				Questa e' una zona sicura e non puoi duellare qui!
+
+Scripts.Players.Duel.TargetAccept:			{0} accetta il duello. Inizia la battaglia!
+
+Scripts.Players.Duel.TargetAlreadyChallenging:		{0} sta gia' sfidando qualcuno in duello.
+
+Scripts.Players.Duel.TargetAlreadyConsidering:		{0} sta gia' considerando un duello.
+
+Scripts.Players.Duel.TargetCancel:			{0} annulla il suo invito a duellare.
+
+Scripts.Players.Duel.TargetDeclines:			{0} rifiuta il tuo invito a duellare.
+
+Scripts.Players.Duel.TargetHealth:			Il tuo bersaglio deve essere completamente guarito.
+
+Scripts.Players.Duel.TargetInCombat:			{0} e' in combattimento.
+
+Scripts.Players.Duel.TargetInDuel:			{0} e' gia' in duello.
+
+Scripts.Players.Duel.TargetInGroup:			{0} e' in un gruppo.
+
+Scripts.Players.Duel.TargetSurrender:			{0} si arrende a te!
+
+Scripts.Players.Duel.YouAccept:				Hai accettato il duello! Inizia la battaglia!
+
+Scripts.Players.Duel.YouAlreadyChallenging:		Hai gia' sfidato {0} in duello. Annulla la richiesta prima di sfidare qualcun altro.
+
+Scripts.Players.Duel.YouAlreadyConsidering:		Stai gia' considerando un duello con {0}. Rifiuta la richiesta prima di sfidare qualcuno.
+
+Scripts.Players.Duel.YouCancel:				Annulli il tuo invito a duellare.
+
+Scripts.Players.Duel.YouChallenge:			Sfidi {0} in duello!
+
+Scripts.Players.Duel.YouDecline:			Rifiuti l'invito di {0} a duellare.
+
+Scripts.Players.Duel.YouHaventChallenged:	Non hai sfidato nessuno in duello.
+
+Scripts.Players.Duel.YouHealth:				Devi essere completamente guarito.
+
+Scripts.Players.Duel.YouInCombat:			Sei in combattimento.
+
+Scripts.Players.Duel.YouInDuel:				Sei gia' in duello.
+
+Scripts.Players.Duel.YouInGroup:			Sei in un gruppo.
+
+Scripts.Players.Duel.YouSurrender:			Ti arrendi a {0}!
+
+
+
+# /GC
+
+Scripts.Players.Guild.AllianceInfo:			Informazioni di alleanza per {0}:
+
+Scripts.Players.Guild.AllianceLeader:			Leader dell'alleanza {0}
+
+Scripts.Players.Guild.AllianceMembers:			Membri dell'alleanza:
+
+Scripts.Players.Guild.AllianceMember:			{0} - {1}
+
+Scripts.Players.Guild.AllianceNoLeader:			Nessun leader dell'alleanza
+
+
+
+# /Language
+
+Scripts.Players.Language.Set:				Cambi la lingua dei messaggi del server in {0}.
+
+Scripts.Players.Language.Current:			La tua lingua e' attualmente impostata in: {0}.
+
+
+
+# /Range
+
+Scripts.Players.Range.NeedTarget:			Distanza dal bersaglio: Non hai selezionato un bersaglio.
+
+Scripts.Players.Range.Result:				Distanza dal bersaglio: {0} unita'. {1}
+
+Scripts.Players.Range.InvalidObject:				Questo comando funziona solo sugli oggetti.
+
+Scripts.Players.Range.NotVisible:			 (Bersaglio non visibile)
+
+
+
+# /Realm
+
+Scripts.Players.Realm.AlbKeeps:            Avamposti di Albion
+
+Scripts.Players.Realm.DarknessFalls:      La Calata delle Tenebre
+
+Scripts.Players.Realm.HibKeeps:            Avamposti di Hibernia
+
+Scripts.Players.Realm.MidKeeps:            Avamposti di Midgard
+
+Scripts.Players.Realm.Title:            Stato del Reame
+
+Scripts.Players.Realm.UseRelicCommand:      Usa '/relic' per avere informazioni sulla Reliquie
+
+
+
+# /Relic
+
+Scripts.Players.Relic.AlbRelics:         Reliquie di Albion
+
+Scripts.Players.Relic.HibRelics:         Reliquie di Hibernia
+
+Scripts.Players.Relic.MidRelics:         Reliquie di Midgard
+
+Scripts.Players.Relic.Power:            Potere
+
+Scripts.Players.Relic.Strength:            Forza
+
+Scripts.Players.Relic.Title:            Stato della Reliquia
+
+Scripts.Players.Relic.UseRealmCommand:      Usa '/realm' per Avere Informazioni sul Reame
+
+
+
+# QUESTS
+
+# /ImportantDelivery
+
+Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Annullamento della Quest {0}. Puoi ricominciarla se lo desideri.
+
+Hib.ImportantDelivery.CheckPlayerAbortQuest.NoAbort:	Bene, ora va' via da qua e finisci il tuo lavoro!
+
+Hib.ImportantDelivery.CheckPlayerAcceptQuest.Accept:	Congratulazioni! Ora sei un passo piu' vicino alla comprensione del mondo di Camelot! Durante questa fase del tuo allenamento, ti inviero' in differenti zone del reame per consegnare merci estremamente necessarie a vari cittadini. Avrai bisogno di controllare il tuo QUEST JOURNAL di tanto in tanto per vedere di cosa hai bisogno per avanzare nella quest. Puoi accedere al quest journal dal bottone COMMAND nella tua [scheda del personaggio].
+
+Hib.ImportantDelivery.CheckPlayerAcceptQuest.NoAccept:	Oh bene, se cambi idea, per favore ritorna qui!
+
+Hib.ImportantDelivery.DefineItems.CrateOfVegetables:	Cesto di Vegetali
+
+Hib.ImportantDelivery.DefineItems.RecruitsCloak:	Mantello della Recluta
+
+Hib.ImportantDelivery.DefineItems.RecruitsDiary:	Diario delle Reclute
+
+Hib.ImportantDelivery.DefineItems.SackOfSupplies:	Sacco di Merci
+
+Hib.ImportantDelivery.Description.Step1:		[Step #1] Ascolta Addrir, ti descrivera' la missione. Quando smette di parlarti, chiedigli che cosa puo' darti per [accelerare] il tuo allenamento.
+
+Hib.ImportantDelivery.Description.Step2:		[Step #2] Ascolta Addrir, ti spieghera' il tuo giornale. Quando smette di parlarti, chiedigli come il giornale ti aiutera' ad [accelerare] i compiti che stai per fare.
+
+Hib.ImportantDelivery.Description.Step3:		[Step #3] Dirigiti a sud-est da Addrir. Cerca allo Stable Master Rumdor e consegnagli il tuo biglietto.
+
+Hib.ImportantDelivery.Description.Step4:		[Step #4] Consegna il Sacco di Merci ad Aethic in Tir na mBeo. Puoi farlo nello stesso modo in cui hai dato il biglietto a Rumdor.
+
+Hib.ImportantDelivery.Description.Step5:		[Step #5] Ascolta cosa ha da dirti Aethic.
+
+Hib.ImportantDelivery.Description.Step6:		[Step #6] Porta il biglietto che ti ha dato Aethic allo Stable Master Truichon, a nord-ovest dell'edificio con il portone rosso. Consegnagli il biglietto nello stesso modo in cui hai dato ad Aethic le merci.
+
+Hib.ImportantDelivery.Description.Step7:		[Step #7] Porta il Cesto di Vegetali allo Stable Master Freagus.
+
+Hib.ImportantDelivery.Description.Step8:		[Step #8] Ascolta ancora lo Stable Master Freagus. Quando smette di parlarti, chiedigli se ha una [ricompensa] per il tuo duro lavoro ed il servizio reso ad Hibernia.
+
+Hib.ImportantDelivery.FinishQuest.RecieveReward:	Ricevi {0} come ricompensa.
+
+Hib.ImportantDelivery.Notify.RentingHorse:		Buon giorno, {0}. Se sei interessato a noleggiare un cavallo, compra un biglietto, poi consegnamelo. Godrai un viaggio sicuro!
+
+Hib.ImportantDelivery.Notify.Supplies:			Ah! Le merci che aspettavo. Grazie {0}. Questi ci aiuteranno enormemente nelle prossime settimane. Avrei un'altra [richiesta] se sei pronto.
+
+Hib.ImportantDelivery.Notify.Vegetables:		Ah, i vegetali che aspettavo da Aethic. Grazie per avermeli portati. Non sono riuscito a trovare nessuno che badasse alla mia stalla per poter andare a prenderli di persona. Fammi vedere, penso che una [ricompensa] e' d'obbligo per il tuo duro lavoro.
+
+Hib.ImportantDelivery.TalkToAddrir.Abort:		Desideri davvero abbandonare questa quest? Tutti gli oggetti raccolti durante la quest saranno perduti.
+
+Hib.ImportantDelivery.TalkToAddrir.CaseCharSheet:	scheda del personaggio
+
+Hib.ImportantDelivery.TalkToAddrir.CaseExpedite:	accelerare
+
+Hib.ImportantDelivery.TalkToAddrir.CaseHorseTicket:	biglietto
+
+Hib.ImportantDelivery.TalkToAddrir.CaseInformation:	informazioni
+
+Hib.ImportantDelivery.TalkToAddrir.CaseJournal:		giornale
+
+Hib.ImportantDelivery.TalkToAddrir.CaseQuestion:	richiesta
+
+Hib.ImportantDelivery.TalkToAddrir.CaseTraining:	continuare il tuo allenamento
+
+Hib.ImportantDelivery.TalkToAddrir.CharSheet:		La scheda del tuo personaggio contiene tutte le informazioni del tuo personaggio, come attributi, abilita' nelle armi, classe di partenza e professione. Se in qualsiasi momento vuoi vedere le statistiche del tuo personaggio, premi l'ultima icona a sinistra nella barra del menu (assomiglia ad una persona con un cerchio attorno) per maggiore [informazioni].
+
+Hib.ImportantDelivery.TalkToAddrir.Expedite:		Ora che ti ho dato una piccola introduzione al mondo di Hibernia, iniziamo con il tuo primo incarico. Ho bisogno che tu consegni questo pacchetto di merci ad Aethic in Tir na mBeo. Non preoccuparti, ho un [biglietto] speciale per te.
+
+Hib.ImportantDelivery.TalkToAddrir.Greetings:		Salve mia giovane recluta. Sono Addrir e sono qui per aiutarti a trovare la strada in questo vasto reame. Durante questa processo, potrai guadagnare armi, armature, denaro ed anche qualche livello. Inizieremo il tuo allenamento con una semplice [domanda].
+
+Hib.ImportantDelivery.TalkToAddrir.HorseTicket:		Tutto cio' che devi fare e' portare questo biglietto a Rumdor qui in Mag Mell, vicino il carro. Consegnagli il biglietto e ti troverai sulla strada per Tir na mBeo. Sii veloce mia giovane recluta. Il tempo e' tutto.
+
+Hib.ImportantDelivery.TalkToAddrir.Information:		Lo so che tutto cio' sembra un po' sconvolgente, ma ho un oggetto speciale qui che rendera' piacevole questa transizione. Per favore, prendi questo [giornale].
+
+Hib.ImportantDelivery.TalkToAddrir.Journal:		Questo giornale ti aiutera' di tanto in tanto mentre farai vari incarichi per me. Mi piace chiamarlo un giornale intelligente. Fu creato da uno degli eldritch per le nuove reclute come te. Ti aiutera' ad [accelerare] il tuo allenamento.
+
+Hib.ImportantDelivery.TalkToAddrir.OneStepCloser:	Congratulazioni! Ora sei un passo piu' vicino alla comprensione del mondo di Camelot! Durante questa fase del tuo allenamento, ti inviero' in differenti zone del reame per consegnare merci estremamente necessarie a vari cittadini. Avrai bisogno di controllare il tuo QUEST JOURNAL di tanto in tanto per vedere di cosa hai bisogno per avanzare nella quest. Puoi accedere al quest journal dal bottone COMMAND nella tua [scheda del personaggio].
+
+Hib.ImportantDelivery.TalkToAddrir.Question:		Ti chiedero' se vuoi continuare o meno il tuo allenamento. Una finestra di dialogo si aprira'. Tutto quello che devi fare e' premere il pulsante Accetat o Rifiuta. Sei pronto per [continuare il tuo allenamento]?
+
+Hib.ImportantDelivery.TalkToAddrir.Training:		Sei pronto ad iniziare il tuo allenamento?
+
+Hib.ImportantDelivery.TalkToAethic.CaseErrand:		richiesta
+
+Hib.ImportantDelivery.TalkToAethic.Errand:		Ho bisogno che tu consegni questo cesto di vegetali a Freagus in Ardee. Sono sicuro che sei in grado di fare questo lavoro. Prendi questo biglietto e dallo allo Stable Master Truichon. Svelto ora, prima che i vegetali marciscano.
+
+Hib.ImportantDelivery.TalkToAethic.Greetings:		Salve viaggiatore. Non ti ho mai visto in giro prima d'ora. Devi essere una nuova recluta. Bene allora, posso aiutarti in qualcosa?
+
+Hib.ImportantDelivery.TalkToAethic.Supplies:		Ah! Le merci che aspettavo. Grazie {0}. Queste ci aiuteranno enormemente nelle prossime settimane. Avrei un'altra [richiesta] se sei pronto.
+
+Hib.ImportantDelivery.TalkToAethic.Vegetables:		Ho bisogno che tu consegni questo cesto di vegetali a Freagus in Ardee. Sono sicuro che sei in grado di fare questo lavoro. Prendi questo biglietto e dallo allo Stable Master Truichon. Svelto ora, prima che i vegetali marciscano.
+
+Hib.ImportantDelivery.TalkToFreagus.CaseReward:		ricompensa
+
+Hib.ImportantDelivery.TalkToFreagus.Errand:		Non andare lontano amico. Ho ancora altre richieste che bisogna soddisfare.
+
+Hib.ImportantDelivery.TalkToFreagus.GoodCrop:		Ah! Questi devono venire da Aethic in Tir na mBeo. Ne ho aspettato di tempo per avere un buon raccolto. la mia famiglia, i cavalli ed io mangeremobene per un po'. I miei ringraziamenti a te {0}. Ora, lasciami controllare se ho una [ricompensa] per il tuo duro lavoro.
+
+Hib.ImportantDelivery.TalkToFreagus.Reward:		E' un po' stracciata, ma ti terra' caldo nei mesi invernali. Grazie ancora {0}.
+
+Hib.ImportantDelivery.TalkToFreagus.Welcome:		Benvenuto nella mia stalla, amico. Cosa posso fare per te oggi?
+
+
+
+# TITLES
+
+# /Claim
+
+Titles.Claim.Frontier.FrontierChallenger:		Frontier Challenger
+
+Titles.Claim.Frontier.FrontierVindicator:		Frontier Vindicator
+
+Titles.Claim.Stronghold.StrongholdChief:		Stronghold Chief
+
+Titles.Claim.Stronghold.StrongholdSoldier:		Stronghold Soldier
+
+# /Deathblows
+
+Titles.Deathblows.BattleEnforcer:			Battle Enforcer
+
+Titles.Deathblows.BattleMaster:				Battle Master
+
+# /Kills
+
+Titles.Kills.Albion.BaneOfAlbion:			Bane of Albion
+
+Titles.Kills.Albion.ScourgeOfAlbion:			Scourge of Albion
+
+Titles.Kills.All.MasterAssassine:			Master Assassine
+
+Titles.Kills.All.MasterEnforcer:			Master Enforcer
+
+Titles.Kills.All.MasterSoldier:				Master Soldier
+
+Titles.Kills.Demon.DemonBane:				Demon Bane
+
+Titles.Kills.Demon.DemonScourge:			Demon Scourge
+
+Titles.Kills.Demon.DemonSlayer:				Demon Slayer
+
+Titles.Kills.Demon.DreadVanquisher:			Dread Vanquisher
+
+Titles.Kills.Dragon.DragonFoe:				Dragen Foe
+
+Titles.Kills.Dragon.DragonScourge:			Dragon Scourge
+
+Titles.Kills.Dragon.DragonSlayer:			Dragon Slayer
+
+Titles.Kills.Epic.EpicChallenger:			Epic Challenger
+
+Titles.Kills.Epic.EpicVictor:				Epic Victor
+
+Titles.Kills.Hibernia.BaneOfHibernia:			Bane of Hibernia
+
+Titles.Kills.Hibernia.ScourgeOfHibernia:		Scourge of Hibernia
+
+Titles.Kills.Midgard.BaneOfMidgard:			Bane of Midgard
+
+Titles.Kills.Midgard.ScourgeOfMidgard:			Scourge of Midgard
+
+# /Level
+
+Titles.Level.Level20Info:				Livello 20+
+
+Titles.Level.Level20:					Livello {0}
+
+# /PrivLevel
+
+Titles.PrivLevel.Administrator:				Amministratore
+
+Titles.PrivLevel.Gamemaster:				Gamemaster
+
+# /Solokills
+
+Titles.Solokills.DuelMaster:				Duel Master
+
+Titles.Solokills.LoneEnforcer:				Lone Enforcer
+
+# /Time
+
+Titles.Time.Account.ElderTitle:				Elder
+
+Titles.Time.Character.Veteran:				Veteran
+
+# /CL
+
+Titles.CL.Level1:					Seeker
+
+Titles.CL.Level2:					Enforcer
+
+Titles.CL.Level3:					Outrider
+
+Titles.CL.Level4:					Lightbringer
+
+Titles.CL.Level5:					King's Champion
+
+Titles.CL.Level6:					King´s Emissary
+
+Titles.CL.Level7:					Patron of Minotaur
+
+Titles.CL.Level8:					Visionary
+
+Titles.CL.Level9:					Gladiator
+
+Titles.CL.Level10:					Labyrinthian
+
+
+
+# PLAYER STATISTIC
+
+# /Kills
+
+PlayerStatistic.Kill.Title:				Report Uccisioni
+
+PlayerStatistic.Kill.AlbionPlayer:			Giocatori Albion Uccisi
+
+PlayerStatistic.Kill.HiberniaPlayer:			Giocatori Hibernia Uccisi
+
+PlayerStatistic.Kill.MidgardPlayer:			Giocatori Midgard Uccisi
+
+PlayerStatistic.Kill.TotalPlayers:			Totale Giocatori Uccisi
+
+
+
+# /Deathblows
+
+PlayerStatistic.Deathblows.AlbionPlayer:		Albion Deathblows
+
+PlayerStatistic.Deathblows.HiberniaPlayer:		Hibernia Deathblows
+
+PlayerStatistic.Deathblows.MidgardPlayer:		Midgard Deathblows
+
+PlayerStatistic.Deathblows.TotalPlayers:		Total Deathblows
+
+
+
+# /Solo
+
+PlayerStatistic.Solo.AlbionPlayer:			Albion Uccisi da Solo
+
+PlayerStatistic.Solo.HiberniaPlayer:			Hibernia Uccisi da Solo
+
+PlayerStatistic.Solo.MidgardPlayer:			Midgard Uccisi da Solo
+
+PlayerStatistic.Solo.TotalPlayers:			Total Uccisi da Solo
+
+
+
+# /Capture
+
+PlayerStatistic.Capture.Title:				Report Catture
+
+PlayerStatistic.Capture.Keeps:				Castelli Catturati
+
+PlayerStatistic.Capture.Towers:				Torri Catturate
+
+
+
+# /PvE
+
+PlayerStatistic.PvE.Title:				PvE Report
+
+PlayerStatistic.PvE.KillsDragon:			Dragon Uccisi
+
+PlayerStatistic.PvE.KillsEpic:				Boss Epici Uccisi
+
+PlayerStatistic.PvE.KillsLegion:			Legion Uccisi
+
+
