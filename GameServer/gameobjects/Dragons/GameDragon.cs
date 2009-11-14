@@ -26,6 +26,7 @@ using log4net;
 using System.Reflection;
 using DOL.Events;
 using DOL.GS.ServerProperties;
+using DOL.AI.Brain;
 
 
 namespace DOL.GS
@@ -359,7 +360,7 @@ namespace DOL.GS
 		/// <param name="y"></param>
 		/// <param name="uptime"></param>
 		/// <returns></returns>
-		protected GameNPC SpawnTimedAdd(int templateID, int level, int x, int y, int uptime)
+		protected GameNPC SpawnTimedAdd(int templateID, int level, int x, int y, int uptime, bool isRetriever)
 		{
 			GameNPC add = null;
 
@@ -376,6 +377,11 @@ namespace DOL.GS
 				if (m_addTemplate != null)
 				{
 					add = new GameNPC(m_addTemplate);
+
+					if (isRetriever)
+					{
+						add.SetOwnBrain(new RetrieverMobBrain());
+					}
 					add.CurrentRegion = this.CurrentRegion;
 					add.Heading = (ushort)(Util.Random(0, 4095));
 					add.Realm = 0;
