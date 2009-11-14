@@ -1,0 +1,25 @@
+﻿# ATLANTIS
+
+# /Researcher
+
+Researcher.GetExamineMessages.YouExamine:		Es interessiert Euch {0}. {1} ist Euch {2} gesonnen.
+
+Researcher.GetExamineMessages.She:			Sie
+
+Researcher.GetExamineMessages.He:			Er
+
+
+
+# DARKNESS RISING
+
+# /KingNPC
+
+CLWeaponNPC.ReceiveItem.RespecCL:			Vielen Dank, Ihr dürft nun Eure Champion-Fertigkeiten neu trainieren. Um dies zu tun, gebt /respec cl ein.
+
+KingNPC.WhisperReceive.AlreadyChampion:			Ihr seid bereits ein Champion!
+
+KingNPC.WhisperReceive.AskForChampion:			Würdet Ihr gerne das Leben eines [Champions] führen?
+
+KingNPC.WhisperReceive.IsNowChampion:			Ihr habt Euch soeben für das Leben eines Champions entschieden!
+
+

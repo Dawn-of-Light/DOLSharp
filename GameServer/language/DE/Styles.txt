@@ -1,0 +1,47 @@
+﻿# /StyleProcessor
+
+StyleProcessor.ExecuteStyle.BackStrike:			Ihr führt einen kritischen Schlag auf den Rücken Eures Zieles aus.
+
+StyleProcessor.ExecuteStyle.ExecuteFail:		Ihr führt den Kampfstil "{0}" nicht richtig aus!
+
+StyleProcessor.ExecuteStyle.PerformPerfectly:		Ihr führt den Kampfstil "{0}" perfekt aus.{1}
+
+StyleProcessor.ExecuteStyle.PerformsPerfectly:		Euer {0} führt {1} perfekt aus! {2}
+
+# ---->	Anpassung ---					---Muss mit dem Namen in der Styles-Tabelle übereinstimmen!---
+
+StyleProcessor.ExecuteStyle.StyleNameBackstab:		Backstab
+
+StyleProcessor.ExecuteStyle.StyleNameBackstabII:	Backstab II
+
+StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:	Perforate Artery
+
+# <----
+
+StyleProcessor.ExecuteStyle.ThroatStrike:		Ihr führt einen kritischen Schlag auf den Hals Eures Zieles aus.
+
+StyleProcessor.TryToUseStyle.AlreadyPreparing:		Ihr bereitet bereits einen Kampfstil vor! Gebt /cancelstyle ein, um den Kampfstil-Abbruch zu aktivieren.
+
+StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	Ihr habt bereits Eure Kampfstile für diese Runde ausgewählt!
+
+StyleProcessor.TryToUseStyle.BackupStyle:		Ihr bereitet nun den Kampfstil "{0}" als Reserve für den Kampstil "{1}" vor!
+
+StyleProcessor.TryToUseStyle.CantCombatMode:		Ihr könnt Euch nicht kampfbereit machen, während Ihr liegt!
+
+StyleProcessor.TryToUseStyle.CantMeleeCombat:		Ihr könnt Euch nicht in den Nahkampf stürzen mit einer Schusswaffe!
+
+StyleProcessor.TryToUseStyle.DualWielding:		Ihr müßt Waffen in beiden Händen führen, um diesen Kampfstil ausführen zu können!
+
+StyleProcessor.TryToUseStyle.Fatigued:			Ihr seid zu erschöpft, um diesen Kampfstil auszuführen!
+
+StyleProcessor.TryToUseStyle.MustHaveTarget:		Ihr benötigt ein Ziel für Euren nächsten Kampstil!
+
+StyleProcessor.TryToUseStyle.NoLongerPreparing:		Ihr bereitet den Kampfstil "{0}" nicht mehr vor!
+
+StyleProcessor.TryToUseStyle.PerformStyleBefore:	Vor diesem Kampfstil müsst Ihr erst den Kampfstil "{0}" ausführen!
+
+StyleProcessor.TryToUseStyle.PreparePerform:		Ihr bereitet den Kampfstil "{0}" vor!
+
+StyleProcessor.TryToUseStyle.StyleRequires:		Dieser Kampstil erfordert eine {0}-Waffe!
+
+

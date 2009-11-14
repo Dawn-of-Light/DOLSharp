@@ -1,0 +1,29 @@
+﻿# GAMELIVING
+
+GameLiving.ReceiveItem:					{0} will diesen Gegenstand nicht!
+
+GameLiving.ReceiveMoney:				{0} will Euer Geld nicht!
+
+
+
+GameLiving.Pronoun.Neutral.Objective:		ihm		
+
+GameLiving.Pronoun.Neutral.Possessive:		sein		
+
+GameLiving.Pronoun.Neutral.Subjective:		es	
+
+GameLiving.Pronoun.Male.Objective:			ihm		
+
+GameLiving.Pronoun.Male.Possessive:			sein		
+
+GameLiving.Pronoun.Male.Subjective:			er	
+
+GameLiving.Pronoun.Female.Objective:		ihr		
+
+GameLiving.Pronoun.Female.Possessive:		ihr		
+
+GameLiving.Pronoun.Female.Subjective:		sie		
+
+	
+
+

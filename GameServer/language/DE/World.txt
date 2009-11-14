@@ -1,0 +1,7 @@
+﻿# /AbstractArea
+
+AbstractArea.Entered:					(Region) Ihr seid nun {0}!
+
+AbstractArea.Left:					(Region) Ihr seid nun nicht mehr {0}!
+
+

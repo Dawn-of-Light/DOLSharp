@@ -1,0 +1,177 @@
+﻿# /PlayerClass
+
+PlayerClass.Profession.Academy:			Académie
+
+PlayerClass.Profession.ChurchofAlbion:		Eglise d'Albion
+
+PlayerClass.Profession.DefendersofAlbion:	Défenseurs d'Albion
+
+PlayerClass.Profession.GuildofShadows:		Fraternité des Ombres
+
+PlayerClass.Profession.HouseofBodgar:		Bogdar-Othila
+
+PlayerClass.Profession.HouseofBragi:		Bragi-Othila
+
+PlayerClass.Profession.HouseofEir:			Eir-Othila
+
+PlayerClass.Profession.HouseofHel:			Hel-Othila
+
+PlayerClass.Profession.HouseofKelgor:		Kelgor-Othila
+
+PlayerClass.Profession.HouseofModi:		Modi-Othila
+
+PlayerClass.Profession.HouseofOdin:		Odin-Othila
+
+PlayerClass.Profession.HouseofSkadi:		Skadi-Othila
+
+PlayerClass.Profession.HouseofThor:		Thor-Othila
+
+PlayerClass.Profession.HouseofTyr:			Tyr-Othila
+
+PlayerClass.Profession.HouseofYmir:		Ymir-Othila
+
+PlayerClass.Profession.Loki:				Loki-Othila
+
+PlayerClass.Profession.PathofAffinity:		Voie de la Nature
+
+PlayerClass.Profession.PathofEssence:		Voie de l'Essence
+
+PlayerClass.Profession.PathofFocus:		Voie des Anciens
+
+PlayerClass.Profession.PathofHarmony:		Voie de l'Harmonie
+
+PlayerClass.Profession.TempleofArawn:		Temple d'Arawn
+
+PlayerClass.Profession.TempleofIronFist:	Temple du Poing de Fer
+
+
+
+PlayerClass.Name.Acolyte:			Acolyte
+
+PlayerClass.Name.AlbionRogue:		Initié
+
+PlayerClass.Name.Animist:			Animiste
+
+PlayerClass.Name.Armsman:			Maître d'Armes
+
+PlayerClass.Name.Bainshee:			Banshee
+
+PlayerClass.Name.Bard:				Barde
+
+PlayerClass.Name.Berserker:		Berserker
+
+PlayerClass.Name.Blademaster:		Finelame
+
+PlayerClass.Name.Bonedancer:		Prêtre de Bogdar
+
+PlayerClass.Name.Cabalist:			Cabaliste
+
+PlayerClass.Name.Champion:			Champion
+
+PlayerClass.Name.Cleric:			Clerc
+
+PlayerClass.Name.Disciple:			Novice
+
+PlayerClass.Name.Druid:			Druide
+
+PlayerClass.Name.Eldritch:			Eldritch
+
+PlayerClass.Name.Elementalist:		Apprenti
+
+PlayerClass.Name.Enchanter:		Enchanteur
+
+PlayerClass.Name.Fighter:			Recrue
+
+PlayerClass.Name.Forester:			Forestier
+
+PlayerClass.Name.Friar:			Moine
+
+PlayerClass.Name.Guardian:			Arme
+
+PlayerClass.Name.Healer:			Guérisseur
+
+PlayerClass.Name.Heretic:			Hérétique
+
+PlayerClass.Name.Hero:				Protecteur
+
+PlayerClass.Name.Hunter:			Chasseur
+
+PlayerClass.Name.Infiltrator:		Sicaire
+
+PlayerClass.Name.Mage:				Disciple
+
+PlayerClass.Name.Magician:			Magicien
+
+PlayerClass.Name.Mauler_Alb:		Kan-Laresh
+
+PlayerClass.Name.Mauler_Hib:		Kan-Laresh
+
+PlayerClass.Name.Mauler_Mid:		Kan-Laresh
+
+PlayerClass.Name.Mentalist:		Empathe
+
+PlayerClass.Name.Mercenary:		Mercenaire
+
+PlayerClass.Name.MidgardRogue:		Larron
+
+PlayerClass.Name.Minstrel:			Ménestrel
+
+PlayerClass.Name.Mystic:			Myste
+
+PlayerClass.Name.Naturalist:		Ovate
+
+PlayerClass.Name.Necromancer:		Prêtre d'Arawn
+
+PlayerClass.Name.Nightshade:		Ombre
+
+PlayerClass.Name.Paladin:			Paladin
+
+PlayerClass.Name.Ranger:			Ranger
+
+PlayerClass.Name.Reaver:			Fléau d'Arawn
+
+PlayerClass.Name.Runemaster:		Prêtre d'Odin
+
+PlayerClass.Name.Savage:			Sauvage
+
+PlayerClass.Name.Scout:			Eclaireur
+
+PlayerClass.Name.Seer:				Devin
+
+PlayerClass.Name.Shadowblade:		Assassin
+
+PlayerClass.Name.Shaman:			Chaman
+
+PlayerClass.Name.Skald:			Skald
+
+PlayerClass.Name.Sorcerer:			Sorcier
+
+PlayerClass.Name.Spiritmaster:		Prêtre de Hel
+
+PlayerClass.Name.Stalker:			Rôdeur
+
+PlayerClass.Name.Thane:			Thane
+
+PlayerClass.Name.Theurgist:		Théurgiste
+
+PlayerClass.Name.Valewalker:		Faucheur
+
+PlayerClass.Name.Valkyrie:			Valkyrie
+
+PlayerClass.Name.Vampiir:			Séide de Leanansidhe
+
+PlayerClass.Name.Viking:			Combattant
+
+PlayerClass.Name.Warden:			Sentinelle
+
+PlayerClass.Name.Warlock:			Helhaxa
+
+PlayerClass.Name.Warrior:			Guerrier
+
+PlayerClass.Name.Wizard:			Thaumaturge
+
+
+
+PlayerClass.OnLevelUp.Autotrain:	Vous pouvez vous spécialiser gratuitement en {0} jusqu'au niveau {1}.
+
+
