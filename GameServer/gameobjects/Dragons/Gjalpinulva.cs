@@ -69,14 +69,14 @@ namespace DOL.GS
 				isRetriever = Util.Chance(25);
 				dogSpawn = SpawnTimedAdd((isRetriever) ? 610 : 611, 
 					(isRetriever) ? Util.Random(47, 53) : 37, 
-					X + Util.Random(300, 600), Y + Util.Random(300, 600), 60);
+					X + Util.Random(300, 600), Y + Util.Random(300, 600), 60, isRetriever);
 
 				// We got a retriever, tell it who its master is and which exit
 				// to run to.
 
 				if (isRetriever)
 				{
-					if (dogSpawn.Brain is RetrieverMobBrain)
+					if (dogSpawn.Brain != null && dogSpawn.Brain is RetrieverMobBrain)
 					{
 						(dogSpawn.Brain as RetrieverMobBrain).Master = this;
 						m_retrieverList.Add(dogSpawn);
@@ -140,7 +140,7 @@ namespace DOL.GS
 			{
 				isDisciple = Util.Chance(25);
 				drakulv = SpawnTimedAdd((isDisciple) ? 613 : 612, Util.Random(62, 68), 
-					x + Util.Random(250), y + Util.Random(250), 120);
+					x + Util.Random(250), y + Util.Random(250), 120, false);
 				if (drakulv.Brain is StandardMobBrain && this.Brain is DragonBrain)
 					(Brain as DragonBrain).AddAggroListTo(drakulv.Brain as StandardMobBrain);
 			}
