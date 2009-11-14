@@ -1,0 +1,369 @@
+﻿# MASTERLEVEL
+
+# 1. Uncomplete steps
+
+SendMasterLevelWindow.Uncomplete.ML1.Step1:		Ianetor aime jouer avec le , et recherche des aventuriers pour participer à un jeu explosif en Anatolie d'Océania ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML1.Step2:		Le voleur qui a dérobé Lornas est toujours en vie ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML1.Step3:		Les clans tritons Zhton et Kyhnroe en Mésothalassa et Océania Boréale sont à l'agonie, mais ils s'affrontent toujours l'un l'autre. Chaque clan est à la recherche d'aventuriers pour combattre à leurs côtés! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML1.Step4:		La barrière retient toujours ceux qui sont emprisonnés dans la mer maudite d'Hespéros d'Océania ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML1.Step5:		Vous n'avez pas encore prouvé votre valeur en combat singulier face aux Champions du Seigneur Krojer! Ce défi est à relever seul.
+
+SendMasterLevelWindow.Uncomplete.ML1.Step6:		Kirkleis contemple toujours avec colère le miroir qui lui renvoie l'image de sa malédiction ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML1.Step7:		Les portails restent sombres et silencieux ! Le Rassa est enfermé hors de portée de ceux qui cherchent sont pouvoir ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML1.Step8:		Le rubis repose dans le sable au pied de la tête dont l'oeil contemple les profondeurs insondables ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML1.Step9:		Desmona porte toujours sa couronne, le symbole nécessaire reste à trouver ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML1.Step10:	Faites face à Cetus avec un anneau, un rubis, un miroir et une couronne ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step1:		La mort marche dans vos pas dans le Temple du Sobékite Eternel! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step2:		Les assassins de l'imposteur tuent les gardien du Temple du Sobékite Eternel! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step3:		Le chef Triton et ses suivants détiennent moult richessses dérobées au sein du Temple Sobékite Eternel! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML2.Step4:		Le reflet de Rrionne est la clef de sont invulnérabilité ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step5:		Vous n'avez pas gagné le jeu de stratégie de Chath ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step6:		L'épreuve de Kanahkt semble trop dure pour vous ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step7:		Vous devez toujours faire face à la Peur, la Terreur et l'Horreur ! Ce défi est réservé à un groupe de combat ou à un aventurier.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step8:		Pour être victorieux, vous devez vous affronter vous même ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step9:		Remportez la victoire face aux Maîtres des Batailles qui ont autrefois remporté l'épreuve du Sobékite Eternel ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step10:	Un imposteur a volé l'Ankh de Vie, lui accordant l'immortalité tant qu'il réside dans le Temple du Sobékite Eternel. Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML3.Step1:		Moirai détient toujours le pouvoir runique de son bouclier magique ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML3.Step2:		Kepa est affaiblie et s'accroche désespérément à son pouvoir ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML3.Step3:		Casta utilise toujours son artefact pour tuer quiconque pénètre dans son antre ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML3.Step4:		Laodamedia garde toujours vigoureusement l'entrée de sa tanière ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML3.Step5:		Antioos clâme que son pouvoir est supérieur à tous les autres ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML3.Step6:		Un étrange barracuda erre dans les ténèbres, luisant de pouvoir ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML3.Step7:		Shraogh inspire toujours la peur chez ceux qui osent se mesurer à lui ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML3.Step8:		La raie pastenague dégage un pouvoir surnaturel ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML3.Step9:		La pieuvre Sinovia dévore ceux qui s'approchent ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML3.Step10:	La Méduse transforme toujours en pierre quiconque s'oppose à elle ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML4.Step1:		Le Colosse n'est pas encore invoqué à partir des scorpions du désert de Stygie ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML4.Step2:		La Forteresse des Tempêtes n'est pas encore tombée ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML4.Step3:		On dit du Puissant Oeil de Ra qu'il rôde toujours dans les terres désertiques d'Atum ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML4.Step4:		Une pierre précieuse pour certains n'est qu'une babiole pour une déesse ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML4.Step5:		Le Jann des Terres d'Atum virevolte parmi les dunes ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML4.Step6:		Oukesson le Ghillan se démultiplie pour combattre, et ne lâchera pas ses trésors tant qu'il ne sera pas vaincu ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML4.Step7:		Les gardiens de la rivière Iter ne sont pas encore réveillés ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML4.Step8:		Le sang de Daehien coule toujours dans les Terres d'Atum ! Ce défi est réservé à un groupe de combat ! 
+
+SendMasterLevelWindow.Uncomplete.ML4.Step9:		Gaurmaes la Maride est toujours à l'abri derrière tornades et poussières ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML4.Step10:	Martikhoras règne toujours dans sa pyramide ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step1:		La Jarre Canopique (Intestins) doit être volée auprès de l'Avatar de Qebehsenuef ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step2:		La jarre Canopique (Estomac) doit être volée auprès de l'Avatar de Duamutef ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step3:		La Jarre Canopique (Poumons) doit être volée auprès de l'Avatar de Hapy ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step4:		La Jarre Canopique (Foie) doit être volée auprès de l'Avatar de Imsety ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step5:		Les gorgones d'Aérus détiennent toujours le Miroir de Ra de Cau Surae ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step6:		Les maudits détiennent la résine qui préserve ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step7:		Les maudits détiennent le masque nécessaire pour affronter Ammut ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step8:		Les attaches se trouvent chez les maudits. Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step9:		Vous devez boire les eaux empoisonnées pour aider Mahaf ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step10:	Vous devez faire face à Ammut dans les profondeurs des Chambres de Ma'ati afin d'être jugé ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step1:		Cherchez un uraeus rare là où ils se trouvent. Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step2:		Le sacrifice doit encore avoir lieu, la salamandre n'est pas encore née ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step3:		Lateef se lamente sur son destin de suivant d'Am-he et souhaite retourner dans le désert ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step4:		Pallida-uraei n'est pas encore apparu ! Cherchez le foyez des Uraeus ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step5:		Les flammes à l'extrême Est de Volcania gardent les objets, et doivent être éteintes ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step6:		Cherchez Siraadi le sacrificateur au milieu des piliers de la vengeance de Volcania ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step7:		Les trois gardiens d'Ankhkare le surveillent. Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step8:		Au centre de l'île les brasiers appellent les efreet ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step9:		La Forteresse de Vazul dans les îles de Cendres n'est pas encore tombée ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step10:	La Chimère tient toujours sa forteresse des Iles de Cendres Orientales ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step1:		Vous devez acquérir le gantelet de feu ! Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step2:		Vous pouvez en apprendre plus sur vos ennemis, mais ils sont quatre cette fois. Vous ne pouvez mettre fin à leur guerre, mais pouvez prouver votre courage.Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step3:		Les Apophiens souhaitent mettre à l'épreuve votre endurance. Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step4:		Les Volurgons souhaitent mettre à l'épreuve votre endurance. Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step5:		Les Shaitans souhaitent mettre à l'épreuve votre endurance. Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step6:		Les Hephaestiens souhaitent mettre à l'épreuve votre endurance. Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step7:		Vous devez passer une épreuve dans la Chambre des Flammes ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step8:		Le regard de Katorii détruit toute vie, elle doit être tuée ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step9:		Une force mystérieuse bloque votre chemin ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step10:	Typhon repose dans son nid de lave au Coeur de Volcania ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML8.Step1:		Bisul le jinn a toujours le cristal de contrôle ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML8.Step2:		Le bouclier d'Agne fut détruit il y a bien longtemps, mais Tholos a en sa possession un autre exemplaire ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML8.Step3:		L'épée du grand Agne est maintenant entre les mains d'un Jinn malfaisant ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML8.Step4:		Autrefois noble et fier, il ne reste plus d'Agne que quelques débris près des foyers des centaures. Ce défi est réservé à un groupe d'aventuriers.
+
+SendMasterLevelWindow.Uncomplete.ML8.Step5:		Kratos n'a pas encore donné la jambe d'Agne ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML8.Step6:		Les serviteurs de Dawar détiennent la tête d'Agne ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML8.Step7:		Trouvez le torse d'Agne parmi les statues d'Aérus ! Ce défi est réservé à un groupe d'aventuriers. 
+
+SendMasterLevelWindow.Uncomplete.ML8.Step8:		Un groupe de Gorgones tente de briser vos efforts pour reconstruire Agne et ont caché son bras gauche ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML8.Step9:		Le bras droit repose dans les ruines d'un ancien puissant temple Atlante. Ce défi est réservé à un groupe d'aventuriers. 
+
+SendMasterLevelWindow.Uncomplete.ML8.Step10:	Vous devez d'abord défaire l'armée d'Agne sur son champ de bataille puis vous devrez renverser Talos dans son temple ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML9.Step1:		Il y a bien longtemps, Kyros était un guerrier ultime aux nombreux rôles lors des batailles. Saurez-vous le défier ? 
+
+SendMasterLevelWindow.Uncomplete.ML9.Step2:		Lachlen était un grand explorateur, toujours prêt à affronter de nouveaux dangers. Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML9.Step3:		Il y a bien longtemps, Evzen avait réunifié trois pays après la mort de leurs seigneurs de guerre puis y avait régné d'une main de fer. 
+
+SendMasterLevelWindow.Uncomplete.ML9.Step4:		Quatre rois similaires sont dormants et doivent être réveillés ! Ce défi est réservé à un groupe de combat.  
+
+SendMasterLevelWindow.Uncomplete.ML9.Step5:		Nelos aimerait vous apprendre une leçon à laquelle il se pourrait que vous ne surviviez pas ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML9.Step6:		Des patrouilles centaures menées par Katri vous empêchent d'atteindre votre but ! Ce défi est réservé à un groupe de combat.
+
+SendMasterLevelWindow.Uncomplete.ML9.Step7:		Seul les laculus les plus forts survivent car ils se dévorent les uns les autres. Ce défi est réservé à un groupe de combat.  
+
+SendMasterLevelWindow.Uncomplete.ML9.Step8:		Vous n'avez pas encore prouvé votre valeur auprès des Gardiens du Phoénix ! Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML9.Step9:		Neola garde toujours ses soeurs. Ce défi est réservé à un groupe de combat. 
+
+SendMasterLevelWindow.Uncomplete.ML9.Step10:	Le Phoénix n'est pas encore affaibli ! Ce défi est réservé à un groupe de combat.
+
+
+
+# 1. Completed steps
+
+SendMasterLevelWindow.Complete.ML1.Step1:	[Terminé] Vous avez soufflé les flammes élémentaires de Ianetor !	
+
+SendMasterLevelWindow.Complete.ML1.Step2:	[Terminé] Justice a été rendue pour Lornas !	
+
+SendMasterLevelWindow.Complete.ML1.Step3:	[Terminé] L'ennemi a été vaincu ! La tribu mourante peut maintenant renaître !	
+
+SendMasterLevelWindow.Complete.ML1.Step4:	[Terminé] Fadrin et sa barrière sont tombés ! Les victimes de la malédiction sont libres !	
+
+SendMasterLevelWindow.Complete.ML1.Step5:	[Terminé] Vous avez encore prouvé votre valeur face aux Champions du Seigneur Krojer !	
+
+SendMasterLevelWindow.Complete.ML1.Step6:	[Terminé] La malédiction de kirkleis a pris fin ! Le règne de flammes de la statue a pris fin !	
+
+SendMasterLevelWindow.Complete.ML1.Step7:	[Terminé] Le Rassa est tombé !	
+
+SendMasterLevelWindow.Complete.ML1.Step8:	[Terminé] Nul requin n'arpente les mers avec un rubis doré pour tout dîner !	
+
+SendMasterLevelWindow.Complete.ML1.Step9:	[Terminé] Le rideau du pouvoir est levé, Desmona ne porte plus sa couronne de harpie!	
+
+SendMasterLevelWindow.Complete.ML1.Step10:	[Terminé] Braves sont ceux qui ont défait Cétus !	
+
+SendMasterLevelWindow.Complete.ML2.Step1:	[Terminé] Le sombre marcheur a été défait !	
+
+SendMasterLevelWindow.Complete.ML2.Step2:	[Terminé] Vous avez éliminé les assassins !	
+
+SendMasterLevelWindow.Complete.ML2.Step3:	[Terminé] Vous avez dérobé le butin des tritons !	
+
+SendMasterLevelWindow.Complete.ML2.Step4:	[Terminé] Le reflet de Rrionne a disparu en même temps que ses pouvoirs !	
+
+SendMasterLevelWindow.Complete.ML2.Step5:	[Terminé] Vous avez vaincu Chath en gagnant son jeu de stratégie !	
+
+SendMasterLevelWindow.Complete.ML2.Step6:	[Terminé] Vous avez finalement maîtrisé l'épreuve de Kanahkt !	
+
+SendMasterLevelWindow.Complete.ML2.Step7:	[Terminé] Vous avez fait face à une ombre au sein de L'Eternel !	
+
+SendMasterLevelWindow.Complete.ML2.Step8:	[Terminé] Vous avez tenu bon face à Amenemhat !	
+
+SendMasterLevelWindow.Complete.ML2.Step9:	[Terminé] Les Maîtres des Batailles se sont effrondrés sous vos coups et reconnaissent votre habileté au combat !	
+
+SendMasterLevelWindow.Complete.ML2.Step10:	[Terminé] L'ankh est détruite, et l'imposteur vaincu !	
+
+SendMasterLevelWindow.Complete.ML3.Step1:	[Terminé] Moirai a été vaincue, et le pouvoir runique est à vous !	
+
+SendMasterLevelWindow.Complete.ML3.Step2:	[Terminé] kepa est tombée, son pouvoir est à vous !	
+
+SendMasterLevelWindow.Complete.ML3.Step3:	[Terminé] Casta a été vaincue, un autre pouvoir runique est désormais à vous !	
+
+SendMasterLevelWindow.Complete.ML3.Step4:	[Terminé] Un autre pouvoir runique est entre vos mains, Laodamedia est vaincue !	
+
+SendMasterLevelWindow.Complete.ML3.Step5:	[Terminé] Antioos a été vaincue, un autre pouvoir runique vous appartient !	
+
+SendMasterLevelWindow.Complete.ML3.Step6:	[Terminé] Vous avez vaincu le barracuda luisant, et récupéré un autre pouvoir runique !	
+
+SendMasterLevelWindow.Complete.ML3.Step7:	[Terminé] Le règne de Shroagh a pris fin, un autre pouvoir runique est entre vos mains !	
+
+SendMasterLevelWindow.Complete.ML3.Step8:	[Terminé] La raie runique est morte , et vous avez absorbé un autre pouvoir runique !	
+
+SendMasterLevelWindow.Complete.ML3.Step9:	[Terminé] La pieuvre Sinovia est morte, vous avez récupéré son pouvoir runique !	
+
+SendMasterLevelWindow.Complete.ML3.Step10:	[Terminé] La Méduse a été vaincue, vous avez réussi une nouvelle épreuve !	
+
+SendMasterLevelWindow.Complete.ML4.Step1:	[Terminé] La Colosse a été détruit !	
+
+SendMasterLevelWindow.Complete.ML4.Step2:	[Terminé] Vous avez vaincu le Pharaon Séti, la Forteresse des Tempêtes est tombée !	
+
+SendMasterLevelWindow.Complete.ML4.Step3:	[Terminé] Le désert est silencieux ! On n'entend plus la Colère de Sekhmèt !	
+
+SendMasterLevelWindow.Complete.ML4.Step4:	[Terminé] Vous avez acquis la Pierre Solaire Radiante !	
+
+SendMasterLevelWindow.Complete.ML4.Step5:	[Terminé] Le Jann ne joue plus dans les dunes de sable !	
+
+SendMasterLevelWindow.Complete.ML4.Step6:	[Terminé] OUkesson le Ghillan et ses clones ont été vaincus !	
+
+SendMasterLevelWindow.Complete.ML4.Step7:	[Terminé] Les gardiens de la rivière Iter se réveillent !	
+
+SendMasterLevelWindow.Complete.ML4.Step8:	[Terminé] Le sang de Daehien ne coule plus !	
+
+SendMasterLevelWindow.Complete.ML4.Step9:	[Terminé] Gaurmaes la Maride, le fléau des Terres d'Atum, n'est plus !	
+
+SendMasterLevelWindow.Complete.ML4.Step10:	[Terminé] Martikhoras a rencontré son destin !	
+
+SendMasterLevelWindow.Complete.ML5.Step1:	[Terminé] La jarre a été trouvée !	
+
+SendMasterLevelWindow.Complete.ML5.Step2:	[Terminé] La jarre a été trouvée !	
+
+SendMasterLevelWindow.Complete.ML5.Step3:	[Terminé] La jarre a été trouvée !	
+
+SendMasterLevelWindow.Complete.ML5.Step4:	[Terminé] La jarre a été trouvée !	
+
+SendMasterLevelWindow.Complete.ML5.Step5:	[Terminé] Le Miroir de Ra a été retrouvé, la Chambre de Ma'ati est illuminée !	
+
+SendMasterLevelWindow.Complete.ML5.Step6:	[Terminé] Vous avez reçu la résine d'embaumement !	
+
+SendMasterLevelWindow.Complete.ML5.Step7:	[Terminé] Le masque a été retrouvé !	
+
+SendMasterLevelWindow.Complete.ML5.Step8:	[Terminé] Vos bandages sont en plumes, vous pourrez bientôt faire face à Ammut !	
+
+SendMasterLevelWindow.Complete.ML5.Step9:	[Terminé] Vous avez bu à la Fontaine, vous avez levé la malédiction de Ma'ati !	
+
+SendMasterLevelWindow.Complete.ML5.Step10:	[Terminé] Vous avez fait face à Ammut la dévoreuse !	
+
+SendMasterLevelWindow.Complete.ML6.Step1:	[Terminé] Un haje-uraei a été vaincu !	
+
+SendMasterLevelWindow.Complete.ML6.Step2:	[Terminé] Le sacrifice a eu lieu, la tâche est accomplie !	
+
+SendMasterLevelWindow.Complete.ML6.Step3:	[Terminé] La voie est libre pour que le sceptique retourne dans le désert !	
+
+SendMasterLevelWindow.Complete.ML6.Step4:	[Terminé] Pallida-uraei a été chassé !	
+
+SendMasterLevelWindow.Complete.ML6.Step5:	[Terminé] Vous avez éteint les flammes et reçu les cendres !	
+
+SendMasterLevelWindow.Complete.ML6.Step6:	[Terminé] Siraandi le sacrificateur et ses enchanteurs sont morts, le pouvoir des piliers est diminué !	
+
+SendMasterLevelWindow.Complete.ML6.Step7:	[Terminé] Les gardiens n'ont pas réussi à protéger Ankhkare !	
+
+SendMasterLevelWindow.Complete.ML6.Step8:	[Terminé] Les brasiers n'appellent plus les efreet !	
+
+SendMasterLevelWindow.Complete.ML6.Step9:	[Terminé] La Forteresse des minotaures est tombée et le puissant Vazul a été vaincu !	
+
+SendMasterLevelWindow.Complete.ML6.Step10:	[Terminé] La Chimère est tombée !	
+
+SendMasterLevelWindow.Complete.ML7.Step1:	[Terminé] Vous avez récupéré le gantelet de feu !	
+
+SendMasterLevelWindow.Complete.ML7.Step2:	[Terminé] Vous avez appris beaucoup des statrégie de combat des quatre factions, et vous êtes montré patient et observateur !	
+
+SendMasterLevelWindow.Complete.ML7.Step3:	[Terminé] Vous avez passé l'épreuve des Aphiens avec succès !	
+
+SendMasterLevelWindow.Complete.ML7.Step4:	[Terminé] Vous avez passé l'épreuve des Volurgons avec succès  !	
+
+SendMasterLevelWindow.Complete.ML7.Step5:	[Terminé] Vous avez passé l'épreuve des Shaitans avec succès  !	
+
+SendMasterLevelWindow.Complete.ML7.Step6:	[Terminé] Vous avez passé l'épreuve des Héphaestiens avec succès  !	
+
+SendMasterLevelWindow.Complete.ML7.Step7:	[Terminé] Vous avez remporté l'épreuve et vaincu la Flamme de Volcania  !	
+
+SendMasterLevelWindow.Complete.ML7.Step8:	[Terminé] Le regard de Katorii s'est éteint à jamais !	
+
+SendMasterLevelWindow.Complete.ML7.Step9:	[Terminé] Le chemin est dégagé !	
+
+SendMasterLevelWindow.Complete.ML7.Step10:	[Terminé] Typhon a été vaincu !	
+
+SendMasterLevelWindow.Complete.ML8.Step1:	[Terminé] Bisul ne contrôle plus les statues !	
+
+SendMasterLevelWindow.Complete.ML8.Step2:	[Terminé] Tholos n'a plus sont bouclier !	
+
+SendMasterLevelWindow.Complete.ML8.Step3:	[Terminé] L'épée a été récupérée sur le Jinn !	
+
+SendMasterLevelWindow.Complete.ML8.Step4:	[Terminé] La statue d'Agne est à nouveau debout !	
+
+SendMasterLevelWindow.Complete.ML8.Step5:	[Terminé] Kratos a honoré sa promesse, et la jambe a été trouvée !	
+
+SendMasterLevelWindow.Complete.ML8.Step6:	[Terminé] La tête d'Agne est tombée !	
+
+SendMasterLevelWindow.Complete.ML8.Step7:	[Terminé] Le torse a été trouvé !	
+
+SendMasterLevelWindow.Complete.ML8.Step8:	[Terminé] Le bras gauche d'Agne a été retrouvé, de nombreuses gorgones ont péri.	
+
+SendMasterLevelWindow.Complete.ML8.Step9:	[Terminé] Le bras droit a été récupéré !	
+
+SendMasterLevelWindow.Complete.ML8.Step10:	[Terminé] L'armée d'Agne a été défaite et Talos est tombé !	
+
+SendMasterLevelWindow.Complete.ML9.Step1:	[Terminé] Vous avez vaincu le puissant Kyros !	
+
+SendMasterLevelWindow.Complete.ML9.Step2:	[Terminé] Lachlen était prêt à vous affronter mais il a néanmoin péri !	
+
+SendMasterLevelWindow.Complete.ML9.Step3:	[Terminé] Evzen est mort et les seigneurs de la guerre défaits !	
+
+SendMasterLevelWindow.Complete.ML9.Step4:	[Terminé] Vous avez réveillé les quatre rois et les avez vaincu en combat !	
+
+SendMasterLevelWindow.Complete.ML9.Step5:	[Terminé] Nelos a été détruit !	
+
+SendMasterLevelWindow.Complete.ML9.Step6:	[Terminé] Vous approchez du but !	
+
+SendMasterLevelWindow.Complete.ML9.Step7:	[Terminé] Le plus fort des Iaculus est mort !	
+
+SendMasterLevelWindow.Complete.ML9.Step8:	[Terminé] Vous avez prouvé votre valeur auprès des Gardiens du Phoénix !	
+
+SendMasterLevelWindow.Complete.ML9.Step9:	[Terminé] Neola n'a pas réussi à protéger ses soeurs !	
+
+SendMasterLevelWindow.Complete.ML9.Step10:	[Terminé] Le Phoénix est tombé !	
+
+

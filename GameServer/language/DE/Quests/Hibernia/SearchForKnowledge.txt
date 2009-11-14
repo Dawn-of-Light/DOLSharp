@@ -1,0 +1,19 @@
+﻿# Suche nach Wissen
+
+Hib.SearchForKnowledge.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
+
+Hib.SearchForKnowledge.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+
+Hib.SearchForKnowledge.Conclusion.Text1:		Ich danke Euch, {0}. Ich werde nach meinen Lehrlingen in Lough Gur schicken. Der Krieg lässt unsere Vorräte zur Neige gehen und wir haben an allen Fronten viel zu tun. Ich habe gewiss mehr zu tun, als ich bewältigen kann. Lasst mich wissen, wenn Ihr aushelfen könnt.
+
+Hib.SearchForKnowledge.Init.Text1:			Rekruten-Umhang
+
+Hib.SearchForKnowledge.Init.Text2:			Brief für Epona
+
+Hib.SearchForKnowledge.Init.Text3:			Bringt die Nachricht Eures Ausbilders zu Epona
+
+Hib.SearchForKnowledge.Story:				Seid gesegnet, und herzlich willkommen in Mag Mell. Die Härte des Krieges gegen Albion und Midgard hat unseren Anführern viel Kopfzerbrechen bereitet. König Lugh ist zurück und hat seinen Thron in Tir na nOgh wieder in Besitz genommen. Sogar Fagan sorgt sich um das Wohl seiner Leute hier.\n\nDer Krieg der Reiche beansprucht den größten Teil der Garnison, die uns beschützen soll. Sogar als die Wachen noch vollzählig hier patroullierten, hatten sie alle Hände voll mit den Siabra und anderen Kreaturen zu tun. Jetzt können sie mit ihrer Truppe gerade einmal die direkte Umgebung des Dorfes bewachen.\n\nIch habe eine Nachricht für unsere Heilerin Epona. Der Krieg der Reiche verlangt unseren tapferen Männern und Frauen alles ab und die Ältesten sagen, dass so viele Heiler wie möglich für die Grenzgebiete rekrutiert werden. Ich möchte, dass Ihr Epona eine Nachricht bringt, die sie von diesen Neuigkeiten unterrichtet.
+
+Hib.SearchForKnowledge.Summary:				Hört Euch an, was Euer Ausbilder über die momentane Situation von Mag Mell und Hibernia zu sagen hat. Wenn er fertig ist, sucht Epona auf und gebt ihr den Brief.
+
+Hib.SearchForKnowledge.TalkToEpona:			Guten Tag. Benödigt Ihr eine heilende Berührung?

@@ -1,0 +1,87 @@
+﻿#TemplateManager
+
+#All
+
+SetGuardName.Commander:		Commandant des {0}
+
+SetGuardName.Hastener:		Hâteur
+
+SetGuardName.Renegade:		{0} Renegad
+
+SetGuardName.TowerCaptain:	Capitaine de la Tour
+
+
+
+#Albion
+
+SetGuardName.Armsman:		Homme d'Armes
+
+SetGuardName.Armswoman:		Homme d'Armes
+
+SetGuardName.BowmanCommander:	Commandant des Eclaireurs
+
+SetGuardName.CaptainCommander:	Commandant des Capitaines
+
+SetGuardName.Cleric:		Clerc
+
+SetGuardName.Infiltrator:	Sicaire
+
+SetGuardName.KnightCommander:	Commandant des Chevaliers
+
+SetGuardName.Lady:		Dame {0}
+
+SetGuardName.Lord:		Seigneur {0}
+
+SetGuardName.MasterWizard:	Maître Thaumaturge
+
+SetGuardName.Scout:		Scout
+
+SetGuardName.Wizard:		Thaumaturge
+
+
+
+#Midgard
+
+SetGuardName.Healer:		Guérisseur
+
+SetGuardName.HersirCommander:	Commandant Hersir
+
+SetGuardName.Hunter:		Chasseur
+
+SetGuardName.Huscarl:		Huscarl
+
+SetGuardName.Jarl:		Jarl {0}
+
+SetGuardName.MasterRunes:	Maître des Runes
+
+SetGuardName.NordicHunter:	Chasseur Nordic
+
+SetGuardName.NordicJarl:	Jarl Nordic
+
+SetGuardName.Runemaster:	Prêtre d'Odin
+
+SetGuardName.Shadowblade:	Assassin
+
+
+
+#Hibernia
+
+SetGuardName.Champion:		Commandant des Champions
+
+SetGuardName.Chieftain:		Chef {0}
+
+SetGuardName.Chieftess:		Cheftaine {0}
+
+SetGuardName.Druid:		Druide
+
+SetGuardName.Eldritch:		Eldritch
+
+SetGuardName.Guardian:		Gardien
+
+SetGuardName.MasterEldritch:	Maître Eldritch
+
+SetGuardName.MasterRanger:	Maître Ranger
+
+SetGuardName.Nightshade:	Ombre
+
+SetGuardName.Ranger:		Ranger

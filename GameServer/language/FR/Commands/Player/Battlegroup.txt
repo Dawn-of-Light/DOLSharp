@@ -1,0 +1,113 @@
+﻿
+
+# /Battlegroup
+
+Scripts.Players.Battlegroup.Help.Help:			/bg help - Affiche toutes les commandes du groupe de combat.
+
+Scripts.Players.Battlegroup.Help.Invite:			/bg invite [nom du joueur] - Invite le joueur spécifié à rejoindre le groupe de combat.
+
+Scripts.Players.Battlegroup.Help.JoinPrivate:		/bg join [moderateur] [mot de passe] - Rejoindre un groupe de combat protégé par un mot de passe.	
+
+Scripts.Players.Battlegroup.Help.JoinPublic:		/bg join [moderateur] - Rejoindre un groupe de combat.
+
+Scripts.Players.Battlegroup.Help.Leader:			/bg promote <nom> - Promouvoir un autre joueur comme chef du groupe de combat; Ce joueur peut inviter d'autres joueurs à rejoindre le canal et peut parler quand le canal est en mode écoute.
+
+Scripts.Players.Battlegroup.Help.Leave:			/bg leave - Quitter le groupe de combat
+
+Scripts.Players.Battlegroup.Help.Listen:			/bg listen - Mettre le groupe de combat en mode écoute; seul le modérateur et les leads peuvent parler.
+
+Scripts.Players.Battlegroup.Help.PasswordClear:	/bg password clear - Efface le mot de passe actuel (moderateur uniquement).
+
+Scripts.Players.Battlegroup.Help.PasswordDisplay:	/bg password - Affiche le mot de passe actuel (moderateur uniquement).
+
+Scripts.Players.Battlegroup.Help.PasswordNew:		/bg password [nouveau mot de passe]	- Change le mot de passe actuel.
+
+Scripts.Players.Battlegroup.Help.Private:			/bg private - Définir le groupe de combat comme étant privé
+
+Scripts.Players.Battlegroup.Help.Public:			/bg public - Définir le groupe de combat comme étant publique, tout le monde peut rejoindre.
+
+Scripts.Players.Battlegroup.Help.Remove:			/bg remove [nom du joueur] - Ejecte le joueur spécifié du groupe de combat.
+
+Scripts.Players.Battlegroup.Help.Usage:			/bg usage :
+
+Scripts.Players.Battlegroup.Help.Who:				/bg who - Liste tous les membres du groupe de combat.
+
+Scripts.Players.Battlegroup.Help.Count:         /bg count - Compte le nombre de membres dans le groupe de combat.
+
+Scripts.Players.Battlegroup.Help.Groups:        /bg groups - Affiche les membres du groupe de bataille avec leur groupes.
+
+Scripts.Players.Battlegroup.Help.GroupClass: /bg groupclass -
+
+Scripts.Players.Battlegroup.Help.Loot:        /bg loot (normal/treasurer) - Définit le ramassage d’objets du group de bataille sur normal ou sur trésor.
+
+Scripts.Players.Battlegroup.Help.LootLevel: /bg lootlevel (level) - Définit le niveau d’objet (loot) pour votre groupe de combat.
+
+Scripts.Players.Battlegroup.Help.Treasurer:        /bg treasurer (player name) - Définit le trésorier du groupe de combat.
+
+Scripts.Players.Battlegroup.Help.Status:	/bg status - Renvoie le nombre de membres dans votre groupe de combat.
+
+Scripts.Players.Battlegroup.Help.Credit: /bg credit
+
+Scripts.Players.Battlegroup.Help.GrantCredit: /bg grantcredit (masterlevel) (playername) -
+
+Scripts.Players.Battlegroup.InBattleGroup:			Vous devez être dans un groupe de combat pour utiliser cette commande.
+
+Scripts.Players.Battlegroup.InviteYourself:		Vous ne pouvez pas vous inviter vous même dans un groupe de combat.	
+
+Scripts.Players.Battlegroup.JoinBattleGroup:		Voulez vous rejoindre le groupe de combat de {0} ?	
+
+Scripts.Players.Battlegroup.LeaderCommand:		Vous devez être le modérateur du groupe de combat pour utiliser cette commande.	
+
+Scripts.Players.Battlegroup.LeaderInvite:			Vous devez être le modérateur du groupe de combat pour inviter un joueur à le rejoindre.
+
+Scripts.Players.Battlegroup.ListenMode:			The listen mode of Battlegroup is switch 
+
+Scripts.Players.Battlegroup.Moderator:			{0} est maintenant modérateur du groupe de combat.
+
+Scripts.Players.Battlegroup.NoPlayer:				Il n'y a pas de joueur de ce nom.
+
+Scripts.Players.Battlegroup.NotBattleGroupLeader:	Ce joueur n'est pas modérateur d'un groupe de combat.	
+
+Scripts.Players.Battlegroup.NotBattleGroupMember:	Ce joueur n'est pas membre d'un groupe de combat.	
+
+Scripts.Players.Battlegroup.NotPublic:			Ce groupe de combat n'est pas publique.
+
+Scripts.Players.Battlegroup.OnlyModerator:		Seul le modérateur peut parler dans ce groupe de combat.	
+
+Scripts.Players.Battlegroup.OwnBattleGroup:			Vous ne pouvez pas rejoindre votre propre groupe de combat.
+
+Scripts.Players.Battlegroup.Password:				Mot de passe de ce groupe de combat: {0}.
+
+Scripts.Players.Battlegroup.PasswordChanged:		Nouveau mot de passe du groupe de combat: {0}.	
+
+Scripts.Players.Battlegroup.PlayerInBattlegroup:	{0} est déjà membre d'un groupe de combat.	
+
+Scripts.Players.Battlegroup.Private:				Le groupe de combat est maintenant privé.
+
+Scripts.Players.Battlegroup.Public:				Le groupe de combat est maintenant publique.
+
+Scripts.Players.Battlegroup.Usage:				Usage: /bc <texte>
+
+Scripts.Players.Battlegroup.UsageInvite:			Usage: /bg invite <nom du joueur>
+
+Scripts.Players.Battlegroup.BattlegroupLootThresholdOff: Le niveau de loot du groupe de combat est actuellement sur off. 
+
+Scripts.Players.Battlegroup.BattlegroupLootThresholdOn: Le niveau de loot du groupe de bataille est actuellement {0}
+
+Scripts.Players.Battlegroup.BattleGroupLootNormal: Le type de loot du groupe de combat est défini à normal.
+
+Scripts.Players.Battlegroup.BattleGroupLootTreasurer: Le type de loot du groupe de bataille est défini pour aller au trésorier.
+
+Scripts.Players.Battlegroup.BattlegroupTreasurerOn: Vous avez changé le trésorier du groupe de combat à :{0}.
+
+Scripts.Players.Battlegroup.BattlegroupTreasurerOff: Le groupe de bataille n’a actuellement plus de trésorier.
+
+Scripts.Players.Battlegroup.BattlegroupStatus: Le statut actuel de votre groupe de bataille est {0}.
+
+Scripts.Players.Battlegroup.BattlegroupCount: Il y a actuellement {0} membres dans votre groupe de combat.
+
+Scripts.Players.Battlegroup.BattlegroupTreasurerIsYou: Vous avez été désigné en tant que trésorier de votre groupe de combat.
+
+Scripts.Players.Battlegroup.BattlegroupTreasurerIs: Le trésorier de votre groupe de combat a été défini à {0}
+
+

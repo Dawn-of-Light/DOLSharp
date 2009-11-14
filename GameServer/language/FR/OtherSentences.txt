@@ -1,0 +1,61 @@
+﻿
+
+
+
+# Languages
+
+System.LanguagesName.English:				English
+
+System.LanguagesName.Italian:				Italian
+
+
+
+
+
+# SYSTEM
+
+System.NoSense:									Cela n'aurait aucun sens !
+
+System.MustSelectTarget:						Vous devez selectionner une cible !
+
+System.ReleaseTimer:							Délai de résurrection
+
+
+
+
+
+# PropertyCalculator
+
+PropertyCalc.MaxSpeed.YouAreEncumbered:			Vous êtes surchargé et ne pouvez plus bouger.
+
+
+
+
+
+# GameGraveStone
+
+GameGravestone.GameGravestone.Grave:			Tombe de {0}
+
+
+
+
+
+# GameGuard
+
+GameGuard.GetExamineMessages.Examine:			Vous examinez {0}. {1} il/elle est {2} et c'est un garde.
+
+
+
+
+
+# GAMESTAICITEM
+
+GameStaticItem.GetName.Article1:			Le {0}
+
+GameStaticItem.GetName.Article2:			le {0}
+
+
+
+
+
+

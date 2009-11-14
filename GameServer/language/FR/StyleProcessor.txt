@@ -1,0 +1,51 @@
+﻿
+
+
+
+# /StyleProcessor
+
+StyleProcessor.ExecuteStyle.BackStrike:         Vous infligez un coup critique dans le dos de votre cible.
+
+StyleProcessor.ExecuteStyle.ExecuteFail:      Vous ne parvenez pas à effectuer votre {0} parfaitement!
+
+StyleProcessor.ExecuteStyle.PerformPerfectly:      Vous effectuez votre {0} Parfaitement ! {1}
+
+StyleProcessor.ExecuteStyle.PerformsPerfectly:      Votre {0} effectue {1} Parfaitement ! {2}
+
+StyleProcessor.ExecuteStyle.StyleNameBackstab:      Backstab
+
+StyleProcessor.ExecuteStyle.StyleNameBackstabII:   Backstab II
+
+StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:   Perfore artère
+
+StyleProcessor.ExecuteStyle.ThroatStrike:      Vous infligez un coup critique dans le throat de votre cible.
+
+StyleProcessor.TryToUseStyle.AlreadyPreparing:      Vous êtes déjà en train de préparer cette attaquer ! Tapez /cancelstyle pour arrêter l'attaque en cours.
+
+StyleProcessor.TryToUseStyle.AlreadySelectedStyles:   Vous avez déjà choisi votre attaque pour ce tour !
+
+StyleProcessor.TryToUseStyle.BackupStyle:      Vous vous préparer maintenant à exécuter un {0} attaque à la place de {1}!
+
+StyleProcessor.TryToUseStyle.CantCombatMode:      Vous ne pouvez pas entrer en mode combat tout en étant assis(e) !
+
+StyleProcessor.TryToUseStyle.CantMeleeCombat:      Vous ne pouvez pas entrer en combat de mêlée avec une arme à distance!
+
+StyleProcessor.TryToUseStyle.DualWielding:      Vous devez être en deux mains pour utiliser cette attaque!
+
+StyleProcessor.TryToUseStyle.Fatigued:         Vous êtes trop fatigué(e) pour utiliser cette attaque !
+
+StyleProcessor.TryToUseStyle.MustHaveTarget:      Vous devez avoir une cible pour exécuter votre prochaine attaque !
+
+StyleProcessor.TryToUseStyle.NoLongerPreparing:      Vous ne préparez plus votre {0}!
+
+StyleProcessor.TryToUseStyle.PerformStyleBefore:   Vous devez exécuter votre {0} avant ce style !
+
+StyleProcessor.TryToUseStyle.PreparePerform:      Vous vous préparez à exécuter {0}!
+
+StyleProcessor.TryToUseStyle.StyleRequires:      Cette attaque requiert un(e) {0}!
+
+ 
+
+
+
+
