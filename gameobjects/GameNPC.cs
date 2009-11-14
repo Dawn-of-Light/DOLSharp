@@ -2201,10 +2201,7 @@ namespace DOL.GS
 			BuffBonusCategory4[(int)eStat.EMP] += template.Empathy;
 			BuffBonusCategory4[(int)eStat.CHR] += template.Charisma;
 
-			m_ownBrain = (Name != null && (Name.EndsWith("retriever")
-				|| Name.EndsWith("messenger"))) // Don't like this hack, but can't specify a brain in npctemplate at the moment
-				? new RetrieverMobBrain()
-				: new StandardMobBrain();
+			m_ownBrain = new StandardMobBrain();
 			m_ownBrain.Body = this;
 			(m_ownBrain as StandardMobBrain).AggroLevel = template.AggroLevel;
 			(m_ownBrain as StandardMobBrain).AggroRange = template.AggroRange;

@@ -67,14 +67,14 @@ namespace DOL.GS
 				isMessenger = Util.Chance(25);
 				glimmerSpawn = SpawnTimedAdd((isMessenger) ? 620 : 621+Util.Random(2),
 					(isMessenger) ? Util.Random(47, 53) : Util.Random(57, 63),
-					X + Util.Random(300, 600), Y + Util.Random(300, 600), 60);
+					X + Util.Random(300, 600), Y + Util.Random(300, 600), 60, isMessenger);
 
 				// We got a messenger, tell it who its master is and which exit
 				// to run to.
 
 				if (isMessenger)
 				{
-					if (glimmerSpawn.Brain is RetrieverMobBrain)
+					if (glimmerSpawn.Brain != null && glimmerSpawn.Brain is RetrieverMobBrain)
 					{
 						(glimmerSpawn.Brain as RetrieverMobBrain).Master = this;
 						m_messengerList.Add(glimmerSpawn);
@@ -136,7 +136,7 @@ namespace DOL.GS
 			for (int add = 0; add < numAdds; ++add)
 			{
 				glimmer = SpawnTimedAdd(624+Util.Random(2), Util.Random(62, 68),
-					x + Util.Random(250), y + Util.Random(250), 120);
+					x + Util.Random(250), y + Util.Random(250), 120, false);
 				if (glimmer.Brain is StandardMobBrain && this.Brain is DragonBrain)
 					(Brain as DragonBrain).AddAggroListTo(glimmer.Brain as StandardMobBrain);
 			}
