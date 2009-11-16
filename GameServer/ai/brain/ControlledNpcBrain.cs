@@ -714,22 +714,22 @@ namespace DOL.AI.Brain
 
 					lock (Body.EffectList)
 					{
-						foreach (GameSpellEffect effect in Body.EffectList)
+						foreach (IGameEffect effect in Body.EffectList)
 						{
-							if (effect.SpellHandler is SpeedEnhancementSpellHandler)
+							if (effect is GameSpellEffect && (effect as GameSpellEffect).SpellHandler is SpeedEnhancementSpellHandler)
 							{
-								effects.Add(effect);
+								effects.Add(effect as GameSpellEffect);
 							}
 						}
 					}
 
 					lock (Owner.EffectList)
 					{
-						foreach (GameSpellEffect effect in Owner.EffectList)
+						foreach (IGameEffect effect in Owner.EffectList)
 						{
-							if (effect.SpellHandler is SpeedEnhancementSpellHandler)
+							if (effect is GameSpellEffect && (effect as GameSpellEffect).SpellHandler is SpeedEnhancementSpellHandler)
 							{
-								effects.Add(effect);
+								effects.Add(effect as GameSpellEffect);
 							}
 						}
 					}
