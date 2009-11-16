@@ -37,9 +37,9 @@ namespace DOL.GS.Effects
 		/// <param name="value">The increment of effective level</param>
 		public void Start(GamePlayer player, int duration, byte value)
 		{
-			if (player.ControlledNpc == null)
+			if (player.ControlledNpcBrain == null)
 				return;
-			m_living = player.ControlledNpc.Body;
+			m_living = player.ControlledNpcBrain.Body;
 			m_effectDuration = duration;
 			m_value = value;
 

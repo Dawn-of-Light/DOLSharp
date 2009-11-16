@@ -4991,9 +4991,9 @@ namespace DOL.GS
 			}
 
 			// Necromancer with summoned pet cannot attack
-			if (ControlledNpc != null)
-				if (ControlledNpc.Body != null)
-				if (ControlledNpc.Body is NecromancerPet)
+			if (ControlledNpcBrain != null)
+				if (ControlledNpcBrain.Body != null)
+				if (ControlledNpcBrain.Body is NecromancerPet)
 			{
 				Out.SendMessage("You cannot enter combat in shade mode!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
@@ -6884,13 +6884,13 @@ namespace DOL.GS
 					if (player.Attackers.Contains(enemy))
 						player.RemoveAttacker(enemy);
 
-					if (player.ControlledNpc != null && player.ControlledNpc.Body.Attackers.Contains(enemy))
-						player.ControlledNpc.Body.RemoveAttacker(enemy);
+					if (player.ControlledNpcBrain != null && player.ControlledNpcBrain.Body.Attackers.Contains(enemy))
+						player.ControlledNpcBrain.Body.RemoveAttacker(enemy);
 				}
 			}
 
-			if (ControlledNpc != null && ControlledNpc.Body.Attackers.Contains(enemy))
-				ControlledNpc.Body.RemoveAttacker(enemy);
+			if (ControlledNpcBrain != null && ControlledNpcBrain.Body.Attackers.Contains(enemy))
+				ControlledNpcBrain.Body.RemoveAttacker(enemy);
 
 			base.EnemyKilled(enemy);
 		}
@@ -6903,7 +6903,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				IControlledBrain npc = ControlledNpc;
+				IControlledBrain npc = ControlledNpcBrain;
 				if (npc != null && npc.Body.InCombat)
 					return true;
 				return base.InCombat;
@@ -8967,129 +8967,17 @@ namespace DOL.GS
 				if (this.IsUnderwater)
 					this.IsDiving = true;
 
-				if (ControlledNpc != null &&
-				    ControlledNpc.WalkState != eWalkState.Stay
-				    && this.IsWithinRadius( ControlledNpc.Body, 1000 ) )
+				if (ControlledNpcBrain != null &&
+				    ControlledNpcBrain.WalkState != eWalkState.Stay
+				    && this.IsWithinRadius( ControlledNpcBrain.Body, 1000 ) )
 				{
 					Point2D point = this.GetPointFromHeading( this.Heading, 64 );
-					ControlledNpc.Body.MoveTo(CurrentRegionID, point.X, point.Y, Z, (ushort)((this.Heading + 2048) % 4096), true);
+					ControlledNpcBrain.Body.MoveTo(CurrentRegionID, point.X, point.Y, Z, (ushort)((this.Heading + 2048) % 4096), true);
 				}
 			}
 			return true;
 		}
 
-		/*
-        // Dinberg - marked this void for deletion.
-        // I don't see why we have a separate void for MoveToInstance, which is basically a CTRL C of whats above!
-		public bool MoveToInstance(Region rgn, int x, int y, int z, ushort heading)
-		{
-			if (IsOnHorse)
-				IsOnHorse = false;
-			//If the region doesn't exist, return false
-			if (rgn == null)
-			{
-				log.Error("rgn is null in MoveToInstance");
-				return false;
-			}
-			//If the x,y inside this region don't point to a zone
-			//return false
-			if (rgn.GetZone(x, y) == null)
-			{
-				log.Error("rgn.GetZone is null in MoveToInstance");
-				return false;
-			}
-
-			Diving(waterBreath.Normal);
-
-			if (SiegeWeapon != null)
-				SiegeWeapon.ReleaseControl();
-
-			if (rgn.ID != CurrentRegionID)
-			{
-				if (!RemoveFromWorld())
-					return false;
-				//notify event
-				CurrentRegion.Notify(RegionEvent.PlayerLeave, CurrentRegion, new RegionPlayerEventArgs(this));
-
-				CancelAllConcentrationEffects(true);
-				CommandNpcRelease();
-			}
-			else
-			{
-				//Just remove the player visible, but leave his OID intact!
-				//If player doesn't change region
-				DismountSteed(true);
-				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					if (player == null) continue;
-					if (player != this)
-					{
-						player.Out.SendObjectRemove(this);
-					}
-				}
-			}
-
-			//Remove the last update tick property, to prevent speedhack messages during zoning and teleporting!
-			TempProperties.removeProperty(PlayerPositionUpdateHandler.LASTUPDATETICK);
-
-			//Set the new destination
-			//Current Speed = 0 when moved ... else X,Y,Z continue to be modified
-			CurrentSpeed = 0;
-			MovementStartTick = Environment.TickCount;
-			int m_originalX = X;
-			int m_originalY = Y;
-			int m_originalZ = Z;
-			X = x;
-			Y = y;
-			Z = z;
-			Heading = heading;
-
-			//If the destination is in another region
-			if (rgn != CurrentRegion)
-			{
-				//Set our new region
-				CurrentRegion = rgn;
-				//Send the region update packet, the rest will be handled
-				//by the packethandlers
-				Out.SendRegionChanged();
-			}
-			else
-			{
-				//Add the player to the new coordinates
-				Out.SendPlayerJump(false);
-				LastNPCUpdate = Environment.TickCount;
-				CurrentUpdateArray.SetAll(false);
-                Point3D originalPoint = new Point3D( m_originalX, m_originalY, m_originalZ );
-				foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					if (npc.IsWithinRadius( originalPoint, WorldMgr.VISIBILITY_DISTANCE) )
-						continue;
-
-					Out.SendNPCCreate(npc);
-					if (npc.Inventory != null)
-						Out.SendLivingEquipmentUpdate(npc);
-					//Send health update only if mob-health is not 100%
-					if (npc.HealthPercent != 100)
-						Out.SendObjectUpdate(npc);
-					CurrentUpdateArray[npc.ObjectID - 1] = true;
-				}
-				//Create player visible to all others
-				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					if (player == null) continue;
-					if (player != this)
-					{
-						player.Out.SendPlayerCreate(this);
-					}
-				}
-				UpdateEquipmentAppearance();
-
-				if (this.IsUnderwater)
-					this.IsDiving = true;
-			}
-			return true;
-		}
-		 */
 
 		//Eden - Move to bind, and check if the loc is allowed
 		public bool MoveToBind()
@@ -12541,30 +12429,30 @@ namespace DOL.GS
 		/// Sets the controlled object for this player
 		/// </summary>
 		/// <param name="controlledNpc"></param>
-		public override void SetControlledNpc(IControlledBrain controlledNpc)
+		public override void SetControlledNpcBrain(IControlledBrain controlledNpcBrain)
 		{
-			if (controlledNpc == ControlledNpc) return;
-			if (controlledNpc == null)
+			if (controlledNpcBrain == ControlledNpcBrain) return;
+			if (controlledNpcBrain == null)
 			{
 				Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SetControlledNpc.ReleaseTarget2", ControlledNpc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SetControlledNpc.ReleaseTarget2", ControlledNpcBrain.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SetControlledNpc.ReleaseTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				if (controlledNpc.Owner != this)
-					throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpc.Owner.Name + ")", "controlledNpc");
-				if (m_controlledNpc == null)
-					InitControlledNpc(1);
-				Out.SendPetWindow(controlledNpc.Body, ePetWindowAction.Open, controlledNpc.AggressionState, controlledNpc.WalkState);
-				if (controlledNpc.Body != null)
+				if (controlledNpcBrain.Owner != this)
+					throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpcBrain.Owner.Name + ")", "controlledNpc");
+				if (m_controlledNpcBrain == null)
+					InitControlledNpcBrain(1);
+				Out.SendPetWindow(controlledNpcBrain.Body, ePetWindowAction.Open, controlledNpcBrain.AggressionState, controlledNpcBrain.WalkState);
+				if (controlledNpcBrain.Body != null)
 				{
-					Out.SendNPCCreate(controlledNpc.Body); // after open pet window again send creation NPC packet
-					if (controlledNpc.Body.Inventory != null)
-						Out.SendLivingEquipmentUpdate(controlledNpc.Body);
+					Out.SendNPCCreate(controlledNpcBrain.Body); // after open pet window again send creation NPC packet
+					if (controlledNpcBrain.Body.Inventory != null)
+						Out.SendLivingEquipmentUpdate(controlledNpcBrain.Body);
 				}
 			}
-			m_controlledNpc[0] = controlledNpc;
+			m_controlledNpcBrain[0] = controlledNpcBrain;
 		}
 
 		/// <summary>
@@ -12572,7 +12460,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcAttack()
 		{
-			IControlledBrain npc = ControlledNpc;
+			IControlledBrain npc = ControlledNpcBrain;
 			if (npc == null || npc.Body.IsConfused || !GameServer.ServerRules.IsAllowedToAttack(this, TargetObject as GameLiving, false))
 				return;
 
@@ -12599,22 +12487,28 @@ namespace DOL.GS
 		{
 			//[Ganrod] Nidel: Animist can removed his TurretFnF.
 			TurretPet turretFnF = TargetObject as TurretPet;
-			if (turretFnF != null && turretFnF.Brain is TurretFNFBrain && GetItsControlledNpc(turretFnF))
+			if (turretFnF != null && turretFnF.Brain is TurretFNFBrain && IsControlledNPC(turretFnF))
 			{
 				Notify(GameLivingEvent.PetReleased, turretFnF);
 				return;
 			}
 
-			IControlledBrain npc = ControlledNpc;
-			if (npc == null)
+			IControlledBrain controlledBrain = ControlledNpcBrain;
+			if (controlledBrain == null)
 				return;
+
 			BDPet subpet = TargetObject as BDPet;
-			if (subpet != null && subpet.Brain is BDPetBrain && ControlledNpc is CommanderBrain && (ControlledNpc as CommanderBrain).FindPet(subpet.Brain as IControlledBrain))
+			if (subpet != null && subpet.Brain is BDPetBrain && ControlledNpcBrain is CommanderBrain && (ControlledNpcBrain as CommanderBrain).FindPet(subpet.Brain as IControlledBrain))
 			{
 				Notify(GameLivingEvent.PetReleased, subpet);
 				return;
 			}
-			Notify(GameLivingEvent.PetReleased, ControlledNpc.Body);
+
+			GameNPC npc = controlledBrain.Body;
+			if (npc == null)
+				return;
+
+			Notify(GameLivingEvent.PetReleased, npc);
 		}
 
 		/// <summary>
@@ -12622,7 +12516,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcFollow()
 		{
-			IControlledBrain npc = ControlledNpc;
+			IControlledBrain npc = ControlledNpcBrain;
 			if (npc == null)
 				return;
 
@@ -12637,7 +12531,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcStay()
 		{
-			IControlledBrain npc = ControlledNpc;
+			IControlledBrain npc = ControlledNpcBrain;
 			if (npc == null)
 				return;
 
@@ -12652,7 +12546,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcComeHere()
 		{
-			IControlledBrain npc = ControlledNpc;
+			IControlledBrain npc = ControlledNpcBrain;
 			if (npc == null)
 				return;
 
@@ -12667,7 +12561,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcGoTarget()
 		{
-			IControlledBrain npc = ControlledNpc;
+			IControlledBrain npc = ControlledNpcBrain;
 			if (npc == null)
 				return;
 
@@ -12688,7 +12582,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcPassive()
 		{
-			IControlledBrain npc = ControlledNpc;
+			IControlledBrain npc = ControlledNpcBrain;
 			if (npc == null)
 				return;
 
@@ -12706,7 +12600,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcAgressive()
 		{
-			IControlledBrain npc = ControlledNpc;
+			IControlledBrain npc = ControlledNpcBrain;
 			if (npc == null)
 				return;
 
@@ -12721,7 +12615,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcDefensive()
 		{
-			IControlledBrain npc = ControlledNpc;
+			IControlledBrain npc = ControlledNpcBrain;
 			if (npc == null)
 				return;
 

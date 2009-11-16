@@ -52,21 +52,16 @@ namespace DOL.GS
 		/// Sets the controlled object for this player
 		/// </summary>
 		/// <param name="controlledNpc"></param>
-		public override void SetControlledNpc(IControlledBrain controlledNpc)
+		public override void SetControlledNpcBrain(IControlledBrain controlledNpcBrain)
 		{
-			m_savedPetHealthPercent = (ControlledNpc != null)
-				? (int)ControlledNpc.Body.HealthPercent : 0;
+			m_savedPetHealthPercent = (ControlledNpcBrain != null)
+				? (int)ControlledNpcBrain.Body.HealthPercent : 0;
 
-			base.SetControlledNpc(controlledNpc);
-			if (controlledNpc == null)
+			base.SetControlledNpcBrain(controlledNpcBrain);
+			if (controlledNpcBrain == null)
 			{
 				OnPetReleased();
-				//See GamePlayer.SetControlledNpc.ReleaseTarget2
-				//Out.SendMessage(String.Format("You lose control of the {0}.", m_petName),
-					//eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
 			}
-			//else
-				//m_petName = controlledNpc.Body.Name;
 		}
 
 		/// <summary>
@@ -74,8 +69,8 @@ namespace DOL.GS
 		/// </summary>
 		public override void CommandNpcRelease()
 		{
-			m_savedPetHealthPercent = (ControlledNpc != null)
-			? (int)ControlledNpc.Body.HealthPercent : 0;
+			m_savedPetHealthPercent = (ControlledNpcBrain != null)
+			? (int)ControlledNpcBrain.Body.HealthPercent : 0;
 
 			base.CommandNpcRelease();
 			OnPetReleased();
@@ -112,9 +107,9 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (ControlledNpc == null)
+				if (ControlledNpcBrain == null)
 					return base.HealthPercentGroupWindow;
-				return ControlledNpc.Body.HealthPercent;
+				return ControlledNpcBrain.Body.HealthPercent;
 			}
 		}
 
@@ -165,9 +160,9 @@ namespace DOL.GS
 				// attackers aggro on pet now, as they can't attack the 
 				// necromancer any longer.
 
-				if (ControlledNpc != null && ControlledNpc.Body != null)
+				if (ControlledNpcBrain != null && ControlledNpcBrain.Body != null)
 				{
-					GameNPC pet = ControlledNpc.Body;
+					GameNPC pet = ControlledNpcBrain.Body;
 					ArrayList attackerList = (ArrayList)m_attackers.Clone();
 
 					if (pet != null)
@@ -197,8 +192,8 @@ namespace DOL.GS
 				// Necromancer has lost shade form, release the pet if it
 				// isn't dead already and update necromancer's current health.
 
-				if (ControlledNpc != null)
-					(ControlledNpc as ControlledNpc).Stop();
+				if (ControlledNpcBrain != null)
+					(ControlledNpcBrain as ControlledNpcBrain).Stop();
 
 				Health = Math.Min(Health, MaxHealth * Math.Max(10, m_savedPetHealthPercent) / 100);
 			}
@@ -240,9 +235,9 @@ namespace DOL.GS
 
         public override void Notify(DOLEvent e, object sender, EventArgs args)
         {
-            if (ControlledNpc != null)
+            if (ControlledNpcBrain != null)
             {
-                GameNPC pet = ControlledNpc.Body;
+                GameNPC pet = ControlledNpcBrain.Body;
 
                 if (pet != null && sender == pet && e == GameLivingEvent.CastStarting &&
                     args is CastStartingEventArgs)

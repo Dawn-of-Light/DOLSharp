@@ -563,7 +563,7 @@ namespace DOL.GS.Spells
         {
             GamePlayer player = Caster as GamePlayer;
 
-            m_living = player.ControlledNpc.Body;
+            m_living = player.ControlledNpcBrain.Body;
             //m_living.Level += 20;
 			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += 75;
             m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] += 75;
@@ -771,7 +771,7 @@ namespace DOL.GS.Spells
 #region BrittleBrain
 namespace DOL.AI.Brain
 {
-    public class BrittleBrain : ControlledNpc
+    public class BrittleBrain : ControlledNpcBrain
     {
         public BrittleBrain(GameLiving owner)
             : base(owner)
@@ -793,7 +793,7 @@ namespace DOL.AI.Brain
 
 namespace DOL.AI.Brain
 {
-    public class TitanBrain : ControlledNpc, IControlledBrain
+    public class TitanBrain : ControlledNpcBrain, IControlledBrain
     {
         private GameLiving m_target;
 

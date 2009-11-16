@@ -285,9 +285,9 @@ namespace DOL.GS.ServerRules
 				return false;
 
 			//Checking for shadowed necromancer, can't be attacked.
-			if(defender.ControlledNpc != null)
-				if(defender.ControlledNpc.Body != null)
-					if(defender.ControlledNpc.Body is NecromancerPet)
+			if(defender.ControlledNpcBrain != null)
+				if(defender.ControlledNpcBrain.Body != null)
+					if(defender.ControlledNpcBrain.Body is NecromancerPet)
 					{
 						if (quiet == false) MessageToLiving(attacker, "You can't attack a shadowed necromancer!");
 						return false;

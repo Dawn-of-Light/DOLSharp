@@ -115,7 +115,7 @@ namespace DOL.GS.Spells
 			if (!base.CheckBeginCast(selectedTarget))
 				return false;
 
-			if (Caster.ControlledNpc == null)
+			if (Caster.ControlledNpcBrain == null)
 			{
 				MessageToCaster("You must have a pet summoned to cast this spell!",
 					eChatType.CT_SpellResisted);
@@ -132,14 +132,14 @@ namespace DOL.GS.Spells
 		{
 			GamePlayer player = Caster as GamePlayer;
 
-			if (player == null || player.ControlledNpc == null) 
+			if (player == null || player.ControlledNpcBrain == null) 
                 return;
 
             // No power cost, we'll drain power on the caster when
             // the pet actually starts casting it.
 			// If there is an ID, create a sub spell for the pet.
 
-			ControlledNpc petBrain = player.ControlledNpc as ControlledNpc;
+			ControlledNpcBrain petBrain = player.ControlledNpcBrain as ControlledNpcBrain;
 			if (petBrain != null && Spell.SubSpellID > 0)
 			{
 				Spell spell = SkillBase.GetSpellByID(Spell.SubSpellID);

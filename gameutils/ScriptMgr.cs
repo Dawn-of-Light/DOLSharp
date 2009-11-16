@@ -832,7 +832,7 @@ namespace DOL.GS
 		}
 
 
-		private static Type m_defaultControlledBrainType = typeof(ControlledNpc);
+		private static Type m_defaultControlledBrainType = typeof(ControlledNpcBrain);
 		public static Type DefaultControlledBrainType
 		{
 			get { return m_defaultControlledBrainType; }

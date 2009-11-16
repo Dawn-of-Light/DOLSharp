@@ -42,9 +42,9 @@ namespace DOL.GS.RealmAbilities
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 
             GamePlayer player = living as GamePlayer;
-            if (player != null && player.ControlledNpc != null && player.ControlledNpc.Body != null)
+            if (player != null && player.ControlledNpcBrain != null && player.ControlledNpcBrain.Body != null)
             {
-                GameNPC pet = player.ControlledNpc.Body as GameNPC;
+                GameNPC pet = player.ControlledNpcBrain.Body as GameNPC;
                 if (pet.IsAlive)
                 {
                     SearingPetEffect SearingPet = (SearingPetEffect)pet.EffectList.GetOfType(typeof(SearingPetEffect));
