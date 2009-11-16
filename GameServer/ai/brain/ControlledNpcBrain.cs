@@ -34,7 +34,7 @@ namespace DOL.AI.Brain
 	/// <summary>
 	/// A brain that can be controlled
 	/// </summary>
-	public class ControlledNpc : StandardMobBrain, IControlledBrain
+	public class ControlledNpcBrain : StandardMobBrain, IControlledBrain
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -71,7 +71,7 @@ namespace DOL.AI.Brain
 		/// Constructs new controlled npc brain
 		/// </summary>
 		/// <param name="owner"></param>
-		public ControlledNpc(GameLiving owner)
+		public ControlledNpcBrain(GameLiving owner)
 			: base()
 		{
 			if (owner == null)
@@ -699,8 +699,50 @@ namespace DOL.AI.Brain
 				{
 					Body.TargetObject = target;
 
+					if (target is GamePlayer)
+					{
+						Body.LastAttackTickPvP = Body.CurrentRegion.Time;
+						Owner.LastAttackedByEnemyTickPvP = Body.CurrentRegion.Time;
+					}
+					else
+					{
+						Body.LastAttackTickPvE = Body.CurrentRegion.Time;
+						Owner.LastAttackedByEnemyTickPvE = Body.CurrentRegion.Time;
+					}
+
+					List<GameSpellEffect> effects = new List<GameSpellEffect>();
+
+					lock (Body.EffectList)
+					{
+						foreach (GameSpellEffect effect in Body.EffectList)
+						{
+							if (effect.SpellHandler is SpeedEnhancementSpellHandler)
+							{
+								effects.Add(effect);
+							}
+						}
+					}
+
+					lock (Owner.EffectList)
+					{
+						foreach (GameSpellEffect effect in Owner.EffectList)
+						{
+							if (effect.SpellHandler is SpeedEnhancementSpellHandler)
+							{
+								effects.Add(effect);
+							}
+						}
+					}
+
+					foreach (GameSpellEffect effect in effects)
+					{
+						effect.Cancel(false);
+					}
+
 					if (!CheckSpells(eCheckSpellType.Offensive))
+					{
 						Body.StartAttack(target);
+					}
 				}
 			}
 			else
@@ -734,7 +776,7 @@ namespace DOL.AI.Brain
 
 			AttackedByEnemyEventArgs args = arguments as AttackedByEnemyEventArgs;
 			if (args == null) return;
-			if (args.AttackData.Target is GamePlayer && (args.AttackData.Target as GamePlayer).ControlledNpc != this)
+			if (args.AttackData.Target is GamePlayer && (args.AttackData.Target as GamePlayer).ControlledNpcBrain != this)
 				return;
 			// react only on these attack results
 			switch (args.AttackData.AttackResult)

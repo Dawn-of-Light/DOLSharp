@@ -62,13 +62,13 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc == null)
+			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpcBrain == null)
 			{
 				MessageToCaster("You must have a controlled leader monster to summon into a group!", eChatType.CT_SpellResisted);
 				return false;
 			}
 
-			if (Caster is GamePlayer && (((GamePlayer)Caster).ControlledNpc.Body.ControlledNpcList == null || ((GamePlayer)Caster).ControlledNpc.Body.PetCounter >= ((GamePlayer)Caster).ControlledNpc.Body.ControlledNpcList.Length))
+			if (Caster is GamePlayer && (((GamePlayer)Caster).ControlledNpcBrain.Body.ControlledNpcList == null || ((GamePlayer)Caster).ControlledNpcBrain.Body.PetCounter >= ((GamePlayer)Caster).ControlledNpcBrain.Body.ControlledNpcList.Length))
 			{
 				MessageToCaster("Your general already has as many followers as he can command!", eChatType.CT_SpellResisted);
 				return false;
@@ -83,10 +83,10 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			if (Caster == null || Caster.ControlledNpc == null)
+			if (Caster == null || Caster.ControlledNpcBrain == null)
 				return;
 
-			GameNPC temppet = Caster.ControlledNpc.Body;
+			GameNPC temppet = Caster.ControlledNpcBrain.Body;
 			//Lets let NPC's able to cast minions.  Here we make sure that the Caster is a GameNPC
 			//and that m_controlledNpc is initialized (since we aren't thread safe).
 			if (temppet == null)
@@ -96,7 +96,7 @@ namespace DOL.GS.Spells
 					temppet = (GameNPC)Caster;
 					//We'll give default NPCs 2 minions!
 					if (temppet.ControlledNpcList == null)
-						temppet.InitControlledNpc(2);
+						temppet.InitControlledNpcBrain(2);
 				}
 				else
 					return;
@@ -155,7 +155,7 @@ namespace DOL.GS.Spells
 		{
 			IControlledBrain controlledBrain = null;
 			BDSubPet.SubPetType type = (BDSubPet.SubPetType)(byte)this.Spell.DamageType;
-			owner = owner.ControlledNpc.Body;
+			owner = owner.ControlledNpcBrain.Body;
 
 			switch (type)
 			{
@@ -185,7 +185,7 @@ namespace DOL.GS.Spells
 					break;
 				//Other
 				default:
-					controlledBrain = new ControlledNpc(owner);
+					controlledBrain = new ControlledNpcBrain(owner);
 					break;
 			}
 
@@ -199,7 +199,7 @@ namespace DOL.GS.Spells
 
 		protected override void SetBrainToOwner(IControlledBrain brain)
 		{
-			Caster.ControlledNpc.Body.AddControlledNpc(brain);
+			Caster.ControlledNpcBrain.Body.AddControlledNpc(brain);
 		}
 
 		protected override byte GetPetLevel()

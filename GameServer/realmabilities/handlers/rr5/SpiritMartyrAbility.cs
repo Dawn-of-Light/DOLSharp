@@ -39,8 +39,8 @@ namespace DOL.GS.RealmAbilities
 			
 			GamePlayer player = living as GamePlayer;
 			if (player == null) return;
-			if (player.ControlledNpc == null) return;
-			if (player.ControlledNpc.Body == null) return;
+			if (player.ControlledNpcBrain == null) return;
+			if (player.ControlledNpcBrain.Body == null) return;
 			
 			ArrayList targets = new ArrayList();
 			//select targets
@@ -69,9 +69,9 @@ namespace DOL.GS.RealmAbilities
 			foreach (GamePlayer visPlayer in player.GetPlayersInRadius((ushort)WorldMgr.VISIBILITY_DISTANCE))
 				visPlayer.Out.SendSpellEffectAnimation(player, player, 7075, 0, false, 0x01);
 
-			int petHealthPercent = player.ControlledNpc.Body.HealthPercent;
+			int petHealthPercent = player.ControlledNpcBrain.Body.HealthPercent;
 			m_healthpool *= (petHealthPercent * 0.01);
-			player.ControlledNpc.Body.Die(player);
+			player.ControlledNpcBrain.Body.Die(player);
 
 			int pool = (int)m_healthpool;
 			while (pool > 0 && targets.Count > 0)

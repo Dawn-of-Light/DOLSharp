@@ -47,7 +47,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// The property that stores the new npc brain
 		/// </summary>
-		protected ControlledNpc m_controlledBrain;
+		protected ControlledNpcBrain m_controlledBrain;
 
 		/// <summary>
 		/// Tells pulsing spells to not add brain if it was not removed by expire effect
@@ -113,14 +113,14 @@ namespace DOL.GS.Spells
 			}
 
 			//You should be able to chain pulsing charm on the same mob
-			if(Spell.Pulse!=0 && Caster is GamePlayer && (((GamePlayer)Caster).ControlledNpc!=null && ((GamePlayer)Caster).ControlledNpc.Body==(GameNPC)selectedTarget))
+			if(Spell.Pulse!=0 && Caster is GamePlayer && (((GamePlayer)Caster).ControlledNpcBrain!=null && ((GamePlayer)Caster).ControlledNpcBrain.Body==(GameNPC)selectedTarget))
 			{
 				((GamePlayer)Caster).CommandNpcRelease();
 			}
 			
 			if (!base.CheckBeginCast(selectedTarget)) return false;
 
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null)
+			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpcBrain != null)
 			{
 				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
 				return false;
@@ -159,7 +159,7 @@ namespace DOL.GS.Spells
 				    }
                 return;
                 }
-				if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpc != null)
+				if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpcBrain != null)
 				{
 					MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
 					return;
@@ -227,7 +227,7 @@ namespace DOL.GS.Spells
 			if (player != null && npc != null)
 			{
 				if (m_controlledBrain == null)
-					m_controlledBrain = new ControlledNpc(player);
+					m_controlledBrain = new ControlledNpcBrain(player);
 
 				if (!m_isBrainSet)
 				{
@@ -235,16 +235,15 @@ namespace DOL.GS.Spells
 					m_isBrainSet = true;
 
 					GameEventMgr.AddHandler(npc, GameLivingEvent.PetReleased, new DOLEventHandler(ReleaseEventHandler));
-					//					GameEventMgr.AddHandler(npc, GameLivingEvent.Dying, new DOLEventHandler(ReleaseEventHandler)); // must be canceled by Die() method anyway, makes some problems with attackers list this way
 				}
 
-				if (player.ControlledNpc != m_controlledBrain)
+				if (player.ControlledNpcBrain != m_controlledBrain)
 				{
 					// sorc: "The slough serpent is enthralled!" ct_spell
 					Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message1, npc.GetName(0, false)), eChatType.CT_Spell);
 					MessageToCaster(npc.GetName(0, true) + " is now under your control.", eChatType.CT_Spell);
 
-					player.SetControlledNpc(m_controlledBrain);
+					player.SetControlledNpcBrain(m_controlledBrain);
 				}
 
 				npc.BroadcastUpdate();
@@ -312,22 +311,20 @@ namespace DOL.GS.Spells
 				if (!noMessages) // no overwrite
 				{
 					GameEventMgr.RemoveHandler(npc, GameLivingEvent.PetReleased, new DOLEventHandler(ReleaseEventHandler));
-					//					GameEventMgr.RemoveHandler(npc, GameLivingEvent.Dying, new DOLEventHandler(ReleaseEventHandler));
 
-					player.SetControlledNpc(null);
+					player.SetControlledNpcBrain(null);
 					MessageToCaster("You lose control of " + npc.GetName(0, false) + "!", eChatType.CT_SpellExpires);
 
 					npc.BroadcastUpdate();
 
-					//if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+					foreach (GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						foreach (GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-							ply.Out.SendObjectGuildID(npc, null);
+						ply.Out.SendObjectGuildID(npc, null);
 					}
 
-					// clear old aggro brain and add caster as only target
 					lock (npc.BrainSync)
 					{
+						npc.StopAttack();
 						npc.RemoveBrain(m_controlledBrain);
 						m_isBrainSet = false;
 
@@ -336,7 +333,14 @@ namespace DOL.GS.Spells
 						{
 							aggroBrain.ClearAggroList();
 							if (Spell.Pulse != 0)
+							{
 								aggroBrain.AddToAggroList(Caster, Caster.Level * 10);
+								npc.StartAttack(Caster);
+							}
+							else
+							{
+								npc.WalkToSpawn();
+							}
 						}
 					}
 
@@ -363,7 +367,6 @@ namespace DOL.GS.Spells
 			}
 			else
 			{
-				// hmmmmmm
 				if (log.IsWarnEnabled)
 					log.Warn(string.Format("charm effect expired: Caster={0} effect.Owner={1}",
 						(Caster == null ? "(null)" : Caster.GetType().ToString()),

@@ -1754,7 +1754,7 @@ namespace DOL.GS
 				{
 					GamePlayer owner = brain.GetPlayerOwner();
 					excludes.Add(owner);
-					if (owner != null && owner.ControlledNpc != null && ad.Target == owner.ControlledNpc.Body)
+					if (owner != null && owner.ControlledNpcBrain != null && ad.Target == owner.ControlledNpcBrain.Body)
 					{
 						switch (ad.AttackResult)
 						{
@@ -6210,44 +6210,35 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the controlled object
 		/// </summary>
-		protected IControlledBrain[] m_controlledNpc = null;
+		protected IControlledBrain[] m_controlledNpcBrain = null;
 
 		/// <summary>
 		/// Initializes the ControlledNpcs for the GameLiving class
 		/// </summary>
 		/// <param name="num">Number of places to allocate.  If negative, sets to null.</param>
-		public void InitControlledNpc(int num)
+		public void InitControlledNpcBrain(int num)
 		{
 			if (num > 0)
-				m_controlledNpc = new IControlledBrain[num];
+				m_controlledNpcBrain = new IControlledBrain[num];
 			else
 			{
-				m_controlledNpc = null;
+				m_controlledNpcBrain = null;
 				return;
 			}
-			//for (int i = 0; i < num; i++)
-			//{
-			//    m_controlledNpc[i] = null;
-			//}
 		}
 
-		/// <summary>
-		/// Gets the controlled object of this player
-		/// </summary>
-		public virtual IControlledBrain ControlledNpc
+		public virtual IControlledBrain ControlledNpcBrain
 		{
 			get
 			{
-				if (m_controlledNpc == null) return null;
-				return m_controlledNpc[0];
+				if (m_controlledNpcBrain == null) 
+					return null;
+
+				return m_controlledNpcBrain[0];
 			}
 		}
 
-    /// <summary>
-    ///[Ganrod] Nidel: Get if this living is owner of npc.
-    /// </summary>
-    /// <returns></returns>
-    public virtual bool GetItsControlledNpc(GameNPC npc)
+    public virtual bool IsControlledNPC(GameNPC npc)
     {
       if (npc == null)
       {
@@ -6265,7 +6256,7 @@ namespace DOL.GS
 		/// Sets the controlled object for this player
 		/// </summary>
 		/// <param name="controlledNpc"></param>
-		public virtual void SetControlledNpc(IControlledBrain controlledNpc)
+		public virtual void SetControlledNpcBrain(IControlledBrain controlledNpcBrain)
 		{
 		}
 

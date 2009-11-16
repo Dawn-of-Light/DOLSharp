@@ -43,16 +43,16 @@ namespace DOL.GS.Spells
 			 * -Select automatically Main controlled Turret if player don't have target or Turret target.
 			 * -Cast only on our turrets.
 			 */
-			if(Caster.ControlledNpc == null || Caster.ControlledNpc.Body == null)
+			if(Caster.ControlledNpcBrain == null || Caster.ControlledNpcBrain.Body == null)
 			{
 				MessageToCaster("You must cast this spell on a creature you are controlling.", eChatType.CT_System);
 				return false;
 			}
 			TurretPet target = selectedTarget as TurretPet;
 
-			if(target == null || !Caster.GetItsControlledNpc(target))
+			if(target == null || !Caster.IsControlledNPC(target))
 			{
-			  target = Caster.ControlledNpc.Body as TurretPet;
+			  target = Caster.ControlledNpcBrain.Body as TurretPet;
 			}
 			return base.CheckBeginCast(target);
 		}
@@ -66,14 +66,14 @@ namespace DOL.GS.Spells
 				if(aggroBrain != null)
 				{
 					TurretPet turret = null;
-					if(Caster.TargetObject == null || !Caster.GetItsControlledNpc(Caster.TargetObject as TurretPet))
+					if(Caster.TargetObject == null || !Caster.IsControlledNPC(Caster.TargetObject as TurretPet))
 					{
-						if(Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+						if(Caster.ControlledNpcBrain != null && Caster.ControlledNpcBrain.Body != null)
 						{
-							turret = Caster.ControlledNpc.Body as TurretPet;
+							turret = Caster.ControlledNpcBrain.Body as TurretPet;
 						}
 					}
-					else if(Caster.GetItsControlledNpc(Caster.TargetObject as TurretPet))
+					else if(Caster.IsControlledNPC(Caster.TargetObject as TurretPet))
 					{
 						turret = Caster.TargetObject as TurretPet;
 					}

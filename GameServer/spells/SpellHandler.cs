@@ -314,11 +314,11 @@ namespace DOL.GS.Spells
 				if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
 					target = Caster;
 
-				if (Caster is GamePlayer && Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+				if (Caster is GamePlayer && Caster.ControlledNpcBrain != null && Caster.ControlledNpcBrain.Body != null)
 				{
-					if(target == null || !Caster.GetItsControlledNpc(target as GameNPC))
+					if(target == null || !Caster.IsControlledNPC(target as GameNPC))
 					{
-						target = Caster.ControlledNpc.Body;
+						target = Caster.ControlledNpcBrain.Body;
 					}
 				}
 			}
@@ -327,8 +327,8 @@ namespace DOL.GS.Spells
 				// Can only be issued by the owner of a pet and the target
 				// is always the pet then.
 
-				if (Caster is GamePlayer && Caster.ControlledNpc != null)
-					target = Caster.ControlledNpc.Body;
+				if (Caster is GamePlayer && Caster.ControlledNpcBrain != null)
+					target = Caster.ControlledNpcBrain.Body;
 				else
 					target = null;
 			}
@@ -384,7 +384,7 @@ namespace DOL.GS.Spells
 				}
 				else
 				{
-		        	if (Caster.ControlledNpc == null || Caster.ControlledNpc.Body == null || !(Caster.ControlledNpc.Body is NecromancerPet))
+		        	if (Caster.ControlledNpcBrain == null || Caster.ControlledNpcBrain.Body == null || !(Caster.ControlledNpcBrain.Body is NecromancerPet))
                         SendCastAnimation(0);
 
 					FinishSpellCast(target);
@@ -573,11 +573,11 @@ namespace DOL.GS.Spells
       //[Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
             if (targetType.Equals("pet"))
             {
-                if (selectedTarget == null || !Caster.GetItsControlledNpc(selectedTarget as GameNPC))
+                if (selectedTarget == null || !Caster.IsControlledNPC(selectedTarget as GameNPC))
                 {
-                    if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+                    if (Caster.ControlledNpcBrain != null && Caster.ControlledNpcBrain.Body != null)
                     {
-                        selectedTarget = Caster.ControlledNpc.Body;
+                        selectedTarget = Caster.ControlledNpcBrain.Body;
                     }
                     else
                     {
@@ -886,11 +886,11 @@ namespace DOL.GS.Spells
                          * -check if target isn't too far away
                          * If all checks isn't true, return false.
                          */
-                        if (target == null || !Caster.GetItsControlledNpc(target as GameNPC))
+                        if (target == null || !Caster.IsControlledNPC(target as GameNPC))
                         {
-                            if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+                            if (Caster.ControlledNpcBrain != null && Caster.ControlledNpcBrain.Body != null)
                             {
-                                target = Caster.ControlledNpc.Body;
+                                target = Caster.ControlledNpcBrain.Body;
                             }
                             else
                             {
@@ -1058,11 +1058,11 @@ namespace DOL.GS.Spells
                          * -check if target isn't too far away
                          * If all checks isn't true, return false.
                          */
-                        if (target == null || !Caster.GetItsControlledNpc(target as GameNPC))
+                        if (target == null || !Caster.IsControlledNPC(target as GameNPC))
                         {
-                            if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+                            if (Caster.ControlledNpcBrain != null && Caster.ControlledNpcBrain.Body != null)
                             {
-                                target = Caster.ControlledNpc.Body;
+                                target = Caster.ControlledNpcBrain.Body;
                             }
                             else
                             {
@@ -1243,11 +1243,11 @@ namespace DOL.GS.Spells
                          * -check if target isn't too far away
                          * If all checks isn't true, return false.
                          */
-                        if (target == null || !Caster.GetItsControlledNpc(target as GameNPC))
+                        if (target == null || !Caster.IsControlledNPC(target as GameNPC))
                         {
-                            if (Caster.ControlledNpc != null && Caster.ControlledNpc.Body != null)
+                            if (Caster.ControlledNpcBrain != null && Caster.ControlledNpcBrain.Body != null)
                             {
-                                target = Caster.ControlledNpc.Body;
+                                target = Caster.ControlledNpcBrain.Body;
                             }
                             else
                             {
@@ -1858,7 +1858,7 @@ namespace DOL.GS.Spells
         //[Ganrod] Nidel: can cast TurretPBAoE on selected Pet/Turret
 		if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower())
         {
-		  target = Caster.ControlledNpc.Body;
+		  target = Caster.ControlledNpcBrain.Body;
         }
       }
 
@@ -1920,7 +1920,7 @@ namespace DOL.GS.Spells
 			      {
 			        foreach(GameNPC pet in Caster.GetNPCsInRadius(NewRadius))
 			        {
-			          if(Caster.GetItsControlledNpc(pet))
+			          if(Caster.IsControlledNPC(pet))
 			          {
 			            list.Add(pet);
 			          }
@@ -1936,15 +1936,15 @@ namespace DOL.GS.Spells
 			      // check target
 			      if(petBody != null && Caster.IsWithinRadius(petBody, Spell.Range))
 			      {
-              if (Caster.GetItsControlledNpc(petBody))
+              if (Caster.IsControlledNPC(petBody))
               {
                 list.Add(petBody);
               }
 			      }
 			      //check controllednpc if target isn't pet (our pet)
-			      if(list.Count < 1 && Caster.ControlledNpc != null)
+			      if(list.Count < 1 && Caster.ControlledNpcBrain != null)
 			      {
-			        petBody = Caster.ControlledNpc.Body;
+			        petBody = Caster.ControlledNpcBrain.Body;
 			        if(petBody != null && Caster.IsWithinRadius(petBody, Spell.Range))
 			        {
 			          list.Add(petBody);
@@ -1962,7 +1962,7 @@ namespace DOL.GS.Spells
               foreach (GameNPC pet in petBody.GetNPCsInRadius(NewRadius))
 			        {
 			          //ignore target or our main pet already added
-                if (pet == petBody || !Caster.GetItsControlledNpc(pet))
+                if (pet == petBody || !Caster.IsControlledNPC(pet))
                 {
                   continue;
                 }
@@ -2098,7 +2098,7 @@ namespace DOL.GS.Spells
 						{
 							list.Add(m_caster);
 
-							IControlledBrain npc = m_caster.ControlledNpc;
+							IControlledBrain npc = m_caster.ControlledNpcBrain;
 							if (npc != null)
 							{
 								//Add our first pet
@@ -2128,7 +2128,7 @@ namespace DOL.GS.Spells
 								{
 									list.Add(living);
 
-									IControlledBrain npc = living.ControlledNpc;
+									IControlledBrain npc = living.ControlledNpcBrain;
 									if (npc != null)
 									{
 										//Add our first pet
@@ -3113,8 +3113,8 @@ namespace DOL.GS.Spells
 		{
 			int spellLevel = Spell.Level;
 			GameLiving caster = null;
-			if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpc)
-				caster = ((ControlledNpc)((GameNPC)m_caster).Brain).Owner;
+			if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpcBrain)
+				caster = ((ControlledNpcBrain)((GameNPC)m_caster).Brain).Owner;
 			else caster = m_caster;
 			int spellbonus = caster.GetModified(eProperty.SpellLevel);
 			spellLevel += spellbonus;
