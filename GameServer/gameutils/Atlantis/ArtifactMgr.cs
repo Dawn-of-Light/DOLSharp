@@ -49,13 +49,13 @@ namespace DOL.GS
 
         public static bool Init()
         {
-            return LoadArtifacts();
+            return LoadArtifacts() > 0;
         }
 
         /// <summary>
         /// Load artifacts from the DB.
         /// </summary>
-        public static bool LoadArtifacts()
+        public static int LoadArtifacts()
         {
 			// Load artifacts and books.
 
@@ -94,7 +94,7 @@ namespace DOL.GS
 				new DOLEventHandler(PlayerGainedExperience));
 
             log.Info(String.Format("{0} artifacts loaded", m_artifacts.Count));
-            return true;
+			return m_artifacts.Count;
 		}
 
 		/// <summary>
