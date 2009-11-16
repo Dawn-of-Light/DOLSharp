@@ -49,7 +49,8 @@ namespace DOL.GS
 
         public static bool Init()
         {
-            return LoadArtifacts() > 0;
+			LoadArtifacts();
+			return true;
         }
 
         /// <summary>
