@@ -627,8 +627,7 @@ namespace DOL
 
 					//---------------------------------------------------------------
 					//Load artifact manager
-					if (!InitComponent(ArtifactMgr.Init(), "Artifact Manager"))
-						return false;
+					InitComponent(ArtifactMgr.Init(), "Artifact Manager");
 
 					//---------------------------------------------------------------
 					//Try to initialize the WorldMgr in early state
