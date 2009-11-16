@@ -34,7 +34,7 @@ namespace DOL.AI.Brain
 	/// A brain for the necromancer pets.
 	/// </summary>
 	/// <author>Aredhel</author>
-	public class NecromancerPetBrain : ControlledNpc
+	public class NecromancerPetBrain : ControlledNpcBrain
 	{
 		/// <summary>
 		/// Defines a logger for this class.

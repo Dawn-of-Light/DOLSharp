@@ -142,7 +142,7 @@ namespace DOL.GS.Spells
             GameLiving target = Caster;
             foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Radius))
             {
-                if (npc is GameNPC && npc.Brain is ControlledNpc)//!(npc is NecromancerPet))
+                if (npc is GameNPC && npc.Brain is ControlledNpcBrain)//!(npc is NecromancerPet))
                     list.Add(npc);
             }
             return list;

@@ -41,12 +41,12 @@ namespace DOL.GS.Spells
 				return false;
 			}
 			GameNPC target = selectedTarget as GameNPC;
-			if(target == null || !(target.Brain is TurretBrain) || !Caster.GetItsControlledNpc(target))
+			if(target == null || !(target.Brain is TurretBrain) || !Caster.IsControlledNPC(target))
 			{
 				MessageToCaster("You must cast this spell on a creature you are controlling", eChatType.CT_SpellResisted);
 				return false;
 			}
-			if((target.Brain is TurretBrain) && !Caster.GetItsControlledNpc(target))
+			if((target.Brain is TurretBrain) && !Caster.IsControlledNPC(target))
 			{
 				MessageToCaster("You must cast this spell on a creature you are controlling", eChatType.CT_SpellResisted);
 				return false;
@@ -77,7 +77,7 @@ namespace DOL.GS.Spells
 				{
 					continue;
 				}
-				if(Caster.GetItsControlledNpc(npc))
+				if(Caster.IsControlledNPC(npc))
 				{
 					//PetCounter is decremented when pet die.
 					npc.Die(Caster);

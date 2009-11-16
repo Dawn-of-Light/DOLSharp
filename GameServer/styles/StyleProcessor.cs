@@ -467,7 +467,7 @@ namespace DOL.GS.Styles
 
 					if (living is GameNPC)
 					{
-						ControlledNpc brain = ((GameNPC)living).Brain as ControlledNpc;
+						ControlledNpcBrain brain = ((GameNPC)living).Brain as ControlledNpcBrain;
 
 						if (brain != null)
 						{

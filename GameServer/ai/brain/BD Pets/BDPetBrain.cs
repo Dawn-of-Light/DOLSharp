@@ -22,7 +22,7 @@ using DOL.GS;
 
 namespace DOL.AI.Brain
 {
-	public abstract class BDPetBrain : ControlledNpc
+	public abstract class BDPetBrain : ControlledNpcBrain
 	{
 		protected const int BASEFORMATIONDIST = 50;
 

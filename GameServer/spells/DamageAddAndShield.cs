@@ -212,7 +212,7 @@ namespace DOL.GS.Spells
 				if (brain != null)
 				{
 					owner = brain.GetPlayerOwner();
-					if (owner != null && owner.ControlledNpc != null && ad.Attacker == owner.ControlledNpc.Body)
+					if (owner != null && owner.ControlledNpcBrain != null && ad.Attacker == owner.ControlledNpcBrain.Body)
 					{
                         MessageToLiving(owner, String.Format(LanguageMgr.GetTranslation( owner.Client, "DamageAddAndShield.EventHandlerDS.YourHitFor" ), ad.Attacker.Name, target.GetName(0, false), ad.Damage ), eChatType.CT_Spell);
                     }

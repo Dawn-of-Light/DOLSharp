@@ -22,7 +22,7 @@ using DOL.GS;
 
 namespace DOL.AI.Brain
 {
-	public class BomberBrain : ControlledNpc
+	public class BomberBrain : ControlledNpcBrain
 	{
 		public BomberBrain(GameLiving owner) : base(owner) { }
 

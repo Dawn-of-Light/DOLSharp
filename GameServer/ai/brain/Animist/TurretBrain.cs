@@ -21,7 +21,7 @@ using DOL.GS;
 
 namespace DOL.AI.Brain
 {
-	public class TurretBrain : ControlledNpc
+	public class TurretBrain : ControlledNpcBrain
 	{
 		private readonly List<GameLiving> listDefensiveTarget;
 
