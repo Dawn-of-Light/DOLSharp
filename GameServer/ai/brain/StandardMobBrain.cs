@@ -1062,7 +1062,7 @@ namespace DOL.AI.Brain
 				case "SummonMinion":
 					//If the list is null, lets make sure it gets initialized!
 					if (Body.ControlledNpcList == null)
-						Body.InitControlledNpc(2);
+						Body.InitControlledNpcBrain(2);
 					else
 					{
 						//Let's check to see if the list is full - if it is, we can't cast another minion.

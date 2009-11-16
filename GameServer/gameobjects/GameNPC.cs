@@ -1285,13 +1285,6 @@ namespace DOL.GS
 			StopFollowing();
 
 			StandardMobBrain brain = Brain as StandardMobBrain;
-			//[Ganrod] Nidel: Force to clear Aggro
-            //Satyr: Actually this is not the right place to forget aggro but
-            //for now we may stay at this until the whole logic is redesigned.
-            //Correct would be: Forget Aggro as soon as arrived at spot
-            //
-            // Aredhel: Actually, this brain stuff doesn't belong here in the 
-            // first place, get rid of this asap.
 
 			if(brain != null && brain.IsAggroing)
 			{
@@ -4342,12 +4335,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the controlled object of this NPC
 		/// </summary>
-		public override IControlledBrain ControlledNpc
+		public override IControlledBrain ControlledNpcBrain
 		{
 			get
 			{
-				if (m_controlledNpc == null) return null;
-				return m_controlledNpc[0];
+				if (m_controlledNpcBrain == null) return null;
+				return m_controlledNpcBrain[0];
 			}
 		}
 
@@ -4356,7 +4349,7 @@ namespace DOL.GS
 		/// </summary>
 		public IControlledBrain[] ControlledNpcList
 		{
-			get { return m_controlledNpc; }
+			get { return m_controlledNpcBrain; }
 		}
 
 		/// <summary>

@@ -52,19 +52,19 @@ namespace DOL.GS
 			{
 				case "returned commander":
 				case "decayed commander":
-					InitControlledNpc(0);
+					InitControlledNpcBrain(0);
 					break;
 				case "skeletal commander":
-					InitControlledNpc(1);
+					InitControlledNpcBrain(1);
 					break;
 				case "bone commander":
-					InitControlledNpc(2);
+					InitControlledNpcBrain(2);
 					break;
 				case "dread commander":
 				case "dread guardian":
 				case "dread lich":
 				case "dread archer":
-					InitControlledNpc(3);
+					InitControlledNpcBrain(3);
 					break;
 			}
 		}
@@ -269,9 +269,9 @@ namespace DOL.GS
 					break;
 			}
 			//If we didn't find a spot return false
-			if (i >= m_controlledNpc.Length)
+			if (i >= m_controlledNpcBrain.Length)
 				return false;
-			m_controlledNpc[i] = controlledNpc;
+			m_controlledNpcBrain[i] = controlledNpc;
 			PetCounter++;
 			return base.AddControlledNpc(controlledNpc);
 		}
@@ -304,9 +304,9 @@ namespace DOL.GS
 				if (found)
 				{
 					//First lets store the brain to kill it
-					IControlledBrain tempBrain = m_controlledNpc[i];
+					IControlledBrain tempBrain = m_controlledNpcBrain[i];
 					//Lets get rid of the brain asap
-					m_controlledNpc[i] = null;
+					m_controlledNpcBrain[i] = null;
 
 					//Only decrement, we just lost one pet
 					PetCounter--;

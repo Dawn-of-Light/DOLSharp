@@ -33,7 +33,7 @@ namespace DOL.AI.Brain
 	/// <summary>
 	/// A brain for the commanders
 	/// </summary>
-	public class CommanderBrain : ControlledNpc
+	public class CommanderBrain : ControlledNpcBrain
 	{
 		/// <summary>
 		/// Defines a logger for this class.

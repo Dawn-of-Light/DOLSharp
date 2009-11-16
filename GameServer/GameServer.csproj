@@ -117,9 +117,7 @@
     <Compile Include="ai\brain\BD Pets\BDPetBrain.cs" />
     <Compile Include="ai\brain\BD Pets\CommanderBrain.cs" />
     <Compile Include="ai\brain\BlankBrain.cs" />
-    <Compile Include="ai\brain\ControlledNpc.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ai\brain\ControlledNpcBrain.cs" />
     <Compile Include="ai\brain\DragonBrain.cs" />
     <Compile Include="ai\brain\Npcs\AggressiveBrain.cs" />
     <Compile Include="ai\brain\GuardBrain.cs">
@@ -2768,41 +2766,8 @@
     <None Include="language\IT\Language-IT.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="language" />
-    <Folder Include="language\CZ" />
-    <Folder Include="language\DE" />
-    <Folder Include="language\DE\Commands" />
-    <Folder Include="language\DE\GameObjects" />
-    <Folder Include="language\DE\GameObjects\CustomNPC" />
-    <Folder Include="language\DE\GameUtils" />
-    <Folder Include="language\DE\Keeps" />
-    <Folder Include="language\DE\Quests" />
-    <Folder Include="language\DE\Quests\Albion" />
-    <Folder Include="language\DE\Quests\Hibernia" />
-    <Folder Include="language\DE\Quests\Midgard" />
-    <Folder Include="language\EN" />
-    <Folder Include="language\EN\Commands" />
-    <Folder Include="language\EN\GameObjects" />
-    <Folder Include="language\EN\GameObjects\CustomNPC" />
-    <Folder Include="language\EN\GameUtils" />
-    <Folder Include="language\EN\Keeps" />
-    <Folder Include="language\EN\Quests" />
-    <Folder Include="language\EN\Quests\Albion" />
-    <Folder Include="language\EN\Quests\Hibernia" />
-    <Folder Include="language\EN\Quests\Midgard" />
-    <Folder Include="language\ES" />
-    <Folder Include="language\FR" />
-    <Folder Include="language\FR\Commands" />
-    <Folder Include="language\FR\Commands\Player" />
-    <Folder Include="language\FR\GameObjects" />
-    <Folder Include="language\FR\GameObjects\CustomNPC" />
-    <Folder Include="language\FR\Keeps" />
-    <Folder Include="language\FR\Quests" />
-    <Folder Include="language\FR\Quests\Albion" />
-    <Folder Include="language\FR\Quests\Hibernia" />
-    <Folder Include="language\FR\world" />
-    <Folder Include="language\IT" />
-    <Folder Include="language\IT\Commands" />
+    <Folder Include="language\DE\Quests\Midgard\" />
+    <Folder Include="language\EN\Quests\Midgard\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

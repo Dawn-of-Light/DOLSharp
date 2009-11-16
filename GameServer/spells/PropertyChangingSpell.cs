@@ -142,7 +142,7 @@ namespace DOL.GS.Spells
 			#region Petbuffs
             if (effect.Owner is GameNPC)
             {
-                if ((effect.Owner as GameNPC).Brain is ControlledNpc)
+                if ((effect.Owner as GameNPC).Brain is ControlledNpcBrain)
                 {
                     //Increase Pet's ArmorAbsorb/MagicAbsorb with Buffs
                     if (this is StrengthBuff)

@@ -102,9 +102,7 @@ namespace DOL.GS.PropertyCalc
 			}
 			else if (living is GameNPC)
 			{
-				//Ryan: edit for BD
-				// 125% speed if following owner
-				if (speed == 1.0 && !living.InCombat)
+				if (!living.InCombat)
 				{
 					IControlledBrain brain = ((GameNPC)living).Brain as IControlledBrain;
 					if (brain != null)
@@ -112,36 +110,24 @@ namespace DOL.GS.PropertyCalc
 						GamePlayer owner = brain.GetPlayerOwner();
 						if (owner != null)
 						{
-							// ignore owner speed if not following owner - tolakram
 							if (owner == brain.Body.CurrentFollowTarget)
 							{
 								speed *= 1.25;
 
 								if (owner.IsSprinting)
+								{
 									speed *= 1.3;
+								}
+
 								if (owner.IsOnHorse)
+								{
 									speed *= 1.45;
-								if (owner.IsOnHorse && owner.IsSprinting)
-									speed *= 1.7;
+								}
 							}
 						}
 					}
 				}
-                else if (!living.InCombat)
-                {
-                    IControlledBrain brain = ((GameNPC)living).Brain as IControlledBrain;
 
-					if (brain != null)
-					{
-						//Ryan: edit for BD
-						GamePlayer owner = brain.GetPlayerOwner();
-						if (owner != null)
-						{
-							if (brain != null && owner.IsSprinting)
-								speed *= 1.3;
-						}				
-					}
-                }
 				double healthPercent = living.Health / (double)living.MaxHealth;
 				if (healthPercent < 0.33)
 				{
