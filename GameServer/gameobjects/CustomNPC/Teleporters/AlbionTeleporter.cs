@@ -184,7 +184,7 @@ namespace DOL.GS
 						SayTo(player,"Sorry, this place is not available for now !");
 						return;
 					}
-					if (player.Level > 10)
+					if (player.Level > 15)
 					{
 						SayTo(player,"Sorry, you are far too experienced to enjoy this place !");
 						return;
