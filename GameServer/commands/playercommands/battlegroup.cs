@@ -392,7 +392,7 @@ namespace DOL.GS.Commands
 						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Battlegroup.ListenMode") + (mybattlegroup.Listen ? "on." : "off.");
 						foreach (GamePlayer ply in mybattlegroup.Members.Keys)
 						{
-							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
 					}
 					break;
@@ -424,7 +424,7 @@ namespace DOL.GS.Commands
 						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Battlegroup.Moderator", inviteeclient.Player.Name);
 						foreach (GamePlayer ply in mybattlegroup.Members.Keys)
 						{
-							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
 					}
 					break;
@@ -445,7 +445,7 @@ namespace DOL.GS.Commands
 						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Battlegroup.Public");
 						foreach (GamePlayer ply in mybattlegroup.Members.Keys)
 						{
-							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
 					}
 					break;
@@ -476,7 +476,7 @@ namespace DOL.GS.Commands
 						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Battlegroup.Private");
 						foreach (GamePlayer ply in mybattlegroup.Members.Keys)
 						{
-							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
 					}
 					break;
@@ -643,7 +643,7 @@ namespace DOL.GS.Commands
                         treasclient.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Battlegroup.BattlegroupTreasurerIsYou"), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
                         foreach (GamePlayer ply in mybattlegroup.Members.Keys)
                         {
-                            ply.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Battlegroup.BattlegroupTreasurerIs", treasclient.Player.Name), eChatType.CT_Friend, eChatLoc.CL_SystemWindow);
+                            ply.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Battlegroup.BattlegroupTreasurerIs", treasclient.Player.Name), eChatType.CT_Chat, eChatLoc.CL_SystemWindow);
                         }
                         if (mybattlegroup.GetBGTreasurer() == null)
                         {

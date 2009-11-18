@@ -194,12 +194,13 @@ namespace DOL.GS.PacketHandler
 		CT_Broadcast = 0x05,
 		CT_Emote = 0x06,
 		CT_Help = 0x07,
-		CT_Friend = 0x08,
+		CT_Chat = 0x08,
 		CT_Advise = 0x09,
 		CT_Officer = 0x0a,
 		CT_Alliance = 0x0b,
 		CT_BattleGroup = 0x0c,
 		CT_BattleGroupLeader = 0x0d,
+		// 0x0e sends nothing (tested with client v1.99)
 		CT_Staff = 0xf,
 
 		CT_Spell = 0x10,
