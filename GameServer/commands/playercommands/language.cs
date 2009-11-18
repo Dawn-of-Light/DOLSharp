@@ -26,7 +26,7 @@ namespace DOL.GS.Commands
 		"&language",
 		ePrivLevel.Player,
 		"Change your server-language display",
-		"/language <EN|FR|DE|ES|CZ>")]
+		"/language <EN|IT|FR|DE|ES|CZ>")]
 	public class LanguageCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>
@@ -51,7 +51,7 @@ namespace DOL.GS.Commands
 				if (log.IsInfoEnabled)
 					log.Info(client.Player.Name + " (" + client.Account.Name + ") changed language.");
 			}
-			else client.Out.SendMessage("Command help: /language <EN|FR|DE|ES|CZ>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			else client.Out.SendMessage("Command help: /language <EN|IT|FR|DE|ES|CZ>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 	}
 }
