@@ -882,7 +882,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(item, client));
 						foreach (GamePlayer ply in mychatgroup.Members.Keys)
 						{
-							ply.Out.SendMessage(str, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+							ply.Out.SendMessage(str, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
 						return 1;
 					}
@@ -952,7 +952,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(item, client));
 						foreach (GamePlayer ply in mybattlegroup.Members.Keys)
 						{
-							ply.Out.SendMessage(str, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+							ply.Out.SendMessage(str, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
 						return 1;
 					}
