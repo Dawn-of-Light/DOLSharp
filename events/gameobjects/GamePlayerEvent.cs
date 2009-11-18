@@ -47,7 +47,8 @@ namespace DOL.Events
 		}
 
 		/// <summary>
-		/// The GameEntered event is fired whenever the player enters the game
+		/// The GameEntered event is fired whenever the player enters the game.
+		/// NOTE:  when this event fires, the player's client will still *not* be included in WorldMgr.GetAllPlayingClients()
 		/// </summary>
 		public static readonly GamePlayerEvent GameEntered = new GamePlayerEvent("GamePlayer.GameEntered");
 		/// <summary>
