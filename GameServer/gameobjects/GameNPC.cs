@@ -2941,7 +2941,7 @@ namespace DOL.GS
         /// <summary>
         /// Gets the proper pronoun including capitalization.
         /// </summary>
-        /// <param name="form"></param>
+        /// <param name="form">1=his; 2=him; 3=he</param>
         /// <param name="capitalize"></param>
         /// <returns></returns>
         public override string GetPronoun(int form, bool capitalize)

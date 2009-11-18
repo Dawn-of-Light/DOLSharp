@@ -53,7 +53,7 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// type of ban (ip, account or both)
+		/// type of ban (I=ip, A=account, B=both)
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
         public string Type
