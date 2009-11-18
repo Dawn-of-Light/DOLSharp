@@ -74,7 +74,7 @@ namespace DOL.GS
 
 				if (isMessenger)
 				{
-					if (glimmerSpawn.Brain != null && glimmerSpawn.Brain is RetrieverMobBrain)
+					if (glimmerSpawn != null && glimmerSpawn.Brain != null && glimmerSpawn.Brain is RetrieverMobBrain)
 					{
 						(glimmerSpawn.Brain as RetrieverMobBrain).Master = this;
 						m_messengerList.Add(glimmerSpawn);
@@ -135,10 +135,12 @@ namespace DOL.GS
 			GameNPC glimmer;
 			for (int add = 0; add < numAdds; ++add)
 			{
-				glimmer = SpawnTimedAdd(624+Util.Random(2), Util.Random(62, 68),
-					x + Util.Random(250), y + Util.Random(250), 120, false);
-				if (glimmer.Brain is StandardMobBrain && this.Brain is DragonBrain)
+				glimmer = SpawnTimedAdd(624+Util.Random(2), Util.Random(62, 68), x + Util.Random(250), y + Util.Random(250), 120, false);
+
+				if (glimmer != null && glimmer.Brain is StandardMobBrain && this.Brain is DragonBrain)
+				{
 					(Brain as DragonBrain).AddAggroListTo(glimmer.Brain as StandardMobBrain);
+				}
 			}
 		}
 		 
