@@ -64,7 +64,7 @@ namespace DOL.GS.Commands
 			string message = text.ToString();
 			foreach (GamePlayer ply in mychatgroup.Members.Keys)
 			{
-				ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+				ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 			}
 		}
 	}
@@ -210,7 +210,7 @@ namespace DOL.GS.Commands
 						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.ListenMode") + (mychatgroup.Listen ? "on." : "off.");
 						foreach (GamePlayer ply in mychatgroup.Members.Keys)
 						{
-							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
 					}
 					break;
@@ -242,7 +242,7 @@ namespace DOL.GS.Commands
 						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Moderator", inviteeclient.Player.Name);
 						foreach (GamePlayer ply in mychatgroup.Members.Keys)
 						{
-							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
 					}
 					break;
@@ -263,7 +263,7 @@ namespace DOL.GS.Commands
 						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Public");
 						foreach (GamePlayer ply in mychatgroup.Members.Keys)
 						{
-							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
 					}
 					break;
@@ -284,7 +284,7 @@ namespace DOL.GS.Commands
 						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Private");
 						foreach (GamePlayer ply in mychatgroup.Members.Keys)
 						{
-							ply.Out.SendMessage(message, eChatType.CT_Friend, eChatLoc.CL_ChatWindow);
+							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
 					}
 					break;
