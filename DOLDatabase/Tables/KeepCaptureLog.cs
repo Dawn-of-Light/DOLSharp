@@ -14,6 +14,7 @@ namespace DOL.Database
 		int m_rpReward;
 		int m_combatTime;
 		string m_capturedBy;
+		string m_rpGainerList = "";
 		private bool m_autoSave;
 
 		public KeepCaptureLog()
@@ -113,6 +114,17 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_capturedBy = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public string RPGainerList
+		{
+			get { return m_rpGainerList; }
+			set
+			{
+				Dirty = true;
+				m_rpGainerList = value;
 			}
 		}
 	}

@@ -87,6 +87,19 @@ namespace DOL.GS.Keeps
 
 					keeplog.CapturedBy = GlobalConstants.RealmToName(killer.Realm);
 
+					string listRPGainers = "";
+
+					foreach (System.Collections.DictionaryEntry de in XPGainers)
+					{
+						GameLiving living = de.Key as GameLiving;
+						if (living != null)
+						{
+							listRPGainers += living.Name + ";";
+						}
+					}
+
+					keeplog.RPGainerList = listRPGainers.TrimEnd(';');
+
 					GameServer.Database.AddNewObject(keeplog);
 				}
 				catch (System.Exception ex)

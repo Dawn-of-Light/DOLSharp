@@ -298,7 +298,7 @@ namespace DOL.GS
 			if (this.CurrentRegionID != obj.CurrentRegionID)
 				return false;
 
-			return base.IsWithinRadius(obj, radius);
+			return base.IsWithinRadius(obj, radius, ignoreZ);
 		}
 
 
