@@ -74,7 +74,7 @@ namespace DOL.GS.PlayerClass
 			player.AddSpellLine(SkillBase.GetSpellLine("Valewalker Arb Path Spec"));
 			// Forester class adds "Arboreal Path" so we need to remove it here
 			player.RemoveSpellLine( "Arboreal Path" );
-			player.AddSpellLine(SkillBase.GetSpellLine("Valewalker Arboreal Path Base ")); //immolation spells
+			player.AddSpellLine(SkillBase.GetSpellLine("Valewalker Arboreal Path Base")); //immolation spells
 			
 			if (player.Level >= 5)
 			{
