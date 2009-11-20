@@ -277,9 +277,9 @@ namespace DOL.AI.Brain
 		{
 			Body.StopAttack();
 			if (Owner is GamePlayer
-				&& IsMainPet
-				&& ((GamePlayer)Owner).CharacterClass.ID != (int)eCharacterClass.Animist
-				&& ((GamePlayer)Owner).CharacterClass.ID != (int)eCharacterClass.Theurgist)
+			    && IsMainPet
+			    && ((GamePlayer)Owner).CharacterClass.ID != (int)eCharacterClass.Animist
+			    && ((GamePlayer)Owner).CharacterClass.ID != (int)eCharacterClass.Theurgist)
 				Body.Follow(Owner, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
 			else if (Owner is GameNPC)
 				Body.Follow(Owner, MIN_OWNER_FOLLOW_DIST, MAX_OWNER_FOLLOW_DIST);
@@ -304,7 +304,7 @@ namespace DOL.AI.Brain
 			if (WalkState == eWalkState.Follow)
 				FollowOwner();
 			// [Ganrod] On supprime la cible du pet au moment  du contrôle.
-		    Body.TargetObject = null;
+			Body.TargetObject = null;
 			GameEventMgr.AddHandler(Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
 
 			return true;
@@ -345,7 +345,7 @@ namespace DOL.AI.Brain
 
 			//Check for buffs, heals, etc
 			if (Owner is GameNPC ||
-				(Owner is GamePlayer && ((WalkState == eWalkState.ComeHere && AggressionState != eAggressionState.Aggressive) || WalkState == eWalkState.Follow)))
+			    (Owner is GamePlayer && ((WalkState == eWalkState.ComeHere && AggressionState != eAggressionState.Aggressive) || WalkState == eWalkState.Follow)))
 			{
 				CheckSpells(eCheckSpellType.Defensive);
 			}
@@ -356,11 +356,14 @@ namespace DOL.AI.Brain
 				CheckNPCAggro();
 				AttackMostWanted();
 			}
-			if (Body.IsAttacking && (Body.TargetObject as GamePlayer) != null && (Body.TargetObject as GamePlayer).IsStealthed)
-			{
-				Body.StopAttack();
-				FollowOwner();
-			}
+			// Do not discover stealthed players
+			if ( Body.TargetObject != null)
+				if (Body.TargetObject is GamePlayer)
+					if (Body.IsAttacking && (Body.TargetObject as GamePlayer).IsStealthed)
+					{
+						Body.StopAttack();
+						FollowOwner();
+					}
 		}
 
 		/// <summary>
@@ -390,7 +393,7 @@ namespace DOL.AI.Brain
 							}
 						case Abilities.ChargeAbility:
 							{
-                                if ( !Body.IsWithinRadius( Body.TargetObject, 500 ) )
+								if ( !Body.IsWithinRadius( Body.TargetObject, 500 ) )
 								{
 									ChargeAbility charge = Body.GetAbility(typeof(ChargeAbility)) as ChargeAbility;
 									if (charge != null && Body.GetSkillDisabledDuration(charge) <= 0)
@@ -409,10 +412,10 @@ namespace DOL.AI.Brain
 		{
 			if (Body == null || Body.Spells == null || Body.Spells.Count < 1)
 				return false;
-				
+			
 			if (Body.IsCasting)
 				return true;
-				
+			
 			bool casted = false;
 			if (type == eCheckSpellType.Defensive)
 			{
@@ -461,7 +464,7 @@ namespace DOL.AI.Brain
 
 			switch (spell.SpellType)
 			{
-				#region Buffs
+					#region Buffs
 				case "StrengthConstitutionBuff":
 				case "DexterityQuicknessBuff":
 				case "StrengthBuff":
@@ -534,9 +537,9 @@ namespace DOL.AI.Brain
 						}
 					}
 					break;
-				#endregion
+					#endregion
 
-				#region Disease Cure/Poison Cure/Summon
+					#region Disease Cure/Poison Cure/Summon
 				case "CureDisease":
 					if (!Body.IsDiseased)
 						break;
@@ -545,9 +548,9 @@ namespace DOL.AI.Brain
 				case "Summon":
 					Body.TargetObject = Body;
 					break;
-				#endregion
+					#endregion
 
-				#region Heals
+					#region Heals
 				case "Heal":
 					//Heal self
 					if (Body.HealthPercent < 75)
@@ -578,7 +581,7 @@ namespace DOL.AI.Brain
 						}
 					}
 					break;
-				#endregion
+					#endregion
 			}
 
 			if (Body.TargetObject != null)
@@ -615,7 +618,7 @@ namespace DOL.AI.Brain
 
 		/// <summary>
 		/// Add living to the aggrolist
-		/// aggroamount can be negative to lower amount of aggro		
+		/// aggroamount can be negative to lower amount of aggro
 		/// </summary>
 		/// <param name="living"></param>
 		/// <param name="aggroamount"></param>
@@ -629,9 +632,9 @@ namespace DOL.AI.Brain
 
 		public override int CalculateAggroLevelToTarget(GameLiving target)
 		{
-		  // only attack if target is green+ to OWNER; always attack higher levels regardless of CON
-		  if (GameServer.ServerRules.IsSameRealm(Body, target, true) || Owner.IsObjectGreyCon(target)) return 0;
-		  return AggroLevel > 100 ? 100 : AggroLevel;
+			// only attack if target is green+ to OWNER; always attack higher levels regardless of CON
+			if (GameServer.ServerRules.IsSameRealm(Body, target, true) || Owner.IsObjectGreyCon(target)) return 0;
+			return AggroLevel > 100 ? 100 : AggroLevel;
 		}
 
 		/// <summary>
