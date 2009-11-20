@@ -96,6 +96,11 @@ namespace DOL.GS.Spells
 		private byte m_delveInfoDepth;
 
 		/// <summary>
+		/// AttackData result for this spell, if any
+		/// </summary>
+		protected AttackData m_lastAttackData = null;
+
+		/// <summary>
 		/// The property key for the interrupt timeout
 		/// </summary>
 		public const string INTERRUPT_TIMEOUT_PROPERTY = "CAST_INTERRUPT_TIMEOUT";
@@ -291,7 +296,7 @@ namespace DOL.GS.Spells
 
 		public virtual bool CastSpell(GameLiving targetObject)
 		{
-			Caster.Notify(GameLivingEvent.CastStarting, m_caster, new CastStartingEventArgs(this));
+			Caster.Notify(GameLivingEvent.CastStarting, m_caster, new CastingEventArgs(this));
 			
 			if (Caster is GamePlayer && Spell.SpellType != "Archery")
 				((GamePlayer)Caster).Stealth(false);
@@ -1740,7 +1745,7 @@ namespace DOL.GS.Spells
 
 
 			//Subspells
-      if (m_spell.SubSpellID > 0 && Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "SummonAnimistFnF" && Spell.SpellType != "SummonAnimistPet" && Spell.SpellType != "Grapple")
+			if (m_spell.SubSpellID > 0 && Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "SummonAnimistFnF" && Spell.SpellType != "SummonAnimistPet" && Spell.SpellType != "Grapple")
 			{
 				Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
 				//we need subspell ID to be 0, we don't want spells linking off the subspell
@@ -1767,23 +1772,23 @@ namespace DOL.GS.Spells
 
 			if (m_ability != null)
 				m_caster.DisableSkill(m_ability.Ability, (m_spell.RecastDelay == 0 ? 3 : m_spell.RecastDelay));
-			
+
 			// disable spells with recasttimer (Disables group of same type with same delay)
 			if (m_spell.RecastDelay > 0 && m_startReuseTimer)
 			{
 				if (m_caster is GamePlayer)
-		        {
-	                   GamePlayer gp_caster = m_caster as GamePlayer;
-	                   foreach (SpellLine spellline in gp_caster.GetSpellLines())
-		                   foreach (Spell sp in SkillBase.GetSpellList(spellline.KeyName))
-		                      if (sp == m_spell || (sp.SharedTimerGroup != 0 && (sp.SharedTimerGroup == m_spell.SharedTimerGroup)))
-		                      	m_caster.DisableSkill(sp, sp.RecastDelay);
-		        }
+				{
+					GamePlayer gp_caster = m_caster as GamePlayer;
+					foreach (SpellLine spellline in gp_caster.GetSpellLines())
+						foreach (Spell sp in SkillBase.GetSpellList(spellline.KeyName))
+							if (sp == m_spell || (sp.SharedTimerGroup != 0 && (sp.SharedTimerGroup == m_spell.SharedTimerGroup)))
+								m_caster.DisableSkill(sp, sp.RecastDelay);
+				}
 				else if (m_caster is GameNPC)
 					m_caster.DisableSkill(m_spell, m_spell.RecastDelay);
 			}
 
-			GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastStartingEventArgs(this, target));
+			GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastingEventArgs(this, target, m_lastAttackData));
 		}
 
 		/// <summary>
@@ -2653,7 +2658,9 @@ namespace DOL.GS.Spells
 		public void MessageToCaster(string message, eChatType type)
 		{
 			if (Caster is GamePlayer)
+			{
 				(Caster as GamePlayer).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+			}
 			else if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain
 				&& (type == eChatType.CT_YouHit || type == eChatType.CT_SpellResisted))
 			{
@@ -2692,11 +2699,11 @@ namespace DOL.GS.Spells
 			if (currentEffect == null)
 				return;
 
-			if (args is CastStartingEventArgs)
+			if (args is CastingEventArgs)
 			{
-				if ((args as CastStartingEventArgs).SpellHandler.Caster != Caster)
+				if ((args as CastingEventArgs).SpellHandler.Caster != Caster)
 					return;
-				if ((args as CastStartingEventArgs).SpellHandler.Spell.SpellType == currentEffect.Spell.SpellType)
+				if ((args as CastingEventArgs).SpellHandler.Spell.SpellType == currentEffect.Spell.SpellType)
 					return;
 			}
 
@@ -3347,6 +3354,7 @@ namespace DOL.GS.Spells
 			ad.DamageType = Spell.DamageType;
 			ad.Modifier = resistModifier;
 
+			m_lastAttackData = ad;
 			return ad;
 		}
 
@@ -3411,6 +3419,8 @@ namespace DOL.GS.Spells
 				if (aggroBrain != null)
 					aggroBrain.AddToAggroList(Caster, 1);
 			}
+
+			m_lastAttackData = ad;
 		}
 
 		#endregion

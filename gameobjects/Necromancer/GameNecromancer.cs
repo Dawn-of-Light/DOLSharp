@@ -240,9 +240,9 @@ namespace DOL.GS
                 GameNPC pet = ControlledNpcBrain.Body;
 
                 if (pet != null && sender == pet && e == GameLivingEvent.CastStarting &&
-                    args is CastStartingEventArgs)
+                    args is CastingEventArgs)
                 {
-                    ISpellHandler spellHandler = (args as CastStartingEventArgs).SpellHandler;
+                    ISpellHandler spellHandler = (args as CastingEventArgs).SpellHandler;
 
                     if (spellHandler != null)
                     {

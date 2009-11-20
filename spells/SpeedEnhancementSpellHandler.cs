@@ -155,23 +155,37 @@ namespace DOL.GS.Spells
 			if (living == null) return;
 			AttackedByEnemyEventArgs attackedByEnemy = arguments as AttackedByEnemyEventArgs;
 			AttackFinishedEventArgs attackFinished = arguments as AttackFinishedEventArgs;
-			CastStartingEventArgs castFinished = arguments as CastStartingEventArgs;
+			CastingEventArgs castFinished = arguments as CastingEventArgs;
 			AttackData ad = null;
 			ISpellHandler sp = null;
+
 			if (attackedByEnemy != null)
+			{
 				ad = attackedByEnemy.AttackData;
+			}
 			else if (attackFinished != null)
+			{
 				ad = attackFinished.AttackData;
+			}
 			else if (castFinished != null)
+			{
 				sp = castFinished.SpellHandler;
+				ad = castFinished.LastAttackData;
+			}
 
 			// Speed should drop if the player casts an offensive spell
 			if (sp == null && ad == null)
+			{
 				return;
+			}
 			else if (sp == null && (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
+			{
 				return;
-			else if (sp != null && sp.HasPositiveEffect)
+			}
+			else if (sp != null && (sp.HasPositiveEffect || ad == null))
+			{
 				return;
+			}
 
 			// remove speed buff if in combat
 			GameSpellEffect speed = SpellHandler.FindEffectOnTarget(living, this);
