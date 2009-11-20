@@ -136,7 +136,7 @@ namespace DOL.GS
 		public override void OnAfterSpellCastSequence(ISpellHandler handler)
 		{
 			base.OnAfterSpellCastSequence(handler);
-			Brain.Notify(GameNPCEvent.CastFinished, this, new CastStartingEventArgs(handler));
+			Brain.Notify(GameNPCEvent.CastFinished, this, new CastingEventArgs(handler));
 		}
 
 		/// <summary>

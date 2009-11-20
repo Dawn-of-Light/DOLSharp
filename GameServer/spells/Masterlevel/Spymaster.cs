@@ -480,9 +480,9 @@ namespace DOL.GS.Spells
 				OnEffectExpires(m_effect, false);
 				return;
 			}
-			if (args is CastStartingEventArgs)
+			if (args is CastingEventArgs)
 			{
-				if ((args as CastStartingEventArgs).SpellHandler.Caster != Caster)
+				if ((args as CastingEventArgs).SpellHandler.Caster != Caster)
 					return;
 				MessageToLiving((GameLiving)player, "You are casting a spell. Your camouflage fades!", eChatType.CT_SpellResisted);
 				OnEffectExpires(m_effect, true);

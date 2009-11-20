@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using DOL.GS.Keeps;
+using DOL.Events;
 
 namespace DOL.GS.Spells
 {
@@ -30,13 +31,19 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("DirectDamage")]
 	public class DirectDamageSpellHandler : SpellHandler
 	{
+		private bool m_castFailed = false;
+
 		/// <summary>
 		/// Execute direct damage spell
 		/// </summary>
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			if (!m_castFailed)
+			{
+				m_caster.Mana -= PowerCost(target);
+			}
+
 			base.FinishSpellCast(target);
 		}
 
@@ -52,10 +59,8 @@ namespace DOL.GS.Spells
 			if (target == null) return;
 
 			bool spellOK = true;
-			//cone spells
-			if (Spell.Target.ToLower() == "cone" ||
-				//pbaoe
-				(Spell.Target == "Enemy" && Spell.Radius > 0 && Spell.Range == 0))
+
+			if (Spell.Target.ToLower() == "cone" ||	(Spell.Target == "Enemy" && Spell.Radius > 0 && Spell.Range == 0))
 				spellOK = false;
 
 			if (!spellOK || CheckLOS(Caster))
@@ -68,16 +73,13 @@ namespace DOL.GS.Spells
 				else
 				{
 					if (Caster is GamePlayer)
+					{
 						player = Caster as GamePlayer;
+					}
 					else if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
 					{
 						IControlledBrain brain = (Caster as GameNPC).Brain as IControlledBrain;
-						//Ryan: edit for BD
 						player = brain.GetPlayerOwner();
-						//if (brain.Owner is GamePlayer)
-						//    player = (GamePlayer)brain.Owner;
-						//else
-						//    player = (GamePlayer)((IControlledBrain)((GameNPC)brain.Owner).Brain).Owner;
 					}
 				}
 				if (player != null)
@@ -86,9 +88,14 @@ namespace DOL.GS.Spells
 					player.Out.SendCheckLOS(Caster, target, new CheckLOSResponse(DealDamageCheckLOS));
 				}
 				else
+				{
 					DealDamage(target, effectiveness);
+				}
 			}
-			else DealDamage(target, effectiveness);
+			else
+			{
+				DealDamage(target, effectiveness);
+			}
 		}
 
 		private bool CheckLOS(GameLiving living)
@@ -103,8 +110,9 @@ namespace DOL.GS.Spells
 
 		private void DealDamageCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
-			if (player == null) // Hmm
+			if (player == null)
 				return;
+
 			if ((response & 0x100) == 0x100)
 			{
 				try
@@ -114,12 +122,25 @@ namespace DOL.GS.Spells
 					{
 						double effectiveness = (double)player.TempProperties.getObjectProperty(LOSEFFECTIVENESS, null);
 						DealDamage(target, effectiveness);
+
+						// Due to LOS check delay the actual cast happens after FinishSpellCast does a notify, so we notify again
+						GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastingEventArgs(this, target, m_lastAttackData));
 					}
 				}
 				catch (Exception e)
 				{
+					m_castFailed = true;
+
 					if (log.IsErrorEnabled)
 						log.Error(string.Format("targetOID:{0} caster:{1} exception:{2}", targetOID, Caster, e));
+				}
+			}
+			else
+			{
+				if (Spell.Target.ToLower() == "enemy" && Spell.Radius == 0 && Spell.Range != 0)
+				{
+					m_castFailed = true;
+					MessageToCaster("You can't see your target!", eChatType.CT_SpellResisted);
 				}
 			}
 		}
@@ -134,6 +155,8 @@ namespace DOL.GS.Spells
 			SendDamageMessages(ad);
 			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 		}
+
+
 		/*
 		 * We need to send resist spell los check packets because spell resist is calculated first, and
 		 * so you could be inside keep and resist the spell and be interupted when not in view

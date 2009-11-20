@@ -39,7 +39,6 @@ namespace DOL.GS.Spells
 		{
 			base.FinishSpellCast(target);
 			foreach (GamePlayer player in Caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				//player.Out.SendSpellEffectAnimation(Caster, target, SECONDEFFECT, 0, false, 1);
 				player.Out.SendSpellCastAnimation(Caster, SECONDEFFECT, 20);
 		}
 
