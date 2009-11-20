@@ -476,7 +476,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="events\gameobjects\CastFailedEventArgs.cs" />
-    <Compile Include="events\gameobjects\CastStartingEventArgs.cs" />
+    <Compile Include="events\gameobjects\CastingEventArgs.cs" />
     <Compile Include="events\gameobjects\DyingEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>

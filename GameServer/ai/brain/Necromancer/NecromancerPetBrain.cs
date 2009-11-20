@@ -143,7 +143,7 @@ namespace DOL.AI.Brain
                 if (spellLine.Name != (Body as NecromancerPet).PetInstaSpellLine)
                 {
                     Owner.Notify(GameLivingEvent.CastStarting, Body,
-                        new CastStartingEventArgs(Body.CurrentSpellHandler));
+                        new CastingEventArgs(Body.CurrentSpellHandler));
                     MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
                         "AI.Brain.Necromancer.PetCastingSpell", Body.Name), eChatType.CT_System);
                 }
