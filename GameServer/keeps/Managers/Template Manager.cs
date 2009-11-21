@@ -67,7 +67,7 @@ namespace DOL.GS.Keeps
 			}
 			else if (guard is GuardLord)
 			{
-				guard.RespawnInterval = ServerProperties.Properties.GUARDLORD_RESPAWN_INTERVAL;
+				guard.RespawnInterval = 5000;
 			}
 			else if (guard is MissionMaster)
 			{

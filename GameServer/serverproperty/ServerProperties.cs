@@ -780,6 +780,12 @@ namespace DOL.GS.ServerProperties
 		public static int TOWER_RP_BASE;
 
 		/// <summary>
+		/// The number of seconds from last kill the this lord is worth no RP
+		/// </summary>
+		[ServerProperty("keeps", "lord_rp_worth_seconds", "The number of seconds from last kill the this lord is worth no RP.", 300)]
+		public static int LORD_RP_WORTH_SECONDS;
+
+		/// <summary>
 		/// Multiplier used to add or subtract RP worth based on keep level difference from 50.
 		/// </summary>
 		[ServerProperty("keeps", "keep_rp_multiplier", "Integer multiplier used to increase/decrease RP worth based on keep level difference from 50.", 50)]
@@ -838,12 +844,6 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("keeps", "tower_guard_level_multiplier", "Multiplier used to determine tower guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.", 1.0)]
 		public static double TOWER_GUARD_LEVEL_MULTIPLIER;
-
-		/// <summary>
-		/// How long before a new lord of a keep or tower respawns in milliseconds
-		/// </summary>
-		[ServerProperty("keeps", "guardlord_respawn_interval", "How long before a new lord of a keep or tower respawns in milliseconds.", 5 * 60 * 1000)]
-		public static int GUARDLORD_RESPAWN_INTERVAL;
 
 		/// <summary>
 		/// Ignore too long outcoming packet or not
