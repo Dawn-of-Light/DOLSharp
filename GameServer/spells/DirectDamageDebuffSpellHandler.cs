@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using DOL.Events;
 
 namespace DOL.GS.Spells
 {
@@ -106,6 +107,9 @@ namespace DOL.GS.Spells
 					{
 						double effectiveness = (double)player.TempProperties.getObjectProperty(LOSEFFECTIVENESS, null);
 						DealDamage(target, effectiveness);
+
+						// Due to LOS check delay the actual cast happens after FinishSpellCast does a notify, so we notify again
+						GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastingEventArgs(this, target, m_lastAttackData));
 					}
 				}
 				catch (Exception e)

@@ -2453,6 +2453,19 @@ namespace DOL.GS.Spells
 			{
 				OnDirectEffect(target, effectiveness);
 			}
+
+			if (!HasPositiveEffect)
+			{
+				AttackData ad = new AttackData();
+				ad.Attacker = Caster;
+				ad.Target = target;
+				ad.AttackType = AttackData.eAttackType.Spell;
+				ad.SpellHandler = this;
+				ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+				ad.IsSpellResisted = false;
+
+				m_lastAttackData = ad;
+			}
 		}
 
 		/// <summary>
@@ -2773,8 +2786,9 @@ namespace DOL.GS.Spells
 		{
 			get
 			{
-				if (m_spell.Target != "Enemy" && m_spell.Target != "Cone")
+				if (m_spell.Target.ToLower() != "enemy" && m_spell.Target.ToLower() != "cone" && m_spell.Target.ToLower() != "area")
 					return true;
+
 				return false;
 			}
 		}
