@@ -187,7 +187,6 @@ namespace DOL.GS.Spells
 				return;
 			}
 
-			// remove speed buff if in combat
 			GameSpellEffect speed = SpellHandler.FindEffectOnTarget(living, this);
 			if (speed != null)
 				speed.Cancel(false);
