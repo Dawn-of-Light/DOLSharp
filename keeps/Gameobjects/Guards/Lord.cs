@@ -1,3 +1,4 @@
+using System;
 using DOL.Events;
 using DOL.AI.Brain;
 using DOL.GS;
@@ -12,6 +13,8 @@ namespace DOL.GS.Keeps
 	public class GuardLord : GameKeepGuard
 	{
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		private long m_lastKillTime = 0;
 
 		/// <summary>
 		/// Lord needs more health at the moment
@@ -28,8 +31,17 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
+				long duration = (CurrentRegion.Time - m_lastKillTime) / 1000L;
+
+				if (duration < ServerProperties.Properties.LORD_RP_WORTH_SECONDS)
+				{
+					return 0;
+				}
+
 				if (this.Component == null || this.Component.Keep == null)
+				{
 					return 5000;
+				}
 				else
 				{
 					int value = 0;
@@ -44,6 +56,7 @@ namespace DOL.GS.Keeps
 					}
 
 					value += (this.Component.Keep.Level * ServerProperties.Properties.UPGRADE_MULTIPLIER);
+
 
 					return value;
 				}
@@ -112,6 +125,8 @@ namespace DOL.GS.Keeps
 				GameServer.ServerRules.ResetKeep(this, killer);
 
 			base.Die(killer);
+
+			m_lastKillTime = CurrentRegion.Time;
 		}
 
 		/// <summary>
