@@ -103,10 +103,22 @@ namespace DOL.GS
 		{
 			lock (m_usedItemsTemplates.SyncRoot)
 			{
-				slot = GetValidSlot(page, slot);
-				if (slot == eMerchantWindowSlot.Invalid || item == null) return false;
-				m_usedItemsTemplates[(int)slot] = item;
+				if (item == null)
+				{
+					return false;
+				}
+
+				eMerchantWindowSlot pageSlot = GetValidSlot(page, slot);
+
+				if (pageSlot == eMerchantWindowSlot.Invalid)
+				{
+					log.ErrorFormat("Invalid slot {0} specified for page {1} of TradeItemList {2}", slot, page, ItemsListID);
+					return false;
+				}
+
+				m_usedItemsTemplates[(int)pageSlot] = item;
 			}
+
 			return true;
 		}
 
