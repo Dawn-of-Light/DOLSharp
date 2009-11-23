@@ -976,6 +976,16 @@ namespace DOL.GS
         Female = 2
     }
 
+	public enum eExpansion : int
+	{
+		None = 1,
+		SI = 2,
+		ToA = 3,
+		Catacombs = 4,
+		DarknessRising = 5,
+		Labyrinth = 6
+	}
+
 	/// <summary>
 	/// strong name constants of spell line used in the world (poison, proc ect ...)
 	/// </summary>

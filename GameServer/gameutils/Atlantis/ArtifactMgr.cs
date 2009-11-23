@@ -127,6 +127,28 @@ namespace DOL.GS
 			return artifactID;
 		}
 
+
+		/// <summary>
+		/// Get all artifacts
+		/// </summary>
+		/// <param name="zone"></param>
+		/// <returns></returns>
+		public static List<Artifact> GetArtifacts()
+		{
+			List<Artifact> artifacts = new List<Artifact>();
+
+			lock (m_artifacts)
+			{
+				foreach (Artifact artifact in m_artifacts.Values)
+				{
+					artifacts.Add(artifact);
+				}
+			}
+
+			return artifacts;
+		}
+
+
         /// <summary>
         /// Find all artifacts from a particular zone.
         /// </summary>
@@ -136,12 +158,19 @@ namespace DOL.GS
         {
 			List<Artifact> artifacts = new List<Artifact>();
 
-            if (zone != null)
-                lock (m_artifacts)
-                    foreach (Artifact artifact in m_artifacts.Values)
-                        if (artifact.Zone == zone)
-                            artifacts.Add(artifact);
-
+			if (zone != null)
+			{
+				lock (m_artifacts)
+				{
+					foreach (Artifact artifact in m_artifacts.Values)
+					{
+						if (artifact.Zone == zone)
+						{
+							artifacts.Add(artifact);
+						}
+					}
+				}
+			}
             return artifacts;
         }
 
@@ -779,15 +808,18 @@ namespace DOL.GS
 
             String scrollTitle = null;
 			int scrollModel = 499;
+			short gold = 4;
             switch (pageNumbers)
             {
                 case Book.Page1: 
 					scrollTitle = artifact.Scroll1;
 					scrollModel = artifact.ScrollModel1;
+					gold = 2;
                     break;
                 case Book.Page2: 
 					scrollTitle = artifact.Scroll2;
 					scrollModel = artifact.ScrollModel1;
+					gold = 3;
                     break;
                 case Book.Page3: 
 					scrollTitle = artifact.Scroll3;
@@ -808,6 +840,7 @@ namespace DOL.GS
                 case Book.AllPages: 
 					scrollTitle = artifact.BookID;
 					scrollModel = artifact.BookModel;
+					gold = 5;
                     break;
             }
 
@@ -815,7 +848,8 @@ namespace DOL.GS
             scroll.Item.Name = scrollTitle;
 			scroll.Model = (ushort)scrollModel;
 			scroll.Item.Model = (ushort)scrollModel;
-            return scroll;
+			scroll.Item.Gold = gold;
+			return scroll;
         }
 
 		/// <summary>
