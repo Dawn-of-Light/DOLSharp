@@ -5821,14 +5821,11 @@ namespace DOL.GS
 						{
 							InventoryItem item = Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
-							//Condition percent can reach 70%
-							//durability percent can reach zero
-							// if item durability reachs 0, item is useless and become broken item
+							// Condition percent can reach 70%
+							// Durability percent can reach zero
+							// If item durability reachs 0, item is useless and become broken item
 
-							// TODO: Random = quick hack in order to find good formula later
-							// maybe because database have wrong max condition so must be increase
-							//like condition
-							if (item != null && item.ConditionPercent > 70)
+							if (item != null && item.ConditionPercent > 70 && Util.Chance(15))
 							{
 								int oldPercent = item.ConditionPercent;
 								double con = GetConLevel(Level, item.Level);
