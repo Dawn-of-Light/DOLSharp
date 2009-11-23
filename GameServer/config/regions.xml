@@ -153,7 +153,7 @@
 		<id>47</id>
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
-		<expansion>0</expansion>
+		<expansion>2</expansion>
 	</Region047>
 	<Region048>
 		<description>The Unused Mine</description>
@@ -642,7 +642,7 @@
 		<id>147</id>
 		<port>10400</port>
 		<ip>127.0.0.1</ip>
-		<expansion>0</expansion>
+		<expansion>2</expansion>
 	</Region147>
 	<Region148>
 		<description>The Frontlines</description>
