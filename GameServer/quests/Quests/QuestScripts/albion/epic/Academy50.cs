@@ -1293,7 +1293,7 @@ namespace DOL.GS.Quests.Albion
 					case 1:
 						return "[Step #1] Seek out Bechard or Silcharde at the fallen tower in Lyonesse and kill one!";
 					case 2:
-						return "[Step #2] Return to Ferowl for your reward!";
+						return "[Step #2] Return the pouch to Ferowl for your reward!";
 				}
 				return base.Description;
 			}
