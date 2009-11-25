@@ -472,15 +472,16 @@ namespace DOL.GS
                         {
                             try
                             {
-                                if (Int16.Parse(classID) == (int)charClass)
+                                if (Int32.Parse(classID) == (int)charClass)
                                 {
                                     classVersions.Add(version.Version, itemTemplate);
                                     break;
                                 }
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                log.Warn(String.Format("Invalid class ID '{0}' for item template '{1}'", classID, itemTemplate.Id_nb));
+                                log.Error(String.Format("Invalid class ID '{0}' for item template '{1}', checked by class '{2}'", classID, itemTemplate.Id_nb, (int)charClass));
+								log.Error(ex.Message);
                             }
                         }
                     }

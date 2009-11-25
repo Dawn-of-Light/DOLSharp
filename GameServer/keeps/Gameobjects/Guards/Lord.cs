@@ -14,6 +14,7 @@ namespace DOL.GS.Keeps
 	{
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+		private eRealm m_lastRealm = eRealm.None;
 		private long m_lastKillTime = 0;
 
 		/// <summary>
@@ -48,17 +49,17 @@ namespace DOL.GS.Keeps
 
 					if (this.Component.Keep is GameKeep)
 					{
-						value = this.Component.Keep.RealmPointsValue() + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.KEEP_RP_MULTIPLIER);
+						value = Math.Max(50, this.Component.Keep.RealmPointsValue() + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.KEEP_RP_MULTIPLIER));
 					}
 					else
 					{
-						value = this.Component.Keep.RealmPointsValue() + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.TOWER_RP_MULTIPLIER);
+						value = Math.Max(5, this.Component.Keep.RealmPointsValue() + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.TOWER_RP_MULTIPLIER));
 					}
 
-					value += (this.Component.Keep.Level * ServerProperties.Properties.UPGRADE_MULTIPLIER);
+					value += ((this.Component.Keep.Level - ServerProperties.Properties.STARTING_KEEP_LEVEL) * ServerProperties.Properties.UPGRADE_MULTIPLIER);
 
 
-					return value;
+					return Math.Max(5, value);
 				}
 			}
 		}
@@ -161,8 +162,6 @@ namespace DOL.GS.Keeps
 			return false;
 		}
 
-
-		eRealm m_lastRealm = eRealm.None;
 
 		/// <summary>
 		/// From a great distance, damage does not harm lord
