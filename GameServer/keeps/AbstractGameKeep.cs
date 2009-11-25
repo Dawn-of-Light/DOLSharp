@@ -291,6 +291,14 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		/// <summary>
+		/// Respawn time for the lord of this keep (milliseconds)
+		/// </summary>
+		public virtual int LordRespawnTime
+		{
+			get { return 5000; }
+		}
+
 
 		#region DBKeep Properties
 		/// <summary>

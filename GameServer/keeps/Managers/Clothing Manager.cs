@@ -465,7 +465,7 @@ namespace DOL.GS.Keeps
                 }
             }
 
-			switch (guard.Realm)
+			switch (guard.ModelRealm)
 			{
 				case eRealm.None:
 				case eRealm.Albion:
@@ -561,17 +561,74 @@ namespace DOL.GS.Keeps
 			GameNpcInventoryTemplate template = guard.Inventory as GameNpcInventoryTemplate;
 			guard.Inventory = new GameNPCInventory(template);
 
-			//special extensions
+			const int renegadeArmorColor = 19;
+
 			InventoryItem item = null;
 			item = guard.Inventory.GetItem(eInventorySlot.TorsoArmor);
 			if (item != null)
-				item.Extension = (int)eExtension.Five;
+			{
+				if (guard.Realm != eRealm.None)
+				{
+					item.Extension = (int)eExtension.Five;
+				}
+				else
+				{
+					item.Extension = (int)eExtension.Four;
+					item.Color = renegadeArmorColor;
+				}
+			}
 			item = guard.Inventory.GetItem(eInventorySlot.HandsArmor);
 			if (item != null)
-				item.Extension = (int)eExtension.Five;
+			{
+				if (guard.Realm != eRealm.None)
+				{
+					item.Extension = (int)eExtension.Five;
+				}
+				else
+				{
+					item.Extension = (int)eExtension.Four;
+					item.Color = renegadeArmorColor;
+				}
+			}
 			item = guard.Inventory.GetItem(eInventorySlot.FeetArmor);
 			if (item != null)
-				item.Extension = (int)eExtension.Five;
+			{
+				if (guard.Realm != eRealm.None)
+				{
+					item.Extension = (int)eExtension.Five;
+				}
+				else
+				{
+					item.Extension = (int)eExtension.Four;
+					item.Color = renegadeArmorColor;
+				}
+			}
+
+
+			if (guard.Realm == eRealm.None)
+			{
+				item = guard.Inventory.GetItem(eInventorySlot.Cloak);
+				if (item != null)
+				{
+					item.Model = 3632;
+					item.Color = renegadeArmorColor;
+				}
+				item = guard.Inventory.GetItem(eInventorySlot.TorsoArmor);
+				if (item != null)
+				{
+					item.Color = renegadeArmorColor;
+				}
+				item = guard.Inventory.GetItem(eInventorySlot.ArmsArmor);
+				if (item != null)
+				{
+					item.Color = renegadeArmorColor;
+				}
+				item = guard.Inventory.GetItem(eInventorySlot.LegsArmor);
+				if (item != null)
+				{
+					item.Color = renegadeArmorColor;
+				}
+			}
 
 			// set the active slot
 			// casters use two handed weapons as default

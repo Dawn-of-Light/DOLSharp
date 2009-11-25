@@ -72,6 +72,13 @@ namespace DOL.GS.Keeps
 			set { m_hookPoint = value; }
 		}
 
+		private eRealm m_modelRealm = eRealm.None;
+		public eRealm ModelRealm
+		{
+			get { return m_modelRealm; }
+			set { m_modelRealm = value; }
+		}
+
 		public bool IsTowerGuard
 		{
 			get

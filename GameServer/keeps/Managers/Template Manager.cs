@@ -17,6 +17,7 @@
  *
  */
 using DOL.AI.Brain;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -46,17 +47,38 @@ namespace DOL.GS.Keeps
 		private static void SetGuardRealm(GameKeepGuard guard)
 		{
 			if (guard.Component != null)
+			{
 				guard.Realm = guard.Component.Keep.Realm;
-			else guard.Realm = guard.CurrentZone.GetRealm();
+
+				if (guard.Realm != eRealm.None)
+				{
+					guard.ModelRealm = guard.Realm;
+				}
+				else
+				{
+					guard.ModelRealm = (eRealm)Util.Random(1, 3);
+				}
+			}
+			else
+			{
+				guard.Realm = guard.CurrentZone.GetRealm();
+			}
 		}
 
 		private static void SetGuardGuild(GameKeepGuard guard)
 		{
 			if (guard.Component == null)
+			{
 				guard.GuildName = "";
+			}
 			else if (guard.Component.Keep.Guild == null)
+			{
 				guard.GuildName = "";
-			else guard.GuildName = guard.Component.Keep.Guild.Name;
+			}
+			else
+			{
+				guard.GuildName = guard.Component.Keep.Guild.Name;
+			}
 		}
 
 		private static void SetGuardRespawn(GameKeepGuard guard)
@@ -67,7 +89,14 @@ namespace DOL.GS.Keeps
 			}
 			else if (guard is GuardLord)
 			{
-				guard.RespawnInterval = 5000;
+				if (guard.Component != null)
+				{
+					guard.RespawnInterval = guard.Component.Keep.LordRespawnTime;
+				}
+				else
+				{
+					guard.RespawnInterval = 5000;
+				}
 			}
 			else if (guard is MissionMaster)
 			{
@@ -94,19 +123,28 @@ namespace DOL.GS.Keeps
 		public static void SetGuardLevel(GameKeepGuard guard)
 		{
 			if (guard.Component != null)
+			{
 				guard.Component.Keep.SetGuardLevel(guard);
+			}
 		}
 
 		private static void SetGuardGender(GameKeepGuard guard)
 		{
 			//portal keep guards are always male
 			if (guard.IsPortalKeepGuard)
+			{
 				guard.IsMale = true;
+			}
 			else
 			{
 				if (Util.Chance(50))
+				{
 					guard.IsMale = true;
-				else guard.IsMale = false;
+				}
+				else
+				{
+					guard.IsMale = false;
+				}
 			}
 		}
 
@@ -198,7 +236,7 @@ namespace DOL.GS.Keeps
 				return;
 			}
 
-			switch ((eRealm)guard.Realm)
+			switch (guard.ModelRealm)
 			{
 				#region None
 				case eRealm.None:
@@ -694,7 +732,7 @@ namespace DOL.GS.Keeps
                     return;
 				}
 			}
-			switch ((eRealm)guard.Realm)
+			switch (guard.ModelRealm)
 			{
 				#region Albion / None
 				case eRealm.None:
@@ -829,8 +867,11 @@ namespace DOL.GS.Keeps
 					}
 				#endregion
 			}
-			if ((eRealm)guard.Realm == eRealm.None)
-                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Renegade", guard.Name);
+
+			if (guard.Realm == eRealm.None)
+			{
+				guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Renegade", guard.Name);
+			}
         }
 
 		/// <summary>
@@ -844,7 +885,7 @@ namespace DOL.GS.Keeps
 				guard.BlockChance = 15;
 				guard.ParryChance = 15;
 
-				if (guard.Realm != eRealm.Albion)
+				if (guard.ModelRealm != eRealm.Albion)
 				{
 					guard.EvadeChance = 10;
 				}
@@ -855,7 +896,7 @@ namespace DOL.GS.Keeps
 			}
 			else if (guard is GuardFighter)
 			{
-				if (guard.Realm != eRealm.Albion)
+				if (guard.ModelRealm != eRealm.Albion)
 				{
 					guard.EvadeChance = 5;
 				}
@@ -869,7 +910,7 @@ namespace DOL.GS.Keeps
 			}
 			else if (guard is GuardArcher)
 			{
-				if (guard.Realm == eRealm.Albion)
+				if (guard.ModelRealm == eRealm.Albion)
 				{
 					guard.BlockChance = 10;
 					guard.EvadeChance = 5;
