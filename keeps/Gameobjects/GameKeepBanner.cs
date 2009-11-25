@@ -33,6 +33,11 @@ namespace DOL.GS.Keeps
 
 		public eBannerType BannerType;
 
+
+		/// <summary>
+		/// No Realm banner model (PvE)
+		/// </summary>
+		public const ushort NoRealmModel = 555;
 		/// <summary>
 		/// Albion unclaimed banner model
 		/// </summary>
@@ -156,6 +161,10 @@ namespace DOL.GS.Keeps
 			switch ((eRealm)this.Realm)
 			{
 				case eRealm.None:
+					{
+						this.Model = NoRealmModel;
+						break;
+					}
 				case eRealm.Albion:
 					{
 						this.Model = AlbionModel;

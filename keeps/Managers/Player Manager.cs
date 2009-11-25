@@ -35,7 +35,15 @@ namespace DOL.GS.Keeps
 		/// <param name="keep">The keep object</param>
 		public static void BroadcastCapture(AbstractGameKeep keep)
 		{
-			string message = string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerManager.BroadcastCapture.Captured", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name));
+			string message = "";
+			if (keep.Realm != eRealm.None)
+			{
+				message = string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerManager.BroadcastCapture.Captured", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name));
+			}
+			else
+			{
+				message = string.Format("{0} has been captured!", keep.Name);
+			}
 
 			/*
 			switch (GameServer.Instance.Configuration.ServerType)
@@ -52,6 +60,7 @@ namespace DOL.GS.Keeps
 						break;
 					}
 			}*/
+
 			BroadcastMessage(message, eRealm.None);
 			NewsMgr.CreateNews(message, keep.Realm, eNewsType.RvRGlobal, false);
 		}
