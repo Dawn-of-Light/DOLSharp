@@ -446,7 +446,7 @@ GMCommands.Keep.Usage.Create:				'/keep create <keepid> <baselevel> <radius (set
 
 GMCommands.Keep.Usage.TowerCreate:			'/keep towercreate <keepid> <baselevel> <name>' To create a tower
 
-GMCommands.Keep.Usage.Remove:				'/keep remove' To remove a keep
+GMCommands.Keep.Usage.Remove:				'/keep remove' To delete a keep from the database
 
 GMCommands.Keep.Usage.Name:					'/keep name <Name>' To change name
 

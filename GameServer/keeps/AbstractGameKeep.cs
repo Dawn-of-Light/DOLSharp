@@ -503,7 +503,11 @@ namespace DOL.GS.Keeps
 			this.Area = area;
 		}
 
-		public virtual void Unload(KeepArea area)
+		/// <summary>
+		/// Remove a keep from the database
+		/// </summary>
+		/// <param name="area"></param>
+		public virtual void Remove(KeepArea area)
 		{
 			foreach (GameKeepGuard guard in (m_guards.Clone() as Hashtable).Values)
 			{

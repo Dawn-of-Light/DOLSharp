@@ -2162,7 +2162,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						karea.Keep.Unload(karea);
+						karea.Keep.Remove(karea);
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.KeepUnloaded"));
 						break;
 					}

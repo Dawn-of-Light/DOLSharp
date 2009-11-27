@@ -478,7 +478,7 @@ GMCommands.Keep.Usage.Radius:				'/keep radius <newRadius (set to 0 for default)
 
 GMCommands.Keep.Usage.Realm:				'/keep realm <newrealm>' To change the realm of a keep
 
-GMCommands.Keep.Usage.Remove:				'/keep remove' To remove a keep
+GMCommands.Keep.Usage.Remove:				'/keep remove' To delete a keep from the database
 
 GMCommands.Keep.Usage.Save:				'/keep save' To save keep into DB
 
