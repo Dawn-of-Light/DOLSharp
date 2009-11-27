@@ -86,6 +86,14 @@ namespace DOL.GS
 			addDoorList.Add(door);
 		}
 
+		public static void UnRegisterDoor(int doorID)
+		{
+			if (m_doors.ContainsKey(doorID))
+			{
+				m_doors.Remove(doorID);
+			}
+		}
+
 		/// <summary>
 		/// This function get the door object by door index
 		/// </summary>
@@ -93,8 +101,13 @@ namespace DOL.GS
 		public static List<IDoor> getDoorByID(int id)
 		{
 			if (m_doors.ContainsKey(id))
+			{
 				return m_doors[id];
-			else return new List<IDoor>();
+			}
+			else
+			{
+				return new List<IDoor>();
+			}
 		}
 	}
 }
