@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameServerScripts", "GameServerScripts\GameServerScripts.csproj", "{136FE76A-A70A-4E52-BCE5-03B587BCB31B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLConfig", "DOLConfig2\DOLConfig.csproj", "{E1131DC5-BA14-4FD3-B717-FA2ACA6E49AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLConfig", "DOLConfig\DOLConfig.csproj", "{E1131DC5-BA14-4FD3-B717-FA2ACA6E49AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
