@@ -56,7 +56,7 @@ namespace DOL.Database.Connection
 		/// </summary>
 		/// <param name="connType">Connection-Type the Database should use</param>
 		/// <param name="connString">Connection-String to indicate the Parameters of the Datasource.
-		///     XML = Directory where the XML-Files sould be stored
+		///     XML = Directory where the XML-Files should be stored
 		///     MYSQL = ADO.NET ConnectionString 
 		///     MSSQL = ADO.NET ConnectionString 
 		///     OLEDB = ADO.NET ConnectionString 
@@ -82,14 +82,6 @@ namespace DOL.Database.Connection
 					{
 					}
 				}
-			}
-			else
-			{
-				// Options of MySQL connection string
-				if (!connString.Contains("Treat Tiny As Boolean"))
-					connString += ";Treat Tiny As Boolean=False";
-
-				this.connString = connString;
 			}
 		}
 
