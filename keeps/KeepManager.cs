@@ -36,18 +36,21 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// list of all keeps
 		/// </summary>
-		private static readonly Hashtable m_keeps = new Hashtable();
+		private static Hashtable m_keeps = new Hashtable();
+
+		public static Hashtable Keeps
+		{
+			get { return m_keeps; }
+		}
+
 		private static readonly List<Battleground> m_battlegrounds = new List<Battleground>();
 
 		public const int NEW_FRONTIERS = 163;
 
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		public static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// load all keep from DB
+		/// load all keeps from the DB
 		/// </summary>
 		/// <returns></returns>
 		public static bool Load()
@@ -75,7 +78,6 @@ namespace DOL.GS.Keeps
                     //in this manner whether the keep is old, new or 'both'. A keep will be 'both' if it is found to
                     //have components of both sets, which is possible.
 
-                    //'town' keeps have no components, and can always be loaded.
                     bool isOld = false;
                     bool isNew = false;
 
