@@ -2709,14 +2709,14 @@ namespace DOL.GS
 				{
 					foreach (Specialization spec in m_specList)
 						if (spec.Name == name)
-						return spec;
+							return spec;
 				}
 				else
 				{
 					name = name.ToLower();
 					foreach (Specialization spec in m_specList)
 						if (spec.Name.ToLower() == name)
-						return spec;
+							return spec;
 				}
 			}
 			return null;
@@ -4667,9 +4667,9 @@ namespace DOL.GS
 						{
 							if (Level % 4 == 0)
 								if (spec.Level >= max_autotrain)
-								return max_autotrain;
-							else
-								Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "PlayerClass.OnLevelUp.Autotrain", spec.Name, max_autotrain));
+									return max_autotrain;
+								else
+									Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "PlayerClass.OnLevelUp.Autotrain", spec.Name, max_autotrain));
 							return 0;
 						}
 					case 2: // return next free points due to AT change on levelup
@@ -4993,7 +4993,7 @@ namespace DOL.GS
 			// Necromancer with summoned pet cannot attack
 			if (ControlledNpcBrain != null)
 				if (ControlledNpcBrain.Body != null)
-				if (ControlledNpcBrain.Body is NecromancerPet)
+					if (ControlledNpcBrain.Body is NecromancerPet)
 			{
 				Out.SendMessage("You cannot enter combat in shade mode!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
@@ -6745,7 +6745,7 @@ namespace DOL.GS
 						|| ServerProperties.Properties.DEATH_MESSAGES_ALL_REALMS)
 				)
 					if (player == this)
-					player.Out.SendMessage(playerMessage, messageType, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(playerMessage, messageType, eChatLoc.CL_SystemWindow);
 				else player.Out.SendMessage(publicMessage, messageType, eChatLoc.CL_SystemWindow);
 			}
 
@@ -7098,6 +7098,18 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Reset all disabled skills to player
+		/// </summary>
+		public virtual void ResetDisabledSkills()
+		{
+			foreach (Skill skl in GetAllDisabledSkills())
+			{
+				Out.SendDisableSkill(skl, 1);
+				m_disabledSkills.Remove(skl);
+			}
+		}
+		
 		/// <summary>
 		/// The next spell
 		/// </summary>
@@ -8746,9 +8758,9 @@ namespace DOL.GS
 				SpecPointsOk = true;
 			}
 
-            //Dinberg, instance change.
-            if (CurrentRegion is BaseInstance)
-                ((BaseInstance)CurrentRegion).OnPlayerEnterInstance(this);
+			//Dinberg, instance change.
+			if (CurrentRegion is BaseInstance)
+				((BaseInstance)CurrentRegion).OnPlayerEnterInstance(this);
 
 			return true;
 		}
@@ -8789,9 +8801,9 @@ namespace DOL.GS
 			if (IsOnHorse)
 				IsOnHorse = false;
 
-            //Dinberg, instance change.
-            if (CurrentRegion is BaseInstance)
-                ((BaseInstance)CurrentRegion).OnPlayerLeaveInstance(this);
+			//Dinberg, instance change.
+			if (CurrentRegion is BaseInstance)
+				((BaseInstance)CurrentRegion).OnPlayerLeaveInstance(this);
 
 			return true;
 		}
@@ -9486,9 +9498,9 @@ namespace DOL.GS
 			{
 				if (m_diving != value)
 					if (value && !CanBreathUnderWater)
-					Diving(waterBreath.Holding);
-				else
-					Diving(waterBreath.Normal);
+						Diving(waterBreath.Holding);
+					else
+						Diving(waterBreath.Normal);
 				m_diving = value;
 			}
 		}
@@ -10435,9 +10447,9 @@ namespace DOL.GS
 				try
 				{
 					log.DebugFormat("Pickup error: {0}  object x{1}, y{2}, z{3}, r{4} - player x{5}, y{6}, z{7}, r{8}",
-											Name,
-											floorObject.X, floorObject.Y, floorObject.Z, floorObject.CurrentRegionID,
-											X, Y, Z, CurrentRegionID);
+					                Name,
+					                floorObject.X, floorObject.Y, floorObject.Z, floorObject.CurrentRegionID,
+					                X, Y, Z, CurrentRegionID);
 				}
 				catch
 				{
@@ -11266,7 +11278,7 @@ namespace DOL.GS
 				{
 					foreach (DBCharacterXMasterLevel mlstep in m_mlsteps)
 						if (mlstep != null)
-						GameServer.Database.SaveObject(mlstep);
+							GameServer.Database.SaveObject(mlstep);
 				}
 
 				if (log.IsInfoEnabled)

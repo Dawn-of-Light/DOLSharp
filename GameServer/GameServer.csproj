@@ -198,6 +198,7 @@
     <Compile Include="commands\GMCommands\object.cs" />
     <Compile Include="commands\GMCommands\path.cs" />
     <Compile Include="commands\GMCommands\Player.cs" />
+    <Compile Include="commands\gmcommands\resetability.cs" />
     <Compile Include="commands\GMCommands\siegeweapon.cs" />
     <Compile Include="commands\GMCommands\speed.cs" />
     <Compile Include="commands\GMCommands\Team.cs" />
