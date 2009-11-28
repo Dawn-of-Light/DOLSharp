@@ -799,6 +799,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Move this object to a GameLocation
+		/// </summary>
+		/// <param name="loc"></param>
+		/// <returns></returns>
+		public virtual bool MoveTo(GameLocation loc)
+		{
+			return MoveTo(loc.RegionID, loc.X, loc.Y, loc.Z, loc.Heading);
+		}
+
+		/// <summary>
 		/// Moves the item from one spot to another spot, possible even
 		/// over region boundaries
 		/// </summary>

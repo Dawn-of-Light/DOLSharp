@@ -425,12 +425,14 @@ namespace DOL.GS
 				regions.Add(data);
 
                 //Dinberg - save the data by ID.
-                if (m_regionData.ContainsKey(data.Id))
-                {
-                    log.Error("Duplicate key in region table - " + data.Id + ", EarlyInit in WorldMgr failed.");
-                }
-                else
-                m_regionData.Add(data.Id, data);
+				if (m_regionData.ContainsKey(data.Id))
+				{
+					log.Error("Duplicate key in region table - " + data.Id + ", EarlyInit in WorldMgr failed.");
+				}
+				else
+				{
+					m_regionData.Add(data.Id, data);
+				}
 			}
 
 			regions.Sort();
@@ -1992,10 +1994,20 @@ namespace DOL.GS
         /// </summary>
         private static Hashtable m_regionData;
 
+		public static Hashtable RegionData
+		{
+			get { return m_regionData; }
+		}
+
         /// <summary>
         /// Stores the zone data parsed from the zones file by RegionID.
         /// </summary>
         private static Dictionary<ushort, List<ZoneData>> m_zonesData;
+
+		public static Dictionary<ushort, List<ZoneData>> ZonesData
+		{
+			get { return m_zonesData; }
+		}
 
 
 		/// <summary>
@@ -2109,8 +2121,14 @@ namespace DOL.GS
                 }
             }
 
-            //But its not over there. We need to put a zone into the instance.
-            List<ZoneData> list = m_zonesData[data.Id];
+            // But its not over there. We need to put a zone into the instance.
+
+			List<ZoneData> list = null;
+
+			if (m_zonesData.ContainsKey(data.Id))
+			{
+				list = m_zonesData[data.Id];
+			}
 
             if (list == null)
             {
