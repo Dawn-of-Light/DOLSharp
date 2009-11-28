@@ -83,6 +83,10 @@ namespace DOL.Database.Connection
 					}
 				}
 			}
+			else
+			{
+				this.connString = connString;
+			}
 		}
 
 		/// <summary>
