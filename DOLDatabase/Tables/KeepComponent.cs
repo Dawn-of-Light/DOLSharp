@@ -36,6 +36,7 @@ namespace DOL.Database
 		private int m_health;
 		private int m_keepID;
 		private int m_keepComponentID;
+		private string m_createInfo;
 
 		/// <summary>
 		/// Create a component of keep (wall, tower,gate, ...)
@@ -51,12 +52,13 @@ namespace DOL.Database
 			m_health = 0;
 			m_keepID = 0;
 			m_keepComponentID = 0;
+			m_createInfo = "";
 		}
 
 		/// <summary>
 		/// Create a component of keep (wall, tower,gate, ...)
 		/// </summary>
-		public DBKeepComponent(int componentID, int componentSkinID, int componentX, int componentY, int componentHead, int componentHeight, int componentHealth, int keepid) : this()
+		public DBKeepComponent(int componentID, int componentSkinID, int componentX, int componentY, int componentHead, int componentHeight, int componentHealth, int keepid, string createInfo) : this()
 		{
 			m_autoSave=false;
 			m_skin = componentSkinID;
@@ -67,6 +69,7 @@ namespace DOL.Database
 			m_health = componentHealth;
 			m_keepID = keepid;
 			m_keepComponentID = componentID;
+			m_createInfo = createInfo;
 		}
 
 		/// <summary>
@@ -202,6 +205,18 @@ namespace DOL.Database
 				m_keepComponentID = value;
 			}
 		}
-		
+
+		[DataElement(AllowDbNull = false, Varchar = 255)]
+		public string CreateInfo
+		{
+			get
+			{
+				return m_createInfo;
+			}
+			set
+			{
+				Dirty = true; m_createInfo = value;
+			}
+		}
 	}
 }

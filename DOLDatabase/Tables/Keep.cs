@@ -44,10 +44,9 @@ namespace DOL.Database
 		private int m_originalRealm;
 		private int m_type;
 		private byte m_baseLevel;
+		private string m_createInfo;
 
-		/// <summary>
-		/// Create a keep row
-		/// </summary>
+
 		public DBKeep()
 		{
 			m_autoSave = false;
@@ -56,6 +55,21 @@ namespace DOL.Database
 			m_midgardDifficultyLevel = 1;
 			m_hiberniaDifficultyLevel = 1;
 			m_type = 0; // Default = Any
+			m_createInfo = "";
+		}
+
+		/// <summary>
+		/// Create a keep row
+		/// </summary>
+		public DBKeep(string createInfo)
+		{
+			m_autoSave = false;
+			m_name = "";
+			m_albionDifficultyLevel = 1;
+			m_midgardDifficultyLevel = 1;
+			m_hiberniaDifficultyLevel = 1;
+			m_type = 0; // Default = Any
+			m_createInfo = createInfo;
 		}
 
 		/// <summary>
@@ -341,6 +355,19 @@ namespace DOL.Database
 			set
 			{
 				Dirty = true; m_baseLevel = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false, Varchar = 255)]
+		public string CreateInfo
+		{
+			get
+			{
+				return m_createInfo;
+			}
+			set
+			{
+				Dirty = true; m_createInfo = value;
 			}
 		}
 	}

@@ -151,6 +151,7 @@ namespace DOL.GS
 		public RegionData RegionData
 		{
 			get { return m_regionData; }
+			protected set { m_regionData = value; }
 		}
 
 		/// <summary>
@@ -300,6 +301,7 @@ namespace DOL.GS
 		public virtual string Name
 		{
 			get { return m_regionData.Name; }
+			protected set { }
 		}
         //Dinberg: Changed this to virtual, so that Instances can take a unique Name, for things like quest instances.
 

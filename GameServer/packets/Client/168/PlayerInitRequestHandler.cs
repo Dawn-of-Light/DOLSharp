@@ -68,9 +68,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
 
-				if (log.IsDebugEnabled)
-					log.DebugFormat("Client {0}({1}) entering world: pid->{2} oid->{3}", player.Client.Account.Name, player.Name, player.Client.SessionID, player.ObjectID);
-
 				player.Out.SendUpdatePoints();
 				player.TargetObject = null;
 				player.LastNPCUpdate = Environment.TickCount; 
