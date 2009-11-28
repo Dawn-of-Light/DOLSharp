@@ -85,6 +85,12 @@ namespace DOL.Database.Connection
 			}
 			else
 			{
+				// Options of MySQL connection string
+				if (!connString.Contains("Treat Tiny As Boolean"))
+				{
+					connString += ";Treat Tiny As Boolean=False";
+				}
+
 				this.connString = connString;
 			}
 		}
