@@ -416,7 +416,7 @@ GMCommands.Jump.Usage.ToXYZRegionID:			/jump to <x> <y> <z> [<RegionID>]
 
 GMCommands.Keep.AddTeleport.StoneAdded:			Teleport Stone added!	
 
-GMCommands.Keep.BaseLevel.YouChangeBaseLev:		You change the base level of the current keep to 		
+GMCommands.Keep.BaseLevel.YouChangeBaseLev:		You change the base level of the current keep to {0}		
 
 GMCommands.Keep.Description:				Various keep creation commands!
 
@@ -428,9 +428,9 @@ GMCommands.Keep.FastCreate.TypeOfKeep:			Type of keep:
 
 GMCommands.Keep.Level.YouChangeKeepLevel:		You change the level of the current keep to {0}.		
 
-GMCommands.Keep.Radius.YouChangeKeepRadius:		You change the radius of the current keep to 		
+GMCommands.Keep.Radius.YouChangeKeepRadius:		You change the radius of the current keep to {0}.		
 
-GMCommands.Keep.Realm.YouChangeKeepRealm:		You change the realm of the current keep to 		
+GMCommands.Keep.Realm.YouChangeKeepRealm:		You change the realm of the current keep to {0}.		
 
 GMCommands.Keep.Remove.KeepUnloaded:			Keep Unloaded!	
 
@@ -438,7 +438,7 @@ GMCommands.Keep.Remove.MustCreateKeepFirst:		You must create a keep first.
 
 GMCommands.Keep.Remove.YouChangeKeepName:		You change the name of the current keep to {0}.		
 
-GMCommands.Keep.Remove.YourNotInAKeepArea:		Your not in a keep area!		
+GMCommands.Keep.Remove.YourNotInAKeepArea:		You're not in a keep area!		
 
 GMCommands.Keep.Save.KeepSavedInDatabase:		Keep saved in database.		
 

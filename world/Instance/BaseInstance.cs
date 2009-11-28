@@ -122,7 +122,7 @@ namespace DOL.GS
 				//If no more players remain, remove and clean up the instance...
 				if (m_destroyWhenEmpty && m_playersInInstance == 0)
 				{
-					log.Warn("Instance now empty, destroying instance " + Description + ", ID: " + ID + ".");
+					log.Info("Instance now empty, destroying instance " + Description + ", ID: " + ID + ".");
 					WorldMgr.RemoveInstance(this);
 				}
 			}
@@ -183,8 +183,6 @@ namespace DOL.GS
         //Increment the amount of players.
             m_playersInInstance++;
 
-            log.Info("A player is now entering " + Name + ".");
-
             //Stop the timer to prevent the region's removal.
 			if (m_autoCloseRegionTimer != null)
 				m_autoCloseRegionTimer.Stop();
@@ -195,12 +193,10 @@ namespace DOL.GS
             //Decrease the amount of players
             m_playersInInstance--;
 
-            log.Debug("A player is now leaving " + Name + ". " + m_playersInInstance + " remain.");
-
             //If no more players remain, remove and clean up the instance...
             if (m_playersInInstance < 1 && DestroyWhenEmpty)
             {
-                log.Warn("Instance now empty, destroying instance " + Description + ", ID: " + ID + ".");
+                log.Info("Instance now empty, destroying instance " + Description + ", ID: " + ID + ".");
                 WorldMgr.RemoveInstance(this);
             }
         }

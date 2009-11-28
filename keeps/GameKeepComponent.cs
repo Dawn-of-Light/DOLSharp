@@ -194,6 +194,9 @@ namespace DOL.GS.Keeps
 		{
 			get { return m_positions; }
 		}
+
+		protected string m_CreateInfo = "";
+
 		#endregion
 
 		public override int RealmPointsValue
@@ -306,21 +309,32 @@ namespace DOL.GS.Keeps
 			this.AddToWorld();
 			FillPositions();
 			this.RepairedHealth = this.MaxHealth;
+			m_CreateInfo = component.CreateInfo;
 			StartHealthRegeneration();
 		}
 
 		public virtual void LoadPositions()
 		{
-            //Dinberg - removing hard-coded bgness.
-            Battleground bg = KeepMgr.GetBattleground(CurrentRegionID);
+			ushort region = CurrentRegionID;
+			if (CurrentRegion is BaseInstance)
+			{
+				region = (CurrentRegion as BaseInstance).Skin;
+			}
+
+            Battleground bg = KeepMgr.GetBattleground(region);
 
 			this.Positions.Clear();
 
 			string query = "`ComponentSkin` = '" + this.Skin + "'";
 			if (Skin != (int)eComponentSkin.Keep && Skin != (int)eComponentSkin.Tower && Skin != (int)eComponentSkin.Gate)
+			{
 				query = query + " AND `ComponentRotation` = '" + this.ComponentHeading + "'";
-            if (bg != null)
-                query = query + " AND `ClassType` = 'DOL.GS.Keeps.GameKeepDoor'"; //Battlegrounds, ignore all but GameKeepDoor
+			}
+			if (bg != null)
+			{
+				// Battlegrounds, ignore all but GameKeepDoor
+				query = query + " AND `ClassType` = 'DOL.GS.Keeps.GameKeepDoor'"; 
+			}
 
 			DBKeepPosition[] DBPositions = (DBKeepPosition[])GameServer.Database.SelectObjects(typeof(DBKeepPosition), query);
 
@@ -384,17 +398,24 @@ namespace DOL.GS.Keeps
 						if (create)
 						{
 							//create the object
-							Assembly asm = Assembly.GetExecutingAssembly();
-							IKeepItem obj = (IKeepItem)asm.CreateInstance(position.ClassType, true);
-							if (obj != null)
-								obj.LoadFromPosition(position, this);
-
-							if (ServerProperties.Properties.ENABLE_DEBUG)
+							try
 							{
-								if (obj is GameLiving)
-									(obj as GameLiving).Name += " is living, component " + obj.Component.ID;
-								else if (obj is GameObject)
-									(obj as GameObject).Name += " is object, component " + obj.Component.ID;
+								Assembly asm = Assembly.GetExecutingAssembly();
+								IKeepItem obj = (IKeepItem)asm.CreateInstance(position.ClassType, true);
+								if (obj != null)
+									obj.LoadFromPosition(position, this);
+
+								if (ServerProperties.Properties.ENABLE_DEBUG)
+								{
+									if (obj is GameLiving)
+										(obj as GameLiving).Name += " is living, component " + obj.Component.ID;
+									else if (obj is GameObject)
+										(obj as GameObject).Name += " is object, component " + obj.Component.ID;
+								}
+							}
+							catch (Exception ex)
+							{
+								log.Error("GameKeepComponent:FillPositions: " + position.ClassType, ex);
 							}
 								
 						}
@@ -479,11 +500,13 @@ namespace DOL.GS.Keeps
 			obj.Y = this.ComponentY;
 			obj.ID = this.ID;
 			obj.Skin = this.Skin;
+			obj.CreateInfo = m_CreateInfo;
 
 			if (New)
 			{
 				GameServer.Database.AddNewObject(obj);
 				InternalID = obj.ObjectId;
+				log.DebugFormat("Added new component for keep ID {0} health {1}", Keep.KeepID, Health);
 			}
 			else
 			{
@@ -583,6 +606,14 @@ namespace DOL.GS.Keeps
 		{
 			StopHealthRegeneration();
 			base.Delete();
+		}
+
+		/// <summary>
+		/// Remove a component and delete it from the database
+		/// </summary>
+		public virtual void Remove()
+		{
+			Delete();
 			DBKeepComponent obj = null;
 			if (this.InternalID != null)
 				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), this.InternalID);

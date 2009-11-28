@@ -440,7 +440,7 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// The Keep Type
+		/// The Keep Type, related to shape for NF keeps, 0 for everything else
 		/// </summary>
 		public eKeepType KeepType
 		{
@@ -542,8 +542,13 @@ namespace DOL.GS.Keeps
 
 			UnloadTimers();
 			GameEventMgr.RemoveHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
-			CurrentRegion.RemoveArea(area);
+			if (area != null)
+			{
+				CurrentRegion.RemoveArea(area);
+			}
+
 			RemoveFromDatabase();
+			KeepMgr.Keeps[KeepID] = null;
 		}
 
 		/// <summary>
@@ -579,6 +584,7 @@ namespace DOL.GS.Keeps
 		public virtual void RemoveFromDatabase()
 		{
 			GameServer.Database.DeleteObject(m_dbkeep);
+			log.Warn("Keep ID " + KeepID + " removed from database!");
 		}
 
 		/// <summary>
@@ -811,7 +817,9 @@ namespace DOL.GS.Keeps
 			{
 				comp.UpdateLevel();
 				foreach (GameClient cln in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+				{
 					cln.Out.SendKeepComponentDetailUpdate(comp);
+				}
 				comp.FillPositions();
 			}
 
