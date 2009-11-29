@@ -194,9 +194,9 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			if (Step == 3)
 			{
 				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtifactID, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
-				string version = text;
+				string version = text + ";;";
 
-				if (versions.ContainsKey(version + ";"))
+				if (versions.ContainsKey(version))
 				{
 					if (GiveItem(scholar, player, ArtifactID, versions[version]))
 					{
@@ -204,7 +204,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 							"and linked now to you,", player.CharacterClass.Name,
 							"Please know that if you lose or destroy this Chestpiece, it will be gone",
 							"from you forever. I hope it will help you succeed in the trials.",
-							"Bring glory to", GlobalConstants.RealmToName(player.Realm));
+							"Bring glory to ", GlobalConstants.RealmToName(player.Realm));
 						scholar.TurnTo(player);
 						scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 						FinishQuest();
@@ -229,6 +229,8 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 						return "Defeat Linos.";
 					case 2:
 						return "Turn in Eirene's Journal in the Hall of Heroes or the Oceanus Haven.";
+					case 3:
+						return "Choose the version of Eirene's Chestpiece you would like to have.";
 					default:
 						return base.Description;
 				}
