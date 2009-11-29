@@ -963,10 +963,14 @@ namespace DOL.GS.Commands
 			else
 				info.Add( " + Loaded: from Database" );
 
-			info.Add( " + Class: " + targetMob.GetType().ToString() );
+			info.Add(" + Class: " + targetMob.GetType().ToString() );
             info.Add(" + Realm: " + GlobalConstants.RealmToName(targetMob.Realm));
-            info.Add( " + Level: " + targetMob.Level );
-			info.Add( " + Brain: " + ( targetMob.Brain == null ? "(null)" : targetMob.Brain.GetType().ToString() ) );
+            info.Add(" + Level: " + targetMob.Level );
+			info.Add(" + Brain: " + ( targetMob.Brain == null ? "(null)" : targetMob.Brain.GetType().ToString() ) );
+			if (targetMob.NPCTemplate != null)
+			{
+				info.Add(" + Templ: " + "[" + targetMob.NPCTemplate.TemplateId + "] " + targetMob.NPCTemplate.Name);
+			}
 
 			IOldAggressiveBrain aggroBrain = targetMob.Brain as IOldAggressiveBrain;
 
@@ -2048,6 +2052,7 @@ namespace DOL.GS.Commands
 			template = new NpcTemplate( targetMob );
 			template.TemplateId = id;
 			template.SaveIntoDatabase();
+			NpcTemplateMgr.AddTemplate(template);
 			DisplayMessage( client, "NPCTemplate saved with ID = " + id + "." );
 		}
 

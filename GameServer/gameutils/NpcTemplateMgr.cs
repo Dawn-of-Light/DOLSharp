@@ -89,6 +89,31 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Reload templates from the database, being careful not to wipe out script loaded templates
+		/// </summary>
+		/// <returns></returns>
+		public static bool Reload()
+		{
+			try
+			{
+				lock (m_mobTemplates.SyncRoot)
+				{
+					DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBNpcTemplate));
+					foreach (DBNpcTemplate dbTemplate in objs)
+					{
+						AddTemplate(new NpcTemplate(dbTemplate));
+					}
+					return true;
+				}
+			}
+			catch (Exception e)
+			{
+				log.Error(e);
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Adds the mob template to collection
 		/// </summary>
 		/// <param name="template">New mob template</param>

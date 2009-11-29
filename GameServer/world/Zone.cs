@@ -165,7 +165,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The description of the Zone eg. "Camelot Hills"
 		/// </summary>
-		private readonly string m_Description;
+		private string m_Description;
 
 		/// <summary>
 		/// The XOffset of this Zone inside the region
@@ -426,6 +426,7 @@ namespace DOL.GS
 		public string Description
 		{
 			get { return m_Description; }
+			set { m_Description = value; }
 		}
 
 		/// <summary>
