@@ -338,6 +338,39 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Adds and starts a weather timer for this region
+		/// </summary>
+		/// <param name="regionID"></param>
+		public static void AddRegion(ushort regionID)
+		{
+			lock (m_weathers)
+			{
+				if (m_weathers.Contains(regionID) == false)
+				{
+					m_weathers.Add(regionID, new WeatherMgr(regionID));
+					(m_weathers[regionID] as WeatherMgr).m_weatherTimer.Change(120000, ServerProperties.Properties.WEATHER_CHECK_INTERVAL);
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Stops and removes the weather timer for this region
+		/// </summary>
+		public static void RemoveRegion(ushort regionID)
+		{
+			lock (m_weathers)
+			{
+				if (m_weathers.Contains(regionID))
+				{
+ 					(m_weathers[regionID] as WeatherMgr).m_weatherTimer.Change(Timeout.Infinite, Timeout.Infinite);
+					m_weathers.Remove(regionID);
+				}
+			}
+		}
+
+
+		/// <summary>
 		/// Stops all weather managers
 		/// </summary>
 		public static void Unload()
