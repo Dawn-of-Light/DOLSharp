@@ -413,8 +413,7 @@ namespace DOL.GS
 		/// <param name="delve"></param>
 		/// <param name="bonusID"></param>
 		/// <param name="levelRequirement"></param>
-		public virtual void DelveMagicalAbility(List<String> delve, ArtifactBonus.ID bonusID, 
-			int levelRequirement)
+		public virtual void DelveMagicalAbility(List<String> delve, ArtifactBonus.ID bonusID, int levelRequirement)
 		{
 			String levelTag = (levelRequirement > 0)
 				? String.Format("[L{0}]: ", levelRequirement)
