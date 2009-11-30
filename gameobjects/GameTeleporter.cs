@@ -179,6 +179,14 @@ namespace DOL.GS
 		/// <param name="destination"></param>
 		protected virtual void OnDestinationPicked(GamePlayer player, Teleport destination)
 		{
+			Region region = WorldMgr.GetRegion((ushort)destination.RegionID);
+
+			if (region == null || region.IsDisabled)
+			{
+				player.Out.SendMessage("This destination is not available.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			OnTeleport(player, destination);
 		}
 
@@ -229,8 +237,7 @@ namespace DOL.GS
 		/// <param name="destination"></param>
 		protected virtual void OnTeleport(GamePlayer player, Teleport destination)
 		{
-			player.MoveTo((ushort)destination.RegionID, destination.X, destination.Y, destination.Z,
-				(ushort)destination.Heading);
+			player.MoveTo((ushort)destination.RegionID, destination.X, destination.Y, destination.Z, (ushort)destination.Heading);
 		}
 	}
 }
