@@ -969,7 +969,7 @@ namespace DOL.GS.Commands
 			info.Add(" + Brain: " + ( targetMob.Brain == null ? "(null)" : targetMob.Brain.GetType().ToString() ) );
 			if (targetMob.NPCTemplate != null)
 			{
-				info.Add(" + Templ: " + "[" + targetMob.NPCTemplate.TemplateId + "] " + targetMob.NPCTemplate.Name);
+				info.Add(" + NPCTemplate: " + "[" + targetMob.NPCTemplate.TemplateId + "] " + targetMob.NPCTemplate.Name);
 			}
 
 			IOldAggressiveBrain aggroBrain = targetMob.Brain as IOldAggressiveBrain;
