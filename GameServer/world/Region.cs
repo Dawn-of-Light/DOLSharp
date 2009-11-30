@@ -268,7 +268,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets whether this region is a dungeon or not
 		/// </summary>
-		public bool IsDungeon
+		public virtual bool IsDungeon
 		{
 			get
 			{
@@ -290,7 +290,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the # of players in the region
 		/// </summary>
-		public int NumPlayers
+		public virtual int NumPlayers
 		{
 			get { return m_numPlrs; }
 		}
@@ -301,7 +301,6 @@ namespace DOL.GS
 		public virtual string Name
 		{
 			get { return m_regionData.Name; }
-			protected set { }
 		}
         //Dinberg: Changed this to virtual, so that Instances can take a unique Name, for things like quest instances.
 
@@ -359,7 +358,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets the region expansion (we use client expansion + 1)
 		/// </summary>
-		public int Expansion
+		public virtual int Expansion
 		{
 			get { return m_regionData.Expansion + 1; }
 		}
@@ -367,7 +366,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets the water level in this region
 		/// </summary>
-		public int WaterLevel
+		public virtual int WaterLevel
 		{
 			get { return m_regionData.WaterLevel; }
 		}
@@ -375,7 +374,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets diving flag for region
 		/// </summary>
-		public bool DivingEnabled
+		public virtual bool DivingEnabled
 		{
 			get { return m_regionData.DivingEnabled; }
 		}
@@ -383,7 +382,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets housing flag for region
 		/// </summary>
-		public bool HousingEnabled
+		public virtual bool HousingEnabled
 		{
 			get { return m_regionData.HousingEnabled; }
 		}
@@ -412,20 +411,20 @@ namespace DOL.GS
 			get { return m_timeManager.CurrentTime; }
 		}
 
-		private bool m_isDisabled = false;
+		protected bool m_isDisabled = false;
 		/// <summary>
 		/// Is this region disabled
 		/// </summary>
-		public bool IsDisabled
+		public virtual bool IsDisabled
 		{
 			get { return m_isDisabled; }
 		}
 
-		private bool m_loadObjects = true;
+		protected bool m_loadObjects = true;
 		/// <summary>
 		/// Will this region load objects
 		/// </summary>
-		public bool LoadObjects
+		public virtual bool LoadObjects
 		{
 			get { return m_loadObjects; }
 		}
@@ -435,7 +434,9 @@ namespace DOL.GS
         /// Added to allow instances; the 'appearance' of the region, the map the GameClient uses.
         /// </summary>
         public virtual ushort Skin
-        { get { return ID; } }
+        { 
+			get { return ID; }
+		}
 
 		#endregion
 
