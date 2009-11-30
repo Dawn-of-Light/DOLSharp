@@ -881,6 +881,10 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		private static void SetBlockEvadeParryChance(GameKeepGuard guard)
 		{
+			guard.BlockChance = 0;
+			guard.EvadeChance = 0;
+			guard.ParryChance = 0;
+
 			if (guard is GuardLord || guard is MissionMaster)
 			{
 				guard.BlockChance = 15;
@@ -889,6 +893,7 @@ namespace DOL.GS.Keeps
 				if (guard.ModelRealm != eRealm.Albion)
 				{
 					guard.EvadeChance = 10;
+					guard.ParryChance = 5;
 				}
 			}
 			else if (guard is GuardStealther)
@@ -897,13 +902,14 @@ namespace DOL.GS.Keeps
 			}
 			else if (guard is GuardFighter)
 			{
+				guard.BlockChance = 10;
+				guard.ParryChance = 10;
+
 				if (guard.ModelRealm != eRealm.Albion)
 				{
 					guard.EvadeChance = 5;
+					guard.ParryChance = 5;
 				}
-
-				guard.BlockChance = 10;
-				guard.ParryChance = 10;
 			}
 			else if (guard is GuardHealer)
 			{
