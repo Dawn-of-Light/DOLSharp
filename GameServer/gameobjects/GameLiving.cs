@@ -1129,6 +1129,17 @@ namespace DOL.GS
 			get { return 0; }
 		}
 
+		/// <summary>
+		/// How much over the XP cap can this living reward.
+		/// 1.0 = none
+		/// 2.0 = twice cap
+		/// etc.
+		/// </summary>
+		public virtual double ExceedXPCapAmount
+		{
+			get { return 1.0; }
+		}
+
 		#region XP array
 
 		/// <summary>
