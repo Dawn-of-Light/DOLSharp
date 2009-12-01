@@ -281,15 +281,29 @@ namespace DOL.GS.Keeps
 
 		public virtual int RealmPointsValue()
 		{
-			if (this is GameKeepTower)
-			{
-				return ServerProperties.Properties.TOWER_RP_BASE;
-			}
-			else
-			{
-				return ServerProperties.Properties.KEEP_RP_BASE;
-			}
+			return GameServer.ServerRules.GetRealmPointsForKeep(this);
 		}
+
+		public virtual int BountyPointsValue()
+		{
+			return GameServer.ServerRules.GetBountyPointsForKeep(this);
+		}
+
+		public virtual long ExperiencePointsValue()
+		{
+			return GameServer.ServerRules.GetExperienceForKeep(this);
+		}
+
+		public virtual double ExceedXPCapAmount()
+		{
+			return GameServer.ServerRules.GetExperienceCapForKeep(this);
+		}
+
+		public virtual long MoneyValue()
+		{
+			return GameServer.ServerRules.GetMoneyValueForKeep(this);
+		}
+
 
 		/// <summary>
 		/// Respawn time for the lord of this keep (milliseconds)
