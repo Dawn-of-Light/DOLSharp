@@ -45,24 +45,81 @@ namespace DOL.GS.Keeps
 				}
 				else
 				{
-					int value = 0;
-
-					if (this.Component.Keep is GameKeep)
-					{
-						value = Math.Max(50, this.Component.Keep.RealmPointsValue() + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.KEEP_RP_MULTIPLIER));
-					}
-					else
-					{
-						value = Math.Max(5, this.Component.Keep.RealmPointsValue() + ((this.Component.Keep.BaseLevel - 50) * ServerProperties.Properties.TOWER_RP_MULTIPLIER));
-					}
-
-					value += ((this.Component.Keep.Level - ServerProperties.Properties.STARTING_KEEP_LEVEL) * ServerProperties.Properties.UPGRADE_MULTIPLIER);
-
-
-					return Math.Max(5, value);
+					return this.Component.Keep.RealmPointsValue();
 				}
 			}
 		}
+
+		public override int BountyPointsValue
+		{
+			get
+			{
+				long duration = (CurrentRegion.Time - m_lastKillTime) / 1000L;
+				if (duration < ServerProperties.Properties.LORD_RP_WORTH_SECONDS)
+				{
+					return 0;
+				}
+
+				if (this.Component != null && this.Component.Keep != null)
+				{
+					return this.Component.Keep.BountyPointsValue();
+				}
+
+				return base.BountyPointsValue;
+			}
+		}
+
+		public override long ExperienceValue
+		{
+			get
+			{
+				long duration = (CurrentRegion.Time - m_lastKillTime) / 1000L;
+				if (duration < ServerProperties.Properties.LORD_RP_WORTH_SECONDS)
+				{
+					return 0;
+				}
+
+				if (this.Component != null && this.Component.Keep != null)
+				{
+					return this.Component.Keep.ExperiencePointsValue();
+				}
+
+				return base.ExperienceValue;
+			}
+		}
+
+		public override double ExceedXPCapAmount
+		{
+			get
+			{
+				if (this.Component != null && this.Component.Keep != null)
+				{
+					return this.Component.Keep.ExceedXPCapAmount();
+				}
+
+				return base.ExceedXPCapAmount;
+			}
+		}
+
+		public override long MoneyValue
+		{
+			get
+			{
+				long duration = (CurrentRegion.Time - m_lastKillTime) / 1000L;
+				if (duration < ServerProperties.Properties.LORD_RP_WORTH_SECONDS)
+				{
+					return 0;
+				}
+
+				if (this.Component != null && this.Component.Keep != null)
+				{
+					return this.Component.Keep.MoneyValue();
+				}
+
+				return base.MoneyValue;
+			}
+		}
+
 
 		public override int AttackRangeDistance
 		{
