@@ -2021,8 +2021,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="skillhandler\FuryAbilityHandler.cs" />
+    <Compile Include="skillhandler\MemoriesOfWar.cs" />
     <Compile Include="skillhandler\MetalGuardAbilityHandler.cs" />
     <Compile Include="skillhandler\RampageAbilityHandler.cs" />
+    <Compile Include="skillhandler\ScarsOfBattle.cs" />
     <Compile Include="skillhandler\TauntingShoutAbilityHandler.cs" />
     <Compile Include="skillhandler\VampiirBoltAbilityHandler.cs" />
     <Compile Include="skillhandler\CriticalShotAbilityHandler.cs">

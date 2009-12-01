@@ -2109,22 +2109,23 @@ namespace DOL.GS
 		public virtual int CalculateMaxHealth(int level, int constitution)
 		{
 			constitution -= 50;
-			if (constitution < 0)
-				constitution *= 2;
+			if (constitution < 0) constitution *= 2;
+			
+			// hp1 : from level
+			// hp2 : from constitution
+			// hp3 : from champions level
+			// hp4 : from artifacts such Spear of Kings charge
 			int hp1 = CharacterClass.BaseHP * level;
 			int hp2 = hp1 * constitution / 10000;
-
-			//Andraste - Vico : Champion Level HP gain
-			double hp3 = 0;
-			if (ChampionLevel >= 1) hp3 = Math.Floor(((double)CharacterClass.BaseHP / 20) * ChampionLevel); // CL's - need correct formula
+			int hp3 = 0;
+			if (ChampionLevel >= 1)
+				hp3 = ServerProperties.Properties.HPS_PER_CHAMPIONLEVEL * ChampionLevel;
 			double hp4 = 20 + hp1 / 50 + hp2 + hp3;
-			if (HasAbility(Abilities.MemoriesOfWar)) hp4 *= 1.1; //10% HP for heavy tanks
-			//ExtraHP : from artifacts, such Spear of Kings charge
-			if (GetModified(eProperty.ExtraHP) > 0) hp4 += Math.Round(hp4 * (double)GetModified(eProperty.ExtraHP) / 100);
+			if (GetModified(eProperty.ExtraHP) > 0)
+				hp4 += Math.Round(hp4 * (double)GetModified(eProperty.ExtraHP) / 100);
 
 			return Math.Max(1, (int)hp4);
 		}
-
 		/// <summary>
 		/// Calculates MaxHealth
 		/// </summary>
