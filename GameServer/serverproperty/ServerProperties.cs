@@ -880,7 +880,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("world", "los_player_check_frequency", "How often are we allowed to check LOS on the same player (seconds)", (ushort)5)]
 		public static ushort LOS_PLAYER_CHECK_FREQUENCY;
-
+		
+		/// <summary>
+		/// HPs gained per champion's level
+		/// </summary>
+		[ServerProperty("world", "hps_per_championlevel", "The amount of extra HPs gained each time you reach a new Champion's Level", 40)]
+		public static int HPS_PER_CHAMPIONLEVEL;
+		
 		/// <summary>
 		/// Account bombing prevention
 		/// </summary>
