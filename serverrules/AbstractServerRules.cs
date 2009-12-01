@@ -773,6 +773,7 @@ namespace DOL.GS.ServerRules
 				long npcExpValue = killedNPC.ExperienceValue;
 				int npcRPValue = killedNPC.RealmPointsValue;
 				int npcBPValue = killedNPC.BountyPointsValue;
+				double npcExceedXPCapAmount = killedNPC.ExceedXPCapAmount;
 
 				//Need to do this before hand so we only do it once - just in case if the player levels!
 				double highestConValue = 0;
@@ -883,6 +884,8 @@ namespace DOL.GS.ServerRules
 
 
 					#endregion
+
+					expCap = (long)(expCap * npcExceedXPCapAmount);
 
 					if (xpReward > expCap)
 						xpReward = expCap;
@@ -1598,6 +1601,66 @@ namespace DOL.GS.ServerRules
 		{
 			PlayerMgr.UpdateStats(lord);
 		}
+
+		/// <summary>
+		/// Experience a keep is worth when captured
+		/// </summary>
+		/// <param name="keep"></param>
+		/// <returns></returns>
+		public virtual long GetExperienceForKeep(AbstractGameKeep keep)
+		{
+			return 0;
+		}
+
+		public virtual double GetExperienceCapForKeep(AbstractGameKeep keep)
+		{
+			return 1.0;
+		}
+
+		/// <summary>
+		/// Realm points a keep is worth when captured
+		/// </summary>
+		/// <param name="keep"></param>
+		/// <returns></returns>
+		public virtual int GetRealmPointsForKeep(AbstractGameKeep keep)
+		{
+			int value = 0;
+
+			if (keep is GameKeep)
+			{
+				value = Math.Max(50, ServerProperties.Properties.KEEP_RP_BASE + ((keep.BaseLevel - 50) * ServerProperties.Properties.KEEP_RP_MULTIPLIER));
+			}
+			else
+			{
+				value = Math.Max(5, ServerProperties.Properties.TOWER_RP_BASE + ((keep.BaseLevel - 50) * ServerProperties.Properties.TOWER_RP_MULTIPLIER));
+			}
+
+			value += ((keep.Level - ServerProperties.Properties.STARTING_KEEP_LEVEL) * ServerProperties.Properties.UPGRADE_MULTIPLIER);
+
+			return Math.Max(5, value);
+		}
+
+		/// <summary>
+		/// Bounty points a keep is worth when captured
+		/// </summary>
+		/// <param name="keep"></param>
+		/// <returns></returns>
+		public virtual int GetBountyPointsForKeep(AbstractGameKeep keep)
+		{
+			return 0;
+		}
+
+
+		/// <summary>
+		/// How much money does this keep reward when captured
+		/// </summary>
+		/// <param name="keep"></param>
+		/// <returns></returns>
+		public virtual long GetMoneyValueForKeep(AbstractGameKeep keep)
+		{
+			return 0;
+		}
+
 
 		/// <summary>
 		/// Is the player allowed to generate news

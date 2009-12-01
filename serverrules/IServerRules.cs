@@ -305,6 +305,44 @@ namespace DOL.GS.ServerRules
 		void ResetKeep(GuardLord lord, GameObject killer);
 
 		/// <summary>
+		/// Experience a keep is worth when captured
+		/// </summary>
+		/// <param name="keep"></param>
+		/// <returns></returns>
+		long GetExperienceForKeep(AbstractGameKeep keep);
+
+
+		/// <summary>
+		/// What's the max over cap a keep can reward XP.
+		/// 1.0 = none
+		/// 2.0 = double
+		/// etc
+		/// </summary>
+		/// <returns></returns>
+		double GetExperienceCapForKeep(AbstractGameKeep keep);
+
+		/// <summary>
+		/// Realm points a keep is worth when captured
+		/// </summary>
+		/// <param name="keep"></param>
+		/// <returns></returns>
+		int GetRealmPointsForKeep(AbstractGameKeep keep);
+
+		/// <summary>
+		/// Bounty points a keep is worth when captured
+		/// </summary>
+		/// <param name="keep"></param>
+		/// <returns></returns>
+		int GetBountyPointsForKeep(AbstractGameKeep keep);
+
+		/// <summary>
+		/// How much money does this keep reward when captured
+		/// </summary>
+		/// <param name="keep"></param>
+		/// <returns></returns>
+		long GetMoneyValueForKeep(AbstractGameKeep keep);
+
+		/// <summary>
 		/// Is the player allowed to generate news
 		/// </summary>
 		/// <param name="type">the type of news</param>

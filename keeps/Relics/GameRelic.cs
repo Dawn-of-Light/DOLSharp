@@ -214,8 +214,8 @@ namespace DOL.GS
 				if (IsMounted)
 				{
 					m_currentRelicPad.RemoveRelic(this);
+					ReturnRelicPad = m_currentRelicPad;
 					m_currentRelicPad = null;
-					ReturnRelicPad = CurrentRelicPad;
 				}
 
 				RemoveFromWorld();
@@ -277,8 +277,15 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual int ReturnRelicTick(RegionTimer timer)
 		{
-			log.Info("Relic " + this.Name + " is lost and returns to " + ReturnRelicPad.ToString());
-			ReturnRelicPad.MountRelic(this);
+			if (ReturnRelicPad != null)
+			{
+				log.Info("Relic " + this.Name + " is lost and returns to " + ReturnRelicPad.ToString());
+				ReturnRelicPad.MountRelic(this);
+			}
+			else
+			{
+				log.Info("Relic " + this.Name + " is lost and ReturnRelicPad is null!");
+			}
 			m_returnRelicTimer.Stop();
 			m_returnRelicTimer=null;
 			return 0;
