@@ -152,6 +152,9 @@ namespace DOL.GS.Keeps
 
 					keeplog.NumEnemies = GetEnemyCountInArea();
 					keeplog.RPReward = RealmPointsValue;
+					keeplog.BPReward = BountyPointsValue;
+					keeplog.XPReward = ExperienceValue;
+					keeplog.MoneyReward = MoneyValue;
 
 					if (Component.Keep.StartCombatTick > 0)
 						keeplog.CombatTime = (int)((Component.Keep.CurrentRegion.Time - Component.Keep.StartCombatTick) / 1000 / 60);

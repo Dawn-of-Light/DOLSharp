@@ -44,10 +44,29 @@ namespace DOL.Events
 		/// </summary>
 		private static readonly Dictionary<object, DOLEventHandlerCollection> GameObjectEventCollections;
 
+		public static int NumObjectHandlers
+		{
+			get
+			{
+				int numHandlers = 0;
+				foreach (DOLEventHandlerCollection handler in GameObjectEventCollections.Values)
+				{
+					numHandlers += handler.Count;
+				}
+
+				return numHandlers;
+			}
+		}
+
 		/// <summary>
 		/// Holds a list of all global eventhandlers
 		/// </summary>
 		private static readonly DOLEventHandlerCollection GlobalHandlerCollection;
+
+		public static int NumGlobalHandlers
+		{
+			get { return GlobalHandlerCollection.Count; }
+		}
 
 		/// <summary>
 		/// A lock used to access the event collections of livings

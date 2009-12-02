@@ -143,6 +143,9 @@ namespace DOL.GS.GameEvents
 				ThreadPool.GetMinThreads(out poolMin, out iocpMin);
 				ThreadPool.GetMaxThreads(out poolMax, out iocpMax);
 
+				int globalHandlers = GameEventMgr.NumGlobalHandlers;
+				int objectHandlers = GameEventMgr.NumObjectHandlers;
+
 				if (log.IsInfoEnabled)
 				{
 					StringBuilder stats = new StringBuilder(256)
@@ -153,7 +156,8 @@ namespace DOL.GS.GameEvents
 						.Append("  In=").Append(inPckRate).Append( "pck/s (" ).Append(Statistics.PacketsIn/1000).Append( "K)" )
 						.Append("  Out=").Append(outPckRate).Append( "pck/s (" ).Append(Statistics.PacketsOut/1000).Append( "K)" )
 						.AppendFormat("  Pool={0}/{1}({2})", poolCurrent, poolMax, poolMin)
-						.AppendFormat("  IOCP={0}/{1}({2})", iocpCurrent, iocpMax, iocpMin);
+						.AppendFormat("  IOCP={0}/{1}({2})", iocpCurrent, iocpMax, iocpMin)
+						.AppendFormat("  GH/OH={0}/{1}", globalHandlers, objectHandlers);
 
 					lock (m_timerStatsByMgr.SyncRoot)
 					{

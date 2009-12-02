@@ -2170,32 +2170,22 @@ namespace DOL.GS
         /// <param name="instance"></param>
         public static void RemoveInstance(BaseInstance instance)
         {
+			//Remove the region
+			lock (m_regions.SyncRoot)
+			{
+				m_regions.Remove(instance.ID);
+			}
+
+			//Remove zones
+			lock (m_zones.SyncRoot)
+			{
+				foreach (Zone zn in instance.Zones)
+				{
+					m_zones.Remove(zn.ID);
+				}
+			}
+
 			instance.OnCollapse();
-
-			//Delete objects
-            foreach (GameObject obj in instance.Objects)
-            {
-                if (obj == null) //Odd error, dont ask!
-                    continue;
-                else
-                {
-                    obj.RemoveFromWorld();
-                    obj.Delete();
-                }
-            }
-
-            //Remove the region
-            lock (m_regions.SyncRoot)
-                m_regions.Remove(instance.ID);
-
-            //Remove zones
-            lock (m_zones.SyncRoot)
-            {
-                foreach (Zone zn in instance.Zones)
-                {
-                    m_zones.Remove(zn.ID);
-                }
-            }
 
             //Destroy the region once and for all.
             instance = null;
