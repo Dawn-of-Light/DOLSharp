@@ -47,6 +47,11 @@ namespace DOL.Events
 		/// </summary>
 		private readonly Dictionary<DOLEvent, WeakMulticastDelegate> _events;
 
+		public int Count
+		{
+			get { return _events.Count; }
+		}
+
 		/// <summary>
 		/// Reader/writer lock for synchronizing access to the event handler map
 		/// </summary>

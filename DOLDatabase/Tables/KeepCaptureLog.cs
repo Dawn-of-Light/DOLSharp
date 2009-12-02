@@ -12,6 +12,9 @@ namespace DOL.Database
 		string m_keepType;
 		int m_numEnemies;
 		int m_rpReward;
+		int m_bpReward;
+		long m_xpReward;
+		long m_moneyReward;
 		int m_combatTime;
 		string m_capturedBy;
 		string m_rpGainerList = "";
@@ -103,6 +106,39 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_rpReward = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int BPReward
+		{
+			get { return m_bpReward; }
+			set
+			{
+				Dirty = true;
+				m_bpReward = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public long XPReward
+		{
+			get { return m_xpReward; }
+			set
+			{
+				Dirty = true;
+				m_xpReward = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public long MoneyReward
+		{
+			get { return m_moneyReward; }
+			set
+			{
+				Dirty = true;
+				m_moneyReward = value;
 			}
 		}
 
