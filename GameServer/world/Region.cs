@@ -64,7 +64,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds all objects inside this region. Their index = their id!
 		/// </summary>
-		private GameObject[] m_objects;
+		protected GameObject[] m_objects;
 
 		/// <summary>
 		/// Object to lock when changing objects in the array
@@ -74,7 +74,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds a counter with the absolute count of all objects that are actually in this region
 		/// </summary>
-		private int m_objectsInRegion;
+		protected int m_objectsInRegion;
 
 		/// <summary>
 		/// This array holds a bitarray

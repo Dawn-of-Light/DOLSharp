@@ -86,10 +86,19 @@ namespace DOL.GS.Commands
 
 			if (cr.Errors.HasErrors)
 			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.Code.ErrorCompiling"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				if (client.Player != null)
+				{
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.Code.ErrorCompiling"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 
-				foreach (CompilerError err in cr.Errors)
-					client.Out.SendMessage(err.ErrorText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					foreach (CompilerError err in cr.Errors)
+						client.Out.SendMessage(err.ErrorText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+				else
+				{
+					log.Debug("Error compiling code.");
+				}
+
+
 				return;
 			}
 
@@ -99,13 +108,29 @@ namespace DOL.GS.Commands
 			try
 			{
 				methodinf.Invoke(null, new object[] { client.Player == null ? null : client.Player.TargetObject, client.Player });
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.Code.CodeExecuted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				if (client.Player != null)
+				{
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.Code.CodeExecuted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					log.Debug("Code Executed.");
+				}
+
 			}
 			catch (Exception ex)
 			{
-				string[] errors = ex.ToString().Split('\n');
-				foreach (string error in errors)
-					client.Out.SendMessage(error, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				if (client.Player != null)
+				{
+					string[] errors = ex.ToString().Split('\n');
+					foreach (string error in errors)
+						client.Out.SendMessage(error, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+				else
+				{
+					log.Debug("Error during execution.");
+				}
 			}
 		}
 

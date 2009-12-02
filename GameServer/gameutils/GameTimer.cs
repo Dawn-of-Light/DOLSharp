@@ -1026,8 +1026,12 @@ namespace DOL.GS
 								//We can not increase forever if we get out of
 								//sync. At some point we have to print out a warning
 								//and catch up some time!
-								if (log.IsWarnEnabled)
-									log.Warn(Name + " out of sync! 1000ms lost! " + timeBalance.ToString());
+								if (log.IsWarnEnabled && timeBalance < -2000)
+								{
+									// Again, too much warning spam is meaningless.  Will warn if time sync is more than the typical 1 to 2 seconds
+									// -tolakram
+									log.Warn(Name + " out of sync, over 2000ms lost! " + timeBalance.ToString());
+								}
 								timeBalance += 1000;
 							}
 							workStart = workEnd;
