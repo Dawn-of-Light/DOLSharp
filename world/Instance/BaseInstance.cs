@@ -232,6 +232,36 @@ namespace DOL.GS
         /// </summary>
         public virtual void OnCollapse()
         {
+			if (m_autoCloseRegionTimer != null)
+			{
+				m_autoCloseRegionTimer.Stop();
+				m_autoCloseRegionTimer = null;
+			}
+
+			if (m_delayCloseRegionTimer != null)
+			{
+				m_delayCloseRegionTimer.Stop();
+				m_delayCloseRegionTimer = null;
+			}
+
+			//Delete objects
+			foreach (GameObject obj in Objects)
+			{
+				if (obj != null)
+				{
+					obj.RemoveFromWorld();
+					obj.Delete();
+				}
+			}
+
+			m_Zones.Clear();
+			m_Areas.Clear();
+			m_graveStones.Clear();
+		}
+
+		~BaseInstance()
+		{
+			log.Debug("BaseInstance destructor called");
 		}
 
         private AutoCloseRegionTimer m_autoCloseRegionTimer;
