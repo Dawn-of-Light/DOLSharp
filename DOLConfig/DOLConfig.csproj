@@ -85,6 +85,10 @@
       <DependentUpon>DOLConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="DOLConfigParser.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ServerProperties.cs" />
     <Compile Include="ExtraPropertiesEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,15 +99,12 @@
     <Compile Include="AssemblyInfo.cs" />
     <EmbeddedResource Include="DOLConfig.resx">
       <DependentUpon>DOLConfig.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ExtraPropertiesEditor.resx">
       <DependentUpon>ExtraPropertiesEditor.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="RegExTextBox.resx">
-      <DependentUpon>RegExTextBox.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <Compile Include="RegExTextBox.cs">
       <SubType>Component</SubType>
