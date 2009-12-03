@@ -29,14 +29,12 @@ namespace DOLConfig
 {
 	public partial class DolConfig : Form
 	{
-		static List<ServerProperty> spList = new List<ServerProperty>();
-		static List<ServerPropertyCategory> scList = new List<ServerPropertyCategory>();
+		ServerProperty[] sp;
+		ServerPropertyCategory[] sc;
 
 		private void LoadServerProperties()
 		{
-			// open data connection
-			ServerProperty[] sp;
-			ServerPropertyCategory[] sc;
+			// open data connection and grab datas
 			try
 			{
 				DataConnection dc = new DataConnection(currentConfig.DBType, currentConfig.DBConnectionString);
@@ -50,59 +48,64 @@ namespace DOLConfig
 				return;
 			}
 			
-			// bufferisation of the datas
-			spList.Clear();
-			scList.Clear();
-			foreach(var current in sp)
-				spList.Add(current);
-			foreach(var current in sc)
-				scList.Add(current);
+			// creation of the SP map
+			CreateSPMap(null, tv_spShow.Nodes);
 			
-			// creation of the nodemap
-			foreach(var current in scList)
-			{
-				if (string.IsNullOrEmpty(current.ParentCategory) && !string.IsNullOrEmpty(current.BaseCategory))
-					CreateMap(tv_spShow.Nodes, current.BaseCategory, current.ObjectId);
-			}
-			
-			// filling the nodemap
-			FillMap();
+			// adding SP Without
 			
 			// how many SP we have ? 1.6millions ? :D
-			toolstrip_status_label.Text ="Loaded: " + spList.Count() + " server properties."; //result.Count() + " properties on " + (from i in sp select i).Count() + " total.";
-		}
-
-		private void CreateMap(TreeNodeCollection nodes, string parent, string id)
-		{
-			// create root node
-			foreach (var current in scList)
-			{
-				if (current.ParentCategory == parent && current.ObjectId != id)
-				{
-					nodes.Add(current.BaseCategory);
-					nodes[nodes.Count - 1].ForeColor = Color.Green;
-					CreateMap(nodes, current.ParentCategory, current.ObjectId);
-				}
-			}
+			toolstrip_status_label.Text ="Loaded: " + sp.Count() + " server properties.";
 		}
 		
-		private void FillMap()
+		/// <summary>
+		/// convert serverproperty / serverproperty_category table to tree view
+		/// </summary>
+		/// <param name="category"></param>
+		/// <param name="tn"></param>
+		private void CreateSPMap(string category, TreeNodeCollection tn)
 		{
-			// attach sps to root node
-			foreach (var current in spList)
+			// serverproperty_category
+			foreach (var current in sc)
 			{
-				if (string.IsNullOrEmpty(current.Category))
+				if (current.ParentCategory == category)
 				{
-					tv_spShow.Nodes.Add(current.Key);
-					tv_spShow.Nodes[tv_spShow.Nodes.Count - 1].ForeColor = Color.Blue;
+					tn.Add(current.DisplayName);
+					tn[tn.Count -1].ForeColor = Color.Green;
+					CreateSPMap(current.BaseCategory,tn[tn.Count-1].Nodes);
 				}
 			}
+			
+			// serverproperty
+			List<string> resultSet;
+			if (string.IsNullOrEmpty(category))
+			{
+				resultSet = (from i in sp
+					where string.IsNullOrEmpty(i.Category)
+					select i.Key).ToList();
+			}
+			else
+			{
+				resultSet = (from i in sp
+					where i.Category == category
+					select i.Key).ToList();
+			}
+			
+			foreach (var current in resultSet)
+			{
+				tn.Add(current);
+				tn[tn.Count-1].ForeColor = Color.Blue;
+			}
+			
 		}
 		
+		/// <summary>
+		/// Display the selected property
+		/// </summary>
+		/// <param name="spkey"></param>
 		private void SelectProperty(string spkey)
 		{
 			// find the SP
-			var target = (from i in spList where i.Key == spkey select i).Single();
+			var target = (from i in sp where i.Key == spkey select i).Single();
 			lbl_spName.Text = target.Key.ToUpper();
 			tb_spDesc.Text = target.Description;
 			tb_spDefaultValue.Text = target.DefaultValue;
@@ -119,6 +122,7 @@ namespace DOLConfig
 		{
 			set_default_values_button.Enabled = true;
 			save_config_button.Enabled = true;
+			tv_spShow.Nodes.Clear();
 			
 			if (sp_tab.Enabled && (sender as TabControl).SelectedTab == sp_tab)
 			{
@@ -135,7 +139,7 @@ namespace DOLConfig
 		/// <param name="e"></param>
 		void Tv_spShowAfterSelect(object sender, TreeViewEventArgs e)
 		{
-			if ((sender as TreeView).SelectedNode.ForeColor == Color.Blue)
+			if ((sender as TreeView).SelectedNode.ForeColor != Color.Green)
 				SelectProperty( (sender as TreeView).SelectedNode.Text);
 		}
 		#endregion
