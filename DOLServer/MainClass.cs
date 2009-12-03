@@ -150,12 +150,9 @@ namespace DOL.DOLServer
 		[STAThread]
 		private static void Main(string[] args)
 		{
-		    //VaNaTiC->
-			//Append the lib path to the search path for assemblies!
-			#warning VaNaTiC: redirected only to ONE path, further notice is needed!
-			AppDomain.CurrentDomain.AppendPrivatePath("."+Path.DirectorySeparatorChar+"lib");
-			//AppDomain.CurrentDomain.SetupInformation.PrivateBinPath = "."+Path.DirectorySeparatorChar+"lib";
-			//VaNaTiC<-
+			// Graveen: the lib path append is now specified in the .config file.
+			//AppDomain.CurrentDomain.AppendPrivatePath("."+Path.DirectorySeparatorChar+"lib");
+
 			Thread.CurrentThread.Name = "MAIN";
 				
 			RegisterActions();

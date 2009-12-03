@@ -82,7 +82,11 @@ namespace DOLConfig
         /// <returns></returns>
         public static DataSet loadExtraOptions()
         {
-            string base_file = Application.StartupPath + Path.DirectorySeparatorChar + "dolconfig_extra_properties.xml";
+            string base_file = Application.StartupPath + Path.DirectorySeparatorChar +
+            	"lib" + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar +
+            	"serverconfig_extraproperties" +
+            	".xml";
+            
             string config_file = getCurrentConfigFile();
 
             if (!File.Exists(config_file)) throw new FileNotFoundException();
