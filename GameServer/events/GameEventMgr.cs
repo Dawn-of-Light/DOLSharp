@@ -42,14 +42,14 @@ namespace DOL.Events
 		/// <summary>
 		/// Holds a list of event handler collections for single gameobjects
 		/// </summary>
-		private static readonly Dictionary<object, DOLEventHandlerCollection> GameObjectEventCollections;
+		private static readonly Dictionary<object, DOLEventHandlerCollection> m_gameObjectEventCollections;
 
 		public static int NumObjectHandlers
 		{
 			get
 			{
 				int numHandlers = 0;
-				foreach (DOLEventHandlerCollection handler in GameObjectEventCollections.Values)
+				foreach (DOLEventHandlerCollection handler in m_gameObjectEventCollections.Values)
 				{
 					numHandlers += handler.Count;
 				}
@@ -61,11 +61,11 @@ namespace DOL.Events
 		/// <summary>
 		/// Holds a list of all global eventhandlers
 		/// </summary>
-		private static readonly DOLEventHandlerCollection GlobalHandlerCollection;
+		private static readonly DOLEventHandlerCollection m_globalHandlerCollection;
 
 		public static int NumGlobalHandlers
 		{
-			get { return GlobalHandlerCollection.Count; }
+			get { return m_globalHandlerCollection.Count; }
 		}
 
 		/// <summary>
@@ -76,8 +76,8 @@ namespace DOL.Events
 		static GameEventMgr()
 		{
 			Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-			GameObjectEventCollections = new Dictionary<object, DOLEventHandlerCollection>();
-			GlobalHandlerCollection = new DOLEventHandlerCollection();
+			m_gameObjectEventCollections = new Dictionary<object, DOLEventHandlerCollection>();
+			m_globalHandlerCollection = new DOLEventHandlerCollection();
 		}
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace DOL.Events
 					{
 						try
 						{
-							GlobalHandlerCollection.AddHandler(e, (DOLEventHandler) Delegate.CreateDelegate(typeof(DOLEventHandler), mInfo));
+							m_globalHandlerCollection.AddHandler(e, (DOLEventHandler) Delegate.CreateDelegate(typeof(DOLEventHandler), mInfo));
 						}
 						catch(Exception ex)
 						{
@@ -169,11 +169,11 @@ namespace DOL.Events
 
 			if(unique)
 			{
-				GlobalHandlerCollection.AddHandlerUnique(e, del);
+				m_globalHandlerCollection.AddHandlerUnique(e, del);
 			}
 			else
 			{
-				GlobalHandlerCollection.AddHandler(e, del);
+				m_globalHandlerCollection.AddHandler(e, del);
 			}
 		}
 
@@ -235,7 +235,7 @@ namespace DOL.Events
 				{
 					DOLEventHandlerCollection col;
 
-					if(!GameObjectEventCollections.TryGetValue(obj, out col))
+					if(!m_gameObjectEventCollections.TryGetValue(obj, out col))
 					{
 						col = new DOLEventHandlerCollection();
 
@@ -243,7 +243,7 @@ namespace DOL.Events
 						{
 							try
 							{
-								GameObjectEventCollections.Add(obj, col);
+								m_gameObjectEventCollections.Add(obj, col);
 							}
 							finally
 							{
@@ -283,7 +283,7 @@ namespace DOL.Events
 			if(del == null)
 				throw new ArgumentNullException("del", "No event handler given!");
 
-			GlobalHandlerCollection.RemoveHandler(e, del);
+			m_globalHandlerCollection.RemoveHandler(e, del);
 		}
 
 		/// <summary>
@@ -308,15 +308,18 @@ namespace DOL.Events
 
 			DOLEventHandlerCollection col = null;
 
-			if(Lock.TryEnterReadLock(LOCK_TIMEOUT))
+			if(Lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
 				try
 				{
-					GameObjectEventCollections.TryGetValue(obj, out col);
+					if (m_gameObjectEventCollections.TryGetValue(obj, out col))
+					{
+						m_gameObjectEventCollections.Remove(obj);
+					}
 				}
 				finally
 				{
-					Lock.ExitReadLock();
+					Lock.ExitWriteLock();
 				}
 			}
 
@@ -337,7 +340,7 @@ namespace DOL.Events
 				{
 					try
 					{
-						GameObjectEventCollections.Clear();
+						m_gameObjectEventCollections.Clear();
 					}
 					finally
 					{
@@ -346,7 +349,7 @@ namespace DOL.Events
 				}
 			}
 
-			GlobalHandlerCollection.RemoveAllHandlers();
+			m_globalHandlerCollection.RemoveAllHandlers();
 		}
 
 		/// <summary>
@@ -407,7 +410,7 @@ namespace DOL.Events
 				{
 					try
 					{
-						GameObjectEventCollections.TryGetValue(sender, out col);
+						m_gameObjectEventCollections.TryGetValue(sender, out col);
 					}
 					finally
 					{
@@ -420,7 +423,7 @@ namespace DOL.Events
 			}
 
 			// notify globally-bound handler
-			GlobalHandlerCollection.Notify(e, sender, eArgs);
+			m_globalHandlerCollection.Notify(e, sender, eArgs);
 		}
 	}
 }
