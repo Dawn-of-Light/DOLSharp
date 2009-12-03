@@ -29,47 +29,47 @@
         private void InitializeComponent()
         {
         	this.components = new System.ComponentModel.Container();
-        	System.Windows.Forms.GroupBox groupBox1;
-        	System.Windows.Forms.Label label3;
-        	System.Windows.Forms.Label label2;
-        	System.Windows.Forms.Label label1;
-        	System.Windows.Forms.GroupBox groupBox2;
-        	System.Windows.Forms.Label label8;
-        	System.Windows.Forms.Label label7;
-        	System.Windows.Forms.Label label6;
-        	System.Windows.Forms.Label label5;
-        	System.Windows.Forms.Label label4;
-        	System.Windows.Forms.GroupBox groupBox4;
-        	System.Windows.Forms.Label label18;
-        	System.Windows.Forms.Label label19;
-        	System.Windows.Forms.Label label20;
-        	System.Windows.Forms.Label label21;
-        	System.Windows.Forms.Label label22;
-        	System.Windows.Forms.GroupBox groupBox5;
-        	System.Windows.Forms.Label label23;
-        	System.Windows.Forms.Label label24;
-        	System.Windows.Forms.Label label25;
         	System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DolConfig));
+        	this.groupBox1 = new System.Windows.Forms.GroupBox();
         	this.auto_account_creation_checkbox = new System.Windows.Forms.CheckBox();
         	this.game_type_selectbox = new System.Windows.Forms.ComboBox();
         	this.short_server_name_textbox = new System.Windows.Forms.TextBox();
+        	this.label3 = new System.Windows.Forms.Label();
+        	this.label2 = new System.Windows.Forms.Label();
         	this.full_server_name_textbox = new System.Windows.Forms.TextBox();
+        	this.label1 = new System.Windows.Forms.Label();
+        	this.groupBox2 = new System.Windows.Forms.GroupBox();
         	this.region_port_textbox = new RegExControls.RegExTextBox();
         	this.region_ip_textbox = new RegExControls.RegExTextBox();
         	this.udp_port_textbox = new RegExControls.RegExTextBox();
         	this.port_textbox = new RegExControls.RegExTextBox();
         	this.ip_textbox = new RegExControls.RegExTextBox();
+        	this.label8 = new System.Windows.Forms.Label();
+        	this.label7 = new System.Windows.Forms.Label();
+        	this.label6 = new System.Windows.Forms.Label();
+        	this.label5 = new System.Windows.Forms.Label();
         	this.detect_region_ip_checkbox = new System.Windows.Forms.CheckBox();
+        	this.label4 = new System.Windows.Forms.Label();
+        	this.groupBox4 = new System.Windows.Forms.GroupBox();
         	this.regExTextBox1 = new RegExControls.RegExTextBox();
         	this.regExTextBox2 = new RegExControls.RegExTextBox();
         	this.regExTextBox3 = new RegExControls.RegExTextBox();
         	this.regExTextBox4 = new RegExControls.RegExTextBox();
         	this.regExTextBox5 = new RegExControls.RegExTextBox();
+        	this.label18 = new System.Windows.Forms.Label();
+        	this.label19 = new System.Windows.Forms.Label();
+        	this.label20 = new System.Windows.Forms.Label();
+        	this.label21 = new System.Windows.Forms.Label();
         	this.checkBox1 = new System.Windows.Forms.CheckBox();
+        	this.label22 = new System.Windows.Forms.Label();
+        	this.groupBox5 = new System.Windows.Forms.GroupBox();
         	this.checkBox2 = new System.Windows.Forms.CheckBox();
         	this.comboBox1 = new System.Windows.Forms.ComboBox();
         	this.textBox1 = new System.Windows.Forms.TextBox();
+        	this.label23 = new System.Windows.Forms.Label();
+        	this.label24 = new System.Windows.Forms.Label();
         	this.textBox2 = new System.Windows.Forms.TextBox();
+        	this.label25 = new System.Windows.Forms.Label();
         	this.tabControl1 = new System.Windows.Forms.TabControl();
         	this.database_tab = new System.Windows.Forms.TabPage();
         	this.general_tab = new System.Windows.Forms.TabPage();
@@ -99,13 +99,6 @@
         	this.label12 = new System.Windows.Forms.Label();
         	this.label11 = new System.Windows.Forms.Label();
         	this.label10 = new System.Windows.Forms.Label();
-        	this.sp_tab = new System.Windows.Forms.TabPage();
-        	this.cb_spType = new System.Windows.Forms.ComboBox();
-        	this.label37 = new System.Windows.Forms.Label();
-        	this.tb_spValue = new System.Windows.Forms.TextBox();
-        	this.label38 = new System.Windows.Forms.Label();
-        	this.lbl_spName = new System.Windows.Forms.Label();
-        	this.tv_spShow = new System.Windows.Forms.TreeView();
         	this.tab_extra = new System.Windows.Forms.TabPage();
         	this.edit_property_button = new System.Windows.Forms.Button();
         	this.delete_property_button = new System.Windows.Forms.Button();
@@ -115,6 +108,15 @@
         	this.value = new System.Windows.Forms.DataGridViewTextBoxColumn();
         	this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
         	this.type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+        	this.sp_tab = new System.Windows.Forms.TabPage();
+        	this.tb_spDefaultValue = new System.Windows.Forms.TextBox();
+        	this.label39 = new System.Windows.Forms.Label();
+        	this.tb_spDesc = new System.Windows.Forms.TextBox();
+        	this.bu_spChange = new System.Windows.Forms.Button();
+        	this.tb_spCurrentValue = new System.Windows.Forms.TextBox();
+        	this.label38 = new System.Windows.Forms.Label();
+        	this.lbl_spName = new System.Windows.Forms.Label();
+        	this.tv_spShow = new System.Windows.Forms.TreeView();
         	this.statusStrip1 = new System.Windows.Forms.StatusStrip();
         	this.toolstrip_status_label = new System.Windows.Forms.ToolStripStatusLabel();
         	this.xml_database_path_select_dialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -160,41 +162,19 @@
         	this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
         	this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
         	this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        	this.bu_spChange = new System.Windows.Forms.Button();
-        	this.tb_spDesc = new System.Windows.Forms.TextBox();
-        	groupBox1 = new System.Windows.Forms.GroupBox();
-        	label3 = new System.Windows.Forms.Label();
-        	label2 = new System.Windows.Forms.Label();
-        	label1 = new System.Windows.Forms.Label();
-        	groupBox2 = new System.Windows.Forms.GroupBox();
-        	label8 = new System.Windows.Forms.Label();
-        	label7 = new System.Windows.Forms.Label();
-        	label6 = new System.Windows.Forms.Label();
-        	label5 = new System.Windows.Forms.Label();
-        	label4 = new System.Windows.Forms.Label();
-        	groupBox4 = new System.Windows.Forms.GroupBox();
-        	label18 = new System.Windows.Forms.Label();
-        	label19 = new System.Windows.Forms.Label();
-        	label20 = new System.Windows.Forms.Label();
-        	label21 = new System.Windows.Forms.Label();
-        	label22 = new System.Windows.Forms.Label();
-        	groupBox5 = new System.Windows.Forms.GroupBox();
-        	label23 = new System.Windows.Forms.Label();
-        	label24 = new System.Windows.Forms.Label();
-        	label25 = new System.Windows.Forms.Label();
-        	groupBox1.SuspendLayout();
-        	groupBox2.SuspendLayout();
-        	groupBox4.SuspendLayout();
-        	groupBox5.SuspendLayout();
+        	this.groupBox1.SuspendLayout();
+        	this.groupBox2.SuspendLayout();
+        	this.groupBox4.SuspendLayout();
+        	this.groupBox5.SuspendLayout();
         	this.tabControl1.SuspendLayout();
         	this.database_tab.SuspendLayout();
         	this.general_tab.SuspendLayout();
         	this.groupBox3.SuspendLayout();
         	this.xml_groupbox.SuspendLayout();
         	this.mysql_groupbox.SuspendLayout();
-        	this.sp_tab.SuspendLayout();
         	this.tab_extra.SuspendLayout();
         	((System.ComponentModel.ISupportInitialize)(this.extra_options_datagrid)).BeginInit();
+        	this.sp_tab.SuspendLayout();
         	this.statusStrip1.SuspendLayout();
         	((System.ComponentModel.ISupportInitialize)(this.wrong_data_error_handler)).BeginInit();
         	this.tabPage1.SuspendLayout();
@@ -208,22 +188,22 @@
         	// 
         	// groupBox1
         	// 
-        	groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+        	this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
         	        	        	| System.Windows.Forms.AnchorStyles.Right)));
-        	groupBox1.Controls.Add(this.auto_account_creation_checkbox);
-        	groupBox1.Controls.Add(this.game_type_selectbox);
-        	groupBox1.Controls.Add(this.short_server_name_textbox);
-        	groupBox1.Controls.Add(label3);
-        	groupBox1.Controls.Add(label2);
-        	groupBox1.Controls.Add(this.full_server_name_textbox);
-        	groupBox1.Controls.Add(label1);
-        	groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	groupBox1.Location = new System.Drawing.Point(6, 6);
-        	groupBox1.Name = "groupBox1";
-        	groupBox1.Size = new System.Drawing.Size(390, 130);
-        	groupBox1.TabIndex = 0;
-        	groupBox1.TabStop = false;
-        	groupBox1.Text = "Gameserver specific (required)";
+        	this.groupBox1.Controls.Add(this.auto_account_creation_checkbox);
+        	this.groupBox1.Controls.Add(this.game_type_selectbox);
+        	this.groupBox1.Controls.Add(this.short_server_name_textbox);
+        	this.groupBox1.Controls.Add(this.label3);
+        	this.groupBox1.Controls.Add(this.label2);
+        	this.groupBox1.Controls.Add(this.full_server_name_textbox);
+        	this.groupBox1.Controls.Add(this.label1);
+        	this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        	this.groupBox1.Location = new System.Drawing.Point(6, 6);
+        	this.groupBox1.Name = "groupBox1";
+        	this.groupBox1.Size = new System.Drawing.Size(390, 130);
+        	this.groupBox1.TabIndex = 0;
+        	this.groupBox1.TabStop = false;
+        	this.groupBox1.Text = "Gameserver specific (required)";
         	// 
         	// auto_account_creation_checkbox
         	// 
@@ -268,21 +248,21 @@
         	// 
         	// label3
         	// 
-        	label3.AutoSize = true;
-        	label3.Location = new System.Drawing.Point(6, 53);
-        	label3.Name = "label3";
-        	label3.Size = new System.Drawing.Size(100, 13);
-        	label3.TabIndex = 3;
-        	label3.Text = "Short Server Name:";
+        	this.label3.AutoSize = true;
+        	this.label3.Location = new System.Drawing.Point(6, 53);
+        	this.label3.Name = "label3";
+        	this.label3.Size = new System.Drawing.Size(100, 13);
+        	this.label3.TabIndex = 3;
+        	this.label3.Text = "Short Server Name:";
         	// 
         	// label2
         	// 
-        	label2.AutoSize = true;
-        	label2.Location = new System.Drawing.Point(6, 79);
-        	label2.Name = "label2";
-        	label2.Size = new System.Drawing.Size(65, 13);
-        	label2.TabIndex = 2;
-        	label2.Text = "Game Type:";
+        	this.label2.AutoSize = true;
+        	this.label2.Location = new System.Drawing.Point(6, 79);
+        	this.label2.Name = "label2";
+        	this.label2.Size = new System.Drawing.Size(65, 13);
+        	this.label2.TabIndex = 2;
+        	this.label2.Text = "Game Type:";
         	// 
         	// full_server_name_textbox
         	// 
@@ -297,34 +277,34 @@
         	// 
         	// label1
         	// 
-        	label1.AutoSize = true;
-        	label1.Location = new System.Drawing.Point(6, 27);
-        	label1.Name = "label1";
-        	label1.Size = new System.Drawing.Size(91, 13);
-        	label1.TabIndex = 0;
-        	label1.Text = "Full Server Name:";
+        	this.label1.AutoSize = true;
+        	this.label1.Location = new System.Drawing.Point(6, 27);
+        	this.label1.Name = "label1";
+        	this.label1.Size = new System.Drawing.Size(91, 13);
+        	this.label1.TabIndex = 0;
+        	this.label1.Text = "Full Server Name:";
         	// 
         	// groupBox2
         	// 
-        	groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+        	this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
         	        	        	| System.Windows.Forms.AnchorStyles.Right)));
-        	groupBox2.Controls.Add(this.region_port_textbox);
-        	groupBox2.Controls.Add(this.region_ip_textbox);
-        	groupBox2.Controls.Add(this.udp_port_textbox);
-        	groupBox2.Controls.Add(this.port_textbox);
-        	groupBox2.Controls.Add(this.ip_textbox);
-        	groupBox2.Controls.Add(label8);
-        	groupBox2.Controls.Add(label7);
-        	groupBox2.Controls.Add(label6);
-        	groupBox2.Controls.Add(label5);
-        	groupBox2.Controls.Add(this.detect_region_ip_checkbox);
-        	groupBox2.Controls.Add(label4);
-        	groupBox2.Location = new System.Drawing.Point(6, 142);
-        	groupBox2.Name = "groupBox2";
-        	groupBox2.Size = new System.Drawing.Size(390, 181);
-        	groupBox2.TabIndex = 1;
-        	groupBox2.TabStop = false;
-        	groupBox2.Text = "Server connection specific (optional)";
+        	this.groupBox2.Controls.Add(this.region_port_textbox);
+        	this.groupBox2.Controls.Add(this.region_ip_textbox);
+        	this.groupBox2.Controls.Add(this.udp_port_textbox);
+        	this.groupBox2.Controls.Add(this.port_textbox);
+        	this.groupBox2.Controls.Add(this.ip_textbox);
+        	this.groupBox2.Controls.Add(this.label8);
+        	this.groupBox2.Controls.Add(this.label7);
+        	this.groupBox2.Controls.Add(this.label6);
+        	this.groupBox2.Controls.Add(this.label5);
+        	this.groupBox2.Controls.Add(this.detect_region_ip_checkbox);
+        	this.groupBox2.Controls.Add(this.label4);
+        	this.groupBox2.Location = new System.Drawing.Point(6, 142);
+        	this.groupBox2.Name = "groupBox2";
+        	this.groupBox2.Size = new System.Drawing.Size(390, 181);
+        	this.groupBox2.TabIndex = 1;
+        	this.groupBox2.TabStop = false;
+        	this.groupBox2.Text = "Server connection specific (optional)";
         	// 
         	// region_port_textbox
         	// 
@@ -372,39 +352,39 @@
         	// 
         	// label8
         	// 
-        	label8.AutoSize = true;
-        	label8.Location = new System.Drawing.Point(6, 78);
-        	label8.Name = "label8";
-        	label8.Size = new System.Drawing.Size(55, 13);
-        	label8.TabIndex = 16;
-        	label8.Text = "UDP Port:";
+        	this.label8.AutoSize = true;
+        	this.label8.Location = new System.Drawing.Point(6, 78);
+        	this.label8.Name = "label8";
+        	this.label8.Size = new System.Drawing.Size(55, 13);
+        	this.label8.TabIndex = 16;
+        	this.label8.Text = "UDP Port:";
         	// 
         	// label7
         	// 
-        	label7.AutoSize = true;
-        	label7.Location = new System.Drawing.Point(6, 153);
-        	label7.Name = "label7";
-        	label7.Size = new System.Drawing.Size(66, 13);
-        	label7.TabIndex = 14;
-        	label7.Text = "Region Port:";
+        	this.label7.AutoSize = true;
+        	this.label7.Location = new System.Drawing.Point(6, 153);
+        	this.label7.Name = "label7";
+        	this.label7.Size = new System.Drawing.Size(66, 13);
+        	this.label7.TabIndex = 14;
+        	this.label7.Text = "Region Port:";
         	// 
         	// label6
         	// 
-        	label6.AutoSize = true;
-        	label6.Location = new System.Drawing.Point(6, 127);
-        	label6.Name = "label6";
-        	label6.Size = new System.Drawing.Size(57, 13);
-        	label6.TabIndex = 12;
-        	label6.Text = "Region IP:";
+        	this.label6.AutoSize = true;
+        	this.label6.Location = new System.Drawing.Point(6, 127);
+        	this.label6.Name = "label6";
+        	this.label6.Size = new System.Drawing.Size(57, 13);
+        	this.label6.TabIndex = 12;
+        	this.label6.Text = "Region IP:";
         	// 
         	// label5
         	// 
-        	label5.AutoSize = true;
-        	label5.Location = new System.Drawing.Point(6, 26);
-        	label5.Name = "label5";
-        	label5.Size = new System.Drawing.Size(20, 13);
-        	label5.TabIndex = 10;
-        	label5.Text = "IP:";
+        	this.label5.AutoSize = true;
+        	this.label5.Location = new System.Drawing.Point(6, 26);
+        	this.label5.Name = "label5";
+        	this.label5.Size = new System.Drawing.Size(20, 13);
+        	this.label5.TabIndex = 10;
+        	this.label5.Text = "IP:";
         	// 
         	// detect_region_ip_checkbox
         	// 
@@ -418,34 +398,34 @@
         	// 
         	// label4
         	// 
-        	label4.AutoSize = true;
-        	label4.Location = new System.Drawing.Point(6, 52);
-        	label4.Name = "label4";
-        	label4.Size = new System.Drawing.Size(53, 13);
-        	label4.TabIndex = 8;
-        	label4.Text = "TCP Port:";
+        	this.label4.AutoSize = true;
+        	this.label4.Location = new System.Drawing.Point(6, 52);
+        	this.label4.Name = "label4";
+        	this.label4.Size = new System.Drawing.Size(53, 13);
+        	this.label4.TabIndex = 8;
+        	this.label4.Text = "TCP Port:";
         	// 
         	// groupBox4
         	// 
-        	groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+        	this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
         	        	        	| System.Windows.Forms.AnchorStyles.Right)));
-        	groupBox4.Controls.Add(this.regExTextBox1);
-        	groupBox4.Controls.Add(this.regExTextBox2);
-        	groupBox4.Controls.Add(this.regExTextBox3);
-        	groupBox4.Controls.Add(this.regExTextBox4);
-        	groupBox4.Controls.Add(this.regExTextBox5);
-        	groupBox4.Controls.Add(label18);
-        	groupBox4.Controls.Add(label19);
-        	groupBox4.Controls.Add(label20);
-        	groupBox4.Controls.Add(label21);
-        	groupBox4.Controls.Add(this.checkBox1);
-        	groupBox4.Controls.Add(label22);
-        	groupBox4.Location = new System.Drawing.Point(6, 142);
-        	groupBox4.Name = "groupBox4";
-        	groupBox4.Size = new System.Drawing.Size(390, 181);
-        	groupBox4.TabIndex = 1;
-        	groupBox4.TabStop = false;
-        	groupBox4.Text = "Server connection specific (optional)";
+        	this.groupBox4.Controls.Add(this.regExTextBox1);
+        	this.groupBox4.Controls.Add(this.regExTextBox2);
+        	this.groupBox4.Controls.Add(this.regExTextBox3);
+        	this.groupBox4.Controls.Add(this.regExTextBox4);
+        	this.groupBox4.Controls.Add(this.regExTextBox5);
+        	this.groupBox4.Controls.Add(this.label18);
+        	this.groupBox4.Controls.Add(this.label19);
+        	this.groupBox4.Controls.Add(this.label20);
+        	this.groupBox4.Controls.Add(this.label21);
+        	this.groupBox4.Controls.Add(this.checkBox1);
+        	this.groupBox4.Controls.Add(this.label22);
+        	this.groupBox4.Location = new System.Drawing.Point(6, 142);
+        	this.groupBox4.Name = "groupBox4";
+        	this.groupBox4.Size = new System.Drawing.Size(390, 181);
+        	this.groupBox4.TabIndex = 1;
+        	this.groupBox4.TabStop = false;
+        	this.groupBox4.Text = "Server connection specific (optional)";
         	// 
         	// regExTextBox1
         	// 
@@ -493,39 +473,39 @@
         	// 
         	// label18
         	// 
-        	label18.AutoSize = true;
-        	label18.Location = new System.Drawing.Point(6, 78);
-        	label18.Name = "label18";
-        	label18.Size = new System.Drawing.Size(55, 13);
-        	label18.TabIndex = 16;
-        	label18.Text = "UDP Port:";
+        	this.label18.AutoSize = true;
+        	this.label18.Location = new System.Drawing.Point(6, 78);
+        	this.label18.Name = "label18";
+        	this.label18.Size = new System.Drawing.Size(55, 13);
+        	this.label18.TabIndex = 16;
+        	this.label18.Text = "UDP Port:";
         	// 
         	// label19
         	// 
-        	label19.AutoSize = true;
-        	label19.Location = new System.Drawing.Point(6, 153);
-        	label19.Name = "label19";
-        	label19.Size = new System.Drawing.Size(66, 13);
-        	label19.TabIndex = 14;
-        	label19.Text = "Region Port:";
+        	this.label19.AutoSize = true;
+        	this.label19.Location = new System.Drawing.Point(6, 153);
+        	this.label19.Name = "label19";
+        	this.label19.Size = new System.Drawing.Size(66, 13);
+        	this.label19.TabIndex = 14;
+        	this.label19.Text = "Region Port:";
         	// 
         	// label20
         	// 
-        	label20.AutoSize = true;
-        	label20.Location = new System.Drawing.Point(6, 127);
-        	label20.Name = "label20";
-        	label20.Size = new System.Drawing.Size(57, 13);
-        	label20.TabIndex = 12;
-        	label20.Text = "Region IP:";
+        	this.label20.AutoSize = true;
+        	this.label20.Location = new System.Drawing.Point(6, 127);
+        	this.label20.Name = "label20";
+        	this.label20.Size = new System.Drawing.Size(57, 13);
+        	this.label20.TabIndex = 12;
+        	this.label20.Text = "Region IP:";
         	// 
         	// label21
         	// 
-        	label21.AutoSize = true;
-        	label21.Location = new System.Drawing.Point(6, 26);
-        	label21.Name = "label21";
-        	label21.Size = new System.Drawing.Size(20, 13);
-        	label21.TabIndex = 10;
-        	label21.Text = "IP:";
+        	this.label21.AutoSize = true;
+        	this.label21.Location = new System.Drawing.Point(6, 26);
+        	this.label21.Name = "label21";
+        	this.label21.Size = new System.Drawing.Size(20, 13);
+        	this.label21.TabIndex = 10;
+        	this.label21.Text = "IP:";
         	// 
         	// checkBox1
         	// 
@@ -539,31 +519,31 @@
         	// 
         	// label22
         	// 
-        	label22.AutoSize = true;
-        	label22.Location = new System.Drawing.Point(6, 52);
-        	label22.Name = "label22";
-        	label22.Size = new System.Drawing.Size(53, 13);
-        	label22.TabIndex = 8;
-        	label22.Text = "TCP Port:";
+        	this.label22.AutoSize = true;
+        	this.label22.Location = new System.Drawing.Point(6, 52);
+        	this.label22.Name = "label22";
+        	this.label22.Size = new System.Drawing.Size(53, 13);
+        	this.label22.TabIndex = 8;
+        	this.label22.Text = "TCP Port:";
         	// 
         	// groupBox5
         	// 
-        	groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+        	this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
         	        	        	| System.Windows.Forms.AnchorStyles.Right)));
-        	groupBox5.Controls.Add(this.checkBox2);
-        	groupBox5.Controls.Add(this.comboBox1);
-        	groupBox5.Controls.Add(this.textBox1);
-        	groupBox5.Controls.Add(label23);
-        	groupBox5.Controls.Add(label24);
-        	groupBox5.Controls.Add(this.textBox2);
-        	groupBox5.Controls.Add(label25);
-        	groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	groupBox5.Location = new System.Drawing.Point(6, 6);
-        	groupBox5.Name = "groupBox5";
-        	groupBox5.Size = new System.Drawing.Size(390, 130);
-        	groupBox5.TabIndex = 0;
-        	groupBox5.TabStop = false;
-        	groupBox5.Text = "Gameserver specific (required)";
+        	this.groupBox5.Controls.Add(this.checkBox2);
+        	this.groupBox5.Controls.Add(this.comboBox1);
+        	this.groupBox5.Controls.Add(this.textBox1);
+        	this.groupBox5.Controls.Add(this.label23);
+        	this.groupBox5.Controls.Add(this.label24);
+        	this.groupBox5.Controls.Add(this.textBox2);
+        	this.groupBox5.Controls.Add(this.label25);
+        	this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        	this.groupBox5.Location = new System.Drawing.Point(6, 6);
+        	this.groupBox5.Name = "groupBox5";
+        	this.groupBox5.Size = new System.Drawing.Size(390, 130);
+        	this.groupBox5.TabIndex = 0;
+        	this.groupBox5.TabStop = false;
+        	this.groupBox5.Text = "Gameserver specific (required)";
         	// 
         	// checkBox2
         	// 
@@ -602,21 +582,21 @@
         	// 
         	// label23
         	// 
-        	label23.AutoSize = true;
-        	label23.Location = new System.Drawing.Point(6, 53);
-        	label23.Name = "label23";
-        	label23.Size = new System.Drawing.Size(100, 13);
-        	label23.TabIndex = 3;
-        	label23.Text = "Short Server Name:";
+        	this.label23.AutoSize = true;
+        	this.label23.Location = new System.Drawing.Point(6, 53);
+        	this.label23.Name = "label23";
+        	this.label23.Size = new System.Drawing.Size(100, 13);
+        	this.label23.TabIndex = 3;
+        	this.label23.Text = "Short Server Name:";
         	// 
         	// label24
         	// 
-        	label24.AutoSize = true;
-        	label24.Location = new System.Drawing.Point(6, 79);
-        	label24.Name = "label24";
-        	label24.Size = new System.Drawing.Size(65, 13);
-        	label24.TabIndex = 2;
-        	label24.Text = "Game Type:";
+        	this.label24.AutoSize = true;
+        	this.label24.Location = new System.Drawing.Point(6, 79);
+        	this.label24.Name = "label24";
+        	this.label24.Size = new System.Drawing.Size(65, 13);
+        	this.label24.TabIndex = 2;
+        	this.label24.Text = "Game Type:";
         	// 
         	// textBox2
         	// 
@@ -629,12 +609,12 @@
         	// 
         	// label25
         	// 
-        	label25.AutoSize = true;
-        	label25.Location = new System.Drawing.Point(6, 27);
-        	label25.Name = "label25";
-        	label25.Size = new System.Drawing.Size(91, 13);
-        	label25.TabIndex = 0;
-        	label25.Text = "Full Server Name:";
+        	this.label25.AutoSize = true;
+        	this.label25.Location = new System.Drawing.Point(6, 27);
+        	this.label25.Name = "label25";
+        	this.label25.Size = new System.Drawing.Size(91, 13);
+        	this.label25.TabIndex = 0;
+        	this.label25.Text = "Full Server Name:";
         	// 
         	// tabControl1
         	// 
@@ -650,11 +630,12 @@
         	this.tabControl1.SelectedIndex = 0;
         	this.tabControl1.Size = new System.Drawing.Size(410, 446);
         	this.tabControl1.TabIndex = 2;
+        	this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
         	// 
         	// database_tab
         	// 
-        	this.database_tab.Controls.Add(groupBox2);
-        	this.database_tab.Controls.Add(groupBox1);
+        	this.database_tab.Controls.Add(this.groupBox2);
+        	this.database_tab.Controls.Add(this.groupBox1);
         	this.database_tab.Location = new System.Drawing.Point(4, 22);
         	this.database_tab.Name = "database_tab";
         	this.database_tab.Padding = new System.Windows.Forms.Padding(3);
@@ -774,7 +755,7 @@
         	// xml_database_path_button
         	// 
         	this.xml_database_path_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-        	this.xml_database_path_button.Image = ((System.Drawing.Image)(resources.GetObject("xml_database_path_button.Image")));
+        	this.xml_database_path_button.Image = global::DOLConfig.Resources.xml_database_path_button_Image;
         	this.xml_database_path_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.xml_database_path_button.Location = new System.Drawing.Point(281, 25);
         	this.xml_database_path_button.Name = "xml_database_path_button";
@@ -931,7 +912,7 @@
         	// 
         	// mysql_test_button
         	// 
-        	this.mysql_test_button.Image = ((System.Drawing.Image)(resources.GetObject("mysql_test_button.Image")));
+        	this.mysql_test_button.Image = global::DOLConfig.Resources.mysql_test_button_Image;
         	this.mysql_test_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.mysql_test_button.Location = new System.Drawing.Point(99, 154);
         	this.mysql_test_button.Name = "mysql_test_button";
@@ -989,83 +970,6 @@
         	this.label10.TabIndex = 0;
         	this.label10.Text = "Server Address:";
         	// 
-        	// sp_tab
-        	// 
-        	this.sp_tab.Controls.Add(this.tb_spDesc);
-        	this.sp_tab.Controls.Add(this.bu_spChange);
-        	this.sp_tab.Controls.Add(this.cb_spType);
-        	this.sp_tab.Controls.Add(this.label37);
-        	this.sp_tab.Controls.Add(this.tb_spValue);
-        	this.sp_tab.Controls.Add(this.label38);
-        	this.sp_tab.Controls.Add(this.lbl_spName);
-        	this.sp_tab.Controls.Add(this.tv_spShow);
-        	this.sp_tab.Location = new System.Drawing.Point(4, 22);
-        	this.sp_tab.Name = "sp_tab";
-        	this.sp_tab.Size = new System.Drawing.Size(402, 420);
-        	this.sp_tab.TabIndex = 4;
-        	this.sp_tab.Text = "Server properties";
-        	this.sp_tab.UseVisualStyleBackColor = true;
-        	// 
-        	// cb_spType
-        	// 
-        	this.cb_spType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-        	this.cb_spType.FormattingEnabled = true;
-        	this.cb_spType.Items.AddRange(new object[] {
-        	        	        	"string",
-        	        	        	"integer",
-        	        	        	"boolean"});
-        	this.cb_spType.Location = new System.Drawing.Point(310, 351);
-        	this.cb_spType.Name = "cb_spType";
-        	this.cb_spType.Size = new System.Drawing.Size(88, 21);
-        	this.cb_spType.TabIndex = 15;
-        	// 
-        	// label37
-        	// 
-        	this.label37.AutoSize = true;
-        	this.label37.Location = new System.Drawing.Point(310, 335);
-        	this.label37.Name = "label37";
-        	this.label37.Size = new System.Drawing.Size(60, 13);
-        	this.label37.TabIndex = 14;
-        	this.label37.Text = "Value type:";
-        	// 
-        	// tb_spValue
-        	// 
-        	this.tb_spValue.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-        	        	        	| System.Windows.Forms.AnchorStyles.Left) 
-        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
-        	this.tb_spValue.Location = new System.Drawing.Point(3, 351);
-        	this.tb_spValue.Multiline = true;
-        	this.tb_spValue.Name = "tb_spValue";
-        	this.tb_spValue.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-        	this.tb_spValue.Size = new System.Drawing.Size(301, 66);
-        	this.tb_spValue.TabIndex = 13;
-        	// 
-        	// label38
-        	// 
-        	this.label38.AutoSize = true;
-        	this.label38.Location = new System.Drawing.Point(3, 335);
-        	this.label38.Name = "label38";
-        	this.label38.Size = new System.Drawing.Size(37, 13);
-        	this.label38.TabIndex = 12;
-        	this.label38.Text = "Value:";
-        	// 
-        	// lbl_spName
-        	// 
-        	this.lbl_spName.AutoSize = true;
-        	this.lbl_spName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.lbl_spName.Location = new System.Drawing.Point(151, 256);
-        	this.lbl_spName.Name = "lbl_spName";
-        	this.lbl_spName.Size = new System.Drawing.Size(101, 15);
-        	this.lbl_spName.TabIndex = 10;
-        	this.lbl_spName.Text = "- Property name -";
-        	// 
-        	// tv_spShow
-        	// 
-        	this.tv_spShow.Location = new System.Drawing.Point(3, 3);
-        	this.tv_spShow.Name = "tv_spShow";
-        	this.tv_spShow.Size = new System.Drawing.Size(396, 245);
-        	this.tv_spShow.TabIndex = 0;
-        	// 
         	// tab_extra
         	// 
         	this.tab_extra.Controls.Add(this.edit_property_button);
@@ -1082,7 +986,7 @@
         	// edit_property_button
         	// 
         	this.edit_property_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-        	this.edit_property_button.Image = ((System.Drawing.Image)(resources.GetObject("edit_property_button.Image")));
+        	this.edit_property_button.Image = global::DOLConfig.Resources.edit_property_button_Image;
         	this.edit_property_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.edit_property_button.Location = new System.Drawing.Point(210, 394);
         	this.edit_property_button.Name = "edit_property_button";
@@ -1098,7 +1002,7 @@
         	// delete_property_button
         	// 
         	this.delete_property_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-        	this.delete_property_button.Image = ((System.Drawing.Image)(resources.GetObject("delete_property_button.Image")));
+        	this.delete_property_button.Image = global::DOLConfig.Resources.delete_property_button_Image;
         	this.delete_property_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.delete_property_button.Location = new System.Drawing.Point(3, 394);
         	this.delete_property_button.Name = "delete_property_button";
@@ -1114,7 +1018,7 @@
         	// add_property_button
         	// 
         	this.add_property_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-        	this.add_property_button.Image = ((System.Drawing.Image)(resources.GetObject("add_property_button.Image")));
+        	this.add_property_button.Image = global::DOLConfig.Resources.add_property_button_Image;
         	this.add_property_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.add_property_button.Location = new System.Drawing.Point(307, 394);
         	this.add_property_button.Name = "add_property_button";
@@ -1188,6 +1092,104 @@
         	this.type.ReadOnly = true;
         	this.type.Visible = false;
         	// 
+        	// sp_tab
+        	// 
+        	this.sp_tab.Controls.Add(this.tb_spDefaultValue);
+        	this.sp_tab.Controls.Add(this.label39);
+        	this.sp_tab.Controls.Add(this.tb_spDesc);
+        	this.sp_tab.Controls.Add(this.bu_spChange);
+        	this.sp_tab.Controls.Add(this.tb_spCurrentValue);
+        	this.sp_tab.Controls.Add(this.label38);
+        	this.sp_tab.Controls.Add(this.lbl_spName);
+        	this.sp_tab.Controls.Add(this.tv_spShow);
+        	this.sp_tab.Location = new System.Drawing.Point(4, 22);
+        	this.sp_tab.Name = "sp_tab";
+        	this.sp_tab.Size = new System.Drawing.Size(402, 420);
+        	this.sp_tab.TabIndex = 4;
+        	this.sp_tab.Text = "Server properties";
+        	this.sp_tab.UseVisualStyleBackColor = true;
+        	// 
+        	// tb_spDefaultValue
+        	// 
+        	this.tb_spDefaultValue.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.tb_spDefaultValue.Enabled = false;
+        	this.tb_spDefaultValue.Location = new System.Drawing.Point(80, 330);
+        	this.tb_spDefaultValue.Multiline = true;
+        	this.tb_spDefaultValue.Name = "tb_spDefaultValue";
+        	this.tb_spDefaultValue.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+        	this.tb_spDefaultValue.Size = new System.Drawing.Size(319, 40);
+        	this.tb_spDefaultValue.TabIndex = 20;
+        	// 
+        	// label39
+        	// 
+        	this.label39.Location = new System.Drawing.Point(3, 330);
+        	this.label39.Name = "label39";
+        	this.label39.Size = new System.Drawing.Size(80, 40);
+        	this.label39.TabIndex = 19;
+        	this.label39.Text = "Default Value:";
+        	// 
+        	// tb_spDesc
+        	// 
+        	this.tb_spDesc.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+        	this.tb_spDesc.Location = new System.Drawing.Point(3, 281);
+        	this.tb_spDesc.Multiline = true;
+        	this.tb_spDesc.Name = "tb_spDesc";
+        	this.tb_spDesc.Size = new System.Drawing.Size(396, 40);
+        	this.tb_spDesc.TabIndex = 18;
+        	// 
+        	// bu_spChange
+        	// 
+        	this.bu_spChange.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+        	this.bu_spChange.Image = global::DOLConfig.Resources.save_config_button_Image;
+        	this.bu_spChange.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        	this.bu_spChange.Location = new System.Drawing.Point(285, 253);
+        	this.bu_spChange.Name = "bu_spChange";
+        	this.bu_spChange.Size = new System.Drawing.Size(114, 23);
+        	this.bu_spChange.TabIndex = 17;
+        	this.bu_spChange.Text = "Save Properties";
+        	this.bu_spChange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+        	this.bu_spChange.UseVisualStyleBackColor = true;
+        	// 
+        	// tb_spCurrentValue
+        	// 
+        	this.tb_spCurrentValue.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Left) 
+        	        	        	| System.Windows.Forms.AnchorStyles.Right)));
+        	this.tb_spCurrentValue.Location = new System.Drawing.Point(80, 377);
+        	this.tb_spCurrentValue.Multiline = true;
+        	this.tb_spCurrentValue.Name = "tb_spCurrentValue";
+        	this.tb_spCurrentValue.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+        	this.tb_spCurrentValue.Size = new System.Drawing.Size(319, 40);
+        	this.tb_spCurrentValue.TabIndex = 13;
+        	// 
+        	// label38
+        	// 
+        	this.label38.Location = new System.Drawing.Point(3, 377);
+        	this.label38.Name = "label38";
+        	this.label38.Size = new System.Drawing.Size(80, 40);
+        	this.label38.TabIndex = 12;
+        	this.label38.Text = "Current Value:";
+        	// 
+        	// lbl_spName
+        	// 
+        	this.lbl_spName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        	this.lbl_spName.Location = new System.Drawing.Point(3, 252);
+        	this.lbl_spName.Name = "lbl_spName";
+        	this.lbl_spName.Size = new System.Drawing.Size(279, 23);
+        	this.lbl_spName.TabIndex = 10;
+        	this.lbl_spName.Text = "- Property name -";
+        	this.lbl_spName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        	// 
+        	// tv_spShow
+        	// 
+        	this.tv_spShow.Location = new System.Drawing.Point(3, 3);
+        	this.tv_spShow.Name = "tv_spShow";
+        	this.tv_spShow.Size = new System.Drawing.Size(396, 245);
+        	this.tv_spShow.TabIndex = 0;
+        	this.tv_spShow.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.Tv_spShowAfterSelect);
+        	// 
         	// statusStrip1
         	// 
         	this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1223,7 +1225,7 @@
         	// save_config_button
         	// 
         	this.save_config_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-        	this.save_config_button.Image = ((System.Drawing.Image)(resources.GetObject("save_config_button.Image")));
+        	this.save_config_button.Image = global::DOLConfig.Resources.save_config_button_Image;
         	this.save_config_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.save_config_button.Location = new System.Drawing.Point(301, 464);
         	this.save_config_button.Name = "save_config_button";
@@ -1239,7 +1241,7 @@
         	// set_default_values_button
         	// 
         	this.set_default_values_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-        	this.set_default_values_button.Image = ((System.Drawing.Image)(resources.GetObject("set_default_values_button.Image")));
+        	this.set_default_values_button.Image = global::DOLConfig.Resources.set_default_values_button_Image;
         	this.set_default_values_button.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.set_default_values_button.Location = new System.Drawing.Point(12, 464);
         	this.set_default_values_button.Name = "set_default_values_button";
@@ -1259,8 +1261,8 @@
         	// 
         	// tabPage1
         	// 
-        	this.tabPage1.Controls.Add(groupBox4);
-        	this.tabPage1.Controls.Add(groupBox5);
+        	this.tabPage1.Controls.Add(this.groupBox4);
+        	this.tabPage1.Controls.Add(this.groupBox5);
         	this.tabPage1.Location = new System.Drawing.Point(4, 22);
         	this.tabPage1.Name = "tabPage1";
         	this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -1373,7 +1375,6 @@
         	// button1
         	// 
         	this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-        	this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
         	this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.button1.Location = new System.Drawing.Point(281, 25);
         	this.button1.Name = "button1";
@@ -1510,7 +1511,6 @@
         	// 
         	// button2
         	// 
-        	this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
         	this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.button2.Location = new System.Drawing.Point(99, 154);
         	this.button2.Name = "button2";
@@ -1581,7 +1581,6 @@
         	// button3
         	// 
         	this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-        	this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
         	this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.button3.Location = new System.Drawing.Point(210, 394);
         	this.button3.Name = "button3";
@@ -1594,7 +1593,6 @@
         	// button4
         	// 
         	this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-        	this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
         	this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.button4.Location = new System.Drawing.Point(3, 394);
         	this.button4.Name = "button4";
@@ -1607,7 +1605,6 @@
         	// button5
         	// 
         	this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-        	this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
         	this.button5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         	this.button5.Location = new System.Drawing.Point(307, 394);
         	this.button5.Name = "button5";
@@ -1677,28 +1674,6 @@
         	this.dataGridViewTextBoxColumn4.ReadOnly = true;
         	this.dataGridViewTextBoxColumn4.Visible = false;
         	// 
-        	// bu_spChange
-        	// 
-        	this.bu_spChange.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-        	this.bu_spChange.Image = ((System.Drawing.Image)(resources.GetObject("bu_spChange.Image")));
-        	this.bu_spChange.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-        	this.bu_spChange.Location = new System.Drawing.Point(310, 394);
-        	this.bu_spChange.Name = "bu_spChange";
-        	this.bu_spChange.Size = new System.Drawing.Size(91, 23);
-        	this.bu_spChange.TabIndex = 17;
-        	this.bu_spChange.Text = "Edit property";
-        	this.bu_spChange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        	this.bu_spChange.UseVisualStyleBackColor = true;
-        	// 
-        	// tb_spDesc
-        	// 
-        	this.tb_spDesc.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        	this.tb_spDesc.Location = new System.Drawing.Point(22, 283);
-        	this.tb_spDesc.Multiline = true;
-        	this.tb_spDesc.Name = "tb_spDesc";
-        	this.tb_spDesc.Size = new System.Drawing.Size(359, 42);
-        	this.tb_spDesc.TabIndex = 18;
-        	// 
         	// DolConfig
         	// 
         	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1715,14 +1690,14 @@
         	this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
         	this.Text = "Dawn of Light Configuration Service";
         	this.Load += new System.EventHandler(this.DOLConfig_Load);
-        	groupBox1.ResumeLayout(false);
-        	groupBox1.PerformLayout();
-        	groupBox2.ResumeLayout(false);
-        	groupBox2.PerformLayout();
-        	groupBox4.ResumeLayout(false);
-        	groupBox4.PerformLayout();
-        	groupBox5.ResumeLayout(false);
-        	groupBox5.PerformLayout();
+        	this.groupBox1.ResumeLayout(false);
+        	this.groupBox1.PerformLayout();
+        	this.groupBox2.ResumeLayout(false);
+        	this.groupBox2.PerformLayout();
+        	this.groupBox4.ResumeLayout(false);
+        	this.groupBox4.PerformLayout();
+        	this.groupBox5.ResumeLayout(false);
+        	this.groupBox5.PerformLayout();
         	this.tabControl1.ResumeLayout(false);
         	this.database_tab.ResumeLayout(false);
         	this.general_tab.ResumeLayout(false);
@@ -1732,10 +1707,10 @@
         	this.xml_groupbox.PerformLayout();
         	this.mysql_groupbox.ResumeLayout(false);
         	this.mysql_groupbox.PerformLayout();
-        	this.sp_tab.ResumeLayout(false);
-        	this.sp_tab.PerformLayout();
         	this.tab_extra.ResumeLayout(false);
         	((System.ComponentModel.ISupportInitialize)(this.extra_options_datagrid)).EndInit();
+        	this.sp_tab.ResumeLayout(false);
+        	this.sp_tab.PerformLayout();
         	this.statusStrip1.ResumeLayout(false);
         	this.statusStrip1.PerformLayout();
         	((System.ComponentModel.ISupportInitialize)(this.wrong_data_error_handler)).EndInit();
@@ -1752,14 +1727,34 @@
         	this.ResumeLayout(false);
         	this.PerformLayout();
         }
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.TextBox tb_spDefaultValue;
+        private System.Windows.Forms.TextBox tb_spCurrentValue;
         private System.Windows.Forms.TreeView tv_spShow;
-        private System.Windows.Forms.ComboBox cb_spType;
-        private System.Windows.Forms.TextBox tb_spValue;
         private System.Windows.Forms.Label lbl_spName;
         private System.Windows.Forms.Button bu_spChange;
         private System.Windows.Forms.TextBox tb_spDesc;
         private System.Windows.Forms.Label label38;
-        private System.Windows.Forms.Label label37;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
