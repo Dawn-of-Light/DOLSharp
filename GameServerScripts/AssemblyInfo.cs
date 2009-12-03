@@ -19,7 +19,7 @@
 using System.Reflection;
 
 [assembly: AssemblyTitle("Dawn of Light - GameServerScripts")]
-[assembly: AssemblyDescription("Contains all the scripted code use dto extend Game Server")]
+[assembly: AssemblyDescription("Contains all the scripted code used to extend Game Server")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Dawn of Light Development Team")]
 [assembly: AssemblyProduct("DAoC Server Side Emulation Package - Dawn of Light")]
