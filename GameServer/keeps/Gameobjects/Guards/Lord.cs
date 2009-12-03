@@ -157,7 +157,9 @@ namespace DOL.GS.Keeps
 					keeplog.MoneyReward = MoneyValue;
 
 					if (Component.Keep.StartCombatTick > 0)
+					{
 						keeplog.CombatTime = (int)((Component.Keep.CurrentRegion.Time - Component.Keep.StartCombatTick) / 1000 / 60);
+					}
 
 					keeplog.CapturedBy = GlobalConstants.RealmToName(killer.Realm);
 
@@ -182,10 +184,12 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-			if (this.Component != null)
-				GameServer.ServerRules.ResetKeep(this, killer);
-
 			base.Die(killer);
+
+			if (this.Component != null)
+			{
+				GameServer.ServerRules.ResetKeep(this, killer);
+			}
 
 			m_lastKillTime = CurrentRegion.Time;
 		}
