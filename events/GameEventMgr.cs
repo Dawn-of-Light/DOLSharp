@@ -42,7 +42,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Holds a list of event handler collections for single gameobjects
 		/// </summary>
-		private static readonly Dictionary<object, DOLEventHandlerCollection> m_gameObjectEventCollections;
+		private static Dictionary<object, DOLEventHandlerCollection> m_gameObjectEventCollections;
 
 		public static int NumObjectHandlers
 		{
