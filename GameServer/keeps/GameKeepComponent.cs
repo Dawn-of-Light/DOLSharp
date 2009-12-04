@@ -261,6 +261,15 @@ namespace DOL.GS.Keeps
 			m_repairTimer.Start(1);
 		}
 
+		public void RemoveTimers()
+		{
+			if (m_repairTimer != null)
+			{
+				m_repairTimer.Stop();
+				m_repairTimer = null;
+			}
+		}
+
 		/// <summary>
 		/// constructor of component
 		/// </summary>
