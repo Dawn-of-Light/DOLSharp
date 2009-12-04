@@ -171,7 +171,7 @@ namespace DOL.GS
 				MaxDurability = template.MaxDurability;
 				MaxCondition = template.MaxCondition;
 				AllowedClasses = template.AllowedClasses;
-				CanUseEvery = template.CanUseEvery;
+				CanUseEvery = ArtifactMgr.GetReuseTimer(this);
 			}
 
 			UpdateAbilities();
