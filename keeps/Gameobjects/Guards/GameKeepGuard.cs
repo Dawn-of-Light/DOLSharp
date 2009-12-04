@@ -710,11 +710,11 @@ namespace DOL.GS.Keeps
 				Component.Keep.Guards.Remove(this.ObjectID);
 			}
 
-			HookPoint = null;
-			Component = null;
-			Inventory = null;
-			Position = null;
-			TempProperties.RemoveAll();
+			//HookPoint = null;
+			//Component = null;
+			//Inventory = null;
+			//Position = null;
+			//TempProperties.RemoveAll();
 
 			base.Delete();
 		}
