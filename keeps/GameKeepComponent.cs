@@ -261,7 +261,7 @@ namespace DOL.GS.Keeps
 			m_repairTimer.Start(1);
 		}
 
-		public void RemoveTimers()
+		public virtual void RemoveTimers()
 		{
 			if (m_repairTimer != null)
 			{
