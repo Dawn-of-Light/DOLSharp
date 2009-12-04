@@ -597,10 +597,9 @@ namespace DOL.GS
 				IsOnHorse = false;
 			if (InWraithForm)
 				InWraithForm = false;
-			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(RangeAttackHandler));
-			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemEquipped, new DOLEventHandler(OnItemEquipped));
-			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemUnequipped, new DOLEventHandler(OnItemUnequipped));
-			GameEventMgr.RemoveHandler(m_inventory, PlayerInventoryEvent.ItemBonusChanged, new DOLEventHandler(OnItemBonusChanged));
+
+			GameEventMgr.RemoveAllHandlersForObject(this);
+			GameEventMgr.RemoveAllHandlersForObject(m_inventory);
 
 			if (Group != null)
 				Group.RemoveMember(this);
