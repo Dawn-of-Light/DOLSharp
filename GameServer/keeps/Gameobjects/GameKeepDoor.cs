@@ -496,6 +496,16 @@ namespace DOL.GS.Keeps
 			m_repairTimer.Interval = repairInterval;
 			m_repairTimer.Start(repairInterval);
 		}
+
+		public virtual void RemoveTimers()
+		{
+			if (m_repairTimer != null)
+			{
+				m_repairTimer.Stop();
+				m_repairTimer = null;
+			}
+
+		}
 		#endregion
 
 		#region Save/load DB
