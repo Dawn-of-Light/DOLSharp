@@ -763,7 +763,9 @@ namespace DOL.GS.Keeps
 		protected void UnloadTimers()
 		{
 			m_changeLevelTimer.Stop();
+			m_changeLevelTimer = null;
 			m_claimTimer.Stop();
+			m_claimTimer = null;
 		}
 
 		/// <summary>

@@ -706,7 +706,16 @@ namespace DOL.GS.Keeps
 		public override void Delete()
 		{
 			if (HookPoint != null && Component != null)
+			{
 				Component.Keep.Guards.Remove(this.ObjectID);
+			}
+
+			HookPoint = null;
+			Component = null;
+			Inventory = null;
+			Position = null;
+			TempProperties.RemoveAll();
+
 			base.Delete();
 		}
 
