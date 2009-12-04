@@ -142,45 +142,52 @@ namespace DOL.GS.Keeps
 			{
 				try
 				{
-					DOL.Database.KeepCaptureLog keeplog = new DOL.Database.KeepCaptureLog();
-					keeplog.KeepName = Component.Keep.Name;
-
-					if (Component.Keep is GameKeep)
-						keeplog.KeepType = "Keep";
-					else
-						keeplog.KeepType = "Tower";
-
-					keeplog.NumEnemies = GetEnemyCountInArea();
-					keeplog.RPReward = RealmPointsValue;
-					keeplog.BPReward = BountyPointsValue;
-					keeplog.XPReward = ExperienceValue;
-					keeplog.MoneyReward = MoneyValue;
-
-					if (Component.Keep.StartCombatTick > 0)
+					if (this.Component != null)
 					{
-						keeplog.CombatTime = (int)((Component.Keep.CurrentRegion.Time - Component.Keep.StartCombatTick) / 1000 / 60);
-					}
+						DOL.Database.KeepCaptureLog keeplog = new DOL.Database.KeepCaptureLog();
+						keeplog.KeepName = Component.Keep.Name;
 
-					keeplog.CapturedBy = GlobalConstants.RealmToName(killer.Realm);
+						if (Component.Keep is GameKeep)
+							keeplog.KeepType = "Keep";
+						else
+							keeplog.KeepType = "Tower";
 
-					string listRPGainers = "";
+						keeplog.NumEnemies = GetEnemyCountInArea();
+						keeplog.RPReward = RealmPointsValue;
+						keeplog.BPReward = BountyPointsValue;
+						keeplog.XPReward = ExperienceValue;
+						keeplog.MoneyReward = MoneyValue;
 
-					foreach (System.Collections.DictionaryEntry de in XPGainers)
-					{
-						GameLiving living = de.Key as GameLiving;
-						if (living != null)
+						if (Component.Keep.StartCombatTick > 0)
 						{
-							listRPGainers += living.Name + ";";
+							keeplog.CombatTime = (int)((Component.Keep.CurrentRegion.Time - Component.Keep.StartCombatTick) / 1000 / 60);
 						}
+
+						keeplog.CapturedBy = GlobalConstants.RealmToName(killer.Realm);
+
+						string listRPGainers = "";
+
+						foreach (System.Collections.DictionaryEntry de in XPGainers)
+						{
+							GameLiving living = de.Key as GameLiving;
+							if (living != null)
+							{
+								listRPGainers += living.Name + ";";
+							}
+						}
+
+						keeplog.RPGainerList = listRPGainers.TrimEnd(';');
+
+						GameServer.Database.AddNewObject(keeplog);
 					}
-
-					keeplog.RPGainerList = listRPGainers.TrimEnd(';');
-
-					GameServer.Database.AddNewObject(keeplog);
+					else
+					{
+						log.Error("Component null for Guard Lord " + Name);
+					}
 				}
 				catch (System.Exception ex)
 				{
-					log.Error(ex);
+					log.Error("KeepCaptureLog Exception", ex);
 				}
 			}
 
