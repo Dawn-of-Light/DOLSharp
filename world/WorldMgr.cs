@@ -2154,12 +2154,8 @@ namespace DOL.GS
                 }
             }
 
-            //Now we are back to the instance.
-            //Lets start the instance!
-            instance.StartRegionMgr();
-
-            //And start a timer to remove it if not in use after 10 minutes.
-            instance.BeginAutoClosureCountdown(10);
+			// Start the instance and execute any final startup tasks
+			instance.Start();
 
             return instance;
         }

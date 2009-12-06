@@ -49,6 +49,15 @@ namespace DOL.GS
             log.Info("An instance is created! " + Name + ", RegionID: " + ID + ", SkinID: " + Skin);
         }
 
+		/// <summary>
+		/// Called as last step in Instance creation.
+		/// </summary>
+		public virtual void Start()
+		{
+			StartRegionMgr();
+			BeginAutoClosureCountdown(10);
+		}
+
         /// <summary>
         /// Defines a logger for this class.
         /// </summary>
@@ -185,7 +194,10 @@ namespace DOL.GS
 
             //Stop the timer to prevent the region's removal.
 			if (m_autoCloseRegionTimer != null)
+			{
 				m_autoCloseRegionTimer.Stop();
+				m_autoCloseRegionTimer = null;
+			}
         }
 
         public virtual void OnPlayerLeaveInstance(GamePlayer player)
@@ -255,8 +267,8 @@ namespace DOL.GS
 			}
 
 			m_Zones.Clear();
-			m_Areas.Clear();
 			m_graveStones.Clear();
+			DOL.Events.GameEventMgr.RemoveAllHandlersForObject(this);
 		}
 
 		~BaseInstance()
@@ -272,6 +284,7 @@ namespace DOL.GS
 			if (m_autoCloseRegionTimer != null)
 			{
 				m_autoCloseRegionTimer.Stop();
+				m_autoCloseRegionTimer = null;
 			}
 
             m_autoCloseRegionTimer = new AutoCloseRegionTimer(TimeManager, this);

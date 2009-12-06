@@ -139,6 +139,8 @@ namespace DOL.GS.Keeps
 					}
 				}
 
+				bool missingKeeps = false;
+
 				DBKeepComponent[] keepcomponents = (DBKeepComponent[])GameServer.Database.SelectAllObjects(typeof(DBKeepComponent));
 				foreach (DBKeepComponent component in keepcomponents)
 				{
@@ -153,16 +155,19 @@ namespace DOL.GS.Keeps
 					AbstractGameKeep keep = getKeepByID(component.KeepID);
 					if (keep == null)
 					{
-						if (Logger.IsWarnEnabled)
-						{
-							Logger.WarnFormat("Keep with ID {0} not found while loading component with ID {1}, possibly old/new keeptype; see server properties", component.KeepID, component.ID);
-						}
+						missingKeeps = true;
 						continue;
 					}
 					GameKeepComponent gamecomponent = new GameKeepComponent();
 					gamecomponent.LoadFromDatabase(component, keep);
 					keep.KeepComponents.Add(gamecomponent);
 				}
+
+				if (missingKeeps && Logger.IsWarnEnabled)
+				{
+					Logger.WarnFormat("Some keeps not found while loading components, possibly old/new keeptype; see server properties");
+				}
+
 				if (m_keeps.Count != 0)
 				{
 					foreach (AbstractGameKeep keep in m_keeps.Values)

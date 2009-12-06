@@ -383,7 +383,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Holds all areas this player is currently within
+		/// Holds all areas this object is currently within
 		/// </summary>
 		public virtual IList CurrentAreas
 		{

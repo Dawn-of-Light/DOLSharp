@@ -703,6 +703,25 @@ namespace DOL.GS.Keeps
 			TemplateMgr.RefreshTemplate(this);
 		}
 
+		public void DeleteObject()
+		{
+			if (Component != null)
+			{
+				Component.Keep.Guards.Remove(this.ObjectID);
+				Component.Delete();
+			}
+
+			HookPoint = null;
+			Component = null;
+			Inventory = null;
+			Position = null;
+			TempProperties.RemoveAll();
+
+			base.Delete();
+			CurrentRegion = null;
+		}
+
+
 		public override void Delete()
 		{
 			if (HookPoint != null && Component != null)
@@ -710,11 +729,7 @@ namespace DOL.GS.Keeps
 				Component.Keep.Guards.Remove(this.ObjectID);
 			}
 
-			//HookPoint = null;
-			//Component = null;
-			//Inventory = null;
-			//Position = null;
-			//TempProperties.RemoveAll();
+			TempProperties.RemoveAll();
 
 			base.Delete();
 		}
