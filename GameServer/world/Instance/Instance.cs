@@ -21,6 +21,7 @@
 //     - there will probably be questions, direct them to dinberg_darktouch@hotmail.co.uk ;)
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using DOL.Database;
@@ -40,8 +41,36 @@ namespace DOL.GS
         /// </summary>
         public Instance(ushort ID, GameTimer.TimeManager time, RegionData data) :base(ID, time, data)
         {
-
         }
+
+		/// <summary>
+		/// Start the instance, executing any required startup tasks
+		/// </summary>
+		public override void Start()
+		{
+			base.Start();
+
+			foreach (Zone z in m_Zones)
+			{
+				m_zoneSkinMap.Add(z.ZoneSkinID, z);
+			}
+		}
+
+
+		public override void OnCollapse()
+		{
+			m_zoneSkinMap.Clear();
+
+			foreach (IArea area in Areas)
+			{
+				RemoveArea(area);
+			}
+
+			Areas.Clear();
+
+			base.OnCollapse();
+		}
+
 
         #region Entrance
 
@@ -143,6 +172,103 @@ namespace DOL.GS
         }
 
         #endregion
+
+		#region Area
+
+		protected Dictionary<int, Zone> m_zoneSkinMap = new Dictionary<int, Zone>();
+
+		/// <summary>
+		/// Gets the areas for a certain spot
+		/// </summary>
+		/// <param name="zone"></param>
+		/// <param name="p"></param>
+		/// <param name="checkZ"></param>
+		/// <returns></returns>
+		public override IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
+		{
+			Zone checkZone = zone;
+			IList areas = new ArrayList();
+
+			if (checkZone == null)
+			{
+				return areas;
+			}
+
+			// Players will always request the skinned zone so map it to the actual instance zone
+			if (m_zoneSkinMap.ContainsKey(zone.ID))
+			{
+				checkZone = m_zoneSkinMap[zone.ID];
+			}
+
+			int zoneIndex = Zones.IndexOf(checkZone);
+
+			if (zoneIndex >= 0)
+			{
+				lock (m_Areas.SyncRoot)
+				{
+					try
+					{
+						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
+						{
+							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
+							if (area.IsContaining(p, checkZ))
+							{
+								areas.Add(area);
+							}
+						}
+					}
+					catch (Exception e)
+					{
+						log.Error("GetArea exception.Area count " + m_ZoneAreasCount[zoneIndex], e);
+					}
+				}
+			}
+
+			return areas;
+		}
+
+		public override IList GetAreasOfZone(Zone zone, int x, int y, int z)
+		{
+			Zone checkZone = zone;
+			IList areas = new ArrayList();
+
+			if (checkZone == null)
+			{
+				return areas;
+			}
+
+			// Players will always request the skinned zone so map it to the actual instance zone
+			if (m_zoneSkinMap.ContainsKey(zone.ID))
+			{
+				checkZone = m_zoneSkinMap[zone.ID];
+			}
+
+			int zoneIndex = Zones.IndexOf(checkZone);
+
+			if (zoneIndex >= 0)
+			{
+				lock (m_Areas.SyncRoot)
+				{
+					try
+					{
+						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
+						{
+							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
+							if (area.IsContaining(x, y, z))
+								areas.Add(area);
+						}
+					}
+					catch (Exception e)
+					{
+						log.Error("GetArea exception.Area count " + m_ZoneAreasCount[zoneIndex], e);
+					}
+				}
+			}
+
+			return areas;
+		}
+
+		#endregion
 
 
         /// <summary>

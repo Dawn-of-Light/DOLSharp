@@ -116,12 +116,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Cache for zone area mapping to quickly access all areas within a certain zone
 		/// </summary>
-		protected readonly ushort[][] m_ZoneAreas;
+		protected ushort[][] m_ZoneAreas;
 
 		/// <summary>
 		/// /// Cache for number of items in m_ZoneAreas array.
 		/// </summary>
-		protected readonly ushort[] m_ZoneAreasCount;
+		protected ushort[] m_ZoneAreasCount;
 
 		/// <summary>
 		/// How often shall we remove unused objects
@@ -1033,7 +1033,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="area"></param>
 		/// <returns></returns>
-		public IArea AddArea(IArea area)
+		public virtual IArea AddArea(IArea area)
 		{
 			lock (m_Areas.SyncRoot)
 			{
@@ -1056,7 +1056,7 @@ namespace DOL.GS
 		/// Removes an are from the list of areas and updates area-zone chache
 		/// </summary>
 		/// <param name="area"></param>
-		public void RemoveArea(IArea area)
+		public virtual void RemoveArea(IArea area)
 		{
 			lock (m_Areas.SyncRoot)
 			{
@@ -1088,7 +1088,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="point"></param>
 		/// <returns></returns>
-		public IList GetAreasOfSpot(IPoint3D point)
+		public virtual IList GetAreasOfSpot(IPoint3D point)
 		{
 			Zone zone = GetZone(point.X, point.Y);
 			return GetAreasOfZone(zone, point);
@@ -1102,14 +1102,14 @@ namespace DOL.GS
 		/// <param name="y"></param>
 		/// <param name="z"></param>
 		/// <returns></returns>
-		public IList GetAreasOfSpot(int x, int y, int z)
+		public virtual IList GetAreasOfSpot(int x, int y, int z)
 		{
 			Zone zone = GetZone(x, y);
 			Point3D p = new Point3D(x, y, z);
 			return GetAreasOfZone(zone, p);
 		}
 
-		public IList GetAreasOfZone(Zone zone, IPoint3D p)
+		public virtual IList GetAreasOfZone(Zone zone, IPoint3D p)
 		{
 			return GetAreasOfZone(zone, p, true);
 		}
@@ -1121,7 +1121,7 @@ namespace DOL.GS
 		/// <param name="p"></param>
 		/// <param name="checkZ"></param>
 		/// <returns></returns>
-		public IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
+		public virtual IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
 		{
 			lock (m_Areas.SyncRoot)
 			{
@@ -1136,7 +1136,9 @@ namespace DOL.GS
 						{
 							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
 							if (area.IsContaining(p, checkZ))
+							{
 								areas.Add(area);
+							}
 						}
 					}
 					catch (Exception e)
@@ -1144,11 +1146,12 @@ namespace DOL.GS
 						log.Error("GetArea exception.Area count " + m_ZoneAreasCount[zoneIndex], e);
 					}
 				}
+
 				return areas;
 			}
 		}
 
-		public IList GetAreasOfZone(Zone zone, int x, int y, int z)
+		public virtual IList GetAreasOfZone(Zone zone, int x, int y, int z)
 		{
 			lock (m_Areas.SyncRoot)
 			{
