@@ -39,6 +39,7 @@ namespace DOL.GS.Keeps
 		public GameKeepComponent Component
 		{
 			get { return m_component; }
+			set { m_component = value; }
 		}
 
 		/// <summary>
@@ -133,6 +134,23 @@ namespace DOL.GS.Keeps
 			{
 				guard.Name += " PatrolID " + PatrolID;
 			}
+		}
+
+		public void DeletePatrol()
+		{
+			if (Component != null)
+			{
+				Component.Keep.Patrols.Remove(this);
+			}
+
+			foreach (GameKeepGuard guard in PatrolGuards)
+			{
+				guard.DeleteObject();
+			}
+
+			PatrolGuards.Clear();
+			Component = null;
+			SpawnPosition = null;
 		}
 
 		/// <summary>

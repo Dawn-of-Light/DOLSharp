@@ -83,6 +83,25 @@ namespace DOL.GS.Keeps
 			set { m_position = value; }
 		}
 
+		public void DeleteObject()
+		{
+			if (Component != null)
+			{
+				if (Component.Keep != null)
+				{
+					Component.Keep.Banners.Remove(this.ObjectID);
+				}
+
+				Component.Delete();
+			}
+
+			Component = null;
+			Position = null;
+
+			base.Delete();
+			CurrentRegion = null;
+		}
+
 		public override void LoadFromDatabase(DataObject obj)
 		{
 			base.LoadFromDatabase(obj);
