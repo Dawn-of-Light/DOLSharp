@@ -282,7 +282,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Player.CurrentRegion.Time > client.Player.AreaUpdateTick) // check if update is needed
 			{
 				IList oldAreas = client.Player.CurrentAreas;
-				IList newAreas = newZone.GetAreasOfSpot(client.Player);
+
+				// Because we may be in an instance we need to do the area check from the current region 
+				// rather than relying on the zone which is in the skinned region.  - Tolakram
+
+				IList newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player);
 
 				// Check for left areas
 				if (oldAreas != null)

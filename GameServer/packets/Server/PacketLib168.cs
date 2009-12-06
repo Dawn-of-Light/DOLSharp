@@ -679,10 +679,10 @@ namespace DOL.GS.PacketHandler
 			Zone z = obj.CurrentZone;
 			if (z == null)
 			{
-				if (log.IsWarnEnabled)
-				{
-					log.Warn("SendObjectUpdate: obj zone == null to " + m_gameClient.Player.Name + " in " + m_gameClient.Player.CurrentZone.Description + " (" + m_gameClient.Player.CurrentRegion.Name + ") : " + obj.Name + " (" + obj.InternalID + ")");
-				}
+				//if (log.IsWarnEnabled)
+				//{
+				//    log.Warn("SendObjectUpdate: obj zone == null to " + m_gameClient.Player.Name + " in " + m_gameClient.Player.CurrentZone.Description + " (" + m_gameClient.Player.CurrentRegion.Name + ") : " + obj.Name + " (" + obj.InternalID + ")");
+				//}
 				return;
 			}
 

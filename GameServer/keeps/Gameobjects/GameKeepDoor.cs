@@ -497,6 +497,26 @@ namespace DOL.GS.Keeps
 			m_repairTimer.Start(repairInterval);
 		}
 
+		public void DeleteObject()
+		{
+			RemoveTimers();
+
+			if (Component != null)
+			{
+				if (Component.Keep != null)
+				{
+					Component.Keep.Doors.Remove(this.ObjectID);
+				}
+
+				Component.Delete();
+			}
+
+			Component = null;
+			Position = null;
+			base.Delete();
+			CurrentRegion = null;
+		}
+
 		public virtual void RemoveTimers()
 		{
 			if (m_repairTimer != null)
