@@ -61,7 +61,7 @@ namespace DOL.GS
 		{
 			m_zoneSkinMap.Clear();
 
-			foreach (IArea area in Areas)
+			foreach (IArea area in (Areas.Clone() as ArrayList))
 			{
 				RemoveArea(area);
 			}
