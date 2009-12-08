@@ -709,8 +709,8 @@ namespace DOL.GS.Keeps
 
 		public int RepairedHealth = 0;
 
-		private RegionTimer m_repairTimer;
-		private static int repairInterval = 30 * 60 * 1000;
+		protected RegionTimer m_repairTimer;
+		protected static int repairInterval = 30 * 60 * 1000;
 
 		public int RepairTimerCallback(RegionTimer timer)
 		{
