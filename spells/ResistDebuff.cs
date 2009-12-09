@@ -75,7 +75,7 @@ namespace DOL.GS.Spells
 				target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
 				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
 			}
-			if(target is GameNPC) 
+			if(target is GameNPC)
 			{
 				IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
 				if (aggroBrain != null)
@@ -103,7 +103,21 @@ namespace DOL.GS.Spells
 				duration = (Spell.Duration * 4);
 			return (int)duration;
 		}
-
+		/// <summary>
+		/// Calculates chance of spell getting resisted
+		/// </summary>
+		/// <param name="target">the target of the spell</param>
+		/// <returns>chance that spell will be resisted for specific target</returns>
+		public override int CalculateSpellResistChance(GameLiving target)
+		{
+			int basechance = base.CalculateSpellResistChance(target);
+			GameSpellEffect rampage = SpellHandler.FindEffectOnTarget(target, "Rampage");
+			if (rampage != null)
+			{
+				basechance += (int)rampage.Spell.Value;
+			}
+			return Math.Min(100, basechance);
+		}
 		/// <summary>
 		/// Updates changes properties to living
 		/// </summary>
@@ -121,9 +135,9 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo 
+		public override IList DelveInfo
 		{
-			get 
+			get
 			{
 				/*
 				<Begin Info: Nullify Dissipation>
@@ -140,36 +154,36 @@ namespace DOL.GS.Spells
 				Damage: Cold
  
 				<End Info>
-				*/
+				 */
 
 				ArrayList list = new ArrayList();
-                list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ResistDebuff.DelveInfo.Function"));
+				list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ResistDebuff.DelveInfo.Function"));
 				list.Add(" "); //empty line
 				list.Add(Spell.Description);
 				list.Add(" "); //empty line
-                list.Add(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ResistDebuff.DelveInfo.Decrease", DebuffTypeName, m_spell.Value)));
-                list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Target", Spell.Target));
-                if (Spell.Range != 0)
-                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Range", Spell.Range));
-                if (Spell.Duration >= ushort.MaxValue * 1000)
-                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + " Permanent.");
-                else if (Spell.Duration > 60000)
-                    list.Add(string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + Spell.Duration / 60000 + ":" + (Spell.Duration % 60000 / 1000).ToString("00") + " min"));
-                else if (Spell.Duration != 0)
-                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + (Spell.Duration / 1000).ToString("0' sec';'Permanent.';'Permanent.'"));
-                if (Spell.Power != 0)
-                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.PowerCost", Spell.Power.ToString("0;0'%'")));
-                list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.CastingTime", (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'")));
-                if (Spell.RecastDelay > 60000)
-                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.RecastTime") + Spell.RecastDelay / 60000 + ":" + (Spell.RecastDelay % 60000 / 1000).ToString("00") + " min");
-                else if (Spell.RecastDelay > 0)
-                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.RecastTime") + (Spell.RecastDelay / 1000).ToString() + " sec");
-                if (Spell.Concentration != 0)
-                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.ConcentrationCost", Spell.Concentration));
-                if (Spell.Radius != 0)
-                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Radius", Spell.Radius));
-                if (Spell.DamageType != eDamageType.Natural)
-                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Damage", GlobalConstants.DamageTypeToName(Spell.DamageType)));
+				list.Add(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ResistDebuff.DelveInfo.Decrease", DebuffTypeName, m_spell.Value)));
+				list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Target", Spell.Target));
+				if (Spell.Range != 0)
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Range", Spell.Range));
+				if (Spell.Duration >= ushort.MaxValue * 1000)
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + " Permanent.");
+				else if (Spell.Duration > 60000)
+					list.Add(string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + Spell.Duration / 60000 + ":" + (Spell.Duration % 60000 / 1000).ToString("00") + " min"));
+				else if (Spell.Duration != 0)
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + (Spell.Duration / 1000).ToString("0' sec';'Permanent.';'Permanent.'"));
+				if (Spell.Power != 0)
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.PowerCost", Spell.Power.ToString("0;0'%'")));
+				list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.CastingTime", (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'")));
+				if (Spell.RecastDelay > 60000)
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.RecastTime") + Spell.RecastDelay / 60000 + ":" + (Spell.RecastDelay % 60000 / 1000).ToString("00") + " min");
+				else if (Spell.RecastDelay > 0)
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.RecastTime") + (Spell.RecastDelay / 1000).ToString() + " sec");
+				if (Spell.Concentration != 0)
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.ConcentrationCost", Spell.Concentration));
+				if (Spell.Radius != 0)
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Radius", Spell.Radius));
+				if (Spell.DamageType != eDamageType.Natural)
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Damage", GlobalConstants.DamageTypeToName(Spell.DamageType)));
 
 				return list;
 			}
@@ -198,7 +212,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("ColdResistDebuff")]
 	public class ColdResistDebuff : AbstractResistDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Resist_Cold; } }	
+		public override eProperty Property1 { get { return eProperty.Resist_Cold; } }
 		public override string DebuffTypeName { get { return "Cold"; } }
 
 		// constructor
@@ -211,7 +225,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("EnergyResistDebuff")]
 	public class EnergyResistDebuff : AbstractResistDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Resist_Energy; } }	
+		public override eProperty Property1 { get { return eProperty.Resist_Energy; } }
 		public override string DebuffTypeName { get { return "Energy"; } }
 
 		// constructor
@@ -224,7 +238,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("HeatResistDebuff")]
 	public class HeatResistDebuff : AbstractResistDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Resist_Heat; } }	
+		public override eProperty Property1 { get { return eProperty.Resist_Heat; } }
 		public override string DebuffTypeName { get { return "Heat"; } }
 
 		// constructor
@@ -237,7 +251,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("MatterResistDebuff")]
 	public class MatterResistDebuff : AbstractResistDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Resist_Matter; } }	
+		public override eProperty Property1 { get { return eProperty.Resist_Matter; } }
 		public override string DebuffTypeName { get { return "Matter"; } }
 
 		// constructor
@@ -250,7 +264,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("SpiritResistDebuff")]
 	public class SpiritResistDebuff : AbstractResistDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Resist_Spirit; } }	
+		public override eProperty Property1 { get { return eProperty.Resist_Spirit; } }
 		public override string DebuffTypeName { get { return "Spirit"; } }
 
 		// constructor
@@ -263,7 +277,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("SlashResistDebuff")]
 	public class SlashResistDebuff : AbstractResistDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Resist_Slash; } }	
+		public override eProperty Property1 { get { return eProperty.Resist_Slash; } }
 		public override string DebuffTypeName { get { return "Slash"; } }
 
 		// constructor
@@ -276,7 +290,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("ThrustResistDebuff")]
 	public class ThrustResistDebuff : AbstractResistDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Resist_Thrust; } }	
+		public override eProperty Property1 { get { return eProperty.Resist_Thrust; } }
 		public override string DebuffTypeName { get { return "Thrust"; } }
 
 		// constructor
@@ -289,7 +303,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("CrushResistDebuff")]
 	public class CrushResistDebuff : AbstractResistDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Resist_Crush; } }	
+		public override eProperty Property1 { get { return eProperty.Resist_Crush; } }
 		public override string DebuffTypeName { get { return "Crush"; } }
 
 		// constructor
@@ -305,9 +319,9 @@ namespace DOL.GS.Spells
 		public override int BonusCategory2 { get { return 3; } }
 		public override int BonusCategory3 { get { return 3; } }
 		
-		public override eProperty Property1 { get { return eProperty.Resist_Crush; } }	
-		public override eProperty Property2 { get { return eProperty.Resist_Slash; } }	
-		public override eProperty Property3 { get { return eProperty.Resist_Thrust; } }	
+		public override eProperty Property1 { get { return eProperty.Resist_Crush; } }
+		public override eProperty Property2 { get { return eProperty.Resist_Slash; } }
+		public override eProperty Property3 { get { return eProperty.Resist_Thrust; } }
 
 		public override string DebuffTypeName { get { return "Crush/Slash/Thrust"; } }
 
@@ -318,7 +332,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("EssenceSear")]
 	public class EssenceResistDebuff : AbstractResistDebuff
 	{
-		public override eProperty Property1 { get { return eProperty.Resist_Natural; } }	
+		public override eProperty Property1 { get { return eProperty.Resist_Natural; } }
 		public override string DebuffTypeName { get { return "Essence"; } }
 
 		// constructor
