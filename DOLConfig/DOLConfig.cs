@@ -154,8 +154,13 @@ namespace DOLConfig
 		/// <param name="e"></param>
 		private void set_default_values_button_Click(object sender, EventArgs e)
 		{
-			currentConfig = new GameServerConfiguration();
-			loadConfig();
+			if (tabControl1.SelectedTab == sp_tab)
+				ResetSP();
+			else
+			{
+				currentConfig = new GameServerConfiguration();
+				loadConfig();
+			}
 		}
 
 		/// <summary>
@@ -246,7 +251,11 @@ namespace DOLConfig
 		private void save_config_button_Click(object sender, EventArgs e)
 		{
 			wrong_data_error_handler.Clear();
-			saveConfig();
+			
+			if (tabControl1.SelectedTab == sp_tab)
+				SaveSP();
+			else
+				saveConfig();
 		}
 
 		/// <summary>
