@@ -28,7 +28,7 @@ namespace DOL.GS.Spells
 	/// Spell handler for speed decreasing spells
 	/// </summary>
 	[SpellHandler("WarlockSpeedDecrease")]
-	public class WarlockSpeedDecreaseSpellHandler : SpeedDecreaseSpellHandler 
+	public class WarlockSpeedDecreaseSpellHandler : UnbreakableSpeedDecreaseSpellHandler
 	{
 
 		private ushort m_playerModel;
@@ -51,10 +51,10 @@ namespace DOL.GS.Spells
 				else if(effect.Owner.Realm == eRealm.Hibernia)
 					effect.Owner.Model = 594;
 
-				SendEffectAnimation(effect.Owner, 12126, 0, false, 1); 
-				//GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(OnAttacked));	
-				//GameEventMgr.AddHandler(effect.Owner, GamePlayerEvent.Linkdeath, new DOLEventHandler(OnAttacked));	
-				//GameEventMgr.AddHandler(effect.Owner, GamePlayerEvent.Quit, new DOLEventHandler(OnAttacked));	
+				SendEffectAnimation(effect.Owner, 12126, 0, false, 1);
+				//GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(OnAttacked));
+				//GameEventMgr.AddHandler(effect.Owner, GamePlayerEvent.Linkdeath, new DOLEventHandler(OnAttacked));
+				//GameEventMgr.AddHandler(effect.Owner, GamePlayerEvent.Quit, new DOLEventHandler(OnAttacked));
 			}
 			//GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
 		}
@@ -72,9 +72,9 @@ namespace DOL.GS.Spells
 			if(effect.Owner is GamePlayer)
 			{
 				effect.Owner.Model = m_playerModel;
-				//GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(OnAttacked));	
-				//GameEventMgr.RemoveHandler(effect.Owner, GamePlayerEvent.Linkdeath, new DOLEventHandler(OnAttacked));	
-				//GameEventMgr.RemoveHandler(effect.Owner, GamePlayerEvent.Quit, new DOLEventHandler(OnAttacked));	
+				//GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(OnAttacked));
+				//GameEventMgr.RemoveHandler(effect.Owner, GamePlayerEvent.Linkdeath, new DOLEventHandler(OnAttacked));
+				//GameEventMgr.RemoveHandler(effect.Owner, GamePlayerEvent.Quit, new DOLEventHandler(OnAttacked));
 			}
 			return base.OnEffectExpires(effect, noMessages);
 		}
