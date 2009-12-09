@@ -78,7 +78,8 @@ namespace DOL.GS
                         }
                         else
                         {
-                        	#warning Graveen: Deprecated - please use npctemplate for stablemaster mounts
+                        	#warning Graveen: Deprecated - use npctemplate for stablemaster mounts
+                           	// this piece of code will be trashed soon !
                         	mount = new GameHorse();
        						foreach (GameNPC npc in GetNPCsInRadius(400))
 							if (npc.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.HorseName")

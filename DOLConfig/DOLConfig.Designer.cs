@@ -109,6 +109,7 @@
         	this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
         	this.type = new System.Windows.Forms.DataGridViewTextBoxColumn();
         	this.sp_tab = new System.Windows.Forms.TabPage();
+        	this.cb_spCurrentValue = new System.Windows.Forms.ComboBox();
         	this.tb_spDefaultValue = new System.Windows.Forms.TextBox();
         	this.label39 = new System.Windows.Forms.Label();
         	this.tb_spDesc = new System.Windows.Forms.TextBox();
@@ -1094,6 +1095,7 @@
         	// 
         	// sp_tab
         	// 
+        	this.sp_tab.Controls.Add(this.cb_spCurrentValue);
         	this.sp_tab.Controls.Add(this.tb_spDefaultValue);
         	this.sp_tab.Controls.Add(this.label39);
         	this.sp_tab.Controls.Add(this.tb_spDesc);
@@ -1109,31 +1111,43 @@
         	this.sp_tab.Text = "Server properties";
         	this.sp_tab.UseVisualStyleBackColor = true;
         	// 
+        	// cb_spCurrentValue
+        	// 
+        	this.cb_spCurrentValue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        	this.cb_spCurrentValue.FormattingEnabled = true;
+        	this.cb_spCurrentValue.Items.AddRange(new object[] {
+        	        	        	"True",
+        	        	        	"False"});
+        	this.cb_spCurrentValue.Location = new System.Drawing.Point(80, 331);
+        	this.cb_spCurrentValue.Name = "cb_spCurrentValue";
+        	this.cb_spCurrentValue.Size = new System.Drawing.Size(121, 21);
+        	this.cb_spCurrentValue.TabIndex = 21;
+        	// 
         	// tb_spDefaultValue
         	// 
         	this.tb_spDefaultValue.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
         	        	        	| System.Windows.Forms.AnchorStyles.Left) 
         	        	        	| System.Windows.Forms.AnchorStyles.Right)));
         	this.tb_spDefaultValue.Enabled = false;
-        	this.tb_spDefaultValue.Location = new System.Drawing.Point(80, 330);
+        	this.tb_spDefaultValue.Location = new System.Drawing.Point(80, 377);
         	this.tb_spDefaultValue.Multiline = true;
         	this.tb_spDefaultValue.Name = "tb_spDefaultValue";
         	this.tb_spDefaultValue.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-        	this.tb_spDefaultValue.Size = new System.Drawing.Size(319, 40);
+        	this.tb_spDefaultValue.Size = new System.Drawing.Size(202, 40);
         	this.tb_spDefaultValue.TabIndex = 20;
         	// 
         	// label39
         	// 
-        	this.label39.Location = new System.Drawing.Point(3, 330);
+        	this.label39.Location = new System.Drawing.Point(3, 377);
         	this.label39.Name = "label39";
-        	this.label39.Size = new System.Drawing.Size(80, 40);
+        	this.label39.Size = new System.Drawing.Size(80, 32);
         	this.label39.TabIndex = 19;
         	this.label39.Text = "Default Value:";
         	// 
         	// tb_spDesc
         	// 
         	this.tb_spDesc.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        	this.tb_spDesc.Location = new System.Drawing.Point(3, 281);
+        	this.tb_spDesc.Location = new System.Drawing.Point(3, 278);
         	this.tb_spDesc.Multiline = true;
         	this.tb_spDesc.Name = "tb_spDesc";
         	this.tb_spDesc.Size = new System.Drawing.Size(396, 40);
@@ -1142,22 +1156,23 @@
         	// bu_spChange
         	// 
         	this.bu_spChange.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-        	this.bu_spChange.Image = global::DOLConfig.Resources.save_config_button_Image;
+        	this.bu_spChange.Image = global::DOLConfig.Resources.edit_property_button_Image;
         	this.bu_spChange.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-        	this.bu_spChange.Location = new System.Drawing.Point(285, 253);
+        	this.bu_spChange.Location = new System.Drawing.Point(288, 394);
         	this.bu_spChange.Name = "bu_spChange";
-        	this.bu_spChange.Size = new System.Drawing.Size(114, 23);
+        	this.bu_spChange.Size = new System.Drawing.Size(111, 23);
         	this.bu_spChange.TabIndex = 17;
-        	this.bu_spChange.Text = "Save Properties";
+        	this.bu_spChange.Text = "Mark for update";
         	this.bu_spChange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         	this.bu_spChange.UseVisualStyleBackColor = true;
+        	this.bu_spChange.Click += new System.EventHandler(this.Bu_spChangeClick);
         	// 
         	// tb_spCurrentValue
         	// 
         	this.tb_spCurrentValue.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
         	        	        	| System.Windows.Forms.AnchorStyles.Left) 
         	        	        	| System.Windows.Forms.AnchorStyles.Right)));
-        	this.tb_spCurrentValue.Location = new System.Drawing.Point(80, 377);
+        	this.tb_spCurrentValue.Location = new System.Drawing.Point(80, 331);
         	this.tb_spCurrentValue.Multiline = true;
         	this.tb_spCurrentValue.Name = "tb_spCurrentValue";
         	this.tb_spCurrentValue.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -1166,7 +1181,7 @@
         	// 
         	// label38
         	// 
-        	this.label38.Location = new System.Drawing.Point(3, 377);
+        	this.label38.Location = new System.Drawing.Point(3, 331);
         	this.label38.Name = "label38";
         	this.label38.Size = new System.Drawing.Size(80, 40);
         	this.label38.TabIndex = 12;
@@ -1175,18 +1190,19 @@
         	// lbl_spName
         	// 
         	this.lbl_spName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.lbl_spName.Location = new System.Drawing.Point(3, 252);
+        	this.lbl_spName.Location = new System.Drawing.Point(22, 252);
         	this.lbl_spName.Name = "lbl_spName";
-        	this.lbl_spName.Size = new System.Drawing.Size(279, 23);
+        	this.lbl_spName.Size = new System.Drawing.Size(356, 23);
         	this.lbl_spName.TabIndex = 10;
         	this.lbl_spName.Text = "- Property name -";
         	this.lbl_spName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         	// 
         	// tv_spShow
         	// 
+        	this.tv_spShow.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         	this.tv_spShow.Location = new System.Drawing.Point(3, 3);
         	this.tv_spShow.Name = "tv_spShow";
-        	this.tv_spShow.Size = new System.Drawing.Size(396, 245);
+        	this.tv_spShow.Size = new System.Drawing.Size(396, 246);
         	this.tv_spShow.TabIndex = 0;
         	this.tv_spShow.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.Tv_spShowAfterSelect);
         	// 
@@ -1727,6 +1743,7 @@
         	this.ResumeLayout(false);
         	this.PerformLayout();
         }
+        private System.Windows.Forms.ComboBox cb_spCurrentValue;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label23;

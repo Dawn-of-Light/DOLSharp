@@ -160,7 +160,6 @@ namespace DOL.GS
 				}
 			}
 
-			#warning Graveen: once NpcTemplate 'll be finalized, must be changed to Flags - db converter to do
 			m_flags = data.Flags;
 
 			m_meleeDamageType = (eDamageType)data.MeleeDamageType;
