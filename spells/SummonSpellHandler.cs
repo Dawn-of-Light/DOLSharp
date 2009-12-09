@@ -185,7 +185,6 @@ namespace DOL.GS.Spells
 			RemoveHandlers();
 			effect.Owner.Health = 0; // to send proper remove packet
 			effect.Owner.Delete();
-			effect.Owner.CurrentRegion = null;
 			return 0;
 		}
 
