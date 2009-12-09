@@ -185,6 +185,7 @@ namespace DOL.GS.Spells
 			RemoveHandlers();
 			effect.Owner.Health = 0; // to send proper remove packet
 			effect.Owner.Delete();
+			effect.Owner.CurrentRegion = null;
 			return 0;
 		}
 
@@ -193,7 +194,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected virtual void RemoveHandlers()
 		{
-			GameEventMgr.RemoveHandler(pet, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
+			GameEventMgr.RemoveAllHandlersForObject(pet);
 		}
 
 		/// <summary>
