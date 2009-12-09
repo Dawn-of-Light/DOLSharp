@@ -48,7 +48,7 @@ namespace DOL.GS.ServerRules
 		}
 
 		public static eRealm DarknessFallOwner = eRealm.None;
-	
+		
 		/// <summary>
 		/// initialize the darkness fall entrance system
 		/// </summary>
@@ -66,42 +66,24 @@ namespace DOL.GS.ServerRules
 		/// check if a realm have more keep at start
 		/// to know the DF owner
 		/// </summary>
+		
 		private static void CheckDFOwner()
 		{
 			int albcount = KeepMgr.GetTowerCountByRealm(eRealm.Albion);
 			int midcount = KeepMgr.GetTowerCountByRealm(eRealm.Midgard);
 			int hibcount = KeepMgr.GetTowerCountByRealm(eRealm.Hibernia);
 
-            //Dinberg - need to review this, it appears that it actually gives an unfair advantage in ties.
-
-			if (albcount>midcount)
+			if (albcount > midcount && albcount > hibcount)
 			{
-				if (albcount > hibcount)
-				{
-					DarknessFallOwner = eRealm.Albion;
-				}
-				else if (albcount < hibcount)
-				{
-					DarknessFallOwner = eRealm.Hibernia;
-				}
+				DarknessFallOwner = eRealm.Albion;
 			}
-			else if (albcount<midcount)
+			if (midcount > albcount && midcount > hibcount)
 			{
-				if (midcount > hibcount)
-				{
-					DarknessFallOwner = eRealm.Midgard;
-				}
-				else if (midcount < hibcount)
-				{
-					DarknessFallOwner = eRealm.Hibernia;
-				}
+				DarknessFallOwner = eRealm.Midgard;
 			}
-			else // == 
+			if (hibcount > midcount && hibcount > albcount)
 			{
-				if (midcount < hibcount)
-				{
-					DarknessFallOwner = eRealm.Hibernia;
-				}
+				DarknessFallOwner = eRealm.Hibernia;
 			}
 		}
 
