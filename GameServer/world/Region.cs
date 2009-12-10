@@ -39,9 +39,6 @@ namespace DOL.GS
 	/// </summary>
 	public class Region
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Region Variables
@@ -220,6 +217,46 @@ namespace DOL.GS
 				}
 			}
 		}
+
+
+
+		/// <summary>
+		/// What to do when the region collapses.
+		/// This is called when instanced regions need to be closed
+		/// </summary>
+		public virtual void OnCollapse()
+		{
+			//Delete objects
+			foreach (GameObject obj in m_objects)
+			{
+				if (obj != null)
+				{
+					obj.Delete();
+					RemoveObject(obj);
+					obj.CurrentRegion = null;
+				}
+			}
+
+			m_objects = null;
+
+			foreach (Zone z in m_Zones)
+			{
+				z.Delete();
+			}
+
+			m_Zones.Clear();
+
+			m_graveStones.Clear();
+
+			DOL.Events.GameEventMgr.RemoveAllHandlersForObject(this);
+		}
+
+
+		~Region()
+		{
+			log.Debug("Region destructor called for " + Description);
+		}
+
 
 		#endregion
 

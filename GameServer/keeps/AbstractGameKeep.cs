@@ -361,6 +361,8 @@ namespace DOL.GS.Keeps
 			return (byte)Math.Max(0, level - 1);
 		}
 
+		string m_name = "";
+
 		/// <summary>
 		/// The Keep Name linked to the DBKeep
 		/// </summary>
@@ -368,15 +370,19 @@ namespace DOL.GS.Keeps
 		{
 			get	
 			{
-				string name = DBKeep.Name;
-
-				if (ServerProperties.Properties.ENABLE_DEBUG)
+				if (DBKeep != null)
 				{
-					name += string.Format(" KID: {0}", KeepID);
+					string name = DBKeep.Name;
+
+					if (ServerProperties.Properties.ENABLE_DEBUG)
+					{
+						name += string.Format(" KID: {0}", KeepID);
+					}
+
+					m_name = name;
 				}
 
-				return name;
-
+				return m_name;
 			}
 			set	{ DBKeep.Name = value; }
 		}
@@ -480,6 +486,12 @@ namespace DOL.GS.Keeps
 			m_doors = new Hashtable();
 			m_patrols = new Hashtable();
 		}
+
+		~AbstractGameKeep()
+		{
+			log.Debug("AbstractGameKeep destructor called for " + Name);
+		}
+
 
 		#region LOAD/UNLOAD
 

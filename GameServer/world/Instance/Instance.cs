@@ -71,6 +71,10 @@ namespace DOL.GS
 			base.OnCollapse();
 		}
 
+		~Instance()
+		{
+			log.Debug("Instance destructor called for " + Description);
+		}
 
         #region Entrance
 
