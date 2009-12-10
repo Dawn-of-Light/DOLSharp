@@ -3450,7 +3450,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (CurrentRegion.Time - CHARMED_NOEXP_TIMEOUT < TempProperties.getLongProperty(CHARMED_TICK_PROP, 0L))
+				if (CurrentRegion == null || CurrentRegion.Time - CHARMED_NOEXP_TIMEOUT < TempProperties.getLongProperty(CHARMED_TICK_PROP, 0L))
 					return false;
 				if (this.Brain is IControlledBrain)
 					return false;
