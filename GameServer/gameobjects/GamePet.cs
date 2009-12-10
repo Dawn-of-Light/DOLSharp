@@ -317,6 +317,7 @@ namespace DOL.GS
 		{
 			GameEventMgr.Notify(GameLivingEvent.PetReleased, this);
 			base.Die(killer);
+			CurrentRegion = null;
 		}
 
 		public virtual void HailMaster()

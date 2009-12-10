@@ -239,11 +239,13 @@ namespace DOL.GS
         }
 
         /// <summary>
-        /// What to do when the region collapses. Default - nothing.
+        /// What to do when the region collapses.
         /// Examples of use: Expire task on task dungeons.
         /// </summary>
-        public virtual void OnCollapse()
+        public override void OnCollapse()
         {
+			base.OnCollapse();
+
 			if (m_autoCloseRegionTimer != null)
 			{
 				m_autoCloseRegionTimer.Stop();
@@ -256,25 +258,12 @@ namespace DOL.GS
 				m_delayCloseRegionTimer = null;
 			}
 
-			//Delete objects
-			foreach (GameObject obj in Objects)
-			{
-				if (obj != null)
-				{
-					obj.Delete();
-					RemoveObject(obj);
-					obj.CurrentRegion = null;
-				}
-			}
-
-			m_Zones.Clear();
-			m_graveStones.Clear();
 			DOL.Events.GameEventMgr.RemoveAllHandlersForObject(this);
 		}
 
 		~BaseInstance()
 		{
-			log.Debug("BaseInstance destructor called");
+			log.Debug("BaseInstance destructor called for " + Description);
 		}
 
         private AutoCloseRegionTimer m_autoCloseRegionTimer;

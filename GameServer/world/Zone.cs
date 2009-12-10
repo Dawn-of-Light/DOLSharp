@@ -47,9 +47,6 @@ namespace DOL.GS
         So for old version please have a look in old release
         */
 
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region constants data
@@ -137,7 +134,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Contains the list of objects per subzone
 		/// </summary>
-		private readonly SubNodeElement[][] m_subZoneElements;
+		private SubNodeElement[][] m_subZoneElements;
 
 		/// <summary>
 		/// Should be accessed as [(subzone/4)|objectType]
@@ -149,7 +146,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds a pointer to the region that is the parent of this zone
 		/// </summary>
-		private readonly Region m_Region;
+		private Region m_Region;
 
 		/// <summary>
 		/// The ID of the Zone eg. 15
@@ -228,6 +225,31 @@ namespace DOL.GS
 			m_subZoneElements = new SubNodeElement[SUBZONE_NBR][];
 			m_initialized = false;
 		}
+
+		public void Delete()
+		{
+			for (int i = 0; i < SUBZONE_NBR; i++)
+			{
+				for (int k = 0; k < m_subZoneElements[i].Length; k++)
+				{
+					m_subZoneElements[i][k].data = null;
+					m_subZoneElements[i][k] = null;
+				}
+
+				m_subZoneElements[i] = null;
+			}
+
+			m_subZoneElements = null;
+			m_subZoneTimestamps = null;
+			m_Region = null;
+			DOL.Events.GameEventMgr.RemoveAllHandlersForObject(this);
+		}
+
+		~Zone()
+		{
+			Console.WriteLine("Destructor called for zone " + Description);
+		}
+
 
 		private void InitializeZone()
 		{
@@ -403,6 +425,7 @@ namespace DOL.GS
 		public Region ZoneRegion
 		{
 			get { return m_Region; }
+			set { m_Region = value; }
 		}
 
 		/// <summary>
