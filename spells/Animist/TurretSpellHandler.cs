@@ -67,20 +67,23 @@ namespace DOL.GS.Spells
 
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			foreach(GameNPC npc in target.CurrentRegion.GetNPCsInRadius(target.X, target.Y, target.Z, (ushort) Spell.Radius, false))
+			if (target != null && target.CurrentRegion != null)
 			{
-				if(npc == null || !npc.IsAlive)
+				foreach (GameNPC npc in target.CurrentRegion.GetNPCsInRadius(target.X, target.Y, target.Z, (ushort)Spell.Radius, false))
 				{
-					continue;
-				}
-				if(!(npc is TurretPet))
-				{
-					continue;
-				}
-				if(Caster.IsControlledNPC(npc))
-				{
-					//PetCounter is decremented when pet die.
-					npc.Die(Caster);
+					if (npc == null || !npc.IsAlive)
+					{
+						continue;
+					}
+					if (!(npc is TurretPet))
+					{
+						continue;
+					}
+					if (Caster.IsControlledNPC(npc))
+					{
+						//PetCounter is decremented when pet die.
+						npc.Die(Caster);
+					}
 				}
 			}
 		}
