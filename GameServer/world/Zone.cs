@@ -230,13 +230,19 @@ namespace DOL.GS
 		{
 			for (int i = 0; i < SUBZONE_NBR; i++)
 			{
-				for (int k = 0; k < m_subZoneElements[i].Length; k++)
+				if (m_subZoneElements[i] != null)
 				{
-					m_subZoneElements[i][k].data = null;
-					m_subZoneElements[i][k] = null;
-				}
+					for (int k = 0; k < m_subZoneElements[i].Length; k++)
+					{
+						if (m_subZoneElements[i][k] != null)
+						{
+							m_subZoneElements[i][k].data = null;
+							m_subZoneElements[i][k] = null;
+						}
+					}
 
-				m_subZoneElements[i] = null;
+					m_subZoneElements[i] = null;
+				}
 			}
 
 			m_subZoneElements = null;
