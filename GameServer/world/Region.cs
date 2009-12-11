@@ -974,7 +974,7 @@ namespace DOL.GS
 		/// <returns>The object with the specified ID, null if it didn't exist</returns>
 		public GameObject GetObject(ushort id)
 		{
-			if (id <= 0 || id > m_objects.Length)
+			if (m_objects == null || id <= 0 || id > m_objects.Length)
 				return null;
 			return m_objects[id - 1];
 		}
