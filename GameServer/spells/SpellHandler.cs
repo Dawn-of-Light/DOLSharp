@@ -3093,6 +3093,28 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
+		/// Player pet damage cap
+		/// This simulates a player casting a baseline nuke with the capped damage near (but not exactly) that of the equivilent spell of the players level.
+		/// This cap is not applied if the player is level 50
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public virtual double CapPetSpellDamage(double damage, GamePlayer player)
+		{
+			if (player.Level < 13)
+			{
+				return 4.1 * player.Level;
+			}
+
+			if (player.Level < 50)
+			{
+				return 3.8 * player.Level;
+			}
+
+			return damage;
+		}
+
+		/// <summary>
 		/// Calculates the base 100% spell damage which is then modified by damage variance factors
 		/// </summary>
 		/// <returns></returns>
@@ -3104,10 +3126,17 @@ namespace DOL.GS.Spells
 			// For pets the stats of the owner have to be taken into account.
 
 			if (Caster is GameNPC && ((Caster as GameNPC).Brain) is IControlledBrain)
+			{
 				player = (((Caster as GameNPC).Brain) as IControlledBrain).Owner as GamePlayer;
+			}
 
 			if (player != null)
 			{
+				if (Caster is GamePet)
+				{
+					spellDamage = CapPetSpellDamage(spellDamage, player);
+				}
+
 				if (this.SpellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
 				{
 					double WeaponSkill = player.GetWeaponSkill(player.AttackWeapon);
