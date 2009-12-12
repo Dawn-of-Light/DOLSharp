@@ -614,6 +614,7 @@ namespace DOL.GS.Keeps
 		public override void Delete()
 		{
 			StopHealthRegeneration();
+			RemoveTimers();
 			HookPoints.Clear();
 			Positions.Clear();
 			Keep = null;
