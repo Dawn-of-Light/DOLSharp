@@ -56,6 +56,20 @@ namespace DOL.GS
 			UpdateNPCEquipmentAppearance();
 		}
 
+		public GameLiving Owner
+		{
+			get 
+			{
+				if (Brain is IControlledBrain)
+				{
+					return (Brain as IControlledBrain).Owner;
+				}
+
+				return null;
+			}
+		}
+
+
 		#region Inventory
 
 		/// <summary>
