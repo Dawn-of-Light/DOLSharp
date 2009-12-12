@@ -2125,9 +2125,12 @@ namespace DOL.GS
 
 			return Math.Max(1, (int)hp4);
 		}
+
 		/// <summary>
-		/// Calculates MaxHealth
+		/// Calculate max mana for this player based on level and mana stat level
 		/// </summary>
+		/// <param name="level"></param>
+		/// <param name="manastat"></param>
 		/// <returns></returns>
 		public virtual int CalculateMaxMana(int level, int manastat)
 		{
