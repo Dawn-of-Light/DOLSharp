@@ -338,7 +338,7 @@ namespace DOL.GS
 					continue;
 				}
 
-				if (!this.IsWithinRadius(observer, WorldMgr.INTERACT_DISTANCE))
+				if (!this.IsWithinRadius(observer, WorldMgr.INFO_DISTANCE))
 				{
 					if (observer.Client.Account.PrivLevel > 1)
 						observer.Out.SendMessage(String.Format("You are too far away from house vault {0} and will not receive any more updates.",

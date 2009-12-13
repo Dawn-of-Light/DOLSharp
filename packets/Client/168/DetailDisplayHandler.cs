@@ -91,12 +91,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 									if (item == null)
 										return 1;
 								}
+								else if (client.Player.ActiveVault != null)
+								{
+									GameHouseVault vault = client.Player.ActiveVault;
+									item = vault.Inventory[objectID];
+									if (item == null)
+										return 1;
+								}
 								else
 								{
 									return 1;
 								}
                             }
-
                         }
                         else if (objectType == 10)
                         {
