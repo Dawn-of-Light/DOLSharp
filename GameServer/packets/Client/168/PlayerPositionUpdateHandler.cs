@@ -350,7 +350,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							builder.Append(" Account=");
 							builder.Append(client.Account.Name);
 							builder.Append(" IP=");
-							builder.Append(client.TcpEndpoint);
+							builder.Append(client.TCPEndpointAddress);
 							GameServer.Instance.LogCheatAction(builder.ToString());
 							if ((client.Account.PrivLevel == 1) && SHcount >= 20) // ~5-10 sec SH
 							{
@@ -421,7 +421,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				builder.Append(" Account=");
 				builder.Append(client.Account.Name);
 				builder.Append(" IP=");
-				builder.Append(client.TcpEndpoint);
+				builder.Append(client.TCPEndpointAddress);
 				GameServer.Instance.LogCheatAction(builder.ToString());
 				{
 					if (ServerProperties.Properties.BAN_HACKERS)
