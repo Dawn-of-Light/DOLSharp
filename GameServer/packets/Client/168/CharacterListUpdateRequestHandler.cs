@@ -55,6 +55,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					b.Reason = String.Format( "Autoban wrong Account '{0}'", GameServer.Database.Escape( accountName ) );
 					GameServer.Database.AddNewObject( b );
 					GameServer.Database.SaveObject( b );
+					GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
 				}
 
 				client.Disconnect();
@@ -94,6 +95,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								b.Reason = String.Format( "Autoban bad CharName '{0}'", GameServer.Database.Escape( charname ) );
 								GameServer.Database.AddNewObject( b );
 								GameServer.Database.SaveObject( b );
+								GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
 							}
 
 							client.Disconnect();
@@ -118,6 +120,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								b.Reason = String.Format( "Autoban CharName '{0}' on wrong Account '{1}'", GameServer.Database.Escape( charname ), GameServer.Database.Escape( client.Account.Name ) );
 								GameServer.Database.AddNewObject( b );
 								GameServer.Database.SaveObject( b );
+								GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
 							}
 
 							client.Disconnect();
@@ -232,6 +235,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 														b.Reason = String.Format( "Autoban Hack char update : Wrong {0} point:{1}", ( stat == eStat.STR ) ? "STR" : stat.ToString(), result );
 														GameServer.Database.AddNewObject( b );
 														GameServer.Database.SaveObject( b );
+														GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
 													}
 
 													client.Disconnect();
@@ -239,29 +243,31 @@ namespace DOL.GS.PacketHandler.Client.v168
 												}
 											}
 										}
-										if (points != 30)
-										{
-											log.Warn("v189+ stat respec points used:" + points);
-											valid = false;
-											if (client.Account.PrivLevel == 1)
-											{
-												if( ServerProperties.Properties.BAN_HACKERS )
-												{
-													DBBannedAccount b = new DBBannedAccount();
-													b.Author = "SERVER";
-													b.Ip = client.TCPEndpointAddress;
-													b.Account = client.Account.Name;
-													b.DateBan = DateTime.Now;
-													b.Type = "B";
-													b.Reason = String.Format( "Autoban Hack char update : Wrong total points used:{0}", points );
-													GameServer.Database.AddNewObject( b );
-													GameServer.Database.SaveObject( b );
-												}
+										// points will not be 30 if character is above level 1.
+										//if (points != 30)
+										//{
+										//    log.Warn("v189+ stat respec points used:" + points);
+										//    valid = false;
+										//    if (client.Account.PrivLevel == 1)
+										//    {
+										//        if( ServerProperties.Properties.BAN_HACKERS )
+										//        {
+										//            DBBannedAccount b = new DBBannedAccount();
+										//            b.Author = "SERVER";
+										//            b.Ip = client.TCPEndpointAddress;
+										//            b.Account = client.Account.Name;
+										//            b.DateBan = DateTime.Now;
+										//            b.Type = "B";
+										//            b.Reason = String.Format( "Autoban Hack char update : Wrong total points used: {0}", points );
+										//            GameServer.Database.AddNewObject( b );
+										//            GameServer.Database.SaveObject( b );
+										//            GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+										//        }
 
-												client.Disconnect();
-												return 1;
-											}
-										}
+										//        client.Disconnect();
+										//        return 1;
+										//    }
+										//}
 										if (valid)
 										{
 											character.Strength = (byte)stats[0];
@@ -332,6 +338,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									b.Reason = String.Format("Autoban Hack char update : zero character size in model:{0}", newModel);
 									GameServer.Database.AddNewObject(b);
 									GameServer.Database.SaveObject(b);
+									GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
 									client.Disconnect();
 									return 1;
 								}
@@ -440,6 +447,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								b.Reason = string.Format("Autoban character create class: id:{0} realm:{1} name:{2} account:{3}", ch.Class, ch.Realm, ch.Name, account.Name);
 								GameServer.Database.AddNewObject(b);
 								GameServer.Database.SaveObject(b);
+								GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
 								client.Disconnect();
 							}
 							//client.Out.SendCharacterOverview((eRealm)ch.Realm);
