@@ -71,8 +71,8 @@ namespace DOLConfig
 
 				return config;
 			}
-			catch (Exception e) {
-				throw e;
+			catch {
+				throw;
 			}
 		}
 
