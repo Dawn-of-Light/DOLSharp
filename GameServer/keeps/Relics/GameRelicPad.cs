@@ -12,7 +12,7 @@ namespace DOL.GS
 	public class GameRelicPad : GameStaticItem
 	{
 
-		const int PAD_AREA_RADIUS = 200;
+		const int PAD_AREA_RADIUS = 250;
 
 		PadArea m_area = null;
 		GameRelic m_mountedRelic = null;
