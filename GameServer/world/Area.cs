@@ -287,7 +287,7 @@ namespace DOL.GS
 				// check if spot is in circle
 				m_distSq = m_xdiff * m_xdiff + m_ydiff * m_ydiff;
 
-				if (checkZ)
+				if (Z != 0 && z != 0 && checkZ)
 				{
 					long m_zdiff = (long)z - Z;
 					m_distSq += m_zdiff * m_zdiff;
