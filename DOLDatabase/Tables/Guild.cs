@@ -35,6 +35,7 @@ namespace DOL.Database
 		private string	m_guildname;
 		private string	m_motd;
 		private string	m_omotd;//officier motd
+		private byte m_realm;
 
 		private string m_allianceID;
 		private int m_emblem;
@@ -56,6 +57,7 @@ namespace DOL.Database
 		public DBGuild()
 		{
 			m_guildname = "default guild name";
+			m_realm = 0;
 			m_autoSave=false;
 			m_emblem = 0;
 			Ranks = new DBRank[10];
@@ -187,7 +189,21 @@ namespace DOL.Database
 			}
 		}
 
-        [DataElement(AllowDbNull = true)] // can be primary too
+		[DataElement(AllowDbNull = true)]
+		public byte Realm
+		{
+			get
+			{
+				return m_realm;
+			}
+			set
+			{
+				Dirty = true;
+				m_realm = value;
+			}
+		}
+		
+		[DataElement(AllowDbNull = true)] // can be primary too
         public bool GuildBanner
         {
             get
