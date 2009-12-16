@@ -91,8 +91,9 @@ namespace DOL.GS.Spells
 			double absorbPercent = 25;
 			if (Spell.Damage > 0)
 				absorbPercent = Spell.Damage;
-			if (absorbPercent > 99)
-				absorbPercent = 99;
+            //because albatives can reach 100%
+			if (absorbPercent > 100)
+				absorbPercent = 100;
 			int damageAbsorbed = (int)(0.01 * absorbPercent * (ad.Damage+ad.CriticalDamage));
 			if (damageAbsorbed > ablativehp)
 				damageAbsorbed = ablativehp;

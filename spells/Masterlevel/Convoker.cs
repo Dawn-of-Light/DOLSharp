@@ -81,7 +81,7 @@ namespace DOL.GS.Spells
             dbs.CastTime = 0;
             dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
             sRadius = 2000;
-            s = new Spell(dbs, 1);
+            s = new Spell(dbs, 50);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
             heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
         }
@@ -101,13 +101,11 @@ namespace DOL.GS.Spells
 
         public override void OnEffectStart(GameSpellEffect effect)
         {
-            //effect.Owner.BuffBonusCategory3[(int)eProperty.Skill_Stealth] += (int)Spell.Value;
             base.OnEffectStart(effect);
         }
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            //effect.Owner.BuffBonusCategory3[(int)eProperty.Skill_Stealth] -= (int)Spell.Value;
             return base.OnEffectExpires(effect, noMessages);
         }
 
@@ -208,7 +206,7 @@ namespace DOL.GS.Spells
             dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
             sRadius = 1000;
             dbs.SpellGroup = 9;
-            s = new Spell(dbs, 1);
+            s = new Spell(dbs, 50);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
             heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
         }
@@ -565,7 +563,7 @@ namespace DOL.GS.Spells
 
             m_living = player.ControlledNpcBrain.Body;
             //m_living.Level += 20;
-			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += 75;
+            m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += 75;
             m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] += 75;
             m_living.Size += 40;
             base.OnEffectStart(effect);
@@ -573,16 +571,17 @@ namespace DOL.GS.Spells
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-        	//m_living.Level -= 20;
-			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] -= 75;
+            //m_living.Level -= 20;
+            m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] -= 75;
             m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] -= 75;
             m_living.Size -= 40;
             return base.OnEffectExpires(effect, noMessages);
-         }
+        }
 
         public Convoker9Handler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     #endregion
+
 
     //no shared timer
     #region Convoker-10
@@ -748,8 +747,8 @@ namespace DOL.GS.Spells
             //spell damage shood be 50-100 (thats the ammmount power tapped on use)
             int mana = (int)(Spell.Damage);
 			target.ChangeMana(target, GameLiving.eManaChangeType.Spell, (-mana));
-
-            target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+            //~yemla~Power rend shouldn't inrupt if im correct? A.k ML9 Perfector Power Drainging Ward Please more info on it.
+            //target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
         }
 
         public virtual void SendCasterMessage(GameLiving target, int mana)
