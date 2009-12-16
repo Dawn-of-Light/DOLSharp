@@ -246,12 +246,39 @@ namespace DOL.GS.Spells
 
 	#region Battlemaster-6
 	// LifeFlight
+    [SpellHandler("ThrowWeapon")]
     public class ThrowWeaponSpellHandler : DirectDamageSpellHandler
  	{
+        #region Disarm Weapon
+        protected static Spell Disarm_Weapon;
+        public static Spell Disarmed
+        {
+            get
+            {
+                if (Disarm_Weapon == null)
+                {
+                    DBSpell spell = new DBSpell();
+                    spell.AutoSave = false;
+                    spell.CastTime = 0;
+                    spell.Uninterruptible = true;
+                    spell.Icon = 7293;
+                    spell.ClientEffect = 7293;
+                    spell.Description = "Disarms the caster.";
+                    spell.Name = "Throw Weapon(Disarm)";
+                    spell.Range = 0;
+                    spell.Value = 0;
+                    spell.Duration = 10;
+                    spell.SpellID = 900100;
+                    spell.Target = "Self";
+                    spell.Type = "Disarm";
+                    Disarm_Weapon = new Spell(spell, 50);
+                    SkillBase.GetSpellList(GlobalSpellsLines.Combat_Styles_Effect).Add(Disarm_Weapon);
+                }
+                return Disarm_Weapon;
+            }
+        }
+        #endregion
         public const string DISABLE = "ThrowWeapon.Shortened.Disable.Timer";
-        public const int DISARMSPELLID = 7357;
-        public const string DISARMSPELLLINE = "Combat Style Effects";
-
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			GamePlayer player = Caster as GamePlayer;
@@ -464,15 +491,7 @@ namespace DOL.GS.Spells
             else
             {
                 //they disarm them selves.
-                ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(Caster, SkillBase.GetSpellByID(DISARMSPELLID), SkillBase.GetSpellLine(DISARMSPELLLINE));
-                if (spellHandler != null)
-                {
-                    //TargetObject = target;
-                    spellHandler.StartSpell(Caster);
-                }
-                //remove the temp property
-                Caster.TempProperties.removeProperty(DISABLE);
-
+                Caster.CastSpell(Disarmed, (SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect)));
             }
         }
 
@@ -488,47 +507,47 @@ namespace DOL.GS.Spells
             OnDirectEffect(target, effectiveness);
 
         }
-	
-		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
-		{		
-			GamePlayer player = Caster as GamePlayer;
 
-			if (player == null) 
+        public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
+        {
+            GamePlayer player = Caster as GamePlayer;
+
+            if (player == null)
                 return null;
 
-			InventoryItem weapon = null;
+            InventoryItem weapon = null;
 
-			if (player.ActiveWeaponSlot.ToString() == "TwoHanded") 
+            if (player.ActiveWeaponSlot.ToString() == "TwoHanded")
                 weapon = player.Inventory.GetItem((eInventorySlot)12);
-			if (player.ActiveWeaponSlot.ToString() == "Standard") 
+            if (player.ActiveWeaponSlot.ToString() == "Standard")
                 weapon = player.Inventory.GetItem((eInventorySlot)10);
 
-			if (weapon == null) 
+            if (weapon == null)
                 return null;
 
             //create the AttackData
-			AttackData ad = new AttackData();
-			ad.Attacker = player;
-			ad.Target = target;
-			ad.Damage = 0;
-			ad.CriticalDamage = 0;
-			ad.WeaponSpeed = player.AttackSpeed(weapon) / 100;
-			ad.DamageType = player.AttackDamageType(weapon);
-			ad.Weapon = weapon;
-			ad.IsOffHand = weapon.Hand == 2;
+            AttackData ad = new AttackData();
+            ad.Attacker = player;
+            ad.Target = target;
+            ad.Damage = 0;
+            ad.CriticalDamage = 0;
+            ad.WeaponSpeed = player.AttackSpeed(weapon) / 100;
+            ad.DamageType = player.AttackDamageType(weapon);
+            ad.Weapon = weapon;
+            ad.IsOffHand = weapon.Hand == 2;
             //we need to figure out which armor piece they are going to hit.
             //figure out the attacktype
-			switch (weapon.Item_Type)
-			{
-				default:
-				case Slot.RIGHTHAND:
-				case Slot.LEFTHAND: 
-                    ad.AttackType = AttackData.eAttackType.MeleeOneHand; 
+            switch (weapon.Item_Type)
+            {
+                default:
+                case Slot.RIGHTHAND:
+                case Slot.LEFTHAND:
+                    ad.AttackType = AttackData.eAttackType.MeleeOneHand;
                     break;
-				case Slot.TWOHAND:
+                case Slot.TWOHAND:
                     ad.AttackType = AttackData.eAttackType.MeleeTwoHand;
                     break;
-			}
+            }
             //Throw Weapon is subject to all the conventional attack results, parry, evade, block, etc.
             ad.AttackResult = ad.Target.CalculateEnemyAttackResult(ad, weapon);
 
@@ -585,9 +604,8 @@ namespace DOL.GS.Spells
                 int attackSpeed = player.AttackSpeed(weapon);
                 player.TempProperties.setProperty(DISABLE, attackSpeed);
             }
-		return ad;			
-		}
-		
+            return ad;
+        }
 		public ThrowWeaponSpellHandler(GameLiving caster,Spell spell,SpellLine line) : base(caster,spell,line) {}
 	}
 	#endregion
@@ -658,6 +676,16 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("BodyguardHandler")]
     public class BodyguardHandler : SpellHandler
     {
+        public override bool CheckBeginCast(GameLiving selectedTarget)
+        {
+        //    if (Caster.Group.MemberCount <= 2)
+        //    {
+        //        MessageToCaster("Your group is to small to use this spell.", eChatType.CT_Important);
+        //        return false;
+        //    }
+              return base.CheckBeginCast(selectedTarget);
+        
+        }
         public override IList DelveInfo
         {
             get
@@ -683,12 +711,10 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {
             base.OnEffectStart(effect);
-            double percentValue = (m_spell.Value) / 100;
+            double percentValue = (m_spell.Value) / 100;//15 / 100 = 0.15 a.k (15%) 100dex * 0.15 = 15dex debuff 
             DexDebuff = (int)((double)effect.Owner.GetModified(eProperty.Dexterity) * percentValue);
             QuiDebuff = (int)((double)effect.Owner.GetModified(eProperty.Quickness) * percentValue);
             GameLiving living = effect.Owner as GameLiving;
-            //value shood be -15 (for 15%)
-            GamePlayer target = Caster.TargetObject as GamePlayer;
             living.DebuffCategory[(int)eProperty.Dexterity] += DexDebuff;
             living.DebuffCategory[(int)eProperty.Quickness] += QuiDebuff;
 

@@ -20,8 +20,7 @@
 using System;
 using System.Reflection;
 using log4net;
-using DOL.Database;
-using System.Collections;
+
 
 namespace DOL.GS.PacketHandler
 {
@@ -37,7 +36,7 @@ namespace DOL.GS.PacketHandler
 		public PacketLib1100(GameClient client)
 			: base(client)
 		{
+			// Graveen: dumb support. Report if buggy.
 		}
-
 	}
 }

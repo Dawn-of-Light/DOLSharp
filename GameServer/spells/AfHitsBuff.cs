@@ -32,16 +32,23 @@ namespace DOL.GS.Spells {
   public override void OnEffectStart(GameSpellEffect effect) {
    base.OnEffectStart(effect);
    double bonus;
-   if(m_spell.Value<0) { bonus=1+m_spell.Value/-100; }
-   else { bonus=1+m_spell.Value/100; }
+   double bonus2 = 0;
+   if
+       (m_spell.Value < 0) 
+   {
+       bonus = bonus2 / 100; 
+   }
+   else
+   { 
+       bonus = m_spell.Value / 100; }
    effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.ArmorFactor,this,bonus);
-    //effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxHealth, this, bonus);
+   effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxHealth, this, bonus);
    SendUpdates(effect.Owner); }
 
  public override int OnEffectExpires(GameSpellEffect effect,bool noMessages) {
   base.OnEffectExpires(effect,noMessages);
   effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.ArmorFactor,this);
-  //effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxHealth, this);
+  effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxHealth, this);
   SendUpdates(effect.Owner);
   return 0; }
 
