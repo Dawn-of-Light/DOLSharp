@@ -208,6 +208,7 @@ namespace DOL.GS.Spells
         {
             m_spellTypesToRemove = new List<string>();
             m_spellTypesToRemove.Add("PveResurrectionIllness");
+            m_spellTypesToRemove.Add("RvrResurrectionIllness");
         }
     }
     #endregion
