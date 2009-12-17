@@ -47,6 +47,11 @@ namespace DOL.GS.Housing
 			{
 				list.Add(" It can be bought for " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + ".");
 			}
+            else if (DatabaseItem.Name != null && DatabaseItem.Name != "")
+            { 
+                list.Add(" It is owned by " + DatabaseItem.Name + ".");
+            }
+
 			return list;
 		}
 
@@ -58,8 +63,12 @@ namespace DOL.GS.Housing
 			}
             if (!ServerProperties.Properties.HOUSING_DEBUG_ALLOW_MULTIPLE && HouseMgr.GetRealHouseByPlayer(player) != null)
 			{
-				player.Out.SendMessage("You already own a house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
+                //the player might be targeting a lot he already purchased that has no house on it yet
+                if (HouseMgr.GetRealHouseByPlayer(player).HouseNumber != this.DatabaseItem.HouseNumber)
+                {
+                    player.Out.SendMessage("You already own a house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return false;
+                }
 			}
 			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
 			{
@@ -165,7 +174,7 @@ namespace DOL.GS.Housing
 		private void CreateHouse(GamePlayer player, int model)
 		{
 			DatabaseItem.Model = model;
-			DatabaseItem.Name = player.Name;
+            DatabaseItem.Name = player.Name; //even though this was set when buying the lot, it might be possible that the house is placed by another character, simply set the name again
 			DatabaseItem.RoofMaterial = 0;
 			DatabaseItem.DoorMaterial = 0;
 			DatabaseItem.WallMaterial = 0;
