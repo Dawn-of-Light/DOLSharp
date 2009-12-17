@@ -66,7 +66,7 @@ namespace DOL.GS.Housing
 			int lotmarkers = 0;
 			foreach (DBHouse house in GameServer.Database.SelectAllObjects(typeof(DBHouse)))
 			{
-				if (house.Model != 0)
+				if (house.OwnerIDs != null && house.OwnerIDs != "")
 				{
 					int id = -1;
 					if ((id = GetUniqueID(house.RegionID)) >= 0)
@@ -77,7 +77,13 @@ namespace DOL.GS.Housing
 						if (hash == null) continue;
 						if (hash.ContainsKey(newHouse.HouseNumber)) continue;
 
-						newHouse.LoadFromDatabase();
+                        if (house.Model != 0) // we do not need to do this for lots without a real house
+                            newHouse.LoadFromDatabase();
+                        else //we need to spawn a lot for this house
+                        {
+                            GameLotMarker.SpawnLotMarker(house);
+                            lotmarkers++;
+                        }
 
 						hash.Add(newHouse.HouseNumber, newHouse);
 						houses++;
@@ -156,12 +162,14 @@ namespace DOL.GS.Housing
 		{
 			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
 			if (hash == null) return;
-			if (hash.ContainsKey(house.HouseNumber))
-			{
-				Logger.Warn("House ID exists !");
-				return;
-			}
-			hash.Add(house.HouseNumber, house);
+            if (!hash.ContainsKey(house.HouseNumber))
+            {
+                hash.Add(house.HouseNumber, house);
+            }
+            else // we have an empty lot in the hash, we need to replace the house object
+            {
+                hash[house.HouseNumber] = house;
+            }
 			int i = 0;
 			for (i = 0; i < 10; i++) // we add missing permissions
 			{
@@ -284,9 +292,9 @@ namespace DOL.GS.Housing
 			house.Model = 0;
             house.Porch = false;
             house.DatabaseItem.GuildName = null;
-            house.DatabaseItem.CreationTime = DateTime.MinValue;
+            house.DatabaseItem.CreationTime = DateTime.Now;
             house.DatabaseItem.LastPaid = DateTime.MinValue;
-            house.DatabaseItem.GuildHouse = false;
+            house.DatabaseItem.GuildHouse = false;            
 
             #region Remove indoor/outdoor items & permissions
             DataObject[] objs;
@@ -373,6 +381,7 @@ namespace DOL.GS.Housing
 			}
 			//house.OwnerIDs += player.InternalID+";";
 			house.OwnerIDs = player.InternalID; // unique owner
+            house.Name = player.Name;
 
 			GameServer.Database.SaveObject(house);
 		}
