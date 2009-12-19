@@ -54,14 +54,14 @@ namespace DOL.GS
 		/// Holds all the players combined with their guilds for the social window
 		/// </summary>
 		/// <remarks>Sorted on the player name in order to optimize the initial refresh (sorted by name)</remarks>
-		private static readonly Dictionary<string, SortedList<string, SocialWindowMemeber>> m_guildXAllPlayers = new Dictionary<string, SortedList<string, SocialWindowMemeber>>();
+		private static readonly Dictionary<string, SortedList<string, SocialWindowMember>> m_guildXAllPlayers = new Dictionary<string, SortedList<string, SocialWindowMember>>();
 
 		/// <summary>
 		/// Gets the sorted dictionary for a guild to display in the social window
 		/// </summary>
 		/// <param name="guildID">The guild id for a player</param>
 		/// <returns>The dictionary sorted on the player's name</returns>
-		public static SortedList<string, SocialWindowMemeber> GetSocialWindowGuild(string guildID)
+		public static SortedList<string, SocialWindowMember> GetSocialWindowGuild(string guildID)
 		{
 			if (m_guildXAllPlayers.ContainsKey(guildID))
 				return m_guildXAllPlayers[guildID];
@@ -78,8 +78,8 @@ namespace DOL.GS
 			{
 				if (!m_guildXAllPlayers[player.GuildID].ContainsKey(player.Name))
 				{
-					SortedList<string, SocialWindowMemeber> tempList = m_guildXAllPlayers[player.GuildID];
-					SocialWindowMemeber member = new SocialWindowMemeber(player.Name, player.Level.ToString(), player.CharacterClass.ID.ToString(), player.GuildRank.RankLevel.ToString(), player.Group != null ? player.Group.MemberCount.ToString() : "1", player.CurrentZone.Description, player.GuildNote);
+					SortedList<string, SocialWindowMember> tempList = m_guildXAllPlayers[player.GuildID];
+					SocialWindowMember member = new SocialWindowMember(player.Name, player.Level.ToString(), player.CharacterClass.ID.ToString(), player.GuildRank.RankLevel.ToString(), player.Group != null ? player.Group.MemberCount.ToString() : "1", player.CurrentZone.Description, player.GuildNote);
 					tempList.Add(player.Name, member);
 				}
 			}
@@ -182,7 +182,8 @@ namespace DOL.GS
 				}
 				DBGuild dbGuild = new DBGuild();
 				dbGuild.GuildName = guildName;
-				dbGuild.GuildID = System.Guid.NewGuid().ToString(); 
+				dbGuild.GuildID = System.Guid.NewGuid().ToString();
+				dbGuild.Realm = (byte)creator.Realm;
 				Guild newguild = new Guild(dbGuild);
 				CreateRanks(newguild);
 				AddGuild(newguild);
@@ -403,10 +404,10 @@ namespace DOL.GS
 				if (((DBGuild)obj).Ranks.Length == 0)
 					CreateRanks(myguild);
 				DataObject[] guildCharacters = GameServer.Database.SelectObjects(typeof(Character), string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
-				SortedList<string, SocialWindowMemeber> tempList = new SortedList<string, SocialWindowMemeber>(guildCharacters.Length);
+				SortedList<string, SocialWindowMember> tempList = new SortedList<string, SocialWindowMember>(guildCharacters.Length);
 				foreach (Character ch in guildCharacters)
 				{
-					SocialWindowMemeber member = new SocialWindowMemeber(ch.Name, ch.Level.ToString(), ch.Class.ToString(), ch.GuildRank.ToString(), "0", ch.LastPlayed.ToShortDateString(), ch.GuildNote);
+					SocialWindowMember member = new SocialWindowMember(ch.Name, ch.Level.ToString(), ch.Class.ToString(), ch.GuildRank.ToString(), "0", ch.LastPlayed.ToShortDateString(), ch.GuildNote);
 					tempList.Add(ch.Name, member);
 				}
 				m_guildXAllPlayers.Add(myguild.GuildID, tempList);
@@ -508,7 +509,7 @@ namespace DOL.GS
 			return guilds;
 		}
 
-		public class SocialWindowMemeber
+		public class SocialWindowMember
 		{
 			#region Members
 			string m_name;
@@ -580,7 +581,7 @@ namespace DOL.GS
 				}
 			}
 
-			public SocialWindowMemeber(string name, string level, string classID, string rank, string group, string zoneOrOnline, string note)
+			public SocialWindowMember(string name, string level, string classID, string rank, string group, string zoneOrOnline, string note)
 			{
 				m_name = name;
 				m_level = level;
@@ -591,7 +592,7 @@ namespace DOL.GS
 				m_guildNote = note;
 			}
 
-            public SocialWindowMemeber(GamePlayer player)
+            public SocialWindowMember(GamePlayer player)
             {
                 m_name = player.Name;
 				m_level = player.Level.ToString();

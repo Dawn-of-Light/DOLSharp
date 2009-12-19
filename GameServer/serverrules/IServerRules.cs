@@ -96,6 +96,14 @@ namespace DOL.GS.ServerRules
 		bool IsAllowedToGroup(GamePlayer source, GamePlayer target, bool quiet);
 
 		/// <summary>
+		/// Is source allowed to join this guild
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="guild"></param>
+		/// <returns></returns>
+		bool IsAllowedToJoinGuild(GamePlayer source, Guild guild);
+
+		/// <summary>
 		/// Is source allowed to trade with target.
 		/// </summary>
 		/// <param name="source"></param>
