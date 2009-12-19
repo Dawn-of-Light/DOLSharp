@@ -3101,14 +3101,35 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual double CapPetSpellDamage(double damage, GamePlayer player)
 		{
+			double cappedDamage = damage;
+
 			if (player.Level < 13)
 			{
-				return 4.1 * player.Level;
+				cappedDamage = 4.1 * player.Level;
 			}
 
 			if (player.Level < 50)
 			{
-				return 3.8 * player.Level;
+				cappedDamage = 3.8 * player.Level;
+			}
+
+			return Math.Min(damage, cappedDamage);
+		}
+
+
+		/// <summary>
+		/// Put a calculated cap on NPC damage to solve a problem where an npc is given a high level spell but needs damage
+		/// capped to the npc level.  This uses player spec nukes to calculate damage cap.
+		/// NPC's level 50 and above are not capped
+		/// </summary>
+		/// <param name="damage"></param>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public virtual double CapNPCSpellDamage(double damage, GameNPC npc)
+		{
+			if (npc.Level < 50)
+			{
+				return Math.Min(damage, 4.7 * npc.Level);
 			}
 
 			return damage;
@@ -3156,6 +3177,10 @@ namespace DOL.GS.Spells
 					int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
 					spellDamage *= (manaStatValue + 200) / 275.0;
 				}
+			}
+			else if (Caster is GameNPC)
+			{
+				spellDamage = CapNPCSpellDamage(spellDamage, Caster as GameNPC);
 			}
 
 			if (spellDamage < 0)
