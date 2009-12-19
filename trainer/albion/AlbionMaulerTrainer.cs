@@ -122,12 +122,5 @@ namespace DOL.GS.Trainer
             }
             return true;
         }
-
-		public override bool AddToWorld()
-		{
-			if (!ServerProperties.Properties.ALLOW_MAULERS)
-				return false;
-			return base.AddToWorld();
-		}
     }
 }
