@@ -116,15 +116,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case eDialogCode.GuildInvite:
 						{
 							GamePlayer guildLeader = WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort)m_data1) as GamePlayer;
-							if (m_response == 0x01)//accepte
+							if (m_response == 0x01)//accept
 							{
 								if (guildLeader == null)
 								{
+									player.Out.SendMessage("You need to be in the same region as the guild leader to accept an invitation.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (player.Guild != null)
 								{
-									player.Out.SendMessage("You are still in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									player.Out.SendMessage("You are still in a guild, you'll have to leave it first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (guildLeader.Guild != null)
@@ -134,14 +135,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 								}
 								else
 								{
-									player.Out.SendMessage("You are not in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									player.Out.SendMessage("Player doing the invite is not in a guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 							}
 							else
 							{
 								if (guildLeader != null)
+								{
 									guildLeader.Out.SendMessage(player.Name + " declined your invite.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
 								return;
 							}
 						}

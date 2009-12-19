@@ -159,6 +159,20 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
+
+		public override bool IsAllowedToJoinGuild(GamePlayer source, Guild guild)
+		{
+			if (source == null) 
+				return false;
+
+			if (ServerProperties.Properties.ALLOW_CROSS_REALM_GUILDS == false && guild.Realm != eRealm.None && source.Realm != guild.Realm)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 		public override bool IsAllowedToTrade(GameLiving source, GameLiving target, bool quiet)
 		{
 			if(source == null || target == null) return false;
