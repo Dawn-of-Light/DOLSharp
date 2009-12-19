@@ -3062,6 +3062,10 @@ namespace DOL.GS
 						allow = true;
 
 					break;
+
+				case Specs.Soulrending:
+					allow = true;
+					break;
 			}
 
 			return allow;
