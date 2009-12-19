@@ -484,9 +484,8 @@ namespace DOL.GS.PacketHandler
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.LoginGranted));
 			pak.WriteByte(0x01); //isSI
-			int version = (int) m_gameClient.Version;
-			pak.WriteByte((byte) (version/100));
-			pak.WriteByte((byte) ((version%100)/10));
+			pak.WriteByte(ParseVersion((int)m_gameClient.Version, true));
+			pak.WriteByte(ParseVersion((int)m_gameClient.Version, false));
 			//pak.WriteByte(build);
 			pak.WriteByte(0x00);
 			pak.WritePascalString(m_gameClient.Account.Name);
