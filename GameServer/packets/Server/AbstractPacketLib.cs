@@ -67,7 +67,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		/// <param name="buf">Buffer containing the data to be sent</param>
 		public void SendTCP(byte[] buf)
-		{	
+		{
 			m_gameClient.PacketProcessor.SendTCP(buf);
 		}
 
@@ -149,6 +149,24 @@ namespace DOL.GS.PacketHandler
 			
 			version = GameClient.eClientVersion.VersionUnknown;
 			return null;
+		}
+		
+		/// <summary>
+		/// Return the msb or lsb byte used the server versionning
+		/// eg: 199 -> 1.99; 1100 -> 1.100
+		/// </summary>
+		/// <param name="version"></param>
+		/// <param name="IsMSB"></param>
+		/// <returns></returns>
+		public static byte ParseVersion(int version, bool IsMSB)
+		{
+			int cte_version = 100;
+			if (version > 199) cte_version = 1000;
+
+			if (IsMSB)
+				return (byte)(version / cte_version);
+			else
+				return (byte)((version % cte_version)/10);
 		}
 	}
 }
