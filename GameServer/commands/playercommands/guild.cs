@@ -326,38 +326,16 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteNotThis"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            if (GameServer.ServerRules is ServerRules.NormalServerRules && client.Player.Realm != obj.Realm && !ServerProperties.Properties.ALLOW_CROSS_REALM_GUILDS)
+							if (!GameServer.ServerRules.IsAllowedToJoinGuild(obj, client.Player.Guild))
                             {
-                                client.Out.SendMessage("You cannot invite a member of this realm into your guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteNotThis"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
                             obj.Out.SendGuildInviteCommand(client.Player, LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteRecieved", client.Player.Name, client.Player.Guild.Name));
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteSent", obj.Name, client.Player.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                             client.Player.Guild.UpdateGuildWindow();
                         }
                         break;
-                    #endregion
-                    #region Accept/Decline
-                    // --------------------------------------------------------------------------------
-                    // ACCEPT
-                    // --------------------------------------------------------------------------------
-                    /*case "accept":
-            {//TODO
-                //it must be other player guild not player who accept
-                GameObject TargetObject = WorldMgr.GetObjectByIDFromRegion(client.Player.CurrentRegionID,data1);
-                client.Player.Guild.AddPlayer(client.Player.Name, (GamePlayer)obj);
-            }	break;*/
-                    //need to know what is send to close window ans say yes
-                    // --------------------------------------------------------------------------------
-                    // DECLINE
-                    // --------------------------------------------------------------------------------
-                    /*case "decline":
-            {//TODO
-                //it must be other player guild not player who accept
-                GameObject TargetObject = WorldMgr.GetObjectByIDFromRegion(client.Player.CurrentRegionID,data1);
-                client.Player.Guild.AddPlayer(client.Player.Name, (GamePlayer)obj);
-            }	break;*/
-                    //need to know what is send to close window ans say no
                     #endregion
                     #region Remove
                     // --------------------------------------------------------------------------------
@@ -931,7 +909,7 @@ namespace DOL.GS.Commands
                             {
                                 if (!GuildMgr.DoesGuildExist(guildname))
                                 {
-                                    if (Properties.GUILD_NUM > 1)
+                                    if (Properties.GUILD_NUM > 1 && client.Account.PrivLevel == 1)
                                     {
                                         Group group = client.Player.Group;
 
@@ -957,6 +935,11 @@ namespace DOL.GS.Commands
                                                     client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AlreadyInGuildName", ply.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                                     return;
                                                 }
+												if (ply.Realm != client.Player.Realm && ServerProperties.Properties.ALLOW_CROSS_REALM_GUILDS == false)
+												{
+													client.Out.SendMessage("All group members must be of the same realm in order to create a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+													return;
+												}
                                             }
 
                                             Guild newGuild = GuildMgr.CreateGuild(client.Player, guildname);
@@ -968,8 +951,16 @@ namespace DOL.GS.Commands
                                             {
                                                 foreach (GamePlayer ply in group.GetPlayersInTheGroup())
                                                 {
-                                                    newGuild.AddPlayer(ply);
+													if (ply == client.Player)
+													{
+														newGuild.AddPlayer(ply, newGuild.GetRankByID(0));
+													}
+													else
+													{
+														newGuild.AddPlayer(ply);
+													}
                                                 }
+
                                                 client.Player.GuildRank = client.Player.Guild.GetRankByID(0); //creator is leader
                                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.GuildCreated", guildname, client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                             }
@@ -985,8 +976,7 @@ namespace DOL.GS.Commands
                                         }
                                         else
                                         {
-											newGuild.AddPlayer( client.Player );
-                                            client.Player.GuildRank = client.Player.Guild.GetRankByID(0); //creator is leader
+											newGuild.AddPlayer(client.Player, newGuild.GetRankByID(0));
                                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.GuildCreated", guildname, client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                         }
                                     }
@@ -1230,7 +1220,7 @@ namespace DOL.GS.Commands
                             if (args.Length == 6 && args[2] == "window")
                             {
                                 //First get the sorted list 
-                                SortedList<string, GuildMgr.SocialWindowMemeber> guildMembers = GuildMgr.GetSocialWindowGuild(client.Player.GuildID);
+                                SortedList<string, GuildMgr.SocialWindowMember> guildMembers = GuildMgr.GetSocialWindowGuild(client.Player.GuildID);
                                 if (guildMembers != null)
                                 {
                                     int sorttemp;
@@ -1241,37 +1231,37 @@ namespace DOL.GS.Commands
                                     {
                                         bool showOffline = showtemp == 0 ? false : true;
                                         //The type of sorting we will be sending
-                                        GuildMgr.SocialWindowMemeber.eSocialWindowSort sort = (GuildMgr.SocialWindowMemeber.eSocialWindowSort)sorttemp;
+                                        GuildMgr.SocialWindowMember.eSocialWindowSort sort = (GuildMgr.SocialWindowMember.eSocialWindowSort)sorttemp;
                                         //Let's sort the sorted list - we don't need to sort if sort = name
-                                        SortedList<string, GuildMgr.SocialWindowMemeber> sortedList = null;
-                                        GuildMgr.SocialWindowMemeber.eSocialWindowIndex index = GuildMgr.SocialWindowMemeber.eSocialWindowIndex.Name;
+                                        SortedList<string, GuildMgr.SocialWindowMember> sortedList = null;
+                                        GuildMgr.SocialWindowMember.eSocialWindowIndex index = GuildMgr.SocialWindowMember.eSocialWindowIndex.Name;
 
                                         #region Sort
                                         switch (sort)
                                         {
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.ClassAsc:
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.ClassDesc:
-                                                index = GuildMgr.SocialWindowMemeber.eSocialWindowIndex.ClassID;
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.ClassAsc:
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.ClassDesc:
+                                                index = GuildMgr.SocialWindowMember.eSocialWindowIndex.ClassID;
                                                 break;
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.GroupAsc:
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.GroupDesc:
-                                                index = GuildMgr.SocialWindowMemeber.eSocialWindowIndex.Group;
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.GroupAsc:
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.GroupDesc:
+                                                index = GuildMgr.SocialWindowMember.eSocialWindowIndex.Group;
                                                 break;
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.LevelAsc:
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.LevelDesc:
-                                                index = GuildMgr.SocialWindowMemeber.eSocialWindowIndex.Level;
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.LevelAsc:
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.LevelDesc:
+                                                index = GuildMgr.SocialWindowMember.eSocialWindowIndex.Level;
                                                 break;
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.NoteAsc:
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.NoteDesc:
-                                                index = GuildMgr.SocialWindowMemeber.eSocialWindowIndex.Note;
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.NoteAsc:
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.NoteDesc:
+                                                index = GuildMgr.SocialWindowMember.eSocialWindowIndex.Note;
                                                 break;
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.RankAsc:
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.RankDesc:
-                                                index = GuildMgr.SocialWindowMemeber.eSocialWindowIndex.Rank;
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.RankAsc:
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.RankDesc:
+                                                index = GuildMgr.SocialWindowMember.eSocialWindowIndex.Rank;
                                                 break;
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.ZoneOrOnlineAsc:
-                                            case GuildMgr.SocialWindowMemeber.eSocialWindowSort.ZoneOrOnlineDesc:
-                                                index = GuildMgr.SocialWindowMemeber.eSocialWindowIndex.ZoneOrOnline;
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.ZoneOrOnlineAsc:
+                                            case GuildMgr.SocialWindowMember.eSocialWindowSort.ZoneOrOnlineDesc:
+                                                index = GuildMgr.SocialWindowMember.eSocialWindowIndex.ZoneOrOnline;
                                                 break;
                                         }
                                         #endregion
@@ -1279,13 +1269,13 @@ namespace DOL.GS.Commands
                                         //We have to make a new sorted list if they just want online, lets do that first
                                         if (!showOffline)
                                         {
-                                            SortedList<string, GamePlayer> playerguild = client.Player.Guild.SortedListOnlineMembers();
-											sortedList = new SortedList<string, GuildMgr.SocialWindowMemeber>(playerguild.Count);
-                                            foreach (GamePlayer player in playerguild.Values)
+                                            SortedList<string, GamePlayer> onlineMembers = client.Player.Guild.SortedListOnlineMembers();
+											sortedList = new SortedList<string, GuildMgr.SocialWindowMember>(onlineMembers.Count);
+                                            foreach (GamePlayer player in onlineMembers.Values)
                                             {
                                                 if (guildMembers.ContainsKey(player.Name))
                                                 {
-                                                    GuildMgr.SocialWindowMemeber member = guildMembers[player.Name];
+                                                    GuildMgr.SocialWindowMember member = guildMembers[player.Name];
 													member.UpdateMember(player);
 													string key = member[(int)index];
 													if (sortedList.ContainsKey(key))
@@ -1293,19 +1283,17 @@ namespace DOL.GS.Commands
 
 													sortedList.Add(key, member);
                                                 }
-                                                else
-                                                    log.Error("Group member either left the guild and didn't get removed or joined the guild and didn't get added." + player.Name);
                                             }
                                         }
-										else if (index == GuildMgr.SocialWindowMemeber.eSocialWindowIndex.Name)
+										else if (index == GuildMgr.SocialWindowMember.eSocialWindowIndex.Name)
 										{
 											sortedList = guildMembers;
 										}
 										else
 										//They sorted on something besides what we presorted on!
 										{
-											sortedList = new SortedList<string, GuildMgr.SocialWindowMemeber>(guildMembers.Count);
-											foreach (GuildMgr.SocialWindowMemeber member in guildMembers.Values)
+											sortedList = new SortedList<string, GuildMgr.SocialWindowMember>(guildMembers.Count);
+											foreach (GuildMgr.SocialWindowMember member in guildMembers.Values)
 											{
 												if (client.Player.Guild.SortedListOnlineMembers().ContainsKey(member.Name))
 													//Update to make sure we have the most up to date info
@@ -1333,12 +1321,12 @@ namespace DOL.GS.Commands
 										}
 
 										//Finally lets send the list we made
-										IList<GuildMgr.SocialWindowMemeber> finalList = sortedList.Values;
+										IList<GuildMgr.SocialWindowMember> finalList = sortedList.Values;
 										int i = 0;
 										string[] buffer=new string[10];
 										for (i = 0; i < 10 && finalList.Count > i + (page - 1) * 10; i++)
 										{
-											GuildMgr.SocialWindowMemeber member;
+											GuildMgr.SocialWindowMember member;
 
 											if ((int)sort > 0)
 											{

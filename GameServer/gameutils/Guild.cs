@@ -87,6 +87,18 @@ namespace DOL.GS
 		/// </summary>
 		protected List<AbstractGameKeep> m_claimedKeeps = new List<AbstractGameKeep>();
 
+		public eRealm Realm
+		{
+			get
+			{
+				return (eRealm)m_DBguild.Realm;
+			}
+			set
+			{
+				m_DBguild.Realm = (byte)value;
+			}
+		}
+
 		public string Webpage
 		{
 			get
@@ -479,11 +491,22 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Add's a player to this Guild
+		/// Add a player to a guild at rank 9
 		/// </summary>
-		/// <param name="addeePlayer">the player beeing added</param>
-		/// <returns>true or false</returns>
+		/// <param name="addeePlayer"></param>
+		/// <returns></returns>
 		public bool AddPlayer(GamePlayer addeePlayer)
+		{
+			return AddPlayer(addeePlayer, GetRankByID(9));
+		}
+
+		/// <summary>
+		/// Add a player to a guild with the specified rank
+		/// </summary>
+		/// <param name="addeePlayer"></param>
+		/// <param name="rank"></param>
+		/// <returns></returns>
+		public bool AddPlayer(GamePlayer addeePlayer, DBRank rank)
 		{
 			if (addeePlayer == null)
 				return false;
@@ -496,7 +519,7 @@ namespace DOL.GS
 				AddOnlineMember(addeePlayer);
 				addeePlayer.GuildName = Name;
 				addeePlayer.GuildID = GuildID;
-				addeePlayer.GuildRank = GetRankByID(9);
+				addeePlayer.GuildRank = rank;
 				addeePlayer.Guild = this;
 				addeePlayer.SaveIntoDatabase();
 				GuildMgr.AddPlayerToSocialWindow(addeePlayer);

@@ -136,6 +136,11 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
+		public override bool IsAllowedToJoinGuild(GamePlayer source, Guild guild)
+		{
+			return true;
+		}
+
 		public override bool IsAllowedToTrade(GameLiving source, GameLiving target, bool quiet)
 		{
 			return true;
