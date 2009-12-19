@@ -74,9 +74,8 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x32);
 			//else
 			//	pak.WriteByte(0x31);
-			int version = (int)m_gameClient.Version;
-			pak.WriteByte((byte)(version / 100));
-			pak.WriteByte((byte)((version % 100) / 10));
+			pak.WriteByte(ParseVersion((int)m_gameClient.Version, true));
+			pak.WriteByte(ParseVersion((int)m_gameClient.Version, false));
 			//pak.WriteByte(build);
 			pak.WriteByte(0x00);
 #if ! NOENCRYPTION
@@ -108,9 +107,8 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x31);
 			*/
 			pak.WriteByte(0x01);
-			int version = (int)m_gameClient.Version;
-			pak.WriteByte((byte)(version / 100));
-			pak.WriteByte((byte)((version % 100) / 10));
+			pak.WriteByte(ParseVersion((int)m_gameClient.Version, true));
+			pak.WriteByte(ParseVersion((int)m_gameClient.Version, false));
 			//pak.WriteByte(build);
 			pak.WriteByte(0x00);
 			SendTCP(pak);
@@ -130,9 +128,8 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte(0x31);
 				*/
 			pak.WriteByte(0x01);
-			int version = (int)m_gameClient.Version;
-			pak.WriteByte((byte)(version / 100));
-			pak.WriteByte((byte)((version % 100) / 10));
+			pak.WriteByte(ParseVersion((int)m_gameClient.Version, true));
+			pak.WriteByte(ParseVersion((int)m_gameClient.Version, false));
 			//pak.WriteByte(build);
 			pak.WriteByte(0x00);
 			pak.WritePascalString(m_gameClient.Account.Name);

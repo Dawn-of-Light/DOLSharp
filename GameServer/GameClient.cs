@@ -133,6 +133,10 @@ namespace DOL
 					//matter what packet code it is
 					int version = (m_pbuf[12] * 100) + (m_pbuf[13] * 10) + m_pbuf[14];
 
+					// we force the versionning: 200 correspond to 1.100 (1100)
+					// thus we could handle logically packets with version number based on the client version
+					if (version>=200) version +=900;
+					
 					eClientVersion ver;
 					IPacketLib lib = AbstractPacketLib.CreatePacketLibForVersion(version, this, out ver);
 
@@ -563,8 +567,8 @@ namespace DOL
 				Version197 = 197,
 				Version198 = 198,
 				Version199 = 199,
-				Version1100 = 200,
-				_LastVersion = 200,
+				Version1100 = 1100,
+				_LastVersion = 1100,
 			}
 			protected eClientVersion m_clientVersion;
 			/// <summary>
