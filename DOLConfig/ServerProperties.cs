@@ -125,7 +125,9 @@ namespace DOLConfig
 			sb.Append(k);
 			sb.Append(Cte_sep);
 			//System.Diagnostics.Debug.Print("key = " + k + " - level = " + level + " - length = " + k.Length);
-			sb.Append(' ', 42 - k.Length - level*3);
+			int pos = 44 - k.Length - level*3;
+			if (pos < 0) pos = 0;
+			sb.Append(' ', pos);
 			sb.Append(v);
 			return sb.ToString();
 		}
