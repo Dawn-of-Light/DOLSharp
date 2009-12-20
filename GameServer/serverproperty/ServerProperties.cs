@@ -135,7 +135,7 @@ namespace DOL.GS.ServerProperties
 		/// A serialised list of disabled expansion IDs
 		/// </summary>
 		[ServerProperty("system","disabled_expansions", "Serialized list of disabled expansions IDs, expansion IDs are client type seperated by ;", "")]
-		public static readonly string DISABLED_EXPANSIONS;
+		public static string DISABLED_EXPANSIONS;
 		
 		/// <summary>
 		/// Server Language
@@ -165,13 +165,13 @@ namespace DOL.GS.ServerProperties
 		/// Bug Report Email Addresses
 		/// </summary>
 		[ServerProperty("system","bug_report_email_addresses", "set to the email addresses you want bug reports sent to (bug reports will only send if the user has set an email address for his account, multiple addresses seperate with ;", "")]
-		public static readonly string BUG_REPORT_EMAIL_ADDRESSES;
+		public static string BUG_REPORT_EMAIL_ADDRESSES;
 		
 		/// <summary>
 		/// Log All GM commands
 		/// </summary>
 		[ServerProperty("system","log_all_gm_commands", "Log all GM commands on the server", false)]
-		public static readonly bool LOG_ALL_GM_COMMANDS;
+		public static bool LOG_ALL_GM_COMMANDS;
 
 		/// <summary>
 		/// Ban Hackers
@@ -257,7 +257,7 @@ namespace DOL.GS.ServerProperties
 		/// Disable Instances
 		/// </summary>
 		[ServerProperty("server","disable_instances", "Enable or disable instances on the server", false)]
-		public static readonly bool DISABLE_INSTANCES;
+		public static bool DISABLE_INSTANCES;
 
 		/// <summary>
 		/// Save QuestItems into Database
@@ -275,7 +275,7 @@ namespace DOL.GS.ServerProperties
 		/// Sets the disabled commands for the server split by ;
 		/// </summary>
 		[ServerProperty("server","disabled_commands", "Serialized list of disabled commands separated by semi-colon, example /realm;/toon;/quit", "")]
-		public static readonly string DISABLED_COMMANDS;
+		public static string DISABLED_COMMANDS;
 		#endregion
 		
 		#region WORLD
@@ -289,7 +289,7 @@ namespace DOL.GS.ServerProperties
 		/// A serialised list of disabled RegionIDs
 		/// </summary>
 		[ServerProperty("world","disabled_regions", "Serialized list of disabled region IDs, separated by semi-colon", "")]
-		public static readonly string DISABLED_REGIONS;
+		public static string DISABLED_REGIONS;
 
 		/// <summary>
 		/// Should the server disable the tutorial zone
@@ -423,7 +423,7 @@ namespace DOL.GS.ServerProperties
 		/// The time until a player is worth rps again after death
 		/// </summary>
 		[ServerProperty("rates","rp_worth_seconds", "Realm Points Worth Seconds - Edit this to change how many seconds until a player is worth RPs again after being killed ", 300)]
-		public static readonly int RP_WORTH_SECONDS;
+		public static int RP_WORTH_SECONDS;
 		
 		/// <summary>
 		/// Health Regen Rate
@@ -537,7 +537,7 @@ namespace DOL.GS.ServerProperties
 		/// Allow all realms access to DF
 		/// </summary>
 		[ServerProperty("pvp","allow_all_realms_df", "Should we allow all realms access to DF", false)]
-		public static readonly bool ALLOW_ALL_REALMS_DF;
+		public static bool ALLOW_ALL_REALMS_DF;
 		
 		/// <summary>
 		/// Allow Bounty Points to be gained in Battlegrounds
@@ -567,7 +567,7 @@ namespace DOL.GS.ServerProperties
 		/// Ignore too long outcoming packet or not
 		/// </summary>
 		[ServerProperty("pvp","enable_minotaur_relics", "Shall we enable Minotaur Relics ?", false)]
-		public static readonly bool ENABLE_MINOTAUR_RELICS;
+		public static bool ENABLE_MINOTAUR_RELICS;
 
 		/// <summary>
 		/// Enable WarMap manager
@@ -982,7 +982,7 @@ namespace DOL.GS.ServerProperties
 		/// The number of players needed to form a guild
 		/// </summary>
 		[ServerProperty("guild","guild_num", "Players Needed For Guild Form - Edit this to change the amount of players required to form a guild", 8)]
-		public static readonly int GUILD_NUM;
+		public static int GUILD_NUM;
 		
 		/// <summary>
 		/// This enables or disables new guild dues. Live standard is 2% dues

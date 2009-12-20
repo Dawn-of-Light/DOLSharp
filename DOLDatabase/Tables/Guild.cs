@@ -189,7 +189,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[ReadOnly]
 		public byte Realm
 		{
 			get
@@ -198,7 +198,6 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
 				m_realm = value;
 			}
 		}

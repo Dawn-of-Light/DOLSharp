@@ -170,8 +170,6 @@ namespace DOL.GS
 		/// <returns>GuildEntry</returns>
 		public static Guild CreateGuild(GamePlayer creator, string guildName)
 		{
-			if (log.IsDebugEnabled)
-				log.Debug("Create guild; guild name=\"" + guildName + "\"");
 			try
 			{
 				if (DoesGuildExist(guildName))
@@ -188,6 +186,10 @@ namespace DOL.GS
 				CreateRanks(newguild);
 				AddGuild(newguild);
 				newguild.AddToDatabase();
+
+				if (log.IsDebugEnabled)
+					log.Debug("Create guild; guild name=\"" + guildName + "\" Realm=" + GlobalConstants.RealmToName(newguild.Realm));
+
 				return newguild;
 			}
 			catch (Exception e)
