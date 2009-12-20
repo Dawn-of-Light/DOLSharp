@@ -98,6 +98,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Attributes\ReadOnly.cs" />
     <Compile Include="Attributes\DataElement.cs">
       <SubType>Code</SubType>
     </Compile>

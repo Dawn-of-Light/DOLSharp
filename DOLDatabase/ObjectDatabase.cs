@@ -148,7 +148,8 @@ namespace DOL.Database
 					}
 					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
 					object[] attrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
-					if (attrib.Length > 0 || keyAttrib.Length > 0)
+					object[] readonlyAttrib = objMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.ReadOnly), true);
+					if (attrib.Length > 0 || keyAttrib.Length > 0 || readonlyAttrib.Length > 0)
 					{
 						object val = null;
 						if (objMembers[i] is PropertyInfo)
@@ -341,6 +342,12 @@ namespace DOL.Database
 				for (int i = 0; i < bindingInfo.Length; i++)
 				{
 					BindingInfo bind = bindingInfo[i];
+
+					if (bind.ReadOnly)
+					{
+						continue;
+					}
+
 					if (!hasRelations)
 					{
 						hasRelations = bind.HasRelation;
@@ -610,12 +617,13 @@ namespace DOL.Database
 				for (int i = 0; i < objMembers.Length; i++)
 				{
 					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
-					object[] attrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
+					object[] readonlyAttrib = objMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.ReadOnly), true);
+					object[] attrib = objMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
 					object[] relAttrib = GetRelationAttributes(objMembers[i]);
 
-					if (attrib.Length > 0 || keyAttrib.Length > 0 || relAttrib.Length > 0)
+					if (attrib.Length > 0 || keyAttrib.Length > 0 || relAttrib.Length > 0 || readonlyAttrib.Length > 0)
 					{
-						BindingInfo info = new BindingInfo(objMembers[i], keyAttrib.Length > 0, relAttrib.Length > 0, (attrib.Length > 0) ? (DataElement) attrib[0] : null);
+						BindingInfo info = new BindingInfo(objMembers[i], keyAttrib.Length > 0, relAttrib.Length > 0, readonlyAttrib.Length > 0, (attrib.Length > 0) ? (DataElement)attrib[0] : null);
 						list.Add(info);
 					}
 				}
@@ -1486,13 +1494,15 @@ namespace DOL.Database
 			public bool PrimaryKey;
 			public DataElement DataElementAttribute;
 			public bool HasRelation;
+			public bool ReadOnly;
 
-			public BindingInfo(MemberInfo member, bool primaryKey, bool hasRelation, DataElement attrib)
+			public BindingInfo(MemberInfo member, bool primaryKey, bool hasRelation, bool readOnly, DataElement attrib)
 			{
 				this.Member = member;
 				this.PrimaryKey = primaryKey;
 				this.HasRelation = hasRelation;
 				this.DataElementAttribute = attrib;
+				this.ReadOnly = readOnly;
 			}
 		}
 
