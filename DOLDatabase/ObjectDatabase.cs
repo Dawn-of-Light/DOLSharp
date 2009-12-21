@@ -148,8 +148,7 @@ namespace DOL.Database
 					}
 					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
 					object[] attrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
-					object[] readonlyAttrib = objMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.ReadOnly), true);
-					if (attrib.Length > 0 || keyAttrib.Length > 0 || readonlyAttrib.Length > 0)
+					if (attrib.Length > 0 || keyAttrib.Length > 0)
 					{
 						object val = null;
 						if (objMembers[i] is PropertyInfo)
