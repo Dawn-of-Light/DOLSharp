@@ -156,7 +156,7 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// A uniq ID for the guild
+		/// A unique ID for the guild
 		/// </summary>
 		[DataElement(AllowDbNull = true, Index=true, Unique=true)]
 		public string GuildID
@@ -190,6 +190,7 @@ namespace DOL.Database
 		}
 
 		[ReadOnly]
+		[DataElement(AllowDbNull = true)]
 		public byte Realm
 		{
 			get
