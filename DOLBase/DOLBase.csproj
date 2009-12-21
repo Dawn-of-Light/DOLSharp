@@ -31,7 +31,7 @@
     <NoStdLib>false</NoStdLib>
     <WarningLevel>4</WarningLevel>
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
-    <RunCodeAnalysis>True</RunCodeAnalysis>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\debug\lib\</OutputPath>
