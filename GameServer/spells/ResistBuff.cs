@@ -165,9 +165,34 @@ namespace DOL.GS.Spells
 	}
 
 	/// <summary>
+	/// Body/Spirit/Energy/Heat/Cold/Matter resistance buff
+	/// </summary>
+	[SpellHandlerAttribute("AllMagicResistsBuff")]
+	public class AllMagicResistsBuff : AbstractResistBuff
+	{
+		public override int BonusCategory1 { get { return 1; } }
+		public override int BonusCategory2 { get { return 1; } }
+		public override int BonusCategory3 { get { return 1; } }
+		public override int BonusCategory4 { get { return 1; } }
+		public override int BonusCategory5 { get { return 1; } }
+		public override int BonusCategory6 { get { return 1; } }
+		
+		public override eProperty Property1 { get { return eProperty.Resist_Heat; } }
+		public override eProperty Property2 { get { return eProperty.Resist_Cold; } }
+		public override eProperty Property3 { get { return eProperty.Resist_Matter; } }
+		public override eProperty Property4 { get { return eProperty.Resist_Body; } }
+		public override eProperty Property5 { get { return eProperty.Resist_Spirit; } }
+		public override eProperty Property6 { get { return eProperty.Resist_Energy; } }
+
+		// constructor
+		public AllMagicResistsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+	}
+
+	/// <summary>
 	/// Crush/Slash/Thrust resistance buff
 	/// </summary>
 	[SpellHandlerAttribute("CrushSlashThrustBuff")]
+	[SpellHandlerAttribute("AllMeleeResistsBuff")]
 	public class CrushSlashThrustBuff : AbstractResistBuff
 	{
 		public override int BonusCategory1 { get { return 1; } }
