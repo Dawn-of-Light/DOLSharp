@@ -153,7 +153,9 @@ namespace DOL.GS
 				{
 					string[] ab = splitab.Split('|');
 					if (splitab.Trim().Length == 0) continue;
-					int id = int.Parse(ab[1]);
+					int id = 1;
+					if (ab.Length>1)
+						id = int.Parse(ab[1]);
 					Ability abil = SkillBase.GetAbility(ab[0], id);
 					if (abil != null)
 						m_abilities.Add(abil);
