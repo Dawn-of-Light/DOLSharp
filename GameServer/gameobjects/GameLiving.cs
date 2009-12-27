@@ -1862,7 +1862,6 @@ namespace DOL.GS
             }
             if (InterruptTime < CurrentRegion.Time + duration)
                 InterruptTime = CurrentRegion.Time + duration;
-
             //new InterruptAction(this, attacker, duration, attackType).Start(1);
 
             if (CurrentSpellHandler != null)
@@ -1961,7 +1960,8 @@ namespace DOL.GS
             get { return m_interruptTime; }
             set
             {
-                InterruptAction = CurrentRegion.Time;
+                if (CurrentRegion != null)
+                    InterruptAction = CurrentRegion.Time;
                 m_interruptTime = value;
             }
         }
