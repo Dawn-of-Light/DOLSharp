@@ -213,17 +213,31 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public override void FinishQuest()
 		{
-			base.FinishQuest();
-			QuestPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
-			QuestPlayer.GainExperience(GameLiving.eXPSource.Quest, Rewards.Experience);
-            //k109: Could not get ReceiveMoney to work...trying AddMoney...
-            QuestPlayer.AddMoney(Rewards.Money);
-            //QuestPlayer.ReceiveMoney(QuestGiver, Rewards.Money);
-			foreach (ItemTemplate basicReward in Rewards.BasicItems)
-				GiveItem(QuestPlayer, basicReward);
-			foreach (ItemTemplate optionalReward in Rewards.ChosenItems)
-				GiveItem(QuestPlayer, optionalReward);
-			QuestPlayer.Out.SendNPCsQuestEffect(QuestGiver, QuestGiver.CanGiveOneQuest(QuestPlayer));
+			int inventorySpaceRequired = Rewards.BasicItems.Count + Rewards.ChosenItems.Count;
+
+			if (QuestPlayer.Inventory.IsSlotsFree(inventorySpaceRequired, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			{
+				base.FinishQuest();
+				QuestPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
+				QuestPlayer.GainExperience(GameLiving.eXPSource.Quest, Rewards.Experience);
+				QuestPlayer.AddMoney(Rewards.Money);
+
+				foreach (ItemTemplate basicReward in Rewards.BasicItems)
+				{
+					GiveItem(QuestPlayer, basicReward);
+				}
+
+				foreach (ItemTemplate optionalReward in Rewards.ChosenItems)
+				{
+					GiveItem(QuestPlayer, optionalReward);
+				}
+
+				QuestPlayer.Out.SendNPCsQuestEffect(QuestGiver, QuestGiver.CanGiveOneQuest(QuestPlayer));
+			}
+			else
+			{
+				QuestPlayer.Out.SendMessage(string.Format("Your inventory is full, you need {0} free slot(s) to complete this quest.", inventorySpaceRequired), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		/// <summary>
