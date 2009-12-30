@@ -110,7 +110,7 @@ namespace DOL.GS.Spells
 
 		private void DealDamageCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
-			if (player == null)
+			if (player == null || Caster.ObjectState != GameObject.eObjectState.Active)
 				return;
 
 			if ((response & 0x100) == 0x100)
