@@ -235,6 +235,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotSold"));
 						}
 
+                        if (item.Description != null)
+                            objectInfo.Add(item.Description);
+
 						if (item.MaxDurability == 0)
 							objectInfo.Add("Cannot be destroyed.");
 
