@@ -164,6 +164,11 @@ namespace DOL.GS
 			return null;
 		}
 
+        public static void UnRegisterLootGenerator(ILootGenerator generator, string mobname, string mobguild, string mobfaction)
+        {
+            UnRegisterLootGenerator(generator, mobname, mobguild, mobfaction, 0);
+        }
+
 		/// <summary>
 		/// Unregister a generator for the given parameters		
 		/// </summary>
@@ -171,7 +176,7 @@ namespace DOL.GS
 		/// <param name="mobname"></param>
 		/// <param name="mobguild"></param>
 		/// <param name="mobfaction"></param>
-		public static void UnRegisterLootGenerator(ILootGenerator generator, string mobname, string mobguild, string mobfaction)
+		public static void UnRegisterLootGenerator(ILootGenerator generator, string mobname, string mobguild, string mobfaction, int mobregion)
 		{
 			if (generator == null)
 				return;
@@ -194,7 +199,16 @@ namespace DOL.GS
 				}
 			}
 
-			if (Util.IsEmpty(mobname) && Util.IsEmpty(mobguild) && Util.IsEmpty(mobfaction))
+            if (mobregion > 0)
+            {
+                IList regionList = (IList)m_mobRegionGenerators[mobregion];
+                if (regionList != null)
+                {
+                    regionList.Remove(generator);
+                }
+            }
+
+			if (Util.IsEmpty(mobname) && Util.IsEmpty(mobguild) && Util.IsEmpty(mobfaction) && mobregion == 0)
 			{
 				m_globalGenerators.Remove(generator);
 			}
