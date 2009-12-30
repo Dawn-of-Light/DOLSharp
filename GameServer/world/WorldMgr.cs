@@ -2020,6 +2020,11 @@ namespace DOL.GS
 			return CreateInstance(0, skinID, instanceType);
 		}
 
+        /// <summary>
+        /// Where do we start looking for an instance id from if none is requested?
+        /// </summary>
+        public const int DEFAULT_VALUE_FOR_INSTANCE_ID_SEARCH_START = 1000;
+
 
 		/// <summary>
 		/// Tries to create an instance with the suggested ID and a given 'skin' (the regionID to display client side).
@@ -2072,6 +2077,8 @@ namespace DOL.GS
                 return null;
             }
 
+            bool RequestedAnID = requestedID == 0 ? false : true;
+
 			ushort ID = requestedID;
 
             //Get the unique ID for this instance or try to create an instance at the requested ID
@@ -2084,13 +2091,15 @@ namespace DOL.GS
             //              -Dinberg.
             lock (m_regions.SyncRoot)
             {
-				if (ID == 0)
+				if (!RequestedAnID)
 				{
+                    ID = DEFAULT_VALUE_FOR_INSTANCE_ID_SEARCH_START;
 					while (ID < ushort.MaxValue)
 					{
 						//Look for a space in the regions table...
-						if (!m_regions.ContainsKey(ID))
-							break;
+                        if (!m_regions.ContainsKey(ID))
+                            break;
+
 						//If no space here, no worries - move quickly to the next ID and continue.
 						ID++;
 					}
