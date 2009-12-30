@@ -131,7 +131,7 @@ namespace DOL.GS
 				//If no more players remain, remove and clean up the instance...
 				if (m_destroyWhenEmpty && m_playersInInstance == 0)
 				{
-					log.Info("Instance now empty, destroying instance " + Description + ", ID: " + ID + ".");
+					log.Info("A: Instance now empty, destroying instance " + Description + ", ID: " + ID + ".");
 					WorldMgr.RemoveInstance(this);
 				}
 			}
@@ -208,7 +208,7 @@ namespace DOL.GS
             //If no more players remain, remove and clean up the instance...
             if (m_playersInInstance < 1 && DestroyWhenEmpty)
             {
-                log.Warn("Instance now empty, destroying instance " + Description + ", ID: " + ID + ".");
+                log.Warn("B: Instance now empty, destroying instance " + Description + ", ID: " + ID + ", type=" + GetType().ToString() + ".");
                 WorldMgr.RemoveInstance(this);
             }
         }
