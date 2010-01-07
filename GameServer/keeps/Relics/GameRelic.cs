@@ -18,12 +18,7 @@ namespace DOL.GS
 
 	public class GameRelic : GameStaticItem
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-
 
 		public const string PLAYER_CARRY_RELIC_WEAK = "IAmCarryingARelic";
 		protected const int CarrierEffectInterval = 4000;
@@ -140,7 +135,7 @@ namespace DOL.GS
 
 			if (IsMounted && !RelicMgr.CanPickupRelicFromShrine(player, this))
 			{
-				player.Out.SendMessage("You cannot pickup " + GetName(0, false) + ". You need to capture your realms " + (Enum.GetName(typeof(eRelicType), RelicType)) + "relic first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You cannot pickup " + GetName(0, false) + ". You need to capture your realms " + (Enum.GetName(typeof(eRelicType), RelicType)) + " relic first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
