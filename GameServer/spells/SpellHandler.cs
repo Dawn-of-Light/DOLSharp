@@ -171,6 +171,12 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual void OnSpellPulse(PulsingSpellEffect effect)
 		{
+			if (Caster.IsMoving && Spell.IsFocus)
+			{
+				MessageToCaster("Your spell was cancelled.", eChatType.CT_SpellExpires);
+				effect.Cancel(false);
+				return;
+			}
 			if (Caster.IsAlive == false)
 			{
 				effect.Cancel(false);
@@ -297,7 +303,7 @@ namespace DOL.GS.Spells
 		public virtual bool CastSpell(GameLiving targetObject)
 		{
 			Caster.Notify(GameLivingEvent.CastStarting, m_caster, new CastingEventArgs(this));
-			
+
 			if (Caster is GamePlayer && Spell.SpellType != "Archery")
 				((GamePlayer)Caster).Stealth(false);
 
@@ -359,13 +365,13 @@ namespace DOL.GS.Spells
 					SendSpellMessages();
 
 					int time = CalculateCastingTime();
-					
+
 					int step1 = time / 3;
 					if (step1 > 1000)
 						step1 = 1000;
 					if (step1 < 1)
 						step1 = 1;
-					
+
 					int step3 = time / 3;
 					if (step3 > 1000)
 						step3 = 1000;
@@ -378,7 +384,7 @@ namespace DOL.GS.Spells
 
 					if (Caster is GamePlayer && (Caster as GamePlayer).Client.Account.PrivLevel >= 3 && ServerProperties.Properties.ENABLE_DEBUG)
 						(Caster as GamePlayer).Out.SendMessage("[DEBUG] step1=" + step1 + "   step2=" + step2 + "   step3=" + step3, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					
+
 					m_castTimer = new DelayedCastTimer(Caster, this, target, step2, step3);
 					m_castTimer.Start(step1);
 					m_started = Caster.CurrentRegion.Time;
@@ -395,7 +401,7 @@ namespace DOL.GS.Spells
 					FinishSpellCast(target);
 				}
 			}
-			
+
 			if (!IsCasting)
 				OnAfterSpellCastSequence();
 
@@ -574,7 +580,7 @@ namespace DOL.GS.Spells
 			}
 
 			String targetType = m_spell.Target.ToLower();
-			
+
 			//[Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
 			if (targetType.Equals("pet"))
 			{
@@ -599,11 +605,11 @@ namespace DOL.GS.Spells
 					if (!quiet) MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
 				}
-				//				if (!Caster.GroundTargetInView)
-				//				{
-				//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
-				//					return false;
-				//				}
+//				if (!Caster.GroundTargetInView)
+//				{
+//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
+//					return false;
+//				}
 			}
 			else if (targetType != "self" && targetType != "group" && targetType != "pet"
 			         && targetType != "controlled" && targetType != "cone" && m_spell.Range > 0)
@@ -824,11 +830,11 @@ namespace DOL.GS.Spells
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
 				}
-				//				if (!Caster.GroundTargetInView)
-				//				{
-				//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
-				//					return false;
-				//				}
+//				if (!Caster.GroundTargetInView)
+//				{
+//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
+//					return false;
+//				}
 			}
 			else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
 			{
@@ -997,11 +1003,11 @@ namespace DOL.GS.Spells
 					if (!quiet) MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
 				}
-				//				if (!Caster.GroundTargetInView)
-				//				{
-				//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
-				//					return false;
-				//				}
+//				if (!Caster.GroundTargetInView)
+//				{
+//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
+//					return false;
+//				}
 			}
 			else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
 			{
@@ -1109,16 +1115,16 @@ namespace DOL.GS.Spells
 			}
 
 			/*if (m_caster.Concentration < m_spell.Concentration)
-            {
-                MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
-                return false;
-            }*/
+{
+MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
+return false;
+}*/
 
 			/*if (m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
-            {
-                MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
-                return false;
-            }*/
+{
+MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
+return false;
+}*/
 
 			return true;
 		}
@@ -1182,11 +1188,11 @@ namespace DOL.GS.Spells
 					if (!quiet) MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
 				}
-				//				if (!Caster.GroundTargetInView)
-				//				{
-				//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
-				//					return false;
-				//				}
+//				if (!Caster.GroundTargetInView)
+//				{
+//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
+//					return false;
+//				}
 			}
 			else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
 			{
@@ -1294,16 +1300,16 @@ namespace DOL.GS.Spells
 			}
 
 			/*if (m_caster.Concentration < m_spell.Concentration)
-            {
-                MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
-                return false;
-            }*/
+{
+MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
+return false;
+}*/
 
 			/*if (m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
-            {
-                MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
-                return false;
-            }*/
+{
+MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
+return false;
+}*/
 
 			return true;
 		}
@@ -1588,7 +1594,7 @@ namespace DOL.GS.Spells
 			double percent = 1.0;
 			int dex = Caster.GetModified(eProperty.Dexterity);
 			if(SpellLine.KeyName.Contains("Champion Abilities")) dex=100; //Vico: No casting time diminution for CL Spells
-			
+
 			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
 			{
 				return 2000; //always 2 sec
@@ -2500,12 +2506,12 @@ namespace DOL.GS.Spells
 		{
 			Spell oldspell = oldeffect.Spell;
 			Spell newspell = neweffect.Spell;
-			//			if (oldspell.SpellType != newspell.SpellType)
-			//			{
-			//				if (log.IsWarnEnabled)
-			//					log.Warn("Spell effect compare with different types " + oldspell.SpellType + " <=> " + newspell.SpellType + "\n" + Environment.StackTrace);
-			//				return false;
-			//			}
+//			if (oldspell.SpellType != newspell.SpellType)
+//			{
+//				if (log.IsWarnEnabled)
+//					log.Warn("Spell effect compare with different types " + oldspell.SpellType + " <=> " + newspell.SpellType + "\n" + Environment.StackTrace);
+//				return false;
+//			}
 			if (oldspell.Concentration > 0)
 				return false;
 			if (newspell.Damage < oldspell.Damage)
@@ -2650,10 +2656,10 @@ namespace DOL.GS.Spells
 			// interrupt a casting player.
 
 			/*if (target is GamePlayer)
-			{
-				if (target.IsCasting && (Spell.Damage > 0 || Spell.CastTime > 0))
-					target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
-			}*/
+{
+if (target.IsCasting && (Spell.Damage > 0 || Spell.CastTime > 0))
+target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+}*/
 			if(!(Spell.SpellType.ToLower().IndexOf("debuff")>=0 && Spell.CastTime==0))
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 
@@ -3227,21 +3233,21 @@ namespace DOL.GS.Spells
 				bonustohit += (int)resPierce.Spell.Value;
 
 			/*
-			http://www.camelotherald.com/news/news_article.php?storyid=704
-			
-			Q: Spell resists. Can you give me more details as to how the system works?
+http://www.camelotherald.com/news/news_article.php?storyid=704
 
-			A: Here's the answer, straight from the desk of the spell designer:
+Q: Spell resists. Can you give me more details as to how the system works?
 
-			"Spells have a factor of (spell level / 2) added to their chance to hit. (Spell level defined as the level the spell is awarded, chance to hit defined as
-			the chance of avoiding the "Your target resists the spell!" message.) Subtracted from the modified to-hit chance is the target's (level / 2).
-			So a L50 caster casting a L30 spell at a L50 monster or player, they have a base chance of 85% to hit, plus 15%, minus 25% for a net chance to hit of 75%.
-			If the chance to hit goes over 100% damage or duration is increased, and if it goes below 55%, you still have a 55% chance to hit but your damage
-			or duration is penalized. If the chance to hit goes below 0, you cannot hit at all. Once the spell hits, damage and duration are further modified
-			by resistances.
-			
-			Note:  The last section about maintaining a chance to hit of 55% has been proven incorrect with live testing.  The code below is very close to live like.
-					- Tolakram
+A: Here's the answer, straight from the desk of the spell designer:
+
+"Spells have a factor of (spell level / 2) added to their chance to hit. (Spell level defined as the level the spell is awarded, chance to hit defined as
+the chance of avoiding the "Your target resists the spell!" message.) Subtracted from the modified to-hit chance is the target's (level / 2).
+So a L50 caster casting a L30 spell at a L50 monster or player, they have a base chance of 85% to hit, plus 15%, minus 25% for a net chance to hit of 75%.
+If the chance to hit goes over 100% damage or duration is increased, and if it goes below 55%, you still have a 55% chance to hit but your damage
+or duration is penalized. If the chance to hit goes below 0, you cannot hit at all. Once the spell hits, damage and duration are further modified
+by resistances.
+
+Note:  The last section about maintaining a chance to hit of 55% has been proven incorrect with live testing.  The code below is very close to live like.
+- Tolakram
 			 */
 
 			int hitchance = 85 + ((spellLevel - target.Level) / 2) + bonustohit;
