@@ -235,6 +235,14 @@ namespace DOL.GS
 					log.DebugFormat("Player {0} captured relic {1}.", player.Name, relicOnPlayer.Name);
 					relicOnPlayer.RelicPadTakesOver(m_parent);
 				}
+				else
+				{
+					log.DebugFormat("Player realm {0} wrong realm on attempt to capture relic {1} of realm {2} on pad of realm {3}.", 
+									GlobalConstants.RealmToName(player.Realm), 
+									relicOnPlayer.Name, 
+									GlobalConstants.RealmToName(relicOnPlayer.Realm), 
+									GlobalConstants.RealmToName(m_parent.Realm));
+				}
 			}
 		}
 
