@@ -6,11 +6,14 @@ using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Reflection;
+using log4net;
 
 namespace DOL.GS
 {
 	public class GameRelicPad : GameStaticItem
 	{
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		const int PAD_AREA_RADIUS = 250;
 
@@ -201,6 +204,8 @@ namespace DOL.GS
 		/// </summary>
 		public class PadArea : Area.Circle
 		{
+			private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 			GameRelicPad m_parent;
 
 			public PadArea(GameRelicPad parentPad)
@@ -212,12 +217,22 @@ namespace DOL.GS
 			public override void OnPlayerEnter(GamePlayer player)
 			{
 				GameRelic relicOnPlayer = player.TempProperties.getObjectProperty(GameRelic.PLAYER_CARRY_RELIC_WEAK, null) as GameRelic;
+
 				if (relicOnPlayer == null)
-					return;
-				if (player.Realm == m_parent.Realm
-					&& relicOnPlayer.RelicType == m_parent.PadType
-					&& m_parent.MountedRelic == null)
 				{
+					return;
+				}
+
+				if (relicOnPlayer.RelicType != m_parent.PadType || m_parent.MountedRelic != null)
+				{
+					player.Client.Out.SendMessage(string.Format("You need to find an empty {0} relic pad in order to place this relic.", relicOnPlayer.RelicType), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					log.DebugFormat("Player {0} needs to find an empty {1} relic pad in order to place {2}.", player.Name, relicOnPlayer.RelicType, relicOnPlayer.Name);
+					return;
+				}
+
+				if (player.Realm == m_parent.Realm)
+				{
+					log.DebugFormat("Player {0} captured relic {1}.", player.Name, relicOnPlayer.Name);
 					relicOnPlayer.RelicPadTakesOver(m_parent);
 				}
 			}
