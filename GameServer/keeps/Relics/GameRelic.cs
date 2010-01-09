@@ -21,8 +21,7 @@ namespace DOL.GS
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public const string PLAYER_CARRY_RELIC_WEAK = "IAmCarryingARelic";
-		protected const int CarrierEffectInterval = 4000;
-		protected int ReturnRelicInterval = ServerProperties.Properties.RELIC_RETURN_TIME * 1000;
+		protected const int RelicEffectInterval = 4000;
 
 		#region declarations
 		InventoryItem m_item;
@@ -33,6 +32,12 @@ namespace DOL.GS
 		DBRelic m_dbRelic;
 		eRelicType m_relicType;
 		RegionTimer m_returnRelicTimer;
+		long m_timeRelicOnGround = 0;
+
+		protected int ReturnRelicInterval
+		{
+			get { return ServerProperties.Properties.RELIC_RETURN_TIME * 1000; }
+		}
 
 		/// <summary>
 		/// The place were the relic should go if it is lost by players
@@ -98,6 +103,11 @@ namespace DOL.GS
 			}
 		}
 
+		public static bool IsPlayerCarryingRelic(GamePlayer player)
+		{
+			return player.TempProperties.getObjectProperty(PLAYER_CARRY_RELIC_WEAK, null) != null;
+		}
+
 		#endregion
 
 		#region constructor
@@ -143,18 +153,19 @@ namespace DOL.GS
 			return true;
 		}
 
-		public virtual void RelicPadTakesOver(GameRelicPad pad)
+		public virtual void RelicPadTakesOver(GameRelicPad pad, bool returning)
 		{
 			m_currentRelicPad = pad;
 			Realm = pad.Realm;
-			pad.MountRelic(this);
+			pad.MountRelic(this, returning);
 			CurrentRegionID = pad.CurrentRegionID;
 			PlayerLoosesRelic(true);
 			X = pad.X;
 			Y = pad.Y;
 			Z = pad.Z;
 			Heading = pad.Heading;
-
+			SaveIntoDatabase();
+			AddToWorld();
 		}
 
 
@@ -197,14 +208,13 @@ namespace DOL.GS
 
 			if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, m_item))
 			{
-
 				if (m_item == null)
 					log.Warn("GameRelic: Could not retrive " + Name + " as InventoryItem on player " + player.Name);
 
 
-
 				m_currentCarrier = player;
 				player.TempProperties.setProperty(PLAYER_CARRY_RELIC_WEAK, this);
+				player.Out.SendUpdateMaxSpeed();
 
 				if (IsMounted)
 				{
@@ -219,7 +229,10 @@ namespace DOL.GS
 				SetHandlers(player, true);
 				StartPlayerTimer(player);
 				if (m_returnRelicTimer != null)
+				{
 					m_returnRelicTimer.Stop();
+					m_returnRelicTimer = null;
+				}
 
 			}
 			else
@@ -235,7 +248,11 @@ namespace DOL.GS
 		/// <param name="removeFromInventory">Defines wheater the Item in the Inventory should be removed.</param>
 		protected virtual void PlayerLoosesRelic(bool removeFromInventory)
 		{
-			if (m_currentCarrier == null) return;
+			if (m_currentCarrier == null)
+			{
+				return;
+			}
+
 			GamePlayer player = m_currentCarrier;
 
 			if (player.TempProperties.getObjectProperty(PLAYER_CARRY_RELIC_WEAK, null) == null)
@@ -252,19 +269,28 @@ namespace DOL.GS
 				}
 
 			}
-			// update the position of the worldObject Relic
-			Update();
+
 			// remove the handlers from the player
 			SetHandlers(player, false);
 			//kill the pulsingEffectTimer on the player
 			StartPlayerTimer(null);
-			// launch the reset timer
-			m_returnRelicTimer = new RegionTimer (this, new RegionTimerCallback(ReturnRelicTick),ReturnRelicInterval);
-			// remove the CarryingWeak
+
 			player.TempProperties.removeProperty(PLAYER_CARRY_RELIC_WEAK);
 			m_currentCarrier = null;
-			SaveIntoDatabase();
-			AddToWorld();
+			player.Out.SendUpdateMaxSpeed();
+
+			if (IsMounted == false)
+			{
+				// launch the reset timer if this relic is not dropped on a pad
+				m_timeRelicOnGround = CurrentRegion.Time;
+				m_returnRelicTimer = new RegionTimer(this, new RegionTimerCallback(ReturnRelicTick), RelicEffectInterval);
+				log.DebugFormat("{0} dropped, return timer for relic set to {1} seconds.", Name, ReturnRelicInterval / 1000);
+
+				// update the position of the worldObject Relic
+				Update();
+				SaveIntoDatabase();
+				AddToWorld();
+			}
 		}
 
 		/// <summary>
@@ -272,17 +298,31 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual int ReturnRelicTick(RegionTimer timer)
 		{
+			if (CurrentRegion.Time - m_timeRelicOnGround < ReturnRelicInterval)
+			{
+				// Note: This does not show up, possible issue with SendSpellEffect
+				ushort effectID = (ushort)Util.Random(5811, 5815);
+				foreach (GamePlayer ppl in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					ppl.Out.SendSpellEffectAnimation(this, this, effectID, 0, false, 0x01);
+				}
+				return RelicEffectInterval;
+			}
+
 			if (ReturnRelicPad != null)
 			{
-				log.Info("Relic " + this.Name + " is lost and returns to " + ReturnRelicPad.ToString());
-				ReturnRelicPad.MountRelic(this);
+				log.Debug("Relic " + this.Name + " is lost and returns to " + ReturnRelicPad.ToString());
+				RemoveFromWorld();
+				RelicPadTakesOver(ReturnRelicPad, true);
+				SaveIntoDatabase();
+				AddToWorld();
 			}
 			else
 			{
-				log.Info("Relic " + this.Name + " is lost and ReturnRelicPad is null!");
+				log.Error("Relic " + this.Name + " is lost and ReturnRelicPad is null!");
 			}
 			m_returnRelicTimer.Stop();
-			m_returnRelicTimer=null;
+			m_returnRelicTimer = null;
 			return 0;
 		}
 		
@@ -296,12 +336,12 @@ namespace DOL.GS
 			{
 				if (m_currentCarrierTimer != null)
 				{
-					log.Warn("GameRelic: PlayerTimer already set on a player");
+					log.Warn("GameRelic: PlayerTimer already set on a player, stopping timer!");
 					m_currentCarrierTimer.Stop();
 					m_currentCarrierTimer = null;
 				}
 				m_currentCarrierTimer = new RegionTimer(player, new RegionTimerCallback(CarrierTimerTick));
-				m_currentCarrierTimer.Start(CarrierEffectInterval);
+				m_currentCarrierTimer.Start(RelicEffectInterval);
 
 			}
 			else
@@ -324,12 +364,33 @@ namespace DOL.GS
 		{
 			//update the relic position
 			Update();
+
+			// check to make sure relic is in a legal region and still in the players backpack
+
+			if (CurrentRegionID != DOL.GS.Keeps.KeepMgr.NEW_FRONTIERS)
+			{
+				log.DebugFormat("{0} taken out of New Frontiers, relic returned to previous pad.", Name);
+				RelicPadTakesOver(ReturnRelicPad, true);
+				SaveIntoDatabase();
+				AddToWorld();
+				return 0;
+			}
+
+			if (CurrentCarrier != null && CurrentCarrier.Inventory.GetFirstItemByID(m_item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
+			{
+				log.DebugFormat("{0} not found in carriers backpack, relic returned to previous pad.", Name);
+				RelicPadTakesOver(ReturnRelicPad, true);
+				SaveIntoDatabase();
+				AddToWorld();
+				return 0;
+			}
+
 			//fireworks spells temp
-			ushort effectID = (ushort)Util.Random(5811, 5814);
+			ushort effectID = (ushort)Util.Random(5811, 5815);
 			foreach (GamePlayer ppl in m_currentCarrier.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				ppl.Out.SendSpellEffectAnimation(m_currentCarrier, m_currentCarrier, effectID, 0, false, 0x01);
 
-			return CarrierEffectInterval;
+			return RelicEffectInterval;
 		}
 
 
@@ -425,17 +486,20 @@ namespace DOL.GS
 			m_itemTemp.Name = Name;
 			m_itemTemp.Object_Type = (int)eObjectType.Magical;
 			m_itemTemp.Model = Model;
-			m_itemTemp.IsDropable = false;
+			m_itemTemp.IsDropable = true;
 			m_itemTemp.IsPickable = false;
 			m_itemTemp.Level = 99;
 			m_itemTemp.Quality = 100;
+			m_itemTemp.Copper = 0;
+			m_itemTemp.Silver = 0;
+			m_itemTemp.Gold = 0;
+			m_itemTemp.Platinum = 0;
 			m_itemTemp.PackSize = 1;
 			m_itemTemp.AutoSave = false;
 			m_itemTemp.Weight = 1000;
 			m_itemTemp.Id_nb = "ARelic";
 			m_itemTemp.IsTradable = false;
 			m_item = new InventoryItem(m_itemTemp);
-			//m_item.ObjectId = System.Guid.NewGuid().ToString();
 		}
 		/// <summary>
 		/// Saves the current GameRelic to the database
