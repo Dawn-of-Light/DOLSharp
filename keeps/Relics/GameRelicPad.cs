@@ -135,11 +135,11 @@ namespace DOL.GS
 			return m_mountedRelic == relic;
 		}
 
-		public void MountRelic(GameRelic relic)
+		public void MountRelic(GameRelic relic, bool returning)
 		{
 			m_mountedRelic = relic;
 
-			if (relic.CurrentCarrier != null)
+			if (relic.CurrentCarrier != null && returning == false)
 			{
 				/* Sending broadcast */
 				string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameRelicPad.MountRelic.Stored", relic.CurrentCarrier.Name, GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm), relic.Name, Name);
@@ -163,11 +163,28 @@ namespace DOL.GS
 						targets.Add(p);
 					}
 				}
-				else targets.Add(relic.CurrentCarrier);
+				else
+				{
+					targets.Add(relic.CurrentCarrier);
+				}
+
 				foreach (GamePlayer target in targets)
+				{
 					target.CapturedRelics++;
+				}
 
 				Notify(RelicPadEvent.RelicMounted, this, new RelicPadEventArgs(relic.CurrentCarrier, relic));
+			}
+			else
+			{
+				// relic returned to pad, probably because it was dropped on ground and timer expired.
+				string message = string.Format("The {0} has been returned to {1}.", relic.Name, Name);
+				foreach (GameClient cl in WorldMgr.GetAllPlayingClients())
+				{
+					if (cl.Player.ObjectState != eObjectState.Active) continue;
+					cl.Out.SendMessage(message + "\n" + message + "\n" + message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				}
+
 			}
 		}
 
@@ -233,7 +250,7 @@ namespace DOL.GS
 				if (player.Realm == m_parent.Realm)
 				{
 					log.DebugFormat("Player {0} captured relic {1}.", player.Name, relicOnPlayer.Name);
-					relicOnPlayer.RelicPadTakesOver(m_parent);
+					relicOnPlayer.RelicPadTakesOver(m_parent, false);
 				}
 				else
 				{
