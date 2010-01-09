@@ -98,7 +98,7 @@ namespace DOL.GS
 					GameRelicPad pad = GetPadAtRelicLocation(relic);
 					if (pad != null && relic.RelicType == pad.PadType)
 					{
-						relic.RelicPadTakesOver(pad);
+						relic.RelicPadTakesOver(pad, true);
 						log.Debug("DBRelic: " + relic.Name + " has been loaded and added to pad " + pad.Name + ".");
 					}
 

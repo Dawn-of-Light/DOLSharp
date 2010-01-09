@@ -97,7 +97,17 @@ namespace DOL.GS.PropertyCalc
 					if (mos != null)
 						speed *= 1 + MasteryOfStealthAbility.GetSpeedBonusForLevel(mos.Level);
 				}
-				if (player.IsSprinting) speed *= 1.3;
+
+				if (GameRelic.IsPlayerCarryingRelic(player) && speed > 1.0)
+				{
+					speed = 1.0;
+				}
+
+				if (player.IsSprinting)
+				{
+					speed *= 1.3;
+				}
+
 				speed *= horseSpeed;
 			}
 			else if (living is GameNPC)
@@ -140,12 +150,19 @@ namespace DOL.GS.PropertyCalc
             GameSpellEffect iConvokerEffect = SpellHandler.FindEffectOnTarget(living, "SpeedWrap");
             if (iConvokerEffect != null && living.EffectList.GetOfType(typeof(ChargeEffect)) == null)
 			{
-                if(living.EffectList.GetOfType(typeof(SprintEffect))!=null && speed>248) return 248;
-				else if(speed>191) return 191;
+				if (living.EffectList.GetOfType(typeof(SprintEffect)) != null && speed > 248)
+				{
+					return 248;
+				}
+				else if (speed > 191)
+				{
+					return 191;
+				}
 			}
 
 			if (speed < 0)
 				return 0;
+
 			return (int)speed;
 		}
 	}
