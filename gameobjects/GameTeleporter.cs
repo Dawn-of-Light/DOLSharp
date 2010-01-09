@@ -70,7 +70,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override bool Interact(GamePlayer player)
 		{
-			if (!base.Interact(player))
+			if (!base.Interact(player) || GameRelic.IsPlayerCarryingRelic(player))
 				return false;
 
 			TurnTo(player, 10000);
@@ -90,6 +90,9 @@ namespace DOL.GS
 
 			GamePlayer player = source as GamePlayer;
 			if (player == null)
+				return false;
+
+			if (GameRelic.IsPlayerCarryingRelic(player))
 				return false;
 			
 			// Battlegrounds are specials, as the teleport location depends on
