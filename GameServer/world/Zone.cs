@@ -1295,72 +1295,92 @@ namespace DOL.GS
 		{
 			return GetNPCsOfZone(new eRealm[] { realm }, 0, 0, 0, 0, false);
 		}
+
+
+		/// <summary>
+		/// Get NPCs of a zone given various parameters
+		/// </summary>
+		/// <param name="realms"></param>
+		/// <param name="minLevel"></param>
+		/// <param name="maxLevel"></param>
+		/// <param name="compareLevel"></param>
+		/// <param name="conLevel"></param>
+		/// <param name="firstOnly"></param>
+		/// <returns></returns>
 		public List<GameNPC> GetNPCsOfZone(eRealm[] realms, int minLevel, int maxLevel, int compareLevel, int conLevel, bool firstOnly)
 		{
 			List<GameNPC> list = new List<GameNPC>();
-			if (!m_initialized) InitializeZone();
-			// select random starting subzone and iterate over all objects in subzone than in all subzone...
-			int currentSubZoneIndex = Util.Random(SUBZONE_NBR);
-			int startSubZoneIndex = currentSubZoneIndex;
-			GameNPC currentNPC = null;
-			bool stopSearching = false;
-			do
+
+			try
 			{
-				SubNodeElement startElement = m_subZoneElements[currentSubZoneIndex][(int)eGameObjectType.NPC];
-				lock (startElement)
+				if (!m_initialized) InitializeZone();
+				// select random starting subzone and iterate over all objects in subzone than in all subzone...
+				int currentSubZoneIndex = Util.Random(SUBZONE_NBR);
+				int startSubZoneIndex = currentSubZoneIndex;
+				GameNPC currentNPC = null;
+				bool stopSearching = false;
+				do
 				{
-					// if list is not empty
-					if (startElement != startElement.next)
+					SubNodeElement startElement = m_subZoneElements[currentSubZoneIndex][(int)eGameObjectType.NPC];
+					lock (startElement)
 					{
-						SubNodeElement curElement = startElement.next;
-						do
+						// if list is not empty
+						if (startElement != startElement.next)
 						{
-							currentNPC = (GameNPC)curElement.data;
-							bool added = false;
-							// Check for specified realms
-							for (int i = 0; i < realms.Length; ++i)
+							SubNodeElement curElement = startElement.next;
+							do
 							{
-								eRealm realm = realms[i];
-								if (currentNPC.Realm == realm)
+								currentNPC = (GameNPC)curElement.data;
+								bool added = false;
+								// Check for specified realms
+								for (int i = 0; i < realms.Length; ++i)
 								{
-									// Check for min-max level, if any specified
-									bool addToList = true;
-									if (compareLevel > 0 && conLevel > 0)
-										addToList = ((int)GameObject.GetConLevel(compareLevel, currentNPC.Level) == conLevel);
-									else
+									eRealm realm = realms[i];
+									if (currentNPC.Realm == realm)
 									{
-										if (minLevel > 0 && currentNPC.Level < minLevel)
-											addToList = false;
-										if (maxLevel > 0 && currentNPC.Level > maxLevel)
-											addToList = false;
-									}
-									if (addToList)
-									{
-										list.Add(currentNPC);
-										added = true;
-										break;
+										// Check for min-max level, if any specified
+										bool addToList = true;
+										if (compareLevel > 0 && conLevel > 0)
+											addToList = ((int)GameObject.GetConLevel(compareLevel, currentNPC.Level) == conLevel);
+										else
+										{
+											if (minLevel > 0 && currentNPC.Level < minLevel)
+												addToList = false;
+											if (maxLevel > 0 && currentNPC.Level > maxLevel)
+												addToList = false;
+										}
+										if (addToList)
+										{
+											list.Add(currentNPC);
+											added = true;
+											break;
+										}
 									}
 								}
-							}
-							// If we have added and must return one only result,
-							// then mark for stop searching
-							if (firstOnly && added)
-							{
-								stopSearching = true;
-								break;
-							}
-							curElement = curElement.next;
-						} while (curElement != startElement);
+								// If we have added and must return one only result,
+								// then mark for stop searching
+								if (firstOnly && added)
+								{
+									stopSearching = true;
+									break;
+								}
+								curElement = curElement.next;
+							} while (curElement != startElement);
+						}
 					}
-				}
-				if (++currentSubZoneIndex >= SUBZONE_NBR)
-				{
-					currentSubZoneIndex = 0;
-				}
-				// If stop searching forced, then exit
-				if (stopSearching)
-					break;
-			} while (currentSubZoneIndex != startSubZoneIndex);
+					if (++currentSubZoneIndex >= SUBZONE_NBR)
+					{
+						currentSubZoneIndex = 0;
+					}
+					// If stop searching forced, then exit
+					if (stopSearching)
+						break;
+				} while (currentSubZoneIndex != startSubZoneIndex);
+			}
+			catch (Exception ex)
+			{
+				log.Error("GetNPCsOfZone: Caught Exception for zone " + Description + ".", ex);
+			}
 
 			return list;
 		}
