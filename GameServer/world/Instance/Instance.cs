@@ -223,7 +223,7 @@ namespace DOL.GS
 					}
 					catch (Exception e)
 					{
-						log.Error("GetArea exception.Area count " + m_ZoneAreasCount[zoneIndex], e);
+						log.Error("GetAreaOfZone: Caught exception for Zone " + zone.Description + ", Area count " + m_ZoneAreasCount[zoneIndex] + ".", e);
 					}
 				}
 			}
