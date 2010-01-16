@@ -23,6 +23,6 @@ namespace DOL.GS.PacketHandler
 	public interface IPacketEncoding
 	{
 		byte[] DecryptPacket(byte[] content, bool udpPacket);
-	  byte[] EncryptPacket(byte[] content, bool udpPacket);
+		byte[] EncryptPacket(byte[] content, bool udpPacket);
 	}
 }

@@ -69,7 +69,7 @@ namespace DOL.GS.ServerRules
 			}
 
 			// Ban IP Address or range (example: 5.5.5.%)
-			string accip = GameServer.Database.Escape(client.TCPEndpointAddress);
+			string accip = GameServer.Database.Escape(client.TcpEndpointAddress);
 			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND '" + GameServer.Database.Escape(accip) + "' LIKE Ip)");
 			if (objs.Length > 0)
 			{
@@ -162,12 +162,12 @@ namespace DOL.GS.ServerRules
 
 			if (!ServerProperties.Properties.ALLOW_DUAL_LOGINS)
 			{
-			 	if ((account == null || account.PrivLevel == 1) && client.TCPEndpointAddress != "not connected")
+			 	if ((account == null || account.PrivLevel == 1) && client.TcpEndpointAddress != "not connected")
 				{
 					foreach (GameClient cln in WorldMgr.GetAllClients())
 					{
 						if (cln == null || client == cln) continue;
-						if (cln.TCPEndpointAddress == client.TCPEndpointAddress)
+						if (cln.TcpEndpointAddress == client.TcpEndpointAddress)
 						{
 							if (cln.Account != null && cln.Account.PrivLevel > 1)
 							{
@@ -1363,17 +1363,17 @@ namespace DOL.GS.ServerRules
 						{
 
 							DOL.Database.PvPKillsLog killLog = new DOL.Database.PvPKillsLog();
-							killLog.KilledIP = killedPlayer.Client.TCPEndpointAddress;
+							killLog.KilledIP = killedPlayer.Client.TcpEndpointAddress;
 							killLog.KilledName = killedPlayer.Name;
 							killLog.KilledRealm = GlobalConstants.RealmToName(killedPlayer.Realm);
-							killLog.KillerIP = pair.Key.Client.TCPEndpointAddress;
+							killLog.KillerIP = pair.Key.Client.TcpEndpointAddress;
 							killLog.KillerName = pair.Key.Name;
 							killLog.KillerRealm = GlobalConstants.RealmToName(pair.Key.Realm);
 							killLog.RPReward = pair.Value;
 							killLog.RegionName = killedPlayer.CurrentRegion.Description;
 							killLog.IsInstance = killedPlayer.CurrentRegion.IsInstance;
 
-							if (killedPlayer.Client.TCPEndpointAddress == pair.Key.Client.TCPEndpointAddress)
+							if (killedPlayer.Client.TcpEndpointAddress == pair.Key.Client.TcpEndpointAddress)
 								killLog.SameIP = 1;
 
 							GameServer.Database.AddNewObject(killLog);

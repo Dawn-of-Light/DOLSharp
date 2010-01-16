@@ -27,8 +27,10 @@ using System.Text;
 using System.Threading;
 using System.Timers;
 using DOL.Events;
+using DOL.GS.ServerProperties;
 using log4net;
-using Timer = System.Timers.Timer;
+using Timer=System.Timers.Timer;
+using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler
 {
@@ -65,7 +67,7 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// thread id of running packet handler
 		/// </summary>
-		protected int m_handlerThreadID = 0;
+		protected int m_handlerThreadID;
 
 		/// <summary>
 		/// Constructs a new PacketProcessor
@@ -84,7 +86,7 @@ namespace DOL.GS.PacketHandler
 			m_udpSendBuffer = client.Server.AcquirePacketBuffer();
 		}
 
-		#region save last couple packets
+		#region Last Packets
 
 		/// <summary>
 		/// The count of last sent/received packets to keep.
@@ -94,32 +96,19 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// Holds the last sent/received packets.
 		/// </summary>
-		protected readonly Queue m_lastPackets = new Queue(MAX_LAST_PACKETS);
+		protected readonly Queue<IPacket> m_lastPackets = new Queue<IPacket>(MAX_LAST_PACKETS);
 
 		/// <summary>
 		/// Saves the sent packet for debugging
 		/// </summary>
 		/// <param name="pak">The sent packet</param>
-		protected void SaveSentPacket(PacketOut pak)
+		protected void SavePacket(IPacket pak)
 		{
-			lock (m_lastPackets.SyncRoot)
+			lock (m_lastPackets)
 			{
 				while (m_lastPackets.Count >= MAX_LAST_PACKETS)
 					m_lastPackets.Dequeue();
-				m_lastPackets.Enqueue(pak);
-			}
-		}
 
-		/// <summary>
-		/// Save the received packet for debugging
-		/// </summary>
-		/// <param name="pak">The received packet</param>
-		protected void SaveReceivedPacket(GSPacketIn pak)
-		{
-			lock (m_lastPackets.SyncRoot)
-			{
-				while (m_lastPackets.Count >= MAX_LAST_PACKETS)
-					m_lastPackets.Dequeue();
 				m_lastPackets.Enqueue(pak);
 			}
 		}
@@ -128,13 +117,11 @@ namespace DOL.GS.PacketHandler
 		/// Makes a copy of last sent/received packets.
 		/// </summary>
 		/// <returns></returns>
-		public object[] GetLastPackets()
+		public IPacket[] GetLastPackets()
 		{
-			lock (m_lastPackets.SyncRoot)
+			lock (m_lastPackets)
 			{
-				object[] res = new object[m_lastPackets.Count];
-				m_lastPackets.CopyTo(res, 0);
-				return res;
+				return m_lastPackets.ToArray();
 			}
 		}
 
@@ -198,7 +185,8 @@ namespace DOL.GS.PacketHandler
 					continue;
 				if (!type.Namespace.ToLower().EndsWith(version.ToLower()))
 					continue;
-				PacketHandlerAttribute[] packethandlerattribs = (PacketHandlerAttribute[]) type.GetCustomAttributes(typeof (PacketHandlerAttribute), true);
+				var packethandlerattribs =
+					(PacketHandlerAttribute[]) type.GetCustomAttributes(typeof (PacketHandlerAttribute), true);
 				if (packethandlerattribs.Length > 0)
 				{
 					count++;
@@ -230,7 +218,7 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// The client TCP packet send queue
 		/// </summary>
-		protected readonly Queue m_tcpQueue = new Queue(256);
+		protected readonly Queue<byte[]> m_tcpQueue = new Queue<byte[]>(256);
 
 		/// <summary>
 		/// Indicates whether data is currently being sent to the client
@@ -245,9 +233,12 @@ namespace DOL.GS.PacketHandler
 		{
 			//Fix the packet size
 			packet.WritePacketLength();
-			SaveSentPacket(packet);
+
+			SavePacket(packet);
+
 			//Get the packet buffer
 			byte[] buf = packet.GetBuffer(); //packet.WritePacketLength sets the Capacity
+
 			//Send the buffer
 			SendTCP(buf);
 		}
@@ -266,18 +257,21 @@ namespace DOL.GS.PacketHandler
 			{
 				if (log.IsDebugEnabled)
 					log.Debug(Marshal.ToHexDump(
-						string.Format("<=== <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3}", buf[2], buf[2] ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, buf.Length),
-						buf));
+					          	string.Format("<=== <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3}", buf[2], buf[2] ^ 168,
+					          	              (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, buf.Length),
+					          	buf));
 
 				if (buf.Length > 2048)
 				{
 					if (log.IsErrorEnabled)
 					{
-						string desc = String.Format("Sending packets longer than 2048 cause client to crash, check log for stacktrace. Packet code: 0x{0:X2}, account: {1}, packet size: {2}.",
-							buf[2], (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, buf.Length);
+						string desc =
+							String.Format(
+								"Sending packets longer than 2048 cause client to crash, check log for stacktrace. Packet code: 0x{0:X2}, account: {1}, packet size: {2}.",
+								buf[2], (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, buf.Length);
 						log.Error(Marshal.ToHexDump(desc, buf) + "\n" + Environment.StackTrace);
 
-						if (ServerProperties.Properties.IGNORE_TOO_LONG_OUTCOMING_PACKET)
+						if (Properties.IGNORE_TOO_LONG_OUTCOMING_PACKET)
 						{
 							log.Error("ALERT: Oversize packet detected and discarded.");
 						}
@@ -289,23 +283,22 @@ namespace DOL.GS.PacketHandler
 					}
 				}
 
-				buf = m_encoding.EncryptPacket(buf, false);
+				//buf = m_encoding.EncryptPacket(buf, false);
 
 				try
 				{
 					Statistics.BytesOut += buf.Length;
 					Statistics.PacketsOut++;
-					lock (m_tcpQueue.SyncRoot)
+
+					lock (m_tcpQueue)
 					{
 						if (m_sendingTcp)
 						{
 							m_tcpQueue.Enqueue(buf);
 							return;
 						}
-						else
-						{
-							m_sendingTcp = true;
-						}
+						
+						m_sendingTcp = true;
 					}
 
 					Buffer.BlockCopy(buf, 0, m_tcpSendBuffer, 0, buf.Length);
@@ -322,7 +315,8 @@ namespace DOL.GS.PacketHandler
 				{
 					// assure that no exception is thrown into the upper layers and interrupt game loops!
 					if (log.IsWarnEnabled)
-						log.Warn("It seems <" + ((m_client.Account != null) ? m_client.Account.Name : "???") + "> went linkdead. Closing connection. (SendTCP, " + e.GetType() + ": " + e.Message + ")");
+						log.Warn("It seems <" + ((m_client.Account != null) ? m_client.Account.Name : "???") +
+						         "> went linkdead. Closing connection. (SendTCP, " + e.GetType() + ": " + e.Message + ")");
 					//DOLConsole.WriteWarning(e.ToString());
 					GameServer.Instance.Disconnect(m_client);
 				}
@@ -332,7 +326,7 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// Holds the TCP AsyncCallback delegate
 		/// </summary>
-		protected static readonly AsyncCallback m_asyncTcpCallback = new AsyncCallback(AsyncTcpSendCallback);
+		protected static readonly AsyncCallback m_asyncTcpCallback = AsyncTcpSendCallback;
 
 		/// <summary>
 		/// Callback method for async sends
@@ -347,12 +341,12 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 
-			GameClient client = (GameClient) ar.AsyncState;
+			var client = (GameClient) ar.AsyncState;
 
 			try
 			{
 				PacketProcessor pakProc = client.PacketProcessor;
-				Queue q = pakProc.m_tcpQueue;
+				Queue<byte[]> q = pakProc.m_tcpQueue;
 
 				int sent = client.Socket.EndSend(ar);
 
@@ -362,7 +356,7 @@ namespace DOL.GS.PacketHandler
 				if (data == null)
 					return;
 
-				lock (q.SyncRoot)
+				lock (q)
 				{
 					if (q.Count > 0)
 					{
@@ -397,7 +391,7 @@ namespace DOL.GS.PacketHandler
 			{
 				// assure that no exception is thrown into the upper layers and interrupt game loops!
 				if (log.IsErrorEnabled)
-					log.Error("AsyncSendCallback. client: " + client.ToString(), e);
+					log.Error("AsyncSendCallback. client: " + client, e);
 				GameServer.Instance.Disconnect(client);
 			}
 		}
@@ -410,24 +404,27 @@ namespace DOL.GS.PacketHandler
 		/// <param name="length">The max stream len.</param>
 		/// <param name="client">The client.</param>
 		/// <returns>The count of bytes writen.</returns>
-		private static int CombinePackets(byte[] buf, Queue q, int length, GameClient client)
+		private static int CombinePackets(byte[] buf, Queue<byte[]> q, int length, GameClient client)
 		{
 			int i = 0;
 			do
 			{
-				byte[] pak = (byte[]) q.Peek();
+				var pak = q.Peek();
 				if (i + pak.Length > buf.Length)
 				{
 					if (i == 0)
 					{
-						log.WarnFormat("packet size {0} > buf size {1}, ignored; client: {2}\n{3}", pak.Length, buf.Length, client, Marshal.ToHexDump("packet data:", pak));
+						log.WarnFormat("packet size {0} > buf size {1}, ignored; client: {2}\n{3}", pak.Length, buf.Length, client,
+						               Marshal.ToHexDump("packet data:", pak));
 						q.Dequeue();
 						continue;
 					}
 					break;
 				}
+
 				Buffer.BlockCopy(pak, 0, buf, i, pak.Length);
 				i += pak.Length;
+
 				q.Dequeue();
 			} while (q.Count > 0);
 
@@ -455,7 +452,7 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// The client UDP packet send queue
 		/// </summary>
-		protected readonly Queue m_udpQueue = new Queue(256);
+		protected readonly Queue<byte[]> m_udpQueue = new Queue<byte[]>(256);
 
 		/// <summary>
 		/// This variable holds the current UDP counter for this sender
@@ -481,7 +478,9 @@ namespace DOL.GS.PacketHandler
 		{
 			//Fix the packet size
 			packet.WritePacketLength();
-			SaveSentPacket(packet);
+
+			SavePacket(packet);
+
 			SendUDP(packet.GetBuffer(), isForced);
 		}
 
@@ -496,25 +495,29 @@ namespace DOL.GS.PacketHandler
 
 			//No udp available, send via TCP instead!
 			//bool flagLostUDP = false;
-			if (m_client.UDPEndPoint == null || !(isForced || m_client.UDPConfirm))
+			if (m_client.UdpEndPoint == null || !(isForced || m_client.UdpConfirm))
 			{
 //				log.FatalFormat("UDP sent over TCP");
 				//DOLConsole.WriteWarning("Trying to send UDP when UDP isn't initialized!");
-				byte[] newbuf = new byte[buf.Length - 2];
+				var newbuf = new byte[buf.Length - 2];
 				newbuf[0] = buf[0];
 				newbuf[1] = buf[1];
-				Array.Copy(buf, 4, newbuf, 2, buf.Length - 4);
+
+				Buffer.BlockCopy(buf, 4, newbuf, 2, buf.Length - 4);
 				SendTCP(newbuf);
+
 				return;
 			}
-			else if(m_client.ClientState == GameClient.eClientState.Playing)
+			
+			if (m_client.ClientState == GameClient.eClientState.Playing)
 			{
-				if ((DateTime.Now.Ticks - m_client.UDPPingTime) > 500000000L) // really 24s, not 50s
+				if ((DateTime.Now.Ticks - m_client.UdpPingTime) > 500000000L) // really 24s, not 50s
 				{
 					//flagLostUDP = true;
-					m_client.UDPConfirm = false;
+					m_client.UdpConfirm = false;
 				}
 			}
+
 			if (m_udpSendBuffer == null)
 				return;
 
@@ -525,37 +528,36 @@ namespace DOL.GS.PacketHandler
 			//fill the udpCounter
 			buf[2] = (byte) (m_udpCounter >> 8);
 			buf[3] = (byte) m_udpCounter;
-			buf = m_encoding.EncryptPacket(buf, true);
+			//buf = m_encoding.EncryptPacket(buf, true);
 
 			Statistics.BytesOut += buf.Length;
 			Statistics.PacketsOut++;
 
-			lock (m_udpQueue.SyncRoot)
+			lock (m_udpQueue)
 			{
 				if (m_sendingUdp)
 				{
 					m_udpQueue.Enqueue(buf);
 					return;
 				}
-				else
-				{
-					m_sendingUdp = true;
-				}
+				
+				m_sendingUdp = true;
 			}
 
 			Buffer.BlockCopy(buf, 0, m_udpSendBuffer, 0, buf.Length);
 
 			try
 			{
-				GameServer.Instance.SendUDP(m_udpSendBuffer, buf.Length, m_client.UDPEndPoint, m_asyncUdpCallback);
+				GameServer.Instance.SendUDP(m_udpSendBuffer, buf.Length, m_client.UdpEndPoint, m_asyncUdpCallback);
 			}
 			catch (Exception e)
 			{
-				int count;
-				lock (m_udpQueue.SyncRoot)
+				int count = m_udpQueue.Count;
+
+				lock (m_udpQueue)
 				{
-					count = m_udpQueue.Count;
 					m_udpQueue.Clear();
+
 					m_sendingUdp = false;
 				}
 				if (log.IsErrorEnabled)
@@ -571,7 +573,7 @@ namespace DOL.GS.PacketHandler
 		{
 			try
 			{
-				Socket s = (Socket) ar.AsyncState;
+				var s = (Socket) ar.AsyncState;
 				int sent = s.EndSendTo(ar);
 
 				int count = 0;
@@ -580,7 +582,7 @@ namespace DOL.GS.PacketHandler
 				if (data == null)
 					return;
 
-				lock (m_udpQueue.SyncRoot)
+				lock (m_udpQueue)
 				{
 					if (m_udpQueue.Count > 0)
 					{
@@ -597,22 +599,23 @@ namespace DOL.GS.PacketHandler
 
 				int start = Environment.TickCount;
 
-				GameServer.Instance.SendUDP(data, count, m_client.UDPEndPoint, m_asyncUdpCallback);
+				GameServer.Instance.SendUDP(data, count, m_client.UdpEndPoint, m_asyncUdpCallback);
 
 				int took = Environment.TickCount - start;
 				if (took > 100 && log.IsWarnEnabled)
 					log.WarnFormat("AsyncUdpSendCallback.BeginSend took {0}ms! (TCP to client: {1})", took, m_client.ToString());
-
 			}
 			catch (Exception e)
 			{
-				int count;
-				lock (m_udpQueue.SyncRoot)
+				int count = m_udpQueue.Count;
+
+				lock (m_udpQueue)
 				{
-					count = m_udpQueue.Count;
 					m_udpQueue.Clear();
+
 					m_sendingUdp = false;
 				}
+
 				if (log.IsErrorEnabled)
 					log.Error("AsyncUdpSendCallback (" + count + ")", e);
 			}
@@ -638,16 +641,20 @@ namespace DOL.GS.PacketHandler
 			lock (this)
 			{
 				byte[] buffer = m_client.PacketBuf;
+
 				//End Offset of buffer
 				int bufferSize = m_client.PacketBufSize + numBytes;
+
 				//Size < minimum
 				if (bufferSize < GSPacketIn.HDR_SIZE)
 				{
 					m_client.PacketBufSize = bufferSize; // undo buffer read
 					return;
 				}
+
 				//Reset the offset
 				m_client.PacketBufSize = 0;
+
 				//Current offset into the buffer
 				int curOffset = 0;
 
@@ -658,71 +665,47 @@ namespace DOL.GS.PacketHandler
 
 					if (dataLeft < packetLength)
 					{
-						Array.Copy(buffer, curOffset, buffer, 0, dataLeft);
+						Buffer.BlockCopy(buffer, curOffset, buffer, 0, dataLeft);
 						m_client.PacketBufSize = dataLeft;
 						break;
 					}
 
-					byte[] curPacket = new byte[packetLength];
-					Array.Copy(buffer, curOffset, curPacket, 0, packetLength);
+					// ** commented out because this hasn't been used in forever and crutching
+					// ** to it only hurts performance in a design that needs to be reworked
+					// ** anyways.                                               
+					// **                                                               - tobz
+					//var curPacket = new byte[packetLength];
+					//Buffer.BlockCopy(buffer, curOffset, curPacket, 0, packetLength);
+					//curPacket = m_encoding.DecryptPacket(buffer, false);
 
-					//DOLConsole.Log("Encrypted Packet\n");
-					//DOLConsole.LogDump(curPacket);
+					int packetEnd = curOffset + packetLength;
 
-					//Decrypting can change the packet size!!!
-					//DOLConsole.Log("Encrypted Packet:\n");
-					//DOLConsole.LogDump(curPacket);
-					curPacket = m_encoding.DecryptPacket(curPacket, false);
-					//DOLConsole.Log("Decrypted Packet:\n");
-					//DOLConsole.LogDump(curPacket);
+					int calcCheck = CalculateChecksum(buffer, curOffset, packetLength - 2);
+					int pakCheck = (buffer[packetEnd - 2] << 8) | (buffer[packetEnd - 1]);
 
-					int calcCheck = CalculateChecksum(curPacket, 0, curPacket.Length - 2);
-					int pakCheck = (curPacket[curPacket.Length - 2] << 8) | (curPacket[curPacket.Length - 1]);
 					if (pakCheck != calcCheck)
 					{
 						if (log.IsWarnEnabled)
-							log.WarnFormat("Bad TCP packet checksum (packet:0x{0:X4} calculated:0x{1:X4}) -> disconnecting\nclient: {2}\ncurOffset={3}; packetLength={4}",
-							               pakCheck, calcCheck, m_client.ToString(), curOffset, packetLength);
+							log.WarnFormat(
+								"Bad TCP packet checksum (packet:0x{0:X4} calculated:0x{1:X4}) -> disconnecting\nclient: {2}\ncurOffset={3}; packetLength={4}",
+								pakCheck, calcCheck, m_client.ToString(), curOffset, packetLength);
 
 						if (log.IsInfoEnabled)
 						{
 							log.Info("Last client sent/received packets (from older to newer):");
-							foreach (object obj in GetLastPackets())
+
+							foreach (IPacket prevPak in GetLastPackets())
 							{
-								PacketOut outPak = obj as PacketOut;
-								GSPacketIn inPak = obj as GSPacketIn;
-								if (outPak != null)
-								{
-									log.Info(Marshal.ToHexDump(outPak.GetType().FullName + ":", outPak.GetBuffer()));
-								}
-								else if (inPak != null)
-								{
-									inPak.LogDump();
-								}
-								else
-								{
-									log.Info("Unknown packet type: " + obj.GetType().FullName);
-								}
+								log.Info(prevPak.ToHumanReadable());
 							}
 						}
 
-//						if (log.IsInfoEnabled)
-//						{
-//							log.InfoFormat("\n{0}\n{1}", Marshal.ToHexDump("packet buffer:", curPacket), Marshal.ToHexDump("client buffer:", buffer));
-//							log.Info("Last Client => Server packets (from older to newer):");
-//							foreach (GSPacketIn p in GetReceivedPackets())
-//							{
-//								log.Info(Marshal.ToHexDump(p.ToString() + ":", p.ToArray()));
-//							}
-//						}
 						m_client.Disconnect();
 						return;
 					}
 
-					GSPacketIn pak = new GSPacketIn(curPacket.Length - GSPacketIn.HDR_SIZE);
-					pak.Load(curPacket, curPacket.Length);
-					//DOLConsole.Log("Decrypted Packet\n");
-					//pak.LogDump();
+					var pak = new GSPacketIn(packetLength - GSPacketIn.HDR_SIZE);
+					pak.Load(buffer, curOffset, packetLength);
 
 					try
 					{
@@ -758,7 +741,7 @@ namespace DOL.GS.PacketHandler
 			byte val1 = 0x7E;
 			byte val2 = 0x7E;
 			int i = dataOffset;
-			int len = i+dataSize;
+			int len = i + dataSize;
 
 			while (i < len)
 			{
@@ -766,14 +749,15 @@ namespace DOL.GS.PacketHandler
 				val2 += val1;
 			}
 
-			return (ushort)(val2 - ((val1 + val2) << 8));
+			return (ushort) (val2 - ((val1 + val2) << 8));
 		}
 
 		public void HandlePacketTimeout(object sender, ElapsedEventArgs e)
 		{
 			string source = ((m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint);
 			if (log.IsErrorEnabled)
-				log.Error("Thread " + m_handlerThreadID + " - Handler " + m_activePacketHandler.GetType().ToString() + " takes too much time (>10000ms) <" + source + "> " + "!");
+				log.Error("Thread " + m_handlerThreadID + " - Handler " + m_activePacketHandler.GetType() +
+				          " takes too much time (>10000ms) <" + source + "> " + "!");
 		}
 
 #if LOGACTIVESTACKS
@@ -783,6 +767,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		public static Hashtable m_activePacketThreads = Hashtable.Synchronized(new Hashtable());
 #endif
+
 		/// <summary>
 		/// Retrieves a textual description of all active packet handler thread stacks
 		/// </summary>
@@ -790,18 +775,18 @@ namespace DOL.GS.PacketHandler
 		public static string GetConnectionThreadpoolStacks()
 		{
 #if LOGACTIVESTACKS
-			StringBuilder builder = new StringBuilder();
+			var builder = new StringBuilder();
 			//When enumerating over a synchronized hashtable, we need to
 			//lock it's syncroot! Only for reading, not for writing locking
 			//is needed!
-			lock(m_activePacketThreads.SyncRoot)
+			lock (m_activePacketThreads.SyncRoot)
 			{
-				foreach(DictionaryEntry entry in m_activePacketThreads)
+				foreach (DictionaryEntry entry in m_activePacketThreads)
 				{
 					try
 					{
-						Thread thread = (Thread) entry.Key;
-						GameClient client = (GameClient) entry.Value;
+						var thread = (Thread) entry.Key;
+						var client = (GameClient) entry.Value;
 
 						// The use of the deprecated Suspend and Resume methods is necessary to get the StackTrace.
 						// Suspend/Resume are not being used for thread synchronization (very bad).
@@ -810,7 +795,7 @@ namespace DOL.GS.PacketHandler
 						StackTrace trace;
 						try
 						{
-							trace = new StackTrace( thread, true );
+							trace = new StackTrace(thread, true);
 						}
 						finally
 						{
@@ -818,10 +803,10 @@ namespace DOL.GS.PacketHandler
 						}
 
 						builder.Append("Stack for thread from account: ");
-						if(client!=null && client.Account!=null)
+						if (client != null && client.Account != null)
 						{
 							builder.Append(client.Account.Name);
-							if(client.Player!=null)
+							if (client.Player != null)
 							{
 								builder.Append(" (");
 								builder.Append(client.Player.Name);
@@ -836,7 +821,7 @@ namespace DOL.GS.PacketHandler
 						builder.Append(Util.FormatStackTrace(trace));
 						builder.Append("\n\n");
 					}
-					catch(Exception e)
+					catch (Exception e)
 					{
 						builder.Append("Error getting stack for thread: ");
 						builder.Append("\n");
@@ -852,7 +837,6 @@ namespace DOL.GS.PacketHandler
 		}
 
 
-
 		public void HandlePacket(GSPacketIn packet)
 		{
 			if (packet == null || m_client == null)
@@ -862,37 +846,43 @@ namespace DOL.GS.PacketHandler
 
 			Statistics.BytesIn += packet.PacketSize;
 			Statistics.PacketsIn++;
-			SaveReceivedPacket(packet);
+
+			SavePacket(packet);
 
 			IPacketHandler packetHandler = null;
 			if (code < m_packetHandlers.Length)
 				packetHandler = m_packetHandlers[code];
+
 			else if (log.IsErrorEnabled)
 			{
-				log.ErrorFormat("Received packet code is outside of m_packetHandlers array bounds! "+m_client.ToString());
+				log.ErrorFormat("Received packet code is outside of m_packetHandlers array bounds! " + m_client);
 				log.Error(Marshal.ToHexDump(
-					String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} (ThreadId={4})", code, code ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, packet.PacketSize, Thread.CurrentThread.ManagedThreadId),
-					packet.ToArray()));
+				          	String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} (ThreadId={4})", code, code ^ 168,
+				          	              (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint,
+				          	              packet.PacketSize, Thread.CurrentThread.ManagedThreadId),
+				          	packet.ToArray()));
 			}
 
 			//TODO remove debug output
 			//if (packet.ID != (0x12^168) && packet.ID != (0x0b^168) && packet.ID != (0x01^168)) {
 			if (log.IsDebugEnabled)
 				log.Debug(Marshal.ToHexDump(
-					String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} handled by {4} (ThreadId={5})", code, code ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, packet.PacketSize, packetHandler, Thread.CurrentThread.ManagedThreadId),
-					packet.ToArray()));
+				          	String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} handled by {4} (ThreadId={5})", code,
+				          	              code ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint,
+				          	              packet.PacketSize, packetHandler, Thread.CurrentThread.ManagedThreadId),
+				          	packet.ToArray()));
 
 			if (packetHandler != null)
 			{
 				Timer monitorTimer = null;
-				if(log.IsDebugEnabled)
+				if (log.IsDebugEnabled)
 				{
 					try
 					{
 						monitorTimer = new Timer(10000);
 						m_activePacketHandler = packetHandler;
 						m_handlerThreadID = Thread.CurrentThread.ManagedThreadId;
-						monitorTimer.Elapsed += new ElapsedEventHandler(HandlePacketTimeout);
+						monitorTimer.Elapsed += HandlePacketTimeout;
 						monitorTimer.Start();
 					}
 					catch (Exception e)
@@ -925,7 +915,8 @@ namespace DOL.GS.PacketHandler
 					if (log.IsErrorEnabled)
 					{
 						string client = (m_client == null ? "null" : m_client.ToString());
-						log.Error("Error while processing packet (handler="+packetHandler.GetType().FullName+"  client: " + client + ")", e);
+						log.Error(
+							"Error while processing packet (handler=" + packetHandler.GetType().FullName + "  client: " + client + ")", e);
 					}
 				}
 #if LOGACTIVESTACKS
@@ -938,7 +929,8 @@ namespace DOL.GS.PacketHandler
 				}
 #endif
 				long timeUsed = Environment.TickCount - start;
-				if (monitorTimer != null) {
+				if (monitorTimer != null)
+				{
 					monitorTimer.Stop();
 					monitorTimer.Close();
 				}
@@ -947,7 +939,8 @@ namespace DOL.GS.PacketHandler
 				{
 					string source = ((m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint);
 					if (log.IsWarnEnabled)
-						log.Warn("(" + source + ") Handle packet Thread " + Thread.CurrentThread.ManagedThreadId + " " + packetHandler + " took " + timeUsed + "ms!");
+						log.Warn("(" + source + ") Handle packet Thread " + Thread.CurrentThread.ManagedThreadId + " " + packetHandler +
+						         " took " + timeUsed + "ms!");
 				}
 			}
 		}
