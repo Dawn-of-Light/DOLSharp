@@ -53,7 +53,7 @@ namespace DOL.GS.Spells
 
 				if (selectedTarget is GamePlayer)
 				{
-					GameSpellEffect currentEffect = (GameSpellEffect)Caster.TempProperties.getObjectProperty(FOCUS_SPELL, null);
+					GameSpellEffect currentEffect = (GameSpellEffect)Caster.TempProperties.getProperty<object>(FOCUS_SPELL, null);
 
 					if (currentEffect != null && currentEffect.SpellHandler is FocusShellHandler)
 					{

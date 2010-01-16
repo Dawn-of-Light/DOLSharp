@@ -50,7 +50,7 @@ namespace DOL.GS.Spells
         {
             if (target is GameNPC)
             {
-                AttackData ad = Caster.TempProperties.getObjectProperty(GameLiving.LAST_ATTACK_DATA, null) as AttackData;
+                AttackData ad = Caster.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null) as AttackData;
                 if (ad != null)
                 {
                     IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;

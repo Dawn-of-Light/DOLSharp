@@ -39,7 +39,7 @@ namespace DOL.GS.Commands
 			}
 			string message = string.Join(" ", args, 1, args.Length - 1);
 
-			long SayTick = client.Player.TempProperties.getLongProperty(SAY_TICK, 0);
+			long SayTick = client.Player.TempProperties.getProperty<long>(SAY_TICK, 0);
 			if (SayTick > 0 && SayTick - client.Player.CurrentRegion.Time <= 0)
 			{
 				client.Player.TempProperties.removeProperty(SAY_TICK);

@@ -44,7 +44,7 @@ namespace DOL.AI.Brain
 		#region Think
 		public override void Think()
 		{
-			GameLiving living = Body.TempProperties.getObjectProperty("bombertarget", null) as GameLiving;
+			GameLiving living = Body.TempProperties.getProperty<object>("bombertarget", null) as GameLiving;
 			if(living == null) return;
 			if(Body.IsWithinRadius( living, 150 ))
 			{

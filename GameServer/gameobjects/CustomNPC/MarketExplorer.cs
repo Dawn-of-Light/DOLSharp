@@ -42,7 +42,7 @@ namespace DOL.GS
                 player.TempProperties.removeProperty(EXPLORER_ITEM_WEAK);
                 return;
             }
-            WeakReference itemWeak = (WeakReference)player.TempProperties.getObjectProperty(EXPLORER_ITEM_WEAK, new WeakRef(null));
+            WeakReference itemWeak = (WeakReference)player.TempProperties.getProperty<object>(EXPLORER_ITEM_WEAK, new WeakRef(null));
             InventoryItem item = (InventoryItem)itemWeak.Target;
             player.TempProperties.removeProperty(EXPLORER_ITEM_WEAK);
 

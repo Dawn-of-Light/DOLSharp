@@ -1344,7 +1344,7 @@ namespace DOL.GS.PacketHandler
 			CheckLOSResponse old_callback = null;
 			lock (m_gameClient.Player.TempProperties)
 			{
-				old_callback = (CheckLOSResponse)m_gameClient.Player.TempProperties.getObjectProperty(key, null);
+				old_callback = (CheckLOSResponse)m_gameClient.Player.TempProperties.getProperty<object>(key, null);
 				m_gameClient.Player.TempProperties.setProperty(key, callback);
 			}
 			if (old_callback != null)

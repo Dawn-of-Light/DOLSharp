@@ -2108,7 +2108,7 @@ namespace DOL.GS
 
 				if (!owner.AttackState)
 				{
-					AttackData ad = owner.TempProperties.getObjectProperty(LAST_ATTACK_DATA, null) as AttackData;
+					AttackData ad = owner.TempProperties.getProperty<object>(LAST_ATTACK_DATA, null) as AttackData;
 					owner.TempProperties.removeProperty(LAST_ATTACK_DATA);
 					if (ad != null && ad.Target != null)
 						ad.Target.RemoveAttacker(owner);
@@ -2189,7 +2189,7 @@ namespace DOL.GS
 								// and the resulting interrupt will last 1.5 seconds."
 
 								long rapidFireMaxDuration = owner.AttackSpeed(attackWeapon) / 2; // half of the total time
-								long elapsedTime = owner.CurrentRegion.Time - owner.TempProperties.getLongProperty(GamePlayer.RANGE_ATTACK_HOLD_START, 0L); // elapsed time before ready to fire
+								long elapsedTime = owner.CurrentRegion.Time - owner.TempProperties.getProperty<long>(GamePlayer.RANGE_ATTACK_HOLD_START, 0L); // elapsed time before ready to fire
 								if (elapsedTime < rapidFireMaxDuration)
 								{
 									effectiveness = 0.5 + (double)elapsedTime * 0.5 / (double)rapidFireMaxDuration;
@@ -2239,7 +2239,7 @@ namespace DOL.GS
 						return;
 					}
 
-					AttackData ad = owner.TempProperties.getObjectProperty(LAST_ATTACK_DATA, null) as AttackData;
+					AttackData ad = owner.TempProperties.getProperty<object>(LAST_ATTACK_DATA, null) as AttackData;
 					if (ad != null && ad.AttackResult == eAttackResult.Fumbled)
 					{
 						Interval = owner.AttackSpeed(attackWeapon);
@@ -2989,7 +2989,7 @@ namespace DOL.GS
 			GameSpellEffect grapple = null;
 			GameSpellEffect brittleguard = null;
 
-			AttackData lastAD = (AttackData)TempProperties.getObjectProperty(LAST_ATTACK_DATA, null);
+			AttackData lastAD = (AttackData)TempProperties.getProperty<object>(LAST_ATTACK_DATA, null);
 			bool defenseDisabled = ad.Target.IsMezzed | ad.Target.IsStunned | ad.Target.IsSitting;
 
 			// If berserk is on, no defensive skills may be used: evade, parry, ...
@@ -3754,7 +3754,7 @@ namespace DOL.GS
 				{
 					int difference = (int)(0.25 * damageDealt); // RA absorb 25% damage
 					damageDealt -= difference;
-					GamePlayer TheMauler = (GamePlayer)(this.TempProperties.getObjectProperty("GiftOfPerizorOwner", null));
+					GamePlayer TheMauler = (GamePlayer)(this.TempProperties.getProperty<object>("GiftOfPerizorOwner", null));
 					if (TheMauler != null && TheMauler.IsAlive)
 					{
 						// Calculate mana using %. % is calculated with target maxhealth and damage difference, apply this % to mauler maxmana
@@ -5568,7 +5568,7 @@ namespace DOL.GS
 			if (source != null && source is GamePlayer)
 			{
 				player = source as GamePlayer;
-				long whisperdelay = player.TempProperties.getLongProperty("WHISPERDELAY", 0L);
+				long whisperdelay = player.TempProperties.getProperty<long>("WHISPERDELAY", 0L);
 				if (whisperdelay > 0 && (CurrentRegion.Time - 1500) < whisperdelay && player.Client.Account.PrivLevel == 1)
 				{
 					//player.Out.SendMessage("Speak slower!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);

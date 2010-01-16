@@ -604,7 +604,7 @@ namespace DOL.GS
 			if (Group != null)
 				Group.RemoveMember(this);
 
-			BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+			BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 			if (mybattlegroup != null)
 				mybattlegroup.RemoveBattlePlayer(this);
 
@@ -618,7 +618,7 @@ namespace DOL.GS
 			if (Mission != null)
 				Mission.ExpireMission();
 
-			ChatGroup mychatgroup = (ChatGroup)TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+			ChatGroup mychatgroup = (ChatGroup)TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 			if (mychatgroup != null)
 				mychatgroup.RemovePlayer(this);
 
@@ -824,7 +824,7 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.CantBindDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			long lastBindTick = TempProperties.getLongProperty(LAST_BIND_TICK, 0L);
+			long lastBindTick = TempProperties.getProperty<long>(LAST_BIND_TICK, 0L);
 			long changeTime = CurrentRegion.Time - lastBindTick;
 			if (Client.Account.PrivLevel == 1 && changeTime < 60000 && changeTime > 0) //60 second rebind timer
 			{
@@ -1288,7 +1288,7 @@ namespace DOL.GS
 				{
 					// actual lost exp, needed for 2nd stage deaths
 					long lostExp = Experience;
-					long lastDeathExpLoss = TempProperties.getLongProperty(DEATH_EXP_LOSS_PROPERTY, 0);
+					long lastDeathExpLoss = TempProperties.getProperty<long>(DEATH_EXP_LOSS_PROPERTY, 0);
 					TempProperties.removeProperty(DEATH_EXP_LOSS_PROPERTY);
 
 					GainExperience(GameLiving.eXPSource.Other, -lastDeathExpLoss);
@@ -1324,7 +1324,7 @@ namespace DOL.GS
 
 			if (Level > 10)
 			{
-				int deathConLoss = TempProperties.getIntProperty(DEATH_CONSTITUTION_LOSS_PROPERTY, 0); // get back constitution lost at death
+				int deathConLoss = TempProperties.getProperty<int>(DEATH_CONSTITUTION_LOSS_PROPERTY, 0); // get back constitution lost at death
 				if (deathConLoss > 0)
 				{
 					TotalConstitutionLostAtDeath += deathConLoss;
@@ -2041,7 +2041,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				long lastmove = TempProperties.getLongProperty(PlayerPositionUpdateHandler.LASTMOVEMENTTICK, 0L);
+				long lastmove = TempProperties.getProperty<long>(PlayerPositionUpdateHandler.LASTMOVEMENTTICK, 0L);
 				if ((lastmove > 0 && lastmove + 5000 < CurrentRegion.Time) //cancel sprint after 5sec without moving?
 				    || Endurance - 5 <= 0)
 					Sprint(false);
@@ -5022,14 +5022,14 @@ namespace DOL.GS
 				return;
 			}
 
-			long vanishTimeout = TempProperties.getLongProperty(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
+			long vanishTimeout = TempProperties.getProperty<long>(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
 			if (vanishTimeout > 0 && vanishTimeout > CurrentRegion.Time)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouMustWaitAgain", (vanishTimeout - CurrentRegion.Time + 1000) / 1000), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			long VanishTick = this.TempProperties.getLongProperty(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
+			long VanishTick = this.TempProperties.getProperty<long>(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
 			long changeTime = this.CurrentRegion.Time - VanishTick;
 			if (changeTime < 30000 && VanishTick > 0)
 			{
@@ -5374,7 +5374,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected override eCheckRangeAttackStateResult CheckRangeAttackState(GameObject target)
 		{
-			long holdStart = TempProperties.getLongProperty(RANGE_ATTACK_HOLD_START, 0L);
+			long holdStart = TempProperties.getProperty<long>(RANGE_ATTACK_HOLD_START, 0L);
 			if (holdStart == 0)
 			{
 				holdStart = CurrentRegion.Time;
@@ -8035,7 +8035,7 @@ namespace DOL.GS
 						{
 							Spell spellItem = SkillBase.GetSpellByID(useItem.SpellID);
 							
-							long nextPotionAvailTime = TempProperties.getLongProperty(NEXT_POTION_AVAIL_TIME+"_Type"+ (spellItem==null?0:spellItem.SharedTimerGroup), 0L);
+							long nextPotionAvailTime = TempProperties.getProperty<long>(NEXT_POTION_AVAIL_TIME+"_Type"+ (spellItem==null?0:spellItem.SharedTimerGroup), 0L);
 							// Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
 							// into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
 							// Nidel Update: Individual timer are now based on SharedTimerGroup of spell's potion for
@@ -8124,10 +8124,10 @@ namespace DOL.GS
 							}
 							else
 							{
-								long lastChargedItemUseTick = TempProperties.getLongProperty(LAST_CHARGED_ITEM_USE_TICK, 0L);
+								long lastChargedItemUseTick = TempProperties.getProperty<long>(LAST_CHARGED_ITEM_USE_TICK, 0L);
 								long changeTime = CurrentRegion.Time - lastChargedItemUseTick;
-								long delay = TempProperties.getLongProperty(ITEM_USE_DELAY, 0L);
-								long itemdelay = TempProperties.getLongProperty("ITEMREUSEDELAY" + useItem.Id_nb, 0L);
+								long delay = TempProperties.getProperty<long>(ITEM_USE_DELAY, 0L);
+								long itemdelay = TempProperties.getProperty<long>("ITEMREUSEDELAY" + useItem.Id_nb, 0L);
 								long itemreuse = (long)useItem.CanUseEvery * 1000;
 								if (itemdelay == 0) itemdelay = CurrentRegion.Time - itemreuse;
 
@@ -8422,7 +8422,7 @@ namespace DOL.GS
 				return true;
 			}
 
-			string afkmessage = TempProperties.getProperty(AFK_MESSAGE, null);
+			string afkmessage = TempProperties.getProperty<string>(AFK_MESSAGE);
 			if (afkmessage != null)
 			{
 				if (afkmessage == "")
@@ -8833,7 +8833,7 @@ namespace DOL.GS
 			{
 				Group.RemoveMember(this);
 			}
-			BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+			BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 			if (mybattlegroup != null)
 			{
 				mybattlegroup.RemoveBattlePlayer(this);
@@ -9391,7 +9391,7 @@ namespace DOL.GS
 
 				if (AttackState && ActiveWeaponSlot != eActiveWeaponSlot.Distance)
 				{
-					AttackData ad = TempProperties.getObjectProperty(LAST_ATTACK_DATA, null) as AttackData;
+					AttackData ad = TempProperties.getProperty<object>(LAST_ATTACK_DATA, null) as AttackData;
 					if (ad != null && ad.IsMeleeAttack && (ad.AttackResult == eAttackResult.TargetNotVisible || ad.AttackResult == eAttackResult.OutOfRange))
 					{
 						//Does the target can be attacked ?
@@ -9739,7 +9739,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					AttackData ad = TempProperties.getObjectProperty(LAST_ATTACK_DATA, null) as AttackData;
+					AttackData ad = TempProperties.getProperty<object>(LAST_ATTACK_DATA, null) as AttackData;
 					if (ad != null && ad.IsMeleeAttack && (ad.AttackResult == eAttackResult.TargetNotVisible || ad.AttackResult == eAttackResult.OutOfRange))
 					{
 						//Does the target can be attacked ?
@@ -10485,7 +10485,7 @@ namespace DOL.GS
 					}
 
 					Group group = Group;
-					BattleGroup mybattlegroup = (BattleGroup)TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+					BattleGroup mybattlegroup = (BattleGroup)TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 					if (mybattlegroup != null && mybattlegroup.GetBGLootType() == true && mybattlegroup.GetBGTreasurer() != null)
 					{
 						GamePlayer theTreasurer = mybattlegroup.GetBGTreasurer();
@@ -11509,7 +11509,7 @@ namespace DOL.GS
 			if (IsOnHorse || IsSummoningMount)
 				IsOnHorse = false;
 
-			UncoverStealthAction action = (UncoverStealthAction)TempProperties.getObjectProperty(UNCOVER_STEALTH_ACTION_PROP, null);
+			UncoverStealthAction action = (UncoverStealthAction)TempProperties.getProperty<object>(UNCOVER_STEALTH_ACTION_PROP, null);
 			if (newState)
 			{
 				//start the uncover timer
@@ -14103,7 +14103,7 @@ namespace DOL.GS
 				if (IsMoving)
 					return false;
 
-				long lastMovementTick = TempProperties.getLongProperty("PLAYERPOSITION_LASTMOVEMENTTICK", 0L);
+				long lastMovementTick = TempProperties.getProperty<long>("PLAYERPOSITION_LASTMOVEMENTTICK", 0L);
 				return (CurrentRegion.Time - lastMovementTick > 3000);
 			}
 		}

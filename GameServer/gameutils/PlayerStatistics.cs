@@ -133,7 +133,7 @@ namespace DOL.GS
 
 		public static PlayerStatistic GetStatistic(GamePlayer player)
 		{
-			PlayerStatistic stats = player.TempProperties.getObjectProperty(PLAYER_STATISTICS_PROPERTY, null) as PlayerStatistic;
+			PlayerStatistic stats = player.TempProperties.getProperty<object>(PLAYER_STATISTICS_PROPERTY, null) as PlayerStatistic;
 			return stats;
 		}
 

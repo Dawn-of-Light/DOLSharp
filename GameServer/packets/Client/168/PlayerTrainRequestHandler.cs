@@ -120,7 +120,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			else if (skillindex >= 100)
 			{
-				IList offeredRA = (IList)client.Player.TempProperties.getObjectProperty("OFFERED_RA", null);
+				IList offeredRA = (IList)client.Player.TempProperties.getProperty<object>("OFFERED_RA", null);
 				if (offeredRA != null && skillindex < offeredRA.Count + 100)
 				{
 					RealmAbility ra = (RealmAbility)offeredRA[skillindex - 100];

@@ -317,7 +317,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                     return 0;
                 if (!(client.Player.TargetObject is MarketExplorer))
                     return 0;
-                List<InventoryItem> list = client.Player.TempProperties.getObjectProperty(DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.EXPLORER_LIST, null) as List<InventoryItem>;
+                List<InventoryItem> list = client.Player.TempProperties.getProperty<object>(DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.EXPLORER_LIST, null) as List<InventoryItem>;
                 if (list == null)
                     return 0;
                 MarketExplorer me = client.Player.TargetObject as MarketExplorer;

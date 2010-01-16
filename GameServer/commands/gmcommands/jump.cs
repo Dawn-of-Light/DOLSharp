@@ -233,7 +233,7 @@ namespace DOL.GS.Commands
 			{
 				Stack<GameLocation> locations;
 
-				locations = client.Player.TempProperties.getObjectProperty( TEMP_KEY_JUMP, null ) as Stack<GameLocation>;
+				locations = client.Player.TempProperties.getProperty<object>( TEMP_KEY_JUMP, null ) as Stack<GameLocation>;
 
 				if ( locations == null )
 				{
@@ -256,7 +256,7 @@ namespace DOL.GS.Commands
 			{
 				Stack<GameLocation> locations;
 
-				locations = client.Player.TempProperties.getObjectProperty( TEMP_KEY_JUMP, null ) as Stack<GameLocation>;
+				locations = client.Player.TempProperties.getProperty<object>( TEMP_KEY_JUMP, null ) as Stack<GameLocation>;
 
 				if ( locations == null || locations.Count < 1 )
 				{

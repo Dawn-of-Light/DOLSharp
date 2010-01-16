@@ -68,7 +68,7 @@ namespace DOL.GS.Commands
 		public void PasswordCheckCallback(GamePlayer player, byte response)
 		{
 			if (response != 0x01) return;
-			string newPassword = (string)player.TempProperties.getObjectProperty(this, null);
+			string newPassword = (string)player.TempProperties.getProperty<object>(this, null);
 			if (newPassword == null) return;
 			player.TempProperties.removeProperty(this);
 			player.Out.SendMessage("Your password has been changed.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);

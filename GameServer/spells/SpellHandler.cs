@@ -2725,7 +2725,7 @@ target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 			GameLiving living = sender as GameLiving;
 			if (living == null) return;
 
-			GameSpellEffect currentEffect = (GameSpellEffect)living.TempProperties.getObjectProperty(FOCUS_SPELL, null);
+			GameSpellEffect currentEffect = (GameSpellEffect)living.TempProperties.getProperty<object>(FOCUS_SPELL, null);
 			if (currentEffect == null)
 				return;
 

@@ -361,7 +361,7 @@ namespace DOL.GS.PacketHandler
 				}
 				//Teleport
 				//gms with debug mode on can see every keep
-				if (m_gameClient.Account.PrivLevel > 1 && m_gameClient.Player.TempProperties.getObjectProperty(GamePlayer.DEBUG_MODE_PROPERTY, null) != null)
+				if (m_gameClient.Account.PrivLevel > 1 && m_gameClient.Player.TempProperties.getProperty<object>(GamePlayer.DEBUG_MODE_PROPERTY, null) != null)
 					flag |= (byte)eRealmWarmapKeepFlags.Teleportable;
 				else
 				{
