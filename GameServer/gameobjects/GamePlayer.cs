@@ -9012,7 +9012,7 @@ namespace DOL.GS
 				{
 					DBBannedAccount b = new DBBannedAccount();
 					b.Author = "SERVER";
-					b.Ip = Client.TCPEndpointAddress;
+					b.Ip = Client.TcpEndpointAddress;
 					b.Account = Client.Account.Name;
 					b.DateBan = DateTime.Now;
 					b.Type = "B";

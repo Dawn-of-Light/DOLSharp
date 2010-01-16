@@ -34,7 +34,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			client.UDPConfirm = false;
+			client.UdpConfirm = false;
 			new WorldInitAction(client.Player).Start(1);
 			return 1;
 		}

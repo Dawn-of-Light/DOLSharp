@@ -27,7 +27,7 @@ namespace DOL.GS.PacketHandler
 		/// Constructor
 		/// </summary>
 		/// <param name="packetCode">ID of the packet</param>
-		public GSTCPPacketOut(byte packetCode) : base()
+		public GSTCPPacketOut(byte packetCode)
 		{
 			base.WriteShort(0x00); //reserved for size
 			base.WriteByte(packetCode);

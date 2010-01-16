@@ -59,7 +59,7 @@ namespace DOL.GS.Commands
 			{
 				DataObject[] objs;
 				DBBannedAccount b = new DBBannedAccount();
-				string accip = gc.TCPEndpointAddress;
+				string accip = gc.TcpEndpointAddress;
 				string accname = GameServer.Database.Escape(gc.Account.Name);
 				string reason;
 

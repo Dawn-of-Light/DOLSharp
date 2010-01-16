@@ -91,13 +91,11 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BaseClient.cs" />
     <Compile Include="BaseServer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BaseServerConfiguration.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ClientBase.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Config\ConfigElement.cs">
@@ -106,6 +104,7 @@
     <Compile Include="Config\XMLConfigFile.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Constant.cs" />
     <Compile Include="FTP\FTPAsynchronousConnection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -121,6 +120,7 @@
     <Compile Include="FTP\FTPMode.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IPacket.cs" />
     <Compile Include="Marshal.cs">
       <SubType>Code</SubType>
     </Compile>

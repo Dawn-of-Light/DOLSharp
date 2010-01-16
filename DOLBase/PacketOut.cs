@@ -24,12 +24,12 @@ namespace DOL
 	/// <summary>
 	/// Writes data to an outgoing packet stream
 	/// </summary>
-	public class PacketOut : MemoryStream
+	public class PacketOut : MemoryStream, IPacket
 	{
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public PacketOut() : base()
+		public PacketOut()
 		{
 		}
 
@@ -45,49 +45,9 @@ namespace DOL
 		/// Constructor
 		/// </summary>
 		/// <param name="buf">Buffer to write to</param>
-		public PacketOut(byte[] buf) : base(buf)
-		{
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="buf">Buffer to write to</param>
-		/// <param name="canwrite">True if you can write to the buffer</param>
-		public PacketOut(byte[] buf, bool canwrite) : base(buf, canwrite)
-		{
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="buf">Buffer to write to</param>
 		/// <param name="start">Starting index into buf</param>
 		/// <param name="size"></param>
 		public PacketOut(byte[] buf, int start, int size) : base(buf, start, size)
-		{
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="buf">Buffer to write to</param>
-		/// <param name="start">Starting index into buf</param>
-		/// <param name="size">Size of the internal buffer</param>
-		/// <param name="canwrite">True if you can write to the buffer</param>
-		public PacketOut(byte[] buf, int start, int size, bool canwrite) : base(buf, start, size, canwrite)
-		{
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="buf">Buffer to write to</param>
-		/// <param name="start">Starting index into buf</param>
-		/// <param name="size">Size of the internal buffer</param>
-		/// <param name="canwrite">True if you can write to the buffer</param>
-		/// <param name="getbuf">True if you can retrieve the internal buffer</param>
-		public PacketOut(byte[] buf, int start, int size, bool canwrite, bool getbuf) : base(buf, start, size, canwrite, getbuf)
 		{
 		}
 
@@ -97,8 +57,8 @@ namespace DOL
 		/// <param name="val">Value to write</param>
 		public virtual void WriteShort(ushort val)
 		{
-			WriteByte((byte)(val >> 8));
-			WriteByte((byte)(val & 0xff));
+			WriteByte((byte) (val >> 8));
+			WriteByte((byte) (val & 0xff));
 		}
 
 		/// <summary>
@@ -107,8 +67,8 @@ namespace DOL
 		/// <param name="val">Value to write</param>
 		public virtual void WriteShortLowEndian(ushort val)
 		{
-			WriteByte((byte)(val & 0xff));
-			WriteByte((byte)(val >> 8));
+			WriteByte((byte) (val & 0xff));
+			WriteByte((byte) (val >> 8));
 		}
 
 		/// <summary>
@@ -117,10 +77,10 @@ namespace DOL
 		/// <param name="val">Value to write</param>
 		public virtual void WriteInt(uint val)
 		{
-			WriteByte((byte)(val >> 24));
-			WriteByte((byte)((val >> 16) & 0xff));
-			WriteByte((byte)((val & 0xffff) >> 8));
-			WriteByte((byte)((val & 0xffff) & 0xff));
+			WriteByte((byte) (val >> 24));
+			WriteByte((byte) ((val >> 16) & 0xff));
+			WriteByte((byte) ((val & 0xffff) >> 8));
+			WriteByte((byte) ((val & 0xffff) & 0xff));
 		}
 
 		/// <summary>
@@ -129,10 +89,10 @@ namespace DOL
 		/// <param name="val">Value to write</param>
 		public virtual void WriteIntLowEndian(uint val)
 		{
-			WriteByte((byte)((val & 0xffff) & 0xff));
-			WriteByte((byte)((val & 0xffff) >> 8));
-			WriteByte((byte)((val >> 16) & 0xff));
-			WriteByte((byte)(val >> 24));
+			WriteByte((byte) ((val & 0xffff) & 0xff));
+			WriteByte((byte) ((val & 0xffff) >> 8));
+			WriteByte((byte) ((val >> 16) & 0xff));
+			WriteByte((byte) (val >> 24));
 		}
 
 		/// <summary>
@@ -141,43 +101,46 @@ namespace DOL
 		/// <param name="val">Value to write</param>
 		public virtual void WriteLong(ulong val)
 		{
-			WriteByte((byte)(val >> 56));
-			WriteByte((byte)((val >> 48) & 0xff));
-			WriteByte((byte)((val >> 40) & 0xff));
-			WriteByte((byte)((val >> 32) & 0xff));
-			WriteByte((byte)((val >> 24) & 0xff));
-			WriteByte((byte)((val >> 16) & 0xff));
-			WriteByte((byte)((val >> 8) & 0xff));
-			WriteByte((byte)(val & 0xff));
+			WriteByte((byte) (val >> 56));
+			WriteByte((byte) ((val >> 48) & 0xff));
+			WriteByte((byte) ((val >> 40) & 0xff));
+			WriteByte((byte) ((val >> 32) & 0xff));
+			WriteByte((byte) ((val >> 24) & 0xff));
+			WriteByte((byte) ((val >> 16) & 0xff));
+			WriteByte((byte) ((val >> 8) & 0xff));
+			WriteByte((byte) (val & 0xff));
 		}
+
 		/// <summary>
 		/// Writes a 8 byte value to the stream in host byte order
 		/// </summary>
 		/// <param name="val">Value to write</param>
 		public virtual void WriteLongLowEndian(ulong val)
 		{
-			WriteByte((byte)(val & 0xff));
-			WriteByte((byte)((val >> 8) & 0xff));
-			WriteByte((byte)((val >> 16) & 0xff));
-			WriteByte((byte)((val >> 24) & 0xff));
-			WriteByte((byte)((val >> 32) & 0xff));
-			WriteByte((byte)((val >> 40) & 0xff));
-			WriteByte((byte)((val >> 48) & 0xff));
-			WriteByte((byte)(val >> 56));
+			WriteByte((byte) (val & 0xff));
+			WriteByte((byte) ((val >> 8) & 0xff));
+			WriteByte((byte) ((val >> 16) & 0xff));
+			WriteByte((byte) ((val >> 24) & 0xff));
+			WriteByte((byte) ((val >> 32) & 0xff));
+			WriteByte((byte) ((val >> 40) & 0xff));
+			WriteByte((byte) ((val >> 48) & 0xff));
+			WriteByte((byte) (val >> 56));
 		}
 
 		/// <summary>
 		/// Calculates the checksum for the internal buffer
 		/// </summary>
 		/// <returns>The checksum of the internal buffer</returns>
-		public virtual byte CalcChecksum()
+		public virtual byte GetChecksum()
 		{
 			byte val = 0;
 			byte[] buf = GetBuffer();
-			for(int i = 0; i < this.Position - 6; ++i)
+
+			for (int i = 0; i < Position - 6; ++i)
 			{
-				val += buf[i+8];
+				val += buf[i + 8];
 			}
+
 			return val;
 		}
 
@@ -188,7 +151,7 @@ namespace DOL
 		/// <param name="num">Number of bytes to write</param>
 		public virtual void Fill(byte val, int num)
 		{
-			for(int i = 0; i < num; ++i)
+			for (int i = 0; i < num; ++i)
 			{
 				WriteByte(val);
 			}
@@ -202,11 +165,11 @@ namespace DOL
 		{
 			Position = 0;
 
-			WriteShort((ushort)(this.Length - 3));
+			WriteShort((ushort) (Length - 3));
 
-			this.Capacity = (int)this.Length;
+			Capacity = (int) Length;
 
-			return (ushort)(this.Length - 3);
+			return (ushort) (Length - 3);
 		}
 
 		/// <summary>
@@ -215,13 +178,14 @@ namespace DOL
 		/// <param name="str">String to write</param>
 		public virtual void WritePascalString(string str)
 		{
-			if(str.Length <= 0)
+			if (str.Length <= 0)
 			{
 				WriteByte(0);
 				return;
 			}
+
 			byte[] bytes = Encoding.Default.GetBytes(str);
-			WriteByte((byte)bytes.Length);
+			WriteByte((byte) bytes.Length);
 			Write(bytes, 0, bytes.Length);
 		}
 
@@ -242,10 +206,8 @@ namespace DOL
 		/// <param name="str">the string to write</param>
 		public virtual void WriteStringBytes(string str)
 		{
-			if(str.Length <= 0)
-			{
+			if (str.Length <= 0)
 				return;
-			}
 
 			byte[] bytes = Encoding.Default.GetBytes(str);
 			Write(bytes, 0, bytes.Length);
@@ -258,10 +220,9 @@ namespace DOL
 		/// <param name="maxlen">Maximum number of bytes to be written</param>
 		public virtual void WriteString(string str, int maxlen)
 		{
-			if(str.Length <= 0)
-			{
+			if (str.Length <= 0)
 				return;
-			}
+
 			byte[] bytes = Encoding.Default.GetBytes(str);
 			Write(bytes, 0, bytes.Length < maxlen ? bytes.Length : maxlen);
 		}
@@ -273,23 +234,42 @@ namespace DOL
 		/// <param name="len">Number of bytes to write</param>
 		public virtual void FillString(string str, int len)
 		{
-			long pos = this.Position;
+			long pos = Position;
 
 			Fill(0x0, len);
 
-			if(str==null) return;
+			if (str == null)
+				return;
 
-			this.Position = pos;
+			Position = pos;
 
-			if(str.Length <= 0)
+			if (str.Length <= 0)
 			{
-				this.Position = pos + len;
+				Position = pos + len;
 				return;
 			}
 
 			byte[] bytes = Encoding.Default.GetBytes(str);
 			Write(bytes, 0, len > bytes.Length ? bytes.Length : len);
-			this.Position = pos + len;
+			Position = pos + len;
+		}
+
+		#region IPacket Members
+
+		/// <summary>
+		/// Generates a human-readable dump of the packet contents.
+		/// </summary>
+		/// <returns>a string representing the packet contents in hexadecimal</returns>
+		public string ToHumanReadable()
+		{
+			return Marshal.ToHexDump(ToString(), ToArray());
+		}
+
+		#endregion
+
+		public override string ToString()
+		{
+			return GetType().Name;
 		}
 	}
 }
