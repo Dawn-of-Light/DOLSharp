@@ -95,7 +95,7 @@ namespace DOL.GS
 		protected void EnchanterDialogResponse(GamePlayer player, byte response)
 		{
 			WeakReference itemWeak =
-				(WeakReference) player.TempProperties.getObjectProperty(
+				(WeakReference) player.TempProperties.getProperty<object>(
 					ENCHANT_ITEM_WEAK,
 					new WeakRef(null)
 					);

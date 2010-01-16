@@ -303,10 +303,10 @@ namespace DOL.GS.Keeps
 				return;
 
 			//Prevent spam for LOS checks multiple times..
-			GameObject lastTarget = (GameObject)this.TempProperties.getObjectProperty(Last_LOS_Target_Property, null);
+			GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(Last_LOS_Target_Property, null);
 			if (lastTarget != null && lastTarget == attackTarget)
 			{
-				long lastTick = this.TempProperties.getLongProperty(Last_LOS_Tick_Property, 0);
+				long lastTick = this.TempProperties.getProperty<long>(Last_LOS_Tick_Property, 0);
 				if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.KEEP_GUARD_LOS_CHECK_TIME * 1000)
 					return;
 			}
@@ -715,7 +715,7 @@ namespace DOL.GS.Keeps
 			Component = null;
 			Inventory = null;
 			Position = null;
-			TempProperties.RemoveAll();
+			TempProperties.removeAllProperties();
 
 			base.Delete();
 			CurrentRegion = null;
@@ -729,7 +729,7 @@ namespace DOL.GS.Keeps
 				Component.Keep.Guards.Remove(this.ObjectID);
 			}
 
-			TempProperties.RemoveAll();
+			TempProperties.removeAllProperties();
 
 			base.Delete();
 		}

@@ -105,7 +105,7 @@ namespace DOL.GS
 
 		public static bool IsPlayerCarryingRelic(GamePlayer player)
 		{
-			return player.TempProperties.getObjectProperty(PLAYER_CARRY_RELIC_WEAK, null) != null;
+			return player.TempProperties.getProperty<object>(PLAYER_CARRY_RELIC_WEAK, null) != null;
 		}
 
 		#endregion
@@ -189,7 +189,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		protected virtual void PlayerTakesRelic(GamePlayer player)
 		{
-			if (player.TempProperties.getObjectProperty(PLAYER_CARRY_RELIC_WEAK, null) != null)
+			if (player.TempProperties.getProperty<object>(PLAYER_CARRY_RELIC_WEAK, null) != null)
 			{
 				player.Out.SendMessage("You are already carrying a relic.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -255,7 +255,7 @@ namespace DOL.GS
 
 			GamePlayer player = m_currentCarrier;
 
-			if (player.TempProperties.getObjectProperty(PLAYER_CARRY_RELIC_WEAK, null) == null)
+			if (player.TempProperties.getProperty<object>(PLAYER_CARRY_RELIC_WEAK, null) == null)
 			{
 				log.Warn("GameRelic: " + player.Name + " has already lost" + Name);
 				return;

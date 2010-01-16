@@ -137,7 +137,7 @@ namespace DOL.GS.Spells
 
 				int missrate = 0;
 				// add defence bonus from last executed style if any
-				AttackData targetAD = (AttackData)target.TempProperties.getObjectProperty(GameLiving.LAST_ATTACK_DATA, null);
+				AttackData targetAD = (AttackData)target.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null);
 				if (targetAD != null
 					&& targetAD.AttackResult == GameLiving.eAttackResult.HitStyle
 					&& targetAD.Style != null)

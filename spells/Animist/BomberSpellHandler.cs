@@ -99,7 +99,7 @@ namespace DOL.GS.Spells
 
             //[Ganrod] Nidel: Abort and delete bomber if Spell or Target is NULL
             Spell subspell = SkillBase.GetSpellByID(m_spell.SubSpellID);
-            GameLiving living = pet.TempProperties.getObjectProperty(BOMBERTARGET, null) as GameLiving;
+            GameLiving living = pet.TempProperties.getProperty<object>(BOMBERTARGET, null) as GameLiving;
 
             if (subspell == null || living == null)
             {

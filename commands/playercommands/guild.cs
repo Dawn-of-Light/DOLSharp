@@ -1785,7 +1785,7 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            GamePlayer inviter = client.Player.TempProperties.getObjectProperty("allianceinvite", null) as GamePlayer;
+                            GamePlayer inviter = client.Player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
                             if (inviter == client.Player)
                                 obj.TempProperties.removeProperty("allianceinvite");
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AllianceAnsCancel"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
@@ -1809,7 +1809,7 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            GamePlayer inviter = client.Player.TempProperties.getObjectProperty("allianceinvite", null) as GamePlayer;
+                            GamePlayer inviter = client.Player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
                             client.Player.TempProperties.removeProperty("allianceinvite");
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AllianceDeclined"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                             inviter.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AllianceDeclinedOther"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
@@ -2245,7 +2245,7 @@ namespace DOL.GS.Commands
 			if (reponse != 0x01)
 				return; //declined
 
-			GamePlayer inviter = player.TempProperties.getObjectProperty("allianceinvite", null) as GamePlayer;
+			GamePlayer inviter = player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
 
 			if (player.Guild == null)
 			{

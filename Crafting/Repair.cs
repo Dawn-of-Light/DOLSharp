@@ -100,9 +100,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected static int Proceed(RegionTimer timer)
 		{
-			GamePlayer player = (GamePlayer)timer.Properties.getObjectProperty(PLAYER_CRAFTER, null);
-			GamePlayer tradePartner = (GamePlayer)timer.Properties.getObjectProperty(PLAYER_PARTNER, null);
-			InventoryItem item = (InventoryItem)timer.Properties.getObjectProperty(ITEM_CRAFTER, null);
+			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(PLAYER_CRAFTER, null);
+			GamePlayer tradePartner = (GamePlayer)timer.Properties.getProperty<object>(PLAYER_PARTNER, null);
+			InventoryItem item = (InventoryItem)timer.Properties.getProperty<object>(ITEM_CRAFTER, null);
 
 			if (player == null || item == null)
 			{
@@ -262,8 +262,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected static int ProceedSiegeWeapon(RegionTimer timer)
 		{
-			GamePlayer player = (GamePlayer)timer.Properties.getObjectProperty(PLAYER_CRAFTER, null);
-			GameSiegeWeapon siegeWeapon = (GameSiegeWeapon)timer.Properties.getObjectProperty(ITEM_CRAFTER, null);
+			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(PLAYER_CRAFTER, null);
+			GameSiegeWeapon siegeWeapon = (GameSiegeWeapon)timer.Properties.getProperty<object>(ITEM_CRAFTER, null);
 
 			if (player == null || siegeWeapon == null)
 			{

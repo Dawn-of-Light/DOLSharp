@@ -76,7 +76,7 @@ namespace DOL.GS.Styles
 					case Style.eAttackResult.Parry: requiredAttackResult = GameLiving.eAttackResult.Parried; break;
 				}
 
-				AttackData lastAD = (AttackData)living.TempProperties.getObjectProperty(GameLiving.LAST_ATTACK_DATA, null);
+				AttackData lastAD = (AttackData)living.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null);
 
 				switch (style.OpeningRequirementType)
 				{
@@ -105,7 +105,7 @@ namespace DOL.GS.Styles
 						break;
 
 					case Style.eOpening.Defensive:
-						AttackData targetsLastAD = (AttackData)target.TempProperties.getObjectProperty(GameLiving.LAST_ATTACK_DATA, null);
+						AttackData targetsLastAD = (AttackData)target.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null);
 
 						//Last attack result
 						if (requiredAttackResult != GameLiving.eAttackResult.Any)
@@ -261,7 +261,7 @@ namespace DOL.GS.Styles
 					{
 						if (preRequireStyle != null)
 						{
-							AttackData lastAD = (AttackData)living.TempProperties.getObjectProperty(GameLiving.LAST_ATTACK_DATA, null);
+							AttackData lastAD = (AttackData)living.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null);
 							if (lastAD == null
 							|| lastAD.AttackResult != GameLiving.eAttackResult.HitStyle
 							|| lastAD.Style == null
@@ -318,7 +318,7 @@ namespace DOL.GS.Styles
 							{
 								if (preRequireStyle != null)
 								{
-									AttackData lastAD = (AttackData)living.TempProperties.getObjectProperty(GameLiving.LAST_ATTACK_DATA, null);
+									AttackData lastAD = (AttackData)living.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null);
 									if (lastAD == null
 									|| lastAD.AttackResult != GameLiving.eAttackResult.HitStyle
 									|| lastAD.Style == null

@@ -33,7 +33,7 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+			ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 			if (mychatgroup == null)
 			{
 				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -109,13 +109,13 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InviteYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						ChatGroup oldchatgroup = (ChatGroup)inviteeclient.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup oldchatgroup = (ChatGroup)inviteeclient.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (oldchatgroup != null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PlayerInChatgroup", inviteeclient.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							mychatgroup = new ChatGroup();
@@ -132,7 +132,7 @@ namespace DOL.GS.Commands
 					break;
 				case "who":
 					{
-						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -163,7 +163,7 @@ namespace DOL.GS.Commands
 					break;
 				case "remove":
 					{
-						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -184,7 +184,7 @@ namespace DOL.GS.Commands
 					break;
 				case "leave":
 					{
-						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -195,7 +195,7 @@ namespace DOL.GS.Commands
 					break;
 				case "listen":
 					{
-						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -216,7 +216,7 @@ namespace DOL.GS.Commands
 					break;
 				case "leader":
 					{
-						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -248,7 +248,7 @@ namespace DOL.GS.Commands
 					break;
 				case "public":
 					{
-						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -269,7 +269,7 @@ namespace DOL.GS.Commands
 					break;
 				case "private":
 					{
-						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -307,7 +307,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						ChatGroup mychatgroup = (ChatGroup)inviteeclient.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)inviteeclient.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.NotChatGroupMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -335,7 +335,7 @@ namespace DOL.GS.Commands
 					break;
 				case "password":
 					{
-						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -386,7 +386,7 @@ namespace DOL.GS.Commands
 
 		public static void JoinChatGroup(GamePlayer player, byte response)
 		{
-			ChatGroup mychatgroup = (ChatGroup)player.TempProperties.getObjectProperty(JOIN_CHATGROUP_PROPERTY, null);
+			ChatGroup mychatgroup = (ChatGroup)player.TempProperties.getProperty<object>(JOIN_CHATGROUP_PROPERTY, null);
 			if (mychatgroup == null) return;
 			lock (mychatgroup)
 			{
