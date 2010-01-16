@@ -41,12 +41,14 @@ namespace DOL.GS.PacketHandler
 		public override ushort WritePacketLength()
 		{
 			Position = 0;
-			base.WriteShort((ushort)(base.Length-5));
+			WriteShort((ushort)(Length-5));
+
 			//IMPORTANT!!!
 			//Set the capacity of the internal buffer or
 			//the byte-array of GetBuffer will be TOO big!
-			base.Capacity = (int)base.Length;
-			return (ushort)(base.Length-5);
+			Capacity = (int)Length;
+
+			return (ushort)(Length-5);
 		}
 	}
 }

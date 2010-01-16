@@ -29,13 +29,24 @@ namespace DOL
 	public class BaseServerConfiguration
 	{
 		/// <summary>
-		/// The port the server should listen to
+		/// Auto Detect the RegionIP
 		/// </summary>
-		protected ushort m_port;
+		protected bool m_detectRegionIP;
+
+		/// <summary>
+		/// Enable uPnP features
+		/// </summary>
+		protected bool m_enableUPnP;
+
 		/// <summary>
 		/// The ip address the server should use for listening
 		/// </summary>
 		protected IPAddress m_ip;
+
+		/// <summary>
+		/// The port the server should listen to
+		/// </summary>
+		protected ushort m_port;
 
 		/// <summary>
 		/// The region IP
@@ -56,87 +67,6 @@ namespace DOL
 		/// The UDP port
 		/// </summary>
 		protected ushort m_udpPort;
-
-		/// <summary>
-		/// Enable uPnP features
-		/// </summary>
-		protected bool m_enableUPnP;
-
-		/// <summary>
-		/// Auto Detect the RegionIP
-		/// </summary>
-		protected bool m_detectRegionIP;
-
-		/// <summary>
-		/// Loads the config values from a specific config element
-		/// </summary>
-		/// <param name="root">the root config element</param>
-		protected virtual void LoadFromConfig(ConfigElement root)
-		{
-			string ip = root["Server"]["IP"].GetString("any");
-			if(ip == "any")
-				m_ip = IPAddress.Any;
-			else
-				m_ip = IPAddress.Parse(ip);
-			m_port = (ushort)root["Server"]["Port"].GetInt(m_port);
-			
-			ip = root["Server"]["RegionIP"].GetString("any");
-			if(ip == "any")
-				m_regionIP = IPAddress.Any;
-			else
-				m_regionIP = IPAddress.Parse(ip);
-			m_regionPort = (ushort)root["Server"]["RegionPort"].GetInt(m_regionPort);
-
-			ip = root["Server"]["UdpIP"].GetString("any");
-			if(ip == "any")
-				m_udpIP = IPAddress.Any;
-			else
-				m_udpIP = IPAddress.Parse(ip);
-			m_udpPort = (ushort)root["Server"]["UdpPort"].GetInt(m_udpPort);
-
-			m_enableUPnP = (bool)root["Server"]["EnableUPnP"].GetBoolean(m_enableUPnP);
-			m_detectRegionIP = (bool)root["Server"]["DetectRegionIP"].GetBoolean(m_detectRegionIP);
-		}
-
-		/// <summary>
-		/// Load the configuration from a XML source file
-		/// </summary>
-		/// <param name="configFile">The file to load from</param>
-		public void LoadFromXMLFile(FileInfo configFile)
-		{
-			XMLConfigFile xmlConfig = XMLConfigFile.ParseXMLFile(configFile);
-			LoadFromConfig(xmlConfig);
-		}
-
-		/// <summary>
-		/// Saves the values into a specific config element
-		/// </summary>
-		/// <param name="root">the root config element</param>
-		protected virtual void SaveToConfig(ConfigElement root)
-		{
-			root["Server"]["Port"].Set(m_port);
-			root["Server"]["IP"].Set(m_ip);
-			root["Server"]["RegionIP"].Set(m_regionIP);
-			root["Server"]["RegionPort"].Set(m_regionPort);
-			root["Server"]["UdpIP"].Set(m_udpIP);
-			root["Server"]["UdpPort"].Set(m_udpPort);
-			root["Server"]["EnableUPnP"].Set(m_enableUPnP);
-			root["Server"]["DetectRegionIP"].Set(m_detectRegionIP);
-		}
-
-		/// <summary>
-		/// Save the configuration to a XML file
-		/// </summary>
-		/// <param name="configFile">The file to save</param>
-		public void SaveToXMLFile(FileInfo configFile)
-		{
-			if(configFile == null)
-				throw new ArgumentNullException("configFile");
-
-			XMLConfigFile config = new XMLConfigFile();
-			SaveToConfig(config);
-			config.Save(configFile);
-		}
 
 		/// <summary>
 		/// Constructs a server configuration with default values
@@ -206,6 +136,7 @@ namespace DOL
 			get { return m_udpPort; }
 			set { m_udpPort = value; }
 		}
+
 		public bool EnableUPnP
 		{
 			get { return m_enableUPnP; }
@@ -219,6 +150,77 @@ namespace DOL
 		{
 			get { return m_detectRegionIP; }
 			set { m_detectRegionIP = value; }
+		}
+
+		/// <summary>
+		/// Loads the config values from a specific config element
+		/// </summary>
+		/// <param name="root">the root config element</param>
+		protected virtual void LoadFromConfig(ConfigElement root)
+		{
+			string ip = root["Server"]["IP"].GetString("any");
+			if (ip == "any")
+				m_ip = IPAddress.Any;
+			else
+				m_ip = IPAddress.Parse(ip);
+			m_port = (ushort) root["Server"]["Port"].GetInt(m_port);
+
+			ip = root["Server"]["RegionIP"].GetString("any");
+			if (ip == "any")
+				m_regionIP = IPAddress.Any;
+			else
+				m_regionIP = IPAddress.Parse(ip);
+			m_regionPort = (ushort) root["Server"]["RegionPort"].GetInt(m_regionPort);
+
+			ip = root["Server"]["UdpIP"].GetString("any");
+			if (ip == "any")
+				m_udpIP = IPAddress.Any;
+			else
+				m_udpIP = IPAddress.Parse(ip);
+			m_udpPort = (ushort) root["Server"]["UdpPort"].GetInt(m_udpPort);
+
+			m_enableUPnP = root["Server"]["EnableUPnP"].GetBoolean(m_enableUPnP);
+			m_detectRegionIP = root["Server"]["DetectRegionIP"].GetBoolean(m_detectRegionIP);
+		}
+
+		/// <summary>
+		/// Load the configuration from a XML source file
+		/// </summary>
+		/// <param name="configFile">The file to load from</param>
+		public void LoadFromXMLFile(FileInfo configFile)
+		{
+			XMLConfigFile xmlConfig = XMLConfigFile.ParseXMLFile(configFile);
+			LoadFromConfig(xmlConfig);
+		}
+
+		/// <summary>
+		/// Saves the values into a specific config element
+		/// </summary>
+		/// <param name="root">the root config element</param>
+		protected virtual void SaveToConfig(ConfigElement root)
+		{
+			root["Server"]["Port"].Set(m_port);
+			root["Server"]["IP"].Set(m_ip);
+			root["Server"]["RegionIP"].Set(m_regionIP);
+			root["Server"]["RegionPort"].Set(m_regionPort);
+			root["Server"]["UdpIP"].Set(m_udpIP);
+			root["Server"]["UdpPort"].Set(m_udpPort);
+			root["Server"]["EnableUPnP"].Set(m_enableUPnP);
+			root["Server"]["DetectRegionIP"].Set(m_detectRegionIP);
+		}
+
+		/// <summary>
+		/// Save the configuration to a XML file
+		/// </summary>
+		/// <param name="configFile">The file to save</param>
+		public void SaveToXMLFile(FileInfo configFile)
+		{
+			if (configFile == null)
+				throw new ArgumentNullException("configFile");
+
+			var config = new XMLConfigFile();
+			SaveToConfig(config);
+			config.Save(configFile);
 		}
 	}
 }

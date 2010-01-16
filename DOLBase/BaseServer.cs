@@ -17,94 +17,14 @@
  *
  */
 using System;
-using System.Collections;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using log4net;
-/*using DOL.NatTraversal.Interop;
-using DOL.NatTraversal;*/
 
 namespace DOL
 {
-	/// <summary>
-	/// The status of the gameserver
-	/// </summary>
-	public enum eGameServerStatus
-	{
-		/// <summary>
-		/// Server is open for connections
-		/// </summary>
-		GSS_Open = 0,
-		/// <summary>
-		/// Server is closed and won't accept connections
-		/// </summary>
-		GSS_Closed,
-		/// <summary>
-		/// Server is down
-		/// </summary>
-		GSS_Down,
-		/// <summary>
-		/// Server is full, no more connections accepted
-		/// </summary>
-		GSS_Full,
-		/// <summary>
-		/// Unknown server status
-		/// </summary>
-		GSS_Unknown,
-		/// <summary>
-		/// Server is banned for the user
-		/// </summary>
-		GSS_Banned,
-		/// <summary>
-		/// User is not invited
-		/// </summary>
-		GSS_NotInvited,
-		/// <summary>
-		/// The count of server stati
-		/// </summary>
-		_GSS_Count,
-	}
-
-	/// <summary>
-	/// The different game server types
-	/// </summary>
-	public enum eGameServerType : int
-	{
-		/// <summary>
-		/// Normal server
-		/// </summary>
-		GST_Normal = 0,
-		/// <summary>
-		/// Test server
-		/// </summary>
-		GST_Test = 1,
-		/// <summary>
-		/// Player vs Player
-		/// </summary>
-		GST_PvP = 2,
-		/// <summary>
-		/// Player vs Monsters
-		/// </summary>
-		GST_PvE = 3,
-		/// <summary>
-		/// Roleplaying server
-		/// </summary>
-		GST_Roleplay = 4,
-		/// <summary>
-		/// Casual server
-		/// </summary>
-		GST_Casual = 5,
-		/// <summary>
-		/// Unknown server type
-		/// </summary>
-		GST_Unknown = 6,
-		/// <summary>
-		/// The count of server types
-		/// </summary>
-		_GST_Count = 7,
-	}
-
 	/// <summary>
 	/// Base class for a server using overlapped socket IO
 	/// </summary>
@@ -113,19 +33,17 @@ namespace DOL
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static readonly int SEND_BUFF_SIZE = 16 * 1024;
+		/// <summary>
+		/// Holds the async accept callback delegate
+		/// </summary>
+		private readonly AsyncCallback m_asyncAcceptCallback;
 
 		/// <summary>
 		/// Hash table of clients
 		/// </summary>
-		protected readonly HybridDictionary m_clients = new HybridDictionary();
-
-		/// <summary>
-		/// Socket that receives connections
-		/// </summary>
-		protected Socket m_listen;
+		protected readonly Dictionary<BaseClient, BaseClient> m_clients = new Dictionary<BaseClient, BaseClient>();
 
 		/// <summary>
 		/// The configuration of this server
@@ -133,11 +51,9 @@ namespace DOL
 		protected BaseServerConfiguration m_config;
 
 		/// <summary>
-		/// Default Constructor
+		/// Socket that receives connections
 		/// </summary>
-		protected BaseServer() : this(new BaseServerConfiguration())
-		{
-		}
+		protected Socket m_listen;
 
 		/// <summary>
 		/// Constructor that takes a server configuration as parameter
@@ -145,9 +61,9 @@ namespace DOL
 		/// <param name="config">The configuraion for the server</param>
 		protected BaseServer(BaseServerConfiguration config)
 		{
-			if(config == null)
+			if (config == null)
 				throw new ArgumentNullException("config");
-			
+
 			m_config = config;
 			m_asyncAcceptCallback = new AsyncCallback(AcceptCallback);
 		}
@@ -157,10 +73,7 @@ namespace DOL
 		/// </summary>
 		public virtual BaseServerConfiguration Configuration
 		{
-			get
-			{
-				return m_config;
-			}
+			get { return m_config; }
 		}
 
 		/// <summary>
@@ -175,11 +88,11 @@ namespace DOL
 		/// Creates a new client object
 		/// </summary>
 		/// <returns>A new client object</returns>
-		protected virtual ClientBase GetNewClient()
+		protected virtual BaseClient GetNewClient()
 		{
-			return new ClientBase(this);
+			return new BaseClient(this);
 		}
-		
+
 		/// <summary>
 		/// Used to get packet buffer.
 		/// </summary>
@@ -188,7 +101,7 @@ namespace DOL
 		{
 			return new byte[2048];
 		}
-		
+
 		/// <summary>
 		/// Releases previously acquired packet buffer.
 		/// </summary>
@@ -210,11 +123,12 @@ namespace DOL
 			}
 			catch (Exception e)
 			{
-				if (log.IsErrorEnabled)
-					log.Error("InitSocket", e);
+				if (Log.IsErrorEnabled)
+					Log.Error("InitSocket", e);
 
 				return false;
 			}
+
 			return true;
 		}
 
@@ -234,12 +148,12 @@ namespace DOL
 					{
 						list.Add(info);
 					}
-					if(log.IsDebugEnabled)
+					if(Log.IsDebugEnabled)
 					{
-						log.Debug("Current UPnP mappings:");
+						Log.Debug("Current UPnP mappings:");
 						foreach(PortMappingInfo info in list)
 						{
-							log.DebugFormat("({0}) {1} - {2} -> {3}:{4}({5})", info.Enabled ? "(Enabled)" : "(Disabled)", info.Description, info.ExternalPort, info.InternalHostName, info.InternalPort, info.Protocol);
+							Log.DebugFormat("({0}) {1} - {2} -> {3}:{4}({5})", info.Enabled ? "(Enabled)" : "(Disabled)", info.Description, info.ExternalPort, info.InternalHostName, info.InternalPort, info.Protocol);
 						}
 					}
 					IPAddress localAddr = Configuration.Ip;
@@ -264,25 +178,25 @@ namespace DOL
 						try
 						{
 							Configuration.RegionIp = nat.PortMappings[0].ExternalIPAddress;
-							if(log.IsDebugEnabled)
-								log.Debug("Found the RegionIP: " + Configuration.RegionIp);
+							if(Log.IsDebugEnabled)
+								Log.Debug("Found the RegionIP: " + Configuration.RegionIp);
 						}
 						catch(Exception)
 						{
-							if(log.IsDebugEnabled)
-								log.Debug("Unable to detect the RegionIP, It is possible that no mappings exist yet");
+							if(Log.IsDebugEnabled)
+								Log.Debug("Unable to detect the RegionIP, It is possible that no mappings exist yet");
 						}
 					}
 				}
 				catch(Exception)
 				{
-					if(log.IsDebugEnabled)
-						log.Debug("Unable to access the UPnP Internet Gateway Device");
+					if(Log.IsDebugEnabled)
+						Log.Debug("Unable to access the UPnP Internet Gateway Device");
 				}
 			}*/
 			//Test if we have a valid port yet
 			//if not try  binding.
-			if(m_listen == null && !InitSocket())
+			if (m_listen == null && !InitSocket())
 				return false;
 
 			try
@@ -290,24 +204,22 @@ namespace DOL
 				m_listen.Listen(100);
 				m_listen.BeginAccept(m_asyncAcceptCallback, this);
 
-				if (log.IsDebugEnabled)
-					log.Debug("Server is now listening to incoming connections!");
+				if (Log.IsDebugEnabled)
+					Log.Debug("Server is now listening to incoming connections!");
 			}
 			catch (Exception e)
 			{
-				if (log.IsErrorEnabled)
-					log.Error("Start", e);
+				if (Log.IsErrorEnabled)
+					Log.Error("Start", e);
+
 				if (m_listen != null)
 					m_listen.Close();
+
 				return false;
 			}
+
 			return true;
 		}
-
-		/// <summary>
-		/// Holds the async accept callback delegate
-		/// </summary>
-		private readonly AsyncCallback m_asyncAcceptCallback;
 
 		/// <summary>
 		/// Called when a client is trying to connect to the server
@@ -316,52 +228,59 @@ namespace DOL
 		private void AcceptCallback(IAsyncResult ar)
 		{
 			Socket sock = null;
+
 			try
 			{
 				if (m_listen == null)
-				{
 					return;
-				}
-				sock = m_listen.EndAccept(ar);
-				sock.SendBufferSize = SEND_BUFF_SIZE;
 
-				ClientBase client = null;
+				sock = m_listen.EndAccept(ar);
+				sock.SendBufferSize = Constants.SEND_BUFF_SIZE;
+
+				BaseClient baseClient = null;
 				try
 				{
-					if (log.IsInfoEnabled)
+					if (Log.IsInfoEnabled)
 					{
 						string ip = sock.Connected ? sock.RemoteEndPoint.ToString() : "socket disconnected";
-						log.Info("Incoming connection from " + ip);
+						Log.Info("Incoming connection from " + ip);
 					}
 
-					client = GetNewClient();
-					client.Socket = sock;
+					baseClient = GetNewClient();
+					baseClient.Socket = sock;
 
-					lock (m_clients.SyncRoot)
-						m_clients.Add(client, client);
+					lock (m_clients)
+						m_clients.Add(baseClient, baseClient);
 
-					client.OnConnect();
-					client.BeginRecv();
+					baseClient.OnConnect();
+					baseClient.BeginReceive();
 				}
 				catch (SocketException)
 				{
-					if (client != null)
-						Disconnect(client);
+					if (baseClient != null)
+						Disconnect(baseClient);
 				}
 				catch (Exception e)
 				{
-					if (log.IsErrorEnabled)
-						log.Error("Client creation", e);
+					if (Log.IsErrorEnabled)
+						Log.Error("Client creation", e);
 
-					if (client != null)
-						Disconnect(client);
+					if (baseClient != null)
+						Disconnect(baseClient);
 				}
 			}
 			catch
 			{
 				if (sock != null) // don't leave the socket open on exception
-					try { sock.Close(); }
-					catch { }
+				{
+					try
+					{
+						sock.Close();
+					}
+					catch
+					{
+					}
+				}
 			}
 			finally
 			{
@@ -377,15 +296,15 @@ namespace DOL
 		/// </summary>
 		public virtual void Stop()
 		{
-			if(log.IsDebugEnabled)
-				log.Debug("Stopping server! - Entering method");
-			
+			if (Log.IsDebugEnabled)
+				Log.Debug("Stopping server! - Entering method");
+
 			/*if(Configuration.EnableUPnP)
 			{
 				try
 				{
-					if(log.IsDebugEnabled)
-						log.Debug("Removing UPnP Mappings");
+					if(Log.IsDebugEnabled)
+						Log.Debug("Removing UPnP Mappings");
 					UPnPNat nat = new UPnPNat();
 					PortMappingInfo pmiUDP = new PortMappingInfo("UDP", Configuration.UDPPort);
 					PortMappingInfo pmiTCP = new PortMappingInfo("TCP", Configuration.Port);
@@ -394,8 +313,8 @@ namespace DOL
 				}
 				catch(Exception ex)
 				{
-					if(log.IsDebugEnabled)
-						log.Debug("Failed to rmeove UPnP Mappings", ex);
+					if(Log.IsDebugEnabled)
+						Log.Debug("Failed to rmeove UPnP Mappings", ex);
 				}
 			}*/
 
@@ -406,78 +325,71 @@ namespace DOL
 					Socket socket = m_listen;
 					m_listen = null;
 					socket.Close();
-					if (log.IsDebugEnabled)
-						log.Debug("Server is no longer listening for incoming connections!");
+					if (Log.IsDebugEnabled)
+						Log.Debug("Server is no longer listening for incoming connections!");
 				}
 			}
 			catch (Exception e)
 			{
-				if (log.IsErrorEnabled)
-					log.Error("Stop", e);
+				if (Log.IsErrorEnabled)
+					Log.Error("Stop", e);
 			}
-			
-			if(m_clients != null)
+
+			if (m_clients != null)
 			{
-				lock (m_clients.SyncRoot)
+				lock (m_clients)
 				{
 					try
 					{
-						IDictionaryEnumerator iter = m_clients.GetEnumerator();
-						while (iter.MoveNext())
+						foreach (var clientPair in m_clients)
 						{
-							ClientBase client = (ClientBase) iter.Key;
-							client.CloseConnections();
+							clientPair.Key.CloseConnections();
 						}
 
-						if(log.IsDebugEnabled)
-							log.Debug("Stopping server! - Cleaning up client list!");
+						if (Log.IsDebugEnabled)
+							Log.Debug("Stopping server! - Cleaning up client list!");
 
 						m_clients.Clear();
 					}
-					catch(Exception e)
+					catch (Exception e)
 					{
-						if(log.IsErrorEnabled)
-							log.Error("Stop",e);
+						if (Log.IsErrorEnabled)
+							Log.Error("Stop", e);
 					}
 				}
 			}
-			if(log.IsDebugEnabled)
-				log.Debug("Stopping server! - End of method!");
+			if (Log.IsDebugEnabled)
+				Log.Debug("Stopping server! - End of method!");
 		}
 
 		/// <summary>
 		/// Disconnects a client
 		/// </summary>
-		/// <param name="client">Client to be disconnected</param>
+		/// <param name="baseClient">Client to be disconnected</param>
 		/// <returns>True if the client was disconnected, false if it doesn't exist</returns>
-		public virtual bool Disconnect(ClientBase client)
+		public virtual bool Disconnect(BaseClient baseClient)
 		{
-			lock (m_clients.SyncRoot)
+			lock (m_clients)
 			{
-				if (!m_clients.Contains(client))
+				if (!m_clients.ContainsKey(baseClient))
 					return false;
-				m_clients.Remove(client);
+
+				m_clients.Remove(baseClient);
 			}
 
 			try
 			{
-				client.OnDisconnect();
-			}
-			catch(Exception e)
-			{
-				if(log.IsErrorEnabled)
-					log.Error("Exception", e);
-			}
-
-			try
-			{
-				client.CloseConnections();
+				baseClient.OnDisconnect();
+				baseClient.CloseConnections();
 			}
 			catch (Exception e)
 			{
-				if (log.IsErrorEnabled)
-					log.Error("Exception", e);
+				if (Log.IsErrorEnabled)
+					Log.Error("Exception", e);
+
+				return false;
 			}
+
 			return true;
 		}
 	}

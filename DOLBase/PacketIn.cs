@@ -23,37 +23,13 @@ namespace DOL
 	/// <summary>
 	/// Class reads data from incoming incoming packets
 	/// </summary>
-	public class PacketIn : MemoryStream
+	public class PacketIn : MemoryStream, IPacket
 	{
-		/// <summary>
-		/// Default constructor
-		/// </summary>
-		public PacketIn() : base()
-		{
-		}
-
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="size">Size of the internal buffer</param>
 		public PacketIn(int size) : base(size)
-		{
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="buf">Buffer containing packet data to read from</param>
-		public PacketIn(byte[] buf) : base(buf)
-		{
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="buf">Buffer containing packet data to read from</param>
-		/// <param name="canwrite">True if writing to the buffer is allowed</param>
-		public PacketIn(byte[] buf, bool canwrite) : base(buf, canwrite)
 		{
 		}
 
@@ -68,36 +44,14 @@ namespace DOL
 		}
 
 		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="buf">Buffer containing packet data to read from</param>
-		/// <param name="start">Starting index into buf</param>
-		/// <param name="size">Number of bytes to read from buf</param>
-		/// <param name="canwrite">True if writing to the buffer is allowed</param>
-		public PacketIn(byte[] buf, int start, int size, bool canwrite) : base(buf, start, size, canwrite)
-		{
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="buf">Buffer containing packet data to read from</param>
-		/// <param name="start">Starting index into buf</param>
-		/// <param name="size">Number of bytes to read from buf</param>
-		/// <param name="canwrite">True if writing to the buffer is allowed</param>
-		/// <param name="getbuf">True if you can retrieve a copy of the internal buffer</param>
-		public PacketIn(byte[] buf, int start, int size, bool canwrite, bool getbuf) : base(buf, start, size, canwrite, getbuf)
-		{
-		}
-
-		/// <summary>
 		/// Reads in 2 bytes and converts it from network to host byte order
 		/// </summary>
 		/// <returns>A 2 byte (short) value</returns>
 		public virtual ushort ReadShort()
 		{
-			byte v1 = (byte)ReadByte();
-			byte v2 = (byte)ReadByte();
+			var v1 = (byte) ReadByte();
+			var v2 = (byte) ReadByte();
+
 			return Marshal.ConvertToUInt16(v1, v2);
 		}
 
@@ -107,8 +61,9 @@ namespace DOL
 		/// <returns>A 2 byte (short) value in network byte order</returns>
 		public virtual ushort ReadShortLowEndian()
 		{
-			byte v1 = (byte) ReadByte();
-			byte v2 = (byte) ReadByte();
+			var v1 = (byte) ReadByte();
+			var v2 = (byte) ReadByte();
+
 			return Marshal.ConvertToUInt16(v2, v1);
 		}
 
@@ -118,10 +73,11 @@ namespace DOL
 		/// <returns>A 4 byte value</returns>
 		public virtual uint ReadInt()
 		{
-			byte v1 = (byte) ReadByte();
-			byte v2 = (byte) ReadByte();
-			byte v3 = (byte) ReadByte();
-			byte v4 = (byte) ReadByte();
+			var v1 = (byte) ReadByte();
+			var v2 = (byte) ReadByte();
+			var v3 = (byte) ReadByte();
+			var v4 = (byte) ReadByte();
+
 			return Marshal.ConvertToUInt32(v1, v2, v3, v4);
 		}
 
@@ -141,8 +97,9 @@ namespace DOL
 		/// <returns>A string of maxlen or less</returns>
 		public virtual string ReadString(int maxlen)
 		{
-			byte[] buf = new byte[maxlen];
+			var buf = new byte[maxlen];
 			Read(buf, 0, maxlen);
+
 			return Marshal.ConvertToString(buf);
 		}
 
@@ -152,17 +109,35 @@ namespace DOL
 		/// <returns>A string from the stream</returns>
 		public virtual string ReadPascalString()
 		{
-			int size = ReadByte();
-			return ReadString(size);
+			return ReadString(ReadByte());
 		}
 
 		public virtual uint ReadIntLowEndian()
 		{
-			byte v1 = (byte)ReadByte();
-			byte v2 = (byte)ReadByte();
-			byte v3 = (byte)ReadByte();
-			byte v4 = (byte)ReadByte();
+			var v1 = (byte) ReadByte();
+			var v2 = (byte) ReadByte();
+			var v3 = (byte) ReadByte();
+			var v4 = (byte) ReadByte();
+
 			return Marshal.ConvertToUInt32(v4, v3, v2, v1);
+		}
+
+		#region IPacket Members
+
+		/// <summary>
+		/// Generates a human-readable dump of the packet contents.
+		/// </summary>
+		/// <returns>a string representing the packet contents in hexadecimal</returns>
+		public string ToHumanReadable()
+		{
+			return Marshal.ToHexDump(ToString(), ToArray());
+		}
+
+		#endregion
+
+		public override string ToString()
+		{
+			return GetType().Name;
 		}
 	}
 }
