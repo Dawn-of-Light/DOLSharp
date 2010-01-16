@@ -31,7 +31,7 @@ namespace DOL.GS.Commands
 		public void OnCommand(GameClient client, string[] args)
 		{
 			const string YELL_TICK = "YELL_Tick";
-			long YELLTick = client.Player.TempProperties.getLongProperty(YELL_TICK, 0);
+			long YELLTick = client.Player.TempProperties.getProperty<long>(YELL_TICK, 0);
 			if (YELLTick > 0 && YELLTick - client.Player.CurrentRegion.Time <= 0)
 			{
 				client.Player.TempProperties.removeProperty(YELL_TICK);

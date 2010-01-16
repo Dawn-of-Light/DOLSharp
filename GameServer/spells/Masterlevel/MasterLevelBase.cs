@@ -792,7 +792,7 @@ namespace DOL.GS.Spells
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            GameTimer timer = (GameTimer)effect.Owner.TempProperties.getObjectProperty(effect, null);
+            GameTimer timer = (GameTimer)effect.Owner.TempProperties.getProperty<object>(effect, null);
             effect.Owner.TempProperties.removeProperty(effect);
             timer.Stop();
 

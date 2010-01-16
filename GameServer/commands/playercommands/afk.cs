@@ -29,7 +29,7 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (client.Player.TempProperties.getProperty(GamePlayer.AFK_MESSAGE, null) != null && args.Length == 1)
+			if (client.Player.TempProperties.getProperty<string>(GamePlayer.AFK_MESSAGE) != null && args.Length == 1)
 			{
 				client.Player.TempProperties.removeProperty(GamePlayer.AFK_MESSAGE);
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Afk.Off"), eChatType.CT_System, eChatLoc.CL_SystemWindow);

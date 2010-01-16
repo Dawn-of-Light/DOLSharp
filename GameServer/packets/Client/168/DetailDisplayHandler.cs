@@ -106,10 +106,10 @@ namespace DOL.GS.PacketHandler.Client.v168
                         }
                         else if (objectType == 10)
                         {
-                            List<InventoryItem> list = client.Player.TempProperties.getObjectProperty(DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.EXPLORER_LIST, null) as List<InventoryItem>;
+                            List<InventoryItem> list = client.Player.TempProperties.getProperty<object>(DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.EXPLORER_LIST, null) as List<InventoryItem>;
 							if (list == null)
 							{
-								list = client.Player.TempProperties.getObjectProperty("TempSearchKey", null) as List<InventoryItem>;
+								list = client.Player.TempProperties.getProperty<object>("TempSearchKey", null) as List<InventoryItem>;
 								if (list == null)
 									return 1;
 							}
@@ -877,7 +877,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 						if (item == null) return 1;
 
-						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MustBeInChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -947,7 +947,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 						if (item == null) return 1;
 
-						BattleGroup mybattlegroup = (BattleGroup)client.Player.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+						BattleGroup mybattlegroup = (BattleGroup)client.Player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 						if (mybattlegroup == null)
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MustBeInBattleGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1629,7 +1629,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem1", Util.FormatTime(spl.RecastDelay / 1000)));
 								else
 									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem2"));
-								long lastChargedItemUseTick = client.Player.TempProperties.getLongProperty(GamePlayer.LAST_CHARGED_ITEM_USE_TICK, 0L);
+								long lastChargedItemUseTick = client.Player.TempProperties.getProperty<long>(GamePlayer.LAST_CHARGED_ITEM_USE_TICK, 0L);
 								long changeTime = client.Player.CurrentRegion.Time - lastChargedItemUseTick;
 								long recastDelay = (spl.RecastDelay > 0) ? spl.RecastDelay : 60000 * 3;
 								if (changeTime < recastDelay) //3 minutes reuse timer
@@ -1815,7 +1815,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	                        WritePotionSpellsInfos(list, client, spl, potionLine);
 	                        list.Add(" ");
                             list.Add(" ");
-	                        long nextPotionAvailTime = client.Player.TempProperties.getLongProperty("LastPotionItemUsedTick_Type" + spl.SharedTimerGroup, 0L);
+	                        long nextPotionAvailTime = client.Player.TempProperties.getProperty<long>("LastPotionItemUsedTick_Type" + spl.SharedTimerGroup, 0L);
 	                        // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
 	                        // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
 	                        if(nextPotionAvailTime > client.Player.CurrentRegion.Time)

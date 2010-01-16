@@ -67,7 +67,7 @@ namespace DOL.GS.Spells
 			{
 				ad = attackedByEnemy.AttackData;
 			}
-			int reduceddmg = living.TempProperties.getIntProperty(ConvertDamage, 0);
+			int reduceddmg = living.TempProperties.getProperty<int>(ConvertDamage, 0);
 			double absorbPercent = Spell.Damage;
 			int damageConverted = (int)(0.01 * absorbPercent * (ad.Damage + ad.CriticalDamage));
 
@@ -163,7 +163,7 @@ namespace DOL.GS.Spells
 				{
 					case AttackData.eAttackType.Spell:
 						{
-							int reduceddmg = living.TempProperties.getIntProperty(ConvertDamage, 0);
+							int reduceddmg = living.TempProperties.getProperty<int>(ConvertDamage, 0);
 							double absorbPercent = Spell.Damage;
 							int damageConverted = (int)(0.01 * absorbPercent * (ad.Damage + ad.CriticalDamage));
 							if (damageConverted > reduceddmg)

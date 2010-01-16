@@ -288,9 +288,9 @@ namespace DOL.GS.Commands
 				realmSpecPoints = player.RespecRealm();
 				player.TempProperties.removeProperty(RA_RESPEC);
 			}
-			if (player.TempProperties.getObjectProperty(LINE_RESPEC, null) != null)
+			if (player.TempProperties.getProperty<object>(LINE_RESPEC, null) != null)
 			{
-				Specialization specLine = (Specialization)player.TempProperties.getObjectProperty(LINE_RESPEC, null);
+				Specialization specLine = (Specialization)player.TempProperties.getProperty<object>(LINE_RESPEC, null);
 				specPoints = player.RespecSingle(specLine);
 				player.TempProperties.removeProperty(LINE_RESPEC);
 			}

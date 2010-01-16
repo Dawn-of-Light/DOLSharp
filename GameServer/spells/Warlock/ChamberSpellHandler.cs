@@ -107,7 +107,7 @@ namespace DOL.GS.Spells
 			GamePlayer caster = (GamePlayer)m_caster;
 			GameLiving target = caster.TargetObject as GameLiving;
 			
-			long ChamberUseTick = caster.TempProperties.getLongProperty(CHAMBER_USE_TICK, 0L);
+			long ChamberUseTick = caster.TempProperties.getProperty<long>(CHAMBER_USE_TICK, 0L);
 			long changeTime = caster.CurrentRegion.Time - ChamberUseTick;
 			if (changeTime < 3000)
 			{

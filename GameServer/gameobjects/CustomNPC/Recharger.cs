@@ -100,7 +100,7 @@ namespace DOL.GS
 		protected void RechargerDialogResponse(GamePlayer player, byte response)
 		{
 			WeakReference itemWeak =
-				(WeakReference) player.TempProperties.getObjectProperty(
+				(WeakReference) player.TempProperties.getProperty<object>(
 				RECHARGE_ITEM_WEAK,
 				new WeakRef(null)
 				);

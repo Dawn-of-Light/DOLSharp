@@ -85,7 +85,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				string key = string.Format("LOS C:0x{0} T:0x{1}",m_checkerOid,m_targetOid);
 				GamePlayer player = (GamePlayer)m_actionSource;
-				CheckLOSResponse callback = (CheckLOSResponse)player.TempProperties.getObjectProperty(key, null);
+				CheckLOSResponse callback = (CheckLOSResponse)player.TempProperties.getProperty<object>(key, null);
 				if(callback == null) return;
 				callback(player, (ushort)m_response, (ushort)m_targetOid);
 				player.TempProperties.removeProperty(key);

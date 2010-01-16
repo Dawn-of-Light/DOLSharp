@@ -69,11 +69,11 @@ namespace DOL.GS.Behaviour.Actions
         /// <returns>0</returns>
         private static int QuestTimerCallBack(RegionTimer callingTimer)
         {
-            string timerid = callingTimer.Properties.getObjectProperty(TIMER_ID, null) as string;
+            string timerid = callingTimer.Properties.getProperty<object>(TIMER_ID, null) as string;
             if (timerid == null)
                 throw new ArgumentNullException("TimerId out of Range", "timerid");
 
-            GameLiving source = callingTimer.Properties.getObjectProperty(TIMER_SOURCE, null) as GameLiving;
+            GameLiving source = callingTimer.Properties.getProperty<object>(TIMER_SOURCE, null) as GameLiving;
             if (source == null)
                 throw new ArgumentNullException("TimerSource null", "timersource");
 

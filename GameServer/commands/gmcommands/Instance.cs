@@ -204,7 +204,7 @@ namespace DOL.GS.Commands
 								throw new Exception("You need to provide a skin id.  A skin is the ID of the region you want this instance to look like.");
 							}
 
-							Instance newInstance = player.TempProperties.getObjectProperty(key, null) as Instance;
+							Instance newInstance = player.TempProperties.getProperty<object>(key, null) as Instance;
 
 							if (newInstance != null)
 							{
@@ -237,7 +237,7 @@ namespace DOL.GS.Commands
 				#region close
 				case "close":
 					{
-						Instance newInstance = player.TempProperties.getObjectProperty(key, null) as Instance;
+						Instance newInstance = player.TempProperties.getProperty<object>(key, null) as Instance;
 
 						if (newInstance == null)
 						{
@@ -268,7 +268,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						Instance newInstance = player.TempProperties.getObjectProperty(key, null) as Instance;
+						Instance newInstance = player.TempProperties.getProperty<object>(key, null) as Instance;
 
 						if (newInstance == null)
 						{
@@ -326,7 +326,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						GameLocation saveLocation = player.TempProperties.getObjectProperty(player.Name + "_exit", null) as GameLocation;
+						GameLocation saveLocation = player.TempProperties.getProperty<object>(player.Name + "_exit", null) as GameLocation;
 
 						if (saveLocation == null)
 						{
@@ -352,7 +352,7 @@ namespace DOL.GS.Commands
             string str = "";
             try
             {
-                str = (string)p.TempProperties.getObjectProperty(INSTANCE_KEY, "");
+                str = (string)p.TempProperties.getProperty<object>(INSTANCE_KEY, "");
             }
             catch { return ""; }
             return str;
