@@ -158,7 +158,7 @@ namespace DOL.GS.Spells
 		{
 			base.OnEffectExpires(effect,noMessages);
 
-			GameTimer timer = (GameTimer)effect.Owner.TempProperties.getObjectProperty(effect, null);
+			GameTimer timer = (GameTimer)effect.Owner.TempProperties.getProperty<object>(effect, null);
 			effect.Owner.TempProperties.removeProperty(effect);
 			timer.Stop();
 

@@ -99,7 +99,7 @@ namespace DOL.GS
 		protected void EmblemerDialogResponse(GamePlayer player, byte response)
 		{
 			WeakReference itemWeak =
-				(WeakReference) player.TempProperties.getObjectProperty(
+				(WeakReference) player.TempProperties.getProperty<object>(
 					EMBLEMIZE_ITEM_WEAK,
 					new WeakRef(null)
 					);

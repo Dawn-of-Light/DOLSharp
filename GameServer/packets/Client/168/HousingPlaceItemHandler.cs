@@ -613,10 +613,10 @@ namespace DOL.GS.PacketHandler.Client.v168
                 return;
 
 
-            WeakReference itemWeak = (WeakReference)player.TempProperties.getObjectProperty(DEED_WEAK, new WeakRef(null));
+            WeakReference itemWeak = (WeakReference)player.TempProperties.getProperty<object>(DEED_WEAK, new WeakRef(null));
             player.TempProperties.removeProperty(DEED_WEAK);
             InventoryItem item = (InventoryItem)itemWeak.Target;
-            House house = (House)player.TempProperties.getObjectProperty(TARGET_HOUSE, null);
+            House house = (House)player.TempProperties.getProperty<object>(TARGET_HOUSE, null);
             player.TempProperties.removeProperty(TARGET_HOUSE);
             if (house == null)
             {
@@ -640,10 +640,10 @@ namespace DOL.GS.PacketHandler.Client.v168
                 return;
 
 
-            WeakReference itemWeak = (WeakReference)player.TempProperties.getObjectProperty(DEED_WEAK, new WeakRef(null));
+            WeakReference itemWeak = (WeakReference)player.TempProperties.getProperty<object>(DEED_WEAK, new WeakRef(null));
             player.TempProperties.removeProperty(DEED_WEAK);
             InventoryItem item = (InventoryItem)itemWeak.Target;
-            House house = (House)player.TempProperties.getObjectProperty(TARGET_HOUSE, null);
+            House house = (House)player.TempProperties.getProperty<object>(TARGET_HOUSE, null);
             player.TempProperties.removeProperty(TARGET_HOUSE);
 
             if (house == null)

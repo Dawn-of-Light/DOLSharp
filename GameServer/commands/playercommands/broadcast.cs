@@ -59,7 +59,7 @@ namespace DOL.GS.Commands
             }
             string message = string.Join(" ", args, 1, args.Length - 1);
 
-            long BroadTick = client.Player.TempProperties.getLongProperty(BROAD_TICK, 0);
+            long BroadTick = client.Player.TempProperties.getProperty<long>(BROAD_TICK, 0);
             if (BroadTick > 0 && BroadTick - client.Player.CurrentRegion.Time <= 0)
             {
                 client.Player.TempProperties.removeProperty(BROAD_TICK);

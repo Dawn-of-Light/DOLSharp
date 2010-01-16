@@ -156,10 +156,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected static int Proceed(RegionTimer timer)
 		{
-			GamePlayer player = (GamePlayer)timer.Properties.getObjectProperty(PLAYER_CRAFTER, null);
-			InventoryItem itemToSalvage = (InventoryItem)timer.Properties.getObjectProperty(ITEM_CRAFTER, null);
-			DBSalvage material = (DBSalvage)timer.Properties.getObjectProperty(MATERIAL_CRAFTER, null);
-			int materialCount = (int)timer.Properties.getObjectProperty(MATERIAL_COUNT_CRAFTER, 0);
+			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(PLAYER_CRAFTER, null);
+			InventoryItem itemToSalvage = (InventoryItem)timer.Properties.getProperty<object>(ITEM_CRAFTER, null);
+			DBSalvage material = (DBSalvage)timer.Properties.getProperty<object>(MATERIAL_CRAFTER, null);
+			int materialCount = (int)timer.Properties.getProperty<object>(MATERIAL_COUNT_CRAFTER, 0);
 
 
 			if (player == null || itemToSalvage == null || material == null || materialCount == 0)

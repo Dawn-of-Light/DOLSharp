@@ -101,7 +101,7 @@ namespace DOL.GS.ServerRules
         public virtual void OnReleased(DOLEvent e, object sender, EventArgs args)
         {
             GamePlayer player = (GamePlayer)sender;
-            if (player.TempProperties.getObjectProperty(KILLED_BY_PLAYER_PROP, null) != null)
+            if (player.TempProperties.getProperty<object>(KILLED_BY_PLAYER_PROP, null) != null)
             {
                 player.TempProperties.removeProperty(KILLED_BY_PLAYER_PROP);
                 SetImmunity(player, ServerProperties.Properties.TIMER_KILLED_BY_PLAYER*1000);//When Killed by a Player
@@ -241,7 +241,7 @@ namespace DOL.GS.ServerRules
 					}
 
 				    // Player can't hit other members of the same BattleGroup
-				    BattleGroup mybattlegroup = (BattleGroup)playerAttacker.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+				    BattleGroup mybattlegroup = (BattleGroup)playerAttacker.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 
 				    if (mybattlegroup != null && mybattlegroup.IsInTheBattleGroup(playerDefender))
 				    {

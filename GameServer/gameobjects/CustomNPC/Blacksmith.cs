@@ -126,7 +126,7 @@ namespace DOL.GS
 		protected void BlacksmithDialogResponse(GamePlayer player, byte response)
 		{
 			WeakReference itemWeak =
-				(WeakReference) player.TempProperties.getObjectProperty(
+				(WeakReference) player.TempProperties.getProperty<object>(
 					REPAIR_ITEM_WEAK,
 					new WeakRef(null)
 					);

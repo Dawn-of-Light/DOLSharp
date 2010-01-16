@@ -167,8 +167,8 @@ namespace DOL.GS.Commands
 
 		protected int Proceed(RegionTimer timer)
 		{
-			GamePlayer player = (GamePlayer)timer.Properties.getObjectProperty("repair_player", null);
-			GameLiving obj = (GameLiving)timer.Properties.getObjectProperty("repair_target", null);
+			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>("repair_player", null);
+			GameLiving obj = (GameLiving)timer.Properties.getProperty<object>("repair_target", null);
 
 			if (player == null || obj == null)
 			{

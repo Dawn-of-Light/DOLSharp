@@ -529,7 +529,7 @@ namespace DOL.GS.Quests.Albion
 
 		public int OnCloseToDeadWilburCallBack(RegionTimer timer)
 		{
-			GameNPC pigHerderWyatt = (GameNPC)timer.Properties.getObjectProperty(questTitle, null);
+			GameNPC pigHerderWyatt = (GameNPC)timer.Properties.getProperty<object>(questTitle, null);
 			if (pigHerderWyatt != null)
 			{
 				pigHerderWyatt.Yell("The King's men will hear about this!!! Oh, Wilbur...");

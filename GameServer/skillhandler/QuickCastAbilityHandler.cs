@@ -68,7 +68,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			long quickcastChangeTick = player.TempProperties.getLongProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, 0L);
+			long quickcastChangeTick = player.TempProperties.getProperty<long>(GamePlayer.QUICK_CAST_CHANGE_TICK, 0L);
 			long changeTime = player.CurrentRegion.Time - quickcastChangeTick;
 			if(changeTime < DISABLE_DURATION)
 			{

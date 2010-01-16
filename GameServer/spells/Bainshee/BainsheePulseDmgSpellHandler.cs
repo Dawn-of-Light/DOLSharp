@@ -145,7 +145,7 @@ namespace DOL.GS.Spells
 					GameLiving target = Caster.CurrentRegion.GetObject(targetOID) as GameLiving;
 					if (target != null)
 					{
-						double effectiveness = (double)player.TempProperties.getObjectProperty(LOSEFFECTIVENESS, null);
+						double effectiveness = (double)player.TempProperties.getProperty<object>(LOSEFFECTIVENESS, null);
 						DealDamage(target, effectiveness);
 					}
 				}

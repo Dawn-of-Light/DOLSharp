@@ -233,7 +233,7 @@ namespace DOL.GS
 
 			public override void OnPlayerEnter(GamePlayer player)
 			{
-				GameRelic relicOnPlayer = player.TempProperties.getObjectProperty(GameRelic.PLAYER_CARRY_RELIC_WEAK, null) as GameRelic;
+				GameRelic relicOnPlayer = player.TempProperties.getProperty<object>(GameRelic.PLAYER_CARRY_RELIC_WEAK, null) as GameRelic;
 
 				if (relicOnPlayer == null)
 				{

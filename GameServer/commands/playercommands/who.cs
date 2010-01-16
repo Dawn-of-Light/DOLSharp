@@ -260,12 +260,12 @@ namespace DOL.GS.Commands
 				if (log.IsErrorEnabled)
 					log.Error("no currentzone in who commandhandler for player " + player.Name);
 			}
-			ChatGroup mychatgroup = (ChatGroup) player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+			ChatGroup mychatgroup = (ChatGroup) player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 			if (mychatgroup != null && (mychatgroup.Members.Contains(player) || mychatgroup.IsPublic && (bool)mychatgroup.Members[player] == true))
 			{
 				result.Append(" [CG]");
 			}
-            BattleGroup mybattlegroup = (BattleGroup)player.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+            BattleGroup mybattlegroup = (BattleGroup)player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
             if (mybattlegroup != null && (mybattlegroup.Members.Contains(player) || mybattlegroup.IsPublic && (bool)mybattlegroup.Members[player] == true))
             {
                 result.Append(" [BG]");
@@ -274,7 +274,7 @@ namespace DOL.GS.Commands
 			{
 				result.Append(" <ANON>");
 			}
-			if (player.TempProperties.getProperty(GamePlayer.AFK_MESSAGE, null) != null)
+			if (player.TempProperties.getProperty<string>(GamePlayer.AFK_MESSAGE) != null)
 			{
 				result.Append(" <AFK>");
 			}
@@ -441,7 +441,7 @@ namespace DOL.GS.Commands
 		{
 			public bool ApplyFilter(GamePlayer player)
 			{
-				ChatGroup cg = (ChatGroup)player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+				ChatGroup cg = (ChatGroup)player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 				//no chatgroup found
 				if (cg == null)
 					return false;

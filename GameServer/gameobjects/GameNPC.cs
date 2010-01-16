@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
  * This program is free software; you can redistribute it and/or
@@ -1050,7 +1050,7 @@ namespace DOL.GS
 
 			// Store original heading if not set already.
 
-			RestoreHeadingAction restore = (RestoreHeadingAction)TempProperties.getObjectProperty(RESTORE_HEADING_ACTION_PROP, null);
+			RestoreHeadingAction restore = (RestoreHeadingAction)TempProperties.getProperty<object>(RESTORE_HEADING_ACTION_PROP, null);
 
 			if (restore == null)
 			{
@@ -1401,7 +1401,7 @@ namespace DOL.GS
 			if (AttackState)
 			{
 				// if in last attack the enemy was out of range, we can attack him now immediately
-				AttackData ad = (AttackData)TempProperties.getObjectProperty(LAST_ATTACK_DATA, null);
+				AttackData ad = (AttackData)TempProperties.getProperty<object>(LAST_ATTACK_DATA, null);
 				if (ad != null && ad.AttackResult == eAttackResult.OutOfRange)
 				{
 					m_attackAction.Start(1);// schedule for next tick
@@ -3213,10 +3213,10 @@ namespace DOL.GS
 				Brain is IControlledBrain && 
 				(target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain != null && (target as GameNPC).Brain is IControlledBrain)))
 			{
-				GameObject lastTarget = (GameObject)this.TempProperties.getObjectProperty(Last_LOS_Target_Property, null);
+				GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(Last_LOS_Target_Property, null);
 				if (lastTarget != null && lastTarget == target)
 				{
-					long lastTick = this.TempProperties.getLongProperty(Last_LOS_Tick_Property, 0);
+					long lastTick = this.TempProperties.getProperty<long>(Last_LOS_Tick_Property, 0);
 					if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
 						return;
 				}
@@ -3450,7 +3450,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (CurrentRegion == null || CurrentRegion.Time - CHARMED_NOEXP_TIMEOUT < TempProperties.getLongProperty(CHARMED_TICK_PROP, 0L))
+				if (CurrentRegion == null || CurrentRegion.Time - CHARMED_NOEXP_TIMEOUT < TempProperties.getProperty<long>(CHARMED_TICK_PROP, 0L))
 					return false;
 				if (this.Brain is IControlledBrain)
 					return false;
@@ -3525,7 +3525,7 @@ namespace DOL.GS
 			}
 
 			// remove temp properties
-			TempProperties.RemoveAll();
+			TempProperties.removeAllProperties();
 
 			if (!(this is GamePet))
 				StartRespawn();
@@ -4243,7 +4243,7 @@ namespace DOL.GS
             }
 
 			// Let's do a few checks to make sure it doesn't just wait on the LOS check
-			int tempProp = TempProperties.getIntProperty(LOSTEMPCHECKER, 0);
+			int tempProp = TempProperties.getProperty<int>(LOSTEMPCHECKER, 0);
 
 			if (tempProp <= 0)
 			{
@@ -4282,12 +4282,12 @@ namespace DOL.GS
 
 		public void PetStartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
-			SpellLine line = (SpellLine)TempProperties.getObjectProperty(LOSCURRENTLINE, null);
-			Spell spell = (Spell)TempProperties.getObjectProperty(LOSCURRENTSPELL, null);
+			SpellLine line = (SpellLine)TempProperties.getProperty<object>(LOSCURRENTLINE, null);
+			Spell spell = (Spell)TempProperties.getProperty<object>(LOSCURRENTSPELL, null);
 
 			if ((response & 0x100) == 0x100 && line != null && spell != null)
 			{
-				GameObject target = (GameObject)TempProperties.getObjectProperty(LOSSPELLTARGET, null);
+				GameObject target = (GameObject)TempProperties.getProperty<object>(LOSSPELLTARGET, null);
 				GameObject lasttarget = TargetObject;
 				TargetObject = target;
 				base.CastSpell(spell, line);

@@ -1363,7 +1363,7 @@ namespace DOL.GS.Commands
                                             DisplaySyntax(client);
                                             return;
                                         }
-                                        ChatGroup cg = (ChatGroup)pname.Player.TempProperties.getObjectProperty(ChatGroup.CHATGROUP_PROPERTY, null);
+                                        ChatGroup cg = (ChatGroup)pname.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 
                                         if (name == pname.Player.Name)
                                         {
@@ -1393,7 +1393,7 @@ namespace DOL.GS.Commands
                                             DisplaySyntax(client);
                                             return;
                                         }
-                                        BattleGroup cg = (BattleGroup)pname.Player.TempProperties.getObjectProperty(BattleGroup.BATTLEGROUP_PROPERTY, null);
+                                        BattleGroup cg = (BattleGroup)pname.Player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 
                                         if (name == pname.Player.Name)
                                         {
@@ -1645,7 +1645,7 @@ namespace DOL.GS.Commands
             text.Add("  - Craftingskill : " + player.CraftingPrimarySkill + "");
             text.Add("  - Money : " + Money.GetString(player.GetCurrentMoney()) + "");
             text.Add("  - Model ID : " + player.Model);
-            text.Add("  - AFK Message: " + player.TempProperties.getProperty(GamePlayer.AFK_MESSAGE, null) + "");
+            text.Add("  - AFK Message: " + player.TempProperties.getProperty<string>(GamePlayer.AFK_MESSAGE) + "");
             text.Add(" ");
             text.Add("ACCOUNT INFORMATION ");
             text.Add("  - Account Name & IP : " + player.Client.Account.Name + " from " + player.Client.Account.LastLoginIP);

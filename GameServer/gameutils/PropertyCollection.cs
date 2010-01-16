@@ -16,8 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
+
 using log4net;
 
 namespace DOL.GS
@@ -28,291 +30,111 @@ namespace DOL.GS
 	public class PropertyCollection
 	{
 		/// <summary>
-		/// Defines a logger for this class.
+		/// Define a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		protected readonly HybridDictionary m_props = new HybridDictionary(0);
-
-		public PropertyCollection()
-		{
-		}
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// retrieve bool property
+		/// Container of properties
+		/// </summary>
+		private readonly HybridDictionary _props = new HybridDictionary();
+
+		/// <summary>
+		/// Retrieve a property
 		/// </summary>
 		/// <param name="key">key</param>
 		/// <param name="def">default value</param>
+		/// <param name="loggued">loggued if the value is not found</param>
 		/// <returns>value in properties or default value if not found</returns>
-		public bool getProperty(string key, bool def)
+		public T getProperty<T>(object key)
 		{
-			object property;
-
-			lock ( m_props.SyncRoot )
-			{
-				property = m_props[key];
-			}
-
-			return ( property is bool ) ? (bool)property : def;
+			return getProperty<T>(key, default(T));
 		}
-
-		/// <summary>
-		/// retrieve int property
-		/// </summary>
-		/// <param name="key">key</param>
-		/// <param name="def">default value</param>
-		/// <returns>value in properties or default value if not found</returns>
-		public int getIntProperty(string key, int def)
+		public T getProperty<T>(object key, T def)
+		{
+			return getProperty<T>(key, def, false);
+		}
+		public T getProperty<T>(object key, T def, bool loggued)
 		{
 			object val;
 
-			lock ( m_props.SyncRoot )
+			lock (_props)
+				val = _props[key];
+
+			if (loggued)
 			{
-				val = m_props[key];
-			}
-
-			if (val == null)
-				return def;
-			if (val is int)
-				return (int) val;
-			if (log.IsWarnEnabled)
-				log.Warn("Property " + key + " was requested as int but is " + val.GetType());
-			return (int) val;
-		}
-
-		/// <summary>
-		/// retrieve long property
-		/// </summary>
-		/// <param name="key">key</param>
-		/// <param name="def">default value</param>
-		/// <returns>value in properties or default value if not found</returns>
-		public long getLongProperty(string key, long def)
-		{
-			object val;
-
-			lock ( m_props.SyncRoot )
-			{
-				val = m_props[key];
-			}
-
-			if (val == null)
-				return def;
-			if (val is long)
-				return (long) val;
-			if (log.IsWarnEnabled)
-				log.Warn("Property " + key + " was requested as long but is " + val.GetType());
-			return (long) val;
-		}
-
-		/// <summary>
-		/// retrieve string property
-		/// </summary>
-		/// <param name="key">key</param>
-		/// <param name="def">default value</param>
-		/// <returns>value in properties or default value if not found</returns>
-		public string getProperty(string key, string def)
-		{
-			object val;
-
-			lock ( m_props.SyncRoot )
-			{
-				val = m_props[key];
-			}
-
-			return (val is string) ? (string) val : def;
-		}
-
-		//Eden
-		public string[] GetAllProperties()
-		{
-			string[] temp = new string[m_props.Count];
-			
-			lock ( m_props.SyncRoot )
-			{
-				int i = 0;
-				foreach ( string key in m_props.Keys )
+				if (val == null)
 				{
-					temp[i] = key;
-					i++;
+					if ( Log.IsWarnEnabled)
+						Log.Warn("Property '" + key + "' is required but not found, default value '" + def + "' is used.");
+					
+					return def;
 				}
 			}
-
-            return temp;
+			
+			if (val is T)
+				return (T)val;
+			
+			return def;
 		}
-
+		
 		/// <summary>
-		/// retrieve object property
-		/// </summary>
-		/// <param name="key">key</param>
-		/// <param name="def">default value</param>
-		/// <returns>value in properties or default value if not found</returns>
-		public object getObjectProperty(string key, object def)
-		{
-			object val;
-
-			lock ( m_props.SyncRoot )
-			{
-				val = m_props[key];
-			}
-
-			return (val != null) ? val : def;
-		}
-
-		/// <summary>
-		/// retrieve object property
-		/// </summary>
-		/// <param name="key">key</param>
-		/// <param name="def">default value</param>
-		/// <returns>value in properties or default value if not found</returns>
-		public object getObjectProperty(object key, object def)
-		{
-			object val;
-
-			lock ( m_props.SyncRoot )
-			{
-				val = m_props[key];
-			}
-
-			return (val != null) ? val : def;
-		}
-
-		/// <summary>
-		/// retrieve bool property but log if the property doesnt exist
-		/// </summary>
-		/// <param name="key">key</param>
-		/// <param name="def">default value</param>
-		/// <returns>value in properties or default value if not found</returns>
-		public bool getRequiredProperty(string key, bool def)
-		{
-			object val;
-
-			lock ( m_props.SyncRoot )
-			{
-				val = m_props[key];
-			}
-
-			if (val == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Property '" + key + "' is required but not found, default value '" + def + "' is used.");
-			}
-
-			return (val is bool) ? (bool) val : def;
-		}
-
-		/// <summary>
-		/// retrieve int property but log if the property doesnt exist
-		/// </summary>
-		/// <param name="key">key</param>
-		/// <param name="def">default value</param>
-		/// <returns>value in properties or default value if not found</returns>
-		public int getRequiredProperty(string key, int def)
-		{
-			object val;
-
-			lock ( m_props.SyncRoot )
-			{
-				val = m_props[key];
-			}
-
-			if (val == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Property '" + key + "' is required but not found, default value '" + def + "' is used.");
-			}
-
-			return (val is int) ? (int) val : def;
-		}
-
-		/// <summary>
-		/// retrieve string property but log if the property doesnt exist
-		/// </summary>
-		/// <param name="key">key</param>
-		/// <param name="def">default value</param>
-		/// <returns>value in properties or default value if not found</returns>
-		public string getRequiredProperty(string key, string def)
-		{
-			object val;
-
-			lock ( m_props.SyncRoot )
-			{
-				val = m_props[key];
-			}
-
-			if (val == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Property '" + key + "' is required but not found, default value '" + def + "' is used.");
-			}
-
-			return (val is string) ? (string) val : def;
-		}
-
-		/// <summary>
-		/// retrieve object property but log if the property doesnt exist
-		/// </summary>
-		/// <param name="key">key</param>
-		/// <param name="def">default value</param>
-		/// <returns>value in properties or default value if not found</returns>
-		public object getRequiredProperty(string key, object def)
-		{
-			object val;
-
-			lock ( m_props.SyncRoot )
-			{
-				val = m_props[key];
-			}
-
-			if (val == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Property '" + key + "' is required but not found, default value '" + def + "' is used.");
-				return def;
-			}
-
-			return val;
-		}
-
-		/// <summary>
-		/// sets a property
+		/// Set a property
 		/// </summary>
 		/// <param name="key">key</param>
 		/// <param name="val">value</param>
 		public void setProperty(object key, object val)
 		{
-			lock ( m_props.SyncRoot )
+			lock (_props)
 			{
-				if ( val == null )
+				if (val == null)
 				{
-					m_props.Remove( key );
+					_props.Remove(key);
 				}
 				else
 				{
-					m_props[key] = val;
+					_props[key] = val;
 				}
 			}
 		}
 
 		/// <summary>
-		/// removes a property
+		/// Remove a property
 		/// </summary>
 		/// <param name="key">key</param>
 		public void removeProperty(object key)
 		{
-			lock ( m_props.SyncRoot )
+			lock (_props)
 			{
-				m_props.Remove( key );
+				_props.Remove(key);
 			}
 		}
 
 		/// <summary>
-		/// remove all properties
+		/// List all properties
 		/// </summary>
-		public void RemoveAll()
+		/// <returns></returns>
+		public List<string> getAllProperties()
 		{
-			lock ( m_props.SyncRoot )
+			var temp = new List<string>();
+
+			lock (_props)
 			{
-				m_props.Clear();
+				foreach (string key in _props.Keys)
+					temp.Add(key);
+			}
+
+			return temp;
+		}
+
+		/// <summary>
+		/// Remove all properties
+		/// </summary>
+		public void removeAllProperties()
+		{
+			lock (_props)
+			{
+				_props.Clear();
 			}
 		}
 	}

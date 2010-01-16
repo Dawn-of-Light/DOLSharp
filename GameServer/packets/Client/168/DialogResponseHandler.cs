@@ -270,20 +270,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							if (m_response == 0x00)
 							{
-								if (player.TempProperties.getLongProperty(House.MONEYFORHOUSERENT, -1) != -1)
+								if (player.TempProperties.getProperty<long>(House.MONEYFORHOUSERENT, -1) != -1)
 								{
 									player.TempProperties.removeProperty(House.MONEYFORHOUSERENT);
 								}
-								if (player.TempProperties.getLongProperty(House.BPSFORHOUSERENT, -1) != -1)
+								if (player.TempProperties.getProperty<long>(House.BPSFORHOUSERENT, -1) != -1)
 								{
 									player.TempProperties.removeProperty(House.BPSFORHOUSERENT);
 								}
 								player.TempProperties.removeProperty(House.HOUSEFORHOUSERENT);
 								return;
 							}
-							House house = player.TempProperties.getObjectProperty(House.HOUSEFORHOUSERENT, null) as House;
+							House house = player.TempProperties.getProperty<object>(House.HOUSEFORHOUSERENT, null) as House;
 
-							long MoneyToAdd = player.TempProperties.getLongProperty(House.MONEYFORHOUSERENT, -1);
+							long MoneyToAdd = player.TempProperties.getProperty<long>(House.MONEYFORHOUSERENT, -1);
 							if (MoneyToAdd != -1)
 							{
 								if (MoneyToAdd + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * 4)
@@ -302,7 +302,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 							else
 							{
-								long BPsToMoney = player.TempProperties.getLongProperty(House.BPSFORHOUSERENT, 0);
+								long BPsToMoney = player.TempProperties.getProperty<long>(House.BPSFORHOUSERENT, 0);
 								if (BPsToMoney + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * 4)
 									BPsToMoney = (HouseMgr.GetRentByModel(house.Model) * 4) - house.KeptMoney;
 

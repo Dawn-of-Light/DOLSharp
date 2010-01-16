@@ -285,7 +285,7 @@ namespace DOL.GS.Spells
 
             if (npc == null) return;
 
-            GamePlayer target = npc.TempProperties.getObjectProperty("target", null) as GamePlayer;
+            GamePlayer target = npc.TempProperties.getProperty<object>("target", null) as GamePlayer;
 
             if (target == null || !target.IsAlive) return;
             GameEventMgr.RemoveHandler(npc, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(ArriveAtTarget));

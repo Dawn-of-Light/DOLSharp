@@ -125,7 +125,7 @@ namespace DOL.GS.Commands
 		protected void LastNameDialogResponse(GamePlayer player, byte response)
 		{
 			string NewLastName =
-				(string)player.TempProperties.getObjectProperty(
+				(string)player.TempProperties.getProperty<object>(
 					LASTNAME_WEAK,
 					String.Empty
 				);

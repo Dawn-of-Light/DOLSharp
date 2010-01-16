@@ -52,7 +52,7 @@ namespace DOL.GS.Commands
 				DisplaySyntax(client);
 				return;
 			}
-			Faction myfaction = (Faction)client.Player.TempProperties.getObjectProperty(TEMP_FACTION_LAST, null);
+			Faction myfaction = (Faction)client.Player.TempProperties.getProperty<object>(TEMP_FACTION_LAST, null);
 			switch (args[1])
 			{
 				#region Create
