@@ -57,11 +57,11 @@ namespace DOL
 		/// <param name="realDelegate">the normal delegate</param>
 		public WeakMulticastDelegate(Delegate realDelegate)
 		{
-			if(realDelegate == null)
+			if (realDelegate == null)
 				throw new ArgumentNullException("realDelegate");
 
 			//Is it a static?
-			if(realDelegate.Target != null)
+			if (realDelegate.Target != null)
 				_weakRef = new WeakRef(realDelegate.Target);
 
 			_method = realDelegate.Method;
@@ -75,7 +75,7 @@ namespace DOL
 		/// <returns>the new combinded weak multicast delegate</returns>
 		public static WeakMulticastDelegate Combine(WeakMulticastDelegate weakDelegate, Delegate realDelegate)
 		{
-			if(realDelegate == null)
+			if (realDelegate == null)
 				return null;
 
 			return (weakDelegate == null) ? new WeakMulticastDelegate(realDelegate) : weakDelegate.Combine(realDelegate);
@@ -90,7 +90,7 @@ namespace DOL
 		/// <returns>the new combined weak multicast delegate</returns>
 		public static WeakMulticastDelegate CombineUnique(WeakMulticastDelegate weakDelegate, Delegate realDelegate)
 		{
-			if(realDelegate == null)
+			if (realDelegate == null)
 				return null;
 
 			return (weakDelegate == null) ? new WeakMulticastDelegate(realDelegate) : weakDelegate.CombineUnique(realDelegate);
@@ -118,18 +118,18 @@ namespace DOL
 		/// <returns>true if equal, false if not equal</returns>
 		protected bool Equals(Delegate realDelegate)
 		{
-			if(realDelegate == null)
+			if (realDelegate == null)
 				return false;
 
-			if(_weakRef == null)
+			if (_weakRef == null)
 			{
-				if(realDelegate.Target == null && _method == realDelegate.Method)
+				if (realDelegate.Target == null && _method == realDelegate.Method)
 					return true;
 
 				return false;
 			}
 
-			if(_weakRef.Target == realDelegate.Target && _method == realDelegate.Method)
+			if (_weakRef.Target == realDelegate.Target && _method == realDelegate.Method)
 				return true;
 
 			return false;
@@ -145,13 +145,13 @@ namespace DOL
 		{
 			bool found = Equals(realDelegate);
 
-			if(!found && _prev != null)
+			if (!found && _prev != null)
 			{
 				WeakMulticastDelegate curNode = _prev;
 
-				while(!found && curNode != null)
+				while (!found && curNode != null)
 				{
-					if(curNode.Equals(realDelegate))
+					if (curNode.Equals(realDelegate))
 						found = true;
 
 					curNode = curNode._prev;
@@ -191,7 +191,7 @@ namespace DOL
 		/// <returns>the new weak multicast delegate</returns>
 		public static WeakMulticastDelegate Remove(WeakMulticastDelegate weakDelegate, Delegate realDelegate)
 		{
-			if(realDelegate == null || weakDelegate == null)
+			if (realDelegate == null || weakDelegate == null)
 				return null;
 
 			return weakDelegate.Remove(realDelegate);
@@ -204,7 +204,7 @@ namespace DOL
 		/// <returns>the new weak multicast delegate</returns>
 		private WeakMulticastDelegate Remove(Delegate realDelegate)
 		{
-			if(Equals(realDelegate))
+			if (Equals(realDelegate))
 			{
 				return _prev;
 			}
@@ -212,9 +212,9 @@ namespace DOL
 			WeakMulticastDelegate current = _prev;
 			WeakMulticastDelegate last = this;
 
-			while(current != null)
+			while (current != null)
 			{
-				if(current.Equals(realDelegate))
+				if (current.Equals(realDelegate))
 				{
 					last._prev = current._prev;
 					current._prev = null;
@@ -238,23 +238,23 @@ namespace DOL
 		{
 			WeakMulticastDelegate current = this;
 
-			while(current != null)
+			while (current != null)
 			{
 				int start = Environment.TickCount;
 
-				if(current._weakRef == null)
+				if (current._weakRef == null)
 				{
 					current._method.Invoke(null, args);
 				}
-				else if(current._weakRef.IsAlive)
+				else if (current._weakRef.IsAlive)
 				{
 					current._method.Invoke(current._weakRef.Target, args);
 				}
 
-				if(Environment.TickCount - start > 500)
+				if (Environment.TickCount - start > 500)
 				{
-					if(Log.IsWarnEnabled)
-						Log.Warn("Invoke took " + (Environment.TickCount - start) + "ms! " + current.ToString());
+					if (Log.IsWarnEnabled)
+						Log.Warn("Invoke took " + (Environment.TickCount - start) + "ms! " + current);
 				}
 
 				current = current._prev;
@@ -271,31 +271,31 @@ namespace DOL
 		{
 			WeakMulticastDelegate current = this;
 
-			while(current != null)
+			while (current != null)
 			{
 				int start = Environment.TickCount;
 
 				try
 				{
-					if(current._weakRef == null)
+					if (current._weakRef == null)
 					{
 						current._method.Invoke(null, args);
 					}
-					else if(current._weakRef.IsAlive)
+					else if (current._weakRef.IsAlive)
 					{
 						current._method.Invoke(current._weakRef.Target, args);
 					}
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
-					if(Log.IsErrorEnabled)
+					if (Log.IsErrorEnabled)
 						Log.Error("InvokeSafe", ex);
 				}
 
-				if(Environment.TickCount - start > 500)
+				if (Environment.TickCount - start > 500)
 				{
-					if(Log.IsWarnEnabled)
-						Log.Warn("InvokeSafe took " + (Environment.TickCount - start) + "ms! " + current.ToString());
+					if (Log.IsWarnEnabled)
+						Log.Warn("InvokeSafe took " + (Environment.TickCount - start) + "ms! " + current);
 				}
 
 				current = current._prev;
@@ -313,10 +313,10 @@ namespace DOL
 			WeakMulticastDelegate current = this;
 			int count = 0;
 
-			while(current != null)
+			while (current != null)
 			{
 				count++;
-				if(current._weakRef == null)
+				if (current._weakRef == null)
 				{
 					builder.Append("\t");
 					builder.Append(count);
@@ -326,7 +326,7 @@ namespace DOL
 				}
 				else
 				{
-					if(current._weakRef.IsAlive)
+					if (current._weakRef.IsAlive)
 					{
 						builder.Append("\t");
 						builder.Append(count);
@@ -359,13 +359,13 @@ namespace DOL
 		public override string ToString()
 		{
 			Type declaringType = null;
-			if(_method != null)
+			if (_method != null)
 			{
 				declaringType = _method.DeclaringType;
 			}
 
 			object target = null;
-			if(_weakRef != null && _weakRef.IsAlive)
+			if (_weakRef != null && _weakRef.IsAlive)
 			{
 				target = _weakRef.Target;
 			}

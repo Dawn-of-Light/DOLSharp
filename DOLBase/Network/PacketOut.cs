@@ -17,12 +17,11 @@
  *
  */
 using System.IO;
-using System.Text;
 
-namespace DOL
+namespace DOL.Network
 {
 	/// <summary>
-	/// Writes data to an outgoing packet stream
+	/// Writes primitives data types to an underlying stream.
 	/// </summary>
 	public class PacketOut : MemoryStream, IPacket
 	{
@@ -50,6 +49,19 @@ namespace DOL
 		public PacketOut(byte[] buf, int start, int size) : base(buf, start, size)
 		{
 		}
+
+		#region IPacket Members
+
+		/// <summary>
+		/// Generates a human-readable dump of the packet contents.
+		/// </summary>
+		/// <returns>a string representing the packet contents in hexadecimal</returns>
+		public string ToHumanReadable()
+		{
+			return Marshal.ToHexDump(ToString(), ToArray());
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Writes a 2 byte (short) value to the stream in network byte order
@@ -184,7 +196,7 @@ namespace DOL
 				return;
 			}
 
-			byte[] bytes = Encoding.Default.GetBytes(str);
+			byte[] bytes = Constants.DefaultEncoding.GetBytes(str);
 			WriteByte((byte) bytes.Length);
 			Write(bytes, 0, bytes.Length);
 		}
@@ -209,7 +221,7 @@ namespace DOL
 			if (str.Length <= 0)
 				return;
 
-			byte[] bytes = Encoding.Default.GetBytes(str);
+			byte[] bytes = Constants.DefaultEncoding.GetBytes(str);
 			Write(bytes, 0, bytes.Length);
 		}
 
@@ -223,7 +235,7 @@ namespace DOL
 			if (str.Length <= 0)
 				return;
 
-			byte[] bytes = Encoding.Default.GetBytes(str);
+			byte[] bytes = Constants.DefaultEncoding.GetBytes(str);
 			Write(bytes, 0, bytes.Length < maxlen ? bytes.Length : maxlen);
 		}
 
@@ -249,24 +261,18 @@ namespace DOL
 				return;
 			}
 
-			byte[] bytes = Encoding.Default.GetBytes(str);
+			byte[] bytes = Constants.DefaultEncoding.GetBytes(str);
 			Write(bytes, 0, len > bytes.Length ? bytes.Length : len);
 			Position = pos + len;
 		}
 
-		#region IPacket Members
-
 		/// <summary>
-		/// Generates a human-readable dump of the packet contents.
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
 		/// </summary>
-		/// <returns>a string representing the packet contents in hexadecimal</returns>
-		public string ToHumanReadable()
-		{
-			return Marshal.ToHexDump(ToString(), ToArray());
-		}
-
-		#endregion
-
+		/// <returns>
+		/// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </returns>
+		/// <filterpriority>2</filterpriority>
 		public override string ToString()
 		{
 			return GetType().Name;

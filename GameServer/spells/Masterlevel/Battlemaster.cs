@@ -477,7 +477,7 @@ namespace DOL.GS.Spells
             base.FinishSpellCast(target);
 
             //we need to make sure the spell is only disabled if the attack was a success
-            int isDisabled = Caster.TempProperties.getProperty<int>(DISABLE, 0);
+            int isDisabled = Caster.TempProperties.getProperty<int>(DISABLE);
             
             //if this value is greater than 0 then we know that their weapon did not damage the target
             //the skill's disable timer should be set to their attackspeed 

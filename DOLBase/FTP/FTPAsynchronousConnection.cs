@@ -18,10 +18,13 @@
  */
 using System;
 using System.Collections;
-using System.Threading;
 using System.IO;
+using System.Threading;
+using System.Timers;
+using Timer=System.Timers.Timer;
 
 //Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
+
 namespace DOL.FTP
 {
 	/// <summary>
@@ -29,26 +32,19 @@ namespace DOL.FTP
 	/// </summary>
 	public class FTPAsynchronousConnection : FTPConnection
 	{
-		private struct FileTransferStruct
-		{
-			public string RemoteFileName;
-			public string LocalFileName;
-			public FTPFileTransferType Type;
-		}
-
-		private ArrayList mThreadPool;
-		private Queue mSendFileTransfersQueue;
-		private Queue mGetFileTransfersQueue;
-		private Queue mDeleteFileQueue;
-		private Queue mSetCurrentDirectoryQueue;
-		private Queue mMakeDirQueue;
-		private Queue mRemoveDirQueue;
-		private System.Timers.Timer mTimer;
+		private readonly Queue mDeleteFileQueue;
+		private readonly Queue mGetFileTransfersQueue;
+		private readonly Queue mMakeDirQueue;
+		private readonly Queue mRemoveDirQueue;
+		private readonly Queue mSendFileTransfersQueue;
+		private readonly Queue mSetCurrentDirectoryQueue;
+		private readonly ArrayList mThreadPool;
+		private readonly Timer mTimer;
 
 		/// <summary>
 		/// Creates a new asynchronous FTP connection
 		/// </summary>
-		public FTPAsynchronousConnection() : base()
+		public FTPAsynchronousConnection()
 		{
 			mThreadPool = new ArrayList();
 			mSendFileTransfersQueue = new Queue();
@@ -57,8 +53,8 @@ namespace DOL.FTP
 			mSetCurrentDirectoryQueue = new Queue();
 			mMakeDirQueue = new Queue();
 			mRemoveDirQueue = new Queue();
-			mTimer = new System.Timers.Timer(100);
-			mTimer.Elapsed+=new System.Timers.ElapsedEventHandler(ManageThreads);
+			mTimer = new Timer(100);
+			mTimer.Elapsed += ManageThreads;
 			mTimer.Start();
 		}
 
@@ -96,7 +92,7 @@ namespace DOL.FTP
 		{
 			base.Open(pRemoteHost, pRemotePort, pUser, pPassword);
 		}
-		
+
 		/// <summary>
 		/// Opens a new FTP connection to a remote host
 		/// </summary>
@@ -109,17 +105,18 @@ namespace DOL.FTP
 		{
 			base.Open(pRemoteHost, pRemotePort, pUser, pPassword, pMode);
 		}
-		
+
 		private Thread CreateGetFileThread(string pRemoteFileName, string pLocalFileName, FTPFileTransferType pType)
 		{
-			FileTransferStruct aFT = new FileTransferStruct();
+			var aFT = new FileTransferStruct();
 			aFT.LocalFileName = pLocalFileName;
 			aFT.RemoteFileName = pRemoteFileName;
 			aFT.Type = pType;
 			mGetFileTransfersQueue.Enqueue(aFT);
 
-			Thread aThread = new Thread(new ThreadStart(GetFileFromQueue));
-			aThread.Name = "GetFileFromQueue " + pRemoteFileName + ", " + pLocalFileName + ", " + pType.ToString();;
+			var aThread = new Thread(GetFileFromQueue);
+			aThread.Name = "GetFileFromQueue " + pRemoteFileName + ", " + pLocalFileName + ", " + pType;
+			;
 			return aThread;
 		}
 
@@ -146,20 +143,21 @@ namespace DOL.FTP
 
 		private void GetFileFromQueue()
 		{
-			FileTransferStruct aFT = (FileTransferStruct)mGetFileTransfersQueue.Dequeue();
+			var aFT = (FileTransferStruct) mGetFileTransfersQueue.Dequeue();
 			base.GetFile(aFT.RemoteFileName, aFT.LocalFileName, aFT.Type);
 		}
 
 		private Thread CreateSendFileThread(string pLocalFileName, string pRemoteFileName, FTPFileTransferType pType)
 		{
-			FileTransferStruct aFT = new FileTransferStruct();
+			var aFT = new FileTransferStruct();
 			aFT.LocalFileName = pLocalFileName;
 			aFT.RemoteFileName = pRemoteFileName;
 			aFT.Type = pType;
 			mSendFileTransfersQueue.Enqueue(aFT);
 
-			Thread aThread = new Thread(new ThreadStart(SendFileFromQueue));
-			aThread.Name = "GetFileFromQueue " + pLocalFileName + ", " + pRemoteFileName + ", " + pType.ToString();;
+			var aThread = new Thread(SendFileFromQueue);
+			aThread.Name = "GetFileFromQueue " + pLocalFileName + ", " + pRemoteFileName + ", " + pType;
+			;
 			return aThread;
 		}
 
@@ -172,7 +170,7 @@ namespace DOL.FTP
 		{
 			SendFile(pLocalFileName, Path.GetFileName(pLocalFileName), pType);
 		}
-		
+
 		/// <summary>
 		/// Sends a file to the remote host
 		/// </summary>
@@ -186,7 +184,7 @@ namespace DOL.FTP
 
 		private void SendFileFromQueue()
 		{
-			FileTransferStruct aFT = (FileTransferStruct)mSendFileTransfersQueue.Dequeue();
+			var aFT = (FileTransferStruct) mSendFileTransfersQueue.Dequeue();
 			base.SendFile(aFT.LocalFileName, aFT.RemoteFileName, aFT.Type);
 		}
 
@@ -203,14 +201,14 @@ namespace DOL.FTP
 		{
 			mDeleteFileQueue.Enqueue(pRemoteFileName);
 
-			Thread aThread = new Thread(new ThreadStart(DeleteFileFromQueue));
+			var aThread = new Thread(DeleteFileFromQueue);
 			aThread.Name = "DeleteFileFromQueue " + pRemoteFileName;
 			return aThread;
 		}
-		
+
 		private void DeleteFileFromQueue()
 		{
-			base.DeleteFile((string)mDeleteFileQueue.Dequeue());
+			base.DeleteFile((string) mDeleteFileQueue.Dequeue());
 		}
 
 		/// <summary>
@@ -226,14 +224,14 @@ namespace DOL.FTP
 		{
 			mSetCurrentDirectoryQueue.Enqueue(pRemotePath);
 
-			Thread aThread = new Thread(new ThreadStart(SetCurrentDirectoryFromQueue));
+			var aThread = new Thread(SetCurrentDirectoryFromQueue);
 			aThread.Name = "SetCurrentDirectoryFromQueue " + pRemotePath;
 			return aThread;
 		}
 
 		private void SetCurrentDirectoryFromQueue()
 		{
-			base.SetCurrentDirectory((string)mSetCurrentDirectoryQueue.Dequeue());
+			base.SetCurrentDirectory((string) mSetCurrentDirectoryQueue.Dequeue());
 		}
 
 		/// <summary>
@@ -249,7 +247,7 @@ namespace DOL.FTP
 		{
 			mMakeDirQueue.Enqueue(pDirectoryName);
 
-			Thread aThread = new Thread(new ThreadStart(MakeDirFromQueue));
+			var aThread = new Thread(MakeDirFromQueue);
 			aThread.Name = "MakeDirFromQueue " + pDirectoryName;
 			return aThread;
 		}
@@ -258,7 +256,7 @@ namespace DOL.FTP
 		{
 			base.MakeDir((String) mMakeDirQueue.Dequeue());
 		}
-			
+
 		/// <summary>
 		/// Removes a remote directory
 		/// </summary>
@@ -272,7 +270,7 @@ namespace DOL.FTP
 		{
 			mRemoveDirQueue.Enqueue(pDirectoryName);
 
-			Thread aThread = new Thread(new ThreadStart(RemoveDirFromQueue));
+			var aThread = new Thread(RemoveDirFromQueue);
 			aThread.Name = "RemoveDirFromQueue " + pDirectoryName;
 			return aThread;
 		}
@@ -291,14 +289,14 @@ namespace DOL.FTP
 			base.Close();
 		}
 
-		private void ManageThreads(Object state, System.Timers.ElapsedEventArgs e)
+		private void ManageThreads(Object state, ElapsedEventArgs e)
 		{
 			Thread aThread;
 			try
 			{
 				LockThreadPool();
 				aThread = PeekThread();
-				if(aThread != null)
+				if (aThread != null)
 				{
 					switch (aThread.ThreadState)
 					{
@@ -316,15 +314,15 @@ namespace DOL.FTP
 				}
 				UnlockThreadPool();
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 				UnlockThreadPool();
 			}
 		}
-		
+
 		private void WaitAllThreads()
 		{
-			while(mThreadPool.Count!=0)
+			while (mThreadPool.Count != 0)
 			{
 				Thread.Sleep(100);
 			}
@@ -336,11 +334,12 @@ namespace DOL.FTP
 			mThreadPool.Add(aThread);
 			UnlockThreadPool();
 		}
+
 		private Thread DequeueThread()
 		{
 			Thread aThread;
 			LockThreadPool();
-			aThread = (Thread)mThreadPool[0];
+			aThread = (Thread) mThreadPool[0];
 			mThreadPool.RemoveAt(0);
 			UnlockThreadPool();
 			return aThread;
@@ -350,9 +349,9 @@ namespace DOL.FTP
 		{
 			Thread aThread = null;
 			LockThreadPool();
-			if(mThreadPool.Count > 0)
+			if (mThreadPool.Count > 0)
 			{
-				aThread = (Thread)mThreadPool[0];
+				aThread = (Thread) mThreadPool[0];
 			}
 			UnlockThreadPool();
 			return aThread;
@@ -367,5 +366,16 @@ namespace DOL.FTP
 		{
 			Monitor.Exit(mThreadPool);
 		}
+
+		#region Nested type: FileTransferStruct
+
+		private struct FileTransferStruct
+		{
+			public string LocalFileName;
+			public string RemoteFileName;
+			public FTPFileTransferType Type;
+		}
+
+		#endregion
 	}
 }

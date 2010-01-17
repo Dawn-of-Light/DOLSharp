@@ -87,7 +87,7 @@ namespace DOL.GS.Spells
 			if (!ad.IsMeleeAttack && ad.AttackType != AttackData.eAttackType.Ranged)
 				return;
 
-			int ablativehp = living.TempProperties.getProperty<int>(ABLATIVE_HP, 0);
+			int ablativehp = living.TempProperties.getProperty<int>(ABLATIVE_HP);
 			double absorbPercent = 25;
 			if (Spell.Damage > 0)
 				absorbPercent = Spell.Damage;

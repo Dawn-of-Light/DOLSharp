@@ -18,10 +18,10 @@
  */
 using System.IO;
 
-namespace DOL
+namespace DOL.Network
 {
 	/// <summary>
-	/// Class reads data from incoming incoming packets
+	/// Reads primitive data types from an underlying stream.
 	/// </summary>
 	public class PacketIn : MemoryStream, IPacket
 	{
@@ -42,6 +42,19 @@ namespace DOL
 		public PacketIn(byte[] buf, int start, int size) : base(buf, start, size)
 		{
 		}
+
+		#region IPacket Members
+
+		/// <summary>
+		/// Generates a human-readable dump of the packet contents.
+		/// </summary>
+		/// <returns>a string representing the packet contents in hexadecimal</returns>
+		public string ToHumanReadable()
+		{
+			return Marshal.ToHexDump(ToString(), ToArray());
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Reads in 2 bytes and converts it from network to host byte order
@@ -122,19 +135,13 @@ namespace DOL
 			return Marshal.ConvertToUInt32(v4, v3, v2, v1);
 		}
 
-		#region IPacket Members
-
 		/// <summary>
-		/// Generates a human-readable dump of the packet contents.
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
 		/// </summary>
-		/// <returns>a string representing the packet contents in hexadecimal</returns>
-		public string ToHumanReadable()
-		{
-			return Marshal.ToHexDump(ToString(), ToArray());
-		}
-
-		#endregion
-
+		/// <returns>
+		/// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </returns>
+		/// <filterpriority>2</filterpriority>
 		public override string ToString()
 		{
 			return GetType().Name;

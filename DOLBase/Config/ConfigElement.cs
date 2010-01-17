@@ -27,17 +27,19 @@ namespace DOL.Config
 	public class ConfigElement
 	{
 		/// <summary>
-		/// The parent element of this element
-		/// </summary>
-		protected ConfigElement m_parent = null;
-		/// <summary>
 		/// All the children elements
 		/// </summary>
 		protected Hashtable m_children = new Hashtable();
+
+		/// <summary>
+		/// The parent element of this element
+		/// </summary>
+		protected ConfigElement m_parent;
+
 		/// <summary>
 		/// The value of this element
 		/// </summary>
-		protected string m_value = null;
+		protected string m_value;
 
 		/// <summary>
 		/// Constructs a new config element with the given parent.
@@ -49,18 +51,6 @@ namespace DOL.Config
 		}
 
 		/// <summary>
-		/// Creates and returns a new configuration element.
-		/// Can be used to create own configuration elements by
-		/// overwriting this method
-		/// </summary>
-		/// <param name="parent">The parent element of the newly created element</param>
-		/// <returns>The newly created config element</returns>
-		protected virtual ConfigElement GetNewConfigElement(ConfigElement parent)
-		{
-			return new ConfigElement(parent);
-		}
-
-		/// <summary>
 		/// Returns the child element with the specified key
 		/// </summary>
 		public ConfigElement this[string key]
@@ -69,7 +59,7 @@ namespace DOL.Config
 			{
 				lock (m_children) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
-					if(!m_children.Contains(key))
+					if (!m_children.Contains(key))
 					{
 						m_children.Add(key, GetNewConfigElement(this));
 					}
@@ -83,6 +73,42 @@ namespace DOL.Config
 					m_children[key] = value;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Gets the parent element of this config element
+		/// </summary>
+		public ConfigElement Parent
+		{
+			get { return m_parent; }
+		}
+
+		/// <summary>
+		/// Returns if this element has children
+		/// </summary>
+		public bool HasChildren
+		{
+			get { return m_children.Count > 0; }
+		}
+
+		/// <summary>
+		/// Returns a Hashtable with the children of this element
+		/// </summary>
+		public Hashtable Children
+		{
+			get { return m_children; }
+		}
+
+		/// <summary>
+		/// Creates and returns a new configuration element.
+		/// Can be used to create own configuration elements by
+		/// overwriting this method
+		/// </summary>
+		/// <param name="parent">The parent element of the newly created element</param>
+		/// <returns>The newly created config element</returns>
+		protected virtual ConfigElement GetNewConfigElement(ConfigElement parent)
+		{
+			return new ConfigElement(parent);
 		}
 
 		/// <summary>
@@ -113,7 +139,7 @@ namespace DOL.Config
 		{
 			return int.Parse(m_value);
 		}
-		
+
 		/// <summary>
 		/// Gets the value of this config element integer
 		/// and if no value is set returns the default value
@@ -133,7 +159,7 @@ namespace DOL.Config
 		{
 			return long.Parse(m_value);
 		}
-		
+
 		/// <summary>
 		/// Gets the value of this config element as long
 		/// and if no value is set returns the default value
@@ -173,30 +199,5 @@ namespace DOL.Config
 		{
 			m_value = value.ToString();
 		}
-
-		/// <summary>
-		/// Gets the parent element of this config element
-		/// </summary>
-		public ConfigElement Parent
-		{
-			get { return m_parent; }
-		}
-
-		/// <summary>
-		/// Returns if this element has children
-		/// </summary>
-		public bool HasChildren
-		{
-			get { return m_children.Count > 0; }
-		}
-
-		/// <summary>
-		/// Returns a Hashtable with the children of this element
-		/// </summary>
-		public Hashtable Children
-		{
-			get { return m_children; }
-		}
-
 	}
 }

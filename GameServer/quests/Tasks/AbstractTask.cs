@@ -534,7 +534,7 @@ namespace DOL.GS.Quests
 				player.Out.SendMessage("You cannot do more than "+MaxTasksDone(player.Level).ToString()+" tasks at your level!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			else if (player.TempProperties.getProperty<int>(CHECK_TASK_TICK, 0) > Environment.TickCount)
+			else if (player.TempProperties.getProperty<int>(CHECK_TASK_TICK) > Environment.TickCount)
 			{
 				player.Out.SendMessage("I have no tasks for you at the moment.  Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				return false;
