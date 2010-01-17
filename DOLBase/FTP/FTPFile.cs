@@ -19,6 +19,7 @@
 using System;
 
 //Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
+
 namespace DOL.FTP
 {
 	/// <summary>
@@ -26,25 +27,9 @@ namespace DOL.FTP
 	/// </summary>
 	public class FTPFile
 	{
-		private String mName;
-
-		/// <summary>
-		/// Creates a new FTP file
-		/// </summary>
-		public FTPFile()
-		{
-		}
-
 		/// <summary>
 		/// Sets the name of the file
 		/// </summary>
-		public String Name {
-			get {
-				return mName;
-			}
-			set {
-				mName = value;
-			}
-		}
+		public String Name { get; set; }
 	}
 }

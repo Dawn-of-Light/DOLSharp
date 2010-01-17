@@ -38,7 +38,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			long KnockTick = client.Player.TempProperties.getProperty<long>(PLAYER_KNOCKED, 0);
+			long KnockTick = client.Player.TempProperties.getProperty<long>(PLAYER_KNOCKED);
 			if (KnockTick > 0 && KnockTick - client.Player.CurrentRegion.Time <= 0)
 			{
 				client.Player.TempProperties.removeProperty(PLAYER_KNOCKED);

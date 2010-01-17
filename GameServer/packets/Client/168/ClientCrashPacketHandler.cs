@@ -18,6 +18,7 @@
  */
 using System.Reflection;
 using DOL;
+using DOL.Network;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -44,22 +45,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (log.IsDebugEnabled)
 				{
 					log.Debug("Last client sent/received packets (from older to newer):");
-					foreach (object obj in client.PacketProcessor.GetLastPackets())
+					
+					foreach (IPacket prevPak in client.PacketProcessor.GetLastPackets())
 					{
-						PacketOut outPak = obj as PacketOut;
-						GSPacketIn inPak = obj as GSPacketIn;
-						if (outPak != null)
-						{
-							log.Debug(Marshal.ToHexDump(outPak.GetType().FullName + ":", outPak.GetBuffer()));
-						}
-						else if (inPak != null)
-						{
-							inPak.LogDump();
-						}
-						else
-						{
-							log.Debug("Unknown packet type: " + obj.GetType().FullName);
-						}
+						log.Info(prevPak.ToHumanReadable());
 					}
 				}
 					

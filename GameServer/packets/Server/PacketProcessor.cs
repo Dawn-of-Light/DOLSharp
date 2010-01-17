@@ -28,6 +28,7 @@ using System.Threading;
 using System.Timers;
 using DOL.Events;
 using DOL.GS.ServerProperties;
+using DOL.Network;
 using log4net;
 using Timer=System.Timers.Timer;
 using System.Collections.Generic;

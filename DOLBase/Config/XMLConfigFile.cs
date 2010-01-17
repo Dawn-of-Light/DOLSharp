@@ -39,7 +39,7 @@ namespace DOL.Config
 		/// Constructs a new XML config file element
 		/// </summary>
 		/// <param name="parent">The parent of the XML config file element</param>
-		protected XMLConfigFile(ConfigElement parent): base(parent)
+		protected XMLConfigFile(ConfigElement parent) : base(parent)
 		{
 		}
 
@@ -50,21 +50,21 @@ namespace DOL.Config
 		/// <returns>true if invalid characters are contained, false if the element is ok</returns>
 		protected bool IsBadXMLElementName(string name)
 		{
-			if(name==null)
+			if (name == null)
 				return false;
 
-			if(name.IndexOf(@"\")!=-1)
+			if (name.IndexOf(@"\") != -1)
 				return true;
 
-			if(name.IndexOf(@"/")!=-1)
+			if (name.IndexOf(@"/") != -1)
 				return true;
 
-			if(name.IndexOf(@"<")!=-1)
+			if (name.IndexOf(@"<") != -1)
 				return true;
 
-			if(name.IndexOf(@">")!=-1)
+			if (name.IndexOf(@">") != -1)
 				return true;
-			
+
 			return false;
 		}
 
@@ -78,22 +78,22 @@ namespace DOL.Config
 		{
 			bool badName = IsBadXMLElementName(name);
 
-			if(element.HasChildren)
+			if (element.HasChildren)
 			{
-				if(name == null)
+				if (name == null)
 					name = "root";
-				
-				if(badName)
+
+				if (badName)
 				{
 					writer.WriteStartElement("param");
-					writer.WriteAttributeString("name",name);
+					writer.WriteAttributeString("name", name);
 				}
 				else
 				{
 					writer.WriteStartElement(name);
 				}
-				
-				foreach(DictionaryEntry entry in element.Children)
+
+				foreach (DictionaryEntry entry in element.Children)
 				{
 					SaveElement(writer, (string) entry.Key, (ConfigElement) entry.Value);
 				}
@@ -101,12 +101,12 @@ namespace DOL.Config
 			}
 			else
 			{
-				if(name != null)
+				if (name != null)
 				{
-					if(badName)
+					if (badName)
 					{
 						writer.WriteStartElement("param");
-						writer.WriteAttributeString("name",name);
+						writer.WriteAttributeString("name", name);
 						writer.WriteString(element.GetString());
 						writer.WriteEndElement();
 					}
@@ -124,13 +124,13 @@ namespace DOL.Config
 		/// <param name="configFile">The filename</param>
 		public void Save(FileInfo configFile)
 		{
-			if(configFile.Exists)
+			if (configFile.Exists)
 				configFile.Delete();
 
-			XmlTextWriter writer = new XmlTextWriter(configFile.FullName, Encoding.UTF8);
+			var writer = new XmlTextWriter(configFile.FullName, Encoding.UTF8);
 			// Indent the XML document for readability
-			writer.Formatting = System.Xml.Formatting.Indented;	
-			
+			writer.Formatting = Formatting.Indented;
+
 			writer.WriteStartDocument();
 			SaveElement(writer, null, this);
 			writer.WriteEndDocument();
@@ -144,44 +144,44 @@ namespace DOL.Config
 		/// <returns>The parsed config</returns>
 		public static XMLConfigFile ParseXMLFile(FileInfo configFile)
 		{
-			XMLConfigFile root = new XMLConfigFile(null);
-			if(!configFile.Exists)
+			var root = new XMLConfigFile(null);
+			if (!configFile.Exists)
 				return root;
-			
+
 			ConfigElement current = root;
-			XmlTextReader reader = new XmlTextReader(configFile.OpenRead());
-			
-			while(reader.Read())
+			var reader = new XmlTextReader(configFile.OpenRead());
+
+			while (reader.Read())
 			{
-				if(reader.NodeType == XmlNodeType.Element)
+				if (reader.NodeType == XmlNodeType.Element)
 				{
-					if(reader.Name=="root")
+					if (reader.Name == "root")
 						continue;
 
-					if(reader.Name=="param")
+					if (reader.Name == "param")
 					{
 						string name = reader.GetAttribute("name");
-						if(name != null && name != "root")
+						if (name != null && name != "root")
 						{
-							ConfigElement newElement = new ConfigElement(current);
+							var newElement = new ConfigElement(current);
 							current[name] = newElement;
-							current = newElement;													
+							current = newElement;
 						}
 					}
 					else
 					{
-						ConfigElement newElement = new ConfigElement(current);
+						var newElement = new ConfigElement(current);
 						current[reader.Name] = newElement;
-						current = newElement;						
+						current = newElement;
 					}
 				}
-				else if(reader.NodeType == XmlNodeType.Text)
+				else if (reader.NodeType == XmlNodeType.Text)
 				{
 					current.Set(reader.Value);
 				}
-				else if(reader.NodeType == XmlNodeType.EndElement)
+				else if (reader.NodeType == XmlNodeType.EndElement)
 				{
-					if(reader.Name!="root")
+					if (reader.Name != "root")
 						current = current.Parent;
 				}
 			}

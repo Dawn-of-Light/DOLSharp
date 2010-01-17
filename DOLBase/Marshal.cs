@@ -23,7 +23,7 @@ namespace DOL
 	/// <summary>
 	/// Provides basic functionality to convert data types
 	/// </summary>
-	public class Marshal
+	public static class Marshal
 	{
 		/// <summary>
 		/// Converts a byte c-style string byte-array 
@@ -33,7 +33,7 @@ namespace DOL
 		/// <returns>the string</returns>
 		public static string ConvertToString(byte[] cstyle)
 		{
-			if(cstyle==null)
+			if (cstyle == null)
 				return null;
 
 			for (int i = 0; i < cstyle.Length; i++)
@@ -52,9 +52,9 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static int ConvertToInt32(byte[] val)
 		{
-			return ConvertToInt32(val,0);
+			return ConvertToInt32(val, 0);
 		}
-		
+
 		/// <summary>
 		/// Converts 4 bytes to an integer value
 		/// in high to low order
@@ -64,9 +64,9 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static int ConvertToInt32(byte[] val, int startIndex)
 		{
-			return ConvertToInt32(val[startIndex], val[startIndex+1], val[startIndex+2], val[startIndex+3]);
+			return ConvertToInt32(val[startIndex], val[startIndex + 1], val[startIndex + 2], val[startIndex + 3]);
 		}
-		
+
 		/// <summary>
 		/// Converts 4 bytes to an integer value
 		/// in high to low order
@@ -78,10 +78,10 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static int ConvertToInt32(byte v1, byte v2, byte v3, byte v4)
 		{
-			return (int)((v1 << 24) | (v2 << 16) | (v3 << 8) | v4);
+			return ((v1 << 24) | (v2 << 16) | (v3 << 8) | v4);
 		}
 
-				/// <summary>
+		/// <summary>
 		/// Converts 4 bytes to an unsigned integer value
 		/// in high to low order
 		/// </summary>
@@ -89,9 +89,9 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static uint ConvertToUInt32(byte[] val)
 		{
-			return ConvertToUInt32(val,0);
+			return ConvertToUInt32(val, 0);
 		}
-		
+
 		/// <summary>
 		/// Converts 4 bytes to an unsigned integer value
 		/// in high to low order
@@ -101,9 +101,9 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static uint ConvertToUInt32(byte[] val, int startIndex)
 		{
-			return ConvertToUInt32(val[startIndex], val[startIndex+1], val[startIndex+2], val[startIndex+3]);
+			return ConvertToUInt32(val[startIndex], val[startIndex + 1], val[startIndex + 2], val[startIndex + 3]);
 		}
-		
+
 		/// <summary>
 		/// Converts 4 bytes to an unsigned integer value
 		/// in high to low order
@@ -115,9 +115,9 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static uint ConvertToUInt32(byte v1, byte v2, byte v3, byte v4)
 		{
-			return (uint)((v1 << 24) | (v2 << 16) | (v3 << 8) | v4);
+			return (uint) ((v1 << 24) | (v2 << 16) | (v3 << 8) | v4);
 		}
-		
+
 		/// <summary>
 		/// Converts 2 bytes to an short value
 		/// in high to low order
@@ -126,9 +126,9 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static short ConvertToInt16(byte[] val)
 		{
-			return ConvertToInt16(val,0);
+			return ConvertToInt16(val, 0);
 		}
-		
+
 		/// <summary>
 		/// Converts 2 bytes to an short value
 		/// in high to low order
@@ -138,9 +138,9 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static short ConvertToInt16(byte[] val, int startIndex)
 		{
-			return ConvertToInt16(val[startIndex], val[startIndex+1]);
+			return ConvertToInt16(val[startIndex], val[startIndex + 1]);
 		}
-		
+
 		/// <summary>
 		/// Converts 2 bytes to an short value
 		/// in high to low order
@@ -150,9 +150,9 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static short ConvertToInt16(byte v1, byte v2)
 		{
-			return (short)((v1 << 8) | v2);
+			return (short) ((v1 << 8) | v2);
 		}
-		
+
 		/// <summary>
 		/// Converts 2 bytes to an unsigned short value
 		/// in high to low order
@@ -161,9 +161,9 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static ushort ConvertToUInt16(byte[] val)
 		{
-			return ConvertToUInt16(val,0);
+			return ConvertToUInt16(val, 0);
 		}
-		
+
 		/// <summary>
 		/// Converts 2 bytes to an unsigned short value
 		/// in high to low order
@@ -173,9 +173,9 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static ushort ConvertToUInt16(byte[] val, int startIndex)
 		{
-			return ConvertToUInt16(val[startIndex], val[startIndex+1]);
+			return ConvertToUInt16(val[startIndex], val[startIndex + 1]);
 		}
-		
+
 		/// <summary>
 		/// Converts 2 bytes to an integer value
 		/// in high to low order
@@ -185,7 +185,7 @@ namespace DOL
 		/// <returns>the integer value</returns>
 		public static ushort ConvertToUInt16(byte v1, byte v2)
 		{
-			return (ushort)(v2 | (v1 << 8));
+			return (ushort) (v2 | (v1 << 8));
 		}
 
 		/// <summary>
@@ -198,7 +198,6 @@ namespace DOL
 		{
 			return ToHexDump(description, dump, 0, dump.Length);
 		}
-		
 
 		/// <summary>
 		/// Converts a byte array into a hex dump
@@ -210,36 +209,36 @@ namespace DOL
 		/// <returns>the converted hex dump</returns>
 		public static string ToHexDump(string description, byte[] dump, int start, int count)
 		{
-			StringBuilder hexDump = new StringBuilder();
-			if (description != null) 
+			var hexDump = new StringBuilder();
+			if (description != null)
 			{
 				hexDump.Append(description).Append("\n");
 			}
 			int end = start + count;
-			for(int i=start; i<end; i+=16) 
+			for (int i = start; i < end; i += 16)
 			{
-				StringBuilder text = new StringBuilder();
-				StringBuilder hex = new StringBuilder();
+				var text = new StringBuilder();
+				var hex = new StringBuilder();
 				hex.Append(i.ToString("X4"));
 				hex.Append(": ");
-				
-				for(int j=0; j<16; j++) 
+
+				for (int j = 0; j < 16; j++)
 				{
-					if(j+i < end) 
+					if (j + i < end)
 					{
-						byte val = dump[j+i];
-						hex.Append(dump[j+i].ToString("X2"));
+						byte val = dump[j + i];
+						hex.Append(dump[j + i].ToString("X2"));
 						hex.Append(" ");
-						if (val>=32 && val<=127) 
+						if (val >= 32 && val <= 127)
 						{
-							text.Append((char)val);
-						} 
-						else 
+							text.Append((char) val);
+						}
+						else
 						{
 							text.Append(".");
 						}
 					}
-					else 
+					else
 					{
 						hex.Append("   ");
 						text.Append(" ");

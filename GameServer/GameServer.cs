@@ -41,6 +41,7 @@ using DOL.GS.ServerProperties;
 using DOL.GS.ServerRules;
 using DOL.Language;
 using DOL.Mail;
+using DOL.Network;
 using log4net;
 using log4net.Config;
 using log4net.Core;
@@ -156,7 +157,7 @@ namespace DOL.GS
 		/// </summary>
 		public new virtual GameServerConfiguration Configuration
 		{
-			get { return (GameServerConfiguration) m_config; }
+			get { return (GameServerConfiguration) _config; }
 		}
 
 		/// <summary>
@@ -223,7 +224,7 @@ namespace DOL.GS
 		/// </summary>
 		public bool IsRunning
 		{
-			get { return m_listen != null; }
+			get { return _listen != null; }
 		}
 
 		/// <summary>

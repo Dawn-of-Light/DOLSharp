@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+ //Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
 
-//Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
 namespace DOL.FTP
 {
 	/// <summary>
 	/// The FTP transfer type
 	/// </summary>
-	public enum FTPFileTransferType : int
+	public enum FTPFileTransferType
 	{
 		/// <summary>
 		/// Transfer will be in ASCII mode

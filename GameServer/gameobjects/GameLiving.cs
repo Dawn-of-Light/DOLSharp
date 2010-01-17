@@ -2189,7 +2189,7 @@ namespace DOL.GS
 								// and the resulting interrupt will last 1.5 seconds."
 
 								long rapidFireMaxDuration = owner.AttackSpeed(attackWeapon) / 2; // half of the total time
-								long elapsedTime = owner.CurrentRegion.Time - owner.TempProperties.getProperty<long>(GamePlayer.RANGE_ATTACK_HOLD_START, 0L); // elapsed time before ready to fire
+								long elapsedTime = owner.CurrentRegion.Time - owner.TempProperties.getProperty<long>(GamePlayer.RANGE_ATTACK_HOLD_START); // elapsed time before ready to fire
 								if (elapsedTime < rapidFireMaxDuration)
 								{
 									effectiveness = 0.5 + (double)elapsedTime * 0.5 / (double)rapidFireMaxDuration;
@@ -5568,7 +5568,7 @@ namespace DOL.GS
 			if (source != null && source is GamePlayer)
 			{
 				player = source as GamePlayer;
-				long whisperdelay = player.TempProperties.getProperty<long>("WHISPERDELAY", 0L);
+				long whisperdelay = player.TempProperties.getProperty<long>("WHISPERDELAY");
 				if (whisperdelay > 0 && (CurrentRegion.Time - 1500) < whisperdelay && player.Client.Account.PrivLevel == 1)
 				{
 					//player.Out.SendMessage("Speak slower!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);

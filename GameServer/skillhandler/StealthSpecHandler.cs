@@ -44,7 +44,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			long stealthChangeTick = player.TempProperties.getProperty<long>(GamePlayer.STEALTH_CHANGE_TICK, 0L);
+			long stealthChangeTick = player.TempProperties.getProperty<long>(GamePlayer.STEALTH_CHANGE_TICK);
 			long changeTime = player.CurrentRegion.Time - stealthChangeTick;
 			if(changeTime < 2000)
 			{

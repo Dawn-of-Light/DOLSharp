@@ -27,7 +27,6 @@ namespace DOL
 	/// a null target to WeakReference.</remarks>
 	public class WeakRef : WeakReference
 	{
-		private class NullValue { };
 		private static readonly NullValue Null = new NullValue();
 
 		/// <summary>
@@ -60,10 +59,15 @@ namespace DOL
 				object o = base.Target;
 				return ((o == Null) ? null : o);
 			}
-			set
-			{
-				base.Target = value ?? Null;
-			}
+			set { base.Target = value ?? Null; }
 		}
+
+		#region Nested type: NullValue
+
+		private class NullValue
+		{
+		} ;
+
+		#endregion
 	}
 }

@@ -306,7 +306,7 @@ namespace DOL.GS.Keeps
 			GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(Last_LOS_Target_Property, null);
 			if (lastTarget != null && lastTarget == attackTarget)
 			{
-				long lastTick = this.TempProperties.getProperty<long>(Last_LOS_Tick_Property, 0);
+				long lastTick = this.TempProperties.getProperty<long>(Last_LOS_Tick_Property);
 				if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.KEEP_GUARD_LOS_CHECK_TIME * 1000)
 					return;
 			}

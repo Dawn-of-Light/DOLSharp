@@ -205,7 +205,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.LastPositionUpdateZone = newZone;
 			}
 
-			int lastTick = client.Player.TempProperties.getProperty<int>(LASTUPDATETICK, 0);
+			int lastTick = client.Player.TempProperties.getProperty<int>(LASTUPDATETICK);
 #if OUTPUT_DEBUG_INFO
 			if (lastTick != 0 && client.Account.PrivLevel == 1)
 			{
@@ -231,7 +231,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//more than you actually should etc...
 				if (plyDist > 100 && plyDist > maxDist)
 				{
-					int counter = client.Player.TempProperties.getProperty<int>(SPEEDHACKCOUNTER, 0);
+					int counter = client.Player.TempProperties.getProperty<int>(SPEEDHACKCOUNTER);
 					counter++;
 					if (counter%10 == 0)
 					{
@@ -323,10 +323,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			const string SHLASTUPDATETICK = "SHPLAYERPOSITION_LASTUPDATETICK";
 			const string SHLASTFLY = "SHLASTFLY_STRING";
 			const string SHLASTSTATUS = "SHLASTSTATUS_STRING";
-			int SHlastTick = client.Player.TempProperties.getProperty<int>(SHLASTUPDATETICK, 0);
-			int SHlastFly = client.Player.TempProperties.getProperty<int>(SHLASTFLY, 0);
-			int SHlastStatus = client.Player.TempProperties.getProperty<int>(SHLASTSTATUS, 0);
-			int SHcount = client.Player.TempProperties.getProperty<int>(SHSPEEDCOUNTER, 0);
+			int SHlastTick = client.Player.TempProperties.getProperty<int>(SHLASTUPDATETICK);
+			int SHlastFly = client.Player.TempProperties.getProperty<int>(SHLASTFLY);
+			int SHlastStatus = client.Player.TempProperties.getProperty<int>(SHLASTSTATUS);
+			int SHcount = client.Player.TempProperties.getProperty<int>(SHSPEEDCOUNTER);
 			int status = (data & 0x1FF ^ data) >> 8;
 			int fly = (flyingflag & 0x1FF ^ flyingflag) >> 8;
 			if (SHlastTick != 0 && SHlastTick != EnvironmentTick)

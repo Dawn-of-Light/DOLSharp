@@ -21,9 +21,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using DOL.Config;
 using log4net;
 
-namespace DOL
+namespace DOL.Network
 {
 	/// <summary>
 	/// Base class for a server using overlapped socket IO
@@ -38,22 +39,22 @@ namespace DOL
 		/// <summary>
 		/// Holds the async accept callback delegate
 		/// </summary>
-		private readonly AsyncCallback m_asyncAcceptCallback;
+		private readonly AsyncCallback _asyncAcceptCallback;
 
 		/// <summary>
 		/// Hash table of clients
 		/// </summary>
-		protected readonly Dictionary<BaseClient, BaseClient> m_clients = new Dictionary<BaseClient, BaseClient>();
+		protected readonly Dictionary<BaseClient, BaseClient> _clients = new Dictionary<BaseClient, BaseClient>();
 
 		/// <summary>
 		/// The configuration of this server
 		/// </summary>
-		protected BaseServerConfiguration m_config;
+		protected BaseServerConfiguration _config;
 
 		/// <summary>
 		/// Socket that receives connections
 		/// </summary>
-		protected Socket m_listen;
+		protected Socket _listen;
 
 		/// <summary>
 		/// Constructor that takes a server configuration as parameter
@@ -64,8 +65,8 @@ namespace DOL
 			if (config == null)
 				throw new ArgumentNullException("config");
 
-			m_config = config;
-			m_asyncAcceptCallback = new AsyncCallback(AcceptCallback);
+			_config = config;
+			_asyncAcceptCallback = new AsyncCallback(AcceptCallback);
 		}
 
 		/// <summary>
@@ -73,7 +74,7 @@ namespace DOL
 		/// </summary>
 		public virtual BaseServerConfiguration Configuration
 		{
-			get { return m_config; }
+			get { return _config; }
 		}
 
 		/// <summary>
@@ -81,7 +82,7 @@ namespace DOL
 		/// </summary>
 		public int ClientCount
 		{
-			get { return m_clients.Count; }
+			get { return _clients.Count; }
 		}
 
 		/// <summary>
@@ -114,12 +115,12 @@ namespace DOL
 		/// Initializes and binds the socket, doesn't listen yet!
 		/// </summary>
 		/// <returns>true if bound</returns>
-		public virtual bool InitSocket()
+		protected virtual bool InitSocket()
 		{
 			try
 			{
-				m_listen = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-				m_listen.Bind(new IPEndPoint(m_config.Ip, m_config.Port));
+				_listen = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+				_listen.Bind(new IPEndPoint(_config.Ip, _config.Port));
 			}
 			catch (Exception e)
 			{
@@ -138,7 +139,7 @@ namespace DOL
 		/// <returns>True if the server was successfully started</returns>
 		public virtual bool Start()
 		{
-			/*if(Configuration.EnableUPnP)
+			/*if(Configuration.EnableUPNP)
 			{
 				try
 				{
@@ -196,13 +197,13 @@ namespace DOL
 			}*/
 			//Test if we have a valid port yet
 			//if not try  binding.
-			if (m_listen == null && !InitSocket())
+			if (_listen == null && !InitSocket())
 				return false;
 
 			try
 			{
-				m_listen.Listen(100);
-				m_listen.BeginAccept(m_asyncAcceptCallback, this);
+				_listen.Listen(100);
+				_listen.BeginAccept(_asyncAcceptCallback, this);
 
 				if (Log.IsDebugEnabled)
 					Log.Debug("Server is now listening to incoming connections!");
@@ -212,8 +213,8 @@ namespace DOL
 				if (Log.IsErrorEnabled)
 					Log.Error("Start", e);
 
-				if (m_listen != null)
-					m_listen.Close();
+				if (_listen != null)
+					_listen.Close();
 
 				return false;
 			}
@@ -231,11 +232,11 @@ namespace DOL
 
 			try
 			{
-				if (m_listen == null)
+				if (_listen == null)
 					return;
 
-				sock = m_listen.EndAccept(ar);
-				sock.SendBufferSize = Constants.SEND_BUFF_SIZE;
+				sock = _listen.EndAccept(ar);
+				sock.SendBufferSize = Constants.SendBuffSize;
 
 				BaseClient baseClient = null;
 				try
@@ -249,8 +250,8 @@ namespace DOL
 					baseClient = GetNewClient();
 					baseClient.Socket = sock;
 
-					lock (m_clients)
-						m_clients.Add(baseClient, baseClient);
+					lock (_clients)
+						_clients.Add(baseClient, baseClient);
 
 					baseClient.OnConnect();
 					baseClient.BeginReceive();
@@ -284,9 +285,9 @@ namespace DOL
 			}
 			finally
 			{
-				if (m_listen != null)
+				if (_listen != null)
 				{
-					m_listen.BeginAccept(m_asyncAcceptCallback, this);
+					_listen.BeginAccept(_asyncAcceptCallback, this);
 				}
 			}
 		}
@@ -299,7 +300,7 @@ namespace DOL
 			if (Log.IsDebugEnabled)
 				Log.Debug("Stopping server! - Entering method");
 
-			/*if(Configuration.EnableUPnP)
+			/*if(Configuration.EnableUPNP)
 			{
 				try
 				{
@@ -320,11 +321,12 @@ namespace DOL
 
 			try
 			{
-				if (m_listen != null)
+				if (_listen != null)
 				{
-					Socket socket = m_listen;
-					m_listen = null;
+					Socket socket = _listen;
+					_listen = null;
 					socket.Close();
+
 					if (Log.IsDebugEnabled)
 						Log.Debug("Server is no longer listening for incoming connections!");
 				}
@@ -335,13 +337,13 @@ namespace DOL
 					Log.Error("Stop", e);
 			}
 
-			if (m_clients != null)
+			if (_clients != null)
 			{
-				lock (m_clients)
+				lock (_clients)
 				{
 					try
 					{
-						foreach (var clientPair in m_clients)
+						foreach (var clientPair in _clients)
 						{
 							clientPair.Key.CloseConnections();
 						}
@@ -349,7 +351,7 @@ namespace DOL
 						if (Log.IsDebugEnabled)
 							Log.Debug("Stopping server! - Cleaning up client list!");
 
-						m_clients.Clear();
+						_clients.Clear();
 					}
 					catch (Exception e)
 					{
@@ -369,12 +371,12 @@ namespace DOL
 		/// <returns>True if the client was disconnected, false if it doesn't exist</returns>
 		public virtual bool Disconnect(BaseClient baseClient)
 		{
-			lock (m_clients)
+			lock (_clients)
 			{
-				if (!m_clients.ContainsKey(baseClient))
+				if (!_clients.ContainsKey(baseClient))
 					return false;
 
-				m_clients.Remove(baseClient);
+				_clients.Remove(baseClient);
 			}
 
 			try

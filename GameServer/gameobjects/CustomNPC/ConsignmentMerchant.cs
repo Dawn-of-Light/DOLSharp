@@ -262,7 +262,7 @@ namespace DOL.GS
             }
             House house = HouseMgr.GetHouse(this.HouseNumber);
             fromItem.SlotPosition = (int)(toSlot);
-            int price = player.TempProperties.getProperty<int>(DOL.GS.PacketHandler.Client.v168.PlayerSetMarketPriceHandler.NEW_PRICE, 0);
+            int price = player.TempProperties.getProperty<int>(DOL.GS.PacketHandler.Client.v168.PlayerSetMarketPriceHandler.NEW_PRICE);
             player.TempProperties.removeProperty(DOL.GS.PacketHandler.Client.v168.PlayerSetMarketPriceHandler.NEW_PRICE);
             if (fromItem.OwnerID != house.OwnerIDs)
                 fromItem.OwnerID = house.OwnerIDs;

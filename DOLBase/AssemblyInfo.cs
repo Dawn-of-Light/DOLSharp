@@ -25,6 +25,5 @@ using System.Reflection;
 [assembly: AssemblyProduct("DAoC Server Side Emulation Package - Dawn of Light")]
 [assembly: AssemblyCopyright("Dawn of Light Development Team")]
 [assembly: AssemblyTrademark("Dawn of Light Development Team")]
-[assembly: AssemblyCulture("")]		
-
+[assembly: AssemblyCulture("")]
 [assembly: AssemblyVersion("1.9.3.2015")]

@@ -91,20 +91,14 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BaseClient.cs" />
-    <Compile Include="BaseServer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BaseServerConfiguration.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Config\BaseServerConfiguration.cs" />
     <Compile Include="Config\ConfigElement.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Config\XMLConfigFile.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Constant.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="FTP\FTPAsynchronousConnection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -120,7 +114,6 @@
     <Compile Include="FTP\FTPMode.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IPacket.cs" />
     <Compile Include="Marshal.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -133,12 +126,11 @@
     <Compile Include="MPK\MPKFileHeader.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PacketIn.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="PacketOut.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Network\BaseClient.cs" />
+    <Compile Include="Network\BaseServer.cs" />
+    <Compile Include="Network\IPacket.cs" />
+    <Compile Include="Network\PacketIn.cs" />
+    <Compile Include="Network\PacketOut.cs" />
     <Compile Include="Statistics.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -148,6 +140,9 @@
     <Compile Include="WeakRef.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Network" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

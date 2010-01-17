@@ -1,43 +1,9 @@
-﻿/*
- * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- */
-using System;
-
-
-/// <summary>
-///  Enum and constants related to DOLBase
-/// </summary>
+﻿using System.Text;
 
 namespace DOL
 {
 	/// <summary>
-	/// This class is handling DOLBase Contants
-	/// </summary>
-	public static class Constants
-	{
-		/// <summary>
-		/// Send buffer size
-		/// </summary>
-		public const int SEND_BUFF_SIZE = 16 * 1024;
-	}
-	
-	/// <summary>
-	/// Status of the GameServer
+	/// The status of the gameserver
 	/// </summary>
 	public enum eGameServerStatus
 	{
@@ -78,7 +44,7 @@ namespace DOL
 	/// <summary>
 	/// The different game server types
 	/// </summary>
-	public enum eGameServerType : int
+	public enum eGameServerType
 	{
 		/// <summary>
 		/// Normal server
@@ -112,5 +78,18 @@ namespace DOL
 		/// The count of server types
 		/// </summary>
 		_GST_Count = 7,
+	}
+
+	public static class Constants
+	{
+		/// <summary>
+		/// The size of the send buffer for a client socket.
+		/// </summary>
+		public const int SendBuffSize = 16*1024;
+
+		/// <summary>
+		/// The default encoding to use for all string operations in packet writing or reading.
+		/// </summary>
+		public static readonly Encoding DefaultEncoding = Encoding.UTF8;
 	}
 }

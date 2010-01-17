@@ -25,48 +25,58 @@ namespace DOL
 	public class Statistics
 	{
 		/// <summary>
-		/// The total mob count
+		/// The total bytes received
 		/// </summary>
-		public static int MemMobCount = 0;
-		/// <summary>
-		/// The total player count
-		/// </summary>
-		public static int MemPlayerCount = 0;
-		/// <summary>
-		/// The total account count
-		/// </summary>
-		public static int MemAccCount = 0;
-		/// <summary>
-		/// The total character count
-		/// </summary>
-		public static int MemCharCount = 0;
-		/// <summary>
-		/// The total incoming packet objects count
-		/// </summary>
-		public static int MemPacketInObj = 0;
-		/// <summary>
-		/// The total outgoing packet objects count
-		/// </summary>
-		public static int MemPacketOutObj = 0;
-		/// <summary>
-		/// The total spellhandler objects
-		/// </summary>
-		public static int MemSpellHandlerObj = 0;
+		public static long BytesIn;
+
 		/// <summary>
 		/// The total bytes sent
 		/// </summary>
-		public static long BytesOut = 0;
+		public static long BytesOut;
+
 		/// <summary>
-		/// The total bytes received
+		/// The total account count
 		/// </summary>
-		public static long BytesIn = 0;
+		public static int MemAccCount;
+
 		/// <summary>
-		/// The total outgoing packets
+		/// The total character count
 		/// </summary>
-		public static long PacketsOut = 0;
+		public static int MemCharCount;
+
+		/// <summary>
+		/// The total mob count
+		/// </summary>
+		public static int MemMobCount;
+
+		/// <summary>
+		/// The total incoming packet objects count
+		/// </summary>
+		public static int MemPacketInObj;
+
+		/// <summary>
+		/// The total outgoing packet objects count
+		/// </summary>
+		public static int MemPacketOutObj;
+
+		/// <summary>
+		/// The total player count
+		/// </summary>
+		public static int MemPlayerCount;
+
+		/// <summary>
+		/// The total spellhandler objects
+		/// </summary>
+		public static int MemSpellHandlerObj;
+
 		/// <summary>
 		/// The total incoming packets
 		/// </summary>
-		public static long PacketsIn = 0;
+		public static long PacketsIn;
+
+		/// <summary>
+		/// The total outgoing packets
+		/// </summary>
+		public static long PacketsOut;
 	}
 }
