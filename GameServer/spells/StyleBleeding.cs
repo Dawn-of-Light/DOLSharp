@@ -70,7 +70,7 @@ namespace DOL.GS.Spells
 			MessageToLiving(effect.Owner, Spell.Message1, eChatType.CT_YouWereHit);
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), eChatType.CT_YouHit, effect.Owner);
 
-			int bleedValue = effect.Owner.TempProperties.getProperty<int>(BLEED_VALUE_PROPERTY, 0);
+			int bleedValue = effect.Owner.TempProperties.getProperty<int>(BLEED_VALUE_PROPERTY);
 
 			AttackData ad = CalculateDamageToTarget( effect.Owner, 1.0 );
 
@@ -103,7 +103,7 @@ namespace DOL.GS.Spells
 
 		public override AttackData CalculateDamageToTarget( GameLiving target, double effectiveness )
 		{
-			int bleedValue = target.TempProperties.getProperty<int>( BLEED_VALUE_PROPERTY, 0 );
+			int bleedValue = target.TempProperties.getProperty<int>( BLEED_VALUE_PROPERTY);
 
 			AttackData ad = new AttackData();
 			ad.Attacker = Caster;

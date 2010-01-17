@@ -302,7 +302,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 							else
 							{
-								long BPsToMoney = player.TempProperties.getProperty<long>(House.BPSFORHOUSERENT, 0);
+								long BPsToMoney = player.TempProperties.getProperty<long>(House.BPSFORHOUSERENT);
 								if (BPsToMoney + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * 4)
 									BPsToMoney = (HouseMgr.GetRentByModel(house.Model) * 4) - house.KeptMoney;
 

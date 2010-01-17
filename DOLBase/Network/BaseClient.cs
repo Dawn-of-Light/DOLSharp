@@ -22,7 +22,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using log4net;
 
-namespace DOL
+namespace DOL.Network
 {
 	/// <summary>
 	/// Base class for connected clients
@@ -32,32 +32,32 @@ namespace DOL
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Holds the receive callback delegate
 		/// </summary>
-		protected static readonly AsyncCallback m_recvCallback = RecvCallback;
+		protected static readonly AsyncCallback ReceiveCallback = OnReceiveHandler;
 
 		/// <summary>
 		/// Packet buffer, holds incoming packet data
 		/// </summary>
-		protected byte[] m_pbuf;
+		protected byte[] _pbuf;
 
 		/// <summary>
 		/// Current offset into the buffer
 		/// </summary>
-		protected int m_pBufEnd;
+		protected int _pBufEnd;
 
 		/// <summary>
 		/// Socket that holds the client connection
 		/// </summary>
-		protected Socket m_sock;
+		protected Socket _sock;
 
 		/// <summary>
 		/// Pointer to the server the client is connected to
 		/// </summary>
-		protected BaseServer m_srvr;
+		protected BaseServer _srvr;
 
 		/// <summary>
 		/// Constructor
@@ -65,12 +65,12 @@ namespace DOL
 		/// <param name="srvr">Pointer to the server the client is connected to</param>
 		public BaseClient(BaseServer srvr)
 		{
-			m_srvr = srvr;
+			_srvr = srvr;
 
 			if (srvr != null)
-				m_pbuf = srvr.AcquirePacketBuffer();
+				_pbuf = srvr.AcquirePacketBuffer();
 
-			m_pBufEnd = 0;
+			_pBufEnd = 0;
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace DOL
 		/// </summary>
 		public BaseServer Server
 		{
-			get { return m_srvr; }
+			get { return _srvr; }
 		}
 
 		/// <summary>
@@ -86,8 +86,8 @@ namespace DOL
 		/// </summary>
 		public Socket Socket
 		{
-			get { return m_sock; }
-			set { m_sock = value; }
+			get { return _sock; }
+			set { _sock = value; }
 		}
 
 		/// <summary>
@@ -95,7 +95,7 @@ namespace DOL
 		/// </summary>
 		public byte[] PacketBuf
 		{
-			get { return m_pbuf; }
+			get { return _pbuf; }
 		}
 
 		/// <summary>
@@ -103,8 +103,8 @@ namespace DOL
 		/// </summary>
 		public int PacketBufSize
 		{
-			get { return m_pBufEnd; }
-			set { m_pBufEnd = value; }
+			get { return _pBufEnd; }
+			set { _pBufEnd = value; }
 		}
 
 		/// <summary>
@@ -114,7 +114,7 @@ namespace DOL
 		{
 			get
 			{
-				Socket s = m_sock;
+				Socket s = _sock;
 				if (s != null && s.Connected && s.RemoteEndPoint != null)
 					return ((IPEndPoint) s.RemoteEndPoint).Address.ToString();
 
@@ -129,7 +129,7 @@ namespace DOL
 		{
 			get
 			{
-				Socket s = m_sock;
+				Socket s = _sock;
 				if (s != null && s.Connected && s.RemoteEndPoint != null)
 					return s.RemoteEndPoint.ToString();
 
@@ -140,7 +140,7 @@ namespace DOL
 		/// <summary>
 		/// Called when data has been received from the connection
 		/// </summary>
-		/// <param name="numBytes">Number of bytes received in m_pbuf</param>
+		/// <param name="numBytes">Number of bytes received in _pbuf</param>
 		protected virtual void OnReceive(int numBytes)
 		{
 		}
@@ -164,24 +164,24 @@ namespace DOL
 		/// </summary>
 		public void BeginReceive()
 		{
-			if (m_sock != null && m_sock.Connected)
+			if (_sock != null && _sock.Connected)
 			{
-				int bufSize = m_pbuf.Length;
+				int bufSize = _pbuf.Length;
 
-				if (m_pBufEnd >= bufSize) //Do we have space to receive?
+				if (_pBufEnd >= bufSize) //Do we have space to receive?
 				{
-					if (log.IsErrorEnabled)
+					if (Log.IsErrorEnabled)
 					{
-						log.Error(TcpEndpoint + " disconnected because of buffer overflow!");
-						log.Error("m_pBufEnd=" + m_pBufEnd + "; buf size=" + bufSize);
-						log.Error(m_pbuf);
+						Log.Error(TcpEndpoint + " disconnected because of buffer overflow!");
+						Log.Error("_pBufEnd=" + _pBufEnd + "; buf size=" + bufSize);
+						Log.Error(_pbuf);
 					}
 
-					m_srvr.Disconnect(this);
+					_srvr.Disconnect(this);
 				}
 				else
 				{
-					m_sock.BeginReceive(m_pbuf, m_pBufEnd, bufSize - m_pBufEnd, SocketFlags.None, m_recvCallback, this);
+					_sock.BeginReceive(_pbuf, _pBufEnd, bufSize - _pBufEnd, SocketFlags.None, ReceiveCallback, this);
 				}
 			}
 		}
@@ -190,7 +190,7 @@ namespace DOL
 		/// Called when a client has received data or the connection has been closed
 		/// </summary>
 		/// <param name="ar">Results of the receive operation</param>
-		protected static void RecvCallback(IAsyncResult ar)
+		protected static void OnReceiveHandler(IAsyncResult ar)
 		{
 			if (ar == null)
 				return;
@@ -209,34 +209,34 @@ namespace DOL
 				}
 				else
 				{
-					if (log.IsDebugEnabled)
-						log.Debug("Disconnecting client (" + baseClient.TcpEndpoint + "), received bytes=" + numBytes);
+					if (Log.IsDebugEnabled)
+						Log.Debug("Disconnecting client (" + baseClient.TcpEndpoint + "), received bytes=" + numBytes);
 
-					baseClient.m_srvr.Disconnect(baseClient);
+					baseClient._srvr.Disconnect(baseClient);
 				}
 			}
 			catch (ObjectDisposedException)
 			{
 				if (baseClient != null)
-					baseClient.m_srvr.Disconnect(baseClient);
+					baseClient._srvr.Disconnect(baseClient);
 			}
 			catch (SocketException e)
 			{
 				if (baseClient != null)
 				{
-					if (log.IsInfoEnabled)
-						log.Info(string.Format("{0}  {1}", baseClient.TcpEndpoint, e.Message));
+					if (Log.IsInfoEnabled)
+						Log.Info(string.Format("{0}  {1}", baseClient.TcpEndpoint, e.Message));
 
-					baseClient.m_srvr.Disconnect(baseClient);
+					baseClient._srvr.Disconnect(baseClient);
 				}
 			}
 			catch (Exception e)
 			{
-				if (log.IsErrorEnabled)
-					log.Error("RecvCallback", e);
+				if (Log.IsErrorEnabled)
+					Log.Error("OnReceiveHandler", e);
 
 				if (baseClient != null)
-					baseClient.m_srvr.Disconnect(baseClient);
+					baseClient._srvr.Disconnect(baseClient);
 			}
 		}
 
@@ -245,29 +245,30 @@ namespace DOL
 		/// </summary>
 		public void CloseConnections()
 		{
-			if (m_sock != null)
+			if (_sock != null)
 			{
 				try
 				{
-					m_sock.Shutdown(SocketShutdown.Send);
+					_sock.Shutdown(SocketShutdown.Send);
 				}
 				catch
 				{
 				}
+
 				try
 				{
-					m_sock.Close();
+					_sock.Close();
 				}
 				catch
 				{
 				}
 			}
 
-			byte[] buff = m_pbuf;
+			byte[] buff = _pbuf;
 			if (buff != null)
 			{
-				m_pbuf = null;
-				m_srvr.ReleasePacketBuffer(buff);
+				_pbuf = null;
+				_srvr.ReleasePacketBuffer(buff);
 			}
 		}
 
@@ -278,12 +279,12 @@ namespace DOL
 		{
 			try
 			{
-				m_srvr.Disconnect(this);
+				_srvr.Disconnect(this);
 			}
 			catch (Exception e)
 			{
-				if (log.IsErrorEnabled)
-					log.Error("Exception", e);
+				if (Log.IsErrorEnabled)
+					Log.Error("Exception", e);
 			}
 		}
 	}

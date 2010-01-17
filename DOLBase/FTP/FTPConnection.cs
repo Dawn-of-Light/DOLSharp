@@ -17,35 +17,35 @@
  *
  */
 using System;
-using System.Net;
-using System.IO;
-using System.Text;
-using System.Net.Sockets;
 using System.Collections;
 using System.Data;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 //Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
+
 namespace DOL.FTP
 {
 	/// <summary>
 	/// Summary description for FTPConnection.
 	/// </summary>
-
 	public class FTPConnection
-	{		
-		private TcpClient mTCPClient;
-		private String mRemoteHost;
-		private int mRemotePort;
+	{
 		private static int BLOCK_SIZE = 512;
-		private static int DEFAULT_REMOTE_PORT = 21;
 		private static int DATA_PORT_RANGE_FROM = 1500;
 		private static int DATA_PORT_RANGE_TO = 65000;
-		private FTPMode mMode;
+		private static int DEFAULT_REMOTE_PORT = 21;
 		private int mActiveConnectionsCount;
 
-		private ArrayList mMessageList = new ArrayList();
 		private bool mLogMessages;
+		private ArrayList mMessageList = new ArrayList();
+		private FTPMode mMode;
+		private String mRemoteHost;
+		private int mRemotePort;
+		private TcpClient mTCPClient;
 
 		/// <summary>
 		/// Creates a new ftp connection
@@ -62,10 +62,7 @@ namespace DOL.FTP
 		/// </summary>
 		public ArrayList MessageList
 		{
-			get
-			{
-				return mMessageList;
-			}
+			get { return mMessageList; }
 		}
 
 
@@ -74,14 +71,11 @@ namespace DOL.FTP
 		/// </summary>
 		public bool LogMessages
 		{
-			get
-			{
-				return mLogMessages;
-			}
+			get { return mLogMessages; }
 
 			set
 			{
-				if(!value)
+				if (!value)
 				{
 					mMessageList = new ArrayList();
 				}
@@ -124,7 +118,7 @@ namespace DOL.FTP
 		{
 			Open(pRemoteHost, pRemotePort, pUser, pPassword, FTPMode.Active);
 		}
-		
+
 		/// <summary>
 		/// Opens a new ftp connection
 		/// </summary>
@@ -135,7 +129,7 @@ namespace DOL.FTP
 		/// <param name="pMode">The ftp mode</param>
 		public virtual void Open(string pRemoteHost, int pRemotePort, string pUser, string pPassword, FTPMode pMode)
 		{
-			ArrayList aTempMessageList = new ArrayList();
+			var aTempMessageList = new ArrayList();
 			int aReturnValue;
 
 			mMode = pMode;
@@ -148,36 +142,36 @@ namespace DOL.FTP
 			{
 				mTCPClient.Connect(mRemoteHost, mRemotePort);
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 				throw new IOException("Couldn't connect to remote server");
 			}
 			aTempMessageList = Read();
-			aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-			if(aReturnValue != 220)
+			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+			if (aReturnValue != 220)
 			{
 				Close();
-				throw new Exception((string)aTempMessageList[0]);
+				throw new Exception((string) aTempMessageList[0]);
 			}
 
 			//SEND USER
 			aTempMessageList = SendCommand("USER " + pUser);
-			aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-			if(!(aReturnValue == 331 || aReturnValue == 202))
+			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+			if (!(aReturnValue == 331 || aReturnValue == 202))
 			{
 				Close();
-				throw new Exception((string)aTempMessageList[0]);
+				throw new Exception((string) aTempMessageList[0]);
 			}
 
 			//SEND PASSWORD
-			if(aReturnValue == 331)
+			if (aReturnValue == 331)
 			{
 				aTempMessageList = SendCommand("PASS " + pPassword);
-				aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-				if(!(aReturnValue == 230 || aReturnValue == 202))
+				aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+				if (!(aReturnValue == 230 || aReturnValue == 202))
 				{
 					Close();
-					throw new Exception((string)aTempMessageList[0]);
+					throw new Exception((string) aTempMessageList[0]);
 				}
 			}
 		}
@@ -187,7 +181,7 @@ namespace DOL.FTP
 		/// </summary>
 		public virtual void Close()
 		{
-			if( mTCPClient != null )
+			if (mTCPClient != null)
 			{
 				SendCommand("QUIT");
 				mTCPClient.Close();
@@ -203,25 +197,25 @@ namespace DOL.FTP
 		{
 			ArrayList aTmpList = Dir();
 
-			DataTable aTable = new DataTable();
+			var aTable = new DataTable();
 			aTable.Columns.Add("Name");
-			for(int i = 0; i < aTmpList.Count; i++)
+			for (int i = 0; i < aTmpList.Count; i++)
 			{
 				DataRow aRow = aTable.NewRow();
-				aRow["Name"] = (string)aTmpList[i];
+				aRow["Name"] = aTmpList[i];
 				aTable.Rows.Add(aRow);
 			}
 
-			DataRow [] aRowList = aTable.Select("Name LIKE '" + pMask + "'", "", DataViewRowState.CurrentRows);
+			DataRow[] aRowList = aTable.Select("Name LIKE '" + pMask + "'", "", DataViewRowState.CurrentRows);
 			aTmpList = new ArrayList();
-			for(int i = 0; i < aRowList.Length; i++)
+			for (int i = 0; i < aRowList.Length; i++)
 			{
-				aTmpList.Add((string)aRowList[i]["Name"]);
+				aTmpList.Add(aRowList[i]["Name"]);
 			}
 
 			return aTmpList;
 		}
-		
+
 		/// <summary>
 		/// Reads the remote directory
 		/// </summary>
@@ -232,14 +226,14 @@ namespace DOL.FTP
 			TcpListener aListner = null;
 			TcpClient aClient = null;
 			NetworkStream aNetworkStream = null;
-			ArrayList aTempMessageList = new ArrayList();
+			var aTempMessageList = new ArrayList();
 			int aReturnValue = 0;
 			string aReturnValueMessage = "";
-			ArrayList aFileList = new ArrayList();
+			var aFileList = new ArrayList();
 
 			SetTransferType(FTPFileTransferType.ASCII);
 
-			if(mMode == FTPMode.Active)
+			if (mMode == FTPMode.Active)
 			{
 				aListner = CreateDataListner();
 				aListner.Start();
@@ -251,13 +245,13 @@ namespace DOL.FTP
 
 			aTempMessageList = new ArrayList();
 			aTempMessageList = SendCommand("NLST");
-			aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-			if(!(aReturnValue == 150 || aReturnValue == 125))
+			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+			if (!(aReturnValue == 150 || aReturnValue == 125))
 			{
-				throw new Exception((string)aTempMessageList[0]);
+				throw new Exception((string) aTempMessageList[0]);
 			}
 
-			if(mMode == FTPMode.Active)
+			if (mMode == FTPMode.Active)
 			{
 				aClient = aListner.AcceptTcpClient();
 			}
@@ -265,19 +259,19 @@ namespace DOL.FTP
 
 			aFileList = ReadLines(aNetworkStream);
 
-			if(aTempMessageList.Count == 1)
+			if (aTempMessageList.Count == 1)
 			{
 				aTempMessageList = Read();
-				aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-				aReturnValueMessage = (string)aTempMessageList[0];
+				aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+				aReturnValueMessage = (string) aTempMessageList[0];
 			}
 			else
 			{
-				aReturnValue = GetMessageReturnValue((string)aTempMessageList[1]);
-				aReturnValueMessage = (string)aTempMessageList[1];
+				aReturnValue = GetMessageReturnValue((string) aTempMessageList[1]);
+				aReturnValueMessage = (string) aTempMessageList[1];
 			}
 
-			if(!(aReturnValue == 226))
+			if (!(aReturnValue == 226))
 			{
 				throw new Exception(aReturnValueMessage);
 			}
@@ -285,7 +279,7 @@ namespace DOL.FTP
 			aNetworkStream.Close();
 			aClient.Close();
 
-			if(mMode == FTPMode.Active)
+			if (mMode == FTPMode.Active)
 			{
 				aListner.Stop();
 			}
@@ -305,14 +299,14 @@ namespace DOL.FTP
 			TcpListener aListner = null;
 			TcpClient aClient = null;
 			NetworkStream aNetworkStream = null;
-			ArrayList aTempMessageList = new ArrayList();
+			var aTempMessageList = new ArrayList();
 			int aReturnValue = 0;
 			string aReturnValueMessage = "";
 			aTempMessageList = new ArrayList();
 
 			SetTransferType(pType);
 
-			if(mMode == FTPMode.Active)
+			if (mMode == FTPMode.Active)
 			{
 				aListner = CreateDataListner();
 				aListner.Start();
@@ -323,24 +317,24 @@ namespace DOL.FTP
 			}
 
 			aTempMessageList = SendCommand("STOR " + pRemoteFileName);
-			aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-			if(!(aReturnValue == 150 || aReturnValue == 125))
+			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+			if (!(aReturnValue == 150 || aReturnValue == 125))
 			{
-				throw new Exception((string)aTempMessageList[0]);
+				throw new Exception((string) aTempMessageList[0]);
 			}
 
-			if(mMode == FTPMode.Active)
+			if (mMode == FTPMode.Active)
 			{
 				aClient = aListner.AcceptTcpClient();
 			}
 
 			aNetworkStream = aClient.GetStream();
 
-			Byte[] aBuffer = new Byte[BLOCK_SIZE];
+			var aBuffer = new Byte[BLOCK_SIZE];
 			int iBytes = 0;
 			int iTotalBytes = 0;
 
-			while(iTotalBytes < pStream.Length)
+			while (iTotalBytes < pStream.Length)
 			{
 				iBytes = pStream.Read(aBuffer, 0, BLOCK_SIZE);
 				iTotalBytes = iTotalBytes + iBytes;
@@ -352,24 +346,24 @@ namespace DOL.FTP
 			aNetworkStream.Close();
 			aClient.Close();
 
-			if(mMode == FTPMode.Active)
+			if (mMode == FTPMode.Active)
 			{
 				aListner.Stop();
 			}
 
-			if(aTempMessageList.Count == 1)
+			if (aTempMessageList.Count == 1)
 			{
 				aTempMessageList = Read();
-				aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-				aReturnValueMessage = (string)aTempMessageList[0];
+				aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+				aReturnValueMessage = (string) aTempMessageList[0];
 			}
 			else
 			{
-				aReturnValue = GetMessageReturnValue((string)aTempMessageList[1]);
-				aReturnValueMessage = (string)aTempMessageList[1];
+				aReturnValue = GetMessageReturnValue((string) aTempMessageList[1]);
+				aReturnValueMessage = (string) aTempMessageList[1];
 			}
 
-			if(!(aReturnValue == 226))
+			if (!(aReturnValue == 226))
 			{
 				throw new Exception(aReturnValueMessage);
 			}
@@ -394,7 +388,7 @@ namespace DOL.FTP
 		/// <param name="pType">The transfer type</param>
 		public virtual void SendFile(string pLocalFileName, string pRemoteFileName, FTPFileTransferType pType)
 		{
-			using (FileStream file = new FileStream(pLocalFileName,FileMode.Open))
+			using (var file = new FileStream(pLocalFileName, FileMode.Open))
 			{
 				SendStream(file, pRemoteFileName, pType);
 			}
@@ -412,13 +406,13 @@ namespace DOL.FTP
 			TcpListener aListner = null;
 			TcpClient aClient = null;
 			NetworkStream aNetworkStream = null;
-			ArrayList aTempMessageList = new ArrayList();
+			var aTempMessageList = new ArrayList();
 			int aReturnValue = 0;
 			string aReturnValueMessage = "";
 
 			SetTransferType(pType);
 
-			if(mMode == FTPMode.Active)
+			if (mMode == FTPMode.Active)
 			{
 				aListner = CreateDataListner();
 				aListner.Start();
@@ -430,28 +424,28 @@ namespace DOL.FTP
 
 			aTempMessageList = new ArrayList();
 			aTempMessageList = SendCommand("RETR " + pRemoteFileName);
-			aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-			if(!(aReturnValue == 150 || aReturnValue == 125))
+			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+			if (!(aReturnValue == 150 || aReturnValue == 125))
 			{
-				throw new Exception((string)aTempMessageList[0]);
+				throw new Exception((string) aTempMessageList[0]);
 			}
 
-			if(mMode == FTPMode.Active)
+			if (mMode == FTPMode.Active)
 			{
 				aClient = aListner.AcceptTcpClient();
 			}
 
 			aNetworkStream = aClient.GetStream();
 
-			Byte[] aBuffer = new Byte[BLOCK_SIZE];
+			var aBuffer = new Byte[BLOCK_SIZE];
 			int iBytes = 0;
 
 			bool bRead = true;
-			while(bRead)
+			while (bRead)
 			{
 				iBytes = aNetworkStream.Read(aBuffer, 0, aBuffer.Length);
 				pStream.Write(aBuffer, 0, iBytes);
-				if(iBytes == 0)
+				if (iBytes == 0)
 				{
 					bRead = false;
 				}
@@ -462,31 +456,31 @@ namespace DOL.FTP
 			aNetworkStream.Close();
 			aClient.Close();
 
-			if(mMode == FTPMode.Active)
+			if (mMode == FTPMode.Active)
 			{
 				aListner.Stop();
 			}
 
-			if(aTempMessageList.Count == 1)
+			if (aTempMessageList.Count == 1)
 			{
 				aTempMessageList = Read();
-				aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-				aReturnValueMessage = (string)aTempMessageList[0];
+				aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+				aReturnValueMessage = (string) aTempMessageList[0];
 			}
 			else
 			{
-				aReturnValue = GetMessageReturnValue((string)aTempMessageList[1]);
-				aReturnValueMessage = (string)aTempMessageList[1];
+				aReturnValue = GetMessageReturnValue((string) aTempMessageList[1]);
+				aReturnValueMessage = (string) aTempMessageList[1];
 			}
 
-			if(!(aReturnValue == 226))
+			if (!(aReturnValue == 226))
 			{
 				throw new Exception(aReturnValueMessage);
 			}
 
 			UnlockTcpClient();
 		}
-		
+
 		/// <summary>
 		/// Retrieves a remote file
 		/// </summary>
@@ -505,24 +499,24 @@ namespace DOL.FTP
 		/// <param name="pType">The transfer type</param>
 		public virtual void GetFile(string pRemoteFileName, string pLocalFileName, FTPFileTransferType pType)
 		{
-			GetStream(pRemoteFileName, new FileStream(pLocalFileName,FileMode.Create), pType);
+			GetStream(pRemoteFileName, new FileStream(pLocalFileName, FileMode.Create), pType);
 		}
-		
+
 		/// <summary>
 		/// Deletes a remote file
 		/// </summary>
 		/// <param name="pRemoteFileName">The remote filename</param>
 		public virtual void DeleteFile(String pRemoteFileName)
 		{
-			lock(mTCPClient)
+			lock (mTCPClient)
 			{
-				ArrayList aTempMessageList = new ArrayList();
+				var aTempMessageList = new ArrayList();
 				int aReturnValue = 0;
 				aTempMessageList = SendCommand("DELE " + pRemoteFileName);
-				aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-				if(aReturnValue != 250)
+				aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+				if (aReturnValue != 250)
 				{
-					throw new Exception((string)aTempMessageList[0]);
+					throw new Exception((string) aTempMessageList[0]);
 				}
 			}
 		}
@@ -535,17 +529,17 @@ namespace DOL.FTP
 		{
 			LockTcpClient();
 
-			ArrayList aTempMessageList = new ArrayList();
+			var aTempMessageList = new ArrayList();
 			int aReturnValue = 0;
 			aTempMessageList = SendCommand("CWD " + pRemotePath);
-			aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-			if(aReturnValue != 250)
+			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+			if (aReturnValue != 250)
 			{
-				throw new Exception((string)aTempMessageList[0]);
+				throw new Exception((string) aTempMessageList[0]);
 			}
 			UnlockTcpClient();
 		}
-		
+
 		private void SetTransferType(FTPFileTransferType pType)
 		{
 			switch (pType)
@@ -565,61 +559,60 @@ namespace DOL.FTP
 		{
 			LockTcpClient();
 
-			ArrayList aTempMessageList = new ArrayList();
+			var aTempMessageList = new ArrayList();
 			int aReturnValue = 0;
 			aTempMessageList = SendCommand(pMode);
-			aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-			if(aReturnValue != 200)
+			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+			if (aReturnValue != 200)
 			{
-				throw new Exception((string)aTempMessageList[0]);
+				throw new Exception((string) aTempMessageList[0]);
 			}
 			UnlockTcpClient();
 		}
-		
+
 		private TcpListener CreateDataListner()
 		{
 			int aPort = GetPortNumber();
 			SetDataPort(aPort);
 			IPAddress ipAddress = Dns.GetHostEntry("localhost").AddressList[0];
 
-			TcpListener aListner = new TcpListener(ipAddress, aPort);
-			return aListner; 
+			var aListner = new TcpListener(ipAddress, aPort);
+			return aListner;
 		}
-		
+
 		private TcpClient CreateDataClient()
 		{
 			int aPort = GetPortNumber();
 
-			IPEndPoint ep = new 
+			var ep = new
 				IPEndPoint(GetLocalAddressList()[0], aPort);
 
-			TcpClient aClient = new TcpClient();
+			var aClient = new TcpClient();
 
 			aClient.Connect(ep);
 
 			return aClient;
 		}
-		
+
 		private void SetDataPort(int pPortNumber)
 		{
 			LockTcpClient();
 
-			ArrayList aTempMessageList = new ArrayList();
+			var aTempMessageList = new ArrayList();
 			int aReturnValue = 0;
 			int iPortHigh = pPortNumber >> 8;
 			int iPortLow = pPortNumber & 255;
 
-			aTempMessageList = SendCommand("PORT " 
-				+ GetLocalAddressList()[0].ToString().Replace(".", ",")
-				+ "," + iPortHigh.ToString() + "," + iPortLow);
+			aTempMessageList = SendCommand("PORT "
+			                               + GetLocalAddressList()[0].ToString().Replace(".", ",")
+			                               + "," + iPortHigh + "," + iPortLow);
 
-			aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-			if(aReturnValue != 200)
+			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+			if (aReturnValue != 200)
 			{
-				throw new Exception((string)aTempMessageList[0]);
+				throw new Exception((string) aTempMessageList[0]);
 			}
 			UnlockTcpClient();
-
 		}
 
 		/// <summary>
@@ -630,14 +623,14 @@ namespace DOL.FTP
 		{
 			LockTcpClient();
 
-			ArrayList aTempMessageList = new ArrayList();
+			var aTempMessageList = new ArrayList();
 			int aReturnValue = 0;
 
 			aTempMessageList = SendCommand("MKD " + pDirectoryName);
-			aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-			if(aReturnValue != 257)
+			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+			if (aReturnValue != 257)
 			{
-				throw new Exception((string)aTempMessageList[0]);
+				throw new Exception((string) aTempMessageList[0]);
 			}
 
 			UnlockTcpClient();
@@ -651,14 +644,14 @@ namespace DOL.FTP
 		{
 			LockTcpClient();
 
-			ArrayList aTempMessageList = new ArrayList();
+			var aTempMessageList = new ArrayList();
 			int aReturnValue = 0;
 
 			aTempMessageList = SendCommand("RMD " + pDirectoryName);
-			aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-			if(aReturnValue != 250)
+			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+			if (aReturnValue != 250)
 			{
-				throw new Exception((string)aTempMessageList[0]);
+				throw new Exception((string) aTempMessageList[0]);
 			}
 
 			UnlockTcpClient();
@@ -671,14 +664,14 @@ namespace DOL.FTP
 		/// <returns>An array containing the response</returns>
 		public ArrayList SendCommand(String pCommand)
 		{
-			while(mActiveConnectionsCount!=0)
+			while (mActiveConnectionsCount != 0)
 			{
 				Thread.Sleep(100);
 			}
-			
+
 			mActiveConnectionsCount++;
 
-			Byte[] cmdBytes = Encoding.ASCII.GetBytes((pCommand+"\r\n").ToCharArray());
+			Byte[] cmdBytes = Encoding.ASCII.GetBytes((pCommand + "\r\n").ToCharArray());
 			NetworkStream aStream = mTCPClient.GetStream();
 			aStream.Write(cmdBytes, 0, cmdBytes.Length);
 
@@ -687,14 +680,14 @@ namespace DOL.FTP
 			return Read();
 		}
 
-		private ArrayList Read ()
+		private ArrayList Read()
 		{
 			NetworkStream aStream = mTCPClient.GetStream();
-			ArrayList aMessageList = new ArrayList();
+			var aMessageList = new ArrayList();
 			ArrayList aTempMessage = ReadLines(aStream);
-			if(aTempMessage.Count > 0)
+			if (aTempMessage.Count > 0)
 			{
-				while(((string)aTempMessage[aTempMessage.Count - 1]).Substring(3, 1) == "-")
+				while (((string) aTempMessage[aTempMessage.Count - 1]).Substring(3, 1) == "-")
 				{
 					aMessageList.AddRange(aTempMessage);
 					aTempMessage = ReadLines(aStream);
@@ -706,22 +699,22 @@ namespace DOL.FTP
 
 			return aMessageList;
 		}
-		
+
 		private ArrayList ReadLines(NetworkStream pStream)
 		{
-			ArrayList aMessageList = new ArrayList();
+			var aMessageList = new ArrayList();
 			char[] seperator = {'\n'};
 			char[] toRemove = {'\r'};
-			Byte[] aBuffer = new Byte[BLOCK_SIZE];
+			var aBuffer = new Byte[BLOCK_SIZE];
 			int bytes = 0;
 			string tmpMes = "";
 			bool bRead = true;
 
-			while(bRead)
+			while (bRead)
 			{
 				bytes = pStream.Read(aBuffer, 0, aBuffer.Length);
 				tmpMes += Encoding.ASCII.GetString(aBuffer, 0, bytes);
-				if(bytes < aBuffer.Length)
+				if (bytes < aBuffer.Length)
 				{
 					bRead = false;
 				}
@@ -730,7 +723,7 @@ namespace DOL.FTP
 			string[] mess = tmpMes.Split(seperator);
 			for (int i = 0; i < mess.Length; i++)
 			{
-				if(mess[i].Length > 0)
+				if (mess[i].Length > 0)
 				{
 					aMessageList.Add(mess[i].Trim(toRemove));
 				}
@@ -751,33 +744,34 @@ namespace DOL.FTP
 			switch (mMode)
 			{
 				case FTPMode.Active:
-					Random rnd = new Random((int)DateTime.Now.Ticks);
+					var rnd = new Random((int) DateTime.Now.Ticks);
 					iPort = DATA_PORT_RANGE_FROM + rnd.Next(DATA_PORT_RANGE_TO - DATA_PORT_RANGE_FROM);
 					break;
 				case FTPMode.Passive:
-					ArrayList aTempMessageList = new ArrayList();
+					var aTempMessageList = new ArrayList();
 					int aReturnValue = 0;
 					aTempMessageList = SendCommand("PASV");
-					aReturnValue = GetMessageReturnValue((string)aTempMessageList[0]);
-					if(aReturnValue != 227)
+					aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
+					if (aReturnValue != 227)
 					{
-						if(((string)aTempMessageList[0]).Length > 4)
+						if (((string) aTempMessageList[0]).Length > 4)
 						{
-							throw new Exception((string)aTempMessageList[0]);
+							throw new Exception((string) aTempMessageList[0]);
 						}
 						else
 						{
-							throw new Exception((string)aTempMessageList[0] + " Passive Mode not implemented");
+							throw new Exception((string) aTempMessageList[0] + " Passive Mode not implemented");
 						}
 					}
-					string aMessage = (string)aTempMessageList[0];
+					var aMessage = (string) aTempMessageList[0];
 					int iIndex1 = aMessage.IndexOf(",", 0);
 					int iIndex2 = aMessage.IndexOf(",", iIndex1 + 1);
 					int iIndex3 = aMessage.IndexOf(",", iIndex2 + 1);
 					int iIndex4 = aMessage.IndexOf(",", iIndex3 + 1);
 					int iIndex5 = aMessage.IndexOf(",", iIndex4 + 1);
 					int iIndex6 = aMessage.IndexOf(")", iIndex5 + 1);
-					iPort = 256 * int.Parse(aMessage.Substring(iIndex4 + 1, iIndex5 - iIndex4 - 1)) + int.Parse(aMessage.Substring(iIndex5 + 1, iIndex6 - iIndex5 - 1));
+					iPort = 256*int.Parse(aMessage.Substring(iIndex4 + 1, iIndex5 - iIndex4 - 1)) +
+					        int.Parse(aMessage.Substring(iIndex5 + 1, iIndex6 - iIndex5 - 1));
 					break;
 			}
 			UnlockTcpClient();
@@ -786,7 +780,7 @@ namespace DOL.FTP
 
 		private void AddMessagesToMessageList(ArrayList mMessages)
 		{
-			if(mLogMessages)
+			if (mLogMessages)
 			{
 				mMessageList.AddRange(mMessages);
 			}
@@ -799,12 +793,12 @@ namespace DOL.FTP
 
 		private void LockTcpClient()
 		{
-			System.Threading.Monitor.Enter(mTCPClient);
+			Monitor.Enter(mTCPClient);
 		}
 
 		private void UnlockTcpClient()
 		{
-			System.Threading.Monitor.Exit(mTCPClient);
+			Monitor.Exit(mTCPClient);
 		}
 	}
 }

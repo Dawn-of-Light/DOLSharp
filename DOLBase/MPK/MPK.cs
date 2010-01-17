@@ -17,9 +17,10 @@
  *
  */
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Specialized;
+using System.IO;
+using System.Text;
 using ICSharpCode.SharpZipLib.Checksums;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 
@@ -30,44 +31,49 @@ namespace DOL.MPK
 	/// </summary>
 	public class MPK
 	{
-		/// <summary>
-		/// The magic at the top of the file
-		/// </summary>
-		public static readonly uint MAGIC = 0x4b41504d; //MPAK
-		/// <summary>
-		/// CRC32 of the deflated directory
-		/// </summary>
-		Crc32 m_crc = new Crc32();
-		/// <summary>
-		/// Compressed size of the directory section
-		/// </summary>
-		int m_sizeDir = 0;
-		/// <summary>
-		/// Compressed size of the name section
-		/// </summary>
-		int m_sizeName = 0;
-		/// <summary>
-		/// Number of files in the directory
-		/// </summary>
-		int m_numFiles = 0;
-		/// <summary>
-		/// Name of the archive
-		/// </summary>
-		string m_name = "";
-		/// <summary>
-		/// Holds all of the files in the MPK
-		/// </summary>
-		HybridDictionary m_files = new HybridDictionary();
+		#region Delegates
 
 		/// <summary>
 		/// Delegate to be called when an invalid file was found inside the MPK
 		/// </summary>
 		public delegate void InvalidFileEventHandler(object sender, EventArgs e);
 
+		#endregion
+
 		/// <summary>
-		/// The event to fire if an invalid file was found
+		/// The magic at the top of the file
 		/// </summary>
-		protected event InvalidFileEventHandler InvalidFile;
+		public static readonly uint MAGIC = 0x4b41504d; //MPAK
+
+		/// <summary>
+		/// CRC32 of the deflated directory
+		/// </summary>
+		private Crc32 m_crc = new Crc32();
+
+		/// <summary>
+		/// Holds all of the files in the MPK
+		/// </summary>
+		private HybridDictionary m_files = new HybridDictionary();
+
+		/// <summary>
+		/// Name of the archive
+		/// </summary>
+		private string m_name = "";
+
+		/// <summary>
+		/// Number of files in the directory
+		/// </summary>
+		private int m_numFiles = 0;
+
+		/// <summary>
+		/// Compressed size of the directory section
+		/// </summary>
+		private int m_sizeDir = 0;
+
+		/// <summary>
+		/// Compressed size of the name section
+		/// </summary>
+		private int m_sizeName = 0;
 
 		/// <summary>
 		/// Creates a new MPK file
@@ -76,7 +82,7 @@ namespace DOL.MPK
 		/// <param name="create">if true, creates the file, else parses an existing file</param>
 		public MPK(string fname, bool create)
 		{
-			if(!create)
+			if (!create)
 			{
 				Read(fname);
 			}
@@ -98,14 +104,8 @@ namespace DOL.MPK
 		/// </summary>
 		public string Name
 		{
-			get
-			{
-				return m_name;
-			}
-			set
-			{
-				m_name = value;
-			}
+			get { return m_name; }
+			set { m_name = value; }
 		}
 
 		/// <summary>
@@ -113,10 +113,7 @@ namespace DOL.MPK
 		/// </summary>
 		public Crc32 CRC
 		{
-			get
-			{
-				return m_crc;
-			}
+			get { return m_crc; }
 		}
 
 		/// <summary>
@@ -124,10 +121,7 @@ namespace DOL.MPK
 		/// </summary>
 		public int DirectorySize
 		{
-			get
-			{
-				return m_sizeDir;
-			}
+			get { return m_sizeDir; }
 		}
 
 		/// <summary>
@@ -135,10 +129,7 @@ namespace DOL.MPK
 		/// </summary>
 		public int Count
 		{
-			get
-			{
-				return m_files.Count;
-			}
+			get { return m_files.Count; }
 		}
 
 		/// <summary>
@@ -148,14 +139,19 @@ namespace DOL.MPK
 		{
 			get
 			{
-				if(m_files.Contains(fname.ToLower()))
+				if (m_files.Contains(fname.ToLower()))
 				{
-					return (MPKFile)m_files[fname.ToLower()];
+					return (MPKFile) m_files[fname.ToLower()];
 				}
 
 				return null;
 			}
 		}
+
+		/// <summary>
+		/// The event to fire if an invalid file was found
+		/// </summary>
+		protected event InvalidFileEventHandler InvalidFile;
 
 		/// <summary>
 		/// Gets a list of all the files inside this MPK
@@ -173,7 +169,7 @@ namespace DOL.MPK
 		/// <returns>true if successfull, false if the file is already contained</returns>
 		public bool AddFile(MPKFile file)
 		{
-			if(!m_files.Contains(file.Header.Name))
+			if (!m_files.Contains(file.Header.Name))
 			{
 				m_files.Add(file.Header.Name, file);
 				return true;
@@ -189,7 +185,7 @@ namespace DOL.MPK
 		/// <returns>true if the file was successfully removed, false if it wasn't in the MPK</returns>
 		public bool RemoveFile(string fname)
 		{
-			if(m_files.Contains(fname.ToLower()))
+			if (m_files.Contains(fname.ToLower()))
 			{
 				m_files.Remove(fname.ToLower());
 				return true;
@@ -213,7 +209,7 @@ namespace DOL.MPK
 		/// </summary>
 		public void Save()
 		{
-			Write(this.Name);
+			Write(Name);
 		}
 
 		/// <summary>
@@ -222,67 +218,67 @@ namespace DOL.MPK
 		/// <param name="fname"></param>
 		public void Write(string fname)
 		{
-			MemoryStream dirmem = new MemoryStream(m_files.Count * MPKFileHeader.MAX_SIZE);
-			MemoryStream filemem = new MemoryStream();
-			BinaryWriter wrtr = new BinaryWriter(filemem, System.Text.Encoding.UTF8);
+			var dirmem = new MemoryStream(m_files.Count*MPKFileHeader.MAX_SIZE);
+			var filemem = new MemoryStream();
+			var wrtr = new BinaryWriter(filemem, Encoding.UTF8);
 
-			MPKFile[] files = new MPKFile[m_files.Count];
+			var files = new MPKFile[m_files.Count];
 			int index = 0;
 			uint offset = 0;
 			uint diroffset = 0;
 
-			foreach(MPKFile file in m_files.Values)
+			foreach (MPKFile file in m_files.Values)
 			{
 				file.Header.DirectoryOffset = diroffset;
 				file.Header.Offset = offset;
 				files[index] = file;
-				file.Header.Write(new BinaryWriter(dirmem, System.Text.Encoding.UTF8));
+				file.Header.Write(new BinaryWriter(dirmem, Encoding.UTF8));
 				offset += file.Header.Size;
 				diroffset += file.Header.CompressedSize;
 				index++;
 			}
 
-			Deflater def = new Deflater();
-			def.SetInput(dirmem.GetBuffer(), 0, (int)dirmem.Position);
+			var def = new Deflater();
+			def.SetInput(dirmem.GetBuffer(), 0, (int) dirmem.Position);
 			def.Finish();
-			byte[] dir = new byte[dirmem.Position];
+			var dir = new byte[dirmem.Position];
 			def.Deflate(dir);
 			m_sizeDir = (int) def.TotalOut;
 			def = new Deflater();
 
 			m_crc.Reset();
 			m_crc.Update(dir, 0, m_sizeDir);
-			
-			def.SetInput(System.Text.Encoding.UTF8.GetBytes(m_name));
+
+			def.SetInput(Encoding.UTF8.GetBytes(m_name));
 			def.Finish();
-			byte[] name = new byte[m_name.Length];
+			var name = new byte[m_name.Length];
 			def.Deflate(name);
 
 			m_numFiles = m_files.Count;
 			m_sizeName = (int) def.TotalOut;
 
-			wrtr.Write((int)m_crc.Value);
+			wrtr.Write((int) m_crc.Value);
 			wrtr.Write(m_sizeDir);
 			wrtr.Write(m_sizeName);
 			wrtr.Write(m_numFiles);
 
-			byte[] buf = new byte[16];
+			var buf = new byte[16];
 			Array.Copy(filemem.GetBuffer(), 0, buf, 0, 16);
 
-			for(byte i = 0; i < 16; i++)
+			for (byte i = 0; i < 16; i++)
 			{
 				buf[i] ^= i;
 			}
 
-			using(wrtr = new BinaryWriter(File.Open(fname, FileMode.Create, FileAccess.Write), System.Text.Encoding.UTF8))
+			using (wrtr = new BinaryWriter(File.Open(fname, FileMode.Create, FileAccess.Write), Encoding.UTF8))
 			{
 				wrtr.Write(MAGIC);
-				wrtr.Write((byte)2);
+				wrtr.Write((byte) 2);
 				wrtr.Write(buf, 0, 16);
 				wrtr.Write(name, 0, m_sizeName);
 				wrtr.Write(dir, 0, m_sizeDir);
 
-				foreach(MPKFile file in files)
+				foreach (MPKFile file in files)
 				{
 					wrtr.Write(file.CompressedData);
 				}
@@ -309,31 +305,31 @@ namespace DOL.MPK
 		/// <param name="dirname">The directory where to put the files</param>
 		public void Extract(string dirname)
 		{
-			if(!Directory.Exists(dirname))
+			if (!Directory.Exists(dirname))
 			{
 				Directory.CreateDirectory(dirname);
 			}
 
-			if(!dirname.EndsWith(Path.DirectorySeparatorChar.ToString()))
+			if (!dirname.EndsWith(Path.DirectorySeparatorChar.ToString()))
 			{
 				dirname += Path.DirectorySeparatorChar;
 			}
 
-			foreach(MPKFile file in m_files.Values)
+			foreach (MPKFile file in m_files.Values)
 			{
 				file.Save(dirname);
 			}
 		}
-				
+
 		/// <summary>
 		/// Reads a MPK file
 		/// </summary>
 		/// <param name="fname">The MPK filename to read</param>
 		public void Read(string fname)
 		{
-			using(BinaryReader rdr = new BinaryReader(File.OpenRead(fname), System.Text.Encoding.UTF8))
+			using (var rdr = new BinaryReader(File.OpenRead(fname), Encoding.UTF8))
 			{
-				if(rdr.ReadUInt32() != MAGIC)
+				if (rdr.ReadUInt32() != MAGIC)
 				{
 					throw new Exception("Invalid MPK file");
 				}
@@ -358,23 +354,23 @@ namespace DOL.MPK
 			m_sizeName = 0;
 			m_numFiles = 0;
 
-			byte[] buf = new byte[16];
+			var buf = new byte[16];
 			rdr.Read(buf, 0, 16);
 
-			for(byte i = 0; i < 16; ++i)
+			for (byte i = 0; i < 16; ++i)
 			{
 				buf[i] ^= i;
 			}
 
-			m_crc.Value = (long)((buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3]);
+			m_crc.Value = (long) ((buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3]);
 			m_sizeDir = ((buf[4] << 24) | (buf[5] << 16) | (buf[6] << 8) | buf[7]);
 			m_sizeName = ((buf[8] << 24) | (buf[9] << 16) | (buf[10] << 8) | buf[11]);
 			m_numFiles = ((buf[12] << 24) | (buf[13] << 16) | (buf[14] << 8) | buf[15]);
 
 			buf = new byte[m_sizeName];
 			rdr.Read(buf, 0, m_sizeName);
-			
-			Inflater inf = new Inflater();
+
+			var inf = new Inflater();
 			inf.SetInput(buf);
 			buf = new byte[1024];
 			inf.Inflate(buf);
@@ -382,36 +378,36 @@ namespace DOL.MPK
 			m_name = Marshal.ConvertToString(buf);
 			long totalin = 0;
 			buf = ReadDirectory(rdr, ref totalin);
-			MemoryStream directory = new MemoryStream(buf);
-				
+			var directory = new MemoryStream(buf);
+
 			long pos = rdr.BaseStream.Position;
 			long len = rdr.BaseStream.Seek(0, SeekOrigin.End);
 			rdr.BaseStream.Position = pos;
 			buf = new byte[len - pos];
 			rdr.Read(buf, 0, buf.Length);
-			MemoryStream files = new MemoryStream(buf);
+			var files = new MemoryStream(buf);
 
 			rdr.BaseStream.Position = pos - totalin;
 			buf = new byte[totalin];
 			rdr.Read(buf, 0, buf.Length);
 
-			Crc32 crc = new Crc32();
+			var crc = new Crc32();
 			crc.Reset();
 			crc.Update(buf);
 
-			if(crc.Value != m_crc.Value)
+			if (crc.Value != m_crc.Value)
 			{
 				throw new Exception("Invalid or corrupt MPK");
 			}
 
-			while(directory.Position < directory.Length && files.Position < files.Length)
+			while (directory.Position < directory.Length && files.Position < files.Length)
 			{
 				crc.Reset();
 				buf = new byte[MPKFileHeader.MAX_SIZE];
 				directory.Read(buf, 0, MPKFileHeader.MAX_SIZE);
-				MPKFileHeader hdr = new MPKFileHeader(new BinaryReader(new MemoryStream(buf), System.Text.Encoding.UTF8));
+				var hdr = new MPKFileHeader(new BinaryReader(new MemoryStream(buf), Encoding.UTF8));
 
-				byte[] compbuf = new byte[hdr.CompressedSize];
+				var compbuf = new byte[hdr.CompressedSize];
 				files.Read(compbuf, 0, compbuf.Length);
 
 				crc.Update(compbuf, 0, compbuf.Length);
@@ -421,10 +417,10 @@ namespace DOL.MPK
 				buf = new byte[hdr.Size];
 				inf.Inflate(buf, 0, buf.Length);
 
-				MPKFile file = new MPKFile(compbuf, buf, hdr);
-				
+				var file = new MPKFile(compbuf, buf, hdr);
 
-				if(crc.Value != hdr.CRC.Value)
+
+				if (crc.Value != hdr.CRC.Value)
 				{
 					OnInvalidFile(file);
 					continue;
@@ -434,20 +430,20 @@ namespace DOL.MPK
 			}
 		}
 
-		byte[] ReadDirectory(BinaryReader rdr, ref long totalin)
+		private byte[] ReadDirectory(BinaryReader rdr, ref long totalin)
 		{
 			int totalout = 0;
-			byte[] input = new byte[1024];
-			byte[] output = new byte[1024];
-			Inflater inf = new Inflater();
+			var input = new byte[1024];
+			var output = new byte[1024];
+			var inf = new Inflater();
 			totalin = 0;
 
-			while(!inf.IsFinished)
+			while (!inf.IsFinished)
 			{
-				while(inf.IsNeedingInput)
+				while (inf.IsNeedingInput)
 				{
 					int count = 0;
-					if((count = rdr.Read(input, 0, 1024)) <= 0)
+					if ((count = rdr.Read(input, 0, 1024)) <= 0)
 					{
 						throw new Exception("EOF");
 					}
@@ -456,9 +452,9 @@ namespace DOL.MPK
 					totalin += count;
 				}
 
-				if(totalout == output.Length)
+				if (totalout == output.Length)
 				{
-					byte[] newOutput = new byte[output.Length * 2];
+					var newOutput = new byte[output.Length*2];
 					Array.Copy(output, newOutput, output.Length);
 					output = newOutput;
 				}
@@ -466,7 +462,7 @@ namespace DOL.MPK
 				totalout += inf.Inflate(output, totalout, output.Length - totalout);
 			}
 
-			byte[] final = new byte[totalout];
+			var final = new byte[totalout];
 			Array.Copy(output, 0, final, 0, totalout);
 			rdr.BaseStream.Position = rdr.BaseStream.Position - inf.RemainingInput;
 			totalin -= inf.RemainingInput;
@@ -479,19 +475,19 @@ namespace DOL.MPK
 		public void Display()
 		{
 			Console.WriteLine("**************************************************************************");
-			Console.WriteLine(this.m_name);
-			Console.WriteLine("{0} files", this.m_numFiles);
+			Console.WriteLine(m_name);
+			Console.WriteLine("{0} files", m_numFiles);
 			Console.WriteLine("{0} actual files", m_files.Count);
 			Console.WriteLine("**************************************************************************");
-			foreach(MPKFile file in m_files.Values)
+			foreach (MPKFile file in m_files.Values)
 			{
 				file.Display();
 			}
 		}
 
-		void OnInvalidFile(MPKFile file)
+		private void OnInvalidFile(MPKFile file)
 		{
-			if(InvalidFile != null)
+			if (InvalidFile != null)
 			{
 				InvalidFile(file, new EventArgs());
 			}

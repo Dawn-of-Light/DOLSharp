@@ -19,9 +19,8 @@
 using System;
 using System.IO;
 using System.Net;
-using DOL.Config;
 
-namespace DOL
+namespace DOL.Config
 {
 	/// <summary>
 	/// This is a server configuration
@@ -31,56 +30,56 @@ namespace DOL
 		/// <summary>
 		/// Auto Detect the RegionIP
 		/// </summary>
-		protected bool m_detectRegionIP;
+		private bool _detectRegionIP;
 
 		/// <summary>
 		/// Enable uPnP features
 		/// </summary>
-		protected bool m_enableUPnP;
+		private bool _enableUPnP;
 
 		/// <summary>
 		/// The ip address the server should use for listening
 		/// </summary>
-		protected IPAddress m_ip;
+		private IPAddress _ip;
 
 		/// <summary>
 		/// The port the server should listen to
 		/// </summary>
-		protected ushort m_port;
+		private ushort _port;
 
 		/// <summary>
 		/// The region IP
 		/// </summary>
-		protected IPAddress m_regionIP;
+		private IPAddress _regionIP;
 
 		/// <summary>
 		/// The region port
 		/// </summary>
-		protected ushort m_regionPort;
+		private ushort _regionPort;
 
 		/// <summary>
 		/// The UDP IP
 		/// </summary>
-		protected IPAddress m_udpIP;
+		private IPAddress _udpIP;
 
 		/// <summary>
 		/// The UDP port
 		/// </summary>
-		protected ushort m_udpPort;
+		private ushort _udpPort;
 
 		/// <summary>
 		/// Constructs a server configuration with default values
 		/// </summary>
-		public BaseServerConfiguration()
+		protected BaseServerConfiguration()
 		{
-			m_port = 10300;
-			m_ip = IPAddress.Any;
-			m_regionIP = IPAddress.Any;
-			m_regionPort = 10400;
-			m_udpIP = IPAddress.Any;
-			m_udpPort = 10400;
-			m_detectRegionIP = true;
-			m_enableUPnP = true;
+			_port = 10300;
+			_ip = IPAddress.Any;
+			_regionIP = IPAddress.Any;
+			_regionPort = 10400;
+			_udpIP = IPAddress.Any;
+			_udpPort = 10400;
+			_detectRegionIP = true;
+			_enableUPnP = true;
 		}
 
 		/// <summary>
@@ -88,8 +87,8 @@ namespace DOL
 		/// </summary>
 		public ushort Port
 		{
-			get { return m_port; }
-			set { m_port = value; }
+			get { return _port; }
+			set { _port = value; }
 		}
 
 		/// <summary>
@@ -97,8 +96,8 @@ namespace DOL
 		/// </summary>
 		public IPAddress Ip
 		{
-			get { return m_ip; }
-			set { m_ip = value; }
+			get { return _ip; }
+			set { _ip = value; }
 		}
 
 		/// <summary>
@@ -106,8 +105,8 @@ namespace DOL
 		/// </summary>
 		public IPAddress RegionIp
 		{
-			get { return m_regionIP; }
-			set { m_regionIP = value; }
+			get { return _regionIP; }
+			set { _regionIP = value; }
 		}
 
 		/// <summary>
@@ -115,8 +114,8 @@ namespace DOL
 		/// </summary>
 		public ushort RegionPort
 		{
-			get { return m_regionPort; }
-			set { m_regionPort = value; }
+			get { return _regionPort; }
+			set { _regionPort = value; }
 		}
 
 		/// <summary>
@@ -124,8 +123,8 @@ namespace DOL
 		/// </summary>
 		public IPAddress UDPIp
 		{
-			get { return m_udpIP; }
-			set { m_udpIP = value; }
+			get { return _udpIP; }
+			set { _udpIP = value; }
 		}
 
 		/// <summary>
@@ -133,14 +132,14 @@ namespace DOL
 		/// </summary>
 		public ushort UDPPort
 		{
-			get { return m_udpPort; }
-			set { m_udpPort = value; }
+			get { return _udpPort; }
+			set { _udpPort = value; }
 		}
 
-		public bool EnableUPnP
+		public bool EnableUpnp
 		{
-			get { return m_enableUPnP; }
-			set { m_enableUPnP = value; }
+			get { return _enableUPnP; }
+			set { _enableUPnP = value; }
 		}
 
 		/// <summary>
@@ -148,8 +147,8 @@ namespace DOL
 		/// </summary>
 		public bool DetectRegionIP
 		{
-			get { return m_detectRegionIP; }
-			set { m_detectRegionIP = value; }
+			get { return _detectRegionIP; }
+			set { _detectRegionIP = value; }
 		}
 
 		/// <summary>
@@ -159,28 +158,20 @@ namespace DOL
 		protected virtual void LoadFromConfig(ConfigElement root)
 		{
 			string ip = root["Server"]["IP"].GetString("any");
-			if (ip == "any")
-				m_ip = IPAddress.Any;
-			else
-				m_ip = IPAddress.Parse(ip);
-			m_port = (ushort) root["Server"]["Port"].GetInt(m_port);
+			_ip = ip == "any" ? IPAddress.Any : IPAddress.Parse(ip);
+			_port = (ushort) root["Server"]["Port"].GetInt(_port);
 
 			ip = root["Server"]["RegionIP"].GetString("any");
-			if (ip == "any")
-				m_regionIP = IPAddress.Any;
-			else
-				m_regionIP = IPAddress.Parse(ip);
-			m_regionPort = (ushort) root["Server"]["RegionPort"].GetInt(m_regionPort);
+			_regionIP = ip == "any" ? IPAddress.Any : IPAddress.Parse(ip);
+			_regionPort = (ushort) root["Server"]["RegionPort"].GetInt(_regionPort);
 
 			ip = root["Server"]["UdpIP"].GetString("any");
-			if (ip == "any")
-				m_udpIP = IPAddress.Any;
-			else
-				m_udpIP = IPAddress.Parse(ip);
-			m_udpPort = (ushort) root["Server"]["UdpPort"].GetInt(m_udpPort);
 
-			m_enableUPnP = root["Server"]["EnableUPnP"].GetBoolean(m_enableUPnP);
-			m_detectRegionIP = root["Server"]["DetectRegionIP"].GetBoolean(m_detectRegionIP);
+			_udpIP = ip == "any" ? IPAddress.Any : IPAddress.Parse(ip);
+			_udpPort = (ushort) root["Server"]["UdpPort"].GetInt(_udpPort);
+
+			_enableUPnP = root["Server"]["EnableUPnP"].GetBoolean(_enableUPnP);
+			_detectRegionIP = root["Server"]["DetectRegionIP"].GetBoolean(_detectRegionIP);
 		}
 
 		/// <summary>
@@ -199,14 +190,14 @@ namespace DOL
 		/// <param name="root">the root config element</param>
 		protected virtual void SaveToConfig(ConfigElement root)
 		{
-			root["Server"]["Port"].Set(m_port);
-			root["Server"]["IP"].Set(m_ip);
-			root["Server"]["RegionIP"].Set(m_regionIP);
-			root["Server"]["RegionPort"].Set(m_regionPort);
-			root["Server"]["UdpIP"].Set(m_udpIP);
-			root["Server"]["UdpPort"].Set(m_udpPort);
-			root["Server"]["EnableUPnP"].Set(m_enableUPnP);
-			root["Server"]["DetectRegionIP"].Set(m_detectRegionIP);
+			root["Server"]["Port"].Set(_port);
+			root["Server"]["IP"].Set(_ip);
+			root["Server"]["RegionIP"].Set(_regionIP);
+			root["Server"]["RegionPort"].Set(_regionPort);
+			root["Server"]["UdpIP"].Set(_udpIP);
+			root["Server"]["UdpPort"].Set(_udpPort);
+			root["Server"]["EnableUPnP"].Set(_enableUPnP);
+			root["Server"]["DetectRegionIP"].Set(_detectRegionIP);
 		}
 
 		/// <summary>
@@ -220,6 +211,7 @@ namespace DOL
 
 			var config = new XMLConfigFile();
 			SaveToConfig(config);
+
 			config.Save(configFile);
 		}
 	}

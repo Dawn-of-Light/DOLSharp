@@ -18,6 +18,7 @@
  */
 using System;
 using System.IO;
+using System.Text;
 using ICSharpCode.SharpZipLib.Checksums;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 
@@ -28,9 +29,9 @@ namespace DOL.MPK
 	/// </summary>
 	public class MPKFile
 	{
-		MPKFileHeader m_hdr = new MPKFileHeader();
-		byte[] m_buf = null;
-		byte[] m_compBuf = null;
+		private byte[] m_buf;
+		private byte[] m_compBuf;
+		private MPKFileHeader m_hdr = new MPKFileHeader();
 
 		/// <summary>
 		/// Constructs a new MPK file entry
@@ -55,6 +56,40 @@ namespace DOL.MPK
 		}
 
 		/// <summary>
+		/// Gets the MPK header
+		/// </summary>
+		public MPKFileHeader Header
+		{
+			get { return m_hdr; }
+		}
+
+		/// <summary>
+		/// Gets the unencrypted Data in the MPK
+		/// </summary>
+		public byte[] Data
+		{
+			get
+			{
+				var buf = new byte[m_buf.Length];
+				m_buf.CopyTo(buf, 0);
+				return buf;
+			}
+		}
+
+		/// <summary>
+		/// Gets the compressed data in the MPK
+		/// </summary>
+		public byte[] CompressedData
+		{
+			get
+			{
+				var buf = new byte[m_hdr.CompressedSize];
+				m_compBuf.CopyTo(buf, 0);
+				return buf;
+			}
+		}
+
+		/// <summary>
 		/// Displays header information of this MPK file entry
 		/// </summary>
 		public void Display()
@@ -68,14 +103,14 @@ namespace DOL.MPK
 		/// <param name="fname">The filename to load</param>
 		public void Load(string fname)
 		{
-			FileInfo fi = new FileInfo(fname);
+			var fi = new FileInfo(fname);
 
-			if(!fi.Exists)
+			if (!fi.Exists)
 			{
-				throw new System.IO.FileNotFoundException("File does not exist", fname);
+				throw new FileNotFoundException("File does not exist", fname);
 			}
 
-			using(FileStream file = fi.OpenRead())
+			using (FileStream file = fi.OpenRead())
 			{
 				m_buf = new byte[fi.Length];
 				file.Read(m_buf, 0, m_buf.Length);
@@ -84,24 +119,24 @@ namespace DOL.MPK
 
 			m_hdr = new MPKFileHeader();
 			m_hdr.Name = fname;
-			m_hdr.Size = (uint)fi.Length;
-			m_hdr.TimeStamp = (uint)DateTime.Now.ToFileTime();
+			m_hdr.Size = (uint) fi.Length;
+			m_hdr.TimeStamp = (uint) DateTime.Now.ToFileTime();
 
-			Deflater def = new Deflater();
+			var def = new Deflater();
 
 			def.SetInput(m_buf, 0, m_buf.Length);
 			def.Finish();
 
 			// create temporary buffer
-			byte[] tempbuffer = new byte[m_buf.Length+m_buf.Length/5];
-			m_hdr.CompressedSize = (uint)def.Deflate(tempbuffer, 0, tempbuffer.Length);
-			
+			var tempbuffer = new byte[m_buf.Length + m_buf.Length/5];
+			m_hdr.CompressedSize = (uint) def.Deflate(tempbuffer, 0, tempbuffer.Length);
+
 			m_compBuf = new byte[m_hdr.CompressedSize];
-			Array.Copy(tempbuffer,0,m_compBuf,0,m_hdr.CompressedSize);
+			Array.Copy(tempbuffer, 0, m_compBuf, 0, m_hdr.CompressedSize);
 
 
-			Crc32 crc = new Crc32();
-			crc.Update(m_compBuf, 0, (int)m_hdr.CompressedSize);
+			var crc = new Crc32();
+			crc.Update(m_compBuf, 0, (int) m_hdr.CompressedSize);
 			m_hdr.CRC = crc;
 		}
 
@@ -111,53 +146,16 @@ namespace DOL.MPK
 		/// <param name="dir">The directory where to save the file</param>
 		public void Save(string dir)
 		{
-			if(!dir.EndsWith(Path.DirectorySeparatorChar.ToString()))
+			if (!dir.EndsWith(Path.DirectorySeparatorChar.ToString()))
 			{
 				dir += Path.DirectorySeparatorChar;
 			}
 
-			using(BinaryWriter writer = new BinaryWriter(File.Create(dir + m_hdr.Name), System.Text.Encoding.UTF8))
+			using (var writer = new BinaryWriter(File.Create(dir + m_hdr.Name), Encoding.UTF8))
 			{
 				writer.Write(m_buf);
 				writer.Flush();
 				writer.Close();
-			}
-		}
-
-		/// <summary>
-		/// Gets the MPK header
-		/// </summary>
-		public MPKFileHeader Header
-		{
-			get
-			{
-				return m_hdr;
-			}
-		}
-
-		/// <summary>
-		/// Gets the unencrypted Data in the MPK
-		/// </summary>
-		public byte[] Data
-		{
-			get
-			{
-				byte[] buf = new byte[m_buf.Length];
-				m_buf.CopyTo(buf, 0);
-				return buf;
-			}
-		}
-
-		/// <summary>
-		/// Gets the compressed data in the MPK
-		/// </summary>
-		public byte[] CompressedData
-		{
-			get
-			{
-				byte[] buf = new byte[m_hdr.CompressedSize];
-				m_compBuf.CopyTo(buf, 0);
-				return buf;
 			}
 		}
 	}

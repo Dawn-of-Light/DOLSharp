@@ -3216,7 +3216,7 @@ namespace DOL.GS
 				GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(Last_LOS_Target_Property, null);
 				if (lastTarget != null && lastTarget == target)
 				{
-					long lastTick = this.TempProperties.getProperty<long>(Last_LOS_Tick_Property, 0);
+					long lastTick = this.TempProperties.getProperty<long>(Last_LOS_Tick_Property);
 					if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
 						return;
 				}
@@ -3450,7 +3450,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (CurrentRegion == null || CurrentRegion.Time - CHARMED_NOEXP_TIMEOUT < TempProperties.getProperty<long>(CHARMED_TICK_PROP, 0L))
+				if (CurrentRegion == null || CurrentRegion.Time - CHARMED_NOEXP_TIMEOUT < TempProperties.getProperty<long>(CHARMED_TICK_PROP))
 					return false;
 				if (this.Brain is IControlledBrain)
 					return false;
@@ -4243,7 +4243,7 @@ namespace DOL.GS
             }
 
 			// Let's do a few checks to make sure it doesn't just wait on the LOS check
-			int tempProp = TempProperties.getProperty<int>(LOSTEMPCHECKER, 0);
+			int tempProp = TempProperties.getProperty<int>(LOSTEMPCHECKER);
 
 			if (tempProp <= 0)
 			{

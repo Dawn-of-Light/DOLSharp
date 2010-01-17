@@ -824,7 +824,7 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.CantBindDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			long lastBindTick = TempProperties.getProperty<long>(LAST_BIND_TICK, 0L);
+			long lastBindTick = TempProperties.getProperty<long>(LAST_BIND_TICK);
 			long changeTime = CurrentRegion.Time - lastBindTick;
 			if (Client.Account.PrivLevel == 1 && changeTime < 60000 && changeTime > 0) //60 second rebind timer
 			{
@@ -1288,7 +1288,7 @@ namespace DOL.GS
 				{
 					// actual lost exp, needed for 2nd stage deaths
 					long lostExp = Experience;
-					long lastDeathExpLoss = TempProperties.getProperty<long>(DEATH_EXP_LOSS_PROPERTY, 0);
+					long lastDeathExpLoss = TempProperties.getProperty<long>(DEATH_EXP_LOSS_PROPERTY);
 					TempProperties.removeProperty(DEATH_EXP_LOSS_PROPERTY);
 
 					GainExperience(GameLiving.eXPSource.Other, -lastDeathExpLoss);
@@ -1324,7 +1324,7 @@ namespace DOL.GS
 
 			if (Level > 10)
 			{
-				int deathConLoss = TempProperties.getProperty<int>(DEATH_CONSTITUTION_LOSS_PROPERTY, 0); // get back constitution lost at death
+				int deathConLoss = TempProperties.getProperty<int>(DEATH_CONSTITUTION_LOSS_PROPERTY); // get back constitution lost at death
 				if (deathConLoss > 0)
 				{
 					TotalConstitutionLostAtDeath += deathConLoss;
@@ -2041,7 +2041,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				long lastmove = TempProperties.getProperty<long>(PlayerPositionUpdateHandler.LASTMOVEMENTTICK, 0L);
+				long lastmove = TempProperties.getProperty<long>(PlayerPositionUpdateHandler.LASTMOVEMENTTICK);
 				if ((lastmove > 0 && lastmove + 5000 < CurrentRegion.Time) //cancel sprint after 5sec without moving?
 				    || Endurance - 5 <= 0)
 					Sprint(false);
@@ -5022,14 +5022,14 @@ namespace DOL.GS
 				return;
 			}
 
-			long vanishTimeout = TempProperties.getProperty<long>(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
+			long vanishTimeout = TempProperties.getProperty<long>(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY);
 			if (vanishTimeout > 0 && vanishTimeout > CurrentRegion.Time)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouMustWaitAgain", (vanishTimeout - CurrentRegion.Time + 1000) / 1000), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			long VanishTick = this.TempProperties.getProperty<long>(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY, 0);
+			long VanishTick = this.TempProperties.getProperty<long>(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY);
 			long changeTime = this.CurrentRegion.Time - VanishTick;
 			if (changeTime < 30000 && VanishTick > 0)
 			{
@@ -5374,7 +5374,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected override eCheckRangeAttackStateResult CheckRangeAttackState(GameObject target)
 		{
-			long holdStart = TempProperties.getProperty<long>(RANGE_ATTACK_HOLD_START, 0L);
+			long holdStart = TempProperties.getProperty<long>(RANGE_ATTACK_HOLD_START);
 			if (holdStart == 0)
 			{
 				holdStart = CurrentRegion.Time;
@@ -8035,7 +8035,7 @@ namespace DOL.GS
 						{
 							Spell spellItem = SkillBase.GetSpellByID(useItem.SpellID);
 							
-							long nextPotionAvailTime = TempProperties.getProperty<long>(NEXT_POTION_AVAIL_TIME+"_Type"+ (spellItem==null?0:spellItem.SharedTimerGroup), 0L);
+							long nextPotionAvailTime = TempProperties.getProperty<long>(NEXT_POTION_AVAIL_TIME+"_Type"+ (spellItem==null?0:spellItem.SharedTimerGroup));
 							// Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
 							// into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
 							// Nidel Update: Individual timer are now based on SharedTimerGroup of spell's potion for
@@ -8124,10 +8124,10 @@ namespace DOL.GS
 							}
 							else
 							{
-								long lastChargedItemUseTick = TempProperties.getProperty<long>(LAST_CHARGED_ITEM_USE_TICK, 0L);
+								long lastChargedItemUseTick = TempProperties.getProperty<long>(LAST_CHARGED_ITEM_USE_TICK);
 								long changeTime = CurrentRegion.Time - lastChargedItemUseTick;
 								long delay = TempProperties.getProperty<long>(ITEM_USE_DELAY, 0L);
-								long itemdelay = TempProperties.getProperty<long>("ITEMREUSEDELAY" + useItem.Id_nb, 0L);
+								long itemdelay = TempProperties.getProperty<long>("ITEMREUSEDELAY" + useItem.Id_nb);
 								long itemreuse = (long)useItem.CanUseEvery * 1000;
 								if (itemdelay == 0) itemdelay = CurrentRegion.Time - itemreuse;
 
@@ -14103,7 +14103,7 @@ namespace DOL.GS
 				if (IsMoving)
 					return false;
 
-				long lastMovementTick = TempProperties.getProperty<long>("PLAYERPOSITION_LASTMOVEMENTTICK", 0L);
+				long lastMovementTick = TempProperties.getProperty<long>("PLAYERPOSITION_LASTMOVEMENTTICK");
 				return (CurrentRegion.Time - lastMovementTick > 3000);
 			}
 		}

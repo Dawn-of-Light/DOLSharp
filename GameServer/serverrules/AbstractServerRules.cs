@@ -720,7 +720,7 @@ namespace DOL.GS.ServerRules
 				#region Worth no experience
 				//"This monster has been charmed recently and is worth no experience."
 				string message = "You gain no experience from this kill!";
-				if (killedNPC.CurrentRegion.Time - GameNPC.CHARMED_NOEXP_TIMEOUT < killedNPC.TempProperties.getProperty<long>(GameNPC.CHARMED_TICK_PROP, 0L))
+				if (killedNPC.CurrentRegion.Time - GameNPC.CHARMED_NOEXP_TIMEOUT < killedNPC.TempProperties.getProperty<long>(GameNPC.CHARMED_TICK_PROP))
 				{
 					message = "This monster has been charmed recently and is worth no experience.";
 				}
