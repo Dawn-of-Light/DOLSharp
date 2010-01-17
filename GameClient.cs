@@ -25,6 +25,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
+using DOL.Network;
 using log4net;
 
 namespace DOL.GS
@@ -415,7 +416,7 @@ namespace DOL.GS
 					{
 						log.WarnFormat("Disconnected {0} in login phase because wrong packet size {1}", TcpEndpoint, numBytes);
 						log.Warn("numBytes=" + numBytes);
-						log.Warn(Marshal.ToHexDump("packet buffer:", m_pbuf, 0, numBytes));
+						log.Warn(Marshal.ToHexDump("packet buffer:", _pbuf, 0, numBytes));
 					}
 					GameServer.Instance.Disconnect(this);
 					return;
@@ -423,7 +424,7 @@ namespace DOL.GS
 
 				//Currently, the version is sent with the first packet, no
 				//matter what packet code it is
-				int version = (m_pbuf[12] * 100) + (m_pbuf[13] * 10) + m_pbuf[14];
+				int version = (_pbuf[12] * 100) + (_pbuf[13] * 10) + _pbuf[14];
 
 				// we force the versionning: 200 correspond to 1.100 (1100)
 				// thus we could handle logically packets with version number based on the client version

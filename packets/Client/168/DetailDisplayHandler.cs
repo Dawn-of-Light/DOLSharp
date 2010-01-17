@@ -1629,7 +1629,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem1", Util.FormatTime(spl.RecastDelay / 1000)));
 								else
 									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem2"));
-								long lastChargedItemUseTick = client.Player.TempProperties.getProperty<long>(GamePlayer.LAST_CHARGED_ITEM_USE_TICK, 0L);
+								long lastChargedItemUseTick = client.Player.TempProperties.getProperty<long>(GamePlayer.LAST_CHARGED_ITEM_USE_TICK);
 								long changeTime = client.Player.CurrentRegion.Time - lastChargedItemUseTick;
 								long recastDelay = (spl.RecastDelay > 0) ? spl.RecastDelay : 60000 * 3;
 								if (changeTime < recastDelay) //3 minutes reuse timer
@@ -1815,7 +1815,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	                        WritePotionSpellsInfos(list, client, spl, potionLine);
 	                        list.Add(" ");
                             list.Add(" ");
-	                        long nextPotionAvailTime = client.Player.TempProperties.getProperty<long>("LastPotionItemUsedTick_Type" + spl.SharedTimerGroup, 0L);
+	                        long nextPotionAvailTime = client.Player.TempProperties.getProperty<long>("LastPotionItemUsedTick_Type" + spl.SharedTimerGroup);
 	                        // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
 	                        // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
 	                        if(nextPotionAvailTime > client.Player.CurrentRegion.Time)

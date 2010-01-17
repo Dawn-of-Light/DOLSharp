@@ -67,7 +67,7 @@ namespace DOL.GS.Spells
 			{
 				ad = attackedByEnemy.AttackData;
 			}
-			int reduceddmg = living.TempProperties.getProperty<int>(ConvertDamage, 0);
+			int reduceddmg = living.TempProperties.getProperty<int>(ConvertDamage);
 			double absorbPercent = Spell.Damage;
 			int damageConverted = (int)(0.01 * absorbPercent * (ad.Damage + ad.CriticalDamage));
 

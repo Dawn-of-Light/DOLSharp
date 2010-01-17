@@ -101,7 +101,7 @@ namespace DOL.GS
                 return;
             }
 
-            long cost = player.TempProperties.getProperty<long>(COST_BY_PTS, 0);
+            long cost = player.TempProperties.getProperty<long>(COST_BY_PTS);
             player.TempProperties.removeProperty(COST_BY_PTS);
             int restorePoints = (int)Math.Min(player.TotalConstitutionLostAtDeath, player.GetCurrentMoney() / cost);
             if (restorePoints < 1)
