@@ -1034,17 +1034,32 @@ namespace DOL.GS
 			return false;
 		}
 
-		public static string InstrumentTypeToName(int instrumentTypeID)
-		{
-			switch (instrumentTypeID)
-			{
-				case 1: return "drum";
-				case 2: return "lute";
-				case 3: return "flute";
-				case 4: return "harp";
-			}
-			return "unknown";
-		}
+        /// <summary>
+        /// Offensive, Defensive, or Positional
+        /// </summary>
+        public static string StyleOpeningTypeToName(int openingType)
+        {
+            return Enum.GetName(typeof(Styles.Style.eOpening), openingType);
+        }
+        /// <summary>
+        /// Position, Back, Side, Front
+        /// </summary>
+        public static string StyleOpeningPositionToName(int openingRequirement)
+        {
+            return Enum.GetName(typeof(Styles.Style.eOpeningPosition), openingRequirement);
+        }
+        /// <summary>
+        /// Attack Result. Any, Miss, Hit, Parry, Block, Evade, Fumble, Style.
+        /// </summary>
+        public static string StyleAttackResultToName(int attackResult)
+        {
+            return Enum.GetName(typeof(Styles.Style.eAttackResult), attackResult);
+        }
+
+        public static string InstrumentTypeToName(int instrumentTypeID)
+        {
+            return Enum.GetName(typeof(InstrumentType), instrumentTypeID);
+        }
 
 		public static string AmmunitionTypeToDamageName(int ammutype)
 		{
@@ -1082,17 +1097,10 @@ namespace DOL.GS
 			return "reduced";
 		}
 
-
-		public static string ShieldTypeToName(int shieldTypeID)
-		{
-			switch (shieldTypeID)
-			{
-				case 1: return "small";
-				case 2: return "medium";
-				case 3: return "large";
-			}
-			return "none";
-		}
+        public static string ShieldTypeToName(int shieldTypeID)
+        {
+            return Enum.GetName(typeof(ShieldLevel), shieldTypeID);
+        }
 
 		public static string ArmorLevelToName(int armorLevel, eRealm realm)
 		{
@@ -1136,10 +1144,10 @@ namespace DOL.GS
 			}
 		}
 
-		public static string WeaponDamageTypeToName(int weaponDamageTypeID)
-		{
-			return ((eWeaponDamageType)weaponDamageTypeID).ToString();
-		}
+        public static string WeaponDamageTypeToName(int weaponDamageTypeID)
+        {
+            return Enum.GetName(typeof(eWeaponDamageType), weaponDamageTypeID);
+        }
 
 		public static string NameToShortName(string name)
 		{
