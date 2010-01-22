@@ -45,23 +45,45 @@ namespace DOL.GS.Spells
     {
       if(Caster.GroundTarget == null)
       {
-        MessageToCaster("You have to set a Areatarget for this Spell.", eChatType.CT_SpellResisted);
+          MessageToCaster("You have to set a ground target for this Spell.", eChatType.CT_SpellResisted);
         return false;
       }
 
       if(!Caster.GroundTargetInView)
       {
-        MessageToCaster("Your Areatarget is not in view.", eChatType.CT_SpellResisted);
+          MessageToCaster("Your ground target is not in view.", eChatType.CT_SpellResisted);
         return false;
       }
 
       if(!Caster.IsWithinRadius( Caster.GroundTarget, CalculateSpellRange() ))
       {
-        MessageToCaster("You have to select a closer Areatarget.", eChatType.CT_SpellResisted);
+        MessageToCaster("You have to select a closer ground target.", eChatType.CT_SpellResisted);
         return false;
       }
 
       return base.CheckBeginCast(selectedTarget);
+    }
+    public override void FinishSpellCast(GameLiving target)
+    {
+        if (Caster.GroundTarget == null)
+        {
+            MessageToCaster("You have to set a ground target for this Spell.", eChatType.CT_SpellResisted);
+            return;
+        }
+
+        if (!Caster.GroundTargetInView)
+        {
+            MessageToCaster("Your ground target is not in view.", eChatType.CT_SpellResisted);
+            return;
+        }
+
+        if (!Caster.IsWithinRadius(Caster.GroundTarget, CalculateSpellRange()))
+        {
+            MessageToCaster("You have to select a closer ground target.", eChatType.CT_SpellResisted);
+            return;
+        }
+
+        base.FinishSpellCast(target);
     }
 
     public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
