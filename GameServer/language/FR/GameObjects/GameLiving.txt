@@ -1,11 +1,6 @@
 ﻿
-
 # GAMELIVING
-
 GameLiving.ReceiveItem:							{0} ne veut pas de cet item !
-
 GameLiving.ReceiveMoney:						{0} ne veut pas de votre argent !
-
-
 
 

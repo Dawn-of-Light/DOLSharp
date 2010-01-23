@@ -1,5 +1,4 @@
 # Race names male
-
 GamePlayer.PlayerRace.Unknown:					Unknown
 GamePlayer.PlayerRace.Male.Briton:				Briton
 GamePlayer.PlayerRace.Male.Avalonian:			Avalonian
@@ -22,9 +21,7 @@ GamePlayer.PlayerRace.Male.Shar:				Shar
 GamePlayer.PlayerRace.Male.Korazh:				Korazh
 GamePlayer.PlayerRace.Male.Deifang:				Deifang
 GamePlayer.PlayerRace.Male.Graoch:				Graoch
-
 # Race names female
-
 GamePlayer.PlayerRace.Female.Briton:			Briton
 GamePlayer.PlayerRace.Female.Avalonian:			Avalonian
 GamePlayer.PlayerRace.Female.Highlander:		Highlander

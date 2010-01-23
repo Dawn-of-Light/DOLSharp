@@ -1,625 +1,313 @@
 ﻿GamePlayer.AddAbility.YouLearn:				You learn the {0} ability!	
-
 GamePlayer.AddSpecialisation.YouLearn:		You learn the {0} skill!		
-
 GamePlayer.AddSpellLine.YouLearn:			You learn the {0} spell list!		
-
 GamePlayer.ApplyPoison.CantApplyRecentCombat:	You have been in combat recently and can't apply a poison yet!			
-
 GamePlayer.ApplyPoison.CantPoisonWeapon:		You can't poison this weapon!			
-
 GamePlayer.ApplyPoison.CantUsePoison:			You can't use this poison.		
-
 GamePlayer.ApplyPoison.CantUsePoisons:			You can't use poisons.		
-
 GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	Poisons can be applied only to weapons.			
-
 GamePlayer.Attack.AlreadyDead:				{0} is already dead!	
-
 GamePlayer.Attack.Blocked:					{0} blocks your attack!	
-
 GamePlayer.Attack.CantBeAttacked:			This can't be attacked!		
-
 GamePlayer.Attack.CantCritical:				You can't get a critical shot on your target, you switch to a standard shot.	
-
 GamePlayer.Attack.CantSeeTarget:			You can't see your target!		
-
 GamePlayer.Attack.CantUseQuiver:			You can't use the selected quiver ammo with your weapon!		
-
 GamePlayer.Attack.CouldRepair:				Your {0} could use repairs.	
-
 GamePlayer.Attack.Critical:					You critical hit {0} for an additional {1} damage!	
-
 GamePlayer.Attack.Evade:					{0} attacks you and you evade the blow!	
-
 GamePlayer.Attack.Evaded:					{0} evades your attack!	
-
 GamePlayer.Attack.Fumble:					You fumble the attack and take time to recover!	
-
 GamePlayer.Attack.Fumbled:					{0} fumbled!	
-
 GamePlayer.Attack.HitsYou:					{0} hits you for {1}{2} damage!	
-
 GamePlayer.Attack.HitsYouCritical:			{0} critical hits you for an additionnal {1} damage!		
-
 GamePlayer.Attack.HitsYour:					{0} hits your {1} for {2}{3} damage!	
-
 GamePlayer.Attack.Intercepted:				{0} steps in front of {1} and takes the blow!	
-
 GamePlayer.Attack.InterceptedHit:			{0} {1}{2} but hit {3} for {4}{5} damage!		
-
 GamePlayer.Attack.InterceptHit:				{0} {1}{2} and hit for {3}{4} damage!	
-
 GamePlayer.Attack.Interrupted:				{0} is attacking you and your {1} is interrupted!	
-
 GamePlayer.Attack.Location.Arm:				arm	
-
 GamePlayer.Attack.Location.Foot:			foot		
-
 GamePlayer.Attack.Location.Hand:			hand		
-
 GamePlayer.Attack.Location.Head:			head		
-
 GamePlayer.Attack.Location.Leg:				leg	
-
 GamePlayer.Attack.Location.Torso:			torso		
-
 GamePlayer.Attack.Miss:						You miss!
-
 GamePlayer.Attack.Missed:					{0} attacks you and misses!	
-
 GamePlayer.Attack.MustSelectQuiver:			You must select a quiver slot to draw from!		
-
 GamePlayer.Attack.NeedRepair:				Your {0} is in need of repairs.	
-
 GamePlayer.Attack.NeedRepairDire:			Your {0} is in dire need of repairs.		
-
 GamePlayer.Attack.NeedTarget:				You need to select a target to attack!	
-
 GamePlayer.Attack.NotInView:				{0} is not in view!	
-
 GamePlayer.Attack.Parried:					{0} parries your attack!	
-
 GamePlayer.Attack.Parry:					{0} attacks you and you parry the blow!	
-
 GamePlayer.Attack.ReadyToFire:				You are ready to fire!	
-
 GamePlayer.Attack.StrafMiss:				You were strafing in combat and miss!	
-
 GamePlayer.Attack.TooFarAway:				{0} is too far away to attack!	
-
 GamePlayer.Attack.TooTired:					You are too tired to hold your shot any longer!	
-
 GamePlayer.Attack.Type.Shot:				shot	
-
 GamePlayer.Attack.Type.Throw:				throw	
-
 GamePlayer.Attack.WithYour:					with your	
-
 GamePlayer.Attack.YouAttack:				You attack	
-
 GamePlayer.Attack.YouShot:					You shot	
-
 GamePlayer.Bind.Bound:						You are now bound to this location.
-
 GamePlayer.Bind.CantBindDead:				You can not bind while dead!	
-
 GamePlayer.Bind.CantHere:					You cannot bind here!	
-
 GamePlayer.Bind.LastBindPoint:				Last Bind Point : {0}.	
-
 GamePlayer.Bind.MustWait:					You must wait {0} seconds to bind again!	
-
 GamePlayer.CastSpell.AlreadyCastFollow:			You are already casting a spell! You prepare this spell as a follow up!		
-
 GamePlayer.CastSpell.AlreadyCastNoQueue:		You are already casting a spell, to enable spell queueing use '/noqueue'!			
-
 GamePlayer.CastSpell.AlreadyPlaySong:			You are already playing a song!		
-
 GamePlayer.CastSpell.CantCastMezzed:			You can't cast while mesmerized!		
-
 GamePlayer.CastSpell.CantCastStunned:			You can't cast while stunned!		
-
 GamePlayer.CommandNpcAttack.TooFarAwayForPet:		Your target is too far away to attack by your pet!			
-
 GamePlayer.CommandNpcGoTarget.MustSelectDestination:You must select a destination for your controlled creature.				
-
 GamePlayer.CraftItem.DontHaveAbilityMake:		You do not have the ability to make this item.			
-
 GamePlayer.CurrentTitle.TitleCleared:			Your title has been cleared.		
-
 GamePlayer.Die.CorpseLies:						{0} just died. {1} corpse lies on the ground.	
-
 GamePlayer.Die.DeadRVR:							You died fighting for your realm and lose no experience!
-
 GamePlayer.Die.DeathN1:							This is your first death for this level.  Your experience and constitution losses are greatly reduced.
-
 GamePlayer.Die.DeathN2:							This is your second death for this level.  Your experience and constitution losses are reduced.
-
 GamePlayer.Die.DuelDefeated:					{0} was just defeated in a duel by {1} !	
-
 GamePlayer.Die.Killed:							{0} was just killed !
-
 GamePlayer.Die.KilledBy:						{0} was just killed by {1}.	
-
 GamePlayer.Die.KilledByLocation:				{0} was just killed by {1} in {2}.		
-
 GamePlayer.Die.KilledLocation:					{0} was just killed in {1} !	
-
 GamePlayer.Die.LoseExperience:					You lose some experience!	
-
 GamePlayer.Die.ReleaseToReturn:					You have died.  Type /release to return to your last bindpoint.	
-
 GamePlayer.Die.YouKilled:						You just killed {0}!	
-
 GamePlayer.DrowningTimerCallback.CannotBreath:	You cannot breathe underwater and take damage!			
-
 GamePlayer.DrowningTimerCallback.Take5%Damage:	You take 5% of your max hits in damage.			
-
 GamePlayer.DuelStop.DuelEnds:					Your duel ends!	
-
 GamePlayer.GainBountyPoints.YouGet:				You get {0} bounty points!		
-
 GamePlayer.GainCraftingSkill.GainSkill:			You gain skill in {0}! ({1})
-
 GamePlayer.GainCraftingSkill.ReachedSkill:		{0} reached 1000 skill in {1}
-
 GamePlayer.GainExperience.CampBonus:			({0} camp bonus)
-
 GamePlayer.GainExperience.CannotRaise:			You cannot raise to the 6th level until you join an advanced guild!		
-
 GamePlayer.GainExperience.GroupBonus:			({0} group bonus)
-
 GamePlayer.GainExperience.OutpostBonus:			({0} outpost bonus)
-
 GamePlayer.GainExperience.TalkToTrainer:		Talk to your trainer for more information.			
-
 GamePlayer.GainExperience.YouGet:				You get {0} experience points.
-
 GamePlayer.GainRealmPoints.Earned:				{0} has earned 1,000,000 realm points in {1}		
-
 GamePlayer.GainRealmPoints.GainBonus:			You gain a +{0} bonus to all specializations!		
-
 GamePlayer.GainRealmPoints.GainedLevel:			You have gained a realm level!		
-
 GamePlayer.GainRealmPoints.GainedRank:			You have gained a new rank and a new realm title!		
-
 GamePlayer.GainRealmPoints.NewRealmTitle:		Your new realm title is {0}!			
-
 GamePlayer.GainRealmPoints.ReachedRank:			{0} reached realm rank {1:#L#} in {2}!		
-
 GamePlayer.GainRealmPoints.YouGet:				You get {0} realm points!		
-
 GamePlayer.GetExamineMessages.EnemyRealmMember:		You examine {0}. {1} is a member of an enemy realm!
-
 GamePlayer.GetExamineMessages.NeutralMember:		You examine {0}. {1} is a neutral member with no guild allegiance.
-
 GamePlayer.GetExamineMessages.OtherGuildMember:		You examine {0}. {1} is a member of the {2} guild.
-
 GamePlayer.GetExamineMessages.RealmMember:			You examine {0}. {1} is a member of the {2} class in your realm.
-
 GamePlayer.GetExamineMessages.YouExamine:			You examine {0}.
-
 GamePlayer.GetExamineMessages.YourGuildMember:		You examine {0}. {1} is a member of the {2} class in your guild.
-
 GamePlayer.IsCloakHoodUp.NoLongerWear:				You will no longer wear your hood up.		
-
 GamePlayer.IsCloakHoodUp.NowWear:					You will now wear your hood up.		
-
 GamePlayer.IsCloakInvisible.Invisible:				You will now don't see your cloak.		
-
 GamePlayer.IsCloakInvisible.Visible:				You will now see your cloak.		
-
 GamePlayer.IsHelmInvisible.Invisible:				You will now don't see your helm.		
-
 GamePlayer.IsHelmInvisible.Visible:					You will now see your helm.		
-
 GamePlayer.IsOnHorse.DismountSteed:			You dismount your steed.
-
 GamePlayer.IsOnHorse.MountSteed:			You mount your steed.
-
 GamePlayer.ItemBonusName.Bonus1:			Strength
-
 GamePlayer.ItemBonusName.Bonus2:			Dexterity
-
 GamePlayer.ItemBonusName.Bonus3:			Constitution
-
 GamePlayer.ItemBonusName.Bonus4:			Quickness
-
 GamePlayer.ItemBonusName.Bonus5:			Intelligence
-
 GamePlayer.ItemBonusName.Bonus6:			Piety
-
 GamePlayer.ItemBonusName.Bonus7:			Empathy
-
 GamePlayer.ItemBonusName.Bonus8:			Charisma
-
 GamePlayer.ItemBonusName.Bonus9:			Power
-
 GamePlayer.ItemBonusName.Bonus10:			Hits
-
 GamePlayer.ItemBonusName.Bonus11:			Body resistance
-
 GamePlayer.ItemBonusName.Bonus12:			Cold resistance
-
 GamePlayer.ItemBonusName.Bonus13:			Crush resistance
-
 GamePlayer.ItemBonusName.Bonus14:			Energy resistance
-
 GamePlayer.ItemBonusName.Bonus15:			Heat resistance
-
 GamePlayer.ItemBonusName.Bonus16:			Matter resistance
-
 GamePlayer.ItemBonusName.Bonus17:			Slash resistance
-
 GamePlayer.ItemBonusName.Bonus18:			Spirit resistance
-
 GamePlayer.ItemBonusName.Bonus19:			Thrust resistance
-
 GamePlayer.OnItemEquipped.Increased:		Your {0} has increased.
-
 GamePlayer.OnItemEquipped.Magic:			The magic of {0} flows through you.
-
 GamePlayer.OnItemEquipped.WieldBothHands:	You wield {0} in both hands.
-
 GamePlayer.OnItemEquipped.WieldLeftHand:	You wield {0} in your left hand.
-
 GamePlayer.OnItemEquipped.WieldRightHand:	You wield {0} in your right hand.
-
 GamePlayer.OnItemUnequipped.BothHandsFree:	You sheathe {0}. Both hands are now free.
-
 GamePlayer.OnItemUnequipped.Decreased:		Your {0} has decreased.
-
 GamePlayer.OnItemUnequipped.LeftHandFree:	You sheathe {0} from your left hand.
-
 GamePlayer.OnItemUnequipped.RightHandFree:	You sheathe {0} from your right hand.
-
 GamePlayer.OnLevelUp.AttainedRank:			You have attained the rank of {0}!		
-
 GamePlayer.OnLevelUp.FreeLevelEligible:		You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).		
-
 GamePlayer.OnLevelUp.HitsRaise:				Your hits raise by {0} points.	
-
 GamePlayer.OnLevelUp.PowerRaise:			Your power raises by {0} points.		
-
 GamePlayer.OnLevelUp.Reached:				{0} reached level {1} in {2}!	
-
 GamePlayer.OnLevelUp.SecondStage:			You raise to level {0} Stage 2!		
-
 GamePlayer.OnLevelUp.StatRaise:				Your stats raise!	
-
 GamePlayer.OnLevelUp.YouAchived:			You have achieved level {0}!		
-
 GamePlayer.OnLevelUp.YouGetSpec:			You get {0} more Specialization Points to spend at this level!		
-
 GamePlayer.OnLevelUp.YouRaise:				You raise to level {0}!	
-
 GamePlayer.OnLinkdeath.Linkdead:			{0} went linkdead!		
-
 GamePlayer.OnPlayerMove.CannotCallMount:		You are moving and cannot call your mount.			
-
 GamePlayer.OnPlayerMove.InterruptCrafting:		You move and interrupt your crafting.			
-
 GamePlayer.OnSkillTrained.TrainsInVarious:		{0} trains in various specializations.			
-
 GamePlayer.OnSkillTrained.YouHave:				You have {0} specialization points left this level.		
-
 GamePlayer.OnSkillTrained.YouSpend:				You spend {0} points and specialize further in {1}		
-
 GamePlayer.OpenSelfCraft.AlreadySelfCrafting:	You are already selfcrafting.			
-
 GamePlayer.OpenSelfCraft.CanOnlyCraftBackpack:	You can only self-craft items in your backpack!			
-
 GamePlayer.PickupObject.Autosplit:				(Autosplit) {0} goes to {1}.
-
 GamePlayer.PickupObject.BackpackFull:			Your backpack is full. You must drop something first.
-
 GamePlayer.PickupObject.CantGetThat:			You can't get that!
-
 GamePlayer.PickupObject.GroupMemberPicksUp:		{0} picks up {1}.
-
 GamePlayer.PickupObject.ItemBelowBGThreshold:	That item is below your battlegroups lootlevel.
-
 GamePlayer.PickupObject.LootDoesntBelongYou:	That loot doesn't belong to you - you can't pick it up.
-
 GamePlayer.PickupObject.MustHaveTarget:			You must have a target to get something!
-
 GamePlayer.PickupObject.NoOneGroupWantsMoney:	No one in group wants the money.
-
 GamePlayer.PickupObject.NoOneWantsThis:			No one in group wants the {0}.
-
 GamePlayer.PickupObject.ObjectTooFarAway:		The {0} is too far away to pick up!
-
 GamePlayer.PickupObject.TooFarFromBoat:			You are too far from the boat to board!
-
 GamePlayer.PickupObject.YouGet:					You get {0} and put it in your backpack.
-
 GamePlayer.PickupObject.YouPickUp:				You pick up {0}.
-
 GamePlayer.PickupObject.YourLootShare:			Your share of the loot is {0}.
-
 GamePlayer.Pray.AlreadyPraying:					You are already praying!	
-
 GamePlayer.Pray.Begin:							You begin your prayers!
-
 GamePlayer.Pray.CantPrayNow:					You can't pray now!	
-
 GamePlayer.Pray.GainBack:						You pray at your grave and gain back experience!	
-
 GamePlayer.Pray.MustGetCloser:				You must get closer to your grave and sit to pray!	
-
 GamePlayer.Pray.MustStandingStill:			You must be standing still to pray.		
-
 GamePlayer.Pray.NeedTarget:					You need to target a grave at which to pray!	
-
 GamePlayer.Pray.SelectGrave:				Select your gravestone to pray!	
-
 GamePlayer.Pronoun.Female.Objective:		her		
-
 GamePlayer.Pronoun.Female.Possessive:		her		
-
 GamePlayer.Pronoun.Female.Subjective:		she		
-
 GamePlayer.Pronoun.Male.Objective:			him		
-
 GamePlayer.Pronoun.Male.Possessive:			his		
-
 GamePlayer.Pronoun.Male.Subjective:			he		
-
 GamePlayer.Quit.CantQuitCrafting:			You can't quit while you're crafting.		
-
 GamePlayer.Quit.CantQuitDead:				You can't quit now, you're dead.  Type '/release' to release your corpse.	
-
 GamePlayer.Quit.CantQuitMount:				You have to dismount before you can quit.	
-
 GamePlayer.Quit.CantQuitStanding:			You must be standing still to quit.		
-
 GamePlayer.Quit.RecentlyInCombat:			You were recently in combat and must wait longer to quit.		
-
 GamePlayer.Quit.YouWillQuit1:				You will quit after sitting for {0} seconds...	
-
 GamePlayer.Quit.YouWillQuit2:				You will quit after sitting for {0} seconds. Type '/stand' or move if you don't want to quit.	
-
 GamePlayer.RealmTitle.UnknownRealm:			Unknown realm
-
 GamePlayer.ReceiveItem.Receive:				You receive {0}!
-
 GamePlayer.ReceiveItem.ReceiveFrom:			You receive {0} from {1}!
-
 GamePlayer.ReceiveTradeItem.CantTrade:			You can't trade this item!		
-
 GamePlayer.ReceiveTradeItem.StillSelfcrafting:	You are still selfcrafting.			
-
 GamePlayer.RefreshSpec.AfterBlocked:			This style is best used after your last attack is blocked.		
-
 GamePlayer.RefreshSpec.AfterEvaded:				This style is best used after your last attack is evaded.		
-
 GamePlayer.RefreshSpec.AfterFumbles:			This style is best used after your last attack fumbles.		
-
 GamePlayer.RefreshSpec.AfterMissed:				This style is best used after your last attack is missed.		
-
 GamePlayer.RefreshSpec.AfterParried:			This style is best used after your last attack is parried.		
-
 GamePlayer.RefreshSpec.AfterStyle:				This style can only be used after you execute the {0} style.		
-
 GamePlayer.RefreshSpec.TargetBlocked:			This style is best used after your target's last attack is blocked.		
-
 GamePlayer.RefreshSpec.TargetEvaded:			This style is best used after your target's last attack is evaded.		
-
 GamePlayer.RefreshSpec.TargetFumbles:			This style is best used after your target's last attack fumbles.		
-
 GamePlayer.RefreshSpec.TargetHits:				This style is best used after your target's last attack hits.		
-
 GamePlayer.RefreshSpec.TargetMisses:			This style is best used after your target's last attack misses.		
-
 GamePlayer.RefreshSpec.TargetParried:			This style is best used after your target's last attack is parried.		
-
 GamePlayer.RefreshSpec.TargetStyle:				This style is best used after your target's last attack is style.		
-
 GamePlayer.RefreshSpec.YouLearn:				You learn the {0} combat style!		
-
 GamePlayer.Release.CantReleaseDuel:				You can't alter your release on a duel death!		
-
 GamePlayer.Release.GraveErected:				A grave was erected where you were slain.		
-
 GamePlayer.Release.LostConstitution:			You've lost some constitution, go to a healer to have it restored!		
-
 GamePlayer.Release.NoLongerReleaseAuto:			You will no longer release automatically. ({0} more seconds)		
-
 GamePlayer.Release.NotDead:						You are not dead!	
-
 GamePlayer.Release.NoValidBindpoint:			You have no valid bindpoint! Releasing here instead!		
-
 GamePlayer.Release.ReturnToPray:				Return to /pray at your grave to regain experience.		
-
 GamePlayer.Release.SurroundingChange:			Your surroundings suddenly change!		
-
 GamePlayer.Release.WillReleaseAuto:				You will now release automatically in {0} more seconds!		
-
 GamePlayer.Release.WillReleaseAutoCity:			You will now release automatically to your home city in {0} more seconds!		
-
 GamePlayer.Release.WillReleaseIn:				You will autorelease in {0} seconds.		
-
 GamePlayer.Release.YouRelease:					You release your corpse unto death.	
-
 GamePlayer.Release.ReleaseToPortalKeep: 		You will now release to the nearest border or portal keep in {0} more seconds!
-
 GamePlayer.Release.ReleaseToHouse:				You will now release to your house in {0} more seconds!
-
 GamePlayer.RemoveAbility.YouLose:				You lose the {0} ability!		
-
 GamePlayer.RemoveSpecialization.YouLose:		You lose the {0} skill!			
-
 GamePlayer.RemoveSpellLine.YouLose:				You lose the {0} spell line!		
-
 GamePlayer.SaveIntoDatabase.CharacterSaved:		Your character has been saved.
-
 GamePlayer.Say.YouSay:							You say, "{0}"
-
 GamePlayer.SayReceive.Says:						{0} says, "{1}"
-
 GamePlayer.SayReceive.FalseLanguage:			{0} says something in a language you don't understand.
-
 GamePlayer.SendReceive.Sends:					{0} sends, "{1}"
-
 GamePlayer.SendReceive.FalseLanguage:			{0} sends something in a language you don't understand.
-
 GamePlayer.SendReceive.Afk:						{0} is currently AFK.
-
 GamePlayer.SendReceive.AfkMessage:				<AFK> {0} sends, "{1}"
-
 GamePlayer.Send.DontUnderstandYou:				{0} doesn't seem to understand you!
-
 GamePlayer.Send.YouSendTo:						You send, "{0}" to {1}.
-
 GamePlayer.SetControlledNpc.ReleaseTarget:		You release control of your controlled target.
-
 GamePlayer.SetControlledNpc.ReleaseTarget2:		You lose control of the {0}.
-
 GamePlayer.Shade.AlreadyShade:				You are already a shade!	
-
 GamePlayer.Shade.NoLongerShade:				You are no longer a shade!	
-
 GamePlayer.Sit.AlreadySitting:				You are already sitting!	
-
 GamePlayer.Sit.CantSitDead:					You can't sit down now, you're dead!	
-
 GamePlayer.Sit.CantSitMezzed:				You can't rest when you are mesmerized!	
-
 GamePlayer.Sit.CantSitStunned:				You can't rest when you are stunned!	
-
 GamePlayer.Sit.InterruptCallMount:			You attempt to sit down and interrupt your call for your mount!		
-
 GamePlayer.Sit.MustDismount:				You must dismount first.	
-
 GamePlayer.Sit.MustStandingStill:			You must be standing still to sit down.		
-
 GamePlayer.Sit.NoLongerWaitingQuit:			You are no longer waiting to quit.		
-
 GamePlayer.Sit.NotSitting:					You are not sitting!	
-
 GamePlayer.Sit.YouSitDown:					You sit down.  Type '/stand' or move to stand up.	
-
 GamePlayer.Sit.YouStandUp:					You stand up.	
-
 GamePlayer.Spell.NotEnoughPowerful:			You are not powerful enough to use this item's spell.		
-
 GamePlayer.Spell.NotImplemented:			{0} ({1}) not implemented yet on this server.		
-
 GamePlayer.Spell.Proc.NotImplemented:		Reactive effect ID {0} is not implemented yet on this server.		
-
 GamePlayer.Spell.ResurrectionIllness:		Resurrection Illness
-
 GamePlayer.Sprint.CantSprintDead:			You can't sprint when dead!		
-
 GamePlayer.Sprint.CantSprintHidden:			You can't sprint while you are hidden!		
-
 GamePlayer.Sprint.NoLongerReady:			You are no longer ready to sprint.		
-
 GamePlayer.Sprint.PrepareSprint:			You prepare to sprint!		
-
 GamePlayer.Sprint.TooFatigued:				You are too fatigued to sprint!	
-
 GamePlayer.StartAttack.CannotMelee:			You cannot enter melee combat mode with an instrument!		
-
 GamePlayer.StartAttack.CannotWithoutWeapon:		You cannot enter combat mode without a weapon!			
-
 GamePlayer.StartAttack.CantAttackmesmerized:	You can't attack when you are mesmerized!			
-
 GamePlayer.StartAttack.CantAttackStunned:		You can't attack when you are stunned!			
-
 GamePlayer.StartAttack.CantUseQuiver:			You can't use the selected quiver ammo with your weapon!		
-
 GamePlayer.StartAttack.CombatNoTarget:			You enter combat mode but have no target!		
-
 GamePlayer.StartAttack.CombatTarget:			You enter combat mode and target [{0}]		
-
 GamePlayer.StartAttack.SelectQuiver:			You must select a quiver slot to draw from!		
-
 GamePlayer.StartAttack.SpellCancelled:			Your spell is cancelled!		
-
 GamePlayer.StartAttack.TargetInRange:			, target is in range		
-
 GamePlayer.StartAttack.TargetOutOfRange:		, target is out of range			
-
 GamePlayer.StartAttack.TiredShot:				You're too tired to perform a critical shot!		
-
 GamePlayer.StartAttack.TiredUse:				You're too tired to use your {0}!		
-
 GamePlayer.StartAttack.YouCantCombat:			You can't enter combat mode while lying down!		
-
 GamePlayer.StartAttack.YouMustWait:				You must wait {0} more second to attempt to attack!		
-
 GamePlayer.StartAttack.YouMustWaitAgain:		You must wait {0} more seconds before attacking again.			
-
 GamePlayer.StartAttack.YouPrepare:				You prepare your {0} ({1}.{2}s to fire{3})		
-
 GamePlayer.Stealth.NoLongerHidden:				You are no longer hidden!		
-
 GamePlayer.Stealth.NowHidden:					You are now hidden!	
-
 GamePlayer.SwitchQuiver.NoMoreAmmo:				You have no more ammo in your quiver!		
-
 GamePlayer.SwitchQuiver.NotUseQuiver:			You will not use your quiver.		
-
 GamePlayer.SwitchQuiver.ShootWith:				You will shoot with: {0}.		
-
 GamePlayer.SwitchWeapon.SpellCancelled:			Your spell is cancelled!		
-
 GamePlayer.UpdateEncumberance.Encumbered:		You are encumbered!			
-
 GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:	You are encumbered and move more slowly.				
-
 GamePlayer.UpdateSpellLine.GainPower:			You gain power in the {0} spell list!		
-
 GamePlayer.UseSlot.AttemptToUse:				You attempt to use {0}.
-
 GamePlayer.UseSlot.AutoReleaseShot:				You will now automatically release your shot.		
-
 GamePlayer.UseSlot.AutoReleaseShotReload:		You will now automatically release your shot and reload.			
-
 GamePlayer.UseSlot.CantCallMountSeated:			You cannot call your mount while seated.		
-
 GamePlayer.UseSlot.CantFire:					You can't fire or use this item!	
-
 GamePlayer.UseSlot.CantMountCombat:				You are in combat and cannot call your mount.		
-
 GamePlayer.UseSlot.CantMountMoving:				You can't mount while you're moving.		
-
 GamePlayer.UseSlot.CantMountSteath:				You can't mount while you're in stealth.		
-
 GamePlayer.UseSlot.CantMountWhileDead:			You can't mount while you're dead.		
-
 GamePlayer.UseSlot.CantSeeTarget:				You can't see your target!		
-
 GamePlayer.UseSlot.CantSummonRvR:				You cannot summon that mount in RvR zones.		
-
 GamePlayer.UseSlot.CantUseFromBackpack:		You can't use this item from your backpack. Equip it before!			
-
 GamePlayer.UseSlot.CantUseInCombat:				You can't use this item in combat!		
-
 GamePlayer.UseSlot.IllegalSourceObject:			Illegal source object. Readied {0}.
-
 GamePlayer.UseSlot.MustDismountBefore:			You must to dismount before.		
-
 GamePlayer.UseSlot.NoAutoReleaseShotReload:		You will no longer automatically release your shot or reload.			
-
 GamePlayer.UseSlot.NotEnouthPower:				You are not powerful enough to use this item's spell.		
-
 GamePlayer.UseSlot.OutOfCharges:				The {0} is out of charges.
-
 GamePlayer.UseSlot.StopCallingMount:			You stop calling your mount.		
-
 GamePlayer.UseSlot.WhistleMount:				You whistle for your mount.
-
 GamePlayer.UseSlot.MustWaitBeforeUse:			You must wait {0} more second before use potion!
-
 GamePlayer.UseSlot.CantUseState:			    You can't use {0} in your state.	
-
 GamePlayer.UseSlot.Used:			            {0} has been used.
-
 GamePlayer.Whisper.SelectTarget:				Select a target to whisper to!
-
-
 
 

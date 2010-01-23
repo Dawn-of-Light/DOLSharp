@@ -1,309 +1,155 @@
 ﻿# Language file for DOL
-
 # Language used : SPANISH / Español
-
 #
-
 # #-Beginning and Empty lines are ignored
-
 # TABS are ignored at the left of ':' too.
-
 # {0} etc. are for args, don't remove them !
-
 #
-
 # Please try to keep ID's alphabetical order
 
-
-
 # LANGUAGEMGR
-
 System.LanguagesName.English:				Inglés
-
 System.LanguagesName.French:				Francés
-
 System.LanguagesName.German:				Alemán
-
 System.LanguagesName.Spanish:				Español
-
 System.LanguagesName.Czech:					Czech
 
-
-
 # SYSTEM
-
 System.NoSense:								Eso no tiene sentido!
 
-
-
 # GAMEPLAYER
-
 GamePlayer.SendReceive.sends:				{0} envía, {1}
-
 GamePlayer.Quit.CantQuitDead:				No puedes salir ahora debido a que estás muerto. Escribe '/release' para revivir tu cuerpo.
-
 GamePlayer.Quit.CantQuitMount:				Has de desmontar antes de poder salir.
-
 GamePlayer.Quit.CantQuitStanding:			Has de estar parado para salir.
-
 GamePlayer.Quit.CantQuitCrafting:			No puedes salir mientras estás crafteando.
-
 GamePlayer.Quit.RecentlyInCombat:			Has estado en combate recientemente, debes esperar para poder salir.
-
 GamePlayer.Quit.YouWillQuit:				Saldrás una vez sentado en {0} segundos. Escribe '/stand' o muévete si no quieres salir.
-
 GamePlayer.Release.NotDead:					No estás muerto!
-
 GamePlayer.Release.CantReleaseDuel:			Tu cuerpo se recuperará automáticamente en una muerte de duelo.
-
 GamePlayer.Release.NoLongerReleaseAuto:		Te recuperarás automáticamente en ({0} segundos más).
-
 GamePlayer.Release.WillReleaseAuto:			Te recuperarás automáticamente en {0} segundos más!
-
 GamePlayer.Release.WillReleaseAutoCity:		Revivirás automaticamente en un tu ciudad en {o} segundos más!
-
 GamePlayer.Release.YouRelease:				Recuperas tu cuerpo desde la muerte.
-
 GamePlayer.Release.GraveErected:			Una tumba fue levantada donde has sido abatido.
-
 GamePlayer.Release.ReturnToPray:			Vuelve para rezar usando el comando /pray y recuperar la experiencia perdida.
-
 GamePlayer.Release.LostConstitution:		Has perdido puntos de constitución, ve al curandero para recuperarlos!
-
 GamePlayer.Release.SurroundingChange:		Tu entorno de repente se cambia!
-
 GamePlayer.Release.NoValidBindpoint:		No tienes un lugar de recuperacion válido!
-
 GamePlayer.Release.WillReleaseIn:			Te auto-recuperarás en {0} segundos más.
-
 GamePlayer.Pray.CantPrayNow:				No puedes rezar ahora!
-
 GamePlayer.Pray.NeedTarget:					Necesitas seleccionar una tumba a la que rezar!
-
 GamePlayer.Pray.SelectGrave:				 Selecciona tu tumba para rezar!
-
 GamePlayer.Pray.MustGetCloser:				Necesitas estar cerca de tu tumba para poder rezar!
-
 GamePlayer.Pray.MustStandingStill:			Has de estar parado para poder rezar.
-
 GamePlayer.Pray.AlreadyPraying:				Ya estás rezando!
-
 GamePlayer.Pray.Begin:						Comienzas tus oraciones!
-
 GamePlayer.Pray.GainBack:					Rezas en tu tumba y recuperas la experiencia perdida!
-
 GamePlayer.AddSpecialisation.YouLearn:		Aprendes la habilidad {0}
-
 GamePlayer.RemoveSpecialization.YouLose:	Pierdes la habilidad {0}!
-
 GamePlayer.AddSpellLine.YouLearn:			Entrenas la lista de conjuros {0}!
-
 GamePlayer.RemoveSpellLine.YouLose:			Pierdes la lista de conjuros {0}!
-
 GamePlayer.AddAbility.YouLearn:				Aprendes la habilidad {0}!
-
 GamePlayer.RemoveAbility.YouLose:			Pierdes la habilidad {0}!
-
 GamePlayer.RefreshSpec.YouLearn:			Aprendes el estilo de combate {0}!
-
 GamePlayer.RefreshSpec.AfterStyle:			Este estilo de combate solo puede ser utilizado despues de ejecutar el estilo {0}.
-
 GamePlayer.RefreshSpec.AfterMissed:			Este estilo de combate es mejor si has fallado tu último ataque. 
-
 GamePlayer.RefreshSpec.AfterParried:		Este estilo de combate es mejor si has parado tu último ataque.
-
 GamePlayer.RefreshSpec.AfterBlocked:		Este estilo de combate es mejor si has bloqueado tu último ataque.
-
 GamePlayer.RefreshSpec.AfterEvaded:			Este estilo de combate es mejor si has esquivado tu último ataque.
-
 GamePlayer.RefreshSpec.AfterFumbles:		Este estilo está mejor usado cuand tropiezas.
-
 GamePlayer.RefreshSpec.TargetMisses:		Este estilo de combate esta mejor usado cuando tu objetivo falla.
-
 GamePlayer.RefreshSpec.TargetHits:			Este estilo de combate esta mejor usado cuando tu objetivo te golpea.
-
 GamePlayer.RefreshSpec.TargetParried:		Este estilo de combate esta mejor usado cuando tu objetivo para tu ataque.
-
 GamePlayer.RefreshSpec.TargetBlocked:		Este estilo de combate esta mejor usado cuando tu objetivo bloquea tu ataque.
-
 GamePlayer.RefreshSpec.TargetEvaded:		Este estilo de combate esta mejor usado cuando tu objetivo esquiva tu ataque.
-
 GamePlayer.RefreshSpec.TargetFumbles:		Este estilo de combate esta mejor usado cuando tu objetivo tropieza.
-
 GamePlayer.RefreshSpec.TargetStyle:			Este estilo de combate esta mejor usado cuando tu objetivo realiza un estilo de combate.
-
 GamePlayer.UpdateSpellLine.GainPower:		Ganas poder en la lista de conjuros {0}!
-
 GamePlayer.OnSkillTrained.YouSpend:			 Gastas {0} puntos y te especializas en {1} 
-
 GamePlayer.OnSkillTrained.YouHave:			Te quedan {0} puntos de especialización en este nivel.
-
 GamePlayer.OnSkillTrained.TrainsInVarious:	{0} Entrenas en diferentes especializaciones.
-
 GamePlayer.GainRealmPoints.YouGet:			Consiges {0} puntos de reino!
-
 GamePlayer.GainRealmPoints.GainedLevel:		 Has avanzado un nivel de reino!
-
 GamePlayer.GainRealmPoints.GainedRank:		Has alcanzado un nuevo rango de reino y un nuevo título!
-
 GamePlayer.GainRealmPoints.NewRealmTitle:	Tu nuevo título de reino es {0}!
-
 GamePlayer.GainRealmPoints.GainBonus:		Consigues un +{0} bonificaciones a todas las especializaciones!
-
 GamePlayer.GainRealmPoints.ReachedRank:		{0} Ha alcanzado el nivel de reino {1:#L#} en {2}!
-
 GamePlayer.GainRealmPoints.Earned:			{0} Ha conseguido 1,000,000 puntos de reino en {1}
-
 GamePlayer.GainBountyPoints.YouGet:			 Consigues {0} puntos de recompensa!
-
 GamePlayer.GainExperience.YouGet:			Consigues {0} puntos de experiencia.
-
 GamePlayer.GainExperience.CannotRaise:		No puedes alcanzar nivel 6 hasta que te unas a una facción avanzada!
-
 GamePlayer.GainExperience.TalkToTrainer:	Habla con tu entrenador para más información.
-
 GamePlayer.OnLevelUp.YouRaise:				 Subes a nivel {0}
-
 GamePlayer.OnLevelUp.YouAchived:			Has alcanzado nivel {0}
-
 GamePlayer.OnLevelUp.FreeLevelEligible:		Puedes conseguir un nivel gratuito!Ve a tu entrenador para recibirlo(o escribe /freelevel decline para rechazarlo).
-
 GamePlayer.OnLevelUp.Reached:				{0} alcanzó nivel {1} en {2}!
-
 GamePlayer.OnLevelUp.StatRaise:				 Tus características de personaje aumentan!
-
 GamePlayer.OnLevelUp.AttainedRank:			Has logrado alcanzar el rango de {0}!
-
 GamePlayer.OnLevelUp.YouGetSpec:			Consigues {0} puntos mas para gastar en este nivel!
-
 GamePlayer.OnLevelUp.HitsRaise:				Tus puntos de vida aumentan en {0} puntos.
-
 GamePlayer.OnLevelUp.PowerRaise:			Tu poder aumenta en {0} puntos.
-
 GamePlayer.OnLevelUp.SecondStage:			Alcanzas la segunda parte del nivel {0}!
-
 GamePlayer.IsCloakHoodUp.NowWear:                     Te enfundas en tu capa.
-
 GamePlayer.IsCloakHoodUp.NoLongerWear:    Te levantas la capucha.
-
 GamePlayer.SwitchWeapon.SpellCancelled:  Tu hechizo es cancelado!
-
 GamePlayer.StartAttack.YouMustWait:               Has de esperar {0} segundos mas para intentar atacar!
-
 GamePlayer.StartAttack.YouCantCombat:      No puedes entrar en combate mientras estás muerto!
-
 GamePlayer.StartAttack.CantAttackStunned:       No puedes entrar en combate mientras estás atontado.  
-
 GamePlayer.StartAttack.CantAttackmesmerized: No puedes atacar mientras estás dormido!
-
 GamePlayer.StartAttack.YouMustWaitAgain:        Has de esperar {0} segundos más para atacar de nuevo.
-
 GamePlayer.StartAttack.CannotWithoutWeapon:     No puedes entrar en combate sin arma!
-
 GamePlayer.StartAttack.CannotMelee:               No puedes entrar en combate con un instrumento!
-
 GamePlayer.StartAttack.SelectQuiver:        Has de seleccionar un carcaj!
-
 GamePlayer.StartAttack.CantUseQuiver:      No puedes usar ese carcaj con el arma que tienes equipada!
-
 GamePlayer.StartAttack.TiredShot:                     Estás demasiado cansado para hacer un disparo crítico!
-
 GamePlayer.StartAttack.TiredUse:                        Estás demasiado cansado para usar tu {0}!
-
 GamePlayer.StartAttack.CombatNoTarget:    Entras en combate, pero no tienes objetivo!
-
 GamePlayer.StartAttack.CombatTarget:         Entras en combate y seleccionas [{0}]
-
 GamePlayer.StartAttack.SpellCancelled:    Tu hechizo es cancelado! 
-
 GamePlayer.StartAttack.TargetInRange:      ,  El objetivo esta en tu rango de ataque 
-
 GamePlayer.StartAttack.TargetOutOfRange:        ,  Objetivo fuera de rango de ataque
-
 GamePlayer.StartAttack.YouPrepare:                  Preparas tu {0} ({1}.{2}s para disparar {3}) 
 
-
-
 # HOUSING
-
 HouseEnterLeave.TooFarAway:					Estás demasiado lejos para entrar a esa casa {0}
-
 HouseEnterLeave.CantEnter:					No puedes entrar a esta casa {0}
-
 HousingDecorationRotate.Rotated:			Interior decoration rotated from {0} degrees to {1} degrees.Decoracion interior cambiada desde {0} grados a {1} grado.
-
 HousingPickupItemHandler.GardenRemoved:		Objeto del jardín eliminado.
-
 HousingPickupItemHandler.PickUp:			Has conseguido {0} y lo has colocado en tu inventario. 
-
 HousingPlaceItemHandler.30objects:			Ya has puesto 30 objetos. No puedes poner más.
-
 HousingPlaceItemHandler.40objects:			Ya has puesto 40 objetos. No puedes poner más.
-
 HousingPlaceItemHandler.CantFloor:			No puedes soltarlo en el suelo!
-
 HousingPlaceItemHandler.CantWall:			No puedes colocarlo en una pared!
-
 HousingPlaceItemHandler.DropOnFloor:		Has colocado el {0} en el suelo de tu casa!
-
 HousingPlaceItemHandler.DropOnGarden:		Has colocado el {0} en tu jardín.
-
 HousingPlaceItemHandler.DropOnWall:			Has puesto el {0} en la pared de tu casa!
-
 HousingPlaceItemHandler.GardenObjectPlaced:	Objeto de jardín colocado. Quedan {0} espacios.
-
 HousingPlaceItemHandler.HasPorch:			Esta casa ya tiene un portico!
-
 HousingPlaceItemHandler.HasNoPorch:			Esta casa no tiene portico!
-
 HousingPlaceItemHandler.IndoorObjectPlaced:	Objeto de interior colocado. Quedan {0} espacios.  
-
 HousingPlaceItemHandler.NoHookpoint:		No hay ningun anclaje colocado!
-
 HousingPlaceItemHandler.PutMoney:			Dejas el dinero en tu casa.
 
-
-
 # SCRIPTS
-
 # /Language
-
 Scripts.Players.Language.Set:				Cambias el idioma de las notificaciones a {0}.
-
 Scripts.Players.Language.Current:			Tu idioma es actualmente: {0}.
 
-
-
 # /Realm
-
 Scripts.Players.Realm.AlbKeeps:            Puestos avanzados de Albión
-
 Scripts.Players.Realm.DarknessFalls:      Abismos de la Oscuridad
-
 Scripts.Players.Realm.HibKeeps:            Puestos avanzados de Hibernia
-
 Scripts.Players.Realm.MidKeeps:            Puestos avanzados de Midgard
-
 Scripts.Players.Realm.Title:            Estatuto del reino
-
 Scripts.Players.Realm.UseRelicCommand:      Teclea '/relic': informaciones de Reliquias
 
-
-
 # /Relic
-
 Scripts.Players.Relic.AlbRelics:         Albión Reliquias
-
 Scripts.Players.Relic.HibRelics:         Hibernia Reliquias
-
 Scripts.Players.Relic.MidRelics:         Midgard Reliquias
-
 Scripts.Players.Relic.Power:            Maná
-
 Scripts.Players.Relic.Strength:            Fuerza
-
 Scripts.Players.Relic.Title:            Estatuto del Reliquias
-
 Scripts.Players.Relic.UseRealmCommand:      Teclea '/realm': informaciones de Reino
-
 
