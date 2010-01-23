@@ -1,203 +1,102 @@
 ﻿
 
-
-
 # General Sentences
-
 GMCommands.Error:							Errore: {0}
 
 
-
-
-
 # /addbind Command
-
 GMCommands.AddBind.Description:				Aggiunge un punto di legame.
-
 GMCommands.AddBind.Usage:					/addbind <[raggio=750]>
-
 GMCommands.AddBind.BindPointAdded:			Punto di legame aggiunto: X={0}, Y={1}, Z={2}, Raggio={3}, Regione={4}
 
 
-
-
-
 # /addhookpoint Command
-
 GMCommands.HookPoint.Description:			Aggiunge un punto di gancio ad un componente del keep.
-
 GMCommands.HookPoint.Usage:					'/addhookpoint <skin> <id>' Per agiungere un punto di gancio (seleziona un componente del keep)
-
 GMCommands.HookPoint.NoGKCTarget:			Non hai selezionato un componente del keep!
 
 
-
-
-
 # /annunce Command
-
 GMCommands.Announce.Description:			Invia un messaggio a tutti i giocatori connessi al gioco
-
 GMCommands.Announce.Usage:					/announce <log|window|send|center|confirm> <messaggio>
-
 GMCommands.Announce.LogAnnounce:			[Annuncio]: {0}
-
 GMCommands.Announce.WindowAnnounce:			Annuncio da {0}
-
 GMCommands.Announce.SendAnnounce:			[Annuncio]: {0}
-
 GMCommands.Announce.ConfirmAnnounce:		Annuncio da {0}: {1}
 
 
-
-
-
 # /area Command
-
 GMCommands.Area.Description:				Vari comandi per la gestione dell'area
-
 GMCommands.Area.Usage.Create:				/area create <nome> <tipo(circle|square)> <raggio> <broadcast(y|n)> <idSouno>
-
 GMCommands.Area.AreaCreated:				Area creata - Descrizione: {0}, X={1}, Y={2}, Z={3}, Raggio={4}, Broadcast={5}, Suono={6}.
 
 
-
-
-
 # /ban Command
-
 GMCommands.Ban.Description:					Vari comandi per la gestione dei ban
-
 GMCommands.Ban.Usage.IP:					'/ban ip <motivo>' Banna IP del bersaglio
-
 GMCommands.Ban.Usage.Account:				'/ban account <motivo>' Banna Acconto del bersaglio
-
 GMCommands.Ban.Usage.Both:					'/ban both <motivo>' Banna l'Acconto e IP del bersaglio
-
 GMCommands.Ban.MustTarget:					È necessario selezionare un bersaglio!
-
 GMCommands.Ban.AAlreadyBanned:				Questo acconto è già bannato.
-
 GMCommands.Ban.ABanned:						Acconto {0} è stato bannato.
-
 GMCommands.Ban.IAlreadyBanned:				Questo IP è già bannato.
-
 GMCommands.Ban.IBanned:						IP {0} è stato bannato.
-
 GMCommands.Ban.BAlreadyBanned:				Questo Acconto e IP sono già bannati.
-
 GMCommands.Ban.BBanned:						Acconto {0} e IP {1} sono stati bannati.
 
 
-
-
-
 # /cast Command
-
 GMCommands.Cast.Description:				Lancia una magia/effetto
-
 GMCommands.Cast.Usage:						'/cast <id> <effect|cast|spell>' Lancia la Magia/EffettoVisuale associato con <IdMagia>
-
 GMCommands.Cast.InvalidId:					ID non valido.
-
 GMCommands.Cast.IdNegative:					ID non può essere negativo.
-
 GMCommands.Cast.EffectExecuted:				Animazione dell'effetto eseguito. Id={0}
-
 GMCommands.Cast.CastExecuted:				Animazione del cast eseguito. Id={0}
-
 GMCommands.Cast.Spell.CastOnLiving:			Lanci {0} su {1}.
-
 GMCommands.Cast.Spell.CastOnSelf:			Lanci {0} su te stesso.
-
 GMCommands.Cast.Spell.GMCastOnYou:			{0} {1} lancia {2} su di te.
-
 GMCommands.Cast.Spell.Inexistent:			Magia inesistente. Id={0}
 
 
-
-
-
 # /crafting Command
-
 GMCommands.Crafting.Description:			Cambia il livello artigianale del bersaglio
-
 GMCommands.Crafting.Usage.Add:				'/crafting add <IdAbilitàArtigianale> <LivelloIniziale>' Aggiunge abilità artigianale al tuo bersaglio
-
 GMCommands.Crafting.Usage.Change:			'/crafting change <IdAbilitàArtigianale> <amount>' Incrementa o decrementa il livello del abilità artiginale del tuo bersaglio
-
 GMCommands.Crafting.Usage.List:				'/crafting list' Lista di tutte le abilità artigianali con gli Id
-
 GMCommands.Crafting.SkillDescription:		Id Abilità Artigianale Descrizione:
-
 GMCommands.Crafting.NoPlayerTarget:			Devi aver selezionato un giocatore per usare questi comandi.
-
 GMCommands.Crafting.InvalidSkill:			Devi digitare un valido Id dell'abilità artigianale.
-
 GMCommands.Crafting.SkillAdded:				Abilità artigianale {0} aggiunti correttamente.
-
 GMCommands.Crafting.AlreadyHaveSkill:		{0} ha già abilità artigianale {1}.
-
 GMCommands.Crafting.NotHaveSkillAddIt:		{0} non ha l'abilità artigianale {1}, aggiungerla prima.
-
 GMCommands.Crafting.SkillChanged:			Abilità artigianale {1} cambiata correttamente.
-
 GMCommands.Crafting.NowHasSkillPoints:		{0} ha ora {} in {}.
 
 
-
-
-
 # /debug Command
-
 GMCommands.Debug.Description:				Attiva o disattiva la modalità di debug
-
 GMCommands.Debug.Usage:						/debug <on/off>
-
 GMCommands.Debug.ModeON:					Modalità di debug ATTIVATA
-
 GMCommands.Debug.ModeOFF:					Modalità di debug DISATTIVATA
 
 
-
-
-
 # ]jump Command
-
 GMCommands.DebugJump.Description:			Ti teletrasporta in una specifica localita
-
 GMCommands.DebugJump.Usage:					']jump <zoneID> <locX> <locY> <locZ> <heading>' Autousato per *jump in modalità di debug
-
 GMCommands.DebugJump.InvalidZoneID:			Zona Id non valida: {0}
-
 GMCommands.DebugJump.UnknownZoneID:			Zona Id sconosciuta: {0}
-
 GMCommands.DebugJump.UnknownRegion:			Regione sconosciuta ({0}).
-
 GMCommands.DebugJump.RegionNotSuppByClient:	Regione ({0}) non è supportata dal tuo client.
 
 
-
-
-
 # /door Command
-
 GMCommands.Door.Description:				Gestione delle porte
-
 GMCommands.Door.Usage.Add:					'/door add <IdPorta>' Id deve essere della porta selezionata dal pachetto e devi usare il comando quando sei sulla porta
-
 GMCommands.Door.Usage.Remove:				'/door remove <IdPorta>' Id deve essere della porta selezionata dal pachetto
-
 GMCommands.Door.InvalidDoorID:				Id Porta deve essere un numero reale di tipo ushort (da 0 a 65535)
-
 GMCommands.Door.Created:					Porta creata con Id={0}
-
 GMCommands.Door.DoorExist:					Porta esistente. Impossibile crearla. Id={0}
-
 GMCommands.Door.Removed:					Porta cancellata con Id={0}
-
 GMCommands.Door.InexistentDoor:				Porta inesistente. Impossibile rimuoverla. Id={0}
-
-
 
 

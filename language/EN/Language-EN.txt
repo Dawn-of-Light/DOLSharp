@@ -1,1999 +1,1000 @@
 ﻿# KEEPS
-
 # Managers/Player Manager
-
 PlayerManager.BroadcastCapture.Captured:		The forces of {0} have captured {1}!
-
 PlayerManager.BroadcastClaim.Claimed:			{0} has claimed {1}!
-
 PlayerManager.BroadcastRaize.Razed:			{0} has been razed by the forces of {1}!
-
 PlayerManager.BroadcastRelease.LostControl:		{0} has lost control of {1}!
 
-
-
 # Relics/GameRelicPad
-
 GameRelicPad.MountRelic.Captured:			{0} has captured the {1}.
-
 GameRelicPad.MountRelic.Stored:				{0} from {1} has stored the {2} to the {3}.
-
 GameRelicPad.RemoveRelic.Removed:			{0} from {1} has removed the {2} from the {3}.
 
-
-
 # STYLES
-
 # /StyleProcessor
-
 StyleProcessor.ExecuteStyle.BackStrike:			You inflict a critical strike in the back of your target 
-
 StyleProcessor.ExecuteStyle.ExecuteFail:		You fail to execute your {0} perfectly!
-
 StyleProcessor.ExecuteStyle.PerformPerfectly:		You perform your {0} perfectly! {1}
-
 StyleProcessor.ExecuteStyle.PerformsPerfectly:		Your {0} performs its {1} perfectly.{2}
-
 StyleProcessor.ExecuteStyle.StyleNameBackstab:		Backstab
-
 StyleProcessor.ExecuteStyle.StyleNameBackstabII:	Backstab II
-
 StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:	Perforate Artery
-
 StyleProcessor.ExecuteStyle.ThroatStrike:		You inflict a critical strike in the throat of your target 
-
 StyleProcessor.TryToUseStyle.AlreadyPreparing:		You are already preparing to use this style! Type /cancelstyle to enable style cancelling.
-
 StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	You have already selected your styles for this round!
-
 StyleProcessor.TryToUseStyle.BackupStyle:		You are now preparing to perform a {0} style as a backup for {1}!
-
 StyleProcessor.TryToUseStyle.CantCombatMode:		You can't enter combat mode while lying down!
-
 StyleProcessor.TryToUseStyle.CantMeleeCombat:		You can't enter melee combat mode with a fired weapon!
-
 StyleProcessor.TryToUseStyle.DualWielding:		You must be dual wielding to use this style!
-
 StyleProcessor.TryToUseStyle.Fatigued:			You are too fatigued to use this style!
-
 StyleProcessor.TryToUseStyle.MustHaveTarget:		You must have a target for your next attack style!
-
 StyleProcessor.TryToUseStyle.NoLongerPreparing:		You are no longer preparing to use your {0} style!
-
 StyleProcessor.TryToUseStyle.PerformStyleBefore:	You must perform the {0} style before this one!
-
 StyleProcessor.TryToUseStyle.PreparePerform:		You prepare to perform a {0}!
-
 StyleProcessor.TryToUseStyle.StyleRequires:		This style requires a {0} weapon!
 
-
-
 # KING THRONE NPC
-
 CLWeaponNPC.ReceiveItem.RespecCL:			Thanks, I added a single champion skill respec to use /respec cl.
-
 KingNPC.WhisperReceive.IsNowChampion:			You have just embraced on the life of the champions!
-
 KingNPC.WhisperReceive.AlreadyChampion:			You are already a champion!
-
 KingNPC.WhisperReceive.AskForChampion:			Would you like to embrace in the life of [Champions]?
 
-
-
 # /packets/Client/168
-
 # /DetailDisplayHandler
-
 DetailDisplayHandler.GetShortItemInfo.CrafterName:	Crafter : {0}
-
 DetailDisplayHandler.GetShortItemInfo.NoDrop:		 No Drop.
-
 DetailDisplayHandler.GetShortItemInfo.NoSell:		 No Sell.
-
 DetailDisplayHandler.GetShortItemInfo.NoTrade:		 No Trade.
-
 DetailDisplayHandler.HandlePacket.Any:			Any
-
 DetailDisplayHandler.HandlePacket.Back:			(Back)
-
 DetailDisplayHandler.HandlePacket.CannotDropped:	Cannot be dropped or put in your bank.
-
 DetailDisplayHandler.HandlePacket.CannotSold:		Cannot be sold to merchants.
-
 DetailDisplayHandler.HandlePacket.CannotTraded:		Cannot be traded to other players.
-
 DetailDisplayHandler.HandlePacket.ChampionLevel:	 - Requires: Champion Level {0}
-
 DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Item: "{1}"
-
 DetailDisplayHandler.HandlePacket.CrafterName:		Crafter : {0}
-
 DetailDisplayHandler.HandlePacket.Damage:		Damage: 
-
 DetailDisplayHandler.HandlePacket.Defense:		Defense: 
-
 DetailDisplayHandler.HandlePacket.DontBelongGuild:	You don't belong to a player guild.
-
 DetailDisplayHandler.HandlePacket.FatigueCost:		Fatigue Cost: 
-
 DetailDisplayHandler.HandlePacket.FollowupStyle:	Followup Style: {0}
-
 DetailDisplayHandler.HandlePacket.Front:		(Front)	
-
 DetailDisplayHandler.HandlePacket.GuildItem:		[Guild] {0}/Item: "{1}"
-
 DetailDisplayHandler.HandlePacket.High:			High
-
 DetailDisplayHandler.HandlePacket.HighBonus:		High Bonus
-
 DetailDisplayHandler.HandlePacket.HighPenalty:		High Penalty
-
 DetailDisplayHandler.HandlePacket.Item:			{0}/Item: "{1}
-
 DetailDisplayHandler.HandlePacket.LevName:		Lev   Name
-
 DetailDisplayHandler.HandlePacket.Low:			Low
-
 DetailDisplayHandler.HandlePacket.LowBonus:		Low Bonus
-
 DetailDisplayHandler.HandlePacket.LowPenalty:		Low Penalty
-
 DetailDisplayHandler.HandlePacket.Medium:		Medium
-
 DetailDisplayHandler.HandlePacket.MediumBonus:		Medium Bonus
-
 DetailDisplayHandler.HandlePacket.MediumPenalty:	Medium Penalty
-
 DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	You must be in a chat group.
-
 DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	You must be in a battle group.
-
 DetailDisplayHandler.HandlePacket.NoBonus:		No Bonus
-
 DetailDisplayHandler.HandlePacket.NoGroup:		You are not part of a group.
-
 DetailDisplayHandler.HandlePacket.NoInformation:	No special information!
-
 DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	You don't have permission to speak on the on guild line.	
-
 DetailDisplayHandler.HandlePacket.OnlyModerator:	Only moderator can talk on this chat group.
-
 DetailDisplayHandler.HandlePacket.Opening:		Opening: 
-
 DetailDisplayHandler.HandlePacket.OpeningStyle:		Opening Style: 
-
 DetailDisplayHandler.HandlePacket.Or:			 or {0}
-
 DetailDisplayHandler.HandlePacket.Positional:		Positional 
-
 DetailDisplayHandler.HandlePacket.Side:			(Side)
-
 DetailDisplayHandler.HandlePacket.TargetBlocks:		Target Blocks
-
 DetailDisplayHandler.HandlePacket.TargetEffect:		Target Effect: 
-
 DetailDisplayHandler.HandlePacket.TargetEvades:		Target Evades
-
 DetailDisplayHandler.HandlePacket.TargetFumbles:	Target Fumbles
-
 DetailDisplayHandler.HandlePacket.TargetHits:		Target Hits
-
 DetailDisplayHandler.HandlePacket.TargetMisses:		Target Misses
-
 DetailDisplayHandler.HandlePacket.TargetParrys:		Target Parrys
-
 DetailDisplayHandler.HandlePacket.TargetStyle:		Target Style
-
 DetailDisplayHandler.HandlePacket.ToHit:		To Hit: 
-
 DetailDisplayHandler.HandlePacket.VeryHigh:		Very High
-
 DetailDisplayHandler.HandlePacket.VeryHighBonus:	Very High Bonus	
-
 DetailDisplayHandler.HandlePacket.VeryHighPenalty:	Very High Penalty
-
 DetailDisplayHandler.HandlePacket.VeryLow:		Very Low
-
 DetailDisplayHandler.HandlePacket.VeryLowBonus:		Very Low Bonus
-
 DetailDisplayHandler.HandlePacket.VeryLowPenalty:	Very Low Penalty
-
 DetailDisplayHandler.HandlePacket.VeryStrange:		It's very strange, i cant recognise this item.
-
 DetailDisplayHandler.HandlePacket.WeaponType:		Weapon Type: {0}
-
 DetailDisplayHandler.HandlePacket.YouBlock:		You Block
-
 DetailDisplayHandler.HandlePacket.YouEvade:		You Evade
-
 DetailDisplayHandler.HandlePacket.YouFumble:		You Fumble
-
 DetailDisplayHandler.HandlePacket.YouHit:		You Hit
-
 DetailDisplayHandler.HandlePacket.YouMiss:		You Miss
-
 DetailDisplayHandler.HandlePacket.YouParry:		You Parry
-
 DetailDisplayHandler.WriteBonusLine.Points:		 pts
-
 DetailDisplayHandler.WriteBonusLine.PowerPool:		% of power pool.
-
 DetailDisplayHandler.WriteClassicArmorInfos.Absorption:	- {0}% Absorption
-
 DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod:	Armor Modifiers:
-
 DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor:	- {0} Base Factor
-
 DetailDisplayHandler.WriteClassicArmorInfos.ClampFact:	- {0} Clamped Factor
-
 DetailDisplayHandler.WriteClassicArmorInfos.Condition:	- {0}% Condition
-
 DetailDisplayHandler.WriteClassicArmorInfos.EffArmor:	Effective Armor:
-
 DetailDisplayHandler.WriteClassicArmorInfos.Factor:	- {0} Factor
-
 DetailDisplayHandler.WriteClassicArmorInfos.Quality:	- {0}% Quality
-
 DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS:	- {0} Base DPS
-
 DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS:	- {0} Clamped DPS
-
 DetailDisplayHandler.WriteClassicShieldInfos.DamageMod:	Damage Modifiers (when used with shield styles):
-
 DetailDisplayHandler.WriteClassicShieldInfos.Large:	- Shield Size : Large
-
 DetailDisplayHandler.WriteClassicShieldInfos.Medium:	- Shield Size : Medium
-
 DetailDisplayHandler.WriteClassicShieldInfos.Small:	- Shield Size : Small
-
 DetailDisplayHandler.WriteClassicShieldInfos.SPD:	- {0} Shield Speed
-
 DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS:	- {0} Base DPS
-
 DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS:	- {0} Clamped DPS
-
 DetailDisplayHandler.WriteClassicWeaponInfos.Condition:	- {0}% Condition
-
 DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod:	Damage Modifiers:
-
 DetailDisplayHandler.WriteClassicWeaponInfos.DamageType:- Damage Type: {0}
-
 DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage:	Effective Damage:
-
 DetailDisplayHandler.WriteClassicWeaponInfos.Quality:	- {0}% Quality
-
 DetailDisplayHandler.WriteClassicWeaponInfos.SPD:	- {0} Weapon Speed
-
 DetailDisplayHandler.WriteHorseInfo.AdvancedHorse:	This is an advanced horse.
-
 DetailDisplayHandler.WriteHorseInfo.Armor:		- Armor: {0}
-
 DetailDisplayHandler.WriteHorseInfo.Barding:		- Barding: None
-
 DetailDisplayHandler.WriteHorseInfo.BasicHorse:		This is a basic horse.
-
 DetailDisplayHandler.WriteHorseInfo.Food:		- Favorite food: Hay and the occasional apple
-
 DetailDisplayHandler.WriteHorseInfo.MountWindow:	To make this horse your active mount, place this icon in the appropriate slot of your Mount window.
-
 DetailDisplayHandler.WriteHorseInfo.Name:		- Name: {0}.
-
 DetailDisplayHandler.WriteHorseInfo.NameMount:		  (Use /namemount to name your horse.)
-
 DetailDisplayHandler.WriteHorseInfo.Quickbar:		To summon this horse, from your Mount window drag the horse icon to your quickbar, and summon by using the quickbar icon.
-
 DetailDisplayHandler.WriteHorseInfo.RvRZzones:		Can't be summoned in RvR zones.
-
 DetailDisplayHandler.WriteHorseInfo.Speed1:		(+35% speed)
-
 DetailDisplayHandler.WriteHorseInfo.Speed2:		(+45% speed)
-
 DetailDisplayHandler.WriteHorseInfo.Summon:		Click this icon in your quickbar to summon (or dismount) your horse.
-
 DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic:	Charged Magic Ability:
-
 DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Charges
-
 DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Focus Bonuses:
-
 DetailDisplayHandler.WriteMagicalBonuses.Level:		- {0} Level
-
 DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Level Requirement
-
 DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2:	Level Requirement: {0} Level
-
 DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Magical Ability:
-
 DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Magical Bonuses:
-
 DetailDisplayHandler.WriteMagicalBonuses.MaxCharges:	- {0} Max
-
 DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor:	- Spell has a chance of casting when enemy strikes at this armor.
-
 DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy:	- Spell has a chance of casting when this weapon strikes an enemy.
-
 DetailDisplayHandler.WriteMagicalBonuses.UsedItem:	- Spell has a chance of casting when this item is used.
-
 DetailDisplayHandler.WriteMagicalBonuses.UseItem1:	Can use item every: {0}
-
 DetailDisplayHandler.WriteMagicalBonuses.UseItem2:	Can use item every: 3:00 min.
-
 DetailDisplayHandler.WriteMagicalBonuses.UseItem3:	Can use again in: {0}.
-
 DetailDisplayHandler.WritePoisonInfo.Charges:		- {0} Charges
-
 DetailDisplayHandler.WritePoisonInfo.Level:		- {0} Level
-
 DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Level Requirement:
-
 DetailDisplayHandler.WritePoisonInfo.MaxCharges:	- {0} Max
-
 DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Offensive Proc Ability:
-
 DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Charged Magic Ability:
-
 DetailDisplayHandler.WritePotionInfo.Charges:		- {0} Charges
-
 DetailDisplayHandler.WritePotionInfo.Level:		- {0} Level
-
 DetailDisplayHandler.WritePotionInfo.LevelRequired:	Level Requirement:
-
 DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
-
 DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Cannot be used in combat
-
 DetailDisplayHandler.WritePotionInfo.UseItem2:		Can use item every: 1:00 min
-
 DetailDisplayHandler.WritePotionInfo.UseItem3:		Can use again in: {0}.
-
 DetailDisplayHandler.WritePotionInfo.Type:		Type : {0}
-
 DetailDisplayHandler.WritePotionInfo.Value:		Value : {0}
-
 DetailDisplayHandler.WritePotionInfo.Target:	Target : {0}
-
 DetailDisplayHandler.WritePotionInfo.Range:		Range : {0}
-
 DetailDisplayHandler.WriteUsableClasses.UsableBy:	Usable by: 
 
-
-
 # /DoorRequestHandler.cs
-
 DoorRequestHandler.OnTick.TooFarAway:			The {0} is too far away!
 
-
-
 # /PlayerBonusesListRequestHandler
-
 PlayerBonusesListRequestHandler.HandlePacket.Bonuses:	Bonuses (snapshot)
-
 PlayerBonusesListRequestHandler.HandlePacket.Magic:		Magic bonus: {0}%
-
 PlayerBonusesListRequestHandler.HandlePacket.Melee:		Melee bonus: {0}%
-
 PlayerBonusesListRequestHandler.HandlePacket.Outpost:	Outpost Bonuses
-
 PlayerBonusesListRequestHandler.HandlePacket.Realm:		Realm Rank Bonuses
-
 PlayerBonusesListRequestHandler.HandlePacket.Relic:		Relic Bonuses
-
 PlayerBonusesListRequestHandler.HandlePacket.Resist:	Resistances
-
 PlayerBonusesListRequestHandler.HandlePacket.Special:	Special Item Bonuses
-
 PlayerBonusesListRequestHandler.HandlePacket.Specs:		+{0} to ALL Specs
 
-
-
 # /PlayerInitRequestHandler
-
 PlayerInitRequestHandler.AllianceMessage:		Alliance Message: {0}
-
 PlayerInitRequestHandler.FreeLevel:			You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).
-
 PlayerInitRequestHandler.GuildMessage:			Guild Message: 
-
 PlayerInitRequestHandler.LevelCap:			You have exceeded the level cap of this battleground!
-
 PlayerInitRequestHandler.OfficerMessage:		Officer Message: {0}
-
 PlayerInitRequestHandler.SaferLocation:			This area isn't currently secure and you are being transported to a safer location.
 
-
-
 # /PlayerMoveItemRequestHandler
-
 PlayerMoveItemRequestHandler.TooFarAway:		You are too far away to give anything to {0}.
 
-
-
 # /PlayerPickUpRequestHandler
-
 PlayerPickUpRequestHandler.HandlePacket.InvalidTarget:	You have an invalid target!
-
 PlayerPickUpRequestHandler.HandlePacket.Target:		You must have a target to get something!
 
-
-
 # /PlayerPositionUpdateHandler
-
 PlayerPositionUpdateHandler.Endurance:			You lose endurance!
-
 PlayerPositionUpdateHandler.Entered:			You have entered {0}.
-
 PlayerPositionUpdateHandler.FallingDamage:		You take falling damage!
-
 PlayerPositionUpdateHandler.FallPercent:		You take {0}% of your max hits in damage.
-
 PlayerPositionUpdateHandler.SafeFall:			The damage was lessened by your Safe Fall ability!
-
 PlayerPositionUpdateHandler.UnknownZone:		Unknown zone, moving to bind point.
 
-
-
 # QUESTS
-
 # /Atlantis
-
 # /ArtifactQuest
-
 ArtifactQuest.GiveItem.BackpackFull:			Your backpack is full, please make room and try again.
 
-
-
 # /ArtifactTurnInQuest
-
 ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artifact Scholar
-
 ArtifactTurnInQuest.Init.ArtifactScholarFemale:		Artifact Scholar
-
 ArtifactTurnInQuest.FinishQuest.Completed:		You have completed the {0} quest!
 
-
-
 # REALMABILITIES
-
 # /Handlers
-
 # /DashingDefenseAbility
-
 DashingDefenseAbility.AddEffectsInfo.Info1:		
-
 DashingDefenseAbility.AddEffectsInfo.Info2:		Target: Self
-
 DashingDefenseAbility.AddEffectsInfo.Info3:		Casting time: instant
-
 DashingDefenseAbility.Execute.AlreadyEffect:		You already an effect of that type!
-
 DashingDefenseAbility.Execute.MustInGroup:		You must be in a group to use this ability!
 
-
-
 # /FirstAidAbility
-
 FirstAidAbility.AddEffectsInfo.Info1:			Level 1: Value: 25%
-
 FirstAidAbility.AddEffectsInfo.Info2:			Level 2: Value: 60%
-
 FirstAidAbility.AddEffectsInfo.Info3:			Level 3: Value: 100%
-
 FirstAidAbility.AddEffectsInfo.Info4:			Target: Self
-
 FirstAidAbility.AddEffectsInfo.Info5:			Casting time: instant
-
 FirstAidAbility.AddEffectsInfo.Info6:			
-
 FirstAidAbility.Execute.FullyHealed:			You are fully healed.
-
 FirstAidAbility.Execute.HealYourself:			You heal yourself for {0} hit points.
 
-
-
 # /PurgeAbility
-
 PurgeAbility.AddEffectsInfo.Info1:			Level 1 of this ability has a five second delay when triggering this ability before it activates. Higher levels of Purge do not have this delay.
-
 PurgeAbility.AddEffectsInfo.Info2:			Target: Self
-
 PurgeAbility.AddEffectsInfo.Info3:			Casting time: instant
-
 PurgeAbility.OnTick.PurgeActivate:			Purge activates in {0} seconds!
-
 PurgeAbility.RemoveNegativeEffects.FallFromYou:		All negative effects fall from you.
 
-
-
 # /RealmAbility
-
 RealmAbility.AddReUseDelayInfo.Every:			Level {0}: Can use every: {1}
-
 RealmAbility..CheckPreconditions.BeInCombat:		You must be in combat recently to use this ability!
-
 RealmAbility..CheckPreconditions.BeInGroup:		You must be in a group use this ability!
-
 RealmAbility..CheckPreconditions.Combat:		You have been in combat recently and cannot use this ability!
-
 RealmAbility..CheckPreconditions.Dead:			You cannot use this ability while dead!
-
 RealmAbility..CheckPreconditions.Mesmerized:		You cannot use this ability while mesmerized!
-
 RealmAbility..CheckPreconditions.Sitting:		You cannot use this ability while sitting!
-
 RealmAbility..CheckPreconditions.Stealthed:		You cannot use this ability while stealthed!
-
 RealmAbility..CheckPreconditions.Stunned:		You cannot use this ability while stunned!
-
 RealmAbility.SendCasterSpellEffectAndCastMessage.Caster:{0} casts a spell!
-
 RealmAbility.SendCasterSpellEffectAndCastMessage.You:	You cast a {0} Spell!
-
 RealmAbility.SendCastMessage.PlayerCasts:		{0} casts a spell!
-
 RealmAbility.SendCastMessage.YouCast:			You cast a {0} Spell!
 
-
-
 # WORLD
-
 # /AbstractArea
-
 AbstractArea.Entered:					(Region) You have entered {0}.
-
 AbstractArea.Left:					(Region) You have left {0}.
 
-
-
 # SCRIPTS
-
 # GameEvents
-
 # /Playerenterexit
-
 Scripts.Events.PlayerEnterExit.Entered:			{0} just entered the game!
-
 Scripts.Events.PlayerEnterExit.Left:			{0} just left the game!
-
 Scripts.Events.PlayerEnterExit.Staff:			[Staff Member] {0}
 
-
-
 # GMCommands
-
 # /Ban
-
 Scripts.GM.Ban.AAlreadyBanned:				This account has already been banned.
-
 Scripts.GM.Ban.ABanned:					Account {0} has been banned.
-
 Scripts.GM.Ban.BAlreadyBanned:				These account and IP have already been banned.
-
 Scripts.GM.Ban.BBanned:					Account {0} and IP {1} have been banned.
-
 Scripts.GM.Ban.IAlreadyBanned:				This IP has already been banned.
-
 Scripts.GM.Ban.IBanned:					IP {0} has been banned.
-
 Scripts.GM.Ban.MustTarget:				You must select a target!
 
-
-
 # PlayerCommands
-
 # /Advice
-
 Scripts.Players.Advice.Advice:				[ADVICE{0}] {1}: "{2}"
-
 Scripts.Players.Advice.AdvicersOn:			There are {0} advisors online!
 
-
-
 # /Advisor
-
 Scripts.Players.Advisor.Off:				You will no longer receive messages from the advice channel.
-
 Scripts.Players.Advisor.On:				You will now receive messages from the advice channel.
 
-
-
 # /Afk
-
 Scripts.Players.Afk.Off:				Your AFK flag is now off.
-
 Scripts.Players.Afk.On:					Your AFK flag is now on.
 
-
-
 # /Anonymous
-
 Scripts.Players.Anonymous.Error:			Anonymous mode is disabled.
-
 Scripts.Players.Anonymous.Off:				You are no longer anonymous.
-
 Scripts.Players.Anonymous.On:				You are now anonymous.
 
-
-
 # /Assist
-
 Scripts.Players.Assist.CantAssistYourself:		You can't assist yourself.
-
 Scripts.Players.Assist.DoesntHaveTarget:	 	doesn't currently have a target.
-
 Scripts.Players.Assist.DontSee:				You don't see {0} around here!
-
 Scripts.Players.Assist.NoTarget:			You have no target.
-
 Scripts.Players.Assist.NotValid:			Target is not valid.
-
 Scripts.Players.Assist.YouAssist:			You assist {0}.
 
-
-
 # /Autoloot
-
 Scripts.Players.Autoloot.Off:				Your autoloot is off. You will no longer attempt to automatically loot anything that drops in your area.
-
 Scripts.Players.Autoloot.On:				Your autoloot is on. You will now attempt to automatically loot anything that drops in your area.
 
-
-
 # /Autosplit
-
 Scripts.Players.Autosplit.Coins:			The leader switched 
-
 Scripts.Players.Autosplit.InGroup:			You must be in a group to use this command.
-
 Scripts.Players.Autosplit.Leader:			You must be the leader of the group to use this command.
-
 Scripts.Players.Autosplit.Loot:				The leader switched 
-
 Scripts.Players.Autosplit.Off:				The leader switched off the autosplit.
-
 Scripts.Players.Autosplit.On:				The leader switched on the autosplit.
-
 Scripts.Players.Autosplit.Self:				{0} switched 
 
-
-
 # /Battlegroup
-
 Scripts.Players.Battlegroup.BattlegroupCount:		There are currently {0} members in your battlegroup.			
-
 Scripts.Players.Battlegroup.BattleGroupLootNormal:	The battlegroup loot type is set to normal.		
-
 Scripts.Players.Battlegroup.BattlegroupLootThresholdOff:The battlegroup lootlevel is currently off.			
-
 Scripts.Players.Battlegroup.BattlegroupLootThresholdOn:	The battlegroup lootlevel is currently {0}.			
-
 Scripts.Players.Battlegroup.BattleGroupLootTreasurer:	The battlegroup loot type is set to go to the treasurer.			
-
 Scripts.Players.Battlegroup.BattlegroupStatus:		The current status of your battlegroup is {0}.			
-
 Scripts.Players.Battlegroup.BattlegroupTreasurerIs:	The treasurer of the battlegroup has been changed to {0}.			
-
 Scripts.Players.Battlegroup.BattlegroupTreasurerIsYou:	You have been made treasuerer of the battlegroup.			
-
 Scripts.Players.Battlegroup.BattlegroupTreasurerOff:	The battlegroup does not currently  have a treasurer.			
-
 Scripts.Players.Battlegroup.BattlegroupTreasurerOn:	You have change the treasurer of the Battlegroup to: {0}.			
-
 Scripts.Players.Battlegroup.Help.Count:			/bg count - Counts the number of members in the battle group			
-
 Scripts.Players.Battlegroup.Help.Credit:		/bg credit - Displays credit for Battlegroup Master Level encounters that have been completed within the last 10 minutes.  			
-
 Scripts.Players.Battlegroup.Help.GrantCredit:		/bg grantcredit (masterlevel) (playername) - Allows Batttlegroup Leader to grant credit for completed Master Level steps.			
-
 Scripts.Players.Battlegroup.Help.GroupClass:		/bg groupclass - Shows the class makeup of each of the groups in the battlegroup.			
-
 Scripts.Players.Battlegroup.Help.Groups:		/bg groups - Displays the battlegroup members with their groups			
-
 Scripts.Players.Battlegroup.Help.Help:			/bg help - Displays all battle group commands
-
 Scripts.Players.Battlegroup.Help.Invite:		/bg invite [playername] - Invites the specified player to the battle group
-
 Scripts.Players.Battlegroup.Help.JoinPrivate:		/bg join [moderator name] [password] - Join a private battle group which has a password set	
-
 Scripts.Players.Battlegroup.Help.JoinPublic:		/bg join [moderator name] - Join a public battle group by name of the moderator	
-
 Scripts.Players.Battlegroup.Help.Leader:		/bg promote <name> - Declare another member of the battle group as leader; This player can invite other players into the battle group and speak when the battle group is on listen mode.
-
 Scripts.Players.Battlegroup.Help.Leave:			/bg leave - Remove oneself from the battle group
-
 Scripts.Players.Battlegroup.Help.Listen:		/bg listen - Puts the battle group on listen mode; only the moderator and leaders can speak
-
 Scripts.Players.Battlegroup.Help.Loot:			/bg loot (normal/treasurer) - Sets battlegroup looting to normal or a treasurer			
-
 Scripts.Players.Battlegroup.Help.LootLevel:		/bg lootlevel (level) - Sets the lootlevel for your battlegroup.			
-
 Scripts.Players.Battlegroup.Help.PasswordClear:		/bg password clear - Clears the current password (moderator only)	
-
 Scripts.Players.Battlegroup.Help.PasswordDisplay:	/bg password - Display the current password for the battle group (moderator only)	
-
 Scripts.Players.Battlegroup.Help.PasswordNew:		/bg password [new password]	
-
 Scripts.Players.Battlegroup.Help.Private:		/bg private - The battle group is invite or password-only
-
 Scripts.Players.Battlegroup.Help.Public:		/bg public - The battle group is public and anyone can join by typing /bg join
-
 Scripts.Players.Battlegroup.Help.Remove:		/bg remove [playername] - Removes the specified player from the battle group
-
 Scripts.Players.Battlegroup.Help.Status:		/bg status - Returns the number of members in your battlegroup.		
-
 Scripts.Players.Battlegroup.Help.Treasurer:		/bg treasurer (player name) - Sets the battlegroup treasurer.			
-
 Scripts.Players.Battlegroup.Help.Usage:			/bg usage:
-
 Scripts.Players.Battlegroup.Help.Who:			/bg who - Lists all members of the battle group
-
 Scripts.Players.Battlegroup.InBattleGroup:		You must be in a battle group to use this command.
-
 Scripts.Players.Battlegroup.InviteYourself:		You cannot invite yourself to a battlegroup.	
-
 Scripts.Players.Battlegroup.JoinBattleGroup:		Do you want to join {0}'s battlegroup?	
-
 Scripts.Players.Battlegroup.LeaderCommand:		You must be a leader of the battle group to use this command.	
-
 Scripts.Players.Battlegroup.LeaderInvite:		You must be the leader to invite a player to join the battle group.
-
 Scripts.Players.Battlegroup.ListenMode:			The listen mode of battlegroup is switch 
-
 Scripts.Players.Battlegroup.Moderator:			{0} becomes a moderator.
-
 Scripts.Players.Battlegroup.NoPlayer:			There is no player with this name.
-
 Scripts.Players.Battlegroup.NotBattleGroupLeader:	This player is not a leader of a battlegroup.	
-
 Scripts.Players.Battlegroup.NotBattleGroupMember:	This player is not a member of a battlegroup.	
-
 Scripts.Players.Battlegroup.NotPublic:			This battlegroup is not public.
-
 Scripts.Players.Battlegroup.OnlyModerator:		Only moderator can talk on this battle group.	
-
 Scripts.Players.Battlegroup.OwnBattleGroup:		You cannot join your own battlegroup.
-
 Scripts.Players.Battlegroup.Password:			Password of battlegroup: {0}.
-
 Scripts.Players.Battlegroup.PasswordChanged:		You have change the password of Battlegroup to: {0}.	
-
 Scripts.Players.Battlegroup.PlayerInBattlegroup:	{0} is already in a battlegroup.	
-
 Scripts.Players.Battlegroup.Private:			The battlegroup is now private.
-
 Scripts.Players.Battlegroup.Public:			The battlegroup is now public.
-
 Scripts.Players.Battlegroup.Usage:			Usage: /bg <text>
-
 Scripts.Players.Battlegroup.UsageInvite:		Usage: /bg invite <playername>
 
-
-
 # /Realm
-
 Scripts.Players.Realm.AlbKeeps:            Albion Outposts
-
 Scripts.Players.Realm.DarknessFalls:      Darkness Falls
-
 Scripts.Players.Realm.HibKeeps:            Hibernia Outposts
-
 Scripts.Players.Realm.MidKeeps:            Midgard Outposts
-
 Scripts.Players.Realm.Title:            Realm status
-
 Scripts.Players.Realm.UseRelicCommand:      Use '/relic' for Relic info
 
-
-
 # /Relic
-
 Scripts.Players.Relic.AlbRelics:         Albion Relics
-
 Scripts.Players.Relic.HibRelics:         Hibernia Relics
-
 Scripts.Players.Relic.MidRelics:         Midgard Relics
-
 Scripts.Players.Relic.Power:            Power
-
 Scripts.Players.Relic.Strength:            Strength
-
 Scripts.Players.Relic.Title:            Relic status
-
 Scripts.Players.Relic.UseRealmCommand:      Use '/realm' for Realm Info.
 
-
-
 # Boats
-
 Scripts.Player.Boat.AlreadyOnBoat:			That player is already on the boat!
-
 Scripts.Player.Boat.BoardingDenied:			Your request to board {0} was denied.
-
 Scripts.Player.Boat.BoardingGranted:			You accepted the boarding request.
-
 Scripts.Player.Boat.BoardingRequest:			{0} is trying to board your boat. Accept?
-
 Scripts.Player.Boat.BoatTooFar:				{0} is too far away for you to board.
-
 Scripts.Player.Boat.BootedBy:				You have been kicked off the boat by {0}.
-
 Scripts.Player.Boat.BootedTarget:			You have booted {0} from the boat.
-
 Scripts.Player.Boat.DeleteConfirmation:			Do you really want to delete your boat {0}?
-
 Scripts.Player.Boat.FullBoat:				The boat is currently full.
-
 Scripts.Player.Boat.Help.Board:				'/boat board' - Boards the targeted boat.
-
 Scripts.Player.Boat.Help.Boot:				'/boat boot' - Boots the selected player from your boat.
-
 Scripts.Player.Boat.Help.Delete:			'/boat delete' - Gives a confirmation dialog to delete your current boat !!permanantly!!
-
 Scripts.Player.Boat.Help.Follow:			'/boat follow' - Orders your boat to follow your selected target.
-
 Scripts.Player.Boat.Help.StopFollow:			'/boat stopfollow' - Orders your boat to stop following its target.
-
 Scripts.Player.Boat.Help.Summon:			'/boat summon' - Summons your boat.
-
 Scripts.Player.Boat.Help.Unsummon:			'/boat unsummon' - Unsummons your targeted boat.
-
 Scripts.Player.Boat.InviteNoSelf:			You cannot invite yourself!
-
 Scripts.Player.Boat.InviteRecieved:			{0} has invited you to join them on their boat.
-
 Scripts.Player.Boat.InviteSent:				You have invited {0} to join you on your boat.
-
 Scripts.Player.Boat.MoveFollow:				Your boat begins to follow {0}.
-
 Scripts.Player.Boat.NoBoatSelected:			You must select a boat first!
-
 Scripts.Player.Boat.NoPlayerSelected:			You need to select a player first.
-
 Scripts.Player.Boat.NotInWater:				You must be in the water before you can summon your boat!
-
 Scripts.Player.Boat.NotOwnBoat:				You do not own a boat.
-
 Scripts.Player.Boat.OwnerNotOn:				The owner of that boat is not online.
-
 Scripts.Player.Boat.PlayerIsDead:			You cannot interact with a dead player!
-
 Scripts.Player.Boat.StopFollow:				You bring your boat to a halt.
-
 Scripts.Player.Boat.Summoned:				Your {0} has been summoned.
-
 Scripts.Player.Boat.TargetNotInBoat:			{0} is not in your boat.
-
 Scripts.Player.Boat.UnknownCommand:			That is not a valid boat command. /boat for help.
-
 Scripts.Player.Boat.Unsummoned:				Your {0} has been unsummoned.
-
 Scripts.Player.Boat.Usage:				Usage:
-
 Scripts.Player.Boat.YouBoard:				You board the {0}.
 
-
-
 # /Boot
-
 Scripts.Players.Boot.InHouseError:			You have to be in your house to use this command!
-
 Scripts.Players.Boot.NoHouseError:			You don't own a house!
-
 Scripts.Players.Boot.NoOneOnline:			No one with that name is online to Kick!
-
 Scripts.Players.Boot.YouRemoved:			You have been removed from the house by {0}!
 
-
-
 # /Bountyrent
-
 Scripts.Players.Bountyrent.InHouseError:		You have to be in your house to use this command!
-
 Scripts.Players.Bountyrent.NoHouseError:		You don't own a house!
 
-
-
 # /Broadcast
-
 Scripts.Players.Broadcast.Message:			[Broadcast] {0} : {1}
-
 Scripts.Players.Broadcast.NoHere:			You cannot broadcast here.
-
 Scripts.Players.Broadcast.NoText:			You must broadcast something...
 
-
-
 # /Cancelstyle
-
 Scripts.Players.Cancelstyle.Set:			Cancel Style now set to {0}.
-
 Scripts.Players.Cancelstyle.On:				ON
-
 Scripts.Players.Cancelstyle.Off:			OFF
 
-
-
 # /Chatgroup
-
 Scripts.Players.Chatgroup.Help.Help:			/cg help - Displays all chat group commands
-
 Scripts.Players.Chatgroup.Help.Invite:			/cg invite [playername] - Invites the specified player to the chat group
-
 Scripts.Players.Chatgroup.Help.JoinPrivate:		/cg join [moderator name] [password] - Join a private chat group which has a password set	
-
 Scripts.Players.Chatgroup.Help.JoinPublic:		/cg join [moderator name] - Join a public chat group by name of the moderator	
-
 Scripts.Players.Chatgroup.Help.Leader:			/cg leader <name> - Declare another member of the chat group as leader; This player can invite other players into the chat group and speak when the chat group is on listen mode.
-
 Scripts.Players.Chatgroup.Help.Leave:			/cg leave - Remove oneself from the chat group
-
 Scripts.Players.Chatgroup.Help.Listen:			/cg listen - Puts the chat group on listen mode; only the moderator and leaders can speak
-
 Scripts.Players.Chatgroup.Help.PasswordClear:		/cg password clear - Clears the current password (moderator only)	
-
 Scripts.Players.Chatgroup.Help.PasswordDisplay:		/cg password - Display the current password for the chat group (moderator only)	
-
 Scripts.Players.Chatgroup.Help.PasswordNew:		/cg password [new password]	
-
 Scripts.Players.Chatgroup.Help.Private:			/cg private - The chat group is invite or password-only
-
 Scripts.Players.Chatgroup.Help.Public:			/cg public - The chat group is public and anyone can join by typing /cg join
-
 Scripts.Players.Chatgroup.Help.Remove:			/cg remove [playername] - Removes the specified player from the chat group
-
 Scripts.Players.Chatgroup.Help.Usage:			/cg usage:
-
 Scripts.Players.Chatgroup.Help.Who:			/cg who - Lists all members of the chat group
-
 Scripts.Players.Chatgroup.InChatGroup:			You must be in a chat group to use this command.
-
 Scripts.Players.Chatgroup.InviteYourself:		You cannot invite yourself to a chatgroup.	
-
 Scripts.Players.Chatgroup.JoinChatGroup:		Do you want to join {0}'s chatgroup?	
-
 Scripts.Players.Chatgroup.LeaderCommand:		You must be a leader of the chat group to use this command.	
-
 Scripts.Players.Chatgroup.LeaderInvite:			You must be the leader to invite a player to join the chat group.
-
 Scripts.Players.Chatgroup.ListenMode:			The listen mode of chatgroup is switch 
-
 Scripts.Players.Chatgroup.Moderator:			{0} becomes a moderator.
-
 Scripts.Players.Chatgroup.NoPlayer:			There is no player with this name.
-
 Scripts.Players.Chatgroup.NotChatGroupLeader:		This player is not a leader of a chatgroup.	
-
 Scripts.Players.Chatgroup.NotChatGroupMember:		This player is not a member of a chatgroup.	
-
 Scripts.Players.Chatgroup.NotPublic:			This chatgroup is not public.
-
 Scripts.Players.Chatgroup.OnlyModerator:		Only moderator can talk on this chat group.	
-
 Scripts.Players.Chatgroup.OwnChatGroup:			You cannot join your own chatgroup.
-
 Scripts.Players.Chatgroup.Password:			Password of Chatgroup: {0}.
-
 Scripts.Players.Chatgroup.PasswordChanged:		You have change the password of Chatgroup to: {0}.	
-
 Scripts.Players.Chatgroup.PlayerInChatgroup:		{0} is already in a chatgroup.	
-
 Scripts.Players.Chatgroup.Private:			The chatgroup is now private.
-
 Scripts.Players.Chatgroup.Public:			The chatgroup is now public.
-
 Scripts.Players.Chatgroup.Usage:			Usage: /c <text>
-
 Scripts.Players.Chatgroup.UsageInvite:			Usage: /cg invite <playername>"
 
-
-
 # /Cmdhelp
-
 Scripts.Players.Cmdhelp.NoCommand:			Command {0} does not exist.
-
 Scripts.Players.Cmdhelp.PlvlCommands:			<----------Commands available for plvl {0}---------->
-
 Scripts.Players.Cmdhelp.Usage:				>----------Usage for {0}----------<
 
-
-
 # /Disband
-
 Scripts.Players.Disband.Disbanded:			{o} was disbanded from group.
-
 Scripts.Players.Disband.NoPlayer:			No players in group with that name.
-
 Scripts.Players.Disband.NotInGroup:			You are not in a group.
-
 Scripts.Players.Disband.NotLeader:			You are not the leader of your group.
-
 Scripts.Players.Disband.NoYourself:			Can't disband yourself in such way.
 
-
-
 # /Dismount
-
 Scripts.Players.Dismount:				You are not riding any steed!
 
-
-
 # /Duel
-
 Scripts.Players.Duel.ChallengesYou:			{0} challenges you to a duel! /duel accept to begin, /duel decline to decline.
-
 Scripts.Players.Duel.DuelOptions:			/duel options are challenge/decline/cancel/surrender/accept
-
 Scripts.Players.Duel.EnemyRealm:			Can't duel enemy realm players.
-
 Scripts.Players.Duel.NeedTarget:			You need to target someone to duel!
-
 Scripts.Players.Duel.ConsideringDuel:			You're not currently considering a duel.
-
 Scripts.Players.Duel.NotInDuel:				You aren't in a duel!
-
 Scripts.Players.Duel.PlayerVsPlayer:			{0} surrenders to {1}!
-
 Scripts.Players.Duel.SafeZone:				This is a safe zone and you cannot duel here!
-
 Scripts.Players.Duel.TargetAccept:			{0} accepts the duel.  Begin fighting!
-
 Scripts.Players.Duel.TargetAlreadyChallenging:		{0} is already challenging someone to a duel.
-
 Scripts.Players.Duel.TargetAlreadyConsidering:		{0} is already considering a duel.
-
 Scripts.Players.Duel.TargetCancel:			{0} cancels his duel invitation.	
-
 Scripts.Players.Duel.TargetDeclines:			{0} declines your duel invitation.
-
 Scripts.Players.Duel.TargetHealth:			Your target must have full health.
-
 Scripts.Players.Duel.TargetInCombat:			{0} is in combat.
-
 Scripts.Players.Duel.TargetInDuel:			{0} is already in a duel.
-
 Scripts.Players.Duel.TargetInGroup:			{0} is in a group.
-
 Scripts.Players.Duel.TargetSurrender:			{0} surrenders to you!
-
 Scripts.Players.Duel.YouAccept:				You accept your duel!  Begin fighting!
-
 Scripts.Players.Duel.YouAlreadyChallenging:		You are already challenging {0} to a duel. Cancel it first before challenging someone else.
-
 Scripts.Players.Duel.YouAlreadyConsidering:		You are already considering a duel with {0}. Decline it first before challenging someone.
-
 Scripts.Players.Duel.YouCancel:				You cancel your duel invitation.
-
 Scripts.Players.Duel.YouChallenge:			You challenge {0} to a duel!
-
 Scripts.Players.Duel.YouDecline:			You decline {0}'s duel invitation.
-
 Scripts.Players.Duel.YouHaventChallenged:		You haven't challenged anyone to a duel.
-
 Scripts.Players.Duel.YouHealth:				You must have full health.
-
 Scripts.Players.Duel.YouInCombat:			You are in combat.
-
 Scripts.Players.Duel.YouInDuel:				You are already in a duel.
-
 Scripts.Players.Duel.YouInGroup:			You are in a group.
-
 Scripts.Players.Duel.YouSurrender:			You surrender to {0}!
 
-
-
 # /Guilds
-
 Scripts.Player.Guild.AccountRemoved:			{0} has removed {1} from the guild.	
-
 Scripts.Player.Guild.ActiveBuff:			Your guild already has an active buff. You must wait for it to expire first.	
-
 Scripts.Player.Guild.AllianceAlreadyOther:		That guild already has an alliance.	
-
 Scripts.Player.Guild.AllianceAnsCancel:			The alliance offer has been cancelled.	
-
 Scripts.Player.Guild.AllianceDeclined:			You decline the alliance offer.	
-
 Scripts.Player.Guild.AllianceDeclinedOther:		The alliance offer has been declined	
-
 Scripts.Player.Guild.AllianceDisabled:			Alliances are disabled on this server.	
-
 Scripts.Player.Guild.AllianceIndexNotVal:		The alliance index is not a valid number.	
-
 Scripts.Player.Guild.AllianceInfo:			Alliance info for {0}:
-
 Scripts.Player.Guild.AllianceInvite:			You have invited a guild to join your alliance.	
-
 Scripts.Player.Guild.AllianceInvited:			You have been invited to join the alliance of {0}.	
-
 Scripts.Player.Guild.AllianceLeader:			Alliance leader {0}	
-
 Scripts.Player.Guild.AllianceMax:			You are unable to invite that guild to your alliance, as your alliance already has the max number of guilds.	
-
 Scripts.Player.Guild.AllianceMember:			{0} - {1}	
-
 Scripts.Player.Guild.AllianceMembers:			Alliance members:	
-
 Scripts.Player.Guild.AllianceMemNotSel:			You must select a player from the same alliance.	
-
 Scripts.Player.Guild.AllianceNoGMSelected:		You must select a GM of guild you want to invite.	
-
 Scripts.Player.Guild.AllianceNoLeader:			No alliance leader
-
 Scripts.Player.Guild.AllianceNotLeader:			You have to be the leader guild of the alliance , before you can remove a guild from the alliance.	
-
 Scripts.Player.Guild.AllianceNotMember:			You must be in an alliance to do that.	
-
 Scripts.Player.Guild.AlreadyInGuild:			{0} is already a member of a guild.	
-
 Scripts.Player.Guild.AlreadyInGuild:			They are already a member of a guild.	
-
 Scripts.Player.Guild.AMotdSet:				You have set the alliance motd for the guild.	
-
 Scripts.Player.Guild.BannerAlready:			Your guild already has a banner.	
-
 Scripts.Player.Guild.BannerBought:			You have purchased a guild banner for {0} bounty points.	
-
 Scripts.Player.Guild.BannerGroupSummoned:		Someone in your group has already summoned the guild banner.	
-
 Scripts.Player.Guild.BannerGuildSummoned:		Someone in your guild has already summoned the guild banner.	
-
 Scripts.Player.Guild.BannerNoGroup:			You need to be in a Group to summon a Banner.	
-
 Scripts.Player.Guild.BannerNone:			Your guild does not own a guild banner.	
-
 Scripts.Player.Guild.BannerNotAfford:			You need 50,000 bounty points to purchase a guild banner!	
-
 Scripts.Player.Guild.BannerSummoned:			You have summoned your guild banner.	
-
 Scripts.Player.Guild.BannerUnsummoned:			You have unsummoned your guild banner.	
-
 Scripts.Player.Guild.BuffActivated:			[Guild Buff] {0} has spent 1000 Guild Merit Points and activated a Guild Buff!	
-
 Scripts.Player.Guild.BuffBountyPoints:			Your guild will now gain 5% bonus to bounty points for 24 hours!	
-
 Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Your guild will now get a bonus to bounty points for 24 hours!	
-
 Scripts.Player.Guild.BuffMPActivated:			[Guild Buff] Your guild will now get a bonus to merit points for 24 hours!	
-
 Scripts.Player.Guild.BuffRealmPoints:			Your guild will now gain 5% bonus to realm points for 24 hours!	
-
 Scripts.Player.Guild.ClaimNotNear:			You must be near a keep to claim it.	
-
 Scripts.Player.Guild.ConfirmLeave:			Do you really want to leave {0}?	
-
 Scripts.Player.Guild.DemotedHigherThanPlayer:		You can only demote to ranks below your own.	
-
 Scripts.Player.Guild.DemotedOther:			{0} has been demoted to {1}.	
-
 Scripts.Player.Guild.DemotedSelf:			You have been demoted to {0}.	
-
 Scripts.Player.Guild.DepositAmount:			You deposit {0} into your guilds bank account.	
-
 Scripts.Player.Guild.DepositFull:			The guild bank seems to be full.	
-
 Scripts.Player.Guild.DepositInvalid:		That is an invalid deposit amount.
-
 Scripts.Player.Guild.DepositTooMuch:		You don't have enough money to do that!
-
 Scripts.Player.Guild.DuesOff:				Guild dues are currently turned off.	
-
 Scripts.Player.Guild.DuesOn:				Guild dues are currently set at {0} percent.	
-
 Scripts.Player.Guild.EmailSet:				You have set the guild email to {0}.	
-
 Scripts.Player.Guild.EmblemAlready:			Your guild already has an emblem but you may change it for a hefty fee of 100 gold. You must select the EmblemNPC again for this proceedure to happen.	
-
 Scripts.Player.Guild.EmblemNeedGold:			You must have 200 gold to re emblem your guild.	
-
 Scripts.Player.Guild.EmblemNeedNPC:			You must be near a valid emblemeer.	
-
 Scripts.Player.Guild.EmblemNPCNotSelected:		You must be near a valid emblemeer.	
-
 Scripts.Player.Guild.EmblemRedo:			Would you like to re-emblem your guild for 100 gold?	
-
 Scripts.Player.Guild.FormNoGroup:			You must be in a group to form a guild.	
-
 Scripts.Player.Guild.FormNoMembers:			You need {0} members in your group to form a guild.	
-
 Scripts.Player.Guild.GuildCreated:			The guild {0} has been formed. {1} is the leader.	
-
 Scripts.Player.Guild.GuildExists:			That guild cannot be created because it already exists.	
-
 Scripts.Player.Guild.GuildForceLeave:			You have been removed from {1} by {0}.
-
 Scripts.Player.Guild.GuildLeave:			You have left your guild.	
-
 Scripts.Player.Guild.GuildLevelReq:			Your guild is not high enough level for this command.	
-
 Scripts.Player.Guild.GuildNotExist:			That guild does not exist.	
-
 Scripts.Player.Guild.Help.GuildACancel:			'/gc acancel' to cancel an alliance invitation	
-
 Scripts.Player.Guild.Help.GuildAAccept:			'/gc aaccept' to accept an alliance invitation	
-
 Scripts.Player.Guild.Help.GuildAccept:			'/gc accept ' to accept invite to guild	
-
 Scripts.Player.Guild.Help.GuildADecline:		'/gc adecline' to decline an alliance invitation	
-
 Scripts.Player.Guild.Help.GuildAInvite:			'/gc ainvite' to invite another guild to join your alliance	
-
 Scripts.Player.Guild.Help.GuildALeave:			'/gc aleave' to remove your guild from an alliance
-
 Scripts.Player.Guild.Help.GuildAlli:			'/gc alliance' to show information on the alliance	
-
 Scripts.Player.Guild.Help.GuildAMotd:			'/gc amotd <text>' to set the message of the day of the alliance's guild	
-
 Scripts.Player.Guild.Help.GuildARemove:			'/gc aremove' to removes your entire guild from an alliance	
-
 Scripts.Player.Guild.Help.GuildARemoveAlli:		'/gc aremove alliance [#]' to Remove the specified guild (listed by number) from the alliance	
-
 Scripts.Player.Guild.Help.GuildAutoRemove:		'/gc autoremove <playername>' 	
-
 Scripts.Player.Guild.Help.GuildAutoRemoveAcc:		'/gc autoremove account <playername>'	
-
 Scripts.Player.Guild.Help.GuildBannerSummon:		'/gc summon' summons the guild banner if you have one	
-
 Scripts.Player.Guild.Help.GuildBuff:			'/gc buff <realmpoints/bountypoints>' sets the guild buff to gain bounty or realm points	
-
 Scripts.Player.Guild.Help.GuildBuyBanner:		'/gc buybanner' - Spend points to buy a guild banner.	
-
 Scripts.Player.Guild.Help.GuildCancel:			'/gc cancel <option> [value]' to cancel all command done before	
-
 Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' to claim a keep	
-
 Scripts.Player.Guild.Help.GuildDecline:			'/gc decline' to decline the enter in guild	
-
 Scripts.Player.Guild.Help.GuildDemote:			'/gc demote <rank#> [name]' to set the rank from 0 to 10 of the player to an inferior rank	
-
 Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <amount>' puts money into the guild bank account.
-
 Scripts.Player.Guild.Help.GuildDues:			'/gc dues <amount>' to set your guild dues %. 1-100% <0 is off>
-
 Scripts.Player.Guild.Help.GuildEdit:			'/gc edit' to show list of all option in guild edit	
-
 Scripts.Player.Guild.Help.GuildEditACHear:		'/gc edit <ranknum> achear <y/n>' edits this rank to be able to hear Alliance chat	
-
 Scripts.Player.Guild.Help.GuildEditACSpeak:		'/gc edit <ranknum> acspeak <y/n>' edits this rank to be able to speak in Alliance chat	
-
 Scripts.Player.Guild.Help.GuildEditAlli:		'/gc edit <ranknum> alli <y/n>'  to allow a rank to enter/leave alliances (create a diplomatic officer)	
-
 Scripts.Player.Guild.Help.GuildEditClaim:		'/gc edit <ranknum> claim <y/n>'  to allow a rank to enter/leave alliances (create a diplomatic officer)	
-
 Scripts.Player.Guild.Help.GuildEditDues:		'/gc edit <ranknum> dues <y/n>'  to be able to change guild dues	
-
 Scripts.Player.Guild.Help.GuildEditEmblem:		'/gc edit <ranknum> emblem <y/n>' used the edit the rank of members who are allowed to wear the guild emblem on their cloak or shield.	
-
 Scripts.Player.Guild.Help.GuildEditGCHear:		'/gc edit <ranknum> gchear <y/n>' edits this rank to be able to hear guild chat	
-
 Scripts.Player.Guild.Help.GuildEditGCSpeak:		'/gc edit <ranknum> gcspeak <y/n>' edits this rank to be able to speak in guild chat	
-
 Scripts.Player.Guild.Help.GuildEditInvite:		'/gc edit <ranknum> invite <y/n>' edits this rank with the ability to invite members into the guild	
-
 Scripts.Player.Guild.Help.GuildEditOCHear:		'/gc edit <ranknum> ochear <y/n>' edits this rank to be able to hear Officer chat	
-
 Scripts.Player.Guild.Help.GuildEditOCSpeak:		'/gc edit <ranknum> ocspeak <y/n>' edits this rank to be able to speak in Officer chat	
-
 Scripts.Player.Guild.Help.GuildEditPromote:		'/gc edit <ranknum> promote <y/n>' edits this rank with the ability to promote/demote lower in rank	
-
 Scripts.Player.Guild.Help.GuildEditRankLevel:		'/gc edit <ranknum> ranklevel <level>'  used to set the rank hierarchy	
-
 Scripts.Player.Guild.Help.GuildEditRelease:		'/gc edit <ranknum> release <y/n>'  to set release the keep you have claim before	
-
 Scripts.Player.Guild.Help.GuildEditRemove:		'/gc edit <ranknum> remove <y/n>' edits this rank with the ability to remove those below him in rank	
-
 Scripts.Player.Guild.Help.GuildEditTitle:		'/gc edit <ranknum> title <text>' sets the title for a specific rank <#> for this guild	
-
 Scripts.Player.Guild.Help.GuildEditUpgrade:		'/gc edit <ranknum> upgrade <y/n>'  to allow a rank to enter/leave alliances (create a diplomatic officer)	
-
 Scripts.Player.Guild.Help.GuildEditView:		'/gc edit <ranknum> view <y/n>'  edits this rank with the ability to display the /gc info screen	
-
 Scripts.Player.Guild.Help.GuildEditWithdraw:		'/gc edit <ranknum> withdraw <y/n>'  to be able to withdraw from guild bank	
-
 Scripts.Player.Guild.Help.GuildEmail:			'/gc email <contact@guildpage.com>' is an additional line set by the leader that can be displayed in a /gc info command, as well as on the Herald.	
-
 Scripts.Player.Guild.Help.GuildEmblem:			'/gc emblem' to set emblem	
-
 Scripts.Player.Guild.Help.GuildForm:			'/gc form <Name>' to create a new guilde with all player of group	
-
 Scripts.Player.Guild.Help.GuildGMAddPlayer:		'/gc addplayer <player> to <guild>' to add player to guild	
-
 Scripts.Player.Guild.Help.GuildGMCommands:		Game Master commands:	
-
 Scripts.Player.Guild.Help.GuildGMCreate:		'/gc create <Name>' Create a new guild with targeted player as leader	
-
 Scripts.Player.Guild.Help.GuildGMPurge:			'/gc purge <Name>' Purge a guild completely	
-
 Scripts.Player.Guild.Help.GuildGMRemovePlayer:		'/gc removeplayer <player> from <guild>' to remove player from a guild	
-
 Scripts.Player.Guild.Help.GuildGMRename:		'/gc rename <OldName> to <NewName' Rename guild from OldName to NewName	
-
 Scripts.Player.Guild.Help.GuildInfo:			'/gc info' to show information on the guild	
-
 Scripts.Player.Guild.Help.GuildInvite:			'/gc invite [name]' to invite targeted player to join the guild	
-
 Scripts.Player.Guild.Help.GuildLeader:			'/gc leader [name]' to set leader successor	
-
 Scripts.Player.Guild.Help.GuildList:			'/gc list' to show all guild in your realm	
-
 Scripts.Player.Guild.Help.GuildMotd:			'/gc motd <text>' to set the message of the day of the guild	
-
 Scripts.Player.Guild.Help.GuildNoteSelf:		'/gc noteself <note>' to set a note about your character for the guild	
-
 Scripts.Player.Guild.Help.GuildOMotd:			'/gc omotd <text>' to set the message of the day of the officier's guild	
-
 Scripts.Player.Guild.Help.GuildPromote:			'/gc promote <rank#> [name]' to promote player to a superior rank	
-
 Scripts.Player.Guild.Help.GuildQuit:			'/gc quit' to leave the guild	
-
 Scripts.Player.Guild.Help.GuildRanks:			'/gc ranks' to show rank information for the guild	
-
 Scripts.Player.Guild.Help.GuildRemAccount:		'/gc removeaccount <accountname>' to remove every character of the account from the guild	
-
 Scripts.Player.Guild.Help.GuildRemove:			'/gc remove <playername>' to remove the player from the guild	
-
 Scripts.Player.Guild.Help.GuildUsage:			Usage:	
-
 Scripts.Player.Guild.Help.GuildWebpage:			'/gc webpage <the.guildpage.com>' is an additional line set by the leader that can be display in a /gc info command, as well as on the Herald.	
-
 Scripts.Player.Guild.Help.GuildWho:			'/gc who' to show all player in your guild	
-
 Scripts.Player.Guild.Help.GuildWithdraw:	'/gc withdraw <amount>' gets money from the guild bank account.
-
 Scripts.Player.Guild.InCombat:				You can't unsummon your Banner while you're in Combat!	
-
 Scripts.Player.Guild.InfoAMotd:				AllianceMessage: {0}	
-
 Scripts.Player.Guild.InfoCEmail:			Contact Email: {0}	
-
 Scripts.Player.Guild.InfoGDuesBank:			Dues: {0} Guild Bank: {1} copper pieces	
-
 Scripts.Player.Guild.InfoGuild:				Guild Info for {0}:	
-
 Scripts.Player.Guild.InfoGuildLevel:			Guild Level: {0}	
-
 Scripts.Player.Guild.InfoMotd:				Message:  {0}	
-
 Scripts.Player.Guild.InfoOMotd:				OfficerMessage: {0}	
-
 Scripts.Player.Guild.InfoRPBPMP:			Realm Points: {0} Bounty Points: {1} Merit Points: {2}	
-
 Scripts.Player.Guild.InfoWebpage:			Webpage: {0}	
-
 Scripts.Player.Guild.InvalidLetters:			Some of the characters entered are invalid.	
-
 Scripts.Player.Guild.InvalidRank:			That is not a valid rank.	
-
 Scripts.Player.Guild.InviteDead:			You cannot invite a dead player to your guild.	
-
 Scripts.Player.Guild.InviteNoSelected:			You must select a player.	
-
 Scripts.Player.Guild.InviteNoSelf:			You can't invite your self.	
-
 Scripts.Player.Guild.InviteNotThis:			You cannot invite this member.	
-
 Scripts.Player.Guild.InviteRecieved:			{0} has invited you to join their guild.	
-
 Scripts.Player.Guild.InviteSent:			You have invited {0} to join your guild.	
-
 Scripts.Player.Guild.Keep:				Your Guild has currently Claimed {0}.	
-
 Scripts.Player.Guild.LevelUp:				[Guild] Your guild has advanced to level {0}!	
-
 Scripts.Player.Guild.LoginsOff:				You will no longer be notified of guild members logging in, type /gc logins to start receiving notifications.	
-
 Scripts.Player.Guild.LoginsOn:				You will once again be notified of guild members logging in, type /gc logins to stop receiving notifications.	
-
 Scripts.Player.Guild.MadeLeader:			You are now the leader of {0}.	
-
 Scripts.Player.Guild.MadeLeaderOther:			{0} has been made the leader of {1}.	
-
 Scripts.Player.Guild.MemberLogin:			{0} has logged into the game.	
-
 Scripts.Player.Guild.MemberLogoff:			{0} has logged out of the game.	
-
 Scripts.Player.Guild.MemberRemoved:			{1} was removed from the guild.
-
 Scripts.Player.Guild.MeritPointReq:			Your guild does not have the required merit points.	
-
 Scripts.Player.Guild.MotdSet:				You have set the motd for the guild.	
-
 Scripts.Player.Guild.NoKeep:				You must have a keep before using that command.	
-
 Scripts.Player.Guild.NoPlayerSelected:			You must select a player.	
-
 Scripts.Player.Guild.NoPlayersInAcc:			There are no players from this account in your guild.	
-
 Scripts.Player.Guild.NoPrivilages:			You do not have high enough privilage in the guild to use that command.	
-
 Scripts.Player.Guild.NoteSet:				You set your guild note to: {0}	
-
 Scripts.Player.Guild.NotInYourGuild:			That player is not in your guild.	
-
 Scripts.Player.Guild.NotMember:				You must be in a guild before you can use any guild commands.	
-
 Scripts.Player.Guild.OMotdSet:				You have set the officer motd for the guild.	
-
 Scripts.Player.Guild.PlayerNotFound:			That player could not be found in the game.	
-
 Scripts.Player.Guild.PromotedOther:			{0} has been promoted to {1}.	
-
 Scripts.Player.Guild.PromotedSelf:			You have been promoted to {0}.	
-
 Scripts.Player.Guild.PromoteHigherThanPlayer:		You can only promote to ranks below your own.	
-
 Scripts.Player.Guild.Purged:				{0} has been purged.	
-
 Scripts.Player.Guild.RankACHearSet:			You have {0} the ACHear of the rank {1}.	
-
 Scripts.Player.Guild.RankACSpeakSet:			You have {0} the ACSpeak of the rank {1}.	
-
 Scripts.Player.Guild.RankAlliSet:			You have {0} the Alliance of the rank {1}.	
-
 Scripts.Player.Guild.RankClaimSet:			You have {0} the Claim of the rank {1}.	
-
 Scripts.Player.Guild.RankDuesSet:			You have {0} the Dues of the rank {1}.	
-
 Scripts.Player.Guild.RankEmblemSet:			You have {0} the emblem of the rank {1}.	
-
 Scripts.Player.Guild.RankGCHearSet:			You have {0} the GCHear of the rank {1}.	
-
 Scripts.Player.Guild.RankGCSpeakSet:			You have {0} the GCSpeak of the rank {1}.	
-
 Scripts.Player.Guild.RankInviteSet:			You have {0} the Invite of the rank {1}.	
-
 Scripts.Player.Guild.RankLevelSet:			You have set the level of the rank to {0}.	
-
 Scripts.Player.Guild.RankOCHearSet:			You have {0} the OCHear of the rank {1}.	
-
 Scripts.Player.Guild.RankOCSpeakSet:			You have {0} the OCSpeak of the rank {1}.	
-
 Scripts.Player.Guild.RankPromoteSet:			You have {0} the Promote of the rank {1}.	
-
 Scripts.Player.Guild.RankReleaseSet:			You have {0} the Release of the rank {1}.	
-
 Scripts.Player.Guild.RankRemoveSet:				You have {0} the Remove of the rank {1}.	
-
 Scripts.Player.Guild.RankTitleSet:				You have set the title of the rank to {0}.	
-
 Scripts.Player.Guild.RankUpgradeSet:			You have {0} the Upgrade of the rank {1}.	
-
 Scripts.Player.Guild.RankViewSet:				You have {0} the View of the rank {1}.	
-
 Scripts.Player.Guild.RankWithdrawSet:			You have {0} the Withdraw of the rank {1}.	
-
 Scripts.Player.Guild.ThirdArgNotNum:			The third argument must be a number.	
-
 Scripts.Player.Guild.UnableToCreate:			The guild {0} was unable to be created.	
-
 Scripts.Player.Guild.UnableToCreateLead:		The guild {0} was unable to be created {1} as leader.	
-
 Scripts.Player.Guild.UnknownCommand:			{0} is not a valid command:	
-
 Scripts.Player.Guild.UpgradeNoLevel:			You must specify a level to target for upgrade.	
-
 Scripts.Player.Guild.UpgradeScndArg:			The second argument must be a number.	
-
 Scripts.Player.Guild.WebpageSet:				You have set the guild webpage to {0}.	
-
 Scripts.Player.Guild.Withdrawamount:			You withdraw {0} from the guild bank.
-
 Scripts.Player.Guild.WithdrawInvalid:			That is an invalid amount to withdraw.	
-
 Scripts.Player.Guild.WithdrawTooMuch:			You cannot withdraw that much money from the guild bank.	
 
-
-
 # /GC
-
 Scripts.Players.Guild.AllianceInfo:			Alliance info for {0}:
-
 Scripts.Players.Guild.AllianceLeader:			Alliance leader {0}
-
 Scripts.Players.Guild.AllianceMembers:			Alliance members:
-
 Scripts.Players.Guild.AllianceMember:			{0} - {1}
-
 Scripts.Players.Guild.AllianceNoLeader:			No alliance leader
 
-
-
 # /Language
-
 Scripts.Players.Language.Current:			Your language is currently set to: {0}.
-
 Scripts.Players.Language.Set:				You change your server display language to {0}.
 
-
-
 # /Range
-
 Scripts.Players.Range.InvalidObject:			This command only works on objects.
-
 Scripts.Players.Range.NeedTarget:			Range to target: You don't have a valid target set.
-
 Scripts.Players.Range.NotVisible:			 (Target not visible)
-
 Scripts.Players.Range.Result:				Range to target: {0} units. {1}
 
-
-
 # SERVERRULES
-
 # /AbstractServerRules/PlayerStatistics
-
 # /Kills
-
 PlayerStatistic.Kill.Title:				Kill Report
-
 PlayerStatistic.Kill.AlbionPlayer:			Albion Players Killed
-
 PlayerStatistic.Kill.HiberniaPlayer:			Hibernia Players Killed
-
 PlayerStatistic.Kill.MidgardPlayer:			Midgard Players Killed
-
 PlayerStatistic.Kill.TotalPlayers:			Total Players Killed
 
-
-
 # /Deathblows
-
 PlayerStatistic.Deathblows.AlbionPlayer:		Albion Deathblows
-
 PlayerStatistic.Deathblows.HiberniaPlayer:		Hibernia Deathblows
-
 PlayerStatistic.Deathblows.MidgardPlayer:		Midgard Deathblows
-
 PlayerStatistic.Deathblows.TotalPlayers:		Total Deathblows
 
-
-
 # /Solo
-
 PlayerStatistic.Solo.AlbionPlayer:			Albion Solo Killed
-
 PlayerStatistic.Solo.HiberniaPlayer:			Hibernia Solo Killed
-
 PlayerStatistic.Solo.MidgardPlayer:			Midgard Solo Killed
-
 PlayerStatistic.Solo.TotalPlayers:			Total Solo Killed
 
-
-
 # /Capture
-
 PlayerStatistic.Capture.Title:				Capture Report
-
 PlayerStatistic.Capture.Keeps:				Total Keeps Captured
-
 PlayerStatistic.Capture.Towers:				Total Towers Captured
 
-
-
 # /PvE
-
 PlayerStatistic.PvE.Title:				PvE Report
-
 PlayerStatistic.PvE.KillsDragon:			Dragon Kills
-
 PlayerStatistic.PvE.KillsEpic:				Epic Boss Kills
-
 PlayerStatistic.PvE.KillsLegion:			Legion Kills
 
-
-
 # TITLES
-
 # /Claim
-
 Titles.Claim.Frontier.FrontierChallenger:		Frontier Challenger
-
 Titles.Claim.Frontier.FrontierVindicator:		Frontier Vindicator
-
 Titles.Claim.Stronghold.StrongholdChief:		Stronghold Chief
-
 Titles.Claim.Stronghold.StrongholdSoldier:		Stronghold Soldier
 
-
-
 # /Deathblows
-
 Titles.Deathblows.BattleEnforcer:			Battle Enforcer
-
 Titles.Deathblows.BattleMaster:				Battle Master
 
-
-
 # /Kills
-
 Titles.Kills.Albion.BaneOfAlbion:			Bane of Albion
-
 Titles.Kills.Albion.ScourgeOfAlbion:			Scourge of Albion
-
 Titles.Kills.All.MasterAssassine:			Master Assassine
-
 Titles.Kills.All.MasterEnforcer:			Master Enforcer
-
 Titles.Kills.All.MasterSoldier:				Master Soldier
-
 Titles.Kills.Demon.DemonBane:				Demon Bane
-
 Titles.Kills.Demon.DemonScourge:			Demon Scourge
-
 Titles.Kills.Demon.DemonSlayer:				Demon Slayer
-
 Titles.Kills.Demon.DreadVanquisher:			Dread Vanquisher
-
 Titles.Kills.Dragon.DragonFoe:				Dragon Foe
-
 Titles.Kills.Dragon.DragonScourge:			Dragon Scourge
-
 Titles.Kills.Dragon.DragonSlayer:			Dragon Slayer
-
 Titles.Kills.Epic.EpicChallenger:			Epic Challenger
-
 Titles.Kills.Epic.EpicVictor:				Epic Victor
-
 Titles.Kills.Hibernia.BaneOfHibernia:			Bane of Hibernia
-
 Titles.Kills.Hibernia.ScourgeOfHibernia:		Scourge of Hibernia
-
 Titles.Kills.Midgard.BaneOfMidgard:			Bane of Midgard
-
 Titles.Kills.Midgard.ScourgeOfMidgard:			Scourge of Midgard
 
-
-
 # /Level
-
 Titles.Level.Level20Info:				Level 20+
-
 Titles.Level.Level20:					Level {0}
 
-
-
 # /PrivLevel
-
 Titles.PrivLevel.Administrator:				Administrator
-
 Titles.PrivLevel.Gamemaster:				Gamemaster
 
-
-
 # /Solokills
-
 Titles.Solokills.DuelMaster:				Duel Master
-
 Titles.Solokills.LoneEnforcer:				Lone Enforcer
 
-
-
 # /Time
-
 Titles.Time.Account.ElderTitle:				Elder
-
 Titles.Time.Character.Veteran:				Veteran
 
-
-
 # /CL
-
 Titles.CL.Level1:					Seeker
-
 Titles.CL.Level2:					Enforcer
-
 Titles.CL.Level3:					Outrider
-
 Titles.CL.Level4:					Lightbringer
-
 Titles.CL.Level5:					King's Champion
-
 Titles.CL.Level6:					King´s Emissary
-
 Titles.CL.Level7:					Patron of Minotaur
-
 Titles.CL.Level8:					Visionary
-
 Titles.CL.Level9:					Gladiator
-
 Titles.CL.Level10:					Labyrinthian
 
-
-
 # /ML
-
 Titles.ML.Line1:					Banelord
-
 Titles.ML.Line2:					Battlemaster
-
 Titles.ML.Line3:					Convoker
-
 Titles.ML.Line4:					Perfecter
-
 Titles.ML.Line5:					Sojourner
-
 Titles.ML.Line6:					Spymaster
-
 Titles.ML.Line7:					Stormlord
-
 Titles.ML.Line8:					Warlord
 
-
-
 # VIEWREPORTS
-
 Scripts.Player.VeiwReport.Usage: 			Usage:
-
 Scripts.Player.ViewReport.Help.Close:			'/viewreport close <report #>' Will close the report of id #.
-
 Scripts.Player.ViewReport.Help.Delete:			'/viewreport delete <report #' Deletes a report of id #.
-
 Scripts.Player.ViewReport.InvalidReport:		That is not a valid report.
-
 Scripts.Player.ViewReport.UnknownCommand:		That is not a valid command.
-
 Scripts.Player.ViewReport.ReportDeleted:		Report {0} has been deleted.
-
 Scripts.Player.ViewReport.NoPriv:			You do not have the privilages to edit reports.
 
-
-
 # MASTERLEVEL
-
 # 1. Uncomplete steps
-
 SendMasterLevelWindow.Uncomplete.ML1.Step1:		Ianetor likes to play with fire, and is seeking adventurers to participate in an explosive game in Oceanus Anatole! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML1.Step2:		The thief that robbed Lornas still lives! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML1.Step3:		The Zhton and Kynhroe clans of tritons in Messothalassa and Oceanus Boreal are dying, yet they still war with each other! Each clan seeks adventurers to fight for their cause! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML1.Step4:		The barrier still holds those taken in by the cursed sea of Oceanus Hesperos! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML1.Step5:		You have not yet proven yourself agaisnt the might of Lord Krojer's champions in single combat! This is a solo encounter.
-
 SendMasterLevelWindow.Uncomplete.ML1.Step6:		Kirkleis still looks upon himself with hatred in the mirror that mocks his curse! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML1.Step7:		The portals lie dark and silent still! The Rassa remains locked away from those who would seek its power! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML1.Step8:		The ruby lies in the sand beneath the head that stares one eye into the eternal depth! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML1.Step9:		Desmona still wears her crown, the token needed remains unfound! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML1.Step10:		Face Cetus with a ring, a ruby, a mirror and a crown! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML2.Step1:		Death stalks you from the shadows in the Temple of the Sobekite Eternal! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML2.Step2:		The imposter's assasins are slaying the keepers of the Temple of the Sobekite Eternal! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML2.Step3:		The triton chiefs and their followers in the flooded depths of the Temple of the Sobekite Eternal hoard stolen goods! This is a battlegroup encounter. 
-
 SendMasterLevelWindow.Uncomplete.ML2.Step4:		Rrionnes' reflection holds the key to her invulerability! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML2.Step5:		You have not beaten Chaths' Test of Strategy! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML2.Step6:		Kanahkt's test seems to be too difficult for you! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML2.Step7:		You mush face fear, terror, or horror! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML2.Step8:		To prove victorious, you must face yourself! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML2.Step9:		Defeat the Battle Masters who once defeated the trial of the Sobekite Eternal! This is a battle group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML2.Step10:		An imposter has stolen the Ankh of Life, granting him immortality as long as he resides in the Temple of the Sobekite Eternal! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML3.Step1:		Moirai still holds the runic power behind her magical shielding!
-
 SendMasterLevelWindow.Uncomplete.ML3.Step2:		Kepa has agreed to give you her runic power, will you help?
-
 SendMasterLevelWindow.Uncomplete.ML3.Step3:		Casta still uses her artifacts to slay anyone who enters her lair!
-
 SendMasterLevelWindow.Uncomplete.ML3.Step4:		Laodamedia still rigorously guards her lair!
-
 SendMasterLevelWindow.Uncomplete.ML3.Step5:		Antioos asks for your help in exchange for another runic power!
-
 SendMasterLevelWindow.Uncomplete.ML3.Step6:		A strange barracuda resides in the darkness, glowing with power!
-
 SendMasterLevelWindow.Uncomplete.ML3.Step7:		Shraogh still strikes fear into the heart of those who oppose him!
-
 SendMasterLevelWindow.Uncomplete.ML3.Step8:		The sting ray swarm with an unnatural glowing power!
-
 SendMasterLevelWindow.Uncomplete.ML3.Step9:		Sinovia the octopus devours those who come near!
-
 SendMasterLevelWindow.Uncomplete.ML3.Step10:		Medusa still turns anyone who opposes her into stone! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML4.Step1:		Colossal has yet to be summoned from the scorpions of the Stygian Desert! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML4.Step2:		The Fortress of Storms has not been taken! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML4.Step3:		The Mighty One, the Eye of Ra, is rumored to roam the desert Land of Atum still! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML4.Step4:		A valuable stone to some is but a bauble to a child! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML4.Step5:		The Jann of the Land of Atum whirl among the dunes! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML4.Step6:		Oukesson the Ghillian is still multiplying when fought! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML4.Step7:		The guardians of the river Iter have yet to waken! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML4.Step8:		The blood of Daehien still flows in the Land of Atum! This is a battlegroup encounter. 
-
 SendMasterLevelWindow.Uncomplete.ML4.Step9:		The marid, Gaurmaes, is still safe behind tornados and dust! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML4.Step10:		Martikhoras reigns in his pyramid still! This is a battlegroup encounter. 
-
 SendMasterLevelWindow.Uncomplete.ML5.Step1:		The Canopic Jar - Intestines must be stolen from the Echo of Qebehsenuef! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML5.Step2:		Another Canopic Jar - Stomach must be stolen from the Echo of Duamutef! This is a group encounter. 
-
 SendMasterLevelWindow.Uncomplete.ML5.Step3:		Another Canopic Jar - Lungs must be stolen from the Echo of Hapy! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML5.Step4:		Another Canopic Jar - Liver must be stolen from the Echo of Imsety! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML5.Step5:		The gorgons of Aeurs still hold Cau Suraes mirror of Ra! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML5.Step6:		The bound ones hold the resin that preserves! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML5.Step7:		The bound ones hold a mask still needed to face Ammut! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML5.Step8:		Wrappings can be found amongst the bound ones. This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML5.Step9:		You must drink the poisoned waters for the aid of Mahaf! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML5.Step10:		You must face Ammut in the depths of the Halls of Ma'ati and be judged! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML6.Step1:		Look for a rare uraeus from where they appear. This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML6.Step2:		The sacrifice has yet to take place, the salamander has yet to be born! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML6.Step3:		Lateef laments his fate as follower of Am-he and wishes to return to the desert! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML6.Step4:		Pallida-uraei has yet to appear! Seek out the homes of the Uraeus! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML6.Step5:		The flame spouts in easternmost Volcanus guard the objects, the flames must be cooled! This is a solo encounter. 
-
 SendMasterLevelWindow.Uncomplete.ML6.Step6:		Seek out the sacrificer Siraadi amongst the pillars of vengenance in Typhon's Reach! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML6.Step7:		Three of Ankhkare guardians guard him well. This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML6.Step8:		In the center of the island braziers still call efreet! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML6.Step9:		Vazul's Fortress in the Azhen Isles has yet to be breached! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML6.Step10:		The Chimera still holds strong in her fortress in East Ashen Isles! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML7.Step1:		You must acquire the gauntlet of fire! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML7.Step2:		You can learn all there is to know of your opponent through combat, but time multiplies when there are four. It is not for you to end the feud, but you can't move on until they have all seen you as a threat. This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML7.Step3:		The Apophians wish to test your endurance. This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML7.Step4:		The Volurgons wish to test your endurance. This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML7.Step5:		The Shaitan wish to test your endurance. This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML7.Step6:		The Hephaestians wish to test your endurance. This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML7.Step7:		You must face a challeng in the Chamber of flame! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML7.Step8:		Katorii's gaze destroys all life it falls upon, yes she must be destroyed! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML7.Step9:		A mysterious force blocks your path! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML7.Step10:		Typhon lies in the lava pool in the center of Volcanus deep! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML8.Step1:		Bisul the jinni still has the control crystal! This is a battlegroup encounter. 
-
 SendMasterLevelWindow.Uncomplete.ML8.Step2:		Agnes shield was destroyed long ago, but it has a twin in his brother Tholoss prossession! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML8.Step3:		The sword the great Agne is now in the hands of a mischievous Jinn! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML8.Step4:		Once noble and proud Agnes, now bits strewn about a Centaur's home. This is a group encounter. 
-
 SendMasterLevelWindow.Uncomplete.ML8.Step5:		Kratos has not handed over the leg of Agne! This is a group encounter. 
-
 SendMasterLevelWindow.Uncomplete.ML8.Step6:		Dawars servant bears the head of Agne! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML8.Step7:		Find the torso of Agne amongst the statues of Aerus! This is a group encounter. 
-
 SendMasterLevelWindow.Uncomplete.ML8.Step8:		A group of gorgons have collaborated to thwart your effort to rebuild Agne by hiding his left arm because the trials resulted in many gorgon deaths in the past! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML8.Step9:		The right arm lies in the once great hall of a wreaked Atlantean temple. This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML8.Step10:		First you must defeat Agnes army on his battlefield then you must topple Talos in his temple! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML9.Step1:		Long ago Kyros demonstrated himself to be the ultimate warrior serving many different roles in combat, would you dare challenge him? This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML9.Step2:		Lachlen was a great explorer who was always prepared to face the unique dangers lurking in each new land! This is a group encounter.
-
 SendMasterLevelWindow.Uncomplete.ML9.Step3:		Long ago Evzen unified three warring territories after each territorys warlord was slain then ruled the combined landsd with an iron fist! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML9.Step4:		Four kings likenesses are dormant and must be awakened! This is a battlegroup encounter. 
-
 SendMasterLevelWindow.Uncomplete.ML9.Step5:		Nelos would like to teach you a lesson that you might not survive! This a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML9.Step6:		Centaur patrols led by Katri hinder you from reaching your goal! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML9.Step7:		Only the strongest Iaculi survive as they cannibalize each other. This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML9.Step8:		You have not yet proven yourself worthy to the Phoenix's Guardians! This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML9.Step9:		Neola still guards her sisters well. This is a battlegroup encounter.
-
 SendMasterLevelWindow.Uncomplete.ML9.Step10:		The phoenix is not yet weakend, and still reigns above! This is a battlegroup encounter.
 
-
-
 # 1. Completed steps
-
 SendMasterLevelWindow.Complete.ML1.Step1:	[Completed] Ianetor has been defeated !	
 
-
-
 # /horse
-
 HorseEmote.MustBeOnMount:					You can only do that while mounted.
-
 HorseEmote.You:							you
-
 HorseEmote.courbette.ToOthers:				-
-
 HorseEmote.courbette.ToSource:				-
-
 HorseEmote.courbette.NoTargetToOthers:			{0}'s mount performs a courbette.
-
 HorseEmote.courbette.NoTargetToSource:			Your mount performs a courbette.
-
 HorseEmote.graze.ToOthers:					-
-
 HorseEmote.graze.ToSource:					-
-
 HorseEmote.graze.NoTargetToOthers:				{0} lets {1} mount graze.
-
 HorseEmote.graze.NoTargetToSource:				You let your mount graze.
-
 HorseEmote.halt.ToOthers:					{0} orders {1} to halt.
-
 HorseEmote.halt.ToSource:					You order {0} to halt.
-
 HorseEmote.halt.NoTargetToOthers:				{0} orders everyone to halt.
-
 HorseEmote.halt.NoTargetToSource:				You order everyone to halt.
-
 HorseEmote.nod.ToOthers:						{0}'s mount nods at {1}.
-
 HorseEmote.nod.ToSource:						Your mount nods at {0}.
-
 HorseEmote.nod.NoTargetToOthers:				{0}'s mount nods.
-
 HorseEmote.nod.NoTargetToSource:				Your mount nods.
-
 HorseEmote.pet.ToOthers:						-
-
 HorseEmote.pet.ToSource:						-
-
 HorseEmote.pet.NoTargetToOthers:				{0} pets {1} mount.
-
 HorseEmote.pet.NoTargetToSource:				You pet your mount.
-
 HorseEmote.rear.ToOthers:					{0}'s mount rears at the sight of {1}.
-
 HorseEmote.rear.ToSource:					Your mount rears at the sight of {0}.
-
 HorseEmote.rear.NoTargetToOthers:				{0}'s mount rears.
-
 HorseEmote.rear.NoTargetToSource:				Your mount rears.
-
 HorseEmote.startle.ToOthers:					{0}'s mount is startled by {1}.
-
 HorseEmote.startle.ToSource:					Your mount is startled by {0}.
-
 HorseEmote.startle.NoTargetToOthers:			{0}'s mount is startled.
-
 HorseEmote.startle.NoTargetToSource:			Your mount is startled.
-
 HorseEmote.trick.ToOthers:					{0} stands on {2} mount to impress {1}.
-
 HorseEmote.trick.ToSource:					You stand on your mount to impress {0}.
-
 HorseEmote.trick.NoTargetToOthers:				{0} stands on {1} mount to impress everyone.
-
 HorseEmote.trick.NoTargetToSource:				You stand on your mount to impress everyone.

@@ -1,19 +1,10 @@
 ﻿Alb.TombWithAView.CheckPlayerAbortQuest.Text1:	Good, now go out there and finish your work!
-
 Alb.TombWithAView.CheckPlayerAbortQuest.Text2:	Aborting Quest {0}. You can start over again if you want.
-
 Alb.TombWithAView.Conclusion.Text1:		Ah, found your way to the Burial Tomb, did you?  'Tis a fearsome place, to be sure!  Now that you know where to find the tomb, you'll know where to go, if and when Taskmaster Traint tasks you with helping clear it out.
-
 Alb.TombWithAView.Init.Text1:			Recruit's Quilted Boots
-
 Alb.TombWithAView.Init.Text2:			Recruit's Leather Boots
-
 Alb.TombWithAView.Init.Text3:			Recruit's Studded Boots
-
 Alb.TombWithAView.Init.Text4:			Find the entrance to the Burial Tomb
-
 Alb.TombWithAView.Story:			What an exhausting day! The Academy sent me to Cotswold to be an advisor on matters of magic and such, and I'm happy to be of service, but there are days when my research takes a lot out of me. It seems like I've been a bit busier lately. Cotswold has become a hub of many goings-on lately, some of which are mundane and some are of a more diabolical nature.\n\nTake, for example, the nearby Burial Tomb, to our south-southeast. The Romans that occupied this region of Britain had a penchant for crypts, tombs, mausoleums and the like. Over the course of hundreds of years, the nearby tombs became home to hundreds of fearsome creatures, many of whom took up residence below, away from daylight and men above. Some of these previously normal creatures are twisted versions of themselves. By what foul sorcery, can only be guessed.\n\nTaskmaster Traint is seeking out volunteers to eradicate the creatures that moved into the tomb. You'll want to make yourself familiar with where to find it.\n\n
-
 Alb.TombWithAView.Summary:			Find the entrance to the Burial Tomb. Return to Lady Grynoch once you've visited the Tomb.
-
 

@@ -1,21 +1,11 @@
 ﻿
-
 AI.Brain.Necromancer.CastSpellAfterAction:	{0} lancera ce sort quand l'action en cour sera terminée.
-
 AI.Brain.Necromancer.ServantFarAwayToCast:	Votre servant est trop eloigné de votre cible pour pouvoir lancer un sort!
-
 AI.Brain.Necromancer.PetCantSeeTarget:		Votre {0} ne peut pas voir la cible!
-
 AI.Brain.Necromancer.PetCastingSpell:		{0} lance un sort!
-
 AI.Brain.Necromancer.PetTooFarBeLostSecIm:	Votre servant est trop éloigné de vous ! Vous allez le perdre dans {0} secondes ou immediatement si vous continuez à vous éloigner.
-
 AI.Brain.Necromancer.PetTooFarBeLostSec:	Votre servant est trop éloigné de vous ! Vous allez le perdre dans {0} secondes.
-
 AI.Brain.Necromancer.HaveLostBondToPet:		Le lien entre vous et votre servant vient d'être rompu.
-
 AI.Brain.Necromancer.SpellNoLongerInQueue:	Le sort {0} n'est plus dans la file d'attente {1}.
-
 AI.Brain.StandardMobBrain.YouProtDist:		Vous vous protégez {0} et distrayez {1}.
-
 

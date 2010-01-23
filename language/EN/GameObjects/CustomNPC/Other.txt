@@ -1,11 +1,6 @@
 ﻿
 
-
-
 # /GameHousingHastener
-
 GameHousingHastener.GetExamineMessages.Examine:		You examine {0}. {1} is {2} and is a hastener.
-
-
 
 

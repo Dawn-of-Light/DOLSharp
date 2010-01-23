@@ -1,11 +1,6 @@
 ﻿CraftNPC.CraftNpcDialogResponse.Accepted:		Die Zunft der {0} hat Euch aufgenommen!
-
 CraftNPC.Interact.Examine:				Ihr seid schon sehr weit gekommen, aber Eure Ausbildung ist noch nicht beendet. 
-
 CraftNPC.Interact.NotMaster:				Ich bin nicht Euer Meister.
-
 CraftNPC.Interact.Promoted:				Ihr seid zum {0} aufgestiegen.
-
 CraftNPC.WhisperReceive.WishToJoin:			Seid Ihr sicher, dass Ihr der {0}-Zunft beitreten wollt?
-
 
