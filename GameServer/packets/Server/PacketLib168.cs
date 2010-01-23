@@ -228,7 +228,8 @@ namespace DOL.GS.PacketHandler
 
 							pak.FillString("", 24); //Class name
 
-							pak.FillString(GamePlayer.RACENAMES[characters[j].Race], 24);
+							//pak.FillString(GamePlayer.RACENAMES[characters[j].Race], 24);
+                            pak.FillString(GamePlayer.RACENAMES(m_gameClient, characters[j].Race, characters[j].Gender), 24);
 							pak.WriteByte((byte)characters[j].Level);
 							pak.WriteByte((byte)characters[j].Class);
 							pak.WriteByte((byte)characters[j].Realm);
