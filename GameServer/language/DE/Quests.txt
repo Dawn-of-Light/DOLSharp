@@ -1,29 +1,15 @@
 ﻿# /Atlantis
-
 # /ArtifactQuest
-
 ArtifactQuest.GiveItem.BackpackFull:			Euer Rucksack ist voll! Bitte macht Platz und versucht es erneut.
 
-
-
 # /ArtifactTurnInQuest
-
 ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artefaktgelehrter
-
 ArtifactTurnInQuest.Init.ArtifactScholarFemale:		Artefaktgelehrte
-
 ArtifactTurnInQuest.FinishQuest.Completed:		Ihr habt die Quest "{0}" abgeschlossen!
 
-
-
 # /Quests
-
 # /AbstractQuest
-
 AbstractQuest.AbortQuest:				Die ausgewählte Quest wurde entfernt!
-
 AbstractQuest.FinishQuest.Completed:			Ihr habt die Quest "{0}" abgeschlossen!
-
 AbstractQuest.OnQuestAssigned.GetQuest:			Euch wurde die Quest "{0}" anvertraut.
-
 

@@ -1,31 +1,16 @@
 ﻿# Cemmeths Befehle
-
 Alb.CemmethsOrders.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
-
 Alb.CemmethsOrders.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
-
 Alb.CemmethsOrders.Conclusion.Text1:		Gut gemacht, {0}, gut gemacht! Unser Auftrag wurde also ausgeführt, trotz des untoten Gesindels da draußen. Ihr seid ein gutes Vorbild für die anderen Möchtegern-Helden und Abenteurer. Bitte nehmt dieses kleine Zeichen der Dankbarkeit.
-
 Alb.CemmethsOrders.Init.Text1:			Rekruten-Steppweste
-
 Alb.CemmethsOrders.Init.Text2:			Rekruten-Lederweste
-
 Alb.CemmethsOrders.Init.Text3:			Rekruten-Nietenweste
-
 Alb.CemmethsOrders.Init.Text4:			Schädel eines Skeletts
-
 Alb.CemmethsOrders.Init.Text5:			Fleisch eines verwesten Zombies
-
 Alb.CemmethsOrders.Init.Text6:			Tötet ein Skelett
-
 Alb.CemmethsOrders.Init.Text7:			Tötet einen verwesten Zombie
-
 Alb.CemmethsOrders.Notify.Text1:		Skelett
-
 Alb.CemmethsOrders.Notify.Text2:		verwester Zombie
-
 Alb.CemmethsOrders.Story:			Bruder Lawrence traf sich neulich mit den örtlichen Milizführern, um über die Bedenken wegen der wachsenden Zahl Untoter in unserer Region zu sprechen und darüber zu beraten, inwiefern dies mit dem Dämonenbruch-Zwischenfall zusammenhängen könnte. Ich muss gestehen, dass mich seine Besorgnis plagt. Ich behaupte nicht, viel über das Wie oder Warum zu wissen, aber wenn diese Kreaturen eine Gefahr darstellen, muss dem ein Ende bereitet werden.\n\nNach unseren Berichten sind Skelette und verweste Zombies die beiden besorgnisergendsten Dinge. Ihre Zahl und Aggressivität scheint zuzunehmen. Ich fürchte, sollten sie unbehelligt bleiben, könnten wir uns in einer Zwickmühle wiederfinden. Wir dürfen die untoten Legionen schließlich nicht in den Hügeln von Camelot herumirren lassen! Was sagt Ihr dazu? Würdet Ihr helfen, indem Ihr dieses Gesindel in seine Ruhestätten zurücktreibt? Bringt mir Beweise für Eure Taten, solltet Ihr Euch dieser Aufgabe gewachsen fühlen.
-
 Alb.CemmethsOrders.Summary:			Reist zum Ossarium von Prydwen, bei dem sich verschiedene Untote herumtreiben. Beseitigt ein Skelett für dessen Schädel und einen verwesenden Zombie für etwas Fleisch. Kehrt zu Cemmeth Budgwold zurück, wenn Ihr fertig seid.
-
 

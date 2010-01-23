@@ -1,15 +1,8 @@
 ﻿
 
-
-
 GameStableMaster.ReceiveItem.HorseName:			Monture
-
 #----> Attention! this must ends with blank character:	"ticket to "
-
 GameStableMaster.ReceiveItem.TicketTo:			ticket to 
-
 GameStableMaster.ReceiveItem.UnknownWay:		Votre monture ne connaît pas la route vers {0}.
-
-
 
 

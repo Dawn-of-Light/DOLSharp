@@ -1,31 +1,16 @@
 ﻿#GameKeepGuard
-
 GameKeepGuard.GetExamineMessages.Balancing:	{0} has keep balancing level ({1})
-
 GameKeepGuard.GetExamineMessages.Upgraded:	{0} a augmenté l'équipement ({1}).
-
 GameKeepGuard.GetExamineMessages.YouExamine:	Vous examinez {0}. {1} est {2} et est un garde de royaume.
-
 GameKeepGuard.GetExamineMessages.YouTarget:	Vous ciblez [{0}]
-
 GameKeepGuard.GetPronoun.He:			Il
-
 GameKeepGuard.GetPronoun.Her:			Her
-
 GameKeepGuard.GetPronoun.Hers:			Hers
-
 GameKeepGuard.GetPronoun.Him:			Him
-
 GameKeepGuard.GetPronoun.His:			His
-
 GameKeepGuard.GetPronoun.She:			Elle
-
 GameKeepGuard.GuardSpam.Killed:			{0} a étais tué(e) dans {1} avec {2} ennemis dans la zone!
 
-
-
 #GuardCaster
-
 GuardCaster.SkinsHardens:			The {0}'s skins hardens substantially.
-
 

@@ -1,7 +1,4 @@
 ﻿RewardQuest.Description:	Quest Goal : {0} ({1}/{2})
-
 RewardQuest.Notify:		You must choose a reward!
-
 RewardQuest.OnQuestAssigned:	You have acquired the {0} quest.
-
 

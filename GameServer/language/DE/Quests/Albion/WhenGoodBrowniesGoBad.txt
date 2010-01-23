@@ -1,27 +1,14 @@
 ﻿# Wenn gute Brownies schlecht werden
-
 Alb.WhenGoodBrowniesGoBad.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
-
 Alb.WhenGoodBrowniesGoBad.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
-
 Alb.WhenGoodBrowniesGoBad.Conclusion.Text1:		Ah, Ihr seid mit dem Blut zurückgekehrt! Ich hasse es, mit anzusehen, wie irgendeinen Wesen, das nicht vom Innersten her böse ist, Leid zugefügt wird. Aber es wurde notwendig, drastische Maßnahmen durchzuführen, um die Wurzel dieses Problems feststellen zu können.
-
 Alb.WhenGoodBrowniesGoBad.Init.Text1:			hellrote Stofffarbe
-
 Alb.WhenGoodBrowniesGoBad.Init.Text2:			hellrote Lederfarbe
-
 Alb.WhenGoodBrowniesGoBad.Init.Text3:			hellrote Lackfarbe
-
 Alb.WhenGoodBrowniesGoBad.Init.Text4:			Brownieblut
-
 Alb.WhenGoodBrowniesGoBad.Init.Text5:			Tötet drei Brownies
-
 Alb.WhenGoodBrowniesGoBad.Notify.Text1:			Brownie
-
 Alb.WhenGoodBrowniesGoBad.ScriptLoaded.Text1:		Meister Kless
-
 Alb.WhenGoodBrowniesGoBad.Story:			Ich bin besorgt über den Rückgang der feenhaften Kreaturen, die in diesen dicht besiedelten Gebieten verbleiben. Während ich mir sicher bin, dass sie uns gegenüber keine Liebe empfinden, nachdem sie dazu gezwungen wurden, sich zu verstecken - oder andernfalls das Risiko einzugehen, die Aufmerksamkeit der Kirche zu erregen-, waren sie selten böswillig.\n\nJedoch sprachen kürzlich einige Dorfbewohner davon, Mitglieder der winzigen Wesen angetroffen zu haben, die sich abnormal verhielten; nahezu unheimlich. Kinder werden entführt, Bauern ohne Provokation angegriffen, Nahrung vergiftet, das Vieh nachts in seinem Gehege getötet. Es ist fast so, als stünden sie unter einer Art Verzauberung, aber ich bin auch kein religiöser Fanatiker. Wenn König Artus in seinem Herzen die alten Wege respektieren konnte, dann werde ich dies auch schaffen.\n\nIch muss das weiter untersuchen, und ich könnte Eure Hilfe gebrauchen, wenn Ihr so nett wärt, mir zu helfen.
-
 Alb.WhenGoodBrowniesGoBad.Summary:			Meister Kless benödigt Brownieblut, um einen Zauber zu wirken, mit dessen Hilfe er feststellen könnte, ob sie verzaubert wurden. Tötet drei Brownies und kehrt mit deren Blut zu Meister Kless zurück.
-
 
