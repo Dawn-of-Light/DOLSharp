@@ -1,0 +1,48 @@
+# Race names male
+
+GamePlayer.PlayerRace.Unknown:					Unbekannt
+GamePlayer.PlayerRace.Male.Briton:				Bretone
+GamePlayer.PlayerRace.Male.Avalonian:			Avalonier
+GamePlayer.PlayerRace.Male.Highlander:			Highlander
+GamePlayer.PlayerRace.Male.Saracen:				Sarazene
+GamePlayer.PlayerRace.Male.Norseman:			Nordmann
+GamePlayer.PlayerRace.Male.Troll:				Troll
+GamePlayer.PlayerRace.Male.Dwarf:				Zwerg
+GamePlayer.PlayerRace.Male.Kobold:				Kobold
+GamePlayer.PlayerRace.Male.Celt:				Kelte
+GamePlayer.PlayerRace.Male.Firbolg:				Firbolg
+GamePlayer.PlayerRace.Male.Elf:					Elf
+GamePlayer.PlayerRace.Male.Lurikeen:			Lurikeen
+GamePlayer.PlayerRace.Male.Inconnu:				Inconnu
+GamePlayer.PlayerRace.Male.Valkyn:				Valkyn
+GamePlayer.PlayerRace.Male.Sylvan:				Sylvaner
+GamePlayer.PlayerRace.Male.HalfOgre:			Halboger
+GamePlayer.PlayerRace.Male.Frostalf:			Frostalf
+GamePlayer.PlayerRace.Male.Shar:				Shar
+GamePlayer.PlayerRace.Male.Korazh:				Korazh
+GamePlayer.PlayerRace.Male.Deifang:				Deifang
+GamePlayer.PlayerRace.Male.Graoch:				Graoch
+
+# Race names female
+
+GamePlayer.PlayerRace.Female.Briton:			Bretonin
+GamePlayer.PlayerRace.Female.Avalonian:			Avalonierin
+GamePlayer.PlayerRace.Female.Highlander:		Highlanderin
+GamePlayer.PlayerRace.Female.Saracen:			Sarazenin
+GamePlayer.PlayerRace.Female.Norseman:			Nordfrau
+GamePlayer.PlayerRace.Female.Troll:				Troll
+GamePlayer.PlayerRace.Female.Dwarf:				Zwergin
+GamePlayer.PlayerRace.Female.Kobold:			Koboldin
+GamePlayer.PlayerRace.Female.Celt:				Keltin
+GamePlayer.PlayerRace.Female.Firbolg:			Firbolg
+GamePlayer.PlayerRace.Female.Elf:				Elfe
+GamePlayer.PlayerRace.Female.Lurikeen:			Lurikeen
+GamePlayer.PlayerRace.Female.Inconnu:			Inconnu
+GamePlayer.PlayerRace.Female.Valkyn:			Valkyn
+GamePlayer.PlayerRace.Female.Sylvan:			Sylvanerin
+GamePlayer.PlayerRace.Female.HalfOgre:			Halboger
+GamePlayer.PlayerRace.Female.Frostalf:			Frostalf
+GamePlayer.PlayerRace.Female.Shar:				Shar
+GamePlayer.PlayerRace.Female.Korazh:			Korazh
+GamePlayer.PlayerRace.Female.Deifang:			Deifang
+GamePlayer.PlayerRace.Female.Graoch:			Graoch
