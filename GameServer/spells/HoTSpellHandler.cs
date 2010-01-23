@@ -85,8 +85,7 @@ namespace DOL.GS.Spells
 
 			base.OnDirectEffect(target, effectiveness);
 			double heal = Spell.Value * effectiveness;
-			if (target.IsDiseased)
-				heal /= 2;
+			
 			target.Health += (int)heal;
 			//"You feel calm and healthy."
 			MessageToLiving(target, Spell.Message1, eChatType.CT_Spell);
