@@ -1,11 +1,6 @@
 ﻿GameBoatStableMaster.ReceiveItem.Departed:		Please wait until the boat has departed before ordering a new one
-
 GameBoatStableMaster.ReceiveItem.SummonedBoat:		{0} says, "I have summoned a boat to travel to {1} you have 30 seconds to board before it departs."
-
 #----> Attention! this must ends with blank character:	"ticket to "
-
 GameBoatStableMaster.ReceiveItem.TicketTo:		ticket to 
-
 GameBoatStableMaster.ReceiveItem.UnknownWay:		I don't know the way to {1} yet.
-
 

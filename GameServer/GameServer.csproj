@@ -2760,6 +2760,7 @@
     <None Include="language\FR\RealmAbilities.txt" />
     <None Include="language\FR\Relic.txt" />
     <None Include="language\FR\SkillHandler.txt" />
+    <None Include="language\FR\Spells.txt" />
     <None Include="language\FR\StyleProcessor.txt" />
     <None Include="language\FR\Trainer.txt" />
     <None Include="language\FR\world\AbstractArea.txt" />
@@ -2770,7 +2771,6 @@
     <None Include="language\IT\Commands\GMCommands.txt" />
     <None Include="language\IT\Effects.txt" />
     <None Include="language\IT\Language-IT.txt" />
-    <None Include="language\Spells.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="language" />

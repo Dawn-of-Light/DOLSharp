@@ -1,17 +1,9 @@
 ﻿Healer.GetExamineMessages.Text1:	You examine {0}. {1} is {2} and is a healer.
-
 Healer.HealerDialogResponse.Text1:	You are too far away to speak with {0}.
-
 Healer.HealerDialogResponse.Text2:	declined
-
 Healer.HealerDialogResponse.Text3:	You give {0} a donation of {1}.
-
 Healer.HealerDialogResponse.Text4:	Need {0} to restore {1} constitution points.
-
 Healer.Interact.Text1:			{0} cures your resurrection sickness.
-
 Healer.Interact.Text2:			It will cost {0} to have your constitution restored. Do you accept?
-
 Healer.Interact.Text3:			Your constitution is already fully restored!
-
 

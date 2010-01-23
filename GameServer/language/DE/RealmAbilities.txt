@@ -1,49 +1,25 @@
 ﻿# /AdrenalineRushAbility
-
 AdrenalineRushAbility.AddEffectsInfo.Info1:	Stufe 1: Dauer: 20 Sekunden
-
 AdrenalineRushAbility.AddEffectsInfo.Info2:	Stufe 2: Dauer: 20 Sekunden
-
 AdrenalineRushAbility.AddEffectsInfo.Info3:	Stufe 3: Dauer: 20 Sekunden
-
 AdrenalineRushAbility.AddEffectsInfo.Info4:	Ziel: Selbst
-
 AdrenalineRushAbility.AddEffectsInfo.Info5:	Zauberzeit: Sofort
 
-
-
 # /ConcentrationAbility
-
 #ConcentrationAbility.AddEffectsInfo.Info1:
-
 #ConcentrationAbility.AddEffectsInfo.Info2:
-
 #ConcentrationAbility.AddEffectsInfo.Info3:
-
 #ConcentrationAbility.AddEffectsInfo.Info4:	
-
 #ConcentrationAbility.AddEffectsInfo.Info5:	
 
-
-
 # /RAPropertyEnhancer
-
 RAPropertyEnhancer.DelveInfo.Info1:		Stufe {0}: Wert: {1}{2}
 
-
-
 # /RAStatEnhancer
-
 RAStatEnhancer.DelveInfo.Info1:			Stufe {0}: Betrag: {1}
 
-
-
 # /SecondWindAbility
-
 SecondWindAbility.AddEffectsInfo.Info1:		Wert: 100%
-
 SecondWindAbility.AddEffectsInfo.Info4:		Ziel: Selbst
-
 SecondWindAbility.AddEffectsInfo.Info5:		Zauberzeit: Sofort
-
 

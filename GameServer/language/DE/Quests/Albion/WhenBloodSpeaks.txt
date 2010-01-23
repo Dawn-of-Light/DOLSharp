@@ -1,27 +1,14 @@
 ﻿# Wenn Blut redet
-
 Alb.WhenBloodSpeaks.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
-
 Alb.WhenBloodSpeaks.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
-
 Alb.WhenBloodSpeaks.Conclusion.Text1:			Ah, Ihr habt das Spriggarnblut, ausgezeichnet! Hoffentlich ist es nur eine Frage der Zeit, bis ich alle Teile dieses Rätsels zusammenfügen kann. Danke für Eure Hilfe, {0}!
-
 Alb.WhenBloodSpeaks.Init.Text1:				Rekruten-Steppbeinlinge
-
 Alb.WhenBloodSpeaks.Init.Text2:				Rekruten-Lederbeinlinge
-
 Alb.WhenBloodSpeaks.Init.Text3:				Rekruten-Nietenbeinlinge
-
 Alb.WhenBloodSpeaks.Init.Text4:				Spriggarnblut
-
 Alb.WhenBloodSpeaks.Init.Text5:				Tötet zwei Spriggarns
-
 Alb.WhenBloodSpeaks.Notify.Text1:			Spriggarn
-
 Alb.WhenBloodSpeaks.ScriptLoaded.Text1:			Meister Kless
-
 Alb.WhenBloodSpeaks.Story:				Meine Nachforschungen über die Ursachen des Verhaltenswechsels der feenhaften Kreaturen in unserer Region gehen gut voran. Ich habe allerdings noch keine endgültigen Ergebnisse. Währenddessen haben Ihre boshaften Ausschreitungen zugenommen. Ich fürchte, wenn nicht bald eine Ursache oder eine Lösung gefunden werden, wird die Kirche diese Angelegenheit selbst in die Hand nehmen. Und dies dürfte nichts Gutes für irgendeine Kreatur der alten Wege bedeuten.\n\nIch würde mich gerne mit Mitgliedern des in den Ebenen von Salisbury ansässigen Druidenzirkels beraten, aber sie sind nicht die Geselligsten und viele von ihnen sind nicht gut auf jene zu sprechen, die sich nahe der Stadt ansiedeln. Ich selbst hatte einige unglückliche Begegnungen mit ihnen. Ich werde das in der Hoffnung, etwas Erwähnenswertes zu entdecken, wegstecken müssen. Wenn ich mit konkreten Beweisen vor sie treten könnte, würden sie mich vielleicht anhören.\n\nDeswegen könnte ich Eure Hilfe gebrauchen. Würdet Ihr helfen?
-
 Alb.WhenBloodSpeaks.Summary:				Meister Kless benödigt Spriggarnblut, um einen Zauber zu wirken, mit dessen Hilfe er feststellen könnte, ob sie unter einem bösen Einfluss stehen. Tötet zwei Sprigganrns und kehrt mit deren Blut zu Meister Kless zurück.
-
 
