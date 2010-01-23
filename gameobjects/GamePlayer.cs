@@ -2282,47 +2282,72 @@ namespace DOL.GS
 		#endregion
 
 		#region Class/Race
+        ///// <summary>
+        ///// All possible player races
+        ///// </summary>
+        //public static readonly string[] RACENAMES = new string[]
+        //{
+        //    "Unknown",
+        //    "Briton",
+        //    "Avalonian",
+        //    "Highlander",
+        //    "Saracen",
+        //    "Norseman",
+        //    "Troll",
+        //    "Dwarf",
+        //    "Kobold",
+        //    "Celt",
+        //    "Firbolg",
+        //    "Elf",
+        //    "Lurikeen",
+        //    "Inconnu",
+        //    "Valkyn",
+        //    "Sylvan",
+        //    "Half Ogre",
+        //    "Frostalf",
+        //    "Shar",
+        //    "Korazh",//albion minotaur
+        //    "Deifang",//midgard minotaur
+        //    "Graoch"//hibernia minotaur
+        //};
 
-		/// <summary>
-		/// All possible player races
-		/// </summary>
-		public static readonly string[] RACENAMES = new string[]
-		{
-			"Unknown",
-			"Briton",
-			"Avalonian",
-			"Highlander",
-			"Saracen",
-			"Norseman",
-			"Troll",
-			"Dwarf",
-			"Kobold",
-			"Celt",
-			"Firbolg",
-			"Elf",
-			"Lurikeen",
-			"Inconnu",
-			"Valkyn",
-			"Sylvan",
-			"Half Ogre",
-			"Frostalf",
-			"Shar",
-			"Korazh",//albion minotaur
-			"Deifang",//midgard minotaur
-			"Graoch"//hibernia minotaur
-		};
+        /// <summary>
+        /// Returns localized race names
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="Race"></param>
+        /// <param name="Gender"></param>
+        /// <returns></returns>
+        public static string RACENAMES(GameClient client, int Race, int Gender)
+        {
+            eRace r = (eRace)Race;
+
+            if (r != 0)
+            {
+                switch (Gender)
+                {
+                    case 0:
+                        return LanguageMgr.GetTranslation(client, "GamePlayer.PlayerRace.Male." + r.ToString("F"));
+                    case 1:
+                        return LanguageMgr.GetTranslation(client, "GamePlayer.PlayerRace.Female." + r.ToString("F"));
+                }
+            }
+            return LanguageMgr.GetTranslation(client, "GamePlayer.PlayerRace." + r.ToString("F")); //Returns 'Unknown'
+        }
 
 		/// <summary>
 		/// Players class
 		/// </summary>
 		protected IClassSpec m_class;
-		/// <summary>
-		/// Gets/sets the player's race name
-		/// </summary>
-		public string RaceName
-		{
-			get { return RACENAMES[Race]; }
-		}
+
+        /// <summary>
+        /// Gets/sets the player's race name
+        /// </summary>
+        public string RaceName
+        {
+            //get { return RACENAMES[Race]; }
+            get { return RACENAMES(Client, PlayerCharacter.Race, PlayerCharacter.Gender); }
+        }
 
 		/// <summary>
 		/// Gets or sets this player's race id
