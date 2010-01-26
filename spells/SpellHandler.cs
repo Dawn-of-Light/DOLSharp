@@ -443,6 +443,15 @@ namespace DOL.GS.Spells
 		/// <returns>true if casting was interrupted</returns>
 		public virtual bool CasterIsAttacked(GameLiving attacker)
 		{
+            //[StephenxPimentel] Check if the necro has MoC effect before interrupting.
+            if (Caster is NecromancerPet)
+            {
+                if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof
+                    (MasteryofConcentrationEffect)) != null)
+                {
+                    return false;
+                }
+            }
 			if (Spell.Uninterruptible)
 				return false;
 			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
@@ -2266,6 +2275,19 @@ return false;
 				if (ra != null)
 					effectiveness = System.Math.Round((double)ra.Level * 25 / 100, 2);
 			}
+            //[StephenxPimentel] Reduce Damage if necro is using MoC
+            if (Caster is NecromancerPet)
+            {
+                if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
+                {
+                    RealmAbility necroRA = (Caster as NecromancerPet).Owner.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+                    effectiveness = System.Math.Round((double)necroRA.Level * 25 / 100, 2);
+                }
+                else
+                {
+                    effectiveness = 1.0;
+                }
+            }
 			// warlock - fixed by Dinberg, thx
 			if (Caster is GamePlayer && (Caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Warlock && m_spell.IsSecondary)
 			{
