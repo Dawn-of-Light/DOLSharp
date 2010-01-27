@@ -77,11 +77,9 @@ namespace DOL.GS.Spells
         {
             return new BomberBrain(owner);
         }
-
         protected override void SetBrainToOwner(IControlledBrain brain)
         {
         }
-
         protected override void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
         {
         }
@@ -114,8 +112,8 @@ namespace DOL.GS.Spells
             subspell.Level = m_spell.Level;
             if (living.IsWithinRadius(bomber, 350))
             {
-                ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(bomber, subspell, SkillBase.GetSpellLine(SpellLine.KeyName));
-                spellhandler.StartSpell(living);
+                    ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(SpellLine.KeyName));
+                    spellhandler.StartSpell(living);
             }
 
             //[Ganrod] Nidel: Delete Bomber after all actions.
