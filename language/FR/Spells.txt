@@ -1,100 +1,50 @@
 # DelveInfo
-
 DelveInfo.CastingTime:					Temps d'Incantation: {0}
-
 DelveInfo.ConcentrationCost:				Coûts en Concentration: {0}
-
 DelveInfo.Damage:					Dommage: {0}
-
 DelveInfo.Duration:					Durée: 
-
 DelveInfo.Focus:					C'est un sort de type Focus. S'annule a la première action.
-
 DelveInfo.Frequency:					Frequence: {0}
-
 DelveInfo.HealthReturned:				Vie retourné: {0}% des dommages
-
 DelveInfo.InstrumentRequire:				Instrument requis: {0}
-
 DelveInfo.PowerCost:					Coût en mana: {0}
-
 DelveInfo.Radius:					Radius: {0}
-
 DelveInfo.Range:					Portée: {0}
-
 DelveInfo.RecastTime:					Délai de réutilisation: 
-
 DelveInfo.Target:					Cible: {0}
-
 DelveInfo.Value:					Valeur: {0}
 
-
-
 # DamageSpeedDecrease
-
 DamageSpeedDecrease.DelveInfo.Decrease:			Ralentissement de vitesse: {0}%
-
 DamageSpeedDecrease.DelveInfo.Function:			Fonction: Ralentissement de Vitesse + Dommage
 
-
-
 # ResistDebuff
-
 ResistDebuff.DelveInfo.Decrease:			Abaisse la résistance {0}: {1}
-
 ResistDebuff.DelveInfo.Function:			Fonction: Diminution de résistance
 
-
-
 #CharmSpellHandler
-
 CharmSpellHandler.DelveInfo.Function:			Fonction: {0}
 
-
-
 # DamageAddAndShield
-
 DamageAddAndShield.EventHandlerDA.DamageToYou:		{0} vous touche pour {1} points de dommage additionels!
-
 DamageAddAndShield.EventHandlerDA.YouHitExtra:		Vous touchez {0} pour {1} points de dommage additionels!
-
 DamageAddAndShield.EventHandlerDA.YouHitFor:		Vous touchez {0} pour {1} points de dommage additionels!
-
 DamageAddAndShield.EventHandlerDA.YourHitFor:		Votre {0} touche {1} pour {2} points de dommage additionels!
-
 DamageAddAndShield.EventHandlerDS.DamageToYou:		{0} vous touche pour {1} points de dommage additionels!
-
 DamageAddAndShield.EventHandlerDS.YouHitFor:		Vous touchez {0} pour {1} points de dommage additionels!
-
 DamageAddAndShield.EventHandlerDS.YourHitFor:		Votre {0} touche {1} pour {2} points de dommage additionels!
 
-
-
 # DirectDamageDebuffSpellHandler
-
 DirectDamageDebuffSpellHandler.DelveInfo.Decrease:	Diminution de résistance ({0}): {1}%
-
 DirectDamageDebuffSpellHandler.DelveInfo.Function:	Fonction: dommages/Diminution de résistance
 
-
-
 # DoTSpellHandler
-
 DoTSpellHandler.SendDamageMessages.YouHitFor:		Vous touchez {0} pour {1} points de dommages!
-
 DoTSpellHandler.SendDamageMessages.YourCriticallyHits:	Votre {0} touche critiquement {1} pour {2} points de dégats supplémentaires!
-
 DoTSpellHandler.SendDamageMessages.YourHitsFor:		Votre {0} touche {1} pour {2} points de dommages!
 
-
-
 # NearsightSpellHandler
-
 NearsightSpellHandler.DelveInfo.Function:		Fonction: {0}
 
-
-
 # ProcSpellHandler
-
 ProcSpellHandler.DelveInfo.Function:			Fonction: {0}
-
