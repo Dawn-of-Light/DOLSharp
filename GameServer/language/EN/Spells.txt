@@ -8,6 +8,7 @@ DelveInfo.Frequency:					Frequency: {0}
 DelveInfo.HealthReturned:				Health returned: {0}% of damage dealt
 DelveInfo.InstrumentRequire:				Instrument require: {0}
 DelveInfo.PowerCost:					Power cost: {0}
+DelveInfo.HealthCost:					Health cost: {0}
 DelveInfo.Radius:					Radius: {0}
 DelveInfo.Range:					Range: {0}
 DelveInfo.RecastTime:					Recast time: 
