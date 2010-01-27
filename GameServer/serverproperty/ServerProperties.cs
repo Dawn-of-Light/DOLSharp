@@ -344,6 +344,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("world", "hps_per_championlevel", "The amount of extra HPs gained each time you reach a new Champion's Level", 40)]
 		public static int HPS_PER_CHAMPIONLEVEL;
+
+		/// <summary>
+		/// Time player must wait after failed task
+		/// </summary>
+		[ServerProperty("world", "task_pause_ticks", "Time player must wait after failed task check to get new chance for a task, in milliseconds", 5*60*1000)]
+		public static int TASK_PAUSE_TICKS;
+
+		/// <summary>
+		/// Should we handle tasks with items
+		/// </summary>
+		[ServerProperty("world", "task_give_random_item", "Task is also rewarded with ROG ?", false)]
+		public static bool TASK_GIVE_RANDOM_ITEM;
 		#endregion
 		
 		#region RATES

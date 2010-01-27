@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
+
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -48,7 +49,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Time player must wait after failed task check to get new chance for a task, in milliseconds
 		/// </summary>
-		protected const int CHECK_TASK_DELAY = 5*60*1000; // 5 minutes to avoid tasks overruns...
+		protected static int CHECK_TASK_DELAY = ServerProperties.Properties.TASK_PAUSE_TICKS; // moved to server properties to avoid tasks overruns...
 
 		/// <summary>
 		/// Chance of npc having task for player
@@ -291,10 +292,10 @@ namespace DOL.GS.Quests
 				string[] properties = m_dbTask.CustomPropertiesString.Split(';');
 				foreach(string property in properties)
 					if(property.Length>0)
-					{
-						string[] values = property.Split('=');
-						m_customProperties[values[0]] = values[1];
-					}
+				{
+					string[] values = property.Split('=');
+					m_customProperties[values[0]] = values[1];
+				}
 			}
 		}
 
@@ -536,7 +537,7 @@ namespace DOL.GS.Quests
 			}
 			else if (player.TempProperties.getProperty<int>(CHECK_TASK_TICK) > Environment.TickCount)
 			{
-				player.Out.SendMessage("I have no tasks for you at the moment.  Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				return false;
 			}
 			else if (Util.Chance(chanceOfSuccess))
