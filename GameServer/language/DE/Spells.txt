@@ -8,6 +8,7 @@ DelveInfo.Frequency:					Frequency: {0}
 DelveInfo.HealthReturned:				Trefferpunkte: {0}% des Schadens
 DelveInfo.InstrumentRequire:				Instrument require: {0}
 DelveInfo.PowerCost:					Magiekraftkosten: {0}
+DelveInfo.HealthCost:                   Gesundheitskosten: {0}
 DelveInfo.Radius:					Radius: {0}
 DelveInfo.Range:					Reichweite: {0}
 DelveInfo.RecastTime:					Recast time: 
