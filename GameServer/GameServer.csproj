@@ -2085,6 +2085,7 @@
     <Compile Include="spells\Animist\SummonAnimistPet.cs" />
     <Compile Include="spells\Animist\TurretSpellHandler.cs" />
     <Compile Include="spells\Archery\Archery.cs" />
+    <Compile Include="spells\Archery\ArcheryDoT.cs" />
     <Compile Include="spells\Archery\Arrow.cs" />
     <Compile Include="spells\Archery\ArrowDamageTypes.cs" />
     <Compile Include="spells\Archery\SiegeShot.cs" />
