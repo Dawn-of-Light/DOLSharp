@@ -5,14 +5,17 @@ DelveInfo.Damage:					Dommage: {0}
 DelveInfo.Duration:					Durée: 
 DelveInfo.Focus:					C'est un sort de type Focus. S'annule a la première action.
 DelveInfo.Frequency:					Frequence: {0}
-DelveInfo.HealthReturned:				Vie retourné: {0}% des dommages
+DelveInfo.HealthReturned:				Vie retournée: {0}% des dommages
 DelveInfo.InstrumentRequire:				Instrument requis: {0}
 DelveInfo.PowerCost:					Coût en mana: {0}
+DelveInfo.HealthCost:				Coût en vie: {0}
 DelveInfo.Radius:					Radius: {0}
 DelveInfo.Range:					Portée: {0}
 DelveInfo.RecastTime:					Délai de réutilisation: 
 DelveInfo.Target:					Cible: {0}
 DelveInfo.Value:					Valeur: {0}
+
+
 
 # DamageSpeedDecrease
 DamageSpeedDecrease.DelveInfo.Decrease:			Ralentissement de vitesse: {0}%
