@@ -15,20 +15,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- *///made by DeMAN
+ */
 using System;
+using System.Collections;
 using System.Reflection;
 
 using DOL.Database;
-using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
 using DOL.Events;
-
+using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 using log4net;
- 
- 
+
 namespace DOL.GS.Spells
 {
+	// Melee ablative
 	[SpellHandlerAttribute("AblativeArmor")]
 	public class AblativeArmorSpellHandler : SpellHandler
 	{
@@ -37,7 +37,7 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
-			effect.Owner.TempProperties.setProperty(ABLATIVE_HP, (int)Spell.Value);			
+			effect.Owner.TempProperties.setProperty(ABLATIVE_HP, (int)Spell.Value);
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
 
 			eChatType toLiving = (Spell.Pulse == 0) ? eChatType.CT_Spell : eChatType.CT_SpellPulse;
@@ -56,8 +56,8 @@ namespace DOL.GS.Spells
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
-			effect.Owner.TempProperties.removeProperty(ABLATIVE_HP);			
-			if (!noMessages && Spell.Pulse == 0) 
+			effect.Owner.TempProperties.removeProperty(ABLATIVE_HP);
+			if (!noMessages && Spell.Pulse == 0)
 			{
 				MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
 				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
@@ -72,26 +72,24 @@ namespace DOL.GS.Spells
 		}
 
 		private void OnAttack(DOLEvent e, object sender, EventArgs arguments)
-		{			
+		{
 			GameLiving living = sender as GameLiving;
 			if (living == null) return;
-			AttackedByEnemyEventArgs attackedByEnemy = arguments as AttackedByEnemyEventArgs;			
+			AttackedByEnemyEventArgs attackedByEnemy = arguments as AttackedByEnemyEventArgs;
 			AttackData ad = null;
 			if (attackedByEnemy != null)
 				ad = attackedByEnemy.AttackData;
 
 //			log.DebugFormat("sender:{0} res:{1} IsMelee:{2} Type:{3}", living.Name, ad.AttackResult, ad.IsMeleeAttack, ad.AttackType);
-
-			if (ad == null || (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
-				return;
-			if (!ad.IsMeleeAttack && ad.AttackType != AttackData.eAttackType.Ranged)
-				return;
-
+			
+			// Melee or Magic ?
+			if (!MatchingDamageType(ref ad)) return;
+			
 			int ablativehp = living.TempProperties.getProperty<int>(ABLATIVE_HP);
 			double absorbPercent = 25;
 			if (Spell.Damage > 0)
 				absorbPercent = Spell.Damage;
-            //because albatives can reach 100%
+			//because albatives can reach 100%
 			if (absorbPercent > 100)
 				absorbPercent = 100;
 			int damageAbsorbed = (int)(0.01 * absorbPercent * (ad.Damage+ad.CriticalDamage));
@@ -117,6 +115,18 @@ namespace DOL.GS.Spells
 			}
 		}
 
+		// Check if Melee
+		protected virtual bool MatchingDamageType(ref AttackData ad)
+		{
+			
+			if (ad == null || (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
+				return false;
+			if (!ad.IsMeleeAttack && ad.AttackType != AttackData.eAttackType.Ranged)
+				return false;
+			
+			return true;
+		}
+
 		protected virtual void OnDamageAbsorbed(AttackData ad, int DamageAmount)
 		{
 		}
@@ -124,8 +134,8 @@ namespace DOL.GS.Spells
 		public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
 		{
 			if ( //VaNaTiC-> this cannot work, cause PulsingSpellEffect is derived from object and only implements IConcEffect
-			     //e is PulsingSpellEffect ||
-			     //VaNaTiC<-
+			    //e is PulsingSpellEffect ||
+			    //VaNaTiC<-
 			    Spell.Pulse != 0 || Spell.Concentration != 0 || e.RemainingTime < 1)
 				return null;
 			PlayerXEffect eff = new PlayerXEffect();
@@ -154,7 +164,101 @@ namespace DOL.GS.Spells
 			}
 			return 0;
 		}
+		#region Devle Info
+		public override IList DelveInfo
+		{
+			get
+			{
+				ArrayList list = new ArrayList();
 
+				//Name
+				list.Add("Name: " + Spell.Name);
+				list.Add("");
+
+				//Description
+				list.Add("Description: " + Spell.Description);
+				list.Add("");
+
+				//Target
+				list.Add("Target: " + Spell.Target);
+
+				//SpellType
+				list.Add(GetAblativeType());
+
+				//Damage
+				if (Spell.Damage != 0)
+					list.Add("Absorption: " + Spell.Damage + "%");
+
+				//Value
+				if (Spell.Value != 0)
+					list.Add("Value: " + Spell.Value + "%");
+
+				//Cast
+				if (Spell.CastTime < 0.1)
+					list.Add("Casting time: Instant");
+				else if (Spell.CastTime > 0)
+					list.Add("Casting time: " + (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
+
+				//Duration
+				if (Spell.Duration >= ushort.MaxValue * 1000)
+					list.Add("Duration: Permanent.");
+				else if (Spell.Duration > 60000)
+					list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration / 60000, (Spell.Duration % 60000 / 1000).ToString("00")));
+				else if (Spell.Duration != 0)
+
+					//Range
+					if (Spell.Range != 0)
+						list.Add("Range: " + Spell.Range);
+
+				//Radius
+				if (Spell.Radius != 0)
+					list.Add("Radius: " + Spell.Radius);
+
+				//Cost
+				list.Add("Power cost: " + Spell.Power.ToString("0;0'%'"));
+
+				//Frequency
+				if (Spell.Frequency != 0)
+					list.Add("Frequency: " + (Spell.Frequency * 0.001).ToString("0.0"));
+
+				//DamageType
+				if (Spell.DamageType != 0)
+					list.Add("Damage Type: " + Spell.DamageType);
+				return list;
+			}
+			#endregion
+		}
+
+		// for delve info
+		protected virtual string GetAblativeType()
+		{
+			return "Type: Melee Absorption";
+		}
+		
 		public AblativeArmorSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+	}
+
+	// Magic Ablative
+	[SpellHandlerAttribute("MagicAblativeArmor")]
+	public class MagicAblativeArmorSpellHandler : AblativeArmorSpellHandler
+	{
+		public MagicAblativeArmorSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		
+		// Check if Melee
+		protected override bool MatchingDamageType(ref AttackData ad)
+		{
+			if (ad == null || (ad.AttackResult == GameLiving.eAttackResult.HitStyle && ad.AttackResult == GameLiving.eAttackResult.HitUnstyled))
+				return false;
+			if (ad.IsMeleeAttack && ad.AttackType == AttackData.eAttackType.Ranged)
+				return false;
+
+			return true;
+		}
+		
+		// for delve info
+		protected override string GetAblativeType()
+		{
+			return "Type: Magic Absorption";
+		}
 	}
 }
