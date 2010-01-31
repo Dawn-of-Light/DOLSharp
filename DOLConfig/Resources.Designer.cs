@@ -102,6 +102,13 @@ namespace DOLConfig {
 			}
 		}
 		
+		internal static System.Drawing.Bitmap search_48 {
+			get {
+				object obj = ResourceManager.GetObject("search_48", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
 		internal static System.Drawing.Bitmap set_default_values_button_Image {
 			get {
 				object obj = ResourceManager.GetObject("set_default_values_button.Image", resourceCulture);
