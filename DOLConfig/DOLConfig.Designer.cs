@@ -109,6 +109,8 @@
         	this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
         	this.type = new System.Windows.Forms.DataGridViewTextBoxColumn();
         	this.sp_tab = new System.Windows.Forms.TabPage();
+        	this.pictureBox1 = new System.Windows.Forms.PictureBox();
+        	this.tbSearch = new System.Windows.Forms.TextBox();
         	this.cb_spCurrentValue = new System.Windows.Forms.ComboBox();
         	this.tb_spDefaultValue = new System.Windows.Forms.TextBox();
         	this.label39 = new System.Windows.Forms.Label();
@@ -176,6 +178,7 @@
         	this.tab_extra.SuspendLayout();
         	((System.ComponentModel.ISupportInitialize)(this.extra_options_datagrid)).BeginInit();
         	this.sp_tab.SuspendLayout();
+        	((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
         	this.statusStrip1.SuspendLayout();
         	((System.ComponentModel.ISupportInitialize)(this.wrong_data_error_handler)).BeginInit();
         	this.tabPage1.SuspendLayout();
@@ -1095,6 +1098,8 @@
         	// 
         	// sp_tab
         	// 
+        	this.sp_tab.Controls.Add(this.pictureBox1);
+        	this.sp_tab.Controls.Add(this.tbSearch);
         	this.sp_tab.Controls.Add(this.cb_spCurrentValue);
         	this.sp_tab.Controls.Add(this.tb_spDefaultValue);
         	this.sp_tab.Controls.Add(this.label39);
@@ -1110,6 +1115,25 @@
         	this.sp_tab.TabIndex = 4;
         	this.sp_tab.Text = "Server properties";
         	this.sp_tab.UseVisualStyleBackColor = true;
+        	// 
+        	// pictureBox1
+        	// 
+        	this.pictureBox1.BackgroundImage = global::DOLConfig.Resources.search_48;
+        	this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+        	this.pictureBox1.Location = new System.Drawing.Point(378, 255);
+        	this.pictureBox1.Name = "pictureBox1";
+        	this.pictureBox1.Size = new System.Drawing.Size(19, 18);
+        	this.pictureBox1.TabIndex = 23;
+        	this.pictureBox1.TabStop = false;
+        	// 
+        	// tbSearch
+        	// 
+        	this.tbSearch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
+        	this.tbSearch.Location = new System.Drawing.Point(288, 254);
+        	this.tbSearch.Name = "tbSearch";
+        	this.tbSearch.Size = new System.Drawing.Size(111, 20);
+        	this.tbSearch.TabIndex = 22;
+        	this.tbSearch.TextChanged += new System.EventHandler(this.TbSearchTextChanged);
         	// 
         	// cb_spCurrentValue
         	// 
@@ -1190,9 +1214,9 @@
         	// lbl_spName
         	// 
         	this.lbl_spName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        	this.lbl_spName.Location = new System.Drawing.Point(22, 252);
+        	this.lbl_spName.Location = new System.Drawing.Point(3, 251);
         	this.lbl_spName.Name = "lbl_spName";
-        	this.lbl_spName.Size = new System.Drawing.Size(356, 23);
+        	this.lbl_spName.Size = new System.Drawing.Size(279, 23);
         	this.lbl_spName.TabIndex = 10;
         	this.lbl_spName.Text = "- Property name -";
         	this.lbl_spName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1727,6 +1751,7 @@
         	((System.ComponentModel.ISupportInitialize)(this.extra_options_datagrid)).EndInit();
         	this.sp_tab.ResumeLayout(false);
         	this.sp_tab.PerformLayout();
+        	((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
         	this.statusStrip1.ResumeLayout(false);
         	this.statusStrip1.PerformLayout();
         	((System.ComponentModel.ISupportInitialize)(this.wrong_data_error_handler)).EndInit();
@@ -1743,6 +1768,8 @@
         	this.ResumeLayout(false);
         	this.PerformLayout();
         }
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox tbSearch;
         private System.Windows.Forms.ComboBox cb_spCurrentValue;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label24;
