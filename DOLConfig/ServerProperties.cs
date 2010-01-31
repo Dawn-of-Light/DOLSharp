@@ -213,7 +213,7 @@ namespace DOLConfig
 				bu_reset_text = set_default_values_button.Text;
 			save_config_button.Text = bu_save_text;
 			set_default_values_button.Text = bu_reset_text;
-					
+			
 			// check if we saved modified SPs
 			if (!sp_saved && (sender as TabControl).SelectedTab != sp_tab)
 			{
@@ -288,6 +288,31 @@ namespace DOLConfig
 					modifyed_sp[original_sp.Key] = original_sp;
 				else
 					modifyed_sp.Add(original_sp.Key, original_sp);
+			}
+		}
+		
+		/// <summary>
+		/// Filter the SPs
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void TbSearchTextChanged(object sender, EventArgs e)
+		{
+			if (string.IsNullOrEmpty(tbSearch.Text))
+				LoadServerProperties();
+			else
+			{
+				tv_spShow.Nodes.Clear();
+				List<ServerProperty> resultSet;
+				resultSet = (from i in sp
+				             where i.Key.Contains(tbSearch.Text)
+				             select i).ToList();
+				
+				for (int i=0; i<resultSet.Count; i++)
+				{
+					tv_spShow.Nodes.Add(FormatNodeText(0, resultSet[i].Key, resultSet[i].Value));
+					tv_spShow.Nodes[i].ForeColor = Color.Blue;
+				}
 			}
 		}
 	}
