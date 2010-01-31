@@ -106,24 +106,34 @@ namespace DOL.GS.Spells
 		public override void CalculateDamageVariance(GameLiving target, out double min, out double max)
 		{
 			int speclevel = 1;
+			min = 1.13;
+			max = 1.13;
+
 			if (m_caster is GamePlayer)
 			{
-				speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
-			}
-			min = 1;
-			max = 1;
+				if (m_spellLine.KeyName == GlobalSpellsLines.Mundane_Poisons)
+				{
+					speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(Specs.Envenom);
+					min = 1.25;
+					max = 1.25;
 
-			if (target.Level > 0)
-			{
-				min = 0.75 + (speclevel - 1) / (double)target.Level * 0.5;
+					if (target.Level > 0)
+					{
+						min = 0.25 + (speclevel - 1) / (double)target.Level;
+					}
+				}
+				else
+				{
+					speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
+
+					if (target.Level > 0)
+					{
+						min = 0.13 + (speclevel - 1) / (double)target.Level;
+					}
+				}
 			}
 
-			if (speclevel - 1 > target.Level)
-			{
-				double overspecBonus = (speclevel - 1 - target.Level) * 0.005;
-				min += overspecBonus;
-				max += overspecBonus;
-			}
+			// no overspec bonus for dots
 
 			if (min > max) min = max;
 			if (min < 0) min = 0;
