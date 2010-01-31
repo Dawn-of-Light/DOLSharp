@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using log4net;
@@ -202,8 +203,21 @@ namespace DOL.GS
 
 			if (!player.IsAlive)
 			{
-				player.Out.SendMessage("You are dead ! Release.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You are dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
+			}
+
+			if (IsMounted)
+			{
+				AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(m_currentRelicPad.CurrentRegionID, m_currentRelicPad, WorldMgr.VISIBILITY_DISTANCE);
+
+				log.DebugFormat("keep {0}", keep);
+
+				if (keep != null && keep.Realm != player.Realm)
+				{
+					player.Out.SendMessage("You must capture this keep before taking a relic.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
 			}
 
 			if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, m_item))

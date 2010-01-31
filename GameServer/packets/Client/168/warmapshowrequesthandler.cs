@@ -62,17 +62,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//teleport
 				case 2:
 					{
+						if (GameRelic.IsPlayerCarryingRelic(client.Player))
+						{
+							return 0;
+						}
+
 						AbstractGameKeep keep = null;
 						if (keepId > 6)
 							keep = KeepMgr.getKeepByID(keepId);
 						if (keep == null && keepId > 6) return 1;
 
 						//we redo our checks here
-						if (client.Account.PrivLevel == 1)
+						if (client.Account.PrivLevel == 1 && keep != null)
 						{
 							//check realm
-							if (keep != null && keep.Realm != client.Player.Realm)
+							if (keep.Realm != client.Player.Realm)
+							{
 								return 0;
+							}
+
+							if (keep is GameKeep && (keep as GameKeep).OwnsAllTowers == false)
+							{
+								return 0;
+							}
+
 							bool found = false;
 							if (client.Player.CurrentRegionID == 163)
 							{
