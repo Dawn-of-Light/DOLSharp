@@ -41,8 +41,9 @@ namespace DOL.GS.PropertyCalc
 	
 			// Relic bonus
 			if (living is GamePlayer)
-				percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Strength)));
-				//percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic)));
+			{
+				percent += (int)(100 * RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Strength));
+			}
 			
 			return percent;
 		}
