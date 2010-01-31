@@ -82,7 +82,7 @@ namespace DOL.GS.Keeps
 
 		public override bool Interact(GamePlayer player)
 		{
-			if (!base.Interact(player))
+			if (!base.Interact(player) || GameRelic.IsPlayerCarryingRelic(player))
 				return false;
 
 			//For players in New Frontiers only

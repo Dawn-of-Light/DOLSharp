@@ -280,10 +280,13 @@ namespace DOL.GS.PacketHandler
 				int acuityItemBonus = 0;
 				if ( updateStats[i] ==  m_gameClient.Player.CharacterClass.ManaStat )
 				{
-					abilityBonus += m_gameClient.Player.AbilityBonus[(int)eProperty.Acuity];
+					if (m_gameClient.Player.CharacterClass.ID != (int)eCharacterClass.Scout && m_gameClient.Player.CharacterClass.ID != (int)eCharacterClass.Hunter && m_gameClient.Player.CharacterClass.ID != (int)eCharacterClass.Ranger)
+					{
+						abilityBonus += m_gameClient.Player.AbilityBonus[(int)eProperty.Acuity];
 
-					if( m_gameClient.Player.CharacterClass.ClassType != eClassType.PureTank )
-						acuityItemBonus = m_gameClient.Player.ItemBonus[(int)eProperty.Acuity];
+						if (m_gameClient.Player.CharacterClass.ClassType != eClassType.PureTank)
+							acuityItemBonus = m_gameClient.Player.ItemBonus[(int)eProperty.Acuity];
+					}
 				}
 
 				int buff = modStats[i] - baseStats[i];
@@ -302,8 +305,12 @@ namespace DOL.GS.PacketHandler
 
 				if( updateStats[i] == m_gameClient.Player.CharacterClass.ManaStat )
 				{
-					if( m_gameClient.Player.CharacterClass.ClassType != eClassType.PureTank )
-						acuityItemBonus = m_gameClient.Player.ItemBonus[(int)eProperty.Acuity];
+					if (m_gameClient.Player.CharacterClass.ID != (int)eCharacterClass.Scout && m_gameClient.Player.CharacterClass.ID != (int)eCharacterClass.Hunter && m_gameClient.Player.CharacterClass.ID != (int)eCharacterClass.Ranger)
+					{
+
+						if (m_gameClient.Player.CharacterClass.ClassType != eClassType.PureTank)
+							acuityItemBonus = m_gameClient.Player.ItemBonus[(int)eProperty.Acuity];
+					}
 				}
 
 				pak.WriteShort( (ushort)(m_gameClient.Player.ItemBonus[(int)updateStats[i]] + acuityItemBonus) );
@@ -324,7 +331,12 @@ namespace DOL.GS.PacketHandler
 			{
 				int acuityItemBonus = 0;
 				if (m_gameClient.Player.CharacterClass.ClassType != eClassType.PureTank && (int)updateStats[i] == (int)m_gameClient.Player.CharacterClass.ManaStat)
-					acuityItemBonus = m_gameClient.Player.AbilityBonus[(int)eProperty.Acuity];
+				{
+					if (m_gameClient.Player.CharacterClass.ID != (int)eCharacterClass.Scout && m_gameClient.Player.CharacterClass.ID != (int)eCharacterClass.Hunter && m_gameClient.Player.CharacterClass.ID != (int)eCharacterClass.Ranger)
+					{
+						acuityItemBonus = m_gameClient.Player.AbilityBonus[(int)eProperty.Acuity];
+					}
+				}
 				pak.WriteByte((byte)(m_gameClient.Player.AbilityBonus[(int)updateStats[i]] + acuityItemBonus));
 			}
 
