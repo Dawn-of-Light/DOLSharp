@@ -68,8 +68,10 @@ namespace DOL.GS.PropertyCalc
             percent += living.AbilityBonus[(int)property];
 
             // Relic bonus calculated before RA bonuses
-            if (living is GamePlayer || living is NecromancerPet)
-                percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic)));
+			if (living is GamePlayer || living is GamePet)
+			{
+				percent += (int)(100 * RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic));
+			}
 
             return percent;
         }
@@ -130,8 +132,10 @@ namespace DOL.GS.PropertyCalc
                 - living.DebuffCategory[(int)property]);
 
             // Relic bonus calculated before RA bonuses
-            if (living is GamePlayer ||living is NecromancerPet)
-                percent = (int)(percent * (1.00 + RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic)));
+			if (living is GamePlayer || living is GamePet)
+			{
+				percent += (int)(100 * RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic));
+			}
 
             // Add RA bonus
             percent += living.AbilityBonus[(int)property];

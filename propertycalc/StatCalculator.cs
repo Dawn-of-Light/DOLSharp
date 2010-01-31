@@ -53,16 +53,21 @@ namespace DOL.GS.PropertyCalc
 
 			// Special cases:
 			// 1) ManaStat (base stat + acuity, players only).
-			// All caster classes benefit from item and ability acuity
-			// bonuses, but only list casters can reap the benefits of
-			// acuity buffs.
-			// 2) Constitution lost at death, only affects players.
+			// 2) As of patch 1.64: - Acuity - This bonus will increase your casting stat, 
+			//    whatever your casting stat happens to be. If you're a druid, you should get an increase to empathy, 
+			//    while a bard should get an increase to charisma.  http://support.darkageofcamelot.com/kb/article.php?id=540
+			// 3) Constitution lost at death, only affects players.
 
 			if (living is GamePlayer)
 			{
 				GamePlayer player = living as GamePlayer;
 				if (property == (eProperty)(player.CharacterClass.ManaStat))
-					abilityBonus += player.AbilityBonus[(int)eProperty.Acuity];
+				{
+					if (player.CharacterClass.ID != (int)eCharacterClass.Scout && player.CharacterClass.ID != (int)eCharacterClass.Hunter && player.CharacterClass.ID != (int)eCharacterClass.Ranger)
+					{
+						abilityBonus += player.AbilityBonus[(int)eProperty.Acuity];
+					}
+				}
 
 				deathConDebuff = player.TotalConstitutionLostAtDeath;
 			}
@@ -146,8 +151,15 @@ namespace DOL.GS.PropertyCalc
 
             if (living is GamePlayer)
             {
-                if (property == (eProperty)((living as GamePlayer).CharacterClass.ManaStat))
-                    itemBonus += living.ItemBonus[(int)eProperty.Acuity];
+				GamePlayer player = living as GamePlayer;
+
+				if (property == (eProperty)player.CharacterClass.ManaStat)
+				{
+					if (player.CharacterClass.ID != (int)eCharacterClass.Scout && player.CharacterClass.ID != (int)eCharacterClass.Hunter && player.CharacterClass.ID != (int)eCharacterClass.Ranger)
+					{
+						itemBonus += living.ItemBonus[(int)eProperty.Acuity];
+					}
+				}
             }
 
             int itemBonusCapIncrease = GetItemBonusCapIncrease(living, property);
@@ -179,8 +191,15 @@ namespace DOL.GS.PropertyCalc
             int itemBonusCapIncrease = living.ItemBonus[(int)(eProperty.StatCapBonus_First - eProperty.Stat_First + property)];
             if (living is GamePlayer)
             {
-                if (property == (eProperty)((living as GamePlayer).CharacterClass.ManaStat))
-                    itemBonusCapIncrease += living.ItemBonus[(int)eProperty.AcuCapBonus];
+				GamePlayer player = living as GamePlayer;
+
+				if (property == (eProperty)player.CharacterClass.ManaStat)
+				{
+					if (player.CharacterClass.ID != (int)eCharacterClass.Scout && player.CharacterClass.ID != (int)eCharacterClass.Hunter && player.CharacterClass.ID != (int)eCharacterClass.Ranger)
+					{
+						itemBonusCapIncrease += living.ItemBonus[(int)eProperty.AcuCapBonus];
+					}
+				}
             }
 
             return Math.Min(itemBonusCapIncrease, itemBonusCapIncreaseCap);
