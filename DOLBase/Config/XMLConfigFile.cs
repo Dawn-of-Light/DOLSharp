@@ -121,13 +121,13 @@ namespace DOL.Config
 			if (configFile == null)
 				throw new ArgumentNullException("configFile");
 
+			if (configFile.Exists)
+				configFile.Delete();
+
 			var writer = new XmlTextWriter(configFile.FullName, Encoding.UTF8)
 			             	{
 			             		Formatting = Formatting.Indented
 			             	};
-
-			if (configFile.Exists)
-				configFile.Delete();
 
 			try
 			{
@@ -157,7 +157,7 @@ namespace DOL.Config
 				return root;
 
 			ConfigElement current = root;
-			using (var reader = new XmlTextReader(configFile.OpenRead()))
+			using(var reader = new XmlTextReader(configFile.OpenRead()))
 			{
 				while (reader.Read())
 				{
