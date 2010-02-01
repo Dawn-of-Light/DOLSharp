@@ -372,7 +372,7 @@ namespace DOL.GS
 
 			log.Debug("loading mobs from DB...");
 
-			List<Mob> mobList = new List<Mob>();
+			var mobList = new List<Mob>();
 
 			if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
 			{
@@ -388,23 +388,24 @@ namespace DOL.GS
 				mobList.AddRange((Mob[])GameServer.Database.SelectAllObjects(typeof(Mob)));
 			}
 
-			Hashtable mobsByRegionId = new Hashtable(512);
+			var mobsByRegionId = new Dictionary<ushort, List<Mob>>(512);
 			foreach (Mob mob in mobList)
 			{
-				ArrayList list = (ArrayList)mobsByRegionId[mob.Region];
+				var list = mobsByRegionId[mob.Region];
 				if (list == null)
 				{
-					list = new ArrayList(1024);
+					list = new List<Mob>(1024);
 					mobsByRegionId.Add(mob.Region, list);
 				}
+
 				list.Add(mob);
 			}
 
-			ArrayList regions = new ArrayList(512);
-			foreach (DictionaryEntry entry in regionCfg.Children)
+			var regions = new List<RegionData>(512);
+			foreach (var entry in regionCfg.Children)
 			{
-				string name = (string)entry.Key;
-				ConfigElement config = (ConfigElement)entry.Value;
+				string name = entry.Key;
+				ConfigElement config = entry.Value;
 
 				RegionData data = new RegionData();
 				data.Id = (ushort)config[ENTRY_REG_ID].GetInt();
@@ -416,11 +417,16 @@ namespace DOL.GS
 				data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
 				data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
 				data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
-				ArrayList mobs = (ArrayList)mobsByRegionId[data.Id];
+
+				var mobs = mobsByRegionId[data.Id];
 				if (mobs == null)
+				{
 					data.Mobs = new Mob[0];
+				}
 				else
-					data.Mobs = (Mob[])mobs.ToArray(typeof(Mob));
+				{
+					data.Mobs = mobs.ToArray();
+				}
 
 				regions.Add(data);
 
@@ -459,10 +465,10 @@ namespace DOL.GS
 
 			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w3");
 
-			foreach (DictionaryEntry entry in zoneCfg.Children)
+			foreach (var entry in zoneCfg.Children)
 			{
 				//string name = (string) entry.Key;
-				ConfigElement config = (ConfigElement)entry.Value;
+				ConfigElement config = entry.Value;
 
                 ZoneData zoneData = new ZoneData();
                 zoneData.Height = (byte)config[ENTRY_ZONE_HEIGHT].GetInt();
@@ -485,7 +491,7 @@ namespace DOL.GS
 
 			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w4");
 
-			regionsData = (RegionData[])regions.ToArray(typeof(RegionData));
+			regionsData = regions.ToArray();
 			return true;
 		}
 
@@ -869,7 +875,7 @@ namespace DOL.GS
 				IDictionaryEnumerator iter = m_regions.GetEnumerator();
 
 				string port = string.Format("{0:D00000}", GameServer.Instance.Configuration.RegionPort);
-				string ip = GameServer.Instance.Configuration.RegionIp.ToString();
+				string ip = GameServer.Instance.Configuration.RegionIP.ToString();
 
 				int i = 0;
 

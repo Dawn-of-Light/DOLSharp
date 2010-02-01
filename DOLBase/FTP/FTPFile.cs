@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-
 //Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
 
 namespace DOL.FTP
@@ -30,6 +28,6 @@ namespace DOL.FTP
 		/// <summary>
 		/// Sets the name of the file
 		/// </summary>
-		public String Name { get; set; }
+		public string Name { get; set; }
 	}
 }

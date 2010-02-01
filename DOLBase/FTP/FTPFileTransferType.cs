@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- //Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
+//Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
 
 namespace DOL.FTP
 {
@@ -29,6 +29,7 @@ namespace DOL.FTP
 		/// Transfer will be in ASCII mode
 		/// </summary>
 		ASCII = 1,
+
 		/// <summary>
 		/// Transfer will be in BINARY mode
 		/// </summary>

@@ -352,7 +352,7 @@ namespace DOL.GS
 			{
 				// Open our udp socket
 				m_udpListen = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-				m_udpListen.Bind(new IPEndPoint(Configuration.UDPIp, Configuration.UDPPort));
+				m_udpListen.Bind(new IPEndPoint(Configuration.UDPIP, Configuration.UDPPort));
 
 				// Bind out UDP socket
 				m_udpOutSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);

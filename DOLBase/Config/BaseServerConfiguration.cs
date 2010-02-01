@@ -23,52 +23,52 @@ using System.Net;
 namespace DOL.Config
 {
 	/// <summary>
-	/// This is a server configuration
+	/// Base configuration for the server.
 	/// </summary>
 	public class BaseServerConfiguration
 	{
 		/// <summary>
-		/// Auto Detect the RegionIP
+		/// Whether or not to try and auto-detect the external IP of the server.
 		/// </summary>
 		private bool _detectRegionIP;
 
 		/// <summary>
-		/// Enable uPnP features
+		/// Whether or not to enable UPnP mapping.
 		/// </summary>
 		private bool _enableUPnP;
 
 		/// <summary>
-		/// The ip address the server should use for listening
+		/// The listening address of the server.
 		/// </summary>
 		private IPAddress _ip;
 
 		/// <summary>
-		/// The port the server should listen to
+		/// The listening port of the server.
 		/// </summary>
 		private ushort _port;
 
 		/// <summary>
-		/// The region IP
+		/// The region (external) address of the server.
 		/// </summary>
 		private IPAddress _regionIP;
 
 		/// <summary>
-		/// The region port
+		/// The region (external) port of the server.
 		/// </summary>
 		private ushort _regionPort;
 
 		/// <summary>
-		/// The UDP IP
+		/// The UDP listening address of the server.
 		/// </summary>
 		private IPAddress _udpIP;
 
 		/// <summary>
-		/// The UDP port
+		/// The UDP listening port of the server.
 		/// </summary>
 		private ushort _udpPort;
 
 		/// <summary>
-		/// Constructs a server configuration with default values
+		/// Constructs a server configuration with default values.
 		/// </summary>
 		protected BaseServerConfiguration()
 		{
@@ -83,7 +83,7 @@ namespace DOL.Config
 		}
 
 		/// <summary>
-		/// Sets or gets the port for the server
+		/// Gets/sets the listening port for the server.
 		/// </summary>
 		public ushort Port
 		{
@@ -92,25 +92,25 @@ namespace DOL.Config
 		}
 
 		/// <summary>
-		/// Sets or gets the IP address for the server
+		/// Gets/sets the listening address for the server.
 		/// </summary>
-		public IPAddress Ip
+		public IPAddress IP
 		{
 			get { return _ip; }
 			set { _ip = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets the region ip
+		/// <summary>p
+		/// Gets/sets the region (external) address for the server.
 		/// </summary>
-		public IPAddress RegionIp
+		public IPAddress RegionIP
 		{
 			get { return _regionIP; }
 			set { _regionIP = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the region port
+		/// Gets/sets the region (external) port for the server.
 		/// </summary>
 		public ushort RegionPort
 		{
@@ -119,16 +119,16 @@ namespace DOL.Config
 		}
 
 		/// <summary>
-		/// Gets or sets the UDP ip
+		/// Gets/sets the UDP listening address for the server.
 		/// </summary>
-		public IPAddress UDPIp
+		public IPAddress UDPIP
 		{
 			get { return _udpIP; }
 			set { _udpIP = value; }
 		}
 
 		/// <summary>
-		/// Gets or sets the UDP port
+		/// Gets/sets the UDP listening port for the server.
 		/// </summary>
 		public ushort UDPPort
 		{
@@ -136,14 +136,17 @@ namespace DOL.Config
 			set { _udpPort = value; }
 		}
 
-		public bool EnableUpnp
+		/// <summary>
+		/// Whether or not to enable UPnP mapping.
+		/// </summary>
+		public bool EnableUPnP
 		{
 			get { return _enableUPnP; }
 			set { _enableUPnP = value; }
 		}
 
 		/// <summary>
-		/// Detects the RegionIP for servers that are behind a supported IGD
+		/// Whether or not to try and auto-detect the external IP of the server.
 		/// </summary>
 		public bool DetectRegionIP
 		{
@@ -152,7 +155,7 @@ namespace DOL.Config
 		}
 
 		/// <summary>
-		/// Loads the config values from a specific config element
+		/// Loads the configuration values from the given configuration element.
 		/// </summary>
 		/// <param name="root">the root config element</param>
 		protected virtual void LoadFromConfig(ConfigElement root)
@@ -175,19 +178,22 @@ namespace DOL.Config
 		}
 
 		/// <summary>
-		/// Load the configuration from a XML source file
+		/// Load the configuration from an XML source file.
 		/// </summary>
-		/// <param name="configFile">The file to load from</param>
+		/// <param name="configFile">the file to load from</param>
 		public void LoadFromXMLFile(FileInfo configFile)
 		{
+			if (configFile == null)
+				throw new ArgumentNullException("configFile");
+
 			XMLConfigFile xmlConfig = XMLConfigFile.ParseXMLFile(configFile);
 			LoadFromConfig(xmlConfig);
 		}
 
 		/// <summary>
-		/// Saves the values into a specific config element
+		/// Saves the values to the given configuration element.
 		/// </summary>
-		/// <param name="root">the root config element</param>
+		/// <param name="root">the configuration element to save to</param>
 		protected virtual void SaveToConfig(ConfigElement root)
 		{
 			root["Server"]["Port"].Set(_port);
@@ -201,9 +207,9 @@ namespace DOL.Config
 		}
 
 		/// <summary>
-		/// Save the configuration to a XML file
+		/// Saves the values to the given XML configuration file.
 		/// </summary>
-		/// <param name="configFile">The file to save</param>
+		/// <param name="configFile">the file to save to</param>
 		public void SaveToXMLFile(FileInfo configFile)
 		{
 			if (configFile == null)
