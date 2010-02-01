@@ -52,14 +52,9 @@ namespace DOL.GS.Spells
         // Event : player takes damage, effect cancels
         private void LivingTakeDamage(DOLEvent e, object sender, EventArgs args)
         {
-            //GamePlayer player = sender as GamePlayer;
-            //if (player == null) return;
-            //if (e == GameLivingEvent.TakeDamage || e == GameLivingEvent.AttackedByEnemy)
-            //{
             	OnEffectExpires(m_effect, true);
-            	//return;
-            //}
-        }     
+        }
+
         public DreamMorph(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     
@@ -70,7 +65,8 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("DreamGroupMorph")]
     public class DreamGroupMorph : DreamMorph
     {
-        /*public override void OnEffectStart(GameSpellEffect effect)
+        /*
+        public override void OnEffectStart(GameSpellEffect effect)
         {  
         	// Same Effect for everyone except caster that get a ToHit bonus
             //Caster.BaseBuffBonusCategory[(int)eProperty.ToHitBonus] += (int)m_spell.Value;
@@ -80,7 +76,8 @@ namespace DOL.GS.Spells
         {
             //Caster.BaseBuffBonusCategory[(int)eProperty.ToHitBonus] -= (int)m_spell.Value;
             return base.OnEffectExpires(effect, noMessages);
-        }*/
+        }
+         */
         public DreamGroupMorph(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 }
