@@ -245,7 +245,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								"ExtraBonusType = '" + eProperty.MaxMana + "' AND ExtraBonus >= '" + power + "')");
 			#endregion
 
-			string qryString = GameServer.Database.Escape((sql.ToString());
+			string qryString = GameServer.Database.Escape(sql.ToString());
 
             InventoryItem[] items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), qryString);
 			int itemsOnPage = page < (int)Math.Ceiling((double)items.Length / 20) ? 20 : items.Length % 20;
