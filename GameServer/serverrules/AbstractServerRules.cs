@@ -69,8 +69,8 @@ namespace DOL.GS.ServerRules
 			}
 
 			// Ban IP Address or range (example: 5.5.5.%)
-			string accip = client.TcpEndpointAddress;
-			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip LIKE '" + GameServer.Database.Escape(accip) + "'");
+			string accip = GameServer.Database.Escape(client.TcpEndpointAddress);
+			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND '" + GameServer.Database.Escape(accip) + "' LIKE Ip)");
 			if (objs.Length > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
