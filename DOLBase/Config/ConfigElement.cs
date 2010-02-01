@@ -48,7 +48,6 @@ namespace DOL.Config
 		public ConfigElement(ConfigElement parent)
 		{
 			_parent = parent;
-			_value = "";
 		}
 
 		/// <summary>
@@ -136,7 +135,7 @@ namespace DOL.Config
 		/// <returns>the integer representation of the value of this element</returns>
 		public int GetInt()
 		{
-			return int.Parse(_value);
+			return int.Parse(_value ?? "");
 		}
 
 		/// <summary>
@@ -155,7 +154,7 @@ namespace DOL.Config
 		/// <returns>the long representation of the value of this element</returns>
 		public long GetLong()
 		{
-			return long.Parse(_value);
+			return long.Parse(_value ?? "");
 		}
 
 		/// <summary>
@@ -174,7 +173,7 @@ namespace DOL.Config
 		/// <returns>the boolean representation of the value of this element</returns>
 		public bool GetBoolean()
 		{
-			return bool.Parse(_value);
+			return bool.Parse(_value ?? "");
 		}
 
 		/// <summary>
