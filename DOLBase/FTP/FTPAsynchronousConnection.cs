@@ -16,12 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Timers;
-using Timer=System.Timers.Timer;
 
 //Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
 
@@ -32,339 +29,160 @@ namespace DOL.FTP
 	/// </summary>
 	public class FTPAsynchronousConnection : FTPConnection
 	{
-		private readonly Queue mDeleteFileQueue;
-		private readonly Queue mGetFileTransfersQueue;
-		private readonly Queue mMakeDirQueue;
-		private readonly Queue mRemoveDirQueue;
-		private readonly Queue mSendFileTransfersQueue;
-		private readonly Queue mSetCurrentDirectoryQueue;
-		private readonly ArrayList mThreadPool;
-		private readonly Timer mTimer;
+		private readonly Queue<string> _deleteFileQueue;
+		private readonly Queue<FileTransferStruct> _getFileTransfersQueue;
+		private readonly Queue<string> _makeDirQueue;
+		private readonly Queue<string> _removeDirQueue;
+		private readonly Queue<FileTransferStruct> _sendFileTransfersQueue;
+		private readonly Queue<string> _setCurrentDirectoryQueue;
 
 		/// <summary>
 		/// Creates a new asynchronous FTP connection
 		/// </summary>
 		public FTPAsynchronousConnection()
 		{
-			mThreadPool = new ArrayList();
-			mSendFileTransfersQueue = new Queue();
-			mGetFileTransfersQueue = new Queue();
-			mDeleteFileQueue = new Queue();
-			mSetCurrentDirectoryQueue = new Queue();
-			mMakeDirQueue = new Queue();
-			mRemoveDirQueue = new Queue();
-			mTimer = new Timer(100);
-			mTimer.Elapsed += ManageThreads;
-			mTimer.Start();
-		}
-
-		/// <summary>
-		/// Opens a new FTP connection to a remote host
-		/// </summary>
-		/// <param name="pRemoteHost">The remote host address</param>
-		/// <param name="pUser">The remote username</param>
-		/// <param name="pPassword">The remote password</param>
-		public override void Open(string pRemoteHost, string pUser, string pPassword)
-		{
-			base.Open(pRemoteHost, pUser, pPassword);
-		}
-
-		/// <summary>
-		/// Opens a new FTP connection to a remote host
-		/// </summary>
-		/// <param name="pRemoteHost">The remote host address</param>
-		/// <param name="pUser">The remote username</param>
-		/// <param name="pPassword">The remote password</param>
-		/// <param name="pMode">The ftp mode</param>
-		public override void Open(string pRemoteHost, string pUser, string pPassword, FTPMode pMode)
-		{
-			base.Open(pRemoteHost, pUser, pPassword, pMode);
-		}
-
-		/// <summary>
-		/// Opens a new FTP connection to a remote host
-		/// </summary>
-		/// <param name="pRemoteHost">The remote host address</param>
-		/// <param name="pRemotePort">The remote port</param>
-		/// <param name="pUser">The remote username</param>
-		/// <param name="pPassword">The remote password</param>
-		public override void Open(string pRemoteHost, int pRemotePort, string pUser, string pPassword)
-		{
-			base.Open(pRemoteHost, pRemotePort, pUser, pPassword);
-		}
-
-		/// <summary>
-		/// Opens a new FTP connection to a remote host
-		/// </summary>
-		/// <param name="pRemoteHost">The remote host address</param>
-		/// <param name="pRemotePort">The remote port</param>
-		/// <param name="pUser">The remote username</param>
-		/// <param name="pPassword">The remote password</param>
-		/// <param name="pMode">The ftp mode</param>
-		public override void Open(string pRemoteHost, int pRemotePort, string pUser, string pPassword, FTPMode pMode)
-		{
-			base.Open(pRemoteHost, pRemotePort, pUser, pPassword, pMode);
-		}
-
-		private Thread CreateGetFileThread(string pRemoteFileName, string pLocalFileName, FTPFileTransferType pType)
-		{
-			var aFT = new FileTransferStruct();
-			aFT.LocalFileName = pLocalFileName;
-			aFT.RemoteFileName = pRemoteFileName;
-			aFT.Type = pType;
-			mGetFileTransfersQueue.Enqueue(aFT);
-
-			var aThread = new Thread(GetFileFromQueue);
-			aThread.Name = "GetFileFromQueue " + pRemoteFileName + ", " + pLocalFileName + ", " + pType;
-			;
-			return aThread;
+			_sendFileTransfersQueue = new Queue<FileTransferStruct>();
+			_getFileTransfersQueue = new Queue<FileTransferStruct>();
+			_deleteFileQueue = new Queue<string>();
+			_setCurrentDirectoryQueue = new Queue<string>();
+			_makeDirQueue = new Queue<string>();
+			_removeDirQueue = new Queue<string>();
 		}
 
 		/// <summary>
 		/// Retrieves a remote file
 		/// </summary>
-		/// <param name="pRemoteFileName">The remote filename</param>
-		/// <param name="pType">The transfer type</param>
-		public override void GetFile(string pRemoteFileName, FTPFileTransferType pType)
+		/// <param name="remoteFileName">The remote filename</param>
+		/// <param name="type">The transfer type</param>
+		public override void GetFile(string remoteFileName, FTPFileTransferType type)
 		{
-			GetFile(pRemoteFileName, Path.GetFileName(pRemoteFileName), pType);
+			GetFile(remoteFileName, Path.GetFileName(remoteFileName), type);
 		}
 
 		/// <summary>
 		/// Retrieves a remote file
 		/// </summary>
-		/// <param name="pRemoteFileName">The remote filename</param>
-		/// <param name="pLocalFileName">The local filename</param>
-		/// <param name="pType">The transfer type</param>
-		public override void GetFile(string pRemoteFileName, string pLocalFileName, FTPFileTransferType pType)
+		/// <param name="remoteFileName">The remote filename</param>
+		/// <param name="localFileName">The local filename</param>
+		/// <param name="type">The transfer type</param>
+		public override void GetFile(string remoteFileName, string localFileName, FTPFileTransferType type)
 		{
-			EnqueueThread(CreateGetFileThread(pRemoteFileName, pLocalFileName, pType));
+			var ftStruct = new FileTransferStruct
+			               	{
+			               		LocalFileName = localFileName,
+			               		RemoteFileName = remoteFileName,
+			               		Type = type
+			               	};
+
+			_getFileTransfersQueue.Enqueue(ftStruct);
+
+			ThreadPool.QueueUserWorkItem(GetFileFromQueue);
 		}
 
-		private void GetFileFromQueue()
+		private void GetFileFromQueue(object state)
 		{
-			var aFT = (FileTransferStruct) mGetFileTransfersQueue.Dequeue();
-			base.GetFile(aFT.RemoteFileName, aFT.LocalFileName, aFT.Type);
-		}
-
-		private Thread CreateSendFileThread(string pLocalFileName, string pRemoteFileName, FTPFileTransferType pType)
-		{
-			var aFT = new FileTransferStruct();
-			aFT.LocalFileName = pLocalFileName;
-			aFT.RemoteFileName = pRemoteFileName;
-			aFT.Type = pType;
-			mSendFileTransfersQueue.Enqueue(aFT);
-
-			var aThread = new Thread(SendFileFromQueue);
-			aThread.Name = "GetFileFromQueue " + pLocalFileName + ", " + pRemoteFileName + ", " + pType;
-			;
-			return aThread;
+			FileTransferStruct ftStruct = _getFileTransfersQueue.Dequeue();
+			base.GetFile(ftStruct.RemoteFileName, ftStruct.LocalFileName, ftStruct.Type);
 		}
 
 		/// <summary>
 		/// Sends a file to the remote host
 		/// </summary>
-		/// <param name="pLocalFileName">The local filename</param>
-		/// <param name="pType">The transfer type</param>
-		public override void SendFile(string pLocalFileName, FTPFileTransferType pType)
+		/// <param name="localFileName">The local filename</param>
+		/// <param name="type">The transfer type</param>
+		public override void SendFile(string localFileName, FTPFileTransferType type)
 		{
-			SendFile(pLocalFileName, Path.GetFileName(pLocalFileName), pType);
+			SendFile(localFileName, Path.GetFileName(localFileName), type);
 		}
 
 		/// <summary>
 		/// Sends a file to the remote host
 		/// </summary>
-		/// <param name="pLocalFileName">The local filename</param>
-		/// <param name="pRemoteFileName">The remote filename</param>
-		/// <param name="pType">The transfer type</param>
-		public override void SendFile(string pLocalFileName, string pRemoteFileName, FTPFileTransferType pType)
+		/// <param name="localFileName">The local filename</param>
+		/// <param name="remoteFileName">The remote filename</param>
+		/// <param name="type">The transfer type</param>
+		public override void SendFile(string localFileName, string remoteFileName, FTPFileTransferType type)
 		{
-			EnqueueThread(CreateSendFileThread(pLocalFileName, pRemoteFileName, pType));
+			var ftStruct = new FileTransferStruct
+			               	{
+			               		LocalFileName = localFileName,
+			               		RemoteFileName = remoteFileName,
+			               		Type = type
+			               	};
+
+			_sendFileTransfersQueue.Enqueue(ftStruct);
+
+			ThreadPool.QueueUserWorkItem(SendFileFromQueue);
 		}
 
-		private void SendFileFromQueue()
+		private void SendFileFromQueue(object state)
 		{
-			var aFT = (FileTransferStruct) mSendFileTransfersQueue.Dequeue();
-			base.SendFile(aFT.LocalFileName, aFT.RemoteFileName, aFT.Type);
+			FileTransferStruct ftStruct = _sendFileTransfersQueue.Dequeue();
+			base.SendFile(ftStruct.LocalFileName, ftStruct.RemoteFileName, ftStruct.Type);
 		}
 
 		/// <summary>
 		/// Deletes a remote file
 		/// </summary>
-		/// <param name="pRemoteFileName">The remote filename</param>
-		public override void DeleteFile(String pRemoteFileName)
+		/// <param name="remoteFileName">The remote filename</param>
+		public override void DeleteFile(string remoteFileName)
 		{
-			EnqueueThread(CreateDeleteFileThread(pRemoteFileName));
+			_deleteFileQueue.Enqueue(remoteFileName);
+
+			ThreadPool.QueueUserWorkItem(DeleteFileFromQueue);
 		}
 
-		private Thread CreateDeleteFileThread(String pRemoteFileName)
+		private void DeleteFileFromQueue(object state)
 		{
-			mDeleteFileQueue.Enqueue(pRemoteFileName);
-
-			var aThread = new Thread(DeleteFileFromQueue);
-			aThread.Name = "DeleteFileFromQueue " + pRemoteFileName;
-			return aThread;
-		}
-
-		private void DeleteFileFromQueue()
-		{
-			base.DeleteFile((string) mDeleteFileQueue.Dequeue());
+			base.DeleteFile(_deleteFileQueue.Dequeue());
 		}
 
 		/// <summary>
 		/// Sets the current remote directory
 		/// </summary>
-		/// <param name="pRemotePath">The remote path to set</param>
-		public override void SetCurrentDirectory(String pRemotePath)
+		/// <param name="remotePath">The remote path to set</param>
+		public override void SetCurrentDirectory(string remotePath)
 		{
-			EnqueueThread(CreateSetCurrentDirectoryThread(pRemotePath));
+			_setCurrentDirectoryQueue.Enqueue(remotePath);
+
+			ThreadPool.QueueUserWorkItem(SetCurrentDirectoryFromQueue);
 		}
 
-		private Thread CreateSetCurrentDirectoryThread(String pRemotePath)
+		private void SetCurrentDirectoryFromQueue(object state)
 		{
-			mSetCurrentDirectoryQueue.Enqueue(pRemotePath);
-
-			var aThread = new Thread(SetCurrentDirectoryFromQueue);
-			aThread.Name = "SetCurrentDirectoryFromQueue " + pRemotePath;
-			return aThread;
-		}
-
-		private void SetCurrentDirectoryFromQueue()
-		{
-			base.SetCurrentDirectory((string) mSetCurrentDirectoryQueue.Dequeue());
+			base.SetCurrentDirectory(_setCurrentDirectoryQueue.Dequeue());
 		}
 
 		/// <summary>
 		/// Creates a directory on the remote server
 		/// </summary>
-		/// <param name="pDirectoryName">The directory name to create</param>
-		public override void MakeDir(string pDirectoryName)
+		/// <param name="directoryName">The directory name to create</param>
+		public override void CreateDirectory(string directoryName)
 		{
-			EnqueueThread(CreateMakeDirFromQueueThread(pDirectoryName));
+			_makeDirQueue.Enqueue(directoryName);
+
+			ThreadPool.QueueUserWorkItem(MakeDirFromQueue);
 		}
 
-		private Thread CreateMakeDirFromQueueThread(string pDirectoryName)
+		private void MakeDirFromQueue(object state)
 		{
-			mMakeDirQueue.Enqueue(pDirectoryName);
-
-			var aThread = new Thread(MakeDirFromQueue);
-			aThread.Name = "MakeDirFromQueue " + pDirectoryName;
-			return aThread;
-		}
-
-		private void MakeDirFromQueue()
-		{
-			base.MakeDir((String) mMakeDirQueue.Dequeue());
+			base.CreateDirectory(_makeDirQueue.Dequeue());
 		}
 
 		/// <summary>
 		/// Removes a remote directory
 		/// </summary>
-		/// <param name="pDirectoryName">The directory name to remove</param>
-		public override void RemoveDir(string pDirectoryName)
+		/// <param name="directoryName">The directory name to remove</param>
+		public override void RemoveDirectory(string directoryName)
 		{
-			EnqueueThread(CreateRemoveDirFromQueue(pDirectoryName));
+			_removeDirQueue.Enqueue(directoryName);
+
+			ThreadPool.QueueUserWorkItem(RemoveDirFromQueue);
 		}
 
-		private Thread CreateRemoveDirFromQueue(string pDirectoryName)
+		private void RemoveDirFromQueue(object state)
 		{
-			mRemoveDirQueue.Enqueue(pDirectoryName);
-
-			var aThread = new Thread(RemoveDirFromQueue);
-			aThread.Name = "RemoveDirFromQueue " + pDirectoryName;
-			return aThread;
-		}
-
-		private void RemoveDirFromQueue()
-		{
-			base.RemoveDir((String) mRemoveDirQueue.Dequeue());
-		}
-
-		/// <summary>
-		/// Closes the FTP connection to the remote server
-		/// </summary>
-		public override void Close()
-		{
-			WaitAllThreads();
-			base.Close();
-		}
-
-		private void ManageThreads(Object state, ElapsedEventArgs e)
-		{
-			Thread aThread;
-			try
-			{
-				LockThreadPool();
-				aThread = PeekThread();
-				if (aThread != null)
-				{
-					switch (aThread.ThreadState)
-					{
-						case ThreadState.Unstarted:
-							LockThreadPool();
-							aThread.Start();
-							UnlockThreadPool();
-							break;
-						case ThreadState.Stopped:
-							LockThreadPool();
-							DequeueThread();
-							UnlockThreadPool();
-							break;
-					}
-				}
-				UnlockThreadPool();
-			}
-			catch (Exception)
-			{
-				UnlockThreadPool();
-			}
-		}
-
-		private void WaitAllThreads()
-		{
-			while (mThreadPool.Count != 0)
-			{
-				Thread.Sleep(100);
-			}
-		}
-
-		private void EnqueueThread(Thread aThread)
-		{
-			LockThreadPool();
-			mThreadPool.Add(aThread);
-			UnlockThreadPool();
-		}
-
-		private Thread DequeueThread()
-		{
-			Thread aThread;
-			LockThreadPool();
-			aThread = (Thread) mThreadPool[0];
-			mThreadPool.RemoveAt(0);
-			UnlockThreadPool();
-			return aThread;
-		}
-
-		private Thread PeekThread()
-		{
-			Thread aThread = null;
-			LockThreadPool();
-			if (mThreadPool.Count > 0)
-			{
-				aThread = (Thread) mThreadPool[0];
-			}
-			UnlockThreadPool();
-			return aThread;
-		}
-
-		private void LockThreadPool()
-		{
-			Monitor.Enter(mThreadPool);
-		}
-
-		private void UnlockThreadPool()
-		{
-			Monitor.Exit(mThreadPool);
+			base.RemoveDirectory(_removeDirQueue.Dequeue());
 		}
 
 		#region Nested type: FileTransferStruct

@@ -201,11 +201,11 @@ namespace DOLConfig
 			this.auto_account_creation_checkbox.Checked = currentConfig.AutoAccountCreation;
 
 			//Ip and Port settings
-			this.ip_textbox.Text = currentConfig.Ip.ToString();
+			this.ip_textbox.Text = currentConfig.IP.ToString();
 			this.port_textbox.Text = currentConfig.Port.ToString();
 			this.udp_port_textbox.Text = currentConfig.UDPPort.ToString();
 			this.detect_region_ip_checkbox.Checked = currentConfig.DetectRegionIP;
-			this.region_ip_textbox.Text = currentConfig.RegionIp.ToString();
+			this.region_ip_textbox.Text = currentConfig.RegionIP.ToString();
 			this.region_port_textbox.Text = currentConfig.RegionPort.ToString();
 
 			//Database Settings
@@ -319,7 +319,7 @@ namespace DOLConfig
 			}
 			try
 			{
-				currentConfig.Ip = new System.Net.IPAddress(ipToByteArray(this.ip_textbox.Text));
+				currentConfig.IP = new System.Net.IPAddress(ipToByteArray(this.ip_textbox.Text));
 			}
 			catch (Exception)
 			{
@@ -355,7 +355,7 @@ namespace DOLConfig
 			}
 			try
 			{
-				currentConfig.RegionIp = new System.Net.IPAddress(ipToByteArray(this.region_ip_textbox.Text));
+				currentConfig.RegionIP = new System.Net.IPAddress(ipToByteArray(this.region_ip_textbox.Text));
 			}
 			catch (Exception)
 			{

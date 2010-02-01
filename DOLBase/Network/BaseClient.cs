@@ -25,7 +25,7 @@ using log4net;
 namespace DOL.Network
 {
 	/// <summary>
-	/// Base class for connected clients
+	/// Base class representing a game client.
 	/// </summary>
 	public class BaseClient
 	{
@@ -35,46 +35,46 @@ namespace DOL.Network
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Holds the receive callback delegate
+		/// The callback when the client receives data.
 		/// </summary>
-		protected static readonly AsyncCallback ReceiveCallback = OnReceiveHandler;
+		private static readonly AsyncCallback ReceiveCallback = OnReceiveHandler;
 
 		/// <summary>
-		/// Packet buffer, holds incoming packet data
+		/// Receive buffer for the client.
 		/// </summary>
-		protected byte[] _pbuf;
+		protected byte[] _pBuf;
 
 		/// <summary>
-		/// Current offset into the buffer
+		/// The current offset into the receive buffer.
 		/// </summary>
-		protected int _pBufEnd;
+		protected int _pBufOffset;
 
 		/// <summary>
-		/// Socket that holds the client connection
+		/// The socket for the client's connection to the server.
 		/// </summary>
-		protected Socket _sock;
+		protected Socket _socket;
 
 		/// <summary>
-		/// Pointer to the server the client is connected to
+		/// The current server instance that is servicing this client.
 		/// </summary>
 		protected BaseServer _srvr;
 
 		/// <summary>
-		/// Constructor
+		/// Creates a new client.
 		/// </summary>
-		/// <param name="srvr">Pointer to the server the client is connected to</param>
+		/// <param name="srvr">the server that is servicing this client</param>
 		public BaseClient(BaseServer srvr)
 		{
 			_srvr = srvr;
 
 			if (srvr != null)
-				_pbuf = srvr.AcquirePacketBuffer();
+				_pBuf = srvr.AcquirePacketBuffer();
 
-			_pBufEnd = 0;
+			_pBufOffset = 0;
 		}
 
 		/// <summary>
-		/// Gets the server that the client is connected to
+		/// Gets the current server instance that is servicing this client.
 		/// </summary>
 		public BaseServer Server
 		{
@@ -82,39 +82,39 @@ namespace DOL.Network
 		}
 
 		/// <summary>
-		/// Gets or sets the socket the client is using
+		/// Gets/sets the socket for the client's connection to the server.
 		/// </summary>
 		public Socket Socket
 		{
-			get { return _sock; }
-			set { _sock = value; }
+			get { return _socket; }
+			set { _socket = value; }
 		}
 
 		/// <summary>
-		/// Gets the packet buffer for the client
+		/// Gets the receive buffer for the client.
 		/// </summary>
-		public byte[] PacketBuf
+		public byte[] ReceiveBuffer
 		{
-			get { return _pbuf; }
+			get { return _pBuf; }
 		}
 
 		/// <summary>
-		/// Gets or sets the offset into the receive buffer
+		/// Gets/sets the offset into the receive buffer.
 		/// </summary>
-		public int PacketBufSize
+		public int ReceiveBufferOffset
 		{
-			get { return _pBufEnd; }
-			set { _pBufEnd = value; }
+			get { return _pBufOffset; }
+			set { _pBufOffset = value; }
 		}
 
 		/// <summary>
-		/// Gets the client's TCP endpoint address string, if connected
+		/// Gets the client's TCP endpoint address, if connected.
 		/// </summary>
 		public string TcpEndpointAddress
 		{
 			get
 			{
-				Socket s = _sock;
+				Socket s = _socket;
 				if (s != null && s.Connected && s.RemoteEndPoint != null)
 					return ((IPEndPoint) s.RemoteEndPoint).Address.ToString();
 
@@ -123,13 +123,13 @@ namespace DOL.Network
 		}
 
 		/// <summary>
-		/// Gets the client's TCP endpoint string, if connected
+		/// Gets the client's TCP endpoint, if connected.
 		/// </summary>
 		public string TcpEndpoint
 		{
 			get
 			{
-				Socket s = _sock;
+				Socket s = _socket;
 				if (s != null && s.Connected && s.RemoteEndPoint != null)
 					return s.RemoteEndPoint.ToString();
 
@@ -138,59 +138,59 @@ namespace DOL.Network
 		}
 
 		/// <summary>
-		/// Called when data has been received from the connection
+		/// Called when the client has received data.
 		/// </summary>
-		/// <param name="numBytes">Number of bytes received in _pbuf</param>
+		/// <param name="numBytes">number of bytes received in _pBuf</param>
 		protected virtual void OnReceive(int numBytes)
 		{
 		}
 
 		/// <summary>
-		/// Called after the client connection has been accepted
+		/// Called after the client connection has been accepted.
 		/// </summary>
 		public virtual void OnConnect()
 		{
 		}
 
 		/// <summary>
-		/// Called right after the client has been disconnected
+		/// Called right after the client has been disconnected.
 		/// </summary>
 		public virtual void OnDisconnect()
 		{
 		}
 
 		/// <summary>
-		/// Tells the client to begin receiving data
+		/// Starts listening for incoming data.
 		/// </summary>
 		public void BeginReceive()
 		{
-			if (_sock != null && _sock.Connected)
+			if (_socket != null && _socket.Connected)
 			{
-				int bufSize = _pbuf.Length;
+				int bufSize = _pBuf.Length;
 
-				if (_pBufEnd >= bufSize) //Do we have space to receive?
+				if (_pBufOffset >= bufSize) //Do we have space to receive?
 				{
 					if (Log.IsErrorEnabled)
 					{
 						Log.Error(TcpEndpoint + " disconnected because of buffer overflow!");
-						Log.Error("_pBufEnd=" + _pBufEnd + "; buf size=" + bufSize);
-						Log.Error(_pbuf);
+						Log.Error("_pBufOffset=" + _pBufOffset + "; buf size=" + bufSize);
+						Log.Error(_pBuf);
 					}
 
 					_srvr.Disconnect(this);
 				}
 				else
 				{
-					_sock.BeginReceive(_pbuf, _pBufEnd, bufSize - _pBufEnd, SocketFlags.None, ReceiveCallback, this);
+					_socket.BeginReceive(_pBuf, _pBufOffset, bufSize - _pBufOffset, SocketFlags.None, ReceiveCallback, this);
 				}
 			}
 		}
 
 		/// <summary>
-		/// Called when a client has received data or the connection has been closed
+		/// Called when the client has received data or the connection has been closed.
 		/// </summary>
-		/// <param name="ar">Results of the receive operation</param>
-		protected static void OnReceiveHandler(IAsyncResult ar)
+		/// <param name="ar">the async operation result object from the receive operation</param>
+		private static void OnReceiveHandler(IAsyncResult ar)
 		{
 			if (ar == null)
 				return;
@@ -241,15 +241,15 @@ namespace DOL.Network
 		}
 
 		/// <summary>
-		/// Closes the client connection
+		/// Closes the client connection.
 		/// </summary>
 		public void CloseConnections()
 		{
-			if (_sock != null)
+			if (_socket != null)
 			{
 				try
 				{
-					_sock.Shutdown(SocketShutdown.Send);
+					_socket.Shutdown(SocketShutdown.Send);
 				}
 				catch
 				{
@@ -257,23 +257,23 @@ namespace DOL.Network
 
 				try
 				{
-					_sock.Close();
+					_socket.Close();
 				}
 				catch
 				{
 				}
 			}
 
-			byte[] buff = _pbuf;
+			byte[] buff = _pBuf;
 			if (buff != null)
 			{
-				_pbuf = null;
+				_pBuf = null;
 				_srvr.ReleasePacketBuffer(buff);
 			}
 		}
 
 		/// <summary>
-		/// Closes the client connection
+		/// Closes the client connection.
 		/// </summary>
 		public void Disconnect()
 		{

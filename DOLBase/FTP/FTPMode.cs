@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- //Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
+//Written by the DotNetFTPClient team: http://www.sourceforge.net/projects/dotnetftpclient
 
 namespace DOL.FTP
 {
@@ -29,6 +29,7 @@ namespace DOL.FTP
 		/// Ftp connection in passive mode
 		/// </summary>
 		Passive = 1,
+
 		/// <summary>
 		/// Ftp connection in active mode
 		/// </summary>

@@ -641,20 +641,20 @@ namespace DOL.GS.PacketHandler
 		{
 			lock (this)
 			{
-				byte[] buffer = m_client.PacketBuf;
+				byte[] buffer = m_client.ReceiveBuffer;
 
 				//End Offset of buffer
-				int bufferSize = m_client.PacketBufSize + numBytes;
+				int bufferSize = m_client.ReceiveBufferOffset + numBytes;
 
 				//Size < minimum
 				if (bufferSize < GSPacketIn.HDR_SIZE)
 				{
-					m_client.PacketBufSize = bufferSize; // undo buffer read
+					m_client.ReceiveBufferOffset = bufferSize; // undo buffer read
 					return;
 				}
 
 				//Reset the offset
-				m_client.PacketBufSize = 0;
+				m_client.ReceiveBufferOffset = 0;
 
 				//Current offset into the buffer
 				int curOffset = 0;
@@ -667,7 +667,7 @@ namespace DOL.GS.PacketHandler
 					if (dataLeft < packetLength)
 					{
 						Buffer.BlockCopy(buffer, curOffset, buffer, 0, dataLeft);
-						m_client.PacketBufSize = dataLeft;
+						m_client.ReceiveBufferOffset = dataLeft;
 						break;
 					}
 
@@ -724,7 +724,7 @@ namespace DOL.GS.PacketHandler
 				if (bufferSize - 1 == curOffset)
 				{
 					buffer[0] = buffer[curOffset];
-					m_client.PacketBufSize = 1;
+					m_client.ReceiveBufferOffset = 1;
 				}
 			}
 		}
