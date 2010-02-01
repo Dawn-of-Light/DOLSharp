@@ -17,7 +17,7 @@
  *
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Net;
@@ -34,144 +34,144 @@ namespace DOL.FTP
 	/// </summary>
 	public class FTPConnection
 	{
-		private static int BLOCK_SIZE = 512;
-		private static int DATA_PORT_RANGE_FROM = 1500;
-		private static int DATA_PORT_RANGE_TO = 65000;
-		private static int DEFAULT_REMOTE_PORT = 21;
-		private int mActiveConnectionsCount;
+		private const int BlockSize = 512;
+		private const int DataPortRangeFrom = 1500;
+		private const int DataPortRangeTo = 65000;
+		private const int DefaultRemotePort = 21;
+		private int _activeConnectionsCount;
 
-		private bool mLogMessages;
-		private ArrayList mMessageList = new ArrayList();
-		private FTPMode mMode;
-		private String mRemoteHost;
-		private int mRemotePort;
-		private TcpClient mTCPClient;
+		private bool _logMessages;
+		private List<string> _messageList = new List<string>();
+		private FTPMode _mode;
+		private string _remoteHost;
+		private int _remotePort;
+		private TcpClient _tcpClient;
 
 		/// <summary>
 		/// Creates a new ftp connection
 		/// </summary>
 		public FTPConnection()
 		{
-			mActiveConnectionsCount = 0;
-			mMode = FTPMode.Active;
-			mLogMessages = false;
+			_activeConnectionsCount = 0;
+			_mode = FTPMode.Active;
+			_logMessages = false;
 		}
 
 		/// <summary>
 		/// The message list containing all the remote messages
 		/// </summary>
-		public ArrayList MessageList
+		public List<string> MessageList
 		{
-			get { return mMessageList; }
+			get { return _messageList; }
 		}
-
 
 		/// <summary>
 		/// Sets or gets if messages should be logged
 		/// </summary>
 		public bool LogMessages
 		{
-			get { return mLogMessages; }
+			get { return _logMessages; }
 
 			set
 			{
 				if (!value)
 				{
-					mMessageList = new ArrayList();
+					_messageList = new List<string>();
 				}
 
-				mLogMessages = value;
+				_logMessages = value;
 			}
 		}
 
 		/// <summary>
 		/// Opens a new ftp connection
 		/// </summary>
-		/// <param name="pRemoteHost">The remote hostname</param>
-		/// <param name="pUser">The remote user</param>
-		/// <param name="pPassword">The remote password</param>
-		public virtual void Open(string pRemoteHost, string pUser, string pPassword)
+		/// <param name="remoteHost">The remote hostname</param>
+		/// <param name="user">The remote user</param>
+		/// <param name="password">The remote password</param>
+		public virtual void Open(string remoteHost, string user, string password)
 		{
-			Open(pRemoteHost, DEFAULT_REMOTE_PORT, pUser, pPassword, FTPMode.Active);
+			Open(remoteHost, DefaultRemotePort, user, password, FTPMode.Active);
 		}
 
 		/// <summary>
 		/// Opens a new ftp connection
 		/// </summary>
-		/// <param name="pRemoteHost">The remote hostname</param>
-		/// <param name="pUser">The remote user</param>
-		/// <param name="pPassword">The remote password</param>
-		/// <param name="pMode">The ftp mode</param>
-		public virtual void Open(string pRemoteHost, string pUser, string pPassword, FTPMode pMode)
+		/// <param name="remoteHost">The remote hostname</param>
+		/// <param name="user">The remote user</param>
+		/// <param name="password">The remote password</param>
+		/// <param name="mode">The ftp mode</param>
+		public virtual void Open(string remoteHost, string user, string password, FTPMode mode)
 		{
-			Open(pRemoteHost, DEFAULT_REMOTE_PORT, pUser, pPassword, pMode);
+			Open(remoteHost, DefaultRemotePort, user, password, mode);
 		}
 
 		/// <summary>
 		/// Opens a new ftp connection
 		/// </summary>
-		/// <param name="pRemoteHost">The remote hostname</param>
-		/// <param name="pRemotePort">The remote port</param>
-		/// <param name="pUser">The remote user</param>
-		/// <param name="pPassword">The remote password</param>
-		public virtual void Open(string pRemoteHost, int pRemotePort, string pUser, string pPassword)
+		/// <param name="remoteHost">The remote hostname</param>
+		/// <param name="remotePort">The remote port</param>
+		/// <param name="user">The remote user</param>
+		/// <param name="password">The remote password</param>
+		public virtual void Open(string remoteHost, int remotePort, string user, string password)
 		{
-			Open(pRemoteHost, pRemotePort, pUser, pPassword, FTPMode.Active);
+			Open(remoteHost, remotePort, user, password, FTPMode.Active);
 		}
 
 		/// <summary>
 		/// Opens a new ftp connection
 		/// </summary>
-		/// <param name="pRemoteHost">The remote hostname</param>
-		/// <param name="pRemotePort">The remote port</param>
-		/// <param name="pUser">The remote user</param>
-		/// <param name="pPassword">The remote password</param>
-		/// <param name="pMode">The ftp mode</param>
-		public virtual void Open(string pRemoteHost, int pRemotePort, string pUser, string pPassword, FTPMode pMode)
+		/// <param name="remoteHost">The remote hostname</param>
+		/// <param name="remotePort">The remote port</param>
+		/// <param name="user">The remote user</param>
+		/// <param name="password">The remote password</param>
+		/// <param name="mode">The ftp mode</param>
+		public virtual void Open(string remoteHost, int remotePort, string user, string password, FTPMode mode)
 		{
-			var aTempMessageList = new ArrayList();
-			int aReturnValue;
+			var tempMessageList = new List<string>();
+			int returnValue;
 
-			mMode = pMode;
-			mTCPClient = new TcpClient();
-			mRemoteHost = pRemoteHost;
-			mRemotePort = pRemotePort;
+			_mode = mode;
+			_tcpClient = new TcpClient();
+			_remoteHost = remoteHost;
+			_remotePort = remotePort;
 
 			//CONNECT
 			try
 			{
-				mTCPClient.Connect(mRemoteHost, mRemotePort);
+				_tcpClient.Connect(_remoteHost, _remotePort);
 			}
 			catch (Exception)
 			{
 				throw new IOException("Couldn't connect to remote server");
 			}
-			aTempMessageList = Read();
-			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-			if (aReturnValue != 220)
+
+			tempMessageList = Read();
+			returnValue = GetMessageReturnValue(tempMessageList[0]);
+			if (returnValue != 220)
 			{
 				Close();
-				throw new Exception((string) aTempMessageList[0]);
+				throw new Exception(tempMessageList[0]);
 			}
 
 			//SEND USER
-			aTempMessageList = SendCommand("USER " + pUser);
-			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-			if (!(aReturnValue == 331 || aReturnValue == 202))
+			tempMessageList = SendCommand("USER " + user);
+			returnValue = GetMessageReturnValue(tempMessageList[0]);
+			if (!(returnValue == 331 || returnValue == 202))
 			{
 				Close();
-				throw new Exception((string) aTempMessageList[0]);
+				throw new Exception(tempMessageList[0]);
 			}
 
 			//SEND PASSWORD
-			if (aReturnValue == 331)
+			if (returnValue == 331)
 			{
-				aTempMessageList = SendCommand("PASS " + pPassword);
-				aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-				if (!(aReturnValue == 230 || aReturnValue == 202))
+				tempMessageList = SendCommand("PASS " + password);
+				returnValue = GetMessageReturnValue(tempMessageList[0]);
+				if (!(returnValue == 230 || returnValue == 202))
 				{
 					Close();
-					throw new Exception((string) aTempMessageList[0]);
+					throw new Exception(tempMessageList[0]);
 				}
 			}
 		}
@@ -181,342 +181,344 @@ namespace DOL.FTP
 		/// </summary>
 		public virtual void Close()
 		{
-			if (mTCPClient != null)
+			if (_tcpClient != null)
 			{
 				SendCommand("QUIT");
-				mTCPClient.Close();
+				_tcpClient.Close();
 			}
 		}
 
 		/// <summary>
 		/// Returns a list of remote directories
 		/// </summary>
-		/// <param name="pMask">The mask for the query</param>
+		/// <param name="mask">The mask for the query</param>
 		/// <returns>An ArrayList of directories</returns>
-		public ArrayList Dir(String pMask)
+		public List<string> GetDirectories(string mask)
 		{
-			ArrayList aTmpList = Dir();
+			List<string> tmpList = GetDirectories();
 
-			var aTable = new DataTable();
-			aTable.Columns.Add("Name");
-			for (int i = 0; i < aTmpList.Count; i++)
+			var table = new DataTable();
+			table.Columns.Add("Name");
+			for (int i = 0; i < tmpList.Count; i++)
 			{
-				DataRow aRow = aTable.NewRow();
-				aRow["Name"] = aTmpList[i];
-				aTable.Rows.Add(aRow);
+				DataRow aRow = table.NewRow();
+				aRow["Name"] = tmpList[i];
+				table.Rows.Add(aRow);
 			}
 
-			DataRow[] aRowList = aTable.Select("Name LIKE '" + pMask + "'", "", DataViewRowState.CurrentRows);
-			aTmpList = new ArrayList();
+			DataRow[] aRowList = table.Select("Name LIKE '" + mask + "'", "", DataViewRowState.CurrentRows);
+			tmpList = new List<string>();
 			for (int i = 0; i < aRowList.Length; i++)
 			{
-				aTmpList.Add(aRowList[i]["Name"]);
+				tmpList.Add((string) aRowList[i]["Name"]);
 			}
 
-			return aTmpList;
+			return tmpList;
 		}
 
 		/// <summary>
 		/// Reads the remote directory
 		/// </summary>
 		/// <returns>An ArrayList with the remote directory contents</returns>
-		public ArrayList Dir()
+		public List<string> GetDirectories()
 		{
-			LockTcpClient();
-			TcpListener aListner = null;
-			TcpClient aClient = null;
-			NetworkStream aNetworkStream = null;
-			var aTempMessageList = new ArrayList();
-			int aReturnValue = 0;
-			string aReturnValueMessage = "";
-			var aFileList = new ArrayList();
+			TcpListener listener = null;
+			TcpClient client = null;
+			NetworkStream networkStream = null;
+			List<string> tempMessageList;
+			int returnValue = 0;
+			string returnValueMessage = "";
+			var fileList = new List<string>();
 
-			SetTransferType(FTPFileTransferType.ASCII);
-
-			if (mMode == FTPMode.Active)
+			lock (_tcpClient)
 			{
-				aListner = CreateDataListner();
-				aListner.Start();
-			}
-			else
-			{
-				aClient = CreateDataClient();
+				SetTransferType(FTPFileTransferType.ASCII);
+
+				if (_mode == FTPMode.Active)
+				{
+					listener = CreateDataListener();
+					listener.Start();
+				}
+				else
+				{
+					client = CreateDataClient();
+				}
+
+				tempMessageList = SendCommand("NLST");
+				returnValue = GetMessageReturnValue(tempMessageList[0]);
+				if (!(returnValue == 150 || returnValue == 125))
+				{
+					throw new Exception(tempMessageList[0]);
+				}
+
+				if (_mode == FTPMode.Active)
+				{
+					client = listener.AcceptTcpClient();
+				}
+				networkStream = client.GetStream();
+
+				fileList = ReadLines(networkStream);
+
+				if (tempMessageList.Count == 1)
+				{
+					tempMessageList = Read();
+					returnValue = GetMessageReturnValue(tempMessageList[0]);
+					returnValueMessage = tempMessageList[0];
+				}
+				else
+				{
+					returnValue = GetMessageReturnValue(tempMessageList[1]);
+					returnValueMessage = tempMessageList[1];
+				}
+
+				if (!(returnValue == 226))
+				{
+					throw new Exception(returnValueMessage);
+				}
+
+				networkStream.Close();
+				client.Close();
+
+				if (_mode == FTPMode.Active)
+				{
+					listener.Stop();
+				}
 			}
 
-			aTempMessageList = new ArrayList();
-			aTempMessageList = SendCommand("NLST");
-			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-			if (!(aReturnValue == 150 || aReturnValue == 125))
-			{
-				throw new Exception((string) aTempMessageList[0]);
-			}
-
-			if (mMode == FTPMode.Active)
-			{
-				aClient = aListner.AcceptTcpClient();
-			}
-			aNetworkStream = aClient.GetStream();
-
-			aFileList = ReadLines(aNetworkStream);
-
-			if (aTempMessageList.Count == 1)
-			{
-				aTempMessageList = Read();
-				aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-				aReturnValueMessage = (string) aTempMessageList[0];
-			}
-			else
-			{
-				aReturnValue = GetMessageReturnValue((string) aTempMessageList[1]);
-				aReturnValueMessage = (string) aTempMessageList[1];
-			}
-
-			if (!(aReturnValue == 226))
-			{
-				throw new Exception(aReturnValueMessage);
-			}
-
-			aNetworkStream.Close();
-			aClient.Close();
-
-			if (mMode == FTPMode.Active)
-			{
-				aListner.Stop();
-			}
-			UnlockTcpClient();
-			return aFileList;
+			return fileList;
 		}
 
 		/// <summary>
 		/// Sends a stream to a remote file
 		/// </summary>
-		/// <param name="pStream">The stream to send</param>
-		/// <param name="pRemoteFileName">The remote file name</param>
-		/// <param name="pType">The transfer type</param>
-		public void SendStream(Stream pStream, string pRemoteFileName, FTPFileTransferType pType)
+		/// <param name="stream">The stream to send</param>
+		/// <param name="remoteFileName">The remote file name</param>
+		/// <param name="type">The transfer type</param>
+		public void SendStream(Stream stream, string remoteFileName, FTPFileTransferType type)
 		{
-			LockTcpClient();
-			TcpListener aListner = null;
-			TcpClient aClient = null;
-			NetworkStream aNetworkStream = null;
-			var aTempMessageList = new ArrayList();
-			int aReturnValue = 0;
-			string aReturnValueMessage = "";
-			aTempMessageList = new ArrayList();
+			TcpListener listener = null;
+			TcpClient client = null;
+			NetworkStream networkStream = null;
+			var tempMessageList = new List<string>();
+			int returnValue = 0;
+			string returnValueMessage = "";
 
-			SetTransferType(pType);
-
-			if (mMode == FTPMode.Active)
+			lock (_tcpClient)
 			{
-				aListner = CreateDataListner();
-				aListner.Start();
+				SetTransferType(type);
+
+				if (_mode == FTPMode.Active)
+				{
+					listener = CreateDataListener();
+					listener.Start();
+				}
+				else
+				{
+					client = CreateDataClient();
+				}
+
+				tempMessageList = SendCommand("STOR " + remoteFileName);
+				returnValue = GetMessageReturnValue(tempMessageList[0]);
+				if (!(returnValue == 150 || returnValue == 125))
+				{
+					throw new Exception(tempMessageList[0]);
+				}
+
+				if (_mode == FTPMode.Active)
+				{
+					client = listener.AcceptTcpClient();
+				}
+
+				networkStream = client.GetStream();
+
+				var buf = new byte[BlockSize];
+				int bytesRead = 0;
+				int totalBytes = 0;
+
+				while (totalBytes < stream.Length)
+				{
+					bytesRead = stream.Read(buf, 0, BlockSize);
+					totalBytes = totalBytes + bytesRead;
+					networkStream.Write(buf, 0, bytesRead);
+				}
+
+				stream.Close();
+
+				networkStream.Close();
+				client.Close();
+
+				if (_mode == FTPMode.Active)
+				{
+					listener.Stop();
+				}
+
+				if (tempMessageList.Count == 1)
+				{
+					tempMessageList = Read();
+					returnValue = GetMessageReturnValue(tempMessageList[0]);
+					returnValueMessage = tempMessageList[0];
+				}
+				else
+				{
+					returnValue = GetMessageReturnValue(tempMessageList[1]);
+					returnValueMessage = tempMessageList[1];
+				}
+
+				if (!(returnValue == 226))
+				{
+					throw new Exception(returnValueMessage);
+				}
 			}
-			else
-			{
-				aClient = CreateDataClient();
-			}
-
-			aTempMessageList = SendCommand("STOR " + pRemoteFileName);
-			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-			if (!(aReturnValue == 150 || aReturnValue == 125))
-			{
-				throw new Exception((string) aTempMessageList[0]);
-			}
-
-			if (mMode == FTPMode.Active)
-			{
-				aClient = aListner.AcceptTcpClient();
-			}
-
-			aNetworkStream = aClient.GetStream();
-
-			var aBuffer = new Byte[BLOCK_SIZE];
-			int iBytes = 0;
-			int iTotalBytes = 0;
-
-			while (iTotalBytes < pStream.Length)
-			{
-				iBytes = pStream.Read(aBuffer, 0, BLOCK_SIZE);
-				iTotalBytes = iTotalBytes + iBytes;
-				aNetworkStream.Write(aBuffer, 0, iBytes);
-			}
-
-			pStream.Close();
-
-			aNetworkStream.Close();
-			aClient.Close();
-
-			if (mMode == FTPMode.Active)
-			{
-				aListner.Stop();
-			}
-
-			if (aTempMessageList.Count == 1)
-			{
-				aTempMessageList = Read();
-				aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-				aReturnValueMessage = (string) aTempMessageList[0];
-			}
-			else
-			{
-				aReturnValue = GetMessageReturnValue((string) aTempMessageList[1]);
-				aReturnValueMessage = (string) aTempMessageList[1];
-			}
-
-			if (!(aReturnValue == 226))
-			{
-				throw new Exception(aReturnValueMessage);
-			}
-			UnlockTcpClient();
 		}
 
 		/// <summary>
 		/// Sends a file to the remote server
 		/// </summary>
-		/// <param name="pLocalFileName">The local filename</param>
-		/// <param name="pType">The transfer type</param>
-		public virtual void SendFile(string pLocalFileName, FTPFileTransferType pType)
+		/// <param name="localFileName">The local filename</param>
+		/// <param name="type">The transfer type</param>
+		public virtual void SendFile(string localFileName, FTPFileTransferType type)
 		{
-			SendFile(pLocalFileName, Path.GetFileName(pLocalFileName), pType);
+			SendFile(localFileName, Path.GetFileName(localFileName), type);
 		}
 
 		/// <summary>
 		/// Sends a file to the remote server
 		/// </summary>
-		/// <param name="pLocalFileName">The local filename</param>
-		/// <param name="pRemoteFileName">The remote filename</param>
-		/// <param name="pType">The transfer type</param>
-		public virtual void SendFile(string pLocalFileName, string pRemoteFileName, FTPFileTransferType pType)
+		/// <param name="localFileName">The local filename</param>
+		/// <param name="remoteFileName">The remote filename</param>
+		/// <param name="type">The transfer type</param>
+		public virtual void SendFile(string localFileName, string remoteFileName, FTPFileTransferType type)
 		{
-			using (var file = new FileStream(pLocalFileName, FileMode.Open))
+			using (var file = new FileStream(localFileName, FileMode.Open))
 			{
-				SendStream(file, pRemoteFileName, pType);
+				SendStream(file, remoteFileName, type);
 			}
 		}
 
 		/// <summary>
 		/// Connects a stream to remote file
 		/// </summary>
-		/// <param name="pRemoteFileName">The remote file name</param>
-		/// <param name="pStream">The stream to connect to the remote file</param>
-		/// <param name="pType">The transfer type</param>
-		public void GetStream(string pRemoteFileName, Stream pStream, FTPFileTransferType pType)
+		/// <param name="remoteFileName">The remote file name</param>
+		/// <param name="stream">The stream to connect to the remote file</param>
+		/// <param name="type">The transfer type</param>
+		public void GetStream(string remoteFileName, Stream stream, FTPFileTransferType type)
 		{
-			LockTcpClient();
-			TcpListener aListner = null;
-			TcpClient aClient = null;
-			NetworkStream aNetworkStream = null;
-			var aTempMessageList = new ArrayList();
-			int aReturnValue = 0;
-			string aReturnValueMessage = "";
+			TcpListener listener = null;
+			TcpClient client = null;
+			NetworkStream networkStream = null;
+			List<string> tempMessageList;
+			int returnValue = 0;
+			string returnValueMessage = "";
 
-			SetTransferType(pType);
-
-			if (mMode == FTPMode.Active)
+			lock (_tcpClient)
 			{
-				aListner = CreateDataListner();
-				aListner.Start();
-			}
-			else
-			{
-				aClient = CreateDataClient();
-			}
+				SetTransferType(type);
 
-			aTempMessageList = new ArrayList();
-			aTempMessageList = SendCommand("RETR " + pRemoteFileName);
-			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-			if (!(aReturnValue == 150 || aReturnValue == 125))
-			{
-				throw new Exception((string) aTempMessageList[0]);
-			}
-
-			if (mMode == FTPMode.Active)
-			{
-				aClient = aListner.AcceptTcpClient();
-			}
-
-			aNetworkStream = aClient.GetStream();
-
-			var aBuffer = new Byte[BLOCK_SIZE];
-			int iBytes = 0;
-
-			bool bRead = true;
-			while (bRead)
-			{
-				iBytes = aNetworkStream.Read(aBuffer, 0, aBuffer.Length);
-				pStream.Write(aBuffer, 0, iBytes);
-				if (iBytes == 0)
+				if (_mode == FTPMode.Active)
 				{
-					bRead = false;
+					listener = CreateDataListener();
+					listener.Start();
+				}
+				else
+				{
+					client = CreateDataClient();
+				}
+
+				tempMessageList = SendCommand("RETR " + remoteFileName);
+				returnValue = GetMessageReturnValue(tempMessageList[0]);
+				if (!(returnValue == 150 || returnValue == 125))
+				{
+					throw new Exception(tempMessageList[0]);
+				}
+
+				if (_mode == FTPMode.Active)
+				{
+					client = listener.AcceptTcpClient();
+				}
+
+				networkStream = client.GetStream();
+
+				var buffer = new byte[BlockSize];
+				int bytesRead = 0;
+
+				bool bRead = true;
+				while (bRead)
+				{
+					bytesRead = networkStream.Read(buffer, 0, buffer.Length);
+					stream.Write(buffer, 0, bytesRead);
+
+					if (bytesRead == 0)
+					{
+						bRead = false;
+					}
+				}
+
+				stream.Close();
+
+				networkStream.Close();
+				client.Close();
+
+				if (_mode == FTPMode.Active)
+				{
+					listener.Stop();
+				}
+
+				if (tempMessageList.Count == 1)
+				{
+					tempMessageList = Read();
+					returnValue = GetMessageReturnValue(tempMessageList[0]);
+					returnValueMessage = tempMessageList[0];
+				}
+				else
+				{
+					returnValue = GetMessageReturnValue(tempMessageList[1]);
+					returnValueMessage = tempMessageList[1];
+				}
+
+				if (!(returnValue == 226))
+				{
+					throw new Exception(returnValueMessage);
 				}
 			}
-
-			pStream.Close();
-
-			aNetworkStream.Close();
-			aClient.Close();
-
-			if (mMode == FTPMode.Active)
-			{
-				aListner.Stop();
-			}
-
-			if (aTempMessageList.Count == 1)
-			{
-				aTempMessageList = Read();
-				aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-				aReturnValueMessage = (string) aTempMessageList[0];
-			}
-			else
-			{
-				aReturnValue = GetMessageReturnValue((string) aTempMessageList[1]);
-				aReturnValueMessage = (string) aTempMessageList[1];
-			}
-
-			if (!(aReturnValue == 226))
-			{
-				throw new Exception(aReturnValueMessage);
-			}
-
-			UnlockTcpClient();
 		}
 
 		/// <summary>
 		/// Retrieves a remote file
 		/// </summary>
-		/// <param name="pRemoteFileName">The remote file name</param>
-		/// <param name="pType">The transfer type</param>
-		public virtual void GetFile(string pRemoteFileName, FTPFileTransferType pType)
+		/// <param name="remoteFileName">The remote file name</param>
+		/// <param name="type">The transfer type</param>
+		public virtual void GetFile(string remoteFileName, FTPFileTransferType type)
 		{
-			GetFile(pRemoteFileName, Path.GetFileName(pRemoteFileName), pType);
+			GetFile(remoteFileName, Path.GetFileName(remoteFileName), type);
 		}
 
 		/// <summary>
 		/// Retrieves a remote file
 		/// </summary>
-		/// <param name="pRemoteFileName">The remote file name</param>
-		/// <param name="pLocalFileName">The local file name</param>
-		/// <param name="pType">The transfer type</param>
-		public virtual void GetFile(string pRemoteFileName, string pLocalFileName, FTPFileTransferType pType)
+		/// <param name="remoteFileName">The remote file name</param>
+		/// <param name="localFileName">The local file name</param>
+		/// <param name="type">The transfer type</param>
+		public virtual void GetFile(string remoteFileName, string localFileName, FTPFileTransferType type)
 		{
-			GetStream(pRemoteFileName, new FileStream(pLocalFileName, FileMode.Create), pType);
+			GetStream(remoteFileName, new FileStream(localFileName, FileMode.Create), type);
 		}
 
 		/// <summary>
 		/// Deletes a remote file
 		/// </summary>
-		/// <param name="pRemoteFileName">The remote filename</param>
-		public virtual void DeleteFile(String pRemoteFileName)
+		/// <param name="remoteFileName">The remote filename</param>
+		public virtual void DeleteFile(string remoteFileName)
 		{
-			lock (mTCPClient)
+			lock (_tcpClient)
 			{
-				var aTempMessageList = new ArrayList();
-				int aReturnValue = 0;
-				aTempMessageList = SendCommand("DELE " + pRemoteFileName);
-				aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-				if (aReturnValue != 250)
+				var tempMessageList = new List<string>();
+				int returnValue = 0;
+
+				tempMessageList = SendCommand("DELE " + remoteFileName);
+				returnValue = GetMessageReturnValue(tempMessageList[0]);
+				if (returnValue != 250)
 				{
-					throw new Exception((string) aTempMessageList[0]);
+					throw new Exception(tempMessageList[0]);
 				}
 			}
 		}
@@ -524,25 +526,26 @@ namespace DOL.FTP
 		/// <summary>
 		/// Sets the remote directory
 		/// </summary>
-		/// <param name="pRemotePath">The remote path to set</param>
-		public virtual void SetCurrentDirectory(String pRemotePath)
+		/// <param name="remotePath">The remote path to set</param>
+		public virtual void SetCurrentDirectory(string remotePath)
 		{
-			LockTcpClient();
+			var tempMessageList = new List<string>();
+			int returnValue = 0;
 
-			var aTempMessageList = new ArrayList();
-			int aReturnValue = 0;
-			aTempMessageList = SendCommand("CWD " + pRemotePath);
-			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-			if (aReturnValue != 250)
+			lock (_tcpClient)
 			{
-				throw new Exception((string) aTempMessageList[0]);
+				tempMessageList = SendCommand("CWD " + remotePath);
+				returnValue = GetMessageReturnValue(tempMessageList[0]);
+				if (returnValue != 250)
+				{
+					throw new Exception(tempMessageList[0]);
+				}
 			}
-			UnlockTcpClient();
 		}
 
-		private void SetTransferType(FTPFileTransferType pType)
+		private void SetTransferType(FTPFileTransferType type)
 		{
-			switch (pType)
+			switch (type)
 			{
 				case FTPFileTransferType.ASCII:
 					SetMode("TYPE A");
@@ -555,168 +558,168 @@ namespace DOL.FTP
 			}
 		}
 
-		private void SetMode(string pMode)
+		private void SetMode(string mode)
 		{
-			LockTcpClient();
+			var tempMessageList = new List<string>();
+			int returnValue = 0;
 
-			var aTempMessageList = new ArrayList();
-			int aReturnValue = 0;
-			aTempMessageList = SendCommand(pMode);
-			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-			if (aReturnValue != 200)
+			lock (_tcpClient)
 			{
-				throw new Exception((string) aTempMessageList[0]);
+				tempMessageList = SendCommand(mode);
+				returnValue = GetMessageReturnValue(tempMessageList[0]);
+				if (returnValue != 200)
+				{
+					throw new Exception(tempMessageList[0]);
+				}
 			}
-			UnlockTcpClient();
 		}
 
-		private TcpListener CreateDataListner()
+		private TcpListener CreateDataListener()
 		{
-			int aPort = GetPortNumber();
-			SetDataPort(aPort);
+			int port = GetPortNumber();
+			SetDataPort(port);
 			IPAddress ipAddress = Dns.GetHostEntry("localhost").AddressList[0];
 
-			var aListner = new TcpListener(ipAddress, aPort);
-			return aListner;
+			return new TcpListener(ipAddress, port);
 		}
 
 		private TcpClient CreateDataClient()
 		{
-			int aPort = GetPortNumber();
+			int port = GetPortNumber();
 
 			var ep = new
-				IPEndPoint(GetLocalAddressList()[0], aPort);
+				IPEndPoint(GetLocalAddressList()[0], port);
 
-			var aClient = new TcpClient();
+			var client = new TcpClient();
 
-			aClient.Connect(ep);
+			client.Connect(ep);
 
-			return aClient;
+			return client;
 		}
 
-		private void SetDataPort(int pPortNumber)
+		private void SetDataPort(int portNumber)
 		{
-			LockTcpClient();
+			var tempMessageList = new List<string>();
+			int returnValue = 0;
+			int iPortHigh = portNumber >> 8;
+			int iPortLow = portNumber & 255;
 
-			var aTempMessageList = new ArrayList();
-			int aReturnValue = 0;
-			int iPortHigh = pPortNumber >> 8;
-			int iPortLow = pPortNumber & 255;
-
-			aTempMessageList = SendCommand("PORT "
-			                               + GetLocalAddressList()[0].ToString().Replace(".", ",")
-			                               + "," + iPortHigh + "," + iPortLow);
-
-			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-			if (aReturnValue != 200)
+			lock (_tcpClient)
 			{
-				throw new Exception((string) aTempMessageList[0]);
+				tempMessageList = SendCommand("PORT "
+				                              + GetLocalAddressList()[0].ToString().Replace(".", ",")
+				                              + "," + iPortHigh + "," + iPortLow);
+
+				returnValue = GetMessageReturnValue(tempMessageList[0]);
+				if (returnValue != 200)
+				{
+					throw new Exception(tempMessageList[0]);
+				}
 			}
-			UnlockTcpClient();
 		}
 
 		/// <summary>
 		/// Creates a remote directory
 		/// </summary>
-		/// <param name="pDirectoryName">The remote directory to create</param>
-		public virtual void MakeDir(string pDirectoryName)
+		/// <param name="directoryName">The remote directory to create</param>
+		public virtual void CreateDirectory(string directoryName)
 		{
-			LockTcpClient();
+			var tempMessageList = new List<string>();
+			int returnValue = 0;
 
-			var aTempMessageList = new ArrayList();
-			int aReturnValue = 0;
-
-			aTempMessageList = SendCommand("MKD " + pDirectoryName);
-			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-			if (aReturnValue != 257)
+			lock (_tcpClient)
 			{
-				throw new Exception((string) aTempMessageList[0]);
+				tempMessageList = SendCommand("MKD " + directoryName);
+				returnValue = GetMessageReturnValue(tempMessageList[0]);
+				if (returnValue != 257)
+				{
+					throw new Exception(tempMessageList[0]);
+				}
 			}
-
-			UnlockTcpClient();
 		}
 
 		/// <summary>
 		/// Removes a remote directory
 		/// </summary>
-		/// <param name="pDirectoryName">The remote directory to remove</param>
-		public virtual void RemoveDir(string pDirectoryName)
+		/// <param name="directoryName">The remote directory to remove</param>
+		public virtual void RemoveDirectory(string directoryName)
 		{
-			LockTcpClient();
+			var tempMessageList = new List<string>();
+			int returnValue = 0;
 
-			var aTempMessageList = new ArrayList();
-			int aReturnValue = 0;
-
-			aTempMessageList = SendCommand("RMD " + pDirectoryName);
-			aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-			if (aReturnValue != 250)
+			lock (_tcpClient)
 			{
-				throw new Exception((string) aTempMessageList[0]);
+				tempMessageList = SendCommand("RMD " + directoryName);
+				returnValue = GetMessageReturnValue(tempMessageList[0]);
+				if (returnValue != 250)
+				{
+					throw new Exception(tempMessageList[0]);
+				}
 			}
-
-			UnlockTcpClient();
 		}
 
 		/// <summary>
 		/// Sends a specific command to the remote server
 		/// </summary>
-		/// <param name="pCommand">The command name</param>
+		/// <param name="command">The command name</param>
 		/// <returns>An array containing the response</returns>
-		public ArrayList SendCommand(String pCommand)
+		private List<string> SendCommand(string command)
 		{
-			while (mActiveConnectionsCount != 0)
+			while (_activeConnectionsCount != 0)
 			{
 				Thread.Sleep(100);
 			}
 
-			mActiveConnectionsCount++;
+			_activeConnectionsCount++;
 
-			Byte[] cmdBytes = Encoding.ASCII.GetBytes((pCommand + "\r\n").ToCharArray());
-			NetworkStream aStream = mTCPClient.GetStream();
+			byte[] cmdBytes = Encoding.ASCII.GetBytes((command + "\r\n").ToCharArray());
+			NetworkStream aStream = _tcpClient.GetStream();
 			aStream.Write(cmdBytes, 0, cmdBytes.Length);
 
-			mActiveConnectionsCount--;
+			_activeConnectionsCount--;
 
 			return Read();
 		}
 
-		private ArrayList Read()
+		private List<string> Read()
 		{
-			NetworkStream aStream = mTCPClient.GetStream();
-			var aMessageList = new ArrayList();
-			ArrayList aTempMessage = ReadLines(aStream);
-			if (aTempMessage.Count > 0)
+			NetworkStream stream = _tcpClient.GetStream();
+
+			var messageList = new List<string>();
+
+			List<string> tempMessage = ReadLines(stream);
+			if (tempMessage.Count > 0)
 			{
-				while (((string) aTempMessage[aTempMessage.Count - 1]).Substring(3, 1) == "-")
+				while ((tempMessage[tempMessage.Count - 1]).Substring(3, 1) == "-")
 				{
-					aMessageList.AddRange(aTempMessage);
-					aTempMessage = ReadLines(aStream);
+					messageList.AddRange(tempMessage);
+					tempMessage = ReadLines(stream);
 				}
-				aMessageList.AddRange(aTempMessage);
+				messageList.AddRange(tempMessage);
 			}
 
-			AddMessagesToMessageList(aMessageList);
+			AddMessagesToMessageList(messageList);
 
-			return aMessageList;
+			return messageList;
 		}
 
-		private ArrayList ReadLines(NetworkStream pStream)
+		private static List<string> ReadLines(NetworkStream stream)
 		{
-			var aMessageList = new ArrayList();
+			var messageList = new List<string>();
 			char[] seperator = {'\n'};
 			char[] toRemove = {'\r'};
-			var aBuffer = new Byte[BLOCK_SIZE];
+			var buffer = new byte[BlockSize];
 			int bytes = 0;
 			string tmpMes = "";
-			bool bRead = true;
+			bool read = true;
 
-			while (bRead)
+			while (read)
 			{
-				bytes = pStream.Read(aBuffer, 0, aBuffer.Length);
-				tmpMes += Encoding.ASCII.GetString(aBuffer, 0, bytes);
-				if (bytes < aBuffer.Length)
+				bytes = stream.Read(buffer, 0, buffer.Length);
+				tmpMes += Encoding.ASCII.GetString(buffer, 0, bytes);
+				if (bytes < buffer.Length)
 				{
-					bRead = false;
+					read = false;
 				}
 			}
 
@@ -725,80 +728,75 @@ namespace DOL.FTP
 			{
 				if (mess[i].Length > 0)
 				{
-					aMessageList.Add(mess[i].Trim(toRemove));
+					messageList.Add(mess[i].Trim(toRemove));
 				}
 			}
 
-			return aMessageList;
+			return messageList;
 		}
 
-		private int GetMessageReturnValue(string pMessage)
+		private static int GetMessageReturnValue(string message)
 		{
-			return int.Parse(pMessage.Substring(0, 3));
+			return int.Parse(message.Substring(0, 3));
 		}
 
 		private int GetPortNumber()
 		{
-			LockTcpClient();
-			int iPort = 0;
-			switch (mMode)
+			int port = 0;
+
+			lock (_tcpClient)
 			{
-				case FTPMode.Active:
-					var rnd = new Random((int) DateTime.Now.Ticks);
-					iPort = DATA_PORT_RANGE_FROM + rnd.Next(DATA_PORT_RANGE_TO - DATA_PORT_RANGE_FROM);
-					break;
-				case FTPMode.Passive:
-					var aTempMessageList = new ArrayList();
-					int aReturnValue = 0;
-					aTempMessageList = SendCommand("PASV");
-					aReturnValue = GetMessageReturnValue((string) aTempMessageList[0]);
-					if (aReturnValue != 227)
-					{
-						if (((string) aTempMessageList[0]).Length > 4)
+				switch (_mode)
+				{
+					case FTPMode.Active:
+						var rnd = new Random((int) DateTime.Now.Ticks);
+						port = DataPortRangeFrom + rnd.Next(DataPortRangeTo - DataPortRangeFrom);
+						break;
+					case FTPMode.Passive:
+						var tempMessageList = new List<string>();
+						int returnValue = 0;
+
+						tempMessageList = SendCommand("PASV");
+						returnValue = GetMessageReturnValue(tempMessageList[0]);
+						if (returnValue != 227)
 						{
-							throw new Exception((string) aTempMessageList[0]);
+							if ((tempMessageList[0]).Length > 4)
+							{
+								throw new Exception(tempMessageList[0]);
+							}
+							else
+							{
+								throw new Exception(tempMessageList[0] + " Passive Mode not implemented");
+							}
 						}
-						else
-						{
-							throw new Exception((string) aTempMessageList[0] + " Passive Mode not implemented");
-						}
-					}
-					var aMessage = (string) aTempMessageList[0];
-					int iIndex1 = aMessage.IndexOf(",", 0);
-					int iIndex2 = aMessage.IndexOf(",", iIndex1 + 1);
-					int iIndex3 = aMessage.IndexOf(",", iIndex2 + 1);
-					int iIndex4 = aMessage.IndexOf(",", iIndex3 + 1);
-					int iIndex5 = aMessage.IndexOf(",", iIndex4 + 1);
-					int iIndex6 = aMessage.IndexOf(")", iIndex5 + 1);
-					iPort = 256*int.Parse(aMessage.Substring(iIndex4 + 1, iIndex5 - iIndex4 - 1)) +
-					        int.Parse(aMessage.Substring(iIndex5 + 1, iIndex6 - iIndex5 - 1));
-					break;
+
+						string message = tempMessageList[0];
+						int index1 = message.IndexOf(",", 0);
+						int index2 = message.IndexOf(",", index1 + 1);
+						int index3 = message.IndexOf(",", index2 + 1);
+						int index4 = message.IndexOf(",", index3 + 1);
+						int index5 = message.IndexOf(",", index4 + 1);
+						int index6 = message.IndexOf(")", index5 + 1);
+						port = 256*int.Parse(message.Substring(index4 + 1, index5 - index4 - 1)) +
+						       int.Parse(message.Substring(index5 + 1, index6 - index5 - 1));
+						break;
+				}
 			}
-			UnlockTcpClient();
-			return iPort;
+
+			return port;
 		}
 
-		private void AddMessagesToMessageList(ArrayList mMessages)
+		private void AddMessagesToMessageList(List<string> messages)
 		{
-			if (mLogMessages)
+			if (_logMessages)
 			{
-				mMessageList.AddRange(mMessages);
+				_messageList.AddRange(messages);
 			}
 		}
 
-		private IPAddress[] GetLocalAddressList()
+		private static IPAddress[] GetLocalAddressList()
 		{
 			return Dns.GetHostEntry(Dns.GetHostName()).AddressList;
-		}
-
-		private void LockTcpClient()
-		{
-			Monitor.Enter(mTCPClient);
-		}
-
-		private void UnlockTcpClient()
-		{
-			Monitor.Exit(mTCPClient);
 		}
 	}
 }

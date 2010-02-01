@@ -69,8 +69,8 @@ namespace DOL.GS.ServerRules
 			}
 
 			// Ban IP Address or range (example: 5.5.5.%)
-			string accip = GameServer.Database.Escape(client.TcpEndpointAddress);
-			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND '" + GameServer.Database.Escape(accip) + "' LIKE Ip)");
+			string accip = client.TcpEndpointAddress;
+			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip LIKE '" + GameServer.Database.Escape(accip) + "'");
 			if (objs.Length > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
@@ -160,7 +160,7 @@ namespace DOL.GS.ServerRules
 				}
 			}
 
-			if (!ServerProperties.Properties.ALLOW_DUAL_LOGINS)
+			if (!Properties.ALLOW_DUAL_LOGINS)
 			{
 			 	if ((account == null || account.PrivLevel == 1) && client.TcpEndpointAddress != "not connected")
 				{

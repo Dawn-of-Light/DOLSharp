@@ -120,7 +120,7 @@ namespace DOL.Network
 			try
 			{
 				_listen = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-				_listen.Bind(new IPEndPoint(_config.Ip, _config.Port));
+				_listen.Bind(new IPEndPoint(_config.IP, _config.Port));
 			}
 			catch (Exception e)
 			{
@@ -157,7 +157,7 @@ namespace DOL.Network
 							Log.DebugFormat("({0}) {1} - {2} -> {3}:{4}({5})", info.Enabled ? "(Enabled)" : "(Disabled)", info.Description, info.ExternalPort, info.InternalHostName, info.InternalPort, info.Protocol);
 						}
 					}
-					IPAddress localAddr = Configuration.Ip;
+					IPAddress localAddr = Configuration.IP;
 					string address = "";
 					if(localAddr.ToString() == IPAddress.Any.ToString())
 					{
@@ -166,7 +166,7 @@ namespace DOL.Network
 					}
 					else
 					{
-						address = Configuration.Ip.ToString();
+						address = Configuration.IP.ToString();
 					}
 
 					PortMappingInfo pmiUdp = new PortMappingInfo("DOL UDP", "UDP", address, Configuration.UDPPort, Configuration.UDPPort, true);
@@ -178,9 +178,9 @@ namespace DOL.Network
 					{
 						try
 						{
-							Configuration.RegionIp = nat.PortMappings[0].ExternalIPAddress;
+							Configuration.RegionIP = nat.PortMappings[0].ExternalIPAddress;
 							if(Log.IsDebugEnabled)
-								Log.Debug("Found the RegionIP: " + Configuration.RegionIp);
+								Log.Debug("Found the RegionIP: " + Configuration.RegionIP);
 						}
 						catch(Exception)
 						{

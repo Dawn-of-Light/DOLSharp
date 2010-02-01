@@ -48,12 +48,12 @@ namespace DOL.MPK
 		/// <summary>
 		/// CRC32 of the deflated directory
 		/// </summary>
-		private Crc32 m_crc = new Crc32();
+		private readonly Crc32 m_crc = new Crc32();
 
 		/// <summary>
 		/// Holds all of the files in the MPK
 		/// </summary>
-		private HybridDictionary m_files = new HybridDictionary();
+		private readonly HybridDictionary m_files = new HybridDictionary();
 
 		/// <summary>
 		/// Name of the archive
@@ -63,17 +63,17 @@ namespace DOL.MPK
 		/// <summary>
 		/// Number of files in the directory
 		/// </summary>
-		private int m_numFiles = 0;
+		private int m_numFiles;
 
 		/// <summary>
 		/// Compressed size of the directory section
 		/// </summary>
-		private int m_sizeDir = 0;
+		private int m_sizeDir;
 
 		/// <summary>
 		/// Compressed size of the name section
 		/// </summary>
-		private int m_sizeName = 0;
+		private int m_sizeName;
 
 		/// <summary>
 		/// Creates a new MPK file
@@ -362,7 +362,7 @@ namespace DOL.MPK
 				buf[i] ^= i;
 			}
 
-			m_crc.Value = (long) ((buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3]);
+			m_crc.Value = ((buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3]);
 			m_sizeDir = ((buf[4] << 24) | (buf[5] << 16) | (buf[6] << 8) | buf[7]);
 			m_sizeName = ((buf[8] << 24) | (buf[9] << 16) | (buf[10] << 8) | buf[11]);
 			m_numFiles = ((buf[12] << 24) | (buf[13] << 16) | (buf[14] << 8) | buf[15]);

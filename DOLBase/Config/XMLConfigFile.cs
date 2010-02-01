@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -24,31 +24,24 @@ using System.Xml;
 namespace DOL.Config
 {
 	/// <summary>
-	/// Reads and parses an XML file
+	/// Reads and writes an XML configuration file.
 	/// </summary>
 	public class XMLConfigFile : ConfigElement
 	{
 		/// <summary>
-		/// Constructs a new XML config file
+		/// Constructs a new XML config file.
 		/// </summary>
-		public XMLConfigFile() : base(null)
+		public XMLConfigFile()
+			: base(null)
 		{
 		}
 
 		/// <summary>
-		/// Constructs a new XML config file element
-		/// </summary>
-		/// <param name="parent">The parent of the XML config file element</param>
-		protected XMLConfigFile(ConfigElement parent) : base(parent)
-		{
-		}
-
-		/// <summary>
-		/// Test wether the given string contains invalid xml characters 
+		/// Checks whether or not the given string has invalid XML element name characters.
 		/// </summary>
 		/// <param name="name">The name to test</param>
-		/// <returns>true if invalid characters are contained, false if the element is ok</returns>
-		protected bool IsBadXMLElementName(string name)
+		/// <returns>true if invalid characters are contained, false if the string is ok</returns>
+		private static bool IsBadXMLElementName(string name)
 		{
 			if (name == null)
 				return false;
@@ -69,12 +62,12 @@ namespace DOL.Config
 		}
 
 		/// <summary>
-		/// Saves a single config element in an xml stream
+		/// Saves a single configuration element to an XML stream.
 		/// </summary>
-		/// <param name="writer">the xml text writer</param>
+		/// <param name="writer">the xml writer to save to</param>
 		/// <param name="name">the name for this element</param>
 		/// <param name="element">the element to save</param>
-		protected void SaveElement(XmlTextWriter writer, string name, ConfigElement element)
+		private static void SaveElement(XmlWriter writer, string name, ConfigElement element)
 		{
 			bool badName = IsBadXMLElementName(name);
 
@@ -93,10 +86,11 @@ namespace DOL.Config
 					writer.WriteStartElement(name);
 				}
 
-				foreach (DictionaryEntry entry in element.Children)
+				foreach (var entry in element.Children)
 				{
-					SaveElement(writer, (string) entry.Key, (ConfigElement) entry.Value);
+					SaveElement(writer, entry.Key, entry.Value);
 				}
+
 				writer.WriteEndElement();
 			}
 			else
@@ -124,17 +118,27 @@ namespace DOL.Config
 		/// <param name="configFile">The filename</param>
 		public void Save(FileInfo configFile)
 		{
+			if (configFile == null)
+				throw new ArgumentNullException("configFile");
+
+			var writer = new XmlTextWriter(configFile.FullName, Encoding.UTF8)
+			             	{
+			             		Formatting = Formatting.Indented
+			             	};
+
 			if (configFile.Exists)
 				configFile.Delete();
 
-			var writer = new XmlTextWriter(configFile.FullName, Encoding.UTF8);
-			// Indent the XML document for readability
-			writer.Formatting = Formatting.Indented;
-
-			writer.WriteStartDocument();
-			SaveElement(writer, null, this);
-			writer.WriteEndDocument();
-			writer.Close();
+			try
+			{
+				writer.WriteStartDocument();
+				SaveElement(writer, null, this);
+				writer.WriteEndDocument();
+			}
+			finally
+			{
+				writer.Close();
+			}
 		}
 
 		/// <summary>
@@ -144,48 +148,56 @@ namespace DOL.Config
 		/// <returns>The parsed config</returns>
 		public static XMLConfigFile ParseXMLFile(FileInfo configFile)
 		{
-			var root = new XMLConfigFile(null);
+			if (configFile == null)
+				throw new ArgumentNullException("configFile");
+
+			var root = new XMLConfigFile();
+
 			if (!configFile.Exists)
 				return root;
 
 			ConfigElement current = root;
-			var reader = new XmlTextReader(configFile.OpenRead());
-
-			while (reader.Read())
+			using (var reader = new XmlTextReader(configFile.OpenRead()))
 			{
-				if (reader.NodeType == XmlNodeType.Element)
+				while (reader.Read())
 				{
-					if (reader.Name == "root")
-						continue;
-
-					if (reader.Name == "param")
+					if (reader.NodeType == XmlNodeType.Element)
 					{
-						string name = reader.GetAttribute("name");
-						if (name != null && name != "root")
+						if (reader.Name == "root")
+							continue;
+
+						if (reader.Name == "param")
+						{
+							string name = reader.GetAttribute("name");
+
+							if (name != null && name != "root")
+							{
+								var newElement = new ConfigElement(current);
+								current[name] = newElement;
+								current = newElement;
+							}
+						}
+						else
 						{
 							var newElement = new ConfigElement(current);
-							current[name] = newElement;
+							current[reader.Name] = newElement;
 							current = newElement;
 						}
 					}
-					else
+					else if (reader.NodeType == XmlNodeType.Text)
 					{
-						var newElement = new ConfigElement(current);
-						current[reader.Name] = newElement;
-						current = newElement;
+						current.Set(reader.Value);
+					}
+					else if (reader.NodeType == XmlNodeType.EndElement)
+					{
+						if (reader.Name != "root")
+						{
+							current = current.Parent;
+						}
 					}
 				}
-				else if (reader.NodeType == XmlNodeType.Text)
-				{
-					current.Set(reader.Value);
-				}
-				else if (reader.NodeType == XmlNodeType.EndElement)
-				{
-					if (reader.Name != "root")
-						current = current.Parent;
-				}
 			}
-			reader.Close();
+
 			return root;
 		}
 	}
