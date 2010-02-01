@@ -391,8 +391,9 @@ namespace DOL.GS
 			var mobsByRegionId = new Dictionary<ushort, List<Mob>>(512);
 			foreach (Mob mob in mobList)
 			{
-				var list = mobsByRegionId[mob.Region];
-				if (list == null)
+				List<Mob> list;
+
+				if(!mobsByRegionId.TryGetValue(mob.Region, out list))
 				{
 					list = new List<Mob>(1024);
 					mobsByRegionId.Add(mob.Region, list);
@@ -418,8 +419,9 @@ namespace DOL.GS
 				data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
 				data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
 
-				var mobs = mobsByRegionId[data.Id];
-				if (mobs == null)
+				List<Mob> mobs;
+
+				if (!mobsByRegionId.TryGetValue(data.Id, out mobs))
 				{
 					data.Mobs = new Mob[0];
 				}
