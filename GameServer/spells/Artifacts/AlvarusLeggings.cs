@@ -34,33 +34,34 @@ namespace DOL.GS.Spells
     	GameSpellEffect m_effect = null;
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-        	if(target is GamePlayer)
-        		if(!((GamePlayer)target).IsSwimming)
-        		{
-        			MessageToCaster("You must be under water to use this ability.", eChatType.CT_SpellResisted);
-        			return;
-        		}
-        	
-        	base.ApplyEffectOnTarget(target, effectiveness);
+            if (target is GamePlayer)
+                if (!((GamePlayer)target).IsUnderwater)
+                {
+                    MessageToCaster("You must be under water to use this ability.", eChatType.CT_SpellResisted);
+                    return;
+                }
+
+            base.ApplyEffectOnTarget(target, effectiveness);
         }
         public override void OnEffectStart(GameSpellEffect effect)
-        {   
-        	if(effect.Owner is GamePlayer)
-        		GameEventMgr.AddHandler((GamePlayer)effect.Owner, GamePlayerEvent.SwimmingStatus, new DOLEventHandler(SwimmingStatusChange));
-        	m_effect = effect;
-        	base.OnEffectStart(effect);
+        {
+            m_effect = effect;
+            base.OnEffectStart(effect);
+            GamePlayer player = effect.Owner as GamePlayer;
+            if (player == null) return;
+            GameEventMgr.AddHandler((GamePlayer)effect.Owner, GamePlayerEvent.SwimmingStatus, new DOLEventHandler(SwimmingStatusChange));
+
         }
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-        	if(effect.Owner is GamePlayer)
-        		GameEventMgr.RemoveHandler((GamePlayer)effect.Owner, GamePlayerEvent.SwimmingStatus, new DOLEventHandler(SwimmingStatusChange));            
+            GamePlayer player = effect.Owner as GamePlayer;
+            if (player == null) return base.OnEffectExpires(effect, noMessages);
+            GameEventMgr.RemoveHandler((GamePlayer)effect.Owner, GamePlayerEvent.SwimmingStatus, new DOLEventHandler(SwimmingStatusChange));  
             return base.OnEffectExpires(effect, noMessages);
         }        
         private void SwimmingStatusChange(DOLEvent e, object sender, EventArgs args)
         {
-        	GamePlayer player = sender as GamePlayer;
-        	if(player!=null)
-        		if(!player.IsSwimming) OnEffectExpires(m_effect, true);
+            OnEffectExpires(m_effect, true);
         }        
         public AlvarusMorph(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
