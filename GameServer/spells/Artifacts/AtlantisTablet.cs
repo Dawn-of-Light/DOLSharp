@@ -24,7 +24,7 @@ namespace DOL.GS.Spells
 			if(effect.Owner is GamePlayer)
 			{
 				GamePlayer player=effect.Owner as GamePlayer; 				
-				if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer) player.Model=(ushort)player.Client.Account.Characters[player.Client.ActiveCharIndex].CreationModel;
+				if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer) player.Model = player.CreationModel;
 				player.Out.SendUpdatePlayer();
 			}	
 			return base.OnEffectExpires(effect,noMessages);
