@@ -19,7 +19,7 @@
 //made by DeMAN
 using System;
 using System.Reflection;
-
+using System.Collections;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
@@ -95,8 +95,8 @@ namespace DOL.GS.Spells
             if (Spell.Damage > 0)
                 absorbPercent = Spell.Damage;
 
-            if (absorbPercent > 99)
-                absorbPercent = 99;
+            if (absorbPercent > 100)
+                absorbPercent = 100;
             //This only absorbs style damage.
             int damageAbsorbed = (int)(0.01 * absorbPercent * (ad.StyleDamage));
             
@@ -105,7 +105,7 @@ namespace DOL.GS.Spells
             OnDamageAbsorbed(ad, damageAbsorbed);
 
             //TODO correct messages
-            MessageToLiving(ad.Target, string.Format("Your melee buffer absorbs {0} damage!", damageAbsorbed), eChatType.CT_Spell);
+            MessageToLiving(ad.Target, string.Format("Your style absorbtion absorbs {0} damage!", damageAbsorbed), eChatType.CT_Spell);
             MessageToLiving(ad.Attacker, string.Format("A barrier absorbs {0} damage of your attack!", damageAbsorbed), eChatType.CT_Spell);
 
         }
@@ -145,7 +145,72 @@ namespace DOL.GS.Spells
             }
             return 0;
         }
+        public override IList DelveInfo
+        {
+            get
+            {
+                ArrayList list = new ArrayList();
 
+                //Name
+                list.Add("Name: " + Spell.Name);
+                list.Add("");
+
+                //Description
+                list.Add("Description: " + Spell.Description);
+                list.Add("");
+
+                //Target
+                list.Add("Target: " + Spell.Target);
+
+                //SpellType
+                list.Add("Type: Style Absorption");
+
+                //Damage
+                if (Spell.Damage != 0)
+                    list.Add("Absorption: " + Spell.Damage + "%");
+                if (Spell.Damage > 100)
+                    list.Add("Absorption: 100%");
+                if (Spell.Damage == 0)
+                    list.Add("Absorption: 50%");
+
+                //Value
+                if (Spell.Value != 0)
+                    list.Add("Value: " + Spell.Value);
+
+                //Cast
+                if (Spell.CastTime < 0.1)
+                    list.Add("Casting time: Instant");
+                else if (Spell.CastTime > 0)
+                    list.Add("Casting time: " + (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
+
+                //Duration
+                if (Spell.Duration >= ushort.MaxValue * 1000)
+                    list.Add("Duration: Permanent.");
+                else if (Spell.Duration > 60000)
+                    list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration / 60000, (Spell.Duration % 60000 / 1000).ToString("00")));
+                else if (Spell.Duration != 0)
+
+                    //Range
+                    if (Spell.Range != 0)
+                        list.Add("Range: " + Spell.Range);
+
+                //Radius
+                if (Spell.Radius != 0)
+                    list.Add("Radius: " + Spell.Radius);
+
+                //Cost
+                list.Add("Power cost: " + Spell.Power.ToString("0;0'%'"));
+
+                //Frequency
+                if (Spell.Frequency != 0)
+                    list.Add("Frequency: " + (Spell.Frequency * 0.001).ToString("0.0"));
+
+                //DamageType
+                if (Spell.DamageType != 0)
+                    list.Add("Damage Type: " + Spell.DamageType);
+                return list;
+            }
+        }
         public StyleDmgAbsSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 }
