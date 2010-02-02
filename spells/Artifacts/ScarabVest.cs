@@ -48,7 +48,7 @@ namespace DOL.GS.Spells
             if(effect.Owner is GamePlayer)
             {
             	GamePlayer player = effect.Owner as GamePlayer;
- 				player.Model = (ushort)player.Client.Account.Characters[player.Client.ActiveCharIndex].CreationModel;     
+ 				player.Model = player.CreationModel;     
             }                       
             return base.OnEffectExpires(effect, noMessages);
         }
