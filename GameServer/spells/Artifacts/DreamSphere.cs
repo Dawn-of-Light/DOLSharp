@@ -28,8 +28,50 @@ namespace DOL.GS.Spells
     /// Dream Sphere self morph spell handler
     /// The DoT proc is a subspell, affects only caster
     /// </summary>
+    
+    //the self dream-morph doesnt break on damage/attacked by enemy only grp-target 1 does
     [SpellHandlerAttribute("DreamMorph")]
-    public class DreamMorph : Morph
+    public class DreamMorph : OffensiveProcSpellHandler
+	{   	
+		public override void OnEffectStart(GameSpellEffect effect)
+		{
+			base.OnEffectStart(effect);
+			if(effect.Owner is GamePlayer)
+			{
+				GamePlayer player=effect.Owner as GamePlayer;
+				if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer) player.Model = (ushort)Spell.LifeDrainReturn;
+				player.Out.SendUpdatePlayer();
+			}
+		}
+
+		public override int OnEffectExpires(GameSpellEffect effect,bool noMessages)
+		{
+			if(effect.Owner is GamePlayer)
+			{
+				GamePlayer player=effect.Owner as GamePlayer; 				
+				if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer) player.Model = player.CreationModel;
+				player.Out.SendUpdatePlayer();
+			}	
+			return base.OnEffectExpires(effect,noMessages);
+		}
+
+        public DreamMorph(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+    
+    /// <summary>
+    /// Dream Sphere group morph spell handler
+    /// The DoT proc is a subspell, affects only caster
+    /// </summary> 
+
+    //http://support.darkageofcamelot.com/kb/article.php?id=745
+    //- The Panther Form level 10 ability of the Dreamsphere artifact has been changed.
+    //When a character in panther form is attacked, they revert to normal form and lose all associated bonuses. 
+    //This change is specific to the Dreamsphere only and does not affect other shapechange forms
+
+    //http://www.daoc-toa.net/img/dreamPrey.jpg
+    //http://www.daoc-toa.net/img/dreamCat.jpg
+    [SpellHandlerAttribute("DreamGroupMorph")]
+    public class DreamGroupMorph : DreamMorph
     {
     	private GameSpellEffect m_effect = null;
         public override void OnEffectStart(GameSpellEffect effect)
@@ -38,46 +80,22 @@ namespace DOL.GS.Spells
         	base.OnEffectStart(effect);
             GamePlayer player = effect.Owner as GamePlayer;
             if(player == null) return;
-            GameEventMgr.AddHandler(player, GamePlayerEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));
+            //GameEventMgr.AddHandler(player, GamePlayerEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));
 			GameEventMgr.AddHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(LivingTakeDamage));
         }
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
             GamePlayer player = effect.Owner as GamePlayer;
             if(player == null) return base.OnEffectExpires(effect, noMessages);
-            GameEventMgr.RemoveHandler(player, GamePlayerEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));
+            //GameEventMgr.RemoveHandler(player, GamePlayerEvent.TakeDamage, new DOLEventHandler(LivingTakeDamage));
 			GameEventMgr.RemoveHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(LivingTakeDamage));
             return base.OnEffectExpires(effect, noMessages);
         }
         // Event : player takes damage, effect cancels
         private void LivingTakeDamage(DOLEvent e, object sender, EventArgs args)
         {
-            	OnEffectExpires(m_effect, true);
+            OnEffectExpires(m_effect, true);
         }
-
-        public DreamMorph(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-    }
-    
-    /// <summary>
-    /// Dream Sphere group morph spell handler
-    /// The DoT proc is a subspell, affects only caster
-    /// </summary>
-    [SpellHandlerAttribute("DreamGroupMorph")]
-    public class DreamGroupMorph : DreamMorph
-    {
-        /*
-        public override void OnEffectStart(GameSpellEffect effect)
-        {  
-        	// Same Effect for everyone except caster that get a ToHit bonus
-            //Caster.BaseBuffBonusCategory[(int)eProperty.ToHitBonus] += (int)m_spell.Value;
-            base.OnEffectStart(effect);
-        }
-        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
-        {
-            //Caster.BaseBuffBonusCategory[(int)eProperty.ToHitBonus] -= (int)m_spell.Value;
-            return base.OnEffectExpires(effect, noMessages);
-        }
-         */
         public DreamGroupMorph(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 }

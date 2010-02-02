@@ -19,7 +19,6 @@
 using System;
 using System.Collections;
 using System.Reflection;
-
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
@@ -82,7 +81,7 @@ namespace DOL.GS.Spells
 
 //			log.DebugFormat("sender:{0} res:{1} IsMelee:{2} Type:{3}", living.Name, ad.AttackResult, ad.IsMeleeAttack, ad.AttackType);
 			
-			// Melee or Magic ?
+			// Melee or Magic or Both ?
 			if (!MatchingDamageType(ref ad)) return;
 			
 			int ablativehp = living.TempProperties.getProperty<int>(ABLATIVE_HP);
@@ -100,7 +99,7 @@ namespace DOL.GS.Spells
 			OnDamageAbsorbed(ad, damageAbsorbed);
 
 			//TODO correct messages
-			MessageToLiving(ad.Target, string.Format("Your melee buffer absorbs {0} damage!", damageAbsorbed), eChatType.CT_Spell);
+            MessageToLiving(ad.Target, string.Format("Your ablative absorbs {0} damage!", damageAbsorbed), eChatType.CT_Spell);//since its not always Melee absorbing
 			MessageToLiving(ad.Attacker, string.Format("A barrier absorbs {0} damage of your attack!", damageAbsorbed), eChatType.CT_Spell);
 
 			if(ablativehp <= 0)
@@ -188,10 +187,14 @@ namespace DOL.GS.Spells
 				//Damage
 				if (Spell.Damage != 0)
 					list.Add("Absorption: " + Spell.Damage + "%");
+                if (Spell.Damage > 100)
+                    list.Add("Absorption: 100%");
+                if (Spell.Damage == 0)
+                    list.Add("Absorption: 25%");
 
 				//Value
 				if (Spell.Value != 0)
-					list.Add("Value: " + Spell.Value + "%");
+					list.Add("Value: " + Spell.Value);
 
 				//Cast
 				if (Spell.CastTime < 0.1)
@@ -261,4 +264,22 @@ namespace DOL.GS.Spells
 			return "Type: Magic Absorption";
 		}
 	}
+    //Both Magic/melee ablative 1.101 druids mite have a buff like this...
+    [SpellHandlerAttribute("BothAblativeArmor")]
+    public class BothAblativeArmorSpellHandler : AblativeArmorSpellHandler
+    {
+        public BothAblativeArmorSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        // Anything is absorbed with this method
+        protected override bool MatchingDamageType(ref AttackData ad)
+        {
+            return true;
+        }
+
+        // for delve info
+        protected override string GetAblativeType()
+        {
+            return "Type: Melee/Magic Absorption";
+        }
+    }
 }
