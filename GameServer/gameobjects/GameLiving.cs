@@ -4886,16 +4886,18 @@ namespace DOL.GS
 			 || (((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63)))
 			{
 				double MinMana = MaxMana * 0.15;
+                double OnePercMana = MaxMana * 0.01;
 				if(Mana < MinMana)
 				{
 					return 0;
 				}
 				if (!InCombat)
 				{
-					if(Mana - GetModified(eProperty.PowerRegenerationRate) < MinMana)
-					{
-						return 0;
-					}
+                    if (ManaPercent < 15)
+                    {
+                        ChangeMana(this, eManaChangeType.Regenerate, (int)OnePercMana);
+                        return 4000;//every 4sec 1% mana out of combat
+                    }
 					ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
 					if(ManaPercent > 80)
 					{

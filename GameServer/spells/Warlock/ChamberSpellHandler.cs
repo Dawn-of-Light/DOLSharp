@@ -20,6 +20,9 @@ using System;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
+using System.Collections;
+using System.Reflection;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -29,8 +32,6 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Chamber")]
 	public class ChamberSpellHandler : SpellHandler
 	{
-		public const string CHAMBER_USE_TICK = "ChamberUseTick";
-
 		private Spell m_primaryspell = null;
 		private SpellLine m_primaryspellline = null;
 		private Spell m_secondaryspell = null;
@@ -106,23 +107,6 @@ namespace DOL.GS.Spells
 		{
 			GamePlayer caster = (GamePlayer)m_caster;
 			GameLiving target = caster.TargetObject as GameLiving;
-			
-			long ChamberUseTick = caster.TempProperties.getProperty<long>(CHAMBER_USE_TICK);
-			long changeTime = caster.CurrentRegion.Time - ChamberUseTick;
-			if (changeTime < 3000)
-			{
-				MessageToCaster("You must wait " + ((3000 - changeTime) / 1000).ToString() + " more second to attempt to use a chamber!", eChatType.CT_System);
-				return false;
-			}
-			caster.TempProperties.setProperty(CHAMBER_USE_TICK, caster.CurrentRegion.Time);
-
-			int duration = caster.GetSkillDisabledDuration(m_spell);
-			if(duration > 0)
-			{
-				MessageToCaster("You must wait "+(duration/10+1)+" seconds to use this spell!", eChatType.CT_System);
-				return false;
-			}
-
 			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(caster, "Chamber", m_spell.Name);
 			if(effect != null && m_spell.Name == effect.Spell.Name)
 			{
@@ -130,9 +114,16 @@ namespace DOL.GS.Spells
 				ISpellHandler spellhandler2 = null;
 				ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
 				GameSpellEffect PhaseShift = SpellHandler.FindEffectOnTarget(target, "Phaseshift");
+                SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
 				spellhandler = ScriptMgr.CreateSpellHandler(caster, chamber.PrimarySpell, chamber.PrimarySpellLine);
 
 				#region Pre-checks
+                int duration = caster.GetSkillDisabledDuration(m_spell);
+                if (duration > 0)
+                {
+                    MessageToCaster("You must wait " + (duration / 1000 + 1) + " seconds to use this spell!", eChatType.CT_System);
+                    return false;
+                }
 				if (caster.IsMoving || caster.IsStrafing)
 				{
 					MessageToCaster("You must be standing still to cast this spell!", eChatType.CT_System);
@@ -190,11 +181,32 @@ namespace DOL.GS.Spells
 				{
 					MessageToCaster(target.Name + " is Phaseshifted and can't be attacked!", eChatType.CT_System); return false;
 				}
+                if (SelectiveBlindness != null)
+                {
+                    GameLiving EffectOwner = SelectiveBlindness.EffectSource;
+                    if (EffectOwner == target)
+                    {
+                        if (m_caster is GamePlayer)
+                            ((GamePlayer)m_caster).Out.SendMessage(string.Format("{0} is invisible to you!", target.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+
+                        return false;
+                    }
+                }
 				if (target.HasAbility(Abilities.DamageImmunity))
 				{
 					MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
 					return false;
 				}
+                if (GameServer.ServerRules.IsAllowedToAttack(Caster, target, true) && chamber.PrimarySpell.Target.ToLower() == "realm")
+                {
+                    MessageToCaster("This spell only works on friendly targets!", eChatType.CT_System);
+                    return false;
+                }
+                if (!GameServer.ServerRules.IsAllowedToAttack(Caster, target, true) && chamber.PrimarySpell.Target.ToLower() != "realm")
+                {
+                    MessageToCaster("That target isn't attackable at this time!", eChatType.CT_System);
+                    return false;
+                }
 				spellhandler.CastSpell();
 				#endregion
 
@@ -207,16 +219,14 @@ namespace DOL.GS.Spells
 
 				foreach (Spell oSpell in SkillBase.GetSpellList(chamber.SpellLine.KeyName))
 				{
-					if (oSpell.Level <= caster.GetSpellLine(chamber.SpellLine.KeyName).Level && oSpell.SpellType.ToLower() == "chamber")
-					{
-						caster.DisableSkill(oSpell, 4);
-					}
+                    caster.DisableSkill(oSpell, Spell.RecastDelay);
 				}
 			}
 			else
 			{
 				base.CastSpell ();
-				if(Caster is GamePlayer)
+                int duration = caster.GetSkillDisabledDuration(m_spell);
+				if(Caster is GamePlayer && duration == 0)
 					((GamePlayer)Caster).Out.SendMessage("Select the first spell for your " + Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			return true;
@@ -234,6 +244,7 @@ namespace DOL.GS.Spells
 			m_caster.Endurance -= 5;
 
 			// messages
+            GamePlayer caster = (GamePlayer)m_caster;
 			if (Spell.InstrumentRequirement == 0)
 			{
 				if(SecondarySpell == null && PrimarySpell == null)
@@ -269,18 +280,6 @@ namespace DOL.GS.Spells
 					quickcast.Cancel(false);
 				}
 			}
-
-			// disable spells with recasttimer (Disables group of same type with same delay)
-			if (m_spell.RecastDelay > 0 && m_startReuseTimer && m_caster is GamePlayer)
-			{
-				foreach (Spell sp in SkillBase.GetSpellList(m_spellLine.KeyName))
-				{
-					if (sp.SpellType == m_spell.SpellType && sp.RecastDelay == m_spell.RecastDelay && sp.Group == m_spell.Group)
-					{
-						((GamePlayer) m_caster).DisableSkill(sp, sp.RecastDelay);
-					}
-				}
-			}
 		}
 
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
@@ -313,7 +312,38 @@ namespace DOL.GS.Spells
 
 			return 0;
 		}
+        		#region Devle Info
+        public override IList DelveInfo
+        {
+            get
+            {
+                ArrayList list = new ArrayList();
 
+                //Name
+                list.Add("Name: " + Spell.Name);
+                list.Add("");
+
+                //Description
+                list.Add("Description: " + Spell.Description);
+                list.Add("");
+
+                //SpellType
+                if (!Spell.AllowBolt)
+                    list.Add("Type: Any but bolts");
+                if (Spell.AllowBolt)
+                    list.Add("Type: Any");
+
+                //Cast
+                list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.CastingTime", (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'")));
+                //Recast
+                if (Spell.RecastDelay > 60000)
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.RecastTime") + (Spell.RecastDelay / 60000).ToString() + ":" + (Spell.RecastDelay % 60000 / 1000).ToString("00") + " min");
+                else if (Spell.RecastDelay > 0)
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.RecastTime") + (Spell.RecastDelay / 1000).ToString() + " sec");
+                return list;
+            }
+        }
+			#endregion
 		// constructor
 		public ChamberSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}

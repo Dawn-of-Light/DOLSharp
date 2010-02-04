@@ -7729,6 +7729,7 @@ namespace DOL.GS
 										{
 											Out.SendMessage("You prepare this as a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 											m_nextSpell = spell;
+                                            spell.OverrideRange = m_runningSpellHandler.Spell.Range;
 											m_nextSpellLine = line;
 										}
 									}
@@ -7767,7 +7768,7 @@ namespace DOL.GS
 							}
 						}
 						else
-							spellhandler.CastSpell();
+						spellhandler.CastSpell();
 					}
 				}
 				else
@@ -12074,11 +12075,13 @@ namespace DOL.GS
 
 			range += BaseBuffBonusCategory[(int)eProperty.Skill_Stealth];
 
-			//Andraste
-			GameSpellEffect iVampiirEffect = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "VampiirStealthDetection");
+            //Buff (Stealth Detection)
+            //Increases the target's ability to detect stealthed players and monsters.
+            //http://camelotherald.com/spells/line.php?c=42&line=115
+			GameSpellEffect iVampiirEffect = SpellHandler.FindEffectOnTarget((GameLiving)this, "VampiirStealthDetection");
 			if (iVampiirEffect != null)
 			{
-				range -= (int)iVampiirEffect.Spell.Value;
+				range += (int)iVampiirEffect.Spell.Value;
 				if (range < 0) range = 0;
 			}
 
