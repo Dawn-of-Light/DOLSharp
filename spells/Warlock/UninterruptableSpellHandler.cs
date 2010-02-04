@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
+using DOL.Language;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
@@ -73,7 +74,48 @@ namespace DOL.GS.Spells
 		{
 			return false;
 		}
+        #region Devle Info
+        public override IList DelveInfo
+        {
+            get
+            {
+                ArrayList list = new ArrayList();
 
+                //Name
+                list.Add("Name: " + Spell.Name);
+                list.Add("");
+
+                //Description
+                list.Add("Description: " + Spell.Description);
+                list.Add("");
+
+                //SpellType
+                list.Add("Type: " + Spell.SpellType);
+
+                double value = 100 - Spell.Value;// 100 - 60 = 40% reduction
+                //Value
+                if (Spell.Value != 0)
+                    list.Add("Spell effectiveness reduced: " + value + "%");
+
+                //Target
+                list.Add("Target: " + Spell.Target);
+
+                //Duration
+                if (Spell.Duration >= ushort.MaxValue * 1000)
+                    list.Add("Duration: Permanent.");
+                else if (Spell.Duration > 60000)
+                    list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration / 60000, (Spell.Duration % 60000 / 1000).ToString("00")));
+                else if (Spell.Duration != 0)
+
+                //Cost
+                list.Add("Power cost: " + Spell.Power.ToString("0;0'%'"));
+
+                //Cast
+                list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.CastingTime", (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'")));
+                return list;
+            }
+        #endregion
+        }
 		// constructor
 		public UninterruptableSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
