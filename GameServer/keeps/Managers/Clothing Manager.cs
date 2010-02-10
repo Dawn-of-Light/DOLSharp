@@ -450,6 +450,10 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		public static void EquipGuard(GameKeepGuard guard)
 		{
+			if(!guard.LoadedFromScript)
+			{
+				return;
+			}
             if (guard is FrontierHastener)
             {
                 switch (guard.Realm)
