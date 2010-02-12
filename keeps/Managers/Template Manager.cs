@@ -208,7 +208,7 @@ namespace DOL.GS.Keeps
 		/// <param name="guard">The guard object</param>
 		private static void SetGuardModel(GameKeepGuard guard)
 		{
-			if(!guard.LoadedFromScript)
+			if(!ServerProperties.Properties.AUTOMODEL_GUARDS_LOADED_FROM_DB && !guard.LoadedFromScript)
 			{
 				return;
 			}

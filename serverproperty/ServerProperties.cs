@@ -786,6 +786,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("keeps","use_new_keeps", "Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.", 2)]
 		public static readonly int USE_NEW_KEEPS;
+
+		/// <summary>
+		/// Should guards loaded from db be equipped by Keepsystem? (false=load equipment from db)
+		/// </summary>
+		[ServerProperty("keeps", "autoequip_guards_loaded_from_db", "Should guards loaded from db be equipped by Keepsystem? (false=load equipment from db)", true)]
+		public static readonly bool AUTOEQUIP_GUARDS_LOADED_FROM_DB;
+
+		/// <summary>
+		/// Should guards loaded from db be modeled by Keepsystem? (false=load from db)
+		/// </summary>
+		[ServerProperty("keeps", "automodel_guards_loaded_from_db", "Should guards loaded from db be modeled by Keepsystem? (false=load from db)", true)]
+		public static readonly bool AUTOMODEL_GUARDS_LOADED_FROM_DB;
 		#endregion
 		
 		#region PVE / TOA
