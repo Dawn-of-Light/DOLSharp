@@ -34,11 +34,6 @@ namespace DOL.GS.PropertyCalc
 	[PropertyCalculator(eProperty.MaxConcentration)]
 	public class MaxConcentrationCalculator : PropertyCalculator
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public MaxConcentrationCalculator() {}
 
 		public override int CalcValue(GameLiving living, eProperty property) 

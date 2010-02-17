@@ -60,10 +60,10 @@ namespace DOL.GS
 		/// Staves / Staff weapons
 		/// </summary>
 		public const string Weapon_Staves = "Weaponry: Staves";
-        /// <summary>
-        /// Staves / Staff weapons
-        /// </summary>
-        public const string Weapon_Archery = "Weaponry: Archery";
+		/// <summary>
+		/// Staves / Staff weapons
+		/// </summary>
+		public const string Weapon_Archery = "Weaponry: Archery";
 		/// <summary>
 		/// Slashing Weapons
 		/// </summary>
@@ -302,16 +302,26 @@ namespace DOL.GS
 		/// Volley Ability
 		/// </summary>
 		public const string Volley = "Volley";
-
+		/// <summary>
+		/// Blood Rage
+		/// </summary>
 		public const string BloodRage = "Blood Rage";
+		/// <summary>
+		/// Subtle Kills
+		/// </summary>
+		public const string SubtleKills = "Subtle Kills";
+		/// <summary>
+		/// Heightened Awareness
+		/// </summary>
+		public const string HeightenedAwareness = "Heightened Awareness";
 
 		//new maintank skills with 1.81
 		/// <summary>
 		/// Scars of Battle Ability
 		/// </summary>
-        /// Upon reaching level 41, the Hero, Warrior and Armsman will begin to gain more 
-        /// hitpoints as they progress towards level 50. At each level beyond 41 they 
-        /// gain 1% extra Hit points per level. At level 50, they will have the full 10% benefit.
+		/// Upon reaching level 41, the Hero, Warrior and Armsman will begin to gain more
+		/// hitpoints as they progress towards level 50. At each level beyond 41 they
+		/// gain 1% extra Hit points per level. At level 50, they will have the full 10% benefit.
 		public const string ScarsOfBattle = "Scars of Battle";
 		/// <summary>
 		/// Memories of War Ability
@@ -324,28 +334,28 @@ namespace DOL.GS
 		public const string Snapshot = "Snapshot";
 		/// <summary>
 		/// Rampage Ability
-		/// </summary>		
-        public const string Rampage = "Rampage";
+		/// </summary>
+		public const string Rampage = "Rampage";
 		/// <summary>
 		/// Metal guard Ability
-		/// </summary>	
-        public const string MetalGuard = "Metal Guard";
+		/// </summary>
+		public const string MetalGuard = "Metal Guard";
 		/// <summary>
 		/// Fury Ability
-		/// </summary>	        
-        public const string Fury = "Fury";
-        /// <summary>
-        /// Fury Ability
-        /// </summary>	        
-        public const string Bodyguard = "Bodyguard";
+		/// </summary>
+		public const string Fury = "Fury";
+		/// <summary>
+		/// Fury Ability
+		/// </summary>
+		public const string Bodyguard = "Bodyguard";
 		/// <summary>
 		/// Bolstering Roar Ability
-		/// </summary>	        
-        public const string BolsteringRoar = "Bolstering Roar";
- 		/// <summary>
+		/// </summary>
+		public const string BolsteringRoar = "Bolstering Roar";
+		/// <summary>
 		/// Taunting Shout Ability
-		/// </summary>	        
-        public const string TauntingShout = "Taunting Shout";
+		/// </summary>
+		public const string TauntingShout = "Taunting Shout";
 
 		public const string DefensiveCombatPowerRegeneration = "Defensive Combat Power Regeneration";
 		//NPC only abilities
@@ -435,7 +445,7 @@ namespace DOL.GS
 	/// <summary>
 	/// strong name constants for built in specs
 	/// </summary>
-	public abstract class Specs 
+	public abstract class Specs
 	{
 		/// <summary>
 		/// Slash Weapon Spec
@@ -773,10 +783,10 @@ namespace DOL.GS
 		/// Spectral Force Magic Spec
 		/// </summary>
 		public const string SpectralForce = "Spectral Force"; //Bainshee
-        /// <summary>
-        /// Spectral Guard Magic Spec
-        /// </summary>
-        public const string SpectralGuard = "Spectral Guard"; //Bainshee
+		/// <summary>
+		/// Spectral Guard Magic Spec
+		/// </summary>
+		public const string SpectralGuard = "Spectral Guard"; //Bainshee
 		/// <summary>
 		/// Vampiiric Embrace Magic Spec
 		/// </summary>
@@ -812,10 +822,10 @@ namespace DOL.GS
 		
 		public const string Archery = "Archery";
 
-        ///<summary>
-        /// The new Beastcraft line for Hunters
-        ///</summary>
-        public const string Beastcraft_NEW = "Beastcraft";
+		///<summary>
+		/// The new Beastcraft line for Hunters
+		///</summary>
+		public const string Beastcraft_NEW = "Beastcraft";
 		
 		public const string Banelord = "Banelord";
 		public const string Battlemaster = "Battlemaster";
