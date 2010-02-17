@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using DOL.Events;
+
 using DOL.AI.Brain;
-using System.Collections.Generic;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Effects
 {

@@ -17,13 +17,12 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Text;
+
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.SkillHandler

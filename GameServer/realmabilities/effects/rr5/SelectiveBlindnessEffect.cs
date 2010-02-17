@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Generic;
 using DOL.Events;
 
 namespace DOL.GS.Effects

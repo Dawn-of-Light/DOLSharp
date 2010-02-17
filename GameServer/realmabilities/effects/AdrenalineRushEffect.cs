@@ -1,9 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using DOL.GS.PropertyCalc;
 using DOL.Events;
 using DOL.GS.Effects;
 

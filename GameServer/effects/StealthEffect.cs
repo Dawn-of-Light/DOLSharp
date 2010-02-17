@@ -18,9 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
 using DOL.Language;
-using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
