@@ -336,8 +336,8 @@ namespace DOL.GS.Commands
 				statut = " Unlocked";
 
 			int doorType = DoorRequestHandler.DoorIDhandler / 100000000;
-				
-            ArrayList info = new ArrayList();
+
+			var info = new List<string>();
 
             info.Add(" + Info sur la porte :  " + targetDoor.Name);
 			info.Add( "  " );
@@ -353,6 +353,7 @@ namespace DOL.GS.Commands
 			info.Add(" + Y : " + targetDoor.Y);
 			info.Add(" + Z : " + targetDoor.Z);
 			info.Add(" + Heading : " + targetDoor.Heading);
+
             client.Out.SendCustomTextWindow( "Door Information", info );
         }
 		

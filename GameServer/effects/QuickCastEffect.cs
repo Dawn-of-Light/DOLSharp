@@ -17,7 +17,8 @@
  *
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -67,12 +68,13 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(1);
+				var delveInfoList = new List<string>();
                 delveInfoList.Add("Can't be interrupted on the following spell.");
+
                 return delveInfoList;
 			}
 		}

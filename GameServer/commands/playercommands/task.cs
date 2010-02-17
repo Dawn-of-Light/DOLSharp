@@ -26,6 +26,7 @@
  */
 
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 
@@ -56,7 +57,7 @@ namespace DOL.GS.Commands
 				
 				if (task != null && task.TaskActive)
 				{
-					IList messages = new ArrayList(4);
+					var messages = new List<string>();
 					messages.Add("You are on " + task.Name);
 					messages.Add("What to do: " + task.Description);
 					messages.Add(" ");

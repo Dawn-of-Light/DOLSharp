@@ -43,6 +43,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
@@ -1130,7 +1131,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (quest.Step >= 4 && quest.Step <= 8)
 				{
-					IList textList = new ArrayList();
+					var textList = new List<string>();
 					textList.Add("swamp slime");
 					textList.Add("river spriteling claw");
 					textList.Add("swamp rat tail");

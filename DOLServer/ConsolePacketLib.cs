@@ -143,7 +143,7 @@ namespace DOLGameServerConsole
 		public void SendUpdatePlayer() { }
 		public void SendUpdatePlayerSkills() { }
 		public void SendUpdateWeaponAndArmorStats() { }
-		public void SendCustomTextWindow(string caption, IList text) { }
+		public void SendCustomTextWindow(string caption, IList<string> text) { }
 		public void SendEncumberance() { }
 		public void SendAddFriends(string[] friendNames) { }
 		public void SendRemoveFriends(string[] friendNames) { }

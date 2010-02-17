@@ -1472,9 +1472,10 @@ namespace DOL.GS.ServerRules
 		/// </summary>
 		/// <param name="player">The player to read statistics from.</param>
 		/// <returns>List of strings.</returns>
-		public virtual IList FormatPlayerStatistics(GamePlayer player)
+		public virtual IList<string> FormatPlayerStatistics(GamePlayer player)
 		{
-			ArrayList stat = new ArrayList();
+			List<string> stat = new List<string>();
+
 			int total = 0;
 			#region Players Killed
 			//only show if there is a kill [by Suncheck]
@@ -1590,6 +1591,7 @@ namespace DOL.GS.ServerRules
 				if (player.KillsLegion > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.PvE.KillsLegion") + ": " + player.KillsLegion.ToString("N0"));
 			}
 			#endregion
+
 			return stat;
 		}
 

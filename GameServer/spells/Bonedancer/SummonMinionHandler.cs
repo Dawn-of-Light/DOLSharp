@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using DOL.AI.Brain;
@@ -218,11 +219,11 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 
 				list.Add(string.Format("Target: {0}", Spell.Target));
 				list.Add(string.Format("Power cost: {0}", Math.Abs(Spell.Power)));

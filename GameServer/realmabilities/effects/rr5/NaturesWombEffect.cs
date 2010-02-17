@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.RealmAbilities;
@@ -103,11 +104,11 @@ namespace DOL.GS.Effects
 			get { return 100; }
 		}
 
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Stuns you for 5 seconds but absorbs all damage taken");
 				return list;
 			}

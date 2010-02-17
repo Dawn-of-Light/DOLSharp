@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using DOL.Language;
@@ -75,11 +76,11 @@ namespace DOL.GS.Spells
 			return false;
 		}
         #region Devle Info
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+            	var list = new List<string>(16);
 
                 //Name
                 list.Add("Name: " + Spell.Name);

@@ -17,9 +17,10 @@
  *
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -82,6 +83,6 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo { get { return new ArrayList(0); } }
+		public override IList<string> DelveInfo { get { return new string[0]; } }
 	}
 }

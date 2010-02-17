@@ -5,6 +5,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 using DOL.GS.RealmAbilities;
+using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
@@ -67,11 +68,11 @@ namespace DOL.GS.Spells
 			base.ApplyEffectOnTarget(target, effectiveness);
         }
 
-		public override IList DelveInfo 
+		public override IList<string> DelveInfo 
 		{
 			get 
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>(16);
 				list.Add("Name: " + Spell.Name);
 				list.Add("Description: " + Spell.Description);
 				list.Add("Target: " + Spell.Target);
@@ -168,11 +169,11 @@ namespace DOL.GS.Spells
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 
-		public override IList DelveInfo 
+		public override IList<string> DelveInfo 
 		{
 			get 
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>(16);
 				list.Add("Name: " + Spell.Name);
 				list.Add("Description: " + Spell.Description);
 				list.Add("Target: " + Spell.Target);

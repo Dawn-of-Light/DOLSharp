@@ -25,9 +25,9 @@ using log4net;
 namespace DOL
 {
 	/// <summary>
-	/// This class implements weakreference delegates which
-	/// enable the target to be garbage collected
+	/// Represents a weak-referenced multicast delegate.
 	/// </summary>
+	/// <remarks>This multicast delegate can be garbage collected.</remarks>
 	public class WeakMulticastDelegate
 	{
 		/// <summary>

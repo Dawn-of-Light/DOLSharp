@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.GS;
@@ -89,11 +90,11 @@ namespace DOL.GS.Effects
 
 
 
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Heals you for 5% mana/endu/hits each tick (3 seconds)");
 				return list;
 			}

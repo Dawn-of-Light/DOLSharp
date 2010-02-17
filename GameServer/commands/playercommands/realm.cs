@@ -91,7 +91,7 @@ namespace DOL.GS.Commands
 					}
 				}
 			}
-			ArrayList realmInfo = new ArrayList();
+			var realmInfo = new List<string>();
 			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.AlbKeeps") + ":");
 			realmInfo.Add(albKeeps);
 			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.MidKeeps") + ":");

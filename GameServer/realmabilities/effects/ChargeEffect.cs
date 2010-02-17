@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.Events;
 using DOL.AI.Brain;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -151,11 +153,11 @@ namespace DOL.GS.Effects
 		}
 
 		// Delve Info
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(4);
+				var delveInfoList = new List<string>(4);
 				delveInfoList.Add(delveString);
 
 				int seconds = (int)(RemainingTime / 1000);

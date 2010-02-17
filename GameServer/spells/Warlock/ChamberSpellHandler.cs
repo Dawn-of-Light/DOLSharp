@@ -23,6 +23,7 @@ using DOL.GS.SkillHandler;
 using System.Collections;
 using System.Reflection;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
@@ -313,11 +314,11 @@ namespace DOL.GS.Spells
 			return 0;
 		}
         		#region Devle Info
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+            	var list = new List<string>();
 
                 //Name
                 list.Add("Name: " + Spell.Name);

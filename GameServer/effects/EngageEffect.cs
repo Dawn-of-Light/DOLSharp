@@ -17,9 +17,10 @@
  *
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -110,11 +111,11 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(3);
+				var delveInfoList = new List<string>(4);
 				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.EngageEffect.InfoEffect"));
 				delveInfoList.Add(" ");
 				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.EngageEffect.XEngagesY", m_owner.GetName(0, true), m_engageTarget.GetName(0, false)));

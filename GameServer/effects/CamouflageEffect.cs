@@ -16,7 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Language;
@@ -56,12 +57,13 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(1);
+				var delveInfoList = new List<string>();
 				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.CamouflageEffect.InfoEffect"));
+
 				return delveInfoList;
 			}
 		}

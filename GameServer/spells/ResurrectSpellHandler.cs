@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using DOL.Events;
 using DOL.GS.Effects;
@@ -284,7 +285,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo 
+		public override IList<string> DelveInfo 
 		{
 			get 
 			{
@@ -304,7 +305,7 @@ namespace DOL.GS.Spells
 				<End Info>
 				*/
 
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 
 				list.Add("Function: " + (Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType));
 				list.Add(" "); //empty line

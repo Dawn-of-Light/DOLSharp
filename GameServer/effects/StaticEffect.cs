@@ -1,8 +1,9 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -90,11 +91,11 @@ namespace DOL.GS.Effects
 			get { return false; }
 		}
 
-		public virtual IList DelveInfo
+		public virtual IList<string> DelveInfo
 		{
 			get
 			{
-				return new ArrayList(0);
+				return new string[0];
 			}
 		}
 

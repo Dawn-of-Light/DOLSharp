@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.PlayerTitles;
@@ -80,7 +81,7 @@ namespace DOL.GS.Commands
 				{
 					case "list":
 						{
-							ArrayList list = new ArrayList();
+							var list = new List<string>();
 							foreach (IPlayerTitle title in target.Titles)
 							{
 								list.Add("- " + title.GetDescription(target));

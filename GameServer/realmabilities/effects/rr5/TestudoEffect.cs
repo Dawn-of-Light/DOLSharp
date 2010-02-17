@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.Events;
@@ -122,11 +123,11 @@ namespace DOL.GS.Effects
 		public override ushort Icon { get { return 3067; } }
 
 
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Warrior with shield equipped covers up and takes 90% less damage for all attacks for 45 seconds. Can only move at reduced speed (speed buffs have no effect) and cannot attack. Using a style will break testudo form. This ability is only effective versus realm enemies.");
 				return list;
 			}

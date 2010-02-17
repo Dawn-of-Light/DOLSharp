@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Styles;
 using DOL.GS.Keeps;
@@ -303,7 +304,7 @@ namespace DOL.GS.ServerRules
 		/// </summary>
 		/// <param name="player">The player to read statistics from.</param>
 		/// <returns>List of strings.</returns>
-		IList FormatPlayerStatistics(GamePlayer player);
+		IList<string> FormatPlayerStatistics(GamePlayer player);
 
 		/// <summary>
 		/// Reset the keep with special server rules handling

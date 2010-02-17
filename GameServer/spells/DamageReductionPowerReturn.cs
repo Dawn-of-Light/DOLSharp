@@ -17,6 +17,7 @@
 *
 *///made by Yemla, based off Alblative
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database;
@@ -151,11 +152,11 @@ namespace DOL.GS.Spells
 		 }
 		 return 0;
 	  }
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 
 				list.Add("Name: " + Spell.Name);
 				list.Add("Description: " + Spell.Description);

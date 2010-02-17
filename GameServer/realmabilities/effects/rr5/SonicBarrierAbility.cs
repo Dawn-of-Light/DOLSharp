@@ -78,7 +78,7 @@ namespace DOL.GS.RealmAbilities
 			return 420;
 		}
 
-		public override void AddEffectsInfo(System.Collections.IList list)
+		public override void AddEffectsInfo(IList<string> list)
 		{
 			list.Add("Sonic Barrier.");
 			list.Add("");

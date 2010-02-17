@@ -31,47 +31,47 @@ namespace DOL.MPK
 		/// <summary>
 		/// Maximum size of a file header
 		/// </summary>
-		public static readonly int MAX_SIZE = 0x11c;
+		public const int MaxSize = 0x11c;
 
 		/// <summary>
 		/// Compressed size of the file
 		/// </summary>
-		private uint m_compSize;
+		private uint _compressedSize;
 
 		/// <summary>
 		/// Checksum for the compressed file
 		/// </summary>
-		private Crc32 m_crc = new Crc32();
+		private Crc32 _crc = new Crc32();
 
 		/// <summary>
 		/// Offset of the file header in the directory memory space
 		/// </summary>
-		private uint m_dirOff;
+		private uint _directoryOffset;
 
 		/// <summary>
 		/// Name of the file
 		/// </summary>
-		private string m_name = "";
+		private string _name = "";
 
 		/// <summary>
 		/// Offset of the file in file memory space
 		/// </summary>
-		private uint m_off;
+		private uint _offset;
 
 		/// <summary>
 		/// Size of the uncompressed file
 		/// </summary>
-		private uint m_size;
+		private uint _uncompressedSize;
 
 		/// <summary>
 		/// Time the entry was created
 		/// </summary>
-		private uint m_time;
+		private uint _timestamp;
 
 		/// <summary>
 		/// Unknown, always 4?
 		/// </summary>
-		private int m_unk = 4;
+		private int _unk = 4;
 
 		/// <summary>
 		/// Creates a new MPK file header
@@ -94,12 +94,12 @@ namespace DOL.MPK
 		/// </summary>
 		public string Name
 		{
-			get { return m_name; }
+			get { return _name; }
 			set
 			{
 				if (value.Length <= 256)
 				{
-					m_name = value;
+					_name = value;
 				}
 			}
 		}
@@ -109,17 +109,17 @@ namespace DOL.MPK
 		/// </summary>
 		public uint TimeStamp
 		{
-			get { return m_time; }
-			set { m_time = value; }
+			get { return _timestamp; }
+			set { _timestamp = value; }
 		}
 
 		/// <summary>
 		/// Gets or sets the size
 		/// </summary>
-		public uint Size
+		public uint UncompressedSize
 		{
-			get { return m_size; }
-			set { m_size = value; }
+			get { return _uncompressedSize; }
+			set { _uncompressedSize = value; }
 		}
 
 		/// <summary>
@@ -127,8 +127,8 @@ namespace DOL.MPK
 		/// </summary>
 		public uint Offset
 		{
-			get { return m_off; }
-			set { m_off = value; }
+			get { return _offset; }
+			set { _offset = value; }
 		}
 
 		/// <summary>
@@ -136,8 +136,8 @@ namespace DOL.MPK
 		/// </summary>
 		public uint DirectoryOffset
 		{
-			get { return m_dirOff; }
-			set { m_dirOff = value; }
+			get { return _directoryOffset; }
+			set { _directoryOffset = value; }
 		}
 
 		/// <summary>
@@ -145,8 +145,8 @@ namespace DOL.MPK
 		/// </summary>
 		public uint CompressedSize
 		{
-			get { return m_compSize; }
-			set { m_compSize = value; }
+			get { return _compressedSize; }
+			set { _compressedSize = value; }
 		}
 
 		/// <summary>
@@ -154,8 +154,8 @@ namespace DOL.MPK
 		/// </summary>
 		public Crc32 CRC
 		{
-			get { return m_crc; }
-			set { m_crc = value; }
+			get { return _crc; }
+			set { _crc = value; }
 		}
 
 		/// <summary>
@@ -166,18 +166,18 @@ namespace DOL.MPK
 		{
 			var name = new byte[256];
 
-			byte[] buf = Encoding.UTF8.GetBytes(m_name);
-			buf.CopyTo(name, 0);
+			byte[] buf = Encoding.UTF8.GetBytes(_name);
+			Buffer.BlockCopy(buf, 0, name, 0, buf.Length);
 			name[buf.Length] = 0;
 
 			file.Write(name, 0, 256);
-			file.Write(m_time);
-			file.Write(m_unk);
-			file.Write(m_off);
-			file.Write(m_size);
-			file.Write(m_dirOff);
-			file.Write(m_compSize);
-			file.Write((uint) m_crc.Value);
+			file.Write(_timestamp);
+			file.Write(_unk);
+			file.Write(_offset);
+			file.Write(_uncompressedSize);
+			file.Write(_directoryOffset);
+			file.Write(_compressedSize);
+			file.Write((uint) _crc.Value);
 		}
 
 		/// <summary>
@@ -188,14 +188,15 @@ namespace DOL.MPK
 		{
 			var buf = new byte[256];
 			rdr.Read(buf, 0, 256);
-			m_name = Marshal.ConvertToString(buf);
-			m_time = rdr.ReadUInt32();
-			m_unk = rdr.ReadInt32();
-			m_off = rdr.ReadUInt32();
-			m_size = rdr.ReadUInt32();
-			m_dirOff = rdr.ReadUInt32();
-			m_compSize = rdr.ReadUInt32();
-			m_crc.Value = rdr.ReadUInt32();
+
+			_name = Marshal.ConvertToString(buf);
+			_timestamp = rdr.ReadUInt32();
+			_unk = rdr.ReadInt32();
+			_offset = rdr.ReadUInt32();
+			_uncompressedSize = rdr.ReadUInt32();
+			_directoryOffset = rdr.ReadUInt32();
+			_compressedSize = rdr.ReadUInt32();
+			_crc.Value = rdr.ReadUInt32();
 		}
 
 		/// <summary>
@@ -205,12 +206,12 @@ namespace DOL.MPK
 		{
 			Console.WriteLine("---------------------------------------------------------------------------");
 
-			Console.WriteLine("Name: {0}", m_name);
-			Console.WriteLine("Offset: {0}", m_off);
-			Console.WriteLine("Size: {0}", m_size);
-			Console.WriteLine("Directory Offset: {0}", m_dirOff);
-			Console.WriteLine("Compressed Size: {0}", m_compSize);
-			Console.WriteLine("CRC32: {0}", m_crc.Value);
+			Console.WriteLine("Name: {0}", _name);
+			Console.WriteLine("Offset: {0}", _offset);
+			Console.WriteLine("Size: {0}", _uncompressedSize);
+			Console.WriteLine("Directory Offset: {0}", _directoryOffset);
+			Console.WriteLine("Compressed Size: {0}", _compressedSize);
+			Console.WriteLine("CRC32: {0}", _crc.Value);
 		}
 	}
 }

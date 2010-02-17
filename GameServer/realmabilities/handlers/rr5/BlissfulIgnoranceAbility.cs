@@ -22,6 +22,7 @@ using System.Collections;
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.Spells;
+using System.Collections.Generic;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -110,7 +111,7 @@ namespace DOL.GS.RealmAbilities
             return 300;
         }
 
-        public override void AddEffectsInfo(System.Collections.IList list)
+        public override void AddEffectsInfo(IList<string> list)
         {
             list.Add("No penality Hit from self buffs. 30s duration, 5min RUT.");
             list.Add("");

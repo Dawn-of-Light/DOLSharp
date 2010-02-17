@@ -1,5 +1,6 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.GS.PropertyCalc;
@@ -81,11 +82,11 @@ namespace DOL.GS.RealmAbilities
 		/// <summary>
 		/// Delve information
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(10);
+				var delveInfoList = new List<string>(8);
 				delveInfoList.Add("Doubles the base melee damage for 20 seconds.");
 				delveInfoList.Add(" ");
 				delveInfoList.Add("Value: " + m_value + "%");

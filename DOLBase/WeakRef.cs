@@ -21,10 +21,11 @@ using System;
 namespace DOL
 {
 	/// <summary>
-	/// WeakReference wrapper that handles null targets.
+	/// A wrapper for <see cref="WeakReference" /> to handle null targets under Mono.
 	/// </summary>
 	/// <remarks>A flaw in the Mono GC crashes the Mono runtime when you provide 
-	/// a null target to WeakReference.</remarks>
+	/// a null target to WeakReference.  This wrapper exists to work around the 
+	/// problem when running under the Mono runtime.</remarks>
 	public class WeakRef : WeakReference
 	{
 		private static readonly NullValue Null = new NullValue();

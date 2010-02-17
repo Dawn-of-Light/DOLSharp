@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
 using DOL.Language;
@@ -148,7 +149,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			<End Info>
 			*/
 			//AbilityBonus[(int)((eProperty)updateResists[i])]
-			ArrayList info = new ArrayList();
+			var info = new List<string>();
 			info.Add(LanguageMgr.GetTranslation(client, "PlayerBonusesListRequestHandler.HandlePacket.Resist"));
 			info.Add(string.Format(" {2}:   {0:+0;-0}%/\t{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Crush) - client.Player.AbilityBonus[(int)eProperty.Resist_Crush], client.Player.AbilityBonus[(int)eProperty.Resist_Crush], SkillBase.GetPropertyName(eProperty.Resist_Crush)));
 			info.Add(string.Format(" {2}:    {0:+0;-0}%/{1:+0;-0}%", client.Player.GetModified(eProperty.Resist_Slash) - client.Player.AbilityBonus[(int)eProperty.Resist_Slash], client.Player.AbilityBonus[(int)eProperty.Resist_Slash], SkillBase.GetPropertyName(eProperty.Resist_Slash)));
