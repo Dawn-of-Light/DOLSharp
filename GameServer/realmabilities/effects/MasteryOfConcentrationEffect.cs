@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.Events;
@@ -57,11 +57,11 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve information
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(4);
+				var delveInfoList = new List<string>(4);
 				delveInfoList.Add("This ability allows a player to cast uninterrupted, even while sustaining attacks, through melee or spell for 30 seconds.");
 
                 int seconds = (int)(RemainingTime / 1000);

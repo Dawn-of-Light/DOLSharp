@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
@@ -41,11 +42,11 @@ namespace DOL.GS.RealmAbilities
 			}
 		}
 
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add(m_description);
 				list.Add("");
 				for (int i = 1; i <= MaxLevel; i++)

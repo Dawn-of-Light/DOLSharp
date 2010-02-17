@@ -25,6 +25,7 @@ using DOL.Events;
 using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
+using System.Collections.Generic;
 
 namespace DOL.GS.ServerRules
 {
@@ -492,9 +493,10 @@ namespace DOL.GS.ServerRules
 		/// </summary>
 		/// <param name="player">The player to read statistics from.</param>
 		/// <returns>List of strings.</returns>
-		public override IList FormatPlayerStatistics(GamePlayer player)
+		public override IList<string> FormatPlayerStatistics(GamePlayer player)
 		{
-			ArrayList stat = new ArrayList();
+			var stat = new List<string>();
+
 			int total = 0;
 			#region Players Killed
 			//only show if there is a kill [by Suncheck]
@@ -568,6 +570,7 @@ namespace DOL.GS.ServerRules
 				if (player.KillsLegion > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.PvE.KillsLegion") + ": " + player.KillsLegion.ToString("N0"));
 			}
 			#endregion
+
 			return stat;
 		}
 

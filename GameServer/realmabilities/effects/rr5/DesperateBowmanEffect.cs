@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.Events;
@@ -30,11 +30,11 @@ namespace DOL.GS.Effects
 
 		public override ushort Icon { get { return 3060; } }
 
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Disarms you for 15 seconds!");
 				return list;
 			}
@@ -72,11 +72,11 @@ namespace DOL.GS.Effects
 
 		public override ushort Icon { get { return 3060; } }
 
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Stun Effect");
 				return list;
 			}

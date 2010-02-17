@@ -22,6 +22,7 @@ using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.SkillHandler;
 using DOL.GS.RealmAbilities;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -207,11 +208,11 @@ namespace DOL.GS.Effects
         // <summary>
         // Delve Info
         // <//summary>
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                IList delveInfoList = new ArrayList(3);
+                var delveInfoList = new List<string>(4);
                 delveInfoList.Add(delveString);
                 delveInfoList.Add(" ");
                 delveInfoList.Add(GuardSource.GetName(0, true) + " is guarding " + GuardTarget.GetName(0, false));

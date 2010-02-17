@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS;
 using DOL.Database;
@@ -233,7 +234,7 @@ namespace DOL.GS.Commands
 
                         MinotaurRelic relic = client.Player.TargetObject as MinotaurRelic;
 
-						ArrayList info = new ArrayList();
+						var info = new List<string>();
                         info.Add("===========================");
 						info.Add(LanguageMgr.GetTranslation(client, "GMCommands.MinoRelic.Info.RelicInfo"));
                         info.Add("===========================");
@@ -399,7 +400,7 @@ namespace DOL.GS.Commands
 				#region ShowAll
 				case "showall":
                     {
-                        ArrayList info = new ArrayList();
+                    	var info = new List<string>();
 
                         if (args.Length > 2)
                         {

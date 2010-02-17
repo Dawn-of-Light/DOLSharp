@@ -1,6 +1,7 @@
 //Andraste v2.0 - Vico
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Collections;
@@ -19,18 +20,34 @@ namespace DOL.GS.Spells
 	{
 		public override bool CheckBeginCast(GameLiving selectedTarget)
         {
-			if(!base.CheckBeginCast(selectedTarget)) return false;
-			if(selectedTarget==null) return false;
-			if (selectedTarget is GameNPC) { MessageToCaster("This spell works only on players.", eChatType.CT_SpellResisted); return false; }
-			if(selectedTarget as GamePlayer==null) return false;
-			if(!m_caster.IsWithinRadius(selectedTarget, Spell.Range)) { MessageToCaster("Your target is too far away.", eChatType.CT_SpellResisted); return false; }
+			if(!base.CheckBeginCast(selectedTarget)) 
+				return false;
+
+			if(selectedTarget==null) 
+				return false;
+
+			if (selectedTarget is GameNPC)
+			{
+				MessageToCaster("This spell works only on players.", eChatType.CT_SpellResisted); return false;
+			}
+
+			if(selectedTarget as GamePlayer==null) 
+				return false;
+
+			if(!m_caster.IsWithinRadius(selectedTarget, Spell.Range))
+			{
+				MessageToCaster("Your target is too far away.", eChatType.CT_SpellResisted); return false;
+			}
+
             return true;
         }
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
-			GamePlayer player=target as GamePlayer;
-			if(player==null) return;
-			ArrayList text=new ArrayList();
+			GamePlayer player = target as GamePlayer;
+			if(player == null) 
+				return;
+
+			var text = new List<string>();
 			text.Add("Class: "+player.CharacterClass.Name);
 			text.Add("Realmpoints: "+player.RealmPoints+" = "+string.Format("{0:#L#} {1}",player.RealmLevel+10,player.RealmTitle));
 			text.Add("----------------------------------------------------");

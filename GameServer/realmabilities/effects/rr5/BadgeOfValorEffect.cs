@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.GS.PropertyCalc;
@@ -100,11 +100,11 @@ namespace DOL.GS.Effects
         /// <summary>
         /// Delve information
         /// </summary>
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                IList delveInfoList = new ArrayList(10);
+                var delveInfoList = new List<string>();
                 delveInfoList.Add("Melee damage for the next 20 seconds will be INCREASED by the targets armor-based ABS instead of decreased.");
                 delveInfoList.Add(" ");
 

@@ -17,7 +17,8 @@
  *
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -94,9 +95,9 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve information.
 		/// </summary>
-		public override IList DelveInfo 
+		public override IList<string> DelveInfo 
         {
-            get { return new ArrayList(0); } 
+            get { return new string[0]; } 
         }
     }
 }

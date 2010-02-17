@@ -18,7 +18,7 @@
  */
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.Events;
 
 namespace DOL.GS.Effects
@@ -68,11 +68,11 @@ namespace DOL.GS.Effects
         public override ushort Icon { get { return 7051; } }
 
         // Delve Info
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("Summon pet in 3 seconds.");
                 return list;
             }

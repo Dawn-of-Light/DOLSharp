@@ -80,11 +80,11 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Delve info string.
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList delve = new ArrayList();
+				var delve = new List<string>();
 				delve.Add("Function: summon");
 				delve.Add("");
 				delve.Add("Summons a pet to serve the caster.");

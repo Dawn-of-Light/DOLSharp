@@ -2852,11 +2852,11 @@ target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public virtual IList DelveInfo
+		public virtual IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>(32);
 				//list.Add("Function: " + (Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType));
 				//list.Add(" "); //empty line
 				list.Add(Spell.Description);

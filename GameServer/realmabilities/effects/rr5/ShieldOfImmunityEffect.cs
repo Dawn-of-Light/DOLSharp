@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.Events;
@@ -71,11 +72,11 @@ namespace DOL.GS.Effects
 		public override ushort Icon { get { return 3047; } }
 
 
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Shield that absorbs 90% melee/archer damage for 20 seconds.");
 				return list;
 			}

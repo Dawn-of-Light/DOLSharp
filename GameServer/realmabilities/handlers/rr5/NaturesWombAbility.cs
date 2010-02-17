@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
@@ -36,7 +37,7 @@ namespace DOL.GS.RealmAbilities
 			return 600;
 		}
 
-		public override void AddEffectsInfo(System.Collections.IList list)
+		public override void AddEffectsInfo(IList<string> list)
 		{
 			list.Add("Stuns you for 5 seconds. During this time all damage is converted into healing!");
 			list.Add("");

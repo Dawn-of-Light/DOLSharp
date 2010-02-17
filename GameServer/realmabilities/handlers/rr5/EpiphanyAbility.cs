@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -75,7 +76,7 @@ namespace DOL.GS.RealmAbilities
 		}
 
 
-		public override void AddEffectsInfo(System.Collections.IList list)
+		public override void AddEffectsInfo(IList<string> list)
 		{
 			list.Add("25% Group power refresh. Skald must be out of combat to use. (group members may be in combat)");
 			list.Add("");

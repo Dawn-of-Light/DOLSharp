@@ -956,7 +956,7 @@ namespace DOL.GS.Commands
 
 		private void info( GameClient client, GameNPC targetMob, string[] args )
 		{
-			ArrayList info = new ArrayList();
+			var info = new List<string>();
 
 			if ( targetMob.LoadedFromScript )
 				info.Add( " + Loaded: from Script" );
@@ -1088,7 +1088,7 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage( "No target selected.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
 				return;
 			}
-			ArrayList info = new ArrayList();
+			var info = new List<string>();
 			info.Add( "Modified stats:" );
 			info.Add( "" );
 			for ( eProperty property = eProperty.Stat_First; property <= eProperty.Stat_Last; ++property )
@@ -1680,7 +1680,7 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				ArrayList text = new ArrayList();
+				var text = new List<string>();
 				text.Add( "." );
 				DataObject[] template = GameServer.Database.SelectObjects( typeof( DBLootTemplate ), "TemplateName = '" + GameServer.Database.Escape( targetMob.Name ) + "'" );
 

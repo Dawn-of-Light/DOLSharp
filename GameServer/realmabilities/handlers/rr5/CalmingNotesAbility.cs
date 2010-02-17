@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Spells;
@@ -49,7 +50,7 @@ namespace DOL.GS.RealmAbilities
         {
             return 300;
         }
-        public override void AddEffectsInfo(System.Collections.IList list)
+        public override void AddEffectsInfo(IList<string> list)
         {
             list.Add("Insta-cast spell that mesmerizes all enemy pets within 750 radius for 30 seconds.");
             list.Add("");

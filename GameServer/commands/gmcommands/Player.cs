@@ -30,6 +30,7 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.GS.Quests;
+using System.Collections.Generic;
 
 namespace DOL.GS.Commands
 {
@@ -1499,7 +1500,7 @@ namespace DOL.GS.Commands
                             return;
                         }
 
-                        ArrayList text = new ArrayList();
+						var text = new List<string>();
 
                         foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
                         {
@@ -1525,7 +1526,7 @@ namespace DOL.GS.Commands
                             return;
                         }
 
-                        ArrayList text = new ArrayList();
+						var text = new List<string>();
                         foreach (IGameEffect effect in player.EffectList)
                         {
                             text.Add(effect.Name + " remaining " + effect.RemainingTime);
@@ -1610,7 +1611,7 @@ namespace DOL.GS.Commands
 
         private void Show_Inventory(GamePlayer player, GameClient client)
         {
-            ArrayList text = new ArrayList();
+			var text = new List<string>();
             text.Add(" ");
             text.Add("PLAYER INVENTORY ");
             text.Add(" ");
@@ -1635,7 +1636,7 @@ namespace DOL.GS.Commands
 
         private void Show_Info(GamePlayer player, GameClient client)
         {
-            ArrayList text = new ArrayList();
+			var text = new List<string>();
             text.Add(" ");
             text.Add("PLAYER INFORMATION ");
             text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
@@ -1654,7 +1655,6 @@ namespace DOL.GS.Commands
 			text.Add(" ");
             text.Add("CHARACTER STATS ");
 
-            ArrayList info = new ArrayList();
             String sCurrent = "";
             String sTitle = "";
             int cnt = 0;

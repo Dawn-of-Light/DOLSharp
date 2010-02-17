@@ -21,13 +21,12 @@ using System.Text;
 namespace DOL
 {
 	/// <summary>
-	/// Provides basic functionality to convert data types
+	/// Provides basic functionality to convert data types.
 	/// </summary>
 	public static class Marshal
 	{
 		/// <summary>
-		/// Converts a byte c-style string byte-array 
-		/// to a c# string
+		/// Reads a null-terminated string from a byte array.
 		/// </summary>
 		/// <param name="cstyle">the bytes</param>
 		/// <returns>the string</returns>

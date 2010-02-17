@@ -18,6 +18,7 @@
  */
 //made by DeMAN
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Collections;
 using DOL.Database;
@@ -145,11 +146,11 @@ namespace DOL.GS.Spells
             }
             return 0;
         }
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
 
                 //Name
                 list.Add("Name: " + Spell.Name);

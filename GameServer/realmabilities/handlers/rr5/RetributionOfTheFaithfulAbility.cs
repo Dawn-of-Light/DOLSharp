@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
@@ -34,7 +35,7 @@ namespace DOL.GS.RealmAbilities
 			return 300;
 		}
 
-		public override void AddEffectsInfo(System.Collections.IList list)
+		public override void AddEffectsInfo(IList<string> list)
 		{
 			list.Add("30 second buff that has a chance to proc a 3 second (duration undiminished by resists) stun on any melee attack on the cleric.");
 			list.Add("");

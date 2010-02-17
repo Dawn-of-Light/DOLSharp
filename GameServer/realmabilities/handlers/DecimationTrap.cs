@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -191,7 +192,7 @@ namespace DOL.GS.RealmAbilities
 			return 900;
 		}
 
-		public override void AddEffectsInfo(System.Collections.IList list)
+		public override void AddEffectsInfo(IList<string> list)
 		{
 			list.Add("Trap that deals the following damage in an 350 radius");
 			list.Add("Level 1: 300 Damage");

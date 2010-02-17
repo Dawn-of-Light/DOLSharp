@@ -4,6 +4,7 @@ using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
+using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
@@ -64,11 +65,11 @@ namespace DOL.GS.Spells
 		}
 
 
-		public override IList DelveInfo 
+		public override IList<string> DelveInfo 
 		{
 			get 
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				//Name
 				list.Add("Name: " + Spell.Name);
 				//Description

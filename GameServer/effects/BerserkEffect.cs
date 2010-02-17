@@ -22,6 +22,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.Events;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -86,11 +87,11 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(4);
+				var delveInfoList = new List<string>();
 				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BerserkEffect.InfoEffect"));
 
 				int seconds = RemainingTime / 1000;

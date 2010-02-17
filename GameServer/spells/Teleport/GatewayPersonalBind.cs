@@ -77,12 +77,13 @@ namespace DOL.GS.Spells
 			base.InterruptCasting();
 		}
 
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
-				list.Add(String.Format("  {0}", Spell.Description));
+				var list = new List<string>();
+				list.Add(string.Format("  {0}", Spell.Description));
+
 				return list;
 			}
 		}

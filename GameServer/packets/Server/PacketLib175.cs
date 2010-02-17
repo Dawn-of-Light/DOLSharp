@@ -18,6 +18,7 @@
  */
 #define NOENCRYPTION
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Collections;
 using DOL.GS.PlayerTitles;
@@ -42,7 +43,7 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-		public override void SendCustomTextWindow(string caption, IList text)
+		public override void SendCustomTextWindow(string caption, IList<string> text)
 		{
 			if (text == null)
 				return;

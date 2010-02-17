@@ -21,6 +21,7 @@ using System.Collections;
 
 using DOL.Database;
 using DOL.GS.Effects;
+using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
@@ -154,7 +155,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// The DelveInfo
 		/// </summary>
-		IList DelveInfo { get; }
+		IList<string> DelveInfo { get; }
 
 		/// <summary>
 		/// Current depth of delve info

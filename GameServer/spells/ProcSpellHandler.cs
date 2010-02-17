@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
@@ -177,11 +178,11 @@ namespace DOL.GS.Spells
         /// <summary>
         /// Delve Info
         /// </summary>
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
 
 //                list.Add("Function: " + (string)(Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType));
                 list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ProcSpellHandler.DelveInfo.Function", (string)(Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType)));
@@ -230,7 +231,7 @@ namespace DOL.GS.Spells
                     }
                     subSpellHandler.DelveInfoDepth = nextDelveDepth;
                     // Get delve info of sub-spell
-                    IList subSpellDelve = subSpellHandler.DelveInfo;
+                    IList<string> subSpellDelve = subSpellHandler.DelveInfo;
                     if (subSpellDelve.Count > 0)
                     {
                         subSpellDelve.RemoveAt(0);

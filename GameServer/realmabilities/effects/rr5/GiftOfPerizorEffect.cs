@@ -18,7 +18,7 @@
  */
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -50,11 +50,11 @@ namespace DOL.GS.Effects
         public override ushort Icon { get { return 3090; } }
 
         // Delve Info
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("Buff group with 25% damage reduction for 60 seconds, return damage reduced as power.");
                 return list;
             }

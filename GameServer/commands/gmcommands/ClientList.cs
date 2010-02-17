@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
@@ -31,7 +32,7 @@ namespace DOL.GS.Commands
 		public void OnCommand(GameClient client, string[] args)
 		{
 			ArrayList clients = WorldMgr.GetAllPlayingClients();
-			ArrayList message = new ArrayList();
+			var message = new List<string>();
 
 			foreach (GameClient gc in clients)
 			{

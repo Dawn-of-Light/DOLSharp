@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.Database;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -56,7 +57,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		IList DelveInfo { get; }
+		IList<string> DelveInfo { get; }
 
 		/// <summary>
 		/// Get the save effect

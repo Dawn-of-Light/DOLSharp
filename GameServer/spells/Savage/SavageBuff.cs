@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -42,11 +43,11 @@ namespace DOL.GS.Spells
 			base.OnEffectStart(effect);
 			SendUpdates(effect.Owner);
 		}
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>(16);
                 //list.Add("Function: " + (Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType));
                 //list.Add(" "); //empty line
                 list.Add(Spell.Description);

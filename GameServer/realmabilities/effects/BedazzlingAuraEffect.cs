@@ -1,10 +1,11 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.GS.PropertyCalc;
 using DOL.Events;
 using DOL.GS.Effects;
+using System.Collections.Generic;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -96,7 +97,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			get
 			{
-				return "Bedazzeling Aura";
+				return "Bedazzling Aura";
 			}
 		}
 
@@ -114,11 +115,11 @@ namespace DOL.GS.RealmAbilities
 		/// <summary>
 		/// Delve information
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(10);
+				var delveInfoList = new List<string>(8);
 				delveInfoList.Add("Grants the group increased resistance to magical damage (Does not stack with Soldier's Barricade or Barrier of Fortitude).");
 				delveInfoList.Add(" ");
 				delveInfoList.Add("Value: " + m_value + "%");

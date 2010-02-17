@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -65,7 +66,7 @@ namespace DOL.GS.RealmAbilities
             return 120;
         }
 
-        public override void AddEffectsInfo(System.Collections.IList list)
+        public override void AddEffectsInfo(IList<string> list)
         {
             list.Add(" PBAoE Pet pulsing effect, 350units, 25 damage, 6 ticks, 2min RUT.");
             list.Add("");

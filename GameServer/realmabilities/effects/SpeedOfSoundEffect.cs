@@ -4,6 +4,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.GS.PropertyCalc;
 using DOL.Events;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -121,11 +122,11 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve information
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(10);
+				var delveInfoList = new List<string>();
 				delveInfoList.Add("Gives immunity to stun/snare/root and mesmerize spells and provides unbreakeable speed.");
 				delveInfoList.Add(" ");
 

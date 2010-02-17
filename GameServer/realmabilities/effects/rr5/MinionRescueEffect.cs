@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.Database;
@@ -179,11 +180,11 @@ namespace DOL.GS.Effects
         public override string Name { get { return "Minion Rescue"; } }
         public override ushort Icon { get { return 3048; } }
 
-        public override System.Collections.IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("Summon pets that will follow and stun enemies.");
                 return list;
             }
