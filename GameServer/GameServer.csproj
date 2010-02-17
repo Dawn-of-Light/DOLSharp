@@ -81,6 +81,8 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -2170,6 +2172,10 @@
     <Compile Include="spells\Savage\SavageEnduranceHeal.cs" />
     <Compile Include="spells\SpeedOfTheRealmHandler.cs" />
     <Compile Include="spells\Spirit Master\SummonSpiritFighter.cs" />
+    <Compile Include="spells\Stealthers\StealthersHandlers.cs" />
+    <Compile Include="spells\Stealthers\StealthersHandlers.Designer.cs">
+      <DependentUpon>StealthersHandlers.cs</DependentUpon>
+    </Compile>
     <Compile Include="spells\StylePowerDrain.cs" />
     <Compile Include="spells\Teleport\GatewayPersonalBind.cs" />
     <Compile Include="spells\HealthToFatigue.cs" />
@@ -2780,6 +2786,7 @@
   <ItemGroup>
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
+    <Folder Include="spells\Stealthers" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

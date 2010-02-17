@@ -18,11 +18,10 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
 using DOL.Events;
+using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.Language;
-using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {

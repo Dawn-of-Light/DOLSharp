@@ -19,20 +19,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Reflection;
 
 using DOL.Database;
-using DOL.Language;
 using DOL.GS.Effects;
+using DOL.GS.Quests;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
-using DOL.GS.SkillHandler;
-using DOL.GS.Quests;
-
+using DOL.Language;
 using log4net;
-using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
