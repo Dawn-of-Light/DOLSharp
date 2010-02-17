@@ -20,62 +20,27 @@
 namespace DOL
 {
 	/// <summary>
-	/// This class is used to hold statistics about DOL usage
+	/// Static class that holds various statistics about the server instance.
 	/// </summary>
-	public class Statistics
+	public static partial class Statistics
 	{
 		/// <summary>
-		/// The total bytes received
+		/// The total number of bytes received.
 		/// </summary>
 		public static long BytesIn;
 
 		/// <summary>
-		/// The total bytes sent
+		/// The total number of bytes sent.
 		/// </summary>
 		public static long BytesOut;
 
 		/// <summary>
-		/// The total account count
-		/// </summary>
-		public static int MemAccCount;
-
-		/// <summary>
-		/// The total character count
-		/// </summary>
-		public static int MemCharCount;
-
-		/// <summary>
-		/// The total mob count
-		/// </summary>
-		public static int MemMobCount;
-
-		/// <summary>
-		/// The total incoming packet objects count
-		/// </summary>
-		public static int MemPacketInObj;
-
-		/// <summary>
-		/// The total outgoing packet objects count
-		/// </summary>
-		public static int MemPacketOutObj;
-
-		/// <summary>
-		/// The total player count
-		/// </summary>
-		public static int MemPlayerCount;
-
-		/// <summary>
-		/// The total spellhandler objects
-		/// </summary>
-		public static int MemSpellHandlerObj;
-
-		/// <summary>
-		/// The total incoming packets
+		/// The total number of packets received.
 		/// </summary>
 		public static long PacketsIn;
 
 		/// <summary>
-		/// The total outgoing packets
+		/// The total number of packets sent.
 		/// </summary>
 		public static long PacketsOut;
 	}

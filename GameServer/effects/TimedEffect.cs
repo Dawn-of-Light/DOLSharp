@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -98,11 +99,12 @@ namespace DOL.GS.Effects
 			}
 		}
 
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
+
 				int seconds = RemainingTime / 1000;
 				if (seconds > 0)
 				{

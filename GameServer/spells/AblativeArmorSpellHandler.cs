@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
@@ -164,11 +165,11 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 		#region Devle Info
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>(16);
 
 				//Name
 				list.Add("Name: " + Spell.Name);

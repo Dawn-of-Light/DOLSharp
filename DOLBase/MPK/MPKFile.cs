@@ -29,9 +29,9 @@ namespace DOL.MPK
 	/// </summary>
 	public class MPKFile
 	{
-		private byte[] m_buf;
-		private byte[] m_compBuf;
-		private MPKFileHeader m_hdr = new MPKFileHeader();
+		private byte[] _buf;
+		private byte[] _compBuf;
+		private MPKFileHeader _hdr = new MPKFileHeader();
 
 		/// <summary>
 		/// Constructs a new MPK file entry
@@ -41,9 +41,9 @@ namespace DOL.MPK
 		/// <param name="hdr">The file entry header</param>
 		public MPKFile(byte[] compData, byte[] data, MPKFileHeader hdr)
 		{
-			m_compBuf = compData;
-			m_buf = data;
-			m_hdr = hdr;
+			_compBuf = compData;
+			_buf = data;
+			_hdr = hdr;
 		}
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace DOL.MPK
 		/// </summary>
 		public MPKFileHeader Header
 		{
-			get { return m_hdr; }
+			get { return _hdr; }
 		}
 
 		/// <summary>
@@ -70,8 +70,9 @@ namespace DOL.MPK
 		{
 			get
 			{
-				var buf = new byte[m_buf.Length];
-				m_buf.CopyTo(buf, 0);
+				var buf = new byte[_buf.Length];
+				Buffer.BlockCopy(_buf, 0, buf, 0, buf.Length);
+
 				return buf;
 			}
 		}
@@ -83,8 +84,9 @@ namespace DOL.MPK
 		{
 			get
 			{
-				var buf = new byte[m_hdr.CompressedSize];
-				m_compBuf.CopyTo(buf, 0);
+				var buf = new byte[_hdr.CompressedSize];
+				Buffer.BlockCopy(_compBuf, 0, buf, 0, buf.Length);
+
 				return buf;
 			}
 		}
@@ -94,7 +96,7 @@ namespace DOL.MPK
 		/// </summary>
 		public void Display()
 		{
-			m_hdr.Display();
+			_hdr.Display();
 		}
 
 		/// <summary>
@@ -112,32 +114,29 @@ namespace DOL.MPK
 
 			using (FileStream file = fi.OpenRead())
 			{
-				m_buf = new byte[fi.Length];
-				file.Read(m_buf, 0, m_buf.Length);
-				file.Close();
+				_buf = new byte[fi.Length];
+				file.Read(_buf, 0, _buf.Length);
 			}
 
-			m_hdr = new MPKFileHeader();
-			m_hdr.Name = fname;
-			m_hdr.Size = (uint) fi.Length;
-			m_hdr.TimeStamp = (uint) DateTime.Now.ToFileTime();
+			_hdr = new MPKFileHeader { Name = fname, UncompressedSize = (uint)fi.Length, TimeStamp = (uint)DateTime.Now.ToFileTime() };
 
 			var def = new Deflater();
 
-			def.SetInput(m_buf, 0, m_buf.Length);
+			def.SetInput(_buf, 0, _buf.Length);
 			def.Finish();
 
 			// create temporary buffer
-			var tempbuffer = new byte[m_buf.Length + m_buf.Length/5];
-			m_hdr.CompressedSize = (uint) def.Deflate(tempbuffer, 0, tempbuffer.Length);
+			var tempbuffer = new byte[_buf.Length + _buf.Length / 5];
+			_hdr.CompressedSize = (uint)def.Deflate(tempbuffer, 0, tempbuffer.Length);
 
-			m_compBuf = new byte[m_hdr.CompressedSize];
-			Array.Copy(tempbuffer, 0, m_compBuf, 0, m_hdr.CompressedSize);
+			_compBuf = new byte[_hdr.CompressedSize];
+			Buffer.BlockCopy(tempbuffer, 0, _compBuf, 0, (int)_hdr.CompressedSize);
 
 
 			var crc = new Crc32();
-			crc.Update(m_compBuf, 0, (int) m_hdr.CompressedSize);
-			m_hdr.CRC = crc;
+			crc.Update(_compBuf, 0, (int)_hdr.CompressedSize);
+
+			_hdr.CRC = crc;
 		}
 
 		/// <summary>
@@ -151,11 +150,9 @@ namespace DOL.MPK
 				dir += Path.DirectorySeparatorChar;
 			}
 
-			using (var writer = new BinaryWriter(File.Create(dir + m_hdr.Name), Encoding.UTF8))
+			using (var writer = new BinaryWriter(File.Create(dir + _hdr.Name), Encoding.UTF8))
 			{
-				writer.Write(m_buf);
-				writer.Flush();
-				writer.Close();
+				writer.Write(_buf);
 			}
 		}
 	}

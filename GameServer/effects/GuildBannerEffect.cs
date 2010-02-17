@@ -18,9 +18,10 @@
  */
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -121,13 +122,14 @@ namespace DOL.GS.Effects
 		#region Delve
 		protected abstract string Description { get; }
 
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>(4);
 				list.Add(Description);
-				list.Add(base.DelveInfo);
+				list.AddRange(base.DelveInfo);
+
 				return list;
 			}
 		}

@@ -19,6 +19,7 @@
 //Eden - 1.94 RR5 Paladin
 
 using System;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
@@ -47,7 +48,7 @@ namespace DOL.GS.RealmAbilities
 			return 900;
 		}
 
-		public override void AddEffectsInfo(System.Collections.IList list)
+		public override void AddEffectsInfo(IList<string> list)
 		{
 			list.Add("Decrease Paladin stats by 25%, and pulse a 300 points group heal with a 750 units range every 3 seconds for 15 seconds total.");
 			list.Add("");

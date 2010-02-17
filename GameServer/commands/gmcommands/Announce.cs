@@ -17,6 +17,7 @@
  *
  */
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.GS;
@@ -59,8 +60,9 @@ namespace DOL.GS.Commands
 				#region Window
 				case "window":
 					{
-						IList messages = new ArrayList();
+						var messages = new List<string>();
 						messages.Add(message);
+
 						foreach (GameClient clients in WorldMgr.GetAllPlayingClients())
                             if(clients != null)
 							    clients.Player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(clients, "GMCommands.Announce.WindowAnnounce", client.Player.Name), messages);

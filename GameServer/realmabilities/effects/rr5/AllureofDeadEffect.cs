@@ -19,6 +19,7 @@
 
 using System.Collections;
 using System;
+using System.Collections.Generic;
 using DOL;
 using DOL.GS;
 using DOL.Events;
@@ -75,11 +76,11 @@ namespace DOL.GS.Effects
         /// <summary>
         /// Delve Info
         /// </summary>
-        public override System.Collections.IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("Changes your Skin for 30 seconds and grantz you 75% CC Imunity.");
                 return list;
             }

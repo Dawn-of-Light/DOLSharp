@@ -17,11 +17,12 @@
  *
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.SkillHandler;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -168,14 +169,15 @@ namespace DOL.GS.Effects
         /// <summary>
         /// Delve Info
         /// </summary>
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                IList delveInfoList = new ArrayList(3);
+            	var delveInfoList = new List<string>(4);
 				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.InfoEffect"));
                 delveInfoList.Add(" ");
 				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.XIsBodyguardingY", GuardSource.GetName(0, true), GuardTarget.GetName(0, false)));
+
                 return delveInfoList;
             }
         }

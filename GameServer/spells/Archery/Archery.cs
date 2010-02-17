@@ -241,11 +241,11 @@ namespace DOL.GS.Spells
             return true;
         }
         
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				//list.Add("Function: " + (Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType));
 				//list.Add(" "); //empty line
 				list.Add(Spell.Description);

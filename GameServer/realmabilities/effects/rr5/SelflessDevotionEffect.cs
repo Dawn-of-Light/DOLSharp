@@ -122,11 +122,11 @@ namespace DOL.GS.Effects
 
 		public int SpellEffectiveness { get { return 100; } }
 
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Decrease Paladin stats by 25%, and pulse a 300 points group heal with a 750 units range every 3 seconds for 15 seconds total.");
 				return list;
 			}

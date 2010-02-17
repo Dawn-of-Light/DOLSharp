@@ -21,6 +21,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
 using System.Collections;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Commands
 {
@@ -259,7 +260,7 @@ namespace DOL.GS.Commands
                                 return;
                             }
                             DetailDisplayHandler itemhandler = new DetailDisplayHandler();
-                            ArrayList objectInfo = new ArrayList();
+                            var objectInfo = new List<string>();
                             itemhandler.WriteTechnicalInfo(objectInfo, obj);
                             client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "GMCommands.Item.Info.Informations", obj.Id_nb), objectInfo);
                             break;

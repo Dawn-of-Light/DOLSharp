@@ -24,6 +24,7 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
@@ -135,7 +136,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
@@ -156,7 +157,7 @@ namespace DOL.GS.Spells
 				<End Info>
 				 */
 
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ResistDebuff.DelveInfo.Function"));
 				list.Add(" "); //empty line
 				list.Add(Spell.Description);

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{E1131DC5-BA14-4FD3-B717-FA2ACA6E49AA}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -102,12 +102,15 @@
     <Compile Include="AssemblyInfo.cs" />
     <EmbeddedResource Include="DOLConfig.resx">
       <DependentUpon>DOLConfig.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ExtraPropertiesEditor.resx">
       <DependentUpon>ExtraPropertiesEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Compile Include="RegExTextBox.cs">
       <SubType>Component</SubType>

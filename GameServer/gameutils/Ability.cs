@@ -18,6 +18,8 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using log4net;
@@ -217,15 +219,16 @@ namespace DOL.GS
 			return "";
 		}
 
-		public virtual IList DelveInfo
+		public virtual IList<string> DelveInfo
 		{
 			get
 			{
-				IList list = new ArrayList();
+				var list = new List<string>(4);
 				foreach (string part in m_description.Split(new char[] { '|' }))
 				{
 					list.Add(part);
 				}
+
 				return list;
 			}
 		}

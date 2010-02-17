@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
@@ -47,7 +48,7 @@ namespace DOL.GS.RealmAbilities
 			return 900;
 		}
 
-		public override void AddEffectsInfo(System.Collections.IList list)
+		public override void AddEffectsInfo(IList<string> list)
 		{
 			list.Add("Warrior with shield equipped covers up and takes 90% less damage for all attacks for 45 seconds. Can only move at reduced speed (speed buffs have no effect) and cannot attack. Using a style will break testudo form. This ability is only effective versus realm enemies.");
 			list.Add("");

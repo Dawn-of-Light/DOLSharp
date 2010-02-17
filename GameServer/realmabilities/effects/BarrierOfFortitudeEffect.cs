@@ -1,9 +1,10 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.GS.PropertyCalc;
 using DOL.Events;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -157,11 +158,11 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve information
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(10);
+				var delveInfoList = new List<string>(8);
 				delveInfoList.Add(m_delveString);
 				delveInfoList.Add(" ");
 				delveInfoList.Add("Value: " + m_value + "%");

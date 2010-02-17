@@ -17,7 +17,8 @@
  *
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Generic;
 using DOL.Events;
 namespace DOL.GS.Effects
 {
@@ -149,11 +150,11 @@ namespace DOL.GS.Effects
 		public override ushort Icon { get { return 3089; } }
 
 		// Delve Info
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Grants a 30 second damage add that stacks with all other forms of damage add. All damage done via the damage add will be returned to the Vampiir as power.");
 				return list;
 			}

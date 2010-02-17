@@ -27,7 +27,7 @@ using log4net;
 namespace DOL.Network
 {
 	/// <summary>
-	/// Base class for a server using overlapped socket IO
+	/// Base class for a server using overlapped socket IO.
 	/// </summary>
 	public class BaseServer
 	{
@@ -236,9 +236,13 @@ namespace DOL.Network
 					return;
 
 				sock = _listen.EndAccept(ar);
-				sock.SendBufferSize = Constants.SendBuffSize;
+
+				sock.SendBufferSize = Constants.SendBufferSize;
+				sock.ReceiveBufferSize = Constants.ReceiveBufferSize;
+				sock.NoDelay = Constants.UseNoDelay;
 
 				BaseClient baseClient = null;
+
 				try
 				{
 					if (Log.IsInfoEnabled)

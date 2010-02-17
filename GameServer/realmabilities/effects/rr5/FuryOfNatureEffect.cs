@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.RealmAbilities;
@@ -175,11 +176,11 @@ namespace DOL.GS.Effects
 			get { return 100; }
 		}
 
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Doubles style damage and returns all damage dealt as spreadheal to all group members except the caster");
 				return list;
 			}

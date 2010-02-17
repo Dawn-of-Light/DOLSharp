@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
@@ -57,11 +58,11 @@ namespace DOL.GS.Spells
 		}
 
 
-		public override IList DelveInfo 
+		public override IList<string> DelveInfo 
 		{
 			get 
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				//Name
 				list.Add("Name: " + Spell.Name);
 				//Description

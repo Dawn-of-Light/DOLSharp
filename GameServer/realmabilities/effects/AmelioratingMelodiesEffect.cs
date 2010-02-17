@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Generic;
 
 using DOL.GS.Effects;
@@ -118,17 +118,18 @@ namespace DOL.GS.RealmAbilities
 		/// <summary>
 		/// Delve information
 		/// </summary>
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>(8);
 				list.Add("Ameliorating Melodies");
 				list.Add(" ");
 				list.Add("Value: " + m_heal.ToString() + " / tick");
 				list.Add("Target: Group");
 				list.Add("Range: " + m_range.ToString());
 				list.Add("Duration: 30 s (" + (m_countdown * 3).ToString() + " s remaining)");
+
 				return list;
 			}
 		}

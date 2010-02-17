@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.Events;
@@ -64,11 +64,11 @@ namespace DOL.GS.Effects
 			base.Stop();
 		}
 
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Grants 90% Parry chance which is broken by an attack");
 				return list;
 			}

@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -1003,7 +1004,7 @@ namespace DOL.GS.Housing
 		/// <param name="player">the player</param>
 		public void SendHouseInfo(GamePlayer player)
 		{
-			ArrayList text = new ArrayList();
+			var text = new List<string>();
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Owner", this.Name));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lotnum", HouseNumber));
 			int level = Model - (int)((Model - 1) / 4) * 4;

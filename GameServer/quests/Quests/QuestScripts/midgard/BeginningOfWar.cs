@@ -42,6 +42,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
@@ -1115,7 +1116,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (quest.Step >= 4 && quest.Step <= 8)
 				{
-					IList textList = new ArrayList();
+					var textList = new List<string>();
 					textList.Add("tattered shirt from escaped thrall");
 					textList.Add("smiera-gatto's claw");
 					textList.Add("coastal wolf blood");

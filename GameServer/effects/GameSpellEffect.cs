@@ -27,6 +27,7 @@ using DOL.GS.PacketHandler;
 using DOL.Language;
 
 using log4net;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -487,11 +488,11 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve information
 		/// </summary>
-		public IList DelveInfo
+		public IList<string> DelveInfo
 		{
 			get
 			{
-				IList list = m_handler.DelveInfo;
+				IList<string> list = m_handler.DelveInfo;
 
 				int seconds = RemainingTime / 1000;
 				if (seconds > 0)

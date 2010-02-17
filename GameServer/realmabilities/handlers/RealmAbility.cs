@@ -3,6 +3,7 @@ using System.Collections;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -93,7 +94,7 @@ namespace DOL.GS.RealmAbilities
 			}
 		}
 
-		public virtual void AddReUseDelayInfo(IList list)
+		public virtual void AddReUseDelayInfo(IList<string> list)
 		{
 			for (int i = 1; i <= MaxLevel; i++)
 			{
@@ -102,7 +103,7 @@ namespace DOL.GS.RealmAbilities
 			}
 		}
 
-		public virtual void AddEffectsInfo(IList list)
+		public virtual void AddEffectsInfo(IList<string> list)
 		{
 		}
 
@@ -119,23 +120,26 @@ namespace DOL.GS.RealmAbilities
 			living.DisableSkill(this, GetReUseDelay(Level) * 1000);
 		}
 
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList list = base.DelveInfo;
+				IList<string> list = base.DelveInfo;
 				int size = list.Count;
 				AddEffectsInfo(list);
+
 				if (list.Count > size)
 				{ // something was added
 					list.Insert(size, "");	// add empty line
 				}
+
 				size = list.Count;
 				AddReUseDelayInfo(list);
 				if (list.Count > size)
 				{ // something was added
 					list.Insert(size, "");	// add empty line
 				}
+
 				return list;
 			}
 		}

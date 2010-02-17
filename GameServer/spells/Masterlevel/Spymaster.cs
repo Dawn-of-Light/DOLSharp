@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS;
@@ -508,11 +509,11 @@ namespace DOL.GS.Effects
 		public override void Stop() { base.Stop(); }
 		public override ushort Icon { get { return 2616; } }
 		public override string Name { get { return "Loockout"; } }
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(1);
+				var delveInfoList = new List<string>();
 				delveInfoList.Add("Your stealth range is increased.");
 				return delveInfoList;
 			}

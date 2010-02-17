@@ -120,11 +120,11 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Delve info string.
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList delve = new ArrayList();
+				var delve = new List<string>();
 				delve.Add("Function: shade summon");
 				delve.Add("");
 				delve.Add("Summons an undead pet to serve the caster. The caster is transformed into a shade, and acts through the pet.");

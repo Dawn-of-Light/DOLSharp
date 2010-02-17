@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Language;
@@ -69,7 +70,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
@@ -90,7 +91,7 @@ namespace DOL.GS.Spells
 				 * <End Info>
 				 */
 
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 
                 list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "NearsightSpellHandler.DelveInfo.Function", (Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType)));
 				list.Add(" "); //empty line

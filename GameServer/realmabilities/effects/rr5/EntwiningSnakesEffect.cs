@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.Events;
@@ -77,11 +78,11 @@ namespace DOL.GS.Effects
 			get { return 0; }
 		}
 
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("A breakable 50 % snare with 20 seconds duration");
 				return list;
 			}

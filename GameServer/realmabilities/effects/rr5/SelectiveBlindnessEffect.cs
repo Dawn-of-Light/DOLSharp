@@ -18,7 +18,8 @@
  */
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Generic;
 using DOL.Events;
 
 namespace DOL.GS.Effects
@@ -80,11 +81,11 @@ namespace DOL.GS.Effects
         public override ushort Icon { get { return 3058; } }
 
         // Delve Info
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("You can't attack an ennemy.");
                 return list;
             }

@@ -28,7 +28,7 @@ namespace DOL.Network
 		/// <summary>
 		/// Default Constructor
 		/// </summary>
-		public PacketOut()
+		protected PacketOut()
 		{
 		}
 
@@ -37,16 +37,6 @@ namespace DOL.Network
 		/// </summary>
 		/// <param name="size">Size of the internal buffer</param>
 		public PacketOut(int size) : base(size)
-		{
-		}
-
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="buf">Buffer to write to</param>
-		/// <param name="start">Starting index into buf</param>
-		/// <param name="size"></param>
-		public PacketOut(byte[] buf, int start, int size) : base(buf, start, size)
 		{
 		}
 

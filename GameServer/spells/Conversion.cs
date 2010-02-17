@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -119,11 +120,11 @@ namespace DOL.GS.Spells
 					effect.Cancel(false);
 			}
 		}
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Name: " + Spell.Name);
 				list.Add("Description: " + Spell.Description);
 				list.Add("Target: " + Spell.Target);
