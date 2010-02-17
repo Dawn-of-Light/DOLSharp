@@ -22,6 +22,7 @@ using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Database;
+using System.Collections.Generic;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -66,7 +67,7 @@ namespace DOL.GS.RealmAbilities
 			return 600;
 		}
 		
-        public override void AddEffectsInfo(System.Collections.IList list)
+        public override void AddEffectsInfo(IList<string> list)
         {
             list.Add("All Heretic groupmates who are able to bind at a keep or tower lord receive a reduction in all spell damage taken for 45 seconds.");
             list.Add("");

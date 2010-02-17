@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 using System.Collections;
@@ -69,11 +70,11 @@ namespace DOL.GS.Effects
             get { return 100; }
         }
 
-        public override System.Collections.IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("Stuns you for the brief duration of 3 seconds");
                 return list;
             }
@@ -142,11 +143,11 @@ namespace DOL.GS.Effects
             get { return 100; }
         }
 
-        public override System.Collections.IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("30 second buff that has a 50% chance to proc a 3 second (duration undiminished by resists) stun on any melee attack on the cleric.");
                 return list;
             }

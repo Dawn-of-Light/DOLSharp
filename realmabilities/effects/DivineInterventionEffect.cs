@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.Events;
@@ -37,7 +38,7 @@ namespace DOL.GS.RealmAbilities
 				return;
 			if (living is GamePlayer)
 			{
-				(living as GamePlayer).Out.SendMessage("Your group is protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				(living as GamePlayer).Out.SendMessage("You group is protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				GameEventMgr.AddHandler(m_group, GroupEvent.MemberJoined, new DOLEventHandler(PlayerJoinedGroup));
 				GameEventMgr.AddHandler(m_group, GroupEvent.MemberDisbanded, new DOLEventHandler(PlayerDisbandedGroup));
 			}
@@ -50,7 +51,7 @@ namespace DOL.GS.RealmAbilities
 					t_player.Out.SendSpellEffectAnimation(living, g_player, 7036, 0, false, 1);
 				}
 				if (g_player == living) continue;
-				g_player.Out.SendMessage("Your are protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				g_player.Out.SendMessage("You are protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				affected.Add(g_player);
 				GameEventMgr.AddHandler(g_player, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
 			}
@@ -62,7 +63,7 @@ namespace DOL.GS.RealmAbilities
 			affected.Add(pjargs.Member);
 			GameEventMgr.AddHandler(pjargs.Member, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
 			if (pjargs.Member is GamePlayer)
-				((GamePlayer)pjargs.Member).Out.SendMessage("Your are protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				((GamePlayer)pjargs.Member).Out.SendMessage("You are protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 		}
 		protected void PlayerDisbandedGroup(DOLEvent e, object sender, EventArgs args)
 		{
@@ -71,7 +72,7 @@ namespace DOL.GS.RealmAbilities
 			affected.Remove(pdargs.Member);
 			GameEventMgr.RemoveHandler(pdargs.Member, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
 			if (pdargs.Member is GamePlayer)
-				((GamePlayer)pdargs.Member).Out.SendMessage("Your are not longer protected by a pool of healing!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
+				((GamePlayer)pdargs.Member).Out.SendMessage("You are no longer protected by a pool of healing!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
 			if (m_group == null)
 				Cancel(false);
 		}
@@ -131,7 +132,7 @@ namespace DOL.GS.RealmAbilities
 			}
 			foreach (GamePlayer pl in affected)
 			{
-				pl.Out.SendMessage("Your are no longer protected by a pool of healing!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
+				pl.Out.SendMessage("You are no longer protected by a pool of healing!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
 				GameEventMgr.RemoveHandler(pl, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
 			}
 			affected.Clear();
@@ -151,11 +152,11 @@ namespace DOL.GS.RealmAbilities
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(10);
+				var delveInfoList = new List<string>();
 				delveInfoList.Add("This ability creates a pool of healing on the user, instantly healing any member of the caster's group when they go below 75% hp, until it is used up.");
 				delveInfoList.Add(" ");
 				delveInfoList.Add("Target: Group");

@@ -18,7 +18,7 @@
  */
 using System;
 using System.Reflection;
-using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Generic;
 using System.Text;
 using DOL.Events;
@@ -154,11 +154,11 @@ namespace DOL.GS.Effects
 
 		public override ushort Icon { get { return 478; } }
 
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("The player will toss dirt into the face of the enemy and causes his fumble rate to increase temporarily. .");
 				list.AddRange(base.DelveInfo);
 				return list;
@@ -295,11 +295,11 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(4);
+				var delveInfoList = new List<string>(4);
 				delveInfoList.Add(delveString);
 
 				int seconds = RemainingTime / 1000;

@@ -486,7 +486,7 @@ namespace DOL.GS.PacketHandler
 		void SendUpdatePlayer();
 		void SendUpdatePlayerSkills();
 		void SendUpdateWeaponAndArmorStats();
-		void SendCustomTextWindow(string caption, IList text);
+		void SendCustomTextWindow(string caption, IList<string> text);
 		void SendPlayerTitles();
 		void SendPlayerTitleUpdate(GamePlayer player);
 		void SendEncumberance();

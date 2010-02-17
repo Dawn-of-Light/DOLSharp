@@ -1,5 +1,6 @@
 using System.Collections;
 using System;
+using System.Collections.Generic;
 using DOL;
 using DOL.GS;
 using DOL.Events;
@@ -44,11 +45,11 @@ namespace DOL.GS.Effects
         public override ushort Icon { get { return 3061; } }
 
 
-        public override System.Collections.IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("Turns the animist into a mushroom for 60 seconds. Does not break on attack. Grants the animist a 10% chance of not spending power for each spell cast during the duration.");
                 return list;
             }

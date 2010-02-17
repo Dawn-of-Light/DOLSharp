@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using System.Collections;
@@ -210,7 +211,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
@@ -228,7 +229,7 @@ namespace DOL.GS.Spells
 				This spell's effect will not take hold while the target is in combat.
 				<End Info>
 				*/
-				IList list = base.DelveInfo;
+				IList<string> list = base.DelveInfo;
 
 				list.Add(" "); //empty line
 				list.Add("This spell's effect will not take hold while the target is in combat.");

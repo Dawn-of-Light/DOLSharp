@@ -102,7 +102,7 @@ namespace DOL.GS.Commands
 				DisplayMessage(client, PlayerStatistic.GetStatsMessage(client.Player));
 		}
 
-		private static ArrayList toplist = new ArrayList();
+		private static IList<string> toplist = new List<string>();
 		public class StatToCount
 		{
 			public string name; public uint count;
@@ -157,13 +157,14 @@ namespace DOL.GS.Commands
 				allstatsheal.Add(new StatToCount(clients.Player.Name, stats.HitPointsHealed));
 				allstatsres.Add(new StatToCount(clients.Player.Name, stats.RessurectionsPerformed));
 			}
-			allstatsrp.Sort(delegate(StatToCount ctc1, StatToCount ctc2) { return ctc1.count.CompareTo(ctc2.count); }); allstatsrp.Reverse();
-			allstatslrp.Sort(delegate(StatToCount ctc1, StatToCount ctc2) { return ctc1.count.CompareTo(ctc2.count); }); allstatslrp.Reverse();
-			allstatskills.Sort(delegate(StatToCount ctc1, StatToCount ctc2) { return ctc1.count.CompareTo(ctc2.count); }); allstatskills.Reverse();
-			allstatsdeath.Sort(delegate(StatToCount ctc1, StatToCount ctc2) { return ctc1.count.CompareTo(ctc2.count); }); allstatsdeath.Reverse();
-			allstatsirs.Sort(delegate(StatToCount ctc1, StatToCount ctc2) { return ctc1.count.CompareTo(ctc2.count); }); allstatsirs.Reverse();
-			allstatsheal.Sort(delegate(StatToCount ctc1, StatToCount ctc2) { return ctc1.count.CompareTo(ctc2.count); }); allstatsheal.Reverse();
-			allstatsres.Sort(delegate(StatToCount ctc1, StatToCount ctc2) { return ctc1.count.CompareTo(ctc2.count); }); allstatsres.Reverse();
+			allstatsrp.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsrp.Reverse();
+			allstatslrp.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatslrp.Reverse();
+			allstatskills.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatskills.Reverse();
+			allstatsdeath.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsdeath.Reverse();
+			allstatsirs.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsirs.Reverse();
+			allstatsheal.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsheal.Reverse();
+			allstatsres.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsres.Reverse();
+
 			statsrp = ""; statslrp = ""; statskills = ""; statsdeath = ""; statsirs = ""; statsheal = ""; statsres = "";
 			for (int c = 0; c < allstatsrp.Count; c++) { if (c > 19 || allstatsrp[c].count < 1) break; statsrp += (c + 1) + ". " + allstatsrp[c].name + " with " + allstatsrp[c].count.ToString() + " RP\n"; }
 			for (int c = 0; c < allstatslrp.Count; c++) { if (c > 19 || allstatslrp[c].count < 1) break; statslrp += (c + 1) + ". " + allstatslrp[c].name + " with " + allstatslrp[c].count.ToString() + " RP/hour\n"; }

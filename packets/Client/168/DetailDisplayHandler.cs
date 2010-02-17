@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 
@@ -55,7 +56,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				unk_186 = packet.ReadInt();
 			ushort objectID = packet.ReadShort();
 			string caption = "";
-			ArrayList objectInfo = new ArrayList();
+			var objectInfo = new List<string>();
 
 			/*
 			Type    Description           Id
@@ -1009,7 +1010,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			return 1;
 		}
 
-		public void WriteSpellInfo(ArrayList output, Spell spell, SpellLine spellLine, GameClient client)
+		public void WriteSpellInfo(IList<string> output, Spell spell, SpellLine spellLine, GameClient client)
 		{
 			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, spellLine);
 			if(spellHandler == null)
@@ -1025,6 +1026,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					Spell s = SkillBase.GetSpellByID(spell.SubSpellID);
 					output.Add(" ");
+
 					ISpellHandler sh = ScriptMgr.CreateSpellHandler(client.Player, s, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 					output.AddRange(sh.DelveInfo);
 				}
@@ -1041,7 +1043,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		public void WriteTechnicalInfo(ArrayList output, ItemTemplate item)
+		public void WriteTechnicalInfo(IList<string> output, ItemTemplate item)
 		{
 			output.Add(" ");
 			output.Add("--- Item technical informations ---");
@@ -1123,7 +1125,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			*/
 
 			string str = "- [" + item.Name + "]: " + GlobalConstants.ObjectTypeToName(item.Object_Type);
-			ArrayList objectInfo = new ArrayList();
+			var objectInfo = new List<string>();
 
 			if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff))
 			{
@@ -1186,7 +1188,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Effective Damage:
 		/// - X.X DPS
 		/// </summary>
-		public void WriteClassicWeaponInfos(ArrayList output, ItemTemplate item, GameClient client)
+		public void WriteClassicWeaponInfos(IList<string> output, ItemTemplate item, GameClient client)
 		{
 			double itemDPS = item.DPS_AF / 10.0;
 			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * client.Player.Level);
@@ -1226,20 +1228,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 				output.Add("- " + effectiveDPS.ToString("0.0") + " DPS");
 			}
 		}
-		public void WriteUsableClasses(ArrayList output, ItemTemplate item, GameClient client)
+
+		public void WriteUsableClasses(IList<string> output, ItemTemplate item, GameClient client)
 		{
-			if (item.AllowedClasses == "" || item.AllowedClasses == null || item.AllowedClasses == "0")
+			if (string.IsNullOrEmpty(item.AllowedClasses) || item.AllowedClasses == "0")
 				return;
+
 			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteUsableClasses.UsableBy"));
+
 			string[] allowedclasses = item.AllowedClasses.Split(';');
 			foreach (string allowed in allowedclasses)
 			{
 				int classID = -1;
 				if (int.TryParse(allowed, out classID))
-					output.Add("- " + ((eCharacterClass)classID)).ToString();
+					output.Add("- " + ((eCharacterClass)classID).ToString());
 				else log.Error(item.Id_nb + " has an invalid entry for allowed classes '" + allowed + "'");
 			}
 		}
+
 		/// <summary>
 		///
 		///
@@ -1248,7 +1254,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// - X.X Clamped DPS
 		/// - XX Shield Speed
 		/// </summary>
-		public void WriteClassicShieldInfos(ArrayList output, ItemTemplate item, GameClient client)
+		public void WriteClassicShieldInfos(IList<string> output, ItemTemplate item, GameClient client)
 		{
 			double itemDPS = item.DPS_AF / 10.0;
 			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * client.Player.Level);
@@ -1291,7 +1297,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Effective Armor:
 		/// - X.X Factor
 		/// </summary>
-		public void WriteClassicArmorInfos(ArrayList output, ItemTemplate item, GameClient client)
+		public void WriteClassicArmorInfos(IList<string> output, ItemTemplate item, GameClient client)
 		{
 			output.Add(" ");
 			output.Add(" ");
@@ -1337,7 +1343,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		}
 
-		public void WriteMagicalBonuses(ArrayList output, ItemTemplate item, GameClient client, bool shortInfo)
+		public void WriteMagicalBonuses(IList<string> output, ItemTemplate item, GameClient client, bool shortInfo)
 		{
 			int oldCount = output.Count;
 
@@ -1643,7 +1649,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		protected void WriteBonusLine(ArrayList list, int bonusCat, int bonusValue)
+		protected void WriteBonusLine(IList<string> list, int bonusCat, int bonusValue)
 		{
 			if (bonusCat != 0 && bonusValue != 0 && !SkillBase.CheckPropertyType((eProperty)bonusCat, ePropertyType.Focus))
 			{
@@ -1706,7 +1712,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		protected void WriteFocusLine(ArrayList list, int focusCat, int focusLevel)
+		protected void WriteFocusLine(IList<string> list, int focusCat, int focusLevel)
 		{
 			if (SkillBase.CheckPropertyType((eProperty)focusCat, ePropertyType.Focus))
 			{
@@ -1715,7 +1721,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		protected void WriteHorseInfo(ArrayList list, ItemTemplate item, GameClient client, string horseName)
+		protected void WriteHorseInfo(IList<string> list, ItemTemplate item, GameClient client, string horseName)
 		{
 			list.Add(" ");
 			list.Add(" ");
@@ -1747,7 +1753,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Food"));
 		}
 
-		protected void WritePoisonInfo(ArrayList list, ItemTemplate item, GameClient client)
+		protected void WritePoisonInfo(IList<string> list, ItemTemplate item, GameClient client)
 		{
 			if (item.PoisonSpellID != 0)
 			{
@@ -1791,7 +1797,7 @@ namespace DOL.GS.PacketHandler.Client.v168
         /// <param name="list"></param>
         /// <param name="item"></param>
         /// <param name="client"></param>
-	    private static void WritePotionInfo(IList list, ItemTemplate item, GameClient client)
+	    private static void WritePotionInfo(IList<string> list, ItemTemplate item, GameClient client)
 	    {
 	        if(item.SpellID != 0)
 	        {
@@ -1841,7 +1847,7 @@ namespace DOL.GS.PacketHandler.Client.v168
         /// <param name="client"></param>
         /// <param name="spl"></param>
         /// <param name="line"></param>
-        private static void WritePotionSpellsInfos(IList list, GameClient client, Spell spl, NamedSkill line)
+        private static void WritePotionSpellsInfos(IList<string> list, GameClient client, Spell spl, NamedSkill line)
         {
             if(spl != null)
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
@@ -56,7 +57,7 @@ namespace DOL.GS.RealmAbilities
 			return 900;
 		}
 
-		public override void AddEffectsInfo(System.Collections.IList list)
+		public override void AddEffectsInfo(IList<string> list)
 		{
 			list.Add("Shield that absorbs 90% melee/archer damage for 20 seconds.");
 			list.Add("");

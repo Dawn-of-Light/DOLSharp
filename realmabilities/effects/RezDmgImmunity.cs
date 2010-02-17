@@ -17,7 +17,7 @@
  *
  */
 
-using System.Collections;
+using System.Collections.Generic;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using System;
@@ -85,11 +85,11 @@ namespace DOL.GS.Effects
 
         public override ushort Icon { get { return 3069; } }
 
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("Newly resserected players can't take damage for 5 seconds.");
                 return list;
             }

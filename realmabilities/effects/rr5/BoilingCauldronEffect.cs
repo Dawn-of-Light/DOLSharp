@@ -18,7 +18,7 @@
  */
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Spells;
@@ -114,11 +114,11 @@ namespace DOL.GS.Effects
         public override ushort Icon { get { return 3085; } }
 
         // Delve Info
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("Cauldron that boil in place for 5s before spilling and doing damage to all those nearby.");
                 return list;
             }

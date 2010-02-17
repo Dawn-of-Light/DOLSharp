@@ -1,5 +1,5 @@
 using System.Collections;
-
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
@@ -75,11 +75,11 @@ namespace DOL.GS.RealmAbilities
 
 		public override ushort Icon { get { return 3019; } }
 
-		public override System.Collections.IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Vanish effect");
 				return list;
 			}

@@ -17,7 +17,7 @@
  *
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.Events;
@@ -95,6 +95,17 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
+		/// Name of the effect
+		/// </summary>
+		public override string Name
+		{
+			get
+			{
+				return "The Empty Mind";
+			}
+		}
+
+		/// <summary>
 		/// Icon to show on players, can be id
 		/// </summary>
 		public override ushort Icon
@@ -105,11 +116,11 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				IList delveInfoList = new ArrayList(4);
+				var delveInfoList = new List<string>(4);
 				delveInfoList.Add("Grants the user 45 seconds of increased resistances to all magical damage by the percentage listed.");
 				foreach (string str in base.DelveInfo)
 					delveInfoList.Add(str);

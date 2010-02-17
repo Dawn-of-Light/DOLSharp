@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 
@@ -87,11 +88,11 @@ namespace DOL.GS.Effects
         public override ushort Icon { get { return 3091; } }
 
         // Delve Info
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("Grants +50% block/parry for 30s.");
                 return list;
             }
@@ -154,11 +155,11 @@ namespace DOL.GS.Effects
         public override ushort Icon { get { return 3091; } }
 
         // Delve Info
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add("Penality -10% block/parry for 15s");
                 return list;
             }

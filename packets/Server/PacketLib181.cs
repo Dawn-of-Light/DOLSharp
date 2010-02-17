@@ -24,6 +24,7 @@ using DOL.AI.Brain;
 using DOL.GS.Effects;
 using DOL.GS.PlayerTitles;
 using log4net;
+using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler
 {
@@ -56,7 +57,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public override void SendCustomTextWindow(string caption, IList text)
+		public override void SendCustomTextWindow(string caption, IList<string> text)
 		{
 			if (text == null)
 				return;

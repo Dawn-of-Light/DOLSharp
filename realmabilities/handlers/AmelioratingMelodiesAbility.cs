@@ -5,6 +5,7 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
 using DOL.GS.Spells;
+using System.Collections.Generic;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -68,7 +69,7 @@ namespace DOL.GS.RealmAbilities
 		/// <summary>
 		/// Delve information
 		/// </summary>
-		public override void AddEffectsInfo(System.Collections.IList list)
+		public override void AddEffectsInfo(IList<string> list)
 		{
 			list.Add("Level 1: Heals 100 / tick");
 			list.Add("Level 2: Heals 250 / tick");

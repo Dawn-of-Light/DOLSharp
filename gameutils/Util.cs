@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
@@ -27,13 +28,27 @@ namespace DOL.GS
 	/// <summary>
 	/// Generic purpose utility collection
 	/// </summary>
-	public sealed class Util
+	public static class Util
 	{
 		/// <summary>
 		/// Holds the random number generator instance
 		/// </summary>
-		[ThreadStatic]
+		[ThreadStatic] 
 		private static Random m_random;
+
+		/// <summary>
+		/// Gets the random number generator
+		/// </summary>
+		public static Random RandomGen
+		{
+			get
+			{
+				Random rnd = m_random;
+				if (rnd == null)
+					m_random = rnd = new Random((int) DateTime.Now.Ticks);
+				return rnd;
+			}
+		}
 
 		/// <summary>
 		/// Generates a random number between 0..max inclusive 0 AND max
@@ -44,8 +59,9 @@ namespace DOL.GS
 		{
 			return RandomGen.Next(max + 1);
 		}
+
 		/// <summary>
-        /// Generates a random number between min..max inclusive min AND max
+		/// Generates a random number between min..max inclusive min AND max
 		/// </summary>
 		/// <param name="min"></param>
 		/// <param name="max"></param>
@@ -54,6 +70,7 @@ namespace DOL.GS
 		{
 			return RandomGen.Next(min, max + 1);
 		}
+
 		/// <summary>
 		/// Generates a random number between 0.0 and 1.0.
 		/// </summary>
@@ -87,20 +104,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets the random number generator
-		/// </summary>
-		public static Random RandomGen
-		{
-			get
-			{
-				Random rnd = m_random;
-				if (rnd == null)
-					m_random = rnd = new Random((int)DateTime.Now.Ticks);
-				return rnd;
-			}
-		}
-
-		/// <summary>
 		/// Make a sentence, first letter uppercase and replace all parameters
 		/// </summary>
 		/// <param name="message"></param>
@@ -108,12 +111,15 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static string MakeSentence(string message, params string[] args)
 		{
-			if (message == null || message.Length == 0) return message;
+			if (string.IsNullOrEmpty(message)) 
+				return message;
+
 			string res = string.Format(message, args);
 			if (res.Length > 0 && char.IsLower(res[0]))
 			{
 				res = char.ToUpper(res[0]) + res.Substring(1);
 			}
+
 			return res;
 		}
 
@@ -125,7 +131,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool IsEmpty(string str)
 		{
-			return (str == null || str.Length == 0 || str.ToLower() == "null");
+			return (string.IsNullOrEmpty(str) || str.ToLower() == "null");
 		}
 
 		/// <summary>
@@ -145,7 +151,7 @@ namespace DOL.GS
 
 			try
 			{
-				trace = new StackTrace( thread, true );
+				trace = new StackTrace(thread, true);
 			}
 			finally
 			{
@@ -162,7 +168,8 @@ namespace DOL.GS
 		/// <returns>The fromatted string of stacktrace object</returns>
 		public static string FormatStackTrace(StackTrace trace)
 		{
-			StringBuilder str = new StringBuilder(128);
+			var str = new StringBuilder(128);
+
 			if (trace == null)
 			{
 				str.Append("(null)");
@@ -182,23 +189,26 @@ namespace DOL.GS
 						.Append("\n");
 				}
 			}
+
 			return str.ToString();
 		}
 
 		public static string FormatTime(long seconds)
 		{
-			StringBuilder str = new StringBuilder(10);
-			long minutes = seconds / 60;
+			var str = new StringBuilder(10);
+
+			long minutes = seconds/60;
 			if (minutes > 0)
 			{
 				str.Append(minutes)
 					.Append(":")
-					.Append((seconds - (minutes * 60)).ToString("D2"))
+					.Append((seconds - (minutes*60)).ToString("D2"))
 					.Append(" min");
 			}
 			else
 				str.Append(seconds)
 					.Append(" sec");
+
 			return str.ToString();
 		}
 
@@ -211,7 +221,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool IsNearValue(int valueToHave, int compareToCompare, ushort tolerance)
 		{
-		  return FastMath.Abs(valueToHave - compareToCompare) <= FastMath.Abs(tolerance);
+			return FastMath.Abs(valueToHave - compareToCompare) <= FastMath.Abs(tolerance);
 		}
 
 		/// <summary>
@@ -228,6 +238,14 @@ namespace DOL.GS
 		public static bool IsNearDistance(int xH, int yH, int zH, int xC, int yC, int zC, ushort tolerance)
 		{
 			return IsNearValue(xH, xC, tolerance) && IsNearValue(yH, yC, tolerance) && IsNearValue(zH, zC, tolerance);
+		}
+
+		public static void AddRange<T>(this IList<T> list, IList<T> addList)
+		{
+			foreach (T item in addList)
+			{
+				list.Add(item);
+			}
 		}
 	}
 }

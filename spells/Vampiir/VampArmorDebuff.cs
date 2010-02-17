@@ -111,11 +111,11 @@ namespace DOL.GS.Spells
 
 		}
 		
-		public override IList DelveInfo 
+		public override IList<string> DelveInfo 
 		{
 			get 
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>(16);
 				list.Add("Name: " + Spell.Name+"\n");
 				list.Add("Description: " + Spell.Description+"\n");
 				list.Add("Target: " + Spell.Target);

@@ -22,6 +22,7 @@ using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Database;
+using System.Collections.Generic;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -65,7 +66,7 @@ namespace DOL.GS.RealmAbilities
 			return 600;
 		}
 
-        public override void AddEffectsInfo(System.Collections.IList list)
+        public override void AddEffectsInfo(IList<string> list)
         {
             list.Add("Function: damage add");
             list.Add("");

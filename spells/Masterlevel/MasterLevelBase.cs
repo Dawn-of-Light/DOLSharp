@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 using DOL.GS.Effects;
@@ -180,11 +181,11 @@ namespace DOL.GS.Spells
         /// <summary>
         /// Current depth of delve info
         /// </summary>
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add(Spell.Description);
                 return list;
             }
@@ -378,11 +379,11 @@ namespace DOL.GS.Spells
         /// <summary>
         /// Current depth of delve info
         /// </summary>
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add(Spell.Description);
                 return list;
             }
@@ -566,11 +567,11 @@ namespace DOL.GS.Spells
         /// <summary>
         /// Current depth of delve info
         /// </summary>
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add(Spell.Description);
                 return list;
             }
@@ -755,11 +756,11 @@ namespace DOL.GS.Spells
         /// <summary>
         /// Current depth of delve info
         /// </summary>
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add(Spell.Description);
                 return list;
             }
@@ -965,11 +966,11 @@ namespace DOL.GS.Spells
         /// <summary>
         /// Current depth of delve info
         /// </summary>
-        public override IList DelveInfo
+        public override IList<string> DelveInfo
         {
             get
             {
-                ArrayList list = new ArrayList();
+                var list = new List<string>();
                 list.Add(Spell.Description);
                 return list;
             }

@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
@@ -51,13 +51,13 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add("Grants unbreakable extreme speed for 15 seconds.");
-				list.Add(base.DelveInfo);
+				list.AddRange(base.DelveInfo);
 				return list;
 			}
 		}

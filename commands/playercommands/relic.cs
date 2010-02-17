@@ -16,6 +16,7 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 *
 */
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using System.Collections;
 using DOL.Language;
@@ -50,7 +51,7 @@ namespace DOL.GS.Commands
         public void OnCommand(GameClient client, string[] args)
         {
             string albStr = "", albPwr = "", midStr = "", midPwr = "", hibStr = "", hibPwr = "";
-            ArrayList relicInfo = new ArrayList();
+			var relicInfo = new List<string>();
 
             #region Reformat Relics  '[Type]: [OwnerRealm]'
             foreach (GameRelic relic in RelicMgr.getNFRelics())

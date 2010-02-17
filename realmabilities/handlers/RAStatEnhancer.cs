@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using DOL.Language;
@@ -25,11 +26,11 @@ namespace DOL.GS.RealmAbilities
 			m_property = property;
 		}
 
-		public override IList DelveInfo
+		public override IList<string> DelveInfo
 		{
 			get
 			{
-				ArrayList list = new ArrayList();
+				var list = new List<string>();
 				list.Add(m_description);
 				list.Add("");
 				for (int i = 1; i <= MaxLevel; i++)
