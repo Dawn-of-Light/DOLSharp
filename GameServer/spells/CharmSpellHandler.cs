@@ -195,13 +195,13 @@ namespace DOL.GS.Spells
 				int resistChance;
 				if (diffLevel >= 0)
 				{
-                    resistChance = 25 - diffLevel * 3;
-                    resistChance = Math.Max(resistChance, 5);
+                    resistChance = 10 - diffLevel * 3;
+                    resistChance = Math.Max(resistChance, 1);
 				}
 				else
 				{
-                    resistChance = 25 + diffLevel * diffLevel * 3;
-                    resistChance = Math.Min(resistChance, 95);
+                    resistChance = 10 + diffLevel * diffLevel * 3;
+                    resistChance = Math.Min(resistChance, 99);
 				}
 				
 				if (Util.Chance(resistChance))
