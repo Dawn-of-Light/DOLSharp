@@ -333,7 +333,7 @@ namespace DOL.GS.Spells
 						if (aggroBrain != null)
 						{
 							aggroBrain.ClearAggroList();
-							if (Spell.Pulse != 0)
+							if (Spell.Pulse != 0 && Caster.ObjectState == GameObject.eObjectState.Active && Caster.IsAlive)
 							{
 								aggroBrain.AddToAggroList(Caster, Caster.Level * 10);
 								npc.StartAttack(Caster);

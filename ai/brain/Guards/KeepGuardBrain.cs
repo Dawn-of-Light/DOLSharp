@@ -85,6 +85,19 @@ namespace DOL.AI.Brain
 				ClearAggroList();
 				guard.WalkToSpawn();
 			}
+
+			// We want guards to check aggro even when they are returning home, which StandardMobBrain does not, so add checks here
+			if (guard.CurrentSpellHandler == null && !guard.AttackState && !guard.InCombat)
+			{
+				CheckPlayerAggro();
+				CheckNPCAggro();
+
+				if (IsAggroing && Body.IsReturningHome)
+				{
+					Body.StopMoving();
+				}
+			}
+
 			base.Think();
 		}
 
@@ -94,7 +107,9 @@ namespace DOL.AI.Brain
 		protected override void CheckPlayerAggro()
 		{
 			if (Body.AttackState || Body.CurrentSpellHandler != null)
+			{
 				return;
+			}
 
 			foreach (GamePlayer player in Body.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -109,7 +124,12 @@ namespace DOL.AI.Brain
 						continue;
 
 					WarMapMgr.AddGroup((byte)player.CurrentZone.ID, player.X, player.Y, player.Name, (byte)player.Realm);
-					Body.StartAttack(player);
+
+					if (DOL.GS.ServerProperties.Properties.ENABLE_DEBUG)
+					{
+						Body.Say("Want to attack player " + player.Name);
+					}
+
 					AddToAggroList(player, player.EffectiveLevel << 1);
 					return;
 				}
@@ -142,7 +162,12 @@ namespace DOL.AI.Brain
 					}
 
 					WarMapMgr.AddGroup((byte)player.CurrentZone.ID, player.X, player.Y, player.Name, (byte)player.Realm);
-					Body.StartAttack(npc);
+
+					if (DOL.GS.ServerProperties.Properties.ENABLE_DEBUG)
+					{
+						Body.Say("Want to attack player " + player.Name + " pet " + npc.Name);
+					}
+
 					AddToAggroList(npc, (npc.Level + 1) << 1);
 					return;
 				}
