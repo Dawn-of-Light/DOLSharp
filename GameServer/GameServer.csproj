@@ -927,6 +927,7 @@
     <Compile Include="packets\Client\168\WorldInitRequestHandler.cs" />
     <Compile Include="packets\Client\168\QuestRemoveRequestHandler.cs" />
     <Compile Include="packets\Server\AbstractPacketLib.cs" />
+    <Compile Include="packets\Server\PacketLib1101.cs" />
     <Compile Include="packets\Server\PacketLib1100.cs" />
     <Compile Include="packets\Server\PacketLib197.cs" />
     <Compile Include="packets\Server\PacketLib196.cs" />
