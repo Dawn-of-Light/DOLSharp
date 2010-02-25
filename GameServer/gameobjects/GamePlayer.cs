@@ -8801,7 +8801,7 @@ namespace DOL.GS
 				return false;
 			if (IsIgnoring(source))
 				return true;
-			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
+			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this) || ServerProperties.Properties.ENABLE_DEBUG)
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SayReceive.Says", source.GetName(0, false), str), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			else
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SayReceive.FalseLanguage", source.GetName(0, false)), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
@@ -9297,7 +9297,7 @@ namespace DOL.GS
 				    && this.IsWithinRadius( ControlledNpcBrain.Body, 1000 ) )
 				{
 					Point2D point = this.GetPointFromHeading( this.Heading, 64 );
-					ControlledNpcBrain.Body.MoveTo(CurrentRegionID, point.X, point.Y, Z, (ushort)((this.Heading + 2048) % 4096), true);
+					ControlledNpcBrain.Body.MovePet(CurrentRegionID, point.X, point.Y, Z, (ushort)((this.Heading + 2048) % 4096));
 				}
 			}
 			return true;
