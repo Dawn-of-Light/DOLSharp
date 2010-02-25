@@ -1863,18 +1863,25 @@ namespace DOL.GS
 
 			if (npc.Brain != "")
 			{
-				ArrayList asms = new ArrayList();
-				asms.Add(typeof(GameServer).Assembly);
-				asms.AddRange(ScriptMgr.Scripts);
-				ABrain brain = null;
-				foreach (Assembly asm in asms)
+				try
 				{
-					brain = (ABrain)asm.CreateInstance(npc.Brain, false);
+					ArrayList asms = new ArrayList();
+					asms.Add(typeof(GameServer).Assembly);
+					asms.AddRange(ScriptMgr.Scripts);
+					ABrain brain = null;
+					foreach (Assembly asm in asms)
+					{
+						brain = (ABrain)asm.CreateInstance(npc.Brain, false);
+						if (brain != null)
+							break;
+					}
 					if (brain != null)
-						break;
+						SetOwnBrain(brain);
 				}
-				if (brain != null)
-					SetOwnBrain(brain);
+				catch
+				{
+					log.ErrorFormat("GameNPC error in LoadFromDatabase: can not instantiate brain of type {0} for npc {1}, name = {2}.", npc.Brain, npc.ClassType, npc.Name);
+				}
 			}
 
 			IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
@@ -2695,34 +2702,71 @@ namespace DOL.GS
 			return true;
 		}
 
-		public bool MoveTo(ushort regionID, int x, int y, int z, ushort heading, bool petMove)
+		/// <summary>
+		/// Move a player pet a short distance.
+		/// Charmed pets are not GamePets so move is handled here instead of in GamePet.
+		/// </summary>
+		/// <param name="regionID"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="z"></param>
+		/// <param name="heading"></param>
+		/// <returns>true if pet was moved</returns>
+		public virtual bool MovePet(ushort regionID, int x, int y, int z, ushort heading)
 		{
-			if (!petMove)
-				return base.MoveTo(regionID, x, y, z, heading);
-
 			if (m_ObjectState != eObjectState.Active)
 				return false;
 
+			// pets can't be moved across regions
+			if (regionID != CurrentRegionID)
+				return false; 
+
+			// do not move a pet in combat, player can passive / follow to bring pet to them
+			if (InCombat)
+				return false; 
+
+			ControlledNpcBrain controlledBrain = Brain as ControlledNpcBrain;
+
+			// only move pet if it's following the owner
+			if (controlledBrain != null && controlledBrain.WalkState != eWalkState.Follow)
+				return false; 
+
 			Region rgn = WorldMgr.GetRegion(regionID);
-			if (rgn == null)
+
+			if (rgn == null || rgn.GetZone(x, y) == null)
 				return false;
-			if (rgn.GetZone(x, y) == null)
-				return false;
+
+			// For a pet move simple erase the pet from all clients and redraw in the new location
 
 			Notify(GameObjectEvent.MoveTo, this, new MoveToEventArgs(regionID, x, y, z, heading));
 
 			if (ObjectState == eObjectState.Active)
 			{
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
 					player.Out.SendObjectRemove(this);
+				}
 			}
-			base.RemoveFromWorld();
+
 			m_x = x;
 			m_y = y;
 			m_z = z;
 			m_Heading = heading;
-			CurrentRegionID = regionID;
-			return AddToWorld();
+
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if (player == null) continue;
+
+				player.Out.SendNPCCreate(this);
+
+				if (m_inventory != null)
+				{
+					player.Out.SendLivingEquipmentUpdate(this);
+				}
+			}
+
+			BroadcastUpdate();
+			return true;
 		}
 
 		/// <summary>
