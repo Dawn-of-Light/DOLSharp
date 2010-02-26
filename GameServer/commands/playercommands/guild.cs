@@ -32,52 +32,61 @@ using log4net;
 
 namespace DOL.GS.Commands
 {
-	/// <summary>
-	/// command handler for /gc command
-	/// </summary>
-	[Cmd(
-		"&gc",
-		new string[] { "&guildcommand" },
-		ePrivLevel.Player,
-		"Guild command (use /gc help for options)",
-		"/gc <option>")]
-	public class GuildCommandHandler : AbstractCommandHandler, ICommandHandler
-	{
-		/// <summary>
-		/// Contains all characters that are valid in a guild name. non case sensitive
-		/// </summary>
-		public static string AllowedGuildNameChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ‹÷ƒ ˆ‰¸·ÈÌÛ˙¡…Õ”⁄";
+    /// <summary>
+    /// command handler for /gc command
+    /// </summary>
+    [Cmd(
+        "&gc",
+        new string[] { "&guildcommand" },
+        ePrivLevel.Player,
+        "Guild command (use /gc help for options)",
+        "/gc <option>")]
+    public class GuildCommandHandler : AbstractCommandHandler, ICommandHandler
+    {
+        /// <summary>
+        /// Contains all characters that are valid in a guild name. non case sensitive
+        /// </summary>
+        public static string AllowedGuildNameChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ‹÷ƒ ˆ‰¸·ÈÌÛ˙¡…Õ”⁄";
 
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        /// <summary>
+        /// Defines a logger for this class.
+        /// </summary>
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// Checks if a guildname has valid characters
-		/// </summary>
-		/// <param name="guildName"></param>
-		/// <returns></returns>
-		public static bool IsValidGuildName(string guildName)
-		{
-			foreach (char c in guildName)
-			{
-				if (AllowedGuildNameChars.IndexOf(char.ToLower(c)) < 0)
-				{
-					return false;
-				}
-			}
+        /// <summary>
+        /// Checks if a guildname has valid characters
+        /// </summary>
+        /// <param name="guildName"></param>
+        /// <returns></returns>
+        public static bool IsValidGuildName(string guildName)
+        {
+            foreach (char c in guildName)
+            {
+                if (AllowedGuildNameChars.IndexOf(char.ToLower(c)) < 0)
+                {
+                    return false;
+                }
+            }
 
-			return true;
-		}
+            return true;
+        }
+        private static bool IsNearRegistrar(GamePlayer player)
+        {
+            foreach (GameNPC registrar in player.GetNPCsInRadius(500))
+            {
+                if (registrar is GuildRegistrar)
+                    return true;
+            }
+            return false;
+        }
 
-		/// <summary>
-		/// method to handle /gc commands from a client
-		/// </summary>
-		/// <param name="client"></param>
-		/// <param name="args"></param>
-		/// <returns></returns>
-		public void OnCommand(GameClient client, string[] args)
+        /// <summary>
+        /// method to handle /gc commands from a client
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public void OnCommand(GameClient client, string[] args)
         {
             try
             {
@@ -161,7 +170,7 @@ namespace DOL.GS.Commands
                             string guildname = String.Join(" ", args, 2, args.Length - 2);
                             if (!GuildMgr.DoesGuildExist(guildname))
                             {
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildNotExist"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.GuildNotExist"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
                             if (GuildMgr.DeleteGuild(guildname))
@@ -326,11 +335,11 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteNotThis"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-							if (!GameServer.ServerRules.IsAllowedToJoinGuild(obj, client.Player.Guild))
+                            if (!GameServer.ServerRules.IsAllowedToJoinGuild(obj, client.Player.Guild))
                             {
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteNotThis"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteNotThis"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
                             obj.Out.SendGuildInviteCommand(client.Player, LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteRecieved", client.Player.Name, client.Player.Guild.Name));
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InviteSent", obj.Name, client.Player.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                             client.Player.Guild.UpdateGuildWindow();
@@ -418,7 +427,7 @@ namespace DOL.GS.Commands
                                 ch.GuildRank = 9;
                                 GameServer.Database.SaveObject(ch);
                             }
-                            
+
                             client.Player.Guild.UpdateGuildWindow();
                         }
                         break;
@@ -534,11 +543,11 @@ namespace DOL.GS.Commands
                                     if (!Util.IsEmpty(amotd) && client.Player.GuildRank.AcHear)
                                         client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InfoaMotd", amotd), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 }
-								if (client.Player.Guild.ClaimedKeeps.Count > 0)
-								{
-									foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
-										client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Keep", keep.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-								}
+                                if (client.Player.Guild.ClaimedKeeps.Count > 0)
+                                {
+                                    foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
+                                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Keep", keep.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                                }
                             }
                             else
                             {
@@ -575,7 +584,7 @@ namespace DOL.GS.Commands
                                     case "2": //enable/disable social windows
                                         {
                                             // "P,ShowGuildWindow,ShowAllianceWindow,?,ShowLFGuildWindow(only with guild),0,0" // news and friend windows always showed
-                                            client.Out.SendMessage("P," + (client.Player.Guild == null ? "0" : "1") + (client.Player.Guild.AllianceId!=string.Empty?"0":"1") + ",0,0,0,0", eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+                                            client.Out.SendMessage("P," + (client.Player.Guild == null ? "0" : "1") + (client.Player.Guild.AllianceId != string.Empty ? "0" : "1") + ",0,0,0,0", eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
                                             break;
                                         }
                                     default:
@@ -595,7 +604,7 @@ namespace DOL.GS.Commands
                             if (client.Player.Guild == null)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return; 
+                                return;
                             }
                             if (client.Player.Guild.GuildBanner)
                             {
@@ -721,7 +730,7 @@ namespace DOL.GS.Commands
                                 client.Player.Guild.BuffType = 2;
                                 client.Player.Guild.RemoveMeritPoints(1000);
                                 client.Player.Guild.BuffTime = DateTime.Now;
-								client.Out.SendMessage( LanguageMgr.GetTranslation( client, "Scripts.Player.Guild.BuffBountyPoints" ), eChatType.CT_Guild, eChatLoc.CL_SystemWindow );
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffBountyPoints"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
                                 {
                                     ply.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BuffActivated", client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
@@ -885,6 +894,11 @@ namespace DOL.GS.Commands
                     // --------------------------------------------------------------------------------
                     case "form":
                         {
+                            if (!IsNearRegistrar(client.Player))
+                            {
+                                client.Out.SendMessage("You must be near a guild registrar to use this command!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
                             if (args.Length < 3)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildForm"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -892,11 +906,11 @@ namespace DOL.GS.Commands
                             }
 
                             string guildname = String.Join(" ", args, 2, args.Length - 2);
-							if (guildname.Length > 30)
-							{
-								client.Out.SendMessage("Sorry, your guild name is too long.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
+                            if (guildname.Length > 30)
+                            {
+                                client.Out.SendMessage("Sorry, your guild name is too long.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
                             guildname = GameServer.Database.Escape(guildname);
 
                             if (!IsValidGuildName(guildname))
@@ -935,11 +949,11 @@ namespace DOL.GS.Commands
                                                     client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AlreadyInGuildName", ply.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                                     return;
                                                 }
-												if (ply.Realm != client.Player.Realm && ServerProperties.Properties.ALLOW_CROSS_REALM_GUILDS == false)
-												{
-													client.Out.SendMessage("All group members must be of the same realm in order to create a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													return;
-												}
+                                                if (ply.Realm != client.Player.Realm && ServerProperties.Properties.ALLOW_CROSS_REALM_GUILDS == false)
+                                                {
+                                                    client.Out.SendMessage("All group members must be of the same realm in order to create a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                    return;
+                                                }
                                             }
 
                                             Guild newGuild = GuildMgr.CreateGuild(client.Player, guildname);
@@ -951,14 +965,14 @@ namespace DOL.GS.Commands
                                             {
                                                 foreach (GamePlayer ply in group.GetPlayersInTheGroup())
                                                 {
-													if (ply == client.Player)
-													{
-														newGuild.AddPlayer(ply, newGuild.GetRankByID(0));
-													}
-													else
-													{
-														newGuild.AddPlayer(ply);
-													}
+                                                    if (ply == client.Player)
+                                                    {
+                                                        newGuild.AddPlayer(ply, newGuild.GetRankByID(0));
+                                                    }
+                                                    else
+                                                    {
+                                                        newGuild.AddPlayer(ply);
+                                                    }
                                                 }
 
                                                 client.Player.GuildRank = client.Player.Guild.GetRankByID(0); //creator is leader
@@ -968,15 +982,15 @@ namespace DOL.GS.Commands
                                     }
                                     else
                                     {
-										Guild newGuild = GuildMgr.CreateGuild(client.Player, guildname);
+                                        Guild newGuild = GuildMgr.CreateGuild(client.Player, guildname);
 
-										if( newGuild == null )
+                                        if (newGuild == null)
                                         {
                                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.UnableToCreateLead", guildname, client.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                         }
                                         else
                                         {
-											newGuild.AddPlayer(client.Player, newGuild.GetRankByID(0));
+                                            newGuild.AddPlayer(client.Player, newGuild.GetRankByID(0));
                                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.GuildCreated", guildname, client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                         }
                                     }
@@ -1081,7 +1095,7 @@ namespace DOL.GS.Commands
                             catch
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-								return;
+                                return;
                             }
                             if ((newrank >= guildRank && guildRank != 0) || (newrank < 0))
                             {
@@ -1270,79 +1284,79 @@ namespace DOL.GS.Commands
                                         if (!showOffline)
                                         {
                                             SortedList<string, GamePlayer> onlineMembers = client.Player.Guild.SortedListOnlineMembers();
-											sortedList = new SortedList<string, GuildMgr.SocialWindowMember>(onlineMembers.Count);
+                                            sortedList = new SortedList<string, GuildMgr.SocialWindowMember>(onlineMembers.Count);
                                             foreach (GamePlayer player in onlineMembers.Values)
                                             {
                                                 if (guildMembers.ContainsKey(player.Name))
                                                 {
                                                     GuildMgr.SocialWindowMember member = guildMembers[player.Name];
-													member.UpdateMember(player);
-													string key = member[(int)index];
-													if (sortedList.ContainsKey(key))
-														key += sortedList.Count.ToString();
+                                                    member.UpdateMember(player);
+                                                    string key = member[(int)index];
+                                                    if (sortedList.ContainsKey(key))
+                                                        key += sortedList.Count.ToString();
 
-													sortedList.Add(key, member);
+                                                    sortedList.Add(key, member);
                                                 }
                                             }
                                         }
-										else if (index == GuildMgr.SocialWindowMember.eSocialWindowIndex.Name)
-										{
-											sortedList = guildMembers;
-										}
-										else
-										//They sorted on something besides what we presorted on!
-										{
-											sortedList = new SortedList<string, GuildMgr.SocialWindowMember>(guildMembers.Count);
-											foreach (GuildMgr.SocialWindowMember member in guildMembers.Values)
-											{
-												if (client.Player.Guild.SortedListOnlineMembers().ContainsKey(member.Name))
-													//Update to make sure we have the most up to date info
-													member.UpdateMember(client.Player.Guild.SortedListOnlineMembers()[member.Name]);
-												else
-													//Make sure that since they are offline they get the offline flag!
-													member.GroupSize = "0";
-												//Add based on the new index
-												string key = member[(int)index];
-												if (sortedList.ContainsKey(key))
-												{
-													key += sortedList.Count.ToString();
-												}
+                                        else if (index == GuildMgr.SocialWindowMember.eSocialWindowIndex.Name)
+                                        {
+                                            sortedList = guildMembers;
+                                        }
+                                        else
+                                        //They sorted on something besides what we presorted on!
+                                        {
+                                            sortedList = new SortedList<string, GuildMgr.SocialWindowMember>(guildMembers.Count);
+                                            foreach (GuildMgr.SocialWindowMember member in guildMembers.Values)
+                                            {
+                                                if (client.Player.Guild.SortedListOnlineMembers().ContainsKey(member.Name))
+                                                    //Update to make sure we have the most up to date info
+                                                    member.UpdateMember(client.Player.Guild.SortedListOnlineMembers()[member.Name]);
+                                                else
+                                                    //Make sure that since they are offline they get the offline flag!
+                                                    member.GroupSize = "0";
+                                                //Add based on the new index
+                                                string key = member[(int)index];
+                                                if (sortedList.ContainsKey(key))
+                                                {
+                                                    key += sortedList.Count.ToString();
+                                                }
 
-												try
-												{
-													sortedList.Add(key, member);
-												}
-												catch
-												{
-													if (log.IsErrorEnabled)
-														log.Error(string.Format("Sorted List duplicate entry - Key: {0} Member: {1}. Replacing - Member: {2}.  Sorted count: {3}.  Guild ID: {4}", key, member.Name, sortedList[key].Name, sortedList.Count, client.Player.GuildID));
-												}
-											}
-										}
+                                                try
+                                                {
+                                                    sortedList.Add(key, member);
+                                                }
+                                                catch
+                                                {
+                                                    if (log.IsErrorEnabled)
+                                                        log.Error(string.Format("Sorted List duplicate entry - Key: {0} Member: {1}. Replacing - Member: {2}.  Sorted count: {3}.  Guild ID: {4}", key, member.Name, sortedList[key].Name, sortedList.Count, client.Player.GuildID));
+                                                }
+                                            }
+                                        }
 
-										//Finally lets send the list we made
-										IList<GuildMgr.SocialWindowMember> finalList = sortedList.Values;
-										int i = 0;
-										string[] buffer=new string[10];
-										for (i = 0; i < 10 && finalList.Count > i + (page - 1) * 10; i++)
-										{
-											GuildMgr.SocialWindowMember member;
+                                        //Finally lets send the list we made
+                                        IList<GuildMgr.SocialWindowMember> finalList = sortedList.Values;
+                                        int i = 0;
+                                        string[] buffer = new string[10];
+                                        for (i = 0; i < 10 && finalList.Count > i + (page - 1) * 10; i++)
+                                        {
+                                            GuildMgr.SocialWindowMember member;
 
-											if ((int)sort > 0)
-											{
-												//They want it normal
-												member = finalList[i + (page - 1) * 10];
-											}
-											else
-											{
-												//They want it in reverse
-												member = finalList[(finalList.Count - 1) - (i + (page - 1) * 10)];
-											}
-											buffer[i]=member.ToString((i + 1) + (page - 1) * 10, finalList.Count);
-										}
-										client.Out.SendMessage("TE," + page.ToString() + "," + finalList.Count + "," + i.ToString(), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
-										foreach(string member in buffer)
-											client.Player.Out.SendMessage(member, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+                                            if ((int)sort > 0)
+                                            {
+                                                //They want it normal
+                                                member = finalList[i + (page - 1) * 10];
+                                            }
+                                            else
+                                            {
+                                                //They want it in reverse
+                                                member = finalList[(finalList.Count - 1) - (i + (page - 1) * 10)];
+                                            }
+                                            buffer[i] = member.ToString((i + 1) + (page - 1) * 10, finalList.Count);
+                                        }
+                                        client.Out.SendMessage("TE," + page.ToString() + "," + finalList.Count + "," + i.ToString(), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
+                                        foreach (string member in buffer)
+                                            client.Player.Out.SendMessage(member, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
 
                                     }
                                 }
@@ -1622,11 +1636,11 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-							if (client.Player.Guild.AllianceId == string.Empty)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
+                            if (client.Player.Guild.AllianceId == string.Empty)
+                            {
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
                             message = String.Join(" ", args, 2, args.Length - 2);
                             client.Player.Guild.alliance.Dballiance.Motd = message;
                             GameServer.Database.SaveObject(client.Player.Guild.alliance.Dballiance);
@@ -1664,14 +1678,14 @@ namespace DOL.GS.Commands
                     // --------------------------------------------------------------------------------
                     case "alliance":
                         {
-							if (client.Player.Guild == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
+                            if (client.Player.Guild == null)
+                            {
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
 
                             Alliance alliance = null;
-							if (client.Player.Guild.AllianceId != null && client.Player.Guild.AllianceId != string.Empty)
+                            if (client.Player.Guild.AllianceId != null && client.Player.Guild.AllianceId != string.Empty)
                             {
                                 alliance = client.Player.Guild.alliance;
                             }
@@ -1959,18 +1973,18 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-   							if (client.Player.Guild.ClaimedKeeps.Count == 1)
-                     		{
+                            if (client.Player.Guild.ClaimedKeeps.Count == 1)
+                            {
                                 client.Player.Guild.ClaimedKeeps[0].Release();
-                    		}
-							else
-							{
-								foreach (AbstractArea area in client.Player.CurrentAreas)
-								{
-									if (area is KeepArea && ((KeepArea)area).Keep.Guild == client.Player.Guild)
-										((KeepArea)area).Keep.Release();
-								}
-							}
+                            }
+                            else
+                            {
+                                foreach (AbstractArea area in client.Player.CurrentAreas)
+                                {
+                                    if (area is KeepArea && ((KeepArea)area).Keep.Guild == client.Player.Guild)
+                                        ((KeepArea)area).Keep.Release();
+                                }
+                            }
                             client.Player.Guild.UpdateGuildWindow();
                             return;
                         }
@@ -1983,7 +1997,7 @@ namespace DOL.GS.Commands
                         {
                             client.Out.SendMessage("Keep upgrading is currently disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             return;
-							/* un-comment this to work on allowing keep upgrading
+                            /* un-comment this to work on allowing keep upgrading
                             if (client.Player.Guild == null)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -2016,22 +2030,22 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.UpgradeScndArg"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-							if (client.Player.Guild.ClaimedKeeps.Count == 1)
-							{
-								foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
-									keep.StartChangeLevel(targetlevel);
-							}
-							else
-							{
-								foreach (AbstractArea area in client.Player.CurrentAreas)
-								{
-									if (area is KeepArea && ((KeepArea)area).Keep.Guild == client.Player.Guild)
-										((KeepArea)area).Keep.StartChangeLevel(targetlevel);
-								}
-							}
+                            if (client.Player.Guild.ClaimedKeeps.Count == 1)
+                            {
+                                foreach (AbstractGameKeep keep in client.Player.Guild.ClaimedKeeps)
+                                    keep.StartChangeLevel(targetlevel);
+                            }
+                            else
+                            {
+                                foreach (AbstractArea area in client.Player.CurrentAreas)
+                                {
+                                    if (area is KeepArea && ((KeepArea)area).Keep.Guild == client.Player.Guild)
+                                        ((KeepArea)area).Keep.StartChangeLevel(targetlevel);
+                                }
+                            }
                             client.Player.Guild.UpdateGuildWindow();
                             return;
-							*/
+                            */
                         }
                     #endregion
                     #region Type
@@ -2220,7 +2234,7 @@ namespace DOL.GS.Commands
                     default:
                         {
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.UnknownCommand", args[1]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							this.DisplayHelp(client);
+                            this.DisplayHelp(client);
                         }
                         break;
                     #endregion
@@ -2235,436 +2249,436 @@ namespace DOL.GS.Commands
             }
         }
 
-		/// <summary>
-		/// method to handle the aliance invite
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="reponse"></param>
-		protected void AllianceInvite(GamePlayer player, byte reponse)
-		{
-			if (reponse != 0x01)
-				return; //declined
+        /// <summary>
+        /// method to handle the aliance invite
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="reponse"></param>
+        protected void AllianceInvite(GamePlayer player, byte reponse)
+        {
+            if (reponse != 0x01)
+                return; //declined
 
-			GamePlayer inviter = player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
+            GamePlayer inviter = player.TempProperties.getProperty<object>("allianceinvite", null) as GamePlayer;
 
-			if (player.Guild == null)
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
+            if (player.Guild == null)
+            {
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
 
-			if (inviter == null || inviter.Guild == null)
-			{
-				return;
-			}
+            if (inviter == null || inviter.Guild == null)
+            {
+                return;
+            }
 
-			if (!player.Guild.GotAccess(player, eGuildRank.Alli))
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			player.TempProperties.removeProperty("allianceinvite");
+            if (!player.Guild.GotAccess(player, eGuildRank.Alli))
+            {
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            player.TempProperties.removeProperty("allianceinvite");
 
-			if (inviter.Guild.alliance == null)
-			{
-				//create alliance
-				Alliance alli = new Alliance();
-				DBAlliance dballi = new DBAlliance();
-				dballi.AllianceName = inviter.Guild.Name;
-				dballi.DBguildleader = null;
-				dballi.Motd = "";
-				alli.Dballiance = dballi;
-				alli.Guilds.Add(inviter.Guild);
-				inviter.Guild.alliance = alli;
-				inviter.Guild.AllianceId = inviter.Guild.alliance.Dballiance.ObjectId;
-			}
-			inviter.Guild.alliance.AddGuild(player.Guild);
-			inviter.Guild.alliance.SaveIntoDatabase();
-			player.Guild.UpdateGuildWindow();
-			inviter.Guild.UpdateGuildWindow();
-		}
+            if (inviter.Guild.alliance == null)
+            {
+                //create alliance
+                Alliance alli = new Alliance();
+                DBAlliance dballi = new DBAlliance();
+                dballi.AllianceName = inviter.Guild.Name;
+                dballi.DBguildleader = null;
+                dballi.Motd = "";
+                alli.Dballiance = dballi;
+                alli.Guilds.Add(inviter.Guild);
+                inviter.Guild.alliance = alli;
+                inviter.Guild.AllianceId = inviter.Guild.alliance.Dballiance.ObjectId;
+            }
+            inviter.Guild.alliance.AddGuild(player.Guild);
+            inviter.Guild.alliance.SaveIntoDatabase();
+            player.Guild.UpdateGuildWindow();
+            inviter.Guild.UpdateGuildWindow();
+        }
 
-		/// <summary>
-		/// method to handle the emblem change
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="reponse"></param>
-		public static void EmblemChange(GamePlayer player, byte reponse)
-		{
-			if (reponse != 0x01)
-				return;
-			if (player.TargetObject is EmblemNPC == false)
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.EmblemNeedNPC"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			if (player.GetCurrentMoney() < GuildMgr.COST_RE_EMBLEM) //200 gold to re-emblem
-			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.EmblemNeedGold"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			player.Out.SendEmblemDialogue();
-			player.Guild.UpdateGuildWindow();
-		}
+        /// <summary>
+        /// method to handle the emblem change
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="reponse"></param>
+        public static void EmblemChange(GamePlayer player, byte reponse)
+        {
+            if (reponse != 0x01)
+                return;
+            if (player.TargetObject is EmblemNPC == false)
+            {
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.EmblemNeedNPC"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            if (player.GetCurrentMoney() < GuildMgr.COST_RE_EMBLEM) //200 gold to re-emblem
+            {
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.EmblemNeedGold"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            player.Out.SendEmblemDialogue();
+            player.Guild.UpdateGuildWindow();
+        }
 
-		public void DisplayHelp(GameClient client)
-		{
-			if (client.Account.PrivLevel > 1)
-			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMCommands"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMCreate"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMPurge"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMRename"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMAddPlayer"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMRemovePlayer"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			}
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildUsage"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildForm"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildInfo"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildRanks"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildCancel"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildDecline"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildClaim"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildQuit"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildMotd"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildAMotd"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildOMotd"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildDemote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildRemove"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildRemAccount"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEmblem"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEdit"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildLeader"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildAccept"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildInvite"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildWho"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildList"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildAlli"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildAAccept"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildACancel"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildADecline"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildAInvite"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildARemove"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildARemoveAlli"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildNoteSelf"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildDues"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildDeposit"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildWithdraw"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildWebpage"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEmail"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildBuff"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildBuyBanner"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildBannerSummon"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-		}
+        public void DisplayHelp(GameClient client)
+        {
+            if (client.Account.PrivLevel > 1)
+            {
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMCommands"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMCreate"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMPurge"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMRename"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMAddPlayer"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildGMRemovePlayer"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            }
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildUsage"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildForm"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildInfo"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildRanks"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildCancel"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildDecline"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildClaim"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildQuit"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildMotd"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildAMotd"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildOMotd"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildDemote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildRemove"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildRemAccount"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEmblem"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEdit"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildLeader"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildAccept"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildInvite"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildWho"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildList"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildAlli"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildAAccept"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildACancel"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildADecline"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildAInvite"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildARemove"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildARemoveAlli"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildNoteSelf"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildDues"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildDeposit"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildWithdraw"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildWebpage"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEmail"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildBuff"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildBuyBanner"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildBannerSummon"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+        }
 
-		/// <summary>
-		/// method to handle commands for /gc edit
-		/// </summary>
-		/// <param name="client"></param>
-		/// <param name="args"></param>
-		/// <returns></returns>
-		public int SetCmd(GameClient client, string[] args)
-		{
-			if (args.Length < 4)
-			{
-				DisplayEditHelp(client);
-				return 0;
-			}
+        /// <summary>
+        /// method to handle commands for /gc edit
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public int SetCmd(GameClient client, string[] args)
+        {
+            if (args.Length < 4)
+            {
+                DisplayEditHelp(client);
+                return 0;
+            }
 
-			bool reponse = true;
-			if (args.Length > 4)
-			{
-				if (args[4].StartsWith("y"))
-					reponse = true;
-				else if (args[4].StartsWith("n"))
-					reponse = false;
-				else if (args[3] != "title" && args[3] != "ranklevel")
-				{
-					DisplayEditHelp(client);
-					return 1;
-				}
-			}
-			byte number;
-			try
-			{
-				number = Convert.ToByte(args[2]);
-				if (number > 9 || number < 0)
-					return 0;
-			}
-			catch
-			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.ThirdArgNotNum"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 0;
-			}
+            bool reponse = true;
+            if (args.Length > 4)
+            {
+                if (args[4].StartsWith("y"))
+                    reponse = true;
+                else if (args[4].StartsWith("n"))
+                    reponse = false;
+                else if (args[3] != "title" && args[3] != "ranklevel")
+                {
+                    DisplayEditHelp(client);
+                    return 1;
+                }
+            }
+            byte number;
+            try
+            {
+                number = Convert.ToByte(args[2]);
+                if (number > 9 || number < 0)
+                    return 0;
+            }
+            catch
+            {
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.ThirdArgNotNum"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
+            }
 
-			switch (args[3])
-			{
-				case "title":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						string message = String.Join(" ", args, 4, args.Length - 4);
-						client.Player.Guild.GetRankByID(number).Title = message;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankTitleSet", number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-						client.Player.Guild.UpdateGuildWindow();
-					}
-					break;
-				case "ranklevel":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						if (args.Length >= 5)
-						{
-							byte lvl = Convert.ToByte(args[4]);
-							client.Player.Guild.GetRankByID(number).RankLevel = lvl;
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankLevelSet", lvl.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-						}
-						else
-						{
-							DisplaySyntax(client);
-						}
-					}
-					break;
+            switch (args[3])
+            {
+                case "title":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        string message = String.Join(" ", args, 4, args.Length - 4);
+                        client.Player.Guild.GetRankByID(number).Title = message;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankTitleSet", number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                        client.Player.Guild.UpdateGuildWindow();
+                    }
+                    break;
+                case "ranklevel":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        if (args.Length >= 5)
+                        {
+                            byte lvl = Convert.ToByte(args[4]);
+                            client.Player.Guild.GetRankByID(number).RankLevel = lvl;
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankLevelSet", lvl.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                        }
+                        else
+                        {
+                            DisplaySyntax(client);
+                        }
+                    }
+                    break;
 
-				case "emblem":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Emblem = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankEmblemSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "gchear":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).GcHear = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankGCHearSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "gcspeak":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
+                case "emblem":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Emblem = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankEmblemSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "gchear":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).GcHear = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankGCHearSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "gcspeak":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
 
-						client.Player.Guild.GetRankByID(number).GcSpeak = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankGCSpeakSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "ochear":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).OcHear = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankOCHearSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "ocspeak":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).OcSpeak = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankOCSpeakSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "achear":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).AcHear = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankACHearSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "acspeak":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).AcSpeak = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankACSpeakSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "invite":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Invite = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankInviteSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "promote":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Promote = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankPromoteSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "remove":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Remove = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankRemoveSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "alli":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Alli = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankAlliSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "view":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.View))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).View = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankViewSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "buff":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Buff = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankBuffSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "claim":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Claim))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Claim = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankClaimSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "upgrade":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Upgrade))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Upgrade = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankUpgradeSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "release":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Release))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Release = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankReleaseSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "dues":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Dues))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Release = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankDuesSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				case "withdraw":
-					{
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Withdraw))
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
-						}
-						client.Player.Guild.GetRankByID(number).Release = reponse;
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankWithdrawSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
-					break;
-				default:
-					{
-						return 0;
-					}
-			} //switch
-			DBRank rank = client.Player.Guild.GetRankByID(number);
-			if (rank != null)
-				GameServer.Database.SaveObject(rank);
-			return 1;
-		}
+                        client.Player.Guild.GetRankByID(number).GcSpeak = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankGCSpeakSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "ochear":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).OcHear = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankOCHearSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "ocspeak":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).OcSpeak = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankOCSpeakSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "achear":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).AcHear = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankACHearSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "acspeak":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).AcSpeak = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankACSpeakSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "invite":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Invite = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankInviteSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "promote":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Promote = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankPromoteSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "remove":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Remove = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankRemoveSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "alli":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Alli = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankAlliSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "view":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.View))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).View = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankViewSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "buff":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Leader))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Buff = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankBuffSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "claim":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Claim))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Claim = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankClaimSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "upgrade":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Upgrade))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Upgrade = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankUpgradeSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "release":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Release))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Release = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankReleaseSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "dues":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Dues))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Release = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankDuesSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                case "withdraw":
+                    {
+                        if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.Withdraw))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return 1;
+                        }
+                        client.Player.Guild.GetRankByID(number).Release = reponse;
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.RankWithdrawSet", (reponse ? "enabled" : "disabled"), number.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+                    }
+                    break;
+                default:
+                    {
+                        return 0;
+                    }
+            } //switch
+            DBRank rank = client.Player.Guild.GetRankByID(number);
+            if (rank != null)
+                GameServer.Database.SaveObject(rank);
+            return 1;
+        }
 
-		public void DisplayEditHelp(GameClient client)
-		{
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildUsage"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditTitle"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditRankLevel"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditEmblem"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditGCHear"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditGCSpeak"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditOCHear"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditOCSpeak"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditACHear"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditACSpeak"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditInvite"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditPromote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditRemove"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditView"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditAlli"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditClaim"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditUpgrade"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditRelease"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditDues"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditWithdraw"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-		}
-	}
+        public void DisplayEditHelp(GameClient client)
+        {
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildUsage"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditTitle"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditRankLevel"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditEmblem"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditGCHear"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditGCSpeak"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditOCHear"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditOCSpeak"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditACHear"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditACSpeak"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditInvite"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditPromote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditRemove"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditView"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditAlli"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditClaim"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditUpgrade"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditRelease"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditDues"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.Help.GuildEditWithdraw"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+        }
+    }
 }
