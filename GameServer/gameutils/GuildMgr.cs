@@ -288,50 +288,57 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Delete's a guild
+		/// Deletes a guild
 		/// </summary>
-		/// <returns>true or false</returns>
-		public static bool DeleteGuild(string guildName)
-		{
-			try
-			{
-				Guild removeGuild = GetGuildByName(guildName);
-				// Does guild exist, if not return null
-				if (removeGuild == null)
-				{
-					return false;
-				}
+        public static bool DeleteGuild(string guildName)
+        {
+            try
+            {
+                Guild removeGuild = GetGuildByName(guildName);
+                // Does guild exist, if not return false.
+                if (removeGuild == null)
+                {
+                    return false;
+                }
 
-				DBGuild[] guilds = (DBGuild[])GameServer.Database.SelectObjects(typeof(DBGuild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
-				foreach (DBGuild guild in guilds)
-				{
-					foreach (Character cha in GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
-						cha.GuildID = "";
-					GameServer.Database.DeleteObject(guild);
-				}
+                DBGuild[] guilds = (DBGuild[])GameServer.Database.SelectObjects(typeof(DBGuild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
+                foreach (DBGuild guild in guilds)
+                {
+                    foreach (Character cha in GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
+                        cha.GuildID = "";
+                    GameServer.Database.DeleteObject(guild);
+                }
 
-				lock (removeGuild.ListOnlineMembers())
-				{
-					foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
-					{
-						ply.Guild = null;
-						ply.GuildID = "";
-						ply.GuildName = "";
-						ply.GuildRank = null;
-					}
-				}
+                //[StephenxPimentel] We need to delete the guild specific ranks aswell!
+                DBRank[] ranks = (DBRank[])GameServer.Database.SelectObjects(typeof(DBRank), "`GuildID` = '" + removeGuild.ID + "'");
+                foreach (DBRank guildRank in ranks)
+                {
+                    GameServer.Database.DeleteObject(guildRank);
+                }
 
-				RemoveGuild(removeGuild);
 
-				return true;
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("DeleteGuild", e);
-				return false;
-			}
-		}
+                lock (removeGuild.ListOnlineMembers())
+                {
+                    foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
+                    {
+                        ply.Guild = null;
+                        ply.GuildID = "";
+                        ply.GuildName = "";
+                        ply.GuildRank = null;
+                    }
+                }
+
+                RemoveGuild(removeGuild);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                if (log.IsErrorEnabled)
+                    log.Error("DeleteGuild", e);
+                return false;
+            }
+        }
 
 		/// <summary>
 		/// Returns a guild according to the matching name
