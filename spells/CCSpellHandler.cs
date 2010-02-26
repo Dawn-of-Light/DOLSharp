@@ -374,6 +374,17 @@ namespace DOL.GS.Spells
 			else return new GameSpellAndImmunityEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
 		}
 
+		/// <summary>
+		/// There is no area variance for stun
+		/// </summary>
+		/// <param name="distance"></param>
+		/// <param name="radius"></param>
+		/// <returns></returns>
+		protected override double CalculateAreaVariance(int distance, int radius)
+		{
+			return 0;
+		}
+
 		public override void OnEffectStart(GameSpellEffect effect)
 		{			
 			effect.Owner.IsStunned=true;
