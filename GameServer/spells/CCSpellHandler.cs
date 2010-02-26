@@ -216,6 +216,19 @@ namespace DOL.GS.Spells
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
 			base.OnEffectStart(effect);
 		}
+
+		/// <summary>
+		/// There is no area variance for mezz
+		/// </summary>
+		/// <param name="distance"></param>
+		/// <param name="radius"></param>
+		/// <returns></returns>
+		protected override double CalculateAreaVariance(int distance, int radius)
+		{
+			return 0;
+		}
+
+
 		//If mez resisted, just rupt, dont demez
 		protected override void OnSpellResisted(GameLiving target)
 		{
