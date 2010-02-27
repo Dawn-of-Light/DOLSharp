@@ -2322,7 +2322,7 @@ return false;
 					int dist = t.GetDistanceTo(Caster.GroundTarget);
 					if (dist >= 0)
 					{
-						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));
+						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(t, dist, Spell.Radius)));
 					}
 				}
 				else if (Spell.Target.ToLower() == "cone")
@@ -2331,7 +2331,7 @@ return false;
 					if (dist >= 0)
 					{
 						//Cone spells use the range for their variance!
-						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Range)));
+						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(t, dist, Spell.Range)));
 					}
 				}
 				else
@@ -2339,7 +2339,7 @@ return false;
 					int dist = t.GetDistanceTo(target);
 					if (dist >= 0)
 					{
-						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(dist, Spell.Radius)));
+						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(t, dist, Spell.Radius)));
 					}
 				}
 			}
@@ -2353,7 +2353,7 @@ return false;
 		/// <param name="distance">The distance away from center of the spell</param>
 		/// <param name="radius">The radius of the spell</param>
 		/// <returns></returns>
-		protected virtual double CalculateAreaVariance(int distance, int radius)
+		protected virtual double CalculateAreaVariance(GameLiving target, int distance, int radius)
 		{
 			return ((double)distance / (double)radius);
 		}
