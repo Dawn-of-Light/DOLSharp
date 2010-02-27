@@ -237,6 +237,7 @@ namespace DOL.GS.Quests
 			else
 			{
 				QuestPlayer.Out.SendMessage(string.Format("Your inventory is full, you need {0} free slot(s) to complete this quest.", inventorySpaceRequired), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Rewards.ChosenItems.Clear();
 			}
 		}
 
