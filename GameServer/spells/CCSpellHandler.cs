@@ -218,15 +218,23 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
-		/// There is no area variance for mezz
+		/// Variance is max 50% for players, none for mobs
 		/// </summary>
-		/// <param name="distance"></param>
-		/// <param name="radius"></param>
-		/// <returns></returns>
-		protected override double CalculateAreaVariance(int distance, int radius)
+		/// <param name="target">target to calculate variance for</param>
+		/// <param name="distance">distance from the target the spell was cast on</param>
+		/// <param name="radius">radius of the spell</param>
+		/// <returns>amount to subtract from effectiveness</returns>
+		protected override double CalculateAreaVariance(GameLiving target, int distance, int radius)
 		{
+			if (target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain is IControlledBrain))
+			{
+				return ((double)distance / (double)radius) / 2.0;
+			}
+
 			return 0;
 		}
+
+
 
 
 		//If mez resisted, just rupt, dont demez
@@ -375,15 +383,22 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
-		/// There is no area variance for stun
+		/// Variance is max 50% for players, none for mobs
 		/// </summary>
-		/// <param name="distance"></param>
-		/// <param name="radius"></param>
-		/// <returns></returns>
-		protected override double CalculateAreaVariance(int distance, int radius)
+		/// <param name="target">target to calculate variance for</param>
+		/// <param name="distance">distance from the target the spell was cast on</param>
+		/// <param name="radius">radius of the spell</param>
+		/// <returns>amount to subtract from effectiveness</returns>
+		protected override double CalculateAreaVariance(GameLiving target, int distance, int radius)
 		{
+			if (target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain is IControlledBrain))
+			{
+				return ((double)distance / (double)radius) / 2.0;
+			}
+
 			return 0;
 		}
+
 
 		public override void OnEffectStart(GameSpellEffect effect)
 		{			
