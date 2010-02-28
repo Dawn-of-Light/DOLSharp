@@ -801,30 +801,57 @@ namespace DOL.GS.ServerRules
 					double damagePercent = (float)de.Value / totalDamage;
 
 					#region Realm Points
+
 					// realm points
 					int rpCap = living.RealmPointsValue * 2;
-					int realmPoints = (int)(npcRPValue * damagePercent);
+					int realmPoints = 0;
 
-					//rp bonuses from RR and Group
-					//100% if full group,scales down according to player count in group and their range to target
-					if (player != null && player.Group != null && plrGrpExp.ContainsKey(player.Group))
-						realmPoints = (int)(realmPoints * (1.0 + plrGrpExp[player.Group] * 0.125));
+					// Keep and Tower captures reward full RP and BP value to each player
+					if (killedNPC is GuardLord)
+					{
+						realmPoints = npcRPValue;
+					}
+					else
+					{
+						realmPoints = (int)(npcRPValue * damagePercent);
+						//rp bonuses from RR and Group
+						//100% if full group,scales down according to player count in group and their range to target
+						if (player != null && player.Group != null && plrGrpExp.ContainsKey(player.Group))
+						{
+							realmPoints = (int)(realmPoints * (1.0 + plrGrpExp[player.Group] * 0.125));
+						}
+					}
 
 					if (realmPoints > rpCap)
 						realmPoints = rpCap;
 
 					if (realmPoints > 0)
 						living.GainRealmPoints(realmPoints);
+
 					#endregion
 
 					#region Bounty Points
+
 					// bounty points
+
 					int bpCap = living.BountyPointsValue * 2;
-					int bountyPoints = (int)(npcBPValue * damagePercent);
+					int bountyPoints = 0;
+
+					// Keep and Tower captures reward full RP and BP value to each player
+					if (killedNPC is GuardLord)
+					{
+						bountyPoints = npcBPValue;
+					}
+					else
+					{
+						bountyPoints = (int)(npcBPValue * damagePercent);
+					}
+
 					if (bountyPoints > bpCap)
 						bountyPoints = bpCap;
 					if (bountyPoints > 0)
 						living.GainBountyPoints(bountyPoints);
+
 					#endregion
 
 					// experience points
