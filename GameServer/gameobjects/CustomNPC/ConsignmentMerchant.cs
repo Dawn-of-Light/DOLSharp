@@ -86,7 +86,7 @@ namespace DOL.GS
                 House house = HouseMgr.GetHouse(this.CurrentRegionID, HouseNumber);
                 String sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2}",
                     HouseMgr.GetOwner(house.DatabaseItem), FirstSlot, LastSlot);
-                return (InventoryItem[])(GameServer.Database.SelectObjects(typeof(InventoryItem), sqlWhere));
+                return (InventoryItem[])(GameServer.Database.SelectObjects<InventoryItem>(sqlWhere));
             }
         }
 
@@ -168,7 +168,7 @@ namespace DOL.GS
             {
                 playerInventory.RemoveItem(toItem);
                 toItem.SlotPosition = fromItem.SlotPosition;
-                GameServer.Database.AddNewObject(toItem);
+                GameServer.Database.AddObject(toItem);
             }
 
             GameServer.Database.DeleteObject(fromItem);
@@ -268,7 +268,7 @@ namespace DOL.GS
                 fromItem.OwnerID = house.OwnerIDs;
             fromItem.SellPrice = price;
             fromItem.OwnerLot = (ushort)this.HouseNumber; // used to mark the lot for market explorer
-            GameServer.Database.AddNewObject(fromItem);
+            GameServer.Database.AddObject(fromItem);
 
             if ((int)toSlot >= (int)eInventorySlot.Consignment_First)
                 toSlot = (eInventorySlot)(RecalculateSlot((int)toSlot));
@@ -348,7 +348,7 @@ namespace DOL.GS
                         throw new Exception("Money amount changed while adding items.");
                     }
                 }
-                DBHouseMerchant merchant = (DBHouseMerchant)GameServer.Database.SelectObject(typeof(DBHouseMerchant), "HouseNumber = '" + this.HouseNumber + "'");
+                DBHouseMerchant merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + this.HouseNumber + "'");
                 merchant.Quantity += orgValue;
                 GameServer.Database.SaveObject(merchant);
                 NotifyObservers(MoveItemFromMerchant(player, playerInventory, fromSlot, toSlot));
@@ -424,7 +424,7 @@ namespace DOL.GS
                 return false;
             if (h.HasOwnerPermissions(player))
             {
-                DBHouseMerchant merchant = (DBHouseMerchant)GameServer.Database.SelectObject(typeof(DBHouseMerchant), "HouseNumber = '" + HouseNumber + "'");
+                DBHouseMerchant merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + HouseNumber + "'");
                 player.Out.SendInventoryItemsUpdate(ConInventory, 0x05);
                 long amount = (long)merchant.Quantity;
                 player.Out.SendConsignmentMerchantMoney((ushort)Money.GetMithril(amount), (ushort)Money.GetPlatinum(amount), (ushort)Money.GetGold(amount), (byte)Money.GetSilver(amount), (byte)Money.GetCopper(amount));
@@ -503,7 +503,7 @@ namespace DOL.GS
                 return;
             if (house.DatabaseItem.GuildHouse)
             {
-                DBGuild guild = (DBGuild)GameServer.Database.SelectObject(typeof(DBGuild), "GuildName = '" + house.DatabaseItem.GuildName + "'");
+                DBGuild guild = GameServer.Database.SelectObject<DBGuild>("GuildName = '" + house.DatabaseItem.GuildName + "'");
                 int emblem = guild.Emblem;
                 InventoryItem cloak = Inventory.GetItem(eInventorySlot.Cloak);
                 if (cloak != null)

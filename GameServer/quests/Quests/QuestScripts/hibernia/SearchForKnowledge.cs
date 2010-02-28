@@ -80,7 +80,7 @@ namespace DOL.GS.Quests.Hibernia
             #region defineItems
 
             // item db check
-            RecruitsCloak = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_cloak");
+            RecruitsCloak = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_cloak");
             if (RecruitsCloak == null)
             {
                 RecruitsCloak = new ItemTemplate();
@@ -122,9 +122,9 @@ namespace DOL.GS.Quests.Hibernia
                 RecruitsCloak.MaxDurability = 50000;
 
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsCloak);
+                    GameServer.Database.AddObject(RecruitsCloak);
             }
-            LetterToEpona = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "letter_to_epona");
+            LetterToEpona = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_to_epona");
             if (LetterToEpona == null)
             {
                 LetterToEpona = new ItemTemplate();
@@ -137,7 +137,7 @@ namespace DOL.GS.Quests.Hibernia
                 LetterToEpona.Id_nb = "letter_to_epona";
 
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(LetterToEpona);
+                    GameServer.Database.AddObject(LetterToEpona);
             }
             #endregion
             Level = 1;

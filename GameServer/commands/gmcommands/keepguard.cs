@@ -239,7 +239,7 @@ namespace DOL.GS.Commands
 							guard.AddToWorld();
 
 							if (guard.Component.Keep != null)
-								guard.Component.Keep.Guards.Add(DOL.Database.UniqueID.IdGenerator.generateId(), guard);
+								guard.Component.Keep.Guards.Add(DOL.Database.UniqueID.IDGenerator.GenerateID(), guard);
 						}
 
 						PositionMgr.FillPositions();

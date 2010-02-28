@@ -225,7 +225,7 @@ namespace DOL.GS.Quests.Midgard
 
 			ticketToMularn = CreateTicketTo("ticket to Mularn", "");
 
-			scrollYuliwyf = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_yuliwyf");
+			scrollYuliwyf = GameServer.Database.FindObjectByKey<ItemTemplate>("scroll_for_yuliwyf");
 			if (scrollYuliwyf == null)
 			{
 				scrollYuliwyf = new ItemTemplate();
@@ -246,11 +246,11 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(scrollYuliwyf);
+					GameServer.Database.AddObject(scrollYuliwyf);
 			}
 
 
-			receiptHarlfug = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_harlfug");
+			receiptHarlfug = GameServer.Database.FindObjectByKey<ItemTemplate>("receipt_for_harlfug");
 			if (receiptHarlfug == null)
 			{
 				receiptHarlfug = new ItemTemplate();
@@ -271,10 +271,10 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(receiptHarlfug);
+					GameServer.Database.AddObject(receiptHarlfug);
 			}
 
-			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
+			chestOfCoins = GameServer.Database.FindObjectByKey<ItemTemplate>("small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
 				chestOfCoins = new ItemTemplate();
@@ -295,10 +295,10 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(chestOfCoins);
+					GameServer.Database.AddObject(chestOfCoins);
 			}
 
-			letterDalikor = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_dalikor");
+			letterDalikor = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_for_dalikor");
 			if (letterDalikor == null)
 			{
 				letterDalikor = new ItemTemplate();
@@ -319,10 +319,10 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(letterDalikor);
+					GameServer.Database.AddObject(letterDalikor);
 			}
 
-			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
+			assistantNecklace = GameServer.Database.FindObjectByKey<ItemTemplate>("assistant_necklace");
 			if (assistantNecklace == null)
 			{
 				assistantNecklace = new ItemTemplate();
@@ -344,11 +344,11 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(assistantNecklace);
+					GameServer.Database.AddObject(assistantNecklace);
 			}
 
 			// item db check
-			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield_mid");
+			recruitsRoundShield = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_round_shield_mid");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
@@ -393,11 +393,11 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsRoundShield);
+					GameServer.Database.AddObject(recruitsRoundShield);
 			}
 
 			// item db check
-			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
+			recruitsBracer = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
 				recruitsBracer = new ItemTemplate();
@@ -442,7 +442,7 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsBracer);
+					GameServer.Database.AddObject(recruitsBracer);
 			}
 
 			#endregion

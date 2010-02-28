@@ -144,7 +144,7 @@ namespace DOL.GS.Quests
 				string tempID = Convert.ToString(identifier);
 
                 // TODO: Dirty Hack this should be done better
-				Mob mob = (Mob)GameServer.Database.SelectObject(typeof(Mob), "MobID='" + GameServer.Database.Escape(tempID) + "' OR Name='" + GameServer.Database.Escape(tempID) + "'");
+				Mob mob = GameServer.Database.SelectObject<Mob>("MobID='" + GameServer.Database.Escape(tempID) + "' OR Name='" + GameServer.Database.Escape(tempID) + "'");
 
                 GameNPC[] livings = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
 
@@ -207,7 +207,7 @@ namespace DOL.GS.Quests
 			{
 				string tempID = Convert.ToString(identifier);
 
-                Mob mob = (Mob) GameServer.Database.SelectObject(typeof(Mob), "MobID='" + GameServer.Database.Escape(tempID) + "' OR Name='" + GameServer.Database.Escape(tempID) + "'");
+                Mob mob = GameServer.Database.SelectObject<Mob>("MobID='" + GameServer.Database.Escape(tempID) + "' OR Name='" + GameServer.Database.Escape(tempID) + "'");
 
 				GameNPC[] npcs = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
 

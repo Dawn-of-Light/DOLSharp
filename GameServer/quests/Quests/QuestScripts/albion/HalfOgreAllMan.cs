@@ -313,7 +313,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			sealedLovePoem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_love_poem");
+			sealedLovePoem = GameServer.Database.FindObjectByKey<ItemTemplate>("sealed_love_poem");
 			if (sealedLovePoem == null)
 			{
 				sealedLovePoem = new ItemTemplate();
@@ -343,11 +343,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sealedLovePoem);
+					GameServer.Database.AddObject(sealedLovePoem);
 			}
 
 			// item db check
-			beautifulRedRose = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "beautiful_red_rose");
+			beautifulRedRose = GameServer.Database.FindObjectByKey<ItemTemplate>("beautiful_red_rose");
 			if (beautifulRedRose == null)
 			{
 				beautifulRedRose = new ItemTemplate();
@@ -377,11 +377,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(beautifulRedRose);
+					GameServer.Database.AddObject(beautifulRedRose);
 
 
 				// item db check
-				adnilsMagicalOrb = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "adnils_magical_orb");
+				adnilsMagicalOrb = GameServer.Database.FindObjectByKey<ItemTemplate>("adnils_magical_orb");
 				if (adnilsMagicalOrb == null)
 				{
 					adnilsMagicalOrb = new ItemTemplate();
@@ -411,7 +411,7 @@ namespace DOL.GS.Quests.Albion
 					//it will be recreated each time it is not found, just comment the following
 					//line if you rather not modify your database
 					if (SAVE_INTO_DATABASE)
-						GameServer.Database.AddNewObject(adnilsMagicalOrb);
+						GameServer.Database.AddObject(adnilsMagicalOrb);
 				}
 
 				#endregion

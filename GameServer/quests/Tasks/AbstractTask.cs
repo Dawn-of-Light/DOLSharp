@@ -92,12 +92,12 @@ namespace DOL.GS.Quests
 			else // if player has no active task, load dbtask an use tasksdone
 			{
 				// Load Task object of player ...
-				DBTask[] tasks = (DBTask[]) GameServer.Database.SelectObjects(typeof(DBTask),"Character_ID ='"+GameServer.Database.Escape(taskPlayer.InternalID)+"'");
-				if (tasks.Length==1)
+				var tasks = GameServer.Database.SelectObjects<DBTask>("Character_ID ='"+GameServer.Database.Escape(taskPlayer.InternalID)+"'");
+				if (tasks.Count==1)
 				{
 					dbTask = tasks[0];
 				}
-				else if (tasks.Length>1)
+				else if (tasks.Count>1)
 				{
 					if (log.IsErrorEnabled)
 						log.Error("More than one DBTask Object found for player "+taskPlayer.Name);
@@ -242,7 +242,7 @@ namespace DOL.GS.Quests
 			if(m_dbTask.IsValid)
 				GameServer.Database.SaveObject(m_dbTask);
 			else
-				GameServer.Database.AddNewObject(m_dbTask);
+				GameServer.Database.AddObject(m_dbTask);
 		}
 
 		/// <summary>
@@ -252,7 +252,7 @@ namespace DOL.GS.Quests
 		{
 			if(!m_dbTask.IsValid) return;
 
-			DBTask dbTask = (DBTask) GameServer.Database.FindObjectByKey(typeof(DBTask), m_dbTask.ObjectId);
+			DBTask dbTask = (DBTask) GameServer.Database.FindObjectByKey<DBTask>(m_dbTask.ObjectId);
 			if(dbTask!=null)
 				GameServer.Database.DeleteObject(dbTask);
 		}

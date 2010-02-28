@@ -164,7 +164,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		enchanterdtenebrousflask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "enchanterdtenebrousflask");
+		enchanterdtenebrousflask = GameServer.Database.FindObjectByKey<ItemTemplate>("enchanterdtenebrousflask");
 			if (enchanterdtenebrousflask == null)
 			{
 				enchanterdtenebrousflask = new ItemTemplate();
@@ -238,9 +238,9 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(enchanterdtenebrousflask);
+					GameServer.Database.AddObject(enchanterdtenebrousflask);
 				}
-			quarterfulltenebrousflask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "quarterfulltenebrousflask");
+			quarterfulltenebrousflask = GameServer.Database.FindObjectByKey<ItemTemplate>("quarterfulltenebrousflask");
 			if (quarterfulltenebrousflask == null)
 			{
 				quarterfulltenebrousflask = new ItemTemplate();
@@ -314,9 +314,9 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(quarterfulltenebrousflask);
+					GameServer.Database.AddObject(quarterfulltenebrousflask);
 				}
-			halffulltenebrousflask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "halffulltenebrousflask");
+			halffulltenebrousflask = GameServer.Database.FindObjectByKey<ItemTemplate>("halffulltenebrousflask");
 			if (halffulltenebrousflask == null)
 			{
 				halffulltenebrousflask = new ItemTemplate();
@@ -390,9 +390,9 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(halffulltenebrousflask);
+					GameServer.Database.AddObject(halffulltenebrousflask);
 				}
-			threequarterfulltenebrousflask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "threequarterfulltenebrousflask");
+			threequarterfulltenebrousflask = GameServer.Database.FindObjectByKey<ItemTemplate>("threequarterfulltenebrousflask");
 			if (threequarterfulltenebrousflask == null)
 			{
 				threequarterfulltenebrousflask = new ItemTemplate();
@@ -466,9 +466,9 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(threequarterfulltenebrousflask);
+					GameServer.Database.AddObject(threequarterfulltenebrousflask);
 				}
-			fullflaskoftenebrousessence = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "fullflaskoftenebrousessence");
+			fullflaskoftenebrousessence = GameServer.Database.FindObjectByKey<ItemTemplate>("fullflaskoftenebrousessence");
 			if (fullflaskoftenebrousessence == null)
 			{
 				fullflaskoftenebrousessence = new ItemTemplate();
@@ -542,7 +542,7 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(fullflaskoftenebrousessence);
+					GameServer.Database.AddObject(fullflaskoftenebrousessence);
 				}
 			
 

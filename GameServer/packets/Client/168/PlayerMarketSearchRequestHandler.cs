@@ -38,7 +38,7 @@ namespace DOL.GS.PacketHandler.Client.v168
         public List<InventoryItem> ExplorerItems()
         {
             List<InventoryItem> list = new List<InventoryItem>();
-            DataObject[] obj = GameServer.Database.SelectObjects(typeof(InventoryItem), "SlotPosition > '1499'");
+			var obj = GameServer.Database.SelectObjects<InventoryItem>("SlotPosition > '1499'");
             foreach (InventoryItem itm in obj)
             {
                 list.Add(itm);
@@ -247,11 +247,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			string qryString = GameServer.Database.Escape(sql.ToString());
 
-            InventoryItem[] items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), qryString);
-			int itemsOnPage = page < (int)Math.Ceiling((double)items.Length / 20) ? 20 : items.Length % 20;
+            var items = GameServer.Database.SelectObjects<InventoryItem>(qryString);
+			int itemsOnPage = page < (int)Math.Ceiling((double)items.Count / 20) ? 20 : items.Count % 20;
             if (itemsOnPage > 0)
             {
-				int itemCount = items.Length;
+				int itemCount = items.Count;
 				int pageCount = (int)Math.Ceiling((double)itemCount / 20) - 1;
 				client.Player.Out.SendMarketExplorerWindow(items, page, (byte)pageCount);
                 client.Player.Out.SendMessage(itemsOnPage.ToString() + " Results found for page " + (page + 1) + ".", eChatType.CT_Important, eChatLoc.CL_ChatWindow);

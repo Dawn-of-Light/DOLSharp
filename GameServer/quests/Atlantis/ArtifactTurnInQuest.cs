@@ -400,7 +400,7 @@ namespace DOL.GS.Quests.Atlantis
 
 		protected void ReturnArtifact(GamePlayer player)
 		{
-            ItemTemplate itemTemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GetCustomProperty("Id_nb"));
+            ItemTemplate itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(GetCustomProperty("Id_nb"));
 			InventoryArtifact artifact = new InventoryArtifact(itemTemplate);
 			artifact.ArtifactLevel = Convert.ToInt32(GetCustomProperty("ALevel"));
 			artifact.Experience = Convert.ToInt64(GetCustomProperty("AXP"));

@@ -182,7 +182,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			farmerAsmasMap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "farmer_asma_map");
+			farmerAsmasMap = GameServer.Database.FindObjectByKey<ItemTemplate>("farmer_asma_map");
 			if (farmerAsmasMap == null)
 			{
 				farmerAsmasMap = new ItemTemplate();
@@ -212,7 +212,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(farmerAsmasMap);
+					GameServer.Database.AddObject(farmerAsmasMap);
 			}
 
 			#endregion

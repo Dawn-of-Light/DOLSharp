@@ -153,7 +153,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		smallmaulerskin = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "smallmaulerskin");
+		smallmaulerskin = GameServer.Database.FindObjectByKey<ItemTemplate>("smallmaulerskin");
 			if (smallmaulerskin == null)
 			{
 				smallmaulerskin = new ItemTemplate();
@@ -227,7 +227,7 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(smallmaulerskin);
+					GameServer.Database.AddObject(smallmaulerskin);
 				}
 			
 

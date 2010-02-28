@@ -76,7 +76,7 @@ namespace DOL.GS
 				}
 
 
-				DataObject[] relics = GameServer.Database.SelectAllObjects(typeof(DBRelic));
+				var relics = GameServer.Database.SelectAllObjects<DBRelic>();
 				foreach (DBRelic datarelic in relics)
 				{
 					if (datarelic.relicType < 0 || datarelic.relicType > 1

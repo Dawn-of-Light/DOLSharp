@@ -89,7 +89,7 @@ namespace DOL.GS.Commands
                         }
 
                         relic.RelicID = MinotaurRelicManager.GetRelicCount() + 1;
-                        GameServer.Database.AddNewObject(relic);
+                        GameServer.Database.AddObject(relic);
 
                         MinotaurRelic rrelic = new MinotaurRelic(relic);
                         rrelic.AddToWorld();
@@ -325,7 +325,7 @@ namespace DOL.GS.Commands
                                             MinotaurRelicManager.RemoveRelic(relic);
                                             client.Player.Out.SendMessage("Relic " + relic.RelicID + " has been removed from the Minorelic Hash Table", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                             
-                                            DataObject obj = GameServer.Database.SelectObject(typeof(DBMinotaurRelic), "RelicID = '" + relic.RelicID + "'");
+                                            DataObject obj = GameServer.Database.SelectObject<DBMinotaurRelic>("RelicID = '" + relic.RelicID + "'");
                                             if (obj != null)
                                             {
                                                 GameServer.Database.DeleteObject(obj);
@@ -360,7 +360,7 @@ namespace DOL.GS.Commands
                             client.Player.Out.SendMessage("Relic " + relic.RelicID + " has been removed from the Minorelic Hash Table", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                             
 
-                            DataObject obj = GameServer.Database.SelectObject(typeof(DBMinotaurRelic), "RelicID = '" + relic.RelicID + "'");
+                            DataObject obj = GameServer.Database.SelectObject<DBMinotaurRelic>("RelicID = '" + relic.RelicID + "'");
                             if (obj != null)
                             {
                                 GameServer.Database.DeleteObject(obj);

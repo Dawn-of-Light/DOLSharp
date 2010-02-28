@@ -80,7 +80,7 @@ namespace DOL.GS.Quests.Albion
 
             // item db check - All my quests with Recruit newbie items make a seperate
             // item then the older quests.
-            RecruitsQuiltedPants = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_quilted_pants");
+            RecruitsQuiltedPants = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_quilted_pants");
             if (RecruitsQuiltedPants == null)
             {
                 RecruitsQuiltedPants = new ItemTemplate();
@@ -129,9 +129,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsQuiltedPants);
+                    GameServer.Database.AddObject(RecruitsQuiltedPants);
             }
-            RecruitsLeatherLeggings = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_leather_leggings");
+            RecruitsLeatherLeggings = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_leather_leggings");
             if (RecruitsLeatherLeggings == null)
             {
                 RecruitsLeatherLeggings = new ItemTemplate();
@@ -181,9 +181,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsLeatherLeggings);
+                    GameServer.Database.AddObject(RecruitsLeatherLeggings);
             }
-            RecruitsStuddedLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_studded_legs");
+            RecruitsStuddedLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_studded_legs");
             if (RecruitsStuddedLegs == null)
             {
                 RecruitsStuddedLegs = new ItemTemplate();
@@ -233,7 +233,7 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsStuddedLegs);
+                    GameServer.Database.AddObject(RecruitsStuddedLegs);
             }
             #endregion
 

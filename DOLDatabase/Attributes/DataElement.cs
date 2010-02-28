@@ -26,82 +26,37 @@ namespace DOL.Database.Attributes
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public class DataElement : Attribute
 	{
-		private bool allowDbNull;
-		private bool unique;
-		private bool index;
-		private byte m_varchar;
-
 		public DataElement()
 		{
-			allowDbNull = true;
-			unique = false;
-			index = false;
-			m_varchar = 0;
+			AllowDbNull = true;
+			Unique = false;
+			Index = false;
+			Varchar = 0;
 		}
 
 		/// <summary>
 		/// Indicates if a value of null is allowed for this Collumn
 		/// </summary>
 		/// <value><c>true</c> if <c>null</c> is allowed</value>
-		public bool AllowDbNull
-		{
-			get
-			{
-				return allowDbNull;
-			}
-			set
-			{
-				allowDbNull = value;
-			}
-		}
+		public bool AllowDbNull { get; set; }
+
 		/// <summary>
 		/// Indicates if a Value has to be Unique in the Table
 		/// </summary>
 		/// <value><c>true</c> if a Value as to be Unique</value>
-		public bool Unique
-		{
-			get
-			{
-				return unique;
-			}
-			set
-			{
-				unique = value;
-			}
-		}
+		public bool Unique { get; set; }
 
 		/// <summary>
 		/// Indicates if the value gets indexed in sql databases
 		/// for optimizing performance
 		/// </summary>
 		/// <value><c>true</c>if column of value should be indexed</value>
-		public bool Index
-		{
-			get
-			{
-				return index;
-			}
-			set
-			{
-				index = value;
-			}
-		}
+		public bool Index { get; set; }
 
 		/// <summary>
 		/// Indicates that a string column will be created as type VarChar with the length provided
 		/// Varchar = 0 will force creation of TEXT datatype
 		/// </summary>
-		public byte Varchar
-		{
-			get
-			{
-				return m_varchar;
-			}
-			set
-			{
-				m_varchar = value;
-			}
-		}
-
+		public byte Varchar { get; set; }
 	}
 }

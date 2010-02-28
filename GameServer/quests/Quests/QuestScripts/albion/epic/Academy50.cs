@@ -227,7 +227,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region Item Declarations
 
-			sealed_pouch = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sealed_pouch");
+			sealed_pouch = GameServer.Database.FindObjectByKey<ItemTemplate>("sealed_pouch");
 			if (sealed_pouch == null)
 			{
 				if (log.IsWarnEnabled)
@@ -249,13 +249,13 @@ namespace DOL.GS.Quests.Albion
 				sealed_pouch.Weight = 12;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sealed_pouch);
+					GameServer.Database.AddObject(sealed_pouch);
 			}
 // end item
 
 			ItemTemplate item = null;
 
-			WizardEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicBoots");
+			WizardEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("WizardEpicBoots");
 			if (WizardEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -292,13 +292,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				WizardEpicBoots = item;
 			}
 //end item
 			//Bernor's Numinous Coif 
-			WizardEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicHelm");
+			WizardEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("WizardEpicHelm");
 			if (WizardEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -335,13 +335,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Spirit;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				WizardEpicHelm = item;
 			}
 //end item
 			//Bernor's Numinous Gloves 
-			WizardEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicGloves");
+			WizardEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("WizardEpicGloves");
 			if (WizardEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -378,13 +378,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				WizardEpicGloves = item;
 			}
 
 			//Bernor's Numinous Hauberk 
-			WizardEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicVest");
+			WizardEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("WizardEpicVest");
 			if (WizardEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -418,13 +418,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				WizardEpicVest = item;
 
 			}
 			//Bernor's Numinous Legs 
-			WizardEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicLegs");
+			WizardEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("WizardEpicLegs");
 			if (WizardEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -458,13 +458,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				WizardEpicLegs = item;
 
 			}
 			//Bernor's Numinous Sleeves 
-			WizardEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WizardEpicArms");
+			WizardEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("WizardEpicArms");
 			if (WizardEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -498,13 +498,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3Type = (int) eStat.INT;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				WizardEpicArms = item;
 
 			}
 //Minstrel Epic Sleeves End
-			MinstrelEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicBoots");
+			MinstrelEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("MinstrelEpicBoots");
 			if (MinstrelEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -541,14 +541,14 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Cold;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				MinstrelEpicBoots = item;
 
 			}
 //end item
 			//of Coruscating Harmony  Coif 
-			MinstrelEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicHelm");
+			MinstrelEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("MinstrelEpicHelm");
 			if (MinstrelEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -585,14 +585,14 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				MinstrelEpicHelm = item;
 
 			}
 //end item
 			//of Coruscating Harmony  Gloves 
-			MinstrelEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicGloves");
+			MinstrelEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("MinstrelEpicGloves");
 			if (MinstrelEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -629,13 +629,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				MinstrelEpicGloves = item;
 
 			}
 			//of Coruscating Harmony  Hauberk 
-			MinstrelEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicVest");
+			MinstrelEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("MinstrelEpicVest");
 			if (MinstrelEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -672,13 +672,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				MinstrelEpicVest = item;
 
 			}
 			//of Coruscating Harmony  Legs 
-			MinstrelEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicLegs");
+			MinstrelEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("MinstrelEpicLegs");
 			if (MinstrelEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -715,13 +715,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				MinstrelEpicLegs = item;
 
 			}
 			//of Coruscating Harmony  Sleeves 
-			MinstrelEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "MinstrelEpicArms");
+			MinstrelEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("MinstrelEpicArms");
 			if (MinstrelEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -758,12 +758,12 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Body;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				MinstrelEpicArms = item;
 			}
 
-			SorcerorEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicBoots");
+			SorcerorEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("SorcerorEpicBoots");
 			if (SorcerorEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -800,14 +800,14 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Energy;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				SorcerorEpicBoots = item;
 
 			}
 //end item
 			//of Mental Acuity Coif 
-			SorcerorEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicHelm");
+			SorcerorEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("SorcerorEpicHelm");
 			if (SorcerorEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -844,14 +844,14 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Thrust;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				SorcerorEpicHelm = item;
 
 			}
 //end item
 			//of Mental Acuity Gloves 
-			SorcerorEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicGloves");
+			SorcerorEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("SorcerorEpicGloves");
 			if (SorcerorEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -888,13 +888,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Heat;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				SorcerorEpicGloves = item;
 
 			}
 			//of Mental Acuity Hauberk 
-			SorcerorEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicVest");
+			SorcerorEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("SorcerorEpicVest");
 			if (SorcerorEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -928,13 +928,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3Type = (int) eProperty.MaxHealth;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				SorcerorEpicVest = item;
 
 			}
 			//of Mental Acuity Legs 
-			SorcerorEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicLegs");
+			SorcerorEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("SorcerorEpicLegs");
 			if (SorcerorEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -971,13 +971,13 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4Type = (int) eResist.Spirit;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				SorcerorEpicLegs = item;
 
 			}
 			//of Mental Acuity Sleeves 
-			SorcerorEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SorcerorEpicArms");
+			SorcerorEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("SorcerorEpicArms");
 			if (SorcerorEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1011,7 +1011,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3Type = (int) eStat.INT;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(item);
+					GameServer.Database.AddObject(item);
 
 				SorcerorEpicArms = item;
 			}

@@ -252,19 +252,19 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineItems
 
-			ticketToTirnaNog = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_ardee_northtirnanog");
+			ticketToTirnaNog = GameServer.Database.FindObjectByKey<ItemTemplate>("hs_ardee_northtirnanog");
 			if (ticketToTirnaNog == null)
 				ticketToTirnaNog = CreateTicketTo("Tir na nOgh", "hs_ardee_northtirnanog");
 
-			ticketToArdee = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_easttirnanogh_ardee");
+			ticketToArdee = GameServer.Database.FindObjectByKey<ItemTemplate>("hs_easttirnanogh_ardee");
 			if (ticketToArdee == null)
 				ticketToArdee = CreateTicketTo("Ardee", "hs_easttirnanogh_ardee");
 			
-			ticketToMagMell = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "hs_ardee_magmell");
+			ticketToMagMell = GameServer.Database.FindObjectByKey<ItemTemplate>("hs_ardee_magmell");
 			if (ticketToMagMell == null)
 				ticketToMagMell = CreateTicketTo("Mag Mell", "hs_ardee_magmell");
 
-			scrollHylvian = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_hylvian");
+			scrollHylvian = GameServer.Database.FindObjectByKey<ItemTemplate>("scroll_for_hylvian");
 			if (scrollHylvian == null)
 			{
 				scrollHylvian = new ItemTemplate();
@@ -285,11 +285,11 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(scrollHylvian);
+					GameServer.Database.AddObject(scrollHylvian);
 			}
 
 
-			receiptFreagus = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_freagus");
+			receiptFreagus = GameServer.Database.FindObjectByKey<ItemTemplate>("receipt_for_freagus");
 			if (receiptFreagus == null)
 			{
 				receiptFreagus = new ItemTemplate();
@@ -310,10 +310,10 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(receiptFreagus);
+					GameServer.Database.AddObject(receiptFreagus);
 			}
 
-			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
+			chestOfCoins = GameServer.Database.FindObjectByKey<ItemTemplate>("small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
 				chestOfCoins = new ItemTemplate();
@@ -334,10 +334,10 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(chestOfCoins);
+					GameServer.Database.AddObject(chestOfCoins);
 			}
 
-			letterAddrir = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_addrir");
+			letterAddrir = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_for_addrir");
 			if (letterAddrir == null)
 			{
 				letterAddrir = new ItemTemplate();
@@ -358,10 +358,10 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(letterAddrir);
+					GameServer.Database.AddObject(letterAddrir);
 			}
 
-			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
+			assistantNecklace = GameServer.Database.FindObjectByKey<ItemTemplate>("assistant_necklace");
 			if (assistantNecklace == null)
 			{
 				assistantNecklace = new ItemTemplate();
@@ -383,11 +383,11 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(assistantNecklace);
+					GameServer.Database.AddObject(assistantNecklace);
 			}
 
 			// item db check
-			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield_hib");
+			recruitsRoundShield = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_round_shield_hib");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
@@ -432,11 +432,11 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsRoundShield);
+					GameServer.Database.AddObject(recruitsRoundShield);
 			}
 
 			// item db check
-			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
+			recruitsBracer = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
 				recruitsBracer = new ItemTemplate();
@@ -481,7 +481,7 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsBracer);
+					GameServer.Database.AddObject(recruitsBracer);
 			}
 
 			#endregion

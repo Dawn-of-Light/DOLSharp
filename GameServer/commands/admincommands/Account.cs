@@ -88,7 +88,7 @@ namespace DOL.GS.Commands
                         account.Realm = (int)eRealm.None;
                         account.CreationDate = DateTime.Now;
                         account.Language = ServerProperties.Properties.SERV_LANGUAGE;
-                        GameServer.Database.AddNewObject(account);
+                        GameServer.Database.AddObject(account);
 
                         DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountCreated"));
                     }
@@ -295,8 +295,8 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-                        DataObject[] banacc=GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accountname) + "')");
-						if (banacc == null)
+                        var banacc = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accountname) + "')");
+						if (banacc.Count == 0)
 						{
 							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
 							return;
@@ -349,7 +349,7 @@ namespace DOL.GS.Commands
 			GameClient client = WorldMgr.GetClientByAccountName(name, true);
 			if (client != null)
 				return client.Account;
-			return (Account)GameServer.Database.SelectObject(typeof(Account), "Name ='" + GameServer.Database.Escape(name) + "'");
+			return GameServer.Database.SelectObject<Account>("Name ='" + GameServer.Database.Escape(name) + "'");
 		}
 
 		/// <summary>
@@ -362,7 +362,7 @@ namespace DOL.GS.Commands
 			GameClient client = WorldMgr.GetClientByPlayerName(charname, true, false);
 			if (client != null)
 				return client.Player.PlayerCharacter;
-			return (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(charname) + "'");
+			return GameServer.Database.SelectObject<Character>("Name='" + GameServer.Database.Escape(charname) + "'");
 		}
 
 		/// <summary>
@@ -404,7 +404,7 @@ namespace DOL.GS.Commands
 			if (client != null)
 				return client.Account.Name;
 
-			Character ch = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(charname) + "'");
+			Character ch = GameServer.Database.SelectObject<Character>("Name='" + GameServer.Database.Escape(charname) + "'");
 			if (ch != null)
 				return ch.AccountName;
 			else

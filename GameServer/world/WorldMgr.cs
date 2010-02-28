@@ -340,7 +340,7 @@ namespace DOL.GS
 
             // Load available teleport locations.
 
-			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(Teleport));
+			var objs = GameServer.Database.SelectAllObjects<Teleport>();
 			m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
 			int[] numTeleports = new int[3];
 			foreach (Teleport teleport in objs)
@@ -380,12 +380,12 @@ namespace DOL.GS
 
 				foreach (string loadRegion in astr)
 				{
-					mobList.AddRange((Mob[])GameServer.Database.SelectObjects(typeof(Mob), "region = " + loadRegion));
+					mobList.AddRange(GameServer.Database.SelectObjects<Mob>("region = " + loadRegion));
 				}
 			}
 			else
 			{
-				mobList.AddRange((Mob[])GameServer.Database.SelectAllObjects(typeof(Mob)));
+				mobList.AddRange(GameServer.Database.SelectAllObjects<Mob>());
 			}
 
 			var mobsByRegionId = new Dictionary<ushort, List<Mob>>(512);

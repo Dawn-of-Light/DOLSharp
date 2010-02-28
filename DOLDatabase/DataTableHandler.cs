@@ -16,10 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Data;
-using System.Collections;
 
+using System.Collections;
+using System.Data;
 using DOL.Database.Cache;
 
 namespace DOL.Database
@@ -29,11 +28,10 @@ namespace DOL.Database
 	/// </summary>
 	public class DataTableHandler
 	{
-		ICache cache;
-		Hashtable precache;
-		bool usesPrecaching;
-		DataSet dset;
-		bool hasRelations;
+		private readonly ICache _cache;
+		private readonly DataSet _dset;
+		private readonly Hashtable _precache;
+		private bool _hasRelations;
 
 		/// <summary>
 		/// The Constructor
@@ -41,10 +39,10 @@ namespace DOL.Database
 		/// <param name="dataSet"></param>
 		public DataTableHandler(DataSet dataSet)
 		{
-			cache = new SimpleCache();
-			precache = new Hashtable();
-			dset = dataSet;
-			hasRelations = false;
+			_cache = new SimpleCache();
+			_precache = new Hashtable();
+			_dset = dataSet;
+			_hasRelations = false;
 		}
 
 		/// <summary>
@@ -52,14 +50,8 @@ namespace DOL.Database
 		/// </summary>
 		public bool HasRelations
 		{
-			get
-			{
-				return hasRelations;
-			}
-			set
-			{
-				hasRelations = false;
-			}
+			get { return _hasRelations; }
+			set { _hasRelations = false; }
 		}
 
 		/// <summary>
@@ -67,56 +59,40 @@ namespace DOL.Database
 		/// </summary>
 		public ICache Cache
 		{
-			get
-			{
-				return cache;
-			}
+			get { return _cache; }
 		}
-	
+
 		/// <summary>
 		/// DataSet
 		/// </summary>
 		public DataSet DataSet
 		{
-			get
-			{
-				return dset;
-			}
+			get { return _dset; }
 		}
 
 		/// <summary>
 		/// Uses Precaching
 		/// </summary>
-		public bool UsesPreCaching
-		{
-			get
-			{
-				return usesPrecaching;
-			}
-			set
-			{
-				usesPrecaching = value;
-			}
-		}
+		public bool UsesPreCaching { get; set; }
 
 		/// <summary>
 		/// Set Cache Object
 		/// </summary>
-		/// <param name="Key">The key object</param>
-		/// <param name="Obj">The value DataObject</param>
-		public void SetCacheObject(object Key, DataObject Obj)
+		/// <param name="key">The key object</param>
+		/// <param name="obj">The value DataObject</param>
+		public void SetCacheObject(object key, DataObject obj)
 		{
-			cache[Key] = Obj;
+			_cache[key] = obj;
 		}
 
 		/// <summary>
 		/// Get Cache Object
 		/// </summary>
-		/// <param name="Key">The key object</param>
+		/// <param name="key">The key object</param>
 		/// <returns>The value DataObject</returns>
-		public DataObject GetCacheObject(object Key)
+		public DataObject GetCacheObject(object key)
 		{
-			return cache[Key] as DataObject;
+			return _cache[key] as DataObject;
 		}
 
 		/// <summary>
@@ -126,7 +102,7 @@ namespace DOL.Database
 		/// <param name="obj">The value DataObject</param>
 		public void SetPreCachedObject(object key, DataObject obj)
 		{
-			precache[key] = obj;
+			_precache[key] = obj;
 		}
 
 		/// <summary>
@@ -136,7 +112,7 @@ namespace DOL.Database
 		/// <returns>The value DataObject</returns>
 		public DataObject GetPreCachedObject(object key)
 		{
-			return precache[key] as DataObject;
+			return _precache[key] as DataObject;
 		}
 	}
 }

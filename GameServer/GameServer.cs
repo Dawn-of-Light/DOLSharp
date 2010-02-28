@@ -85,7 +85,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Database instance
 		/// </summary>
-		protected ObjectDatabase m_database;
+		protected IObjectDatabase m_database;
 
 		/// <summary>
 		/// The textwrite for log operations
@@ -191,7 +191,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the database instance
 		/// </summary>
-		public static ObjectDatabase Database
+		public static IObjectDatabase Database
 		{
 			get { return Instance.m_database; }
 		}
@@ -1189,8 +1189,8 @@ namespace DOL.GS
 		{
 			if (m_database == null)
 			{
-				var con = new DataConnection(Configuration.DBType, Configuration.DBConnectionString);
-				m_database = new ObjectDatabase(con);
+				m_database = ObjectDatabase.GetObjectDatabase(Configuration.DBType, Configuration.DBConnectionString);
+
 				try
 				{
 					//We will search our assemblies for DataTables by reflection so 

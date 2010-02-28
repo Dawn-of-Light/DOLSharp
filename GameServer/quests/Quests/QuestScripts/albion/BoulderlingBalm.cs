@@ -189,7 +189,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            boulderlingRemains = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "boulderling_remains");
+            boulderlingRemains = GameServer.Database.FindObjectByKey<ItemTemplate>("boulderling_remains");
             if (boulderlingRemains == null)
             {
                 if (log.IsWarnEnabled)
@@ -208,7 +208,7 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(boulderlingRemains);
+                    GameServer.Database.AddObject(boulderlingRemains);
             }
 
 

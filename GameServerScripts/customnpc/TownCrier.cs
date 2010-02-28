@@ -28,7 +28,7 @@ namespace DOL.GS.Scripts
 		/// <summary>
 		/// The data object that represents a town crier message
 		/// </summary>
-		[DataTable(TableName="TownCrierMessages")]
+		[DataTable(TableName = "TownCrierMessages")]
 		public class TownCrierMessage : DataObject
 		{
 			private string m_msg;
@@ -88,7 +88,7 @@ namespace DOL.GS.Scripts
 		{
 			if (!m_init && GameServer.Database != null)
 			{
-				GameServer.Database.RegisterDataObject(typeof (TownCrierMessage));
+				GameServer.Database.RegisterDataObject(typeof(TownCrierMessage));
 				// 2008-01-29 Kakuri - Obsolete
 				//GameServer.Database.LoadDatabaseTable( typeof( TownCrierMessage ) );
 				m_init = true;
@@ -114,7 +114,7 @@ namespace DOL.GS.Scripts
 			base.LoadFromDatabase(mob);
 			if (GameServer.Database != null)
 			{
-				TownCrierMessage tcmsg = (TownCrierMessage) GameServer.Database.FindObjectByKey(typeof (TownCrierMessage), this.InternalID);
+				var tcmsg = GameServer.Database.FindObjectByKey<TownCrierMessage>(InternalID);
 
 				if (tcmsg != null)
 				{
@@ -131,15 +131,13 @@ namespace DOL.GS.Scripts
 			{
 				TownCrierMessage tcmsg = null;
 
-				tcmsg = (TownCrierMessage) GameServer.Database.FindObjectByKey(typeof (TownCrierMessage), InternalID);
+				tcmsg = GameServer.Database.FindObjectByKey<TownCrierMessage>(InternalID);
 
 				if (tcmsg == null)
 				{
-					tcmsg = new TownCrierMessage();
-					tcmsg.TownCrierID = InternalID;
-					tcmsg.Message = m_msg;
+					tcmsg = new TownCrierMessage { TownCrierID = InternalID, Message = m_msg };
 
-					GameServer.Database.AddNewObject(tcmsg);
+					GameServer.Database.AddObject(tcmsg);
 					GameServer.Database.SaveObject(tcmsg);
 				}
 				else
@@ -154,7 +152,7 @@ namespace DOL.GS.Scripts
 		{
 			if (InternalID != null && GameServer.Database != null)
 			{
-				TownCrierMessage tcmsg = (TownCrierMessage) GameServer.Database.FindObjectByKey(typeof (TownCrierMessage), InternalID);
+				var tcmsg = GameServer.Database.FindObjectByKey<TownCrierMessage>(InternalID);
 
 				if (tcmsg != null)
 				{

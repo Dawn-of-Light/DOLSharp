@@ -184,7 +184,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			slithsTail = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sliths_tail");
+			slithsTail = GameServer.Database.FindObjectByKey<ItemTemplate>("sliths_tail");
 			if (slithsTail == null)
 			{
 				slithsTail = new ItemTemplate();
@@ -219,7 +219,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(slithsTail);
+					GameServer.Database.AddObject(slithsTail);
 			}
 
 			#endregion

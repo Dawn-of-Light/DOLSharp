@@ -73,11 +73,12 @@ namespace DOL.GS
 				lock (m_mobTemplates.SyncRoot)
 				{
 					m_mobTemplates.Clear();
-					DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBNpcTemplate));
+					var objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
 					foreach (DBNpcTemplate dbTemplate in objs)
 					{
 						AddTemplate(new NpcTemplate(dbTemplate));
 					}
+
 					return true;
 				}
 			}
@@ -98,7 +99,7 @@ namespace DOL.GS
 			{
 				lock (m_mobTemplates.SyncRoot)
 				{
-					DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBNpcTemplate));
+					var objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
 					foreach (DBNpcTemplate dbTemplate in objs)
 					{
 						AddTemplate(new NpcTemplate(dbTemplate));

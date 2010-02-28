@@ -217,7 +217,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            enchantedHalberd = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "enchanted_halberd");
+            enchantedHalberd = GameServer.Database.FindObjectByKey<ItemTemplate>("enchanted_halberd");
             if (enchantedHalberd == null)
             {
                 if (log.IsWarnEnabled)
@@ -235,7 +235,7 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(enchantedHalberd);
+                    GameServer.Database.AddObject(enchantedHalberd);
             }
 
 

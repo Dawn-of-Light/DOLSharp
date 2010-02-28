@@ -29,10 +29,10 @@ namespace DOLConfig
 {
 	public partial class DolConfig : Form
 	{
-		List<ServerProperty> sp = new List<ServerProperty>();
-		List<ServerPropertyCategory> sc = new List<ServerPropertyCategory>();
+		IList<ServerProperty> sp = new List<ServerProperty>();
+		IList<ServerPropertyCategory> sc = new List<ServerPropertyCategory>();
 		Dictionary<string, ServerProperty> modifyed_sp = new Dictionary<string, ServerProperty>();
-		ObjectDatabase db = null;
+		IObjectDatabase db = null;
 		string bu_save_text = null;
 		string bu_reset_text = null;
 		bool sp_saved = true;
@@ -48,12 +48,10 @@ namespace DOLConfig
 			sc.Clear();
 			try
 			{
-				DataConnection dc = new DataConnection(currentConfig.DBType, currentConfig.DBConnectionString);
-				db = new ObjectDatabase(dc);
-				ServerProperty[] sptmp = (ServerProperty[])db.SelectAllObjects(typeof(ServerProperty));
-				ServerPropertyCategory[] sctmp = (ServerPropertyCategory[])db.SelectAllObjects(typeof(ServerPropertyCategory));
-				sp = sptmp.ToList();
-				sc = sctmp.ToList();
+				db = ObjectDatabase.GetObjectDatabase(currentConfig.DBType, currentConfig.DBConnectionString);
+
+				sp = db.SelectAllObjects<ServerProperty>();
+				sc = db.SelectAllObjects<ServerPropertyCategory>();
 			}
 			catch
 			{

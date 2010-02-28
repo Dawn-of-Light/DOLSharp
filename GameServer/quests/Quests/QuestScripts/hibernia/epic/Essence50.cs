@@ -174,7 +174,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region Item Declarations
 
-			Moonstone = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "Moonstone");
+			Moonstone = GameServer.Database.FindObjectByKey<ItemTemplate>("Moonstone");
 			if (Moonstone == null)
 			{
 				if (log.IsWarnEnabled)
@@ -196,12 +196,12 @@ namespace DOL.GS.Quests.Hibernia
 				Moonstone.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(Moonstone);
+					GameServer.Database.AddObject(Moonstone);
 				}
 
 			}
 // end item			
-			BardEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicBoots");
+			BardEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("BardEpicBoots");
 			if (BardEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -239,13 +239,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(BardEpicBoots);
+					GameServer.Database.AddObject(BardEpicBoots);
 				}
 
 			}
 //end item
 			//Moonsung Coif 
-			BardEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicHelm");
+			BardEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("BardEpicHelm");
 			if (BardEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -283,14 +283,14 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(BardEpicHelm);
+					GameServer.Database.AddObject(BardEpicHelm);
 				}
 
 
 			}
 //end item
 			//Moonsung Gloves 
-			BardEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicGloves");
+			BardEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("BardEpicGloves");
 			if (BardEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -328,12 +328,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(BardEpicGloves);
+					GameServer.Database.AddObject(BardEpicGloves);
 				}
 
 			}
 			//Moonsung Hauberk 
-			BardEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicVest");
+			BardEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("BardEpicVest");
 			if (BardEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -371,12 +371,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(BardEpicVest);
+					GameServer.Database.AddObject(BardEpicVest);
 				}
 
 			}
 			//Moonsung Legs 
-			BardEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicLegs");
+			BardEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("BardEpicLegs");
 			if (BardEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -414,12 +414,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(BardEpicLegs);
+					GameServer.Database.AddObject(BardEpicLegs);
 				}
 
 			}
 			//Moonsung Sleeves 
-			BardEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "BardEpicArms");
+			BardEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("BardEpicArms");
 			if (BardEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -457,12 +457,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(BardEpicArms);
+					GameServer.Database.AddObject(BardEpicArms);
 				}
 
 			}
 //Champion Epic Sleeves End
-			ChampionEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicBoots");
+			ChampionEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("ChampionEpicBoots");
 			if (ChampionEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -500,13 +500,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(ChampionEpicBoots);
+					GameServer.Database.AddObject(ChampionEpicBoots);
 				}
 
 			}
 //end item
 			//Moonglow Coif 
-			ChampionEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicHelm");
+			ChampionEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("ChampionEpicHelm");
 			if (ChampionEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -544,13 +544,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(ChampionEpicHelm);
+					GameServer.Database.AddObject(ChampionEpicHelm);
 				}
 
 			}
 //end item
 			//Moonglow Gloves 
-			ChampionEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicGloves");
+			ChampionEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("ChampionEpicGloves");
 			if (ChampionEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -588,12 +588,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(ChampionEpicGloves);
+					GameServer.Database.AddObject(ChampionEpicGloves);
 				}
 
 			}
 			//Moonglow Hauberk 
-			ChampionEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicVest");
+			ChampionEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("ChampionEpicVest");
 			if (ChampionEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -631,12 +631,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(ChampionEpicVest);
+					GameServer.Database.AddObject(ChampionEpicVest);
 				}
 
 			}
 			//Moonglow Legs 
-			ChampionEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicLegs");
+			ChampionEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("ChampionEpicLegs");
 			if (ChampionEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -674,12 +674,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(ChampionEpicLegs);
+					GameServer.Database.AddObject(ChampionEpicLegs);
 				}
 
 			}
 			//Moonglow Sleeves 
-			ChampionEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ChampionEpicArms");
+			ChampionEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("ChampionEpicArms");
 			if (ChampionEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -717,11 +717,11 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(ChampionEpicArms);
+					GameServer.Database.AddObject(ChampionEpicArms);
 				}
 
 			}
-			NightshadeEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicBoots");
+			NightshadeEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("NightshadeEpicBoots");
 			if (NightshadeEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -759,13 +759,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(NightshadeEpicBoots);
+					GameServer.Database.AddObject(NightshadeEpicBoots);
 				}
 
 			}
 //end item
 			//Moonlit Coif 
-			NightshadeEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicHelm");
+			NightshadeEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("NightshadeEpicHelm");
 			if (NightshadeEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -803,13 +803,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(NightshadeEpicHelm);
+					GameServer.Database.AddObject(NightshadeEpicHelm);
 				}
 
 			}
 //end item
 			//Moonlit Gloves 
-			NightshadeEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicGloves");
+			NightshadeEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("NightshadeEpicGloves");
 			if (NightshadeEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -847,12 +847,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(NightshadeEpicGloves);
+					GameServer.Database.AddObject(NightshadeEpicGloves);
 				}
 
 			}
 			//Moonlit Hauberk 
-			NightshadeEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicVest");
+			NightshadeEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("NightshadeEpicVest");
 			if (NightshadeEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -887,12 +887,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(NightshadeEpicVest);
+					GameServer.Database.AddObject(NightshadeEpicVest);
 				}
 
 			}
 			//Moonlit Legs 
-			NightshadeEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicLegs");
+			NightshadeEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("NightshadeEpicLegs");
 			if (NightshadeEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -930,12 +930,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(NightshadeEpicLegs);
+					GameServer.Database.AddObject(NightshadeEpicLegs);
 				}
 
 			}
 			//Moonlit Sleeves 
-			NightshadeEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "NightshadeEpicArms");
+			NightshadeEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("NightshadeEpicArms");
 			if (NightshadeEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -973,11 +973,11 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-                    GameServer.Database.AddNewObject(NightshadeEpicArms);
+                    GameServer.Database.AddObject(NightshadeEpicArms);
 				}
 
 			}
-			EnchanterEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicBoots");
+			EnchanterEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("EnchanterEpicBoots");
 			if (EnchanterEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1015,13 +1015,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EnchanterEpicBoots);
+					GameServer.Database.AddObject(EnchanterEpicBoots);
 				}
 
 			}
 //end item
 			//Moonspun Coif 
-			EnchanterEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicHelm");
+			EnchanterEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("EnchanterEpicHelm");
 			if (EnchanterEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1059,13 +1059,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EnchanterEpicHelm);
+					GameServer.Database.AddObject(EnchanterEpicHelm);
 				}
 
 			}
 //end item
 			//Moonspun Gloves 
-			EnchanterEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicGloves");
+			EnchanterEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("EnchanterEpicGloves");
 			if (EnchanterEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1103,12 +1103,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EnchanterEpicGloves);
+					GameServer.Database.AddObject(EnchanterEpicGloves);
 				}
 
 			}
 			//Moonspun Hauberk 
-			EnchanterEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicVest");
+			EnchanterEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("EnchanterEpicVest");
 			if (EnchanterEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1143,12 +1143,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EnchanterEpicVest);
+					GameServer.Database.AddObject(EnchanterEpicVest);
 				}
 
 			}
 			//Moonspun Legs 
-			EnchanterEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicLegs");
+			EnchanterEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("EnchanterEpicLegs");
 			if (EnchanterEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1186,12 +1186,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EnchanterEpicLegs);
+					GameServer.Database.AddObject(EnchanterEpicLegs);
 				}
 
 			}
 			//Moonspun Sleeves 
-			EnchanterEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EnchanterEpicArms");
+			EnchanterEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("EnchanterEpicArms");
 			if (EnchanterEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1229,7 +1229,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EnchanterEpicArms);
+					GameServer.Database.AddObject(EnchanterEpicArms);
 				}
 
 			}

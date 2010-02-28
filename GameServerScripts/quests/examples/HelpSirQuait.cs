@@ -197,7 +197,7 @@ using DOL.AI.Brain;
 
 		#region defineItems
 
-	    SirQuaitsSword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "SirQuaitsSword");
+	    SirQuaitsSword = GameServer.Database.FindObjectByKey<ItemTemplate>("SirQuaitsSword");
 		if (SirQuaitsSword == null)
 		{
 			SirQuaitsSword = new ItemTemplate();
@@ -271,7 +271,7 @@ using DOL.AI.Brain;
 			//it will be recreated each time it is not found, just comment the following
 			//line if you rather not modify your database
 			if (SAVE_INTO_DATABASE)
-				GameServer.Database.AddNewObject(SirQuaitsSword);
+				GameServer.Database.AddObject(SirQuaitsSword);
 			}
 		
 

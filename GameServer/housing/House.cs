@@ -394,16 +394,16 @@ namespace DOL.GS.Housing
 
         public bool AddConsignment(int startValue)
         {
-            DataObject obj = GameServer.Database.SelectObject(typeof(Mob), "HouseNumber = '" + this.HouseNumber + "'");
+            DataObject obj = GameServer.Database.SelectObject<Mob>("HouseNumber = '" + this.HouseNumber + "'");
             if (obj != null)
                 return false;
-            DBHouseMerchant merchant = (DBHouseMerchant)GameServer.Database.SelectObject(typeof(DBHouseMerchant), "HouseNumber = '" + this.HouseNumber + "'");
+            DBHouseMerchant merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + this.HouseNumber + "'");
             if (merchant != null)
                 return false;
             DBHouseMerchant newM = new DBHouseMerchant();
             newM.HouseNumber = this.HouseNumber;
             newM.Quantity = startValue;
-            GameServer.Database.AddNewObject(newM);
+            GameServer.Database.AddObject(newM);
             #region positioning
             double multi = 0;
             int range = 0;
@@ -539,7 +539,7 @@ namespace DOL.GS.Housing
 
         public void RemoveConsignment()
         {
-            Mob npcmob = (Mob)GameServer.Database.SelectObject(typeof(Mob), "HouseNumber = '" + this.HouseNumber + "'");
+            Mob npcmob = GameServer.Database.SelectObject<Mob>("HouseNumber = '" + this.HouseNumber + "'");
             if (npcmob != null)
             {
                 GameNPC[] npc = WorldMgr.GetNPCsByNameFromRegion(npcmob.Name, npcmob.Region, (eRealm)npcmob.Realm);
@@ -552,7 +552,7 @@ namespace DOL.GS.Housing
                     }
                 }
             }
-            DBHouseMerchant merchant = (DBHouseMerchant)GameServer.Database.SelectObject(typeof(DBHouseMerchant), "HouseNumber = '" + this.HouseNumber + "'");
+            DBHouseMerchant merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + this.HouseNumber + "'");
             if (merchant != null)
             {
                 GameServer.Database.DeleteObject(merchant);
@@ -811,7 +811,7 @@ namespace DOL.GS.Housing
 				return false;
 			perm.Slot = slot;
 			CharsPermissions.Add(perm);
-			GameServer.Database.AddNewObject(perm);
+			GameServer.Database.AddObject(perm);
 			return true;
 		}
 
@@ -843,7 +843,7 @@ namespace DOL.GS.Housing
                 return false;
             perm.Slot = slot;
             CharsPermissions.Add(perm);
-            GameServer.Database.AddNewObject(perm);
+            GameServer.Database.AddObject(perm);
             return true;
         }
 
@@ -876,7 +876,7 @@ namespace DOL.GS.Housing
                 return false;
             perm.Slot = slot;
             CharsPermissions.Add(perm);
-            GameServer.Database.AddNewObject(perm);
+            GameServer.Database.AddObject(perm);
             return true;
         }
 
@@ -1240,7 +1240,7 @@ namespace DOL.GS.Housing
 		{
 			if (item == null)
 			{
-				item = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Id_nb = '" + GameServer.Database.Escape(templateID) + "'");
+				item = GameServer.Database.SelectObject<ItemTemplate>("Id_nb = '" + GameServer.Database.Escape(templateID) + "'");
 				if (item == null)
 					return null;
 			}
@@ -1360,7 +1360,7 @@ namespace DOL.GS.Housing
             //get the housepoint item
             String sqlWhere = String.Format("Position = '{0}' AND HouseID = '{1}'",
                 posi, obj.CurrentHouse.HouseNumber);
-            DBHousepointItem item = (DBHousepointItem)GameServer.Database.SelectObject(typeof(DBHousepointItem), sqlWhere);
+            DBHousepointItem item = GameServer.Database.SelectObject<DBHousepointItem>(sqlWhere);
             if (item == null)
                 return;
 
@@ -1370,14 +1370,14 @@ namespace DOL.GS.Housing
 			// Need to clear the current house points so we can replace items
 			player.CurrentHouse.HousepointItems.Clear();
             /* what is this used for? it causes errors and there is no reason for it
-			foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + player.CurrentHouse.HouseNumber + "'"))
+			foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = '" + player.CurrentHouse.HouseNumber + "'"))
 			{
 				FillHookpoint(null, hpitem.Position, hpitem.ItemTemplateID);
 				this.HousepointItems[hpitem.Position] = hpitem;
 			} */
 
 			player.CurrentHouse.SendUpdate();
-            ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate), "Name = '" + GameServer.Database.Escape(obj.Name) + "'");
+            ItemTemplate template = GameServer.Database.SelectObject<ItemTemplate>("Name = '" + GameServer.Database.Escape(obj.Name) + "'");
 			if (template != null)
 			player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
 		}
@@ -1392,7 +1392,7 @@ namespace DOL.GS.Housing
 			String sqlWhere = String.Format("HouseID = '{0}' and ItemTemplateID like '%_vault'",
 				HouseNumber);
 
-			foreach (DBHousepointItem housePointItem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), sqlWhere))
+			foreach (DBHousepointItem housePointItem in GameServer.Database.SelectObjects<DBHousepointItem>(sqlWhere))
 				if (housePointItem.Index >= 0 && housePointItem.Index <= 3)
 					usedVaults[housePointItem.Index] = true;
 
@@ -1439,7 +1439,8 @@ namespace DOL.GS.Housing
 					House.RELATIVE_HOOKPOINTS_COORDS[i][j] = null;
 				}
 			}
-			HouseHookpointOffset[] objs = (HouseHookpointOffset[])GameServer.Database.SelectAllObjects(typeof(HouseHookpointOffset));
+
+			var objs = GameServer.Database.SelectAllObjects<HouseHookpointOffset>();
 			foreach (HouseHookpointOffset o in objs)
 			{
 				AddNewOffset(o);
@@ -1519,38 +1520,39 @@ namespace DOL.GS.Housing
 		public void LoadFromDatabase()
 		{
 			int i = 0;
-			foreach (DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = '" + this.HouseNumber + "'"))
+			foreach (DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = '" + this.HouseNumber + "'"))
 			{
 				IndoorItem iitem = new IndoorItem();
 				iitem.CopyFrom(dbiitem);
 				this.IndoorItems.Add(i++, iitem);
 			}
 			i = 0;
-			foreach (DBHouseOutdoorItem dboitem in GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = '" + this.HouseNumber + "'"))
+			foreach (DBHouseOutdoorItem dboitem in GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = '" + this.HouseNumber + "'"))
 			{
 				OutdoorItem oitem = new OutdoorItem();
 				oitem.CopyFrom(dboitem);
 				this.OutdoorItems.Add(i++, oitem);
 			}
 
-			foreach (DBHouseCharsXPerms d in GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber = '" + this.HouseNumber + "'"))
+			foreach (DBHouseCharsXPerms d in GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = '" + this.HouseNumber + "'"))
 			{
 				this.CharsPermissions.Add(d);
 			}
 
-			foreach (DBHousePermissions dbperm in GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber = '" + this.HouseNumber + "'"))
+			foreach (DBHousePermissions dbperm in GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = '" + this.HouseNumber + "'"))
 			{
 				this.HouseAccess[dbperm.PermLevel] = dbperm;
 			}
 
-			foreach (DBHousepointItem item in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + this.HouseNumber + "'"))
+			foreach (DBHousepointItem item in GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = '" + this.HouseNumber + "'"))
 			{
 				if (item.ItemTemplateID.EndsWith("_vault"))
 				{
-					ItemTemplate template = (ItemTemplate)GameServer.Database.SelectObject(typeof(ItemTemplate),
-						"Id_nb = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
+					ItemTemplate template = GameServer.Database.SelectObject<ItemTemplate>("Id_nb = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
+
 					if (template == null)
 						continue;
+
 					GameHouseVault houseVault = new GameHouseVault(template, item.Index);
 					houseVault.Attach(this, item);
 				}
