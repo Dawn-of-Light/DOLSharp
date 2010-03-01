@@ -138,7 +138,7 @@ namespace DOL.GS.Spells
 
             if (player != null)
             {
-                if (!player.InCombat)
+                if (!player.InCombat && !GameRelic.IsPlayerCarryingRelic(player))
                 {
                     SendEffectAnimation(player, 0, false, 1);
 					player.MoveToBind();

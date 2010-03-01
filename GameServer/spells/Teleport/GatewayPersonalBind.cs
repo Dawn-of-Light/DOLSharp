@@ -46,7 +46,10 @@ namespace DOL.GS.Spells
 			if (player == null)
 				return false;
 
-			return !player.InCombat;
+			if (player.InCombat || GameRelic.IsPlayerCarryingRelic(player))
+				return false;
+
+			return true;
 		}
 
 		/// <summary>
@@ -60,15 +63,16 @@ namespace DOL.GS.Spells
 			if (player == null)
 				return;
 
+			if (player.InCombat || GameRelic.IsPlayerCarryingRelic(player))
+				return;
+
 			SendEffectAnimation(player, 0, false, 1);
 
 			UniPortalEffect effect = new UniPortalEffect(this, 1000);
 			effect.Start(player);
 
 			Character character = player.PlayerCharacter;
-			player.MoveTo((ushort)character.BindRegion,
-				character.BindXpos, character.BindYpos, character.BindZpos,
-				(ushort)character.BindHeading);
+			player.MoveTo((ushort)character.BindRegion,	character.BindXpos, character.BindYpos, character.BindZpos, (ushort)character.BindHeading);
 		}
 
 		public override void InterruptCasting()
