@@ -301,6 +301,7 @@ namespace DOL.GS
 					{
 						case 1://Albion main
 						case 2://Albion housing
+						case 27: //Tutorials
 						case 51://Albion SI
 						case 70://Albion TOA
 						case 73://Albion TOA
