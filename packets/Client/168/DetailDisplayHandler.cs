@@ -1001,7 +1001,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return 1;
 			}
 
-			client.Out.SendCustomTextWindow(caption, objectInfo);
+			if (objectInfo.Count > 0)
+			{
+				client.Out.SendCustomTextWindow(caption, objectInfo);
+			}
+			else
+			{
+				log.ErrorFormat("DetailDisplayHandler no info for objectID {0} of type {1}, client: {2}", objectID, objectType, client);
+			}
 
 			return 1;
 		}
