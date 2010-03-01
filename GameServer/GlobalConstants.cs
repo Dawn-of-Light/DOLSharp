@@ -1058,7 +1058,7 @@ namespace DOL.GS
 
         public static string InstrumentTypeToName(int instrumentTypeID)
         {
-            return Enum.GetName(typeof(InstrumentType), instrumentTypeID);
+            return Enum.GetName(typeof(eInstrumentType), instrumentTypeID);
         }
 
 		public static string AmmunitionTypeToDamageName(int ammutype)
