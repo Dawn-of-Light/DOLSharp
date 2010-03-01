@@ -718,7 +718,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                 case (int)eCharacterClass.Mercenary: return (int)eCharacterClass.Fighter;
                 case (int)eCharacterClass.Paladin: return (int)eCharacterClass.Fighter;
                 case (int)eCharacterClass.Mauler_Alb: return (int)eCharacterClass.Fighter;
-                case (int)eCharacterClass.Fighter: return (int)eCharacterClass.Fighter;
+                case (int)eCharacterClass.Fighter: return (int)eCharacterClass.Reaver;
                 case (int)eCharacterClass.Cleric: return (int)eCharacterClass.Acolyte;
                 case (int)eCharacterClass.Friar: return (int)eCharacterClass.Acolyte;
                 case (int)eCharacterClass.Heretic: return (int)eCharacterClass.Acolyte;
@@ -743,6 +743,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                 case (int)eCharacterClass.Vampiir: return (int)eCharacterClass.Stalker;
                 case (int)eCharacterClass.Bainshee: return (int)eCharacterClass.Magician;
                 case (int)eCharacterClass.Eldritch: return (int)eCharacterClass.Magician;
+				case (int)eCharacterClass.Enchanter: return (int)eCharacterClass.Magician;
                 case (int)eCharacterClass.Mentalist: return (int)eCharacterClass.Magician;
                 case (int)eCharacterClass.Animist: return (int)eCharacterClass.Forester;
                 case (int)eCharacterClass.Valewalker: return (int)eCharacterClass.Forester;
