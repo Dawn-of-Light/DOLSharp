@@ -57,6 +57,9 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
+			if (target == null || target.CurrentRegion == null)
+				return;
+
 			if (target.Realm == 0 || Caster.Realm == 0)
 			{
 				target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;

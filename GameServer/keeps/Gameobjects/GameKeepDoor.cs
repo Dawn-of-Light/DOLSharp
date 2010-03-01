@@ -157,6 +157,9 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
+				if (this.Component == null || this.Component.Keep == null)
+					return false;
+
 				if (this.Component.Keep is GameKeepTower)
 				{
 					if (this.DoorIndex == 1)
