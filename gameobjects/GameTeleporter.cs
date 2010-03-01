@@ -240,7 +240,10 @@ namespace DOL.GS
 		/// <param name="destination"></param>
 		protected virtual void OnTeleport(GamePlayer player, Teleport destination)
 		{
-			player.MoveTo((ushort)destination.RegionID, destination.X, destination.Y, destination.Z, (ushort)destination.Heading);
+			if (player.InCombat == false && GameRelic.IsPlayerCarryingRelic(player) == false)
+			{
+				player.MoveTo((ushort)destination.RegionID, destination.X, destination.Y, destination.Z, (ushort)destination.Heading);
+			}
 		}
 	}
 }
