@@ -54,7 +54,7 @@ namespace DOL.GS.Effects
 
 			if (m_owner is GamePlayer)
 				(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.EngageEffect.ConcOnBlockingX", m_engageTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
+			/*
 			// only emulate attack mode so it works more like on live servers
 			// entering real attack mode while engaging someone stops engage
 			// other players will see attack mode after pos update packet is sent
@@ -66,6 +66,7 @@ namespace DOL.GS.Effects
 				//m_engageSource.Out.SendMessage("You enter combat mode to engage your target!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				//m_engageSource.Out.SendMessage("You enter combat mode and target ["+engageTarget.GetName(0, false)+"]", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
+			 */
 		}
 
 		/// <summary>
@@ -73,7 +74,8 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public override void Cancel(bool playerCancel)
 		{
-			base.Cancel(playerCancel);
+			m_owner.EffectList.Remove(this);
+			//base.Cancel(playerCancel);
 			if (m_owner is GamePlayer)
 			{
 				if (playerCancel)

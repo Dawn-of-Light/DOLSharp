@@ -29,7 +29,7 @@ namespace DOL.GS.PlayerClass
 	[PlayerClassAttribute((int)eCharacterClass.Nightshade, "Nightshade", "Stalker")]
 	public class ClassNightshade : ClassStalker
 	{
-		public ClassNightshade() : base() 
+		public ClassNightshade() : base()
 		{
 			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.PathofEssence");
 			m_specializationMultiplier = 22;
@@ -39,7 +39,7 @@ namespace DOL.GS.PlayerClass
 			m_manaStat = eStat.INT; //TODO: not sure
 		}
 
-		public override string GetTitle(int level) 
+		public override string GetTitle(int level)
 		{
 			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Nightshade.GetTitle.50");
 			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Nightshade.GetTitle.45");
@@ -75,7 +75,7 @@ namespace DOL.GS.PlayerClass
 		/// Update all skills and add new for current level
 		/// </summary>
 		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player) 
+		public override void OnLevelUp(GamePlayer player)
 		{
 			base.OnLevelUp(player);
 
@@ -83,40 +83,44 @@ namespace DOL.GS.PlayerClass
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Critical_Strike));
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Envenom));
 			player.AddSpellLine(SkillBase.GetSpellLine("Nightshade"));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));	
-		
-			if (player.Level >= 5) 
-			{			
+			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
+			
+			if (player.Level >= 5)
+			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
 			}
-			if (player.Level >= 10) 
+			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
 			}
-			if (player.Level >= 15) 
+			if (player.Level >= 15)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}
-			if (player.Level >= 20) 
+			if (player.Level >= 20)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 4));
 			}
-			if (player.Level >= 30) 
+			if (player.Level >= 30)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 5));
 			}
-			if (player.Level >= 40) 
+			if (player.Level >= 40)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 6));
 			}
-			if (player.Level >= 50) 
+			if (player.Level >= 45)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.SubtleKills));
+			}
+			if (player.Level >= 50)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 7));
 			}
 		}
 
 		/// <summary>
-        /// Add all spell-lines and other things that are new when this skill is trained
+		/// Add all spell-lines and other things that are new when this skill is trained
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="skill"></param>
@@ -128,14 +132,14 @@ namespace DOL.GS.PlayerClass
 			{
 				case Specs.Stealth:
 					if(skill.Level >= 5) player.AddAbility(SkillBase.GetAbility(Abilities.Distraction));
-                    if (skill.Level >= 8) player.AddAbility(SkillBase.GetAbility(Abilities.DangerSense));
-                    if (skill.Level >= 10) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
+					if (skill.Level >= 8) player.AddAbility(SkillBase.GetAbility(Abilities.DangerSense));
+					if (skill.Level >= 10) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
 					if(skill.Level >= 16) player.AddAbility(SkillBase.GetAbility(Abilities.DetectHidden));
-                    if (skill.Level >= 20) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 2));
+					if (skill.Level >= 20) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 2));
 					if (skill.Level >= 25) player.AddAbility(SkillBase.GetAbility(Abilities.Climbing));
-                    if (skill.Level >= 30) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 3));
-                    if (skill.Level >= 40) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 4));
-                    if (skill.Level >= 50) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
+					if (skill.Level >= 30) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 3));
+					if (skill.Level >= 40) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 4));
+					if (skill.Level >= 50) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
 					break;
 			}
 		}

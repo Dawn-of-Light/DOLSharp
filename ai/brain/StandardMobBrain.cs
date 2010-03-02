@@ -642,8 +642,18 @@ namespace DOL.AI.Brain
 		public virtual int CalculateAggroLevelToTarget(GameLiving target)
 		{
 			if (GameServer.ServerRules.IsSameRealm(Body, target, true)) return 0;
+
+			// related to the pet owner if applicable
+			if (target is GamePet)
+			{
+				GamePlayer thisLiving = (((GamePet)target).Brain as IControlledBrain).GetPlayerOwner();
+				if (thisLiving != null)
+					if (thisLiving.IsObjectGreyCon(Body))
+						return 0;
+			}
+			
 			if (target.IsObjectGreyCon(Body)) return 0;	// only attack if green+ to target
-			//if (Level <= 3) return 0;	// workaround, dont aggro for newbie mobs
+
 			if (Body.Faction != null && target is GamePlayer)
 			{
 				GamePlayer player = (GamePlayer)target;

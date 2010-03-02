@@ -102,6 +102,10 @@ namespace DOL.GS.PlayerClass
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 6));
 			}
+			if (player.Level >= 45)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.BloodRage));
+			}
 			if (player.Level >= 50)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 7));
@@ -122,14 +126,14 @@ namespace DOL.GS.PlayerClass
 			{
 				case Specs.Stealth:
 					if(skill.Level >= 5) player.AddAbility(SkillBase.GetAbility(Abilities.Distraction));
-                    if (skill.Level >= 8) player.AddAbility(SkillBase.GetAbility(Abilities.DangerSense));
-                    if (skill.Level >= 10) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
+					if (skill.Level >= 8) player.AddAbility(SkillBase.GetAbility(Abilities.DangerSense));
+					if (skill.Level >= 10) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
 					if(skill.Level >= 16) player.AddAbility(SkillBase.GetAbility(Abilities.DetectHidden));
-                    if (skill.Level >= 20) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 2));
+					if (skill.Level >= 20) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 2));
 					if (skill.Level >= 25) player.AddAbility(SkillBase.GetAbility(Abilities.Climbing));
-                    if (skill.Level >= 30) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 3));
-                    if (skill.Level >= 40) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 4));
-                    if (skill.Level >= 50) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
+					if (skill.Level >= 30) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 3));
+					if (skill.Level >= 40) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 4));
+					if (skill.Level >= 50) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
 					break;
 			}
 		}
