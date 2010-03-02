@@ -33,7 +33,7 @@ namespace DOL.GS.Effects
 					p.Out.SendSpellEffectAnimation(player, player, Icon, 0, false, 1);
 				}
 			}
-			target.DebuffCategory[(int)eProperty.MeleeDamage] -= 50;
+			target.DebuffCategory[(int)eProperty.MissHit] -= 50;
 			target.BuffBonusCategory4[(int)eProperty.EvadeChance] += 50;
 			target.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 0.5);
 
@@ -50,7 +50,7 @@ namespace DOL.GS.Effects
 
 		public override void Stop()
 		{
-			owner.DebuffCategory[(int)eProperty.MeleeDamage] += 50;
+			owner.DebuffCategory[(int)eProperty.MissHit] += 50;
 			owner.BuffBonusCategory4[(int)eProperty.EvadeChance] -= 50;
 			owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
 
@@ -72,7 +72,7 @@ namespace DOL.GS.Effects
 			get
 			{
 				var list = new List<string>();
-				list.Add("Reduces Melee damage and movement by 50% and grants 50% 360° evade");
+				list.Add("Grants 50% Evade and reduces Melee combat accuracy and movement by 50%");
 				return list;
 			}
 		}
