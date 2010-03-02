@@ -2029,6 +2029,7 @@
     <Compile Include="skillhandler\MetalGuardAbilityHandler.cs" />
     <Compile Include="skillhandler\RampageAbilityHandler.cs" />
     <Compile Include="skillhandler\ScarsOfBattle.cs" />
+    <Compile Include="skillhandler\StealthersAbilitiesHandler.cs" />
     <Compile Include="skillhandler\TauntingShoutAbilityHandler.cs" />
     <Compile Include="skillhandler\VampiirBoltAbilityHandler.cs" />
     <Compile Include="skillhandler\CriticalShotAbilityHandler.cs">
@@ -2173,6 +2174,7 @@
     <Compile Include="spells\Savage\SavageEnduranceHeal.cs" />
     <Compile Include="spells\SpeedOfTheRealmHandler.cs" />
     <Compile Include="spells\Spirit Master\SummonSpiritFighter.cs" />
+    <Compile Include="spells\Stealthers\StealthersHandlers.cs" />
     <Compile Include="spells\StylePowerDrain.cs" />
     <Compile Include="spells\Teleport\GatewayPersonalBind.cs" />
     <Compile Include="spells\HealthToFatigue.cs" />
@@ -2783,6 +2785,7 @@
   <ItemGroup>
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
+    <Folder Include="spells\Stealthers" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
