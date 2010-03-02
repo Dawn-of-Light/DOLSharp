@@ -57,7 +57,7 @@ namespace DOL.GS.SkillHandler
 					log.Warn("Could not retrieve player in EngageAbilityHandler.");
 				return;
 			}
-
+			/*
 			//Cancel old engage effects on player
 			if (player.IsEngaging)
 			{
@@ -68,7 +68,7 @@ namespace DOL.GS.SkillHandler
 					return;
 				}
 			}
-
+			 */
 			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You can't enter combat mode while lying down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
@@ -106,7 +106,17 @@ namespace DOL.GS.SkillHandler
 				player.Out.SendMessage("You are not allowed to engage " + target.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+			//Cancel old engage effects on player
+			foreach (EngageEffect engage in player.EffectList.GetAllOfType(typeof(EngageEffect)))
+			{
 
+				if (engage != null)
+				{
+					engage.Cancel(false);
+					engage.Stop();
+					return;
+				}
+			}
 			new EngageEffect().Start(player);
 		}
 	}

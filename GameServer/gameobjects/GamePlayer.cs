@@ -7729,7 +7729,7 @@ namespace DOL.GS
 										{
 											Out.SendMessage("You prepare this as a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 											m_nextSpell = spell;
-                                            spell.OverrideRange = m_runningSpellHandler.Spell.Range;
+											spell.OverrideRange = m_runningSpellHandler.Spell.Range;
 											m_nextSpellLine = line;
 										}
 									}
@@ -7768,7 +7768,7 @@ namespace DOL.GS
 							}
 						}
 						else
-						spellhandler.CastSpell();
+							spellhandler.CastSpell();
 					}
 				}
 				else
@@ -12069,19 +12069,29 @@ namespace DOL.GS
 			// Mastery of Stealth Bonus
 			RAPropertyEnhancer mos = GetAbility(typeof(MasteryOfStealthAbility)) as RAPropertyEnhancer;
 			if (mos != null && !enemyHasCamouflage)
-			{
-				range += mos.GetAmountForLevel(mos.Level);
-			}
-
+				if (!HasAbility(Abilities.DetectHidden) || !enemy.HasAbility(Abilities.DetectHidden))
+					range += mos.GetAmountForLevel(mos.Level);
+			
 			range += BaseBuffBonusCategory[(int)eProperty.Skill_Stealth];
 
-            //Buff (Stealth Detection)
-            //Increases the target's ability to detect stealthed players and monsters.
-            //http://camelotherald.com/spells/line.php?c=42&line=115
+			//Buff (Stealth Detection)
+			//Increases the target's ability to detect stealthed players and monsters.
 			GameSpellEffect iVampiirEffect = SpellHandler.FindEffectOnTarget((GameLiving)this, "VampiirStealthDetection");
 			if (iVampiirEffect != null)
-			{
 				range += (int)iVampiirEffect.Spell.Value;
+			
+			//Infill Only - Greater Chance to Detect Stealthed Enemies for 1 minute
+			//after executing a klling blow on a realm opponent.
+			GameSpellEffect HeightenedAwareness = SpellHandler.FindEffectOnTarget((GameLiving)this, "HeightenedAwareness");
+			if (HeightenedAwareness != null)
+				range += (int)HeightenedAwareness.Spell.Value;
+
+			//Nightshade Only - Greater chance of remaining hidden while stealthed for 1 minute
+			//after executing a killing blow on a realm opponent.
+			GameSpellEffect SubtleKills = SpellHandler.FindEffectOnTarget((GameLiving)enemy, "SubtleKills");
+			if (SubtleKills != null)
+			{
+				range -= (int)SubtleKills.Spell.Value;
 				if (range < 0) range = 0;
 			}
 
