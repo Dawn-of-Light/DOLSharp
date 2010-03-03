@@ -571,9 +571,12 @@ namespace DOL.GS.Keeps
 				if (area is KeepArea)
 				{
 					AbstractGameKeep keep = (area as KeepArea).Keep;
-					Component = new GameKeepComponent();
-					Component.Keep = keep;
-					Component.Keep.Doors.Add(door.InternalID, this);
+					if (!keep.Doors.Contains(door.InternalID))
+					{
+						Component = new GameKeepComponent();
+						Component.Keep = keep;
+						keep.Doors.Add(door.InternalID, this);
+					}
 					break;
 				}
 			}
