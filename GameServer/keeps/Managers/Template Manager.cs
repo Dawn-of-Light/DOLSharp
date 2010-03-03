@@ -974,7 +974,14 @@ namespace DOL.GS.Keeps
 			}
 			else if (guard.Level < 250)
 			{
-				guard.MaxSpeedBase = 275;
+				if (guard.Realm == eRealm.None)
+				{
+					guard.MaxSpeedBase = 200;
+				}
+				else
+				{
+					guard.MaxSpeedBase = 275;
+				}
 			}
 			else
 			{

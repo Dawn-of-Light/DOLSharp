@@ -570,6 +570,8 @@ namespace DOL.GS
 			 * - Instances where objects that began with a vowel but were prefixed by the article "a" (a orb of animation) have been corrected.
 			 */
 
+			if (Name.Length < 1)
+				return "";
 
 			// actually this should be only for Named mobs (like dragon, legion) but there is no way to find that out
 			if (char.IsUpper(Name[0]) && this is GameLiving) // proper noun
