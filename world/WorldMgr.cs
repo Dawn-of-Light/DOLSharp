@@ -633,7 +633,10 @@ namespace DOL.GS
 				{
 					Thread.Sleep(200); // check every 200ms for needed relocs
 					int start = Environment.TickCount;
-					foreach (Region region in m_regions.Values)
+
+					Hashtable regionsClone = (Hashtable)m_regions.Clone();
+
+					foreach (Region region in regionsClone.Values)
 					{
 						if (region.NumPlayers > 0 && (region.LastRelocation + Zone.MAX_REFRESH_INTERVAL) * 10 * 1000 < DateTime.Now.Ticks)
 						{

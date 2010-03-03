@@ -1706,9 +1706,19 @@ namespace DOL.GS.PacketHandler
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.DoorState)))
 			{
+				ushort zone = (ushort)(door.DoorID / 1000000);
+				Zone doorZone = WorldMgr.GetZone(zone);
+				uint flag = door.Flag;
+
+				// by default give all unflagged above ground doors a default sound
+				if (flag == 0 && !doorZone.IsDungeon)
+				{
+					flag = 1;
+				}
+
 				pak.WriteInt((uint) door.DoorID);
 				pak.WriteByte((byte) (door.State == eDoorState.Open ? 0x01 : 0x00));
-				pak.WriteByte((byte) door.Flag);
+				pak.WriteByte((byte) flag);
 				pak.WriteByte(0xFF);
 				pak.WriteByte(0x0);
 				SendTCP(pak);

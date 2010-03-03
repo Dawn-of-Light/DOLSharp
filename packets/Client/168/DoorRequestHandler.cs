@@ -119,8 +119,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			
 			if (DOOR == null)
 			{
-
-				if (doorType != 9 && client.Account.PrivLevel > 1)
+				if (doorType != 9 && client.Account.PrivLevel > 1 && client.Player.CurrentRegion.IsInstance == false)
 				{
 					if (client.Player.TempProperties.getProperty(DoorMgr.WANT_TO_ADD_DOORS, false))
 					{
@@ -128,9 +127,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					else
 					{
-						client.Player.Out.SendMessage("This door is not in the database. Use /door show to enable the add door dialog when targeting doors.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						client.Player.Out.SendMessage("This door is not in the database. Use '/door show' to enable the add door dialog when targeting doors.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
-
 				}
 
 				new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
