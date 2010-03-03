@@ -1710,8 +1710,8 @@ namespace DOL.GS.PacketHandler
 				Zone doorZone = WorldMgr.GetZone(zone);
 				uint flag = door.Flag;
 
-				// by default give all unflagged above ground doors a default sound
-				if (flag == 0 && !doorZone.IsDungeon)
+				// by default give all unflagged above ground doors a default sound (excluding ToA zones)
+				if (flag == 0 && !doorZone.IsDungeon && doorZone.ZoneRegion.Expansion != (int)eExpansion.ToA)
 				{
 					flag = 1;
 				}
