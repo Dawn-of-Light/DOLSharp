@@ -1372,6 +1372,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Bonedancer,
 						(int)eCharacterClass.Warrior,
 						(int)eCharacterClass.Shadowblade,
+						(int)eCharacterClass.Hunter,
 						(int)eCharacterClass.Viking,
 						(int)eCharacterClass.Mystic,
 						(int)eCharacterClass.MidgardRogue }, // Valkyn
