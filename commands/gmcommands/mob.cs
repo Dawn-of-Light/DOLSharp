@@ -99,7 +99,8 @@ namespace DOL.GS.Commands
 		"'/mob race reload' reload race resists from the database",
 	     "'/mob bodytype <ID>' changing the mob's bodytype",
 	     "'/mob gender <0 = neutral | 1 = male | 2 = female>' set gender for this mob",
-	     "'/mob select' select the mob within 100 radius (used for selection of non-targettable GameNPC)",
+		 "'/mob package <string>' set the package ID for this mob",
+		 "'/mob select' select the mob within 100 radius (used for selection of non-targettable GameNPC)",
          "'/mob reload <name>' reload the targetted or named mob(s) from the database",
          "'/mob findname <name> <#>' search for a mob with a name like <name> with maximum <#> (def. 10) matches"
 	    )]
@@ -214,7 +215,8 @@ namespace DOL.GS.Commands
 				case "bodytype": bodytype(client, targetMob, args); break;
 				case "race": race( client, targetMob, args ); break;
 				case "gender": gender(client, targetMob, args); break;
-				case "select": select(AUTOSELECT_RADIUS, client);break;
+				case "package": package(client, targetMob, args); break;
+				case "select": select(AUTOSELECT_RADIUS, client); break;
                 case "reload": reload(client, targetMob, args); break;
                 case "findname": findname(client, args); break;
 				default:
@@ -1073,10 +1075,12 @@ namespace DOL.GS.Commands
             info.Add( " + Quests to give:  " + targetMob.QuestListToGive.Count );
 
 			if( targetMob.PathID != null && targetMob.PathID.Length > 0 )
-			info.Add( " + Path: " + targetMob.PathID );
+				info.Add( " + Path: " + targetMob.PathID );
 
             if ( targetMob.BoatOwnerID != null && targetMob.BoatOwnerID.Length > 0 )
 				info.Add( " + Boat OwnerID: " + targetMob.BoatOwnerID );
+
+			info.Add(" + Package ID:  " + targetMob.PackageID);
 
 			client.Out.SendCustomTextWindow( "[ " + targetMob.Name + " ]", info );
 		}
@@ -2220,7 +2224,30 @@ namespace DOL.GS.Commands
 			}
 		}
 
-		private string CheckName( string name, GameClient client )
+		private void package(GameClient client, GameNPC targetMob, string[] args)
+		{
+			string packageID;
+			try
+			{
+				packageID = args[2];
+
+				if (packageID == "")
+				{
+					DisplaySyntax(client, args[1]);
+					return;
+				}
+
+				targetMob.PackageID = packageID;
+				targetMob.SaveIntoDatabase();
+				client.Out.SendMessage("PackageID set to " + packageID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			catch (Exception)
+			{
+				DisplaySyntax(client, args[1]);
+			}
+		}
+
+		private string CheckName(string name, GameClient client)
 		{
 			if (name.Length > 47)
 				client.Out.SendMessage("WARNING: name length=" + name.Length + " but only first 47 chars will be shown.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
