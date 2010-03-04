@@ -99,6 +99,11 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
+				if (this.Component == null || this.Component.Keep == null)
+				{
+					return eRealm.None;
+				}
+
 				return this.Component.Keep.Realm;
 			}
 		}
@@ -132,6 +137,11 @@ namespace DOL.GS.Keeps
 		{
 			get 
 			{
+				if (this.Component == null || this.Component.Keep == null)
+				{
+					return 0;
+				}
+
 				return (byte)this.Component.Keep.Level;
 			}
 		}
@@ -699,6 +709,9 @@ namespace DOL.GS.Keeps
 
 		public int RepairTimerCallback(RegionTimer timer)
 		{
+			if (Component == null || Component.Keep == null)
+				return 0;
+
 			if (HealthPercent == 100 || Component.Keep.InCombat)
 				return repairInterval;
 
