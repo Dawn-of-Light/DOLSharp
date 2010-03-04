@@ -260,10 +260,30 @@ namespace DOL.AI.Brain
 			if (dragon == null) return false;
 
 			ArrayList inRangePlayers = new ArrayList();
-			foreach (GamePlayer player in dragon.GetPlayersInRadius((ushort) dragon.AttackRange))
-				if (player.IsAlive) inRangePlayers.Add(player);
+			foreach (GamePlayer player in dragon.GetPlayersInRadius((ushort)dragon.AttackRange))
+			{
+				if (player.IsAlive)
+				{
+					inRangePlayers.Add(player);
+				}
+			}
+
+			foreach (GameNPC npc in dragon.GetNPCsInRadius((ushort)dragon.AttackRange))
+			{
+				if (npc.IsAlive && npc is NecromancerPet)
+				{
+					if (!inRangePlayers.Contains((npc as NecromancerPet).Owner as GamePlayer))
+					{
+						inRangePlayers.Add((npc as NecromancerPet).Owner as GamePlayer);
+					}
+				}
+			}
+
 			if (inRangePlayers.Count > 0)
+			{
 				return dragon.CheckThrow((GamePlayer)(inRangePlayers[Util.Random(1, inRangePlayers.Count) - 1]));
+			}
+
 			return false;
 		}
 
