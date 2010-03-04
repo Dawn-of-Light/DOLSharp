@@ -276,6 +276,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("server","disabled_commands", "Serialized list of disabled commands separated by semi-colon, example /realm;/toon;/quit", "")]
 		public static string DISABLED_COMMANDS;
+
+        /// <summary>
+        /// Disable Appeal System
+        /// </summary>
+        [ServerProperty("server", "disable_appeal_system", "Disable the /Appeal System", false)]
+        public static bool DISABLE_APPEALSYSTEM;
 		#endregion
 		
 		#region WORLD
