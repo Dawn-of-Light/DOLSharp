@@ -179,6 +179,7 @@
     <Compile Include="commands\GMCommands\debugjump.cs" />
     <Compile Include="commands\GMCommands\door.cs" />
     <Compile Include="commands\GMCommands\Faction.cs" />
+    <Compile Include="commands\GMCommands\gmappeal.cs" />
     <Compile Include="commands\GMCommands\gmrelic.cs" />
     <Compile Include="commands\GMCommands\gmrelicpad.cs" />
     <Compile Include="commands\GMCommands\harm.cs" />
@@ -223,8 +224,10 @@
     <Compile Include="commands\PlayerCommands\broadcast.cs" />
     <Compile Include="commands\PlayerCommands\cancelstyle.cs" />
     <Compile Include="commands\PlayerCommands\chatgroup.cs" />
+    <Compile Include="commands\PlayerCommands\checkappeal.cs" />
     <Compile Include="commands\PlayerCommands\cloak.cs" />
     <Compile Include="commands\PlayerCommands\cmdhelp.cs" />
+    <Compile Include="commands\PlayerCommands\appeal.cs" />
     <Compile Include="commands\PlayerCommands\filter.cs" />
     <Compile Include="commands\playercommands\realm.cs" />
     <Compile Include="commands\playercommands\relic.cs" />
@@ -695,6 +698,7 @@
     <Compile Include="gameobjects\GamePet.cs" />
     <Compile Include="gameobjects\GameTeleporter.cs" />
     <Compile Include="gameobjects\Theurgist\TheurgistPet.cs" />
+    <Compile Include="gameutils\AppealMgr.cs" />
     <Compile Include="gameutils\Atlantis\InventoryArtifact.cs" />
     <Compile Include="gameobjects\Atlantis\Researcher.cs" />
     <Compile Include="gameobjects\Atlantis\Scholar.cs" />

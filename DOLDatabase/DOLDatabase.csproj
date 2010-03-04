@@ -138,6 +138,7 @@
     <Compile Include="Tables\Account.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tables\Appeal.cs" />
     <Compile Include="Tables\Artifact.cs" />
     <Compile Include="Tables\ArtifactBonus.cs" />
     <Compile Include="Tables\ArtifactXItem.cs" />

@@ -306,6 +306,45 @@ Scripts.Players.Anonymous.Error:			Anonymous mode is disabled.
 Scripts.Players.Anonymous.Off:				You are no longer anonymous.
 Scripts.Players.Anonymous.On:				You are now anonymous.
 
+# /Appeal
+Scripts.Players.Appeal.UseGMappeal:				Use /gmappeal to assist players with their appeal.
+Scripts.Players.Appeal.NeedMoreDetail:			Report has NOT been received.  Please resubmit your report with a bit more detail.
+Scripts.Players.Appeal.AlreadyActiveAppeal:		You already have an active appeal, please wait for server staff to address your appeal before submitting another.
+Scripts.Players.Appeal.NameNotUnique:			Character name is not unique.
+Scripts.Players.Appeal.PlayerNotFound:			{0}  is not in the game.
+Scripts.Players.Appeal.RandMessage0:			Howdy {0}, thanks for waiting.  How may I help you? 
+Scripts.Players.Appeal.RandMessage1:			Hiya {0}, what can I do for you today?
+Scripts.Players.Appeal.RandMessage2:			Greetings {0}!  I'm here to assist.  How can I be of service?
+Scripts.Players.Appeal.RandMessage3:			Hi {0}, I understand you need some help, what can I do for you today?
+Scripts.Players.Appeal.RandMessage4:			Hello {0}, sorry your having problems, what seems to be the matter?
+Scripts.Players.Appeal.BeingHelped:				That player is already being helped.
+Scripts.Players.Appeal.NotBeingHelped:			You have to be assisting this player with their appeal before you can release it.
+Scripts.Players.Appeal.DoesntHaveAppeal:		That player has already canceled their appeal or doesn't have one.
+Scripts.Players.Appeal.DoNotHaveAppeal:			You do not have an appeal to cancel or it has already been closed for you.
+Scripts.Players.Appeal.NoAppealsinQueue:		There are no Appeals currently in queue.
+Scripts.Players.Appeal.CantFindAppeal:			Could not find an appeal under that offline player's name, make sure spelling is correct.
+Scripts.Players.Appeal.StaffClosedYourAppeal:	Staffmember {0} has closed your appeal.
+Scripts.Players.Appeal.MustBeAssisting:			You need to be assisting an active player with an appeal first.
+Scripts.Players.Appeal.NoLocationToJump:		No location to jump back to.
+Scripts.Players.Appeal.NoLongerReceiveMsg:		You will no longer recieve Appeal messages for this session.
+Scripts.Players.Appeal.NowReceiveMsg:			You will now recieve Appeal messages again for this session.
+Scripts.Players.Appeal.UseCmdTurnBackOn:		Use /gmappeal mute again to turn the messages back on.
+Scripts.Players.Appeal.UseCmdTurnBackOff:		Use /gmappeal mute again to turn the messages back off.
+Scripts.Players.Appeal.CantCancelWhile:			You can't cancel your appeal while you are being helped.
+Scripts.Players.Appeal.NoAppealToView:			You currently do not have an appeal to view.
+Scripts.Players.Appeal.PleaseBePatient:			Please be patient while we work to address your concern as quickly as possible.
+Scripts.Players.Appeal.IfYouLogOut:				If you log out with an active appeal it will be saved and automatically reinstated when you log back in.
+Scripts.Players.Appeal.ToCancelYourAppeal:		To cancel your appeal use /checkappeal cancel.
+Scripts.Players.Appeal.CriticalMessage:			Critical Appeals may need urgent attention!
+Scripts.Players.Appeal.YouAreMuted:				You are muted and are not allowed to submit an appeal at this time.
+Scripts.Players.Appeal.AppealSubmitted:			Your appeal has been submitted successfully...  use /checkappeal to check the status of your appeal.
+Scripts.Players.Appeal.StaffChangedStatus:		Staffmember {0} has changed the status of your appeal to {1}.
+Scripts.Players.Appeal.CanceledYourAppeal:		You have canceled your appeal.
+Scripts.Players.Appeal.LoginMessage:			If you need in-game assistance from server staff (such as stuck character) please use /appeal.
+Scripts.Players.Appeal.YouHavePendingAppeal:	You have a pending appeal in the queue, please use /checkappeal to see its status or to cancel the appeal.
+Scripts.Players.Appeal.CurrentStaffAvailable:	There are currently {0} staff available and {1} appeals in queue.
+Scripts.Players.Appeal.SystemDisabled:			The appeal system is currently disabled.
+
 # /Assist
 Scripts.Players.Assist.CantAssistYourself:		You can't assist yourself.
 Scripts.Players.Assist.DoesntHaveTarget:	 	doesn't currently have a target.
