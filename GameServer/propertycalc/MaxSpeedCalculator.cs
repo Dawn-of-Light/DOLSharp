@@ -103,9 +103,14 @@ namespace DOL.GS.PropertyCalc
 					
 				}
 
-				if (GameRelic.IsPlayerCarryingRelic(player) && speed > 1.0)
+				if (GameRelic.IsPlayerCarryingRelic(player))
 				{
-					speed = 1.0;
+					if (speed > 1.0)
+					{
+						speed = 1.0;
+					}
+
+					horseSpeed = 1.0;
 				}
 
 				if (player.IsSprinting)
