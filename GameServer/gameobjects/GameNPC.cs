@@ -4350,6 +4350,19 @@ namespace DOL.GS
 				GameObject target = (GameObject)TempProperties.getProperty<object>(LOSSPELLTARGET, null);
 				GameObject lasttarget = TargetObject;
 				TargetObject = target;
+
+				// Tolakram - check to see if we targeted a necro shade and if so switch to the pet
+
+				GameLiving living = TargetObject as GameLiving;
+
+				if (living != null && living.EffectList.GetOfType(typeof(DOL.GS.Effects.NecromancerShadeEffect)) != null)
+				{
+					if (living is GamePlayer && (living as GamePlayer).ControlledNpcBrain != null)
+					{
+						TargetObject = (living as GamePlayer).ControlledNpcBrain.Body;
+					}
+				}
+
 				base.CastSpell(spell, line);
 				TargetObject = lasttarget;
 			}

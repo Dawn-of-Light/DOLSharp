@@ -719,9 +719,12 @@ namespace DOL.GS
 		{
 			if (target == null || !target.IsAlive || target.IsStunned)
 				return false;
+
 			bool success = Util.Chance(ThrowChance);
+
 			if (success)
 				ThrowPlayer(target);
+
 			return success;
 		}
 
@@ -736,12 +739,10 @@ namespace DOL.GS
 			// Face the target, then push it 600 units up and 400-600 units backwards.
 
 			TurnTo(target);
-			Point3D targetPosition = TargetPosition( target, 600, Heading, Util.Random(400, 600) );
-			target.MoveTo(target.CurrentRegionID,
-				targetPosition.X,
-				targetPosition.Y,
-				targetPosition.Z,
-				target.Heading);
+
+			Point3D targetPosition = TargetPosition(target, 600, Heading, Util.Random(400, 600) );
+
+			target.MoveTo(target.CurrentRegionID, targetPosition.X, targetPosition.Y, targetPosition.Z, target.Heading);
 		}
 
 		/// <summary>
