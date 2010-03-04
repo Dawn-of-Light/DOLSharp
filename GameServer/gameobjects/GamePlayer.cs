@@ -8949,6 +8949,11 @@ namespace DOL.GS
 					return false;
 			}
 
+			if (GameRelic.IsPlayerCarryingRelic(this))
+			{
+				return false;
+			}
+
 			if (OnMountSteed != null && !OnMountSteed(this, steed, forced) && !forced)
 				return false;
 
