@@ -526,6 +526,19 @@ namespace DOL.GS
 		/// Spawn Heading
 		/// </summary>
 		protected ushort m_spawnHeading;
+
+
+		/// <summary>
+		/// package ID defined form this NPC
+		/// </summary>
+		protected string m_packageID;
+
+		public string PackageID
+		{
+			get { return m_packageID; }
+			set { m_packageID = value; }
+		}
+
 		/// <summary>
 		/// The last time this NPC sent the 0x09 update packet
 		/// </summary>
@@ -534,6 +547,7 @@ namespace DOL.GS
 		/// The last time this NPC was actually updated to at least one player
 		/// </summary>
 		protected volatile uint m_lastVisibleToPlayerTick = uint.MinValue;
+
 		/// <summary>
 		/// Gets or Sets the flags of this npc
 		/// </summary>
@@ -1834,6 +1848,7 @@ namespace DOL.GS
 			Size = npc.Size;
 			Level = npc.Level;	// health changes when GameNPC.Level changes
 			Flags = npc.Flags;
+			m_packageID = npc.PackageID;
 
 			Strength = (short)npc.Strength;
 			Constitution = (short)npc.Constitution;
@@ -2033,6 +2048,7 @@ namespace DOL.GS
             mob.IsCloakHoodUp = m_isCloakHoodUp;
             mob.Gender = (byte)Gender;
 			mob.VisibleWeaponSlots = this.m_visibleActiveWeaponSlots;
+			mob.PackageID = PackageID;
 
 			if (InternalID == null)
 			{
