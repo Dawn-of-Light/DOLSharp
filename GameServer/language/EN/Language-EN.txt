@@ -333,7 +333,7 @@ Scripts.Players.Appeal.UseCmdTurnBackOff:		Use /gmappeal mute again to turn the 
 Scripts.Players.Appeal.CantCancelWhile:			You can't cancel your appeal while you are being helped.
 Scripts.Players.Appeal.NoAppealToView:			You currently do not have an appeal to view.
 Scripts.Players.Appeal.PleaseBePatient:			Please be patient while we work to address your concern as quickly as possible.
-Scripts.Players.Appeal.IfYouLogOut:				If you log out with an active appeal it will be saved and automatically reinstated when you log back in.
+Scripts.Players.Appeal.IfYouLogOut:				If you log out with an active appeal it will be saved and automatically reinstated when you log back in.  (Even if you switch characters)
 Scripts.Players.Appeal.ToCancelYourAppeal:		To cancel your appeal use /checkappeal cancel.
 Scripts.Players.Appeal.CriticalMessage:			Critical Appeals may need urgent attention!
 Scripts.Players.Appeal.YouAreMuted:				You are muted and are not allowed to submit an appeal at this time.

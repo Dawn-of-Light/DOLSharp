@@ -27,6 +27,7 @@ using DOL.Database.Attributes;
     public class DBAppeal : DataObject
     {
         private string m_name;
+        private string m_account;
         private int m_severity;
         private string m_status;
         private string m_timestamp;
@@ -44,15 +45,17 @@ using DOL.Database.Attributes;
         public DBAppeal()
         {
             m_name = "";
+            m_account = "";
             m_severity = 0;
             m_status = "";
             m_timestamp = "";
             m_text = "";
         }
 
-        public DBAppeal(string name, int severity, string status, string timestamp, string text)
+        public DBAppeal(string name, string account, int severity, string status, string timestamp, string text)
         {
             m_name = name;
+            m_account = account;
             m_severity = severity;
             m_status = status;
             m_timestamp = timestamp;
@@ -71,6 +74,13 @@ using DOL.Database.Attributes;
         {
             get { return m_name; }
             set { m_name = value; }
+        }
+
+        [DataElement(AllowDbNull = false)]
+        public string Account
+        {
+            get { return m_account; }
+            set { m_account = value; }
         }
 
         [DataElement(AllowDbNull = false)]

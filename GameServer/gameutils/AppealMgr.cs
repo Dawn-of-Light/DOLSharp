@@ -173,6 +173,12 @@ namespace DOL.GS.Appeal
             return appeal;
         }
 
+        public static DBAppeal GetAppealByAccountName(string name)
+        {
+            DBAppeal appeal = (DBAppeal)GameServer.Database.SelectObject(typeof(DBAppeal), "`Account` = '" + GameServer.Database.Escape(name) + "'");
+            return appeal;
+        }
+
         /// <summary>
         /// Gets a combined list of Appeals for every player that is online.
         /// </summary>
@@ -228,7 +234,7 @@ namespace DOL.GS.Appeal
             }
             string eText = GameServer.Database.Escape(Text); //prevent SQL injection
             string TimeStamp = DateTime.Now.ToLongTimeString() + " " + DateTime.Now.ToLongDateString();
-            DBAppeal appeal = new DBAppeal(Player.Name, Severity, Status, TimeStamp, eText);
+            DBAppeal appeal = new DBAppeal(Player.Name, Player.Client.Account.Name, Severity, Status, TimeStamp, eText);
             GameServer.Database.AddNewObject(appeal);
             Player.TempProperties.setProperty("HasPendingAppeal", true);
             Player.Out.SendMessage("[Appeals]: " + LanguageMgr.GetTranslation(Player.Client, "Scripts.Players.Appeal.AppealSubmitted"), eChatType.CT_Important, eChatLoc.CL_ChatWindow);
@@ -312,12 +318,19 @@ namespace DOL.GS.Appeal
             }
 
             //Check if there is an existing appeal belonging to this player.
-            DBAppeal appeal = GetAppealByPlayerName(player.Name);
+            DBAppeal appeal = GetAppealByAccountName(player.Client.Account.Name);
 
             if (appeal == null)
             {
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Appeal.LoginMessage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
+            }
+            if (appeal.Name != player.Name)
+            {
+                //players account has an appeal but it dosn't belong to this player, let's change it.
+                appeal.Name = player.Name;
+                appeal.Dirty = true;
+                GameServer.Database.SaveObject(appeal);
             }
             player.Out.SendMessage("[Appeals]: " + LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Appeal.YouHavePendingAppeal"), eChatType.CT_Important, eChatLoc.CL_ChatWindow);
             player.TempProperties.setProperty("HasPendingAppeal", true);
