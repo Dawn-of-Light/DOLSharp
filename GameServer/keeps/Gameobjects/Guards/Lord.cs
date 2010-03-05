@@ -214,6 +214,12 @@ namespace DOL.GS.Keeps
 			if (this.Component == null)
 				return false;
 
+			if (Component.Keep.InCombat)
+			{
+				player.Out.SendMessage("No time to talk now we're under attack!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				return false;
+			}
+
 			if (GameServer.ServerRules.IsAllowedToClaim(player, CurrentRegion))
 			{
 				player.Out.SendMessage("Would you like to [Claim Keep] now? Or maybe [Release Keep]?", eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -278,6 +284,7 @@ namespace DOL.GS.Keeps
 
         public override bool WhisperReceive(GameLiving source, string str)
         {
+			if (Component.Keep.InCombat) return false;
             if (!base.WhisperReceive(source, str)) return false;
             if (!(source is GamePlayer)) return false;
             GamePlayer player = (GamePlayer)source;
