@@ -28,10 +28,12 @@ namespace DOL.GS.Commands
     [CmdAttribute(
         "&appeal",
         ePrivLevel.Player,
-        "Usage: '/appeal <appeal text>'",
-        "Where <appeal text> is a description of your issue.",
-        "Please provide as many details as possible in your description.",
-        "If you have already submitted an appeal, you can check its status by typing /checkappeal'.")]
+        "Usage: '/appeal <appeal type> <appeal text>",
+        "Where <appeal type> is one of the following:",
+        "  Harassment, Naming, Conduct, Stuck, Emergency or Other",
+        "and <appeal text> is a description of your issue.",
+        "If you have submitted an appeal, you can check its",
+        "status by typing '/checkappeal'.")]
     public class AppealCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -50,6 +52,70 @@ namespace DOL.GS.Commands
                 {
                     AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.UseGMappeal"));
                 }
+            }
+
+            //Support for EU Clients
+
+            if (args.Length == 2 && args[1].ToLower() == "cancel")
+            {
+                CheckAppealCommandHandler cch = new CheckAppealCommandHandler();
+                cch.OnCommand(client, args);
+                return;
+            }
+
+            if (args.Length > 1)
+            {
+                bool HasPendingAppeal = client.Player.TempProperties.getProperty<bool>("HasPendingAppeal");
+                if (HasPendingAppeal)
+                {
+                    AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
+                    return;
+                }
+                if (args.Length < 5)
+                {
+                    AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NeedMoreDetail"));
+                    return;
+                }
+                int severity = 0;
+                switch (args[1].ToLower())
+                {
+                    case "harassment":
+                        {
+                            severity = (int)AppealMgr.eSeverity.High;
+                            args[1] = "";
+                            break;
+                        }
+                    case "naming":
+                        {
+                            severity = (int)AppealMgr.eSeverity.Low;
+                            args[1] = "";
+                            break;
+                        }
+                    case "other":
+                    case "conduct":
+                        {
+                            severity = (int)AppealMgr.eSeverity.Medium;
+                            args[1] = "";
+                            break;
+                        }
+                    case "stuck":
+                    case "emergency":
+                        {
+                            severity = (int)AppealMgr.eSeverity.Critical;
+                            args[1] = "";
+                            break;
+                        }
+                    default:
+                        {
+                            severity = (int)AppealMgr.eSeverity.Medium;
+                            break;
+                        }
+
+                }
+                string message = string.Join(" ", args, 1, args.Length - 1);
+                GamePlayer p = client.Player as GamePlayer;
+                AppealMgr.CreateAppeal(p, severity, "Open", message);
+                return;
             }
             return;
         }
@@ -78,6 +144,20 @@ namespace DOL.GS.Commands
 
             //send over the info to the /report command
             args[1] = "";
+            //strip these words if they are the first word in the bugreport text
+            switch (args[2].ToLower())
+            {
+                case "harassment":
+                case "naming":
+                case "other":
+                case "conduct":
+                case "stuck":
+                case "emergency":
+                    {
+                        args[2] = "";
+                        break;
+                    }
+            }
             ReportCommandHandler report = new ReportCommandHandler();
             report.OnCommand(client, args);
             AppealMgr.MessageToAllStaff(client.Player.Name + " submitted a bug report.");
@@ -109,6 +189,20 @@ namespace DOL.GS.Commands
             {
                 AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NeedMoreDetail"));
                 return;
+            }
+            //strip these words if they are the first word in the appeal text
+            switch (args[1].ToLower())
+            {
+                case "harassment":
+                case "naming":
+                case "other":
+                case "conduct":
+                case "stuck":
+                case "emergency":
+                    {
+                        args[1] = "";
+                        break;
+                    }
             }
             string message = string.Join(" ", args, 1, args.Length - 1);
             GamePlayer p = client.Player as GamePlayer;
@@ -146,6 +240,20 @@ namespace DOL.GS.Commands
             {
                 case "NAME":
                     {
+                        //strip these words if they are the first word in the appeal text
+                        switch (args[2].ToLower())
+                        {
+                            case "harassment":
+                            case "naming":
+                            case "other":
+                            case "conduct":
+                            case "stuck":
+                            case "emergency":
+                                {
+                                    args[2] = "";
+                                    break;
+                                }
+                        }
                         string message = string.Join(" ", args, 2, args.Length - 2);
                         GamePlayer p = client.Player as GamePlayer;
                         AppealMgr.CreateAppeal(p, (int)AppealMgr.eSeverity.Low, "Open", message);
@@ -153,6 +261,20 @@ namespace DOL.GS.Commands
                     }
                 case "TOS":
                     {
+                        //strip these words if they are the first word in the appeal text
+                        switch (args[2].ToLower())
+                        {
+                            case "harassment":
+                            case "naming":
+                            case "other":
+                            case "conduct":
+                            case "stuck":
+                            case "emergency":
+                                {
+                                    args[2] = "";
+                                    break;
+                                }
+                        }
                         string message = string.Join(" ", args, 2, args.Length - 2);
                         GamePlayer p = client.Player as GamePlayer;
                         AppealMgr.CreateAppeal(p, (int)AppealMgr.eSeverity.Medium, "Open", message);
@@ -188,6 +310,20 @@ namespace DOL.GS.Commands
                 AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NeedMoreDetail"));
                 return;
             }
+            //strip these words if they are the first word in the appeal text
+            switch (args[1].ToLower())
+            {
+                case "harassment":
+                case "naming":
+                case "other":
+                case "conduct":
+                case "stuck":
+                case "emergency":
+                    {
+                        args[1] = "";
+                        break;
+                    }
+            }
             string message = string.Join(" ", args, 1, args.Length - 1);
             GamePlayer p = client.Player as GamePlayer;
             AppealMgr.CreateAppeal(p, (int)AppealMgr.eSeverity.Critical, "Open", message);
@@ -219,6 +355,20 @@ namespace DOL.GS.Commands
             {
                 AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NeedMoreDetail"));
                 return;
+            }
+            //strip these words if they are the first word in the appeal text
+            switch (args[1].ToLower())
+            {
+                case "harassment":
+                case "naming":
+                case "other":
+                case "conduct":
+                case "stuck":
+                case "emergency":
+                    {
+                        args[1] = "";
+                        break;
+                    }
             }
             string message = string.Join(" ", args, 1, args.Length - 1);
             GamePlayer p = client.Player as GamePlayer;
