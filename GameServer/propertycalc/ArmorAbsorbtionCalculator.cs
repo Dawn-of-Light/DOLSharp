@@ -34,10 +34,10 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			int abs = living.BaseBuffBonusCategory[(int)property]
+			int abs = Math.Min(living.BaseBuffBonusCategory[(int)property]
 				- living.DebuffCategory[(int)property]
 				+ living.ItemBonus[(int)property]
-				+ living.AbilityBonus[(int)property];
+				+ living.AbilityBonus[(int)property], 50);
 
 			if (living is GameNPC)
 			{
@@ -45,12 +45,10 @@ namespace DOL.GS.PropertyCalc
 				else if (living.Level >= 20) abs += 19;
 				else if (living.Level >= 10) abs += 10;
 
-				//abs += (living.GetModified(eProperty.Constitution) 
-				//    + living.GetModified(eProperty.Dexterity) - 100) / 400;
-
 				abs += (living.GetModified(eProperty.Constitution)
 					+ living.GetModified(eProperty.Dexterity) - 120) / 12;
 			}
+
 			return abs;
 		}
 	}
