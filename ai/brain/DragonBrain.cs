@@ -70,6 +70,8 @@ namespace DOL.AI.Brain
 			if (!IsAggroing && AggroLevel > 0)
 			{
 				CheckPlayerAggro();
+				CheckNPCAggro();
+
 				if (IsAggroing)
 				{
 					AttackMostWanted();
@@ -93,6 +95,34 @@ namespace DOL.AI.Brain
 			PickThrowTarget();
         }
 
+
+		protected override void CheckNPCAggro()
+		{
+			if (Body.AttackState)
+				return;
+
+			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
+			{
+				if (!npc.IsAlive || npc.ObjectState != GameObject.eObjectState.Active)
+					continue;
+
+				if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
+					continue;
+
+				if (m_aggroTable.ContainsKey(npc))
+					continue; // add only new NPCs
+
+				if (npc.Brain != null && npc.Brain is IControlledBrain)
+				{
+					if (CalculateAggroLevelToTarget(npc) > 0)
+					{
+						AddToAggroList(npc, (npc.Level + 1) << 1);
+					}
+				}
+			}
+		}
+
+
 		/// <summary>
 		/// Called whenever the dragon's body sends something to its brain.
 		/// </summary>
@@ -114,9 +144,21 @@ namespace DOL.AI.Brain
 					// classes on him, if not, well, dragon will try to get its Glare off...
 
 					GameObject source = (args as TakeDamageEventArgs).DamageSource;
-					if (dragon.IsWithinRadius(source, dragon.AttackRange))
-						dragon.CheckMeleeDebuff(source as GamePlayer);
-					else dragon.CheckGlare(source as GamePlayer);
+					if (source != null)
+					{
+						if (dragon.IsWithinRadius(source, dragon.AttackRange))
+						{
+							dragon.CheckMeleeDebuff(source as GamePlayer);
+						}
+						else
+						{
+							dragon.CheckGlare(source as GamePlayer);
+						}
+					}
+					else
+					{
+						log.Error("Dragon takes damage from null source. args = " + (args == null ? "null" : args.ToString()));
+					}
 				}
 				else if (e == GameLivingEvent.EnemyHealed)
 				{
@@ -125,9 +167,22 @@ namespace DOL.AI.Brain
 					// classes on him, if not, there's still Glare...
 
 					GameObject source = (args as EnemyHealedEventArgs).HealSource;
-					if (dragon.IsWithinRadius(source, dragon.AttackRange))
-						dragon.CheckRangedDebuff(source as GamePlayer);
-					else dragon.CheckGlare(source as GamePlayer);
+
+					if (source != null)
+					{
+						if (dragon.IsWithinRadius(source, dragon.AttackRange))
+						{
+							dragon.CheckRangedDebuff(source as GamePlayer);
+						}
+						else
+						{
+							dragon.CheckGlare(source as GamePlayer);
+						}
+					}
+					else
+					{
+						log.Error("Dragon heal source null. args = " + (args == null ? "null" : args.ToString()));
+					}
 				}
 			}
 			else if (e == GameNPCEvent.ArriveAtTarget && sender != null)
