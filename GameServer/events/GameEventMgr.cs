@@ -49,7 +49,9 @@ namespace DOL.Events
 			get
 			{
 				int numHandlers = 0;
-				foreach (DOLEventHandlerCollection handler in m_gameObjectEventCollections.Values)
+				Dictionary<object, DOLEventHandlerCollection> cloneGameObjectEventCollections = new Dictionary<object,DOLEventHandlerCollection>(m_gameObjectEventCollections);
+
+				foreach (DOLEventHandlerCollection handler in cloneGameObjectEventCollections.Values)
 				{
 					numHandlers += handler.Count;
 				}

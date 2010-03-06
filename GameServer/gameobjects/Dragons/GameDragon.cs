@@ -700,7 +700,7 @@ namespace DOL.GS
 
 		#region Throw
 
-		private const int m_throwChance = 5;
+		private const int m_throwChance = 3;
 
 		/// <summary>
 		/// Chance to throw a player.

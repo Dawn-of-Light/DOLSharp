@@ -1953,7 +1953,7 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage( "Cannot create brain, standard brain being applied", eChatType.CT_System, eChatLoc.CL_SystemWindow );
 				mob.SetOwnBrain( new StandardMobBrain() );
 			}
-			else // Copies the Range, aggro etc...
+			else if (brain is StandardMobBrain)
 			{
 				StandardMobBrain sbrain = (StandardMobBrain)brain;
 				StandardMobBrain tsbrain = (StandardMobBrain)targetMob.Brain;
