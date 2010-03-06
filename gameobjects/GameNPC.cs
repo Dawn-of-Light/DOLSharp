@@ -2728,24 +2728,27 @@ namespace DOL.GS
 		/// <param name="z"></param>
 		/// <param name="heading"></param>
 		/// <returns>true if pet was moved</returns>
-		public virtual bool MovePet(ushort regionID, int x, int y, int z, ushort heading)
+		public virtual bool MovePet(ushort regionID, int x, int y, int z, ushort heading, bool forceMove)
 		{
 			if (m_ObjectState != eObjectState.Active)
 				return false;
 
 			// pets can't be moved across regions
 			if (regionID != CurrentRegionID)
-				return false; 
+				return false;
 
-			// do not move a pet in combat, player can passive / follow to bring pet to them
-			if (InCombat)
-				return false; 
+			if (forceMove == false)
+			{
+				// do not move a pet in combat, player can passive / follow to bring pet to them
+				if (InCombat)
+					return false;
 
-			ControlledNpcBrain controlledBrain = Brain as ControlledNpcBrain;
+				ControlledNpcBrain controlledBrain = Brain as ControlledNpcBrain;
 
-			// only move pet if it's following the owner
-			if (controlledBrain != null && controlledBrain.WalkState != eWalkState.Follow)
-				return false; 
+				// only move pet if it's following the owner
+				if (controlledBrain != null && controlledBrain.WalkState != eWalkState.Follow)
+					return false;
+			}
 
 			Region rgn = WorldMgr.GetRegion(regionID);
 

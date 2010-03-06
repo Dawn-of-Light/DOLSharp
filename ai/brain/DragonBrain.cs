@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using DOL.GS;
+using DOL.GS.Effects;
 using log4net;
 using System.Reflection;
 using DOL.Events;
@@ -289,15 +290,28 @@ namespace DOL.AI.Brain
 			GameDragon dragon = Body as GameDragon;
 			if (dragon == null) return false;
 
-            lock (m_aggroTable.SyncRoot)
+			ArrayList inRangeLiving = new ArrayList();
+
+			lock (m_aggroTable.SyncRoot)
             {
 				foreach (DictionaryEntry dictEntry in m_aggroTable)
 				{
-					GamePlayer player = dictEntry.Key as GamePlayer;
-					if (player != null && !dragon.IsWithinRadius(player, dragon.AttackRange))
-						return dragon.CheckGlare(player);
+					GameLiving living = dictEntry.Key as GameLiving;
+					if (living != null && 
+						living.IsAlive && 
+						living.EffectList.GetOfType(typeof(NecromancerShadeEffect)) == null && 
+						!dragon.IsWithinRadius(living, dragon.AttackRange))
+					{
+						inRangeLiving.Add(living);
+					}
 				}
             }
+
+			if (inRangeLiving.Count > 0)
+			{
+				return dragon.CheckGlare((GameLiving)(inRangeLiving[Util.Random(1, inRangeLiving.Count) - 1]));
+			}
+
 			return false;
 		}
 
@@ -314,29 +328,26 @@ namespace DOL.AI.Brain
 			GameDragon dragon = Body as GameDragon;
 			if (dragon == null) return false;
 
-			ArrayList inRangePlayers = new ArrayList();
+			ArrayList inRangeLiving = new ArrayList();
 			foreach (GamePlayer player in dragon.GetPlayersInRadius((ushort)dragon.AttackRange))
 			{
-				if (player.IsAlive)
+				if (player.IsAlive && player.EffectList.GetOfType(typeof(NecromancerShadeEffect)) == null)
 				{
-					inRangePlayers.Add(player);
+					inRangeLiving.Add(player);
 				}
 			}
 
 			foreach (GameNPC npc in dragon.GetNPCsInRadius((ushort)dragon.AttackRange))
 			{
-				if (npc.IsAlive && npc is NecromancerPet)
+				if (npc.IsAlive && npc.Brain != null && npc.Brain is IControlledBrain)
 				{
-					if (!inRangePlayers.Contains((npc as NecromancerPet).Owner as GamePlayer))
-					{
-						inRangePlayers.Add((npc as NecromancerPet).Owner as GamePlayer);
-					}
+					inRangeLiving.Add(npc);
 				}
 			}
 
-			if (inRangePlayers.Count > 0)
+			if (inRangeLiving.Count > 0)
 			{
-				return dragon.CheckThrow((GamePlayer)(inRangePlayers[Util.Random(1, inRangePlayers.Count) - 1]));
+				return dragon.CheckThrow((GameLiving)(inRangeLiving[Util.Random(1, inRangeLiving.Count) - 1]));
 			}
 
 			return false;

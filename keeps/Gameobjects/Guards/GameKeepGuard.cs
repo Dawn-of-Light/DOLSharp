@@ -122,6 +122,23 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public override double GetArmorAbsorb(eArmorSlot slot)
+		{
+			double abs = GetModified(eProperty.ArmorAbsorption);
+
+			if (this is GuardLord)
+			{
+				abs += 5;
+			}
+			else if (this is GuardCaster)
+			{
+				abs -= 5;
+			}
+
+			return Math.Max(0.0, abs * 0.01);
+		}
+
+
 		/// <summary>
 		/// Bools holding weather this guard is male or female.
 		/// </summary>
