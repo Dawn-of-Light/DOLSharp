@@ -26,9 +26,9 @@ using DOL.GS.ServerRules;
 namespace DOL.GS.Commands
 {
    [CmdAttribute(
-      "&relic",
+      "&relics",
       ePrivLevel.Player,
-        "Displays the current relic status.", "/relic")]
+        "Displays the current relic status.", "/relics")]
    public class RelicCommandHandler : AbstractCommandHandler, ICommandHandler
    {
         /*          Relic status
