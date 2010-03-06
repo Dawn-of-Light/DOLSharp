@@ -545,12 +545,12 @@ namespace DOL.GS
 			get { return m_glareChance; }
 		}
 
-		private GamePlayer m_glareTarget;
+		private GameLiving m_glareTarget;
 
 		/// <summary>
 		/// The target for the next glare attack.
 		/// </summary>
-		private GamePlayer GlareTarget
+		private GameLiving GlareTarget
 		{
 			get { return m_glareTarget; }
 			set { m_glareTarget = value; PrepareToGlare(); }
@@ -561,7 +561,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="target">The potential target.</param>
 		/// <returns>Whether or not the spell was cast.</returns>
-		public bool CheckGlare(GamePlayer target)
+		public bool CheckGlare(GameLiving target)
 		{
 			if (target == null || GlareTarget != null) return false;
 			bool success = Util.Chance(GlareChance);
@@ -700,7 +700,7 @@ namespace DOL.GS
 
 		#region Throw
 
-		private const int m_throwChance = 3;
+		private const int m_throwChance = 5;
 
 		/// <summary>
 		/// Chance to throw a player.
@@ -715,7 +715,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="target">The potential target.</param>
 		/// <returns>Whether or not the target was thrown.</returns>
-		public bool CheckThrow(GamePlayer target)
+		public bool CheckThrow(GameLiving target)
 		{
 			if (target == null || !target.IsAlive || target.IsStunned)
 				return false;
@@ -723,7 +723,7 @@ namespace DOL.GS
 			bool success = Util.Chance(ThrowChance);
 
 			if (success)
-				ThrowPlayer(target);
+				ThrowLiving(target);
 
 			return success;
 		}
@@ -732,7 +732,7 @@ namespace DOL.GS
 		/// Hurl a player into the air.
 		/// </summary>
 		/// <param name="target">The player to hurl into the air.</param>
-		private void ThrowPlayer(GamePlayer target)
+		private void ThrowLiving(GameLiving target)
 		{
 			BroadcastMessage(String.Format("{0} is hurled into the air!", target.Name));
 			
@@ -740,9 +740,17 @@ namespace DOL.GS
 
 			TurnTo(target);
 
-			Point3D targetPosition = TargetPosition(target, 600, Heading, Util.Random(400, 600) );
+			Point3D targetPosition = TargetPosition(target, 600, Heading, Util.Random(300, 500) );
 
-			target.MoveTo(target.CurrentRegionID, targetPosition.X, targetPosition.Y, targetPosition.Z, target.Heading);
+			if (target is GamePlayer)
+			{
+				target.MoveTo(target.CurrentRegionID, targetPosition.X, targetPosition.Y, targetPosition.Z, target.Heading);
+			}
+			else if (target is GameNPC)
+			{
+				(target as GameNPC).MovePet(target.CurrentRegionID, targetPosition.X, targetPosition.Y, targetPosition.Z, target.Heading, true);
+				target.ChangeHealth(this, eHealthChangeType.Spell, (int)(target.Health * -0.35));
+			}
 		}
 
 		/// <summary>

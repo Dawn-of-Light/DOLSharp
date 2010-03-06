@@ -9302,7 +9302,7 @@ namespace DOL.GS
 				    && this.IsWithinRadius( ControlledNpcBrain.Body, 1000 ) )
 				{
 					Point2D point = this.GetPointFromHeading( this.Heading, 64 );
-					ControlledNpcBrain.Body.MovePet(CurrentRegionID, point.X, point.Y, Z, (ushort)((this.Heading + 2048) % 4096));
+					ControlledNpcBrain.Body.MovePet(CurrentRegionID, point.X, point.Y, Z, (ushort)((this.Heading + 2048) % 4096), false);
 				}
 			}
 			return true;
