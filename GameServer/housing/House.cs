@@ -51,7 +51,7 @@ namespace DOL.GS.Housing
 		public const string MONEYFORHOUSERENT = "MoneyForHouseRent";
 		public const string BPSFORHOUSERENT = "BPsForHouseRent";
 
-		public const int MAX_HOOKPOINT_LOCATIONS = 50;
+		public const int MAX_HOOKPOINT_LOCATIONS = 200;
 
 
 		#region Properties

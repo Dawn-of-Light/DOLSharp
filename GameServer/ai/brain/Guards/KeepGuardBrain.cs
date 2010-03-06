@@ -50,7 +50,10 @@ namespace DOL.AI.Brain
 			if (guard == null)
 				guard = Body as GameKeepGuard;
 			if (guard == null)
+			{
 				Stop();
+				return;
+			}
 
 			if ((guard is GuardArcher || guard is GuardLord))
 			{
