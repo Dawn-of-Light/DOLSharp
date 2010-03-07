@@ -839,11 +839,6 @@ namespace DOL.GS.Spells
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
 				}
-//				if (!Caster.GroundTargetInView)
-//				{
-//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
-//					return false;
-//				}
 			}
 			else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
 			{
@@ -958,6 +953,7 @@ namespace DOL.GS.Spells
 		{
 			return CheckDuringCast(target, false);
 		}
+
 		public virtual bool CheckDuringCast(GameLiving target, bool quiet)
 		{
 			if (m_interrupted)
@@ -1012,11 +1008,6 @@ namespace DOL.GS.Spells
 					if (!quiet) MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
 				}
-//				if (!Caster.GroundTargetInView)
-//				{
-//					MessageToCaster("Your ground target is not in view!", eChatType.CT_SpellResisted);
-//					return false;
-//				}
 			}
 			else if (m_spell.Target.ToLower() != "self" && m_spell.Target.ToLower() != "group" && m_spell.Target.ToLower() != "cone" && m_spell.Range > 0)
 			{
@@ -1123,18 +1114,6 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			/*if (m_caster.Concentration < m_spell.Concentration)
-{
-MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
-return false;
-}*/
-
-			/*if (m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
-{
-MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
-return false;
-}*/
-
 			return true;
 		}
 
@@ -1142,6 +1121,8 @@ return false;
 		{
 			return CheckAfterCast(target, false);
 		}
+
+
 		public virtual bool CheckAfterCast(GameLiving target, bool quiet)
 		{
 			if (m_interrupted)
@@ -1468,6 +1449,7 @@ return false;
 			/// The target object at the moment of CastSpell call
 			/// </summary>
 			private readonly GameLiving m_target;
+			private readonly GameLiving m_caster;
 			private byte m_stage;
 			private readonly int m_delay1;
 			private readonly int m_delay2;
@@ -1483,8 +1465,13 @@ return false;
 			{
 				if (handler == null)
 					throw new ArgumentNullException("handler");
+
+				if (actionSource == null)
+					throw new ArgumentNullException("actionSource");
+
 				m_handler = handler;
 				m_target = target;
+				m_caster = actionSource;
 				m_stage = 0;
 				m_delay1 = delay1;
 				m_delay2 = delay2;
@@ -1497,6 +1484,15 @@ return false;
 			{
 				try
 				{
+					if (m_handler.Spell.Target.ToLower() == "enemy" && m_caster.TargetObject != m_target)
+					{
+						// caster changed targets, possibly to avoid LoS check, abort spell
+						Interval = 0;
+						m_handler.InterruptCasting();
+						m_handler.OnAfterSpellCastSequence();
+						return;
+					}
+
 					if (m_stage == 0)
 					{
 						if (!m_handler.CheckAfterCast(m_target))
