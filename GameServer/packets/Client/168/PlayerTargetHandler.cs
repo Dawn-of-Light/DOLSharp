@@ -124,7 +124,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					GameGravestone gravestone = myTarget as GameGravestone;
 					if (gravestone == null || !gravestone.InternalID.Equals(player.InternalID))
 					{
-						player.Out.SendMessage("You are no longer targetting your cairn. Your prayers fail.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage("You are no longer targetting your grave. Your prayers fail.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						player.PrayTimerStop();
 					}
 				}
