@@ -3077,7 +3077,7 @@ namespace DOL.GS
 					break;
 
 				case Specs.Enhancement:
-					if (line.IsBaseLine || CharacterClass.ID == (int)eCharacterClass.Cleric)
+					if ((line.IsBaseLine || CharacterClass.ID == (int)eCharacterClass.Cleric) && CharacterClass.ID != (int)eCharacterClass.Heretic)
 						allow = true;
 
 					break;
