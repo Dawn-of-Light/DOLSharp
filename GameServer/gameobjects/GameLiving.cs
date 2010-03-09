@@ -4882,31 +4882,27 @@ namespace DOL.GS
 		/// <param name="selfRegenerationTimer">timer calling this function</param>
 		protected virtual int PowerRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
-			if (this is GamePlayer && (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir
-			 || (((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63)))
+			if (this is GamePlayer &&
+				(((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir ||
+				(((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63))) // Maulers
 			{
 				double MinMana = MaxMana * 0.15;
-                double OnePercMana = MaxMana * 0.01;
-				if(Mana < MinMana)
-				{
-					return 0;
-				}
+                double OnePercMana = Math.Ceiling(MaxMana * 0.01);
+
 				if (!InCombat)
 				{
-                    if (ManaPercent < 15)
+					if (ManaPercent < 15)
                     {
                         ChangeMana(this, eManaChangeType.Regenerate, (int)OnePercMana);
-                        return 4000;//every 4sec 1% mana out of combat
+                        return 4000;
                     }
-					ChangeMana(this, eManaChangeType.Regenerate, -1 * GetModified(eProperty.PowerRegenerationRate));
-					if(ManaPercent > 80)
+					else if (ManaPercent > 15)
 					{
+						ChangeMana(this, eManaChangeType.Regenerate, (int)(-OnePercMana));
 						return 1000;
 					}
-					else
-					{
-						return 1500;
-					}
+
+					return 0;
 				}
 			}
 			else
