@@ -182,28 +182,33 @@ namespace DOL.GS.Spells
 
 			if (Caster is GamePlayer)
 			{
-				/*
-				 * The Minstrel/Mentalist has an almost certain chance to charm/retain control of 
-				 * a creature his level or lower, although there is a small random chance that it
-				 * could fail. The higher the level of the charmed creature compared to the 
-				 * Minstrel/Mentalist, the greater the chance the monster has of breaking the charm.
-				 * Please note that your specialization level in the magic skill that contains the
-				 * charm spell will modify your base chance of charming and retaining control.
-				 * The higher your spec level, the greater your chance of controlling.
-				 */
-				int diffLevel = (int)(Caster.Level/1.5 + Caster.GetModifiedSpecLevel(m_spellLine.Spec)/3) - target.Level;
-				int resistChance;
-				if (diffLevel >= 0)
+				int resistChance = 100 - (85 + ((Caster.Level - target.Level) / 2));
+
+				if (this.Spell.Pulse > 0) // not permanent
 				{
-                    resistChance = 10 - diffLevel * 3;
-                    resistChance = Math.Max(resistChance, 1);
+					/*
+					 * The Minstrel/Mentalist has an almost certain chance to charm/retain control of 
+					 * a creature his level or lower, although there is a small random chance that it
+					 * could fail. The higher the level of the charmed creature compared to the 
+					 * Minstrel/Mentalist, the greater the chance the monster has of breaking the charm.
+					 * Please note that your specialization level in the magic skill that contains the
+					 * charm spell will modify your base chance of charming and retaining control.
+					 * The higher your spec level, the greater your chance of controlling.
+					 */
+					int diffLevel = (int)(Caster.Level / 1.5 + Caster.GetModifiedSpecLevel(m_spellLine.Spec) / 3) - target.Level;
+					if (diffLevel >= 0)
+					{
+						resistChance = 10 - diffLevel * 3;
+						resistChance = Math.Max(resistChance, 1);
+					}
+					else
+					{
+						resistChance = 10 + diffLevel * diffLevel * 3;
+						resistChance = Math.Min(resistChance, 99);
+					}
+
 				}
-				else
-				{
-                    resistChance = 10 + diffLevel * diffLevel * 3;
-                    resistChance = Math.Min(resistChance, 99);
-				}
-				
+
 				if (Util.Chance(resistChance))
 				{
 					MessageToCaster(target.GetName(0, true) + " resists the charm!", eChatType.CT_SpellResisted);
