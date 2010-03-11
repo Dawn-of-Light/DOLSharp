@@ -1196,7 +1196,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			double itemDPS = item.DPS_AF / 10.0;
 			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * client.Player.Level);
 			double itemSPD = item.SPD_ABS / 10.0;
-			double effectiveDPS = itemDPS * item.Quality / 100.0 * item.Condition / item.MaxCondition;
+			double effectiveDPS = clampedDPS * item.Quality / 100.0 * item.Condition / item.MaxCondition;
 
 			output.Add(" ");
 			output.Add(" ");
