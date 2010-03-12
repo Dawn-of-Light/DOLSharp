@@ -73,7 +73,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 0;
 			}
 		
-			DBDoor DOOR = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "InternalID = '" + DoorID + "'");
+			DBDoor DOOR = GameServer.Database.SelectObject<DBDoor>("InternalID = '" + DoorID + "'");
 
 			if (DOOR != null)
 			{
@@ -163,7 +163,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				door.Y = player.Y;
 				door.Z = player.Z;
 				door.Heading = player.Heading;
-				GameServer.Database.AddNewObject(door);
+				GameServer.Database.AddObject(door);
 
 				player.Out.SendMessage("Added door " + DoorIDhandler + " to the database!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				DoorMgr.Init( );
@@ -247,10 +247,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					//create a bug report
 					BugReport report = new BugReport();
 					report.DateSubmitted = DateTime.Now;
-					report.ID = GameServer.Database.GetObjectCount(typeof(BugReport)) + 1;
+					report.ID = GameServer.Database.GetObjectCount<BugReport>() + 1;
 					report.Message = "There is a missing door at location Region: " + player.CurrentRegionID + " X:" + player.X + " Y: " + player.Y + " Z: " + player.Z;
 					report.Submitter = player.Name;
-					GameServer.Database.AddNewObject(report);
+					GameServer.Database.AddObject(report);
 					 */
 
 					//else basic quick hack

@@ -64,7 +64,7 @@ namespace DOL.GS.Housing
 
 			int houses = 0;
 			int lotmarkers = 0;
-			foreach (DBHouse house in GameServer.Database.SelectAllObjects(typeof(DBHouse)))
+			foreach (DBHouse house in GameServer.Database.SelectAllObjects<DBHouse>())
 			{
 				if (house.OwnerIDs != null && house.OwnerIDs != "")
 				{
@@ -177,7 +177,7 @@ namespace DOL.GS.Housing
 				{
 					house.HouseAccess[i] = new DBHousePermissions(house.HouseNumber, i);
 
-					GameServer.Database.AddNewObject(house.HouseAccess[i]);
+					GameServer.Database.AddObject(house.HouseAccess[i]);
 				}
 			}
 			house.SaveIntoDatabase();
@@ -190,18 +190,17 @@ namespace DOL.GS.Housing
                 player.LeaveHouse();
 
             #region Remove indoor/outdoor items
-            DataObject[] objs;
 
             // Remove all indoor items
-            objs = GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = " + house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DataObject item in objs)
+            var indoorObjs = GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = " + house.HouseNumber);
+			if (indoorObjs.Count > 0)
+				foreach (var item in indoorObjs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all outdoor items
-            objs = GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = " + house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DataObject item in objs)
+            var outdoorObjs = GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = " + house.HouseNumber);
+            if (outdoorObjs.Count > 0)
+                foreach (var item in outdoorObjs)
                     GameServer.Database.DeleteObject(item);
             #endregion
 
@@ -251,7 +250,7 @@ namespace DOL.GS.Housing
             house.SaveIntoDatabase();
             house.SendUpdate();
             #region consignment merchant
-            DBHouseMerchant merchant = (DBHouseMerchant)GameServer.Database.SelectObject(typeof(DBHouseMerchant), "HouseNumber = '" + house.HouseNumber + "'");
+            DBHouseMerchant merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + house.HouseNumber + "'");
             if (merchant != null)
             {
                 int oldValue = merchant.Quantity;
@@ -297,38 +296,38 @@ namespace DOL.GS.Housing
             house.DatabaseItem.GuildHouse = false;            
 
             #region Remove indoor/outdoor items & permissions
-            DataObject[] objs;
 
             // Remove all indoor items
-            objs = GameServer.Database.SelectObjects(typeof(DBHouseIndoorItem), "HouseNumber = " + house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DataObject item in objs)
+            var indoorObjs = GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = " + house.HouseNumber);
+            if (indoorObjs.Count > 0)
+                foreach (var item in indoorObjs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all outdoor items
-            objs = GameServer.Database.SelectObjects(typeof(DBHouseOutdoorItem), "HouseNumber = " + house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DataObject item in objs)
+            var outdoorObjs = GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = " + house.HouseNumber);
+            if (outdoorObjs.Count > 0)
+                foreach (var item in outdoorObjs)
                     GameServer.Database.DeleteObject(item);
             
             // Remove all housepoint items
-            objs = GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = " + house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DataObject item in objs)
+            var housepointObjs = GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = " + house.HouseNumber);
+            if (housepointObjs.Count> 0)
+                foreach (var item in housepointObjs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all permissions
-            objs = GameServer.Database.SelectObjects(typeof(DBHousePermissions), "HouseNumber = " + house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DataObject item in objs)
+            var housePermissionObjs = GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = " + house.HouseNumber);
+            if (housePermissionObjs.Count > 0)
+                foreach (var item in housePermissionObjs)
                     GameServer.Database.DeleteObject(item);
 
             // Remove all char x permissions
-            objs = GameServer.Database.SelectObjects(typeof(DBHouseCharsXPerms), "HouseNumber = " + house.HouseNumber);
-            if (objs.Length > 0)
-                foreach (DataObject item in objs)
+            var houseCharPermissionObjs = GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = " + house.HouseNumber);
+            if (houseCharPermissionObjs.Count > 0)
+                foreach (var item in houseCharPermissionObjs)
                     GameServer.Database.DeleteObject(item);
             #endregion
+
             house.RemoveConsignment();
             house.SaveIntoDatabase();
 			hash.Remove(house.HouseNumber);

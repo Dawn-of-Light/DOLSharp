@@ -281,7 +281,7 @@ namespace DOL.GS
                     }
 
                 }
-                GameServer.Database.AddNewObject(rank);
+                GameServer.Database.AddObject(rank);
 				GameServer.Database.SaveObject(rank);
 				newguild.Ranks[i] = rank;
 			}
@@ -297,21 +297,22 @@ namespace DOL.GS
                 Guild removeGuild = GetGuildByName(guildName);
                 // Does guild exist, if not return false.
                 if (removeGuild == null)
-                {
-                    return false;
-                }
+					return false;
 
-                DBGuild[] guilds = (DBGuild[])GameServer.Database.SelectObjects(typeof(DBGuild), "GuildName='" + GameServer.Database.Escape(guildName) + "'");
-                foreach (DBGuild guild in guilds)
-                {
-                    foreach (Character cha in GameServer.Database.SelectObjects(typeof(Character), "GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
-                        cha.GuildID = "";
-                    GameServer.Database.DeleteObject(guild);
-                }
+				var guilds = GameServer.Database.SelectObjects<DBGuild>("GuildName='" + GameServer.Database.Escape(guildName) + "'");
+				foreach (var guild in guilds)
+				{
+					foreach (var cha in GameServer.Database.SelectObjects<Character>("GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
+					{
+						cha.GuildID = "";
+					}
+
+					GameServer.Database.DeleteObject(guild);
+				}
 
                 //[StephenxPimentel] We need to delete the guild specific ranks aswell!
-                DBRank[] ranks = (DBRank[])GameServer.Database.SelectObjects(typeof(DBRank), "`GuildID` = '" + removeGuild.ID + "'");
-                foreach (DBRank guildRank in ranks)
+                var ranks = GameServer.Database.SelectObjects<DBRank>("`GuildID` = '" + removeGuild.ID + "'");
+                foreach (var guildRank in ranks)
                 {
                     GameServer.Database.DeleteObject(guildRank);
                 }
@@ -405,34 +406,39 @@ namespace DOL.GS
 			m_lastID = 0;
 
 			//load guilds
-			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBGuild));
-			foreach (DataObject obj in objs)
+			var guildObjs = GameServer.Database.SelectAllObjects<DBGuild>();
+			foreach(var obj in guildObjs)
 			{
-				Guild myguild = new Guild((DBGuild)obj);
+				var myguild = new Guild(obj);
 				AddGuild(myguild);
-				if (((DBGuild)obj).Ranks.Length == 0)
+
+				if (obj.Ranks.Length == 0)
 					CreateRanks(myguild);
-				DataObject[] guildCharacters = GameServer.Database.SelectObjects(typeof(Character), string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
-				SortedList<string, SocialWindowMember> tempList = new SortedList<string, SocialWindowMember>(guildCharacters.Length);
+
+				var guildCharacters = GameServer.Database.SelectObjects<Character>(string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
+				var tempList = new SortedList<string, SocialWindowMember>(guildCharacters.Count);
+
 				foreach (Character ch in guildCharacters)
 				{
-					SocialWindowMember member = new SocialWindowMember(ch.Name, ch.Level.ToString(), ch.Class.ToString(), ch.GuildRank.ToString(), "0", ch.LastPlayed.ToShortDateString(), ch.GuildNote);
+					var member = new SocialWindowMember(ch.Name, ch.Level.ToString(), ch.Class.ToString(), ch.GuildRank.ToString(), "0", ch.LastPlayed.ToShortDateString(), ch.GuildNote);
 					tempList.Add(ch.Name, member);
 				}
+
 				m_guildXAllPlayers.Add(myguild.GuildID, tempList);
 			}
 
 			//load alliances
-			objs = GameServer.Database.SelectAllObjects(typeof(DBAlliance));
-			foreach (DBAlliance dball in objs)
+			var allianceObjs = GameServer.Database.SelectAllObjects<DBAlliance>();
+			foreach (DBAlliance dball in allianceObjs)
 			{
-				Alliance myalliance = new Alliance();
+				var myalliance = new Alliance();
 				myalliance.LoadFromDatabase(dball);
+
 				if (dball != null && dball.DBguilds != null)
 				{
 					foreach (DBGuild mydbgui in dball.DBguilds)
 					{
-						Guild gui = GetGuildByName(mydbgui.GuildName);
+						var gui = GetGuildByName(mydbgui.GuildName);
 						myalliance.Guilds.Add(gui);
 						gui.alliance = myalliance;
 					}
@@ -496,7 +502,8 @@ namespace DOL.GS
 			if (oldemblem != 0)
 			{
 				player.RemoveMoney(COST_RE_EMBLEM, null);
-				DataObject[] objs = GameServer.Database.SelectObjects(typeof(InventoryItem), "Emblem = " + GameServer.Database.Escape(oldemblem.ToString()));
+				var objs = GameServer.Database.SelectObjects<InventoryItem>("Emblem = " + GameServer.Database.Escape(oldemblem.ToString()));
+				
 				foreach (InventoryItem item in objs)
 				{
 					item.Emblem = newemblem;
@@ -507,7 +514,7 @@ namespace DOL.GS
 
 		public static List<Guild> GetAllGuilds()
 		{
-			List<Guild> guilds = new List<Guild>(m_guilds.Count);
+			var guilds = new List<Guild>(m_guilds.Count);
 			lock (m_guilds.SyncRoot)
 			{
 				foreach (Guild guild in m_guilds.Values)
@@ -515,6 +522,7 @@ namespace DOL.GS
 					guilds.Add(guild);
 				}
 			}
+
 			return guilds;
 		}
 

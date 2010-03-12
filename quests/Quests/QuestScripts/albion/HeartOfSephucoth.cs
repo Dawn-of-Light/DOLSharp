@@ -183,7 +183,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			sephucothsHeart = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sephucoths_heart");
+			sephucothsHeart = GameServer.Database.FindObjectByKey<ItemTemplate>("sephucoths_heart");
 			if (sephucothsHeart == null)
 			{
 				sephucothsHeart = new ItemTemplate();
@@ -213,11 +213,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sephucothsHeart);
+					GameServer.Database.AddObject(sephucothsHeart);
 			}
 
 			// item db check
-			polishedBone = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "polished_bone");
+			polishedBone = GameServer.Database.FindObjectByKey<ItemTemplate>("polished_bone");
 			if (polishedBone == null)
 			{
 				polishedBone = new ItemTemplate();
@@ -247,11 +247,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(polishedBone);
+					GameServer.Database.AddObject(polishedBone);
 			}
 
 			// item db check
-			fieryCrystalPendant = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "fiery_crystal_pendant");
+			fieryCrystalPendant = GameServer.Database.FindObjectByKey<ItemTemplate>("fiery_crystal_pendant");
 			if (fieryCrystalPendant == null)
 			{
 				fieryCrystalPendant = new ItemTemplate();
@@ -288,7 +288,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(fieryCrystalPendant);
+					GameServer.Database.AddObject(fieryCrystalPendant);
 			}
 
 			#endregion

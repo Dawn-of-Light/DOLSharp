@@ -96,9 +96,9 @@ namespace DOL.GS
         /// <param name="instanceName"></param>
         public virtual void LoadFromDatabase(string instanceName)
         {
-            DBInstanceXElement[] objects = (DBInstanceXElement[])GameServer.Database.SelectObjects(typeof(DBInstanceXElement), "`InstanceID` = '" + instanceName + "'");
+            var objects = GameServer.Database.SelectObjects<DBInstanceXElement>("`InstanceID` = '" + instanceName + "'");
 
-            if (objects == null || objects.Length == 0)
+            if (objects.Count == 0)
                 return;
 
             int count = 0;

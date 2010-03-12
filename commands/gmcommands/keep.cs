@@ -2050,10 +2050,10 @@ namespace DOL.GS.Commands
 						keep.Z = client.Player.Z;
 						keep.Heading = client.Player.Heading;
 						keep.BaseLevel = baseLevel;
-						GameServer.Database.AddNewObject(keep);
+						GameServer.Database.AddObject(keep);
 
 						DBKeepComponent towerComponent = new DBKeepComponent(1, (int)GameKeepComponent.eComponentSkin.Tower, 0, 0, 0, 0, 3200, keep.KeepID, client.Player.Name + ";/keep towercreate");
-						GameServer.Database.AddNewObject(towerComponent);
+						GameServer.Database.AddObject(towerComponent);
 
 						GameKeepTower k = new GameKeepTower();
 						k.Load(keep);
@@ -2142,7 +2142,7 @@ namespace DOL.GS.Commands
 						keep.Z = client.Player.Z;
 						keep.Heading = client.Player.Heading;
 						keep.BaseLevel = baselevel;
-						GameServer.Database.AddNewObject(keep);
+						GameServer.Database.AddObject(keep);
 
 						GameKeep k = new GameKeep();
 						k.Load(keep);

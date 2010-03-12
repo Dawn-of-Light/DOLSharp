@@ -154,10 +154,10 @@ namespace DOL.GS
 				HybridDictionary itemsInPage = new HybridDictionary(MAX_ITEM_IN_TRADEWINDOWS);
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "'");
+					var itemList = GameServer.Database.SelectObjects<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "'");
 					foreach (MerchantItem merchantitem in itemList)
 					{
-						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);
+						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(merchantitem.ItemTemplateID);
                         if (item != null)
                         {
                             ItemTemplate slotItem = (ItemTemplate)itemsInPage[merchantitem.SlotPosition];
@@ -217,10 +217,10 @@ namespace DOL.GS
 
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					MerchantItem itemToFind = (MerchantItem)GameServer.Database.SelectObject(typeof (MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + (int)slot + "'");
+					var itemToFind = GameServer.Database.SelectObject<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + (int)slot + "'");
 					if (itemToFind != null)
 					{
-						item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof (ItemTemplate), itemToFind.ItemTemplateID);
+						item = GameServer.Database.FindObjectByKey<ItemTemplate>(itemToFind.ItemTemplateID);
 					}
 				}
 				return item;
@@ -244,10 +244,10 @@ namespace DOL.GS
 				Hashtable allItems = new Hashtable();
 				if (m_itemsListID != null)
 				{
-					DataObject[] itemList = GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "'");
+					var itemList = GameServer.Database.SelectObjects<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "'");
 					foreach (MerchantItem merchantitem in itemList)
 					{
-						ItemTemplate item = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), merchantitem.ItemTemplateID);
+						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(merchantitem.ItemTemplateID);
 						if (item != null)
 						{
 							ItemTemplate slotItem = (ItemTemplate)allItems[merchantitem.SlotPosition];

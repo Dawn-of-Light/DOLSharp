@@ -189,7 +189,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			fairyGeneralWings = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "fairy_general_wings");
+			fairyGeneralWings = GameServer.Database.FindObjectByKey<ItemTemplate>("fairy_general_wings");
 			if (fairyGeneralWings == null)
 			{
 				fairyGeneralWings = new ItemTemplate();
@@ -210,10 +210,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(fairyGeneralWings);
+					GameServer.Database.AddObject(fairyGeneralWings);
 			}
 
-			dustyOldMap = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dusty_old_map");
+			dustyOldMap = GameServer.Database.FindObjectByKey<ItemTemplate>("dusty_old_map");
 			if (dustyOldMap == null)
 			{
 				dustyOldMap = new ItemTemplate();
@@ -234,12 +234,12 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(dustyOldMap);
+					GameServer.Database.AddObject(dustyOldMap);
 			}
 
 
 			// item db check
-			recruitsArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_arms");
+			recruitsArms = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_studded_arms");
 			if (recruitsArms == null)
 			{
 				recruitsArms = new ItemTemplate();
@@ -282,10 +282,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsArms);
+					GameServer.Database.AddObject(recruitsArms);
 			}
 
-			recruitsSleeves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_sleeves");
+			recruitsSleeves = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_quilted_sleeves");
 			if (recruitsSleeves == null)
 			{
 				recruitsSleeves = new ItemTemplate();
@@ -328,7 +328,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsSleeves);
+					GameServer.Database.AddObject(recruitsSleeves);
 			}
 
 			#endregion

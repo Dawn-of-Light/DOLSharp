@@ -160,7 +160,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		bronze_short_sword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bronze_short_sword");
+		bronze_short_sword = GameServer.Database.FindObjectByKey<ItemTemplate>("bronze_short_sword");
 			if (bronze_short_sword == null)
 			{
 				bronze_short_sword = new ItemTemplate();
@@ -234,9 +234,9 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bronze_short_sword);
+					GameServer.Database.AddObject(bronze_short_sword);
 				}
-			sveawolftooth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sveawolftooth");
+			sveawolftooth = GameServer.Database.FindObjectByKey<ItemTemplate>("sveawolftooth");
 			if (sveawolftooth == null)
 			{
 				sveawolftooth = new ItemTemplate();
@@ -310,9 +310,9 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sveawolftooth);
+					GameServer.Database.AddObject(sveawolftooth);
 				}
-			sveabone_hilt_sword = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sveabone_hilt_sword");
+			sveabone_hilt_sword = GameServer.Database.FindObjectByKey<ItemTemplate>("sveabone_hilt_sword");
 			if (sveabone_hilt_sword == null)
 			{
 				sveabone_hilt_sword = new ItemTemplate();
@@ -386,7 +386,7 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sveabone_hilt_sword);
+					GameServer.Database.AddObject(sveabone_hilt_sword);
 				}
 			
 

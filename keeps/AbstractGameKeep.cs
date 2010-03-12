@@ -624,7 +624,7 @@ namespace DOL.GS.Keeps
 				m_dbkeep.ClaimedGuildName = "";
 			if(InternalID == null)
 			{
-				GameServer.Database.AddNewObject(m_dbkeep);
+				GameServer.Database.AddObject(m_dbkeep);
 				InternalID = m_dbkeep.ObjectId;
 			}
 			else
@@ -1183,7 +1183,7 @@ namespace DOL.GS.Keeps
 			int height = KeepMgr.GetHeightFromLevel(this.Level);
 
 			//predict Z
-			DBKeepHookPoint hp = (DBKeepHookPoint)GameServer.Database.SelectObject(typeof(DBKeepHookPoint), "HookPointID = '97' and Height = '" + height + "'");
+			DBKeepHookPoint hp = GameServer.Database.SelectObject<DBKeepHookPoint>("HookPointID = '97' and Height = '" + height + "'");
 			if (hp == null)
 				return;
 			int z = component.Z + hp.Z;

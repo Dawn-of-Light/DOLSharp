@@ -172,7 +172,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			bundleOfDecayedZombieLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bundle_of_decayed_zombie_legs");
+			bundleOfDecayedZombieLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("bundle_of_decayed_zombie_legs");
 			if (bundleOfDecayedZombieLegs == null)
 			{
 				bundleOfDecayedZombieLegs = new ItemTemplate();
@@ -203,7 +203,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bundleOfDecayedZombieLegs);
+					GameServer.Database.AddObject(bundleOfDecayedZombieLegs);
 			}
 
 			#endregion

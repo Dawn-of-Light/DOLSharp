@@ -37,7 +37,7 @@ namespace DOL.GS
 				news.Type = (byte)type;
 				news.Realm = (byte)realm;
 				news.Text = message;
-				GameServer.Database.AddNewObject(news);
+				GameServer.Database.AddObject(news);
 				GameEventMgr.Notify(DatabaseEvent.NewsCreated, new NewsEventArgs(news));
 			}
 		}
@@ -54,9 +54,9 @@ namespace DOL.GS
 				if (type > 0)
 					realm = " AND (Realm = 0 OR Realm = " + ((int)client.Player.Realm).ToString() + " ) ";
 
-				DBNews[] newsList = (DBNews[])GameServer.Database.SelectObjects(typeof(DBNews), "`Type` = '" + type + "'" + realm + " ORDER BY `CreationDate` DESC LIMIT 5");
+				var newsList = GameServer.Database.SelectObjects<DBNews>("`Type` = '" + type + "'" + realm + " ORDER BY `CreationDate` DESC LIMIT 5");
 
-				int n = newsList.Length;
+				int n = newsList.Count;
 
 				while (n > 0)
 				{

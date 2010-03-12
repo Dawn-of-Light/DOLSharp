@@ -154,7 +154,7 @@ namespace DOL.GS.Quests.Albion
 
             #region defineItems
 
-            daringpaddedboots_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedboots_alb");
+            daringpaddedboots_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedboots_alb");
             if (daringpaddedboots_alb == null)
             {
                 daringpaddedboots_alb = new ItemTemplate();
@@ -228,9 +228,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedboots_alb);
+                    GameServer.Database.AddObject(daringpaddedboots_alb);
             }
-            daringpaddedcap_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedcap_alb");
+            daringpaddedcap_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedcap_alb");
             if (daringpaddedcap_alb == null)
             {
                 daringpaddedcap_alb = new ItemTemplate();
@@ -304,9 +304,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedcap_alb);
+                    GameServer.Database.AddObject(daringpaddedcap_alb);
             }
-            daringpaddedgloves_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedgloves_alb");
+            daringpaddedgloves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedgloves_alb");
             if (daringpaddedgloves_alb == null)
             {
                 daringpaddedgloves_alb = new ItemTemplate();
@@ -380,9 +380,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedgloves_alb);
+                    GameServer.Database.AddObject(daringpaddedgloves_alb);
             }
-            daringpaddedpants_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedpants_alb");
+            daringpaddedpants_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedpants_alb");
             if (daringpaddedpants_alb == null)
             {
                 daringpaddedpants_alb = new ItemTemplate();
@@ -456,9 +456,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedpants_alb);
+                    GameServer.Database.AddObject(daringpaddedpants_alb);
             }
-            daringpaddedsleeves_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedsleeves_alb");
+            daringpaddedsleeves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedsleeves_alb");
             if (daringpaddedsleeves_alb == null)
             {
                 daringpaddedsleeves_alb = new ItemTemplate();
@@ -532,9 +532,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedsleeves_alb);
+                    GameServer.Database.AddObject(daringpaddedsleeves_alb);
             }
-            daringpaddedvest_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedvest_alb");
+            daringpaddedvest_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedvest_alb");
             if (daringpaddedvest_alb == null)
             {
                 daringpaddedvest_alb = new ItemTemplate();
@@ -608,9 +608,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedvest_alb);
+                    GameServer.Database.AddObject(daringpaddedvest_alb);
             }
-            daringleatherboots_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleatherboots_alb");
+            daringleatherboots_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherboots_alb");
             if (daringleatherboots_alb == null)
             {
                 daringleatherboots_alb = new ItemTemplate();
@@ -684,9 +684,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleatherboots_alb);
+                    GameServer.Database.AddObject(daringleatherboots_alb);
             }
-            daringleathercap_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleathercap_alb");
+            daringleathercap_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathercap_alb");
             if (daringleathercap_alb == null)
             {
                 daringleathercap_alb = new ItemTemplate();
@@ -760,9 +760,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleathercap_alb);
+                    GameServer.Database.AddObject(daringleathercap_alb);
             }
-            daringleathergloves_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleathergloves_alb");
+            daringleathergloves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathergloves_alb");
             if (daringleathergloves_alb == null)
             {
                 daringleathergloves_alb = new ItemTemplate();
@@ -836,9 +836,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleathergloves_alb);
+                    GameServer.Database.AddObject(daringleathergloves_alb);
             }
-            daringleatherjerkin_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleatherjerkin_alb");
+            daringleatherjerkin_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherjerkin_alb");
             if (daringleatherjerkin_alb == null)
             {
                 daringleatherjerkin_alb = new ItemTemplate();
@@ -912,9 +912,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleatherjerkin_alb);
+                    GameServer.Database.AddObject(daringleatherjerkin_alb);
             }
-            daringleatherleggings_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleatherleggings_alb");
+            daringleatherleggings_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherleggings_alb");
             if (daringleatherleggings_alb == null)
             {
                 daringleatherleggings_alb = new ItemTemplate();
@@ -988,9 +988,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleatherleggings_alb);
+                    GameServer.Database.AddObject(daringleatherleggings_alb);
             }
-            daringleathersleeves_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleathersleeves_alb");
+            daringleathersleeves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathersleeves_alb");
             if (daringleathersleeves_alb == null)
             {
                 daringleathersleeves_alb = new ItemTemplate();
@@ -1064,9 +1064,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleathersleeves_alb);
+                    GameServer.Database.AddObject(daringleathersleeves_alb);
             }
-            daringstuddedboots_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedboots_alb");
+            daringstuddedboots_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedboots_alb");
             if (daringstuddedboots_alb == null)
             {
                 daringstuddedboots_alb = new ItemTemplate();
@@ -1140,9 +1140,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedboots_alb);
+                    GameServer.Database.AddObject(daringstuddedboots_alb);
             }
-            daringstuddedcap_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedcap_alb");
+            daringstuddedcap_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedcap_alb");
             if (daringstuddedcap_alb == null)
             {
                 daringstuddedcap_alb = new ItemTemplate();
@@ -1216,9 +1216,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedcap_alb);
+                    GameServer.Database.AddObject(daringstuddedcap_alb);
             }
-            daringstuddedgloves_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedgloves_alb");
+            daringstuddedgloves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedgloves_alb");
             if (daringstuddedgloves_alb == null)
             {
                 daringstuddedgloves_alb = new ItemTemplate();
@@ -1292,9 +1292,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedgloves_alb);
+                    GameServer.Database.AddObject(daringstuddedgloves_alb);
             }
-            daringstuddedjerkin_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedjerkin_alb");
+            daringstuddedjerkin_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedjerkin_alb");
             if (daringstuddedjerkin_alb == null)
             {
                 daringstuddedjerkin_alb = new ItemTemplate();
@@ -1368,9 +1368,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedjerkin_alb);
+                    GameServer.Database.AddObject(daringstuddedjerkin_alb);
             }
-            daringstuddedleggings_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedleggings_alb");
+            daringstuddedleggings_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedleggings_alb");
             if (daringstuddedleggings_alb == null)
             {
                 daringstuddedleggings_alb = new ItemTemplate();
@@ -1444,9 +1444,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedleggings_alb);
+                    GameServer.Database.AddObject(daringstuddedleggings_alb);
             }
-            daringstuddedsleeves_alb = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedsleeves_alb");
+            daringstuddedsleeves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedsleeves_alb");
             if (daringstuddedsleeves_alb == null)
             {
                 daringstuddedsleeves_alb = new ItemTemplate();
@@ -1520,7 +1520,7 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedsleeves_alb);
+                    GameServer.Database.AddObject(daringstuddedsleeves_alb);
             }
 
 

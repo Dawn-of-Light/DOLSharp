@@ -42,7 +42,7 @@ namespace DOL.GS
         [ScriptLoadedEvent]
         public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
         {
-            DataObject[] specs = GameServer.Database.SelectAllObjects(typeof(DBChampSpecs));
+            var specs = GameServer.Database.SelectAllObjects<DBChampSpecs>();
             foreach (DBChampSpecs spec in specs)
             {
                 ChampSpec newspec = new ChampSpec(spec.IdLine, spec.SkillIndex, spec.Index, spec.Cost, spec.SpellID);

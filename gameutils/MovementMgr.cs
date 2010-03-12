@@ -20,6 +20,7 @@ using System.Collections;
 using System.Reflection;
 using DOL.Database;
 using log4net;
+using System.Collections.Generic;
 
 namespace DOL.GS.Movement
 {
@@ -44,8 +45,8 @@ namespace DOL.GS.Movement
         {
             SortedList sorted = new SortedList();
             pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-            DBPath dbpath = (DBPath)GameServer.Database.SelectObject(typeof(DBPath), "PathID='" + GameServer.Database.Escape(pathID) + "'");
-            DBPathPoint[] pathpoints = null;
+            DBPath dbpath = GameServer.Database.SelectObject<DBPath>("PathID='" + GameServer.Database.Escape(pathID) + "'");
+            IList<DBPathPoint> pathpoints = null;
             ePathType pathType = ePathType.Once;
 
             if (dbpath != null)
@@ -55,7 +56,7 @@ namespace DOL.GS.Movement
             }
             if (pathpoints == null)
             {
-                pathpoints = (DBPathPoint[])GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID='" + GameServer.Database.Escape(pathID) + "'");
+                pathpoints = GameServer.Database.SelectObjects<DBPathPoint>("PathID='" + GameServer.Database.Escape(pathID) + "'");
             }
 
             foreach (DBPathPoint point in pathpoints)
@@ -100,7 +101,7 @@ namespace DOL.GS.Movement
                 return;
 
             pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-            foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), "PathID='" + GameServer.Database.Escape(pathID) + "'"))
+            foreach (DBPath pp in GameServer.Database.SelectObjects<DBPath>("PathID='" + GameServer.Database.Escape(pathID) + "'"))
             {
                 GameServer.Database.DeleteObject(pp);
             }
@@ -110,7 +111,7 @@ namespace DOL.GS.Movement
             //Set the current pathpoint to the rootpoint!
             path = root;
             DBPath dbp = new DBPath(pathID, root.Type);
-            GameServer.Database.AddNewObject(dbp);
+            GameServer.Database.AddObject(dbp);
 
             int i = 1;
             do
@@ -119,7 +120,7 @@ namespace DOL.GS.Movement
                 dbpp.Step = i++;
                 dbpp.PathID = pathID;
                 dbpp.WaitTime = path.WaitTime;
-                GameServer.Database.AddNewObject(dbpp);
+                GameServer.Database.AddObject(dbpp);
                 path = path.Next;
             } while (path != null && path != root);
         }

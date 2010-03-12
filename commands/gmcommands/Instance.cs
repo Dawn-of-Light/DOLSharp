@@ -99,7 +99,7 @@ namespace DOL.GS.Commands
                         element.NPCTemplate = npctemplate;
 
                         //Save the element to database!
-                        GameServer.Database.AddNewObject(element);
+                        GameServer.Database.AddObject(element);
                         GameServer.Database.SaveObject(element);
 
                         //Dinberg: place a marker at this spot!
@@ -170,7 +170,7 @@ namespace DOL.GS.Commands
                         if (obj == null)
                             return;
                         string ObjectId = obj.Name + obj.Guild;
-                        DataObject o = GameServer.Database.FindObjectByKey(typeof(DBInstanceXElement), ObjectId);
+                        DataObject o = GameServer.Database.FindObjectByKey<DBInstanceXElement>(ObjectId);
 
                         if (o == null)
                         {

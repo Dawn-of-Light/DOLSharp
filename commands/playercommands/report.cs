@@ -58,7 +58,7 @@ namespace DOL.GS.Commands
 			BugReport report = new BugReport();
 			
 			//Andraste
-			BugReport[] reports=(BugReport[])GameServer.Database.SelectAllObjects(typeof(BugReport));
+			var reports = GameServer.Database.SelectAllObjects<BugReport>();
             bool found = false; int i = 0;
             for(i=0;i<MAX_REPORTS;i++)
 			{
@@ -72,11 +72,11 @@ namespace DOL.GS.Commands
 				return;
 			}
 			
-			//report.ID = GameServer.Database.GetObjectCount(typeof(BugReport)) + 1;
+			//report.ID = GameServer.Database.GetObjectCount<BugReport>() + 1;
 			report.ID = i;
 			report.Message = message;
 			report.Submitter = client.Player.Name + " [" + client.Account.Name + "]";
-			GameServer.Database.AddNewObject(report);
+			GameServer.Database.AddObject(report);
 			client.Player.Out.SendMessage("Report submitted, if this is not a bug report it will be ignored!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			if (ServerProperties.Properties.BUG_REPORT_EMAIL_ADDRESSES != "")

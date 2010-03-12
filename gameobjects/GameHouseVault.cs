@@ -166,7 +166,7 @@ namespace DOL.GS
 				String sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2}",
                     HouseMgr.GetOwner(CurrentHouse.DatabaseItem),
 					FirstSlot, LastSlot);
-				return (InventoryItem[])(GameServer.Database.SelectObjects(typeof(InventoryItem), sqlWhere));
+				return (InventoryItem[])(GameServer.Database.SelectObjects<InventoryItem>(sqlWhere));
 			}
 		}
 
@@ -235,7 +235,7 @@ namespace DOL.GS
 				toItem.SlotPosition = fromItem.SlotPosition;
 				toItem.OwnerID = HouseMgr.GetOwner( CurrentHouse.DatabaseItem );
 				toItem.AutoSave = true;
-				GameServer.Database.AddNewObject( toItem );
+				GameServer.Database.AddObject( toItem );
 			}
 
 			GameServer.Database.DeleteObject(fromItem);
@@ -280,7 +280,7 @@ namespace DOL.GS
 			fromItem.SlotPosition = (int)(toSlot) -
 				(int)(eInventorySlot.HousingInventory_First) +
 				FirstSlot;
-			GameServer.Database.AddNewObject(fromItem);
+			GameServer.Database.AddObject(fromItem);
 
 			updateItems.Add((int)toSlot, fromItem);
 			return updateItems;
@@ -455,7 +455,7 @@ namespace DOL.GS
 			hookedItem.Heading = (ushort)(heading % 4096);
 			hookedItem.ItemTemplateID = m_templateID;
 			hookedItem.Index = (byte)Index;
-			GameServer.Database.AddNewObject(hookedItem);
+			GameServer.Database.AddObject(hookedItem);
 
 			// Now add the vault to the house.
 

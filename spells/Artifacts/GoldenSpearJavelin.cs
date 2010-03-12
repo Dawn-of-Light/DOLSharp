@@ -34,7 +34,7 @@ namespace DOL.GS.Spells
         public GoldenSpearJavelin(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
-            _artefJavelin = (ItemTemplate) GameServer.Database.SelectObject(typeof(ItemTemplate), "Id_nb='Artef_Javelin'") ?? Javelin;
+            _artefJavelin = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Artef_Javelin'") ?? Javelin;
             item = new InventoryItem();
             item.CopyFrom(_artefJavelin);
         }
@@ -43,7 +43,7 @@ namespace DOL.GS.Spells
         {
             get
             {
-                _artefJavelin = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "Artef_Javelin");
+                _artefJavelin = (ItemTemplate) GameServer.Database.FindObjectByKey<ItemTemplate>("Artef_Javelin");
                 if(_artefJavelin == null)
                 {
                     if(log.IsWarnEnabled) log.Warn("Could not find Artef_Javelin, loading it ...");

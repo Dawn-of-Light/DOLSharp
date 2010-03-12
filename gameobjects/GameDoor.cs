@@ -107,7 +107,7 @@ namespace DOL.GS
 		{
 			DBDoor obj = null;
 			if (InternalID != null)
-				obj = (DBDoor)GameServer.Database.FindObjectByKey(typeof(DBDoor), InternalID);
+				obj = GameServer.Database.FindObjectByKey<DBDoor>(InternalID);
 			if (obj == null)
 				obj = new DBDoor();
 			obj.Name = this.Name;
@@ -122,7 +122,7 @@ namespace DOL.GS
 			obj.Locked = this.Locked;
 			if (InternalID == null)
 			{
-				GameServer.Database.AddNewObject(obj);
+				GameServer.Database.AddObject(obj);
 				InternalID = obj.ObjectId;
 			}
 			else

@@ -439,7 +439,7 @@ namespace DOL.GS.Quests.Albion
 			#region DefineItems
 
 			// item db check
-			noteFormColm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "colms_note");
+			noteFormColm = GameServer.Database.FindObjectByKey<ItemTemplate>("colms_note");
 			if (noteFormColm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -461,11 +461,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(noteFormColm);
+					GameServer.Database.AddObject(noteFormColm);
 			}
 
 			// item db check
-			fairyPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ire_fairy_plans");
+			fairyPlans = GameServer.Database.FindObjectByKey<ItemTemplate>("ire_fairy_plans");
 			if (fairyPlans == null)
 			{
 				if (log.IsWarnEnabled)
@@ -486,10 +486,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(fairyPlans);
+					GameServer.Database.AddObject(fairyPlans);
 			}
 
-			translatedPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "translated_ire_fairy_plans");
+			translatedPlans = GameServer.Database.FindObjectByKey<ItemTemplate>("translated_ire_fairy_plans");
 			if (translatedPlans == null)
 			{
 				if (log.IsWarnEnabled)
@@ -510,11 +510,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(translatedPlans);
+					GameServer.Database.AddObject(translatedPlans);
 			}
 
 			// item db check
-			recruitsLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_legs");
+			recruitsLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_studded_legs");
 			if (recruitsLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -561,11 +561,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsLegs);
+					GameServer.Database.AddObject(recruitsLegs);
 			}
 
 			// item db check
-			recruitsPants = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_pants");
+			recruitsPants = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_quilted_pants");
 			if (recruitsPants == null)
 			{
 				recruitsPants = new ItemTemplate();
@@ -612,7 +612,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsPants);
+					GameServer.Database.AddObject(recruitsPants);
 			}
 
 			#endregion

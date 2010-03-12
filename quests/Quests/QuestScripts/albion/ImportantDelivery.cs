@@ -265,7 +265,7 @@ namespace DOL.GS.Quests.Albion
 			ticketToBombard = CreateTicketTo("ticket to North Camelot Gates", "hs_ludlow_northcamelotgates");
 
 
-			sackOfSupplies = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "sack_of_supplies");
+			sackOfSupplies = GameServer.Database.FindObjectByKey<ItemTemplate>("sack_of_supplies");
 			if (sackOfSupplies == null)
 			{
 				sackOfSupplies = new ItemTemplate();
@@ -286,10 +286,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(sackOfSupplies);
+					GameServer.Database.AddObject(sackOfSupplies);
 			}
 
-			crateOfVegetables = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "crate_of_vegetables");
+			crateOfVegetables = GameServer.Database.FindObjectByKey<ItemTemplate>("crate_of_vegetables");
 			if (crateOfVegetables == null)
 			{
 				crateOfVegetables = new ItemTemplate();
@@ -310,11 +310,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(crateOfVegetables);
+					GameServer.Database.AddObject(crateOfVegetables);
 			}
 
 			// item db check
-			recruitsCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_cloak");
+			recruitsCloak = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_cloak");
 			if (recruitsCloak == null)
 			{
 				recruitsCloak = new ItemTemplate();
@@ -354,7 +354,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsCloak);
+					GameServer.Database.AddObject(recruitsCloak);
 			}
 
 			#endregion

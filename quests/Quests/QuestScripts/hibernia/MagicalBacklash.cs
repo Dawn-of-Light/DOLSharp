@@ -81,7 +81,7 @@ namespace DOL.GS.Quests.Hibernia
             #region defineItems
 
             // item db check
-            RecruitsShortSword = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_short_sword_hib");
+            RecruitsShortSword = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_short_sword_hib");
             if (RecruitsShortSword == null)
             {
                 RecruitsShortSword = new ItemTemplate();
@@ -128,9 +128,9 @@ namespace DOL.GS.Quests.Hibernia
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsShortSword);
+                    GameServer.Database.AddObject(RecruitsShortSword);
             }
-            RecruitsDirk = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_dirk");
+            RecruitsDirk = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_dirk");
             if (RecruitsDirk == null)
             {
                 RecruitsDirk = new ItemTemplate();
@@ -177,9 +177,9 @@ namespace DOL.GS.Quests.Hibernia
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsDirk);
+                    GameServer.Database.AddObject(RecruitsDirk);
             }
-            RecruitsClub = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_club");
+            RecruitsClub = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_club");
             if (RecruitsClub == null)
             {
                 RecruitsClub = new ItemTemplate();
@@ -226,9 +226,9 @@ namespace DOL.GS.Quests.Hibernia
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsClub);
+                    GameServer.Database.AddObject(RecruitsClub);
             }
-            RecruitsStaff = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_staff");
+            RecruitsStaff = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_staff");
             if (RecruitsStaff == null)
             {
                 RecruitsStaff = new ItemTemplate();
@@ -275,7 +275,7 @@ namespace DOL.GS.Quests.Hibernia
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsStaff);
+                    GameServer.Database.AddObject(RecruitsStaff);
             }
             #endregion
 

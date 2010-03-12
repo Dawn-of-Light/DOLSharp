@@ -24,6 +24,7 @@ using DOL.Database;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using log4net;
+using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -62,10 +63,11 @@ namespace DOL.GS
 				m_OTDXMob = new HybridDictionary(500);
 				lock(m_OTDXMob)
 				{
-					DataObject[] m_lootOTDs=null;
+					IList<DBLootOTD> lootOTDs;
+
 					try
 					{
-						m_lootOTDs = GameServer.Database.SelectAllObjects(typeof(DBLootOTD));
+						lootOTDs = GameServer.Database.SelectAllObjects<DBLootOTD>();
 					}
 					catch(Exception e)
 					{
@@ -74,9 +76,9 @@ namespace DOL.GS
 						return false;
 					}
 
-					if(m_lootOTDs != null)
+					if(lootOTDs != null)
 					{
-						foreach(DBLootOTD dbLootOTD in m_lootOTDs)
+						foreach(DBLootOTD dbLootOTD in lootOTDs)
 						{
 							m_OTDXMob.Add(dbLootOTD.MobName,dbLootOTD);
 						}
@@ -105,7 +107,7 @@ namespace DOL.GS
 				{
 					if ( (lootOTD.MinLevel < player.Level))
 					{
-						DataObject obj = GameServer.Database.SelectObject(typeof(DBOTDXCharacter), "CharacterName = '" + GameServer.Database.Escape(player.Name) + "' AND LootOTD_ID = '" + GameServer.Database.Escape(lootOTD.ObjectId) + "'");
+						DataObject obj = GameServer.Database.SelectObject<DBOTDXCharacter>("CharacterName = '" + GameServer.Database.Escape(player.Name) + "' AND LootOTD_ID = '" + GameServer.Database.Escape(lootOTD.ObjectId) + "'");
 						if (obj != null) continue;
 
 						string[] sclass = lootOTD.SerializedClassAllowed.Split(',');
@@ -126,7 +128,7 @@ namespace DOL.GS
 						DBOTDXCharacter OtdxChar = new DBOTDXCharacter();
 						OtdxChar.CharacterName = player.Name;
 						OtdxChar.LootOTD_ID = lootOTD.ObjectId;
-						GameServer.Database.AddNewObject(OtdxChar);
+						GameServer.Database.AddObject(OtdxChar);
 					}
 				}
 			}

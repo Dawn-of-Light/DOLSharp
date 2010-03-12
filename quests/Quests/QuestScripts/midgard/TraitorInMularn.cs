@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Midgard
 			#region defineItems
 
 			// item db check
-			necklaceOfDoppelganger = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "necklace_of_the_doppelganger");
+			necklaceOfDoppelganger = GameServer.Database.FindObjectByKey<ItemTemplate>("necklace_of_the_doppelganger");
 			if (necklaceOfDoppelganger == null)
 			{
 				if (log.IsWarnEnabled)
@@ -209,11 +209,11 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(necklaceOfDoppelganger);
+					GameServer.Database.AddObject(necklaceOfDoppelganger);
 			}
 
 			// item db check
-			askefruerPlans = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_plans");
+			askefruerPlans = GameServer.Database.FindObjectByKey<ItemTemplate>("askefruer_plans");
 			if (askefruerPlans == null)
 			{
 				if (log.IsWarnEnabled)
@@ -234,11 +234,11 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(askefruerPlans);
+					GameServer.Database.AddObject(askefruerPlans);
 			}
 
 			// item db check
-			recruitsBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_boots_mid");
+			recruitsBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_studded_boots_mid");
 			if (recruitsBoots == null)
 			{
 				recruitsBoots = new ItemTemplate();
@@ -285,11 +285,11 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsBoots);
+					GameServer.Database.AddObject(recruitsBoots);
 			}
 
 			// item db check
-			recruitsQuiltedBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_boots");
+			recruitsQuiltedBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_quilted_boots");
 			if (recruitsQuiltedBoots == null)
 			{
 				recruitsQuiltedBoots = new ItemTemplate();
@@ -336,7 +336,7 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsQuiltedBoots);
+					GameServer.Database.AddObject(recruitsQuiltedBoots);
 			}
 
 			#endregion

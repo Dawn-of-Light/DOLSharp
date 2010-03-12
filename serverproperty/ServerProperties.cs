@@ -1095,7 +1095,7 @@ namespace DOL.GS.ServerProperties
 		public static object Load(ServerPropertyAttribute attrib)
 		{
 			string key = attrib.Key;
-			ServerProperty property = GameServer.Database.SelectObject(typeof(ServerProperty), "`Key` = '" + GameServer.Database.Escape(key) + "'") as ServerProperty;
+			ServerProperty property = GameServer.Database.SelectObject<ServerProperty>("`Key` = '" + GameServer.Database.Escape(key) + "'") as ServerProperty;
 			if (property == null)
 			{
 				property = new ServerProperty();
@@ -1104,7 +1104,7 @@ namespace DOL.GS.ServerProperties
 				property.Description = attrib.Description;
 				property.DefaultValue = attrib.DefaultValue.ToString();
 				property.Value = attrib.DefaultValue.ToString();
-				GameServer.Database.AddNewObject(property);
+				GameServer.Database.AddObject(property);
 				log.Debug("Cannot find server property " + key + " creating it");
 			}
 			log.Debug("Loading " + key + " Value is " + property.Value);

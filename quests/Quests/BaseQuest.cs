@@ -333,7 +333,7 @@ namespace DOL.GS.Quests
 
 		protected static ItemTemplate CreateTicketTo(String location)
 		{
-			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "ticket_to_" + GameServer.Database.Escape(location.ToLower()));
+			ItemTemplate ticket = GameServer.Database.FindObjectByKey<ItemTemplate>("ticket_to_" + GameServer.Database.Escape(location.ToLower()));
 			if (ticket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -360,14 +360,14 @@ namespace DOL.GS.Quests
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				GameServer.Database.AddNewObject(ticket);
+				GameServer.Database.AddObject(ticket);
 			}
 			return ticket;
 		}
 
 		protected static ItemTemplate CreateTicketTo(String destination, String ticket_Id)
 		{
-			ItemTemplate ticket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), GameServer.Database.Escape(ticket_Id.ToLower()));
+			ItemTemplate ticket = GameServer.Database.FindObjectByKey<ItemTemplate>(GameServer.Database.Escape(ticket_Id.ToLower()));
 			if (ticket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -394,7 +394,7 @@ namespace DOL.GS.Quests
 				ticket.Weight = 0;
 
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(ticket);
+					GameServer.Database.AddObject(ticket);
 			}
 			return ticket;
 		}

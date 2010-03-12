@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			wellPreservedBones = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "well_preserved_bone");
+			wellPreservedBones = GameServer.Database.FindObjectByKey<ItemTemplate>("well_preserved_bone");
 			if (wellPreservedBones == null)
 			{
 				wellPreservedBones = new ItemTemplate();
@@ -209,11 +209,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(wellPreservedBones);
+					GameServer.Database.AddObject(wellPreservedBones);
 			}
 
 			// item db check
-			twoWellPreservedBones = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "two_well_preserved_bones");
+			twoWellPreservedBones = GameServer.Database.FindObjectByKey<ItemTemplate>("two_well_preserved_bones");
 			if (twoWellPreservedBones == null)
 			{
 				twoWellPreservedBones = new ItemTemplate();
@@ -244,7 +244,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(twoWellPreservedBones);
+					GameServer.Database.AddObject(twoWellPreservedBones);
 			}
 
 			#endregion

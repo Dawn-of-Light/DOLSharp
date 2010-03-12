@@ -136,7 +136,7 @@ namespace DOL.GS.Quests
 			if(m_dbQuest.IsValid)
 				GameServer.Database.SaveObject(m_dbQuest);
 			else
-				GameServer.Database.AddNewObject(m_dbQuest);
+				GameServer.Database.AddObject(m_dbQuest);
 		}
 		  
 		/// <summary>
@@ -146,7 +146,7 @@ namespace DOL.GS.Quests
 		{
 			if(!m_dbQuest.IsValid) return;
 
-			DBQuest dbQuest = (DBQuest) GameServer.Database.FindObjectByKey(typeof(DBQuest), m_dbQuest.ObjectId);
+			DBQuest dbQuest = (DBQuest) GameServer.Database.FindObjectByKey<DBQuest>(m_dbQuest.ObjectId);
 			if(dbQuest!=null)
 				GameServer.Database.DeleteObject(dbQuest);
 		}

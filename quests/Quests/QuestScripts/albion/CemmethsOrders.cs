@@ -80,7 +80,7 @@ namespace DOL.GS.Quests.Albion
             #region defineItems
 
             // item db check
-            RecruitsQuiltedVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_quilted_vest");
+            RecruitsQuiltedVest = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_quilted_vest");
             if (RecruitsQuiltedVest == null)
             {
                 RecruitsQuiltedVest = new ItemTemplate();
@@ -124,9 +124,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsQuiltedVest);
+                    GameServer.Database.AddObject(RecruitsQuiltedVest);
             }
-            RecruitsLeatherJerkin = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_leather_jerkin");
+            RecruitsLeatherJerkin = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_leather_jerkin");
             if (RecruitsLeatherJerkin == null)
             {
                 RecruitsLeatherJerkin = new ItemTemplate();
@@ -170,9 +170,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsLeatherJerkin);
+                    GameServer.Database.AddObject(RecruitsLeatherJerkin);
             }
-            RecruitsStuddedVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_studded_vest");
+            RecruitsStuddedVest = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_studded_vest");
             if (RecruitsStuddedVest == null)
             {
                 RecruitsStuddedVest = new ItemTemplate();
@@ -216,7 +216,7 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsStuddedVest);
+                    GameServer.Database.AddObject(RecruitsStuddedVest);
             }
             #endregion
 

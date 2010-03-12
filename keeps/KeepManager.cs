@@ -67,10 +67,10 @@ namespace DOL.GS.Keeps
 			{
 				m_keeps.Clear();
 
-				DataObject[] keeps = GameServer.Database.SelectAllObjects(typeof(DBKeep));
+				var keeps = GameServer.Database.SelectAllObjects<DBKeep>();
 				foreach (DBKeep datakeep in keeps)
 				{
-					if (WorldMgr.GetRegion((ushort)datakeep.Region) == null)
+					if (WorldMgr.GetRegion(datakeep.Region) == null)
 						continue;
 
                     //Dinberg - checking whether the keep is old or new.
@@ -85,7 +85,7 @@ namespace DOL.GS.Keeps
                     //assumption keeps and towers are linked before population. So we will settle for a second
                     //query. It's on server start, so it wont impact running performance.
 
-                    DBKeepComponent[] currentKeepComponents = (DBKeepComponent[])GameServer.Database.SelectObjects(typeof(DBKeepComponent), "`KeepID` = '" + datakeep.KeepID + "'");
+                    var currentKeepComponents = GameServer.Database.SelectObjects<DBKeepComponent>("`KeepID` = '" + datakeep.KeepID + "'");
 				
                     //Pass through, and depending on the outcome of the components, determine the 'age' of the keep.
                     foreach (DBKeepComponent dum in currentKeepComponents)
@@ -141,7 +141,7 @@ namespace DOL.GS.Keeps
 
 				bool missingKeeps = false;
 
-				DBKeepComponent[] keepcomponents = (DBKeepComponent[])GameServer.Database.SelectAllObjects(typeof(DBKeepComponent));
+				var keepcomponents = GameServer.Database.SelectAllObjects<DBKeepComponent>();
 				foreach (DBKeepComponent component in keepcomponents)
 				{
 					// if use old keeps don't try to load new components
@@ -207,7 +207,7 @@ namespace DOL.GS.Keeps
 
 			Hashtable hookPointList = new Hashtable();
 
-			DBKeepHookPoint[] dbkeepHookPoints = (DBKeepHookPoint[])GameServer.Database.SelectAllObjects(typeof(DBKeepHookPoint));
+			var dbkeepHookPoints = GameServer.Database.SelectAllObjects<DBKeepHookPoint>();
 			foreach (DBKeepHookPoint dbhookPoint in dbkeepHookPoints)
 			{
 				ArrayList currentArray;
@@ -256,7 +256,7 @@ namespace DOL.GS.Keeps
 				{
 					foreach (GameKeepHookPoint hp in component.HookPoints.Values)
 					{
-						DBKeepHookPointItem item = (DBKeepHookPointItem)GameServer.Database.SelectObject(typeof(DBKeepHookPointItem), "KeepID = '" + component.Keep.KeepID + "' AND ComponentID = '" + component.ID + "' AND HookPointID = '" + hp.ID + "'");
+						DBKeepHookPointItem item = GameServer.Database.SelectObject<DBKeepHookPointItem>("KeepID = '" + component.Keep.KeepID + "' AND ComponentID = '" + component.ID + "' AND HookPointID = '" + hp.ID + "'");
 						if (item != null)
 							HookPointItem.Invoke(component.HookPoints[hp.ID] as GameKeepHookPoint, item.ClassType);
 					}
@@ -763,7 +763,7 @@ namespace DOL.GS.Keeps
 
 		private static void LoadBattlegroundCaps()
 		{
-			Battleground[] bgs = (Battleground[])GameServer.Database.SelectAllObjects(typeof(Battleground));
+			var bgs = GameServer.Database.SelectAllObjects<Battleground>();
 			foreach (Battleground bg in bgs)
 				m_battlegrounds.Add(bg);
 		}
@@ -790,7 +790,7 @@ namespace DOL.GS.Keeps
 
 			if (location != "")
 			{
-				Teleport t = (Teleport)GameServer.Database.SelectObject(typeof(Teleport), "`TeleportID` = '" + location + "'");
+				Teleport t = GameServer.Database.SelectObject<Teleport>("`TeleportID` = '" + location + "'");
 				if (t != null)
 					player.MoveTo((ushort)t.RegionID, t.X, t.Y, t.Z, (ushort)t.Heading);
 			}

@@ -42,7 +42,7 @@ namespace DOL.GS.DatabaseConverters
 			log.Info("Database Version 5 Convert Started");
 			log.Info("This fixes some errors with the area classtypes");
 
-			DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBArea));
+			var objs = GameServer.Database.SelectAllObjects<DBArea>();
 			int count = 0;
 			foreach (DBArea area in objs)
 			{

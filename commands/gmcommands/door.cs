@@ -126,7 +126,7 @@ namespace DOL.GS.Commands
 		private void add( GameClient client, GameDoor targetDoor)
 		{
 
-			DBDoor DOOR = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "InternalID = '" + DoorID + "'");
+			DBDoor DOOR = GameServer.Database.SelectObject<DBDoor>("InternalID = '" + DoorID + "'");
 
 			if (DOOR != null)
 			{
@@ -149,7 +149,7 @@ namespace DOL.GS.Commands
 						door.Z = targetDoor.Z;
 						door.Heading = targetDoor.Heading;
 						door.Health = 2545;
-						GameServer.Database.AddNewObject(door);
+						GameServer.Database.AddObject(door);
 						((GameLiving)targetDoor).AddToWorld( );
 						client.Player.Out.SendMessage("Added door ID:" + DoorID + "to the database", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						//DoorMgr.Init( );
@@ -178,7 +178,7 @@ namespace DOL.GS.Commands
 						door.Y = client.Player.Y;
 						door.Z = client.Player.Z;
 						door.Heading = client.Player.Heading;
-						GameServer.Database.AddNewObject(door);
+						GameServer.Database.AddObject(door);
 						((GameLiving)targetDoor).AddToWorld( );
 						client.Player.Out.SendMessage("Added door " + DoorID + " to the database", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						return;
@@ -189,7 +189,7 @@ namespace DOL.GS.Commands
 			private void delete ( GameClient client, GameDoor targetDoor)
 			{
 
-				DBDoor DOOR = (DBDoor)GameServer.Database.SelectObject(typeof(DBDoor), "InternalID = '" + DoorID + "'");
+				DBDoor DOOR = GameServer.Database.SelectObject<DBDoor>("InternalID = '" + DoorID + "'");
 
 				if( DOOR != null )
 				{
