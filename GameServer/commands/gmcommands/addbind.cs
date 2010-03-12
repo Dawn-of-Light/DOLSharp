@@ -51,7 +51,7 @@ namespace DOL.GS.Commands
 			bp.Z = client.Player.Z;
 			bp.Region = client.Player.CurrentRegionID;
 			bp.Radius = bindRadius;
-			GameServer.Database.AddNewObject(bp);
+			GameServer.Database.AddObject(bp);
 			client.Player.CurrentRegion.AddArea(new Area.BindArea("bind point", bp));
 			DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.AddBind.BindPointAdded", bp.X, bp.Y, bp.Z, bp.Radius, bp.Region));
 		}

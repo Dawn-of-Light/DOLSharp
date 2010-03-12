@@ -42,17 +42,17 @@ namespace DOL.GS.DatabaseConverters
 			log.Info("Database Version 2 Convert Started");
 
 			log.Info("Converting Styles");
-			DBStyle[] styles = (DBStyle[])GameServer.Database.SelectAllObjects(typeof(DBStyle));
+			var styles = GameServer.Database.SelectAllObjects<DBStyle>();
 			foreach (DBStyle style in styles)
 			{
 				style.Icon = style.ID;
 
 				GameServer.Database.SaveObject(style);
 			}
-			log.Info(styles.Length + " Styles Processed");
+			log.Info(styles.Count + " Styles Processed");
 
 			log.Info("Converting Mobs");
-			Mob[] mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob), "`Realm` = '6'");
+			var mobs = GameServer.Database.SelectObjects<Mob>("`Realm` = '6'");
 			foreach (Mob mob in mobs)
 			{
 				if ((mob.Flags & (uint)GameNPC.eFlags.PEACE) == 0)
@@ -72,7 +72,7 @@ namespace DOL.GS.DatabaseConverters
 
 				GameServer.Database.SaveObject(mob);
 			}
-			log.Info(mobs.Length + " Mobs Processed");
+			log.Info(mobs.Count + " Mobs Processed");
 
 			log.Info("Database Version 2 Convert Finished");
 		}

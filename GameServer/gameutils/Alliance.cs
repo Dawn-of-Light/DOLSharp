@@ -68,7 +68,7 @@ namespace DOL.GS
 				myguild.AllianceId = m_dballiance.ObjectId;
 				m_dballiance.DBguilds = null;
 				//sirru 23.12.06 Add the new object instead of trying to save it
-				GameServer.Database.AddNewObject(m_dballiance);
+				GameServer.Database.AddObject(m_dballiance);
 				GameServer.Database.FillObjectRelations(m_dballiance);
 				//sirru 23.12.06 save changes to db for each guild
 				SaveIntoDatabase();

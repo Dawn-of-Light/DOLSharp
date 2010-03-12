@@ -23,15 +23,15 @@ namespace DOL.Database.UniqueID
 	/// <summary>
 	/// Generates an UniqeID for every Object.
 	/// </summary>
-	public class IdGenerator
+	public class IDGenerator
 	{
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <returns>a new unique Key</returns>
-		public static string generateId()
+		public static string GenerateID()
 		{
-			return System.Guid.NewGuid().ToString();
+			return Guid.NewGuid().ToString();
 		}
 	}
 }

@@ -1958,7 +1958,7 @@ namespace DOL.GS
 		{
 			if (InternalID != null)
 			{
-				Mob mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+				Mob mob = GameServer.Database.FindObjectByKey<Mob>(InternalID);
 				if (mob != null)
 					GameServer.Database.DeleteObject(mob);
 			}
@@ -1979,7 +1979,7 @@ namespace DOL.GS
 			Mob mob = null;
 			if (InternalID != null)
 			{
-				mob = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+				mob = GameServer.Database.FindObjectByKey<Mob>(InternalID);
 			}
 
 			if (mob == null)
@@ -2052,7 +2052,7 @@ namespace DOL.GS
 
 			if (InternalID == null)
 			{
-				GameServer.Database.AddNewObject(mob);
+				GameServer.Database.AddObject(mob);
 				InternalID = mob.ObjectId;
 			}
 			else

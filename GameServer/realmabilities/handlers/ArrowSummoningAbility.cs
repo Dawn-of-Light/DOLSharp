@@ -92,7 +92,7 @@ namespace DOL.GS.RealmAbilities
 		[ScriptLoadedEvent]
 		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
-			ItemTemplate arrow_summoning1 = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "arrow_summoning1");
+			ItemTemplate arrow_summoning1 = GameServer.Database.FindObjectByKey<ItemTemplate>("arrow_summoning1");
 			if (arrow_summoning1 == null)
 			{
 				arrow_summoning1 = new ItemTemplate();
@@ -116,11 +116,11 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning1.IsTradable = false;
 				arrow_summoning1.MaxCount = 20;
 				arrow_summoning1.Id_nb = "arrow_summoning1";
-				GameServer.Database.AddNewObject(arrow_summoning1);
+				GameServer.Database.AddObject(arrow_summoning1);
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + arrow_summoning1.Id_nb);
 			}
-			ItemTemplate arrow_summoning2 = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "arrow_summoning2");
+			ItemTemplate arrow_summoning2 = GameServer.Database.FindObjectByKey<ItemTemplate>("arrow_summoning2");
 			if (arrow_summoning2 == null)
 			{
 				arrow_summoning2 = new ItemTemplate();
@@ -144,11 +144,11 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning2.IsTradable = false;
 				arrow_summoning2.MaxCount = 20;
 				arrow_summoning2.Id_nb = "arrow_summoning2";
-				GameServer.Database.AddNewObject(arrow_summoning2);
+				GameServer.Database.AddObject(arrow_summoning2);
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + arrow_summoning2.Id_nb);
 			}
-			ItemTemplate arrow_summoning3 = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "arrow_summoning3");
+			ItemTemplate arrow_summoning3 = GameServer.Database.FindObjectByKey<ItemTemplate>("arrow_summoning3");
 			if (arrow_summoning3 == null)
 			{
 				arrow_summoning3 = new ItemTemplate();
@@ -172,7 +172,7 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning3.IsTradable = false;
 				arrow_summoning3.MaxCount = 20;
 				arrow_summoning3.Id_nb = "arrow_summoning3";
-				GameServer.Database.AddNewObject(arrow_summoning3);
+				GameServer.Database.AddObject(arrow_summoning3);
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + arrow_summoning3.Id_nb);
 			}

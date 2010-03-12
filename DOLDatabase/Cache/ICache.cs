@@ -16,41 +16,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
 
-namespace DOL.Database.Cache {
-	
+namespace DOL.Database.Cache
+{
 	/// <summary>
 	/// Implementors define a caching algorithm.
 	/// </summary>
 	/// <remarks>
 	/// All implementations MUST be threadsafe
 	/// </remarks>
-	public interface ICache {
-
+	public interface ICache
+	{
 		/// <summary>
 		/// Gets a Collection of all Key that are in the Cache at the Moment
 		/// </summary>
 		/// <value>All Keys that are in the Cache</value>
-
-		ICollection Keys
-		{
-			get;
-		}
+		ICollection Keys { get; }
 
 		/// <summary>
 		/// Gets or sets cached data
 		/// </summary>
 		/// <value>The cached object or <c>null</c></value>
 		/// <exception cref="CacheException"></exception>
-		object this [object key] 
-		{
-			get;
-			set;
-		}
-	
+		object this[object key] { get; set; }
 	}
-
-
 }

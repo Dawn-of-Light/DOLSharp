@@ -255,7 +255,7 @@ namespace DOL.GS
 			// this is bad - IDs are all over the place; there's no guarantee that existing templates have IDs in the range 0 - (Count -1)
 			// if a proper templateID is not externally set before saving, it will overwrite any existing template with this ID
 			// TODO : change when pk is made to be int
-			return GameServer.Database.GetObjectCount(typeof(DBNpcTemplate));
+			return GameServer.Database.GetObjectCount<DBNpcTemplate>();
 		}
 
 
@@ -528,7 +528,7 @@ namespace DOL.GS
 
 		public virtual void SaveIntoDatabase()
 		{
-			DBNpcTemplate tmp = (DBNpcTemplate)GameServer.Database.FindObjectByKey(typeof(DBNpcTemplate), TemplateId);
+			DBNpcTemplate tmp = GameServer.Database.FindObjectByKey<DBNpcTemplate>(TemplateId);
 			bool add = false;
 
 			if (tmp == null)
@@ -619,7 +619,7 @@ namespace DOL.GS
 			}
 
 			if (add)
-				GameServer.Database.AddNewObject(tmp);
+				GameServer.Database.AddObject(tmp);
 			else
 				GameServer.Database.SaveObject(tmp);
 		}

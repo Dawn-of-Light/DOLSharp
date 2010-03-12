@@ -222,7 +222,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			spiderSilkenRobe = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spider_silken_robe");
+			spiderSilkenRobe = GameServer.Database.FindObjectByKey<ItemTemplate>("spider_silken_robe");
 			if (spiderSilkenRobe == null)
 			{
 				spiderSilkenRobe = new ItemTemplate();
@@ -268,10 +268,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(spiderSilkenRobe);
+					GameServer.Database.AddObject(spiderSilkenRobe);
 			}
 
-			ringedSpiderChitinTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ringed_spider_chitin_tunic");
+			ringedSpiderChitinTunic = GameServer.Database.FindObjectByKey<ItemTemplate>("ringed_spider_chitin_tunic");
 			if (ringedSpiderChitinTunic == null)
 			{
 				ringedSpiderChitinTunic = new ItemTemplate();
@@ -316,10 +316,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(ringedSpiderChitinTunic);
+					GameServer.Database.AddObject(ringedSpiderChitinTunic);
 			}
 
-			studdedSpiderEyeVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "studded_spider_eye_vest");
+			studdedSpiderEyeVest = GameServer.Database.FindObjectByKey<ItemTemplate>("studded_spider_eye_vest");
 			if (studdedSpiderEyeVest == null)
 			{
 				studdedSpiderEyeVest = new ItemTemplate();
@@ -364,10 +364,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(studdedSpiderEyeVest);
+					GameServer.Database.AddObject(studdedSpiderEyeVest);
 			}
 
-			spiderEmblazonedTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spider_emblazoned_tunic");
+			spiderEmblazonedTunic = GameServer.Database.FindObjectByKey<ItemTemplate>("spider_emblazoned_tunic");
 			if (spiderEmblazonedTunic == null)
 			{
 				spiderEmblazonedTunic = new ItemTemplate();
@@ -411,10 +411,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(spiderEmblazonedTunic);
+					GameServer.Database.AddObject(spiderEmblazonedTunic);
 			}
 
-			embossedSpiderTunic = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "embossed_spider_tunic");
+			embossedSpiderTunic = GameServer.Database.FindObjectByKey<ItemTemplate>("embossed_spider_tunic");
 			if (embossedSpiderTunic == null)
 			{
 				embossedSpiderTunic = new ItemTemplate();
@@ -459,10 +459,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(embossedSpiderTunic);
+					GameServer.Database.AddObject(embossedSpiderTunic);
 			}
 
-			bloatedFang = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bloated_spider_fang");
+			bloatedFang = GameServer.Database.FindObjectByKey<ItemTemplate>("bloated_spider_fang");
 			if (bloatedFang == null)
 			{
 				if (log.IsWarnEnabled)
@@ -480,10 +480,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bloatedFang);
+					GameServer.Database.AddObject(bloatedFang);
 			}
 
-			spiderChitin = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "arachneida_spider_chitin");
+			spiderChitin = GameServer.Database.FindObjectByKey<ItemTemplate>("arachneida_spider_chitin");
 			if (spiderChitin == null)
 			{
 				if (log.IsWarnEnabled)
@@ -501,7 +501,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(spiderChitin);
+					GameServer.Database.AddObject(spiderChitin);
 			}
 
 			#endregion

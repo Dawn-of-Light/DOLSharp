@@ -24,14 +24,9 @@ namespace DOL.Database.Attributes
 	/// Attribute to indicate an Relationship to another DatabaseObject.
 	/// </summary>
 	/// 
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
 	public class Relation : Attribute
 	{
-		private string localField;
-		private string remoteField;
-		private bool autoLoad;
-		private bool autoDelete;
-
 		/// <summary>
 		/// Constructor for the Relation-Attribute.
 		/// Standard settings are:
@@ -40,43 +35,23 @@ namespace DOL.Database.Attributes
 		/// </summary>
 		public Relation()
 		{
-			localField = null;
-			remoteField = null;
-			autoLoad = true;
-			autoDelete = false;
+			LocalField = null;
+			RemoteField = null;
+			AutoLoad = true;
+			AutoDelete = false;
 		}
 
 		/// <summary>
 		/// Property to set/get the Name of the LocalField for the Relation
 		/// </summary>
 		/// <value>Name of the Local Field</value>
-		public string LocalField
-		{
-			get
-			{
-				return localField;
-			}
-			set
-			{
-				localField = value;
-			}
-		}
+		public string LocalField { get; set; }
 
 		/// <summary>
 		/// Property to set/get the RemoteField of the Relation
 		/// </summary>
 		/// <value>Name of the Remote Field</value>
-		public string RemoteField
-		{
-			get
-			{
-				return remoteField;
-			}
-			set
-			{
-				remoteField = value;
-			}
-		}
+		public string RemoteField { get; set; }
 
 		/// <summary>
 		/// Property to set/get Autoload
@@ -84,17 +59,7 @@ namespace DOL.Database.Attributes
 		/// If false you have to fill the Relation with Database.FillObjectRelations(DataObject)
 		/// </summary>
 		/// <value><c>true</c> if Relation sould be filled automatical</value>
-		public bool AutoLoad
-		{
-			get
-			{
-				return autoLoad;
-			}
-			set
-			{
-				autoLoad = value;
-			}
-		}
+		public bool AutoLoad { get; set; }
 
 		/// <summary>
 		/// AutoDelete-Property to set/get AutoDelete
@@ -102,11 +67,6 @@ namespace DOL.Database.Attributes
 		/// If set to false, the related Objects are NOT deleted.
 		/// </summary>
 		/// <value><c>true</c> if related objects are deleted as well</value>
-		public bool AutoDelete
-		{
-			get { return autoDelete; }
-			set { autoDelete = value; }
-		}
-
+		public bool AutoDelete { get; set; }
 	}
 }

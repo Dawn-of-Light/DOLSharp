@@ -241,7 +241,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		snakevenom = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "snakevenom");
+		snakevenom = GameServer.Database.FindObjectByKey<ItemTemplate>("snakevenom");
 			if (snakevenom == null)
 			{
 				snakevenom = new ItemTemplate();
@@ -315,7 +315,7 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(snakevenom);
+					GameServer.Database.AddObject(snakevenom);
 				}
 			
 

@@ -186,7 +186,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            drum = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "finely_crafted_drum");
+            drum = GameServer.Database.FindObjectByKey<ItemTemplate>("finely_crafted_drum");
             if (drum == null)
             {
                 if (log.IsWarnEnabled)
@@ -205,7 +205,7 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(drum);
+                    GameServer.Database.AddObject(drum);
             }
 
 

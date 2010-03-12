@@ -174,7 +174,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region Item Declarations
 
-			GreenMaw_key = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "GreenMaw_key");
+			GreenMaw_key = GameServer.Database.FindObjectByKey<ItemTemplate>("GreenMaw_key");
 			if (GreenMaw_key == null)
 			{
 				if (log.IsWarnEnabled)
@@ -196,12 +196,12 @@ namespace DOL.GS.Quests.Hibernia
 				GreenMaw_key.Weight = 12;
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(GreenMaw_key);
+					GameServer.Database.AddObject(GreenMaw_key);
 				}
 
 			}
 // end item			
-			RangerEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicBoots");
+			RangerEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("RangerEpicBoots");
 			if (RangerEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -239,13 +239,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(RangerEpicBoots);
+					GameServer.Database.AddObject(RangerEpicBoots);
 				}
 
 			}
 //end item
 			//Mist Shrouded Coif 
-			RangerEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicHelm");
+			RangerEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("RangerEpicHelm");
 			if (RangerEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -283,13 +283,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(RangerEpicHelm);
+					GameServer.Database.AddObject(RangerEpicHelm);
 				}
 
 			}
 //end item
 			//Mist Shrouded Gloves 
-			RangerEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicGloves");
+			RangerEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("RangerEpicGloves");
 			if (RangerEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -327,12 +327,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(RangerEpicGloves);
+					GameServer.Database.AddObject(RangerEpicGloves);
 				}
 
 			}
 			//Mist Shrouded Hauberk 
-			RangerEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicVest");
+			RangerEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("RangerEpicVest");
 			if (RangerEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -370,12 +370,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(RangerEpicVest);
+					GameServer.Database.AddObject(RangerEpicVest);
 				}
 
 			}
 			//Mist Shrouded Legs 
-			RangerEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicLegs");
+			RangerEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("RangerEpicLegs");
 			if (RangerEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -413,13 +413,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(RangerEpicLegs);
+					GameServer.Database.AddObject(RangerEpicLegs);
 				}
 				;
 
 			}
 			//Mist Shrouded Sleeves 
-			RangerEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "RangerEpicArms");
+			RangerEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("RangerEpicArms");
 			if (RangerEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -457,12 +457,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(RangerEpicArms);
+					GameServer.Database.AddObject(RangerEpicArms);
 				}
 
 			}
 //Hero Epic Sleeves End
-			HeroEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicBoots");
+			HeroEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("HeroEpicBoots");
 			if (HeroEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -500,13 +500,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(HeroEpicBoots);
+					GameServer.Database.AddObject(HeroEpicBoots);
 				}
 
 			}
 //end item
 			//Misted Coif 
-			HeroEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicHelm");
+			HeroEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("HeroEpicHelm");
 			if (HeroEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -544,13 +544,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(HeroEpicHelm);
+					GameServer.Database.AddObject(HeroEpicHelm);
 				}
 
 			}
 //end item
 			//Misted Gloves 
-			HeroEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicGloves");
+			HeroEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("HeroEpicGloves");
 			if (HeroEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -588,12 +588,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(HeroEpicGloves);
+					GameServer.Database.AddObject(HeroEpicGloves);
 				}
 
 			}
 			//Misted Hauberk 
-			HeroEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicVest");
+			HeroEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("HeroEpicVest");
 			if (HeroEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -628,12 +628,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(HeroEpicVest);
+					GameServer.Database.AddObject(HeroEpicVest);
 				}
 
 			}
 			//Misted Legs 
-			HeroEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicLegs");
+			HeroEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("HeroEpicLegs");
 			if (HeroEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -671,12 +671,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(HeroEpicLegs);
+					GameServer.Database.AddObject(HeroEpicLegs);
 				}
 
 			}
 			//Misted Sleeves 
-			HeroEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "HeroEpicArms");
+			HeroEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("HeroEpicArms");
 			if (HeroEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -714,11 +714,11 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(HeroEpicArms);
+					GameServer.Database.AddObject(HeroEpicArms);
 				}
 
 			}
-			WardenEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicBoots");
+			WardenEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("WardenEpicBoots");
 			if (WardenEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -756,13 +756,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(WardenEpicBoots);
+					GameServer.Database.AddObject(WardenEpicBoots);
 				}
 
 			}
 //end item
 			//Mystical Coif 
-			WardenEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicHelm");
+			WardenEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("WardenEpicHelm");
 			if (WardenEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -800,13 +800,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(WardenEpicHelm);
+					GameServer.Database.AddObject(WardenEpicHelm);
 				}
 
 			}
 //end item
 			//Mystical Gloves 
-			WardenEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicGloves");
+			WardenEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("WardenEpicGloves");
 			if (WardenEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -845,12 +845,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(WardenEpicGloves);
+					GameServer.Database.AddObject(WardenEpicGloves);
 				}
 
 			}
 			//Mystical Hauberk 
-			WardenEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicVest");
+			WardenEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("WardenEpicVest");
 			if (WardenEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -888,12 +888,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(WardenEpicVest);
+					GameServer.Database.AddObject(WardenEpicVest);
 				}
 
 			}
 			//Mystical Legs 
-			WardenEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicLegs");
+			WardenEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("WardenEpicLegs");
 			if (WardenEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -931,12 +931,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(WardenEpicLegs);
+					GameServer.Database.AddObject(WardenEpicLegs);
 				}
 
 			}
 			//Mystical Sleeves 
-			WardenEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "WardenEpicArms");
+			WardenEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("WardenEpicArms");
 			if (WardenEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -974,11 +974,11 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(WardenEpicArms);
+					GameServer.Database.AddObject(WardenEpicArms);
 				}
 
 			}
-			EldritchEpicBoots = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicBoots");
+			EldritchEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("EldritchEpicBoots");
 			if (EldritchEpicBoots == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1016,13 +1016,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EldritchEpicBoots);
+					GameServer.Database.AddObject(EldritchEpicBoots);
 				}
 
 			}
 //end item
 			//Mist Woven Coif 
-			EldritchEpicHelm = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicHelm");
+			EldritchEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("EldritchEpicHelm");
 			if (EldritchEpicHelm == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1060,13 +1060,13 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EldritchEpicHelm);
+					GameServer.Database.AddObject(EldritchEpicHelm);
 				}
 
 			}
 //end item
 			//Mist Woven Gloves 
-			EldritchEpicGloves = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicGloves");
+			EldritchEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("EldritchEpicGloves");
 			if (EldritchEpicGloves == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1104,12 +1104,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EldritchEpicGloves);
+					GameServer.Database.AddObject(EldritchEpicGloves);
 				}
 
 			}
 			//Mist Woven Hauberk 
-			EldritchEpicVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicVest");
+			EldritchEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("EldritchEpicVest");
 			if (EldritchEpicVest == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1144,12 +1144,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EldritchEpicVest);
+					GameServer.Database.AddObject(EldritchEpicVest);
 				}
 
 			}
 			//Mist Woven Legs 
-			EldritchEpicLegs = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicLegs");
+			EldritchEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("EldritchEpicLegs");
 			if (EldritchEpicLegs == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1187,12 +1187,12 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EldritchEpicLegs);
+					GameServer.Database.AddObject(EldritchEpicLegs);
 				}
 
 			}
 			//Mist Woven Sleeves 
-			EldritchEpicArms = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "EldritchEpicArms");
+			EldritchEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("EldritchEpicArms");
 			if (EldritchEpicArms == null)
 			{
 				if (log.IsWarnEnabled)
@@ -1230,7 +1230,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (SAVE_INTO_DATABASE)
 				{
-					GameServer.Database.AddNewObject(EldritchEpicArms);
+					GameServer.Database.AddObject(EldritchEpicArms);
 				}
 
 			}
@@ -1239,12 +1239,12 @@ namespace DOL.GS.Quests.Hibernia
 
             // Graveen: we assume items are existing in the DB
             // TODO: insert here creation of items if they do not exists
-            MaulerHibEpicBoots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerHibEpicBoots");
-            MaulerHibEpicHelm = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerHibEpicHelm");
-            MaulerHibEpicGloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerHibEpicGloves");
-            MaulerHibEpicVest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerHibEpicVest");
-            MaulerHibEpicLegs = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerHibEpicLegs");
-            MaulerHibEpicArms = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "MaulerHibEpicArms");
+            MaulerHibEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("MaulerHibEpicBoots");
+            MaulerHibEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("MaulerHibEpicHelm");
+            MaulerHibEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("MaulerHibEpicGloves");
+            MaulerHibEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("MaulerHibEpicVest");
+            MaulerHibEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("MaulerHibEpicLegs");
+            MaulerHibEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("MaulerHibEpicArms");
 
 //Item Descriptions End
 

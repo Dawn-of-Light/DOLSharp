@@ -303,7 +303,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			dragonflyWhip = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "dragonfly_whip");
+			dragonflyWhip = GameServer.Database.FindObjectByKey<ItemTemplate>("dragonfly_whip");
 			if (dragonflyWhip == null)
 			{
 				dragonflyWhip = new ItemTemplate();
@@ -324,11 +324,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(dragonflyWhip);
+					GameServer.Database.AddObject(dragonflyWhip);
 			}
 
 			// item db check
-			recruitsVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_vest");
+			recruitsVest = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_studded_vest");
 			if (recruitsVest == null)
 			{
 				recruitsVest = new ItemTemplate();
@@ -372,11 +372,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsVest);
+					GameServer.Database.AddObject(recruitsVest);
 			}
 
 			// item db check
-			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_vest");
+			recruitsQuiltedVest = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_quilted_vest");
 			if (recruitsQuiltedVest == null)
 			{
 				recruitsQuiltedVest = new ItemTemplate();
@@ -419,7 +419,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsQuiltedVest);
+					GameServer.Database.AddObject(recruitsQuiltedVest);
 			}
 
 			#endregion

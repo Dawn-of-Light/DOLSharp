@@ -227,7 +227,7 @@ namespace DOL.GS.Commands
 												return;
 											}
 
-											ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), templateID);
+											ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
 											if (template == null)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Add.ItemTemplateNoFound", templateID));
@@ -246,7 +246,7 @@ namespace DOL.GS.Commands
 												return;
 											}
 
-											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
+											MerchantItem item = GameServer.Database.SelectObject<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
 											if (item == null)
 											{
 												item = new MerchantItem();
@@ -255,7 +255,7 @@ namespace DOL.GS.Commands
 												item.SlotPosition = (int)slot;
 												item.PageNumber = page;
 
-												GameServer.Database.AddNewObject(item);
+												GameServer.Database.AddObject(item);
 											}
 											else
 											{
@@ -305,7 +305,7 @@ namespace DOL.GS.Commands
 												return;
 											}
 
-											MerchantItem item = (MerchantItem)GameServer.Database.SelectObject(typeof(MerchantItem), "ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
+											MerchantItem item = GameServer.Database.SelectObject<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
 											if (item == null)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Remove.SlotInPageIsAEmpty", slot, page));
@@ -342,8 +342,8 @@ namespace DOL.GS.Commands
 											}
 											DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Merchant.Articles.Delete.DeletingListTemp"));
 
-											MerchantItem[] merchantitems = (MerchantItem[])GameServer.Database.SelectObjects(typeof(MerchantItem), "ItemsListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "'");
-											if (merchantitems.Length > 0)
+											var merchantitems = GameServer.Database.SelectObjects<MerchantItem>("ItemsListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "'");
+											if (merchantitems.Count > 0)
 											{
 												foreach (MerchantItem item in merchantitems)
 												{

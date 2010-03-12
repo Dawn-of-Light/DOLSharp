@@ -534,14 +534,14 @@ namespace DOL.GS
 				return;
 
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
-			WorldObject[] staticObjs = (WorldObject[])GameServer.Database.SelectObjects(typeof(WorldObject), "Region = " + ID);
-			BindPoint[] bindPoints = (BindPoint[])GameServer.Database.SelectObjects(typeof(BindPoint), "Region = " + ID);
-			int count = mobObjs.Length + staticObjs.Length;
+			var staticObjs = GameServer.Database.SelectObjects<WorldObject>("Region = " + ID);
+			var bindPoints = GameServer.Database.SelectObjects<BindPoint>("Region = " + ID);
+			int count = mobObjs.Length + staticObjs.Count;
 			if (count > 0) PreAllocateRegionSpace(count + 100);
-			int myItemCount = staticObjs.Length;
+			int myItemCount = staticObjs.Count;
 			int myMobCount = 0;
 			int myMerchantCount = 0;
-			int myBindCount = bindPoints.Length;
+			int myBindCount = bindPoints.Count;
 			string allErrors = string.Empty;
 
 			if (mobObjs.Length > 0)
@@ -654,7 +654,7 @@ namespace DOL.GS
 				}
 			}
 
-			if (staticObjs.Length > 0)
+			if (staticObjs.Count > 0)
 			{
 				foreach (WorldObject item in staticObjs)
 				{

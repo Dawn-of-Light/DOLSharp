@@ -27,65 +27,31 @@ namespace DOL.Database.Attributes
 	[AttributeUsage(AttributeTargets.Class)]
 	public class DataTable : Attribute
 	{
-		private string tableName;
-		private bool precaching;
-		private string viewName;
-
 		/// <summary>
 		/// Constrctor of DataTable sets the TableName-Property to null.
 		/// </summary>
 		public DataTable()
 		{
-			tableName = null;
-			precaching = false;
+			TableName = null;
+			PreCache = false;
 		}
 
 		/// <summary>
 		/// TableName-Property if null the Classname is used as Tablename.
 		/// </summary>
 		/// <value>The TableName that sould be used or <c>null</c> for Classname</value>
-		public string TableName
-		{
-			get
-			{
-				return tableName;
-			}
-			set
-			{
-				tableName=value;
-			}
-		}
-		
+		public string TableName { get; set; }
+
 		/// <summary>
 		/// The view is based on the ViewTarget table
 		/// </summary>
-		public string ViewName
-		{
-			get
-			{
-				return viewName;
-			}
-			set
-			{
-				viewName=value;
-			}
-		}
+		public string ViewName { get; set; }
 
 		/// <summary>
 		/// If preloading data is required for performance in Findobjectbykey
 		/// Uses more memory then
 		/// </summary>
 		/// <value>true if enabled</value>
-		public bool PreCache
-		{
-			get
-			{
-				return precaching;
-			}
-			set
-			{
-				precaching=value;
-			}
-		}
+		public bool PreCache { get; set; }
 	}
 }

@@ -19,51 +19,56 @@
 using System;
 using System.Collections;
 
-namespace DOL.Database.Cache 
+namespace DOL.Database.Cache
 {
-
 	/// <summary>
 	/// A simple <c>Hashtable</c> based cache
 	/// </summary>
-	public class SimpleCache : ICache 
+	public class SimpleCache : ICache
 	{
-		private Hashtable cache = new Hashtable();
+		private readonly Hashtable _cache = Hashtable.Synchronized(new Hashtable());
+
+		#region ICache Members
 
 		/// <summary>
 		/// Return's all Keys that are in the Stored in the Cache
 		/// </summary>
 		/// <value>All Keys that are in the Cache</value>
-		public ICollection Keys 
+		public ICollection Keys
 		{
-			get 
-			{
-				return cache.Keys;
-			}
+			get { return _cache.Keys; }
 		}
 
 		/// <summary>
 		/// Gets or sets cached data
 		/// </summary>
 		/// <value>The cached object or <c>null</c></value>
-		public object this[object key] 
+		public object this[object key]
 		{
-			get 
+			get
 			{
-				WeakReference wr = cache[key] as WeakReference;
-				if (wr == null || !wr.IsAlive) 
+				var wr = _cache[key] as WeakReference;
+				if (wr == null || !wr.IsAlive)
 				{
-					cache.Remove(key);
+					_cache.Remove(key);
 					return null;
 				}
-				return wr.Target; 
+
+				return wr.Target;
 			}
-			set 
-			{ 
-				if(value == null)
-					cache.Remove(key);
-				else 
-					cache[key] = new WeakReference(value);
+			set
+			{
+				if (value == null)
+				{
+					_cache.Remove(key);
+				}
+				else
+				{
+					_cache[key] = new WeakReference(value);
+				}
 			}
 		}
+
+		#endregion
 	}
 }

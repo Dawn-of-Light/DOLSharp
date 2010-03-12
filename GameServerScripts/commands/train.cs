@@ -59,8 +59,7 @@ namespace DOL.GS.Scripts.Commands
 
             string line = string.Join(" ", args, 1, args.Length - 2);
 
-            DBSpecialization dbSpec = (DBSpecialization)GameServer.Database.
-                SelectObject(typeof(DBSpecialization), string.Format("KeyName LIKE \"{0}%\"", line));
+            var dbSpec = GameServer.Database.SelectObject<DBSpecialization>(string.Format("KeyName LIKE \"{0}%\"", line));
 
 			Specialization spec = null;
 

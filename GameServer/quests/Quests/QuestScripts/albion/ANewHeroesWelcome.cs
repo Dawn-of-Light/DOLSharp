@@ -80,7 +80,7 @@ namespace DOL.GS.Quests.Albion
             #region defineItems
 
             // item db check
-            RecruitsCloak = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "k109_recruits_cloak");
+            RecruitsCloak = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_cloak");
             if (RecruitsCloak == null)
             {
                 RecruitsCloak = new ItemTemplate();
@@ -112,9 +112,9 @@ namespace DOL.GS.Quests.Albion
                 RecruitsCloak.MaxDurability = 50000;
 
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(RecruitsCloak);
+                    GameServer.Database.AddObject(RecruitsCloak);
             }
-            LetterToPompin = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "letter_to_pompin");
+            LetterToPompin = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_to_pompin");
             if (LetterToPompin == null)
             {
                 LetterToPompin = new ItemTemplate();
@@ -127,7 +127,7 @@ namespace DOL.GS.Quests.Albion
                 LetterToPompin.Id_nb = "letter_to_pompin";
 
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(LetterToPompin);
+                    GameServer.Database.AddObject(LetterToPompin);
             }
             #endregion
 

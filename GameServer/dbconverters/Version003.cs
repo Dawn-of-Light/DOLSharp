@@ -47,7 +47,7 @@ namespace DOL.GS.DatabaseConverters
 				return;
 			}
 
-			ItemTemplate[] templates = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "`SpellID` != '0'");
+			var templates = GameServer.Database.SelectObjects<ItemTemplate>("`SpellID` != '0'");
 
 			int count = 0;
 			foreach (ItemTemplate template in templates)
@@ -79,7 +79,7 @@ namespace DOL.GS.DatabaseConverters
 
 			log.Info("Converted " + count + " templates");
 
-			InventoryItem[] items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), "SpellID != 0");
+			var items = GameServer.Database.SelectObjects<InventoryItem>("SpellID != 0");
 			count = 0;
 			foreach (InventoryItem item in items)
 			{

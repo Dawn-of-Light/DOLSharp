@@ -71,14 +71,14 @@ namespace DOL.GS
 
 		public void SaveAggroToFaction(string charID)
 		{
-			DBFactionAggroLevel dbfactionAggroLevel = (DBFactionAggroLevel)GameServer.Database.SelectObject(typeof(DBFactionAggroLevel), "CharacterID = '" + GameServer.Database.Escape(charID) + "' AND FactionID =" + this.ID);
+			DBFactionAggroLevel dbfactionAggroLevel = GameServer.Database.SelectObject<DBFactionAggroLevel>("CharacterID = '" + GameServer.Database.Escape(charID) + "' AND FactionID =" + this.ID);
 			if (dbfactionAggroLevel == null)
 			{
 				dbfactionAggroLevel = new DBFactionAggroLevel();
 				dbfactionAggroLevel.AggroLevel = (int)m_playerxFaction[charID];
 				dbfactionAggroLevel.CharacterID = charID;
 				dbfactionAggroLevel.FactionID = this.ID;
-				GameServer.Database.AddNewObject(dbfactionAggroLevel);
+				GameServer.Database.AddObject(dbfactionAggroLevel);
 			}
 			else
 			{

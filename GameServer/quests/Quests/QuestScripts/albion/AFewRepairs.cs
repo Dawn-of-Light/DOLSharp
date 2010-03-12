@@ -218,7 +218,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            elderWood = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "elder_wood");
+            elderWood = GameServer.Database.FindObjectByKey<ItemTemplate>("elder_wood");
             if (elderWood == null)
             {
                 if (log.IsWarnEnabled)
@@ -237,10 +237,10 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(elderWood);
+                    GameServer.Database.AddObject(elderWood);
             }
 
-            boogeyTeeth = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "boogey_teeth");
+            boogeyTeeth = GameServer.Database.FindObjectByKey<ItemTemplate>("boogey_teeth");
             if (boogeyTeeth == null)
             {
                 if (log.IsWarnEnabled)
@@ -259,7 +259,7 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(boogeyTeeth);
+                    GameServer.Database.AddObject(boogeyTeeth);
             }
 
             #endregion

@@ -93,7 +93,7 @@ namespace DOL.GS.Commands
 						dbfaction.Name = name;
 						dbfaction.ID = (max + 1);
 						//log.Info("add obj to db with id :" + dbfaction.ID);
-						GameServer.Database.AddNewObject(dbfaction);
+						GameServer.Database.AddObject(dbfaction);
 						//log.Info("add obj to db");
 						myfaction = new Faction();
 						myfaction.LoadFromDatabase(dbfaction);
@@ -156,7 +156,7 @@ namespace DOL.GS.Commands
 						dblinkedfaction.FactionID = myfaction.ID;
 						dblinkedfaction.LinkedFactionID = linkedfaction.ID;
 						dblinkedfaction.IsFriend = true;
-						GameServer.Database.AddNewObject(dblinkedfaction);
+						GameServer.Database.AddObject(dblinkedfaction);
 						myfaction.AddFriendFaction(linkedfaction);
 					}
 					break;
@@ -194,7 +194,7 @@ namespace DOL.GS.Commands
 						dblinkedfaction.FactionID = myfaction.ID;
 						dblinkedfaction.LinkedFactionID = linkedfaction.ID;
 						dblinkedfaction.IsFriend = false;
-						GameServer.Database.AddNewObject(dblinkedfaction);
+						GameServer.Database.AddObject(dblinkedfaction);
 						myfaction.AddEnemyFaction(linkedfaction);
 					}
 					break;

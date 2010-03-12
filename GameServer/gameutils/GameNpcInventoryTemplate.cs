@@ -306,7 +306,7 @@ namespace DOL.GS
 			try
 			{
 				m_npcEquipmentCache = new Dictionary<string, List<NPCEquipment>>(1000);
-				foreach (NPCEquipment equip in GameServer.Database.SelectAllObjects(typeof(NPCEquipment)))
+				foreach (NPCEquipment equip in GameServer.Database.SelectAllObjects<NPCEquipment>())
 				{
 					List<NPCEquipment> list;
 					if (m_npcEquipmentCache.ContainsKey(equip.TemplateID))
@@ -343,7 +343,7 @@ namespace DOL.GS
 					if (templateID == null)
 						throw new ArgumentNullException("templateID");
 
-					DataObject[] npcEquipment = GameServer.Database.SelectObjects(typeof(NPCEquipment), "TemplateID = '" + GameServer.Database.Escape(templateID) + "'");
+					var npcEquipment = GameServer.Database.SelectObjects<NPCEquipment>("TemplateID = '" + GameServer.Database.Escape(templateID) + "'");
 
 					// delete removed item templates
 					foreach (NPCEquipment npcItem in npcEquipment)
@@ -380,7 +380,7 @@ namespace DOL.GS
 							npcItem.Effect = item.Effect;
 							npcItem.TemplateID = templateID;
 							npcItem.Extension = item.Extension;
-							GameServer.Database.AddNewObject(npcItem);
+							GameServer.Database.AddObject(npcItem);
 						}
 					}
 
