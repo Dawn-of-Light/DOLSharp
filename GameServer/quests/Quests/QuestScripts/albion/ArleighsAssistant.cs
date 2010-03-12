@@ -192,7 +192,7 @@ namespace DOL.GS.Quests.Albion
 
 
 
-            spritelingToes = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "spriteling_toes");
+            spritelingToes = GameServer.Database.FindObjectByKey<ItemTemplate>("spriteling_toes");
             if (spritelingToes == null)
              {
                  if (log.IsWarnEnabled)
@@ -211,10 +211,10 @@ namespace DOL.GS.Quests.Albion
                  //it will be recreated each time it is not found, just comment the following
                  //line if you rather not modify your database
                  if (SAVE_INTO_DATABASE)
-                     GameServer.Database.AddNewObject(spritelingToes);
+                     GameServer.Database.AddObject(spritelingToes);
              }
 
-             wormRot = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "worm_rot");
+             wormRot = GameServer.Database.FindObjectByKey<ItemTemplate>("worm_rot");
              if (wormRot == null)
              {
                  if (log.IsWarnEnabled)
@@ -232,10 +232,10 @@ namespace DOL.GS.Quests.Albion
                  //it will be recreated each time it is not found, just comment the following
                  //line if you rather not modify your database
                  if (SAVE_INTO_DATABASE)
-                     GameServer.Database.AddNewObject(wormRot);
+                     GameServer.Database.AddObject(wormRot);
              }
 
-             snakeSkin = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "green_skin");
+             snakeSkin = GameServer.Database.FindObjectByKey<ItemTemplate>("green_skin");
              if (snakeSkin == null)
              {
                  if (log.IsWarnEnabled)
@@ -254,7 +254,7 @@ namespace DOL.GS.Quests.Albion
                  //it will be recreated each time it is not found, just comment the following
                  //line if you rather not modify your database
                  if (SAVE_INTO_DATABASE)
-                     GameServer.Database.AddNewObject(snakeSkin);
+                     GameServer.Database.AddObject(snakeSkin);
              }
             #endregion
 
@@ -656,7 +656,7 @@ namespace DOL.GS.Quests.Albion
             base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
             //Give reward to player here ...
-            ItemTemplate dye = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "light_" + getRandomDyeColor() + "_cloth_dye");
+            ItemTemplate dye = GameServer.Database.FindObjectByKey<ItemTemplate>("light_" + getRandomDyeColor() + "_cloth_dye");
             if (dye != null)
                 GiveItem(arleighPenn, m_questPlayer, dye);
 

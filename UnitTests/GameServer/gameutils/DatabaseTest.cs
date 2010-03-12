@@ -40,10 +40,13 @@ namespace DOL.GS.Tests
 		[Test] public void TestSelect()
 		{
 			Console.WriteLine("TestSelect();");
-			DataObject[] obs = GameServer.Database.SelectAllObjects(typeof(ItemTemplate));
+
+			var obs = GameServer.Database.SelectAllObjects<ItemTemplate>();
 			Console.WriteLine("ItemTemplates Type="+obs.GetType());
-			MerchantItem[] items = (MerchantItem[])GameServer.Database.SelectAllObjects(typeof(MerchantItem));
+
+			var items = GameServer.Database.SelectAllObjects<MerchantItem>();
 			Console.WriteLine("MerchantItems Type="+items.GetType());
+			
 		}			
 
 	}

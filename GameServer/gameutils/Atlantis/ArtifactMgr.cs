@@ -60,17 +60,17 @@ namespace DOL.GS
         {
 			// Load artifacts and books.
 
-            DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(Artifact));
+            var artifactDbos = GameServer.Database.SelectAllObjects<Artifact>();
 			m_artifacts = new Dictionary<String, Artifact>();
-            foreach (Artifact artifact in dbo)
+            foreach (Artifact artifact in artifactDbos)
                 m_artifacts.Add(artifact.ArtifactID, artifact);
 
 			// Load artifact versions.
 
-            dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactXItem));
+            var artifactItemDbos = GameServer.Database.SelectAllObjects<ArtifactXItem>();
 			m_artifactVersions = new Dictionary<String, List<ArtifactXItem>>();
 			List<ArtifactXItem> versionList;
-            foreach (ArtifactXItem artifactVersion in dbo)
+			foreach (ArtifactXItem artifactVersion in artifactItemDbos)
             {
 				if (m_artifactVersions.ContainsKey(artifactVersion.ArtifactID))
 					versionList = m_artifactVersions[artifactVersion.ArtifactID];
@@ -84,9 +84,9 @@ namespace DOL.GS
 
 			// Load artifact bonuses.
 
-			dbo = GameServer.Database.SelectAllObjects(typeof(ArtifactBonus));
+			var artifactBonusDbos = GameServer.Database.SelectAllObjects<ArtifactBonus>();
 			m_artifactBonuses = new List<ArtifactBonus>();
-			foreach (ArtifactBonus artifactBonus in dbo)
+			foreach (ArtifactBonus artifactBonus in artifactBonusDbos)
 				m_artifactBonuses.Add(artifactBonus);
 
 			// Install event handlers.
@@ -459,7 +459,7 @@ namespace DOL.GS
                 ItemTemplate itemTemplate;
                 foreach (ArtifactXItem version in allVersions)
                 {
-                    itemTemplate = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), version.ItemID);
+                    itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(version.ItemID);
 
                     if (itemTemplate == null)
                     {

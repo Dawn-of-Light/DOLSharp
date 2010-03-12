@@ -36,7 +36,7 @@ namespace DOL.GS
 			Hashtable usedSlots = new Hashtable();
 
 			// 0 = for all classes, then quickcheck if it contains the classid
-			StarterEquipment[] items = (StarterEquipment[])GameServer.Database.SelectObjects(typeof(StarterEquipment), "`Class` = '0' OR `Class` LIKE '%" + c.Class + "%'");
+			var items = GameServer.Database.SelectObjects<StarterEquipment>("`Class` = '0' OR `Class` LIKE '%" + c.Class + "%'");
 
 			foreach (StarterEquipment item in items)
 			{
@@ -119,7 +119,7 @@ namespace DOL.GS
 						}
 					}
 				}
-				GameServer.Database.AddNewObject(inventoryItem);
+				GameServer.Database.AddObject(inventoryItem);
 			}
 		}
 	}

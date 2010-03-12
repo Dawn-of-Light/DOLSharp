@@ -153,7 +153,7 @@ namespace DOL.GS.GameEvents
 				newstat.Upload = (int)outRate/1024;
 				newstat.Download = (int)inRate / 1024;
 				newstat.Memory = totalmem / 1024;
-				GameServer.Database.AddNewObject(newstat);
+				GameServer.Database.AddObject(newstat);
 				GameServer.Database.SaveObject(newstat);
 			}
 			catch (Exception e)

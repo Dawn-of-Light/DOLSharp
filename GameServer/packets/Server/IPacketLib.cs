@@ -555,7 +555,7 @@ namespace DOL.GS.PacketHandler
 		void SendHousePayRentDialog(string title);
 		void SendToggleHousePoints(House house);
 		void SendRentReminder(House house);
-		void SendMarketExplorerWindow(InventoryItem[] items, byte page, byte maxpage);
+		void SendMarketExplorerWindow(IList<InventoryItem> items, byte page, byte maxpage);
 		void SendMarketExplorerWindow();
 		void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper);
 

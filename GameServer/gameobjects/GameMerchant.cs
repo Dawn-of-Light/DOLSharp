@@ -330,7 +330,7 @@ namespace DOL.GS
 		{
 			Mob merchant = null;
 			if (InternalID != null)
-				merchant = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+				merchant = GameServer.Database.FindObjectByKey<Mob>(InternalID);
 			if (merchant == null)
 				merchant = new Mob();
 
@@ -367,7 +367,7 @@ namespace DOL.GS
 
 			if (InternalID == null)
 			{
-				GameServer.Database.AddNewObject(merchant);
+				GameServer.Database.AddObject(merchant);
 				InternalID = merchant.ObjectId;
 			}
 			else
@@ -383,7 +383,7 @@ namespace DOL.GS
 		{
 			if (InternalID != null)
 			{
-				Mob merchant = (Mob)GameServer.Database.FindObjectByKey(typeof(Mob), InternalID);
+				Mob merchant = GameServer.Database.FindObjectByKey<Mob>(InternalID);
 				if (merchant != null)
 					GameServer.Database.DeleteObject(merchant);
 			}

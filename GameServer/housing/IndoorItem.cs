@@ -106,7 +106,7 @@ namespace DOL.GS.Housing
             this.Emblem = dbitem.Emblem;
 			this.Position = dbitem.Position;
 			this.Placemode = dbitem.Placemode;
-			this.BaseItem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), dbitem.BaseItemID);
+			this.BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(dbitem.BaseItemID);
 			this.DatabaseItem = dbitem;
 		}
 

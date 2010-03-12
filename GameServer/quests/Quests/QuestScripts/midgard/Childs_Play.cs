@@ -155,7 +155,7 @@ namespace DOL.GS.Quests.Midgard
 
             #region defineItems
 
-            daringpaddedboots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedboots");
+            daringpaddedboots = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedboots");
             if (daringpaddedboots == null)
             {
                 daringpaddedboots = new ItemTemplate();
@@ -229,9 +229,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedboots);
+                    GameServer.Database.AddObject(daringpaddedboots);
             }
-            daringpaddedcap = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedcap");
+            daringpaddedcap = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedcap");
             if (daringpaddedcap == null)
             {
                 daringpaddedcap = new ItemTemplate();
@@ -305,9 +305,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedcap);
+                    GameServer.Database.AddObject(daringpaddedcap);
             }
-            daringpaddedgloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedgloves");
+            daringpaddedgloves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedgloves");
             if (daringpaddedgloves == null)
             {
                 daringpaddedgloves = new ItemTemplate();
@@ -381,9 +381,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedgloves);
+                    GameServer.Database.AddObject(daringpaddedgloves);
             }
-            daringpaddedpants = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedpants");
+            daringpaddedpants = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedpants");
             if (daringpaddedpants == null)
             {
                 daringpaddedpants = new ItemTemplate();
@@ -457,9 +457,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedpants);
+                    GameServer.Database.AddObject(daringpaddedpants);
             }
-            daringpaddedsleeves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedsleeves");
+            daringpaddedsleeves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedsleeves");
             if (daringpaddedsleeves == null)
             {
                 daringpaddedsleeves = new ItemTemplate();
@@ -533,9 +533,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedsleeves);
+                    GameServer.Database.AddObject(daringpaddedsleeves);
             }
-            daringpaddedvest = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringpaddedvest");
+            daringpaddedvest = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedvest");
             if (daringpaddedvest == null)
             {
                 daringpaddedvest = new ItemTemplate();
@@ -609,9 +609,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringpaddedvest);
+                    GameServer.Database.AddObject(daringpaddedvest);
             }
-            daringleatherboots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleatherboots");
+            daringleatherboots = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherboots");
             if (daringleatherboots == null)
             {
                 daringleatherboots = new ItemTemplate();
@@ -685,9 +685,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleatherboots);
+                    GameServer.Database.AddObject(daringleatherboots);
             }
-            daringleathercap = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleathercap");
+            daringleathercap = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathercap");
             if (daringleathercap == null)
             {
                 daringleathercap = new ItemTemplate();
@@ -761,9 +761,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleathercap);
+                    GameServer.Database.AddObject(daringleathercap);
             }
-            daringleathergloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleathergloves");
+            daringleathergloves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathergloves");
             if (daringleathergloves == null)
             {
                 daringleathergloves = new ItemTemplate();
@@ -837,9 +837,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleathergloves);
+                    GameServer.Database.AddObject(daringleathergloves);
             }
-            daringleatherjerkin = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleatherjerkin");
+            daringleatherjerkin = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherjerkin");
             if (daringleatherjerkin == null)
             {
                 daringleatherjerkin = new ItemTemplate();
@@ -913,9 +913,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleatherjerkin);
+                    GameServer.Database.AddObject(daringleatherjerkin);
             }
-            daringleatherleggings = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleatherleggings");
+            daringleatherleggings = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherleggings");
             if (daringleatherleggings == null)
             {
                 daringleatherleggings = new ItemTemplate();
@@ -989,9 +989,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleatherleggings);
+                    GameServer.Database.AddObject(daringleatherleggings);
             }
-            daringleathersleeves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringleathersleeves");
+            daringleathersleeves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathersleeves");
             if (daringleathersleeves == null)
             {
                 daringleathersleeves = new ItemTemplate();
@@ -1065,9 +1065,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringleathersleeves);
+                    GameServer.Database.AddObject(daringleathersleeves);
             }
-            daringstuddedboots = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedboots");
+            daringstuddedboots = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedboots");
             if (daringstuddedboots == null)
             {
                 daringstuddedboots = new ItemTemplate();
@@ -1141,9 +1141,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedboots);
+                    GameServer.Database.AddObject(daringstuddedboots);
             }
-            daringstuddedcap = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedcap");
+            daringstuddedcap = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedcap");
             if (daringstuddedcap == null)
             {
                 daringstuddedcap = new ItemTemplate();
@@ -1217,9 +1217,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedcap);
+                    GameServer.Database.AddObject(daringstuddedcap);
             }
-            daringstuddedgloves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedgloves");
+            daringstuddedgloves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedgloves");
             if (daringstuddedgloves == null)
             {
                 daringstuddedgloves = new ItemTemplate();
@@ -1293,9 +1293,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedgloves);
+                    GameServer.Database.AddObject(daringstuddedgloves);
             }
-            daringstuddedjerkin = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedjerkin");
+            daringstuddedjerkin = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedjerkin");
             if (daringstuddedjerkin == null)
             {
                 daringstuddedjerkin = new ItemTemplate();
@@ -1369,9 +1369,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedjerkin);
+                    GameServer.Database.AddObject(daringstuddedjerkin);
             }
-            daringstuddedleggings = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedleggings");
+            daringstuddedleggings = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedleggings");
             if (daringstuddedleggings == null)
             {
                 daringstuddedleggings = new ItemTemplate();
@@ -1445,9 +1445,9 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedleggings);
+                    GameServer.Database.AddObject(daringstuddedleggings);
             }
-            daringstuddedsleeves = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "daringstuddedsleeves");
+            daringstuddedsleeves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedsleeves");
             if (daringstuddedsleeves == null)
             {
                 daringstuddedsleeves = new ItemTemplate();
@@ -1521,7 +1521,7 @@ namespace DOL.GS.Quests.Midgard
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(daringstuddedsleeves);
+                    GameServer.Database.AddObject(daringstuddedsleeves);
             }
 
 

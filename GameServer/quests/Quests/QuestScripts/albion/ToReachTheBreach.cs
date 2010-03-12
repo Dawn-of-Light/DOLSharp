@@ -83,7 +83,7 @@ namespace DOL.GS.Quests.Albion
         private void Init()
         {
           #region defineItems
-          RecruitsIntelligentBelt = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),"RecruitsIntelligentBelt");
+          RecruitsIntelligentBelt = GameServer.Database.FindObjectByKey<ItemTemplate>("RecruitsIntelligentBelt");
           if(RecruitsIntelligentBelt == null)
           {
               RecruitsIntelligentBelt = new ItemTemplate();
@@ -113,7 +113,7 @@ namespace DOL.GS.Quests.Albion
               RecruitsIntelligentBelt.Bonus4Type = (int)eProperty.MaxHealth;
               RecruitsIntelligentBelt.IsDropable = false;
           }
-          RecruitsMightyBelt = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),"RecruitsMightyBelt");
+          RecruitsMightyBelt = GameServer.Database.FindObjectByKey<ItemTemplate>("RecruitsMightyBelt");
           if(RecruitsMightyBelt == null)
           {
               RecruitsMightyBelt = new ItemTemplate();
@@ -143,7 +143,7 @@ namespace DOL.GS.Quests.Albion
               RecruitsMightyBelt.Bonus4Type = (int)eProperty.MaxHealth;
               RecruitsMightyBelt.IsDropable = false;
           }
-          RecruitsPiousBelt = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate),"RecruitsPiousBelt");
+          RecruitsPiousBelt = GameServer.Database.FindObjectByKey<ItemTemplate>("RecruitsPiousBelt");
           if(RecruitsPiousBelt == null)
           {
               RecruitsPiousBelt = new ItemTemplate();

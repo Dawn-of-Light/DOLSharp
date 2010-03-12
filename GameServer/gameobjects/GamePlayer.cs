@@ -856,7 +856,7 @@ namespace DOL.GS
 			if (!bound && InHouse && CurrentHouse != null) // lets do a double check, more safe
 			{
 				House house = CurrentHouse;
-				DataObject[] obj = GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + house.HouseNumber.ToString() + "'");
+				var obj = GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = '" + house.HouseNumber.ToString() + "'");
 				bool canbindhere = false;
 				foreach (DBHousepointItem hpi in obj)
 				{
@@ -9331,7 +9331,7 @@ namespace DOL.GS
 					b.DateBan = DateTime.Now;
 					b.Type = "B";
 					b.Reason = "X/Y/Zone : " + X + "/" + Y + "/" + CurrentRegion.ID;
-					GameServer.Database.AddNewObject(b);
+					GameServer.Database.AddObject(b);
 					GameServer.Database.SaveObject(b);
 					string message = "Unknown bind point, your account is banned, contact a GM.";
 					Client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
@@ -10965,7 +10965,7 @@ namespace DOL.GS
 				if (houseVault.Detach())
 				{
 					ItemTemplate template =
-						(ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), houseVault.TemplateID);
+						GameServer.Database.FindObjectByKey<ItemTemplate>(houseVault.TemplateID);
 					Inventory.AddItem(eInventorySlot.FirstEmptyBackpack,
 					                  new InventoryItem(template));
 				}
@@ -11448,7 +11448,7 @@ namespace DOL.GS
 			#endregion
 
 			//Load the quests for this player
-			DBQuest[] quests = (DBQuest[])GameServer.Database.SelectObjects(typeof(DBQuest), "Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
+			var quests = GameServer.Database.SelectObjects<DBQuest>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
 			foreach (DBQuest dbquest in quests)
 			{
 				AbstractQuest quest = AbstractQuest.LoadFromDatabase(this, dbquest);
@@ -11462,20 +11462,20 @@ namespace DOL.GS
 			}
 
 			// Load Task object of player ...
-			DBTask[] tasks = (DBTask[])GameServer.Database.SelectObjects(typeof(DBTask), "Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
-			if (tasks.Length == 1)
+			var tasks = GameServer.Database.SelectObjects<DBTask>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
+			if (tasks.Count == 1)
 			{
 				m_task = AbstractTask.LoadFromDatabase(this, tasks[0]);
 			}
-			else if (tasks.Length > 1)
+			else if (tasks.Count > 1)
 			{
 				if (log.IsErrorEnabled)
 					log.Error("More than one DBTask Object found for player " + Name);
 			}
 
 			// Load ML steps of player ...
-			DBCharacterXMasterLevel[] mlsteps = (DBCharacterXMasterLevel[])GameServer.Database.SelectObjects(typeof(DBCharacterXMasterLevel), "Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
-			if (mlsteps.Length > 0)
+			var mlsteps = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
+			if (mlsteps.Count > 0)
 			{
 				foreach (DBCharacterXMasterLevel mlstep in mlsteps)
 					m_mlsteps.Add(mlstep);
@@ -12606,7 +12606,7 @@ namespace DOL.GS
 		/// </summary>
 		public void CraftItem(ushort itemID)
 		{
-			DBCraftedItem craftitem = (DBCraftedItem)GameServer.Database.SelectObject(typeof(DBCraftedItem), "CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
+			DBCraftedItem craftitem = GameServer.Database.SelectObject<DBCraftedItem>("CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
 			if (craftitem != null && craftitem.ItemTemplate != null && craftitem.RawMaterials != null)
 			{
 				AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)craftitem.CraftingSkillType);
@@ -14230,7 +14230,7 @@ namespace DOL.GS
 			// Add it in DB
 			try
 			{
-				GameServer.Database.AddNewObject(newstep);
+				GameServer.Database.AddObject(newstep);
 			}
 			catch (Exception e)
 			{

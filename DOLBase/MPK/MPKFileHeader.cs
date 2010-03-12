@@ -24,7 +24,7 @@ using ICSharpCode.SharpZipLib.Checksums;
 namespace DOL.MPK
 {
 	/// <summary>
-	/// Summary description for MPKFileHeader.
+	/// Represents the header of an internal file in an MPK archive.
 	/// </summary>
 	public class MPKFileHeader
 	{

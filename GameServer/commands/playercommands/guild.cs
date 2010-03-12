@@ -380,7 +380,7 @@ namespace DOL.GS.Commands
                                 if (myclient == null)
                                 {
                                     // Patch 1.84: look for offline players
-                                    obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(playername) + "'");
+                                    obj = GameServer.Database.SelectObject<Character>("Name='" + GameServer.Database.Escape(playername) + "'");
                                 }
                                 else
                                     obj = myclient.Player;
@@ -458,8 +458,8 @@ namespace DOL.GS.Commands
 
                             string playername = String.Join(" ", args, 2, args.Length - 2);
                             // Patch 1.84: look for offline players
-                            Character[] chs = (Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + client.Player.GuildID + "'");
-                            if (chs != null && chs.GetLength(0) > 0)
+                            var chs = GameServer.Database.SelectObjects<Character>("AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + client.Player.GuildID + "'");
+                            if (chs.Count > 0)
                             {
                                 GameClient myclient = WorldMgr.GetClientByAccountName(playername, false);
                                 string plys = "";
@@ -1052,7 +1052,7 @@ namespace DOL.GS.Commands
                                 if (myclient == null)
                                 {
                                     // Patch 1.84: look for offline players
-                                    obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(playername) + "'");
+                                    obj = GameServer.Database.SelectObject<Character>("Name='" + GameServer.Database.Escape(playername) + "'");
                                 }
                                 else
                                     obj = myclient.Player;
@@ -1151,7 +1151,7 @@ namespace DOL.GS.Commands
                                 if (myclient == null)
                                 {
                                     // Patch 1.84: look for offline players
-                                    obj = (Character)GameServer.Database.SelectObject(typeof(Character), "Name='" + GameServer.Database.Escape(playername) + "'");
+                                    obj = GameServer.Database.SelectObject<Character>("Name='" + GameServer.Database.Escape(playername) + "'");
                                 }
                                 else
                                     obj = myclient.Player;
@@ -1532,9 +1532,9 @@ namespace DOL.GS.Commands
                                 }
                                 else
                                 {
-                                    Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(playername) + "'");
+                                    Character c = GameServer.Database.SelectObject<Character>("Name = '" + GameServer.Database.Escape(playername) + "'");
                                     //if (c == null)
-                                    //c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(playername) + "'");
+                                    //c = (Character)GameServer.Database.SelectObject<CharacterArchive>("Name = '" + GameServer.Database.Escape(playername) + "'");
 
                                     if (c == null)
                                     {
@@ -1545,8 +1545,8 @@ namespace DOL.GS.Commands
                                     accountId = c.Name;
                                 }
                                 List<Character> chars = new List<Character>();
-                                chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(Character), "AccountID = '" + accountId + "'"));
-                                //chars.AddRange((Character[])GameServer.Database.SelectObjects(typeof(CharacterArchive), "AccountID = '" + accountId + "'"));
+                                chars.AddRange(GameServer.Database.SelectObjects<Character>("AccountID = '" + accountId + "'"));
+                                //chars.AddRange((Character[])GameServer.Database.SelectObjects<CharacterArchive>("AccountID = '" + accountId + "'"));
 
                                 foreach (Character ply in chars)
                                 {
@@ -1566,9 +1566,9 @@ namespace DOL.GS.Commands
                                 }
                                 else
                                 {
-                                    Character c = (Character)GameServer.Database.SelectObject(typeof(Character), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
+                                    Character c = GameServer.Database.SelectObject<Character>("Name = '" + GameServer.Database.Escape(args[2]) + "'");
                                     //if (c == null)
-                                    //    c = (Character)GameServer.Database.SelectObject(typeof(CharacterArchive), "Name = '" + GameServer.Database.Escape(args[2]) + "'");
+                                    //    c = (Character)GameServer.Database.SelectObject<CharacterArchive>("Name = '" + GameServer.Database.Escape(args[2]) + "'");
                                     if (c == null)
                                     {
                                         client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.PlayerNotFound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);

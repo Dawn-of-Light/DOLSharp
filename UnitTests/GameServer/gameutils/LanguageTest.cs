@@ -41,6 +41,7 @@ namespace DOL.Tests
 			
 			Console.WriteLine(LanguageMgr.GetString("testscript","fail default string"));
 			Console.WriteLine(LanguageMgr.GetString("test.script2","fail default string"));*/
+			Assert.IsTrue(true, "ok");
 		}
 	}
 }

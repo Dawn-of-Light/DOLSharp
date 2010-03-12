@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS;
@@ -189,25 +190,25 @@ namespace DOL.GS.Scripts
 			m_js.AppendFormat("var numAdminsConnected = {0}", admin);
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numAccts = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Account)));
+			m_js.AppendFormat("var numAccts = {0}", GameServer.Database.GetObjectCount<Account>());
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numMobs = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Mob)));
+			m_js.AppendFormat("var numMobs = {0}", GameServer.Database.GetObjectCount<Mob>());
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.InventoryItem)));
+			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount<InventoryItem>());
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.Character)));
+			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount<Character>());
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numMerchantItems = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.MerchantItem)));
+			m_js.AppendFormat("var numMerchantItems = {0}", GameServer.Database.GetObjectCount<MerchantItem>());
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numItemTemplates = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.ItemTemplate)));
+			m_js.AppendFormat("var numItemTemplates = {0}", GameServer.Database.GetObjectCount<ItemTemplate>());
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numWorldObjects = {0}", GameServer.Database.GetObjectCount(typeof (DOL.Database.WorldObject)));
+			m_js.AppendFormat("var numWorldObjects = {0}", GameServer.Database.GetObjectCount<WorldObject>());
 			m_js.Append(nl.NewLine);
 
 			m_js.AppendFormat("var srvrType = \"{0}\"", GameServer.Instance.Configuration.ServerType.ToString());

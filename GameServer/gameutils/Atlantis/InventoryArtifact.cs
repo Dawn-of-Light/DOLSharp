@@ -138,7 +138,7 @@ namespace DOL.GS
 
 		public void UpdateArtifact()
 		{
-			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Id_nb);
+			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(Id_nb);
 
 			if (template != null)
 			{
@@ -182,7 +182,7 @@ namespace DOL.GS
 		/// </summary>
 		public void UpdateAbilities()
 		{
-			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Id_nb);
+			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(Id_nb);
 
 			if (template == null)
 				return;
@@ -210,7 +210,7 @@ namespace DOL.GS
 		/// <returns>True, if artifact gained 1 or more abilities, else false.</returns>
 		private bool AddAbilities(GamePlayer player, int artifactLevel)
 		{
-			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Id_nb);
+			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(Id_nb);
 
 			if (template == null)
 			{

@@ -262,7 +262,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			trainerWhip = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "askefruer_whip");
+			trainerWhip = GameServer.Database.FindObjectByKey<ItemTemplate>("askefruer_whip");
 			if (trainerWhip == null)
 			{
 				trainerWhip = new ItemTemplate();
@@ -283,11 +283,11 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(trainerWhip);
+					GameServer.Database.AddObject(trainerWhip);
 			}
 
 			// item db check
-			recruitsVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_studded_vest_mid");
+			recruitsVest = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_studded_vest_mid");
 			if (recruitsVest == null)
 			{
 				recruitsVest = new ItemTemplate();
@@ -334,11 +334,11 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsVest);
+					GameServer.Database.AddObject(recruitsVest);
 			}
 
 			// item db check
-			recruitsQuiltedVest = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_quilted_vest");
+			recruitsQuiltedVest = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_quilted_vest");
 			if (recruitsQuiltedVest == null)
 			{
 				recruitsQuiltedVest = new ItemTemplate();
@@ -381,7 +381,7 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsQuiltedVest);
+					GameServer.Database.AddObject(recruitsQuiltedVest);
 			}
 
 			#endregion

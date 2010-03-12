@@ -16,16 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
-
 using DOL.Database.Attributes;
 using DOL.Database.Cache;
 using DOL.Database.Connection;
+using DOL.Database.Handlers;
 using DOL.Database.UniqueID;
 using log4net;
 using MySql.Data.MySqlClient;
@@ -37,398 +38,190 @@ namespace DOL.Database
 	/// <summary>
 	/// Database to to full Dokumentation
 	/// </summary>
-	public class ObjectDatabase
+	public abstract class ObjectDatabase : IObjectDatabase
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
+		protected static readonly NumberFormatInfo Nfi = new CultureInfo("en-US", false).NumberFormat;
+		private readonly Dictionary<Type, BindingInfo[]> BindingInfos = new Dictionary<Type, BindingInfo[]>();
+		protected readonly DataConnection Connection;
+		private readonly Dictionary<Type, ConstructorInfo> ConstructorByFieldType = new Dictionary<Type, ConstructorInfo>();
+		private readonly Dictionary<Type, MemberInfo[]> MemberInfoCache = new Dictionary<Type, MemberInfo[]>();
+		private readonly Dictionary<MemberInfo, Relation[]> RelationAttributes = new Dictionary<MemberInfo, Relation[]>();
 
-		private Hashtable tableDatasets;
-		private DataConnection connection;
+		protected readonly Dictionary<string, DataTableHandler> TableDatasets;
 
-		public ObjectDatabase(DataConnection Connection)
+		protected ObjectDatabase(DataConnection connection)
 		{
-			tableDatasets = new Hashtable();
-			connection = Connection;
-
+			TableDatasets = new Dictionary<string, DataTableHandler>();
+			Connection = connection;
 		}
 
-		/// <summary>
-		/// Primary Key ID of a view
-		/// </summary>
-		/// <param name="objectType"></param>
-		/// <returns></returns>
-		public string GetTableOrViewName(Type objectType)
-		{				
-			// Graveen: introducing view selection hack (before rewriting the layer :D)
-			// basically, a view must exist and is created with the following:
-			//
-			//	[DataTable(TableName="InventoryItem",ViewName = "MarketItem")]
-    		//	public class SomeMarketItems : InventoryItem {};
-    		//
-    		//  here, we rely on the view called MarketItem,
-    		//  based on the InventoryItem table. We have to tell to the code
-    		//  only to bypass the id generated with FROM by the above
-    		//  code.
-    		// 
-			string name = DataObject.GetViewName(objectType);
-			
-			// if not a view, we use tablename, else viewname
-    		if (string.IsNullOrEmpty(name))
-    			return DataObject.GetTableName(objectType);
-    		
-    		return name;
-		}
-		
-		public string[] GetTableNameList()
+		#region Data tables
+
+		protected DataSet GetDataSet(string tableName)
 		{
-			string[] ar = new string[tableDatasets.Count];
-			IDictionaryEnumerator iter = tableDatasets.GetEnumerator();
-			int index = 0;
-			while (iter.MoveNext())
+			if (!TableDatasets.ContainsKey(tableName))
+				return null;
+
+			return TableDatasets[tableName].DataSet;
+		}
+
+		protected void FillObjectWithRow<TObject>(ref TObject dataObject, DataRow row, bool reload)
+			where TObject : DataObject
+		{
+			bool relation = false;
+
+			string tableName = dataObject.TableName;
+			Type myType = dataObject.GetType();
+			string id = row[tableName + "_ID"].ToString();
+
+			MemberInfo[] myMembers = myType.GetMembers();
+			dataObject.ObjectId = id;
+
+			for (int i = 0; i < myMembers.Length; i++)
 			{
-				ar[index] = (string) iter.Key;
-				++index;
-			}
+				object[] myAttributes = GetRelationAttributes(myMembers[i]);
 
-			return ar;
-		}
-
-
-		public int GetObjectCount(Type objectType)
-		{
-			return GetObjectCount(objectType, "");
-		}
-
-		public int GetObjectCount(Type objectType, string where)
-		{
-			string tableName = DataObject.GetTableName(objectType);
-			if (connection.IsSQLConnection)
-			{
-				string query = "SELECT COUNT(*) FROM " + GetTableOrViewName(objectType);
-				if (where != "")
-					query += " WHERE " + where;
-				object count = connection.ExecuteScalar(query);
-				if (count is Int64)
-					return (int)((Int64)count);
-				return (int)count;
-			}
-			return 0;
-		}
-
-		private bool SQLAddNewObject(DataObject dataObject)
-		{
-			try
-			{
-				string tableName = dataObject.TableName;
-
-				if (dataObject.ObjectId == null)
+				if (myAttributes.Length > 0)
 				{
-					dataObject.ObjectId = IdGenerator.generateId();
+					//if(myAttributes[0] is Attributes.Relation)
+					//{
+					relation = true;
+					//}
 				}
-				StringBuilder columns = new StringBuilder();
-				StringBuilder values = new StringBuilder();
-
-				MemberInfo[] objMembers = dataObject.GetType().GetMembers();
-				bool hasRelations = false;
-				string dateFormat = connection.GetDBDateFormat();
-
-				columns.Append("`" + tableName + "_ID`");
-				values.Append("'" + Escape(dataObject.ObjectId) + "'");
-
-				for (int i = 0; i < objMembers.Length; i++)
+				else
 				{
-					if (!hasRelations)
+					object[] keyAttrib = myMembers[i].GetCustomAttributes(typeof(PrimaryKey), true);
+					myAttributes = myMembers[i].GetCustomAttributes(typeof(DataElement), true);
+					if (myAttributes.Length > 0 || keyAttrib.Length > 0)
 					{
-						object[] relAttrib = GetRelationAttributes(objMembers[i]);
-						hasRelations = relAttrib.Length > 0;
-					}
-					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
-					object[] attrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
-					if (attrib.Length > 0 || keyAttrib.Length > 0)
-					{
-						object val = null;
-						if (objMembers[i] is PropertyInfo)
+						object val = row[myMembers[i].Name];
+						if (val != null && !val.GetType().IsInstanceOfType(DBNull.Value))
 						{
-							val = ((PropertyInfo) objMembers[i]).GetValue(dataObject, null);
+							if (myMembers[i] is PropertyInfo)
+							{
+								((PropertyInfo)myMembers[i]).SetValue(dataObject, val, null);
+							}
+							if (myMembers[i] is FieldInfo)
+							{
+								((FieldInfo)myMembers[i]).SetValue(dataObject, val);
+							}
 						}
-						else if (objMembers[i] is FieldInfo)
-						{
-							val = ((FieldInfo) objMembers[i]).GetValue(dataObject);
-						}
-
-						columns.Append(", ");
-						values.Append(", ");
-						columns.Append("`" + objMembers[i].Name + "`");
-						if (val is bool)
-						{
-							val = ((bool) val) ? (byte) 1 : (byte) 0;
-						}
-						else if (val is DateTime)
-						{
-							val = ((DateTime) val).ToString(dateFormat);
-						}
-						else if (val is float)
-						{
-							val = ((float)val).ToString(nfi);
-						}
-						else if (val is double)
-						{
-							val = ((double)val).ToString(nfi);
-						}
-						else if (val is string)
-						{
-							val = Escape(val.ToString());
-						}
-						values.Append('\'');
-						values.Append(val);
-						values.Append('\'');
 					}
 				}
-
-				string sql = "INSERT INTO `" + tableName + "` (" + columns.ToString() + ") VALUES (" + values.ToString() + ")";
-				if(log.IsDebugEnabled)
-					log.Debug(sql);
-				int res = connection.ExecuteNonQuery(sql);
-				if (res == 0)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId + "Query = " + sql);
-					return false;
-				}
-
-				if (hasRelations)
-				{
-					SaveObjectRelations(dataObject);
-				}
-
-				dataObject.Dirty = false;
-				dataObject.IsValid = true;
-				return true;
-
 			}
-			catch (Exception e)
+
+			dataObject.Dirty = false;
+
+
+			if (relation)
 			{
-				if(log.IsErrorEnabled)
-					log.Error("Error while adding dataobject " + dataObject.TableName + " " + dataObject.ObjectId,e);
+				FillLazyObjectRelations(dataObject, true);
 			}
 
-			return false;
+			dataObject.IsValid = true;
 		}
 
-		public void MoveObject(Type targetType, Type sourceType, string query)
+		protected void FillRowWithObject(DataObject dataObject, DataRow row)
 		{
-			if (!connection.IsSQLConnection)
-				return;
+			bool relation = false;
 
-			string targetTableName = DataObject.GetTableName(targetType);
-			string sourceTableName = DataObject.GetTableName(sourceType);
+			Type myType = dataObject.GetType();
 
-			DataTableHandler targetHandler = tableDatasets[targetTableName] as DataTableHandler;
-			DataTableHandler sourceHandler = tableDatasets[sourceTableName] as DataTableHandler;
+			row[dataObject.TableName + "_ID"] = dataObject.ObjectId;
 
-			DataTable targetTable = targetHandler.DataSet.Tables[0] as DataTable;
-			DataTable sourceTable = sourceHandler.DataSet.Tables[0] as DataTable;
+			MemberInfo[] myMembers = myType.GetMembers();
 
-			//column names
-			string insertQuery = "INSERT INTO `" + targetTableName + "` (";
-
-			for (int i = 0; i < targetTable.Columns.Count; i++)
+			for (int i = 0; i < myMembers.Length; i++)
 			{
-				DataColumn targetColumn = targetTable.Columns[i] as DataColumn;
-				if (i == 0)
-					insertQuery += "`" + targetTableName + "_ID`";
+				object[] myAttributes = GetRelationAttributes(myMembers[i]);
+				object val = null;
+
+				if (myAttributes.Length > 0)
+				{
+					relation = true;
+				}
 				else
-					insertQuery += "`" + targetColumn.ColumnName + "`";
-				if (i + 1 < targetTable.Columns.Count)
-					insertQuery += ",";
+				{
+					myAttributes = myMembers[i].GetCustomAttributes(typeof(DataElement), true);
+					object[] keyAttrib = myMembers[i].GetCustomAttributes(typeof(PrimaryKey), true);
+
+					if (myAttributes.Length > 0 || keyAttrib.Length > 0)
+					{
+						if (myMembers[i] is PropertyInfo)
+						{
+							val = ((PropertyInfo)myMembers[i]).GetValue(dataObject, null);
+						}
+						if (myMembers[i] is FieldInfo)
+						{
+							val = ((FieldInfo)myMembers[i]).GetValue(dataObject);
+						}
+						if (val != null)
+						{
+							row[myMembers[i].Name] = val;
+						}
+					}
+				}
+				//}
 			}
 
-			insertQuery += ") SELECT ";
-
-			//column values
-			string shortName = sourceTableName.Substring(0, 1).ToLower();
-
-			for (int i = 0; i < targetTable.Columns.Count; i++)
+			if (relation)
 			{
-				DataColumn targetColumn = targetTable.Columns[i] as DataColumn;
-				if (i == 0)
-					insertQuery += shortName + "." + sourceTableName + "_ID";
-				else
-					insertQuery += shortName + "." + targetColumn.ColumnName;
-				if (i + 1 < targetTable.Columns.Count)
-					insertQuery += ",";
+				SaveObjectRelations(dataObject);
 			}
-
-			insertQuery += " FROM `" + sourceTableName + "` " + shortName + " " + query;
-
-			//connection.ExecuteNonQuery("INSERT INTO `" + targetTableName + "` SELECT * FROM `" + sourceTableName + "` WHERE " + query);
-			connection.ExecuteNonQuery(insertQuery);
-
-			string deleteQuery = "DELETE " + shortName + " FROM `" + sourceTableName + "` " + shortName + " " + query;
-			connection.ExecuteNonQuery(deleteQuery);
 		}
+
+		protected DataRow FindRowByKey(DataObject dataObject)
+		{
+			DataRow row;
+
+			string tableName = dataObject.TableName;
+
+
+			DataTable table = GetDataSet(tableName).Tables[tableName];
+
+			Type myType = dataObject.GetType();
+
+			string key = table.PrimaryKey[0].ColumnName;
+
+			if (key.Equals(tableName + "_ID"))
+				row = table.Rows.Find(dataObject.ObjectId);
+			else
+			{
+				MemberInfo[] keymember = myType.GetMember(key);
+
+				object val = null;
+
+				if (keymember[0] is PropertyInfo)
+					val = ((PropertyInfo)keymember[0]).GetValue(dataObject, null);
+				if (keymember[0] is FieldInfo)
+					val = ((FieldInfo)keymember[0]).GetValue(dataObject);
+
+				if (val != null)
+					row = table.Rows.Find(val);
+				else
+					return null;
+			}
+
+			return row;
+		}
+
+		#endregion
+
+		#region Public API
 
 		/// <summary>
 		/// insert a new object into the db
 		/// and save it
 		/// </summary>
 		/// <param name="dataObject"></param>
-		public bool AddNewObject(DataObject dataObject)
+		public bool AddObject(DataObject dataObject)
 		{
-			if (connection.IsSQLConnection)
-			{
-				return SQLAddNewObject(dataObject);
-			}
-
-			DataTable table = null;
-			DataRow row = null;
-
-			try
-			{
-				string tableName = dataObject.TableName;
-
-				DataSet dataset = GetDataSet(tableName);
-				table = dataset.Tables[tableName];
-
-				lock (dataset) // lock dataset before making any changes to it
-				{
-					row = table.NewRow();
-					FillRowWithObject(dataObject, row);
-					table.Rows.Add(row);
-				}
-
-				if (dataObject.ObjectId == null)
-					dataObject.ObjectId = IdGenerator.generateId();
-				dataObject.ObjectId = row[tableName + "_ID"].ToString();
-
-				dataObject.Dirty = false;
-				dataObject.IsValid = true;
-				return true;
-			}
-
-			catch (Exception e)
-			{
-				if(log.IsErrorEnabled)
-					log.Error("AddNewObject",e);
-
-				if (row != null && table != null)
-				{
-					table.Rows.Remove(row);
-				}
-				throw new DatabaseException("Adding Databaseobject failed !", e);
-			}
-		}
-
-		private void SQLSaveObject(DataObject dataObject)
-		{
-			try
-			{
-				if (!dataObject.Dirty)
-					return;
-				string tableName = dataObject.TableName;
-
-				StringBuilder sb = new StringBuilder("UPDATE `" + tableName + "` SET ");
-
-				BindingInfo[] bindingInfo = GetBindingInfo(dataObject.GetType());
-				bool hasRelations = false;
-				bool first = true;
-				string dateFormat = connection.GetDBDateFormat();
-
-				for (int i = 0; i < bindingInfo.Length; i++)
-				{
-					BindingInfo bind = bindingInfo[i];
-
-					if (bind.ReadOnly)
-					{
-						continue;
-					}
-
-					if (!hasRelations)
-					{
-						hasRelations = bind.HasRelation;
-					}
-					if (!bind.HasRelation)
-					{
-						object val = null;
-						if (bind.Member is PropertyInfo)
-						{
-							val = ((PropertyInfo) bind.Member).GetValue(dataObject, null);
-						}
-						else if (bind.Member is FieldInfo)
-						{
-							val = ((FieldInfo) bind.Member).GetValue(dataObject);
-						}
-						else
-						{
-							continue;
-						}
-
-						if (!first)
-						{
-							sb.Append(", ");
-						}
-						else
-						{
-							first = false;
-						}
-
-						if (val is bool)
-						{
-							val = ((bool)val) ? (byte)1 : (byte)0;
-						}
-						else if (val is DateTime)
-						{
-							val = ((DateTime)val).ToString(dateFormat);
-						}
-						else if (val is float)
-						{
-							val = ((float)val).ToString(nfi);
-						}
-						else if (val is double)
-						{
-							val = ((double)val).ToString(nfi);
-						}
-						else if (val is string)
-						{
-							val = Escape(val.ToString());
-						}
-						sb.Append("`" + bind.Member.Name + "` = ");
-						sb.Append('\'');
-						sb.Append(val);
-						sb.Append('\'');
-					}
-				}
-
-				sb.Append(" WHERE `" + tableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'");
-				string sql = sb.ToString();
-				if(log.IsDebugEnabled)
-					log.Debug(sql);
-				int res = connection.ExecuteNonQuery(sql);
-				if (res == 0)
-				{
-					if(log.IsErrorEnabled)
-						log.Error("Error modifying object " + dataObject.TableName + " ID=" + dataObject.ObjectId + " --- keyvalue changed? "+sql);
-					return;
-				}
-
-				if (hasRelations)
-				{
-					SaveObjectRelations(dataObject);
-				}
-
-				dataObject.Dirty = false;
-				dataObject.IsValid = true;
-
-			}
-			catch (Exception e)
-			{
-				if(log.IsErrorEnabled)
-					log.Error("Error while adding dataobject " + dataObject.TableName + " " + dataObject.ObjectId, e);
-			}
+			return AddObjectImpl(dataObject);
 		}
 
 		/// <summary>
@@ -438,44 +231,734 @@ namespace DOL.Database
 		/// <param name="dataObject"></param>
 		public void SaveObject(DataObject dataObject)
 		{
-			if (connection.IsSQLConnection)
-			{
-				SQLSaveObject(dataObject);
+			SaveObjectImpl(dataObject);
+		}
+
+		/// <summary>
+		/// delete object from db and make it persist if autosave=true
+		/// </summary>
+		/// <param name="dataObject"></param>
+		public void DeleteObject(DataObject dataObject)
+		{
+			DeleteObjectImpl(dataObject);
+		}
+
+		public int GetObjectCount<TObject>()
+			where TObject : DataObject
+		{
+			return GetObjectCount<TObject>("");
+		}
+
+		public int GetObjectCount<TObject>(string whereExpression)
+			where TObject : DataObject
+		{
+			return GetObjectCountImpl<TObject>(whereExpression);
+		}
+
+		public TObject FindObjectByKey<TObject>(object key)
+			where TObject : DataObject
+		{
+			var dataObject = FindObjectByKeyImpl<TObject>(key);
+
+			return dataObject ?? default(TObject);
+		}
+
+		/// <summary>
+		/// Selects a single object, if more than
+		/// one exist, the first is returned
+		/// </summary>
+		/// <param name="objectType">the type of the object</param>
+		/// <param name="statement">the select statement</param>
+		/// <returns>the object or null if none found</returns>
+		public TObject SelectObject<TObject>(string whereExpression)
+			where TObject : DataObject
+		{
+			var objs = SelectObjects<TObject>(whereExpression);
+
+			if (objs.Count > 0)
+				return objs[0];
+
+			return default(TObject);
+		}
+
+		public IList<TObject> SelectObjects<TObject>(string whereExpression)
+			where TObject : DataObject
+		{
+			var dataObjects = SelectObjectsImpl<TObject>(whereExpression);
+
+			return dataObjects ?? new List<TObject>();
+		}
+
+		public IList<TObject> SelectAllObjects<TObject>()
+			where TObject : DataObject
+		{
+			var dataObjects = SelectAllObjectsImpl<TObject>();
+
+			return dataObjects ?? new List<TObject>();
+		}
+
+		public void RegisterDataObject(Type objType)
+		{
+			if (TableDatasets.ContainsKey(GetTableOrViewName(objType)))
 				return;
+
+			bool primary = false;
+			bool relations = false;
+			MemberInfo primaryIndexMember = null;
+
+			string tableName = GetTableOrViewName(objType);
+			var ds = new DataSet();
+			var table = new DataTable(tableName);
+			table.Columns.Add(tableName + "_ID", typeof(string));
+
+			MemberInfo[] myMembers = objType.GetMembers();
+
+			for (int i = 0; i < myMembers.Length; i++)
+			{
+				//object[] myAttributes = myMembers[i].GetCustomAttributes(true);
+				//object[] myAttributes = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
+
+				object[] myAttributes = myMembers[i].GetCustomAttributes(typeof(PrimaryKey), true);
+
+				if (myAttributes.Length > 0)
+				{
+					primary = true;
+					if (myMembers[i] is PropertyInfo)
+						table.Columns.Add(myMembers[i].Name, ((PropertyInfo)myMembers[i]).PropertyType);
+					else
+						table.Columns.Add(myMembers[i].Name, ((FieldInfo)myMembers[i]).FieldType);
+
+					table.Columns[myMembers[i].Name].AutoIncrement = ((PrimaryKey)myAttributes[0]).AutoIncrement;
+
+					var index = new DataColumn[1];
+					index[0] = table.Columns[myMembers[i].Name];
+					primaryIndexMember = myMembers[i];
+					table.PrimaryKey = index;
+					continue;
+				}
+
+				myAttributes = myMembers[i].GetCustomAttributes(typeof(DataElement), true);
+
+				if (myAttributes.Length > 0)
+				{
+					//if(myAttributes[0] is Attributes.DataElement)
+					//{
+					if (myMembers[i] is PropertyInfo)
+					{
+						table.Columns.Add(myMembers[i].Name, ((PropertyInfo)myMembers[i]).PropertyType);
+					}
+					else
+					{
+						table.Columns.Add(myMembers[i].Name, ((FieldInfo)myMembers[i]).FieldType);
+					}
+
+					table.Columns[myMembers[i].Name].AllowDBNull = ((DataElement)myAttributes[0]).AllowDbNull;
+					if (((DataElement)myAttributes[0]).Unique)
+					{
+						table.Constraints.Add(new UniqueConstraint("UNIQUE_" + myMembers[i].Name, table.Columns[myMembers[i].Name]));
+					}
+					if (((DataElement)myAttributes[0]).Index)
+					{
+						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEX", true);
+					}
+					if (((DataElement)myAttributes[0]).Varchar > 0)
+					{
+						table.Columns[myMembers[i].Name].ExtendedProperties.Add("VARCHAR", ((DataElement)myAttributes[0]).Varchar);
+					}
+
+					//if(myAttributes[0] is Attributes.PrimaryKey)
+					myAttributes = GetRelationAttributes(myMembers[i]);
+
+					//if(myAttributes[0] is Attributes.Relation)
+					if (myAttributes.Length > 0)
+					{
+						relations = true;
+					}
+				}
 			}
+
+			if (primary == false)
+			{
+				var index = new DataColumn[1];
+				index[0] = table.Columns[tableName + "_ID"];
+				table.PrimaryKey = index;
+			}
+
+			if (Connection.IsSQLConnection)
+			{
+				Connection.CheckOrCreateTable(table);
+			}
+
+			ds.DataSetName = tableName;
+			ds.EnforceConstraints = true;
+			ds.CaseSensitive = false;
+			ds.Tables.Add(table);
+
+			var dth = new DataTableHandler(ds);
+			dth.HasRelations = relations;
+			dth.UsesPreCaching = DataObject.GetPreCachedFlag(objType);
+
+			TableDatasets.Add(tableName, dth);
+
+			//if (dth.UsesPreCaching && Connection.IsSQLConnection)
+			//{
+			//    // not useful for xml connection
+			//    if (Log.IsDebugEnabled)
+			//        Log.Debug("Precaching of " + table.TableName + "...");
+
+			//    var objects = SQLSelectObjects<TObject>("");
+
+			//    object key;
+			//    for (int i = 0; i < objects.Length; i++)
+			//    {
+			//        key = null;
+			//        if (primaryIndexMember == null)
+			//        {
+			//            key = objects[i].ObjectId;
+			//        }
+			//        else
+			//        {
+			//            if (primaryIndexMember is PropertyInfo)
+			//            {
+			//                key = ((PropertyInfo) primaryIndexMember).GetValue(objects[i], null);
+			//            }
+			//            else if (primaryIndexMember is FieldInfo)
+			//            {
+			//                key = ((FieldInfo) primaryIndexMember).GetValue(objects[i]);
+			//            }
+			//        }
+			//        if (key != null)
+			//        {
+			//            dth.SetPreCachedObject(key, objects[i]);
+			//        }
+			//        else
+			//        {
+			//            if (Log.IsErrorEnabled)
+			//                Log.Error("Primary key is null! " + ((primaryIndexMember != null) ? primaryIndexMember.Name : ""));
+			//        }
+			//    }
+
+			//    if (Log.IsDebugEnabled)
+			//        Log.Debug("Precaching of " + table.TableName + " finished!");
+			//}
+		}
+
+		public string[] GetTableNameList()
+		{
+			var list = new List<string>();
+			foreach (var entry in TableDatasets)
+			{
+				list.Add(entry.Key);
+			}
+
+			return list.ToArray();
+		}
+
+		public string Escape(string toEscape)
+		{
+			return Connection.Escape(toEscape);
+		}
+
+		#endregion
+
+		#region Implementation
+
+		/// <summary>
+		/// Adds a new object to the database.
+		/// </summary>
+		/// <param name="dataObject">the object to add to the database</param>
+		/// <returns>true if the object was added successfully; false otherwise</returns>
+		protected abstract bool AddObjectImpl(DataObject dataObject);
+
+		/// <summary>
+		/// Persists an object to the database.
+		/// </summary>
+		/// <param name="dataObject">the object to save to the database</param>
+		protected abstract void SaveObjectImpl(DataObject dataObject);
+
+		/// <summary>
+		/// Deletes an object from the database.
+		/// </summary>
+		/// <param name="dataObject">the object to delete from the database</param>
+		protected abstract void DeleteObjectImpl(DataObject dataObject);
+
+		/// <summary>
+		/// Finds an object in the database by primary key.
+		/// </summary>
+		/// <param name="objectType">the type of object to retrieve</param>
+		/// <param name="key">the value of the primary key to search for</param>
+		/// <returns>a <see cref="DataObject" /> instance representing a row with the given primary key value; null if the key value does not exist</returns>
+		protected abstract TObject FindObjectByKeyImpl<TObject>(object key)
+			where TObject : DataObject;
+
+		/// <summary>
+		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
+		/// </summary>
+		/// <param name="objectType">the type of objects to retrieve</param>
+		/// <param name="whereClause">the where clause to filter object selection on</param>
+		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
+		protected abstract DataObject[] SelectObjectsImpl(Type objectType, string whereClause);
+
+		/// <summary>
+		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
+		/// </summary>
+		/// <param name="objectType">the type of objects to retrieve</param>
+		/// <param name="whereClause">the where clause to filter object selection on</param>
+		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
+		protected abstract IList<TObject> SelectObjectsImpl<TObject>(string whereClause)
+			where TObject : DataObject;
+
+		/// <summary>
+		/// Selects all objects from a given table in the database.
+		/// </summary>
+		/// <param name="objectType">the type of objects to retrieve</param>
+		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects</returns>
+		protected abstract IList<TObject> SelectAllObjectsImpl<TObject>()
+			where TObject : DataObject;
+
+		/// <summary>
+		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
+		/// </summary>
+		/// <param name="objectType">the type of objects to count</param>
+		/// <param name="where">the where clause to filter object count on</param>
+		/// <returns>a positive integer representing the number of objects that matched the given criteria; zero if no such objects existed</returns>
+		protected abstract int GetObjectCountImpl<TObject>(string where)
+			where TObject : DataObject;
+
+		#endregion
+
+		#region Relations
+
+		public void FillObjectRelations(DataObject dataObject)
+		{
+			FillLazyObjectRelations(dataObject, false);
+		}
+
+		protected void SaveObjectRelations(DataObject dataObject)
+		{
 			try
 			{
-				if (dataObject.Dirty == false)
-					return;
+				object val;
 
-				DataSet dataset = GetDataSet(dataObject.TableName);
+				Type myType = dataObject.GetType();
 
-				lock (dataset) // lock the dataset before changing any values!
+				MemberInfo[] myMembers = myType.GetMembers();
+
+				for (int i = 0; i < myMembers.Length; i++)
 				{
-					DataRow row = FindRowByKey(dataObject);
-					if (row == null)
+					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
+					if (myAttributes.Length > 0)
 					{
-						throw new DatabaseException("Saving Databaseobject failed (Keyvalue Changed ?)!");
-					}
-					FillRowWithObject(dataObject, row);
-				}
-				dataObject.Dirty = false;
-				dataObject.IsValid = true;
+						//if(myAttributes[0] is Attributes.Relation)
+						//{
+						bool array = false;
 
-				return;
+						Type type;
+
+						if (myMembers[i] is PropertyInfo)
+							type = ((PropertyInfo)myMembers[i]).PropertyType;
+						else
+							type = ((FieldInfo)myMembers[i]).FieldType;
+
+						if (type.HasElementType)
+						{
+							type = type.GetElementType();
+							array = true;
+						}
+
+						val = null;
+
+						if (array)
+						{
+							if (myMembers[i] is PropertyInfo)
+							{
+								val = ((PropertyInfo)myMembers[i]).GetValue(dataObject, null);
+							}
+							if (myMembers[i] is FieldInfo)
+							{
+								val = ((FieldInfo)myMembers[i]).GetValue(dataObject);
+							}
+							if (val is Array)
+							{
+								var a = val as Array;
+
+								foreach (object o in a)
+								{
+									if (o is DataObject)
+										SaveObject(o as DataObject);
+								}
+							}
+							else
+							{
+								if (val is DataObject)
+									SaveObject(val as DataObject);
+							}
+						}
+						else
+						{
+							if (myMembers[i] is PropertyInfo)
+								val = ((PropertyInfo)myMembers[i]).GetValue(dataObject, null);
+							if (myMembers[i] is FieldInfo)
+								val = ((FieldInfo)myMembers[i]).GetValue(dataObject);
+							if (val != null && val is DataObject)
+								SaveObject(val as DataObject);
+						}
+					}
+					//}
+				}
 			}
 			catch (Exception e)
 			{
-				throw new DatabaseException("Saving Database object failed!", e);
+				throw new DatabaseException("Saving Relations failed !", e);
 			}
 		}
 
-		public DataObject ReloadObject(DataObject dataObject)
+		protected void DeleteObjectRelations(DataObject dataObject)
+		{
+			try
+			{
+				object val;
+
+				Type myType = dataObject.GetType();
+
+				MemberInfo[] myMembers = myType.GetMembers();
+
+				for (int i = 0; i < myMembers.Length; i++)
+				{
+					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
+					if (myAttributes.Length > 0)
+					{
+						//if(myAttributes[0] is Attributes.Relation)
+						//{
+						if (myAttributes[0].AutoDelete == false)
+							continue;
+
+						bool array = false;
+
+						Type type;
+
+						if (myMembers[i] is PropertyInfo)
+							type = ((PropertyInfo)myMembers[i]).PropertyType;
+						else
+							type = ((FieldInfo)myMembers[i]).FieldType;
+
+						if (type.HasElementType)
+						{
+							type = type.GetElementType();
+							array = true;
+						}
+
+						val = null;
+
+						if (array)
+						{
+							if (myMembers[i] is PropertyInfo)
+							{
+								val = ((PropertyInfo)myMembers[i]).GetValue(dataObject, null);
+							}
+							if (myMembers[i] is FieldInfo)
+							{
+								val = ((FieldInfo)myMembers[i]).GetValue(dataObject);
+							}
+							if (val is Array)
+							{
+								var a = val as Array;
+
+								foreach (object o in a)
+								{
+									if (o is DataObject)
+										DeleteObject(o as DataObject);
+								}
+							}
+							else
+							{
+								if (val is DataObject)
+									DeleteObject(val as DataObject);
+							}
+						}
+						else
+						{
+							if (myMembers[i] is PropertyInfo)
+								val = ((PropertyInfo)myMembers[i]).GetValue(dataObject, null);
+							if (myMembers[i] is FieldInfo)
+								val = ((FieldInfo)myMembers[i]).GetValue(dataObject);
+							if (val != null && val is DataObject)
+								DeleteObject(val as DataObject);
+						}
+						//}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				throw new DatabaseException("Resolving Relations failed !", e);
+			}
+		}
+
+		protected void FillLazyObjectRelations(DataObject dataObject, bool autoload)
+		{
+			try
+			{
+				var dataObjectType = dataObject.GetType();
+
+				MemberInfo[] myMembers;
+				if (!MemberInfoCache.TryGetValue(dataObjectType, out myMembers))
+				{
+					myMembers = dataObjectType.GetMembers();
+					MemberInfoCache[dataObjectType] = myMembers;
+				}
+
+				for (int i = 0; i < myMembers.Length; i++)
+				{
+					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
+
+					if (myAttributes.Length > 0)
+					{
+						Relation rel = myAttributes[0];
+
+						if ((rel.AutoLoad == false) && autoload)
+							continue;
+
+						bool isArray = false;
+						Type remoteType;
+						DataObject[] elements;
+
+						string local = rel.LocalField;
+						string remote = rel.RemoteField;
+
+						if (myMembers[i] is PropertyInfo)
+						{
+							remoteType = ((PropertyInfo)myMembers[i]).PropertyType;
+						}
+						else
+						{
+							remoteType = ((FieldInfo) myMembers[i]).FieldType;
+						}
+
+						if (remoteType.HasElementType)
+						{
+							remoteType = remoteType.GetElementType();
+							isArray = true;
+						}
+
+						PropertyInfo prop = dataObjectType.GetProperty(local);
+						FieldInfo field = dataObjectType.GetField(local);
+
+						object val = 0;
+
+						if (prop != null)
+						{
+							val = prop.GetValue(dataObject, null);
+						}
+						if (field != null)
+						{
+							val = field.GetValue(dataObject);
+						}
+
+						if (val != null)
+						{
+							elements = SelectObjectsImpl(remoteType, remote + " = '" + Escape(val.ToString()) + "'");
+
+							if ((elements != null) && (elements.Length > 0))
+							{
+								if (isArray)
+								{
+									if (myMembers[i] is PropertyInfo)
+									{
+										((PropertyInfo) myMembers[i]).SetValue(dataObject, elements, null);
+									}
+									if (myMembers[i] is FieldInfo)
+									{
+										var currentField = (FieldInfo) myMembers[i];
+										ConstructorInfo constructor;
+										if (!ConstructorByFieldType.TryGetValue(currentField.FieldType, out constructor))
+										{
+											constructor = currentField.FieldType.GetConstructor(new[] {typeof (int)});
+											ConstructorByFieldType[currentField.FieldType] = constructor;
+										}
+
+										object elementHolder = constructor.Invoke(new object[] {elements.Length});
+										var elementArray = (object[]) elementHolder;
+
+										for (int m = 0; m < elementArray.Length; m++)
+										{
+											elementArray[m] = elements[m];
+										}
+
+										currentField.SetValue(dataObject, elementArray);
+									}
+								}
+								else
+								{
+									if (myMembers[i] is PropertyInfo)
+									{
+										((PropertyInfo) myMembers[i]).SetValue(dataObject, elements[0], null);
+									}
+									if (myMembers[i] is FieldInfo)
+									{
+										((FieldInfo) myMembers[i]).SetValue(dataObject, elements[0]);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				throw new DatabaseException("Resolving Relations for " + dataObject.TableName + " failed!", e);
+			}
+		}
+
+		#endregion
+
+		#region Cache
+
+		protected void DeleteFromCache(string tableName, DataObject obj)
+		{
+			DataTableHandler handler = TableDatasets[tableName];
+			handler.SetCacheObject(obj.ObjectId, null);
+		}
+
+		/// <summary>
+		/// Selects object from the db and updates or adds entry in the pre-cache
+		/// </summary>
+		/// <param name="objectType"></param>
+		/// <param name="key"></param>
+		public bool UpdateInCache<TObject>(object key)
+			where TObject : DataObject
+		{
+			MemberInfo[] members = typeof(TObject).GetMembers();
+			var ret = (TObject)Activator.CreateInstance(typeof(TObject));
+
+			string tableName = ret.TableName;
+			DataTableHandler dth = TableDatasets[tableName];
+			string whereClause = null;
+
+			if (!dth.UsesPreCaching || key == null)
+				return false;
+
+			// Escape PK value
+			key = Escape(key.ToString());
+
+			for (int i = 0; i < members.Length; i++)
+			{
+				object[] keyAttrib = members[i].GetCustomAttributes(typeof(PrimaryKey), true);
+				if (keyAttrib.Length > 0)
+				{
+					whereClause = "`" + members[i].Name + "` = '" + key + "'";
+					break;
+				}
+			}
+
+			if (whereClause == null)
+			{
+				whereClause = "`" + ret.TableName + "_ID` = '" + key + "'";
+			}
+
+			var objs = SelectObjects<TObject>(whereClause);
+			if (objs.Count > 0)
+			{
+				dth.SetPreCachedObject(key, objs[0]);
+				return true;
+			}
+
+			return false;
+		}
+
+		protected void ReloadCache(string tableName)
+		{
+			DataTableHandler handler = TableDatasets[tableName];
+
+			ICache cache = handler.Cache;
+
+			foreach (object o in cache.Keys)
+			{
+				ReloadObject(cache[o] as DataObject);
+			}
+		}
+
+		#endregion
+
+		#region Helpers
+
+		protected Relation[] GetRelationAttributes(MemberInfo info)
+		{
+			Relation[] rel;
+			if (RelationAttributes.TryGetValue(info, out rel))
+				return rel;
+
+			rel = (Relation[])info.GetCustomAttributes(typeof(Relation), true);
+			RelationAttributes[info] = rel;
+
+			return rel;
+		}
+
+		protected BindingInfo[] GetBindingInfo(Type objectType)
+		{
+			BindingInfo[] bindingInfos;
+
+			if (!BindingInfos.TryGetValue(objectType, out bindingInfos))
+			{
+				var list = new List<BindingInfo>();
+
+				MemberInfo[] objMembers = objectType.GetMembers();
+				for (int i = 0; i < objMembers.Length; i++)
+				{
+					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof(PrimaryKey), true);
+					object[] readonlyAttrib = objMembers[i].GetCustomAttributes(typeof(ReadOnly), true);
+					object[] attrib = objMembers[i].GetCustomAttributes(typeof(DataElement), true);
+					object[] relAttrib = GetRelationAttributes(objMembers[i]);
+
+					if (attrib.Length > 0 || keyAttrib.Length > 0 || relAttrib.Length > 0 || readonlyAttrib.Length > 0)
+					{
+						var info = new BindingInfo(objMembers[i], keyAttrib.Length > 0, relAttrib.Length > 0, readonlyAttrib.Length > 0,
+												   (attrib.Length > 0) ? (DataElement)attrib[0] : null);
+						list.Add(info);
+					}
+				}
+
+				bindingInfos = list.ToArray();
+				BindingInfos[objectType] = bindingInfos;
+			}
+
+			return bindingInfos;
+		}
+
+		/// <summary>
+		/// Primary Key ID of a view
+		/// </summary>
+		/// <param name="objectType"></param>
+		/// <returns></returns>
+		protected static string GetTableOrViewName(Type objectType)
+		{
+			// Graveen: introducing view selection hack (before rewriting the layer :D)
+			// basically, a view must exist and is created with the following:
+			//
+			//	[DataTable(TableName="InventoryItem",ViewName = "MarketItem")]
+			//	public class SomeMarketItems : InventoryItem {};
+			//
+			//  here, we rely on the view called MarketItem,
+			//  based on the InventoryItem table. We have to tell to the code
+			//  only to bypass the id generated with FROM by the above
+			//  code.
+			// 
+			string name = DataObject.GetViewName(objectType);
+
+			// if not a view, we use tablename, else viewname
+			if (string.IsNullOrEmpty(name))
+				return DataObject.GetTableName(objectType);
+
+			return name;
+		}
+
+		private DataObject ReloadObject(DataObject dataObject)
 		{
 			try
 			{
 				if (dataObject == null)
 					return null;
+
 				DataObject ret = dataObject;
 
 				DataRow row = FindRowByKey(ret);
@@ -496,1027 +979,45 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// delete object from db and make it persist if autosave=true
-		/// </summary>
-		/// <param name="dataObject"></param>
-		public void DeleteObject(DataObject dataObject)
+		#endregion
+
+		#region Factory
+
+		public static IObjectDatabase GetObjectDatabase(ConnectionType connectionType, string connectionString)
 		{
-			try
-			{
-				if (connection.IsSQLConnection)
-				{
-					string sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + dataObject.TableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'";
-					if(log.IsDebugEnabled)
-						log.Debug(sql);
-					int res = connection.ExecuteNonQuery(sql);
-					if (res == 0)
-					{
-						if(log.IsErrorEnabled)
-							log.Error("Deleting " + dataObject.TableName + " object failed! ID=" + dataObject.ObjectId);
-					}
-				}
-				else
-				{
-					DataSet dataset = GetDataSet(dataObject.TableName);
-					if (dataset == null)
-					{
-						throw new DatabaseException("Deleting Databaseobject failed, no dataset!");
-					}
-					lock (dataset) // lock dataset before making changes to it
-					{
-						DataRow row = FindRowByKey(dataObject);
-						if (row == null)
-						{
-							throw new DatabaseException("Deleting Databaseobject failed !");
-						}
-						row.Delete();
-					}
-				}
+			var connection = new DataConnection(connectionType, connectionString);
 
-				dataObject.IsValid = false;
-				DeleteObjectInPreCache(dataObject.TableName, dataObject);
-				DeleteObjectRelations(dataObject);
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Deleting Databaseobject failed !", e);
-			}
-		}
+			if (connectionType == ConnectionType.DATABASE_XML)
+				return new XMLObjectDatabase(connection);
 
-		private DataObject SQLFindObjectByKey(Type objectType, object key)
-		{
-			MemberInfo[] members = objectType.GetMembers();
-			DataObject ret = (DataObject) Activator.CreateInstance(objectType);
-			string tableName = ret.TableName;
-			DataTableHandler dth = tableDatasets[tableName] as DataTableHandler;
-			string whereClause = null;
-
-			if (dth.UsesPreCaching)
-			{
-				DataObject obj = dth.GetPreCachedObject(key);
-				if (obj != null)
-					return obj;
-			}
-
-			// Escape PK value
-			key = Escape(key.ToString());
-			
-			for (int i = 0; i < members.Length; i++)
-			{
-				object[] keyAttrib = members[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
-				if (keyAttrib.Length > 0)
-				{
-					whereClause = "`" + members[i].Name + "` = '" + key.ToString() + "'";
-					break;
-				}
-			}
-			if (whereClause == null)
-			{
-				whereClause = "`" + ret.TableName + "_ID` = '" + key.ToString() + "'";
-			}
-			DataObject[] objs = SQLSelectObjects(objectType, whereClause);
-			if (objs.Length > 0)
-			{
-				dth.SetPreCachedObject(key, objs[0]);
-				return objs[0];
-			}
-			else
-				return null;
-		}
-
-		public DataObject FindObjectByKey(Type objectType, object key)
-		{
-			if (connection.IsSQLConnection)
-			{
-				return SQLFindObjectByKey(objectType, key);
-			}
-			DataObject ret = (DataObject) Activator.CreateInstance(objectType);
-			String tableName = ret.TableName;
-			DataRow row;
-			DataTable table = GetDataSet(tableName).Tables[tableName];
-			row = table.Rows.Find(key);
-			if (row != null)
-			{
-				FillObjectWithRow(ref ret, row, false);
-				return ret;
-			}
-
+			if (connectionType == ConnectionType.DATABASE_MYSQL)
+				return new MySQLObjectDatabase(connection);
 
 			return null;
 		}
 
-		private BindingInfo[] GetBindingInfo(Type objectType)
+		#endregion
+
+		#region Nested type: BindingInfo
+
+		protected class BindingInfo
 		{
-			BindingInfo[] bindingInfos = (BindingInfo[]) m_bindingInfos[objectType];
-			if (bindingInfos == null)
-			{
-				ArrayList list = new ArrayList();
-				MemberInfo[] objMembers = objectType.GetMembers();
-				for (int i = 0; i < objMembers.Length; i++)
-				{
-					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
-					object[] readonlyAttrib = objMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.ReadOnly), true);
-					object[] attrib = objMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
-					object[] relAttrib = GetRelationAttributes(objMembers[i]);
-
-					if (attrib.Length > 0 || keyAttrib.Length > 0 || relAttrib.Length > 0 || readonlyAttrib.Length > 0)
-					{
-						BindingInfo info = new BindingInfo(objMembers[i], keyAttrib.Length > 0, relAttrib.Length > 0, readonlyAttrib.Length > 0, (attrib.Length > 0) ? (DataElement)attrib[0] : null);
-						list.Add(info);
-					}
-				}
-				bindingInfos = (BindingInfo[]) list.ToArray(typeof (BindingInfo));
-				m_bindingInfos[objectType] = bindingInfos;
-			}
-			return bindingInfos;
-		}
-
-
-		private DataObject[] SQLSelectObjects(Type objectType, string whereClause)
-		{
-			string tableName = DataObject.GetTableName(objectType);
-			ArrayList dataObjects = new ArrayList(500);
-
-			// build sql command
-			StringBuilder sb = new StringBuilder("SELECT `" + tableName + "_ID`, ");
-			bool first = true;
-			BindingInfo[] bindingInfo = GetBindingInfo(objectType);
-			for (int i = 0; i < bindingInfo.Length; i++)
-			{
-				if (!bindingInfo[i].HasRelation)
-				{
-					if (!first)
-					{
-						sb.Append(", ");
-					}
-					else
-					{
-						first = false;
-					}
-					sb.Append("`" + bindingInfo[i].Member.Name + "`");
-				}
-			}
-			sb.Append(" FROM `" + GetTableOrViewName(objectType) + "`");
-
-			if ( whereClause != null && whereClause.Trim().Length > 0 )
-			{
-				sb.Append(" WHERE " + whereClause);
-			}
-			string sql = sb.ToString();
-
-			if (log.IsDebugEnabled)
-				log.Debug(sql);
-
-			// read data and fill objects
-			connection.ExecuteSelect(sql, delegate(MySqlDataReader reader)
-			                         {
-			                         	object [] data = new object [reader.FieldCount];
-			                         	while (reader.Read())
-			                         	{
-			                         		reader.GetValues(data);
-			                         		string id = (string)data [0];
-			                         		DataObject cache = null;
-
-			                         		if (cache != null)
-			                         		{
-			                         			dataObjects.Add(cache);
-			                         		}
-			                         		else
-			                         		{ // fill new data object
-			                         			DataObject obj = (DataObject)(Activator.CreateInstance(objectType));
-			                         			obj.ObjectId = id;
-
-			                         			bool hasRelations = false;
-			                         			int field = 1; // we can use hard index access because we iterate the same order here
-			                         			for (int i = 0; i < bindingInfo.Length; i++)
-			                         			{
-			                         				BindingInfo bind = bindingInfo [i];
-			                         				if (!hasRelations)
-			                         				{
-			                         					hasRelations = bind.HasRelation;
-			                         				}
-
-			                         				if (!bind.HasRelation)
-			                         				{
-			                         					object val = data [field++];
-			                         					if (val != null && !val.GetType().IsInstanceOfType(DBNull.Value))
-			                         					{
-			                         						if (bind.Member is PropertyInfo)
-			                         						{
-			                         							Type type = ((PropertyInfo)bind.Member).PropertyType;
-
-			                         							try
-			                         							{
-			                         								if (type == typeof(bool))
-			                         								{
-			                         									// special handling for bool
-			                         									((PropertyInfo)bind.Member).SetValue(obj, (val.ToString() == "0") ? false : true, null);
-			                         								}
-			                         								else if (type == typeof(DateTime))
-			                         								{
-			                         									// special handling for datetime
-			                         									if (val is MySqlDateTime)
-			                         									{
-			                         										((PropertyInfo)bind.Member).SetValue(obj, ((MySqlDateTime)val).GetDateTime(), null);
-			                         									}
-			                         									else
-			                         									{
-			                         										((PropertyInfo)bind.Member).SetValue(obj, ((IConvertible)val).ToDateTime(null), null);
-			                         									}
-			                         								}
-			                         								else
-			                         								{
-			                         									((PropertyInfo)bind.Member).SetValue(obj, val, null);
-			                         								}
-			                         							}
-			                         							catch (Exception e)
-			                         							{
-			                         								if (log.IsErrorEnabled)
-			                         									log.Error(tableName + ": " + bind.Member.Name + " = " + val.GetType().FullName + " doesnt fit to " + bind.Member.DeclaringType.FullName, e);
-			                         								continue;
-			                         							}
-			                         						}
-			                         						else if (bind.Member is FieldInfo)
-			                         						{
-			                         							((FieldInfo)bind.Member).SetValue(obj, val);
-			                         						}
-			                         					}
-			                         				}
-			                         			}
-
-			                         			dataObjects.Add(obj);
-			                         			obj.Dirty = false;
-			                         			if (hasRelations)
-			                         			{
-			                         				FillLazyObjectRelations(obj, true);
-			                         			}
-			                         			obj.IsValid = true;
-			                         		}
-			                         	}
-			                         }
-			                        );
-			return (DataObject[]) dataObjects.ToArray(objectType);
-		}
-
-		/// <summary>
-		/// Selects a single object, if more than
-		/// one exist, the first is returned
-		/// </summary>
-		/// <param name="objectType">the type of the object</param>
-		/// <param name="statement">the select statement</param>
-		/// <returns>the object or null if none found</returns>
-		public DataObject SelectObject(Type objectType, string statement)
-		{
-			DataObject[] objs = SelectObjects(objectType, statement);
-			if (objs.Length > 0)
-				return objs[0];
-			return null;
-		}
-
-		public DataObject[] SelectObjects(Type objectType, string statement)
-		{
-			if (connection.IsSQLConnection)
-			{
-				return SQLSelectObjects(objectType, statement);
-			}
-
-			string tableName = DataObject.GetTableName(objectType);
-			if (log.IsDebugEnabled)
-				log.Debug("1. select objects " + tableName + " " + statement);
-			DataSet ds = GetDataSet(tableName);
-			if (ds != null)
-			{
-				DataTable table = ds.Tables[tableName];
-				if (log.IsDebugEnabled)
-					log.Debug("2. " + tableName + " " + statement);
-				DataRow[] rows = table.Select(statement);
-				if (log.IsDebugEnabled)
-					log.Debug("3. " + tableName + " " + statement);
-
-				int count = rows.Length;
-				DataObject[] objs = (DataObject[]) Array.CreateInstance(objectType, count);
-				for (int i = 0; i < count; i++)
-				{
-					DataObject remap = (DataObject) (Activator.CreateInstance(objectType));
-					FillObjectWithRow(ref remap, rows[i], false);
-					objs[i] = remap;
-				}
-				if (log.IsDebugEnabled)
-					log.Debug("4. select objects " + tableName + " " + statement);
-				return objs;
-			}
-			return (DataObject[]) Array.CreateInstance(objectType, 0);
-		}
-
-
-		public DataObject[] SelectAllObjects(Type objectType)
-		{
-			if (connection.IsSQLConnection)
-			{
-				return SQLSelectObjects(objectType, null);
-			}
-
-			string tableName = DataObject.GetTableName(objectType);
-			if (log.IsDebugEnabled)
-				log.Debug("1. select all " + tableName);
-			DataSet ds = GetDataSet(tableName);
-
-			if (ds != null)
-			{
-				DataTable table = ds.Tables[tableName];
-				DataRow[] rows = table.Select();
-
-				int count = rows.Length;
-				//Create an array of our destination objects
-				DataObject[] objs = (DataObject[]) Array.CreateInstance(objectType, count);
-				for (int i = 0; i < count; i++)
-				{
-					DataObject remap = (DataObject) (Activator.CreateInstance(objectType));
-					FillObjectWithRow(ref remap, rows[i], false);
-					objs[i] = remap;
-				}
-				if (log.IsDebugEnabled)
-					log.Debug("2. select all " + tableName);
-				return objs;
-			}
-
-			return (DataObject[]) Array.CreateInstance(objectType, 0);
-		}
-
-		public void RegisterDataObject(Type dataObjectType)
-		{
-			if (tableDatasets.ContainsKey(DataObject.GetTableName(dataObjectType)))
-				return;
-
-			bool primary = false;
-			bool relations = false;
-			MemberInfo primaryIndexMember = null;
-
-			string TableName = DataObject.GetTableName(dataObjectType);
-			DataSet ds = new DataSet();
-			DataTable table = new DataTable(TableName);
-			table.Columns.Add(TableName + "_ID", typeof (string));
-			MemberInfo[] myMembers = dataObjectType.GetMembers();
-
-			for (int i = 0; i < myMembers.Length; i++)
-			{
-				//object[] myAttributes = myMembers[i].GetCustomAttributes(true);
-				//object[] myAttributes = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
-
-				object[] myAttributes = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
-
-				if (myAttributes.Length > 0)
-				{
-					primary = true;
-					if (myMembers[i] is PropertyInfo)
-						table.Columns.Add(myMembers[i].Name, ((PropertyInfo) myMembers[i]).PropertyType);
-					else
-						table.Columns.Add(myMembers[i].Name, ((FieldInfo) myMembers[i]).FieldType);
-
-					table.Columns[myMembers[i].Name].AutoIncrement = ((Attributes.PrimaryKey)myAttributes[0]).AutoIncrement;
-
-					DataColumn[] index = new DataColumn[1];
-					index[0] = table.Columns[myMembers[i].Name];
-					primaryIndexMember = myMembers[i];
-					table.PrimaryKey = index;
-					continue;
-				}
-
-				myAttributes = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
-
-				if (myAttributes.Length > 0)
-				{
-					//if(myAttributes[0] is Attributes.DataElement)
-					//{
-					if (myMembers[i] is PropertyInfo)
-					{
-						table.Columns.Add(myMembers[i].Name, ((PropertyInfo) myMembers[i]).PropertyType);
-					}
-					else
-					{
-						table.Columns.Add(myMembers[i].Name, ((FieldInfo) myMembers[i]).FieldType);
-					}
-
-					table.Columns[myMembers[i].Name].AllowDBNull = ((Attributes.DataElement) myAttributes[0]).AllowDbNull;
-					if (((Attributes.DataElement) myAttributes[0]).Unique)
-					{
-						table.Constraints.Add(new UniqueConstraint("UNIQUE_" + myMembers[i].Name, table.Columns[myMembers[i].Name]));
-					}
-					if (((Attributes.DataElement) myAttributes[0]).Index)
-					{
-						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEX", true);
-					}
-					if (((Attributes.DataElement)myAttributes[0]).Varchar > 0)
-					{
-						table.Columns[myMembers[i].Name].ExtendedProperties.Add("VARCHAR", ((Attributes.DataElement)myAttributes[0]).Varchar);
-					}
-
-					//if(myAttributes[0] is Attributes.PrimaryKey)
-					myAttributes = GetRelationAttributes(myMembers[i]);
-
-					//if(myAttributes[0] is Attributes.Relation)
-					if (myAttributes.Length > 0)
-					{
-						relations = true;
-					}
-				}
-			}
-
-			if (primary == false)
-			{
-				DataColumn[] index = new DataColumn[1];
-				index[0] = table.Columns[TableName + "_ID"];
-				table.PrimaryKey = index;
-			}
-
-			if (connection.IsSQLConnection)
-			{
-				connection.CheckOrCreateTable(table);
-			}
-
-			ds.DataSetName = TableName;
-			ds.EnforceConstraints = true;
-			ds.CaseSensitive = false;
-			ds.Tables.Add(table);
-
-			DataTableHandler dth = new DataTableHandler(ds);
-			dth.HasRelations = relations;
-			dth.UsesPreCaching = DataObject.GetPreCachedFlag(dataObjectType);
-
-			tableDatasets.Add(TableName, dth);
-
-			if (dth.UsesPreCaching && connection.IsSQLConnection)
-			{ // not useful for xml connection
-				if (log.IsDebugEnabled)
-					log.Debug("Precaching of " + table.TableName + "...");
-				DataObject[] objects = SQLSelectObjects(dataObjectType, null);
-				object key;
-				for (int i = 0; i < objects.Length; i++)
-				{
-					key = null;
-					if (primaryIndexMember == null)
-					{
-						key = objects[i].ObjectId;
-					}
-					else
-					{
-						if (primaryIndexMember is PropertyInfo)
-						{
-							key = ((PropertyInfo) primaryIndexMember).GetValue(objects[i], null);
-						}
-						else if (primaryIndexMember is FieldInfo)
-						{
-							key = ((FieldInfo) primaryIndexMember).GetValue(objects[i]);
-						}
-					}
-					if (key != null)
-					{
-						dth.SetPreCachedObject(key, objects[i]);
-					}
-					else
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Primary key is null! " + ((primaryIndexMember != null) ? primaryIndexMember.Name : ""));
-					}
-				}
-
-				if (log.IsDebugEnabled)
-					log.Debug("Precaching of " + table.TableName + " finished!");
-			}
-		}
-
-
-		public DataSet GetDataSet(string TableName)
-		{
-			DataTableHandler handler = (DataTableHandler) tableDatasets[TableName];
-			return handler.DataSet;
-		}
-
-		private void FillObjectWithRow(ref DataObject DataObject, DataRow row, bool reload)
-		{
-			bool relation = false;
-
-			string tableName = DataObject.TableName;
-			Type myType = DataObject.GetType();
-			string id = row[tableName + "_ID"].ToString();
-
-			MemberInfo[] myMembers = myType.GetMembers();
-			DataObject.ObjectId = id;
-
-			for (int i = 0; i < myMembers.Length; i++)
-			{
-				object[] myAttributes = GetRelationAttributes(myMembers[i]);
-
-				if (myAttributes.Length > 0)
-				{
-					//if(myAttributes[0] is Attributes.Relation)
-					//{
-					relation = true;
-					//}
-				}
-				else
-				{
-					object[] keyAttrib = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
-					myAttributes = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
-					if (myAttributes.Length > 0 || keyAttrib.Length > 0)
-					{
-						object val = row[myMembers[i].Name];
-						if (val != null && !val.GetType().IsInstanceOfType(DBNull.Value))
-						{
-							if (myMembers[i] is PropertyInfo)
-							{
-								((PropertyInfo) myMembers[i]).SetValue(DataObject, val, null);
-							}
-							if (myMembers[i] is FieldInfo)
-							{
-								((FieldInfo) myMembers[i]).SetValue(DataObject, val);
-							}
-						}
-					}
-				}
-			}
-
-			DataObject.Dirty = false;
-
-
-			if (relation == true)
-			{
-				FillLazyObjectRelations(DataObject, true);
-			}
-
-			DataObject.IsValid = true;
-		}
-
-		private void DeleteObjectInPreCache(string TableName, DataObject obj)
-		{
-			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-			handler.SetCacheObject(obj.ObjectId, null);
-		}
-
-		/// <summary>
-		/// Selects object from the db and updates or adds entry in the pre-cache
-		/// </summary>
-		/// <param name="objectType"></param>
-		/// <param name="key"></param>
-		public bool UpdateObjectInPreCache(Type objectType, object key)
-		{
-			MemberInfo[] members = objectType.GetMembers();
-			DataObject ret = (DataObject)Activator.CreateInstance(objectType);
-			string tableName = ret.TableName;
-			DataTableHandler dth = tableDatasets[tableName] as DataTableHandler;
-			string whereClause = null;
-
-			if (!dth.UsesPreCaching || objectType == null || key == null)
-				return false;
-
-			// Escape PK value
-			key = Escape(key.ToString());
-
-			for (int i = 0; i < members.Length; i++)
-			{
-				object[] keyAttrib = members[i].GetCustomAttributes(typeof(DOL.Database.Attributes.PrimaryKey), true);
-				if (keyAttrib.Length > 0)
-				{
-					whereClause = "`" + members[i].Name + "` = '" + key.ToString() + "'";
-					break;
-				}
-			}
-
-			if (whereClause == null)
-			{
-				whereClause = "`" + ret.TableName + "_ID` = '" + key.ToString() + "'";
-			}
-
-			DataObject[] objs = SQLSelectObjects(objectType, whereClause);
-
-			if (objs.Length > 0)
-			{
-				dth.SetPreCachedObject(key, objs[0]);
-				return true;
-			}
-
-			return false;
-		}
-
-		private void FillRowWithObject(DataObject DataObject, DataRow row)
-		{
-			bool relation = false;
-
-			Type myType = DataObject.GetType();
-
-			row[DataObject.TableName + "_ID"] = DataObject.ObjectId;
-
-			MemberInfo[] myMembers = myType.GetMembers();
-
-			for (int i = 0; i < myMembers.Length; i++)
-			{
-				object[] myAttributes = GetRelationAttributes(myMembers[i]);
-				object val = null;
-
-				if (myAttributes.Length > 0)
-				{
-					relation = true;
-				}
-				else
-				{
-					myAttributes = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.DataElement), true);
-					object[] keyAttrib = myMembers[i].GetCustomAttributes(typeof (DOL.Database.Attributes.PrimaryKey), true);
-
-					if (myAttributes.Length > 0 || keyAttrib.Length > 0)
-					{
-						if (myMembers[i] is PropertyInfo)
-						{
-							val = ((PropertyInfo) myMembers[i]).GetValue(DataObject, null);
-						}
-						if (myMembers[i] is FieldInfo)
-						{
-							val = ((FieldInfo) myMembers[i]).GetValue(DataObject);
-						}
-						if (val != null)
-						{
-							row[myMembers[i].Name] = val;
-						}
-					}
-				}
-				//}
-			}
-			if (relation == true)
-			{
-				SaveObjectRelations(DataObject);
-			}
-		}
-
-		private DataRow FindRowByKey(DataObject DataObject)
-		{
-			DataRow row;
-
-			String tableName = DataObject.TableName;
-
-
-			DataTable table = GetDataSet(tableName).Tables[tableName];
-
-			Type myType = DataObject.GetType();
-
-			string key = table.PrimaryKey[0].ColumnName;
-
-			if (key.Equals(tableName + "_ID"))
-				row = table.Rows.Find(DataObject.ObjectId);
-			else
-			{
-				MemberInfo[] keymember = myType.GetMember(key);
-
-				object val = null;
-
-				if (keymember[0] is PropertyInfo)
-					val = ((PropertyInfo) keymember[0]).GetValue(DataObject, null);
-				if (keymember[0] is FieldInfo)
-					val = ((FieldInfo) keymember[0]).GetValue(DataObject);
-
-				if (val != null)
-					row = table.Rows.Find(val);
-				else
-					return null;
-			}
-
-			return row;
-		}
-
-		public void FillObjectRelations(DataObject DataObject)
-		{
-			FillLazyObjectRelations(DataObject, false);
-		}
-
-		private void SaveObjectRelations(DataObject DataObject)
-		{
-			try
-			{
-				object val;
-
-				Type myType = DataObject.GetType();
-
-				MemberInfo[] myMembers = myType.GetMembers();
-
-				for (int i = 0; i < myMembers.Length; i++)
-				{
-					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
-					if (myAttributes.Length > 0)
-					{
-						//if(myAttributes[0] is Attributes.Relation)
-						//{
-						bool array = false;
-
-						Type type;
-
-						if (myMembers[i] is PropertyInfo)
-							type = ((PropertyInfo) myMembers[i]).PropertyType;
-						else
-							type = ((FieldInfo) myMembers[i]).FieldType;
-
-						if (type.HasElementType)
-						{
-							type = type.GetElementType();
-							array = true;
-						}
-
-						val = null;
-
-						if (array)
-						{
-							if (myMembers[i] is PropertyInfo)
-							{
-								val = ((PropertyInfo) myMembers[i]).GetValue(DataObject, null);
-							}
-							if (myMembers[i] is FieldInfo)
-							{
-								val = ((FieldInfo) myMembers[i]).GetValue(DataObject);
-							}
-							if (val is Array)
-							{
-								Array a = val as Array;
-
-								foreach (object o in a)
-								{
-									if (o is DataObject)
-										SaveObject(o as DataObject);
-								}
-							}
-							else
-							{
-								if (val is DataObject)
-									SaveObject(val as DataObject);
-							}
-
-						}
-						else
-						{
-							if (myMembers[i] is PropertyInfo)
-								val = ((PropertyInfo) myMembers[i]).GetValue(DataObject, null);
-							if (myMembers[i] is FieldInfo)
-								val = ((FieldInfo) myMembers[i]).GetValue(DataObject);
-							if (val != null && val is DataObject)
-								SaveObject(val as DataObject);
-						}
-					}
-					//}
-				}
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Saving Relations failed !", e);
-			}
-		}
-
-		private void DeleteObjectRelations(DataObject DataObject)
-		{
-			try
-			{
-				object val;
-
-				Type myType = DataObject.GetType();
-
-				MemberInfo[] myMembers = myType.GetMembers();
-
-				for (int i = 0; i < myMembers.Length; i++)
-				{
-					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
-					if (myAttributes.Length > 0)
-					{
-						//if(myAttributes[0] is Attributes.Relation)
-						//{
-						if (myAttributes[0].AutoDelete == false)
-							continue;
-
-						bool array = false;
-
-						Type type;
-
-						if (myMembers[i] is PropertyInfo)
-							type = ((PropertyInfo) myMembers[i]).PropertyType;
-						else
-							type = ((FieldInfo) myMembers[i]).FieldType;
-
-						if (type.HasElementType)
-						{
-							type = type.GetElementType();
-							array = true;
-						}
-
-						val = null;
-
-						if (array)
-						{
-							if (myMembers[i] is PropertyInfo)
-							{
-								val = ((PropertyInfo) myMembers[i]).GetValue(DataObject, null);
-							}
-							if (myMembers[i] is FieldInfo)
-							{
-								val = ((FieldInfo) myMembers[i]).GetValue(DataObject);
-							}
-							if (val is Array)
-							{
-								Array a = val as Array;
-
-								foreach (object o in a)
-								{
-									if (o is DataObject)
-										DeleteObject(o as DataObject);
-								}
-							}
-							else
-							{
-								if (val is DataObject)
-									DeleteObject(val as DataObject);
-							}
-
-						}
-						else
-						{
-							if (myMembers[i] is PropertyInfo)
-								val = ((PropertyInfo) myMembers[i]).GetValue(DataObject, null);
-							if (myMembers[i] is FieldInfo)
-								val = ((FieldInfo) myMembers[i]).GetValue(DataObject);
-							if (val != null && val is DataObject)
-								DeleteObject(val as DataObject);
-						}
-						//}
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Resolving Relations failed !", e);
-			}
-		}
-
-		protected readonly Hashtable m_memberInfoCache = new Hashtable();
-		protected readonly Hashtable m_constructorByFieldType = new Hashtable();
-
-		private void FillLazyObjectRelations(DataObject DataObject, bool Autoload)
-		{
-			try
-			{
-				Type myType = DataObject.GetType();
-
-				MemberInfo[] myMembers = (MemberInfo[])m_memberInfoCache[myType];
-				if (myMembers == null)
-				{
-					myMembers = myType.GetMembers();
-					m_memberInfoCache[myType] = myMembers;
-				}
-
-				for (int i = 0; i < myMembers.Length; i++)
-				{
-					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
-					if (myAttributes.Length > 0)
-					{
-						//if(myAttributes[0] is Attributes.Relation)
-						//{
-						bool array = false;
-
-						Relation rel = myAttributes[0];
-
-						if (
-							(rel.AutoLoad == false) &&
-							(Autoload == true)
-						)
-							continue;
-
-						DataObject[] Elements = null;
-
-						string local = myAttributes[0].LocalField;
-						string remote = myAttributes[0].RemoteField;
-
-						Type type;
-
-						if (myMembers[i] is PropertyInfo)
-							type = ((PropertyInfo) myMembers[i]).PropertyType;
-						else
-							type = ((FieldInfo) myMembers[i]).FieldType;
-
-						if (type.HasElementType)
-						{
-							type = type.GetElementType();
-							array = true;
-						}
-
-						PropertyInfo prop = myType.GetProperty(local);
-						FieldInfo field = myType.GetField(local);
-
-						object val = 0;
-
-						if (prop != null)
-							val = prop.GetValue(DataObject, null);
-						if (field != null)
-							val = field.GetValue(DataObject);
-
-						if (val != null)
-							Elements = SelectObjects(type, remote + " = '" + Escape(val.ToString()) + "'");
-
-						if (
-							(Elements != null) &&
-							(Elements.Length > 0)
-						)
-						{
-							if (array)
-							{
-								if (myMembers[i] is PropertyInfo)
-								{
-									((PropertyInfo) myMembers[i]).SetValue(DataObject, Elements, null);
-								}
-								if (myMembers[i] is FieldInfo)
-								{
-									FieldInfo currentField = (FieldInfo) myMembers[i];
-									ConstructorInfo constructor = (ConstructorInfo)m_constructorByFieldType[currentField.FieldType];
-									if (constructor == null)
-									{
-										constructor = currentField.FieldType.GetConstructor(new Type[] {typeof(int)});
-										m_constructorByFieldType[currentField.FieldType] = constructor;
-									}
-
-									object[] args = {Elements.Length};
-									object t = constructor.Invoke(args);
-									object[] test = (object[]) t;
-
-									for (int m = 0; m < Elements.Length; m++)
-										test[m] = Elements[m];
-
-									currentField.SetValue(DataObject, test);
-								}
-							}
-							else
-							{
-								if (myMembers[i] is PropertyInfo)
-									((PropertyInfo) myMembers[i]).SetValue(DataObject, Elements[0], null);
-								if (myMembers[i] is FieldInfo)
-									((FieldInfo) myMembers[i]).SetValue(DataObject, Elements[0]);
-							}
-						}
-						//}
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Resolving Relations for " + DataObject.TableName + " failed!", e);
-			}
-		}
-
-		private void ReloadCache(string TableName)
-		{
-			DataTableHandler handler = tableDatasets[TableName] as DataTableHandler;
-
-			ICache cache = handler.Cache;
-
-			foreach (object o in cache.Keys)
-			{
-				ReloadObject(cache[o] as DataObject);
-			}
-		}
-
-		public string Escape(string toEscape)
-		{
-			return connection.Escape(toEscape);
-		}
-
-		public bool IsSQLConnection
-		{
-			get { return connection.IsSQLConnection; }
-		}
-
-		protected readonly Hashtable m_bindingInfos = new Hashtable();
-
-		private class BindingInfo
-		{
-			public MemberInfo Member;
-			public bool PrimaryKey;
+			public readonly bool HasRelation;
+			public readonly MemberInfo Member;
+			public readonly bool ReadOnly;
 			public DataElement DataElementAttribute;
-			public bool HasRelation;
-			public bool ReadOnly;
+			public bool PrimaryKey;
 
 			public BindingInfo(MemberInfo member, bool primaryKey, bool hasRelation, bool readOnly, DataElement attrib)
 			{
-				this.Member = member;
-				this.PrimaryKey = primaryKey;
-				this.HasRelation = hasRelation;
-				this.DataElementAttribute = attrib;
-				this.ReadOnly = readOnly;
+				Member = member;
+				PrimaryKey = primaryKey;
+				HasRelation = hasRelation;
+				DataElementAttribute = attrib;
+				ReadOnly = readOnly;
 			}
 		}
 
-		protected readonly Hashtable m_relationAttributes = new Hashtable();
-
-		protected Relation[] GetRelationAttributes(MemberInfo info)
-		{
-			Relation[] rel = (Relation[])m_relationAttributes[info];
-			if (rel != null)
-				return rel;
-
-			rel = (Relation[])info.GetCustomAttributes(typeof (DOL.Database.Attributes.Relation), true);
-			m_relationAttributes[info] = rel;
-
-			return rel;
-		}
+		#endregion
 	}
 }

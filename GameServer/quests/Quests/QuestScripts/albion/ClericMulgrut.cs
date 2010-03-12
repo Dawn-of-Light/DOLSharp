@@ -181,7 +181,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			beltOfAnimation = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "belt_of_animation");
+			beltOfAnimation = GameServer.Database.FindObjectByKey<ItemTemplate>("belt_of_animation");
 			if (beltOfAnimation == null)
 			{
 				beltOfAnimation = new ItemTemplate();
@@ -216,7 +216,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(beltOfAnimation);
+					GameServer.Database.AddObject(beltOfAnimation);
 			}
 
 			#endregion

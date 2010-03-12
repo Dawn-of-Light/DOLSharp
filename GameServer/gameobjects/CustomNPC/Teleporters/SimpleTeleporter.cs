@@ -89,12 +89,7 @@ namespace DOL.GS
 			if (m_destinations.Count > 0 || GuildName == null || GuildName.Length == 0)
 				return;
 
-			Teleport [] teleports = (Teleport [])GameServer.Database.SelectObjects(typeof(Teleport), "Type = '" + GameServer.Database.Escape(GuildName) + "'");
-
-			foreach (Teleport teleport in teleports)
-			{
-				m_destinations.Add(teleport);
-			}
+			m_destinations.AddRange(GameServer.Database.SelectObjects<Teleport>("Type = '" + GameServer.Database.Escape(GuildName) + "'"));
 		}
 
 		public override bool WhisperReceive(GameLiving source, string text)

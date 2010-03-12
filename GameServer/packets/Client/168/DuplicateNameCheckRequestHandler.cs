@@ -29,7 +29,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			string name=packet.ReadString(30);
 			string select = string.Format("Name = '{0}'",GameServer.Database.Escape(name));
-			Character character = (Character) GameServer.Database.SelectObject(typeof(Character), select);
+			Character character = GameServer.Database.SelectObject<Character>(select);
 			bool nameExists = (character != null);
 
 			client.Out.SendDupNameCheckReply(name,nameExists);

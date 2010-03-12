@@ -208,7 +208,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			marinefungusroot = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "marinefungusroot");
+			marinefungusroot = GameServer.Database.FindObjectByKey<ItemTemplate>("marinefungusroot");
 			if (marinefungusroot == null)
 			{
 				marinefungusroot = new ItemTemplate();
@@ -282,7 +282,7 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(marinefungusroot);
+					GameServer.Database.AddObject(marinefungusroot);
 			}
 
 

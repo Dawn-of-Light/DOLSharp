@@ -207,7 +207,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		rindaskey = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "rindaskey");
+		rindaskey = GameServer.Database.FindObjectByKey<ItemTemplate>("rindaskey");
 			if (rindaskey == null)
 			{
 				rindaskey = new ItemTemplate();
@@ -281,9 +281,9 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(rindaskey);
+					GameServer.Database.AddObject(rindaskey);
 				}
-			ironkeychain = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "ironkeychain");
+			ironkeychain = GameServer.Database.FindObjectByKey<ItemTemplate>("ironkeychain");
 			if (ironkeychain == null)
 			{
 				ironkeychain = new ItemTemplate();
@@ -357,9 +357,9 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(ironkeychain);
+					GameServer.Database.AddObject(ironkeychain);
 				}
-			silverringofhealth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "silverringofhealth");
+			silverringofhealth = GameServer.Database.FindObjectByKey<ItemTemplate>("silverringofhealth");
 			if (silverringofhealth == null)
 			{
 				silverringofhealth = new ItemTemplate();
@@ -433,7 +433,7 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(silverringofhealth);
+					GameServer.Database.AddObject(silverringofhealth);
 				}
 			
 

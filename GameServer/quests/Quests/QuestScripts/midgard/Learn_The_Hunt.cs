@@ -153,7 +153,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		clawofblackmauler = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "clawofblackmauler");
+		clawofblackmauler = GameServer.Database.FindObjectByKey<ItemTemplate>("clawofblackmauler");
 			if (clawofblackmauler == null)
 			{
 				clawofblackmauler = new ItemTemplate();
@@ -227,7 +227,7 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(clawofblackmauler);
+					GameServer.Database.AddObject(clawofblackmauler);
 				}
 			
 

@@ -109,7 +109,7 @@ namespace DOL.GS.Commands
                            	player = client.Player;
 
 						String select = String.Format("Name = '{0}'", GameServer.Database.Escape(args[2]));
-						Character character = (Character)GameServer.Database.SelectObject(typeof(Character), select);
+						Character character = GameServer.Database.SelectObject<Character>(select);
 
 						if (character != null)
 						{

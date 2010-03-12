@@ -74,12 +74,13 @@ namespace DOL.GS
 				lock (m_itemTemplates.SyncRoot)
 				{
 					// ** find our loot template **
-					DataObject[] itemTemplates = null;
+					IList<ItemTemplate> itemTemplates = null;
+
 					for (int i = 0; i <= LEVEL_SIZE; i++)
 					{
 						try
 						{
-							itemTemplates = GameServer.Database.SelectObjects(typeof(ItemTemplate), "Level>=" + (i * LEVEL_RANGE) + " AND Level<=" + ((i + 1) * LEVEL_RANGE) + " AND IsPickable = 1 AND IsDropable = 1 AND CanDropAsloot = 1");
+							itemTemplates = GameServer.Database.SelectObjects<ItemTemplate>("Level>=" + (i * LEVEL_RANGE) + " AND Level<=" + ((i + 1) * LEVEL_RANGE) + " AND IsPickable = 1 AND IsDropable = 1 AND CanDropAsloot = 1");
 						}
 						catch (Exception e)
 						{
@@ -90,7 +91,7 @@ namespace DOL.GS
 
 						if (itemTemplates != null) // did we find a loot template
 						{
-							m_itemTemplates[i] = (ItemTemplate[])itemTemplates;
+							m_itemTemplates[i] = new List<ItemTemplate>(itemTemplates).ToArray();
 
 							List<ItemTemplate> templatesAlb = new List<ItemTemplate>();
 							List<ItemTemplate> templatesHib = new List<ItemTemplate>();

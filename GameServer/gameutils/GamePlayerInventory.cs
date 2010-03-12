@@ -75,7 +75,7 @@ namespace DOL.GS
 			{
 				try
 				{
-					DataObject[] items = GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(inventoryID) + "'");
+					var items = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(inventoryID) + "'");
 					foreach (InventoryItem item in items)
 					{
 						if (item.CanUseEvery > 0)
@@ -227,7 +227,7 @@ namespace DOL.GS
                     break;
             }
 			item.OwnerID = m_player.InternalID;
-			GameServer.Database.AddNewObject(item);
+			GameServer.Database.AddObject(item);
             
             if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
 				Player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(item, (int)eInventorySlot.Invalid));
@@ -901,7 +901,7 @@ namespace DOL.GS
 				newItem.SlotPosition = toSlot;
 				fromItem.Weight -= itemCount * (fromItem.Weight / fromItem.Count);
 				fromItem.Count -= itemCount;
-				GameServer.Database.AddNewObject(newItem);
+				GameServer.Database.AddObject(newItem);
 				return true;
 			}
 			return false;

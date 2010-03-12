@@ -265,10 +265,8 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte((byte) characters[j].Piety);
 								pak.WriteByte((byte) characters[j].Empathy);
 								pak.WriteByte((byte) characters[j].Charisma);
-
-								InventoryItem[] items = (InventoryItem[])
-								                        GameServer.Database.SelectObjects(typeof (InventoryItem),
-								                                                          "OwnerID = '" + GameServer.Database.Escape(characters[j].ObjectId) +
+								
+								var items = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(characters[j].ObjectId) +
 								                                                          "' AND SlotPosition >='10' AND SlotPosition <= '29'");
 								int found = 0;
 								//16 bytes: armor model
@@ -3408,11 +3406,11 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendMarketExplorerWindow(InventoryItem[] items, byte page, byte maxpage)
+		public virtual void SendMarketExplorerWindow(IList<InventoryItem> items, byte page, byte maxpage)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.MarketExplorerWindow)))
 			{
-				pak.WriteByte((byte) (page < items.Length/20 ? 20 : items.Length%20));
+				pak.WriteByte((byte) (page < items.Count/20 ? 20 : items.Count%20));
 				pak.WriteByte(page);
 				pak.WriteByte(maxpage);
 				pak.WriteByte(0);

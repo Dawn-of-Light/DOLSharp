@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-
 namespace DOL.Database.Connection
 {
 	/// <summary>
 	/// Enum what Datatstorage should be used
 	/// </summary>
-	public enum ConnectionType 
+	public enum ConnectionType
 	{
 		/// <summary>
 		/// Use XML-Files as Database
@@ -40,7 +38,7 @@ namespace DOL.Database.Connection
 		/// <summary>
 		/// Use an ODBC-Datasource
 		/// </summary>
-		DATABASE_ODBC,	
+		DATABASE_ODBC,
 		/// <summary>
 		/// Use an OLEDB-Datasource
 		/// </summary>

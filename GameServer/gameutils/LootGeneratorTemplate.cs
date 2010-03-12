@@ -79,12 +79,12 @@ namespace DOL.GS
 
 				lock (m_LootTemplates)
 				{
-					DataObject[] dbLootTemplates = null;
+					IList<DBLootTemplate> dbLootTemplates = null;
 
 					try
 					{
 						// TemplateName (typically the mob name), ItemTemplateID, Chance
-						dbLootTemplates = GameServer.Database.SelectAllObjects(typeof(DBLootTemplate));
+						dbLootTemplates = GameServer.Database.SelectAllObjects<DBLootTemplate>();
 					}
 					catch (Exception e)
 					{
@@ -132,11 +132,11 @@ namespace DOL.GS
 
 				lock (m_mobXLootTemplates)
 				{
-					DataObject[] dbMobLootTemplates = null;
+					IList<DBMobXLootTemplate> dbMobLootTemplates = null;
 
 					try
 					{
-						dbMobLootTemplates = GameServer.Database.SelectAllObjects(typeof(DBMobXLootTemplate));
+						dbMobLootTemplates = GameServer.Database.SelectAllObjects<DBMobXLootTemplate>();
 					}
 					catch (Exception e)
 					{
@@ -190,7 +190,7 @@ namespace DOL.GS
 		public void RefreshLootTemplate(string templateName)
 		{
 			Dictionary<string, DBLootTemplate> loot = null;
-			DataObject[] dbLootTemplates = GameServer.Database.SelectObjects(typeof(DBLootTemplate), "TemplateName = '" + templateName + "'");
+			var dbLootTemplates = GameServer.Database.SelectObjects<DBLootTemplate>("TemplateName = '" + templateName + "'");
 
 			if (dbLootTemplates != null)
 			{

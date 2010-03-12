@@ -709,11 +709,11 @@ namespace DOL.GS
 		public static void InitializeRaceResists()
 		{
 			// http://camelot.allakhazam.com/Start_Stats.html
-			DataObject[] races;
+			IList<Race> races;
 
 			try
 			{
-				races = GameServer.Database.SelectAllObjects( typeof( Race ) );
+				races = GameServer.Database.SelectAllObjects<Race>();
 			}
 			catch( Exception e )
 			{
@@ -738,7 +738,7 @@ namespace DOL.GS
 			{
 				if( m_raceResists == null )
 				{
-					m_raceResists = new Dictionary<int, int[]>( races.Length );
+					m_raceResists = new Dictionary<int, int[]>(races.Count);
 				}
 				else
 				{
@@ -1272,9 +1272,9 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Loading spells...");
 
-			DataObject[] spelldb = GameServer.Database.SelectAllObjects(typeof(DBSpell));
+			var spelldb = GameServer.Database.SelectAllObjects<DBSpell>();
 
-			m_dbSpells = new Dictionary<int, DBSpell>(spelldb.Length);
+			m_dbSpells = new Dictionary<int, DBSpell>(spelldb.Count);
 
 			foreach (DBSpell spell in spelldb)
 			{
@@ -1289,20 +1289,20 @@ namespace DOL.GS
 				}
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Spells loaded: " + spelldb.Length);
+				log.Info("Spells loaded: " + spelldb.Count);
 
 		}
 
 		public static void LoadSpellLines()
 		{
 			// load all spell lines
-			DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(DBSpellLine));
+			var dbo = GameServer.Database.SelectAllObjects<DBSpellLine>();
 
 			foreach (DBSpellLine line in dbo)
 			{
 				List<Spell> spell_list = new List<Spell>();
 
-				DBLineXSpell[] dbo2 = (DBLineXSpell[])GameServer.Database.SelectObjects(typeof(DBLineXSpell), "LineName = '" + GameServer.Database.Escape(line.KeyName) + "'");
+				var dbo2 = GameServer.Database.SelectObjects<DBLineXSpell>("LineName = '" + GameServer.Database.Escape(line.KeyName) + "'");
 
 				foreach (DBLineXSpell lxs in dbo2)
 				{
@@ -1320,10 +1320,10 @@ namespace DOL.GS
 
 				RegisterSpellLine(new SpellLine(line.KeyName, line.Name, line.Spec, line.IsBaseLine));
 				if (log.IsDebugEnabled)
-					log.Debug("SpellLine: " + line.KeyName + ", " + dbo2.Length + " spells");
+					log.Debug("SpellLine: " + line.KeyName + ", " + dbo2.Count + " spells");
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total spell lines loaded: " + dbo.Length);
+				log.Info("Total spell lines loaded: " + dbo.Count);
 
 		}
 
@@ -1331,14 +1331,14 @@ namespace DOL.GS
 		{
 			// load Abilities
 			log.Info("Loading Abilities...");
-			DataObject[] abilities = GameServer.Database.SelectAllObjects(typeof(DBAbility));
+			var abilities = GameServer.Database.SelectAllObjects<DBAbility>();
 			if (abilities != null)
 			{
 				foreach (DBAbility dba in abilities)
 				{
 					m_abilitiesByName.Add(dba.KeyName, dba);
 
-					if (dba.Implementation != null && dba.Implementation.Length > 0 && !m_implementationTypeCache.ContainsKey(dba.Implementation))
+					if (!string.IsNullOrEmpty(dba.Implementation) && !m_implementationTypeCache.ContainsKey(dba.Implementation))
 					{
 						Type type = ScriptMgr.GetType(dba.Implementation);
 						if (type != null)
@@ -1355,13 +1355,13 @@ namespace DOL.GS
 				}
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total abilities loaded: " + ((abilities != null) ? abilities.Length : 0));
+				log.Info("Total abilities loaded: " + ((abilities != null) ? abilities.Count : 0));
 		}
 
 		private static void LoadClassRealmAbilities()
 		{
 			log.Info("Loading class to realm ability associations...");
-			DataObject[] classxra = GameServer.Database.SelectAllObjects(typeof(ClassXRealmAbility));
+			var classxra = GameServer.Database.SelectAllObjects<ClassXRealmAbility>();
 
 			if (classxra != null)
 			{
@@ -1398,7 +1398,8 @@ namespace DOL.GS
 			//(procs) load all Procs
 			if (log.IsInfoEnabled)
 				log.Info("Loading procs...");
-			DataObject[] stylespells = GameServer.Database.SelectAllObjects(typeof(DBStyleXSpell));
+
+			var stylespells = GameServer.Database.SelectAllObjects<DBStyleXSpell>();
 			if (stylespells != null)
 			{
 				foreach (DBStyleXSpell proc in stylespells)
@@ -1425,7 +1426,7 @@ namespace DOL.GS
 				}
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total procs loaded: " + ((stylespells != null) ? stylespells.Length : 0));
+				log.Info("Total procs loaded: " + ((stylespells != null) ? stylespells.Count : 0));
 
 		}
 
@@ -1434,7 +1435,8 @@ namespace DOL.GS
 			// load Specialization & styles
 			if (log.IsInfoEnabled)
 				log.Info("Loading specialization & styles...");
-			DataObject[] specabilities = GameServer.Database.SelectAllObjects(typeof(DBSpecXAbility));
+
+			var specabilities = GameServer.Database.SelectAllObjects<DBSpecXAbility>();
 			if (specabilities != null)
 			{
 				foreach (DBSpecXAbility sxa in specabilities)
@@ -1457,7 +1459,7 @@ namespace DOL.GS
 
 		public static void LoadSpecializations()
 		{
-			DataObject[] specs = GameServer.Database.SelectAllObjects(typeof(DBSpecialization));
+			var specs = GameServer.Database.SelectAllObjects<DBSpecialization>();
 			if (specs != null)
 			{
 				foreach (DBSpecialization spec in specs)
@@ -1515,7 +1517,7 @@ namespace DOL.GS
 				SortStylesByLevel();
 			}
 			if (log.IsInfoEnabled)
-				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Length : 0));
+				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Count : 0));
 		}
 
 		private static void LoadAbilityHandlers()

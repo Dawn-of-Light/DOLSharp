@@ -130,7 +130,7 @@ namespace DOL.GS.Commands
                     #region Create
                     case "create":
                         {
-                            ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), args[2]);
+                            ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(args[2]);
                             if (template == null)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Create.NotFound", args[2]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -253,7 +253,7 @@ namespace DOL.GS.Commands
                     #region Info
                     case "info":
                         {
-                            ItemTemplate obj = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), args[2]);
+                            ItemTemplate obj = GameServer.Database.FindObjectByKey<ItemTemplate>(args[2]);
                             if (obj == null)
                             {
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Info.ItemTemplateUnknown", args[2]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1281,7 +1281,7 @@ namespace DOL.GS.Commands
                                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                 return;
                             }
-                            ItemTemplate temp = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), name);
+                            ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(name);
                             bool add = false;
                             if (temp == null)
                             {
@@ -1353,7 +1353,7 @@ namespace DOL.GS.Commands
                             temp.PoisonSpellID = item.PoisonSpellID;
                             if (add)
                             {
-                                GameServer.Database.AddNewObject(temp);
+                                GameServer.Database.AddObject(temp);
                             }
                             else
                             {
@@ -1369,8 +1369,8 @@ namespace DOL.GS.Commands
                             string name = string.Join(" ", args, 2, args.Length - 2);
 							if(name != "")
 							{
-								ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "id_nb like '%" + GameServer.Database.Escape(name) + "%'");
-								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Length), new object[] { });
+								var items = GameServer.Database.SelectObjects<ItemTemplate>("id_nb like '%" + GameServer.Database.Escape(name) + "%'");
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Count), new object[] { });
 								foreach (ItemTemplate item in items)
 								{
 									DisplayMessage(client, item.Id_nb + " (" + item.Name + ")", new object[] { });
@@ -1385,8 +1385,8 @@ namespace DOL.GS.Commands
                             string name = string.Join(" ", args, 2, args.Length - 2);
 							if(name != "")
 							{
-								ItemTemplate[] items = (ItemTemplate[])GameServer.Database.SelectObjects(typeof(ItemTemplate), "name like '%" + GameServer.Database.Escape(name) + "%'");
-								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Length), new object[] { });
+								var items = GameServer.Database.SelectObjects<ItemTemplate>("name like '%" + GameServer.Database.Escape(name) + "%'");
+								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Count), new object[] { });
 								foreach (ItemTemplate item in items)
 								{
 									DisplayMessage(client, item.Name + "  (" + item.Id_nb + ")", new object[] { });
@@ -1398,7 +1398,7 @@ namespace DOL.GS.Commands
 					#region Load
 					case "load":
 						{
-							if (GameServer.Database.UpdateObjectInPreCache(typeof(ItemTemplate), args[2]))
+							if (GameServer.Database.UpdateInCache<ItemTemplate>(args[2]))
 							{
 								log.DebugFormat("Item {0} updated or added to ItemTemplate cache.", args[2]);
 								DisplayMessage(client, "Item {0} updated or added to ItemTemplate cache.", args[2]);
@@ -1416,7 +1416,7 @@ namespace DOL.GS.Commands
 						{
 							if (args[2] != "")
 							{
-								ItemTemplate[] packageItems = GameServer.Database.SelectObjects(typeof(ItemTemplate), "PackageID = '" + args[2] + "'") as ItemTemplate[];
+								var packageItems = GameServer.Database.SelectObjects<ItemTemplate>("PackageID = '" + args[2] + "'") as ItemTemplate[];
 
 								if (packageItems != null)
 								{
@@ -1424,7 +1424,7 @@ namespace DOL.GS.Commands
 
 									foreach (ItemTemplate item in packageItems)
 									{
-										if (GameServer.Database.UpdateObjectInPreCache(typeof(ItemTemplate), item.Id_nb))
+										if (GameServer.Database.UpdateInCache<ItemTemplate>(item.Id_nb))
 										{
 											count++;
 										}

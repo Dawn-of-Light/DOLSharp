@@ -78,7 +78,7 @@ namespace DOL.GS.Quests.Albion
             #region defineItems
 
             // item db check
-            lightredclothdye = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "light_red_cloth_dye");
+            lightredclothdye = GameServer.Database.FindObjectByKey<ItemTemplate>("light_red_cloth_dye");
             if (lightredclothdye == null)
             {
                 lightredclothdye = new ItemTemplate();
@@ -109,9 +109,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(lightredclothdye);
+                    GameServer.Database.AddObject(lightredclothdye);
             }
-            lightredleatherdye = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "light_red_leather_dye");
+            lightredleatherdye = GameServer.Database.FindObjectByKey<ItemTemplate>("light_red_leather_dye");
             if (lightredleatherdye == null)
             {
                 lightredleatherdye = new ItemTemplate();
@@ -142,9 +142,9 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(lightredleatherdye);
+                    GameServer.Database.AddObject(lightredleatherdye);
             }
-            lightredenamel = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "light_red_enamel");
+            lightredenamel = GameServer.Database.FindObjectByKey<ItemTemplate>("light_red_enamel");
             if (lightredenamel == null)
             {
                 lightredenamel = new ItemTemplate();
@@ -175,7 +175,7 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddNewObject(lightredenamel);
+                    GameServer.Database.AddObject(lightredenamel);
             }
             #endregion
 

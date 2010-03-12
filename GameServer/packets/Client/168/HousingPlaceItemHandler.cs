@@ -286,7 +286,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 
                     OutdoorItem oitem = new OutdoorItem();
-                    oitem.BaseItem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), orgitem.Id_nb);
+                    oitem.BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(orgitem.Id_nb);
                     oitem.Model = orgitem.Model;
                     oitem.Position = Convert.ToByte(position);
 					oitem.Rotation = Convert.ToByte(rotation);
@@ -295,7 +295,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                     pos = GetFirstFreeSlot(house.OutdoorItems);
                     DBHouseOutdoorItem odbitem = oitem.CreateDBOutdoorItem(housenumber);
 					oitem.DatabaseItem = odbitem;
-					GameServer.Database.AddNewObject(odbitem);
+					GameServer.Database.AddObject(odbitem);
 
                     client.Player.Inventory.RemoveItem(orgitem);
                     //add item to outdooritems
@@ -373,12 +373,12 @@ namespace DOL.GS.PacketHandler.Client.v168
                             iitem.Size = 50; // Banners have to be reduced in size
                         }
                         else
-						iitem.BaseItem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), orgitem.Id_nb);
+						iitem.BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(orgitem.Id_nb);
 					}
 
 					DBHouseIndoorItem idbitem = iitem.CreateDBIndoorItem(housenumber);
 					iitem.DatabaseItem = idbitem;
-					GameServer.Database.AddNewObject(idbitem);
+					GameServer.Database.AddObject(idbitem);
 					house.IndoorItems.Add(pos, iitem);
                     client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.IndoorItemPlaced", (GetMaxIndoorItemsForHouse(house.Model) - house.IndoorItems.Count)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
@@ -471,7 +471,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                             point.Position = (uint)position;
 
                             // If we already have soemthing here, do not place more
-                            foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + house.HouseNumber + "'"))
+                            foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = '" + house.HouseNumber + "'"))
                             {
                                 if (hpitem.Position == point.Position)
                                 {
@@ -479,7 +479,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                                     return 1;
                                 }
                             }
-                            GameServer.Database.AddNewObject(point);
+                            GameServer.Database.AddObject(point);
                             GameObject obj = house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
                             house.HousepointItems[point.Position] = point;
                             client.Player.Inventory.RemoveItem(orgitem);
@@ -596,7 +596,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			a.OffY = player.Y - player.CurrentHouse.Y;
 			a.OffZ = player.Z - 25000;
 			a.OffH = player.Heading - player.CurrentHouse.Heading;
-			if (GameServer.Database.AddNewObject(a) && House.AddNewOffset(a))
+			if (GameServer.Database.AddObject(a) && House.AddNewOffset(a))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				log.Debug(string.Format("HOUSING: {0} logged new HouseHookpointOffset for model {1}, position {2}, offset {3}, {4}, {5}", player.Name, a.Model, a.Hookpoint, a.OffX, a.OffY, a.OffZ));

@@ -87,7 +87,7 @@ namespace DOL.GS
 		/// <returns>Found item or null</returns>
 		public static GameInventoryItem CreateFromTemplate(string templateID)
 		{
-			ItemTemplate template = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof(ItemTemplate), templateID);
+			ItemTemplate template = (ItemTemplate) GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
 			if (template == null)
 			{
 				if (log.IsWarnEnabled)

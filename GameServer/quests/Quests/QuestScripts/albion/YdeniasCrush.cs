@@ -227,7 +227,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			letterToElvar = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_to_elvar_tambor");
+			letterToElvar = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_to_elvar_tambor");
 			if (letterToElvar == null)
 			{
 				if (log.IsWarnEnabled)
@@ -257,11 +257,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(letterToElvar);
+					GameServer.Database.AddObject(letterToElvar);
 			}
 
 			// item db check
-			letterToYdenia = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_to_yderia_philpott");
+			letterToYdenia = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_to_yderia_philpott");
 			if (letterToYdenia == null)
 			{
 				if (log.IsWarnEnabled)
@@ -291,11 +291,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(letterToYdenia);
+					GameServer.Database.AddObject(letterToYdenia);
 			}
 
 			// item db check
-			silverRingOfHealth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "silver_ring_of_health");
+			silverRingOfHealth = GameServer.Database.FindObjectByKey<ItemTemplate>("silver_ring_of_health");
 			if (silverRingOfHealth == null)
 			{
 				if (log.IsWarnEnabled)
@@ -333,7 +333,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(silverRingOfHealth);
+					GameServer.Database.AddObject(silverRingOfHealth);
 			}
 
 			#endregion

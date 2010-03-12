@@ -50,7 +50,7 @@ namespace DOL.GS
 		{
 			m_factions = new Hashtable(1);
 
-			DataObject[] dbfactions =	GameServer.Database.SelectAllObjects(typeof(DBFaction));
+			var dbfactions =	GameServer.Database.SelectAllObjects<DBFaction>();
 			foreach(DBFaction dbfaction in dbfactions)
 			{
 				Faction myfaction = new Faction();
@@ -58,7 +58,7 @@ namespace DOL.GS
 				m_factions.Add(dbfaction.ID,myfaction);
 			}
 
-			DataObject[] dblinkedfactions =	GameServer.Database.SelectAllObjects(typeof(DBLinkedFaction));
+			var dblinkedfactions =	GameServer.Database.SelectAllObjects<DBLinkedFaction>();
 			foreach(DBLinkedFaction dblinkedfaction in dblinkedfactions)
 			{
 				Faction faction = GetFactionByID(dblinkedfaction.LinkedFactionID);
@@ -73,7 +73,8 @@ namespace DOL.GS
 				else
 					faction.AddEnemyFaction(linkedFaction);
 			}
-			DataObject[] dbfactionAggroLevels =	GameServer.Database.SelectAllObjects(typeof(DBFactionAggroLevel));
+
+			var dbfactionAggroLevels =	GameServer.Database.SelectAllObjects<DBFactionAggroLevel>();
 			foreach(DBFactionAggroLevel dbfactionAggroLevel in dbfactionAggroLevels)
 			{
 				Faction faction = GetFactionByID(dbfactionAggroLevel.FactionID);
