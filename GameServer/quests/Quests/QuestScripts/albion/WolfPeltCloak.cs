@@ -261,7 +261,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			wolfPeltCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_pelt_cloak");
+			wolfPeltCloak = GameServer.Database.FindObjectByKey<ItemTemplate>("wolf_pelt_cloak");
 			if (wolfPeltCloak == null)
 			{
 				if (log.IsWarnEnabled)
@@ -299,10 +299,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(wolfPeltCloak);
+					GameServer.Database.AddObject(wolfPeltCloak);
 			}
 
-			wolfFur = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_fur");
+			wolfFur = GameServer.Database.FindObjectByKey<ItemTemplate>("wolf_fur");
 			if (wolfFur == null)
 			{
 				if (log.IsWarnEnabled)
@@ -320,10 +320,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(wolfFur);
+					GameServer.Database.AddObject(wolfFur);
 			}
 
-			wolfHeadToken = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "wolf_head_token");
+			wolfHeadToken = GameServer.Database.FindObjectByKey<ItemTemplate>("wolf_head_token");
 			if (wolfHeadToken == null)
 			{
 				if (log.IsWarnEnabled)
@@ -341,7 +341,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(wolfHeadToken);
+					GameServer.Database.AddObject(wolfHeadToken);
 			}
 
 			#endregion

@@ -47,7 +47,7 @@ namespace DOL.GS.DatabaseConverters
 				return;
 			}
 
-			Mob[] mobs = (Mob[])GameServer.Database.SelectObjects(typeof(Mob), "`ClassType` = 'DOL.GS.GameMob'");
+			var mobs = GameServer.Database.SelectObjects<Mob>("`ClassType` = 'DOL.GS.GameMob'");
 
 			int count = 0;
 			foreach (Mob mob in mobs)

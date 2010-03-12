@@ -883,7 +883,7 @@ namespace DOL.GS
 
 		public void AddToDatabase()
 		{
-			GameServer.Database.AddNewObject(this.m_DBguild);
+			GameServer.Database.AddObject(this.m_DBguild);
 		}
 		/// <summary>
 		/// Saves this guild to database

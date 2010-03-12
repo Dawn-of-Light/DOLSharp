@@ -5,6 +5,7 @@ using DOL.Database;
 using DOL.GS;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
+using System.Collections.Generic;
 
 namespace DOL.GS.Keeps
 {
@@ -20,7 +21,7 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepGuard guard)
 		{
-			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "ClassType != 'DOL.GS.Keeps.Banner' and TemplateID = '" + GameServer.Database.Escape(guard.TemplateID) + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height <= " + guard.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
+			return GameServer.Database.SelectObject<DBKeepPosition>("ClassType != 'DOL.GS.Keeps.Banner' and TemplateID = '" + GameServer.Database.Escape(guard.TemplateID) + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height <= " + guard.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
 		}
 
 		/// <summary>
@@ -30,7 +31,7 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepBanner b)
 		{
-			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "ClassType = 'DOL.GS.Keeps.Banner' and TemplateID = '" + GameServer.Database.Escape(b.TemplateID) + "' and ComponentSkin = '" + b.Component.Skin + "' and Height <= " + b.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
+			return GameServer.Database.SelectObject<DBKeepPosition>("ClassType = 'DOL.GS.Keeps.Banner' and TemplateID = '" + GameServer.Database.Escape(b.TemplateID) + "' and ComponentSkin = '" + b.Component.Skin + "' and Height <= " + b.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
 		}
 
 		/// <summary>
@@ -40,7 +41,7 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetPosition(GameKeepGuard guard)
 		{
-			return GameServer.Database.SelectObject(typeof(DBKeepPosition), "TemplateID = '" + GameServer.Database.Escape(guard.TemplateID) + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height = " + guard.Component.Height) as DBKeepPosition;
+			return GameServer.Database.SelectObject<DBKeepPosition>("TemplateID = '" + GameServer.Database.Escape(guard.TemplateID) + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height = " + guard.Component.Height) as DBKeepPosition;
 		}
 
 
@@ -181,7 +182,7 @@ namespace DOL.GS.Keeps
 			DBKeepPosition pos = CreatePosition(guardID, component, player);
 			pos.Height = height;
 			pos.ClassType = type.ToString();
-			GameServer.Database.AddNewObject(pos);
+			GameServer.Database.AddObject(pos);
 			return pos;
 		}
 
@@ -198,7 +199,7 @@ namespace DOL.GS.Keeps
 			pos.Height = 0;
 			pos.ClassType = "DOL.GS.Keeps.Patrol";
 			pos.KeepType = (int)keepType;
-			GameServer.Database.AddNewObject(pos);
+			GameServer.Database.AddObject(pos);
 			return pos;
 		}
 
@@ -288,8 +289,8 @@ namespace DOL.GS.Keeps
 		{
 			SortedList sorted = new SortedList();
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			DBPath dbpath = (DBPath)GameServer.Database.SelectObject(typeof(DBPath), "PathID='" + GameServer.Database.Escape(pathID) + "'");
-			DBPathPoint[] pathpoints = null;
+			DBPath dbpath = GameServer.Database.SelectObject<DBPath>("PathID='" + GameServer.Database.Escape(pathID) + "'");
+			IList<DBPathPoint> pathpoints = null;
 			ePathType pathType = ePathType.Once;
 
 			if (dbpath != null)
@@ -299,7 +300,7 @@ namespace DOL.GS.Keeps
 			}
 			if (pathpoints == null)
 			{
-				pathpoints = (DBPathPoint[])GameServer.Database.SelectObjects(typeof(DBPathPoint), "PathID='" + GameServer.Database.Escape(pathID) + "'");
+				pathpoints = GameServer.Database.SelectObjects<DBPathPoint>("PathID='" + GameServer.Database.Escape(pathID) + "'");
 			}
 
 			foreach (DBPathPoint point in pathpoints)
@@ -347,7 +348,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			foreach (DBPath pp in GameServer.Database.SelectObjects(typeof(DBPath), "PathID='" + GameServer.Database.Escape(pathID) + "'"))
+			foreach (DBPath pp in GameServer.Database.SelectObjects<DBPath>("PathID='" + GameServer.Database.Escape(pathID) + "'"))
 			{
 				GameServer.Database.DeleteObject(pp);
 			}
@@ -357,7 +358,7 @@ namespace DOL.GS.Keeps
 			//Set the current pathpoint to the rootpoint!
 			path = root;
 			DBPath dbp = new DBPath(pathID, ePathType.Loop);
-			GameServer.Database.AddNewObject(dbp);
+			GameServer.Database.AddObject(dbp);
 
 			int i = 1;
 			do
@@ -372,7 +373,7 @@ namespace DOL.GS.Keeps
 				dbpp.Step = i++;
 				dbpp.PathID = pathID;
 				dbpp.WaitTime = path.WaitTime;
-				GameServer.Database.AddNewObject(dbpp);
+				GameServer.Database.AddObject(dbpp);
 				path = path.Next;
 			} while (path != null && path != root);
 		}
@@ -421,7 +422,7 @@ namespace DOL.GS.Keeps
 
 			pos.HOff = player.Heading - component.Heading;
 
-			GameServer.Database.AddNewObject(pos);
+			GameServer.Database.AddObject(pos);
 
 			player.Out.SendMessage("Added door successfully, restart the server", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}

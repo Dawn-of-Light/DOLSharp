@@ -26,7 +26,7 @@ using ICSharpCode.SharpZipLib.Zip.Compression;
 namespace DOL.MPK
 {
 	/// <summary>
-	/// Summary description for MPKDirectory.
+	/// Handles the reading and writing to MPK files.
 	/// </summary>
 	public class MPK
 	{

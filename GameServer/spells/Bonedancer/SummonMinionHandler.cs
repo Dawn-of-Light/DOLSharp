@@ -107,7 +107,7 @@ namespace DOL.GS.Spells
 
 			if (pet.Brain is BDArcherBrain)
 			{
-				ItemTemplate temp = GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "BD_Archer_Distance_bow") as ItemTemplate;
+				ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>("BD_Archer_Distance_bow") as ItemTemplate;
 				if (temp == null)
 					log.Error("Unable to find Bonedancer Archer's Bow");
 				else

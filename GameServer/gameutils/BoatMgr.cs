@@ -138,7 +138,7 @@ namespace DOL.GS
                 boat.Flags ^= (uint)GameNPC.eFlags.PEACE;
 
                 AddBoat(boat);
-                GameServer.Database.AddNewObject(boat.theBoatDB);
+                GameServer.Database.AddObject(boat.theBoatDB);
                 return boat;
             }
             catch (Exception e)
@@ -164,7 +164,7 @@ namespace DOL.GS
                     return false;
                 }
 
-                DBBoat[] boats = (DBBoat[])GameServer.Database.SelectObjects(typeof(DBBoat), "BoatName='" + GameServer.Database.Escape(boatName) + "'");
+                var boats = GameServer.Database.SelectObjects<DBBoat>("BoatName='" + GameServer.Database.Escape(boatName) + "'");
                 foreach (DBBoat boat in boats)
                 {
                     GameServer.Database.DeleteObject(boat);
@@ -265,8 +265,8 @@ namespace DOL.GS
             }
 
             //load boats
-            DataObject[] objs = GameServer.Database.SelectAllObjects(typeof(DBBoat));
-            foreach (DataObject obj in objs)
+            var objs = GameServer.Database.SelectAllObjects<DBBoat>();
+            foreach (var obj in objs)
             {
                 GameBoat myboat = new GameBoat();
                 myboat.LoadFromDatabase(obj);

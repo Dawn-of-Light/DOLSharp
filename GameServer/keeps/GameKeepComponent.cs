@@ -345,7 +345,7 @@ namespace DOL.GS.Keeps
 				query = query + " AND `ClassType` = 'DOL.GS.Keeps.GameKeepDoor'"; 
 			}
 
-			DBKeepPosition[] DBPositions = (DBKeepPosition[])GameServer.Database.SelectObjects(typeof(DBKeepPosition), query);
+			var DBPositions = GameServer.Database.SelectObjects<DBKeepPosition>(query);
 
 			foreach (DBKeepPosition position in DBPositions)
 			{
@@ -496,7 +496,7 @@ namespace DOL.GS.Keeps
 			DBKeepComponent obj = null;
 			bool New = false;
 			if (InternalID != null)
-				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), InternalID);
+				obj = GameServer.Database.FindObjectByKey<DBKeepComponent>(InternalID);
 			if (obj == null)
 			{
 				obj = new DBKeepComponent();
@@ -513,7 +513,7 @@ namespace DOL.GS.Keeps
 
 			if (New)
 			{
-				GameServer.Database.AddNewObject(obj);
+				GameServer.Database.AddObject(obj);
 				InternalID = obj.ObjectId;
 				log.DebugFormat("Added new component for keep ID {0} health {1}", Keep.KeepID, Health);
 			}
@@ -630,7 +630,7 @@ namespace DOL.GS.Keeps
 			Delete();
 			DBKeepComponent obj = null;
 			if (this.InternalID != null)
-				obj = (DBKeepComponent)GameServer.Database.FindObjectByKey(typeof(DBKeepComponent), this.InternalID);
+				obj = GameServer.Database.FindObjectByKey<DBKeepComponent>(this.InternalID);
 			if (obj != null)
 				GameServer.Database.DeleteObject(obj);
 

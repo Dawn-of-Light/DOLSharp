@@ -21,8 +21,6 @@ namespace DOL.GS.Atlantis
     /// </summary>
     public class TetheredEncounterMob : BasicEncounterMob
     {
-        public static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         public override void SaveIntoDatabase()
         {
         }

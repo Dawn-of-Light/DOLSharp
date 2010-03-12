@@ -386,7 +386,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			treviansHoodedCloak = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "trevians_hooded_cloak");
+			treviansHoodedCloak = GameServer.Database.FindObjectByKey<ItemTemplate>("trevians_hooded_cloak");
 			if (treviansHoodedCloak == null)
 			{
 				if (log.IsWarnEnabled)
@@ -418,11 +418,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(treviansHoodedCloak);
+					GameServer.Database.AddObject(treviansHoodedCloak);
 			}
 
 			// item db check
-			bootsOfRescuer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_rescuer_alb");
+			bootsOfRescuer = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_rescuer_alb");
 			if (bootsOfRescuer == null)
 			{
 				if (log.IsWarnEnabled)
@@ -473,11 +473,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bootsOfRescuer);
+					GameServer.Database.AddObject(bootsOfRescuer);
 			}
 
 			// item db check
-			bootsOfBaneful = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_baneful");
+			bootsOfBaneful = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_baneful");
 			if (bootsOfBaneful == null)
 			{
 				if (log.IsWarnEnabled)
@@ -528,11 +528,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bootsOfBaneful);
+					GameServer.Database.AddObject(bootsOfBaneful);
 			}
 
 			// item db check
-			bootsOfProtector = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_protector");
+			bootsOfProtector = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_protector");
 			if (bootsOfProtector == null)
 			{
 				if (log.IsWarnEnabled)
@@ -582,11 +582,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bootsOfProtector);
+					GameServer.Database.AddObject(bootsOfProtector);
 			}
 
 			// item db check
-			bootsOfErudition = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_erudition");
+			bootsOfErudition = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_erudition");
 			if (bootsOfErudition == null)
 			{
 				if (log.IsWarnEnabled)
@@ -633,10 +633,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bootsOfErudition);
+					GameServer.Database.AddObject(bootsOfErudition);
 			}
 
-			bootsOfReverence = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_reverence");
+			bootsOfReverence = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_reverence");
 			if (bootsOfReverence == null)
 			{
 				if (log.IsWarnEnabled)
@@ -686,10 +686,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bootsOfReverence);
+					GameServer.Database.AddObject(bootsOfReverence);
 			}
 
-			bootsOfShadow = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_shadow");
+			bootsOfShadow = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_shadow");
 			if (bootsOfShadow == null)
 			{
 				if (log.IsWarnEnabled)
@@ -739,10 +739,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bootsOfShadow);
+					GameServer.Database.AddObject(bootsOfShadow);
 			}
 
-			bootsOfEvanescent = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_evanescent");
+			bootsOfEvanescent = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_evanescent");
 			if (bootsOfEvanescent == null)
 			{
 				if (log.IsWarnEnabled)
@@ -792,10 +792,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bootsOfEvanescent);
+					GameServer.Database.AddObject(bootsOfEvanescent);
 			}
 
-			bootsOfInfluence = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_influence");
+			bootsOfInfluence = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_influence");
 			if (bootsOfInfluence == null)
 			{
 				if (log.IsWarnEnabled)
@@ -842,10 +842,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bootsOfInfluence);
+					GameServer.Database.AddObject(bootsOfInfluence);
 			}
 
-			bootsOfTheDevoted = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "boots_of_the_devoted");
+			bootsOfTheDevoted = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_the_devoted");
 			if (bootsOfTheDevoted == null)
 			{
 				if (log.IsWarnEnabled)
@@ -895,10 +895,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bootsOfTheDevoted);
+					GameServer.Database.AddObject(bootsOfTheDevoted);
 			}
 
-			whistleReward = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "trevians_whistle");
+			whistleReward = GameServer.Database.FindObjectByKey<ItemTemplate>("trevians_whistle");
 			if (whistleReward == null)
 			{
 				if (log.IsWarnEnabled)
@@ -930,7 +930,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(whistleReward);
+					GameServer.Database.AddObject(whistleReward);
 			}
 
 			#endregion

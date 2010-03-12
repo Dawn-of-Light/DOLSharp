@@ -52,7 +52,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                 return 0;
             }
 
-            DBHouseMerchant merchant = (DBHouseMerchant)GameServer.Database.SelectObject(typeof(DBHouseMerchant), "HouseNumber = '" + con.HouseNumber + "'");
+            DBHouseMerchant merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + con.HouseNumber + "'");
 
             if (merchant.Quantity > 0)
             {

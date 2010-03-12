@@ -99,8 +99,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArtifactEncounters\BasicEncounterMob.cs" />
-    <Compile Include="ArtifactEncounters\TetheredEncounterMob.cs" />
+    <Compile Include="quests\artifact example\BasicEncounterMob.cs" />
+    <Compile Include="quests\artifact example\TetheredEncounterMob.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -136,9 +136,9 @@
     <Compile Include="globals.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MasterLevelEncounters\EncounterMgr.cs" />
-    <Compile Include="MasterLevelEncounters\ML1FireIsland.cs" />
-    <Compile Include="quests\examples\HelpSirQuait.cs" />
+    <Compile Include="quests\masterlevel example\EncounterMgr.cs" />
+    <Compile Include="quests\masterlevel example\ML1FireIsland.cs" />
+    <Compile Include="quests\classic example\HelpSirQuait.cs" />
     <Compile Include="gameevents\WebUIGenerator.cs">
       <SubType>Code</SubType>
     </Compile>

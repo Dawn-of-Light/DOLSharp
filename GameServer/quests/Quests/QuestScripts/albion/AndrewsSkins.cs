@@ -265,7 +265,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			bundleOfBearSkins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "bundle_of_bear_skins");
+			bundleOfBearSkins = GameServer.Database.FindObjectByKey<ItemTemplate>("bundle_of_bear_skins");
 			if (bundleOfBearSkins == null)
 			{
 				bundleOfBearSkins = new ItemTemplate();
@@ -295,11 +295,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(bundleOfBearSkins);
+					GameServer.Database.AddObject(bundleOfBearSkins);
 			}
 
 			// item db check
-			spoolOfLeatherworkingThread = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "spool_of_leatherworking_thread");
+			spoolOfLeatherworkingThread = GameServer.Database.FindObjectByKey<ItemTemplate>("spool_of_leatherworking_thread");
 			if (spoolOfLeatherworkingThread == null)
 			{
 				spoolOfLeatherworkingThread = new ItemTemplate();
@@ -329,11 +329,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(spoolOfLeatherworkingThread);
+					GameServer.Database.AddObject(spoolOfLeatherworkingThread);
 			}
 
 			// item db check
-			chokerOfTheBear = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "choker_of_the_bear");
+			chokerOfTheBear = GameServer.Database.FindObjectByKey<ItemTemplate>("choker_of_the_bear");
 			if (chokerOfTheBear == null)
 			{
 				chokerOfTheBear = new ItemTemplate();
@@ -372,7 +372,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(chokerOfTheBear);
+					GameServer.Database.AddObject(chokerOfTheBear);
 			}
 
 			#endregion

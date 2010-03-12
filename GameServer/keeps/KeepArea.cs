@@ -69,7 +69,7 @@ namespace DOL.GS.Keeps
 					m_dbArea.Y = this.Y;
 					m_dbArea.Z = this.Z;
 
-					GameServer.Database.AddNewObject(m_dbArea);
+					GameServer.Database.AddObject(m_dbArea);
 				}
 			}
 		}

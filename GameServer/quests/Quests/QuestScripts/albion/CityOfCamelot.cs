@@ -219,7 +219,7 @@ namespace DOL.GS.Quests.Albion
 
 			ticketToCotswold = CreateTicketTo("ticket to Camelot Hills", "");
 
-			scrollUrqhart = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "scroll_for_urqhart");
+			scrollUrqhart = GameServer.Database.FindObjectByKey<ItemTemplate>("scroll_for_urqhart");
 			if (scrollUrqhart == null)
 			{
 				scrollUrqhart = new ItemTemplate();
@@ -240,11 +240,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(scrollUrqhart);
+					GameServer.Database.AddObject(scrollUrqhart);
 			}
 
 
-			receiptBombard = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "receipt_for_bombard");
+			receiptBombard = GameServer.Database.FindObjectByKey<ItemTemplate>("receipt_for_bombard");
 			if (receiptBombard == null)
 			{
 				receiptBombard = new ItemTemplate();
@@ -265,10 +265,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(receiptBombard);
+					GameServer.Database.AddObject(receiptBombard);
 			}
 
-			chestOfCoins = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "small_chest_of_coins");
+			chestOfCoins = GameServer.Database.FindObjectByKey<ItemTemplate>("small_chest_of_coins");
 			if (chestOfCoins == null)
 			{
 				chestOfCoins = new ItemTemplate();
@@ -289,10 +289,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(chestOfCoins);
+					GameServer.Database.AddObject(chestOfCoins);
 			}
 
-			letterFrederick = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "letter_for_frederick");
+			letterFrederick = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_for_frederick");
 			if (letterFrederick == null)
 			{
 				letterFrederick = new ItemTemplate();
@@ -313,10 +313,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(letterFrederick);
+					GameServer.Database.AddObject(letterFrederick);
 			}
 
-			assistantNecklace = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "assistant_necklace");
+			assistantNecklace = GameServer.Database.FindObjectByKey<ItemTemplate>("assistant_necklace");
 			if (assistantNecklace == null)
 			{
 				assistantNecklace = new ItemTemplate();
@@ -338,11 +338,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(assistantNecklace);
+					GameServer.Database.AddObject(assistantNecklace);
 			}
 
 			// item db check
-			recruitsRoundShield = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_round_shield");
+			recruitsRoundShield = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_round_shield");
 			if (recruitsRoundShield == null)
 			{
 				if (log.IsWarnEnabled)
@@ -387,11 +387,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsRoundShield);
+					GameServer.Database.AddObject(recruitsRoundShield);
 			}
 
 			// item db check
-			recruitsBracer = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "recruits_silver_bracer");
+			recruitsBracer = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_silver_bracer");
 			if (recruitsBracer == null)
 			{
 				recruitsBracer = new ItemTemplate();
@@ -436,7 +436,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(recruitsBracer);
+					GameServer.Database.AddObject(recruitsBracer);
 			}
 
 			#endregion

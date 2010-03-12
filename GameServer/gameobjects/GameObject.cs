@@ -1432,7 +1432,7 @@ namespace DOL.GS
 		/// <returns>true if the item was successfully received</returns>
 		public virtual bool ReceiveItem(GameLiving source, string templateID)
 		{
-			ItemTemplate template = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), templateID);
+			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
 			if (template == null)
 			{
 				if (log.IsErrorEnabled)

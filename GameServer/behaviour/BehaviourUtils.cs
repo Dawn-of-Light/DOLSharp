@@ -104,7 +104,7 @@ namespace DOL.GS.Behaviour
                     result = obj;
                 else
                 {
-                    result = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), Convert.ToString(obj));
+                    result = GameServer.Database.FindObjectByKey<ItemTemplate>(Convert.ToString(obj));
                 }
             }
             else if (destinationType == typeof(CustomDialogResponse))

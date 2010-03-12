@@ -64,7 +64,7 @@ namespace DOL.GS.Housing
 			this.Model = dbitem.Model;
 			this.Position = dbitem.Position;
 			this.Rotation = dbitem.Rotation;
-			this.BaseItem = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), dbitem.BaseItemID);
+			this.BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(dbitem.BaseItemID);
 			this.DatabaseItem = dbitem;
 		}
 

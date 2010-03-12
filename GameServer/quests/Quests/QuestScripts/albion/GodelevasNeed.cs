@@ -187,7 +187,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			woodenBucket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "wooden_bucket");
+			woodenBucket = GameServer.Database.FindObjectByKey<ItemTemplate>("wooden_bucket");
 			if (woodenBucket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -217,11 +217,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(woodenBucket);
+					GameServer.Database.AddObject(woodenBucket);
 			}
 
 			// item db check
-			fullWoodenBucket = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "full_wooden_bucket");
+			fullWoodenBucket = GameServer.Database.FindObjectByKey<ItemTemplate>("full_wooden_bucket");
 			if (fullWoodenBucket == null)
 			{
 				if (log.IsWarnEnabled)
@@ -251,11 +251,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(fullWoodenBucket);
+					GameServer.Database.AddObject(fullWoodenBucket);
 			}
 
 			// item db check
-			reedBracer = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "reed_bracer");
+			reedBracer = GameServer.Database.FindObjectByKey<ItemTemplate>("reed_bracer");
 			if (reedBracer == null)
 			{
 				if (log.IsWarnEnabled)
@@ -293,7 +293,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(reedBracer);
+					GameServer.Database.AddObject(reedBracer);
 			}
 
 			#endregion

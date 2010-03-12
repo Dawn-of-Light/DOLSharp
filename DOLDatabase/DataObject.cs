@@ -29,75 +29,17 @@ namespace DOL.Database
 	/// </summary>
 	public abstract class DataObject : ICloneable
 	{
-		private string objectId;
-
-		private bool dirty;
-
-		private bool valid;
+		private bool _dirty;
 
 		/// <summary>
 		/// Default-Construktor that generates a new Object-ID and set
 		/// Dirty and Valid to <c>false</c>
 		/// </summary>
-		public DataObject()
+		protected DataObject()
 		{
-			objectId = IdGenerator.generateId();
-			dirty = false;
-			valid = false;
-		}
-
-		/// <summary>
-		/// Returns the Tablename for an Objecttype. 
-		/// Reads the DataTable-Attribute or if
-		/// not defined returns the Classname
-		/// </summary>
-		/// <param name="myType">get the Tablename for this DataObject</param>
-		/// <returns>The </returns>
-		public static string GetTableName(Type myType)
-		{
-			object[] attri = myType.GetCustomAttributes(typeof(DataTable), true);
-
-			if((attri.Length >= 1) && (attri[0] is DataTable))
-			{
-				DataTable tab = attri[0] as DataTable;					
-				string name = tab.TableName;
-				if(name != null)
-					return name;
-			}
-
-			return myType.Name;
-		}
-
-		public static string GetViewName(Type myType)
-		{
-			object[] attri = myType.GetCustomAttributes(typeof(DataTable), true);
-
-			if((attri.Length >= 1) && (attri[0] is DataTable))
-			{
-				DataTable tab = attri[0] as DataTable;					
-				string name = tab.ViewName;
-				if(name != null)
-					return name;
-			}
-
-			return null;
-		}		
-		/// <summary>
-		/// Returns the Tablename for an Objecttype. 
-		/// Reads the DataTable-Attribute or if
-		/// not defined returns the Classname
-		/// </summary>
-		/// <param name="myType">get the Tablename for this DataObject</param>
-		/// <returns>The </returns>
-		public static bool GetPreCachedFlag(Type myType)
-		{
-			object[] attri = myType.GetCustomAttributes(typeof(DataTable), true);
-			if((attri.Length >= 1) && (attri[0] is DataTable))
-			{
-				DataTable tab = attri[0] as DataTable;					
-				return tab.PreCache;
-			}
-			return false;
+			ObjectId = IDGenerator.GenerateID();
+			_dirty = false;
+			IsValid = false;
 		}
 
 		/// <summary>
@@ -108,8 +50,8 @@ namespace DOL.Database
 		{
 			get
 			{
-				Type myType = this.GetType();
-				return DataObject.GetTableName(myType);
+				Type myType = GetType();
+				return GetTableName(myType);
 			}
 		}
 
@@ -121,8 +63,8 @@ namespace DOL.Database
 		{
 			get
 			{
-				Type myType = this.GetType();
-				return DataObject.GetPreCachedFlag(myType);
+				Type myType = GetType();
+				return GetPreCachedFlag(myType);
 			}
 		}
 
@@ -130,43 +72,19 @@ namespace DOL.Database
 		/// Is object valid
 		/// </summary>
 		[Browsable(false)]
-		public bool IsValid
-		{
-			get
-			{
-				return valid;
-			}
-			set
-			{
-				valid = value;
-			}
-		}
+		public bool IsValid { get; set; }
 
 		/// <summary>
 		/// Auto save object or not?
 		/// </summary>
 		[Browsable(false)]
-		abstract public bool AutoSave
-		{
-			get;
-			set;
-		}
+		public abstract bool AutoSave { get; set; }
 
 		/// <summary>
 		/// Index of the object in his table
 		/// </summary>
 		[Browsable(false)]
-		public string ObjectId
-		{
-			get
-			{
-				return objectId;
-			}
-			set
-			{
-				objectId = value;
-			}
-		}
+		public string ObjectId { get; set; }
 
 		/// <summary>
 		/// Is object different of object in DB
@@ -174,15 +92,10 @@ namespace DOL.Database
 		[Browsable(false)]
 		public virtual bool Dirty
 		{
-			set
-			{
-				dirty = value;
-			}
-			get
-			{
-				return dirty;
-			}
+			set { _dirty = value; }
+			get { return _dirty; }
 		}
+
 		#region ICloneable Member
 
 		/// <summary>
@@ -191,11 +104,67 @@ namespace DOL.Database
 		/// <returns></returns>
 		public object Clone()
 		{
-			DataObject obj = (DataObject)MemberwiseClone();
-			obj.ObjectId = IdGenerator.generateId();
+			var obj = (DataObject) MemberwiseClone();
+			obj.ObjectId = IDGenerator.GenerateID();
 			return obj;
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Returns the Tablename for an Objecttype. 
+		/// Reads the DataTable-Attribute or if
+		/// not defined returns the Classname
+		/// </summary>
+		/// <param name="myType">get the Tablename for this DataObject</param>
+		/// <returns>The </returns>
+		public static string GetTableName(Type myType)
+		{
+			object[] attri = myType.GetCustomAttributes(typeof (DataTable), true);
+
+			if ((attri.Length >= 1) && (attri[0] is DataTable))
+			{
+				var tab = attri[0] as DataTable;
+				string name = tab.TableName;
+				if (name != null)
+					return name;
+			}
+
+			return myType.Name;
+		}
+
+		public static string GetViewName(Type myType)
+		{
+			object[] attri = myType.GetCustomAttributes(typeof (DataTable), true);
+
+			if ((attri.Length >= 1) && (attri[0] is DataTable))
+			{
+				var tab = attri[0] as DataTable;
+				string name = tab.ViewName;
+				if (name != null)
+					return name;
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Returns the Tablename for an Objecttype. 
+		/// Reads the DataTable-Attribute or if
+		/// not defined returns the Classname
+		/// </summary>
+		/// <param name="myType">get the Tablename for this DataObject</param>
+		/// <returns>The </returns>
+		public static bool GetPreCachedFlag(Type myType)
+		{
+			object[] attri = myType.GetCustomAttributes(typeof (DataTable), true);
+			if ((attri.Length >= 1) && (attri[0] is DataTable))
+			{
+				var tab = attri[0] as DataTable;
+				return tab.PreCache;
+			}
+
+			return false;
+		}
 	}
 }

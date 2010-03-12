@@ -363,7 +363,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									b.DateBan = DateTime.Now;
 									b.Type = "B";
 									b.Reason = string.Format("Autoban SH:({0},{1}) on player:{2}", SHcount, EnvironmentTick - SHlastTick, client.Player.Name);
-									GameServer.Database.AddNewObject(b);
+									GameServer.Database.AddObject(b);
 									GameServer.Database.SaveObject(b);
 
 									for (int i = 0; i < 8; i++)
@@ -433,7 +433,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						b.DateBan = DateTime.Now;
 						b.Type = "B";
 						b.Reason = string.Format("Autoban flying hack: on player:{0}", client.Player.Name);
-						GameServer.Database.AddNewObject(b);
+						GameServer.Database.AddObject(b);
 						GameServer.Database.SaveObject(b);
 					}
 					string message = "Client Hack Detected!!!";

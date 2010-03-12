@@ -57,7 +57,6 @@ namespace DOL.GS.Commands
 
 			try
 			{
-				DataObject[] objs;
 				DBBannedAccount b = new DBBannedAccount();
 				string accip = gc.TcpEndpointAddress;
 				string accname = GameServer.Database.Escape(gc.Account.Name);
@@ -71,8 +70,8 @@ namespace DOL.GS.Commands
 				{
 					#region Account
 					case "account":
-						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accname) + "')");
-						if (objs.Length > 0)
+						var acctBans = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accname) + "')");
+						if (acctBans.Count > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.AAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							return;
@@ -84,8 +83,8 @@ namespace DOL.GS.Commands
 					#endregion Account
 					#region IP
 					case "ip":
-						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
-						if (objs.Length > 0)
+						var ipBans = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
+						if (ipBans.Count > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.IAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							return;
@@ -97,8 +96,8 @@ namespace DOL.GS.Commands
 					#endregion IP
 					#region Both
 					case "both":
-						objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "Type='B' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
-						if (objs.Length > 0)
+						var acctIpBans = GameServer.Database.SelectObjects<DBBannedAccount>("Type='B' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
+						if (acctIpBans.Count > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.BAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							return;
@@ -122,7 +121,7 @@ namespace DOL.GS.Commands
 				b.Account = accname;
 				b.DateBan = DateTime.Now;
 				b.Reason = reason;
-				GameServer.Database.AddNewObject(b);
+				GameServer.Database.AddObject(b);
 				GameServer.Database.SaveObject(b);
 
 				if (log.IsInfoEnabled)

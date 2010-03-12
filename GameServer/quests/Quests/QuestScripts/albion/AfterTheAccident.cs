@@ -70,7 +70,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// Recruit's Necklace of Might
-			RecruitsNecklaceofMight = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_necklace_of_might");
+			RecruitsNecklaceofMight = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_necklace_of_might");
 			if (RecruitsNecklaceofMight == null)
 			{
 				RecruitsNecklaceofMight = new ItemTemplate();
@@ -108,10 +108,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(RecruitsNecklaceofMight);
+					GameServer.Database.AddObject(RecruitsNecklaceofMight);
 			}
 			//Recruit's Necklace of Insight
-			RecruitsNecklaceofInsight = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_necklace_of_insight");
+			RecruitsNecklaceofInsight = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_necklace_of_insight");
 			if (RecruitsNecklaceofInsight == null)
 			{
 				RecruitsNecklaceofInsight = new ItemTemplate();
@@ -149,10 +149,10 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(RecruitsNecklaceofInsight);
+					GameServer.Database.AddObject(RecruitsNecklaceofInsight);
 			}
 			//Recruit's Necklace of Faith
-			RecruitsNecklaceofFaith = (ItemTemplate)GameServer.Database.FindObjectByKey(typeof(ItemTemplate), "recruits_necklace_of_faith");
+			RecruitsNecklaceofFaith = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_necklace_of_faith");
 			if (RecruitsNecklaceofFaith == null)
 			{
 				RecruitsNecklaceofFaith = new ItemTemplate();
@@ -190,7 +190,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(RecruitsNecklaceofFaith);
+					GameServer.Database.AddObject(RecruitsNecklaceofFaith);
 			}
 
 			ItemTemplate punySkeletonSkull = new ItemTemplate();

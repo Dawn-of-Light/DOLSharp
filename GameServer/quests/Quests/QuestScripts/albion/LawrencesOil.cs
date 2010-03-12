@@ -179,7 +179,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineItems
 
 			// item db check
-			lawrencesEmptyFlask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "lawrences_empty_flask");
+			lawrencesEmptyFlask = GameServer.Database.FindObjectByKey<ItemTemplate>("lawrences_empty_flask");
 			if (lawrencesEmptyFlask == null)
 			{
 				lawrencesEmptyFlask = new ItemTemplate();
@@ -210,11 +210,11 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(lawrencesEmptyFlask);
+					GameServer.Database.AddObject(lawrencesEmptyFlask);
 			}
 
 			// item db check
-			lawrencesFilledFlask = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "lawrences_filled_flask");
+			lawrencesFilledFlask = GameServer.Database.FindObjectByKey<ItemTemplate>("lawrences_filled_flask");
 			if (lawrencesFilledFlask == null)
 			{
 				lawrencesFilledFlask = new ItemTemplate();
@@ -245,7 +245,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(lawrencesFilledFlask);
+					GameServer.Database.AddObject(lawrencesFilledFlask);
 			}
 
 			#endregion

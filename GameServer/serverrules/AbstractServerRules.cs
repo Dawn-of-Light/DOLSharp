@@ -59,9 +59,9 @@ namespace DOL.GS.ServerRules
 				return false;
 
 			// Ban account
-			DataObject[] objs;
-            objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
-			if (objs.Length > 0)
+			IList<DBBannedAccount> objs;
+            objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
+			if (objs.Count > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 				log.Debug("IsAllowedToConnect deny access to username " + username);
@@ -70,8 +70,8 @@ namespace DOL.GS.ServerRules
 
 			// Ban IP Address or range (example: 5.5.5.%)
 			string accip = GameServer.Database.Escape(client.TcpEndpointAddress);
-			objs = GameServer.Database.SelectObjects(typeof(DBBannedAccount), "((Type='I' OR Type='B') AND '" + GameServer.Database.Escape(accip) + "' LIKE Ip)");
-			if (objs.Length > 0)
+			objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='I' OR Type='B') AND '" + GameServer.Database.Escape(accip) + "' LIKE Ip)");
+			if (objs.Count > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 				log.Debug("IsAllowedToConnect deny access to IP " + accip);
@@ -130,7 +130,7 @@ namespace DOL.GS.ServerRules
 			}
 			*/
 
-			Account account = (Account)GameServer.Database.SelectObject(typeof(Account), "Name ='" + GameServer.Database.Escape(username) + "'");
+			Account account = GameServer.Database.SelectObject<Account>("Name ='" + GameServer.Database.Escape(username) + "'");
 
 			if (Properties.MAX_PLAYERS > 0)
 			{
@@ -1403,7 +1403,7 @@ namespace DOL.GS.ServerRules
 							if (killedPlayer.Client.TcpEndpointAddress == pair.Key.Client.TcpEndpointAddress)
 								killLog.SameIP = 1;
 
-							GameServer.Database.AddNewObject(killLog);
+							GameServer.Database.AddObject(killLog);
 						}
 					}
 					catch (System.Exception ex)

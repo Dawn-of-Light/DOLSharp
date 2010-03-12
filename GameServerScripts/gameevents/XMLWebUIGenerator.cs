@@ -279,8 +279,7 @@ namespace DOL.GS.Scripts
 		{
 			try
 			{
-				DataConnection con = new DataConnection(ConnectionType.DATABASE_XML, "."+Path.DirectorySeparatorChar+"webui"+Path.DirectorySeparatorChar+"generated");
-				ObjectDatabase db = new ObjectDatabase(con);
+				var db = ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_XML, "."+Path.DirectorySeparatorChar+"webui"+Path.DirectorySeparatorChar+"generated");
 
 				db.RegisterDataObject(typeof (ServerInfo));
 				db.RegisterDataObject(typeof (PlayerInfo));
@@ -290,18 +289,18 @@ namespace DOL.GS.Scripts
 				si.Time = DateTime.Now.ToString();
 				si.ServerName = GameServer.Instance.Configuration.ServerName;
 				si.NumClients = GameServer.Instance.ClientCount;
-				si.NumAccounts = GameServer.Database.GetObjectCount(typeof (DOL.Database.Account));
-				si.NumMobs = GameServer.Database.GetObjectCount(typeof (DOL.Database.Mob));
-				si.NumInventoryItems = GameServer.Database.GetObjectCount(typeof (DOL.Database.InventoryItem));
-				si.NumPlayerChars = GameServer.Database.GetObjectCount(typeof (DOL.Database.Character));
-				si.NumMerchantItems = GameServer.Database.GetObjectCount(typeof (DOL.Database.MerchantItem));
-				si.NumItemTemplates = GameServer.Database.GetObjectCount(typeof (DOL.Database.ItemTemplate));
-				si.NumWorldObjects = GameServer.Database.GetObjectCount(typeof (DOL.Database.WorldObject));
+				si.NumAccounts = GameServer.Database.GetObjectCount<Account>();
+				si.NumMobs = GameServer.Database.GetObjectCount<Mob>();
+				si.NumInventoryItems = GameServer.Database.GetObjectCount<InventoryItem>();
+				si.NumPlayerChars = GameServer.Database.GetObjectCount<Character>();
+				si.NumMerchantItems = GameServer.Database.GetObjectCount<MerchantItem>();
+				si.NumItemTemplates = GameServer.Database.GetObjectCount<ItemTemplate>();
+				si.NumWorldObjects = GameServer.Database.GetObjectCount<WorldObject>();
 				si.ServerType = GameServer.Instance.Configuration.ServerType.ToString();
 				si.ServerStatus = GameServer.Instance.ServerStatus.ToString();
 				si.AAC = GameServer.Instance.Configuration.AutoAccountCreation ? "enabled" : "disabled";
 
-				db.AddNewObject(si);
+				db.AddObject(si);
 
 				PlayerInfo pi = new PlayerInfo();
 
@@ -324,7 +323,6 @@ namespace DOL.GS.Scripts
 
 				// 2008-01-29 Kakuri - Obsolete
 				//db.WriteDatabaseTables();
-				con = null;
 				db = null;
 
 				if (log.IsInfoEnabled)

@@ -175,7 +175,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					else
 					{
-						playerAccount = (Account)GameServer.Database.FindObjectByKey(typeof(Account), userName);
+						playerAccount = GameServer.Database.FindObjectByKey<Account>(userName);
 
 						client.PingTime = DateTime.Now.Ticks;
 
@@ -197,7 +197,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                                 
                                 // check for account bombing
                                 TimeSpan ts;
-    							Account[] allAccByIp = (Account[])GameServer.Database.SelectObjects(typeof(Account), "LastLoginIP = '" + ipAddress + "'");
+    							var allAccByIp = GameServer.Database.SelectObjects<Account>("LastLoginIP = '" + ipAddress + "'");
                                 int totalacc = 0;
                                 foreach (Account ac in allAccByIp)
                                 {
@@ -247,7 +247,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (log.IsInfoEnabled)
 									log.Info("New account created: " + userName);
 
-								GameServer.Database.AddNewObject(playerAccount);
+								GameServer.Database.AddObject(playerAccount);
 							}
 							else
 							{

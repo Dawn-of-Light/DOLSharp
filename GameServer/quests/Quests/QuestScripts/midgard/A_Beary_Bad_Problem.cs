@@ -155,7 +155,7 @@ using DOL.AI.Brain;
 
 			#region defineItems
 
-		silverringofhealth = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "silverringofhealth");
+		silverringofhealth = GameServer.Database.FindObjectByKey<ItemTemplate>("silverringofhealth");
 			if (silverringofhealth == null)
 			{
 				silverringofhealth = new ItemTemplate();
@@ -229,9 +229,9 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(silverringofhealth);
+					GameServer.Database.AddObject(silverringofhealth);
 				}
-			blackmaulercubpelt = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), "blackmaulercubpelt");
+			blackmaulercubpelt = GameServer.Database.FindObjectByKey<ItemTemplate>("blackmaulercubpelt");
 			if (blackmaulercubpelt == null)
 			{
 				blackmaulercubpelt = new ItemTemplate();
@@ -305,7 +305,7 @@ using DOL.AI.Brain;
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddNewObject(blackmaulercubpelt);
+					GameServer.Database.AddObject(blackmaulercubpelt);
 				}
 			
 

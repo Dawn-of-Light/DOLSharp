@@ -67,7 +67,7 @@ namespace DOL.GS.Commands
 							}
 
 							int repor = int.Parse(args[2]);
-							BugReport report = (BugReport)GameServer.Database.FindObjectByKey(typeof(BugReport), repor);
+							BugReport report = GameServer.Database.FindObjectByKey<BugReport>(repor);
 							if (report == null)
 							{
 								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.InvalidReport"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -91,7 +91,7 @@ namespace DOL.GS.Commands
 								break;
 							}
 							int repor = int.Parse(args[2]);
-							BugReport report = (BugReport)GameServer.Database.FindObjectByKey(typeof(BugReport), repor);
+							BugReport report = GameServer.Database.FindObjectByKey<BugReport>(repor);
 							if (report == null)
 							{
 								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.InvalidReport"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -101,7 +101,7 @@ namespace DOL.GS.Commands
 							int count = 1;
 							GameServer.Database.DeleteObject(report);
 							// Get all Database'd Bug Reports since we have deleted one
-							DataObject[] bugReports = GameServer.Database.SelectAllObjects(typeof(BugReport));
+							var bugReports = GameServer.Database.SelectAllObjects<BugReport>();
 							foreach (BugReport curReport in bugReports)
 							{
 								// Create new DB for bugreports without the one we deleted
@@ -126,8 +126,8 @@ namespace DOL.GS.Commands
 				e = new Exception();
 				// Display bug reports to player
 				string Reports = "---------- BUG REPORTS ------------\n";
-				DataObject[] dbo = GameServer.Database.SelectAllObjects(typeof(BugReport));
-				if (dbo.Length < 1)
+				var dbo = GameServer.Database.SelectAllObjects<BugReport>();
+				if (dbo.Count < 1)
 				{
 					Reports += "  - No Reports On File -\n";
 					return;

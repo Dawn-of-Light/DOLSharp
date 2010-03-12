@@ -29,6 +29,7 @@ using DOL.GS.Styles;
 using DOL.GS.PlayerTitles;
 
 using log4net;
+using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler
 {
@@ -62,7 +63,7 @@ namespace DOL.GS.PacketHandler
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterOverview));
 			pak.FillString(m_gameClient.Account.Name, 24);
-			InventoryItem[] items;
+			IList<InventoryItem> items;
 			Character[] characters = m_gameClient.Account.Characters;
 			if (characters == null)
 			{
@@ -77,7 +78,7 @@ namespace DOL.GS.PacketHandler
 						if (characters[j].AccountSlot == i)
 						{
 							pak.FillString(characters[j].Name, 24);
-							items = (InventoryItem[])GameServer.Database.SelectObjects(typeof(InventoryItem), "OwnerID = '" + GameServer.Database.Escape(characters[j].ObjectId) + "' AND SlotPosition >='10' AND SlotPosition <= '37'");
+							items = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(characters[j].ObjectId) + "' AND SlotPosition >='10' AND SlotPosition <= '37'");
 							byte ExtensionTorso = 0;
 							byte ExtensionGloves = 0;
 							byte ExtensionBoots = 0;

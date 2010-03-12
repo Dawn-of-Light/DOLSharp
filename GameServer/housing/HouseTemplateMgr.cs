@@ -169,14 +169,15 @@ namespace DOL.GS.Housing
 
 		static void CheckMerchantItems(string merchantid, string[] itemids)
 		{
-			DataObject[] merchantitems = GameServer.Database.SelectObjects(typeof (MerchantItem), "ItemListID=\'" + GameServer.Database.Escape(merchantid) + "\'");
+			var merchantitems = GameServer.Database.SelectObjects<MerchantItem>("ItemListID=\'" + GameServer.Database.Escape(merchantid) + "\'");
+
 			int slot = 0;
 			foreach (string itemid in itemids)
 			{
 				bool found = false;
-				foreach (DataObject dbitem in merchantitems)
+				foreach (var dbitem in merchantitems)
 				{
-					if (((MerchantItem) dbitem).ItemTemplateID == itemid)
+					if (dbitem.ItemTemplateID == itemid)
 					{
 						found = true;
 						break;
@@ -184,12 +185,15 @@ namespace DOL.GS.Housing
 				}
 				if (!found)
 				{
-					MerchantItem newitem = new MerchantItem();
-					newitem.ItemListID = merchantid;
-					newitem.ItemTemplateID = itemid;
-					newitem.SlotPosition = (slot%30);
-					newitem.PageNumber = (slot/30);
-					GameServer.Database.AddNewObject(newitem);
+					var newitem = new MerchantItem
+					              	{
+					              		ItemListID = merchantid,
+					              		ItemTemplateID = itemid,
+					              		SlotPosition = (slot%30),
+					              		PageNumber = (slot/30)
+					              	};
+
+					GameServer.Database.AddObject(newitem);
 				}
 				slot += 1;
 			}
@@ -197,28 +201,31 @@ namespace DOL.GS.Housing
 
 		static void CheckItemTemplate(string name, string id, int model, int objtype, int copper, int dps, int spd, int bonus, int weight, int realm)
 		{
-			ItemTemplate templateitem = (ItemTemplate) GameServer.Database.FindObjectByKey(typeof (ItemTemplate), GameServer.Database.Escape(id));
+			var templateitem = GameServer.Database.FindObjectByKey<ItemTemplate>(GameServer.Database.Escape(id));
 			if (templateitem == null)
 			{
-				templateitem = new ItemTemplate();
-				templateitem.Name = name;
-				templateitem.Model = model;
-				templateitem.Level = 0;
-				templateitem.Object_Type = objtype;
-				templateitem.Id_nb = id;
-				templateitem.IsPickable = true;
-				templateitem.IsDropable = true;
-				templateitem.DPS_AF = dps;
-				templateitem.SPD_ABS = spd;
-				templateitem.Hand = 0x0E;
-				templateitem.Weight = weight;
-				templateitem.Copper = (byte) Money.GetCopper(copper);
-				templateitem.Silver = (byte) Money.GetSilver(copper);
-				templateitem.Gold = (short) Money.GetGold(copper);
-                templateitem.Platinum = (short)Money.GetPlatinum(copper);
-				templateitem.Bonus = bonus;
-				templateitem.Realm = (byte)realm;
-				GameServer.Database.AddNewObject(templateitem);
+				templateitem = new ItemTemplate
+				               	{
+				               		Name = name,
+				               		Model = model,
+				               		Level = 0,
+				               		Object_Type = objtype,
+				               		Id_nb = id,
+				               		IsPickable = true,
+				               		IsDropable = true,
+				               		DPS_AF = dps,
+				               		SPD_ABS = spd,
+				               		Hand = 0x0E,
+				               		Weight = weight,
+				               		Copper = (byte) Money.GetCopper(copper),
+				               		Silver = (byte) Money.GetSilver(copper),
+				               		Gold = (short) Money.GetGold(copper),
+				               		Platinum = (short) Money.GetPlatinum(copper),
+				               		Bonus = bonus,
+				               		Realm = (byte) realm
+				               	};
+
+				GameServer.Database.AddObject(templateitem);
 			}
 		}
 
@@ -277,18 +284,20 @@ namespace DOL.GS.Housing
 
 		static void CheckNPCTemplate(int templateID, string classType, string guild, string model, string inventory)
 		{
-			NpcTemplate template = NpcTemplateMgr.GetTemplate(templateID);
+			var template = NpcTemplateMgr.GetTemplate(templateID);
 			if (template == null)
 			{
-				template = new NpcTemplate();
-				template.Name = "";
-				template.TemplateId = templateID;
-				template.ClassType = classType;
-				template.GuildName = guild;
-				template.Model = model;
-				template.Size = "50";
-				template.Level = "50";
-				template.Inventory = inventory;
+				template = new NpcTemplate
+				           	{
+				           		Name = "",
+				           		TemplateId = templateID,
+				           		ClassType = classType,
+				           		GuildName = guild,
+				           		Model = model,
+				           		Size = "50",
+				           		Level = "50",
+				           		Inventory = inventory
+				           	};
 
 				NpcTemplateMgr.AddTemplate(template);
 				//template.SaveIntoDatabase(); lets not save yet
