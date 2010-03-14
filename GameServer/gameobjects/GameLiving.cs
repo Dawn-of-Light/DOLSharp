@@ -1529,25 +1529,31 @@ namespace DOL.GS
 				}
 
 				InventoryItem armor = null;
+
 				if (ad.Target.Inventory != null)
 					armor = ad.Target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
-				// Make sure we use CopyFrom(ItemTemplate) to make a deep copy
-				InventoryItem weaponTypeToUse = new InventoryItem(weapon as ItemTemplate);
+				InventoryItem weaponTypeToUse = null;
 
-				if ((weapon.Object_Type == (int)eObjectType.TwoHandedWeapon) || (weapon.Object_Type == (int)eObjectType.PolearmWeapon))
+				if (weapon != null)
 				{
-					if (weapon.Type_Damage == (int)eDamageType.Crush)
+					// Make sure we use CopyFrom(ItemTemplate) to make a deep copy
+					weaponTypeToUse = new InventoryItem(weapon as ItemTemplate);
+
+					if ((weapon.Object_Type == (int)eObjectType.TwoHandedWeapon) || (weapon.Object_Type == (int)eObjectType.PolearmWeapon))
 					{
-						weaponTypeToUse.Object_Type = (int)eObjectType.CrushingWeapon;
-					}
-					else if (weapon.Type_Damage == (int)eDamageType.Slash)
-					{
-						weaponTypeToUse.Object_Type = (int)eObjectType.SlashingWeapon;
-					}
-					else
-					{
-						weaponTypeToUse.Object_Type = (int)eObjectType.ThrustWeapon;
+						if (weapon.Type_Damage == (int)eDamageType.Crush)
+						{
+							weaponTypeToUse.Object_Type = (int)eObjectType.CrushingWeapon;
+						}
+						else if (weapon.Type_Damage == (int)eDamageType.Slash)
+						{
+							weaponTypeToUse.Object_Type = (int)eObjectType.SlashingWeapon;
+						}
+						else
+						{
+							weaponTypeToUse.Object_Type = (int)eObjectType.ThrustWeapon;
+						}
 					}
 				}
 
