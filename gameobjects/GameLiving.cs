@@ -1532,7 +1532,27 @@ namespace DOL.GS
 				if (ad.Target.Inventory != null)
 					armor = ad.Target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
-				int lowerboundary = (WeaponSpecLevel(weapon) - 1) * 50 / (ad.Target.EffectiveLevel + 1) + 75;
+				// Make sure we use CopyFrom(ItemTemplate) to make a deep copy
+				InventoryItem weaponTypeToUse = new InventoryItem(weapon as ItemTemplate);
+
+				if ((weapon.Object_Type == (int)eObjectType.TwoHandedWeapon) || (weapon.Object_Type == (int)eObjectType.PolearmWeapon))
+				{
+					if (weapon.Type_Damage == (int)eDamageType.Crush)
+					{
+						weaponTypeToUse.Object_Type = (int)eObjectType.CrushingWeapon;
+					}
+					else if (weapon.Type_Damage == (int)eDamageType.Slash)
+					{
+						weaponTypeToUse.Object_Type = (int)eObjectType.SlashingWeapon;
+					}
+					else
+					{
+						weaponTypeToUse.Object_Type = (int)eObjectType.ThrustWeapon;
+					}
+				}
+
+				int lowerboundary = (WeaponSpecLevel(weaponTypeToUse) - 1) * 50 / (ad.Target.EffectiveLevel + 1) + 75;
+
 				lowerboundary = Math.Max(lowerboundary, 75);
 				lowerboundary = Math.Min(lowerboundary, 125);
 				damage *= (GetWeaponSkill(weapon) + 90.68) / (ad.Target.GetArmorAF(ad.ArmorHitLocation) + 20 * 4.67);
@@ -1597,7 +1617,7 @@ namespace DOL.GS
 				if (ad.Damage == 0)
 				{
 					if (log.IsDebugEnabled)
-						log.Debug("Damage=0 -> miss " + AttackDamage(weapon));
+						log.ErrorFormat("Possible Damage Error: {0} Damage = 0 -> miss.  AttackDamage {1}, weapon name {2}", Name, AttackDamage(weapon), weapon.Name);
 					ad.AttackResult = eAttackResult.Missed;
 				}
 			}
@@ -3417,7 +3437,7 @@ namespace DOL.GS
 			}
 			if (this is GamePlayer && ad.Attacker is GamePlayer && weapon != null)
 			{
-				missrate -= (int)(ad.Attacker.GetWeaponSkill(weapon) * 0.03);
+				missrate -= (int)((ad.Attacker.WeaponSpecLevel(weapon) - 1) * 0.1);
 			}
 			if (ad.Attacker.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
@@ -3436,9 +3456,9 @@ namespace DOL.GS
 			{
 				missrate >>= 1; //halved
 			}
+
 			if (Util.Chance(missrate))
 			{
-				//DOLConsole.WriteLine("Random Miss...");
 				return eAttackResult.Missed;
 			}
 

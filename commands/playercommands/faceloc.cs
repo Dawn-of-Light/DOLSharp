@@ -59,7 +59,11 @@ namespace DOL.GS.Commands
 				x = System.Convert.ToInt32(args[1]);
 				y = System.Convert.ToInt32(args[2]);
 			}
-			catch {}
+			catch
+			{
+				client.Out.SendMessage("Please enter a valid X and Y location.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 			int Xoffset = client.Player.CurrentZone.XOffset;
 			int Yoffset = client.Player.CurrentZone.YOffset;
             Point2D gloc = new Point2D( Xoffset + x, Yoffset + y );
