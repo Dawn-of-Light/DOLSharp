@@ -129,13 +129,15 @@ namespace DOL.GS.Spells
 			{
 				OnTick();
 			}
+
+
 			protected override void OnTick()
 			{
 				GameLiving target = m_arrowTarget;
 				GameLiving caster = (GameLiving)m_actionSource;
 				if (target == null || !target.IsAlive || target.ObjectState != GameObject.eObjectState.Active || target.CurrentRegionID != caster.CurrentRegionID) return;
 
-				int missrate = 0;
+				int missrate = 100 - CalculateToHitChance(target);
 				// add defence bonus from last executed style if any
 				AttackData targetAD = (AttackData)target.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null);
 				if (targetAD != null
@@ -280,6 +282,19 @@ namespace DOL.GS.Spells
 			}
 
 
+			public virtual int CalculateToHitChance(GameLiving target)
+			{
+				GameLiving caster = m_handler.Caster;
+				Spell spell = m_handler.Spell;
+
+				int bonustohit = caster.GetModified(eProperty.ToHitBonus);
+
+				// miss rate extremely low on same level targets.
+				int hitchance = 99 + ((spell.Level - target.Level) / 2) + bonustohit;
+
+				return hitchance;
+			}
+
             protected virtual void CheckWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
             {
                 if (weapon == null) return;
@@ -303,6 +318,7 @@ namespace DOL.GS.Spells
                         weapon.PoisonSpellID);
                 }
             }
+
             protected virtual void StartWeaponMagicalEffect(AttackData ad, SpellLine spellLine, int spellID)
             {
                 if (spellLine == null) return;

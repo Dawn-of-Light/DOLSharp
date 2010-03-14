@@ -21,6 +21,7 @@ using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
+using DOL.AI.Brain;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -113,6 +114,7 @@ namespace DOL.GS.Spells
 		{
 			MessageToCaster("You prepare " + Spell.Name, eChatType.CT_Spell);
 		}
+
 		
 		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
 		{		
@@ -154,14 +156,80 @@ namespace DOL.GS.Spells
 				}
 				return ad;
             }
-			if (Spell.DamageType == eDamageType.Slash)
-			{
-                GameSpellEffect ef = FindEffectOnTarget(Caster, "ArrowDamageTypes");
-                if ( ef != null)
-					ad.DamageType = ef.SpellHandler.Spell.DamageType;
-            }
+
 			return ad;			
 		}
+
+		/// <summary>
+		/// Determines what damage type to use.  For archery the player can choose.
+		/// </summary>
+		/// <returns></returns>
+		public override eDamageType DetermineSpellDamageType()
+		{
+			GameSpellEffect ef = FindEffectOnTarget(Caster, "ArrowDamageTypes");
+			if (ef != null)
+			{
+				return ef.SpellHandler.Spell.DamageType;
+			}
+			else
+			{
+				return eDamageType.Crush;
+			}
+		}
+
+		/// <summary>
+		/// This is specific for archery and used only to calculate damage variance vs level
+		/// </summary>
+		/// <param name="target">spell target</param>
+		/// <returns>chance that the spell lands on target</returns>
+		//public override int CalculateToHitChance(GameLiving target)
+		//{
+		//    int spellLevel = Spell.Level;
+		//    GameLiving caster = null;
+
+		//    // no clue if this applies to archer or not
+		//    //int spellbonus = caster.GetModified(eProperty.SpellLevel);
+		//    //spellLevel += spellbonus;
+
+		//    //Cap on lvl 50 for spell level
+		//    if (spellLevel > 50)
+		//        spellLevel = 50;
+
+		//    int bonustohit = m_caster.GetModified(eProperty.ToHitBonus);
+
+		//    int hitchance = 99 + ((spellLevel - target.Level) / 2) + bonustohit;
+
+		//    if (!(caster is GamePlayer && target is GamePlayer))
+		//    {
+		//        hitchance -= (int)(m_caster.GetConLevel(target) * ServerProperties.Properties.PVE_SPELL_CONHITPERCENT);
+		//    }
+
+		//    return hitchance;
+		//}
+
+
+		/// <summary>
+		/// Calculates the base 100% spell damage which is then modified by damage variance factors
+		/// </summary>
+		/// <returns></returns>
+		public override double CalculateDamageBase()
+		{
+			double spellDamage = Spell.Damage;
+			GamePlayer player = Caster as GamePlayer;
+
+			if (player != null)
+			{
+				int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
+				spellDamage *= (manaStatValue + 300) / 275.0;
+			}
+
+			if (spellDamage < 0)
+				spellDamage = 0;
+
+			return spellDamage;
+		}
+
+
 		
 		public override void FinishSpellCast(GameLiving target)
 		{
@@ -195,11 +263,46 @@ namespace DOL.GS.Spells
 			base.FinishSpellCast(target);
 		}
 
-        public override int CalculateCastingTime()
-        {
-            if (Spell.LifeDrainReturn == 2) return 6000;
-            return base.CalculateCastingTime();
-        }
+		/// <summary>
+		/// Calculates the effective casting time
+		/// </summary>
+		/// <returns>effective casting time in milliseconds</returns>
+		public override int CalculateCastingTime()
+		{
+			if (Spell.LifeDrainReturn == 2) return 6000;
+
+			int ticks = m_spell.CastTime;
+
+			double percent = 1.0;
+			int dex = Caster.GetModified(eProperty.Dexterity);
+
+			if (dex < 60)
+			{
+				//do nothing.
+			}
+			else if (dex < 250)
+			{
+				percent = 1.0 - (dex - 60) * 0.15 * 0.01;
+			}
+			else
+			{
+				percent = 1.0 - ((dex - 60) * 0.15 + (dex - 250) * 0.05) * 0.01;
+			}
+
+			GamePlayer player = m_caster as GamePlayer;
+
+			if (player != null)
+			{
+				percent *= 1.0 - m_caster.GetModified(eProperty.ArcherySpeed) * 0.01;
+			}
+
+			ticks = (int)(ticks * Math.Max(0.4, percent));
+
+			if (ticks < 1)
+				ticks = 1; // at least 1 tick
+
+			return ticks;
+		}
 
         public override int PowerCost(GameLiving target) { return 0; }
 
