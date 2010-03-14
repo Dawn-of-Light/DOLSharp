@@ -641,6 +641,12 @@ namespace DOL.GS.Keeps
 
 		public virtual bool CheckForClaim(GamePlayer player)
 		{
+			if (InCombat)
+			{
+				player.Out.SendMessage(Name + " is under attack and can't be claimed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
 			if(player.Realm != this.Realm)
 			{
 				player.Out.SendMessage("The keep is not owned by your realm.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
@@ -804,6 +810,17 @@ namespace DOL.GS.Keeps
 		#endregion
 
 		#region Release
+
+		public bool CheckForRelease(GamePlayer player)
+		{
+			if (InCombat)
+			{
+				player.Out.SendMessage(Name + " is under attack and can't be released.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			return true;
+		}
 
 		/// <summary>
 		/// released the keep of the guild

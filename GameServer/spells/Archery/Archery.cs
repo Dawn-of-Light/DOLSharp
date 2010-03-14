@@ -157,6 +157,16 @@ namespace DOL.GS.Spells
 				return ad;
             }
 
+			GameNPC npc = target as GameNPC;
+			if (npc != null)
+			{
+				if (npc.Brain != null && (npc.Brain is IControlledBrain) == false)
+				{
+					// boost for npc damage until we find exactly where calculation is going wrong -tolakram
+					ad.Damage = (int)(ad.Damage * 1.5);
+				}
+			}
+
 			return ad;			
 		}
 
@@ -176,37 +186,6 @@ namespace DOL.GS.Spells
 				return eDamageType.Crush;
 			}
 		}
-
-		/// <summary>
-		/// This is specific for archery and used only to calculate damage variance vs level
-		/// </summary>
-		/// <param name="target">spell target</param>
-		/// <returns>chance that the spell lands on target</returns>
-		//public override int CalculateToHitChance(GameLiving target)
-		//{
-		//    int spellLevel = Spell.Level;
-		//    GameLiving caster = null;
-
-		//    // no clue if this applies to archer or not
-		//    //int spellbonus = caster.GetModified(eProperty.SpellLevel);
-		//    //spellLevel += spellbonus;
-
-		//    //Cap on lvl 50 for spell level
-		//    if (spellLevel > 50)
-		//        spellLevel = 50;
-
-		//    int bonustohit = m_caster.GetModified(eProperty.ToHitBonus);
-
-		//    int hitchance = 99 + ((spellLevel - target.Level) / 2) + bonustohit;
-
-		//    if (!(caster is GamePlayer && target is GamePlayer))
-		//    {
-		//        hitchance -= (int)(m_caster.GetConLevel(target) * ServerProperties.Properties.PVE_SPELL_CONHITPERCENT);
-		//    }
-
-		//    return hitchance;
-		//}
-
 
 		/// <summary>
 		/// Calculates the base 100% spell damage which is then modified by damage variance factors

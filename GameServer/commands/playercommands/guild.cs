@@ -1975,14 +1975,22 @@ namespace DOL.GS.Commands
                             }
                             if (client.Player.Guild.ClaimedKeeps.Count == 1)
                             {
-                                client.Player.Guild.ClaimedKeeps[0].Release();
+								if (client.Player.Guild.ClaimedKeeps[0].CheckForRelease(client.Player))
+								{
+									client.Player.Guild.ClaimedKeeps[0].Release();
+								}
                             }
                             else
                             {
                                 foreach (AbstractArea area in client.Player.CurrentAreas)
                                 {
-                                    if (area is KeepArea && ((KeepArea)area).Keep.Guild == client.Player.Guild)
-                                        ((KeepArea)area).Keep.Release();
+									if (area is KeepArea && ((KeepArea)area).Keep.Guild == client.Player.Guild)
+									{
+										if (((KeepArea)area).Keep.CheckForRelease(client.Player))
+										{
+											((KeepArea)area).Keep.Release();
+										}
+									}
                                 }
                             }
                             client.Player.Guild.UpdateGuildWindow();
