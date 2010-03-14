@@ -3361,8 +3361,10 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 			if (finalDamage < 0)
 				finalDamage = 0;
 
+			eDamageType damageType = DetermineSpellDamageType();
+
 			#region Resists
-			eProperty property = target.GetResistTypeForDamage(Spell.DamageType);
+			eProperty property = target.GetResistTypeForDamage(damageType);
 			// The Daoc resistsystem is since 1.65 a 2category system.
 			// - First category are Item/Race/Buff/RvrBanners resists that are displayed in the characteroverview.
 			// - Second category are resists that are given through RAs like avoidance of magic, brilliance aura of deflection.
@@ -3372,7 +3374,7 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 			// - avi
 
 			#region Primary Resists
-			int primaryResistModifier = ad.Target.GetResist(Spell.DamageType);
+			int primaryResistModifier = ad.Target.GetResist(damageType);
 
 			/* Resist Pierce
 			 * Resipierce is a special bonus which has been introduced with ToA.
@@ -3457,11 +3459,20 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 
 			ad.Damage = finalDamage;
 			ad.CriticalDamage = cdamage;
-			ad.DamageType = Spell.DamageType;
+			ad.DamageType = damageType;
 			ad.Modifier = resistModifier;
 
 			m_lastAttackData = ad;
 			return ad;
+		}
+
+		/// <summary>
+		/// What damage type to use.  Overriden by archery
+		/// </summary>
+		/// <returns></returns>
+		public virtual eDamageType DetermineSpellDamageType()
+		{
+			return Spell.DamageType;
 		}
 
 		/// <summary>
