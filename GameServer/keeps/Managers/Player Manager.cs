@@ -2,6 +2,7 @@ using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using log4net;
 
 namespace DOL.GS.Keeps
 {
@@ -29,6 +30,8 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class PlayerMgr
 	{
+		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Sends a message to all players to notify them of the keep capture
 		/// </summary>
@@ -143,6 +146,12 @@ namespace DOL.GS.Keeps
 				return false;
 			if (player.Guild == null)
 				return false;
+
+			if (keep.InCombat)
+			{
+				log.DebugFormat("KEEPWARNING: {0} attempted to {1} {2} while in combat.", player.Name, type, keep.Name);
+				return false;
+			}
 
 			switch (type)
 			{

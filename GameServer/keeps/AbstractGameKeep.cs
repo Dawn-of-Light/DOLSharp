@@ -644,6 +644,7 @@ namespace DOL.GS.Keeps
 			if (InCombat)
 			{
 				player.Out.SendMessage(Name + " is under attack and can't be claimed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				log.DebugFormat("KEEPWARNING: {0} attempted to claim {1} while in combat.", player.Name, Name);
 				return false;
 			}
 
@@ -816,6 +817,7 @@ namespace DOL.GS.Keeps
 			if (InCombat)
 			{
 				player.Out.SendMessage(Name + " is under attack and can't be released.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				log.DebugFormat("KEEPWARNING: {0} attempted to release {1} while in combat.", player.Name, Name);
 				return false;
 			}
 
