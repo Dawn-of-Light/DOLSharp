@@ -31,7 +31,7 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			ArrayList clients = WorldMgr.GetAllPlayingClients();
+			var clients = WorldMgr.GetAllPlayingClients();
 			var message = new List<string>();
 
 			foreach (GameClient gc in clients)

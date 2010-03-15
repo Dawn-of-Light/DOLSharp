@@ -88,9 +88,11 @@ namespace DOL.GS.Appeal
 		public static void NotifyStaff()
 		{
 			//here we keep the staff up to date on the status of the appeal queue, if there are open Appeals.
-			List<DBAppeal> Appeals = new List<DBAppeal>();
-			Appeals = GetAllAppeals();
-			if (Appeals.Count < 1 || Appeals == null) { return; }
+			IList<DBAppeal> Appeals = GetAllAppeals();
+
+			if (Appeals.Count == 0)
+				return;
+
 			int low = 0;
 			int med = 0;
 			int high = 0;
@@ -183,10 +185,11 @@ namespace DOL.GS.Appeal
 		/// Gets a combined list of Appeals for every player that is online.
 		/// </summary>
 		/// <returns></returns>
-		public static List<DBAppeal> GetAllAppeals()
+		public static IList<DBAppeal> GetAllAppeals()
 		{
-			List<DBAppeal> rlist = new List<DBAppeal>();
-			ArrayList clientlist = WorldMgr.GetAllPlayingClients();
+			var rlist = new List<DBAppeal>();
+			var clientlist = WorldMgr.GetAllPlayingClients();
+
 			foreach (GameClient c in clientlist)
 			{
 				DBAppeal ap = GetAppealByPlayerName(c.Player.Name);
@@ -195,16 +198,18 @@ namespace DOL.GS.Appeal
 					rlist.Add(ap);
 				}
 			}
+
 			TotalAppeals = rlist.Count;
+
 			return rlist;
 		}
 		/// <summary>
 		/// Gets a combined list of Appeals including player Appeals who are offline.
 		/// </summary>
 		/// <returns></returns>
-		public static List<DBAppeal> GetAllAppealsOffline()
+		public static IList<DBAppeal> GetAllAppealsOffline()
 		{
-			return(List<DBAppeal>)GameServer.Database.SelectAllObjects<DBAppeal>();
+			return GameServer.Database.SelectAllObjects<DBAppeal>();
 		}
 		/// <summary>
 		/// Creates a New Appeal
@@ -304,10 +309,10 @@ namespace DOL.GS.Appeal
 
 				StaffList.Add(player);
 				
-				List<DBAppeal> Appeals = GetAllAppeals();
-				if (Appeals.Count > 0 && Appeals != null)
+				IList<DBAppeal> Appeals = GetAllAppeals();
+				if (Appeals.Count > 0)
 				{
-					player.Out.SendMessage("[Appeals]: " + "There are " + Appeals.Count + " Appeals in the queue!  Use /gmappeal to work the Appeals queue.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("[Appeals]: " + "There are " + Appeals.Count + " appeals in the queue!  Use /gmappeal to work the appeals queue.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 				}
 			}
 
