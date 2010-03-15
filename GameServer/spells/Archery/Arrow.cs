@@ -289,8 +289,13 @@ namespace DOL.GS.Spells
 
 				int bonustohit = caster.GetModified(eProperty.ToHitBonus);
 
-				// miss rate extremely low on same level targets.
-				int hitchance = 99 + ((spell.Level - target.Level) / 2) + bonustohit;
+				// miss rate is 0 on same level opponent
+				int hitchance = 100 + bonustohit;
+
+				if ((caster is GamePlayer && target is GamePlayer) == false)
+				{
+					hitchance -= (int)(caster.GetConLevel(target) * ServerProperties.Properties.PVE_SPELL_CONHITPERCENT);
+				}
 
 				return hitchance;
 			}
