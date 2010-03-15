@@ -20,6 +20,7 @@ using System;
 using DOL.GS;
 using DOL.Language;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,6 +30,8 @@ namespace DOL.GS.PlayerClass
 	[PlayerClassAttribute((int)eCharacterClass.Nightshade, "Nightshade", "Stalker")]
 	public class ClassNightshade : ClassStalker
 	{
+		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };
+
 		public ClassNightshade() : base()
 		{
 			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.PathofEssence");
@@ -64,11 +67,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override IList AutoTrainableSkills()
+		public override IList<string> GetAutotrainableSkills()
 		{
-			ArrayList skills = new ArrayList();
-			skills.Add(Specs.Stealth);
-			return skills;
+			return AutotrainableSkills;
 		}
 
 		/// <summary>

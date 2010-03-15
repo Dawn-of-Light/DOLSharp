@@ -20,6 +20,7 @@ using System;
 using DOL.GS;
 using DOL.Language;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,6 +30,8 @@ namespace DOL.GS.PlayerClass
 	[PlayerClassAttribute((int)eCharacterClass.Warrior, "Warrior", "Viking")]
 	public class ClassWarrior : ClassViking
 	{
+		private static readonly string[] AutotrainableSkills = new[] { Specs.Axe, Specs.Hammer, Specs.Sword };
+
 		public ClassWarrior() : base() 
 		{
 			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofTyr");
@@ -54,13 +57,9 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
-		public override IList AutoTrainableSkills()
+		public override IList<string> GetAutotrainableSkills()
 		{
-			ArrayList skills = new ArrayList();
-			skills.Add(Specs.Axe);
-			skills.Add(Specs.Hammer);
-			skills.Add(Specs.Sword);
-			return skills;
+			return AutotrainableSkills;
 		}
 
 		/// <summary>

@@ -20,6 +20,7 @@ using System;
 using DOL.GS;
 using DOL.Language;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,6 +30,7 @@ namespace DOL.GS.PlayerClass
 	[PlayerClassAttribute((int)eCharacterClass.Hunter, "Hunter", "MidgardRogue", "Huntress")]
 	public class ClassHunter : ClassMidgardRogue
 	{
+		private static readonly string[] AutotrainableSkills = new[] { Specs.Archery };
 
 		public ClassHunter()
 			: base()
@@ -57,11 +59,9 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
-		public override IList AutoTrainableSkills()
+		public override IList<string> GetAutotrainableSkills()
 		{
-			ArrayList skills = new ArrayList();
-			skills.Add(Specs.Archery);
-			return skills;
+			return AutotrainableSkills;
 		}
 
 		public override eClassType ClassType
