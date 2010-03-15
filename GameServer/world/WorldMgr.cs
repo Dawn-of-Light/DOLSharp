@@ -1415,9 +1415,10 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="realmID">ID of Realm (1=Alb, 2=Mid, 3=Hib)</param>
 		/// <returns>An ArrayList of clients</returns>
-		public static ArrayList GetClientsOfRealm(eRealm realm)
+		public static IList<GameClient> GetClientsOfRealm(eRealm realm)
 		{
-			ArrayList targetClients = new ArrayList();
+			var targetClients = new List<GameClient>();
+
 			lock (m_clients.SyncRoot)
 			{
 				foreach (GameClient client in m_clients)
@@ -1432,6 +1433,7 @@ namespace DOL.GS
 					}
 				}
 			}
+
 			return targetClients;
 		}
 
@@ -1492,9 +1494,10 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="regionID">The ID of the Region</param>
 		/// <returns>Array of GameClients from that Region</returns>
-		public static ArrayList GetClientsOfRegion(ushort regionID)
+		public static IList<GameClient> GetClientsOfRegion(ushort regionID)
 		{
-			ArrayList targetClients = new ArrayList();
+			var targetClients = new  List<GameClient>();
+
 			lock (m_clients.SyncRoot)
 			{
 				foreach (GameClient client in m_clients)
@@ -1509,6 +1512,7 @@ namespace DOL.GS
 					}
 				}
 			}
+
 			return targetClients;
 		}
 
@@ -1678,9 +1682,10 @@ namespace DOL.GS
 		/// Gets a copy of all playing clients
 		/// </summary>
 		/// <returns>ArrayList of playing GameClients</returns>
-		public static ArrayList GetAllPlayingClients()
+		public static IList<GameClient> GetAllPlayingClients()
 		{
-			ArrayList targetClients = new ArrayList();
+			var targetClients = new List<GameClient>();
+
 			lock (m_clients.SyncRoot)
 			{
 				foreach (GameClient client in m_clients)
@@ -1720,9 +1725,10 @@ namespace DOL.GS
 		/// Gets a copy of ALL clients no matter at what state they are
 		/// </summary>
 		/// <returns>ArrayList of GameClients</returns>
-		public static ArrayList GetAllClients()
+		public static IList<GameClient> GetAllClients()
 		{
-			ArrayList targetClients = new ArrayList();
+			var targetClients = new List<GameClient>();
+
 			lock (m_clients.SyncRoot)
 			{
 				foreach (GameClient client in m_clients)
@@ -1731,6 +1737,7 @@ namespace DOL.GS
 						targetClients.Add(client);
 				}
 			}
+
 			return targetClients;
 		}
 
@@ -1816,31 +1823,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Returns an IEnumerator of GamePlayers close to another GameObject
-		/// </summary>
-		/// <param name="obj">GameObject to check</param>
-		/// <param name="radiusToCheck">Radius around GameObject to check for clients</param>
-		/// <param name="withDistance">Wether or not to return the objects with distance</param>
-		/// <returns>IEnumerator of players close to the target object</returns>
-		[Obsolete("Use GameObject.GetPlayersInRadius instead!", false)]
-		public static IEnumerable GetPlayersCloseToObject(GameObject obj, ushort radiusToCheck, bool withDistance)
-		{
-			return obj.CurrentRegion.GetPlayersInRadius(obj.X, obj.Y, obj.Z, radiusToCheck, withDistance);
-		}
-
-		/// <summary>
-		/// Returns an IEnumerator of GamePlayers close to another GameObject
-		/// </summary>
-		/// <param name="obj">GameObject to check</param>
-		/// <param name="radiusToCheck">Radius around GameObject to check for clients</param>
-		/// <returns>IEnumerator of players close to the target object</returns>
-		[Obsolete("Use GameObject.GetPlayersInRadius instead!", false)]
-		public static IEnumerable GetPlayersCloseToObject(GameObject obj, ushort radiusToCheck)
-		{
-			return GetPlayersCloseToObject(obj, radiusToCheck, false);
-		}
-
-		/// <summary>
 		/// Returns an IEnumerator of GameNPCs that are close to a certain
 		/// spot in the region
 		/// </summary>
@@ -1875,31 +1857,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Returns an IEnumerator of GameNPCs close to another GameObject
-		/// </summary>
-		/// <param name="obj">GameObject to check</param>
-		/// <param name="radiusToCheck">Radius around GameObject to check for NPCs</param>
-		/// <param name="withDistance">Wether or not to return the objects with distance</param>
-		/// <returns>IEnumerator of NPCs close to the target object</returns>
-		[Obsolete("Use GameObject.GetNPCsInRadius instead!", false)]
-		public static IEnumerable GetNPCsCloseToObject(GameObject obj, ushort radiusToCheck, bool withDistance)
-		{
-			return obj.CurrentRegion.GetNPCsInRadius(obj.X, obj.Y, obj.Z, radiusToCheck, withDistance);
-		}
-
-		/// <summary>
-		/// Returns an IEnumerator of GameNPCs close to another GameObject
-		/// </summary>
-		/// <param name="obj">GameObject to check</param>
-		/// <param name="radiusToCheck">Radius around GameObject to check for NPCs</param>
-		/// <returns>IEnumerator of NPCs close to the target object</returns>
-		[Obsolete("Use GameObject.GetNPCsInRadius instead!", false)]
-		public static IEnumerable GetNPCsCloseToObject(GameObject obj, ushort radiusToCheck)
-		{
-			return GetNPCsCloseToObject(obj, radiusToCheck, false);
-		}
-
-		/// <summary>
 		/// Returns an IEnumerator of GameItems that are close to a certain
 		/// spot in the region
 		/// </summary>
@@ -1915,49 +1872,9 @@ namespace DOL.GS
 			Region reg = GetRegion(regionid);
 			if (reg == null)
 				return new Region.EmptyEnumerator();
+
 			return reg.GetItemsInRadius(x, y, z, radiusToCheck, withDistance);
 		}
-
-		/// <summary>
-		/// Returns an IEnumerator of GameItems that are close to a certain
-		/// spot in the region
-		/// </summary>
-		/// <param name="regionid">Region to search</param>
-		/// <param name="x">X inside region</param>
-		/// <param name="y">Y inside region</param>
-		/// <param name="z">Z inside region</param>
-		/// <param name="radiusToCheck">Radius to sarch for GameItems</param>
-		/// <returns>IEnumerator that can be used to go through all items</returns>
-		public static IEnumerable GetItemsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck)
-		{
-			return GetItemsCloseToSpot(regionid, x, y, z, radiusToCheck, false);
-		}
-
-		/// <summary>
-		/// Returns an IEnumerator of GameItems close to another GameObject
-		/// </summary>
-		/// <param name="obj">GameObject to check</param>
-		/// <param name="radiusToCheck">Radius around GameObject to check for items</param>
-		/// <param name="withDistance">Wether or not to return the objects with distance</param>
-		/// <returns>IEnumerator of items close to the target object</returns>
-		[Obsolete("Use GameObject.GetItemsInRadius instead!", false)]
-		public static IEnumerable GetItemsCloseToObject(GameObject obj, ushort radiusToCheck, bool withDistance)
-		{
-			return obj.CurrentRegion.GetItemsInRadius(obj.X, obj.Y, obj.Z, radiusToCheck, withDistance);
-		}
-
-		/// <summary>
-		/// Returns an IEnumerator of GameItems close to another GameObject
-		/// </summary>
-		/// <param name="obj">GameObject to check</param>
-		/// <param name="radiusToCheck">Radius around GameObject to check for items</param>
-		/// <returns>IEnumerator of items close to the target object</returns>
-		[Obsolete("Use GameObject.GetItemsInRadius instead!", false)]
-		public static IEnumerable GetItemsCloseToObject(GameObject obj, ushort radiusToCheck)
-		{
-			return GetItemsCloseToObject(obj, radiusToCheck, false);
-		}
-
 
 		private static void CheckRegionAndZoneConfigs()
 		{

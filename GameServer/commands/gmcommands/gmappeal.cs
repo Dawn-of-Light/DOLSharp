@@ -219,8 +219,9 @@ namespace DOL.GS.Commands
                         int high = 0;
                         int crit = 0;
                         string caption;
-                        List<DBAppeal> appeallist = new List<DBAppeal>();
+                        IList<DBAppeal> appeallist;
                         List<string> msg = new List<string>();
+
                         if (args[1] == "listall")
                         {
                             caption = "Offline and Online Player Appeals";
@@ -231,11 +232,13 @@ namespace DOL.GS.Commands
                             caption = "Online Player Appeals";
                             appeallist = AppealMgr.GetAllAppeals();
                         }
+
                         if (appeallist.Count < 1 || appeallist == null)
                         {
                             AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NoAppealsinQueue"));
                             return;
                         }
+
                         foreach (DBAppeal a in appeallist)
                         {
                             switch (a.Severity)
