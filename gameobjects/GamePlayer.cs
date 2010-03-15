@@ -7555,7 +7555,6 @@ namespace DOL.GS
 
 				lock (m_spellQueueAccessMonitor)
 				{
-					// warlock queue stuff
 					if (m_runningSpellHandler != null)
 					{
 						if (spell.CastTime > 0 && !(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType != "Chamber")
@@ -7567,7 +7566,15 @@ namespace DOL.GS
 							}
 							if (SpellQueue)
 							{
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastFollow"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+								if (spell.SpellType.ToLower() == "archery")
+								{
+									Out.SendMessage("You prepare a " + spell.Name, eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+								}
+								else
+								{
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CastSpell.AlreadyCastFollow"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+								}
+
 								m_nextSpell = spell;
 								m_nextSpellLine = line;
 								m_nextSpellTarget = TargetObject as GameLiving;
