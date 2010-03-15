@@ -20,6 +20,7 @@ using System;
 using DOL.GS;
 using DOL.Language;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,6 +30,8 @@ namespace DOL.GS.PlayerClass
 	[PlayerClassAttribute((int)eCharacterClass.Ranger, "Ranger", "Stalker")]
 	public class ClassRanger : ClassStalker
 	{
+		private static readonly string[] AutotrainableSkills = new[] { Specs.Archery };
+
 		public ClassRanger()
 			: base()
 		{
@@ -65,11 +68,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override IList AutoTrainableSkills()
+		public override IList<string> GetAutotrainableSkills()
 		{
-			ArrayList skills = new ArrayList();
-			skills.Add(Specs.Archery);
-			return skills;
+			return AutotrainableSkills;
 		}
 
 		/// <summary>

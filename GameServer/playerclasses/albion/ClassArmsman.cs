@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
@@ -28,6 +29,8 @@ namespace DOL.GS.PlayerClass
 	[PlayerClassAttribute((int)eCharacterClass.Armsman, "Armsman", "Fighter", "Armswoman")]
 	public class ClassArmsman : ClassFighter
 	{
+		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Thrust };
+
 		public ClassArmsman() : base() 
 		{
 			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.DefendersofAlbion");
@@ -53,12 +56,9 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
-		public override IList AutoTrainableSkills()
+		public override IList<string> GetAutotrainableSkills()
 		{
-			ArrayList skills = new ArrayList();
-			skills.Add(Specs.Slash);
-			skills.Add(Specs.Thrust);
-			return skills;
+			return AutotrainableSkills;
 		}
 
 		/// <summary>

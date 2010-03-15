@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
@@ -64,12 +65,6 @@ namespace DOL.GS.PlayerClass
 			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mauler.GetTitle.10");
 			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mauler.GetTitle.5");
 			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
-		}
-
-		public override IList AutoTrainableSkills()
-		{
-			ArrayList skills = new ArrayList();
-			return skills;
 		}
 
 		/// <summary>
