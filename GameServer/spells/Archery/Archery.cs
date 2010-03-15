@@ -112,7 +112,7 @@ namespace DOL.GS.Spells
 		
 		public override void SendSpellMessages()
 		{
-			MessageToCaster("You prepare " + Spell.Name, eChatType.CT_Spell);
+			MessageToCaster("You prepare a " + Spell.Name, eChatType.CT_YouHit);
 		}
 
 		
