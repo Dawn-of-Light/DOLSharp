@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
@@ -28,6 +29,8 @@ namespace DOL.GS.PlayerClass
 	[PlayerClassAttribute((int)eCharacterClass.Paladin, "Paladin", "Fighter")]
 	public class ClassPaladin : ClassFighter
 	{
+		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Chants };
+
 		public ClassPaladin() : base()
 		{
 			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.ChurchofAlbion");
@@ -60,12 +63,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override IList AutoTrainableSkills()
+		public override IList<string> GetAutotrainableSkills()
 		{
-			ArrayList skills = new ArrayList();
-			skills.Add(Specs.Slash);
-			skills.Add(Specs.Chants);
-			return skills;
+			return AutotrainableSkills;
 		}
 
 		/// <summary>

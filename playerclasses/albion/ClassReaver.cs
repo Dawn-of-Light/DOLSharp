@@ -20,6 +20,7 @@ using System;
 using DOL.GS;
 using DOL.Language;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,6 +30,8 @@ namespace DOL.GS.PlayerClass
 	[PlayerClassAttribute((int)eCharacterClass.Reaver, "Reaver", "Fighter")]
 	public class ClassReaver : ClassFighter
 	{
+		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Flexible };
+
 		public ClassReaver() : base()
 		{
 			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.TempleofArawn");
@@ -61,12 +64,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override IList AutoTrainableSkills()
+		public override IList<string> GetAutotrainableSkills()
 		{
-			ArrayList skills = new ArrayList();
-			skills.Add(Specs.Slash);
-			skills.Add(Specs.Flexible);
-			return skills;
+			return AutotrainableSkills;
 		}
 
 		/// <summary>

@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using DOL.GS;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
@@ -29,6 +30,7 @@ namespace DOL.GS.PlayerClass
 	[PlayerClassAttribute((int)eCharacterClass.Infiltrator, "Infiltrator", "Rogue")]
 	public class ClassInfiltrator : ClassAlbionRogue
 	{
+		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };
 
 		public ClassInfiltrator() : base()
 		{
@@ -60,11 +62,9 @@ namespace DOL.GS.PlayerClass
 			return true;
 		}
 
-		public override IList AutoTrainableSkills()
+		public override IList<string> GetAutotrainableSkills()
 		{
-			ArrayList skills = new ArrayList();
-			skills.Add(Specs.Stealth);
-			return skills;
+			return AutotrainableSkills;
 		}
 
 		public override void OnLevelUp(GamePlayer player)
