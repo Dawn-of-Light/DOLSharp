@@ -7568,7 +7568,7 @@ namespace DOL.GS
 							{
 								if (spell.SpellType.ToLower() == "archery")
 								{
-									Out.SendMessage("You prepare a " + spell.Name, eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+									Out.SendMessage("You ready a " + spell.Name + " as a follow up!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 								}
 								else
 								{
