@@ -214,9 +214,10 @@ namespace DOL.GS.Keeps
 			if (this.Component == null)
 				return false;
 
-			if (Component.Keep.InCombat)
+			if (InCombat || Component.Keep.InCombat)
 			{
-				player.Out.SendMessage("No time to talk now we're under attack!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage("You can't talk to the lord while under siege.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				log.DebugFormat("KEEPWARNING: {0} attempted to interact with {1} of {2} while keep or lord in combat.", player.Name, Name, Component.Keep.Name);
 				return false;
 			}
 
@@ -284,7 +285,8 @@ namespace DOL.GS.Keeps
 
         public override bool WhisperReceive(GameLiving source, string str)
         {
-			if (Component.Keep.InCombat) return false;
+			if (InCombat) return false;
+			if (Component == null) return false;
             if (!base.WhisperReceive(source, str)) return false;
             if (!(source is GamePlayer)) return false;
             GamePlayer player = (GamePlayer)source;
