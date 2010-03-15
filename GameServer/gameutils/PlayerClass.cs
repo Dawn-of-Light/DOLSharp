@@ -165,7 +165,7 @@ namespace DOL.GS
 		void OnRealmLevelUp(GamePlayer player);
 		void OnSkillTrained(GamePlayer player, Specialization skill);
 		bool CanUseLefthandedWeapon(GamePlayer player);
-		IList AutoTrainableSkills();
+		IList<string> GetAutotrainableSkills();
 		string FemaleName
 		{
 			get;
@@ -267,6 +267,8 @@ namespace DOL.GS
 		/// Weapon Skill Base value to influence ranged weapon skill calc
 		/// </summary>
 		protected int m_wsbaseRanged = 440;
+
+		private static readonly string[] AutotrainableSkills = new string[0];
 
 		public CharacterClassSpec()
 		{
@@ -384,11 +386,10 @@ namespace DOL.GS
 		/// can train in.  Added by Echostorm for RAs
 		/// </summary>
 		/// <returns></returns>
-		public virtual IList AutoTrainableSkills()
+		public virtual IList<string> GetAutotrainableSkills()
 		{
-			return new ArrayList(0);
+			return AutotrainableSkills;
 		}
-
 
 		/// <summary>
 		/// Add all skills and other things that are required for current level

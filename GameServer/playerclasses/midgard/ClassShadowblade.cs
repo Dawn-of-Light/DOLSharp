@@ -20,12 +20,15 @@ using System;
 using DOL.GS;
 using DOL.Language;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
 	[PlayerClassAttribute((int)eCharacterClass.Shadowblade, "Shadowblade", "MidgardRogue")]
 	public class ClassShadowblade : ClassMidgardRogue
 	{
+		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };
+
 		public ClassShadowblade() : base()
 		{
 			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.Loki");
@@ -59,11 +62,9 @@ namespace DOL.GS.PlayerClass
 			return true;
 		}
 
-		public override IList AutoTrainableSkills()
+		public override IList<string> GetAutotrainableSkills()
 		{
-			ArrayList skills = new ArrayList();
-			skills.Add(Specs.Stealth);
-			return skills;
+			return AutotrainableSkills;
 		}
 
 		public override void OnLevelUp(GamePlayer player)

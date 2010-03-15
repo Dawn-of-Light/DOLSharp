@@ -4968,7 +4968,7 @@ namespace DOL.GS
 			int max_autotrain = Level / 4;
 			if (max_autotrain == 0) max_autotrain = 1;
 
-			foreach (string autotrainKey in CharacterClass.AutoTrainableSkills())
+			foreach (string autotrainKey in CharacterClass.GetAutotrainableSkills())
 			{
 				if (autotrainKey == spec.KeyName)
 					switch (Mode)
