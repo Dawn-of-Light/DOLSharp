@@ -8390,11 +8390,27 @@ namespace DOL.GS
 													if (spellHandler != null)
 													{
 														Stealth(false);
+
 														if (useItem.Item_Type == (int)eInventorySlot.FirstBackpack)
 														{
 															Emote(eEmote.Drink);
 														}
+
 														GameLiving target = TargetObject as GameLiving;
+
+														// Tobz: make sure we have the appropriate target for our charge spell, 
+														// otherwise don't waste a charge.
+														if (spell.Target.ToLower() == "enemy")
+														{
+															// we need an enemy target.
+															if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
+															{
+																// not allowed to attack, so they are not an enemy.
+																Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+																return;
+															}
+														}
+
 														//Spell
 														spellHandler.StartSpell(target);
 														//SubSpells
