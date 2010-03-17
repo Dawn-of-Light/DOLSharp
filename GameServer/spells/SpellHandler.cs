@@ -1505,19 +1505,6 @@ return false;
 			{
 				try
 				{
-					// Do not do this check for Necromancers and Game NPC's
-					if (m_caster is GamePlayer && ((m_caster as GamePlayer).CharacterClass is PlayerClass.ClassNecromancer) == false)
-					{
-						if (m_handler.Spell.Target.ToLower() == "enemy" && m_caster.TargetObject != m_target)
-						{
-							// caster changed targets, possibly to avoid LoS check, abort spell
-							Interval = 0;
-							m_handler.InterruptCasting();
-							m_handler.OnAfterSpellCastSequence();
-							return;
-						}
-					}
-
 					if (m_stage == 0)
 					{
 						if (!m_handler.CheckAfterCast(m_target))
