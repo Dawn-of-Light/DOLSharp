@@ -85,6 +85,19 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected bool m_startReuseTimer = true;
 
+		public bool StartReuseTimer
+		{
+			get { return m_startReuseTimer; }
+		}
+
+		/// <summary>
+		/// Can this spell be queued with other spells?
+		/// </summary>
+		public virtual bool CanQueue
+		{
+			get { return true; }
+		}
+
 		/// <summary>
 		/// Ability that casts a spell
 		/// </summary>
@@ -361,34 +374,7 @@ namespace DOL.GS.Spells
 
 				if (!Spell.IsInstantCast)
 				{
-					m_interrupted = false;
-					SendSpellMessages();
-
-					int time = CalculateCastingTime();
-
-					int step1 = time / 3;
-					if (step1 > 1000)
-						step1 = 1000;
-					if (step1 < 1)
-						step1 = 1;
-
-					int step3 = time / 3;
-					if (step3 > 1000)
-						step3 = 1000;
-					if (step3 < 1)
-						step3 = 1;
-
-					int step2 = time - step1 - step3;
-					if (step2 < 1)
-						step2 = 1;
-
-					if (Caster is GamePlayer && (Caster as GamePlayer).Client.Account.PrivLevel >= 3 && ServerProperties.Properties.ENABLE_DEBUG)
-						(Caster as GamePlayer).Out.SendMessage("[DEBUG] step1=" + step1 + "   step2=" + step2 + "   step3=" + step3, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-					m_castTimer = new DelayedCastTimer(Caster, this, target, step2, step3);
-					m_castTimer.Start(step1);
-					m_started = Caster.CurrentRegion.Time;
-					SendCastAnimation();
+					StartCastTimer(target);
 
 					if ((Caster is GamePlayer && (Caster as GamePlayer).IsStrafing) || Caster.IsMoving)
 						CasterMoves();
@@ -406,6 +392,41 @@ namespace DOL.GS.Spells
 				OnAfterSpellCastSequence();
 
 			return true;
+		}
+
+
+		public virtual void StartCastTimer(GameLiving target)
+		{
+			m_interrupted = false;
+			SendSpellMessages();
+
+			int time = CalculateCastingTime();
+
+			int step1 = time / 3;
+			if (step1 > ServerProperties.Properties.SPELL_INTERRUPT_MAXSTAGELENGTH)
+				step1 = ServerProperties.Properties.SPELL_INTERRUPT_MAXSTAGELENGTH;
+			if (step1 < 1)
+				step1 = 1;
+
+			int step3 = time / 3;
+			if (step3 > ServerProperties.Properties.SPELL_INTERRUPT_MAXSTAGELENGTH)
+				step3 = ServerProperties.Properties.SPELL_INTERRUPT_MAXSTAGELENGTH;
+			if (step3 < 1)
+				step3 = 1;
+
+			int step2 = time - step1 - step3;
+			if (step2 < 1)
+				step2 = 1;
+
+			if (Caster is GamePlayer && ServerProperties.Properties.ENABLE_DEBUG)
+			{
+				(Caster as GamePlayer).Out.SendMessage("[DEBUG] spell time = " + time + ", step1 = " + step1 + ", step2 = " + step2 + ", step3 = " + step3, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+
+			m_castTimer = new DelayedCastTimer(Caster, this, target, step2, step3);
+			m_castTimer.Start(step1);
+			m_started = Caster.CurrentRegion.Time;
+			SendCastAnimation();
 		}
 
 		/// <summary>
@@ -1427,11 +1448,11 @@ return false;
 			{
 				m_castTimer.Stop();
 				m_castTimer = null;
+
 				if (m_caster is GamePlayer)
+				{
 					((GamePlayer)m_caster).ClearSpellQueue();
-				//This was called in OnAfterSpellCastSequence anyways for GameNPCs
-				//else if (m_caster is GameNPC)
-				//    ((GameNPC)m_caster).StopSpellAttack();
+				}
 			}
 			OnAfterSpellCastSequence();
 		}
@@ -1509,7 +1530,6 @@ return false;
 						m_stage = 1;
 						m_handler.Stage = 1;
 						Interval = m_delay1;
-						return;
 					}
 					else if (m_stage == 1)
 					{
@@ -1523,24 +1543,39 @@ return false;
 						m_stage = 2;
 						m_handler.Stage = 2;
 						Interval = m_delay2;
-						return;
 					}
 					else if (m_stage == 2)
 					{
 						m_stage = 3;
 						m_handler.Stage = 3;
+						Interval = 100;
 
 						if (m_handler.CheckEndCast(m_target))
 						{
 							m_handler.FinishSpellCast(m_target);
 						}
 					}
+					else
+					{
+						m_stage = 4;
+						m_handler.Stage = 4;
+						Interval = 0;
+						m_handler.OnAfterSpellCastSequence();
+					}
+
+					if (m_caster is GamePlayer && ServerProperties.Properties.ENABLE_DEBUG)
+					{
+						(m_caster as GamePlayer).Out.SendMessage("[DEBUG] stage = " + m_handler.Stage, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+
+					return;
 				}
 				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
 						log.Error(ToString(), e);
 				}
+
 				m_handler.OnAfterSpellCastSequence();
 				Interval = 0;
 			}

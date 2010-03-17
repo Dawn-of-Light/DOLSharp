@@ -114,6 +114,11 @@ namespace DOL.GS
 		public static readonly string QUICK_CAST_CHANGE_TICK = "quick_cast_change_tick";
 
 		/// <summary>
+		/// Last spell cast from a used item
+		/// </summary>
+		public static readonly string LAST_USED_ITEM_SPELL = "last_used_item_spell";
+
+		/// <summary>
 		/// Array that stores ML step completition
 		/// </summary>
 		private ArrayList m_mlsteps = new ArrayList();
@@ -7461,6 +7466,17 @@ namespace DOL.GS
 		/// <param name="handler"></param>
 		public override void OnAfterSpellCastSequence(ISpellHandler handler)
 		{
+			InventoryItem lastUsedItem = TempProperties.getProperty<InventoryItem>(LAST_USED_ITEM_SPELL, null);
+			if (lastUsedItem != null)
+			{
+				if (handler.StartReuseTimer)
+				{
+					lastUsedItem.CanUseAgainIn = lastUsedItem.CanUseEvery;
+				}
+
+				TempProperties.removeProperty(LAST_USED_ITEM_SPELL);
+			}
+
 			lock (m_spellQueueAccessMonitor)
 			{
 				Spell nextSpell = m_nextSpell;
@@ -7557,6 +7573,12 @@ namespace DOL.GS
 				{
 					if (m_runningSpellHandler != null)
 					{
+						if (m_runningSpellHandler.CanQueue == false)
+						{
+							m_runningSpellHandler.CasterMoves();
+							return;
+						}
+
 						if (spell.CastTime > 0 && !(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType != "Chamber")
 						{
 							if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
@@ -8304,7 +8326,7 @@ namespace DOL.GS
 					    && useItem.MaxCharges == 0)
 					{
 						int cooldown = useItem.CanUseAgainIn;
-						if (cooldown > 0)
+						if (cooldown > 0 && Client.Account.PrivLevel == (uint)ePrivLevel.Player)
 						{
 							int minutes = cooldown / 60;
 							int seconds = cooldown % 60;
@@ -8318,7 +8340,9 @@ namespace DOL.GS
 						else
 						{
 							if (UseMagicalItem(useItem, type))
-								useItem.CanUseAgainIn = useItem.CanUseEvery;
+							{
+								TempProperties.setProperty(LAST_USED_ITEM_SPELL, useItem);
+							}
 						}
 						return;
 					}
@@ -8590,9 +8614,16 @@ namespace DOL.GS
 			if (IsMezzed || (IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || !IsAlive)
 			{
 				Out.SendMessage("You can't use anything in your state.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
 			}
 
-			SpellLine itemSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Spells);
+			if (m_runningSpellHandler != null)
+			{
+				Out.SendMessage("You are already casting a spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			SpellLine itemSpellLine = new SpellLine("TempItemSpells", "Temp Item Spells", "", true);
 			if (itemSpellLine == null)
 				return false;
 
@@ -8615,10 +8646,16 @@ namespace DOL.GS
 
 				if (IsOnHorse && !spellHandler.HasPositiveEffect)
 					IsOnHorse = false;
+
 				Stealth(false);
+
 				if (spellHandler.CheckBeginCast(TargetObject as GameLiving))
+				{
+					m_runningSpellHandler = spellHandler;
+					m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
 					spellHandler.CastSpell();
-				return true;
+					return true;
+				}
 			}
 			return false;
 		}
