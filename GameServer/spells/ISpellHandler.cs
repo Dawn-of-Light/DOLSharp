@@ -67,6 +67,16 @@ namespace DOL.GS.Spells
 		bool IsCasting { get; }
 
 		/// <summary>
+		/// Can this spell be queued with other spells?
+		/// </summary>
+		bool CanQueue { get; }
+
+		/// <summary>
+		/// Should we start the reuse timer (spell successful)?
+		/// </summary>
+		bool StartReuseTimer { get; }
+
+		/// <summary>
 		/// Gets wether this spell has positive or negative impact on targets
 		/// important to determine wether the spell can be canceled by a player
 		/// </summary>
