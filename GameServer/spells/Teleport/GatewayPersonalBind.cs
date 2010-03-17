@@ -35,6 +35,16 @@ namespace DOL.GS.Spells
 		public GatewayPersonalBind(GameLiving caster, Spell spell, SpellLine spellLine)
 			: base(caster, spell, spellLine) { }
 
+
+		/// <summary>
+		/// Can this spell be queued with other spells?
+		/// </summary>
+		public override bool CanQueue
+		{
+			get { return false; }
+		}
+
+
 		/// <summary>
 		/// Whether this spell can be cast on the selected target at all.
 		/// </summary>
@@ -46,11 +56,31 @@ namespace DOL.GS.Spells
 			if (player == null)
 				return false;
 
-			if (player.InCombat || GameRelic.IsPlayerCarryingRelic(player))
+			if (player.IsMoving)
+			{
+				player.Out.SendMessage("You must be standing still to use this item!", DOL.GS.PacketHandler.eChatType.CT_System, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
 				return false;
+			}
+
+			if (player.InCombat || GameRelic.IsPlayerCarryingRelic(player))
+			{
+				player.Out.SendMessage("You have been in combat recently and cannot use this item!", DOL.GS.PacketHandler.eChatType.CT_System, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
+				return false;
+			}
 
 			return true;
 		}
+
+
+		/// <summary>
+		/// Always a constant casting time
+		/// </summary>
+		/// <returns></returns>
+		public override int CalculateCastingTime()
+		{
+			return m_spell.CastTime;
+		}
+
 
 		/// <summary>
 		/// Apply the effect.
@@ -63,7 +93,7 @@ namespace DOL.GS.Spells
 			if (player == null)
 				return;
 
-			if (player.InCombat || GameRelic.IsPlayerCarryingRelic(player))
+			if (player.InCombat || GameRelic.IsPlayerCarryingRelic(player) || player.IsMoving)
 				return;
 
 			SendEffectAnimation(player, 0, false, 1);
@@ -74,6 +104,14 @@ namespace DOL.GS.Spells
 			Character character = player.PlayerCharacter;
 			player.MoveTo((ushort)character.BindRegion,	character.BindXpos, character.BindYpos, character.BindZpos, (ushort)character.BindHeading);
 		}
+
+
+		public override void CasterMoves()
+		{
+			MessageToCaster("You move and interrupt your spellcast!", DOL.GS.PacketHandler.eChatType.CT_System);
+			InterruptCasting();
+		}
+
 
 		public override void InterruptCasting()
 		{

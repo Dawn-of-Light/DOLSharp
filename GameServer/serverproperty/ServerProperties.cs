@@ -999,6 +999,9 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("spells","spell_interrupt_again", "", 100)]
 		public static int SPELL_INTERRUPT_AGAIN;
 
+		[ServerProperty("spells", "spell_interrupt_maxstagelength", "Max length of stage 1 and 3, 1000 = 1 second", 1500)]
+		public static int SPELL_INTERRUPT_MAXSTAGELENGTH;
+
 		#endregion
 
 		#region GUILDS / ALLIANCES
