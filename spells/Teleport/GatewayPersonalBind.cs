@@ -108,8 +108,8 @@ namespace DOL.GS.Spells
 
 		public override void CasterMoves()
 		{
-			MessageToCaster("You move and interrupt your spellcast!", DOL.GS.PacketHandler.eChatType.CT_System);
 			InterruptCasting();
+			MessageToCaster("You move and interrupt your spellcast!", DOL.GS.PacketHandler.eChatType.CT_Important);
 		}
 
 

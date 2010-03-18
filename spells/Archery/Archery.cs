@@ -91,9 +91,16 @@ namespace DOL.GS.Spells
 
 			if (targetType == "enemy")
 			{
-				if (!(m_caster.IsObjectInFront(selectedTarget, 180) && m_caster.TargetInView))
+				if (m_caster.IsObjectInFront(selectedTarget, 180) == false)
 				{
-					MessageToCaster("Your target is not in view!", eChatType.CT_System);
+					MessageToCaster("Your target is not in view!", eChatType.CT_SpellResisted);
+					Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
+					return false;
+				}
+
+				if (m_caster.TargetInView == false)
+				{
+					MessageToCaster("Your target is not visible!", eChatType.CT_SpellResisted);
 					Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
 					return false;
 				}
