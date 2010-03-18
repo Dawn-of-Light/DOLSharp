@@ -334,6 +334,12 @@ namespace DOL.GS.ServerProperties
 		public static bool ALWAYS_CHECK_LOS;
 
 		/// <summary>
+		/// Perform checklos on client with each mob
+		/// </summary>
+		[ServerProperty("world", "check_los_during_cast", "Perform a LOS check during a spell cast.", true)]
+		public static bool CHECK_LOS_DURING_CAST;
+
+		/// <summary>
 		/// Perform LOS check between controlled NPC's and players
 		/// </summary>
 		[ServerProperty("world", "always_check_pet_los", "Should we perform LOS checks between controlled NPC's and players?", false)]
