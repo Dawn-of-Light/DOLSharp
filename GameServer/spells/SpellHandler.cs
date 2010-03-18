@@ -64,6 +64,10 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected GameLiving m_caster;
 		/// <summary>
+		/// The target for this spell
+		/// </summary>
+		protected GameLiving m_spellTarget = null;
+		/// <summary>
 		/// Has the spell been interrupted
 		/// </summary>
 		protected bool m_interrupted = false;
@@ -213,7 +217,7 @@ namespace DOL.GS.Spells
 				Caster.Mana -= Spell.PulsePower;
 				if (Spell.InstrumentRequirement != 0 || !HasPositiveEffect)
 					SendEffectAnimation(Caster, 0, true, 1); // pulsing auras or songs
-				StartSpell(Caster.TargetObject as GameLiving);
+				StartSpell(m_spellTarget);
 			}
 			else
 			{
@@ -315,6 +319,8 @@ namespace DOL.GS.Spells
 
 		public virtual bool CastSpell(GameLiving targetObject)
 		{
+			m_spellTarget = targetObject;
+
 			Caster.Notify(GameLivingEvent.CastStarting, m_caster, new CastingEventArgs(this));
 
 			if (Caster is GamePlayer && Spell.SpellType != "Archery")
@@ -329,20 +335,19 @@ namespace DOL.GS.Spells
 			}
 
 			m_interrupted = false;
-			GameLiving target = Caster.TargetObject as GameLiving;
 
 			if (Spell.Target.ToLower() == "pet")
 			{
 				// Pet is the target, check if the caster is the pet.
 
 				if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
-					target = Caster;
+					m_spellTarget = Caster;
 
 				if (Caster is GamePlayer && Caster.ControlledNpcBrain != null && Caster.ControlledNpcBrain.Body != null)
 				{
-					if(target == null || !Caster.IsControlledNPC(target as GameNPC))
+					if (m_spellTarget == null || !Caster.IsControlledNPC(m_spellTarget as GameNPC))
 					{
-						target = Caster.ControlledNpcBrain.Body;
+						m_spellTarget = Caster.ControlledNpcBrain.Body;
 					}
 				}
 			}
@@ -352,9 +357,9 @@ namespace DOL.GS.Spells
 				// is always the pet then.
 
 				if (Caster is GamePlayer && Caster.ControlledNpcBrain != null)
-					target = Caster.ControlledNpcBrain.Body;
+					m_spellTarget = Caster.ControlledNpcBrain.Body;
 				else
-					target = null;
+					m_spellTarget = null;
 			}
 
 			if (Spell.Pulse != 0 && CancelPulsingSpell(Caster, Spell.SpellType))
@@ -364,8 +369,7 @@ namespace DOL.GS.Spells
 				else
 					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
 			}
-			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, m_spellLine)
-			         && CheckBeginCast(target))
+			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, m_spellTarget, Spell, m_spellLine) && CheckBeginCast(m_spellTarget))
 			{
 				if (m_caster is GamePlayer && (m_caster as GamePlayer).IsOnHorse && !HasPositiveEffect)
 				{
@@ -374,7 +378,7 @@ namespace DOL.GS.Spells
 
 				if (!Spell.IsInstantCast)
 				{
-					StartCastTimer(target);
+					StartCastTimer(m_spellTarget);
 
 					if ((Caster is GamePlayer && (Caster as GamePlayer).IsStrafing) || Caster.IsMoving)
 						CasterMoves();
@@ -384,7 +388,7 @@ namespace DOL.GS.Spells
 					if (Caster.ControlledNpcBrain == null || Caster.ControlledNpcBrain.Body == null || !(Caster.ControlledNpcBrain.Body is NecromancerPet))
 						SendCastAnimation(0);
 
-					FinishSpellCast(target);
+					FinishSpellCast(m_spellTarget);
 				}
 			}
 
@@ -427,6 +431,11 @@ namespace DOL.GS.Spells
 			m_castTimer.Start(step1);
 			m_started = Caster.CurrentRegion.Time;
 			SendCastAnimation();
+
+			if (m_caster.IsMoving || m_caster.IsStrafing)
+			{
+				CasterMoves();
+			}
 		}
 
 		/// <summary>
@@ -440,8 +449,8 @@ namespace DOL.GS.Spells
 			if (Spell.MoveCast)
 				return;
 
-			MessageToCaster("You move and interrupt your spellcast!", eChatType.CT_System);
 			InterruptCasting();
+			MessageToCaster("You move and interrupt your spellcast!", eChatType.CT_System);
 		}
 
 		/// <summary>
@@ -885,7 +894,7 @@ namespace DOL.GS.Spells
 				{
 					case "Enemy":
 						//enemys have to be in front and in view for targeted spells
-						if (!(m_caster.IsObjectInFront(target, 180) && m_caster.TargetInView))
+						if (!m_caster.IsObjectInFront(target, 180))
 						{
 							MessageToCaster("Your target is not in view.  The spell fails.", eChatType.CT_SpellResisted);
 							return false;
@@ -1049,14 +1058,33 @@ namespace DOL.GS.Spells
 					}
 				}
 
-				switch (m_spell.Target)
+				switch (m_spell.Target.ToLower())
 				{
-					case "Enemy":
+					case "enemy":
 						//enemys have to be in front and in view for targeted spells
-						if (Caster is GamePlayer && !(m_caster.IsObjectInFront(target, 180) /*&& m_caster.TargetInView*/) && !Caster.IsWithinRadius(target, 50))
+						if (Caster is GamePlayer && !m_caster.IsObjectInFront(target, 180) && !Caster.IsWithinRadius(target, 50))
 						{
 							if (!quiet) MessageToCaster("Your target is not in view. The spell fails.", eChatType.CT_SpellResisted);
 							return false;
+						}
+
+						if (ServerProperties.Properties.CHECK_LOS_DURING_CAST)
+						{
+							GamePlayer playerCaster = null;
+							if (Caster is GamePlayer)
+							{
+								playerCaster = Caster as GamePlayer;
+							}
+							else if (Caster is GameNPC && (Caster as GameNPC).Brain != null && (Caster as GameNPC).Brain is IControlledBrain)
+							{
+								playerCaster = ((Caster as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+							}
+
+							if (playerCaster != null)
+							{
+								// This will generate an interrupt if LOS check fails
+								playerCaster.Out.SendCheckLOS(playerCaster, m_spellTarget, new CheckLOSResponse(CheckLOSYouToTarget));
+							}
 						}
 
 						if (!GameServer.ServerRules.IsAllowedToAttack(Caster, target, quiet))
@@ -1065,7 +1093,7 @@ namespace DOL.GS.Spells
 						}
 						break;
 
-					case "Corpse":
+					case "corpse":
 						if (target.IsAlive || !GameServer.ServerRules.IsSameRealm(Caster, target, quiet))
 						{
 							if (!quiet) MessageToCaster("This spell only works on dead members of your realm!",
@@ -1074,14 +1102,14 @@ namespace DOL.GS.Spells
 						}
 						break;
 
-					case "Realm":
+					case "realm":
 						if (!GameServer.ServerRules.IsSameRealm(Caster, target, quiet))
 						{
 							return false;
 						}
 						break;
 
-					case "Pet":
+					case "pet":
 						/*
 						 * [Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
 						 * -If caster target's isn't own pet.
@@ -1228,7 +1256,7 @@ namespace DOL.GS.Spells
 				{
 					case "Enemy":
 						//enemys have to be in front and in view for targeted spells
-						if (Caster is GamePlayer && !(m_caster.IsObjectInFront(target, 180) /*&& m_caster.TargetInView*/) && !Caster.IsWithinRadius(target, 50))
+						if (Caster is GamePlayer && !m_caster.IsObjectInFront(target, 180) && !Caster.IsWithinRadius(target, 50))
 						{
 							if (!quiet) MessageToCaster("Your target is not in view. The spell fails.", eChatType.CT_SpellResisted);
 							return false;
@@ -1550,9 +1578,9 @@ return false;
 						m_handler.OnAfterSpellCastSequence();
 					}
 
-					if (m_caster is GamePlayer && ServerProperties.Properties.ENABLE_DEBUG)
+					if (m_caster is GamePlayer && ServerProperties.Properties.ENABLE_DEBUG && m_stage < 3)
 					{
-						(m_caster as GamePlayer).Out.SendMessage("[DEBUG] stage = " + m_handler.Stage, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						(m_caster as GamePlayer).Out.SendMessage("[DEBUG] step = " + (m_handler.Stage + 1), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 
 					return;
@@ -2281,11 +2309,16 @@ return false;
 		/// <param name="target">The current target object</param>
 		public virtual void StartSpell(GameLiving target)
 		{
+			if (m_spellTarget == null)
+				m_spellTarget = target;
+
 			GamePlayer player = Caster as GamePlayer;
 			if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower() && (target == null || (Spell.Radius > 0 && Spell.Range == 0)))
-				target = Caster;
-			if (target == null) return;
-			IList targets = SelectTargets(target);
+			{
+				m_spellTarget = Caster;
+			}
+			if (m_spellTarget == null) return;
+			IList targets = SelectTargets(m_spellTarget);
 
 			double effectiveness = 1.0;
 			if (Caster is GamePlayer)
