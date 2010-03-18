@@ -20,106 +20,95 @@
 using System;
 using DOL.Events;
 using DOL.GS.Effects;
-
+using DOL.GS.PacketHandler;
 namespace DOL.GS.Spells
 {
-	/// <summary>
 	/// Costume spell handler: Shape change on self
-	/// </summary>
 	/// <author>Luhz</author>
 	[SpellHandler("Costume")]
 	class CostumeSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// All checks before any casting begins
-		/// </summary>
-		/// <param name="selectedTarget"></param>
-		/// <returns></returns>
 		public override bool CheckBeginCast(GameLiving selectedTarget, bool quiet)
 		{
-			if (m_caster is GamePlayer)
-			{
-				switch (m_caster.CurrentRegionID)
-				{
-					case 10:  //City of Camelot
-					case 101: //Jordheim
-					case 201: //Tir Na Nog
+			GameLiving player = selectedTarget as GamePlayer;
 
-					case 2:	  //Albion Housing
-					case 102: //Midgard Housing
-					case 202: //Hibernia Housing
-						break;
-					default:
-						return false;
-				}
+			if (player == null)
+				return false;
+
+			switch (player.CurrentRegionID)
+			{
+				case 10: return true;// Camelot City
+				case 101: return true; // Jordheim
+				case 201: return true; // Tir Na Nog
+				case 2: return true; // Alb Housing
+				case 102: return true; // Mid Housing
+				case 202: return true; // Hib Housing
+				default: return false;
 			}
-			return base.CheckBeginCast(selectedTarget, true);
 		}
 
-		/// <summary>
-		/// Effect starting.
-		/// </summary>
+		/// Effect starting.		
 		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			GamePlayer player = effect.Owner as GamePlayer;
 
 			if (player != null)
-				player.Model = (ushort)effect.Spell.Value;
-
-			GameEventMgr.AddHandler(effect.Owner, GamePlayerEvent.RegionChanged, new DOLEventHandler(OnZone));
+			{
+				if (CheckBeginCast(player, true) == false)
+				{
+					if (effect != null)
+						effect.Cancel(true);
+					player.Model = player.CreationModel;
+					return;
+				}
+				else
+				{
+					player.Model = (ushort)effect.Spell.Value;
+				}
+				GameEventMgr.AddHandler(effect.Owner, GamePlayerEvent.RegionChanged, new DOLEventHandler(OnZone));
+			}
 		}
 
-		/// <summary>
-		/// Cancels the effect if the player zones out of the allowed regions.
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		private void OnZone(DOLEvent e, object sender, EventArgs arguments)
 		{
 			if (sender is GamePlayer)
 			{
 				switch ((sender as GamePlayer).CurrentRegionID)
 				{
-					case 10:  //City of Camelot
+					case 10: // Camelot City 
 					case 101: //Jordheim
 					case 201: //Tir Na Nog
-
 					case 2:	  //Albion Housing
 					case 102: //Midgard Housing
-					case 202: //Hibernia Housing
-						return;	
-					default: 
+					case 202: //Hibernia Housing                        
+					default:
 						GameSpellEffect costume = FindEffectOnTarget(sender as GamePlayer, this);
-						if (costume != null) costume.Cancel(false);
-						break;
+						if (costume != null)
+							costume.Cancel(true);
+						return;
 				}
 			}
 		}
 
-		/// <summary>
-		/// Effect expiring (duration spells only).
-		/// </summary>
-		/// <param name="effect"></param>
-		/// <param name="noMessages"></param>
+		/// Effect expiring (duration spells only).		
 		/// <returns>Immunity duration in milliseconds.</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			GamePlayer player = effect.Owner as GamePlayer;
 
 			if (player != null)
-				player.Model = player.CreationModel;      
+			{
+				effect.Cancel(false);
+				player.Model = player.CreationModel;
 
+				GameEventMgr.RemoveHandler((GamePlayer)effect.Owner, GamePlayerEvent.RegionChanged, new DOLEventHandler(OnZone));
+			}
 			return 0;
+
 		}
 
-		/// <summary>
-		/// Creates a new Costume spell handler.
-		/// </summary>
-		/// <param name="caster"></param>
-		/// <param name="spell"></param>
-		/// <param name="line"></param>
+		/// Creates a new Costume spell handler.		
 		public CostumeSpellHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line) { }
 	}
