@@ -85,7 +85,7 @@ namespace DOL.GS.Spells
 				if (effect != null)
 				{
 					effect.Cancel(false);
-					((GamePlayer)living).Out.SendMessage("You move and break your modification spell.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					((GamePlayer)living).Out.SendMessage("You move and break your modification spell.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
 		}
