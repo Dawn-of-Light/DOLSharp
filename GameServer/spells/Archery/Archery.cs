@@ -88,6 +88,16 @@ namespace DOL.GS.Spells
 					return false;
 				}
 			}
+
+			if (targetType == "enemy")
+			{
+				if (!(m_caster.IsObjectInFront(selectedTarget, 180) && m_caster.TargetInView))
+				{
+					MessageToCaster("Your target is not in view!", eChatType.CT_System);
+					Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
+					return false;
+				}
+			}
 			
 			if (Caster != null && Caster is GamePlayer && Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)Caster.AttackWeapon.Object_Type))
             {

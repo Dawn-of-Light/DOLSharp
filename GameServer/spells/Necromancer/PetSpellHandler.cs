@@ -39,47 +39,18 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override bool CastSpell()
 		{
-			GameLiving target = Caster.TargetObject as GameLiving;
+			m_spellTarget = Caster.TargetObject as GameLiving;
 			bool casted = true;
 
-            if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, target, Spell, SpellLine)
-                && CheckBeginCast(target))
+			if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, m_spellTarget, Spell, SpellLine) && CheckBeginCast(m_spellTarget))
             {
                 if (Spell.CastTime > 0)
                 {
-                    m_interrupted = false;
-                    SendSpellMessages();
-
-                    int time = CalculateCastingTime();
-
-                    int step1 = time / 3;
-                    if (step1 > 1000)
-                        step1 = 1000;
-                    if (step1 < 1)
-                        step1 = 1;
-
-                    int step3 = time / 3;
-                    if (step3 > 1000)
-                        step3 = 1000;
-                    if (step3 < 1)
-                        step3 = 1;
-
-                    int step2 = time - step1 - step3;
-                    if (step2 < 1)
-                        step2 = 1;
-
-                    m_castTimer = new DelayedCastTimer(Caster, this, target, step2, step3);
-                    m_castTimer.Start(step1);
-                    m_started = Caster.CurrentRegion.Time;
-
-                    SendCastAnimation();
-
-                    if (m_caster.IsMoving || m_caster.IsStrafing)
-                        CasterMoves();
+					StartCastTimer(m_spellTarget);
                 }
                 else
                 {
-                    FinishSpellCast(target);
+					FinishSpellCast(m_spellTarget);
                 }
             }
             else 

@@ -53,7 +53,7 @@ namespace DOL.GS.Spells
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
             base.ApplyEffectOnTarget(target, effectiveness);
-            pet.TempProperties.setProperty(BOMBERTARGET, Caster.TargetObject);
+            pet.TempProperties.setProperty(BOMBERTARGET, target);
             pet.Name = Spell.Name;
             pet.Follow(target, 5, Spell.Range * 5); // with Toa bonus, if the bomber was fired > Spell.Range base, it didnt move..
         }
