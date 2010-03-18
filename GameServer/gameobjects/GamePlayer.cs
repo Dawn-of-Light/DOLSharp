@@ -9970,7 +9970,7 @@ namespace DOL.GS
 						string attackTypeMsg = "shot";
 						if (AttackWeapon.Object_Type == (int)eObjectType.Thrown)
 							attackTypeMsg = "throw";
-						Out.SendMessage("You move and interrupt your " + attackTypeMsg + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage("You move and interrupt your " + attackTypeMsg + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						StopAttack();
 					}
 				}
@@ -10087,7 +10087,7 @@ namespace DOL.GS
 			if (IsCastingRealmAbility)
 			{
 				Out.SendInterruptAnimation(this);
-				Out.SendMessage("You move and interrupt your spellcast!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage("You move and interrupt your spellcast!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				RealmAbilityCastTimer.Stop();
 				RealmAbilityCastTimer = null;
 			}
@@ -10108,7 +10108,7 @@ namespace DOL.GS
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				{
 					string attackTypeMsg = (AttackWeapon.Object_Type == (int)eObjectType.Thrown ? "throw" : "shot");
-					Out.SendMessage("You move and interrupt your " + attackTypeMsg + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage("You move and interrupt your " + attackTypeMsg + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					StopAttack();
 				}
 				else

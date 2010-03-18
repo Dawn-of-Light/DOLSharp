@@ -37,7 +37,7 @@ namespace DOL.GS.RealmAbilities
 
 			if (!caster.TargetInView)
 			{
-				caster.Out.SendMessage(caster.TargetObject.Name + " is not in view.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.Out.SendMessage(caster.TargetObject.Name + " is not in view.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				caster.DisableSkill(this, 3 * 1000);
 				return;
 			}
@@ -120,7 +120,7 @@ namespace DOL.GS.RealmAbilities
 
 			if (!caster.TargetInView)
 			{
-				caster.Out.SendMessage(caster.TargetObject.Name + " is not in view.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.Out.SendMessage(caster.TargetObject.Name + " is not in view.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				caster.DisableSkill(this, 3 * 1000);
 				return 0;
 			}
