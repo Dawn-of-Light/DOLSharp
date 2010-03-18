@@ -450,7 +450,7 @@ namespace DOL.GS.Spells
 				return;
 
 			InterruptCasting();
-			MessageToCaster("You move and interrupt your spellcast!", eChatType.CT_System);
+			MessageToCaster("You move and interrupt your spellcast!", eChatType.CT_Important);
 		}
 
 		/// <summary>
@@ -686,13 +686,20 @@ namespace DOL.GS.Spells
 							return false;
 						}
 
-						//enemys have to be in front and in view for targeted spells
-						if (!(m_caster.IsObjectInFront(selectedTarget, 180) && m_caster.TargetInView))
+						if (m_spell.SpellType == "Charm" && m_spell.CastTime == 0 && m_spell.Pulse != 0)
+							break;
+
+						if (m_caster.IsObjectInFront(selectedTarget, 180) == false)
 						{
-							if(m_spell.SpellType=="Charm" && m_spell.CastTime==0 && m_spell.Pulse!=0) break;
-							if (!quiet) MessageToCaster("Your target is not in view!", eChatType.CT_System);
-							Caster.Notify(GameLivingEvent.CastFailed,
-							              new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
+							if (!quiet) MessageToCaster("Your target is not in view!", eChatType.CT_SpellResisted);
+							Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
+							return false;
+						}
+
+						if (m_caster.TargetInView == false)
+						{
+							if (!quiet) MessageToCaster("Your target is not visible!", eChatType.CT_SpellResisted);
+							Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
 							return false;
 						}
 
@@ -721,9 +728,8 @@ namespace DOL.GS.Spells
 				//heals/buffs/rez need LOS only to start casting
 				if (!m_caster.TargetInView && m_spell.Target.ToLower() != "pet")
 				{
-					if (!quiet) MessageToCaster("Your target is not in view!", eChatType.CT_System);
-					Caster.Notify(GameLivingEvent.CastFailed,
-					              new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
+					if (!quiet) MessageToCaster("Your target is not in visible!", eChatType.CT_SpellResisted);
+					Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
 					return false;
 				}
 
@@ -808,7 +814,7 @@ namespace DOL.GS.Spells
 				return;
 			if ((response & 0x100) == 0x100) // In view ?
 				return;
-			MessageToLiving(player, "You can't see your target!", eChatType.CT_SpellResisted);
+			MessageToLiving(player, "You can't see your target from here!", eChatType.CT_SpellResisted);
 			InterruptCasting(); // break;
 		}
 
@@ -896,7 +902,7 @@ namespace DOL.GS.Spells
 						//enemys have to be in front and in view for targeted spells
 						if (!m_caster.IsObjectInFront(target, 180))
 						{
-							MessageToCaster("Your target is not in view.  The spell fails.", eChatType.CT_SpellResisted);
+							MessageToCaster("Your target is not in view. The spell fails.", eChatType.CT_SpellResisted);
 							return false;
 						}
 
@@ -2829,7 +2835,7 @@ target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 			MessageToCaster(String.Format("You lose your focus on your {0} spell.", currentEffect.Spell.Name), eChatType.CT_SpellExpires);
 
 			if (e == GameLivingEvent.Moving)
-				MessageToCaster("You move and interrupt your focus!", eChatType.CT_System);
+				MessageToCaster("You move and interrupt your focus!", eChatType.CT_Important);
 		}
 		#endregion
 

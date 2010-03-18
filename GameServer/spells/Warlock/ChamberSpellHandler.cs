@@ -157,7 +157,12 @@ namespace DOL.GS.Spells
 				}
 				if (!caster.TargetInView)
 				{
-					MessageToCaster("Your target is not in view!", eChatType.CT_System);
+					MessageToCaster("Your target is not visible!", eChatType.CT_SpellResisted);
+					return false;
+				}
+				if (caster.IsObjectInFront(m_spellTarget, 180) == false)
+				{
+					MessageToCaster("Your target is not in view!", eChatType.CT_SpellResisted);
 					return false;
 				}
 				if (caster.IsPvPInvulnerability)
