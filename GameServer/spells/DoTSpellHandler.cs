@@ -94,7 +94,7 @@ namespace DOL.GS.Spells
 			if (iWarLordEffect != null)
 				ad.Damage *= (int)(1.00 - (iWarLordEffect.Spell.Value * 0.01));
                        
-            ad.CriticalDamage = 0;
+            //ad.CriticalDamage = 0; - DoTs can crit.
 			return ad;
 		}
 
