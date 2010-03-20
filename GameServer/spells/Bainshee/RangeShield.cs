@@ -28,12 +28,19 @@ namespace DOL.GS.Spells
             GameLiving living = sender as GameLiving;
             if (attackArgs == null) return;
             if (living == null) return;
-
+            double value = 0;
             switch (attackArgs.AttackData.AttackType)
             {
                 case AttackData.eAttackType.Ranged:
-                    double value = Spell.Value *.01;
+                    value = Spell.Value * .01;
                     attackArgs.AttackData.Damage *= (int)value;
+                    break;
+                case AttackData.eAttackType.Spell:
+                    if (attackArgs.AttackData.SpellHandler.Spell.SpellType == "Archery")
+                    {
+                        value = Spell.Value * .01;
+                        attackArgs.AttackData.Damage *= (int)value;
+                    }
                     break;
             }
         }
