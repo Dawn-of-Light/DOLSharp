@@ -124,7 +124,6 @@ namespace DOL.GS.Spells
                     mocFactor = System.Math.Round((double)ra.Level * 25 / 100, 2);
                 amount = (int)Math.Round(amount * mocFactor);
             }
-
             int criticalvalue = 0;
             int criticalchance = Caster.GetModified(eProperty.CriticalHealHitChance);
             double effectiveness = 0;
@@ -142,9 +141,23 @@ namespace DOL.GS.Spells
                 criticalvalue = Util.Random(amount / 10, amount / 2 + 1);
 
             amount += criticalvalue;
-
+            GamePlayer Target = (GamePlayer)target;
+            GameSpellEffect HealEffect = SpellHandler.FindEffectOnTarget(Target, "EfficientHealing");
+            double HealBonus = amount * ((int)HealEffect.Spell.Value * 0.01);
+            if (HealEffect != null)
+            {
+                amount += (int)HealBonus;
+                Target.Out.SendMessage("Your Efficient Healing buff grants you a additional" + HealBonus + " in the Heal!", eChatType.CT_Spell, eChatLoc.CL_ChatWindow);
+            }
+            GameSpellEffect EndEffect = SpellHandler.FindEffectOnTarget(Target, "EfficientEndurance");
+            double EndBonus = amount * ((int)EndEffect.Spell.Value * 0.01);
+            if (EndEffect != null)
+            {
+                //600 / 10 = 60end
+                Target.Endurance += (int)EndBonus;
+                Target.Out.SendMessage("Your Efficient Endurance buff grants you " + EndBonus + " Endurance from the Heal!", eChatType.CT_Spell, eChatLoc.CL_ChatWindow);
+            }
             GameSpellEffect flaskHeal = FindEffectOnTarget(target, "HealFlask");
-
             if(flaskHeal != null)
             {
                 amount += (int) ((amount*flaskHeal.Spell.Value)*0.01);

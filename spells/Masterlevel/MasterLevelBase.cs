@@ -1283,7 +1283,17 @@ namespace DOL.GS
         {
             get { int hp=500; if(Name.ToLower().IndexOf("speed")>=0) hp=100; return hp; }
         }
-
+        public virtual int CalculateToHitChance(GameLiving target)
+        {
+            int spellLevel = m_owner.Level;
+            GameLiving caster = m_owner as GameLiving;
+            int spellbonus = m_owner.GetModified(eProperty.SpellLevel);
+            spellLevel += spellbonus;
+            if (spellLevel > 50)
+                spellLevel = 50;
+            int hitchance = 85 + ((spellLevel - target.Level) / 2);
+            return hitchance;
+        }
         public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
         {
             if (damageType == eDamageType.Slash || damageType == eDamageType.Crush || damageType == eDamageType.Thrust)
@@ -1324,7 +1334,17 @@ namespace DOL.GS
             get { return m_owner; }
             set { m_owner = value; }
         }
-
+        public virtual int CalculateToHitChance(GameLiving target)
+        {
+            int spellLevel = m_owner.Level;
+            GameLiving caster = m_owner as GameLiving;
+            int spellbonus = m_owner.GetModified(eProperty.SpellLevel);
+            spellLevel += spellbonus;
+            if (spellLevel > 50)
+                spellLevel = 50;
+            int hitchance = 85 + ((spellLevel - target.Level) / 2);
+            return hitchance;
+        }
         public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
         {
             if (source is GamePlayer)
@@ -1381,7 +1401,17 @@ namespace DOL.GS
             DeleteFromDatabase();
             Delete();
         }
-
+        public virtual int CalculateToHitChance(GameLiving target)
+        {
+            int spellLevel = m_owner.Level;
+            GameLiving caster = m_owner as GameLiving;
+            int spellbonus = m_owner.GetModified(eProperty.SpellLevel);
+            spellLevel += spellbonus;
+            if (spellLevel > 50)
+                spellLevel = 50;
+            int hitchance = 85 + ((spellLevel - target.Level) / 2);
+            return hitchance;
+        }
         public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
         {
         }

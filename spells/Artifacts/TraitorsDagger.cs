@@ -33,6 +33,19 @@ namespace DOL.GS.Spells
 			if (effect.Owner is GamePlayer)
 			{
 				GamePlayer player = effect.Owner as GamePlayer;
+                foreach (GameSpellEffect Effect in player.EffectList.GetAllOfType(typeof(GameSpellEffect)))
+                {
+                    if (Effect.SpellHandler.Spell.SpellType.Equals("ShadesOfMist") || 
+                        Effect.SpellHandler.Spell.SpellType.Equals("DreamMorph") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("DreamGroupMorph") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("MaddeningScalars") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("AtlantisTabletMorph") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("AlvarusMorph"))
+                    {
+                        player.Out.SendMessage("You already have a activate morph!", DOL.GS.PacketHandler.eChatType.CT_SpellResisted, DOL.GS.PacketHandler.eChatLoc.CL_ChatWindow);
+                        return;
+                    }
+                }
 				player.Shade(true);
                 player.Out.SendUpdatePlayer();
 			}
