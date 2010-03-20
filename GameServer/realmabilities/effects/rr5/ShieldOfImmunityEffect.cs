@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.Events;
+using DOL.Database;
 
 namespace DOL.GS.Effects
 {
@@ -13,7 +14,7 @@ namespace DOL.GS.Effects
 	public class ShieldOfImmunityEffect : TimedEffect
 	{
 		private GameLiving owner;
-
+        private Spell spell;
 		public ShieldOfImmunityEffect()
 			: base(20000)
 		{
@@ -45,8 +46,7 @@ namespace DOL.GS.Effects
 
 			if (ad.Damage < 1)
 				return;
-
-			if (ad.IsMeleeAttack || ad.AttackType == AttackData.eAttackType.Ranged)
+			if (ad.IsMeleeAttack || ad.AttackType == AttackData.eAttackType.Ranged || ad.AttackType == AttackData.eAttackType.Spell && attackedByEnemy.AttackData.SpellHandler.Spell.SpellType == "Archery")
 			{
 				int absorb = (int)(ad.Damage * 0.9);
                 int critic = (int)(ad.CriticalDamage * 0.9);

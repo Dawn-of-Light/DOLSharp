@@ -38,6 +38,7 @@ namespace DOL.GS.Spells
 			// RR4: now it's a list
 			m_spellTypesToRemove = new List<string>();
 			m_spellTypesToRemove.Add("Nearsight");
+            m_spellTypesToRemove.Add("Silence");
 		} 
 	}
 }

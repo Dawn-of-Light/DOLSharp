@@ -35,7 +35,21 @@ namespace DOL.GS.Spells
             if(effect.Owner is GamePlayer)
             {
 	            GamePlayer player = effect.Owner as GamePlayer;
-	            if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer) player.Model = (ushort)Spell.LifeDrainReturn; // 102 official model
+                foreach (GameSpellEffect Effect in player.EffectList.GetAllOfType(typeof(GameSpellEffect)))
+                {
+                    if (Effect.SpellHandler.Spell.SpellType.Equals("ShadesOfMist") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("TraitorsDaggerProc") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("DreamMorph") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("DreamGroupMorph") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("AtlantisTabletMorph") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("AlvarusMorph"))
+                    {
+                        player.Out.SendMessage("You already have a activate morph!", DOL.GS.PacketHandler.eChatType.CT_SpellResisted, DOL.GS.PacketHandler.eChatLoc.CL_ChatWindow);
+                        return;
+                    }
+                }
+	            if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer && (ushort)Spell.LifeDrainReturn > 0)
+                    player.Model = (ushort)Spell.LifeDrainReturn; // 102 official model
 	   			player.Out.SendUpdatePlayer();
    			}
    		}
@@ -45,7 +59,8 @@ namespace DOL.GS.Spells
   			if(effect.Owner is GamePlayer)
             {
 	            GamePlayer player = effect.Owner as GamePlayer; 				
-  				if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer) player.Model = player.CreationModel;
+  				if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer)
+                    player.Model = player.CreationModel;
     			player.Out.SendUpdatePlayer();
     		}	
     		return base.OnEffectExpires(effect,noMessages);
