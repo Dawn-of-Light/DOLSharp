@@ -34,13 +34,17 @@ namespace DOL.GS.Spells
     	GameSpellEffect m_effect = null;
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            GamePlayer Target = target as GamePlayer;
-                if (!((GamePlayer)Target).IsUnderwater)
-                {
-                    MessageToCaster("You must be under water to use this ability.", eChatType.CT_SpellResisted);
-                    return;
-                }
-            foreach (GameSpellEffect Effect in Target.EffectList.GetAllOfType(typeof(GameSpellEffect)))
+            GamePlayer targetPlayer = target as GamePlayer;
+
+			if (targetPlayer == null)
+				return;
+
+            if (!targetPlayer.IsUnderwater)
+            {
+                MessageToCaster("You must be under water to use this ability.", eChatType.CT_SpellResisted);
+                return;
+            }
+            foreach (GameSpellEffect Effect in targetPlayer.EffectList.GetAllOfType(typeof(GameSpellEffect)))
             {
                 if (
                     Effect.SpellHandler.Spell.SpellType.Equals("ShadesOfMist") || 
@@ -50,7 +54,7 @@ namespace DOL.GS.Spells
                     Effect.SpellHandler.Spell.SpellType.Equals("MaddeningScalars") ||
                     Effect.SpellHandler.Spell.SpellType.Equals("AtlantisTabletMorph"))
                 {
-                    Target.Out.SendMessage("You already have a activate morph!", DOL.GS.PacketHandler.eChatType.CT_SpellResisted, DOL.GS.PacketHandler.eChatLoc.CL_ChatWindow);
+                    targetPlayer.Out.SendMessage("You already have an active morph!", DOL.GS.PacketHandler.eChatType.CT_SpellResisted, DOL.GS.PacketHandler.eChatLoc.CL_ChatWindow);
                     return;
                 }
             }
