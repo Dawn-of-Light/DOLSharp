@@ -143,17 +143,17 @@ namespace DOL.GS.Spells
             amount += criticalvalue;
             GamePlayer Target = (GamePlayer)target;
             GameSpellEffect HealEffect = SpellHandler.FindEffectOnTarget(Target, "EfficientHealing");
-            double HealBonus = amount * ((int)HealEffect.Spell.Value * 0.01);
             if (HealEffect != null)
             {
-                amount += (int)HealBonus;
+				double HealBonus = amount * ((int)HealEffect.Spell.Value * 0.01);
+				amount += (int)HealBonus;
                 Target.Out.SendMessage("Your Efficient Healing buff grants you a additional" + HealBonus + " in the Heal!", eChatType.CT_Spell, eChatLoc.CL_ChatWindow);
             }
             GameSpellEffect EndEffect = SpellHandler.FindEffectOnTarget(Target, "EfficientEndurance");
-            double EndBonus = amount * ((int)EndEffect.Spell.Value * 0.01);
             if (EndEffect != null)
             {
-                //600 / 10 = 60end
+				double EndBonus = amount * ((int)EndEffect.Spell.Value * 0.01);
+				//600 / 10 = 60end
                 Target.Endurance += (int)EndBonus;
                 Target.Out.SendMessage("Your Efficient Endurance buff grants you " + EndBonus + " Endurance from the Heal!", eChatType.CT_Spell, eChatLoc.CL_ChatWindow);
             }
