@@ -28,6 +28,7 @@ namespace DOL.Database
 	{
 		private int m_reportID;
 		private string m_message;
+		private string m_category;
 		private string m_submitter;
 		private DateTime m_dateSubmitted;
 		private string m_closedBy;
@@ -36,11 +37,12 @@ namespace DOL.Database
 
 		public BugReport()
 		{
-			m_message = "";
-			m_submitter = "";
+			m_message = string.Empty;
+			m_submitter = string.Empty;
 			m_dateSubmitted = DateTime.Now;
-			m_closedBy = "";
+			m_closedBy = string.Empty;
 			m_autoSave = true;
+			m_category = string.Empty;
 		}
 
 		public override bool AutoSave
@@ -112,6 +114,15 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_dateClosed = value;
+			}
+		}
+		
+		[DataElement(AllowDbNull = true)]
+		public string Category {
+			get { return m_category; }
+			set {
+				Dirty = true;
+				m_category = value;
 			}
 		}
 	}
