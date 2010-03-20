@@ -46,7 +46,7 @@ namespace DOL.GS.Effects
 
 			if (ad.Damage < 1)
 				return;
-			if (ad.IsMeleeAttack || ad.AttackType == AttackData.eAttackType.Ranged || ad.AttackType == AttackData.eAttackType.Spell && attackedByEnemy.AttackData.SpellHandler.Spell.SpellType == "Archery")
+			if (ad.IsMeleeAttack || ad.AttackType == AttackData.eAttackType.Ranged || (ad.AttackType == AttackData.eAttackType.Spell && attackedByEnemy.AttackData.SpellHandler.Spell.SpellType == "Archery"))
 			{
 				int absorb = (int)(ad.Damage * 0.9);
                 int critic = (int)(ad.CriticalDamage * 0.9);
