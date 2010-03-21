@@ -137,7 +137,7 @@ namespace DOL.GS.Spells
 				GameLiving caster = (GameLiving)m_actionSource;
 				if (target == null || !target.IsAlive || target.ObjectState != GameObject.eObjectState.Active || target.CurrentRegionID != caster.CurrentRegionID) return;
 
-				int missrate = 100 - CalculateToHitChance(target);
+				int missrate = 100 - m_handler.CalculateToHitChance(target);
 				// add defence bonus from last executed style if any
 				AttackData targetAD = (AttackData)target.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null);
 				if (targetAD != null
@@ -282,25 +282,7 @@ namespace DOL.GS.Spells
 			}
 
 
-			public virtual int CalculateToHitChance(GameLiving target)
-			{
-				GameLiving caster = m_handler.Caster;
-				Spell spell = m_handler.Spell;
-
-				int bonustohit = caster.GetModified(eProperty.ToHitBonus);
-
-				// miss rate is 0 on same level opponent
-				int hitchance = 100 + bonustohit;
-
-				if ((caster is GamePlayer && target is GamePlayer) == false)
-				{
-					hitchance -= (int)(caster.GetConLevel(target) * ServerProperties.Properties.PVE_SPELL_CONHITPERCENT);
-				}
-
-				return hitchance;
-			}
-
-            protected virtual void CheckWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
+			protected virtual void CheckWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
             {
                 if (weapon == null) return;
                 double procChance = weapon.SPD_ABS * 0.0025;
