@@ -2315,41 +2315,43 @@ return false;
 		/// <param name="target">The current target object</param>
 		public virtual void StartSpell(GameLiving target)
 		{
+			// For PBAOE spells always set the target to the caster
+			if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower() && (target == null || (Spell.Radius > 0 && Spell.Range == 0)))
+			{
+				target = Caster;
+			}
+
 			if (m_spellTarget == null)
 				m_spellTarget = target;
 
-			GamePlayer player = Caster as GamePlayer;
-			if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower() && (target == null || (Spell.Radius > 0 && Spell.Range == 0)))
-			{
-				m_spellTarget = Caster;
-			}
 			if (m_spellTarget == null) return;
+
 			IList targets = SelectTargets(m_spellTarget);
 
-			double effectiveness = 1.0;
-			if (Caster is GamePlayer)
-				effectiveness = player.Effectiveness;
+			double effectiveness = Caster.Effectiveness;
 
 			if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
 			{
 				RealmAbility ra = Caster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
-				if (ra != null)
-					effectiveness = System.Math.Round((double)ra.Level * 25 / 100, 2);
+				if (ra != null && ra.Level > 0)
+				{
+					effectiveness *= System.Math.Round((double)ra.Level * 25 / 100, 2);
+				}
 			}
+
             //[StephenxPimentel] Reduce Damage if necro is using MoC
             if (Caster is NecromancerPet)
             {
                 if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
                 {
                     RealmAbility necroRA = (Caster as NecromancerPet).Owner.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
-                    effectiveness = System.Math.Round((double)necroRA.Level * 25 / 100, 2);
-                }
-                else
-                {
-                    effectiveness = 1.0;
+					if (necroRA != null && necroRA.Level > 0)
+					{
+						effectiveness *= System.Math.Round((double)necroRA.Level * 25 / 100, 2);
+					}
                 }
             }
-			// warlock - fixed by Dinberg, thx
+
 			if (Caster is GamePlayer && (Caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Warlock && m_spell.IsSecondary)
 			{
 				GameSpellEffect affect = SpellHandler.FindEffectOnTarget(Caster, "Uninterruptable");
@@ -2359,6 +2361,7 @@ return false;
 					effectiveness *= (1 - (nerf * 0.01));
 				}
 			}
+
 			foreach (GameLiving t in targets)
 			{
 				// Aggressive NPCs will aggro on every target they hit
@@ -2406,7 +2409,9 @@ return false;
 			}
 
 			if (Spell.Target.ToLower() == "ground")
+			{
 				ApplyEffectOnTarget(null, 1);
+			}
 		}
 		/// <summary>
 		/// Calculate the variance due to the radius of the spell
@@ -3338,6 +3343,7 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 			if (!(caster is GamePlayer && target is GamePlayer))
 			{
 				hitchance -= (int)(m_caster.GetConLevel(target) * ServerProperties.Properties.PVE_SPELL_CONHITPERCENT);
+				hitchance += Math.Max(0, target.Attackers.Count - 1) * ServerProperties.Properties.MISSRATE_REDUCTION_PER_ATTACKERS;
 			}
 
 			// [Freya] Nidel: Harpy Cloak : They have less chance of landing melee attacks, and spells have a greater chance of affecting them.
@@ -3362,6 +3368,26 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 		{
 			return CalculateDamageToTarget(target, 1);
 		}
+
+
+		/// <summary>
+		/// Adjust damage based on chance to hit.
+		/// </summary>
+		/// <param name="damage"></param>
+		/// <param name="hitChance"></param>
+		/// <returns></returns>
+		public virtual int AdjustDamageForHitChance(int damage, int hitChance)
+		{
+			int adjustedDamage = damage;
+
+			if (hitChance < 55)
+			{
+				adjustedDamage += (int)(adjustedDamage * (hitChance - 55) * 4.3 * 0.01);
+			}
+
+			return adjustedDamage;
+		}
+
 
 		/// <summary>
 		/// Calculates damage to target with resist chance and stores it in ad
@@ -3394,11 +3420,7 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 			// Live testing done Summer 2009 by Bluraven, Tolakram  Levels 40, 45, 50, 55, 60, 65, 70
 			// Damage reduced by chance < 55, no extra damage increase noted with hitchance > 100
 			int hitChance = CalculateToHitChance(ad.Target);
-			if (hitChance < 55)
-			{
-				finalDamage += (int)(finalDamage * (hitChance - 55) * 4.3 * 0.01);
-
-			}
+			finalDamage = AdjustDamageForHitChance(finalDamage, hitChance);
 
 			// apply effectiveness
 			finalDamage = (int)(finalDamage * effectiveness);
