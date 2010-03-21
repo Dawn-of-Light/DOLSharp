@@ -132,7 +132,53 @@ namespace DOL.GS.Spells
 			MessageToCaster("You prepare a " + Spell.Name, eChatType.CT_YouHit);
 		}
 
-		
+
+		public override int CalculateToHitChance(GameLiving target)
+		{
+			int bonustohit = Caster.GetModified(eProperty.ToHitBonus);
+
+			// miss rate is 0 on same level opponent
+			int hitchance = 100 + bonustohit;
+
+			if ((Caster is GamePlayer && target is GamePlayer) == false)
+			{
+				hitchance -= (int)(Caster.GetConLevel(target) * ServerProperties.Properties.PVE_SPELL_CONHITPERCENT);
+				hitchance += Math.Max(0, target.Attackers.Count - 1) * ServerProperties.Properties.MISSRATE_REDUCTION_PER_ATTACKERS;
+			}
+
+			return hitchance;
+		}
+
+
+		/// <summary>
+		/// Adjust damage based on chance to hit.
+		/// </summary>
+		/// <param name="damage"></param>
+		/// <param name="hitChance"></param>
+		/// <returns></returns>
+		public override int AdjustDamageForHitChance(int damage, int hitChance)
+		{
+			int adjustedDamage = damage;
+
+			if (hitChance < 85)
+			{
+				adjustedDamage += (int)(adjustedDamage * (hitChance - 85) * 0.038);
+			}
+
+			return adjustedDamage;
+		}
+
+
+		/// <summary>
+		/// Level mod for effect between target and caster if there is any
+		/// </summary>
+		/// <returns></returns>
+		public override double GetLevelModFactor()
+		{
+			return 0.025;
+		}
+
+
 		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
 		{		
 			AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
@@ -180,7 +226,29 @@ namespace DOL.GS.Spells
 				if (npc.Brain != null && (npc.Brain is IControlledBrain) == false)
 				{
 					// boost for npc damage until we find exactly where calculation is going wrong -tolakram
-					ad.Damage = (int)(ad.Damage * 1.5);
+					ad.Damage = (int)(ad.Damage * 1.57);
+				}
+			}
+
+			if (Caster.AttackWeapon != null)
+			{
+				// Quality
+				ad.Damage -= (int)(ad.Damage * (100 - Caster.AttackWeapon.Quality) * .01);
+
+				// Condition
+				ad.Damage -= (int)(ad.Damage * (1.0 - Math.Min(1.0, Caster.AttackWeapon.Condition / Caster.AttackWeapon.MaxCondition)));
+
+				// Patch Note:  http://support.darkageofcamelot.com/kb/article.php?id=931
+				// - The Damage Per Second (DPS) of your bow will have an effect on your damage for archery shots. If the effective DPS 
+				//   of your equipped bow is less than that of your max DPS for the level of archery shot you are using, the damage of your 
+				//   shot will be reduced. Max DPS for a particular level can be found by using this equation: (.3 * level) + 1.2
+
+				int spellRequiredDPS = 12 + 3 * Spell.Level;
+
+				if (Caster.AttackWeapon.DPS_AF < spellRequiredDPS)
+				{
+					double percentReduction = (double)Caster.AttackWeapon.DPS_AF / (double)spellRequiredDPS;
+					ad.Damage = (int)(ad.Damage * percentReduction);
 				}
 			}
 
