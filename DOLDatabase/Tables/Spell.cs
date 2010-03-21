@@ -64,14 +64,16 @@ namespace DOL.Database
 		protected bool m_moveCast = false;
 		protected bool m_uninterruptible = false;
 		protected bool m_isfocus = false;
-        	protected int m_sharedtimergroup; 
-        
+		protected int m_sharedtimergroup;
+		protected string m_packageID = string.Empty;
+		
 		// warlock
 		protected bool m_isprimary;
 		protected bool m_issecondary;
 		protected bool m_allowbolt;
 		static bool m_autoSave;
 
+		
 		public DBSpell()
 		{
 			m_autoSave = false;
@@ -556,19 +558,19 @@ namespace DOL.Database
 				m_isfocus = value;
 			}
 		}
-        [DataElement(AllowDbNull = true)]
-        public int SharedTimerGroup
-        {
-            get
-            {
-                return m_sharedtimergroup;
-            }
-            set
-            {
-                Dirty = true;
-                m_sharedtimergroup = value;
-            }
-        }
+		[DataElement(AllowDbNull = true)]
+		public int SharedTimerGroup
+		{
+			get
+			{
+				return m_sharedtimergroup;
+			}
+			set
+			{
+				Dirty = true;
+				m_sharedtimergroup = value;
+			}
+		}
 
 		#region warlock
 		[DataElement(AllowDbNull = true)]
@@ -608,6 +610,19 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_allowbolt = (bool)value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public string PackageID
+		{
+			get
+			{
+				return this.m_packageID;
+			}
+			set
+			{
+				this.m_packageID = value;
+				this.Dirty = true;
 			}
 		}
 		#endregion
