@@ -3397,14 +3397,16 @@ namespace DOL.GS
 				((GamePlayer)ad.Attacker).Group != null &&
 				(int)(0.90 * ((GamePlayer)ad.Attacker).Group.Leader.Level) >= ad.Attacker.Level &&
 				ad.Attacker.IsWithinRadius(((GamePlayer)ad.Attacker).Group.Leader, 3000))
+			{
 				missrate -= (int)(5 * ((GamePlayer)ad.Attacker).Group.Leader.GetConLevel(this));
+			}
 			else if (this is GameNPC || ad.Attacker is GameNPC) // if target is not player use level mod
 			{
 				missrate += (int)(5 * ad.Attacker.GetConLevel(this));
 			}
 
 			// experimental missrate adjustment for number of attackers
-			if (ad.Attacker is GameNPC && ((ad.Attacker as GameNPC).Brain is IControlledBrain == false))
+			if ((this is GamePlayer && ad.Attacker is GamePlayer) == false)
 			{
 				missrate -= (Math.Max(0, Attackers.Count - 1) * ServerProperties.Properties.MISSRATE_REDUCTION_PER_ATTACKERS);
 			}
