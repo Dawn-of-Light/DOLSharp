@@ -3406,7 +3406,7 @@ namespace DOL.GS
 			// experimental missrate adjustment for number of attackers
 			if (ad.Attacker is GameNPC && ((ad.Attacker as GameNPC).Brain is IControlledBrain == false))
 			{
-				missrate -= ((Attackers.Count - 1) * ServerProperties.Properties.MISSRATE_REDUCTION_PER_ATTACKERS);
+				missrate -= (Math.Max(0, Attackers.Count - 1) * ServerProperties.Properties.MISSRATE_REDUCTION_PER_ATTACKERS);
 			}
 
 			// weapon/armor bonus
