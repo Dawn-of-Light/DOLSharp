@@ -60,7 +60,7 @@ namespace DOL.GS.Commands
 	 "/player showgroup",
      "/player showeffects",
      "/player articredit <artifact>",
-	 "/player allchars [PlayerName]"
+	 "/player allchars <PlayerName>"
    )]
 
     public class PlayerCommandHandler : AbstractCommandHandler, ICommandHandler
