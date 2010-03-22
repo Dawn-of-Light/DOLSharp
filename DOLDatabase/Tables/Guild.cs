@@ -173,9 +173,10 @@ namespace DOL.Database
 		}		
 
 		/// <summary>
-		/// Name of guild
+		/// Name of the Guild.  This is readonly after initial creation.
 		/// </summary>
-		[DataElement(AllowDbNull = true)] // can be primary too
+		[ReadOnly]
+		[DataElement(AllowDbNull = true)]
 		public string GuildName
 		{
 			get
@@ -184,11 +185,13 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
 				m_guildname = value;
 			}
 		}
 
+		/// <summary>
+		/// Guild Realm.  This is readonly after creation
+		/// </summary>
 		[ReadOnly]
 		[DataElement(AllowDbNull = true)]
 		public byte Realm

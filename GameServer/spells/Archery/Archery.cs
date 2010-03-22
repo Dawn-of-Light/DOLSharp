@@ -236,7 +236,7 @@ namespace DOL.GS.Spells
 				ad.Damage -= (int)(ad.Damage * (100 - Caster.AttackWeapon.Quality) * .01);
 
 				// Condition
-				ad.Damage -= (int)(ad.Damage * (1.0 - Math.Min(1.0, Caster.AttackWeapon.Condition / Caster.AttackWeapon.MaxCondition)));
+				ad.Damage = (int)((double)ad.Damage * Math.Min(1.0, (double)Caster.AttackWeapon.Condition / (double)Caster.AttackWeapon.MaxCondition));
 
 				// Patch Note:  http://support.darkageofcamelot.com/kb/article.php?id=931
 				// - The Damage Per Second (DPS) of your bow will have an effect on your damage for archery shots. If the effective DPS 
