@@ -8436,25 +8436,31 @@ namespace DOL.GS
 														}
 
 														//Spell
-														spellHandler.StartSpell(target);
-														//SubSpells
-														spellHandler.CastSubSpells(target, spellHandler.SpellLine);
+														if (spellHandler.StartItemSpell(target))
+														{
+															//SubSpells
+															spellHandler.CastSubSpells(target, spellHandler.SpellLine);
 
-														if (useItem.Count > 1)
-														{
-															Inventory.RemoveCountFromStack(useItem, 1);
-														}
-														else
-														{
-															useItem.Charges--;
-															if (useItem.Charges < 1)
+															if (useItem.Count > 1)
 															{
 																Inventory.RemoveCountFromStack(useItem, 1);
 															}
-														}
-														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Used", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+															else
+															{
+																useItem.Charges--;
+																if (useItem.Charges < 1)
+																{
+																	Inventory.RemoveCountFromStack(useItem, 1);
+																}
+															}
+															Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Used", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-														TempProperties.setProperty(NEXT_POTION_AVAIL_TIME + "_Type" + (spellItem == null ? 0 : spellItem.SharedTimerGroup), useItem.CanUseEvery * 1000 + CurrentRegion.Time);
+															TempProperties.setProperty(NEXT_POTION_AVAIL_TIME + "_Type" + (spellItem == null ? 0 : spellItem.SharedTimerGroup), useItem.CanUseEvery * 1000 + CurrentRegion.Time);
+														}
+														else
+														{
+															// StartItemSpell is responsible for sending failure message to player
+														}
 													}
 													else
 													{

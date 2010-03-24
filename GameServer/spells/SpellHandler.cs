@@ -2310,7 +2310,21 @@ return false;
 
 
 		/// <summary>
-		/// called when spell effect has to be started and applied to targets
+		/// Tries to start a spell attached to an item (/use with at least 1 charge)
+		/// Override this to do a CheckBeginCast if needed, otherwise spell will always cast and item will be used.
+		/// </summary>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		public virtual bool StartItemSpell(GameLiving target)
+		{
+			StartSpell(target);
+			return true;
+		}
+
+
+		/// <summary>
+		/// Called when spell effect has to be started and applied to targets
+		/// This is typically called after calling CheckBeginCast
 		/// </summary>
 		/// <param name="target">The current target object</param>
 		public virtual void StartSpell(GameLiving target)
