@@ -387,7 +387,7 @@ namespace DOL.GS
 					add.Realm = 0;
 					add.X = x;
 					add.Y = y;
-					add.Z = 0;
+					add.Z = Z;
 					add.CurrentSpeed = 0;
 					add.Level = (byte)level;
 					add.RespawnInterval = -1;
@@ -593,6 +593,7 @@ namespace DOL.GS
 
 			GameObject oldTarget = TargetObject;
 			TargetObject = GlareTarget;
+			Z = SpawnPoint.Z; // this is a fix to correct Z errors that sometimes happen during dragon fights
 			TurnTo(GlareTarget);
 			CastSpell(Glare, SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
 			GlareTarget = null;
