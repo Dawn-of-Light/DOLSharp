@@ -606,6 +606,18 @@ namespace DOL.GS
 			GameEventMgr.RemoveAllHandlersForObject(this);
 			GameEventMgr.RemoveAllHandlersForObject(m_inventory);
 
+			if (CraftTimer != null)
+			{
+				CraftTimer.Stop();
+				CraftTimer = null;
+			}
+
+			if (QuestActionTimer != null)
+			{
+				QuestActionTimer.Stop();
+				QuestActionTimer = null;
+			}
+
 			if (Group != null)
 				Group.RemoveMember(this);
 
@@ -5380,6 +5392,15 @@ namespace DOL.GS
 			//			}
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
+				if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
+				{
+					if ((eCharacterClass)PlayerCharacter.Class == eCharacterClass.Scout || (eCharacterClass)PlayerCharacter.Class == eCharacterClass.Hunter || (eCharacterClass)PlayerCharacter.Class == eCharacterClass.Ranger)
+					{
+						// There is no feedback on live when attempting to fire a bow with arrows
+						return;
+					}
+				}
+
 				// Check arrows for ranged attack
 				if (RangeAttackAmmo == null)
 				{
@@ -12249,6 +12270,14 @@ namespace DOL.GS
 		/// Holds all already finished quests off this player
 		/// </summary>
 		protected readonly ArrayList m_questListFinished = new ArrayList(1);
+
+		protected RegionTimer m_questActionTimer = null;
+
+		public RegionTimer QuestActionTimer
+		{
+			get { return m_questActionTimer; }
+			set { m_questActionTimer = value; }
+		}
 
 		/// <summary>
 		/// Gets the questlist of this player
