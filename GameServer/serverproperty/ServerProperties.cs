@@ -282,7 +282,13 @@ namespace DOL.GS.ServerProperties
         /// </summary>
         [ServerProperty("server", "disable_appeal_system", "Disable the /Appeal System", false)]
         public static bool DISABLE_APPEALSYSTEM;
-		#endregion
+
+        /// <summary>
+        /// Use Database Language datas instead of files (if empty = build the table from files)
+        /// </summary>
+        [ServerProperty("server", "use_dblanguage", "Use Database Language datas instead of files (if empty = build the table from files)", false)]
+        public static bool USE_DBLANGUAGE;
+        #endregion
 		
 		#region WORLD
 		/// <summary>
