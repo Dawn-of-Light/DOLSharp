@@ -138,7 +138,7 @@ namespace DOL.GS.Commands
         }
     }
     [CmdAttribute("&gmlanen", ePrivLevel.Admin,
-        "'/gmlanen <TranslationID> <text in english>', example : '/lanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
+        "'/gmlanen <TranslationID> <text in english>', example : '/gmlanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
     public class GMLanguageENCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -153,7 +153,7 @@ namespace DOL.GS.Commands
         }
     }
     [CmdAttribute("&gmlanfr", ePrivLevel.Admin,
-        "'/gmlanfr <TranslationID> <text in french>', example : '/lanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
+        "'/gmlanfr <TranslationID> <text in french>', example : '/gmlanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
     public class GMLanguageFRCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -168,7 +168,7 @@ namespace DOL.GS.Commands
         }
     }
     [CmdAttribute("&gmlande", ePrivLevel.Admin,
-        "'/gmlanfr <TranslationID> <text in german>', example : '/lanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
+        "'/gmlanfr <TranslationID> <text in german>', example : '/gmlanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
     public class GMLanguageDECommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -183,7 +183,7 @@ namespace DOL.GS.Commands
         }
     }
     [CmdAttribute("&gmlanit", ePrivLevel.Admin,
-        "'/gmlanit <TranslationID> <text in italian>', example : '/lanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
+        "'/gmlanit <TranslationID> <text in italian>', example : '/gmlanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
     public class GMLanguageITCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -198,7 +198,7 @@ namespace DOL.GS.Commands
         }
     }
     [CmdAttribute("&gmlanes", ePrivLevel.Admin,
-        "'/gmlanes <TranslationID> <text in spanish>', example : '/lanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
+        "'/gmlanes <TranslationID> <text in spanish>', example : '/gmlanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
     public class GMLanguageESCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -213,7 +213,7 @@ namespace DOL.GS.Commands
         }
     }
     [CmdAttribute("&gmlancz", ePrivLevel.Admin,
-        "'/gmlancz <TranslationID> <text in russian>', example : '/lanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
+        "'/gmlancz <TranslationID> <text in russian>', example : '/gmlanen Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!' ")]
     public class GMLanguageCZCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
