@@ -325,7 +325,7 @@ namespace DOL.Language
             if (client == null)
                 return GetTranslation(DOL.GS.ServerProperties.Properties.SERV_LANGUAGE, TranslationID, args);
 
-            if(client.Player != null)
+            if(client.Player != null && client.Account.PrivLevel > 1)
             {
                 bool debug = client.Player.TempProperties.getProperty("LANGUAGEMGR-DEBUG", false);
                 if (debug && IDSentences.ContainsKey(TranslationID))
