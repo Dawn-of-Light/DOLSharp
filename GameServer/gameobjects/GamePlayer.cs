@@ -11802,22 +11802,22 @@ namespace DOL.GS
 				case eGameServerType.GST_Normal:
 					{
 						if (Realm == player.Realm || Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
-							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.RealmMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name));
+							message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.RealmMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name);
 						else
-							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.EnemyRealmMember", player.GetName(this), GetPronoun(Client, 0, true)));
+							message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.EnemyRealmMember", player.GetName(this), GetPronoun(Client, 0, true));
 						break;
 					}
 
 				case eGameServerType.GST_PvP:
 					{
 						if (Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
-							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name));
+							message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name);
 						else if (Guild == null)
-							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.NeutralMember", player.GetName(this), GetPronoun(Client, 0, true)));
+							message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.NeutralMember", player.GetName(this), GetPronoun(Client, 0, true));
 						else if (Guild == player.Guild || Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
-							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name));
+							message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name);
 						else
-							message = string.Format(LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.OtherGuildMember", player.GetName(this), GetPronoun(Client, 0, true), GuildName));
+							message = LanguageMgr.GetTranslation(player.Client, "GamePlayer.GetExamineMessages.OtherGuildMember", player.GetName(this), GetPronoun(Client, 0, true), GuildName);
 						break;
 					}
 
