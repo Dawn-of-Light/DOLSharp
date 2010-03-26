@@ -7835,8 +7835,13 @@ namespace DOL.GS
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, ab.Spell, ab.SpellLine);
 			if (spellhandler != null)
 			{
-				m_runningSpellHandler = spellhandler;
-				m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+				// Instant cast abilities should not interfere with the spell queue
+				if (spellhandler.Spell.CastTime > 0)
+				{
+					m_runningSpellHandler = spellhandler;
+					m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+				}
+
 				spellhandler.Ability = ab;
 				spellhandler.CastSpell();
 			}
