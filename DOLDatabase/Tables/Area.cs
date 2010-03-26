@@ -17,7 +17,8 @@ namespace DOL.Database
 		private static bool m_autoSave;
 		private bool m_canBroadcast;
 		private byte m_sound;
-		private bool m_checkLOS;
+        private bool m_checkLOS;
+        private string m_points;
 
 		public DBArea()
 		{
@@ -175,5 +176,19 @@ namespace DOL.Database
 				m_checkLOS = value;
 			}
 		}
+
+        [DataElement(AllowDbNull = true)]
+        public string Points
+        {
+            get
+            {
+                return m_points;
+            }
+            set
+            {
+                Dirty = true;
+                m_points = value;
+            }
+        }
 	}
 }

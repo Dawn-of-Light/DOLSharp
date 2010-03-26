@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+using System.Collections.Generic;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Database;
@@ -322,6 +324,168 @@ namespace DOL.GS
 				m_RadiusRadius = area.Radius * area.Radius;
 			}
 		}
+
+        public class Polygon : AbstractArea
+        {
+            /// <summary>
+            /// The X coordinate of this Area (center, not important)
+            /// </summary>
+            protected int m_X;
+
+            /// <summary>
+            /// The Y coordinate of this Area (center, not important)
+            /// </summary>
+            protected int m_Y;
+
+            /// <summary>
+            /// Returns the Height of this Area
+            /// </summary>
+            protected int m_Radius;
+
+            /// <summary>
+            /// The radius of the area in Coordinates
+            /// </summary>
+            public int Radius
+            {
+                get { return m_Radius; }
+            }
+
+            /// <summary>
+            /// The Points string
+            /// </summary>
+            protected string m_stringpoints;
+
+            /// <summary>
+            /// The Points list
+            /// </summary>
+            protected IList<Point2D> m_points;
+
+            public Polygon()
+                : base()
+            {
+            }
+
+            public Polygon(string desc, int x, int y, int z, int radius, string points)
+                : base(desc)
+            {
+                m_Description = desc;
+                m_X = x;
+                m_Y = y;
+                m_Radius = radius;
+                StringPoints = points;
+            }
+
+            /// <summary>
+            /// Returns the X Coordinate of this Area (center, not important)
+            /// </summary>
+            public int X
+            {
+                get { return m_X; }
+            }
+
+            /// <summary>
+            /// Returns the Y Coordinate of this Area (center, not important)
+            /// </summary>
+            public int Y
+            {
+                get { return m_Y; }
+            }
+
+            /// <summary>
+            /// Get / Set(init) the serialized points
+            /// </summary>
+            public string StringPoints
+            {
+                get
+                {
+                    return m_stringpoints;
+                }
+                set
+                {
+                    m_stringpoints = value;
+                    m_points = new List<Point2D>();
+                    if (m_stringpoints.Length < 1) return;
+                    string[] points = m_stringpoints.Split('|');
+                    foreach (string point in points)
+                    {
+                        string[] pts = point.Split(';');
+                        if (pts.Length != 2) continue;
+                        int x = Convert.ToInt32(pts[0]);
+                        int y = Convert.ToInt32(pts[1]);
+                        Point2D p = new Point2D(x, y);
+                        if (!m_points.Contains(p)) m_points.Add(p);
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Checks wether area intersects with given zone
+            /// </summary>
+            /// <param name="zone"></param>
+            /// <returns></returns>
+            public override bool IsIntersectingZone(Zone zone)
+            {
+                // TODO if needed
+                if (X + Radius < zone.XOffset)
+                    return false;
+                if (X - Radius >= zone.XOffset + 65536)
+                    return false;
+                if (Y + Radius < zone.YOffset)
+                    return false;
+                if (Y - Radius >= zone.YOffset + 65536)
+                    return false;
+
+                return true;
+            }
+
+            public override bool IsContaining(int x, int y, int z, bool checkZ)
+            {
+                return IsContaining(new Point3D(x, y, z));
+            }
+
+            public override bool IsContaining(int x, int y, int z)
+            {
+                return IsContaining(new Point3D(x, y, z));
+            }
+
+            public override bool IsContaining(IPoint3D obj, bool checkZ)
+            {
+                return IsContaining(obj);
+            }
+
+            public override bool IsContaining(IPoint3D obj)
+            {
+                if (m_points.Count < 3) return false;
+                Point2D p1, p2;
+                bool inside = false;
+
+                Point2D oldpt = new Point2D(m_points[m_points.Count - 1].X, m_points[m_points.Count - 1].Y);
+
+                foreach (Point2D pt in m_points)
+                {
+                    Point2D newpt = new Point2D(pt.X, pt.Y);
+
+                    if (newpt.X > oldpt.X) { p1 = oldpt; p2 = newpt; }
+                    else { p1 = newpt; p2 = oldpt; }
+
+                    if ((newpt.X < obj.X) == (obj.X <= oldpt.X)
+                        && (obj.Y - p1.Y) * (p2.X - p1.X) < (p2.Y - p1.Y) * (obj.X - p1.X))
+                        inside = !inside;
+
+                    oldpt = newpt;
+                }
+                return inside;
+            }
+
+            public override void LoadFromDatabase(DBArea area)
+            {
+                m_Description = area.Description;
+                m_X = area.X;
+                m_Y = area.Y;
+                m_Radius = area.Radius;
+                StringPoints = area.Points;
+            }
+        }
 
 		public class BindArea : Circle
 		{
