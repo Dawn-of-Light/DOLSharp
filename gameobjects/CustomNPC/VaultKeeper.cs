@@ -65,7 +65,7 @@ namespace DOL.GS
 				return false;
 			TurnTo(player, 10000);
 			// Affiche tous les objets dans le coffre
-			ICollection items = player.Inventory.GetItemRange(eInventorySlot.FirstVault, eInventorySlot.LastVault);
+			var items = player.Inventory.GetItemRange(eInventorySlot.FirstVault, eInventorySlot.LastVault);
 			if (items.Count == 0)
 			{
 				player.Out.SendInventoryItemsUpdate(0x03, null);

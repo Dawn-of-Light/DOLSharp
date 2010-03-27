@@ -53,7 +53,7 @@ namespace DOL.GS.Behaviour.Actions
             Hashtable dataSlots = new Hashtable(10);
             lock (player.Inventory)
             {
-                ICollection allBackpackItems = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+                var allBackpackItems = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 
                 bool result = false;
                 foreach (InventoryItem item in allBackpackItems)
