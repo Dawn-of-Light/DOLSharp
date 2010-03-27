@@ -276,7 +276,7 @@ namespace DOL.GS
 			}
 			if (removeFromInventory)
 			{
-				lock (player.Inventory.AllItems.SyncRoot)
+				lock (player.Inventory.AllItems)
 				{
 					bool success = player.Inventory.RemoveItem(m_item);
 					log.Debug("Remove " + m_item.Name + " from " + player.Name + "'s Inventory " + ((success) ? "successfully." : "with errors."));

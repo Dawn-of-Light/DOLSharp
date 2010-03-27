@@ -23,6 +23,7 @@ using System.Collections;
 using DOL.Database;
 using DOL.GS.Housing;
 using log4net;
+using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler
 {
@@ -133,7 +134,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		protected override void SendInventorySlotsUpdateBase(ICollection slots, byte preAction)
+		protected override void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
@@ -256,7 +257,8 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
-			ICollection items = null;
+
+			ICollection<InventoryItem> items = null;
 			if (living.Inventory != null)
 				items = living.Inventory.VisibleItems;
 
@@ -410,7 +412,7 @@ namespace DOL.GS.PacketHandler
 			if ((type & 8) == 8)
 				pak.WriteByte((byte)item.Size);
 			pak.WriteByte((byte)item.Position);
-			pak.WriteByte((byte)(item.Placemode - 2));
+			pak.WriteByte((byte)(item.PlacementMode - 2));
 		}
 
 		public override void SendRvRGuildBanner(GamePlayer player, bool show)

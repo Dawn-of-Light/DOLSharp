@@ -472,9 +472,9 @@ namespace DOL.GS.PacketHandler
 		void SendGroupWindowUpdate();
 		void SendGroupMemberUpdate(bool updateIcons, GameLiving living);
 		void SendGroupMembersUpdate(bool updateIcons);
-		void SendInventoryItemsUpdate(ICollection itemsToUpdate);
-		void SendInventorySlotsUpdate(ICollection slots);
-		void SendInventoryItemsUpdate(byte preAction, ICollection itemsToUpdate);
+		void SendInventoryItemsUpdate(ICollection<InventoryItem> itemsToUpdate);
+		void SendInventorySlotsUpdate(ICollection<int> slots);
+		void SendInventoryItemsUpdate(byte preAction, ICollection<InventoryItem> itemsToUpdate);
 		void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, byte windowType);
 		void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType);
 		void SendDoorState(IDoor door);
@@ -543,7 +543,7 @@ namespace DOL.GS.PacketHandler
 		void SendWarmapBonuses();
 		//housing
 		void SendHouse(House house);
-		void SendHouseOccuped(House house, bool flagHouseOccuped);
+		void SendHouseOccupied(House house, bool flagHouseOccuped);
 		void SendRemoveHouse(House house);
 		void SendGarden(House house);
 		void SendGarden(House house, int i);
