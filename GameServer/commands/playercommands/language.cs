@@ -44,15 +44,41 @@ namespace DOL.GS.Commands
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Current", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			else if (args.Length == 2)
-			{
-                if (args[1].ToLower() == "debug" && client.Account.PrivLevel > 1)
+            else if (args.Length >= 2)
+            {
+                if (client.Account.PrivLevel >= 2)
                 {
-                    bool debug = client.Player.TempProperties.getProperty("LANGUAGEMGR-DEBUG", false);
-                    debug = !debug;
-                    client.Player.TempProperties.setProperty("LANGUAGEMGR-DEBUG", debug);
-                    client.Out.SendMessage("[LanguageMgr] Debug mode : " + (debug ? "ON" : "OFF"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    return;
+                    switch (args[1].ToLower())
+                    {
+                        case "debug": //receive extended messages
+                            {
+                                bool debug = client.Player.TempProperties.getProperty("LANGUAGEMGR-DEBUG", false);
+                                debug = !debug;
+                                client.Player.TempProperties.setProperty("LANGUAGEMGR-DEBUG", debug);
+                                client.Out.SendMessage("[LanguageMgr] Debug mode : " + (debug ? "ON" : "OFF"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
+                        case "load": //refresh from database
+                            {
+                                if (args.Length != 3)
+                                {
+                                    DisplayMessage(client, "[LanguageMgr] Usage : '/lan load GamePlayer.AddAbility.YouLearn'");
+                                    return;
+                                }
+                                if (!LanguageMgr.IDSentences.ContainsKey(args[2]))
+                                {
+                                    DisplayMessage(client, "[LanguageMgr] Can't find TranslationID <" + args[2] + "> !");
+                                    return;
+                                }
+                                if (LanguageMgr.Refresh(args[2]))
+                                {
+                                    DisplayMessage(client, "[LanguageMgr] TranslationID <" + args[2] + "> updated successfully !");
+                                    return;
+                                }
+                                DisplayMessage(client, "[LanguageMgr] An error occured.");
+                                return;
+                            }
+                    }
                 }
                 // Valid language -> English default
 				client.Account.Language = LanguageMgr.LangsToName(LanguageMgr.NameToLangs(args[1].ToUpper()));
