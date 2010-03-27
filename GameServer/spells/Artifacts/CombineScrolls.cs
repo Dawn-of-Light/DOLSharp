@@ -53,8 +53,7 @@ namespace DOL.GS.Spells
             if (scroll == null || !ArtifactMgr.IsArtifactScroll(scroll))
                 return false;
 
-            ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
-                eInventorySlot.LastBackpack);
+			var backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 
 			foreach (InventoryItem item in backpack)
 				if (item != null && item != scroll)
@@ -87,8 +86,7 @@ namespace DOL.GS.Spells
 			combinedScroll.Name = useItem.Name;
 			combinedScroll.Item.Name = useItem.Name;
 
-			ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
-				eInventorySlot.LastBackpack);
+			var backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 
             ArrayList removeItems = new ArrayList();
 			removeItems.Add(useItem);

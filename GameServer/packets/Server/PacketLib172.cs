@@ -19,6 +19,7 @@
 #define  NOENCRYPTION
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.Quests;
@@ -107,7 +108,7 @@ namespace DOL.GS.PacketHandler
 			SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 		}
 
-		protected override void SendInventorySlotsUpdateBase(ICollection slots, byte preAction)
+		protected override void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
@@ -221,7 +222,8 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
-			ICollection items = null;
+
+			ICollection<InventoryItem> items = null;
 			if (living.Inventory != null)
 				items = living.Inventory.VisibleItems;
 

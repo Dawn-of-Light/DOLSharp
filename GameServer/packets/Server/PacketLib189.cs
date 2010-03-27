@@ -49,7 +49,8 @@ namespace DOL.GS.PacketHandler
 		public override void SendLivingEquipmentUpdate(GameLiving living)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
-			ICollection items = null;
+
+			ICollection<InventoryItem> items = null;
 			if (living.Inventory != null)
 				items = living.Inventory.VisibleItems;
 
@@ -172,7 +173,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		/// <param name="slots"></param>
 		/// <param name="preAction"></param>
-		protected override void SendInventorySlotsUpdateBase(ICollection slots, byte preAction)
+		protected override void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
 			GameHouseVault houseVault = m_gameClient.Player.ActiveVault;
@@ -432,7 +433,7 @@ namespace DOL.GS.PacketHandler
 		}
               
 
-		public override void SendHouseOccuped(House house, bool flagHouseOccuped)
+		public override void SendHouseOccupied(House house, bool flagHouseOccuped)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));
 			pak.WriteShort((ushort)house.HouseNumber);

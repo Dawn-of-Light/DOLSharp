@@ -43,7 +43,7 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-		protected override void SendInventorySlotsUpdateBase(ICollection slots, byte preAction)
+		protected override void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
