@@ -2960,20 +2960,20 @@ namespace DOL.GS.PacketHandler
 				for (byte i = 0; i < 10; i++)
 				{
 					pak.WriteByte(i);
-					pak.WriteByte(house.HouseAccess[i].CanEnterHouse ? (byte)1 : (byte)0);
+					pak.WriteByte(house.HouseAccess[i].Enter);
 					pak.WriteByte(house.HouseAccess[i].Vault1);
 					pak.WriteByte(house.HouseAccess[i].Vault2);
 					pak.WriteByte(house.HouseAccess[i].Vault3);
 					pak.WriteByte(house.HouseAccess[i].Vault4);
-					pak.WriteByte(house.HouseAccess[i].CanChangeExternalAppearance ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].ChangeInterior);
-					pak.WriteByte(house.HouseAccess[i].ChangeGarden);
-					pak.WriteByte(house.HouseAccess[i].CanBanish ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].CanUseMerchants ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].CanUseTools ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].CanBindInHouse ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].ConsignmentMerchant);
-					pak.WriteByte(house.HouseAccess[i].CanPayRent ? (byte)1 : (byte)0);
+					pak.WriteByte(house.HouseAccess[i].Appearance);
+					pak.WriteByte(house.HouseAccess[i].Interior);
+					pak.WriteByte(house.HouseAccess[i].Garden);
+					pak.WriteByte(house.HouseAccess[i].Banish);
+					pak.WriteByte(house.HouseAccess[i].UseMerchant);
+					pak.WriteByte(house.HouseAccess[i].Tools);
+					pak.WriteByte(house.HouseAccess[i].Bind);
+					pak.WriteByte(house.HouseAccess[i].Merchant);
+					pak.WriteByte(house.HouseAccess[i].PayRent);
 					pak.WriteByte(0x00); // ??
 				}
 
@@ -3951,7 +3951,7 @@ namespace DOL.GS.PacketHandler
 
 			pak.WriteByte((byte) size);
 			pak.WriteByte((byte) item.Position);
-			pak.WriteByte((byte) (item.PlacementMode - 2));
+			pak.WriteByte((byte) (item.Placemode - 2));
 		}
 	}
 }
