@@ -8828,11 +8828,11 @@ namespace DOL.GS
 			{
 				if (afkmessage == "")
 				{
-					source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.Afk", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					source.Out.SendMessage(LanguageMgr.GetTranslation(source.Client, "GamePlayer.SendReceive.Afk", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.AfkMessage", Name, afkmessage), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+					source.Out.SendMessage(LanguageMgr.GetTranslation(source.Client, "GamePlayer.SendReceive.AfkMessage", Name, afkmessage), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 				}
 			}
 
