@@ -890,7 +890,7 @@ namespace DOL.GS.Housing
             if (list.Count == 0)
             {
                 foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                    pl.Out.SendHouseOccuped(this, true);
+                    pl.Out.SendHouseOccupied(this, true);
             }
 			GameClient client = player.Client;
 			client.Out.SendMessage(string.Format("Entering house {0}.", this.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -993,7 +993,7 @@ namespace DOL.GS.Housing
             if (list.Count == 0)
             {
                 foreach (GamePlayer pl in player.GetPlayersInRadius(HouseMgr.HOUSE_DISTANCE))
-                    pl.Out.SendHouseOccuped(this, false);
+                    pl.Out.SendHouseOccupied(this, false);
             }
 		}
 
