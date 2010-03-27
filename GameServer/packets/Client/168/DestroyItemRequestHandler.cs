@@ -45,7 +45,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return 0;
 				}
 
-				if ((new ArrayList(client.Player.Inventory.EquippedItems).Contains(item)))
+				if (client.Player.Inventory.EquippedItems.Contains(item))
 				{
 					client.Out.SendMessage("You cannot destroy an equipped item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 0;
