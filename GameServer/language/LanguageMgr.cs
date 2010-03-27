@@ -63,6 +63,20 @@ namespace DOL.Language
 			return count;
 		}
 
+        public static bool Refresh(string TranslationID)
+        {
+            if (!LanguageMgr.IDSentences.ContainsKey(TranslationID)) return false;
+            DBLanguage obj = GameServer.Database.SelectObject<DBLanguage>("`TranslationID` = '" + GameServer.Database.Escape(TranslationID) + "'");
+            if (obj == null) return false;
+            IDSentences[obj.TranslationID]["EN"] = obj.EN;
+            IDSentences[obj.TranslationID]["DE"] = obj.DE != null && obj.DE != "" ? obj.DE : obj.EN;
+            IDSentences[obj.TranslationID]["FR"] = obj.FR != null && obj.FR != "" ? obj.FR : obj.EN;
+            IDSentences[obj.TranslationID]["IT"] = obj.IT != null && obj.IT != "" ? obj.IT : obj.EN;
+            IDSentences[obj.TranslationID]["ES"] = obj.ES != null && obj.ES != "" ? obj.ES : obj.EN;
+            IDSentences[obj.TranslationID]["CZ"] = obj.CZ != null && obj.CZ != "" ? obj.CZ : obj.EN;
+            return true;
+        }
+
 		/// <summary>
 		/// Load language database and files
 		/// </summary>
