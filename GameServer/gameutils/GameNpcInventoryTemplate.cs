@@ -134,7 +134,7 @@ namespace DOL.GS
 		/// <returns>true if added</returns>
 		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect, int extension)
 		{
-			lock (m_items.SyncRoot)
+			lock (m_items)
 			{
 				lock (m_usedInventoryItems.SyncRoot)
 				{
@@ -145,13 +145,13 @@ namespace DOL.GS
 						return false;
 					//Changed to support randomization of slots - if we try to load a weapon in the same spot with a different model,
 					//let's make it random 50% chance to either overwrite the item or leave it be
-					if (m_items.Contains((int)slot))
+					if (m_items.ContainsKey(slot))
 					{
 						//50% chance to keep the item we have
 						if (Util.Chance(50))
 							return false;
 						//Let's remove the old item!
-						m_items.Remove((int)slot);
+						m_items.Remove(slot);
 					}
 					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect, extension);
 					InventoryItem item = null;
@@ -169,7 +169,7 @@ namespace DOL.GS
 					else
 						return false;
 
-					m_items.Add((int)slot, item);
+					m_items.Add(slot, item);
 				}
 			}
 			return true;
@@ -182,14 +182,21 @@ namespace DOL.GS
 		/// <returns>true if removed</returns>
 		public bool RemoveNPCEquipment(eInventorySlot slot)
 		{
-			lock (m_items.SyncRoot)
+			lock (m_items)
 			{
 				slot = GetValidInventorySlot(slot);
-				if (slot == eInventorySlot.Invalid) return false;
-				if (m_isClosed) return false;
-				if (!m_items.Contains((int)slot))
+
+				if (slot == eInventorySlot.Invalid) 
 					return false;
-				m_items.Remove((int)slot);
+
+				if (m_isClosed) 
+					return false;
+
+				if (!m_items.ContainsKey(slot))
+					return false;
+
+				m_items.Remove(slot);
+
 				return true;
 			}
 		}
@@ -201,7 +208,7 @@ namespace DOL.GS
 		/// <returns>Invetory template instance that should be used</returns>
 		public GameNpcInventoryTemplate CloseTemplate()
 		{
-			lock (m_items.SyncRoot)
+			lock (m_items)
 			{
 				lock (m_usedInventoryTemplates.SyncRoot)
 				{
@@ -221,7 +228,7 @@ namespace DOL.GS
 						{
 							finalTemplate = this;
 							m_usedInventoryTemplates[templateID.ToString()] = this;
-							foreach (DictionaryEntry de in m_items)
+							foreach (var de in m_items)
 							{
 								if (!m_usedInventoryItems.Contains(de.Key))
 									m_usedInventoryItems.Add(de.Key, de.Value);
@@ -240,14 +247,17 @@ namespace DOL.GS
 		/// <returns>Open copy of this template</returns>
 		public GameNpcInventoryTemplate CloneTemplate()
 		{
-			lock (m_items.SyncRoot)
+			lock (m_items)
 			{
-				GameNpcInventoryTemplate clone = new GameNpcInventoryTemplate();
-				clone.m_changedSlots = (ArrayList)m_changedSlots.Clone();
+				var clone = new GameNpcInventoryTemplate();
+				clone.m_changedSlots = new List<eInventorySlot>(m_changedSlots);
 				clone.m_changesCounter = m_changesCounter;
-				foreach (DictionaryEntry de in m_items)
+
+				foreach (var de in m_items)
 					clone.m_items.Add(de.Key, de.Value);
+
 				clone.m_isClosed = false;
+
 				return clone;
 			}
 		}
@@ -275,7 +285,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			lock (m_items.SyncRoot)
+			lock (m_items)
 			{
 				if (m_npcEquipmentCache.ContainsKey(templateID))
 				{
@@ -336,7 +346,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool SaveIntoDatabase(string templateID)
 		{
-			lock (m_items.SyncRoot)
+			lock (m_items)
 			{
 				try
 				{
@@ -348,7 +358,7 @@ namespace DOL.GS
 					// delete removed item templates
 					foreach (NPCEquipment npcItem in npcEquipment)
 					{
-						if (!m_items.Contains(npcItem.Slot))
+						if (!m_items.ContainsKey((eInventorySlot)npcItem.Slot))
 							GameServer.Database.DeleteObject(npcItem);
 					}
 
@@ -358,7 +368,8 @@ namespace DOL.GS
 						bool foundInDB = false;
 						foreach (NPCEquipment npcItem in npcEquipment)
 						{
-							if (item.SlotPosition != npcItem.Slot) continue;
+							if (item.SlotPosition != npcItem.Slot) 
+								continue;
 
 							if (item.Model != npcItem.Model || item.Color != npcItem.Color || item.Effect != npcItem.Effect)
 							{
@@ -368,9 +379,12 @@ namespace DOL.GS
 								npcItem.Extension = item.Extension;
 								GameServer.Database.SaveObject(npcItem);
 							}
+
 							foundInDB = true;
+
 							break;
 						}
+
 						if (!foundInDB)
 						{
 							NPCEquipment npcItem = new NPCEquipment();
@@ -390,6 +404,7 @@ namespace DOL.GS
 				{
 					if (log.IsErrorEnabled)
 						log.Error("Error saving NPC inventory template, templateID=" + templateID, e);
+
 					return false;
 				}
 			}
@@ -472,7 +487,7 @@ namespace DOL.GS
 		/// <param name="toSlot">Second SlotPosition</param>
 		/// <param name="itemCount">How many items to move</param>
 		/// <returns>false</returns>
-		protected override bool StackItems(int fromSlot, int toSlot, int itemCount)
+		protected override bool StackItems(eInventorySlot fromSlot, eInventorySlot toSlot, int itemCount)
 		{
 			return false;
 		}
@@ -483,7 +498,7 @@ namespace DOL.GS
 		/// <param name="fromSlot">First SlotPosition</param>
 		/// <param name="toSlot">Second SlotPosition</param>
 		/// <returns>false</returns>
-		protected override bool ExchangeItems(int fromSlot, int toSlot)
+		protected override bool ExchangeItems(eInventorySlot fromSlot, eInventorySlot toSlot)
 		{
 			return false;
 		}

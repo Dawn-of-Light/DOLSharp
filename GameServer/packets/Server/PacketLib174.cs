@@ -536,8 +536,10 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
-			ICollection items = null;
+
+			ICollection<InventoryItem> items = null;
 			if (living.Inventory != null)
 				items = living.Inventory.VisibleItems;
 

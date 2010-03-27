@@ -8506,7 +8506,7 @@ namespace DOL.GS
 						}
 						else if (type > 0)
 						{
-							if (!(new ArrayList(Inventory.EquippedItems).Contains(useItem)))
+							if (!Inventory.EquippedItems.Contains(useItem))
 							{
 								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
@@ -10554,7 +10554,7 @@ namespace DOL.GS
 		{
 			if (arguments is ItemUnequippedArgs == false) return;
 			InventoryItem item = ((ItemUnequippedArgs)arguments).Item;
-			int prevSlot = ((ItemUnequippedArgs)arguments).PreviousSlotPosition;
+			int prevSlot = (int)((ItemUnequippedArgs)arguments).PreviousSlotPosition;
 			if (item == null) return;
 
 			//			DOLConsole.WriteLine("unequipped item '" + item.Name + "' !");

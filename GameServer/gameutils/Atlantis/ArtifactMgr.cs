@@ -343,7 +343,7 @@ namespace DOL.GS
 
 			// Only currently equipped artifacts can gain experience.
 
-			ICollection equippedItems = player.Inventory.GetItemRange(eInventorySlot.MinEquipable, eInventorySlot.MaxEquipable);
+			var equippedItems = player.Inventory.GetItemRange(eInventorySlot.MinEquipable, eInventorySlot.MaxEquipable);
 
 			foreach (InventoryItem item in equippedItems)
 				if (item != null && item is InventoryArtifact)
@@ -684,7 +684,7 @@ namespace DOL.GS
 		public static List<String> GetArtifacts(GamePlayer player)
 		{
 		    List<String> artifacts = new List<String>();
-			lock (player.Inventory.AllItems.SyncRoot)
+			lock (player.Inventory.AllItems)
 			{
 				foreach (InventoryItem item in player.Inventory.AllItems)
 				{
@@ -739,8 +739,7 @@ namespace DOL.GS
 
 			// Now check if the player has got it.
 
-			ICollection backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack,
-				eInventorySlot.LastBackpack);
+			var backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 			foreach (InventoryItem item in backpack)
 			{
 				if (item.Object_Type == (int)eObjectType.Magical &&

@@ -548,7 +548,7 @@ namespace DOL.GS
 				else
 					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.Bought2", template.GetName(1, false), totalValue, m_countText);
 
-				System.Collections.IList items = (System.Collections.IList)player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+				var items = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 				int removed = 0;
 
 				foreach (InventoryItem item in items)
@@ -561,6 +561,7 @@ namespace DOL.GS
 					if (removed == totalValue)
 						break;
 				}
+
 				player.Out.SendInventoryItemsUpdate(items);
 				player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 			}

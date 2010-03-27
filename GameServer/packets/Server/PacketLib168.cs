@@ -1067,7 +1067,7 @@ namespace DOL.GS.PacketHandler
 
 				if (living.Inventory != null)
 				{
-					ICollection items = living.Inventory.VisibleItems;
+					var items = living.Inventory.VisibleItems;
 					pak.WriteByte((byte) items.Count);
 					foreach (InventoryItem item in items)
 					{
@@ -1624,7 +1624,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendInventorySlotsUpdate(ICollection slots)
+		public virtual void SendInventorySlotsUpdate(ICollection<int> slots)
 		{
 			// slots contain ints
 
@@ -1639,7 +1639,7 @@ namespace DOL.GS.PacketHandler
 			}
 			else
 			{
-				var updateSlots = new ArrayList(MaxItemUpdate);
+				var updateSlots = new List<int>(MaxItemUpdate);
 				foreach (int slot in slots)
 				{
 					updateSlots.Add(slot);
@@ -1662,12 +1662,12 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-		public virtual void SendInventoryItemsUpdate(ICollection itemsToUpdate)
+		public virtual void SendInventoryItemsUpdate(ICollection<InventoryItem> itemsToUpdate)
 		{
 			SendInventoryItemsUpdate(0, itemsToUpdate);
 		}
 
-		public virtual void SendInventoryItemsUpdate(byte preAction, ICollection itemsToUpdate)
+		public virtual void SendInventoryItemsUpdate(byte preAction, ICollection<InventoryItem> itemsToUpdate)
 		{
 			if (m_gameClient.Player == null)
 				return;
@@ -1680,7 +1680,7 @@ namespace DOL.GS.PacketHandler
 			// clients crash if too long packet is sent
 			// so we send big updates in parts
 			const int MAX_UPDATE = 32;
-			var slotsToUpdate = new ArrayList(Math.Min(MAX_UPDATE, itemsToUpdate.Count));
+			var slotsToUpdate = new List<int>(Math.Min(MAX_UPDATE, itemsToUpdate.Count));
 			foreach (InventoryItem item in itemsToUpdate)
 			{
 				if (item == null)
@@ -2956,26 +2956,27 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(10); // number of permissions ?
 				pak.WriteByte(0x00); // ??
 				pak.WriteShort((ushort) house.HouseNumber);
-				byte i;
-				for (i = 0; i < 10; i++)
+
+				for (byte i = 0; i < 10; i++)
 				{
 					pak.WriteByte(i);
-					pak.WriteByte(house.HouseAccess[i].Enter);
+					pak.WriteByte(house.HouseAccess[i].CanEnterHouse ? (byte)1 : (byte)0);
 					pak.WriteByte(house.HouseAccess[i].Vault1);
 					pak.WriteByte(house.HouseAccess[i].Vault2);
 					pak.WriteByte(house.HouseAccess[i].Vault3);
 					pak.WriteByte(house.HouseAccess[i].Vault4);
-					pak.WriteByte(house.HouseAccess[i].Appearance);
-					pak.WriteByte(house.HouseAccess[i].Interior);
-					pak.WriteByte(house.HouseAccess[i].Garden);
-					pak.WriteByte(house.HouseAccess[i].Banish);
-					pak.WriteByte(house.HouseAccess[i].UseMerchant);
-					pak.WriteByte(house.HouseAccess[i].Tools);
-					pak.WriteByte(house.HouseAccess[i].Bind);
-					pak.WriteByte(house.HouseAccess[i].Merchant);
-					pak.WriteByte(house.HouseAccess[i].PayRent);
+					pak.WriteByte(house.HouseAccess[i].CanChangeExternalAppearance ? (byte)1 : (byte)0);
+					pak.WriteByte(house.HouseAccess[i].ChangeInterior);
+					pak.WriteByte(house.HouseAccess[i].ChangeGarden);
+					pak.WriteByte(house.HouseAccess[i].CanBanish ? (byte)1 : (byte)0);
+					pak.WriteByte(house.HouseAccess[i].CanUseMerchants ? (byte)1 : (byte)0);
+					pak.WriteByte(house.HouseAccess[i].CanUseTools ? (byte)1 : (byte)0);
+					pak.WriteByte(house.HouseAccess[i].CanBindInHouse ? (byte)1 : (byte)0);
+					pak.WriteByte(house.HouseAccess[i].ConsignmentMerchant);
+					pak.WriteByte(house.HouseAccess[i].CanPayRent ? (byte)1 : (byte)0);
 					pak.WriteByte(0x00); // ??
 				}
+
 				SendTCP(pak);
 			}
 		}
@@ -3031,7 +3032,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendHouseOccuped(House house, bool flagHouseOccuped)
+		public virtual void SendHouseOccupied(House house, bool flagHouseOccuped)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden)))
 			{
@@ -3786,7 +3787,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		protected virtual void SendInventorySlotsUpdateBase(ICollection slots, byte preAction)
+		protected virtual void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate)))
 			{
@@ -3950,7 +3951,7 @@ namespace DOL.GS.PacketHandler
 
 			pak.WriteByte((byte) size);
 			pak.WriteByte((byte) item.Position);
-			pak.WriteByte((byte) (item.Placemode - 2));
+			pak.WriteByte((byte) (item.PlacementMode - 2));
 		}
 	}
 }
