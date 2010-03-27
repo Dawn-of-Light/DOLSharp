@@ -3921,7 +3921,10 @@ namespace DOL.GS
 		/// </summary>
 		public override int AttackCriticalChance(InventoryItem weapon)
 		{
-			return 0;
+            if (weapon != null && weapon.Item_Type == Slot.RANGED && RangedAttackType == eRangedAttackType.Critical)
+                return 0; // no crit damage for crit shots
+
+            return GetModified(eProperty.CriticalMeleeHitChance);
 		}
 
 		/// <summary>
