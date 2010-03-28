@@ -307,11 +307,13 @@ namespace DOL.Language
 		public static string GetTranslation(string lang, string TranslationID, params object [] args)
 		{
             string translated = TranslationID;
-            
-            if (!IDSentences.ContainsKey(TranslationID))
-                return translated;
 
-            translated = IDSentences[TranslationID][lang];
+			if (!IDSentences.ContainsKey(TranslationID) || !IDSentences[TranslationID].ContainsKey(lang))
+			{
+				return translated;
+			}
+
+			translated = IDSentences[TranslationID][lang];
 
             try
             {

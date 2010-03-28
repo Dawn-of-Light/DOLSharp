@@ -280,9 +280,11 @@ namespace DOL.GS.PacketHandler
 			}
 			SendTCP(pak);
 		}
+
 		public override void SendWarmapUpdate(ICollection<AbstractGameKeep> list)
 		{
 			if (m_gameClient.Player == null) return;
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.WarMapClaimedKeeps));
 			int KeepCount = 0;
 			int TowerCount = 0;
@@ -359,13 +361,15 @@ namespace DOL.GS.PacketHandler
 					flag |= (byte)eRealmWarmapKeepFlags.Claimed;
 					name = guild.Name;
 				}
+
 				//Teleport
-				//gms with debug mode on can see every keep
-				if (m_gameClient.Account.PrivLevel > 1 && m_gameClient.Player.TempProperties.getProperty<object>(GamePlayer.DEBUG_MODE_PROPERTY, null) != null)
+				if (m_gameClient.Account.PrivLevel > (int)ePrivLevel.Player)
+				{
 					flag |= (byte)eRealmWarmapKeepFlags.Teleportable;
+				}
 				else
 				{
-					if (m_gameClient.Player.Realm == keep.Realm)
+					if (m_gameClient.Player.CurrentRegionID == KeepMgr.NEW_FRONTIERS && m_gameClient.Player.Realm == keep.Realm)
 					{
 						GameKeep theKeep = keep as GameKeep;
 						if (theKeep != null)
@@ -375,10 +379,14 @@ namespace DOL.GS.PacketHandler
 								flag |= (byte)eRealmWarmapKeepFlags.Teleportable;
 							}
 						}
-					}	
+					}
 				}
+
 				if (keep.InCombat)
+				{
 					flag |= (byte)eRealmWarmapKeepFlags.UnderSiege;
+				}
+
 				pak.WriteByte((byte)flag);
 				pak.WritePascalString(name);
 			}
