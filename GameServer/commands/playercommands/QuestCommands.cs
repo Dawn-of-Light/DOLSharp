@@ -21,9 +21,9 @@ using DOL.GS.Quests;
 
 namespace DOL.GS.Commands
 {
-	/// <summary>
-	/// Command handler for the various /commands used in quests
-	/// </summary>
+	// Command handler for the various /commands used in quests
+
+
 	[CmdAttribute(
 		"&search",
 		ePrivLevel.Player,
@@ -38,12 +38,20 @@ namespace DOL.GS.Commands
 			if (player == null)
 				return;
 
+			bool searched = false;
+
 			foreach (AbstractQuest quest in player.QuestList)
 			{
 				if (quest.Command(player, AbstractQuest.eQuestCommand.Search))
 				{
+					searched = true;
 					break;
 				}
+			}
+
+			if (searched == false)
+			{
+				player.Out.SendMessage("You can't do that here!", DOL.GS.PacketHandler.eChatType.CT_Important, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
 			}
 
 		}
