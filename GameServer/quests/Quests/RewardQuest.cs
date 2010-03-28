@@ -33,6 +33,8 @@ namespace DOL.GS.Quests
 	/// <author>Aredhel</author>
 	public class RewardQuest : BaseQuest
 	{
+		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private GameNPC m_questGiver;
 		private List<QuestGoal> m_goals;
 		private QuestRewards m_rewards;
@@ -81,14 +83,29 @@ namespace DOL.GS.Quests
 		/// <param name="type"></param>
 		/// <param name="targetNumber"></param>
 		/// <param name="questItem"></param>
-		protected QuestGoal AddGoal(String description, QuestGoal.GoalType type, int targetNumber,
-			ItemTemplate questItem)
+		protected QuestGoal AddGoal(string description, QuestGoal.GoalType type, int targetNumber, ItemTemplate questItem)
 		{
-			QuestGoal goal = new QuestGoal(this, description, type, m_goals.Count + 1, targetNumber,
-				questItem);
+			QuestGoal goal = new QuestGoal("none", this, description, type, m_goals.Count + 1, targetNumber, questItem);
 			m_goals.Add(goal);
 			return goal;
 		}
+
+		/// <summary>
+		/// Add a goal for this quest and give it a unique identifier
+		/// </summary>
+		/// <param name="ID"></param>
+		/// <param name="description"></param>
+		/// <param name="type"></param>
+		/// <param name="targetNumber"></param>
+		/// <param name="questItem"></param>
+		/// <returns></returns>
+		protected QuestGoal AddGoal(string id, string description, QuestGoal.GoalType type, int targetNumber, ItemTemplate questItem)
+		{
+			QuestGoal goal = new QuestGoal(id, this, description, type, m_goals.Count + 1, targetNumber, questItem);
+			m_goals.Add(goal);
+			return goal;
+		}
+
 
 		/// <summary>
 		/// The NPC giving the quest.
@@ -152,7 +169,10 @@ namespace DOL.GS.Quests
 		public virtual void OfferQuest(GamePlayer player)
 		{
 			if (CheckQuestQualification(player))
+			{
+				OfferPlayer = player;
 				player.Out.SendQuestOfferWindow(QuestGiver, player, this);
+			}
 		}
 
 		/// <summary>
@@ -246,8 +266,9 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public class QuestGoal
 		{
+			private string m_id;
 			private RewardQuest m_quest;
-			private String m_description;
+			private string m_description;
 			private int m_index;
 			private int m_current, m_target;
 			private int m_zoneID1 = 0, m_xOffset1 = 0, m_yOffset1 = 0;
@@ -260,14 +281,15 @@ namespace DOL.GS.Quests
 			/// <summary>
 			/// Constructs a new QuestGoal.
 			/// </summary>
+			/// <param name="id">An id used to fidn this quest goal.</param>
 			/// <param name="quest">The quest this goal is a part of.</param>
 			/// <param name="description">The description of the goal.</param>
 			/// <param name="type"></param>
 			/// <param name="index"></param>
 			/// <param name="target"></param>
-			public QuestGoal(RewardQuest quest, String description, GoalType type, int index, int target,
-				ItemTemplate questItem)
+			public QuestGoal(string id, RewardQuest quest, string description, GoalType type, int index, int target, ItemTemplate questItem)
 			{
+				m_id = id;
 				m_quest = quest;
 				m_description = description;
 				m_goalType = type;
@@ -279,9 +301,17 @@ namespace DOL.GS.Quests
 			}
 
 			/// <summary>
+			/// An id for this quest goal
+			/// </summary>
+			public string Id
+			{
+				get { return m_id; }
+			}
+
+			/// <summary>
 			/// Ready-to-use description of the goal and its current status.
 			/// </summary>
-			public String Description
+			public string Description
 			{
                 get { return String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Description", m_description, Current, Target)); }
 			}
@@ -550,7 +580,10 @@ namespace DOL.GS.Quests
 			/// </summary>
 			public long Money
 			{
-				get { return (long)((m_maxCopperForLevel[m_quest.Level] * MoneyPercent / 100)); }
+				get 
+				{
+					return (long)((m_maxCopperForLevel[m_quest.Level] * MoneyPercent / 100));
+				}
 			}
 
 			/// <summary>

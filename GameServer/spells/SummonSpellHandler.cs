@@ -64,7 +64,14 @@ namespace DOL.GS.Spells
 			if (pet == null)
 				return;
 
-			MessageToCaster(String.Format("The {0} is now under your control.", pet.Name), eChatType.CT_Spell);
+			if (Spell.Message1 == string.Empty)
+			{
+				MessageToCaster(String.Format("The {0} is now under your control.", pet.Name), eChatType.CT_Spell);
+			}
+			else
+			{
+				MessageToCaster(Spell.Message1, eChatType.CT_Spell);
+			}
 			pet.HailMaster();
 		}
 

@@ -315,20 +315,44 @@ namespace DOL.GS.Quests
 			}
 		}
 
-		protected static void GiveItem(GamePlayer player, ItemTemplate itemTemplate)
+		protected static bool TryGiveItem(GamePlayer player, ItemTemplate itemTemplate)
 		{
-			GiveItem(null, player, itemTemplate);
+			return GiveItem(null, player, itemTemplate, false);
 		}
 
-		protected static void GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
+		protected static bool TryGiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
+		{
+			return GiveItem(source, player, itemTemplate, false);
+		}
+
+		protected static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate)
+		{
+			return GiveItem(null, player, itemTemplate, true);
+		}
+
+		protected static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
+		{
+			return GiveItem(source, player, itemTemplate, true);
+		}
+
+		protected static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
 		{
 			InventoryItem item = new InventoryItem(itemTemplate);			
 			if (!player.ReceiveItem(source, item))
 			{
-				player.CreateItemOnTheGround(item);
-				player.Out.SendMessage(String.Format("Your backpack is full, {0} is dropped on the ground.",
-					itemTemplate.Name), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+				if (canDrop)
+				{
+					player.CreateItemOnTheGround(item);
+					player.Out.SendMessage(String.Format("Your backpack is full, {0} is dropped on the ground.", itemTemplate.Name), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+				}
+				else
+				{
+					player.Out.SendMessage(String.Format("Your backpack is full!", itemTemplate.Name), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+					return false;
+				}
 			}
+
+			return true;
 		}
 
 		protected static ItemTemplate CreateTicketTo(String location)

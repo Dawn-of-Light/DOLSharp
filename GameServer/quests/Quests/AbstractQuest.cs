@@ -17,6 +17,8 @@
  *
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
@@ -48,11 +50,138 @@ namespace DOL.GS.Quests
 		/// The player doing the quest
 		/// </summary>
 		protected GamePlayer m_questPlayer = null;
+
+		/// <summary>
+		/// The player who is being offered this quest
+		/// </summary>
+		protected GamePlayer m_offerPlayer = null;
+
 		/// <summary>
 		/// The quest database object, storing the information for the player
 		/// and the quest. Eg. QuestStep etc.
 		/// </summary>
 		private DBQuest m_dbQuest = null;
+
+		/// <summary>
+		/// List of all QuestParts that can be fired on notify method of quest.
+		/// </summary>
+		protected static IList questParts = null;
+
+		/// <summary>
+		/// The various /commands supported by quests
+		/// </summary>
+		public enum eQuestCommand
+		{
+			None,
+			Search
+		}
+
+		private List<SearchLocation> m_searchLocations = new List<SearchLocation>();
+
+		protected class SearchLocation : GameLocation
+		{
+			public const int DEFAULT_SEARCH_SECONDS = 5;
+			public const int DEFAULT_SEARCH_RADIUS = 150;
+
+			protected QuestSearchArea m_area;
+
+			/// <summary>
+			/// Create a /search location for this quest.
+			/// This will create an area for searching and popup a message to the player when they are 
+			/// in the area to be /searched
+			/// </summary>
+			/// <param name="questType"></param>
+			/// <param name="step"></param>
+			/// <param name="name"></param>
+			/// <param name="regionId"></param>
+			/// <param name="x"></param>
+			/// <param name="y"></param>
+			/// <param name="z"></param>
+			public SearchLocation(Type questType, int step, string name, ushort regionId, int x, int y, int z)
+				: base(name, regionId, x, y, z)
+			{
+				CreateSearchLocation(questType, step, DEFAULT_SEARCH_SECONDS, name, regionId, x, y, z, DEFAULT_SEARCH_RADIUS);
+			}
+
+			/// <summary>
+			/// Create a /search location for this quest.
+			/// This will create an area for searching and popup a message to the player when they are 
+			/// in the area to be /searched. Optionally provide the number of seconds to search and the radius of the search area.
+			/// </summary>
+			/// <param name="questType"></param>
+			/// <param name="step"></param>
+			/// <param name="searchSeconds"></param>
+			/// <param name="name"></param>
+			/// <param name="regionId"></param>
+			/// <param name="x"></param>
+			/// <param name="y"></param>
+			/// <param name="z"></param>
+			/// <param name="radius"></param>
+			public SearchLocation(Type questType, int step, int searchSeconds, string name, ushort regionId, int x, int y, int z, int radius)
+				: base(name, regionId, x, y, z)
+			{
+				CreateSearchLocation(questType, step, searchSeconds, name, regionId, x, y, z, radius);
+			}
+
+			protected void CreateSearchLocation(Type questType, int step, int searchSeconds, string name, ushort regionId, int x, int y, int z, int radius)
+			{
+				m_area = new QuestSearchArea(questType, step, searchSeconds, name, x, y, z, radius);
+				m_area.DisplayMessage = false;
+
+				if (WorldMgr.GetRegion(regionId) != null)
+				{
+					WorldMgr.GetRegion(regionId).AddArea(m_area);
+				}
+			}
+
+			public QuestSearchArea SearchArea
+			{
+				get { return m_area; }
+			}
+		}
+
+		protected class QuestSearchArea : Area.Circle
+		{
+			Type m_questType;
+			int m_validStep;
+			int m_searchSeconds;
+			string m_popupText = "";
+			
+	        public QuestSearchArea(Type questType, int validStep, int searchSeconds, string desc, int x, int y, int z, int radius)
+	            : base(desc, x, y, z, radius)
+	        {
+				m_questType = questType;
+				m_validStep = validStep;
+				m_searchSeconds = searchSeconds;
+				m_popupText = desc;
+				DisplayMessage = false;
+			}
+
+			public override void OnPlayerEnter(GamePlayer player)
+			{
+				// popup a dialog telling the player they should search here
+				if (player.IsDoingQuest(m_questType) != null && player.IsDoingQuest(m_questType).Step == m_validStep)
+				{
+					player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, m_popupText);
+				}
+			}
+
+			public Type QuestType
+			{
+				get { return m_questType; }
+			}
+
+			public int Step
+			{
+				get { return m_validStep; }
+			}
+
+			public int SearchSeconds
+			{
+				get { return m_searchSeconds; }
+			}
+		}
+
 
 		/// <summary>
 		/// Constructs a new empty Quest
@@ -172,6 +301,12 @@ namespace DOL.GS.Quests
 			}
 		}
 
+		public GamePlayer OfferPlayer
+		{
+			get { return m_offerPlayer; }
+			set { m_offerPlayer = value; }
+		}
+
 		/// <summary>
 		/// Retrieves the name of the quest
 		/// </summary>
@@ -276,12 +411,144 @@ namespace DOL.GS.Quests
 			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "AbstractQuest.OnQuestAssigned.GetQuest", Name)), eChatType.CT_Group, eChatLoc.CL_ChatWindow);
 
 		}
+
+
+		#region Quest Commands
+
+		protected eQuestCommand m_currentCommand = eQuestCommand.None;
+
+		protected void AddSearchLocation(SearchLocation location)
+		{
+			if (m_searchLocations.Contains(location) == false)
+			{
+				m_searchLocations.Add(location);
+			}
+		}
+
+		public virtual bool Command(GamePlayer player, eQuestCommand command)
+		{
+			if (m_searchLocations == null || m_searchLocations.Count == 0)
+				return false;
+
+			if (player == null || command == eQuestCommand.None)
+				return false;
+
+			if (command == eQuestCommand.Search)
+			{
+				foreach (AbstractArea area in player.CurrentAreas)
+				{
+					if (area is QuestSearchArea)
+					{
+						QuestSearchArea questArea = area as QuestSearchArea;
+
+						if (questArea != null && questArea.Step == Step)
+						{
+							foreach (SearchLocation location in m_searchLocations)
+							{
+								if (location.SearchArea == questArea)
+								{
+									StartQuestActionTimer(player, command, questArea.SearchSeconds);
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
+		public virtual void StartQuestActionTimer(GamePlayer player, eQuestCommand command, int seconds)
+		{
+			if (player.QuestActionTimer == null)
+			{
+				m_currentCommand = command;
+				AddSearchActionHandlers(player);
+
+				// Live progress dialog is labeled 'Area Action' but I dediced to make label more specific - tolakram
+				QuestPlayer.Out.SendTimerWindow(Enum.GetName(typeof(eQuestCommand), command), seconds);
+				QuestPlayer.QuestActionTimer = new RegionTimer(player);
+				QuestPlayer.QuestActionTimer.Callback = new RegionTimerCallback(QuestActionCallback);
+				QuestPlayer.QuestActionTimer.Start(seconds * 1000);
+			}
+			else
+			{
+				// error message about another action in progress
+			}
+		}
+
+		protected virtual int QuestActionCallback(RegionTimer timer)
+		{
+			RemoveSearchActionHandlers(QuestPlayer);
+
+			QuestPlayer.Out.SendCloseTimerWindow();
+			QuestPlayer.QuestActionTimer.Stop();
+			QuestPlayer.QuestActionTimer = null;
+			QuestCommandCompleted(m_currentCommand);
+			m_currentCommand = eQuestCommand.None;
+			return 0;
+		}
+
+
+		protected void AddSearchActionHandlers(GamePlayer player)
+		{
+			if (player != null)
+			{
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Moving, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.AttackFinished, new DOLEventHandler(InterruptSearch));
+			}
+		}
+
+		protected void RemoveSearchActionHandlers(GamePlayer player)
+		{
+			if (player != null)
+			{
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.Moving, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.AttackFinished, new DOLEventHandler(InterruptSearch));
+			}
+		}
+
+
+		protected void InterruptSearch(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = sender as GamePlayer;
+
+			if (player != null)
+			{
+				player.Out.SendMessage("Your search is interrupted!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				RemoveSearchActionHandlers(player);
+				player.Out.SendCloseTimerWindow();
+				player.QuestActionTimer.Stop();
+				player.QuestActionTimer = null;
+				m_currentCommand = eQuestCommand.None;
+			}
+		}
+
+		protected virtual void QuestCommandCompleted(eQuestCommand command)
+		{
+			// override this to do whatever needs to be done when the command is completed
+			// Typically this would be: give player an item and advance the step
+
+			QuestPlayer.Out.SendMessage("Error, command completed handler not overriden for quest!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+		}
+
+
+		#endregion Quest Commands
+
+
+		#region Custom Properties
+
+
 		/// <summary>
 		/// This HybridDictionary holds all the custom properties of this quest
 		/// </summary>
 		protected readonly HybridDictionary m_customProperties = new HybridDictionary();
 
-		#region Custom Properties
 
 		/// <summary>
 		/// This method parses the custom properties string of the m_dbQuest
