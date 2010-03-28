@@ -82,21 +82,30 @@ namespace DOL.GS.Keeps
 
 		public override bool Interact(GamePlayer player)
 		{
-			if (!base.Interact(player) || GameRelic.IsPlayerCarryingRelic(player))
+			if (!base.Interact(player))
 				return false;
 
 			//For players in New Frontiers only
-			if (player.Client.Account.PrivLevel == 1 && player.CurrentRegionID == 163)
+			if (player.CurrentRegionID == KeepMgr.NEW_FRONTIERS)
 			{
-				if (player.Realm != this.Realm)
-					return false;
-				if (Component != null && Component.Keep is GameKeep)
+				if (player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
 				{
-					if ((Component.Keep as GameKeep).OwnsAllTowers == false)
+					if (player.Realm != this.Realm)
+						return false;
+
+					if (Component != null && Component.Keep is GameKeep)
+					{
+						if ((Component.Keep as GameKeep).OwnsAllTowers == false || (Component.Keep as GameKeep).InCombat)
+							return false;
+					}
+
+					if (GameRelic.IsPlayerCarryingRelic(player))
 						return false;
 				}
 
-				eDialogCode code = eDialogCode.SimpleWarning;
+				// open up the warmap window
+
+				eDialogCode code = eDialogCode.WarmapWindowAlbion;
 				switch (player.Realm)
 				{
 					case eRealm.Albion: code = eDialogCode.WarmapWindowAlbion; break;
@@ -104,12 +113,14 @@ namespace DOL.GS.Keeps
 					case eRealm.Hibernia: code = eDialogCode.WarmapWindowHibernia; break;
 				}
 
-				player.Out.SendDialogBox(code, 0, 0, 0, 0, eDialogType.YesNo, false, "");
+				player.Out.SendDialogBox(code, 0, 0, 0, 0, eDialogType.Warmap, false, "");
 			}
 
 			//if no component assigned, teleport to the border keep
-			if (Component == null && player.CurrentRegionID != 163)
+			if (Component == null && player.CurrentRegionID != KeepMgr.NEW_FRONTIERS)
+			{
 				KeepMgr.ExitBattleground(player);
+			}
 
 			return true;
 		}

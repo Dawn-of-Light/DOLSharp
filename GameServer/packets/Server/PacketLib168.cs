@@ -1406,7 +1406,7 @@ namespace DOL.GS.PacketHandler
 		}
 
 		public virtual void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4,
-		                                  eDialogType type, bool autoWarpText, string message)
+		                                  eDialogType type, bool autoWrapText, string message)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog)))
 			{
@@ -1417,7 +1417,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort(data3); //data3
 				pak.WriteShort(data4); //data4
 				pak.WriteByte((byte) type);
-				pak.WriteByte((byte) (autoWarpText ? 0x01 : 0x00));
+				pak.WriteByte((byte) (autoWrapText ? 0x01 : 0x00));
 				if (message.Length > 0)
 					pak.WriteString(message, message.Length);
 				pak.WriteByte(0x00);
@@ -3897,40 +3897,43 @@ namespace DOL.GS.PacketHandler
 			{
 				string str = listStr;
 
-				if (pak.Position + 4 > MaxPacketLength) // line + pascalstringline(1) + trailingZero
-					return;
-
-				pak.WriteByte(++line);
-
-				while (str.Length > byte.MaxValue)
+				if (str != null)
 				{
-					string s = str.Substring(0, byte.MaxValue);
-
-					if (pak.Position + s.Length + 2 > MaxPacketLength)
-					{
-						needBreak = true;
-						break;
-					}
-
-					pak.WritePascalString(s);
-					str = str.Substring(byte.MaxValue, str.Length - byte.MaxValue);
-					if (line >= 200 || pak.Position + Math.Min(byte.MaxValue, str.Length) + 2 >= MaxPacketLength)
-						// line + pascalstringline(1) + trailingZero
+					if (pak.Position + 4 > MaxPacketLength) // line + pascalstringline(1) + trailingZero
 						return;
 
 					pak.WriteByte(++line);
+
+					while (str.Length > byte.MaxValue)
+					{
+						string s = str.Substring(0, byte.MaxValue);
+
+						if (pak.Position + s.Length + 2 > MaxPacketLength)
+						{
+							needBreak = true;
+							break;
+						}
+
+						pak.WritePascalString(s);
+						str = str.Substring(byte.MaxValue, str.Length - byte.MaxValue);
+						if (line >= 200 || pak.Position + Math.Min(byte.MaxValue, str.Length) + 2 >= MaxPacketLength)
+							// line + pascalstringline(1) + trailingZero
+							return;
+
+						pak.WriteByte(++line);
+					}
+
+					if (pak.Position + str.Length + 2 > MaxPacketLength) // str.Length + trailing zero
+					{
+						str = str.Substring(0, (int)Math.Max(Math.Min(1, str.Length), MaxPacketLength - pak.Position - 2));
+						needBreak = true;
+					}
+
+					pak.WritePascalString(str);
+
+					if (needBreak || line >= 200) // Check max packet length or max stings in window (0 - 199)
+						break;
 				}
-
-				if (pak.Position + str.Length + 2 > MaxPacketLength) // str.Length + trailing zero
-				{
-					str = str.Substring(0, (int) Math.Max(Math.Min(1, str.Length), MaxPacketLength - pak.Position - 2));
-					needBreak = true;
-				}
-
-				pak.WritePascalString(str);
-
-				if (needBreak || line >= 200) // Check max packet length or max stings in window (0 - 199)
-					break;
 			}
 		}
 

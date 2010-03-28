@@ -202,7 +202,7 @@ GMCommands.Jump.Usage.PlayerNToPlayerN:			/jump <PlayerName> to <PlayerName>
 GMCommands.Jump.Usage.RelXYZ:				/jump rel <x> <y> <z>
 GMCommands.Jump.Usage.ToGT:				/jump to GT
 GMCommands.Jump.Usage.ToNameRealmID:			/jump to <Name> <RealmID>	
-GMCommands.Jump.Usage.ToPlayerName:			/jump to <PlayerName>	
+GMCommands.Jump.Usage.ToPlayerName:			/jump to <PlayerName or MobName>	
 GMCommands.Jump.Usage.ToXYZRegionID:			/jump to <x> <y> <z> [<RegionID>]	
 		
 # /keep Command

@@ -251,8 +251,10 @@ namespace DOL.GS
 
             if (client == null || client.Player == null) return;
 
-            if (LastCalcul + REFRESH_INTERVAL < NFTime)
-                Calcul();
+			if (LastCalcul + REFRESH_INTERVAL < NFTime)
+			{
+				Calcul();
+			}
 
             client.Out.SendWarmapDetailUpdate(w_fights, w_groups);
         }
