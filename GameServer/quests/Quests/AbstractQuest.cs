@@ -76,112 +76,7 @@ namespace DOL.GS.Quests
 			Search
 		}
 
-		private List<SearchLocation> m_searchLocations = new List<SearchLocation>();
-
-		protected class SearchLocation : GameLocation
-		{
-			public const int DEFAULT_SEARCH_SECONDS = 5;
-			public const int DEFAULT_SEARCH_RADIUS = 150;
-
-			protected QuestSearchArea m_area;
-
-			/// <summary>
-			/// Create a /search location for this quest.
-			/// This will create an area for searching and popup a message to the player when they are 
-			/// in the area to be /searched
-			/// </summary>
-			/// <param name="questType"></param>
-			/// <param name="step"></param>
-			/// <param name="text">Text to popup in a dialog when entering area. Make this an empty string to suppress popup.</param>
-			/// <param name="regionId"></param>
-			/// <param name="x"></param>
-			/// <param name="y"></param>
-			/// <param name="z"></param>
-			public SearchLocation(Type questType, int step, string text, ushort regionId, int x, int y, int z)
-				: base(text, regionId, x, y, z)
-			{
-				CreateSearchLocation(questType, step, DEFAULT_SEARCH_SECONDS, text, regionId, x, y, z, DEFAULT_SEARCH_RADIUS);
-			}
-
-			/// <summary>
-			/// Create a /search location for this quest.
-			/// This will create an area for searching and popup a message to the player when they are 
-			/// in the area to be /searched. Optionally provide the number of seconds to search and the radius of the search area.
-			/// </summary>
-			/// <param name="questType"></param>
-			/// <param name="step"></param>
-			/// <param name="searchSeconds"></param>
-			/// <param name="text">Text to popup in a dialog when entering area. Make this an empty string to suppress popup.</param>
-			/// <param name="regionId"></param>
-			/// <param name="x"></param>
-			/// <param name="y"></param>
-			/// <param name="z"></param>
-			/// <param name="radius"></param>
-			public SearchLocation(Type questType, int step, int searchSeconds, string text, ushort regionId, int x, int y, int z, int radius)
-				: base(text, regionId, x, y, z)
-			{
-				CreateSearchLocation(questType, step, searchSeconds, text, regionId, x, y, z, radius);
-			}
-
-			protected void CreateSearchLocation(Type questType, int step, int searchSeconds, string text, ushort regionId, int x, int y, int z, int radius)
-			{
-				m_area = new QuestSearchArea(questType, step, searchSeconds, text, x, y, z, radius);
-				m_area.DisplayMessage = false;
-
-				if (WorldMgr.GetRegion(regionId) != null)
-				{
-					WorldMgr.GetRegion(regionId).AddArea(m_area);
-				}
-			}
-
-			public QuestSearchArea SearchArea
-			{
-				get { return m_area; }
-			}
-		}
-
-		protected class QuestSearchArea : Area.Circle
-		{
-			Type m_questType;
-			int m_validStep;
-			int m_searchSeconds;
-			string m_popupText = "";
-			
-	        public QuestSearchArea(Type questType, int validStep, int searchSeconds, string desc, int x, int y, int z, int radius)
-	            : base(desc, x, y, z, radius)
-	        {
-				m_questType = questType;
-				m_validStep = validStep;
-				m_searchSeconds = searchSeconds;
-				m_popupText = desc;
-				DisplayMessage = false;
-			}
-
-			public override void OnPlayerEnter(GamePlayer player)
-			{
-				// popup a dialog telling the player they should search here
-				if (player.IsDoingQuest(m_questType) != null && player.IsDoingQuest(m_questType).Step == m_validStep && m_popupText != string.Empty)
-				{
-					player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, m_popupText);
-				}
-			}
-
-			public Type QuestType
-			{
-				get { return m_questType; }
-			}
-
-			public int Step
-			{
-				get { return m_validStep; }
-			}
-
-			public int SearchSeconds
-			{
-				get { return m_searchSeconds; }
-			}
-		}
-
+		private List<QuestSearchArea> m_searchAreas = new List<QuestSearchArea>();
 
 		/// <summary>
 		/// Constructs a new empty Quest
@@ -417,17 +312,17 @@ namespace DOL.GS.Quests
 
 		protected eQuestCommand m_currentCommand = eQuestCommand.None;
 
-		protected void AddSearchLocation(SearchLocation location)
+		protected void AddSearchArea(QuestSearchArea searchArea)
 		{
-			if (m_searchLocations.Contains(location) == false)
+			if (m_searchAreas.Contains(searchArea) == false)
 			{
-				m_searchLocations.Add(location);
+				m_searchAreas.Add(searchArea);
 			}
 		}
 
 		public virtual bool Command(GamePlayer player, eQuestCommand command)
 		{
-			if (m_searchLocations == null || m_searchLocations.Count == 0)
+			if (m_searchAreas == null || m_searchAreas.Count == 0)
 				return false;
 
 			if (player == null || command == eQuestCommand.None)
@@ -443,9 +338,9 @@ namespace DOL.GS.Quests
 
 						if (questArea != null && questArea.Step == Step)
 						{
-							foreach (SearchLocation location in m_searchLocations)
+							foreach (QuestSearchArea searchArea in m_searchAreas)
 							{
-								if (location.SearchArea == questArea)
+								if (searchArea == questArea)
 								{
 									StartQuestActionTimer(player, command, questArea.SearchSeconds);
 									return true;

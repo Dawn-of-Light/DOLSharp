@@ -1322,6 +1322,7 @@
     <Compile Include="behaviour\Triggers\GiveItemTrigger.cs" />
     <Compile Include="behaviour\Triggers\WhisperTrigger.cs" />
     <Compile Include="behaviour\Triggers\InteractTrigger.cs" />
+    <Compile Include="quests\Quests\Utility\QuestSearchArea.cs" />
     <Compile Include="realmabilities\effects\AdrenalineRushEffect.cs" />
     <Compile Include="realmabilities\effects\AmelioratingMelodiesEffect.cs" />
     <Compile Include="realmabilities\effects\BarrierOfFortitudeEffect.cs" />
