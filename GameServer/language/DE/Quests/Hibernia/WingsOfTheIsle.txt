@@ -1,0 +1,10 @@
+﻿Hib.WingsOfTheIsle.Story:	Excuse me {0}, can I ask a favor of you? My daughter Jessica has been having a terrible time ever since the fighting broke out. She used to love taking a boat over to the island to play, but now a days all she does is sulk in the woods north of town. Perhaps you could find the time to speak with her, she won't talk with her father anymore but perhaps you can find out what's been bugging her? 
+Hib.WingsOfTheIsle.Summary:	Visit with Jessica north of town to find out what is bothering her, if you can try and help her for Baeth.
+Hib.WingsOfTheIsle.Goal1:	Find Jessica north of town and speak with her. 
+Hib.WingsOfTheIsle.Goal2:	Search the light house on the island for the flute. 	
+Hib.WingsOfTheIsle.Goal3:	Return the flute to Jessica.
+Hib.WingsOfTheIsle.Jessica1:	Hello sir, it's a nice night isn't it? About the only fun thing left to do around here is explore the forest. Though my father hates it when I leave for too long... I just wish I could go back to the [island].
+Hib.WingsOfTheIsle.Jessica2:	I used to go there nearly every day; my father gave me this reed flute you see. When you would play it near the water thousands of dragonflies would come to you. I [lost] it my last trip out though.
+Hib.WingsOfTheIsle.Jessica3:	Yes, I lost it the last time I was out on the island. I think I was playing in the light house before my father came and rushed me away. That was the day the invaders came. If you'd like you could ride my wyvern to the island?
+Hib.WingsOfTheIsle.Conclusion:	Oh my, it's my old flute! Where ever did you find it? I hope it wasn't too hard to find. My father already replaced it for me. You can have my new one though, if you'd like? I'm glad to have this one back.
+

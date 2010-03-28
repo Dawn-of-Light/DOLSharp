@@ -8365,10 +8365,7 @@ namespace DOL.GS
 						}
 						else
 						{
-							if (UseMagicalItem(useItem, type))
-							{
-								TempProperties.setProperty(LAST_USED_ITEM_SPELL, useItem);
-							}
+							UseMagicalItem(useItem, type);
 						}
 						return;
 					}
@@ -8683,6 +8680,7 @@ namespace DOL.GS
 
 				if (spellHandler.CheckBeginCast(TargetObject as GameLiving))
 				{
+					TempProperties.setProperty(LAST_USED_ITEM_SPELL, item);
 					m_runningSpellHandler = spellHandler;
 					m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
 					spellHandler.CastSpell();

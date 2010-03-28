@@ -1483,17 +1483,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#region Charge1
 				if (item.SpellID != 0)
 				{
-					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-					if (chargeEffectsLine != null)
+					// Re-doing the first spell to avoid requiring the spell be in an existing line.
+					// This is common for magical items with spells attached.   - tolakram
+
+					SpellLine itemSpellLine = new SpellLine("TempItemSpells", "Temp Item Spells", "", true);
+					if (itemSpellLine != null)
 					{
-						List<Spell> spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
-						foreach (Spell spl in spells)
+						Spell spell = SkillBase.GetSpellByID(item.SpellID);
+						if (spell != null)
 						{
-							if (spl.ID == item.SpellID)
+							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, itemSpellLine);
+
+							if (spellHandler != null)
 							{
 								output.Add(" ");
-								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2", spl.Level));
-								//output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
+								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2", spell.Level));
 								output.Add(" ");
 								output.Add(" ");
 								if (item.MaxCharges > 0)
@@ -1503,18 +1507,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", item.MaxCharges));
 									output.Add(" ");
 								}
-								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
-								if (spellHandler != null)
-								{
-									output.AddRange(spellHandler.DelveInfo);
-									output.Add("- This spell is cast when the item is used.");
-									output.Add(" ");
-								}
-								else
-								{
-									output.Add("-" + spl.Name + "(Not implemented yet)");
-								}
-								break;
+
+								output.AddRange(spellHandler.DelveInfo);
+								output.Add("- This spell is cast when the item is used.");
+								output.Add(" ");
+							}
+							else
+							{
+								output.Add("-" + spell.Name + "(Not implemented yet)");
 							}
 						}
 					}
