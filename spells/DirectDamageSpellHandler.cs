@@ -60,32 +60,34 @@ namespace DOL.GS.Spells
 
 			bool spellOK = true;
 
-			if (Spell.Target.ToLower() == "cone" ||	(Spell.Target == "Enemy" && Spell.Radius > 0 && Spell.Range == 0))
-				spellOK = false;
-
-			if (!spellOK || CheckLOS(Caster))
+			if (Spell.Target.ToLower() == "cone" || (Spell.Target == "Enemy" && Spell.Radius > 0 && Spell.Range == 0))
 			{
-				GamePlayer player = null;
+				spellOK = false;
+			}
+
+			if (spellOK == false || MustCheckLOS(Caster))
+			{
+				GamePlayer checkPlayer = null;
 				if (target is GamePlayer)
 				{
-					player = target as GamePlayer;
+					checkPlayer = target as GamePlayer;
 				}
 				else
 				{
 					if (Caster is GamePlayer)
 					{
-						player = Caster as GamePlayer;
+						checkPlayer = Caster as GamePlayer;
 					}
 					else if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain)
 					{
 						IControlledBrain brain = (Caster as GameNPC).Brain as IControlledBrain;
-						player = brain.GetPlayerOwner();
+						checkPlayer = brain.GetPlayerOwner();
 					}
 				}
-				if (player != null)
+				if (checkPlayer != null)
 				{
-					player.TempProperties.setProperty(LOSEFFECTIVENESS, effectiveness);
-					player.Out.SendCheckLOS(Caster, target, new CheckLOSResponse(DealDamageCheckLOS));
+					checkPlayer.TempProperties.setProperty(LOSEFFECTIVENESS, effectiveness);
+					checkPlayer.Out.SendCheckLOS(Caster, target, new CheckLOSResponse(DealDamageCheckLOS));
 				}
 				else
 				{
@@ -96,16 +98,6 @@ namespace DOL.GS.Spells
 			{
 				DealDamage(target, effectiveness);
 			}
-		}
-
-		private bool CheckLOS(GameLiving living)
-		{
-			foreach (AbstractArea area in living.CurrentAreas)
-			{
-				if (area.CheckLOS)
-					return true;
-			}
-			return false;
 		}
 
 		private void DealDamageCheckLOS(GamePlayer player, ushort response, ushort targetOID)

@@ -74,9 +74,19 @@ namespace DOL.GS.Commands
 
 				if (clientc == null)
 				{
+					GameNPC[] npcs = WorldMgr.GetNPCsByName(args[2], eRealm.None);
+
+					if (npcs.Length > 0)
+					{
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", npcs[0].CurrentRegion.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Player.MoveTo(npcs[0].CurrentRegionID, npcs[0].X, npcs[0].Y, npcs[0].Z, npcs[0].Heading);
+						return;
+					}
+
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.CannotBeFound", args[2]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
+
 				if (CheckExpansion(client, clientc, clientc.Player.CurrentRegionID))
 				{
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", clientc.Player.CurrentRegion.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -100,6 +110,7 @@ namespace DOL.GS.Commands
 					int.TryParse(args[3], out realm);
 
 					GameNPC[] npcs = WorldMgr.GetNPCsByName(args[2], (eRealm)realm);
+
 					if (npcs.Length > 0)
 					{
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", npcs[0].CurrentRegion.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);

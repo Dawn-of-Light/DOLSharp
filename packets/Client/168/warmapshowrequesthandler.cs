@@ -26,6 +26,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP, 0xE0 ^ 168, "Show warmap")]
 	public class WarmapShowRequestHandler : IPacketHandler
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int code = packet.ReadByte();
@@ -62,33 +64,53 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//teleport
 				case 2:
 					{
-						if (GameRelic.IsPlayerCarryingRelic(client.Player))
+						client.Out.SendWarmapUpdate(KeepMgr.getKeepsByRealmMap(client.Player.WarMapPage));
+						WarMapMgr.SendFightInfo(client);
+
+						if (client.Account.PrivLevel == (int)ePrivLevel.Player &&
+							(client.Player.InCombat || client.Player.CurrentRegionID != 163 || GameRelic.IsPlayerCarryingRelic(client.Player)))
 						{
 							return 0;
 						}
 
 						AbstractGameKeep keep = null;
+
 						if (keepId > 6)
-							keep = KeepMgr.getKeepByID(keepId);
-						if (keep == null && keepId > 6) return 1;
-
-						//we redo our checks here
-						if (client.Account.PrivLevel == 1 && keep != null)
 						{
-							//check realm
-							if (keep.Realm != client.Player.Realm)
-							{
-								return 0;
-							}
+							keep = KeepMgr.getKeepByID(keepId);
+						}
 
-							if (keep is GameKeep && (keep as GameKeep).OwnsAllTowers == false)
-							{
-								return 0;
-							}
+						if (keep == null && keepId > 6)
+						{
+							return 1;
+						}
 
+						if (client.Account.PrivLevel == (int)ePrivLevel.Player)
+						{
 							bool found = false;
+
+							if (keep != null)
+							{
+								// if we are requesting to teleport to a keep we need to check that keeps requirements first
+
+								if (keep.Realm != client.Player.Realm)
+								{
+									return 0;
+								}
+
+								if (keep is GameKeep && ((keep as GameKeep).OwnsAllTowers == false || keep.InCombat))
+								{
+									return 0;
+								}
+
+								// Missing: Supply line check
+							}
+
 							if (client.Player.CurrentRegionID == 163)
 							{
+								// We are in the frontiers and all keep requirements are met or we are not near a keep
+								// this may be a portal stone in the RvR village, for example
+
 								foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.INTERACT_DISTANCE))
 								{
 									if (item is FrontiersPortalStone)
@@ -98,12 +120,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 									}
 								}
 							}
+
 							if (!found)
 							{
 								client.Player.Out.SendMessage("You cannot teleport unless you are near a valid portal stone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return 0;
 							}
 						}
+
 						int x = 0;
 						int y = 0;
 						int z = 0;
@@ -128,9 +152,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								}
 							default:
 								{
-									//does keep have all towers intact?
-									//todo 5 second teleport
-									if (client.Account.PrivLevel > 1 || (((keep as GameKeep).OwnsAllTowers && !keep.InCombat)))
+									if (keep != null && keep is GameKeep)
 									{
 										FrontiersPortalStone stone = keep.TeleportStone;
 										heading = stone.Heading;
@@ -140,8 +162,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 									break;
 								}
 						}
+
 						if (x != 0)
+						{
 							client.Player.MoveTo(163, x, y, z, heading);
+						}
+
 						break;
 					}
 			}

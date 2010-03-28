@@ -194,7 +194,7 @@ GMCommands.Item.FindName.MatchingNamesForX:	Matching Names for {0} count {1}.
 # /jump Command
 GMCommands.Jump.Description:				Teleports a player or yourself to the specified location xp
 GMCommands.Jump.Information:				Playername can be [me]:
-GMCommands.Jump.Usage.ToPlayerName:			/jump to <PlayerName>
+GMCommands.Jump.Usage.ToPlayerName:			/jump to <PlayerName or MobName>
 GMCommands.Jump.Usage.ToNameRealmID:		/jump to <Name> <RealmID>
 GMCommands.Jump.Usage.ToXYZRegionID:		/jump to <x> <y> <z> [<RegionID>]
 GMCommands.Jump.Usage.PlayerNameToXYZ:		/jump <PlayerName> to <x> <y> <z>
