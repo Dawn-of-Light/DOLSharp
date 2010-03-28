@@ -96,7 +96,7 @@ namespace DOL.GS.Quests.Hibernia
 		// This defines the location for a /search plus the step that it's valid for.  This needs to be static, we only want to add one area for the quest.
 		// This also needs to be added to the searchLocation list for this quest in each constructor.
 		// In addition override QuestCommandCompleted to do anything required on a successful search.
-		private static SearchLocation searchLocation = new SearchLocation(typeof(WingsOfTheIsleHibernia), 2, "Use /search to look for Jessica's flute.", 27, 356182, 382308, 5237);
+		private static QuestSearchArea searchArea = new QuestSearchArea(typeof(WingsOfTheIsleHibernia), 2, "Use /search to look for Jessica's flute.", 27, 356182, 382308, 5237);
 
 		/* We need to define the constructors from the base class here, else there might be problems
 		 * when loading this quest...
@@ -128,7 +128,7 @@ namespace DOL.GS.Quests.Hibernia
 		/// </summary>
 		protected void InitializeQuest(GamePlayer player)
 		{
-			AddSearchLocation(searchLocation);
+			AddSearchArea(searchArea);
 
 			Rewards.Experience = 772;
 			Rewards.MoneyPercent = 10;
