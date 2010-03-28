@@ -1640,7 +1640,7 @@ namespace DOL.GS.Commands
             text.Add(" ");
             text.Add("PLAYER INFORMATION ");
             text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
-            text.Add("  - Realm Level Class : " + player.Realm + " " + player.Level + " " + player.CharacterClass.Name);
+            text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " + player.CharacterClass.Name);
             text.Add("  - Guild : " + player.GuildName);
             text.Add("  - XPs/RPs/BPs : " + player.Experience + " xps, " + player.RealmPoints + " rps, " + player.BountyPoints + " bps");
             text.Add("  - Craftingskill : " + player.CraftingPrimarySkill + "");
