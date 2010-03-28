@@ -92,15 +92,15 @@ namespace DOL.GS.Quests
 			/// </summary>
 			/// <param name="questType"></param>
 			/// <param name="step"></param>
-			/// <param name="name"></param>
+			/// <param name="text">Text to popup in a dialog when entering area. Make this an empty string to suppress popup.</param>
 			/// <param name="regionId"></param>
 			/// <param name="x"></param>
 			/// <param name="y"></param>
 			/// <param name="z"></param>
-			public SearchLocation(Type questType, int step, string name, ushort regionId, int x, int y, int z)
-				: base(name, regionId, x, y, z)
+			public SearchLocation(Type questType, int step, string text, ushort regionId, int x, int y, int z)
+				: base(text, regionId, x, y, z)
 			{
-				CreateSearchLocation(questType, step, DEFAULT_SEARCH_SECONDS, name, regionId, x, y, z, DEFAULT_SEARCH_RADIUS);
+				CreateSearchLocation(questType, step, DEFAULT_SEARCH_SECONDS, text, regionId, x, y, z, DEFAULT_SEARCH_RADIUS);
 			}
 
 			/// <summary>
@@ -111,21 +111,21 @@ namespace DOL.GS.Quests
 			/// <param name="questType"></param>
 			/// <param name="step"></param>
 			/// <param name="searchSeconds"></param>
-			/// <param name="name"></param>
+			/// <param name="text">Text to popup in a dialog when entering area. Make this an empty string to suppress popup.</param>
 			/// <param name="regionId"></param>
 			/// <param name="x"></param>
 			/// <param name="y"></param>
 			/// <param name="z"></param>
 			/// <param name="radius"></param>
-			public SearchLocation(Type questType, int step, int searchSeconds, string name, ushort regionId, int x, int y, int z, int radius)
-				: base(name, regionId, x, y, z)
+			public SearchLocation(Type questType, int step, int searchSeconds, string text, ushort regionId, int x, int y, int z, int radius)
+				: base(text, regionId, x, y, z)
 			{
-				CreateSearchLocation(questType, step, searchSeconds, name, regionId, x, y, z, radius);
+				CreateSearchLocation(questType, step, searchSeconds, text, regionId, x, y, z, radius);
 			}
 
-			protected void CreateSearchLocation(Type questType, int step, int searchSeconds, string name, ushort regionId, int x, int y, int z, int radius)
+			protected void CreateSearchLocation(Type questType, int step, int searchSeconds, string text, ushort regionId, int x, int y, int z, int radius)
 			{
-				m_area = new QuestSearchArea(questType, step, searchSeconds, name, x, y, z, radius);
+				m_area = new QuestSearchArea(questType, step, searchSeconds, text, x, y, z, radius);
 				m_area.DisplayMessage = false;
 
 				if (WorldMgr.GetRegion(regionId) != null)
@@ -160,7 +160,7 @@ namespace DOL.GS.Quests
 			public override void OnPlayerEnter(GamePlayer player)
 			{
 				// popup a dialog telling the player they should search here
-				if (player.IsDoingQuest(m_questType) != null && player.IsDoingQuest(m_questType).Step == m_validStep)
+				if (player.IsDoingQuest(m_questType) != null && player.IsDoingQuest(m_questType).Step == m_validStep && m_popupText != string.Empty)
 				{
 					player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, m_popupText);
 				}
