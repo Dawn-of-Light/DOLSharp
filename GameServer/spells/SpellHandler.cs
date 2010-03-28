@@ -787,6 +787,25 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
+		/// Does the area we are in force an LoS check on everything?
+		/// </summary>
+		/// <param name="living"></param>
+		/// <returns></returns>
+		protected bool MustCheckLOS(GameLiving living)
+		{
+			foreach (AbstractArea area in living.CurrentAreas)
+			{
+				if (area.CheckLOS)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		/// <summary>
 		/// Check the Line of Sight from you to your pet
 		/// </summary>
 		/// <param name="player">The player</param>
@@ -803,36 +822,54 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
-		/// Check the Line of Sight from you to your target
+		/// Check the Line of Sight from a player to a target
 		/// </summary>
 		/// <param name="player">The player</param>
 		/// <param name="response">The result</param>
 		/// <param name="targetOID">The target OID</param>
-		public virtual void CheckLOSYouToTarget(GamePlayer player, ushort response, ushort targetOID)
+		public virtual void CheckLOSPlayerToTarget(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
 				return;
-			if ((response & 0x100) == 0x100) // In view ?
+
+			if ((response & 0x100) == 0x100) // In view?
 				return;
-			MessageToLiving(player, "You can't see your target from here!", eChatType.CT_SpellResisted);
-			InterruptCasting(); // break;
+
+			if (ServerProperties.Properties.ENABLE_DEBUG)
+			{
+				MessageToCaster("LoS Interrupt in CheckLOSPlayerToTarget", eChatType.CT_System);
+				log.Debug("LoS Interrupt in CheckLOSPlayerToTarget");
+			}
+
+			if (Caster is GamePlayer)
+			{
+				MessageToCaster("You can't see your target from here!", eChatType.CT_SpellResisted);
+			}
+
+			InterruptCasting();
 		}
 
 		/// <summary>
-		/// Check the Line of Sight from your pet to your target
+		/// Check the Line of Sight from an npc to a target
 		/// </summary>
 		/// <param name="player">The player</param>
 		/// <param name="response">The result</param>
 		/// <param name="targetOID">The target OID</param>
-		public virtual void CheckLOSPetToTarget(GamePlayer player, ushort response, ushort targetOID)
+		public virtual void CheckLOSNPCToTarget(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null) // Hmm
 				return;
-			if ((response & 0x100) == 0x100) // In view ?
 
+			if ((response & 0x100) == 0x100) // In view?
 				return;
-			MessageToLiving(player, "Your pet can't see the target!", eChatType.CT_SpellResisted);
-			InterruptCasting(); // break;
+
+			if (ServerProperties.Properties.ENABLE_DEBUG)
+			{
+				MessageToCaster("LoS Interrupt in CheckLOSNPCToTarget", eChatType.CT_System);
+				log.Debug("LoS Interrupt in CheckLOSNPCToTarget");
+			}
+
+			InterruptCasting();
 		}
 		/// <summary>
 		/// Checks after casting before spell is executed
@@ -1076,20 +1113,35 @@ namespace DOL.GS.Spells
 
 						if (ServerProperties.Properties.CHECK_LOS_DURING_CAST)
 						{
-							GamePlayer playerCaster = null;
-							if (Caster is GamePlayer)
+							GamePlayer playerChecker = null;
+
+							if (target is GamePlayer)
 							{
-								playerCaster = Caster as GamePlayer;
+								playerChecker = target as GamePlayer;
+							}
+							else if (Caster is GamePlayer)
+							{
+								playerChecker = Caster as GamePlayer;
 							}
 							else if (Caster is GameNPC && (Caster as GameNPC).Brain != null && (Caster as GameNPC).Brain is IControlledBrain)
 							{
-								playerCaster = ((Caster as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+								playerChecker = ((Caster as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
 							}
 
-							if (playerCaster != null)
+							if (playerChecker != null)
 							{
+								// If the area forces an LoS check then we do it, otherwise we only check 
+								// if caster or target is a player
 								// This will generate an interrupt if LOS check fails
-								playerCaster.Out.SendCheckLOS(playerCaster, m_spellTarget, new CheckLOSResponse(CheckLOSYouToTarget));
+
+								if (Caster is GamePlayer)
+								{
+									playerChecker.Out.SendCheckLOS(Caster, target, new CheckLOSResponse(CheckLOSPlayerToTarget));
+								}
+								else if (target is GamePlayer || MustCheckLOS(Caster))
+								{
+									playerChecker.Out.SendCheckLOS(Caster, target, new CheckLOSResponse(CheckLOSNPCToTarget));
+								}
 							}
 						}
 

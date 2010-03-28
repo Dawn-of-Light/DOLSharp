@@ -377,6 +377,7 @@ namespace DOL.GS.PacketHandler
 	{
 		Ok = 0x00,
 		YesNo = 0x01,
+		Warmap = 0x01,
 	}
 
 	public enum eDialogCode : byte
@@ -460,7 +461,7 @@ namespace DOL.GS.PacketHandler
 		void SendRiding(GameObject rider, GameObject steed, bool dismount);
 		void SendFindGroupWindowUpdate(GamePlayer[] list);
 		void SendGroupInviteCommand(GamePlayer invitingPlayer, string inviteMessage);
-		void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4, eDialogType type, bool autoWarpText, string message);
+		void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4, eDialogType type, bool autoWrapText, string message);
 		void SendCustomDialog(string msg, DOL.GS.PacketHandler.CustomDialogResponse callback);
 		void SendCheckLOS(GameObject Checker, GameObject Target, DOL.GS.PacketHandler.CheckLOSResponse callback);
 		void SendGuildLeaveCommand(GamePlayer invitingPlayer,string inviteMessage);
