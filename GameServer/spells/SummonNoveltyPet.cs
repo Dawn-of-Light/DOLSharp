@@ -59,9 +59,9 @@ namespace DOL.GS.Spells
 
         public override bool CheckBeginCast(GameLiving selectedTarget)
         {
-            if (Caster.CurrentRegion.IsRvR)
+            if (Caster.CurrentRegion.IsRvR || Caster.CurrentRegion.IsHousing || Caster.CurrentRegion.IsCapitalCity)
             {
-                MessageToCaster("You cannot cast this spell in an rvr zone!", DOL.GS.PacketHandler.eChatType.CT_SpellResisted);
+                MessageToCaster("You cannot cast this spell here!", DOL.GS.PacketHandler.eChatType.CT_SpellResisted);
                 return false;
             }
 
