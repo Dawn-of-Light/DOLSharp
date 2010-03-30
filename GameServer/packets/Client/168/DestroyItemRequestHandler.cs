@@ -32,7 +32,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 			if (item != null)
 			{
-				if (item.MaxDurability == 0)
+				if (item.IsIndestructible)
 				{
 					client.Out.SendMessage(String.Format("You can't destroy {0}!",
 						item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);

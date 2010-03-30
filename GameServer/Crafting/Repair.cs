@@ -19,8 +19,8 @@
 using System;
 using System.Reflection;
 using DOL.Database;
-using DOL.Language;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS
@@ -71,7 +71,7 @@ namespace DOL.GS
 
 			GamePlayer tradePartner = null;
 			if (player.TradeWindow != null) tradePartner = player.TradeWindow.Partner;
-
+			
 			if (player.IsMoving || player.IsStrafing)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.StopRepair1", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -94,7 +94,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Called when craft time is finished 
+		/// Called when craft time is finished
 		/// </summary>
 		/// <param name="timer"></param>
 		/// <returns></returns>
@@ -155,12 +155,18 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool IsAllowedToBeginWork(GamePlayer player, InventoryItem item, int percentNeeded)
 		{
+			if (item.IsNotLosingDur)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.IsAllowedToBeginWork.CantRepair", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+			
 			if (item.SlotPosition < (int)eInventorySlot.FirstBackpack || item.SlotPosition > (int)eInventorySlot.LastBackpack)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.IsAllowedToBeginWork.BackpackItems"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-
+			
 			eCraftingSkill skill = CraftingMgr.GetSecondaryCraftingSkillToWorkOnItem(item);
 			if (skill == eCraftingSkill.NoCrafting)
 			{
@@ -236,7 +242,7 @@ namespace DOL.GS
 			{
 				return 0;
 			}
-			//chance with Woodworking 
+			//chance with Woodworking
 			if (player.IsMoving || player.IsStrafing)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.StopRepair1", siegeWeapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -256,7 +262,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Called when craft time is finished 
+		/// Called when craft time is finished
 		/// </summary>
 		/// <param name="timer"></param>
 		/// <returns></returns>

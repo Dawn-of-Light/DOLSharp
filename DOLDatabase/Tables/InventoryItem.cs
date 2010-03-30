@@ -368,6 +368,8 @@ namespace DOL.Database
 			Flags = template.Flags;
 			BonusLevel = template.BonusLevel;
 			Description = template.Description;
+			IsIndestructible = template.IsIndestructible;
+			IsNotLosingDur = template.IsNotLosingDur;
 		}
 	}
 }

@@ -164,7 +164,6 @@
     </Compile>
     <Compile Include="Tables\ClassXRealmAbility.cs" />
     <Compile Include="Tables\Battleground.cs" />
-    <Compile Include="Tables\ItemUnique.cs" />
     <Compile Include="Tables\Language.cs" />
     <Compile Include="Tables\PvPKillsLog.cs" />
     <Compile Include="Tables\HouseHookpointOffset.cs" />
