@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Net.Sockets;
 using DOL.Database;
 using DOL.Events;
 using DOL.Tests;
@@ -32,8 +31,8 @@ namespace DOL.GS.Quests.Tests
 	public class KillTaskTest : DOLTestCase
 	{
 		public KillTaskTest()
-		{			
-		}		
+		{
+		}
 
 		[Test] public void CreateKillTask()
 		{
@@ -50,10 +49,10 @@ namespace DOL.GS.Quests.Tests
 			// player must have trainer selected when task given.
 			player.TargetObject = trainer;
 			
-			// mob for task			
-			if (KillTask.BuildTask(player,trainer)) 
+			// mob for task
+			if (KillTask.BuildTask(player,trainer))
 			{
-				KillTask task =(KillTask) player.Task;				
+				KillTask task =(KillTask) player.Task;
 
 				Assert.IsNotNull(task);
 				Assert.IsTrue(task.TaskActive);
@@ -74,18 +73,18 @@ namespace DOL.GS.Quests.Tests
 				mob.Level = player.Level;
 				mob.CurrentRegionID = player.CurrentRegionID;
 				mob.AddToWorld();
-			
+				
 				// First we kill mob
 				mob.XPGainers.Add(player,1.0F);
-				task.Notify(GameNPCEvent.EnemyKilled,player,new EnemyKilledEventArgs(mob));						
+				task.Notify(GameNPCEvent.EnemyKilled,player,new EnemyKilledEventArgs(mob));
 
 				// arificial pickup Item
 				player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item);
-			
+				
 				// Check item in Inventory
 				if (player.Inventory.GetFirstItemByName(task.ItemName,eInventorySlot.FirstBackpack,eInventorySlot.LastBackpack) != null)
 					Assert.Fail("Player didn't recieve task item.");
-			
+				
 				// Now give item tro trainer
 				task.Notify(GamePlayerEvent.GiveItem,player,new GiveItemEventArgs(player,trainer,item));
 

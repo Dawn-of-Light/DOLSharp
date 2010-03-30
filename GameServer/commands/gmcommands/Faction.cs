@@ -38,11 +38,6 @@ namespace DOL.GS.Commands
 	   "GMCommands.Faction.Usage.Select")]
 	public class FactionCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		protected string TEMP_FACTION_LAST = "TEMP_FACTION_LAST";
 
 		public void OnCommand(GameClient client, string[] args)

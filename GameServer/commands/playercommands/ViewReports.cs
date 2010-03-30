@@ -16,14 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using System;
-using System.Reflection;
-using DOL.Language;
 using DOL.Database;
-using DOL.Database.Attributes;
-using log4net;
+using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -34,12 +30,6 @@ namespace DOL.GS.Commands
 		"/viewreports")]
 	public class ViewReportsCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>      
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-
 		/// <summary>
 		/// method to handle /boat commands from a client
 		/// </summary>

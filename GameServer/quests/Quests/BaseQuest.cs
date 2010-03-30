@@ -28,11 +28,13 @@
 using System;
 using System.Collections;
 using System.Reflection;
+
 using DOL.Database;
-using DOL.GS.PacketHandler;
-using log4net;
 using DOL.Events;
 using DOL.GS.Behaviour;
+using DOL.GS.PacketHandler;
+using log4net;
+
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -48,7 +50,7 @@ namespace DOL.GS.Quests
 	/// <summary>
 	/// BaseQuest provides some helper classes for writing quests and
 	/// integrates a new QuestPart Based QuestSystem.
-	/// </summary>	
+	/// </summary>
 	public abstract class BaseQuest : AbstractQuest
 	{
 		/// <summary>
@@ -82,11 +84,6 @@ namespace DOL.GS.Quests
 		// /// List of all QuestParts that can be fired on interact Events.
 		// /// </summary>
 		//private static IDictionary interactQuestParts = new HybridDictionary();
-
-		/// <summary>
-		/// List of all QuestParts that can be fired on notify method of quest.
-		/// </summary>
-		private static IList questParts = null;
 
 		/// <summary>
 		/// Create an empty Quest
@@ -138,7 +135,7 @@ namespace DOL.GS.Quests
 			questParts = null;
 		}
 
-		// Base QuestPart methods		
+		// Base QuestPart methods
 
 		/// <summary>
 		/// Remove all registered handlers for this quest,
@@ -161,14 +158,14 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="questPart">QuestPart to be added</param>
 		public static void AddBehaviour(QuestBehaviour questPart)
-		{						
+		{
 			if (questParts == null)
 				questParts = new ArrayList();
 
 			if (!questParts.Contains(questPart))
 				questParts.Add(questPart);
 			
-            questPart.ID = questParts.Count; // fake id but ids only have to be unique quest wide its enough to use the number in the list as id.
+			questPart.ID = questParts.Count; // fake id but ids only have to be unique quest wide its enough to use the number in the list as id.
 		}
 
 		/// <summary>
@@ -181,7 +178,7 @@ namespace DOL.GS.Quests
 				return;
 
 			UnRegisterBehaviour(questPart);
-			questParts.Remove(questPart);			
+			questParts.Remove(questPart);
 		}
 
 		/// <summary>
@@ -337,7 +334,7 @@ namespace DOL.GS.Quests
 
 		protected static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
 		{
-			InventoryItem item = new InventoryItem(itemTemplate);			
+			InventoryItem item = new InventoryItem(itemTemplate);
 			if (!player.ReceiveItem(source, item))
 			{
 				if (canDrop)
