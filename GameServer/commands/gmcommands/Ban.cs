@@ -35,11 +35,6 @@ namespace DOL.GS.Commands
 		"GMCommands.Ban.Usage.Both")]
 	public class BanCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 3)
@@ -48,7 +43,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			GameClient gc = WorldMgr.GetClientByPlayerName(args[2],false,false);		
+			GameClient gc = WorldMgr.GetClientByPlayerName(args[2],false,false);
 			if (gc == null)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.UnableToFindPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -68,7 +63,7 @@ namespace DOL.GS.Commands
 
 				switch (args[1].ToLower())
 				{
-					#region Account
+						#region Account
 					case "account":
 						var acctBans = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accname) + "')");
 						if (acctBans.Count > 0)
@@ -80,8 +75,8 @@ namespace DOL.GS.Commands
 						b.Type = "A";
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.ABanned", accname), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						break;
-					#endregion Account
-					#region IP
+						#endregion Account
+						#region IP
 					case "ip":
 						var ipBans = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(accip) + "')");
 						if (ipBans.Count > 0)
@@ -93,8 +88,8 @@ namespace DOL.GS.Commands
 						b.Type = "I";
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.IBanned", accip), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						break;
-					#endregion IP
-					#region Both
+						#endregion IP
+						#region Both
 					case "both":
 						var acctIpBans = GameServer.Database.SelectObjects<DBBannedAccount>("Type='B' AND Account ='" + GameServer.Database.Escape(accname) + "' AND Ip ='" + GameServer.Database.Escape(accip) + "'");
 						if (acctIpBans.Count > 0)
@@ -106,14 +101,14 @@ namespace DOL.GS.Commands
 						b.Type = "B";
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.BBanned", accname, accip), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						break;
-					#endregion Both
-					#region Default
+						#endregion Both
+						#region Default
 					default:
 						{
 							DisplaySyntax(client);
 							return;
 						}
-					#endregion Default
+						#endregion Default
 				}
 
 				b.Author = client.Player.PlayerCharacter.Name;

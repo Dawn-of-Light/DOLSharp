@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
 using DOL.Events;
-using DOL.Database;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Effects
 {
@@ -14,7 +11,6 @@ namespace DOL.GS.Effects
 	public class ShieldOfImmunityEffect : TimedEffect
 	{
 		private GameLiving owner;
-        private Spell spell;
 		public ShieldOfImmunityEffect()
 			: base(20000)
 		{
@@ -49,9 +45,9 @@ namespace DOL.GS.Effects
 			if (ad.IsMeleeAttack || ad.AttackType == AttackData.eAttackType.Ranged || (ad.AttackType == AttackData.eAttackType.Spell && attackedByEnemy.AttackData.SpellHandler.Spell.SpellType == "Archery"))
 			{
 				int absorb = (int)(ad.Damage * 0.9);
-                int critic = (int)(ad.CriticalDamage * 0.9);
+				int critic = (int)(ad.CriticalDamage * 0.9);
 				ad.Damage -= absorb;
-                ad.CriticalDamage -= critic;
+				ad.CriticalDamage -= critic;
 				if (living is GamePlayer)
 					((GamePlayer)living).Out.SendMessage("Your Shield of Immunity absorbs " + (absorb + critic) + " points of damage", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				if (ad.Attacker is GamePlayer)

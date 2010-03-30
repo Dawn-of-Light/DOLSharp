@@ -1,14 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using DOL.GS;
-using DOL.Database;
-using DOL.Language;
-using DOL.GS.Movement;
-using DOL.GS.PacketHandler;
-using log4net;
 using DOL.AI.Brain;
+using DOL.Database;
+using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -23,12 +17,6 @@ namespace DOL.GS.Commands
 		"/boat <option>")]
 	public class BoatCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-
 		/// <summary>
 		/// method to handle /boat commands from a client
 		/// </summary>

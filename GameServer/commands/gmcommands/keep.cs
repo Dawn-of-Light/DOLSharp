@@ -17,17 +17,9 @@
  *
  */
 using System;
-using System.Collections;
-using System.Collections.Specialized;
-
-using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Keeps;
-using DOL.GS.PacketHandler;
 using DOL.Language;
-
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.Commands
 {
@@ -53,8 +45,6 @@ namespace DOL.GS.Commands
 		"GMCommands.Keep.Usage.Radius")]
 	public class KeepCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		protected string TEMP_KEEP_LAST = "TEMP_KEEP_LAST";
 		public enum eKeepTypes : int
 		{
@@ -103,7 +93,7 @@ namespace DOL.GS.Commands
 			
 			switch (args[1])
 			{
-				#region FastCreate
+					#region FastCreate
 				case "fastcreate":
 					{
 						#region DisplayTemplates
@@ -179,7 +169,7 @@ namespace DOL.GS.Commands
 						
 						switch ((eKeepTypes)keepType)
 						{
-							#region DunCrauchonBledmeerFasteCaerBenowyc
+								#region DunCrauchonBledmeerFasteCaerBenowyc
 							case eKeepTypes.DunCrauchonBledmeerFasteCaerBenowyc:
 								{
 									keepComp = new GameKeepComponent();
@@ -247,8 +237,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion DunCrauchonBledmeerFasteCaerBenowyc
-							#region DunCrimthainnNottmoorFasteCaerBerkstead
+								#endregion DunCrauchonBledmeerFasteCaerBenowyc
+								#region DunCrimthainnNottmoorFasteCaerBerkstead
 							case eKeepTypes.DunCrimthainnNottmoorFasteCaerBerkstead:
 								{
 									keepComp = new GameKeepComponent();
@@ -313,8 +303,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion DunCrimthainnNottmoorFasteCaerBerkstead
-							#region DunBolgHlidskialfFasteCaerErasleigh
+								#endregion DunCrimthainnNottmoorFasteCaerBerkstead
+								#region DunBolgHlidskialfFasteCaerErasleigh
 							case eKeepTypes.DunBolgHlidskialfFasteCaerErasleigh:
 								{
 									keepComp = new GameKeepComponent();
@@ -388,8 +378,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion DunBolgHlidskialfFasteCaerErasleigh
-							#region DunnGedGlenlockFasteCaerBoldiam
+								#endregion DunBolgHlidskialfFasteCaerErasleigh
+								#region DunnGedGlenlockFasteCaerBoldiam
 							case eKeepTypes.DunnGedGlenlockFasteCaerBoldiam:
 								{
 									keepComp = new GameKeepComponent();
@@ -463,8 +453,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion DunnGedGlenlockFasteCaerBoldiam
-							#region DundaBehnnBlendrakeFasteCaerSursbrooke
+								#endregion DunnGedGlenlockFasteCaerBoldiam
+								#region DundaBehnnBlendrakeFasteCaerSursbrooke
 							case eKeepTypes.DundaBehnnBlendrakeFasteCaerSursbrooke:
 								{
 									keepComp = new GameKeepComponent();
@@ -540,8 +530,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion DundaBehnnBlendrakeFasteCaerSursbrooke
-							#region DunScathaigFensalirFasteCaerRenaris
+								#endregion DundaBehnnBlendrakeFasteCaerSursbrooke
+								#region DunScathaigFensalirFasteCaerRenaris
 							case eKeepTypes.DunScathaigFensalirFasteCaerRenaris:
 								{
 									keepComp = new GameKeepComponent();
@@ -615,8 +605,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion DunScathaigFensalirFasteCaerRenaris
-							#region DunAilinneArvakrFasteCaerHurbury
+								#endregion DunScathaigFensalirFasteCaerRenaris
+								#region DunAilinneArvakrFasteCaerHurbury
 							case eKeepTypes.DunAilinneArvakrFasteCaerHurbury:
 								{
 									keepComp = new GameKeepComponent();
@@ -702,8 +692,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion DunAilinneArvakrFasteCaerHurbury
-							#region FortBrolorn
+								#endregion DunAilinneArvakrFasteCaerHurbury
+								#region FortBrolorn
 							case eKeepTypes.FortBrolorn:
 								{
 									keepComp = new GameKeepComponent();
@@ -756,8 +746,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion FortBrolorn
-							#region BG1_4
+								#endregion FortBrolorn
+								#region BG1_4
 							case eKeepTypes.BG1_4:
 								{
 									keepComp = new GameKeepComponent();
@@ -813,8 +803,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion BG1_4
-							#region ClaimBG5_9
+								#endregion BG1_4
+								#region ClaimBG5_9
 							case eKeepTypes.ClaimBG5_9:
 								{
 									keepComp = new GameKeepComponent();
@@ -867,8 +857,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion ClaimBG5_9
-							#region BG5_9
+								#endregion ClaimBG5_9
+								#region BG5_9
 							case eKeepTypes.BG5_9:
 								{
 									keepComp = new GameKeepComponent();
@@ -924,8 +914,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion BG5_9
-							#region CaerClaret
+								#endregion BG5_9
+								#region CaerClaret
 							case eKeepTypes.CaerClaret:
 								{
 									keepComp = new GameKeepComponent();
@@ -963,8 +953,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion CaerClaret
-							#region BG10_14
+								#endregion CaerClaret
+								#region BG10_14
 							case eKeepTypes.BG10_14:
 								{
 									keepComp = new GameKeepComponent();
@@ -1020,8 +1010,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion BG10_14
-							#region CKBG15_19
+								#endregion BG10_14
+								#region CKBG15_19
 							case eKeepTypes.CKBG15_19:
 								{
 									keepComp = new GameKeepComponent();
@@ -1086,8 +1076,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion CKBG15_19
-							#region BG15_19
+								#endregion CKBG15_19
+								#region BG15_19
 							case eKeepTypes.BG15_19:
 								{
 									keepComp = new GameKeepComponent();
@@ -1143,8 +1133,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion BG15_19
-							#region CKBG20_24
+								#endregion BG15_19
+								#region CKBG20_24
 							case eKeepTypes.CKBG20_24:
 								{
 									keepComp = new GameKeepComponent();
@@ -1215,8 +1205,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion CKBG20_24
-							#region BG20_24
+								#endregion CKBG20_24
+								#region BG20_24
 							case eKeepTypes.BG20_24:
 								{
 									keepComp = new GameKeepComponent();
@@ -1272,8 +1262,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion BG20_24
-							#region CKBG25_29
+								#endregion BG20_24
+								#region CKBG25_29
 							case eKeepTypes.CKBG25_29:
 								{
 									keepComp = new GameKeepComponent();
@@ -1344,8 +1334,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion CKBG25_29
-							#region BG25_29
+								#endregion CKBG25_29
+								#region BG25_29
 							case eKeepTypes.BG25_29:
 								{
 									keepComp = new GameKeepComponent();
@@ -1401,8 +1391,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion BG25_29
-							#region CKBG30_34
+								#endregion BG25_29
+								#region CKBG30_34
 							case eKeepTypes.CKBG30_34:
 								{
 									keepComp = new GameKeepComponent();
@@ -1470,8 +1460,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion CKBG30_34
-							#region BG30_34
+								#endregion CKBG30_34
+								#region BG30_34
 							case eKeepTypes.BG30_34:
 								{
 									keepComp = new GameKeepComponent();
@@ -1527,8 +1517,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion BG30_34
-							#region CKBG35_39
+								#endregion BG30_34
+								#region CKBG35_39
 							case eKeepTypes.CKBG35_39:
 								{
 									keepComp = new GameKeepComponent();
@@ -1599,8 +1589,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion CKBG35_39
-							#region BG35_39
+								#endregion CKBG35_39
+								#region BG35_39
 							case eKeepTypes.BG35_39:
 								{
 									keepComp = new GameKeepComponent();
@@ -1656,8 +1646,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion BG35_39
-							#region TBG35_39
+								#endregion BG35_39
+								#region TBG35_39
 							case eKeepTypes.TBG35_39:
 								{
 									keepComp = new GameKeepComponent();
@@ -1665,8 +1655,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion TBG35_39
-							#region TestCKBG40_44
+								#endregion TBG35_39
+								#region TestCKBG40_44
 							case eKeepTypes.TestCKBG40_44:
 								{
 									keepComp = new GameKeepComponent();
@@ -1748,8 +1738,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion TestCKBG40_44
-							#region TestBG40_44
+								#endregion TestCKBG40_44
+								#region TestBG40_44
 							case eKeepTypes.TestBG40_44:
 								{
 									keepComp = new GameKeepComponent();
@@ -1805,8 +1795,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion TestBG40_44
-							#region TestTBG40_44
+								#endregion TestBG40_44
+								#region TestTBG40_44
 							case eKeepTypes.TestTBG40_44:
 								{
 									keep.KeepComponents.Add(keepComp);
@@ -1814,8 +1804,8 @@ namespace DOL.GS.Commands
 									keepComp = new GameKeepComponent();
 									break;
 								}
-							#endregion TestTBG40_44
-							#region CKBG40_44
+								#endregion TestTBG40_44
+								#region CKBG40_44
 							case eKeepTypes.CKBG40_44:
 								{
 									keepComp = new GameKeepComponent();
@@ -1895,8 +1885,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion CKBG40_44
-							#region BG40_44
+								#endregion CKBG40_44
+								#region BG40_44
 							case eKeepTypes.BG40_44:
 								{
 									keepComp = new GameKeepComponent();
@@ -1952,8 +1942,8 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion BG40_44
-							#region TBG40_44
+								#endregion BG40_44
+								#region TBG40_44
 							case eKeepTypes.TBG40_44:
 								{
 									keepComp = new GameKeepComponent();
@@ -1961,12 +1951,12 @@ namespace DOL.GS.Commands
 									keep.KeepComponents.Add(keepComp);
 									break;
 								}
-							#endregion TBG40_44
-							#region Default
+								#endregion TBG40_44
+								#region Default
 							default:
 								DisplayMessage(client, "Wrong type of keep");
 								return;
-							#endregion Default
+								#endregion Default
 						}
 
 						log.Debug("Keep creation: used keep type " + ((eKeepTypes)keepType));
@@ -1997,8 +1987,8 @@ namespace DOL.GS.Commands
 						keep.SaveIntoDatabase();
 						break;
 					}
-				#endregion FastCreate
-				#region TowerCreate
+					#endregion FastCreate
+					#region TowerCreate
 				case "towercreate":
 					{
 						if (args.Length < 5)
@@ -2070,8 +2060,8 @@ namespace DOL.GS.Commands
 						}
 						break;
 					}
-				#endregion TowerCreate
-				#region Create
+					#endregion TowerCreate
+					#region Create
 				case "create":
 					{
 						if (args.Length < 6)
@@ -2191,8 +2181,8 @@ namespace DOL.GS.Commands
 						}
 						break;
 					}
-				#endregion Create
-				#region Remove
+					#endregion Create
+					#region Remove
 				case "remove":
 					{
 						KeepArea karea = null;
@@ -2216,8 +2206,8 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.KeepUnloaded"));
 						break;
 					}
-				#endregion Remove
-				#region Name
+					#endregion Remove
+					#region Name
 				case "name":
 					{
 						if (args.Length < 3)
@@ -2234,8 +2224,8 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.YouChangeKeepName", myKeep.Name));
 						break;
 					}
-				#endregion Name
-				#region KeepID
+					#endregion Name
+					#region KeepID
 				case "keepid":
 					{
 						if (args.Length < 3)
@@ -2262,8 +2252,8 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, "You change the id of the current keep to " + keepid);
 						break;
 					}
-				#endregion KeepID
-				#region Level
+					#endregion KeepID
+					#region Level
 				case "level":
 					{
 						if (args.Length < 3)
@@ -2290,8 +2280,8 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Level.YouChangeKeepLevel", keepLevel));
 						break;
 					}
-				#endregion Level
-				#region BaseLevel
+					#endregion Level
+					#region BaseLevel
 				case "baselevel":
 					{
 						if (args.Length < 3)
@@ -2320,22 +2310,22 @@ namespace DOL.GS.Commands
 
 						break;
 					}
-				#endregion BaseLevel
-				// Not Used
-				#region MoveHere
-				/*case "movehere":
+					#endregion BaseLevel
+					// Not Used
+					#region MoveHere
+					/*case "movehere":
 					{
 						break;
 					}*/
-				#endregion MoveHere
-				// Not Used
-				#region AddComponent
-				/*case "addcomponent":
+					#endregion MoveHere
+					// Not Used
+					#region AddComponent
+					/*case "addcomponent":
 					{
 						break;
 					}*/
-				#endregion AddComponent
-				#region Realm
+					#endregion AddComponent
+					#region Realm
 				case "realm":
 					{
 						if (args.Length < 3)
@@ -2362,8 +2352,8 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Realm.YouChangeKeepRealm", GlobalConstants.RealmToName(realm)));
 						break;
 					}
-				#endregion Realm
-				#region Radius
+					#endregion Realm
+					#region Radius
 				case "radius":
 					{
 						if (args.Length < 3)
@@ -2390,8 +2380,8 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Radius.YouChangeKeepRadius", radius));
 						break;
 					}
-				#endregion Radius
-				#region Save
+					#endregion Radius
+					#region Save
 				case "save":
 					{
 						if (myKeep == null)
@@ -2403,8 +2393,8 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Save.KeepSavedInDatabase"));
 						break;
 					}
-				#endregion Save
-				#region AddTeleport
+					#endregion Save
+					#region AddTeleport
 				case "addteleporter":
 					{
 						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
@@ -2428,8 +2418,8 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.AddTeleport.StoneAdded"));
 						break;
 					}
-				#endregion AddTeleport
-				#region AddBanner
+					#endregion AddTeleport
+					#region AddBanner
 				case "addbanner":
 					{
 						GameKeepBanner.eBannerType bannerType = GameKeepBanner.eBannerType.Realm;
@@ -2437,9 +2427,9 @@ namespace DOL.GS.Commands
 						{
 							switch (args[2].ToLower())
 							{
-								case "realm": bannerType = GameKeepBanner.eBannerType.Realm; break;
-								case "guild": bannerType = GameKeepBanner.eBannerType.Guild; break;
-								default: return;
+									case "realm": bannerType = GameKeepBanner.eBannerType.Realm; break;
+									case "guild": bannerType = GameKeepBanner.eBannerType.Guild; break;
+									default: return;
 							}
 						}
 
@@ -2483,14 +2473,14 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, "Banner added!");
 						break;
 					}
-				#endregion Addbanner
-				#region Default
+					#endregion Addbanner
+					#region Default
 				default:
 					{
 						DisplaySyntax(client);
 						break;
 					}
-				#endregion Default
+					#endregion Default
 			}
 		}
 	}

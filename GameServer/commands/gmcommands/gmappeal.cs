@@ -46,8 +46,6 @@ namespace DOL.GS.Commands
 
     public class GMAppealCommandHandler : AbstractCommandHandler, ICommandHandler
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         public void OnCommand(GameClient client, string[] args)
         {
             if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
