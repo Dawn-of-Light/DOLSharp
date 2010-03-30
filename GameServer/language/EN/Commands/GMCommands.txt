@@ -154,6 +154,8 @@ GMCommands.Item.Usage.isPickable:			'/item ispickable <true|false> [slot #]' - S
 GMCommands.Item.Usage.isDropable:			'/item isdropable <true|false> [slot #]' - Sets whether or not an item can be dropped
 GMCommands.Item.Usage.IsTradable:			'/item istradable <true|false> [slot #]' - Sets whether or not an item can be traded
 GMCommands.Item.Usage.IsStackable:			'/item isstackable <true|false> [slot #]' - Sets whether or not an item is stackable
+GMCommands.Item.Usage.IsNotLosingDUR:		'/item isnotlosingdur <true|false> [slot #]' - Sets whether or not an item is losing dur after repairs
+GMCommands.Item.Usage.IsIndestructible:		'/item isindestructible <true|false> [slot #]' - Sets whether or not an item is indestructible via shit+d
 GMCommands.Item.Usage.CanDropAsLoot:		'/item candropasloot <true|false> [slot #]' - Sets whether or not an item can be looted
 GMCommands.Item.Usage.Bonus:				'/item bonus <bonus> [slot #]' - Sets the item bonus
 GMCommands.Item.Usage.mBonus:				'/item mbonus <num> <BonusType> <value> [slot #]' - Sets the item magical bonus (num 0 = ExtraBonus)

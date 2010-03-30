@@ -191,7 +191,7 @@ namespace DOL.GS
 		{
 			lock(Sync)
 			{
-				if(!itemForTrade.IsDropable || !itemForTrade.IsPickable)
+				if(!itemForTrade.IsDropable || !itemForTrade.IsPickable || itemForTrade.IsNotLosingDur)
 					return false;
 				if (TradeItems.Contains(itemForTrade))
 					return false;
