@@ -86,7 +86,7 @@ namespace DOL.GS.Spells
 				}
 				if (checkPlayer != null)
 				{
-					checkPlayer.TempProperties.setProperty(LOSEFFECTIVENESS, effectiveness);
+                    checkPlayer.TempProperties.setProperty(LOSEFFECTIVENESS + target.ObjectID, effectiveness);
 					checkPlayer.Out.SendCheckLOS(Caster, target, new CheckLOSResponse(DealDamageCheckLOS));
 				}
 				else
@@ -112,9 +112,9 @@ namespace DOL.GS.Spells
 					GameLiving target = Caster.CurrentRegion.GetObject(targetOID) as GameLiving;
 					if (target != null)
 					{
-						double effectiveness = (double)player.TempProperties.getProperty<object>(LOSEFFECTIVENESS, null);
+                        double effectiveness = player.TempProperties.getProperty<double>(LOSEFFECTIVENESS + target.ObjectID, 1.0);
 						DealDamage(target, effectiveness);
-
+                        player.TempProperties.removeProperty(LOSEFFECTIVENESS + target.ObjectID);
 						// Due to LOS check delay the actual cast happens after FinishSpellCast does a notify, so we notify again
 						GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastingEventArgs(this, target, m_lastAttackData));
 					}
