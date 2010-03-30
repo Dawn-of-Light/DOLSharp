@@ -35,12 +35,6 @@ namespace DOL.GS.Commands
 		"AdminCommands.Code.Usage")]
 	public class DynCodeCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		
-
 		public static void ExecuteCode(GameClient client, string code)
 		{
 			CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");

@@ -37,14 +37,11 @@ please note that /who CSR will not show hidden CSRs
  level 40 through 50 Wizards currently in Emain Macha with a guild that matches
  the "Dragonhearts" filter.
 
-*/
+ */
 
 using System;
 using System.Collections;
-using System.Reflection;
 using System.Text;
-using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Commands
 {
@@ -66,14 +63,9 @@ namespace DOL.GS.Commands
 		"/WHO <level> lists players of level <level>",
 		"/WHO <level> <level> lists players in level range",
 		"/WHO <language> lists players with a specific language"
-		)]
+	)]
 	public class WhoCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public const int MAX_LIST_SIZE = 26;
 		public const string MESSAGE_LIST_TRUNCATED = "(Too many matches ({0}).  List truncated.)";
 		private const string MESSAGE_NO_MATCHES = "No Matches.";
@@ -91,16 +83,16 @@ namespace DOL.GS.Commands
 			foreach (GameClient serverClient in WorldMgr.GetAllPlayingClients())
 			{
 				GamePlayer addPlayer = serverClient.Player;
-                if (addPlayer == null) continue;
+				if (addPlayer == null) continue;
 				if (serverClient.Account.PrivLevel > (uint)ePrivLevel.Player && serverClient.Player.IsAnonymous == false)
 				{
 					clientsList.Add(addPlayer.Client);
 					continue;
 				}
 				if (addPlayer.Client != client // allways add self
-					&& client.Account.PrivLevel == (uint)ePrivLevel.Player
-					&& (addPlayer.IsAnonymous
-					|| !GameServer.ServerRules.IsSameRealm(addPlayer, client.Player, true)))
+				    && client.Account.PrivLevel == (uint)ePrivLevel.Player
+				    && (addPlayer.IsAnonymous
+				        || !GameServer.ServerRules.IsSameRealm(addPlayer, client.Player, true)))
 					continue;
 				clientsList.Add(addPlayer.Client);
 			}
@@ -265,12 +257,12 @@ namespace DOL.GS.Commands
 			{
 				result.Append(" [CG]");
 			}
-            BattleGroup mybattlegroup = (BattleGroup)player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
-            if (mybattlegroup != null && (mybattlegroup.Members.Contains(player) || mybattlegroup.IsPublic && (bool)mybattlegroup.Members[player] == true))
-            {
-                result.Append(" [BG]");
-            }
-            if (player.IsAnonymous)
+			BattleGroup mybattlegroup = (BattleGroup)player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
+			if (mybattlegroup != null && (mybattlegroup.Members.Contains(player) || mybattlegroup.IsPublic && (bool)mybattlegroup.Members[player] == true))
+			{
+				result.Append(" [BG]");
+			}
+			if (player.IsAnonymous)
 			{
 				result.Append(" <ANON>");
 			}
@@ -431,13 +423,13 @@ namespace DOL.GS.Commands
 				return false;
 			}
 			
-			public LanguageFilter(string language) 
+			public LanguageFilter(string language)
 			{
 				m_str = language;
 			}
 		}
 
-		private class ChatGroupFilter : IWhoFilter 
+		private class ChatGroupFilter : IWhoFilter
 		{
 			public bool ApplyFilter(GamePlayer player)
 			{

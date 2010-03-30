@@ -1,4 +1,4 @@
- /*
+/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
  * This program is free software; you can redistribute it and/or
@@ -17,14 +17,8 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-
 using DOL.Database;
 using DOL.GS.Keeps;
-using DOL.GS.PacketHandler;
-
-using log4net;
 
 namespace DOL.GS.Commands
 {
@@ -35,11 +29,6 @@ namespace DOL.GS.Commands
 		"/repair")]
 	public class RepairCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public void OnCommand(GameClient client, string[] args)
 		{
 			GameInventoryItem item = client.Player.TargetObject as GameInventoryItem;
@@ -180,8 +169,8 @@ namespace DOL.GS.Commands
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
 
-            if (!PreFireChecks(player, obj))
-                return 0;
+			if (!PreFireChecks(player, obj))
+				return 0;
 
 			if (Util.ChanceDouble(CalculateRepairChance(player,obj)))
 			{
@@ -206,7 +195,7 @@ namespace DOL.GS.Commands
 				DisplayMessage(player, "You successfully repair the component by 15%!");
 				/*
 				 * - Realm points will now be awarded for successfully repairing a door or outpost piece.
-				 * Players will receive approximately 10% of the amount repaired in realm points. 
+				 * Players will receive approximately 10% of the amount repaired in realm points.
 				 * (Note that realm points for repairing a door or outpost piece will not work in the battlegrounds.)
 				 */
 				// tolakram - we have no idea how many hit points a live door has so this code is not accurate
@@ -232,17 +221,17 @@ namespace DOL.GS.Commands
 		{
 			switch (level)
 			{
-				case 1: return 2;
-				case 2: return 44;
-				case 3: return 192;
-				case 4: return 840;
-				case 5: return 3576;
-				case 6: return 8640;
-				case 7: return 14400;
-				case 8: return 27200;
-				case 9: return 42432;
-				case 10: return 68100;
-				default: return 0;
+					case 1: return 2;
+					case 2: return 44;
+					case 3: return 192;
+					case 4: return 840;
+					case 5: return 3576;
+					case 6: return 8640;
+					case 7: return 14400;
+					case 8: return 27200;
+					case 9: return 42432;
+					case 10: return 68100;
+					default: return 0;
 			}
 		}
 		static string[] WoodNames = { "rowan", "elm", "oak", "ironwood", "heartwood", "runewood", "stonewood", "ebonwood", "dyrwood", "duskwood" };
@@ -283,17 +272,17 @@ namespace DOL.GS.Commands
 		{
 			switch (name.Replace(" wooden boards", ""))
 			{
-				case "rowan": return 1;
-				case "elm": return 4;
-				case "oak": return 8;
-				case "ironwood": return 16;
-				case "heartwood": return 32;
-				case "runewood": return 48;
-				case "stonewood": return 60;
-				case "ebonwood": return 80;
-				case "dyrwood": return 104;
-				case "duskwood": return 136;
-				default: return 0;
+					case "rowan": return 1;
+					case "elm": return 4;
+					case "oak": return 8;
+					case "ironwood": return 16;
+					case "heartwood": return 32;
+					case "runewood": return 48;
+					case "stonewood": return 60;
+					case "ebonwood": return 80;
+					case "dyrwood": return 104;
+					case "duskwood": return 136;
+					default: return 0;
 			}
 		}
 	}

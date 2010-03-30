@@ -11,24 +11,16 @@
  */
 
 using System;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
-
-using log4net;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute("&password", ePrivLevel.Player,
-		"Changes your account password",
-		"/password <current_password> <new_password>")]
+	              "Changes your account password",
+	              "/password <current_password> <new_password>")]
 	public class PasswordCommand : AbstractCommandHandler, ICommandHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		public void OnCommand(GameClient client, string[] args)
 		{
 			string usage = "Usage: /password <current_password> <new_password>";
@@ -52,10 +44,10 @@ namespace DOL.GS.Commands
 				else
 				{
 					client.Out.SendMessage("Your current password was incorrect.",
-						eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					                       eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					if (log.IsInfoEnabled)
 						log.Info(client.Player.Name + " (" + client.Account.Name +
-								") attempted to change password but failed!");
+						         ") attempted to change password but failed!");
 					return;
 				}
 			}
