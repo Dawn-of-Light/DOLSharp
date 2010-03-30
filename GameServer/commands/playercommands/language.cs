@@ -39,55 +39,65 @@ namespace DOL.GS.Commands
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (DOL.GS.ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE == false)
+			{
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Current", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, "This server does not support changing languages");
 				return;
+			}
+
+
 			if (args.Length == 1)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Current", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				DisplaySyntax(client);
 			}
-            else if (args.Length >= 2)
-            {
-                if (client.Account.PrivLevel >= 2)
-                {
-                    switch (args[1].ToLower())
-                    {
-                        case "debug": //receive extended messages
-                            {
-                                bool debug = client.Player.TempProperties.getProperty("LANGUAGEMGR-DEBUG", false);
-                                debug = !debug;
-                                client.Player.TempProperties.setProperty("LANGUAGEMGR-DEBUG", debug);
-                                client.Out.SendMessage("[LanguageMgr] Debug mode : " + (debug ? "ON" : "OFF"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-                        case "load": //refresh from database
-                            {
-                                if (args.Length != 3)
-                                {
-                                    DisplayMessage(client, "[LanguageMgr] Usage : '/lan load GamePlayer.AddAbility.YouLearn'");
-                                    return;
-                                }
-                                if (!LanguageMgr.IDSentences.ContainsKey(args[2]))
-                                {
-                                    DisplayMessage(client, "[LanguageMgr] Can't find TranslationID <" + args[2] + "> !");
-                                    return;
-                                }
-                                if (LanguageMgr.Refresh(args[2]))
-                                {
-                                    DisplayMessage(client, "[LanguageMgr] TranslationID <" + args[2] + "> updated successfully !");
-                                    return;
-                                }
-                                DisplayMessage(client, "[LanguageMgr] An error occured.");
-                                return;
-                            }
-                    }
-                }
-                // Valid language -> English default
+			else
+			{
+				if (client.Account.PrivLevel >= 2)
+				{
+					switch (args[1].ToLower())
+					{
+						case "debug": //receive extended messages
+							{
+								bool debug = client.Player.TempProperties.getProperty("LANGUAGEMGR-DEBUG", false);
+								debug = !debug;
+								client.Player.TempProperties.setProperty("LANGUAGEMGR-DEBUG", debug);
+								client.Out.SendMessage("[LanguageMgr] Debug mode : " + (debug ? "ON" : "OFF"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+						case "load": //refresh from database
+							{
+								if (args.Length != 3)
+								{
+									DisplayMessage(client, "[LanguageMgr] Usage : '/lan load GamePlayer.AddAbility.YouLearn'");
+									return;
+								}
+								if (!LanguageMgr.IDSentences.ContainsKey(args[2]))
+								{
+									DisplayMessage(client, "[LanguageMgr] Can't find TranslationID <" + args[2] + "> !");
+									return;
+								}
+								if (LanguageMgr.Refresh(args[2]))
+								{
+									DisplayMessage(client, "[LanguageMgr] TranslationID <" + args[2] + "> updated successfully !");
+									return;
+								}
+								DisplayMessage(client, "[LanguageMgr] An error occured.");
+								return;
+							}
+					}
+				}
+
+				// Valid language -> English default
 				client.Account.Language = LanguageMgr.LangsToName(LanguageMgr.NameToLangs(args[1].ToUpper()));
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Set", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				GameServer.Database.SaveObject(client.Account);
+
 				if (log.IsInfoEnabled)
+				{
 					log.Info(client.Player.Name + " (" + client.Account.Name + ") changed language.");
+				}
 			}
-			else client.Out.SendMessage("Command help: /language <EN|IT|FR|DE|ES|CZ>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 	}
 
