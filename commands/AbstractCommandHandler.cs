@@ -28,6 +28,8 @@ namespace DOL.GS.Commands
 	/// </summary>
 	public abstract class AbstractCommandHandler
 	{
+		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public virtual void DisplayMessage(GamePlayer player, string message)
 		{
 			DisplayMessage(player.Client, message, new object[] { });
