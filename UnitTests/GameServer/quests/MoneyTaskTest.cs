@@ -17,12 +17,8 @@
  *
  */
 using System;
-using System.Net.Sockets;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS;
-using DOL.GS.PacketHandler;
-using DOL.GS.Quests;
 using DOL.Tests;
 using NUnit.Framework;
 

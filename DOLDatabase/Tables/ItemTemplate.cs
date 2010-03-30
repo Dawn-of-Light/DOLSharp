@@ -17,12 +17,9 @@
  *
  */
 using System;
-
-using DOL.Database;
-using DOL.Database.Attributes;
-using System.Collections;
-using log4net;
 using System.Reflection;
+using DOL.Database.Attributes;
+using log4net;
 
 namespace DOL.Database
 {
@@ -107,7 +104,7 @@ namespace DOL.Database
 		protected string m_packageID = "";
 		protected string m_description = "";
 
-		static bool m_autoSave;
+		static bool m_autoSave = false;
 
 		public ItemTemplate()
 		{
@@ -181,8 +178,6 @@ namespace DOL.Database
 			m_flags = 0;
 			m_bonusLevel = 0;
 			m_description = "";
-
-			m_autoSave = false;
 		}
 
 		[PrimaryKey]

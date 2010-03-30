@@ -17,24 +17,16 @@
  *
  */
 using System;
-using System.Reflection;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.Language;
-using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
 	public class NoHopeForTheHopeful : RewardQuest
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		protected const string questTitle = "No Hope For The Hopeful";
-        protected const int minimumLevel = 1;
+		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 5;
 
 		private static GameNPC sirDorian = null;
@@ -62,13 +54,13 @@ namespace DOL.GS.Quests.Albion
 		}
 
 		private void Init()
-        {
-            #region defineItems
+		{
+			#region defineItems
 
-            ItemTemplate intelligentBracer = CreateBracer();
+			ItemTemplate intelligentBracer = CreateBracer();
 			intelligentBracer.Id_nb = "recruits_intelligent_bracer";
-            intelligentBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text1");
-            intelligentBracer.Bonus1 = 4;
+			intelligentBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text1");
+			intelligentBracer.Bonus1 = 4;
 			intelligentBracer.Bonus1Type = (int)eProperty.Acuity;
 			intelligentBracer.Bonus2 = 3;
 			intelligentBracer.Bonus2Type = (int)eProperty.Constitution;
@@ -77,8 +69,8 @@ namespace DOL.GS.Quests.Albion
 
 			ItemTemplate mightyBracer = CreateBracer();
 			mightyBracer.Id_nb = "recruits_mighty_bracer";
-            mightyBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text2");
-            mightyBracer.Bonus1 = 4;
+			mightyBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text2");
+			mightyBracer.Bonus1 = 4;
 			mightyBracer.Bonus1Type = (int)eProperty.Strength;
 			mightyBracer.Bonus2 = 4;
 			mightyBracer.Bonus2Type = (int)eProperty.Constitution;
@@ -87,8 +79,8 @@ namespace DOL.GS.Quests.Albion
 
 			ItemTemplate slyBracer = CreateBracer();
 			slyBracer.Id_nb = "recruits_sly_bracer";
-            slyBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text3");
-            slyBracer.Bonus1 = 4;
+			slyBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text3");
+			slyBracer.Bonus1 = 4;
 			slyBracer.Bonus1Type = (int)eProperty.Dexterity;
 			slyBracer.Bonus2 = 4;
 			slyBracer.Bonus2Type = (int)eProperty.Quickness;
@@ -97,23 +89,23 @@ namespace DOL.GS.Quests.Albion
 
 			ItemTemplate piousBracer = CreateBracer();
 			piousBracer.Id_nb = "recruits_pious_bracer";
-            piousBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text4");
-            piousBracer.Bonus1 = 4;
+			piousBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text4");
+			piousBracer.Bonus1 = 4;
 			piousBracer.Bonus1Type = (int)eProperty.Acuity;
 			piousBracer.Bonus2 = 3;
 			piousBracer.Bonus2Type = (int)eProperty.Dexterity;
 			piousBracer.Bonus3 = 2;
 			piousBracer.Bonus3Type = (int)eProperty.Resist_Slash;
 
-            #endregion
+			#endregion
 
-            ItemTemplate banditCloak = new ItemTemplate();
+			ItemTemplate banditCloak = new ItemTemplate();
 			banditCloak.Weight = 0;
 			banditCloak.Condition = 50000;
 			banditCloak.MaxCondition = 50000;
 			banditCloak.Model = 669;
 			banditCloak.Extension = 1;
-            banditCloak.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text5");
+			banditCloak.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text5");
 
 			Level = 1;
 			QuestGiver = sirDorian;
@@ -125,7 +117,7 @@ namespace DOL.GS.Quests.Albion
 			Rewards.AddOptionalItem(piousBracer);
 			Rewards.ChoiceOf = 1;
 
-            banditHopefulGoal = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text6"), QuestGoal.GoalType.KillTask, 2, banditCloak);
+			banditHopefulGoal = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text6"), QuestGoal.GoalType.KillTask, 2, banditCloak);
 
 		}
 
@@ -204,7 +196,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected static void TalkToSirDorian(DOLEvent e, object sender, EventArgs args)
 		{
-			//We get the player from the event arguments and check if he qualifies		
+			//We get the player from the event arguments and check if he qualifies
 			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
 			if (player == null)
 				return;
@@ -286,12 +278,12 @@ namespace DOL.GS.Quests.Albion
 
 			if (response == 0x00)
 			{
-                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.CheckPlayerAbortQuest.Text1"));
-            }
+				SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.CheckPlayerAbortQuest.Text1"));
+			}
 			else
 			{
-                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.CheckPlayerAbortQuest.Text2", questTitle));
-                quest.AbortQuest();
+				SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.CheckPlayerAbortQuest.Text2", questTitle));
+				quest.AbortQuest();
 			}
 		}
 
@@ -358,7 +350,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Story");
+				String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Story");
 				return desc;
 			}
 		}
@@ -370,8 +362,8 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Summary");
-            }
+				return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Summary");
+			}
 		}
 
 		/// <summary>
@@ -379,11 +371,11 @@ namespace DOL.GS.Quests.Albion
 		/// </summary>
 		public override String Conclusion
 		{
-			get 
+			get
 			{
-                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Conclusion.Text1", QuestPlayer.Name));
-                text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Conclusion.Text2");
-                return text;
+				String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Conclusion.Text1", QuestPlayer.Name));
+				text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.NoHopeForTheHopeful.Conclusion.Text2");
+				return text;
 			}
 		}
 
@@ -407,8 +399,8 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Notify")) >= 0)
-                    {
+				if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Notify")) >= 0)
+				{
 					if (!banditHopefulGoal.IsAchieved)
 					{
 						banditHopefulGoal.Advance();
@@ -418,14 +410,14 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
-        public override void AbortQuest()
-        {
-            base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-        }
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+		}
 
-        public override void FinishQuest()
-        {
-            base.FinishQuest();
-        }
+		public override void FinishQuest()
+		{
+			base.FinishQuest();
+		}
 	}
 }

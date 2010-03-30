@@ -1,38 +1,30 @@
 /*
-* DAWN OF LIGHT - The first free open source DAoC server emulator
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*
-*/
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using System;
-using System.Reflection;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.Language;
-using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
 	public class AfterTheAccident : RewardQuest
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		protected const string questTitle = "After The Accident";
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 5;
@@ -74,8 +66,8 @@ namespace DOL.GS.Quests.Albion
 			if (RecruitsNecklaceofMight == null)
 			{
 				RecruitsNecklaceofMight = new ItemTemplate();
-                RecruitsNecklaceofMight.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text1");
-                if (log.IsWarnEnabled)
+				RecruitsNecklaceofMight.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text1");
+				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + RecruitsNecklaceofMight.Name + ", creating it ...");
 
 				RecruitsNecklaceofMight.Level = 3;
@@ -115,8 +107,8 @@ namespace DOL.GS.Quests.Albion
 			if (RecruitsNecklaceofInsight == null)
 			{
 				RecruitsNecklaceofInsight = new ItemTemplate();
-                RecruitsNecklaceofInsight.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text2");
-                if (log.IsWarnEnabled)
+				RecruitsNecklaceofInsight.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text2");
+				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + RecruitsNecklaceofInsight.Name + ", creating it ...");
 
 				RecruitsNecklaceofInsight.Level = 3;
@@ -156,8 +148,8 @@ namespace DOL.GS.Quests.Albion
 			if (RecruitsNecklaceofFaith == null)
 			{
 				RecruitsNecklaceofFaith = new ItemTemplate();
-                RecruitsNecklaceofFaith.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text3");
-                if (log.IsWarnEnabled)
+				RecruitsNecklaceofFaith.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text3");
+				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + RecruitsNecklaceofFaith.Name + ", creating it ...");
 
 				RecruitsNecklaceofFaith.Level = 3;
@@ -199,7 +191,7 @@ namespace DOL.GS.Quests.Albion
 			punySkeletonSkull.MaxCondition = 50000;
 			punySkeletonSkull.Model = 540;
 			punySkeletonSkull.Extension = 1;
-            punySkeletonSkull.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text4");
+			punySkeletonSkull.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text4");
 
 			#endregion
 
@@ -211,8 +203,8 @@ namespace DOL.GS.Quests.Albion
 			Rewards.AddOptionalItem(RecruitsNecklaceofFaith);
 			Rewards.ChoiceOf = 1;
 
-            punySkeletonGoal = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Init.Text5"), QuestGoal.GoalType.KillTask, 2, punySkeletonSkull);
-        }
+			punySkeletonGoal = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Init.Text5"), QuestGoal.GoalType.KillTask, 2, punySkeletonSkull);
+		}
 
 		[ScriptLoadedEvent]
 		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
@@ -228,10 +220,10 @@ namespace DOL.GS.Quests.Albion
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Sir Prescott", eRealm.Albion);
 
 			/* Whops, if the npcs array length is 0 then no npc exists in
-				* this users Mob Database, so we simply create one ;-)
-				* else we take the existing one. And if more than one exist, we take
-				* the first ...
-				*/
+			 * this users Mob Database, so we simply create one ;-)
+			 * else we take the existing one. And if more than one exist, we take
+			 * the first ...
+			 */
 			if (npcs.Length == 0)
 			{
 				SirPrescott = new GameNPC();
@@ -302,7 +294,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected static void TalkToSirPrescott(DOLEvent e, object sender, EventArgs args)
 		{
-			//We get the player from the event arguments and check if he qualifies      
+			//We get the player from the event arguments and check if he qualifies
 			GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
 			if (player == null)
 				return;
@@ -381,16 +373,16 @@ namespace DOL.GS.Quests.Albion
 			if (quest == null)
 				return;
 
-            if (response == 0x00)
-            {
-                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.CheckPlayerAbortQuest.Text1"));
-            }
-            else
-            {
-                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.CheckPlayerAbortQuest.Text2", questTitle));
-                quest.AbortQuest();
-            }
-        }
+			if (response == 0x00)
+			{
+				SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.CheckPlayerAbortQuest.Text1"));
+			}
+			else
+			{
+				SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.CheckPlayerAbortQuest.Text2", questTitle));
+				quest.AbortQuest();
+			}
+		}
 
 		/* This is our callback hook that will be called when the player clicks
 		 * on any button in the quest offer dialog. We check if he accepts or
@@ -455,7 +447,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-                String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Story");
+				String desc = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Story");
 				return desc;
 			}
 		}
@@ -467,8 +459,8 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Summary");
-            }
+				return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Summary");
+			}
 		}
 
 		/// <summary>
@@ -478,8 +470,8 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-                String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Conclusion.Text1", QuestPlayer.Name));
-                return text;
+				String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Conclusion.Text1", QuestPlayer.Name));
+				return text;
 			}
 		}
 
@@ -514,8 +506,8 @@ namespace DOL.GS.Quests.Albion
 			if (Step == 1 && e == GameLivingEvent.EnemyKilled)
 			{
 				EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
-                if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Notify.Text1")) >= 0)
-                    {
+				if (gArgs.Target.Name.IndexOf(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Notify.Text1")) >= 0)
+				{
 					if (!punySkeletonGoal.IsAchieved)
 					{
 						punySkeletonGoal.Advance();
@@ -525,14 +517,14 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
-        public override void AbortQuest()
-        {
-            base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-        }
+		public override void AbortQuest()
+		{
+			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+		}
 
-        public override void FinishQuest()
-        {
-            base.FinishQuest();
-        }
+		public override void FinishQuest()
+		{
+			base.FinishQuest();
+		}
 	}
 }

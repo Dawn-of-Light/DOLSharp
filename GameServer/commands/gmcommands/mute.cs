@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
-
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.Commands
 {
@@ -32,17 +28,15 @@ namespace DOL.GS.Commands
 		"/mute <playername or #ClientID> - example /mute #24  to mute player on client id 24",
 		"/mute <playername or #ClientID> allchars - this applies an account mute to this player",
 		"/mute <playername or #ClientID> remove - remove all mutes from this players account")]
-    public class MuteCommandHandler : AbstractCommandHandler, ICommandHandler
-    {
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+	public class MuteCommandHandler : AbstractCommandHandler, ICommandHandler
+	{
 		public void OnCommand(GameClient client, string[] args)
-        {
-            if (args.Length < 2)
-            {
+		{
+			if (args.Length < 2)
+			{
 				DisplaySyntax(client);
-                return;
-            }
+				return;
+			}
 
 			GameClient playerClient = null;
 
@@ -128,7 +122,7 @@ namespace DOL.GS.Commands
 
 				log.Warn(client.Player.Name + " un-muted " + playerClient.Player.Name);
 			}
-            return;
-        }
-    }
+			return;
+		}
+	}
 }
