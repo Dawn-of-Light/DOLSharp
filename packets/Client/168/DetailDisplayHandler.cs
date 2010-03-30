@@ -235,7 +235,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                         if (item.Description != null)
                             objectInfo.Add(item.Description);
 
-						if (item.MaxDurability == 0)
+						if (item.IsIndestructible)
 							objectInfo.Add("Cannot be destroyed.");
 
 						if (item.BonusLevel > 0)
@@ -1069,6 +1069,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			output.Add("        Realm: " + item.Realm);
 			output.Add("  Is dropable: " + (item.IsDropable ? "yes" : "no"));
 			output.Add("  Is pickable: " + (item.IsPickable ? "yes" : "no"));
+			output.Add(" Is alwaysDUR: " + (item.IsNotLosingDur ? "yes" : "no"));
+			output.Add("Is Indestruct: " + (item.IsIndestructible ? "yes" : "no"));
 			output.Add(" Is stackable: " + (item.IsStackable ? "yes" : "no"));
 			output.Add("  ProcSpellID: " + item.ProcSpellID);
 			output.Add(" ProcSpellID1: " + item.ProcSpellID1);

@@ -355,7 +355,7 @@ namespace DOL.GS
 				// allow admin and gm account opened windows to trade any item
 				if (this.m_owner.Client.Account.PrivLevel == 1)
 				{
-					if (!itemForTrade.IsDropable || !itemForTrade.IsPickable)
+					if (!itemForTrade.IsDropable || !itemForTrade.IsPickable || itemForTrade.IsNotLosingDur)
 						return false;
 				}
 				if (TradeItems.Contains(itemForTrade))
