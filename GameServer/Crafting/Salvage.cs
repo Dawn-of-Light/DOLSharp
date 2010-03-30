@@ -18,11 +18,11 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Specialized;
 using System.Reflection;
+
 using DOL.Database;
-using DOL.Language;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS
@@ -150,7 +150,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Called when craft time is finished 
+		/// Called when craft time is finished
 		/// </summary>
 		/// <param name="timer"></param>
 		/// <returns></returns>
@@ -204,7 +204,7 @@ namespace DOL.GS
 					changedSlots.Add((int)firstEmptySlot, -count); // Create the item in the free slot (always at least one)
 					count = 0;
 				}
-			
+				
 			}
 
 			InventoryItem newItem = null;
@@ -234,7 +234,7 @@ namespace DOL.GS
 		}
 		
 		#endregion
-			
+		
 		#region Requirement check
 
 		/// <summary>
@@ -245,6 +245,12 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool IsAllowedToBeginWork(GamePlayer player, InventoryItem item)
 		{
+			if (item.IsNotLosingDur || item.IsIndestructible)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoSalvage", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+			
 			if(item.SlotPosition < (int)eInventorySlot.FirstBackpack || item.SlotPosition > (int)eInventorySlot.LastBackpack)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.IsAllowedToBeginWork.BackpackItems"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -284,7 +290,7 @@ namespace DOL.GS
 		{
 			int maxCount = (int)Math.Floor(Money.GetMoney(0, 0, item.Gold, item.Silver ,item.Copper) * 0.45 / Money.GetMoney(0, 0, material.RawMaterial.Gold, material.RawMaterial.Silver ,material.RawMaterial.Copper)); // crafted item return max 45% of the item value in material
 			if(item.CrafterName == null || item.CrafterName == "") maxCount = (int)Math.Ceiling((double)maxCount / 2); // merchand item return max the number of material of the same item if it was crafted crafted / 2 and Ceiling (it give max 30% of the base value)
-	
+			
 			int playerPercent = player.GetCraftingSkillValue(CraftingMgr.GetSecondaryCraftingSkillToWorkOnItem(item)) * 100 / CraftingMgr.GetItemCraftLevel(item);
 			if(playerPercent > 100) playerPercent = 100;
 			else if(playerPercent < 75) playerPercent = 75;

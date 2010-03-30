@@ -50,6 +50,8 @@ namespace DOL.GS.Commands
 	     "GMCommands.Item.Usage.Quality",
 	     "GMCommands.Item.Usage.Durability",
 	     "GMCommands.Item.Usage.isPickable",
+	     "GMCommands.Item.Usage.IsNotLosingDUR",
+	     "GMCommands.Item.Usage.IsIndestructible",
 	     "GMCommands.Item.Usage.isDropable",
 	     "GMCommands.Item.Usage.IsTradable",
 	     "GMCommands.Item.Usage.IsStackable",
@@ -989,6 +991,56 @@ namespace DOL.GS.Commands
 							break;
 						}
 						#endregion IsPickable
+						#region IsNotLosingDur
+					case "isnotlosingdur":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							item.IsNotLosingDur  = Convert.ToBoolean(args[2]);
+							break;
+						}
+						#endregion IsNotLosingDur
+						#region IsIndestructible
+					case "isindestructible":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							item.IsIndestructible = Convert.ToBoolean(args[2]);
+							break;
+						}
+						#endregion IsIndestructible
 						#region IsTradable
 					case "istradable":
 						{
@@ -1281,6 +1333,7 @@ namespace DOL.GS.Commands
 								add = true;
 								temp = new ItemTemplate();
 							}
+							
 							item.Id_nb = name;
 							temp.Bonus = item.Bonus;
 							temp.Bonus1 = item.Bonus1;
@@ -1344,6 +1397,9 @@ namespace DOL.GS.Commands
 							temp.PoisonCharges = item.PoisonCharges;
 							temp.PoisonMaxCharges = item.PoisonMaxCharges;
 							temp.PoisonSpellID = item.PoisonSpellID;
+							temp.IsIndestructible = item.IsIndestructible;
+							temp.IsNotLosingDur = item.IsNotLosingDur;
+
 							if (add)
 							{
 								GameServer.Database.AddObject(temp);

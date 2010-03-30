@@ -34,23 +34,33 @@ namespace DOL.Database
 		protected string m_id_nb;
 		protected string m_name;
 		protected int m_level;
+		
+		// dur_con
 		protected int m_durability;
 		protected int m_maxdurability;
 		protected int m_condition;
 		protected int m_maxcondition;
 		protected int m_quality;
+		protected int m_weight;
+		protected bool m_isIndestructible;
+		protected bool m_isNotLosingDur;
+
+		// weapon/armor
 		protected int m_dps_af;
 		protected int m_spd_abs;
 		protected int m_hand;
 		protected int m_type_damage;
 		protected int m_object_type;
 		protected int m_item_type;
+		
+		// apparence
 		protected int m_color;
 		protected int m_emblem;
 		protected int m_effect;
-		protected int m_weight;
 		protected int m_model;
 		protected byte m_extension;
+		
+		// bonuses
 		protected int m_bonus;
 		protected int m_bonus1;
 		protected int m_bonus2;
@@ -75,16 +85,24 @@ namespace DOL.Database
 		protected int m_bonus9Type;
 		protected int m_bonus10Type;
 		protected int m_extrabonusType;
+		
+		// money
 		protected short m_platinum;
 		protected short m_gold;
 		protected byte m_silver;
 		protected byte m_copper;
+		
+		// properties
 		protected bool m_isDropable;
 		protected bool m_isPickable;
 		protected bool m_isTradable;
 		protected bool m_canDropAsLoot;
+		
+		// stack
 		protected int m_maxCount;
 		protected int m_packSize;
+		
+		// proc & charges
 		protected int m_spellID;
 		protected int m_procSpellID;
 		protected int m_maxCharges;
@@ -96,13 +114,15 @@ namespace DOL.Database
 		protected int m_poisonSpellID;
 		protected int m_poisonMaxCharges;
 		protected int m_poisonCharges;
+		
 		protected int m_realm;
-		protected string m_allowedClasses = "";
+		protected string m_allowedClasses;
 		protected int m_canUseEvery;
-		protected int m_flags = 0;
-		protected int m_bonusLevel= 0;
-		protected string m_packageID = "";
-		protected string m_description = "";
+		protected int m_flags;
+		protected int m_bonusLevel;
+		protected string m_description;
+		
+		protected string m_packageID;
 
 		static bool m_autoSave = false;
 
@@ -174,7 +194,7 @@ namespace DOL.Database
 			m_poisonMaxCharges = 0;
 			m_poisonSpellID = 0;
 			m_realm = 0;
-            m_allowedClasses = "0";
+			m_allowedClasses = "0";
 			m_flags = 0;
 			m_bonusLevel = 0;
 			m_description = "";
@@ -908,6 +928,24 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Your item cannot be shift + d
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public bool IsIndestructible {
+			get { return m_isIndestructible; }
+			set { Dirty = true; m_isIndestructible = value; }
+		}
+		
+		/// <summary>
+		/// Your item will not lose dur over repairs
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public bool IsNotLosingDur {
+			get { return m_isNotLosingDur; }
+			set { Dirty = true; m_isNotLosingDur = value; }
+		}
+		
 		/// <summary>
 		/// Amount of items sold at once
 		/// </summary>
