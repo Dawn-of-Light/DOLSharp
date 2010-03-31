@@ -882,6 +882,23 @@ namespace DOL.GS
 		Wizard = 7,
 		Mauler_Alb = 60,
 
+		//mid classes
+		Berserker = 31,
+		Bonedancer = 30,
+		Healer = 26,
+		Hunter = 25,
+		Runemaster = 29,
+		Savage = 32,
+		Shadowblade = 23,
+		Shaman = 28,
+		Skald = 24,
+		Spiritmaster = 27,
+		Thane = 21,
+		Valkyrie = 34,
+		Warlock = 59,
+		Warrior = 22,
+		Mauler_Mid = 61,
+
 		//hib classes
 		Animist = 55,
 		Bainshee = 39,
@@ -899,23 +916,6 @@ namespace DOL.GS
 		Vampiir = 58,
 		Warden = 46,
 		Mauler_Hib = 62,
-
-		//mid classes
-		Berserker = 31,
-		Bonedancer = 30,
-		Healer = 26,
-		Hunter = 25,
-		Runemaster = 29,
-		Savage = 32,
-		Shadowblade = 23,
-		Shaman = 28,
-		Skald = 24,
-		Spiritmaster = 27,
-		Thane = 21,
-		Valkyrie = 34,
-		Warlock = 59,
-		Warrior = 22,
-		Mauler_Mid = 61,
 	}
 
 	/// <summary>

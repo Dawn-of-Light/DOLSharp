@@ -110,6 +110,10 @@ namespace DOL.GS
 						loot.Name = "scroll|" + artifactID + "|" + pageNumber;
 						loot.Level = 35;
 
+						loot.IsPickable = true;
+						loot.IsDropable = true;
+						loot.IsTradable = true;
+
 						lootList.AddFixed(loot, 1);
 					}
 				}
