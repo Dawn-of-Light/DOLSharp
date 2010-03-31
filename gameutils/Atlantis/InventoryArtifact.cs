@@ -163,6 +163,8 @@ namespace DOL.GS
 				IsPickable = template.IsPickable;
 				IsDropable = template.IsDropable;
 				IsTradable = template.IsTradable;
+				IsIndestructible = template.IsIndestructible;
+				IsNotLosingDur = template.IsNotLosingDur;
 				Charges = template.Charges;
 				Charges1 = template.Charges1;
 				MaxCharges = template.MaxCharges;
