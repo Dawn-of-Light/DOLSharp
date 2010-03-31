@@ -849,6 +849,9 @@ namespace DOL.GS
 			scroll.Model = (ushort)scrollModel;
 			scroll.Item.Model = (ushort)scrollModel;
 			scroll.Item.Gold = gold;
+			scroll.Item.IsDropable = true;
+			scroll.Item.IsPickable = true;
+			scroll.Item.IsTradable = true;
 			return scroll;
         }
 
