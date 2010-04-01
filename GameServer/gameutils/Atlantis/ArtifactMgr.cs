@@ -848,6 +848,7 @@ namespace DOL.GS
             scroll.Item.Name = scrollTitle;
 			scroll.Model = (ushort)scrollModel;
 			scroll.Item.Model = (ushort)scrollModel;
+			scroll.Item.Platinum = 0;
 			scroll.Item.Gold = gold;
 			scroll.Item.IsDropable = true;
 			scroll.Item.IsPickable = true;
