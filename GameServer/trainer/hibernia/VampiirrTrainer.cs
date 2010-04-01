@@ -25,7 +25,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Vampiir Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Vampiir Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Vampiir Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class VampiirTrainer : GameTrainer
 	{
@@ -50,7 +50,7 @@ namespace DOL.GS.Trainer
 		{
 			if (!base.Interact(player)) return false;
 
-			// check if class matches.				
+			// check if class matches.
 			if (player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
 			{
 				// popup the training window
@@ -84,7 +84,7 @@ namespace DOL.GS.Trainer
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level >= 5 && (player.CharacterClass.ID == (int)eCharacterClass.Stalker || player.CharacterClass.ID == (int)eCharacterClass.Forester || player.CharacterClass.ID == (int)eCharacterClass.Guardian
-			|| player.CharacterClass.ID == (int)eCharacterClass.Magician || player.CharacterClass.ID == (int)eCharacterClass.Naturalist) && (player.Race == (int)eRace.Celt || player.Race == (int)eRace.Lurikeen || player.Race == (int)eRace.Shar));
+			                              || player.CharacterClass.ID == (int)eCharacterClass.Magician || player.CharacterClass.ID == (int)eCharacterClass.Naturalist) && (player.Race == (int)eRace.Celt || player.Race == (int)eRace.Lurikeen || player.Race == (int)eRace.Shar));
 		}
 
 		/// <summary>
@@ -116,19 +116,9 @@ namespace DOL.GS.Trainer
 						foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) // inform nearest clients about this player now is vampire (can fly)
 							if (plr != null)
 								plr.Out.SendVampireEffect(player, true);
-                        
-                        // drop any equiped-non usable item, in inventory or on the ground if full
-                        lock (player.Inventory)
-                        {
-                            foreach (InventoryItem item in player.Inventory.EquippedItems)
-                            {
-                                if (!player.HasAbilityToUseItem(item))
-                                    if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == true)
-                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
-                                    else
-                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
-                            }
-                        }
+						
+						// drop any equiped-non usable item, in inventory or on the ground if full
+						CheckAbilityToUseItem(player);
 					}
 					break;
 			}
