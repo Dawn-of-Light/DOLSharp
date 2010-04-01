@@ -180,7 +180,7 @@ namespace DOL.Network
 		/// <param name="str">String to write</param>
 		public virtual void WritePascalString(string str)
 		{
-			if (str.Length <= 0)
+			if (str == null || str.Length <= 0)
 			{
 				WriteByte(0);
 				return;
