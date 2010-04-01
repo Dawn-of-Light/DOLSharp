@@ -114,6 +114,11 @@ namespace DOL.GS
 						loot.IsDropable = true;
 						loot.IsTradable = true;
 
+						loot.Platinum = 0;
+						loot.Gold = 1;
+						loot.Silver = 0;
+						loot.Copper = 0;
+
 						lootList.AddFixed(loot, 1);
 					}
 				}
