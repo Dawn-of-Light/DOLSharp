@@ -1159,7 +1159,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\Missions\TaskDungeonMission.cs" />
-    <Compile Include="quests\QuestMgrs\Actions\AbortQuestAction.cs" />
     <Compile Include="behaviour\Actions\AttackAction.cs" />
     <Compile Include="behaviour\Actions\MonsterSpawnAction.cs" />
     <Compile Include="behaviour\Actions\SetMonsterPathAction.cs" />
@@ -1183,12 +1182,6 @@
     <Compile Include="behaviour\Actions\DropItemAction.cs" />
     <Compile Include="behaviour\Actions\TakeItemAction.cs" />
     <Compile Include="behaviour\Actions\GiveItemAction.cs" />
-    <Compile Include="quests\QuestMgrs\Actions\OfferQuestAbortAction.cs" />
-    <Compile Include="quests\QuestMgrs\Actions\OfferQuestAction.cs" />
-    <Compile Include="quests\QuestMgrs\Actions\GiveQuestAction.cs" />
-    <Compile Include="quests\QuestMgrs\Actions\FinishQuestAction.cs" />
-    <Compile Include="quests\QuestMgrs\Actions\IncreaseQuestStepAction.cs" />
-    <Compile Include="quests\QuestMgrs\Actions\SetQuestStepAction.cs" />
     <Compile Include="behaviour\Attributes\RequirementAttribute.cs" />
     <Compile Include="behaviour\Attributes\TriggerAttribute.cs" />
     <Compile Include="behaviour\Attributes\ActionAttribute.cs" />
@@ -1309,15 +1302,7 @@
     <Compile Include="quests\Classic\midgard\The_Birthday_Gift.cs" />
     <Compile Include="quests\Classic\midgard\TraitorInMularn.cs" />
     <Compile Include="quests\Classic\midgard\Trial_of_Strength.cs" />
-    <Compile Include="quests\QuestMgrs\Requirements\QuestGivableRequirement.cs" />
-    <Compile Include="quests\QuestMgrs\Requirements\QuestPendingRequirement.cs" />
-    <Compile Include="quests\QuestMgrs\Requirements\QuestCompletedRequirement.cs" />
-    <Compile Include="quests\QuestMgrs\Requirements\QuestStepRequirement.cs" />
     <Compile Include="behaviour\Requirements\InventoryItemRequirement.cs" />
-    <Compile Include="quests\QuestMgrs\RewardQuest.cs" />
-    <Compile Include="quests\QuestMgrs\Triggers\AcceptQuestTrigger.cs" />
-    <Compile Include="quests\QuestMgrs\Triggers\AbortQuestTrigger.cs" />
-    <Compile Include="quests\QuestMgrs\Triggers\ContinueQuestTrigger.cs" />
     <Compile Include="behaviour\Triggers\ItemUsedTrigger.cs" />
     <Compile Include="behaviour\Triggers\TimerTrigger.cs" />
     <Compile Include="behaviour\Triggers\LeaveAreaTrigger.cs" />
@@ -1325,11 +1310,31 @@
     <Compile Include="behaviour\Triggers\PlayerKilledTrigger.cs" />
     <Compile Include="behaviour\Triggers\EnemyDyingTrigger.cs" />
     <Compile Include="behaviour\Triggers\EnemyKilledTrigger.cs" />
-    <Compile Include="quests\QuestMgrs\Triggers\DeclineQuestTrigger.cs" />
     <Compile Include="behaviour\Triggers\GiveItemTrigger.cs" />
     <Compile Include="behaviour\Triggers\WhisperTrigger.cs" />
     <Compile Include="behaviour\Triggers\InteractTrigger.cs" />
-    <Compile Include="quests\QuestMgrs\Utility\QuestSearchArea.cs" />
+    <Compile Include="quests\QuestsMgr\AbstractQuest.cs" />
+    <Compile Include="quests\QuestsMgr\Actions\AbortQuestAction.cs" />
+    <Compile Include="quests\QuestsMgr\Actions\FinishQuestAction.cs" />
+    <Compile Include="quests\QuestsMgr\Actions\GiveQuestAction.cs" />
+    <Compile Include="quests\QuestsMgr\Actions\IncreaseQuestStepAction.cs" />
+    <Compile Include="quests\QuestsMgr\Actions\OfferQuestAbortAction.cs" />
+    <Compile Include="quests\QuestsMgr\Actions\OfferQuestAction.cs" />
+    <Compile Include="quests\QuestsMgr\Actions\SetQuestStepAction.cs" />
+    <Compile Include="quests\QuestsMgr\BaseQuest.cs" />
+    <Compile Include="quests\QuestsMgr\QuestBehaviour.cs" />
+    <Compile Include="quests\QuestsMgr\QuestBuilder.cs" />
+    <Compile Include="quests\QuestsMgr\QuestMgr.cs" />
+    <Compile Include="quests\QuestsMgr\Requirements\QuestCompletedRequirement.cs" />
+    <Compile Include="quests\QuestsMgr\Requirements\QuestGivableRequirement.cs" />
+    <Compile Include="quests\QuestsMgr\Requirements\QuestPendingRequirement.cs" />
+    <Compile Include="quests\QuestsMgr\Requirements\QuestStepRequirement.cs" />
+    <Compile Include="quests\QuestsMgr\RewardQuest.cs" />
+    <Compile Include="quests\QuestsMgr\Triggers\AbortQuestTrigger.cs" />
+    <Compile Include="quests\QuestsMgr\Triggers\AcceptQuestTrigger.cs" />
+    <Compile Include="quests\QuestsMgr\Triggers\ContinueQuestTrigger.cs" />
+    <Compile Include="quests\QuestsMgr\Triggers\DeclineQuestTrigger.cs" />
+    <Compile Include="quests\QuestsMgr\Utility\QuestSearchArea.cs" />
     <Compile Include="realmabilities\effects\AdrenalineRushEffect.cs" />
     <Compile Include="realmabilities\effects\AmelioratingMelodiesEffect.cs" />
     <Compile Include="realmabilities\effects\BarrierOfFortitudeEffect.cs" />
@@ -1972,16 +1977,9 @@
     <Compile Include="propertycalc\StyleDamagePercentCalculator.cs" />
     <Compile Include="propertycalc\TOABonusCalculator.cs" />
     <Compile Include="propertycalc\ToHitCalculator.cs" />
-    <Compile Include="quests\QuestMgrs\AbstractQuest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="quests\Tasks\AbstractTask.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\QuestMgrs\BaseQuest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\QuestMgrs\QuestBehaviour.cs" />
     <Compile Include="quests\Tasks\CraftTask.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2007,8 +2005,6 @@
     <Compile Include="realmabilities\handlers\SerenityAbility.cs" />
     <Compile Include="realmabilities\handlers\TrueshotAbility.cs" />
     <Compile Include="realmabilities\handlers\WildPowerAbility.cs" />
-    <Compile Include="quests\QuestMgrs\QuestBuilder.cs" />
-    <Compile Include="quests\QuestMgrs\QuestMgr.cs" />
     <Compile Include="ResourceUtil.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2804,6 +2800,11 @@
   <ItemGroup>
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
+    <Folder Include="quests\QuestsMgr" />
+    <Folder Include="quests\QuestsMgr\Actions" />
+    <Folder Include="quests\QuestsMgr\Requirements" />
+    <Folder Include="quests\QuestsMgr\Triggers" />
+    <Folder Include="quests\QuestsMgr\Utility" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
