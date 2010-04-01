@@ -103,14 +103,9 @@ namespace DOL.GS.Trainer
 					if (CanPromotePlayer(player))
 					{
 						PromotePlayer(player, (int)eCharacterClass.Heretic, "Welcome to the Temple of Arawn, " + player.Name + ".", null);
-						lock (player.Inventory)
-						{
-							foreach (DOL.Database.InventoryItem item in player.Inventory.EquippedItems)
-							{
-								if (!player.HasAbilityToUseItem(item))
-									player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
-							}
-						}
+						
+						// drop any equiped-non usable item, in inventory or on the ground if full
+						CheckAbilityToUseItem(player);
 					}
 					break;
 			}

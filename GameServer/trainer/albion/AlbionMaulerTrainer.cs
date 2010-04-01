@@ -105,18 +105,8 @@ namespace DOL.GS.Trainer
                         // Mauler_Alb = 60
                         PromotePlayer(player, (int)eCharacterClass.Mauler_Alb, "Welcome young Mauler. May your time in Albion be rewarding.", null);
 
-                        // drop any equiped-non usable item, in inventory or on the ground if full
-                        lock (player.Inventory)
-                        {
-                            foreach (InventoryItem item in player.Inventory.EquippedItems)
-                            {
-                                if (!player.HasAbilityToUseItem(item))
-                                    if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == true)
-                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
-                                    else
-                                        player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
-                            }
-                        }
+						// drop any equiped-non usable item, in inventory or on the ground if full
+						CheckAbilityToUseItem(player);
                     }
                     break;
             }
