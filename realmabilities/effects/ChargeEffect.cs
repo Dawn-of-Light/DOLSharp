@@ -59,7 +59,7 @@ namespace DOL.GS.Effects
 			}
 			foreach (GameSpellEffect spell in speedSpells)
 				spell.Cancel(false);
-			m_living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED4);
+			m_living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED3);
 			m_living.TempProperties.setProperty("Charging", true);
 			if (m_living is GamePlayer)
 				((GamePlayer)m_living).Out.SendUpdateMaxSpeed();
