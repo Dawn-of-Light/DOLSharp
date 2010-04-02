@@ -558,7 +558,7 @@ namespace DOL.GS
 		/// Returns name with article for nouns
 		/// </summary>
 		/// <param name="article">0=definite, 1=indefinite</param>
-		/// <param name="firstLetterUppercase"></param>
+		/// <param name="firstLetterUppercase">Forces the first letter of the returned string to be upper case</param>
 		/// <returns>name of this object (includes article if needed)</returns>
 		public virtual string GetName(int article, bool firstLetterUppercase)
 		{

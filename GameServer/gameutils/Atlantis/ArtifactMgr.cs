@@ -848,11 +848,16 @@ namespace DOL.GS
             scroll.Item.Name = scrollTitle;
 			scroll.Model = (ushort)scrollModel;
 			scroll.Item.Model = (ushort)scrollModel;
+
+			// Correct for possible errors in generic scroll template (artifact_scroll)
 			scroll.Item.Platinum = 0;
 			scroll.Item.Gold = gold;
+			scroll.Item.Silver = 0;
+			scroll.Item.Copper = 0;
 			scroll.Item.IsDropable = true;
 			scroll.Item.IsPickable = true;
 			scroll.Item.IsTradable = true;
+
 			return scroll;
         }
 

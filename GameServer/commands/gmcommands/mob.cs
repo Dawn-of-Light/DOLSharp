@@ -82,10 +82,13 @@ namespace DOL.GS.Commands
 	     "'/mob equiptemplate save <EquipmentTemplateID> [replace]' to save the inventory template with a new name",
 	     "'/mob equiptemplate close' to finish the inventory template you are creating",
 	     "'/mob dropcount [number]' to set number of drops for mob (omit number to view current value)",
-	     "'/mob addloot <ItemTemplateID> [chance]' to add loot to the mob's unique drop table",
-	     "'/mob viewloot [random]' to view the selected mob's loot table random or complete",
-	     "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
-	     "'/mob refreshloot' to refresh the mob's loot generator",
+	     "'/mob addloot <ItemTemplateID> <chance> [count]' to add loot to the mob's unique drop table.  Optionally specify count of how many to drop if chance = 100%",
+		 "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob.",
+		 "'/mob addmobxlt <max num drops>' Add a MobXLootTemplate entry for this mob in order to set the max number of drops per kill",
+		 "'/mob viewloot [random]' to view the selected mob's loot table.  Use random to simulate a kill drop.",
+		 "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
+		 "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table",
+		 "'/mob refreshloot' to refresh all loot generators for this mob",
 	     "'/mob copy [name]' copies a mob exactly and places it at your location",
 	     "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
 	     "'/mob npctemplate create <NPCTemplateID>' creates a new template from selected mob",
@@ -118,39 +121,41 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			GameNPC targetMob = null;
-			if ( client.Player.TargetObject != null && client.Player.TargetObject is GameNPC )
-				targetMob = (GameNPC)client.Player.TargetObject;
-
-			if ( args[1] != "create"
-			    && args[1] != "fastcreate"
-			    && args[1] != "nrandcreate"
-			    && args[1] != "nfastcreate"
-			    && args[1] != "npctemplate"
-			    && args[1] != "model"
-			    && args[1] != "copy"
-			    && args[1] != "select"
-			    && args[1] != "reload"
-			    && args[1] != "findname"
-			    && targetMob == null )
+			try
 			{
-				// it is not a mob
-				if ( client.Player.TargetObject != null )
+				GameNPC targetMob = null;
+				if (client.Player.TargetObject != null && client.Player.TargetObject is GameNPC)
+					targetMob = (GameNPC)client.Player.TargetObject;
+
+				if (args[1] != "create"
+					&& args[1] != "fastcreate"
+					&& args[1] != "nrandcreate"
+					&& args[1] != "nfastcreate"
+					&& args[1] != "npctemplate"
+					&& args[1] != "model"
+					&& args[1] != "copy"
+					&& args[1] != "select"
+					&& args[1] != "reload"
+					&& args[1] != "findname"
+					&& targetMob == null)
 				{
-					client.Out.SendMessage( "Cannot use " + client.Player.TargetObject + " for /mob command.", eChatType.CT_System, eChatLoc.CL_SystemWindow );
-					return;
-				}
-				
-				// nothing selected - trying to autoselect a mob within AUTOSELECT_RADIUS radius
-				if ( client.Player.TargetObject == null )
-				{
-					if (select(AUTOSELECT_RADIUS, client)==null)
+					// it is not a mob
+					if (client.Player.TargetObject != null)
+					{
+						client.Out.SendMessage("Cannot use " + client.Player.TargetObject + " for /mob command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
-				}
-			}
+					}
 
-			switch (args[1])
-			{
+					// nothing selected - trying to autoselect a mob within AUTOSELECT_RADIUS radius
+					if (client.Player.TargetObject == null)
+					{
+						select(AUTOSELECT_RADIUS, client);
+						return;
+					}
+				}
+
+				switch (args[1])
+				{
 					case "create": create(client, args); break;
 					case "fastcreate": fastcreate(client, args); break;
 					case "nfastcreate": nfastcreate(client, args); break;
@@ -168,7 +173,7 @@ namespace DOL.GS.Commands
 					case "movehere": movehere(client, targetMob, args); break;
 					case "location": location(client, targetMob, args); break;
 					case "remove": remove(client, targetMob, args); break;
-				case "transparent": // deprecated, use "ghost"
+					case "transparent": // deprecated, use "ghost"
 					case "ghost": ghost(client, targetMob, args); break;
 					case "stealth": stealth(client, targetMob, args); break;
 					case "torch": torch(client, targetMob, args); break;
@@ -179,7 +184,7 @@ namespace DOL.GS.Commands
 					case "notarget": notarget(client, targetMob, args); break;
 					case "kill": kill(client, targetMob, args); break;
 					case "flags": flags(client, targetMob, args); break;
-				case "regen":  // deprecated, use "heal"
+					case "regen":  // deprecated, use "heal"
 					case "heal": heal(client, targetMob, args); break;
 					case "attack": attack(client, targetMob, args); break;
 					case "info": info(client, targetMob, args); break;
@@ -195,21 +200,24 @@ namespace DOL.GS.Commands
 					case "equiptemplate": equiptemplate(client, targetMob, args); break;
 					case "dropcount": dropcount(client, targetMob, args); break;
 					case "addloot": addloot(client, targetMob, args); break;
+					case "addotd": addotd(client, targetMob, args); break;
+					case "addmobxlt": addmobxlt(client, targetMob, args); break;
 					case "viewloot": viewloot(client, targetMob, args); break;
 					case "removeloot": removeloot(client, targetMob, args); break;
+					case "removeotd": removeotd(client, targetMob, args); break;
 					case "refreshloot": refreshloot(client, targetMob, args); break;
 					case "copy": copy(client, targetMob, args); break;
 					case "npctemplate": npctemplate(client, targetMob, args); break;
 					case "class": setClass(client, targetMob, args); break;
 					case "path": path(client, targetMob, args); break;
 					case "house": house(client, targetMob, args); break;
-				case "str":
-				case "con":
-				case "dex":
-				case "qui":
-				case "int":
-				case "emp":
-				case "pie":
+					case "str":
+					case "con":
+					case "dex":
+					case "qui":
+					case "int":
+					case "emp":
+					case "pie":
 					case "cha": stat(client, targetMob, args); break;
 					case "tether": tether(client, targetMob, args); break;
 					case "hood": hood(client, targetMob, args); break;
@@ -222,9 +230,14 @@ namespace DOL.GS.Commands
 					case "load": load(client, args); break;
 					case "reload": reload(client, targetMob, args); break;
 					case "findname": findname(client, args); break;
-				default:
-					DisplaySyntax(client);
-					return;
+					default:
+						DisplaySyntax(client);
+						return;
+				}
+			}
+			catch
+			{
+				DisplaySyntax(client);
 			}
 		}
 
@@ -809,12 +822,12 @@ namespace DOL.GS.Commands
 
 				if ( mobs == null )
 				{
-					var deleteLoots = GameServer.Database.SelectObjects<DBMobXLootTemplate>("MobName = '" + mobName + "'" );
+					var deleteLoots = GameServer.Database.SelectObjects<MobXLootTemplate>("MobName = '" + mobName + "'" );
 
 					foreach ( var o in deleteLoots )
 						GameServer.Database.DeleteObject( o );
 
-					var deleteLootTempl = GameServer.Database.SelectObjects<DBLootTemplate>("TemplateName = '" + mobName + "'" );
+					var deleteLootTempl = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + mobName + "'" );
 
 					foreach ( var o in deleteLootTempl )
 						GameServer.Database.DeleteObject( o );
@@ -901,7 +914,14 @@ namespace DOL.GS.Commands
 			client.Out.SendMessage( targetMob.Name + "'s FLYING flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.FLYING ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
 		}
 
-		private void noname( GameClient client, GameNPC targetMob, string[] args )
+		private void swimming(GameClient client, GameNPC targetMob, string[] args)
+		{
+			targetMob.Flags ^= (uint)GameNPC.eFlags.SWIMMING;
+			targetMob.SaveIntoDatabase();
+			client.Out.SendMessage("Mob SWIMMING flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.SWIMMING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+		}
+
+		private void noname(GameClient client, GameNPC targetMob, string[] args)
 		{
 			targetMob.Flags ^= (uint)GameNPC.eFlags.DONTSHOWNAME;
 			targetMob.SaveIntoDatabase();
@@ -1533,23 +1553,21 @@ namespace DOL.GS.Commands
 
 		private void dropcount( GameClient client, GameNPC targetMob, string[] args )
 		{
-			DBMobXLootTemplate temp =GameServer.Database.SelectObject<DBMobXLootTemplate>("MobName = '" + GameServer.Database.Escape( targetMob.Name ) + "'" );
+			MobXLootTemplate mxlt = GameServer.Database.SelectObject<MobXLootTemplate>("MobName = '" + GameServer.Database.Escape(targetMob.Name) + "' AND LootTemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
+
+			if (mxlt == null)
+			{
+				DisplayMessage( client, "Mob '" + targetMob.Name + "' does not have a MobXLootTemplate, use /mob addmobxlt <max drop count> to add one." );
+				return;
+			}
 
 			if ( args.Length < 3 )
 			{
-				if ( temp == null )
-				{
-					DisplayMessage( client, "Mob '" + targetMob.Name + "' does not have a loot template." );
-				}
-				else
-				{
-					DisplayMessage( client, "Mob '" + targetMob.Name + "' drops " + temp.DropCount + " items." );
-				}
+				DisplayMessage(client, "Mob '" + targetMob.Name + "' drops " + mxlt.DropCount + " items.");
 			}
 			else
 			{
 				int dropCount = 1;
-				bool addToDB = false;
 
 				try
 				{
@@ -1561,25 +1579,12 @@ namespace DOL.GS.Commands
 					return;
 				}
 
-				if ( temp == null )
-				{
-					temp = new DBMobXLootTemplate();
-					temp.MobName = targetMob.Name;
-					temp.LootTemplateName = targetMob.Name;
-					addToDB = true;
-				}
-
 				if ( dropCount < 1 )
 					dropCount = 1;
 
-				temp.DropCount = dropCount;
-
-				if ( addToDB )
-					GameServer.Database.AddObject( temp );
-				else
-					GameServer.Database.SaveObject( temp );
-
-				DisplayMessage( client, "Mob '" + targetMob.Name + "' will drop " + temp.DropCount + " items." );
+				mxlt.DropCount = dropCount;
+				GameServer.Database.AddObject(mxlt);
+				DisplayMessage(client, "Mob '" + targetMob.Name + "' will drop a maximum of " + mxlt.DropCount + " items!");
 			}
 		}
 
@@ -1587,19 +1592,18 @@ namespace DOL.GS.Commands
 		{
 			try
 			{
-				int chance = 100;
-
 				string lootTemplateID = args[2];
 				string name = targetMob.Name;
+				int chance = Convert.ToInt16(args[3]);
+				int numDrops = 0;
 
-				try
+				if (chance == 100 && args.Length > 4)
 				{
-					chance = Convert.ToInt16( args[3] );
+					numDrops = Convert.ToInt16(args[4]);
 				}
-				catch ( Exception )
-				{
-					chance = 100;
-				}
+
+				if (numDrops < 1)
+					numDrops = 1;
 
 				ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(lootTemplateID );
 				if ( item == null )
@@ -1608,20 +1612,21 @@ namespace DOL.GS.Commands
 					return;
 				}
 
-				var template = GameServer.Database.SelectObjects<DBLootTemplate>("TemplateName = '" + GameServer.Database.Escape( name ) + "' AND ItemTemplateID = '" + GameServer.Database.Escape( lootTemplateID ) + "'" );
+				var template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape( name ) + "' AND ItemTemplateID = '" + GameServer.Database.Escape( lootTemplateID ) + "'" );
 				if ( template != null )
 				{
-					foreach ( var loot in template )
-						GameServer.Database.DeleteObject( loot );
+					foreach (var loot in template)
+					{
+						GameServer.Database.DeleteObject(loot);
+					}
 
-					DBLootTemplate lt = new DBLootTemplate();
+					LootTemplate lt = new LootTemplate();
 					lt.Chance = chance;
 					lt.TemplateName = name;
 					lt.ItemTemplateID = lootTemplateID;
-					//lt.AutoSave = true;
-					//lt.Dirty = true;
-					
-					GameServer.Database.AddObject( lt );
+					lt.Count = numDrops;
+					GameServer.Database.AddObject(lt);
+					refreshloot(client, targetMob, null);
 				}
 				else
 				{
@@ -1632,31 +1637,34 @@ namespace DOL.GS.Commands
 						return;
 					}
 
-					DBLootTemplate lt = new DBLootTemplate();
+					LootTemplate lt = new LootTemplate();
 					lt.Chance = chance;
 					lt.TemplateName = name;
 					lt.ItemTemplateID = lootTemplateID;
-					//lt.AutoSave = true;
-					//lt.Dirty = true;
-
-					GameServer.Database.AddObject( lt );
+					lt.Count = numDrops;
+					GameServer.Database.AddObject(lt);
+					refreshloot(client, targetMob, null);
 				}
 
-				DBMobXLootTemplate mxlt = GameServer.Database.SelectObject<DBMobXLootTemplate>("MobName = '" + targetMob.Name + "'" );
-
-				if ( mxlt == null )
+				if (chance < 100)
 				{
-					mxlt = new DBMobXLootTemplate();
-					mxlt.MobName = targetMob.Name;
-					mxlt.LootTemplateName = targetMob.Name;
-					mxlt.DropCount = 1;
-					GameServer.Database.AddObject( mxlt );
+					client.Out.SendMessage(item.Name + " was succesfully added to the loot list for  " + name + " with a " + chance + "% chance to drop!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					client.Out.SendMessage(item.Name + " was succesfully added to the loot list for " + name + " with a drop count of " + numDrops + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 
-				//targetMob.SaveIntoDatabase();
+				MobXLootTemplate mxlt = GameServer.Database.SelectObject<MobXLootTemplate>("MobName = '" + GameServer.Database.Escape(targetMob.Name) + "' AND LootTemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
+				if (mxlt == null)
+				{
+					DisplayMessage(client, "If you need to limit max number of drops per kill for this mob then use /mob addmobxlt <max num drops> to add a MobXLootTemplate entry.");
+				}
+				else
+				{
+					DisplayMessage(client, "A MobXLootTemplate entry exists for this mob and limits the total drops per kill to " + mxlt.DropCount);
+				}
 
-				client.Out.SendMessage( "The " + lootTemplateID + " was succesfully added to the " + name + " with a " + chance + "% chance to drop.",
-				                       eChatType.CT_System, eChatLoc.CL_SystemWindow );
 			}
 			catch( Exception )
 			{
@@ -1664,11 +1672,80 @@ namespace DOL.GS.Commands
 			}
 		}
 
-		private void swimming( GameClient client, GameNPC targetMob, string[] args )
+
+		private void addmobxlt(GameClient client, GameNPC targetMob, string[] args)
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.SWIMMING;
-			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage( "Mob SWIMMING flag is set to " + ( ( targetMob.Flags & (uint)GameNPC.eFlags.SWIMMING ) != 0 ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
+			try
+			{
+				int maxNumDrops = Convert.ToInt32(args[2]);
+
+				MobXLootTemplate mxlt = GameServer.Database.SelectObject<MobXLootTemplate>("MobName = '" + GameServer.Database.Escape(targetMob.Name) + "' AND LootTemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
+				if (mxlt == null)
+				{
+					mxlt = new MobXLootTemplate();
+					mxlt.MobName = targetMob.Name;
+					mxlt.LootTemplateName = targetMob.Name;
+					mxlt.DropCount = maxNumDrops;
+					GameServer.Database.AddObject(mxlt);
+
+					refreshloot(client, targetMob, null);
+					DisplayMessage(client, "New MobXLootTemplate " + targetMob.Name + " added with DropCount set to " + maxNumDrops + "!");
+				}
+				else
+				{
+					DisplayMessage(client, "A MobXLootTemplate exists for " + targetMob.Name + " with DropCount set to " + mxlt.DropCount + ". Use /mob <drop count> to change it.");
+				}
+			}
+			catch (Exception)
+			{
+				DisplaySyntax(client, args[1]);
+			}
+		}
+
+		private void addotd(GameClient client, GameNPC targetMob, string[] args)
+		{
+			try
+			{
+				string mobName = targetMob.Name;
+				string itemTemplateID = args[2];
+				int minlevel = Convert.ToInt32(args[3]);
+
+				ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(itemTemplateID);
+				if (item == null)
+				{
+					DisplayMessage(client, "You cannot add the " + itemTemplateID + " to the " + targetMob.Name + " because the item does not exist.");
+					return;
+				}
+
+				LootOTD otd = GameServer.Database.SelectObject<LootOTD>("MobName = '" + GameServer.Database.Escape(mobName) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(itemTemplateID) + "'");
+
+				if (otd != null)
+				{
+					DisplayMessage(client, "ItemTemplate " + itemTemplateID + " is already in this in " + mobName + "'s OTD list!");
+				}
+				else
+				{
+					ItemTemplate itemtemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(itemTemplateID);
+					if (itemtemplate == null)
+					{
+						DisplayMessage(client, "ItemTemplate " + itemTemplateID + " not found!");
+						return;
+					}
+
+					LootOTD loot = new LootOTD();
+					loot.MobName = mobName;
+					loot.ItemTemplateID = itemtemplate.Id_nb;
+					loot.MinLevel = minlevel;
+					GameServer.Database.AddObject(loot);
+					refreshloot(client, targetMob, null);
+					client.Out.SendMessage(itemTemplateID + " was succesfully added to " + mobName + "'s one time drop list.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+
+			}
+			catch (Exception)
+			{
+				DisplaySyntax(client, args[1]);
+			}
 		}
 
 		private void viewloot( GameClient client, GameNPC targetMob, string[] args )
@@ -1687,19 +1764,56 @@ namespace DOL.GS.Commands
 			else
 			{
 				var text = new List<string>();
-				text.Add( "." );
-				var template = GameServer.Database.SelectObjects<DBLootTemplate>("TemplateName = '" + GameServer.Database.Escape( targetMob.Name ) + "'" );
+				text.Add("");
 
-				foreach ( DBLootTemplate loot in template )
+				IList<LootOTD> otds = GameServer.Database.SelectObjects<LootOTD>("MobName = '" + GameServer.Database.Escape(targetMob.Name.Replace("'", "\'")) + "'");
+
+				if (otds != null && otds.Count > 0)
 				{
-					string message = "";
-					if ( loot.ItemTemplate == null )
-						message += loot.ItemTemplateID + " (Template Not Found)";
-					else
-						message += loot.ItemTemplate.Name + " (" + loot.ItemTemplate.Id_nb + ")";
-					message += " Chance: " + loot.Chance.ToString();
-					text.Add( "-> " + message );
+					text.Add("One time drops:");
+					text.Add("");
+
+					foreach (LootOTD otd in otds)
+					{
+						ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(otd.ItemTemplateID);
+
+						if (drop != null)
+						{
+							text.Add("- " + drop.Name + " (" + drop.Id_nb + "), Min Level = " + otd.MinLevel);
+						}
+						else
+						{
+							text.Add("Error, Item not found: " + otd.ItemTemplateID);
+						}
+					}
+
+					client.Out.SendCustomTextWindow(targetMob.Name + "'s One Time Drops", text);
 				}
+
+				text.Add("");
+				text.Add("Loot:");
+				text.Add("");
+
+				var template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
+
+				foreach (LootTemplate loot in template )
+				{
+					ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(loot.ItemTemplateID);
+
+					string message = "";
+					if (drop == null)
+					{
+						message += loot.ItemTemplateID + " (Template Not Found)";
+					}
+					else
+					{
+						message += drop.Name + " (" + drop.Id_nb + ")";
+					}
+
+					message += " Chance: " + loot.Chance.ToString();
+					text.Add( "- " + message );
+				}
+
 				client.Out.SendCustomTextWindow( targetMob.Name + "'s Loot Table", text );
 			}
 		}
@@ -1709,52 +1823,79 @@ namespace DOL.GS.Commands
 			string lootTemplateID = args[2];
 			string name = targetMob.Name;
 
-			if ( lootTemplateID.ToLower().ToString() == "all" )
+			if ( lootTemplateID.ToLower().ToString() == "all items" )
 			{
-				var template = GameServer.Database.SelectObjects<DBLootTemplate>("TemplateName = '" + GameServer.Database.Escape( name ) + "'" );
+				var template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape( name ) + "'" );
 
 				if ( template != null )
 				{
-					foreach ( DataObject loot in template )
+					log.ErrorFormat("{0} removing all items from LootTemplate {1}!", client.Player.Name, name);
+
+					foreach (LootTemplate loot in template )
 					{
-						GameServer.Database.DeleteObject( loot );
+						log.ErrorFormat("{0}", loot.ItemTemplateID);
+						GameServer.Database.DeleteObject(loot);
 					}
-					client.Out.SendMessage( "Removed all items from " + targetMob.Name,
-					                       eChatType.CT_System, eChatLoc.CL_SystemWindow );
+
+					refreshloot(client, targetMob, null);
+					client.Out.SendMessage("Removed all items from " + targetMob.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					client.Out.SendMessage( "No items found on " + targetMob.Name,
-					                       eChatType.CT_System, eChatLoc.CL_SystemWindow );
+					client.Out.SendMessage("No items found on " + targetMob.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 			else
 			{
-				var template = GameServer.Database.SelectObjects<DBLootTemplate>("TemplateName = '" + GameServer.Database.Escape( name ) + "' AND ItemTemplateID = '" + GameServer.Database.Escape( lootTemplateID ) + "'" );
+				IList<LootTemplate> template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'" );
 
-				if ( template != null )
+				if (template != null)
 				{
-					foreach ( DataObject loot in template )
+					foreach (LootTemplate loot in template)
 					{
-						GameServer.Database.DeleteObject( loot );
+						GameServer.Database.DeleteObject(loot);
 					}
-					client.Out.SendMessage( lootTemplateID + " removed from " + targetMob.Name,
-					                       eChatType.CT_System, eChatLoc.CL_SystemWindow );
+
+					refreshloot(client, targetMob, null);
+					client.Out.SendMessage(lootTemplateID + " removed from " + targetMob.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					client.Out.SendMessage( lootTemplateID + " does not exist on " + name,
-					                       eChatType.CT_System, eChatLoc.CL_SystemWindow );
+					client.Out.SendMessage(lootTemplateID + " does not exist on " + name, eChatType.CT_System, eChatLoc.CL_SystemWindow );
 				}
+			}
+		}
+
+		private void removeotd(GameClient client, GameNPC targetMob, string[] args)
+		{
+			string itemTemplateID = args[2];
+			string name = targetMob.Name;
+
+			IList<LootOTD> template = GameServer.Database.SelectObjects<LootOTD>("MobName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(itemTemplateID) + "'");
+
+			if (template != null)
+			{
+				foreach (LootOTD loot in template)
+				{
+					GameServer.Database.DeleteObject(loot);
+				}
+
+				refreshloot(client, targetMob, null);
+
+				client.Out.SendMessage(itemTemplateID + " OTD removed from " + targetMob.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			else
+			{
+				client.Out.SendMessage(itemTemplateID + " OTD does not exist on " + name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
 		private void refreshloot( GameClient client, GameNPC targetMob, string[] args )
 		{
-			LootMgr.RefreshTemplateGenerator( targetMob );
+			LootMgr.RefreshGenerators(targetMob);
 		}
 
-		void setClass( GameClient client, GameNPC targetMob, string[] args )
+		void setClass(GameClient client, GameNPC targetMob, string[] args)
 		{
 			if ( args.Length < 3 )
 			{

@@ -165,6 +165,10 @@ namespace DOL.GS
 				IsTradable = template.IsTradable;
 				IsIndestructible = template.IsIndestructible;
 				IsNotLosingDur = template.IsNotLosingDur;
+				Platinum = template.Platinum;
+				Gold = template.Gold;
+				Silver = template.Silver;
+				Copper = template.Copper;
 				Charges = template.Charges;
 				Charges1 = template.Charges1;
 				MaxCharges = template.MaxCharges;

@@ -30,6 +30,15 @@ namespace DOL.GS
 	{
 		private const string REPAIR_ITEM_WEAK = "repair item";
 
+		/// <summary>
+		/// Can accept any item
+		/// </summary>
+		public override bool CanTradeAnyItem
+		{
+			get { return true; }
+		}
+
+
 		#region Examine/Interact Message
 
 		/// <summary>

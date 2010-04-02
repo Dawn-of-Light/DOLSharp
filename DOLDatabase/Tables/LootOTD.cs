@@ -25,23 +25,16 @@ namespace DOL
 {
 	namespace Database
 	{
-		/// <summary>
-		/// Account table
-		/// </summary>
 		[DataTable(TableName="LootOTD")]
-		public class DBLootOTD : DataObject 
+		public class LootOTD : DataObject 
 		{
 			private string m_itemTemplateID;
 			private int m_minLevel;
-			private string m_classAllowed;
 			private string m_mobName;
 			
 			private static bool m_autoSave;
 
-			/// <summary>
-			/// Create account row in DB
-			/// </summary>
-			public DBLootOTD() 
+			public LootOTD() 
 			{
 				
 				m_autoSave = false;
@@ -63,9 +56,26 @@ namespace DOL
 			}
 
 			/// <summary>
+			/// Name of the mob to drop this item
+			/// </summary>
+			[DataElement(AllowDbNull = false, Varchar = 100, Index = true)]
+			public string MobName
+			{
+				get
+				{
+					return m_mobName;
+				}
+				set
+				{
+					Dirty = true;
+					m_mobName = value;
+				}
+			}
+
+			/// <summary>
 			/// The item template id of the OTD
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull = false, Varchar = 100)]
 			public string ItemTemplateID
 			{
 				get
@@ -80,7 +90,7 @@ namespace DOL
 			}
 
 			/// <summary>
-			/// The minimum level require to drop the OTD
+			/// The minimum level required to get drop
 			/// </summary>
 			[DataElement(AllowDbNull=false)]
 			public int MinLevel
@@ -95,46 +105,6 @@ namespace DOL
 					m_minLevel = value;
 				}
 			}
-
-			/// <summary>
-			/// The class allowed to drop OTD
-			/// </summary>
-			[DataElement(AllowDbNull=false)]
-			public string SerializedClassAllowed
-			{
-				get
-				{
-					return m_classAllowed;
-				}
-				set
-				{   
-					Dirty = true;
-					m_classAllowed = value;
-				}
-			}
-			/// <summary>
-			/// The mob who drop the OTD
-			/// </summary>
-			[DataElement(AllowDbNull=false)]
-			public string MobName
-			{
-				get
-				{
-					return m_mobName;
-				}
-				set
-				{   
-					Dirty = true;
-					m_mobName = value;
-				}
-			}
-
-	
-			/// <summary>
-			/// List of charcter the account own
-			/// </summary>
-			[Relation(LocalField = "ItemTemplateID", RemoteField = "Id_nb", AutoLoad = true, AutoDelete=false)]
-			public ItemTemplate item;
 		}
 	}
 }

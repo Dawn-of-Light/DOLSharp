@@ -19,8 +19,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using log4net;
-using System.Reflection;
 using System.Collections;
 using DOL.Database;
 
@@ -40,8 +38,6 @@ namespace DOL.GS
     /// <author>Aredhel</author>
     class LootGeneratorScroll : LootGeneratorBase
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         public LootGeneratorScroll()
             : base() { }
 
@@ -109,15 +105,6 @@ namespace DOL.GS
 						loot.Model = 488;
 						loot.Name = "scroll|" + artifactID + "|" + pageNumber;
 						loot.Level = 35;
-
-						loot.IsPickable = true;
-						loot.IsDropable = true;
-						loot.IsTradable = true;
-
-						loot.Platinum = 0;
-						loot.Gold = 1;
-						loot.Silver = 0;
-						loot.Copper = 0;
 
 						lootList.AddFixed(loot, 1);
 					}
