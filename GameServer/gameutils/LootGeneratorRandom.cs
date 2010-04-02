@@ -18,9 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using DOL.Database;
-using log4net;
 
 namespace DOL.GS
 {
@@ -30,11 +28,6 @@ namespace DOL.GS
 	/// </summary>
 	public class LootGeneratorRandom : LootGeneratorBase
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		/// <summary>
 		/// Map holding the corresponding lootTemplateName for each Moblevel group
 		/// groups are rounded down to 1-5, 5-10, 10-15, 15-20, 20-25, etc...

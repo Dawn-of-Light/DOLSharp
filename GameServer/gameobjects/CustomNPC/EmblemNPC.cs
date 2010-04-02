@@ -28,6 +28,14 @@ namespace DOL.GS
 		public const long EMBLEM_COST = 50000;
 		private const string EMBLEMIZE_ITEM_WEAK = "emblemise item";
 
+		/// <summary>
+		/// Can accept any item
+		/// </summary>
+		public override bool CanTradeAnyItem
+		{
+			get { return true; }
+		}
+
 		public override bool Interact(GamePlayer player)
 		{
 			if (!base.Interact(player))

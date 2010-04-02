@@ -18,13 +18,10 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Specialized;
-using System.Reflection;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
-using log4net;
-using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -35,104 +32,205 @@ namespace DOL.GS
 	public class LootGeneratorOneTimeDrop : LootGeneratorBase
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		///
 		/// </summary>
-		protected static HybridDictionary m_OTDXMob = null;
+		protected static Dictionary<string, List<LootOTD>> m_mobOTDList = new Dictionary<string,List<LootOTD>>();
 
-		/// <summary>
-		/// Constrcut a new One Time Drop Loot Generator and load it's values from database.
-		/// </summary>
 		public LootGeneratorOneTimeDrop()
 		{
 			PreloadLootOTDs();
 		}
 
-		/// <summary>
-		/// Loads the loottemplates
-		/// </summary>
-		/// <returns></returns>
 		protected static bool PreloadLootOTDs()
 		{
-			if (m_OTDXMob==null)
+			lock (m_mobOTDList)
 			{
-				m_OTDXMob = new HybridDictionary(500);
-				lock(m_OTDXMob)
+				m_mobOTDList.Clear();
+				IList<LootOTD> lootOTDs;
+
+				try
 				{
-					IList<DBLootOTD> lootOTDs;
-
-					try
+					lootOTDs = GameServer.Database.SelectAllObjects<LootOTD>();
+				}
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
 					{
-						lootOTDs = GameServer.Database.SelectAllObjects<DBLootOTD>();
-					}
-					catch(Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Loot One Time Drop: OTD could not be loaded:", e);
-						return false;
+						log.Error("LootGeneratorOneTimeDrop: Drops could not be loaded:", e);
 					}
 
-					if(lootOTDs != null)
+					return false;
+				}
+
+				if (lootOTDs != null && lootOTDs.Count > 0)
+				{
+					int count = 0;
+
+					foreach (LootOTD l in lootOTDs)
 					{
-						foreach(DBLootOTD dbLootOTD in lootOTDs)
+						IList<Mob> mobs = GameServer.Database.SelectObjects<Mob>("Name = '" + GameServer.Database.Escape(l.MobName) + "'");
+
+						if (mobs == null || mobs.Count == 0)
 						{
-							m_OTDXMob.Add(dbLootOTD.MobName,dbLootOTD);
+							log.ErrorFormat("Can't find MobName {0} for OTD {1}", l.MobName, l.ItemTemplateID);
+							continue;
 						}
+
+						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(l.ItemTemplateID);
+
+						if (item == null)
+						{
+							log.ErrorFormat("Can't find ItemTemplate {0} for OTD MobName {1}", l.ItemTemplateID, l.MobName);
+							continue;
+						}
+
+						if (m_mobOTDList.ContainsKey(l.MobName.ToLower()))
+						{
+							List<LootOTD> drops = m_mobOTDList[l.MobName.ToLower()];
+
+							if (drops.Contains(l) == false)
+							{
+								drops.Add(l);
+								count++;
+							}
+							else
+							{
+								log.ErrorFormat("Same OTD ItemTemplate {0} specified multiple times for MobName {1}", l.ItemTemplateID, l.MobName);
+							}
+						}
+						else
+						{
+							List<LootOTD> drops = new List<LootOTD>();
+							drops.Add(l);
+							m_mobOTDList.Add(l.MobName.ToLower(), drops);
+							count++;
+						}
+
 					}
+
+					log.InfoFormat("One Time Drop generator pre-loaded {0} drops.", count);
 				}
 			}
+
 			return true;
 		}
+
+
+		/// <summary>
+		/// Refresh the OTDs for this mob
+		/// </summary>
+		/// <param name="mob"></param>
+		public override void Refresh(GameNPC mob)
+		{
+			if (mob == null)
+				return;
+
+			IList<LootOTD> otds = GameServer.Database.SelectObjects<LootOTD>("MobName = '" + GameServer.Database.Escape(mob.Name) + "'");
+
+			lock (m_mobOTDList)
+			{
+				if (m_mobOTDList.ContainsKey(mob.Name.ToLower()))
+				{
+					m_mobOTDList.Remove(mob.Name.ToLower());
+				}
+			}
+
+			if (otds != null)
+			{
+				lock (m_mobOTDList)
+				{
+					List<LootOTD> newList = new List<LootOTD>();
+
+					foreach (LootOTD otd in otds)
+					{
+						newList.Add(otd);
+					}
+
+					m_mobOTDList.Add(mob.Name.ToLower(), newList);
+				}
+			}
+		}
+
 
 		public override LootList GenerateLoot(GameNPC mob, GameObject killer)
 		{
 			LootList loot = base.GenerateLoot(mob, killer);
-			DBLootOTD lootOTD = (DBLootOTD) m_OTDXMob[mob.Name];
-			foreach(GameObject gainer in mob.XPGainers.Keys)
-			{
-				GamePlayer player = null;
-				if(gainer is GamePlayer)
-					player = gainer as GamePlayer;
-				else if (gainer is GameNPC)
-				{
-					IControlledBrain brain = ((GameNPC)gainer).Brain as IControlledBrain;
-					if (brain != null)
-						player = brain.GetPlayerOwner();
-				}
-				if ( player != null)
-				{
-					if ( (lootOTD.MinLevel < player.Level))
-					{
-						DataObject obj = GameServer.Database.SelectObject<DBOTDXCharacter>("CharacterName = '" + GameServer.Database.Escape(player.Name) + "' AND LootOTD_ID = '" + GameServer.Database.Escape(lootOTD.ObjectId) + "'");
-						if (obj != null) continue;
+			List<LootOTD> lootOTDs = null;
 
-						string[] sclass = lootOTD.SerializedClassAllowed.Split(',');
-						bool classFlag = false;
-						foreach (string str in sclass)
+			try
+			{
+				if (m_mobOTDList.ContainsKey(mob.Name.ToLower()))
+				{
+					lootOTDs = m_mobOTDList[mob.Name.ToLower()];
+				}
+
+				if (lootOTDs != null)
+				{
+					foreach (GameObject gainer in mob.XPGainers.Keys)
+					{
+						GamePlayer player = null;
+
+						if (gainer is GamePlayer)
 						{
-							if (str == player.CharacterClass.Name)
+							player = gainer as GamePlayer;
+						}
+						else if (gainer is GameNPC)
+						{
+							IControlledBrain brain = ((GameNPC)gainer).Brain as IControlledBrain;
+							if (brain != null)
 							{
-								classFlag = true;
-								break;
+								player = brain.GetPlayerOwner();
 							}
 						}
-						if (!classFlag) continue;
 
-						if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack,new InventoryItem(lootOTD.item)))
-							player.Out.SendMessage("Your inventory is full!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						if (player != null)
+						{
+							foreach (LootOTD drop in lootOTDs)
+							{
+								if (drop.MinLevel <= player.Level)
+								{
+									CharacterXOneTimeDrop hasDrop = GameServer.Database.SelectObject<CharacterXOneTimeDrop>("CharacterID = '" + GameServer.Database.Escape(player.InternalID) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(drop.ItemTemplateID) + "'");
 
-						DBOTDXCharacter OtdxChar = new DBOTDXCharacter();
-						OtdxChar.CharacterName = player.Name;
-						OtdxChar.LootOTD_ID = lootOTD.ObjectId;
-						GameServer.Database.AddObject(OtdxChar);
+									if (hasDrop == null)
+									{
+										ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(drop.ItemTemplateID);
+
+										if (item != null)
+										{
+											if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(item)))
+											{
+												CharacterXOneTimeDrop charXDrop = new CharacterXOneTimeDrop();
+												charXDrop.CharacterID = player.InternalID;
+												charXDrop.ItemTemplateID = drop.ItemTemplateID;
+												GameServer.Database.AddObject(charXDrop);
+
+												player.Out.SendMessage(string.Format("You receive {0} from {1}!", item.GetName(1, false), mob.GetName(1, false)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+											}
+											else
+											{
+												// do not drop, player will have to try again
+												player.Out.SendMessage("Your inventory is full and a one time drop cannot be added!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+												log.DebugFormat("OTD Failed, Inventory full: {0} from mob {1} for player {2}.", drop.ItemTemplateID, drop.MobName, player.Name);
+												break;
+											}
+										}
+										else
+										{
+											log.ErrorFormat("Error trying to drop ItemTemplate {0} from {1}.  Item not found.", drop.ItemTemplateID, drop.MobName);
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}
-			return loot;//empty because all is done here because must appear in inventory
+			catch (Exception ex)
+			{
+				log.Error("LootGeneratorOneTimeDrop exception for mob " + mob.Name + ":", ex);
+			}
+
+			return loot;
 		}
 	}
 }

@@ -23,21 +23,26 @@ using DOL.Database;
 namespace DOL.GS
 {
 	/// <summary>
-	/// BaseLootGenerator
-	/// At the moment this generator drops nothing, and just provides the basic functionality
+	/// Base for all loot generators
 	/// </summary>
 	public class LootGeneratorBase : ILootGenerator
 	{
-		protected int m_exclusivePriority =0;
+		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		protected int m_exclusivePriority = 0;
+
 		public LootGeneratorBase()
 		{
-			
 		}
 
 		public int ExclusivePriority
 		{
 			get{ return m_exclusivePriority; }
 			set{ m_exclusivePriority = value; }
+		}
+
+		public virtual void Refresh(GameNPC mob)
+		{
 		}
 
 		/// <summary>
