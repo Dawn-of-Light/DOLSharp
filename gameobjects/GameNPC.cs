@@ -2259,17 +2259,6 @@ namespace DOL.GS
 			}
 		}
 
-		protected bool m_canAcceptUndroppableItems = false;
-
-		/// <summary>
-		/// Can this NPC accept items that aren't droppable?  Use for repair / swap / fixer type npc's
-		/// </summary>
-		public bool CanAcceptUndroppableItems
-		{
-			get { return m_canAcceptUndroppableItems; }
-			protected set { m_canAcceptUndroppableItems = value; }
-		}
-
 		#endregion
 		#region Quest
 		/// <summary>
@@ -4055,8 +4044,7 @@ namespace DOL.GS
 					}
 					if (playerAttacker == null) return; // no loot if mob kills another mob
 
-                    message = String.Format(LanguageMgr.GetTranslation(playerAttacker.Client, "GameNPC.DropLoot.Drops",
-                        GetName(0, true), char.IsLower(loot.Name[0]) ? loot.GetName(1, false) : loot.Name));
+                    message = String.Format(LanguageMgr.GetTranslation(playerAttacker.Client, "GameNPC.DropLoot.Drops", GetName(0, true), loot.GetName(1, false)));
 
 					dropMessages.Add(message);
 					loot.AddToWorld();

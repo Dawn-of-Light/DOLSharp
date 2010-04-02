@@ -123,6 +123,21 @@ namespace DOL.GS
 		/// </summary>
 		private ArrayList m_mlsteps = new ArrayList();
 
+
+		/// <summary>
+		/// Can this living accept any item regardless of tradable or droppable?
+		/// </summary>
+		public override bool CanTradeAnyItem
+		{
+			get 
+			{
+				if (Client.Account.PrivLevel > (int)ePrivLevel.Player)
+					return true;
+
+				return false;
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets the targetObject's visibility
 		/// </summary>
@@ -6845,20 +6860,25 @@ namespace DOL.GS
 			int count = 0;
 			double speed = 0;
 			bool bowWeapon = true;
+
 			for (int i = 0; i < weapons.Length; i++)
 			{
 				if (weapons[i] != null)
 				{
 					speed += weapons[i].SPD_ABS;
 					count++;
+
 					switch (weapons[i].Object_Type)
 					{
 						case (int)eObjectType.Fired:
 						case (int)eObjectType.Longbow:
 						case (int)eObjectType.Crossbow:
 						case (int)eObjectType.RecurvedBow:
-							case (int)eObjectType.CompositeBow: break;
-							default: bowWeapon = false; break;
+						case (int)eObjectType.CompositeBow:
+							break;
+						default: 
+							bowWeapon = false; 
+							break;
 					}
 				}
 			}
@@ -6869,18 +6889,27 @@ namespace DOL.GS
 			speed /= count;
 
 			int qui = Math.Min(250, Quickness); //250 soft cap on quickness
+
 			if (bowWeapon)
 			{
-				//Draw Time formulas, there are very many ...
-				//Formula 2: y = iBowDelay * ((100 - ((iQuickness - 50) / 5 + iMasteryofArcheryLevel * 3)) / 100)
-				//Formula 1: x = (1 - ((iQuickness - 60) / 500 + (iMasteryofArcheryLevel * 3) / 100)) * iBowDelay
-				//Table a: Formula used: drawspeed = bowspeed * (1-(quickness - 50)*0.002) * ((1-MoA*0.03) - (archeryspeedbonus/100))
-				//Table b: Formula used: drawspeed = bowspeed * (1-(quickness - 50)*0.002) * (1-MoA*0.03) - ((archeryspeedbonus/100 * basebowspeed))
+				if (ServerProperties.Properties.ALLOW_OLD_ARCHERY)
+				{
+					//Draw Time formulas, there are very many ...
+					//Formula 2: y = iBowDelay * ((100 - ((iQuickness - 50) / 5 + iMasteryofArcheryLevel * 3)) / 100)
+					//Formula 1: x = (1 - ((iQuickness - 60) / 500 + (iMasteryofArcheryLevel * 3) / 100)) * iBowDelay
+					//Table a: Formula used: drawspeed = bowspeed * (1-(quickness - 50)*0.002) * ((1-MoA*0.03) - (archeryspeedbonus/100))
+					//Table b: Formula used: drawspeed = bowspeed * (1-(quickness - 50)*0.002) * (1-MoA*0.03) - ((archeryspeedbonus/100 * basebowspeed))
 
-				//For now use the standard weapon formula, later add ranger haste etc.
-				speed *= (1.0 - (qui - 60) * 0.002) * 0.01 * GetModified(eProperty.ArcherySpeed);
-				if (RangedAttackType == eRangedAttackType.Critical)
-					speed = speed * 2 - (GetAbilityLevel(Abilities.Critical_Shot) - 1) * speed / 10;
+					//For now use the standard weapon formula, later add ranger haste etc.
+					speed *= (1.0 - (qui - 60) * 0.002) * 0.01 * GetModified(eProperty.ArcherySpeed);
+					if (RangedAttackType == eRangedAttackType.Critical)
+						speed = speed * 2 - (GetAbilityLevel(Abilities.Critical_Shot) - 1) * speed / 10;
+				}
+				else
+				{
+					// no archery bonus
+					speed *= (1.0 - (qui - 60) * 0.002);
+				}
 			}
 			else
 			{
@@ -7950,7 +7979,7 @@ namespace DOL.GS
 						}
 						return false;
 					}
-					if (item.IsTradable == false && source.Client.Account.PrivLevel < 2 && TradeWindow.Partner.Client.Account.PrivLevel < 2)
+					if (item.IsTradable == false && source.CanTradeAnyItem == false && TradeWindow.Partner.CanTradeAnyItem == false)
 					{
 						source.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ReceiveTradeItem.CantTrade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return false;

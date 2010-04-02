@@ -41,6 +41,8 @@ namespace DOL.GS
 			set;
 		}
 
+		void Refresh(GameNPC mob);
+
 		/// <summary>
 		/// Generates a list of ItemTemplates that this mob should drop
 		/// </summary>		
