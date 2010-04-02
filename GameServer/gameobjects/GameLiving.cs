@@ -340,6 +340,15 @@ namespace DOL.GS
 
 		#endregion
 
+		/// <summary>
+		/// Can this living accept any item regardless of tradable or droppable?
+		/// </summary>
+		public virtual bool CanTradeAnyItem
+		{
+			get { return false; }
+		}
+
+
         /// <summary>
         /// Chance to fumble an attack.
         /// </summary>

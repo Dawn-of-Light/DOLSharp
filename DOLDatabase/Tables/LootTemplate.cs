@@ -33,14 +33,15 @@ namespace DOL.Database
 	/// Database Storage of Tasks
 	/// </summary>
 	[DataTable(TableName="LootTemplate")]
-	public class DBLootTemplate : DataObject
+	public class LootTemplate : DataObject
 	{
 		protected string	m_TemplateName = "";
 		protected string	m_ItemTemplateID = "";
 		protected int		m_Chance = 99;
+		protected int		m_count = 1;
 		static bool			m_autoSave;
 		
-		public DBLootTemplate()
+		public LootTemplate()
 		{
 			m_autoSave = false;
 		}
@@ -84,7 +85,18 @@ namespace DOL.Database
 			}
 		}
 
-		[Relation(LocalField = "ItemTemplateID", RemoteField = "Id_nb", AutoLoad = true, AutoDelete=false)]
-		public ItemTemplate ItemTemplate;		
+		[DataElement(AllowDbNull = false)]
+		public int Count
+		{
+			get 
+			{
+				return Math.Max(1, m_count);
+			}
+			set
+			{
+				Dirty = true;
+				m_count = value;
+			}
+		}
 	}
 }

@@ -27,7 +27,7 @@ namespace DOL.Database
 	/// Database Storage of Tasks
 	/// </summary>
 	[DataTable(TableName = "LootGenerator")]
-	public class DBLootGenerator : DataObject
+	public class LootGenerator : DataObject
 	{
 		/// <summary>
 		/// Trigger Mob
@@ -54,12 +54,13 @@ namespace DOL.Database
 		/// </summary>
 		protected int m_exclusivePriority = 0;
 
+
 		static bool m_autoSave;
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public DBLootGenerator()
+		public LootGenerator()
 		{
 			m_autoSave = false;
 		}

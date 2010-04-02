@@ -26,23 +26,19 @@ namespace DOL
 	namespace Database
 	{
 		/// <summary>
-		/// character which have already drop otd is in this table
+		/// List of characters and the one time drops they have received.
 		/// </summary>
-		[DataTable(TableName="OTDXCharacter")]
-		public class DBOTDXCharacter : DataObject 
+		[DataTable(TableName="CharacterXOneTimeDrop")]
+		public class CharacterXOneTimeDrop : DataObject 
 		{
-			private string m_lootOTD_ID;
-			private string m_CharacterName;
-			
+			private string m_characterID;
+			private string m_itemTemplateID;
 			private static bool m_autoSave;
 
-			/// <summary>
-			/// Create account row in DB
-			/// </summary>
-			public DBOTDXCharacter() 
+			public CharacterXOneTimeDrop() 
 			{
-				m_lootOTD_ID = "";
-				m_CharacterName = "";
+				m_itemTemplateID = "";
+				m_characterID = "";
 				m_autoSave = false;
 			}
 
@@ -62,36 +58,36 @@ namespace DOL
 			}
 
 			/// <summary>
-			/// The character name of player who have ever drop otd
+			/// The DOLCharacters_ID of the player who gets the drop
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
-			public string CharacterName
+			[DataElement(AllowDbNull = false, Varchar = 100, Index = true)]
+			public string CharacterID
 			{
 				get
 				{
-					return m_CharacterName;
+					return m_characterID;
 				}
 				set
-				{   
+				{
 					Dirty = true;
-					m_CharacterName = value;
+					m_characterID = value;
 				}
 			}
 
 			/// <summary>
-			/// The object id of the DBLootOtd
+			/// The item id_nb that was dropped
 			/// </summary>
-			[DataElement(AllowDbNull=false)]
-			public string LootOTD_ID
+			[DataElement(AllowDbNull = false, Varchar = 100, Index = true)]
+			public string ItemTemplateID
 			{
 				get
 				{
-					return m_lootOTD_ID;
+					return m_itemTemplateID;
 				}
 				set
 				{   
 					Dirty = true;
-					m_lootOTD_ID = value;
+					m_itemTemplateID = value;
 				}
 			}
 		}

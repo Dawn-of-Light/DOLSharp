@@ -159,6 +159,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tables\BugReport.cs" />
+    <Compile Include="Tables\CharacterXOneTimeDrop.cs" />
     <Compile Include="Tables\DOLCharacters.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -257,9 +258,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tables\NpcTemplate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tables\OTDXCharacter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tables\Path.cs">

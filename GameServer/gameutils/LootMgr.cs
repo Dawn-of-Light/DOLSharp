@@ -76,10 +76,10 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Loading LootGenerators...");
 
-			IList<DBLootGenerator> m_lootGenerators;
+			IList<LootGenerator> m_lootGenerators;
 			try
 			{
-				m_lootGenerators = GameServer.Database.SelectAllObjects<DBLootGenerator>();
+				m_lootGenerators = GameServer.Database.SelectAllObjects<LootGenerator>();
 			}
 			catch (Exception e)
 			{
@@ -90,7 +90,7 @@ namespace DOL.GS
 
 			if (m_lootGenerators != null) // did we find any loot generators
 			{
-				foreach (DBLootGenerator dbGenerator in m_lootGenerators)
+				foreach (LootGenerator dbGenerator in m_lootGenerators)
 				{
 					ILootGenerator generator = GetGeneratorInCache(dbGenerator);
 					if (generator == null)
@@ -146,7 +146,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="dbGenerator"></param>
 		/// <param name="generator"></param>
-		private static void PutGeneratorInCache(DBLootGenerator dbGenerator, ILootGenerator generator)
+		private static void PutGeneratorInCache(LootGenerator dbGenerator, ILootGenerator generator)
 		{
 			m_ClassGenerators[dbGenerator.LootGeneratorClass + dbGenerator.ExclusivePriority] = generator;
 		}
@@ -156,7 +156,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="dbGenerator"></param>
 		/// <returns></returns>
-		private static ILootGenerator GetGeneratorInCache(DBLootGenerator dbGenerator)
+		private static ILootGenerator GetGeneratorInCache(LootGenerator dbGenerator)
 		{
 			if (m_ClassGenerators[dbGenerator.LootGeneratorClass + dbGenerator.ExclusivePriority] != null)
 			{
@@ -271,19 +271,18 @@ namespace DOL.GS
 
 
         /// <summary>
-        /// Looks for a LootGeneratorTemplate; if found, refreshes loot list for given mob
+        /// Call the refresh method for each generator to update loot, if implemented
         /// </summary>
         /// <param name="mob"></param>
-        public static void RefreshTemplateGenerator( GameNPC mob )
+        public static void RefreshGenerators(GameNPC mob)
         {
-            foreach ( ILootGenerator gen in m_globalGenerators )
-            {
-                if ( gen is LootGeneratorTemplate )
-                {
-                    ( (LootGeneratorTemplate)gen ).RefreshLootTemplate( mob.Name );
-                    return;
-                }
-            }
+			if (mob != null)
+			{
+				foreach (ILootGenerator gen in m_globalGenerators)
+				{
+					gen.Refresh(mob);
+				}
+			}
         }
 
 

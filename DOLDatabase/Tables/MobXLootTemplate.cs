@@ -33,7 +33,7 @@ namespace DOL.Database
 	/// Database Storage of Mob LootTemplate Relation
 	/// </summary>
 	[DataTable(TableName="MobXLootTemplate")]
-	public class DBMobXLootTemplate : DataObject
+	public class MobXLootTemplate : DataObject
 	{
 		private string	m_MobName = "";
 		private string	m_LootTemplateName = "";
@@ -43,7 +43,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public DBMobXLootTemplate()
+		public MobXLootTemplate()
 		{
 			m_MobName = "";
 			m_LootTemplateName = "";			

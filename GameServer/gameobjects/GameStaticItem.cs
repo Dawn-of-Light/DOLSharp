@@ -93,19 +93,22 @@ namespace DOL.GS
 			}
 		}
 
+
 		/// <summary>
 		/// Returns name with article for nouns
 		/// </summary>
 		/// <param name="article">0=definite, 1=indefinite</param>
-		/// <param name="firstLetterUppercase"></param>
+		/// <param name="firstLetterUppercase">Forces the first letter of the returned string to be uppercase</param>
 		/// <returns>name of this object (includes article if needed)</returns>
 		public override string GetName(int article, bool firstLetterUppercase)
 		{
 			if (Name == "")
 				return "";
+
 			if(char.IsUpper(Name[0]))
 			{
 				// proper name
+
 				if (firstLetterUppercase)
 					return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStaticItem.GetName.Article1", Name);
 				else
