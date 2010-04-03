@@ -36,6 +36,8 @@ namespace DOL.GS.Housing
 		public const int MAXHOUSES = 2000;
         public const int HOUSE_DISTANCE = 10120; //guessed, but i'm sure its > vis dist.
 
+		protected const int RENT_TIMER_INTERVAL = 1000 * 60 * 60 * 2;  // check every 2 hours
+
 		private static Timer CheckRentTimer = null;
 		private static Hashtable m_houselists;
 		private static Hashtable m_idlist;
@@ -105,7 +107,7 @@ namespace DOL.GS.Housing
 			if (Logger.IsInfoEnabled)
 				Logger.Info("loaded " + houses + " houses and " + lotmarkers + " lotmarkers in " + regions + " regions!");
 
-			CheckRentTimer = new Timer(new TimerCallback(CheckRents), null, 10000, 1000 * 3600);
+			CheckRentTimer = new Timer(new TimerCallback(CheckRents), null, RENT_TIMER_INTERVAL, RENT_TIMER_INTERVAL);
 			return true;
 		}
 		public static void Stop()
@@ -542,7 +544,7 @@ namespace DOL.GS.Housing
         
 		public static void CheckRents(object state)
 		{
-			Logger.Debug("Time to check Rents !");
+			Logger.Debug("Time to check Rents!");
 			TimeSpan Diff;
 			ArrayList todel = new ArrayList();
 
@@ -570,7 +572,9 @@ namespace DOL.GS.Housing
 			}
 
 			foreach (House h in todel) // here we remove houses
+			{
 				RemoveHouse(h);
+			}
 		}
 
 		internal static void SpecialBuy(GamePlayer gamePlayer, ushort item_slot, byte item_count, byte menu_id)

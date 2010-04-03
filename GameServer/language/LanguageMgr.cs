@@ -308,9 +308,20 @@ namespace DOL.Language
 		{
             string translated = TranslationID;
 
-			if (!IDSentences.ContainsKey(TranslationID) || !IDSentences[TranslationID].ContainsKey(lang))
+			if (IDSentences.ContainsKey(TranslationID) == false)
 			{
 				return translated;
+			}
+
+			if (IDSentences[TranslationID].ContainsKey(lang) == false)
+			{
+				// For some accounts language is null or not set to a valid language, default to english
+				lang = "EN";
+
+				if (IDSentences[TranslationID].ContainsKey(lang) == false)
+				{
+					return translated;
+				}
 			}
 
 			translated = IDSentences[TranslationID][lang];
