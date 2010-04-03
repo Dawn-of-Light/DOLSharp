@@ -93,16 +93,7 @@ namespace DOL.GS
         {
             get
             {
-                if (CurrentRegion.ID >= 73 && CurrentRegion.ID <= 90)
-                    return eRealm.Albion;
-
-                if (CurrentRegion.ID >= 130 && CurrentRegion.ID <= 147)
-                    return eRealm.Midgard;
-
-                if (CurrentRegion.ID >= 30 && CurrentRegion.ID <= 47)
-                    return eRealm.Hibernia;
-
-                return eRealm.None;
+				return CurrentZone.GetRealm();
             }
         }
 
@@ -239,6 +230,34 @@ namespace DOL.GS
 
             return base.WhisperReceive(source, text);
         }
+
+
+		protected override bool GetTeleportLocation(GamePlayer player, string text)
+		{
+			// special cases
+			if (text.ToLower() == "battlegrounds" || text.ToLower() == "personal")
+			{
+				return base.GetTeleportLocation(player, text);
+			}
+
+			// Find the teleport location in the database.  For Djinns use the player realm to match Interact list given.
+			Teleport port = WorldMgr.GetTeleportLocation(player.Realm, String.Format("{0}:{1}", Type, text));
+			if (port != null)
+			{
+				if (port.RegionID == 0 && port.X == 0 && port.Y == 0 && port.Z == 0)
+				{
+					OnSubSelectionPicked(player, port);
+				}
+				else
+				{
+					OnDestinationPicked(player, port);
+				}
+				return false;
+			}
+
+			return true;	// Needs further processing.
+		}
+
 
         /// <summary>
         /// Player has picked a subselection.
