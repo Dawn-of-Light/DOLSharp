@@ -68,31 +68,32 @@ namespace DOL.GS.PacketHandler.Client.v168
 			10		Market Search		  slot?
 			*/
 
+			ItemTemplate item = null;
+			InventoryItem invItem = null;
+
 			switch (objectType)
 			{
 				#region Inventory Item
 				case 1: //Display Infos on inventory item
 				case 10: // market search
                     {
-                        InventoryItem item = null;
-
                         if (objectType == 1)
                         {
-                            item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-                            if (item == null)
+                            invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+                            if (invItem == null)
                             {
 								if (client.Player.ActiveConMerchant != null)
 								{
 									Consignment con = client.Player.ActiveConMerchant;
-									item = con.ConInventory[objectID];
-									if (item == null)
+									invItem = con.ConInventory[objectID];
+									if (invItem == null)
 										return 1;
 								}
 								else if (client.Player.ActiveVault != null)
 								{
 									GameHouseVault vault = client.Player.ActiveVault;
-									item = vault.Inventory[objectID];
-									if (item == null)
+									invItem = vault.Inventory[objectID];
+									if (invItem == null)
 										return 1;
 								}
 								else
@@ -114,13 +115,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 							if (objectID >= list.Count)
 								return 1;
 
-							item = list[objectID];
+							invItem = list[objectID];
 
-							if (item == null)
+							if (invItem == null)
 								return 1;
                         }
 
-						caption = item.Name;
+						caption = invItem.Name;
 
 						// Aredhel: Start of a more sophisticated item delve system.
 						// The idea is to have every item inherit from an item base class,
@@ -137,10 +138,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// provide *only* an overridden Delve() method, use the base
 						// Delve() and you're done, spells, charges and everything else.
 
-						if (item is InventoryArtifact)
+						if (invItem is InventoryArtifact)
 						{
 							List<String> delve = new List<String>();
-							(item as InventoryArtifact).Delve(delve, client.Player);
+							(invItem as InventoryArtifact).Delve(delve, client.Player);
 
 							foreach (string line in delve)
 								objectInfo.Add(line);
@@ -151,54 +152,54 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//**********************************
 						//show crafter name
 						//**********************************
-						if (item.CrafterName != null && item.CrafterName != "")
+						if (invItem.CrafterName != null && invItem.CrafterName != "")
 						{
-							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CrafterName", item.CrafterName));
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CrafterName", invItem.CrafterName));
 						}
-						else if (item.Id_nb == "UniqueObject") // tolakram - force display of unique object
+						else if (invItem.Id_nb == "UniqueObject") // tolakram - force display of unique object
 						{
                             objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.UniqueObject"));
                             objectInfo.Add(" ");//empty line
 						}
 
-						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType._LastWeapon) ||
-							item.Object_Type == (int)eObjectType.Instrument)
+						if ((invItem.Object_Type >= (int)eObjectType.GenericWeapon) && (invItem.Object_Type <= (int)eObjectType._LastWeapon) ||
+							invItem.Object_Type == (int)eObjectType.Instrument)
 						{
-							WriteUsableClasses(objectInfo, item, client);
-							WriteMagicalBonuses(objectInfo, item, client, false);
-							WriteClassicWeaponInfos(objectInfo, item, client);
+							WriteUsableClasses(objectInfo, invItem, client);
+							WriteMagicalBonuses(objectInfo, invItem, client, false);
+							WriteClassicWeaponInfos(objectInfo, invItem, client);
 						}
 
-						if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
+						if (invItem.Object_Type >= (int)eObjectType.Cloth && invItem.Object_Type <= (int)eObjectType.Scale)
 						{
-							WriteUsableClasses(objectInfo, item, client);
-							WriteMagicalBonuses(objectInfo, item, client, false);
-							WriteClassicArmorInfos(objectInfo, item, client);
+							WriteUsableClasses(objectInfo, invItem, client);
+							WriteMagicalBonuses(objectInfo, invItem, client, false);
+							WriteClassicArmorInfos(objectInfo, invItem, client);
 						}
 
-						if (item.Object_Type == (int)eObjectType.Shield)
+						if (invItem.Object_Type == (int)eObjectType.Shield)
 						{
-							WriteUsableClasses(objectInfo, item, client);
-							WriteMagicalBonuses(objectInfo, item, client, false);
-							WriteClassicShieldInfos(objectInfo, item, client);
+							WriteUsableClasses(objectInfo, invItem, client);
+							WriteMagicalBonuses(objectInfo, invItem, client, false);
+							WriteClassicShieldInfos(objectInfo, invItem, client);
 						}
 
-						if (item.Object_Type == (int)eObjectType.Magical || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
+						if (invItem.Object_Type == (int)eObjectType.Magical || invItem.Object_Type == (int)eObjectType.AlchemyTincture || invItem.Object_Type == (int)eObjectType.SpellcraftGem)
 						{
-							WriteMagicalBonuses(objectInfo, item, client, false);
+							WriteMagicalBonuses(objectInfo, invItem, client, false);
 						}
 
 						// Items with a reuse timer (aka cooldown).
 
-						if (item.CanUseEvery > 0)
+						if (invItem.CanUseEvery > 0)
 						{
-							int minutes = item.CanUseEvery / 60;
-							int seconds = item.CanUseEvery % 60;
+							int minutes = invItem.CanUseEvery / 60;
+							int seconds = invItem.CanUseEvery % 60;
 
 							objectInfo.Add(String.Format("Can use item every: {0:00}:{1:00}",
 									minutes, seconds));
 
-							int cooldown = item.CanUseAgainIn;
+							int cooldown = invItem.CanUseAgainIn;
 
 							if (cooldown > 0)
 							{
@@ -213,38 +214,38 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//***********************************
 						//shows info for Poison Potions
 						//***********************************
-						if (item.Object_Type == (int)eObjectType.Poison)
+						if (invItem.Object_Type == (int)eObjectType.Poison)
 						{
-							WritePoisonInfo(objectInfo, item, client);
+							WritePoisonInfo(objectInfo, invItem, client);
 						}
 
-						if (item.Object_Type == (int)eObjectType.Magical && item.Item_Type == (int)eInventorySlot.FirstBackpack) // potion
-							WritePotionInfo(objectInfo, item, client);
+						if (invItem.Object_Type == (int)eObjectType.Magical && invItem.Item_Type == (int)eInventorySlot.FirstBackpack) // potion
+							WritePotionInfo(objectInfo, invItem, client);
 
-						if (!item.IsDropable || !item.IsPickable)
+						if (!invItem.IsDropable || !invItem.IsPickable)
 							objectInfo.Add(" ");//empty line
 
-						if (!item.IsPickable)
+						if (!invItem.IsPickable)
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotTraded"));
-						if (!item.IsDropable)
+						if (!invItem.IsDropable)
 						{
 							//objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotDropped"));
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotSold"));
 						}
 
-                        if (item.Description != null)
-                            objectInfo.Add(item.Description);
+                        if (invItem.Description != null)
+                            objectInfo.Add(invItem.Description);
 
-						if (item.IsIndestructible)
+						if (invItem.IsIndestructible)
 							objectInfo.Add("Cannot be destroyed.");
 
-						if (item.BonusLevel > 0)
-							objectInfo.Add(string.Format("Bonus Level: {0}", item.BonusLevel));
+						if (invItem.BonusLevel > 0)
+							objectInfo.Add(string.Format("Bonus Level: {0}", invItem.BonusLevel));
 
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
 						{
-							WriteTechnicalInfo(objectInfo, item);
+							WriteTechnicalInfo(objectInfo, invItem);
 						}
 
 						break;
@@ -319,8 +320,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case 4: //Display Infos on Merchant objects
 				case 19: //Display Info quest reward
 					{
-						ItemTemplate item = null;
-
 						if (objectType == 4)
 						{
 							GameMerchant merchant = null;
@@ -656,66 +655,64 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (playerTradeWindow == null)
 							return 1;
 
-						InventoryItem item = null;
-
 						if (playerTradeWindow.PartnerTradeItems != null && objectID < playerTradeWindow.PartnerItemsCount)
-							item = (InventoryItem)playerTradeWindow.PartnerTradeItems[objectID];
+							invItem = (InventoryItem)playerTradeWindow.PartnerTradeItems[objectID];
 
-						if (item == null)
+						if (invItem == null)
 							return 1;
 
-						caption = item.Name;
+						caption = invItem.Name;
 
-						if (item.Item_Type == (int)eInventorySlot.Horse)
+						if (invItem.Item_Type == (int)eInventorySlot.Horse)
 						{
-							WriteHorseInfo(objectInfo, item, client, "");
+							WriteHorseInfo(objectInfo, invItem, client, "");
 						}
 
-						if ((item.Item_Type == (int)eInventorySlot.HorseBarding || item.Item_Type == (int)eInventorySlot.HorseArmor) && item.Level > 0)
+						if ((invItem.Item_Type == (int)eInventorySlot.HorseBarding || invItem.Item_Type == (int)eInventorySlot.HorseArmor) && invItem.Level > 0)
 						{
 							objectInfo.Add(" ");//empty line
 							objectInfo.Add(" ");//empty line
-							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChampionLevel", item.Level));
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChampionLevel", invItem.Level));
 						}
-						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff) ||
-							item.Object_Type == (int)eObjectType.Instrument)
+						if ((invItem.Object_Type >= (int)eObjectType.GenericWeapon) && (invItem.Object_Type <= (int)eObjectType.MaulerStaff) ||
+							invItem.Object_Type == (int)eObjectType.Instrument)
 						{
-							WriteUsableClasses(objectInfo, item, client);
-							WriteMagicalBonuses(objectInfo, item, client, false);
-							WriteClassicWeaponInfos(objectInfo, item, client);
+							WriteUsableClasses(objectInfo, invItem, client);
+							WriteMagicalBonuses(objectInfo, invItem, client, false);
+							WriteClassicWeaponInfos(objectInfo, invItem, client);
 						}
 
-						if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
+						if (invItem.Object_Type >= (int)eObjectType.Cloth && invItem.Object_Type <= (int)eObjectType.Scale)
 						{
-							WriteUsableClasses(objectInfo, item, client);
-							WriteMagicalBonuses(objectInfo, item, client, false);
-							WriteClassicArmorInfos(objectInfo, item, client);
+							WriteUsableClasses(objectInfo, invItem, client);
+							WriteMagicalBonuses(objectInfo, invItem, client, false);
+							WriteClassicArmorInfos(objectInfo, invItem, client);
 						}
 
-						if (item.Object_Type == (int)eObjectType.Shield)
+						if (invItem.Object_Type == (int)eObjectType.Shield)
 						{
-							WriteUsableClasses(objectInfo, item, client);
-							WriteMagicalBonuses(objectInfo, item, client, false);
-							WriteClassicShieldInfos(objectInfo, item, client);
+							WriteUsableClasses(objectInfo, invItem, client);
+							WriteMagicalBonuses(objectInfo, invItem, client, false);
+							WriteClassicShieldInfos(objectInfo, invItem, client);
 						}
 
-						if ((item.Item_Type != (int)eInventorySlot.Horse && item.Object_Type == (int)eObjectType.Magical) || item.Object_Type == (int)eObjectType.AlchemyTincture || item.Object_Type == (int)eObjectType.SpellcraftGem)
+						if ((invItem.Item_Type != (int)eInventorySlot.Horse && invItem.Object_Type == (int)eObjectType.Magical) || invItem.Object_Type == (int)eObjectType.AlchemyTincture || invItem.Object_Type == (int)eObjectType.SpellcraftGem)
 						{
-							WriteMagicalBonuses(objectInfo, item, client, false);
+							WriteMagicalBonuses(objectInfo, invItem, client, false);
 						}
 
-						if (item.Object_Type == (int)eObjectType.Poison)
+						if (invItem.Object_Type == (int)eObjectType.Poison)
 						{
-							WritePoisonInfo(objectInfo, item, client);
+							WritePoisonInfo(objectInfo, invItem, client);
 						}
 
-						if (item.Object_Type == (int)eObjectType.Magical && item.Item_Type == 40) // potion
-							WritePotionInfo(objectInfo, item, client);
+						if (invItem.Object_Type == (int)eObjectType.Magical && invItem.Item_Type == 40) // potion
+							WritePotionInfo(objectInfo, invItem, client);
 
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
 						{
-							WriteTechnicalInfo(objectInfo, item);
+							WriteTechnicalInfo(objectInfo, invItem);
 						}
 
 						break;
@@ -832,9 +829,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#region Group
 				case 12: // Item info to Group Chat
 					{
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (item == null) return 1;
-						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Item", client.Player.Name, GetShortItemInfo(item, client));
+						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+						if (invItem == null) return 1;
+						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Item", client.Player.Name, GetShortItemInfo(invItem, client));
 						if (client.Player.Group == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -847,9 +844,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#region Guild
 				case 13: // Item info to Guild Chat
 					{
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (item == null) return 1;
-						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.GuildItem", client.Player.Name, GetShortItemInfo(item, client));
+						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+						if (invItem == null) return 1;
+						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.GuildItem", client.Player.Name, GetShortItemInfo(invItem, client));
 						if (client.Player.Guild == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.DontBelongGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -871,8 +868,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#region ChatGroup
 				case 15: // Item info to Chat group
 					{
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (item == null) return 1;
+						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+						if (invItem == null) return 1;
 
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
@@ -885,7 +882,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(item, client));
+						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(invItem, client));
 						foreach (GamePlayer ply in mychatgroup.Members.Keys)
 						{
 							ply.Out.SendMessage(str, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
@@ -896,10 +893,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#region Repair
 				case 100://repair
 					{
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (item != null)
+						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+						if (invItem != null)
 						{
-							client.Player.RepairItem(item);
+							client.Player.RepairItem(invItem);
 						}
 						else
 						{
@@ -911,10 +908,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#region Self Craft
 				case 101://selfcraft
 					{
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (item != null)
+						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+						if (invItem != null)
 						{
-							client.Player.OpenSelfCraft(item);
+							client.Player.OpenSelfCraft(invItem);
 						}
 						else
 						{
@@ -926,10 +923,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#region Salvage
 				case 102://salvage
 					{
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (item != null)
+						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+						if (invItem != null)
 						{
-							client.Player.SalvageItem(item);
+							client.Player.SalvageItem(invItem);
 						}
 						else
 						{
@@ -941,8 +938,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#region BattleGroup
 				case 103: // Item info to battle group
 					{
-						InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (item == null) return 1;
+						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+						if (invItem == null) return 1;
 
 						BattleGroup mybattlegroup = (BattleGroup)client.Player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 						if (mybattlegroup == null)
@@ -955,7 +952,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(item, client));
+						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(invItem, client));
 						foreach (GamePlayer ply in mybattlegroup.Members.Keys)
 						{
 							ply.Out.SendMessage(str, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
@@ -1007,7 +1004,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			else
 			{
-				log.ErrorFormat("DetailDisplayHandler no info for objectID {0} of type {1}, client: {2}", objectID, objectType, client);
+				log.ErrorFormat("DetailDisplayHandler no info for objectID {0} of type {1}. Item: {2}, client: {3}", objectID, objectType, (item == null ? (invItem == null ? "null" : invItem.Id_nb) : item.Id_nb),  client);
 			}
 
 			return 1;
