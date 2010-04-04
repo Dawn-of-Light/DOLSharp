@@ -392,8 +392,15 @@ namespace DOL.GS
         /// <param name="destination"></param>
         protected override void OnTeleport(GamePlayer player, Teleport destination)
         {
-            player.Out.SendMessage("There is an odd distortion in the air around you...",
-                eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            player.Out.SendMessage("There is an odd distortion in the air around you...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			// if player is porting in atlantis to another atlantis location then keep in the same region
+			// this allows us to support cooperative atlantis zones
+			if ((player.CurrentRegionID == 30 || player.CurrentRegionID == 73 || player.CurrentRegionID == 130) &&
+				(destination.RegionID == 30 || destination.RegionID == 73 || destination.RegionID == 130))
+			{
+				destination.RegionID = player.CurrentRegionID;
+			}
 
             base.OnTeleport(player, destination);
         }
@@ -405,9 +412,10 @@ namespace DOL.GS
         /// <returns></returns>
         public override bool Say(String message)
         {
-            foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
-                player.Out.SendMessage(String.Format("The {0} says, \"{1}\"", this.Name, message), 
-                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
+			{
+				player.Out.SendMessage(String.Format("The {0} says, \"{1}\"", this.Name, message), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
 
             return true;
         }
