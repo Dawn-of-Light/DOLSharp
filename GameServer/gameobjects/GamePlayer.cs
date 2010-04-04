@@ -812,6 +812,12 @@ namespace DOL.GS
 			Character character = PlayerCharacter; // if property will be derived with cost-intensive code, so its only getted one time
 			if (character == null) return;
 
+			if (CurrentRegion.IsInstance)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.CantHere"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			if (forced)
 			{
 				character.BindRegion = CurrentRegionID;

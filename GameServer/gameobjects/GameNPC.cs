@@ -1971,6 +1971,7 @@ namespace DOL.GS
 			// do not allow saving in an instanced region
 			if (CurrentRegion.IsInstance)
 			{
+				LoadedFromScript = true;
 				return;
 			}
 
@@ -3771,18 +3772,26 @@ namespace DOL.GS
 				if ( m_respawnInterval > 0 || m_respawnInterval < 0 )
 					return m_respawnInterval;
 
+				int minutes = Util.Random(ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL, ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL + 5);
+
+				if (Name != Name.ToLower())
+				{
+					minutes += 10;
+				}
+
 				if (Level <= 65 && Realm == 0)
 				{
-					return Util.Random(ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL, ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL + 5) * 60000;
+					return minutes * 60000;
 				}
 				else if (Realm != 0)
 				{
-					return Util.Random(5 * 60000);
+					// 5 to 10 minutes for realm npc's
+					return Util.Random(5 * 60000, 10 * 60000);
 				}
 				else
 				{
-					int minutes = (Level - 65) + ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL + 10;
-					return minutes * 60000;
+					int add = (Level - 65) + ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL + 10;
+					return (minutes + add) * 60000;
 				}
 			}
 			set
