@@ -1066,6 +1066,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			output.Add("        Realm: " + item.Realm);
 			output.Add("  Is dropable: " + (item.IsDropable ? "yes" : "no"));
 			output.Add("  Is pickable: " + (item.IsPickable ? "yes" : "no"));
+			output.Add("  Is tradable: " + (item.IsTradable ? "yes" : "no"));
 			output.Add(" Is alwaysDUR: " + (item.IsNotLosingDur ? "yes" : "no"));
 			output.Add("Is Indestruct: " + (item.IsIndestructible ? "yes" : "no"));
 			output.Add(" Is stackable: " + (item.IsStackable ? "yes" : "no"));
@@ -1086,7 +1087,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			else if (GlobalConstants.IsArmor(item.Object_Type))
 			{
 				output.Add("  Armorfactor: " + item.DPS_AF);
-				output.Add("    Absorbage: " + item.SPD_ABS);
+				output.Add("   Absorption: " + item.SPD_ABS);
 				output.Add("        Bonus: " + item.Bonus);
 			}
 			else if (item.Object_Type == (int)eObjectType.Shield)
