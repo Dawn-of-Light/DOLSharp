@@ -41,6 +41,11 @@ namespace DOL.GS
 			PreloadLootOTDs();
 		}
 
+		public static void ReloadLootOTD()
+		{
+			PreloadLootOTDs();
+		}
+
 		protected static bool PreloadLootOTDs()
 		{
 			lock (m_mobOTDList)
