@@ -34,7 +34,7 @@ namespace DOL.GS.Commands
 		"/player lastname <change|reset> <newLastName>",
 		"/player level <newLevel>",
 		"/player realm <newRealm>",
-		"/player inventory",
+		"/player inventory [wear|bag|vault|house|cons]",
 		"/player <rps|bps|xp|xpa|clxp> <amount>",
 		"/player stat <typeofStat> <value>",
 		"/player money <copp|silv|gold|plat|mith> <amount>",
@@ -1538,13 +1538,16 @@ namespace DOL.GS.Commands
 
 						if (args.Length == 2)
 						{
-							Show_Inventory(player, client);
-						}
-						else
-						{
-							DisplaySyntax(client);
+							Show_Inventory(player, client, "");
 							return;
 						}
+						else if (args.Length == 3)
+						{
+							Show_Inventory(player, client, args[2].ToLower());
+							return;
+						}
+
+						DisplaySyntax(client);
 						break;
 					}
 					#endregion
@@ -1599,36 +1602,96 @@ namespace DOL.GS.Commands
 				player.TakeDamage(killer, eDamageType.Natural, damage, 0);
 		}
 
-		private void Show_Inventory(GamePlayer player, GameClient client)
+		private void Show_Inventory(GamePlayer player, GameClient client, string limitType)
 		{
 			var text = new List<string>();
-			text.Add(" ");
-			text.Add("PLAYER INVENTORY ");
-			text.Add(" ");
 			text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
-			text.Add("  - Realm Level Class : " + player.Realm + " " + player.Level + " " + player.CharacterClass.Name);
-			text.Add("  - Inventory list: ");
+			text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " + player.CharacterClass.Name);
 			text.Add(" ");
-			text.Add("  ----- WEAR");
+			text.Add(Money.GetShortString(player.GetCurrentMoney()));
+			text.Add(" ");
 
-			foreach (InventoryItem item in player.Inventory.EquippedItems)
+			bool limitShown = false;
+
+
+			if (limitType == "" || limitType == "wear")
 			{
-				text.Add("     [" + GlobalConstants.SlotToName(item.Item_Type) + "] " + item.Name + " (" + item.Id_nb + ")");
+				limitShown = true;
+				text.Add("  ----- Wearing:");
+
+				foreach (InventoryItem item in player.Inventory.EquippedItems)
+				{
+					text.Add("     [" + GlobalConstants.SlotToName(item.Item_Type) + "] " + item.Name + " (" + item.Id_nb + ")");
+				}
+				text.Add(" ");
 			}
-			text.Add(" ");
-			text.Add("  ----- BAG");
-			foreach (InventoryItem item in player.Inventory.AllItems)
+
+			if (limitType == "" || limitType == "bag")
 			{
-				if (item.SlotPosition >= 30) text.Add("    " + item.Name + " (" + item.Id_nb + ")");
+				limitShown = true;
+				text.Add("  ----- Backpack:");
+				foreach (InventoryItem item in player.Inventory.AllItems)
+				{
+					if (item.SlotPosition >= (int)eInventorySlot.FirstBackpack && item.SlotPosition <= (int)eInventorySlot.LastBackpack)
+					{
+						text.Add("    " + item.Name + " (" + item.Id_nb + ")");
+					}
+				}
 			}
-			client.Out.SendCustomTextWindow("~*PLAYER INVENTORY LISTING*~", text);
+
+			if (limitType == "vault")
+			{
+				limitShown = true;
+				text.Add("  ----- Vault:");
+				foreach (InventoryItem item in player.Inventory.AllItems)
+				{
+					if (item.SlotPosition >= (int)eInventorySlot.FirstVault && item.SlotPosition <= (int)eInventorySlot.LastVault)
+					{
+						text.Add("    " + item.Name + " (" + item.Id_nb + ")");
+					}
+				}
+			}
+
+			if (limitType == "house")
+			{
+				limitShown = true;
+				text.Add("  ----- Housing:");
+				foreach (InventoryItem item in player.Inventory.AllItems)
+				{
+					if (item.SlotPosition >= (int)eInventorySlot.HouseVault_First && item.SlotPosition <= (int)eInventorySlot.HouseVault_Last)
+					{
+						text.Add("    " + item.Name + " (" + item.Id_nb + ")");
+					}
+				}
+			}
+
+			if (limitType == "cons")
+			{
+				limitShown = true;
+				text.Add("  ----- Consignment:");
+				foreach (InventoryItem item in player.Inventory.AllItems)
+				{
+					if (item.SlotPosition >= (int)eInventorySlot.Consignment_First && item.SlotPosition <= (int)eInventorySlot.Consignment_Last)
+					{
+						text.Add("    " + item.Name + " (" + item.Id_nb + ")");
+					}
+				}
+			}
+
+			if (!limitShown)
+			{
+				text.Add("Unkown command.  Use wear | bag | vault | house | cons");
+			}
+
+
+			client.Out.SendCustomTextWindow("PLAYER INVENTORY LISTING", text);
 		}
 
 		private void Show_Info(GamePlayer player, GameClient client)
 		{
 			var text = new List<string>();
 			text.Add(" ");
-			text.Add("PLAYER INFORMATION ");
+			text.Add("PLAYER INFORMATION (Client # " + player.Client.SessionID + ")");
 			text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
 			text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " + player.CharacterClass.Name);
 			text.Add("  - Guild : " + player.GuildName);
@@ -1698,7 +1761,7 @@ namespace DOL.GS.Commands
 			}
 			text.Add(sTitle + sCurrent);
 
-			client.Out.SendCustomTextWindow("~*PLAYER & ACCOUNT INFORMATION*~", text);
+			client.Out.SendCustomTextWindow("PLAYER & ACCOUNT INFORMATION", text);
 		}
 	}
 }
