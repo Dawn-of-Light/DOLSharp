@@ -294,24 +294,32 @@ namespace DOL.GS.Spells
 		}
 
 
-		
+
 		public override void FinishSpellCast(GameLiving target)
 		{
-            if(target==null && Spell.Target.ToLower() != "area") return;
-            if(Caster==null) return;
-			if(Caster is GamePlayer&&Caster.IsStealthed)
+			if (target == null && Spell.Target.ToLower() != "area") return;
+			if (Caster == null) return;
+
+			if (Caster is GamePlayer && Caster.IsStealthed)
+			{
 				(Caster as GamePlayer).Stealth(false);
+			}
 
 			if (Spell.Target.ToLower() == "area")
 			{
+				// always put archer into combat when using area (volley)
+				Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+
 				foreach (GameLiving npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+				{
 					if (npc.Realm == 0 || Caster.Realm == 0)
 					{
 						npc.LastAttackedByEnemyTickPvE = npc.CurrentRegion.Time;
-						Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
 					}
+				}
 			}
-			else if (target != null)
+			else
 			{
 				if (target.Realm == 0 || Caster.Realm == 0)
 				{
@@ -324,6 +332,7 @@ namespace DOL.GS.Spells
 					Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
 				}
 			}
+
 			base.FinishSpellCast(target);
 		}
 
