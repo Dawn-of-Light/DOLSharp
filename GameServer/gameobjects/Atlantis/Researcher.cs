@@ -34,6 +34,17 @@ namespace DOL.GS
         public Researcher()
             : base() { }
 
+		/// <summary>
+		/// Can trade untradable items
+		/// </summary>
+		public override bool CanTradeAnyItem
+		{
+			get
+			{
+				return true;
+			}
+		}
+
         public override bool AddToWorld()
         {
             GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
