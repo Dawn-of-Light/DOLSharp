@@ -159,7 +159,7 @@ namespace DOL.AI.Brain
 
             foreach (GamePlayer player in Body.GetPlayersInRadius(AggressionRange))
             {
-                if (Util.Chance(GetChanceToAggro(player)))
+                if (Util.Chance(GetChanceToAggroOn(player)))
                 {
                     Aggression.Raise(player, InternalAggression.Initial);
                     return;
@@ -190,7 +190,7 @@ namespace DOL.AI.Brain
         /// </summary>
         /// <param name="living"></param>
         /// <returns></returns>
-        protected virtual ushort GetChanceToAggro(GameLiving living)
+        protected virtual ushort GetChanceToAggroOn(GameLiving living)
         {
             return living.IsAttackable
                 ? AggressionLevel
@@ -538,7 +538,8 @@ namespace DOL.AI.Brain
             private object m_syncObject = new object();
 
             /// <summary>
-            /// Get current amount of aggression for this living.
+            /// Returns true if the living is considered an enemy,
+            /// else false.
             /// </summary>
             /// <param name="living"></param>
             /// <returns></returns>
