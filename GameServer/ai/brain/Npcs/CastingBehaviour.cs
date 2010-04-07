@@ -29,14 +29,14 @@ namespace DOL.AI.Brain
         {
             foreach (Spell spell in Body.HarmfulSpells)
             {
-                if (target is GameLiving && GameLiving.HasEffect(target as GameLiving, spell))
-                    continue;
-
-                Body.StopMoving();
-                Body.TargetObject = target;
-                Body.TurnTo(target);
-                Body.CastSpell(spell, SpellLine);
-                return;
+                if (target.IsAttackable && !target.HasEffect(spell))
+                {
+                    Body.StopMoving();
+                    Body.TargetObject = target;
+                    Body.TurnTo(target);
+                    Body.CastSpell(spell, SpellLine);
+                    return;
+                }
             }
 
             Body.Notify(GameLivingEvent.CastFailed, Body);
