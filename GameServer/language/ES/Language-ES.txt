@@ -81,7 +81,7 @@ GamePlayer.GainExperience.YouGet:			Consigues {0} puntos de experiencia.
 GamePlayer.GainExperience.CannotRaise:		No puedes alcanzar nivel 6 hasta que te unas a una facción avanzada!
 GamePlayer.GainExperience.TalkToTrainer:	Habla con tu entrenador para más información.
 GamePlayer.OnLevelUp.YouRaise:				 Subes a nivel {0}
-GamePlayer.OnLevelUp.YouAchived:			Has alcanzado nivel {0}
+GamePlayer.OnLevelUp.YouAchieved:			Has alcanzado nivel {0}
 GamePlayer.OnLevelUp.FreeLevelEligible:		Puedes conseguir un nivel gratuito!Ve a tu entrenador para recibirlo(o escribe /freelevel decline para rechazarlo).
 GamePlayer.OnLevelUp.Reached:				{0} alcanzó nivel {1} en {2}!
 GamePlayer.OnLevelUp.StatRaise:				 Tus características de personaje aumentan!

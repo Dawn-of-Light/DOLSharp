@@ -228,7 +228,7 @@ GamePlayer.OnItemUnequipped.BothHandsFree:		Rinfoderi {0}. Entrambe le tue mani 
 GamePlayer.OnItemUnequipped.LeftHandFree:		Rinfoderi {0} dalla tua mano sinistra.
 GamePlayer.OnItemUnequipped.RightHandFree:		Rinfoderi {0} dalla tua mano destra.
 GamePlayer.OnLevelUp.YouRaise:				Il tuo livello sale a {0}!
-GamePlayer.OnLevelUp.YouAchived:			Hai raggiunto il livello {0}!
+GamePlayer.OnLevelUp.YouAchieved:			Hai raggiunto il livello {0}!
 GamePlayer.OnLevelUp.FreeLevelEligible:		Ora puoi acquisire un livello gratuito! Clicca sul tuo allenatore per riceverlo (oppure digita '/freelevel decline' per rinunciare al livello gratuito).
 GamePlayer.OnLevelUp.Reached:				{0} ha raggiunto il livello {1} a {2}!
 GamePlayer.OnLevelUp.StatRaise:				Le tue statistiche aumentano!
