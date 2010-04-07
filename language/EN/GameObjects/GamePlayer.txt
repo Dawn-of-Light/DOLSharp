@@ -143,7 +143,7 @@ GamePlayer.OnLevelUp.PowerRaise:			Your power raises by {0} points.
 GamePlayer.OnLevelUp.Reached:				{0} reached level {1} in {2}!	
 GamePlayer.OnLevelUp.SecondStage:			You raise to level {0} Stage 2!		
 GamePlayer.OnLevelUp.StatRaise:				Your stats raise!	
-GamePlayer.OnLevelUp.YouAchived:			You have achieved level {0}!		
+GamePlayer.OnLevelUp.YouAchieved:			You have achieved level {0}!		
 GamePlayer.OnLevelUp.YouGetSpec:			You get {0} more Specialization Points to spend at this level!		
 GamePlayer.OnLevelUp.YouRaise:				You raise to level {0}!	
 GamePlayer.OnLinkdeath.Linkdead:			{0} went linkdead!		

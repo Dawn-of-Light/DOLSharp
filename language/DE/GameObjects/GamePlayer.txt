@@ -143,7 +143,7 @@ GamePlayer.OnLevelUp.PowerRaise:			Eure Magiekraft erhöht sich um {0} Punkte.
 GamePlayer.OnLevelUp.Reached:				{0} erreicht Erfahrungsstufe {1} in {2}!	
 GamePlayer.OnLevelUp.SecondStage:			Ihr erreicht Teil 2 der {0}. Erfahrungsstufe!		
 GamePlayer.OnLevelUp.StatRaise:				Eure Attribute sind gestiegen!	
-GamePlayer.OnLevelUp.YouAchived:			Ihr erreicht die Erfahrungsstufe {0} !		
+GamePlayer.OnLevelUp.YouAchieved:			Ihr erreicht die Erfahrungsstufe {0} !		
 GamePlayer.OnLevelUp.YouGetSpec:			Ihr erhaltet {0} Spezialisierungspunkte, die Ihr nach Belieben verteilen könnt!		
 GamePlayer.OnLevelUp.YouRaise:				Ihr steigt zur {0}. Erfahrungsstufe auf!	
 GamePlayer.OnLinkdeath.Linkdead:			Die Verbindung zu {0} wurde unterbrochen!		
