@@ -147,7 +147,7 @@ GamePlayer.OnLevelUp.PowerRaise:			Vos points de mana ont augmenté de {0}.
 GamePlayer.OnLevelUp.Reached:				{0} a atteint le niveau {1} dans {2}!
 GamePlayer.OnLevelUp.SecondStage:			Vous avez atteint la deuxième étape de votre niveau {0} !
 GamePlayer.OnLevelUp.StatRaise:				Vos statistiques augmentent !
-GamePlayer.OnLevelUp.YouAchived:			Vous avez achevé le niveau {0}!
+GamePlayer.OnLevelUp.YouAchieved:			Vous avez achevé le niveau {0}!
 GamePlayer.OnLevelUp.YouGetSpec:			Vous obtenez {0} points de spécialisation à dépenser pour ce niveau!
 GamePlayer.OnLevelUp.YouRaise:				Vous avez atteint le niveau {0}!
 GamePlayer.OnLinkdeath.Linkdead:			{0} a été deconnecté(e) par le serveur !

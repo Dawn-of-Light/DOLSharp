@@ -4758,10 +4758,15 @@ namespace DOL.GS
 			IsLevelSecondStage = false;
 
 			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouRaise", Level), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouAchived", Level), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+			if (Level % 10 == 0)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.YouAchieved", Level), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+			}
 			Out.SendPlayerFreeLevelUpdate();
 			if (FreeLevelState == 2)
+			{
 				Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.FreeLevelEligible"));
+			}
 
 			switch (Level)
 			{

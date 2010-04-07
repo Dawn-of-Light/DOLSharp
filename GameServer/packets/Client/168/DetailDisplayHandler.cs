@@ -155,12 +155,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (invItem.CrafterName != null && invItem.CrafterName != "")
 						{
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CrafterName", invItem.CrafterName));
+							objectInfo.Add(" ");
 						}
 						else if (invItem.Id_nb == "UniqueObject") // tolakram - force display of unique object
 						{
                             objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.UniqueObject"));
-                            objectInfo.Add(" ");//empty line
+                            objectInfo.Add(" ");
 						}
+
+						if (invItem.Description != null && invItem.Description != "")
+						{
+							objectInfo.Add(invItem.Description);
+							objectInfo.Add(" ");
+						}
+
 
 						if ((invItem.Object_Type >= (int)eObjectType.GenericWeapon) && (invItem.Object_Type <= (int)eObjectType._LastWeapon) ||
 							invItem.Object_Type == (int)eObjectType.Instrument)
@@ -193,11 +201,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (invItem.CanUseEvery > 0)
 						{
+							objectInfo.Add(" ");
+
 							int minutes = invItem.CanUseEvery / 60;
 							int seconds = invItem.CanUseEvery % 60;
 
-							objectInfo.Add(String.Format("Can use item every: {0:00}:{1:00}",
-									minutes, seconds));
+							objectInfo.Add(String.Format("Can use item every: {0:00}:{1:00}", minutes, seconds));
 
 							int cooldown = invItem.CanUseAgainIn;
 
@@ -206,8 +215,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								minutes = cooldown / 60;
 								seconds = cooldown % 60;
 
-								objectInfo.Add(String.Format("Can use again in: {0:00}:{1:00}",
-									minutes, seconds));
+								objectInfo.Add(String.Format("Can use again in: {0:00}:{1:00}", minutes, seconds));
 							}
 						}
 
@@ -222,25 +230,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (invItem.Object_Type == (int)eObjectType.Magical && invItem.Item_Type == (int)eInventorySlot.FirstBackpack) // potion
 							WritePotionInfo(objectInfo, invItem, client);
 
-						if (!invItem.IsDropable || !invItem.IsPickable)
-							objectInfo.Add(" ");//empty line
+						if (!invItem.IsDropable || !invItem.IsPickable || invItem.IsIndestructible)
+							objectInfo.Add(" ");
 
 						if (!invItem.IsPickable)
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotTraded"));
-						if (!invItem.IsDropable)
-						{
-							//objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotDropped"));
-							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotSold"));
-						}
 
-                        if (invItem.Description != null)
-                            objectInfo.Add(invItem.Description);
+						if (!invItem.IsDropable)
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotSold"));
 
 						if (invItem.IsIndestructible)
 							objectInfo.Add("Cannot be destroyed.");
 
 						if (invItem.BonusLevel > 0)
+						{
+							objectInfo.Add(" ");
 							objectInfo.Add(string.Format("Bonus Level: {0}", invItem.BonusLevel));
+						}
 
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
