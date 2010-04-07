@@ -480,6 +480,17 @@ namespace DOL.GS
 			set { m_Model = value; }
 		}
 
+        /// <summary>
+        /// Whether or not the object can be attacked.
+        /// </summary>
+        public virtual bool IsAttackable
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public virtual bool IsAttackableDoor
         {
             get
@@ -1466,6 +1477,32 @@ namespace DOL.GS
 		}
 
 		#endregion
+
+        #region Spell Cast
+
+        /// <summary>
+        /// Returns true if the object has the spell effect,
+        /// else false.
+        /// </summary>
+        /// <param name="spell"></param>
+        /// <returns></returns>
+        public virtual bool HasEffect(Spell spell)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the object has a spell effect of a
+        /// given type, else false.
+        /// </summary>
+        /// <param name="spell"></param>
+        /// <returns></returns>
+        public virtual bool HasEffect(Type effectType)
+        {
+            return false;
+        }
+
+        #endregion
 
 		/// <summary>
 		/// Returns the string representation of the GameObject
