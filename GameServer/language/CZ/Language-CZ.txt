@@ -179,7 +179,7 @@ GamePlayer.OnLevelUp.PowerRaise:			Tvoje mana vzrostla o {0} bodu.
 GamePlayer.OnLevelUp.Reached:				{0} dosahl urovne {1} v {2}!
 GamePlayer.OnLevelUp.SecondStage:			Postoupil jsi do druhe etapy {0} urovne!
 GamePlayer.OnLevelUp.StatRaise:				Tvoje vlastnosti se zvysily!
-GamePlayer.OnLevelUp.YouAchived:			Dosahl jsi {0} urovne!
+GamePlayer.OnLevelUp.YouAchieved:			Dosahl jsi {0} urovne!
 GamePlayer.OnLevelUp.YouGetSpec:			Na teto urovni jsi ziskal {0} dovednostnich bodu k rozdeleni!
 GamePlayer.OnLevelUp.YouRaise:				Postoupil jsi na {0} uroven!
 GamePlayer.OnLinkdeath.Linkdead:			{0} ztratil spojeni!
