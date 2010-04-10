@@ -149,6 +149,20 @@ namespace DOL.GS.Spells
 
 				AttackData ad = m_handler.CalculateDamageToTarget(target, 0.5); // half of the damage is magical
 
+				// check for bladeturn miss
+				if (ad.AttackResult == GameLiving.eAttackResult.Missed)
+				{
+					// Not sure if pet or npc should aggro on BT block or not
+					//target.OnAttackedByEnemy(ad);
+					//if (target is GameNPC)
+					//{
+					//    IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
+					//    if (aggroBrain != null)
+					//        aggroBrain.AddToAggroList(caster, 1);
+					//}
+					return;
+				}
+
 				if (Util.Chance(missrate)) 
 				{
 					ad.AttackResult = GameLiving.eAttackResult.Missed;
