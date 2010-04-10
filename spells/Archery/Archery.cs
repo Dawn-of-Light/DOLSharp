@@ -237,6 +237,12 @@ namespace DOL.GS.Spells
 					}
 				}
 
+				// Volley damage reduction based on live testing - tolakram
+				if (Spell.Target.ToLower() == "area")
+				{
+					ad.Damage = (int)(ad.Damage * 0.815);
+				}
+
 				if (Caster.AttackWeapon != null)
 				{
 					// Quality
