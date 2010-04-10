@@ -2007,62 +2007,64 @@ return false;
 			#region Process the targets
 			switch (NewTarget)
 			{
-					#region GTAoE
-					// GTAoE
+				#region GTAoE
+				// GTAoE
 				case "area":
 					//Dinberg - fix for animists turrets, where before a radius of zero meant that no targets were ever
 					//selected!
 					if (Spell.SpellType == "SummonAnimistPet" || Spell.SpellType == "SummonAnimistFnF")
+					{
 						list.Add(Caster);
+					}
 					else
 						if (NewRadius > 0)
-					{
-						foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
 						{
-							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
+							foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
 							{
-								// Apply Mentalist RA5L
-								SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
-								if (SelectiveBlindness != null)
+								if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 								{
-									GameLiving EffectOwner = SelectiveBlindness.EffectSource;
-									if(EffectOwner==player)
+									// Apply Mentalist RA5L
+									SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+									if (SelectiveBlindness != null)
 									{
-										if (Caster is GamePlayer) ((GamePlayer)Caster).Out.SendMessage(string.Format("{0} is invisible to you!", player.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+										GameLiving EffectOwner = SelectiveBlindness.EffectSource;
+										if (EffectOwner == player)
+										{
+											if (Caster is GamePlayer) ((GamePlayer)Caster).Out.SendMessage(string.Format("{0} is invisible to you!", player.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+										}
+										else list.Add(player);
 									}
 									else list.Add(player);
 								}
-								else list.Add(player);
 							}
-						}
-						foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
-						{
-							if (npc is GameStorm)
-								list.Add(npc);
-							else if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
+							foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
 							{
-								if(!npc.HasAbility("DamageImmunity")) list.Add(npc);
+								if (npc is GameStorm)
+									list.Add(npc);
+								else if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
+								{
+									if (!npc.HasAbility("DamageImmunity")) list.Add(npc);
+								}
 							}
 						}
-					}
 					break;
-					#endregion
-					#region Corpse
+				#endregion
+				#region Corpse
 				case "corpse":
 					if (target != null && !target.IsAlive)
 						list.Add(target);
 					break;
-					#endregion
-					#region Pet
+				#endregion
+				#region Pet
 				case "pet":
 					{
 						//Start-- [Ganrod] Nidel: Can cast Pet spell on our Minion/Turret pet without ControlledNpc
 						// awesome, Pbaoe with target pet spell ?^_^
 						if (NewRadius > 0 && Spell.Range == 0)
 						{
-							foreach(GameNPC pet in Caster.GetNPCsInRadius(NewRadius))
+							foreach (GameNPC pet in Caster.GetNPCsInRadius(NewRadius))
 							{
-								if(Caster.IsControlledNPC(pet))
+								if (Caster.IsControlledNPC(pet))
 								{
 									list.Add(pet);
 								}
@@ -2076,7 +2078,7 @@ return false;
 
 						GameNPC petBody = target as GameNPC;
 						// check target
-						if(petBody != null && Caster.IsWithinRadius(petBody, Spell.Range))
+						if (petBody != null && Caster.IsWithinRadius(petBody, Spell.Range))
 						{
 							if (Caster.IsControlledNPC(petBody))
 							{
@@ -2084,22 +2086,22 @@ return false;
 							}
 						}
 						//check controllednpc if target isn't pet (our pet)
-						if(list.Count < 1 && Caster.ControlledNpcBrain != null)
+						if (list.Count < 1 && Caster.ControlledNpcBrain != null)
 						{
 							petBody = Caster.ControlledNpcBrain.Body;
-							if(petBody != null && Caster.IsWithinRadius(petBody, Spell.Range))
+							if (petBody != null && Caster.IsWithinRadius(petBody, Spell.Range))
 							{
 								list.Add(petBody);
 							}
 						}
 
 						//Single spell buff/heal...
-						if(Spell.Radius == 0)
+						if (Spell.Radius == 0)
 						{
 							return list;
 						}
 						//Our buff affects every pet in the area of targetted pet (our pets)
-						if(Spell.Radius > 0 && petBody != null)
+						if (Spell.Radius > 0 && petBody != null)
 						{
 							foreach (GameNPC pet in petBody.GetNPCsInRadius(NewRadius))
 							{
@@ -2114,8 +2116,8 @@ return false;
 					}
 					//End-- [Ganrod] Nidel: Can cast Pet spell on our Minion/Turret pet without ControlledNpc
 					break;
-					#endregion
-					#region Enemy
+				#endregion
+				#region Enemy
 				case "enemy":
 					if (NewRadius > 0)
 					{
@@ -2130,7 +2132,7 @@ return false;
 								if (SelectiveBlindness != null)
 								{
 									GameLiving EffectOwner = SelectiveBlindness.EffectSource;
-									if(EffectOwner==player)
+									if (EffectOwner == player)
 									{
 										if (Caster is GamePlayer) ((GamePlayer)Caster).Out.SendMessage(string.Format("{0} is invisible to you!", player.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 									}
@@ -2143,7 +2145,7 @@ return false;
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
 							{
-								if(!npc.HasAbility("DamageImmunity")) list.Add(npc);
+								if (!npc.HasAbility("DamageImmunity")) list.Add(npc);
 							}
 						}
 					}
@@ -2152,25 +2154,26 @@ return false;
 						if (target != null && GameServer.ServerRules.IsAllowedToAttack(Caster, target, true))
 						{
 							// Apply Mentalist RA5L
-							if(Spell.Range>0)
+							if (Spell.Range > 0)
 							{
 								SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
 								if (SelectiveBlindness != null)
 								{
 									GameLiving EffectOwner = SelectiveBlindness.EffectSource;
-									if(EffectOwner==target)
+									if (EffectOwner == target)
 									{
 										if (Caster is GamePlayer) ((GamePlayer)Caster).Out.SendMessage(string.Format("{0} is invisible to you!", target.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 									}
-									else if(!target.HasAbility("DamageImmunity")) list.Add(target);
+									else if (!target.HasAbility("DamageImmunity")) list.Add(target);
 								}
-								else if(!target.HasAbility("DamageImmunity")) list.Add(target);
-							} else if(!target.HasAbility("DamageImmunity")) list.Add(target);
+								else if (!target.HasAbility("DamageImmunity")) list.Add(target);
+							}
+							else if (!target.HasAbility("DamageImmunity")) list.Add(target);
 						}
 					}
 					break;
-					#endregion
-					#region Realm
+				#endregion
+				#region Realm
 				case "realm":
 					if (NewRadius > 0)
 					{
@@ -2197,8 +2200,8 @@ return false;
 							list.Add(target);
 					}
 					break;
-					#endregion
-					#region Self
+				#endregion
+				#region Self
 				case "self":
 					{
 						if (NewRadius > 0)
@@ -2226,8 +2229,8 @@ return false;
 						}
 						break;
 					}
-					#endregion
-					#region Group
+				#endregion
+				#region Group
 				case "group":
 					{
 						Group group = m_caster.Group;
@@ -2294,8 +2297,8 @@ return false;
 
 						break;
 					}
-					#endregion
-					#region Cone AoE
+				#endregion
+				#region Cone AoE
 				case "cone":
 					{
 						target = Caster;
@@ -2324,12 +2327,12 @@ return false;
 							if (!GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
 								continue;
 
-							if(!npc.HasAbility("DamageImmunity")) list.Add(npc);
+							if (!npc.HasAbility("DamageImmunity")) list.Add(npc);
 
 						}
 						break;
 					}
-					#endregion
+				#endregion
 			}
 			#endregion
 			return list;
