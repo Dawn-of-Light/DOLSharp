@@ -180,79 +180,87 @@ namespace DOL.GS.Spells
 
 
 		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
-		{		
+		{
 			AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
-			GamePlayer player; 
+			GamePlayer player;
 			GameSpellEffect bladeturn = FindEffectOnTarget(target, "Bladeturn");
 			if (bladeturn != null)
 			{
 				switch (Spell.LifeDrainReturn)
 				{
-					case 0 :
+					case 0:
+						{
 							if (Caster is GamePlayer)
 							{
 								player = Caster as GamePlayer;
 								player.Out.SendMessage("Your strike was absorbed by a magical barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							}								
+							}
 							if (target is GamePlayer)
 							{
-								player = target as GamePlayer;	
+								player = target as GamePlayer;
 								player.Out.SendMessage("The blow was absorbed by a magical barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 								ad.AttackResult = GameLiving.eAttackResult.Missed;
 								bladeturn.Cancel(false);
 							}
-							break;
-					case 1 :
+						}
+						break;
+					case 1:
+						{
 							if (target is GamePlayer)
 							{
-								player = target as GamePlayer;	
+								player = target as GamePlayer;
 								player.Out.SendMessage("A shot penetrated your magic barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 							}
 							ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-							break;
+						}
+						break;
 					case 2:
-							player = target as GamePlayer;	
+						{
+							player = target as GamePlayer;
 							player.Out.SendMessage("A shot penetrated your magic barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 							ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 							bladeturn.Cancel(false);
-							break;						
-				}
-				return ad;
-            }
-
-			GameNPC npc = target as GameNPC;
-			if (npc != null)
-			{
-				if (npc.Brain != null && (npc.Brain is IControlledBrain) == false)
-				{
-					// boost for npc damage until we find exactly where calculation is going wrong -tolakram
-					ad.Damage = (int)(ad.Damage * 1.57);
+						}
+						break;
 				}
 			}
 
-			if (Caster.AttackWeapon != null)
+			if (ad.AttackResult != GameLiving.eAttackResult.Missed)
 			{
-				// Quality
-				ad.Damage -= (int)(ad.Damage * (100 - Caster.AttackWeapon.Quality) * .01);
-
-				// Condition
-				ad.Damage = (int)((double)ad.Damage * Math.Min(1.0, (double)Caster.AttackWeapon.Condition / (double)Caster.AttackWeapon.MaxCondition));
-
-				// Patch Note:  http://support.darkageofcamelot.com/kb/article.php?id=931
-				// - The Damage Per Second (DPS) of your bow will have an effect on your damage for archery shots. If the effective DPS 
-				//   of your equipped bow is less than that of your max DPS for the level of archery shot you are using, the damage of your 
-				//   shot will be reduced. Max DPS for a particular level can be found by using this equation: (.3 * level) + 1.2
-
-				int spellRequiredDPS = 12 + 3 * Spell.Level;
-
-				if (Caster.AttackWeapon.DPS_AF < spellRequiredDPS)
+				GameNPC npc = target as GameNPC;
+				if (npc != null)
 				{
-					double percentReduction = (double)Caster.AttackWeapon.DPS_AF / (double)spellRequiredDPS;
-					ad.Damage = (int)(ad.Damage * percentReduction);
+					if (npc.Brain != null && (npc.Brain is IControlledBrain) == false)
+					{
+						// boost for npc damage until we find exactly where calculation is going wrong -tolakram
+						ad.Damage = (int)(ad.Damage * 1.57);
+					}
+				}
+
+				if (Caster.AttackWeapon != null)
+				{
+					// Quality
+					ad.Damage -= (int)(ad.Damage * (100 - Caster.AttackWeapon.Quality) * .01);
+
+					// Condition
+					ad.Damage = (int)((double)ad.Damage * Math.Min(1.0, (double)Caster.AttackWeapon.Condition / (double)Caster.AttackWeapon.MaxCondition));
+
+					// Patch Note:  http://support.darkageofcamelot.com/kb/article.php?id=931
+					// - The Damage Per Second (DPS) of your bow will have an effect on your damage for archery shots. If the effective DPS 
+					//   of your equipped bow is less than that of your max DPS for the level of archery shot you are using, the damage of your 
+					//   shot will be reduced. Max DPS for a particular level can be found by using this equation: (.3 * level) + 1.2
+
+					int spellRequiredDPS = 12 + 3 * Spell.Level;
+
+					if (Caster.AttackWeapon.DPS_AF < spellRequiredDPS)
+					{
+						double percentReduction = (double)Caster.AttackWeapon.DPS_AF / (double)spellRequiredDPS;
+						ad.Damage = (int)(ad.Damage * percentReduction);
+					}
 				}
 			}
 
-			return ad;			
+			return ad;
 		}
 
 		/// <summary>
