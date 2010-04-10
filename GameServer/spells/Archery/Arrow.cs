@@ -54,8 +54,19 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void StartSpell(GameLiving target)
 		{
+			int targetCount = 0;
+
 			foreach (GameLiving targ in SelectTargets(target))
+			{
 				DealDamage(targ);
+				targetCount++;
+
+				if (Spell.Target.ToLower() == "area" && targetCount >= Spell.Value)
+				{
+					// Volley is limited to Volley # + 2 targets.  This number is stored in Spell.Value
+					break;
+				}
+			}
 		}
 
 		private bool CheckLOS(GameLiving living)
@@ -263,14 +274,23 @@ namespace DOL.GS.Spells
 				ad.UncappedDamage = ad.Damage;
 				ad.Damage = (int)Math.Min(ad.Damage, m_handler.Spell.Damage * 3);
 
-				if(caster is GamePlayer)
-					ad.Damage = (int)(ad.Damage*((GamePlayer)caster).Effectiveness);
+				if (caster is GamePlayer)
+				{
+					ad.Damage = (int)(ad.Damage * ((GamePlayer)caster).Effectiveness);
+				}
 
 				// fix critical damage
 				if (blocked == false && ad.CriticalDamage > 0)
 				{
-					int critMax = (target is GamePlayer) ? ad.Damage/2 : ad.Damage;
-					ad.CriticalDamage = Util.Random(critMax / 10, critMax);
+					if (m_handler.Spell.Target.ToLower() == "area")
+					{
+						ad.CriticalDamage = 0;
+					}
+					else
+					{
+						int critMax = (target is GamePlayer) ? ad.Damage / 2 : ad.Damage;
+						ad.CriticalDamage = Util.Random(critMax / 10, critMax);
+					}
 				}
 
 				m_handler.SendDamageMessages(ad);
