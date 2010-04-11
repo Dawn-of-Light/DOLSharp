@@ -242,6 +242,7 @@ namespace DOL.GS
 
 			// Find the teleport location in the database.  For Djinns use the player realm to match Interact list given.
 			Teleport port = WorldMgr.GetTeleportLocation(player.Realm, String.Format("{0}:{1}", Type, text));
+
 			if (port != null)
 			{
 				if (port.RegionID == 0 && port.X == 0 && port.Y == 0 && port.Z == 0)
@@ -363,21 +364,21 @@ namespace DOL.GS
                     {
                         player.Out.SendMessage(String.Format(teleportInfo, Name, "Oceanus"),
                             eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        base.OnTeleport(player, destination);
+                        OnTeleport(player, destination);
                         return;
                     }
                 case "delta":
                     {
                         player.Out.SendMessage(String.Format(teleportInfo, Name, "Stygia"),
                             eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        base.OnTeleport(player, destination);
+                        OnTeleport(player, destination);
                         return;
                     }
                 case "green glades":
                     {
                         player.Out.SendMessage(String.Format(teleportInfo, Name, "Aerus"),
                             eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        base.OnTeleport(player, destination);
+                        OnTeleport(player, destination);
                         return;
                     }
             }
