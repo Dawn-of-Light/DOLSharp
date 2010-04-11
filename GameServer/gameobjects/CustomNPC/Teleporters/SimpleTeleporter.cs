@@ -65,17 +65,37 @@ namespace DOL.GS
 			if (!base.Interact(player))
 				return false;
 
-			if (GuildName == null || GuildName.Length == 0)
+			if (Realm != eRealm.None && Realm != player.Realm && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
+				return false;
+
+			if ((GuildName == null || GuildName.Length == 0) && player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
 			{
 				SayTo(player, "I have not been set up properly, I need a guild name in order to work.");
+				return true;
 			}
 
 			LoadDestinations();
 
-			SayTo(player, PackageID);
+			if (PackageID == string.Empty && player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
+			{
+				SayTo(player, "You can set what I say to players by setting the packageid with /mob package \"Some Text\"");
+			}
+
+			if (PackageID != string.Empty)
+			{
+				SayTo(player, PackageID);
+			}
+
+			int numDestinations = 0;
 			foreach (Teleport destination in m_destinations)
 			{
 				player.Out.SendMessage(String.Format("[{0}]", destination.TeleportID), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				numDestinations++;
+			}
+
+			if (numDestinations == 0 && player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
+			{
+				SayTo(player, "I have not been set up properly, I need teleport locations.  Do /teleport add \"Destination Name\" \"" + GuildName + "\"");
 			}
 
 			return true;
@@ -104,6 +124,9 @@ namespace DOL.GS
 				m_destinations.Clear();
 				return false;
 			}
+
+			if (Realm != eRealm.None && Realm != player.Realm && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
+				return false;
 
 			Teleport destination = null;
 
