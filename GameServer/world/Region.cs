@@ -1061,6 +1061,18 @@ namespace DOL.GS
 				}
 			}
 		}
+
+        /// <summary>
+        /// Check if the given region is one of the Atlantis starting
+        /// locations.
+        /// </summary>
+        /// <param name="regionId"></param>
+        /// <returns></returns>
+        public static bool IsAtlantisStartingLocation(int regionId)
+        {
+            return (regionId == 30 || regionId == 73 || regionId == 130);
+        }
+
 		#endregion
 
 		#region Area
