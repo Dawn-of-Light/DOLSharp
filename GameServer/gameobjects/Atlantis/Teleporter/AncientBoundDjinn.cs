@@ -356,6 +356,10 @@ namespace DOL.GS
             if (player == null)
                 return;
 
+            if (Region.IsAtlantisStartingLocation(player.CurrentRegionID) &&
+                Region.IsAtlantisStartingLocation(destination.RegionID))
+                destination.RegionID = player.CurrentRegionID;
+
             String teleportInfo = "The magic of the {0} delivers you to the Haven of {1}.";
 
             switch (destination.TeleportID.ToLower())
@@ -364,21 +368,21 @@ namespace DOL.GS
                     {
                         player.Out.SendMessage(String.Format(teleportInfo, Name, "Oceanus"),
                             eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        OnTeleport(player, destination);
+                        base.OnTeleport(player, destination);
                         return;
                     }
                 case "delta":
                     {
                         player.Out.SendMessage(String.Format(teleportInfo, Name, "Stygia"),
                             eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        OnTeleport(player, destination);
+                        base.OnTeleport(player, destination);
                         return;
                     }
                 case "green glades":
                     {
                         player.Out.SendMessage(String.Format(teleportInfo, Name, "Aerus"),
                             eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        OnTeleport(player, destination);
+                        base.OnTeleport(player, destination);
                         return;
                     }
             }
@@ -393,15 +397,8 @@ namespace DOL.GS
         /// <param name="destination"></param>
         protected override void OnTeleport(GamePlayer player, Teleport destination)
         {
-            player.Out.SendMessage("There is an odd distortion in the air around you...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			// if player is porting in atlantis to another atlantis location then keep in the same region
-			// this allows us to support cooperative atlantis zones
-			if ((player.CurrentRegionID == 30 || player.CurrentRegionID == 73 || player.CurrentRegionID == 130) &&
-				(destination.RegionID == 30 || destination.RegionID == 73 || destination.RegionID == 130))
-			{
-				destination.RegionID = player.CurrentRegionID;
-			}
+            player.Out.SendMessage("There is an odd distortion in the air around you...", 
+                eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
             base.OnTeleport(player, destination);
         }
