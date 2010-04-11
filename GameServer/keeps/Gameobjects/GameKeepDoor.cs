@@ -204,6 +204,11 @@ namespace DOL.GS.Keeps
 			set
 			{
 				base.Health = value;
+
+				if (HealthPercent > 15 && m_state == eDoorState.Open)
+				{
+					CloseDoor();
+				}
 			}
 		}
 
@@ -700,7 +705,7 @@ namespace DOL.GS.Keeps
 		{
 			foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
 			{
-				client.Out.SendDoorState(this);
+				client.Player.SendDoorUpdate(this);
 			}
 		}
 
@@ -726,8 +731,6 @@ namespace DOL.GS.Keeps
 		public void Repair(int amount)
 		{
 			Health += amount;
-			if (HealthPercent > 15 && m_state == eDoorState.Open)
-				CloseDoor();
 		}
 		/// <summary>
 		/// This Function is called when keep is taken to repair door

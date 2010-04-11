@@ -92,11 +92,41 @@ namespace DOL.GS
 		/// </summary>
 		protected byte m_lastUpdateArray;
 		/// <summary>
-		/// Holds the tickcount when the npcs around this player
+		/// Holds the tickcount when the objects around this player
 		/// were checked the last time for new npcs. Will be done
 		/// every 250ms in WorldMgr.
 		/// </summary>
-		protected int m_lastNPCUpdate;
+		protected int m_lastWorldUpdate;
+
+		protected Dictionary<int, eDoorState> m_doorUpdateList = null;
+
+		protected ushort m_doorUpdateRegionID;
+
+		public void SendDoorUpdate(IDoor door)
+		{
+			Out.SendObjectCreate(door as GameObject);
+
+			if (m_doorUpdateList == null || m_doorUpdateRegionID != CurrentRegionID)
+			{
+				m_doorUpdateList = new Dictionary<int,eDoorState>();
+				m_doorUpdateRegionID = CurrentRegionID;
+				m_doorUpdateList.Add(door.ObjectID, door.State);
+
+				Out.SendDoorState(door);
+			}
+			else
+			{
+				if (m_doorUpdateList.ContainsKey(door.ObjectID) == false || m_doorUpdateList[door.ObjectID] != door.State)
+				{
+					Out.SendDoorState(door);
+					m_doorUpdateList[door.ObjectID] = door.State;
+				}
+			}
+
+			Out.SendObjectUpdate(door as GameObject);
+		}
+
+
 
 		/// <summary>
 		/// true if the targetObject is visible
@@ -218,6 +248,8 @@ namespace DOL.GS
 			else
 				m_lastUpdateArray = 0;
 		}
+
+
 
 		/// <summary>
 		/// Returns the GameClient of this Player
@@ -770,12 +802,12 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The last time we did update the NPCs around us
+		/// The last time we did update the world around us
 		/// </summary>
-		public int LastNPCUpdate
+		public int LastWorldUpdate
 		{
-			get { return m_lastNPCUpdate; }
-			set { m_lastNPCUpdate = value; }
+			get { return m_lastWorldUpdate; }
+			set { m_lastWorldUpdate = value; }
 		}
 
 		private bool m_statsAnon = false;
@@ -9388,7 +9420,7 @@ namespace DOL.GS
 			{
 				//Add the player to the new coordinates
 				Out.SendPlayerJump(false);
-				LastNPCUpdate = Environment.TickCount;
+				LastWorldUpdate = Environment.TickCount;
 				CurrentUpdateArray.SetAll(false);
 				foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
@@ -14463,7 +14495,7 @@ namespace DOL.GS
 			m_housingUpdateArray = null;
 			m_lastUpdateArray = 0;
 			m_canFly = false;
-			m_lastNPCUpdate = Environment.TickCount;
+			m_lastWorldUpdate = Environment.TickCount;
 			m_inventory = new GamePlayerInventory(this);
 			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemEquipped, new DOLEventHandler(OnItemEquipped));
 			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemUnequipped, new DOLEventHandler(OnItemUnequipped));
