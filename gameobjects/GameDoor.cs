@@ -194,7 +194,7 @@ namespace DOL.GS
 						m_state = value;
 						foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
-							player.Out.SendDoorState(this);
+							player.SendDoorUpdate(this);
 						}
 					}
 				}

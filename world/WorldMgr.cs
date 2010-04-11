@@ -721,6 +721,8 @@ namespace DOL.GS
 			return Util.GetThreadStack(m_NPCUpdateThread);
 		}
 
+		private static uint m_lastWorldObjectUpdateTick = 0;
+
 		/// <summary>
 		/// This thread updates the NPCs around the player at very short
 		/// intervalls! But since the update is very quick the thread will
@@ -755,7 +757,7 @@ namespace DOL.GS
 						if (player.ObjectState != GameObject.eObjectState.Active)
 							continue;
 
-						if (Environment.TickCount - player.LastNPCUpdate > (int)(ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL >= 100 ? ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL : 100))
+						if (Environment.TickCount - player.LastWorldUpdate > (int)(ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL >= 100 ? ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL : 100))
 						{
 							BitArray carray = player.CurrentUpdateArray;
 							BitArray narray = player.NewUpdateArray;
@@ -783,9 +785,62 @@ namespace DOL.GS
 											log.Error("NPC update: " + e.GetType().FullName + " (" + npc.ToString() + ")", e);
 									}
 								}
+
+								// Broadcast updates of all non-npc objects around this player
+								if (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL > 0 && (uint)Environment.TickCount - m_lastWorldObjectUpdateTick > (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL >= 10000 ? ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL : 10000))
+								{
+									foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+									{
+										client.Out.SendObjectCreate(item);
+									}
+
+									foreach (IDoor door in client.Player.GetDoorsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+									{
+										client.Player.SendDoorUpdate(door);
+									}
+
+									//housing
+									if (client.Player.CurrentRegion.HousingEnabled)
+									{
+										if (client.Player.HousingUpdateArray == null)
+											client.Player.HousingUpdateArray = new BitArray(DOL.GS.Housing.HouseMgr.MAXHOUSES, false);
+
+										Hashtable houses = (Hashtable)DOL.GS.Housing.HouseMgr.GetHouses(client.Player.CurrentRegionID);
+										if (houses != null)
+										{
+											foreach (DOL.GS.Housing.House house in DOL.GS.Housing.HouseMgr.GetHouses(client.Player.CurrentRegionID).Values)
+											{
+												if (client.Player.IsWithinRadius(house, DOL.GS.Housing.HouseMgr.HOUSE_DISTANCE))
+												{
+													if (!client.Player.HousingUpdateArray[house.UniqueID])
+													{
+														client.Out.SendHouse(house);
+														client.Out.SendGarden(house);
+														ArrayList list = house.GetAllPlayersInHouse();
+														if (list.Count > 0)
+														{
+															client.Out.SendHouseOccupied(house, true);
+														}
+														client.Player.HousingUpdateArray[house.UniqueID] = true;
+													}
+												}
+												else
+												{
+													client.Player.HousingUpdateArray[house.UniqueID] = false;
+												}
+											}
+										}
+									}
+									else if (client.Player.HousingUpdateArray != null)
+									{
+										client.Player.HousingUpdateArray = null;
+									}
+
+									m_lastWorldObjectUpdateTick = (uint)Environment.TickCount;
+								}
 							}
 							player.SwitchUpdateArrays();
-							player.LastNPCUpdate = Environment.TickCount;
+							player.LastWorldUpdate = Environment.TickCount;
 						}
 					}
 					int took = Environment.TickCount - start;
