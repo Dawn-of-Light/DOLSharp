@@ -356,8 +356,8 @@ namespace DOL.GS
             if (player == null)
                 return;
 
-            if (Region.IsAtlantisStartingLocation(player.CurrentRegionID) &&
-                Region.IsAtlantisStartingLocation(destination.RegionID))
+            if (Region.IsAtlantis(player.CurrentRegionID) &&
+                Region.IsAtlantis(destination.RegionID))
                 destination.RegionID = player.CurrentRegionID;
 
             String teleportInfo = "The magic of the {0} delivers you to the Haven of {1}.";
