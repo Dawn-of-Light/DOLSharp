@@ -38,11 +38,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				client.Out.SendObjectCreate(item);
 			}
+
 			foreach (IDoor door in client.Player.GetDoorsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
-				client.Out.SendObjectCreate(door as GameObject);
-				client.Out.SendDoorState(door);
-				client.Out.SendObjectUpdate(door as GameObject);
+				client.Player.SendDoorUpdate(door);
 			}
 
 			//housing
@@ -76,7 +75,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 			else if (client.Player.HousingUpdateArray != null)
+			{
 				client.Player.HousingUpdateArray = null;
+			}
 
 			return 1;
 		}

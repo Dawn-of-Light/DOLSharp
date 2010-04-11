@@ -79,8 +79,11 @@ namespace DOL.GS.Relics
 					lock (m_syncPillar)
 					{
 						m_pillarState = value;
+
 						foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-							player.Out.SendDoorState(this);
+						{
+							player.SendDoorUpdate(this);
+						}
 					}
 				}
 			}

@@ -321,6 +321,9 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("world", "world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second).", (uint)30000)]
 		public static uint WORLD_NPC_UPDATE_INTERVAL;
 
+		[ServerProperty("world", "world_object_update_interval", "How often (milliseconds) will objects (static, housing, doors, broadcast updates to the clients. Minimum allowed = 10000 (10 seconds). 0 will disable this update.", (uint)30000)]
+		public static uint WORLD_OBJECT_UPDATE_INTERVAL;
+
 		[ServerProperty("world", "world_player_update_interval", "How often (milliseconds) will players be checked for updates. Minimum allowed = 100 (100 milliseconds).", (uint)300)]
 		public static uint WORLD_PLAYER_UPDATE_INTERVAL;
 

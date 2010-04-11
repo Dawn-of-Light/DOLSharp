@@ -70,7 +70,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				player.Out.SendUpdatePoints();
 				player.TargetObject = null;
-				player.LastNPCUpdate = Environment.TickCount; 
+				player.LastWorldUpdate = Environment.TickCount; 
 				player.CurrentUpdateArray.SetAll(false);
 				// update the region color scheme which may be wrong due to ALLOW_ALL_REALMS support
 				player.Out.SendRegionColorSheme();

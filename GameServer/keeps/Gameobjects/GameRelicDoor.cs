@@ -293,7 +293,7 @@ namespace DOL.GS.Keeps
 		{
 			foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
 			{
-				client.Out.SendDoorState(this);
+				client.Player.SendDoorUpdate(this);
 			}
 		}
 
