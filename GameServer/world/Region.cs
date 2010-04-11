@@ -1063,12 +1063,11 @@ namespace DOL.GS
 		}
 
         /// <summary>
-        /// Check if the given region is one of the Atlantis starting
-        /// locations.
+        /// Check if the given region is Atlantis.
         /// </summary>
         /// <param name="regionId"></param>
         /// <returns></returns>
-        public static bool IsAtlantisStartingLocation(int regionId)
+        public static bool IsAtlantis(int regionId)
         {
             return (regionId == 30 || regionId == 73 || regionId == 130);
         }
