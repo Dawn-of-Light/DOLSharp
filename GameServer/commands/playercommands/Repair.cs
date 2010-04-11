@@ -64,6 +64,9 @@ namespace DOL.GS.Commands
 			if (player.Realm != obj.Realm)
 				return false;
 
+			if (player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
+				return true;
+
 			if ((obj as GameLiving).InCombat)
 			{
 				DisplayMessage(player, "You can't repair object while it is under attack!");
@@ -211,6 +214,9 @@ namespace DOL.GS.Commands
 		}
 		public static double CalculateRepairChance(GamePlayer player, GameObject obj)
 		{
+			if (player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
+				return 100;
+
 			double skill = player.GetCraftingSkillValue(eCraftingSkill.WoodWorking);
 			int skillneeded = (obj.Level + 1) * 50;
 			double chance = skill / skillneeded;
