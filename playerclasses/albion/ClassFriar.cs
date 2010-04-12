@@ -63,9 +63,9 @@ namespace DOL.GS.PlayerClass
 			base.OnLevelUp(player);
 
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Staff));
-
 			player.AddSpellLine(SkillBase.GetSpellLine("Rebirth"));
 			player.AddSpellLine(SkillBase.GetSpellLine("Friar Enhancement Spec"));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 
 			if (player.Level >=10)
 			{
@@ -91,10 +91,6 @@ namespace DOL.GS.PlayerClass
 			else if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-			}
-			else if (player.Level >= 5)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 			}
 		}
 
