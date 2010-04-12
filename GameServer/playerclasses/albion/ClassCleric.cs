@@ -61,16 +61,12 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
-			if (player.Level >= 5) 
-			{				
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Smite));
-				
-				player.AddSpellLine(SkillBase.GetSpellLine("Smiting"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Rebirth (Cleric)"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Guardian Angel"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Terrible Hammer"));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Smite));
+			player.AddSpellLine(SkillBase.GetSpellLine("Smiting"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Rebirth (Cleric)"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Guardian Angel"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Terrible Hammer"));
 
-			}
 			if (player.Level >= 10) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));
