@@ -1253,7 +1253,7 @@ namespace DOL.AI.Brain
 
 		public virtual IPoint3D CalcRandomWalkTarget()
 		{
-			int roamingRadius = 300;
+			int roamingRadius = Body.CurrentRegion.IsDungeon ? 50 : 300;
 
 			if (Body.RoamingRange > 0)
 			{
@@ -1265,8 +1265,6 @@ namespace DOL.AI.Brain
 			double angle = Util.Random(0, 360) / (2 * Math.PI);
 			double targetX = Body.SpawnPoint.X + Util.Random( -roamingRadius, roamingRadius );
             double targetY = Body.SpawnPoint.Y + Util.Random( -roamingRadius, roamingRadius );
-			//double targetZ = (Body.IsUnderwater) ? Body.SpawnZ : 0;
-			/*(Body.Flags & (uint)GameNPC.eFlags.FLYING) == (uint)GameNPC.eFlags.FLYING ||  + Util.Random(-100, 100)*/
 
             return new Point3D( (int)targetX, (int)targetY, Body.SpawnPoint.Z );
 		}
