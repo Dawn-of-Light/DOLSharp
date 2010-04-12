@@ -61,13 +61,16 @@ namespace DOL.GS.PlayerClass
 		{		
 			base.OnLevelUp(player);
 
-			player.AddAbility(SkillBase.GetAbility(Abilities.TauntingShout));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_CelticSpear));
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Celtic_Spear));
 
+			if (player.Level >= 5)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.TauntingShout));
+			}
 			if (player.Level >= 10) 
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LargeWeapons));

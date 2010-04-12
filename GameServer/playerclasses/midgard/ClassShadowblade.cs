@@ -79,10 +79,13 @@ namespace DOL.GS.PlayerClass
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrown));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LeftAxes));
 
+			if (player.Level >= 5)
+			{
+				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
+			}
 			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));

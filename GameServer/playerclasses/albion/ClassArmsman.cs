@@ -69,13 +69,14 @@ namespace DOL.GS.PlayerClass
 		{
 			base.OnLevelUp(player);
 
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Polearms));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Polearms));
+			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
+
 			if (player.Level >= 5) 
-			{				
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Polearms));
+			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.TauntingShout));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Polearms));
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
 			}
 			if (player.Level >= 10)
 			{
