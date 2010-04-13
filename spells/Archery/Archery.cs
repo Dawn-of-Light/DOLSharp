@@ -32,6 +32,15 @@ namespace DOL.GS.Spells
 	[SpellHandler("Archery")]
 	public class Archery : ArrowSpellHandler
 	{
+		public enum eShotType
+		{
+			Other = 0, 
+			Critical = 1,
+			Power = 2,
+			PointBlank = 3,
+			Rapid = 4
+		}
+
         public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (m_caster.ObjectState != GameLiving.eObjectState.Active)	return false;
@@ -108,21 +117,23 @@ namespace DOL.GS.Spells
 			
 			if (Caster != null && Caster is GamePlayer && Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)Caster.AttackWeapon.Object_Type))
             {
-                if (Spell.LifeDrainReturn == 1 && (!(Caster.IsStealthed)))
+                if (Spell.LifeDrainReturn == (int)eShotType.Critical && (!(Caster.IsStealthed)))
                 {
-                    MessageToCaster("You must be stealthed and wielding a bow to use this ability!", eChatType.CT_Spell);
+					MessageToCaster("You must be stealthed and wielding a bow to use this ability!", eChatType.CT_SpellResisted);
                     return false;
                 }
-                return true;
+
+				return true;
             }
             else
             {
-                if (Spell.LifeDrainReturn == 1)
+				if (Spell.LifeDrainReturn == (int)eShotType.Critical)
                 {
-                    MessageToCaster("You must be stealthed and wielding a bow to use this ability!", eChatType.CT_Spell);
+					MessageToCaster("You must be stealthed and wielding a bow to use this ability!", eChatType.CT_SpellResisted);
                     return false;
                 }
-            	MessageToCaster("You must be wielding a bow to use this ability!", eChatType.CT_Spell);
+
+            	MessageToCaster("You must be wielding a bow to use this ability!", eChatType.CT_SpellResisted);
                 return false;
             }
         }
@@ -188,7 +199,7 @@ namespace DOL.GS.Spells
 			{
 				switch (Spell.LifeDrainReturn)
 				{
-					case 1:
+					case (int)eShotType.Critical:
 						{
 							if (target is GamePlayer)
 							{
@@ -199,7 +210,7 @@ namespace DOL.GS.Spells
 						}
 						break;
 
-					case 2:
+					case (int)eShotType.Power:
 						{
 							player = target as GamePlayer;
 							player.Out.SendMessage("A shot penetrated your magic barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
@@ -208,7 +219,7 @@ namespace DOL.GS.Spells
 						}
 						break;
 
-					case 0:
+					case (int)eShotType.Other:
 					default:
 						{
 							if (Caster is GamePlayer)
@@ -359,7 +370,7 @@ namespace DOL.GS.Spells
 		/// <returns>effective casting time in milliseconds</returns>
 		public override int CalculateCastingTime()
 		{
-			if (Spell.LifeDrainReturn == 2) return 6000;
+			if (Spell.LifeDrainReturn == (int)eShotType.Power) return 6000;
 
 			int ticks = m_spell.CastTime;
 
