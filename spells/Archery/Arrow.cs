@@ -237,19 +237,13 @@ namespace DOL.GS.Spells
 								{
 									m_handler.MessageToCaster(player.GetName(0, true) + " blocks your arrow!", eChatType.CT_System);
 								}
-								m_handler.DamageTarget(ad, false, 0x02);
-								target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, caster);
-								target.OnAttackedByEnemy(ad);
-								if (target is GameNPC)
-								{
-									IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
-									if (aggroBrain != null)
-										aggroBrain.AddToAggroList(caster, 1);
-								}
 							}
 						}
 					}
 				}
+
+				// A shield block will block the physical damage but not the magic damage (acid / poison shot).
+				// Because of this we have to handle the block with special code and not set AttackResult to blocked.
 
 				if (physicalBlock == false)
 				{
@@ -293,7 +287,7 @@ namespace DOL.GS.Spells
 				}
 
 				m_handler.SendDamageMessages(ad);
-				m_handler.DamageTarget(ad, false, 0x14);
+				m_handler.DamageTarget(ad, false, (physicalBlock ? 0x02 : 0x14));
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, caster);
 
 				if (m_handler.Spell.SubSpellID != 0)
