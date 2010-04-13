@@ -39,7 +39,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-            m_caster.Endurance -= CalculateEnduranceCost();
+			m_caster.Endurance -= CalculateEnduranceCost();
 			//if ((target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent) && Spell.SpellType != "SiegeArrow")
 			//{
 			//    MessageToCaster(String.Format("Your spell has no effect on the {0}!", target.Name), eChatType.CT_SpellResisted);
@@ -91,7 +91,7 @@ namespace DOL.GS.Spells
 
 		private void DealDamage(GameLiving target)
 		{
-            int ticksToTarget = m_caster.GetDistanceTo( target ) * 100 / 85; // 85 units per 1/10s
+			int ticksToTarget = m_caster.GetDistanceTo(target) * 100 / 85; // 85 units per 1/10s
 			int delay = 1 + ticksToTarget / 100;
 			foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -123,7 +123,8 @@ namespace DOL.GS.Spells
 			/// <param name="actionSource">The action source</param>
 			/// <param name="arrowTarget">The arrow target</param>
 			/// <param name="spellHandler"></param>
-			public ArrowOnTargetAction(GameLiving actionSource, GameLiving arrowTarget, ArrowSpellHandler spellHandler) : base(actionSource)
+			public ArrowOnTargetAction(GameLiving actionSource, GameLiving arrowTarget, ArrowSpellHandler spellHandler)
+				: base(actionSource)
 			{
 				if (arrowTarget == null)
 					throw new ArgumentNullException("arrowTarget");
@@ -163,25 +164,17 @@ namespace DOL.GS.Spells
 				// check for bladeturn miss
 				if (ad.AttackResult == GameLiving.eAttackResult.Missed)
 				{
-					// Not sure if pet or npc should aggro on BT block or not
-					//target.OnAttackedByEnemy(ad);
-					//if (target is GameNPC)
-					//{
-					//    IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
-					//    if (aggroBrain != null)
-					//        aggroBrain.AddToAggroList(caster, 1);
-					//}
 					return;
 				}
 
-				if (Util.Chance(missrate)) 
+				if (Util.Chance(missrate))
 				{
 					ad.AttackResult = GameLiving.eAttackResult.Missed;
 					m_handler.MessageToCaster("You miss!", eChatType.CT_YouHit);
 					m_handler.MessageToLiving(target, caster.GetName(0, false) + " missed!", eChatType.CT_Missed);
 					target.OnAttackedByEnemy(ad);
 					target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, caster);
-					if(target is GameNPC)
+					if (target is GameNPC)
 					{
 						IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
 						if (aggroBrain != null)
@@ -190,21 +183,20 @@ namespace DOL.GS.Spells
 					return;
 				}
 
-				// Block
-				bool blocked = false;
-				if (target is GamePlayer && !target.IsStunned && !target.IsSitting) 
-				{ // mobs left out yet
+				bool physicalBlock = false;
+
+				if (target is GamePlayer && !target.IsStunned && !target.IsMezzed && !target.IsSitting)
+				{
 					GamePlayer player = (GamePlayer)target;
 					InventoryItem lefthand = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-					if (lefthand!=null && (player.AttackWeapon==null || player.AttackWeapon.Item_Type==Slot.RIGHTHAND || player.AttackWeapon.Item_Type==Slot.LEFTHAND)) 
+					if (lefthand != null && (player.AttackWeapon == null || player.AttackWeapon.Item_Type == Slot.RIGHTHAND || player.AttackWeapon.Item_Type == Slot.LEFTHAND))
 					{
-						if (target.IsObjectInFront(caster, 180) && lefthand.Object_Type == (int)eObjectType.Shield) 
+						if (target.IsObjectInFront(caster, 180) && lefthand.Object_Type == (int)eObjectType.Shield)
 						{
-							// TODO: shield size, which field to use?
-							// TODO: 30% chance to block arrows/bolts
+							// TODO: shield size vs number of attackers not calculated
 							double shield = 0.5 * player.GetModifiedSpecLevel(Specs.Shields);
-							double blockchance = ((player.Dexterity*2)-100)/40.0 + shield + (0*3) + 5;
-                            blockchance += 30;
+							double blockchance = ((player.Dexterity * 2) - 100) / 40.0 + shield + (0 * 3) + 5;
+							blockchance += 30;
 							blockchance -= target.GetConLevel(caster) * 5;
 							if (blockchance >= 100) blockchance = 99;
 							if (blockchance <= 0) blockchance = 1;
@@ -237,32 +229,41 @@ namespace DOL.GS.Spells
 								}
 							}
 
-							if (blockchance >= Util.Random(1, 100)) 
+							if (blockchance >= Util.Random(1, 100))
 							{
-								m_handler.MessageToLiving(player, "You partially block " + caster.GetName(0, false) + "'s spell!", eChatType.CT_Missed);
-								m_handler.MessageToCaster(player.GetName(0, true) + " blocks!", eChatType.CT_YouHit);
-								blocked = true;
+								physicalBlock = true;
+								m_handler.MessageToLiving(player, "You block " + caster.GetName(0, false) + "'s arrow!", eChatType.CT_System);
+								if (m_handler.Spell.Target.ToLower() != "area")
+								{
+									m_handler.MessageToCaster(player.GetName(0, true) + " blocks your arrow!", eChatType.CT_System);
+								}
+								m_handler.DamageTarget(ad, false, 0x02);
+								target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, caster);
+								target.OnAttackedByEnemy(ad);
+								if (target is GameNPC)
+								{
+									IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
+									if (aggroBrain != null)
+										aggroBrain.AddToAggroList(caster, 1);
+								}
 							}
 						}
 					}
 				}
 
-				// simplified melee damage calculation
-				if (blocked == false)
+				if (physicalBlock == false)
 				{
-					// TODO: armor resists to damage type
-
 					double damage = m_handler.Spell.Damage / 2; // another half is physical damage
-					if(target is GamePlayer)
+					if (target is GamePlayer)
 						ad.ArmorHitLocation = ((GamePlayer)target).CalculateArmorHitLocation(ad);
 
 					InventoryItem armor = null;
 					if (target.Inventory != null)
 						armor = target.Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
-					double ws = (caster.Level * 8 * (1.0 + (caster.GetModified(eProperty.Dexterity) - 50)/200.0));
+					double ws = (caster.Level * 8 * (1.0 + (caster.GetModified(eProperty.Dexterity) - 50) / 200.0));
 
-					damage *= ((ws + 90.68) / (target.GetArmorAF(ad.ArmorHitLocation) + 20*4.67));
+					damage *= ((ws + 90.68) / (target.GetArmorAF(ad.ArmorHitLocation) + 20 * 4.67));
 					damage *= 1.0 - Math.Min(0.85, ad.Target.GetArmorAbsorb(ad.ArmorHitLocation));
 					ad.Modifier = (int)(damage * (ad.Target.GetResist(ad.DamageType) + SkillBase.GetArmorResist(armor, ad.DamageType)) / -100.0);
 					damage += ad.Modifier;
@@ -270,7 +271,6 @@ namespace DOL.GS.Spells
 					ad.Damage += (int)damage;
 				}
 
-				// apply total damage cap	
 				ad.UncappedDamage = ad.Damage;
 				ad.Damage = (int)Math.Min(ad.Damage, m_handler.Spell.Damage * 3);
 
@@ -279,8 +279,7 @@ namespace DOL.GS.Spells
 					ad.Damage = (int)(ad.Damage * ((GamePlayer)caster).Effectiveness);
 				}
 
-				// fix critical damage
-				if (blocked == false && ad.CriticalDamage > 0)
+				if (physicalBlock == false && ad.CriticalDamage > 0)
 				{
 					if (m_handler.Spell.Target.ToLower() == "area")
 					{
@@ -294,70 +293,75 @@ namespace DOL.GS.Spells
 				}
 
 				m_handler.SendDamageMessages(ad);
-				m_handler.DamageTarget(ad, false, (blocked ? 0x02 : 0x14));
+				m_handler.DamageTarget(ad, false, 0x14);
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, caster);
-				
-				//Eden
-				if(m_handler.Spell.SubSpellID!=0)
+
+				if (m_handler.Spell.SubSpellID != 0)
 				{
 					Spell subspell = SkillBase.GetSpellByID(m_handler.Spell.SubSpellID);
 					if (subspell != null)
 					{
-                       subspell.Level = m_handler.Spell.Level;
+						subspell.Level = m_handler.Spell.Level;
 						ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_handler.Caster, subspell, SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect));
-						if(spellhandler!=null) spellhandler.StartSpell(target);
+						if (spellhandler != null)
+						{
+							spellhandler.StartSpell(target);
+						}
 					}
 				}
-              	if (m_handler.Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)m_handler.Caster.AttackWeapon.Object_Type))
-                {
-                    if (ad.AttackResult == GameLiving.eAttackResult.HitUnstyled || ad.AttackResult == GameLiving.eAttackResult.HitStyle)
-                        CheckWeaponMagicalEffect(ad, m_handler.Caster.AttackWeapon);
+
+				if (physicalBlock == false && m_handler.Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)m_handler.Caster.AttackWeapon.Object_Type))
+				{
+					if (ad.AttackResult == GameLiving.eAttackResult.HitUnstyled || ad.AttackResult == GameLiving.eAttackResult.HitStyle)
+					{
+						CheckWeaponMagicalEffect(ad, m_handler.Caster.AttackWeapon);
+					}
 				}
 			}
 
 
 			protected virtual void CheckWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
-            {
-                if (weapon == null) return;
-                double procChance = weapon.SPD_ABS * 0.0025;
-                if (weapon.ProcSpellID != 0 && Util.ChanceDouble(procChance))
-                    StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects),
-                        weapon.ProcSpellID);
-                if (weapon.ProcSpellID1 != 0 && Util.ChanceDouble(procChance))
-                    StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects),
-                        weapon.ProcSpellID1);
-                if (weapon.PoisonSpellID != 0)
-                {
-                    if (ad.Target.EffectList.GetOfType(typeof(RemedyEffect)) != null)
-                    {
-                        if (ad.Attacker is GamePlayer)
-                            (ad.Attacker as GamePlayer).Out.SendMessage("Your target is protected against your poison by a magical effect.",
-                                eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
-                    StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons),
-                        weapon.PoisonSpellID);
-                }
-            }
+			{
+				if (weapon == null) return;
+				double procChance = weapon.SPD_ABS * 0.0025;
+				if (weapon.ProcSpellID != 0 && Util.ChanceDouble(procChance))
+					StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects),
+						weapon.ProcSpellID);
+				if (weapon.ProcSpellID1 != 0 && Util.ChanceDouble(procChance))
+					StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects),
+						weapon.ProcSpellID1);
+				if (weapon.PoisonSpellID != 0)
+				{
+					if (ad.Target.EffectList.GetOfType(typeof(RemedyEffect)) != null)
+					{
+						if (ad.Attacker is GamePlayer)
+							(ad.Attacker as GamePlayer).Out.SendMessage("Your target is protected against your poison by a magical effect.",
+								eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						return;
+					}
+					StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons),
+						weapon.PoisonSpellID);
+				}
+			}
 
-            protected virtual void StartWeaponMagicalEffect(AttackData ad, SpellLine spellLine, int spellID)
-            {
-                if (spellLine == null) return;
+			protected virtual void StartWeaponMagicalEffect(AttackData ad, SpellLine spellLine, int spellID)
+			{
+				if (spellLine == null) return;
 
 				List<Spell> spells = SkillBase.GetSpellList(spellLine.KeyName);
-                foreach (Spell spell in spells)
-                {
-                    if (spell.ID == spellID)
-                    {
-                        ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, spell, spellLine);
-                        if (spellHandler != null)
-                            spellHandler.StartSpell(ad.Target);
-                    }
-                }
-            }
+				foreach (Spell spell in spells)
+				{
+					if (spell.ID == spellID)
+					{
+						ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, spell, spellLine);
+						if (spellHandler != null)
+							spellHandler.StartSpell(ad.Target);
+					}
+				}
+			}
 		}
 
 		// constructor
-		public ArrowSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		public ArrowSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 }
