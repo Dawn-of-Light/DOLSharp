@@ -183,7 +183,7 @@ namespace DOL.GS.Spells
 					return;
 				}
 
-				bool physicalBlock = false;
+				bool arrowBlock = false;
 
 				if (target is GamePlayer && !target.IsStunned && !target.IsMezzed && !target.IsSitting)
 				{
@@ -231,21 +231,22 @@ namespace DOL.GS.Spells
 
 							if (blockchance >= Util.Random(1, 100))
 							{
-								physicalBlock = true;
+								arrowBlock = true;
 								m_handler.MessageToLiving(player, "You block " + caster.GetName(0, false) + "'s arrow!", eChatType.CT_System);
 								if (m_handler.Spell.Target.ToLower() != "area")
 								{
 									m_handler.MessageToCaster(player.GetName(0, true) + " blocks your arrow!", eChatType.CT_System);
+									m_handler.DamageTarget(ad, false, 0x02);
 								}
 							}
 						}
 					}
 				}
 
-				// A shield block will block the physical damage but not the magic damage (acid / poison shot).
+				// A shield block will block all arrow damage but not the magic damage (acid / poison shot).
 				// Because of this we have to handle the block with special code and not set AttackResult to blocked.
 
-				if (physicalBlock == false)
+				if (arrowBlock == false)
 				{
 					double damage = m_handler.Spell.Damage / 2; // another half is physical damage
 					if (target is GamePlayer)
@@ -263,32 +264,33 @@ namespace DOL.GS.Spells
 					damage += ad.Modifier;
 					if (damage < 0) damage = 0;
 					ad.Damage += (int)damage;
-				}
 
-				ad.UncappedDamage = ad.Damage;
-				ad.Damage = (int)Math.Min(ad.Damage, m_handler.Spell.Damage * 3);
+					ad.UncappedDamage = ad.Damage;
+					ad.Damage = (int)Math.Min(ad.Damage, m_handler.Spell.Damage * 3);
 
-				if (caster is GamePlayer)
-				{
-					ad.Damage = (int)(ad.Damage * ((GamePlayer)caster).Effectiveness);
-				}
-
-				if (physicalBlock == false && ad.CriticalDamage > 0)
-				{
-					if (m_handler.Spell.Target.ToLower() == "area")
+					if (caster is GamePlayer)
 					{
-						ad.CriticalDamage = 0;
+						ad.Damage = (int)(ad.Damage * ((GamePlayer)caster).Effectiveness);
 					}
-					else
+
+					if (ad.CriticalDamage > 0)
 					{
-						int critMax = (target is GamePlayer) ? ad.Damage / 2 : ad.Damage;
-						ad.CriticalDamage = Util.Random(critMax / 10, critMax);
+						if (m_handler.Spell.Target.ToLower() == "area")
+						{
+							ad.CriticalDamage = 0;
+						}
+						else
+						{
+							int critMax = (target is GamePlayer) ? ad.Damage / 2 : ad.Damage;
+							ad.CriticalDamage = Util.Random(critMax / 10, critMax);
+						}
 					}
+
+					m_handler.SendDamageMessages(ad);
+					m_handler.DamageTarget(ad, false, 0x14);
+					target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, caster);
 				}
 
-				m_handler.SendDamageMessages(ad);
-				m_handler.DamageTarget(ad, false, (physicalBlock ? 0x02 : 0x14));
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, caster);
 
 				if (m_handler.Spell.SubSpellID != 0)
 				{
@@ -304,7 +306,7 @@ namespace DOL.GS.Spells
 					}
 				}
 
-				if (physicalBlock == false && m_handler.Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)m_handler.Caster.AttackWeapon.Object_Type))
+				if (arrowBlock == false && m_handler.Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)m_handler.Caster.AttackWeapon.Object_Type))
 				{
 					if (ad.AttackResult == GameLiving.eAttackResult.HitUnstyled || ad.AttackResult == GameLiving.eAttackResult.HitStyle)
 					{
