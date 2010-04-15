@@ -34,6 +34,7 @@ namespace DOL.Database
 	[DataTable(TableName="Path")]
 	public class DBPath : DataObject
 	{
+		protected ushort m_region = 0;
 		protected string m_pathID = "invalid";
 		protected int m_type;//etype
 		
@@ -57,6 +58,16 @@ namespace DOL.Database
 		public int PathType {
 			get { return m_type; }
 			set { m_type = value; }
+		}
+
+		/// <summary>
+		/// Used in PathDesigner tool, only. Not in DoL code
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public ushort RegionID
+		{
+			get { return m_region; }
+			set { m_region = value; }
 		}
 
 		override public bool AutoSave

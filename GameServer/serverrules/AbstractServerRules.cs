@@ -60,7 +60,7 @@ namespace DOL.GS.ServerRules
 
 			// Ban account
 			IList<DBBannedAccount> objs;
-            objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
+			objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
 			if (objs.Count > 0)
 			{
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
@@ -111,7 +111,7 @@ namespace DOL.GS.ServerRules
 				client.Out.SendLoginDenied(eLoginError.AccountNoAccessAnyGame);
 				return false;
 			}
-			*/
+			 */
 
 
 			/* Example to deny new connections on saturdays
@@ -120,7 +120,7 @@ namespace DOL.GS.ServerRules
 				client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
 				return false;
 			}
-			*/
+			 */
 
 			/* Example to deny new connections between 10am and 12am
 			if(DateTime.Now.Hour >= 10 && DateTime.Now.Hour <= 12)
@@ -128,7 +128,7 @@ namespace DOL.GS.ServerRules
 				client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
 				return false;
 			}
-			*/
+			 */
 
 			Account account = GameServer.Database.SelectObject<Account>("Name ='" + GameServer.Database.Escape(username) + "'");
 
@@ -162,7 +162,7 @@ namespace DOL.GS.ServerRules
 
 			if (!Properties.ALLOW_DUAL_LOGINS)
 			{
-			 	if ((account == null || account.PrivLevel == 1) && client.TcpEndpointAddress != "not connected")
+				if ((account == null || account.PrivLevel == 1) && client.TcpEndpointAddress != "not connected")
 				{
 					foreach (GameClient cln in WorldMgr.GetAllClients())
 					{
@@ -264,11 +264,11 @@ namespace DOL.GS.ServerRules
 				if (!area.IsSafeArea)
 					continue;
 
-                if (defender is GamePlayer)
-                {
-                    if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
-                    return false;
-                }
+				if (defender is GamePlayer)
+				{
+					if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
+					return false;
+				}
 			}
 
 			//safe area support for attacker
@@ -289,10 +289,10 @@ namespace DOL.GS.ServerRules
 			if(defender.ControlledNpcBrain != null)
 				if(defender.ControlledNpcBrain.Body != null)
 					if(defender.ControlledNpcBrain.Body is NecromancerPet)
-					{
-						if (quiet == false) MessageToLiving(attacker, "You can't attack a shadowed necromancer!");
-						return false;
-					}
+			{
+				if (quiet == false) MessageToLiving(attacker, "You can't attack a shadowed necromancer!");
+				return false;
+			}
 
 			return true;
 		}
@@ -487,14 +487,14 @@ namespace DOL.GS.ServerRules
 
 				switch ((eObjectType)item.Object_Type)
 				{
-					case eObjectType.Cloth: return bestLevel >= 1;
-					case eObjectType.Leather: return bestLevel >= 2;
+						case eObjectType.Cloth: return bestLevel >= 1;
+						case eObjectType.Leather: return bestLevel >= 2;
 					case eObjectType.Reinforced:
-					case eObjectType.Studded: return bestLevel >= 3;
+						case eObjectType.Studded: return bestLevel >= 3;
 					case eObjectType.Scale:
-					case eObjectType.Chain: return bestLevel >= 4;
-					case eObjectType.Plate: return bestLevel >= 5;
-					default: return false;
+						case eObjectType.Chain: return bestLevel >= 4;
+						case eObjectType.Plate: return bestLevel >= 5;
+						default: return false;
 				}
 			}
 
@@ -506,58 +506,58 @@ namespace DOL.GS.ServerRules
 			//http://support.darkageofcamelot.com/cgi-bin/support.cfg/php/enduser/std_adp.php?p_sid=frxnPUjg&p_lva=&p_refno=020709-000000&p_created=1026248996&p_sp=cF9ncmlkc29ydD0mcF9yb3dfY250PTE0JnBfc2VhcmNoX3RleHQ9JnBfc2VhcmNoX3R5cGU9MyZwX2NhdF9sdmwxPTI2JnBfY2F0X2x2bDI9fmFueX4mcF9zb3J0X2J5PWRmbHQmcF9wYWdlPTE*&p_li
 			switch ((eObjectType)item.Object_Type)
 			{
-				case eObjectType.GenericItem: return true;
-				case eObjectType.GenericArmor: return true;
-				case eObjectType.GenericWeapon: return true;
-				case eObjectType.Staff: twoHandCheck = new string[] { Abilities.Weapon_Staves }; break;
-				case eObjectType.Fired: otherCheck = new string[] { Abilities.Weapon_Shortbows }; break;
+					case eObjectType.GenericItem: return true;
+					case eObjectType.GenericArmor: return true;
+					case eObjectType.GenericWeapon: return true;
+					case eObjectType.Staff: twoHandCheck = new string[] { Abilities.Weapon_Staves }; break;
+					case eObjectType.Fired: otherCheck = new string[] { Abilities.Weapon_Shortbows }; break;
 
-				//generic
-				case eObjectType.FistWraps: oneHandCheck = new string[] { Abilities.Weapon_FistWraps }; break;
-				case eObjectType.MaulerStaff: twoHandCheck = new string[] { Abilities.Weapon_MaulerStaff }; break;
+					//generic
+					case eObjectType.FistWraps: oneHandCheck = new string[] { Abilities.Weapon_FistWraps }; break;
+					case eObjectType.MaulerStaff: twoHandCheck = new string[] { Abilities.Weapon_MaulerStaff }; break;
 
-				//alb
-				case eObjectType.CrushingWeapon: oneHandCheck = new string[] { Abilities.Weapon_Crushing, Abilities.Weapon_Blunt, Abilities.Weapon_Hammers }; break;
-				case eObjectType.SlashingWeapon: oneHandCheck = new string[] { Abilities.Weapon_Slashing, Abilities.Weapon_Blades, Abilities.Weapon_Swords, Abilities.Weapon_Axes }; break;
-				case eObjectType.ThrustWeapon: oneHandCheck = new string[] { Abilities.Weapon_Thrusting, Abilities.Weapon_Piercing }; break;
-				case eObjectType.Flexible: oneHandCheck = new string[] { Abilities.Weapon_Flexible }; break;
-				case eObjectType.TwoHandedWeapon: twoHandCheck = new string[] { Abilities.Weapon_TwoHanded, Abilities.Weapon_LargeWeapons }; break;
-				case eObjectType.PolearmWeapon: twoHandCheck = new string[] { Abilities.Weapon_Polearms, Abilities.Weapon_CelticSpear, Abilities.Weapon_Spears }; break;
-                case eObjectType.Longbow: otherCheck = new string[] { Abilities.Weapon_Longbows, Abilities.Weapon_Archery }; break;
-				case eObjectType.Crossbow: otherCheck = new string[] { Abilities.Weapon_Crossbow }; break;
+					//alb
+					case eObjectType.CrushingWeapon: oneHandCheck = new string[] { Abilities.Weapon_Crushing, Abilities.Weapon_Blunt, Abilities.Weapon_Hammers }; break;
+					case eObjectType.SlashingWeapon: oneHandCheck = new string[] { Abilities.Weapon_Slashing, Abilities.Weapon_Blades, Abilities.Weapon_Swords, Abilities.Weapon_Axes }; break;
+					case eObjectType.ThrustWeapon: oneHandCheck = new string[] { Abilities.Weapon_Thrusting, Abilities.Weapon_Piercing }; break;
+					case eObjectType.Flexible: oneHandCheck = new string[] { Abilities.Weapon_Flexible }; break;
+					case eObjectType.TwoHandedWeapon: twoHandCheck = new string[] { Abilities.Weapon_TwoHanded, Abilities.Weapon_LargeWeapons }; break;
+					case eObjectType.PolearmWeapon: twoHandCheck = new string[] { Abilities.Weapon_Polearms, Abilities.Weapon_CelticSpear, Abilities.Weapon_Spears }; break;
+					case eObjectType.Longbow: otherCheck = new string[] { Abilities.Weapon_Longbows, Abilities.Weapon_Archery }; break;
+					case eObjectType.Crossbow: otherCheck = new string[] { Abilities.Weapon_Crossbow }; break;
 
-				//mid
-				case eObjectType.Sword: oneHandCheck = new string[] { Abilities.Weapon_Swords, Abilities.Weapon_Slashing, Abilities.Weapon_Blades }; twoHandCheck = new string[] { Abilities.Weapon_Swords }; break;
-				case eObjectType.Hammer: oneHandCheck = new string[] { Abilities.Weapon_Hammers, Abilities.Weapon_Crushing, Abilities.Weapon_Blunt }; twoHandCheck = new string[] { Abilities.Weapon_Hammers }; break;
+					//mid
+					case eObjectType.Sword: oneHandCheck = new string[] { Abilities.Weapon_Swords, Abilities.Weapon_Slashing, Abilities.Weapon_Blades }; twoHandCheck = new string[] { Abilities.Weapon_Swords }; break;
+					case eObjectType.Hammer: oneHandCheck = new string[] { Abilities.Weapon_Hammers, Abilities.Weapon_Crushing, Abilities.Weapon_Blunt }; twoHandCheck = new string[] { Abilities.Weapon_Hammers }; break;
 				case eObjectType.LeftAxe:
-				case eObjectType.Axe: oneHandCheck = new string[] { Abilities.Weapon_Axes, Abilities.Weapon_Slashing, Abilities.Weapon_Blades }; twoHandCheck = new string[] { Abilities.Weapon_Axes }; break;
-				case eObjectType.HandToHand: oneHandCheck = new string[] { Abilities.Weapon_HandToHand }; break;
-				case eObjectType.Spear: twoHandCheck = new string[] { Abilities.Weapon_Spears, Abilities.Weapon_CelticSpear, Abilities.Weapon_Polearms }; break;
-                case eObjectType.CompositeBow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Archery }; break;
-				case eObjectType.Thrown: otherCheck = new string[] { Abilities.Weapon_Thrown }; break;
+					case eObjectType.Axe: oneHandCheck = new string[] { Abilities.Weapon_Axes, Abilities.Weapon_Slashing, Abilities.Weapon_Blades }; twoHandCheck = new string[] { Abilities.Weapon_Axes }; break;
+					case eObjectType.HandToHand: oneHandCheck = new string[] { Abilities.Weapon_HandToHand }; break;
+					case eObjectType.Spear: twoHandCheck = new string[] { Abilities.Weapon_Spears, Abilities.Weapon_CelticSpear, Abilities.Weapon_Polearms }; break;
+					case eObjectType.CompositeBow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Archery }; break;
+					case eObjectType.Thrown: otherCheck = new string[] { Abilities.Weapon_Thrown }; break;
 
-				//hib
-				case eObjectType.Blades: oneHandCheck = new string[] { Abilities.Weapon_Blades, Abilities.Weapon_Slashing, Abilities.Weapon_Swords, Abilities.Weapon_Axes }; break;
-				case eObjectType.Blunt: oneHandCheck = new string[] { Abilities.Weapon_Blunt, Abilities.Weapon_Crushing, Abilities.Weapon_Hammers }; break;
-				case eObjectType.Piercing: oneHandCheck = new string[] { Abilities.Weapon_Piercing, Abilities.Weapon_Thrusting }; break;
-				case eObjectType.LargeWeapons: twoHandCheck = new string[] { Abilities.Weapon_LargeWeapons, Abilities.Weapon_TwoHanded }; break;
-				case eObjectType.CelticSpear: twoHandCheck = new string[] { Abilities.Weapon_CelticSpear, Abilities.Weapon_Spears, Abilities.Weapon_Polearms }; break;
-				case eObjectType.Scythe: twoHandCheck = new string[] { Abilities.Weapon_Scythe }; break;
-				case eObjectType.RecurvedBow: otherCheck = new string[] { Abilities.Weapon_RecurvedBows, Abilities.Weapon_Archery }; break;
+					//hib
+					case eObjectType.Blades: oneHandCheck = new string[] { Abilities.Weapon_Blades, Abilities.Weapon_Slashing, Abilities.Weapon_Swords, Abilities.Weapon_Axes }; break;
+					case eObjectType.Blunt: oneHandCheck = new string[] { Abilities.Weapon_Blunt, Abilities.Weapon_Crushing, Abilities.Weapon_Hammers }; break;
+					case eObjectType.Piercing: oneHandCheck = new string[] { Abilities.Weapon_Piercing, Abilities.Weapon_Thrusting }; break;
+					case eObjectType.LargeWeapons: twoHandCheck = new string[] { Abilities.Weapon_LargeWeapons, Abilities.Weapon_TwoHanded }; break;
+					case eObjectType.CelticSpear: twoHandCheck = new string[] { Abilities.Weapon_CelticSpear, Abilities.Weapon_Spears, Abilities.Weapon_Polearms }; break;
+					case eObjectType.Scythe: twoHandCheck = new string[] { Abilities.Weapon_Scythe }; break;
+					case eObjectType.RecurvedBow: otherCheck = new string[] { Abilities.Weapon_RecurvedBows, Abilities.Weapon_Archery }; break;
 
-				//misc
-				case eObjectType.Magical: return true;
-				case eObjectType.Shield: return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
-                case eObjectType.Arrow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows, Abilities.Weapon_Archery }; break;
-				case eObjectType.Bolt: otherCheck = new string[] { Abilities.Weapon_Crossbow }; break;
-				case eObjectType.Poison: return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
-				case eObjectType.Instrument: return living.HasAbility(Abilities.Weapon_Instruments);
+					//misc
+					case eObjectType.Magical: return true;
+					case eObjectType.Shield: return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
+					case eObjectType.Arrow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows, Abilities.Weapon_Archery }; break;
+					case eObjectType.Bolt: otherCheck = new string[] { Abilities.Weapon_Crossbow }; break;
+					case eObjectType.Poison: return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
+					case eObjectType.Instrument: return living.HasAbility(Abilities.Weapon_Instruments);
 
-				//housing
-				case eObjectType.GardenObject: return true;
-				case eObjectType.HouseWallObject: return true;
-				case eObjectType.HouseFloorObject: return true;
-				//TODO: different shield sizes
+					//housing
+					case eObjectType.GardenObject: return true;
+					case eObjectType.HouseWallObject: return true;
+					case eObjectType.HouseFloorObject: return true;
+					//TODO: different shield sizes
 			}
 
 			if (item.Item_Type == Slot.RIGHTHAND || item.Item_Type == Slot.LEFTHAND)
@@ -868,12 +868,12 @@ namespace DOL.GS.ServerRules
 					// exp cap
 					/*
 					
-					http://support.darkageofcamelot.com/kb/article.php?id=438					 
+					http://support.darkageofcamelot.com/kb/article.php?id=438
 					 
-					Experience clamps have been raised from 1.1x a same level kill to 1.25x a same level kill. 
-					This change has two effects: it will allow lower level players in a group to gain more experience faster (15% faster), 
+					Experience clamps have been raised from 1.1x a same level kill to 1.25x a same level kill.
+					This change has two effects: it will allow lower level players in a group to gain more experience faster (15% faster),
 					and it will also let higher level players (the 35-50s who tend to hit this clamp more often) to gain experience faster.
-					*/
+					 */
 					long expCap = (long)(GameServer.ServerRules.GetExperienceForLiving(living.Level) * ServerProperties.Properties.XP_CAP_PERCENT / 100);
 
 					if (player != null)
@@ -891,16 +891,16 @@ namespace DOL.GS.ServerRules
 					//let's check the con, for example if a level 50 kills a green, we want our level 1 to get green xp too
 					/*
 					 * http://www.camelotherald.com/more/110.shtml
-					 * All group experience is divided evenly amongst group members, if they are in the same level range. What's a level range? One color range. 
-					 * If everyone in the group cons yellow to each other (or high blue, or low orange), experience will be shared out exactly evenly, with no leftover points. 
-					 * How can you determine a color range? Simple - Level divided by ten plus one. So, to a level 40 player (40/10 + 1), 36-40 is yellow, 31-35 is blue, 
-					 * 26-30 is green, and 25-less is gray. But for everyone in the group to get the maximum amount of experience possible, the encounter must be a challenge to 
-					 * the group. If the group has two people, the monster must at least be (con) yellow to the highest level member. If the group has four people, the monster 
+					 * All group experience is divided evenly amongst group members, if they are in the same level range. What's a level range? One color range.
+					 * If everyone in the group cons yellow to each other (or high blue, or low orange), experience will be shared out exactly evenly, with no leftover points.
+					 * How can you determine a color range? Simple - Level divided by ten plus one. So, to a level 40 player (40/10 + 1), 36-40 is yellow, 31-35 is blue,
+					 * 26-30 is green, and 25-less is gray. But for everyone in the group to get the maximum amount of experience possible, the encounter must be a challenge to
+					 * the group. If the group has two people, the monster must at least be (con) yellow to the highest level member. If the group has four people, the monster
 					 * must at least be orange. If the group has eight, the monster must at least be red.
 					 *
-					 * If "challenge code" has been activated, then the experience is divided roughly like so in a group of two (adjust the colors up if the group is bigger): If 
-					 * the monster was blue to the highest level player, each lower level group member will ROUGHLY receive experience as if they soloed a blue monster. 
-					 * Ditto for green. As everyone knows, a monster that cons gray to the highest level player will result in no exp for anyone. If the monster was high blue, 
+					 * If "challenge code" has been activated, then the experience is divided roughly like so in a group of two (adjust the colors up if the group is bigger): If
+					 * the monster was blue to the highest level player, each lower level group member will ROUGHLY receive experience as if they soloed a blue monster.
+					 * Ditto for green. As everyone knows, a monster that cons gray to the highest level player will result in no exp for anyone. If the monster was high blue,
 					 * challenge code may not kick in. It could also kick in if the monster is low yellow to the high level player, depending on the group strength of the pair.
 					 */
 					//xp challenge
@@ -954,7 +954,7 @@ namespace DOL.GS.ServerRules
 							if (keep.Guild != null && keep.Guild == player.Guild)
 								bonus = 20;
 							else if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal &&
-								keep.Realm == living.Realm)
+							         keep.Realm == living.Realm)
 								bonus = 10;
 
 							outpostXP = (xpReward / 100) * bonus;
@@ -1132,10 +1132,10 @@ namespace DOL.GS.ServerRules
 		/// <param name="killer">killer</param>
 		public virtual void OnPlayerKilled(GamePlayer killedPlayer, GameObject killer)
 		{
-            if (ServerProperties.Properties.ENABLE_WARMAPMGR && killer is GamePlayer && killer.CurrentRegion.ID == 163)
-                WarMapMgr.AddFight((byte)killer.CurrentZone.ID, killer.X, killer.Y, (byte)killer.Realm, (byte)killedPlayer.Realm);
+			if (ServerProperties.Properties.ENABLE_WARMAPMGR && killer is GamePlayer && killer.CurrentRegion.ID == 163)
+				WarMapMgr.AddFight((byte)killer.CurrentZone.ID, killer.X, killer.Y, (byte)killer.Realm, (byte)killedPlayer.Realm);
 
-            killedPlayer.LastDeathRealmPoints = 0;
+			killedPlayer.LastDeathRealmPoints = 0;
 			// "player has been killed recently"
 			long noExpSeconds = ServerProperties.Properties.RP_WORTH_SECONDS;
 			if (killedPlayer.PlayerCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
@@ -1321,7 +1321,7 @@ namespace DOL.GS.ServerRules
 							if (keep.Guild != null && keep.Guild == (living as GamePlayer).Guild)
 								bonus = 20;
 							else if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal &&
-								keep.Realm == living.Realm)
+							         keep.Realm == living.Realm)
 								bonus = 10;
 
 							outpostXP = (xpReward / 100) * bonus;
@@ -1332,17 +1332,17 @@ namespace DOL.GS.ServerRules
 					living.GainExperience(GameLiving.eXPSource.Player, xpReward);
 
 					//gold
-                    if (living is GamePlayer)
-                    {
-                        long money = (long)(playerMoneyValue * damagePercent);
-                        GamePlayer player = living as GamePlayer;
-                        if (player.GetSpellLine("Spymaster") != null)
-                        {
-                            money += 20 * money / 100;
-                        }
-                        //long money = (long)(Money.GetMoney(0, 0, 17, 85, 0) * damagePercent * killedPlayer.Level / 50);
-                        ((GamePlayer)living).AddMoney(money, "You recieve {0}");
-                    }
+					if (living is GamePlayer)
+					{
+						long money = (long)(playerMoneyValue * damagePercent);
+						GamePlayer player = living as GamePlayer;
+						if (player.GetSpellLine("Spymaster") != null)
+						{
+							money += 20 * money / 100;
+						}
+						//long money = (long)(Money.GetMoney(0, 0, 17, 85, 0) * damagePercent * killedPlayer.Level / 50);
+						((GamePlayer)living).AddMoney(money, "You recieve {0}");
+					}
 
 					if (killedPlayer.ReleaseType != GamePlayer.eReleaseType.Duel && expGainPlayer != null)
 					{
@@ -1437,23 +1437,23 @@ namespace DOL.GS.ServerRules
 		/// <param name="source">The "looking" player</param>
 		/// <param name="target">The considered player</param>
 		/// <returns>The name of the target</returns>
-        public virtual string GetPlayerName(GamePlayer source, GamePlayer target)
-        {
-            return target.Name;
-        }
+		public virtual string GetPlayerName(GamePlayer source, GamePlayer target)
+		{
+			return target.Name;
+		}
 
-        /// <summary>
-        /// Gets the player Realmrank 12 or 13 title
-        /// </summary>
-        /// <param name="source">The "looking" player</param>
-        /// <param name="target">The considered player</param>
-        /// <returns>The Realmranktitle of the target</returns>
-        public virtual string GetPlayerPrefixName(GamePlayer source, GamePlayer target)
-        {
-            if (IsSameRealm(source, target, true))
-                return target.PrefixName;
-            return string.Empty;
-        }
+		/// <summary>
+		/// Gets the player Realmrank 12 or 13 title
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered player</param>
+		/// <returns>The Realmranktitle of the target</returns>
+		public virtual string GetPlayerPrefixName(GamePlayer source, GamePlayer target)
+		{
+			if (IsSameRealm(source, target, true))
+				return target.PrefixName;
+			return string.Empty;
+		}
 
 		/// <summary>
 		/// Gets the player last name based on server type
@@ -1705,6 +1705,28 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
+		/// <summary>
+		/// Gets the NPC name based on server type
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered NPC</param>
+		/// <returns>The name of the target</returns>
+		public virtual string GetNPCName(GamePlayer source, GameNPC target)
+		{
+			return target.Name;
+		}
+		
+		/// <summary>
+		/// Gets the NPC guild name based on server type
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered NPC</param>
+		/// <returns>The guild name of the target</returns>
+		public virtual string GetNPCGuildName(GamePlayer source, GameNPC target)
+		{
+			return target.GuildName;
+		}
+		
 		#region MessageToLiving
 		/// <summary>
 		/// Send system text message to system window
