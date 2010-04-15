@@ -39,9 +39,8 @@ namespace DOL.GS
 			SetOwnBrain(new BlankBrain());
 		}
 
-
 		/// <summary>
-		/// Training Dummies never drop below 10% health
+		/// Training Dummies never loose health
 		/// </summary>
 		public override int Health
 		{
