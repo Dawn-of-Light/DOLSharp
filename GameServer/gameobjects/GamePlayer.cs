@@ -18,25 +18,24 @@
  *
  */
 using System;
-using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 using DOL.AI.Brain;
-using DOL.GS;
-using DOL.Events;
 using DOL.Database;
+using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
+using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
 using DOL.GS.PlayerTitles;
 using DOL.GS.PropertyCalc;
 using DOL.GS.Quests;
 using DOL.GS.RealmAbilities;
 using DOL.GS.SkillHandler;
-using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
 using DOL.Language;
@@ -159,7 +158,7 @@ namespace DOL.GS
 		/// </summary>
 		public override bool CanTradeAnyItem
 		{
-			get 
+			get
 			{
 				if (Client.Account.PrivLevel > (int)ePrivLevel.Player)
 					return true;
@@ -694,10 +693,20 @@ namespace DOL.GS
 			if (InHouse)
 				LeaveHouse();
 
-			//Dinberg: this will eventually need to be changed so that it moves them to the location they TP'ed in.
+			// Dinberg: this will eventually need to be changed so that it moves them to the location they TP'ed in.
+			// Damien: Overwrite current position with Bind position if MoveToBind() failed
 			if (CurrentRegion.IsInstance)
-				MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
-
+			{
+				if (!MoveToBind())
+				{
+					PlayerCharacter.Region = PlayerCharacter.BindRegion;
+					PlayerCharacter.Xpos =PlayerCharacter.BindXpos;
+					PlayerCharacter.Ypos= PlayerCharacter.BindYpos;
+					PlayerCharacter.Zpos =PlayerCharacter.BindZpos;
+					PlayerCharacter.Direction=PlayerCharacter.BindHeading;
+				}
+			}
+			
 			//check for battleground caps
 			Battleground bg = KeepMgr.GetBattleground(CurrentRegionID);
 			if (bg != null)
@@ -6919,8 +6928,8 @@ namespace DOL.GS
 						case (int)eObjectType.RecurvedBow:
 						case (int)eObjectType.CompositeBow:
 							break;
-						default: 
-							bowWeapon = false; 
+						default:
+							bowWeapon = false;
 							break;
 					}
 				}
@@ -8517,7 +8526,7 @@ namespace DOL.GS
 
 														GameLiving target = TargetObject as GameLiving;
 
-														// Tobz: make sure we have the appropriate target for our charge spell, 
+														// Tobz: make sure we have the appropriate target for our charge spell,
 														// otherwise don't waste a charge.
 														if (spell.Target.ToLower() == "enemy")
 														{
@@ -9469,7 +9478,6 @@ namespace DOL.GS
 			}
 			return true;
 		}
-
 
 		//Eden - Move to bind, and check if the loc is allowed
 		public bool MoveToBind()
