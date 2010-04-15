@@ -941,6 +941,7 @@
     <Compile Include="packets\Client\168\WorldInitRequestHandler.cs" />
     <Compile Include="packets\Client\168\QuestRemoveRequestHandler.cs" />
     <Compile Include="packets\Server\AbstractPacketLib.cs" />
+    <Compile Include="packets\Server\PacketLib1102.cs" />
     <Compile Include="packets\Server\PacketLib1101.cs" />
     <Compile Include="packets\Server\PacketLib1100.cs" />
     <Compile Include="packets\Server\PacketLib197.cs" />
@@ -2800,11 +2801,6 @@
   <ItemGroup>
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
-    <Folder Include="quests\QuestsMgr" />
-    <Folder Include="quests\QuestsMgr\Actions" />
-    <Folder Include="quests\QuestsMgr\Requirements" />
-    <Folder Include="quests\QuestsMgr\Triggers" />
-    <Folder Include="quests\QuestsMgr\Utility" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
