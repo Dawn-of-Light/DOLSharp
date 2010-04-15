@@ -277,22 +277,22 @@ namespace DOL.GS.ServerRules
 		/// <returns>The guild name of the target</returns>
 		string GetPlayerGuildName(GamePlayer source, GamePlayer target);
 
-        /// <summary>
-        /// Gets the player Realmrank 12 or 13 title
-        /// </summary>
-        /// <param name="source">The "looking" player</param>
-        /// <param name="target">The considered player</param>
-        /// <returns>The Realmranktitle of the target</returns>
-        string GetPlayerPrefixName(GamePlayer source, GamePlayer target); 
+		/// <summary>
+		/// Gets the player Realmrank 12 or 13 title
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered player</param>
+		/// <returns>The Realmranktitle of the target</returns>
+		string GetPlayerPrefixName(GamePlayer source, GamePlayer target);
 
 		/// <summary>
 		/// Gets the server type color handling scheme
 		/// 
-		/// ColorHandling: this byte tells the client how to handle color for PC and NPC names (over the head) 
-		/// 0: standard way, other realm PC appear red, our realm NPC appear light green 
-		/// 1: standard PvP way, all PC appear red, all NPC appear with their level color 
+		/// ColorHandling: this byte tells the client how to handle color for PC and NPC names (over the head)
+		/// 0: standard way, other realm PC appear red, our realm NPC appear light green
+		/// 1: standard PvP way, all PC appear red, all NPC appear with their level color
 		/// 2: Same realm livings are friendly, other realm livings are enemy; nearest friend/enemy buttons work
-		/// 3: standard PvE way, all PC friendly, realm 0 NPC enemy rest NPC appear light green 
+		/// 3: standard PvE way, all PC friendly, realm 0 NPC enemy rest NPC appear light green
 		/// 4: All NPC are enemy, all players are friendly; nearest friend button selects self, nearest enemy don't work at all
 		/// </summary>
 		/// <param name="client">The client asking for color handling</param>
@@ -365,5 +365,21 @@ namespace DOL.GS.ServerRules
 		/// <param name="player">The player</param>
 		/// <returns>True if the player can use /level</returns>
 		bool CountsTowardsSlashLevel(Character player);
+		
+		/// <summary>
+		/// Gets the NPC name based on server type
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered NPC</param>
+		/// <returns>The name of the target</returns>
+		string GetNPCName(GamePlayer source, GameNPC target);
+
+		/// <summary>
+		/// Gets the NPC guild name based on server type
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered NPC</param>
+		/// <returns>The guild name of the target</returns>
+		string GetNPCGuildName(GamePlayer source, GameNPC target);
 	}
 }
