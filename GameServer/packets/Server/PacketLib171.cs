@@ -67,8 +67,8 @@ namespace DOL.GS.PacketHandler
 			if (zone == null) return;
 			pak.WriteShort((ushort)(zone.XOffset / 0x2000));
 			pak.WriteShort((ushort)(zone.YOffset / 0x2000));
-            //Dinberg - Changing to allow instances...
-            pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
+			//Dinberg - Changing to allow instances...
+			pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
 			pak.WriteShort(0x00); //TODO: unknown, new in 1.71
 			SendTCP(pak);
 		}
@@ -188,10 +188,10 @@ namespace DOL.GS.PacketHandler
 			}
 			if ((npc.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0)
 				if (m_gameClient.Account.PrivLevel > 1) add += "-DOR"; // indicates DOR flag for GMs
-				else flags2 |= 0x01;
+			else flags2 |= 0x01;
 			if ((npc.Flags & (uint)GameNPC.eFlags.DONTSHOWNAME) != 0)
 				if (m_gameClient.Account.PrivLevel > 1) add += "-NON"; // indicates NON flag for GMs
-				else flags2 |= 0x02;
+			else flags2 |= 0x02;
 
 			if( ( npc.Flags & (uint)GameNPC.eFlags.STEALTH ) > 0 )
 				flags2 |= 0x04;
@@ -203,7 +203,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0x00); // new in 1.71
 			pak.WriteByte(0x00); // new in 1.71 (region instance ID from StoC_0x20)
 
-			string name = npc.Name;
+			string name = GameServer.ServerRules.GetNPCName(m_gameClient.Player, npc);
 			if (name.Length + add.Length + 2 > 47) // clients crash with too long names
 				name = name.Substring(0, 47 - add.Length - 2);
 			if (add.Length > 0)
@@ -211,9 +211,10 @@ namespace DOL.GS.PacketHandler
 
 			pak.WritePascalString(name);
 
-			if (npc.GuildName.Length > 47)
-				pak.WritePascalString(npc.GuildName.Substring(0, 47));
-			else pak.WritePascalString(npc.GuildName);
+			string l_npcGuildname = GameServer.ServerRules.GetNPCGuildName(m_gameClient.Player, npc);;
+			if (l_npcGuildname.Length > 47)
+				pak.WritePascalString(l_npcGuildname.Substring(0, 47));
+			else pak.WritePascalString(l_npcGuildname);
 
 			pak.WriteByte(0x00);
 			SendTCP(pak);
@@ -241,8 +242,8 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte(player.Level);
 					pak.WritePascalString(player.Name);
 					pak.WriteString(player.CharacterClass.Name, 4);
-                    //Dinberg:Instances - you know the score by now ;)
-                    //ZoneSkinID for clientside positioning of objects.
+					//Dinberg:Instances - you know the score by now ;)
+					//ZoneSkinID for clientside positioning of objects.
 					if (player.CurrentZone != null)
 						pak.WriteByte((byte)player.CurrentZone.ZoneSkinID);
 					else

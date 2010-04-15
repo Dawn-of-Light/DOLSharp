@@ -16,10 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS.PacketHandler;
-using DOL.Database;
-using DOL.Language;
 using System;
+using DOL.Database;
+using DOL.GS.PacketHandler;
+using DOL.GS.PacketHandler.Client.v168;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -113,7 +114,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						acc.Password = newpass;
+						acc.Password = LoginRequestHandler.CryptPassword(newpass);
 						GameServer.Database.SaveObject(acc);
 					}
 					break;

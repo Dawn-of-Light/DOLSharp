@@ -180,6 +180,7 @@
     <Compile Include="commands\GMCommands\Announce.cs" />
     <Compile Include="commands\GMCommands\area.cs" />
     <Compile Include="commands\GMCommands\Ban.cs" />
+    <Compile Include="commands\gmcommands\blink.cs" />
     <Compile Include="commands\GMCommands\cast.cs" />
     <Compile Include="commands\GMCommands\ClientList.cs" />
     <Compile Include="commands\GMCommands\crafting.cs" />

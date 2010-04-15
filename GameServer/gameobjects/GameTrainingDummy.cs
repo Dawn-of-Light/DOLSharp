@@ -18,22 +18,7 @@
  */
 using System;
 using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using DOL.AI;
 using DOL.AI.Brain;
-using DOL.Database;
-using DOL.Events;
-using DOL.Language;
-using DOL.GS.Effects;
-using DOL.GS.Movement;
-using DOL.GS.Quests;
-using DOL.GS.PacketHandler;
-using DOL.GS.Spells;
-using DOL.GS.Utils;
-using DOL.GS.Housing;
-using DOL.GS.RealmAbilities;
 using log4net;
 
 namespace DOL.GS
@@ -48,7 +33,6 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-
 		public GameTrainingDummy() : base()
 		{
 			m_maxSpeedBase = 0;
@@ -61,19 +45,8 @@ namespace DOL.GS
 		/// </summary>
 		public override int Health
 		{
-			get
-			{
-				return base.Health;
-			}
-			set
-			{
-				base.Health = Math.Max(1, value);
-			
-				if (HealthPercent < 10)
-				{
-					base.Health = MaxHealth / 10;
-				}
-			}
+			get{ return base.MaxHealth;}
+			set {}
 		}
 
 		/// <summary>
@@ -81,10 +54,7 @@ namespace DOL.GS
 		/// </summary>
 		public override bool IsAlive
 		{
-			get
-			{
-				return true;
-			}
+			get{ return true;}
 		}
 
 		/// <summary>
@@ -93,9 +63,19 @@ namespace DOL.GS
 		/// <param name="ad"></param>
 		public override void OnAttackedByEnemy(AttackData ad)
 		{
-			// put the dummy in combat mode to reduce regen times
-			LastAttackedByEnemyTickPvE = CurrentRegion.Time;
-			return;
+			if (ad.IsHit)
+			{
+				if (ad.Attacker.Realm == 0 || this.Realm == 0)
+				{
+					LastAttackedByEnemyTickPvE = CurrentRegion.Time;
+					ad.Attacker.LastAttackTickPvE = CurrentRegion.Time;
+				}
+				else
+				{
+					LastAttackedByEnemyTickPvP = CurrentRegion.Time;
+					ad.Attacker.LastAttackTickPvP = CurrentRegion.Time;
+				}
+			}
 		}
 
 		/// <summary>
@@ -107,8 +87,5 @@ namespace DOL.GS
 		{
 			return true;
 		}
-
-
 	}
-
 }

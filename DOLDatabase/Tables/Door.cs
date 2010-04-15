@@ -51,7 +51,6 @@ namespace DOL.Database
 		public DBDoor()
 		{
 			m_autoSave = false;
-			ObjectId = "";
 			m_zpos = 0;
 			m_ypos = 0;
 			m_xpos = 0;

@@ -234,6 +234,7 @@ namespace DOLGameServerConsole
         public void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z) { }
         public virtual void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag) { }
         public virtual void SendMinotaurRelicBarUpdate(GamePlayer player, int xp) { }
+        public virtual void SendBlinkPanel(GamePlayer player, byte flag) { }
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>
