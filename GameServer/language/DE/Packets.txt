@@ -130,7 +130,7 @@ DetailDisplayHandler.WritePotionInfo.LevelRequired:	Benötigte Erfahrung:
 DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
 DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Kann nicht im Kampf verwendet werden.
 DetailDisplayHandler.WritePotionInfo.UseItem2:		Wiederverwendbar jede Minute.
-DetailDisplayHandler.WritePotionInfo.UseItem3:		Kann wieder verwendet werden in: {0}.
+DetailDisplayHandler.WritePotionInfo.UseItem3:		Kann wieder verwendet werden in: {0}
 DetailDisplayHandler.WriteUsableClasses.UsableBy:	Geeignet für: 
 
 # /DoorRequestHandler.cs

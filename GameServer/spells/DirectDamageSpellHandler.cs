@@ -155,12 +155,15 @@ namespace DOL.GS.Spells
 		 */
 		protected override void OnSpellResisted(GameLiving target)
 		{
-			if (target is GamePlayer /*&& Caster.TempProperties.getProperty("player_in_keep_property", false)*/)
+			if (target is GamePlayer)
 			{
 				GamePlayer player = target as GamePlayer;
 				player.Out.SendCheckLOS(Caster, player, new CheckLOSResponse(ResistSpellCheckLOS));
 			}
-			else SpellResisted(target);
+			else
+			{
+				SpellResisted(target);
+			}
 		}
 
 		private void ResistSpellCheckLOS(GamePlayer player, ushort response, ushort targetOID)

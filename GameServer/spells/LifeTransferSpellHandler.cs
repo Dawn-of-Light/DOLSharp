@@ -36,10 +36,10 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Execute lifetransfer spell
 		/// </summary>
-		public override void StartSpell(GameLiving target)
+		public override bool StartSpell(GameLiving target)
 		{
 			IList targets = SelectTargets(target);
-			if (targets.Count <= 0) return;
+			if (targets.Count <= 0) return false;
 
 			bool healed = false;
 			int transferHeal;
@@ -95,6 +95,8 @@ namespace DOL.GS.Spells
 					SendEffectAnimation(Caster, 0, false, 0);
 				}
 			}
+
+			return true;
 		}
 
 		/// <summary>

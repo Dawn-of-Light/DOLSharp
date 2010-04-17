@@ -52,7 +52,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
-		public override void StartSpell(GameLiving target)
+		public override bool StartSpell(GameLiving target)
 		{
 			int targetCount = 0;
 
@@ -67,6 +67,8 @@ namespace DOL.GS.Spells
 					break;
 				}
 			}
+
+			return true;
 		}
 
 		private bool CheckLOS(GameLiving living)
@@ -310,48 +312,7 @@ namespace DOL.GS.Spells
 				{
 					if (ad.AttackResult == GameLiving.eAttackResult.HitUnstyled || ad.AttackResult == GameLiving.eAttackResult.HitStyle)
 					{
-						CheckWeaponMagicalEffect(ad, m_handler.Caster.AttackWeapon);
-					}
-				}
-			}
-
-
-			protected virtual void CheckWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
-			{
-				if (weapon == null) return;
-				double procChance = weapon.SPD_ABS * 0.0025;
-				if (weapon.ProcSpellID != 0 && Util.ChanceDouble(procChance))
-					StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects),
-						weapon.ProcSpellID);
-				if (weapon.ProcSpellID1 != 0 && Util.ChanceDouble(procChance))
-					StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects),
-						weapon.ProcSpellID1);
-				if (weapon.PoisonSpellID != 0)
-				{
-					if (ad.Target.EffectList.GetOfType(typeof(RemedyEffect)) != null)
-					{
-						if (ad.Attacker is GamePlayer)
-							(ad.Attacker as GamePlayer).Out.SendMessage("Your target is protected against your poison by a magical effect.",
-								eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons),
-						weapon.PoisonSpellID);
-				}
-			}
-
-			protected virtual void StartWeaponMagicalEffect(AttackData ad, SpellLine spellLine, int spellID)
-			{
-				if (spellLine == null) return;
-
-				List<Spell> spells = SkillBase.GetSpellList(spellLine.KeyName);
-				foreach (Spell spell in spells)
-				{
-					if (spell.ID == spellID)
-					{
-						ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, spell, spellLine);
-						if (spellHandler != null)
-							spellHandler.StartSpell(ad.Target);
+						caster.CheckWeaponMagicalEffect(ad, m_handler.Caster.AttackWeapon);
 					}
 				}
 			}

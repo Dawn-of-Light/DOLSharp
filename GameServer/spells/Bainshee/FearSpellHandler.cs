@@ -49,9 +49,9 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
-		public override void StartSpell(GameLiving target)
+		public override bool StartSpell(GameLiving target)
 		{
-			if (target == null) return;
+			if (target == null) return false;
 
 			IList targets = SelectTargets(target);
 
@@ -62,6 +62,8 @@ namespace DOL.GS.Spells
 					((GameNPC)t).AddBrain(new FearBrain());
 				}
 			}
+
+			return true;
 		}
 
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)

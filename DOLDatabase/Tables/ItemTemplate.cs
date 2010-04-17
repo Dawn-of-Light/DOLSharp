@@ -120,6 +120,7 @@ namespace DOL.Database
 		protected int m_canUseEvery;
 		protected int m_flags;
 		protected int m_bonusLevel;
+		protected int m_levelRequirement;
 		protected string m_description;
 		
 		protected string m_packageID;
@@ -197,6 +198,7 @@ namespace DOL.Database
 			m_allowedClasses = "0";
 			m_flags = 0;
 			m_bonusLevel = 0;
+			m_levelRequirement = 0;
 			m_description = "";
 		}
 
@@ -1159,6 +1161,20 @@ namespace DOL.Database
 			set
 			{
 				this.m_bonusLevel = value;
+				this.Dirty = true;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int LevelRequirement
+		{
+			get
+			{
+				return this.m_levelRequirement;
+			}
+			set
+			{
+				this.m_levelRequirement = value;
 				this.Dirty = true;
 			}
 		}
