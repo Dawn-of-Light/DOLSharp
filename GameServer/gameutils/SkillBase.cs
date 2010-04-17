@@ -2093,6 +2093,38 @@ namespace DOL.GS
 			return null;
 		}
 
+
+		/// <summary>
+		/// Update or add a spell to the global spell list.  Useful for adding procs and charges to items without restarting server.
+		/// This will not update a spell in a spell line.
+		/// </summary>
+		/// <param name="spellID"></param>
+		/// <returns></returns>
+		public static bool UpdateSpell(int spellID)
+		{
+			DBSpell dbSpell = GameServer.Database.SelectObject<DBSpell>("SpellID = " + spellID);
+
+			if (dbSpell != null)
+			{
+				Spell spell = new Spell(dbSpell, 1);
+
+				lock (m_spells)
+				{
+					if (m_spells.ContainsKey(spellID))
+					{
+						m_spells[spellID] = spell;
+					}
+					else
+					{
+						m_spells.Add(spellID, spell);
+					}
+				}
+				return true;
+			}
+
+			return false;
+		}
+
 		/// <summary>
 		/// Returns spell with id, level of spell is always 1
 		/// </summary>
@@ -2105,6 +2137,33 @@ namespace DOL.GS
 				return spell;
 			return null;
 		}
+
+		/// <summary>
+		/// Will attempt to find a spell by ID or in a SpellLine
+		/// </summary>
+		/// <param name="spellID"></param>
+		/// <param name="line"></param>
+		/// <returns></returns>
+		public static Spell FindSpell(int spellID, SpellLine line)
+		{
+			Spell spell = GetSpellByID(spellID);
+
+			if (spell == null && line != null)
+			{
+				List<Spell> spells = GetSpellList(line.KeyName);
+				foreach (Spell lineSpell in spells)
+				{
+					if (lineSpell.ID == spellID)
+					{
+						spell = lineSpell;
+						break;
+					}
+				}
+			}
+
+			return spell;
+		}
+
 
 		/// <summary>
 		/// Get display name of property

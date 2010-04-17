@@ -589,7 +589,7 @@ DetailDisplayHandler.WritePotionInfo.LevelRequired:	Livello Richiesto:
 DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
 DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Non puo' essere usato in combattimento
 DetailDisplayHandler.WritePotionInfo.UseItem2:		Puoi usare l'oggetto ogni: 1:00 min
-DetailDisplayHandler.WritePotionInfo.UseItem3:		Puoi riusarlo entro: {0}.
+DetailDisplayHandler.WritePotionInfo.UseItem3:		Puoi riusarlo entro: {0}
 DetailDisplayHandler.WriteUsableClasses.UsableBy:	Utilizzabile da: 
 
 # /DoorRequestHandler.cs

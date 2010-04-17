@@ -74,8 +74,9 @@ namespace DOL.GS.Commands
 	     "GMCommands.Item.Usage.FindID",
 	     "GMCommands.Item.Usage.FindName",
 	     "/item load <id_nb> - Load an item from the DB and replace or add item to the ItemTemplate cache",
+	     "/item loadartifacts - Re-load all the artifact entries from the DB.  ItemTemplates must be loaded separately and prior to loading artifacts.",
 	     "/item loadpackage <packageid> - Load all the items in a package from the DB and replace or add to the ItemTemplate cache",
-	     "/item loadartifacts - Re-load all the artifact entries from the DB.  ItemTemplates must be loaded separately and prior to loading artifacts.")]
+		 "/item loadspells - Read each item spell from the database and update the global spell list")]
 	public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -1497,11 +1498,52 @@ namespace DOL.GS.Commands
 						}
 						break;
 						#endregion LoadArtifacts
+						#region LoadSpells
+					case "loadspells":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							LoadSpell(client, item.SpellID);
+							LoadSpell(client, item.SpellID1);
+							LoadSpell(client, item.ProcSpellID);
+							LoadSpell(client, item.ProcSpellID1);
+							break;
+						}
+						#endregion LoadSpells
 				}
 			}
 			catch
 			{
 				DisplaySyntax(client);
+			}
+		}
+
+		private void LoadSpell(GameClient client, int spellID)
+		{
+			if (spellID != 0)
+			{
+				if (SkillBase.UpdateSpell(spellID))
+				{
+					log.DebugFormat("Spell ID {0} added / updated in the global spell list", spellID);
+					DisplayMessage(client, "Spell ID {0} added / updated in the global spell list", spellID);
+				}
 			}
 		}
 	}

@@ -34,10 +34,10 @@ namespace DOL.GS.Spells
 		/// Execute heal spell
 		/// </summary>
 		/// <param name="target"></param>
-		public override void StartSpell(GameLiving target)
+		public override bool StartSpell(GameLiving target)
 		{
 			IList targets = SelectTargets(target);
-			if (targets.Count <= 0) return;
+			if (targets.Count <= 0) return false;
 
 			bool healed = false;
 			int minHeal;
@@ -80,6 +80,8 @@ namespace DOL.GS.Spells
 			}
 
 			if (!healed && Spell.CastTime == 0) m_startReuseTimer = false;
+
+			return true;
 		}
 
 		/// <summary>
