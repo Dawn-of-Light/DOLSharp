@@ -34,13 +34,21 @@ namespace DOL.GS.Spells
 		/// Called when a spell is casted
 		/// </summary>
 		bool CastSpell();
+		bool CastSpell(InventoryItem item);
 		bool CastSpell(GameLiving target);
+		bool CastSpell(GameLiving target, InventoryItem item);
 		
 		/// <summary>
 		/// Starts the spell, without displaying cast message etc.
 		/// Should be used for StyleEffects, ...
 		/// </summary>
-		void StartSpell(GameLiving target);
+		bool StartSpell(GameLiving target);
+
+		/// <summary>
+		/// Starts the spell, without displaying cast message etc.
+		/// Should be used with spells attached to items (procs, /use, etc)
+		/// </summary>
+		bool StartSpell(GameLiving target, InventoryItem item);
 
 		/// <summary>
 		/// Whenever the current casting sequence is to be interrupted

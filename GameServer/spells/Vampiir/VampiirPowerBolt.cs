@@ -20,12 +20,14 @@ namespace DOL.GS.Spells
 			}
 			return base.CheckBeginCast(selectedTarget);
 		}
-		public override void StartSpell(GameLiving target)
+		public override bool StartSpell(GameLiving target)
 		{
 			foreach (GameLiving targ in SelectTargets(target))
 			{
 				DealDamage(targ);
 			}
+
+			return true;
 		}
 
 		private void DealDamage(GameLiving target)

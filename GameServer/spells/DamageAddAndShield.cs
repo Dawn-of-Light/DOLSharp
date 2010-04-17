@@ -279,7 +279,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
-		public override void StartSpell(GameLiving target)
+		public override bool StartSpell(GameLiving target)
 		{
 			// set min spread based on spec
 			if (Caster is GamePlayer)
@@ -293,7 +293,8 @@ namespace DOL.GS.Spells
 					else if (m_minDamageSpread < 50) m_minDamageSpread = 50;
 				}
 			}
-			base.StartSpell(target);
+
+			return base.StartSpell(target);
 		}
 
 		/// <summary>

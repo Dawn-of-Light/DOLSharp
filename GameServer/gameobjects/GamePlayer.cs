@@ -6275,58 +6275,44 @@ namespace DOL.GS
 						//reactive effect
 						if (ad.ArmorHitLocation != eArmorSlot.UNKNOWN)
 						{
-							InventoryItem reactiveitem = Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
+							InventoryItem reactiveItem = Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
-							if (reactiveitem != null && reactiveitem.ProcSpellID != 0 && Util.Chance(10))
+							if (reactiveItem != null)
 							{
+								int requiredLevel = reactiveItem.LevelRequirement > 0 ? reactiveItem.LevelRequirement : Math.Min(50, reactiveItem.Level);
+
 								SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-								if (reactiveEffectLine != null)
+
+								if (reactiveItem.ProcSpellID != 0 && requiredLevel <= Level && Util.Chance(10))
 								{
-									List<Spell> spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
-									foreach (Spell spell in spells)
+									if (reactiveEffectLine != null)
 									{
-										if (spell.ID == reactiveitem.ProcSpellID)
+										Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID, reactiveEffectLine);
+
+										if (spell != null)
 										{
-											if (spell.Level <= Level)
+											ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+											if (spellHandler != null)
 											{
-												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-												if (spellHandler != null)
-													spellHandler.StartSpell(ad.Attacker);
-												else
-													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.Proc.NotImplemented", reactiveitem.ProcSpellID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												spellHandler.StartSpell(ad.Attacker, reactiveItem);
 											}
-											else
-												Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.NotEnoughPowerful"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											break;
 										}
 									}
 								}
-							}
-							if (reactiveitem != null && reactiveitem.ProcSpellID1 != 0 && Util.Chance(10))
-							{
-								SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-								if (reactiveEffectLine != null)
+
+								if (reactiveItem.ProcSpellID1 != 0 && requiredLevel <= Level && Util.Chance(10))
 								{
-									List<Spell> spells = SkillBase.GetSpellList(reactiveEffectLine.KeyName);
-									foreach (Spell spell in spells)
+									if (reactiveEffectLine != null)
 									{
-										if (spell.ID == reactiveitem.ProcSpellID1)
+										Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID1, reactiveEffectLine);
+
+										if (spell != null)
 										{
-											if (spell.Level <= Level)
+											ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+											if (spellHandler != null)
 											{
-												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-												if (spellHandler != null)
-												{
-													spellHandler.StartSpell(ad.Attacker);
-												}
-												else
-												{
-													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.Proc.NotImplemented", reactiveitem.ProcSpellID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												}
+												spellHandler.StartSpell(ad.Attacker, reactiveItem);
 											}
-											else
-												Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Spell.NotEnoughPowerful"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											break;
 										}
 									}
 								}
@@ -8477,109 +8463,117 @@ namespace DOL.GS
 						}
 						else if (useItem.SpellID > 0 && useItem.Charges > 0 && useItem.Object_Type == (int)eObjectType.Magical && (useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
 						{
-							Spell spellItem = SkillBase.GetSpellByID(useItem.SpellID);
-							
-							long nextPotionAvailTime = TempProperties.getProperty<long>(NEXT_POTION_AVAIL_TIME+"_Type"+ (spellItem==null?0:spellItem.SharedTimerGroup));
-							// Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
-							// into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
-							// Nidel Update: Individual timer are now based on SharedTimerGroup of spell's potion for
-							// can use some different potion type (heal/buff/...) like off.
-							if (Client.Account.PrivLevel == 1 && nextPotionAvailTime > CurrentRegion.Time)
+							SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
+
+							if (useItem.Item_Type == 41)
 							{
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustWaitBeforeUse", (nextPotionAvailTime - CurrentRegion.Time) / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 							}
-							else
+
+							Spell spell = SkillBase.FindSpell(useItem.SpellID, potionEffectLine);
+
+							if (spell != null)
 							{
-								SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
-								if (useItem.Item_Type == 41)
-									potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+								// For potions most can be used by any player level except a few higher level ones.
+								// So for the case of potions we will only restrict the level of usage if LevelRequirement is >0 for the item
 
-								if (potionEffectLine != null)
+								long nextPotionAvailTime = TempProperties.getProperty<long>(NEXT_POTION_AVAIL_TIME + "_Type" + (spell.SharedTimerGroup));
+
+								if (Client.Account.PrivLevel == 1 && nextPotionAvailTime > CurrentRegion.Time)
 								{
-									List<Spell> spells = SkillBase.GetSpellList(potionEffectLine.KeyName);
-									foreach (Spell spell in spells)
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustWaitBeforeUse", (nextPotionAvailTime - CurrentRegion.Time) / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
+								else
+								{
+									if (potionEffectLine != null)
 									{
-										if (spell.ID == useItem.SpellID)
+										int requiredLevel = useItem.LevelRequirement > 0 ? useItem.LevelRequirement : Math.Min(50, useItem.Level);
+
+										if (requiredLevel <= Level)
 										{
-											if (spell.Level <= Level)
+											if (spell.CastTime > 0 && AttackState)
 											{
-												if (spell.CastTime > 0 && AttackState)
-												{
-													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												}
-												//Eden
-												else if ((IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || IsMezzed || !IsAlive)
-												{
-													Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseState", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												}
-												else
-												{
-													SpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine) as SpellHandler;
-													if (spellHandler != null)
-													{
-														Stealth(false);
-
-														if (useItem.Item_Type == (int)eInventorySlot.FirstBackpack)
-														{
-															Emote(eEmote.Drink);
-														}
-
-														GameLiving target = TargetObject as GameLiving;
-
-														// Tobz: make sure we have the appropriate target for our charge spell,
-														// otherwise don't waste a charge.
-														if (spell.Target.ToLower() == "enemy")
-														{
-															// we need an enemy target.
-															if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
-															{
-																// not allowed to attack, so they are not an enemy.
-																Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-																return;
-															}
-														}
-
-														//Spell
-														if (spellHandler.StartItemSpell(target))
-														{
-															//SubSpells
-															spellHandler.CastSubSpells(target, spellHandler.SpellLine);
-
-															if (useItem.Count > 1)
-															{
-																Inventory.RemoveCountFromStack(useItem, 1);
-															}
-															else
-															{
-																useItem.Charges--;
-																if (useItem.Charges < 1)
-																{
-																	Inventory.RemoveCountFromStack(useItem, 1);
-																}
-															}
-															Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Used", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-															TempProperties.setProperty(NEXT_POTION_AVAIL_TIME + "_Type" + (spellItem == null ? 0 : spellItem.SharedTimerGroup), useItem.CanUseEvery * 1000 + CurrentRegion.Time);
-														}
-														else
-														{
-															// StartItemSpell is responsible for sending failure message to player
-														}
-													}
-													else
-													{
-														Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													}
-												}
+												Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+											}
+											//Eden
+											else if ((IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || IsMezzed || !IsAlive)
+											{
+												Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseState", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											}
 											else
 											{
-												Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												SpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine) as SpellHandler;
+												if (spellHandler != null)
+												{
+													GameLiving target = TargetObject as GameLiving;
+
+													// Tobz: make sure we have the appropriate target for our charge spell,
+													// otherwise don't waste a charge.
+													if (spell.Target.ToLower() == "enemy")
+													{
+														// we need an enemy target.
+														if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
+														{
+															// not allowed to attack, so they are not an enemy.
+															Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+															return;
+														}
+													}
+
+													Stealth(false);
+
+													if (useItem.Item_Type == (int)eInventorySlot.FirstBackpack)
+													{
+														Emote(eEmote.Drink);
+													}
+
+													//Spell
+													if (spellHandler.StartSpell(target, useItem))
+													{
+														//SubSpells
+														spellHandler.CastSubSpells(target, spellHandler.SpellLine);
+
+														if (useItem.Count > 1)
+														{
+															Inventory.RemoveCountFromStack(useItem, 1);
+														}
+														else
+														{
+															useItem.Charges--;
+															if (useItem.Charges < 1)
+															{
+																Inventory.RemoveCountFromStack(useItem, 1);
+															}
+														}
+														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Used", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+														TempProperties.setProperty(NEXT_POTION_AVAIL_TIME + "_Type" + (spell.SharedTimerGroup), useItem.CanUseEvery * 1000 + CurrentRegion.Time);
+													}
+													else
+													{
+														// StartItemSpell is responsible for sending failure message to player
+													}
+												}
+												else
+												{
+													Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+												}
 											}
-											break;
+										}
+										else
+										{
+											Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										}
 									}
+									else
+									{
+										Out.SendMessage("Potion effect line not found", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									}
 								}
+							}
+							else
+							{
+								Out.SendMessage("Potion effect spell ID " + useItem.SpellID + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 						}
 						else if (type > 0)
@@ -8609,8 +8603,6 @@ namespace DOL.GS
 								}
 								else
 								{
-									//TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
-
 									SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 
 									if (chargeEffectLine != null)
@@ -8619,88 +8611,118 @@ namespace DOL.GS
 										{
 											if (useItem.SpellID == 0)
 												return;
-											Spell spell = SkillBase.GetSpellByID(useItem.SpellID);
-											if (spell.Level <= Level)
+
+											int requiredLevel = useItem.LevelRequirement > 0 ? useItem.LevelRequirement : Math.Min(50, useItem.Level);
+
+											if (requiredLevel <= Level)
 											{
-												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-												if (spellHandler != null)
+												Spell spell = SkillBase.FindSpell(useItem.SpellID, chargeEffectLine);
+
+												if (spell != null)
 												{
-													if (IsOnHorse && !spellHandler.HasPositiveEffect)
-														IsOnHorse = false;
-													Stealth(false);
-													if(spellHandler.CastSpell())
+													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+													if (spellHandler != null)
 													{
-														if(spell.SubSpellID>0)
+														if (IsOnHorse && !spellHandler.HasPositiveEffect)
+															IsOnHorse = false;
+
+														Stealth(false);
+
+														if (spellHandler.CastSpell())
 														{
-															Spell subspell = SkillBase.GetSpellByID(spell.SubSpellID);
-															if(subspell!=null)
+															if (spell.SubSpellID > 0)
 															{
-																ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(this, subspell, chargeEffectLine);
-																if(subSpellHandler!=null)
+																Spell subspell = SkillBase.GetSpellByID(spell.SubSpellID);
+																if (subspell != null)
 																{
-																	subSpellHandler.CastSpell();
+																	ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(this, subspell, chargeEffectLine);
+																	if (subSpellHandler != null)
+																	{
+																		subSpellHandler.CastSpell();
+																	}
 																}
 															}
+															if (useItem.MaxCharges > 0)
+															{
+																useItem.Charges--;
+															}
+
+															TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+															TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+															TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
 														}
-														if (useItem.MaxCharges > 0)
-															useItem.Charges--;
-														TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-														TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
-														TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
+													}
+													else
+													{
+														Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													}
 												}
 												else
 												{
-													Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+													Out.SendMessage("Charge effect ID " + spell.ID + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												}
 											}
 											else
+											{
 												Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-
+											}
 										}
 										else if (type == 2) //use2
 										{
 											if (useItem.SpellID1 == 0)
 												return;
-											Spell spell = SkillBase.GetSpellByID(useItem.SpellID1);
-											if (spell == null) { Out.SendMessage("Charge effect ID " + useItem.SpellID1 + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
-											if (spell.Level <= Level)
+
+											int requiredLevel = useItem.LevelRequirement > 0 ? useItem.LevelRequirement : Math.Min(50, useItem.Level);
+
+											if (requiredLevel <= Level)
 											{
-												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-												if (spellHandler != null)
+												Spell spell = SkillBase.FindSpell(useItem.SpellID1, chargeEffectLine);
+
+												if (spell != null)
 												{
-													if (IsOnHorse && !spellHandler.HasPositiveEffect)
-														IsOnHorse = false;
-													Stealth(false);
-													if(spellHandler.CastSpell())
+													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+													if (spellHandler != null)
 													{
-														if(spell.SubSpellID>0)
+														if (IsOnHorse && !spellHandler.HasPositiveEffect)
+															IsOnHorse = false;
+
+														Stealth(false);
+
+														if (spellHandler.CastSpell())
 														{
-															Spell subspell = SkillBase.GetSpellByID(spell.SubSpellID);
-															if(subspell!=null)
+															if (spell.SubSpellID > 0)
 															{
-																ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(this, subspell, chargeEffectLine);
-																if(subSpellHandler!=null)
+																Spell subspell = SkillBase.GetSpellByID(spell.SubSpellID);
+
+																if (subspell != null)
 																{
-																	subSpellHandler.CastSpell();
+																	ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(this, subspell, chargeEffectLine);
+																	if (subSpellHandler != null)
+																	{
+																		subSpellHandler.CastSpell();
+																	}
 																}
 															}
+															if (useItem.MaxCharges > 0)
+															{
+																useItem.Charges--;
+															}
+
+															TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+															TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+															TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
 														}
-														if (useItem.MaxCharges1 > 0)
-															useItem.Charges1--;
-														TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-														TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
-														TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
+													}
+													else
+													{
+														Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 													}
 												}
 												else
 												{
-													Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+													Out.SendMessage("Charge effect ID " + spell.ID + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												}
 											}
-											else
-												Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										}
 									}
 								}
@@ -8720,6 +8742,9 @@ namespace DOL.GS
 		/// <param name="type"></param>
 		protected bool UseMagicalItem(InventoryItem item, int type)
 		{
+			if (item == null)
+				return false;
+
 			//Eden
 			if (IsMezzed || (IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || !IsAlive)
 			{
@@ -8733,39 +8758,44 @@ namespace DOL.GS
 				return false;
 			}
 
-			SpellLine itemSpellLine = new SpellLine("TempItemSpells", "Temp Item Spells", "", true);
+			SpellLine itemSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+
 			if (itemSpellLine == null)
 				return false;
 
-			if (type == 1 || type == 0) //use1
+			if (type == 1 || type == 0)
 			{
-				Spell spell = SkillBase.GetSpellByID(item.SpellID);
-				if (spell.Level > Level)
+				Spell spell = SkillBase.FindSpell(item.SpellID, itemSpellLine);
+
+				if (spell != null)
 				{
-					Out.SendMessage("You are not powerful enough to use this item's spell.",
-					                eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
+					int requiredLevel = item.LevelRequirement > 0 ? item.LevelRequirement : Math.Min(50, item.Level);
 
-				Out.SendMessage(String.Format("You use {0}.", item.GetName(0, false)),
-				                eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+					if (requiredLevel > Level)
+					{
+						Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return false;
+					}
 
-				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, itemSpellLine);
-				if (spellHandler == null)
-					return false;
+					Out.SendMessage(String.Format("You use {0}.", item.GetName(0, false)), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 
-				if (IsOnHorse && !spellHandler.HasPositiveEffect)
-					IsOnHorse = false;
+					ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, itemSpellLine);
+					if (spellHandler == null)
+						return false;
 
-				Stealth(false);
+					if (IsOnHorse && !spellHandler.HasPositiveEffect)
+						IsOnHorse = false;
 
-				if (spellHandler.CheckBeginCast(TargetObject as GameLiving))
-				{
-					TempProperties.setProperty(LAST_USED_ITEM_SPELL, item);
-					m_runningSpellHandler = spellHandler;
-					m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-					spellHandler.CastSpell();
-					return true;
+					Stealth(false);
+
+					if (spellHandler.CheckBeginCast(TargetObject as GameLiving))
+					{
+						TempProperties.setProperty(LAST_USED_ITEM_SPELL, item);
+						m_runningSpellHandler = spellHandler;
+						m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+						spellHandler.CastSpell(item);
+						return true;
+					}
 				}
 			}
 			return false;

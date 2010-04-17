@@ -51,7 +51,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
-		public override void StartSpell(GameLiving target)
+		public override bool StartSpell(GameLiving target)
 		{
 			foreach (GameLiving targ in SelectTargets(target))
 			{
@@ -65,6 +65,8 @@ namespace DOL.GS.Spells
 					DealDamage(targ);
 				}
 			}
+
+			return true;
 		}
 
 		private bool CheckLOS(GameLiving living)
