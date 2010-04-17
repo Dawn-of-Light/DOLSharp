@@ -31,14 +31,15 @@ namespace DOL.GS.Spells
 		/// Execute heal spell
 		/// </summary>
 		/// <param name="target"></param>
-		public override void StartSpell(GameLiving target)
+		public override bool StartSpell(GameLiving target)
 		{
 			m_startReuseTimer = true;
 			// do not start spell if not in combat
 			GamePlayer player = Caster as GamePlayer;
 			if (!Caster.InCombat && (player==null || player.Group==null || !player.Group.IsGroupInCombat()))
-				return;
-			base.StartSpell(target);
+				return false;
+
+			return base.StartSpell(target);
 		}
 
 		// constructor

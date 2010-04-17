@@ -128,7 +128,7 @@ DetailDisplayHandler.WritePotionInfo.LevelRequired:	Condition de Niveau
 DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
 DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Ne peut être utilisé en combat.
 DetailDisplayHandler.WritePotionInfo.UseItem2:		Pout être utilisé toutes les: 1:00 min
-DetailDisplayHandler.WritePotionInfo.UseItem3:		Peut être réutilisée dans: {0}.
+DetailDisplayHandler.WritePotionInfo.UseItem3:		Peut être réutilisée dans: {0}
 DetailDisplayHandler.WritePotionInfo.Type:		Fonction : {0}
 DetailDisplayHandler.WritePotionInfo.Value:		Valeur : {0}
 DetailDisplayHandler.WritePotionInfo.Target:		Cible : {0}

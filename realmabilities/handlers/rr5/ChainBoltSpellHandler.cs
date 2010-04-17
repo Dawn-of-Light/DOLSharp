@@ -45,9 +45,9 @@ namespace DOL.GS.Spells
         /// <summary>
         /// called when spell effect has to be started and applied to targets
         /// </summary>
-        public override void StartSpell(GameLiving target)
+        public override bool StartSpell(GameLiving target)
         {
-            if (target == null) return;
+            if (target == null) return false;
 
             if (m_maxTick >= 0)
             {
@@ -65,8 +65,10 @@ namespace DOL.GS.Spells
             BoltOnTargetAction bolt = new BoltOnTargetAction(Caster, target, this);
             bolt.Start(1 + ticksToTarget);
             m_currentSource = target;
-            m_currentTick++;            
-        }
+            m_currentTick++;
+
+			return true;
+		}
 
         public override void DamageTarget(AttackData ad, bool showEffectAnimation)
         {

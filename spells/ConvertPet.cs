@@ -36,10 +36,10 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Execute pet conversion spell
 		/// </summary>
-		public override void StartSpell(GameLiving target)
+		public override bool StartSpell(GameLiving target)
 		{
 			IList targets = SelectTargets(target);
-			if (targets.Count <= 0) return;
+			if (targets.Count <= 0) return false;
 			int mana = 0;
 
 			foreach (GameLiving living in targets)
@@ -58,6 +58,8 @@ namespace DOL.GS.Spells
 					MessageToCaster("Your mana is already full!", eChatType.CT_SpellResisted);
 				((GamePlayer)m_caster).CommandNpcRelease();
 			}
+
+			return true;
 		}
 	}
 }

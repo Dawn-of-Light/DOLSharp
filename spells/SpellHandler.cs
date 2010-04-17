@@ -102,6 +102,9 @@ namespace DOL.GS.Spells
 			get { return true; }
 		}
 
+
+		protected InventoryItem m_spellItem = null;
+
 		/// <summary>
 		/// Ability that casts a spell
 		/// </summary>
@@ -307,6 +310,29 @@ namespace DOL.GS.Spells
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Cast a spell by using an item
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public virtual bool CastSpell(InventoryItem item)
+		{
+			m_spellItem = item;
+			return CastSpell(Caster.TargetObject as GameLiving);
+		}
+
+		/// <summary>
+		/// Cast a spell by using an Item
+		/// </summary>
+		/// <param name="targetObject"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public virtual bool CastSpell(GameLiving targetObject, InventoryItem item)
+		{
+			m_spellItem = item;
+			return CastSpell(targetObject);
+		}
 
 		/// <summary>
 		/// called whenever the player clicks on a spell icon
@@ -2369,11 +2395,11 @@ return false;
 		/// Override this to do a CheckBeginCast if needed, otherwise spell will always cast and item will be used.
 		/// </summary>
 		/// <param name="target"></param>
-		/// <returns></returns>
-		public virtual bool StartItemSpell(GameLiving target)
+		/// <param name="item"></param>
+		public virtual bool StartSpell(GameLiving target, InventoryItem item)
 		{
-			StartSpell(target);
-			return true;
+			m_spellItem = item;
+			return StartSpell(target);
 		}
 
 
@@ -2382,7 +2408,7 @@ return false;
 		/// This is typically called after calling CheckBeginCast
 		/// </summary>
 		/// <param name="target">The current target object</param>
-		public virtual void StartSpell(GameLiving target)
+		public virtual bool StartSpell(GameLiving target)
 		{
 			// For PBAOE spells always set the target to the caster
 			if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower() && (target == null || (Spell.Radius > 0 && Spell.Range == 0)))
@@ -2393,7 +2419,7 @@ return false;
 			if (m_spellTarget == null)
 				m_spellTarget = target;
 
-			if (m_spellTarget == null) return;
+			if (m_spellTarget == null) return false;
 
 			IList targets = SelectTargets(m_spellTarget);
 
@@ -2481,6 +2507,8 @@ return false;
 			{
 				ApplyEffectOnTarget(null, 1);
 			}
+
+			return true;
 		}
 		/// <summary>
 		/// Calculate the variance due to the radius of the spell
@@ -2757,10 +2785,17 @@ return false;
 		/// <returns>chance that spell will be resisted for specific target</returns>
 		public virtual int CalculateSpellResistChance(GameLiving target)
 		{
-			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || HasPositiveEffect)
+			{
 				return 0;
-			if (HasPositiveEffect)
-				return 0;
+			}
+
+			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects && m_spellItem != null)
+			{
+				int itemSpellLevel = m_spellItem.LevelRequirement > 0 ? m_spellItem.LevelRequirement : Math.Min(50, m_spellItem.Level);
+				return 100 - (85 + ((itemSpellLevel - target.Level) / 2));
+			}
+
 			return 100 - CalculateToHitChance(target);
 		}
 
@@ -3010,18 +3045,18 @@ target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 				if (Spell.Duration >= ushort.MaxValue * 1000)
 					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + " Permanent.");
 				else if (Spell.Duration > 60000)
-					list.Add(string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + Spell.Duration / 60000 + ":" + (Spell.Duration % 60000 / 1000).ToString("00") + " min"));
+					list.Add(string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + " " + Spell.Duration / 60000 + ":" + (Spell.Duration % 60000 / 1000).ToString("00") + " min"));
 				else if (Spell.Duration != 0)
-					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + (Spell.Duration / 1000).ToString("0' sec';'Permanent.';'Permanent.'"));
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + " " + (Spell.Duration / 1000).ToString("0' sec';'Permanent.';'Permanent.'"));
 				if (Spell.Frequency != 0)
 					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Frequency", (Spell.Frequency * 0.001).ToString("0.0")));
 				if (Spell.Power != 0)
 					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.PowerCost", Spell.Power.ToString("0;0'%'")));
 				list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.CastingTime", (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'")));
 				if (Spell.RecastDelay > 60000)
-					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.RecastTime") + (Spell.RecastDelay / 60000).ToString() + ":" + (Spell.RecastDelay % 60000 / 1000).ToString("00") + " min");
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.RecastTime") + " " + (Spell.RecastDelay / 60000).ToString() + ":" + (Spell.RecastDelay % 60000 / 1000).ToString("00") + " min");
 				else if (Spell.RecastDelay > 0)
-					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.RecastTime") + (Spell.RecastDelay / 1000).ToString() + " sec");
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.RecastTime") + " " + (Spell.RecastDelay / 1000).ToString() + " sec");
 				if (Spell.Concentration != 0)
 					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.ConcentrationCost", Spell.Concentration));
 				if (Spell.Radius != 0)
@@ -3708,5 +3743,6 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 			return 0;
 		}
 		#endregion
+
 	}
 }

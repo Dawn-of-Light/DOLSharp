@@ -67,14 +67,14 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
-		public override void StartSpell(GameLiving target)
+		public override bool StartSpell(GameLiving target)
 		{
 			if (m_charmedNpc == null)
 				m_charmedNpc = target as GameNPC; // save target on first start
 			else
 				target = m_charmedNpc; // reuse for pulsing spells
 
-			if (target == null) return;
+			if (target == null) return false;
 			if (Util.Chance(CalculateSpellResistChance(target)))
 			{
 				OnSpellResisted(target);
@@ -83,6 +83,8 @@ namespace DOL.GS.Spells
 			{
 				ApplyEffectOnTarget(target, 1);
 			}
+
+			return true;
 		}
 
 		/// <summary>

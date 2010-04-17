@@ -2773,7 +2773,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="ad"></param>
 		/// <param name="weapon"></param>
-		protected virtual void CheckWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
+		public virtual void CheckWeaponMagicalEffect(AttackData ad, InventoryItem weapon)
 		{
 			if (weapon == null)
 				return;
@@ -2789,14 +2789,12 @@ namespace DOL.GS
 			// Proc #1
 
 			if (weapon.ProcSpellID != 0 && Util.ChanceDouble(procChance))
-				StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects),
-					weapon.ProcSpellID);
+				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), weapon.ProcSpellID);
 
 			// Proc #2
 
 			if (weapon.ProcSpellID1 != 0 && Util.ChanceDouble(procChance))
-				StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects),
-					weapon.ProcSpellID1);
+				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), weapon.ProcSpellID1);
 
 			// Poison
 
@@ -2810,8 +2808,7 @@ namespace DOL.GS
 					return;
 				}
 
-				StartWeaponMagicalEffect(ad, SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons),
-					weapon.PoisonSpellID);
+				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons), weapon.PoisonSpellID);
 
 				// Spymaster Enduring Poison
 
@@ -2828,29 +2825,40 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Make a proc or poison on the weapon go off.
+		/// Will assume spell is in GlobalSpellsLines.Item_Effects even if it's not and use the weapons LevelRequirement
+		/// Item_Effects must be used here because various spell handlers recognize this line to alter variance and other spell parameters
 		/// </summary>
-		private void StartWeaponMagicalEffect(AttackData ad, SpellLine spellLine, int spellID)
+		protected void StartWeaponMagicalEffect(InventoryItem weapon, AttackData ad, SpellLine spellLine, int spellID)
 		{
-			if (spellLine == null)
+			if (weapon == null)
 				return;
 
-			List<Spell> spells = SkillBase.GetSpellList(spellLine.KeyName);
-
-			foreach (Spell spell in spells)
+			if (spellLine == null)
 			{
-				if (spell.ID == spellID)
+				spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+			}
+
+			if (spellLine != null && ad != null && weapon != null)
+			{
+				Spell procSpell = SkillBase.FindSpell(spellID, spellLine);
+
+				if (procSpell != null)
 				{
-					if (spell.Level > EffectiveLevel)
+					int requiredLevel = weapon.LevelRequirement > 0 ? weapon.LevelRequirement : Math.Min(50, weapon.Level);
+					if (requiredLevel > Level)
 					{
 						if (this is GamePlayer)
-							(this as GamePlayer).Out.SendMessage("You are not powerful enough to use this item's spell.",
-								eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+						{
+							(this as GamePlayer).Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+						}
 						return;
 					}
 
-					ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, spell, spellLine);
+					ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, procSpell, spellLine);
 					if (spellHandler != null)
-						spellHandler.StartSpell(ad.Target);
+					{
+						spellHandler.StartSpell(ad.Target, weapon);
+					}
 				}
 			}
 		}
@@ -3208,56 +3216,50 @@ namespace DOL.GS
 				{
 					if( Inventory != null && Inventory.GetItem( eInventorySlot.LeftHandWeapon ) != null )
 					{
-						InventoryItem reactiveitem = Inventory.GetItem( eInventorySlot.LeftHandWeapon );
+						InventoryItem reactiveItem = Inventory.GetItem( eInventorySlot.LeftHandWeapon );
 
-						if( reactiveitem != null && reactiveitem.Object_Type == (int)eObjectType.Shield )
+						if(reactiveItem != null && reactiveItem.Object_Type == (int)eObjectType.Shield)
 						{
-							//Start some sweet boolean logic
-							//See if we use the proc upfront
-							bool useProc1 = reactiveitem.ProcSpellID != 0 && Util.Chance( 10 );
-							bool useProc2 = reactiveitem.ProcSpellID1 != 0 && Util.Chance( 10 );
+							int requiredLevel = reactiveItem.LevelRequirement > 0 ? reactiveItem.LevelRequirement : Math.Min(50, reactiveItem.Level);
 
-							//If we are procing at all lets search
-							if( useProc1 || useProc2 )
+							if (requiredLevel <= Level)
 							{
-								SpellLine reactiveEffectLine = SkillBase.GetSpellLine( GlobalSpellsLines.Item_Effects );
-								if( reactiveEffectLine != null )
+								bool useProc1 = reactiveItem.ProcSpellID != 0 && Util.Chance(10);
+								bool useProc2 = reactiveItem.ProcSpellID1 != 0 && Util.Chance(10);
+
+								if (useProc1 || useProc2)
 								{
-									//Ok while we loop we will track if we've found the spells
-									//If we aren't using the proc set it to true!
-									bool found1 = !useProc1;
-									bool found2 = !useProc2;
-									List<Spell> spells = SkillBase.GetSpellList( reactiveEffectLine.KeyName );
-									//Start the one and only loop
-									foreach( Spell spell in spells )
+									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+
+									if (reactiveEffectLine != null)
 									{
-										//Check for proc one
-										if( useProc1 && spell.ID == reactiveitem.ProcSpellID )
+										if (useProc1)
 										{
-											if( spell.Level <= Level )
+											Spell spell = SkillBase.FindSpell(reactiveItem.SpellID, reactiveEffectLine);
+
+											if (spell != null)
 											{
-												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler( this, spell, reactiveEffectLine );
-												if( spellHandler != null )
-													spellHandler.StartSpell( spell.Target == "Enemy" ? ad.Attacker : ad.Target );
+												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+												if (spellHandler != null)
+												{
+													spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target, reactiveItem);
+												}
 											}
-											found1 = true;
 										}
 
-										//Check for proc two
-										if( useProc2 && spell.ID == reactiveitem.ProcSpellID1 )
+										if (useProc2)
 										{
-											if( spell.Level <= Level )
-											{
-												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler( this, spell, reactiveEffectLine );
-												if( spellHandler != null )
-													spellHandler.StartSpell( spell.Target == "Enemy" ? ad.Attacker : ad.Target );
-											}
-											found2 = true;
-										}
+											Spell spell = SkillBase.FindSpell(reactiveItem.SpellID1, reactiveEffectLine);
 
-										//Break if we've found both
-										if( found1 && found2 )
-											break;
+											if (spell != null)
+											{
+												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+												if (spellHandler != null)
+												{
+													spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target, reactiveItem);
+												}
+											}
+										}
 									}
 								}
 							}
