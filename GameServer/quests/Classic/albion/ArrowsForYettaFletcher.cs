@@ -186,7 +186,9 @@ namespace DOL.GS.Quests.Albion
 				
 				bundleOfDecayedZombieLegs.Object_Type = (int) eObjectType.GenericItem;
 				bundleOfDecayedZombieLegs.Id_nb = "bundle_of_decayed_zombie_legs";
-				bundleOfDecayedZombieLegs.Price = 0;
+				bundleOfDecayedZombieLegs.Gold = 0;
+				bundleOfDecayedZombieLegs.Silver = 0;
+				bundleOfDecayedZombieLegs.Copper = 0;
 				bundleOfDecayedZombieLegs.IsPickable = false;
 				bundleOfDecayedZombieLegs.IsDropable = false;
 				

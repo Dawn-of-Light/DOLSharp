@@ -18,17 +18,17 @@
  */
 /*
  * Author:		Gandulf Kohlweiss
- * Date:
+ * Date:			
  * Directory: /scripts/quests/albion/
  *
  * Description:
- *  Brief Walkthrough:
- *  1) Travel to loc=19105,26552 Camelot Hills to speak with Master Frederick.
- *  2) Go see Dragonfly Handler Colm at loc=13911,29125 Camelot Hills, hand him the Note for Colm from Master Frederick.
- *  3) Purchace a Dragonfly Ticket to Castle Sauvage (it's actually free), from Colm and hand him the ticket.
- *  4) Click on Master Visur, loc=35852,3511 Camelot Hills, Castle Sauvage, to be teleported to The Proving Grounds.
- *  5) Go to Scryer Alice is at loc=48045,24732 The Proving Grounds, and hand her the Ire Fairy Plans.
- *  6) Port back to Castle Sauvage and give Ulliam, loc=35468,5134 Camelot Hills, the Ticket to Cotswold from Scryer Alice.
+ *  Brief Walkthrough: 
+ *  1) Travel to loc=19105,26552 Camelot Hills to speak with Master Frederick. 
+ *  2) Go see Dragonfly Handler Colm at loc=13911,29125 Camelot Hills, hand him the Note for Colm from Master Frederick. 
+ *  3) Purchace a Dragonfly Ticket to Castle Sauvage (it's actually free), from Colm and hand him the ticket. 
+ *  4) Click on Master Visur, loc=35852,3511 Camelot Hills, Castle Sauvage, to be teleported to The Proving Grounds. 
+ *  5) Go to Scryer Alice is at loc=48045,24732 The Proving Grounds, and hand her the Ire Fairy Plans. 
+ *  6) Port back to Castle Sauvage and give Ulliam, loc=35468,5134 Camelot Hills, the Ticket to Cotswold from Scryer Alice. 
  *  7) The horse will deposit you in front of Master Frederick, hand him the Translated Plans from Scryer Alice for your reward.
  */
 
@@ -53,7 +53,7 @@ namespace DOL.GS.Quests.Albion
 	/* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * AbstractQuest
-	 *
+	 * 	 
 	 */
 
 	public class Frontiers : BaseFrederickQuest
@@ -64,7 +64,7 @@ namespace DOL.GS.Quests.Albion
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/* Declare the variables we need inside our quest.
-		 * You can declare static variables here, which will be available in
+		 * You can declare static variables here, which will be available in 
 		 * ALL instance of your quest and should be initialized ONLY ONCE inside
 		 * the OnScriptLoaded method.
 		 * 
@@ -126,14 +126,14 @@ namespace DOL.GS.Quests.Albion
 		 * game events. And yes, quests basically are game events for single players
 		 * 
 		 * To make this method automatically load, we have to declare it static
-		 * and give it the [ScriptLoadedEvent] attribute.
+		 * and give it the [ScriptLoadedEvent] attribute. 
 		 *
-		 * Inside this method we initialize the quest. This is neccessary if we
+		 * Inside this method we initialize the quest. This is neccessary if we 
 		 * want to set the quest hooks to the NPCs.
 		 * 
 		 * If you want, you can however add a quest to the player from ANY place
 		 * inside your code, from events, from custom items, from anywhere you
-		 * want.
+		 * want. 
 		 */
 
 		[ScriptLoadedEvent]
@@ -144,14 +144,14 @@ namespace DOL.GS.Quests.Albion
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 			/* First thing we do in here is to search for the NPCs inside
-			 * the world who comes from the certain Realm. If we find a the players,
-			 * this means we don't have to create a new one.
-			 * 
-			 * NOTE: You can do anything you want in this method, you don't have
-			 * to search for NPC's ... you could create a custom item, place it
-			 * on the ground and if a player picks it up, he will get the quest!
-			 * Just examples, do anything you like and feel comfortable with :)
-			 */
+			* the world who comes from the certain Realm. If we find a the players,
+			* this means we don't have to create a new one.
+			* 
+			* NOTE: You can do anything you want in this method, you don't have
+			* to search for NPC's ... you could create a custom item, place it
+			* on the ground and if a player picks it up, he will get the quest!
+			* Just examples, do anything you like and feel comfortable with :)
+			*/
 
 			#region DefineNPCs
 
@@ -250,11 +250,11 @@ namespace DOL.GS.Quests.Albion
 			else
 				alice = npcs[0];
 
-			Point2D point = alice.GetPointFromHeading( alice.Heading, 30 );
+            Point2D point = alice.GetPointFromHeading( alice.Heading, 30 );
 			locationAlice = new GameLocation(alice.CurrentZone.Description, alice.CurrentRegionID, point.X, point.Y, alice.Z);
 
-			dragonflyTicket = CreateTicketTo("Castle Sauvage", "hs_src_castlesauvage");
-			horseTicket = CreateTicketTo("Camelot Hills", "hs_src_camelothills");
+			dragonflyTicket = CreateTicketTo("ticket to Castle Sauvage", "");
+			horseTicket = CreateTicketTo("ticket to Camelot Hills", "");
 
 			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Dragonfly Handler Colm", eRealm.Albion, typeof (GameStableMaster));
 			if (npcs.Length == 0)
@@ -343,7 +343,7 @@ namespace DOL.GS.Quests.Albion
 
 				dragonfly.Heading = 2434;
 				dragonfly.MaxSpeedBase = 400;
-				//dragonfly.EquipmentTemplateID = 200276;
+				//dragonfly.EquipmentTemplateID = 200276;                
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -378,7 +378,7 @@ namespace DOL.GS.Quests.Albion
 				brain.AggroRange = 0;
 				uliam.SetOwnBrain(brain);
 
-				//ulliam.EquipmentTemplateID = 200276;
+				//ulliam.EquipmentTemplateID = 200276;                
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -391,11 +391,11 @@ namespace DOL.GS.Quests.Albion
 			else
 				uliam = npcs[0] as GameStableMaster;
 
-			Point2D uliamloc = uliam.GetPointFromHeading( uliam.Heading, 30 );
+            Point2D uliamloc = uliam.GetPointFromHeading( uliam.Heading, 30 );
 			locationUliam = new GameLocation(uliam.CurrentZone.Description, uliam.CurrentRegionID, uliam.X, uliam.Y, uliam.Z);
 
 			/*
-            foreach (GameNPC npc in WorldMgr.GetNPCsCloseToObject(uliam, 400))
+            foreach (GameNPC npc in WorldMgr.GetNPCsCloseToObject(uliam, 400))                
             {
                 if (npc.Name == "horse")
                 {
@@ -423,16 +423,16 @@ namespace DOL.GS.Quests.Albion
                                 
                 horse.AggroLevel = 0;
                 horse.AggroRange = 0;
-                //horse.EquipmentTemplateID = 200276;
+                //horse.EquipmentTemplateID = 200276;                
 
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                if (SAVE_INTO_DATABASE) 
                     horse.SaveIntoDatabase();
                 horse.AddToWorld();
             }
-			 */
+			*/
 
 			#endregion
 
@@ -532,7 +532,9 @@ namespace DOL.GS.Quests.Albion
 				recruitsLegs.Object_Type = (int) eObjectType.Studded;
 				recruitsLegs.Item_Type = (int) eEquipmentItems.LEGS;
 				recruitsLegs.Id_nb = "recruits_studded_legs";
-				recruitsLegs.Price = Money.GetMoney(0,0,0,10,0);
+				recruitsLegs.Gold = 0;
+				recruitsLegs.Silver = 10;
+				recruitsLegs.Copper = 0;
 				recruitsLegs.IsPickable = true;
 				recruitsLegs.IsDropable = true;
 				recruitsLegs.Color = 9; // red leather
@@ -581,7 +583,9 @@ namespace DOL.GS.Quests.Albion
 				recruitsPants.Object_Type = (int) eObjectType.Cloth;
 				recruitsPants.Item_Type = (int) eEquipmentItems.LEGS;
 				recruitsPants.Id_nb = "recruits_quilted_pants";
-				recruitsPants.Price = Money.GetMoney(0,0,0,10,0);
+				recruitsPants.Gold = 0;
+				recruitsPants.Silver = 10;
+				recruitsPants.Copper = 0;
 				recruitsPants.IsPickable = true;
 				recruitsPants.IsDropable = true;
 				recruitsPants.Color = 17; // red leather
@@ -614,12 +618,12 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			/* Now we add some hooks to the npc we found.
-			 * Actually, we want to know when a player interacts with him.
-			 * So, we hook the right-click (interact) and the whisper method
-			 * of npc and set the callback method to the "TalkToXXX"
-			 * method. This means, the "TalkToXXX" method is called whenever
-			 * a player right clicks on him or when he whispers to him.
-			 */
+			* Actually, we want to know when a player interacts with him.
+			* So, we hook the right-click (interact) and the whisper method
+			* of npc and set the callback method to the "TalkToXXX"
+			* method. This means, the "TalkToXXX" method is called whenever
+			* a player right clicks on him or when he whispers to him.
+			*/
 
 			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
 			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
@@ -638,7 +642,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.AddHandler(alice, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAlice));
 
 			/* Now we bring to masterFrederick the possibility to give this quest to players */
-			masterFrederick.AddQuestToGive(typeof (Frontiers));
+			masterFrederick.AddQuestToGive(typeof (Frontiers));	
 
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
@@ -646,7 +650,7 @@ namespace DOL.GS.Quests.Albion
 		}
 
 		/* The following method is called automatically when this quest class
-		 * is unloaded.
+		 * is unloaded. 
 		 * 
 		 * Since we set hooks in the load method, it is good practice to remove
 		 * those hooks again!
@@ -661,7 +665,7 @@ namespace DOL.GS.Quests.Albion
 			if (masterFrederick == null)
 				return;
 
-			/* Removing hooks works just as adding them but instead of
+			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
 
@@ -708,7 +712,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected static void TalkToMasterFrederick(DOLEvent e, object sender, EventArgs args)
 		{
-			//We get the player from the event arguments and check if he qualifies
+			//We get the player from the event arguments and check if he qualifies		
 			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
@@ -746,7 +750,7 @@ namespace DOL.GS.Quests.Albion
 					return;
 				}
 			}
-			// The player whispered to NPC (clicked on the text inside the [])
+				// The player whispered to NPC (clicked on the text inside the [])
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
 				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
@@ -798,7 +802,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected static void TalkToColm(DOLEvent e, object sender, EventArgs args)
 		{
-			//We get the player from the event arguments and check if he qualifies
+			//We get the player from the event arguments and check if he qualifies		
 			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
@@ -823,7 +827,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected static void TalkToAlice(DOLEvent e, object sender, EventArgs args)
 		{
-			//We get the player from the event arguments and check if he qualifies
+			//We get the player from the event arguments and check if he qualifies		
 			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
@@ -860,7 +864,7 @@ namespace DOL.GS.Quests.Albion
 				}
 
 			}
-			// The player whispered to NPC (clicked on the text inside the [])
+				// The player whispered to NPC (clicked on the text inside the [])
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
 				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
@@ -888,7 +892,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected static void TalkToMasterVisur(DOLEvent e, object sender, EventArgs args)
 		{
-			//We get the player from the event arguments and check if he qualifies
+			//We get the player from the event arguments and check if he qualifies		
 			GamePlayer player = ((SourceEventArgs) args).Source as GamePlayer;
 			if (player == null)
 				return;
@@ -1121,7 +1125,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			//Give reward to player here ...
+			//Give reward to player here ...            
 			if (m_questPlayer.HasAbilityToUseItem(recruitsLegs))
 				GiveItem(masterFrederick, m_questPlayer, recruitsLegs);
 			else

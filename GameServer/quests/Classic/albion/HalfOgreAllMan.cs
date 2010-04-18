@@ -326,7 +326,9 @@ namespace DOL.GS.Quests.Albion
 
 				sealedLovePoem.Object_Type = (int) eObjectType.GenericItem;
 				sealedLovePoem.Id_nb = "sealed_love_poem";
-				sealedLovePoem.Price = 0;
+				sealedLovePoem.Gold = 0;
+				sealedLovePoem.Silver = 0;
+				sealedLovePoem.Copper = 0;
 				sealedLovePoem.IsPickable = false;
 				sealedLovePoem.IsDropable = false;
 				
@@ -358,7 +360,9 @@ namespace DOL.GS.Quests.Albion
 
 				beautifulRedRose.Object_Type = (int) eObjectType.GenericItem;
 				beautifulRedRose.Id_nb = "beautiful_red_rose";
-				beautifulRedRose.Price = 0;
+				beautifulRedRose.Gold = 0;
+				beautifulRedRose.Silver = 0;
+				beautifulRedRose.Copper = 0;
 				beautifulRedRose.IsPickable = false;
 				beautifulRedRose.IsDropable = false;
 				
@@ -390,7 +394,9 @@ namespace DOL.GS.Quests.Albion
 
 					adnilsMagicalOrb.Object_Type = (int) eObjectType.GenericItem;
 					adnilsMagicalOrb.Id_nb = "adnils_magical_orb";
-					adnilsMagicalOrb.Price = 0;
+					adnilsMagicalOrb.Gold = 0;
+					adnilsMagicalOrb.Silver = 0;
+					adnilsMagicalOrb.Copper = 0;
 					adnilsMagicalOrb.IsPickable = false;
 					adnilsMagicalOrb.IsDropable = false;
 				

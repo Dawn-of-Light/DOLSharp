@@ -216,7 +216,9 @@ namespace DOL.GS.Quests.Albion
 				recruitsShortSword.Object_Type = (int) eObjectType.SlashingWeapon;
 				recruitsShortSword.Item_Type = (int) eEquipmentItems.LEFT_HAND;
 				recruitsShortSword.Id_nb = "recruits_short_sword";
-				recruitsShortSword.Price = Money.GetMoney(0,0,0,2,0);
+				recruitsShortSword.Gold = 0;
+				recruitsShortSword.Silver = 2;
+				recruitsShortSword.Copper = 0;
 				recruitsShortSword.IsPickable = true;
 				recruitsShortSword.IsDropable = true;
 				recruitsShortSword.Color = 45; // blue metal
@@ -262,7 +264,9 @@ namespace DOL.GS.Quests.Albion
 				recruitsStaff.Object_Type = (int) eObjectType.Staff;
 				recruitsStaff.Item_Type = (int) eEquipmentItems.LEFT_HAND;
 				recruitsStaff.Id_nb = "recruits_staff";
-				recruitsStaff.Price = Money.GetMoney(0,0,0,2,0);
+				recruitsStaff.Gold = 0;
+				recruitsStaff.Silver = 2;
+				recruitsStaff.Copper = 0;
 				recruitsStaff.IsPickable = true;
 				recruitsStaff.IsDropable = true;
 				recruitsStaff.Color = 45; // blue metal

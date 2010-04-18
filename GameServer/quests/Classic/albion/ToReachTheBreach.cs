@@ -87,7 +87,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsIntelligentBelt.Color = 0;
 				RecruitsIntelligentBelt.Object_Type = (int)eObjectType.GenericArmor;
 				RecruitsIntelligentBelt.Item_Type = (int)eEquipmentItems.WAIST;
-				RecruitsIntelligentBelt.Price = Money.GetMoney(0,0,0,0,10);
+				RecruitsIntelligentBelt.Gold = 0;
+				RecruitsIntelligentBelt.Silver = 0;
+				RecruitsIntelligentBelt.Copper = 10;
 				RecruitsIntelligentBelt.Quality = 100;
 				RecruitsIntelligentBelt.Condition = 50000;
 				RecruitsIntelligentBelt.MaxCondition = 50000;
@@ -115,7 +117,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsMightyBelt.Color = 0;
 				RecruitsMightyBelt.Object_Type = (int)eObjectType.GenericArmor;
 				RecruitsMightyBelt.Item_Type = (int)eEquipmentItems.WAIST;
-				RecruitsMightyBelt.Price = Money.GetMoney(0,0,0,0,10);
+				RecruitsMightyBelt.Gold = 0;
+				RecruitsMightyBelt.Silver = 0;
+				RecruitsMightyBelt.Copper = 10;
 				RecruitsMightyBelt.Quality = 100;
 				RecruitsMightyBelt.Condition = 50000;
 				RecruitsMightyBelt.MaxCondition = 50000;
@@ -143,7 +147,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsPiousBelt.Color = 0;
 				RecruitsPiousBelt.Object_Type = (int)eObjectType.GenericArmor;
 				RecruitsPiousBelt.Item_Type = (int)eEquipmentItems.WAIST;
-				RecruitsPiousBelt.Price = Money.GetMoney(0,0,0,0,10);
+				RecruitsPiousBelt.Gold = 0;
+				RecruitsPiousBelt.Silver = 0;
+				RecruitsPiousBelt.Copper = 10;
 				RecruitsPiousBelt.Quality = 100;
 				RecruitsPiousBelt.Condition = 50000;
 				RecruitsPiousBelt.MaxCondition = 50000;

@@ -222,7 +222,10 @@ namespace DOL.GS.Quests.Midgard
 				marinefungusroot.Item_Type = 40;
 				marinefungusroot.Id_nb = "marinefungusroot";
 				marinefungusroot.Hand = 0;
-				marinefungusroot.Price = 0;
+				marinefungusroot.Platinum = 0;
+				marinefungusroot.Gold = 0;
+				marinefungusroot.Silver = 0;
+				marinefungusroot.Copper = 0;
 				marinefungusroot.IsPickable = true;
 				marinefungusroot.IsDropable = true;
 				marinefungusroot.IsTradable = true;

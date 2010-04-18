@@ -240,7 +240,9 @@ namespace DOL.GS.Quests.Albion
 
 				letterToElvar.Object_Type = (int) eObjectType.GenericItem;
 				letterToElvar.Id_nb = "letter_to_elvar_tambor";
-				letterToElvar.Price = 0;
+				letterToElvar.Gold = 0;
+				letterToElvar.Silver = 0;
+				letterToElvar.Copper = 0;
 				letterToElvar.IsPickable = false;
 				letterToElvar.IsDropable = false;
 				
@@ -272,7 +274,9 @@ namespace DOL.GS.Quests.Albion
 
 				letterToYdenia.Object_Type = (int) eObjectType.GenericItem;
 				letterToYdenia.Id_nb = "letter_to_yderia_philpott";
-				letterToYdenia.Price = 0;
+				letterToYdenia.Gold = 0;
+				letterToYdenia.Silver = 0;
+				letterToYdenia.Copper = 0;
 				letterToYdenia.IsPickable = false;
 				letterToYdenia.IsDropable = false;
 
@@ -306,7 +310,9 @@ namespace DOL.GS.Quests.Albion
 				silverRingOfHealth.Item_Type = (int) eEquipmentItems.L_RING;
 				silverRingOfHealth.Id_nb = "silver_ring_of_health";
 
-				silverRingOfHealth.Price = Money.GetMoney(0,0,0,0,30);
+				silverRingOfHealth.Gold = 0;
+				silverRingOfHealth.Silver = 0;
+				silverRingOfHealth.Copper = 30;
 				silverRingOfHealth.IsPickable = true;
 				silverRingOfHealth.IsDropable = true;
 
