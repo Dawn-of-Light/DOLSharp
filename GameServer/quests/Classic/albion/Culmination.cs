@@ -280,9 +280,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsGauntlets.Object_Type = (int) eObjectType.Studded;
 				recruitsGauntlets.Item_Type = (int) eEquipmentItems.HAND;
 				recruitsGauntlets.Id_nb = "recruits_studded_gauntlets";
-				recruitsGauntlets.Gold = 0;
-				recruitsGauntlets.Silver = 9;
-				recruitsGauntlets.Copper = 0;
+				recruitsGauntlets.Price = Money.GetMoney(0,0,0,9,0);
 				recruitsGauntlets.IsPickable = true;
 				recruitsGauntlets.IsDropable = true;
 				recruitsGauntlets.Color = 9; // red leather
@@ -327,9 +325,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsGloves.Object_Type = (int) eObjectType.Cloth;
 				recruitsGloves.Item_Type = (int) eEquipmentItems.HAND;
 				recruitsGloves.Id_nb = "recruits_quilted_gloves";
-				recruitsGloves.Gold = 0;
-				recruitsGloves.Silver = 9;
-				recruitsGloves.Copper = 0;
+				recruitsGloves.Price = Money.GetMoney(0,0,0,9,0);
 				recruitsGloves.IsPickable = true;
 				recruitsGloves.IsDropable = true;
 				recruitsGloves.Color = 27; // red leather
@@ -370,9 +366,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsJewel.Object_Type = (int) eObjectType.Magical;
 				recruitsJewel.Item_Type = (int) eEquipmentItems.JEWEL;
 				recruitsJewel.Id_nb = "recruits_cloudy_jewel";
-				recruitsJewel.Gold = 0;
-				recruitsJewel.Silver = 9;
-				recruitsJewel.Copper = 0;
+				recruitsJewel.Price = Money.GetMoney(0,0,0,9,0);
 				recruitsJewel.IsPickable = true;
 				recruitsJewel.IsDropable = true;
 
@@ -409,9 +403,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsJewelCloth.Object_Type = (int) eObjectType.Magical;
 				recruitsJewelCloth.Item_Type = (int) eEquipmentItems.JEWEL;
 				recruitsJewelCloth.Id_nb = "recruits_cloudy_jewel_cloth";
-				recruitsJewelCloth.Gold = 0;
-				recruitsJewelCloth.Silver = 9;
-				recruitsJewelCloth.Copper = 0;
+				recruitsJewelCloth.Price = Money.GetMoney(0,0,0,9,0);
 				recruitsJewelCloth.IsPickable = true;
 				recruitsJewelCloth.IsDropable = true;
 
@@ -454,9 +446,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsBracer.Object_Type = (int) eObjectType.Magical;
 				recruitsBracer.Item_Type = (int) eEquipmentItems.R_BRACER;
 				recruitsBracer.Id_nb = "recruits_golden_bracer";
-				recruitsBracer.Gold = 0;
-				recruitsBracer.Silver = 9;
-				recruitsBracer.Copper = 0;
+				recruitsBracer.Price = Money.GetMoney(0,0,0,9,0);
 				recruitsBracer.IsPickable = true;
 				recruitsBracer.IsDropable = true;
 

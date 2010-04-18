@@ -91,9 +91,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsQuiltedBoots.Object_Type = (int)eObjectType.Cloth;
 				RecruitsQuiltedBoots.Item_Type = (int)eEquipmentItems.FEET;
 				RecruitsQuiltedBoots.Id_nb = "k109_recruits_quilted_boots";
-				RecruitsQuiltedBoots.Gold = 0;
-				RecruitsQuiltedBoots.Silver = 0;
-				RecruitsQuiltedBoots.Copper = 40;
+				RecruitsQuiltedBoots.Price = Money.GetMoney(0,0,0,0,40);
 				RecruitsQuiltedBoots.IsPickable = true;
 				RecruitsQuiltedBoots.IsDropable = true; // can't be sold to merchand
 
@@ -139,9 +137,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsLeatherBoots.Object_Type = (int)eObjectType.Leather;
 				RecruitsLeatherBoots.Item_Type = (int)eEquipmentItems.FEET;
 				RecruitsLeatherBoots.Id_nb = "k109_recruits_leather_boots";
-				RecruitsLeatherBoots.Gold = 0;
-				RecruitsLeatherBoots.Silver = 0;
-				RecruitsLeatherBoots.Copper = 40;
+				RecruitsLeatherBoots.Price = Money.GetMoney(0,0,0,0,40);
 				RecruitsLeatherBoots.IsPickable = true;
 				RecruitsLeatherBoots.IsDropable = true; // can't be sold to merchand
 
@@ -189,9 +185,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsStuddedBoots.Object_Type = (int)eObjectType.Studded;
 				RecruitsStuddedBoots.Item_Type = (int)eEquipmentItems.FEET;
 				RecruitsStuddedBoots.Id_nb = "k109_recruits_studded_boots";
-				RecruitsStuddedBoots.Gold = 0;
-				RecruitsStuddedBoots.Silver = 0;
-				RecruitsStuddedBoots.Copper = 40;
+				RecruitsStuddedBoots.Price = Money.GetMoney(0,0,0,0,40);
 				RecruitsStuddedBoots.IsPickable = true;
 				RecruitsStuddedBoots.IsDropable = true; // can't be sold to merchand
 
