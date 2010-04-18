@@ -466,9 +466,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsHelm.Object_Type = (int) eObjectType.Studded;
 				recruitsHelm.Item_Type = (int) eEquipmentItems.HEAD;
 				recruitsHelm.Id_nb = "recruits_studded_helm_mid";
-				recruitsHelm.Gold = 0;
-				recruitsHelm.Silver = 9;
-				recruitsHelm.Copper = 0;
+				recruitsHelm.Price = Money.GetMoney(0,0,0,9,0);
 				recruitsHelm.IsPickable = true;
 				recruitsHelm.IsDropable = true;
 				recruitsHelm.Color = 14; // blue leather
@@ -516,9 +514,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsCap.Object_Type = (int) eObjectType.Cloth;
 				recruitsCap.Item_Type = (int) eEquipmentItems.HEAD;
 				recruitsCap.Id_nb = "recruits_quilted_cap";
-				recruitsCap.Gold = 0;
-				recruitsCap.Silver = 9;
-				recruitsCap.Copper = 0;
+				recruitsCap.Price = Money.GetMoney(0,0,0,9,0);
 				recruitsCap.IsPickable = true;
 				recruitsCap.IsDropable = true;
 				recruitsCap.Color = 36; // blue cloth
@@ -562,9 +558,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsRing.Object_Type = (int) eObjectType.Magical;
 				recruitsRing.Item_Type = (int) eEquipmentItems.R_RING;
 				recruitsRing.Id_nb = "recruits_pewter_ring";
-				recruitsRing.Gold = 0;
-				recruitsRing.Silver = 9;
-				recruitsRing.Copper = 0;
+				recruitsRing.Price = Money.GetMoney(0,0,0,9,0);
 				recruitsRing.IsPickable = true;
 				recruitsRing.IsDropable = true;
 
