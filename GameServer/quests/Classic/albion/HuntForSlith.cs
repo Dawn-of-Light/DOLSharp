@@ -199,9 +199,7 @@ namespace DOL.GS.Quests.Albion
 				slithsTail.Object_Type = (int) eObjectType.Magical;
 				slithsTail.Item_Type = (int) eEquipmentItems.L_RING;
 				slithsTail.Id_nb = "sliths_tail";
-				slithsTail.Gold = 0;
-				slithsTail.Silver = 0;
-				slithsTail.Copper = 30;
+				slithsTail.Price = Money.GetMoney(0,0,0,0,30);
 				slithsTail.IsPickable = true;
 				slithsTail.IsDropable = true;
 

@@ -143,10 +143,7 @@ namespace DOL.GS.Quests.Albion
 			template.IsDropable = true;
 			template.CanDropAsLoot = false;
 			template.IsTradable = true;
-			template.Platinum = 0;
-			template.Gold = 0;
-			template.Silver = 0;
-			template.Copper = 22;
+			template.Price = Money.GetMoney(0,0,0,0,22);
 			template.MaxCount = 1;
 			template.PackSize = 1;
 			template.Realm = 1;

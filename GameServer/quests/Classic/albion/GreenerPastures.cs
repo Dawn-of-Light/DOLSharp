@@ -195,9 +195,7 @@ namespace DOL.GS.Quests.Albion
 
 				farmerAsmasMap.Object_Type = (int) eObjectType.GenericItem;
 				farmerAsmasMap.Id_nb = "farmer_asma_map";
-				farmerAsmasMap.Gold = 0;
-				farmerAsmasMap.Silver = 0;
-				farmerAsmasMap.Copper = 0;
+				farmerAsmasMap.Price = 0;
 				farmerAsmasMap.IsPickable = false;
 				farmerAsmasMap.IsDropable = false;
 				

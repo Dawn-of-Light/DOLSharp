@@ -192,9 +192,7 @@ namespace DOL.GS.Quests.Albion
 				
 				wellPreservedBones.Object_Type = (int) eObjectType.GenericItem;
 				wellPreservedBones.Id_nb = "well_preserved_bone";
-				wellPreservedBones.Gold = 0;
-				wellPreservedBones.Silver = 0;
-				wellPreservedBones.Copper = 0;
+				wellPreservedBones.Price = 0;
 				wellPreservedBones.IsPickable = false;
 				wellPreservedBones.IsDropable = false;
 				
@@ -227,9 +225,7 @@ namespace DOL.GS.Quests.Albion
 				
 				twoWellPreservedBones.Object_Type = (int) eObjectType.GenericItem;
 				twoWellPreservedBones.Id_nb = "two_well_preserved_bones";
-				twoWellPreservedBones.Gold = 0;
-				twoWellPreservedBones.Silver = 0;
-				twoWellPreservedBones.Copper = 0;
+				twoWellPreservedBones.Price = 0;
 				twoWellPreservedBones.IsPickable = false;
 				twoWellPreservedBones.IsDropable = false;
 				
