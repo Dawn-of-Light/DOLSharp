@@ -853,12 +853,12 @@ namespace DOL.GS.Quests.Albion
 					if (Step == 4)
 					{
 						kealan.SayTo(player, "Very well now hand me over the rest and you will revieve your reward...");
-						RemoveItem(kealan, player, gArgs.Item.Template);
+						RemoveItem(kealan, player, gArgs.Item);
 						Step = 5;
 					}
 					else if (Step == 5)
 					{
-						RemoveItem(kealan, player, gArgs.Item.Template);
+						RemoveItem(kealan, player, gArgs.Item);
 						FinishQuest();
 					}
 					return;
