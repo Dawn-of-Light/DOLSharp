@@ -1,5 +1,0 @@
-﻿GameBoatStableMaster.ReceiveItem.Departed:		{0} sagt: "Bitte steigt jetzt in das Boot am Steg, wenn Ihr noch mitfahren wollt."
-GameBoatStableMaster.ReceiveItem.SummonedBoat:		{0} sagt: "Euch bleibt eine halbe Minute, in der jeder das Boot betreten muss (Rechtsklick), bevor es abfährt."
-GameBoatStableMaster.ReceiveItem.TicketTo:		ticket nach 
-GameBoatStableMaster.ReceiveItem.UnknownWay:		{0} sagt: "Tut mir leid, dieses Ticket nach {1} ist hier nicht gültig."
-
