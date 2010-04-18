@@ -91,9 +91,7 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsIntelligentBelt.Object_Type = (int)eObjectType.Magical;
 				RecruitsIntelligentBelt.Item_Type = (int)eEquipmentItems.WAIST;
 
-				RecruitsIntelligentBelt.Gold = 0;
-				RecruitsIntelligentBelt.Silver = 0;
-				RecruitsIntelligentBelt.Copper = 10;
+				RecruitsIntelligentBelt.Price = Money.GetMoney(0,0,0,0,10);
 
 				RecruitsIntelligentBelt.Quality = 100;
 				RecruitsIntelligentBelt.Condition = 50000;
@@ -125,9 +123,7 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsMightyBelt.Object_Type = (int)eObjectType.Magical;
 				RecruitsMightyBelt.Item_Type = (int)eEquipmentItems.WAIST;
 
-				RecruitsMightyBelt.Gold = 0;
-				RecruitsMightyBelt.Silver = 0;
-				RecruitsMightyBelt.Copper = 10;
+				RecruitsMightyBelt.Price = Money.GetMoney(0,0,0,0,10);
 
 				RecruitsMightyBelt.Quality = 100;
 				RecruitsMightyBelt.Condition = 50000;
@@ -159,9 +155,7 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsPiousBelt.Object_Type = (int)eObjectType.Magical;
 				RecruitsPiousBelt.Item_Type = (int)eEquipmentItems.WAIST;
 
-				RecruitsPiousBelt.Gold = 0;
-				RecruitsPiousBelt.Silver = 0;
-				RecruitsPiousBelt.Copper = 10;
+				RecruitsPiousBelt.Price = Money.GetMoney(0,0,0,0,10);
 
 				RecruitsPiousBelt.Quality = 100;
 				RecruitsPiousBelt.Condition = 50000;

@@ -402,9 +402,7 @@ namespace DOL.GS.Quests.Hibernia
 				recruitsRoundShield.Object_Type = 0x2A; // (int)eObjectType.Shield;
 				recruitsRoundShield.Item_Type = (int) eEquipmentItems.LEFT_HAND;
 				recruitsRoundShield.Id_nb = "recruits_round_shield_hib";
-				recruitsRoundShield.Gold = 0;
-				recruitsRoundShield.Silver = 4;
-				recruitsRoundShield.Copper = 0;
+				recruitsRoundShield.Price = Money.GetMoney(0,0,0,4,0);
 				recruitsRoundShield.IsPickable = true;
 				recruitsRoundShield.IsDropable = true;
 				recruitsRoundShield.Color = 69;
@@ -451,9 +449,7 @@ namespace DOL.GS.Quests.Hibernia
 				recruitsBracer.Object_Type = (int) eObjectType.Magical;
 				recruitsBracer.Item_Type = (int) eEquipmentItems.L_BRACER;
 				recruitsBracer.Id_nb = "recruits_silver_bracer";
-				recruitsBracer.Gold = 0;
-				recruitsBracer.Silver = 4;
-				recruitsBracer.Copper = 0;
+				recruitsBracer.Price = Money.GetMoney(0,0,0,4,0);
 				recruitsBracer.IsPickable = true;
 				recruitsBracer.IsDropable = true;
 				//recruitsBracer.Color = 36;
