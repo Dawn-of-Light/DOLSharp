@@ -191,7 +191,9 @@ namespace DOL.GS.Quests.Hibernia
 				necklaceOfDoppelganger.Object_Type = (int) eObjectType.Magical;
 				necklaceOfDoppelganger.Item_Type = (int) eEquipmentItems.NECK;
 				necklaceOfDoppelganger.Id_nb = "necklace_of_the_doppelganger";
-				necklaceOfDoppelganger.Price = 0;
+				necklaceOfDoppelganger.Gold = 0;
+				necklaceOfDoppelganger.Silver = 0;
+				necklaceOfDoppelganger.Copper = 0;
 				necklaceOfDoppelganger.IsPickable = true;
 				necklaceOfDoppelganger.IsDropable = false;
 
@@ -253,7 +255,9 @@ namespace DOL.GS.Quests.Hibernia
 				recruitsBoots.Object_Type = (int) eObjectType.Reinforced;
 				recruitsBoots.Item_Type = (int) eEquipmentItems.FEET;
 				recruitsBoots.Id_nb = "recruits_cailiocht_boots";
-				recruitsBoots.Price = Money.GetMoney(0,0,0,10,0);
+				recruitsBoots.Gold = 0;
+				recruitsBoots.Silver = 10;
+				recruitsBoots.Copper = 0;
 				recruitsBoots.IsPickable = true;
 				recruitsBoots.IsDropable = true;
 				recruitsBoots.Color = 13; // green leather
@@ -298,7 +302,9 @@ namespace DOL.GS.Quests.Hibernia
 				recruitsQuiltedBoots.Object_Type = (int) eObjectType.Cloth;
 				recruitsQuiltedBoots.Item_Type = (int) eEquipmentItems.FEET;
 				recruitsQuiltedBoots.Id_nb = "recruits_quilted_boots";
-				recruitsQuiltedBoots.Price = Money.GetMoney(0,0,0,10,0);
+				recruitsQuiltedBoots.Gold = 0;
+				recruitsQuiltedBoots.Silver = 10;
+				recruitsQuiltedBoots.Copper = 0;
 				recruitsQuiltedBoots.IsPickable = true;
 				recruitsQuiltedBoots.IsDropable = true;
 				recruitsQuiltedBoots.Color = 32;
