@@ -196,9 +196,7 @@ namespace DOL.GS.Quests.Albion
 
 				sephucothsHeart.Object_Type = (int) eObjectType.GenericItem;
 				sephucothsHeart.Id_nb = "sephucoths_heart";
-				sephucothsHeart.Gold = 0;
-				sephucothsHeart.Silver = 0;
-				sephucothsHeart.Copper = 0;
+				sephucothsHeart.Price = 0;
 				sephucothsHeart.IsPickable = false;
 				sephucothsHeart.IsDropable = false;
 				
@@ -230,9 +228,7 @@ namespace DOL.GS.Quests.Albion
 
 				polishedBone.Object_Type = (int) eObjectType.GenericItem;
 				polishedBone.Id_nb = "polished_bone";
-				polishedBone.Gold = 0;
-				polishedBone.Silver = 0;
-				polishedBone.Copper = 0;
+				polishedBone.Price = 0;
 				polishedBone.IsPickable = false;
 				polishedBone.IsDropable = false;
 				
@@ -266,9 +262,7 @@ namespace DOL.GS.Quests.Albion
 				fieryCrystalPendant.Object_Type = (int) eObjectType.Magical;
 				fieryCrystalPendant.Item_Type = (int) eEquipmentItems.NECK;
 				fieryCrystalPendant.Id_nb = "fiery_crystal_pendant";
-				fieryCrystalPendant.Gold = 0;
-				fieryCrystalPendant.Silver = 0;
-				fieryCrystalPendant.Copper = 30;
+				fieryCrystalPendant.Price = Money.GetMoney(0,0,0,0,30);
 				fieryCrystalPendant.IsPickable = true;
 				fieryCrystalPendant.IsDropable = true;
 

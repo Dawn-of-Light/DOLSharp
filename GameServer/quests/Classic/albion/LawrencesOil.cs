@@ -193,9 +193,7 @@ namespace DOL.GS.Quests.Albion
 				
 				lawrencesEmptyFlask.Object_Type = (int) eObjectType.GenericItem;
 				lawrencesEmptyFlask.Id_nb = "lawrences_empty_flask";
-				lawrencesEmptyFlask.Gold = 0;
-				lawrencesEmptyFlask.Silver = 0;
-				lawrencesEmptyFlask.Copper = 0;
+				lawrencesEmptyFlask.Price = 0;
 				lawrencesEmptyFlask.IsPickable = false;
 				lawrencesEmptyFlask.IsDropable = false;
 				
@@ -228,9 +226,7 @@ namespace DOL.GS.Quests.Albion
 				
 				lawrencesFilledFlask.Object_Type = (int) eObjectType.GenericItem;
 				lawrencesFilledFlask.Id_nb = "lawrences_filled_flask";
-				lawrencesFilledFlask.Gold = 0;
-				lawrencesFilledFlask.Silver = 0;
-				lawrencesFilledFlask.Copper = 0;
+				lawrencesFilledFlask.Price = 0;
 				lawrencesFilledFlask.IsPickable = false;
 				lawrencesFilledFlask.IsDropable = false;
 				

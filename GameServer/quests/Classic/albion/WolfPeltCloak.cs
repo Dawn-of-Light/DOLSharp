@@ -282,9 +282,7 @@ namespace DOL.GS.Quests.Albion
 				wolfPeltCloak.Object_Type = (int) eObjectType.Magical;
 				wolfPeltCloak.Item_Type = (int) eEquipmentItems.CLOAK;
 				wolfPeltCloak.Id_nb = "wolf_pelt_cloak";
-				wolfPeltCloak.Gold = 0;
-				wolfPeltCloak.Silver = 4;
-				wolfPeltCloak.Copper = 3;
+				wolfPeltCloak.Price = Money.GetMoney(0,0,0,4,3);
 				wolfPeltCloak.IsPickable = true;
 				wolfPeltCloak.IsDropable = true;
 				wolfPeltCloak.Color = 44;

@@ -196,9 +196,7 @@ namespace DOL.GS.Quests.Albion
 				beltOfAnimation.Object_Type = (int) eObjectType.Magical;
 				beltOfAnimation.Item_Type = (int) eEquipmentItems.WAIST;
 				beltOfAnimation.Id_nb = "belt_of_animation";
-				beltOfAnimation.Gold = 0;
-				beltOfAnimation.Silver = 0;
-				beltOfAnimation.Copper = 0;
+				beltOfAnimation.Price = 0;
 				beltOfAnimation.IsPickable = true;
 				beltOfAnimation.IsDropable = false; // can't be sold to merchand
 
