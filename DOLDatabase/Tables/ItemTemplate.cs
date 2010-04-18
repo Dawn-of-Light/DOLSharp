@@ -1226,6 +1226,22 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Temporary price handler pending Inventory modifications
+		/// </summary>
+		public long Price
+		{
+			get { return ((Platinum * 1000L + Gold) * 100L + Silver) * 100L + Copper; }
+			set
+			{
+				Platinum = (short)(value / 100 / 100 / 1000 % 1000);
+				Gold = (short)(value / 100 / 100 % 1000);
+				Silver = (byte)(value / 100 % 100);
+				Copper = (byte)(value % 100);
+			}
+
+		}
+
 		private const string m_vowels = "aeuio";
 		/// <summary>
 		/// Returns name with article for nouns
