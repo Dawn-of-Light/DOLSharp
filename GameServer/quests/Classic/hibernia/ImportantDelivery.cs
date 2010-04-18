@@ -357,9 +357,7 @@ namespace DOL.GS.Quests.Hibernia
 				recruitsCloak.Object_Type = (int) eObjectType.Cloth;
 				recruitsCloak.Item_Type = (int) eEquipmentItems.CLOAK;
 				recruitsCloak.Id_nb = "recruits_cloak_hib";
-				recruitsCloak.Gold = 0;
-				recruitsCloak.Silver = 1;
-				recruitsCloak.Copper = 0;
+				recruitsCloak.Price = Money.GetMoney(0,0,0,1,0);
 				recruitsCloak.IsPickable = true;
 				recruitsCloak.IsDropable = true;
 				recruitsCloak.Color = 69;
