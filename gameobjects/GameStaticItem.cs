@@ -81,7 +81,10 @@ namespace DOL.GS
 		/// </summary>
 		public override string Name
 		{
-			get { return base.Name; }
+			get 
+			{
+				return base.Name; 
+			}
 			set
 			{
 				base.Name = value;
@@ -267,6 +270,71 @@ namespace DOL.GS
 			}
 			return base.RemoveFromWorld();
 		}
+
+
+		/// <summary>
+		/// Temporarily remove this static item from the world.
+		/// Used mainly for quest interaction
+		/// </summary>
+		/// <param name="respawnSeconds"></param>
+		/// <returns></returns>
+		public virtual bool RemoveFromWorld(int respawnSeconds)
+		{
+			if (RemoveFromWorld())
+			{
+				StartRespawn(Math.Max(1, respawnSeconds));
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Timer used to respawn this object
+		/// </summary>
+		protected RegionTimer m_respawnTimer = null;
+
+		/// <summary>
+		/// The sync object for respawn timer modifications
+		/// </summary>
+		protected readonly object m_respawnTimerLock = new object();
+
+		/// <summary>
+		/// Starts the Respawn Timer
+		/// </summary>
+		protected virtual void StartRespawn(int respawnSeconds)
+		{
+			lock (m_respawnTimerLock)
+			{
+				if (m_respawnTimer == null)
+				{
+					m_respawnTimer = new RegionTimer(this);
+					m_respawnTimer.Callback = new RegionTimerCallback(RespawnTimerCallback);
+					m_respawnTimer.Start(respawnSeconds * 1000);
+				}
+			}
+		}
+
+		/// <summary>
+		/// The callback that will respawn this object
+		/// </summary>
+		/// <param name="respawnTimer">the timer calling this callback</param>
+		/// <returns>the new interval</returns>
+		protected virtual int RespawnTimerCallback(RegionTimer respawnTimer)
+		{
+			lock (m_respawnTimerLock)
+			{
+				if (m_respawnTimer != null)
+				{
+					m_respawnTimer.Stop();
+					m_respawnTimer = null;
+					AddToWorld();
+				}
+			}
+
+			return 0;
+		}
+
 
 		/// <summary>
 		/// Holds the owners of this item, can be more than 1 person
