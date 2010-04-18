@@ -386,9 +386,7 @@ namespace DOL.GS.Quests.Hibernia
 				reedFlute.Object_Type = (int)eObjectType.Magical;
 				reedFlute.Item_Type = (int)eInventorySlot.FirstBackpack;
 				reedFlute.Id_nb = "quest_reed_flute";
-				reedFlute.Gold = 0;
-				reedFlute.Silver = 0;
-				reedFlute.Copper = 0;
+				reedFlute.Price = 0;
 				reedFlute.IsPickable = false;
 				reedFlute.IsDropable = false;
 				reedFlute.IsTradable = false;
@@ -402,10 +400,7 @@ namespace DOL.GS.Quests.Hibernia
 				reedFlute.SpellID = 65001;
 				reedFlute.CanUseEvery = 300;
 
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(reedFlute);
-				}
+				GameServer.Database.AddObject(reedFlute);
 			}
 
 			// Add spell and npctemplate to the DB
