@@ -63,7 +63,7 @@ namespace DOL.GS
 			this.Level = (byte)item.Level;
 			this.Model = (ushort)item.Model;
 			this.Name = item.Name;
-			m_item.CopyFrom(item);
+			m_item.Template = item.Template ;
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace DOL.GS
 		/// <returns>Found item or null</returns>
 		public static GameInventoryItem CreateFromTemplate(string templateID)
 		{
-			ItemTemplate template = (ItemTemplate) GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
+			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
 			if (template == null)
 			{
 				if (log.IsWarnEnabled)
@@ -155,15 +155,13 @@ namespace DOL.GS
 
 			GameInventoryItem invItem = new GameInventoryItem();
 
-			invItem.m_item = new InventoryItem();
+			invItem.m_item = new InventoryItem(template);
 			invItem.m_item.SlotPosition = 0;
 			invItem.m_item.OwnerID = null;
 
 			invItem.Level = (byte)template.Level;
 			invItem.Model = (ushort)template.Model;
 			invItem.Name = template.Name;
-
-			invItem.m_item.CopyFrom(template);
 
 			return invItem;
 		}

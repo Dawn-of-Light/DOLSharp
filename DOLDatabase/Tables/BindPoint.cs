@@ -130,19 +130,5 @@ namespace DOL.Database
 			get { return m_realm; }
 			set { m_realm = value; }
 		}
-
-		/// <summary>
-		/// autosave this bind or not
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return false;
-			}
-			set
-			{
-			}
-		}
 	}
 }

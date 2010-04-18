@@ -30,10 +30,10 @@ namespace DOL.Database
 	public class DBBannedAccount : DataObject
 	{
 		private string	m_author;
-        private string  m_type;
+		private string  m_type;
 		private string	m_ip;
 		private string	m_account;
-        private DateTime m_dateban;
+		private DateTime m_dateban;
 		private string	m_reason;
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace DOL.Database
 		/// type of ban (I=ip, A=account, B=both)
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-        public string Type
+		public string Type
 		{
 			get
 			{
@@ -112,7 +112,7 @@ namespace DOL.Database
 			}
 			set
 			{
-                m_dateban = value;
+				m_dateban = value;
 			}
 		}
 
@@ -129,20 +129,6 @@ namespace DOL.Database
 			set
 			{
 				m_reason=value;
-			}
-		}
-
-		/// <summary>
-		/// autosave ban table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return true;
-			}
-			set
-			{
 			}
 		}
 	}

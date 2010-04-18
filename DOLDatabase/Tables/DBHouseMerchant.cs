@@ -27,7 +27,6 @@ namespace DOL.Database
     [DataTable(TableName = "DBHouseMerchant")]
     public class DBHouseMerchant : DataObject
     {
-        static bool m_autoSave;
         static int house_number;
         static int quantity;
 
@@ -35,7 +34,6 @@ namespace DOL.Database
         {
             house_number = 0;
             quantity = 0;
-            m_autoSave = true;
         }
 
         /// <summary>
@@ -70,21 +68,6 @@ namespace DOL.Database
             {
                 Dirty = true;
                 quantity = value;
-            }
-        }
-
-        /// <summary>
-        /// autosave DBHM table
-        /// </summary>
-        override public bool AutoSave
-        {
-            get
-            {
-                return m_autoSave;
-            }
-            set
-            {
-                m_autoSave = value;
             }
         }
     }

@@ -25,8 +25,7 @@ namespace DOL.GS.Spells
             ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>("mysticwood_wooden_boards");
             if (template != null)
             {
-                item = new InventoryItem();
-                item.CopyFrom(template);
+                item = new InventoryItem(template);
                 if (item.IsStackable)
                 {
                     item.Count = 100;
@@ -255,8 +254,7 @@ namespace DOL.GS.Spells
             ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(ammo);
             if (template != null)
             {
-                item = new InventoryItem();
-                item.CopyFrom(template);
+                item = new InventoryItem(template);
                 if (item.IsStackable)
                 {
                     item.Count = 10;

@@ -5364,10 +5364,8 @@ namespace DOL.GS
 				case eAttackResult.Fumbled:
 					// remove an arrow and endurance
 					ItemTemplate ammoTemplate = RangeAttackAmmo;
-					if (ammoTemplate is InventoryItem)
-					{
-						Inventory.RemoveCountFromStack((InventoryItem)ammoTemplate, 1);
-					}
+					Inventory.RemoveCountFromStack(new InventoryItem(ammoTemplate), 1);
+
 					if (RangedAttackType == eRangedAttackType.Critical)
 						Endurance -= CRITICAL_SHOT_ENDURANCE;
 					else if (RangedAttackType == eRangedAttackType.RapidFire && GetAbilityLevel(Abilities.RapidFire) == 1)
@@ -5742,7 +5740,7 @@ namespace DOL.GS
 							} break;
 					}
 				}
-				return ammo;
+				return ammo.Template;
 			}
 			set { m_rangeAttackAmmo.Target = value; }
 		}
@@ -6279,7 +6277,7 @@ namespace DOL.GS
 
 							if (reactiveItem != null)
 							{
-								int requiredLevel = reactiveItem.LevelRequirement > 0 ? reactiveItem.LevelRequirement : Math.Min(50, reactiveItem.Level);
+								int requiredLevel = reactiveItem.Template.LevelRequirement > 0 ? reactiveItem.Template.LevelRequirement : Math.Min(50, reactiveItem.Level);
 
 								SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 
@@ -8487,7 +8485,7 @@ namespace DOL.GS
 								{
 									if (potionEffectLine != null)
 									{
-										int requiredLevel = useItem.LevelRequirement > 0 ? useItem.LevelRequirement : Math.Min(50, useItem.Level);
+										int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(50, useItem.Level);
 
 										if (requiredLevel <= Level)
 										{
@@ -8612,7 +8610,7 @@ namespace DOL.GS
 											if (useItem.SpellID == 0)
 												return;
 
-											int requiredLevel = useItem.LevelRequirement > 0 ? useItem.LevelRequirement : Math.Min(50, useItem.Level);
+											int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(50, useItem.Level);
 
 											if (requiredLevel <= Level)
 											{
@@ -8672,7 +8670,7 @@ namespace DOL.GS
 											if (useItem.SpellID1 == 0)
 												return;
 
-											int requiredLevel = useItem.LevelRequirement > 0 ? useItem.LevelRequirement : Math.Min(50, useItem.Level);
+											int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(50, useItem.Level);
 
 											if (requiredLevel <= Level)
 											{
@@ -8769,7 +8767,7 @@ namespace DOL.GS
 
 				if (spell != null)
 				{
-					int requiredLevel = item.LevelRequirement > 0 ? item.LevelRequirement : Math.Min(50, item.Level);
+					int requiredLevel = item.Template.LevelRequirement > 0 ? item.Template.LevelRequirement : Math.Min(50, item.Level);
 
 					if (requiredLevel > Level)
 					{
@@ -8821,7 +8819,7 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ApplyPoison.PoisonsAppliedWeapons"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (!HasAbilityToUseItem(toItem))
+			if (!HasAbilityToUseItem(toItem.Template))
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.ApplyPoison.CantPoisonWeapon"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -9541,9 +9539,9 @@ namespace DOL.GS
 			}
 
 			if (GameServer.ServerRules.IsAllowedToMoveToBind(this))
-				MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
+				return MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
 
-			return true;
+			return false;
 		}
 
 		#endregion
@@ -10534,7 +10532,7 @@ namespace DOL.GS
 				if (item.SlotPosition == Slot.HORSE)
 				{
 					ActiveHorse.ID = (byte)(item.SPD_ABS == 0 ? 1 : item.SPD_ABS);
-					ActiveHorse.Name = item.CrafterName;
+					ActiveHorse.Name = item.Creator;
 				}
 				return;
 			}
@@ -11071,7 +11069,7 @@ namespace DOL.GS
 					{
 						bool good = false;
 						if (floorItem.Item.IsStackable)
-							good = Inventory.AddTemplate(floorItem.Item, floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+							good = Inventory.AddTemplate(new InventoryItem (floorItem.Item), floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 						else
 							good = Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
 
@@ -13917,7 +13915,7 @@ namespace DOL.GS
 					h_name = value;
 					InventoryItem item = h_player.Inventory.GetItem(eInventorySlot.Horse);
 					if (item != null)
-						item.CrafterName = Name;
+						item.Creator = Name;
 					h_player.Out.SendSetControlledHorse(h_player);
 				}
 			}

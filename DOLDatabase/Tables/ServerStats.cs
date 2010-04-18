@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -16,105 +16,94 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
-using System.Text;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "BugReport")]
-	public class BugReport : DataObject
+	/// <summary>
+	/// Database Storage of ServerStats
+	/// </summary>
+	[DataTable(TableName = "serverstats")]
+	public class ServerStats : DataObject
 	{
-		private int m_reportID;
-		private string m_message;
-		private string m_category;
-		private string m_submitter;
-		private DateTime m_dateSubmitted;
-		private string m_closedBy;
-		private DateTime m_dateClosed;
+		protected DateTime m_statdate;
+		protected int m_clients;
+		protected float m_cpu;
+		protected int m_upload;
+		protected int m_download;
+		protected long m_memory;
 
-		public BugReport()
+		public ServerStats()
 		{
-			m_message = string.Empty;
-			m_submitter = string.Empty;
-			m_dateSubmitted = DateTime.Now;
-			m_closedBy = string.Empty;
-			m_category = string.Empty;
+			m_statdate = DateTime.Now;
+			m_clients = 0;
+			m_cpu = 0;
+			m_upload = 0;
+			m_download = 0;
+			m_memory = 0;
 		}
 
-		[PrimaryKey]//DataElement(AllowDbNull = false, Unique = true)]
-		public int ID
+		[DataElement(AllowDbNull = false)]
+		public DateTime StatDate
 		{
-			get { return m_reportID; }
+			get { return m_statdate; }
 			set
 			{
-				m_reportID = value;
 				Dirty = true;
+				m_statdate = value;
 			}
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public string Message
+		public int Clients
 		{
-			get { return m_message; }
+			get { return m_clients; }
 			set
 			{
 				Dirty = true;
-				m_message = value;
+				m_clients = value;
+			}
+		}
+		[DataElement(AllowDbNull = false)]
+		public float CPU
+		{
+			get { return m_cpu; }
+			set
+			{
+				Dirty = true;
+				m_cpu = value;
+			}
+		}
+		[DataElement(AllowDbNull = false)]
+		public int Upload
+		{
+			get { return m_upload; }
+			set
+			{
+				Dirty = true;
+				m_upload = value;
+			}
+		}
+		[DataElement(AllowDbNull = false)]
+		public int Download
+		{
+			get { return m_download; }
+			set
+			{
+				Dirty = true;
+				m_download = value;
 			}
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public string Submitter
+		public long Memory
 		{
-			get { return m_submitter; }
+			get { return m_memory; }
 			set
 			{
 				Dirty = true;
-				m_submitter = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = false)]
-		public DateTime DateSubmitted
-		{
-			get { return m_dateSubmitted; }
-			set
-			{
-				Dirty = true;
-				m_dateSubmitted = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = false)]
-		public string ClosedBy
-		{
-			get { return m_closedBy; }
-			set
-			{
-				Dirty = true;
-				m_closedBy = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = false)]
-		public DateTime DateClosed
-		{
-			get { return m_dateClosed; }
-			set
-			{
-				Dirty = true;
-				m_dateClosed = value;
-			}
-		}
-		
-		[DataElement(AllowDbNull = true)]
-		public string Category {
-			get { return m_category; }
-			set {
-				Dirty = true;
-				m_category = value;
+				m_memory = value;
 			}
 		}
 	}

@@ -39,7 +39,16 @@ namespace DOL.Language
 		/// All the sentences [TranslationID] [Language] = [Sentence]
 		/// </summary>
         public static Dictionary<string, Dictionary<string, string>> IDSentences;
-
+        
+        /// <summary>
+        /// Give a way to change or relocate the lang files
+        /// </summary>
+        private static string LangPath = Path.Combine(GameServer.Instance.Configuration.RootDirectory ,"languages");
+        public static void SetLangPath(string path)
+        {
+        	LangPath = path;
+        }
+        
 		/// <summary>
 		/// Count files in a language directory
 		/// </summary>
@@ -48,12 +57,12 @@ namespace DOL.Language
 		private static int CountLanguageFiles(string abrev)
 		{
 			int count = 0;
-			string LangPath = "." + Path.DirectorySeparatorChar + "languages" + Path.DirectorySeparatorChar + abrev + Path.DirectorySeparatorChar;
+			string langPath = Path.Combine(LangPath , abrev );
 			
-			if (!Directory.Exists(LangPath))
+			if (!Directory.Exists(langPath))
 				return count;
 
-			foreach (string file in Directory.GetFiles(LangPath, "*", SearchOption.AllDirectories))
+			foreach (string file in Directory.GetFiles(langPath, "*", SearchOption.AllDirectories))
 			{
 				if (!file.EndsWith(".txt"))
 					continue;
@@ -192,8 +201,8 @@ namespace DOL.Language
 				}
 			}
 
-			string LangPath = "." + Path.DirectorySeparatorChar + "languages" + Path.DirectorySeparatorChar + abrev + Path.DirectorySeparatorChar;
-			foreach (string FilePath in Directory.GetFiles(LangPath, "*", SearchOption.AllDirectories))
+			string langPath = Path.Combine(LangPath , abrev );
+			foreach (string FilePath in Directory.GetFiles(langPath, "*", SearchOption.AllDirectories))
 			{
 				if (!FilePath.EndsWith(".txt"))
 					continue;

@@ -19,7 +19,7 @@
 /* Created by Schaf
  * Last modified by Schaf on 10.12.2004 20:09
  */
- 
+
 using System;
 
 using DOL.Database;
@@ -40,14 +40,12 @@ namespace DOL.Database
 
 		private string m_baseitemid;
 
-		private static bool m_autoSave;
-
 		/// <summary>
 		/// The Constructor
 		/// </summary>
 		public DBHouseOutdoorItem()
 		{
-			m_autoSave = false;
+			AutoSave = false;
 		}
 
 		/// <summary>
@@ -132,21 +130,6 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_baseitemid = value;
-			}
-		}
-
-		/// <summary>
-		/// Autosave
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
 			}
 		}
 	}

@@ -27,7 +27,6 @@ namespace DOL.Database
 	[DataTable(TableName = "Faction")]
 	public class DBFaction : DataObject
 	{
-		private bool m_autoSave;
 		private string m_name;
 		private int m_index;
 		private int m_baseAggroLevel;
@@ -37,25 +36,10 @@ namespace DOL.Database
 		/// </summary>
 		public DBFaction()
 		{
-			m_autoSave = false;
+			AutoSave = false;
 			ID = 0;
 			m_baseAggroLevel = 0;
 			m_name = String.Empty;
-		}
-
-		/// <summary>
-		/// autosave faction table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
 		}
 
 		/// <summary>

@@ -27,8 +27,6 @@ namespace DOL.Database
 	[DataTable(TableName = "Door")]
 	public class DBDoor : DataObject
 	{
-		static bool m_autoSave;
-
 		private int m_xpos;
 		private int m_ypos;
 		private int m_zpos;
@@ -40,7 +38,7 @@ namespace DOL.Database
 		private byte m_realm;
 		private string m_guild;
 		private uint m_flags;
-       // private int m_constitution;
+		// private int m_constitution;
 		private int m_locked;
 		private int m_health;
 		private int m_maxHealth;
@@ -50,28 +48,13 @@ namespace DOL.Database
 		/// </summary>
 		public DBDoor()
 		{
-			m_autoSave = false;
+			AutoSave = false;
 			m_zpos = 0;
 			m_ypos = 0;
 			m_xpos = 0;
 			m_heading = 0;
 			m_name = "";
 			m_internalID = 0;
-		}
-
-		/// <summary>
-		/// Auto save table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
 		}
 
 		/// <summary>
@@ -217,7 +200,7 @@ namespace DOL.Database
 					m_constitution = value;
 				}
 			}
-			*/
+		 */
 		[DataElement(AllowDbNull = false)]
 		public byte Level
 		{
@@ -261,43 +244,43 @@ namespace DOL.Database
 		}
 		
 		[DataElement(AllowDbNull = false)]
-        public int Locked
-        {
-            get
-            {
-                return m_locked;
-            }
-            set
-            {
-                Dirty = true;
-                m_locked = value;
-            }
-        }
+		public int Locked
+		{
+			get
+			{
+				return m_locked;
+			}
+			set
+			{
+				Dirty = true;
+				m_locked = value;
+			}
+		}
 		[DataElement(AllowDbNull = false)]
-        public int Health
-        {
-            get
-            {
-                return m_health;
-            }
-            set
-            {
-                Dirty = true;
-                m_health = value;
-            }
-        }
+		public int Health
+		{
+			get
+			{
+				return m_health;
+			}
+			set
+			{
+				Dirty = true;
+				m_health = value;
+			}
+		}
 		[DataElement(AllowDbNull = false)]
-        public int MaxHealth
-        {
-            get
-            {
-                return m_maxHealth;
-            }
-            set
-            {
-                Dirty = true;
-                m_maxHealth = value;
-            }
-        }
+		public int MaxHealth
+		{
+			get
+			{
+				return m_maxHealth;
+			}
+			set
+			{
+				Dirty = true;
+				m_maxHealth = value;
+			}
+		}
 	}
 }

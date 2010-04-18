@@ -153,18 +153,19 @@ namespace DOL.GS
 						//Let's remove the old item!
 						m_items.Remove(slot);
 					}
-					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect, extension);
+					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect, extension);	
 					InventoryItem item = null;
 
 					if (!m_usedInventoryItems.ContainsKey(itemID))
-					{
-							item = new InventoryItem();
-							item.Id_nb = itemID;
-							item.Model = model;
-							item.Color = color;
-							item.Effect = effect;
-							item.Extension = (byte)extension;
-							item.SlotPosition = (int)slot;
+					{					
+						item = new InventoryItem();
+						item.Template = new ItemTemplate();
+						item.Template.Id_nb = itemID;
+						item.Model = model;
+						item.Color = color;
+						item.Effect = effect;
+						item.Extension = (byte)extension;
+						item.SlotPosition = (int)slot;
 					}
 					else
 						return false;
@@ -186,10 +187,10 @@ namespace DOL.GS
 			{
 				slot = GetValidInventorySlot(slot);
 
-				if (slot == eInventorySlot.Invalid) 
+				if (slot == eInventorySlot.Invalid)
 					return false;
 
-				if (m_isClosed) 
+				if (m_isClosed)
 					return false;
 
 				if (!m_items.ContainsKey(slot))
@@ -280,7 +281,7 @@ namespace DOL.GS
 			if (Util.IsEmpty(templateID) || templateID == "\r\n" || templateID == "0")
 			{
 				//if (log.IsWarnEnabled)
-					//log.Warn("Null or empty string template reference");
+				//log.Warn("Null or empty string template reference");
 
 				return false;
 			}
@@ -368,7 +369,7 @@ namespace DOL.GS
 						bool foundInDB = false;
 						foreach (NPCEquipment npcItem in npcEquipment)
 						{
-							if (item.SlotPosition != npcItem.Slot) 
+							if (item.SlotPosition != npcItem.Slot)
 								continue;
 
 							if (item.Model != npcItem.Model || item.Color != npcItem.Color || item.Effect != npcItem.Effect)
@@ -511,7 +512,7 @@ namespace DOL.GS
 		/// <param name="minSlot">The first slot</param>
 		/// <param name="maxSlot">The last slot</param>
 		/// <returns>false</returns>
-		public override bool AddTemplate(ItemTemplate template, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
+		public override bool AddTemplate(InventoryItem template, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
 			return false;
 		}

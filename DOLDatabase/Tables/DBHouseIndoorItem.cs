@@ -19,7 +19,7 @@
 /* Created by Schaf
  * Last modified by Schaf on 10.12.2004 20:09
  */
- 
+
 using System;
 
 using DOL.Database;
@@ -42,15 +42,13 @@ namespace DOL
 			private string m_baseitemid;
 			//"can-be-null" data (well, i dont know if size can be 0)
 			private int m_color;
-            private int m_emblem;
+			private int m_emblem;
 			private int m_rotation;
 			private int m_size;
 
-			static bool m_autoSave;
-
 			public DBHouseIndoorItem()
 			{
-				m_autoSave=false;
+				AutoSave=false;
 			}
 
 			[DataElement(AllowDbNull=false, Index=true)]
@@ -157,19 +155,19 @@ namespace DOL
 					m_color = value;
 				}
 			}
-            [DataElement(AllowDbNull = true)]
-            public int Emblem
-            {
-                get
-                {
-                    return m_emblem;
-                }
-                set
-                {
-                    Dirty = true;
-                    m_emblem = value;
-                }
-            }
+			[DataElement(AllowDbNull = true)]
+			public int Emblem
+			{
+				get
+				{
+					return m_emblem;
+				}
+				set
+				{
+					Dirty = true;
+					m_emblem = value;
+				}
+			}
 			[DataElement(AllowDbNull=true)]
 			public int Rotation
 			{
@@ -194,18 +192,6 @@ namespace DOL
 				{
 					Dirty = true;
 					m_size = value;
-				}
-			}
-
-			override public bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
 				}
 			}
 		}

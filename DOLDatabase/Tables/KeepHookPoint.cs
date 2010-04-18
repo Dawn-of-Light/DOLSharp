@@ -35,7 +35,6 @@ namespace DOL.Database
 		private int m_heading;
 		private int m_keepComponentSkinID;
 		private int m_hookPointID;
-		static bool		m_autoSave;
 		private int m_height;
 
 		/// <summary>
@@ -43,16 +42,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBKeepHookPoint()
 		{
-			m_autoSave = false;
-		}
-
-		/// <summary>
-		/// Autosave table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get	{return m_autoSave;}
-			set	{m_autoSave = value;}
+			AutoSave = false;
 		}
 		
 		/// <summary>
@@ -61,16 +51,16 @@ namespace DOL.Database
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public int HookPointID
 		{
-			get 
+			get
 			{
 				return m_hookPointID;
 			}
-			set	
+			set
 			{
 				Dirty = true;
 				m_hookPointID = value;
 			}
-		}		
+		}
 
 		/// <summary>
 		/// skin of component with hookpoint is linked
@@ -78,16 +68,16 @@ namespace DOL.Database
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public int KeepComponentSkinID
 		{
-			get 
+			get
 			{
 				return m_keepComponentSkinID;
 			}
-			set	
+			set
 			{
 				Dirty = true;
 				m_keepComponentSkinID = value;
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// Z position of door

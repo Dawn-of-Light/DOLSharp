@@ -62,7 +62,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Global Constant for all quests to define wether npcs and items should be saved in db or not.
 		/// </summary>
-		public static bool SAVE_INTO_DATABASE = ServerProperties.Properties.SAVE_QUESTITEMS_INTO_DATABASE;
+		public static bool SAVE_INTO_DATABASE = ServerProperties.Properties.SAVE_QUEST_MOBS_INTO_DATABASE;
 
 		public static Queue m_sayTimerQueue = new Queue();
 		public static Queue m_sayObjectQueue = new Queue();
@@ -352,40 +352,6 @@ namespace DOL.GS.Quests
 			return true;
 		}
 
-		protected static ItemTemplate CreateTicketTo(String location)
-		{
-			ItemTemplate ticket = GameServer.Database.FindObjectByKey<ItemTemplate>("ticket_to_" + GameServer.Database.Escape(location.ToLower()));
-			if (ticket == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + location + ", creating it ...");
-				ticket = new ItemTemplate();
-				ticket.Name = "ticket to " + location;
-
-				ticket.Weight = 0;
-				ticket.Model = 498;
-
-				ticket.Object_Type = (int)eObjectType.GenericItem;
-				ticket.Item_Type = 40;
-
-				ticket.Id_nb = "ticket_to_" + location.ToLower();
-
-				ticket.IsPickable = true;
-				ticket.IsDropable = true;
-
-				ticket.Gold = 0;
-				ticket.Silver = 5;
-				ticket.Copper = 3;
-				ticket.PackSize = 1;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				GameServer.Database.AddObject(ticket);
-			}
-			return ticket;
-		}
-
 		protected static ItemTemplate CreateTicketTo(String destination, String ticket_Id)
 		{
 			ItemTemplate ticket = GameServer.Database.FindObjectByKey<ItemTemplate>(GameServer.Database.Escape(ticket_Id.ToLower()));
@@ -407,15 +373,12 @@ namespace DOL.GS.Quests
 				ticket.IsPickable = true;
 				ticket.IsDropable = true;
 
-				ticket.Gold = 0;
-				ticket.Silver = 5;
-				ticket.Copper = 0;
+				ticket.Price = Money.GetMoney(0,0,0,5,3);
 
 				ticket.PackSize = 1;
 				ticket.Weight = 0;
 
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(ticket);
+				GameServer.Database.AddObject(ticket);
 			}
 			return ticket;
 		}

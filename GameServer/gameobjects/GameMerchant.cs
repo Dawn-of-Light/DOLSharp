@@ -139,7 +139,7 @@ namespace DOL.GS
 			if (amountToBuy <= 0) return;
 
 			//Calculate the value of items
-			long totalValue = number * template.Value;
+			long totalValue = number * template.Price;
 
 			lock (player.Inventory)
 			{
@@ -150,7 +150,7 @@ namespace DOL.GS
 					return;
 				}
 
-				if (!player.Inventory.AddTemplate(template, amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (!player.Inventory.AddTemplate(new InventoryItem(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -197,7 +197,7 @@ namespace DOL.GS
 			if (amountToBuy <= 0) return;
 
 			//Calculate the value of items
-			long totalValue = number * template.Value;
+			long totalValue = number * template.Price;
 
 			lock (player.Inventory)
 			{
@@ -208,7 +208,7 @@ namespace DOL.GS
 					return;
 				}
 
-				if (!player.Inventory.AddTemplate(template, amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (!player.Inventory.AddTemplate(new InventoryItem (template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -282,7 +282,7 @@ namespace DOL.GS
 
 			int itemCount = Math.Max(1, item.Count);
 			int packSize = Math.Max(1, item.PackSize);
-			long val = item.Value * itemCount / packSize / 2;
+			long val = item.Price * itemCount / packSize / 2;
 
 
 			if (!item.IsDropable)
@@ -423,7 +423,7 @@ namespace DOL.GS
 			if (amountToBuy <= 0) return;
 
 			//Calculate the value of items
-			long totalValue = number * template.Value;
+			long totalValue = number * template.Price;
 
 			lock (player.Inventory)
 			{
@@ -432,7 +432,7 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeedBP", totalValue), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				if (!player.Inventory.AddTemplate(template, amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (!player.Inventory.AddTemplate(new InventoryItem(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -526,7 +526,7 @@ namespace DOL.GS
 			if (amountToBuy <= 0) return;
 
 			//Calculate the value of items
-			long totalValue = number * template.Value;
+			long totalValue = number * template.Price;
 
 			lock (player.Inventory)
 			{
@@ -535,7 +535,7 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeed2", totalValue, m_countText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				if (!player.Inventory.AddTemplate(template, amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (!player.Inventory.AddTemplate(new InventoryItem(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 

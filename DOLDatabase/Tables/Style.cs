@@ -33,7 +33,7 @@ namespace DOL.Database
 		protected int m_ID;
 		/// <summary>
 		/// The class ID of the style
-		/// </summary>		
+		/// </summary>
 		private int m_classId;
 		/// <summary>
 		/// The name of this style
@@ -136,14 +136,12 @@ namespace DOL.Database
 		/// </summary>
 		protected int m_armorHitLocation;
 		
-		static bool m_autoSave;
-
 		/// <summary>
 		/// The Constructor
 		/// </summary>
 		public DBStyle()
 		{
-			m_autoSave = false;
+			AutoSave = false;
 		}
 
 		/// <summary>
@@ -318,7 +316,7 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		///(procs) The Style should Randomly cast a proc 
+		///(procs) The Style should Randomly cast a proc
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public bool RandomProc
@@ -335,21 +333,6 @@ namespace DOL.Database
 		{
 			get { return m_armorHitLocation; }
 			set { m_armorHitLocation = value; Dirty = true; }
-		}
-
-		/// <summary>
-		/// Autosave in table?
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
 		}
 	}
 }

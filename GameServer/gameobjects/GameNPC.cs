@@ -3982,18 +3982,18 @@ namespace DOL.GS
 					GameStaticItem loot;
 					if (GameMoney.IsItemMoney(lootTemplate.Name))
 					{
-						long value = lootTemplate.Value;
+						long value = lootTemplate.Price;
 						if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Coin_Drop_5, (eRealm)killer.Realm))
 							value += (value / 100) * 5;
 						else if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Coin_Drop_3, (eRealm)killer.Realm))
 							value += (value / 100) * 3;
 
 						//this will need to be changed when the ML for increasing money is added
-						if (value != lootTemplate.Value)
+						if (value != lootTemplate.Price)
 						{
 							GamePlayer killerPlayer = killer as GamePlayer;
 							if (killerPlayer != null)
-								killerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(killerPlayer.Client, "GameNPC.DropLoot.AdditionalMoney", Money.GetString(value - lootTemplate.Value)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+								killerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(killerPlayer.Client, "GameNPC.DropLoot.AdditionalMoney", Money.GetString(value - lootTemplate.Price)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
 						}
 
 						loot = new GameMoney(value, this);

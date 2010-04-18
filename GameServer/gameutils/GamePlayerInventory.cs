@@ -592,7 +592,7 @@ namespace DOL.GS
 								m_player.Out.SendMessage(fromItem.GetName(0, true) + " can't go there!", eChatType.CT_System,
 								                         eChatLoc.CL_SystemWindow);
 							}
-							else if (!m_player.HasAbilityToUseItem(fromItem))
+							else if (!m_player.HasAbilityToUseItem(fromItem.Template))
 							{
 								valid = false;
 								m_player.Out.SendMessage("You have no skill in using this weapon type!", eChatType.CT_System,
@@ -610,7 +610,7 @@ namespace DOL.GS
 								m_player.Out.SendMessage(fromItem.GetName(0, true) + " can't go there!", eChatType.CT_System,
 								                         eChatLoc.CL_SystemWindow);
 							}
-							else if (!m_player.HasAbilityToUseItem(fromItem))
+							else if (!m_player.HasAbilityToUseItem(fromItem.Template))
 							{
 								valid = false;
 								m_player.Out.SendMessage("You have no skill in using this weapon type!", eChatType.CT_System,
@@ -626,7 +626,7 @@ namespace DOL.GS
 								m_player.Out.SendMessage(fromItem.GetName(0, true) + " can't go there!", eChatType.CT_System,
 								                         eChatLoc.CL_SystemWindow);
 							}
-							else if (!m_player.HasAbilityToUseItem(fromItem))
+							else if (!m_player.HasAbilityToUseItem(fromItem.Template))
 							{
 								valid = false;
 								m_player.Out.SendMessage("You have no skill in using this weapon type!", eChatType.CT_System,
@@ -642,7 +642,7 @@ namespace DOL.GS
 								m_player.Out.SendMessage(fromItem.GetName(0, true) + " can't go there!", eChatType.CT_System,
 								                         eChatLoc.CL_SystemWindow);
 							}
-							else if (!m_player.HasAbilityToUseItem(fromItem))
+							else if (!m_player.HasAbilityToUseItem(fromItem.Template))
 							{
 								valid = false;
 								m_player.Out.SendMessage("You have no skill in using this weapon type!", eChatType.CT_System,
@@ -663,7 +663,7 @@ namespace DOL.GS
 								m_player.Out.SendMessage(fromItem.GetName(0, true) + " can't go there!", eChatType.CT_System,
 								                         eChatLoc.CL_SystemWindow);
 							}
-							else if (!m_player.HasAbilityToUseItem(fromItem))
+							else if (!m_player.HasAbilityToUseItem(fromItem.Template ))
 							{
 								valid = false;
 								m_player.Out.SendMessage("You have no skill in wearing this armor type!", eChatType.CT_System,
@@ -784,7 +784,7 @@ namespace DOL.GS
 								m_player.Out.SendMessage(toItem.GetName(0, true) + " can't go there!", eChatType.CT_System,
 								                         eChatLoc.CL_SystemWindow);
 							}
-							else if (!m_player.HasAbilityToUseItem(toItem))
+							else if (!m_player.HasAbilityToUseItem(toItem.Template))
 							{
 								valid = false;
 								m_player.Out.SendMessage("You have no skill in using this weapon type!", eChatType.CT_System,
@@ -802,7 +802,7 @@ namespace DOL.GS
 								m_player.Out.SendMessage(toItem.GetName(0, true) + " can't go there!", eChatType.CT_System,
 								                         eChatLoc.CL_SystemWindow);
 							}
-							else if (!m_player.HasAbilityToUseItem(toItem))
+							else if (!m_player.HasAbilityToUseItem(toItem.Template))
 							{
 								valid = false;
 								m_player.Out.SendMessage("You have no skill in using this weapon type!", eChatType.CT_System,
@@ -818,7 +818,7 @@ namespace DOL.GS
 								m_player.Out.SendMessage(toItem.GetName(0, true) + " can't go there!", eChatType.CT_System,
 								                         eChatLoc.CL_SystemWindow);
 							}
-							else if (!m_player.HasAbilityToUseItem(toItem))
+							else if (!m_player.HasAbilityToUseItem(toItem.Template))
 							{
 								valid = false;
 								m_player.Out.SendMessage("You have no skill in using this weapon type!", eChatType.CT_System,
@@ -832,7 +832,7 @@ namespace DOL.GS
 								m_player.Out.SendMessage(toItem.GetName(0, true) + " can't go there!", eChatType.CT_System,
 								                         eChatLoc.CL_SystemWindow);
 							}
-							else if (!m_player.HasAbilityToUseItem(toItem))
+							else if (!m_player.HasAbilityToUseItem(toItem.Template))
 							{
 								valid = false;
 								m_player.Out.SendMessage("You have no skill in using this weapon type!", eChatType.CT_System,
@@ -853,7 +853,7 @@ namespace DOL.GS
 								m_player.Out.SendMessage(toItem.GetName(0, true) + " can't go there!", eChatType.CT_System,
 								                         eChatLoc.CL_SystemWindow);
 							}
-							else if (!m_player.HasAbilityToUseItem(toItem))
+							else if (!m_player.HasAbilityToUseItem(toItem.Template))
 							{
 								valid = false;
 								m_player.Out.SendMessage("You have no skill in wearing this armor type!", eChatType.CT_System,

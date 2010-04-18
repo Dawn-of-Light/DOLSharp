@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
 using System;
 
 using DOL.Database;
@@ -34,23 +34,9 @@ namespace DOL.Database
 		private int m_offZ;
 		private int m_offH;
 
-		static bool m_autoSave;
-
 		public HouseHookpointOffset()
 		{
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
+			AutoSave = false;
 		}
 
 		[DataElement(AllowDbNull = false)]
@@ -101,10 +87,10 @@ namespace DOL.Database
 		public int OffZ
 		{
 			get { return m_offZ; }
-			set 
-			{ 
-				Dirty = true; 
-				m_offZ = value; 
+			set
+			{
+				Dirty = true;
+				m_offZ = value;
 			}
 		}
 

@@ -34,8 +34,6 @@ namespace DOL.Database
 	[DataTable(TableName="GuildAlliance")]
 	public class DBAlliance : DataObject
 	{
-		static bool		m_autoSave;
-
 		private string	m_allianceName;
 		private string	m_motd;
 
@@ -45,26 +43,10 @@ namespace DOL.Database
 		public DBAlliance()
 		{
 			m_allianceName = "default alliance name";
-			m_autoSave=false;
 		}
 
 		/// <summary>
-		/// autosave table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
-		}
-
-		/// <summary>
-		/// Name of the alliance 
+		/// Name of the alliance
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public string AllianceName

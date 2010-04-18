@@ -71,7 +71,7 @@ namespace DOL.GS
 			if (t == null || item == null)
 				return false;
 
-			if (item.Level >= 10 && item.CrafterName != "")
+			if (item.Level >= 10 && item.IsCrafted)
 			{
 				if (item.Object_Type != (int) eObjectType.Magical && item.Object_Type != (int) eObjectType.Bolt && item.Object_Type != (int) eObjectType.Poison)
 				{
@@ -135,7 +135,7 @@ namespace DOL.GS
 
 		public long CalculEnchantPrice(InventoryItem item)
 		{
-			return (Money.GetMoney(0, 0, item.Gold, item.Silver, item.Copper)/5);
+			return (item.Price/5);
 		}
 	}
 }

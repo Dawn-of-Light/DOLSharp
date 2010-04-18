@@ -117,6 +117,7 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Compile Include="GameServer\gameutils\InventoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DOLTestCase.cs">

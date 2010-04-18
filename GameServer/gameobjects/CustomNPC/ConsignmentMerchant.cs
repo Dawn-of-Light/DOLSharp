@@ -335,14 +335,14 @@ namespace DOL.GS
                 string message;
                 if (ConsignmentMoney.UseBP) // we buy with Bountypoints
                 {
-                    message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtBP", ((ItemTemplate)fromItem).GetName(1, false), totalValue);
+                    message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtBP", fromItem.GetName(1, false), totalValue);
                     player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
                     player.BountyPoints -= totalValue;
                     player.Out.SendUpdatePoints();
                 }
                 else //we buy with money
                 {
-                    message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.Bought", ((ItemTemplate)fromItem).GetName(1, false), Money.GetString(totalValue));
+                    message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.Bought", fromItem.GetName(1, false), Money.GetString(totalValue));
                     if (!player.RemoveMoney(totalValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
                     {
                         throw new Exception("Money amount changed while adding items.");

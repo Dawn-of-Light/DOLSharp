@@ -1808,7 +1808,7 @@ namespace DOL.GS.PacketHandler
 									pak.WriteByte(0x01);
 								pak.WriteShort((ushort) value2);
 								//Item Price
-								pak.WriteInt((uint) item.Value);
+								pak.WriteInt((uint) item.Price);
 								pak.WriteShort((ushort) item.Model);
 								pak.WritePascalString(item.Name);
 							}
@@ -3468,7 +3468,7 @@ namespace DOL.GS.PacketHandler
 						else
 							pak.WriteByte((byte) (item.Hand << 6));
 						pak.WriteByte((byte) ((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
-						pak.WriteByte((byte) (m_gameClient.Player.HasAbilityToUseItem(item) ? 0 : 1));
+						pak.WriteByte((byte) (m_gameClient.Player.HasAbilityToUseItem(item.Template) ? 0 : 1));
 						pak.WriteShort((ushort) (item.PackSize > 1 ? item.Weight*item.PackSize : item.Weight));
 						pak.WriteByte(item.ConditionPercent);
 						pak.WriteByte(item.DurabilityPercent);

@@ -30,15 +30,16 @@ namespace DOL.Database
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+		public static string m_blankItem = "Item_Template";
+		
 		protected string m_id_nb;
 		protected string m_name;
 		protected int m_level;
 		
 		// dur_con
 		protected int m_durability;
-		protected int m_maxdurability;
 		protected int m_condition;
+		protected int m_maxdurability;
 		protected int m_maxcondition;
 		protected int m_quality;
 		protected int m_weight;
@@ -87,10 +88,7 @@ namespace DOL.Database
 		protected int m_extrabonusType;
 		
 		// money
-		protected short m_platinum;
-		protected short m_gold;
-		protected byte m_silver;
-		protected byte m_copper;
+		protected long m_Price;
 		
 		// properties
 		protected bool m_isDropable;
@@ -125,17 +123,13 @@ namespace DOL.Database
 		
 		protected string m_packageID;
 
-		static bool m_autoSave = false;
-
 		public ItemTemplate()
 		{
-			m_id_nb = "XXX_useless_junk_XXX";
-			m_name = "Some usless junk";
+			m_id_nb = m_blankItem;
+			m_name = "(blank item)";
 			m_level = 0;
-			m_durability = 1;
-			m_maxdurability = 1;
-			m_condition = 1;
-			m_maxcondition = 1;
+			m_durability = m_maxdurability = 1;
+			m_condition  = m_maxcondition = 1;
 			m_quality = 1;
 			m_dps_af = 0;
 			m_spd_abs = 0;
@@ -173,10 +167,6 @@ namespace DOL.Database
 			m_bonus9Type = 0;
 			m_bonus10Type = 0;
 			m_extrabonusType = 0;
-			m_platinum = 0;
-			m_gold = 0;
-			m_silver = 0;
-			m_copper = 0;
 			m_isDropable = true;
 			m_isPickable = true;
 			m_isTradable = true;
@@ -200,8 +190,10 @@ namespace DOL.Database
 			m_bonusLevel = 0;
 			m_levelRequirement = 0;
 			m_description = "";
-		}
 
+
+		}
+		
 		[PrimaryKey]
 		public virtual string Id_nb
 		{
@@ -211,20 +203,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
 				m_id_nb = value;
-			}
-		}
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
 			}
 		}
 
@@ -237,7 +216,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_name = value;
 			}
 		}
@@ -250,31 +229,45 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_level = value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public int Durability
 		{
 			get
 			{
-				return m_durability;
+				if (m_durability==0)
+					return m_maxdurability;
+				else
+					return m_durability;
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_durability = value;
 			}
 		}
-		public byte DurabilityPercent
+
+		[DataElement(AllowDbNull = true)]
+		public int Condition
 		{
 			get
 			{
-				return (byte)((m_maxdurability > 0) ? m_durability * 100 / m_maxdurability : 0);
+				if (m_condition==0)
+					return m_maxcondition;
+				else
+					return m_condition;
+			}
+			set
+			{
+				
+				m_condition = value;
 			}
 		}
-
+		
 		[DataElement(AllowDbNull = true)]
 		public int MaxDurability
 		{
@@ -284,30 +277,11 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_maxdurability = value;
 			}
 		}
-		[DataElement(AllowDbNull = true)]
-		public int Condition
-		{
-			get
-			{
-				return m_condition;
-			}
-			set
-			{
-				Dirty = true;
-				m_condition = value;
-			}
-		}
-		public byte ConditionPercent
-		{
-			get
-			{
-				return (byte)Math.Round((m_maxcondition > 0) ? (double)m_condition / m_maxcondition * 100 : 0);
-			}
-		}
+
 		[DataElement(AllowDbNull = true)]
 		public int MaxCondition
 		{
@@ -317,10 +291,11 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_maxcondition = value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public int Quality
 		{
@@ -330,7 +305,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_quality = value;
 			}
 		}
@@ -343,7 +318,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_dps_af = value;
 			}
 		}
@@ -356,7 +331,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_spd_abs = value;
 			}
 		}
@@ -369,7 +344,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_hand = value;
 			}
 		}
@@ -382,7 +357,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_type_damage = value;
 			}
 		}
@@ -395,7 +370,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_object_type = value;
 			}
 		}
@@ -408,7 +383,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_item_type = value;
 			}
 		}
@@ -421,7 +396,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_color = value;
 			}
 		}
@@ -434,7 +409,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_emblem = value;
 			}
 		}
@@ -447,7 +422,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_effect = value;
 			}
 		}
@@ -460,7 +435,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_weight = value;
 			}
 		}
@@ -473,7 +448,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_model = value;
 			}
 		}
@@ -486,7 +461,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_extension = value;
 			}
 		}
@@ -499,7 +474,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus = value;
 			}
 		}
@@ -512,7 +487,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus1 = value;
 			}
 		}
@@ -525,7 +500,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus2 = value;
 			}
 		}
@@ -538,7 +513,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus3 = value;
 			}
 		}
@@ -551,7 +526,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus4 = value;
 			}
 		}
@@ -564,7 +539,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus5 = value;
 			}
 		}
@@ -577,7 +552,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus6 = value;
 			}
 		}
@@ -590,7 +565,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus7 = value;
 			}
 		}
@@ -603,7 +578,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus8 = value;
 			}
 		}
@@ -616,7 +591,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus9 = value;
 			}
 		}
@@ -629,7 +604,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus10 = value;
 			}
 		}
@@ -642,7 +617,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_extrabonus = value;
 			}
 		}
@@ -655,7 +630,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus1Type = value;
 			}
 		}
@@ -668,7 +643,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus2Type = value;
 			}
 		}
@@ -681,7 +656,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus3Type = value;
 			}
 		}
@@ -694,7 +669,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus4Type = value;
 			}
 		}
@@ -707,7 +682,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus5Type = value;
 			}
 		}
@@ -720,7 +695,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus6Type = value;
 			}
 		}
@@ -733,7 +708,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus7Type = value;
 			}
 		}
@@ -746,7 +721,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus8Type = value;
 			}
 		}
@@ -759,7 +734,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus9Type = value;
 			}
 		}
@@ -772,7 +747,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_bonus10Type = value;
 			}
 		}
@@ -785,7 +760,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_extrabonusType = value;
 			}
 		}
@@ -798,7 +773,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_isPickable = value;
 			}
 		}
@@ -812,7 +787,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_isDropable = value;
 			}
 		}
@@ -826,7 +801,7 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_canDropAsLoot = value;
 			}
 		}
@@ -840,71 +815,22 @@ namespace DOL.Database
 			}
 			set
 			{
-				Dirty = true;
+				
 				m_isTradable = value;
 			}
 		}
 
-		public long Value
-		{
-			get
-			{
-				return (((0 * 1000L + Platinum) * 1000L + Gold) * 100L + Silver) * 100L + Copper;
-			}
-		}
-
 		[DataElement(AllowDbNull = true)]
-		public short Platinum
+		public long Price
 		{
 			get
 			{
-				return m_platinum;
+				return m_Price;
 			}
 			set
 			{
-				Dirty = true;
-				m_platinum = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = true)]
-		public short Gold
-		{
-			get
-			{
-				return m_gold;
-			}
-			set
-			{
-				Dirty = true;
-				m_gold = value;
-			}
-		}
-		[DataElement(AllowDbNull = true)]
-		public byte Silver
-		{
-			get
-			{
-				return m_silver;
-			}
-			set
-			{
-				Dirty = true;
-				m_silver = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = true)]
-		public byte Copper
-		{
-			get
-			{
-				return m_copper;
-			}
-			set
-			{
-				Dirty = true;
-				m_copper = value;
+				
+				m_Price = value;
 			}
 		}
 
@@ -917,7 +843,7 @@ namespace DOL.Database
 			get { return m_maxCount; }
 			set
 			{
-				Dirty = true;
+				
 				m_maxCount = value;
 			}
 		}
@@ -936,7 +862,7 @@ namespace DOL.Database
 		[DataElement(AllowDbNull = true)]
 		public bool IsIndestructible {
 			get { return m_isIndestructible; }
-			set { Dirty = true; m_isIndestructible = value; }
+			set {  m_isIndestructible = value; }
 		}
 		
 		/// <summary>
@@ -945,7 +871,7 @@ namespace DOL.Database
 		[DataElement(AllowDbNull = true)]
 		public bool IsNotLosingDur {
 			get { return m_isNotLosingDur; }
-			set { Dirty = true; m_isNotLosingDur = value; }
+			set {  m_isNotLosingDur = value; }
 		}
 		
 		/// <summary>
@@ -957,7 +883,7 @@ namespace DOL.Database
 			get { return m_packSize; }
 			set
 			{
-				Dirty = true;
+				
 				m_packSize = value;
 			}
 		}
@@ -971,7 +897,7 @@ namespace DOL.Database
 			get { return m_charges; }
 			set
 			{
-				Dirty = true;
+				
 				m_charges = value;
 			}
 		}
@@ -985,7 +911,7 @@ namespace DOL.Database
 			get { return m_maxCharges; }
 			set
 			{
-				Dirty = true;
+				
 				m_maxCharges = value;
 			}
 		}
@@ -996,7 +922,7 @@ namespace DOL.Database
 			get { return m_charges1; }
 			set
 			{
-				Dirty = true;
+				
 				m_charges1 = value;
 			}
 		}
@@ -1010,7 +936,7 @@ namespace DOL.Database
 			get { return m_maxCharges1; }
 			set
 			{
-				Dirty = true;
+				
 				m_maxCharges1 = value;
 			}
 		}
@@ -1024,7 +950,7 @@ namespace DOL.Database
 			get { return m_spellID; }
 			set
 			{
-				Dirty = true;
+				
 				m_spellID = value;
 			}
 		}
@@ -1038,7 +964,7 @@ namespace DOL.Database
 			get { return m_spellID1; }
 			set
 			{
-				Dirty = true;
+				
 				m_spellID1 = value;
 			}
 		}
@@ -1052,7 +978,7 @@ namespace DOL.Database
 			get { return m_procSpellID; }
 			set
 			{
-				Dirty = true;
+				
 				m_procSpellID = value;
 			}
 		}
@@ -1063,7 +989,7 @@ namespace DOL.Database
 			get { return m_procSpellID1; }
 			set
 			{
-				Dirty = true;
+				
 				m_procSpellID1 = value;
 			}
 		}
@@ -1074,7 +1000,7 @@ namespace DOL.Database
 			get { return m_poisonSpellID; }
 			set
 			{
-				Dirty = true;
+				
 				m_poisonSpellID = value;
 			}
 		}
@@ -1085,7 +1011,7 @@ namespace DOL.Database
 			get { return m_poisonMaxCharges; }
 			set
 			{
-				Dirty = true;
+				
 				m_poisonMaxCharges = value;
 			}
 		}
@@ -1096,7 +1022,7 @@ namespace DOL.Database
 			get { return m_poisonCharges; }
 			set
 			{
-				Dirty = true;
+				
 				m_poisonCharges = value;
 			}
 		}
@@ -1108,7 +1034,7 @@ namespace DOL.Database
 			set
 			{
 				m_realm = value;
-				Dirty = true;
+				
 			}
 		}
 
@@ -1122,7 +1048,7 @@ namespace DOL.Database
 			set
 			{
 				m_allowedClasses = value;
-				Dirty = true;
+				
 			}
 		}
 
@@ -1133,7 +1059,7 @@ namespace DOL.Database
 			set
 			{
 				m_canUseEvery = value;
-				Dirty = true;
+				
 			}
 		}
 
@@ -1147,7 +1073,6 @@ namespace DOL.Database
 			set
 			{
 				this.m_flags = value;
-				this.Dirty = true;
 			}
 		}
 
@@ -1161,7 +1086,6 @@ namespace DOL.Database
 			set
 			{
 				this.m_bonusLevel = value;
-				this.Dirty = true;
 			}
 		}
 
@@ -1189,7 +1113,6 @@ namespace DOL.Database
 			set
 			{
 				this.m_packageID = value;
-				this.Dirty = true;
 			}
 		}
 
@@ -1203,7 +1126,22 @@ namespace DOL.Database
 			set
 			{
 				this.m_description = value;
-				this.Dirty = true;
+			}
+		}
+		
+		// Various Methods		
+		public virtual byte BaseDurabilityPercent
+		{
+			get
+			{
+				return (byte)((MaxDurability > 0) ?Durability * 100 / MaxDurability : 0);
+			}
+		}
+
+		public virtual byte BaseConditionPercent
+		{
+			get	{
+				return (byte)Math.Round((MaxCondition > 0) ? (double)Condition / MaxCondition * 100 : 0);
 			}
 		}
 

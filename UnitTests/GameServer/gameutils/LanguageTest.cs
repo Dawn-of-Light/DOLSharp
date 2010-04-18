@@ -32,15 +32,9 @@ namespace DOL.Tests
 		}
 		[Test]
 		public void TestGetString()
-		{/*
+		{
 			Console.WriteLine("TestGetString();");
-			Console.WriteLine(LanguageMgr.GetString("test","fail default string"));
-			Console.WriteLine(LanguageMgr.GetString("test2","fail default string2"));
-			
-			Console.WriteLine(LanguageMgr.GetString("test3","defaultstring test3 succeed"));
-			
-			Console.WriteLine(LanguageMgr.GetString("testscript","fail default string"));
-			Console.WriteLine(LanguageMgr.GetString("test.script2","fail default string"));*/
+			Console.WriteLine(LanguageMgr.GetTranslation ("test","fail default string"));
 			Assert.IsTrue(true, "ok");
 		}
 	}

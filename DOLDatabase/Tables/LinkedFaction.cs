@@ -31,7 +31,6 @@ namespace DOL.Database
 		private int	m_factionID;
 		private int	m_linkedFactionID;
 		private bool	m_friend;
-		static bool		m_autoSave;
 
 		/// <summary>
 		/// Create faction linked to an other
@@ -41,34 +40,25 @@ namespace DOL.Database
 			m_factionID = 0;
 			m_linkedFactionID = 0;
 			m_friend = true;
-			m_autoSave = false;
+			AutoSave = false;
 		}
 
 		/// <summary>
-		/// autosave table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get	{return m_autoSave;}
-			set	{m_autoSave = value;}
-		}
-
-		/// <summary>
-		/// Index of faction 
+		/// Index of faction
 		/// </summary>
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public int FactionID
 		{
-			get 
-            {
-                return m_factionID;
-            }
-			set	
+			get
+			{
+				return m_factionID;
+			}
+			set
 			{
 				Dirty = true;
-                m_factionID = value;
-            }
-		}		
+				m_factionID = value;
+			}
+		}
 
 		/// <summary>
 		/// The linked faction index
@@ -76,15 +66,15 @@ namespace DOL.Database
 		[DataElement(AllowDbNull=true,Unique=false)]
 		public int LinkedFactionID
 		{
-			get 
-            {
-                return m_linkedFactionID;
-            }
-			set	
+			get
+			{
+				return m_linkedFactionID;
+			}
+			set
 			{
 				Dirty = true;
-                m_linkedFactionID = value;
-            }
+				m_linkedFactionID = value;
+			}
 		}
 
 		/// <summary>
@@ -93,11 +83,11 @@ namespace DOL.Database
 		[DataElement(AllowDbNull=true,Unique=false)]
 		public bool IsFriend
 		{
-			get 
+			get
 			{
 				return m_friend;
 			}
-			set	
+			set
 			{
 				Dirty = true;
 				m_friend = value;

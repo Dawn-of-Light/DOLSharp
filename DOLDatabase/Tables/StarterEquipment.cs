@@ -32,23 +32,6 @@ namespace DOL.Database
 		private string m_class;
 		private string m_templateID;
 
-		private static bool m_autoSave;
-
-		/// <summary>
-		/// Auto save this table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
-		}
-
 		/// <summary>
 		/// Serialized classes this item should be given to (separator ':')
 		/// 0 for all classes

@@ -9,24 +9,13 @@ namespace DOL.Database
 	[DataTable(TableName = "ClassXRealmAbility")]
 	public class ClassXRealmAbility : DataObject
 	{
-		static bool m_autoSave;
 		protected string m_abilityKey;
 		protected int m_charClass;
 
 		public ClassXRealmAbility()
 		{
-			m_autoSave = false;
+			AutoSave = false;
 		}
-
-		/// <summary>
-		/// auto save Db or not
-		/// </summary>
-		override public bool AutoSave
-		{
-			get { return m_autoSave; }
-			set { m_autoSave = value; }
-		}
-
 
 		/// <summary>
 		/// Char class that can get this ability

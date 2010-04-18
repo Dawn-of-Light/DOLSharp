@@ -29,7 +29,7 @@ namespace DOL
 		/// Account table
 		/// </summary>
 		[DataTable(TableName="Account")]
-		public class Account : DataObject 
+		public class Account : DataObject
 		{
 			private string m_name;
 			private string m_password;
@@ -44,12 +44,10 @@ namespace DOL
 			private string m_lastClientVersion;
 			private bool m_isMuted;
 			
-			private static bool m_autoSave;
-
 			/// <summary>
 			/// Create account row in DB
 			/// </summary>
-			public Account() 
+			public Account()
 			{
 				m_name = null;
 				m_password = null;
@@ -57,23 +55,6 @@ namespace DOL
 				m_plvl = 1;
 				m_realm = 0;
 				m_isMuted = false;
-				//m_autoSave = true;
-				m_autoSave = false;
-			}
-
-			/// <summary>
-			/// Auto save this table
-			/// </summary>
-			override public  bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
-				}
 			}
 
 			/// <summary>
@@ -87,7 +68,7 @@ namespace DOL
 					return m_name;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_name = value;
 				}
@@ -104,7 +85,7 @@ namespace DOL
 					return m_password;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_password = value;
 				}
@@ -121,7 +102,7 @@ namespace DOL
 					return m_creationDate;
 				}
 				set
-				{   
+				{
 					m_creationDate = value;
 					Dirty = true;
 				}
@@ -138,7 +119,7 @@ namespace DOL
 					return m_lastLogin;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_lastLogin = value;
 				}
@@ -155,7 +136,7 @@ namespace DOL
 					return m_realm;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_realm = value;
 				}
@@ -242,11 +223,11 @@ namespace DOL
 			[Relation(LocalField = "Name", RemoteField = "AccountName", AutoLoad = true, AutoDelete=true)]
 			public Character[] Characters;
 
-            /// <summary>
-            /// Remove ban
-            /// </summary>
-            [Relation(LocalField = "Name", RemoteField = "Account", AutoLoad = true, AutoDelete = true)]
-            public DBBannedAccount[] BannedAccount;
+			/// <summary>
+			/// Remove ban
+			/// </summary>
+			[Relation(LocalField = "Name", RemoteField = "Account", AutoLoad = true, AutoDelete = true)]
+			public DBBannedAccount[] BannedAccount;
 		}
 	}
 }

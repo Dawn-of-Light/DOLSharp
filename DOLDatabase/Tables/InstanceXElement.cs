@@ -22,12 +22,12 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-    /// <summary>
-    /// This table represents instances, with an entry for each element (instance type, objects, mobs, entrances, etc) in an instance.
-    /// </summary>
-    [DataTable(TableName = "InstanceXElement")]
-    public class DBInstanceXElement : DataObject
-    {
+	/// <summary>
+	/// This table represents instances, with an entry for each element (instance type, objects, mobs, entrances, etc) in an instance.
+	/// </summary>
+	[DataTable(TableName = "InstanceXElement")]
+	public class DBInstanceXElement : DataObject
+	{
 		protected string m_instanceID;
 		protected string m_classType;
 		protected int m_X, m_Y, m_Z;
@@ -35,69 +35,63 @@ namespace DOL.Database
 		protected int m_NPCTemplate;
 
 		public DBInstanceXElement()
-        {
-        }
-
-		override public bool AutoSave
 		{
-			get { return true; }
-			set { }
 		}
 
 		/// <summary>
-        /// The unique name of this instance. Eg 'My Task Dungeon'
-        /// </summary>
-        [DataElement(AllowDbNull = false, Index = true)]
-        public String InstanceID
-        {
-            get { return m_instanceID; }
-            set { m_instanceID = value; }
-        }
-
-        [DataElement(AllowDbNull = true)]
-        public String ClassType
-        {
-            get { return m_classType; }
-            set { m_classType = value; }
-        }
-
-        [DataElement(AllowDbNull = false)]
-        public int X
-        { 
-			get { return m_X; } 
-			set { m_X = value; } 
+		/// The unique name of this instance. Eg 'My Task Dungeon'
+		/// </summary>
+		[DataElement(AllowDbNull = false, Index = true)]
+		public String InstanceID
+		{
+			get { return m_instanceID; }
+			set { m_instanceID = value; }
 		}
 
-        [DataElement(AllowDbNull = false)]
-        public int Y
-        { 
-			get { return m_Y; } 
+		[DataElement(AllowDbNull = true)]
+		public String ClassType
+		{
+			get { return m_classType; }
+			set { m_classType = value; }
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int X
+		{
+			get { return m_X; }
+			set { m_X = value; }
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int Y
+		{
+			get { return m_Y; }
 			set { m_Y = value; }
 		}
 
-        [DataElement(AllowDbNull = false)]
-        public int Z
-        { 
-			get { return m_Z; } 
-			set { m_Z = value; } 
+		[DataElement(AllowDbNull = false)]
+		public int Z
+		{
+			get { return m_Z; }
+			set { m_Z = value; }
 		}
 
-        [DataElement(AllowDbNull = false)]
-        public ushort Heading
-        { 
-			get { return m_Heading; } 
-			set { m_Heading = value; } 
+		[DataElement(AllowDbNull = false)]
+		public ushort Heading
+		{
+			get { return m_Heading; }
+			set { m_Heading = value; }
 		}
 
-        /// <summary>
-        /// Where applicable, the npc template to create this mob from.
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public int NPCTemplate
-        { 
-			get { return m_NPCTemplate; } 
+		/// <summary>
+		/// Where applicable, the npc template to create this mob from.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int NPCTemplate
+		{
+			get { return m_NPCTemplate; }
 			set { m_NPCTemplate = value; }
 		}
 
-    }
+	}
 }
