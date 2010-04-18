@@ -85,7 +85,9 @@ namespace DOL.GS.Quests.Albion
 
 				lightredclothdye.Object_Type = (int)eObjectType.GenericItem;
 				lightredclothdye.Id_nb = "light_red_cloth_dye";
-				lightredclothdye.Price = Money.GetMoney(0,0,0,0,40);
+				lightredclothdye.Gold = 0;
+				lightredclothdye.Silver = 0;
+				lightredclothdye.Copper = 40;
 				lightredclothdye.IsPickable = true;
 				lightredclothdye.IsDropable = true; // can't be sold to merchand
 				lightredclothdye.Quality = 100;
@@ -116,7 +118,9 @@ namespace DOL.GS.Quests.Albion
 
 				lightredleatherdye.Object_Type = (int)eObjectType.GenericItem;
 				lightredleatherdye.Id_nb = "light_red_leather_dye";
-				lightredleatherdye.Price = Money.GetMoney(0,0,0,0,40);
+				lightredleatherdye.Gold = 0;
+				lightredleatherdye.Silver = 0;
+				lightredleatherdye.Copper = 40;
 				lightredleatherdye.IsPickable = true;
 				lightredleatherdye.IsDropable = true; // can't be sold to merchand
 				lightredleatherdye.Quality = 100;
@@ -147,7 +151,9 @@ namespace DOL.GS.Quests.Albion
 
 				lightredenamel.Object_Type = (int)eObjectType.GenericItem;
 				lightredenamel.Id_nb = "light_red_enamel";
-				lightredenamel.Price = Money.GetMoney(0,0,0,0,40);
+				lightredenamel.Gold = 0;
+				lightredenamel.Silver = 0;
+				lightredenamel.Copper = 40;
 				lightredenamel.IsPickable = true;
 				lightredenamel.IsDropable = true; // can't be sold to merchand
 				lightredenamel.Quality = 100;

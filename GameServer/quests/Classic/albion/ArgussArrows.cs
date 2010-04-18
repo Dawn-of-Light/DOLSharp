@@ -230,7 +230,9 @@ namespace DOL.GS.Quests.Albion
                 dullBlackGem.Object_Type = (int)eObjectType.Magical;
                 dullBlackGem.Item_Type = (int)eEquipmentItems.JEWEL;
                 dullBlackGem.Id_nb = "dull_black_gem";
-                dullBlackGem.Price = 0;
+                dullBlackGem.Gold = 0;
+                dullBlackGem.Silver = 9;
+                dullBlackGem.Copper = 0;
                 dullBlackGem.IsPickable = true;
                 dullBlackGem.IsDropable = true;
 

@@ -77,7 +77,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsNecklaceofMight.Object_Type = (int)eObjectType.Magical;
 				RecruitsNecklaceofMight.Item_Type = (int)eEquipmentItems.NECK;
 				RecruitsNecklaceofMight.Id_nb = "recruits_necklace_of_might";
-				RecruitsNecklaceofMight.Price  = Money.GetMoney(0,0,0,2,40);
+				RecruitsNecklaceofMight.Gold = 0;
+				RecruitsNecklaceofMight.Silver = 2;
+				RecruitsNecklaceofMight.Copper = 40;
 				RecruitsNecklaceofMight.IsPickable = false;
 				RecruitsNecklaceofMight.IsDropable = true; // can be sold to merchand
 
@@ -88,7 +90,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsNecklaceofMight.Bonus3 = 1;
 				RecruitsNecklaceofMight.Bonus3Type = (int)eProperty.Resist_Body;
 				RecruitsNecklaceofMight.Quality = 100;
+				RecruitsNecklaceofMight.Condition = 50000;
 				RecruitsNecklaceofMight.MaxCondition = 50000;
+				RecruitsNecklaceofMight.Durability = 50000;
 				RecruitsNecklaceofMight.MaxDurability = 50000;
 
 
@@ -114,7 +118,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsNecklaceofInsight.Object_Type = (int)eObjectType.Magical;
 				RecruitsNecklaceofInsight.Item_Type = (int)eEquipmentItems.NECK;
 				RecruitsNecklaceofInsight.Id_nb = "recruits_necklace_of_insight";
-				RecruitsNecklaceofInsight.Price = Money.GetMoney(0,0,0,2,40);
+				RecruitsNecklaceofInsight.Gold = 0;
+				RecruitsNecklaceofInsight.Silver = 2;
+				RecruitsNecklaceofInsight.Copper = 40;
 				RecruitsNecklaceofInsight.IsPickable = false;
 				RecruitsNecklaceofInsight.IsDropable = true; // can be sold to merchand
 
@@ -153,7 +159,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsNecklaceofFaith.Object_Type = (int)eObjectType.Magical;
 				RecruitsNecklaceofFaith.Item_Type = (int)eEquipmentItems.NECK;
 				RecruitsNecklaceofFaith.Id_nb = "recruits_necklace_of_faith";
-				RecruitsNecklaceofFaith.Price = Money.GetMoney(0,0,0,2,40);
+				RecruitsNecklaceofFaith.Gold = 0;
+				RecruitsNecklaceofFaith.Silver = 2;
+				RecruitsNecklaceofFaith.Copper = 40;
 				RecruitsNecklaceofFaith.IsPickable = false;
 				RecruitsNecklaceofFaith.IsDropable = true; // can be sold to merchand
 

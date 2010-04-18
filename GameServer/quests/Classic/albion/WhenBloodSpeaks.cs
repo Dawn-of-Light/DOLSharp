@@ -88,7 +88,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsQuiltedPants.Object_Type = (int)eObjectType.Cloth;
 				RecruitsQuiltedPants.Item_Type = (int)eEquipmentItems.LEGS;
 				RecruitsQuiltedPants.Id_nb = "k109_recruits_quilted_pants";
-				RecruitsQuiltedPants.Price = Money.GetMoney(0,0,0,0,40);
+				RecruitsQuiltedPants.Gold = 0;
+				RecruitsQuiltedPants.Silver = 0;
+				RecruitsQuiltedPants.Copper = 40;
 				RecruitsQuiltedPants.IsPickable = true;
 				RecruitsQuiltedPants.IsDropable = false; // can't be sold to merchand
 
@@ -114,6 +116,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsQuiltedPants.Durability = 50000;
 				RecruitsQuiltedPants.MaxDurability = 50000;
 
+
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
@@ -136,7 +139,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsLeatherLeggings.Object_Type = (int)eObjectType.Leather;
 				RecruitsLeatherLeggings.Item_Type = (int)eEquipmentItems.LEGS;
 				RecruitsLeatherLeggings.Id_nb = "k109_recruits_leather_leggings";
-				RecruitsLeatherLeggings.Price = Money.GetMoney(0,0,0,0,40);
+				RecruitsLeatherLeggings.Gold = 0;
+				RecruitsLeatherLeggings.Silver = 0;
+				RecruitsLeatherLeggings.Copper = 40;
 				RecruitsLeatherLeggings.IsPickable = true;
 				RecruitsLeatherLeggings.IsDropable = false; // can't be sold to merchand
 
@@ -186,7 +191,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsStuddedLegs.Object_Type = (int)eObjectType.Studded;
 				RecruitsStuddedLegs.Item_Type = (int)eEquipmentItems.LEGS;
 				RecruitsStuddedLegs.Id_nb = "k109_recruits_studded_legs";
-				RecruitsStuddedLegs.Price = Money.GetMoney(0,0,0,0,40);
+				RecruitsStuddedLegs.Gold = 0;
+				RecruitsStuddedLegs.Silver = 0;
+				RecruitsStuddedLegs.Copper = 40;
 				RecruitsStuddedLegs.IsPickable = true;
 				RecruitsStuddedLegs.IsDropable = false; // can't be sold to merchand
 

@@ -261,8 +261,8 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineItems
 
-			ticketToLudlow = CreateTicketTo("Ludlow", "hs_northcamelotgates_ludlow");
-			ticketToBombard = CreateTicketTo("North Camelot Gates", "hs_ludlow_northcamelotgates");
+			ticketToLudlow = CreateTicketTo("ticket to Ludlow", "hs_northcamelotgates_ludlow");
+			ticketToBombard = CreateTicketTo("ticket to North Camelot Gates", "hs_ludlow_northcamelotgates");
 
 
 			sackOfSupplies = GameServer.Database.FindObjectByKey<ItemTemplate>("sack_of_supplies");
@@ -329,7 +329,9 @@ namespace DOL.GS.Quests.Albion
 				recruitsCloak.Object_Type = (int) eObjectType.Cloth;
 				recruitsCloak.Item_Type = (int) eEquipmentItems.CLOAK;
 				recruitsCloak.Id_nb = "recruits_cloak";
-				recruitsCloak.Price = Money.GetMoney(0,0,0,1,0);
+				recruitsCloak.Gold = 0;
+				recruitsCloak.Silver = 1;
+				recruitsCloak.Copper = 0;
 				recruitsCloak.IsPickable = true;
 				recruitsCloak.IsDropable = true;
 				recruitsCloak.Color = 36;

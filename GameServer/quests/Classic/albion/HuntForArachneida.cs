@@ -251,7 +251,9 @@ namespace DOL.GS.Quests.Albion
 				spiderSilkenRobe.Object_Type = (int) eObjectType.Cloth;
 				spiderSilkenRobe.Item_Type = (int) eEquipmentItems.TORSO;
 				spiderSilkenRobe.Id_nb = "spider_silken_robe";
-				spiderSilkenRobe.Price = Money.GetMoney(0,0,0,8,3);
+				spiderSilkenRobe.Gold = 0;
+				spiderSilkenRobe.Silver = 8;
+				spiderSilkenRobe.Copper = 3;
 				spiderSilkenRobe.IsPickable = true;
 				spiderSilkenRobe.IsDropable = true;
 				//spiderSilkenRobe.Color = 44;
@@ -297,7 +299,9 @@ namespace DOL.GS.Quests.Albion
 				ringedSpiderChitinTunic.Object_Type = (int) eObjectType.Chain;
 				ringedSpiderChitinTunic.Item_Type = (int) eEquipmentItems.TORSO;
 				ringedSpiderChitinTunic.Id_nb = "ringed_spider_chitin_tunic";
-				ringedSpiderChitinTunic.Price = Money.GetMoney(0,0,0,9,3);
+				ringedSpiderChitinTunic.Gold = 0;
+				ringedSpiderChitinTunic.Silver = 9;
+				ringedSpiderChitinTunic.Copper = 3;
 				ringedSpiderChitinTunic.IsPickable = true;
 				ringedSpiderChitinTunic.IsDropable = true;
 
@@ -343,7 +347,9 @@ namespace DOL.GS.Quests.Albion
 				studdedSpiderEyeVest.Object_Type = (int) eObjectType.Studded;
 				studdedSpiderEyeVest.Item_Type = (int) eEquipmentItems.TORSO;
 				studdedSpiderEyeVest.Id_nb = "studded_spider_eye_vest";
-				studdedSpiderEyeVest.Price = Money.GetMoney(0,0,0,9,3);
+				studdedSpiderEyeVest.Gold = 0;
+				studdedSpiderEyeVest.Silver = 9;
+				studdedSpiderEyeVest.Copper = 3;
 				studdedSpiderEyeVest.IsPickable = true;
 				studdedSpiderEyeVest.IsDropable = true;
 
@@ -388,7 +394,9 @@ namespace DOL.GS.Quests.Albion
 				spiderEmblazonedTunic.Object_Type = (int) eObjectType.Leather;
 				spiderEmblazonedTunic.Item_Type = (int) eEquipmentItems.TORSO;
 				spiderEmblazonedTunic.Id_nb = "spider_emblazoned_tunic";
-				spiderEmblazonedTunic.Price = Money.GetMoney(0,0,0,9,3);
+				spiderEmblazonedTunic.Gold = 0;
+				spiderEmblazonedTunic.Silver = 9;
+				spiderEmblazonedTunic.Copper = 3;
 				spiderEmblazonedTunic.IsPickable = true;
 				spiderEmblazonedTunic.IsDropable = true;
 
@@ -434,7 +442,9 @@ namespace DOL.GS.Quests.Albion
 				embossedSpiderTunic.Object_Type = (int) eObjectType.Leather;
 				embossedSpiderTunic.Item_Type = (int) eEquipmentItems.TORSO;
 				embossedSpiderTunic.Id_nb = "embossed_spider_tunic";
-				embossedSpiderTunic.Price = Money.GetMoney(0,0,0,9,3);
+				embossedSpiderTunic.Gold = 0;
+				embossedSpiderTunic.Silver = 9;
+				embossedSpiderTunic.Copper = 3;
 				embossedSpiderTunic.IsPickable = true;
 				embossedSpiderTunic.IsDropable = true;
 

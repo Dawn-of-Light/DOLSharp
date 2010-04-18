@@ -88,7 +88,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsQuiltedVest.Object_Type = (int)eObjectType.Cloth;
 				RecruitsQuiltedVest.Item_Type = (int)eEquipmentItems.TORSO;
 				RecruitsQuiltedVest.Id_nb = "k109_recruits_quilted_vest";
-				RecruitsQuiltedVest.Price = Money.GetMoney(0,0,0,0,40);
+				RecruitsQuiltedVest.Gold = 0;
+				RecruitsQuiltedVest.Silver = 0;
+				RecruitsQuiltedVest.Copper = 40;
 				RecruitsQuiltedVest.IsPickable = true;
 				RecruitsQuiltedVest.IsDropable = true; // can't be sold to merchand
 
@@ -132,7 +134,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsLeatherJerkin.Object_Type = (int)eObjectType.Leather;
 				RecruitsLeatherJerkin.Item_Type = (int)eEquipmentItems.TORSO;
 				RecruitsLeatherJerkin.Id_nb = "k109_recruits_leather_jerkin";
-				RecruitsLeatherJerkin.Price = Money.GetMoney(0,0,0,0,40);
+				RecruitsLeatherJerkin.Gold = 0;
+				RecruitsLeatherJerkin.Silver = 0;
+				RecruitsLeatherJerkin.Copper = 40;
 				RecruitsLeatherJerkin.IsPickable = true;
 				RecruitsLeatherJerkin.IsDropable = true; // can't be sold to merchand
 
@@ -176,7 +180,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsStuddedVest.Object_Type = (int)eObjectType.Studded;
 				RecruitsStuddedVest.Item_Type = (int)eEquipmentItems.TORSO;
 				RecruitsStuddedVest.Id_nb = "k109_recruits_studded_vest";
-				RecruitsStuddedVest.Price = Money.GetMoney(0,0,0,0,40);
+				RecruitsStuddedVest.Gold = 0;
+				RecruitsStuddedVest.Silver = 0;
+				RecruitsStuddedVest.Copper = 40;
 				RecruitsStuddedVest.IsPickable = true;
 				RecruitsStuddedVest.IsDropable = true; // can't be sold to merchand
 
