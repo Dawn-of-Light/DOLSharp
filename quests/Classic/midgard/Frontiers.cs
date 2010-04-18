@@ -246,8 +246,8 @@ namespace DOL.GS.Quests.Midgard
             Point2D point = idora.GetPointFromHeading( idora.Heading, 30 );
 			locationIdora = new GameLocation(idora.CurrentZone.Description, idora.CurrentRegionID, point.X, point.Y, idora.Z);
 
-			ticketToSvasudFaste = CreateTicketTo("ticket to Svasud Faste", "hs_mularn_svasudfaste");
-			ticketToMularn = CreateTicketTo("ticket to Mularn", "hs_svasudfaste_mularn");
+			ticketToSvasudFaste = CreateTicketTo("Svasud Faste", "hs_mularn_svasudfaste");
+			ticketToMularn = CreateTicketTo("Mularn", "hs_svasudfaste_mularn");
 
 			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Griffin Handler Njiedi", eRealm.Midgard, typeof (GameStableMaster));
 			if (npcs.Length == 0)
@@ -488,9 +488,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsLegs.Object_Type = (int) eObjectType.Studded;
 				recruitsLegs.Item_Type = (int) eEquipmentItems.LEGS;
 				recruitsLegs.Id_nb = "recruits_studded_legs_mid";
-				recruitsLegs.Gold = 0;
-				recruitsLegs.Silver = 10;
-				recruitsLegs.Copper = 0;
+				recruitsLegs.Price = Money.GetMoney(0,0,0,10,0);
 				recruitsLegs.IsPickable = true;
 				recruitsLegs.IsDropable = true;
 				recruitsLegs.Color = 14; // blue leather
@@ -539,9 +537,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsPants.Object_Type = (int) eObjectType.Cloth;
 				recruitsPants.Item_Type = (int) eEquipmentItems.LEGS;
 				recruitsPants.Id_nb = "recruits_quilted_pants";
-				recruitsPants.Gold = 0;
-				recruitsPants.Silver = 10;
-				recruitsPants.Copper = 0;
+				recruitsPants.Price = Money.GetMoney(0,0,0,10,0);
 				recruitsPants.IsPickable = true;
 				recruitsPants.IsDropable = true;
 				recruitsPants.Color = 36;
