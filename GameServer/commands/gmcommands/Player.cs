@@ -33,6 +33,7 @@ namespace DOL.GS.Commands
 		"/player name <newName>",
 		"/player lastname <change|reset> <newLastName>",
 		"/player level <newLevel>",
+		"/player checkspec - Check the spec points for this player and do a full respec if incorrect regardless of priv level",
 		"/player realm <newRealm>",
 		"/player inventory [wear|bag|vault|house|cons]",
 		"/player <rps|bps|xp|xpa|clxp> <amount>",
@@ -65,7 +66,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			switch (args[1])
+			switch (args[1].ToLower())
 			{
 					#region articredit
 				case "articredit":
@@ -200,8 +201,15 @@ namespace DOL.GS.Commands
 								}
 							}
 
+							bool specPointsOk = player.CheckSpecPoints(false);
+
 							client.Out.SendMessage("You changed " + player.Name + "'s level successfully to " + newLevel.ToString() + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your level to " + newLevel.ToString() + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							if (specPointsOk == false)
+							{
+								client.Out.SendMessage("Spec points were not correct, forcing a respec all.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage("Your spec points were not correct so a full respec has been performed.  Please visit a trainer to respec.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							}
 							player.Out.SendUpdatePlayer();
 							player.Out.SendUpdatePoints();
 							player.UpdatePlayerStatus();
@@ -1429,6 +1437,41 @@ namespace DOL.GS.Commands
 						player.Out.SendStatusUpdate();
 						player.Out.SendCharResistsUpdate();
 						client.Out.SendMessage(player.Name + " updated successfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					}
+					break;
+					#endregion
+					#region checkspec
+				case "checkspec":
+					{
+						GamePlayer player = client.Player.TargetObject as GamePlayer;
+
+						if (args.Length != 2)
+						{
+							DisplaySyntax(client);
+							return;
+						}
+
+						if (player == null)
+							player = client.Player;
+
+						bool specPointsOk = player.CheckSpecPoints(true);
+
+						if (specPointsOk)
+						{
+							client.Out.SendMessage(player.Name + " spec points ok.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						}
+						else
+						{
+							client.Out.SendMessage(player.Name + " spec points incorrect, doing a forced full respec.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage("Your spec points were not correct so a full respec has been performed.  Please visit a trainer to respec.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						}
+
+						player.Out.SendUpdatePlayer();
+						player.Out.SendCharStatsUpdate();
+						player.Out.SendUpdatePoints();
+						player.Out.SendUpdateMaxSpeed();
+						player.Out.SendStatusUpdate();
+						player.Out.SendCharResistsUpdate();
 					}
 					break;
 					#endregion

@@ -75,7 +75,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Char spec points checked on load
 		/// </summary>
-		protected bool SpecPointsOk = true;
+		protected bool m_specPointsOk = true;
 		/// <summary>
 		/// Has this player entered the game, will be
 		/// true after the first time the char enters
@@ -9274,10 +9274,10 @@ namespace DOL.GS
 			UpdateEquipmentAppearance();
 
 			// display message
-			if (SpecPointsOk == false)
+			if (m_specPointsOk == false)
 			{
 				Out.SendMessage("Your Specs points total was incorrect. Now corrected, please train again.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				SpecPointsOk = true;
+				m_specPointsOk = true;
 			}
 
 			//Dinberg, instance change.
@@ -11612,40 +11612,7 @@ namespace DOL.GS
 			LoadSkillsFromCharacter();
 			LoadCraftingSkills();
 
-			# region SkillSpecialtypoints coherence check
-			// calc normal spec points for the level & classe
-			int allpoints = -1;
-			for (int i = 1; i <= Level; i++)
-			{
-				if (i <= 5) allpoints += i; //start levels
-				if (i > 5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
-				if (i > 40) allpoints += CharacterClass.SpecPointsMultiplier * (i - 1) / 20; //half levels
-			}
-			if (IsLevelSecondStage == true && Level != 50)
-				allpoints += CharacterClass.SpecPointsMultiplier * Level / 20; // add current half level
-
-			// calc spec points player have (autotrain is not anymore processed here - 1.87 livelike)
-			int mypoints = SkillSpecialtyPoints;
-			foreach (Specialization spec in GetSpecList())
-			{
-				mypoints += (spec.Level * (spec.Level + 1) - 2) / 2;
-				mypoints -= GetAutoTrainPoints(spec, 0);
-			}
-
-			// check if correct, if not respec. Not applicable to GMs
-			SpecPointsOk = true;
-			if (allpoints != mypoints)
-			{
-				log.WarnFormat("Spec points total for player {0} incorrect: {1} instead of {2}.", Name, mypoints, allpoints);
-				if (Client.Account.PrivLevel == 1)
-				{
-					mypoints = RespecAllLines();
-					SkillSpecialtyPoints = allpoints;
-					SpecPointsOk = false;
-				}
-			}
-
-			#endregion
+			m_specPointsOk = CheckSpecPoints(false);
 
 			//Load the quests for this player
 			var quests = GameServer.Database.SelectObjects<DBQuest>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
@@ -11709,6 +11676,43 @@ namespace DOL.GS
 			// check the account for the Muted flag
 			if (Client.Account.IsMuted)
 				IsMuted = true;
+		}
+
+
+		public bool CheckSpecPoints(bool forceCorrect)
+		{
+			int allpoints = -1;
+			for (int i = 1; i <= Level; i++)
+			{
+				if (i <= 5) allpoints += i; //start levels
+				if (i > 5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
+				if (i > 40) allpoints += CharacterClass.SpecPointsMultiplier * (i - 1) / 20; //half levels
+			}
+			if (IsLevelSecondStage == true && Level != 50)
+				allpoints += CharacterClass.SpecPointsMultiplier * Level / 20; // add current half level
+
+			// calc spec points player have (autotrain is not anymore processed here - 1.87 livelike)
+			int mypoints = SkillSpecialtyPoints;
+			foreach (Specialization spec in GetSpecList())
+			{
+				mypoints += (spec.Level * (spec.Level + 1) - 2) / 2;
+				mypoints -= GetAutoTrainPoints(spec, 0);
+			}
+
+			// check if correct, if not respec. Not applicable to GMs
+			bool specPointsOk = true;
+			if (allpoints != mypoints)
+			{
+				if (Client.Account.PrivLevel == 1 || forceCorrect)
+				{
+					log.WarnFormat("Spec points total for player {0} incorrect: {1} instead of {2}. Forcing respec.", Name, mypoints, allpoints);
+					mypoints = RespecAllLines();
+					SkillSpecialtyPoints = allpoints;
+					specPointsOk = false;
+				}
+			}
+
+			return specPointsOk;
 		}
 
 		/// <summary>
