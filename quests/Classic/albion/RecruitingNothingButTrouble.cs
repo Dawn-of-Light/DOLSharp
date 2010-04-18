@@ -88,9 +88,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsShortSword.Object_Type = (int)eObjectType.SlashingWeapon;
 				RecruitsShortSword.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
 				RecruitsShortSword.Id_nb = "k109_recruits_short_sword";
-				RecruitsShortSword.Gold = 0;
-				RecruitsShortSword.Silver = 0;
-				RecruitsShortSword.Copper = 0;
+				RecruitsShortSword.Price = 0;
 				RecruitsShortSword.IsPickable = true;
 				RecruitsShortSword.IsDropable = false;// can't be sold to merchand
 
@@ -137,9 +135,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsDirk.Object_Type = (int)eObjectType.ThrustWeapon;
 				RecruitsDirk.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
 				RecruitsDirk.Id_nb = "k109_recruits_dirk";
-				RecruitsDirk.Gold = 0;
-				RecruitsDirk.Silver = 0;
-				RecruitsDirk.Copper = 0;
+				RecruitsDirk.Price = 0;
 				RecruitsDirk.IsPickable = true;
 				RecruitsDirk.IsDropable = false;// can't be sold to merchand
 
@@ -186,9 +182,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsMace.Object_Type = (int)eObjectType.CrushingWeapon;
 				RecruitsMace.Item_Type = (int)eEquipmentItems.RIGHT_HAND;
 				RecruitsMace.Id_nb = "k109_recruits_mace";
-				RecruitsMace.Gold = 0;
-				RecruitsMace.Silver = 0;
-				RecruitsMace.Copper = 0;
+				RecruitsMace.Price = 0;
 				RecruitsMace.IsPickable = true;
 				RecruitsMace.IsDropable = false;// can't be sold to merchand
 
@@ -235,9 +229,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsStaff.Object_Type = (int)eObjectType.Staff;
 				RecruitsStaff.Item_Type = (int)eEquipmentItems.TWO_HANDED;
 				RecruitsStaff.Id_nb = "k109_recruits_staff";
-				RecruitsStaff.Gold = 0;
-				RecruitsStaff.Silver = 0;
-				RecruitsStaff.Copper = 0;
+				RecruitsStaff.Price = 0;
 				RecruitsStaff.IsPickable = true;
 				RecruitsStaff.IsDropable = false;// can't be sold to merchand
 
