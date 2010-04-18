@@ -266,8 +266,8 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineItems
 
-			ticketToHaggerfel = CreateTicketTo("Haggerfel", "hs_src_haggerfel");
-			ticketToVasudheim = CreateTicketTo("Vasudheim", "hs_src_vasudheim");
+			ticketToHaggerfel = CreateTicketTo("ticket to Haggerfel", "");
+			ticketToVasudheim = CreateTicketTo("ticket to Vasudheim", "");
 
 
 			sackOfSupplies = GameServer.Database.FindObjectByKey<ItemTemplate>("sack_of_supplies");
@@ -334,7 +334,9 @@ namespace DOL.GS.Quests.Midgard
 				recruitsCloak.Object_Type = (int) eObjectType.Cloth;
 				recruitsCloak.Item_Type = (int) eEquipmentItems.CLOAK;
 				recruitsCloak.Id_nb = "recruits_cloak_mid";
-				recruitsCloak.Price = Money.GetMoney(0,0,0,1,0);
+				recruitsCloak.Gold = 0;
+				recruitsCloak.Silver = 1;
+				recruitsCloak.Copper = 0;
 				recruitsCloak.IsPickable = true;
 				recruitsCloak.IsDropable = true;
 				recruitsCloak.Color = 44; // brown

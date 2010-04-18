@@ -88,7 +88,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsCloak.Object_Type = (int)eObjectType.Magical;
 				RecruitsCloak.Item_Type = (int)eEquipmentItems.CLOAK;
 				RecruitsCloak.Id_nb = "k109_recruits_cloak";
-				RecruitsCloak.Price = 0;
+				RecruitsCloak.Gold = 0;
+				RecruitsCloak.Silver = 0;
+				RecruitsCloak.Copper = 0;
 				RecruitsCloak.IsPickable = true;
 				RecruitsCloak.IsDropable = false; // can't be sold to merchand
 

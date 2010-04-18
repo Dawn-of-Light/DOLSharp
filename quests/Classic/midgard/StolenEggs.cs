@@ -305,7 +305,9 @@ namespace DOL.GS.Quests.Midgard
 				recruitsVest.Object_Type = (int) eObjectType.Studded;
 				recruitsVest.Item_Type = (int) eEquipmentItems.TORSO;
 				recruitsVest.Id_nb = "recruits_studded_vest_mid";
-				recruitsVest.Price = Money.GetMoney(0,0,0,9,0);
+				recruitsVest.Gold = 0;
+				recruitsVest.Silver = 9;
+				recruitsVest.Copper = 0;
 				recruitsVest.IsPickable = true;
 				recruitsVest.IsDropable = true;
 				recruitsVest.CanDropAsLoot = false;
@@ -354,7 +356,9 @@ namespace DOL.GS.Quests.Midgard
 				recruitsQuiltedVest.Object_Type = (int) eObjectType.Cloth;
 				recruitsQuiltedVest.Item_Type = (int) eEquipmentItems.TORSO;
 				recruitsQuiltedVest.Id_nb = "recruits_quilted_vest";
-				recruitsQuiltedVest.Price = Money.GetMoney(0,0,0,9,0);
+				recruitsQuiltedVest.Gold = 0;
+				recruitsQuiltedVest.Silver = 9;
+				recruitsQuiltedVest.Copper = 0;
 				recruitsQuiltedVest.IsPickable = true;
 				recruitsQuiltedVest.IsDropable = true;
 				recruitsQuiltedVest.Color = 36;

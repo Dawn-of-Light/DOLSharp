@@ -400,7 +400,9 @@ namespace DOL.GS.Quests.Albion
 				treviansHoodedCloak.Object_Type = (int) eObjectType.Cloth;
 				treviansHoodedCloak.Item_Type = (int) eEquipmentItems.CLOAK;
 				treviansHoodedCloak.Id_nb = "trevians_hooded_cloak";
-				treviansHoodedCloak.Price = 0;
+				treviansHoodedCloak.Gold = 0;
+				treviansHoodedCloak.Silver = 0;
+				treviansHoodedCloak.Copper = 0;
 				treviansHoodedCloak.IsPickable = false;
 				treviansHoodedCloak.IsDropable = false;
 				treviansHoodedCloak.Color = 44;
@@ -439,7 +441,9 @@ namespace DOL.GS.Quests.Albion
 				bootsOfRescuer.Item_Type = (int) eEquipmentItems.FEET;
 
 				bootsOfRescuer.Id_nb = "boots_of_rescuer_alb";
-				bootsOfRescuer.Price = 0;
+				bootsOfRescuer.Gold = 0;
+				bootsOfRescuer.Silver = 0;
+				bootsOfRescuer.Copper = 0;
 				bootsOfRescuer.IsPickable = true;
 				bootsOfRescuer.IsDropable = true;
 				bootsOfRescuer.Color = 49; // red metal
@@ -491,7 +495,9 @@ namespace DOL.GS.Quests.Albion
 				bootsOfBaneful.Object_Type = (int) eObjectType.Plate;
 				bootsOfBaneful.Item_Type = (int) eEquipmentItems.FEET;
 				bootsOfBaneful.Id_nb = "boots_of_baneful";
-				bootsOfBaneful.Price = 0;
+				bootsOfBaneful.Gold = 0;
+				bootsOfBaneful.Silver = 0;
+				bootsOfBaneful.Copper = 0;
 				bootsOfBaneful.IsPickable = true;
 				bootsOfBaneful.IsDropable = true;
 				bootsOfBaneful.Color = 49; // red metal
@@ -544,7 +550,9 @@ namespace DOL.GS.Quests.Albion
 				bootsOfProtector.Object_Type = (int) eObjectType.Plate;
 				bootsOfProtector.Item_Type = (int) eEquipmentItems.FEET;
 				bootsOfProtector.Id_nb = "boots_of_protector";
-				bootsOfProtector.Price = 0;
+				bootsOfProtector.Gold = 0;
+				bootsOfProtector.Silver = 0;
+				bootsOfProtector.Copper = 0;
 				bootsOfProtector.IsPickable = true;
 				bootsOfProtector.IsDropable = true;
 				bootsOfProtector.Color = 49; // red metal
@@ -596,7 +604,9 @@ namespace DOL.GS.Quests.Albion
 				bootsOfErudition.Object_Type = (int) eObjectType.Cloth;
 				bootsOfErudition.Item_Type = (int) eEquipmentItems.FEET;
 				bootsOfErudition.Id_nb = "boots_of_erudition";
-				bootsOfErudition.Price = 0;
+				bootsOfErudition.Gold = 0;
+				bootsOfErudition.Silver = 0;
+				bootsOfErudition.Copper = 0;
 				bootsOfErudition.IsPickable = true;
 				bootsOfErudition.IsDropable = true;
 				bootsOfErudition.Color = 27; // red cloth
@@ -644,7 +654,9 @@ namespace DOL.GS.Quests.Albion
 				bootsOfReverence.Object_Type = (int) eObjectType.Studded; // Studded
 				bootsOfReverence.Item_Type = (int) eEquipmentItems.FEET; // LAYER_FEET
 				bootsOfReverence.Id_nb = "boots_of_reverence";
-				bootsOfReverence.Price = 0;
+				bootsOfReverence.Gold = 0;
+				bootsOfReverence.Silver = 0;
+				bootsOfReverence.Copper = 0;
 				bootsOfReverence.IsPickable = true;
 				bootsOfReverence.IsDropable = true;
 				bootsOfReverence.Color = 9; // red leather
@@ -695,7 +707,9 @@ namespace DOL.GS.Quests.Albion
 				bootsOfShadow.Object_Type = (int) eObjectType.Leather; // Studded
 				bootsOfShadow.Item_Type = (int) eEquipmentItems.FEET; // LAYER_FEET
 				bootsOfShadow.Id_nb = "boots_of_shadow";
-				bootsOfShadow.Price = 0;
+				bootsOfShadow.Gold = 0;
+				bootsOfShadow.Silver = 0;
+				bootsOfShadow.Copper = 0;
 				bootsOfShadow.IsPickable = true;
 				bootsOfShadow.IsDropable = true;
 				bootsOfShadow.Color = 9; // red leather
@@ -746,7 +760,9 @@ namespace DOL.GS.Quests.Albion
 				bootsOfEvanescent.Object_Type = (int) eObjectType.Leather; // Studded
 				bootsOfEvanescent.Item_Type = (int) eEquipmentItems.FEET; // LAYER_FEET
 				bootsOfEvanescent.Id_nb = "boots_of_evanescent";
-				bootsOfEvanescent.Price = 0;
+				bootsOfEvanescent.Gold = 0;
+				bootsOfEvanescent.Silver = 0;
+				bootsOfEvanescent.Copper = 0;
 				bootsOfEvanescent.IsPickable = true;
 				bootsOfEvanescent.IsDropable = true;
 				bootsOfEvanescent.Color = 9; // red leather
@@ -797,7 +813,9 @@ namespace DOL.GS.Quests.Albion
 				bootsOfInfluence.Object_Type = (int) eObjectType.Studded; // Studded
 				bootsOfInfluence.Item_Type = (int) eEquipmentItems.FEET; // LAYER_FEET
 				bootsOfInfluence.Id_nb = "boots_of_influence";
-				bootsOfInfluence.Price = 0;
+				bootsOfInfluence.Gold = 0;
+				bootsOfInfluence.Silver = 0;
+				bootsOfInfluence.Copper = 0;
 				bootsOfInfluence.IsPickable = true;
 				bootsOfInfluence.IsDropable = true;
 				bootsOfInfluence.Color = 9; // red leather
@@ -845,7 +863,9 @@ namespace DOL.GS.Quests.Albion
 				bootsOfTheDevoted.Object_Type = (int) eObjectType.Leather; // Studded
 				bootsOfTheDevoted.Item_Type = (int) eEquipmentItems.FEET; // LAYER_FEET
 				bootsOfTheDevoted.Id_nb = "boots_of_the_devoted";
-				bootsOfTheDevoted.Price = 0;
+				bootsOfTheDevoted.Gold = 0;
+				bootsOfTheDevoted.Silver = 0;
+				bootsOfTheDevoted.Copper = 0;
 				bootsOfTheDevoted.IsPickable = true;
 				bootsOfTheDevoted.IsDropable = true;
 				bootsOfTheDevoted.Color = 9; // red leather
@@ -892,9 +912,12 @@ namespace DOL.GS.Quests.Albion
 				whistleReward.Object_Type = 41; // CLoth
 				//whistleReward.Item_Type = 26; // LAYER_CLOAK
 				whistleReward.Id_nb = "trevians_whistle";
-				whistleReward.Price = 0;
+				whistleReward.Gold = 0;
+				whistleReward.Silver = 0;
+				whistleReward.Copper = 0;
 				whistleReward.IsPickable = false;
 				whistleReward.IsDropable = false;
+
 
 				whistleReward.Quality = 100;
 				whistleReward.Condition = 1000;

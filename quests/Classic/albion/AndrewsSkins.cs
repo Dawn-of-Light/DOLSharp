@@ -278,7 +278,9 @@ namespace DOL.GS.Quests.Albion
 
 				bundleOfBearSkins.Object_Type = (int) eObjectType.GenericItem;
 				bundleOfBearSkins.Id_nb = "bundle_of_bear_skins";
-				bundleOfBearSkins.Price = 0;
+				bundleOfBearSkins.Gold = 0;
+				bundleOfBearSkins.Silver = 0;
+				bundleOfBearSkins.Copper = 0;
 				bundleOfBearSkins.IsPickable = false;
 				bundleOfBearSkins.IsDropable = false;
 				
@@ -310,7 +312,9 @@ namespace DOL.GS.Quests.Albion
 
 				spoolOfLeatherworkingThread.Object_Type = (int) eObjectType.GenericItem;
 				spoolOfLeatherworkingThread.Id_nb = "spool_of_leatherworking_thread";
-				spoolOfLeatherworkingThread.Price = 0;
+				spoolOfLeatherworkingThread.Gold = 0;
+				spoolOfLeatherworkingThread.Silver = 0;
+				spoolOfLeatherworkingThread.Copper = 0;
 				spoolOfLeatherworkingThread.IsPickable = false;
 				spoolOfLeatherworkingThread.IsDropable = false;
 
@@ -345,7 +349,9 @@ namespace DOL.GS.Quests.Albion
 				chokerOfTheBear.Item_Type = (int) eEquipmentItems.NECK;
 				chokerOfTheBear.Id_nb = "choker_of_the_bear";
 
-				chokerOfTheBear.Price = Money.GetMoney(0,0,0,0,30);
+				chokerOfTheBear.Gold = 0;
+				chokerOfTheBear.Silver = 0;
+				chokerOfTheBear.Copper = 30;
 				chokerOfTheBear.IsPickable = true;
 				chokerOfTheBear.IsDropable = true;
 

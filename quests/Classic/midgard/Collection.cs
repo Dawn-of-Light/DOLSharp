@@ -297,7 +297,9 @@ namespace DOL.GS.Quests.Midgard
 				recruitsArms.Object_Type = (int) eObjectType.Studded;
 				recruitsArms.Item_Type = (int) eEquipmentItems.ARMS;
 				recruitsArms.Id_nb = "recruits_studded_arms_mid";
-				recruitsArms.Price = Money.GetMoney(0,0,0,4,0);
+				recruitsArms.Gold = 0;
+				recruitsArms.Silver = 4;
+				recruitsArms.Copper = 0;
 				recruitsArms.IsPickable = true;
 				recruitsArms.IsDropable = true;
 				recruitsArms.Color = 36; // blue cloth
@@ -341,7 +343,9 @@ namespace DOL.GS.Quests.Midgard
 				recruitsSleeves.Object_Type = (int) eObjectType.Cloth;
 				recruitsSleeves.Item_Type = (int) eEquipmentItems.ARMS;
 				recruitsSleeves.Id_nb = "recruits_quilted_sleeves";
-				recruitsSleeves.Price = Money.GetMoney(0,0,0,4,0);
+				recruitsSleeves.Gold = 0;
+				recruitsSleeves.Silver = 4;
+				recruitsSleeves.Copper = 0;
 				recruitsSleeves.IsPickable = true;
 				recruitsSleeves.IsDropable = true;
 				recruitsSleeves.Color = 27; // red cloth

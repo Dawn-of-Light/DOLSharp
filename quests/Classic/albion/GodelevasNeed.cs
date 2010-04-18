@@ -200,7 +200,9 @@ namespace DOL.GS.Quests.Albion
 
 				woodenBucket.Object_Type = (int)eObjectType.GenericItem;
 				woodenBucket.Id_nb = "wooden_bucket";
-				woodenBucket.Price = 0;
+				woodenBucket.Gold = 0;
+				woodenBucket.Silver = 0;
+				woodenBucket.Copper = 0;
 				woodenBucket.IsPickable = false;
 				woodenBucket.IsDropable = false;
 
@@ -232,7 +234,9 @@ namespace DOL.GS.Quests.Albion
 
 				fullWoodenBucket.Object_Type = (int)eObjectType.GenericItem;
 				fullWoodenBucket.Id_nb = "full_wooden_bucket";
-				fullWoodenBucket.Price = 0;
+				fullWoodenBucket.Gold = 0;
+				fullWoodenBucket.Silver = 0;
+				fullWoodenBucket.Copper = 0;
 				fullWoodenBucket.IsPickable = false;
 				fullWoodenBucket.IsDropable = false;
 
@@ -266,7 +270,9 @@ namespace DOL.GS.Quests.Albion
 				reedBracer.Item_Type = (int)eEquipmentItems.L_BRACER;
 				reedBracer.Id_nb = "reed_bracer";
 
-				reedBracer.Price = Money.GetMoney(0,0,0,0,30);
+				reedBracer.Gold = 0;
+				reedBracer.Silver = 0;
+				reedBracer.Copper = 30;
 				reedBracer.IsPickable = true;
 				reedBracer.IsDropable = true;
 
