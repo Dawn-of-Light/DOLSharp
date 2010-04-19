@@ -51,7 +51,7 @@ namespace DOL.Tests
 			itemu.Id_nb = "tunik"+DateTime.Now.Ticks;
 			GameServer.Database.AddObject(itemu);
 			Assert.IsNotNull(itemu, "ItemUnique is created !");
-			itema = GameServer.Database.SelectObject<ItemTemplate>("id_nb= 'traitors_dagger_alb");
+			itema = GameServer.Database.SelectObject<ItemTemplate>("id_nb= 'traitors_dagger_hib");
 		}
 
 		/* Tests for items - 1/ IT 2/ IU 3/ Ghost
@@ -61,14 +61,6 @@ namespace DOL.Tests
 		 * 3) delete this invitem
 		 * 4) check inventory table
 		 * 5) check IT / IU tables
-		 * 
-		 * Tests for specific items: artefact, boats
-		 * 
-		 * 1) artefact creation
-		 * 
-		 * Tests for floor throw, blacksmith, repair
-		 * 
-		 * 1) the type given IT IU Ghost is not changed during the operation
 		 * 
 		 */
 		[Test] public void InventoryFromIT()
@@ -116,18 +108,6 @@ namespace DOL.Tests
 			Assert.IsNotNull(ii, "ii-g #1 : " + ii.Template.Id_nb + " created & added to " + ii.OwnerID);
 			var iicheck = GameServer.Database.FindObjectByKey<InventoryItem>(ii.ObjectId);
 			Assert.IsNull(iicheck, "ii-g #2 : not saved in db " + ii.Template.Id_nb + " to " + ii.OwnerID);
-		}
-		[Test] public void InventoryArtifact()
-		{
-			InventoryTestCreation();
-			Console.WriteLine("InventoryItem linked to an artifact: replace XP via bonuses");
-			
-			InventoryArtifact ia = new InventoryArtifact(itema);
-			Assert.IsNotNull(ia, "ia #1 : " + ia.Template.Id_nb + " created & added to " + ia.OwnerID);
-			player.Inventory.AddItem(eInventorySlot.RightHandWeapon, ia);
-			Assert.IsNotNull(ia, "ia #2 : " + ia.Template.Id_nb + " created & added to " + ia.OwnerID);
-			var iacheck = GameServer.Database.FindObjectByKey<InventoryItem>(ia.ObjectId);
-			Assert.IsNotNull(iacheck, "ia #3 : " + ia.OwnerID + " saved to db");			
 		}
 	}
 }

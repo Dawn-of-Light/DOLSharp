@@ -185,8 +185,7 @@ namespace DOL.Database
 			set { Dirty = true;m_charges1 = value; }
 		}
 		
-		protected int m_canUseAgainIn;		// can use again in, in seconds
-		[DataElement(AllowDbNull = true)]
+		private DateTime m_lastUsedDateTime;	// last used DT
 		public int CanUseAgainIn
 		{
 			get
@@ -218,8 +217,6 @@ namespace DOL.Database
 			get { return CanUseAgainIn; }
 			set { Dirty =true;m_cooldown = value; }
 		}
-		
-		private DateTime m_lastUsedDateTime;	// last used DT
 
 		[Relation(LocalField = "ITemplate_Id", RemoteField = "Id_nb", AutoLoad = true, AutoDelete=false)]
 		public ItemTemplate ITWrapper
@@ -326,7 +323,7 @@ namespace DOL.Database
 			m_condition = template.Condition;
 			m_durability = template.Durability;
 			m_emblem = template.Emblem;
-			m_canUseAgainIn = template.CanUseAgainIn;
+			m_cooldown = template.Cooldown;
 			m_charges = template.Charges;
 			m_charges1 = template.Charges1;
 			m_poisonCharges = template.PoisonCharges ;

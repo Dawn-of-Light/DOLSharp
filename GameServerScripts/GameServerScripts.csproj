@@ -253,8 +253,12 @@
     <Folder Include="quests\Albion\epic" />
     <Folder Include="quests\Examples and  Tutorials" />
     <Folder Include="quests\Examples and  Tutorials\Artifact encounter" />
+    <Folder Include="quests\Examples and  Tutorials\Artifact encounter" />
+    <Folder Include="quests\Examples and  Tutorials\Classic quest" />
     <Folder Include="quests\Examples and  Tutorials\Classic quest" />
     <Folder Include="quests\Examples and  Tutorials\MasterLevel encounter" />
+    <Folder Include="quests\Examples and  Tutorials\MasterLevel encounter" />
+    <Folder Include="quests\Examples and  Tutorials\Search quest" />
     <Folder Include="quests\Examples and  Tutorials\Search quest" />
     <Folder Include="quests\Hibernia" />
     <Folder Include="quests\Hibernia\epic" />
