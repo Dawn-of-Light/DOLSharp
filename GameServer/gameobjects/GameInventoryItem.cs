@@ -66,6 +66,25 @@ namespace DOL.GS
 			m_item.Template = item.Template ;
 		}
 
+
+		/// <summary>
+		/// Constructs a GameInventoryItem based on a Unique Item
+		/// </summary>
+		/// <param name="item">ItemUnique to put into this class</param>
+		public GameInventoryItem(ItemUnique itemUnique)
+			: this()
+		{
+			InventoryItem newItem = new InventoryItem(itemUnique);
+
+			m_item = newItem;
+			m_item.SlotPosition = 0;
+			m_item.OwnerID = null;
+			this.Level = (byte)newItem.Level;
+			this.Model = (ushort)newItem.Model;
+			this.Name = newItem.Name;
+			m_item.UTemplate_Id = newItem.Id_nb;
+		}
+
 		/// <summary>
 		/// Creates a new GameInventoryItem based on an
 		/// InventoryTemplateID. Will disappear after 3 minutes if
@@ -97,6 +116,24 @@ namespace DOL.GS
 
 			return CreateFromTemplate(template);
 		}
+
+
+		public static GameInventoryItem CreateUniqueFromTemplate(string templateID)
+		{
+			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
+
+			if (template == null)
+			{
+				if (log.IsWarnEnabled)
+					log.Warn("Item Creation: Template not found!\n" + Environment.StackTrace);
+				return null;
+			}
+
+			ItemUnique unique = new ItemUnique(template);
+
+			return CreateFromUnique(unique);
+		}
+
 
         #region PickUpTimer
         private RegionTimer m_pickup;
@@ -162,6 +199,24 @@ namespace DOL.GS
 			invItem.Level = (byte)template.Level;
 			invItem.Model = (ushort)template.Model;
 			invItem.Name = template.Name;
+
+			return invItem;
+		}
+
+		public static GameInventoryItem CreateFromUnique(ItemUnique unique)
+		{
+			if (unique == null)
+				return null;
+
+			GameInventoryItem invItem = new GameInventoryItem();
+
+			invItem.m_item = new InventoryItem(unique);
+			invItem.m_item.SlotPosition = 0;
+			invItem.m_item.OwnerID = null;
+
+			invItem.Level = (byte)unique.Level;
+			invItem.Model = (ushort)unique.Model;
+			invItem.Name = unique.Name;
 
 			return invItem;
 		}

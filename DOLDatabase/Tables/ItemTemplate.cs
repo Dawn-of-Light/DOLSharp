@@ -1099,7 +1099,6 @@ namespace DOL.Database
 			set
 			{
 				this.m_levelRequirement = value;
-				this.Dirty = true;
 			}
 		}
 
