@@ -28,860 +28,861 @@ using DOL.GS;
 using DOL.GS.ServerProperties;
 using log4net;
 
+
 namespace DOL.GS.PacketHandler.Client.v168
 {
-    [PacketHandlerAttribute(PacketHandlerType.TCP, 0x57 ^ 168, "Handles character creation requests")]
-    public class CharacterListUpdateRequestHandler : IPacketHandler
-    {
-        /// <summary>
-        /// Defines a logger for this class.
-        /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x57 ^ 168, "Handles character creation requests")]
+	public class CharacterListUpdateRequestHandler : IPacketHandler
+	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public int HandlePacket(GameClient client, GSPacketIn packet)
-        {
-            //DOLConsole.WriteLine("Character creation!\n");
-            string accountName = packet.ReadString(24);
-            if (!accountName.StartsWith(client.Account.Name))// TODO more correctly check, client send accountName as account-S, -N, -H (if it not fit in 20, then only account)
-            {
-                if (ServerProperties.Properties.BAN_HACKERS)
-                {
-                    DBBannedAccount b = new DBBannedAccount();
-                    b.Author = "SERVER";
-                    b.Ip = client.TcpEndpointAddress;
-                    b.Account = client.Account.Name;
-                    b.DateBan = DateTime.Now;
-                    b.Type = "B";
-                    b.Reason = String.Format("Autoban wrong Account '{0}'", GameServer.Database.Escape(accountName));
-                    GameServer.Database.AddObject(b);
-                    GameServer.Database.SaveObject(b);
-                    GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
-                }
+		public int HandlePacket(GameClient client, GSPacketIn packet)
+		{
+			//DOLConsole.WriteLine("Character creation!\n");
+			string accountName = packet.ReadString(24);
+			if (!accountName.StartsWith(client.Account.Name))// TODO more correctly check, client send accountName as account-S, -N, -H (if it not fit in 20, then only account)
+			{
+				if (ServerProperties.Properties.BAN_HACKERS)
+				{
+					DBBannedAccount b = new DBBannedAccount();
+					b.Author = "SERVER";
+					b.Ip = client.TcpEndpointAddress;
+					b.Account = client.Account.Name;
+					b.DateBan = DateTime.Now;
+					b.Type = "B";
+					b.Reason = String.Format("Autoban wrong Account '{0}'", GameServer.Database.Escape(accountName));
+					GameServer.Database.AddObject(b);
+					GameServer.Database.SaveObject(b);
+					GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+				}
 
-                client.Disconnect();
-                return 0;
-            }
+				client.Disconnect();
+				return 0;
+			}
 
-            int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
-            for (int i = 0; i < charsCount; i++)
-            {
-                string charname = packet.ReadString(24);
-                if (charname.Length == 0)
-                {
-                    //If the charname is empty, skip the other bytes
-                    packet.Skip(160);
-                    if (client.Version >= GameClient.eClientVersion.Version199)
-                    {
-                        // skip 4 bytes added in 1.99
-                        packet.Skip(4);
-                    }
-                }
-                else
-                {
-                    // Graveen: changed the following to allow GMs to have special chars in their names (_,-, etc..)
-                    Regex nameCheck = new Regex("^[A-Z][a-zA-Z]");
-                    if (charname.Length < 3 || !nameCheck.IsMatch(charname))
-                    {
-                        if (client.Account.PrivLevel == 1)
-                        {
-                            if (ServerProperties.Properties.BAN_HACKERS)
-                            {
-                                DBBannedAccount b = new DBBannedAccount();
-                                b.Author = "SERVER";
-                                b.Ip = client.TcpEndpointAddress;
-                                b.Account = client.Account.Name;
-                                b.DateBan = DateTime.Now;
-                                b.Type = "B";
-                                b.Reason = String.Format("Autoban bad CharName '{0}'", GameServer.Database.Escape(charname));
-                                GameServer.Database.AddObject(b);
-                                GameServer.Database.SaveObject(b);
-                                GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
-                            }
+			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
+			for (int i = 0; i < charsCount; i++)
+			{
+				string charname = packet.ReadString(24);
+				if (charname.Length == 0)
+				{
+					//If the charname is empty, skip the other bytes
+					packet.Skip(160);
+					if (client.Version >= GameClient.eClientVersion.Version199)
+					{
+						// skip 4 bytes added in 1.99
+						packet.Skip(4);
+					}
+				}
+				else
+				{
+					// Graveen: changed the following to allow GMs to have special chars in their names (_,-, etc..)
+					Regex nameCheck = new Regex("^[A-Z][a-zA-Z]");
+					if (charname.Length < 3 || !nameCheck.IsMatch(charname))
+					{
+						if (client.Account.PrivLevel == 1)
+						{
+							if (ServerProperties.Properties.BAN_HACKERS)
+							{
+								DBBannedAccount b = new DBBannedAccount();
+								b.Author = "SERVER";
+								b.Ip = client.TcpEndpointAddress;
+								b.Account = client.Account.Name;
+								b.DateBan = DateTime.Now;
+								b.Type = "B";
+								b.Reason = String.Format("Autoban bad CharName '{0}'", GameServer.Database.Escape(charname));
+								GameServer.Database.AddObject(b);
+								GameServer.Database.SaveObject(b);
+								GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+							}
 
-                            client.Disconnect();
-                            return 1;
-                        }
-                    }
+							client.Disconnect();
+							return 1;
+						}
+					}
 
-                    String select = String.Format("Name = '{0}'", GameServer.Database.Escape(charname));
-                    Character character = GameServer.Database.SelectObject<Character>(select);
-                    if (character != null)
-                    {
-                        if (character.AccountName != client.Account.Name)
-                        {
-                            if (Properties.BAN_HACKERS == true)
-                            {
-                                DBBannedAccount b = new DBBannedAccount();
-                                b.Author = "SERVER";
-                                b.Ip = client.TcpEndpointAddress;
-                                b.Account = client.Account.Name;
-                                b.DateBan = DateTime.Now;
-                                b.Type = "B";
-                                b.Reason = String.Format("Autoban CharName '{0}' on wrong Account '{1}'", GameServer.Database.Escape(charname), GameServer.Database.Escape(client.Account.Name));
-                                GameServer.Database.AddObject(b);
-                                GameServer.Database.SaveObject(b);
-                                GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
-                            }
+					String select = String.Format("Name = '{0}'", GameServer.Database.Escape(charname));
+					Character character = GameServer.Database.SelectObject<Character>(select);
+					if (character != null)
+					{
+						if (character.AccountName != client.Account.Name)
+						{
+							if (Properties.BAN_HACKERS == true)
+							{
+								DBBannedAccount b = new DBBannedAccount();
+								b.Author = "SERVER";
+								b.Ip = client.TcpEndpointAddress;
+								b.Account = client.Account.Name;
+								b.DateBan = DateTime.Now;
+								b.Type = "B";
+								b.Reason = String.Format("Autoban CharName '{0}' on wrong Account '{1}'", GameServer.Database.Escape(charname), GameServer.Database.Escape(client.Account.Name));
+								GameServer.Database.AddObject(b);
+								GameServer.Database.SaveObject(b);
+								GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+							}
 
-                            client.Disconnect();
-                            return 1;
-                        }
+							client.Disconnect();
+							return 1;
+						}
 
-                        // update old character
-                        byte customization = (byte)packet.ReadByte();
-                        int newModel = character.CurrentModel;
+						// update old character
+						byte customization = (byte)packet.ReadByte();
+						int newModel = character.CurrentModel;
 
-                        if (customization == 1 || customization == 2 || customization == 3)
-                        {
-                            bool flagChangedStats = false;
-                            character.EyeSize = (byte)packet.ReadByte();
-                            character.LipSize = (byte)packet.ReadByte();
-                            character.EyeColor = (byte)packet.ReadByte();
-                            character.HairColor = (byte)packet.ReadByte();
-                            character.FaceType = (byte)packet.ReadByte();
-                            character.HairStyle = (byte)packet.ReadByte();
-                            packet.Skip(3);
-                            character.MoodType = (byte)packet.ReadByte();
-                            packet.Skip(89); // Skip location string, race string, classe string, level ,class ,realm and startRaceGender
-                            newModel = packet.ReadShortLowEndian(); //read new model
-                            if (customization != 3 && client.Version >= GameClient.eClientVersion.Version189)
-                            {
-                                packet.Skip(6); // Region ID + character Internal ID
-                                int[] stats = new int[8];
-                                stats[0] = (byte)packet.ReadByte(); // Strength
-                                stats[2] = (byte)packet.ReadByte(); // Dexterity
-                                stats[1] = (byte)packet.ReadByte(); // Constitution
-                                stats[3] = (byte)packet.ReadByte(); // Quickness
-                                stats[4] = (byte)packet.ReadByte(); // Intelligence
-                                stats[5] = (byte)packet.ReadByte(); // Piety
-                                stats[6] = (byte)packet.ReadByte(); // Empathy
-                                stats[7] = (byte)packet.ReadByte(); // Charisma
-                                packet.Skip(43);// armor models/armor color/weapon models/active weapon slots/siZone
-                                if (client.Version >= GameClient.eClientVersion.Version199)
-                                {
-                                    // skip 4 bytes added in 1.99
-                                    packet.Skip(4);
-                                }
-                                byte newConstitution = (byte)packet.ReadByte();
-                                if (newConstitution > 0)
-                                    stats[1] = newConstitution;
-                                flagChangedStats |= stats[0] != character.Strength;
-                                flagChangedStats |= stats[1] != character.Constitution;
-                                flagChangedStats |= stats[2] != character.Dexterity;
-                                flagChangedStats |= stats[3] != character.Quickness;
-                                flagChangedStats |= stats[4] != character.Intelligence;
-                                flagChangedStats |= stats[5] != character.Piety;
-                                flagChangedStats |= stats[6] != character.Empathy;
-                                flagChangedStats |= stats[7] != character.Charisma;
-                                if (flagChangedStats)
-                                {
-                                    IClassSpec cl = ScriptMgr.FindClassSpec(character.Class);
+						if (customization == 1 || customization == 2 || customization == 3)
+						{
+							bool flagChangedStats = false;
+							character.EyeSize = (byte)packet.ReadByte();
+							character.LipSize = (byte)packet.ReadByte();
+							character.EyeColor = (byte)packet.ReadByte();
+							character.HairColor = (byte)packet.ReadByte();
+							character.FaceType = (byte)packet.ReadByte();
+							character.HairStyle = (byte)packet.ReadByte();
+							packet.Skip(3);
+							character.MoodType = (byte)packet.ReadByte();
+							packet.Skip(89); // Skip location string, race string, classe string, level ,class ,realm and startRaceGender
+							newModel = packet.ReadShortLowEndian(); //read new model
+							if (customization != 3 && client.Version >= GameClient.eClientVersion.Version189)
+							{
+								packet.Skip(6); // Region ID + character Internal ID
+								int[] stats = new int[8];
+								stats[0] = (byte)packet.ReadByte(); // Strength
+								stats[2] = (byte)packet.ReadByte(); // Dexterity
+								stats[1] = (byte)packet.ReadByte(); // Constitution
+								stats[3] = (byte)packet.ReadByte(); // Quickness
+								stats[4] = (byte)packet.ReadByte(); // Intelligence
+								stats[5] = (byte)packet.ReadByte(); // Piety
+								stats[6] = (byte)packet.ReadByte(); // Empathy
+								stats[7] = (byte)packet.ReadByte(); // Charisma
+								packet.Skip(43);// armor models/armor color/weapon models/active weapon slots/siZone
+								if (client.Version >= GameClient.eClientVersion.Version199)
+								{
+									// skip 4 bytes added in 1.99
+									packet.Skip(4);
+								}
+								byte newConstitution = (byte)packet.ReadByte();
+								if (newConstitution > 0)
+									stats[1] = newConstitution;
+								flagChangedStats |= stats[0] != character.Strength;
+								flagChangedStats |= stats[1] != character.Constitution;
+								flagChangedStats |= stats[2] != character.Dexterity;
+								flagChangedStats |= stats[3] != character.Quickness;
+								flagChangedStats |= stats[4] != character.Intelligence;
+								flagChangedStats |= stats[5] != character.Piety;
+								flagChangedStats |= stats[6] != character.Empathy;
+								flagChangedStats |= stats[7] != character.Charisma;
+								if (flagChangedStats)
+								{
+									IClassSpec cl = ScriptMgr.FindClassSpec(character.Class);
 
-                                    if (cl != null)
-                                    {
-                                        int points = 0;
-                                        int[] leveledStats = new int[8];
-                                        int[] raceStats = new int[8];
-                                        bool valid = true;
-                                        for (int j = 0; j < 8; j++)
-                                        {
-                                            eStat stat = (eStat)CheckCharacter.eStatIndex[j];
-                                            raceStats[j] = CheckCharacter.STARTING_STATS[character.Race][j];
-                                            for (int level = character.Level; level > 5; level--)
-                                            {
-                                                if (cl.PrimaryStat != eStat.UNDEFINED && cl.PrimaryStat == stat)
-                                                {
-                                                    leveledStats[j]++;
-                                                }
-                                                if (cl.SecondaryStat != eStat.UNDEFINED && cl.SecondaryStat == stat)
-                                                {
-                                                    if ((level - 6) % 2 == 0)
-                                                        leveledStats[j]++;
-                                                }
-                                                if (cl.TertiaryStat != eStat.UNDEFINED && cl.TertiaryStat == stat)
-                                                {
-                                                    if ((level - 6) % 3 == 0)
-                                                        leveledStats[j]++;
-                                                }
-                                            }
-                                            int result = stats[j] - leveledStats[j] - raceStats[j];
-                                            bool validBeginStat = result >= 0;
-                                            int point = result;
-                                            string pref = "";
-                                            if (cl.PrimaryStat != eStat.UNDEFINED && cl.PrimaryStat == stat)
-                                                pref = "1)";
-                                            if (cl.SecondaryStat != eStat.UNDEFINED && cl.SecondaryStat == stat)
-                                                pref = "2)";
-                                            if (cl.TertiaryStat != eStat.UNDEFINED && cl.TertiaryStat == stat)
-                                                pref = "3)";
-                                            point += Math.Max(0, result - 10); //two points used
-                                            point += Math.Max(0, result - 15); //three points used
-                                            log.Info(string.Format("{0,-2} {1,-3}:{2, 3} {3,3} {4,3} {5,3} {6,2} {7} {8}",
-                                                                   pref, (stat == eStat.STR) ? "STR" : stat.ToString(), stats[j], leveledStats[j], stats[j] - leveledStats[j], raceStats[j], result, point, (validBeginStat) ? "" : "Not Valid"));
-                                            points += point;
-                                            if (!validBeginStat)
-                                            {
-                                                valid = false;
-                                                if (client.Account.PrivLevel == 1)
-                                                {
-                                                    if (ServerProperties.Properties.BAN_HACKERS)
-                                                    {
-                                                        DBBannedAccount b = new DBBannedAccount();
-                                                        b.Author = "SERVER";
-                                                        b.Ip = client.TcpEndpointAddress;
-                                                        b.Account = client.Account.Name;
-                                                        b.DateBan = DateTime.Now;
-                                                        b.Type = "B";
-                                                        b.Reason = String.Format("Autoban Hack char update : Wrong {0} point:{1}", (stat == eStat.STR) ? "STR" : stat.ToString(), result);
-                                                        GameServer.Database.AddObject(b);
-                                                        GameServer.Database.SaveObject(b);
-                                                        GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
-                                                    }
+									if (cl != null)
+									{
+										int points = 0;
+										int[] leveledStats = new int[8];
+										int[] raceStats = new int[8];
+										bool valid = true;
+										for (int j = 0; j < 8; j++)
+										{
+											eStat stat = (eStat)CheckCharacter.eStatIndex[j];
+											raceStats[j] = CheckCharacter.STARTING_STATS[character.Race][j];
+											for (int level = character.Level; level > 5; level--)
+											{
+												if (cl.PrimaryStat != eStat.UNDEFINED && cl.PrimaryStat == stat)
+												{
+													leveledStats[j]++;
+												}
+												if (cl.SecondaryStat != eStat.UNDEFINED && cl.SecondaryStat == stat)
+												{
+													if ((level - 6) % 2 == 0)
+														leveledStats[j]++;
+												}
+												if (cl.TertiaryStat != eStat.UNDEFINED && cl.TertiaryStat == stat)
+												{
+													if ((level - 6) % 3 == 0)
+														leveledStats[j]++;
+												}
+											}
+											int result = stats[j] - leveledStats[j] - raceStats[j];
+											bool validBeginStat = result >= 0;
+											int point = result;
+											string pref = "";
+											if (cl.PrimaryStat != eStat.UNDEFINED && cl.PrimaryStat == stat)
+												pref = "1)";
+											if (cl.SecondaryStat != eStat.UNDEFINED && cl.SecondaryStat == stat)
+												pref = "2)";
+											if (cl.TertiaryStat != eStat.UNDEFINED && cl.TertiaryStat == stat)
+												pref = "3)";
+											point += Math.Max(0, result - 10); //two points used
+											point += Math.Max(0, result - 15); //three points used
+											log.Info(string.Format("{0,-2} {1,-3}:{2, 3} {3,3} {4,3} {5,3} {6,2} {7} {8}",
+											                       pref, (stat == eStat.STR) ? "STR" : stat.ToString(), stats[j], leveledStats[j], stats[j] - leveledStats[j], raceStats[j], result, point, (validBeginStat) ? "" : "Not Valid"));
+											points += point;
+											if (!validBeginStat)
+											{
+												valid = false;
+												if (client.Account.PrivLevel == 1)
+												{
+													if (ServerProperties.Properties.BAN_HACKERS)
+													{
+														DBBannedAccount b = new DBBannedAccount();
+														b.Author = "SERVER";
+														b.Ip = client.TcpEndpointAddress;
+														b.Account = client.Account.Name;
+														b.DateBan = DateTime.Now;
+														b.Type = "B";
+														b.Reason = String.Format("Autoban Hack char update : Wrong {0} point:{1}", (stat == eStat.STR) ? "STR" : stat.ToString(), result);
+														GameServer.Database.AddObject(b);
+														GameServer.Database.SaveObject(b);
+														GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+													}
 
-                                                    client.Disconnect();
-                                                    return 1;
-                                                }
-                                            }
-                                        }
-                                        // points will not be 30 if character is above level 1.
-                                        //if (points != 30)
-                                        //{
-                                        //    log.Warn("v189+ stat respec points used:" + points);
-                                        //    valid = false;
-                                        //    if (client.Account.PrivLevel == 1)
-                                        //    {
-                                        //        if( ServerProperties.Properties.BAN_HACKERS )
-                                        //        {
-                                        //            DBBannedAccount b = new DBBannedAccount();
-                                        //            b.Author = "SERVER";
-                                        //            b.Ip = client.TcpEndpointAddress;
-                                        //            b.Account = client.Account.Name;
-                                        //            b.DateBan = DateTime.Now;
-                                        //            b.Type = "B";
-                                        //            b.Reason = String.Format( "Autoban Hack char update : Wrong total points used: {0}", points );
-                                        //            GameServer.Database.AddObject( b );
-                                        //            GameServer.Database.SaveObject( b );
-                                        //            GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
-                                        //        }
+													client.Disconnect();
+													return 1;
+												}
+											}
+										}
+										// points will not be 30 if character is above level 1.
+										//if (points != 30)
+										//{
+										//    log.Warn("v189+ stat respec points used:" + points);
+										//    valid = false;
+										//    if (client.Account.PrivLevel == 1)
+										//    {
+										//        if( ServerProperties.Properties.BAN_HACKERS )
+										//        {
+										//            DBBannedAccount b = new DBBannedAccount();
+										//            b.Author = "SERVER";
+										//            b.Ip = client.TcpEndpointAddress;
+										//            b.Account = client.Account.Name;
+										//            b.DateBan = DateTime.Now;
+										//            b.Type = "B";
+										//            b.Reason = String.Format( "Autoban Hack char update : Wrong total points used: {0}", points );
+										//            GameServer.Database.AddObject( b );
+										//            GameServer.Database.SaveObject( b );
+										//            GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+										//        }
 
-                                        //        client.Disconnect();
-                                        //        return 1;
-                                        //    }
-                                        //}
-                                        if (valid)
-                                        {
-                                            character.Strength = (byte)stats[0];
-                                            character.Constitution = (byte)stats[1];
-                                            character.Dexterity = (byte)stats[2];
-                                            character.Quickness = (byte)stats[3];
-                                            character.Intelligence = (byte)stats[4];
-                                            character.Piety = (byte)stats[5];
-                                            character.Empathy = (byte)stats[6];
-                                            character.Charisma = (byte)stats[7];
-                                            //if (client.Player != null && character.Name == client.Player.Name && client.ActiveCharIndex != -1 && client.Account.Characters[client.ActiveCharIndex].Name == character.Name)
-                                            Character[] chars = client.Account.Characters;
-                                            for (int z = 0; z < chars.Length; z++)
-                                            {
-                                                if (chars[z].Name != character.Name) continue;
-                                                //log.Error(string.Format("found activePlayer:[{0}] {1} {2}", client.ActiveCharIndex, client.Player.Name, character.Name));
-                                                if (log.IsInfoEnabled)
-                                                    log.Info(String.Format("Character {0} updated in cache!\n", charname));
-                                                //client.Account.Characters = null;
-                                                if (client.Player != null)
-                                                {
-                                                    client.Player.PlayerCharacter.Strength = (byte)stats[0];
-                                                    client.Player.PlayerCharacter.Constitution = (byte)stats[1];
-                                                    client.Player.PlayerCharacter.Dexterity = (byte)stats[2];
-                                                    client.Player.PlayerCharacter.Quickness = (byte)stats[3];
-                                                    client.Player.PlayerCharacter.Intelligence = (byte)stats[4];
-                                                    client.Player.PlayerCharacter.Piety = (byte)stats[5];
-                                                    client.Player.PlayerCharacter.Empathy = (byte)stats[6];
-                                                    client.Player.PlayerCharacter.Charisma = (byte)stats[7];
-                                                }
-                                                client.Account.Characters[z].Strength = (byte)stats[0];
-                                                client.Account.Characters[z].Constitution = (byte)stats[1];
-                                                client.Account.Characters[z].Dexterity = (byte)stats[2];
-                                                client.Account.Characters[z].Quickness = (byte)stats[3];
-                                                client.Account.Characters[z].Intelligence = (byte)stats[4];
-                                                client.Account.Characters[z].Piety = (byte)stats[5];
-                                                client.Account.Characters[z].Empathy = (byte)stats[6];
-                                                client.Account.Characters[z].Charisma = (byte)stats[7];
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (log.IsErrorEnabled)
-                                            log.Error("No CharacterClass with ID " + character.Class + " found");
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                packet.Skip(58); // skip all other things
-                                if (client.Version >= GameClient.eClientVersion.Version199)
-                                {
-                                    // skip 4 bytes added in 1.99
-                                    packet.Skip(4);
-                                }
-                            }
-                            if (customization == 2) // change player customization
-                            {
-                                if (client.Account.PrivLevel == 1 && ((newModel >> 11) & 3) == 0) // Player size must be > 0 (from 1 to 3)
-                                {
-                                    DBBannedAccount b = new DBBannedAccount();
-                                    b.Author = "SERVER";
-                                    b.Ip = client.TcpEndpointAddress;
-                                    b.Account = client.Account.Name;
-                                    b.DateBan = DateTime.Now;
-                                    b.Type = "B";
-                                    b.Reason = String.Format("Autoban Hack char update : zero character size in model:{0}", newModel);
-                                    GameServer.Database.AddObject(b);
-                                    GameServer.Database.SaveObject(b);
-                                    GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
-                                    client.Disconnect();
-                                    return 1;
-                                }
-                                if ((ushort)newModel != character.CreationModel)
-                                {
-                                    //character.CreationModel = newModel;
-                                    character.CurrentModel = newModel;
-                                }
-                                character.CustomisationStep = 2; // disable config button
+										//        client.Disconnect();
+										//        return 1;
+										//    }
+										//}
+										if (valid)
+										{
+											character.Strength = (byte)stats[0];
+											character.Constitution = (byte)stats[1];
+											character.Dexterity = (byte)stats[2];
+											character.Quickness = (byte)stats[3];
+											character.Intelligence = (byte)stats[4];
+											character.Piety = (byte)stats[5];
+											character.Empathy = (byte)stats[6];
+											character.Charisma = (byte)stats[7];
+											//if (client.Player != null && character.Name == client.Player.Name && client.ActiveCharIndex != -1 && client.Account.Characters[client.ActiveCharIndex].Name == character.Name)
+											Character[] chars = client.Account.Characters;
+											for (int z = 0; z < chars.Length; z++)
+											{
+												if (chars[z].Name != character.Name) continue;
+												//log.Error(string.Format("found activePlayer:[{0}] {1} {2}", client.ActiveCharIndex, client.Player.Name, character.Name));
+												if (log.IsInfoEnabled)
+													log.Info(String.Format("Character {0} updated in cache!\n", charname));
+												//client.Account.Characters = null;
+												if (client.Player != null)
+												{
+													client.Player.PlayerCharacter.Strength = (byte)stats[0];
+													client.Player.PlayerCharacter.Constitution = (byte)stats[1];
+													client.Player.PlayerCharacter.Dexterity = (byte)stats[2];
+													client.Player.PlayerCharacter.Quickness = (byte)stats[3];
+													client.Player.PlayerCharacter.Intelligence = (byte)stats[4];
+													client.Player.PlayerCharacter.Piety = (byte)stats[5];
+													client.Player.PlayerCharacter.Empathy = (byte)stats[6];
+													client.Player.PlayerCharacter.Charisma = (byte)stats[7];
+												}
+												client.Account.Characters[z].Strength = (byte)stats[0];
+												client.Account.Characters[z].Constitution = (byte)stats[1];
+												client.Account.Characters[z].Dexterity = (byte)stats[2];
+												client.Account.Characters[z].Quickness = (byte)stats[3];
+												client.Account.Characters[z].Intelligence = (byte)stats[4];
+												client.Account.Characters[z].Piety = (byte)stats[5];
+												client.Account.Characters[z].Empathy = (byte)stats[6];
+												client.Account.Characters[z].Charisma = (byte)stats[7];
+											}
+										}
+									}
+									else
+									{
+										if (log.IsErrorEnabled)
+											log.Error("No CharacterClass with ID " + character.Class + " found");
+									}
+								}
+							}
+							else
+							{
+								packet.Skip(58); // skip all other things
+								if (client.Version >= GameClient.eClientVersion.Version199)
+								{
+									// skip 4 bytes added in 1.99
+									packet.Skip(4);
+								}
+							}
+							if (customization == 2) // change player customization
+							{
+								if (client.Account.PrivLevel == 1 && ((newModel >> 11) & 3) == 0) // Player size must be > 0 (from 1 to 3)
+								{
+									DBBannedAccount b = new DBBannedAccount();
+									b.Author = "SERVER";
+									b.Ip = client.TcpEndpointAddress;
+									b.Account = client.Account.Name;
+									b.DateBan = DateTime.Now;
+									b.Type = "B";
+									b.Reason = String.Format("Autoban Hack char update : zero character size in model:{0}", newModel);
+									GameServer.Database.AddObject(b);
+									GameServer.Database.SaveObject(b);
+									GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+									client.Disconnect();
+									return 1;
+								}
+								if ((ushort)newModel != character.CreationModel)
+								{
+									//character.CreationModel = newModel;
+									character.CurrentModel = newModel;
+								}
+								character.CustomisationStep = 2; // disable config button
 
-                                GameServer.Database.SaveObject(character);
+								GameServer.Database.SaveObject(character);
 
-                                if (log.IsInfoEnabled)
-                                    log.Info(String.Format("Character {0} face proprieties configured by account {1}!\n", charname, client.Account.Name));
-                            }
-                            //it's possible ?
-                            else if (customization == 3) //auto config
-                            {
-                                character.CustomisationStep = 3; // enable config button to player
+								if (log.IsInfoEnabled)
+									log.Info(String.Format("Character {0} face proprieties configured by account {1}!\n", charname, client.Account.Name));
+							}
+							//it's possible ?
+							else if (customization == 3) //auto config
+							{
+								character.CustomisationStep = 3; // enable config button to player
 
-                                GameServer.Database.SaveObject(character);
+								GameServer.Database.SaveObject(character);
 
-                                if (log.IsInfoEnabled)
-                                    log.Info(String.Format("Character {0} face proprieties auto updated!\n", charname));
-                            }
-                            else if (customization == 1 && flagChangedStats) //changed stat only for 1.89+
-                            {
-                                GameServer.Database.SaveObject(character);
+								if (log.IsInfoEnabled)
+									log.Info(String.Format("Character {0} face proprieties auto updated!\n", charname));
+							}
+							else if (customization == 1 && flagChangedStats) //changed stat only for 1.89+
+							{
+								GameServer.Database.SaveObject(character);
 
-                                if (log.IsInfoEnabled)
-                                    log.Info(String.Format("Character {0} stat updated!\n", charname));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // create new character
+								if (log.IsInfoEnabled)
+									log.Info(String.Format("Character {0} stat updated!\n", charname));
+							}
+						}
+					}
+					else
+					{
+						// create new character
 
-                        Account account = client.Account;
-                        Character ch = new Character();
-                        ch.AccountName = account.Name;
-                        ch.Name = charname;
+						Account account = client.Account;
+						Character ch = new Character();
+						ch.AccountName = account.Name;
+						ch.Name = charname;
 
-                        if (packet.ReadByte() == 0x01)
-                        {
-                            ch.EyeSize = (byte)packet.ReadByte();
-                            ch.LipSize = (byte)packet.ReadByte();
-                            ch.EyeColor = (byte)packet.ReadByte();
-                            ch.HairColor = (byte)packet.ReadByte();
-                            ch.FaceType = (byte)packet.ReadByte();
-                            ch.HairStyle = (byte)packet.ReadByte();
-                            packet.Skip(3);
-                            ch.MoodType = (byte)packet.ReadByte();
+						if (packet.ReadByte() == 0x01)
+						{
+							ch.EyeSize = (byte)packet.ReadByte();
+							ch.LipSize = (byte)packet.ReadByte();
+							ch.EyeColor = (byte)packet.ReadByte();
+							ch.HairColor = (byte)packet.ReadByte();
+							ch.FaceType = (byte)packet.ReadByte();
+							ch.HairStyle = (byte)packet.ReadByte();
+							packet.Skip(3);
+							ch.MoodType = (byte)packet.ReadByte();
 
-                            ch.CustomisationStep = 2; // disable config button
+							ch.CustomisationStep = 2; // disable config button
 
-                            packet.Skip(13);
-                        }
-                        else
-                        {
-                            packet.Skip(23);
-                        }
+							packet.Skip(13);
+						}
+						else
+						{
+							packet.Skip(23);
+						}
 
-                        packet.Skip(24); //Location String
-                        ch.LastName = "";
-                        ch.GuildID = "";
-                        packet.Skip(24); //Skip class name
-                        packet.Skip(24); //Skip race name
-                        ch.Level = packet.ReadByte(); //not safe!
-                        ch.Level = 1;
-                        ch.Class = packet.ReadByte();
-                        if (ServerProperties.Properties.START_AS_BASE_CLASS)
-                        {
-                            ch.Class = RevertClass(ch);
-                        }
-                        ch.Realm = packet.ReadByte();
+						packet.Skip(24); //Location String
+						ch.LastName = "";
+						ch.GuildID = "";
+						packet.Skip(24); //Skip class name
+						packet.Skip(24); //Skip race name
+						ch.Level = packet.ReadByte(); //not safe!
+						ch.Level = 1;
+						ch.Class = packet.ReadByte();
+						if (ServerProperties.Properties.START_AS_BASE_CLASS)
+						{
+							ch.Class = RevertClass(ch);
+						}
+						ch.Realm = packet.ReadByte();
 
-                        if (log.IsDebugEnabled)
-                            log.Debug("Creation " + client.Version + " character, class:" + ch.Class + ", realm:" + ch.Realm);
+						if (log.IsDebugEnabled)
+							log.Debug("Creation " + client.Version + " character, class:" + ch.Class + ", realm:" + ch.Realm);
 
-                        // Is class disabled ?
-                        int occurences = 0;
-                        List<string> disabled_classes = new List<string>(Properties.DISABLED_CLASSES.Split(';'));
-                        occurences = (from j in disabled_classes
-                                      where j == ch.Class.ToString()
-                                      select j).Count();
-                        if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
-                        {
-                            log.Debug("Client " + client.Account.Name + " tried to create a disabled classe: " + (eCharacterClass)ch.Class);
-                            client.Out.SendCharacterOverview((eRealm)ch.Realm);
-                            return 1;
-                        }
+						// Is class disabled ?
+						int occurences = 0;
+						List<string> disabled_classes = new List<string>(Properties.DISABLED_CLASSES.Split(';'));
+						occurences = (from j in disabled_classes
+						              where j == ch.Class.ToString()
+						              select j).Count();
+						if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
+						{
+							log.Debug("Client " + client.Account.Name + " tried to create a disabled classe: " + (eCharacterClass)ch.Class);
+							client.Out.SendCharacterOverview((eRealm)ch.Realm);
+							return 1;
+						}
 
-                        if (client.Version >= GameClient.eClientVersion.Version193)
-                            CheckCharacter.init_post193_tables();
-                        else
-                            CheckCharacter.init_pre193_tables();
+						if (client.Version >= GameClient.eClientVersion.Version193)
+							CheckCharacter.init_post193_tables();
+						else
+							CheckCharacter.init_pre193_tables();
 
-                        if (!Enum.IsDefined(typeof(eCharacterClass), (eCharacterClass)ch.Class))
-                        {
-                            log.Error(client.Account.Name + " tried to create a character with wrong class ID: " + ch.Class + ", realm:" + ch.Realm);
-                            if (ServerProperties.Properties.BAN_HACKERS)
-                            {
-                                DBBannedAccount b = new DBBannedAccount();
-                                b.Author = "SERVER";
-                                b.Ip = client.TcpEndpointAddress;
-                                b.Account = client.Account.Name;
-                                b.DateBan = DateTime.Now;
-                                b.Type = "B";
-                                b.Reason = string.Format("Autoban character create class: id:{0} realm:{1} name:{2} account:{3}", ch.Class, ch.Realm, ch.Name, account.Name);
-                                GameServer.Database.AddObject(b);
-                                GameServer.Database.SaveObject(b);
-                                GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
-                                client.Disconnect();
-                            }
-                            //client.Out.SendCharacterOverview((eRealm)ch.Realm);
-                            return 1;
-                        }
+						if (!Enum.IsDefined(typeof(eCharacterClass), (eCharacterClass)ch.Class))
+						{
+							log.Error(client.Account.Name + " tried to create a character with wrong class ID: " + ch.Class + ", realm:" + ch.Realm);
+							if (ServerProperties.Properties.BAN_HACKERS)
+							{
+								DBBannedAccount b = new DBBannedAccount();
+								b.Author = "SERVER";
+								b.Ip = client.TcpEndpointAddress;
+								b.Account = client.Account.Name;
+								b.DateBan = DateTime.Now;
+								b.Type = "B";
+								b.Reason = string.Format("Autoban character create class: id:{0} realm:{1} name:{2} account:{3}", ch.Class, ch.Realm, ch.Name, account.Name);
+								GameServer.Database.AddObject(b);
+								GameServer.Database.SaveObject(b);
+								GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+								client.Disconnect();
+							}
+							//client.Out.SendCharacterOverview((eRealm)ch.Realm);
+							return 1;
+						}
 
-                        ch.AccountSlot = i + ch.Realm * 100;
+						ch.AccountSlot = i + ch.Realm * 100;
 
-                        //The following byte contains
-                        //1bit=start location ... in SI you can choose ...
-                        //1bit=first race bit
-                        //1bit=unknown
-                        //1bit=gender (0=male, 1=female)
-                        //4bit=race
-                        byte startRaceGender = (byte)packet.ReadByte();
+						//The following byte contains
+						//1bit=start location ... in SI you can choose ...
+						//1bit=first race bit
+						//1bit=unknown
+						//1bit=gender (0=male, 1=female)
+						//4bit=race
+						byte startRaceGender = (byte)packet.ReadByte();
 
-                        ch.Race = (startRaceGender & 0x0F) + ((startRaceGender & 0x40) >> 2);
+						ch.Race = (startRaceGender & 0x0F) + ((startRaceGender & 0x40) >> 2);
 
-                        List<string> disabled_races = new List<string>(Properties.DISABLED_RACES.Split(';'));
-                        occurences = (from j in disabled_races
-                                      where j == ch.Race.ToString()
-                                      select j).Count();
-                        if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
-                        {
-                            log.Debug("Client " + client.Account.Name + " tried to create a disabled race: " + (eRace)ch.Race);
-                            client.Out.SendCharacterOverview((eRealm)ch.Realm);
-                            return 1;
-                        }
+						List<string> disabled_races = new List<string>(Properties.DISABLED_RACES.Split(';'));
+						occurences = (from j in disabled_races
+						              where j == ch.Race.ToString()
+						              select j).Count();
+						if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
+						{
+							log.Debug("Client " + client.Account.Name + " tried to create a disabled race: " + (eRace)ch.Race);
+							client.Out.SendCharacterOverview((eRealm)ch.Realm);
+							return 1;
+						}
 
-                        ch.Gender = ((startRaceGender >> 4) & 0x01);
-                        //DOLConsole.WriteLine("startRaceGender="+startRaceGender+"; Race="+ch.Race+"; Gender="+ch.Gender);
+						ch.Gender = ((startRaceGender >> 4) & 0x01);
+						//DOLConsole.WriteLine("startRaceGender="+startRaceGender+"; Race="+ch.Race+"; Gender="+ch.Gender);
 
-                        bool siStartLocation = ((startRaceGender >> 7) != 0);
+						bool siStartLocation = ((startRaceGender >> 7) != 0);
 
-                        ch.CreationModel = packet.ReadShortLowEndian();
-                        ch.CurrentModel = ch.CreationModel;
-                        ch.Region = packet.ReadByte();
-                        packet.Skip(1); //TODO second byte of region unused currently
-                        packet.Skip(4); //TODO Unknown Int / last used?
-                        ch.Strength = (byte)packet.ReadByte();
-                        ch.Dexterity = (byte)packet.ReadByte();
-                        ch.Constitution = (byte)packet.ReadByte();
-                        ch.Quickness = (byte)packet.ReadByte();
-                        ch.Intelligence = (byte)packet.ReadByte();
-                        ch.Piety = (byte)packet.ReadByte();
-                        ch.Empathy = (byte)packet.ReadByte();
-                        ch.Charisma = (byte)packet.ReadByte();
-                        packet.Skip(44); //TODO equipment
-                        if (client.Version >= GameClient.eClientVersion.Version199)
-                        {
-                            // skip 4 bytes added in 1.99
-                            packet.Skip(4);
-                        }
-                        // check if client tried to create invalid char
-                        if (!CheckCharacter.IsCharacterValid(ch))
-                        {
-                            if (log.IsWarnEnabled)
-                                log.Warn(ch.AccountName + " tried to create invalid character:" +
-                                         "\nchar name=" + ch.Name + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
-                                         "\nstr=" + ch.Strength + ", con=" + ch.Constitution + ", dex=" + ch.Dexterity + ", qui=" + ch.Quickness + ", int=" + ch.Intelligence + ", pie=" + ch.Piety + ", emp=" + ch.Empathy + ", chr=" + ch.Charisma);
+						ch.CreationModel = packet.ReadShortLowEndian();
+						ch.CurrentModel = ch.CreationModel;
+						ch.Region = packet.ReadByte();
+						packet.Skip(1); //TODO second byte of region unused currently
+						packet.Skip(4); //TODO Unknown Int / last used?
+						ch.Strength = (byte)packet.ReadByte();
+						ch.Dexterity = (byte)packet.ReadByte();
+						ch.Constitution = (byte)packet.ReadByte();
+						ch.Quickness = (byte)packet.ReadByte();
+						ch.Intelligence = (byte)packet.ReadByte();
+						ch.Piety = (byte)packet.ReadByte();
+						ch.Empathy = (byte)packet.ReadByte();
+						ch.Charisma = (byte)packet.ReadByte();
+						packet.Skip(44); //TODO equipment
+						if (client.Version >= GameClient.eClientVersion.Version199)
+						{
+							// skip 4 bytes added in 1.99
+							packet.Skip(4);
+						}
+						// check if client tried to create invalid char
+						if (!CheckCharacter.IsCharacterValid(ch))
+						{
+							if (log.IsWarnEnabled)
+								log.Warn(ch.AccountName + " tried to create invalid character:" +
+								         "\nchar name=" + ch.Name + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
+								         "\nstr=" + ch.Strength + ", con=" + ch.Constitution + ", dex=" + ch.Dexterity + ", qui=" + ch.Quickness + ", int=" + ch.Intelligence + ", pie=" + ch.Piety + ", emp=" + ch.Empathy + ", chr=" + ch.Charisma);
 
-                            if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
-                            else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
-                            return 1;
-                        }
+							if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
+							else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
+							return 1;
+						}
 
-                        ch.CreationDate = DateTime.Now;
+						ch.CreationDate = DateTime.Now;
 
-                        ch.Endurance = 100;
-                        ch.MaxEndurance = 100;
-                        ch.Concentration = 100;
-                        ch.MaxSpeed = GamePlayer.PLAYER_BASE_SPEED;
+						ch.Endurance = 100;
+						ch.MaxEndurance = 100;
+						ch.Concentration = 100;
+						ch.MaxSpeed = GamePlayer.PLAYER_BASE_SPEED;
 
-                        //if the server property for disable tutorial is set, we load in the classic starting locations
-                        if (ch.Region == 27 && ServerProperties.Properties.DISABLE_TUTORIAL)
-                        {
-                            switch (ch.Realm)
-                            {
-                                case 1: ch.Region = 1; break;
-                                case 2: ch.Region = 100; break;
-                                case 3: ch.Region = 200; break;
-                            }
-                        }
+						//if the server property for disable tutorial is set, we load in the classic starting locations
+						if (ch.Region == 27 && ServerProperties.Properties.DISABLE_TUTORIAL)
+						{
+							switch (ch.Realm)
+							{
+									case 1: ch.Region = 1; break;
+									case 2: ch.Region = 100; break;
+									case 3: ch.Region = 200; break;
+							}
+						}
 
 
 
-                        ch.Xpos = 505603;
-                        ch.Ypos = 494709;
-                        ch.Zpos = 2463;
-                        ch.Direction = 5947;
+						ch.Xpos = 505603;
+						ch.Ypos = 494709;
+						ch.Zpos = 2463;
+						ch.Direction = 5947;
 
-                        if (ch.Region == 51 && ch.Realm == 1)//Albion SI start point (I hope)
-                        {
-                            ch.Xpos = 526252;
-                            ch.Ypos = 542415;
-                            ch.Zpos = 3165;
-                            ch.Direction = 5286;
-                        }
-                        if (ch.Region != 51 && ch.Realm == 1)//Albion start point (Church outside Camelot/humberton)
-                        {
-                            ch.Xpos = 505603;
-                            ch.Ypos = 494709;
-                            ch.Zpos = 2463;
-                            ch.Direction = 5947;
-                            //ch.Region = 1;
-                            //DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
-                            //DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
-                        }
-                        if (ch.Region == 151 && ch.Realm == 2)//Midgard SI start point
-                        {
-                            ch.Xpos = 293720;
-                            ch.Ypos = 356408;
-                            ch.Zpos = 3488;
-                            ch.Direction = 6670;
-                        }
-                        if (ch.Region != 151 && ch.Realm == 2)//Midgard start point (Fort Atla)
-                        {
-                            ch.Xpos = 749103;
-                            ch.Ypos = 815835;
-                            ch.Zpos = 4408;
-                            ch.Direction = 7915;
-                            //ch.Region = 100;
-                            //DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
-                            //DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
-                        }
-                        if (ch.Region == 181 && ch.Realm == 3)//Hibernia SI start point
-                        {
-                            ch.Xpos = 426483;
-                            ch.Ypos = 440626;
-                            ch.Zpos = 5952;
-                            ch.Direction = 2403;
-                        }
-                        if (ch.Region != 181 && ch.Realm == 3)//Hibernia start point (Mag Mel)
-                        {
-                            ch.Xpos = 345900;
-                            ch.Ypos = 490867;
-                            ch.Zpos = 5200;
-                            ch.Direction = 4826;
-                            //ch.Region = 200;
-                            //DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
-                            //DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
-                        }
+						if (ch.Region == 51 && ch.Realm == 1)//Albion SI start point (I hope)
+						{
+							ch.Xpos = 526252;
+							ch.Ypos = 542415;
+							ch.Zpos = 3165;
+							ch.Direction = 5286;
+						}
+						if (ch.Region != 51 && ch.Realm == 1)//Albion start point (Church outside Camelot/humberton)
+						{
+							ch.Xpos = 505603;
+							ch.Ypos = 494709;
+							ch.Zpos = 2463;
+							ch.Direction = 5947;
+							//ch.Region = 1;
+							//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
+							//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
+						}
+						if (ch.Region == 151 && ch.Realm == 2)//Midgard SI start point
+						{
+							ch.Xpos = 293720;
+							ch.Ypos = 356408;
+							ch.Zpos = 3488;
+							ch.Direction = 6670;
+						}
+						if (ch.Region != 151 && ch.Realm == 2)//Midgard start point (Fort Atla)
+						{
+							ch.Xpos = 749103;
+							ch.Ypos = 815835;
+							ch.Zpos = 4408;
+							ch.Direction = 7915;
+							//ch.Region = 100;
+							//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
+							//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
+						}
+						if (ch.Region == 181 && ch.Realm == 3)//Hibernia SI start point
+						{
+							ch.Xpos = 426483;
+							ch.Ypos = 440626;
+							ch.Zpos = 5952;
+							ch.Direction = 2403;
+						}
+						if (ch.Region != 181 && ch.Realm == 3)//Hibernia start point (Mag Mel)
+						{
+							ch.Xpos = 345900;
+							ch.Ypos = 490867;
+							ch.Zpos = 5200;
+							ch.Direction = 4826;
+							//ch.Region = 200;
+							//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
+							//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
+						}
 
-                        // chars are bound on creation
-                        ch.BindRegion = ch.Region;
-                        ch.BindHeading = ch.Direction;
-                        ch.BindXpos = ch.Xpos;
-                        ch.BindYpos = ch.Ypos;
-                        ch.BindZpos = ch.Zpos;
+						// chars are bound on creation
+						ch.BindRegion = ch.Region;
+						ch.BindHeading = ch.Direction;
+						ch.BindXpos = ch.Xpos;
+						ch.BindYpos = ch.Ypos;
+						ch.BindZpos = ch.Zpos;
 
-                        if (account.PrivLevel == 1 && Properties.STARTING_GUILD)
-                        {
-                            switch (ch.Realm)
-                            {
-                                case 1:
-                                    switch (ServerProperties.Properties.SERV_LANGUAGE)
-                                    {
-                                        case "EN":
-                                            ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
-                                            break;
-                                        case "DE":
-                                            ch.GuildID = GuildMgr.GuildNameToGuildID("Klan Cotswold");
-                                            break;
-                                        default:
-                                            ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
-                                            break;
-                                    }
-                                    break;
-                                case 2:
-                                    switch (ServerProperties.Properties.SERV_LANGUAGE)
-                                    {
-                                        case "EN":
-                                            ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
-                                            break;
-                                        case "DE":
-                                            ch.GuildID = GuildMgr.GuildNameToGuildID("Beschützer von Mularn");
-                                            break;
-                                        default:
-                                            ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
-                                            break;
-                                    }
-                                    break;
-                                case 3:
-                                    switch (ServerProperties.Properties.SERV_LANGUAGE)
-                                    {
-                                        case "EN":
-                                            ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
-                                            break;
-                                        case "DE":
-                                            ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog-Abenteurer");
-                                            break;
-                                        default:
-                                            ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
-                                            break;
-                                    }
-                                    break;
-                                default: break;
-                            }
+						if (account.PrivLevel == 1 && Properties.STARTING_GUILD)
+						{
+							switch (ch.Realm)
+							{
+								case 1:
+									switch (ServerProperties.Properties.SERV_LANGUAGE)
+									{
+										case "EN":
+											ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
+											break;
+										case "DE":
+											ch.GuildID = GuildMgr.GuildNameToGuildID("Klan Cotswold");
+											break;
+										default:
+											ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
+											break;
+									}
+									break;
+								case 2:
+									switch (ServerProperties.Properties.SERV_LANGUAGE)
+									{
+										case "EN":
+											ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
+											break;
+										case "DE":
+											ch.GuildID = GuildMgr.GuildNameToGuildID("Beschützer von Mularn");
+											break;
+										default:
+											ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
+											break;
+									}
+									break;
+								case 3:
+									switch (ServerProperties.Properties.SERV_LANGUAGE)
+									{
+										case "EN":
+											ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
+											break;
+										case "DE":
+											ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog-Abenteurer");
+											break;
+										default:
+											ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
+											break;
+									}
+									break;
+									default: break;
+							}
 
-                            if (ch.GuildID != "")
-                                ch.GuildRank = 8;
-                        }
-                        if (Properties.STARTING_LEVEL > 1)
-                        {
-                            ch.Experience = GameServer.ServerRules.GetExperienceForLevel(Properties.STARTING_LEVEL);
-                        }
+							if (ch.GuildID != "")
+								ch.GuildRank = 8;
+						}
+						if (Properties.STARTING_LEVEL > 1)
+						{
+							ch.Experience = GameServer.ServerRules.GetExperienceForLevel(Properties.STARTING_LEVEL);
+						}
 
-                        if (Properties.STARTING_MONEY > 0)
-                        {
-                            long value = Properties.STARTING_MONEY;
-                            ch.Copper = Money.GetCopper(value);
-                            ch.Silver = Money.GetSilver(value);
-                            ch.Gold = Money.GetGold(value);
-                            ch.Platinum = Money.GetPlatinum(value);
-                        }
+						if (Properties.STARTING_MONEY > 0)
+						{
+							long value = Properties.STARTING_MONEY;
+							ch.Copper = Money.GetCopper(value);
+							ch.Silver = Money.GetSilver(value);
+							ch.Gold = Money.GetGold(value);
+							ch.Platinum = Money.GetPlatinum(value);
+						}
 
-                        if (Properties.STARTING_REALM_LEVEL > 0)
-                        {
-                            int realmLevel = Properties.STARTING_REALM_LEVEL;
-                            long rpamount = 0;
-                            if (realmLevel < GamePlayer.REALMPOINTS_FOR_LEVEL.Length)
-                                rpamount = GamePlayer.REALMPOINTS_FOR_LEVEL[realmLevel];
+						if (Properties.STARTING_REALM_LEVEL > 0)
+						{
+							int realmLevel = Properties.STARTING_REALM_LEVEL;
+							long rpamount = 0;
+							if (realmLevel < GamePlayer.REALMPOINTS_FOR_LEVEL.Length)
+								rpamount = GamePlayer.REALMPOINTS_FOR_LEVEL[realmLevel];
 
-                            // thanks to Linulo from http://daoc.foren.4players.de/viewtopic.php?t=40839&postdays=0&postorder=asc&start=0
-                            if (rpamount == 0)
-                                rpamount = (long)(25.0 / 3.0 * (realmLevel * realmLevel * realmLevel) - 25.0 / 2.0 * (realmLevel * realmLevel) + 25.0 / 6.0 * realmLevel);
+							// thanks to Linulo from http://daoc.foren.4players.de/viewtopic.php?t=40839&postdays=0&postorder=asc&start=0
+							if (rpamount == 0)
+								rpamount = (long)(25.0 / 3.0 * (realmLevel * realmLevel * realmLevel) - 25.0 / 2.0 * (realmLevel * realmLevel) + 25.0 / 6.0 * realmLevel);
 
-                            ch.RealmPoints = rpamount;
-                            ch.RealmLevel = realmLevel;
-                            ch.RealmSpecialtyPoints = realmLevel;
-                        }
+							ch.RealmPoints = rpamount;
+							ch.RealmLevel = realmLevel;
+							ch.RealmSpecialtyPoints = realmLevel;
+						}
 
-                        ch.RespecAmountRealmSkill += 2;
+						ch.RespecAmountRealmSkill += 2;
 
-                        setBasicCraftingForNewCharacter(ch);
+						setBasicCraftingForNewCharacter(ch);
 
-                        //Save the character in the database
-                        GameServer.Database.AddObject(ch);
-                        //Fire the character creation event
-                        GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch, client));
-                        //add equipment
-                        StartupEquipment.AddEquipment(ch);
-                        //write changes
-                        GameServer.Database.SaveObject(ch);
+						//Save the character in the database
+						GameServer.Database.AddObject(ch);
+						//Fire the character creation event
+						GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch, client));
+						//add equipment
+						StartupEquipment.AddEquipment(ch);
+						//write changes
+						GameServer.Database.SaveObject(ch);
 
-                        client.Account.Characters = null;
+						client.Account.Characters = null;
 
-                        if (log.IsInfoEnabled)
-                            log.Info(String.Format("Character {0} created!", charname));
+						if (log.IsInfoEnabled)
+							log.Info(String.Format("Character {0} created!", charname));
 
-                        GameServer.Database.FillObjectRelations(client.Account);
-                        client.Out.SendCharacterOverview((eRealm)ch.Realm);
-                    }
-                }
-            }
-            return 1;
-        }
-        private static int RevertClass(Character ch)
-        {
-            switch (ch.Class)
-            {
-                //Alb
-                case (int)eCharacterClass.Armsman: return (int)eCharacterClass.Fighter;
-                case (int)eCharacterClass.Mercenary: return (int)eCharacterClass.Fighter;
-                case (int)eCharacterClass.Paladin: return (int)eCharacterClass.Fighter;
-                case (int)eCharacterClass.Mauler_Alb: return (int)eCharacterClass.Fighter;
-                case (int)eCharacterClass.Reaver: return (int)eCharacterClass.Fighter;
-                case (int)eCharacterClass.Cleric: return (int)eCharacterClass.Acolyte;
-                case (int)eCharacterClass.Friar: return (int)eCharacterClass.Acolyte;
-                case (int)eCharacterClass.Heretic: return (int)eCharacterClass.Acolyte;
-                case (int)eCharacterClass.Infiltrator: return (int)eCharacterClass.AlbionRogue;
-                case (int)eCharacterClass.Scout: return (int)eCharacterClass.AlbionRogue;
-                case (int)eCharacterClass.Minstrel: return (int)eCharacterClass.AlbionRogue;
-                case (int)eCharacterClass.Cabalist: return (int)eCharacterClass.Mage;
-                case (int)eCharacterClass.Sorcerer: return (int)eCharacterClass.Mage;
-                case (int)eCharacterClass.Theurgist: return (int)eCharacterClass.Elementalist;
-                case (int)eCharacterClass.Wizard: return (int)eCharacterClass.Elementalist;
-                case (int)eCharacterClass.Necromancer: return (int)eCharacterClass.Disciple;
-                //Hib
-                case (int)eCharacterClass.Hero: return (int)eCharacterClass.Guardian;
-                case (int)eCharacterClass.Champion: return (int)eCharacterClass.Guardian;
-                case (int)eCharacterClass.Blademaster: return (int)eCharacterClass.Guardian;
-                case (int)eCharacterClass.Mauler_Hib: return (int)eCharacterClass.Guardian;
-                case (int)eCharacterClass.Bard: return (int)eCharacterClass.Naturalist;
-                case (int)eCharacterClass.Druid: return (int)eCharacterClass.Naturalist;
-                case (int)eCharacterClass.Warden: return (int)eCharacterClass.Naturalist;
-                case (int)eCharacterClass.Ranger: return (int)eCharacterClass.Stalker;
-                case (int)eCharacterClass.Nightshade: return (int)eCharacterClass.Stalker;
-                case (int)eCharacterClass.Vampiir: return (int)eCharacterClass.Stalker;
-                case (int)eCharacterClass.Bainshee: return (int)eCharacterClass.Magician;
-                case (int)eCharacterClass.Eldritch: return (int)eCharacterClass.Magician;
-				case (int)eCharacterClass.Enchanter: return (int)eCharacterClass.Magician;
-                case (int)eCharacterClass.Mentalist: return (int)eCharacterClass.Magician;
-                case (int)eCharacterClass.Animist: return (int)eCharacterClass.Forester;
-                case (int)eCharacterClass.Valewalker: return (int)eCharacterClass.Forester;
-                //Mid
-                case (int)eCharacterClass.Berserker: return (int)eCharacterClass.Viking;
-                case (int)eCharacterClass.Mauler_Mid: return (int)eCharacterClass.Viking;
-                case (int)eCharacterClass.Savage: return (int)eCharacterClass.Viking;
-                case (int)eCharacterClass.Skald: return (int)eCharacterClass.Viking;
-                case (int)eCharacterClass.Thane: return (int)eCharacterClass.Viking;
-                case (int)eCharacterClass.Valkyrie: return (int)eCharacterClass.Viking;
-                case (int)eCharacterClass.Warrior: return (int)eCharacterClass.Viking;
-                case (int)eCharacterClass.Hunter: return (int)eCharacterClass.MidgardRogue;
-                case (int)eCharacterClass.Shadowblade: return (int)eCharacterClass.MidgardRogue;
-                case (int)eCharacterClass.Healer: return (int)eCharacterClass.Seer;
-                case (int)eCharacterClass.Shaman: return (int)eCharacterClass.Seer;
-                case (int)eCharacterClass.Bonedancer: return (int)eCharacterClass.Mystic;
-                case (int)eCharacterClass.Runemaster: return (int)eCharacterClass.Mystic;
-                case (int)eCharacterClass.Warlock: return (int)eCharacterClass.Mystic;
-                case (int)eCharacterClass.Spiritmaster: return (int)eCharacterClass.Mystic;
-                //older client support
-                default: return ch.Class;
+						GameServer.Database.FillObjectRelations(client.Account);
+						client.Out.SendCharacterOverview((eRealm)ch.Realm);
+					}
+				}
+			}
+			return 1;
+		}
+		private static int RevertClass(Character ch)
+		{
+			switch (ch.Class)
+			{
+					//Alb
+					case (int)eCharacterClass.Armsman: return (int)eCharacterClass.Fighter;
+					case (int)eCharacterClass.Mercenary: return (int)eCharacterClass.Fighter;
+					case (int)eCharacterClass.Paladin: return (int)eCharacterClass.Fighter;
+					case (int)eCharacterClass.Mauler_Alb: return (int)eCharacterClass.Fighter;
+					case (int)eCharacterClass.Reaver: return (int)eCharacterClass.Fighter;
+					case (int)eCharacterClass.Cleric: return (int)eCharacterClass.Acolyte;
+					case (int)eCharacterClass.Friar: return (int)eCharacterClass.Acolyte;
+					case (int)eCharacterClass.Heretic: return (int)eCharacterClass.Acolyte;
+					case (int)eCharacterClass.Infiltrator: return (int)eCharacterClass.AlbionRogue;
+					case (int)eCharacterClass.Scout: return (int)eCharacterClass.AlbionRogue;
+					case (int)eCharacterClass.Minstrel: return (int)eCharacterClass.AlbionRogue;
+					case (int)eCharacterClass.Cabalist: return (int)eCharacterClass.Mage;
+					case (int)eCharacterClass.Sorcerer: return (int)eCharacterClass.Mage;
+					case (int)eCharacterClass.Theurgist: return (int)eCharacterClass.Elementalist;
+					case (int)eCharacterClass.Wizard: return (int)eCharacterClass.Elementalist;
+					case (int)eCharacterClass.Necromancer: return (int)eCharacterClass.Disciple;
+					//Hib
+					case (int)eCharacterClass.Hero: return (int)eCharacterClass.Guardian;
+					case (int)eCharacterClass.Champion: return (int)eCharacterClass.Guardian;
+					case (int)eCharacterClass.Blademaster: return (int)eCharacterClass.Guardian;
+					case (int)eCharacterClass.Mauler_Hib: return (int)eCharacterClass.Guardian;
+					case (int)eCharacterClass.Bard: return (int)eCharacterClass.Naturalist;
+					case (int)eCharacterClass.Druid: return (int)eCharacterClass.Naturalist;
+					case (int)eCharacterClass.Warden: return (int)eCharacterClass.Naturalist;
+					case (int)eCharacterClass.Ranger: return (int)eCharacterClass.Stalker;
+					case (int)eCharacterClass.Nightshade: return (int)eCharacterClass.Stalker;
+					case (int)eCharacterClass.Vampiir: return (int)eCharacterClass.Stalker;
+					case (int)eCharacterClass.Bainshee: return (int)eCharacterClass.Magician;
+					case (int)eCharacterClass.Eldritch: return (int)eCharacterClass.Magician;
+					case (int)eCharacterClass.Enchanter: return (int)eCharacterClass.Magician;
+					case (int)eCharacterClass.Mentalist: return (int)eCharacterClass.Magician;
+					case (int)eCharacterClass.Animist: return (int)eCharacterClass.Forester;
+					case (int)eCharacterClass.Valewalker: return (int)eCharacterClass.Forester;
+					//Mid
+					case (int)eCharacterClass.Berserker: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Mauler_Mid: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Savage: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Skald: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Thane: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Valkyrie: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Warrior: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Hunter: return (int)eCharacterClass.MidgardRogue;
+					case (int)eCharacterClass.Shadowblade: return (int)eCharacterClass.MidgardRogue;
+					case (int)eCharacterClass.Healer: return (int)eCharacterClass.Seer;
+					case (int)eCharacterClass.Shaman: return (int)eCharacterClass.Seer;
+					case (int)eCharacterClass.Bonedancer: return (int)eCharacterClass.Mystic;
+					case (int)eCharacterClass.Runemaster: return (int)eCharacterClass.Mystic;
+					case (int)eCharacterClass.Warlock: return (int)eCharacterClass.Mystic;
+					case (int)eCharacterClass.Spiritmaster: return (int)eCharacterClass.Mystic;
+					//older client support
+					default: return ch.Class;
 
-            }
-        }
-        private void setBasicCraftingForNewCharacter(Character ch)
-        {
-            string serializedAllCraftingSkills = "";
-            foreach (int craftingSkillId in Enum.GetValues(typeof(eCraftingSkill)))
-            {
-                if (craftingSkillId > 0)
-                {
-                    serializedAllCraftingSkills += (int)craftingSkillId + "|1;";
-                    if (craftingSkillId == (int)eCraftingSkill._Last)
-                    {
-                        break;
-                    }
-                }
-            }
-            if (serializedAllCraftingSkills.Length > 0)
-            {
-                serializedAllCraftingSkills = serializedAllCraftingSkills.Remove(serializedAllCraftingSkills.Length - 1);
-            }
-            ch.SerializedCraftingSkills = serializedAllCraftingSkills;
-            ch.CraftingPrimarySkill = (int)eCraftingSkill.BasicCrafting;
-        }
+			}
+		}
+		private void setBasicCraftingForNewCharacter(Character ch)
+		{
+			string serializedAllCraftingSkills = "";
+			foreach (int craftingSkillId in Enum.GetValues(typeof(eCraftingSkill)))
+			{
+				if (craftingSkillId > 0)
+				{
+					serializedAllCraftingSkills += (int)craftingSkillId + "|1;";
+					if (craftingSkillId == (int)eCraftingSkill._Last)
+					{
+						break;
+					}
+				}
+			}
+			if (serializedAllCraftingSkills.Length > 0)
+			{
+				serializedAllCraftingSkills = serializedAllCraftingSkills.Remove(serializedAllCraftingSkills.Length - 1);
+			}
+			ch.SerializedCraftingSkills = serializedAllCraftingSkills;
+			ch.CraftingPrimarySkill = (int)eCraftingSkill.BasicCrafting;
+		}
 
-        #region CheckCharacter
+		#region CheckCharacter
 
-        /// <summary>
-        /// Provides methods to handle char creation checks
-        /// </summary>
-        protected class CheckCharacter
-        {
-            protected const int STR = 0;
-            protected const int CON = 1;
-            protected const int DEX = 2;
-            protected const int QUI = 3;
-            protected const int INT = 4;
-            protected const int PIE = 5;
-            protected const int EMP = 6;
-            protected const int CHA = 7;
+		/// <summary>
+		/// Provides methods to handle char creation checks
+		/// </summary>
+		protected class CheckCharacter
+		{
+			protected const int STR = 0;
+			protected const int CON = 1;
+			protected const int DEX = 2;
+			protected const int QUI = 3;
+			protected const int INT = 4;
+			protected const int PIE = 5;
+			protected const int EMP = 6;
+			protected const int CHA = 7;
 
-            /// <summary>
-            /// Verify whether created character is valid
-            /// </summary>
-            /// <param name="ch">The character to check</param>
-            /// <returns>True if valid</returns>
-            public static bool IsCharacterValid(Character ch)
-            {
-                bool valid = true;
-                try
-                {
-                    if (ch.Realm > 3)
-                    {
-                        if (log.IsWarnEnabled)
-                            log.Warn("Wrong realm: " + ch.Realm);
-                        valid = false;
-                    }
-                    if (ch.Level != 1)
-                    {
-                        if (log.IsWarnEnabled)
-                            log.Warn("Wrong level: " + ch.Level);
-                        valid = false;
-                    }
-                    if (Array.IndexOf(STARTING_CLASSES[ch.Realm], ch.Class) == -1)
-                    {
-                        if (log.IsWarnEnabled)
-                            log.Warn("Wrong class: " + ch.Class + ", realm:" + ch.Realm);
-                        valid = false;
-                    }
-                    if (Array.IndexOf(RACES_CLASSES[ch.Race], ch.Class) == -1)
-                    {
-                        if (log.IsWarnEnabled)
-                            log.Warn("Wrong race: " + ch.Race + ", class:" + ch.Class);
-                        valid = false;
-                    }
-                    int pointsUsed = 0;
-                    pointsUsed += PointsUsed(ch.Race, STR, ch.Strength);
-                    pointsUsed += PointsUsed(ch.Race, CON, ch.Constitution);
-                    pointsUsed += PointsUsed(ch.Race, DEX, ch.Dexterity);
-                    pointsUsed += PointsUsed(ch.Race, QUI, ch.Quickness);
-                    pointsUsed += PointsUsed(ch.Race, INT, ch.Intelligence);
-                    pointsUsed += PointsUsed(ch.Race, PIE, ch.Piety);
-                    pointsUsed += PointsUsed(ch.Race, EMP, ch.Empathy);
-                    pointsUsed += PointsUsed(ch.Race, CHA, ch.Charisma);
-                    if (pointsUsed != 30)
-                    {
-                        if (log.IsWarnEnabled)
-                            log.Warn("Points used: " + pointsUsed);
-                        valid = false;
-                    }
-                }
-                catch (Exception e)
-                {
-                    if (log.IsErrorEnabled)
-                        log.Error("CharacterCreation", e);
-                    return false;
-                }
-                return valid;
-            }
+			/// <summary>
+			/// Verify whether created character is valid
+			/// </summary>
+			/// <param name="ch">The character to check</param>
+			/// <returns>True if valid</returns>
+			public static bool IsCharacterValid(Character ch)
+			{
+				bool valid = true;
+				try
+				{
+					if (ch.Realm > 3)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong realm: " + ch.Realm);
+						valid = false;
+					}
+					if (ch.Level != 1)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong level: " + ch.Level);
+						valid = false;
+					}
+					if (Array.IndexOf(STARTING_CLASSES[ch.Realm], ch.Class) == -1)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong class: " + ch.Class + ", realm:" + ch.Realm);
+						valid = false;
+					}
+					if (Array.IndexOf(RACES_CLASSES[ch.Race], ch.Class) == -1)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Wrong race: " + ch.Race + ", class:" + ch.Class);
+						valid = false;
+					}
+					int pointsUsed = 0;
+					pointsUsed += PointsUsed(ch.Race, STR, ch.Strength);
+					pointsUsed += PointsUsed(ch.Race, CON, ch.Constitution);
+					pointsUsed += PointsUsed(ch.Race, DEX, ch.Dexterity);
+					pointsUsed += PointsUsed(ch.Race, QUI, ch.Quickness);
+					pointsUsed += PointsUsed(ch.Race, INT, ch.Intelligence);
+					pointsUsed += PointsUsed(ch.Race, PIE, ch.Piety);
+					pointsUsed += PointsUsed(ch.Race, EMP, ch.Empathy);
+					pointsUsed += PointsUsed(ch.Race, CHA, ch.Charisma);
+					if (pointsUsed != 30)
+					{
+						if (log.IsWarnEnabled)
+							log.Warn("Points used: " + pointsUsed);
+						valid = false;
+					}
+				}
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("CharacterCreation", e);
+					return false;
+				}
+				return valid;
+			}
 
-            /// <summary>
-            /// Calculates amount of starting points spent on one stat
-            /// </summary>
-            /// <param name="race">race index in starting stats array</param>
-            /// <param name="statIndex">index of that stat in starting stats array</param>
-            /// <param name="statValue">base+spent points in stat</param>
-            /// <returns></returns>
-            protected static int PointsUsed(int race, int statIndex, int statValue)
-            {
-                statValue -= STARTING_STATS[race][statIndex];
-                int result = statValue; //one point used
-                result += Math.Max(0, statValue - 10); //two points used
-                result += Math.Max(0, statValue - 15); //three points used
-                return result;
-            }
+			/// <summary>
+			/// Calculates amount of starting points spent on one stat
+			/// </summary>
+			/// <param name="race">race index in starting stats array</param>
+			/// <param name="statIndex">index of that stat in starting stats array</param>
+			/// <param name="statValue">base+spent points in stat</param>
+			/// <returns></returns>
+			protected static int PointsUsed(int race, int statIndex, int statValue)
+			{
+				statValue -= STARTING_STATS[race][statIndex];
+				int result = statValue; //one point used
+				result += Math.Max(0, statValue - 10); //two points used
+				result += Math.Max(0, statValue - 15); //three points used
+				return result;
+			}
 
-            public static readonly byte[] eStatIndex = new byte[8]
+			public static readonly byte[] eStatIndex = new byte[8]
 			{
 				(byte)eProperty.Strength,
 				(byte)eProperty.Constitution,
@@ -893,10 +894,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				(byte)eProperty.Charisma
 			};
 
-            /// <summary>
-            /// All possible player races
-            /// </summary>
-            public static readonly int[][] STARTING_STATS = new int[][]
+			/// <summary>
+			/// All possible player races
+			/// </summary>
+			public static readonly int[][] STARTING_STATS = new int[][]
 			{
 				null, // "Unknown",
 				//           STR CON DEX QUI INT PIE EMP CHA
@@ -923,17 +924,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 				new int[8] { 80, 70, 50, 40, 60, 60, 60, 60 }, // HiberniaMenotaur
 			};
 
-            /// <summary>
-            /// All possible player starting classes
-            /// </summary>
-            public static int[][] STARTING_CLASSES = null;
-            protected static int[][] RACES_CLASSES = null;
-            public static int[] ADVANCED_CLASS_TO_BASE_CLASS = null;
+			/// <summary>
+			/// All possible player starting classes
+			/// </summary>
+			public static int[][] STARTING_CLASSES = null;
+			protected static int[][] RACES_CLASSES = null;
+			public static int[] ADVANCED_CLASS_TO_BASE_CLASS = null;
 
-            // static methods handling pre and post 1.93 characters creation tables
-            public static void init_pre193_tables()
-            {
-                STARTING_CLASSES = new int[][]
+			// static methods handling pre and post 1.93 characters creation tables
+			public static void init_pre193_tables()
+			{
+				STARTING_CLASSES = new int[][]
 				{
 					null, // "Unknown",
 					new int[] { (int)eCharacterClass.Fighter,
@@ -953,7 +954,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Forester }, // Hibernia
 				};
 
-                RACES_CLASSES = new int[][]
+				RACES_CLASSES = new int[][]
 				{
 					null, // "Unknown",
 					//
@@ -1032,7 +1033,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Naturalist }, //HiberniaMenotaur
 				};
 
-                ADVANCED_CLASS_TO_BASE_CLASS = new int[]
+				ADVANCED_CLASS_TO_BASE_CLASS = new int[]
 				{
 					0, // "Unknown",
 					(int)eCharacterClass.Fighter, 		// Paladin = 1,
@@ -1098,11 +1099,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 					(int)eCharacterClass.Viking, 		// Mauler_Mid = 61,
 					(int)eCharacterClass.Guardian, 		// Mauler_Hib = 62,
 				};
-            }
+			}
 
-            public static void init_post193_tables()
-            {
-                STARTING_CLASSES = new int[][]
+			public static void init_post193_tables()
+			{
+				STARTING_CLASSES = new int[][]
 				{
 					null, // "Unknown",
 					new int[]{
@@ -1172,7 +1173,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Mauler_Hib } 	// Mauler_Hib = 62,
 				};
 
-                RACES_CLASSES = new int[][]
+				RACES_CLASSES = new int[][]
 				{
 					null, // "Unknown",
 					//
@@ -1447,10 +1448,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Guardian,
 						(int)eCharacterClass.Naturalist }, //HibMinotaur
 				};
-            }
-        }
+			}
+		}
 
-        #endregion
+		#endregion
 
-    }
+	}
 }

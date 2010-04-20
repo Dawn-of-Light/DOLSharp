@@ -200,7 +200,6 @@ namespace DOL
 			public Character()
 			{
 				m_creationDate = DateTime.Now;
-				AutoSave = false;
 				m_concentration = 100;
 				m_exp = 0;
 				m_bntyPts = 0;

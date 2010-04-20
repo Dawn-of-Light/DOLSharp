@@ -273,10 +273,11 @@ namespace DOL.Database
 		public InventoryItem(ItemTemplate template):base()
 		{
 			Template = template;
-			m_itemplate_id = template.Id_nb;		
+			m_itemplate_id = template.Id_nb;
 			m_utemplate_id = null;
 			m_color = template.Color;
 			m_emblem = template.Emblem;
+			m_count = template.MaxCount;
 			m_extension = template.Extension;
 			m_condition = template.MaxCondition;
 			m_durability = template.MaxDurability;
@@ -292,11 +293,12 @@ namespace DOL.Database
 		public InventoryItem(ItemUnique template):base()
 		{
 			Template = (ItemTemplate)template;
-			Template.Dirty = true;	
+			Template.Dirty = true;
 			m_utemplate_id = template.Id_nb;
 			m_itemplate_id = null;
 			m_color = template.Color;
 			m_emblem = template.Emblem;
+			m_count = template.MaxCount;
 			m_extension = template.Extension;
 			m_condition = template.MaxCondition;
 			m_durability = template.MaxDurability;
