@@ -1062,14 +1062,14 @@ namespace DOL.GS
 				if (fromItem.Count + toItem.Count > fromItem.MaxCount)
 				{
 					fromItem.Count -= (toItem.MaxCount - toItem.Count);
-					fromItem.Weight = fromItem.Count*(toItem.Weight/toItem.Count);
+					//fromItem.Weight = fromItem.Count*(toItem.Weight/toItem.Count);
 					toItem.Count = toItem.MaxCount;
-					toItem.Weight = toItem.Count*(fromItem.Weight/fromItem.Count);
+					//toItem.Weight = toItem.Count*(fromItem.Weight/fromItem.Count);
 				}
 				else
 				{
 					toItem.Count += fromItem.Count;
-					toItem.Weight += fromItem.Weight;
+					//toItem.Weight += fromItem.Weight;
 					RemoveItem(fromItem);
 				}
 
@@ -1081,9 +1081,9 @@ namespace DOL.GS
 				var newItem = (InventoryItem) fromItem.Clone();
 				m_items[toSlot] = newItem;
 				newItem.Count = itemCount;
-				newItem.Weight = itemCount*(fromItem.Weight/fromItem.Count);
+				//newItem.Weight = itemCount*(fromItem.Weight/fromItem.Count);
 				newItem.SlotPosition = (int) toSlot;
-				fromItem.Weight -= itemCount*(fromItem.Weight/fromItem.Count);
+				//fromItem.Weight -= itemCount*(fromItem.Weight/fromItem.Count);
 				fromItem.Count -= itemCount;
 
 				GameServer.Database.AddObject(newItem);

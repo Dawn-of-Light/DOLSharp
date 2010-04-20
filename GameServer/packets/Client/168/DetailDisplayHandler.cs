@@ -157,18 +157,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CrafterName", invItem.Creator));
 							objectInfo.Add(" ");
 						}
-						else if (invItem.Id_nb == "UniqueObject") // tolakram - force display of unique object
-						{
-							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.UniqueObject"));
-							objectInfo.Add(" ");
-						}
-
-						if (invItem.Description != null && invItem.Description != "")
+						else if (invItem.Description != null && invItem.Description != "")
 						{
 							objectInfo.Add(invItem.Description);
 							objectInfo.Add(" ");
 						}
-
 
 						if ((invItem.Object_Type >= (int)eObjectType.GenericWeapon) && (invItem.Object_Type <= (int)eObjectType._LastWeapon) ||
 						    invItem.Object_Type == (int)eObjectType.Instrument)

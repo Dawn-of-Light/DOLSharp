@@ -32,9 +32,9 @@ namespace DOL.Database
 			m_name = "(blank item)";
 		}
 
-		public ItemUnique(ItemTemplate template)
+		public ItemUnique(ItemTemplate template) : base()
 		{
-			Id_nb = "Unique_" + UniqueID.IDGenerator.GenerateID();
+			m_id_nb = "Unique_" + UniqueID.IDGenerator.GenerateID();
 			Name = template.Name;
 			Bonus = template.Bonus;
 			Bonus1 = template.Bonus1;
@@ -104,6 +104,19 @@ namespace DOL.Database
 			IsIndestructible = template.IsIndestructible;
 			IsNotLosingDur = template.IsNotLosingDur;
 		}
+
+		public override string Id_nb
+		{
+			get
+			{
+				return m_id_nb;
+			}
+			set
+			{
+				// set once when created, never changed
+			}
+		}
+
 		
 		public override bool Dirty {
 			get { return true; }
