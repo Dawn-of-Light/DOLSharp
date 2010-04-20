@@ -27,6 +27,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database;
@@ -189,6 +190,16 @@ namespace DOL.GS.Quests
 		/// <param name="args"></param>
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
+			if (sender is GamePlayer && e == GameObjectEvent.InteractWith)
+			{
+				InteractWithEventArgs iArgs = args as InteractWithEventArgs;
+				if (iArgs.Target is GameStaticItem)
+				{
+					InteractWithObject(sender as GamePlayer, iArgs.Target as GameStaticItem);
+					return;
+				}
+			}
+
 			if (questParts == null)
 				return;
 
@@ -246,6 +257,49 @@ namespace DOL.GS.Quests
 					player.Out.SendMessage("You cannot remove the \"" + itemTemplate.Name + "\" because you don't have it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
+		}
+
+		protected static int RemoveAllItem(GameLiving target, GamePlayer player, ItemTemplate itemTemplate, bool notify)
+		{
+			int itemsRemoved = 0;
+
+			if (itemTemplate == null)
+			{
+				log.Error("itemtemplate is null in RemoveItem:" + Environment.StackTrace);
+				return 0;
+			}
+			lock (player.Inventory)
+			{
+				InventoryItem item = player.Inventory.GetFirstItemByID(itemTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+
+				while (item != null)
+				{
+					player.Inventory.RemoveItem(item);
+					itemsRemoved++;
+					item = player.Inventory.GetFirstItemByID(itemTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+				}
+
+				if (notify)
+				{
+					if (itemsRemoved == 0)
+					{
+						player.Out.SendMessage("You cannot remove the \"" + itemTemplate.Name + "\" because you don't have it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					else if (target != null)
+					{
+						if (itemTemplate.Name.EndsWith("s"))
+						{
+							player.Out.SendMessage("You give the " + itemTemplate.Name + " to " + target.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						else
+						{
+							player.Out.SendMessage("You give the " + itemTemplate.Name + "'s to " + target.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+					}
+				}
+			}
+
+			return itemsRemoved;
 		}
 		#endregion
 
@@ -327,6 +381,11 @@ namespace DOL.GS.Quests
 			return GiveItem(null, player, itemTemplate, true);
 		}
 
+		protected static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
+		{
+			return GiveItem(null, player, itemTemplate, canDrop);
+		}
+
 		protected static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
 		{
 			return GiveItem(source, player, itemTemplate, true);
@@ -344,7 +403,7 @@ namespace DOL.GS.Quests
 				}
 				else
 				{
-					player.Out.SendMessage(String.Format("Your backpack is full!", itemTemplate.Name), eChatType.CT_Important, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage("Your backpack is full!", eChatType.CT_Important, eChatLoc.CL_PopupWindow);
 					return false;
 				}
 			}
@@ -459,5 +518,83 @@ namespace DOL.GS.Quests
 			}
 			return 0;
 		}
+
+		#region World Item Interaction
+
+		protected struct QuestStepInteraction
+		{
+			public string objectName;
+			public int numRequired;
+			public ItemTemplate itemResult;
+			public string interactText;
+		}
+
+		Dictionary<int, QuestStepInteraction> m_interactions = new Dictionary<int, QuestStepInteraction>();
+		const int INTERACT_ITEM_RESPAWN_SECONDS = 120;
+
+		/// <summary>
+		/// Add an interact item associated with a step for this quest
+		/// </summary>
+		/// <param name="step">What step is this item valid for</param>
+		/// <param name="staticObjectName">the name of the static item to interact with</param>
+		/// <param name="numRequired">How many times to interact before this step is complete</param>
+		/// <param name="itemResult">What item is given to the player when interacting</param>
+		/// <param name="interactText">Text presented to player when interacting with the object</param>
+		protected void AddInteractStep(int step, string objectName, int numRequired, ItemTemplate itemResult, string interactText)
+		{
+			try
+			{
+				QuestStepInteraction info = new QuestStepInteraction();
+				info.objectName = objectName;
+				info.numRequired = numRequired;
+				info.itemResult = itemResult;
+				info.interactText = interactText;
+
+				m_interactions.Add(step, info);
+			}
+			catch (Exception ex)
+			{
+				log.Error("Error adding Interact Step, possible duplicate?", ex);
+			}
+		}
+
+		/// <summary>
+		/// We are interacting with an object, check to see if this quest and step needs to respond
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="staticItem"></param>
+		protected void InteractWithObject(GamePlayer player, GameStaticItem staticItem)
+		{
+			if (m_interactions.Count > 0)
+			{
+				if (m_interactions.ContainsKey(Step))
+				{
+					QuestStepInteraction info = m_interactions[Step];
+
+					if (staticItem.Name == info.objectName)
+					{
+						if (GiveItem(player, info.itemResult, false))
+						{
+							player.Out.SendMessage(info.interactText, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							staticItem.RemoveFromWorld(INTERACT_ITEM_RESPAWN_SECONDS);
+							OnObjectInteract(info);
+						}
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// When an object is interacted with this message is sent after world item is removed and inventory item added
+		/// </summary>
+		/// <param name="info"></param>
+		protected virtual void OnObjectInteract(QuestStepInteraction info)
+		{
+			// this is needed in order to support both Base and Reward quests
+			log.Error("Override OnObjectInteract to advance goal progress");
+		}
+
+		#endregion World Item Interaction
+
 	}
 }
