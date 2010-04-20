@@ -592,7 +592,7 @@ namespace DOL.GS
 			delve.Add("        Color: " + Color);
 			delve.Add("       Emblem: " + Emblem);
 			delve.Add("       Effect: " + Effect);
-			delve.Add("  Value/Price: " + Money.GetPlatinum (Price) + "p " + Money.GetGold (Price) + "g " + Money.GetSilver (Price) + "s " + Money.GetCopper(Price)  + "c");
+			delve.Add("  Value/Price: " + Money.GetShortString(Price));
 			delve.Add("       Weight: " + (Weight / 10.0f) + "lbs");
 			delve.Add("      Quality: " + Quality + "%");
 			delve.Add("   Durability: " + Durability + "/" + MaxDurability + "(max)");

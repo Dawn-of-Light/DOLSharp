@@ -43,24 +43,31 @@ namespace DOL.GS
 
 		public static int GetGold(long money) {
 			return (int)(money/100/100%1000);
-		}	
+		}
 
 		public static int GetSilver(long money) {
 			return (int)(money/100%100);
-		}	
+		}
 
 		public static int GetCopper(long money) {
 			return (int)(money%100);
-		}	
-	
+		}
+		
 		public static long GetMoney(int mithril, int platinum, int gold, int silver, int copper) {
 			return (((mithril*1000L+platinum)*1000L+gold)*100L+silver)*100L+copper;
 		}
 
-		public static string GetString(long money) 
+		
+
+		/// <summary>
+		/// return different formatted strings for money
+		/// </summary>
+		/// <param name="money"></param>
+		/// <returns></returns>
+		public static string GetString(long money)
 		{
 			if (money == 0)
-                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text1");
+				return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text1");
 
 			int copper = Money.GetCopper(money);
 			int silver = Money.GetSilver(money);
@@ -72,54 +79,53 @@ namespace DOL.GS
 			if (mithril != 0)
 			{
 				res.Append(mithril);
-                res.Append(" ");
-                res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text2"));
-                res.Append(" ");
-            }
+				res.Append(" ");
+				res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text2"));
+				res.Append(" ");
+			}
 			if (platin != 0)
 			{
 				res.Append(platin);
-                res.Append(" ");
-                res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text3"));
-                res.Append(" ");
-            }
+				res.Append(" ");
+				res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text3"));
+				res.Append(" ");
+			}
 			if (gold != 0)
 			{
 				res.Append(gold);
-                res.Append(" ");
-                res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text4"));
-                res.Append(" ");
-            }
+				res.Append(" ");
+				res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text4"));
+				res.Append(" ");
+			}
 			if (silver != 0)
 			{
 				res.Append(silver);
-                res.Append(" ");
-                res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text5"));
-                res.Append(" ");
-            }
+				res.Append(" ");
+				res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text5"));
+				res.Append(" ");
+			}
 			if (copper != 0)
 			{
 				res.Append(copper);
-                res.Append(" ");
-                res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text6"));
-                res.Append(" ");
-            }
+				res.Append(" ");
+				res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text6"));
+				res.Append(" ");
+			}
 
 			// remove last comma
 			if(res.Length > 1)
 				res.Length -= 2;
 
-            res.Append(" ");
-            res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text7"));
+			res.Append(" ");
+			res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text7"));
 
 			return res.ToString();
-		}	
+		}
 
-
-		public static string GetShortString(long money) 
+		public static string GetShortString(long money)
 		{
 			if (money == 0)
-                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text1");
+				return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text1");
 
 			int copper = Money.GetCopper(money);
 			int silver = Money.GetSilver(money);
@@ -131,34 +137,55 @@ namespace DOL.GS
 			if (mithril != 0)
 			{
 				res.Append(mithril);
-                res.Append("m, ");
-            }
+				res.Append("m, ");
+			}
 			if (platin != 0)
 			{
 				res.Append(platin);
-                res.Append("p, ");
-            }
+				res.Append("p, ");
+			}
 			if (gold != 0)
 			{
 				res.Append(gold);
-                res.Append("g, ");
-            }
+				res.Append("g, ");
+			}
 			if (silver != 0)
 			{
 				res.Append(silver);
-                res.Append("s, ");
-            }
+				res.Append("s, ");
+			}
 			if (copper != 0)
 			{
 				res.Append(copper);
-                res.Append("c, ");
-            }
+				res.Append("c, ");
+			}
 
 			// remove last comma
 			if(res.Length > 1)
 				res.Length -= 2;
 
 			return res.ToString();
-		}	
+		}
+		
+		/// <summary>
+		/// Calculate an approximate price for given level and quality
+		/// </summary>
+		/// <param name="level"></param>
+		/// <param name="quality"></param>
+		/// <returns></returns>
+		public static long SetAutoPrice(int level, int quality)
+		{
+			int levelmod = level*level*level;
+			
+			double dCopper = ((double)levelmod / 0.6); // level 50, 100 quality; worth aprox 20 gold, sells for 10 gold
+			double dQuality = (double)quality / 100.0;
+
+			dCopper = dCopper * dQuality * dQuality * dQuality * dQuality * dQuality * dQuality;
+			
+			if (dCopper < 2)
+				dCopper = 2;
+			
+			return (long)dCopper;
+		}
 	}
 }

@@ -1,3 +1,4 @@
+
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
@@ -475,6 +476,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("rates","mana_regen_rate", "Mana regen rate", 1.0)]
 		public static double MANA_REGEN_RATE;
+		
+		/// <summary>
+		/// Items sell ratio
+		/// </summary>
+		[ServerProperty("rates","item_sell_ratio", "Merchants are buying items at the % of initial value", 50)]
+		public static int ITEM_SELL_RATIO;
 		#endregion
 		
 		#region NPCs
