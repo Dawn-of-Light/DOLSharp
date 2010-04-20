@@ -5740,7 +5740,8 @@ namespace DOL.GS
 							} break;
 					}
 				}
-				return ammo.Template;
+
+				return (ammo == null ? null : ammo.Template);
 			}
 			set { m_rangeAttackAmmo.Target = value; }
 		}
