@@ -236,6 +236,16 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override bool AddItem(eInventorySlot slot, InventoryItem item)
 		{
+			if (item.Template is ItemUnique)
+			{
+				return AddItem(slot, item, false);
+			}
+
+			return AddItem(slot, item, true);
+		}
+
+		protected bool AddItem(eInventorySlot slot, InventoryItem item, bool addObject)
+		{
 			if (!base.AddItem(slot, item))
 				return false;
 
@@ -253,9 +263,16 @@ namespace DOL.GS
 			}
 
 			item.OwnerID = m_player.InternalID;
-			GameServer.Database.AddObject(item);
+			if (addObject)
+			{
+				GameServer.Database.AddObject(item);
+			}
+			else
+			{
+				GameServer.Database.SaveObject(item);
+			}
 
-			if (IsEquippedSlot((eInventorySlot) item.SlotPosition))
+			if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
 				m_player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(item, eInventorySlot.Invalid));
 
 			return true;
@@ -268,6 +285,16 @@ namespace DOL.GS
 		/// <returns>true if successfull</returns>
 		public override bool RemoveItem(InventoryItem item)
 		{
+			if (item.Template is ItemUnique)
+			{
+				return RemoveItem(item, false);
+			}
+
+			return RemoveItem(item, true);
+		}
+
+		protected bool RemoveItem(InventoryItem item, bool isDelete)
+		{
 			if (item == null)
 				return false;
 
@@ -275,16 +302,19 @@ namespace DOL.GS
 			{
 				if (Log.IsErrorEnabled)
 					Log.Error(m_player.Name + ": PlayerInventory -> tried to remove item with wrong owner (" + (item.OwnerID ?? "null") +
-					          ")\n\n" + Environment.StackTrace);
+							  ")\n\n" + Environment.StackTrace);
 				return false;
 			}
 
-			var oldSlot = (eInventorySlot) item.SlotPosition;
+			var oldSlot = (eInventorySlot)item.SlotPosition;
 
 			if (!base.RemoveItem(item))
 				return false;
 
-			GameServer.Database.DeleteObject(item);
+			if (isDelete)
+			{
+				GameServer.Database.DeleteObject(item);
+			}
 
 			ITradeWindow window = m_player.TradeWindow;
 			if (window != null)
@@ -313,6 +343,7 @@ namespace DOL.GS
 
 			return true;
 		}
+
 
 		/// <summary>
 		/// Adds count of items to the inventory item

@@ -576,54 +576,75 @@ namespace DOL.GS
                     {
                         lock (m_owner.Inventory)
                         {
-                            if (!m_owner.Inventory.RemoveItem(item))
-                            {
-                                if (logTrade)
-                                    GameServer.Instance.LogGMAction("   NOTItem: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+							if (!m_owner.Inventory.RemoveItem(item))
+							{
+								if (logTrade)
+									GameServer.Instance.LogGMAction("   NOTItem: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
 
-                                //BOT.Ban(m_owner, "Trade Hack");
-                                //BOT.Ban(partner, "Trade Hack");
+								//BOT.Ban(m_owner, "Trade Hack");
+								//BOT.Ban(partner, "Trade Hack");
 
-                                return false;
-                            }
+								return false;
+							}
                         }
                     }
                     foreach (InventoryItem item in partnerTradeItems)
                     {
                         lock (partner.Inventory)
                         {
-                            if (!partner.Inventory.RemoveItem(item))
-                            {
-                                if (logTrade)
-                                    GameServer.Instance.LogGMAction("   NOTItem: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+							if (!partner.Inventory.RemoveItem(item))
+							{
+								if (logTrade)
+									GameServer.Instance.LogGMAction("   NOTItem: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
 
-                                //BOT.Ban(m_owner, "Trade Hack");
-                                //BOT.Ban(partner, "Trade Hack");
+								//BOT.Ban(m_owner, "Trade Hack");
+								//BOT.Ban(partner, "Trade Hack");
 
-                                return false;
-                            }
+								return false;
+							}
                         }
                     }
 
 					foreach(InventoryItem item in ownerTradeItems)
 					{
 						if (m_owner.Guild != partner.Guild)
+						{
 							item.Emblem = 0;
+						}
+
 						if (!partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+						{
 							if (log.IsWarnEnabled)
-								log.Warn("Item was not added to first free slot. Player="+partner.Name+"; Item="+item.Id_nb);
-						if(logTrade)
-							GameServer.Instance.LogGMAction("   Item: "+m_owner.Name+"("+m_owner.Client.Account.Name+") -> "+partner.Name+"("+partner.Client.Account.Name+") : "+item.Name+"("+item.Id_nb+")");
+							{
+								log.Warn("Item was not added to first free slot. Player=" + partner.Name + "; Item=" + item.Id_nb);
+							}
+						}
+
+						if (logTrade)
+						{
+							GameServer.Instance.LogGMAction("   Item: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+						}
 					}
+
 					foreach(InventoryItem item in partnerTradeItems)
 					{
 						if (m_owner.Guild != partner.Guild)
+						{
 							item.Emblem = 0;
+						}
+
 						if (!m_owner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+						{
 							if (log.IsWarnEnabled)
-								log.Warn("Item was not added to first free slot. Player="+m_owner.Name+"; Item="+item.Id_nb);
-						if(logTrade)
-							GameServer.Instance.LogGMAction("   Item: "+partner.Name+"("+partner.Client.Account.Name+") -> "+m_owner.Name+"("+m_owner.Client.Account.Name+") : "+item.Name+"("+item.Id_nb+")");
+							{
+								log.Warn("Item was not added to first free slot. Player=" + m_owner.Name + "; Item=" + item.Id_nb);
+							}
+
+							if (logTrade)
+							{
+								GameServer.Instance.LogGMAction("   Item: " + partner.Name + "(" + partner.Client.Account.Name + ") -> " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+							}
+						}
 					}
 
 					m_owner.Inventory.CommitChanges();
