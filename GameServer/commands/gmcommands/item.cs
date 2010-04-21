@@ -1399,7 +1399,7 @@ namespace DOL.GS.Commands
 						#region LoadPackage
 					case "loadpackage":
 						{
-							if (args[2] != "" || args[2] = "**all**")
+							if (args[2] != "")
 							{
 								if (args[2] == "**all**") args[2] = String.Empty;
 								
