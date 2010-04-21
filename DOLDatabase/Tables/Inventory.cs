@@ -279,7 +279,7 @@ namespace DOL.Database
 			m_utemplate_id = null;
 			m_color = template.Color;
 			m_emblem = template.Emblem;
-			m_count = template.MaxCount;
+			m_count = template.PackSize;
 			m_extension = template.Extension;
 			m_condition = template.MaxCondition;
 			m_durability = template.MaxDurability;
@@ -301,7 +301,7 @@ namespace DOL.Database
 			m_itemplate_id = null;
 			m_color = template.Color;
 			m_emblem = template.Emblem;
-			m_count = template.MaxCount;
+			m_count = template.PackSize;
 			m_extension = template.Extension;
 			m_condition = template.MaxCondition;
 			m_durability = template.MaxDurability;

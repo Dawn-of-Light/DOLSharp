@@ -383,14 +383,14 @@ namespace DOL.GS
 			{
 				switch (stat)
 				{
-					case eStat.STR: npc.Strength = (short)newstat; break;
-					case eStat.DEX: npc.Dexterity = (short)newstat; break;
-					case eStat.CON: npc.Constitution = (short)newstat; break;
-					case eStat.QUI: npc.Quickness = (short)newstat; break;
-					case eStat.INT: npc.Intelligence = (short)newstat; break;
-					case eStat.PIE: npc.Piety = (short)newstat; break;
-					case eStat.EMP: npc.Empathy = (short)newstat; break;
-					case eStat.CHR: npc.Charisma = (short)newstat; break;
+						case eStat.STR: npc.Strength = (short)newstat; break;
+						case eStat.DEX: npc.Dexterity = (short)newstat; break;
+						case eStat.CON: npc.Constitution = (short)newstat; break;
+						case eStat.QUI: npc.Quickness = (short)newstat; break;
+						case eStat.INT: npc.Intelligence = (short)newstat; break;
+						case eStat.PIE: npc.Piety = (short)newstat; break;
+						case eStat.EMP: npc.Empathy = (short)newstat; break;
+						case eStat.CHR: npc.Charisma = (short)newstat; break;
 				}
 			}
 		}
@@ -516,10 +516,10 @@ namespace DOL.GS
 		/// Holds various flags of this npc
 		/// </summary>
 		protected uint m_flags;
-        /// <summary>
-        /// Spawn point
-        /// </summary>
-        protected Point3D m_spawnPoint;
+		/// <summary>
+		/// Spawn point
+		/// </summary>
+		protected Point3D m_spawnPoint;
 		/// <summary>
 		/// Spawn Heading
 		/// </summary>
@@ -595,42 +595,42 @@ namespace DOL.GS
 			get { return (uint)Environment.TickCount - m_lastVisibleToPlayerTick < 60000; }
 		}
 
-        /// <summary>
-        /// Gets or sets the spawnposition of this npc
-        /// </summary>
-        public virtual Point3D SpawnPoint
-        {
-            get { return m_spawnPoint; }
-            set { m_spawnPoint = value; }
-        }
+		/// <summary>
+		/// Gets or sets the spawnposition of this npc
+		/// </summary>
+		public virtual Point3D SpawnPoint
+		{
+			get { return m_spawnPoint; }
+			set { m_spawnPoint = value; }
+		}
 
-        /// <summary>
-        /// Gets or sets the spawnposition of this npc
-        /// </summary>
-        [Obsolete( "Use GameNPC.SpawnPoint" )]
-        public virtual int SpawnX
-        {
-            get { return m_spawnPoint.X; }
-            set { m_spawnPoint.X = value; }
-        }
-        /// <summary>
-        /// Gets or sets the spawnposition of this npc
-        /// </summary>
-        [Obsolete( "Use GameNPC.SpawnPoint" )]
-        public virtual int SpawnY
-        {
-            get { return m_spawnPoint.Y; }
-            set { m_spawnPoint.Y = value; }
-        }
-        /// <summary>
-        /// Gets or sets the spawnposition of this npc
-        /// </summary>
-        [Obsolete( "Use GameNPC.SpawnPoint" )]
-        public virtual int SpawnZ
-        {
-            get { return m_spawnPoint.Z; }
-            set { m_spawnPoint.Z = value; }
-        }
+		/// <summary>
+		/// Gets or sets the spawnposition of this npc
+		/// </summary>
+		[Obsolete( "Use GameNPC.SpawnPoint" )]
+		public virtual int SpawnX
+		{
+			get { return m_spawnPoint.X; }
+			set { m_spawnPoint.X = value; }
+		}
+		/// <summary>
+		/// Gets or sets the spawnposition of this npc
+		/// </summary>
+		[Obsolete( "Use GameNPC.SpawnPoint" )]
+		public virtual int SpawnY
+		{
+			get { return m_spawnPoint.Y; }
+			set { m_spawnPoint.Y = value; }
+		}
+		/// <summary>
+		/// Gets or sets the spawnposition of this npc
+		/// </summary>
+		[Obsolete( "Use GameNPC.SpawnPoint" )]
+		public virtual int SpawnZ
+		{
+			get { return m_spawnPoint.Z; }
+			set { m_spawnPoint.Z = value; }
+		}
 
 		/// <summary>
 		/// Gets or sets the spawnheading of this npc
@@ -648,7 +648,7 @@ namespace DOL.GS
 		{
 			set
 			{
-                SaveCurrentPosition();
+				SaveCurrentPosition();
 
 				if (base.CurrentSpeed != value)
 				{
@@ -690,10 +690,10 @@ namespace DOL.GS
 
 				if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
 				{
-                    long expectedDistance = FastMath.Abs((long)Target.X - m_x);
+					long expectedDistance = FastMath.Abs((long)Target.X - m_x);
 
-                    if (expectedDistance == 0)
-                        return Target.X;
+					if (expectedDistance == 0)
+						return Target.X;
 
 					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * TickSpeedX));
 					
@@ -719,10 +719,10 @@ namespace DOL.GS
 
 				if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
 				{
-                    long expectedDistance = FastMath.Abs((long)Target.Y - m_y);
+					long expectedDistance = FastMath.Abs((long)Target.Y - m_y);
 
-                    if (expectedDistance == 0)
-                        return Target.Y;
+					if (expectedDistance == 0)
+						return Target.Y;
 
 					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * TickSpeedY));
 
@@ -747,10 +747,10 @@ namespace DOL.GS
 
 				if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
 				{
-                    long expectedDistance = FastMath.Abs((long)Target.Z - m_z);
+					long expectedDistance = FastMath.Abs((long)Target.Z - m_z);
 
-                    if (expectedDistance == 0) 
-                        return Target.Z;
+					if (expectedDistance == 0)
+						return Target.Z;
 
 					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * TickSpeedZ));
 
@@ -817,17 +817,17 @@ namespace DOL.GS
 		{
 			get
 			{
-                if ( TetherRange > 0 )
-                {
-                    if( this.IsWithinRadius( this.SpawnPoint, TetherRange ) )
-                        return false;
-                    else
-                        return true;
-                }
-                else
-                {
-                    return false;
-                }
+				if ( TetherRange > 0 )
+				{
+					if( this.IsWithinRadius( this.SpawnPoint, TetherRange ) )
+						return false;
+					else
+						return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
@@ -872,9 +872,9 @@ namespace DOL.GS
 		/// </summary>
 		protected static readonly int MIN_ALLOWED_PET_FOLLOW_DISTANCE = 90;
 		/// <summary>
-        /// At what health percent will npc give up range attack and rush the attacker
-        /// </summary>
-        protected const int MINHEALTHPERCENTFORRANGEDATTACK = 70;
+		/// At what health percent will npc give up range attack and rush the attacker
+		/// </summary>
+		protected const int MINHEALTHPERCENTFORRANGEDATTACK = 70;
 
 		private string m_pathID;
 		public string PathID
@@ -883,91 +883,91 @@ namespace DOL.GS
 			set { m_pathID = value; }
 		}
 
-        private IPoint3D m_target = new Point3D(0, 0, 0);
+		private IPoint3D m_target = new Point3D(0, 0, 0);
 
-        /// <summary>
-        /// The target position.
-        /// </summary>
-        public virtual IPoint3D Target 
-        {
-            get
-            {
-                return m_target;
-            }
+		/// <summary>
+		/// The target position.
+		/// </summary>
+		public virtual IPoint3D Target
+		{
+			get
+			{
+				return m_target;
+			}
 
-            protected set
-            {
-                if (value != m_target)
-                {
-                    SaveCurrentPosition();
-                    m_target = value;
-                }
-            }
-        }
+			protected set
+			{
+				if (value != m_target)
+				{
+					SaveCurrentPosition();
+					m_target = value;
+				}
+			}
+		}
 
-        /// <summary>
-        /// The target object.
-        /// </summary>
-        public override GameObject TargetObject
-        {
-            get
-            {
-                return base.TargetObject;
-            }
-            set
-            {
-                GameObject previousTarget = TargetObject;
-                GameObject newTarget = value;
+		/// <summary>
+		/// The target object.
+		/// </summary>
+		public override GameObject TargetObject
+		{
+			get
+			{
+				return base.TargetObject;
+			}
+			set
+			{
+				GameObject previousTarget = TargetObject;
+				GameObject newTarget = value;
 
-                base.TargetObject = newTarget;
+				base.TargetObject = newTarget;
 
-                if (previousTarget != null && newTarget != previousTarget)
-                    previousTarget.Notify(GameNPCEvent.SwitchedTarget, this,
-                        new SwitchedTargetEventArgs(previousTarget, newTarget));           
-            }
-        }
+				if (previousTarget != null && newTarget != previousTarget)
+					previousTarget.Notify(GameNPCEvent.SwitchedTarget, this,
+					                      new SwitchedTargetEventArgs(previousTarget, newTarget));
+			}
+		}
 
 		/// <summary>
 		/// Updates the tick speed for this living.
-        /// </summary>
-        protected override void UpdateTickSpeed()
-        {
-            if (!IsMoving)
-            {
-                SetTickSpeed(0, 0, 0);
-                return;
-            }
+		/// </summary>
+		protected override void UpdateTickSpeed()
+		{
+			if (!IsMoving)
+			{
+				SetTickSpeed(0, 0, 0);
+				return;
+			}
 
-            if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
-            {
-                double dist = this.GetDistanceTo(new Point3D(Target.X, Target.Y, Target.Z));
+			if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
+			{
+				double dist = this.GetDistanceTo(new Point3D(Target.X, Target.Y, Target.Z));
 
-                if (dist <= 0)
-                {
-                    SetTickSpeed(0, 0, 0);
-                    return;
-                }
+				if (dist <= 0)
+				{
+					SetTickSpeed(0, 0, 0);
+					return;
+				}
 
-                double dx = (double)(Target.X - m_x) / dist;
-                double dy = (double)(Target.Y - m_y) / dist;
-                double dz = (double)(Target.Z - m_z) / dist;
+				double dx = (double)(Target.X - m_x) / dist;
+				double dy = (double)(Target.Y - m_y) / dist;
+				double dz = (double)(Target.Z - m_z) / dist;
 
-                SetTickSpeed(dx, dy, dz, CurrentSpeed);
-                return;
-            }
+				SetTickSpeed(dx, dy, dz, CurrentSpeed);
+				return;
+			}
 
-            base.UpdateTickSpeed();
-        }
+			base.UpdateTickSpeed();
+		}
 
 		/// <summary>
 		/// True if the mob is at its target position, else false.
 		/// </summary>
 		public bool IsAtTargetPosition
 		{
-            get
-            {
-                return (X == Target.X && Y == Target.Y && Z == Target.Z);
-            }
+			get
+			{
+				return (X == Target.X && Y == Target.Y && Z == Target.Z);
+			}
 		}
 
 		/// <summary>
@@ -992,10 +992,10 @@ namespace DOL.GS
 
 			Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(tx, ty));
 
-            if (sendUpdate)
-                Heading = GetHeading(new Point2D(tx, ty));
-            else
-                base.Heading = GetHeading(new Point2D(tx, ty));
+			if (sendUpdate)
+				Heading = GetHeading(new Point2D(tx, ty));
+			else
+				base.Heading = GetHeading(new Point2D(tx, ty));
 		}
 
 		/// <summary>
@@ -1042,8 +1042,8 @@ namespace DOL.GS
 		/// <param name="target">GameObject to turn towards</param>
 		public virtual void TurnTo(GameObject target, bool sendUpdate)
 		{
-            if (target == null || target.CurrentRegion != CurrentRegion)
-                return;
+			if (target == null || target.CurrentRegion != CurrentRegion)
+				return;
 
 			TurnTo(target.X, target.Y, sendUpdate);
 		}
@@ -1057,8 +1057,8 @@ namespace DOL.GS
 		/// <param name="duration">restore heading after this duration</param>
 		public virtual void TurnTo(GameObject target, int duration)
 		{
-			if (target == null || target.CurrentRegion != CurrentRegion) 
-                return;
+			if (target == null || target.CurrentRegion != CurrentRegion)
+				return;
 
 			// Store original heading if not set already.
 
@@ -1146,76 +1146,76 @@ namespace DOL.GS
 		/// </summary>
 		protected class ArriveAtTargetAction : RegionAction
 		{
-		  /// <summary>
-		  /// Constructs a new ArriveAtTargetAction
-		  /// </summary>
-		  /// <param name="actionSource">The action source</param>
-		  public ArriveAtTargetAction(GameNPC actionSource)
-			: base(actionSource)
-		  {
-		  }
+			/// <summary>
+			/// Constructs a new ArriveAtTargetAction
+			/// </summary>
+			/// <param name="actionSource">The action source</param>
+			public ArriveAtTargetAction(GameNPC actionSource)
+				: base(actionSource)
+			{
+			}
 
-		  /// <summary>
-		  /// This function is called when the Mob arrives at its target spot
-		  /// This time was estimated using walking speed and distance.
-		  /// It fires the ArriveAtTarget event
-		  /// </summary>
-          protected override void OnTick()
-          {
-              GameNPC npc = (GameNPC)m_actionSource;
+			/// <summary>
+			/// This function is called when the Mob arrives at its target spot
+			/// This time was estimated using walking speed and distance.
+			/// It fires the ArriveAtTarget event
+			/// </summary>
+			protected override void OnTick()
+			{
+				GameNPC npc = (GameNPC)m_actionSource;
 
-              bool arriveAtSpawnPoint = npc.IsReturningToSpawnPoint;
+				bool arriveAtSpawnPoint = npc.IsReturningToSpawnPoint;
 
-              npc.StopMoving();
-              npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
+				npc.StopMoving();
+				npc.Notify(GameNPCEvent.ArriveAtTarget, npc);
 
-              if (arriveAtSpawnPoint)
-                  npc.Notify(GameNPCEvent.ArriveAtSpawnPoint, npc);
-          }
-        }
-
-        public virtual void CancelWalkToTimer()
-        {
-            if (m_arriveAtTargetAction != null)
-            {
-                m_arriveAtTargetAction.Stop();
-                m_arriveAtTargetAction = null;
-            }
+				if (arriveAtSpawnPoint)
+					npc.Notify(GameNPCEvent.ArriveAtSpawnPoint, npc);
+			}
 		}
 
-        /// <summary>
-        /// Ticks required to arrive at a given spot.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="speed"></param>
-        /// <returns></returns>
-        private int GetTicksToArriveAt(IPoint3D target, int speed)
-        {
-            return GetDistanceTo(target) * 1000 / speed;
-        }
-
-        /// <summary>
-        /// Make the current (calculated) position permanent.
-        /// </summary>
-        private void SaveCurrentPosition()
-        {
-            SavePosition(this);
-        }
-
-        /// <summary>
-        /// Make the target position permanent.
-        /// </summary>
-        private void SavePosition(IPoint3D target)
-        {
-            X = target.X;
-            Y = target.Y;
-            Z = target.Z;
-
-            MovementStartTick = Environment.TickCount;
-        }
+		public virtual void CancelWalkToTimer()
+		{
+			if (m_arriveAtTargetAction != null)
+			{
+				m_arriveAtTargetAction.Stop();
+				m_arriveAtTargetAction = null;
+			}
+		}
 
 		/// <summary>
-        /// Walk to a certain spot at a given speed.
+		/// Ticks required to arrive at a given spot.
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="speed"></param>
+		/// <returns></returns>
+		private int GetTicksToArriveAt(IPoint3D target, int speed)
+		{
+			return GetDistanceTo(target) * 1000 / speed;
+		}
+
+		/// <summary>
+		/// Make the current (calculated) position permanent.
+		/// </summary>
+		private void SaveCurrentPosition()
+		{
+			SavePosition(this);
+		}
+
+		/// <summary>
+		/// Make the target position permanent.
+		/// </summary>
+		private void SavePosition(IPoint3D target)
+		{
+			X = target.X;
+			Y = target.Y;
+			Z = target.Z;
+
+			MovementStartTick = Environment.TickCount;
+		}
+
+		/// <summary>
+		/// Walk to a certain spot at a given speed.
 		/// </summary>
 		/// <param name="tx"></param>
 		/// <param name="ty"></param>
@@ -1223,7 +1223,7 @@ namespace DOL.GS
 		/// <param name="speed"></param>
 		public virtual void WalkTo(int targetX, int targetY, int targetZ, int speed)
 		{
-            WalkTo(new Point3D(targetX, targetY, targetZ), speed);
+			WalkTo(new Point3D(targetX, targetY, targetZ), speed);
 		}
 
 		/// <summary>
@@ -1233,42 +1233,42 @@ namespace DOL.GS
 		/// <param name="speed"></param>
 		public virtual void WalkTo(IPoint3D target, int speed)
 		{
-            if (IsTurningDisabled)
-                return;
+			if (IsTurningDisabled)
+				return;
 
-            if (speed > MaxSpeed)
-                speed = MaxSpeed;
+			if (speed > MaxSpeed)
+				speed = MaxSpeed;
 
-            if (speed <= 0)
-                return;
+			if (speed <= 0)
+				return;
 
-            Target = target; // this also saves the current position
+			Target = target; // this also saves the current position
 
-            if (IsWithinRadius(Target, CONST_WALKTOTOLERANCE))
-            {
-                // No need to start walking.
+			if (IsWithinRadius(Target, CONST_WALKTOTOLERANCE))
+			{
+				// No need to start walking.
 
-                Notify(GameNPCEvent.ArriveAtTarget, this);
-                return;
-            }
+				Notify(GameNPCEvent.ArriveAtTarget, this);
+				return;
+			}
 
-            CancelWalkToTimer();
+			CancelWalkToTimer();
 
-            m_Heading = GetHeading(Target);
-            m_currentSpeed = speed; 
+			m_Heading = GetHeading(Target);
+			m_currentSpeed = speed;
 
-            UpdateTickSpeed();
-            Notify(GameNPCEvent.WalkTo, this, new WalkToEventArgs(Target, speed));
+			UpdateTickSpeed();
+			Notify(GameNPCEvent.WalkTo, this, new WalkToEventArgs(Target, speed));
 
-            StartArriveAtTargetAction(GetTicksToArriveAt(Target, speed));
-            BroadcastUpdate();
+			StartArriveAtTargetAction(GetTicksToArriveAt(Target, speed));
+			BroadcastUpdate();
 		}
 
-        private void StartArriveAtTargetAction(int requiredTicks)
-        {
-            m_arriveAtTargetAction = new ArriveAtTargetAction(this);
-            m_arriveAtTargetAction.Start((requiredTicks > 1) ? requiredTicks : 1);
-        }
+		private void StartArriveAtTargetAction(int requiredTicks)
+		{
+			m_arriveAtTargetAction = new ArriveAtTargetAction(this);
+			m_arriveAtTargetAction.Start((requiredTicks > 1) ? requiredTicks : 1);
+		}
 
 		/// <summary>
 		/// Walk to the spawn point
@@ -1285,7 +1285,7 @@ namespace DOL.GS
 		{
 			CancelWalkToTimer();
 			IsReturningHome = false;
-            IsReturningToSpawnPoint = false;
+			IsReturningToSpawnPoint = false;
 		}
 
 		/// <summary>
@@ -1304,8 +1304,8 @@ namespace DOL.GS
 			}
 
 			IsReturningHome = true;
-            IsReturningToSpawnPoint = true;
-            WalkTo( SpawnPoint, speed );
+			IsReturningToSpawnPoint = true;
+			WalkTo( SpawnPoint, speed );
 		}
 
 		/// <summary>
@@ -1319,8 +1319,8 @@ namespace DOL.GS
 			Notify(GameNPCEvent.Walk, this, new WalkEventArgs(speed));
 
 			CancelWalkToTimer();
-            SaveCurrentPosition();
-            Target.Clear();
+			SaveCurrentPosition();
+			Target.Clear();
 
 			m_currentSpeed = speed;
 
@@ -1342,32 +1342,32 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StopMoving()
 		{
-		    CancelWalkToSpawn();
+			CancelWalkToSpawn();
 
 			if (IsMoving)
 				CurrentSpeed = 0;
 		}
 
-        /// <summary>
-        /// Stops the movement of the mob and forcibly moves it to the
-        /// given target position.
-        /// </summary>
-        public virtual void StopMovingAt(IPoint3D target)
-        {
-            CancelWalkToSpawn();
+		/// <summary>
+		/// Stops the movement of the mob and forcibly moves it to the
+		/// given target position.
+		/// </summary>
+		public virtual void StopMovingAt(IPoint3D target)
+		{
+			CancelWalkToSpawn();
 
-            if (IsMoving)
-            {
-                m_currentSpeed = 0;
-                UpdateTickSpeed();
-            }
+			if (IsMoving)
+			{
+				m_currentSpeed = 0;
+				UpdateTickSpeed();
+			}
 
-            SavePosition(target);
-            BroadcastUpdate();
-        }
+			SavePosition(target);
+			BroadcastUpdate();
+		}
 
-        private const int StickMinimumRange = 100;
-        private const int StickMaximumRange = 5000;
+		private const int StickMinimumRange = 100;
+		private const int StickMaximumRange = 5000;
 
 		/// <summary>
 		/// Follow given object
@@ -1380,8 +1380,8 @@ namespace DOL.GS
 			if (m_followTimer.IsAlive)
 				m_followTimer.Stop();
 
-			if (target == null || target.ObjectState != eObjectState.Active) 
-                return;
+			if (target == null || target.ObjectState != eObjectState.Active)
+				return;
 
 			m_followMaxDist = maxDistance;
 			m_followMinDist = minDistance;
@@ -1427,8 +1427,8 @@ namespace DOL.GS
 				else m_lastAttackTickPvP = m_CurrentRegion.Time;
 				if (this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
 				{
-                    // Aredhel: Erm, checking for spells in a follow method, what did we create
-                    // brain classes for again?
+					// Aredhel: Erm, checking for spells in a follow method, what did we create
+					// brain classes for again?
 
 					//Check for negatively casting spells
 					StandardMobBrain stanBrain = (StandardMobBrain)Brain;
@@ -1438,122 +1438,122 @@ namespace DOL.GS
 			}
 		}
 
-          /// <summary>
-          /// Keep following a specific object at a max distance
-          /// </summary>
-          protected virtual int FollowTimerCallback(RegionTimer callingTimer)
-          {
-             if (IsCasting)
-                return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
-
-             bool wasInRange = m_followTimer.Properties.getProperty(FOLLOW_TARGET_IN_RANGE, false);
-             m_followTimer.Properties.removeProperty(FOLLOW_TARGET_IN_RANGE);
-
-             GameObject followTarget = (GameObject)m_followTarget.Target;
-             GameLiving followLiving = followTarget as GameLiving;
-
-             //Stop following if target living is dead
-             if (followLiving != null && !followLiving.IsAlive)
-             {
-                StopFollowing();
-                Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-                return 0;
-             }
-
-             //Stop following if we have no target
-             if (followTarget == null || followTarget.ObjectState != eObjectState.Active || CurrentRegionID != followTarget.CurrentRegionID)
-             {
-                StopFollowing();
-                Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-                return 0;
-             }
-
-             //Calculate the difference between our position and the players position
-             float diffx = (long)followTarget.X - X;
-             float diffy = (long)followTarget.Y - Y;
-             float diffz = (long)followTarget.Z - Z;
-
-             //SH: Removed Z checks when one of the two Z values is zero(on ground)
-             //Tolakram: a Z of 0 does not indicate on the ground.  Z varies based on terrain  Removed 0 Z check
-             float distance = (float)Math.Sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
-
-             //if distance is greater then the max follow distance, stop following and return home
-             if ((int)distance > m_followMaxDist)
-             {
-                StopFollowing();
-                Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-                this.WalkToSpawn();
-                return 0;
-             }
-             int newX, newY, newZ;
-
-             if (this.Brain is StandardMobBrain)
-             {
-                StandardMobBrain brain = this.Brain as StandardMobBrain;
-
-                //if the npc hasn't hit or been hit in a while, stop following and return home
-                if (!(Brain is IControlledBrain))
-                {
-                   if (AttackState && brain != null && followLiving != null)
-                   {
-                      long seconds = 20 + ((brain.GetAggroAmountForLiving(followLiving) / (MaxHealth + 1)) * 100);
-                      long lastattacked = LastAttackTick;
-                      long lasthit = LastAttackedByEnemyTick;
-                      if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
-                      {
-                         //StopFollow();
-                         Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-                         //brain.ClearAggroList();
-                         this.WalkToSpawn();
-                         return 0;
-                      }
-                   }
-                }
-
-                //If we're part of a formation, we can get out early.
-                newX = followTarget.X;
-                newY = followTarget.Y;
-                newZ = followTarget.Z;
-                if (brain.CheckFormation(ref newX, ref newY, ref newZ))
-                {
-                   WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
-				   return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
-                }
-             }
-
-			 // Tolakram - Distances under 100 do not calculate correctly leading to the mob always being told to walkto
-			 int minAllowedFollowDistance = MIN_ALLOWED_FOLLOW_DISTANCE;
-
-			  // pets can follow closer.  need to implement /fdistance command to make this adjustable
-			 if (this.Brain is IControlledBrain)
-				 minAllowedFollowDistance = MIN_ALLOWED_PET_FOLLOW_DISTANCE;
-
-             //Are we in range yet?  
-			 if ((int)distance <= (m_followMinDist < minAllowedFollowDistance ? minAllowedFollowDistance : m_followMinDist))
-             {
-                StopMoving();
-                TurnTo(followTarget);
-                if (!wasInRange)
-                {
-                   m_followTimer.Properties.setProperty(FOLLOW_TARGET_IN_RANGE, true);
-                   FollowTargetInRange();
-                }
+		/// <summary>
+		/// Keep following a specific object at a max distance
+		/// </summary>
+		protected virtual int FollowTimerCallback(RegionTimer callingTimer)
+		{
+			if (IsCasting)
 				return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
-             }
 
-             // follow on distance
-             diffx = (diffx / distance) * m_followMinDist;
-             diffy = (diffy / distance) * m_followMinDist;
-             diffz = (diffz / distance) * m_followMinDist;
+			bool wasInRange = m_followTimer.Properties.getProperty(FOLLOW_TARGET_IN_RANGE, false);
+			m_followTimer.Properties.removeProperty(FOLLOW_TARGET_IN_RANGE);
 
-             //Subtract the offset from the target's position to get
-             //our target position
-             newX = (int)(followTarget.X - diffx);
-             newY = (int)(followTarget.Y - diffy);
-             newZ = (int)(followTarget.Z - diffz);
-             WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
-			 return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
-          }
+			GameObject followTarget = (GameObject)m_followTarget.Target;
+			GameLiving followLiving = followTarget as GameLiving;
+
+			//Stop following if target living is dead
+			if (followLiving != null && !followLiving.IsAlive)
+			{
+				StopFollowing();
+				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+				return 0;
+			}
+
+			//Stop following if we have no target
+			if (followTarget == null || followTarget.ObjectState != eObjectState.Active || CurrentRegionID != followTarget.CurrentRegionID)
+			{
+				StopFollowing();
+				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+				return 0;
+			}
+
+			//Calculate the difference between our position and the players position
+			float diffx = (long)followTarget.X - X;
+			float diffy = (long)followTarget.Y - Y;
+			float diffz = (long)followTarget.Z - Z;
+
+			//SH: Removed Z checks when one of the two Z values is zero(on ground)
+			//Tolakram: a Z of 0 does not indicate on the ground.  Z varies based on terrain  Removed 0 Z check
+			float distance = (float)Math.Sqrt(diffx * diffx + diffy * diffy + diffz * diffz);
+
+			//if distance is greater then the max follow distance, stop following and return home
+			if ((int)distance > m_followMaxDist)
+			{
+				StopFollowing();
+				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+				this.WalkToSpawn();
+				return 0;
+			}
+			int newX, newY, newZ;
+
+			if (this.Brain is StandardMobBrain)
+			{
+				StandardMobBrain brain = this.Brain as StandardMobBrain;
+
+				//if the npc hasn't hit or been hit in a while, stop following and return home
+				if (!(Brain is IControlledBrain))
+				{
+					if (AttackState && brain != null && followLiving != null)
+					{
+						long seconds = 20 + ((brain.GetAggroAmountForLiving(followLiving) / (MaxHealth + 1)) * 100);
+						long lastattacked = LastAttackTick;
+						long lasthit = LastAttackedByEnemyTick;
+						if (CurrentRegion.Time - lastattacked > seconds * 1000 && CurrentRegion.Time - lasthit > seconds * 1000)
+						{
+							//StopFollow();
+							Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
+							//brain.ClearAggroList();
+							this.WalkToSpawn();
+							return 0;
+						}
+					}
+				}
+
+				//If we're part of a formation, we can get out early.
+				newX = followTarget.X;
+				newY = followTarget.Y;
+				newZ = followTarget.Z;
+				if (brain.CheckFormation(ref newX, ref newY, ref newZ))
+				{
+					WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
+					return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
+				}
+			}
+
+			// Tolakram - Distances under 100 do not calculate correctly leading to the mob always being told to walkto
+			int minAllowedFollowDistance = MIN_ALLOWED_FOLLOW_DISTANCE;
+
+			// pets can follow closer.  need to implement /fdistance command to make this adjustable
+			if (this.Brain is IControlledBrain)
+				minAllowedFollowDistance = MIN_ALLOWED_PET_FOLLOW_DISTANCE;
+
+			//Are we in range yet?
+			if ((int)distance <= (m_followMinDist < minAllowedFollowDistance ? minAllowedFollowDistance : m_followMinDist))
+			{
+				StopMoving();
+				TurnTo(followTarget);
+				if (!wasInRange)
+				{
+					m_followTimer.Properties.setProperty(FOLLOW_TARGET_IN_RANGE, true);
+					FollowTargetInRange();
+				}
+				return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
+			}
+
+			// follow on distance
+			diffx = (diffx / distance) * m_followMinDist;
+			diffy = (diffy / distance) * m_followMinDist;
+			diffz = (diffz / distance) * m_followMinDist;
+
+			//Subtract the offset from the target's position to get
+			//our target position
+			newX = (int)(followTarget.X - diffx);
+			newY = (int)(followTarget.Y - diffy);
+			newZ = (int)(followTarget.Z - diffz);
+			WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
+			return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
+		}
 
 		/// <summary>
 		/// Disables the turning for this living
@@ -1589,13 +1589,13 @@ namespace DOL.GS
 
 		protected bool m_isReturningHome = false;
 
-        /// <summary>
-        /// Whether or not the NPC is on its way back to the spawn point.
-        /// [Aredhel: I decided to add this property in order not to mess
-        /// with SMB and IsReturningHome. Also, to prevent outside classes
-        /// from interfering the setter is now protected.]
-        /// </summary>
-        public bool IsReturningToSpawnPoint { get; protected set; }
+		/// <summary>
+		/// Whether or not the NPC is on its way back to the spawn point.
+		/// [Aredhel: I decided to add this property in order not to mess
+		/// with SMB and IsReturningHome. Also, to prevent outside classes
+		/// from interfering the setter is now protected.]
+		/// </summary>
+		public bool IsReturningToSpawnPoint { get; protected set; }
 
 		/// <summary>
 		/// Gets if npc moving on path
@@ -1627,22 +1627,22 @@ namespace DOL.GS
 
 			PathingNormalSpeed = speed;
 
-            if( this.IsWithinRadius( CurrentWayPoint, 100 ) )
+			if( this.IsWithinRadius( CurrentWayPoint, 100 ) )
 			{
-                if (CurrentWayPoint.Type == ePathType.Path_Reverse && CurrentWayPoint.FiredFlag)
-                    CurrentWayPoint = CurrentWayPoint.Prev;
-                else
-                {
-                    if ((CurrentWayPoint.Type == ePathType.Loop) && (CurrentWayPoint.Next == null))
-                        CurrentWayPoint = MovementMgr.FindFirstPathPoint(CurrentWayPoint);
-                    else
-                        CurrentWayPoint = CurrentWayPoint.Next;     
-                }
+				if (CurrentWayPoint.Type == ePathType.Path_Reverse && CurrentWayPoint.FiredFlag)
+					CurrentWayPoint = CurrentWayPoint.Prev;
+				else
+				{
+					if ((CurrentWayPoint.Type == ePathType.Loop) && (CurrentWayPoint.Next == null))
+						CurrentWayPoint = MovementMgr.FindFirstPathPoint(CurrentWayPoint);
+					else
+						CurrentWayPoint = CurrentWayPoint.Next;
+				}
 			}
 
 			if (CurrentWayPoint != null)
 			{
-                GameEventMgr.AddHandler(this, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnArriveAtWaypoint));
+				GameEventMgr.AddHandler(this, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnArriveAtWaypoint));
 				WalkTo(CurrentWayPoint, Math.Min(speed, CurrentWayPoint.MaxSpeed));
 				m_IsMovingOnPath = true;
 				Notify(GameNPCEvent.PathMoveStarts, this);
@@ -1661,30 +1661,30 @@ namespace DOL.GS
 			if (!IsMovingOnPath)
 				return;
 
-            GameEventMgr.RemoveHandler(this, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnArriveAtWaypoint));
+			GameEventMgr.RemoveHandler(this, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnArriveAtWaypoint));
 			Notify(GameNPCEvent.PathMoveEnds, this);
 			m_IsMovingOnPath = false;
 		}
 
-        /// <summary>
-        /// decides what to do on reached waypoint in path
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="n"></param>
-        /// <param name="args"></param>
-        protected void OnArriveAtWaypoint(DOLEvent e, object n, EventArgs args)
-        {
-            if (!IsMovingOnPath || n != this)
-                return;
+		/// <summary>
+		/// decides what to do on reached waypoint in path
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="n"></param>
+		/// <param name="args"></param>
+		protected void OnArriveAtWaypoint(DOLEvent e, object n, EventArgs args)
+		{
+			if (!IsMovingOnPath || n != this)
+				return;
 
-            if (CurrentWayPoint != null)
-            {
-                WaypointDelayAction waitTimer = new WaypointDelayAction(this);
-                waitTimer.Start(Math.Max(1, CurrentWayPoint.WaitTime * 100));
-            }
-            else
-                StopMovingOnPath();
-        }
+			if (CurrentWayPoint != null)
+			{
+				WaypointDelayAction waitTimer = new WaypointDelayAction(this);
+				waitTimer.Start(Math.Max(1, CurrentWayPoint.WaitTime * 100));
+			}
+			else
+				StopMovingOnPath();
+		}
 
 		/// <summary>
 		/// Delays movement to the next waypoint
@@ -1944,9 +1944,9 @@ namespace DOL.GS
 			m_houseNumber = npc.HouseNumber;
 			m_maxdistance = npc.MaxDistance;
 			m_roamingRange = npc.RoamingRange;
-            m_isCloakHoodUp = npc.IsCloakHoodUp;
+			m_isCloakHoodUp = npc.IsCloakHoodUp;
 			m_visibleActiveWeaponSlots = npc.VisibleWeaponSlots;
-            Gender = (Gender)npc.Gender;
+			Gender = (Gender)npc.Gender;
 		}
 
 		/// <summary>
@@ -2044,8 +2044,8 @@ namespace DOL.GS
 			mob.BodyType = BodyType;
 			mob.PathID = PathID;
 			mob.MaxDistance = m_maxdistance;
-            mob.IsCloakHoodUp = m_isCloakHoodUp;
-            mob.Gender = (byte)Gender;
+			mob.IsCloakHoodUp = m_isCloakHoodUp;
+			mob.Gender = (byte)Gender;
 			mob.VisibleWeaponSlots = this.m_visibleActiveWeaponSlots;
 			mob.PackageID = PackageID;
 
@@ -2628,8 +2628,8 @@ namespace DOL.GS
 			}
 			BroadcastUpdate();
 			m_spawnPoint.X = X;
-            m_spawnPoint.Y = Y;
-            m_spawnPoint.Z = Z;
+			m_spawnPoint.Y = Y;
+			m_spawnPoint.Z = Z;
 			m_spawnHeading = Heading;
 			lock (BrainSync)
 			{
@@ -2646,7 +2646,7 @@ namespace DOL.GS
 			//If the Mob has a Path assigned he will now walk on it!
 			if (MaxSpeedBase > 0 && CurrentSpellHandler == null && !IsMoving
 			    && !AttackState && !InCombat && !IsMovingOnPath && !IsReturningHome
-				//Check everything otherwise the Server will crash
+			    //Check everything otherwise the Server will crash
 			    && PathID != null && PathID != "" && PathID != "NULL")
 			{
 				PathPoint path = MovementMgr.LoadPath(PathID);
@@ -2657,7 +2657,7 @@ namespace DOL.GS
 				}
 			}
 
-            if (m_houseNumber > 0 && !(this is Consignment))
+			if (m_houseNumber > 0 && !(this is Consignment))
 			{
 				log.Info("NPC '" + Name + "' added to house N�" + m_houseNumber);
 				CurrentHouse = HouseMgr.GetHouse(m_houseNumber);
@@ -2666,11 +2666,11 @@ namespace DOL.GS
 				else
 					log.Info("Confirmed number: " + CurrentHouse.HouseNumber.ToString());
 			}
-      // [Ganrod] Nidel: Hack pour mettre full life au respawn.
-      if (!InCombat && IsAlive && base.Health < MaxHealth)
-      {
-        base.Health = MaxHealth;
-      }
+			// [Ganrod] Nidel: Hack pour mettre full life au respawn.
+			if (!InCombat && IsAlive && base.Health < MaxHealth)
+			{
+				base.Health = MaxHealth;
+			}
 			return true;
 		}
 
@@ -2989,60 +2989,60 @@ namespace DOL.GS
 			return LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.TowardsYou", aggroLevelString);
 		}
 
-        /// <summary>
-        /// Gets the proper pronoun including capitalization.
-        /// </summary>
-        /// <param name="form">1=his; 2=him; 3=he</param>
-        /// <param name="capitalize"></param>
-        /// <returns></returns>
-        public override string GetPronoun(int form, bool capitalize)
-        {
-            String language = ServerProperties.Properties.DB_LANGUAGE;
+		/// <summary>
+		/// Gets the proper pronoun including capitalization.
+		/// </summary>
+		/// <param name="form">1=his; 2=him; 3=he</param>
+		/// <param name="capitalize"></param>
+		/// <returns></returns>
+		public override string GetPronoun(int form, bool capitalize)
+		{
+			String language = ServerProperties.Properties.DB_LANGUAGE;
 
-            switch (Gender)
-            {
-                case Gender.Male:
-                    switch (form)
-                    {
-                        case 1:
-                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
-                                "GameLiving.Pronoun.Male.Possessive"));
-                        case 2:
-                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
-                                "GameLiving.Pronoun.Male.Objective"));
-                        default:
-                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
-                                "GameLiving.Pronoun.Male.Subjective"));
-                    }
+			switch (Gender)
+			{
+				case Gender.Male:
+					switch (form)
+					{
+						case 1:
+							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+							                                                         "GameLiving.Pronoun.Male.Possessive"));
+						case 2:
+							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+							                                                         "GameLiving.Pronoun.Male.Objective"));
+						default:
+							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+							                                                         "GameLiving.Pronoun.Male.Subjective"));
+					}
 
-                case Gender.Female:
-                    switch (form)
-                    {
-                        case 1:
-                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
-                                "GameLiving.Pronoun.Female.Possessive"));
-                        case 2:
-                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
-                                "GameLiving.Pronoun.Female.Objective"));
-                        default:
-                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
-                                "GameLiving.Pronoun.Female.Subjective"));
-                    }
-                default:
-                    switch (form)
-                    {
-                        case 1:
-                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
-                                "GameLiving.Pronoun.Neutral.Possessive"));
-                        case 2:
-                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
-                                "GameLiving.Pronoun.Neutral.Objective"));
-                        default:
-                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
-                                "GameLiving.Pronoun.Neutral.Subjective"));
-                    }
-            }
-        }
+				case Gender.Female:
+					switch (form)
+					{
+						case 1:
+							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+							                                                         "GameLiving.Pronoun.Female.Possessive"));
+						case 2:
+							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+							                                                         "GameLiving.Pronoun.Female.Objective"));
+						default:
+							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+							                                                         "GameLiving.Pronoun.Female.Subjective"));
+					}
+				default:
+					switch (form)
+					{
+						case 1:
+							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+							                                                         "GameLiving.Pronoun.Neutral.Possessive"));
+						case 2:
+							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+							                                                         "GameLiving.Pronoun.Neutral.Objective"));
+						default:
+							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+							                                                         "GameLiving.Pronoun.Neutral.Subjective"));
+					}
+			}
+		}
 
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
@@ -3052,8 +3052,8 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = base.GetExamineMessages(player);
-			list.Add(LanguageMgr.GetTranslation(player.Client, "GameNPC.GetExamineMessages.YouExamine", 
-                GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client, "GameNPC.GetExamineMessages.YouExamine",
+			                                    GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
 
 			return list;
 		}
@@ -3170,7 +3170,7 @@ namespace DOL.GS
 
 			//TODO: Guards in rvr areas doesn't need check
 			if (text == "task")
-		    {
+			{
 				if (source.TargetObject == null)
 					return false;
 				if (KillTask.CheckAvailability(player, (GameLiving) source.TargetObject))
@@ -3188,7 +3188,7 @@ namespace DOL.GS
 					CraftTask.BuildTask(player, (GameLiving) source.TargetObject);
 					return true;
 				}
-		    }
+			}
 			return true;
 		}
 
@@ -3259,10 +3259,10 @@ namespace DOL.GS
 
 			TargetObject = target;
 
-			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS && 
-				Brain != null && 
-				Brain is IControlledBrain && 
-				(target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain != null && (target as GameNPC).Brain is IControlledBrain)))
+			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
+			    Brain != null &&
+			    Brain is IControlledBrain &&
+			    (target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain != null && (target as GameNPC).Brain is IControlledBrain)))
 			{
 				GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(Last_LOS_Target_Property, null);
 				if (lastTarget != null && lastTarget == target)
@@ -3377,9 +3377,9 @@ namespace DOL.GS
 			base.RangedAttackFinished();
 
 			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
-				Brain != null &&
-				Brain is IControlledBrain &&
-				(TargetObject is GamePlayer || (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)))
+			    Brain != null &&
+			    Brain is IControlledBrain &&
+			    (TargetObject is GamePlayer || (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)))
 			{
 				GamePlayer player = null;
 
@@ -3427,25 +3427,25 @@ namespace DOL.GS
 		}
 
 
-        private void SetLastMeleeAttackTick()
-        {
-            if (TargetObject.Realm == 0 || Realm == 0)
-                m_lastAttackTickPvE = m_CurrentRegion.Time;
-            else
-                m_lastAttackTickPvP = m_CurrentRegion.Time;
-        }
+		private void SetLastMeleeAttackTick()
+		{
+			if (TargetObject.Realm == 0 || Realm == 0)
+				m_lastAttackTickPvE = m_CurrentRegion.Time;
+			else
+				m_lastAttackTickPvP = m_CurrentRegion.Time;
+		}
 
-        private void StartMeleeAttackTimer()
-        {
-            if (m_attackers.Count == 0)
-            {
-                if (SpellTimer == null)
-                    SpellTimer = new SpellAction(this);
+		private void StartMeleeAttackTimer()
+		{
+			if (m_attackers.Count == 0)
+			{
+				if (SpellTimer == null)
+					SpellTimer = new SpellAction(this);
 
-                if (!SpellTimer.IsAlive)
-                    SpellTimer.Start(1);
-            }
-        }
+				if (!SpellTimer.IsAlive)
+					SpellTimer.Start(1);
+			}
+		}
 
 		/// <summary>
 		/// Gets/sets the object health
@@ -3692,11 +3692,11 @@ namespace DOL.GS
 		/// <param name="target"></param>
 		public void SwitchToMelee(GameObject target)
 		{
-            // Tolakram: Order is important here.  First StopAttack, then switch weapon
-            StopAttack();
-            StopMoving();
+			// Tolakram: Order is important here.  First StopAttack, then switch weapon
+			StopAttack();
+			StopMoving();
 
-            InventoryItem twohand = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+			InventoryItem twohand = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
 			InventoryItem righthand = Inventory.GetItem(eInventorySlot.RightHandWeapon);
 
 			if (twohand != null && righthand == null)
@@ -3707,8 +3707,8 @@ namespace DOL.GS
 					SwitchWeapon(eActiveWeaponSlot.TwoHanded);
 				else SwitchWeapon(eActiveWeaponSlot.Standard);
 			}
-			else 
-                SwitchWeapon(eActiveWeaponSlot.Standard);
+			else
+				SwitchWeapon(eActiveWeaponSlot.Standard);
 
 			StartAttack(target);
 		}
@@ -3736,16 +3736,16 @@ namespace DOL.GS
 			{
 				if (attackType == AttackData.eAttackType.Ranged || attackType == AttackData.eAttackType.Spell)
 				{
-                    if( this.IsWithinRadius( attacker, 150 ) == false )
-					    return false;
+					if( this.IsWithinRadius( attacker, 150 ) == false )
+						return false;
 				}
 			}
 
-            // Experimental - this prevents interrupts from causing ranged attacks to always switch to melee
-            if (AttackState && HealthPercent < MINHEALTHPERCENTFORRANGEDATTACK) 
-            {
-                SwitchToMelee(attacker);
-            }
+			// Experimental - this prevents interrupts from causing ranged attacks to always switch to melee
+			if (AttackState && HealthPercent < MINHEALTHPERCENTFORRANGEDATTACK)
+			{
+				SwitchToMelee(attacker);
+			}
 
 			return base.OnInterruptTick(attacker, attackType);
 		}
@@ -3880,17 +3880,17 @@ namespace DOL.GS
 			Health = MaxHealth;
 			Mana = MaxMana;
 			Endurance = MaxEndurance;
-            int origSpawnX = m_spawnPoint.X;
-            int origSpawnY = m_spawnPoint.Y;
+			int origSpawnX = m_spawnPoint.X;
+			int origSpawnY = m_spawnPoint.Y;
 			//X=(m_spawnX+Random(750)-350); //new SpawnX = oldSpawn +- 350 coords
 			//Y=(m_spawnY+Random(750)-350);	//new SpawnX = oldSpawn +- 350 coords
 			X = m_spawnPoint.X;
-            Y = m_spawnPoint.Y;
-            Z = m_spawnPoint.Z;
+			Y = m_spawnPoint.Y;
+			Z = m_spawnPoint.Z;
 			Heading = m_spawnHeading;
 			AddToWorld();
-            m_spawnPoint.X = origSpawnX;
-            m_spawnPoint.Y = origSpawnY;
+			m_spawnPoint.X = origSpawnX;
+			m_spawnPoint.Y = origSpawnY;
 			return 0;
 		}
 
@@ -3904,7 +3904,7 @@ namespace DOL.GS
 			int period = m_healthRegenerationPeriod;
 			if (!InCombat)
 			{
-                int oldPercent = HealthPercent;
+				int oldPercent = HealthPercent;
 				period = base.HealthRegenerationTimerCallback(selfRegenerationTimer);
 				if (oldPercent != HealthPercent)
 					BroadcastUpdate();
@@ -3917,10 +3917,10 @@ namespace DOL.GS
 		/// </summary>
 		public override int AttackCriticalChance(InventoryItem weapon)
 		{
-            if (weapon != null && weapon.Item_Type == Slot.RANGED && RangedAttackType == eRangedAttackType.Critical)
-                return 0; // no crit damage for crit shots
+			if (weapon != null && weapon.Item_Type == Slot.RANGED && RangedAttackType == eRangedAttackType.Critical)
+				return 0; // no crit damage for crit shots
 
-            return GetModified(eProperty.CriticalMeleeHitChance);
+			return GetModified(eProperty.CriticalMeleeHitChance);
 		}
 
 		/// <summary>
@@ -3954,10 +3954,10 @@ namespace DOL.GS
 			base.StopAttack();
 			StopFollowing();
 
-            // Tolakram: If npc has a distance weapon it needs to be made active after attack is stopped
-            if (Inventory != null && Inventory.GetItem(eInventorySlot.DistanceWeapon) != null && ActiveWeaponSlot != eActiveWeaponSlot.Distance)
-                SwitchWeapon(eActiveWeaponSlot.Distance);
-        }
+			// Tolakram: If npc has a distance weapon it needs to be made active after attack is stopped
+			if (Inventory != null && Inventory.GetItem(eInventorySlot.DistanceWeapon) != null && ActiveWeaponSlot != eActiveWeaponSlot.Distance)
+				SwitchWeapon(eActiveWeaponSlot.Distance);
+		}
 
 		/// <summary>
 		/// This method is called to drop loot after this mob dies
@@ -4014,7 +4014,17 @@ namespace DOL.GS
 					}
 					else
 					{
-						loot = new GameInventoryItem(new InventoryItem(lootTemplate));
+						if (lootTemplate is ItemUnique)
+						{
+							GameServer.Database.AddObject(lootTemplate);
+							InventoryItem invitem = new InventoryItem(lootTemplate as ItemUnique);
+							invitem.Creator = killer.Name;
+							invitem.IsCrafted = false;
+							loot = new GameInventoryItem(invitem);
+						}
+						else
+							loot = new GameInventoryItem(new InventoryItem(lootTemplate));
+						
 						loot.X = X;
 						loot.Y = Y;
 						loot.Z = Z;
@@ -4053,7 +4063,7 @@ namespace DOL.GS
 					}
 					if (playerAttacker == null) return; // no loot if mob kills another mob
 
-                    message = String.Format(LanguageMgr.GetTranslation(playerAttacker.Client, "GameNPC.DropLoot.Drops", GetName(0, true), loot.GetName(1, false)));
+					message = String.Format(LanguageMgr.GetTranslation(playerAttacker.Client, "GameNPC.DropLoot.Drops", GetName(0, true), loot.GetName(1, false)));
 
 					dropMessages.Add(message);
 					loot.AddToWorld();
@@ -4137,40 +4147,40 @@ namespace DOL.GS
 
 		#region Spell
 
-        /// <summary>
-        /// Whether or not the NPC can cast harmful spells
-        /// at the moment.
-        /// </summary>
-        public override bool CanCastHarmfulSpells
-        {
-            get
-            {
-                if (!base.CanCastHarmfulSpells)
-                    return false;
+		/// <summary>
+		/// Whether or not the NPC can cast harmful spells
+		/// at the moment.
+		/// </summary>
+		public override bool CanCastHarmfulSpells
+		{
+			get
+			{
+				if (!base.CanCastHarmfulSpells)
+					return false;
 
-                IList<Spell> harmfulSpells = HarmfulSpells;
+				IList<Spell> harmfulSpells = HarmfulSpells;
 
-                foreach (Spell harmfulSpell in harmfulSpells)
-                    if (harmfulSpell.CastTime == 0)
-                        return true;
+				foreach (Spell harmfulSpell in harmfulSpells)
+					if (harmfulSpell.CastTime == 0)
+						return true;
 
-                return (harmfulSpells.Count > 0 && !IsBeingInterrupted);
-            }
-        }
+				return (harmfulSpells.Count > 0 && !IsBeingInterrupted);
+			}
+		}
 
-        public override IList<Spell> HarmfulSpells
-        {
-            get
-            {
-                IList<Spell> harmfulSpells = new List<Spell>();
+		public override IList<Spell> HarmfulSpells
+		{
+			get
+			{
+				IList<Spell> harmfulSpells = new List<Spell>();
 
-                foreach (Spell spell in Spells)
-                    if (spell.IsHarmful)
-                        harmfulSpells.Add(spell);
+				foreach (Spell spell in Spells)
+					if (spell.IsHarmful)
+						harmfulSpells.Add(spell);
 
-                return harmfulSpells;
-            }
-        }
+				return harmfulSpells;
+			}
+		}
 
 		private IList m_spells = new ArrayList(1);
 		/// <summary>
@@ -4294,14 +4304,14 @@ namespace DOL.GS
 		/// <param name="line"></param>
 		public override void CastSpell(Spell spell, SpellLine line)
 		{
-            // Aredhel: Waiting on the LOS check completely f* up Facilitate
-            // Painworking timing, avoid LOS checks for necro pets AT ALL!
+			// Aredhel: Waiting on the LOS check completely f* up Facilitate
+			// Painworking timing, avoid LOS checks for necro pets AT ALL!
 
-            if (this is NecromancerPet)
-            {
-                base.CastSpell(spell, line);
-                return;
-            }
+			if (this is NecromancerPet)
+			{
+				base.CastSpell(spell, line);
+				return;
+			}
 
 			// Let's do a few checks to make sure it doesn't just wait on the LOS check
 			int tempProp = TempProperties.getProperty<int>(LOSTEMPCHECKER);
@@ -4393,14 +4403,14 @@ namespace DOL.GS
 			if (brain != null)
 				brain.Notify(e, sender, args);
 
-            if (e == GameNPCEvent.ArriveAtTarget)
-            {
-                if (IsReturningToSpawnPoint)
-                {
-                    TurnTo(SpawnHeading);
-                    IsReturningToSpawnPoint = false;
-                }
-            }
+			if (e == GameNPCEvent.ArriveAtTarget)
+			{
+				if (IsReturningToSpawnPoint)
+				{
+					TurnTo(SpawnHeading);
+					IsReturningToSpawnPoint = false;
+				}
+			}
 		}
 
 		#endregion
@@ -4508,10 +4518,10 @@ namespace DOL.GS
 		}
 
 
-        /// <summary>
-        /// Gender of this NPC.
-        /// </summary>
-        public override Gender Gender { get; set; }
+		/// <summary>
+		/// Gender of this NPC.
+		/// </summary>
+		public override Gender Gender { get; set; }
 
 		public GameNPC Copy()
 		{
@@ -4652,7 +4662,7 @@ namespace DOL.GS
 			m_followTarget = new WeakRef(null);
 
 			m_size = 50; //Default size
-            Target = new Point3D();
+			Target = new Point3D();
 			m_followMinDist = 100;
 			m_followMaxDist = 3000;
 			m_flags = 0;
@@ -4660,8 +4670,8 @@ namespace DOL.GS
 			m_roamingRange = 0; // default to non roaming - tolakram
 			m_boatowner_id = "";
 
-            if ( m_spawnPoint == null )
-                m_spawnPoint = new Point3D();
+			if ( m_spawnPoint == null )
+				m_spawnPoint = new Point3D();
 
 			//m_factionName = "";
 			LinkedFactions = new ArrayList(1);

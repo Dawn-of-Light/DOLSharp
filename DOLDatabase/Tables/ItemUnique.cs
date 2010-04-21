@@ -23,7 +23,7 @@ using log4net;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "ItemUnique", PreCache = true)]
+	[DataTable(TableName = "ItemUnique", PreCache = false)]
 	public class ItemUnique : ItemTemplate
 	{
 		public ItemUnique():base()
