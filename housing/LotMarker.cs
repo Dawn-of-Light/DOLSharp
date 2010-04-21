@@ -218,7 +218,7 @@ namespace DOL.GS.Housing
 				return 0;
 
 			int itemCount = Math.Max(1, item.Count);
-			return item.Value * itemCount / 2;
+			return item.Price * itemCount / 2;
 		}
 
 		public override void SaveIntoDatabase()

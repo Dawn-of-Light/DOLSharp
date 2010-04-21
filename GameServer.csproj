@@ -194,7 +194,7 @@
     <Compile Include="commands\GMCommands\harm.cs" />
     <Compile Include="commands\GMCommands\heal.cs" />
     <Compile Include="commands\GMCommands\Instance.cs" />
-    <Compile Include="commands\GMCommands\item.cs" />
+    <Compile Include="commands\gmcommands\item.cs" />
     <Compile Include="commands\GMCommands\jump.cs" />
     <Compile Include="commands\GMCommands\keep.cs" />
     <Compile Include="commands\GMCommands\KeepComponent.cs" />
@@ -318,17 +318,17 @@
     <Compile Include="commands\PlayerCommands\who.cs" />
     <Compile Include="commands\PlayerCommands\xp.cs" />
     <Compile Include="commands\PlayerCommands\yell.cs" />
-    <Compile Include="Crafting\AbstractCraftingSkill.cs">
+    <Compile Include="craft\AbstractCraftingSkill.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\AbstractProfession.cs" />
-    <Compile Include="Crafting\AdvancedCraftingSkill.cs">
+    <Compile Include="craft\AbstractProfession.cs" />
+    <Compile Include="craft\AdvancedCraftingSkill.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\Alchemy.cs">
+    <Compile Include="craft\Alchemy.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\ArmorCrafting.cs">
+    <Compile Include="craft\ArmorCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="effects\DummyEffect.cs" />
@@ -343,47 +343,47 @@
     <Compile Include="gameobjects\CustomNPC\Teleporters\SimpleTeleporter.cs" />
     <Compile Include="gameobjects\GameTrainingDummy.cs" />
     <Compile Include="gameobjects\craft master\BasicCraftingMaster.cs" />
-    <Compile Include="Crafting\ClothWorking.cs">
+    <Compile Include="craft\ClothWorking.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\BasicCrafting.cs" />
-    <Compile Include="Crafting\CraftingMgr.cs">
+    <Compile Include="craft\BasicCrafting.cs" />
+    <Compile Include="craft\CraftingMgr.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\Fletching.cs">
+    <Compile Include="craft\Fletching.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\GemCutting.cs">
+    <Compile Include="craft\GemCutting.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\HerbalCrafting.cs">
+    <Compile Include="craft\HerbalCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\LeatherCrafting.cs">
+    <Compile Include="craft\LeatherCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\MetalWorking.cs">
+    <Compile Include="craft\MetalWorking.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\Repair.cs">
+    <Compile Include="craft\Repair.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\Salvage.cs">
+    <Compile Include="craft\Salvage.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\SiegeCrafting.cs">
+    <Compile Include="craft\SiegeCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\SpellCrafting.cs">
+    <Compile Include="craft\SpellCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\Tailoring.cs">
+    <Compile Include="craft\Tailoring.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\WeaponCrafting.cs">
+    <Compile Include="craft\WeaponCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crafting\WoodWorking.cs">
+    <Compile Include="craft\WoodWorking.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="dbconverters\Version004.cs" />
@@ -1212,98 +1212,6 @@
     <Compile Include="behaviour\Requirements\GuildRequirement.cs" />
     <Compile Include="behaviour\Requirements\RealmPointsRequirement.cs" />
     <Compile Include="quests\Catacombs\ObeliskCredit.cs" />
-    <Compile Include="quests\Classic\albion\AFewRepairs.cs" />
-    <Compile Include="quests\Classic\albion\AfterTheAccident.cs" />
-    <Compile Include="quests\Classic\albion\AgainstTheGrain.cs" />
-    <Compile Include="quests\Classic\albion\Aiding_Guard_Alakyrr.cs" />
-    <Compile Include="quests\Classic\albion\AMessageToTheManes.cs" />
-    <Compile Include="quests\Classic\albion\AndrewsSkins.cs" />
-    <Compile Include="quests\Classic\albion\ANewHeroesWelcome.cs" />
-    <Compile Include="quests\Classic\albion\ArgussArrows.cs" />
-    <Compile Include="quests\Classic\albion\ArleighsAssistant.cs" />
-    <Compile Include="quests\Classic\albion\ArrowsForYettaFletcher.cs" />
-    <Compile Include="quests\Classic\albion\BaseFrederickQuest.cs" />
-    <Compile Include="quests\Classic\albion\BeginningOfWar.cs" />
-    <Compile Include="quests\Classic\albion\BoarStew.cs" />
-    <Compile Include="quests\Classic\albion\BoulderlingBalm.cs" />
-    <Compile Include="quests\Classic\albion\BreakingTheBandits.cs" />
-    <Compile Include="quests\Classic\albion\BuildingABetterBow.cs" />
-    <Compile Include="quests\Classic\albion\Cellar_Infestation.cs" />
-    <Compile Include="quests\Classic\albion\CemmethsOrders.cs" />
-    <Compile Include="quests\Classic\albion\ChildsPlay.cs" />
-    <Compile Include="quests\Classic\albion\CityOfCamelot.cs" />
-    <Compile Include="quests\Classic\albion\ClericMulgrut.cs" />
-    <Compile Include="quests\Classic\albion\Collection.cs" />
-    <Compile Include="quests\Classic\albion\Culmination.cs" />
-    <Compile Include="quests\Classic\albion\Disenchanted.cs" />
-    <Compile Include="quests\Classic\albion\DredgeUpAPledge.cs" />
-    <Compile Include="quests\Classic\albion\epic\Academy50.cs" />
-    <Compile Include="quests\Classic\albion\epic\Church50.cs" />
-    <Compile Include="quests\Classic\albion\epic\Defenders50.cs" />
-    <Compile Include="quests\Classic\albion\epic\Shadows50.cs" />
-    <Compile Include="quests\Classic\albion\Frontiers.cs" />
-    <Compile Include="quests\Classic\albion\GodelevasNeed.cs" />
-    <Compile Include="quests\Classic\albion\GreenerPastures.cs" />
-    <Compile Include="quests\Classic\albion\HalfOgreAllMan.cs" />
-    <Compile Include="quests\Classic\albion\HeartOfSephucoth.cs" />
-    <Compile Include="quests\Classic\albion\HuntForArachneida.cs" />
-    <Compile Include="quests\Classic\albion\HuntForSlith.cs" />
-    <Compile Include="quests\Classic\albion\ImportantDelivery.cs" />
-    <Compile Include="quests\Classic\albion\IreFairyIre.cs" />
-    <Compile Include="quests\Classic\albion\LawrencesOil.cs" />
-    <Compile Include="quests\Classic\albion\MarlinsSalesPitch.cs" />
-    <Compile Include="quests\Classic\albion\NoHopeForTheHopeful.cs" />
-    <Compile Include="quests\Classic\albion\Nuisances.cs" />
-    <Compile Include="quests\Classic\albion\RecruitingNothingButTrouble.cs" />
-    <Compile Include="quests\Classic\albion\RevengeTheOtherWhiteMeat.cs" />
-    <Compile Include="quests\Classic\albion\ShakenSquire.cs" />
-    <Compile Include="quests\Classic\albion\TombWithAView.cs" />
-    <Compile Include="quests\Classic\albion\ToReachTheBreach.cs" />
-    <Compile Include="quests\Classic\albion\TraitorInCotswold.cs" />
-    <Compile Include="quests\Classic\albion\TreviansBestFriend.cs" />
-    <Compile Include="quests\Classic\albion\WhenBloodSpeaks.cs" />
-    <Compile Include="quests\Classic\albion\WhenGoodBrowniesGoBad.cs" />
-    <Compile Include="quests\Classic\albion\WolfPeltCloak.cs" />
-    <Compile Include="quests\Classic\albion\YdeniasCrush.cs" />
-    <Compile Include="quests\Classic\hibernia\BaseAddrirQuest.cs" />
-    <Compile Include="quests\Classic\hibernia\ChildsPlay.cs" />
-    <Compile Include="quests\Classic\hibernia\CityOfTirnaNog.cs" />
-    <Compile Include="quests\Classic\hibernia\epic\Essence50.cs" />
-    <Compile Include="quests\Classic\hibernia\epic\Focus50.cs" />
-    <Compile Include="quests\Classic\hibernia\epic\Harmony50.cs" />
-    <Compile Include="quests\Classic\hibernia\ImportantDelivery.cs" />
-    <Compile Include="quests\Classic\hibernia\MagicalBacklash.cs" />
-    <Compile Include="quests\Classic\hibernia\Nuisances.cs" />
-    <Compile Include="quests\Classic\hibernia\SearchForKnowledge.cs" />
-    <Compile Include="quests\Classic\hibernia\ToReachTheBreach.cs" />
-    <Compile Include="quests\Classic\hibernia\TraitorInMagMell.cs" />
-    <Compile Include="quests\Classic\midgard\Amoras_Aid.cs" />
-    <Compile Include="quests\Classic\midgard\A_Beary_Bad_Problem.cs" />
-    <Compile Include="quests\Classic\midgard\Bad_Food.cs" />
-    <Compile Include="quests\Classic\midgard\BaseDalikorQuest.cs" />
-    <Compile Include="quests\Classic\midgard\Bear Skins.cs" />
-    <Compile Include="quests\Classic\midgard\BeginningOfWar.cs" />
-    <Compile Include="quests\Classic\midgard\Childs_Play.cs" />
-    <Compile Include="quests\Classic\midgard\CityOfJordheim.cs" />
-    <Compile Include="quests\Classic\midgard\Collection.cs" />
-    <Compile Include="quests\Classic\midgard\Culmination.cs" />
-    <Compile Include="quests\Classic\midgard\epic\MidgardRogue50.cs" />
-    <Compile Include="quests\Classic\midgard\epic\Mystic50.cs" />
-    <Compile Include="quests\Classic\midgard\epic\Seer50.cs" />
-    <Compile Include="quests\Classic\midgard\epic\Viking50.cs" />
-    <Compile Include="quests\Classic\midgard\Essence_of_Life.cs" />
-    <Compile Include="quests\Classic\midgard\Frontiers.cs" />
-    <Compile Include="quests\Classic\midgard\ImportantDelivery.cs" />
-    <Compile Include="quests\Classic\midgard\Learn_The_Hunt.cs" />
-    <Compile Include="quests\Classic\midgard\Mauler_Invasion.cs" />
-    <Compile Include="quests\Classic\midgard\Mead_Run.cs" />
-    <Compile Include="quests\Classic\midgard\Nuisances.cs" />
-    <Compile Include="quests\Classic\midgard\Rindas_Lost_Key.cs" />
-    <Compile Include="quests\Classic\midgard\StolenEggs.cs" />
-    <Compile Include="quests\Classic\midgard\Sveabone_Hilt_Sword.cs" />
-    <Compile Include="quests\Classic\midgard\The_Birthday_Gift.cs" />
-    <Compile Include="quests\Classic\midgard\TraitorInMularn.cs" />
-    <Compile Include="quests\Classic\midgard\Trial_of_Strength.cs" />
     <Compile Include="behaviour\Requirements\InventoryItemRequirement.cs" />
     <Compile Include="behaviour\Triggers\ItemUsedTrigger.cs" />
     <Compile Include="behaviour\Triggers\TimerTrigger.cs" />

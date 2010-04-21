@@ -369,7 +369,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//set right base item, so we can recreate it on take.
                         if (orgitem.Id_nb.Contains("GuildBanner"))
                         {
-                            iitem.BaseItem = (ItemTemplate)orgitem;
+                            iitem.BaseItem = orgitem.Template;
                             iitem.Size = 50; // Banners have to be reduced in size
                         }
                         else
@@ -480,7 +480,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                                 }
                             }
                             GameServer.Database.AddObject(point);
-                            GameObject obj = house.FillHookpoint(orgitem, (uint)position, orgitem.Id_nb);
+                            GameObject obj = house.FillHookpoint(orgitem.Template, (uint)position, orgitem.Id_nb);
                             house.HousepointItems[point.Position] = point;
                             client.Player.Inventory.RemoveItem(orgitem);
                             client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointAdded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -556,7 +556,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					log.Debug("HOUSING: " + client.Player.Name + " placing house vault at position " + position + " in house " + house.HouseNumber + " model " + house.Model);
 
-					GameHouseVault houseVault = new GameHouseVault(orgitem, vaultIndex);
+					GameHouseVault houseVault = new GameHouseVault(orgitem.Template, vaultIndex);
 					houseVault.Attach(house, (uint)position, (ushort)((client.Player.Heading + 2048) % 4096));
 					client.Player.Inventory.RemoveItem(orgitem);
 					house.SaveIntoDatabase();

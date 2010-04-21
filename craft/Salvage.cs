@@ -288,8 +288,8 @@ namespace DOL.GS
 		/// </summary>
 		protected static int CalculateMaterialCount(GamePlayer player, InventoryItem item, DBSalvage material)
 		{
-			int maxCount = (int)Math.Floor(Money.GetMoney(0, 0, item.Gold, item.Silver ,item.Copper) * 0.45 / Money.GetMoney(0, 0, material.RawMaterial.Gold, material.RawMaterial.Silver ,material.RawMaterial.Copper)); // crafted item return max 45% of the item value in material
-			if(item.CrafterName == null || item.CrafterName == "") maxCount = (int)Math.Ceiling((double)maxCount / 2); // merchand item return max the number of material of the same item if it was crafted crafted / 2 and Ceiling (it give max 30% of the base value)
+			int maxCount = (int)(item.Price * 0.45 / material.RawMaterial.Price); // crafted item return max 45% of the item value in material
+			if(item.IsCrafted) maxCount = (int)Math.Ceiling((double)maxCount / 2); // merchand item return max the number of material of the same item if it was crafted crafted / 2 and Ceiling (it give max 30% of the base value)
 			
 			int playerPercent = player.GetCraftingSkillValue(CraftingMgr.GetSecondaryCraftingSkillToWorkOnItem(item)) * 100 / CraftingMgr.GetItemCraftLevel(item);
 			if(playerPercent > 100) playerPercent = 100;

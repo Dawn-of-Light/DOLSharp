@@ -35,8 +35,7 @@ namespace DOL.GS.Spells
             : base(caster, spell, line)
         {
             _artefJavelin = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Artef_Javelin'") ?? Javelin;
-            item = new InventoryItem();
-            item.CopyFrom(_artefJavelin);
+            item = new InventoryItem(_artefJavelin);
         }
 
         private ItemTemplate Javelin
@@ -51,9 +50,7 @@ namespace DOL.GS.Spells
                     _artefJavelin.Id_nb = "Artef_Javelin";
                     _artefJavelin.Name = "Golden Javelin";
                     _artefJavelin.Level = 50;
-                    _artefJavelin.Durability = 50000;
                     _artefJavelin.MaxDurability = 50000;
-                    _artefJavelin.Condition = 50000;
                     _artefJavelin.MaxCondition = 50000;
                     _artefJavelin.Quality = 100;
                     _artefJavelin.Object_Type = (int) eObjectType.Magical;
