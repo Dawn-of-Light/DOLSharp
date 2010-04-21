@@ -29,32 +29,16 @@ namespace DOL
 		/// List of characters and the one time drops they have received.
 		/// </summary>
 		[DataTable(TableName="CharacterXOneTimeDrop")]
-		public class CharacterXOneTimeDrop : DataObject 
+		public class CharacterXOneTimeDrop : DataObject
 		{
 			private string m_characterID;
 			private string m_itemTemplateID;
-			private static bool m_autoSave;
 
-			public CharacterXOneTimeDrop() 
+			public CharacterXOneTimeDrop()
 			{
 				m_itemTemplateID = "";
 				m_characterID = "";
-				m_autoSave = false;
-			}
-
-			/// <summary>
-			/// Auto save this table
-			/// </summary>
-			override public  bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
-				}
+				AutoSave = false;
 			}
 
 			/// <summary>
@@ -85,7 +69,7 @@ namespace DOL
 					return m_itemTemplateID;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_itemTemplateID = value;
 				}

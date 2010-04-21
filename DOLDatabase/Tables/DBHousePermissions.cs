@@ -47,19 +47,17 @@ namespace DOL
 			private byte m_merchant;
 			private byte m_payRent;
 
-			static bool m_autoSave;
-
 
 			public DBHousePermissions(int n, int lvl)
 			{
-				m_autoSave = false;
+				AutoSave = false;
 				HouseNumber = n;
 				PermLevel = lvl;
 			}
 
 			public DBHousePermissions()
 			{
-				m_autoSave = false;
+				AutoSave = false;
 			}
 
 
@@ -272,18 +270,6 @@ namespace DOL
 				{
 					Dirty = true;
 					m_payRent = value;
-				}
-			}
-
-			override public bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
 				}
 			}
 		}

@@ -22,29 +22,13 @@ namespace DOL.Database
 		private int m_templateType;
 		private int m_keepType;
 
-		private bool m_autoSave;
-
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		public DBKeepPosition()
 		{
 			m_keepType = 0; // default to any keep type
-			m_autoSave = true;
 		}
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
-		}
-
 		/// <summary>
 		/// The Skin ID of the Keep Component the Position is assigned to
 		/// </summary>

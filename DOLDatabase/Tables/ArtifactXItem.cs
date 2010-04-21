@@ -23,74 +23,74 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-    /// <summary>
-    /// Relation between artifacts and the actual items.
-    /// </summary>
-    /// <author>Aredhel</author>
-    [DataTable(TableName = "ArtifactXItem")]
-    public class ArtifactXItem : DataObject
-    {
-        private String m_artifactID;
-        private String m_itemID;
-        private String m_version;
+	/// <summary>
+	/// Relation between artifacts and the actual items.
+	/// </summary>
+	/// <author>Aredhel</author>
+	[DataTable(TableName = "ArtifactXItem")]
+	public class ArtifactXItem : DataObject
+	{
+		private String m_artifactID;
+		private String m_itemID;
+		private String m_version;
 		private int m_realm;
 
-        /// <summary>
-        /// Create a new artifact/item relation.
-        /// </summary>
-        public ArtifactXItem()
-            : base() { }
+		/// <summary>
+		/// Create a new artifact/item relation.
+		/// </summary>
+		public ArtifactXItem()
+			: base() { }
 
-        /// <summary>
-        /// Whether to auto-save this object or not.
-        /// </summary>
-        public override bool AutoSave
-        {
-            get { return false; }
-            set { }
-        }
+		/// <summary>
+		/// Whether to auto-save this object or not.
+		/// </summary>
+		public override bool AutoSave
+		{
+			get { return false; }
+			set { }
+		}
 
-        /// <summary>
-        /// The artifact ID.
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public String ArtifactID
-        {
-            get { return m_artifactID; }
-            set
-            {
-                Dirty = true;
-                m_artifactID = value;
-            }
-        }
+		/// <summary>
+		/// The artifact ID.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public String ArtifactID
+		{
+			get { return m_artifactID; }
+			set
+			{
+				Dirty = true;
+				m_artifactID = value;
+			}
+		}
 
-        /// <summary>
-        /// The item ID.
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public String ItemID
-        {
-            get { return m_itemID; }
-            set
-            {
-                Dirty = true;
-                m_itemID = value;
-            }
-        }
+		/// <summary>
+		/// The item ID.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public String ItemID
+		{
+			get { return m_itemID; }
+			set
+			{
+				Dirty = true;
+				m_itemID = value;
+			}
+		}
 
-        /// <summary>
-        /// The artifact version.
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public String Version
-        {
-            get { return m_version; }
-            set
-            {
-                Dirty = true;
-                m_version = value;
-            }
-        }
+		/// <summary>
+		/// The artifact version.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public String Version
+		{
+			get { return m_version; }
+			set
+			{
+				Dirty = true;
+				m_version = value;
+			}
+		}
 
 		/// <summary>
 		/// The realm.
@@ -105,5 +105,5 @@ namespace DOL.Database
 				m_realm = value;
 			}
 		}
-    }
+	}
 }

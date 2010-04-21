@@ -27,7 +27,6 @@ namespace DOL.Database
 	[DataTable(TableName="KeepComponent")]
 	public class DBKeepComponent : DataObject
 	{
-		static bool	m_autoSave;
 		private int m_skin;//todo eskin
 		private int m_x;
 		private int m_y;
@@ -43,7 +42,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBKeepComponent()
 		{
-			m_autoSave=false;
+			AutoSave=false;
 			m_skin = 0;
 			m_x = 0;
 			m_y = 0;
@@ -60,7 +59,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBKeepComponent(int componentID, int componentSkinID, int componentX, int componentY, int componentHead, int componentHeight, int componentHealth, int keepid, string createInfo) : this()
 		{
-			m_autoSave=false;
+			AutoSave=false;
 			m_skin = componentSkinID;
 			m_x = componentX;
 			m_y = componentY;
@@ -70,21 +69,6 @@ namespace DOL.Database
 			m_keepID = keepid;
 			m_keepComponentID = componentID;
 			m_createInfo = createInfo;
-		}
-
-		/// <summary>
-		/// autosave table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
 		}
 
 		/// <summary>
@@ -98,7 +82,7 @@ namespace DOL.Database
 				return m_x;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_x = value;
 			}
@@ -115,7 +99,7 @@ namespace DOL.Database
 				return m_y;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_y = value;
 			}
@@ -132,7 +116,7 @@ namespace DOL.Database
 				return m_heading;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_heading = value;
 			}
@@ -149,7 +133,7 @@ namespace DOL.Database
 				return m_health;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_health = value;
 			}
@@ -166,7 +150,7 @@ namespace DOL.Database
 				return m_skin;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_skin = value;
 			}
@@ -183,7 +167,7 @@ namespace DOL.Database
 				return m_keepID;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_keepID = value;
 			}
@@ -200,7 +184,7 @@ namespace DOL.Database
 				return m_keepComponentID;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_keepComponentID = value;
 			}

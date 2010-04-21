@@ -26,8 +26,6 @@ namespace DOL.Database
 	[DataTable(TableName="SinglePermission")]
 	public class DBSinglePermission : DataObject
 	{
-		static bool		m_autoSave;
-
 		private string	m_playerID;
 		private string	m_command;
 
@@ -35,19 +33,7 @@ namespace DOL.Database
 		{
 			m_playerID = "";
 			m_command = "";
-			m_autoSave=false;
-		}
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
+			AutoSave=false;
 		}
 
 		[DataElement(AllowDbNull = false, Index=true)]

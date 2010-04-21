@@ -83,12 +83,12 @@ namespace DOL.GS.Commands
 	     "'/mob equiptemplate close' to finish the inventory template you are creating",
 	     "'/mob dropcount [number]' to set number of drops for mob (omit number to view current value)",
 	     "'/mob addloot <ItemTemplateID> <chance> [count]' to add loot to the mob's unique drop table.  Optionally specify count of how many to drop if chance = 100%",
-		 "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob.",
-		 "'/mob addmobxlt <max num drops>' Add a MobXLootTemplate entry for this mob in order to set the max number of drops per kill",
-		 "'/mob viewloot [random]' to view the selected mob's loot table.  Use random to simulate a kill drop.",
-		 "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
-		 "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table",
-		 "'/mob refreshloot' to refresh all loot generators for this mob",
+	     "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob.",
+	     "'/mob addmobxlt <max num drops>' Add a MobXLootTemplate entry for this mob in order to set the max number of drops per kill",
+	     "'/mob viewloot [random] [inv]' to view the selected mob's loot table.  Use random to simulate a kill drop, random inv to simulate and generate the loots",
+	     "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
+	     "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table",
+	     "'/mob refreshloot' to refresh all loot generators for this mob",
 	     "'/mob copy [name]' copies a mob exactly and places it at your location",
 	     "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
 	     "'/mob npctemplate create <NPCTemplateID>' creates a new template from selected mob",
@@ -128,16 +128,16 @@ namespace DOL.GS.Commands
 					targetMob = (GameNPC)client.Player.TargetObject;
 
 				if (args[1] != "create"
-					&& args[1] != "fastcreate"
-					&& args[1] != "nrandcreate"
-					&& args[1] != "nfastcreate"
-					&& args[1] != "npctemplate"
-					&& args[1] != "model"
-					&& args[1] != "copy"
-					&& args[1] != "select"
-					&& args[1] != "reload"
-					&& args[1] != "findname"
-					&& targetMob == null)
+				    && args[1] != "fastcreate"
+				    && args[1] != "nrandcreate"
+				    && args[1] != "nfastcreate"
+				    && args[1] != "npctemplate"
+				    && args[1] != "model"
+				    && args[1] != "copy"
+				    && args[1] != "select"
+				    && args[1] != "reload"
+				    && args[1] != "findname"
+				    && targetMob == null)
 				{
 					// it is not a mob
 					if (client.Player.TargetObject != null)
@@ -156,61 +156,61 @@ namespace DOL.GS.Commands
 
 				switch (args[1])
 				{
-					case "create": create(client, args); break;
-					case "fastcreate": fastcreate(client, args); break;
-					case "nfastcreate": nfastcreate(client, args); break;
-					case "nrandcreate": nrandcreate(client, args); break;
-					case "model": model(client, targetMob, args); break;
-					case "size": size(client, targetMob, args); break;
-					case "name": name(client, targetMob, args); break;
-					case "guild": guild(client, targetMob, args); break;
-					case "peace": peace(client, targetMob, args); break;
-					case "aggro": aggro(client, targetMob, args); break;
-					case "range": range(client, targetMob, args); break;
-					case "distance": distance(client, targetMob, args); break;
-					case "roaming": roaming(client, targetMob, args); break;
-					case "damagetype": damagetype(client, targetMob, args); break;
-					case "movehere": movehere(client, targetMob, args); break;
-					case "location": location(client, targetMob, args); break;
-					case "remove": remove(client, targetMob, args); break;
+						case "create": create(client, args); break;
+						case "fastcreate": fastcreate(client, args); break;
+						case "nfastcreate": nfastcreate(client, args); break;
+						case "nrandcreate": nrandcreate(client, args); break;
+						case "model": model(client, targetMob, args); break;
+						case "size": size(client, targetMob, args); break;
+						case "name": name(client, targetMob, args); break;
+						case "guild": guild(client, targetMob, args); break;
+						case "peace": peace(client, targetMob, args); break;
+						case "aggro": aggro(client, targetMob, args); break;
+						case "range": range(client, targetMob, args); break;
+						case "distance": distance(client, targetMob, args); break;
+						case "roaming": roaming(client, targetMob, args); break;
+						case "damagetype": damagetype(client, targetMob, args); break;
+						case "movehere": movehere(client, targetMob, args); break;
+						case "location": location(client, targetMob, args); break;
+						case "remove": remove(client, targetMob, args); break;
 					case "transparent": // deprecated, use "ghost"
-					case "ghost": ghost(client, targetMob, args); break;
-					case "stealth": stealth(client, targetMob, args); break;
-					case "torch": torch(client, targetMob, args); break;
-					case "statue": statue(client, targetMob, args); break;
-					case "fly": fly(client, targetMob, args); break;
-					case "swimming": swimming(client, targetMob, args); break;
-					case "noname": noname(client, targetMob, args); break;
-					case "notarget": notarget(client, targetMob, args); break;
-					case "kill": kill(client, targetMob, args); break;
-					case "flags": flags(client, targetMob, args); break;
+						case "ghost": ghost(client, targetMob, args); break;
+						case "stealth": stealth(client, targetMob, args); break;
+						case "torch": torch(client, targetMob, args); break;
+						case "statue": statue(client, targetMob, args); break;
+						case "fly": fly(client, targetMob, args); break;
+						case "swimming": swimming(client, targetMob, args); break;
+						case "noname": noname(client, targetMob, args); break;
+						case "notarget": notarget(client, targetMob, args); break;
+						case "kill": kill(client, targetMob, args); break;
+						case "flags": flags(client, targetMob, args); break;
 					case "regen":  // deprecated, use "heal"
-					case "heal": heal(client, targetMob, args); break;
-					case "attack": attack(client, targetMob, args); break;
-					case "info": info(client, targetMob, args); break;
-					case "stats": stats(client, targetMob, args); break;
-					case "realm": realm(client, targetMob, args); break;
-					case "speed": speed(client, targetMob, args); break;
-					case "level": level(client, targetMob, args); break;
-					case "levela": levela(client, targetMob, args); break;
-					case "brain": brain(client, targetMob, args); break;
-					case "respawn": respawn(client, targetMob, args); break;
-					case "questinfo": questinfo(client, targetMob, args); break;
-					case "equipinfo": equipinfo(client, targetMob, args); break;
-					case "equiptemplate": equiptemplate(client, targetMob, args); break;
-					case "dropcount": dropcount(client, targetMob, args); break;
-					case "addloot": addloot(client, targetMob, args); break;
-					case "addotd": addotd(client, targetMob, args); break;
-					case "addmobxlt": addmobxlt(client, targetMob, args); break;
-					case "viewloot": viewloot(client, targetMob, args); break;
-					case "removeloot": removeloot(client, targetMob, args); break;
-					case "removeotd": removeotd(client, targetMob, args); break;
-					case "refreshloot": refreshloot(client, targetMob, args); break;
-					case "copy": copy(client, targetMob, args); break;
-					case "npctemplate": npctemplate(client, targetMob, args); break;
-					case "class": setClass(client, targetMob, args); break;
-					case "path": path(client, targetMob, args); break;
-					case "house": house(client, targetMob, args); break;
+						case "heal": heal(client, targetMob, args); break;
+						case "attack": attack(client, targetMob, args); break;
+						case "info": info(client, targetMob, args); break;
+						case "stats": stats(client, targetMob, args); break;
+						case "realm": realm(client, targetMob, args); break;
+						case "speed": speed(client, targetMob, args); break;
+						case "level": level(client, targetMob, args); break;
+						case "levela": levela(client, targetMob, args); break;
+						case "brain": brain(client, targetMob, args); break;
+						case "respawn": respawn(client, targetMob, args); break;
+						case "questinfo": questinfo(client, targetMob, args); break;
+						case "equipinfo": equipinfo(client, targetMob, args); break;
+						case "equiptemplate": equiptemplate(client, targetMob, args); break;
+						case "dropcount": dropcount(client, targetMob, args); break;
+						case "addloot": addloot(client, targetMob, args); break;
+						case "addotd": addotd(client, targetMob, args); break;
+						case "addmobxlt": addmobxlt(client, targetMob, args); break;
+						case "viewloot": viewloot(client, targetMob, args); break;
+						case "removeloot": removeloot(client, targetMob, args); break;
+						case "removeotd": removeotd(client, targetMob, args); break;
+						case "refreshloot": refreshloot(client, targetMob, args); break;
+						case "copy": copy(client, targetMob, args); break;
+						case "npctemplate": npctemplate(client, targetMob, args); break;
+						case "class": setClass(client, targetMob, args); break;
+						case "path": path(client, targetMob, args); break;
+						case "house": house(client, targetMob, args); break;
 					case "str":
 					case "con":
 					case "dex":
@@ -218,18 +218,18 @@ namespace DOL.GS.Commands
 					case "int":
 					case "emp":
 					case "pie":
-					case "cha": stat(client, targetMob, args); break;
-					case "tether": tether(client, targetMob, args); break;
-					case "hood": hood(client, targetMob, args); break;
-					case "cloak": cloak(client, targetMob, args); break;
-					case "bodytype": bodytype(client, targetMob, args); break;
-					case "race": race(client, targetMob, args); break;
-					case "gender": gender(client, targetMob, args); break;
-					case "package": package(client, targetMob, args); break;
-					case "select": select(AUTOSELECT_RADIUS, client); break;
-					case "load": load(client, args); break;
-					case "reload": reload(client, targetMob, args); break;
-					case "findname": findname(client, args); break;
+						case "cha": stat(client, targetMob, args); break;
+						case "tether": tether(client, targetMob, args); break;
+						case "hood": hood(client, targetMob, args); break;
+						case "cloak": cloak(client, targetMob, args); break;
+						case "bodytype": bodytype(client, targetMob, args); break;
+						case "race": race(client, targetMob, args); break;
+						case "gender": gender(client, targetMob, args); break;
+						case "package": package(client, targetMob, args); break;
+						case "select": select(AUTOSELECT_RADIUS, client); break;
+						case "load": load(client, args); break;
+						case "reload": reload(client, targetMob, args); break;
+						case "findname": findname(client, args); break;
 					default:
 						DisplaySyntax(client);
 						return;
@@ -1750,8 +1750,17 @@ namespace DOL.GS.Commands
 
 		private void viewloot( GameClient client, GameNPC targetMob, string[] args )
 		{
-			if ( args.Length == 3 && args[2] == "random" )
+			if (args[2] == "random" )
 			{
+				// generated loots go in inventory
+				if (!String.IsNullOrEmpty(args[3]))
+				{
+					targetMob.AddXPGainer(client.Player, 1);
+					targetMob.DropLoot(client.Player);
+					targetMob.RemoveAttacker(client.Player);
+					return;
+				}
+				
 				ItemTemplate[] templates = LootMgr.GetLoot( targetMob, client.Player );
 				DisplayMessage( client, "[ " + targetMob.Name + "'s Loot Table ]\n\n" );
 

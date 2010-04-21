@@ -35,15 +35,11 @@ namespace DOL
 			private byte m_type;
 			private string m_name;
 			private int m_permLevel;
-            private int m_slot;
-
-			static bool m_autoSave;
-
-
+			private int m_slot;
 
 			public DBHouseCharsXPerms()
 			{
-				m_autoSave = false;
+				AutoSave = false;
 			}
 
 
@@ -100,31 +96,17 @@ namespace DOL
 				}
 			}
 
-            [DataElement(AllowDbNull = false)]
-            public int Slot
-            {
-                get
-                {
-                    return m_slot;
-                }
-                set
-                {
-                    Dirty = true;
-                    m_slot = value;
-                }
-            }
-
-			
-
-			override public bool AutoSave
+			[DataElement(AllowDbNull = false)]
+			public int Slot
 			{
 				get
 				{
-					return m_autoSave;
+					return m_slot;
 				}
 				set
 				{
-					m_autoSave = value;
+					Dirty = true;
+					m_slot = value;
 				}
 			}
 		}

@@ -84,11 +84,6 @@ namespace DOL.GS
 		protected string m_ServerNameShort;
 
 		/// <summary>
-		/// The location of the language file
-		/// </summary>
-		protected string m_languageFile;
-
-		/// <summary>
 		/// The count of server cpu
 		/// </summary>
 		protected int m_cpuCount;
@@ -160,7 +155,6 @@ namespace DOL.GS
 			m_logConfigFile = root["Server"]["LogConfigFile"].GetString(m_logConfigFile);
 			m_regionConfigFile = root["Server"]["RegionConfigFile"].GetString(m_regionConfigFile);
 			m_zoneConfigFile = root["Server"]["ZoneConfigFile"].GetString(m_zoneConfigFile);
-			m_languageFile = root["Server"]["LanguageFile"].GetString(m_languageFile);
 
 			m_scriptCompilationTarget = root["Server"]["ScriptCompilationTarget"].GetString(m_scriptCompilationTarget);
 			m_scriptAssemblies = root["Server"]["ScriptAssemblies"].GetString(m_scriptAssemblies);
@@ -259,7 +253,6 @@ namespace DOL.GS
 			root["Server"]["LogConfigFile"].Set(m_logConfigFile);
 			root["Server"]["RegionConfigFile"].Set(m_regionConfigFile);
 			root["Server"]["ZoneConfigFile"].Set(m_zoneConfigFile);
-			root["Server"]["LanguageFile"].Set(m_languageFile);
 
 			root["Server"]["ScriptCompilationTarget"].Set(m_scriptCompilationTarget);
 			root["Server"]["ScriptAssemblies"].Set(m_scriptAssemblies);
@@ -350,7 +343,6 @@ namespace DOL.GS
 			m_logConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "logconfig.xml";
 			m_regionConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "regions.xml";
 			m_zoneConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "zones.xml";
-			m_languageFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "GameServer.lng";
 
 			m_scriptCompilationTarget = "."+Path.DirectorySeparatorChar+"lib"+Path.DirectorySeparatorChar+"GameServerScripts.dll";
 			m_scriptAssemblies = "DOLBase.dll,GameServer.dll,DOLDatabase.dll,System.dll,log4net.dll,System.Xml.dll";
@@ -436,21 +428,6 @@ namespace DOL.GS
 					return Path.Combine(m_rootDirectory, m_zoneConfigFile);
 			}
 			set { m_zoneConfigFile = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the language file
-		/// </summary>
-		public string LanguageFile
-		{
-			get
-			{
-				if(Path.IsPathRooted(m_languageFile))
-					return m_languageFile;
-				else
-					return Path.Combine(m_rootDirectory, m_languageFile);
-			}
-			set { m_languageFile = value; }
 		}
 
 		/// <summary>

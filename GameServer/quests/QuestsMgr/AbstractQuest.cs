@@ -359,7 +359,7 @@ namespace DOL.GS.Quests
 			if (player.QuestActionTimer == null)
 			{
 				m_currentCommand = command;
-				AddActionHandlers(player);
+				AddSearchActionHandlers(player);
 
 				// Live progress dialog is labeled 'Area Action' but I dediced to make label more specific - tolakram
 				QuestPlayer.Out.SendTimerWindow(Enum.GetName(typeof(eQuestCommand), command), seconds);
@@ -375,7 +375,7 @@ namespace DOL.GS.Quests
 
 		protected virtual int QuestActionCallback(RegionTimer timer)
 		{
-			RemoveActionHandlers(QuestPlayer);
+			RemoveSearchActionHandlers(QuestPlayer);
 
 			QuestPlayer.Out.SendCloseTimerWindow();
 			QuestPlayer.QuestActionTimer.Stop();
@@ -386,40 +386,37 @@ namespace DOL.GS.Quests
 		}
 
 
-		protected void AddActionHandlers(GamePlayer player)
+		protected void AddSearchActionHandlers(GamePlayer player)
 		{
 			if (player != null)
 			{
-				GameEventMgr.AddHandler(player, GamePlayerEvent.Moving, new DOLEventHandler(InterruptAction));
-				GameEventMgr.AddHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(InterruptAction));
-				GameEventMgr.AddHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(InterruptAction));
-				GameEventMgr.AddHandler(player, GamePlayerEvent.AttackFinished, new DOLEventHandler(InterruptAction));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Moving, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.AddHandler(player, GamePlayerEvent.AttackFinished, new DOLEventHandler(InterruptSearch));
 			}
 		}
 
-		protected void RemoveActionHandlers(GamePlayer player)
+		protected void RemoveSearchActionHandlers(GamePlayer player)
 		{
 			if (player != null)
 			{
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.Moving, new DOLEventHandler(InterruptAction));
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(InterruptAction));
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(InterruptAction));
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.AttackFinished, new DOLEventHandler(InterruptAction));
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.Moving, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(InterruptSearch));
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.AttackFinished, new DOLEventHandler(InterruptSearch));
 			}
 		}
 
 
-		protected void InterruptAction(DOLEvent e, object sender, EventArgs args)
+		protected void InterruptSearch(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = sender as GamePlayer;
 
 			if (player != null)
 			{
-				if (m_currentCommand != eQuestCommand.None)
-				{
-					player.Out.SendMessage("Your " + Enum.GetName(typeof(eQuestCommand), m_currentCommand).ToLower() + " is interrupted!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				}
-				RemoveActionHandlers(player);
+				player.Out.SendMessage("Your search is interrupted!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				RemoveSearchActionHandlers(player);
 				player.Out.SendCloseTimerWindow();
 				player.QuestActionTimer.Stop();
 				player.QuestActionTimer = null;

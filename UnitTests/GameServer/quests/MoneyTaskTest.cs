@@ -19,10 +19,12 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS;
+using DOL.GS.Quests;
 using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.GS.Quests.Tests
+namespace DOL.Tests
 {
 	/// <summary>
 	/// Zusammenfassung für GamePlayerTest.
@@ -58,7 +60,7 @@ namespace DOL.GS.Quests.Tests
 					Console.WriteLine("Item:" + task.Description);
 
 					// Check Notify Event handling
-					InventoryItem item = new InventoryItem();
+					InventoryItem item = new InventoryItem(new ItemTemplate());
 					item.Name = task.ItemName;
 
 					GameNPC npc = new GameNPC();

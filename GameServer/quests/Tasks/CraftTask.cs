@@ -186,7 +186,7 @@ namespace DOL.GS.Quests
 									RecieverName = NPC.Name,
 									RecieverZone = NPC.CurrentZone.Description
 								};
-			craftTask.SetRewardMoney((long)(taskItems.Value * RewardMoneyRatio));
+			craftTask.SetRewardMoney((long)(taskItems.Price * RewardMoneyRatio));
 
 			player.Task = craftTask;
 

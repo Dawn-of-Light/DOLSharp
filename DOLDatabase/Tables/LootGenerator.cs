@@ -54,24 +54,12 @@ namespace DOL.Database
 		/// </summary>
 		protected int m_exclusivePriority = 0;
 
-
-		static bool m_autoSave;
-
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		public LootGenerator()
 		{
-			m_autoSave = false;
-		}
-
-		/// <summary>
-		/// AutoSave
-		/// </summary>
-		override public bool AutoSave
-		{
-			get { return m_autoSave; }
-			set { m_autoSave = value; }
+			AutoSave = false;
 		}
 
 		/// <summary>

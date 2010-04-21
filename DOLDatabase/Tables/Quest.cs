@@ -34,8 +34,6 @@ namespace DOL.Database
 		private	int			m_step;
 		private string		m_customPropertiesString;
 
-		private static bool	m_autoSave;
-
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -55,22 +53,6 @@ namespace DOL.Database
 			m_step = step;
 			m_characterid = charname;
 		}
-
-		/// <summary>
-		/// AutoSave record
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
-		}
-
 		/// <summary>
 		/// Quest Name
 		/// </summary>

@@ -1634,11 +1634,11 @@ namespace DOL.GS
 		/// <param name="armor"></param>
 		/// <param name="damageType"></param>
 		/// <returns>resist value</returns>
-		public static int GetArmorResist(ItemTemplate armor, eDamageType damageType)
+		public static int GetArmorResist(InventoryItem armor, eDamageType damageType)
 		{
 			if (armor == null) return 0;
-			int realm = armor.Realm - (int)eRealm._First;
-			int armorType = armor.Object_Type - (int)eObjectType._FirstArmor;
+			int realm = armor.Template.Realm - (int)eRealm._First;
+			int armorType = armor.Template.Object_Type - (int)eObjectType._FirstArmor;
 			int damage = damageType - eDamageType._FirstResist;
 			if (realm < 0 || realm > eRealm._LastPlayerRealm - eRealm._First) return 0;
 			if (armorType < 0 || armorType > eObjectType._LastArmor - eObjectType._FirstArmor) return 0;

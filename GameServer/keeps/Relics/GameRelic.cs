@@ -27,7 +27,7 @@ namespace DOL.GS
 		#region declarations
 		InventoryItem m_item;
 		GamePlayer m_currentCarrier = null;
-		GameRelicPad m_currentRelicPad = null;	
+		GameRelicPad m_currentRelicPad = null;
 		GameRelicPad m_returnRelicPad = null;
 		RegionTimer m_currentCarrierTimer;
 		DBRelic m_dbRelic;
@@ -492,10 +492,8 @@ namespace DOL.GS
 			Emblem = 0;
 			Level = 99;
 
-
-
-			ItemTemplate m_itemTemp;
 			//generate itemtemplate for inventoryitem
+			ItemTemplate m_itemTemp;
 			m_itemTemp = new ItemTemplate();
 			m_itemTemp.Name = Name;
 			m_itemTemp.Object_Type = (int)eObjectType.Magical;
@@ -504,16 +502,14 @@ namespace DOL.GS
 			m_itemTemp.IsPickable = false;
 			m_itemTemp.Level = 99;
 			m_itemTemp.Quality = 100;
-			m_itemTemp.Copper = 0;
-			m_itemTemp.Silver = 0;
-			m_itemTemp.Gold = 0;
-			m_itemTemp.Platinum = 0;
+			m_itemTemp.Price = 0;
 			m_itemTemp.PackSize = 1;
 			m_itemTemp.AutoSave = false;
 			m_itemTemp.Weight = 1000;
 			m_itemTemp.Id_nb = "ARelic";
 			m_itemTemp.IsTradable = false;
-			m_item = new InventoryItem(m_itemTemp);
+			m_item = new InventoryItem();
+			m_item.Template = m_itemTemp;
 		}
 		/// <summary>
 		/// Saves the current GameRelic to the database

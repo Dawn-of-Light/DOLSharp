@@ -33,29 +33,11 @@ namespace DOL.Database
 		protected string m_description = "no description";
 		protected string m_implementation = null;
 
-		static bool			m_autoSave;
-
 		/// <summary>
 		/// Create ability
 		/// </summary>
 		public DBAbility()
 		{
-			m_autoSave = false;
-		}
-
-		/// <summary>
-		/// auto save Db or not
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
 		}
 
 		/// <summary>
@@ -91,7 +73,7 @@ namespace DOL.Database
 		public string Description
 		{
 			get {	return m_description;	}
-			set	
+			set
 			{
 				Dirty = true;
 				m_description = value;
@@ -105,7 +87,7 @@ namespace DOL.Database
 		public int IconID
 		{
 			get {	return m_iconID;	}
-			set	
+			set
 			{
 				Dirty = true;
 				m_iconID = value;
@@ -119,7 +101,7 @@ namespace DOL.Database
 		public string Implementation
 		{
 			get {	return m_implementation;	}
-			set	
+			set
 			{
 				Dirty = true;
 				m_implementation = value;

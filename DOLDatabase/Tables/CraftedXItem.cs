@@ -30,7 +30,6 @@ namespace DOL
 		[DataTable(TableName="CraftedXItem")]
 		public class DBCraftedXItem : DataObject
 		{
-			static bool	m_autoSave;
 			private string m_ingredientId_nb;
 			private int m_count;
 			private string m_craftedItemId_nb;
@@ -40,19 +39,7 @@ namespace DOL
 			/// </summary>
 			public DBCraftedXItem()
 			{
-				m_autoSave=false;
-			}
-
-			override public bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
-				}
+				AutoSave=false;
 			}
 
 			/// <summary>

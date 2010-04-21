@@ -27,7 +27,6 @@ namespace DOL.Database
 	[DataTable(TableName = "Keep")]
 	public class DBKeep : DataObject
 	{
-		static bool m_autoSave;
 		private string m_name;
 		private ushort m_region;
 		private int m_x;
@@ -49,7 +48,7 @@ namespace DOL.Database
 
 		public DBKeep()
 		{
-			m_autoSave = false;
+			AutoSave = false;
 			m_name = "";
 			m_albionDifficultyLevel = 1;
 			m_midgardDifficultyLevel = 1;
@@ -63,28 +62,13 @@ namespace DOL.Database
 		/// </summary>
 		public DBKeep(string createInfo)
 		{
-			m_autoSave = false;
+			AutoSave = false;
 			m_name = "";
 			m_albionDifficultyLevel = 1;
 			m_midgardDifficultyLevel = 1;
 			m_hiberniaDifficultyLevel = 1;
 			m_type = 0; // Default = Any
 			m_createInfo = createInfo;
-		}
-
-		/// <summary>
-		/// autosave this table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
 		}
 
 		/// <summary>

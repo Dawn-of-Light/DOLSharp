@@ -161,8 +161,8 @@ namespace DOL.GS.PacketHandler
 				? 0
 				: template.Type_Damage << 6) | template.Object_Type));
 			pak.WriteShort((ushort)template.Weight);
-			pak.WriteByte(template.ConditionPercent);
-			pak.WriteByte(template.DurabilityPercent);
+			pak.WriteByte(template.BaseConditionPercent);
+			pak.WriteByte(template.BaseDurabilityPercent);
 			pak.WriteByte((byte)template.Quality);
 			pak.WriteByte((byte)template.Bonus);
 			pak.WriteShort((ushort)template.Model);

@@ -71,24 +71,10 @@ namespace DOL.Database
 		protected bool m_isprimary;
 		protected bool m_issecondary;
 		protected bool m_allowbolt;
-		static bool m_autoSave;
-
 		
 		public DBSpell()
 		{
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
+			AutoSave = false;
 		}
 
 		[DataElement(AllowDbNull = false, Unique = true)]

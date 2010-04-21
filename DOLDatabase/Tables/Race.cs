@@ -25,7 +25,6 @@ namespace DOL.Database
 	[DataTable( TableName = "Race" )]
 	public class Race : DataObject
 	{
-		protected bool m_autoSave;
 		protected int m_ID = 0;
 		protected string m_Name;
 		protected sbyte m_ResistBody;
@@ -42,20 +41,7 @@ namespace DOL.Database
 
 		public Race() : base()
 		{
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-				Dirty = true;
-			}
+			AutoSave = false;
 		}
 
 		[DataElement( AllowDbNull = false, Index = true, Unique = true )]

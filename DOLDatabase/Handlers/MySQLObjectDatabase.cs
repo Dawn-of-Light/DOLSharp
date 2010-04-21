@@ -137,9 +137,6 @@ namespace DOL.Database.Handlers
 		{
 			try
 			{
-				if (!dataObject.Dirty)
-					return;
-
 				string tableName = dataObject.TableName;
 
 				var sb = new StringBuilder("UPDATE `" + tableName + "` SET ");
