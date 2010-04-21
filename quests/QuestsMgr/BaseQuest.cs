@@ -393,7 +393,18 @@ namespace DOL.GS.Quests
 
 		protected static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
 		{
-			InventoryItem item = new InventoryItem(itemTemplate);
+			InventoryItem item = null;
+
+			if (itemTemplate is ItemUnique)
+			{
+				GameServer.Database.AddObject(itemTemplate as ItemUnique);
+				item = new InventoryItem(itemTemplate as ItemUnique);
+			}
+			else
+			{
+				item = new InventoryItem(itemTemplate);
+			}
+
 			if (!player.ReceiveItem(source, item))
 			{
 				if (canDrop)
