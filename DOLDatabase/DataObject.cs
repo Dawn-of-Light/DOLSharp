@@ -40,6 +40,7 @@ namespace DOL.Database
 			ObjectId = IDGenerator.GenerateID();
 			_dirty = false;
 			IsValid = false;
+			AutoSave = true;
 		}
 
 		/// <summary>
@@ -78,7 +79,7 @@ namespace DOL.Database
 		/// Auto save object or not?
 		/// </summary>
 		[Browsable(false)]
-		public abstract bool AutoSave { get; set; }
+		public virtual bool AutoSave { get; set; }
 
 		/// <summary>
 		/// Index of the object in his table

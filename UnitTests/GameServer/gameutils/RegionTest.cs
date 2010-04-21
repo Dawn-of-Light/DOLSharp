@@ -25,7 +25,7 @@ using DOL.GS;
 using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.GS.Tests
+namespace DOL.Tests
 {
 	/// <summary>
 	/// Unittest for the Region Class

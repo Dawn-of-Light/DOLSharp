@@ -26,7 +26,6 @@ namespace DOL.Database
 	[DataTable(TableName = "Relic")]
 	public class DBRelic : DataObject
 	{
-		static bool m_autoSave;
 		private int m_relicID;
 		private int m_region;
 		private int m_x;
@@ -42,25 +41,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Create a relic row
 		/// </summary>
-		public DBRelic()
-		{
-			m_autoSave = true;
-		}
-
-		/// <summary>
-		/// autosave this table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
-		}
+		public DBRelic(){}
 
 		/// <summary>
 		/// Index of relic

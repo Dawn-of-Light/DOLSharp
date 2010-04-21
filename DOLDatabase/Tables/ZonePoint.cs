@@ -34,23 +34,12 @@ namespace DOL.Database
 		private ushort	m_realm;
 		private ushort	m_heading;
 		private string	m_classType = "";
-		private static bool m_autoSave;
 
 		public ZonePoint()
 		{
-			m_autoSave=false;
+			AutoSave=false;
 		}
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
-		}
+
 		[DataElement(AllowDbNull=false, Index=true)]
 		public ushort Id
 		{

@@ -33,7 +33,6 @@ namespace DOL.Database
 		private byte m_type;
 		private byte m_realm;
 		private string m_text;
-		private static bool m_autoSave;
 
 		/// <summary>
 		/// Create account row in DB
@@ -44,22 +43,6 @@ namespace DOL.Database
 			m_type = 0;
 			m_realm = 0;
 			m_text = "";
-			m_autoSave = true;
-		}
-
-		/// <summary>
-		/// Auto save this table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
 		}
 
 		[DataElement(AllowDbNull = false)]

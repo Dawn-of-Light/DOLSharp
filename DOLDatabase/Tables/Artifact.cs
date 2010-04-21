@@ -23,20 +23,20 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-    /// <summary>
-    /// An artifact.
-    /// </summary>
+	/// <summary>
+	/// An artifact.
+	/// </summary>
 	/// <author>Aredhel</author>
-    [DataTable(TableName = "Artifact")]
-    public class Artifact : DataObject
-    {
-        private String m_artifactID;
+	[DataTable(TableName = "Artifact")]
+	public class Artifact : DataObject
+	{
+		private String m_artifactID;
 		private String m_encounterID;
 		private String m_questID;
-        private String m_zone;
+		private String m_zone;
 		private String m_scholarID;
-        private int m_reuseTimer;
-        private int m_xpRate;
+		private int m_reuseTimer;
+		private int m_xpRate;
 		private String m_bookID;
 		private int m_bookModel;
 		private String m_scroll1, m_scroll2, m_scroll3;
@@ -46,39 +46,39 @@ namespace DOL.Database
 		private String m_messageUse;
 		private String m_messageCombineScrolls, m_messageCombineBook;
 		private String m_messageReceiveScrolls, m_messageReceiveBook;
-        private String m_credit;
-
-        /// <summary>
-        /// Create a new artifact object.
-        /// </summary>
-        public Artifact()
-            : base() { }
-
-        /// <summary>
-        /// Whether to auto-save this object or not.
-        /// </summary>
-        public override bool AutoSave
-        {
-            get { return false; }
-            set { }
-        }
-
-        /// <summary>
-        /// The artifact ID.
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public String ArtifactID
-        {
-            get { return m_artifactID; }
-            set 
-            {
-                Dirty = true;
-                m_artifactID = value; 
-            }
-        }
+		private String m_credit;
 
 		/// <summary>
-		/// The ID for the encounter required to get the quest for 
+		/// Create a new artifact object.
+		/// </summary>
+		public Artifact()
+			: base() { }
+
+		/// <summary>
+		/// Whether to auto-save this object or not.
+		/// </summary>
+		public override bool AutoSave
+		{
+			get { return false; }
+			set { }
+		}
+
+		/// <summary>
+		/// The artifact ID.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public String ArtifactID
+		{
+			get { return m_artifactID; }
+			set
+			{
+				Dirty = true;
+				m_artifactID = value;
+			}
+		}
+
+		/// <summary>
+		/// The ID for the encounter required to get the quest for
 		/// this artifact.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
@@ -107,19 +107,19 @@ namespace DOL.Database
 			}
 		}
 
-        /// <summary>
-        /// The zone this artifact belongs to.
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public String Zone
-        {
-            get { return m_zone; }
-            set
-            {
-                Dirty = true;
-                m_zone = value;
-            }
-        }
+		/// <summary>
+		/// The zone this artifact belongs to.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public String Zone
+		{
+			get { return m_zone; }
+			set
+			{
+				Dirty = true;
+				m_zone = value;
+			}
+		}
 
 		/// <summary>
 		/// The scholar(s) studying this artifact.
@@ -149,19 +149,19 @@ namespace DOL.Database
 			}
 		}
 
-        /// <summary>
-        /// The rate at which this artifact gains xp (in percent).
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public int XPRate
-        {
-            get { return m_xpRate; }
-            set
-            {
-                Dirty = true;
-                m_xpRate = value;
-            }
-        }
+		/// <summary>
+		/// The rate at which this artifact gains xp (in percent).
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int XPRate
+		{
+			get { return m_xpRate; }
+			set
+			{
+				Dirty = true;
+				m_xpRate = value;
+			}
+		}
 
 		/// <summary>
 		/// The book ID.
@@ -387,18 +387,18 @@ namespace DOL.Database
 			}
 		}
 
-        /// <summary>
-        /// The bounty point credit for this artifact.
-        /// </summary>
-        [DataElement(AllowDbNull = true)]
-        public String Credit
-        {
-            get { return m_credit; }
-            set
-            {
-                Dirty = true;
-                m_credit = value;
-            }
-        }
-    }
+		/// <summary>
+		/// The bounty point credit for this artifact.
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public String Credit
+		{
+			get { return m_credit; }
+			set
+			{
+				Dirty = true;
+				m_credit = value;
+			}
+		}
+	}
 }

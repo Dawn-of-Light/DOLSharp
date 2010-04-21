@@ -32,24 +32,9 @@ namespace DOL.Database
 		protected string m_spec="unknown";
 		protected bool m_isBaseLine=true;
 
-		static bool	m_autoSave;
-
 		public DBSpellLine()
 		{
-			m_autoSave = false;
-		}
-
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
+			AutoSave = false;
 		}
 
 		[DataElement(AllowDbNull=false,Unique=true)]

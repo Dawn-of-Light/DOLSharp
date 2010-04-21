@@ -21,80 +21,65 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-    /// <summary>
-    /// (procs) Database Storage of StyleXSpell
-    /// </summary>
-    [DataTable(TableName = "StyleXSpell")]
-    public class DBStyleXSpell : DataObject
-    {
-        static bool m_autoSave = false;
-        protected int m_SpellID;
-        protected int m_ClassID;
-        protected int m_StyleID;
-        protected int m_Chance;
+	/// <summary>
+	/// (procs) Database Storage of StyleXSpell
+	/// </summary>
+	[DataTable(TableName = "StyleXSpell")]
+	public class DBStyleXSpell : DataObject
+	{
+		protected int m_SpellID;
+		protected int m_ClassID;
+		protected int m_StyleID;
+		protected int m_Chance;
 
 
-        /// <summary>
-        /// The Constructor
-        /// </summary>
-        public DBStyleXSpell()
-            : base()
-        {
-        }
+		/// <summary>
+		/// The Constructor
+		/// </summary>
+		public DBStyleXSpell()
+			: base()
+		{
+			AutoSave = false;
+		}
 
-        /// <summary>
-        /// The Spell ID
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public int SpellID
-        {
-            get { return m_SpellID; }
-            set { m_SpellID = value; Dirty = true; }
-        }
+		/// <summary>
+		/// The Spell ID
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int SpellID
+		{
+			get { return m_SpellID; }
+			set { m_SpellID = value; Dirty = true; }
+		}
 
-        /// <summary>
-        /// The ClassID, required for style subsitute procs (0 is not a substitute style)
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public int ClassID
-        {
-            get { return m_ClassID; }
-            set { m_ClassID = value; Dirty = true; }
-        }
+		/// <summary>
+		/// The ClassID, required for style subsitute procs (0 is not a substitute style)
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int ClassID
+		{
+			get { return m_ClassID; }
+			set { m_ClassID = value; Dirty = true; }
+		}
 
-        /// <summary>
-        /// The StyleID
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public int StyleID
-        {
-            get { return m_StyleID; }
-            set { m_StyleID = value; Dirty = true; }
-        }
+		/// <summary>
+		/// The StyleID
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int StyleID
+		{
+			get { return m_StyleID; }
+			set { m_StyleID = value; Dirty = true; }
+		}
 
-        /// <summary>
-        /// The Chance to add to the styleeffect list
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public int Chance
-        {
-            get { return m_Chance; }
-            set { m_Chance = value; Dirty = true; }
-        }
-
-        /// <summary>
-        /// Auto save is not needed the value aren't changed in game
-        /// </summary>
-        override public bool AutoSave
-        {
-            get
-            {
-                return m_autoSave;
-            }
-            set
-            {
-                m_autoSave = value;
-            }
-        }
-    }
+		/// <summary>
+		/// The Chance to add to the styleeffect list
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int Chance
+		{
+			get { return m_Chance; }
+			set { m_Chance = value; Dirty = true; }
+		}
+	}
 }

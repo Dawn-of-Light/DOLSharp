@@ -19,7 +19,7 @@
  * This DB holds all information needed for all types of NPCs.
  * It just hold the Information about the different Types, not if and where it
  * is on the world. This is handled in MobDB. With this, it is possible to assign
- * Spells, Brains and other stuff to Mobs, that was just possible to get 
+ * Spells, Brains and other stuff to Mobs, that was just possible to get
  * hardcoded before.
  */
 
@@ -68,23 +68,12 @@ namespace DOL.Database
 		private int m_maxdistance = 0;
 		private int m_tetherRange = 0;
 
-		private static bool m_autoSave;
-
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		public DBNpcTemplate()
 		{
-			m_autoSave = false;
-		}
-
-		/// <summary>
-		/// AutoSave in table?
-		/// </summary>
-		public override bool AutoSave
-		{
-			get { return m_autoSave; }
-			set { m_autoSave = value; }
+			AutoSave = false;
 		}
 
 		/// <summary>
@@ -217,7 +206,7 @@ namespace DOL.Database
 		/// Flags
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-        public byte Flags
+		public byte Flags
 		{
 			get { return m_flags; }
 			set

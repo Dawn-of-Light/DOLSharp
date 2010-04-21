@@ -223,7 +223,7 @@ namespace DOL.GS
 			{
 				foreach (InventoryItem item in player.Inventory.EquippedItems)
 				{
-					if (!player.HasAbilityToUseItem(item))
+					if (!player.HasAbilityToUseItem(item.Template))
 						if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == true)
 					{
 						player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
@@ -346,7 +346,7 @@ namespace DOL.GS
 		public virtual bool addGift(String template, GamePlayer player)
 		{
 			ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(template);
-			if (!player.Inventory.AddTemplate(temp, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			if (!player.Inventory.AddTemplate(new InventoryItem(temp), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

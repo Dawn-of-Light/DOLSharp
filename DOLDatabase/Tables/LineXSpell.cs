@@ -31,23 +31,9 @@ namespace DOL.Database
 		protected int m_spellid;
 		protected int m_level;
 
-		static bool	m_autoSave;
-
 		public DBLineXSpell()
 		{
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
+			AutoSave = false;
 		}
 
 		[DataElement(AllowDbNull=false, Index=true)]

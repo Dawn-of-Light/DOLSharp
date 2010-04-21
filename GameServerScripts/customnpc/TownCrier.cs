@@ -33,17 +33,10 @@ namespace DOL.GS.Scripts
 		{
 			private string m_msg;
 			private string m_id;
-			private static bool autoSave;
 
 			public TownCrierMessage()
 			{
 				m_msg = "Dawn of Light r0x my world!";
-			}
-
-			public override bool AutoSave
-			{
-				get { return autoSave; }
-				set { autoSave = value; }
 			}
 
 			[PrimaryKey]

@@ -32,19 +32,9 @@ namespace DOL.Database
 		protected string m_description = "no description";
 		protected ushort m_icon = 0;
 
-		static bool	m_autoSave;
-
 		public DBSpecialization()
 		{
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get {	return m_autoSave;	}
-			set	{
-				m_autoSave = value;
-			}
+			AutoSave = false;
 		}
 
 		[DataElement(AllowDbNull=false,Unique=true)]
@@ -57,7 +47,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull=false)]
-		public string Name 
+		public string Name
 		{
 			get {	return m_name;	}
 			set {
@@ -77,7 +67,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull=true)]
-		public string Description 
+		public string Description
 		{
 			get {	return m_description;	}
 			set {

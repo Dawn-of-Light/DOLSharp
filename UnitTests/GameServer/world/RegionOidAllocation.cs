@@ -20,12 +20,13 @@ using System;
 using System.Threading;
 using DOL.Database;
 using DOL.Tests;
+using DOL.GS;
 using NUnit.Framework;
 
-namespace DOL.GS.World
+namespace DOL.Tests
 {
 	[TestFixture]
-	public class RegionOidAllocation : DOLTestCase
+	public class RegionOidAllocationTest : DOLTestCase
 	{
 		public Region m_reg;
 		public int id;
@@ -102,13 +103,13 @@ namespace DOL.GS.World
 		[Test] public void MultithreadAddRemove()
 		{
 			const int count = 10;
-			RegionOidAllocation[] roas = new RegionOidAllocation[count];
+			RegionOidAllocationTest[] roas = new RegionOidAllocationTest[count];
 			object obj = new object();
 			Monitor.Enter(obj);
 
 			for (int i = 0; i < count; i++)
 			{
-				RegionOidAllocation roaInstance = new RegionOidAllocation();
+				RegionOidAllocationTest roaInstance = new RegionOidAllocationTest();
 				roaInstance.id = i;
 				roaInstance.sync = obj;
 				roaInstance.m_reg = m_reg;
@@ -125,7 +126,7 @@ namespace DOL.GS.World
 				bool done = true;
 				for (int i = 0; i < count; i++)
 				{
-					RegionOidAllocation roa = roas[i];
+					RegionOidAllocationTest roa = roas[i];
 					if (!roa.finished)
 					{
 						done = false;

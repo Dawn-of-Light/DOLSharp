@@ -2792,7 +2792,7 @@ return false;
 
 			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects && m_spellItem != null)
 			{
-				int itemSpellLevel = m_spellItem.LevelRequirement > 0 ? m_spellItem.LevelRequirement : Math.Min(50, m_spellItem.Level);
+				int itemSpellLevel = m_spellItem.Template.LevelRequirement > 0 ? m_spellItem.Template.LevelRequirement : Math.Min(50, m_spellItem.Level);
 				return 100 - (85 + ((itemSpellLevel - target.Level) / 2));
 			}
 

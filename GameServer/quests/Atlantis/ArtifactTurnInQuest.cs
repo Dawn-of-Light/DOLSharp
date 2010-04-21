@@ -266,8 +266,8 @@ namespace DOL.GS.Quests.Atlantis
 
 			foreach (string art in arts)
 			{
-				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(art, 
-					(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
+				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(art,
+				                                                                            (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				if (versions.Count > 1)
 				{
 					artCheck = true;
@@ -276,8 +276,8 @@ namespace DOL.GS.Quests.Atlantis
 			}
 
 			return (player != null &&
-				player.IsDoingQuest(this.GetType()) == null &&
-				artCheck);
+			        player.IsDoingQuest(this.GetType()) == null &&
+			        artCheck);
 		}
 
 		#endregion
@@ -285,24 +285,24 @@ namespace DOL.GS.Quests.Atlantis
 		#region TalkTo/Receive Item
 
 		/// <summary>
-	    /// Handle an item given to the scholar.
-	    /// </summary>
-	    /// <param name="source"></param>
-	    /// <param name="item"></param>
-	    /// <param name="target"></param>
-	    /// <returns></returns>
-	    public override bool ReceiveItem(GameLiving source, GameLiving target, InventoryItem item)
-	    {
-	        GamePlayer player = source as GamePlayer;
-	        ArtifactScholar scholar = target as ArtifactScholar;
-	        if (player == null || scholar == null)
-	            return false;
+		/// Handle an item given to the scholar.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="item"></param>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		public override bool ReceiveItem(GameLiving source, GameLiving target, InventoryItem item)
+		{
+			GamePlayer player = source as GamePlayer;
+			ArtifactScholar scholar = target as ArtifactScholar;
+			if (player == null || scholar == null)
+				return false;
 
 			//If the player is on the right step (the give me an art step)
-	        if (Step == 0)
-	        {
+			if (Step == 0)
+			{
 				//Lets see if they gave us a valid artifact
-	            string ArtID = ArtifactMgr.GetArtifactIDFromItemID(item.Id_nb);
+				string ArtID = ArtifactMgr.GetArtifactIDFromItemID(item.Id_nb);
 				Dictionary<String, ItemTemplate> versions = ArtifactMgr.GetArtifactVersions(ArtID, (eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 				//If this artifact has more than one option for them, give them the quest
 				if (versions != null && item != null && versions.Count > 1 && RemoveItem(player, item))
@@ -322,15 +322,15 @@ namespace DOL.GS.Quests.Atlantis
 					Step = 1;
 					return true;
 				}
-	        }
-	        else
-	        {
+			}
+			else
+			{
 				//Why are they giving this to us!
-	            player.Out.SendMessage(string.Format("{0} doesn't want that item.", scholar.Name), 
-					eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-	        }
+				player.Out.SendMessage(string.Format("{0} doesn't want that item.", scholar.Name),
+				                       eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+			}
 
-	        return base.ReceiveItem(source, target, item);
+			return base.ReceiveItem(source, target, item);
 		}
 
 		/// <summary>
@@ -400,7 +400,7 @@ namespace DOL.GS.Quests.Atlantis
 
 		protected void ReturnArtifact(GamePlayer player)
 		{
-            ItemTemplate itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(GetCustomProperty("Id_nb"));
+			ItemTemplate itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(GetCustomProperty("Id_nb"));
 			InventoryArtifact artifact = new InventoryArtifact(itemTemplate);
 			artifact.ArtifactLevel = Convert.ToInt32(GetCustomProperty("ALevel"));
 			artifact.Experience = Convert.ToInt64(GetCustomProperty("AXP"));

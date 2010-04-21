@@ -33,7 +33,6 @@ namespace DOL.Database
 		private DateTime m_dateSubmitted;
 		private string m_closedBy;
 		private DateTime m_dateClosed;
-		private bool m_autoSave;
 
 		public BugReport()
 		{
@@ -41,14 +40,7 @@ namespace DOL.Database
 			m_submitter = string.Empty;
 			m_dateSubmitted = DateTime.Now;
 			m_closedBy = string.Empty;
-			m_autoSave = true;
 			m_category = string.Empty;
-		}
-
-		public override bool AutoSave
-		{
-			get { return m_autoSave; }
-			set { m_autoSave = value; }
 		}
 
 		[PrimaryKey]//DataElement(AllowDbNull = false, Unique = true)]

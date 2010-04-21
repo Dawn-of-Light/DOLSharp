@@ -33,7 +33,6 @@ namespace DOL.Database
 		private string     m_characterID;
 		private int	    m_factionID;
 		private int 	m_AggroLevel;
-		static bool		m_autoSave;
 
 		/// <summary>
 		/// Create faction aggro level against character
@@ -43,16 +42,7 @@ namespace DOL.Database
 			m_characterID = "";
 			m_factionID = 0;
 			m_AggroLevel = 0;
-			m_autoSave = false;
-		}
-
-		/// <summary>
-		/// Autosave table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get	{return m_autoSave;}
-			set	{m_autoSave = value;}
+			AutoSave = false;
 		}
 		
 		/// <summary>
@@ -61,16 +51,16 @@ namespace DOL.Database
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public string CharacterID
 		{
-			get 
+			get
 			{
 				return m_characterID;
 			}
-			set	
+			set
 			{
 				Dirty = true;
 				m_characterID = value;
 			}
-		}		
+		}
 
 		/// <summary>
 		/// index of this faction
@@ -78,16 +68,16 @@ namespace DOL.Database
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public int FactionID
 		{
-			get 
+			get
 			{
 				return m_factionID;
 			}
-			set	
+			set
 			{
 				Dirty = true;
 				m_factionID = value;
 			}
-		}		
+		}
 		
 		/// <summary>
 		/// aggro level/ relationship of faction against character
@@ -95,16 +85,16 @@ namespace DOL.Database
 		[DataElement(AllowDbNull=false,Unique=false)]
 		public int AggroLevel
 		{
-			get 
+			get
 			{
 				return m_AggroLevel;
 			}
-			set	
+			set
 			{
 				Dirty = true;
 				m_AggroLevel = value;
 			}
-		}		
+		}
 		
 	}
 }

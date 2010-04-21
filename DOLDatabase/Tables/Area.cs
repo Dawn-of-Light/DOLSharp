@@ -14,27 +14,14 @@ namespace DOL.Database
 		private int m_radius;
 		private ushort m_region;
 		private string m_classType = "";
-		private static bool m_autoSave;
 		private bool m_canBroadcast;
 		private byte m_sound;
-        private bool m_checkLOS;
-        private string m_points;
+		private bool m_checkLOS;
+		private string m_points;
 
 		public DBArea()
 		{
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
+			AutoSave = false;
 		}
 
 		[DataElement(AllowDbNull = false)]
@@ -177,18 +164,18 @@ namespace DOL.Database
 			}
 		}
 
-        [DataElement(AllowDbNull = true)]
-        public string Points
-        {
-            get
-            {
-                return m_points;
-            }
-            set
-            {
-                Dirty = true;
-                m_points = value;
-            }
-        }
+		[DataElement(AllowDbNull = true)]
+		public string Points
+		{
+			get
+			{
+				return m_points;
+			}
+			set
+			{
+				Dirty = true;
+				m_points = value;
+			}
+		}
 	}
 }

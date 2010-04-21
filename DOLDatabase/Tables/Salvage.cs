@@ -30,29 +30,13 @@ namespace DOL.Database
 		private int m_objectType;
 		private int m_salvageLevel;
 		private string m_id_nb;
-		static bool	m_autoSave;
 
 		/// <summary>
 		/// Create salvage
 		/// </summary>
 		public DBSalvage()
 		{
-			m_autoSave=false;
-		}
-
-		/// <summary>
-		/// auto save Db or not
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
+			AutoSave =false;
 		}
 
 		/// <summary>

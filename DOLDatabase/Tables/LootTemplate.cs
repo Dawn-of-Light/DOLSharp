@@ -18,9 +18,9 @@
  */
 
 /*
- * Credits go to: 
+ * Credits go to:
  * - Echostorm's Mob Drop Loot System
- * - Roach's modifications to add loottemplate base mobdrops  
+ * - Roach's modifications to add loottemplate base mobdrops
  */
 
 using System;
@@ -39,24 +39,17 @@ namespace DOL.Database
 		protected string	m_ItemTemplateID = "";
 		protected int		m_Chance = 99;
 		protected int		m_count = 1;
-		static bool			m_autoSave;
 		
 		public LootTemplate()
 		{
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get	{return m_autoSave;}
-			set	{m_autoSave = value;}
+			AutoSave = false;
 		}
 		
 		[DataElement(AllowDbNull=false, Index=true)]
 		public string TemplateName
 		{
 			get {return m_TemplateName;}
-			set	
+			set
 			{
 				Dirty = true;
 				m_TemplateName = value;
@@ -67,7 +60,7 @@ namespace DOL.Database
 		public string ItemTemplateID
 		{
 			get {return m_ItemTemplateID;}
-			set	
+			set
 			{
 				Dirty = true;
 				m_ItemTemplateID = value;
@@ -78,7 +71,7 @@ namespace DOL.Database
 		public int Chance
 		{
 			get {return m_Chance;}
-			set	
+			set
 			{
 				Dirty = true;
 				m_Chance = value;
@@ -88,7 +81,7 @@ namespace DOL.Database
 		[DataElement(AllowDbNull = false)]
 		public int Count
 		{
-			get 
+			get
 			{
 				return Math.Max(1, m_count);
 			}

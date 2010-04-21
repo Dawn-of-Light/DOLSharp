@@ -20,18 +20,19 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.Tests;
+using DOL.GS;
 using NUnit.Framework;
 
-namespace DOL.GS.Tests
+namespace DOL.Tests
 {
 	
 	/// <summary>
 	/// Unittest for the LootMgr Class
 	/// </summary>
 	[TestFixture]
-	public class LootMgrTest : DOLTestCase
+	public class LootManagerTest : DOLTestCase
 	{
-		public LootMgrTest()
+		public LootManagerTest()
 		{
 			
 		}

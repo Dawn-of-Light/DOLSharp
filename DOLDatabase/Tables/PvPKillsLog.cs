@@ -19,19 +19,10 @@ namespace DOL.Database
 		string m_regionName = "";
 		bool m_isInstance = false;
 
-		private bool m_autoSave;
-
 		public PvPKillsLog()
 			: base()
 		{
 		}
-
-		public override bool AutoSave
-		{
-			get { return m_autoSave; }
-			set { m_autoSave = value; }
-		}
-
 
 		[PrimaryKey(AutoIncrement = true)]
 		public long ID

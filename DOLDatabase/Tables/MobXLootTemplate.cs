@@ -18,9 +18,9 @@
  */
 
 /*
- * Credits go to: 
+ * Credits go to:
  * - Echostorm's Mob Drop Loot System
- * - Roach's modifications to add loottemplate base mobdrops  
+ * - Roach's modifications to add loottemplate base mobdrops
  */
 
 using System;
@@ -38,7 +38,6 @@ namespace DOL.Database
 		private string	m_MobName = "";
 		private string	m_LootTemplateName = "";
 		private int		m_dropCount;
-		private static bool			m_autoSave;
 		
 		/// <summary>
 		/// Constructor
@@ -46,20 +45,11 @@ namespace DOL.Database
 		public MobXLootTemplate()
 		{
 			m_MobName = "";
-			m_LootTemplateName = "";			
+			m_LootTemplateName = "";
 			m_dropCount=1;
-			m_autoSave = false;
+			AutoSave = false;
 		}
-
-		/// <summary>
-		/// Auto Save
-		/// </summary>
-		override public bool AutoSave
-		{
-			get	{return m_autoSave;}
-			set	{m_autoSave = value;}
-		}
-		
+	
 		/// <summary>
 		/// Mob Name
 		/// </summary>
@@ -67,7 +57,7 @@ namespace DOL.Database
 		public string MobName
 		{
 			get {return m_MobName;}
-			set	
+			set
 			{
 				Dirty = true;
 				m_MobName = value;
@@ -81,7 +71,7 @@ namespace DOL.Database
 		public string LootTemplateName
 		{
 			get {return m_LootTemplateName;}
-			set	
+			set
 			{
 				Dirty = true;
 				m_LootTemplateName = value;
@@ -95,7 +85,7 @@ namespace DOL.Database
 		public int DropCount
 		{
 			get {return m_dropCount;}
-			set	
+			set
 			{
 				Dirty = true;
 				m_dropCount = value;

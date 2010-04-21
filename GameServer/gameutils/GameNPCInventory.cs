@@ -22,9 +22,7 @@ namespace DOL.GS
 		{
 			foreach (InventoryItem item in template.AllItems)
 			{
-				InventoryItem newItem = new InventoryItem();
-				newItem.CopyFrom(item);
-				AddItem((eInventorySlot)item.SlotPosition, newItem);
+				AddItem((eInventorySlot)item.SlotPosition, new InventoryItem(item));
 			}
 		}
 	}

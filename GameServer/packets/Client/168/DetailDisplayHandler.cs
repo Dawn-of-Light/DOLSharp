@@ -66,22 +66,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 			8       Ability               100+position in players abilities list (?)
 			9       Trainers skill        position in trainers window list
 			10		Market Search		  slot?
-			*/
+			 */
 
 			ItemTemplate item = null;
 			InventoryItem invItem = null;
 
 			switch (objectType)
 			{
-				#region Inventory Item
+					#region Inventory Item
 				case 1: //Display Infos on inventory item
 				case 10: // market search
-                    {
-                        if (objectType == 1)
-                        {
-                            invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-                            if (invItem == null)
-                            {
+					{
+						if (objectType == 1)
+						{
+							invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+							if (invItem == null)
+							{
 								if (client.Player.ActiveConMerchant != null)
 								{
 									Consignment con = client.Player.ActiveConMerchant;
@@ -100,11 +100,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 								{
 									return 1;
 								}
-                            }
-                        }
-                        else if (objectType == 10)
-                        {
-                            List<InventoryItem> list = client.Player.TempProperties.getProperty<object>(DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.EXPLORER_LIST, null) as List<InventoryItem>;
+							}
+						}
+						else if (objectType == 10)
+						{
+							List<InventoryItem> list = client.Player.TempProperties.getProperty<object>(DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.EXPLORER_LIST, null) as List<InventoryItem>;
 							if (list == null)
 							{
 								list = client.Player.TempProperties.getProperty<object>("TempSearchKey", null) as List<InventoryItem>;
@@ -119,7 +119,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							if (invItem == null)
 								return 1;
-                        }
+						}
 
 						caption = invItem.Name;
 
@@ -152,26 +152,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//**********************************
 						//show crafter name
 						//**********************************
-						if (invItem.CrafterName != null && invItem.CrafterName != "")
+						if (invItem.IsCrafted)
 						{
-							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CrafterName", invItem.CrafterName));
+							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CrafterName", invItem.Creator));
 							objectInfo.Add(" ");
 						}
-						else if (invItem.Id_nb == "UniqueObject") // tolakram - force display of unique object
-						{
-                            objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.UniqueObject"));
-                            objectInfo.Add(" ");
-						}
-
-						if (invItem.Description != null && invItem.Description != "")
+						else if (invItem.Description != null && invItem.Description != "")
 						{
 							objectInfo.Add(invItem.Description);
 							objectInfo.Add(" ");
 						}
 
-
 						if ((invItem.Object_Type >= (int)eObjectType.GenericWeapon) && (invItem.Object_Type <= (int)eObjectType._LastWeapon) ||
-							invItem.Object_Type == (int)eObjectType.Instrument)
+						    invItem.Object_Type == (int)eObjectType.Instrument)
 						{
 							WriteUsableClasses(objectInfo, invItem, client);
 							WriteMagicalBonuses(objectInfo, invItem, client, false);
@@ -257,6 +250,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (!invItem.IsDropable)
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotSold"));
 
+						if (invItem.Description != null)
+							objectInfo.Add(invItem.Description);
+
 						if (invItem.IsIndestructible)
 							objectInfo.Add("Cannot be destroyed.");
 
@@ -274,8 +270,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						break;
 					}
-				#endregion
-				#region Spell
+					#endregion
+					#region Spell
 				case 2: //spell
 					{
 						int lineID = objectID / 100;
@@ -339,8 +335,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;
 					}
-				#endregion
-				#region Merchant
+					#endregion
+					#region Merchant
 				case 4: //Display Infos on Merchant objects
 				case 19: //Display Info quest reward
 					{
@@ -399,18 +395,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 
 						if ((item.Object_Type >= (int)eObjectType.GenericWeapon) && (item.Object_Type <= (int)eObjectType.MaulerStaff) ||
-							item.Object_Type == (int)eObjectType.Instrument)
+						    item.Object_Type == (int)eObjectType.Instrument)
 						{
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-							WriteClassicWeaponInfos(objectInfo, item, client);
+							WriteClassicWeaponInfos(objectInfo, new InventoryItem(item), client);
 						}
 
 						if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
 						{
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-							WriteClassicArmorInfos(objectInfo, item, client);
+							WriteClassicArmorInfos(objectInfo, new InventoryItem(item), client);
 						}
 
 						if (item.Object_Type == (int)eObjectType.Shield)
@@ -436,12 +432,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
 						{
-							WriteTechnicalInfo(objectInfo, item);
+							WriteTechnicalInfo(objectInfo, item, item.MaxDurability, item.MaxCondition);
 						}
 						break;
 					}
-				#endregion
-				#region Effect
+					#endregion
+					#region Effect
 				case 5: //icons on top (buffs/dots)
 					{
 						IGameEffect foundEffect = null;
@@ -464,8 +460,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						break;
 					}
-				#endregion
-				#region Style
+					#endregion
+					#region Style
 				case 6: //style
 					{
 						IList styleList = client.Player.GetStyleList();
@@ -573,7 +569,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
 								temp = (temp == "" ? st.Name : temp +
-									LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Or", st.Name));
+								        LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Or", st.Name));
 						}
 						if (temp != "")
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.FollowupStyle", temp));
@@ -671,8 +667,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;
 					}
-				#endregion
-				#region Trade Window
+					#endregion
+					#region Trade Window
 				case 7: //trade windows
 					{
 						ITradeWindow playerTradeWindow = client.Player.TradeWindow;
@@ -699,7 +695,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChampionLevel", invItem.Level));
 						}
 						if ((invItem.Object_Type >= (int)eObjectType.GenericWeapon) && (invItem.Object_Type <= (int)eObjectType.MaulerStaff) ||
-							invItem.Object_Type == (int)eObjectType.Instrument)
+						    invItem.Object_Type == (int)eObjectType.Instrument)
 						{
 							WriteUsableClasses(objectInfo, invItem, client);
 							WriteMagicalBonuses(objectInfo, invItem, client, false);
@@ -741,8 +737,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						break;
 					}
-				#endregion
-				#region Ability
+					#endregion
+					#region Ability
 				case 8://abilities
 					{
 						int id = objectID - 100;
@@ -764,8 +760,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;
 					}
-				#endregion
-				#region Trainer
+					#endregion
+					#region Trainer
 				case 9: //trainer window "info" button
 					{
 						IList specList = client.Player.GetSpecList();
@@ -849,8 +845,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;
 					}
-				#endregion
-				#region Group
+					#endregion
+					#region Group
 				case 12: // Item info to Group Chat
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -864,8 +860,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Player.Group.SendMessageToGroupMembers(str, eChatType.CT_Group, eChatLoc.CL_ChatWindow);
 						return 1;
 					}
-				#endregion
-				#region Guild
+					#endregion
+					#region Guild
 				case 13: // Item info to Guild Chat
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -888,8 +884,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
-				#endregion
-				#region ChatGroup
+					#endregion
+					#region ChatGroup
 				case 15: // Item info to Chat group
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -913,8 +909,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
-				#endregion
-				#region Repair
+					#endregion
+					#region Repair
 				case 100://repair
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -928,8 +924,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
-				#endregion
-				#region Self Craft
+					#endregion
+					#region Self Craft
 				case 101://selfcraft
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -943,8 +939,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
-				#endregion
-				#region Salvage
+					#endregion
+					#region Salvage
 				case 102://salvage
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -958,8 +954,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
-				#endregion
-				#region BattleGroup
+					#endregion
+					#region BattleGroup
 				case 103: // Item info to battle group
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
@@ -983,8 +979,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return 1;
 					}
-				#endregion
-				#region ChampionAbilities delve from trainer window
+					#endregion
+					#region ChampionAbilities delve from trainer window
 				case 151:
 				case 152:
 				case 153:
@@ -1015,8 +1011,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						break;
 					}
-				// TODO: find last CL line index
-				#endregion
+					// TODO: find last CL line index
+					#endregion
 				default:
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoInformation"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 1;
@@ -1067,7 +1063,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		public void WriteTechnicalInfo(IList<string> output, ItemTemplate item)
+		public void WriteTechnicalInfo(IList<string> output, InventoryItem item)
+		{
+			WriteTechnicalInfo(output, item.Template, item.Durability ,item.Condition);
+			
+		}
+		public void WriteTechnicalInfo(IList<string> output, ItemTemplate item, int dur, int con )
 		{
 			output.Add(" ");
 			output.Add("--- Item technical informations ---");
@@ -1082,11 +1083,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			output.Add("        Color: " + item.Color);
 			output.Add("       Emblem: " + item.Emblem);
 			output.Add("       Effect: " + item.Effect);
-			output.Add("  Value/Price: " + item.Platinum + "p " + item.Gold + "g " + item.Silver + "s " + item.Copper + "c");
+			output.Add("  Value/Price: " + Money.GetShortString(item.Price));
 			output.Add("       Weight: " + (item.Weight / 10.0f) + "lbs");
 			output.Add("      Quality: " + item.Quality + "%");
-			output.Add("   Durability: " + item.Durability + "/" + item.MaxDurability + "(max)");
-			output.Add("    Condition: " + item.Condition + "/" + item.MaxCondition + "(max)");
+			output.Add("   Durability: " + dur + "/" + item.MaxDurability);
+			output.Add("    Condition: " + con + "/" + item.MaxCondition);
 			output.Add("        Realm: " + item.Realm);
 			output.Add("  Is dropable: " + (item.IsDropable ? "yes" : "no"));
 			output.Add("  Is pickable: " + (item.IsPickable ? "yes" : "no"));
@@ -1149,7 +1150,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						[Guild] Player/Item: "- DPS 3.0 speed 94% qual 100% con (Crush) (Two Handed). Bonuses:
 						22 Hits, 5% Energy, 2 All Casting, 50 lvls ALL focus 7% buff bonus, (10/10 char
 						ges) health regen Value: 8  Tradeable.".
-			*/
+			 */
 
 			string str = "- [" + item.Name + "]: " + GlobalConstants.ObjectTypeToName(item.Object_Type);
 			var objectInfo = new List<string>();
@@ -1170,14 +1171,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 				WriteClassicShieldInfos(objectInfo, item, client);
 			}
 			if (item.Object_Type == (int)eObjectType.Magical ||
-				item.Object_Type == (int)eObjectType.Instrument)
+			    item.Object_Type == (int)eObjectType.Instrument)
 			{
 				WriteMagicalBonuses(objectInfo, item, client, true);
 			}
-			if (item.CrafterName != null && item.CrafterName != "")
+			if (item.IsCrafted)
 			{
 				objectInfo.Add(" ");//empty line
-				objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.GetShortItemInfo.CrafterName", item.CrafterName));
+				objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.GetShortItemInfo.CrafterName", item.Creator));
 			}
 			if (item.Object_Type == (int)eObjectType.Poison)
 			{
@@ -1200,10 +1201,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			return str;
 		}
 
-
 		/// <summary>
-		///
-		///
 		/// Damage Modifiers:
 		/// - X.X Base DPS
 		/// - X.X Clamped DPS
@@ -1215,12 +1213,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Effective Damage:
 		/// - X.X DPS
 		/// </summary>
-		public void WriteClassicWeaponInfos(IList<string> output, ItemTemplate item, GameClient client)
+		public void WriteClassicWeaponInfos(IList<string> output, InventoryItem item, GameClient client)
 		{
 			double itemDPS = item.DPS_AF / 10.0;
 			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * client.Player.Level);
 			double itemSPD = item.SPD_ABS / 10.0;
-			double effectiveDPS = clampedDPS * item.Quality / 100.0 * item.Condition / item.MaxCondition;
+			double effectiveDPS = clampedDPS * item.Quality / 100.0 * item.Condition / item.Template.MaxCondition;
 
 			output.Add(" ");
 			output.Add(" ");
@@ -1246,7 +1244,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicWeaponInfos.DamageType",
-				(item.Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(item.Type_Damage))));
+			                                      (item.Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(item.Type_Damage))));
 			output.Add(" ");
 
 			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage"));
@@ -1255,7 +1253,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 				output.Add("- " + effectiveDPS.ToString("0.0") + " DPS");
 			}
 		}
-
+		
+		public void WriteUsableClasses(IList<string> output, InventoryItem item, GameClient client)
+		{
+			WriteUsableClasses(output,item.Template, client);
+		}
 		public void WriteUsableClasses(IList<string> output, ItemTemplate item, GameClient client)
 		{
 			if (string.IsNullOrEmpty(item.AllowedClasses) || item.AllowedClasses == "0")
@@ -1274,13 +1276,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 		}
 
 		/// <summary>
-		///
-		///
 		/// Damage Modifiers (when used with shield styles):
 		/// - X.X Base DPS
 		/// - X.X Clamped DPS
 		/// - XX Shield Speed
 		/// </summary>
+		public void WriteClassicShieldInfos(IList<string> output, InventoryItem item, GameClient client)
+		{
+			WriteClassicShieldInfos(output, item.Template, client);
+		}
 		public void WriteClassicShieldInfos(IList<string> output, ItemTemplate item, GameClient client)
 		{
 			double itemDPS = item.DPS_AF / 10.0;
@@ -1304,15 +1308,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			switch (item.Type_Damage)
 			{
-				case 1: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Small")); break;
-				case 2: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Medium")); break;
-				case 3: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Large")); break;
+					case 1: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Small")); break;
+					case 2: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Medium")); break;
+					case 3: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Large")); break;
 			}
 		}
 
 		/// <summary>
-		///
-		///
 		/// Armor Modifiers:
 		/// - X.X Base Factor
 		/// - X.X Clamped Factor
@@ -1324,7 +1326,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Effective Armor:
 		/// - X.X Factor
 		/// </summary>
-		public void WriteClassicArmorInfos(IList<string> output, ItemTemplate item, GameClient client)
+		public void WriteClassicArmorInfos(IList<string> output, InventoryItem item, GameClient client)
 		{
 			output.Add(" ");
 			output.Add(" ");
@@ -1356,7 +1358,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			if (item.Condition != 0)
 			{
-				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.Condition", item.ConditionPercent));
+				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicArmorInfos.Condition", 100 /*item.ConditionPercent*/));
 			}
 			output.Add(" ");
 
@@ -1369,7 +1371,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 		}
-
+		
+		public void WriteMagicalBonuses(IList<string> output, InventoryItem item, GameClient client, bool shortInfo)
+		{
+			WriteMagicalBonuses(output, item.Template, client, shortInfo);
+		}
 		public void WriteMagicalBonuses(IList<string> output, ItemTemplate item, GameClient client, bool shortInfo)
 		{
 			int oldCount = output.Count;
@@ -1720,17 +1726,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 						SkillBase.GetPropertyName((eProperty)bonusCat),
 						bonusValue.ToString("+0 ;-0 ;0 "), //Eden
 						((bonusCat == (int)eProperty.PowerPool)
-							|| (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last)
-							|| (bonusCat >= (int)eProperty.ResCapBonus_First && bonusCat <= (int)eProperty.ResCapBonus_Last)
-							|| bonusCat == (int)eProperty.Conversion
-							|| bonusCat == (int)eProperty.ExtraHP
-							|| bonusCat == (int)eProperty.RealmPoints
-							|| bonusCat == (int)eProperty.StyleAbsorb
-                            || bonusCat == (int)eProperty.ArcaneSyphon
-                            || bonusCat == (int)eProperty.BountyPoints
-                            || bonusCat == (int)eProperty.XpPoints)
+						 || (bonusCat >= (int)eProperty.Resist_First && bonusCat <= (int)eProperty.Resist_Last)
+						 || (bonusCat >= (int)eProperty.ResCapBonus_First && bonusCat <= (int)eProperty.ResCapBonus_Last)
+						 || bonusCat == (int)eProperty.Conversion
+						 || bonusCat == (int)eProperty.ExtraHP
+						 || bonusCat == (int)eProperty.RealmPoints
+						 || bonusCat == (int)eProperty.StyleAbsorb
+						 || bonusCat == (int)eProperty.ArcaneSyphon
+						 || bonusCat == (int)eProperty.BountyPoints
+						 || bonusCat == (int)eProperty.XpPoints)
 						? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
-							: LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.Points")
+						: LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.Points")
 					));
 				}
 			}
@@ -1740,9 +1746,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			switch (property)
 			{
-				//case eProperty.BlockChance:
-				//case eProperty.ParryChance:
-				//case eProperty.EvadeChance:
+					//case eProperty.BlockChance:
+					//case eProperty.ParryChance:
+					//case eProperty.EvadeChance:
 				case eProperty.DefensiveBonus:
 				case eProperty.BladeturnReinforcement:
 				case eProperty.NegativeReduction:
@@ -1767,6 +1773,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
+		protected void WriteHorseInfo(IList<string> list, InventoryItem item, GameClient client, string horseName)
+		{
+			WriteHorseInfo(list, item.Template, client, horseName);
+		}
 		protected void WriteHorseInfo(IList<string> list, ItemTemplate item, GameClient client, string horseName)
 		{
 			list.Add(" ");
@@ -1799,6 +1809,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Food"));
 		}
 
+		protected void WritePoisonInfo(IList<string> list, InventoryItem item, GameClient client)
+		{
+			WritePoisonInfo(list, item.Template, client);
+		}
 		protected void WritePoisonInfo(IList<string> list, ItemTemplate item, GameClient client)
 		{
 			if (item.PoisonSpellID != 0)
@@ -1837,34 +1851,38 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-       /// <summary>
-        /// Nidel: Write potions infos. Spell's infos include
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="item"></param>
-        /// <param name="client"></param>
-	    private static void WritePotionInfo(IList<string> list, ItemTemplate item, GameClient client)
-	    {
-	        if(item.SpellID != 0)
-	        {
-	            SpellLine potionLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
-	            if(potionLine != null)
-	            {
-	                List<Spell> spells = SkillBase.GetSpellList(potionLine.KeyName);
+		/// <summary>
+		/// Nidel: Write potions infos. Spell's infos include
+		/// </summary>
+		/// <param name="list"></param>
+		/// <param name="item"></param>
+		/// <param name="client"></param>
+		private static void WritePotionInfo(IList<string> list, InventoryItem item, GameClient client)
+		{
+			WritePotionInfo(list, item.Template, client);
+		}
+		private static void WritePotionInfo(IList<string> list, ItemTemplate item, GameClient client)
+		{
+			if(item.SpellID != 0)
+			{
+				SpellLine potionLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
+				if(potionLine != null)
+				{
+					List<Spell> spells = SkillBase.GetSpellList(potionLine.KeyName);
 
-	                foreach(Spell spl in spells)
-	                {
-	                    if(spl.ID == item.SpellID)
-	                    {
-	                        list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.ChargedMagic"));
-	                        list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Charges", item.Charges));
-	                        list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.MaxCharges", item.MaxCharges));
-	                        list.Add(" ");
-	                        WritePotionSpellsInfos(list, client, spl, potionLine);
-	                        list.Add(" ");
-	                        long nextPotionAvailTime = client.Player.TempProperties.getProperty<long>("LastPotionItemUsedTick_Type" + spl.SharedTimerGroup);
-	                        // Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
-	                        // into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
+					foreach(Spell spl in spells)
+					{
+						if(spl.ID == item.SpellID)
+						{
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.ChargedMagic"));
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Charges", item.Charges));
+							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.MaxCharges", item.MaxCharges));
+							list.Add(" ");
+							WritePotionSpellsInfos(list, client, spl, potionLine);
+							list.Add(" ");
+							long nextPotionAvailTime = client.Player.TempProperties.getProperty<long>("LastPotionItemUsedTick_Type" + spl.SharedTimerGroup);
+							// Satyr Update: Individual Reuse-Timers for Pots need a Time looking forward
+							// into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
 							if (nextPotionAvailTime > client.Player.CurrentRegion.Time)
 							{
 								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem3", Util.FormatTime((nextPotionAvailTime - client.Player.CurrentRegion.Time) / 1000)));
@@ -1884,58 +1902,58 @@ namespace DOL.GS.PacketHandler.Client.v168
 								}
 							}
 
-	                        if(spl.CastTime > 0)
-	                        {
-	                            list.Add(" ");
-	                            list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.NoUseInCombat"));
-	                        }
-	                        break;
-	                    }
-	                }
-	            }
-	        }
-	    }
+							if(spl.CastTime > 0)
+							{
+								list.Add(" ");
+								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.NoUseInCombat"));
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
 
-        /// <summary>
-        /// Nidel: Write spell's infos of potions and subspell's infos with recursive method.
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="client"></param>
-        /// <param name="spl"></param>
-        /// <param name="line"></param>
-        private static void WritePotionSpellsInfos(IList<string> list, GameClient client, Spell spl, NamedSkill line)
-        {
-            if(spl != null)
-            {
-                list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
-                list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Type", spl.SpellType));
-                list.Add(" ");
-                list.Add(spl.Description);
-                list.Add(" ");
-                if(spl.Value != 0)
-                {
-                    list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Value", spl.Value));
-                }
-                list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Target", spl.Target));
-                if(spl.Range > 0)
-                {
-                    list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Range", spl.Range));
-                }
-                list.Add(" ");
-                list.Add(" ");
-                if(spl.SubSpellID > 0)
-                {
-                    List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
-                    foreach(Spell subSpell in spells)
-                    {
-                        if(subSpell.ID == spl.SubSpellID)
-                        {
-                            WritePotionSpellsInfos(list, client, subSpell, line);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+		/// <summary>
+		/// Nidel: Write spell's infos of potions and subspell's infos with recursive method.
+		/// </summary>
+		/// <param name="list"></param>
+		/// <param name="client"></param>
+		/// <param name="spl"></param>
+		/// <param name="line"></param>
+		private static void WritePotionSpellsInfos(IList<string> list, GameClient client, Spell spl, NamedSkill line)
+		{
+			if(spl != null)
+			{
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Type", spl.SpellType));
+				list.Add(" ");
+				list.Add(spl.Description);
+				list.Add(" ");
+				if(spl.Value != 0)
+				{
+					list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Value", spl.Value));
+				}
+				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Target", spl.Target));
+				if(spl.Range > 0)
+				{
+					list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Range", spl.Range));
+				}
+				list.Add(" ");
+				list.Add(" ");
+				if(spl.SubSpellID > 0)
+				{
+					List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
+					foreach(Spell subSpell in spells)
+					{
+						if(subSpell.ID == spl.SubSpellID)
+						{
+							WritePotionSpellsInfos(list, client, subSpell, line);
+							break;
+						}
+					}
+				}
+			}
+		}
 	}
 }

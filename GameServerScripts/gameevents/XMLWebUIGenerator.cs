@@ -71,13 +71,6 @@ namespace DOL.GS.Scripts
 			private int m_numMerchantItems = 0;
 			private int m_numItemTemplates = 0;
 			private int m_numWorldObj = 0;
-			private static bool m_autoSave = true;
-
-			public override bool AutoSave
-			{
-				get { return m_autoSave; }
-				set { m_autoSave = value; }
-			}
 
 			[DataElement(AllowDbNull=true)]
 			public string Time
@@ -185,14 +178,6 @@ namespace DOL.GS.Scripts
 			private int m_lvl = 0;
 			private int m_x = 0;
 			private int m_y = 0;
-
-			private static bool m_autoSave = true;
-
-			public override bool AutoSave
-			{
-				get { return m_autoSave; }
-				set { m_autoSave = value; }
-			}
 
 			[DataElement(AllowDbNull=true)]
 			public string Name

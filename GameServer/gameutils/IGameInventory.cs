@@ -98,7 +98,7 @@ namespace DOL.GS
 
 		bool			AddItem(eInventorySlot slot, InventoryItem item);
 		bool			AddCountToStack(InventoryItem item, int count);
-		bool			AddTemplate(ItemTemplate template, int count, eInventorySlot minSlot, eInventorySlot maxSlot);
+		bool			AddTemplate(InventoryItem template, int count, eInventorySlot minSlot, eInventorySlot maxSlot);
 		bool            RemoveItem(InventoryItem item);
 		bool			RemoveCountFromStack(InventoryItem item, int count);
 		bool			RemoveTemplate(string templateID, int count, eInventorySlot minSlot, eInventorySlot maxSlot);
@@ -123,7 +123,7 @@ namespace DOL.GS
 		InventoryItem	GetFirstItemByObjectType(int objectType, eInventorySlot minSlot, eInventorySlot maxSlot);
 		InventoryItem   GetFirstItemByName(string name ,eInventorySlot minSlot, eInventorySlot maxSlot);
 
-		ICollection<InventoryItem>     VisibleItems    { get; }
+		ICollection<InventoryItem> VisibleItems    { get; }
 		ICollection<InventoryItem> EquippedItems { get; }
 		ICollection<InventoryItem> AllItems { get; }
 

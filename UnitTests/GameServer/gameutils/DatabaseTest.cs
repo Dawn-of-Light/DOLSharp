@@ -24,7 +24,7 @@ using DOL.GS.PacketHandler;
 using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.GS.Tests
+namespace DOL.Tests
 {
 	/// <summary>
 	/// Unit tests for the Zone Class

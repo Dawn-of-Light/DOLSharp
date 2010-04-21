@@ -215,23 +215,26 @@ namespace DOL.Database
 		#region Public API
 
 		/// <summary>
-		/// insert a new object into the db
-		/// and save it
+		/// insert a new object into the db and save it
+		/// if AutoSave is set
 		/// </summary>
 		/// <param name="dataObject"></param>
 		public bool AddObject(DataObject dataObject)
 		{
-			return AddObjectImpl(dataObject);
+			if (dataObject.AutoSave)
+				return AddObjectImpl(dataObject);
+			else
+				return false;
 		}
 
 		/// <summary>
-		/// saves an object to db in memory and when autosave is activated
-		/// it saves immediately persistent to database
+		/// saves an object to db in memory
 		/// </summary>
 		/// <param name="dataObject"></param>
 		public void SaveObject(DataObject dataObject)
 		{
-			SaveObjectImpl(dataObject);
+			if (dataObject.Dirty)
+				SaveObjectImpl(dataObject);
 		}
 
 		/// <summary>
@@ -913,7 +916,7 @@ namespace DOL.Database
 					if (attrib.Length > 0 || keyAttrib.Length > 0 || relAttrib.Length > 0 || readonlyAttrib.Length > 0)
 					{
 						var info = new BindingInfo(objMembers[i], keyAttrib.Length > 0, relAttrib.Length > 0, readonlyAttrib.Length > 0,
-												   (attrib.Length > 0) ? (DataElement)attrib[0] : null);
+						                           (attrib.Length > 0) ? (DataElement)attrib[0] : null);
 						list.Add(info);
 					}
 				}

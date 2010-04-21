@@ -106,8 +106,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="quests\artifact example\BasicEncounterMob.cs" />
-    <Compile Include="quests\artifact example\TetheredEncounterMob.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -143,16 +141,129 @@
     <Compile Include="globals.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\masterlevel example\EncounterMgr.cs" />
-    <Compile Include="quests\masterlevel example\ML1FireIsland.cs" />
-    <Compile Include="quests\classic example\HelpSirQuait.cs" />
     <Compile Include="gameevents\WebUIGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameevents\XMLWebUIGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="quests\search example\WingsOfTheIsleHibernia.cs" />
+    <Compile Include="quests\Albion\AFewRepairs.cs" />
+    <Compile Include="quests\Albion\AfterTheAccident.cs" />
+    <Compile Include="quests\Albion\AgainstTheGrain.cs" />
+    <Compile Include="quests\Albion\Aiding_Guard_Alakyrr.cs" />
+    <Compile Include="quests\Albion\AMessageToTheManes.cs" />
+    <Compile Include="quests\Albion\AndrewsSkins.cs" />
+    <Compile Include="quests\Albion\ANewHeroesWelcome.cs" />
+    <Compile Include="quests\Albion\ArgussArrows.cs" />
+    <Compile Include="quests\Albion\ArleighsAssistant.cs" />
+    <Compile Include="quests\Albion\ArrowsForYettaFletcher.cs" />
+    <Compile Include="quests\Albion\BaseFrederickQuest.cs" />
+    <Compile Include="quests\Albion\BeginningOfWar.cs" />
+    <Compile Include="quests\Albion\BoarStew.cs" />
+    <Compile Include="quests\Albion\BoulderlingBalm.cs" />
+    <Compile Include="quests\Albion\BreakingTheBandits.cs" />
+    <Compile Include="quests\Albion\BuildingABetterBow.cs" />
+    <Compile Include="quests\Albion\Cellar_Infestation.cs" />
+    <Compile Include="quests\Albion\CemmethsOrders.cs" />
+    <Compile Include="quests\Albion\ChildsPlay.cs" />
+    <Compile Include="quests\Albion\CityOfCamelot.cs" />
+    <Compile Include="quests\Albion\ClericMulgrut.cs" />
+    <Compile Include="quests\Albion\Collection.cs" />
+    <Compile Include="quests\Albion\Culmination.cs" />
+    <Compile Include="quests\Albion\Disenchanted.cs" />
+    <Compile Include="quests\Albion\DredgeUpAPledge.cs" />
+    <Compile Include="quests\Albion\epic\Academy50.cs" />
+    <Compile Include="quests\Albion\epic\Church50.cs" />
+    <Compile Include="quests\Albion\epic\Defenders50.cs" />
+    <Compile Include="quests\Albion\epic\Shadows50.cs" />
+    <Compile Include="quests\Albion\Frontiers.cs" />
+    <Compile Include="quests\Albion\GodelevasNeed.cs" />
+    <Compile Include="quests\Albion\GreenerPastures.cs" />
+    <Compile Include="quests\Albion\HalfOgreAllMan.cs" />
+    <Compile Include="quests\Albion\HeartOfSephucoth.cs" />
+    <Compile Include="quests\Albion\HuntForArachneida.cs" />
+    <Compile Include="quests\Albion\HuntForSlith.cs" />
+    <Compile Include="quests\Albion\ImportantDelivery.cs" />
+    <Compile Include="quests\Albion\IreFairyIre.cs" />
+    <Compile Include="quests\Albion\LawrencesOil.cs" />
+    <Compile Include="quests\Albion\MarlinsSalesPitch.cs" />
+    <Compile Include="quests\Albion\NoHopeForTheHopeful.cs" />
+    <Compile Include="quests\Albion\Nuisances.cs" />
+    <Compile Include="quests\Albion\RecruitingNothingButTrouble.cs" />
+    <Compile Include="quests\Albion\RevengeTheOtherWhiteMeat.cs" />
+    <Compile Include="quests\Albion\ShakenSquire.cs" />
+    <Compile Include="quests\Albion\TombWithAView.cs" />
+    <Compile Include="quests\Albion\ToReachTheBreach.cs" />
+    <Compile Include="quests\Albion\TraitorInCotswold.cs" />
+    <Compile Include="quests\Albion\TreviansBestFriend.cs" />
+    <Compile Include="quests\Albion\WhenBloodSpeaks.cs" />
+    <Compile Include="quests\Albion\WhenGoodBrowniesGoBad.cs" />
+    <Compile Include="quests\Albion\WolfPeltCloak.cs" />
+    <Compile Include="quests\Albion\YdeniasCrush.cs" />
+    <Compile Include="quests\Examples and  Tutorials\Artifact encounter\BasicEncounterMob.cs" />
+    <Compile Include="quests\Examples and  Tutorials\Artifact encounter\TetheredEncounterMob.cs" />
+    <Compile Include="quests\Examples and  Tutorials\Classic quest\HelpSirQuait.cs" />
+    <Compile Include="quests\Examples and  Tutorials\MasterLevel encounter\EncounterMgr.cs" />
+    <Compile Include="quests\Examples and  Tutorials\MasterLevel encounter\ML1FireIsland.cs" />
+    <Compile Include="quests\Examples and  Tutorials\Search quest\WingsOfTheIsleHibernia.cs" />
+    <Compile Include="quests\Hibernia\BaseAddrirQuest.cs" />
+    <Compile Include="quests\Hibernia\ChildsPlay.cs" />
+    <Compile Include="quests\Hibernia\CityOfTirnaNog.cs" />
+    <Compile Include="quests\Hibernia\epic\Essence50.cs" />
+    <Compile Include="quests\Hibernia\epic\Focus50.cs" />
+    <Compile Include="quests\Hibernia\epic\Harmony50.cs" />
+    <Compile Include="quests\Hibernia\ImportantDelivery.cs" />
+    <Compile Include="quests\Hibernia\MagicalBacklash.cs" />
+    <Compile Include="quests\Hibernia\Nuisances.cs" />
+    <Compile Include="quests\Hibernia\SearchForKnowledge.cs" />
+    <Compile Include="quests\Hibernia\ToReachTheBreach.cs" />
+    <Compile Include="quests\Hibernia\TraitorInMagMell.cs" />
+    <Compile Include="quests\Midgard\Amoras_Aid.cs" />
+    <Compile Include="quests\Midgard\A_Beary_Bad_Problem.cs" />
+    <Compile Include="quests\Midgard\Bad_Food.cs" />
+    <Compile Include="quests\Midgard\BaseDalikorQuest.cs" />
+    <Compile Include="quests\Midgard\Bear Skins.cs" />
+    <Compile Include="quests\Midgard\BeginningOfWar.cs" />
+    <Compile Include="quests\Midgard\Childs_Play.cs" />
+    <Compile Include="quests\Midgard\CityOfJordheim.cs" />
+    <Compile Include="quests\Midgard\Collection.cs" />
+    <Compile Include="quests\Midgard\Culmination.cs" />
+    <Compile Include="quests\Midgard\epic\MidgardRogue50.cs" />
+    <Compile Include="quests\Midgard\epic\Mystic50.cs" />
+    <Compile Include="quests\Midgard\epic\Seer50.cs" />
+    <Compile Include="quests\Midgard\epic\Viking50.cs" />
+    <Compile Include="quests\Midgard\Essence_of_Life.cs" />
+    <Compile Include="quests\Midgard\Frontiers.cs" />
+    <Compile Include="quests\Midgard\ImportantDelivery.cs" />
+    <Compile Include="quests\Midgard\Learn_The_Hunt.cs" />
+    <Compile Include="quests\Midgard\Mauler_Invasion.cs" />
+    <Compile Include="quests\Midgard\Mead_Run.cs" />
+    <Compile Include="quests\Midgard\Nuisances.cs" />
+    <Compile Include="quests\Midgard\Rindas_Lost_Key.cs" />
+    <Compile Include="quests\Midgard\StolenEggs.cs" />
+    <Compile Include="quests\Midgard\Sveabone_Hilt_Sword.cs" />
+    <Compile Include="quests\Midgard\The_Birthday_Gift.cs" />
+    <Compile Include="quests\Midgard\TraitorInMularn.cs" />
+    <Compile Include="quests\Midgard\Trial_of_Strength.cs" />
+    <None Include="quests\Albion\BaseFrederickPathPoints.xml" />
+    <None Include="quests\Hibernia\BaseAddrirPathPoints.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="quests\Albion" />
+    <Folder Include="quests\Albion\epic" />
+    <Folder Include="quests\Examples and  Tutorials" />
+    <Folder Include="quests\Examples and  Tutorials\Artifact encounter" />
+    <Folder Include="quests\Examples and  Tutorials\Artifact encounter" />
+    <Folder Include="quests\Examples and  Tutorials\Classic quest" />
+    <Folder Include="quests\Examples and  Tutorials\Classic quest" />
+    <Folder Include="quests\Examples and  Tutorials\MasterLevel encounter" />
+    <Folder Include="quests\Examples and  Tutorials\MasterLevel encounter" />
+    <Folder Include="quests\Examples and  Tutorials\Search quest" />
+    <Folder Include="quests\Examples and  Tutorials\Search quest" />
+    <Folder Include="quests\Hibernia" />
+    <Folder Include="quests\Hibernia\epic" />
+    <Folder Include="quests\Midgard" />
+    <Folder Include="quests\Midgard\epic" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

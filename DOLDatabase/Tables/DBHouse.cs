@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
 using System;
 
 using DOL.Database;
@@ -59,17 +59,12 @@ namespace DOL
 			private DateTime m_lastpaid;
 			private long m_keptmoney;
 			private bool m_nopurge;
-            private bool m_guildHouse;
-            private string m_guildName;
-            private bool m_hasConsignment;
+			private bool m_guildHouse;
+			private string m_guildName;
+			private bool m_hasConsignment;
 
-			static bool m_autoSave;
-
-			public DBHouse()
-			{
-				m_autoSave=false;
-			}
-
+			public DBHouse(){ }
+			
 			[PrimaryKey]
 			public int HouseNumber
 			{
@@ -203,209 +198,209 @@ namespace DOL
 			[DataElement(AllowDbNull=true)]
 			public int PorchRoofColor
 			{
-				get 
-				{ 
-					return m_porchroofcolor;  
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_porchroofcolor;
+				}
+				set
+				{
 					Dirty = true;
-					m_porchroofcolor = value; 
+					m_porchroofcolor = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public int PorchMaterial
 			{
-				get 
-				{ 
-					return m_porchmaterial;  
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_porchmaterial;
+				}
+				set
+				{
 					Dirty = true;
-					m_porchmaterial = value; 
+					m_porchmaterial = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public int RoofMaterial
 			{
-				get 
-				{ 
-					return m_roofmaterial;  
-				} 
-				set 
-				{ 
-					Dirty = true;
-					m_roofmaterial = value; 
+				get
+				{
+					return m_roofmaterial;
 				}
-			}	
+				set
+				{
+					Dirty = true;
+					m_roofmaterial = value;
+				}
+			}
 			[DataElement(AllowDbNull=true)]
 			public int DoorMaterial
 			{
-				get 
-				{ 
-					return m_doormaterial;  
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_doormaterial;
+				}
+				set
+				{
 					Dirty = true;
-					m_doormaterial = value; 
+					m_doormaterial = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public int WallMaterial
 			{
-				get 
-				{ 
-					return m_wallmaterial;  
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_wallmaterial;
+				}
+				set
+				{
 					Dirty = true;
-					m_wallmaterial = value; 
+					m_wallmaterial = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public int TrussMaterial
 			{
-				get 
-				{ 
-					return m_trussmaterial;  
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_trussmaterial;
+				}
+				set
+				{
 					Dirty = true;
-					m_trussmaterial = value; 
+					m_trussmaterial = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public int WindowMaterial
 			{
-				get 
-				{ 
-					return m_windowmaterial;  	
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_windowmaterial;
+				}
+				set
+				{
 					Dirty = true;
-					m_windowmaterial = value; 
+					m_windowmaterial = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public int Rug1Color
 			{
-				get 
-				{ 
-					return m_rug1color;  	
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_rug1color;
+				}
+				set
+				{
 					Dirty = true;
-					m_rug1color = value; 
+					m_rug1color = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public int Rug2Color
 			{
-				get 
-				{ 
-					return m_rug2color;  	
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_rug2color;
+				}
+				set
+				{
 					Dirty = true;
-					m_rug2color = value; 
+					m_rug2color = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public int Rug3Color
 			{
-				get 
-				{ 
-					return m_rug3color;  	
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_rug3color;
+				}
+				set
+				{
 					Dirty = true;
-					m_rug3color = value; 
+					m_rug3color = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public int Rug4Color
 			{
-				get 
-				{ 
-					return m_rug4color;  	
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_rug4color;
+				}
+				set
+				{
 					Dirty = true;
-					m_rug4color = value; 
+					m_rug4color = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public bool IndoorGuildBanner
 			{
-				get 
-				{ 
-					return m_indoorguildbanner;  	
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_indoorguildbanner;
+				}
+				set
+				{
 					Dirty = true;
-					m_indoorguildbanner = value; 
+					m_indoorguildbanner = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public bool IndoorGuildShield
 			{
-				get 
-				{ 
-					return m_indoorguildshield;  	
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_indoorguildshield;
+				}
+				set
+				{
 					Dirty = true;
-					m_indoorguildshield = value; 
+					m_indoorguildshield = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public bool OutdoorGuildBanner
 			{
-				get 
-				{ 
-					return m_outdoorguildbanner;  	
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_outdoorguildbanner;
+				}
+				set
+				{
 					Dirty = true;
-					m_outdoorguildbanner = value; 
+					m_outdoorguildbanner = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public bool OutdoorGuildShield
 			{
-				get 
-				{ 
-					return m_outdoorguildshield;  	
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_outdoorguildshield;
+				}
+				set
+				{
 					Dirty = true;
-					m_outdoorguildshield = value; 
+					m_outdoorguildshield = value;
 				}
 			}
 			[DataElement(AllowDbNull=true)]
 			public bool Porch
 			{
-				get 
-				{ 
-					return m_porch;  	
-				} 
-				set 
-				{ 
+				get
+				{
+					return m_porch;
+				}
+				set
+				{
 					Dirty = true;
-					m_porch = value; 
+					m_porch = value;
 				}
 			}
 
@@ -465,64 +460,52 @@ namespace DOL
 				}
 			}
 
-            [DataElement(AllowDbNull = true)]
-            public bool GuildHouse
-            {
-                get
-                {
-                    return m_guildHouse;
-                }
-                set
-                {
-                    Dirty = true;
-                    m_guildHouse = value;
-                }
-            }
-            [DataElement(AllowDbNull = true)]
-            public string GuildName
-            {
-                get
-                {
-                    return m_guildName;
-                }
-                set
-                {
-                    Dirty = true;
-                    m_guildName = value;
-                }
-            }
+			[DataElement(AllowDbNull = true)]
+			public bool GuildHouse
+			{
+				get
+				{
+					return m_guildHouse;
+				}
+				set
+				{
+					Dirty = true;
+					m_guildHouse = value;
+				}
+			}
+			[DataElement(AllowDbNull = true)]
+			public string GuildName
+			{
+				get
+				{
+					return m_guildName;
+				}
+				set
+				{
+					Dirty = true;
+					m_guildName = value;
+				}
+			}
 
-            [DataElement(AllowDbNull = true)]
-            public bool HasConsignment
-            {
-                get
-                {
-                    return m_hasConsignment;
-                }
-                set
-                {
-                    Dirty = true;
-                    m_hasConsignment = value;
-                }
-            }
-            
-            //[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]
+			[DataElement(AllowDbNull = true)]
+			public bool HasConsignment
+			{
+				get
+				{
+					return m_hasConsignment;
+				}
+				set
+				{
+					Dirty = true;
+					m_hasConsignment = value;
+				}
+			}
+			
+			//[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]
 			//public DBHouseIndoorItem[] IndoorItems;
 
 			//[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]
 			//public DBHouseOutdoorItem[] OutdoorItems;
-
-			override public bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
-				}
-			}
 		}
 	}
 }

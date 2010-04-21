@@ -56,7 +56,7 @@ namespace DOL.Database
 			ProcSpell1 = 13,
 			MaxSpell = 13,
 			Max = 13
-		};					  
+		};
 
 		/// <summary>
 		/// Create a new artifact bonus.

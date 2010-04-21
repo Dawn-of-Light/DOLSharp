@@ -75,8 +75,8 @@ namespace DOL.GS.Commands
 	     "GMCommands.Item.Usage.FindName",
 	     "/item load <id_nb> - Load an item from the DB and replace or add item to the ItemTemplate cache",
 	     "/item loadartifacts - Re-load all the artifact entries from the DB.  ItemTemplates must be loaded separately and prior to loading artifacts.",
-	     "/item loadpackage <packageid> - Load all the items in a package from the DB and replace or add to the ItemTemplate cache",
-		 "/item loadspells - Read each item spell from the database and update the global spell list")]
+	     "/item loadpackage <packageid> | **all** - Load all the items in a package from the DB and replace or add to the ItemTemplate cache. **all** is loading all items [! SLOW !]",
+	     "/item loadspells - Read each item spell from the database and update the global spell list")]
 	public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -95,9 +95,7 @@ namespace DOL.GS.Commands
 					case "blank":
 						{
 							InventoryItem item = new InventoryItem();
-							Random rand = new Random();
-							item.Id_nb = "blankItem" + rand.Next().ToString();
-							item.Name = "a blank item";
+							
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Blank.ItemCreated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -148,8 +146,7 @@ namespace DOL.GS.Commands
 									}
 								}
 
-								InventoryItem item = new InventoryItem();
-								item.CopyFrom(template);
+								InventoryItem item = new InventoryItem(template);
 								if (item.IsStackable)
 								{
 									item.Count = count;
@@ -257,7 +254,7 @@ namespace DOL.GS.Commands
 							}
 							DetailDisplayHandler itemhandler = new DetailDisplayHandler();
 							var objectInfo = new List<string>();
-							itemhandler.WriteTechnicalInfo(objectInfo, obj);
+							itemhandler.WriteTechnicalInfo(objectInfo, obj, 0,0);
 							client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "GMCommands.Item.Info.Informations", obj.Id_nb), objectInfo);
 							break;
 						}
@@ -527,7 +524,8 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							item.CrafterName = args[2];
+							item.IsCrafted = true;
+							item.Creator = args[2];
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
@@ -607,10 +605,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							item.Platinum = (short)(Convert.ToInt16(args[2]) % 1000);
-							item.Gold = (short)(Convert.ToInt16(args[3]) % 1000);
-							item.Silver = (byte)(Convert.ToByte(args[4]) % 100);
-							item.Copper = (byte)(Convert.ToByte(args[5]) % 100);
+							item.Price = Money.GetMoney(0,(int)(Convert.ToInt16(args[2]) % 1000),(int)(Convert.ToInt16(args[3]) % 1000),(int)(Convert.ToByte(args[4]) % 100),(int)(Convert.ToByte(args[5]) % 100));
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
@@ -1291,7 +1286,7 @@ namespace DOL.GS.Commands
 					case "savetemplate":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
-							string name = "";
+							string idnb = string.Empty;
 							if (args.Length >= 4)
 							{
 								try
@@ -1310,11 +1305,11 @@ namespace DOL.GS.Commands
 								{
 									slot = 0;
 								}
-								name = args[2];
+								idnb = args[2];
 							}
 							else if (args.Length >= 3)
 							{
-								name = args[2];
+								idnb = args[2];
 							}
 							else
 							{
@@ -1327,89 +1322,29 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(name);
-							bool add = false;
+							
+							// if the item is allready in the database
+							ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
+							
+							// save the new item, and recreate the link in inventory
 							if (temp == null)
 							{
-								add = true;
-								temp = new ItemTemplate();
+								item.Template.AutoSave = true;
+								item.Template.Id_nb = idnb;
+								GameServer.Database.AddObject(item.Template);
 							}
-							
-							item.Id_nb = name;
-							temp.Bonus = item.Bonus;
-							temp.Bonus1 = item.Bonus1;
-							temp.Bonus2 = item.Bonus2;
-							temp.Bonus3 = item.Bonus3;
-							temp.Bonus4 = item.Bonus4;
-							temp.Bonus5 = item.Bonus5;
-							temp.Bonus6 = item.Bonus6;
-							temp.Bonus7 = item.Bonus7;
-							temp.Bonus8 = item.Bonus8;
-							temp.Bonus9 = item.Bonus9;
-							temp.Bonus10 = item.Bonus10;
-							temp.Bonus1Type = item.Bonus1Type;
-							temp.Bonus2Type = item.Bonus2Type;
-							temp.Bonus3Type = item.Bonus3Type;
-							temp.Bonus4Type = item.Bonus4Type;
-							temp.Bonus5Type = item.Bonus5Type;
-							temp.Bonus6Type = item.Bonus6Type;
-							temp.Bonus7Type = item.Bonus7Type;
-							temp.Bonus8Type = item.Bonus8Type;
-							temp.Bonus9Type = item.Bonus9Type;
-							temp.Bonus10Type = item.Bonus10Type;
-							temp.Platinum = item.Platinum;
-							temp.Gold = item.Gold;
-							temp.Silver = item.Silver;
-							temp.Copper = item.Copper;
-							temp.Color = item.Color;
-							temp.Condition = item.Condition;
-							temp.DPS_AF = item.DPS_AF;
-							temp.Durability = item.Durability;
-							temp.Effect = item.Effect;
-							temp.Emblem = item.Emblem;
-							temp.ExtraBonus = item.ExtraBonus;
-							temp.ExtraBonusType = item.ExtraBonusType;
-							temp.Hand = item.Hand;
-							temp.Id_nb = item.Id_nb;
-							temp.IsDropable = item.IsDropable;
-							temp.IsPickable = item.IsPickable;
-							temp.IsTradable = item.IsTradable;
-							temp.Item_Type = item.Item_Type;
-							temp.Level = item.Level;
-							temp.MaxCondition = item.MaxCondition;
-							temp.MaxDurability = item.MaxDurability;
-							temp.Model = item.Model;
-							temp.Extension = item.Extension;
-							temp.Name = item.Name;
-							temp.Object_Type = item.Object_Type;
-							temp.Quality = item.Quality;
-							temp.SPD_ABS = item.SPD_ABS;
-							temp.Type_Damage = item.Type_Damage;
-							temp.Weight = item.Weight;
-							temp.MaxCount = item.MaxCount;
-							temp.PackSize = item.PackSize;
-							temp.Charges = item.Charges;
-							temp.MaxCharges = item.MaxCharges;
-							temp.SpellID = item.SpellID;
-							temp.SpellID1 = item.SpellID1;
-							temp.ProcSpellID = item.ProcSpellID;
-							temp.ProcSpellID1 = item.ProcSpellID1;
-							temp.Realm = item.Realm;
-							temp.PoisonCharges = item.PoisonCharges;
-							temp.PoisonMaxCharges = item.PoisonMaxCharges;
-							temp.PoisonSpellID = item.PoisonSpellID;
-							temp.IsIndestructible = item.IsIndestructible;
-							temp.IsNotLosingDur = item.IsNotLosingDur;
-
-							if (add)
-							{
-								GameServer.Database.AddObject(temp);
-							}
+							// or update it
 							else
 							{
-								GameServer.Database.SaveObject(temp);
+								item.Template.Dirty = true;
+								GameServer.Database.SaveObject(item.Template);
 							}
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.SaveTemplate.ItemSaved", name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							
+							// remove old invitem and recreate the links
+							client.Player.Inventory.RemoveItem(item);
+							client.Player.Inventory.AddItem((eInventorySlot)slot, new InventoryItem(item.Template));
+							
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.SaveTemplate.ItemSaved", idnb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
 						#endregion SaveTemplate
@@ -1466,6 +1401,8 @@ namespace DOL.GS.Commands
 						{
 							if (args[2] != "")
 							{
+								if (args[2] == "**all**") args[2] = String.Empty;
+								
 								var packageItems = GameServer.Database.SelectObjects<ItemTemplate>("PackageID = '" + args[2] + "'") as ItemTemplate[];
 
 								if (packageItems != null)

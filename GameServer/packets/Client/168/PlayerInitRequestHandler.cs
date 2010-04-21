@@ -112,7 +112,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.StartPowerRegeneration();
 				player.StartEnduranceRegeneration();
 				player.SetPvPInvulnerability(10*1000, null);
-
 				if (player.Guild != null)
 				{
 					SendGuildMessagesToPlayer(player);
@@ -259,29 +258,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			private static void SendGuildMessagesToPlayer(GamePlayer player)
 			{
-				try
+				if(player.GuildRank.GcHear && player.Guild.Motd != "")
 				{
-					if (player.GuildRank.GcHear && player.Guild.Motd != "")
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.GuildMessage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						player.Out.SendMessage(player.Guild.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					if (player.GuildRank.OcHear && player.Guild.Omotd != "")
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.OfficerMessage", player.Guild.Omotd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					if (player.Guild.alliance != null && player.GuildRank.AcHear && player.Guild.alliance.Dballiance.Motd != "")
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.AllianceMessage", player.Guild.alliance.Dballiance.Motd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.GuildMessage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(player.Guild.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
-				catch (Exception ex)
+				if(player.GuildRank.OcHear && player.Guild.Omotd != "")
 				{
-					log.Error("SendGuildMessageToPlayer exception, missing guild ranks?", ex);
-					if (player != null)
-					{
-						player.Out.SendMessage("There was an error sending motd for your guild. Guild ranks may be missing or corrupted.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					}
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.OfficerMessage", player.Guild.Omotd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				if(player.Guild.alliance != null && player.GuildRank.AcHear && player.Guild.alliance.Dballiance.Motd != "")
+				{
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.AllianceMessage", player.Guild.alliance.Dballiance.Motd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 

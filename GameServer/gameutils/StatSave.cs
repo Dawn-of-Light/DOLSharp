@@ -147,7 +147,7 @@ namespace DOL.GS.GameEvents
 
 				long totalmem = GC.GetTotalMemory(false);
 			
-				DBServerStats newstat = new DBServerStats();
+				ServerStats newstat = new ServerStats();
 				newstat.CPU = cpu;
 				newstat.Clients = clients;
 				newstat.Upload = (int)outRate/1024;
@@ -171,125 +171,5 @@ namespace DOL.GS.GameEvents
 				}
 			}
 		}
-	}
-}
-
-
-namespace DOL.Database
-{
-	/// <summary>
-	/// Database Storage of ServerStats
-	/// </summary>
-	[DataTable(TableName = "serverstats")]
-	public class DBServerStats : DataObject
-	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		protected DateTime m_statdate;
-		protected int m_clients;
-		protected float m_cpu;
-		protected int m_upload;
-		protected int m_download;
-		protected long m_memory;
-
-		static bool m_autoSave;
-
-		public DBServerStats()
-		{
-			m_statdate = DateTime.Now;
-			m_clients = 0;
-			m_cpu = 0;
-			m_upload = 0;
-			m_download = 0;
-			m_memory = 0;
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get { return m_autoSave; }
-			set { m_autoSave = value; }
-		}
-
-		[DataElement(AllowDbNull = false)]
-		public DateTime StatDate
-		{
-			get { return m_statdate; }
-			set
-			{
-				Dirty = true;
-				m_statdate = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = false)]
-		public int Clients
-		{
-			get { return m_clients; }
-			set
-			{
-				Dirty = true;
-				m_clients = value;
-			}
-		}
-		[DataElement(AllowDbNull = false)]
-		public float CPU
-		{
-			get { return m_cpu; }
-			set
-			{
-				Dirty = true;
-				m_cpu = value;
-			}
-		}
-		[DataElement(AllowDbNull = false)]
-		public int Upload
-		{
-			get { return m_upload; }
-			set
-			{
-				Dirty = true;
-				m_upload = value;
-			}
-		}
-		[DataElement(AllowDbNull = false)]
-		public int Download
-		{
-			get { return m_download; }
-			set
-			{
-				Dirty = true;
-				m_download = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = false)]
-		public long Memory
-		{
-			get { return m_memory; }
-			set
-			{
-				Dirty = true;
-				m_memory = value;
-			}
-		}
-
-
-		//[GameServerStartedEvent]
-		//public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
-		//{
-		//     if (!m_init && (GameServer.Database != null))
-		//     {
-		//          log.Info("DATABASE ServerStats LOADED");
-		//          GameServer.Database.RegisterDataObject(typeof(DBServerStats));
-		//          GameServer.Database.LoadDatabaseTable(typeof(DBServerStats));
-		//          m_init = true;
-		//     }
-		//}
-		//[ScriptUnloadedEvent]
-		//public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
-		//{
-		//     //unregister tables
-		//}
 	}
 }

@@ -24,13 +24,12 @@ namespace DOL
 			private int m_var5;
 			private int m_var6;
 			private string m_spellLine;
-			private static bool m_autoSave;
 
 			public PlayerXEffect()
 			{
-
-				m_autoSave = false;
+				AutoSave = false;
 			}
+
 			[DataElement(AllowDbNull = true)]
 			public bool IsHandler
 			{
@@ -156,19 +155,6 @@ namespace DOL
 				{
 					Dirty = true;
 					m_spellLine = value;
-				}
-			}
-
-
-			override public bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
 				}
 			}
 
