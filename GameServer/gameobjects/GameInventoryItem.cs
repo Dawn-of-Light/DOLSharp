@@ -112,6 +112,7 @@ namespace DOL.GS
 
 			GameInventoryItem invItem = new GameInventoryItem();
 			ItemUnique unique = new ItemUnique(template);
+			GameServer.Database.AddObject(unique);
 			invItem.m_item = new InventoryItem(unique);
 			invItem.m_item.SlotPosition = 0;
 			invItem.m_item.OwnerID = null;

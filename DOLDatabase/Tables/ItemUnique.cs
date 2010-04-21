@@ -23,7 +23,7 @@ using log4net;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "ItemUnique", PreCache = false)]
+	[DataTable(TableName = "ItemUnique", PreCache = true)]
 	public class ItemUnique : ItemTemplate
 	{
 		public ItemUnique():base()
@@ -104,22 +104,10 @@ namespace DOL.Database
 			IsIndestructible = template.IsIndestructible;
 			IsNotLosingDur = template.IsNotLosingDur;
 		}
-
-		public override string Id_nb
-		{
-			get
-			{
-				return m_id_nb;
-			}
-			set
-			{
-				// set once when created, never changed
-			}
-		}
-
-		
+	
 		public override bool Dirty {
 			get { return true; }
+			set { base.Dirty = true; }
 		}
 	}
 }

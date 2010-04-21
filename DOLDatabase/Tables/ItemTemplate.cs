@@ -25,6 +25,7 @@ namespace DOL.Database
 {
 	[DataTable(TableName = "ItemTemplate", PreCache = true)]
 	public class ItemTemplate : DataObject
+		
 	{
 		/// <summary>
 		/// Defines a logger for this class.

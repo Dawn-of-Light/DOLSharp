@@ -470,7 +470,7 @@ namespace DOL.GS.Quests
 		/// <returns>InventoryItem of given Name and Level</returns>
 		public static InventoryItem GenerateItem(string ItemName, int ItemLevel, int Model)
 		{
-			ItemTemplate TaskItems = new ItemUnique();
+			ItemUnique TaskItems = new ItemUnique();
 			TaskItems.Name = ItemName;
 			TaskItems.Level = ItemLevel;
 			TaskItems.DPS_AF = 0;
@@ -489,6 +489,7 @@ namespace DOL.GS.Quests
 			TaskItems.Quality = 80+ItemLevel;
 			TaskItems.MaxCondition = 90;
 			TaskItems.MaxDurability = 1000;
+			GameServer.Database.AddObject(TaskItems);
 			InventoryItem InvTaskItems = new InventoryItem(TaskItems);
 			return InvTaskItems;
 		}
