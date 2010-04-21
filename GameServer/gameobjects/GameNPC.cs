@@ -4011,25 +4011,29 @@ namespace DOL.GS
 						loot.Z = Z;
 						loot.Heading = Heading;
 						loot.CurrentRegion = CurrentRegion;
+						(loot as GameInventoryItem).Item.IsCrafted = false;
+						(loot as GameInventoryItem).Item.Creator = Name;
 					}
 					else
 					{
+						InventoryItem invitem;
+						
 						if (lootTemplate is ItemUnique)
 						{
 							GameServer.Database.AddObject(lootTemplate);
-							InventoryItem invitem = new InventoryItem(lootTemplate as ItemUnique);
-							invitem.Creator = killer.Name;
-							invitem.IsCrafted = false;
-							loot = new GameInventoryItem(invitem);
+							invitem = new InventoryItem(lootTemplate as ItemUnique);
 						}
 						else
-							loot = new GameInventoryItem(new InventoryItem(lootTemplate));
+							invitem = new InventoryItem(lootTemplate);
 						
+						loot = new GameInventoryItem(invitem);
 						loot.X = X;
 						loot.Y = Y;
 						loot.Z = Z;
 						loot.Heading = Heading;
 						loot.CurrentRegion = CurrentRegion;
+						(loot as GameInventoryItem).Item.IsCrafted = false;
+						(loot as GameInventoryItem).Item.Creator = Name;
 
 						// This may seem like an odd place for this code, but loot-generating code further up the line
 						// is dealing strictly with ItemTemplate objects, while you need the InventoryItem in order

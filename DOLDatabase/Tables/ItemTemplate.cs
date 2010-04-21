@@ -842,11 +842,7 @@ namespace DOL.Database
 		public int MaxCount
 		{
 			get { return m_maxCount; }
-			set
-			{
-				
-				m_maxCount = value;
-			}
+			set	{ m_maxCount = value;}
 		}
 
 		public bool IsStackable
@@ -882,11 +878,7 @@ namespace DOL.Database
 		public int PackSize
 		{
 			get { return m_packSize; }
-			set
-			{
-				
-				m_packSize = value;
-			}
+			set	{ m_packSize = value;}
 		}
 
 		/// <summary>
@@ -896,11 +888,7 @@ namespace DOL.Database
 		public int Charges
 		{
 			get { return m_charges; }
-			set
-			{
-				
-				m_charges = value;
-			}
+			set	{ m_charges = value;}
 		}
 
 		/// <summary>

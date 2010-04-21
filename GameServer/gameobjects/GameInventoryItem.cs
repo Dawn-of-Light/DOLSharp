@@ -75,6 +75,9 @@ namespace DOL.GS
 		/// <returns>Found item or null</returns>
 		public static GameInventoryItem CreateFromTemplate(InventoryItem item)
 		{
+			if (item.Template is ItemUnique)
+				return null;
+			
 			return CreateFromTemplate(item.Id_nb);
 		}
 
@@ -98,7 +101,11 @@ namespace DOL.GS
 			return CreateFromTemplate(template);
 		}
 
-
+		/// <summary>
+		/// Creates a new GII handling an UniqueItem in the InventoryItem attached
+		/// </summary>
+		/// <param name="templateID"></param>
+		/// <returns></returns>
 		public static GameInventoryItem CreateUniqueFromTemplate(string templateID)
 		{
 			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
@@ -109,68 +116,12 @@ namespace DOL.GS
 					log.Warn("Item Creation: Template not found!\n" + Environment.StackTrace);
 				return null;
 			}
-
-			GameInventoryItem invItem = new GameInventoryItem();
-			ItemUnique unique = new ItemUnique(template);
-			GameServer.Database.AddObject(unique);
-			invItem.m_item = new InventoryItem(unique);
-			invItem.m_item.SlotPosition = 0;
-			invItem.m_item.OwnerID = null;
-
-			invItem.Level = (byte)template.Level;
-			invItem.Model = (ushort)template.Model;
-			invItem.Name = template.Name;
-
-			return invItem;
+			
+			return CreateUniqueFromTemplate(template);
 		}
-
-
-        #region PickUpTimer
-        private RegionTimer m_pickup;
-        /// <summary>
-        /// Starts a new pickuptimer with the given time (in seconds)
-        /// </summary>
-        /// <param name="time"></param>
-        public void StartPickupTimer(int time)
-        {
-            if (m_pickup != null)
-            {
-                m_pickup.Stop();
-                m_pickup = null;
-            }
-            m_pickup = new RegionTimer(this, new RegionTimerCallback(CallBack), time * 1000);
-        }
-        private int CallBack(RegionTimer timer)
-        {
-            m_pickup.Stop();
-            m_pickup = null;
-            return 0;
-        }
-        public void StopPickupTimer()
-        {
-            foreach (GamePlayer player in Owners)
-            {
-                if (player.ObjectState == eObjectState.Active)
-                {
-                    player.Out.SendMessage("You may now pick up " + Name + "!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-                }
-            }
-            m_pickup.Stop();
-            m_pickup = null;
-        }
-        public int GetPickupTime
-        {
-            get
-            {
-                if (m_pickup == null)
-                    return 0;
-                return m_pickup.TimeUntilElapsed;
-            }
-        }
-        #endregion
-
+		
 		/// <summary>
-		/// Creates a new GameInventoryItem based on an ItemTemplate. Will disappear 
+		/// Creates a new GameInventoryItem based on an ItemTemplate. Will disappear
 		/// after 3 minutes after being added to the world.
 		/// </summary>
 		/// <param name="template">The template to load and create an item from.</param>
@@ -183,6 +134,7 @@ namespace DOL.GS
 			GameInventoryItem invItem = new GameInventoryItem();
 
 			invItem.m_item = new InventoryItem(template);
+			
 			invItem.m_item.SlotPosition = 0;
 			invItem.m_item.OwnerID = null;
 
@@ -192,6 +144,70 @@ namespace DOL.GS
 
 			return invItem;
 		}
+		public static GameInventoryItem CreateUniqueFromTemplate(ItemTemplate template)
+		{
+			if (template == null)
+				return null;
+
+			GameInventoryItem invItem = new GameInventoryItem();
+			ItemUnique item = new ItemUnique(template);
+			GameServer.Database.AddObject(item);
+			
+			invItem.m_item = new InventoryItem(item);
+			
+			invItem.m_item.SlotPosition = 0;
+			invItem.m_item.OwnerID = null;
+
+			invItem.Level = (byte)template.Level;
+			invItem.Model = (ushort)template.Model;
+			invItem.Name = template.Name;
+
+			return invItem;
+		}
+
+		#region PickUpTimer
+		private RegionTimer m_pickup;
+		/// <summary>
+		/// Starts a new pickuptimer with the given time (in seconds)
+		/// </summary>
+		/// <param name="time"></param>
+		public void StartPickupTimer(int time)
+		{
+			if (m_pickup != null)
+			{
+				m_pickup.Stop();
+				m_pickup = null;
+			}
+			m_pickup = new RegionTimer(this, new RegionTimerCallback(CallBack), time * 1000);
+		}
+		private int CallBack(RegionTimer timer)
+		{
+			m_pickup.Stop();
+			m_pickup = null;
+			return 0;
+		}
+		public void StopPickupTimer()
+		{
+			foreach (GamePlayer player in Owners)
+			{
+				if (player.ObjectState == eObjectState.Active)
+				{
+					player.Out.SendMessage("You may now pick up " + Name + "!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+				}
+			}
+			m_pickup.Stop();
+			m_pickup = null;
+		}
+		public int GetPickupTime
+		{
+			get
+			{
+				if (m_pickup == null)
+					return 0;
+				return m_pickup.TimeUntilElapsed;
+			}
+		}
+		#endregion
 
 		/// <summary>
 		/// Gets the InventoryItem contained within this class

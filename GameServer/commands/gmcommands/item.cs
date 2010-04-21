@@ -75,7 +75,7 @@ namespace DOL.GS.Commands
 	     "GMCommands.Item.Usage.FindName",
 	     "/item load <id_nb> - Load an item from the DB and replace or add item to the ItemTemplate cache",
 	     "/item loadartifacts - Re-load all the artifact entries from the DB.  ItemTemplates must be loaded separately and prior to loading artifacts.",
-	     "/item loadpackage <packageid> - Load all the items in a package from the DB and replace or add to the ItemTemplate cache",
+	     "/item loadpackage <packageid> | **all** - Load all the items in a package from the DB and replace or add to the ItemTemplate cache. **all** is loading all items [! SLOW !]",
 	     "/item loadspells - Read each item spell from the database and update the global spell list")]
 	public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -1399,8 +1399,10 @@ namespace DOL.GS.Commands
 						#region LoadPackage
 					case "loadpackage":
 						{
-							if (args[2] != "")
+							if (args[2] != "" || args[2] = "**all**")
 							{
+								if (args[2] == "**all**") args[2] = String.Empty;
+								
 								var packageItems = GameServer.Database.SelectObjects<ItemTemplate>("PackageID = '" + args[2] + "'") as ItemTemplate[];
 
 								if (packageItems != null)

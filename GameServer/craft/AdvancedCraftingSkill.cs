@@ -112,7 +112,7 @@ namespace DOL.GS
 				return false;	
 			}
 
-			if(item.IsCrafted)
+			if(!item.IsCrafted)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.CraftedItems"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

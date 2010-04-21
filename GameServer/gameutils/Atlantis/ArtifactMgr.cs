@@ -801,7 +801,6 @@ namespace DOL.GS
 
 			if (artifact == null)
 				return null;
-
 			
 			GameInventoryItem scroll = GameInventoryItem.CreateUniqueFromTemplate("artifact_scroll");
 			if (scroll == null)
