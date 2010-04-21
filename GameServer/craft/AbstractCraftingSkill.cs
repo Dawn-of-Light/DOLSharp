@@ -552,7 +552,8 @@ namespace DOL.GS
 					else
 					{
 						
-						newItem = new InventoryItem(new ItemUnique(craftItemData.ItemTemplate));
+						ItemUnique unique = new ItemUnique(craftItemData.ItemTemplate);
+						newItem = new InventoryItem(unique);
 						newItem.IsCrafted = true;
 						newItem.Creator = player.Name;
 						newItem.Quality = GetQuality(player, craftItemData);

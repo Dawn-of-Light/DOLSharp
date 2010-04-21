@@ -363,7 +363,7 @@ namespace DOL.Database
 				// null ownerid items are never saved
 				if (string.IsNullOrEmpty(m_ownerID))
 					return false;
-					
+				
 				// ghost item
 				if (string.IsNullOrEmpty(m_utemplate_id) && string.IsNullOrEmpty(m_itemplate_id))
 					return false;
@@ -373,6 +373,10 @@ namespace DOL.Database
 			}
 			set
 			{
+				// null ownerid items are never saved
+				if (string.IsNullOrEmpty(m_ownerID))
+					base.Dirty =  false;
+				
 				// ghost item
 				if (string.IsNullOrEmpty(m_utemplate_id) && string.IsNullOrEmpty(m_itemplate_id))
 					base.Dirty = false;
