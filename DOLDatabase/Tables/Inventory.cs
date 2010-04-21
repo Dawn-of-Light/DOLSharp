@@ -251,6 +251,7 @@ namespace DOL.Database
 		public InventoryItem()
 		{
 			AutoSave = false;
+			m_ownerID = null;
 			m_emblem = 0;
 			m_count = 1;
 			m_sellPrice = 0;
@@ -272,6 +273,7 @@ namespace DOL.Database
 		/// <param name="itemTemplate"></param>
 		public InventoryItem(ItemTemplate template):base()
 		{
+			m_ownerID = null;
 			Template = template;
 			m_itemplate_id = template.Id_nb;
 			m_utemplate_id = null;
@@ -292,6 +294,7 @@ namespace DOL.Database
 		/// <param name="itemTemplate"></param>
 		public InventoryItem(ItemUnique template):base()
 		{
+			m_ownerID = null;
 			Template = (ItemTemplate)template;
 			Template.Dirty = true;
 			m_utemplate_id = template.Id_nb;
