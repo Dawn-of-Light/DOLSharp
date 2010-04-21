@@ -43,7 +43,6 @@ namespace DOL.GS.PacketHandler
 	public class PacketLib168 : AbstractPacketLib, IPacketLib
 	{
 		private const int MaxPacketLength = 2048;
-		private const int MaxItemUpdate = 32;
 
 		/// <summary>
 		/// Defines a logger for this class.
@@ -1634,17 +1633,17 @@ namespace DOL.GS.PacketHandler
 
 			// clients crash if too long packet is sent
 			// so we send big updates in parts
-			if (slots == null || slots.Count <= MaxItemUpdate)
+			if (slots == null || slots.Count <= ServerProperties.Properties.MAX_ITEMS_PER_PACKET)
 			{
 				SendInventorySlotsUpdateBase(slots, 0);
 			}
 			else
 			{
-				var updateSlots = new List<int>(MaxItemUpdate);
+				var updateSlots = new List<int>(ServerProperties.Properties.MAX_ITEMS_PER_PACKET);
 				foreach (int slot in slots)
 				{
 					updateSlots.Add(slot);
-					if (updateSlots.Count >= MaxItemUpdate)
+					if (updateSlots.Count >= ServerProperties.Properties.MAX_ITEMS_PER_PACKET)
 					{
 						SendInventorySlotsUpdateBase(updateSlots, 0);
 						updateSlots.Clear();

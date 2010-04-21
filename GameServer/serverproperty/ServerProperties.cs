@@ -290,6 +290,14 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server", "use_dblanguage", "Use Database Language datas instead of files (if empty = build the table from files)", false)]
 		public static bool USE_DBLANGUAGE;
 		#endregion
+
+		/// <summary>
+		/// This specifies the max number of inventory items to send in an update packet
+		/// </summary>
+		[ServerProperty("server", "max_items_per_packet", "Max number of inventory items sent per packet.", 30)]
+		public static int MAX_ITEMS_PER_PACKET;
+
+
 		
 		#region WORLD
 		/// <summary>
