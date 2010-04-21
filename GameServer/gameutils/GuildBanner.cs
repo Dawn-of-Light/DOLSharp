@@ -176,6 +176,7 @@ namespace DOL.GS
 
 
         }
+
         protected ItemTemplate m_guildBanner;
         public ItemTemplate GuildBannerItem
         {

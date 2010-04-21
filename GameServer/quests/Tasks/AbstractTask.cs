@@ -470,7 +470,7 @@ namespace DOL.GS.Quests
 		/// <returns>InventoryItem of given Name and Level</returns>
 		public static InventoryItem GenerateItem(string ItemName, int ItemLevel, int Model)
 		{
-			InventoryItem TaskItems = new InventoryItem();
+			ItemUnique TaskItems = new ItemUnique();
 			TaskItems.Name = ItemName;
 			TaskItems.Level = ItemLevel;
 			TaskItems.DPS_AF = 0;
@@ -481,20 +481,17 @@ namespace DOL.GS.Quests
 			TaskItems.Item_Type = 1;
 			TaskItems.Weight = 1;
 			TaskItems.Model = Model;
-			TaskItems.Gold = 0;
-			TaskItems.Silver = 0;
-			TaskItems.Copper = 0;
+			TaskItems.Price = 0;
 			TaskItems.Color = 0;
 			TaskItems.IsDropable = true;
 			TaskItems.IsPickable = true;
 			//TaskItems.IsStackable = false;
-			TaskItems.AutoSave = false;
-			TaskItems.Condition = 90;
-			TaskItems.Durability = 1000;
 			TaskItems.Quality = 80+ItemLevel;
-			TaskItems.MaxCondition = TaskItems.Condition;
-			TaskItems.MaxDurability = TaskItems.Durability;
-			return TaskItems;
+			TaskItems.MaxCondition = 90;
+			TaskItems.MaxDurability = 1000;
+			GameServer.Database.AddObject(TaskItems);
+			InventoryItem InvTaskItems = new InventoryItem(TaskItems);
+			return InvTaskItems;
 		}
 
 		public static bool CheckAvailability(GamePlayer player, GameLiving target)

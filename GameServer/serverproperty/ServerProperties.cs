@@ -1,3 +1,4 @@
+
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
@@ -262,8 +263,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Save QuestItems into Database
 		/// </summary>
-		[ServerProperty("server","save_questitems_into_database", "set false if you don't want this", true)]
-		public static bool SAVE_QUESTITEMS_INTO_DATABASE;
+		[ServerProperty("server","save_quest_mobs_into_database", "set false if you don't want this", true)]
+		public static bool SAVE_QUEST_MOBS_INTO_DATABASE;
 		
 		/// <summary>
 		/// This specifies the max amount of people in one battlegroup.
@@ -277,26 +278,18 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server","disabled_commands", "Serialized list of disabled commands separated by semi-colon, example /realm;/toon;/quit", "")]
 		public static string DISABLED_COMMANDS;
 
-        /// <summary>
-        /// Disable Appeal System
-        /// </summary>
-        [ServerProperty("server", "disable_appeal_system", "Disable the /Appeal System", false)]
-        public static bool DISABLE_APPEALSYSTEM;
-
-        /// <summary>
-        /// Use Database Language datas instead of files (if empty = build the table from files)
-        /// </summary>
-        [ServerProperty("server", "use_dblanguage", "Use Database Language datas instead of files (if empty = build the table from files)", false)]
-        public static bool USE_DBLANGUAGE;
+		/// <summary>
+		/// Disable Appeal System
+		/// </summary>
+		[ServerProperty("server", "disable_appeal_system", "Disable the /Appeal System", false)]
+		public static bool DISABLE_APPEALSYSTEM;
 
 		/// <summary>
-		/// This specifies the max number of inventory items to send in an update packet
+		/// Use Database Language datas instead of files (if empty = build the table from files)
 		/// </summary>
-		[ServerProperty("server", "max_items_per_packet", "Max number of inventory items sent per packet.", 30)]
-		public static int MAX_ITEMS_PER_PACKET;
-
-
-        #endregion
+		[ServerProperty("server", "use_dblanguage", "Use Database Language datas instead of files (if empty = build the table from files)", false)]
+		public static bool USE_DBLANGUAGE;
+		#endregion
 		
 		#region WORLD
 		/// <summary>
@@ -483,6 +476,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("rates","mana_regen_rate", "Mana regen rate", 1.0)]
 		public static double MANA_REGEN_RATE;
+		
+		/// <summary>
+		/// Items sell ratio
+		/// </summary>
+		[ServerProperty("rates","item_sell_ratio", "Merchants are buying items at the % of initial value", 50)]
+		public static int ITEM_SELL_RATIO;
 		#endregion
 		
 		#region NPCs
@@ -1000,11 +999,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("classes","give_dol_respec_at_level", "What levels does we give a DOL respec? (serialized)", "0")]
 		public static string GIVE_DOL_RESPEC_AT_LEVEL;
 
-        /// <summary>
-        /// Should the server start characters as Base Class?
-        /// </summary>
-        [ServerProperty("classes", "start_as_base_class", "Should we start all players as their base class? true if yes (e.g. Armsmen become Fighters on Creation)", false)]
-        public static bool START_AS_BASE_CLASS;
+		/// <summary>
+		/// Should the server start characters as Base Class?
+		/// </summary>
+		[ServerProperty("classes", "start_as_base_class", "Should we start all players as their base class? true if yes (e.g. Armsmen become Fighters on Creation)", false)]
+		public static bool START_AS_BASE_CLASS;
 
 		/// <summary>
 		/// Should the server start characters as Base Class?

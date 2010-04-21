@@ -28,8 +28,7 @@ namespace DOL.Database
 	[DataTable(TableName = "Teleport")]
 	public class Teleport : DataObject
 	{
-		private bool m_autoSave;
-        private String m_type;
+		private String m_type;
 		private String m_teleportID;
 		private int m_realm;
 		private int m_regionID;
@@ -43,8 +42,8 @@ namespace DOL.Database
 		/// </summary>
 		public Teleport()
 		{
-			m_autoSave = false;
-            m_type = "";
+			AutoSave = false;
+			m_type = "";
 			m_teleportID = "UNDEFINED";
 			m_realm = 0;
 			m_regionID = 0;
@@ -52,15 +51,6 @@ namespace DOL.Database
 			m_y = 0;
 			m_z = 0;
 			m_heading = 0;
-		}
-
-		/// <summary>
-		/// Autosave teleport location table?
-		/// </summary>
-		override public bool AutoSave
-		{
-			get { return m_autoSave; }
-			set	{ m_autoSave = value; }
 		}
 
 		/// <summary>
@@ -73,15 +63,15 @@ namespace DOL.Database
 			set	{ m_type = value;	}
 		}
 
-        /// <summary>
-        /// ID for this teleport location.
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public String TeleportID
-        {
-            get { return m_teleportID; }
-            set { m_teleportID = value; }
-        }
+		/// <summary>
+		/// ID for this teleport location.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public String TeleportID
+		{
+			get { return m_teleportID; }
+			set { m_teleportID = value; }
+		}
 
 		/// <summary>
 		/// Realm for this teleport location.

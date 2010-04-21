@@ -39,24 +39,10 @@ namespace DOL.Database
 		private ushort		m_region;
 		private int		m_emblem;
 
-		static bool			m_autoSave;
-
 		public WorldObject()
 		{
-			m_autoSave=false;
+			AutoSave=false;
 			m_type = "DOL.GS.GameItem";
-		}
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
 		}
 
 		[DataElement(AllowDbNull = true)]
@@ -86,7 +72,7 @@ namespace DOL.Database
 				m_name = value;
 			}
 		}
-				
+		
 		[DataElement(AllowDbNull=false)]
 		public int X
 		{
@@ -95,7 +81,7 @@ namespace DOL.Database
 				return m_x;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_x = value;
 			}
@@ -109,7 +95,7 @@ namespace DOL.Database
 				return m_y;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_y = value;
 			}
@@ -123,7 +109,7 @@ namespace DOL.Database
 				return m_z;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_z = value;
 			}
@@ -137,7 +123,7 @@ namespace DOL.Database
 				return m_heading;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_heading = value;
 			}
@@ -151,7 +137,7 @@ namespace DOL.Database
 				return m_region;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_region = value;
 			}
@@ -165,7 +151,7 @@ namespace DOL.Database
 				return m_model;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_model = value;
 			}
@@ -178,7 +164,7 @@ namespace DOL.Database
 				return m_emblem;
 			}
 			set
-			{   
+			{
 				Dirty = true;
 				m_emblem = value;
 			}

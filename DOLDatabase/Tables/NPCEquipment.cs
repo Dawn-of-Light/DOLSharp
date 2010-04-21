@@ -52,31 +52,14 @@ namespace DOL.Database
 		/// <summary>
 		/// The Item Extension
 		/// </summary>
-		protected int		m_extension; 
-
-		static bool			m_autoSave;
+		protected int		m_extension;
 
 		/// <summary>
 		/// The Constructor
 		/// </summary>
 		public NPCEquipment()
 		{
-			m_autoSave=false;
-		}
-
-		/// <summary>
-		/// Autosave in table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
+			AutoSave=false;
 		}
 
 		/// <summary>
@@ -179,6 +162,6 @@ namespace DOL.Database
 				Dirty = true;
 				m_extension = value;
 			}
-		} 
+		}
 	}
 }

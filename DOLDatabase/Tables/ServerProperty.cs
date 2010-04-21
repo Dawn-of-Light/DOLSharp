@@ -32,8 +32,6 @@ namespace DOL.Database
 		private string m_defaultValue;
 		private string m_value;
 
-		private static bool m_autoSave;
-
 		public ServerProperty()
 		{
 			m_category = "";
@@ -42,22 +40,6 @@ namespace DOL.Database
 
 			m_defaultValue = ""; ;
 			m_value = "";
-			m_autoSave = true;
-		}
-
-		/// <summary>
-		/// Auto save this table
-		/// </summary>
-		public override bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
 		}
 
 		[DataElement(AllowDbNull = false)]

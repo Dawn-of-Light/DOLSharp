@@ -33,19 +33,22 @@ namespace DOL.GS.RealmAbilities
 		{
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
             GamePlayer player = living as GamePlayer;
-            GameInventoryItem as1 = GameInventoryItem.CreateFromTemplate("arrow_summoning1");
-            GameInventoryItem as2 = GameInventoryItem.CreateFromTemplate("arrow_summoning2");
-            GameInventoryItem as3 = GameInventoryItem.CreateFromTemplate("arrow_summoning3");
+            ItemTemplate arrow_summoning_1 = GameServer.Database.FindObjectByKey<ItemTemplate>("arrow_summoning1");
+            ItemTemplate arrow_summoning_2 = GameServer.Database.FindObjectByKey<ItemTemplate>("arrow_summoning2");
+            ItemTemplate arrow_summoning_3 = GameServer.Database.FindObjectByKey<ItemTemplate>("arrow_summoning3");
+            GameInventoryItem as1 = GameInventoryItem.CreateFromTemplate(arrow_summoning_1);
+            GameInventoryItem as2 = GameInventoryItem.CreateFromTemplate(arrow_summoning_2);
+            GameInventoryItem as3 = GameInventoryItem.CreateFromTemplate(arrow_summoning_3);
 
-			if(!player.Inventory.AddTemplate(as1.Item,10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+            if(!player.Inventory.AddTemplate(new InventoryItem (arrow_summoning_1),10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
 				player.Out.SendMessage("You do not have enough inventory space to place this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			else if(!player.Inventory.AddTemplate(as2.Item,10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+            else if(!player.Inventory.AddTemplate(new InventoryItem (arrow_summoning_2),10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
                 player.Out.SendMessage("You do not have enough inventory space to place this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			else if(!player.Inventory.AddTemplate(as3.Item,10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+            else if(!player.Inventory.AddTemplate(new InventoryItem (arrow_summoning_3),10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
                 player.Out.SendMessage("You do not have enough inventory space to place this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}			
@@ -98,9 +101,7 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning1 = new ItemTemplate();
 				arrow_summoning1.Name = "mystical barbed footed flight broadhead arrows";
 				arrow_summoning1.Level = 1;
-				arrow_summoning1.Durability = 100;
 				arrow_summoning1.MaxDurability = 100;
-				arrow_summoning1.Condition = 50000;
 				arrow_summoning1.MaxCondition = 50000;
 				arrow_summoning1.Quality = 100;
 				arrow_summoning1.DPS_AF = 0;
@@ -126,9 +127,7 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning2 = new ItemTemplate();
 				arrow_summoning2.Name = "mystical keen footed flight broadhead arrows";
 				arrow_summoning2.Level = 1;
-				arrow_summoning2.Durability = 100;
 				arrow_summoning2.MaxDurability = 100;
-				arrow_summoning2.Condition = 50000;
 				arrow_summoning2.MaxCondition = 50000;
 				arrow_summoning2.Quality = 100;
 				arrow_summoning2.DPS_AF = 0;
@@ -154,9 +153,7 @@ namespace DOL.GS.RealmAbilities
 				arrow_summoning3 = new ItemTemplate();
 				arrow_summoning3.Name = "mystical blunt footed flight broadhead arrows";
 				arrow_summoning3.Level = 1;
-				arrow_summoning3.Durability = 100;
 				arrow_summoning3.MaxDurability = 100;
-				arrow_summoning3.Condition = 50000;
 				arrow_summoning3.MaxCondition = 50000;
 				arrow_summoning3.Quality = 100;
 				arrow_summoning3.DPS_AF = 0;

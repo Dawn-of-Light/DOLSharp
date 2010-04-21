@@ -88,7 +88,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = true)]
-		public int WaitTime 
+		public int WaitTime
 		{
 			get { return m_waitTime; }
 			set { m_waitTime = value; }

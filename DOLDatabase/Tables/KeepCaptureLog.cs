@@ -18,19 +18,11 @@ namespace DOL.Database
 		int m_combatTime;
 		string m_capturedBy;
 		string m_rpGainerList = "";
-		private bool m_autoSave;
 
 		public KeepCaptureLog()
 			: base()
 		{
 		}
-
-		public override bool AutoSave
-		{
-			get { return m_autoSave; }
-			set { m_autoSave = value; }
-		}
-
 
 		[PrimaryKey(AutoIncrement = true)]
 		public long ID

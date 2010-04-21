@@ -103,6 +103,8 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
+		protected static int MAX_ITEMS_PER_SEND = 32;
+
 		/// <summary>
 		/// New inventory update handler. This handler takes into account that
 		/// a slot on the client isn't necessarily the same as a slot on the
@@ -126,7 +128,7 @@ namespace DOL.GS.PacketHandler
 			foreach (int slot in updateItems.Keys)
 			{
 				items.Add(slot, updateItems[slot]);
-				if (items.Count >= ServerProperties.Properties.MAX_ITEMS_PER_PACKET)
+				if (items.Count >= MAX_ITEMS_PER_SEND)
 				{
 					SendInventoryItemsPartialUpdate(items, windowType);
 					items.Clear();

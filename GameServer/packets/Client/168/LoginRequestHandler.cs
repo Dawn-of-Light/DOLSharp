@@ -156,7 +156,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					bool goodname = true;
 					foreach (char c in userName.ToLower().ToCharArray())
 					{
-						if ((c < '0' || c > '9') && (c < 'a' || c > 'z'))
+						if ((c < '0' || c > '9') && (c < 'a' || c > 'z') && client.Account.PrivLevel == (uint)ePrivLevel.Player)
 						{
 							goodname = false;
 							break;

@@ -34,23 +34,6 @@ namespace DOL.Database
 		private byte m_maxLevel;
 		private byte m_maxRealmLevel;
 
-		private static bool m_autoSave = false;
-
-		/// <summary>
-		/// Auto save this table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
-		}
-
 		/// <summary>
 		/// Battleground region ID
 		/// </summary>

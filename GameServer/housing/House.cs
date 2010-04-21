@@ -1140,7 +1140,7 @@ namespace DOL.GS.Housing
 				ItemTemplate item = items.GetItem(page, (eMerchantWindowSlot)pslot);
 				if (item != null)
 				{
-					price += Money.GetMoney(0, 0, item.Gold, item.Silver, item.Copper);
+					price += item.Price;
 				}
 			}
 			if (!player.RemoveMoney(price, LanguageMgr.GetTranslation(player.Client, "House.Edit.PayForChanges", Money.GetString(price))))

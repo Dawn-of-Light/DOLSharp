@@ -32,17 +32,9 @@ namespace DOL.Database
 		protected int m_abilitylevel;
 		protected int m_speclevel;
 
-		static bool	m_autoSave;
-
 		public DBSpecXAbility()
 		{
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get { return m_autoSave; }
-			set { m_autoSave = value; }
+			AutoSave = false;
 		}
 
 		[DataElement(AllowDbNull=false)]

@@ -58,12 +58,6 @@
     <description>Location of Log config file</description>
   </Server>
   <Server>
-    <property>LanguageFile</property>
-    <type>string</type>
-    <value></value>
-    <description>Location of used lagunage file</description>
-  </Server>
-  <Server>
     <property>ScriptAssemblies</property>
     <type>string</type>
     <value></value>

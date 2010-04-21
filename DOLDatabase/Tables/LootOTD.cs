@@ -26,33 +26,15 @@ namespace DOL
 	namespace Database
 	{
 		[DataTable(TableName="LootOTD")]
-		public class LootOTD : DataObject 
+		public class LootOTD : DataObject
 		{
 			private string m_itemTemplateID;
 			private int m_minLevel;
 			private string m_mobName;
-			
-			private static bool m_autoSave;
 
-			public LootOTD() 
+			public LootOTD()
 			{
-				
-				m_autoSave = false;
-			}
-
-			/// <summary>
-			/// Auto save this table
-			/// </summary>
-			override public  bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
-				}
+				AutoSave = false;
 			}
 
 			/// <summary>
@@ -83,7 +65,7 @@ namespace DOL
 					return m_itemTemplateID;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_itemTemplateID = value;
 				}
@@ -100,7 +82,7 @@ namespace DOL
 					return m_minLevel;
 				}
 				set
-				{   
+				{
 					Dirty = true;
 					m_minLevel = value;
 				}

@@ -408,7 +408,7 @@ namespace DOL.GS
 						if (lootTemplate.Chance == 100)
 						{
 							// Added support for specifying drop count in LootTemplate rather than relying on MobXLootTemplate DropCount
-							if (lootTemplate.Count > 0)
+							if (lootTemplate.Count > 1)
 							{
 								lootList.AddFixed(drop, lootTemplate.Count);
 							}

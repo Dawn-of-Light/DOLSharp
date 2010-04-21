@@ -28,8 +28,6 @@ namespace DOL
 		[DataTable(TableName="MerchantItem")]
 		public class MerchantItem : DataObject
 		{
-			static bool m_autoSave;
-
 			private string		m_item_list_ID;
 			private string		m_id_nb;
 			private int			m_page_number;
@@ -38,19 +36,7 @@ namespace DOL
 
 			public MerchantItem()
 			{
-				m_autoSave=false;
-			}
-
-			override public bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
-				}
+				AutoSave=false;
 			}
 
 			[DataElement(AllowDbNull=false, Index=true)]

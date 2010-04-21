@@ -217,12 +217,9 @@ namespace DOL.GS.Housing
 				               		SPD_ABS = spd,
 				               		Hand = 0x0E,
 				               		Weight = weight,
-				               		Copper = (byte) Money.GetCopper(copper),
-				               		Silver = (byte) Money.GetSilver(copper),
-				               		Gold = (short) Money.GetGold(copper),
-				               		Platinum = (short) Money.GetPlatinum(copper),
+				               		Price = (long)copper,
 				               		Bonus = bonus,
-				               		Realm = (byte) realm
+				               		Realm = (byte) realm,
 				               	};
 
 				GameServer.Database.AddObject(templateitem);

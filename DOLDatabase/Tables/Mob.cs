@@ -74,14 +74,11 @@ namespace DOL.Database
 
 		public static readonly string DEFAULT_NPC_CLASSTYPE = "DOL.GS.GameNPC";
 
-		static bool m_autoSave;
-
 		/// <summary>
 		/// The Constructor
 		/// </summary>
 		public Mob()
 		{
-			m_autoSave = false;
 			m_type = DEFAULT_NPC_CLASSTYPE;
 			m_equipmentTemplateID = "";
 			m_npcTemplateID = -1;
@@ -104,21 +101,6 @@ namespace DOL.Database
 			m_boat_ownerid = "";
 			m_roamingRange = -1;
 			m_gender = 0;
-		}
-
-		/// <summary>
-		/// AutoSave
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
 		}
 
 		/// <summary>

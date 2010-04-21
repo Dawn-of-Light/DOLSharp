@@ -29,12 +29,10 @@ namespace DOL.Database
 	[DataTable(TableName="GuildRank")]
 	public class DBRank : DataObject
 	{
-		static bool		m_autoSave;
-
 		private string	m_guildid;
 		private string	m_title;
 		private byte	m_ranklevel;
-				
+		
 		private bool	m_alli;
 		private bool	m_emblem;
 		private bool	m_gchear;
@@ -50,9 +48,9 @@ namespace DOL.Database
 		private bool	m_claim;
 		private bool	m_upgrade;
 		private bool	m_release;
-        private bool m_buff;
-        private bool m_dues;
-        private bool m_withdraw;
+		private bool 	m_buff;
+		private bool 	m_dues;
+		private bool 	m_withdraw;
 
 		/// <summary>
 		/// create rank rules
@@ -61,8 +59,8 @@ namespace DOL.Database
 		{
 			m_guildid = "";
 			m_title = "";
-			m_ranklevel = 0; 
-			m_autoSave=false;
+			m_ranklevel = 0;
+			AutoSave = false;
 			m_alli = false;
 			m_emblem  = false;
 			m_gchear  = false;
@@ -74,24 +72,9 @@ namespace DOL.Database
 			m_invite  = false;
 			m_promote = false;
 			m_remove  = false;
-            m_buff = false;
-            m_dues = false;
-            m_withdraw = false;
-        }
-
-		/// <summary>
-		/// autosave table
-		/// </summary>
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
+			m_buff = false;
+			m_dues = false;
+			m_withdraw = false;
 		}
 
 		/// <summary>
@@ -179,20 +162,20 @@ namespace DOL.Database
 			}
 		}
 
-        [DataElement(AllowDbNull = true)]
-        public bool Buff
-        {
-            get
-            {
-                return m_buff;
-            }
-            set
-            {
-                Dirty = true;
-                m_buff = value;
-            }
-        }
-        /// <summary>
+		[DataElement(AllowDbNull = true)]
+		public bool Buff
+		{
+			get
+			{
+				return m_buff;
+			}
+			set
+			{
+				Dirty = true;
+				m_buff = value;
+			}
+		}
+		/// <summary>
 		/// Can player with this rank hear guild chat
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -412,31 +395,31 @@ namespace DOL.Database
 				m_release = value;
 			}
 		}
-        [DataElement(AllowDbNull = true)]
-        public bool Dues
-        {
-            get
-            {
-                return m_dues;
-            }
-            set
-            {
-                Dirty = true;
-                m_dues = value;
-            }
-        }
-        [DataElement(AllowDbNull = true)]
-        public bool Withdraw
-        {
-            get
-            {
-                return m_withdraw;
-            }
-            set
-            {
-                Dirty = true;
-                m_withdraw = value;
-            }
-        }
-    }
+		[DataElement(AllowDbNull = true)]
+		public bool Dues
+		{
+			get
+			{
+				return m_dues;
+			}
+			set
+			{
+				Dirty = true;
+				m_dues = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public bool Withdraw
+		{
+			get
+			{
+				return m_withdraw;
+			}
+			set
+			{
+				Dirty = true;
+				m_withdraw = value;
+			}
+		}
+	}
 }

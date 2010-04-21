@@ -19,7 +19,7 @@
 /* Created by Schaf
  * Last modified by Schaf on 10.12.2004 20:09
  */
- 
+
 using System;
 
 using DOL.Database;
@@ -36,24 +36,7 @@ namespace DOL.Database
 		private string m_templateID; // the item template id of the item placed
 		private byte m_index;
 
-		static bool m_autoSave;
-
-		public DBHousepointItem()
-		{
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get
-			{
-				return m_autoSave;
-			}
-			set
-			{
-				m_autoSave = value;
-			}
-		}
+		public DBHousepointItem(){}
 
 		[DataElement(AllowDbNull = false)]
 		public int HouseID
@@ -100,17 +83,17 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Index of this item in case there is more than 1 
+		/// Index of this item in case there is more than 1
 		/// of the same type.
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public byte Index
 		{
 			get { return m_index; }
-			set 
-			{ 
-				Dirty = true; 
-				m_index = value; 
+			set
+			{
+				Dirty = true;
+				m_index = value;
 			}
 		}
 	}

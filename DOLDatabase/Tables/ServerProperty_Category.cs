@@ -29,12 +29,6 @@ namespace DOL.Database
 		private string 	m_base_cat;
 		private string 	m_parent_cat;
 		private string 	m_display_name;
-		
-		private static bool m_autoSave;
-		public override bool AutoSave {
-			get { return m_autoSave; }
-			set { m_autoSave = value; }
-		}
 
 		public ServerPropertyCategory()
 		{

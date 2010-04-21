@@ -160,6 +160,8 @@
     </Compile>
     <Compile Include="Tables\BugReport.cs" />
     <Compile Include="Tables\CharacterXOneTimeDrop.cs" />
+    <Compile Include="Tables\ItemUnique.cs" />
+    <Compile Include="Tables\ServerStats.cs" />
     <Compile Include="Tables\DOLCharacters.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -296,7 +298,7 @@
     <Compile Include="Tables\Task.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tables\InventoryItem.cs">
+    <Compile Include="Tables\Inventory.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tables\ItemTemplate.cs">

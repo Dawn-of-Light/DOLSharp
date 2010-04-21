@@ -34,29 +34,13 @@ namespace DOL
 			private int m_craftinglevel;
 			private string m_id_nb;
 			private int m_craftingSkillType;
-			static bool	m_autoSave;
 
 			/// <summary>
 			/// Create an crafted item
 			/// </summary>
 			public DBCraftedItem()
 			{
-				m_autoSave=false;
-			}
-
-			/// <summary>
-			/// AutoSave
-			/// </summary>
-			override public bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
-				}
+				AutoSave=false;
 			}
 
 			/// <summary>

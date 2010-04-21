@@ -22,7 +22,7 @@
  * Author:	LightBringer
  * Editor:  Gandulf Kohlweiss
  * Date:	2004/06/19
-*/
+ */
 
 using System;
 using DOL.Database.Attributes;
@@ -35,51 +35,44 @@ namespace DOL.Database
 	[DataTable(TableName="Task")]
 	public class DBTask : DataObject
 	{
-		protected string	m_characterid = "";		
+		protected string	m_characterid = "";
 		protected DateTime	m_TimeOut = DateTime.Now.AddHours(2);
-		protected String	m_TaskType = null;		// name of classname		
+		protected String	m_TaskType = null;		// name of classname
 		protected int		m_TasksDone = 0;
 		protected string	m_customPropertiesString = null;
-		static bool			m_autoSave;
 
 		public DBTask()
 		{
-			m_autoSave = false;
-		}
-
-		override public bool AutoSave
-		{
-			get	{return m_autoSave;}
-			set	{m_autoSave = value;}
+			AutoSave = false;
 		}
 
 		[PrimaryKey]
 		public string Character_ID
 		{
 			get {return m_characterid;}
-			set	
+			set
 			{
 				Dirty = true;
 				m_characterid = value;
 			}
-		}		
+		}
 
 		[DataElement(AllowDbNull=true,Unique=false)]
 		public DateTime TimeOut
 		{
 			get {return m_TimeOut;}
-			set	
+			set
 			{
 				Dirty = true;
 				m_TimeOut = value;
 			}
-		}		
+		}
 
 		[DataElement(AllowDbNull=true,Unique=false)]
 		public String TaskType
 		{
 			get {return m_TaskType;}
-			set	
+			set
 			{
 				Dirty = true;
 				m_TaskType = value;
@@ -90,12 +83,12 @@ namespace DOL.Database
 		public int TasksDone
 		{
 			get {return m_TasksDone;}
-			set	
+			set
 			{
 				Dirty = true;
 				m_TasksDone = value;
 			}
-		}		
+		}
 
 		[DataElement(AllowDbNull=true,Unique=false)]
 		public string CustomPropertiesString

@@ -35,7 +35,6 @@ namespace DOL.Tests
 		{
 			Character character= null;
 			Account account = GameServer.Database.SelectObject<Account>("");
-			
 			Assert.IsNotNull(account);
 
 			foreach (Character charact in account.Characters)
@@ -43,38 +42,44 @@ namespace DOL.Tests
 				if (charact!=null)
 					character = charact;
 			}			
-
 			Assert.IsNotNull(character);
 			
-
 			GameClient client = new GameClient(GameServer.Instance);
-			client.Version = GameClient.eClientVersion.Version168;
-			client.Socket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);			
+			client.Version = GameClient.eClientVersion.Version1101;
+			client.Socket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
 			client.Account = account;
-
-			GamePlayer player = new GamePlayer(client,character);
-			return player;
+			client.PacketProcessor = new DOL.GS.PacketHandler.PacketProcessor(client);
+			client.Out = new DOL.GS.PacketHandler.PacketLib1101(client);
+			client.Player = new GamePlayer(client,character);
+			Assert.IsNotNull(client.Player,"GamePlayer instance created");
+			
+			return client.Player;
 		}
 
 		[TestFixtureSetUp] public virtual void Init()
 		{
-			Directory.SetCurrentDirectory("../../../debug");
-			Console.WriteLine(Directory.GetCurrentDirectory());
+			
+			Directory.SetCurrentDirectory("../../debug");
+			string CD= Directory.GetCurrentDirectory();
+			Console.WriteLine(CD);
 			if(GameServer.Instance==null)
 			{
-				FileInfo configFile = new FileInfo("../debug/config/serverconfig.xml");
+				FileInfo configFile = new FileInfo("./config/serverconfig.xml");
 				GameServerConfiguration config = new GameServerConfiguration();
 				if(!configFile.Exists)
 					config.SaveToXMLFile(configFile);
 				else
 					config.LoadFromXMLFile(configFile);
 				GameServer.CreateInstance(config);
+				Directory.SetCurrentDirectory(CD);
 			}
 			if (!GameServer.Instance.IsRunning)
 			{
+				Language.LanguageMgr.SetLangPath(Path.Combine(CD,"languages"));
 				Console.WriteLine("Starting GameServer");
 				if (!GameServer.Instance.Start())
 				{
+					
 					Console.WriteLine("Error init GameServer");
 				}
 			}
@@ -83,7 +88,10 @@ namespace DOL.Tests
 				Console.WriteLine("GameServer already running, skip init of Gameserver...");
 			}
 		}
-
+		public void cd()
+		{
+			Console.WriteLine("GC: "+Directory.GetCurrentDirectory()); 
+		}
 		[TestFixtureTearDown] public void Dispose()
 		{
 			// At the moment we do not stop GameServer after each test to let it be reused by all tests.

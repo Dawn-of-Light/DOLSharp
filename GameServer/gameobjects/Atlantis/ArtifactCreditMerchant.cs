@@ -115,7 +115,7 @@ namespace DOL.GS
 					lock (player.Inventory)
 						player.Inventory.RemoveItem(item);
 
-					long totalValue = item.Value;
+					long totalValue = item.Price;
 					player.BountyPoints += totalValue;
 					player.Out.SendUpdatePoints();
 					player.Out.SendMessage(totalValue + " Bounty Points refunded", eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);

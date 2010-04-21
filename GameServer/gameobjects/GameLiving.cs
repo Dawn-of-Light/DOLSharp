@@ -1547,7 +1547,7 @@ namespace DOL.GS
 				if (weapon != null)
 				{
 					// Make sure we use CopyFrom(ItemTemplate) to make a deep copy
-					weaponTypeToUse = new InventoryItem(weapon as ItemTemplate);
+					weaponTypeToUse = new InventoryItem(weapon.Template);
 
 					if ((weapon.Object_Type == (int)eObjectType.TwoHandedWeapon) || (weapon.Object_Type == (int)eObjectType.PolearmWeapon))
 					{
@@ -2844,7 +2844,7 @@ namespace DOL.GS
 
 				if (procSpell != null)
 				{
-					int requiredLevel = weapon.LevelRequirement > 0 ? weapon.LevelRequirement : Math.Min(50, weapon.Level);
+					int requiredLevel = weapon.Template.LevelRequirement > 0 ? weapon.Template.LevelRequirement : Math.Min(50, weapon.Level);
 					if (requiredLevel > Level)
 					{
 						if (this is GamePlayer)
@@ -3220,7 +3220,7 @@ namespace DOL.GS
 
 						if(reactiveItem != null && reactiveItem.Object_Type == (int)eObjectType.Shield)
 						{
-							int requiredLevel = reactiveItem.LevelRequirement > 0 ? reactiveItem.LevelRequirement : Math.Min(50, reactiveItem.Level);
+							int requiredLevel = reactiveItem.Template.LevelRequirement > 0 ? reactiveItem.Template.LevelRequirement : Math.Min(50, reactiveItem.Level);
 
 							if (requiredLevel <= Level)
 							{

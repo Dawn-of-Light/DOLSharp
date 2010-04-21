@@ -50,10 +50,8 @@ namespace DOL.GS
 			money.Name = "bag of coins";
 			money.Level = 0;
 
-			money.Copper = (byte)Money.GetCopper(moneyCount);
-			money.Silver = (byte)Money.GetSilver(moneyCount);
-			money.Gold = (byte)Money.GetGold(moneyCount);
-
+			money.Price = moneyCount;
+			
 			loot.AddFixed(money, 1);
 			return loot;
 		}

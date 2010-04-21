@@ -41,10 +41,10 @@ namespace DOL
 			//from the 0x57/0x55 Packets
 			//
 			private string m_name;			//24 Bytes
-			//0x00					//24 bytes empty 
+			//0x00					//24 bytes empty
 			//Locationstring		//24 bytes empty when sent
-			private string m_guildid;		//not sent in 0x55/0x57		
-			private string m_lastName;		//not sent in 0x55/0x57		
+			private string m_guildid;		//not sent in 0x55/0x57
+			private string m_lastName;		//not sent in 0x55/0x57
 			private int m_race;
 			private int m_gender;
 			private int m_level;				//01 byte
@@ -107,12 +107,12 @@ namespace DOL
 			private int m_bindzpos;
 			private int m_bindregion;
 			private int m_bindheading;
-            //bind house
-            private int m_bindhousexpos;
-            private int m_bindhouseypos;
-            private int m_bindhousezpos;
-            private int m_bindhouseregion;
-            private int m_bindhouseheading;
+			//bind house
+			private int m_bindhousexpos;
+			private int m_bindhouseypos;
+			private int m_bindhousezpos;
+			private int m_bindhouseregion;
+			private int m_bindhouseheading;
 
 			private byte m_deathCount;
 			private int m_conLostAtDeath;
@@ -126,7 +126,7 @@ namespace DOL
 			private bool m_isLevelSecondStage;
 			private bool m_usedLevelCommand;
 
-			// here are skills stored. loading and saving skills of player is done automatically and 
+			// here are skills stored. loading and saving skills of player is done automatically and
 			// these fields should NOT manipulated or used otherwise
 			// instead use the skill access methods on GamePlayer
 			private string m_abilities = "";	// comma separated string of ability keynames and levels eg "sprint,0,evade,1"
@@ -138,7 +138,7 @@ namespace DOL
 			private string m_disabledAbilities = "";
 
 			private string m_friendList = ""; //comma seperated string of friends
-            private string m_ignoreList = ""; //comma seperated string of ignored Players
+			private string m_ignoreList = ""; //comma seperated string of ignored Players
 			private string m_playerTitleType = "";
 
 			private bool m_flagClassName = true;
@@ -181,20 +181,18 @@ namespace DOL
 
 			private string m_guildNote = "";
 			
-            //CLs
-            private bool m_cl;
-            private long m_clExperience;
-            private int m_clLevel;
-            private int m_clSpecPoints;
-            private string m_clSpells;
+			//CLs
+			private bool m_cl;
+			private long m_clExperience;
+			private int m_clLevel;
+			private int m_clSpecPoints;
+			private string m_clSpells;
 			
-            // MLs
-            private byte m_ml;
-            private long m_mlExperience;
-            private int m_mlLevel;
-            private bool m_mlGranted;
-			
-			static bool m_autoSave;
+			// MLs
+			private byte m_ml;
+			private long m_mlExperience;
+			private int m_mlLevel;
+			private bool m_mlGranted;
 
 			/// <summary>
 			/// Create the character row in table
@@ -202,7 +200,6 @@ namespace DOL
 			public Character()
 			{
 				m_creationDate = DateTime.Now;
-				m_autoSave = false;
 				m_concentration = 100;
 				m_exp = 0;
 				m_bntyPts = 0;
@@ -586,22 +583,6 @@ namespace DOL
 				set
 				{
 					m_concentration = value;
-					Dirty = true;
-				}
-			}
-
-			/// <summary>
-			/// Auto save the character
-			/// </summary>
-			override public bool AutoSave
-			{
-				get
-				{
-					return m_autoSave;
-				}
-				set
-				{
-					m_autoSave = value;
 					Dirty = true;
 				}
 			}
@@ -1014,90 +995,90 @@ namespace DOL
 				}
 			}
 
-            /// <summary>
-            /// The house bind X position of character
-            /// </summary>
-            [DataElement(AllowDbNull = true)]
-            public int BindHouseXpos
-            {
-                get
-                {
-                    return m_bindhousexpos;
-                }
-                set
-                {
-                    Dirty = true;
-                    m_bindhousexpos = value;
-                }
-            }
+			/// <summary>
+			/// The house bind X position of character
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int BindHouseXpos
+			{
+				get
+				{
+					return m_bindhousexpos;
+				}
+				set
+				{
+					Dirty = true;
+					m_bindhousexpos = value;
+				}
+			}
 
-            /// <summary>
-            /// The bind house Y position of character
-            /// </summary>
-            [DataElement(AllowDbNull = true)]
-            public int BindHouseYpos
-            {
-                get
-                {
-                    return m_bindhouseypos;
-                }
-                set
-                {
-                    Dirty = true;
-                    m_bindhouseypos = value;
-                }
-            }
+			/// <summary>
+			/// The bind house Y position of character
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int BindHouseYpos
+			{
+				get
+				{
+					return m_bindhouseypos;
+				}
+				set
+				{
+					Dirty = true;
+					m_bindhouseypos = value;
+				}
+			}
 
-            /// <summary>
-            /// The bind house Z position of character
-            /// </summary>
-            [DataElement(AllowDbNull = true)]
-            public int BindHouseZpos
-            {
-                get
-                {
-                    return m_bindhousezpos;
-                }
-                set
-                {
-                    Dirty = true;
-                    m_bindhousezpos = value;
-                }
-            }
+			/// <summary>
+			/// The bind house Z position of character
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int BindHouseZpos
+			{
+				get
+				{
+					return m_bindhousezpos;
+				}
+				set
+				{
+					Dirty = true;
+					m_bindhousezpos = value;
+				}
+			}
 
-            /// <summary>
-            /// The bind house region position of character
-            /// </summary>
-            [DataElement(AllowDbNull = true)]
-            public int BindHouseRegion
-            {
-                get
-                {
-                    return m_bindhouseregion;
-                }
-                set
-                {
-                    Dirty = true;
-                    m_bindhouseregion = value;
-                }
-            }
+			/// <summary>
+			/// The bind house region position of character
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int BindHouseRegion
+			{
+				get
+				{
+					return m_bindhouseregion;
+				}
+				set
+				{
+					Dirty = true;
+					m_bindhouseregion = value;
+				}
+			}
 
-            /// <summary>
-            /// The bind house heading position of character
-            /// </summary>
-            [DataElement(AllowDbNull = true)]
-            public int BindHouseHeading
-            {
-                get
-                {
-                    return m_bindhouseheading;
-                }
-                set
-                {
-                    Dirty = true;
-                    m_bindhouseheading = value;
-                }
-            }
+			/// <summary>
+			/// The bind house heading position of character
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int BindHouseHeading
+			{
+				get
+				{
+					return m_bindhouseheading;
+				}
+				set
+				{
+					Dirty = true;
+					m_bindhouseheading = value;
+				}
+			}
 
 			/// <summary>
 			/// The number of chacter is dead at this level
@@ -1356,19 +1337,19 @@ namespace DOL
 				}
 			}
 
-            /// <summary>
-            /// The Ignore list
-            /// </summary>
-            [DataElement(AllowDbNull = true)]
-            public string SerializedIgnoreList
-            {
-                get { return m_ignoreList; }
-                set
-                {
-                    Dirty = true;
-                    m_ignoreList = value;
-                }
-            }
+			/// <summary>
+			/// The Ignore list
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public string SerializedIgnoreList
+			{
+				get { return m_ignoreList; }
+				set
+				{
+					Dirty = true;
+					m_ignoreList = value;
+				}
+			}
 
 			/// <summary>
 			/// Is cloak hood up
@@ -1624,7 +1605,7 @@ namespace DOL
 					Dirty = true;
 					m_respecBought = value;
 				}
-			}						
+			}
 			/// <summary>
 			/// Gets/sets the characters safety flag
 			/// </summary>
@@ -2020,7 +2001,7 @@ namespace DOL
 			{
 				get { return m_killsEpicBoss; }
 				set { m_killsEpicBoss = value; Dirty = true; }
-			} 
+			}
 
 			#endregion
 
@@ -2145,89 +2126,89 @@ namespace DOL
 			{
 				get { return m_showGuildLogins; }
 				set { Dirty = true; m_showGuildLogins = value; }
-			}	
+			}
 			
 			/// <summary>
 			/// Is Champion level activated
-			/// </summary>	           
-            [DataElement(AllowDbNull = true)]
-            public bool Champion
-            {
-                get
-                {
-                    return m_cl;
-                }
-                set
-                {
-                    m_cl = value;
-                    Dirty = true;
-                }
-            } 
- 			/// <summary>
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public bool Champion
+			{
+				get
+				{
+					return m_cl;
+				}
+				set
+				{
+					m_cl = value;
+					Dirty = true;
+				}
+			}
+			/// <summary>
 			/// Champion level
-			/// </summary>		           
-            [DataElement(AllowDbNull = true)]
-            public int ChampionLevel
-            {
-                get
-                {
-                    return m_clLevel;
-                }
-                set
-                {
-                    m_clLevel = value;
-                    Dirty = true;
-                }
-            }             
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int ChampionLevel
+			{
+				get
+				{
+					return m_clLevel;
+				}
+				set
+				{
+					m_clLevel = value;
+					Dirty = true;
+				}
+			}
 			/// <summary>
 			/// Champion Available speciality points
-			/// </summary>			
-            [DataElement(AllowDbNull = true)]
-            public int ChampionSpecialtyPoints
-            {
-                get
-                {
-                    return m_clSpecPoints;
-                }
-                set
-                {
-                    m_clSpecPoints = value;
-                    Dirty = true;
-                }
-            }
- 			/// <summary>
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public int ChampionSpecialtyPoints
+			{
+				get
+				{
+					return m_clSpecPoints;
+				}
+				set
+				{
+					m_clSpecPoints = value;
+					Dirty = true;
+				}
+			}
+			/// <summary>
 			/// Champion Experience
-			/// </summary>		           
-            [DataElement(AllowDbNull = true)]
-            public long ChampionExperience
-            { 
-                get
-                {
-                    return m_clExperience;
-                }
-                set
-                {
-                    m_clExperience = value;
-                    Dirty = true;
-                }
-            }   
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public long ChampionExperience
+			{
+				get
+				{
+					return m_clExperience;
+				}
+				set
+				{
+					m_clExperience = value;
+					Dirty = true;
+				}
+			}
 			/// <summary>
 			/// Champion Spells
-			/// </summary>		           
-            [DataElement(AllowDbNull = true)]
-            public string ChampionSpells
-            { 
-                get
-                {
-                    return m_clSpells;
-                }
-                set
-                {
-                    m_clSpells = value;
-                    Dirty = true;
-                }
-            }               
- 			/// <summary>
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public string ChampionSpells
+			{
+				get
+				{
+					return m_clSpells;
+				}
+				set
+				{
+					m_clSpells = value;
+					Dirty = true;
+				}
+			}
+			/// <summary>
 			/// ML Line
 			/// </summary>
 			[DataElement(AllowDbNull = false)]
@@ -2274,7 +2255,7 @@ namespace DOL
 					Dirty = true;
 					m_mlLevel = value;
 				}
-			}		
+			}
 			/// <summary>
 			/// ML can be validated to next level
 			/// </summary>
@@ -2304,11 +2285,11 @@ namespace DOL
 					Dirty = true;
 					m_roleplay = value;
 				}
-            }
+			}
 
-            #region Relations
-            
-            /*	Graveen: disabled due tout huge slowdown on server start
+			#region Relations
+			
+			/*	Graveen: disabled due tout huge slowdown on server start
              
             /// <summary>
             /// Remove DBCharacterXMasterLevel
@@ -2351,9 +2332,9 @@ namespace DOL
             /// </summary>
             [Relation(LocalField = "ObjectId", RemoteField = "PlayerID", AutoLoad = true, AutoDelete = true)]
             public DBSinglePermission[] singlePermissions;
-*/
-            #endregion Relations
+			 */
+			#endregion Relations
 
-        }
+		}
 	}
 }

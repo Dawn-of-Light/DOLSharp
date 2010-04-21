@@ -705,10 +705,12 @@ namespace DOL.GS
 				return null;
 
 			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
-			{
+			{			          
 				InventoryItem item;
-
-				return !m_items.TryGetValue(slot, out item) ? null : item;
+				m_items.TryGetValue(slot, out item);
+					return item;
+				//else
+				//	return null;
 			}
 		}
 
@@ -825,7 +827,7 @@ namespace DOL.GS
 		/// <param name="minSlot">The first slot</param>
 		/// <param name="maxSlot">The last slot</param>
 		/// <returns>True if all items were added</returns>
-		public virtual bool AddTemplate(ItemTemplate template, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
+		public virtual bool AddTemplate(InventoryItem  template, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
 			// Make sure template isn't null.
 			if (template == null)
