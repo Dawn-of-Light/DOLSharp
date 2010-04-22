@@ -259,7 +259,7 @@ namespace DOL.Database.Handlers
 				if (res == 0)
 				{
 					if (Log.IsErrorEnabled)
-						Log.Error("Deleting " + dataObject.TableName + " object failed! ID=" + dataObject.ObjectId);
+						Log.Error("Deleting " + dataObject.TableName + " object failed! ID=" + dataObject.ObjectId + " " + Environment.StackTrace);
 				}
 
 				dataObject.IsValid = false;
