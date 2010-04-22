@@ -5363,8 +5363,8 @@ namespace DOL.GS
 				case eAttackResult.HitStyle:
 				case eAttackResult.Fumbled:
 					// remove an arrow and endurance
-					ItemTemplate ammoTemplate = RangeAttackAmmo;
-					Inventory.RemoveCountFromStack(new InventoryItem(ammoTemplate), 1);
+					InventoryItem ammo = RangeAttackAmmo;
+					Inventory.RemoveCountFromStack(ammo, 1);
 
 					if (RangedAttackType == eRangedAttackType.Critical)
 						Endurance -= CRITICAL_SHOT_ENDURANCE;
@@ -5703,7 +5703,7 @@ namespace DOL.GS
 		/// Gets/Sets the item that is used for ranged attack
 		/// </summary>
 		/// <returns>Item that will be used for range/accuracy/damage modifications</returns>
-		protected override ItemTemplate RangeAttackAmmo
+		protected override InventoryItem RangeAttackAmmo
 		{
 			get
 			{
@@ -5741,7 +5741,7 @@ namespace DOL.GS
 					}
 				}
 
-				return (ammo == null ? null : ammo.Template);
+				return ammo;
 			}
 			set { m_rangeAttackAmmo.Target = value; }
 		}
@@ -6805,7 +6805,7 @@ namespace DOL.GS
 				case eObjectType.CompositeBow:
 				case eObjectType.RecurvedBow:
 				case eObjectType.Fired:
-					ItemTemplate ammo = RangeAttackAmmo;
+					InventoryItem ammo = RangeAttackAmmo;
 					if (ammo == null)
 						return (eDamageType)weapon.Type_Damage;
 					return (eDamageType)ammo.Type_Damage;
@@ -6842,7 +6842,7 @@ namespace DOL.GS
 						return 0;
 
 					double range;
-					ItemTemplate ammo = RangeAttackAmmo;
+					InventoryItem ammo = RangeAttackAmmo;
 
 					switch ((eObjectType)weapon.Object_Type)
 					{
