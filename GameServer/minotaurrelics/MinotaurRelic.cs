@@ -460,7 +460,7 @@ namespace DOL.GS
         /// </summary>
         /// <param name="respawnTimer"></param>
         /// <returns></returns>
-        protected virtual int RespawnTimerCallback(RegionTimer respawnTimer)
+        protected override int RespawnTimerCallback(RegionTimer respawnTimer)
         {
             if (respawntimer != null)
             {

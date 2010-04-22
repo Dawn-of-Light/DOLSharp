@@ -694,17 +694,14 @@ namespace DOL.GS
 				LeaveHouse();
 
 			// Dinberg: this will eventually need to be changed so that it moves them to the location they TP'ed in.
-			// Damien: Overwrite current position with Bind position if MoveToBind() failed
+			// DamienOphyr: Overwrite current position with Bind position in database, MoveTo() is inoperant
 			if (CurrentRegion.IsInstance)
 			{
-				if (!MoveToBind())
-				{
 					PlayerCharacter.Region = PlayerCharacter.BindRegion;
 					PlayerCharacter.Xpos =PlayerCharacter.BindXpos;
 					PlayerCharacter.Ypos= PlayerCharacter.BindYpos;
 					PlayerCharacter.Zpos =PlayerCharacter.BindZpos;
 					PlayerCharacter.Direction=PlayerCharacter.BindHeading;
-				}
 			}
 			
 			//check for battleground caps
