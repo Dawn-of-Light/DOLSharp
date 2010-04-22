@@ -576,7 +576,7 @@ namespace DOL.GS
                     {
                         lock (m_owner.Inventory)
                         {
-							if (!m_owner.Inventory.RemoveItem(item))
+							if (!m_owner.Inventory.RemoveTradeItem(item))
 							{
 								if (logTrade)
 									GameServer.Instance.LogGMAction("   NOTItem: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
@@ -592,7 +592,7 @@ namespace DOL.GS
                     {
                         lock (partner.Inventory)
                         {
-							if (!partner.Inventory.RemoveItem(item))
+							if (!partner.Inventory.RemoveTradeItem(item))
 							{
 								if (logTrade)
 									GameServer.Instance.LogGMAction("   NOTItem: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
@@ -612,7 +612,7 @@ namespace DOL.GS
 							item.Emblem = 0;
 						}
 
-						if (!partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+						if (!partner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item))
 						{
 							if (log.IsWarnEnabled)
 							{
@@ -633,7 +633,7 @@ namespace DOL.GS
 							item.Emblem = 0;
 						}
 
-						if (!m_owner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+						if (!m_owner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item))
 						{
 							if (log.IsWarnEnabled)
 							{
