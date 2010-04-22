@@ -3595,16 +3595,8 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-		public virtual void SendBlinkPanel(GamePlayer player, byte flag)
+		public virtual void SendBlinkPanel(byte flag)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
-
-			pak.WriteShort((ushort)player.ObjectID);
-			pak.WriteByte((byte)8);
-			pak.WriteByte((byte)flag);
-			pak.WriteByte((byte)0);
-
-			SendTCP(pak);
 		}
 
 		/// <summary>

@@ -604,7 +604,11 @@ namespace DOL.GS.PacketHandler
         void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z);
         void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag);
         void SendMinotaurRelicBarUpdate(GamePlayer player, int xp);
-        void SendBlinkPanel(GamePlayer player, byte flag);
+		/// <summary>
+		/// Makes a specific UI Part "blink"
+		/// </summary>
+		/// <param name="flag">The UI part as byte (See ePanel enum for details)</param>
+        void SendBlinkPanel(byte flag);
 		/// <summary>
 		/// The bow prepare animation
 		/// </summary>
