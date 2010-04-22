@@ -14250,30 +14250,38 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual void LoadChampionSpells()
 		{
-			string championSpells = ChampionSpells;
-			Hashtable championSpellsh = new Hashtable();
-			SkillBase.CleanSpellList(GlobalSpellsLines.Champion_Spells + Name);
-			SpellLine line = new SpellLine(GlobalSpellsLines.Champion_Spells + Name, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
-			line.Level = 50;
-			SkillBase.RegisterSpellLine(line);
-			if (championSpells != null && championSpells.Length > 0)
+			try
 			{
-				foreach (string cSpell in championSpells.Split(';'))
+				string championSpells = ChampionSpells;
+				Hashtable championSpellsh = new Hashtable();
+				SkillBase.CleanSpellList(GlobalSpellsLines.Champion_Spells + Name);
+				SpellLine line = new SpellLine(GlobalSpellsLines.Champion_Spells + Name, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
+				line.Level = 50;
+				SkillBase.RegisterSpellLine(line);
+				if (championSpells != null && championSpells.Length > 0)
 				{
-					string[] cSpellProp = cSpell.Split('|');
-					if (cSpellProp.Length < 2) continue;
-					championSpellsh.Add(cSpellProp[0], int.Parse(cSpellProp[0]));
+					foreach (string cSpell in championSpells.Split(';'))
+					{
+						string[] cSpellProp = cSpell.Split('|');
+						if (cSpellProp.Length < 2) continue;
+						championSpellsh.Add(cSpellProp[0], int.Parse(cSpellProp[0]));
+					}
 				}
+				if (championSpellsh != null)
+				{
+					foreach (DictionaryEntry de in championSpellsh)
+					{
+						SkillBase.AddSpellToList(GlobalSpellsLines.Champion_Spells + Name, (int)de.Value);
+					}
+					AddSpellLine(line);
+				}
+				championSpellsh = null;
 			}
-			if (championSpellsh != null)
+			catch (Exception ex)
 			{
-				foreach (DictionaryEntry de in championSpellsh)
-				{
-					SkillBase.AddSpellToList(GlobalSpellsLines.Champion_Spells + Name, (int)de.Value);
-				}
-				AddSpellLine(line);
+				log.ErrorFormat("Error loading champion spell line for player {0} ID {1}. ", Name, InternalID);
+				log.Error("LoadChampionSpells", ex);
 			}
-			championSpellsh = null;
 		}
 		/// <summary>
 		/// Checks if player has this champion spell
