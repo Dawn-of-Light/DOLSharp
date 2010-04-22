@@ -63,7 +63,15 @@ namespace DOL.GS
 			this.Level = (byte)item.Level;
 			this.Model = (ushort)item.Model;
 			this.Name = item.Name;
-			m_item.Template = item.Template ;
+			if (item.Template is ItemUnique)
+			{
+				ItemUnique unique = new ItemUnique(item.Template);
+				GameServer.Database.AddObject(unique);
+				log.Warn ("GameInventory unique avec id " + unique.Id_nb);
+				m_item.Template  = unique;
+			}
+			else
+				m_item.Template = item.Template;
 		}
 
 		/// <summary>
