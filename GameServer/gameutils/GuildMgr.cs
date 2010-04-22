@@ -412,7 +412,7 @@ namespace DOL.GS
 				var myguild = new Guild(obj);
 				AddGuild(myguild);
 
-				if (obj.Ranks.Length == 0)
+				if (obj.Ranks == null || obj.Ranks.Length == 0)
 					CreateRanks(myguild);
 
 				var guildCharacters = GameServer.Database.SelectObjects<Character>(string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
