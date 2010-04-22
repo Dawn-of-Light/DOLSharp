@@ -222,8 +222,7 @@ namespace DOL.Database.Handlers
 				if (res == 0)
 				{
 					if (Log.IsErrorEnabled)
-						Log.Error("Error modifying object " + dataObject.TableName + " ID=" + dataObject.ObjectId +
-								  " --- keyvalue changed? " + sql);
+						Log.Error("Error modifying object " + dataObject.TableName + " ID=" + dataObject.ObjectId + " --- keyvalue changed? " + sql + " " + Environment.StackTrace);
 					return;
 				}
 

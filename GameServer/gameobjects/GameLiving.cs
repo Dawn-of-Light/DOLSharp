@@ -2084,7 +2084,7 @@ namespace DOL.GS
 		/// Gets/Sets the item that is used for ranged attack
 		/// </summary>
 		/// <returns>Item that will be used for range/accuracy/damage modifications</returns>
-		protected virtual ItemTemplate RangeAttackAmmo
+		protected virtual InventoryItem RangeAttackAmmo
 		{
 			get { return null; }
 			set { }
@@ -3463,7 +3463,7 @@ namespace DOL.GS
 			}
 			if (ad.Attacker.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
-				ItemTemplate ammo = RangeAttackAmmo;
+				InventoryItem ammo = RangeAttackAmmo;
 				if (ammo != null)
 					switch ((ammo.SPD_ABS >> 4) & 0x3)
 					{
