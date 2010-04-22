@@ -150,7 +150,6 @@ namespace DOL.GS.Commands
 								if (item.IsStackable)
 								{
 									item.Count = count;
-									item.Weight = item.Count * item.Weight;
 								}
 								if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 								{
@@ -184,12 +183,10 @@ namespace DOL.GS.Commands
 							}
 							if (Convert.ToInt32(args[2]) < 1)
 							{
-								item.Weight = item.Weight / item.Count;
 								item.Count = 1;
 							}
 							else
 							{
-								item.Weight = Convert.ToInt32(args[2]) * item.Weight / item.Count;
 								item.Count = Convert.ToInt32(args[2]);
 							}
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
