@@ -356,7 +356,7 @@ namespace DOL.GS
 					{
 						player.Out.SendMessage("(" + rawmaterial.Count + ") " + rawmaterial.ItemTemplate.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
-					return false;
+					if (player.Client.Account.PrivLevel == (uint)ePrivLevel.Player) return false;
 				}
 
 				return true;
