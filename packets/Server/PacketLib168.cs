@@ -1679,15 +1679,14 @@ namespace DOL.GS.PacketHandler
 
 			// clients crash if too long packet is sent
 			// so we send big updates in parts
-			const int MAX_UPDATE = 32;
-			var slotsToUpdate = new List<int>(Math.Min(MAX_UPDATE, itemsToUpdate.Count));
+			var slotsToUpdate = new List<int>(Math.Min(ServerProperties.Properties.MAX_ITEMS_PER_PACKET, itemsToUpdate.Count));
 			foreach (InventoryItem item in itemsToUpdate)
 			{
 				if (item == null)
 					continue;
 
 				slotsToUpdate.Add(item.SlotPosition);
-				if (slotsToUpdate.Count >= MAX_UPDATE)
+				if (slotsToUpdate.Count >= ServerProperties.Properties.MAX_ITEMS_PER_PACKET)
 				{
 					SendInventorySlotsUpdateBase(slotsToUpdate, preAction);
 					slotsToUpdate.Clear();
