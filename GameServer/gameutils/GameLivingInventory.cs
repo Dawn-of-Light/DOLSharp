@@ -60,10 +60,7 @@ namespace DOL.GS
 				eInventorySlot.Mythical,
 			};
 
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		//Defines the visible slots that will be displayed to players
 		protected static readonly eInventorySlot[] VISIBLE_SLOTS =
@@ -560,6 +557,12 @@ namespace DOL.GS
 			}
 		}
 
+		public virtual bool AddTradeItem(eInventorySlot slot, InventoryItem item)
+		{
+			return false;
+		}
+
+
 		/// <summary>
 		/// Removes all items from the inventory
 		/// </summary>
@@ -608,6 +611,12 @@ namespace DOL.GS
 				}
 			}
 
+			return false;
+		}
+
+
+		public virtual bool RemoveTradeItem(InventoryItem item)
+		{
 			return false;
 		}
 
