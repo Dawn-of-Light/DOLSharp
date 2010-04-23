@@ -73,6 +73,7 @@ namespace DOL.GS.Commands
 	     "GMCommands.Item.Usage.TemplateID",
 	     "GMCommands.Item.Usage.FindID",
 	     "GMCommands.Item.Usage.FindName",
+	     "/item saveunique <id_nb> <slot> - save item as an unique one",
 	     "/item load <id_nb> - Load an item from the DB and replace or add item to the ItemTemplate cache",
 	     "/item loadartifacts - Re-load all the artifact entries from the DB.  ItemTemplates must be loaded separately and prior to loading artifacts.",
 	     "/item loadpackage <packageid> | **all** - Load all the items in a package from the DB and replace or add to the ItemTemplate cache. **all** is loading all items [! SLOW !]",
@@ -95,7 +96,6 @@ namespace DOL.GS.Commands
 					case "blank":
 						{
 							InventoryItem item = new InventoryItem();
-							
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Blank.ItemCreated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1281,6 +1281,7 @@ namespace DOL.GS.Commands
 						#endregion TemplateID
 						#region SaveTemplate
 					case "savetemplate":
+					case "saveunique":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
 							string idnb = string.Empty;
@@ -1320,15 +1321,27 @@ namespace DOL.GS.Commands
 								return;
 							}
 							
-							// if the item is allready in the database
-							ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
-							
-							// save the new item, and recreate the link in inventory
+							ItemTemplate temp = null;
+							if (args[1]== "savetemplate")
+								// if the item is allready in the database
+								temp = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
+
+							// save the new item
 							if (temp == null)
 							{
 								item.Template.AutoSave = true;
 								item.Template.Id_nb = idnb;
-								GameServer.Database.AddObject(item.Template);
+								if (args[1]== "savetemplate")
+								{
+									GameServer.Database.AddObject(item.Template);
+									item.ITemplate_Id = idnb;
+								}
+								else //saveunique
+								{
+									GameServer.Database.AddObject(item.Template as ItemUnique);
+									item.UTemplate_Id = idnb;
+								}
+
 							}
 							// or update it
 							else
@@ -1336,10 +1349,15 @@ namespace DOL.GS.Commands
 								item.Template.Dirty = true;
 								GameServer.Database.SaveObject(item.Template);
 							}
-							
-							// remove old invitem and recreate the links
-							client.Player.Inventory.RemoveItem(item);
-							client.Player.Inventory.AddItem((eInventorySlot)slot, new InventoryItem(item.Template));
+
+
+							if (!item.AutoSave) // blank item previously created
+							{
+								item.AutoSave = true;
+								GameServer.Database.AddObject(item);
+							}
+							else
+								GameServer.Database.SaveObject(item);
 							
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.SaveTemplate.ItemSaved", idnb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}

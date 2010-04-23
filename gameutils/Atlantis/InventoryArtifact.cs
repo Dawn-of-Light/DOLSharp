@@ -58,7 +58,7 @@ namespace DOL.GS
 		public InventoryArtifact(ItemTemplate template)
 			: base(template)
 			
-		{	
+		{
 			ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(template.Id_nb);
 			ArtifactLevel = 0;
 			m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
@@ -84,12 +84,17 @@ namespace DOL.GS
 		{
 			if (item != null)
 			{
+				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(Id_nb);
+				if (template != null)
+					CanUseEvery = ArtifactMgr.GetReuseTimer(this);
+				
+				this.Template = template;
 				this.ObjectId = item.ObjectId;	// This is the key for the 'inventoryitem' table
 				this.OwnerID = item.OwnerID;
 				ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(Id_nb);
 				ArtifactLevel = ArtifactMgr.GetCurrentLevel(this);
 				m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
-				UpdateArtifact();
+				UpdateAbilities(template);
 			}
 		}
 
@@ -137,57 +142,11 @@ namespace DOL.GS
 			}
 		}
 
-
-		public void UpdateArtifact()
-		{
-			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(Id_nb);
-
-			if (template != null)
-			{
-				Name = template.Name;
-				ProcSpellID = template.ProcSpellID;
-				ProcSpellID1 = template.ProcSpellID1;
-				SpellID = template.SpellID;
-				SpellID1 = template.SpellID1;
-				Level = template.Level;
-				Quality = template.Quality;
-				Realm = template.Realm;
-				DPS_AF = template.DPS_AF;
-				SPD_ABS = template.SPD_ABS;
-				Hand = template.Hand;
-				Type_Damage = template.Type_Damage;
-				Object_Type = template.Object_Type;
-				Item_Type = template.Item_Type;
-				Effect = template.Effect;
-				Weight = template.Weight;
-				Model = template.Model;
-				Extension = template.Extension;
-				IsPickable = template.IsPickable;
-				IsDropable = template.IsDropable;
-				IsTradable = template.IsTradable;
-				IsIndestructible = template.IsIndestructible;
-				IsNotLosingDur = template.IsNotLosingDur;
-				Price= template.Price;
-				Charges = template.Charges;
-				Charges1 = template.Charges1;
-				MaxCharges = template.MaxCharges;
-				MaxCharges1 = template.MaxCharges1;
-				MaxDurability = template.MaxDurability;
-				MaxCondition = template.MaxCondition;
-				AllowedClasses = template.AllowedClasses;
-				CanUseEvery = ArtifactMgr.GetReuseTimer(this);
-			}
-
-			UpdateAbilities();
-		}
-
 		/// <summary>
 		/// Verify that this artifact has all the correct abilities
 		/// </summary>
-		public void UpdateAbilities()
+		public void UpdateAbilities(ItemTemplate template)
 		{
-			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(Id_nb);
-
 			if (template == null)
 				return;
 
