@@ -1546,7 +1546,6 @@ namespace DOL.GS
 
 				if (weapon != null)
 				{
-					// Make sure we use CopyFrom(ItemTemplate) to make a deep copy
 					weaponTypeToUse = new InventoryItem(weapon.Template);
 
 					if ((weapon.Object_Type == (int)eObjectType.TwoHandedWeapon) || (weapon.Object_Type == (int)eObjectType.PolearmWeapon))

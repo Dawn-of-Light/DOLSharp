@@ -27,6 +27,7 @@ namespace DOL.Database
 	public class ItemUnique : ItemTemplate
 	{
 		public ItemUnique():base()
+			
 		{
 			m_id_nb = "Unique_" + UniqueID.IDGenerator.GenerateID();
 			m_name = "(blank item)";
