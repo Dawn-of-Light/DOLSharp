@@ -1225,7 +1225,7 @@ namespace DOL.GS
 			if (changes < 0)
 			{
 				if (Log.IsErrorEnabled)
-					Log.Error("Inventory changes counter is bellow zero (forgot to use BeginChanges?)!\n\n" + Environment.StackTrace);
+					Log.Error("Inventory changes counter is below zero (forgot to use BeginChanges?)!\n\n" + Environment.StackTrace);
 
 				Thread.VolatileWrite(ref m_changesCounter, 0);
 			}
