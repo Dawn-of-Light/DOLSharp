@@ -404,7 +404,7 @@ namespace DOL.GS.Quests.Atlantis
 			InventoryArtifact artifact = new InventoryArtifact(itemTemplate);
 			artifact.ArtifactLevel = Convert.ToInt32(GetCustomProperty("ALevel"));
 			artifact.Experience = Convert.ToInt64(GetCustomProperty("AXP"));
-			artifact.UpdateAbilities();
+			artifact.UpdateAbilities(itemTemplate);
 
 			if (!player.ReceiveItem(null, artifact))
 			{
