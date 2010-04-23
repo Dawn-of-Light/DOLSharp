@@ -1705,17 +1705,18 @@ namespace DOL.GS.PacketHandler
 			{
 				ushort zone = (ushort)(door.DoorID / 1000000);
 				Zone doorZone = WorldMgr.GetZone(zone);
+				int doorType = door.DoorID / 100000000;
 				uint flag = door.Flag;
 
-				// by default give all unflagged above ground doors a default sound (excluding ToA zones)
-				if (flag == 0 && !doorZone.IsDungeon && doorZone.ZoneRegion.Expansion != (int)eExpansion.ToA)
+				// by default give all unflagged above ground non keep doors a default sound (excluding ToA zones)
+				if (flag == 0 && doorType != 7 && doorZone != null && !doorZone.IsDungeon && doorZone.ZoneRegion.Expansion != (int)eExpansion.ToA)
 				{
 					flag = 1;
 				}
 
-				pak.WriteInt((uint) door.DoorID);
-				pak.WriteByte((byte) (door.State == eDoorState.Open ? 0x01 : 0x00));
-				pak.WriteByte((byte) flag);
+				pak.WriteInt((uint)door.DoorID);
+				pak.WriteByte((byte)(door.State == eDoorState.Open ? 0x01 : 0x00));
+				pak.WriteByte((byte)flag);
 				pak.WriteByte(0xFF);
 				pak.WriteByte(0x0);
 				SendTCP(pak);

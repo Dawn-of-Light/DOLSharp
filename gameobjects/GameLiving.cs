@@ -1633,7 +1633,7 @@ namespace DOL.GS
 				{
 					if (log.IsDebugEnabled)
 					{
-						log.ErrorFormat("Possible Damage Error: {0} Damage = 0 -> miss.  AttackDamage {1}, weapon name {2}", Name, AttackDamage(weapon), (weapon == null ? "None" : weapon.Name));
+						log.ErrorFormat("Possible Damage Error: {0} Damage = 0 -> miss vs {1}.  AttackDamage {2}, weapon name {3}", Name, (ad.Target == null ? "null" : ad.Target.Name), AttackDamage(weapon), (weapon == null ? "None" : weapon.Name));
 					}
 
 					ad.AttackResult = eAttackResult.Missed;
