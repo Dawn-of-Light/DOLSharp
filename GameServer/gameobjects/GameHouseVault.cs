@@ -166,6 +166,7 @@ namespace DOL.GS
 				String sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2}",
                     HouseMgr.GetOwner(CurrentHouse.DatabaseItem),
 					FirstSlot, LastSlot);
+
 				return (InventoryItem[])(GameServer.Database.SelectObjects<InventoryItem>(sqlWhere));
 			}
 		}
@@ -189,19 +190,23 @@ namespace DOL.GS
 
 			lock (m_vaultSync)
 			{
-				if (fromSlot == toSlot) NotifyObservers(null);
-				else if (fromSlot >= eInventorySlot.HousingInventory_First &&
-					fromSlot <= eInventorySlot.HousingInventory_Last)
+				if (fromSlot == toSlot)
 				{
-					if (toSlot >= eInventorySlot.HousingInventory_First &&
-						toSlot <= eInventorySlot.HousingInventory_Last)
+					NotifyObservers(null);
+				}
+				else if (fromSlot >= eInventorySlot.HousingInventory_First && fromSlot <= eInventorySlot.HousingInventory_Last)
+				{
+					if (toSlot >= eInventorySlot.HousingInventory_First && toSlot <= eInventorySlot.HousingInventory_Last)
+					{
 						NotifyObservers(MoveItemInsideVault(fromSlot, toSlot));
+					}
 
 					NotifyObservers(MoveItemFromVault(playerInventory, fromSlot, toSlot));
 				}
-				else if (toSlot >= eInventorySlot.HousingInventory_First &&
-					toSlot <= eInventorySlot.HousingInventory_Last)
+				else if (toSlot >= eInventorySlot.HousingInventory_First && toSlot <= eInventorySlot.HousingInventory_Last)
+				{
 					NotifyObservers(MoveItemToVault(playerInventory, fromSlot, toSlot));
+				}
 			}
 		}
 
@@ -229,17 +234,16 @@ namespace DOL.GS
 			InventoryItem fromItem = inventory[(int)fromSlot];
 			InventoryItem toItem = playerInventory.GetItem(toSlot);
 
+			// if there is an item in the players target inventory slot then move it to the vault
 			if (toItem != null)
 			{
-				playerInventory.RemoveItem(toItem);
+				playerInventory.RemoveTradeItem(toItem);
 				toItem.SlotPosition = fromItem.SlotPosition;
-				toItem.OwnerID = HouseMgr.GetOwner( CurrentHouse.DatabaseItem );
-				toItem.AutoSave = true;
-				GameServer.Database.AddObject( toItem );
+				toItem.OwnerID = HouseMgr.GetOwner(CurrentHouse.DatabaseItem);
+				GameServer.Database.SaveObject(toItem);
 			}
 
-			GameServer.Database.DeleteObject(fromItem);
-			playerInventory.AddItem(toSlot, fromItem);
+			playerInventory.AddTradeItem(toSlot, fromItem);
 			updateItems.Add((int)fromSlot, toItem);
 			return updateItems;
 		}
@@ -267,20 +271,18 @@ namespace DOL.GS
 			IDictionary<int, InventoryItem> inventory = Inventory;
 			IDictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(1);
 
-			playerInventory.RemoveItem(fromItem);
+			playerInventory.RemoveTradeItem(fromItem);
 
+			// if there is an item in the vaults target slot then move it to the players inventory
 			if (inventory.ContainsKey((int)toSlot))
 			{
 				InventoryItem toItem = inventory[(int)toSlot];
-				GameServer.Database.DeleteObject(toItem);
-				playerInventory.AddItem(fromSlot, toItem);
+				playerInventory.AddTradeItem(fromSlot, toItem);
 			}
 
             fromItem.OwnerID = HouseMgr.GetOwner(CurrentHouse.DatabaseItem);
-			fromItem.SlotPosition = (int)(toSlot) -
-				(int)(eInventorySlot.HousingInventory_First) +
-				FirstSlot;
-			GameServer.Database.AddObject(fromItem);
+			fromItem.SlotPosition = (int)(toSlot) - (int)(eInventorySlot.HousingInventory_First) + FirstSlot;
+			GameServer.Database.SaveObject(fromItem);
 
 			updateItems.Add((int)toSlot, fromItem);
 			return updateItems;
@@ -312,9 +314,7 @@ namespace DOL.GS
 				GameServer.Database.SaveObject(toItem);
 			}
 
-			fromItem.SlotPosition = (int)(toSlot) -
-				(int)(eInventorySlot.HousingInventory_First) +
-				FirstSlot;
+			fromItem.SlotPosition = (int)(toSlot) - (int)(eInventorySlot.HousingInventory_First) + FirstSlot;
 			GameServer.Database.SaveObject(fromItem);
 
 			updateItems.Add((int)fromSlot, toItem);
@@ -341,8 +341,10 @@ namespace DOL.GS
 				if (!this.IsWithinRadius(observer, WorldMgr.INFO_DISTANCE))
 				{
 					if (observer.Client.Account.PrivLevel > 1)
+					{
 						observer.Out.SendMessage(String.Format("You are too far away from house vault {0} and will not receive any more updates.",
 							Index + 1), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+					}
 
 					observer.ActiveVault = null;
 					inactiveList.Add(observer.Name);
