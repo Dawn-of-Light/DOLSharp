@@ -85,18 +85,24 @@ namespace DOL.GS
 			if (item != null)
 			{
 				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(Id_nb);
-				if (template != null)
-					CanUseEvery = ArtifactMgr.GetReuseTimer(this);
-				
-				this.Template = template;
+
+				if (template == null)
+				{
+					log.ErrorFormat("Artifact: Error loading artifact for owner {0} holding item {1} with an id_nb of {2}", item.OwnerID, item.Name, item.Id_nb);
+					return;
+				}
+
+				this.Template = template.Clone() as ItemTemplate; // Must make a clone since we modify based on XP
 				this.ObjectId = item.ObjectId;	// This is the key for the 'inventoryitem' table
 				this.OwnerID = item.OwnerID;
+				CanUseEvery = ArtifactMgr.GetReuseTimer(this);
 				ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(Id_nb);
 				ArtifactLevel = ArtifactMgr.GetCurrentLevel(this);
 				m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
 				UpdateAbilities(template);
 			}
 		}
+
 
 		/// <summary>
 		/// The ID of this artifact.
