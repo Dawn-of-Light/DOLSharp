@@ -41,6 +41,7 @@ namespace DOL.Database
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Inventory fields
+
 		protected string m_ownerID; 		// owner id
 		[DataElement(AllowDbNull = false, Index = true)]
 		public string OwnerID
@@ -677,11 +678,15 @@ namespace DOL.Database
 			get { return Template.Bonus10Type; }
 			set { Template.Bonus10Type = value; }
 		}
-		
 		public string Description
 		{
 			get { return Template.Description;}
 			set { Template.Description = value;}
+		}
+		public int Flags
+		{
+			get { return Template.Flags; }
+			set { Template.Flags = value; }
 		}
 		public int BonusLevel
 		{

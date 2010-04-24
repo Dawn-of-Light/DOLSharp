@@ -987,6 +987,7 @@ namespace DOL.GS
 		public virtual int WeaponSpecLevel(InventoryItem weapon)
 		{
 			if (weapon == null) return 0;
+
 			return 0;	// TODO
 		}
 
@@ -1546,7 +1547,9 @@ namespace DOL.GS
 
 				if (weapon != null)
 				{
-					weaponTypeToUse = new InventoryItem(weapon.Template);
+					weaponTypeToUse = new InventoryItem();
+					weaponTypeToUse.Object_Type = weapon.Object_Type;
+					weaponTypeToUse.SlotPosition = weapon.SlotPosition;
 
 					if ((weapon.Object_Type == (int)eObjectType.TwoHandedWeapon) || (weapon.Object_Type == (int)eObjectType.PolearmWeapon))
 					{
@@ -1566,7 +1569,6 @@ namespace DOL.GS
 				}
 
 				int lowerboundary = (WeaponSpecLevel(weaponTypeToUse) - 1) * 50 / (ad.Target.EffectiveLevel + 1) + 75;
-
 				lowerboundary = Math.Max(lowerboundary, 75);
 				lowerboundary = Math.Min(lowerboundary, 125);
 				damage *= (GetWeaponSkill(weapon) + 90.68) / (ad.Target.GetArmorAF(ad.ArmorHitLocation) + 20 * 4.67);
