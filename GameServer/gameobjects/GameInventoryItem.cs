@@ -67,8 +67,8 @@ namespace DOL.GS
 			{
 				ItemUnique unique = new ItemUnique(item.Template);
 				GameServer.Database.AddObject(unique);
-				log.Warn ("GameInventory unique avec id " + unique.Id_nb);
 				m_item.Template  = unique;
+				m_item.UTemplate_Id = unique.Id_nb;
 			}
 			else
 				m_item.Template = item.Template;

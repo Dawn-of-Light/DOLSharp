@@ -241,10 +241,6 @@ namespace DOL.Database
 			set{
 				Dirty = true;
 				m_item = value;
-				if (value is ItemTemplate)
-					m_itemplate_id = value.Id_nb;
-				if (value is ItemUnique)
-					m_utemplate_id = value.Id_nb;
 			}
 		}
 		#endregion
@@ -369,7 +365,7 @@ namespace DOL.Database
 					return false;
 				
 				// ghost item
-				if ((string.IsNullOrEmpty(m_utemplate_id) && string.IsNullOrEmpty(m_itemplate_id)) || !AutoSave)
+				if (string.IsNullOrEmpty(m_utemplate_id) && string.IsNullOrEmpty(m_itemplate_id))
 					return false;
 				
 				// Items with reuse timers will ALWAYS be saved.
@@ -382,7 +378,7 @@ namespace DOL.Database
 					base.Dirty =  false;
 				
 				// ghost item
-				if ((string.IsNullOrEmpty(m_utemplate_id) && string.IsNullOrEmpty(m_itemplate_id)) || !AutoSave)
+				if (string.IsNullOrEmpty(m_utemplate_id) && string.IsNullOrEmpty(m_itemplate_id))
 					base.Dirty = false;
 				else
 					base.Dirty = value;
