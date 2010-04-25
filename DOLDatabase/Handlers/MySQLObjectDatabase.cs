@@ -273,6 +273,51 @@ namespace DOL.Database.Handlers
 			}
 		}
 
+
+		protected override DataObject FindObjectByKeyImpl(Type objectType, object key)
+		{
+			MemberInfo[] members = objectType.GetMembers();
+			var ret = Activator.CreateInstance(objectType) as DataObject;
+
+			string tableName = ret.TableName;
+			DataTableHandler dth = TableDatasets[tableName];
+			string whereClause = null;
+
+			if (dth.UsesPreCaching)
+			{
+				DataObject obj = dth.GetPreCachedObject(key);
+				if (obj != null)
+					return obj;
+			}
+
+			// Escape PK value
+			key = Escape(key.ToString());
+
+			for (int i = 0; i < members.Length; i++)
+			{
+				object[] keyAttrib = members[i].GetCustomAttributes(typeof(PrimaryKey), true);
+				if (keyAttrib.Length > 0)
+				{
+					whereClause = "`" + members[i].Name + "` = '" + key + "'";
+					break;
+				}
+			}
+
+			if (whereClause == null)
+			{
+				whereClause = "`" + ret.TableName + "_ID` = '" + key + "'";
+			}
+
+			var objs = SelectObjectsImpl(objectType, whereClause, Transaction.IsloationLevel.DEFAULT);
+			if (objs.Length > 0)
+			{
+				dth.SetPreCachedObject(key, objs[0]);
+				return objs[0];
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// Finds an object in the database by primary key.
 		/// </summary>
@@ -313,7 +358,7 @@ namespace DOL.Database.Handlers
 				whereClause = "`" + ret.TableName + "_ID` = '" + key + "'";
 			}
 
-			var objs = SelectObjectsImpl<TObject>(whereClause);
+			var objs = SelectObjectsImpl<TObject>(whereClause, Transaction.IsloationLevel.DEFAULT);
 			if (objs.Count > 0)
 			{
 				dth.SetPreCachedObject(key, objs[0]);
@@ -329,7 +374,7 @@ namespace DOL.Database.Handlers
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <param name="whereClause">the where clause to filter object selection on</param>
 		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected override DataObject[] SelectObjectsImpl(Type objectType, string whereClause)
+		protected override DataObject[] SelectObjectsImpl(Type objectType, string whereClause, Transaction.IsloationLevel isolation)
 		{
 			string tableName = GetTableOrViewName(objectType);
 			var dataObjects = new List<DataObject>(64);
@@ -365,7 +410,7 @@ namespace DOL.Database.Handlers
 			string sql = sb.ToString();
 
 			if (Log.IsDebugEnabled)
-				Log.Debug(sql);
+				Log.Debug("DataObject[] SelectObjectsImpl: " + sql);
 
 			int objCount = 0;
 
@@ -462,7 +507,7 @@ namespace DOL.Database.Handlers
 					obj.IsValid = true;
 				}
 			}
-				);
+			, isolation);
 
 			return dataObjects.ToArray();
 		}
@@ -473,7 +518,7 @@ namespace DOL.Database.Handlers
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <param name="whereClause">the where clause to filter object selection on</param>
 		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected override IList<TObject> SelectObjectsImpl<TObject>(string whereClause)
+		protected override IList<TObject> SelectObjectsImpl<TObject>(string whereClause, Transaction.IsloationLevel isolation)
 		{
 			string tableName = GetTableOrViewName(typeof(TObject));
 			var dataObjects = new List<TObject>(64);
@@ -509,7 +554,7 @@ namespace DOL.Database.Handlers
 			string sql = sb.ToString();
 
 			if (Log.IsDebugEnabled)
-				Log.Debug(sql);
+				Log.Debug("IList<TObject> SelectObjectsImpl: " + sql);
 
 			// read data and fill objects
 			Connection.ExecuteSelect(sql, delegate(MySqlDataReader reader)
@@ -602,7 +647,7 @@ namespace DOL.Database.Handlers
 													obj.IsValid = true;
 												}
 											}
-				);
+				, isolation);
 
 			return dataObjects.ToArray();
 		}
@@ -612,9 +657,9 @@ namespace DOL.Database.Handlers
 		/// </summary>
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects</returns>
-		protected override IList<TObject> SelectAllObjectsImpl<TObject>()
+		protected override IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsloationLevel isolation)
 		{
-			return SelectObjectsImpl<TObject>("");
+			return SelectObjectsImpl<TObject>("", isolation);
 		}
 
 		/// <summary>

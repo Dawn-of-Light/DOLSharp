@@ -42,7 +42,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBKeepComponent()
 		{
-			AutoSave=false;
+			AutoSave=true;
 			m_skin = 0;
 			m_x = 0;
 			m_y = 0;
@@ -59,7 +59,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBKeepComponent(int componentID, int componentSkinID, int componentX, int componentY, int componentHead, int componentHeight, int componentHealth, int keepid, string createInfo) : this()
 		{
-			AutoSave=false;
+			AutoSave=true;
 			m_skin = componentSkinID;
 			m_x = componentX;
 			m_y = componentY;

@@ -59,7 +59,7 @@ namespace DOL.Database
 		/// </summary>
 		public NPCEquipment()
 		{
-			AutoSave=false;
+			AutoSave=true;
 		}
 
 		/// <summary>

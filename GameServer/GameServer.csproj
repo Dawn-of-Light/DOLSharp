@@ -340,6 +340,7 @@
     <Compile Include="gameobjects\Atlantis\Teleporter\SpawnDjinnStone.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\SummonDjinnStone.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\SummonedDjinn.cs" />
+    <Compile Include="gameobjects\GameVault.cs" />
     <Compile Include="gameobjects\CustomNPC\Teleporters\SimpleTeleporter.cs" />
     <Compile Include="gameobjects\GameTrainingDummy.cs" />
     <Compile Include="gameobjects\craft master\BasicCraftingMaster.cs" />

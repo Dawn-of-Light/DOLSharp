@@ -48,7 +48,7 @@ namespace DOL.Database
 
 		public DBKeep()
 		{
-			AutoSave = false;
+			AutoSave = true;
 			m_name = "";
 			m_albionDifficultyLevel = 1;
 			m_midgardDifficultyLevel = 1;
@@ -62,7 +62,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBKeep(string createInfo)
 		{
-			AutoSave = false;
+			AutoSave = true;
 			m_name = "";
 			m_albionDifficultyLevel = 1;
 			m_midgardDifficultyLevel = 1;

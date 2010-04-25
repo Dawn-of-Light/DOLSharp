@@ -146,7 +146,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
-			GameHouseVault houseVault = m_gameClient.Player.ActiveVault;
+			GameVault houseVault = m_gameClient.Player.ActiveVault;
 			pak.WriteByte((byte)(items.Count));
 			pak.WriteByte(0x00); // new in 189b+, show shield in left hand
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
@@ -174,7 +174,7 @@ namespace DOL.GS.PacketHandler
 		protected override void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
-			GameHouseVault houseVault = m_gameClient.Player.ActiveVault;
+			GameVault houseVault = m_gameClient.Player.ActiveVault;
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
 			pak.WriteByte(0); // CurrentSpeed & 0xFF (not used for player, only for NPC)
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
@@ -190,7 +190,10 @@ namespace DOL.GS.PacketHandler
 				foreach (int updatedSlot in slots)
 				{
 					if (updatedSlot >= (int)eInventorySlot.Consignment_First && updatedSlot <= (int)eInventorySlot.Consignment_Last)
+					{
+						log.Error("PacketLib198:SendInventorySlotsUpdateBase - Consignment inventory is no longer cached with player.  Use a Dictionary<int, InventoryItem> instead.");
 						pak.WriteByte((byte)(updatedSlot - (int)eInventorySlot.Consignment_First + (int)eInventorySlot.HousingInventory_First));
+					}
 					else
 						pak.WriteByte((byte)(updatedSlot));
 					WriteItemData(pak, m_gameClient.Player.Inventory.GetItem((eInventorySlot)(updatedSlot)));
