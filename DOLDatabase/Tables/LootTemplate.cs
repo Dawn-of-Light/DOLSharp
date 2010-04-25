@@ -42,7 +42,6 @@ namespace DOL.Database
 		
 		public LootTemplate()
 		{
-			AutoSave = false;
 		}
 		
 		[DataElement(AllowDbNull=false, Index=true)]

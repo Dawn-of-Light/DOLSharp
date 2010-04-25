@@ -47,7 +47,6 @@ namespace DOL.Database
 			m_MobName = "";
 			m_LootTemplateName = "";
 			m_dropCount=1;
-			AutoSave = false;
 		}
 	
 		/// <summary>

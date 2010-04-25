@@ -27,7 +27,6 @@ namespace DOL
 
 			public PlayerXEffect()
 			{
-				AutoSave = false;
 			}
 
 			[DataElement(AllowDbNull = true)]

@@ -50,14 +50,12 @@ namespace DOL
 
 			public DBHousePermissions(int n, int lvl)
 			{
-				AutoSave = false;
 				HouseNumber = n;
 				PermLevel = lvl;
 			}
 
 			public DBHousePermissions()
 			{
-				AutoSave = false;
 			}
 
 
