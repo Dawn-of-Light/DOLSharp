@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -16,53 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-using System;
-using DOL.Database;
-using DOL.Database.Attributes;
-
-namespace DOL.Database
+namespace DOL.Database.Transaction
 {
-	[DataTable(TableName="SinglePermission")]
-	public class DBSinglePermission : DataObject
+	/// <summary>
+	/// Connection isloation levels
+	/// </summary>
+	public enum IsloationLevel
 	{
-		private string	m_playerID;
-		private string	m_command;
-
-		public DBSinglePermission()
-		{
-			m_playerID = "";
-			m_command = "";
-			AutoSave=true;
-		}
-
-		[DataElement(AllowDbNull = false, Index=true)]
-		public string PlayerID
-		{
-			get
-			{
-				return m_playerID;
-			}
-			set
-			{
-				Dirty = true;
-				m_playerID = value;
-			}
-		}
-
-		[DataElement(AllowDbNull = false, Index=true)]
-		public string Command
-		{
-			get
-			{
-				return m_command;
-			}
-			set
-			{
-				Dirty = true;
-				m_command = value;
-			}
-		}
-		
+		DEFAULT,
+		SERIALIZABLE,
+	    REPEATABLE_READ,
+		READ_COMMITTED,
+	    READ_UNCOMMITTED,
+		SNAPSHOT
 	}
 }

@@ -224,7 +224,10 @@ namespace DOL.Database
 			if (dataObject.AutoSave)
 				return AddObjectImpl(dataObject);
 			else
+			{
+				Log.Warn("AddObject called on DataObject when AutoSave is False: " + dataObject.TableName);
 				return false;
+			}
 		}
 
 		/// <summary>
@@ -234,11 +237,13 @@ namespace DOL.Database
 		public void SaveObject(DataObject dataObject)
 		{
 			if (dataObject.Dirty)
+			{
 				SaveObjectImpl(dataObject);
+			}
 		}
 
 		/// <summary>
-		/// delete object from db and make it persist if autosave=true
+		/// delete object from db
 		/// </summary>
 		/// <param name="dataObject"></param>
 		public void DeleteObject(DataObject dataObject)
@@ -266,6 +271,7 @@ namespace DOL.Database
 			return dataObject ?? default(TObject);
 		}
 
+
 		/// <summary>
 		/// Selects a single object, if more than
 		/// one exist, the first is returned
@@ -276,7 +282,21 @@ namespace DOL.Database
 		public TObject SelectObject<TObject>(string whereExpression)
 			where TObject : DataObject
 		{
-			var objs = SelectObjects<TObject>(whereExpression);
+			return SelectObject<TObject>(whereExpression, Transaction.IsloationLevel.DEFAULT);
+		}
+
+		/// <summary>
+		/// Selects a single object, if more than
+		/// one exist, the first is returned
+		/// </summary>
+		/// <typeparam name="TObject"></typeparam>
+		/// <param name="whereExpression"></param>
+		/// <param name="isolation"></param>
+		/// <returns></returns>
+		public TObject SelectObject<TObject>(string whereExpression, Transaction.IsloationLevel isolation)
+			where TObject : DataObject
+		{
+			var objs = SelectObjects<TObject>(whereExpression, isolation);
 
 			if (objs.Count > 0)
 				return objs[0];
@@ -287,7 +307,13 @@ namespace DOL.Database
 		public IList<TObject> SelectObjects<TObject>(string whereExpression)
 			where TObject : DataObject
 		{
-			var dataObjects = SelectObjectsImpl<TObject>(whereExpression);
+			return SelectObjects<TObject>(whereExpression, Transaction.IsloationLevel.DEFAULT);
+		}
+
+		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsloationLevel isolation)
+			where TObject : DataObject
+		{
+			var dataObjects = SelectObjectsImpl<TObject>(whereExpression, isolation);
 
 			return dataObjects ?? new List<TObject>();
 		}
@@ -295,7 +321,13 @@ namespace DOL.Database
 		public IList<TObject> SelectAllObjects<TObject>()
 			where TObject : DataObject
 		{
-			var dataObjects = SelectAllObjectsImpl<TObject>();
+			return SelectAllObjects<TObject>(Transaction.IsloationLevel.DEFAULT);
+		}
+
+		public IList<TObject> SelectAllObjects<TObject>(Transaction.IsloationLevel isolation)
+			where TObject : DataObject
+		{
+			var dataObjects = SelectAllObjectsImpl<TObject>(isolation);
 
 			return dataObjects ?? new List<TObject>();
 		}
@@ -495,28 +527,40 @@ namespace DOL.Database
 			where TObject : DataObject;
 
 		/// <summary>
-		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
+		/// Finds an object in the database by primary key.
+		/// Uses cache if available
 		/// </summary>
-		/// <param name="objectType">the type of objects to retrieve</param>
-		/// <param name="whereClause">the where clause to filter object selection on</param>
-		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected abstract DataObject[] SelectObjectsImpl(Type objectType, string whereClause);
+		/// <param name="objectType"></param>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		protected abstract DataObject FindObjectByKeyImpl(Type objectType, object key);
 
 		/// <summary>
 		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
 		/// </summary>
-		/// <param name="objectType">the type of objects to retrieve</param>
-		/// <param name="whereClause">the where clause to filter object selection on</param>
-		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected abstract IList<TObject> SelectObjectsImpl<TObject>(string whereClause)
+		/// <param name="objectType"></param>
+		/// <param name="whereClause"></param>
+		/// <param name="isolation"></param>
+		/// <returns></returns>
+		protected abstract DataObject[] SelectObjectsImpl(Type objectType, string whereClause, Transaction.IsloationLevel isolation);
+
+		/// <summary>
+		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
+		/// </summary>
+		/// <typeparam name="TObject"></typeparam>
+		/// <param name="whereClause"></param>
+		/// <param name="isolation"></param>
+		/// <returns></returns>
+		protected abstract IList<TObject> SelectObjectsImpl<TObject>(string whereClause, Transaction.IsloationLevel isolation)
 			where TObject : DataObject;
 
 		/// <summary>
 		/// Selects all objects from a given table in the database.
 		/// </summary>
-		/// <param name="objectType">the type of objects to retrieve</param>
-		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects</returns>
-		protected abstract IList<TObject> SelectAllObjectsImpl<TObject>()
+		/// <typeparam name="TObject"></typeparam>
+		/// <param name="isolation"></param>
+		/// <returns></returns>
+		protected abstract IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsloationLevel isolation)
 			where TObject : DataObject;
 
 		/// <summary>
@@ -758,9 +802,17 @@ namespace DOL.Database
 							val = field.GetValue(dataObject);
 						}
 
-						if (val != null)
+						if (val != null && val.ToString() != string.Empty)
 						{
-							elements = SelectObjectsImpl(remoteType, remote + " = '" + Escape(val.ToString()) + "'");
+							if (DataObject.GetPreCachedFlag(remoteType))
+							{
+								elements = new DataObject[1];
+								elements[0] = FindObjectByKeyImpl(remoteType, val);
+							}
+							else
+							{
+								elements = SelectObjectsImpl(remoteType, remote + " = '" + Escape(val.ToString()) + "'", Transaction.IsloationLevel.DEFAULT);
+							}
 
 							if ((elements != null) && (elements.Length > 0))
 							{
@@ -989,9 +1041,6 @@ namespace DOL.Database
 		public static IObjectDatabase GetObjectDatabase(ConnectionType connectionType, string connectionString)
 		{
 			var connection = new DataConnection(connectionType, connectionString);
-
-			if (connectionType == ConnectionType.DATABASE_XML)
-				return new XMLObjectDatabase(connection);
 
 			if (connectionType == ConnectionType.DATABASE_MYSQL)
 				return new MySQLObjectDatabase(connection);

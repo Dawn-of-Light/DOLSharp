@@ -41,7 +41,8 @@ namespace DOL.GS.Commands
 	              "'/object noname' to remove the targeted object name",
 	              "'/object remove' to remove the targeted object",
 	              "'/object save' to save the object",
-	              "'/object target' to automatically target the nearest object")]
+				  "'/object reload' to reload the object",
+				  "'/object target' to automatically target the nearest object")]
 	public class ObjectCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -193,6 +194,12 @@ namespace DOL.GS.Commands
 						targetObject.DeleteFromDatabase();
 						targetObject.Delete();
 						DisplayMessage( client, "Object removed from Clients and Database" );
+						break;
+					}
+				case "reload":
+					{
+						targetObject.RemoveFromWorld(2);
+						DisplayMessage(client, "Object reloading");
 						break;
 					}
 				case "target":

@@ -18,10 +18,19 @@ namespace DOL.Database
 		TObject SelectObject<TObject>(string whereExpression)
 			where TObject : DataObject;
 
+		TObject SelectObject<TObject>(string whereExpression, Transaction.IsloationLevel isolation)
+			where TObject : DataObject;
+
 		IList<TObject> SelectObjects<TObject>(string whereExpression)
 			where TObject : DataObject;
 
+		IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsloationLevel isolation)
+			where TObject : DataObject;
+
 		IList<TObject> SelectAllObjects<TObject>()
+			where TObject : DataObject;
+
+		IList<TObject> SelectAllObjects<TObject>(Transaction.IsloationLevel isolation)
 			where TObject : DataObject;
 
 		int GetObjectCount<TObject>()

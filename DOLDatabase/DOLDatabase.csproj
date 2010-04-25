@@ -136,6 +136,10 @@
     <Compile Include="Connection\DataConnection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Handlers\XMLObjectDatabase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transaction\IsolationLevel.cs" />
     <Compile Include="DatabaseException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -146,7 +150,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Handlers\MySQLObjectDatabase.cs" />
-    <Compile Include="Handlers\XMLObjectDatabase.cs" />
     <Compile Include="IObjectDatabase.cs" />
     <Compile Include="Tables\Account.cs">
       <SubType>Code</SubType>
