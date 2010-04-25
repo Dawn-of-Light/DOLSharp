@@ -162,6 +162,13 @@ namespace DOL.Database.Handlers
 			return 0;
 		}
 
+
+		protected override DataObject FindObjectByKeyImpl(Type objectType, object key)
+		{
+			return null;
+		}
+
+
 		/// <summary>
 		/// Finds an object in the database by primary key.
 		/// </summary>
@@ -190,7 +197,7 @@ namespace DOL.Database.Handlers
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <param name="whereClause">the where clause to filter object selection on</param>
 		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected override DataObject[] SelectObjectsImpl(Type objectType, string statement)
+		protected override DataObject[] SelectObjectsImpl(Type objectType, string statement, Transaction.IsloationLevel isolation)
 		{
 
 			string tableName = GetTableOrViewName(objectType);
@@ -230,15 +237,15 @@ namespace DOL.Database.Handlers
 			return (DataObject[])Array.CreateInstance(objectType, 0);
 		}
 
+
 		/// <summary>
 		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
 		/// </summary>
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <param name="whereClause">the where clause to filter object selection on</param>
 		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected override IList<TObject> SelectObjectsImpl<TObject>(string statement)
+		protected override IList<TObject> SelectObjectsImpl<TObject>(string statement, Transaction.IsloationLevel isolation)
 		{
-
 			string tableName = GetTableOrViewName(typeof(TObject));
 
 			if (Log.IsDebugEnabled)
@@ -277,12 +284,13 @@ namespace DOL.Database.Handlers
 			return new List<TObject>();
 		}
 
+
 		/// <summary>
 		/// Selects all objects from a given table in the database.
 		/// </summary>
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects</returns>
-		protected override IList<TObject> SelectAllObjectsImpl<TObject>()
+		protected override IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsloationLevel isolation)
 		{
 			string tableName = DataObject.GetTableName(typeof(TObject));
 
@@ -316,6 +324,7 @@ namespace DOL.Database.Handlers
 
 			return new List<TObject>();
 		}
+
 
 		#endregion
 	}

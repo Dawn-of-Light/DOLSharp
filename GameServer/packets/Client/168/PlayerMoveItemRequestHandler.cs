@@ -202,7 +202,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (fromSlot >= (ushort)eInventorySlot.HousingInventory_First &&
 			    fromSlot <= (ushort)eInventorySlot.HousingInventory_Last)
 			{
-				GameHouseVault ghv = client.Player.ActiveVault;
+				GameVault ghv = client.Player.ActiveVault;
 				Consignment cm = client.Player.ActiveConMerchant;
 				
 
@@ -219,7 +219,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (toSlot >= (ushort)eInventorySlot.HousingInventory_First &&
 			    toSlot <= (ushort)eInventorySlot.HousingInventory_Last)
 			{
-				GameHouseVault ghv = client.Player.ActiveVault;
+				GameVault ghv = client.Player.ActiveVault;
 				Consignment cm = client.Player.ActiveConMerchant;
 				if (cm != null) // we have an active Consignment Merchant
 				{
@@ -238,7 +238,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// Move an item from, to or inside a vault.
 			if (fromHousing || toHousing)
 			{
-				GameHouseVault houseVault = client.Player.ActiveVault;
+				GameVault houseVault = client.Player.ActiveVault;
 				if (fromSlot >= (ushort)eInventorySlot.FirstBackpack && fromSlot <= (ushort)eInventorySlot.LastBackpack)
 				{
 					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
@@ -264,8 +264,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return 0;
 				}
 
-				houseVault.MoveItem(client.Player.Inventory, (eInventorySlot)fromSlot,
-				                    (eInventorySlot)toSlot);
+				houseVault.MoveItem(client.Player, (eInventorySlot)fromSlot, (eInventorySlot)toSlot);
 
 				return 1;
 			}

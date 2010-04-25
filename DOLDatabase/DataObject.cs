@@ -150,12 +150,10 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Returns the Tablename for an Objecttype. 
-		/// Reads the DataTable-Attribute or if
-		/// not defined returns the Classname
+		/// Is this table pre-cached on startup?
 		/// </summary>
-		/// <param name="myType">get the Tablename for this DataObject</param>
-		/// <returns>The </returns>
+		/// <param name="myType"></param>
+		/// <returns>bool</returns>
 		public static bool GetPreCachedFlag(Type myType)
 		{
 			object[] attri = myType.GetCustomAttributes(typeof (DataTable), true);

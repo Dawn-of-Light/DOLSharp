@@ -295,7 +295,7 @@ namespace DOL.Database.Connection
 		/// </summary>
 		/// <param name="sqlcommand"></param>
 		/// <param name="callback"></param>
-		public void ExecuteSelect(string sqlcommand, QueryCallback callback)
+		public void ExecuteSelect(string sqlcommand, QueryCallback callback, Transaction.IsloationLevel isolation)
 		{
 			if (connType == ConnectionType.DATABASE_MYSQL)
 			{
@@ -315,16 +315,48 @@ namespace DOL.Database.Connection
 
 						long start = Environment.TickCount;
 
-						var cmd = new MySqlCommand(sqlcommand, conn);
-						MySqlDataReader reader = cmd.ExecuteReader( /*CommandBehavior.CloseConnection*/);
+						MySqlTransaction tran = null;
+						IsolationLevel tranIsolation = IsolationLevel.Unspecified;
+
+						switch (isolation)
+						{
+							case Transaction.IsloationLevel.READ_COMMITTED:
+								tranIsolation = IsolationLevel.ReadCommitted;
+								break;
+							case Transaction.IsloationLevel.READ_UNCOMMITTED:
+								tranIsolation = IsolationLevel.ReadUncommitted;
+								break;
+							case Transaction.IsloationLevel.REPEATABLE_READ:
+								tranIsolation = IsolationLevel.RepeatableRead;
+								break;
+							case Transaction.IsloationLevel.SERIALIZABLE:
+								tranIsolation = IsolationLevel.Serializable;
+								break;
+							case Transaction.IsloationLevel.SNAPSHOT:
+								tranIsolation = IsolationLevel.Snapshot;
+								break;
+						}
+
+						if (tranIsolation != IsolationLevel.Unspecified)
+						{
+							tran = conn.BeginTransaction(tranIsolation);
+						}
+						else
+						{
+							tran = conn.BeginTransaction();
+						}
+
+						var cmd = new MySqlCommand(sqlcommand, conn, tran);
+						MySqlDataReader reader = cmd.ExecuteReader();
 						callback(reader);
 
 						reader.Close();
+						tran.Commit();
 
 						if (log.IsDebugEnabled)
-							log.Debug("SQL Select exec time " + (Environment.TickCount - start) + "ms");
+							log.Debug("SQL Select (" + isolation + ") exec time " + (Environment.TickCount - start) + "ms");
 						else if (Environment.TickCount - start > 500 && log.IsWarnEnabled)
-							log.Warn("SQL Select took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
+							log.Warn("SQL Select (" + isolation + ") took " + (Environment.TickCount - start) + "ms!\n" + sqlcommand);
 
 						ReleaseConnection(conn);
 
@@ -439,7 +471,7 @@ namespace DOL.Database.Connection
 					                                                    		}
 					                                                    		if (log.IsDebugEnabled)
 					                                                    			log.Debug(currentTableColumns.Count + " in table");
-					                                                    	});
+					                                                    	}, Transaction.IsloationLevel.DEFAULT);
 				}
 				catch (Exception e)
 				{
@@ -666,39 +698,6 @@ namespace DOL.Database.Connection
 			dataSet.Clear();
 			switch (connType)
 			{
-				case ConnectionType.DATABASE_XML:
-					{
-						string filename = connString + tableName + ".xml";
-
-						try
-						{
-							dataSet.ReadXmlSchema(connString + tableName + ".xsd");
-							dataSet.ReadXml(filename, XmlReadMode.IgnoreSchema);
-							dataSet.AcceptChanges();
-						}
-						catch (FileNotFoundException)
-						{
-							try
-							{
-								dataSet.WriteXml(filename);
-								dataSet.WriteXmlSchema(connString + tableName + ".xsd");
-							}
-							catch (Exception ex)
-							{
-								throw new DatabaseException("Could not create XML-Databasefiles (Directory present ?)", ex);
-							}
-						}
-						catch (ConstraintException e)
-						{
-							if (log.IsErrorEnabled)
-								log.Error(
-									"At least one item in the table \"" + tableName + "\" violated a constraint (non-null, unique or foreign-key)!",
-									e);
-							throw e;
-						}
-
-						break;
-					}
 				case ConnectionType.DATABASE_MSSQL:
 					{
 						try

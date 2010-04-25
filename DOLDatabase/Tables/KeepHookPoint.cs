@@ -37,12 +37,9 @@ namespace DOL.Database
 		private int m_hookPointID;
 		private int m_height;
 
-		/// <summary>
-		/// Create faction aggro level against character
-		/// </summary>
 		public DBKeepHookPoint()
 		{
-			AutoSave = false;
+			AutoSave = true;
 		}
 		
 		/// <summary>

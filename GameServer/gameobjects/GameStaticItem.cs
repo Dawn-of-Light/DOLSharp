@@ -28,6 +28,8 @@ namespace DOL.GS
 	/// </summary>
 	public class GameStaticItem : GameObject
 	{
+		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// The emblem of the Object
 		/// </summary>
@@ -208,10 +210,14 @@ namespace DOL.GS
 		public override void SaveIntoDatabase()
 		{
 			WorldObject obj = null;
-			if(InternalID != null)
-				obj = (WorldObject) GameServer.Database.FindObjectByKey<WorldObject>(InternalID);
-			if(obj == null)
-			  obj = new WorldObject();
+			if (InternalID != null)
+			{
+				obj = (WorldObject)GameServer.Database.FindObjectByKey<WorldObject>(InternalID);
+			}
+			if (obj == null)
+			{
+				obj = new WorldObject();
+			}
 			obj.Name = Name;
 			obj.Model = Model;
 			obj.Emblem = Emblem;
@@ -222,13 +228,15 @@ namespace DOL.GS
 			obj.Z = Z;
 			obj.ClassType = this.GetType().ToString();
 
-			if(InternalID == null)
+			if (InternalID == null)
 			{
 				GameServer.Database.AddObject(obj);
 				InternalID = obj.ObjectId;
 			}
 			else
+			{
 				GameServer.Database.SaveObject(obj);
+			}
 		}
 
 		/// <summary>
