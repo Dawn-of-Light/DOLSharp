@@ -68,7 +68,10 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((offer) ? (byte)0x02 : (byte)0x01); // Accept/Decline or Finish/Not Yet
 			pak.WriteByte(0x01); // Wrap
 			pak.WritePascalString(quest.Name);
-			pak.WritePascalString(quest.Summary);
+			if (quest.Summary.Length > 255)
+				pak.WritePascalString(quest.Summary.Substring(0,255));
+			else
+				pak.WritePascalString(quest.Summary);
 			if (offer)
 			{
 				pak.WriteShort((ushort)quest.Story.Length);
