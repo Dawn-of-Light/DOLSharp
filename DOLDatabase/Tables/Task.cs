@@ -43,7 +43,6 @@ namespace DOL.Database
 
 		public DBTask()
 		{
-			AutoSave = false;
 		}
 
 		[PrimaryKey]

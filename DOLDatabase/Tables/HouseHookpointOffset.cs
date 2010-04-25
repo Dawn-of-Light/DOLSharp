@@ -36,7 +36,6 @@ namespace DOL.Database
 
 		public HouseHookpointOffset()
 		{
-			AutoSave = false;
 		}
 
 		[DataElement(AllowDbNull = false)]

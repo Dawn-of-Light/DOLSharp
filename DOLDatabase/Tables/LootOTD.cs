@@ -34,7 +34,6 @@ namespace DOL
 
 			public LootOTD()
 			{
-				AutoSave = false;
 			}
 
 			/// <summary>

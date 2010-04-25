@@ -48,7 +48,6 @@ namespace DOL.Database
 		/// </summary>
 		public DBDoor()
 		{
-			AutoSave = false;
 			m_zpos = 0;
 			m_ypos = 0;
 			m_xpos = 0;

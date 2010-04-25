@@ -39,7 +39,6 @@ namespace DOL
 
 			public DBHouseCharsXPerms()
 			{
-				AutoSave = false;
 			}
 
 
