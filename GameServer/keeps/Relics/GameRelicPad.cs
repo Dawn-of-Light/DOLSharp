@@ -13,8 +13,6 @@ namespace DOL.GS
 {
 	public class GameRelicPad : GameStaticItem
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		const int PAD_AREA_RADIUS = 250;
 
 		PadArea m_area = null;
@@ -254,11 +252,11 @@ namespace DOL.GS
 				}
 				else
 				{
-					log.DebugFormat("Player realm {0} wrong realm on attempt to capture relic {1} of realm {2} on pad of realm {3}.", 
-									GlobalConstants.RealmToName(player.Realm), 
-									relicOnPlayer.Name, 
-									GlobalConstants.RealmToName(relicOnPlayer.Realm), 
-									GlobalConstants.RealmToName(m_parent.Realm));
+					log.DebugFormat("Player realm {0} wrong realm on attempt to capture relic {1} of realm {2} on pad of realm {3}.",
+					                GlobalConstants.RealmToName(player.Realm),
+					                relicOnPlayer.Name,
+					                GlobalConstants.RealmToName(relicOnPlayer.Realm),
+					                GlobalConstants.RealmToName(m_parent.Realm));
 				}
 			}
 		}

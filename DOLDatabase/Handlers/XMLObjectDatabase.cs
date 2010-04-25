@@ -197,7 +197,7 @@ namespace DOL.Database.Handlers
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <param name="whereClause">the where clause to filter object selection on</param>
 		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected override DataObject[] SelectObjectsImpl(Type objectType, string statement, Transaction.IsloationLevel isolation)
+		protected override DataObject[] SelectObjectsImpl(Type objectType, string statement, Transaction.IsolationLevel isolation)
 		{
 
 			string tableName = GetTableOrViewName(objectType);
@@ -244,7 +244,7 @@ namespace DOL.Database.Handlers
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <param name="whereClause">the where clause to filter object selection on</param>
 		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected override IList<TObject> SelectObjectsImpl<TObject>(string statement, Transaction.IsloationLevel isolation)
+		protected override IList<TObject> SelectObjectsImpl<TObject>(string statement, Transaction.IsolationLevel isolation)
 		{
 			string tableName = GetTableOrViewName(typeof(TObject));
 
@@ -290,7 +290,7 @@ namespace DOL.Database.Handlers
 		/// </summary>
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects</returns>
-		protected override IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsloationLevel isolation)
+		protected override IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsolationLevel isolation)
 		{
 			string tableName = DataObject.GetTableName(typeof(TObject));
 

@@ -19,8 +19,6 @@ namespace DOL.GS
 
 	public class GameRelic : GameStaticItem
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public const string PLAYER_CARRY_RELIC_WEAK = "IAmCarryingARelic";
 		protected const int RelicEffectInterval = 4000;
 

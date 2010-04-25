@@ -21,7 +21,7 @@ namespace DOL.Database.Transaction
 	/// <summary>
 	/// Connection isloation levels
 	/// </summary>
-	public enum IsloationLevel
+	public enum IsolationLevel
 	{
 		DEFAULT,
 		SERIALIZABLE,

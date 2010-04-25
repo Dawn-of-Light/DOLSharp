@@ -32,11 +32,6 @@ namespace DOL.GS
 	public class GameInventoryItem : GameStaticItemTimed
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// The InventoryItem that is contained within
 		/// </summary>
 		private InventoryItem m_item;
