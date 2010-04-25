@@ -182,7 +182,6 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual IDictionary<int, InventoryItem> MoveItemFromVault(GamePlayer player, eInventorySlot fromSlot, eInventorySlot toSlot)
 		{
-			log.Debug("Move item from vault");
 			// We will only allow moving to the backpack.
 
 			if (toSlot < eInventorySlot.FirstBackpack || toSlot > eInventorySlot.LastBackpack)
@@ -217,7 +216,6 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual IDictionary<int, InventoryItem> MoveItemToVault(GamePlayer player, eInventorySlot fromSlot, eInventorySlot toSlot)
 		{
-			log.Debug("Move item to vault");
 			// We will only allow moving from the backpack.
 
 			if (fromSlot < eInventorySlot.FirstBackpack || fromSlot > eInventorySlot.LastBackpack)
@@ -253,8 +251,6 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual IDictionary<int, InventoryItem> MoveItemInsideVault(GamePlayer player, eInventorySlot fromSlot, eInventorySlot toSlot)
 		{
-			log.Debug("Move item inside vault");
-
 			IDictionary<int, InventoryItem> inventory = VaultInventory(player);
 
 			if (!inventory.ContainsKey((int)fromSlot))
