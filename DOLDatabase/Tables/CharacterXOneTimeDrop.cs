@@ -38,7 +38,6 @@ namespace DOL
 			{
 				m_itemTemplateID = "";
 				m_characterID = "";
-				AutoSave = false;
 			}
 
 			/// <summary>

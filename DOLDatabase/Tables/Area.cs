@@ -21,7 +21,6 @@ namespace DOL.Database
 
 		public DBArea()
 		{
-			AutoSave = false;
 		}
 
 		[DataElement(AllowDbNull = false)]

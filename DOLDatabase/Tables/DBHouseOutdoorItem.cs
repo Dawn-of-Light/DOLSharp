@@ -45,7 +45,6 @@ namespace DOL.Database
 		/// </summary>
 		public DBHouseOutdoorItem()
 		{
-			AutoSave = false;
 		}
 
 		/// <summary>

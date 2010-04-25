@@ -42,7 +42,6 @@ namespace DOL.Database
 		/// </summary>
 		public Teleport()
 		{
-			AutoSave = false;
 			m_type = "";
 			m_teleportID = "UNDEFINED";
 			m_realm = 0;

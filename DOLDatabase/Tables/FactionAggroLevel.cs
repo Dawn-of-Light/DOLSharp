@@ -42,7 +42,6 @@ namespace DOL.Database
 			m_characterID = "";
 			m_factionID = 0;
 			m_AggroLevel = 0;
-			AutoSave = false;
 		}
 		
 		/// <summary>
