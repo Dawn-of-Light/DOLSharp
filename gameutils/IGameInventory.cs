@@ -89,7 +89,7 @@ namespace DOL.GS
 	}
 
 	/// <summary>
-	/// Description résume de IGameInventory.
+	/// Interface for GameInventory
 	/// </summary>		
 	public interface IGameInventory
 	{
@@ -97,10 +97,22 @@ namespace DOL.GS
 		bool            SaveIntoDatabase(string inventoryID);
 
 		bool			AddItem(eInventorySlot slot, InventoryItem item);
+						/// <summary>
+						/// Add an item to Inventory and save.  This assumes item is already in the database and is being transferred.
+						/// </summary>
+						/// <param name="slot"></param>
+						/// <param name="item"></param>
+						/// <returns></returns>
 		bool			AddTradeItem(eInventorySlot slot, InventoryItem item);
 		bool			AddCountToStack(InventoryItem item, int count);
 		bool			AddTemplate(InventoryItem template, int count, eInventorySlot minSlot, eInventorySlot maxSlot);
 		bool            RemoveItem(InventoryItem item);
+						/// <summary>
+						/// Remove an item from Inventory and update owner and position but do not remove from the database.
+						/// This is use for transferring items.
+						/// </summary>
+						/// <param name="item"></param>
+						/// <returns></returns>
 		bool            RemoveTradeItem(InventoryItem item);
 		bool			RemoveCountFromStack(InventoryItem item, int count);
 		bool			RemoveTemplate(string templateID, int count, eInventorySlot minSlot, eInventorySlot maxSlot);

@@ -91,8 +91,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 								}
 								else if (client.Player.ActiveVault != null)
 								{
-									GameHouseVault vault = client.Player.ActiveVault;
-									invItem = vault.Inventory[objectID];
+									GameVault vault = client.Player.ActiveVault;
+									invItem = vault.VaultInventory(client.Player)[objectID];
 									if (invItem == null)
 										return 1;
 								}

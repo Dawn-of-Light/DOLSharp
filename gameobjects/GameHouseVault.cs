@@ -31,13 +31,8 @@ namespace DOL.GS
 	/// A house vault.
 	/// </summary>
 	/// <author>Aredhel</author>
-	public class GameHouseVault : GameStaticItem, IHouseHookpointItem
+	public class GameHouseVault : GameVault, IHouseHookpointItem
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		/// <summary>
 		/// House vault permission bits.
 		/// </summary>
@@ -49,29 +44,28 @@ namespace DOL.GS
 			View = 0x04
 		}
 
-		/// <summary>
-		/// Number of items a single vault can hold.
-		/// </summary>
-		public const int Size = 100;
 
 		/// <summary>
 		/// Create a new house vault.
 		/// </summary>
 		/// <param name="vaultIndex"></param>
-		public GameHouseVault(ItemTemplate itemTemplate, int vaultIndex)
+		public GameHouseVault(ItemTemplate itemTemplate, int vaultIndex) : base()
 		{
-			if (vaultIndex < 0 || vaultIndex > 3)
-				throw new ArgumentOutOfRangeException();
-
 			if (itemTemplate == null)
 				throw new ArgumentNullException();
 
 			Name = itemTemplate.Name;
 			Model = (ushort)(itemTemplate.Model);
-
 			m_templateID = itemTemplate.Id_nb;
-			m_vaultIndex = vaultIndex;
+			Index = vaultIndex;
 		}
+
+
+		public override string GetOwner(GamePlayer player)
+		{
+			return HouseMgr.GetOwner(CurrentHouse.DatabaseItem);
+		}
+
 
 		#region Interact
 
@@ -89,245 +83,25 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override bool Interact(GamePlayer player)
 		{
-			if (!base.Interact(player) || CurrentHouse == null)
-				return false;
-
 			if (!player.InHouse)
 				return false;
 
-			if (!CanView(player))
-			{
-				player.Out.SendMessage("You don't have permission to view this vault!",
-					eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (!base.Interact(player) || CurrentHouse == null)
 				return false;
-			}
-
-            if (player.ActiveConMerchant != null)
-                player.ActiveConMerchant = null;
 
 			if (!m_observers.ContainsKey(player.Name))
 				m_observers.Add(player.Name, player);
 
-			player.ActiveVault = this;
-			player.Out.SendInventoryItemsUpdate(Inventory, 0x04);
 			return true;
 		}
 
-		/// <summary>
-		/// First slot in the DB.
-		/// </summary>
-		public virtual int FirstSlot
-		{
-			get { return (int)(eInventorySlot.HouseVault_First) + Size * Index; }
-		}
-
-		/// <summary>
-		/// Last slot in the DB.
-		/// </summary>
-		public virtual int LastSlot
-		{
-			get { return (int)(eInventorySlot.HouseVault_First) + Size * (Index + 1) - 1; }
-		}
-
-		/// <summary>
-		/// Inventory for this vault.
-		/// </summary>
-		public virtual Dictionary<int, InventoryItem> Inventory
-		{
-			get
-			{
-				Dictionary<int, InventoryItem> inventory = new Dictionary<int, InventoryItem>();
-				int slotOffset = - FirstSlot + (int)(eInventorySlot.HousingInventory_First);
-				foreach (InventoryItem item in Items)
-				{
-					if (item != null)
-					{
-						if (!inventory.ContainsKey(item.SlotPosition + slotOffset))
-						{
-							inventory.Add(item.SlotPosition + slotOffset, item);
-						}
-						else
-						{
-							log.Error("HOUSING: Duplicate item in house vault for house number " + this.CurrentHouse.HouseNumber + ", " + item.Name + ", Position  " + (item.SlotPosition + slotOffset));
-						}
-					}
-				}
-				return inventory;
-			}
-		}
-
-		/// <summary>
-		/// List of items in the vault.
-		/// </summary>
-		public InventoryItem[] Items
-		{
-			get
-			{
-				String sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2}",
-                    HouseMgr.GetOwner(CurrentHouse.DatabaseItem),
-					FirstSlot, LastSlot);
-
-				return (InventoryItem[])(GameServer.Database.SelectObjects<InventoryItem>(sqlWhere));
-			}
-		}
-
-		/// <summary>
-		/// This is used to synchronize actions on the vault.
-		/// </summary>
-		private object m_vaultSync = new object();
-
-		/// <summary>
-		/// Move an item from, to or inside a house vault.
-		/// </summary>
-		/// <param name="playerInventory"></param>
-		/// <param name="fromSlot"></param>
-		/// <param name="toSlot"></param>
-		/// <returns></returns>
-		public virtual void MoveItem( IGameInventory playerInventory, eInventorySlot fromSlot, eInventorySlot toSlot )
-		{
-			if (fromSlot == toSlot)
-				return;
-
-			lock (m_vaultSync)
-			{
-				if (fromSlot == toSlot)
-				{
-					NotifyObservers(null);
-				}
-				else if (fromSlot >= eInventorySlot.HousingInventory_First && fromSlot <= eInventorySlot.HousingInventory_Last)
-				{
-					if (toSlot >= eInventorySlot.HousingInventory_First && toSlot <= eInventorySlot.HousingInventory_Last)
-					{
-						NotifyObservers(MoveItemInsideVault(fromSlot, toSlot));
-					}
-
-					NotifyObservers(MoveItemFromVault(playerInventory, fromSlot, toSlot));
-				}
-				else if (toSlot >= eInventorySlot.HousingInventory_First && toSlot <= eInventorySlot.HousingInventory_Last)
-				{
-					NotifyObservers(MoveItemToVault(playerInventory, fromSlot, toSlot));
-				}
-			}
-		}
-
-		/// <summary>
-		/// Move an item from the vault.
-		/// </summary>
-		/// <param name="playerInventory"></param>
-		/// <param name="fromSlot"></param>
-		/// <param name="toSlot"></param>
-		/// <returns></returns>
-		protected virtual IDictionary<int, InventoryItem> MoveItemFromVault( IGameInventory playerInventory,
-			eInventorySlot fromSlot, eInventorySlot toSlot)
-		{
-			// We will only allow moving to the backpack.
-
-			if (toSlot < eInventorySlot.FirstBackpack || toSlot > eInventorySlot.LastBackpack)
-				return null;
-
-			IDictionary<int, InventoryItem> inventory = Inventory;
-
-			if (!inventory.ContainsKey((int)fromSlot))
-				return null;
-
-			IDictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(1);
-			InventoryItem fromItem = inventory[(int)fromSlot];
-			InventoryItem toItem = playerInventory.GetItem(toSlot);
-
-			// if there is an item in the players target inventory slot then move it to the vault
-			if (toItem != null)
-			{
-				playerInventory.RemoveTradeItem(toItem);
-				toItem.SlotPosition = fromItem.SlotPosition;
-				toItem.OwnerID = HouseMgr.GetOwner(CurrentHouse.DatabaseItem);
-				GameServer.Database.SaveObject(toItem);
-			}
-
-			playerInventory.AddTradeItem(toSlot, fromItem);
-			updateItems.Add((int)fromSlot, toItem);
-			return updateItems;
-		}
-
-		/// <summary>
-		/// Move an item to the vault.
-		/// </summary>
-		/// <param name="playerInventory"></param>
-		/// <param name="fromSlot"></param>
-		/// <param name="toSlot"></param>
-		/// <returns></returns>
-		protected virtual IDictionary<int, InventoryItem> MoveItemToVault( IGameInventory playerInventory, 
-			eInventorySlot fromSlot, eInventorySlot toSlot)
-		{
-			// We will only allow moving from the backpack.
-
-			if (fromSlot < eInventorySlot.FirstBackpack || fromSlot > eInventorySlot.LastBackpack)
-				return null;
-
-			InventoryItem fromItem = playerInventory.GetItem(fromSlot);
-
-			if (fromItem == null)
-				return null;
-
-			IDictionary<int, InventoryItem> inventory = Inventory;
-			IDictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(1);
-
-			playerInventory.RemoveTradeItem(fromItem);
-
-			// if there is an item in the vaults target slot then move it to the players inventory
-			if (inventory.ContainsKey((int)toSlot))
-			{
-				InventoryItem toItem = inventory[(int)toSlot];
-				playerInventory.AddTradeItem(fromSlot, toItem);
-			}
-
-            fromItem.OwnerID = HouseMgr.GetOwner(CurrentHouse.DatabaseItem);
-			fromItem.SlotPosition = (int)(toSlot) - (int)(eInventorySlot.HousingInventory_First) + FirstSlot;
-			GameServer.Database.SaveObject(fromItem);
-
-			updateItems.Add((int)toSlot, fromItem);
-			return updateItems;
-		}
-
-		/// <summary>
-		/// Move an item around inside the vault.
-		/// </summary>
-		/// <param name="fromSlot"></param>
-		/// <param name="toSlot"></param>
-		/// <returns></returns>
-		protected virtual IDictionary<int, InventoryItem> MoveItemInsideVault( eInventorySlot fromSlot,
-			eInventorySlot toSlot)
-		{
-			IDictionary<int, InventoryItem> inventory = Inventory;
-
-			if (!inventory.ContainsKey((int)fromSlot))
-				return null;
-
-			IDictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(2);
-			InventoryItem fromItem = null, toItem = null;
-
-			fromItem = inventory[(int)fromSlot];
-
-			if (inventory.ContainsKey((int)toSlot))
-			{
-				toItem = inventory[(int)toSlot];
-				toItem.SlotPosition = fromItem.SlotPosition;
-				GameServer.Database.SaveObject(toItem);
-			}
-
-			fromItem.SlotPosition = (int)(toSlot) - (int)(eInventorySlot.HousingInventory_First) + FirstSlot;
-			GameServer.Database.SaveObject(fromItem);
-
-			updateItems.Add((int)fromSlot, toItem);
-			updateItems.Add((int)toSlot, fromItem);
-			return updateItems;
-		}
 
 		/// <summary>
 		/// Send inventory updates to all players actively viewing this vault;
 		/// players that are too far away will be considered inactive.
 		/// </summary>
 		/// <param name="updateItems"></param>
-		protected virtual void NotifyObservers( IDictionary<int, InventoryItem> updateItems )
+		protected override void NotifyObservers(GamePlayer player, IDictionary<int, InventoryItem> updateItems )
 		{
 			IList<String> inactiveList = new List<String>();
 			foreach (GamePlayer observer in m_observers.Values)
@@ -370,7 +144,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanView(GamePlayer player)
+		public override bool CanView(GamePlayer player)
 		{
 			if (IsOwner(player) || player.Client.Account.PrivLevel > 1)
 				return true;
@@ -383,7 +157,7 @@ namespace DOL.GS
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public bool CanMove(GamePlayer player)
+        public override bool CanMove(GamePlayer player)
         {
             if (CurrentHouse.IsOwner(player) || player.Client.Account.PrivLevel > 1)
                 return true;
@@ -415,16 +189,6 @@ namespace DOL.GS
 		#endregion
 
 		#region IHouseHookpointItem Implementation
-
-		private int m_vaultIndex;
-
-		/// <summary>
-		/// Index of this vault.
-		/// </summary>
-		public int Index
-		{
-			get { return m_vaultIndex; }
-		}
 
 		private String m_templateID;
 

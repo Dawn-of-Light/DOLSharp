@@ -540,7 +540,8 @@ namespace DOL.GS
 				}
 
 				m_items.Add(slot, item);
-				item.SlotPosition = (int) slot;
+
+				item.SlotPosition = (int)slot;
 
 				if (item.OwnerID != null)
 				{

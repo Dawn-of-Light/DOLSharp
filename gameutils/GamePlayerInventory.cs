@@ -62,7 +62,13 @@ namespace DOL.GS
 			{
 				try
 				{
-					var items = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(inventoryID) + "'");
+					// We only want to cache items in the players personal inventory and personal vault.
+					// If we cache ALL items them all vault code must make sure to update cache, which is not ideal
+					// in addition, a player with a housing vault may still have an item in cache that may have been
+					// removed by another player with the appropriate house permission.  - Tolakram
+					var items = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(inventoryID) + 
+																					"' AND (SlotPosition <= " + (int)eInventorySlot.LastVault + 
+																					" OR (SlotPosition >= 500 AND SlotPosition < 600))");
 					foreach (InventoryItem item in items)
 					{
 						var itemSlot = (eInventorySlot) item.SlotPosition;
@@ -197,6 +203,22 @@ namespace DOL.GS
 									currentItem.SlotPosition = realSlot; // just to be sure
 								}
 
+								// Check database to make sure player still owns this item before saving
+
+								InventoryItem checkItem = GameServer.Database.SelectObject<InventoryItem>("Inventory_ID = '" + currentItem.ObjectId + "'");
+
+								if (checkItem == null || checkItem.OwnerID != m_player.InternalID)
+								{
+									if (checkItem != null)
+									{
+										Log.ErrorFormat("Item '{0}' : '{1}' does not have same owner id on save inventory.  Game Owner = '{2}' : '{3}', DB Owner = '{4}'", currentItem.Name, currentItem.ObjectId, m_player.Name, m_player.InternalID, checkItem.OwnerID);
+									}
+									else
+									{
+										Log.ErrorFormat("Item '{0}' : '{1}' not found in DB for player '{1}'", currentItem.Name, currentItem.Id_nb, m_player.Name);
+									}
+								}
+
 								GameServer.Database.SaveObject(currentItem);
 							}
 						}
@@ -260,9 +282,14 @@ namespace DOL.GS
 			item.OwnerID = m_player.InternalID;
 
 			if (addObject)
+			{
 				GameServer.Database.AddObject(item);
+			}
 			else
+			{
 				GameServer.Database.SaveObject(item);
+			}
+
 
 			if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
 				m_player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(item, eInventorySlot.Invalid));
@@ -307,6 +334,8 @@ namespace DOL.GS
 
 			if (deleteObject)
 				GameServer.Database.DeleteObject(item);
+			else
+				GameServer.Database.SaveObject(item);
 
 			ITradeWindow window = m_player.TradeWindow;
 			if (window != null)
@@ -1124,8 +1153,6 @@ namespace DOL.GS
 
 			m_items.TryGetValue(fromSlot, out fromItem);
 			m_items.TryGetValue(toSlot, out toItem);
-
-			//			Log.DebugFormat("exchange slot from:{0} to:{1}; same items? {2}", fromSlot, toSlot, fromItem==toItem&&fromItem!=null);
 
 			bool fromSlotEquipped = IsEquippedSlot(fromSlot);
 			bool toSlotEquipped = IsEquippedSlot(toSlot);

@@ -7942,13 +7942,13 @@ namespace DOL.GS
 
 		#region Vault/Money/Items/Trading/UseSlot/ApplyPoison
 
-		private GameHouseVault m_activeVault;
+		private GameVault m_activeVault;
 		private Consignment m_activeConMerchant;
 
 		/// <summary>
 		/// The currently active house vault.
 		/// </summary>
-		public GameHouseVault ActiveVault
+		public GameVault ActiveVault
 		{
 			get { return m_activeVault; }
 			set { m_activeVault = value; }
