@@ -71,56 +71,63 @@ namespace DOL.GS
 																					" OR (SlotPosition >= 500 AND SlotPosition < 600))");
 					foreach (InventoryItem item in items)
 					{
-						var itemSlot = (eInventorySlot) item.SlotPosition;
-
-						if (item.CanUseEvery > 0)
+						try
 						{
-							item.SetCooldown();
-						}
+							var itemSlot = (eInventorySlot)item.SlotPosition;
 
-						if (GetValidInventorySlot((eInventorySlot) item.SlotPosition) == eInventorySlot.Invalid)
-						{
-							if (Log.IsErrorEnabled)
-								Log.Error("Tried to load an item in invalid slot, ignored. Item id=" + item.ObjectId);
-
-							continue;
-						}
-
-						if (m_items.ContainsKey(itemSlot))
-						{
-							if (Log.IsErrorEnabled)
-								Log.Error("Error loading " + m_player.Name + "'s inventory OwnerID " + inventoryID + " slot " +
-								          item.SlotPosition + " duplicate item found, skipping!");
-							continue;
-						}
-
-						// Depending on whether or not the item is an artifact we will
-						// create different types of inventory items. That way we can speed
-						// up item type checks and implement item delve information in
-						// a natural way, i.e. through inheritance.
-
-						if (ArtifactMgr.IsArtifact(item))
-						{
-							m_items.Add(itemSlot, new InventoryArtifact(item));
-						}
-						else
-						{
-							m_items.Add(itemSlot, item);
-						}
-
-						if (Log.IsWarnEnabled)
-						{
-							// bows don't use damage type - no warning needed
-							if (GlobalConstants.IsWeapon(item.Object_Type)
-							    && item.Type_Damage == 0
-							    && item.Object_Type != (int) eObjectType.CompositeBow
-							    && item.Object_Type != (int) eObjectType.Crossbow
-							    && item.Object_Type != (int) eObjectType.Longbow
-							    && item.Object_Type != (int) eObjectType.Fired
-							    && item.Object_Type != (int) eObjectType.RecurvedBow)
+							if (item.CanUseEvery > 0)
 							{
-								Log.Warn(m_player.Name + ": weapon with damage type 0 is loaded \"" + item.Name + "\" (" + item.ObjectId + ")");
+								item.SetCooldown();
 							}
+
+							if (GetValidInventorySlot((eInventorySlot)item.SlotPosition) == eInventorySlot.Invalid)
+							{
+								if (Log.IsErrorEnabled)
+									Log.Error("Tried to load an item in invalid slot, ignored. Item id=" + item.ObjectId);
+
+								continue;
+							}
+
+							if (m_items.ContainsKey(itemSlot))
+							{
+								if (Log.IsErrorEnabled)
+									Log.Error("Error loading " + m_player.Name + "'s inventory OwnerID " + inventoryID + " slot " +
+											  item.SlotPosition + " duplicate item found, skipping!");
+								continue;
+							}
+
+							// Depending on whether or not the item is an artifact we will
+							// create different types of inventory items. That way we can speed
+							// up item type checks and implement item delve information in
+							// a natural way, i.e. through inheritance.
+
+							if (ArtifactMgr.IsArtifact(item))
+							{
+								m_items.Add(itemSlot, new InventoryArtifact(item));
+							}
+							else
+							{
+								m_items.Add(itemSlot, item);
+							}
+
+							if (Log.IsWarnEnabled)
+							{
+								// bows don't use damage type - no warning needed
+								if (GlobalConstants.IsWeapon(item.Object_Type)
+									&& item.Type_Damage == 0
+									&& item.Object_Type != (int)eObjectType.CompositeBow
+									&& item.Object_Type != (int)eObjectType.Crossbow
+									&& item.Object_Type != (int)eObjectType.Longbow
+									&& item.Object_Type != (int)eObjectType.Fired
+									&& item.Object_Type != (int)eObjectType.RecurvedBow)
+								{
+									Log.Warn(m_player.Name + ": weapon with damage type 0 is loaded \"" + item.Name + "\" (" + item.ObjectId + ")");
+								}
+							}
+						}
+						catch (Exception ex)
+						{
+							Log.Error("Loading player inventory (" + inventoryID + "), " + item.Name + ", slot: " + item.SlotPosition, ex);
 						}
 					}
 
