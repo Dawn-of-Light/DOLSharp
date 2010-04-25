@@ -282,7 +282,7 @@ namespace DOL.Database
 		public TObject SelectObject<TObject>(string whereExpression)
 			where TObject : DataObject
 		{
-			return SelectObject<TObject>(whereExpression, Transaction.IsloationLevel.DEFAULT);
+			return SelectObject<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
 		}
 
 		/// <summary>
@@ -293,7 +293,7 @@ namespace DOL.Database
 		/// <param name="whereExpression"></param>
 		/// <param name="isolation"></param>
 		/// <returns></returns>
-		public TObject SelectObject<TObject>(string whereExpression, Transaction.IsloationLevel isolation)
+		public TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
 			var objs = SelectObjects<TObject>(whereExpression, isolation);
@@ -307,10 +307,10 @@ namespace DOL.Database
 		public IList<TObject> SelectObjects<TObject>(string whereExpression)
 			where TObject : DataObject
 		{
-			return SelectObjects<TObject>(whereExpression, Transaction.IsloationLevel.DEFAULT);
+			return SelectObjects<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
 		}
 
-		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsloationLevel isolation)
+		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
 			var dataObjects = SelectObjectsImpl<TObject>(whereExpression, isolation);
@@ -321,10 +321,10 @@ namespace DOL.Database
 		public IList<TObject> SelectAllObjects<TObject>()
 			where TObject : DataObject
 		{
-			return SelectAllObjects<TObject>(Transaction.IsloationLevel.DEFAULT);
+			return SelectAllObjects<TObject>(Transaction.IsolationLevel.DEFAULT);
 		}
 
-		public IList<TObject> SelectAllObjects<TObject>(Transaction.IsloationLevel isolation)
+		public IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
 			var dataObjects = SelectAllObjectsImpl<TObject>(isolation);
@@ -542,7 +542,7 @@ namespace DOL.Database
 		/// <param name="whereClause"></param>
 		/// <param name="isolation"></param>
 		/// <returns></returns>
-		protected abstract DataObject[] SelectObjectsImpl(Type objectType, string whereClause, Transaction.IsloationLevel isolation);
+		protected abstract DataObject[] SelectObjectsImpl(Type objectType, string whereClause, Transaction.IsolationLevel isolation);
 
 		/// <summary>
 		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
@@ -551,7 +551,7 @@ namespace DOL.Database
 		/// <param name="whereClause"></param>
 		/// <param name="isolation"></param>
 		/// <returns></returns>
-		protected abstract IList<TObject> SelectObjectsImpl<TObject>(string whereClause, Transaction.IsloationLevel isolation)
+		protected abstract IList<TObject> SelectObjectsImpl<TObject>(string whereClause, Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
 
 		/// <summary>
@@ -560,7 +560,7 @@ namespace DOL.Database
 		/// <typeparam name="TObject"></typeparam>
 		/// <param name="isolation"></param>
 		/// <returns></returns>
-		protected abstract IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsloationLevel isolation)
+		protected abstract IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
 
 		/// <summary>
@@ -811,7 +811,7 @@ namespace DOL.Database
 							}
 							else
 							{
-								elements = SelectObjectsImpl(remoteType, remote + " = '" + Escape(val.ToString()) + "'", Transaction.IsloationLevel.DEFAULT);
+								elements = SelectObjectsImpl(remoteType, remote + " = '" + Escape(val.ToString()) + "'", Transaction.IsolationLevel.DEFAULT);
 							}
 
 							if ((elements != null) && (elements.Length > 0))

@@ -295,7 +295,7 @@ namespace DOL.Database.Connection
 		/// </summary>
 		/// <param name="sqlcommand"></param>
 		/// <param name="callback"></param>
-		public void ExecuteSelect(string sqlcommand, QueryCallback callback, Transaction.IsloationLevel isolation)
+		public void ExecuteSelect(string sqlcommand, QueryCallback callback, Transaction.IsolationLevel isolation)
 		{
 			if (connType == ConnectionType.DATABASE_MYSQL)
 			{
@@ -320,19 +320,19 @@ namespace DOL.Database.Connection
 
 						switch (isolation)
 						{
-							case Transaction.IsloationLevel.READ_COMMITTED:
+							case Transaction.IsolationLevel.READ_COMMITTED:
 								tranIsolation = IsolationLevel.ReadCommitted;
 								break;
-							case Transaction.IsloationLevel.READ_UNCOMMITTED:
+							case Transaction.IsolationLevel.READ_UNCOMMITTED:
 								tranIsolation = IsolationLevel.ReadUncommitted;
 								break;
-							case Transaction.IsloationLevel.REPEATABLE_READ:
+							case Transaction.IsolationLevel.REPEATABLE_READ:
 								tranIsolation = IsolationLevel.RepeatableRead;
 								break;
-							case Transaction.IsloationLevel.SERIALIZABLE:
+							case Transaction.IsolationLevel.SERIALIZABLE:
 								tranIsolation = IsolationLevel.Serializable;
 								break;
-							case Transaction.IsloationLevel.SNAPSHOT:
+							case Transaction.IsolationLevel.SNAPSHOT:
 								tranIsolation = IsolationLevel.Snapshot;
 								break;
 						}
@@ -471,7 +471,7 @@ namespace DOL.Database.Connection
 					                                                    		}
 					                                                    		if (log.IsDebugEnabled)
 					                                                    			log.Debug(currentTableColumns.Count + " in table");
-					                                                    	}, Transaction.IsloationLevel.DEFAULT);
+					                                                    	}, Transaction.IsolationLevel.DEFAULT);
 				}
 				catch (Exception e)
 				{
