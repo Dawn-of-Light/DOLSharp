@@ -84,7 +84,8 @@ namespace DOL.GS
 		{
 			if (item != null)
 			{
-				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(Id_nb);
+				// We want a new copy from the DB to avoid everyone sharing the same template
+				ItemTemplate template = GameServer.Database.SelectObject<ItemTemplate>("`Id_nb` = '" + Id_nb + "'");
 
 				if (template == null)
 				{
@@ -92,7 +93,7 @@ namespace DOL.GS
 					return;
 				}
 
-				this.Template = template.Clone() as ItemTemplate; // Must make a clone since we modify based on XP
+				this.Template = template;
 				this.ObjectId = item.ObjectId;	// This is the key for the 'inventoryitem' table
 				this.OwnerID = item.OwnerID;
 				CanUseEvery = ArtifactMgr.GetReuseTimer(this);
