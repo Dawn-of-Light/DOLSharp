@@ -46,12 +46,12 @@ namespace DOLConfig
 			// open data connection and grab datas
 			sp.Clear();
 			sc.Clear();
+			
 			try
 			{
 				db = ObjectDatabase.GetObjectDatabase(currentConfig.DBType, currentConfig.DBConnectionString);
-
-				sp = db.SelectAllObjects<ServerProperty>();
-				sc = db.SelectAllObjects<ServerPropertyCategory>();
+				sp = db.SelectAllObjects<ServerProperty>().ToList();
+				sc = db.SelectAllObjects<ServerPropertyCategory>().ToList();
 			}
 			catch
 			{
@@ -62,8 +62,18 @@ namespace DOLConfig
 			// reset display
 			tv_spShow.Nodes.Clear();
 			
-			// creation of the SP map
-			CreateSPMap(null, tv_spShow.Nodes,0);
+			// no SP_C table
+			if (sc.Count == 0)
+			{
+				foreach (var current in sp)
+				{
+					tv_spShow.Nodes.Add(FormatNodeText(0, current.Key, current.Value));
+					tv_spShow.Nodes[tv_spShow.Nodes.Count-1].ForeColor = Color.Blue;
+				}
+			}
+			else
+				// creation of the SP map
+				CreateSPMap(null, tv_spShow.Nodes,0);
 			
 			// how many SP we have ? 1.6millions ? :D
 			toolstrip_status_label.Text ="Loaded: " + sp.Count() + " server properties.";

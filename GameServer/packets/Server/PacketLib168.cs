@@ -1040,17 +1040,6 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x00);
 				SendTCP(pak);
 			}
-
-			//if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
-//			{
-//				IControlledBrain brain = npc.Brain as IControlledBrain;
-//				if (brain != null)
-//				{
-//					GamePlayer playerowner = brain.GetPlayerOwner();
-//					if (playerowner != null)
-//						SendObjectGuildID(npc, playerowner.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
-//				}
-//			}
 		}
 
 		public virtual void SendLivingEquipmentUpdate(GameLiving living)
