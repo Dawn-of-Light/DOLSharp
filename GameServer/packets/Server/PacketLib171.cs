@@ -167,12 +167,8 @@ namespace DOL.GS.PacketHandler
 			if (npc.Inventory != null) flags |= 0x02; //If mob has equipment, then only show it after the client gets the 0xBD packet
 			if ((npc.Flags & (uint)GameNPC.eFlags.PEACE) != 0) flags |= 0x10;
 			if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0) flags |= 0x20;
-			if((npc.Flags & (uint)GameNPC.eFlags.TORCH) != 0)
-			{
-				flags |= 0x04;
-			}
+			if((npc.Flags & (uint)GameNPC.eFlags.TORCH) != 0) flags |= 0x04;
 			
-
 			pak.WriteByte(flags);
 			pak.WriteByte(0x20); //TODO this is the default maxstick distance
 

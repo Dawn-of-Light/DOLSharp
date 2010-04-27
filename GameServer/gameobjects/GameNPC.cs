@@ -509,6 +509,9 @@ namespace DOL.GS
 			/// npc is a statue (no idle animation, no target...)
 			/// </summary>
 			STATUE = 0x80,
+			/// <summary>
+			/// npc is swimming
+			/// </summary>
 			SWIMMING = 0x100
 		}
 
