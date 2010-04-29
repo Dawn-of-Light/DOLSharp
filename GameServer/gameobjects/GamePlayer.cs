@@ -11528,7 +11528,6 @@ namespace DOL.GS
 
 				m_guildName = m_guild.Name;
 				m_guild.AddOnlineMember(this);
-				//m_guildNote = m_character.GuildNote; // OBSOLETE (VaNaTiC)
 			}
 			#endregion
 
