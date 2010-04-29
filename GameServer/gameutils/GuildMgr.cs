@@ -200,91 +200,123 @@ namespace DOL.GS
 			}
 		}
 
-		public static void CreateRanks(Guild newguild)
+		public static void CreateRanks(Guild guild)
 		{
 			DBRank rank;
 			for (int i = 0; i < 10; i++)
 			{
-				rank = new DBRank();
-				rank.AcHear = false;
-				rank.AcSpeak = false;
-				rank.Alli = false;
-				rank.Claim = false;
-				rank.Emblem = false;
-				rank.GcHear = true;
-				rank.GcSpeak = false;
-				rank.GuildID = newguild.GuildID;
-				rank.Invite = false;
-				rank.OcHear = false;
-				rank.OcSpeak = false;
-				rank.Promote = false;
-				rank.RankLevel = (byte)i;
-				rank.Release = false;
-				rank.Remove = false;
-				rank.Title = "Rank "+i.ToString();
-				rank.Upgrade = false;
-				rank.View = false;
-                rank.View = false;
-                rank.Dues = false;
+				rank = CreateRank(guild, i);
 
-                if (i < 9)
-                {
-                    rank.GcSpeak = true;
-                    rank.View = true;
-                    if (i < 8)
-                    {
-                        rank.Emblem = true;
-                        if (i < 7)
-                        {
-                            rank.AcHear = true;
-                            if (i < 6)
-                            {
-                                rank.AcSpeak = true;
-                                if (i < 5)
-                                {
-                                    rank.OcHear = true;
-                                    if (i < 4)
-                                    {
-                                        rank.OcSpeak = true;
-                                        if (i < 3)
-                                        {
-                                            rank.Invite = true;
-                                            rank.Promote = true;
-
-                                            if (i < 2)
-                                            {
-                                                rank.Release = true;
-                                                rank.Upgrade = true;
-                                                rank.Claim = true;
-                                                if (i < 1)
-                                                {
-                                                    rank.Remove = true;
-                                                    rank.Alli = true;
-                                                    rank.Dues = true;
-                                                    rank.Withdraw = true;
-													rank.Title = "Guildmaster";
-													rank.Buff=true;
-                                                }
-
-                                            }
-
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                }
-                GameServer.Database.AddObject(rank);
-				GameServer.Database.SaveObject(rank);
-				newguild.Ranks[i] = rank;
+				GameServer.Database.AddObject(rank);
+				guild.Ranks[i] = rank;
 			}
+		}
+
+		public static void RepairRanks(Guild guild)
+		{
+			DBRank rank;
+			for (int i = 0; i < 10; i++)
+			{
+				bool foundRank = false;
+
+				foreach (DBRank r in guild.Ranks)
+				{
+					if (r.RankLevel == i)
+					{
+						foundRank = true;
+						break;
+					}
+				}
+
+				if (foundRank == false)
+				{
+					rank = CreateRank(guild, i);
+					rank.Title = rank.Title.Replace("Rank", "Repaired Rank");
+					GameServer.Database.AddObject(rank);
+				}
+			}
+		}
+
+		private static DBRank CreateRank(Guild guild, int rankLevel)
+		{
+			DBRank rank = new DBRank();
+			rank.AcHear = false;
+			rank.AcSpeak = false;
+			rank.Alli = false;
+			rank.Claim = false;
+			rank.Emblem = false;
+			rank.GcHear = true;
+			rank.GcSpeak = false;
+			rank.GuildID = guild.GuildID;
+			rank.Invite = false;
+			rank.OcHear = false;
+			rank.OcSpeak = false;
+			rank.Promote = false;
+			rank.RankLevel = (byte)rankLevel;
+			rank.Release = false;
+			rank.Remove = false;
+			rank.Title = "Rank " + rankLevel.ToString();
+			rank.Upgrade = false;
+			rank.View = false;
+			rank.View = false;
+			rank.Dues = false;
+
+			if (rankLevel < 9)
+			{
+				rank.GcSpeak = true;
+				rank.View = true;
+				if (rankLevel < 8)
+				{
+					rank.Emblem = true;
+					if (rankLevel < 7)
+					{
+						rank.AcHear = true;
+						if (rankLevel < 6)
+						{
+							rank.AcSpeak = true;
+							if (rankLevel < 5)
+							{
+								rank.OcHear = true;
+								if (rankLevel < 4)
+								{
+									rank.OcSpeak = true;
+									if (rankLevel < 3)
+									{
+										rank.Invite = true;
+										rank.Promote = true;
+
+										if (rankLevel < 2)
+										{
+											rank.Release = true;
+											rank.Upgrade = true;
+											rank.Claim = true;
+											if (rankLevel < 1)
+											{
+												rank.Remove = true;
+												rank.Alli = true;
+												rank.Dues = true;
+												rank.Withdraw = true;
+												rank.Title = "Guildmaster";
+												rank.Buff = true;
+											}
+
+										}
+
+									}
+
+								}
+
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+			return rank;
 		}
 
 		/// <summary>
@@ -410,10 +442,29 @@ namespace DOL.GS
 			foreach(var obj in guildObjs)
 			{
 				var myguild = new Guild(obj);
-				AddGuild(myguild);
 
-				if (obj.Ranks == null || obj.Ranks.Length == 0)
-					CreateRanks(myguild);
+				if (obj.Ranks == null ||
+					obj.Ranks.Length < 10 || 
+					obj.Ranks[0] == null ||
+					obj.Ranks[1] == null ||
+					obj.Ranks[2] == null ||
+					obj.Ranks[3] == null ||
+					obj.Ranks[4] == null ||
+					obj.Ranks[5] == null ||
+					obj.Ranks[6] == null ||
+					obj.Ranks[7] == null ||
+					obj.Ranks[8] == null ||
+					obj.Ranks[9] == null)
+				{
+					log.ErrorFormat("GuildMgr: Ranks missing for {0}, creating new ones!", myguild.Name);
+
+					RepairRanks(myguild);
+
+					// now reload the guild to fix the relations
+					myguild = new Guild(GameServer.Database.SelectObject<DBGuild>("GuildID = '" + obj.GuildID + "'"));
+				}
+
+				AddGuild(myguild);
 
 				var guildCharacters = GameServer.Database.SelectObjects<Character>(string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
 				var tempList = new SortedList<string, SocialWindowMember>(guildCharacters.Count);
