@@ -277,7 +277,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				catch (Exception ex)
 				{
-					log.Error("SendGuildMessageToPlayer exception, missing guild ranks?", ex);
+					log.Error("SendGuildMessageToPlayer exception, missing guild ranks for guild: " + player.Guild.Name + "?", ex);
 					if (player != null)
 					{
 						player.Out.SendMessage("There was an error sending motd for your guild. Guild ranks may be missing or corrupted.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
