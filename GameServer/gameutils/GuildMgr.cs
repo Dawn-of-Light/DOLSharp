@@ -221,6 +221,12 @@ namespace DOL.GS
 
 				foreach (DBRank r in guild.Ranks)
 				{
+					if (r == null)
+					{
+						// I love DOLDB relations!
+						break;
+					}
+
 					if (r.RankLevel == i)
 					{
 						foundRank = true;
