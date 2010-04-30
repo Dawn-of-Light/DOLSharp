@@ -222,7 +222,6 @@ namespace DOL.GS
 				{
 					newItem = new InventoryItem(material.RawMaterial);
 					newItem.Count = -countToAdd;
-					newItem.Weight *= -countToAdd;
 					player.Inventory.AddItem((eInventorySlot)de.Key, newItem);
 				}
 			}
