@@ -39,7 +39,6 @@ namespace DOL.Database
 
 		public DBKeepHookPoint()
 		{
-			AutoSave = true;
 		}
 		
 		/// <summary>

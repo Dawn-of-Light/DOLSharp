@@ -48,7 +48,6 @@ namespace DOL
 
 			public DBHouseIndoorItem()
 			{
-				AutoSave=true;
 			}
 
 			[DataElement(AllowDbNull=false, Index=true)]

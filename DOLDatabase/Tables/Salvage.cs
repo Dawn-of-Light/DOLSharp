@@ -36,7 +36,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBSalvage()
 		{
-			AutoSave =false;
+			AllowAdd =false;
 		}
 
 		/// <summary>

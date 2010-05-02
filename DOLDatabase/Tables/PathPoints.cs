@@ -94,10 +94,5 @@ namespace DOL.Database
 			set { m_waitTime = value; }
 		}
 
-		override public bool AutoSave
-		{
-			get { return false; }
-			set {}
-		}
 	}
 }

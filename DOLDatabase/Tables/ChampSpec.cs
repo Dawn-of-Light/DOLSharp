@@ -38,7 +38,7 @@ namespace DOL.Database
 
 		public DBChampSpecs()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		// how much spell costs

@@ -502,11 +502,13 @@ namespace DOL.GS
 			m_itemTemp.Quality = 100;
 			m_itemTemp.Price = 0;
 			m_itemTemp.PackSize = 1;
-			m_itemTemp.AutoSave = false;
+			m_itemTemp.AllowAdd = false;
 			m_itemTemp.Weight = 1000;
 			m_itemTemp.Id_nb = "ARelic";
 			m_itemTemp.IsTradable = false;
 			m_item = new InventoryItem();
+			m_item.AllowAdd = false;
+			m_item.AllowDelete = false;
 			m_item.Template = m_itemTemp;
 		}
 		/// <summary>

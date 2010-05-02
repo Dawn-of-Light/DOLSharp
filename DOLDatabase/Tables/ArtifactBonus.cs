@@ -67,7 +67,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Whether to auto-save this object or not.
 		/// </summary>
-		public override bool AutoSave
+		public override bool AllowAdd
 		{
 			get { return false; }
 			set { }

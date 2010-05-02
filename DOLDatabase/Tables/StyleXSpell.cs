@@ -39,7 +39,7 @@ namespace DOL.Database
 		public DBStyleXSpell()
 			: base()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		/// <summary>

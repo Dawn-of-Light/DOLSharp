@@ -40,7 +40,7 @@ namespace DOL
 			/// </summary>
 			public DBCraftedItem()
 			{
-				AutoSave=false;
+				AllowAdd=false;
 			}
 
 			/// <summary>

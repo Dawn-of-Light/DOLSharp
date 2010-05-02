@@ -34,7 +34,7 @@ namespace DOL.Database
 
 		public DBSpellLine()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		[DataElement(AllowDbNull=false,Unique=true)]

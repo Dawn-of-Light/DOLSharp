@@ -162,7 +162,7 @@ namespace DOL.GS
 				if (m_glareSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 0;
 					spell.ClientEffect = 5701;
 					spell.Description = "Glare";
@@ -196,7 +196,7 @@ namespace DOL.GS
 				if (m_breathSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 0;
 					spell.Uninterruptible = true;
 					spell.ClientEffect = 208;
@@ -226,7 +226,7 @@ namespace DOL.GS
 				if (m_resistDebuffSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 0;
 					spell.Uninterruptible = true;
 					spell.ClientEffect = 778;
@@ -265,7 +265,7 @@ namespace DOL.GS
 				if (m_meleeDebuffSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 0;
 					spell.Uninterruptible = true;
 					spell.ClientEffect = 13082;
@@ -302,7 +302,7 @@ namespace DOL.GS
 				if (m_rangedDebuffSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 0;
 					spell.Uninterruptible = true;
 					spell.ClientEffect = 590;

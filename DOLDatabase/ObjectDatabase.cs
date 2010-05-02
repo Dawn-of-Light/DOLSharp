@@ -216,22 +216,23 @@ namespace DOL.Database
 
 		/// <summary>
 		/// insert a new object into the db and save it
-		/// if AutoSave is set
 		/// </summary>
 		/// <param name="dataObject"></param>
 		public bool AddObject(DataObject dataObject)
 		{
-			if (dataObject.AutoSave)
+			if (dataObject.AllowAdd)
+			{
 				return AddObjectImpl(dataObject);
+			}
 			else
 			{
-				Log.Warn("AddObject called on DataObject when AutoSave is False: " + dataObject.TableName);
+				Log.Warn("AddObject called on DataObject when AllowSave is False: " + dataObject.TableName + " : " + dataObject.ObjectId);
 				return false;
 			}
 		}
 
 		/// <summary>
-		/// saves an object to db in memory
+		/// Saves an object to db if saving is allowed and object is dirty
 		/// </summary>
 		/// <param name="dataObject"></param>
 		public void SaveObject(DataObject dataObject)
@@ -248,7 +249,10 @@ namespace DOL.Database
 		/// <param name="dataObject"></param>
 		public void DeleteObject(DataObject dataObject)
 		{
-			DeleteObjectImpl(dataObject);
+			if (dataObject.AllowDelete)
+			{
+				DeleteObjectImpl(dataObject);
+			}
 		}
 
 		public int GetObjectCount<TObject>()

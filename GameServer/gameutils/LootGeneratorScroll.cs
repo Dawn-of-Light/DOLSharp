@@ -88,7 +88,7 @@ namespace DOL.GS
 						int pageNumber;
 
 						ItemTemplate loot = new ItemTemplate();
-						loot.AutoSave = false;
+						loot.AllowAdd = false;
 
 						if (mob.Level > 55)
 						{

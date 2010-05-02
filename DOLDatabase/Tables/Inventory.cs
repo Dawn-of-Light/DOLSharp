@@ -251,7 +251,7 @@ namespace DOL.Database
 		/// </summary>
 		public InventoryItem()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 			m_ownerID = null;
 			m_emblem = 0;
 			m_count = 1;
@@ -262,7 +262,7 @@ namespace DOL.Database
 			m_itemplate_id = null;
 			m_utemplate_id = null;
 			ITWrapper = new ItemTemplate();
-			ITWrapper.AutoSave = false;
+			ITWrapper.AllowAdd = false;
 		}
 
 		/// <summary>

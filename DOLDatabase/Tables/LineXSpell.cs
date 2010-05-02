@@ -33,7 +33,7 @@ namespace DOL.Database
 
 		public DBLineXSpell()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		[DataElement(AllowDbNull=false, Index=true)]

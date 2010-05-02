@@ -60,7 +60,6 @@ namespace DOL.Database
 			m_guildid = "";
 			m_title = "";
 			m_ranklevel = 0;
-			AutoSave = true;
 			m_alli = false;
 			m_emblem  = false;
 			m_gchear  = false;

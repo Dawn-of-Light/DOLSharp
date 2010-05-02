@@ -74,7 +74,7 @@ namespace DOL.Database
 		
 		public DBSpell()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		[DataElement(AllowDbNull = false, Unique = true)]

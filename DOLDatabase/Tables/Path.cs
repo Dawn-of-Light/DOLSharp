@@ -70,12 +70,6 @@ namespace DOL.Database
 			set { m_region = value; }
 		}
 
-		override public bool AutoSave
-		{
-			get { return false; }
-			set {}
-		}
-		
 		[Relation(LocalField = "PathID", RemoteField = "PathID", AutoLoad = true, AutoDelete=true)]
 		public DBPathPoint[] PathPoints;
 	}

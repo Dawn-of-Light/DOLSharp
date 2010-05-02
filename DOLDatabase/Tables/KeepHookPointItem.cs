@@ -85,11 +85,5 @@ namespace DOL.Database
 				m_classType = value;
 			}
 		}
-
-		override public bool AutoSave
-		{
-			get { return true; }
-			set { }
-		}
 	}
 }

@@ -34,7 +34,7 @@ namespace DOL.Database
 
 		public DBSpecXAbility()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		[DataElement(AllowDbNull=false)]

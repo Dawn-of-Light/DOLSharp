@@ -239,7 +239,7 @@ namespace DOL.GS.Keeps
 				if (m_albLordHealSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 2;
 					spell.ClientEffect = 1340;
 					spell.Value = 225; //350;
@@ -265,7 +265,7 @@ namespace DOL.GS.Keeps
 				if (m_midLordHealSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 2;
 					spell.ClientEffect = 3011;
 					spell.Value = 225;//350;
@@ -291,7 +291,7 @@ namespace DOL.GS.Keeps
 				if (m_hibLordHealSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 2;
 					spell.ClientEffect = 3030;
 					spell.Value = 225;//350;
@@ -321,7 +321,7 @@ namespace DOL.GS.Keeps
 				if (m_albGuardHealSmallSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 2;
 					spell.ClientEffect = 1340;
 					spell.Value = 200;
@@ -347,7 +347,7 @@ namespace DOL.GS.Keeps
 				if (m_midGuardHealSmallSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 2;
 					spell.ClientEffect = 3011;
 					spell.Value = 200;
@@ -373,7 +373,7 @@ namespace DOL.GS.Keeps
 				if (m_hibGuardHealSmallSpell == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 2;
 					spell.ClientEffect = 3030;
 					spell.Value = 200;
