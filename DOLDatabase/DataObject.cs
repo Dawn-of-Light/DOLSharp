@@ -30,6 +30,7 @@ namespace DOL.Database
 	public abstract class DataObject : ICloneable
 	{
 		private bool _dirty;
+		private bool _isDeleted = false;
 
 		/// <summary>
 		/// Default-Construktor that generates a new Object-ID and set
@@ -95,6 +96,16 @@ namespace DOL.Database
 		{
 			set { _dirty = value; }
 			get { return _dirty; }
+		}
+
+		/// <summary>
+		/// Has this object been deleted from the database
+		/// </summary>
+		[Browsable(false)]
+		public virtual bool IsDeleted
+		{
+			set { _isDeleted = value; }
+			get { return _isDeleted; }
 		}
 
 		#region ICloneable Member

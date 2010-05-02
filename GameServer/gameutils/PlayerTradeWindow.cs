@@ -612,12 +612,20 @@ namespace DOL.GS
 							item.Emblem = 0;
 						}
 
-						if (!partner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item))
+						bool addFail = false;
+
+						if (item.IsDeleted && !partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 						{
-							if (log.IsWarnEnabled)
-							{
-								log.Warn("Item was not added to first free slot. Player=" + partner.Name + "; Item=" + item.Id_nb);
-							}
+							addFail = true;
+						}
+						else if (!partner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item))
+						{
+							addFail = true;
+						}
+
+						if (addFail && log.IsWarnEnabled)
+						{
+							log.Warn("Item was not added to first free slot. Player=" + partner.Name + "; Item=" + item.Id_nb);
 						}
 
 						if (logTrade)
@@ -633,17 +641,25 @@ namespace DOL.GS
 							item.Emblem = 0;
 						}
 
-						if (!m_owner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item))
-						{
-							if (log.IsWarnEnabled)
-							{
-								log.Warn("Item was not added to first free slot. Player=" + m_owner.Name + "; Item=" + item.Id_nb);
-							}
+						bool addFail = false;
 
-							if (logTrade)
-							{
-								GameServer.Instance.LogGMAction("   Item: " + partner.Name + "(" + partner.Client.Account.Name + ") -> " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
-							}
+						if (item.IsDeleted && !partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+						{
+							addFail = true;
+						}
+						else if (!partner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item))
+						{
+							addFail = true;
+						}
+
+						if (addFail && log.IsWarnEnabled)
+						{
+							log.Warn("Item was not added to first free slot. Player=" + partner.Name + "; Item=" + item.Id_nb);
+						}
+
+						if (logTrade)
+						{
+							GameServer.Instance.LogGMAction("   Item: " + partner.Name + "(" + partner.Client.Account.Name + ") -> " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
 						}
 					}
 

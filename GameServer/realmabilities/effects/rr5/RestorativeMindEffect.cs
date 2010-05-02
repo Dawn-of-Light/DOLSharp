@@ -13,8 +13,8 @@ namespace DOL.GS.Effects
 	public class RestorativeMindEffect : TimedEffect
 	{
 
-		private GamePlayer owner;
-		private RegionTimer ticktimer;
+		private GamePlayer m_playerOwner;
+		private RegionTimer m_tickTimer;
 
 
 		public RestorativeMindEffect()
@@ -29,45 +29,46 @@ namespace DOL.GS.Effects
 			GamePlayer player = target as GamePlayer;
 			if (player != null)
 			{
-				owner = player;
+				m_playerOwner = player;
 				foreach (GamePlayer p in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					p.Out.SendSpellEffectAnimation(player, player, Icon, 0, false, 1);
 				}
+
+				healTarget();
+				startTimer();
 			}
-
-			healTarget();
-			startTimer();
-
 		}
 
 		public override void Stop()
 		{
-			if (ticktimer.IsAlive)
-				ticktimer.Stop();
+			if (m_tickTimer.IsAlive)
+				m_tickTimer.Stop();
 			base.Stop();
 		}
 
 		private void healTarget()
 		{
-			int healthtick = (int)(owner.MaxHealth * 0.05);
-			int manatick = (int)(owner.MaxMana * 0.05);
-			int endutick = (int)(owner.MaxEndurance * 0.05);
-			if (!owner.IsAlive)
-				Stop();
-			int modendu = owner.MaxEndurance - owner.Endurance;
-			if (modendu > endutick)
-				modendu = endutick;
-			owner.Endurance += modendu;
-			int modheal = owner.MaxHealth - owner.Health;
-			if (modheal > healthtick)
-				modheal = healthtick;
-			owner.Health += modheal;
-			int modmana = owner.MaxMana - owner.Mana;
-			if (modmana > manatick)
-				modmana = manatick;
-			owner.Mana += modmana;
-
+			if (m_playerOwner != null)
+			{
+				int healthtick = (int)(m_playerOwner.MaxHealth * 0.05);
+				int manatick = (int)(m_playerOwner.MaxMana * 0.05);
+				int endutick = (int)(m_playerOwner.MaxEndurance * 0.05);
+				if (!m_playerOwner.IsAlive)
+					Stop();
+				int modendu = m_playerOwner.MaxEndurance - m_playerOwner.Endurance;
+				if (modendu > endutick)
+					modendu = endutick;
+				m_playerOwner.Endurance += modendu;
+				int modheal = m_playerOwner.MaxHealth - m_playerOwner.Health;
+				if (modheal > healthtick)
+					modheal = healthtick;
+				m_playerOwner.Health += modheal;
+				int modmana = m_playerOwner.MaxMana - m_playerOwner.Mana;
+				if (modmana > manatick)
+					modmana = manatick;
+				m_playerOwner.Mana += modmana;
+			}
 		}
 
 		private int onTick(RegionTimer timer)
@@ -78,9 +79,9 @@ namespace DOL.GS.Effects
 
 		private void startTimer()
 		{
-			ticktimer = new RegionTimer(owner);
-			ticktimer.Callback = new RegionTimerCallback(onTick);
-			ticktimer.Start(3000);
+			m_tickTimer = new RegionTimer(m_playerOwner);
+			m_tickTimer.Callback = new RegionTimerCallback(onTick);
+			m_tickTimer.Start(3000);
 
 		}
 

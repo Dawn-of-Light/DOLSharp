@@ -50,6 +50,7 @@ namespace DOL.Database.Handlers
 
 				dataObject.Dirty = false;
 				dataObject.IsValid = true;
+				dataObject.IsDeleted = false;
 
 				return true;
 			}
@@ -132,6 +133,8 @@ namespace DOL.Database.Handlers
 
 				DeleteFromCache(dataObject.TableName, dataObject);
 				DeleteObjectRelations(dataObject);
+
+				dataObject.IsDeleted = true;
 			}
 			catch (Exception e)
 			{

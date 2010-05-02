@@ -2311,20 +2311,6 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion BaseLevel
-					// Not Used
-					#region MoveHere
-					/*case "movehere":
-					{
-						break;
-					}*/
-					#endregion MoveHere
-					// Not Used
-					#region AddComponent
-					/*case "addcomponent":
-					{
-						break;
-					}*/
-					#endregion AddComponent
 					#region Realm
 				case "realm":
 					{

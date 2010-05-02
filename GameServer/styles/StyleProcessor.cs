@@ -134,7 +134,7 @@ namespace DOL.GS.Styles
 							return false;
 
 						//you can't use positional styles on keep doors or walls
-						if (target is GameKeepComponent || target is GameKeepDoor)
+						if ((target is GameKeepComponent || target is GameKeepDoor) && (Style.eOpeningPosition)style.OpeningRequirementValue != Style.eOpeningPosition.Front)
 							return false;
 
 						// get players angle on target
@@ -416,9 +416,10 @@ namespace DOL.GS.Styles
 					double factor = (attackData.Style.GrowthRate * living.GetModifiedSpecLevel(attackData.Style.Spec) * living.AttackSpeed(weapon) * 0.001) / living.UnstyledDamageCap(weapon);
 					attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor);
 					attackData.StyleDamage = (int)(attackData.StyleDamage * living.GetModified(eProperty.StyleDamage) / 100.0);
+
 					//Eden - style absorb bonus
 					int absorb=0;
-					if(attackData.Target is GamePlayer && attackData.Target.GetModified(eProperty.StyleAbsorb)>0)
+					if(attackData.Target is GamePlayer && attackData.Target.GetModified(eProperty.StyleAbsorb) > 0)
 					{
 						absorb=(int)Math.Floor((double)attackData.StyleDamage * ((double)attackData.Target.GetModified(eProperty.StyleAbsorb)/100));
 						attackData.StyleDamage -= absorb;
@@ -436,47 +437,34 @@ namespace DOL.GS.Styles
 					//PA: 75 + (CSSkill * 9) + Damage Cap 
 					//BSII: 45 + (CSSkill * 6) + Damage Cap 
 					//BS: 5 + (CSSkill * 14 / 3) + Damage Cap
-					if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstab")))
+					if (attackData.Target is GameNPC || attackData.Target is GamePlayer)
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						attackData.Damage += 5 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3);
-					}
-					else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstabII")))
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						attackData.Damage += 45 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 6);
-					}
-					else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNamePerforateArtery")))
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.ThroatStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						attackData.Damage += 75 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 9);
+						if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstab")))
+						{
+							player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							attackData.Damage += 5 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3);
+						}
+						else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstabII")))
+						{
+							player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							attackData.Damage += 45 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 6);
+						}
+						else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNamePerforateArtery")))
+						{
+							player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.ThroatStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							attackData.Damage += 75 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 9);
+						}
 					}
 
 					if (player != null)
 					{
 						// reduce players endurance
 						player.Endurance -= fatCost;
-						string damageAmount = (attackData.StyleDamage > 0) ? " (+" + attackData.StyleDamage + ")" : "";
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.PerformPerfectly", attackData.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						if(absorb>0)
-						{
-							player.Out.SendMessage("A barrier absorb "+absorb+" damages", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-							if(living is GamePlayer) (living as GamePlayer).Out.SendMessage("A barrier absorb "+absorb+" damages", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						}
-					}
 
-					if (living is GameNPC)
-					{
-						ControlledNpcBrain brain = ((GameNPC)living).Brain as ControlledNpcBrain;
-
-						if (brain != null)
+						if(absorb > 0)
 						{
-							GamePlayer owner = brain.GetPlayerOwner();
-							if (owner != null)
-							{
-								string damageAmount = (attackData.StyleDamage > 0) ? " (+" + attackData.StyleDamage + ")" : "";
-								owner.Out.SendMessage(LanguageMgr.GetTranslation(owner.Client, "StyleProcessor.ExecuteStyle.PerformsPerfectly", living.Name, attackData.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-							}
+							player.Out.SendMessage("A barrier absorbs " + absorb + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							if(living is GamePlayer) (living as GamePlayer).Out.SendMessage("A barrier absorbs " + absorb + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 						}
 					}
 
@@ -646,11 +634,19 @@ namespace DOL.GS.Styles
 					break;
 				}
 			}
+
 			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(caster, styleSpell, styleLine);
 			if (spellHandler == null && styleSpell != null && caster is GamePlayer)
 			{
 				((GamePlayer)caster).Out.SendMessage(styleSpell.Name + " not implemented yet (" + styleSpell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
+
+			// No negative effects can be applied on a keep door or via attacking a keep door
+			if ((target is GameKeepComponent || target is GameKeepDoor) && spellHandler.HasPositiveEffect == false)
+			{
+				return null;
+			}
+
 			return spellHandler;
 		}
 	}
