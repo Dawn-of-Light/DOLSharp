@@ -196,6 +196,7 @@ namespace DOL.Database.Handlers
 
 		/// <summary>
 		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
+		/// This is SLOW SLOW SLOW.  You should cache these results rather than reading from the XML file each time.
 		/// </summary>
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <param name="whereClause">the where clause to filter object selection on</param>
@@ -211,6 +212,7 @@ namespace DOL.Database.Handlers
 			DataSet ds = GetDataSet(tableName);
 			if (ds != null)
 			{
+				Connection.LoadDataSet(tableName, ds);
 				DataTable table = ds.Tables[tableName];
 
 				if (Log.IsDebugEnabled)
@@ -243,6 +245,7 @@ namespace DOL.Database.Handlers
 
 		/// <summary>
 		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
+		/// This is SLOW SLOW SLOW.  You should cache these results rather than reading from the XML file each time.
 		/// </summary>
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <param name="whereClause">the where clause to filter object selection on</param>
@@ -257,6 +260,7 @@ namespace DOL.Database.Handlers
 			DataSet ds = GetDataSet(tableName);
 			if (ds != null)
 			{
+				Connection.LoadDataSet(tableName, ds);
 				DataTable table = ds.Tables[tableName];
 
 				if (Log.IsDebugEnabled)
@@ -290,6 +294,7 @@ namespace DOL.Database.Handlers
 
 		/// <summary>
 		/// Selects all objects from a given table in the database.
+		/// This is SLOW SLOW SLOW.  You should cache these results rather than reading from the XML file each time.
 		/// </summary>
 		/// <param name="objectType">the type of objects to retrieve</param>
 		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects</returns>
@@ -304,6 +309,7 @@ namespace DOL.Database.Handlers
 
 			if (ds != null)
 			{
+				Connection.LoadDataSet(tableName, ds);
 				DataTable table = ds.Tables[tableName];
 				DataRow[] rows = table.Select();
 

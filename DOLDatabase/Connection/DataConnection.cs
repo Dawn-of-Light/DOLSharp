@@ -730,23 +730,6 @@ namespace DOL.Database.Connection
 
 						break;
 					}
-				case ConnectionType.DATABASE_MYSQL:
-					{
-						return; // not needed anymore
-						/*try
-					{
-						DOLConsole.WriteLine("Loading table "+tableName);
-						MySqlConnection conn = new MySqlConnection(connString);
-						MySqlDataAdapter adapter = new MySqlDataAdapter("SELECT * from `" + tableName + "`", conn);
-
-						adapter.Fill(dataSet.Tables[tableName]);
-					}
-					catch (Exception ex)
-					{
-						throw new DatabaseException("Could not load the Database-Table", ex);
-					}
-					break;*/
-					}
 				case ConnectionType.DATABASE_OLEDB:
 					{
 						try
@@ -761,6 +744,19 @@ namespace DOL.Database.Connection
 							throw new DatabaseException("Could not load the Database-Table", ex);
 						}
 						break;
+					}
+				case ConnectionType.DATABASE_XML:
+					{
+						try
+						{
+							dataSet.Tables[tableName].ReadXml(connString + tableName + ".xml");
+						}
+						catch (Exception ex)
+						{
+							throw new DatabaseException("Could not load the Database-Table", ex);
+						}
+						break;
+
 					}
 			}
 		}
