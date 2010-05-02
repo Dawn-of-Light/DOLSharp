@@ -29,8 +29,8 @@ namespace DOL.Database
 	/// </summary>
 	public abstract class DataObject : ICloneable
 	{
-		private bool _dirty;
-		private bool _isDeleted = false;
+		bool m_allowAdd = true;
+		bool m_allowDelete = true;
 
 		/// <summary>
 		/// Default-Construktor that generates a new Object-ID and set
@@ -39,9 +39,10 @@ namespace DOL.Database
 		protected DataObject()
 		{
 			ObjectId = IDGenerator.GenerateID();
-			_dirty = false;
 			IsValid = false;
-			AutoSave = true;
+			AllowAdd = true;
+			AllowDelete = true;
+			IsDeleted = false;
 		}
 
 		/// <summary>
@@ -77,10 +78,24 @@ namespace DOL.Database
 		public bool IsValid { get; set; }
 
 		/// <summary>
-		/// Auto save object or not?
+		/// Can this object added to the DB?
 		/// </summary>
 		[Browsable(false)]
-		public virtual bool AutoSave { get; set; }
+		public virtual bool AllowAdd 
+		{
+			get { return m_allowAdd; }
+			set { m_allowAdd = value; }
+		}
+
+		/// <summary>
+		/// Can this object be deleted from the DB?
+		/// </summary>
+		[Browsable(false)]
+		public virtual bool AllowDelete
+		{
+			get { return m_allowDelete; }
+			set { m_allowDelete = value; }
+		}
 
 		/// <summary>
 		/// Index of the object in his table
@@ -89,24 +104,17 @@ namespace DOL.Database
 		public string ObjectId { get; set; }
 
 		/// <summary>
-		/// Is object different of object in DB
+		/// Is object different than object in the DB?
 		/// </summary>
 		[Browsable(false)]
-		public virtual bool Dirty
-		{
-			set { _dirty = value; }
-			get { return _dirty; }
-		}
+		public virtual bool Dirty { get; set; }
 
 		/// <summary>
 		/// Has this object been deleted from the database
 		/// </summary>
 		[Browsable(false)]
-		public virtual bool IsDeleted
-		{
-			set { _isDeleted = value; }
-			get { return _isDeleted; }
-		}
+		public virtual bool IsDeleted { get; set; }
+
 
 		#region ICloneable Member
 

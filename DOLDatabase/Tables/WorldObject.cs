@@ -41,7 +41,6 @@ namespace DOL.Database
 
 		public WorldObject()
 		{
-			AutoSave = true;
 			m_type = "DOL.GS.GameItem";
 		}
 

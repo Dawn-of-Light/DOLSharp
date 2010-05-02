@@ -41,7 +41,7 @@ namespace DOL.Database
 
 		public Race() : base()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		[DataElement( AllowDbNull = false, Index = true, Unique = true )]

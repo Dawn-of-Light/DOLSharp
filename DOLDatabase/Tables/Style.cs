@@ -141,7 +141,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBStyle()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		/// <summary>

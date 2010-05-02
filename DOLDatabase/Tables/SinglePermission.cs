@@ -33,7 +33,6 @@ namespace DOL.Database
 		{
 			m_playerID = "";
 			m_command = "";
-			AutoSave=true;
 		}
 
 		[DataElement(AllowDbNull = false, Index=true)]

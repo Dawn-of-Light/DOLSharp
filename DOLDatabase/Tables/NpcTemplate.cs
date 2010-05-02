@@ -73,7 +73,6 @@ namespace DOL.Database
 		/// </summary>
 		public DBNpcTemplate()
 		{
-			AutoSave = true;
 		}
 
 		/// <summary>

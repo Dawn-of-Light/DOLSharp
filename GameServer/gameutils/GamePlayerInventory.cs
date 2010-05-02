@@ -91,8 +91,8 @@ namespace DOL.GS
 							if (m_items.ContainsKey(itemSlot))
 							{
 								if (Log.IsErrorEnabled)
-									Log.Error("Error loading " + m_player.Name + "'s inventory OwnerID " + inventoryID + " slot " +
-											  item.SlotPosition + " duplicate item found, skipping!");
+									Log.Error("Error loading " + m_player.Name + "'s inventory OwnerID " + inventoryID + " slot #" +
+											  item.SlotPosition + ". Duplicate item found, skipping!");
 								continue;
 							}
 
@@ -226,7 +226,7 @@ namespace DOL.GS
 									}
 									else
 									{
-										Log.ErrorFormat("Item '{0}' : '{1}' not found in DB for player '{2}'", currentItem.Name, currentItem.Id_nb, m_player.Name);
+										Log.ErrorFormat("Item '{0}' : '{1}' not found in DBInventory for player '{2}'", currentItem.Name, currentItem.Id_nb, m_player.Name);
 									}
 
 									continue;
@@ -1149,7 +1149,7 @@ namespace DOL.GS
 				newItem.Count = itemCount;
 				newItem.SlotPosition = (int) toSlot;
 				fromItem.Count -= itemCount;
-				newItem.AutoSave = true;
+				newItem.AllowAdd = fromItem.Template.AllowAdd;
 				GameServer.Database.AddObject(newItem);
 
 				return true;

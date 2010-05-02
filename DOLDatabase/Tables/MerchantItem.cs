@@ -36,7 +36,6 @@ namespace DOL
 
 			public MerchantItem()
 			{
-				AutoSave=true;
 			}
 
 			[DataElement(AllowDbNull=false, Index=true)]

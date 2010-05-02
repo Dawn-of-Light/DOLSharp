@@ -61,7 +61,7 @@ namespace DOL.GS
 				if (Blood_Rage == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = true;
+					spell.AllowAdd = true;
 					spell.CastTime = 0;
 					spell.Uninterruptible = true;
 					spell.Icon = 10541;
@@ -91,7 +91,7 @@ namespace DOL.GS
 				if (Heightened_Awareness == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = true;
+					spell.AllowAdd = true;
 					spell.CastTime = 0;
 					spell.Uninterruptible = true;
 					spell.Icon = 10541;
@@ -121,7 +121,7 @@ namespace DOL.GS
 				if (Subtle_Kills == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = true;
+					spell.AllowAdd = true;
 					spell.CastTime = 0;
 					spell.Uninterruptible = true;
 					spell.Icon = 10541;

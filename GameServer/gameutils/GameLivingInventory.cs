@@ -683,6 +683,7 @@ namespace DOL.GS
 
 					if (item.Count == count)
 					{
+						item.AllowAdd = true;
 						return RemoveItem(item);
 					}
 

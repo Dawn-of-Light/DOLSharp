@@ -36,7 +36,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBFaction()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 			ID = 0;
 			m_baseAggroLevel = 0;
 			m_name = String.Empty;
