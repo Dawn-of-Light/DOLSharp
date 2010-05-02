@@ -41,7 +41,6 @@ namespace DOL.Database
 		/// </summary>
 		public DBLanguage()
 		{
-			AutoSave = true;
 		}
 
 		/// <summary>

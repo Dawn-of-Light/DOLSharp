@@ -1723,7 +1723,7 @@ namespace DOL.GS
 				if (m_PvERezIllness == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 0;
 					spell.ClientEffect = 2435;
 					spell.Icon = 2435;

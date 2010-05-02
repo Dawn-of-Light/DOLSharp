@@ -39,7 +39,7 @@ namespace DOL
 			/// </summary>
 			public DBCraftedXItem()
 			{
-				AutoSave=false;
+				AllowAdd=false;
 			}
 
 			/// <summary>

@@ -34,7 +34,7 @@ namespace DOL.Database
 
 		public DBSpecialization()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		[DataElement(AllowDbNull=false,Unique=true)]

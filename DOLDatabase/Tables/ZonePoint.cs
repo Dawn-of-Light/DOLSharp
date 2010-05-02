@@ -37,7 +37,7 @@ namespace DOL.Database
 
 		public ZonePoint()
 		{
-			AutoSave=false;
+			AllowAdd=false;
 		}
 
 		[DataElement(AllowDbNull=false, Index=true)]

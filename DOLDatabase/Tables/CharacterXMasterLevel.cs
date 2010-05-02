@@ -37,7 +37,6 @@ namespace DOL.Database
 
 		public DBCharacterXMasterLevel()
 		{
-			AutoSave = false;
 		}
 
 		// Owner ID

@@ -789,7 +789,7 @@ namespace DOL.GS
 				if (m_stun == null)
 				{
 					DBSpell spell = new DBSpell();
-					spell.AutoSave = false;
+					spell.AllowAdd = false;
 					spell.CastTime = 0;
 					spell.Uninterruptible = true;
 					spell.ClientEffect = 4123;

@@ -54,7 +54,7 @@ namespace DOL.GS.Effects
 
             // Build spell
             DBSpell tSpell = new DBSpell();
-            tSpell.AutoSave = false;
+            tSpell.AllowAdd = false;
             tSpell.Description = "Damage the target.";
             tSpell.Name = "PBAoE damage";
             tSpell.Target = "Enemy";

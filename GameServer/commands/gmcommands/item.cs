@@ -1329,7 +1329,7 @@ namespace DOL.GS.Commands
 							// save the new item
 							if (temp == null)
 							{
-								item.Template.AutoSave = true;
+								item.Template.AllowAdd = true;
 								item.Template.Id_nb = idnb;
 								if (args[1]== "savetemplate")
 								{
@@ -1351,9 +1351,9 @@ namespace DOL.GS.Commands
 							}
 
 
-							if (!item.AutoSave) // blank item previously created
+							if (!item.AllowAdd) // blank item previously created
 							{
-								item.AutoSave = true;
+								item.AllowAdd = true;
 								GameServer.Database.AddObject(item);
 							}
 							else

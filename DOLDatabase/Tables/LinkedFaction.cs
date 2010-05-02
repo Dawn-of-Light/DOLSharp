@@ -40,7 +40,7 @@ namespace DOL.Database
 			m_factionID = 0;
 			m_linkedFactionID = 0;
 			m_friend = true;
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		/// <summary>

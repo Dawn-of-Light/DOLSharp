@@ -14,7 +14,7 @@ namespace DOL.Database
 
 		public ClassXRealmAbility()
 		{
-			AutoSave = false;
+			AllowAdd = false;
 		}
 
 		/// <summary>
