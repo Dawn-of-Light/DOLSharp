@@ -1406,6 +1406,8 @@ namespace DOL.GS
 		{
 			return MakeAttack(target, weapon, style, effectiveness, interruptDuration, dualWield, false);
 		}
+
+
 		protected virtual AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield, bool ignoreLOS)
 		{
 			AttackData ad = new AttackData();
@@ -1440,16 +1442,6 @@ namespace DOL.GS
 				ad.AttackResult = (target == null) ? eAttackResult.NoTarget : eAttackResult.NoValidTarget;
 				return ad;
 			}
-
-			// Do not allow styles or critical damage to keep doors
-			if (ad.Target is GameKeepComponent || ad.Target is GameKeepDoor)
-			{
-				// cancel all style requests
-				ad.Style = null;
-				NextCombatStyle = null;
-				NextCombatBackupStyle = null;
-			}
-
 
 			// check region
 			if (ad.Target.CurrentRegionID != CurrentRegionID || ad.Target.ObjectState != eObjectState.Active)
@@ -1652,6 +1644,34 @@ namespace DOL.GS
 				ad.CriticalDamage = GetMeleeCriticalDamage(ad, weapon);
 			}
 
+			// Attacked living may modify the attack data.  Primarily used for keep doors and components.
+			ad.Target.ModifyAttack(ad);
+
+			if (ad.AttackResult == eAttackResult.HitStyle)
+			{
+				if (this is GamePlayer)
+				{
+					GamePlayer player = this as GamePlayer;
+
+					string damageAmount = (ad.StyleDamage > 0) ? " (+" + ad.StyleDamage + ")" : "";
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.PerformPerfectly", ad.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				}
+				else if (this is GameNPC)
+				{
+					ControlledNpcBrain brain = ((GameNPC)this).Brain as ControlledNpcBrain;
+
+					if (brain != null)
+					{
+						GamePlayer owner = brain.GetPlayerOwner();
+						if (owner != null)
+						{
+							string damageAmount = (ad.StyleDamage > 0) ? " (+" + ad.StyleDamage + ")" : "";
+							owner.Out.SendMessage(LanguageMgr.GetTranslation(owner.Client, "StyleProcessor.ExecuteStyle.PerformsPerfectly", Name, ad.Style.Name, damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						}
+					}
+				}
+			}
+
 			string message = "";
 			bool broadcast = true;
 			ArrayList excludes = new ArrayList();
@@ -1690,11 +1710,7 @@ namespace DOL.GS
 				case eAttackResult.HitUnstyled:
 				case eAttackResult.HitStyle:
 					{
-						if (ad.Target is GameKeepComponent || ad.Target is GameKeepDoor)
-						{
-							broadcast = false;
-						}
-						else if (target != null && target != ad.Target)
+						if (target != null && target != ad.Target)
 						{
 							message = string.Format("{0} attacks {1} but hits {2}!", ad.Attacker.GetName(0, true), target.GetName(0, false), ad.Target.GetName(0, false));
 							excludes.Add(target);
@@ -1775,18 +1791,20 @@ namespace DOL.GS
 							case eAttackResult.HitStyle:
 							case eAttackResult.HitUnstyled:
 								{
-									if (!(ad.Target is GameKeepComponent || ad.Target is GameKeepDoor))
+									string modmessage = "";
+									if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
+									if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
+									string attackTypeMsg = "attacks";
+									if (ad.Attacker.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 									{
-										string modmessage = "";
-										if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
-										if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
-										string attackTypeMsg = "attacks";
-										if (ad.Attacker.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-											attackTypeMsg = "shoots";
-										owner.Out.SendMessage(string.Format("Your {0} {1} {2} and hits for {3}{4} damage!", ad.Attacker.Name, attackTypeMsg, ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-										if (ad.CriticalDamage > 0)
-											owner.Out.SendMessage("Your " + ad.Attacker.Name + " critically hits " + ad.Target.GetName(0, false) + " for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+										attackTypeMsg = "shoots";
 									}
+									owner.Out.SendMessage(string.Format("Your {0} {1} {2} and hits for {3}{4} damage!", ad.Attacker.Name, attackTypeMsg, ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+									if (ad.CriticalDamage > 0)
+									{
+										owner.Out.SendMessage("Your " + ad.Attacker.Name + " critically hits " + ad.Target.GetName(0, false) + " for an additional " + ad.CriticalDamage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+									}
+
 									break;
 								}
 							default:
@@ -3003,10 +3021,6 @@ namespace DOL.GS
             return null;
         }
 
-        // **************************************************************************
-        // Aredhel: What the ... is this an attempt to write an even longer
-        // method than DetailDisplayHandler???
-
 		/// <summary>
 		/// Returns the result of an enemy attack,
 		/// yes this means WE decide if an enemy hits us or not :-)
@@ -3766,6 +3780,16 @@ namespace DOL.GS
 
 			return blockChance;
 		}
+
+		/// <summary>
+		/// Modify the attack done to this living.
+		/// This method offers us a chance to modify the attack data prior to the living taking damage.
+		/// </summary>
+		/// <param name="attackData">The attack data for this attack</param>
+		public virtual void ModifyAttack(AttackData attackData)
+		{
+		}
+
 
         /// <summary>
 		/// This method is called whenever this living

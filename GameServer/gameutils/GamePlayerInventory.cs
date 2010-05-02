@@ -127,7 +127,11 @@ namespace DOL.GS
 						}
 						catch (Exception ex)
 						{
-							Log.Error("Loading player inventory (" + inventoryID + "), " + item.Name + ", slot: " + item.SlotPosition, ex);
+							Log.Error("Error loading player inventory (" + inventoryID + "), Inventory_ID: " + 
+										item.ObjectId + 
+										" (" + (item.ITemplate_Id == null ? "" : item.ITemplate_Id) + 
+										", " + (item.UTemplate_Id == null ? "" : item.UTemplate_Id) + 
+										"), slot: " + item.SlotPosition, ex);
 						}
 					}
 
@@ -151,7 +155,7 @@ namespace DOL.GS
 				catch (Exception e)
 				{
 					if (Log.IsErrorEnabled)
-						Log.Error("Loading player inventory (" + inventoryID + ")", e);
+						Log.Error("Error loading player inventory (" + inventoryID + ").  Load aborted!", e);
 
 					return false;
 				}
@@ -222,8 +226,10 @@ namespace DOL.GS
 									}
 									else
 									{
-										Log.ErrorFormat("Item '{0}' : '{1}' not found in DB for player '{1}'", currentItem.Name, currentItem.Id_nb, m_player.Name);
+										Log.ErrorFormat("Item '{0}' : '{1}' not found in DB for player '{2}'", currentItem.Name, currentItem.Id_nb, m_player.Name);
 									}
+
+									continue;
 								}
 
 								GameServer.Database.SaveObject(currentItem);
@@ -273,6 +279,7 @@ namespace DOL.GS
 			if (!base.AddItem(slot, item))
 				return false;
 
+			// guild banner code here? 
 			switch (item.Model)
 			{
 				case 3223:
@@ -340,9 +347,13 @@ namespace DOL.GS
 				return false;
 
 			if (deleteObject)
+			{
 				GameServer.Database.DeleteObject(item);
+			}
 			else
+			{
 				GameServer.Database.SaveObject(item);
+			}
 
 			ITradeWindow window = m_player.TradeWindow;
 			if (window != null)

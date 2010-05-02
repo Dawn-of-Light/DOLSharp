@@ -280,68 +280,8 @@ namespace DOL.GS.Keeps
 
 		#region function override
 
-		/// <summary>
-		/// This methode is override to remove XP system
-		/// </summary>
-		/// <param name="source">the damage source</param>
-		/// <param name="damageType">the damage type</param>
-		/// <param name="damageAmount">the amount of damage</param>
-		/// <param name="criticalAmount">the amount of critical damage</param>
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
-			// graveen: ml2 bm to add or put this is a better section (AttackData?)
-
-			int toughness = ServerProperties.Properties.SET_KEEP_DOOR_TOUGHNESS;
-
-			if (this.Component.Keep is GameKeepTower)
-				toughness = ServerProperties.Properties.SET_TOWER_DOOR_TOUGHNESS;
-
-
-			if (source is GamePlayer)
-			{
-				damageAmount = (damageAmount - (damageAmount * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
-				criticalAmount = 0;
-				((GamePlayer)source).Out.SendMessage(String.Format("You hit {0} for {1} damage!", GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-			}
-			else if (source is GameNPC)
-			{
-				if (!ServerProperties.Properties.DOORS_ALLOWPETATTACK)
-				{
-					damageAmount = 0;
-					criticalAmount = 0;
-
-					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
-					{
-						GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
-						if (player != null)
-						{
-							player.Out.SendMessage(String.Format("Your {0} has no effect on {1}!", source.Name, GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						}
-					}
-				}
-				else
-				{
-					damageAmount = (damageAmount - (damageAmount * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
-					criticalAmount = 0;
-
-					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
-					{
-						GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
-						if (player != null)
-						{
-							// special considerations for pet spam classes
-							if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
-								damageAmount = (int)(damageAmount * ServerProperties.Properties.PET_SPAM_DAMAGE_MULTIPLIER);
-							else
-								damageAmount = (int)(damageAmount * ServerProperties.Properties.PET_DAMAGE_MULTIPLIER);
-
-
-							player.Out.SendMessage(String.Format("Your {0} hits {1} for {2} damage!", source.Name, GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						}
-					}
-				}
-			}
-
 			if (damageAmount > 0)
 			{
 				this.Component.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
@@ -352,21 +292,70 @@ namespace DOL.GS.Keeps
 				{
 					m_oldHealthPercent = HealthPercent;
 					foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
+					{
 						client.Out.SendObjectUpdate(this);
+					}
 				}
 			}
 		}
 
-		/// <summary>
-		/// Take Damage and don't modify the values (simply calls base.TakeDamage)
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="damageType"></param>
-		/// <param name="damageAmount"></param>
-		/// <param name="criticalAmount"></param>
-		public void TakeUnmodifiedDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
+
+		public override void ModifyAttack(AttackData attackData)
 		{
-			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
+			int toughness = ServerProperties.Properties.SET_KEEP_DOOR_TOUGHNESS;
+			int baseDamage = attackData.Damage;
+			int styleDamage = attackData.StyleDamage;
+			int criticalDamage = 0;
+
+			GameLiving source = attackData.Attacker;
+
+			if (this.Component.Keep is GameKeepTower)
+			{
+				toughness = ServerProperties.Properties.SET_TOWER_DOOR_TOUGHNESS;
+			}
+
+			if (source is GamePlayer)
+			{
+				baseDamage = (baseDamage - (baseDamage * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
+				styleDamage = (styleDamage - (styleDamage * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
+			}
+			else if (source is GameNPC)
+			{
+				if (!ServerProperties.Properties.DOORS_ALLOWPETATTACK)
+				{
+					baseDamage = 0;
+					styleDamage = 0;
+					attackData.AttackResult = eAttackResult.NotAllowed_ServerRules;
+				}
+				else
+				{
+					baseDamage = (baseDamage - (baseDamage * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
+					styleDamage = (styleDamage - (styleDamage * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
+
+					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
+					{
+						GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
+						if (player != null)
+						{
+							// special considerations for pet spam classes
+							if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
+							{
+								baseDamage = (int)(baseDamage * ServerProperties.Properties.PET_SPAM_DAMAGE_MULTIPLIER);
+								styleDamage = (int)(styleDamage * ServerProperties.Properties.PET_SPAM_DAMAGE_MULTIPLIER);
+							}
+							else
+							{
+								baseDamage = (int)(baseDamage * ServerProperties.Properties.PET_DAMAGE_MULTIPLIER);
+								styleDamage = (int)(styleDamage * ServerProperties.Properties.PET_DAMAGE_MULTIPLIER);
+							}
+						}
+					}
+				}
+			}
+
+			attackData.Damage = baseDamage;
+			attackData.StyleDamage = styleDamage;
+			attackData.CriticalDamage = criticalDamage;
 		}
 
 

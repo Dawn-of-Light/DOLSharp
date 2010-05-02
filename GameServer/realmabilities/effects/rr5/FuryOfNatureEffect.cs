@@ -7,9 +7,6 @@ using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Adrenaline Rush
-	/// </summary>
 	public class FuryOfNatureEffect : TimedEffect
 	{
 		public FuryOfNatureEffect()
@@ -18,24 +15,22 @@ namespace DOL.GS.Effects
 			;
 		}
 
-		private GameLiving owner;
-
 		public override void Start(GameLiving target)
 		{
-			base.Start(target);
-			owner = target;
-			GamePlayer player = target as GamePlayer;
-			if (player != null)
+			if (target != null)
 			{
-				foreach (GamePlayer p in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				base.Start(target);
+
+				if (target != null)
 				{
-					p.Out.SendSpellEffectAnimation(player, player, Icon, 0, false, 1);
+					foreach (GamePlayer p in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
+						p.Out.SendSpellEffectAnimation(m_owner, target, Icon, 0, false, 1);
+					}
 				}
+
+				GameEventMgr.AddHandler(m_owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
 			}
-
-			GameEventMgr.AddHandler(target, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
-
-
 		}
 
 		private void OnAttack(DOLEvent e, object sender, EventArgs arguments)
@@ -62,18 +57,18 @@ namespace DOL.GS.Effects
 			if (extra > 0)
 				player.Out.SendMessage("Your Fury enables you to strike " + args.AttackData.Target.Name + " for " + extra + " additional points of damage", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 			Hashtable injuredTargets = new Hashtable();
-			GamePlayer mostInjuredLiving = owner as GamePlayer;
-			if (mostInjuredLiving == null) return;
+			GamePlayer mostInjuredLiving = null;
 
 			foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 			{
 				if (p == player)
 					continue;
+
 				mostInjuredLiving = p;
 				break;
 			}
 
-			if (mostInjuredLiving == owner) return;
+			if (mostInjuredLiving == null) return;
 
 			double mostInjuredPercent = mostInjuredLiving.Health / (float)mostInjuredLiving.MaxHealth;
 			int groupHealCap = args.AttackData.Damage;
@@ -167,7 +162,7 @@ namespace DOL.GS.Effects
 
 		public override void Stop()
 		{
-			GameEventMgr.RemoveHandler(owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
+			GameEventMgr.RemoveHandler(m_owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
 			base.Stop();
 		}
 

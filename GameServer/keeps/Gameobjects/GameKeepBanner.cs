@@ -232,5 +232,6 @@ namespace DOL.GS.Keeps
 			this.Emblem = emblem;
 			this.Name = GlobalConstants.RealmToName(this.Component.Keep.Realm) + " Guild Banner";
 		}
+
 	}
 }

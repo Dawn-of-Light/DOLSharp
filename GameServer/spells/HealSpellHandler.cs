@@ -107,6 +107,10 @@ namespace DOL.GS.Spells
 			if (GameServer.ServerRules.IsAllowedToAttack(Caster, target, true))
 				return false;
 
+			// no healing of keep components
+			if (target is Keeps.GameKeepComponent || target is Keeps.GameKeepDoor)
+				return false;
+
 			if (!target.IsAlive)
             {
                 //"You cannot heal the dead!" sshot550.tga
@@ -231,9 +235,11 @@ namespace DOL.GS.Spells
 				return false;
 
 			if (!target.IsAlive)
-			{
 				return false;
-			}
+
+			// no healing of keep components
+			if (target is Keeps.GameKeepComponent || target is Keeps.GameKeepDoor)
+				return false;
 
 			int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);
 
