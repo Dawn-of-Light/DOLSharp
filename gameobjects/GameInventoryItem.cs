@@ -67,7 +67,7 @@ namespace DOL.GS
 			}
 			else
 				m_item.Template = item.Template;
-			m_item.AutoSave = true;
+			m_item.AllowAdd = true;
 		}
 
 		/// <summary>

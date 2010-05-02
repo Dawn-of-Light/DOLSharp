@@ -259,7 +259,7 @@ namespace DOL.GS.Spells
                 if (Disarm_Weapon == null)
                 {
                     DBSpell spell = new DBSpell();
-                    spell.AutoSave = false;
+                    spell.AllowAdd = false;
                     spell.CastTime = 0;
                     spell.Uninterruptible = true;
                     spell.Icon = 7293;
