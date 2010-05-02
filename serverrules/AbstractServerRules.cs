@@ -318,6 +318,9 @@ namespace DOL.GS.ServerRules
 					case "self":
 					case "group":
 					case "pet":
+					case "controlled":
+					case "realm":
+					case "area":
 						isAllowed = true;
 						break;
 
@@ -335,9 +338,16 @@ namespace DOL.GS.ServerRules
 								case "magicalstrike":
 								case "siegearrow":
 								case "summontheurgistpet":
+								case "directdamagewithdebuff":
 									isAllowed = true;
 									break;
 							}
+						}
+
+						// pbaoe
+						if (spell.Radius > 0 && spell.Range == 0)
+						{
+							isAllowed = true;
 						}
 
 						break;

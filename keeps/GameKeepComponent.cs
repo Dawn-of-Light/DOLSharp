@@ -524,38 +524,53 @@ namespace DOL.GS.Keeps
 			base.SaveIntoDatabase();
 		}
 
-		/// <summary>
-		/// broadcast life of keep component
-		/// </summary>
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
-			// graveen: ml2 bm to add or put this is a better section (AttackData?)
+			if (damageAmount > 0)
+			{
+				this.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
+				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
+
+				//only on hp change
+				if (m_oldHealthPercent != HealthPercent)
+				{
+					m_oldHealthPercent = HealthPercent;
+					foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
+					{
+						client.Out.SendObjectUpdate(this);
+					}
+				}
+			}
+		}
+
+
+		public override void ModifyAttack(AttackData attackData)
+		{
+			int toughness = ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS;
+			int baseDamage = attackData.Damage;
+			int styleDamage = attackData.StyleDamage;
+			int criticalDamage = 0;
+
+			GameLiving source = attackData.Attacker;
+
+
 			if (source is GamePlayer)
 			{
-				damageAmount = ((damageAmount - (damageAmount * 5 * this.Keep.Level) / 100) * ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS / 100) / 2;
-				criticalAmount = 0;
-				((GamePlayer)source).Out.SendMessage(String.Format("You hit {0} for {1} damage!", GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+				baseDamage = (baseDamage - (baseDamage * 5 * this.Keep.Level / 100)) * toughness / 100;
+				styleDamage = (styleDamage - (styleDamage * 5 * this.Keep.Level / 100)) * toughness / 100;
 			}
 			else if (source is GameNPC)
 			{
 				if (!ServerProperties.Properties.STRUCTURES_ALLOWPETATTACK)
 				{
-					damageAmount = 0;
-					criticalAmount = 0;
-
-					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
-					{
-						GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
-						if (player != null)
-						{
-							player.Out.SendMessage(String.Format("Your {0} has no effect on {1}!", source.Name, GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-						}
-					}
+					baseDamage = 0;
+					styleDamage = 0;
+					attackData.AttackResult = eAttackResult.NotAllowed_ServerRules;
 				}
 				else
 				{
-					damageAmount = ((damageAmount - (damageAmount * 5 * this.Keep.Level) / 100) * ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS / 100) / 2;
-					criticalAmount = 0;
+					baseDamage = (baseDamage - (baseDamage * 5 * this.Keep.Level / 100)) * toughness / 100;
+					styleDamage = (styleDamage - (styleDamage * 5 * this.Keep.Level / 100)) * toughness / 100;
 
 					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
 					{
@@ -564,29 +579,25 @@ namespace DOL.GS.Keeps
 						{
 							// special considerations for pet spam classes
 							if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
-								damageAmount = (int)(damageAmount * ServerProperties.Properties.PET_SPAM_DAMAGE_MULTIPLIER);
+							{
+								baseDamage = (int)(baseDamage * ServerProperties.Properties.PET_SPAM_DAMAGE_MULTIPLIER);
+								styleDamage = (int)(styleDamage * ServerProperties.Properties.PET_SPAM_DAMAGE_MULTIPLIER);
+							}
 							else
-								damageAmount = (int)(damageAmount * ServerProperties.Properties.PET_DAMAGE_MULTIPLIER);
-
-							player.Out.SendMessage(String.Format("Your {0} hits {1} for {2} damage!", source.Name, GetName(0, false), damageAmount), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							{
+								baseDamage = (int)(baseDamage * ServerProperties.Properties.PET_DAMAGE_MULTIPLIER);
+								styleDamage = (int)(styleDamage * ServerProperties.Properties.PET_DAMAGE_MULTIPLIER);
+							}
 						}
 					}
 				}
 			}
 
-			if (damageAmount > 0)
-			{
-
-				this.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
-				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
-				//only on hp change
-				if (m_oldHealthPercent == this.HealthPercent) return;
-				m_oldHealthPercent = this.HealthPercent;
-
-				foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegionID))
-					client.Out.SendKeepComponentDetailUpdate(this);
-			}
+			attackData.Damage = baseDamage;
+			attackData.StyleDamage = styleDamage;
+			attackData.CriticalDamage = criticalDamage;
 		}
+
 
 		public override void Die(GameObject killer)
 		{
