@@ -528,6 +528,8 @@ namespace DOL.GS.Keeps
 			}
 			return inArea;
 		}
+
+
 		#endregion
 
 		/// <summary>

@@ -123,9 +123,16 @@ namespace DOL.GS.Spells
 
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			base.ApplyEffectOnTarget(target, effectiveness);
+			// do not apply debuff to keep components or doors
+			if ((target is Keeps.GameKeepComponent) == false && (target is Keeps.GameKeepDoor) == false)
+			{
+				base.ApplyEffectOnTarget(target, effectiveness);
+			}
+
 			if ((Spell.Duration > 0 && Spell.Target != "Area") || Spell.Concentration > 0)
+			{
 				OnDirectEffect(target, effectiveness);
+			}
 		}
 
 		private void DealDamage(GameLiving target, double effectiveness)

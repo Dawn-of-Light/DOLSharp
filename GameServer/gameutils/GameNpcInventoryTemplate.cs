@@ -243,7 +243,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Creates a shallow copy of the GameNpcInventoryTemplate.
+		/// Creates a copy of the GameNpcInventoryTemplate.
 		/// </summary>
 		/// <returns>Open copy of this template</returns>
 		public GameNpcInventoryTemplate CloneTemplate()
@@ -255,7 +255,19 @@ namespace DOL.GS
 				clone.m_changesCounter = m_changesCounter;
 
 				foreach (var de in m_items)
-					clone.m_items.Add(de.Key, de.Value);
+				{
+					InventoryItem oldItem = de.Value;
+
+					InventoryItem item = new InventoryItem();
+					item.Template = new ItemTemplate();
+					item.Template.Id_nb = oldItem.Id_nb;
+					item.Model = oldItem.Model;
+					item.Color = oldItem.Color;
+					item.Effect = oldItem.Effect;
+					item.Extension = oldItem.Extension;
+					item.SlotPosition = oldItem.SlotPosition;
+					clone.m_items.Add(de.Key, item);
+				}
 
 				clone.m_isClosed = false;
 
