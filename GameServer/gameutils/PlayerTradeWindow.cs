@@ -612,23 +612,22 @@ namespace DOL.GS
 							item.Emblem = 0;
 						}
 
-						bool addFail = false;
+						bool tradeSuccess = false;
 
-						if (item.IsDeleted && !partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+						if (item.IsDeleted)
 						{
-							addFail = true;
+							tradeSuccess = partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item);
 						}
-						else if (!partner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item))
+						else
 						{
-							addFail = true;
-						}
-
-						if (addFail && log.IsWarnEnabled)
-						{
-							log.Warn("Item was not added to first free slot. Player=" + partner.Name + "; Item=" + item.Id_nb);
+							tradeSuccess = partner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item);
 						}
 
-						if (logTrade)
+						if (!tradeSuccess)
+						{
+							log.Error("Trade item was not added to Partner first free slot.  Owner = " + m_owner.Name + ", Partner = " + partner.Name + "; Item = " + item.Id_nb);
+						}
+						else if (logTrade)
 						{
 							GameServer.Instance.LogGMAction("   Item: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
 						}
@@ -641,23 +640,22 @@ namespace DOL.GS
 							item.Emblem = 0;
 						}
 
-						bool addFail = false;
+						bool tradeSuccess = false;
 
-						if (item.IsDeleted && !partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+						if (item.IsDeleted)
 						{
-							addFail = true;
+							tradeSuccess = m_owner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item);
 						}
-						else if (!partner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item))
+						else
 						{
-							addFail = true;
-						}
-
-						if (addFail && log.IsWarnEnabled)
-						{
-							log.Warn("Item was not added to first free slot. Player=" + partner.Name + "; Item=" + item.Id_nb);
+							tradeSuccess = m_owner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item);
 						}
 
-						if (logTrade)
+						if (!tradeSuccess)
+						{
+							log.Error("Trade item was not added to Owner first free slot.  Owner = " + m_owner.Name + ", Partner = " + partner.Name + "; Item = " + item.Id_nb);
+						}
+						else if (logTrade)
 						{
 							GameServer.Instance.LogGMAction("   Item: " + partner.Name + "(" + partner.Client.Account.Name + ") -> " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
 						}
