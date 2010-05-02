@@ -1149,7 +1149,7 @@ namespace DOL.GS
 				newItem.Count = itemCount;
 				newItem.SlotPosition = (int) toSlot;
 				fromItem.Count -= itemCount;
-
+				newItem.AutoSave = true;
 				GameServer.Database.AddObject(newItem);
 
 				return true;
