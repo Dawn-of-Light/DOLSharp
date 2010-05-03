@@ -67,9 +67,9 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.WritePascalString(String.Format("{0}\r", goal.Description));
 			}
-			pak.WriteShort(0); // unknown, new in 1.94
-			pak.WriteByte((byte)quest.Level);
-			pak.WriteByte((byte)quest.Rewards.MoneyPercent);
+			pak.WriteInt((uint)(quest.Rewards.Money)); // unknown, new in 1.94
+		//	pak.WriteByte((byte)quest.Level);
+		//	pak.WriteByte((byte)quest.Rewards.MoneyPercent);
 			pak.WriteByte((byte)quest.Rewards.ExperiencePercent(player));
 			pak.WriteByte((byte)quest.Rewards.BasicItems.Count);
 			foreach (ItemTemplate reward in quest.Rewards.BasicItems)
