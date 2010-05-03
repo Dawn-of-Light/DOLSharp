@@ -241,6 +241,10 @@ namespace DOL.GS.Quests
 				QuestPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
 				QuestPlayer.GainExperience(GameLiving.eXPSource.Quest, Rewards.Experience);
 				QuestPlayer.AddMoney(Rewards.Money);
+				if (Rewards.GiveBountyPoints > 0)
+					QuestPlayer.GainBountyPoints(Rewards.GiveBountyPoints);
+				if (Rewards.GiveRealmPoints > 0)
+					QuestPlayer.GainRealmPoints(Rewards.GiveRealmPoints);
 
 				foreach (ItemTemplate basicReward in Rewards.BasicItems)
 				{
@@ -457,7 +461,43 @@ namespace DOL.GS.Quests
 			private List<ItemTemplate> m_basicItems, m_optionalItems;
 			private int m_choiceOf;
 			private List<ItemTemplate> m_chosenItems;
-
+			private int m_bountypoints;
+			private int	m_realmpoints;
+			private int	m_gold;
+			
+			public QuestRewards(RewardQuest quest)
+			{
+				m_quest = quest;
+				m_moneyPercent = 0;
+				m_experience = 0;
+				m_basicItems = new List<ItemTemplate>();
+				m_optionalItems = new List<ItemTemplate>();
+				m_choiceOf = 0;
+				m_chosenItems = new List<ItemTemplate>();
+				m_bountypoints = 0;
+				m_realmpoints = 0;
+				m_gold = 0;
+				
+			}
+			
+			public int GiveGold
+			{
+				get { return m_gold; }
+				set { m_gold = value;}
+			}
+			
+			public int GiveRealmPoints
+			{
+				get { return m_realmpoints; }
+				set { m_realmpoints = value;}
+			}
+			
+			public int GiveBountyPoints
+			{
+				get { return m_bountypoints; }
+				set { m_bountypoints = value;}
+			}
+			
 			/// <summary>
 			/// The maximum amount of copper awarded for a quest with a
 			/// particular level.
@@ -515,18 +555,7 @@ namespace DOL.GS.Quests
 				11018817,
 				11018817	// level 50, this appears to be the overall cap
 			};
-
-			public QuestRewards(RewardQuest quest)
-			{
-				m_quest = quest;
-				m_moneyPercent = 0;
-				m_experience = 0;
-				m_basicItems = new List<ItemTemplate>();
-				m_optionalItems = new List<ItemTemplate>();
-				m_choiceOf = 0;
-				m_chosenItems = new List<ItemTemplate>();
-			}
-
+			
 			/// <summary>
 			/// Add a basic reward (up to a maximum of 8).
 			/// </summary>
@@ -582,7 +611,7 @@ namespace DOL.GS.Quests
 			{
 				get 
 				{
-					return (long)((m_maxCopperForLevel[m_quest.Level] * MoneyPercent / 100));
+					return (long)((m_maxCopperForLevel[m_quest.Level] * MoneyPercent / 100) + (GiveGold * 10000));
 				}
 			}
 
