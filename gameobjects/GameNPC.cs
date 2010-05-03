@@ -1369,8 +1369,8 @@ namespace DOL.GS
 			BroadcastUpdate();
 		}
 
-		private const int StickMinimumRange = 100;
-		private const int StickMaximumRange = 5000;
+		private const int STICKMINIMUMRANGE = 100;
+		private const int STICKMAXIMUMRANGE = 5000;
 
 		/// <summary>
 		/// Follow given object
@@ -3364,11 +3364,11 @@ namespace DOL.GS
 
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				{
-					Follow(target, AttackRange, StickMaximumRange);
+					Follow(target, AttackRange, STICKMAXIMUMRANGE);
 				}
 				else
 				{
-					Follow(target, StickMinimumRange, StickMaximumRange);
+					Follow(target, STICKMINIMUMRANGE, STICKMAXIMUMRANGE);
 				}
 			}
 
@@ -3696,8 +3696,8 @@ namespace DOL.GS
 		public void SwitchToMelee(GameObject target)
 		{
 			// Tolakram: Order is important here.  First StopAttack, then switch weapon
+			StopFollowing();
 			StopAttack();
-			StopMoving();
 
 			InventoryItem twohand = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
 			InventoryItem righthand = Inventory.GetItem(eInventorySlot.RightHandWeapon);
@@ -3722,9 +3722,10 @@ namespace DOL.GS
 		/// <param name="target"></param>
 		public void SwitchToRanged(GameObject target)
 		{
+			StopFollowing();
+			StopAttack();
 			SwitchWeapon(eActiveWeaponSlot.Distance);
 			StartAttack(target);
-			StopFollowing();
 		}
 
 		/// <summary>
@@ -3745,9 +3746,19 @@ namespace DOL.GS
 			}
 
 			// Experimental - this prevents interrupts from causing ranged attacks to always switch to melee
-			if (AttackState && HealthPercent < MINHEALTHPERCENTFORRANGEDATTACK)
+			if (AttackState)
 			{
-				SwitchToMelee(attacker);
+				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance && HealthPercent < MINHEALTHPERCENTFORRANGEDATTACK)
+				{
+					SwitchToMelee(attacker);
+				}
+				else if (ActiveWeaponSlot != eActiveWeaponSlot.Distance && 
+							Inventory != null && 
+							Inventory.GetItem(eInventorySlot.DistanceWeapon) != null && 
+							GetDistanceTo(attacker) > 500)
+				{
+					SwitchToRanged(attacker);
+				}
 			}
 
 			return base.OnInterruptTick(attacker, attackType);
@@ -3944,7 +3955,7 @@ namespace DOL.GS
 		{
 			if (m_attackAction != null && target != null)
 			{
-				Follow(target, StickMinimumRange, MaxDistance);
+				Follow(target, STICKMINIMUMRANGE, MaxDistance);
 				m_attackAction.Start(1);
 			}
 		}
@@ -4292,8 +4303,8 @@ namespace DOL.GS
 				else
 				{
 					//If we aren't a distance NPC, lets make sure we are in range to attack the target!
-					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius( owner.TargetObject, StickMinimumRange ) )
-						((GameNPC)owner).Follow(owner.TargetObject, StickMinimumRange, StickMaximumRange);
+					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius( owner.TargetObject, STICKMINIMUMRANGE ) )
+						((GameNPC)owner).Follow(owner.TargetObject, STICKMINIMUMRANGE, STICKMAXIMUMRANGE);
 				}
 				Interval = 500;
 			}
@@ -4657,11 +4668,11 @@ namespace DOL.GS
 		{
 			Level = 1; // health changes when GameNPC.Level changes
 			m_Realm = 0;
-			m_Name = "new Mob";
+			m_Name = "new mob";
 			m_Model = 408;
 			//Fill the living variables
 			//			CurrentSpeed = 0; // cause position addition recalculation
-			MaxSpeedBase = 100;
+			MaxSpeedBase = 200;
 			GuildName = "";
 			m_healthRegenerationPeriod = 3000;
 

@@ -795,12 +795,12 @@ namespace DOL.GS
 		/// <returns>effective speed of the attack. average if more than one weapon.</returns>
 		public virtual int AttackSpeed(params InventoryItem[] weapon)
 		{
-			//TODO needs to come from the DB
 			double speed = 3400 * (1.0 - (GetModified(eProperty.Quickness) - 60) / 500.0);
-			//Combat Speed buff and debuff
+
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
-				speed *= GetModified(eProperty.ArcherySpeed) * 0.01;
+				speed *= 1.5; // mob archer speed too fast
+				speed *= 1.0 - GetModified(eProperty.ArcherySpeed) * 0.01;
 			}
 			else
 			{
@@ -4377,39 +4377,51 @@ namespace DOL.GS
 			switch (slot)
 			{
 				case eActiveWeaponSlot.Standard:
-					if (rightHandSlot == null)
-						rightHand = 0xFF;
-					else rightHand = 0x00;
+					{
+						if (rightHandSlot == null)
+							rightHand = 0xFF;
+						else
+							rightHand = 0x00;
 
-					if (leftHandSlot == null)
-						leftHand = 0xFF;
-					else leftHand = 0x01;
+						if (leftHandSlot == null)
+							leftHand = 0xFF;
+						else
+							leftHand = 0x01;
+					}
 					break;
 
 				case eActiveWeaponSlot.TwoHanded:
-					if (twoHandSlot != null && (twoHandSlot.Hand == 1 || this is GameNPC)) // 2h
 					{
-						rightHand = leftHand = 0x02;
-						break;
+						if (twoHandSlot != null && (twoHandSlot.Hand == 1 || this is GameNPC)) // 2h
+						{
+							rightHand = leftHand = 0x02;
+							break;
+						}
+
+						// 1h weapon in 2h slot
+						if (twoHandSlot == null)
+							rightHand = 0xFF;
+						else
+							rightHand = 0x02;
+
+						if (leftHandSlot == null)
+							leftHand = 0xFF;
+						else
+							leftHand = 0x01;
 					}
-
-					// 1h weapon in 2h slot
-					if (twoHandSlot == null)
-						rightHand = 0xFF;
-					else rightHand = 0x02;
-
-					if (leftHandSlot == null)
-						leftHand = 0xFF;
-					else leftHand = 0x01;
 					break;
 
 				case eActiveWeaponSlot.Distance:
-					leftHand = 0xFF; // cannot use left-handed weapons if ranged slot active
-					if (distanceSlot == null)
-						rightHand = 0xFF;
-					else if (distanceSlot.Hand == 1) // bows use 2 hands, trowing axes 1h
-						rightHand = leftHand = 0x03;
-					else rightHand = 0x03;
+					{
+						leftHand = 0xFF; // cannot use left-handed weapons if ranged slot active
+
+						if (distanceSlot == null)
+							rightHand = 0xFF;
+						else if (distanceSlot.Hand == 1 || this is GameNPC) // NPC equipment does not have hand so always assume 2 handed bow
+							rightHand = leftHand = 0x03; // bows use 2 hands, throwing axes 1h
+						else
+							rightHand = 0x03;
+					}
 					break;
 			}
 
