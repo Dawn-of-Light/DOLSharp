@@ -258,21 +258,29 @@ namespace DOL.GS
             {
                 InventoryItem toItem = inventory[(int)toSlot];
                 GameServer.Database.DeleteObject(toItem);
+
                 playerInventory.AddItem(fromSlot, toItem);
             }
-            House house = HouseMgr.GetHouse(this.HouseNumber);
+
+            House house = HouseMgr.GetHouse(HouseNumber);
+
             fromItem.SlotPosition = (int)(toSlot);
+
             int price = player.TempProperties.getProperty<int>(DOL.GS.PacketHandler.Client.v168.PlayerSetMarketPriceHandler.NEW_PRICE);
             player.TempProperties.removeProperty(DOL.GS.PacketHandler.Client.v168.PlayerSetMarketPriceHandler.NEW_PRICE);
-            if (fromItem.OwnerID != house.OwnerIDs)
-                fromItem.OwnerID = house.OwnerIDs;
+            
+			if (fromItem.OwnerID != house.OwnerID)
+                fromItem.OwnerID = house.OwnerID;
+
             fromItem.SellPrice = price;
-            fromItem.OwnerLot = (ushort)this.HouseNumber; // used to mark the lot for market explorer
+            fromItem.OwnerLot = (ushort)HouseNumber; // used to mark the lot for market explorer
             GameServer.Database.AddObject(fromItem);
 
             if ((int)toSlot >= (int)eInventorySlot.Consignment_First)
                 toSlot = (eInventorySlot)(RecalculateSlot((int)toSlot));
+
             updateItems.Add((int)toSlot, fromItem);
+
             return updateItems;
         }
 

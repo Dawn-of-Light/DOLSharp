@@ -116,9 +116,6 @@ namespace DOL.GS
 			if(res.Length > 1)
 				res.Length -= 2;
 
-			res.Append(" ");
-			res.Append(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Money.GetString.Text7"));
-
 			return res.ToString();
 		}
 

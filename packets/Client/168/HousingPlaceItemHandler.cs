@@ -23,6 +23,7 @@ using DOL.Language;
 using DOL.GS.Housing;
 using System.Reflection;
 using log4net;
+using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -120,7 +121,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			short ypos	= (short)packet.ReadShort();	// y for inside objs.
 			//log.Info("U1: " + unknow1 + " - U2: " + unknow2);
 
-			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID,housenumber);
+			House house = HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
 
 			//log.Info("position: " + position + " - rotation: " + rotation);
 			if (house == null) return 1;
@@ -142,8 +143,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case 245: MoneyToAdd *= 10000000; break;
 					case 244: MoneyToAdd *= 10000000000; break;
 				}
-				client.Player.TempProperties.setProperty(House.MONEYFORHOUSERENT, MoneyToAdd);
-				client.Player.TempProperties.setProperty(House.HOUSEFORHOUSERENT, house);
+				client.Player.TempProperties.setProperty(Housing.HousingConstants.MoneyForHouseRent, MoneyToAdd);
+				client.Player.TempProperties.setProperty(Housing.HousingConstants.HouseForHouseRent, house);
 				client.Player.Out.SendInventorySlotsUpdate(null);
 				client.Player.Out.SendHousePayRentDialog("Housing07");
 				
@@ -190,7 +191,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                     client.Player.Out.SendMessage("You must be a member of a guild to do that", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return 1;
                 }
-                if (HouseMgr.GetRealHouseByPlayer(client.Player) != house)
+                if (HouseMgr.GetHouseByPlayer(client.Player) != house)
                 {
                     client.Out.SendInventorySlotsUpdate(new int[] { slot });
                     client.Player.Out.SendMessage("You do not own this house.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -273,7 +274,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			switch (method)
 			{
 				case 1:
-                    if (!house.CanAddGarden(client.Player))
+					if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
@@ -292,7 +293,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					oitem.Rotation = Convert.ToByte(rotation);
 
 					//add item in db
-                    pos = GetFirstFreeSlot(house.OutdoorItems);
+                    pos = GetFirstFreeSlot(house.OutdoorItems.Keys);
                     DBHouseOutdoorItem odbitem = oitem.CreateDBOutdoorItem(housenumber);
 					oitem.DatabaseItem = odbitem;
 					GameServer.Database.AddObject(odbitem);
@@ -310,7 +311,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				case 2:
 				case 3:
-                    if (!house.CanAddInterior(client.Player))
+					if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
@@ -334,13 +335,9 @@ namespace DOL.GS.PacketHandler.Client.v168
                         client.Out.SendInventorySlotsUpdate(new int[] { slot });
 						return 1;
 					}
-					IndoorItem iitem = new IndoorItem();
-					iitem.Model = orgitem.Model;
-					iitem.Color = orgitem.Color;
-					iitem.X = xpos;
-					iitem.Y = ypos;
+					var iitem = new IndoorItem { Model = orgitem.Model, Color = orgitem.Color, X = xpos, Y = ypos };
 
-                    int ProperRotation = client.Player.Heading / 10;
+					int ProperRotation = client.Player.Heading / 10;
                     if (ProperRotation > 360)
                     {
                         ProperRotation = 360;
@@ -359,9 +356,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					iitem.Size = 100; //? dont know how this is defined. maybe DPS_AF or something.
 					iitem.Position = position;
-					iitem.Placemode = method;
+					iitem.PlacementMode = method;
 					iitem.BaseItem = null;
-					pos = GetFirstFreeSlot(house.IndoorItems);
+					pos = GetFirstFreeSlot(house.IndoorItems.Keys);
 					if (orgitem.Object_Type == 50 || orgitem.Object_Type == 51)
 					{
 						//its a housing item, so lets take it!
@@ -398,7 +395,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
                 case 4:
                     {
-                        if (!house.HasOwnerPermissions(client.Player) && !house.CanAddGarden(client.Player))
+                        if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
                         {
                             client.Out.SendInventorySlotsUpdate(new int[] { slot });
                             return 1;
@@ -450,7 +447,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				case 5:
 					{
-						if (!house.CanAddInterior(client.Player))
+						if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
 						{
 							client.Out.SendInventorySlotsUpdate(new int[] { slot });
 							return 1;
@@ -465,12 +462,14 @@ namespace DOL.GS.PacketHandler.Client.v168
                         }
                         else if (house.GetHookpointLocation((uint)position) != null)
                         {
-                            DBHousepointItem point = new DBHousepointItem();
-                            point.HouseID = house.HouseNumber;
-                            point.ItemTemplateID = orgitem.Id_nb;
-                            point.Position = (uint)position;
+                            var point = new DBHousepointItem
+                                        	{
+                                        		HouseID = house.HouseNumber,
+                                        		ItemTemplateID = orgitem.Id_nb,
+                                        		Position = (uint) position
+                                        	};
 
-                            // If we already have soemthing here, do not place more
+                        	// If we already have soemthing here, do not place more
                             foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = '" + house.HouseNumber + "'"))
                             {
                                 if (hpitem.Position == point.Position)
@@ -493,7 +492,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						break;
 					}
                 case 6: 
-                    if (!house.CanEditAppearance(client.Player))
+                    if (!house.CanChangeExternalAppearance(client.Player))
                     {
                         client.Out.SendInventorySlotsUpdate(new int[] { slot });
                         return 1;
@@ -523,17 +522,20 @@ namespace DOL.GS.PacketHandler.Client.v168
                         client.Player.Inventory.RemoveItem(orgitem);
                     }
                     else
-                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.BadShieldBanner"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    {
+                    	client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.BadShieldBanner"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
 
                     house.SaveIntoDatabase();
                     house.SendUpdate();
                     break;
 				case 7: // House vault.
 
-					if (position > House.MAX_HOOKPOINT_LOCATIONS)
+					if (position > HousingConstants.MaxHookpointLocations)
 					{
 						client.Player.Out.SendMessage("This hookpoint position is unknown, error logged.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						log.Error("HOUSING: " + client.Player.Name + " working with invalid position " + position + " in house " + house.HouseNumber + " model " + house.Model);
+						
 						return 1;
 					}
 
@@ -543,6 +545,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointID", +position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointCloser"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"), new CustomDialogResponse(LogLocation));
+						
 						return 1;
 
 					}
@@ -551,14 +554,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						client.Player.Out.SendMessage("You can't add any more vaults to this house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Out.SendInventorySlotsUpdate(new int[] { slot });
+
 						return 1;
 					}
 
 					log.Debug("HOUSING: " + client.Player.Name + " placing house vault at position " + position + " in house " + house.HouseNumber + " model " + house.Model);
 
-					GameHouseVault houseVault = new GameHouseVault(orgitem.Template, vaultIndex);
+					var houseVault = new GameHouseVault(orgitem.Template, vaultIndex);
 					houseVault.Attach(house, (uint)position, (ushort)((client.Player.Heading + 2048) % 4096));
+
 					client.Player.Inventory.RemoveItem(orgitem);
+
 					house.SaveIntoDatabase();
 					house.SendUpdate();
 					return 0;
@@ -568,11 +574,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			return 1;
 		}
 
-		protected int GetFirstFreeSlot(Hashtable tbl)
+		protected static int GetFirstFreeSlot(ICollection<int> tbl)
 		{
 			int i = 0;//tbl.Count;
-			while(tbl.Contains(i))
+
+			while (tbl.Contains(i))
+			{
 				i++;
+			}
+
 			return i;
 		}
 
@@ -589,13 +599,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (player.CurrentHouse == null)
 				return;
 
-			HouseHookpointOffset a = new HouseHookpointOffset();
-			a.Model = player.CurrentHouse.Model;
-			a.Hookpoint = position;
-			a.OffX = player.X - player.CurrentHouse.X;
-			a.OffY = player.Y - player.CurrentHouse.Y;
-			a.OffZ = player.Z - 25000;
-			a.OffH = player.Heading - player.CurrentHouse.Heading;
+			var a = new HouseHookpointOffset
+			        	{
+			        		Model = player.CurrentHouse.Model,
+			        		Hookpoint = position,
+			        		OffX = player.X - player.CurrentHouse.X,
+			        		OffY = player.Y - player.CurrentHouse.Y,
+			        		OffZ = player.Z - 25000,
+			        		OffH = player.Heading - player.CurrentHouse.Heading
+			        	};
+
 			if (GameServer.Database.AddObject(a) && House.AddNewOffset(a))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -613,16 +626,19 @@ namespace DOL.GS.PacketHandler.Client.v168
                 return;
 
 
-            WeakReference itemWeak = (WeakReference)player.TempProperties.getProperty<object>(DEED_WEAK, new WeakRef(null));
+			var itemWeak = player.TempProperties.getProperty<WeakReference>(DEED_WEAK, new WeakRef(null));
             player.TempProperties.removeProperty(DEED_WEAK);
+
             InventoryItem item = (InventoryItem)itemWeak.Target;
             House house = (House)player.TempProperties.getProperty<object>(TARGET_HOUSE, null);
             player.TempProperties.removeProperty(TARGET_HOUSE);
+
             if (house == null)
             {
                 player.Out.SendMessage("No House selected!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
+
             if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
                 || item.OwnerID == null || item.OwnerID != player.InternalID)
             {
@@ -632,16 +648,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 
             player.Inventory.RemoveItem(item);
             HouseMgr.RemoveHouse(house);
+
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HouseRemoved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
+
         protected static void HouseUpgradeDialogue(GamePlayer player, byte response)
         {
             if (response != 0x01)
                 return;
 
-
-            WeakReference itemWeak = (WeakReference)player.TempProperties.getProperty<object>(DEED_WEAK, new WeakRef(null));
+            var itemWeak = player.TempProperties.getProperty<WeakReference>(DEED_WEAK, new WeakRef(null));
             player.TempProperties.removeProperty(DEED_WEAK);
+
             InventoryItem item = (InventoryItem)itemWeak.Target;
             House house = (House)player.TempProperties.getProperty<object>(TARGET_HOUSE, null);
             player.TempProperties.removeProperty(TARGET_HOUSE);
@@ -658,6 +676,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                 player.Out.SendMessage("This does not work without a House Deed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
+
             HouseMgr.UpgradeHouse(house, item);
             player.Inventory.RemoveItem(item);
         }

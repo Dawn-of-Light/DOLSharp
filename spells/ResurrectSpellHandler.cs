@@ -131,7 +131,7 @@ namespace DOL.GS.Spells
 						// -> any better solution -> post :)
 						if ( Spell.ResurrectHealth == 100 )
 						{
-							GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, GlobalSpells.PvERessurectionIllnessSpellType);
+							GameSpellEffect effect = FindEffectOnTarget(player, GlobalSpells.PvERessurectionIllnessSpellType);
 				            if ( effect != null )
 				            	effect.Overwrite(new GameSpellEffect(effect.SpellHandler, effect.Duration / 2, effect.PulseFreq));
 						}

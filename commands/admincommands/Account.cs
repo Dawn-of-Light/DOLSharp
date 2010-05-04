@@ -116,6 +116,9 @@ namespace DOL.GS.Commands
 
 						acc.Password = LoginRequestHandler.CryptPassword(newpass);
 						GameServer.Database.SaveObject(acc);
+
+						// log change
+						AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountPasswordChange, "", (client.Player != null ? client.Player.Name : ""));
 					}
 					break;
 				#endregion ChangePassword
@@ -139,6 +142,10 @@ namespace DOL.GS.Commands
 
 						KickAccount(acc);
 						GameServer.Database.DeleteObject(acc);
+
+						// log change
+						AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountDelete, "acct="+AccountName, (client.Player != null ? client.Player.Name : ""));
+
                         DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountDeleted", acc.Name));
 						return;
 					}
@@ -163,6 +170,10 @@ namespace DOL.GS.Commands
 
                         KickCharacter(cha);
                         GameServer.Database.DeleteObject(cha);
+
+						// log change
+						AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterDelete, "char="+charname, (client.Player != null ? client.Player.Name : ""));
+
                         DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterDeleted", cha.Name));
                         return;
                     }

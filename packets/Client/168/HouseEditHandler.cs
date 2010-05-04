@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 using System.Reflection;
 using log4net;
@@ -34,7 +35,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int chnge;
 			ushort playerID = packet.ReadShort(); // no use for that.
 
-			ArrayList changes = new ArrayList();
+			var changes = new List<int>();
 			for(int i = 0; i < 10; i++)
 			{
 				swtch = packet.ReadByte();

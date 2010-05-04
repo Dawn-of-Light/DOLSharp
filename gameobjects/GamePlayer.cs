@@ -792,6 +792,9 @@ namespace DOL.GS
 				//Notify our event handlers (if any)
 				Notify(GamePlayerEvent.Quit, this);
 
+				// log quit
+				AuditMgr.AddAuditEntry(Client, AuditType.Character, AuditSubtype.CharacterLogout, "", Name);
+
 				//Cleanup stuff
 				CleanupOnDisconnect();
 				Delete();
@@ -942,8 +945,16 @@ namespace DOL.GS
 						break;
 					}
 				}
+
 				if (canbindhere)
 				{
+					// make sure we can actually use the bindstone
+					if(!house.CanBindInHouse(this))
+					{
+						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.CantHere"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
+
 					bound = true;
 					double angle = house.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
 					int outsideX = (int)(house.X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));

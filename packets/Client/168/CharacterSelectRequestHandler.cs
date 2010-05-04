@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
-
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0xB8^168,"Handles setting SessionID and the active character")]
+	[PacketHandler(PacketHandlerType.TCP, 0xB8 ^ 168, "Handles setting SessionID and the active character")]
 	public class CharacterSelectRequestHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int packetVersion;
@@ -35,56 +34,72 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case GameClient.eClientVersion.Version171:
 				case GameClient.eClientVersion.Version172:
 				case GameClient.eClientVersion.Version173:
-					packetVersion = 168; break;
+					packetVersion = 168;
+					break;
 				default:
-					packetVersion = 174; break;
+					packetVersion = 174;
+					break;
 			}
+
 			packet.Skip(4); //Skip the first 4 bytes
-			if(packetVersion==174) packet.Skip(1);
+			if (packetVersion == 174)
+			{
+				packet.Skip(1);
+			}
+
 			string charName = packet.ReadString(28);
 
 			//TODO Character handling 
-			if(charName.Equals("noname")) 
+			if (charName.Equals("noname"))
 			{
 				client.Out.SendSessionID();
-			} 
-			else 
+			}
+			else
 			{
 				// SH: Also load the player if client player is NOT null but their charnames differ!!!
 				// only load player when on charscreen and player is not loaded yet
 				// packet is sent on every region change (and twice after "play" was pressed)
-				if(
-				   (
-					(client.Player == null && client.Account.Characters != null) 
-					|| (client.Player!=null && client.Player.Name.ToLower()!=charName.ToLower())
-				   ) && client.ClientState == GameClient.eClientState.CharScreen)
+				if (
+					(
+						(client.Player == null && client.Account.Characters != null)
+						|| (client.Player != null && client.Player.Name.ToLower() != charName.ToLower())
+					) && client.ClientState == GameClient.eClientState.CharScreen)
 				{
-					bool charFound=false;
-					for(int i=0;i<client.Account.Characters.Length;i++)
+					bool charFound = false;
+					for (int i = 0; i < client.Account.Characters.Length; i++)
 					{
-						if(client.Account.Characters[i]!=null 
-							&& client.Account.Characters[i].Name==charName)
+						if (client.Account.Characters[i] != null
+						    && client.Account.Characters[i].Name == charName)
 						{
-							charFound=true;
+							charFound = true;
 							client.LoadPlayer(i);
 							break;
 						}
 					}
-					if(charFound==false)
+					if (charFound == false)
 					{
-						client.Player=null;
-						client.ActiveCharIndex=-1;
+						client.Player = null;
+						client.ActiveCharIndex = -1;
+					}
+					else
+					{
+						// log character play
+						AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterLogin, "", charName);
 					}
 				}
-				if(client.Player==null)
+
+				if (client.Player == null)
 				{
 					// client keeps sending the name of the deleted char even if new one was created, correct name only after "play" button pressed
 					//client.Server.Error(new Exception("ERROR, active character not found!!! name="+charName));
 				}
+
 				client.Out.SendSessionID();
 			}
+
 			return 1;
 		}
+
+		#endregion
 	}
 }
-

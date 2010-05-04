@@ -4,6 +4,7 @@ House.DBHousePermissions.AccessLevel:			Access level {0}
 House.Edit.NotEnoughMoney:				You don't have enough money to do that!
 House.Edit.PayForChanges:				You pay {0} for your changes.
 House.Enter.EnteredHouse:				You have entered house number {0}.
+House.Enter.EnteringHouse:				Entering house {0}.
 House.Exit.LeftHouse:					You have left house number {0}.
 House.SendHouseInfo.DoorMaterial:			-Door: {0}	
 House.SendHouseInfo.ExteriorMaterials:			Exterior Materials:	
