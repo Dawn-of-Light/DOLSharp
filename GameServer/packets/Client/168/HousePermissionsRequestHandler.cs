@@ -42,7 +42,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel == 1)
 				return 1;
+
 			client.Out.SendHousePermissions(house);
+
 			return 1;
 		}
 

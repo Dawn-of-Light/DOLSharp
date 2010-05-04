@@ -140,7 +140,8 @@ namespace DOL.GS
 			if (text.ToLower() == "personal")
 			{
 				House house = HouseMgr.GetHouseByPlayer(player);
-				if (house == null)
+
+				if(house == null)
 				{
 					text = "entrance";	// Fall through, port to housing entrance.
 				}

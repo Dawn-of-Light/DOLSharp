@@ -32,24 +32,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
-            int id = packet.ReadByte();
-            int op = packet.ReadByte();
+            int permissionSlot = packet.ReadByte();
+            int newPermissionLevel = packet.ReadByte();
             ushort housenumber = packet.ReadShort();
 
             House house = HouseMgr.GetHouse(housenumber);
             if (house == null)
                 return 1;
+
             if (client.Player == null) 
                 return 1;
 
             if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel == 1)
                 return 1;
 
-            if (op == 100)
-                house.RemoveFromPerm(id);
-            else
-                house.ChangePerm(id, op);
-            return 1;
+			if (newPermissionLevel == 100)
+			{
+				house.RemovePermission(permissionSlot);
+			}
+			else
+			{
+				house.AdjustPermissionSlot(permissionSlot, newPermissionLevel);
+			}
+
+        	return 1;
         }
     }
 }

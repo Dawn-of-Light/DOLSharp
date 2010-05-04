@@ -66,8 +66,8 @@ namespace DOL.GS.Commands
 							return;
 						}
 						BPsToAdd *= 10000;
-						client.Player.TempProperties.setProperty(House.BPSFORHOUSERENT, BPsToAdd);
-						client.Player.TempProperties.setProperty(House.HOUSEFORHOUSERENT, house);
+						client.Player.TempProperties.setProperty(Housing.HousingConstants.BPsForHouseRent, BPsToAdd);
+						client.Player.TempProperties.setProperty(Housing.HousingConstants.HouseForHouseRent, house);
 						client.Player.Out.SendHousePayRentDialog("Housing07");
 						break;
 					}
