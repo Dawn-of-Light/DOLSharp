@@ -498,6 +498,11 @@ namespace DOL.Database
 			return Connection.Escape(toEscape);
 		}
 
+		public bool ExecuteNonQuery(string rawQuery)
+		{
+			return ExecuteNonQueryImpl(rawQuery);
+		}
+
 		#endregion
 
 		#region Implementation
@@ -524,7 +529,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Finds an object in the database by primary key.
 		/// </summary>
-		/// <param name="objectType">the type of object to retrieve</param>
+		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
 		/// <param name="key">the value of the primary key to search for</param>
 		/// <returns>a <see cref="DataObject" /> instance representing a row with the given primary key value; null if the key value does not exist</returns>
 		protected abstract TObject FindObjectByKeyImpl<TObject>(object key)
@@ -551,9 +556,9 @@ namespace DOL.Database
 		/// <summary>
 		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
 		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="whereClause"></param>
-		/// <param name="isolation"></param>
+		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
+		/// <param name="whereClause">the where clause to filter object selection on</param>
+		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
 		/// <returns></returns>
 		protected abstract IList<TObject> SelectObjectsImpl<TObject>(string whereClause, Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
@@ -561,8 +566,8 @@ namespace DOL.Database
 		/// <summary>
 		/// Selects all objects from a given table in the database.
 		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="isolation"></param>
+		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
+		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects</returns>
 		/// <returns></returns>
 		protected abstract IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
@@ -570,11 +575,13 @@ namespace DOL.Database
 		/// <summary>
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
 		/// </summary>
-		/// <param name="objectType">the type of objects to count</param>
+		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
 		/// <param name="where">the where clause to filter object count on</param>
 		/// <returns>a positive integer representing the number of objects that matched the given criteria; zero if no such objects existed</returns>
 		protected abstract int GetObjectCountImpl<TObject>(string where)
 			where TObject : DataObject;
+
+		protected abstract bool ExecuteNonQueryImpl(string raqQuery);
 
 		#endregion
 
@@ -989,7 +996,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="objectType"></param>
 		/// <returns></returns>
-		protected static string GetTableOrViewName(Type objectType)
+		public static string GetTableOrViewName(Type objectType)
 		{
 			// Graveen: introducing view selection hack (before rewriting the layer :D)
 			// basically, a view must exist and is created with the following:

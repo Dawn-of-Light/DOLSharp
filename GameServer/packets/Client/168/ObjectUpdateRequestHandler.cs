@@ -55,15 +55,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					foreach (House house in HouseMgr.GetHouses(client.Player.CurrentRegionID).Values)
 					{
-						if (client.Player.IsWithinRadius( house, HouseMgr.HOUSE_DISTANCE ))
+						if (client.Player.IsWithinRadius( house, HousingConstants.HouseViewingDistance ))
 						{
 							if (!client.Player.HousingUpdateArray[house.UniqueID])
 							{
 								client.Out.SendHouse(house);
 								client.Out.SendGarden(house);
-                                ArrayList list = house.GetAllPlayersInHouse();
+
+                                var list = house.GetAllPlayersInHouse();
                                 if (list.Count > 0)
                                     client.Out.SendHouseOccupied(house, true);
+
 								client.Player.HousingUpdateArray[house.UniqueID] = true;
 							}
 						}

@@ -698,7 +698,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//write changes
 						GameServer.Database.SaveObject(ch);
 
-						client.Account.Characters = null;
+						// log creation
+						AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.CharacterCreate, "", charname);
+
+                        client.Account.Characters = null;
 
 						if (log.IsInfoEnabled)
 							log.Info(String.Format("Character {0} created!", charname));

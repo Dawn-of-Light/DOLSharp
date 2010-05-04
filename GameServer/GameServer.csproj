@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -811,6 +811,7 @@
     </Compile>
     <Compile Include="gameutils\Atlantis\ArtifactMgr.cs" />
     <Compile Include="gameutils\AttackData.cs" />
+    <Compile Include="gameutils\AuditMgr.cs" />
     <Compile Include="gameutils\BattleGroup.cs" />
     <Compile Include="gameutils\BoatMgr.cs" />
     <Compile Include="gameutils\CardMgr.cs" />
@@ -834,6 +835,7 @@
     <Compile Include="gameutils\StatSave.cs" />
     <Compile Include="gameutils\WarMapMgr.cs" />
     <Compile Include="gameutils\XFireSupport.cs" />
+    <Compile Include="housing\HousingConstants.cs" />
     <Compile Include="housing\IHouseHookpointItem.cs" />
     <Compile Include="ai\brain\Npcs\IAggressiveBrain.cs" />
     <Compile Include="keeps\Gameobjects\FrontiersPortalStone.cs" />

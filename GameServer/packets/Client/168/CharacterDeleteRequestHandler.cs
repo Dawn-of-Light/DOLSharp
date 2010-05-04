@@ -30,7 +30,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
@@ -44,8 +44,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (client.ActiveCharIndex == i)
 						client.ActiveCharIndex = -1;
 
-					if (log.IsInfoEnabled)
-						log.Info(String.Format("IP {1} is Deleting character {0} from account {2}!", charName, client.TcpEndpoint, client.Account.Name));
+					if (Log.IsInfoEnabled)
+						Log.Info(String.Format("IP {1} is Deleting character {0} from account {2}!", charName, client.TcpEndpoint, client.Account.Name));
 					//Fire the deletion event before removing the char
 					GameEventMgr.Notify(DatabaseEvent.CharacterDeleted, null, new CharacterEventArgs(chars[i], client));
 					//EventMgr.FireCharacterDeletion(chars[i]);
@@ -63,8 +63,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					catch (Exception e)
 					{
-						if (log.IsErrorEnabled)
-							log.Error("Error deleting char items, char OID="+chars[i].ObjectId, e);
+						if (Log.IsErrorEnabled)
+							Log.Error("Error deleting char items, char OID="+chars[i].ObjectId, e);
 					}
 
 					// delete quests
@@ -80,8 +80,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					catch (Exception e)
 					{
-						if (log.IsErrorEnabled)
-							log.Error("Error deleting char quests, char OID="+chars[i].ObjectId, e);
+						if (Log.IsErrorEnabled)
+							Log.Error("Error deleting char quests, char OID="+chars[i].ObjectId, e);
 					}
 					
 					// delete ML steps
@@ -97,8 +97,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					catch (Exception e)
 					{
-						if (log.IsErrorEnabled)
-							log.Error("Error deleting char ml steps, char OID="+chars[i].ObjectId, e);
+						if (Log.IsErrorEnabled)
+							Log.Error("Error deleting char ml steps, char OID="+chars[i].ObjectId, e);
 					}					
 
 					GameServer.Database.DeleteObject(chars[i]);
@@ -110,8 +110,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					if (client.Account.Characters == null || client.Account.Characters.Length == 0)
 					{
-						if (log.IsInfoEnabled)
-							log.Info(string.Format("Account {0} has no more chars. Realm reset!", client.Account.Name));
+						if (Log.IsInfoEnabled)
+							Log.Info(string.Format("Account {0} has no more chars. Realm reset!", client.Account.Name));
 						//Client has no more characters, so the client can choose
 						//the realm again!
 						client.Account.Realm = 0;
@@ -119,6 +119,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// 2008-01-29 Kakuri - Obsolete
 						//GameServer.Database.WriteDatabaseTable( typeof( Account ) );
 					}
+
+					// log deletion
+					AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterDelete, "", charName);
+
 					break;
 				}
 			return 1;

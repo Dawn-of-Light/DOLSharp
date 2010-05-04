@@ -32,7 +32,7 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			House house = HouseMgr.GetRealHouseByPlayer(client.Player);
+			House house = HouseMgr.GetHouseByPlayer(client.Player);
 			if (house == null)
 			{
 				DisplayMessage(client, "You do not own a house.");

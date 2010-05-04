@@ -237,7 +237,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			private static void SendHouseRentRemindersToPlayer(GamePlayer player)
 			{
-				House house = HouseMgr.GetRealHouseByPlayer(player);
+				House house = HouseMgr.GetHouseByPlayer(player);
+
 				if(house != null)
 				{
 					TimeSpan due = (house.LastPaid.AddDays(7).AddHours(1) - DateTime.Now);

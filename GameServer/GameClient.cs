@@ -673,6 +673,9 @@ namespace DOL.GS
 								log.Info("(" + TcpEndpoint + ") " + Account.Name + " just disconnected!");
 							}
 						}
+
+						// log disconnect
+						AuditMgr.AddAuditEntry(this, AuditType.Account, AuditSubtype.AccountLogout, "", Account.Name);
 					}
 				}
 				catch (Exception e)

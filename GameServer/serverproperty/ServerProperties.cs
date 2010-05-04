@@ -908,9 +908,7 @@ namespace DOL.GS.ServerProperties
 
 		[ServerProperty("housing","housing_lot_price_minimum", "Minimum lot price.", 300L * 100L * 100L)] // 300g
 		public static long HOUSING_LOT_PRICE_MINIMUM;
-		
-		[ServerProperty("housing","housing_debug_allow_multiple", "Allow the player to own more than 1 house.  This breaks some housing commands.", false)]
-		public static bool HOUSING_DEBUG_ALLOW_MULTIPLE;
+
 		#endregion
 		
 		#region CLASSES

@@ -52,18 +52,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 			switch (method)
 			{
 				case 1: //garden item
-					if (!house.CanRemoveGarden(client.Player))
-						return 1;
-					foreach(DictionaryEntry entry in house.OutdoorItems)
+					if (!house.CanChangeGarden(client.Player, DecorationPermissions.Remove))
+                        return 1;
+
+					foreach(var entry in house.OutdoorItems)
 					{
-						OutdoorItem oitem = (OutdoorItem)entry.Value;
+						OutdoorItem oitem = entry.Value;
 						if (oitem.Position != position)
 							continue;
-						int i = (int)entry.Key;
-						GameServer.Database.DeleteObject(((OutdoorItem) house.OutdoorItems[i]).DatabaseItem); //delete the database instance
+
+						int i = entry.Key;
+						GameServer.Database.DeleteObject(oitem.DatabaseItem); //delete the database instance
+
 						InventoryItem invitem = new InventoryItem(((OutdoorItem) house.OutdoorItems[i]).BaseItem);
 						client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
 						house.OutdoorItems.Remove(i);
+
 						client.Out.SendGarden(house);
 						client.Out.SendMessage("Garden object removed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Out.SendMessage(string.Format("You get {0} and put it in your backpack.", invitem.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -75,9 +79,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				case 2:
 				case 3: //wall/floor mode
-					if (!house.CanRemoveInterior(client.Player))
-						return 1;
-					IndoorItem iitem = ((IndoorItem) house.IndoorItems[position]);
+					if (!house.CanChangeInterior(client.Player, DecorationPermissions.Remove))
+                        return 1;
+
+					IndoorItem iitem = house.IndoorItems[position];
 					if (iitem == null)
 					{
 						client.Player.Out.SendMessage("error: id was null", eChatType.CT_Help, eChatLoc.CL_SystemWindow);

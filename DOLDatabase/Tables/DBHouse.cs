@@ -55,7 +55,7 @@ namespace DOL
 			private bool m_outdoorguildshield;
 			private bool m_outdoorguildbanner;
 			private bool m_porch;
-			private string m_ownerids;
+			private string m_ownerid;
 			private DateTime m_lastpaid;
 			private long m_keptmoney;
 			private bool m_nopurge;
@@ -405,16 +405,16 @@ namespace DOL
 			}
 
 			[DataElement(AllowDbNull=true)]
-			public string OwnerIDs
+			public string OwnerID
 			{
 				get
 				{
-					return m_ownerids;
+					return m_ownerid;
 				}
 				set
 				{
 					Dirty = true;
-					m_ownerids = value;
+					m_ownerid = value;
 				}
 			}
 

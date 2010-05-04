@@ -29,6 +29,7 @@ using log4net;
 using DOL.Config;
 using Timer=System.Threading.Timer;
 using System.Collections.Generic;
+using DOL.GS.Housing;
 
 namespace DOL.GS
 {
@@ -803,24 +804,25 @@ namespace DOL.GS
 									if (client.Player.CurrentRegion.HousingEnabled)
 									{
 										if (client.Player.HousingUpdateArray == null)
-											client.Player.HousingUpdateArray = new BitArray(DOL.GS.Housing.HouseMgr.MAXHOUSES, false);
+											client.Player.HousingUpdateArray = new BitArray(HouseMgr.MAXHOUSES, false);
 
-										Hashtable houses = (Hashtable)DOL.GS.Housing.HouseMgr.GetHouses(client.Player.CurrentRegionID);
+										Hashtable houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
 										if (houses != null)
 										{
-											foreach (DOL.GS.Housing.House house in DOL.GS.Housing.HouseMgr.GetHouses(client.Player.CurrentRegionID).Values)
+											foreach (House house in HouseMgr.GetHouses(client.Player.CurrentRegionID).Values)
 											{
-												if (client.Player.IsWithinRadius(house, DOL.GS.Housing.HouseMgr.HOUSE_DISTANCE))
+												if (client.Player.IsWithinRadius(house, HousingConstants.HouseViewingDistance))
 												{
 													if (!client.Player.HousingUpdateArray[house.UniqueID])
 													{
 														client.Out.SendHouse(house);
 														client.Out.SendGarden(house);
-														ArrayList list = house.GetAllPlayersInHouse();
-														if (list.Count > 0)
+														
+														if (house.IsOccupied)
 														{
 															client.Out.SendHouseOccupied(house, true);
 														}
+
 														client.Player.HousingUpdateArray[house.UniqueID] = true;
 													}
 												}

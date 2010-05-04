@@ -4,5 +4,4 @@ Money.GetString.Text3:	platinum,
 Money.GetString.Text4:	gold,
 Money.GetString.Text5:	silver,
 Money.GetString.Text6:	copper,
-Money.GetString.Text7:	pieces,
 

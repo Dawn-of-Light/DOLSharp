@@ -43,11 +43,12 @@ namespace DOL.GS.Housing
 		{
 			IList list = new ArrayList();
 			list.Add("You target lot number " + DatabaseItem.HouseNumber + ".");
-			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
+
+			if (string.IsNullOrEmpty(DatabaseItem.OwnerID))
 			{
 				list.Add(" It can be bought for " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + ".");
 			}
-            else if (DatabaseItem.Name != null && DatabaseItem.Name != "")
+            else if (!string.IsNullOrEmpty(DatabaseItem.Name))
             { 
                 list.Add(" It is owned by " + DatabaseItem.Name + ".");
             }
@@ -58,25 +59,26 @@ namespace DOL.GS.Housing
 		public override bool Interact(GamePlayer player)
 		{
 			if (!base.Interact(player))
-			{
 				return false;
-			}
-            if (!ServerProperties.Properties.HOUSING_DEBUG_ALLOW_MULTIPLE && HouseMgr.GetRealHouseByPlayer(player) != null)
+
+			var house = HouseMgr.GetHouseByPlayer(player);
+			
+            if (house != null)
 			{
                 //the player might be targeting a lot he already purchased that has no house on it yet
-                if (HouseMgr.GetRealHouseByPlayer(player).HouseNumber != this.DatabaseItem.HouseNumber)
+                if (house.HouseNumber != DatabaseItem.HouseNumber)
                 {
                     player.Out.SendMessage("You already own a house!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return false;
                 }
 			}
-			if (DatabaseItem.OwnerIDs == null || DatabaseItem.OwnerIDs == "")
+			if (string.IsNullOrEmpty(DatabaseItem.OwnerID))
 			{
-				player.Out.SendCustomDialog("Do you want to buy this lot?\r\n It costs " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + "!", new CustomDialogResponse(BuyLot));
+				player.Out.SendCustomDialog("Do you want to buy this lot?\r\n It costs " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + "!", BuyLot);
 			}
 			else
 			{
-				if (HouseMgr.IsOwner(DatabaseItem, player, true))
+				if (HouseMgr.IsOwner(DatabaseItem, player))
 				{
 					player.Out.SendMerchantWindow(HouseTemplateMgr.GetLotMarkerItems(this), eMerchantWindowType.Normal);
 				}
@@ -93,8 +95,10 @@ namespace DOL.GS.Housing
 			if (response != 0x01) return;
 			lock (DatabaseItem) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				if (DatabaseItem.OwnerIDs != null && DatabaseItem.OwnerIDs != "") return;
-				if (HouseMgr.GetHouseNumberByPlayer(player) != 0 && player.Client.Account.PrivLevel == 1 && !ServerProperties.Properties.HOUSING_DEBUG_ALLOW_MULTIPLE)
+				if (!string.IsNullOrEmpty(DatabaseItem.OwnerID)) 
+					return;
+
+				if (HouseMgr.GetHouseNumberByPlayer(player) != 0)
 				{
 					player.Out.SendMessage("You already own another lot or house (Number " + HouseMgr.GetHouseNumberByPlayer(player) + ").", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 					return;
@@ -102,7 +106,7 @@ namespace DOL.GS.Housing
 				if (player.RemoveMoney(HouseTemplateMgr.GetLotPrice(DatabaseItem), "You just bought this lot for {0}.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 				{
 					DatabaseItem.LastPaid = DateTime.Now;
-					HouseMgr.AddOwner(DatabaseItem, player);
+					DatabaseItem.OwnerID = player.PlayerCharacter.ObjectId;
 				}
 				else
 				{
@@ -117,7 +121,8 @@ namespace DOL.GS.Housing
 			if (!(source is GamePlayer)) return false;
 
 			GamePlayer player = (GamePlayer)source;
-			if (HouseMgr.IsOwner(DatabaseItem, player, true))
+
+			if (HouseMgr.IsOwner(DatabaseItem, player))
 			{
 				switch (item.Id_nb)
 				{
