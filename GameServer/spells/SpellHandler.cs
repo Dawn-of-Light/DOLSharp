@@ -2579,10 +2579,47 @@ return false;
 				}
 			}
 
-			if ((target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent) && ((Spell.SpellType != "SiegeArrow" && Spell.SpellType != "DirectDamage") || Spell.Radius != 0))
+			if ((target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent))
 			{
-				MessageToCaster(String.Format("Your spell has no effect on the {0}!", target.Name), eChatType.CT_SpellResisted);
-				return;
+				bool isAllowed = false;
+				bool isSilent = false;
+
+				if (Spell.Radius == 0)
+				{
+					switch (Spell.SpellType.ToLower())
+					{
+						case "archery":
+						case "bolt":
+						case "bomber":
+						case "damagespeeddecrease":
+						case "directdamage":
+						case "magicalstrike":
+						case "siegearrow":
+						case "summontheurgistpet":
+						case "directdamagewithdebuff":
+							isAllowed = true;
+							break;
+					}
+				}
+
+				if (Spell.Radius > 0)
+				{
+					// pbaoe is allowed, otherwise door is in range of a AOE so don't spam caster with a message
+					if (Spell.Range == 0)
+						isAllowed = true;
+					else
+						isSilent = true;
+				}
+
+				if (!isAllowed)
+				{
+					if (!isSilent)
+					{
+						MessageToCaster(String.Format("Your spell has no effect on the {0}!", target.Name), eChatType.CT_SpellResisted);
+					}
+
+					return;
+				}
 			}
 			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName == GlobalSpellsLines.Potions_Effects || m_spellLine.KeyName == Specs.Savagery || m_spellLine.KeyName == GlobalSpellsLines.Character_Abilities || m_spellLine.KeyName == "OffensiveProc")
 				effectiveness = 1.0; // TODO player.PlayerEffectiveness
@@ -3668,10 +3705,6 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 		/// <param name="ad"></param>
 		public virtual void SendDamageMessages(AttackData ad)
 		{
-			// tolakram - Keep components handle all damage messages
-			if (ad.Target is Keeps.GameKeepDoor || ad.Target is Keeps.GameKeepComponent)
-				return;
-
 			string modmessage = "";
 			if (ad.Modifier > 0)
 				modmessage = " (+" + ad.Modifier + ")";
