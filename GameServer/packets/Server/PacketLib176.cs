@@ -412,7 +412,7 @@ namespace DOL.GS.PacketHandler
 			if ((type & 8) == 8)
 				pak.WriteByte((byte)item.Size);
 			pak.WriteByte((byte)item.Position);
-			pak.WriteByte((byte)(item.Placemode - 2));
+			pak.WriteByte((byte)(item.PlacementMode - 2));
 		}
 
 		public override void SendRvRGuildBanner(GamePlayer player, bool show)

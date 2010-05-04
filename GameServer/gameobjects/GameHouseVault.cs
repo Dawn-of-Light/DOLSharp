@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 using DOL.Database;
 using DOL.GS.Housing;
-using System;
 using DOL.GS.PacketHandler;
-using System.Collections.Generic;
-using log4net;
-using System.Reflection;
 
 namespace DOL.GS
 {
@@ -34,173 +32,45 @@ namespace DOL.GS
 	public class GameHouseVault : GameVault, IHouseHookpointItem
 	{
 		/// <summary>
-		/// House vault permission bits.
+		/// This list holds all the players that are currently viewing
+		/// the vault; it is needed to update the contents of the vault
+		/// for any one observer if there is a change.
 		/// </summary>
-		public enum Permissions
-		{
-			None = 0x00,
-			Remove = 0x01,
-			Add = 0x02,
-			View = 0x04
-		}
+		private readonly Dictionary<string, GamePlayer> _observers = new Dictionary<string, GamePlayer>();
 
+		private readonly string _templateID;
+		private DBHousepointItem _hookedItem;
+		private readonly object _vaultLock = new object();
 
 		/// <summary>
 		/// Create a new house vault.
 		/// </summary>
 		/// <param name="vaultIndex"></param>
-		public GameHouseVault(ItemTemplate itemTemplate, int vaultIndex) : base()
+		public GameHouseVault(ItemTemplate itemTemplate, int vaultIndex)
 		{
 			if (itemTemplate == null)
 				throw new ArgumentNullException();
 
 			Name = itemTemplate.Name;
-			Model = (ushort)(itemTemplate.Model);
-			m_templateID = itemTemplate.Id_nb;
+			Model = (ushort) (itemTemplate.Model);
+			_templateID = itemTemplate.Id_nb;
 			Index = vaultIndex;
 		}
 
-
-		public override string GetOwner(GamePlayer player)
+		public override int VaultSize
 		{
-			return HouseMgr.GetOwner(CurrentHouse.DatabaseItem);
+			get { return HousingConstants.VaultSize; }
 		}
 
-
-		#region Interact
-
-		/// <summary>
-		/// This list holds all the players that are currently viewing
-		/// the vault; it is needed to update the contents of the vault
-		/// for any one observer if there is a change.
-		/// </summary>
-		private Dictionary<String, GamePlayer> m_observers = new Dictionary<String, GamePlayer>();
-
-		/// <summary>
-		/// Player interacting with this vault.
-		/// </summary>
-		/// <param name="player"></param>
-		/// <returns></returns>
-		public override bool Interact(GamePlayer player)
-		{
-			if (!player.InHouse)
-				return false;
-
-			if (!base.Interact(player) || CurrentHouse == null)
-				return false;
-
-			if (!m_observers.ContainsKey(player.Name))
-				m_observers.Add(player.Name, player);
-
-			return true;
-		}
-
-
-		/// <summary>
-		/// Send inventory updates to all players actively viewing this vault;
-		/// players that are too far away will be considered inactive.
-		/// </summary>
-		/// <param name="updateItems"></param>
-		protected override void NotifyObservers(GamePlayer player, IDictionary<int, InventoryItem> updateItems )
-		{
-			IList<String> inactiveList = new List<String>();
-			foreach (GamePlayer observer in m_observers.Values)
-			{
-				if (observer.ActiveVault != this)
-				{
-					inactiveList.Add(observer.Name);
-					continue;
-				}
-
-				if (!this.IsWithinRadius(observer, WorldMgr.INFO_DISTANCE))
-				{
-					if (observer.Client.Account.PrivLevel > 1)
-					{
-						observer.Out.SendMessage(String.Format("You are too far away from house vault {0} and will not receive any more updates.",
-							Index + 1), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-					}
-
-					observer.ActiveVault = null;
-					inactiveList.Add(observer.Name);
-					continue;
-				}
-
-				observer.Client.Out.SendInventoryItemsUpdate(updateItems, 0);
-			}
-
-			// Now remove all inactive observers.
-
-			foreach (String observerName in inactiveList)
-				m_observers.Remove(observerName);
-		}
-
-		#endregion
-
-		#region Permissions
-
-		/// <summary>
-		/// Whether or not this player can view the contents of this
-		/// vault.
-		/// </summary>
-		/// <param name="player"></param>
-		/// <returns></returns>
-		public override bool CanView(GamePlayer player)
-		{
-			if (IsOwner(player) || player.Client.Account.PrivLevel > 1)
-				return true;
-
-			return ((GetPlayerPermissions(player) & (byte)(Permissions.View)) > 0);
-		}
-
-        /// <summary>
-        /// Whether or not this player can move items inside the vault
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns></returns>
-        public override bool CanMove(GamePlayer player)
-        {
-            if (CurrentHouse.IsOwner(player) || player.Client.Account.PrivLevel > 1)
-                return true;
-
-            return ((GetPlayerPermissions(player) & (byte)(Permissions.Remove)) > 0);
-        }
-
-		/// <summary>
-		/// Get permissions this player has for this vault.
-		/// </summary>
-		/// <param name="player"></param>
-		/// <returns></returns>
-		private byte GetPlayerPermissions(GamePlayer player)
-		{
-			DBHousePermissions housePermissions = CurrentHouse.GetPlayerPermissions(player);
-			if (housePermissions != null)
-			{
-				switch (Index)
-				{
-					case 0: return housePermissions.Vault1;
-					case 1: return housePermissions.Vault2;
-					case 2: return housePermissions.Vault3;
-					case 3: return housePermissions.Vault4;
-				}
-			}
-			return (byte)(Permissions.None);
-		}
-
-		#endregion
-
-		#region IHouseHookpointItem Implementation
-
-		private String m_templateID;
+		#region IHouseHookpointItem Members
 
 		/// <summary>
 		/// Template ID for this vault.
 		/// </summary>
-		public String TemplateID
+		public string TemplateID
 		{
-			get { return m_templateID; }
+			get { return _templateID; }
 		}
-
-		private DBHousepointItem m_hookedItem = null;
 
 		/// <summary>
 		/// Attach this vault to a hookpoint in a house.
@@ -213,18 +83,19 @@ namespace DOL.GS
 			if (house == null)
 				return false;
 
-			// Register vault in the DB.
+			// register vault in the DB.
+			var hookedItem = new DBHousepointItem
+			                 	{
+			                 		HouseID = house.HouseNumber,
+			                 		Position = hookpointID,
+			                 		Heading = (ushort) (heading%4096),
+			                 		ItemTemplateID = _templateID,
+			                 		Index = (byte) Index
+			                 	};
 
-			DBHousepointItem hookedItem = new DBHousepointItem();
-			hookedItem.HouseID = house.HouseNumber;
-			hookedItem.Position = hookpointID;
-			hookedItem.Heading = (ushort)(heading % 4096);
-			hookedItem.ItemTemplateID = m_templateID;
-			hookedItem.Index = (byte)Index;
 			GameServer.Database.AddObject(hookedItem);
 
-			// Now add the vault to the house.
-
+			// now add the vault to the house.
 			return Attach(house, hookedItem);
 		}
 
@@ -239,7 +110,7 @@ namespace DOL.GS
 			if (house == null || hookedItem == null)
 				return false;
 
-			m_hookedItem = hookedItem;
+			_hookedItem = hookedItem;
 
 			IPoint3D position = house.GetHookpointLocation(hookedItem.Position);
 			if (position == null)
@@ -251,8 +122,9 @@ namespace DOL.GS
 			X = position.X;
 			Y = position.Y;
 			Z = position.Z;
-			Heading = (ushort)(hookedItem.Heading % 4096);
+			Heading = (ushort) (hookedItem.Heading%4096);
 			AddToWorld();
+
 			return true;
 		}
 
@@ -262,26 +134,125 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool Detach()
 		{
-			if (m_hookedItem == null)
+			if (_hookedItem == null)
 				return false;
 
 			lock (m_vaultSync)
 			{
-				foreach (GamePlayer observer in m_observers.Values)
+				foreach (GamePlayer observer in _observers.Values)
+				{
 					observer.ActiveVault = null;
+				}
 
-				m_observers.Clear();
+				_observers.Clear();
 				RemoveFromWorld();
 
-				// Unregister this vault from the DB.
-
-				GameServer.Database.DeleteObject(m_hookedItem);
-				m_hookedItem = null;
+				// unregister this vault from the DB.
+				GameServer.Database.DeleteObject(_hookedItem);
+				_hookedItem = null;
 			}
 
 			return true;
 		}
 
 		#endregion
+
+		public override string GetOwner(GamePlayer player)
+		{
+			return HouseMgr.GetOwner(CurrentHouse.DatabaseItem);
+		}
+
+		/// <summary>
+		/// Player interacting with this vault.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public override bool Interact(GamePlayer player)
+		{
+			if (!player.InHouse)
+				return false;
+
+			if (!base.Interact(player) || CurrentHouse == null)
+				return false;
+
+			lock(_vaultLock)
+			{
+				if (!_observers.ContainsKey(player.Name))
+				{
+					_observers.Add(player.Name, player);
+				}
+			}
+			
+			return true;
+		}
+
+		/// <summary>
+		/// Send inventory updates to all players actively viewing this vault;
+		/// players that are too far away will be considered inactive.
+		/// </summary>
+		/// <param name="updateItems"></param>
+		protected override void NotifyObservers(GamePlayer player, IDictionary<int, InventoryItem> updateItems)
+		{
+			var inactiveList = new List<string>();
+
+			lock (_vaultLock)
+			{
+				foreach (GamePlayer observer in _observers.Values)
+				{
+					if (observer.ActiveVault != this)
+					{
+						inactiveList.Add(observer.Name);
+						continue;
+					}
+
+					if (!IsWithinRadius(observer, WorldMgr.INFO_DISTANCE))
+					{
+						observer.ActiveVault = null;
+						inactiveList.Add(observer.Name);
+
+						continue;
+					}
+
+					observer.Client.Out.SendInventoryItemsUpdate(updateItems, 0);
+				}
+
+				// now remove all inactive observers.
+				foreach (string observerName in inactiveList)
+				{
+					_observers.Remove(observerName);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Whether or not this player can view the contents of this
+		/// vault.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public override bool CanView(GamePlayer player)
+		{
+			return CurrentHouse.CanUseVault(player, this, VaultPermissions.View);
+		}
+
+		/// <summary>
+		/// Whether or not this player can move items inside the vault
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public override bool CanAddItems(GamePlayer player)
+		{
+			return CurrentHouse.CanUseVault(player, this, VaultPermissions.Add);
+		}
+
+		/// <summary>
+		/// Whether or not this player can move items inside the vault
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public override bool CanRemoveItems(GamePlayer player)
+		{
+			return CurrentHouse.CanUseVault(player, this, VaultPermissions.Remove);
+		}
 	}
 }

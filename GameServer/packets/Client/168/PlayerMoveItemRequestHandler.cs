@@ -252,15 +252,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (houseVault == null)
 				{
-					client.Out.SendMessage("You are not actively viewing a vault!",
-					                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("You are not actively viewing a vault!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendInventoryItemsUpdate(null);
+
 					return 0;
 				}
-				if (!houseVault.CanMove(client.Player))
+
+				if (toHousing && !houseVault.CanAddItems(client.Player))
 				{
-					client.Out.SendMessage("You don't have permission to add or remove Items!",
-					                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("You don't have permission to add items!",  eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return 0;
+				}
+
+				if (fromHousing && !houseVault.CanRemoveItems(client.Player))
+				{
+					client.Out.SendMessage("You don't have permission to remove items!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return 0;
 				}
 
@@ -314,12 +320,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (client.Player.TargetObject == null)
 					return 0;
+
 				if (!(client.Player.TargetObject is MarketExplorer))
 					return 0;
-				List<InventoryItem> list = client.Player.TempProperties.getProperty<object>(DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.EXPLORER_LIST, null) as List<InventoryItem>;
+
+				var list = client.Player.TempProperties.getProperty<List<InventoryItem>>(PlayerMarketSearchRequestHandler.EXPLORER_LIST, null);
 				if (list == null)
 					return 0;
-				MarketExplorer me = client.Player.TargetObject as MarketExplorer;
+
+				var me = client.Player.TargetObject as MarketExplorer;
 
 				int itemnr = fromSlot - (int)eInventorySlot.MarketExplorerFirst;
 

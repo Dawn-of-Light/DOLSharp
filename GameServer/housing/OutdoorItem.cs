@@ -19,63 +19,48 @@
 /* Created by Schaf
  * Last modified by Schaf on 10.12.2004 20:09
  */
- 
-using System;
-using System.Collections;
 
-using DOL.Database; //yeah for the DBOutdoorItem class!
+using DOL.Database;
+
+//yeah for the DBOutdoorItem class!
 
 namespace DOL.GS.Housing
 {
 	public class OutdoorItem
 	{
-		int m_model;
-		public int Model
+		public OutdoorItem()
+		{}
+
+		public OutdoorItem(DBHouseOutdoorItem dbitem)
 		{
-			get { return m_model; }
-			set { m_model= value; }
-		}
-		int m_position;
-		public int Position
-		{
-			get { return m_position; }
-			set { m_position = value;}
-		}
-		int m_rotation;
-		public int Rotation
-		{
-			get { return m_rotation; }
-			set { m_rotation = value;}
-		}
-		ItemTemplate m_baseitem;
-		public ItemTemplate BaseItem
-		{
-			get { return m_baseitem; }
-			set { m_baseitem = value;}			
-		}
-		DBHouseOutdoorItem m_databaseitem;
-		public DBHouseOutdoorItem DatabaseItem
-		{
-			get { return m_databaseitem; }
-			set { m_databaseitem=value;  }
-		}
-		public void CopyFrom(DBHouseOutdoorItem dbitem)
-		{
-			this.Model = dbitem.Model;
-			this.Position = dbitem.Position;
-			this.Rotation = dbitem.Rotation;
-			this.BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(dbitem.BaseItemID);
-			this.DatabaseItem = dbitem;
+			Model = dbitem.Model;
+			Position = dbitem.Position;
+			Rotation = dbitem.Rotation;
+			BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(dbitem.BaseItemID);
+			DatabaseItem = dbitem;
 		}
 
-		public DBHouseOutdoorItem CreateDBOutdoorItem(int HouseNumber)
+		public int Model { get; set; }
+
+		public int Position { get; set; }
+
+		public int Rotation { get; set; }
+
+		public ItemTemplate BaseItem { get; set; }
+
+		public DBHouseOutdoorItem DatabaseItem { get; set; }
+
+		public DBHouseOutdoorItem CreateDBOutdoorItem(int houseNumber)
 		{
-			DBHouseOutdoorItem dbitem = new DBHouseOutdoorItem();
-			dbitem.HouseNumber = HouseNumber;
-			dbitem.Model = Model;
-			dbitem.Position = Position;
-			dbitem.BaseItemID = BaseItem.Id_nb;
-			dbitem.Rotation = Rotation;
+			var dbitem = new DBHouseOutdoorItem
+			             	{
+			             		HouseNumber = houseNumber,
+			             		Model = Model,
+			             		Position = Position,
+			             		BaseItemID = BaseItem.Id_nb,
+			             		Rotation = Rotation
+			             	};
+
 			return dbitem;
 		}
 	}

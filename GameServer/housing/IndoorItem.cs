@@ -20,105 +20,66 @@
  * Last modified by Schaf on 10.12.2004 20:09
  */
 
-using System;
-using System.Collections;
+using DOL.Database;
 
-using DOL.Database; //yeah for the DBIndoorItem class!
+//yeah for the DBIndoorItem class!
 
 namespace DOL.GS.Housing
 {
 	public class IndoorItem
 	{
-		int m_model;
-		public int Model
+		public IndoorItem()
+		{}
+
+		public IndoorItem(DBHouseIndoorItem dbitem)
 		{
-			get { return m_model; }
-			set { m_model= value; }
-		}
-		int m_color;
-		public int Color
-		{
-			get { return m_color; }
-			set { m_color = value;}
-		}
-		short m_x;
-		public short X
-		{
-			get { return m_x; }
-			set { m_x = value;}
-		}
-		short m_y;
-		public short Y
-		{
-			get { return m_y; }
-			set { m_y = value;}
-		}
-		int m_rotation;
-		public int Rotation
-		{
-			get { return m_rotation; }
-			set { m_rotation = value;}
-		}
-		int m_size;
-		public int Size
-		{
-			get { return m_size; }
-			set { m_size = value;}
-		}
-        int m_emblem;
-        public int Emblem
-        {
-            get { return m_emblem; }
-            set { m_emblem = value; }
-        }
-		int m_position;
-		public int Position
-		{
-			get { return m_position; }
-			set { m_position = value;}
-		}
-		int m_placemode;
-		public int Placemode
-		{
-			get { return m_placemode;  }
-			set { m_placemode = value; }
-		}
-		ItemTemplate m_baseitem;
-		public ItemTemplate BaseItem
-		{
-			get { return m_baseitem; }
-			set { m_baseitem = value;}			
-		}
-		DBHouseIndoorItem m_databaseitem;
-		public DBHouseIndoorItem DatabaseItem
-		{
-			get { return m_databaseitem; }
-			set { m_databaseitem=value;  }
-		}
-		public void CopyFrom(DBHouseIndoorItem dbitem)
-		{
-			this.Model = dbitem.Model;
-			this.Color = dbitem.Color;
-			this.X = (short)dbitem.X;
-			this.Y = (short)dbitem.Y;
-			this.Rotation = dbitem.Rotation;
-			this.Size = dbitem.Size;
-            this.Emblem = dbitem.Emblem;
-			this.Position = dbitem.Position;
-			this.Placemode = dbitem.Placemode;
-			this.BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(dbitem.BaseItemID);
-			this.DatabaseItem = dbitem;
+			Model = dbitem.Model;
+			Color = dbitem.Color;
+			X = (short) dbitem.X;
+			Y = (short) dbitem.Y;
+			Rotation = dbitem.Rotation;
+			Size = dbitem.Size;
+			Emblem = dbitem.Emblem;
+			Position = dbitem.Position;
+			PlacementMode = dbitem.Placemode;
+			BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(dbitem.BaseItemID);
+			DatabaseItem = dbitem;
 		}
 
-		public DBHouseIndoorItem CreateDBIndoorItem(int HouseNumber)
+		public int Model { get; set; }
+
+		public int Color { get; set; }
+
+		public short X { get; set; }
+
+		public short Y { get; set; }
+
+		public int Rotation { get; set; }
+
+		public int Size { get; set; }
+
+		public int Emblem { get; set; }
+
+		public int Position { get; set; }
+
+		public int PlacementMode { get; set; }
+
+		public ItemTemplate BaseItem { get; set; }
+
+		public DBHouseIndoorItem DatabaseItem { get; set; }
+
+		public DBHouseIndoorItem CreateDBIndoorItem(int houseNumber)
 		{
-			DBHouseIndoorItem dbitem = new DBHouseIndoorItem();
-			dbitem.HouseNumber = HouseNumber;
-			dbitem.Model = Model;
-			dbitem.Position = Position;
-			dbitem.Placemode = Placemode;
-			dbitem.X = X;
-			dbitem.Y = Y;
+			var dbitem = new DBHouseIndoorItem
+			             	{
+			             		HouseNumber = houseNumber,
+			             		Model = Model,
+			             		Position = Position,
+			             		Placemode = PlacementMode,
+			             		X = X,
+			             		Y = Y
+			             	};
+
 			if (BaseItem != null)
 			{
 				dbitem.BaseItemID = BaseItem.Id_nb;
@@ -127,9 +88,11 @@ namespace DOL.GS.Housing
 			{
 				dbitem.BaseItemID = "null";
 			}
+
 			dbitem.Color = Color;
 			dbitem.Rotation = Rotation;
 			dbitem.Size = Size;
+
 			return dbitem;
 		}
 	}

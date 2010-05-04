@@ -17,258 +17,272 @@
  *
  */
 
-using System;
-
-using DOL.Database;
 using DOL.Database.Attributes;
 
-namespace DOL
+namespace DOL.Database
 {
-	namespace Database
+	/// <summary>
+	/// Table that holds the different configurations for the permission levels of different houses.
+	/// </summary>
+	[DataTable(TableName = "DBHousePermissions")]
+	public class DBHousePermissions : DataObject
 	{
-		[DataTable(TableName = "DBHousePermissions")]
-		public class DBHousePermissions : DataObject
+		//important data
+		private bool _banish;
+		private bool _bind;
+		private bool _changeExternalAppearance;
+		private bool _enter;
+		private byte _garden;
+		private int _housenumber;
+		private byte _interior;
+		private byte _merchant;
+		private bool _payRent;
+		private int _permLevel;
+		private bool _tools;
+		private bool _useMerchant;
+		private byte _vault1;
+		private byte _vault2;
+		private byte _vault3;
+		private byte _vault4;
+
+		public DBHousePermissions()
+		{}
+
+		public DBHousePermissions(int n, int lvl)
 		{
-			//important data
-			private int m_housenumber;
-			private int m_permLevel;
-			private byte m_enter;
-			private byte m_vault1;
-			private byte m_vault2;
-			private byte m_vault3;
-			private byte m_vault4;
-			private byte m_appearance;
-			private byte m_interior;
-			private byte m_garden;
-			private byte m_banish;
-			private byte m_useMerchant;
-			private byte m_tools;
-			private byte m_bind;
-			private byte m_merchant;
-			private byte m_payRent;
+			HouseNumber = n;
+			PermissionLevel = lvl;
+		}
 
+		/// <summary>
+		/// Gets or sets level of the permission.
+		/// </summary>
+		/// <remarks>Since permission levels are hard-coded, this value should never be anything other than 1 thru 9.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public int PermissionLevel
+		{
+			get { return _permLevel; }
+			set
+			{
+				Dirty = true;
+				_permLevel = value;
+			}
+		}
 
-			public DBHousePermissions(int n, int lvl)
+		/// <summary>
+		/// Gets or sets the house number this permission is associated with.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int HouseNumber
+		{
+			get { return _housenumber; }
+			set
 			{
-				HouseNumber = n;
-				PermLevel = lvl;
+				Dirty = true;
+				_housenumber = value;
 			}
+		}
 
-			public DBHousePermissions()
+		/// <summary>
+		/// Gets or sets whether or not players in this level can enter the home.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public bool CanEnterHouse
+		{
+			get { return _enter; }
+			set
 			{
+				Dirty = true;
+				_enter = value;
 			}
+		}
 
+		/// <summary>
+		/// Gets or sets the flags related to the 1st or 5th vault in the home.
+		/// </summary>
+		/// <remarks>These flags contain view, add, and remove permissions for the vault.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public byte Vault1
+		{
+			get { return _vault1; }
+			set
+			{
+				Dirty = true;
+				_vault1 = value;
+			}
+		}
 
+		/// <summary>
+		/// Gets or sets the flags related to the 2nd or 6th vault in the home.
+		/// </summary>
+		/// <remarks>These flags contain view, add, and remove permissions for the vault.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public byte Vault2
+		{
+			get { return _vault2; }
+			set
+			{
+				Dirty = true;
+				_vault2 = value;
+			}
+		}
 
-			[DataElement(AllowDbNull = false)]
-			public int PermLevel
+		/// <summary>
+		/// Gets or sets the flags related to the 3rd or 7th vault in the home.
+		/// </summary>
+		/// <remarks>These flags contain view, add, and remove permissions for the vault.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public byte Vault3
+		{
+			get { return _vault3; }
+			set
 			{
-				get
-				{
-					return m_permLevel;
-				}
-				set
-				{
-					Dirty = true;
-					m_permLevel = value;
-				}
+				Dirty = true;
+				_vault3 = value;
 			}
+		}
 
-			[DataElement(AllowDbNull = false)]
-			public int HouseNumber
+		/// <summary>
+		/// Gets or sets the flags related to the 4th or 8th vault in the home.
+		/// </summary>
+		/// <remarks>These flags contain view, add, and remove permissions for the vault.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public byte Vault4
+		{
+			get { return _vault4; }
+			set
 			{
-				get
-				{
-					return m_housenumber;
-				}
-				set
-				{
-					Dirty = true;
-					m_housenumber = value;
-				}
+				Dirty = true;
+				_vault4 = value;
 			}
+		}
 
-			[DataElement(AllowDbNull = false)]
-			public byte Enter
+		/// <summary>
+		/// Gets or sets whether or not players in this level can change the external appearance of the home.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public bool CanChangeExternalAppearance
+		{
+			get { return _changeExternalAppearance; }
+			set
 			{
-				get
-				{
-					return m_enter;
-				}
-				set
-				{
-					Dirty = true;
-					m_enter = value;
-				}
+				Dirty = true;
+				_changeExternalAppearance = value;
 			}
-			[DataElement(AllowDbNull = false)]
-			public byte Vault1
+		}
+
+		/// <summary>
+		/// Gets or sets the flags related to changing the interior appearance.
+		/// </summary>
+		/// <remarks>These flags contain add and remove permissions for the interior appearance.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public byte ChangeInterior
+		{
+			get { return _interior; }
+			set
 			{
-				get
-				{
-					return m_vault1;
-				}
-				set
-				{
-					Dirty = true;
-					m_vault1 = value;
-				}
+				Dirty = true;
+				_interior = value;
 			}
-			[DataElement(AllowDbNull = false)]
-			public byte Vault2
+		}
+
+		/// <summary>
+		/// Gets or sets the flags related to changing the garden layout.
+		/// </summary>
+		/// <remarks>These flags contain add and remove permissions for the garden layout.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public byte ChangeGarden
+		{
+			get { return _garden; }
+			set
 			{
-				get
-				{
-					return m_vault2;
-				}
-				set
-				{
-					Dirty = true;
-					m_vault2 = value;
-				}
+				Dirty = true;
+				_garden = value;
 			}
-			[DataElement(AllowDbNull = false)]
-			public byte Vault3
+		}
+
+		/// <summary>
+		/// Gets or sets whether or not players in this level can banish others from the home.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public bool CanBanish
+		{
+			get { return _banish; }
+			set
 			{
-				get
-				{
-					return m_vault3;
-				}
-				set
-				{
-					Dirty = true;
-					m_vault3 = value;
-				}
+				Dirty = true;
+				_banish = value;
 			}
-			[DataElement(AllowDbNull = false)]
-			public byte Vault4
+		}
+
+		/// <summary>
+		/// Gets or sets whether or not players in this level can use merchants in the home.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public bool CanUseMerchants
+		{
+			get { return _useMerchant; }
+			set
 			{
-				get
-				{
-					return m_vault4;
-				}
-				set
-				{
-					Dirty = true;
-					m_vault4 = value;
-				}
+				Dirty = true;
+				_useMerchant = value;
 			}
-			[DataElement(AllowDbNull = false)]
-			public byte Appearance
+		}
+
+		/// <summary>
+		/// Gets or sets whether or not players in this level can the tools in the home.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public bool CanUseTools
+		{
+			get { return _tools; }
+			set
 			{
-				get
-				{
-					return m_appearance;
-				}
-				set
-				{
-					Dirty = true;
-					m_appearance = value;
-				}
+				Dirty = true;
+				_tools = value;
 			}
-			[DataElement(AllowDbNull = false)]
-			public byte Interior
+		}
+
+		/// <summary>
+		/// Gets or sets whether or not players in this level can bind inside the home.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public bool CanBindInHouse
+		{
+			get { return _bind; }
+			set
 			{
-				get
-				{
-					return m_interior;
-				}
-				set
-				{
-					Dirty = true;
-					m_interior = value;
-				}
+				Dirty = true;
+				_bind = value;
 			}
-			[DataElement(AllowDbNull = false)]
-			public byte Garden
+		}
+
+		/// <summary>
+		/// Gets or sets the flags related to the consignment merchant.
+		/// </summary>
+		/// <remarks>These flags contain add/remove and withdraw permissions for the consignment merchant.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public byte ConsignmentMerchant
+		{
+			get { return _merchant; }
+			set
 			{
-				get
-				{
-					return m_garden;
-				}
-				set
-				{
-					Dirty = true;
-					m_garden = value;
-				}
+				Dirty = true;
+				_merchant = value;
 			}
-			[DataElement(AllowDbNull = false)]
-			public byte Banish
+		}
+
+		/// <summary>
+		/// Gets or sets whether or not players in this level can pay rent.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public bool CanPayRent
+		{
+			get { return _payRent; }
+			set
 			{
-				get
-				{
-					return m_banish;
-				}
-				set
-				{
-					Dirty = true;
-					m_banish = value;
-				}
-			}
-			[DataElement(AllowDbNull = false)]
-			public byte UseMerchant
-			{
-				get
-				{
-					return m_useMerchant;
-				}
-				set
-				{
-					Dirty = true;
-					m_useMerchant = value;
-				}
-			}
-			[DataElement(AllowDbNull = false)]
-			public byte Tools
-			{
-				get
-				{
-					return m_tools;
-				}
-				set
-				{
-					Dirty = true;
-					m_tools = value;
-				}
-			}
-			[DataElement(AllowDbNull = false)]
-			public byte Bind
-			{
-				get
-				{
-					return m_bind;
-				}
-				set
-				{
-					Dirty = true;
-					m_bind = value;
-				}
-			}
-			[DataElement(AllowDbNull = false)]
-			public byte Merchant
-			{
-				get
-				{
-					return m_merchant;
-				}
-				set
-				{
-					Dirty = true;
-					m_merchant = value;
-				}
-			}
-			[DataElement(AllowDbNull = false)]
-			public byte PayRent
-			{
-				get
-				{
-					return m_payRent;
-				}
-				set
-				{
-					Dirty = true;
-					m_payRent = value;
-				}
+				Dirty = true;
+				_payRent = value;
 			}
 		}
 	}

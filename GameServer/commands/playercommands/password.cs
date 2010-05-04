@@ -16,15 +16,17 @@ using DOL.GS.PacketHandler.Client.v168;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&password", ePrivLevel.Player,
-	              "Changes your account password",
-	              "/password <current_password> <new_password>")]
+	[Cmd("&password", ePrivLevel.Player,
+		"Changes your account password",
+		"/password <current_password> <new_password>")]
 	public class PasswordCommand : AbstractCommandHandler, ICommandHandler
 	{
+		#region ICommandHandler Members
+
 		public void OnCommand(GameClient client, string[] args)
 		{
 			string usage = "Usage: /password <current_password> <new_password>";
-			
+
 			if (args.Length < 3)
 			{
 				client.Out.SendMessage(usage, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -32,22 +34,23 @@ namespace DOL.GS.Commands
 			}
 			try
 			{
-				string old_password = args[1];
-				string new_password = args[2];
-				if ((client.Account != null) && (LoginRequestHandler.CryptPassword(old_password) == client.Account.Password))
+				string oldPassword = args[1];
+				string newPassword = args[2];
+
+				if ((client.Account != null) && (LoginRequestHandler.CryptPassword(oldPassword) == client.Account.Password))
 				{
 					// TODO: Add confirmation dialog
 					// TODO: If user has set their email address, mail them the change notification
-					client.Player.TempProperties.setProperty(this, new_password);
-					client.Out.SendCustomDialog("Do you wish to change your password to \n" + new_password, new CustomDialogResponse(PasswordCheckCallback));
+					client.Player.TempProperties.setProperty(this, newPassword);
+					client.Out.SendCustomDialog("Do you wish to change your password to \n" + newPassword, PasswordCheckCallback);
 				}
 				else
 				{
-					client.Out.SendMessage("Your current password was incorrect.",
-					                       eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("Your current password was incorrect.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
 					if (log.IsInfoEnabled)
-						log.Info(client.Player.Name + " (" + client.Account.Name +
-						         ") attempted to change password but failed!");
+						log.Info(client.Player.Name + " (" + client.Account.Name + ") attempted to change password but failed!");
+
 					return;
 				}
 			}
@@ -57,15 +60,26 @@ namespace DOL.GS.Commands
 			}
 		}
 
-		public void PasswordCheckCallback(GamePlayer player, byte response)
+		#endregion
+
+		private void PasswordCheckCallback(GamePlayer player, byte response)
 		{
-			if (response != 0x01) return;
-			string newPassword = (string)player.TempProperties.getProperty<object>(this, null);
-			if (newPassword == null) return;
+			if (response != 0x01)
+				return;
+
+			var newPassword = player.TempProperties.getProperty<string>(this, null);
+			if (newPassword == null)
+				return;
+
 			player.TempProperties.removeProperty(this);
 			player.Out.SendMessage("Your password has been changed.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			player.Client.Account.Password = LoginRequestHandler.CryptPassword(newPassword);
+
 			GameServer.Database.SaveObject(player.Client.Account);
+
+			// log change
+			AuditMgr.AddAuditEntry(player, AuditType.Account, AuditSubtype.AccountPasswordChange, "", player.Name);
+
 			if (log.IsInfoEnabled)
 				log.Info(player.Name + " (" + player.Client.Account.Name + ") changed password.");
 		}

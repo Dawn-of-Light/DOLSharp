@@ -92,7 +92,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								else if (client.Player.ActiveVault != null)
 								{
 									GameVault vault = client.Player.ActiveVault;
-									invItem = vault.VaultInventory(client.Player)[objectID];
+									invItem = vault.GetVaultInventory(client.Player)[objectID];
 									if (invItem == null)
 										return 1;
 								}

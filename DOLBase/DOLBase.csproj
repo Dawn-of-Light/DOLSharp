@@ -144,15 +144,13 @@
     <Compile Include="Statistics.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Threading\SpinWaitLock.cs" />
     <Compile Include="WeakMulticastDelegate.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WeakRef.cs">
       <SubType>Code</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Network" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

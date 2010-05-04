@@ -25,8 +25,6 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	
-
 	[PacketHandler(PacketHandlerType.TCP, 0x07, "Handles housing permissions changes")]
 	public class HousePermissionsSetHandler : IPacketHandler
 	{
@@ -48,21 +46,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 1;
 
 			DBHousePermissions permission = house.HouseAccess[level];
-			permission.Enter = (byte)packet.ReadByte();
+			permission.CanEnterHouse = (packet.ReadByte() != 0);
 			permission.Vault1 = (byte)packet.ReadByte();
 			permission.Vault2 = (byte)packet.ReadByte();
 			permission.Vault3 = (byte)packet.ReadByte();
 			permission.Vault4 = (byte)packet.ReadByte();
-			permission.Appearance = (byte)packet.ReadByte();
-			permission.Interior = (byte)packet.ReadByte();
-			permission.Garden = (byte)packet.ReadByte();
-			permission.Banish = (byte)packet.ReadByte();
-			permission.UseMerchant = (byte)packet.ReadByte();
-			permission.Tools = (byte)packet.ReadByte();
-			permission.Bind = (byte)packet.ReadByte();
-			permission.Merchant = (byte)packet.ReadByte();
-			permission.PayRent = (byte)packet.ReadByte();
+			permission.CanChangeExternalAppearance = (packet.ReadByte() != 0);
+			permission.ChangeInterior = (byte)packet.ReadByte();
+			permission.ChangeGarden = (byte)packet.ReadByte();
+			permission.CanBanish = (packet.ReadByte() != 0);
+			permission.CanUseMerchants = (packet.ReadByte() != 0);
+			permission.CanUseTools = (packet.ReadByte() != 0);
+			permission.CanBindInHouse = (packet.ReadByte() != 0);
+			permission.ConsignmentMerchant = (byte)packet.ReadByte();
+			permission.CanPayRent = (packet.ReadByte() != 0);
 			int unk2 = (byte)packet.ReadByte();
+
 			GameServer.Database.SaveObject(permission);
 			return 1;
 		}

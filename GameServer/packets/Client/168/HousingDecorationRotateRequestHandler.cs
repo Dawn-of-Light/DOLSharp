@@ -39,14 +39,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 			House house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
 				return 1;
-			if (client.Player == null) return 1;
-			// Working only for inside items.
-			if (!client.Player.InHouse) return 1;
-			
-			if (!house.HasOwnerPermissions(client.Player) && !house.CanAddInterior(client.Player))
+
+			if (client.Player == null) 
 				return 1;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HouseDecorationRotate));
+			// Working only for inside items.
+			if (!client.Player.InHouse) 
+				return 1;
+			
+			if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
+				return 1;
+
+			var pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HouseDecorationRotate));
 			pak.WriteShort(housenumber);
 			pak.WriteByte(index);
 			pak.WriteByte(0x01);

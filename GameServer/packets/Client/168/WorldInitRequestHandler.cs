@@ -18,13 +18,14 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP,0x7C^168,"Handles world init replies")]
+	[PacketHandler(PacketHandlerType.TCP, 0x7C ^ 168, "Handles world init replies")]
 	public class WorldInitRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -38,7 +39,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 0;
 
 			client.UdpConfirm = false;
+
 			new WorldInitAction(client.Player).Start(1);
+
 			return 1;
 		}
 
@@ -51,10 +54,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// Constructs a new WorldInitAction
 			/// </summary>
 			/// <param name="actionSource">The action source</param>
-			public WorldInitAction(GamePlayer actionSource) : base(actionSource)
+			public WorldInitAction(GamePlayer actionSource)
+				: base(actionSource)
 			{
 			}
-
 
 			/// <summary>
 			/// Called on every timer tick
@@ -62,30 +65,33 @@ namespace DOL.GS.PacketHandler.Client.v168
 			protected override void OnTick()
 			{
 				GamePlayer player = (GamePlayer)m_actionSource;
-				if(player==null) return;
+				if (player == null) return;
 				//check emblems at world load before any updates
-				if(player.Inventory!=null) lock (player.Inventory)
+				if (player.Inventory != null) 
 				{
-					Guild playerGuild = player.Guild;
-					foreach(InventoryItem myitem in player.Inventory.AllItems)
+					lock (player.Inventory)
 					{
-						if (myitem != null && myitem.Emblem != 0)
+						Guild playerGuild = player.Guild;
+						foreach (InventoryItem myitem in player.Inventory.AllItems)
 						{
-							if (playerGuild == null || myitem.Emblem != playerGuild.Emblem )
+							if (myitem != null && myitem.Emblem != 0)
 							{
-								myitem.Emblem = 0;
-							}
-							if (player.Level < 20)
-							{
-								if (player.CraftingPrimarySkill == eCraftingSkill.NoCrafting)
+								if (playerGuild == null || myitem.Emblem != playerGuild.Emblem)
 								{
 									myitem.Emblem = 0;
 								}
-								else
+								if (player.Level < 20)
 								{
-									if (player.GetCraftingSkillValue(player.CraftingPrimarySkill) < 400)
+									if (player.CraftingPrimarySkill == eCraftingSkill.NoCrafting)
 									{
 										myitem.Emblem = 0;
+									}
+									else
+									{
+										if (player.GetCraftingSkillValue(player.CraftingPrimarySkill) < 400)
+										{
+											myitem.Emblem = 0;
+										}
 									}
 								}
 							}
@@ -133,8 +139,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.Client.Player.SaveIntoDatabase();
 					player.Client.Player.Quit(true);
 					player.Client.Disconnect();
+
 					return;
 				}
+
 				// this is bind stuff
 				// make sure that players doesnt start dead when coming in
 				// thats important since if client moves the player it requests player creation
@@ -142,6 +150,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					player.Health = player.MaxHealth;
 				}
+
 				player.Out.SendPlayerPositionAndObjectID();
 				player.Out.SendEncumberance(); // Send only max encumberance without used
 				player.Out.SendUpdateMaxSpeed();
@@ -156,16 +165,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.Out.SendUpdatePlayer();
 				player.Out.SendUpdateMoney();
 				player.Out.SendCharStatsUpdate();
+
 				ArrayList friends = player.Friends;
-				ArrayList onlineFriends = new ArrayList();
-				foreach(string friendName in friends)
+				var onlineFriends = new List<string>();
+				foreach (string friendName in friends)
 				{
 					GameClient friendClient = WorldMgr.GetClientByPlayerName(friendName, true, false);
-					if (friendClient == null) continue;
-					if (friendClient.Player != null && friendClient.Player.IsAnonymous) continue;
+					if (friendClient == null) 
+						continue;
+
+					if (friendClient.Player != null && friendClient.Player.IsAnonymous) 
+						continue;
+
 					onlineFriends.Add(friendName);
 				}
-				player.Out.SendAddFriends((string[])onlineFriends.ToArray(typeof(string)));
+
+				player.Out.SendAddFriends(onlineFriends.ToArray());
 				player.Out.SendCharResistsUpdate();
 				int effectsCount = 0;
 				player.Out.SendUpdateIcons(null, ref effectsCount);
@@ -178,7 +193,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				// 0xBE - 0 1 0 0
 				//used only on PvP, sets THIS players ID for nearest friend/enemy buttons and "friendly" name colors
 				//if (GameServer.ServerRules.GetColorHandling(player.Client) == 1) // PvP
-					player.Out.SendObjectGuildID(player, player.Guild);
+				player.Out.SendObjectGuildID(player, player.Guild);
 				player.Out.SendDebugMode(player.TempProperties.getProperty<object>(GamePlayer.DEBUG_MODE_PROPERTY, null) != null);
 				player.Out.SendUpdateMaxSpeed(); // Speed in debug mode ?
 				//WARNING: This would change problems if a scripter changed the values for plvl

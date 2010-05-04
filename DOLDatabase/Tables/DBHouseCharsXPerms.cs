@@ -17,96 +17,102 @@
  *
  */
 
-using System;
-
-using DOL.Database;
 using DOL.Database.Attributes;
 
-namespace DOL
+namespace DOL.Database
 {
-	namespace Database
+	/// <summary>
+	/// Table that holds the different characters and guilds that have been given permissions to a house.
+	/// </summary>
+	[DataTable(TableName = "DBHouseCharsXPerms")]
+	public class DBHouseCharsXPerms : DataObject
 	{
+		//important data
+		private int _houseNumber;
+		private string _targetName;
+		private int _permissionLevel;
+		private int _slot;
+		private int _permissionType;
 
-		[DataTable(TableName = "DBHouseCharsXPerms")]
-		public class DBHouseCharsXPerms : DataObject
+		public DBHouseCharsXPerms()
+		{}
+
+		public DBHouseCharsXPerms(string targetName, int permissionLevel, int permissionType)
 		{
-			//important data
-			private int m_housenumber;
-			private byte m_type;
-			private string m_name;
-			private int m_permLevel;
-			private int m_slot;
+			_targetName = targetName;
+			_permissionLevel = permissionLevel;
+			_permissionType = permissionType;
+		}
 
-			public DBHouseCharsXPerms()
+		/// <summary>
+		/// Gets or sets the house number this permission is associated with.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int HouseNumber
+		{
+			get { return _houseNumber; }
+			set
 			{
+				Dirty = true;
+				_houseNumber = value;
 			}
+		}
 
+		/// <summary>
+		/// Gets or sets the type of permission for this mapping
+		/// </summary>
+		/// <remarks>Type includes things like character, account, guild, class, etc.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public int PermissionType
+		{
+			get { return _permissionType; }
+			set
+			{
+				Dirty = true;
+				_permissionType = value;
+			}
+		}
 
-			[DataElement(AllowDbNull = false)]
-			public int HouseNumber
+		/// <summary>
+		/// Gets or sets the name of the character, account, guild, etc, that is tied to this mapping.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public string TargetName
+		{
+			get { return _targetName; }
+			set
 			{
-				get
-				{
-					return m_housenumber;
-				}
-				set
-				{
-					Dirty = true;
-					m_housenumber = value;
-				}
+				Dirty = true;
+				_targetName = value;
 			}
-			[DataElement(AllowDbNull = false)]
-			public byte Type
-			{
-				get
-				{
-					return m_type;
-				}
-				set
-				{
-					Dirty = true;
-					m_type = value;
-				}
-			}
-			[DataElement(AllowDbNull = false)]
-			public string Name
-			{
-				get
-				{
-					return m_name;
-				}
-				set
-				{
-					Dirty = true;
-					m_name = value;
-				}
-			}
-			[DataElement(AllowDbNull = false)]
-			public int PermLevel
-			{
-				get
-				{
-					return m_permLevel;
-				}
-				set
-				{
-					Dirty = true;
-					m_permLevel = value;
-				}
-			}
+		}
 
-			[DataElement(AllowDbNull = false)]
-			public int Slot
+		/// <summary>
+		/// Gets or sets level of the permission.
+		/// </summary>
+		/// <remarks>Since permission levels are hard-coded, this value should never be anything other than 1 - 9.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public int PermissionLevel
+		{
+			get { return _permissionLevel; }
+			set
 			{
-				get
-				{
-					return m_slot;
-				}
-				set
-				{
-					Dirty = true;
-					m_slot = value;
-				}
+				Dirty = true;
+				_permissionLevel = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the slot that this mapping is displayed in when the house owner sees the list of all mappings.
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int Slot
+		{
+			get { return _slot; }
+			set
+			{
+				Dirty = true;
+				_slot = value;
 			}
 		}
 	}

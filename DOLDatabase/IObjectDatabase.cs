@@ -47,5 +47,7 @@ namespace DOL.Database
 		void FillObjectRelations(DataObject dataObject);
 
 		string Escape(string rawInput);
+
+		bool ExecuteNonQuery(string rawQuery);
 	}
 }

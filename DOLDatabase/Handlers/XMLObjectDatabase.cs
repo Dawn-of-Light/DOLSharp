@@ -334,6 +334,13 @@ namespace DOL.Database.Handlers
 			return new List<TObject>();
 		}
 
+		protected override bool ExecuteNonQueryImpl(string rawQuery)
+		{
+			if (Log.IsDebugEnabled)
+					Log.Debug("Raw query execution not supported in XML mode.");
+
+			return true;
+		}
 
 		#endregion
 	}

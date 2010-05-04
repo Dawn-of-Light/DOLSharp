@@ -691,6 +691,38 @@ namespace DOL.Database.Handlers
 			return 0;
 		}
 
+		/// <summary>
+		/// Executes a raw SQL query against the database.
+		/// </summary>
+		/// <param name="dataObject">the query to execute</param>
+		/// <returns>true if the query was run successfully; false otherwise</returns>
+		protected override bool ExecuteNonQueryImpl(string rawQuery)
+		{
+			try
+			{
+				if (Log.IsDebugEnabled)
+					Log.Debug(rawQuery);
+
+				int res = Connection.ExecuteNonQuery(rawQuery);
+				if (res == 0)
+				{
+					if (Log.IsErrorEnabled)
+						Log.Error("Error executing raw query: " + rawQuery);
+					
+					return false;
+				}
+
+				return true;
+			}
+			catch (Exception e)
+			{
+				if (Log.IsErrorEnabled)
+					Log.Error("Error while executing raw query: " + rawQuery, e);
+			}
+
+			return false;
+		}
+
 		#endregion
 	}
 }
