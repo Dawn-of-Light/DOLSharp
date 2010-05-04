@@ -41,7 +41,11 @@ namespace DOL.GS.Spells
 		{
 			// do damage even if immune to duration effect
 			OnDirectEffect(target, effectiveness);
-			base.ApplyEffectOnTarget(target, effectiveness);
+
+			if ((target is Keeps.GameKeepDoor) == false && (target is Keeps.GameKeepComponent == false))
+			{
+				base.ApplyEffectOnTarget(target, effectiveness);
+			}
 		}
 
 		/// <summary>
@@ -51,11 +55,6 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness"></param>
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
-			if (target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent)
-			{
-				MessageToCaster("Your spell has no effect on the keep component!", eChatType.CT_SpellResisted);
-				return;
-			}
 			base.OnDirectEffect(target, effectiveness);
 			// calc damage
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
@@ -72,6 +71,11 @@ namespace DOL.GS.Spells
 		{
 			if(ad == null) return;
 			if(!m_caster.IsAlive) return;
+
+			if (ad.Target is Keeps.GameKeepDoor || ad.Target is Keeps.GameKeepComponent)
+			{
+				return;
+			}
 
 			int heal = (ad.Damage + ad.CriticalDamage) * m_spell.LifeDrainReturn/100;
 			if (m_caster.IsDiseased)
