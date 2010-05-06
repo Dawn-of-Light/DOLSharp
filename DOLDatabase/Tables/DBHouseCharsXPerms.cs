@@ -30,6 +30,7 @@ namespace DOL.Database
 		//important data
 		private int _houseNumber;
 		private string _targetName;
+		private string _displayName;
 		private int _permissionLevel;
 		private int _slot;
 		private int _permissionType;
@@ -37,9 +38,10 @@ namespace DOL.Database
 		public DBHouseCharsXPerms()
 		{}
 
-		public DBHouseCharsXPerms(string targetName, int permissionLevel, int permissionType)
+		public DBHouseCharsXPerms(string targetName, string displayName, int permissionLevel, int permissionType)
 		{
 			_targetName = targetName;
+			_displayName = displayName;
 			_permissionLevel = permissionLevel;
 			_permissionType = permissionType;
 		}
@@ -84,6 +86,21 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				_targetName = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the value to display for the target of a single permission entry.
+		/// </summary>
+		/// <remarks>This is not the same as the actual target, sometimes.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public string DisplayName
+		{
+			get { return _displayName; }
+			set
+			{
+				Dirty = true;
+				_displayName = value;
 			}
 		}
 
