@@ -48,7 +48,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Player.CurrentRegion.HousingEnabled)
 			{
 				if (client.Player.HousingUpdateArray == null)
-					client.Player.HousingUpdateArray = new BitArray(HouseMgr.MAXHOUSES, false);
+					client.Player.HousingUpdateArray = new BitArray(HouseMgr.MaxHouses, false);
 
 				Hashtable houses = (Hashtable)HouseMgr.GetHouses(client.Player.CurrentRegionID);
 				if (houses != null)
