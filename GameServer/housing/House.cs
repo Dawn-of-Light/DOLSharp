@@ -536,37 +536,6 @@ namespace DOL.GS.Housing
 
 		#region Hookpoints
 
-		public static bool AddNewOffset(HouseHookpointOffset o)
-		{
-			if (o.Hookpoint <= HousingConstants.MaxHookpointLocations)
-			{
-				HousingConstants.RelativeHookpointsCoords[o.Model][o.Hookpoint] = new[] { o.OffX, o.OffY, o.OffZ, o.OffH };
-				return true;
-			}
-
-			Log.Error("HOUSING: HouseHookPointOffset exceeds array size.  Model " + o.Model + " hookpoint " + o.Hookpoint);
-
-			return false;
-		}
-
-		public static void LoadHookpointOffsets()
-		{
-			//initialise array
-			for (int i = 12; i > 0; i--)
-			{
-				for (int j = 1; j < HousingConstants.RelativeHookpointsCoords[i].Length; j++)
-				{
-					HousingConstants.RelativeHookpointsCoords[i][j] = null;
-				}
-			}
-
-			var objs = GameServer.Database.SelectAllObjects<HouseHookpointOffset>();
-			foreach (HouseHookpointOffset o in objs)
-			{
-				AddNewOffset(o);
-			}
-		}
-
 		public Point3D GetHookpointLocation(uint n)
 		{
 			if (n > HousingConstants.MaxHookpointLocations)
@@ -661,7 +630,7 @@ namespace DOL.GS.Housing
 
 						if (hNPC == null)
 						{
-							HouseMgr.Logger.Error("Can't create instance of type: " + npt.ClassType);
+							HouseMgr.Log.Error("Can't create instance of type: " + npt.ClassType);
 							return null;
 						}
 
@@ -1007,8 +976,8 @@ namespace DOL.GS.Housing
 				}
 			}
 
-			// no matching permissions, create a new one and add it.
-			var housePermission = new DBHouseCharsXPerms(targetName, permLevel, (int)permType);
+			// no matching permissions, create a new one and add it. (always use play name as display.
+			var housePermission = new DBHouseCharsXPerms(targetName, player.Name, permLevel, (int)permType);
 			GameServer.Database.AddObject(housePermission);
 
 			// add it to our list
@@ -1043,7 +1012,7 @@ namespace DOL.GS.Housing
 			}
 
 			// no matching permissions, create a new one and add it.
-			var housePermission = new DBHouseCharsXPerms(targetName, permLevel, (int)permType);
+			var housePermission = new DBHouseCharsXPerms(targetName, targetName, permLevel, (int)permType);
 			GameServer.Database.AddObject(housePermission);
 
 			// add it to our list
