@@ -57,7 +57,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				pak.WriteByte((byte)0x00);			// ?
 				pak.WriteByte((byte)perm.PermissionType);		// Type (Guild, Class, Race ...)
 				pak.WriteByte((byte)perm.PermissionLevel);	// Level (Friend, Visitor ...)
-				pak.WritePascalString(perm.DisplayName);
+				pak.WritePascalString(perm.TargetName);
 			}
 			client.Out.SendTCP(pak);
 			return 1;
