@@ -1008,7 +1008,7 @@ namespace DOL.GS.Housing
 			}
 
 			// no matching permissions, create a new one and add it.
-			var housePermission = new DBHouseCharsXPerms(targetName, permLevel, (int)permType);
+			var housePermission = new DBHouseCharsXPerms(targetName, player.Name, permLevel, (int)permType);
 			GameServer.Database.AddObject(housePermission);
 
 			// add it to our list
@@ -1043,7 +1043,7 @@ namespace DOL.GS.Housing
 			}
 
 			// no matching permissions, create a new one and add it.
-			var housePermission = new DBHouseCharsXPerms(targetName, permLevel, (int)permType);
+			var housePermission = new DBHouseCharsXPerms(targetName, targetName, permLevel, (int)permType);
 			GameServer.Database.AddObject(housePermission);
 
 			// add it to our list

@@ -30,6 +30,7 @@ namespace DOL.Database
 		//important data
 		private int _houseNumber;
 		private string _targetName;
+		private string _displayName;
 		private int _permissionLevel;
 		private int _slot;
 		private int _permissionType;
@@ -37,9 +38,10 @@ namespace DOL.Database
 		public DBHouseCharsXPerms()
 		{}
 
-		public DBHouseCharsXPerms(string targetName, int permissionLevel, int permissionType)
+		public DBHouseCharsXPerms(string targetName, string displayName, int permissionLevel, int permissionType)
 		{
 			_targetName = targetName;
+			_displayName = displayName;
 			_permissionLevel = permissionLevel;
 			_permissionType = permissionType;
 		}
@@ -74,7 +76,7 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Gets or sets the name of the character, account, guild, etc, that is tied to this mapping.
+		/// Gets or sets the target name of the character, account, guild, etc, that is tied to this mapping.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
 		public string TargetName
@@ -84,6 +86,22 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				_targetName = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the display name for the permission.
+		/// </summary>
+		/// <remarks>In cases of giving account-wide permissions to a player, this will be the character name
+		/// at the time the permission was added, not the account name.</remarks>
+		[DataElement(AllowDbNull = false)]
+		public string DisplayName
+		{
+			get { return _displayName; }
+			set
+			{
+				Dirty = true;
+				_displayName = value;
 			}
 		}
 
