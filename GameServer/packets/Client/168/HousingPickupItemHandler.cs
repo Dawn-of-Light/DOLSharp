@@ -42,7 +42,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int housenumber = packet.ReadShort();
 			int method = packet.ReadByte();
 
-			//HouseMgr.Log.Debug("HousingPickupItemHandler unknown" + unknown + " position " + position + " method " + method);
+			//HouseMgr.Logger.Debug("HousingPickupItemHandler unknown" + unknown + " position " + position + " method " + method);
 
 			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
 
