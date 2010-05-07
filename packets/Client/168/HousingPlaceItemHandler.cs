@@ -609,7 +609,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			        		OffH = player.Heading - player.CurrentHouse.Heading
 			        	};
 
-			if (GameServer.Database.AddObject(a) && HouseMgr.AddNewOffset(a))
+			if (GameServer.Database.AddObject(a) && House.AddNewOffset(a))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.HookPointLogged", position), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				log.Debug(string.Format("HOUSING: {0} logged new HouseHookpointOffset for model {1}, position {2}, offset {3}, {4}, {5}", player.Name, a.Model, a.Hookpoint, a.OffX, a.OffY, a.OffZ));
@@ -630,8 +630,7 @@ namespace DOL.GS.PacketHandler.Client.v168
             player.TempProperties.removeProperty(DEED_WEAK);
 
             InventoryItem item = (InventoryItem)itemWeak.Target;
-
-            var house = player.TempProperties.getProperty<House>(TARGET_HOUSE, null);
+            House house = (House)player.TempProperties.getProperty<object>(TARGET_HOUSE, null);
             player.TempProperties.removeProperty(TARGET_HOUSE);
 
             if (house == null)
