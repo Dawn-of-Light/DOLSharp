@@ -693,6 +693,11 @@ namespace DOL.Database
 			get { return Template.BonusLevel;}
 			set { Template.BonusLevel = value;}
 		}
+		public int LevelRequirement
+		{
+			get { return Template.LevelRequirement; }
+			set { Template.LevelRequirement = value; }
+		}
 		public bool CanDropAsLoot
 		{
 			get { return Template.CanDropAsLoot;}

@@ -1372,11 +1372,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		}
 		
-		public void WriteMagicalBonuses(IList<string> output, InventoryItem item, GameClient client, bool shortInfo)
-		{
-			WriteMagicalBonuses(output, item.Template, client, shortInfo);
-		}
 		public void WriteMagicalBonuses(IList<string> output, ItemTemplate item, GameClient client, bool shortInfo)
+		{
+		    WriteMagicalBonuses(output, new InventoryItem(item), client, shortInfo);
+		}
+
+		public void WriteMagicalBonuses(IList<string> output, InventoryItem item, GameClient client, bool shortInfo)
 		{
 			int oldCount = output.Count;
 
