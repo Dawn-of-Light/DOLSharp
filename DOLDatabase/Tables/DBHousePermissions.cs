@@ -46,7 +46,8 @@ namespace DOL.Database
 		private byte _vault4;
 
 		public DBHousePermissions()
-		{}
+		{
+		}
 
 		public DBHousePermissions(int n, int lvl)
 		{
