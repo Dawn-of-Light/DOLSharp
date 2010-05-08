@@ -236,10 +236,20 @@ namespace DOL.Database
 		protected ItemTemplate m_item;
 		public virtual ItemTemplate Template
 		{
-			get{
+			get
+			{
+				if (m_item == null)
+				{
+					if (OwnerID != null && OwnerID != "")
+						log.ErrorFormat("Template null for {0} Inventory.  Can't find template {1}{2}!", OwnerID, (ITemplate_Id == null ? "" : ITemplate_Id), (UTemplate_Id == null ? "" : UTemplate_Id));
+
+					return new ItemTemplate();
+				}
+
 				return m_item;
 			}
-			set{
+			set
+			{
 				Dirty = true;
 				m_item = value;
 			}
