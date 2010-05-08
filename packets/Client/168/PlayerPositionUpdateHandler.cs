@@ -16,7 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-//#define OUTPUT_DEBUG_INFO
+
+// #define OUTPUT_DEBUG_INFO
 
 using System;
 using System.Collections;
@@ -40,7 +41,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-#if OUTPUT_DEBUG_INFO
+		#region DEBUG
+		#if OUTPUT_DEBUG_INFO
 		private static int lastX = 0;
 		private static int lastY = 0;
 		private static int lastUpdateTick = 0;
@@ -55,7 +57,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// Stores the last update tick inside the player
 		/// </summary>
-#endif
+		#endif
+		#endregion DEBUG
+
 		public const string LASTUPDATETICK = "PLAYERPOSITION_LASTUPDATETICK";
 		public const string LASTMOVEMENTTICK = "PLAYERPOSITION_LASTMOVEMENTTICK";
 		/// <summary>
@@ -84,9 +88,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 				packetVersion = 168;
 			}
 
-#if OUTPUT_DEBUG_INFO
+			#region DEBUG
+			#if OUTPUT_DEBUG_INFO
 			int oldSpeed = client.Player.CurrentSpeed;
-#endif
+			#endif
+			#endregion
+
 			//read the state of the player
 			packet.Skip(2); //PID
 			ushort data = packet.ReadShort();
@@ -206,7 +213,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			int lastTick = client.Player.TempProperties.getProperty<int>(LASTUPDATETICK);
-#if OUTPUT_DEBUG_INFO
+
+			#region DEBUG
+			#if OUTPUT_DEBUG_INFO
 			if (lastTick != 0 && client.Account.PrivLevel == 1)
 			{
 				int tickDiff = Environment.TickCount - lastTick;
@@ -218,13 +227,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				maxDist = (maxDist*DIST_TOLERANCE/100);
 
-				int plyDist = WorldMgr.GetDistance(
-					client.Player.PlayerCharacter.Xpos,
-					client.Player.PlayerCharacter.Ypos,
-					0,
-					realX,
-					realY,
-					0);
+				int plyDist = client.Player.GetDistanceTo(new Point3D(realX, realY, 0), 0);
 
 				//We ignore distances below 100 coordinates because below that the toleranze
 				//is nonexistent... eg. sometimes bumping into a wall would cause you to move
@@ -250,23 +253,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Player.TempProperties.setProperty(SPEEDHACKCOUNTER, counter);
 				}
 			}
-#endif
+			#endif
+			#endregion DEBUG
+
 			client.Player.TempProperties.setProperty(LASTUPDATETICK, Environment.TickCount);
 
 			ushort headingflag = packet.ReadShort();
 			client.Player.Heading = (ushort)(headingflag & 0xFFF);
 			ushort flyingflag = packet.ReadShort();
 			byte flags = (byte)packet.ReadByte();
-			/*
-			if (!client.Player.IsPlayerJump || (client.Player.IsPlayerJump & ((flags & 0x40) != 0)))
-			{
-				client.Player.IsPlayerJump = false;
-				client.Player.X = realX;
-				client.Player.Y = realY;
-				client.Player.Z = realZ;
-			}
-			 */
-			//client.Player.IsPlayerJump = false;
+
 			if(client.Player.X!=realX || client.Player.Y!=realY)
 			{
 				client.Player.TempProperties.setProperty(LASTMOVEMENTTICK, client.Player.CurrentRegion.Time);
@@ -329,16 +325,27 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int SHcount = client.Player.TempProperties.getProperty<int>(SHSPEEDCOUNTER);
 			int status = (data & 0x1FF ^ data) >> 8;
 			int fly = (flyingflag & 0x1FF ^ flyingflag) >> 8;
+
+			if (client.Player.IsJumping)
+			{
+				SHcount = 0;
+				client.Player.IsJumping = false;
+			}
+
 			if (SHlastTick != 0 && SHlastTick != EnvironmentTick)
 			{
 				if (((SHlastStatus == status || (status & 0x8) == 0)) && ((fly & 0x80) != 0x80) && (SHlastFly == fly || (SHlastFly & 0x10) == (fly & 0x10) || !((((SHlastFly & 0x10) == 0x10) && ((fly & 0x10) == 0x0) && (flyingflag & 0x7FF) > 0))))
 				{
 					if ((EnvironmentTick - SHlastTick) < 400)
 					{
-						if (client.Account.PrivLevel > 1)
-							client.Out.SendMessage(string.Format("SH ({0}) detected: {1}", 500 / (EnvironmentTick - SHlastTick), EnvironmentTick - SHlastTick), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 						SHcount++;
-						if (SHcount % 10 == 0)
+
+						if (SHcount > 1 && client.Account.PrivLevel > 1)
+						{
+							client.Out.SendMessage(string.Format("SH: ({0}) detected: {1}, count {2}", 500 / (EnvironmentTick - SHlastTick), EnvironmentTick - SHlastTick, SHcount), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+						}
+
+						if (SHcount % 5 == 0)
 						{
 							StringBuilder builder = new StringBuilder();
 							builder.Append("TEST_SH_DETECT[");
@@ -352,7 +359,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 							builder.Append(" IP=");
 							builder.Append(client.TcpEndpointAddress);
 							GameServer.Instance.LogCheatAction(builder.ToString());
-							if ((client.Account.PrivLevel == 1) && SHcount >= 20) // ~5-10 sec SH
+
+							if (client.Account.PrivLevel > 1)
+							{
+								client.Out.SendMessage("SH: Logging SH cheat.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+
+								if (SHcount >= 15)
+								{
+									client.Out.SendMessage("SH: Player would have been banned!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+								}
+							}
+
+							if ((client.Account.PrivLevel == 1) && SHcount >= 15)
 							{
 								if (ServerProperties.Properties.BAN_HACKERS)
 								{
@@ -396,18 +414,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 					}
 					else
+					{
 						SHcount = 0;
-					//					client.Out.SendMessage("SHC:"+(Environment.TickCount - SHlastTick).ToString()/**0.0001*/, eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+					}
+
 					SHlastTick = EnvironmentTick;
 				}
-				else
-				{
-					//					client.Out.SendMessage("SHC : skip", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-				}
-
 			}
 			else
+			{
 				SHlastTick = EnvironmentTick;
+			}
 
 			int state = ((data >> 10) & 7);
 			client.Player.IsClimbing = (state == 7);
@@ -471,26 +488,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 
-
-			//DOLConsole.WriteLine("Player position: X="+realX+" Y="+realY+ "heading="+client.Player.Heading);
-
-			/*
-			int flyspeed = (flyingflag&0xFFF);
-			if((flyingflag&0x1000)!=0)
-				flyspeed = -flyspeed;
-
-			if(flyspeed<0)
-			{
-				if(client.Player.Z>lastZ)
-					lastZ=client.Player.Z;
-			}
-			else
-			{
-				lastZ=int.MinValue;
-			}
-
-			DOLConsole.WriteLine("Flying Speed="+flyspeed+" rest = "+(flyingflag>>15)+" "+((flyingflag>>14)&0x01)+" "+((flyingflag>>13)&0x01)+"  "+((flyingflag>>12)&0x01));
-			*/
 			//**************//
 			//FALLING DAMAGE//
 			//**************//
@@ -549,21 +546,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			//**************//
 
-#if OUTPUT_DEBUG_INFO
+			#region DEBUG
+			#if OUTPUT_DEBUG_INFO
 			if (lastX != 0 && lastY != 0)
 			{
 				if (log.IsDebugEnabled)
 				{
 					int timediff = Environment.TickCount - lastUpdateTick;
-					int distance = WorldMgr.GetDistance(lastX, lastY, 0, realX, realY, 0);
-					log.Debug("Distanze = " + distance + "Speed=" + oldSpeed + " coords/sec=" + (distance*1000/timediff));
+					Point3D lastPosition = new Point3D(lastX, lastY, 0);
+					int distance = lastPosition.GetDistanceTo(new Point3D(realX, realY, 0));
+					log.Debug(client.Player.Name + ": distance = " + distance + ", speed = " + oldSpeed + ",  coords/sec=" + (distance*1000/timediff));
 				}
 			}
 			lastX = realX;
 			lastY = realY;
 			lastUpdateTick = Environment.TickCount;
-#endif
-
+			#endif
+			#endregion DEBUG
 
 			byte[] con168 = packet.ToArray();
 			//Riding is set here!

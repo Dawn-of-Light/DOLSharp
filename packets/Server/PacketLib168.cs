@@ -556,7 +556,7 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.WriteInt((uint) (headingOnly ? 0 : m_gameClient.Player.X));
 				pak.WriteInt((uint) (headingOnly ? 0 : m_gameClient.Player.Y));
-				pak.WriteShort((ushort) m_gameClient.Player.ObjectID); //This is the player's objectid not Sessionid!!!
+				pak.WriteShort((ushort) m_gameClient.Player.ObjectID);
 				pak.WriteShort((ushort) (headingOnly ? 0 : m_gameClient.Player.Z));
 				pak.WriteShort(m_gameClient.Player.Heading);
 				if (m_gameClient.Player.CurrentHouse == null)
