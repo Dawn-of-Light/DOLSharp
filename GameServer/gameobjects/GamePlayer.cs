@@ -67,7 +67,7 @@ namespace DOL.GS
 		/// based on!
 		/// (renamed and private, cause if derive is needed overwrite PlayerCharacter)
 		/// </summary>
-		private Character my_character;
+		private Character m_dbCharacter;
 		/// <summary>
 		/// The database id this character belong to
 		/// </summary>
@@ -96,6 +96,11 @@ namespace DOL.GS
 		/// every 250ms in WorldMgr.
 		/// </summary>
 		protected int m_lastWorldUpdate;
+
+		/// <summary>
+		/// Is this player being 'jumped' to a new location?
+		/// </summary>
+		public bool IsJumping { get; set; }
 
 		protected Dictionary<int, eDoorState> m_doorUpdateList = null;
 
@@ -271,7 +276,7 @@ namespace DOL.GS
 		/// </summary>
 		public Character PlayerCharacter
 		{
-			get { return my_character; }
+			get { return m_dbCharacter; }
 		}
 
 		/// <summary>
@@ -9255,6 +9260,8 @@ namespace DOL.GS
 			//DOLConsole.WriteLine("add to world "+Name);
 			if (!base.AddToWorld())
 				return false;
+
+			IsJumping = false;
 			m_pvpInvulnerabilityTick = 0;
 			m_healthRegenerationTimer = new RegionTimer(this);
 			m_powerRegenerationTimer = new RegionTimer(this);
@@ -9311,6 +9318,9 @@ namespace DOL.GS
 				}
 			}
 			if (!base.RemoveFromWorld()) return false;
+
+			IsJumping = false;
+
 			if (m_pvpInvulnerabilityTimer != null)
 			{
 				m_pvpInvulnerabilityTimer.Stop();
@@ -9426,6 +9436,8 @@ namespace DOL.GS
 						player.Out.SendObjectRemove(this);
 					}
 				}
+
+				IsJumping = true;
 			}
 
 			//Remove the last update tick property, to prevent speedhack messages during zoning and teleporting!
@@ -9460,9 +9472,6 @@ namespace DOL.GS
 				CurrentUpdateArray.SetAll(false);
 				foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if ( npc.IsWithinRadius( new Point3D( m_originalX, m_originalY, m_originalZ ), WorldMgr.VISIBILITY_DISTANCE ) )
-						continue;
-
 					Out.SendNPCCreate(npc);
 					if (npc.Inventory != null)
 						Out.SendLivingEquipmentUpdate(npc);
@@ -9471,25 +9480,17 @@ namespace DOL.GS
 						Out.SendObjectUpdate(npc);
 					CurrentUpdateArray[npc.ObjectID - 1] = true;
 				}
-				//Create player visible to all others
+
 				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if (player == null) continue;
-					if (player != this)
+					if (player != null && player != this)
 					{
 						player.Out.SendPlayerCreate(this);
-					}
-				}
-				//Eden - can't see others?
-				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					if (player == null) continue;
-					if (player != this)
-					{
 						Out.SendPlayerCreate(player);
 						Out.SendLivingEquipmentUpdate(player);
 					}
 				}
+
 				UpdateEquipmentAppearance();
 
 				if (this.IsUnderwater)
@@ -11497,19 +11498,19 @@ namespace DOL.GS
 			base.LoadFromDatabase(obj);
 			if (!(obj is Character))
 				return;
-			my_character = (Character)obj;
+			m_dbCharacter = (Character)obj;
 
-			m_customFaceAttributes[(int)eCharFacePart.EyeSize] = my_character.EyeSize;
-			m_customFaceAttributes[(int)eCharFacePart.LipSize] = my_character.LipSize;
-			m_customFaceAttributes[(int)eCharFacePart.EyeColor] = my_character.EyeColor;
-			m_customFaceAttributes[(int)eCharFacePart.HairColor] = my_character.HairColor;
-			m_customFaceAttributes[(int)eCharFacePart.FaceType] = my_character.FaceType;
-			m_customFaceAttributes[(int)eCharFacePart.HairStyle] = my_character.HairStyle;
-			m_customFaceAttributes[(int)eCharFacePart.MoodType] = my_character.MoodType;
+			m_customFaceAttributes[(int)eCharFacePart.EyeSize] = m_dbCharacter.EyeSize;
+			m_customFaceAttributes[(int)eCharFacePart.LipSize] = m_dbCharacter.LipSize;
+			m_customFaceAttributes[(int)eCharFacePart.EyeColor] = m_dbCharacter.EyeColor;
+			m_customFaceAttributes[(int)eCharFacePart.HairColor] = m_dbCharacter.HairColor;
+			m_customFaceAttributes[(int)eCharFacePart.FaceType] = m_dbCharacter.FaceType;
+			m_customFaceAttributes[(int)eCharFacePart.HairStyle] = m_dbCharacter.HairStyle;
+			m_customFaceAttributes[(int)eCharFacePart.MoodType] = m_dbCharacter.MoodType;
 
 			#region guild handling
 			//TODO: overwork guild handling (VaNaTiC)
-			m_guildid = my_character.GuildID;
+			m_guildid = m_dbCharacter.GuildID;
 			if (m_guildid != null)
 				m_guild = GuildMgr.GetGuildByGuildID(m_guildid);
 			else
@@ -11520,7 +11521,7 @@ namespace DOL.GS
 				foreach (DBRank rank in m_guild.Ranks)
 				{
 					if (rank == null) continue;
-					if (rank.RankLevel == my_character.GuildRank)
+					if (rank.RankLevel == m_dbCharacter.GuildRank)
 					{
 						m_guildRank = rank;
 						break;
@@ -11533,21 +11534,21 @@ namespace DOL.GS
 			#endregion
 
 			#region setting world-init-position (delegate to PlayerCharacter dont make sense)
-			m_x = my_character.Xpos;
-			m_y = my_character.Ypos;
-			m_z = my_character.Zpos;
-			m_Heading = (ushort)my_character.Direction;
+			m_x = m_dbCharacter.Xpos;
+			m_y = m_dbCharacter.Ypos;
+			m_z = m_dbCharacter.Zpos;
+			m_Heading = (ushort)m_dbCharacter.Direction;
 			//important, use CurrentRegion property
 			//instead because it sets the Region too
-			CurrentRegionID = (ushort)my_character.Region;
+			CurrentRegionID = (ushort)m_dbCharacter.Region;
 			if (CurrentRegion == null || CurrentRegion.GetZone(m_x, m_y) == null)
 			{
-				log.WarnFormat("Invalid region/zone on char load ({0}): x={1} y={2} z={3} reg={4}; moving to bind point.", my_character.Name, X, Y, Z, my_character.Region);
-				m_x = my_character.BindXpos;
-				m_y = my_character.BindYpos;
-				m_z = my_character.BindZpos;
-				m_Heading = (ushort)my_character.BindHeading;
-				CurrentRegionID = (ushort)my_character.BindRegion;
+				log.WarnFormat("Invalid region/zone on char load ({0}): x={1} y={2} z={3} reg={4}; moving to bind point.", m_dbCharacter.Name, X, Y, Z, m_dbCharacter.Region);
+				m_x = m_dbCharacter.BindXpos;
+				m_y = m_dbCharacter.BindYpos;
+				m_z = m_dbCharacter.BindZpos;
+				m_Heading = (ushort)m_dbCharacter.BindHeading;
+				CurrentRegionID = (ushort)m_dbCharacter.BindRegion;
 			}
 
 			for (int i = 0; i < m_lastUniqueLocations.Length; i++)
@@ -11559,28 +11560,28 @@ namespace DOL.GS
 			#endregion
 
 			// stats first
-			m_charStat[eStat.STR - eStat._First] = (short)my_character.Strength;
-			m_charStat[eStat.DEX - eStat._First] = (short)my_character.Dexterity;
-			m_charStat[eStat.CON - eStat._First] = (short)my_character.Constitution;
-			m_charStat[eStat.QUI - eStat._First] = (short)my_character.Quickness;
-			m_charStat[eStat.INT - eStat._First] = (short)my_character.Intelligence;
-			m_charStat[eStat.PIE - eStat._First] = (short)my_character.Piety;
-			m_charStat[eStat.EMP - eStat._First] = (short)my_character.Empathy;
-			m_charStat[eStat.CHR - eStat._First] = (short)my_character.Charisma;
+			m_charStat[eStat.STR - eStat._First] = (short)m_dbCharacter.Strength;
+			m_charStat[eStat.DEX - eStat._First] = (short)m_dbCharacter.Dexterity;
+			m_charStat[eStat.CON - eStat._First] = (short)m_dbCharacter.Constitution;
+			m_charStat[eStat.QUI - eStat._First] = (short)m_dbCharacter.Quickness;
+			m_charStat[eStat.INT - eStat._First] = (short)m_dbCharacter.Intelligence;
+			m_charStat[eStat.PIE - eStat._First] = (short)m_dbCharacter.Piety;
+			m_charStat[eStat.EMP - eStat._First] = (short)m_dbCharacter.Empathy;
+			m_charStat[eStat.CHR - eStat._First] = (short)m_dbCharacter.Charisma;
 
-			SetCharacterClass(my_character.Class);
+			SetCharacterClass(m_dbCharacter.Class);
 
 			m_currentSpeed = 0;
 			if (MaxSpeedBase == 0)
 				MaxSpeedBase = PLAYER_BASE_SPEED;
 
-			m_currentXP = my_character.Experience;
+			m_currentXP = m_dbCharacter.Experience;
 			m_inventory.LoadFromDatabase(InternalID);
 
-			SwitchQuiver((eActiveQuiverSlot)(my_character.ActiveWeaponSlot & 0xF0), false);
-			SwitchWeapon((eActiveWeaponSlot)(my_character.ActiveWeaponSlot & 0x0F));
+			SwitchQuiver((eActiveQuiverSlot)(m_dbCharacter.ActiveWeaponSlot & 0xF0), false);
+			SwitchWeapon((eActiveWeaponSlot)(m_dbCharacter.ActiveWeaponSlot & 0x0F));
 
-			if (my_character.PlayedTime == 0)
+			if (m_dbCharacter.PlayedTime == 0)
 			{
 				Health = MaxHealth;
 				Mana = MaxMana;
@@ -11588,9 +11589,9 @@ namespace DOL.GS
 			}
 			else
 			{
-				Health = my_character.Health;
-				Mana = my_character.Mana;
-				Endurance = my_character.Endurance; // has to be set after max, same applies to other values with max properties
+				Health = m_dbCharacter.Health;
+				Mana = m_dbCharacter.Mana;
+				Endurance = m_dbCharacter.Endurance; // has to be set after max, same applies to other values with max properties
 			}
 
 			if (Health <= 0)
@@ -11679,11 +11680,11 @@ namespace DOL.GS
 
 			// Has to be updated on load to ensure time offline isn't
 			// added to character /played.
-			my_character.LastPlayed = DateTime.Now;
+			m_dbCharacter.LastPlayed = DateTime.Now;
 
 			m_titles.Clear();
 			m_titles.AddRange(PlayerTitleMgr.GetPlayerTitles(this));
-			IPlayerTitle t = PlayerTitleMgr.GetTitleByTypeName(my_character.CurrentTitleType);
+			IPlayerTitle t = PlayerTitleMgr.GetTitleByTypeName(m_dbCharacter.CurrentTitleType);
 			if (t == null)
 				t = PlayerTitleMgr.ClearTitle;
 			m_currentTitle = t;
@@ -11716,80 +11717,41 @@ namespace DOL.GS
 			{
 				SaveSkillsToCharacter();
 				SaveCraftingSkills();
-				my_character.PlayedTime = PlayedTime;  //We have to set the PlayedTime on the character before setting the LastPlayed
-				my_character.LastPlayed = DateTime.Now;
+				m_dbCharacter.PlayedTime = PlayedTime;  //We have to set the PlayedTime on the character before setting the LastPlayed
+				m_dbCharacter.LastPlayed = DateTime.Now;
 
-				//Eden LRP
-				/*int lastdayLRP = m_client.Account.LastDayLRP;
-                PlayerStatistic stats = PlayerStatistic.GetStatistic(this);
-                DateTime lastlog = m_client.Account.LastLogin;
-                if (lastlog.AddDays(7) < DateTime.Now)
-                {
-                    lastdayLRP = 0;
-                    m_client.Account.LRP1 = 0;
-                    m_client.Account.LRP2 = 0;
-                    m_client.Account.LRP3 = 0;
-                    m_client.Account.LRP4 = 0;
-                    m_client.Account.LRP5 = 0;
-                    m_client.Account.LRP6 = 0;
-                    m_client.Account.LRP7 = 0;
-                }
-                switch(DateTime.Now.DayOfWeek)
-                {
-                    case DayOfWeek.Monday:
-                        if(lastdayLRP!=1) m_client.Account.LRP1 = 0;
-                        m_client.Account.LRP1 += (int)stats.TotalRP;
-                        m_client.Account.LastDayLRP = 1;
-                        break;
-                    case DayOfWeek.Tuesday:
-                        if(lastdayLRP!=2) m_client.Account.LRP2 = 0;
-                        m_client.Account.LRP2 += (int)stats.TotalRP;
-                        m_client.Account.LastDayLRP = 2;
-                        break;
-                    case DayOfWeek.Wednesday:
-                        if(lastdayLRP!=3) m_client.Account.LRP3 = 0;
-                        m_client.Account.LRP3 += (int)stats.TotalRP;
-                        m_client.Account.LastDayLRP = 3;
-                        break;
-                    case DayOfWeek.Thursday:
-                        if(lastdayLRP!=4) m_client.Account.LRP4 = 0;
-                        m_client.Account.LRP4 += (int)stats.TotalRP;
-                        m_client.Account.LastDayLRP = 4;
-                        break;
-                    case DayOfWeek.Friday:
-                        if(lastdayLRP!=5) m_client.Account.LRP5 = 0;
-                        m_client.Account.LRP5 += (int)stats.TotalRP;
-                        m_client.Account.LastDayLRP = 5;
-                        break;
-                    case DayOfWeek.Saturday:
-                        if(lastdayLRP!=6) m_client.Account.LRP6 = 0;
-                        m_client.Account.LRP6 += (int)stats.TotalRP;
-                        m_client.Account.LastDayLRP = 6;
-                        break;
-                    case DayOfWeek.Sunday:
-                        if(lastdayLRP!=7) m_client.Account.LRP7 = 0;
-                        m_client.Account.LRP7 += (int)stats.TotalRP;
-                        m_client.Account.LastDayLRP = 7;
-                        break;
-                }
-                stats.TotalRP = 0;
-                //GameServer.Database.SaveObject(m_client.Account);
-				 */
-				my_character.ActiveWeaponSlot = (byte)((byte)ActiveWeaponSlot | (byte)ActiveQuiverSlot);
+				m_dbCharacter.ActiveWeaponSlot = (byte)((byte)ActiveWeaponSlot | (byte)ActiveQuiverSlot);
 				if (m_stuckFlag)
 				{
 					lock (m_lastUniqueLocations)
 					{
 						GameLocation loc = m_lastUniqueLocations[m_lastUniqueLocations.Length - 1];
-						my_character.Xpos = loc.X;
-						my_character.Ypos = loc.Y;
-						my_character.Zpos = loc.Z;
-						my_character.Region = loc.RegionID;
-						my_character.Direction = loc.Heading;
+						m_dbCharacter.Xpos = loc.X;
+						m_dbCharacter.Ypos = loc.Y;
+						m_dbCharacter.Zpos = loc.Z;
+						m_dbCharacter.Region = loc.RegionID;
+						m_dbCharacter.Direction = loc.Heading;
 					}
 				}
-				GameServer.Database.SaveObject(my_character);
+				GameServer.Database.SaveObject(m_dbCharacter);
 				Inventory.SaveIntoDatabase(InternalID);
+
+				Character cachedCharacter = null;
+
+				foreach (Character accountChar in Client.Account.Characters)
+				{
+					if (accountChar.ObjectId == InternalID)
+					{
+						cachedCharacter = accountChar;
+						break;
+					}
+				}
+
+				if (cachedCharacter != null)
+				{
+					cachedCharacter = m_dbCharacter;
+				}
+
 
 				if (m_mlsteps != null)
 				{
@@ -11799,7 +11761,7 @@ namespace DOL.GS
 				}
 
 				if (log.IsInfoEnabled)
-					log.Info(my_character.Name + " saved!");
+					log.Info(m_dbCharacter.Name + " saved!");
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SaveIntoDatabase.CharacterSaved"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			catch (Exception e)
@@ -14519,11 +14481,12 @@ namespace DOL.GS
 		public GamePlayer(GameClient client, Character theChar)
 			: base()
 		{
+			IsJumping = false;
 			m_steed = new WeakRef(null);
 			m_rangeAttackAmmo = new WeakRef(null);
 			m_rangeAttackTarget = new WeakRef(null);
 			m_client = client;
-			my_character = theChar;
+			m_dbCharacter = theChar;
 			m_controlledHorse = new ControlledHorse(this);
 			m_buff1Bonus = new PropertyIndexer((int)eProperty.MaxProperty); // set up a fixed indexer for players
 			m_buff2Bonus = new PropertyIndexer((int)eProperty.MaxProperty);
