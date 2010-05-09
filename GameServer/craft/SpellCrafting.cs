@@ -263,6 +263,8 @@ namespace DOL.GS
 			{
 				ApplySpellcraftGems(player, item);
 			}
+
+			GameServer.Database.SaveObject(item);
 		}
 
 		/// <summary>

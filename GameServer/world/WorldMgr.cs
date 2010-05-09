@@ -200,7 +200,7 @@ namespace DOL.GS
 		/// This thread is used to update the NPCs around a player
 		/// as fast as possible
 		/// </summary>
-		private static Thread m_NPCUpdateThread;
+		private static Thread m_WorldUpdateThread;
 
 		/// <summary>
 		/// This constant defines the day constant
@@ -528,10 +528,11 @@ namespace DOL.GS
 					log.Info("Total Bind Points: " + bindpoints);
 				}
 
-				m_NPCUpdateThread = new Thread(new ThreadStart(NPCUpdateThreadStart));
-				m_NPCUpdateThread.Name = "NpcUpdate";
-				m_NPCUpdateThread.IsBackground = true;
-				m_NPCUpdateThread.Start();
+				m_WorldUpdateThread = new Thread(new ThreadStart(WorldUpdateThreadStart));
+				m_WorldUpdateThread.Priority = ThreadPriority.AboveNormal;
+				m_WorldUpdateThread.Name = "NpcUpdate";
+				m_WorldUpdateThread.IsBackground = true;
+				m_WorldUpdateThread.Start();
 
 				m_dayIncrement = Math.Max(1, Math.Min(512, ServerProperties.Properties.WORLD_DAY_INCREMENT)); // increments > 512 do not render smoothly on clients
 				m_dayStartTick = Environment.TickCount - (int)(DAY / m_dayIncrement / 2); // set start time to 12pm
@@ -714,26 +715,28 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets the npc update thread stacktrace
+		/// Gets the world update thread stacktrace
 		/// </summary>
 		/// <returns></returns>
-		public static StackTrace GetNpcUpdateStacktrace()
+		public static StackTrace GetWorldUpdateStacktrace()
 		{
-			return Util.GetThreadStack(m_NPCUpdateThread);
+			return Util.GetThreadStack(m_WorldUpdateThread);
 		}
 
 		private static uint m_lastWorldObjectUpdateTick = 0;
 
 		/// <summary>
-		/// This thread updates the NPCs around the player at very short
+		/// This thread updates the NPCs and objects around the player at very short
 		/// intervalls! But since the update is very quick the thread will
 		/// sleep most of the time!
 		/// </summary>
-		private static void NPCUpdateThreadStart()
+		private static void WorldUpdateThreadStart()
 		{
 			bool running = true;
 			if (log.IsDebugEnabled)
+			{
 				log.Debug("NPCUpdateThread ThreadId=" + Thread.CurrentThread.ManagedThreadId);
+			}
 			while (running)
 			{
 				try
@@ -751,8 +754,9 @@ namespace DOL.GS
 							if (log.IsErrorEnabled)
 								log.Error("account has no active player but is playing, disconnecting! => " + client.Account.Name);
 							GameServer.Instance.Disconnect(client);
-							Thread.Sleep(200);
+							continue;
 						}
+
 						if (client.ClientState != GameClient.eClientState.Playing)
 							continue;
 						if (player.ObjectState != GameObject.eObjectState.Active)
@@ -763,6 +767,9 @@ namespace DOL.GS
 							BitArray carray = player.CurrentUpdateArray;
 							BitArray narray = player.NewUpdateArray;
 							narray.SetAll(false);
+
+							int npcsUpdated = 0, objectsUpdated = 0, doorsUpdated = 0, housesUpdated = 0;
+
 							lock (player.CurrentRegion.ObjectsSyncLock)
 							{
 								foreach (GameNPC npc in player.GetNPCsInRadius(VISIBILITY_DISTANCE))
@@ -774,10 +781,12 @@ namespace DOL.GS
 										if ((uint)Environment.TickCount - npc.LastUpdateTickCount > (ServerProperties.Properties.WORLD_NPC_UPDATE_INTERVAL >= 1000 ? ServerProperties.Properties.WORLD_NPC_UPDATE_INTERVAL : 1000))
 										{
 											npc.BroadcastUpdate();
+											npcsUpdated++;
 										}
 										else if (carray[npc.ObjectID - 1] == false)
 										{
 											client.Out.SendObjectUpdate(npc);
+											npcsUpdated++;
 										}
 									}
 									catch (Exception e)
@@ -793,18 +802,22 @@ namespace DOL.GS
 									foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 									{
 										client.Out.SendObjectCreate(item);
+										objectsUpdated++;
 									}
 
 									foreach (IDoor door in client.Player.GetDoorsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 									{
 										client.Player.SendDoorUpdate(door);
+										doorsUpdated++;
 									}
 
 									//housing
 									if (client.Player.CurrentRegion.HousingEnabled)
 									{
 										if (client.Player.HousingUpdateArray == null)
+										{
 											client.Player.HousingUpdateArray = new BitArray(HouseMgr.MAXHOUSES, false);
+										}
 
 										Hashtable houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
 										if (houses != null)
@@ -824,6 +837,7 @@ namespace DOL.GS
 														}
 
 														client.Player.HousingUpdateArray[house.UniqueID] = true;
+														housesUpdated++;
 													}
 												}
 												else
@@ -841,16 +855,21 @@ namespace DOL.GS
 									m_lastWorldObjectUpdateTick = (uint)Environment.TickCount;
 								}
 							}
+
 							player.SwitchUpdateArrays();
 							player.LastWorldUpdate = Environment.TickCount;
+
+							// log.DebugFormat("Player {0} world update: {1} npcs, {2} objects, {3} doors, and {4} houses in {5}ms", player.Name, npcsUpdated, objectsUpdated, doorsUpdated, housesUpdated, Environment.TickCount - start);
 						}
 					}
+
 					int took = Environment.TickCount - start;
 					if (took > 500)
 					{
 						if (log.IsWarnEnabled)
 							log.WarnFormat("NPC update took {0}ms", took);
 					}
+
 					Thread.Sleep(50);
 				}
 				catch (ThreadAbortException)
@@ -885,10 +904,10 @@ namespace DOL.GS
 					m_dayResetTimer.Dispose();
 					m_dayResetTimer = null;
 				}
-				if (m_NPCUpdateThread != null)
+				if (m_WorldUpdateThread != null)
 				{
-					m_NPCUpdateThread.Abort();
-					m_NPCUpdateThread = null;
+					m_WorldUpdateThread.Abort();
+					m_WorldUpdateThread = null;
 				}
 				if (m_relocationThread != null)
 				{

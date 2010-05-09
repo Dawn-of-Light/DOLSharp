@@ -394,7 +394,7 @@ namespace DOL.GS.PacketHandler
 		WarmapWindowHibernia = 0x30,
 		WarmapWindowAlbion = 0x31,
 		WarmapWindowMidgard = 0x32,
-		QuestSuscribe = 0x64,
+		QuestSubscribe = 0x64,
 	}
 	public enum eRealmWarmapKeepFlags : byte
 	{
