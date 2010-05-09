@@ -316,7 +316,7 @@ namespace DOL.Database.Connection
 						long start = Environment.TickCount;
 
 						MySqlTransaction tran = null;
-						IsolationLevel tranIsolation = IsolationLevel.Unspecified;
+						IsolationLevel tranIsolation = IsolationLevel.RepeatableRead;  // default for MySQL InnoDB
 
 						switch (isolation)
 						{
@@ -337,14 +337,7 @@ namespace DOL.Database.Connection
 								break;
 						}
 
-						if (tranIsolation != IsolationLevel.Unspecified)
-						{
-							tran = conn.BeginTransaction(tranIsolation);
-						}
-						else
-						{
-							tran = conn.BeginTransaction();
-						}
+						tran = conn.BeginTransaction(tranIsolation);
 
 						var cmd = new MySqlCommand(sqlcommand, conn, tran);
 						MySqlDataReader reader = cmd.ExecuteReader();
