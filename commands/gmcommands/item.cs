@@ -1303,61 +1303,114 @@ namespace DOL.GS.Commands
 								{
 									slot = 0;
 								}
+
 								idnb = args[2];
 							}
 							else if (args.Length >= 3)
 							{
 								idnb = args[2];
 							}
-							else
+							else if (args.Length < 2)
 							{
 								DisplaySyntax(client);
 								return;
 							}
+
 							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
 							if (item == null)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							
+
+							// if a blank item was created then AllowAdd will be false here
+							if (idnb == string.Empty && (item.AllowAdd == false || args[1] == "saveunique"))
+							{
+								DisplayMessage(client, "You need to provide a new id_nb for this item.");
+								return;
+							}
+							else if (idnb == string.Empty)
+							{
+								idnb = item.Id_nb;
+							}
+
+
 							ItemTemplate temp = null;
-							if (args[1]== "savetemplate")
+							if (args[1] == "savetemplate")
+							{
 								// if the item is allready in the database
 								temp = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
+							}
 
 							// save the new item
 							if (temp == null)
 							{
-								item.Template.AllowAdd = true;
-								item.Template.Id_nb = idnb;
 								if (args[1]== "savetemplate")
 								{
-									GameServer.Database.AddObject(item.Template);
-									item.ITemplate_Id = idnb;
+									try
+									{
+										item.Template.AllowAdd = true;
+										item.Template.Id_nb = idnb;
+										GameServer.Database.AddObject(item.Template);
+										item.ITemplate_Id = idnb;
+									}
+									catch (Exception ex)
+									{
+										DisplayMessage(client, "Error adding template: " + ex.Message);
+										return;
+									}
 								}
 								else //saveunique
 								{
-									GameServer.Database.AddObject(item.Template as ItemUnique);
-									item.UTemplate_Id = idnb;
+									try
+									{
+										log.Debug("save unique " + item.Template.Id_nb);
+										ItemUnique unique = new ItemUnique(item.Template);
+										unique.Id_nb = idnb;
+										GameServer.Database.AddObject(unique);
+										item.ITemplate_Id = null;
+										item.UTemplate_Id = idnb;
+									}
+									catch (Exception ex)
+									{
+										DisplayMessage(client, "Error adding unique: " + ex.Message);
+										return;
+									}
 								}
-
 							}
-							// or update it
-							else
+							else // update the item
 							{
 								item.Template.Dirty = true;
 								GameServer.Database.SaveObject(item.Template);
+								GameServer.Database.UpdateInCache<ItemTemplate>(item.Template);
 							}
 
 
 							if (!item.AllowAdd) // blank item previously created
 							{
-								item.AllowAdd = true;
-								GameServer.Database.AddObject(item);
+								try
+								{
+									item.AllowAdd = true;
+									GameServer.Database.AddObject(item);
+								}
+								catch (Exception ex)
+								{
+									DisplayMessage(client, "Error adding inventory item: " + ex.Message);
+									return;
+								}
 							}
 							else
-								GameServer.Database.SaveObject(item);
+							{
+								try
+								{
+									GameServer.Database.SaveObject(item);
+								}
+								catch (Exception ex)
+								{
+									DisplayMessage(client, "Error saving inventory item: " + ex.Message);
+									return;
+								}
+							}
 							
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.SaveTemplate.ItemSaved", idnb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
