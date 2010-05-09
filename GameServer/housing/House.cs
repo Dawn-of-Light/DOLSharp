@@ -1255,7 +1255,7 @@ namespace DOL.GS.Housing
 			// check based on guild
 			if (player.Guild != null)
 			{
-				return m_databaseItem.GuildName == OwnerID && player.Guild.GotAccess(player, eGuildRank.Leader);
+				return OwnerID == player.Guild.GuildID && player.Guild.GotAccess(player, eGuildRank.Leader);
 			}
 
 			// no character/account/guild match, not an owner
