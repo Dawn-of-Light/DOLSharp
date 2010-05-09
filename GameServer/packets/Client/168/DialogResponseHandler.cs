@@ -169,7 +169,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 							break;
 						}
-					case eDialogCode.QuestSuscribe:
+					case eDialogCode.QuestSubscribe:
 						{
 							GameLiving questNPC = (GameLiving)WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort)m_data2);
 							if (questNPC == null)
