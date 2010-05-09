@@ -148,6 +148,8 @@ namespace DOL.GS
 			}
 
 			player.Inventory.RemoveCountFromStack(tincture, 1);
+
+			GameServer.Database.SaveObject(item);
 		}
 
 		#endregion
