@@ -69,6 +69,7 @@ namespace DOL.GS
 					var items = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(inventoryID) + 
 																					"' AND (SlotPosition <= " + (int)eInventorySlot.LastVault + 
 																					" OR (SlotPosition >= 500 AND SlotPosition < 600))");
+
 					foreach (InventoryItem item in items)
 					{
 						try
@@ -91,8 +92,11 @@ namespace DOL.GS
 							if (m_items.ContainsKey(itemSlot))
 							{
 								if (Log.IsErrorEnabled)
-									Log.Error("Error loading " + m_player.Name + "'s inventory OwnerID " + inventoryID + " slot #" +
-											  item.SlotPosition + ". Duplicate item found, skipping!");
+								{
+									Log.ErrorFormat("Error loading {0}'s ({1}) inventory!\nDuplicate item {2} found in slot {3}; Skipping!",
+										m_player.Name, inventoryID, item.Name, itemSlot);
+								}
+
 								continue;
 							}
 
