@@ -19,7 +19,7 @@
 namespace DOL.Database.Transaction
 {
 	/// <summary>
-	/// Connection isloation levels
+	/// Connection isolation levels
 	/// </summary>
 	public enum IsolationLevel
 	{
