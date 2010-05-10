@@ -111,7 +111,7 @@ namespace DOL.GS.Quests.Atlantis
 
 					if (npcs.Length == 0)
 					{
-						log.Error(String.Format("ARTIFACTQUEST: {0} {1} not found in {2} for artifact {3}", title, scholar, GlobalConstants.RealmToName(realm), artifactID));
+						log.Warn(String.Format("ARTIFACTQUEST: {0} {1} not found in {2} for artifact {3}", title, scholar, GlobalConstants.RealmToName(realm), artifactID));
 					}
 					else
 					{
@@ -123,7 +123,7 @@ namespace DOL.GS.Quests.Atlantis
 			}
 			else
 			{
-				log.Error("ARTIFACTQUEST: scholars is null for artifact " + artifactID);
+				log.Warn("ARTIFACTQUEST: scholars is null for artifact " + artifactID);
 
 			}
 		}
@@ -151,14 +151,14 @@ namespace DOL.GS.Quests.Atlantis
 			if (encounterType == null)
 			{
 				m_reasonFailQualification = "It does not appear this encounter type is set up correctly.";
-				log.Error("ArtifactQuest: EncounterType is null for ArtifactID " + ArtifactID);
+				log.Warn("ArtifactQuest: EncounterType is null for ArtifactID " + ArtifactID);
 				return false;
 			}
 
 			if (player == null)
 			{
 				m_reasonFailQualification = "Player is null for quest, serious error!";
-				log.Error("ArtifactQuest: Player is null for ArtifactID " + ArtifactID + " encounterType " + encounterType.FullName);
+				log.Warn("ArtifactQuest: Player is null for ArtifactID " + ArtifactID + " encounterType " + encounterType.FullName);
 				return false;
 			}
 
