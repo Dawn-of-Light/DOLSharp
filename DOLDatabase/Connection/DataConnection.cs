@@ -315,36 +315,10 @@ namespace DOL.Database.Connection
 
 						long start = Environment.TickCount;
 
-						MySqlTransaction tran = null;
-						IsolationLevel tranIsolation = IsolationLevel.RepeatableRead;  // default for MySQL InnoDB
-
-						switch (isolation)
-						{
-							case Transaction.IsolationLevel.READ_COMMITTED:
-								tranIsolation = IsolationLevel.ReadCommitted;
-								break;
-							case Transaction.IsolationLevel.READ_UNCOMMITTED:
-								tranIsolation = IsolationLevel.ReadUncommitted;
-								break;
-							case Transaction.IsolationLevel.REPEATABLE_READ:
-								tranIsolation = IsolationLevel.RepeatableRead;
-								break;
-							case Transaction.IsolationLevel.SERIALIZABLE:
-								tranIsolation = IsolationLevel.Serializable;
-								break;
-							case Transaction.IsolationLevel.SNAPSHOT:
-								tranIsolation = IsolationLevel.Snapshot;
-								break;
-						}
-
-						tran = conn.BeginTransaction(tranIsolation);
-
-						var cmd = new MySqlCommand(sqlcommand, conn, tran);
+						var cmd = new MySqlCommand(sqlcommand, conn);
 						MySqlDataReader reader = cmd.ExecuteReader();
 						callback(reader);
-
 						reader.Close();
-						tran.Commit();
 
 						if (log.IsDebugEnabled)
 							log.Debug("SQL Select (" + isolation + ") exec time " + (Environment.TickCount - start) + "ms");
