@@ -82,8 +82,8 @@ namespace DOL.GS.PacketHandler
 				UInt32 outLen = CryptLib168.DecodeMythicRSAPacket(content,(UInt32)content.Length,output,(UInt32)output.Length);
 				if(outLen==0)
 				{
-					if (log.IsErrorEnabled)
-						log.Error("Failed to decrypt RSA packet!");
+					if (Log.IsErrorEnabled)
+						Log.Error("Failed to decrypt RSA packet!");
 					return content;
 				}
 				byte[] newPacket = new byte[outLen];

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace DOL.GS
 {
@@ -100,8 +100,8 @@ namespace DOL.GS.Commands
 				if (npc == null)
 					continue;
 
-				log.Warn(index + ": Object name=" + npc.Name + ", {X/Y/Z} H =  { " + npc.X + " / " + npc.Y + " / " + npc.Z + " }  " + npc.Heading + ".");
-				log.Warn("Zone, zoneID " + npc.CurrentZone.ID + " (" + npc.CurrentZone.Description + "), zoneSkinID = " + npc.CurrentZone.ZoneSkinID + ".");
+				Log.Warn(index + ": Object name=" + npc.Name + ", {X/Y/Z} H =  { " + npc.X + " / " + npc.Y + " / " + npc.Z + " }  " + npc.Heading + ".");
+				Log.Warn("Zone, zoneID " + npc.CurrentZone.ID + " (" + npc.CurrentZone.Description + "), zoneSkinID = " + npc.CurrentZone.ZoneSkinID + ".");
 			}
 		}
 	}

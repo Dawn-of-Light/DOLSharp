@@ -16,37 +16,39 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using DOL.Database;
 using DOL.GS.Housing;
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandler(PacketHandlerType.TCP, 0x05, "Handles housing permissions requests from menu")]
 	public class HousePermissionsRequestHandler : IPacketHandler
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		#region IPacketHandler Members
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int pid = packet.ReadShort();
 			ushort housenumber = packet.ReadShort();
-			
-			House house = HouseMgr.GetHouse(housenumber);
+
+			// house is null, return
+			var house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
 				return 1;
-			if (client.Player == null) return 1;
 
-			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel == 1)
+			// player is null, return
+			if (client.Player == null)
 				return 1;
 
+			// player has no owner permissions and isn't a GM or admin, return
+			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel <= 1)
+				return 1;
+
+			// send out the house permissions
 			client.Out.SendHousePermissions(house);
 
 			return 1;
 		}
 
+		#endregion
 	}
 }

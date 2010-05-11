@@ -214,7 +214,7 @@ namespace DOL.GS.GameEvents
 			}
 			catch (Exception e)
 			{
-				log.Error("stats log callback", e);
+				log.Error("stats Log callback", e);
 			}
 			finally
 			{

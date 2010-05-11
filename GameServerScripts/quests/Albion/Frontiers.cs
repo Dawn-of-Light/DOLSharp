@@ -406,8 +406,8 @@ namespace DOL.GS.Quests.Albion
             
             if (horse == null)
             {
-                if(log.IsWarnEnabled)
-									log.Warn("Could not find Horse near Uliam, creating ...");
+                if(Log.IsWarnEnabled)
+									Log.Warn("Could not find Horse near Uliam, creating ...");
                 horse = new GameNPC();
                 horse.Model = 450; // //819;
                 horse.Name = "horse";

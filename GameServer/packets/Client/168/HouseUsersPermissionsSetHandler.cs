@@ -16,36 +16,35 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using DOL.Database;
 using DOL.GS.Housing;
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-    [PacketHandler(PacketHandlerType.TCP, 0x06, "Handles housing Users permissions requests")]
-    public class HouseUsersPermissionsSetHandler : IPacketHandler
-    {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	[PacketHandler(PacketHandlerType.TCP, 0x06, "Handles housing Users permissions requests")]
+	public class HouseUsersPermissionsSetHandler : IPacketHandler
+	{
+		#region IPacketHandler Members
 
-        public int HandlePacket(GameClient client, GSPacketIn packet)
-        {
-            int permissionSlot = packet.ReadByte();
-            int newPermissionLevel = packet.ReadByte();
-            ushort housenumber = packet.ReadShort();
+		public int HandlePacket(GameClient client, GSPacketIn packet)
+		{
+			int permissionSlot = packet.ReadByte();
+			int newPermissionLevel = packet.ReadByte();
+			ushort houseNumber = packet.ReadShort();
 
-            House house = HouseMgr.GetHouse(housenumber);
-            if (house == null)
-                return 1;
+			// house is null, return
+			var house = HouseMgr.GetHouse(houseNumber);
+			if (house == null)
+				return 1;
 
-            if (client.Player == null) 
-                return 1;
+			// player is null, return
+			if (client.Player == null)
+				return 1;
 
-            if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel == 1)
-                return 1;
+			// can't set permissions unless you're the owner.
+			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel <= 1)
+				return 1;
 
+			// check if we're setting or removing permissions
 			if (newPermissionLevel == 100)
 			{
 				house.RemovePermission(permissionSlot);
@@ -55,7 +54,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				house.AdjustPermissionSlot(permissionSlot, newPermissionLevel);
 			}
 
-        	return 1;
-        }
-    }
+			return 1;
+		}
+
+		#endregion
+	}
 }

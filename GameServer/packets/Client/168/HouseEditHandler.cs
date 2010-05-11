@@ -16,42 +16,46 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.Database;
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x01,"Change handler for outside/inside look (houses).")]
+	[PacketHandler(PacketHandlerType.TCP, 0x01, "Change handler for outside/inside look (houses).")]
 	public class HouseEditHandler : IPacketHandler
-    {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			int swtch;
-			int chnge;
 			ushort playerID = packet.ReadShort(); // no use for that.
 
+			// house is null, return
+			var house = client.Player.CurrentHouse;
+			if(house == null)
+				return 1;
+
+			// grab all valid changes
 			var changes = new List<int>();
-			for(int i = 0; i < 10; i++)
+			for (int i = 0; i < 10; i++)
 			{
-				swtch = packet.ReadByte();
-				chnge = packet.ReadByte();
-				if(swtch != 255)
+				int swtch = packet.ReadByte();
+				int change = packet.ReadByte();
+
+				if (swtch != 255)
 				{
-					changes.Add(chnge);
+					changes.Add(change);
 				}
 			}
 
-			if(changes.Count > 0 && client.Player.CurrentHouse != null)
+			// apply changes
+			if (changes.Count > 0)
 			{
-				client.Player.CurrentHouse.Edit(client.Player, changes);
+				house.Edit(client.Player, changes);
 			}
 
 			return 1;
 		}
+
+		#endregion
 	}
 }

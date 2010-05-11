@@ -16,51 +16,56 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.Database;
 using DOL.GS.Housing;
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandler(PacketHandlerType.TCP, 0x03, "Handles housing Users permissions requests from menu")]
 	public class HouseUsersPermissionsRequestHandler : IPacketHandler
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		#region IPacketHandler Members
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int unk1 = packet.ReadByte();
 			int unk2 = packet.ReadByte();
 			ushort housenumber = packet.ReadShort();
-			House house = HouseMgr.GetHouse(housenumber);
+
+			// house is null, return
+			var house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
 				return 1;
-			if (client.Player == null) return 1;
 
-            if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel == 1)
+			// player is null, return
+			if (client.Player == null)
 				return 1;
 
+			// player has no owner permissions and isn't a GM or admin, return
+			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel <= 1)
+				return 1;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HouseUserPermissions));
+			var pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HouseUserPermissions));
 
-			pak.WriteByte((byte)house.CharsPermissions.Count);			// Number of permissions
-			pak.WriteByte(0x00);				// ?
-			pak.WriteShort(housenumber);			// House N°
+			pak.WriteByte((byte) house.CharsPermissions.Count); // Number of permissions
+			pak.WriteByte(0x00); // ?
+			pak.WriteShort(housenumber); // House N°
 
 			foreach (DBHouseCharsXPerms perm in house.CharsPermissions)
 			{
-				pak.WriteByte((byte)perm.Slot);				// Slot
-				pak.WriteByte((byte)0x00);			// ?
-				pak.WriteByte((byte)0x00);			// ?
-				pak.WriteByte((byte)perm.PermissionType);		// Type (Guild, Class, Race ...)
-				pak.WriteByte((byte)perm.PermissionLevel);	// Level (Friend, Visitor ...)
+				pak.WriteByte((byte) perm.Slot); // Slot
+				pak.WriteByte(0x00); // ?
+				pak.WriteByte(0x00); // ?
+				pak.WriteByte((byte) perm.PermissionType); // Type (Guild, Class, Race ...)
+				pak.WriteByte((byte) perm.PermissionLevel); // Level (Friend, Visitor ...)
 				pak.WritePascalString(perm.DisplayName);
 			}
+
 			client.Out.SendTCP(pak);
+
 			return 1;
 		}
+
+		#endregion
 	}
 }

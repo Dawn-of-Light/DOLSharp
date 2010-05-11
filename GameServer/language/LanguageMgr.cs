@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.IO;
-
 using DOL.GS;
 using DOL.Database;
 using log4net;
@@ -315,6 +314,12 @@ namespace DOL.Language
 		/// <returns></returns>
 		public static string GetTranslation(string lang, string TranslationID, params object [] args)
 		{
+			// in case args are null, set them to an empty array so we don't catch any null refs
+			if(args == null)
+			{
+				args = new object[0];
+			}
+
             string translated = TranslationID;
 
 			if (IDSentences.ContainsKey(TranslationID) == false)

@@ -424,7 +424,7 @@ namespace DOL.GS.Styles
 						absorb=(int)Math.Floor((double)attackData.StyleDamage * ((double)attackData.Target.GetModified(eProperty.StyleAbsorb)/100));
 						attackData.StyleDamage -= absorb;
 					}
-					//					log.Debug("unstyled cap="+player.UnstyledDamageCap(weapon)+"  factor="+factor+"  weapon spec="+player.WeaponSpecLevel(weapon)+"  attack speed="+player.AttackSpeed(weapon)+"  GR="+attackData.Style.GrowthRate);
+					//					Log.Debug("unstyled cap="+player.UnstyledDamageCap(weapon)+"  factor="+factor+"  weapon spec="+player.WeaponSpecLevel(weapon)+"  attack speed="+player.AttackSpeed(weapon)+"  GR="+attackData.Style.GrowthRate);
 					//Increase regular damage by styledamage ... like on live servers
 					attackData.Damage += attackData.StyleDamage;
 

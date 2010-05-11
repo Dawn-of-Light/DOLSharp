@@ -36,6 +36,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			if (client == null || client.Player == null)
 				return 0;
+
 			if (client.Player.ObjectState != GameObject.eObjectState.Active) return 0;
 
 			ushort sessionId = packet.ReadShort(); // session ID

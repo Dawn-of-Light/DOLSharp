@@ -71,25 +71,25 @@ namespace DOL.GS.Commands
 						}
 
 						int max = 0;
-						//log.Info("count:" + FactionMgr.Factions.Count.ToString());
+						//Log.Info("count:" + FactionMgr.Factions.Count.ToString());
 						if (FactionMgr.Factions.Count != 0)
 						{
-							//log.Info("count >0");
+							//Log.Info("count >0");
 							IEnumerator enumerator = FactionMgr.Factions.Keys.GetEnumerator();
 							while (enumerator.MoveNext())
 							{
-								//log.Info("max :" + max + " et current :" + (int)enumerator.Current);
+								//Log.Info("max :" + max + " et current :" + (int)enumerator.Current);
 								max = System.Math.Max(max, (int)enumerator.Current);
 							}
 						}
-						//log.Info("max :" + max);
+						//Log.Info("max :" + max);
 						DBFaction dbfaction = new DBFaction();
 						dbfaction.BaseAggroLevel = baseAggro;
 						dbfaction.Name = name;
 						dbfaction.ID = (max + 1);
-						//log.Info("add obj to db with id :" + dbfaction.ID);
+						//Log.Info("add obj to db with id :" + dbfaction.ID);
 						GameServer.Database.AddObject(dbfaction);
-						//log.Info("add obj to db");
+						//Log.Info("add obj to db");
 						myfaction = new Faction();
 						myfaction.LoadFromDatabase(dbfaction);
 						FactionMgr.Factions.Add(dbfaction.ID, myfaction);
