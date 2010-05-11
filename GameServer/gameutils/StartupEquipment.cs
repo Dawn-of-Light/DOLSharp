@@ -74,34 +74,38 @@ namespace DOL.GS
 				{
 					if (slot == (eInventorySlot)inventoryItem.Item_Type)
 					{
-						if (usedSlots.ContainsKey(slot))
+						eInventorySlot chosenSlot = eInventorySlot.FirstEmptyBackpack;
+
+						if (slot == eInventorySlot.LeftHandWeapon && (eObjectType)inventoryItem.Object_Type != eObjectType.Shield && usedSlots.ContainsKey(eInventorySlot.RightHandWeapon) == false)
+						{
+							chosenSlot = eInventorySlot.RightHandWeapon;
+						}
+						else
+						{
+							chosenSlot = slot;
+						}
+
+						if (usedSlots.ContainsKey(chosenSlot))
 						{
 							GameServer.Instance.Logger.Error("Cannot add item " + item.TemplateID + " to class " + item.Class + " already an item for that slot assigned!");
 							continue;
 						}
-						else
+
+						inventoryItem.SlotPosition = (int)chosenSlot;
+						usedSlots[chosenSlot] = true;
+						if (c.ActiveWeaponSlot == 0)
 						{
-							eInventorySlot chosenSlot = eInventorySlot.FirstEmptyBackpack;
-							//left hand weapons we put in right hands
-							if (slot == eInventorySlot.LeftHandWeapon && (eObjectType)inventoryItem.Object_Type != eObjectType.Shield)
-								chosenSlot = eInventorySlot.RightHandWeapon;
-							else chosenSlot = slot;
-							inventoryItem.SlotPosition = (int)chosenSlot;
-							usedSlots[chosenSlot] = true;
-							if (c.ActiveWeaponSlot == 0)
+							switch (inventoryItem.SlotPosition)
 							{
-								switch (inventoryItem.SlotPosition)
-								{
-									case Slot.RIGHTHAND:
-										c.ActiveWeaponSlot = (byte)GamePlayer.eActiveWeaponSlot.Standard;
-										break;
-									case Slot.TWOHAND:
-										c.ActiveWeaponSlot = (byte)GamePlayer.eActiveWeaponSlot.TwoHanded;
-										break;
-									case Slot.RANGED:
-										c.ActiveWeaponSlot = (byte)GamePlayer.eActiveWeaponSlot.Distance;
-										break;
-								}
+								case Slot.RIGHTHAND:
+									c.ActiveWeaponSlot = (byte)GamePlayer.eActiveWeaponSlot.Standard;
+									break;
+								case Slot.TWOHAND:
+									c.ActiveWeaponSlot = (byte)GamePlayer.eActiveWeaponSlot.TwoHanded;
+									break;
+								case Slot.RANGED:
+									c.ActiveWeaponSlot = (byte)GamePlayer.eActiveWeaponSlot.Distance;
+									break;
 							}
 						}
 					}

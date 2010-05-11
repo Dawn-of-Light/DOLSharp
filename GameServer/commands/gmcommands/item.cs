@@ -251,7 +251,7 @@ namespace DOL.GS.Commands
 							}
 							DetailDisplayHandler itemhandler = new DetailDisplayHandler();
 							var objectInfo = new List<string>();
-							itemhandler.WriteTechnicalInfo(objectInfo, obj, 0,0);
+							itemhandler.WriteTechnicalInfo(objectInfo, new InventoryItem(obj), 0,0);
 							client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "GMCommands.Item.Info.Informations", obj.Id_nb), objectInfo);
 							break;
 						}
