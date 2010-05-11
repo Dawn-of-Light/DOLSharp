@@ -432,7 +432,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
 						{
-							WriteTechnicalInfo(objectInfo, item, item.MaxDurability, item.MaxCondition);
+							WriteTechnicalInfo(objectInfo, new InventoryItem(item), item.MaxDurability, item.MaxCondition);
 						}
 						break;
 					}
@@ -1065,10 +1065,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void WriteTechnicalInfo(IList<string> output, InventoryItem item)
 		{
-			WriteTechnicalInfo(output, item.Template, item.Durability ,item.Condition);
-			
+			WriteTechnicalInfo(output, new InventoryItem(item), item.Durability, item.Condition);
 		}
-		public void WriteTechnicalInfo(IList<string> output, ItemTemplate item, int dur, int con )
+
+		public void WriteTechnicalInfo(IList<string> output, InventoryItem item, int dur, int con )
 		{
 			output.Add(" ");
 			output.Add("--- Item technical informations ---");
@@ -1810,11 +1810,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteHorseInfo.Food"));
 		}
 
-		protected void WritePoisonInfo(IList<string> list, InventoryItem item, GameClient client)
-		{
-			WritePoisonInfo(list, item.Template, client);
-		}
 		protected void WritePoisonInfo(IList<string> list, ItemTemplate item, GameClient client)
+		{
+			WritePoisonInfo(list, new InventoryItem(item), client);
+		}
+
+		protected void WritePoisonInfo(IList<string> list, InventoryItem item, GameClient client)
 		{
 			if (item.PoisonSpellID != 0)
 			{
@@ -1858,11 +1859,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <param name="list"></param>
 		/// <param name="item"></param>
 		/// <param name="client"></param>
-		private static void WritePotionInfo(IList<string> list, InventoryItem item, GameClient client)
-		{
-			WritePotionInfo(list, item.Template, client);
-		}
 		private static void WritePotionInfo(IList<string> list, ItemTemplate item, GameClient client)
+		{
+			WritePotionInfo(list, new InventoryItem(item), client);
+		}
+
+		private static void WritePotionInfo(IList<string> list, InventoryItem item, GameClient client)
 		{
 			if(item.SpellID != 0)
 			{
