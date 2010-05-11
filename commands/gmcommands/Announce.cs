@@ -49,7 +49,7 @@ namespace DOL.GS.Commands
 			switch (args.GetValue(1).ToString().ToLower())
 			{
 				#region Log
-				case "log":
+				case "Log":
 					{
 						foreach (GameClient clients in WorldMgr.GetAllPlayingClients())
                             if(clients != null)

@@ -1,6 +1,4 @@
-using DOL.GS;
 using DOL.GS.Housing;
-using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Commands
@@ -21,23 +19,26 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			if (!house.HasOwnerPermissions(client.Player))
+			// no permission to banish, return
+			if (!house.CanBanish(client.Player))
 			{
 				DisplayMessage(client, "You do not have permissions to do that.");
 				return;
 			}
 
+			// check each player, try and find player with the given name (lowercase cmp)
 			foreach (GamePlayer player in house.GetAllPlayersInHouse())
 			{
-				if (player != client.Player && player.Name.IndexOf(args[1]) > -1)
+				if (player != client.Player && player.Name.ToLower() != args[1].ToLower())
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.YouRemoved", client.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					ChatUtil.SendSystemMessage(client, "Scripts.Players.Boot.YouRemoved", client.Player.Name);
 					player.LeaveHouse();
+
 					return;
 				}
 			}
 
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.NoOneOnline"), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+			ChatUtil.SendHelpMessage(client, "Scripts.Players.Boot.NoOneOnline", null);
 		}
 	}
 }

@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.Database;
 using DOL.GS.Housing;
 
@@ -29,6 +27,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP, 0x0D, "Handles things like pickup indoor/outdoor items")]
 	public class HousingPickupItemHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		/// <summary>
 		/// Handle the packet
 		/// </summary>
@@ -42,9 +42,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int housenumber = packet.ReadShort();
 			int method = packet.ReadByte();
 
-			//HouseMgr.Logger.Debug("HousingPickupItemHandler unknown" + unknown + " position " + position + " method " + method);
-
-			House house = (House) HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
+			House house = HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
 
 			if (house == null) return 1;
 			if (client.Player == null) return 1;
@@ -52,11 +50,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 			switch (method)
 			{
 				case 1: //garden item
+					// no permission to remove items from the garden, return
 					if (!house.CanChangeGarden(client.Player, DecorationPermissions.Remove))
-                        return 1;
+						return 1;
 
-					foreach(var entry in house.OutdoorItems)
+					foreach (var entry in house.OutdoorItems)
 					{
+						// continue if this is not the item in question
 						OutdoorItem oitem = entry.Value;
 						if (oitem.Position != position)
 							continue;
@@ -64,23 +64,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 						int i = entry.Key;
 						GameServer.Database.DeleteObject(oitem.DatabaseItem); //delete the database instance
 
-						InventoryItem invitem = new InventoryItem(((OutdoorItem) house.OutdoorItems[i]).BaseItem);
+						// return indoor item into inventory item, add to player inventory
+						var invitem = new InventoryItem((house.OutdoorItems[i]).BaseItem);
 						client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
 						house.OutdoorItems.Remove(i);
 
+						// update garden
 						client.Out.SendGarden(house);
-						client.Out.SendMessage("Garden object removed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Out.SendMessage(string.Format("You get {0} and put it in your backpack.", invitem.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+						ChatUtil.SendSystemMessage(client, "Garden object removed.");
+						ChatUtil.SendSystemMessage(client, string.Format("You get {0} and put it in your backpack.", invitem.Name));
 						return 1;
 					}
+
 					//no object @ position
-					client.Out.SendMessage("There is no Garden Tile at slot " + position + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					ChatUtil.SendSystemMessage(client, "There is no Garden Tile at slot " + position + "!");
 					break;
 
 				case 2:
 				case 3: //wall/floor mode
+					// no permission to remove items from the interior, return
 					if (!house.CanChangeInterior(client.Player, DecorationPermissions.Remove))
-                        return 1;
+						return 1;
 
 					IndoorItem iitem = house.IndoorItems[position];
 					if (iitem == null)
@@ -91,111 +96,131 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					if (iitem.BaseItem != null)
 					{
-						InventoryItem item = new InventoryItem(((IndoorItem) house.IndoorItems[(position)]).BaseItem);
-						if (GetItemBack(item) == true)
+						var item = new InventoryItem((house.IndoorItems[(position)]).BaseItem);
+						if (GetItemBack(item))
 						{
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							{
-								if (method == 2)
-									client.Player.Out.SendMessage("The " + item.Name + " is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								else client.Player.Out.SendMessage("The " + item.Name + " is cleared from the floor.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								string removalMsg = string.Format("The {0} is cleared from the {1}.", item.Name,
+								                                  (method == 2 ? "wall surface" : "floor"));
+
+								ChatUtil.SendSystemMessage(client, removalMsg);
 							}
 							else
 							{
-								client.Player.Out.SendMessage("You need place in your inventory !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								ChatUtil.SendSystemMessage(client, "You need place in your inventory !");
 								return 1;
 							}
 						}
 						else
-							client.Player.Out.SendMessage("The " + item.Name + " is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						{
+							ChatUtil.SendSystemMessage(client, "The " + item.Name + " is cleared from the wall surface.");
+						}
 					}
 					else if (iitem.DatabaseItem.BaseItemID.Contains("GuildBanner"))
 					{
-						ItemTemplate it = new ItemTemplate();
-						it.Id_nb = iitem.DatabaseItem.BaseItemID;
-						it.CanDropAsLoot = false;
-						it.IsDropable = true;
-						it.IsPickable = true;
-						it.IsTradable = true;
-						it.Item_Type = 41;
-						it.Level = 1;
-						it.MaxCharges = 1;
-						it.MaxCount = 1;
-						it.Model = iitem.DatabaseItem.Model;
-						it.Emblem = iitem.DatabaseItem.Emblem;
+						var it = new ItemTemplate
+						         	{
+						         		Id_nb = iitem.DatabaseItem.BaseItemID,
+						         		CanDropAsLoot = false,
+						         		IsDropable = true,
+						         		IsPickable = true,
+						         		IsTradable = true,
+						         		Item_Type = 41,
+						         		Level = 1,
+						         		MaxCharges = 1,
+						         		MaxCount = 1,
+						         		Model = iitem.DatabaseItem.Model,
+						         		Emblem = iitem.DatabaseItem.Emblem,
+						         		Object_Type = (int) eObjectType.HouseWallObject,
+						         		Realm = 0,
+						         		Quality = 100
+						         	};
+
 						string[] idnb = iitem.DatabaseItem.BaseItemID.Split('_');
 						it.Name = idnb[1] + "'s Banner";
-						it.Object_Type = (int)eObjectType.HouseWallObject;
-						it.Realm = 0;
-						it.Quality = 100;
-						InventoryItem inv = new InventoryItem(it);
+
+						var inv = new InventoryItem(it);
 						if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, inv))
 						{
-							if (method == 2)
-								client.Player.Out.SendMessage("The " + inv.Name + " is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							else client.Player.Out.SendMessage("The " + inv.Name + " is cleared from the floor.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							string invMsg = string.Format("The {0} is cleared from the {1}.", inv.Name,
+							                              (method == 2 ? "wall surface" : "floor"));
+
+							ChatUtil.SendSystemMessage(client, invMsg);
 						}
 						else
 						{
-							client.Player.Out.SendMessage("You need place in your inventory !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							ChatUtil.SendSystemMessage(client, "You need place in your inventory !");
 							return 1;
 						}
 					}
+					else if (method == 2)
+					{
+						ChatUtil.SendSystemMessage(client, "The decoration item is cleared from the wall surface.");
+					}
 					else
-						if (method == 2)
-							client.Player.Out.SendMessage("The decoration item is cleared from the wall surface.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					else client.Player.Out.SendMessage("The decoration item is cleared from the floor.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					{
+						ChatUtil.SendSystemMessage(client, "The decoration item is cleared from the floor.");
+					}
 
-					GameServer.Database.DeleteObject(((IndoorItem) house.IndoorItems[(position)]).DatabaseItem);
+					GameServer.Database.DeleteObject((house.IndoorItems[(position)]).DatabaseItem);
 					house.IndoorItems.Remove(position);
 
-					GSTCPPacketOut pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HousingItem));
+					var pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HousingItem));
 					pak.WriteShort((ushort) housenumber);
 					pak.WriteByte(0x01);
 					pak.WriteByte(0x00);
-					pak.WriteByte((byte)position);
+					pak.WriteByte((byte) position);
 					pak.WriteByte(0x00);
+
 					foreach (GamePlayer plr in house.GetAllPlayersInHouse())
+					{
 						plr.Out.SendTCP(pak);
+					}
 
 					break;
 			}
 			return 1;
 		}
-		
-		private bool GetItemBack(InventoryItem item)
+
+		#endregion
+
+		private static bool GetItemBack(InventoryItem item)
 		{
 			#region item types
+
 			switch (item.Object_Type)
 			{
-				case (int)eObjectType.Axe:
-				case (int)eObjectType.Blades:
-				case (int)eObjectType.Blunt:
-				case (int)eObjectType.CelticSpear:
-				case (int)eObjectType.CompositeBow:
-				case (int)eObjectType.Crossbow:
-				case (int)eObjectType.Flexible:
-				case (int)eObjectType.Hammer:
-				case (int)eObjectType.HandToHand:
-				case (int)eObjectType.LargeWeapons:
-				case (int)eObjectType.LeftAxe:
-				case (int)eObjectType.Longbow:
-				case (int)eObjectType.MaulerStaff:
-				case (int)eObjectType.Piercing:
-				case (int)eObjectType.PolearmWeapon:
-				case (int)eObjectType.RecurvedBow:
-				case (int)eObjectType.Scythe:
-				case (int)eObjectType.Shield:
-				case (int)eObjectType.SlashingWeapon:
-				case (int)eObjectType.Spear:
-				case (int)eObjectType.Staff:
-				case (int)eObjectType.Sword:
-				case (int)eObjectType.Thrown:
-				case (int)eObjectType.ThrustWeapon:
-				case (int)eObjectType.TwoHandedWeapon:
+				case (int) eObjectType.Axe:
+				case (int) eObjectType.Blades:
+				case (int) eObjectType.Blunt:
+				case (int) eObjectType.CelticSpear:
+				case (int) eObjectType.CompositeBow:
+				case (int) eObjectType.Crossbow:
+				case (int) eObjectType.Flexible:
+				case (int) eObjectType.Hammer:
+				case (int) eObjectType.HandToHand:
+				case (int) eObjectType.LargeWeapons:
+				case (int) eObjectType.LeftAxe:
+				case (int) eObjectType.Longbow:
+				case (int) eObjectType.MaulerStaff:
+				case (int) eObjectType.Piercing:
+				case (int) eObjectType.PolearmWeapon:
+				case (int) eObjectType.RecurvedBow:
+				case (int) eObjectType.Scythe:
+				case (int) eObjectType.Shield:
+				case (int) eObjectType.SlashingWeapon:
+				case (int) eObjectType.Spear:
+				case (int) eObjectType.Staff:
+				case (int) eObjectType.Sword:
+				case (int) eObjectType.Thrown:
+				case (int) eObjectType.ThrustWeapon:
+				case (int) eObjectType.TwoHandedWeapon:
 					return false;
-					default: return true;
+				default:
+					return true;
 			}
+
 			#endregion
 		}
 	}

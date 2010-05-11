@@ -1364,7 +1364,7 @@ namespace DOL.GS.Commands
 								{
 									try
 									{
-										log.Debug("save unique " + item.Template.Id_nb);
+										Log.Debug("save unique " + item.Template.Id_nb);
 										ItemUnique unique = new ItemUnique(item.Template);
 										unique.Id_nb = idnb;
 										GameServer.Database.AddObject(unique);
@@ -1453,12 +1453,12 @@ namespace DOL.GS.Commands
 						{
 							if (GameServer.Database.UpdateInCache<ItemTemplate>(args[2]))
 							{
-								log.DebugFormat("Item {0} updated or added to ItemTemplate cache.", args[2]);
+								Log.DebugFormat("Item {0} updated or added to ItemTemplate cache.", args[2]);
 								DisplayMessage(client, "Item {0} updated or added to ItemTemplate cache.", args[2]);
 							}
 							else
 							{
-								log.DebugFormat("Item {0} not found.", args[2]);
+								Log.DebugFormat("Item {0} not found.", args[2]);
 								DisplayMessage(client, "Item {0} not found.", args[2]);
 							}
 							break;
@@ -1485,7 +1485,7 @@ namespace DOL.GS.Commands
 										}
 									}
 
-									log.DebugFormat("{0} items updated or added to the ItemTemplate cache.", count);
+									Log.DebugFormat("{0} items updated or added to the ItemTemplate cache.", count);
 									DisplayMessage(client, "{0} items updated or added to the ItemTemplate cache.", count);
 								}
 								else
@@ -1546,7 +1546,7 @@ namespace DOL.GS.Commands
 			{
 				if (SkillBase.UpdateSpell(spellID))
 				{
-					log.DebugFormat("Spell ID {0} added / updated in the global spell list", spellID);
+					Log.DebugFormat("Spell ID {0} added / updated in the global spell list", spellID);
 					DisplayMessage(client, "Spell ID {0} added / updated in the global spell list", spellID);
 				}
 			}

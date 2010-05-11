@@ -18,202 +18,164 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Housing
 {
-	public class House : Point3D
+	public class House : Point3D, IGameLocation
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private readonly DBHouse m_databaseItem;
-		private readonly DBHousePermissions[] m_houseAccess;
-		private Consignment m_consignment;
+		private readonly DBHouse _databaseItem;
+		private readonly DBHousePermissions[] _houseAccess;
+		private GameConsignmentMerchant _consignment;
 
 		#region Properties
 
 		public int HouseNumber
 		{
-			get { return m_databaseItem.HouseNumber; }
-			set { m_databaseItem.HouseNumber = value; }
-		}
-
-		public override int X
-		{
-			get { return m_databaseItem.X; }
-			set { m_databaseItem.X = value; }
-		}
-
-		public override int Y
-		{
-			get { return m_databaseItem.Y; }
-			set { m_databaseItem.Y = value; }
-		}
-
-		public override int Z
-		{
-			get { return m_databaseItem.Z; }
-			set { m_databaseItem.Z = value; }
-		}
-
-		public ushort RegionID
-		{
-			get { return m_databaseItem.RegionID; }
-			set { m_databaseItem.RegionID = value; }
-		}
-
-		public int Heading
-		{
-			get { return m_databaseItem.Heading; }
-			set { m_databaseItem.Heading = value; }
-		}
-
-		public string Name
-		{
-			get { return m_databaseItem.Name; }
-			set { m_databaseItem.Name = value; }
+			get { return _databaseItem.HouseNumber; }
+			set { _databaseItem.HouseNumber = value; }
 		}
 
 		public string OwnerID
 		{
-			get { return m_databaseItem.OwnerID; }
-			set { m_databaseItem.OwnerID = value; }
+			get { return _databaseItem.OwnerID; }
+			set { _databaseItem.OwnerID = value; }
 		}
 
 		public int Model
 		{
-			get { return m_databaseItem.Model; }
-			set { m_databaseItem.Model = value; }
+			get { return _databaseItem.Model; }
+			set { _databaseItem.Model = value; }
 		}
 
 		public int Emblem
 		{
-			get { return m_databaseItem.Emblem; }
-			set { m_databaseItem.Emblem = value; }
+			get { return _databaseItem.Emblem; }
+			set { _databaseItem.Emblem = value; }
 		}
 
 		public int PorchRoofColor
 		{
-			get { return m_databaseItem.PorchRoofColor; }
-			set { m_databaseItem.PorchRoofColor = value; }
+			get { return _databaseItem.PorchRoofColor; }
+			set { _databaseItem.PorchRoofColor = value; }
 		}
 
 		public int PorchMaterial
 		{
-			get { return m_databaseItem.PorchMaterial; }
-			set { m_databaseItem.PorchMaterial = value; }
+			get { return _databaseItem.PorchMaterial; }
+			set { _databaseItem.PorchMaterial = value; }
 		}
 
 		public bool Porch
 		{
-			get { return m_databaseItem.Porch; }
-			set { m_databaseItem.Porch = value; }
+			get { return _databaseItem.Porch; }
+			set { _databaseItem.Porch = value; }
 		}
 
 		public bool IndoorGuildBanner
 		{
-			get { return m_databaseItem.IndoorGuildBanner; }
-			set { m_databaseItem.IndoorGuildBanner = value; }
+			get { return _databaseItem.IndoorGuildBanner; }
+			set { _databaseItem.IndoorGuildBanner = value; }
 		}
 
 		public bool IndoorGuildShield
 		{
-			get { return m_databaseItem.IndoorGuildShield; }
-			set { m_databaseItem.IndoorGuildShield = value; }
+			get { return _databaseItem.IndoorGuildShield; }
+			set { _databaseItem.IndoorGuildShield = value; }
 		}
 
 		public bool OutdoorGuildBanner
 		{
-			get { return m_databaseItem.OutdoorGuildBanner; }
-			set { m_databaseItem.OutdoorGuildBanner = value; }
+			get { return _databaseItem.OutdoorGuildBanner; }
+			set { _databaseItem.OutdoorGuildBanner = value; }
 		}
 
 		public bool OutdoorGuildShield
 		{
-			get { return m_databaseItem.OutdoorGuildShield; }
-			set { m_databaseItem.OutdoorGuildShield = value; }
+			get { return _databaseItem.OutdoorGuildShield; }
+			set { _databaseItem.OutdoorGuildShield = value; }
 		}
 
 		public int RoofMaterial
 		{
-			get { return m_databaseItem.RoofMaterial; }
-			set { m_databaseItem.RoofMaterial = value; }
+			get { return _databaseItem.RoofMaterial; }
+			set { _databaseItem.RoofMaterial = value; }
 		}
 
 		public int DoorMaterial
 		{
-			get { return m_databaseItem.DoorMaterial; }
-			set { m_databaseItem.DoorMaterial = value; }
+			get { return _databaseItem.DoorMaterial; }
+			set { _databaseItem.DoorMaterial = value; }
 		}
 
 		public int WallMaterial
 		{
-			get { return m_databaseItem.WallMaterial; }
-			set { m_databaseItem.WallMaterial = value; }
+			get { return _databaseItem.WallMaterial; }
+			set { _databaseItem.WallMaterial = value; }
 		}
 
 		public int TrussMaterial
 		{
-			get { return m_databaseItem.TrussMaterial; }
-			set { m_databaseItem.TrussMaterial = value; }
+			get { return _databaseItem.TrussMaterial; }
+			set { _databaseItem.TrussMaterial = value; }
 		}
 
 		public int WindowMaterial
 		{
-			get { return m_databaseItem.WindowMaterial; }
-			set { m_databaseItem.WindowMaterial = value; }
+			get { return _databaseItem.WindowMaterial; }
+			set { _databaseItem.WindowMaterial = value; }
 		}
 
 		public int Rug1Color
 		{
-			get { return m_databaseItem.Rug1Color; }
-			set { m_databaseItem.Rug1Color = value; }
+			get { return _databaseItem.Rug1Color; }
+			set { _databaseItem.Rug1Color = value; }
 		}
 
 		public int Rug2Color
 		{
-			get { return m_databaseItem.Rug2Color; }
-			set { m_databaseItem.Rug2Color = value; }
+			get { return _databaseItem.Rug2Color; }
+			set { _databaseItem.Rug2Color = value; }
 		}
 
 		public int Rug3Color
 		{
-			get { return m_databaseItem.Rug3Color; }
-			set { m_databaseItem.Rug3Color = value; }
+			get { return _databaseItem.Rug3Color; }
+			set { _databaseItem.Rug3Color = value; }
 		}
 
 		public int Rug4Color
 		{
-			get { return m_databaseItem.Rug4Color; }
-			set { m_databaseItem.Rug4Color = value; }
+			get { return _databaseItem.Rug4Color; }
+			set { _databaseItem.Rug4Color = value; }
 		}
 
 		public DateTime LastPaid
 		{
-			get { return m_databaseItem.LastPaid; }
-			set { m_databaseItem.LastPaid = value; }
+			get { return _databaseItem.LastPaid; }
+			set { _databaseItem.LastPaid = value; }
 		}
 
 		public long KeptMoney
 		{
-			get { return m_databaseItem.KeptMoney; }
-			set { m_databaseItem.KeptMoney = value; }
+			get { return _databaseItem.KeptMoney; }
+			set { _databaseItem.KeptMoney = value; }
 		}
 
 		public bool NoPurge
 		{
-			get { return m_databaseItem.NoPurge; }
-			set { m_databaseItem.NoPurge = value; }
+			get { return _databaseItem.NoPurge; }
+			set { _databaseItem.NoPurge = value; }
 		}
 
 		public int UniqueID { get; set; }
@@ -226,20 +188,20 @@ namespace DOL.GS.Housing
 
 		public DBHouse DatabaseItem
 		{
-			get { return m_databaseItem; }
+			get { return _databaseItem; }
 		}
 
 		public List<DBHouseCharsXPerms> CharsPermissions { get; private set; }
 
 		public DBHousePermissions[] HouseAccess
 		{
-			get { return m_houseAccess; }
+			get { return _houseAccess; }
 		}
 
-		public Consignment ConsignmentMerchant
+		public GameConsignmentMerchant ConsignmentMerchant
 		{
-			get { return m_consignment; }
-			set { m_consignment = value; }
+			get { return _consignment; }
+			set { _consignment = value; }
 		}
 
 		public bool IsOccupied
@@ -258,12 +220,48 @@ namespace DOL.GS.Housing
 			}
 		}
 
+		public override int X
+		{
+			get { return _databaseItem.X; }
+			set { _databaseItem.X = value; }
+		}
+
+		public override int Y
+		{
+			get { return _databaseItem.Y; }
+			set { _databaseItem.Y = value; }
+		}
+
+		public override int Z
+		{
+			get { return _databaseItem.Z; }
+			set { _databaseItem.Z = value; }
+		}
+
+		public ushort RegionID
+		{
+			get { return _databaseItem.RegionID; }
+			set { _databaseItem.RegionID = value; }
+		}
+
+		public ushort Heading
+		{
+			get { return (ushort)_databaseItem.Heading; }
+			set { _databaseItem.Heading = value; }
+		}
+
+		public string Name
+		{
+			get { return _databaseItem.Name; }
+			set { _databaseItem.Name = value; }
+		}
+
 		#endregion
 
 		public House(DBHouse house)
 		{
-			m_databaseItem = house;
-			m_houseAccess = new DBHousePermissions[HousingConstants.MaxPermissionLevel + 1]; // for one-based indexing
+			_databaseItem = house;
+			_houseAccess = new DBHousePermissions[HousingConstants.MaxPermissionLevel + 1]; // for one-based indexing
 			IndoorItems = new Dictionary<int, IndoorItem>();
 			OutdoorItems = new Dictionary<int, OutdoorItem>();
 			HousepointItems = new Dictionary<uint, DBHousepointItem>();
@@ -273,7 +271,7 @@ namespace DOL.GS.Housing
 		/// <summary>
 		/// The spot you are teleported to when you exit this house.
 		/// </summary>
-		public IGameLocation OutdoorJumpPoint
+		public GameLocation OutdoorJumpPoint
 		{
 			get
 			{
@@ -291,7 +289,8 @@ namespace DOL.GS.Housing
 		/// </summary>
 		public void SendUpdate()
 		{
-			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(RegionID, X, Y, Z, HousingConstants.HouseViewingDistance))
+			foreach (
+				GamePlayer player in WorldMgr.GetPlayersCloseToSpot(RegionID, X, Y, Z, HousingConstants.HouseViewingDistance))
 			{
 				player.Out.SendHouse(this);
 				player.Out.SendGarden(this);
@@ -304,7 +303,7 @@ namespace DOL.GS.Housing
 		/// <param name="player">the player who wants to get in</param>
 		public void Enter(GamePlayer player)
 		{
-			var list = GetAllPlayersInHouse();
+			IList<GamePlayer> list = GetAllPlayersInHouse();
 			if (list.Count == 0)
 			{
 				foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -313,11 +312,9 @@ namespace DOL.GS.Housing
 				}
 			}
 
-			GameClient client = player.Client;
-
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "House.Enter.EnteringHouse", HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendEnterHouse(this);
-			client.Out.SendFurniture(this);
+			ChatUtil.SendSystemMessage(player, "House.Enter.EnteringHouse", HouseNumber);
+			player.Out.SendEnterHouse(this);
+			player.Out.SendFurniture(this);
 
 			player.InHouse = true;
 			player.CurrentHouse = this;
@@ -326,60 +323,59 @@ namespace DOL.GS.Housing
 			{
 				//thx to sp4m
 				default:
-					client.Player.MoveTo(RegionID, X, Y, 25022, client.Player.Heading);
+					player.MoveTo(RegionID, X, Y, 25022, player.Heading);
 					break;
 
 				case 1:
-					client.Player.MoveTo(RegionID, X + 80, Y + 100, ((25025)), client.Player.Heading);
+					player.MoveTo(RegionID, X + 80, Y + 100, ((25025)), player.Heading);
 					break;
 
 				case 2:
-					client.Player.MoveTo(RegionID, X - 260, Y + 100, ((24910)), client.Player.Heading);
+					player.MoveTo(RegionID, X - 260, Y + 100, ((24910)), player.Heading);
 					break;
 
 				case 3:
-					client.Player.MoveTo(RegionID, X - 200, Y + 100, ((24800)), client.Player.Heading);
+					player.MoveTo(RegionID, X - 200, Y + 100, ((24800)), player.Heading);
 					break;
 
 				case 4:
-					client.Player.MoveTo(RegionID, X - 350, Y - 30, ((24660)), client.Player.Heading);
+					player.MoveTo(RegionID, X - 350, Y - 30, ((24660)), player.Heading);
 					break;
 
 				case 5:
-					client.Player.MoveTo(RegionID, X + 230, Y - 480, ((25100)), client.Player.Heading);
+					player.MoveTo(RegionID, X + 230, Y - 480, ((25100)), player.Heading);
 					break;
 
 				case 6:
-					client.Player.MoveTo(RegionID, X - 80, Y - 660, ((24700)), client.Player.Heading);
+					player.MoveTo(RegionID, X - 80, Y - 660, ((24700)), player.Heading);
 					break;
 
 				case 7:
-					client.Player.MoveTo(RegionID, X - 80, Y - 660, ((24700)), client.Player.Heading);
+					player.MoveTo(RegionID, X - 80, Y - 660, ((24700)), player.Heading);
 					break;
 
 				case 8:
-					client.Player.MoveTo(RegionID, X - 90, Y - 625, ((24670)), client.Player.Heading);
+					player.MoveTo(RegionID, X - 90, Y - 625, ((24670)), player.Heading);
 					break;
 
 				case 9:
-					client.Player.MoveTo(RegionID, X + 400, Y - 160, ((25150)), client.Player.Heading);
+					player.MoveTo(RegionID, X + 400, Y - 160, ((25150)), player.Heading);
 					break;
 
 				case 10:
-					client.Player.MoveTo(RegionID, X + 400, Y - 80, ((25060)), client.Player.Heading);
+					player.MoveTo(RegionID, X + 400, Y - 80, ((25060)), player.Heading);
 					break;
 
 				case 11:
-					client.Player.MoveTo(RegionID, X + 400, Y - 60, ((24900)), client.Player.Heading);
+					player.MoveTo(RegionID, X + 400, Y - 60, ((24900)), player.Heading);
 					break;
 
 				case 12:
-					client.Player.MoveTo(RegionID, X, Y - 620, ((24595)), client.Player.Heading);
+					player.MoveTo(RegionID, X, Y - 620, ((24595)), player.Heading);
 					break;
 			}
 
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "House.Enter.EnteredHouse", HouseNumber),
-								   eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			ChatUtil.SendSystemMessage(player, "House.Enter.EnteredHouse", HouseNumber);
 		}
 
 		/// <summary>
@@ -389,20 +385,16 @@ namespace DOL.GS.Housing
 		/// <param name="silent">text or not</param>
 		public void Exit(GamePlayer player, bool silent)
 		{
-			double angle = Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
-			var x = (int)(X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));
-			var y = (int)(Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
-			var heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);
-
-			player.MoveTo(RegionID, x, y, Z, heading);
+			player.MoveTo(OutdoorJumpPoint);
 
 			if (!silent)
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Exit.LeftHouse", HouseNumber),
-									   eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			{
+				ChatUtil.SendSystemMessage(player, "House.Exit.LeftHouse", HouseNumber);
+			}
 
 			player.Out.SendExitHouse(this);
 
-			var list = GetAllPlayersInHouse();
+			IList<GamePlayer> list = GetAllPlayersInHouse();
 			if (list.Count == 0)
 			{
 				foreach (GamePlayer pl in player.GetPlayersInRadius(HousingConstants.HouseViewingDistance))
@@ -439,12 +431,16 @@ namespace DOL.GS.Housing
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.WindowMaterial", WindowMaterial));
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.ExteriorUpgrades"));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildBanner", ((OutdoorGuildBanner) ? "Y" : "N")));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildShield", ((OutdoorGuildShield) ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildBanner",
+												((OutdoorGuildBanner) ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildShield",
+												((OutdoorGuildShield) ? "Y" : "N")));
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.InteriorUpgrades"));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildBanner", ((IndoorGuildBanner) ? "Y" : "N")));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildShield", ((IndoorGuildShield) ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildBanner",
+												((IndoorGuildBanner) ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildShield",
+												((IndoorGuildShield) ? "Y" : "N")));
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.InteriorCarpets"));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug1Color", Rug1Color));
@@ -453,11 +449,14 @@ namespace DOL.GS.Housing
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug4Color", Rug4Color));
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lockbox", Money.GetString(KeptMoney)));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentalPrice", Money.GetString(HouseMgr.GetRentByModel(Model))));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(Model) * 4)));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentalPrice",
+												Money.GetString(HouseMgr.GetRentByModel(Model))));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.MaxLockbox",
+												Money.GetString(HouseMgr.GetRentByModel(Model) * 4)));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
 
-			player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.HouseOwner", Name), text);
+			player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.HouseOwner", Name),
+											text);
 		}
 
 		public int GetPorchAndGuildEmblemFlags()
@@ -512,10 +511,10 @@ namespace DOL.GS.Housing
 		/// <returns></returns>
 		public int GetFreeVaultNumber()
 		{
-			var usedVaults = new bool[] { false, false, false, false };
+			var usedVaults = new[] { false, false, false, false };
 			string sqlWhere = string.Format("HouseID = '{0}' AND ItemTemplateID LIKE '%_vault'", HouseNumber);
 
-			foreach (var housePointItem in GameServer.Database.SelectObjects<DBHousepointItem>(sqlWhere))
+			foreach (DBHousepointItem housePointItem in GameServer.Database.SelectObjects<DBHousepointItem>(sqlWhere))
 			{
 				if (housePointItem.Index >= 0 && housePointItem.Index <= 3)
 				{
@@ -720,8 +719,7 @@ namespace DOL.GS.Housing
 		{
 			if (!CanEmptyHookpoint(player))
 			{
-				player.Out.SendMessage("Only the Owner of a House can remove or place Items on Hookpoints!", eChatType.CT_System,
-									   eChatLoc.CL_SystemWindow);
+				ChatUtil.SendSystemMessage(player, "Only the Owner of a House can remove or place Items on Hookpoints!");
 				return;
 			}
 
@@ -752,23 +750,42 @@ namespace DOL.GS.Housing
 
 			var template = GameServer.Database.SelectObject<ItemTemplate>("Name = '" + GameServer.Database.Escape(obj.Name) + "'");
 			if (template != null)
+			{
 				player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
+			}
 		}
 
 		#endregion
 
 		#region Editing
 
-		public bool EditPorch(bool addPorch)
+		public bool AddPorch()
 		{
-			if (Porch == addPorch) //we cannot remove if removed, or add if added
+			if (Porch) // we can't add an already added porch
 				return false;
 
-			if (!addPorch)
-				RemoveConsignment();
+			// set porch to true, we now have one!
+			Porch = true;
 
-			Porch = addPorch;
+			// broadcast updates
+			SendUpdate();
+			SaveIntoDatabase();
 
+			return true;
+		}
+
+		public bool RemovePorch()
+		{
+			if (!Porch) // we can't remove an already removed porch
+				return false;
+
+			// remove the consignment merchant
+			RemoveConsignment();
+
+			// set porch to false, no mo porch!
+			Porch = false;
+
+			// broadcast updates
 			SendUpdate();
 			SaveIntoDatabase();
 
@@ -777,6 +794,7 @@ namespace DOL.GS.Housing
 
 		public bool AddConsignment(int startValue)
 		{
+			// check to make sure a consignment merchant doesn't already exist for this house.
 			var obj = GameServer.Database.SelectObject<Mob>("HouseNumber = '" + HouseNumber + "'");
 			if (obj != null)
 				return false;
@@ -785,21 +803,22 @@ namespace DOL.GS.Housing
 			if (merchant != null)
 				return false;
 
+			// create a new consignment merchant entry, and add it to the DB
 			var newM = new DBHouseMerchant { HouseNumber = HouseNumber, Quantity = startValue };
 			GameServer.Database.AddObject(newM);
 
 			float[] consignmentCoords = HousingConstants.ConsignmentPositioning[Model];
 			double multi = consignmentCoords[0];
-			int range = (int)consignmentCoords[1];
-			int zaddition = (int)consignmentCoords[2];
-			int realm = (int)consignmentCoords[3];
+			var range = (int)consignmentCoords[1];
+			var zaddition = (int)consignmentCoords[2];
+			var realm = (int)consignmentCoords[3];
 
 			double angle = Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
 			var heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);
 			var tX = (int)((X + (500 * Math.Sin(angle))) - Math.Sin(angle - multi) * range);
 			var tY = (int)((Y - (500 * Math.Cos(angle))) + Math.Cos(angle - multi) * range);
 
-			var con = new Consignment
+			var con = new GameConsignmentMerchant
 						{
 							CurrentRegionID = RegionID,
 							X = tX,
@@ -808,7 +827,7 @@ namespace DOL.GS.Housing
 							Level = 50,
 							Realm = (eRealm)realm,
 							HouseNumber = HouseNumber,
-							Name = "Consignment Merchant",
+							Name = "GameConsignmentMerchant Merchant",
 							Heading = heading,
 							Model = 144
 						};
@@ -852,7 +871,7 @@ namespace DOL.GS.Housing
 				GameServer.Database.DeleteObject(merchant);
 			}
 
-			m_consignment = null;
+			_consignment = null;
 			DatabaseItem.HasConsignment = false;
 
 			SaveIntoDatabase();
@@ -860,10 +879,7 @@ namespace DOL.GS.Housing
 
 		public void Edit(GamePlayer player, List<int> changes)
 		{
-			MerchantTradeItems items;
-
-			items = player.InHouse ? HouseTemplateMgr.IndoorMenuItems : HouseTemplateMgr.OutdoorMenuItems;
-
+			MerchantTradeItems items = player.InHouse ? HouseTemplateMgr.IndoorMenuItems : HouseTemplateMgr.OutdoorMenuItems;
 			if (items == null)
 				return;
 
@@ -880,6 +896,7 @@ namespace DOL.GS.Housing
 
 			long price = 0;
 
+			// tally up the price for all the requested changes
 			foreach (int slot in changes)
 			{
 				int page = slot / 30;
@@ -892,13 +909,16 @@ namespace DOL.GS.Housing
 				}
 			}
 
-			if (!player.RemoveMoney(price, LanguageMgr.GetTranslation(player.Client, "House.Edit.PayForChanges", Money.GetString(price))))
+			// make sure player has enough money to cover the changes
+			if (!player.RemoveMoney(price))
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "House.Edit.NotEnoughMoney"), eChatType.CT_Merchant,
-									   eChatLoc.CL_SystemWindow);
+				ChatUtil.SendMerchantMessage(player, "House.Edit.NotEnoughMoney", null);
 				return;
 			}
 
+			ChatUtil.SendSystemMessage(player, "House.Edit.PayForChanges", Money.GetString(price));
+
+			// make all the changes
 			foreach (int slot in changes)
 			{
 				int page = slot / 30;
@@ -961,10 +981,12 @@ namespace DOL.GS.Housing
 				}
 			}
 
-			GameServer.Database.SaveObject(m_databaseItem);
+			// save the house
+			GameServer.Database.SaveObject(_databaseItem);
 
 			if (player.InHouse)
 			{
+				// update all players in the house
 				foreach (GamePlayer p in GetAllPlayersInHouse())
 				{
 					p.Out.SendEnterHouse(this); //update rugs.
@@ -972,7 +994,8 @@ namespace DOL.GS.Housing
 			}
 			else
 			{
-				foreach (GamePlayer p in WorldMgr.GetPlayersCloseToSpot(RegionID, X, Y, Z, HousingConstants.HouseViewingDistance))
+				// update all players nearby
+				foreach (GamePlayer p in WorldMgr.GetPlayersCloseToSpot(this, HousingConstants.HouseViewingDistance))
 				{
 					p.Out.SendHouse(this); //update wall look
 					p.Out.SendGarden(this);
@@ -996,7 +1019,7 @@ namespace DOL.GS.Housing
 			string targetName = permType == PermissionType.Account ? player.Client.Account.Name : player.Name;
 
 			//  check to make sure an existing mapping doesn't exist.
-			foreach (var perm in CharsPermissions)
+			foreach (DBHouseCharsXPerms perm in CharsPermissions)
 			{
 				// fast expression to evaluate to match appropriate permissions
 				if (perm.PermissionType == (int)permType)
@@ -1031,7 +1054,7 @@ namespace DOL.GS.Housing
 			}
 
 			//  check to make sure an existing mapping doesn't exist.
-			foreach (var perm in CharsPermissions)
+			foreach (DBHouseCharsXPerms perm in CharsPermissions)
 			{
 				// fast expression to evaluate to match appropriate permissions
 				if (perm.PermissionType == (int)permType)
@@ -1058,7 +1081,7 @@ namespace DOL.GS.Housing
 			DBHouseCharsXPerms matchedPerm = null;
 			bool foundMatch = false;
 
-			foreach (var perm in CharsPermissions)
+			foreach (DBHouseCharsXPerms perm in CharsPermissions)
 			{
 				if (perm.TargetName == targetName)
 				{
@@ -1090,7 +1113,7 @@ namespace DOL.GS.Housing
 			DBHouseCharsXPerms matchedPerm = null;
 			bool foundMatch = false;
 
-			foreach (var perm in CharsPermissions)
+			foreach (DBHouseCharsXPerms perm in CharsPermissions)
 			{
 				if (perm.Slot == slot)
 				{
@@ -1120,7 +1143,7 @@ namespace DOL.GS.Housing
 		public void AdjustPermissionSlot(int permSlot, int newPermLevel)
 		{
 			// get the permission based on the given slot
-			var permission = CharsPermissions.Where(perm => perm.Slot == permSlot).FirstOrDefault();
+			DBHouseCharsXPerms permission = CharsPermissions.Where(perm => perm.Slot == permSlot).FirstOrDefault();
 
 			if (permission == null)
 				return;
@@ -1147,17 +1170,21 @@ namespace DOL.GS.Housing
 				return null;
 
 			// try character permissions first
-			var charPermissions = from cp in CharsPermissions
-								  where cp.TargetName == player.Name && cp.PermissionType == (int)PermissionType.Player
-								  select cp;
+			IEnumerable<DBHouseCharsXPerms> charPermissions = from cp in CharsPermissions
+															  where
+																cp.TargetName == player.Name &&
+																cp.PermissionType == (int)PermissionType.Player
+															  select cp;
 
 			if (charPermissions.Count() > 0)
 				return charPermissions.First();
 
 			// try account permissions next
-			var acctPermissions = from cp in CharsPermissions
-								  where cp.TargetName == player.Client.Account.Name && cp.PermissionType == (int)PermissionType.Account
-								  select cp;
+			IEnumerable<DBHouseCharsXPerms> acctPermissions = from cp in CharsPermissions
+															  where
+																cp.TargetName == player.Client.Account.Name &&
+																cp.PermissionType == (int)PermissionType.Account
+															  select cp;
 
 			if (acctPermissions.Count() > 0)
 				return acctPermissions.First();
@@ -1165,18 +1192,20 @@ namespace DOL.GS.Housing
 			if (player.Guild != null)
 			{
 				// try guild permissions next
-				var guildPermissions = from cp in CharsPermissions
-									   where player.Guild.Name == cp.TargetName && cp.PermissionType == (int)PermissionType.Guild
-									   select cp;
+				IEnumerable<DBHouseCharsXPerms> guildPermissions = from cp in CharsPermissions
+																   where
+																	player.Guild.Name == cp.TargetName &&
+																	cp.PermissionType == (int)PermissionType.Guild
+																   select cp;
 
 				if (guildPermissions.Count() > 0)
 					return guildPermissions.First();
 			}
 
 			// look for the catch-all permissions last
-			var allPermissions = from cp in CharsPermissions
-								 where cp.TargetName == "All"
-								 select cp;
+			IEnumerable<DBHouseCharsXPerms> allPermissions = from cp in CharsPermissions
+															 where cp.TargetName == "All"
+															 select cp;
 
 			if (allPermissions.Count() > 0)
 				return allPermissions.First();
@@ -1187,8 +1216,16 @@ namespace DOL.GS.Housing
 
 		private bool HasAccess(GamePlayer player, Func<DBHousePermissions, bool> accessExpression)
 		{
+			// make sure player isn't null
+			if (player == null)
+				return false;
+
+			// owner and GMs+ can do everything
+			if (HasOwnerPermissions(player) || player.Client.Account.PrivLevel > 1)
+				return true;
+
 			// get house permissions for the given player
-			var housePermissions = GetPermissionLevel(player);
+			DBHousePermissions housePermissions = GetPermissionLevel(player);
 
 			if (housePermissions == null)
 				return false;
@@ -1200,13 +1237,13 @@ namespace DOL.GS.Housing
 		private DBHousePermissions GetPermissionLevel(GamePlayer player)
 		{
 			// get player permissions mapping
-			var permissions = GetPlayerPermissions(player);
+			DBHouseCharsXPerms permissions = GetPlayerPermissions(player);
 
 			if (permissions == null)
 				return null;
 
 			// get house permissions for the given mapping
-			var housePermissions = GetPermissionLevel(permissions);
+			DBHousePermissions housePermissions = GetPermissionLevel(permissions);
 
 			return housePermissions;
 		}
@@ -1220,7 +1257,7 @@ namespace DOL.GS.Housing
 			return GetPermissionLevel(charPerms.PermissionLevel);
 		}
 
-		public DBHousePermissions GetPermissionLevel(int permissionLevel)
+		private DBHousePermissions GetPermissionLevel(int permissionLevel)
 		{
 			// make sure they are in the bounds of our access list
 			if (permissionLevel < 0 || permissionLevel > HouseAccess.Length - 1)
@@ -1237,16 +1274,16 @@ namespace DOL.GS.Housing
 				return false;
 
 			// check by character name/account if not guild house	
-			if (!m_databaseItem.GuildHouse)
+			if (!_databaseItem.GuildHouse)
 			{
 				// check if character is explicit owner
-				if (m_databaseItem.OwnerID == player.PlayerCharacter.ObjectId)
+				if (_databaseItem.OwnerID == player.PlayerCharacter.ObjectId)
 					return true;
 
 				// check account-wide if not a guild house
-				var charsOnAccount = from chr in player.Client.Account.Characters
-									 where chr.ObjectId == m_databaseItem.OwnerID
-									 select chr;
+				IEnumerable<Character> charsOnAccount = from chr in player.Client.Account.Characters
+														where chr.ObjectId == _databaseItem.OwnerID
+														select chr;
 
 				if (charsOnAccount.Count() > 0)
 					return true;
@@ -1273,14 +1310,6 @@ namespace DOL.GS.Housing
 
 		public bool CanEnterHome(GamePlayer player)
 		{
-			// make sure player isn't null
-			if (player == null)
-				return false;
-
-			// owner and GMs+ can do everything
-			if (HasOwnerPermissions(player) || player.Client.Account.PrivLevel > 1)
-				return true;
-
 			// check if player has access
 			return HasAccess(player, cp => cp.CanEnterHouse);
 		}
@@ -1296,7 +1325,7 @@ namespace DOL.GS.Housing
 				return true;
 
 			// get player house permissions
-			var housePermissions = GetPermissionLevel(player);
+			DBHousePermissions housePermissions = GetPermissionLevel(player);
 
 			if (housePermissions == null)
 				return false;
@@ -1334,7 +1363,7 @@ namespace DOL.GS.Housing
 				return true;
 
 			// get player house permissions
-			var housePermissions = GetPermissionLevel(player);
+			DBHousePermissions housePermissions = GetPermissionLevel(player);
 
 			if (housePermissions == null)
 				return false;
@@ -1353,7 +1382,7 @@ namespace DOL.GS.Housing
 				return true;
 
 			// get player house permissions
-			var housePermissions = GetPermissionLevel(player);
+			DBHousePermissions housePermissions = GetPermissionLevel(player);
 
 			if (housePermissions == null)
 				return false;
@@ -1372,7 +1401,7 @@ namespace DOL.GS.Housing
 				return true;
 
 			// get player house permissions
-			var housePermissions = GetPermissionLevel(player);
+			DBHousePermissions housePermissions = GetPermissionLevel(player);
 
 			if (housePermissions == null)
 				return false;
@@ -1382,84 +1411,36 @@ namespace DOL.GS.Housing
 
 		public bool CanChangeExternalAppearance(GamePlayer player)
 		{
-			// make sure player isn't null
-			if (player == null)
-				return false;
-
-			// owner and GMs+ can do everything
-			if (HasOwnerPermissions(player) || player.Client.Account.PrivLevel > 1)
-				return true;
-
 			// check if player has access
 			return HasAccess(player, cp => cp.CanChangeExternalAppearance);
 		}
 
 		public bool CanBanish(GamePlayer player)
 		{
-			// make sure player isn't null
-			if (player == null)
-				return false;
-
-			// owner and GMs+ can do everything
-			if (HasOwnerPermissions(player) || player.Client.Account.PrivLevel > 1)
-				return true;
-
 			// check if player has access
 			return HasAccess(player, cp => cp.CanBanish);
 		}
 
 		public bool CanBindInHouse(GamePlayer player)
 		{
-			// make sure player isn't null
-			if (player == null)
-				return false;
-
-			// owner and GMs+ can do everything
-			if (HasOwnerPermissions(player) || player.Client.Account.PrivLevel > 1)
-				return true;
-
 			// check if player has access
 			return HasAccess(player, cp => cp.CanBindInHouse);
 		}
 
 		public bool CanPayRent(GamePlayer player)
 		{
-			// make sure player isn't null
-			if (player == null)
-				return false;
-
-			// owner and GMs+ can do everything
-			if (HasOwnerPermissions(player) || player.Client.Account.PrivLevel > 1)
-				return true;
-
 			// check if player has access
 			return HasAccess(player, cp => cp.CanPayRent);
 		}
 
 		public bool CanUseMerchants(GamePlayer player)
 		{
-			// make sure player isn't null
-			if (player == null)
-				return false;
-
-			// owner and GMs+ can do everything
-			if (HasOwnerPermissions(player) || player.Client.Account.PrivLevel > 1)
-				return true;
-
 			// check if player has access
 			return HasAccess(player, cp => cp.CanUseMerchants);
 		}
 
 		public bool CanUseTools(GamePlayer player)
 		{
-			// make sure player isn't null
-			if (player == null)
-				return false;
-
-			// owner and GMs+ can do everything
-			if (HasOwnerPermissions(player) || player.Client.Account.PrivLevel > 1)
-				return true;
-
 			// check if player has access
 			return HasAccess(player, cp => cp.CanUseTools);
 		}
@@ -1475,7 +1456,7 @@ namespace DOL.GS.Housing
 		/// </summary>
 		public void SaveIntoDatabase()
 		{
-			GameServer.Database.SaveObject(m_databaseItem);
+			GameServer.Database.SaveObject(_databaseItem);
 		}
 
 		/// <summary>
@@ -1484,32 +1465,42 @@ namespace DOL.GS.Housing
 		public void LoadFromDatabase()
 		{
 			int i = 0;
-			foreach (var dbiitem in GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = '" + HouseNumber + "'"))
+			foreach (
+				DBHouseIndoorItem dbiitem in
+					GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = '" + HouseNumber + "'"))
 			{
 				IndoorItems.Add(i++, new IndoorItem(dbiitem));
 			}
 
 			i = 0;
-			foreach (var dboitem in GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = '" + HouseNumber + "'"))
+			foreach (
+				DBHouseOutdoorItem dboitem in
+					GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = '" + HouseNumber + "'"))
 			{
 				OutdoorItems.Add(i++, new OutdoorItem(dboitem));
 			}
 
-			foreach (var d in GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = '" + HouseNumber + "'"))
+			foreach (
+				DBHouseCharsXPerms d in GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = '" + HouseNumber + "'")
+				)
 			{
 				CharsPermissions.Add(d);
 			}
 
-			foreach (var dbperm in GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = '" + HouseNumber + "'"))
+			foreach (
+				DBHousePermissions dbperm in
+					GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = '" + HouseNumber + "'"))
 			{
 				HouseAccess[dbperm.PermissionLevel] = dbperm;
 			}
 
-			foreach (var item in GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = '" + HouseNumber + "'"))
+			foreach (
+				DBHousepointItem item in GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = '" + HouseNumber + "'"))
 			{
 				if (item.ItemTemplateID.EndsWith("_vault"))
 				{
-					var template = GameServer.Database.SelectObject<ItemTemplate>("Id_nb = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
+					var template =
+						GameServer.Database.SelectObject<ItemTemplate>("Id_nb = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
 					if (template == null)
 						continue;
 

@@ -191,7 +191,7 @@ namespace DOL.GS.PacketHandler
 				{
 					if (updatedSlot >= (int)eInventorySlot.Consignment_First && updatedSlot <= (int)eInventorySlot.Consignment_Last)
 					{
-						log.Error("PacketLib198:SendInventorySlotsUpdateBase - Consignment inventory is no longer cached with player.  Use a Dictionary<int, InventoryItem> instead.");
+						log.Error("PacketLib198:SendInventorySlotsUpdateBase - GameConsignmentMerchant inventory is no longer cached with player.  Use a Dictionary<int, InventoryItem> instead.");
 						pak.WriteByte((byte)(updatedSlot - (int)eInventorySlot.Consignment_First + (int)eInventorySlot.HousingInventory_First));
 					}
 					else

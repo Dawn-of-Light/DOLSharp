@@ -153,7 +153,7 @@ namespace DOL.GS.ServerRules
 				if (account == null || account.PrivLevel == 1)
 				{
 					// GMs are still allowed to enter server
-					// Normal Players will not be allowed to log in
+					// Normal Players will not be allowed to Log in
 					client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
 					log.Debug("IsAllowedToConnect deny access; staff only login");
 					return false;

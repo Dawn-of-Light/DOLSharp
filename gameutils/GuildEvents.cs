@@ -261,7 +261,7 @@ namespace DOL.Regiment
 
 		public static void StartCheckThread()
 		{
-			//log.Warn("Starting BuffTimer Check...");
+			//Log.Warn("Starting BuffTimer Check...");
 
 			foreach (Guild checkGuild in GuildMgr.ListGuild())
 			{

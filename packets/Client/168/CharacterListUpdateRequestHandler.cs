@@ -247,7 +247,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 										// points will not be 30 if character is above level 1.
 										//if (points != 30)
 										//{
-										//    log.Warn("v189+ stat respec points used:" + points);
+										//    Log.Warn("v189+ stat respec points used:" + points);
 										//    valid = false;
 										//    if (client.Account.PrivLevel == 1)
 										//    {
@@ -284,7 +284,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 											for (int z = 0; z < chars.Length; z++)
 											{
 												if (chars[z].Name != character.Name) continue;
-												//log.Error(string.Format("found activePlayer:[{0}] {1} {2}", client.ActiveCharIndex, client.Player.Name, character.Name));
+												//Log.Error(string.Format("found activePlayer:[{0}] {1} {2}", client.ActiveCharIndex, client.Player.Name, character.Name));
 												if (log.IsInfoEnabled)
 													log.Info(String.Format("Character {0} updated in cache!\n", charname));
 												//client.Account.Characters = null;
@@ -698,7 +698,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//write changes
 						GameServer.Database.SaveObject(ch);
 
-						// log creation
+						// Log creation
 						AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.CharacterCreate, "", charname);
 
                         client.Account.Characters = null;

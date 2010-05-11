@@ -1319,8 +1319,8 @@ namespace DOL.GS.Commands
 												}
 												catch
 												{
-													if (log.IsErrorEnabled)
-														log.Error(string.Format("Sorted List duplicate entry - Key: {0} Member: {1}. Replacing - Member: {2}.  Sorted count: {3}.  Guild ID: {4}", key, member.Name, sortedList[key].Name, sortedList.Count, client.Player.GuildID));
+													if (Log.IsErrorEnabled)
+														Log.Error(string.Format("Sorted List duplicate entry - Key: {0} Member: {1}. Replacing - Member: {2}.  Sorted count: {3}.  Guild ID: {4}", key, member.Name, sortedList[key].Name, sortedList.Count, client.Player.GuildID));
 												}
 											}
 										}
@@ -2241,8 +2241,8 @@ namespace DOL.GS.Commands
 			}
 			catch (Exception e)
 			{
-				if (log.IsErrorEnabled)
-					log.Error("error in /gc script, " + args[1] + " command: " + e.ToString());
+				if (Log.IsErrorEnabled)
+					Log.Error("error in /gc script, " + args[1] + " command: " + e.ToString());
 
 				DisplayHelp(client);
 			}

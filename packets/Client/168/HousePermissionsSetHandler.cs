@@ -16,19 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.Database;
 using DOL.GS.Housing;
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandler(PacketHandlerType.TCP, 0x07, "Handles housing permissions changes")]
 	public class HousePermissionsSetHandler : IPacketHandler
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		#region IPacketHandler Members
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
@@ -36,35 +32,43 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int unk1 = packet.ReadByte();
 			ushort housenumber = packet.ReadShort();
 
-			House house = HouseMgr.GetHouse(housenumber);
+			// house is null, return
+			var house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
 				return 1;
-			if (client.Player == null) 
-			    return 1;
 
-			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel == 1)
+			// player is null, return
+			if (client.Player == null)
 				return 1;
 
+			// player has no owner permissions and isn't a GM or admin, return
+			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel <= 1)
+				return 1;
+
+			// read in the permission values
 			DBHousePermissions permission = house.HouseAccess[level];
 			permission.CanEnterHouse = (packet.ReadByte() != 0);
-			permission.Vault1 = (byte)packet.ReadByte();
-			permission.Vault2 = (byte)packet.ReadByte();
-			permission.Vault3 = (byte)packet.ReadByte();
-			permission.Vault4 = (byte)packet.ReadByte();
+			permission.Vault1 = (byte) packet.ReadByte();
+			permission.Vault2 = (byte) packet.ReadByte();
+			permission.Vault3 = (byte) packet.ReadByte();
+			permission.Vault4 = (byte) packet.ReadByte();
 			permission.CanChangeExternalAppearance = (packet.ReadByte() != 0);
-			permission.ChangeInterior = (byte)packet.ReadByte();
-			permission.ChangeGarden = (byte)packet.ReadByte();
+			permission.ChangeInterior = (byte) packet.ReadByte();
+			permission.ChangeGarden = (byte) packet.ReadByte();
 			permission.CanBanish = (packet.ReadByte() != 0);
 			permission.CanUseMerchants = (packet.ReadByte() != 0);
 			permission.CanUseTools = (packet.ReadByte() != 0);
 			permission.CanBindInHouse = (packet.ReadByte() != 0);
-			permission.ConsignmentMerchant = (byte)packet.ReadByte();
+			permission.ConsignmentMerchant = (byte) packet.ReadByte();
 			permission.CanPayRent = (packet.ReadByte() != 0);
-			int unk2 = (byte)packet.ReadByte();
+			int unk2 = (byte) packet.ReadByte();
 
+			// save the updated permission
 			GameServer.Database.SaveObject(permission);
+
 			return 1;
 		}
 
+		#endregion
 	}
 }

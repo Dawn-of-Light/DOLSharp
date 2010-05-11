@@ -76,7 +76,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// If the server should only accept connections from staff
 		/// </summary>
-		[ServerProperty("system","staff_login", "Staff Login Only - Edit this to set weather you wish staff to be the only ones allowed to log in values True,False", false)]
+		[ServerProperty("system","staff_login", "Staff Login Only - Edit this to set weather you wish staff to be the only ones allowed to Log in values True,False", false)]
 		public static bool STAFF_LOGIN;
 		
 		/// <summary>
@@ -115,9 +115,9 @@ namespace DOL.GS.ServerProperties
 		public static int MAX_PLAYERS;
 
 		/// <summary>
-		/// Should the server log trades
+		/// Should the server Log trades
 		/// </summary>
-		[ServerProperty("system","log_trades", "Should the server log all trades a player makes, values True,False", false)]
+		[ServerProperty("system","log_trades", "Should the server Log all trades a player makes, values True,False", false)]
 		public static bool LOG_TRADES;
 
 		/// <summary>
@@ -342,7 +342,7 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("world","weather_chance", "What is the chance of starting a storm.", 5)]
 		public static int WEATHER_CHANCE;
 
-		[ServerProperty("world","weather_log_events", "Should weather events be shown in the log (and on the console).", true)]
+		[ServerProperty("world","weather_log_events", "Should weather events be shown in the Log (and on the console).", true)]
 		public static bool WEATHER_LOG_EVENTS;
 		
 		/// <summary>

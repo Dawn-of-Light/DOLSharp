@@ -18,10 +18,8 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using DOL.Database;
 using DOL.GS.Housing;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -39,8 +37,8 @@ namespace DOL.GS
 		private readonly Dictionary<string, GamePlayer> _observers = new Dictionary<string, GamePlayer>();
 
 		private readonly string _templateID;
-		private DBHousepointItem _hookedItem;
 		private readonly object _vaultLock = new object();
+		private DBHousepointItem _hookedItem;
 
 		/// <summary>
 		/// Create a new house vault.
@@ -175,14 +173,14 @@ namespace DOL.GS
 			if (!base.Interact(player) || CurrentHouse == null)
 				return false;
 
-			lock(_vaultLock)
+			lock (_vaultLock)
 			{
 				if (!_observers.ContainsKey(player.Name))
 				{
 					_observers.Add(player.Name, player);
 				}
 			}
-			
+
 			return true;
 		}
 

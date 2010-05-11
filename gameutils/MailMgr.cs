@@ -198,7 +198,7 @@ namespace DOL.Mail
 		}
 
 		/// <summary>
-		/// Parses the log config file and extracts all archived logs.
+		/// Parses the Log config file and extracts all archived logs.
 		/// </summary>
 		/// <returns>A Queue made of strings containing logs urls.</returns>
 		public static Queue GetArchivedLogsUrls()
@@ -219,11 +219,11 @@ namespace DOL.Mail
 					{
 						if (configFileReader.LocalName == "file")
 						{
-							// First attribute of node file is the url of a log.
+							// First attribute of node file is the url of a Log.
 							configFileReader.MoveToFirstAttribute();
 							info = new FileInfo(configFileReader.ReadContentAsString());
 
-							// Foreach file in the log directory, we will return all logs with
+							// Foreach file in the Log directory, we will return all logs with
 							// the same name + an extension added when archived.
 							foreach (string file in Directory.GetFiles(info.DirectoryName, info.Name + "*"))
 							{
@@ -239,10 +239,10 @@ namespace DOL.Mail
 				{
 					// We return the default value.
 					Queue archiveList = new Queue(); // List made of all archived logs urls.
-					archiveList.Enqueue("./logs/Cheats.log");
-					archiveList.Enqueue("./logs/GMActions.log");
-					archiveList.Enqueue("./logs/Error.log");
-					archiveList.Enqueue("./logs/GameServer.log");
+					archiveList.Enqueue("./logs/Cheats.Log");
+					archiveList.Enqueue("./logs/GMActions.Log");
+					archiveList.Enqueue("./logs/Error.Log");
+					archiveList.Enqueue("./logs/GameServer.Log");
 					return archiveList;
 				}
 			}
@@ -296,7 +296,7 @@ namespace DOL.Mail
 
 					foreach (string file in archivedLogsUrls)
 					{
-						// Attach each compressed log with correct name.
+						// Attach each compressed Log with correct name.
 						FileInfo info = new FileInfo(file + ".gz");
 						Attachment a = new Attachment(file + ".gz");
 						a.Name = info.Name;
@@ -320,7 +320,7 @@ namespace DOL.Mail
 				}
 				else
 				{
-					Logger.Info("No log to send.");
+					Logger.Info("No Log to send.");
 				}
 			}
 			catch (Exception e)

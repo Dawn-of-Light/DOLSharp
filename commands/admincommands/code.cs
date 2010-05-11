@@ -61,11 +61,11 @@ namespace DOL.GS.Commands
 			text.Append("using DOL.Events;\n");
 			text.Append("using log4net;\n");
 			text.Append("public class DynCode {\n");
-			text.Append("private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);\n");
+			text.Append("private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);\n");
 			text.Append("public static GameClient Client = null;\n");
 			text.Append("public static void print(object obj) {\n");
 			text.Append("	string str = (obj==null)?\"(null)\":obj.ToString();\n");
-			text.Append("	if (Client==null || Client.Player==null) log.Debug(str);\n	else Client.Out.SendMessage(str, eChatType.CT_System, eChatLoc.CL_SystemWindow);\n}\n");
+			text.Append("	if (Client==null || Client.Player==null) Log.Debug(str);\n	else Client.Out.SendMessage(str, eChatType.CT_System, eChatLoc.CL_SystemWindow);\n}\n");
 			text.Append("public static void DynMethod(GameObject target, GamePlayer player) {\nif (player!=null) Client = player.Client;\n");
 			text.Append("GameNPC targetNpc = target as GameNPC;");
 			text.Append(code);
@@ -89,7 +89,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-					log.Debug("Error compiling code.");
+					Log.Debug("Error compiling code.");
 				}
 
 
@@ -109,7 +109,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-					log.Debug("Code Executed.");
+					Log.Debug("Code Executed.");
 				}
 
 			}
@@ -123,7 +123,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-					log.Debug("Error during execution.");
+					Log.Debug("Error during execution.");
 				}
 			}
 		}

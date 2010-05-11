@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -100,7 +100,7 @@ namespace DOL.GS.Commands
                                 AppealMgr.ChangeStatus(client.Player.Name, targetClient.Player, appeal, "Being Helped");
                                 string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.RandMessage" + Util.Random(4), targetClient.Player.Name);
                                 client.Player.TempProperties.setProperty("AppealAssist", targetClient.Player);
-                                client.Player.Send(targetClient.Player, message);
+                                client.Player.SendPrivateMessage(targetClient.Player, message);
                                 targetClient.Out.SendPlaySound(eSoundType.Craft, 0x04);
                                 return;
                             }

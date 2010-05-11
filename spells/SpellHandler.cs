@@ -2730,8 +2730,8 @@ return false;
 			Spell newspell = neweffect.Spell;
 //			if (oldspell.SpellType != newspell.SpellType)
 //			{
-//				if (log.IsWarnEnabled)
-//					log.Warn("Spell effect compare with different types " + oldspell.SpellType + " <=> " + newspell.SpellType + "\n" + Environment.StackTrace);
+//				if (Log.IsWarnEnabled)
+//					Log.Warn("Spell effect compare with different types " + oldspell.SpellType + " <=> " + newspell.SpellType + "\n" + Environment.StackTrace);
 //				return false;
 //			}
 			if (oldspell.Concentration > 0)

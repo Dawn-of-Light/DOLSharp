@@ -138,8 +138,8 @@ namespace DOL.GS.Spells
 				if (player == null) continue;
 				player.Out.SendCombatAnimation(null, target, 0, 0, 0, 0, 0x0A, target.HealthPercent);
 			}
-			//			log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
-			//			log.Debug(String.Format("dpsCap: {0}; dps: {1}; dmg {2}; spread: {6}; resDmg: {3}; atkSpeed: {4}; resist: {5}.", dpsCap, dps, damage, damageResisted, attacker.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
+			//			Log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
+			//			Log.Debug(String.Format("dpsCap: {0}; dps: {1}; dmg {2}; spread: {6}; resDmg: {3}; atkSpeed: {4}; resist: {5}.", dpsCap, dps, damage, damageResisted, attacker.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
 		}
 
 		// constructor
@@ -237,8 +237,8 @@ namespace DOL.GS.Spells
 					continue;
 				player.Out.SendCombatAnimation(null, target, 0, 0, 0, 0, 0x14, target.HealthPercent);
 			}
-			//			log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
-			//			log.Debug(String.Format("dmg {0}; spread: {4}; resDmg: {1}; atkSpeed: {2}; resist: {3}.", damage, damageResisted, target.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
+			//			Log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
+			//			Log.Debug(String.Format("dmg {0}; spread: {4}; resDmg: {1}; atkSpeed: {2}; resist: {3}.", damage, damageResisted, target.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
 		}
 
 		// constructor

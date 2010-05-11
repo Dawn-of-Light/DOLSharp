@@ -207,8 +207,8 @@ namespace DOL.GS.Commands
 
 			if (player == null)
 			{
-				if (log.IsErrorEnabled)
-					log.Error("null player in who command");
+				if (Log.IsErrorEnabled)
+					Log.Error("null player in who command");
 				return "???";
 			}
 
@@ -239,8 +239,8 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				if (log.IsErrorEnabled)
-					log.Error("no character class spec in who commandhandler for player " + player.Name);
+				if (Log.IsErrorEnabled)
+					Log.Error("no character class spec in who commandhandler for player " + player.Name);
 			}
 			if (player.CurrentZone != null)
 			{
@@ -249,8 +249,8 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				if (log.IsErrorEnabled)
-					log.Error("no currentzone in who commandhandler for player " + player.Name);
+				if (Log.IsErrorEnabled)
+					Log.Error("no currentzone in who commandhandler for player " + player.Name);
 			}
 			ChatGroup mychatgroup = (ChatGroup) player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 			if (mychatgroup != null && (mychatgroup.Members.Contains(player) || mychatgroup.IsPublic && (bool)mychatgroup.Members[player] == true))

@@ -16,37 +16,35 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using DOL.Database;
 using DOL.GS.Housing;
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandler(PacketHandlerType.TCP, 0x18, "Handles housing decoration request")]
 	public class HousingDecorationRotateRequestHandler : IPacketHandler
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		#region IPacketHandler Members
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort housenumber = packet.ReadShort();
-			byte index = (byte)packet.ReadByte();
-			byte unk1 = (byte)packet.ReadByte();
+			var index = (byte) packet.ReadByte();
+			var unk1 = (byte) packet.ReadByte();
 
-			House house = HouseMgr.GetHouse(housenumber);
+			// house is null, return
+			var house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
 				return 1;
 
-			if (client.Player == null) 
+			// player is null, return
+			if (client.Player == null)
 				return 1;
 
-			// Working only for inside items.
-			if (!client.Player.InHouse) 
+			// rotation only works for inside items
+			if (!client.Player.InHouse)
 				return 1;
-			
+
+			// no permission to change the interior, return
 			if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
 				return 1;
 
@@ -59,5 +57,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			return 1;
 		}
 
+		#endregion
 	}
 }
