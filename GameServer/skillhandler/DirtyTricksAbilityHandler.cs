@@ -145,7 +145,7 @@ namespace DOL.GS.Effects
 			if (dt == null)
 			{
 				new DTdetrimentalEffect().Start(target);
-				// log.Debug("Effect Started from dirty tricks handler on " + target.Name);
+				// Log.Debug("Effect Started from dirty tricks handler on " + target.Name);
 			}
 		}
 
@@ -206,7 +206,7 @@ namespace DOL.GS.Effects
 		public override void Start(GameLiving living)
 		{
 			m_player = living;
-			//    log.Debug("Effect Started from DT detrimental effect on " + m_player.Name);
+			//    Log.Debug("Effect Started from DT detrimental effect on " + m_player.Name);
 			StartTimers(); // start the timers before adding to the list!
 			m_player.EffectList.Add(this);
 			m_player.DebuffCategory[(int)eProperty.FumbleChance] += 50;
@@ -225,7 +225,7 @@ namespace DOL.GS.Effects
 		{
 			if (playerCancel) // not cancelable by teh player
 				return;
-			//  log.Debug("Effect Canceled from DT Detrimental effect on "+ m_player.Name);
+			//  Log.Debug("Effect Canceled from DT Detrimental effect on "+ m_player.Name);
 			StopTimers();
 			m_player.EffectList.Remove(this);
 			m_player.DebuffCategory[(int)eProperty.FumbleChance] -= 50;

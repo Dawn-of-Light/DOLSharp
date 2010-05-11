@@ -144,7 +144,7 @@ namespace DOL.GS.Quests.Albion
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lady Felin", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				//if (log.IsWarnEnabled) log.Warn("Could not find Lady Felin, creating her ...");
+				//if (Log.IsWarnEnabled) Log.Warn("Could not find Lady Felin, creating her ...");
 				ladyFelin = new GameNPC();
 				ladyFelin.Model = 603;
 				ladyFelin.Name = "Lady Felin";

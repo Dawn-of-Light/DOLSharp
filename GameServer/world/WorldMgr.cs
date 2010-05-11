@@ -1887,6 +1887,31 @@ namespace DOL.GS
 		/// Returns an IEnumerator of GamePlayers that are close to a certain
 		/// spot in the region
 		/// </summary>
+		/// <param name="location">the game location to search from</param>
+		/// <param name="radiusToCheck">Radius to sarch for GameClients</param>
+		/// <returns>IEnumerator that can be used to go through all players</returns>
+		public static IEnumerable GetPlayersCloseToSpot(IGameLocation location, ushort radiusToCheck)
+		{
+			return GetPlayersCloseToSpot(location.RegionID, location.X, location.Y, location.Z, radiusToCheck, false);
+		}
+
+		/// <summary>
+		/// Returns an IEnumerator of GamePlayers that are close to a certain
+		/// spot in the region
+		/// </summary>
+		/// <param name="regionid">Region to search</param>
+		/// <param name="point">the 3D point to search from</param>
+		/// <param name="radiusToCheck">Radius to sarch for GameClients</param>
+		/// <returns>IEnumerator that can be used to go through all players</returns>
+		public static IEnumerable GetPlayersCloseToSpot(ushort regionid, IPoint3D point, ushort radiusToCheck)
+		{
+			return GetPlayersCloseToSpot(regionid, point.X, point.Y, point.Z, radiusToCheck, false);
+		}
+
+		/// <summary>
+		/// Returns an IEnumerator of GamePlayers that are close to a certain
+		/// spot in the region
+		/// </summary>
 		/// <param name="regionid">Region to search</param>
 		/// <param name="x">X inside region</param>
 		/// <param name="y">Y inside region</param>

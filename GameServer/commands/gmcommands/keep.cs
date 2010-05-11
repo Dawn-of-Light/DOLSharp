@@ -156,7 +156,7 @@ namespace DOL.GS.Commands
 							keep.KeepType = 0;
 						}
 
-						log.Debug("Keep creation: starting");
+						Log.Debug("Keep creation: starting");
 
 						// TODO: Add keep component to list in keep class
 
@@ -1959,7 +1959,7 @@ namespace DOL.GS.Commands
 								#endregion Default
 						}
 
-						log.Debug("Keep creation: used keep type " + ((eKeepTypes)keepType));
+						Log.Debug("Keep creation: used keep type " + ((eKeepTypes)keepType));
 
 						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, keep);
 						foreach (GameKeepComponent comp in keep.KeepComponents)
@@ -1971,7 +1971,7 @@ namespace DOL.GS.Commands
 						}
 						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.FastCreate.KeepCreated"));
 
-						log.Debug("Keep creation: check of components complete");
+						Log.Debug("Keep creation: check of components complete");
 
 						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
 						{
@@ -1982,7 +1982,7 @@ namespace DOL.GS.Commands
 							}
 						}
 
-						log.Debug("Keep creation: complete, saving");
+						Log.Debug("Keep creation: complete, saving");
 
 						keep.SaveIntoDatabase();
 						break;

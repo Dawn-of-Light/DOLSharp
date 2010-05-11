@@ -16,19 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using DOL.Database;
 using DOL.GS.Housing;
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandler(PacketHandlerType.TCP, 0x0E, "Handles housing decoration rotation")]
 	public class HousingDecorationRotateHandler : IPacketHandler
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		#region IPacketHandler Members
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
@@ -37,32 +32,58 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort housenumber = packet.ReadShort();
 			ushort angle = packet.ReadShort();
 			ushort unk2 = packet.ReadShort();
-			// Working only for inside items.
-			if (!client.Player.InHouse) return 1;
-			House house = HouseMgr.GetHouse(housenumber);
+
+			// rotation only works for inside items
+			if (!client.Player.InHouse)
+				return 1;
+
+			// house is null, return
+			var house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
 				return 1;
-			if (client.Player == null) return 1;
 
-			if (!house.HasOwnerPermissions(client.Player))
+			// player is null, return
+			if (client.Player == null)
 				return 1;
-			IndoorItem iitem = ((IndoorItem)house.IndoorItems[position]);
+
+			// no permission to change the interior, return
+			if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
+				return 1;
+
+			// grab the item in question
+			IndoorItem iitem = house.IndoorItems[position];
 			if (iitem == null)
 			{
 				client.Player.Out.SendMessage("error: id was null", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 				return 1;
 			} //should this ever happen?
+
+			// adjust the item's roation
 			int old = iitem.Rotation;
-			iitem.Rotation = (iitem.Rotation + angle) % 360;
+			iitem.Rotation = (iitem.Rotation + angle)%360;
+
 			if (iitem.Rotation < 0)
+			{
 				iitem.Rotation = 360 + iitem.Rotation;
+			}
+
 			iitem.DatabaseItem.Rotation = iitem.Rotation;
+
+			// save item
 			GameServer.Database.SaveObject(iitem.DatabaseItem);
-			client.Player.Out.SendMessage(string.Format("Interior decoration rotated from {0} degrees to {1}", old, iitem.Rotation), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			ChatUtil.SendSystemMessage(client,
+			                           string.Format("Interior decoration rotated from {0} degrees to {1}", old, iitem.Rotation));
+
+			// update all players in the house.
 			foreach (GamePlayer plr in house.GetAllPlayersInHouse())
+			{
 				plr.Client.Out.SendFurniture(house, position);
+			}
+
 			return 1;
 		}
 
+		#endregion
 	}
 }

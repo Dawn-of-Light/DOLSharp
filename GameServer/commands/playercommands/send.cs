@@ -73,7 +73,7 @@ namespace DOL.GS.Commands
 					}
 					else
 					{
-						client.Player.Send(targetClient.Player, message);
+						client.Player.SendPrivateMessage(targetClient.Player, message);
 					}
 					return;
 			}

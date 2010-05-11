@@ -16,19 +16,42 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-namespace DOL.GS.Utils 
-   {
-	public sealed class FastMath {
-		public static int Abs(int x) {
+using System;
+
+namespace DOL.GS.Utils
+{
+	public static class FastMath
+	{
+		public static int Abs(this int x)
+		{
 			return (x >= 0) ? x : -x;
 		}
 
-		public static float Abs(float x) {
+		public static float Abs(this float x)
+		{
 			return (x >= 0) ? x : -x;
 		}
 
-		public static long Abs(long x) {
+		public static long Abs(this long x)
+		{
 			return (x >= 0) ? x : -x;
+		}
+
+		public static int Clamp(this int input, int min, int max)
+		{
+			int val = input;
+
+			if (input < min)
+			{
+				val = min;
+			}
+
+			if (input > max)
+			{
+				val = max;
+			}
+
+			return val;
 		}
 	}
 }

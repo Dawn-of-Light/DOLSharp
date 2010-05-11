@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-
 namespace DOL.GS
 {
 	/// <summary>
@@ -28,15 +26,16 @@ namespace DOL.GS
 		/// <summary>
 		/// X
 		/// </summary>
-        int X { get; set; }
+		int X { get; set; }
+
 		/// <summary>
 		/// Y
 		/// </summary>
-        int Y { get; set; }
+		int Y { get; set; }
 
-        ushort GetHeading( IPoint2D point );
-        Point2D GetPointFromHeading( ushort heading, int distance );
-        int GetDistance( IPoint2D point );
-        void Clear();
+		ushort GetHeading(IPoint2D point);
+		Point2D GetPointFromHeading(ushort heading, int distance);
+		int GetDistance(IPoint2D point);
+		void Clear();
 	}
 }

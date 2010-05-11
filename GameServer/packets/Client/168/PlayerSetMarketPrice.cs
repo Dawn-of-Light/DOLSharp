@@ -41,7 +41,7 @@ namespace DOL.GS.PacketHandler.Client.v168
             int unk1 = packet.ReadByte();
             ushort unk2 = packet.ReadShort();
             uint price = packet.ReadInt();
-            Consignment con = client.Player.ActiveConMerchant;
+            GameConsignmentMerchant con = client.Player.ActiveConMerchant;
             House house = HouseMgr.GetHouse(con.HouseNumber);
             if (house == null)
                 return 0;

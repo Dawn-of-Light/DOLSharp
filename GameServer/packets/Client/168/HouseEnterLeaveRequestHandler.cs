@@ -16,18 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Reflection;
-using DOL.GS;
 using DOL.GS.Housing;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x0B,"Handles Enter/Leave house requests")]
+	[PacketHandler(PacketHandlerType.TCP, 0x0B, "Handles Enter/Leave house requests")]
 	public class HouseEnterLeaveHandler : IPacketHandler
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		#region IPacketHandler Members
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
@@ -35,29 +35,34 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int housenumber = packet.ReadShort();
 			int enter = packet.ReadByte();
 
+			// house is null, return
 			House house = HouseMgr.GetHouse(housenumber);
-			if (house==null) {  log.Info("house not found!"); return 1; }
+			if (house == null)
+				return 1;
 
 			new EnterLeaveHouseAction(client.Player, house, enter).Start(1);
 
 			return 1;
 		}
 
+		#endregion
+
+		#region Nested type: EnterLeaveHouseAction
+
 		/// <summary>
 		/// Handles house enter/leave events
 		/// </summary>
-		protected class EnterLeaveHouseAction : RegionAction
+		private class EnterLeaveHouseAction : RegionAction
 		{
-			/// <summary>
-			/// The target house
-			/// </summary>
-			protected readonly House m_house;
 			/// <summary>
 			/// The enter house flag
 			/// </summary>
-			protected readonly int m_enter;
+			private readonly int _enter;
 
-			private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+			/// <summary>
+			/// The target house
+			/// </summary>
+			private readonly House _house;
 
 			/// <summary>
 			/// Constructs a new EnterLeaveHouseAction
@@ -67,10 +72,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="enter">The enter house flag</param>
 			public EnterLeaveHouseAction(GamePlayer actionSource, House house, int enter) : base(actionSource)
 			{
-				//if (house == null)
-				//	throw new ArgumentNullException("house");
-				m_house = house;
-				m_enter = enter;
+				_house = house;
+				_enter = enter;
 			}
 
 			/// <summary>
@@ -78,30 +81,31 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
-				player.CurrentHouse = m_house; //we set even if its null!
-
-				switch(m_enter)
+				switch (_enter)
 				{
-					case 0: 
-						player.LeaveHouse(); 
+					case 0:
+						player.LeaveHouse();
 						break;
 
 					case 1:
-						if (!player.IsWithinRadius(m_house, WorldMgr.VISIBILITY_DISTANCE) || (player.CurrentRegionID != m_house.RegionID))	
+						if (!player.IsWithinRadius(_house, WorldMgr.VISIBILITY_DISTANCE) || (player.CurrentRegionID != _house.RegionID))
 						{
-							player.Out.SendMessage(string.Format("You are too far away to enter house {0}.", m_house.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return; 
+							ChatUtil.SendSystemMessage(player, string.Format("You are too far away to enter house {0}.", _house.HouseNumber));
+							return;
 						}
 
-						if (m_house.CanEnterHome(player))
+						// make sure player can enter
+						if (_house.CanEnterHome(player))
 						{
-							m_house.Enter(player);
+							player.CurrentHouse = _house;
+
+							_house.Enter(player);
 						}
 						else
 						{
-							player.Out.SendMessage(string.Format("You can't enter house {0}.", m_house.HouseNumber), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							ChatUtil.SendSystemMessage(player, string.Format("You can't enter house {0}.", _house.HouseNumber));
 							return;
 						}
 
@@ -109,5 +113,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 		}
+
+		#endregion
 	}
 }

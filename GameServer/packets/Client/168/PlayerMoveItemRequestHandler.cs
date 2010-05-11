@@ -39,7 +39,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort fromSlot = (ushort) packet.ReadShort();
 			ushort itemCount= (ushort) packet.ReadShort();
 
-			//log.Debug("MoveItem, id=" + id.ToString() + " toSlot=" + toSlot.ToString() + " fromSlot=" + fromSlot.ToString() + " itemCount=" + itemCount.ToString());
+			//Log.Debug("MoveItem, id=" + id.ToString() + " toSlot=" + toSlot.ToString() + " fromSlot=" + fromSlot.ToString() + " itemCount=" + itemCount.ToString());
 
 			//If our slot is > 1000 it is (objectID+1000) of target
 			if(toSlot>1000)
@@ -198,15 +198,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 0;
 			}
 
-			// House Vaults and Consignment Merchants deliver the same slot numbers
+			// House Vaults and GameConsignmentMerchant Merchants deliver the same slot numbers
 			if (fromSlot >= (ushort)eInventorySlot.HousingInventory_First &&
 			    fromSlot <= (ushort)eInventorySlot.HousingInventory_Last)
 			{
 				GameVault ghv = client.Player.ActiveVault;
-				Consignment cm = client.Player.ActiveConMerchant;
+				GameConsignmentMerchant cm = client.Player.ActiveConMerchant;
 				
 
-				if (cm != null) // we have an active Consignment Merchant
+				if (cm != null) // we have an active GameConsignmentMerchant Merchant
 				{
 					if (ghv != null) //this should never happen
 					{
@@ -220,8 +220,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			    toSlot <= (ushort)eInventorySlot.HousingInventory_Last)
 			{
 				GameVault ghv = client.Player.ActiveVault;
-				Consignment cm = client.Player.ActiveConMerchant;
-				if (cm != null) // we have an active Consignment Merchant
+				GameConsignmentMerchant cm = client.Player.ActiveConMerchant;
+				if (cm != null) // we have an active GameConsignmentMerchant Merchant
 				{
 					if (ghv != null) //this should never happen
 					{
@@ -275,17 +275,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 1;
 			}
 
-			// Move an item from, to or inside a Consignment Merchant.
+			// Move an item from, to or inside a GameConsignmentMerchant Merchant.
 
 			if ((fromSlot >= (ushort)eInventorySlot.Consignment_First &&
 			     fromSlot <= (ushort)eInventorySlot.Consignment_Last) ||
 			    (toSlot >= (ushort)eInventorySlot.Consignment_First &&
 			     toSlot <= (ushort)eInventorySlot.Consignment_Last))
 			{
-				Consignment con = client.Player.ActiveConMerchant;
+				GameConsignmentMerchant con = client.Player.ActiveConMerchant;
 				if (con == null)
 				{
-					client.Out.SendMessage("You are not actively interacting with a Consignment Merchant!",
+					client.Out.SendMessage("You are not actively interacting with a GameConsignmentMerchant Merchant!",
 					                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendInventoryItemsUpdate(null);
 					return 0;
@@ -295,7 +295,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
 					if (!item.IsTradable)
 					{
-						client.Out.SendMessage("You can not put this Item into a Consignment Merchant!",
+						client.Out.SendMessage("You can not put this Item into a GameConsignmentMerchant Merchant!",
 						                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Out.SendInventoryItemsUpdate(null);
 						return 0;

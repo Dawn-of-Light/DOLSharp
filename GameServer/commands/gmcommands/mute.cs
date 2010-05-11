@@ -109,7 +109,7 @@ namespace DOL.GS.Commands
 					client.Player.Out.SendMessage("This action was done to the players account.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				}
 
-				log.Warn(client.Player.Name + " muted " + playerClient.Player.Name);
+				Log.Warn(client.Player.Name + " muted " + playerClient.Player.Name);
 			}
 			else
 			{
@@ -120,7 +120,7 @@ namespace DOL.GS.Commands
 					client.Player.Out.SendMessage("This action was done to the players account.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				}
 
-				log.Warn(client.Player.Name + " un-muted " + playerClient.Player.Name);
+				Log.Warn(client.Player.Name + " un-muted " + playerClient.Player.Name);
 			}
 			return;
 		}

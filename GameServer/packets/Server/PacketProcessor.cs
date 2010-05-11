@@ -268,7 +268,7 @@ namespace DOL.GS.PacketHandler
 					{
 						string desc =
 							String.Format(
-								"Sending packets longer than 2048 cause client to crash, check log for stacktrace. Packet code: 0x{0:X2}, account: {1}, packet size: {2}.",
+								"Sending packets longer than 2048 cause client to crash, check Log for stacktrace. Packet code: 0x{0:X2}, account: {1}, packet size: {2}.",
 								buf[2], (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint, buf.Length);
 						log.Error(Marshal.ToHexDump(desc, buf) + "\n" + Environment.StackTrace);
 
@@ -361,12 +361,12 @@ namespace DOL.GS.PacketHandler
 				{
 					if (q.Count > 0)
 					{
-//						log.WarnFormat("async sent {0} bytes, sending queued packets count: {1}", sent, q.Count);
+//						Log.WarnFormat("async sent {0} bytes, sending queued packets count: {1}", sent, q.Count);
 						count = CombinePackets(data, q, data.Length, client);
 					}
 					if (count <= 0)
 					{
-//						log.WarnFormat("async sent {0} bytes", sent);
+//						Log.WarnFormat("async sent {0} bytes", sent);
 						pakProc.m_sendingTcp = false;
 						return;
 					}
@@ -492,13 +492,13 @@ namespace DOL.GS.PacketHandler
 		/// <param name="isForced">Force UDP packet if <code>true</code>, else packet can be sent over TCP</param>
 		public void SendUDP(byte[] buf, bool isForced)
 		{
-//			log.FatalFormat("Send UDP: {0}", isForced);
+//			Log.FatalFormat("Send UDP: {0}", isForced);
 
 			//No udp available, send via TCP instead!
 			//bool flagLostUDP = false;
 			if (m_client.UdpEndPoint == null || !(isForced || m_client.UdpConfirm))
 			{
-//				log.FatalFormat("UDP sent over TCP");
+//				Log.FatalFormat("UDP sent over TCP");
 				//DOLConsole.WriteWarning("Trying to send UDP when UDP isn't initialized!");
 				var newbuf = new byte[buf.Length - 2];
 				newbuf[0] = buf[0];
@@ -587,12 +587,12 @@ namespace DOL.GS.PacketHandler
 				{
 					if (m_udpQueue.Count > 0)
 					{
-//						log.WarnFormat("async UDP sent {0} bytes, sending queued packets count: {1}", sent, m_udpQueue.Count);
+//						Log.WarnFormat("async UDP sent {0} bytes, sending queued packets count: {1}", sent, m_udpQueue.Count);
 						count = CombinePackets(data, m_udpQueue, data.Length, m_client);
 					}
 					if (count <= 0)
 					{
-//						log.WarnFormat("async UDP sent {0} bytes", sent);
+//						Log.WarnFormat("async UDP sent {0} bytes", sent);
 						m_sendingUdp = false;
 						return;
 					}

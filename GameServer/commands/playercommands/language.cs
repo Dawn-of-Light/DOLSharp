@@ -87,9 +87,9 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Set", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				GameServer.Database.SaveObject(client.Account);
 
-				if (log.IsInfoEnabled)
+				if (Log.IsInfoEnabled)
 				{
-					log.Info(client.Player.Name + " (" + client.Account.Name + ") changed language.");
+					Log.Info(client.Player.Name + " (" + client.Account.Name + ") changed language.");
 				}
 			}
 		}

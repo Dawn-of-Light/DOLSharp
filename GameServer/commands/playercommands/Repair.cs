@@ -164,8 +164,8 @@ namespace DOL.GS.Commands
 
 			if (player == null || obj == null)
 			{
-				if (log.IsWarnEnabled)
-					log.Warn("There was a problem getting back the target or player in door/component repair!");
+				if (Log.IsWarnEnabled)
+					Log.Warn("There was a problem getting back the target or player in door/component repair!");
 				return 0;
 			}
 

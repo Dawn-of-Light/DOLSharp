@@ -82,7 +82,7 @@ namespace DOL.GS.Spells
 		 if (attackedByEnemy != null)
 			ad = attackedByEnemy.AttackData;
 
-//         log.DebugFormat("sender:{0} res:{1} IsMelee:{2} Type:{3}", living.Name, ad.AttackResult, ad.IsMeleeAttack, ad.AttackType);
+//         Log.DebugFormat("sender:{0} res:{1} IsMelee:{2} Type:{3}", living.Name, ad.AttackResult, ad.IsMeleeAttack, ad.AttackType);
 
 			int damagereduction = living.TempProperties.getProperty<int>(Damage_Reduction);
 		 double absorbPercent = Spell.Damage;

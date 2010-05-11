@@ -16,10 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS;
-using DOL.GS.PacketHandler;
-using DOL.Language;
+using System.Reflection;
+using log4net;
 
 namespace DOL.GS.Commands
 {
@@ -28,91 +26,90 @@ namespace DOL.GS.Commands
 	/// </summary>
 	public abstract class AbstractCommandHandler
 	{
-		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public virtual void DisplayMessage(GamePlayer player, string message)
 		{
-			DisplayMessage(player.Client, message, new object[] { });
+			DisplayMessage(player.Client, message, new object[] {});
 		}
-
 
 		public virtual void DisplayMessage(GameClient client, string message)
 		{
-			DisplayMessage(client, message, new object[] { });
+			DisplayMessage(client, message, new object[] {});
 		}
-
 
 		public virtual void DisplayMessage(GameClient client, string message, params object[] objs)
 		{
 			if (client == null || !client.IsPlaying)
 				return;
-			client.Out.SendMessage(String.Format(message, objs), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			ChatUtil.SendSystemMessage(client, string.Format(message, objs));
 			return;
 		}
-
 
 		public virtual void DisplaySyntax(GameClient client)
 		{
 			if (client == null || !client.IsPlaying)
 				return;
 
-			CmdAttribute[] attrib = (CmdAttribute[])this.GetType().GetCustomAttributes(typeof(CmdAttribute), false);
+			var attrib = (CmdAttribute[]) GetType().GetCustomAttributes(typeof (CmdAttribute), false);
 			if (attrib.Length == 0)
 				return;
 
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, attrib[0].Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			ChatUtil.SendSystemMessage(client, attrib[0].Description, null);
+
 			foreach (string sentence in attrib[0].Usage)
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, sentence), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			{
+				ChatUtil.SendSystemMessage(client, sentence, null);
+			}
+
 			return;
 		}
 
+		public virtual void DisplaySyntax(GameClient client, string subcommand)
+		{
+			if (client == null || !client.IsPlaying)
+				return;
 
-        public virtual void DisplaySyntax( GameClient client, string subcommand )
-        {
-            if ( client == null || !client.IsPlaying )
-                return;
+			var attrib = (CmdAttribute[]) GetType().GetCustomAttributes(typeof (CmdAttribute), false);
 
-            CmdAttribute[] attrib = (CmdAttribute[])this.GetType().GetCustomAttributes( typeof( CmdAttribute ), false );
+			if (attrib.Length == 0)
+				return;
 
-            if ( attrib.Length == 0 )
-                return;
+			foreach (string sentence in attrib[0].Usage)
+			{
+				string[] words = sentence.Split(new[] {' '}, 3);
 
-            foreach ( string sentence in attrib[0].Usage )
-            {
-                string[] words = sentence.Split( new char[] { ' ' }, 3 );
+				if (words.Length >= 2 && words[1].Equals(subcommand))
+				{
+					ChatUtil.SendSystemMessage(client, sentence, null);
+				}
+			}
 
-                if ( words.Length >= 2 && words[1].Equals( subcommand ) )
-                {
-                    client.Out.SendMessage( LanguageMgr.GetTranslation( client, sentence ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
-                }
-            }
+			return;
+		}
 
-            return;
-        }
+		public virtual void DisplaySyntax(GameClient client, string subcommand1, string subcommand2)
+		{
+			if (client == null || !client.IsPlaying)
+				return;
 
+			var attrib = (CmdAttribute[]) GetType().GetCustomAttributes(typeof (CmdAttribute), false);
 
-        public virtual void DisplaySyntax( GameClient client, string subcommand1, string subcommand2 )
-        {
-            if ( client == null || !client.IsPlaying )
-                return;
+			if (attrib.Length == 0)
+				return;
 
-            CmdAttribute[] attrib = (CmdAttribute[])this.GetType().GetCustomAttributes( typeof( CmdAttribute ), false );
+			foreach (string sentence in attrib[0].Usage)
+			{
+				string[] words = sentence.Split(new[] {' '}, 4);
 
-            if ( attrib.Length == 0 )
-                return;
+				if (words.Length >= 3 && words[1].Equals(subcommand1) && words[2].Equals(subcommand2))
+				{
+					ChatUtil.SendSystemMessage(client, sentence, null);
+				}
+			}
 
-            foreach ( string sentence in attrib[0].Usage )
-            {
-                string[] words = sentence.Split( new char[] { ' ' }, 4 );
-
-                if ( words.Length >= 3 && words[1].Equals( subcommand1 ) && words[2].Equals( subcommand2 ) )
-                {
-                    client.Out.SendMessage( LanguageMgr.GetTranslation( client, sentence ), eChatType.CT_System, eChatLoc.CL_SystemWindow );
-                }
-            }
-
-            return;
-
-        }
+			return;
+		}
 	}
 }
