@@ -49,7 +49,7 @@ namespace DOL.GS.Commands
 
 					GameServer.Database.SaveObject(obj.Client.Account); // Save account.
 
-					// log change
+					// Log change
 					AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountEmailChange, oldEmail, EmailAddy);
 
 					client.Out.SendMessage("Contact e-mail address set to " +

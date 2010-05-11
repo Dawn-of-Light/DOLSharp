@@ -59,7 +59,7 @@ namespace DOL.GS.Spells
 						int aggro = Convert.ToInt32(ad.Damage * this.Spell.Value * target.AttackSpeed(ad.Weapon) / 4000);
 						aggroBrain.AddToAggroList(Caster, aggro);
 
-						//log.Info("Taunt amount: " + aggro.ToString());
+						//Log.Info("Taunt amount: " + aggro.ToString());
 					}
                 }
             }

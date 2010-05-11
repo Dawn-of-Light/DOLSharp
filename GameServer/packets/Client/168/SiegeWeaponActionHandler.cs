@@ -55,7 +55,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			switch (action)
 			{
-				case 1: { client.Player.SiegeWeapon.Load(ammo); } break;//select ammo need log to know how sent
+				case 1: { client.Player.SiegeWeapon.Load(ammo); } break;//select ammo need Log to know how sent
 				case 2: { client.Player.SiegeWeapon.Arm(); } break;//arm
 				case 3: { client.Player.SiegeWeapon.Aim(); } break;//aim
 				case 4: { client.Player.SiegeWeapon.Fire(); } break;//fire

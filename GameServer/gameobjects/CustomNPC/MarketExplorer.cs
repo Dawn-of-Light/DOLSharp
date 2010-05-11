@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
@@ -46,7 +46,7 @@ namespace DOL.GS
             InventoryItem item = (InventoryItem)itemWeak.Target;
             player.TempProperties.removeProperty(EXPLORER_ITEM_WEAK);
 
-            Consignment consign = HouseMgr.GetConsignmentByHouseNumber((int)item.OwnerLot);
+            GameConsignmentMerchant consign = HouseMgr.GetConsignmentByHouseNumber((int)item.OwnerLot);
 
             if (consign == null)
             {

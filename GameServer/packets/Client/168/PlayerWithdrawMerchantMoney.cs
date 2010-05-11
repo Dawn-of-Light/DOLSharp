@@ -1,4 +1,4 @@
-﻿/*
+/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ using DOL.Language;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-    [PacketHandler(PacketHandlerType.TCP, 0x1C, "Withdraw Consignment Merchant Money")]
+    [PacketHandler(PacketHandlerType.TCP, 0x1C, "Withdraw GameConsignmentMerchant Merchant Money")]
     public class PlayerWithdrawMerchantMoney : IPacketHandler
     {
         /// <summary>
@@ -37,7 +37,7 @@ namespace DOL.GS.PacketHandler.Client.v168
         {
             if (client.Player == null)
                 return 0;
-            Consignment con = client.Player.ActiveConMerchant;
+            GameConsignmentMerchant con = client.Player.ActiveConMerchant;
 
             if (con == null)
                 return 0;

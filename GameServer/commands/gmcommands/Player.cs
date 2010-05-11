@@ -120,10 +120,10 @@ namespace DOL.GS.Commands
 							"!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						client.Out.SendMessage("You successfully changed this players name to " + player.Name + "!",
 											   eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-						client.Out.SendMessage("Tell the player to log out and back in to complete the change.", eChatType.CT_Important,
+						client.Out.SendMessage("Tell the player to Log out and back in to complete the change.", eChatType.CT_Important,
 											   eChatLoc.CL_SystemWindow);
 
-						// log change
+						// Log change
 						AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterRename, oldName, args[2]);
 
 						player.SaveIntoDatabase();
@@ -1851,7 +1851,7 @@ namespace DOL.GS.Commands
 			if (limitType == "cons")
 			{
 				limitShown = true;
-				text.Add("  ----- Consignment:");
+				text.Add("  ----- GameConsignmentMerchant:");
 				foreach (InventoryItem item in player.Inventory.AllItems)
 				{
 					if (item.SlotPosition >= (int)eInventorySlot.Consignment_First &&

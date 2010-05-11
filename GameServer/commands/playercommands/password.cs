@@ -48,8 +48,8 @@ namespace DOL.GS.Commands
 				{
 					client.Out.SendMessage("Your current password was incorrect.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
-					if (log.IsInfoEnabled)
-						log.Info(client.Player.Name + " (" + client.Account.Name + ") attempted to change password but failed!");
+					if (Log.IsInfoEnabled)
+						Log.Info(client.Player.Name + " (" + client.Account.Name + ") attempted to change password but failed!");
 
 					return;
 				}
@@ -77,11 +77,11 @@ namespace DOL.GS.Commands
 
 			GameServer.Database.SaveObject(player.Client.Account);
 
-			// log change
+			// Log change
 			AuditMgr.AddAuditEntry(player, AuditType.Account, AuditSubtype.AccountPasswordChange, "", player.Name);
 
-			if (log.IsInfoEnabled)
-				log.Info(player.Name + " (" + player.Client.Account.Name + ") changed password.");
+			if (Log.IsInfoEnabled)
+				Log.Info(player.Name + " (" + player.Client.Account.Name + ") changed password.");
 		}
 	}
 }

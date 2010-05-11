@@ -145,7 +145,7 @@ namespace DOL.GS.Quests.Midgard
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lady Hinda", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				//if (log.IsWarnEnabled) log.Warn("Could not find Lady Hinda, creating her ...");
+				//if (Log.IsWarnEnabled) Log.Warn("Could not find Lady Hinda, creating her ...");
 				ladyHinda = new GameNPC();
 				ladyHinda.Model = 678;
 				ladyHinda.Name = "Lady Hinda";

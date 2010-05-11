@@ -117,7 +117,7 @@ namespace DOL.GS.Commands
 						acc.Password = LoginRequestHandler.CryptPassword(newpass);
 						GameServer.Database.SaveObject(acc);
 
-						// log change
+						// Log change
 						AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountPasswordChange, "", (client.Player != null ? client.Player.Name : ""));
 					}
 					break;
@@ -143,7 +143,7 @@ namespace DOL.GS.Commands
 						KickAccount(acc);
 						GameServer.Database.DeleteObject(acc);
 
-						// log change
+						// Log change
 						AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountDelete, "acct="+AccountName, (client.Player != null ? client.Player.Name : ""));
 
                         DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountDeleted", acc.Name));
@@ -171,7 +171,7 @@ namespace DOL.GS.Commands
                         KickCharacter(cha);
                         GameServer.Database.DeleteObject(cha);
 
-						// log change
+						// Log change
 						AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterDelete, "char="+charname, (client.Player != null ? client.Player.Name : ""));
 
                         DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterDeleted", cha.Name));

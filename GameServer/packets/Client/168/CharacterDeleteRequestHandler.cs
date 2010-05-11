@@ -120,7 +120,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//GameServer.Database.WriteDatabaseTable( typeof( Account ) );
 					}
 
-					// log deletion
+					// Log deletion
 					AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterDelete, "", charName);
 
 					break;

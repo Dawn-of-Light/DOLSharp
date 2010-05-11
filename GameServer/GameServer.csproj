@@ -822,6 +822,7 @@
     <Compile Include="commands\CmdAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gameutils\ChatUtil.cs" />
     <Compile Include="gameutils\GameNPCInventory.cs" />
     <Compile Include="gameutils\GuildBanner.cs" />
     <Compile Include="gameutils\GuildEvents.cs" />

@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler
 						fxcount++;
 						if (changedEffects != null && !changedEffects.Contains(effect))
 							continue;
-						//						log.DebugFormat("adding [{0}] '{1}'", fxcount-1, effect.Name);
+						//						Log.DebugFormat("adding [{0}] '{1}'", fxcount-1, effect.Name);
 						pak.WriteByte((byte)(fxcount - 1)); // icon index
 						pak.WriteByte((effect is GameSpellEffect) ? (byte)(fxcount - 1) : (byte)0xff);
 						byte ImmunByte = 0;
@@ -145,7 +145,7 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte((byte)(fxcount++));
 					pak.Fill(0, 10);
 					entriesCount++;
-					//					log.DebugFormat("adding [{0}] (empty)", fxcount-1);
+					//					Log.DebugFormat("adding [{0}] (empty)", fxcount-1);
 				}
 
 				if (changedEffects != null)

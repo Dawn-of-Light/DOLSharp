@@ -35,6 +35,7 @@ using DOL.GS.PlayerTitles;
 using DOL.GS.PropertyCalc;
 using DOL.GS.Quests;
 using DOL.GS.RealmAbilities;
+using DOL.GS.ServerProperties;
 using DOL.GS.SkillHandler;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
@@ -7950,7 +7951,7 @@ namespace DOL.GS
 		#region Vault/Money/Items/Trading/UseSlot/ApplyPoison
 
 		private GameVault m_activeVault;
-		private Consignment m_activeConMerchant;
+		private GameConsignmentMerchant m_activeConMerchant;
 
 		/// <summary>
 		/// The currently active house vault.
@@ -7964,7 +7965,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The currently active Consignment Merchant
 		/// </summary>
-		public Consignment ActiveConMerchant
+		public GameConsignmentMerchant ActiveConMerchant
 		{
 			get { return m_activeConMerchant; }
 			set { m_activeConMerchant = value; }
@@ -8880,8 +8881,8 @@ namespace DOL.GS
 		{
 			if (source is GamePlayer)
 			{
-				GamePlayer sender = source as GamePlayer;
-				foreach (string Name in this.IgnoreList)
+				var sender = source as GamePlayer;
+				foreach (string Name in IgnoreList)
 				{
 					if (sender.Name == Name && sender.Client.Account.PrivLevel < 2)
 						return true;
@@ -8897,9 +8898,28 @@ namespace DOL.GS
 		public delegate bool SendReceiveHandler(GamePlayer source, GamePlayer receiver, string str);
 
 		/// <summary>
+		/// Delegate to be called when this player is about to send a text
+		/// </summary>
+		public delegate bool SendHandler(GamePlayer source, GamePlayer receiver, string str);
+
+		/// <summary>
+		/// Event that is fired when the Player is about to send a text
+		/// </summary>
+		public event SendHandler OnSend;
+
+		/// <summary>
 		/// Event that is fired when the Player receives a Send text
 		/// </summary>
 		public event SendReceiveHandler OnSendReceive;
+
+		/// <summary>
+		/// Clears all send event handlers
+		/// </summary>
+		public void ClearOnSend()
+		{
+			OnSend = null;
+		}
+
 		/// <summary>
 		/// Clears all OnSendReceive event handlers
 		/// </summary>
@@ -8914,12 +8934,13 @@ namespace DOL.GS
 		/// <param name="source">GamePlayer that was sending</param>
 		/// <param name="str">string that was sent</param>
 		/// <returns>true if the string was received successfully, false if it was not received</returns>
-		public virtual bool SendReceive(GamePlayer source, string str)
+		public virtual bool PrivateMessageReceive(GamePlayer source, string str)
 		{
-			if (OnSendReceive != null && !OnSendReceive(source, this, str))
+			var onSendReceive = OnSendReceive;
+			if (onSendReceive != null && !onSendReceive(source, this, str))
 				return false;
 
-			if (IsIgnoring(source as GameLiving))
+			if (IsIgnoring(source))
 				return true;
 
 			eChatType type = eChatType.CT_Send;
@@ -8927,44 +8948,32 @@ namespace DOL.GS
 				type = eChatType.CT_Staff;
 
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.Sends", source.Name, str), type, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.Sends", source.Name, str), type,
+				                eChatLoc.CL_ChatWindow);
 			else
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.FalseLanguage", source.Name), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SendReceive.FalseLanguage", source.Name),
+				                eChatType.CT_Send, eChatLoc.CL_ChatWindow);
 				return true;
 			}
 
-			string afkmessage = TempProperties.getProperty<string>(AFK_MESSAGE);
+			var afkmessage = TempProperties.getProperty<string>(AFK_MESSAGE);
 			if (afkmessage != null)
 			{
 				if (afkmessage == "")
 				{
-					source.Out.SendMessage(LanguageMgr.GetTranslation(source.Client, "GamePlayer.SendReceive.Afk", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					source.Out.SendMessage(LanguageMgr.GetTranslation(source.Client, "GamePlayer.SendReceive.Afk", Name),
+					                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					source.Out.SendMessage(LanguageMgr.GetTranslation(source.Client, "GamePlayer.SendReceive.AfkMessage", Name, afkmessage), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+					source.Out.SendMessage(
+						LanguageMgr.GetTranslation(source.Client, "GamePlayer.SendReceive.AfkMessage", Name, afkmessage), eChatType.CT_Say,
+						eChatLoc.CL_ChatWindow);
 				}
 			}
 
 			return true;
-		}
-
-		/// <summary>
-		/// Delegate to be called when this player is about to send a text
-		/// </summary>
-		public delegate bool SendHandler(GamePlayer source, GamePlayer receiver, string str);
-
-		/// <summary>
-		/// Event that is fired when the Player is about to send a text
-		/// </summary>
-		public event SendHandler OnSend;
-		/// <summary>
-		/// Clears all send event handlers
-		/// </summary>
-		public void ClearOnSend()
-		{
-			OnSend = null;
 		}
 
 		/// <summary>
@@ -8973,22 +8982,28 @@ namespace DOL.GS
 		/// <param name="target">The target of the send</param>
 		/// <param name="str">string to send (without any "xxx sends:" in front!!!)</param>
 		/// <returns>true if text was sent successfully</returns>
-		public virtual bool Send(GamePlayer target, string str)
+		public virtual bool SendPrivateMessage(GamePlayer target, string str)
 		{
 			if (target == null || str == null)
 				return false;
-			if (OnSend != null && !OnSend(this, target, str))
+
+			SendHandler onSend = OnSend;
+			if (onSend != null && !onSend(this, target, str))
 				return false;
-			if (!target.SendReceive(this, str))
+
+			if (!target.PrivateMessageReceive(this, str))
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Send.target.DontUnderstandYou", target.Name), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Send.target.DontUnderstandYou", target.Name),
+				                eChatType.CT_Send, eChatLoc.CL_ChatWindow);
 				return false;
 			}
-			else
-			{
-				if(Client.Account.PrivLevel==1 && target.Client.Account.PrivLevel>1 && target.IsAnonymous) return true;
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Send.YouSendTo", str, target.Name), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
-			}
+
+			if (Client.Account.PrivLevel == 1 && target.Client.Account.PrivLevel > 1 && target.IsAnonymous)
+				return true;
+
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Send.YouSendTo", str, target.Name), eChatType.CT_Send,
+			                eChatLoc.CL_ChatWindow);
+
 			return true;
 		}
 
@@ -9004,10 +9019,13 @@ namespace DOL.GS
 				return false;
 			if (IsIgnoring(source))
 				return true;
-			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this) || ServerProperties.Properties.ENABLE_DEBUG)
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SayReceive.Says", source.GetName(0, false), str), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this) || Properties.ENABLE_DEBUG)
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SayReceive.Says", source.GetName(0, false), str),
+				                eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			else
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SayReceive.FalseLanguage", source.GetName(0, false)), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(
+					LanguageMgr.GetTranslation(Client, "GamePlayer.SayReceive.FalseLanguage", source.GetName(0, false)),
+					eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			return true;
 		}
 
@@ -9022,7 +9040,8 @@ namespace DOL.GS
 				return false;
 			if (!base.Say(str))
 				return false;
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Say.YouSay", str), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Say.YouSay", str), eChatType.CT_Say,
+			                eChatLoc.CL_ChatWindow);
 			return true;
 		}
 
@@ -9041,7 +9060,8 @@ namespace DOL.GS
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
 				Out.SendMessage(source.GetName(0, false) + " yells, \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			else
-				Out.SendMessage(source.GetName(0, false) + " yells something in a language you don't understand.", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(source.GetName(0, false) + " yells something in a language you don't understand.", eChatType.CT_Say,
+				                eChatLoc.CL_ChatWindow);
 			return true;
 		}
 
@@ -9074,9 +9094,11 @@ namespace DOL.GS
 			if (IsIgnoring(source))
 				return true;
 			if (GameServer.ServerRules.IsAllowedToUnderstand(source, this))
-				Out.SendMessage(source.GetName(0, false) + " whispers to you, \"" + str + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(source.GetName(0, false) + " whispers to you, \"" + str + "\"", eChatType.CT_Say,
+				                eChatLoc.CL_ChatWindow);
 			else
-				Out.SendMessage(source.GetName(0, false) + " whispers something in a language you don't understand.", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(source.GetName(0, false) + " whispers something in a language you don't understand.",
+				                eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			return true;
 		}
 
@@ -9090,7 +9112,8 @@ namespace DOL.GS
 		{
 			if (target == null)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Whisper.SelectTarget"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Whisper.SelectTarget"), eChatType.CT_System,
+				                eChatLoc.CL_ChatWindow);
 				return false;
 			}
 			if (!GameServer.ServerRules.IsAllowedToSpeak(this, "whisper"))
@@ -9098,7 +9121,8 @@ namespace DOL.GS
 			if (!base.Whisper(target, str))
 				return false;
 			if (target is GamePlayer)
-				Out.SendMessage("You whisper, \"" + str + "\" to " + target.GetName(0, false), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				Out.SendMessage("You whisper, \"" + str + "\" to " + target.GetName(0, false), eChatType.CT_Say,
+				                eChatLoc.CL_ChatWindow);
 			return true;
 		}
 

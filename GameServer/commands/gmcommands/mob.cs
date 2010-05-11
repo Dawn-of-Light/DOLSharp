@@ -1838,11 +1838,11 @@ namespace DOL.GS.Commands
 
 				if ( template != null )
 				{
-					log.ErrorFormat("{0} removing all items from LootTemplate {1}!", client.Player.Name, name);
+					Log.ErrorFormat("{0} removing all items from LootTemplate {1}!", client.Player.Name, name);
 
 					foreach (LootTemplate loot in template )
 					{
-						log.ErrorFormat("{0}", loot.ItemTemplateID);
+						Log.ErrorFormat("{0}", loot.ItemTemplateID);
 						GameServer.Database.DeleteObject(loot);
 					}
 
@@ -2477,7 +2477,7 @@ namespace DOL.GS.Commands
 				Mob mob = GameServer.Database.SelectObject<Mob>("Mob_ID = '" + GameServer.Database.Escape(args[2]) + "'");
 				if (mob != null)
 				{
-					log.DebugFormat("Mob_ID {0} loaded from database.", args[2]);
+					Log.DebugFormat("Mob_ID {0} loaded from database.", args[2]);
 					DisplayMessage(client, "Mob_ID {0} loaded from database.", args[2]);
 					GameNPC npc = new GameNPC();
 					npc.LoadFromDatabase(mob);
@@ -2486,7 +2486,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-					log.DebugFormat("Mob_ID {0} not found.", args[2]);
+					Log.DebugFormat("Mob_ID {0} not found.", args[2]);
 					DisplayMessage(client, "Mob_ID {0} not found.", args[2]);
 				}
 			}

@@ -147,7 +147,7 @@ namespace DOL.GS.Housing
 			return null;
 		}
 
-        public static Consignment GetConsignmentByHouseNumber(int housenumber)
+        public static GameConsignmentMerchant GetConsignmentByHouseNumber(int housenumber)
         {
             foreach (Hashtable hash in m_houselists.Values)
                 if (hash.ContainsKey(housenumber))

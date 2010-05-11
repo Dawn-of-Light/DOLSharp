@@ -84,7 +84,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								if (client.Player.ActiveConMerchant != null)
 								{
-									Consignment con = client.Player.ActiveConMerchant;
+									GameConsignmentMerchant con = client.Player.ActiveConMerchant;
 									invItem = con.ConInventory[objectID];
 									if (invItem == null)
 										return 1;

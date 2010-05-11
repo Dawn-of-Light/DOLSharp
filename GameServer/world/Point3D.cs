@@ -65,6 +65,8 @@ namespace DOL.GS
 		{
 		}
 
+		#region IPoint3D Members
+
 		/// <summary>
 		/// Z coord of this point
 		/// </summary>
@@ -74,14 +76,13 @@ namespace DOL.GS
 			set { m_z = value; }
 		}
 
-		/// <summary>
-		/// Calculates the hashcode of this point
-		/// </summary>
-		/// <returns>The hashcode</returns>
-		/*public override int GetHashCode()
+		public override void Clear()
 		{
-			return base.GetHashCode() *37 + m_z;
-		}*/
+			base.Clear();
+			Z = 0;
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Creates the string representation of this point
@@ -93,109 +94,80 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Compares this point to any object
+		/// Get the distance to a point
 		/// </summary>
-		/// <param name="obj">The object to compare</param>
-		/// <returns>True if object is IPoint3D and equals this point</returns>
-		/*public override bool Equals(object obj)
+		/// <remarks>
+		/// If you don't actually need the distance value, it is faster
+		/// to use IsWithinRadius (since it avoids the square root calculation)
+		/// </remarks>
+		/// <param name="point">Target point</param>
+		/// <returns>Distance to point</returns>
+		public virtual int GetDistanceTo(IPoint3D point)
 		{
-			IPoint3D point = obj as IPoint3D;
-			if (point == null)
-				return false;
+			double dx = (double) X - point.X;
+			double dy = (double) Y - point.Y;
+			double dz = (double) Z - point.Z;
 
-			return ((point.X == m_x) && (point.Y == m_y) && (point.Z == m_z));
-		}*/
+			return (int) Math.Sqrt(dx*dx + dy*dy + dz*dz);
+		}
 
-        [Obsolete( "Use instance method GetDistanceTo" )]
-        public static int GetDistance( IPoint3D p1, IPoint3D p2 )
-        {
-            return p1.GetDistance( p2 );
-        }
+		/// <summary>
+		/// Get the distance to a point (with z-axis adjustment)
+		/// </summary>
+		/// <param name="point">Target point</param>
+		/// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease influence of Z-axis</param>
+		/// <returns>Adjusted distance to point</returns>
+		public virtual int GetDistanceTo(IPoint3D point, double zfactor)
+		{
+			double dx = (double) X - point.X;
+			double dy = (double) Y - point.Y;
+			var dz = (double) ((Z - point.Z)*zfactor);
 
-        [Obsolete( "Use instance method GetDistanceTo" )]
-        public static int GetDistance( int x1, int y1, int z1, int x2, int y2, int z2 )
-        {
-            Point3D pt1 = new Point3D( x1, y1, z1 );
-            Point3D pt2 = new Point3D( x2, y2, z2 );
-            return pt1.GetDistanceTo( pt2 );
-        }
+			return (int) Math.Sqrt(dx*dx + dy*dy + dz*dz);
+		}
 
-
-        /// <summary>
-        /// Get the distance to a point
-        /// </summary>
-        /// <remarks>
-        /// If you don't actually need the distance value, it is faster
-        /// to use IsWithinRadius (since it avoids the square root calculation)
-        /// </remarks>
-        /// <param name="point">Target point</param>
-        /// <returns>Distance to point</returns>
-        public virtual int GetDistanceTo( IPoint3D point )
-        {
-			double dx = (double)this.X - point.X;
-            double dy = (double)this.Y - point.Y;
-            double dz = (double)this.Z - point.Z;
-
-            return (int)Math.Sqrt( dx * dx + dy * dy + dz * dz );
-        }
-
-        /// <summary>
-        /// Get the distance to a point (with z-axis adjustment)
-        /// </summary>
-        /// <param name="point">Target point</param>
-        /// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease influence of Z-axis</param>
-        /// <returns>Adjusted distance to point</returns>
-        public virtual int GetDistanceTo( IPoint3D point, double zfactor )
-        {
-            double dx = (double)this.X - point.X;
-            double dy = (double)this.Y - point.Y;
-            double dz = (double)( ( this.Z - point.Z ) * zfactor );
-
-            return (int)Math.Sqrt( dx * dx + dy * dy + dz * dz );
-        }
-
-        /// <summary>
-        /// Determine if another point is within a given radius
-        /// </summary>
-        /// <param name="point">Target point</param>
-        /// <param name="radius">Radius</param>
-        /// <returns>True if the point is within the radius, otherwise false</returns>
+		/// <summary>
+		/// Determine if another point is within a given radius
+		/// </summary>
+		/// <param name="point">Target point</param>
+		/// <param name="radius">Radius</param>
+		/// <returns>True if the point is within the radius, otherwise false</returns>
 		public bool IsWithinRadius(IPoint3D point, int radius)
 		{
 			return IsWithinRadius(point, radius, false);
 		}
 
 
-        /// <summary>
-        /// Determine if another point is within a given radius, optionally ignoring Z values
-        /// </summary>
-        /// <param name="point">Target point</param>
-        /// <param name="radius">Radius</param>
+		/// <summary>
+		/// Determine if another point is within a given radius, optionally ignoring Z values
+		/// </summary>
+		/// <param name="point">Target point</param>
+		/// <param name="radius">Radius</param>
 		/// <param name="ignoreZ">ignore Z</param>
 		/// <returns>True if the point is within the radius, otherwise false</returns>
-        public bool IsWithinRadius( IPoint3D point, int radius, bool ignoreZ )
-        {
-			if ( radius > ushort.MaxValue )
+		public bool IsWithinRadius(IPoint3D point, int radius, bool ignoreZ)
+		{
+			if (radius > ushort.MaxValue)
 			{
-				return GetDistanceTo(point, ignoreZ ? 0.0 : 1.0 ) <= radius;
+				return GetDistanceTo(point, ignoreZ ? 0.0 : 1.0) <= radius;
 			}
 
-			uint rsquared = (uint)radius * (uint)radius;
+			uint rsquared = (uint) radius*(uint) radius;
 
-			int dx = this.X - point.X;
+			int dx = X - point.X;
 
-			long dist = ( (long)dx ) * dx;
+			long dist = ((long) dx)*dx;
 
-			if ( dist > rsquared )
+			if (dist > rsquared)
 			{
 				return false;
 			}
 
-			int dy = this.Y - point.Y;
+			int dy = Y - point.Y;
 
-			dist += ( (long)dy ) * dy;
+			dist += ((long) dy)*dy;
 
-			if ( dist > rsquared )
+			if (dist > rsquared)
 			{
 				return false;
 			}
@@ -206,9 +178,9 @@ namespace DOL.GS
 
 			if (!ignoreZ)
 			{
-				int dz = this.Z - point.Z;
+				int dz = Z - point.Z;
 
-				dist += ((long)dz) * dz;
+				dist += ((long) dz)*dz;
 
 				if (dist > rsquared)
 				{
@@ -217,12 +189,6 @@ namespace DOL.GS
 			}
 
 			return true;
-        }
-
-        public override void Clear()
-        {
-            base.Clear();
-            Z = 0;
-        }
+		}
 	}
 }

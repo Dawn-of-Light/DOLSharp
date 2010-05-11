@@ -144,7 +144,7 @@ namespace DOL.GS.Quests.Hibernia
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lady Legada", eRealm.None);
 			if (npcs.Length == 0)
 			{
-				//if (log.IsWarnEnabled) log.Warn("Could not find Lady Felin, creating her ...");
+				//if (Log.IsWarnEnabled) Log.Warn("Could not find Lady Felin, creating her ...");
 				ladyLegada = new GameNPC();
 				ladyLegada.Model = 679;
 				ladyLegada.Name = "Lady Legada";

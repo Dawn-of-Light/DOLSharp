@@ -129,7 +129,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (c2 == 0 && c3 == 0x05000000 && c4 == 0xF4000000)
 			{
 				loggerUsing = true;
-				log.Warn("logger detected (" + username + ")");
+				Log.Warn("logger detected (" + username + ")");
 			}*/
 
 			// check server status
@@ -320,7 +320,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								GameServer.Database.AddObject(playerAccount);
 
-								// log account creation
+								// Log account creation
 								AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountCreate, "", userName);
 							}
 							else
@@ -349,7 +349,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								client.Out.SendLoginDenied(eLoginError.WrongPassword);
 
-								// log failure
+								// Log failure
 								AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountFailedLogin, "", userName);
 
 								GameServer.Instance.Disconnect(client);
@@ -388,7 +388,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Out.SendLoginGranted();
 					client.ClientState = GameClient.eClientState.Connecting;
 
-					// log entry
+					// Log entry
 					AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountSuccessfulLogin, "", userName);
 				}
 			}
