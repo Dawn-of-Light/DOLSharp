@@ -157,7 +157,7 @@ namespace DOL.GS
 
 		public override string GetOwner(GamePlayer player)
 		{
-			return HouseMgr.GetOwner(CurrentHouse.DatabaseItem);
+			return CurrentHouse.DatabaseItem.OwnerID;
 		}
 
 		/// <summary>

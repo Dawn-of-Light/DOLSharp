@@ -35,40 +35,44 @@ namespace DOL.GS.PacketHandler.Client.v168
 
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
+			// player is null, return
             if (client.Player == null)
                 return 0;
-            GameConsignmentMerchant con = client.Player.ActiveConMerchant;
 
+			// active consignment merchant is null, return
+            GameConsignmentMerchant con = client.Player.ActiveConMerchant;
             if (con == null)
                 return 0;
-            House house = HouseMgr.GetHouse(con.HouseNumber);
 
+			// current house is null, return
+            House house = HouseMgr.GetHouse(con.HouseNumber);
             if (house == null)
                 return 0;
 
-            if (!house.HasOwnerPermissions(client.Player))
+			// make sure player has permissions to withdraw from the consignment merchant
+            if (!house.CanUseConsignmentMerchant(client.Player, ConsignmentPermissions.Withdraw))
             {
                 client.Player.Out.SendMessage("You don't have permission to withdraw money from this merchant!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
                 return 0;
             }
 
-            DBHouseMerchant merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + con.HouseNumber + "'");
+        	var totalConMoney = con.TotalMoney;
 
-            if (merchant.Quantity > 0)
+            if (totalConMoney > 0)
             {
                 if (ConsignmentMoney.UseBP)
                 {
-                    client.Player.Out.SendMessage("You withdraw " + merchant.Quantity.ToString() + " BountyPoints from your Merchant.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
-                    client.Player.BountyPoints += merchant.Quantity;
+					client.Player.Out.SendMessage("You withdraw " + totalConMoney.ToString() + " BountyPoints from your Merchant.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					client.Player.BountyPoints += totalConMoney;
                     client.Player.Out.SendUpdatePoints();
                 }
                 else
                 {
-                    string message = LanguageMgr.GetTranslation(client, "GameMerchant.OnPlayerWithdraw", Money.GetString((long)merchant.Quantity));
-                    client.Player.AddMoney((long)merchant.Quantity, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+					ChatUtil.SendMerchantMessage(client, "GameMerchant.OnPlayerWithdraw", Money.GetString(totalConMoney));
+					client.Player.AddMoney(totalConMoney);
                 }
-                merchant.Quantity = 0;
-                GameServer.Database.SaveObject(merchant);
+
+				con.TotalMoney -= totalConMoney;
             }
 
             return 1;

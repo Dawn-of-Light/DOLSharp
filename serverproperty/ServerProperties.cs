@@ -888,16 +888,16 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("housing","indoor_items_depend_on_size", "If true the max number of allowed House indoor items are set like live (40, 60, 80, 100)", true)]
 		public static bool INDOOR_ITEMS_DEPEND_ON_SIZE;
 
-		[ServerProperty("housing","housing_rent_cottage", "Rent price for a cottage.", 200000L)]
+		[ServerProperty("housing","housing_rent_cottage", "Rent price for a cottage.", 20L * 100L * 100L)] // 20g
 		public static long HOUSING_RENT_COTTAGE;
 
-		[ServerProperty("housing","housing_rent_house", "Rent price for a house.", 350000L)]
+		[ServerProperty("housing","housing_rent_house", "Rent price for a house.", 35L * 100L * 100L)] // 35g
 		public static long HOUSING_RENT_HOUSE;
 
-		[ServerProperty("housing","housing_rent_villa", "Rent price for a villa.", 600000L)]
+		[ServerProperty("housing","housing_rent_villa", "Rent price for a villa.", 60L * 100L * 100L)] // 60g
 		public static long HOUSING_RENT_VILLA;
 
-		[ServerProperty("housing","housing_rent_mansion", "Rent price for a mansion.", 1000000L)]
+		[ServerProperty("housing","housing_rent_mansion", "Rent price for a mansion.", 100L * 100L * 100L)] // 100g
 		public static long HOUSING_RENT_MANSION;
 
 		[ServerProperty("housing","housing_lot_price_start", "Starting lot price before per hour reductions", 95L * 1000L * 100L * 100L)] // 95p

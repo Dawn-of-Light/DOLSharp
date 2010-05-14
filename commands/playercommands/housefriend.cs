@@ -63,7 +63,9 @@ namespace DOL.GS.Commands
 						}
 
 						if (client.Player.CurrentHouse.AddPermission(targetClient.Player, PermissionType.Player, HousingConstants.MinPermissionLevel))
+						{
 							client.Out.SendMessage("You added " + targetClient.Player.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
 						break;
 					}
 
@@ -83,7 +85,9 @@ namespace DOL.GS.Commands
                         }
 
 						if (client.Player.CurrentHouse.AddPermission(targetClient.Player, PermissionType.Account, HousingConstants.MinPermissionLevel))
-                            client.Out.SendMessage("You added " + targetClient.Player.Name + "'s Account.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						{
+							client.Out.SendMessage("You added " + targetClient.Player.Name + "'s account.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
                         break;
                     }
 
@@ -95,19 +99,23 @@ namespace DOL.GS.Commands
                         Guild targetGuild = GuildMgr.GetGuildByName(args[2]);
                         if (targetGuild == null)
                         {
-                            client.Out.SendMessage("A Guild with that name was not found. Don't forget to put longer names in quotes eg: \"My Guild\".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            client.Out.SendMessage("A guild with that name was not found. Don't forget to put longer names in quotes eg: \"My Guild\".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             return;
                         }
 
 						if (client.Player.CurrentHouse.AddPermission(targetGuild.Name, PermissionType.Guild, HousingConstants.MinPermissionLevel))
-                            client.Out.SendMessage("You added " + targetGuild.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						{
+							client.Out.SendMessage("You added " + targetGuild.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
                         break;
                     
                     }
 				case "all":
 					{
 						if (client.Player.CurrentHouse.AddPermission("All", PermissionType.All, HousingConstants.MinPermissionLevel))
-							client.Out.SendMessage("You added Everybody !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						{
+							client.Out.SendMessage("You added everybody!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
 						break;
 					}
                 default:
