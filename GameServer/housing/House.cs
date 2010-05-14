@@ -35,7 +35,7 @@ namespace DOL.GS.Housing
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private readonly DBHouse _databaseItem;
-		private readonly DBHousePermissions[] _houseAccess;
+		private readonly Dictionary<int, DBHousePermissions> _houseAccess;
 		private GameConsignmentMerchant _consignment;
 
 		#region Properties
@@ -191,9 +191,9 @@ namespace DOL.GS.Housing
 			get { return _databaseItem; }
 		}
 
-		public List<DBHouseCharsXPerms> CharsPermissions { get; private set; }
+		public List<DBHouseCharsXPerms> HousePermissions { get; private set; }
 
-		public DBHousePermissions[] HouseAccess
+		public Dictionary<int, DBHousePermissions> PermissionLevels
 		{
 			get { return _houseAccess; }
 		}
@@ -261,11 +261,11 @@ namespace DOL.GS.Housing
 		public House(DBHouse house)
 		{
 			_databaseItem = house;
-			_houseAccess = new DBHousePermissions[HousingConstants.MaxPermissionLevel + 1]; // for one-based indexing
+			_houseAccess = new Dictionary<int, DBHousePermissions>();
 			IndoorItems = new Dictionary<int, IndoorItem>();
 			OutdoorItems = new Dictionary<int, OutdoorItem>();
 			HousepointItems = new Dictionary<uint, DBHousepointItem>();
-			CharsPermissions = new List<DBHouseCharsXPerms>();
+			HousePermissions = new List<DBHouseCharsXPerms>();
 		}
 
 		/// <summary>
@@ -543,7 +543,7 @@ namespace DOL.GS.Housing
 				return true;
 			}
 
-			Log.Error("HOUSING: HouseHookPointOffset exceeds array size.  Model " + o.Model + " hookpoint " + o.Hookpoint);
+			Log.Error("[Housing]: HouseHookPointOffset exceeds array size.  Model " + o.Model + ", hookpoint " + o.Hookpoint);
 
 			return false;
 		}
@@ -660,7 +660,7 @@ namespace DOL.GS.Housing
 
 						if (hNPC == null)
 						{
-							HouseMgr.Logger.Error("Can't create instance of type: " + npt.ClassType);
+							HouseMgr.Log.Error("[Housing] Can't create instance of type: " + npt.ClassType);
 							return null;
 						}
 
@@ -1019,7 +1019,7 @@ namespace DOL.GS.Housing
 			string targetName = permType == PermissionType.Account ? player.Client.Account.Name : player.Name;
 
 			//  check to make sure an existing mapping doesn't exist.
-			foreach (DBHouseCharsXPerms perm in CharsPermissions)
+			foreach (DBHouseCharsXPerms perm in HousePermissions)
 			{
 				// fast expression to evaluate to match appropriate permissions
 				if (perm.PermissionType == (int)permType)
@@ -1031,30 +1031,22 @@ namespace DOL.GS.Housing
 			}
 
 			// no matching permissions, create a new one and add it.
-			var housePermission = new DBHouseCharsXPerms(targetName, player.Name, permLevel, (int)permType);
+			var housePermission = new DBHouseCharsXPerms(HouseNumber, targetName, player.Name, permLevel, (int)permType);
 			GameServer.Database.AddObject(housePermission);
 
 			// add it to our list
-			CharsPermissions.Add(housePermission);
+			HousePermissions.Add(housePermission);
+
+			// sort permissions by creation date, oldest to newest
+			HousePermissions.Sort((a, b) => a.CreationTime.CompareTo(b.CreationTime));
 
 			return true;
 		}
 
 		public bool AddPermission(string targetName, PermissionType permType, int permLevel)
 		{
-			// find an empty slot.
-			int slot = 0;
-			foreach (DBHouseCharsXPerms pe in CharsPermissions)
-			{
-				// found an empty slot, break out
-				if (pe.Slot != slot)
-					break;
-
-				slot++;
-			}
-
 			//  check to make sure an existing mapping doesn't exist.
-			foreach (DBHouseCharsXPerms perm in CharsPermissions)
+			foreach (DBHouseCharsXPerms perm in HousePermissions)
 			{
 				// fast expression to evaluate to match appropriate permissions
 				if (perm.PermissionType == (int)permType)
@@ -1066,90 +1058,47 @@ namespace DOL.GS.Housing
 			}
 
 			// no matching permissions, create a new one and add it.
-			var housePermission = new DBHouseCharsXPerms(targetName, targetName, permLevel, (int)permType);
+			var housePermission = new DBHouseCharsXPerms(HouseNumber, targetName, targetName, permLevel, (int)permType);
 			GameServer.Database.AddObject(housePermission);
 
 			// add it to our list
-			CharsPermissions.Add(housePermission);
-			CharsPermissions.Sort((a, b) => a.Slot == b.Slot ? 0 : a.Slot - b.Slot);
+			HousePermissions.Add(housePermission);
+
+			// sort permissions by creation date, oldest to newest
+			HousePermissions.Sort((a, b) => a.CreationTime.CompareTo(b.CreationTime));
 
 			return true;
 		}
 
-		public void RemovePermission(string targetName)
-		{
-			DBHouseCharsXPerms matchedPerm = null;
-			bool foundMatch = false;
-
-			foreach (DBHouseCharsXPerms perm in CharsPermissions)
-			{
-				if (perm.TargetName == targetName)
-				{
-					// we found a match, but make sure we didn't find a duplicate
-					if (foundMatch)
-					{
-						// we found a duplicate, no bueno. set to false and break out.
-						foundMatch = false;
-						break;
-					}
-
-					// found a match, so mark it and grab the matched permission
-					foundMatch = true;
-					matchedPerm = perm;
-				}
-			}
-
-			// no match? return.
-			if (!foundMatch)
-				return;
-
-			// remove the permission and delete it from the database
-			CharsPermissions.Remove(matchedPerm);
-			GameServer.Database.DeleteObject(matchedPerm);
-		}
-
 		public void RemovePermission(int slot)
 		{
-			DBHouseCharsXPerms matchedPerm = null;
-			bool foundMatch = false;
+			// make sure slot is in range
+			if(slot < 0 || slot > HousePermissions.Count - 1)
+				return;
 
-			foreach (DBHouseCharsXPerms perm in CharsPermissions)
-			{
-				if (perm.Slot == slot)
-				{
-					// we found a match, but make sure we didn't find a duplicate
-					if (foundMatch)
-					{
-						// we found a duplicate, no bueno. set to false and break out.
-						foundMatch = false;
-						break;
-					}
-
-					// found a match, so mark it and grab the matched permission
-					foundMatch = true;
-					matchedPerm = perm;
-				}
-			}
-
-			// no match? return.
-			if (!foundMatch)
+			// grab the permission
+			var matchedPerm = HousePermissions[slot];
+			if (matchedPerm == null)
 				return;
 
 			// remove the permission and delete it from the database
-			CharsPermissions.Remove(matchedPerm);
+			HousePermissions.Remove(matchedPerm);
 			GameServer.Database.DeleteObject(matchedPerm);
 		}
 
-		public void AdjustPermissionSlot(int permSlot, int newPermLevel)
+		public void AdjustPermissionSlot(int slot, int newPermLevel)
 		{
-			// get the permission based on the given slot
-			DBHouseCharsXPerms permission = CharsPermissions.Where(perm => perm.Slot == permSlot).FirstOrDefault();
+			// make sure slot is in range
+			if (slot < 0 || slot > HousePermissions.Count - 1)
+				return;
 
+			// grab the permission
+			var permission = HousePermissions[slot];
 			if (permission == null)
 				return;
 
 			// check for proper permission level range
-			if (newPermLevel < 1 || newPermLevel > HouseAccess.Length - 1)
+			if (newPermLevel < HousingConstants.MinPermissionLevel || newPermLevel > HousingConstants.MaxPermissionLevel)
 				return;
 
 			// update the permission level
@@ -1170,7 +1119,7 @@ namespace DOL.GS.Housing
 				return null;
 
 			// try character permissions first
-			IEnumerable<DBHouseCharsXPerms> charPermissions = from cp in CharsPermissions
+			IEnumerable<DBHouseCharsXPerms> charPermissions = from cp in HousePermissions
 															  where
 																cp.TargetName == player.Name &&
 																cp.PermissionType == (int)PermissionType.Player
@@ -1180,7 +1129,7 @@ namespace DOL.GS.Housing
 				return charPermissions.First();
 
 			// try account permissions next
-			IEnumerable<DBHouseCharsXPerms> acctPermissions = from cp in CharsPermissions
+			IEnumerable<DBHouseCharsXPerms> acctPermissions = from cp in HousePermissions
 															  where
 																cp.TargetName == player.Client.Account.Name &&
 																cp.PermissionType == (int)PermissionType.Account
@@ -1192,7 +1141,7 @@ namespace DOL.GS.Housing
 			if (player.Guild != null)
 			{
 				// try guild permissions next
-				IEnumerable<DBHouseCharsXPerms> guildPermissions = from cp in CharsPermissions
+				IEnumerable<DBHouseCharsXPerms> guildPermissions = from cp in HousePermissions
 																   where
 																	player.Guild.Name == cp.TargetName &&
 																	cp.PermissionType == (int)PermissionType.Guild
@@ -1203,7 +1152,7 @@ namespace DOL.GS.Housing
 			}
 
 			// look for the catch-all permissions last
-			IEnumerable<DBHouseCharsXPerms> allPermissions = from cp in CharsPermissions
+			IEnumerable<DBHouseCharsXPerms> allPermissions = from cp in HousePermissions
 															 where cp.TargetName == "All"
 															 select cp;
 
@@ -1259,12 +1208,10 @@ namespace DOL.GS.Housing
 
 		private DBHousePermissions GetPermissionLevel(int permissionLevel)
 		{
-			// make sure they are in the bounds of our access list
-			if (permissionLevel < 0 || permissionLevel > HouseAccess.Length - 1)
-				return null;
+			DBHousePermissions permissions;
+			PermissionLevels.TryGetValue(permissionLevel, out permissions);
 
-			// return the given permissions
-			return HouseAccess[permissionLevel];
+			return permissions;
 		}
 
 		public bool HasOwnerPermissions(GamePlayer player)
@@ -1484,14 +1431,14 @@ namespace DOL.GS.Housing
 				DBHouseCharsXPerms d in GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = '" + HouseNumber + "'")
 				)
 			{
-				CharsPermissions.Add(d);
+				HousePermissions.Add(d);
 			}
 
 			foreach (
 				DBHousePermissions dbperm in
 					GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = '" + HouseNumber + "'"))
 			{
-				HouseAccess[dbperm.PermissionLevel] = dbperm;
+				PermissionLevels[dbperm.PermissionLevel] = dbperm;
 			}
 
 			foreach (
@@ -1515,8 +1462,8 @@ namespace DOL.GS.Housing
 				HousepointItems[item.Position] = item;
 			}
 
-			// extra step, sort character permissions by slot, low to high.
-			CharsPermissions.Sort((a, b) => a.Slot == b.Slot ? 0 : a.Slot - b.Slot);
+			// sort character permissions by creation time, oldest to newest
+			HousePermissions.Sort((a, b) => a.CreationTime.CompareTo(b.CreationTime));
 		}
 
 		#endregion

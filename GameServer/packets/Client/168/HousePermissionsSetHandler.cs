@@ -32,6 +32,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int unk1 = packet.ReadByte();
 			ushort housenumber = packet.ReadShort();
 
+			// make sure permission level is within bounds
+			if (level < HousingConstants.MinPermissionLevel || level > HousingConstants.MaxPermissionLevel)
+				return 1;
+
 			// house is null, return
 			var house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
@@ -46,7 +50,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 1;
 
 			// read in the permission values
-			DBHousePermissions permission = house.HouseAccess[level];
+			DBHousePermissions permission = house.PermissionLevels[level];
+
 			permission.CanEnterHouse = (packet.ReadByte() != 0);
 			permission.Vault1 = (byte) packet.ReadByte();
 			permission.Vault2 = (byte) packet.ReadByte();

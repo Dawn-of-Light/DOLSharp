@@ -30,7 +30,6 @@ namespace DOL.GS.Housing
 		public static MerchantTradeItems HiberniaLotMarkerItems;
 		public static MerchantTradeItems IndoorBindstoneMenuItems;
 		public static MerchantTradeItems IndoorCraftMenuItems;
-
 		public static MerchantTradeItems IndoorMenuItems;
 		public static MerchantTradeItems IndoorNPCMenuItems;
 		public static MerchantTradeItems IndoorShopItems;

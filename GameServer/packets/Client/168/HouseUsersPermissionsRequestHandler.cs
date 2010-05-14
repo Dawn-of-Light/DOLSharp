@@ -30,10 +30,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			int unk1 = packet.ReadByte();
 			int unk2 = packet.ReadByte();
-			ushort housenumber = packet.ReadShort();
+			ushort houseNumber = packet.ReadShort();
 
 			// house is null, return
-			var house = HouseMgr.GetHouse(housenumber);
+			var house = HouseMgr.GetHouse(houseNumber);
 			if (house == null)
 				return 1;
 
@@ -45,23 +45,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel <= 1)
 				return 1;
 
-			var pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HouseUserPermissions));
-
-			pak.WriteByte((byte) house.CharsPermissions.Count); // Number of permissions
-			pak.WriteByte(0x00); // ?
-			pak.WriteShort(housenumber); // House N°
-
-			foreach (DBHouseCharsXPerms perm in house.CharsPermissions)
-			{
-				pak.WriteByte((byte) perm.Slot); // Slot
-				pak.WriteByte(0x00); // ?
-				pak.WriteByte(0x00); // ?
-				pak.WriteByte((byte) perm.PermissionType); // Type (Guild, Class, Race ...)
-				pak.WriteByte((byte) perm.PermissionLevel); // Level (Friend, Visitor ...)
-				pak.WritePascalString(perm.DisplayName);
-			}
-
-			client.Out.SendTCP(pak);
+			// build the packet
+			client.Out.SendHouseUsersPermissions(house);
 
 			return 1;
 		}
