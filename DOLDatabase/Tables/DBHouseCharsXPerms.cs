@@ -17,6 +17,7 @@
  *
  */
 
+using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
@@ -32,18 +33,20 @@ namespace DOL.Database
 		private string _targetName;
 		private string _displayName;
 		private int _permissionLevel;
-		private int _slot;
 		private int _permissionType;
+		private DateTime _creationTime;
 
 		public DBHouseCharsXPerms()
 		{}
 
-		public DBHouseCharsXPerms(string targetName, string displayName, int permissionLevel, int permissionType)
+		public DBHouseCharsXPerms(int houseNumber, string targetName, string displayName, int permissionLevel, int permissionType)
 		{
+			_houseNumber = houseNumber;
 			_targetName = targetName;
 			_displayName = displayName;
 			_permissionLevel = permissionLevel;
 			_permissionType = permissionType;
+			_creationTime = DateTime.Now;
 		}
 
 		/// <summary>
@@ -121,16 +124,16 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Gets or sets the slot that this mapping is displayed in when the house owner sees the list of all mappings.
+		/// Gets or sets the the time this mapping was created.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public int Slot
+		public DateTime CreationTime
 		{
-			get { return _slot; }
-			set
+			get { return _creationTime; }
+			set 
 			{
 				Dirty = true;
-				_slot = value;
+				_creationTime = value;
 			}
 		}
 	}

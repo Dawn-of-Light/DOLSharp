@@ -19,326 +19,392 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using DOL.Database;
-using DOL.Language;
 using DOL.GS.PacketHandler;
-using DOL.GS.Housing;
+using DOL.GS.ServerProperties;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Housing
 {
 	public class HouseMgr
 	{
-		public static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public const int MAXHOUSES = 2000;
-
-		protected const int RENT_TIMER_INTERVAL = 1000 * 60 * 60 * 2;  // check every 2 hours
-
-		private static Timer CheckRentTimer = null;
-		private static Hashtable m_houselists;
-		private static Hashtable m_idlist;
+		private static Timer CheckRentTimer;
+		private static Dictionary<ushort, Dictionary<int, House>> _houseList;
+		private static Dictionary<ushort, int> _idList;
 
 		public static bool Start()
 		{
+			// load hookpoint offsets
 			House.LoadHookpointOffsets();
-			m_houselists = new Hashtable();
-			m_idlist = new Hashtable();
+
+			// initialize the house template manager
+			HouseTemplateMgr.Initialize();
+
+			_houseList = new Dictionary<ushort, Dictionary<int, House>>();
+			_idList = new Dictionary<ushort, int>();
+
 			int regions = 0;
 			foreach (RegionEntry entry in WorldMgr.GetRegionList())
 			{
 				Region reg = WorldMgr.GetRegion(entry.id);
 				if (reg != null && reg.HousingEnabled)
 				{
-					if (!m_houselists.ContainsKey(reg.ID))
-						m_houselists.Add(reg.ID, new Hashtable());
+					if (!_houseList.ContainsKey(reg.ID))
+						_houseList.Add(reg.ID, new Dictionary<int, House>());
 
-					if (!m_idlist.ContainsKey(reg.ID))
-						m_idlist.Add(reg.ID, 0);
+					if (!_idList.ContainsKey(reg.ID))
+						_idList.Add(reg.ID, 0);
 
 					regions++;
 				}
 			}
-			HouseTemplateMgr.Initialize();
 
 			int houses = 0;
 			int lotmarkers = 0;
-			foreach (var house in GameServer.Database.SelectAllObjects<DBHouse>())
+			int id = 0;
+
+			foreach (DBHouse house in GameServer.Database.SelectAllObjects<DBHouse>())
 			{
-				if (!string.IsNullOrEmpty(house.OwnerID))
+				// try and grab the houses for the region of thise house
+				Dictionary<int, House> housesForRegion;
+				_houseList.TryGetValue(house.RegionID, out housesForRegion);
+
+				// if we don't have the given region loaded as a housing zone, skip this house
+				if (housesForRegion == null)
+					continue;
+
+				// if we already loaded this house, that's no bueno, but just skip
+				if (housesForRegion.ContainsKey(house.HouseNumber))
+					continue;
+
+				// if the house actually exists (isn't a lot anymore) then we just load it
+				// from the database as normal
+				if (house.Model != 0)
 				{
-					int id = -1;
-					if ((id = GetUniqueID(house.RegionID)) >= 0)
-					{
-						House newHouse = new House(house);
-						newHouse.UniqueID = id;
-						Hashtable hash = (Hashtable)m_houselists[house.RegionID];
-						if (hash == null) continue;
-						if (hash.ContainsKey(newHouse.HouseNumber)) continue;
+					// create new house object for the given house definition
+					var newHouse = new House(house) { UniqueID = id++ };
 
-                        if (house.Model != 0) // we do not need to do this for lots without a real house
-                            newHouse.LoadFromDatabase();
-                        else //we need to spawn a lot for this house
-                        {
-                            GameLotMarker.SpawnLotMarker(house);
-                            lotmarkers++;
-                        }
+					newHouse.LoadFromDatabase();
 
-						hash.Add(newHouse.HouseNumber, newHouse);
-						houses++;
-					}
-					else
-					{
-						if (Logger.IsWarnEnabled)
-							Logger.Warn("Failed to get a unique id, cant load house! More than " + MAXHOUSES + " houses in region " + house.RegionID + " or region not loaded // housing not enabled?");
-					}
+					// store the house
+					housesForRegion.Add(newHouse.HouseNumber, newHouse);
+					houses++;
 				}
 				else
 				{
-					if (!m_idlist.ContainsKey(house.RegionID)) continue;
+					// we have a lot - need to spawn a lot marker for this one
 					GameLotMarker.SpawnLotMarker(house);
 					lotmarkers++;
 				}
 			}
 
-			if (Logger.IsInfoEnabled)
-				Logger.Info("loaded " + houses + " houses and " + lotmarkers + " lotmarkers in " + regions + " regions!");
+			if (Log.IsInfoEnabled)
+				Log.Info("[Housing] Loaded " + houses + " houses and " + lotmarkers + " lotmarkers in " + regions + " regions!");
 
-			CheckRentTimer = new Timer(new TimerCallback(CheckRents), null, RENT_TIMER_INTERVAL, RENT_TIMER_INTERVAL);
+			// start the timer for checking rents
+			CheckRentTimer = new Timer(CheckRents, null, HousingConstants.RentTimerInterval, HousingConstants.RentTimerInterval);
+
 			return true;
 		}
+
 		public static void Stop()
 		{
 		}
 
-		public static int GetUniqueID(ushort regionid)
+		public static IDictionary<int, House> GetHouses(ushort regionID)
 		{
-			if (m_idlist.ContainsKey(regionid))
-			{
-				int id = (int)m_idlist[regionid];
-				id += 1;
-				m_idlist[regionid] = id;
-				return id;
-			}
+			// try and get the houses for the given region
+			Dictionary<int, House> housesByRegion;
+			_houseList.TryGetValue(regionID, out housesByRegion);
 
-			return -1;
+			return housesByRegion;
 		}
-		public static Hashtable GetHouses(ushort regionid)
-		{
-			Hashtable table = m_houselists[regionid] as Hashtable;
-			if (table == null)
-				table = new Hashtable();
-			return table;
-		}
-		public static House GetHouse(ushort regionid, int housenumber)
-		{
-			Hashtable hash = (Hashtable)m_houselists[regionid];
-			if (hash == null) return null;
 
-			return (House)hash[housenumber];
-		}
-		public static House GetHouse(int housenumber)
+		public static House GetHouse(ushort regionID, int houseNumber)
 		{
-			foreach (Hashtable hash in m_houselists.Values)
-				if (hash.ContainsKey(housenumber))
-					return (House)hash[housenumber];
+			// try and get the houses for the given region
+			Dictionary<int, House> housesByRegion;
+			_houseList.TryGetValue(regionID, out housesByRegion);
+
+			// if we couldn't find houses for the region, return null
+			if (housesByRegion == null)
+				return null;
+
+			// if the house number exists, return the house
+			if (housesByRegion.ContainsKey(houseNumber))
+				return housesByRegion[houseNumber];
+
+			// couldn't find the house, return null
 			return null;
 		}
 
-        public static GameConsignmentMerchant GetConsignmentByHouseNumber(int housenumber)
-        {
-            foreach (Hashtable hash in m_houselists.Values)
-                if (hash.ContainsKey(housenumber))
-                {
-                    House h = (House)hash[housenumber];
-                    if (h.ConsignmentMerchant != null)
-                        return h.ConsignmentMerchant;
-                }
-            return null;
-        }
+		public static House GetHouse(int houseNumber)
+		{
+			// search thru each housing region, and if a house is found with
+			// the given house number, return it
+			foreach (var housingRegion in _houseList.Values)
+			{
+				if (housingRegion.ContainsKey(houseNumber))
+					return housingRegion[houseNumber];
+			}
+
+			// couldn't find the house, return null
+			return null;
+		}
+
+		public static GameConsignmentMerchant GetConsignmentByHouseNumber(int houseNumber)
+		{
+			// search thru each housing region, and if a house is found with
+			// the given house number, return the consignment merchant
+			foreach (var housingRegion in _houseList.Values)
+			{
+				if (housingRegion.ContainsKey(houseNumber))
+					return housingRegion[houseNumber].ConsignmentMerchant;
+			}
+
+			// couldn't find the house, return null
+			return null;
+		}
 
 		public static void AddHouse(House house)
 		{
-			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
-			
-			if (hash == null) 
+			// try and get the houses for the given region
+			Dictionary<int, House> housesByRegion;
+			_houseList.TryGetValue(house.RegionID, out housesByRegion);
+
+			if (housesByRegion == null)
 				return;
 
-            if (!hash.ContainsKey(house.HouseNumber))
-            {
-                hash.Add(house.HouseNumber, house);
-            }
-            else // we have an empty lot in the hash, we need to replace the house object
-            {
-                hash[house.HouseNumber] = house;
-            }
-
-			for (int i = HousingConstants.MinPermissionLevel; i < HousingConstants.MaxPermissionLevel; i++) // we add missing permissions
+			// if the house doesn't exist yet, add it
+			if (!housesByRegion.ContainsKey(house.HouseNumber))
 			{
-				if (house.HouseAccess[i] == null)
-				{
-					var permission = new DBHousePermissions(house.HouseNumber, i);
-
-					house.HouseAccess[i] = permission;
-
-					GameServer.Database.AddObject(permission);
-				}
+				housesByRegion.Add(house.HouseNumber, house);
+			}
+			else
+			{
+				// replace the existing lot with our new house
+				housesByRegion[house.HouseNumber] = house;
 			}
 
+			// create any missing permissions
+			for (int i = HousingConstants.MinPermissionLevel; i < HousingConstants.MaxPermissionLevel + 1; i++)
+			{
+				if(house.PermissionLevels.ContainsKey(i))
+				{
+					var oldPermission = house.PermissionLevels[i];
+					if (oldPermission != null)
+					{
+						GameServer.Database.DeleteObject(oldPermission);
+					}
+				}
+
+				// create a new, blank permission
+				var permission = new DBHousePermissions(house.HouseNumber, i);
+				house.PermissionLevels.Add(i, permission);
+
+				// add the permission to the database
+				GameServer.Database.AddObject(permission);
+			}
+
+			// save the house, broadcast an update
 			house.SaveIntoDatabase();
 			house.SendUpdate();
 		}
 
 		public static void UpgradeHouse(House house, InventoryItem deed)
-        {
-            foreach (GamePlayer player in house.GetAllPlayersInHouse())
-                player.LeaveHouse();
+		{
+			// remove all players from the home before we upgrade it
+			foreach (GamePlayer player in house.GetAllPlayersInHouse())
+			{
+				player.LeaveHouse();
+			}
 
-            #region Remove indoor/outdoor items
+			// remove all indoor items
+			var iobjs = GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = " + house.HouseNumber);
 
-            // Remove all indoor items
-            var iobjs = GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = " + house.HouseNumber);
-            if (iobjs.Count > 0)
-                foreach (var item in iobjs)
-                    GameServer.Database.DeleteObject(item);
+			foreach (DBHouseIndoorItem item in iobjs)
+			{
+				GameServer.Database.DeleteObject(item);
+			}
 
-            // Remove all outdoor items
-            var oobjs = GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = " + house.HouseNumber);
-            if (oobjs.Count > 0)
-                foreach (var item in oobjs)
-                    GameServer.Database.DeleteObject(item);
-            #endregion
+			// remove all outdoor items
+			var oobjs = GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = " + house.HouseNumber);
 
-            #region newmodel
-            int newmodel = 1;
-            switch (deed.Id_nb)
-            {
-                case "alb_cottage_deed":
-                    newmodel = 1;
-                    break;
-                case "alb_house_deed":
-                    newmodel = 2;
-                    break;
-                case "alb_villa_deed":
-                    newmodel = 3;
-                    break;
-                case "alb_mansion_deed":
-                    newmodel = 4;
-                    break;
-                case "mid_cottage_deed":
-                    newmodel = 5;
-                    break;
-                case "mid_house_deed":
-                    newmodel = 6;
-                    break;
-                case "mid_villa_deed":
-                    newmodel = 7;
-                    break;
-                case "mid_mansion_deed":
-                    newmodel = 8;
-                    break;
-                case "hib_cottage_deed":
-                    newmodel = 9;
-                    break;
-                case "hib_house_deed":
-                    newmodel = 10;
-                    break;
-                case "hib_villa_deed":
-                    newmodel = 11;
-                    break;
-                case "hib_mansion_deed":
-                    newmodel = 12;
-                    break;
-            }
-            #endregion
-            house.Model = newmodel;
-            house.SaveIntoDatabase();
-            house.SendUpdate();
+			foreach (DBHouseOutdoorItem item in oobjs)
+			{
+				GameServer.Database.DeleteObject(item);
+			}
 
-            #region consignment merchant
-            var merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + house.HouseNumber + "'");
-            if (merchant != null)
-            {
-                int oldValue = merchant.Quantity;
-                house.RemoveConsignment();
-                house.AddConsignment(oldValue);
-            }
-            #endregion
-        }
+			// figure out the new model to set the house
+			int newmodel = 1;
+			switch (deed.Id_nb)
+			{
+				case "alb_cottage_deed":
+					newmodel = 1;
+					break;
+				case "alb_house_deed":
+					newmodel = 2;
+					break;
+				case "alb_villa_deed":
+					newmodel = 3;
+					break;
+				case "alb_mansion_deed":
+					newmodel = 4;
+					break;
+				case "mid_cottage_deed":
+					newmodel = 5;
+					break;
+				case "mid_house_deed":
+					newmodel = 6;
+					break;
+				case "mid_villa_deed":
+					newmodel = 7;
+					break;
+				case "mid_mansion_deed":
+					newmodel = 8;
+					break;
+				case "hib_cottage_deed":
+					newmodel = 9;
+					break;
+				case "hib_house_deed":
+					newmodel = 10;
+					break;
+				case "hib_villa_deed":
+					newmodel = 11;
+					break;
+				case "hib_mansion_deed":
+					newmodel = 12;
+					break;
+			}
+
+			// change the model of the house
+			house.Model = newmodel;
+
+			// save the house, and broadcast an update
+			house.SaveIntoDatabase();
+			house.SendUpdate();
+
+			// if there is a consignment merchant, we have to readd him since we changed the house
+			var merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + house.HouseNumber + "'");
+			if (merchant != null)
+			{
+				int oldValue = merchant.Quantity;
+				house.RemoveConsignment();
+				house.AddConsignment(oldValue);
+			}
+		}
 
 		public static void RemoveHouse(House house)
 		{
-			Logger.Warn("House " + house.UniqueID + " removed");
-			Hashtable hash = (Hashtable)m_houselists[house.RegionID];
-			if (hash == null) return;
+			// try and get the houses for the given region
+			Dictionary<int, House> housesByRegion;
+			_houseList.TryGetValue(house.RegionID, out housesByRegion);
+
+			if (housesByRegion == null)
+				return;
+
+			// remove all the outside items of the house
 			house.OutdoorItems.Clear();
-			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot((ushort)house.RegionID, house.X, house.Y, house.Z, WorldMgr.OBJ_UPDATE_DISTANCE))
+
+			// remove the house for all nearby players
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(house, WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
 				player.Out.SendRemoveHouse(house);
 				player.Out.SendGarden(house);
-//				player.Out.SendRemoveGarden(house);
-
 			}
-            if (house.DatabaseItem.GuildHouse)
-            {
-                Guild guild = GuildMgr.GetGuildByName(house.DatabaseItem.GuildName);
-                if (guild != null)
-                {
-                    guild.GuildHouseNumber = 0;
-                }
-            }
-			foreach (GamePlayer player in house.GetAllPlayersInHouse())
-				player.LeaveHouse();
 
+			// clear the house number for the guild if this is a guild house
+			if (house.DatabaseItem.GuildHouse)
+			{
+				Guild guild = GuildMgr.GetGuildByName(house.DatabaseItem.GuildName);
+				if (guild != null)
+				{
+					guild.GuildHouseNumber = 0;
+				}
+			}
+
+			// remove all players from the house
+			foreach (GamePlayer player in house.GetAllPlayersInHouse())
+			{
+				player.LeaveHouse();
+			}
+
+			// zero out key values for the house
 			house.OwnerID = "";
 			house.KeptMoney = 0;
 			house.Name = ""; // not null !
 			house.Emblem = 0;
 			house.Model = 0;
-            house.Porch = false;
-            house.DatabaseItem.GuildName = null;
-            house.DatabaseItem.CreationTime = DateTime.Now;
-            house.DatabaseItem.LastPaid = DateTime.MinValue;
-            house.DatabaseItem.GuildHouse = false;            
+			house.Porch = false;
+			house.DatabaseItem.GuildName = null;
+			house.DatabaseItem.CreationTime = DateTime.Now;
+			house.DatabaseItem.LastPaid = DateTime.MinValue;
+			house.DatabaseItem.GuildHouse = false;
 
-            #region Remove indoor/outdoor items & permissions
+			#region Remove indoor/outdoor items and clear permissions
 
-            // Remove all indoor items
-			var iobjs = GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = " + house.HouseNumber);
-            if (iobjs.Count > 0)
-                foreach (var item in iobjs)
-                    GameServer.Database.DeleteObject(item);
+			// Remove all indoor items
+			IList<DBHouseIndoorItem> iobjs =
+				GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = " + house.HouseNumber);
 
-            // Remove all outdoor items
-            var oobjs = GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = " + house.HouseNumber);
-			if (oobjs.Count > 0)
-				foreach (var item in oobjs)
-					GameServer.Database.DeleteObject(item);
-            
-            // Remove all housepoint items
-            var hpobjs = GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = " + house.HouseNumber);
-			if (hpobjs.Count > 0)
-				foreach (var item in hpobjs)
-					GameServer.Database.DeleteObject(item);
+			foreach (DBHouseIndoorItem item in iobjs)
+			{
+				GameServer.Database.DeleteObject(item);
+			}
 
-            // Remove all permissions
-            var pobjs = GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = " + house.HouseNumber);
-			if (pobjs.Count > 0)
-				foreach (var item in pobjs)
-					GameServer.Database.DeleteObject(item);
+			// Remove all outdoor items
+			IList<DBHouseOutdoorItem> oobjs =
+				GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = " + house.HouseNumber);
 
-            // Remove all char x permissions
-            var cpobjs = GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = " + house.HouseNumber);
-			if (cpobjs.Count > 0)
-				foreach (var item in cpobjs)
-					GameServer.Database.DeleteObject(item);
-            #endregion
+			foreach (DBHouseOutdoorItem item in oobjs)
+			{
+				GameServer.Database.DeleteObject(item);
+			}
 
-            house.RemoveConsignment();
-            house.SaveIntoDatabase();
-			hash.Remove(house.HouseNumber);
+			// Remove all housepoint items
+			IList<DBHousepointItem> hpobjs = GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = " + house.HouseNumber);
+
+			foreach (DBHousepointItem item in hpobjs)
+			{
+				GameServer.Database.DeleteObject(item);
+			}
+
+			// Remove all permissions
+			IList<DBHousePermissions> pobjs =
+				GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = " + house.HouseNumber);
+
+			foreach (DBHousePermissions item in pobjs)
+			{
+				GameServer.Database.DeleteObject(item);
+			}
+
+			// Remove all char x permissions
+			IList<DBHouseCharsXPerms> cpobjs =
+				GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = " + house.HouseNumber);
+
+			foreach (DBHouseCharsXPerms item in cpobjs)
+			{
+				GameServer.Database.DeleteObject(item);
+			}
+
+			#endregion
+
+			// remove the consignment merchant
+			house.RemoveConsignment();
+
+			// saved the cleared house in the database
+			house.SaveIntoDatabase();
+
+			// remove the house from the list of houses in the region
+			housesByRegion.Remove(house.HouseNumber);
+
+			// spawn a lot marker for the now-empty lot
 			GameLotMarker.SpawnLotMarker(house.DatabaseItem);
 		}
 
@@ -350,32 +416,36 @@ namespace DOL.GS.Housing
 		/// <returns>True if the player is the owner</returns>
 		public static bool IsOwner(DBHouse house, GamePlayer player)
 		{
-			if (house == null || player == null) 
+			// house and player can't be null
+			if (house == null || player == null)
 				return false;
 
-			if (string.IsNullOrEmpty(house.OwnerID)) 
+			// if owner id isn't set, there is no owner
+			if (string.IsNullOrEmpty(house.OwnerID))
 				return false;
 
-           if (player.Guild != null && house.GuildHouse)
-            {
-                if (player.Guild.Name == house.GuildName && player.Guild.GotAccess(player, eGuildRank.Leader))
-                    return true;
-            }
-            else
-            {
-                foreach (Character c in player.Client.Account.Characters)
-                {
-                    if (house.OwnerID == c.ObjectId)
-                        return true;
-                }
-            }
+			// check if this a guild house, and if the player
+			// 1) belongs to the guild and is 2) a GM in the guild
+			if (player.Guild != null && house.GuildHouse)
+			{
+				if (player.Guild.Name == house.GuildName && player.Guild.GotAccess(player, eGuildRank.Leader))
+					return true;
+			}
+			else
+			{
+				foreach (Character c in player.Client.Account.Characters)
+				{
+					if (house.OwnerID == c.ObjectId)
+						return true;
+				}
+			}
 
 			return false;
 		}
 
 		public static int GetHouseNumberByPlayer(GamePlayer p)
 		{
-			var house = GetHouseByPlayer(p);
+			House house = GetHouseByPlayer(p);
 
 			return house != null ? house.HouseNumber : 0;
 		}
@@ -387,145 +457,188 @@ namespace DOL.GS.Housing
 		/// <returns>The house object</returns>
 		public static House GetHouseByPlayer(GamePlayer p)
 		{
-			foreach (DictionaryEntry regs in m_houselists)
+			// check every house in every region until we find
+			// a house that belongs to this player
+			foreach (var regs in _houseList)
 			{
-				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
+				foreach (var entry in regs.Value)
 				{
-					House house = (House)Entry.Value;
-
-					if (house.OwnerID == null)
-						continue;
+					var house = entry.Value;
 
 					if (house.OwnerID == p.PlayerCharacter.ObjectId)
 						return house;
 				}
 			}
-			return null; // no house
+
+			// didn't find a house that belonged to the player,
+			// so return null
+			return null;
 		}
 
-        /// <summary>
-        /// Gets the guild house object by real owner
-        /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
-        public static House GetGuildHouseByPlayer(GamePlayer p)
-        {
-            foreach (DictionaryEntry regs in m_houselists)
-            {
-                foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
-                {
-                    House house = (House)Entry.Value;
+		/// <summary>
+		/// Gets the guild house object by real owner
+		/// </summary>
+		/// <param name="p"></param>
+		/// <returns></returns>
+		public static House GetGuildHouseByPlayer(GamePlayer p)
+		{
+			// make sure player is in a guild
+			if (p.Guild == null)
+				return null;
 
-                    if (house.OwnerID == null || !house.DatabaseItem.GuildHouse)
-                        continue;
+			// check every house in every region until we find
+			// a house that belongs to the same guild as the player
+			foreach (var regs in _houseList)
+			{
+				foreach (var entry in regs.Value)
+				{
+					var house = entry.Value;
 
-                    if (house.HasOwnerPermissions(p))
-                        return house;
-                }
-            }
-            return null; // no house
-        }
+					if (house.DatabaseItem.GuildName == p.Guild.GuildID)
+						return house;
+				}
+			}
 
-        public static bool IsGuildHouse(House house)
-        {
-            Hashtable hash = (Hashtable)m_houselists[house.RegionID];
-            if (hash == null) return false;
+			// didn't find a house that belonged to the player's guild,
+			// or they aren't in a guild, so return null
+			return null;
+		}
 
-            return house.DatabaseItem.GuildHouse;
-        }
-        public static string GetOwningGuild(House house)
-        {
-            Hashtable hash = (Hashtable)m_houselists[house.RegionID];
-            if (hash == null) return "";
-
-            return house.DatabaseItem.GuildName;
-        }
-        public static void SetGuildHouse(House house, bool guildowns, string owningGuild)
-        {
-            Hashtable hash = (Hashtable)m_houselists[house.RegionID];
-            if (hash == null)
-                return;
-            house.DatabaseItem.Name = owningGuild;
-            house.DatabaseItem.GuildHouse = guildowns;
-            house.DatabaseItem.GuildName = owningGuild;
-        }
-        public static void HouseTransferToGuild(GamePlayer plr)
-        {
-            if (plr.Guild != null && plr.Guild.GuildOwnsHouse)
-                return;
-
-            plr.Out.SendCustomDialog(LanguageMgr.GetTranslation(plr.Client, "Scripts.Player.Housing.TransferToGuild", plr.Guild.Name), new CustomDialogResponse(MakeGuildLot));
-            return;
-        }
-        protected static void MakeGuildLot(GamePlayer player, byte response)
-        {
-            if (response != 0x01) 
+		public static void HouseTransferToGuild(GamePlayer plr)
+		{
+			// player must be in a guild
+			if (plr.Guild == null)
 				return;
 
-            House house = GetHouse((GetHouseNumberByPlayer(player)));
-            house.DatabaseItem.OwnerID = player.Guild.GuildID;
-            player.Guild.GuildHouseNumber=house.HouseNumber;
+			// player's guild can't already have a guild house
+			if (plr.Guild.GuildOwnsHouse)
+				return;
 
-            player.Guild.SendMessageToGuildMembers(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.GuildNowOwns", player.Guild.Name, player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+			// send house xfer prompt to player
+			plr.Out.SendCustomDialog(LanguageMgr.GetTranslation(plr.Client, "Scripts.Player.Housing.TransferToGuild", plr.Guild.Name), MakeGuildLot);
 
-            SetGuildHouse(house, true, player.GuildName);
+			return;
+		}
 
-            player.Guild.SaveIntoDatabase();
-            player.Guild.UpdateGuildWindow();
+		private static void MakeGuildLot(GamePlayer player, byte response)
+		{
+			// user responded no/decline
+			if (response != 0x01)
+				return;
 
-            house.SaveIntoDatabase();
-            house.SendUpdate();
-        }
+			var playerHouse = GetHouse(GetHouseNumberByPlayer(player));
+			var playerGuild = player.Guild;
 
-        public static string GetOwner(DBHouse house)
-        {
-        	return house == null ? null : house.OwnerID;
-        }
+			// double check and make sure this guild isn't null
+			if (playerGuild == null)
+				return;
+
+			// adjust the house to be under guild control
+			playerHouse.DatabaseItem.OwnerID = playerGuild.GuildID;
+			playerHouse.DatabaseItem.Name = playerGuild.Name;
+			playerHouse.DatabaseItem.GuildHouse = true;
+			playerHouse.DatabaseItem.GuildName = playerGuild.Name;
+
+			// adjust guild to reflect their new guild house
+			player.Guild.GuildHouseNumber = playerHouse.HouseNumber;
+
+			// notify guild members of the guild house acquisition
+			player.Guild.SendMessageToGuildMembers(
+				LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.GuildNowOwns", player.Guild.Name, player.Name),
+				eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+
+			// save the guild and broadcast updates
+			player.Guild.SaveIntoDatabase();
+			player.Guild.UpdateGuildWindow();
+
+			// save the house and broadcast updates
+			playerHouse.SaveIntoDatabase();
+			playerHouse.SendUpdate();
+		}
 
 		public static long GetRentByModel(int model)
-        {
-            switch (model % 4)
-            {
-				case 0: return ServerProperties.Properties.HOUSING_RENT_MANSION;
-				case 1: return ServerProperties.Properties.HOUSING_RENT_COTTAGE;
-				case 2: return ServerProperties.Properties.HOUSING_RENT_HOUSE;
-				case 3: return ServerProperties.Properties.HOUSING_RENT_VILLA;
-            }
+		{
+			switch (model % 4)
+			{
+				case 0:
+					return Properties.HOUSING_RENT_MANSION;
+				case 1:
+					return Properties.HOUSING_RENT_COTTAGE;
+				case 2:
+					return Properties.HOUSING_RENT_HOUSE;
+				case 3:
+					return Properties.HOUSING_RENT_VILLA;
+			}
 
 			return 0;
-        }
-        
+		}
+
 		public static void CheckRents(object state)
 		{
-			Logger.Debug("Time to check Rents!");
-			TimeSpan Diff;
-			ArrayList todel = new ArrayList();
+			Log.Debug("[Housing] Starting timed rent check");
 
-			foreach (DictionaryEntry regs in m_houselists)
+			TimeSpan diff;
+			var houseRemovalList = new List<House>();
+
+			foreach (var regs in _houseList)
 			{
-				foreach (DictionaryEntry Entry in (Hashtable)(regs.Value))
+				foreach (var entry in regs.Value)
 				{
-					House house = (House)Entry.Value;
-					if (string.IsNullOrEmpty(house.OwnerID) || house.NoPurge) // Replaced OR by AND to fix table problems due to old method bugs
+					var house = entry.Value;
+
+					// if the house has no owner or is set to not be purged, 
+					// we just skip over it
+					if (string.IsNullOrEmpty(house.OwnerID) || house.NoPurge)
 						continue;
 
-					Diff = DateTime.Now - house.LastPaid;
-					long Rent = GetRentByModel(house.Model);
-					if (Rent > 0L && Diff.Days >= 7)
+					// get the time that rent was last paid for the house
+					diff = DateTime.Now - house.LastPaid;
+
+					// get the amount of rent for the given house
+					long rent = GetRentByModel(house.Model);
+
+					// if the rent isn't free and it's been 7 days or more,
+					// the house needs to pay rent!
+					if (rent > 0L && diff.Days >= 7)
 					{
-						Logger.Debug("House " + house.UniqueID + " must pay !");
-						if (house.KeptMoney >= Rent)
+						long lockboxAmount = house.KeptMoney;
+						long consignmentAmount = 0;
+
+						var consignmentMerchant = house.ConsignmentMerchant;
+						if (consignmentMerchant != null)
 						{
-							house.KeptMoney -= Rent;
+							consignmentAmount = consignmentMerchant.TotalMoney;
+						}
+
+						// try to pull from the lockbox first
+						if (lockboxAmount >= rent)
+						{
+							house.KeptMoney -= rent;
 							house.LastPaid = DateTime.Now;
 							house.SaveIntoDatabase();
 						}
-						else todel.Add(house); //  to permit to delete house and continue the foreach
+						else
+						{
+							long remainingDifference = (rent - lockboxAmount);
+
+							// not enough was in the lockbox.  see if we have the difference
+							// on the consignment merchant
+							if (remainingDifference <= consignmentAmount)
+							{
+								// we have the difference, phew!
+								house.KeptMoney = 0;
+								consignmentMerchant.TotalMoney -= remainingDifference;
+							}
+
+							// house can't afford rent, so we schedule house to be
+							// repossessed.
+							houseRemovalList.Add(house);
+						}
 					}
 				}
 			}
 
-			foreach (House h in todel) // here we remove houses
+			foreach (House h in houseRemovalList) // here we remove houses
 			{
 				RemoveHouse(h);
 			}
@@ -540,12 +653,24 @@ namespace DOL.GS.Housing
 			//a merchant but could be anything eg. Housing Lot Markers etc.
 			switch ((eMerchantWindowType)menu_id)
 			{
-				case eMerchantWindowType.HousingInsideShop: items = HouseTemplateMgr.IndoorShopItems; break;
-				case eMerchantWindowType.HousingOutsideShop: items = HouseTemplateMgr.OutdoorShopItems; break;
-				case eMerchantWindowType.HousingBindstone: items = HouseTemplateMgr.IndoorBindstoneMenuItems; break;
-				case eMerchantWindowType.HousingCrafting: items = HouseTemplateMgr.IndoorCraftMenuItems; break;
-				case eMerchantWindowType.HousingNPC: items = HouseTemplateMgr.IndoorNPCMenuItems; break;
-				case eMerchantWindowType.HousingVault: items = HouseTemplateMgr.IndoorVaultMenuItems; break;
+				case eMerchantWindowType.HousingInsideShop:
+					items = HouseTemplateMgr.IndoorShopItems;
+					break;
+				case eMerchantWindowType.HousingOutsideShop:
+					items = HouseTemplateMgr.OutdoorShopItems;
+					break;
+				case eMerchantWindowType.HousingBindstone:
+					items = HouseTemplateMgr.IndoorBindstoneMenuItems;
+					break;
+				case eMerchantWindowType.HousingCrafting:
+					items = HouseTemplateMgr.IndoorCraftMenuItems;
+					break;
+				case eMerchantWindowType.HousingNPC:
+					items = HouseTemplateMgr.IndoorNPCMenuItems;
+					break;
+				case eMerchantWindowType.HousingVault:
+					items = HouseTemplateMgr.IndoorVaultMenuItems;
+					break;
 			}
 
 			GameMerchant.OnPlayerBuy(gamePlayer, item_slot, item_count, items);
@@ -557,7 +682,7 @@ namespace DOL.GS.Housing
 		/// <returns>array of house</returns>
 		public static IEnumerable getHousesCloseToSpot(ushort regionid, int x, int y, int radius)
 		{
-			ArrayList myhouses = new ArrayList();
+			var myhouses = new ArrayList();
 			int radiussqrt = radius * radius;
 			foreach (House house in GetHouses(regionid).Values)
 			{
@@ -572,6 +697,5 @@ namespace DOL.GS.Housing
 			}
 			return myhouses;
 		}
-
 	}
 }

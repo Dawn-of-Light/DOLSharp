@@ -44,7 +44,37 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 1;
 
 			// send out the house permissions
-			client.Out.SendHousePermissions(house);
+			using (var pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HousingPersmissions)))
+			{
+				pak.WriteByte(HousingConstants.MaxPermissionLevel); // number of permissions ?
+				pak.WriteByte(0x00); // unknown
+				pak.WriteShort((ushort)house.HouseNumber);
+
+				foreach (var entry in house.PermissionLevels)
+				{
+					var level = entry.Key;
+					var permission = entry.Value;
+
+					pak.WriteByte((byte)level);
+					pak.WriteByte(permission.CanEnterHouse ? (byte)1 : (byte)0);
+					pak.WriteByte(permission.Vault1);
+					pak.WriteByte(permission.Vault2);
+					pak.WriteByte(permission.Vault3);
+					pak.WriteByte(permission.Vault4);
+					pak.WriteByte(permission.CanChangeExternalAppearance ? (byte)1 : (byte)0);
+					pak.WriteByte(permission.ChangeInterior);
+					pak.WriteByte(permission.ChangeGarden);
+					pak.WriteByte(permission.CanBanish ? (byte)1 : (byte)0);
+					pak.WriteByte(permission.CanUseMerchants ? (byte)1 : (byte)0);
+					pak.WriteByte(permission.CanUseTools ? (byte)1 : (byte)0);
+					pak.WriteByte(permission.CanBindInHouse ? (byte)1 : (byte)0);
+					pak.WriteByte(permission.ConsignmentMerchant);
+					pak.WriteByte(permission.CanPayRent ? (byte)1 : (byte)0);
+					pak.WriteByte(0x00); // ??
+				}
+
+				client.Out.SendTCP(pak);
+			}
 
 			return 1;
 		}

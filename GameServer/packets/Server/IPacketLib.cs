@@ -569,6 +569,7 @@ namespace DOL.GS.PacketHandler
 		void SendWarmapUpdate(ICollection<AbstractGameKeep> list);
 		void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups);
 		void SendWarmapBonuses();
+
 		//housing
 		void SendHouse(House house);
 		void SendHouseOccupied(House house, bool flagHouseOccuped);
@@ -579,13 +580,13 @@ namespace DOL.GS.PacketHandler
 		void SendExitHouse(House house);
 		void SendFurniture(House house);
 		void SendFurniture(House house, int i);
-		void SendHousePermissions(House house);
 		void SendHousePayRentDialog(string title);
 		void SendToggleHousePoints(House house);
 		void SendRentReminder(House house);
 		void SendMarketExplorerWindow(IList<InventoryItem> items, byte page, byte maxpage);
 		void SendMarketExplorerWindow();
-		void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper);
+		void SendConsignmentMerchantMoney(long copper);
+		void SendHouseUsersPermissions(House house);
 
 		void SendStarterHelp();
         void SendPlayerFreeLevelUpdate();

@@ -2938,38 +2938,6 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendHousePermissions(House house)
-		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HousingPersmissions)))
-			{
-				pak.WriteByte(10); // number of permissions ?
-				pak.WriteByte(0x00); // ??
-				pak.WriteShort((ushort) house.HouseNumber);
-
-				for (byte i = HousingConstants.MinPermissionLevel; i < HousingConstants.MaxPermissionLevel; i++)
-				{
-					pak.WriteByte(i);
-					pak.WriteByte(house.HouseAccess[i].CanEnterHouse ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].Vault1);
-					pak.WriteByte(house.HouseAccess[i].Vault2);
-					pak.WriteByte(house.HouseAccess[i].Vault3);
-					pak.WriteByte(house.HouseAccess[i].Vault4);
-					pak.WriteByte(house.HouseAccess[i].CanChangeExternalAppearance ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].ChangeInterior);
-					pak.WriteByte(house.HouseAccess[i].ChangeGarden);
-					pak.WriteByte(house.HouseAccess[i].CanBanish ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].CanUseMerchants ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].CanUseTools ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].CanBindInHouse ? (byte)1 : (byte)0);
-					pak.WriteByte(house.HouseAccess[i].ConsignmentMerchant);
-					pak.WriteByte(house.HouseAccess[i].CanPayRent ? (byte)1 : (byte)0);
-					pak.WriteByte(0x00); // ??
-				}
-
-				SendTCP(pak);
-			}
-		}
-
 		public virtual void SendHousePayRentDialog(string title)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog)))
@@ -3071,7 +3039,6 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-
 		public virtual void SendToggleHousePoints(House house)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseTogglePoints)))
@@ -3079,6 +3046,33 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteByte(0x04);
 				pak.WriteByte(0x00);
+
+				SendTCP(pak);
+			}
+		}
+
+		public virtual void SendHouseUsersPermissions(House house)
+		{
+			if(house == null)
+				return;
+
+			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseUserPermissions)))
+			{
+				int slotId = 0;
+
+				pak.WriteByte((byte)house.HousePermissions.Count); // number of permissions
+				pak.WriteByte(0x00); // ?
+				pak.WriteShort((ushort)house.HouseNumber); // house number
+
+				foreach (DBHouseCharsXPerms perm in house.HousePermissions)
+				{
+					pak.WriteByte((byte)slotId++); // Slot
+					pak.WriteByte(0x00); // ?
+					pak.WriteByte(0x00); // ?
+					pak.WriteByte((byte)perm.PermissionType); // Type (Guild, Class, Race ...)
+					pak.WriteByte((byte)perm.PermissionLevel); // Level (Friend, Visitor ...)
+					pak.WritePascalString(perm.DisplayName);
+				}
 
 				SendTCP(pak);
 			}
@@ -3556,15 +3550,15 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper)
+		public virtual void SendConsignmentMerchantMoney(long copper)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.ConsignmentMerchantMoney)))
 			{
-				pak.WriteByte(copper);
-				pak.WriteByte(silver);
-				pak.WriteShort(gold);
-				pak.WriteShort(mithril);
-				pak.WriteShort(plat);
+				pak.WriteByte((byte)Money.GetCopper(copper));
+				pak.WriteByte((byte)Money.GetSilver(copper));
+				pak.WriteShort((ushort)Money.GetGold(copper));
+				pak.WriteShort((ushort)Money.GetPlatinum(copper));
+				pak.WriteShort((ushort)Money.GetMithril(copper));
 				SendTCP(pak);
 			}
 		}

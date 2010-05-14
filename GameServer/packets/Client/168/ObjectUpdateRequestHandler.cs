@@ -48,12 +48,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Player.CurrentRegion.HousingEnabled)
 			{
 				if (client.Player.HousingUpdateArray == null)
-					client.Player.HousingUpdateArray = new BitArray(HouseMgr.MAXHOUSES, false);
+					client.Player.HousingUpdateArray = new BitArray(HousingConstants.MaximumHouseCount, false);
 
-				Hashtable houses = (Hashtable)HouseMgr.GetHouses(client.Player.CurrentRegionID);
+				var houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
 				if (houses != null)
 				{
-					foreach (House house in HouseMgr.GetHouses(client.Player.CurrentRegionID).Values)
+					foreach (House house in houses.Values)
 					{
 						if (client.Player.IsWithinRadius( house, HousingConstants.HouseViewingDistance ))
 						{
@@ -64,7 +64,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 
                                 var list = house.GetAllPlayersInHouse();
                                 if (list.Count > 0)
-                                    client.Out.SendHouseOccupied(house, true);
+                                {
+                                	client.Out.SendHouseOccupied(house, true);
+                                }
 
 								client.Player.HousingUpdateArray[house.UniqueID] = true;
 							}

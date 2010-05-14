@@ -816,13 +816,13 @@ namespace DOL.GS
 									{
 										if (client.Player.HousingUpdateArray == null)
 										{
-											client.Player.HousingUpdateArray = new BitArray(HouseMgr.MAXHOUSES, false);
+											client.Player.HousingUpdateArray = new BitArray(HousingConstants.MaximumHouseCount, false);
 										}
 
-										Hashtable houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
+										var houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
 										if (houses != null)
 										{
-											foreach (House house in HouseMgr.GetHouses(client.Player.CurrentRegionID).Values)
+											foreach (House house in houses.Values)
 											{
 												if (client.Player.IsWithinRadius(house, HousingConstants.HouseViewingDistance))
 												{

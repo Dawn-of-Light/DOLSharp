@@ -203,6 +203,7 @@ namespace DOLGameServerConsole
 		public void SendGarden(House house) { }
 		public void SendEnterHouse(House house) { }
 		public void SendExitHouse(House house) { }
+		public void SendHouseUsersPermissions(House house) { }
 		public void SendFurniture(House house) { }
 		public void SendFurniture(House house, int i) { }
 		public void SendToggleHousePoints(House house) { }
@@ -229,7 +230,7 @@ namespace DOLGameServerConsole
 		public void SendXFireInfo(byte flag) { }
 		public void SendMarketExplorerWindow() { }
 		public void SendMarketExplorerWindow(IList<InventoryItem> items, byte page, byte maxpage) { }
-		public void SendConsignmentMerchantMoney(ushort mithril, ushort plat, ushort gold, byte silver, byte copper) { }
+		public void SendConsignmentMerchantMoney(long copper) { }
         public void SendMinotaurRelicMapRemove(byte id) { }
         public void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z) { }
         public virtual void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag) { }
