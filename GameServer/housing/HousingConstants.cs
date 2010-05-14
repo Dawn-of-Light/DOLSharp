@@ -53,18 +53,26 @@ namespace DOL.GS.Housing
 	public enum ConsignmentPermissions : byte
 	{
 		AddRemove = 0x03,
-		Withdraw = 0x10
+		Withdraw = 0x10,
+		Any = AddRemove | Withdraw
 	}
 
 	public static class HousingConstants
 	{
 		public const string BPsForHouseRent = "BPsForHouseRent";
-		public const int HouseViewingDistance = 10120; //guessed, but i'm sure its > vis dist.
 		public const string HouseForHouseRent = "HouseForHouseRent";
+		public const int HouseViewingDistance = 10120; //guessed, but i'm sure its > vis dist.
 		public const int MaxHookpointLocations = 200;
-		public const string MoneyForHouseRent = "MoneyForHouseRent";
+		public const int MaximumHouseCount = 2500;
 		public const int MaxPermissionLevel = 9;
-		public const int MinPermissionLevel = 0;
+		public const int MinPermissionLevel = 1;
+		public const string MoneyForHouseRent = "MoneyForHouseRent";
+		public const int RentTimerInterval = 1000*60*60*2; // check every 2 hours
+
+		/// <summary>
+		/// Number of items a single house vault can hold.
+		/// </summary>
+		public const int VaultSize = 100;
 
 		/// <summary>
 		/// Multi-dimensional array of consignment positioning primitives.
@@ -74,18 +82,18 @@ namespace DOL.GS.Housing
 		public static readonly float[][] ConsignmentPositioning = new[]
 		                                                          	{
 		                                                          		null,
-		                                                          		new[] {0.55f, 630, 40, 1},		// model 1
-		                                                          		new[] {0.55f, 630, 40, 1},		// model 2
-		                                                          		new[] {-0.55f, 613, 100, 1},	// model 3
-		                                                          		new[] {0.53f, 620, 100, 1},		// model 4
-		                                                          		new[] {-0.47f, 755, 40, 2},		// model 5
-		                                                          		new[] {-0.5f, 630, 40, 2},		// model 6
-		                                                          		new[] {0.48f, 695, 100, 2},		// model 7
-		                                                          		new[] {-0.505f, 680, 100, 2},	// model 8
-		                                                          		new[] {0.475f, 693, 40, 3},		// model 9
-		                                                          		new[] {0.47f, 688, 40, 3},		// model 10
-		                                                          		new[] {-0.65f, 603, 100, 3},	// model 11
-		                                                          		new[] {-0.58f, 638, 100, 3}		// model 12
+		                                                          		new[] {0.55f, 630, 40, 1}, // model 1
+		                                                          		new[] {0.55f, 630, 40, 1}, // model 2
+		                                                          		new[] {-0.55f, 613, 100, 1}, // model 3
+		                                                          		new[] {0.53f, 620, 100, 1}, // model 4
+		                                                          		new[] {-0.47f, 755, 40, 2}, // model 5
+		                                                          		new[] {-0.5f, 630, 40, 2}, // model 6
+		                                                          		new[] {0.48f, 695, 100, 2}, // model 7
+		                                                          		new[] {-0.505f, 680, 100, 2}, // model 8
+		                                                          		new[] {0.475f, 693, 40, 3}, // model 9
+		                                                          		new[] {0.47f, 688, 40, 3}, // model 10
+		                                                          		new[] {-0.65f, 603, 100, 3}, // model 11
+		                                                          		new[] {-0.58f, 638, 100, 3} // model 12
 		                                                          	};
 
 		/// <summary>
@@ -121,10 +129,5 @@ namespace DOL.GS.Housing
 		                                                            		// MID (model 12)
 		                                                            		new int[MaxHookpointLocations + 1][],
 		                                                            	};
-
-		/// <summary>
-		/// Number of items a single house vault can hold.
-		/// </summary>
-		public const int VaultSize = 100;
 	}
 }

@@ -58,7 +58,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Gets or sets level of the permission.
 		/// </summary>
-		/// <remarks>Since permission levels are hard-coded, this value should never be anything other than 1 thru 9.</remarks>
+		/// <remarks>Since permission levels are hard-coded, this value should never be anything other than 0 thru 9.</remarks>
 		[DataElement(AllowDbNull = false)]
 		public int PermissionLevel
 		{

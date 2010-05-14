@@ -46,6 +46,18 @@ namespace DOL.GS
 			target.Out.SendMessage(translatedMsg, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 		}
 
+		public static void SendMerchantMessage(GameClient target, string message)
+		{
+			target.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+		}
+
+		public static void SendMerchantMessage(GameClient target, string translationID, params object[] args)
+		{
+			var translatedMsg = LanguageMgr.GetTranslation(target, translationID, args);
+
+			target.Out.SendMessage(translatedMsg, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+		}
+
 		public static void SendHelpMessage(GamePlayer target, string message)
 		{
 			target.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);

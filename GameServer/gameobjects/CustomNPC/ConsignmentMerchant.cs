@@ -39,7 +39,9 @@ namespace DOL.GS
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private readonly Dictionary<string, GamePlayer> _observers = new Dictionary<string, GamePlayer>();
+		private readonly object m_moneyLock = new object();
 		private readonly object m_vaultSync = new object();
+		private long m_totalMoney;
 
 		/// <summary>
 		/// First slot in the DB.
@@ -90,8 +92,34 @@ namespace DOL.GS
 			{
 				House house = HouseMgr.GetHouse(CurrentRegionID, HouseNumber);
 				String sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2}",
-				                                HouseMgr.GetOwner(house.DatabaseItem), FirstSlot, LastSlot);
+				                                house.DatabaseItem.OwnerID, FirstSlot, LastSlot);
 				return (InventoryItem[]) (GameServer.Database.SelectObjects<InventoryItem>(sqlWhere));
+			}
+		}
+
+		/// <summary>
+		///  Gets or sets the total amount of money held by this consignment merchant.
+		/// </summary>
+		public long TotalMoney
+		{
+			get
+			{
+				lock (m_moneyLock)
+				{
+					return m_totalMoney;
+				}
+			}
+			set
+			{
+				lock (m_moneyLock)
+				{
+					m_totalMoney = value;
+
+					// update DB entry
+					var merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + HouseNumber + "'");
+					merchant.Quantity += (int) m_totalMoney;
+					GameServer.Database.SaveObject(merchant);
+				}
 			}
 		}
 
@@ -364,7 +392,8 @@ namespace DOL.GS
 					}
 				}
 
-				if (player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == eInventorySlot.Invalid)
+				if (player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) ==
+				    eInventorySlot.Invalid)
 				{
 					ChatUtil.SendSystemMessage(player, "GameMerchant.OnPlayerBuy.NotInventorySpace", null);
 					return;
@@ -381,13 +410,12 @@ namespace DOL.GS
 				{
 					if (player.RemoveMoney(totalValue))
 					{
-						ChatUtil.SendMerchantMessage(player, "GameMerchant.OnPlayerBuy.Bought", fromItem.GetName(1, false), Money.GetString(totalValue));
+						ChatUtil.SendMerchantMessage(player, "GameMerchant.OnPlayerBuy.Bought", fromItem.GetName(1, false),
+						                             Money.GetString(totalValue));
 					}
 				}
 
-				var merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + HouseNumber + "'");
-				merchant.Quantity += orgValue;
-				GameServer.Database.SaveObject(merchant);
+				TotalMoney += orgValue;
 
 				NotifyObservers(MoveItemFromMerchant(player, playerInventory, fromSlot, toSlot));
 			}
@@ -472,19 +500,16 @@ namespace DOL.GS
 			if (h == null)
 				return false;
 
-			if (h.HasOwnerPermissions(player))
+			if (h.CanUseConsignmentMerchant(player, ConsignmentPermissions.Any))
 			{
-				var merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + HouseNumber + "'");
 				player.Out.SendInventoryItemsUpdate(ConInventory, 0x05);
 
-				var amount = (long) merchant.Quantity;
-				player.Out.SendConsignmentMerchantMoney((ushort) Money.GetMithril(amount), (ushort) Money.GetPlatinum(amount),
-				                                        (ushort) Money.GetGold(amount), (byte) Money.GetSilver(amount),
-				                                        (byte) Money.GetCopper(amount));
+				long amount = m_totalMoney;
+				player.Out.SendConsignmentMerchantMoney(amount);
 
 				if (ConsignmentMoney.UseBP)
 				{
-					player.Out.SendMessage("Your Merchant currently holds " + merchant.Quantity + " BountyPoints.",
+					player.Out.SendMessage("Your Merchant currently holds " + amount + " BountyPoints.",
 					                       eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 				}
 			}
@@ -507,7 +532,7 @@ namespace DOL.GS
 						template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 310, 81);
 						template.AddNPCEquipment(eInventorySlot.FeetArmor, 1301);
 						template.AddNPCEquipment(eInventorySlot.LegsArmor, 1312);
-						
+
 						if (Util.Chance(50))
 						{
 							template.AddNPCEquipment(eInventorySlot.TorsoArmor, 1005, 67);
@@ -526,7 +551,7 @@ namespace DOL.GS
 						template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 321, 81);
 						template.AddNPCEquipment(eInventorySlot.FeetArmor, 1301);
 						template.AddNPCEquipment(eInventorySlot.LegsArmor, 1303);
-						
+
 						if (Util.Chance(50))
 						{
 							template.AddNPCEquipment(eInventorySlot.TorsoArmor, 1300);
@@ -544,7 +569,7 @@ namespace DOL.GS
 						Model = 335;
 						template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 457, 81);
 						template.AddNPCEquipment(eInventorySlot.FeetArmor, 1333);
-						
+
 						if (Util.Chance(50))
 						{
 							template.AddNPCEquipment(eInventorySlot.TorsoArmor, 1336);
