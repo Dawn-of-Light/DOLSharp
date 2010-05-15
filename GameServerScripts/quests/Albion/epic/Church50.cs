@@ -957,7 +957,6 @@ namespace DOL.GS.Quests.Albion
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == Roben.Name && gArgs.Item.Id_nb == statue_of_arawn.Id_nb)
 				{
-					RemoveItem(player, statue_of_arawn, true);
 					Roben.SayTo(player, "You have earned this Epic Armor, wear it with honor!");
 
 					FinishQuest();
@@ -975,29 +974,38 @@ namespace DOL.GS.Quests.Albion
 
 		public override void FinishQuest()
 		{
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-
-			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Cleric)
+			if (m_questPlayer.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
-				GiveItem(m_questPlayer, ClericEpicBoots);
-				GiveItem(m_questPlayer, ClericEpicArms);
-				GiveItem(m_questPlayer, ClericEpicGloves);
-				GiveItem(m_questPlayer, ClericEpicHelm);
-				GiveItem(m_questPlayer, ClericEpicVest);
-				GiveItem(m_questPlayer, ClericEpicLegs);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Paladin)
-			{
-				GiveItem(m_questPlayer, PaladinEpicBoots);
-				GiveItem(m_questPlayer, PaladinEpicArms);
-				GiveItem(m_questPlayer, PaladinEpicGloves);
-				GiveItem(m_questPlayer, PaladinEpicHelm);
-				GiveItem(m_questPlayer, PaladinEpicVest);
-				GiveItem(m_questPlayer, PaladinEpicLegs);
-			}
+				RemoveItem(m_questPlayer, statue_of_arawn, true);
 
-			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
-			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+				base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+				if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Cleric)
+				{
+					GiveItem(m_questPlayer, ClericEpicBoots);
+					GiveItem(m_questPlayer, ClericEpicArms);
+					GiveItem(m_questPlayer, ClericEpicGloves);
+					GiveItem(m_questPlayer, ClericEpicHelm);
+					GiveItem(m_questPlayer, ClericEpicVest);
+					GiveItem(m_questPlayer, ClericEpicLegs);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Paladin)
+				{
+					GiveItem(m_questPlayer, PaladinEpicBoots);
+					GiveItem(m_questPlayer, PaladinEpicArms);
+					GiveItem(m_questPlayer, PaladinEpicGloves);
+					GiveItem(m_questPlayer, PaladinEpicHelm);
+					GiveItem(m_questPlayer, PaladinEpicVest);
+					GiveItem(m_questPlayer, PaladinEpicLegs);
+				}
+
+				m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
+				//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+			}
+			else
+			{
+				m_questPlayer.Out.SendMessage("You do not have enough free space in your inventory!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		#region Allakhazam Epic Source
