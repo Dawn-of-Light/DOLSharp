@@ -231,8 +231,23 @@ namespace DOL.GS.Spells
 			{
 				Caster.Mana -= Spell.PulsePower;
 				if (Spell.InstrumentRequirement != 0 || !HasPositiveEffect)
+				{
 					SendEffectAnimation(Caster, 0, true, 1); // pulsing auras or songs
+				}
+
 				StartSpell(m_spellTarget);
+
+				if (m_spell.SubSpellID > 0 && Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "SummonAnimistFnF" && Spell.SpellType != "SummonAnimistPet" && Spell.SpellType != "Grapple")
+				{
+					Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
+					//we need subspell ID to be 0, we don't want spells linking off the subspell
+					if (spell != null && spell.SubSpellID == 0)
+					{
+						ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+						spellhandler.StartSpell(m_spellTarget);
+					}
+				}
+
 			}
 			else
 			{
