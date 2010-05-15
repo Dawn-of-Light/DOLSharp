@@ -791,7 +791,9 @@ namespace DOL.GS.PacketHandler
 
 						// The use of the deprecated Suspend and Resume methods is necessary to get the StackTrace.
 						// Suspend/Resume are not being used for thread synchronization (very bad).
-						// It may be possible to get the StackTrace some other way, but this works for now.
+						// It may be possible to get the StackTrace some other way, but this works for now
+						// So, the related warning is disabled
+						#pragma warning disable 0618
 						thread.Suspend();
 						StackTrace trace;
 						try
@@ -802,7 +804,8 @@ namespace DOL.GS.PacketHandler
 						{
 							thread.Resume();
 						}
-
+						#pragma warning restore 0618
+						
 						builder.Append("Stack for thread from account: ");
 						if (client != null && client.Account != null)
 						{
