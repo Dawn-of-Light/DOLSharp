@@ -1534,55 +1534,62 @@ namespace DOL.GS.Quests.Midgard
 
 		public override void FinishQuest()
 		{
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-
-			switch ((eCharacterClass)m_questPlayer.CharacterClass.ID)
+			if (m_questPlayer.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
-				case eCharacterClass.Spiritmaster:
-					{
-						GiveItem(m_questPlayer, SpiritmasterEpicArms);
-						GiveItem(m_questPlayer, SpiritmasterEpicBoots);
-						GiveItem(m_questPlayer, SpiritmasterEpicGloves);
-						GiveItem(m_questPlayer, SpiritmasterEpicHelm);
-						GiveItem(m_questPlayer, SpiritmasterEpicLegs);
-						GiveItem(m_questPlayer, SpiritmasterEpicVest);
-						break;
-					}
-				case eCharacterClass.Runemaster:
-					{
-						GiveItem(m_questPlayer, RunemasterEpicArms);
-						GiveItem(m_questPlayer, RunemasterEpicBoots);
-						GiveItem(m_questPlayer, RunemasterEpicGloves);
-						GiveItem(m_questPlayer, RunemasterEpicHelm);
-						GiveItem(m_questPlayer, RunemasterEpicLegs);
-						GiveItem(m_questPlayer, RunemasterEpicVest);
-						break;
-					}
-				case eCharacterClass.Bonedancer:
-					{
-						GiveItem(m_questPlayer, BonedancerEpicArms);
-						GiveItem(m_questPlayer, BonedancerEpicBoots);
-						GiveItem(m_questPlayer, BonedancerEpicGloves);
-						GiveItem(m_questPlayer, BonedancerEpicHelm);
-						GiveItem(m_questPlayer, BonedancerEpicLegs);
-						GiveItem(m_questPlayer, BonedancerEpicVest);
-						break;
-					}
-				case eCharacterClass.Warlock:
-					{
-						GiveItem(m_questPlayer, WarlockEpicArms);
-						GiveItem(m_questPlayer, WarlockEpicBoots);
-						GiveItem(m_questPlayer, WarlockEpicGloves);
-						GiveItem(m_questPlayer, WarlockEpicHelm);
-						GiveItem(m_questPlayer, WarlockEpicLegs);
-						GiveItem(m_questPlayer, WarlockEpicVest);
-						break;
-					}
-			}
-			Danica.SayTo(m_questPlayer, "May it serve you well, knowing that you have helped preserve the history of Midgard!");
+				base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
-			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+				switch ((eCharacterClass)m_questPlayer.CharacterClass.ID)
+				{
+					case eCharacterClass.Spiritmaster:
+						{
+							GiveItem(m_questPlayer, SpiritmasterEpicArms);
+							GiveItem(m_questPlayer, SpiritmasterEpicBoots);
+							GiveItem(m_questPlayer, SpiritmasterEpicGloves);
+							GiveItem(m_questPlayer, SpiritmasterEpicHelm);
+							GiveItem(m_questPlayer, SpiritmasterEpicLegs);
+							GiveItem(m_questPlayer, SpiritmasterEpicVest);
+							break;
+						}
+					case eCharacterClass.Runemaster:
+						{
+							GiveItem(m_questPlayer, RunemasterEpicArms);
+							GiveItem(m_questPlayer, RunemasterEpicBoots);
+							GiveItem(m_questPlayer, RunemasterEpicGloves);
+							GiveItem(m_questPlayer, RunemasterEpicHelm);
+							GiveItem(m_questPlayer, RunemasterEpicLegs);
+							GiveItem(m_questPlayer, RunemasterEpicVest);
+							break;
+						}
+					case eCharacterClass.Bonedancer:
+						{
+							GiveItem(m_questPlayer, BonedancerEpicArms);
+							GiveItem(m_questPlayer, BonedancerEpicBoots);
+							GiveItem(m_questPlayer, BonedancerEpicGloves);
+							GiveItem(m_questPlayer, BonedancerEpicHelm);
+							GiveItem(m_questPlayer, BonedancerEpicLegs);
+							GiveItem(m_questPlayer, BonedancerEpicVest);
+							break;
+						}
+					case eCharacterClass.Warlock:
+						{
+							GiveItem(m_questPlayer, WarlockEpicArms);
+							GiveItem(m_questPlayer, WarlockEpicBoots);
+							GiveItem(m_questPlayer, WarlockEpicGloves);
+							GiveItem(m_questPlayer, WarlockEpicHelm);
+							GiveItem(m_questPlayer, WarlockEpicLegs);
+							GiveItem(m_questPlayer, WarlockEpicVest);
+							break;
+						}
+				}
+				Danica.SayTo(m_questPlayer, "May it serve you well, knowing that you have helped preserve the history of Midgard!");
+
+				m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
+				//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+			}
+			else
+			{
+				m_questPlayer.Out.SendMessage("You do not have enough free space in your inventory!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		#region Allakhazam Epic Source

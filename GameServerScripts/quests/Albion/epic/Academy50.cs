@@ -1329,7 +1329,6 @@ namespace DOL.GS.Quests.Albion
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == Ferowl.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
-					RemoveItem(Ferowl, player, sealed_pouch);
 					Ferowl.SayTo(player, "You have earned this Epic Armor, wear it with honor!");
 					FinishQuest();
 					return;
@@ -1346,38 +1345,48 @@ namespace DOL.GS.Quests.Albion
 
 		public override void FinishQuest()
 		{
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+			if (m_questPlayer.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			{
+				RemoveItem(Ferowl, m_questPlayer, sealed_pouch);
 
-			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Minstrel)
-			{
-				GiveItem(m_questPlayer, MinstrelEpicBoots);
-				GiveItem(m_questPlayer, MinstrelEpicHelm);
-				GiveItem(m_questPlayer, MinstrelEpicGloves);
-				GiveItem(m_questPlayer, MinstrelEpicArms);
-				GiveItem(m_questPlayer, MinstrelEpicVest);
-				GiveItem(m_questPlayer, MinstrelEpicLegs);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Wizard)
-			{
-				GiveItem(m_questPlayer, WizardEpicBoots);
-				GiveItem(m_questPlayer, WizardEpicHelm);
-				GiveItem(m_questPlayer, WizardEpicGloves);
-				GiveItem(m_questPlayer, WizardEpicVest);
-				GiveItem(m_questPlayer, WizardEpicArms);
-				GiveItem(m_questPlayer, WizardEpicLegs);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Sorcerer)
-			{
-				GiveItem(m_questPlayer, SorcerorEpicBoots);
-				GiveItem(m_questPlayer, SorcerorEpicHelm);
-				GiveItem(m_questPlayer, SorcerorEpicGloves);
-				GiveItem(m_questPlayer, SorcerorEpicVest);
-				GiveItem(m_questPlayer, SorcerorEpicArms);
-				GiveItem(m_questPlayer, SorcerorEpicLegs);
-			}
+				if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Minstrel)
+				{
+					GiveItem(m_questPlayer, MinstrelEpicBoots);
+					GiveItem(m_questPlayer, MinstrelEpicHelm);
+					GiveItem(m_questPlayer, MinstrelEpicGloves);
+					GiveItem(m_questPlayer, MinstrelEpicArms);
+					GiveItem(m_questPlayer, MinstrelEpicVest);
+					GiveItem(m_questPlayer, MinstrelEpicLegs);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Wizard)
+				{
+					GiveItem(m_questPlayer, WizardEpicBoots);
+					GiveItem(m_questPlayer, WizardEpicHelm);
+					GiveItem(m_questPlayer, WizardEpicGloves);
+					GiveItem(m_questPlayer, WizardEpicVest);
+					GiveItem(m_questPlayer, WizardEpicArms);
+					GiveItem(m_questPlayer, WizardEpicLegs);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Sorcerer)
+				{
+					GiveItem(m_questPlayer, SorcerorEpicBoots);
+					GiveItem(m_questPlayer, SorcerorEpicHelm);
+					GiveItem(m_questPlayer, SorcerorEpicGloves);
+					GiveItem(m_questPlayer, SorcerorEpicVest);
+					GiveItem(m_questPlayer, SorcerorEpicArms);
+					GiveItem(m_questPlayer, SorcerorEpicLegs);
+				}
 
-			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
-			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+				base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+
+				m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
+				//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+			}
+			else
+			{
+				m_questPlayer.Out.SendMessage("You do not have enough free space in your inventory!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		#region Allakhazam Epic Source
