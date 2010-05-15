@@ -2174,84 +2174,91 @@ namespace DOL.GS.Quests.Midgard
 
 		public override void FinishQuest()
 		{
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-
-			switch ((eCharacterClass)m_questPlayer.CharacterClass.ID)
+			if (m_questPlayer.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
-				case eCharacterClass.Warrior:
-					{
-						GiveItem(m_questPlayer, WarriorEpicArms);
-						GiveItem(m_questPlayer, WarriorEpicBoots);
-						GiveItem(m_questPlayer, WarriorEpicGloves);
-						GiveItem(m_questPlayer, WarriorEpicHelm);
-						GiveItem(m_questPlayer, WarriorEpicLegs);
-						GiveItem(m_questPlayer, WarriorEpicVest);
-						break;
-					}
-				case eCharacterClass.Berserker:
-					{
-						GiveItem(m_questPlayer, BerserkerEpicArms);
-						GiveItem(m_questPlayer, BerserkerEpicBoots);
-						GiveItem(m_questPlayer, BerserkerEpicGloves);
-						GiveItem(m_questPlayer, BerserkerEpicHelm);
-						GiveItem(m_questPlayer, BerserkerEpicLegs);
-						GiveItem(m_questPlayer, BerserkerEpicVest);
-						break;
-					}
-				case eCharacterClass.Thane:
-					{
-						GiveItem(m_questPlayer, ThaneEpicArms);
-						GiveItem(m_questPlayer, ThaneEpicBoots);
-						GiveItem(m_questPlayer, ThaneEpicGloves);
-						GiveItem(m_questPlayer, ThaneEpicHelm);
-						GiveItem(m_questPlayer, ThaneEpicLegs);
-						GiveItem(m_questPlayer, ThaneEpicVest);
-						break;
-					}
-				case eCharacterClass.Skald:
-					{
-						GiveItem(m_questPlayer, SkaldEpicArms);
-						GiveItem(m_questPlayer, SkaldEpicBoots);
-						GiveItem(m_questPlayer, SkaldEpicGloves);
-						GiveItem(m_questPlayer, SkaldEpicHelm);
-						GiveItem(m_questPlayer, SkaldEpicLegs);
-						GiveItem(m_questPlayer, SkaldEpicVest);
-						break;
-					}
-				case eCharacterClass.Savage:
-					{
-						GiveItem(m_questPlayer, SavageEpicArms);
-						GiveItem(m_questPlayer, SavageEpicBoots);
-						GiveItem(m_questPlayer, SavageEpicGloves);
-						GiveItem(m_questPlayer, SavageEpicHelm);
-						GiveItem(m_questPlayer, SavageEpicLegs);
-						GiveItem(m_questPlayer, SavageEpicVest);
-						break;
-					}
-				case eCharacterClass.Valkyrie:
-					{
-						GiveItem(m_questPlayer, ValkyrieEpicArms);
-						GiveItem(m_questPlayer, ValkyrieEpicBoots);
-						GiveItem(m_questPlayer, ValkyrieEpicGloves);
-						GiveItem(m_questPlayer, ValkyrieEpicHelm);
-						GiveItem(m_questPlayer, ValkyrieEpicLegs);
-						GiveItem(m_questPlayer, ValkyrieEpicVest);
-						break;
-					}
-                case eCharacterClass.Mauler_Mid:
-                    {
-                        GiveItem(m_questPlayer, MaulerMidEpicArms);
-                        GiveItem(m_questPlayer, MaulerMidEpicBoots);
-                        GiveItem(m_questPlayer, MaulerMidEpicGloves);
-                        GiveItem(m_questPlayer, MaulerMidEpicHelm);
-                        GiveItem(m_questPlayer, MaulerMidEpicLegs);
-                        GiveItem(m_questPlayer, MaulerMidEpicVest);
-                        break;
-                    }
-			}
+				base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
-			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+				switch ((eCharacterClass)m_questPlayer.CharacterClass.ID)
+				{
+					case eCharacterClass.Warrior:
+						{
+							GiveItem(m_questPlayer, WarriorEpicArms);
+							GiveItem(m_questPlayer, WarriorEpicBoots);
+							GiveItem(m_questPlayer, WarriorEpicGloves);
+							GiveItem(m_questPlayer, WarriorEpicHelm);
+							GiveItem(m_questPlayer, WarriorEpicLegs);
+							GiveItem(m_questPlayer, WarriorEpicVest);
+							break;
+						}
+					case eCharacterClass.Berserker:
+						{
+							GiveItem(m_questPlayer, BerserkerEpicArms);
+							GiveItem(m_questPlayer, BerserkerEpicBoots);
+							GiveItem(m_questPlayer, BerserkerEpicGloves);
+							GiveItem(m_questPlayer, BerserkerEpicHelm);
+							GiveItem(m_questPlayer, BerserkerEpicLegs);
+							GiveItem(m_questPlayer, BerserkerEpicVest);
+							break;
+						}
+					case eCharacterClass.Thane:
+						{
+							GiveItem(m_questPlayer, ThaneEpicArms);
+							GiveItem(m_questPlayer, ThaneEpicBoots);
+							GiveItem(m_questPlayer, ThaneEpicGloves);
+							GiveItem(m_questPlayer, ThaneEpicHelm);
+							GiveItem(m_questPlayer, ThaneEpicLegs);
+							GiveItem(m_questPlayer, ThaneEpicVest);
+							break;
+						}
+					case eCharacterClass.Skald:
+						{
+							GiveItem(m_questPlayer, SkaldEpicArms);
+							GiveItem(m_questPlayer, SkaldEpicBoots);
+							GiveItem(m_questPlayer, SkaldEpicGloves);
+							GiveItem(m_questPlayer, SkaldEpicHelm);
+							GiveItem(m_questPlayer, SkaldEpicLegs);
+							GiveItem(m_questPlayer, SkaldEpicVest);
+							break;
+						}
+					case eCharacterClass.Savage:
+						{
+							GiveItem(m_questPlayer, SavageEpicArms);
+							GiveItem(m_questPlayer, SavageEpicBoots);
+							GiveItem(m_questPlayer, SavageEpicGloves);
+							GiveItem(m_questPlayer, SavageEpicHelm);
+							GiveItem(m_questPlayer, SavageEpicLegs);
+							GiveItem(m_questPlayer, SavageEpicVest);
+							break;
+						}
+					case eCharacterClass.Valkyrie:
+						{
+							GiveItem(m_questPlayer, ValkyrieEpicArms);
+							GiveItem(m_questPlayer, ValkyrieEpicBoots);
+							GiveItem(m_questPlayer, ValkyrieEpicGloves);
+							GiveItem(m_questPlayer, ValkyrieEpicHelm);
+							GiveItem(m_questPlayer, ValkyrieEpicLegs);
+							GiveItem(m_questPlayer, ValkyrieEpicVest);
+							break;
+						}
+					case eCharacterClass.Mauler_Mid:
+						{
+							GiveItem(m_questPlayer, MaulerMidEpicArms);
+							GiveItem(m_questPlayer, MaulerMidEpicBoots);
+							GiveItem(m_questPlayer, MaulerMidEpicGloves);
+							GiveItem(m_questPlayer, MaulerMidEpicHelm);
+							GiveItem(m_questPlayer, MaulerMidEpicLegs);
+							GiveItem(m_questPlayer, MaulerMidEpicVest);
+							break;
+						}
+				}
+
+				m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
+				//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+			}
+			else
+			{
+				m_questPlayer.Out.SendMessage("You do not have enough free space in your inventory!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 		}
 	}
 }

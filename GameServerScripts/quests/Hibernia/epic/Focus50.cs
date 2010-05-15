@@ -1476,7 +1476,6 @@ namespace DOL.GS.Quests.Hibernia
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == Ainrebh.Name && gArgs.Item.Id_nb == GreenMaw_key.Id_nb)
 				{
-					RemoveItem(Ainrebh, player, GreenMaw_key);
 					Ainrebh.SayTo(player, "You have earned this Epic Armour!");
 					FinishQuest();
 					return;
@@ -1493,56 +1492,65 @@ namespace DOL.GS.Quests.Hibernia
 
 		public override void FinishQuest()
 		{
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+			if (m_questPlayer.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			{
+				RemoveItem(Ainrebh, m_questPlayer, GreenMaw_key);
 
-			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Hero)
-			{
-				GiveItem(m_questPlayer, HeroEpicArms);
-				GiveItem(m_questPlayer, HeroEpicBoots);
-				GiveItem(m_questPlayer, HeroEpicGloves);
-				GiveItem(m_questPlayer, HeroEpicHelm);
-				GiveItem(m_questPlayer, HeroEpicLegs);
-				GiveItem(m_questPlayer, HeroEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Ranger)
-			{
-				GiveItem(m_questPlayer, RangerEpicArms);
-				GiveItem(m_questPlayer, RangerEpicBoots);
-				GiveItem(m_questPlayer, RangerEpicGloves);
-				GiveItem(m_questPlayer, RangerEpicHelm);
-				GiveItem(m_questPlayer, RangerEpicLegs);
-				GiveItem(m_questPlayer, RangerEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Eldritch)
-			{
-				GiveItem(m_questPlayer, EldritchEpicArms);
-				GiveItem(m_questPlayer, EldritchEpicBoots);
-				GiveItem(m_questPlayer, EldritchEpicGloves);
-				GiveItem(m_questPlayer, EldritchEpicHelm);
-				GiveItem(m_questPlayer, EldritchEpicLegs);
-				GiveItem(m_questPlayer, EldritchEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Warden)
-			{
-				GiveItem(m_questPlayer, WardenEpicArms);
-				GiveItem(m_questPlayer, WardenEpicBoots);
-				GiveItem(m_questPlayer, WardenEpicGloves);
-				GiveItem(m_questPlayer, WardenEpicHelm);
-				GiveItem(m_questPlayer, WardenEpicLegs);
-				GiveItem(m_questPlayer, WardenEpicVest);
-			}
-            else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mauler_Hib)
-            {
-                GiveItem(m_questPlayer, MaulerHibEpicBoots);
-                GiveItem(m_questPlayer, MaulerHibEpicArms);
-                GiveItem(m_questPlayer, MaulerHibEpicGloves);
-                GiveItem(m_questPlayer, MaulerHibEpicHelm);
-                GiveItem(m_questPlayer, MaulerHibEpicVest);
-                GiveItem(m_questPlayer, MaulerHibEpicLegs);
-            }
+				base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
-			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+				if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Hero)
+				{
+					GiveItem(m_questPlayer, HeroEpicArms);
+					GiveItem(m_questPlayer, HeroEpicBoots);
+					GiveItem(m_questPlayer, HeroEpicGloves);
+					GiveItem(m_questPlayer, HeroEpicHelm);
+					GiveItem(m_questPlayer, HeroEpicLegs);
+					GiveItem(m_questPlayer, HeroEpicVest);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Ranger)
+				{
+					GiveItem(m_questPlayer, RangerEpicArms);
+					GiveItem(m_questPlayer, RangerEpicBoots);
+					GiveItem(m_questPlayer, RangerEpicGloves);
+					GiveItem(m_questPlayer, RangerEpicHelm);
+					GiveItem(m_questPlayer, RangerEpicLegs);
+					GiveItem(m_questPlayer, RangerEpicVest);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Eldritch)
+				{
+					GiveItem(m_questPlayer, EldritchEpicArms);
+					GiveItem(m_questPlayer, EldritchEpicBoots);
+					GiveItem(m_questPlayer, EldritchEpicGloves);
+					GiveItem(m_questPlayer, EldritchEpicHelm);
+					GiveItem(m_questPlayer, EldritchEpicLegs);
+					GiveItem(m_questPlayer, EldritchEpicVest);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Warden)
+				{
+					GiveItem(m_questPlayer, WardenEpicArms);
+					GiveItem(m_questPlayer, WardenEpicBoots);
+					GiveItem(m_questPlayer, WardenEpicGloves);
+					GiveItem(m_questPlayer, WardenEpicHelm);
+					GiveItem(m_questPlayer, WardenEpicLegs);
+					GiveItem(m_questPlayer, WardenEpicVest);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mauler_Hib)
+				{
+					GiveItem(m_questPlayer, MaulerHibEpicBoots);
+					GiveItem(m_questPlayer, MaulerHibEpicArms);
+					GiveItem(m_questPlayer, MaulerHibEpicGloves);
+					GiveItem(m_questPlayer, MaulerHibEpicHelm);
+					GiveItem(m_questPlayer, MaulerHibEpicVest);
+					GiveItem(m_questPlayer, MaulerHibEpicLegs);
+				}
+
+				m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
+				//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+			}
+			else
+			{
+				m_questPlayer.Out.SendMessage("You do not have enough free space in your inventory!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		#region Allakhazam Epic Source

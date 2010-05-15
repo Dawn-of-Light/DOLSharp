@@ -1033,7 +1033,6 @@ namespace DOL.GS.Quests.Midgard
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == Miri.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
-					RemoveItem(Miri, player, sealed_pouch);
 					Miri.SayTo(player, "You have earned this Epic Armour!");
 					FinishQuest();
 					return;
@@ -1051,29 +1050,38 @@ namespace DOL.GS.Quests.Midgard
 
 		public override void FinishQuest()
 		{
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-
-			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Shaman)
+			if (m_questPlayer.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
-				GiveItem(m_questPlayer, ShamanEpicArms);
-				GiveItem(m_questPlayer, ShamanEpicBoots);
-				GiveItem(m_questPlayer, ShamanEpicGloves);
-				GiveItem(m_questPlayer, ShamanEpicHelm);
-				GiveItem(m_questPlayer, ShamanEpicLegs);
-				GiveItem(m_questPlayer, ShamanEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Healer)
-			{
-				GiveItem(m_questPlayer, HealerEpicArms);
-				GiveItem(m_questPlayer, HealerEpicBoots);
-				GiveItem(m_questPlayer, HealerEpicGloves);
-				GiveItem(m_questPlayer, HealerEpicHelm);
-				GiveItem(m_questPlayer, HealerEpicLegs);
-				GiveItem(m_questPlayer, HealerEpicVest);
-			}
+				RemoveItem(Miri, m_questPlayer, sealed_pouch);
 
-			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
-			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+				base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+				if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Shaman)
+				{
+					GiveItem(m_questPlayer, ShamanEpicArms);
+					GiveItem(m_questPlayer, ShamanEpicBoots);
+					GiveItem(m_questPlayer, ShamanEpicGloves);
+					GiveItem(m_questPlayer, ShamanEpicHelm);
+					GiveItem(m_questPlayer, ShamanEpicLegs);
+					GiveItem(m_questPlayer, ShamanEpicVest);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Healer)
+				{
+					GiveItem(m_questPlayer, HealerEpicArms);
+					GiveItem(m_questPlayer, HealerEpicBoots);
+					GiveItem(m_questPlayer, HealerEpicGloves);
+					GiveItem(m_questPlayer, HealerEpicHelm);
+					GiveItem(m_questPlayer, HealerEpicLegs);
+					GiveItem(m_questPlayer, HealerEpicVest);
+				}
+
+				m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
+				//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+			}
+			else
+			{
+				m_questPlayer.Out.SendMessage("You do not have enough free space in your inventory!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		#region Allakhazam Epic Source

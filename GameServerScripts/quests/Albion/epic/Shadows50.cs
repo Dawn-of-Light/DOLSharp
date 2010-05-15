@@ -1948,7 +1948,6 @@ namespace DOL.GS.Quests.Albion
 				GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
 				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
-					RemoveItem(Lidmann, player, sealed_pouch);
 					Lidmann.SayTo(player, "You have earned this Epic Armor, wear it with honor!");
 					FinishQuest();
 					return;
@@ -1965,74 +1964,83 @@ namespace DOL.GS.Quests.Albion
 
 		public override void FinishQuest()
 		{
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
-
-			switch ((eCharacterClass)m_questPlayer.CharacterClass.ID)
+			if (m_questPlayer.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
-				case eCharacterClass.Reaver:
-					{
-						GiveItem(m_questPlayer, ReaverEpicArms);
-						GiveItem(m_questPlayer, ReaverEpicBoots);
-						GiveItem(m_questPlayer, ReaverEpicGloves);
-						GiveItem(m_questPlayer, ReaverEpicHelm);
-						GiveItem(m_questPlayer, ReaverEpicLegs);
-						GiveItem(m_questPlayer, ReaverEpicVest);
-						break;
-					}
-				case eCharacterClass.Mercenary:
-					{
-						GiveItem(m_questPlayer, MercenaryEpicArms);
-						GiveItem(m_questPlayer, MercenaryEpicBoots);
-						GiveItem(m_questPlayer, MercenaryEpicGloves);
-						GiveItem(m_questPlayer, MercenaryEpicHelm);
-						GiveItem(m_questPlayer, MercenaryEpicLegs);
-						GiveItem(m_questPlayer, MercenaryEpicVest);
-						break;
-					}
-				case eCharacterClass.Cabalist:
-					{
-						GiveItem(m_questPlayer, CabalistEpicArms);
-						GiveItem(m_questPlayer, CabalistEpicBoots);
-						GiveItem(m_questPlayer, CabalistEpicGloves);
-						GiveItem(m_questPlayer, CabalistEpicHelm);
-						GiveItem(m_questPlayer, CabalistEpicLegs);
-						GiveItem(m_questPlayer, CabalistEpicVest);
-						break;
-					}
-				case eCharacterClass.Infiltrator:
-					{
-						GiveItem(m_questPlayer, InfiltratorEpicArms);
-						GiveItem(m_questPlayer, InfiltratorEpicBoots);
-						GiveItem(m_questPlayer, InfiltratorEpicGloves);
-						GiveItem(m_questPlayer, InfiltratorEpicHelm);
-						GiveItem(m_questPlayer, InfiltratorEpicLegs);
-						GiveItem(m_questPlayer, InfiltratorEpicVest);
-						break;
-					}
-				case eCharacterClass.Necromancer:
-					{
-						GiveItem(m_questPlayer, NecromancerEpicArms);
-						GiveItem(m_questPlayer, NecromancerEpicBoots);
-						GiveItem(m_questPlayer, NecromancerEpicGloves);
-						GiveItem(m_questPlayer, NecromancerEpicHelm);
-						GiveItem(m_questPlayer, NecromancerEpicLegs);
-						GiveItem(m_questPlayer, NecromancerEpicVest);
-						break;
-					}
-				case eCharacterClass.Heretic:
-					{
-						GiveItem(m_questPlayer, HereticEpicArms);
-						GiveItem(m_questPlayer, HereticEpicBoots);
-						GiveItem(m_questPlayer, HereticEpicGloves);
-						GiveItem(m_questPlayer, HereticEpicHelm);
-						GiveItem(m_questPlayer, HereticEpicLegs);
-						GiveItem(m_questPlayer, HereticEpicVest);
-						break;
-					}
-			}
+				RemoveItem(Lidmann, m_questPlayer, sealed_pouch);
 
-			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
-			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+				base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+
+				switch ((eCharacterClass)m_questPlayer.CharacterClass.ID)
+				{
+					case eCharacterClass.Reaver:
+						{
+							GiveItem(m_questPlayer, ReaverEpicArms);
+							GiveItem(m_questPlayer, ReaverEpicBoots);
+							GiveItem(m_questPlayer, ReaverEpicGloves);
+							GiveItem(m_questPlayer, ReaverEpicHelm);
+							GiveItem(m_questPlayer, ReaverEpicLegs);
+							GiveItem(m_questPlayer, ReaverEpicVest);
+							break;
+						}
+					case eCharacterClass.Mercenary:
+						{
+							GiveItem(m_questPlayer, MercenaryEpicArms);
+							GiveItem(m_questPlayer, MercenaryEpicBoots);
+							GiveItem(m_questPlayer, MercenaryEpicGloves);
+							GiveItem(m_questPlayer, MercenaryEpicHelm);
+							GiveItem(m_questPlayer, MercenaryEpicLegs);
+							GiveItem(m_questPlayer, MercenaryEpicVest);
+							break;
+						}
+					case eCharacterClass.Cabalist:
+						{
+							GiveItem(m_questPlayer, CabalistEpicArms);
+							GiveItem(m_questPlayer, CabalistEpicBoots);
+							GiveItem(m_questPlayer, CabalistEpicGloves);
+							GiveItem(m_questPlayer, CabalistEpicHelm);
+							GiveItem(m_questPlayer, CabalistEpicLegs);
+							GiveItem(m_questPlayer, CabalistEpicVest);
+							break;
+						}
+					case eCharacterClass.Infiltrator:
+						{
+							GiveItem(m_questPlayer, InfiltratorEpicArms);
+							GiveItem(m_questPlayer, InfiltratorEpicBoots);
+							GiveItem(m_questPlayer, InfiltratorEpicGloves);
+							GiveItem(m_questPlayer, InfiltratorEpicHelm);
+							GiveItem(m_questPlayer, InfiltratorEpicLegs);
+							GiveItem(m_questPlayer, InfiltratorEpicVest);
+							break;
+						}
+					case eCharacterClass.Necromancer:
+						{
+							GiveItem(m_questPlayer, NecromancerEpicArms);
+							GiveItem(m_questPlayer, NecromancerEpicBoots);
+							GiveItem(m_questPlayer, NecromancerEpicGloves);
+							GiveItem(m_questPlayer, NecromancerEpicHelm);
+							GiveItem(m_questPlayer, NecromancerEpicLegs);
+							GiveItem(m_questPlayer, NecromancerEpicVest);
+							break;
+						}
+					case eCharacterClass.Heretic:
+						{
+							GiveItem(m_questPlayer, HereticEpicArms);
+							GiveItem(m_questPlayer, HereticEpicBoots);
+							GiveItem(m_questPlayer, HereticEpicGloves);
+							GiveItem(m_questPlayer, HereticEpicHelm);
+							GiveItem(m_questPlayer, HereticEpicLegs);
+							GiveItem(m_questPlayer, HereticEpicVest);
+							break;
+						}
+				}
+
+				m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
+				//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+			}
+			else
+			{
+				m_questPlayer.Out.SendMessage("You do not have enough free space in your inventory!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		#region Allakhazam Epic Source

@@ -1453,7 +1453,6 @@ namespace DOL.GS.Quests.Hibernia
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == Brigit.Name && gArgs.Item.Id_nb == Moonstone.Id_nb)
 				{
-					RemoveItem(Brigit, player, Moonstone);
 					Brigit.SayTo(player, "You have earned this Epic Armour!");
 					FinishQuest();
 					return;
@@ -1470,47 +1469,56 @@ namespace DOL.GS.Quests.Hibernia
 
 		public override void FinishQuest()
 		{
-			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+			if (m_questPlayer.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			{
+				RemoveItem(Brigit, m_questPlayer, Moonstone);
 
-			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Champion)
-			{
-				GiveItem(m_questPlayer, ChampionEpicArms);
-				GiveItem(m_questPlayer, ChampionEpicBoots);
-				GiveItem(m_questPlayer, ChampionEpicGloves);
-				GiveItem(m_questPlayer, ChampionEpicHelm);
-				GiveItem(m_questPlayer, ChampionEpicLegs);
-				GiveItem(m_questPlayer, ChampionEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Bard)
-			{
-				GiveItem(m_questPlayer, BardEpicArms);
-				GiveItem(m_questPlayer, BardEpicBoots);
-				GiveItem(m_questPlayer, BardEpicGloves);
-				GiveItem(m_questPlayer, BardEpicHelm);
-				GiveItem(m_questPlayer, BardEpicLegs);
-				GiveItem(m_questPlayer, BardEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Enchanter)
-			{
-				GiveItem(m_questPlayer, EnchanterEpicArms);
-				GiveItem(m_questPlayer, EnchanterEpicBoots);
-				GiveItem(m_questPlayer, EnchanterEpicGloves);
-				GiveItem(m_questPlayer, EnchanterEpicHelm);
-				GiveItem(m_questPlayer, EnchanterEpicLegs);
-				GiveItem(m_questPlayer, EnchanterEpicVest);
-			}
-			else if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Nightshade)
-			{
-				GiveItem(m_questPlayer, NightshadeEpicArms);
-				GiveItem(m_questPlayer, NightshadeEpicBoots);
-				GiveItem(m_questPlayer, NightshadeEpicGloves);
-				GiveItem(m_questPlayer, NightshadeEpicHelm);
-				GiveItem(m_questPlayer, NightshadeEpicLegs);
-				GiveItem(m_questPlayer, NightshadeEpicVest);
-			}
+				base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
-			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
-			//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+				if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Champion)
+				{
+					GiveItem(m_questPlayer, ChampionEpicArms);
+					GiveItem(m_questPlayer, ChampionEpicBoots);
+					GiveItem(m_questPlayer, ChampionEpicGloves);
+					GiveItem(m_questPlayer, ChampionEpicHelm);
+					GiveItem(m_questPlayer, ChampionEpicLegs);
+					GiveItem(m_questPlayer, ChampionEpicVest);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Bard)
+				{
+					GiveItem(m_questPlayer, BardEpicArms);
+					GiveItem(m_questPlayer, BardEpicBoots);
+					GiveItem(m_questPlayer, BardEpicGloves);
+					GiveItem(m_questPlayer, BardEpicHelm);
+					GiveItem(m_questPlayer, BardEpicLegs);
+					GiveItem(m_questPlayer, BardEpicVest);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Enchanter)
+				{
+					GiveItem(m_questPlayer, EnchanterEpicArms);
+					GiveItem(m_questPlayer, EnchanterEpicBoots);
+					GiveItem(m_questPlayer, EnchanterEpicGloves);
+					GiveItem(m_questPlayer, EnchanterEpicHelm);
+					GiveItem(m_questPlayer, EnchanterEpicLegs);
+					GiveItem(m_questPlayer, EnchanterEpicVest);
+				}
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Nightshade)
+				{
+					GiveItem(m_questPlayer, NightshadeEpicArms);
+					GiveItem(m_questPlayer, NightshadeEpicBoots);
+					GiveItem(m_questPlayer, NightshadeEpicGloves);
+					GiveItem(m_questPlayer, NightshadeEpicHelm);
+					GiveItem(m_questPlayer, NightshadeEpicLegs);
+					GiveItem(m_questPlayer, NightshadeEpicVest);
+				}
+
+				m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1937768448, true);
+				//m_questPlayer.AddMoney(Money.GetMoney(0,0,0,2,Util.Random(50)), "You recieve {0} as a reward.");		
+			}
+			else
+			{
+				m_questPlayer.Out.SendMessage("You do not have enough free space in your inventory!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		#region Allakhazam Epic Source
