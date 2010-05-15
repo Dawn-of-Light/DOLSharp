@@ -117,6 +117,11 @@ namespace DOL.GS.Spells
 		bool IsOverwritable(GameSpellEffect compare);
 
 		/// <summary>
+		/// Does this spell ignore all damage caps?
+		/// </summary>
+		bool IgnoreDamageCap { get; set; }
+
+		/// <summary>
 		/// Actions to take when the effect starts
 		/// </summary>
 		/// <param name="effect"></param>

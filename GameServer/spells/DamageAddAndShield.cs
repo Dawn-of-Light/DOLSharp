@@ -76,7 +76,7 @@ namespace DOL.GS.Spells
 			int spread = m_minDamageSpread;
 			spread += Util.Random(50);
 			double dpsCap = DPSCap(attacker.Level);
-			double dps = Math.Min(Spell.Damage, dpsCap);
+			double dps = IgnoreDamageCap ? Spell.Damage : Math.Min(Spell.Damage, dpsCap);
 			double damage = dps * atkArgs.AttackData.WeaponSpeed * spread * 0.001; // attack speed is 10 times higher (2.5spd=25)
 			double damageResisted = damage * target.GetResist(Spell.DamageType) * -0.01;
 

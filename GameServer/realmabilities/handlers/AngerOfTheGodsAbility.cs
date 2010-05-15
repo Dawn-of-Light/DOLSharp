@@ -9,58 +9,61 @@ namespace DOL.GS.RealmAbilities
 {
 	public class AngerOfTheGodsAbility : TimedRealmAbility
 	{
-        private DBSpell dbs;
-        private Spell s;
-        private SpellLine sl;
-        private int damage = 0;
-        private GamePlayer player;
+        private DBSpell m_dbspell;
+        private Spell m_spell;
+        private SpellLine m_spellline;
+        private double m_damage = 0;
+        private GamePlayer m_player;
+
         public AngerOfTheGodsAbility(DBAbility dba, int level) : base(dba, level) {}
-        public virtual void NewSpell(int damage)
+        public virtual void NewSpell(double damage)
         {
-            dbs = new DBSpell();
-            dbs.Name = "Anger of the Gods";
-            dbs.Icon = 7023;
-            dbs.ClientEffect = 7023;
-            dbs.Damage = damage;
-            dbs.DamageType = (int)eDamageType.Matter;
-            dbs.Target = "Group";
-            dbs.Radius = 0;
-            dbs.Type = "DamageAdd";
-            dbs.Value = 0;
-            dbs.Duration = 30;
-            dbs.Pulse = 0;
-            dbs.PulsePower = 0;
-            dbs.Power = 0;
-            dbs.CastTime = 0;
-			dbs.EffectGroup = 10;
-			dbs.SpellGroup = 10;
-            dbs.Range = 1000;
-            s = new Spell(dbs, 1);
-            sl = new SpellLine("RAs", "RealmAbilitys", "RealmAbilitys", true);
+            m_dbspell = new DBSpell();
+            m_dbspell.Name = "Anger of the Gods";
+            m_dbspell.Icon = 7023;
+            m_dbspell.ClientEffect = 7023;
+            m_dbspell.Damage = damage;
+            m_dbspell.DamageType = 0;
+            m_dbspell.Target = "Group";
+            m_dbspell.Radius = 0;
+            m_dbspell.Type = "DamageAdd";
+            m_dbspell.Value = 0;
+            m_dbspell.Duration = 30;
+            m_dbspell.Pulse = 0;
+            m_dbspell.PulsePower = 0;
+            m_dbspell.Power = 0;
+            m_dbspell.CastTime = 0;
+			m_dbspell.EffectGroup = 99999; // stacks with other damage adds
+            m_dbspell.Range = 1000;
+            m_spell = new Spell(m_dbspell, 1);
+            m_spellline = new SpellLine("RAs", "RealmAbilities", "RealmAbilities", true);
         }	
 
 		public override void Execute(GameLiving living)
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
-			player = living as GamePlayer;
+			m_player = living as GamePlayer;
 			switch (Level)
 			{
-				case 1: damage = 10; break;
-				case 2: damage = 20; break;
-				case 3: damage = 30; break;
+				case 1: m_damage = 10.0; break;
+				case 2: m_damage = 20.0; break;
+				case 3: m_damage = 30.0; break;
 				default: return;
 			}
-			NewSpell(damage);
-			CastSpell(player);
+			NewSpell(m_damage);
+			CastSpell(m_player);
 			DisableSkill(living);
 		}
+
         protected void CastSpell(GameLiving target)
         {
             if (!target.IsAlive) return;
-            s = new Spell(dbs, 1);
-            ISpellHandler dd = ScriptMgr.CreateSpellHandler(player, s, sl);
+            m_spell = new Spell(m_dbspell, 1);
+            ISpellHandler dd = ScriptMgr.CreateSpellHandler(m_player, m_spell, m_spellline);
+			dd.IgnoreDamageCap = true;
             dd.StartSpell(target);
         }	
+
         public override int GetReUseDelay(int level)
         {
             return 600;
