@@ -150,6 +150,18 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected const string FOCUS_SPELL = "FOCUSING_A_SPELL";
 
+		protected bool m_ignoreDamageCap = false;
+
+		/// <summary>
+		/// Does this spell ignore any damage cap?
+		/// </summary>
+		public bool IgnoreDamageCap
+		{
+			get { return m_ignoreDamageCap; }
+			set { m_ignoreDamageCap = value; }
+		}
+
+
 		/// <summary>
 		/// The CastingCompleteEvent
 		/// </summary>
