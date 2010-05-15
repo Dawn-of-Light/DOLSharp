@@ -33,7 +33,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the random number generator instance
 		/// </summary>
-		[ThreadStatic] 
+		[ThreadStatic]
 		private static Random m_random;
 
 		/// <summary>
@@ -111,7 +111,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static string MakeSentence(string message, params string[] args)
 		{
-			if (string.IsNullOrEmpty(message)) 
+			if (string.IsNullOrEmpty(message))
 				return message;
 
 			string res = string.Format(message, args);
@@ -140,12 +140,14 @@ namespace DOL.GS
 		/// <remarks>
 		/// The use of the deprecated Suspend and Resume methods is necessary to get the StackTrace.
 		/// Suspend/Resume are not being used for thread synchronization (very bad).
-		/// It may be possible to get the StackTrace some other way, but this works for now.
+		/// It may be possible to get the StackTrace some other way, but this works for now
+		/// So, the related warning is disabled
 		/// </remarks>
 		/// <param name="thread">Thread</param>
 		/// <returns>The thread's stacktrace</returns>
 		public static StackTrace GetThreadStack(Thread thread)
 		{
+			#pragma warning disable 0618
 			thread.Suspend();
 			StackTrace trace;
 
@@ -157,7 +159,8 @@ namespace DOL.GS
 			{
 				thread.Resume();
 			}
-
+			#pragma warning restore 0618
+			
 			return trace;
 		}
 
