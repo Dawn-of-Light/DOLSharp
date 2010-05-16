@@ -500,10 +500,8 @@ namespace DOL.AI.Brain
 				{
 					foreach (GameLiving aliv in m_aggroTable.Keys)
 					{
-						Body.Yell((long)m_aggroTable[aliv] + ": " + aliv.Name);
+						Body.Yell(aliv.Name + ": " + (long)m_aggroTable[aliv]);
 					}
-
-					Body.Yell("-");
 				}
 			}
 		}

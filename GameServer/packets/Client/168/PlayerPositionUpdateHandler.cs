@@ -364,13 +364,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								client.Out.SendMessage("SH: Logging SH cheat.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
-								if (SHcount >= 15)
+								if (SHcount >= ServerProperties.Properties.SPEEDHACK_TOLERANCE)
 								{
 									client.Out.SendMessage("SH: Player would have been banned!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 								}
 							}
 
-							if ((client.Account.PrivLevel == 1) && SHcount >= 15)
+							if ((client.Account.PrivLevel == 1) && SHcount >= ServerProperties.Properties.SPEEDHACK_TOLERANCE)
 							{
 								if (ServerProperties.Properties.BAN_HACKERS)
 								{
