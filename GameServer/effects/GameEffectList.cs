@@ -156,16 +156,21 @@ namespace DOL.GS.Effects
 			GamePlayer player = m_owner as GamePlayer;
 			if (player == null || player.PlayerCharacter == null || GameServer.Database == null)
 				return;
+
 			var effs = GameServer.Database.SelectObjects<PlayerXEffect>("ChardID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
 			if (effs == null)
 				return;
+
 			ArrayList targets = new ArrayList();
 			targets.Add(player);
 			foreach (PlayerXEffect eff in effs)
 			{
-				if (eff.SpellLine == GlobalSpellsLines.Reserved_Spells) continue;
+				if (eff.SpellLine == GlobalSpellsLines.Reserved_Spells)
+					continue;
+
 				bool good = true;
 				Spell spell = SkillBase.GetSpellByID(eff.Var1);
+
 				if (spell == null)
 					good = false;
 
@@ -173,11 +178,16 @@ namespace DOL.GS.Effects
 
 				if (!Util.IsEmpty(eff.SpellLine))
 				{
-					line = SkillBase.GetSpellLine(eff.SpellLine);
+					line = SkillBase.GetSpellLine(eff.SpellLine, false);
 					if (line == null)
+					{
 						good = false;
+					}
 				}
-				else good = false;
+				else
+				{
+					good = false;
+				}
 
 				if (good)
 				{
@@ -189,9 +199,9 @@ namespace DOL.GS.Effects
 					e.RestoreVars = vars;
 					e.Start(player);
 				}
+
 				GameServer.Database.DeleteObject(eff);
 			}
-
 		}
 
 		public virtual void SaveAllEffects()
@@ -217,7 +227,10 @@ namespace DOL.GS.Effects
 					PlayerXEffect effx = eff.getSavedEffect();
 					if (effx == null)
 						continue;
-					if (effx.SpellLine == GlobalSpellsLines.Reserved_Spells) continue;
+
+					if (effx.SpellLine == GlobalSpellsLines.Reserved_Spells)
+						continue;
+
 					effx.ChardID = player.PlayerCharacter.ObjectId;
 					GameServer.Database.AddObject(effx);
 				}
@@ -231,6 +244,7 @@ namespace DOL.GS.Effects
 		{
 			if (m_changesCount > 0)
 				return;
+
 			UpdateChangedEffects();
 		}
 
@@ -253,6 +267,7 @@ namespace DOL.GS.Effects
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("changes count is less than zero, forgot BeginChanges()?\n" + Environment.StackTrace);
+
 				m_changesCount = 0;
 			}
 
