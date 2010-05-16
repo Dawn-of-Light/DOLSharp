@@ -81,7 +81,7 @@ namespace DOL.GS
                     spell.Name = "Dragon Glare";
                     spell.Range = 2500;
                     spell.Radius = 700;
-                    spell.Damage = 2000* DragonStrength /100;
+                    spell.Damage = 2000* DragonDifficulty /100;
 					spell.RecastDelay = 10;
                     spell.DamageType = (int)eDamageType.Heat;
                     spell.SpellID = 6001;
@@ -116,7 +116,7 @@ namespace DOL.GS
                     spell.Name = "Dragon Nuke";
                     spell.Range = 700;
                     spell.Radius = 700;
-                    spell.Damage = 2000* DragonStrength /100;
+                    spell.Damage = 2000* DragonDifficulty /100;
                     spell.DamageType = (int)eDamageType.Heat;
                     spell.SpellID = 6002;
                     spell.Target = "Enemy";
@@ -147,7 +147,7 @@ namespace DOL.GS
                     spell.Name = "Melt Armor";
                     spell.Range = 700;
                     spell.Radius = 700;
-                    spell.Value = 30* DragonStrength/100;
+                    spell.Value = 30* DragonDifficulty/100;
                     spell.Duration = 30;
                     spell.Damage = 0;
                     spell.DamageType = (int)eDamageType.Heat;
@@ -187,7 +187,7 @@ namespace DOL.GS
 					spell.Range = 700;
 					spell.Radius = 700;
 					spell.Value = 50;
-					spell.Duration = 90* DragonStrength /100;
+					spell.Duration = 90* DragonDifficulty /100;
 					spell.Damage = 0;
 					spell.DamageType = (int)eDamageType.Heat;
 					spell.SpellID = 6003;
@@ -224,7 +224,7 @@ namespace DOL.GS
 					spell.Range = 700;
 					spell.Radius = 700;
 					spell.Value = 100;
-					spell.Duration = 90* DragonStrength /100;
+					spell.Duration = 90* DragonDifficulty /100;
 					spell.Damage = 0;
 					spell.DamageType = (int)eDamageType.Heat;
 					spell.SpellID = 6003;
