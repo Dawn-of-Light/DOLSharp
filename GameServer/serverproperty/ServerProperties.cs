@@ -200,7 +200,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("system", "allow_dual_logins", "Disable to disallow players to connect with more than 1 account at a time.", true)]
 		public static bool ALLOW_DUAL_LOGINS;
-		
+
+		/// <summary>
+		/// This specifies the max number of inventory items to send in an update packet
+		/// </summary>
+		[ServerProperty("server", "max_items_per_packet", "Max number of inventory items sent per packet.", 30)]
+		public static int MAX_ITEMS_PER_PACKET;
+
+		/// <summary>
+		/// Number of times speed hack detected before banning.  Must be multiples of 5 (20, 25, 30, etc)
+		/// </summary>
+		[ServerProperty("server", "speedhack_tolerance", "Number of times speed hack detected before banning.  Multiples of 5 (20, 25, 30, etc)", 20)]
+		public static int SPEEDHACK_TOLERANCE;
 		
 		#endregion
 		
@@ -289,16 +300,10 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("server", "use_dblanguage", "Use Database Language datas instead of files (if empty = build the table from files)", false)]
 		public static bool USE_DBLANGUAGE;
+
 		#endregion
 
-		/// <summary>
-		/// This specifies the max number of inventory items to send in an update packet
-		/// </summary>
-		[ServerProperty("server", "max_items_per_packet", "Max number of inventory items sent per packet.", 30)]
-		public static int MAX_ITEMS_PER_PACKET;
 
-
-		
 		#region WORLD
 		/// <summary>
 		/// Epic encounters strength: 100 is 100% base strength

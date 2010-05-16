@@ -1924,11 +1924,23 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		///
+		/// Return the spell line, creating a temporary one if not found
 		/// </summary>
 		/// <param name="keyname"></param>
 		/// <returns></returns>
 		public static SpellLine GetSpellLine(string keyname)
+		{
+			return GetSpellLine(keyname, true);
+		}
+
+
+		/// <summary>
+		/// Return a spell line
+		/// </summary>
+		/// <param name="keyname">The key name of the line</param>
+		/// <param name="create">Should we create a temp spell line if not found?</param>
+		/// <returns></returns>
+		public static SpellLine GetSpellLine(string keyname, bool create)
 		{
 			if (keyname == GlobalSpellsLines.Mob_Spells)
 				return new SpellLine("Mob Spells", "Mob Spells", "", true);
@@ -1936,10 +1948,17 @@ namespace DOL.GS
 			if (m_spellLinesByName.ContainsKey(keyname))
 				return m_spellLinesByName[keyname].Clone() as SpellLine;
 
-			if (log.IsWarnEnabled)
-				log.Warn("Spell-Line " + keyname + " unknown");
+			if (create)
+			{
+				if (log.IsWarnEnabled)
+				{
+					log.Warn("Spell-Line " + keyname + " unknown, creating temporary line.");
+				}
 
-			return new SpellLine(keyname, "?" + keyname, "", true);
+				return new SpellLine(keyname, "?" + keyname, "", true);
+			}
+
+			return null;
 		}
 
 		public static void CleanSpellList(string spellLineID)
