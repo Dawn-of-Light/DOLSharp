@@ -48,13 +48,14 @@ namespace DOL.GS
 
 		
 		/// <summary>
-		/// Set the dragon strength in percent of its max abilities
+		/// Set the dragon difficulty in percent of its max abilities
+		/// 100 = full strength
 		/// </summary>
-		private int m_DragonStrength;
-		public virtual int DragonStrength
+		private int m_DragonDifficulty;
+		public virtual int DragonDifficulty
 		{
-			get { return m_DragonStrength;}
-			set { m_DragonStrength = value;}
+			get { return m_DragonDifficulty;}
+			set { m_DragonDifficulty = value;}
 			
 		}
 		
@@ -83,7 +84,7 @@ namespace DOL.GS
 				"A glowing light begins to form on the mound that served as {0}'s lair." };
 
 			TetherRange = 2500;	// TODO: Can be removed once there is an NPCTemplate.
-			m_DragonStrength = ServerProperties.Properties.SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
+			m_DragonDifficulty = ServerProperties.Properties.SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
 		}
 
 		public ushort LairRadius
@@ -112,14 +113,13 @@ namespace DOL.GS
 
 		public override double GetArmorAF(eArmorSlot slot)
 		{
-			return 1000*m_DragonStrength/100;
+			return 1000 * m_DragonDifficulty / 100;
 		}
 
 		public override double GetArmorAbsorb(eArmorSlot slot)
 		{
 			// 85% ABS is cap.
-
-			return 0.85*m_DragonStrength/100;
+			return 0.85 * m_DragonDifficulty / 100;
 		}
 
 		/// <summary>
@@ -135,8 +135,8 @@ namespace DOL.GS
 			{
 				case eDamageType.Slash : 
 				case eDamageType.Crush :
-				case eDamageType.Thrust: return 65*m_DragonStrength/100;
-				default: return 99*m_DragonStrength/100;
+				case eDamageType.Thrust: return 65 * m_DragonDifficulty / 100;
+				default: return 99 * m_DragonDifficulty / 100;
 			}
 		}
 
@@ -144,19 +144,27 @@ namespace DOL.GS
 		{
 			get
 			{
-				return 30000*m_DragonStrength/100;
+				return 30000 * m_DragonDifficulty / 100;
 			}
 		}
 
 		public override double AttackDamage(InventoryItem weapon)
 		{
-			return base.AttackDamage(weapon) * 1.0 *m_DragonStrength/100;
+			return base.AttackDamage(weapon) * 1.0 * m_DragonDifficulty/100;
 		}
 
 		public override int MaxSpeedBase
 		{
 			get { return 191 + (Level * 2); }
 			set { m_maxSpeedBase = value; }
+		}
+
+		public override short Strength
+		{
+			get
+			{
+				return (short)(base.Strength * m_DragonDifficulty / 100);
+			}
 		}
 
 		public override int RespawnInterval
@@ -166,7 +174,7 @@ namespace DOL.GS
 				int highmod = Level + 50;
 				int lowmod = Level / 3;
 				int result = Util.Random(lowmod, highmod);
-				return result * 60 * 1000 *m_DragonStrength/100;
+				return result * 60 * 1000 *m_DragonDifficulty/100;
 			}
 		}
 
@@ -303,8 +311,7 @@ namespace DOL.GS
 		protected void ReportNews(GameObject killer)
 		{
 			int numPlayers = AwardDragonKillPoint();
-			String message = String.Format("{0} has been slain by a force of {1} warriors from the realm of {2}",
-				Name, numPlayers, GlobalConstants.RealmToName((eRealm)killer.Realm));
+			String message = String.Format("{0} has been slain by a force of {1} warriors!", Name, numPlayers);
 			NewsMgr.CreateNews(message, killer.Realm, eNewsType.PvE, true);
 		}
 
@@ -794,7 +801,7 @@ namespace DOL.GS
 					spell.Uninterruptible = true;
 					spell.ClientEffect = 4123;
 					spell.Icon = 4123;
-					spell.Duration = 30*m_DragonStrength/100;
+					spell.Duration = 30*m_DragonDifficulty/100;
 					spell.Description = "Stun";
 					spell.Name = "Paralyzing Horror";
 					spell.Range = 700;
