@@ -80,6 +80,8 @@ namespace DOL.GS.Spells
 			double damage = dps * atkArgs.AttackData.WeaponSpeed * spread * 0.001; // attack speed is 10 times higher (2.5spd=25)
 			double damageResisted = damage * target.GetResist(Spell.DamageType) * -0.01;
 
+			// log.DebugFormat("dps: {0}, damage: {1}, damageResisted: {2}, minDamageSpread: {3}, spread: {4}", dps, damage, damageResisted, m_minDamageSpread, spread);
+
 			if (Spell.Damage < 0)
 			{
 				damage = atkArgs.AttackData.Damage * Spell.Damage / -100.0;
@@ -115,10 +117,7 @@ namespace DOL.GS.Spells
 
 				if ( attackerClient != null )
 				{
-					if ( Spell.Pulse != 0 )
-						MessageToLiving( attacker, String.Format( LanguageMgr.GetTranslation( attackerClient, "DamageAddAndShield.EventHandlerDA.YouHitExtra" ), target.GetName( 0, false ), ad.Damage ), eChatType.CT_Spell );
-					else
-						MessageToLiving( attacker, String.Format( LanguageMgr.GetTranslation( attackerClient, "DamageAddAndShield.EventHandlerDA.YouHitFor" ), target.GetName( 0, false ), ad.Damage ), eChatType.CT_Spell );
+					MessageToLiving( attacker, String.Format( LanguageMgr.GetTranslation( attackerClient, "DamageAddAndShield.EventHandlerDA.YouHitExtra" ), target.GetName( 0, false ), ad.Damage ), eChatType.CT_Spell );
 				}
             }
 
@@ -138,8 +137,6 @@ namespace DOL.GS.Spells
 				if (player == null) continue;
 				player.Out.SendCombatAnimation(null, target, 0, 0, 0, 0, 0x0A, target.HealthPercent);
 			}
-			//			Log.Debug(String.Format("spell damage: {0}; damage: {1}; resisted damage: {2}; damage type {3}; minSpread {4}.", Spell.Damage, ad.Damage, ad.Modifier, ad.DamageType, m_minDamageSpread));
-			//			Log.Debug(String.Format("dpsCap: {0}; dps: {1}; dmg {2}; spread: {6}; resDmg: {3}; atkSpeed: {4}; resist: {5}.", dpsCap, dps, damage, damageResisted, attacker.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
 		}
 
 		// constructor
@@ -292,23 +289,16 @@ namespace DOL.GS.Spells
 					if (m_minDamageSpread > 100) m_minDamageSpread = 100;
 					else if (m_minDamageSpread < 50) m_minDamageSpread = 50;
 				}
+				else
+				{
+					// For level 0 spells, like realm abilities, always work off of full spec to achieve live like damage amounts.
+					// If spec level is used at all it most likely should only be for baseline spells. - tolakram
+					m_minDamageSpread = 100;
+				}
 			}
 
 			return base.StartSpell(target);
 		}
-
-		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
-		//public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
-		//{
-		//    base.ApplyEffectOnTarget(target, m_minDamageSpread);
-		//}
-		// Either keep this commented out or don't let DamageShield inherit
-		// from AbstractDamageAddSpellHandler, because it screws spell duration
-		// up completely.
 
 		/// <summary>
 		/// When an applied effect starts
