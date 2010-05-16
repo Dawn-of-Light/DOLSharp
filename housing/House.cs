@@ -35,7 +35,11 @@ namespace DOL.GS.Housing
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private readonly DBHouse _databaseItem;
-		private readonly Dictionary<int, DBHousePermissions> _houseAccess;
+		private readonly Dictionary<int, DBHouseCharsXPerms> _housePermissions;
+		private readonly Dictionary<uint, DBHousepointItem> _housepointItems;
+		private readonly Dictionary<int, IndoorItem> _indoorItems;
+		private readonly Dictionary<int, OutdoorItem> _outdoorItems;
+		private readonly Dictionary<int, DBHousePermissions> _permissionLevels;
 		private GameConsignmentMerchant _consignment;
 
 		#region Properties
@@ -180,22 +184,34 @@ namespace DOL.GS.Housing
 
 		public int UniqueID { get; set; }
 
-		public Dictionary<int, IndoorItem> IndoorItems { get; private set; }
+		public IDictionary<int, IndoorItem> IndoorItems
+		{
+			get { return _indoorItems; }
+		}
 
-		public Dictionary<int, OutdoorItem> OutdoorItems { get; private set; }
+		public IDictionary<int, OutdoorItem> OutdoorItems
+		{
+			get { return _outdoorItems; }
+		}
 
-		public Dictionary<uint, DBHousepointItem> HousepointItems { get; private set; }
+		public IDictionary<uint, DBHousepointItem> HousepointItems
+		{
+			get { return _housepointItems; }
+		}
 
 		public DBHouse DatabaseItem
 		{
 			get { return _databaseItem; }
 		}
 
-		public List<DBHouseCharsXPerms> HousePermissions { get; private set; }
-
-		public Dictionary<int, DBHousePermissions> PermissionLevels
+		public IEnumerable<KeyValuePair<int, DBHouseCharsXPerms>> HousePermissions
 		{
-			get { return _houseAccess; }
+			get { return _housePermissions.OrderBy(entry => entry.Value.CreationTime); }
+		}
+
+		public IDictionary<int, DBHousePermissions> PermissionLevels
+		{
+			get { return _permissionLevels; }
 		}
 
 		public GameConsignmentMerchant ConsignmentMerchant
@@ -246,7 +262,7 @@ namespace DOL.GS.Housing
 
 		public ushort Heading
 		{
-			get { return (ushort)_databaseItem.Heading; }
+			get { return (ushort) _databaseItem.Heading; }
 			set { _databaseItem.Heading = value; }
 		}
 
@@ -261,11 +277,11 @@ namespace DOL.GS.Housing
 		public House(DBHouse house)
 		{
 			_databaseItem = house;
-			_houseAccess = new Dictionary<int, DBHousePermissions>();
-			IndoorItems = new Dictionary<int, IndoorItem>();
-			OutdoorItems = new Dictionary<int, OutdoorItem>();
-			HousepointItems = new Dictionary<uint, DBHousepointItem>();
-			HousePermissions = new List<DBHouseCharsXPerms>();
+			_permissionLevels = new Dictionary<int, DBHousePermissions>();
+			_indoorItems = new Dictionary<int, IndoorItem>();
+			_outdoorItems = new Dictionary<int, OutdoorItem>();
+			_housepointItems = new Dictionary<uint, DBHousepointItem>();
+			_housePermissions = new Dictionary<int, DBHouseCharsXPerms>();
 		}
 
 		/// <summary>
@@ -275,10 +291,10 @@ namespace DOL.GS.Housing
 		{
 			get
 			{
-				double angle = Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
-				var x = (int)(X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));
-				var y = (int)(Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
-				var heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);
+				double angle = Heading*((Math.PI*2)/360); // angle*2pi/360;
+				var x = (int) (X + (0*Math.Cos(angle) + 500*Math.Sin(angle)));
+				var y = (int) (Y - (500*Math.Cos(angle) - 0*Math.Sin(angle)));
+				var heading = (ushort) ((Heading < 180 ? Heading + 180 : Heading - 180)/0.08789);
 
 				return new GameLocation("Housing", RegionID, x, y, Z, heading);
 			}
@@ -321,7 +337,7 @@ namespace DOL.GS.Housing
 
 			switch (Model)
 			{
-				//thx to sp4m
+					//thx to sp4m
 				default:
 					player.MoveTo(RegionID, X, Y, 25022, player.Heading);
 					break;
@@ -410,7 +426,7 @@ namespace DOL.GS.Housing
 		/// <param name="player">the player</param>
 		public void SendHouseInfo(GamePlayer player)
 		{
-			int level = Model - ((Model - 1) / 4) * 4;
+			int level = Model - ((Model - 1)/4)*4;
 			TimeSpan due = (LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
 			var text = new List<string>();
 
@@ -432,15 +448,15 @@ namespace DOL.GS.Housing
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.ExteriorUpgrades"));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildBanner",
-												((OutdoorGuildBanner) ? "Y" : "N")));
+			                                    ((OutdoorGuildBanner) ? "Y" : "N")));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildShield",
-												((OutdoorGuildShield) ? "Y" : "N")));
+			                                    ((OutdoorGuildShield) ? "Y" : "N")));
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.InteriorUpgrades"));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildBanner",
-												((IndoorGuildBanner) ? "Y" : "N")));
+			                                    ((IndoorGuildBanner) ? "Y" : "N")));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildShield",
-												((IndoorGuildShield) ? "Y" : "N")));
+			                                    ((IndoorGuildShield) ? "Y" : "N")));
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.InteriorCarpets"));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug1Color", Rug1Color));
@@ -450,13 +466,13 @@ namespace DOL.GS.Housing
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lockbox", Money.GetString(KeptMoney)));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentalPrice",
-												Money.GetString(HouseMgr.GetRentByModel(Model))));
+			                                    Money.GetString(HouseMgr.GetRentByModel(Model))));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.MaxLockbox",
-												Money.GetString(HouseMgr.GetRentByModel(Model) * 4)));
+			                                    Money.GetString(HouseMgr.GetRentByModel(Model)*4)));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
 
 			player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.HouseOwner", Name),
-											text);
+			                                text);
 		}
 
 		public int GetPorchAndGuildEmblemFlags()
@@ -511,7 +527,7 @@ namespace DOL.GS.Housing
 		/// <returns></returns>
 		public int GetFreeVaultNumber()
 		{
-			var usedVaults = new[] { false, false, false, false };
+			var usedVaults = new[] {false, false, false, false};
 			string sqlWhere = string.Format("HouseID = '{0}' AND ItemTemplateID LIKE '%_vault'", HouseNumber);
 
 			foreach (DBHousepointItem housePointItem in GameServer.Database.SelectObjects<DBHousepointItem>(sqlWhere))
@@ -539,7 +555,7 @@ namespace DOL.GS.Housing
 		{
 			if (o.Hookpoint <= HousingConstants.MaxHookpointLocations)
 			{
-				HousingConstants.RelativeHookpointsCoords[o.Model][o.Hookpoint] = new[] { o.OffX, o.OffY, o.OffZ, o.OffH };
+				HousingConstants.RelativeHookpointsCoords[o.Model][o.Hookpoint] = new[] {o.OffX, o.OffY, o.OffZ, o.OffH};
 				return true;
 			}
 
@@ -559,7 +575,7 @@ namespace DOL.GS.Housing
 				}
 			}
 
-			var objs = GameServer.Database.SelectAllObjects<HouseHookpointOffset>();
+			IList<HouseHookpointOffset> objs = GameServer.Database.SelectAllObjects<HouseHookpointOffset>();
 			foreach (HouseHookpointOffset o in objs)
 			{
 				AddNewOffset(o);
@@ -588,7 +604,7 @@ namespace DOL.GS.Housing
 				if (HousingConstants.RelativeHookpointsCoords[Model][i] != null)
 				{
 					if (HousingConstants.RelativeHookpointsCoords[Model][i][0] + X == objX &&
-						HousingConstants.RelativeHookpointsCoords[Model][i][1] + Y == objY)
+					    HousingConstants.RelativeHookpointsCoords[Model][i][1] + Y == objY)
 					{
 						position = i;
 					}
@@ -608,7 +624,7 @@ namespace DOL.GS.Housing
 			if (hookpointsCoords == null)
 				return 0;
 
-			return (ushort)(Heading + hookpointsCoords[3]);
+			return (ushort) (Heading + hookpointsCoords[3]);
 		}
 
 		/// <summary>
@@ -639,7 +655,7 @@ namespace DOL.GS.Housing
 			ushort heading = GetHookpointHeading(position);
 			GameStaticItem sItem = null;
 
-			switch ((eObjectType)item.Object_Type)
+			switch ((eObjectType) item.Object_Type)
 			{
 				case eObjectType.HouseNPC:
 					{
@@ -647,13 +663,13 @@ namespace DOL.GS.Housing
 						if (npt == null)
 							return null;
 
-						var hNPC = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(npt.ClassType, false);
+						var hNPC = (GameNPC) Assembly.GetAssembly(typeof (GameServer)).CreateInstance(npt.ClassType, false);
 
 						if (hNPC == null)
 						{
 							foreach (Assembly asm in ScriptMgr.Scripts)
 							{
-								hNPC = (GameNPC)asm.CreateInstance(npt.ClassType, false);
+								hNPC = (GameNPC) asm.CreateInstance(npt.ClassType, false);
 								if (hNPC != null) break;
 							}
 						}
@@ -674,8 +690,8 @@ namespace DOL.GS.Housing
 						hNPC.Z = z;
 						hNPC.Heading = heading;
 						hNPC.CurrentRegionID = RegionID;
-						hNPC.Realm = (eRealm)item.Realm;
-						hNPC.Flags ^= (uint)GameNPC.eFlags.PEACE;
+						hNPC.Realm = (eRealm) item.Realm;
+						hNPC.Flags ^= (uint) GameNPC.eFlags.PEACE;
 						hNPC.AddToWorld();
 						break;
 					}
@@ -690,7 +706,7 @@ namespace DOL.GS.Housing
 						sItem.Heading = heading;
 						sItem.CurrentRegionID = RegionID;
 						sItem.Name = item.Name;
-						sItem.Model = (ushort)item.Model;
+						sItem.Model = (ushort) item.Model;
 						sItem.AddToWorld();
 						//0:07:45.984 S=>C 0xD9 item/door create v171 (oid:0x0DDB emblem:0x0000 heading:0x0DE5 x:596203 y:530174 z:24723 model:0x05D2 health:  0% flags:0x04(realm:0) extraBytes:0 unk1_171:0x0096220C name:"Hibernia bindstone")
 						//add bind point
@@ -707,7 +723,7 @@ namespace DOL.GS.Housing
 						sItem.Heading = heading;
 						sItem.CurrentRegionID = RegionID;
 						sItem.Name = item.Name;
-						sItem.Model = (ushort)item.Model;
+						sItem.Model = (ushort) item.Model;
 						sItem.AddToWorld();
 						break;
 					}
@@ -804,35 +820,35 @@ namespace DOL.GS.Housing
 				return false;
 
 			// create a new consignment merchant entry, and add it to the DB
-			var newM = new DBHouseMerchant { HouseNumber = HouseNumber, Quantity = startValue };
+			var newM = new DBHouseMerchant {HouseNumber = HouseNumber, Quantity = startValue};
 			GameServer.Database.AddObject(newM);
 
 			float[] consignmentCoords = HousingConstants.ConsignmentPositioning[Model];
 			double multi = consignmentCoords[0];
-			var range = (int)consignmentCoords[1];
-			var zaddition = (int)consignmentCoords[2];
-			var realm = (int)consignmentCoords[3];
+			var range = (int) consignmentCoords[1];
+			var zaddition = (int) consignmentCoords[2];
+			var realm = (int) consignmentCoords[3];
 
-			double angle = Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
-			var heading = (ushort)((Heading < 180 ? Heading + 180 : Heading - 180) / 0.08789);
-			var tX = (int)((X + (500 * Math.Sin(angle))) - Math.Sin(angle - multi) * range);
-			var tY = (int)((Y - (500 * Math.Cos(angle))) + Math.Cos(angle - multi) * range);
+			double angle = Heading*((Math.PI*2)/360); // angle*2pi/360;
+			var heading = (ushort) ((Heading < 180 ? Heading + 180 : Heading - 180)/0.08789);
+			var tX = (int) ((X + (500*Math.Sin(angle))) - Math.Sin(angle - multi)*range);
+			var tY = (int) ((Y - (500*Math.Cos(angle))) + Math.Cos(angle - multi)*range);
 
 			var con = new GameConsignmentMerchant
-						{
-							CurrentRegionID = RegionID,
-							X = tX,
-							Y = tY,
-							Z = Z + zaddition,
-							Level = 50,
-							Realm = (eRealm)realm,
-							HouseNumber = HouseNumber,
-							Name = "GameConsignmentMerchant Merchant",
-							Heading = heading,
-							Model = 144
-						};
+			          	{
+			          		CurrentRegionID = RegionID,
+			          		X = tX,
+			          		Y = tY,
+			          		Z = Z + zaddition,
+			          		Level = 50,
+			          		Realm = (eRealm) realm,
+			          		HouseNumber = HouseNumber,
+			          		Name = "GameConsignmentMerchant Merchant",
+			          		Heading = heading,
+			          		Model = 144
+			          	};
 
-			con.Flags |= (uint)GameNPC.eFlags.PEACE;
+			con.Flags |= (uint) GameNPC.eFlags.PEACE;
 			con.LoadedFromScript = false;
 			con.RoamingRange = 0;
 
@@ -853,7 +869,7 @@ namespace DOL.GS.Housing
 			var npcmob = GameServer.Database.SelectObject<Mob>("HouseNumber = '" + HouseNumber + "'");
 			if (npcmob != null)
 			{
-				GameNPC[] npc = WorldMgr.GetNPCsByNameFromRegion(npcmob.Name, npcmob.Region, (eRealm)npcmob.Realm);
+				GameNPC[] npc = WorldMgr.GetNPCsByNameFromRegion(npcmob.Name, npcmob.Region, (eRealm) npcmob.Realm);
 
 				foreach (GameNPC hnpc in npc)
 				{
@@ -899,10 +915,10 @@ namespace DOL.GS.Housing
 			// tally up the price for all the requested changes
 			foreach (int slot in changes)
 			{
-				int page = slot / 30;
-				int pslot = slot % 30;
+				int page = slot/30;
+				int pslot = slot%30;
 
-				ItemTemplate item = items.GetItem(page, (eMerchantWindowSlot)pslot);
+				ItemTemplate item = items.GetItem(page, (eMerchantWindowSlot) pslot);
 				if (item != null)
 				{
 					price += item.Price;
@@ -921,14 +937,14 @@ namespace DOL.GS.Housing
 			// make all the changes
 			foreach (int slot in changes)
 			{
-				int page = slot / 30;
-				int pslot = slot % 30;
+				int page = slot/30;
+				int pslot = slot%30;
 
-				ItemTemplate item = items.GetItem(page, (eMerchantWindowSlot)pslot);
+				ItemTemplate item = items.GetItem(page, (eMerchantWindowSlot) pslot);
 
 				if (item != null)
 				{
-					switch ((eObjectType)item.Object_Type)
+					switch ((eObjectType) item.Object_Type)
 					{
 						case eObjectType.HouseInteriorBanner:
 							IndoorGuildBanner = (item.DPS_AF == 1 ? true : false);
@@ -1019,10 +1035,10 @@ namespace DOL.GS.Housing
 			string targetName = permType == PermissionType.Account ? player.Client.Account.Name : player.Name;
 
 			//  check to make sure an existing mapping doesn't exist.
-			foreach (DBHouseCharsXPerms perm in HousePermissions)
+			foreach (DBHouseCharsXPerms perm in _housePermissions.Values)
 			{
 				// fast expression to evaluate to match appropriate permissions
-				if (perm.PermissionType == (int)permType)
+				if (perm.PermissionType == (int) permType)
 				{
 					// make sure it's not identical, which would mean we couldn't add!
 					if (perm.TargetName == targetName)
@@ -1031,14 +1047,11 @@ namespace DOL.GS.Housing
 			}
 
 			// no matching permissions, create a new one and add it.
-			var housePermission = new DBHouseCharsXPerms(HouseNumber, targetName, player.Name, permLevel, (int)permType);
+			var housePermission = new DBHouseCharsXPerms(HouseNumber, targetName, player.Name, permLevel, (int) permType);
 			GameServer.Database.AddObject(housePermission);
 
 			// add it to our list
-			HousePermissions.Add(housePermission);
-
-			// sort permissions by creation date, oldest to newest
-			HousePermissions.Sort((a, b) => a.CreationTime.CompareTo(b.CreationTime));
+			_housePermissions.Add(GetOpenPermissionSlot(), housePermission);
 
 			return true;
 		}
@@ -1046,10 +1059,10 @@ namespace DOL.GS.Housing
 		public bool AddPermission(string targetName, PermissionType permType, int permLevel)
 		{
 			//  check to make sure an existing mapping doesn't exist.
-			foreach (DBHouseCharsXPerms perm in HousePermissions)
+			foreach (DBHouseCharsXPerms perm in _housePermissions.Values)
 			{
 				// fast expression to evaluate to match appropriate permissions
-				if (perm.PermissionType == (int)permType)
+				if (perm.PermissionType == (int) permType)
 				{
 					// make sure it's not identical, which would mean we couldn't add!
 					if (perm.TargetName == targetName)
@@ -1058,44 +1071,51 @@ namespace DOL.GS.Housing
 			}
 
 			// no matching permissions, create a new one and add it.
-			var housePermission = new DBHouseCharsXPerms(HouseNumber, targetName, targetName, permLevel, (int)permType);
+			var housePermission = new DBHouseCharsXPerms(HouseNumber, targetName, targetName, permLevel, (int) permType);
 			GameServer.Database.AddObject(housePermission);
 
 			// add it to our list
-			HousePermissions.Add(housePermission);
-
-			// sort permissions by creation date, oldest to newest
-			HousePermissions.Sort((a, b) => a.CreationTime.CompareTo(b.CreationTime));
+			_housePermissions.Add(GetOpenPermissionSlot(), housePermission);
 
 			return true;
 		}
 
+		/// <summary>
+		/// Grabs the first available house permission slot.
+		/// </summary>
+		/// <returns>returns an open house permission slot as an int</returns>
+		private int GetOpenPermissionSlot()
+		{
+			int startingSlot = 0;
+
+			while(_housePermissions.ContainsKey(startingSlot))
+			{
+				startingSlot++;
+			}
+
+			return startingSlot;
+		}
+
 		public void RemovePermission(int slot)
 		{
-			// make sure slot is in range
-			if(slot < 0 || slot > HousePermissions.Count - 1)
+			// make sure the permission exists
+			if (!_housePermissions.ContainsKey(slot))
 				return;
 
-			// grab the permission
-			var matchedPerm = HousePermissions[slot];
-			if (matchedPerm == null)
-				return;
+			var matchedPerm = _housePermissions[slot];
 
 			// remove the permission and delete it from the database
-			HousePermissions.Remove(matchedPerm);
+			_housePermissions.Remove(slot);
 			GameServer.Database.DeleteObject(matchedPerm);
 		}
 
 		public void AdjustPermissionSlot(int slot, int newPermLevel)
 		{
-			// make sure slot is in range
-			if (slot < 0 || slot > HousePermissions.Count - 1)
+			// make sure the permission exists
+			if (!_housePermissions.ContainsKey(slot))
 				return;
 
-			// grab the permission
-			var permission = HousePermissions[slot];
-			if (permission == null)
-				return;
+			var permission = _housePermissions[slot];
 
 			// check for proper permission level range
 			if (newPermLevel < HousingConstants.MinPermissionLevel || newPermLevel > HousingConstants.MaxPermissionLevel)
@@ -1119,21 +1139,21 @@ namespace DOL.GS.Housing
 				return null;
 
 			// try character permissions first
-			IEnumerable<DBHouseCharsXPerms> charPermissions = from cp in HousePermissions
-															  where
-																cp.TargetName == player.Name &&
-																cp.PermissionType == (int)PermissionType.Player
-															  select cp;
+			IEnumerable<DBHouseCharsXPerms> charPermissions = from cp in _housePermissions.Values
+			                                                  where
+			                                                  	cp.TargetName == player.Name &&
+			                                                  	cp.PermissionType == (int) PermissionType.Player
+			                                                  select cp;
 
 			if (charPermissions.Count() > 0)
 				return charPermissions.First();
 
 			// try account permissions next
-			IEnumerable<DBHouseCharsXPerms> acctPermissions = from cp in HousePermissions
-															  where
-																cp.TargetName == player.Client.Account.Name &&
-																cp.PermissionType == (int)PermissionType.Account
-															  select cp;
+			IEnumerable<DBHouseCharsXPerms> acctPermissions = from cp in _housePermissions.Values
+			                                                  where
+			                                                  	cp.TargetName == player.Client.Account.Name &&
+			                                                  	cp.PermissionType == (int) PermissionType.Account
+			                                                  select cp;
 
 			if (acctPermissions.Count() > 0)
 				return acctPermissions.First();
@@ -1141,20 +1161,20 @@ namespace DOL.GS.Housing
 			if (player.Guild != null)
 			{
 				// try guild permissions next
-				IEnumerable<DBHouseCharsXPerms> guildPermissions = from cp in HousePermissions
-																   where
-																	player.Guild.Name == cp.TargetName &&
-																	cp.PermissionType == (int)PermissionType.Guild
-																   select cp;
+				IEnumerable<DBHouseCharsXPerms> guildPermissions = from cp in _housePermissions.Values
+				                                                   where
+				                                                   	player.Guild.Name == cp.TargetName &&
+				                                                   	cp.PermissionType == (int) PermissionType.Guild
+				                                                   select cp;
 
 				if (guildPermissions.Count() > 0)
 					return guildPermissions.First();
 			}
 
 			// look for the catch-all permissions last
-			IEnumerable<DBHouseCharsXPerms> allPermissions = from cp in HousePermissions
-															 where cp.TargetName == "All"
-															 select cp;
+			IEnumerable<DBHouseCharsXPerms> allPermissions = from cp in _housePermissions.Values
+			                                                 where cp.TargetName == "All"
+			                                                 select cp;
 
 			if (allPermissions.Count() > 0)
 				return allPermissions.First();
@@ -1209,7 +1229,7 @@ namespace DOL.GS.Housing
 		private DBHousePermissions GetPermissionLevel(int permissionLevel)
 		{
 			DBHousePermissions permissions;
-			PermissionLevels.TryGetValue(permissionLevel, out permissions);
+			_permissionLevels.TryGetValue(permissionLevel, out permissions);
 
 			return permissions;
 		}
@@ -1229,8 +1249,8 @@ namespace DOL.GS.Housing
 
 				// check account-wide if not a guild house
 				IEnumerable<Character> charsOnAccount = from chr in player.Client.Account.Characters
-														where chr.ObjectId == _databaseItem.OwnerID
-														select chr;
+				                                        where chr.ObjectId == _databaseItem.OwnerID
+				                                        select chr;
 
 				if (charsOnAccount.Count() > 0)
 					return true;
@@ -1283,16 +1303,16 @@ namespace DOL.GS.Housing
 			switch (vault.Index)
 			{
 				case 0:
-					activeVaultPermissions = (VaultPermissions)housePermissions.Vault1;
+					activeVaultPermissions = (VaultPermissions) housePermissions.Vault1;
 					break;
 				case 1:
-					activeVaultPermissions = (VaultPermissions)housePermissions.Vault2;
+					activeVaultPermissions = (VaultPermissions) housePermissions.Vault2;
 					break;
 				case 2:
-					activeVaultPermissions = (VaultPermissions)housePermissions.Vault3;
+					activeVaultPermissions = (VaultPermissions) housePermissions.Vault3;
 					break;
 				case 3:
-					activeVaultPermissions = (VaultPermissions)housePermissions.Vault4;
+					activeVaultPermissions = (VaultPermissions) housePermissions.Vault4;
 					break;
 			}
 
@@ -1315,7 +1335,7 @@ namespace DOL.GS.Housing
 			if (housePermissions == null)
 				return false;
 
-			return ((ConsignmentPermissions)housePermissions.ConsignmentMerchant & consignPerms) > 0;
+			return ((ConsignmentPermissions) housePermissions.ConsignmentMerchant & consignPerms) > 0;
 		}
 
 		public bool CanChangeInterior(GamePlayer player, DecorationPermissions interiorPerms)
@@ -1334,7 +1354,7 @@ namespace DOL.GS.Housing
 			if (housePermissions == null)
 				return false;
 
-			return ((DecorationPermissions)housePermissions.ChangeInterior & interiorPerms) > 0;
+			return ((DecorationPermissions) housePermissions.ChangeInterior & interiorPerms) > 0;
 		}
 
 		public bool CanChangeGarden(GamePlayer player, DecorationPermissions gardenPerms)
@@ -1353,7 +1373,7 @@ namespace DOL.GS.Housing
 			if (housePermissions == null)
 				return false;
 
-			return ((DecorationPermissions)housePermissions.ChangeGarden & gardenPerms) > 0;
+			return ((DecorationPermissions) housePermissions.ChangeGarden & gardenPerms) > 0;
 		}
 
 		public bool CanChangeExternalAppearance(GamePlayer player)
@@ -1416,7 +1436,7 @@ namespace DOL.GS.Housing
 				DBHouseIndoorItem dbiitem in
 					GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = '" + HouseNumber + "'"))
 			{
-				IndoorItems.Add(i++, new IndoorItem(dbiitem));
+				_indoorItems.Add(i++, new IndoorItem(dbiitem));
 			}
 
 			i = 0;
@@ -1424,21 +1444,21 @@ namespace DOL.GS.Housing
 				DBHouseOutdoorItem dboitem in
 					GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = '" + HouseNumber + "'"))
 			{
-				OutdoorItems.Add(i++, new OutdoorItem(dboitem));
+				_outdoorItems.Add(i++, new OutdoorItem(dboitem));
 			}
 
 			foreach (
 				DBHouseCharsXPerms d in GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = '" + HouseNumber + "'")
 				)
 			{
-				HousePermissions.Add(d);
+				_housePermissions.Add(GetOpenPermissionSlot(), d);
 			}
 
 			foreach (
 				DBHousePermissions dbperm in
 					GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = '" + HouseNumber + "'"))
 			{
-				PermissionLevels[dbperm.PermissionLevel] = dbperm;
+				_permissionLevels.Add(dbperm.PermissionLevel, dbperm);
 			}
 
 			foreach (
@@ -1463,7 +1483,7 @@ namespace DOL.GS.Housing
 			}
 
 			// sort character permissions by creation time, oldest to newest
-			HousePermissions.Sort((a, b) => a.CreationTime.CompareTo(b.CreationTime));
+			//HousePermissions.Sort((a, b) => a.CreationTime.CompareTo(b.CreationTime));
 		}
 
 		#endregion

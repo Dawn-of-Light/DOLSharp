@@ -23,7 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
-
+using System.Linq;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Effects;
@@ -2961,14 +2961,16 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteByte((byte) house.OutdoorItems.Count);
 				pak.WriteByte(0x80);
-				foreach (DictionaryEntry entry in new SortedList(house.OutdoorItems))
+
+				foreach (var entry in house.OutdoorItems.OrderBy(entry => entry.Key))
 				{
-					var item = (OutdoorItem) entry.Value;
-					pak.WriteByte((byte) ((int) entry.Key));
+					var item = entry.Value;
+					pak.WriteByte((byte) (entry.Key));
 					pak.WriteShort((ushort) item.Model);
 					pak.WriteByte((byte) item.Position);
 					pak.WriteByte((byte) item.Rotation);
 				}
+
 				SendTCP(pak);
 			}
 		}
@@ -3058,15 +3060,16 @@ namespace DOL.GS.PacketHandler
 
 			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseUserPermissions)))
 			{
-				int slotId = 0;
-
-				pak.WriteByte((byte)house.HousePermissions.Count); // number of permissions
+				pak.WriteByte((byte)house.HousePermissions.Count()); // number of permissions
 				pak.WriteByte(0x00); // ?
 				pak.WriteShort((ushort)house.HouseNumber); // house number
 
-				foreach (DBHouseCharsXPerms perm in house.HousePermissions)
+				foreach (var entry in house.HousePermissions)
 				{
-					pak.WriteByte((byte)slotId++); // Slot
+					// grab permission
+					var perm = entry.Value;
+
+					pak.WriteByte((byte)entry.Key); // Slot
 					pak.WriteByte(0x00); // ?
 					pak.WriteByte(0x00); // ?
 					pak.WriteByte((byte)perm.PermissionType); // Type (Guild, Class, Race ...)
@@ -3086,10 +3089,10 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte) house.IndoorItems.Count);
 				pak.WriteByte(0x80); //0x00 = update, 0x80 = complete package
 
-				foreach (DictionaryEntry entry in new SortedList(house.IndoorItems))
+				foreach (var entry in house.IndoorItems.OrderBy(entry => entry.Key))
 				{
-					var item = (IndoorItem) entry.Value;
-					WriteHouseFurniture(pak, item, (int) entry.Key);
+					var item = entry.Value;
+					WriteHouseFurniture(pak, item, entry.Key);
 				}
 
 				SendTCP(pak);

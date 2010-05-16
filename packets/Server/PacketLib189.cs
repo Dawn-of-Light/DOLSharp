@@ -18,6 +18,7 @@
  */
 #define NOENCRYPTION
 using System;
+using System.Linq;
 using log4net;
 using DOL.GS.Quests;
 using System.Reflection;
@@ -396,14 +397,16 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0); // sheduled for repossession (in hours) new in 1.89b+
 			pak.WriteByte((byte)house.OutdoorItems.Count);
 			pak.WriteByte(0x80);
-			foreach (DictionaryEntry entry in new SortedList(house.OutdoorItems))
+
+			foreach (var entry in house.OutdoorItems.OrderBy(entry => entry.Key))
 			{
-				OutdoorItem item = (OutdoorItem)entry.Value;
-				pak.WriteByte((byte)((int)entry.Key));
+				OutdoorItem item = entry.Value;
+				pak.WriteByte((byte)entry.Key);
 				pak.WriteShort((ushort)item.Model);
 				pak.WriteByte((byte)item.Position);
 				pak.WriteByte((byte)item.Rotation);
 			}
+
 			SendTCP(pak);
 		}
 
