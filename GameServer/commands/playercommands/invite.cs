@@ -88,9 +88,31 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			client.Out.SendMessage("You have invited " + target.Name + " to join your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			target.Out.SendGroupInviteCommand(client.Player, client.Player.Name + " has invited you to join\n" + client.Player.GetPronoun(1, false) + " group. Do you wish to join?");
-			target.Out.SendMessage(client.Player.Name + " has invited you to join " + client.Player.GetPronoun(1, false) + " group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (client.Account.PrivLevel > target.Client.Account.PrivLevel)
+			{
+				// you have no choice!
+
+				if (client.Player.Group == null)
+				{
+					Group group = new Group(client.Player);
+					GroupMgr.AddGroup(group, group);
+					group.AddMember(client.Player);
+					group.AddMember(target);
+				}
+				else
+				{
+					client.Player.Group.AddMember(target);
+				}
+
+				client.Out.SendMessage("(GM) You have added " + target.Name + " to your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				target.Out.SendMessage("GM " + client.Player.Name + " has added you to " + client.Player.GetPronoun(1, false) + " group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			else
+			{
+				client.Out.SendMessage("You have invited " + target.Name + " to join your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				target.Out.SendGroupInviteCommand(client.Player, client.Player.Name + " has invited you to join\n" + client.Player.GetPronoun(1, false) + " group. Do you wish to join?");
+				target.Out.SendMessage(client.Player.Name + " has invited you to join " + client.Player.GetPronoun(1, false) + " group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
 		}
 	}
 }
