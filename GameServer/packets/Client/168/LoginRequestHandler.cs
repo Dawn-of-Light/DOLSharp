@@ -265,7 +265,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								foreach (Account ac in allAccByIp)
 								{
 									ts = DateTime.Now - ac.CreationDate;
-									if (ts.Minutes < Properties.TIME_BETWEEN_ACCOUNT_CREATION_SAMEIP && totalacc > 1)
+									if (ts.TotalMinutes < Properties.TIME_BETWEEN_ACCOUNT_CREATION_SAMEIP && totalacc > 1)
 									{
 										Log.Warn("Account creation: too many from same IP within set minutes - " + userName + " : " + ipAddress);
 
@@ -291,7 +291,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (Properties.TIME_BETWEEN_ACCOUNT_CREATION > 0)
 								{
 									ts = DateTime.Now - m_lastAccountCreateTime;
-									if (ts.Minutes < Properties.TIME_BETWEEN_ACCOUNT_CREATION)
+									if (ts.TotalMinutes < Properties.TIME_BETWEEN_ACCOUNT_CREATION)
 									{
 										Log.Warn("Account creation: time between account creation too small - " + userName + " : " + ipAddress);
 
