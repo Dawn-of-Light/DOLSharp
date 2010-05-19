@@ -303,6 +303,27 @@ namespace DOL.Language
 
             return IDSentences["LONG_NAME"][lng];
 		}
+
+
+		/// <summary>
+		/// This returns the last part of the translation text id id actual translation fails
+		/// This helps to avoid returning strings that are too long and overflow the client
+		/// In addition, later version clients seem to reject names with special characters in them
+		/// </summary>
+		/// <param name="TranslationID"></param>
+		/// <returns></returns>
+		public static string GetTranslationErrorText(string lang, string TranslationID)
+		{
+			try
+			{
+				return lang + TranslationID.Substring(TranslationID.LastIndexOf(".") + 1);
+			}
+			catch
+			{
+			}
+
+			return lang + "Error";
+		}
 		
 
 		/// <summary>
@@ -324,7 +345,7 @@ namespace DOL.Language
 
 			if (IDSentences.ContainsKey(TranslationID) == false)
 			{
-				return translated;
+				return GetTranslationErrorText(lang, translated);
 			}
 
 			if (IDSentences[TranslationID].ContainsKey(lang) == false)
@@ -334,7 +355,7 @@ namespace DOL.Language
 
 				if (IDSentences[TranslationID].ContainsKey(lang) == false)
 				{
-					return translated;
+					return GetTranslationErrorText(lang, translated);
 				}
 			}
 
