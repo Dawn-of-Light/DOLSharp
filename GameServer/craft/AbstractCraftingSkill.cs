@@ -559,7 +559,7 @@ namespace DOL.GS
 						newItem.Creator = player.Name;
 						newItem.Quality = GetQuality(player, craftItemData);
 						newItem.Count = -countToAdd;
-						newItem.Weight *= -countToAdd;
+						newItem.Weight += -countToAdd;
 
 						if ((int)de.Key > 0)		// Create new item in the backpack
 						{

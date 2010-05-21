@@ -323,6 +323,8 @@ namespace DOL.GS.PacketHandler
 		HousingCrafting = 0x09,
 		HousingBindstone = 0x0A,
 		HousingInsideMenu = 0x0B,
+		HousingTicket = 0x0C,
+		HousingGuildTicket = 0x0D,
 	}
 
 	/// <summary>
