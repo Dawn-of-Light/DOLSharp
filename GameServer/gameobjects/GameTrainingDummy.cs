@@ -20,6 +20,7 @@ using System;
 using System.Reflection;
 using DOL.AI.Brain;
 using log4net;
+using DOL.Events;
 
 namespace DOL.GS
 {
@@ -84,6 +85,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override bool Interact(GamePlayer player)
 		{
+			Notify(GameObjectEvent.Interact, this, new InteractEventArgs(player));
+			player.Notify(GameObjectEvent.InteractWith, player, new InteractWithEventArgs(this));
 			return true;
 		}
 	}
