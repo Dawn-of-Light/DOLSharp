@@ -5066,40 +5066,42 @@ namespace DOL.GS
 			foreach (string autotrainKey in CharacterClass.GetAutotrainableSkills())
 			{
 				if (autotrainKey == spec.KeyName)
-					switch (Mode)
 				{
-					case 0:// return sum of all AT points in the spec
-						{
-							int pts_to_refund = Math.Min(max_autotrain, spec.Level);
-							return ((pts_to_refund * (pts_to_refund + 1) - 2) / 2);
-						}
-					case 1: // return max AT level + message
-						{
-							if (Level % 4 == 0)
-								if (spec.Level >= max_autotrain)
-									return max_autotrain;
-								else
-									Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "PlayerClass.OnLevelUp.Autotrain", spec.Name, max_autotrain));
-							return 0;
-						}
-					case 2: // return next free points due to AT change on levelup
-						{
-							if (spec.Level < max_autotrain)
-								return (spec.Level + 1);
-							else
+					switch (Mode)
+					{
+						case 0:// return sum of all AT points in the spec
+							{
+								int pts_to_refund = Math.Min(max_autotrain, spec.Level);
+								return ((pts_to_refund * (pts_to_refund + 1) - 2) / 2);
+							}
+						case 1: // return max AT level + message
+							{
+								if (Level % 4 == 0)
+									if (spec.Level >= max_autotrain)
+										return max_autotrain;
+									else
+										Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client, "PlayerClass.OnLevelUp.Autotrain", spec.Name, max_autotrain));
 								return 0;
-						}
-					case 3: // return sum of all free AT points
-						{
-							if (spec.Level < max_autotrain)
-								return (((max_autotrain * (max_autotrain + 1) - 2) / 2) - ((spec.Level * (spec.Level + 1) - 2) / 2));
-							else
-								return ((max_autotrain * (max_autotrain + 1) - 2) / 2);
-						}
-					case 4: // spec is autotrainable
-						{
-							return 1;
-						}
+							}
+						case 2: // return next free points due to AT change on levelup
+							{
+								if (spec.Level < max_autotrain)
+									return (spec.Level + 1);
+								else
+									return 0;
+							}
+						case 3: // return sum of all free AT points
+							{
+								if (spec.Level < max_autotrain)
+									return (((max_autotrain * (max_autotrain + 1) - 2) / 2) - ((spec.Level * (spec.Level + 1) - 2) / 2));
+								else
+									return ((max_autotrain * (max_autotrain + 1) - 2) / 2);
+							}
+						case 4: // spec is autotrainable
+							{
+								return 1;
+							}
+					}
 				}
 			}
 			return 0;
