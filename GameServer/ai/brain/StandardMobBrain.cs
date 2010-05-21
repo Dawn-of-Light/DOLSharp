@@ -296,6 +296,14 @@ namespace DOL.AI.Brain
 		protected readonly Hashtable m_aggroTable = new Hashtable();
 
 		/// <summary>
+		/// The aggression table for this mob
+		/// </summary>
+		public Hashtable AggroTable
+		{
+			get { return m_aggroTable; }
+		}
+
+		/// <summary>
 		/// Aggressive Level in % 0..100, 0 means not Aggressive
 		/// </summary>
 		public virtual int AggroLevel
