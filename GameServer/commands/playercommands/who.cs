@@ -117,6 +117,11 @@ namespace DOL.GS.Commands
 						filters = null;
 						break;
 					}
+				case "help": // list syntax for the who command
+					{
+						DisplaySyntax(client);
+						return;
+					}
 				case "staff":
 				case "gm":
 				case "admin":

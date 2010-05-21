@@ -154,6 +154,11 @@ namespace DOL.Events
 
 		public static readonly GamePlayerEvent NextCraftingTierReached = new GamePlayerEvent("GamePlayer.ReachedNewCraftTitle");
 
+		/// <summary>
+		/// The ChangeTarget event is fired when a player changes target
+		/// </summary>
+		public static readonly GamePlayerEvent ChangeTarget = new GamePlayerEvent("GamePlayer.ChangeTarget");
+
 		#region Statistics
 
 		/// <summary>

@@ -22,6 +22,7 @@ using System.Reflection;
 using DOL.GS.Quests;
 using DOL.Database;
 using log4net;
+using DOL.GS.Behaviour;
 
 namespace DOL.GS.PacketHandler
 {
@@ -47,14 +48,17 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((offer) ? (byte)0x02 : (byte)0x01); // Accept/Decline or Finish/Not Yet
 			pak.WriteByte(0x01); // Wrap
 			pak.WritePascalString(quest.Name);
-			if (quest.Summary.Length > 255)
-				pak.WritePascalString(quest.Summary.Substring(0,255)); // Summary is max 255 bytes !
+
+			String personalizedSummary = BehaviourUtils.GetPersonalizedMessage(quest.Summary, player);
+			if (personalizedSummary.Length > 255)
+				pak.WritePascalString(personalizedSummary.Substring(0, 255)); // Summary is max 255 bytes !
 			else
-				pak.WritePascalString(quest.Summary);
+				pak.WritePascalString(personalizedSummary);
 			if (offer)
 			{
-				pak.WriteShort((ushort)quest.Story.Length);
-				pak.WriteStringBytes(quest.Story);
+				String personalizedStory = BehaviourUtils.GetPersonalizedMessage(quest.Story, player);
+				pak.WriteShort((ushort)personalizedStory.Length);
+				pak.WriteStringBytes(personalizedStory);
 			}
 			else
 			{
