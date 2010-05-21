@@ -19,6 +19,7 @@
 using System;
 
 using DOL.GS.Keeps;
+using DOL.Events;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -128,6 +129,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						player.PrayTimerStop();
 					}
 				}
+
+				GameEventMgr.Notify(GamePlayerEvent.ChangeTarget, player, null);
 			}
 		}
 	}
