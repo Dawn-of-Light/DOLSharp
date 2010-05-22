@@ -187,7 +187,7 @@ namespace DOL.GS.Spells
 
 				bool arrowBlock = false;
 
-				if (target is GamePlayer && !target.IsStunned && !target.IsMezzed && !target.IsSitting)
+				if (target is GamePlayer && !target.IsStunned && !target.IsMezzed && !target.IsSitting && m_handler.Spell.LifeDrainReturn != (int)Archery.eShotType.Critical)
 				{
 					GamePlayer player = (GamePlayer)target;
 					InventoryItem lefthand = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
