@@ -2557,6 +2557,14 @@ namespace DOL.GS.Commands
 
 			text.Add("InCombat: " + targetMob.InCombat);
 
+			if (targetMob.InCombat)
+			{
+				text.Add("LastCombatPVE: " + targetMob.LastAttackedByEnemyTickPvE);
+				text.Add("LastCombatPVP: " + targetMob.LastAttackedByEnemyTickPvP);
+				text.Add("RegionTick: " + targetMob.CurrentRegion.Time);
+				text.Add("");
+			}
+
 			if (targetMob.TargetObject != null)
 			{
 				text.Add("TargetObject: " + targetMob.TargetObject.Name);
