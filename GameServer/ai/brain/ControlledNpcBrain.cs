@@ -667,7 +667,11 @@ namespace DOL.AI.Brain
 					// 1st we check only if living is mezzed,
 					// cause if so there is no need to look
 					// through all effects for a root
-					if (living.IsMezzed || living.IsStealthed || living.IsAlive == false || living.ObjectState != GameObject.eObjectState.Active)
+					if (living.IsMezzed ||
+						living.IsStealthed || 
+						living.IsAlive == false || 
+						living.ObjectState != GameObject.eObjectState.Active ||
+						Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE)
 					{
 						removable.Add(living);
 					}
