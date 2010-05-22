@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database;
@@ -115,7 +116,7 @@ namespace DOL.AI.Brain
 				int maxdistance = Body.MaxDistance > 0 ? Body.MaxDistance : -Body.MaxDistance * AggroRange / 100;
                 if (maxdistance > 0 && distance > maxdistance)
                 {
-                    Body.WalkToSpawn(Body.MaxSpeed * 2);
+                    Body.WalkToSpawn();
                     return;
                 }
 			}
@@ -158,28 +159,25 @@ namespace DOL.AI.Brain
                 Body.WalkToSpawn(); // Mobs do not walk back at 2x their speed..
             }
 
-            //Satyr: This Check needs to be done BEFORE all agro-actions and AFTER
-            //all Returning-Home Issues.
-            if (Body.IsReturningHome)
-                return;
-
-
-			//If we have an aggrolevel above 0, we check for players and npcs in the area to attack
-			if (!Body.AttackState && AggroLevel > 0)
+			if (Body.IsReturningHome == false)
 			{
-				CheckPlayerAggro();
-				CheckNPCAggro();
-			}
-			// Only start an attack if there actually is something to attack
-			if (IsAggroing)
-			{
-				//[ganrod] Nidel: Cancel WalkToSpawn and restart attack action
-				if(Body.IsReturningHome)
+				//If we have an aggrolevel above 0, we check for players and npcs in the area to attack
+				if (!Body.AttackState && AggroLevel > 0)
 				{
-				  Body.StopMoving();
+					CheckPlayerAggro();
+					CheckNPCAggro();
 				}
-				AttackMostWanted();
-				return;
+
+				if (HasAggro)
+				{
+					AttackMostWanted();
+					return;
+				}
+				else
+				{
+					Body.StopAttack(); // this will set AttackState to false
+					Body.TargetObject = null;
+				}
 			}
 		}
 
@@ -324,16 +322,16 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Checks whether living has someone on its aggrolist		
 		/// </summary>
-		public virtual bool IsAggroing
+		public virtual bool HasAggro
 		{
 			get
 			{
-				bool aggroing = false;
+				bool hasAggro = false;
 				lock (m_aggroTable.SyncRoot)
 				{
-					aggroing = (m_aggroTable.Count > 0);
+					hasAggro = (m_aggroTable.Count > 0);
 				}
-				return aggroing;
+				return hasAggro;
 			}
 		}
 
@@ -575,15 +573,13 @@ namespace DOL.AI.Brain
 			if (!IsActive)
 				return;
 
-			GameLiving target = CalculateNextAttackTarget();
-			if (target != null)
-			{
-				if (!Body.AttackState || target != Body.TargetObject)
-				{
-					Body.TargetObject = target;
+			Body.TargetObject = CalculateNextAttackTarget();
 
-					if (!CheckSpells(eCheckSpellType.Offensive))
-						Body.StartAttack(target);
+			if (Body.TargetObject != null)
+			{
+				if (!CheckSpells(eCheckSpellType.Offensive))
+				{
+					Body.StartAttack(Body.TargetObject);
 				}
 			}
 		}
@@ -599,9 +595,17 @@ namespace DOL.AI.Brain
 			{
 				double maxAggro = 0;
 				IDictionaryEnumerator aggros = m_aggroTable.GetEnumerator();
+				List<GameLiving> removable = new List<GameLiving>();
 				while (aggros.MoveNext())
 				{
 					GameLiving living = (GameLiving)aggros.Key;
+
+					// check to make sure this target is still valid
+					if (living.IsAlive == false || living.ObjectState != GameObject.eObjectState.Active)
+					{
+						removable.Add(living);
+						continue;
+					}
 
 					// Don't bother about necro shade, can't attack it anyway.
 					if (living.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
@@ -631,12 +635,18 @@ namespace DOL.AI.Brain
 						}
 					}
 				}
+
+				foreach (GameLiving l in removable)
+				{
+					RemoveFromAggroList(l);
+				}
 			}
 
 			if (maxAggroObject == null)
-			{	// nobody left
+			{
 				m_aggroTable.Clear();
 			}
+
 			return maxAggroObject;
 		}
 
@@ -709,41 +719,6 @@ namespace DOL.AI.Brain
 					OnAttackedByEnemy(eArgs.AttackData);
 					return;
 				}
-				else if (e == GameLivingEvent.EnemyHealed)
-				{
-					EnemyHealedEventArgs eArgs = args as EnemyHealedEventArgs;
-					if (eArgs != null && eArgs.HealSource is GameLiving)
-					{
-						// first check to see if the healer is in our aggrolist so we don't go attacking anyone who heals
-						if (m_aggroTable[(GameLiving)eArgs.HealSource] != null)
-						{
-							if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
-							{
-								AddToAggroList((GameLiving)eArgs.HealSource, eArgs.HealAmount);
-							}
-						}
-					}
-					return;
-				}
-				else if (e == GameLivingEvent.EnemyKilled)
-				{
-					EnemyKilledEventArgs eArgs = args as EnemyKilledEventArgs;
-					if (eArgs != null)
-					{
-						// transfer all controlled target aggro to the owner
-						if (eArgs.Target is GameNPC)
-						{
-							IControlledBrain controlled = ((GameNPC)eArgs.Target).Brain as IControlledBrain;
-							if (controlled != null)
-							{
-								long contrAggro = GetAggroAmountForLiving(controlled.Body);
-								AddToAggroList(controlled.Owner, (int)contrAggro);
-							}
-						}
-						RemoveFromAggroList(eArgs.Target);
-					}
-					return;
-				}
 				else if (e == GameLivingEvent.Dying)
 				{
 					// clean aggro table
@@ -765,6 +740,45 @@ namespace DOL.AI.Brain
 					Body.StartAttack(Body.TargetObject);
 				}
 			}
+
+			if (e == GameLivingEvent.EnemyHealed)
+			{
+				EnemyHealedEventArgs eArgs = args as EnemyHealedEventArgs;
+				if (eArgs != null && eArgs.HealSource is GameLiving)
+				{
+					// first check to see if the healer is in our aggrolist so we don't go attacking anyone who heals
+					if (m_aggroTable[(GameLiving)eArgs.HealSource] != null)
+					{
+						if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & (uint)GameNPC.eFlags.PEACE) == 0))
+						{
+							AddToAggroList((GameLiving)eArgs.HealSource, eArgs.HealAmount);
+						}
+					}
+				}
+				return;
+			}
+			else if (e == GameLivingEvent.EnemyKilled)
+			{
+				EnemyKilledEventArgs eArgs = args as EnemyKilledEventArgs;
+				if (eArgs != null)
+				{
+					// transfer all controlled target aggro to the owner
+					if (eArgs.Target is GameNPC)
+					{
+						IControlledBrain controlled = ((GameNPC)eArgs.Target).Brain as IControlledBrain;
+						if (controlled != null)
+						{
+							long contrAggro = GetAggroAmountForLiving(controlled.Body);
+							AddToAggroList(controlled.Owner, (int)contrAggro);
+						}
+					}
+
+					RemoveFromAggroList(eArgs.Target);
+					AttackMostWanted();
+				}
+				return;
+			}
+
 		}
 
 		/// <summary>
