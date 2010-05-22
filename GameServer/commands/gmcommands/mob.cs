@@ -2555,15 +2555,24 @@ namespace DOL.GS.Commands
 				text.Add("");
 			}
 
-			text.Add("InCombat: " + targetMob.InCombat);
-
-			if (targetMob.InCombat)
+			if (targetMob.IsReturningHome || targetMob.IsReturningToSpawnPoint)
 			{
-				text.Add("LastCombatPVE: " + targetMob.LastAttackedByEnemyTickPvE);
-				text.Add("LastCombatPVP: " + targetMob.LastAttackedByEnemyTickPvP);
-				text.Add("RegionTick: " + targetMob.CurrentRegion.Time);
+				text.Add("IsReturningHome: " + targetMob.IsReturningHome);
+				text.Add("IsReturningToSpawnPoint: " + targetMob.IsReturningToSpawnPoint);
 				text.Add("");
 			}
+
+			text.Add("InCombat: " + targetMob.InCombat);
+			text.Add("AttackState: " + targetMob.AttackState);
+			text.Add("LastCombatPVE: " + targetMob.LastAttackedByEnemyTickPvE);
+			text.Add("LastCombatPVP: " + targetMob.LastAttackedByEnemyTickPvP);
+
+			if (targetMob.InCombat || targetMob.AttackState)
+			{
+				text.Add("RegionTick: " + targetMob.CurrentRegion.Time);
+			}
+
+			text.Add("");
 
 			if (targetMob.TargetObject != null)
 			{
