@@ -45,6 +45,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		public const int MAX_AGGRO_DISTANCE = 3600;
+		public const int MAX_AGGRO_LIST_DISTANCE = 6000;
 		public const int MAX_PET_AGGRO_DISTANCE = 512; // Tolakram - Live test with caby pet - I was extremely close before auto aggro
 
 		/// <summary>
@@ -175,7 +176,9 @@ namespace DOL.AI.Brain
 				}
 				else
 				{
-					Body.StopAttack(); // this will set AttackState to false
+					if (Body.AttackState)
+						Body.StopAttack();
+
 					Body.TargetObject = null;
 				}
 			}
@@ -601,7 +604,10 @@ namespace DOL.AI.Brain
 					GameLiving living = (GameLiving)aggros.Key;
 
 					// check to make sure this target is still valid
-					if (living.IsAlive == false || living.ObjectState != GameObject.eObjectState.Active)
+					if (living.IsAlive == false || 
+						living.ObjectState != GameObject.eObjectState.Active ||
+						living.IsStealthed ||
+						Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE)
 					{
 						removable.Add(living);
 						continue;
@@ -611,9 +617,6 @@ namespace DOL.AI.Brain
 					if (living.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
 						continue;
 						
-					if (living.IsStealthed)
-						continue;
-
 					long amount = (long)aggros.Value;
 
 					if (living.IsAlive
