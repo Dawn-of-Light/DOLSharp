@@ -1055,13 +1055,23 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Check this flag to see wether this living is involved in combat
+		/// Check this flag to see if this living is involved in combat
 		/// </summary>
 		public virtual bool InCombat
 		{
 			get
 			{
-				return InCombatPvE || InCombatPvP;
+				if ((InCombatPvE || InCombatPvP) == false)
+				{
+					if (Attackers.Count > 0)
+					{
+						Attackers.Clear();
+					}
+
+					return false;
+				}
+
+				return true;
 			}
 		}
 
