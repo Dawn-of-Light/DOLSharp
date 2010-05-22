@@ -667,7 +667,7 @@ namespace DOL.AI.Brain
 					// 1st we check only if living is mezzed,
 					// cause if so there is no need to look
 					// through all effects for a root
-					if (living.IsMezzed || living.IsStealthed)
+					if (living.IsMezzed || living.IsStealthed || living.IsAlive == false || living.ObjectState != GameObject.eObjectState.Active)
 					{
 						removable.Add(living);
 					}
@@ -681,6 +681,7 @@ namespace DOL.AI.Brain
 						}
 					}
 				}
+
 				foreach (GameLiving living in removable)
 				{
 					RemoveFromAggroList(living);
@@ -754,7 +755,8 @@ namespace DOL.AI.Brain
 			}
 			else
 			{
-				//if (Body.AttackState)
+				Body.TargetObject = null;
+
 				if (Body.IsAttacking)
 					Body.StopAttack();
 
@@ -762,9 +764,13 @@ namespace DOL.AI.Brain
 					Body.SpellTimer.Stop();
 
 				if (WalkState == eWalkState.Follow)
+				{
 					FollowOwner();
+				}
 				else if (m_tempX > 0 && m_tempY > 0 && m_tempZ > 0)
+				{
 					Body.WalkTo(m_tempX, m_tempY, m_tempZ, Body.MaxSpeed);
+				}
 			}
 		}
 
