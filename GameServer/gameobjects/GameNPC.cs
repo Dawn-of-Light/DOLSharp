@@ -691,17 +691,17 @@ namespace DOL.GS
 				if (!IsMoving)
 					return base.X;
 
-				if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
+				if (TargetPosition.X != 0 || TargetPosition.Y != 0 || TargetPosition.Z != 0)
 				{
-					long expectedDistance = FastMath.Abs((long)Target.X - m_x);
+					long expectedDistance = FastMath.Abs((long)TargetPosition.X - m_x);
 
 					if (expectedDistance == 0)
-						return Target.X;
+						return TargetPosition.X;
 
 					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * TickSpeedX));
 					
 					if (expectedDistance - actualDistance < 0)
-						return Target.X;
+						return TargetPosition.X;
 				}
 
 				return base.X;
@@ -720,17 +720,17 @@ namespace DOL.GS
 				if (!IsMoving)
 					return base.Y;
 
-				if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
+				if (TargetPosition.X != 0 || TargetPosition.Y != 0 || TargetPosition.Z != 0)
 				{
-					long expectedDistance = FastMath.Abs((long)Target.Y - m_y);
+					long expectedDistance = FastMath.Abs((long)TargetPosition.Y - m_y);
 
 					if (expectedDistance == 0)
-						return Target.Y;
+						return TargetPosition.Y;
 
 					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * TickSpeedY));
 
 					if (expectedDistance - actualDistance < 0)
-						return Target.Y;
+						return TargetPosition.Y;
 				}
 				return base.Y;
 			}
@@ -748,17 +748,17 @@ namespace DOL.GS
 				if (!IsMoving)
 					return base.Z;
 
-				if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
+				if (TargetPosition.X != 0 || TargetPosition.Y != 0 || TargetPosition.Z != 0)
 				{
-					long expectedDistance = FastMath.Abs((long)Target.Z - m_z);
+					long expectedDistance = FastMath.Abs((long)TargetPosition.Z - m_z);
 
 					if (expectedDistance == 0)
-						return Target.Z;
+						return TargetPosition.Z;
 
 					long actualDistance = FastMath.Abs((long)(MovementElapsedTicks * TickSpeedZ));
 
 					if (expectedDistance - actualDistance < 0)
-						return Target.Z;
+						return TargetPosition.Z;
 				}
 				return base.Z;
 			}
@@ -886,24 +886,24 @@ namespace DOL.GS
 			set { m_pathID = value; }
 		}
 
-		private IPoint3D m_target = new Point3D(0, 0, 0);
+		private IPoint3D m_targetPosition = new Point3D(0, 0, 0);
 
 		/// <summary>
 		/// The target position.
 		/// </summary>
-		public virtual IPoint3D Target
+		public virtual IPoint3D TargetPosition
 		{
 			get
 			{
-				return m_target;
+				return m_targetPosition;
 			}
 
 			protected set
 			{
-				if (value != m_target)
+				if (value != m_targetPosition)
 				{
 					SaveCurrentPosition();
-					m_target = value;
+					m_targetPosition = value;
 				}
 			}
 		}
@@ -941,9 +941,9 @@ namespace DOL.GS
 				return;
 			}
 
-			if (Target.X != 0 || Target.Y != 0 || Target.Z != 0)
+			if (TargetPosition.X != 0 || TargetPosition.Y != 0 || TargetPosition.Z != 0)
 			{
-				double dist = this.GetDistanceTo(new Point3D(Target.X, Target.Y, Target.Z));
+				double dist = this.GetDistanceTo(new Point3D(TargetPosition.X, TargetPosition.Y, TargetPosition.Z));
 
 				if (dist <= 0)
 				{
@@ -951,9 +951,9 @@ namespace DOL.GS
 					return;
 				}
 
-				double dx = (double)(Target.X - m_x) / dist;
-				double dy = (double)(Target.Y - m_y) / dist;
-				double dz = (double)(Target.Z - m_z) / dist;
+				double dx = (double)(TargetPosition.X - m_x) / dist;
+				double dy = (double)(TargetPosition.Y - m_y) / dist;
+				double dz = (double)(TargetPosition.Z - m_z) / dist;
 
 				SetTickSpeed(dx, dy, dz, CurrentSpeed);
 				return;
@@ -969,7 +969,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (X == Target.X && Y == Target.Y && Z == Target.Z);
+				return (X == TargetPosition.X && Y == TargetPosition.Y && Z == TargetPosition.Z);
 			}
 		}
 
@@ -1245,9 +1245,9 @@ namespace DOL.GS
 			if (speed <= 0)
 				return;
 
-			Target = target; // this also saves the current position
+			TargetPosition = target; // this also saves the current position
 
-			if (IsWithinRadius(Target, CONST_WALKTOTOLERANCE))
+			if (IsWithinRadius(TargetPosition, CONST_WALKTOTOLERANCE))
 			{
 				// No need to start walking.
 
@@ -1257,13 +1257,13 @@ namespace DOL.GS
 
 			CancelWalkToTimer();
 
-			m_Heading = GetHeading(Target);
+			m_Heading = GetHeading(TargetPosition);
 			m_currentSpeed = speed;
 
 			UpdateTickSpeed();
-			Notify(GameNPCEvent.WalkTo, this, new WalkToEventArgs(Target, speed));
+			Notify(GameNPCEvent.WalkTo, this, new WalkToEventArgs(TargetPosition, speed));
 
-			StartArriveAtTargetAction(GetTicksToArriveAt(Target, speed));
+			StartArriveAtTargetAction(GetTicksToArriveAt(TargetPosition, speed));
 			BroadcastUpdate();
 		}
 
@@ -1278,7 +1278,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void WalkToSpawn()
 		{
-			WalkToSpawn((int) (MaxSpeed/2.5));
+			WalkToSpawn((int) (MaxSpeed/2.0));
 		}
 
 		/// <summary>
@@ -1301,10 +1301,12 @@ namespace DOL.GS
 
 			StandardMobBrain brain = Brain as StandardMobBrain;
 
-			if(brain != null && brain.IsAggroing)
+			if(brain != null && brain.HasAggro)
 			{
 				brain.ClearAggroList();
 			}
+
+			TargetObject = null;
 
 			IsReturningHome = true;
 			IsReturningToSpawnPoint = true;
@@ -1323,7 +1325,7 @@ namespace DOL.GS
 
 			CancelWalkToTimer();
 			SaveCurrentPosition();
-			Target.Clear();
+			TargetPosition.Clear();
 
 			m_currentSpeed = speed;
 
@@ -3328,17 +3330,26 @@ namespace DOL.GS
 				if (TargetObject != null && m_targetLOSObject != null && TargetObject == m_targetLOSObject)
 					ContinueStartAttack(m_targetLOSObject);
 			}
-			else if (ServerProperties.Properties.ENABLE_DEBUG)
+			else
 			{
-				log.Debug(Name + " FAILED start attack LOS check to player " + player.Name);
+				if (ServerProperties.Properties.ENABLE_DEBUG)
+				{
+					log.Debug(Name + " FAILED start attack LOS check to player " + player.Name);
+				}
+
+				if (m_targetLOSObject != null && m_targetLOSObject is GameLiving && Brain != null && Brain is IOldAggressiveBrain)
+				{
+					// there will be a think delay before mob attempts to attack next target
+					(Brain as IOldAggressiveBrain).RemoveFromAggroList(m_targetLOSObject as GameLiving);
+				}
 			}
 		}
 
 
 		public virtual void ContinueStartAttack(GameObject target)
 		{
-			if (IsMovingOnPath)
-				StopMovingOnPath();
+			StopMoving();
+			StopMovingOnPath();
 
 			if (Brain != null && Brain is IControlledBrain)
 			{
@@ -4680,7 +4691,7 @@ namespace DOL.GS
 			m_followTarget = new WeakRef(null);
 
 			m_size = 50; //Default size
-			Target = new Point3D();
+			TargetPosition = new Point3D();
 			m_followMinDist = 100;
 			m_followMaxDist = 3000;
 			m_flags = 0;

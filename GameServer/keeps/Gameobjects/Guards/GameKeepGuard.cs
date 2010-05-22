@@ -250,8 +250,6 @@ namespace DOL.GS.Keeps
 					{
 						if (guard.MaxSpeedBase == 0 || (guard is GuardArcher && !guard.BeenAttackedRecently))
 							guard.SwitchToRanged(guard.TargetObject);
-						/*else if (guard is GuardCaster)
-							(guard as GuardCaster).StartSpellAttack(guard.TargetObject);*/
 					}
 				}
 				return;
@@ -286,7 +284,6 @@ namespace DOL.GS.Keeps
 					player = (npc.Brain as IControlledBrain).GetPlayerOwner();
 				}
 			}
-
 
 			if (player != null)
 			{
@@ -382,6 +379,10 @@ namespace DOL.GS.Keeps
 
 				base.StartAttack(TargetObject);
 			}
+			else if (TargetObject != null && TargetPosition is GameLiving)
+			{
+				(this.Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
+			}
 		}
 
 		/// <summary>
@@ -395,6 +396,11 @@ namespace DOL.GS.Keeps
 			if ((response & 0x100) != 0x100)
 			{
 				StopAttack();
+
+				if (TargetObject != null && TargetPosition is GameLiving)
+				{
+					(this.Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
+				}
 			}
 		}
 
@@ -858,7 +864,7 @@ namespace DOL.GS.Keeps
 				StopFollowing();
 
 				StandardMobBrain brain = Brain as StandardMobBrain;
-				if (brain != null && brain.IsAggroing)
+				if (brain != null && brain.HasAggro)
 				{
 					brain.ClearAggroList();
 				}
