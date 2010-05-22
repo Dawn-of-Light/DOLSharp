@@ -783,14 +783,14 @@ namespace DOL.GS.PacketHandler
 				if (npc.IsMoving && !npc.IsAtTargetPosition)
 				{
 					speed = npc.CurrentSpeed;
-					if (npc.Target.X != 0 || npc.Target.Y != 0 || npc.Target.Z != 0)
+					if (npc.TargetPosition.X != 0 || npc.TargetPosition.Y != 0 || npc.TargetPosition.Z != 0)
 					{
-						Zone tz = npc.CurrentRegion.GetZone(npc.Target.X, npc.Target.Y);
+						Zone tz = npc.CurrentRegion.GetZone(npc.TargetPosition.X, npc.TargetPosition.Y);
 						if (tz != null)
 						{
-							xOffsetInTargetZone = (ushort) (npc.Target.X - tz.XOffset);
-							yOffsetInTargetZone = (ushort) (npc.Target.Y - tz.YOffset);
-							zOffsetInTargetZone = (ushort) (npc.Target.Z);
+							xOffsetInTargetZone = (ushort) (npc.TargetPosition.X - tz.XOffset);
+							yOffsetInTargetZone = (ushort) (npc.TargetPosition.Y - tz.YOffset);
+							zOffsetInTargetZone = (ushort) (npc.TargetPosition.Z);
 							//Dinberg:Instances - zoneSkinID for object positioning clientside.
 							targetZone = tz.ZoneSkinID;
 						}

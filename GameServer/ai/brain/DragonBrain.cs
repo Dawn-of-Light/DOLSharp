@@ -68,12 +68,12 @@ namespace DOL.AI.Brain
 			// If we aren't already aggroing something, look out for
 			// someone we can aggro on and attack right away.
 
-			if (!IsAggroing && AggroLevel > 0)
+			if (!HasAggro && AggroLevel > 0)
 			{
 				CheckPlayerAggro();
 				CheckNPCAggro();
 
-				if (IsAggroing)
+				if (HasAggro)
 				{
 					AttackMostWanted();
 					return;
