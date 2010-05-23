@@ -8867,9 +8867,18 @@ namespace DOL.GS
 			}
 
 			// Apply poison effect to weapon
-			toItem.PoisonCharges = poisonPotion.Template.PoisonCharges;
-			toItem.PoisonMaxCharges = poisonPotion.Template.PoisonMaxCharges;
-			toItem.PoisonSpellID = poisonPotion.Template.PoisonSpellID;
+			if (poisonPotion.PoisonSpellID != 0)
+			{
+				toItem.PoisonCharges = poisonPotion.PoisonCharges;
+				toItem.PoisonMaxCharges = poisonPotion.PoisonMaxCharges;
+				toItem.PoisonSpellID = poisonPotion.PoisonSpellID;
+			}
+			else
+			{
+				toItem.PoisonCharges = poisonPotion.Template.PoisonCharges;
+				toItem.PoisonMaxCharges = poisonPotion.Template.PoisonMaxCharges;
+				toItem.PoisonSpellID = poisonPotion.Template.PoisonSpellID;
+			}
 			Inventory.RemoveCountFromStack(poisonPotion, 1);
 			Out.SendMessage(string.Format("You apply {0} to {1}.", poisonPotion.GetName(0, false), toItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;

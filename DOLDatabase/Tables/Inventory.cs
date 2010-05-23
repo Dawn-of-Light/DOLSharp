@@ -296,6 +296,9 @@ namespace DOL.Database
 			m_durability = template.MaxDurability;
 			m_charges = template.MaxCharges;
 			m_charges1 = template.MaxCharges1;
+			m_poisonCharges = template.PoisonCharges;
+			m_poisonMaxCharges = template.PoisonMaxCharges;
+			m_poisonSpellID = template.PoisonSpellID;
 		}
 		
 		/// <summary>
@@ -318,6 +321,9 @@ namespace DOL.Database
 			m_durability = template.MaxDurability;
 			m_charges = template.MaxCharges;
 			m_charges1 = template.MaxCharges1;
+			m_poisonCharges = template.PoisonCharges;
+			m_poisonMaxCharges = template.PoisonMaxCharges;
+			m_poisonSpellID = template.PoisonSpellID;
 		}
 		
 		/// <summary>
