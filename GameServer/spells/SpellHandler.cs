@@ -3550,10 +3550,10 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 
 			if (hitChance < 55)
 			{
-				adjustedDamage += (int)(adjustedDamage * (hitChance - 55) * 4.3 * 0.01);
+				adjustedDamage += (int)(adjustedDamage * (hitChance - 55) * ServerProperties.Properties.SPELL_HITCHANCE_DAMAGE_REDUCTION_MULTIPLIER * 0.01);
 			}
 
-			return adjustedDamage;
+			return Math.Max(adjustedDamage, 1);
 		}
 
 
