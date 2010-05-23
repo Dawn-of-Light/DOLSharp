@@ -173,7 +173,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (short)(60 + Level);
+				return (short)(20 + Level * 6);
 			}
 		}
 

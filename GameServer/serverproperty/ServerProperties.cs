@@ -847,7 +847,15 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("pve", "missrate_reduction_per_attackers", "Adjustment to missrate per number of attackers", 0)]
 		public static int MISSRATE_REDUCTION_PER_ATTACKERS;
-		
+
+		/// <summary>
+		/// Spell damage reduction multiplier based on hitchance below 55%.
+		/// Default is 4.3, which will produce the minimum 1 damage at a 33% chance to hit
+		/// Lower numbers reduce damage reduction
+		/// </summary>
+		[ServerProperty("pve", "spell_hitchance_damage_reduction_multiplier", "Spell damage reduction multiplier based on hitchance if < 55%. Lower numbers reduce damage reduction.", 4.3)]
+		public static double SPELL_HITCHANCE_DAMAGE_REDUCTION_MULTIPLIER;
+
 		/// <summary>
 		/// TOA Artifact XP rate
 		/// </summary>

@@ -4146,8 +4146,10 @@ namespace DOL.GS
 			//			log.Error(Environment.StackTrace);
 			lock (m_attackers.SyncRoot)
 			{
-				//TODO fire event, that an attacker was removed
-				m_attackers.Remove(attacker);
+				if (m_attackers.Contains(attacker))
+				{
+					m_attackers.Remove(attacker);
+				}
 			}
 		}
 		/// <summary>

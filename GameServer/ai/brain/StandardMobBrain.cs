@@ -98,6 +98,7 @@ namespace DOL.AI.Brain
             //Mobs will not aggro on their way back home (in fact they should even under some special circumstances)
             //They will completly forget all Aggro when respawned and returned Home.
 
+
             // If the NPC is tethered and has been pulled too far it will
 			// de-aggro and return to its spawn point.
 			if (Body.IsOutOfTetherRange)
@@ -488,14 +489,12 @@ namespace DOL.AI.Brain
 				{
 					long amount = (long)m_aggroTable[living];
 					amount += aggroamount;
+
+					// can't be removed this way, set to minimum
 					if (amount <= 0)
-					{
-						m_aggroTable.Remove(living);
-					}
-					else
-					{
-						m_aggroTable[living] = amount;
-					}
+						amount = 1L;
+
+					m_aggroTable[living] = amount;
 				}
 				else
 				{
@@ -503,13 +502,18 @@ namespace DOL.AI.Brain
 					{
 						m_aggroTable[living] = (long)aggroamount;
 					}
+					else
+					{
+						m_aggroTable[living] = 1L;
+					}
+
 				}
 
 				if (DOL.GS.ServerProperties.Properties.ENABLE_DEBUG && (this is IControlledBrain) == false)
 				{
 					foreach (GameLiving aliv in m_aggroTable.Keys)
 					{
-						Body.Yell(aliv.Name + ": " + (long)m_aggroTable[aliv]);
+						Body.Yell(aliv.Name + ": " + m_aggroTable[aliv]);
 					}
 				}
 			}
@@ -642,6 +646,7 @@ namespace DOL.AI.Brain
 				foreach (GameLiving l in removable)
 				{
 					RemoveFromAggroList(l);
+					Body.RemoveAttacker(l);
 				}
 			}
 
@@ -776,7 +781,7 @@ namespace DOL.AI.Brain
 						}
 					}
 
-					RemoveFromAggroList(eArgs.Target);
+					Body.Attackers.Remove(eArgs.Target);
 					AttackMostWanted();
 				}
 				return;
@@ -803,9 +808,13 @@ namespace DOL.AI.Brain
 		{
 			if (!Body.AttackState
 				&& Body.IsAlive
-				&& Body.ObjectState == GameObject.eObjectState.Active
-				&& ad.IsHit)
+				&& Body.ObjectState == GameObject.eObjectState.Active)
 			{
+				if (ad.AttackResult == GameLiving.eAttackResult.Missed)
+				{
+					AddToAggroList(ad.Attacker, 1);
+				}
+
 				Body.StartAttack(ad.Attacker);
 				BringFriends(ad);
 			}
@@ -1023,7 +1032,9 @@ namespace DOL.AI.Brain
 								}
 							}
 							else
+							{
 								CheckInstantSpells(spell);
+							}
 						}
 					}
 				}
