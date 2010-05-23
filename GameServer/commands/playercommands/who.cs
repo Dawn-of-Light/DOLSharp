@@ -355,7 +355,7 @@ namespace DOL.GS.Commands
 
 			public StringFilter(string str)
 			{
-				m_filterString = str.ToLower();
+				m_filterString = str.ToLower().Trim();
 			}
 
 			public bool ApplyFilter(GamePlayer player)
@@ -368,7 +368,7 @@ namespace DOL.GS.Commands
 					return false;
 				if (player.CharacterClass.Name.ToLower().StartsWith(m_filterString))
 					return true;
-				if (player.CurrentZone != null && player.CurrentZone.Description.ToLower().StartsWith(m_filterString))
+				if (player.CurrentZone != null && player.CurrentZone.Description.ToLower().Contains(m_filterString))
 					return true;
 				return false;
 			}

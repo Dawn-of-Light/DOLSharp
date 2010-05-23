@@ -702,13 +702,17 @@ namespace DOL.GS.Keeps
                     ShortName = KeepName.Substring(4);
                 }
             }
-            else//Midgard
-            {
-            	if (KeepName.Contains(" "))
-                	ShortName = KeepName.Substring(0, KeepName.IndexOf(" ", 0));
-                else
-                	ShortName = KeepName;	
-            }
+			else if (KeepName.StartsWith("Castle"))// Albion Relic
+			{
+				ShortName = KeepName.Substring(7);
+			}
+			else//Midgard
+			{
+				if (KeepName.Contains(" "))
+					ShortName = KeepName.Substring(0, KeepName.IndexOf(" ", 0));
+				else
+					ShortName = KeepName;
+			}
             return ShortName;
         }
 
