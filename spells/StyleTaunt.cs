@@ -56,10 +56,10 @@ namespace DOL.GS.Spells
                     IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
 					if (aggroBrain != null)
 					{
-						int aggro = Convert.ToInt32(ad.Damage * this.Spell.Value * target.AttackSpeed(ad.Weapon) / 4000);
+						int aggro = Convert.ToInt32(ad.Damage * Spell.Value);
 						aggroBrain.AddToAggroList(Caster, aggro);
 
-						//Log.Info("Taunt amount: " + aggro.ToString());
+						//log.DebugFormat("Damage: {0}, Taunt Value: {1}, (de)Taunt Amount {2}", ad.Damage, Spell.Value, aggro.ToString());
 					}
                 }
             }
