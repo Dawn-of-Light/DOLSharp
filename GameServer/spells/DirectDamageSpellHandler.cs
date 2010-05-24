@@ -100,7 +100,7 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		private void DealDamageCheckLOS(GamePlayer player, ushort response, ushort targetOID)
+		protected virtual void DealDamageCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if (player == null || Caster.ObjectState != GameObject.eObjectState.Active)
 				return;
@@ -137,7 +137,7 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		private void DealDamage(GameLiving target, double effectiveness)
+		protected virtual void DealDamage(GameLiving target, double effectiveness)
 		{
 			if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
 

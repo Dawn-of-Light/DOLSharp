@@ -644,17 +644,20 @@ namespace DOL.GS.Keeps
 			//You examine the Armswoman. She is friendly and is a realm guard.
 			//She has upgraded equipment (5).
 			IList list = new ArrayList(4);
-            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.YouTarget", GetName(0, false)));
-            list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
-            if (this.Component != null)
-            {
-				string text = "";
-				if (this.Component.Keep.Level > 1 && this.Component.Keep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
-                    text = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.Keep.Level);
-                if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.Keep.Region == 163 && !(this.Component.Keep is GameKeepTower))
-                    text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.Keep.BaseLevel - 50).ToString());
-                if (text != "")
-					list.Add(text);
+			list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.YouTarget", GetName(0, false)));
+			if (Realm != eRealm.None)
+			{
+				list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+				if (this.Component != null)
+				{
+					string text = "";
+					if (this.Component.Keep.Level > 1 && this.Component.Keep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
+						text = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.Keep.Level);
+					if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.Keep.Region == 163 && !(this.Component.Keep is GameKeepTower))
+						text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.Keep.BaseLevel - 50).ToString());
+					if (text != "")
+						list.Add(text);
+				}
 			}
 			return list;
 		}

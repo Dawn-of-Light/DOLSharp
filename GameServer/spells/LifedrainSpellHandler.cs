@@ -25,14 +25,9 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("Lifedrain")]
     public class LifedrainSpellHandler : DirectDamageSpellHandler
     {
-        /// <summary>
-        /// execute direct effect
-        /// </summary>
-        /// <param name="target">target that gets the damage</param>
-        /// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
-        public override void OnDirectEffect(GameLiving target, double effectiveness)
-        {
-            if (target == null || !target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
+		protected override void DealDamage(GameLiving target, double effectiveness)
+		{
+			if (target == null || !target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
 
 			if (target is GamePlayer || target is GameNPC)
 			{
@@ -43,7 +38,7 @@ namespace DOL.GS.Spells
 				StealLife(ad);
 				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 			}
-        }
+		}
 
         /// <summary>
         /// Uses percent of damage to heal the caster
