@@ -200,8 +200,8 @@ namespace DOL.GS.Keeps
 					}
 					else
 					{
-						x += Util.Random(150, 250);
-						y += Util.Random(150, 250);
+						x += Util.Random(250, 350);
+						y += Util.Random(250, 350);
 					}
 
 					if (guard.IsAlive)
