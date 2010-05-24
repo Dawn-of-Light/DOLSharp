@@ -63,6 +63,9 @@ namespace DOL.GS.Spells
 			if (target is GamePlayer && (target as GamePlayer).IsRiding)
 				return;
 
+			if (target is Keeps.GameKeepGuard)
+				return;
+
 			// Graveen: archery speed shot
 			if ((Spell.Pulse != 0 || Spell.CastTime != 0) && target.InCombat)
 			{
