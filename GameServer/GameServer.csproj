@@ -193,6 +193,7 @@
     <Compile Include="commands\GMCommands\gmrelicpad.cs" />
     <Compile Include="commands\GMCommands\harm.cs" />
     <Compile Include="commands\GMCommands\heal.cs" />
+    <Compile Include="commands\GMCommands\info.cs" />
     <Compile Include="commands\GMCommands\Instance.cs" />
     <Compile Include="commands\gmcommands\item.cs" />
     <Compile Include="commands\GMCommands\jump.cs" />
