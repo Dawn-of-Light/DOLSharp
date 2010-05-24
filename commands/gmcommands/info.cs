@@ -102,7 +102,6 @@ namespace DOL.GS.Commands
 						var targetM = client.Player.TargetObject as GameMovingObject;
                         info.Add(" + Is GameMovingObject  ");
                         info.Add(" + ( Boats - Siege weapons - Custom Object");
-						info.Add(" + Type: \n   " + targetM.Type);
 						info.Add(" + Emblem: \n   " + targetM.Emblem);
 						info.Add(" ");
 					}
