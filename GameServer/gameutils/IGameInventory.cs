@@ -7,6 +7,8 @@ namespace DOL.GS
 {
 	public enum eInventorySlot : int
 	{
+		LastEmptyBagHorse	= -8,
+		FirstEmptyBagHorse	= -7,
 		LastEmptyQuiver		= -6,
 		FirstEmptyQuiver	= -5,
 		LastEmptyVault      = -4,
@@ -51,14 +53,18 @@ namespace DOL.GS
 
 		FirstBackpack     = 40,
 		LastBackpack      = 79,
-
-		Mithril			  = 80,
-		Platinum		  = 81,
-		Gold			  = 82,
-		Silver			  = 83,
-		Copper			  = 84,
+		
+		FirstBagHorse	= 80,
+		LastBagHorse	= 95,
 
 		PlayerPaperDoll   = 100,
+		
+		Mithril			  = 101,
+		Platinum		  = 102,
+		Gold			  = 103,
+		Silver			  = 104,
+		Copper			  = 105,
+		
 		FirstVault        = 110,
 		LastVault         = 149,
 
@@ -137,10 +143,10 @@ namespace DOL.GS
 		InventoryItem	GetFirstItemByObjectType(int objectType, eInventorySlot minSlot, eInventorySlot maxSlot);
 		InventoryItem   GetFirstItemByName(string name ,eInventorySlot minSlot, eInventorySlot maxSlot);
 
-		ICollection<InventoryItem> VisibleItems    { get; }
-		ICollection<InventoryItem> EquippedItems { get; }
-		ICollection<InventoryItem> AllItems { get; }
+		ICollection<InventoryItem> VisibleItems		{ get; }
+		ICollection<InventoryItem> EquippedItems	{ get; }
+		ICollection<InventoryItem> AllItems			{ get; }
 
-		int             InventoryWeight { get; }
+		int InventoryWeight { get; }
 	}
 }
