@@ -39,9 +39,9 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[Cmd("&info", ePrivLevel.GM, "Various Information", "'/info (select a target)")]
+	[Cmd("&GMinfo", ePrivLevel.GM, "Various Information", "'/GMinfo (select a target or not)")]
 	
-	public class InfoCommandHandler : AbstractCommandHandler, ICommandHandler
+	public class GMInfoCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
@@ -80,7 +80,7 @@ namespace DOL.GS.Commands
 					{
 						var targetM = client.Player.TargetObject as GameMerchant;
 						
-                        info.Add(" + Is Merchant " + targetM.TradeItems.ItemsListID);
+                        info.Add(" + Is Merchant ");
 						if (targetM.TradeItems != null)
 						{
                             info.Add(" + Sell List: \n   " + targetM.TradeItems.ItemsListID);
@@ -93,7 +93,7 @@ namespace DOL.GS.Commands
 					{
 						var targetP = client.Player.TargetObject as GamePet;
                         info.Add(" + Is Pet ");
-						info.Add(" + Pet Owner: \n   " + targetP.Owner);
+						info.Add(" + Pet Owner:   " + targetP.Owner);
 						info.Add(" ");
 					}
 					
@@ -102,7 +102,7 @@ namespace DOL.GS.Commands
 						var targetM = client.Player.TargetObject as GameMovingObject;
                         info.Add(" + Is GameMovingObject  ");
                         info.Add(" + ( Boats - Siege weapons - Custom Object");
-						info.Add(" + Emblem: \n   " + targetM.Emblem);
+						info.Add(" + Emblem:   " + targetM.Emblem);
 						info.Add(" ");
 					}
 					
@@ -113,6 +113,7 @@ namespace DOL.GS.Commands
 					info.Add(" + Realm: " + GlobalConstants.RealmToName(target.Realm));
 					info.Add(" + Model:  " + target.Model);
 					info.Add(" + Size " + target.Size);
+					info.Add(string.Format(" + Flags: {0} (0x{1})", ((GameNPC.eFlags)target.Flags).ToString("G"), target.Flags.ToString("X")));
 					info.Add(" ");
 					
 					info.Add(" + Speed(current/max): " + target.CurrentSpeed + "/" + target.MaxSpeedBase);
@@ -151,8 +152,6 @@ namespace DOL.GS.Commands
 						info.Add(" + Respawn: " + days + hours + respawn.Minutes + " minutes " + respawn.Seconds + " seconds");
 						info.Add(" + SpawnPoint:  " + target.SpawnPoint.X + ", " + target.SpawnPoint.Y + ", " + target.SpawnPoint.Z);
 					}
-					
-					info.Add(string.Format(" + Flags: {0} (0x{1})", ((GameNPC.eFlags)target.Flags).ToString("G"), target.Flags.ToString("X")));
 					
 					if (target.QuestListToGive.Count > 0)
 						info.Add(" + Quests to give:  " + target.QuestListToGive.Count);
@@ -216,7 +215,6 @@ namespace DOL.GS.Commands
 										
 					info.Add("");
 					info.Add(" + Loot:");
-					info.Add("");
 
 					var template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape(target.Name) + "'");
 					foreach (LootTemplate loot in template)
@@ -235,6 +233,68 @@ namespace DOL.GS.Commands
 
 						message += " Chance: " + loot.Chance.ToString();
 						info.Add("- " + message);
+					}
+					
+					if (target.Brain != null && target.Brain.IsActive)
+					{
+						info.Add(target.Brain.GetType().FullName);
+						info.Add(target.Brain.ToString());
+						info.Add("");
+					}
+
+					if (target.IsReturningHome || target.IsReturningToSpawnPoint)
+					{
+						info.Add("IsReturningHome: " + target.IsReturningHome);
+						info.Add("IsReturningToSpawnPoint: " + target.IsReturningToSpawnPoint);
+						info.Add("");
+					}
+
+					info.Add("InCombat: " + target.InCombat);
+					info.Add("AttackState: " + target.AttackState);
+					info.Add("LastCombatPVE: " + target.LastAttackedByEnemyTickPvE);
+					info.Add("LastCombatPVP: " + target.LastAttackedByEnemyTickPvP);
+
+					if (target.InCombat || target.AttackState)
+						info.Add("RegionTick: " + target.CurrentRegion.Time);
+
+					info.Add("");
+
+					if (target.TargetObject != null)
+					{
+						info.Add("TargetObject: " + target.TargetObject.Name);
+						info.Add("InView: " + target.TargetInView);
+					}
+
+					if (target.Brain != null && target.Brain is StandardMobBrain)
+					{
+						Hashtable aggroList = (target.Brain as StandardMobBrain).AggroTable;
+
+						if (aggroList.Count > 0)
+						{
+							info.Add("");
+							info.Add("Aggro List:");
+
+							foreach (GameLiving living in aggroList.Keys)
+								info.Add(living.Name + ": " + (long)aggroList[living]);
+						}
+					}
+
+					if (target.Attackers != null && target.Attackers.Count > 0)
+					{
+						info.Add("");
+						info.Add("Attacker List:");
+
+						foreach (GameLiving attacker in target.Attackers)
+							info.Add(attacker.Name);
+					}
+
+					if (target.EffectList.Count > 0)
+					{
+						info.Add("");
+						info.Add("Effect List:");
+
+						foreach (IGameEffect effect in target.EffectList)
+							info.Add(effect.Name + " remaining " + effect.RemainingTime);
 					}
 				}
 				
@@ -537,9 +597,8 @@ namespace DOL.GS.Commands
                     info.Add(" ");
                     info.Add(" Server player: " + WorldMgr.GetAllPlayingClientsCount());
                     info.Add(" ");
-                    info.Add(" PLAYER IN REGION:");
-                    info.Add(" ");
-                    info.Add(" All Region player: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID));
+                    info.Add(" Region Player:");
+                    info.Add(" All player: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID));
                     info.Add(" ");
                     info.Add(" Alb player: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID, eRealm.Albion));
                     info.Add(" Hib player: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID, eRealm.Hibernia));
