@@ -456,6 +456,13 @@ namespace DOL.GS
 				case eInventorySlot.FirstEmptyBackpack:
 					slot = FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 					break;
+				// INVENTAIRE DES CHEVAUX
+				case eInventorySlot.LastEmptyBagHorse:
+					slot = FindLastEmptySlot(eInventorySlot.FirstBagHorse, eInventorySlot.LastBagHorse);
+					break;
+				case eInventorySlot.FirstEmptyBagHorse:
+					slot = FindFirstEmptySlot(eInventorySlot.FirstBagHorse, eInventorySlot.LastBagHorse);
+					break;
 			}
 
 			if ((slot >= eInventorySlot.FirstBackpack && slot <= eInventorySlot.LastBackpack)
@@ -465,7 +472,9 @@ namespace DOL.GS
 			    || (slot >= eInventorySlot.HouseVault_First && slot <= eInventorySlot.HouseVault_Last)
 			    || (slot >= eInventorySlot.Consignment_First && slot <= eInventorySlot.Consignment_Last)
 			    || (slot == eInventorySlot.PlayerPaperDoll)
-			    || (slot == eInventorySlot.Mythical))
+			    || (slot == eInventorySlot.Mythical)
+				// INVENTAIRE DES CHEVAUX
+				|| (slot >= eInventorySlot.FirstBagHorse && slot <= eInventorySlot.LastBagHorse))
 				return slot;
 
 
@@ -538,7 +547,32 @@ namespace DOL.GS
 
 				if (fromItem == toItem || fromItem == null)
 					valid = false;
+				
+				/*************** Horse Inventory **************/
+				if (m_player.Client.Account.PrivLevel == 1 && 
+					((toSlot >= eInventorySlot.FirstBagHorse && toSlot <= eInventorySlot.LastBagHorse) ||
+					(fromSlot >= eInventorySlot.FirstBagHorse && fromSlot <= eInventorySlot.LastBagHorse)))
+				{
+					
+					if (m_player.Inventory.GetItem(eInventorySlot.Horse) == null)
+					{
+						m_player.Out.SendMessage("You must be equipped with a horse.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						valid = false;
 
+					}
+					if (!m_player.IsOnHorse)
+					{
+						m_player.Out.SendMessage("You must be on your horse to use this inventory.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						valid = false;
+					}
+					if (m_player.ChampionLevel == 0)
+					{
+						m_player.Out.SendMessage("You must be a champion to use this inventory.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+						valid = false;
+					}
+				}
+				/***********************************************/
+				
 				if (valid && toItem != null && fromItem.Object_Type == (int) eObjectType.Poison &&
 				    GlobalConstants.IsWeapon(toItem.Object_Type))
 				{
@@ -1119,10 +1153,7 @@ namespace DOL.GS
 			m_items.TryGetValue(fromSlot, out fromItem);
 			m_items.TryGetValue(toSlot, out toItem);
 
-			if (toSlot < eInventorySlot.FirstQuiver
-			    || (toSlot > eInventorySlot.FourthQuiver && toSlot < eInventorySlot.FirstBackpack)
-			    || (toSlot > eInventorySlot.LastBackpack && toSlot < eInventorySlot.FirstVault)
-			    || toSlot > eInventorySlot.LastVault)
+			if (toSlot < eInventorySlot.FirstQuiver || (toSlot > eInventorySlot.FourthQuiver && toSlot < eInventorySlot.FirstBackpack))
 				return false;
 
 			if (itemCount == 0)
