@@ -295,7 +295,9 @@ namespace DOL.GS
 			    || (slot >= eInventorySlot.HeadArmor && slot <= eInventorySlot.Neck)
 			    || (slot >= eInventorySlot.HorseArmor && slot <= eInventorySlot.Horse)
 			    || (slot >= eInventorySlot.Waist && slot <= eInventorySlot.Mythical)
-			    || (slot == eInventorySlot.Ground))
+			    || (slot == eInventorySlot.Ground)
+				// INVENTAIRE DES CHEVAUX
+				|| (slot >= eInventorySlot.FirstBagHorse && slot <= eInventorySlot.LastBagHorse))
 				return slot;
 
 			return eInventorySlot.Invalid;
