@@ -180,7 +180,7 @@
     <Compile Include="commands\GMCommands\Announce.cs" />
     <Compile Include="commands\GMCommands\area.cs" />
     <Compile Include="commands\GMCommands\Ban.cs" />
-    <Compile Include="commands\gmcommands\blink.cs" />
+    <Compile Include="commands\GMcommands\blink.cs" />
     <Compile Include="commands\GMCommands\cast.cs" />
     <Compile Include="commands\GMCommands\ClientList.cs" />
     <Compile Include="commands\GMCommands\crafting.cs" />
@@ -193,7 +193,7 @@
     <Compile Include="commands\GMCommands\gmrelicpad.cs" />
     <Compile Include="commands\GMCommands\harm.cs" />
     <Compile Include="commands\GMCommands\heal.cs" />
-    <Compile Include="commands\GMCommands\info.cs" />
+    <Compile Include="commands\GMCommands\GMinfo.cs" />
     <Compile Include="commands\GMCommands\Instance.cs" />
     <Compile Include="commands\gmcommands\item.cs" />
     <Compile Include="commands\GMCommands\jump.cs" />
