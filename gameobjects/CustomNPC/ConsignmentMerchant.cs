@@ -591,6 +591,17 @@ namespace DOL.GS
 			house.ConsignmentMerchant = this;
 			SetEmblem();
 
+			// verify if OwnerLot is correct 
+            var itemcon = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + house.OwnerID + "' AND SlotPosition >= 1500 AND SlotPosition <= 1599");
+			if (itemcon.Count > 0)
+			{
+                for (int i = 0; i < itemcon.Count; i++)
+                {
+                    itemcon[i].OwnerLot = ((ushort)HouseNumber);
+					GameServer.Database.SaveObject(itemcon[i]);
+                }
+			}
+
 			return true;
 		}
 
