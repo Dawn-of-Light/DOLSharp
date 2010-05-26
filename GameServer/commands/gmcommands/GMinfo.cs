@@ -212,36 +212,16 @@ namespace DOL.GS.Commands
 					info.Add(" + Position:  " + target.X + ", " + target.Y + ", " + target.Z + ", " + target.Heading);
 					info.Add(" + OID: " + target.ObjectID);
 					info.Add(" + Package ID:  " + target.PackageID);
-										
-					info.Add("");
-					info.Add(" + Loot:");
-
-					var template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape(target.Name) + "'");
-					foreach (LootTemplate loot in template)
-					{
-						ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(loot.ItemTemplateID);
-
-						string message = "";
-						if (drop == null)
-						{
-							message += loot.ItemTemplateID + " (Template Not Found)";
-						}
-						else
-						{
-							message += drop.Name + " (" + drop.Id_nb + ")";
-						}
-
-						message += " Chance: " + loot.Chance.ToString();
-						info.Add("- " + message);
-					}
 					
-					if (target.Brain != null && target.Brain.IsActive)
+				/*	if (target.Brain != null && target.Brain.IsActive)
 					{
 						info.Add(target.Brain.GetType().FullName);
 						info.Add(target.Brain.ToString());
 						info.Add("");
 					}
-
+				*/
+					info.Add("");
+					info.Add(" ------ State ------");
 					if (target.IsReturningHome || target.IsReturningToSpawnPoint)
 					{
 						info.Add("IsReturningHome: " + target.IsReturningHome);
@@ -295,6 +275,28 @@ namespace DOL.GS.Commands
 
 						foreach (IGameEffect effect in target.EffectList)
 							info.Add(effect.Name + " remaining " + effect.RemainingTime);
+					}
+										
+					info.Add("");
+					info.Add(" + Loot:");
+
+					var template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape(target.Name) + "'");
+					foreach (LootTemplate loot in template)
+					{
+						ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(loot.ItemTemplateID);
+
+						string message = "";
+						if (drop == null)
+						{
+							message += loot.ItemTemplateID + " (Template Not Found)";
+						}
+						else
+						{
+							message += drop.Name + " (" + drop.Id_nb + ")";
+						}
+
+						message += " Chance: " + loot.Chance.ToString();
+						info.Add("- " + message);
 					}
 				}
 				
