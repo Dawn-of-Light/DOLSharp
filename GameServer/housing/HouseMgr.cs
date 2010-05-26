@@ -308,6 +308,9 @@ namespace DOL.GS.Housing
 
 			if (housesByRegion == null)
 				return;
+				
+			// remove the consignment merchant
+			house.RemoveConsignment();
 
 			// remove all the outside items of the house
 			house.OutdoorItems.Clear();
@@ -394,9 +397,6 @@ namespace DOL.GS.Housing
 			}
 
 			#endregion
-
-			// remove the consignment merchant
-			house.RemoveConsignment();
 
 			// saved the cleared house in the database
 			house.SaveIntoDatabase();
