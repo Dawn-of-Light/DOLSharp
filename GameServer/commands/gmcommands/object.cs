@@ -68,24 +68,36 @@ namespace DOL.GS.Commands
 			{
 				case "info":
 					{
-						List<string> Object_Info = new List<string>();
+						List<string> info = new List<string>();
 						
-						string o_name = "(blank name)";
+						string name = "(blank name)";
 						if (!string.IsNullOrEmpty(targetObject.Name))
-							o_name = targetObject.Name;
+							name = targetObject.Name;
 						
-						Object_Info.Add(" OID: " + targetObject.ObjectID);
-						Object_Info.Add(" Model: " + targetObject.Model);
-						Object_Info.Add (" Class: " + client.Player.TargetObject.GetType());
+						info.Add(" OID: " + targetObject.ObjectID);
+						info.Add (" Type: " + targetObject.GetType());
+						info.Add(" ");
+						info.Add(" Name: " + name);
+						info.Add(" Model: " + targetObject.Model);
+						info.Add(" Emblem: " + targetObject.Emblem);
+						info.Add(" Realm: " + targetObject.Realm);
+                        if (targetObject.Owners.LongLength > 0)
+						{
+							info.Add(" ");
+							info.Add(" Owner: " + targetObject.Owners[0].Name);
+						}
+						info.Add(" ");
 
-						GameInventoryItem invItem = client.Player.TargetObject as GameInventoryItem;
+						GameInventoryItem invItem = targetObject as GameInventoryItem;
 						if( invItem != null )
 						{
-							Object_Info.Add (" Count: " + invItem.Item.Count);
+							info.Add (" Count: " + invItem.Item.Count);
 						}
 
-						Object_Info.Add(" Location: X= " + targetObject.X + " ,Y= " + targetObject.Y + " ,Z= " + targetObject.Z);
-						client.Out.SendCustomTextWindow( "[ " + o_name + " ]", Object_Info );
+						info.Add(" ");
+						info.Add(" Location: X= " + targetObject.X + " ,Y= " + targetObject.Y + " ,Z= " + targetObject.Z);
+						
+						client.Out.SendCustomTextWindow( "[ " + name + " ]", info );
 						break;
 					}
 				case "movehere":

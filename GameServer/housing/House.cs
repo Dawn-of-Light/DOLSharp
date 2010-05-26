@@ -875,6 +875,15 @@ namespace DOL.GS.Housing
 				{
 					if (hnpc.HouseNumber == HouseNumber)
 					{
+						var itemcon = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + this.OwnerID + "' AND SlotPosition >= 1500 AND SlotPosition <= 1599");
+						if (itemcon.Count > 0)
+						{
+							for (int i = 0; i < itemcon.Count; i++)
+							{
+								itemcon[i].OwnerLot = 0;
+								GameServer.Database.SaveObject(itemcon[i]);
+							}
+						}
 						hnpc.DeleteFromDatabase();
 						hnpc.Delete();
 					}

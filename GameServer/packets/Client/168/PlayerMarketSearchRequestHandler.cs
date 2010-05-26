@@ -93,7 +93,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
             StringBuilder sql = new StringBuilder();
 
-            sql.Append("SlotPosition > '1499'");
+            sql.Append("SlotPosition >= 1500 AND OwnerLot != 0 ");
 
             if (filter != null && filter != "")
                 sql.Append(" AND Name LIKE '%" + filter + "%'");
