@@ -748,7 +748,7 @@ namespace DOL.GS
 
 			TurnTo(target);
 
-			Point3D targetPosition = TargetPosition(target, 600, Heading, Util.Random(300, 500) );
+			Point3D targetPosition = PositionOfTarget(target, 600, Heading, Util.Random(300, 500) );
 
 			if (target is GamePlayer)
 			{
@@ -771,7 +771,7 @@ namespace DOL.GS
 		/// <param name="heading">The direction the object is displaced in.</param>
 		/// <param name="displacement">The amount the object is displaced by.</param>
 		/// <returns></returns>
-		private Point3D TargetPosition( IPoint3D target, int height, int heading, int displacement)
+		private Point3D PositionOfTarget( IPoint3D target, int height, int heading, int displacement)
 		{
             Point3D targetPoint;
 
