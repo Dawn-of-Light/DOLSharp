@@ -335,16 +335,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				me.BuyItem(item, client.Player);
 			}
-
-
+			
 			//Do we want to move an item from inventory/vault/quiver into inventory/vault/quiver?
 			if (((fromSlot>=(ushort)eInventorySlot.Ground && fromSlot<=(ushort)eInventorySlot.LastBackpack)
 			    || (fromSlot >=(ushort)eInventorySlot.FirstVault && fromSlot<=(ushort)eInventorySlot.LastVault)
 				|| (fromSlot >=(ushort)eInventorySlot.FirstBagHorse && fromSlot <=(ushort)eInventorySlot.LastBagHorse))
 			    &&((toSlot >=(ushort)eInventorySlot.Ground && toSlot<=(ushort)eInventorySlot.LastBackpack)
-			    || (toSlot >=(ushort)eInventorySlot.FirstVault && toSlot<=(ushort)eInventorySlot.LastVault))
+			    || (toSlot >=(ushort)eInventorySlot.FirstVault && toSlot<=(ushort)eInventorySlot.LastVault)
 			    || (toSlot >=(ushort)eInventorySlot.HousingInventory_First && toSlot<=(ushort)eInventorySlot.HousingInventory_Last)
-				|| (toSlot >=(ushort)eInventorySlot.FirstBagHorse && toSlot <=(ushort)eInventorySlot.LastBagHorse))
+				|| (toSlot >=(ushort)eInventorySlot.FirstBagHorse && toSlot <=(ushort)eInventorySlot.LastBagHorse)))
 			{
 				//We want to drop the item
 				if (toSlot==(ushort)eInventorySlot.Ground)
@@ -381,13 +380,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.Inventory.MoveItem((eInventorySlot)fromSlot, (eInventorySlot)toSlot, itemCount);
 				return 1;
 			}
-
-
+			
 			if (((fromSlot>=(ushort)eInventorySlot.Ground && fromSlot<=(ushort)eInventorySlot.LastBackpack)
 			    || (fromSlot>=(ushort)eInventorySlot.FirstVault && fromSlot<=(ushort)eInventorySlot.LastVault)
 				|| (fromSlot >=(ushort)eInventorySlot.FirstBagHorse && fromSlot <=(ushort)eInventorySlot.LastBagHorse))
-			    && (toSlot==(ushort)eInventorySlot.PlayerPaperDoll || toSlot==(ushort)eInventorySlot.NewPlayerPaperDoll)
-				|| (toSlot >=(ushort)eInventorySlot.FirstBagHorse && toSlot <=(ushort)eInventorySlot.LastBagHorse))
+			    && ((toSlot==(ushort)eInventorySlot.PlayerPaperDoll || toSlot==(ushort)eInventorySlot.NewPlayerPaperDoll)
+				|| (toSlot>=(ushort)eInventorySlot.Ground && toSlot<=(ushort)eInventorySlot.LastBackpack)
+			    || (toSlot>=(ushort)eInventorySlot.FirstVault && toSlot<=(ushort)eInventorySlot.LastVault)
+				|| (toSlot >=(ushort)eInventorySlot.FirstBagHorse && toSlot <=(ushort)eInventorySlot.LastBagHorse)))
 			{
 				InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)fromSlot);
 				if(item==null) return 0;

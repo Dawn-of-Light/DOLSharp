@@ -134,17 +134,20 @@ namespace DOL.GS
 				m_DBguild.GuildHouseNumber = value;
 				if (value == 0)
 					this.m_DBguild.HaveGuildHouse = false;
-				m_DBguild.HaveGuildHouse = true;
+				else
+					m_DBguild.HaveGuildHouse = true;
 			}
 		}
-
-
 
 		public bool GuildOwnsHouse
 		{
 			get
 			{
 				return m_DBguild.HaveGuildHouse;
+			}
+			set
+			{
+				 m_DBguild.HaveGuildHouse = value;
 			}
 		}
 
