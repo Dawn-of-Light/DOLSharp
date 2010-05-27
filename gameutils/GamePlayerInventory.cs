@@ -1153,7 +1153,8 @@ namespace DOL.GS
 			m_items.TryGetValue(fromSlot, out fromItem);
 			m_items.TryGetValue(toSlot, out toItem);
 
-			if (toSlot < eInventorySlot.FirstQuiver || (toSlot > eInventorySlot.FourthQuiver && toSlot < eInventorySlot.FirstBackpack))
+			if ((toSlot > eInventorySlot.HorseArmor && toSlot < eInventorySlot.FirstQuiver) 
+				|| (toSlot > eInventorySlot.FourthQuiver && toSlot < eInventorySlot.FirstBackpack))
 				return false;
 
 			if (itemCount == 0)
