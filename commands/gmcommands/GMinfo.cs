@@ -163,11 +163,29 @@ namespace DOL.GS.Commands
 						info.Add(" + Boat OwnerID: " + target.BoatOwnerID);
 						
 					info.Add(" ");
-					info.Add(" + STR  /  CON  /  DEX  /  QUI");
-					info.Add(" + " + target.Strength + "  /  " + target.Constitution + "  /  " + target.Dexterity + "  /  " + target.Quickness);
-					info.Add(" + INT  /  EMP  /  PIE  /  CHR");
-					info.Add(" + " + target.Intelligence + "  /  " + target.Empathy + "  /  " + target.Piety + "  /  " + target.Charisma);
-					info.Add(" + Block / Parry / Evade %:  " + target.BlockChance + " / " + target.ParryChance + " / " + target.EvadeChance);
+					if (target.Strength > 0)
+						info.Add(" + STR: "+ target.Strength);
+					if (target.Constitution > 0)
+						info.Add(" + CON: "+ target.Constitution);
+					if (target.Dexterity > 0)
+						info.Add(" + DEX: "+ target.Dexterity);
+					if (target.Quickness > 0)
+						info.Add(" + QUI: "+ target.Quickness);
+					if (target.Intelligence > 0)
+						info.Add(" + INT: "+ target.Intelligence);
+					if (target.Empathy > 0)
+						info.Add(" + EMP: "+ target.Empathy);
+					if (target.Piety > 0)
+						info.Add(" + PIE: "+ target.Piety);
+					if (target.Charisma > 0)
+						info.Add(" + CHR: "+ target.Charisma);
+					if (target.BlockChance > 0)
+						info.Add(" + Block: "+ target.BlockChance);
+					if (target.ParryChance > 0)
+						info.Add(" + Parry: "+ target.ParryChance);
+					if (target.EvadeChance > 0)
+						info.Add(" + Evade %:  "+ target.EvadeChance);
+					
 					info.Add(" + Damage type: " + target.MeleeDamageType);
 					if (target.LeftHandSwingChance > 0)
 						info.Add(" + Left Swing %: " + target.LeftHandSwingChance);
@@ -188,16 +206,26 @@ namespace DOL.GS.Commands
 					if (target.BodyType > 0)
 						info.Add(" + Body Type:  " + target.BodyType);
 						
-					info.Add(" + Resist Crush/Slash/Thrust:  " + target.GetDamageResist(eProperty.Resist_Crush)
-							 + " / " + target.GetDamageResist(eProperty.Resist_Slash)
-							 + " / " + target.GetDamageResist(eProperty.Resist_Thrust));
-					info.Add(" +  -- Heat/Cold/Matter/Natural:  " + target.GetDamageResist(eProperty.Resist_Heat)
-							 + " / " + target.GetDamageResist(eProperty.Resist_Cold)
-							 + " / " + target.GetDamageResist(eProperty.Resist_Matter)
-							 + " / " + target.GetDamageResist(eProperty.Resist_Natural));
-					info.Add(" +  -- Body/Spirit/Energy:  " + target.GetDamageResist(eProperty.Resist_Body)
-							 + " / " + target.GetDamageResist(eProperty.Resist_Spirit)
-							 + " / " + target.GetDamageResist(eProperty.Resist_Energy));
+					if (target.GetDamageResist(eProperty.Resist_Crush) > 0)
+				    	info.Add(" + Resist Crush:  " + target.GetDamageResist(eProperty.Resist_Crush));
+					if (target.GetDamageResist(eProperty.Resist_Slash) > 0)
+				    	info.Add(" + Resist Slash:  " + target.GetDamageResist(eProperty.Resist_Slash));
+					if (target.GetDamageResist(eProperty.Resist_Thrust) > 0)
+				    	info.Add(" + Resist Thrust:  " + target.GetDamageResist(eProperty.Resist_Thrust));
+					if (target.GetDamageResist(eProperty.Resist_Heat) > 0)
+				    	info.Add(" + Resist Heat:  " + target.GetDamageResist(eProperty.Resist_Heat));
+					if (target.GetDamageResist(eProperty.Resist_Cold) > 0)
+				    	info.Add(" + Resist Cold:  " + target.GetDamageResist(eProperty.Resist_Cold));
+					if (target.GetDamageResist(eProperty.Resist_Matter) > 0)
+				    	info.Add(" + Resist Matter:  " + target.GetDamageResist(eProperty.Resist_Matter));
+					if (target.GetDamageResist(eProperty.Resist_Natural) > 0)
+				    	info.Add(" + Resist Natural:  " + target.GetDamageResist(eProperty.Resist_Natural));
+					if (target.GetDamageResist(eProperty.Resist_Body) > 0)
+				    	info.Add(" + Resist Body:  " + target.GetDamageResist(eProperty.Resist_Body));
+					if (target.GetDamageResist(eProperty.Resist_Spirit) > 0)
+				    	info.Add(" + Resist Spirit:  " + target.GetDamageResist(eProperty.Resist_Spirit));
+					if (target.GetDamageResist(eProperty.Resist_Energy) > 0)
+				    	info.Add(" + Resist Energy:  " + target.GetDamageResist(eProperty.Resist_Energy));
 					info.Add(" + Active weapon slot: " + target.ActiveWeaponSlot);
 					info.Add(" + Visible weapon slot: " + target.VisibleActiveWeaponSlots);
 					

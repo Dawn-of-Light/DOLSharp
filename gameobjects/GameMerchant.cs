@@ -23,6 +23,7 @@ using System.Threading;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Language;
+using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -348,6 +349,7 @@ namespace DOL.GS
 			merchant.Size = Size;
 			merchant.Level = Level;
 			merchant.Flags = Flags;
+			merchant.PathID = PathID;
 			IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 			{
