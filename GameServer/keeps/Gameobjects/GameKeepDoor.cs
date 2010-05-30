@@ -56,6 +56,14 @@ namespace DOL.GS.Keeps
 			set { m_doorID = value; }
 		}
 
+		/// <summary>
+		/// Get the ZoneID of this door
+		/// </summary>
+		public ushort ZoneID
+		{
+			get { return (ushort)(DoorID / 1000000); }
+		}
+
 		public int OwnerKeepID
 		{
 			get { return (m_doorID / 100000) % 1000; }
