@@ -37,6 +37,7 @@ namespace DOL.GS
 		string Name	{get;}
 		uint Flag {get;}
 		ushort Heading	{get;}
+		ushort ZoneID { get; }
 		eRealm Realm {get;}
 		int DoorID	{get;}
 		int ObjectID	{get;}

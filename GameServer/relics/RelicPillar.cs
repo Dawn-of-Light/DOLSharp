@@ -57,6 +57,14 @@ namespace DOL.GS.Relics
 		}
 
 		/// <summary>
+		/// Get the ZoneID of this door
+		/// </summary>
+		public ushort ZoneID
+		{
+			get { return (ushort)(DoorID / 1000000); }
+		}
+
+		/// <summary>
 		/// Pillars behave like regular doors.
 		/// </summary>
 		public uint Flag
