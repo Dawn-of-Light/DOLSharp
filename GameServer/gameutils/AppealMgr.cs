@@ -192,10 +192,17 @@ namespace DOL.GS.Appeal
 
 			foreach (GameClient c in clientlist)
 			{
-				DBAppeal ap = GetAppealByPlayerName(c.Player.Name);
-				if (ap != null)
+				try
 				{
-					rlist.Add(ap);
+					DBAppeal ap = GetAppealByPlayerName(c.Player.Name);
+					if (ap != null)
+					{
+						rlist.Add(ap);
+					}
+				}
+				catch
+				{
+					// most likely player is null due to disconnect
 				}
 			}
 
