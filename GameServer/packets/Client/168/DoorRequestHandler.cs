@@ -28,40 +28,50 @@ namespace DOL.GS.PacketHandler.Client.v168
 	public class DoorRequestHandler : IPacketHandler
 	{
 
-		public static int DoorIDhandler;
+		public static int m_handlerDoorID;
 		/// <summary>
 		/// door index which is unique
 		/// </summary>
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			int DoorID = (int)packet.ReadInt();
-			DoorIDhandler = DoorID;
+			int doorID = (int)packet.ReadInt();
+			m_handlerDoorID = doorID;
 			byte doorState = (byte)packet.ReadByte();
-			int doorType = DoorID / 100000000;
+			int doorType = doorID / 100000000;
 			if (client.Account.PrivLevel > 1)
 			{
 				if (doorType == 7)
 				{
-					int ownerKeepId = (DoorID / 100000) % 1000;
-					int towerNum = (DoorID / 10000) % 10;
+					int ownerKeepId = (doorID / 100000) % 1000;
+					int towerNum = (doorID / 10000) % 10;
 					int keepID = ownerKeepId + towerNum * 256;
-					int componentID = (DoorID / 100) % 100;
-					int doorIndex = DoorID % 10;
-					client.Out.SendDebugMessage("Keep Door ID: {0} state:{1} (Owner Keep: {6} KeepID:{2} ComponentID:{3} DoorIndex:{4} TowerNumber:{5})", DoorID, doorState, keepID, componentID, doorIndex, towerNum, ownerKeepId);
+					int componentID = (doorID / 100) % 100;
+					int doorIndex = doorID % 10;
+					client.Out.SendDebugMessage("Keep Door ID: {0} state:{1} (Owner Keep: {6} KeepID:{2} ComponentID:{3} DoorIndex:{4} TowerNumber:{5})", doorID, doorState, keepID, componentID, doorIndex, towerNum, ownerKeepId);
 				}
 				else if (doorType == 9)
 				{
-					int doorIndex = DoorID - doorType * 10000000;
-					client.Out.SendDebugMessage("House DoorID:{0} state:{1} (doorType:{2} doorIndex:{3})", DoorID, doorState, doorType, doorIndex);
+					int doorIndex = doorID - doorType * 10000000;
+					client.Out.SendDebugMessage("House DoorID:{0} state:{1} (doorType:{2} doorIndex:{3})", doorID, doorState, doorType, doorIndex);
 				}
 				else
 				{
-					int zoneDoor = (int)(DoorID / 1000000);
-					int fixture = (int)(DoorID - zoneDoor * 1000000);
+					int zoneDoor = (int)(doorID / 1000000);
+					int fixture = (int)(doorID - zoneDoor * 1000000);
 					int fixturePiece = fixture;
 					fixture /= 100;
 					fixturePiece = fixturePiece - fixture * 100;
-					client.Out.SendDebugMessage("DoorID:{0} state:{1} zone:{2} fixture:{3} fixturePiece:{4} Type:{5})", DoorID, doorState, zoneDoor, fixture, fixturePiece, doorType);
+
+					// For ToA the client always sends the same ID so we need to construct an id using the current zone
+					if (client.Player.CurrentRegion.Expansion == (int)eExpansion.ToA)
+					{
+						doorID -= zoneDoor * 1000000;
+						zoneDoor = client.Player.CurrentZone.ID;
+						doorID += zoneDoor * 1000000;
+						m_handlerDoorID = doorID;
+					}
+
+					client.Out.SendDebugMessage("DoorID:{0} state:{1} zone:{2} fixture:{3} fixturePiece:{4} Type:{5})", doorID, doorState, zoneDoor, fixture, fixturePiece, doorType);
 				}
 			}
 
@@ -73,13 +83,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 0;
 			}
 		
-			DBDoor DOOR = GameServer.Database.SelectObject<DBDoor>("InternalID = '" + DoorID + "'");
+			DBDoor DOOR = GameServer.Database.SelectObject<DBDoor>("InternalID = '" + doorID + "'");
 
 			if (DOOR != null)
 			{
 				if( doorType == 7 || doorType == 9 )
 				{
-					new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+					new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
 					return 1;
 				}
 				
@@ -89,14 +99,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						if (DOOR.Health == 0)
 						{
-							new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+							new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
 							return 1;					
 						}
 						if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 						{
 							if( DOOR.Realm != 0)
 							{
-								new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+								new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
 								return 1;
 							}
 						}
@@ -104,7 +114,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							if( (eRealm)client.Player.Realm == (eRealm)DOOR.Realm || DOOR.Realm == 6 )
 							{
-								new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+								new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
 								return 1;
 							}
 						}
@@ -112,7 +122,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				if( client.Account.PrivLevel > 1 )
 				{
-					new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+					new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
 					return 1;
 				}
 			}
@@ -131,7 +141,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 
-				new ChangeDoorAction(client.Player, DoorID, doorState).Start(1);
+				new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
 				return 1;
 			}
 			return 0;
@@ -142,18 +152,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if( response != 0x01 )
 				return;
 
-			int doorType = DoorIDhandler / 100000000;
+			int doorType = m_handlerDoorID / 100000000;
 			if( doorType == 7 )
 			{
-				PositionMgr.CreateDoor(DoorIDhandler, player);
+				PositionMgr.CreateDoor(m_handlerDoorID, player);
 			}
 			else
 			{
 				DBDoor door = new DBDoor( );
 				door.ObjectId = null;
-				door.InternalID = DoorIDhandler;
+				door.InternalID = m_handlerDoorID;
 				door.Name = "door";
-				door.Type = DoorIDhandler / 100000000;
+				door.Type = m_handlerDoorID / 100000000;
 				door.Level = 20;
 				door.Realm = 6;
 				door.MaxHealth = 2545;
@@ -165,7 +175,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				door.Heading = player.Heading;
 				GameServer.Database.AddObject(door);
 
-				player.Out.SendMessage("Added door " + DoorIDhandler + " to the database!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("Added door " + m_handlerDoorID + " to the database!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				DoorMgr.Init( );
 			}
 		}
