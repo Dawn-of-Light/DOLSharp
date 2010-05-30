@@ -45,32 +45,39 @@ namespace DOL.GS
 			var dbdoors = GameServer.Database.SelectAllObjects<DBDoor>();
 			foreach (DBDoor door in dbdoors)
 			{
-				IDoor mydoor = null;
-				ushort zone = (ushort)(door.InternalID / 1000000);
-				//check if the door is a keep door
-				foreach (AbstractArea area in WorldMgr.GetZone(zone).GetAreasOfSpot(door.X, door.Y, door.Z))
-				{
-					if (area is KeepArea)
-					{
-						mydoor = new GameKeepDoor();
-						mydoor.LoadFromDatabase(door);
-						break;
-					}
-				}
+				LoadDoor(door);
+			}
+			return true;
+		}
 
-				//if the door is not a keep door, create a standard door
-				if (mydoor == null)
+		public static bool LoadDoor(DBDoor door)
+		{
+			IDoor mydoor = null;
+			ushort zone = (ushort)(door.InternalID / 1000000);
+			//check if the door is a keep door
+			foreach (AbstractArea area in WorldMgr.GetZone(zone).GetAreasOfSpot(door.X, door.Y, door.Z))
+			{
+				if (area is KeepArea)
 				{
-					mydoor = new GameDoor();
+					mydoor = new GameKeepDoor();
 					mydoor.LoadFromDatabase(door);
-				}
-
-				//add to the list of doors
-				if (mydoor != null)
-				{
-					RegisterDoor(mydoor);
+					break;
 				}
 			}
+
+			//if the door is not a keep door, create a standard door
+			if (mydoor == null)
+			{
+				mydoor = new GameDoor();
+				mydoor.LoadFromDatabase(door);
+			}
+
+			//add to the list of doors
+			if (mydoor != null)
+			{
+				RegisterDoor(mydoor);
+			}
+
 			return true;
 		}
 
