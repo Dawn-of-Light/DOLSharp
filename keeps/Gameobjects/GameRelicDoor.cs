@@ -52,6 +52,14 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
+		/// Get the ZoneID of this door
+		/// </summary>
+		public ushort ZoneID
+		{
+			get { return (ushort)(DoorID / 1000000); }
+		}
+
+		/// <summary>
 		/// This flag is send in packet(keep door = 4, regular door = 0)
 		/// </summary>
 		public uint Flag

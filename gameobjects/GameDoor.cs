@@ -155,6 +155,14 @@ namespace DOL.GS
 			set { m_doorID = value; }
 		}
 
+		/// <summary>
+		/// Get the ZoneID of this door
+		/// </summary>
+		public ushort ZoneID
+		{
+			get { return (ushort)(DoorID / 1000000); }
+		}
+
 		private int m_type;
 
 		/// <summary>
