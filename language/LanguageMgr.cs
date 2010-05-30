@@ -306,7 +306,7 @@ namespace DOL.Language
 
 
 		/// <summary>
-		/// This returns the last part of the translation text id id actual translation fails
+		/// This returns the last part of the translation text id if actual translation fails
 		/// This helps to avoid returning strings that are too long and overflow the client
 		/// In addition, later version clients seem to reject names with special characters in them
 		/// </summary>
@@ -316,13 +316,22 @@ namespace DOL.Language
 		{
 			try
 			{
-				return lang + TranslationID.Substring(TranslationID.LastIndexOf(".") + 1);
+				string str = TranslationID;
+
+				// trying to find entries like "GamePlayer.Title" and not "This is an untranslated sentence"
+				if (str.Contains(".") && str.Contains(" ") == false && str.EndsWith(".") == false)
+					str = TranslationID.Substring(TranslationID.LastIndexOf(".") + 1);
+
+				if (str.Length > 0)
+					return str;
+				else
+					return lang + " no text found";
 			}
 			catch
 			{
 			}
 
-			return lang + "Error";
+			return lang + " Error";
 		}
 		
 
@@ -348,18 +357,26 @@ namespace DOL.Language
 				return GetTranslationErrorText(lang, translated);
 			}
 
-			if (IDSentences[TranslationID].ContainsKey(lang) == false)
+			if (IDSentences[TranslationID].ContainsKey(lang) == false || IDSentences[TranslationID][lang].Length == 0)
 			{
-				// For some accounts language is null or not set to a valid language, default to english
+				// if language is invalid, not found, or the returned string is empty then give english a try
 				lang = "EN";
 
 				if (IDSentences[TranslationID].ContainsKey(lang) == false)
 				{
+					log.ErrorFormat("LanguageMGR: No default EN entry found for {0}!", TranslationID);
 					return GetTranslationErrorText(lang, translated);
 				}
 			}
 
 			translated = IDSentences[TranslationID][lang];
+
+			if (translated.Length == 0)
+			{
+				// never allow the return of an empty string
+				log.ErrorFormat("LanguageMGR: String empty on translation of {0} to language {1}!", TranslationID, lang);
+				return lang + " no text found";
+			}
 
             try
             {
@@ -368,7 +385,7 @@ namespace DOL.Language
             }
             catch
             {
-                log.Warn("Parameters number error, ID: " + TranslationID + " (Arg count=" + args.Length + ").");
+				log.ErrorFormat("LanguageMGR: Parameter number incorrect: {0} for language {1}, Arg count = {2}", TranslationID, lang, args.Length);
             }
 
             return translated;
