@@ -41,7 +41,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort JumpSpotID = packet.ReadShort();
-			ZonePoint zonePoint = GameServer.Database.SelectObject<ZonePoint>("`Id` = '" + JumpSpotID + "' AND (`Realm` = '" + (byte)client.Player.Realm + "' OR `Realm` = '0' OR `Realm` = NULL)");
+
+			eRealm targetRealm = client.Player.Realm;
+
+			if (client.Player.CurrentRegion.Expansion == (int)eExpansion.ToA)
+			{
+				// if we are in ToA then base the target jump on the current region realm instead of the players realm
+				targetRealm = client.Player.CurrentZone.GetRealm();
+			}
+
+			ZonePoint zonePoint = GameServer.Database.SelectObject<ZonePoint>("`Id` = '" + JumpSpotID + "' AND (`Realm` = '" + (byte)targetRealm + "' OR `Realm` = '0' OR `Realm` = NULL)");
 
 			if (zonePoint == null)
 			{
