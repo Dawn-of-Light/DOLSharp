@@ -567,13 +567,13 @@ namespace DOL.GS.Keeps
 			Zone curZone = WorldMgr.GetZone((ushort)(door.InternalID / 1000000));
 			if (curZone == null) return;
 			this.CurrentRegion = curZone.ZoneRegion;
-			m_Name = door.Name;
+			m_name = door.Name;
 			m_Heading = (ushort)door.Heading;
 			m_x = door.X;
 			m_y = door.Y;
 			m_z = door.Z;
-			m_Level = 0;
-			m_Model = 0xFFFF;
+			m_level = 0;
+			m_model = 0xFFFF;
 			m_doorID = door.InternalID;
 			m_state = eDoorState.Closed;
 			this.AddToWorld();
@@ -608,10 +608,10 @@ namespace DOL.GS.Keeps
 
 			m_oldMaxHealth = MaxHealth;
 			m_health = MaxHealth;
-			m_Name = "Keep Door";
+			m_name = "Keep Door";
 			m_oldHealthPercent = HealthPercent;
 			m_doorID = GenerateDoorID();
-			this.m_Model = 0xFFFF;
+			this.m_model = 0xFFFF;
 			m_state = eDoorState.Closed;
 			this.AddToWorld();
 			StartHealthRegeneration();

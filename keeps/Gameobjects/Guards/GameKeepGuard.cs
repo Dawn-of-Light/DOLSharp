@@ -116,7 +116,7 @@ namespace DOL.GS.Keeps
 			set
 			{
 				if (this.IsRespawning)
-					m_Level = value;
+					m_level = value;
 				else
 					base.Level = value;
 			}

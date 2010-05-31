@@ -4679,8 +4679,8 @@ namespace DOL.GS
 		{
 			Level = 1; // health changes when GameNPC.Level changes
 			m_Realm = 0;
-			m_Name = "new mob";
-			m_Model = 408;
+			m_name = "new mob";
+			m_model = 408;
 			//Fill the living variables
 			//			CurrentSpeed = 0; // cause position addition recalculation
 			MaxSpeedBase = 200;
