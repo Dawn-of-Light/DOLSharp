@@ -141,10 +141,10 @@ namespace DOL.GS.Keeps
 			public TeleporterEffect()
 				: base()
 			{
-				m_Name = "teleport spell effect";
+				m_name = "teleport spell effect";
 				m_flags = (uint)GameNPC.eFlags.PEACE + (uint)GameNPC.eFlags.DONTSHOWNAME;
 				m_size = 255;
-				m_Model = 0x783;
+				m_model = 0x783;
 				m_maxSpeedBase = 0;
 			}
 		}

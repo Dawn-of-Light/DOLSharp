@@ -416,23 +416,23 @@ namespace DOL.GS
 		/// <summary>
 		/// The level of the Object
 		/// </summary>
-		protected byte m_Level;
+		protected byte m_level;
 
 		/// <summary>
 		/// The name of the Object
 		/// </summary>
-		protected string m_Name;
+		protected string m_name;
 		
 		/// <summary>
 		/// The name of the Object
 		/// </summary>
-		protected string m_Guild;
+		protected string m_guild;
 
 
 		/// <summary>
 		/// The model of the Object
 		/// </summary>
-		protected ushort m_Model;
+		protected ushort m_model;
 		
 		
 		/// <summary>
@@ -440,8 +440,8 @@ namespace DOL.GS
 		/// </summary>
 		public virtual byte Level
 		{
-			get { return m_Level; }
-			set { m_Level = value; }
+			get { return m_level; }
+			set { m_level = value; }
 		}
 
 		/// <summary>
@@ -458,8 +458,8 @@ namespace DOL.GS
 		/// </summary>
 		public virtual string Name
 		{
-			get { return m_Name; }
-			set { m_Name = value; }
+			get { return m_name; }
+			set { m_name = value; }
 		}
 		
 		/// <summary>
@@ -467,8 +467,8 @@ namespace DOL.GS
 		/// </summary>
 		public virtual string Guild
 		{
-			get { return m_Guild; }
-			set { m_Guild = value; }
+			get { return m_guild; }
+			set { m_guild = value; }
 		}
 
 		/// <summary>
@@ -476,8 +476,8 @@ namespace DOL.GS
 		/// </summary>
 		public virtual ushort Model
 		{
-			get { return m_Model; }
-			set { m_Model = value; }
+			get { return m_model; }
+			set { m_model = value; }
 		}
 
         /// <summary>
@@ -1540,7 +1540,7 @@ namespace DOL.GS
 			//as standard! We want our mobs/items etc. at
 			//the same startingspots when we restart!
 			m_saveInDB = false;
-			m_Name = "";
+			m_name = "";
 			m_ObjectState = eObjectState.Inactive;
 			m_boat_ownerid = "";
 		}

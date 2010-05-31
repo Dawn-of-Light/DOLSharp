@@ -248,13 +248,13 @@ namespace DOL.GS.Keeps
 			Zone curZone = WorldMgr.GetZone((ushort)(door.InternalID / 1000000));
 			if (curZone == null) return;
 			this.CurrentRegion = curZone.ZoneRegion;
-			m_Name = door.Name;
+			m_name = door.Name;
 			m_Heading = (ushort)door.Heading;
 			m_x = door.X;
 			m_y = door.Y;
 			m_z = door.Z;
-			m_Level = 0;
-			m_Model = 0xFFFF;
+			m_level = 0;
+			m_model = 0xFFFF;
 			m_doorID = door.InternalID;
 			m_state = eDoorState.Closed;
 			this.AddToWorld();
