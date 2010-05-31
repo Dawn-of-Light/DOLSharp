@@ -482,8 +482,8 @@ namespace DOL.GS
 
 			//get constant values
 			MiniTemp template = GetRelicTemplate(m_originalRealm, m_relicType);
-			m_Name = template.Name;
-			m_Model = template.Model;
+			m_name = template.Name;
+			m_model = template.Model;
 			template = null;
 
 			//set still empty fields

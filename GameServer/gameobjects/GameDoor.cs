@@ -43,7 +43,7 @@ namespace DOL.GS
 	/// </summary>
 	public class GameDoor : GameLiving, IDoor
 	{
-		private bool OpenDead = false;
+		private bool m_openDead = false;
 		private static Timer m_timer;
 		protected volatile uint m_lastUpdateTickCount = uint.MinValue;
 		private readonly object m_LockObject = new object();
@@ -67,7 +67,7 @@ namespace DOL.GS
 			: base()
 		{
 			m_state = eDoorState.Closed;
-			//this.Realm = 0;
+			m_model = 0xFFFF;
 		}
 		
 		/// <summary>
@@ -82,17 +82,17 @@ namespace DOL.GS
 			Zone curZone = WorldMgr.GetZone((ushort)(m_dbdoor.InternalID / 1000000));
 			if (curZone == null) return;
 			this.CurrentRegion = curZone.ZoneRegion;
-			m_Name = m_dbdoor.Name;
+			m_name = m_dbdoor.Name;
 			m_Heading = (ushort)m_dbdoor.Heading;
 			m_x = m_dbdoor.X;
 			m_y = m_dbdoor.Y;
 			m_z = m_dbdoor.Z;
-			m_Level = 0;
-			m_Model = 0xFFFF;
+			m_level = 0;
+			m_model = 0xFFFF;
 			m_doorID = m_dbdoor.InternalID;
-            m_Guild = m_dbdoor.Guild;
+            m_guild = m_dbdoor.Guild;
             m_Realm = (eRealm)m_dbdoor.Realm;
-            m_Level = m_dbdoor.Level;
+            m_level = m_dbdoor.Level;
             m_health = m_dbdoor.MaxHealth;
             m_maxHealth = m_dbdoor.MaxHealth;
 			m_locked = m_dbdoor.Locked;
@@ -219,7 +219,7 @@ namespace DOL.GS
 			if (Locked == 0)
 				this.State = eDoorState.Open;
 			
-			if (HealthPercent > 40 || !OpenDead)
+			if (HealthPercent > 40 || !m_openDead)
 			{
 				lock (m_LockObject)
 				{
@@ -246,7 +246,7 @@ namespace DOL.GS
 		/// </summary>
 		public void Close()
 		{
-			if (!OpenDead)
+			if (!m_openDead)
 				this.State = eDoorState.Closed;
 			m_closeDoorAction = null;
 		}
@@ -347,7 +347,7 @@ namespace DOL.GS
 			if (HealthPercent >= 40)
 			{
 				m_timer.Dispose( );
-				OpenDead = false;
+				m_openDead = false;
 				Close( );
 				return;
 			}
@@ -355,7 +355,7 @@ namespace DOL.GS
 			if (Health == MaxHealth)
 			{
 				m_timer.Dispose( );
-				OpenDead = false;
+				m_openDead = false;
 				Close();
 				return;
 			}
@@ -363,7 +363,7 @@ namespace DOL.GS
 			if( m_healthregentimer <= 0 )
 			{
 				m_timer.Dispose();
-				OpenDead = false;
+				m_openDead = false;
 				Close( );
 				return;
 			}
@@ -374,7 +374,7 @@ namespace DOL.GS
 		public override void TakeDamage ( GameObject source, eDamageType damageType, int damageAmount, int criticalAmount )
 		{
 			
-			if( !OpenDead && this.Realm != eRealm.Door )
+			if( !m_openDead && this.Realm != eRealm.Door )
 			{
 				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 
@@ -384,11 +384,11 @@ namespace DOL.GS
 			GamePlayer attackerPlayer = source as GamePlayer;
 			if( attackerPlayer != null)
 			{
-				if( !OpenDead && this.Realm != eRealm.Door )
+				if( !m_openDead && this.Realm != eRealm.Door )
 				{
 					attackerPlayer.Out.SendMessage("The door is now open", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
-				if( !OpenDead && this.Realm != eRealm.Door )
+				if( !m_openDead && this.Realm != eRealm.Door )
 				{
 					Health -= damageAmount + criticalAmount;
 			
@@ -396,7 +396,7 @@ namespace DOL.GS
 					{
 						attackerPlayer.Out.SendMessage("The door is now open", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						Die(source);
-						OpenDead = true;
+						m_openDead = true;
 						RegenDoorHealth();
 						if( Locked == 0 )
 							Open( );
