@@ -43,20 +43,20 @@ namespace DOL.GS
 			//as standard! We want our mobs/items etc. at
 			//the same startingspots when we restart!
 			m_saveInDB = false;
-			m_Name = LanguageMgr.GetTranslation(player.Client, "GameGravestone.GameGravestone.Grave", player.Name);
+			m_name = LanguageMgr.GetTranslation(player.Client, "GameGravestone.GameGravestone.Grave", player.Name);
 			m_Heading = player.Heading;
 			m_x = player.X;
 			m_y = player.Y;
 			m_z = player.Z;
 			CurrentRegionID = player.CurrentRegionID;
-			m_Level = 0;
+			m_level = 0;
 
 			if (player.Realm == eRealm.Albion)
-				m_Model = 145; //Albion Gravestone
+				m_model = 145; //Albion Gravestone
 			else if (player.Realm == eRealm.Midgard)
-				m_Model = 636; //Midgard Gravestone
+				m_model = 636; //Midgard Gravestone
 			else if (player.Realm == eRealm.Hibernia)
-				m_Model = 637; //Hibernia Gravestone
+				m_model = 637; //Hibernia Gravestone
 
 			m_xpValue = xpValue;
 
