@@ -3713,6 +3713,9 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 			ad.DamageType = damageType;
 			ad.Modifier = resistModifier;
 
+			// Attacked living may modify the attack data.  Primarily used for keep doors and components.
+			ad.Target.ModifyAttack(ad);
+
 			m_lastAttackData = ad;
 			return ad;
 		}
