@@ -97,6 +97,14 @@ namespace DOL.GS
 				}
 			}
 		}
+		
+		private bool m_loadedFromScript = true;
+		public bool LoadedFromScript
+		{
+			get { return m_loadedFromScript; }
+			set { m_loadedFromScript = value; }
+		}
+
 
 
 		/// <summary>
@@ -143,10 +151,13 @@ namespace DOL.GS
 		{
 			WorldObject item = obj as WorldObject;
 			base.LoadFromDatabase(obj);
+			
+			m_loadedFromScript = false;
 			CurrentRegionID = item.Region;
 			Name = item.Name;
 			Model = item.Model;
 			Emblem = item.Emblem;
+			Realm = (eRealm)item.Realm;
 			Heading = item.Heading;
 			X = item.X;
 			Y = item.Y;
@@ -196,11 +207,6 @@ namespace DOL.GS
 			set
 			{
 				base.Realm = value;
-				if (ObjectState == eObjectState.Active)
-				{
-					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						player.Out.SendObjectCreate(this);
-				}
 			}
 		}
 
@@ -216,11 +222,19 @@ namespace DOL.GS
 			}
 			if (obj == null)
 			{
-				obj = new WorldObject();
+				if (LoadedFromScript == false)
+				{
+					obj = new WorldObject();
+				}
+				else
+				{
+					return;
+				}
 			}
 			obj.Name = Name;
 			obj.Model = Model;
 			obj.Emblem = Emblem;
+			obj.Realm = (byte)Realm;
 			obj.Heading = Heading;
 			obj.Region = CurrentRegionID;
 			obj.X = X;
