@@ -159,8 +159,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.Out.SendUpdateMaxSpeed(); // Speed after conc buffs
 				player.Out.SendStatusUpdate();
 				player.Out.SendInventoryItemsUpdate(0x01, player.Inventory.EquippedItems);
-				player.Out.SendInventoryItemsUpdate(0x02, player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack));
-				player.Out.SendInventoryItemsUpdate(0x00, player.Inventory.GetItemRange(eInventorySlot.FirstBagHorse, eInventorySlot.LastBagHorse));
+                player.Out.SendInventoryItemsUpdate(0x02, player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBagHorse));
 				player.Out.SendUpdatePlayerSkills();   //TODO Insert 0xBE - 08 Various in SendUpdatePlayerSkills() before send spells
 				player.Out.SendUpdateCraftingSkills(); // ^
 				player.Out.SendUpdatePlayer();

@@ -45,12 +45,6 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length > 1)
-			{
-				DisplaySyntax(client);
-				return;
-			}
-			
 			uint hour = WorldMgr.GetCurrentDayTime() / 1000 / 60 / 60;
 			uint minute = WorldMgr.GetCurrentDayTime() / 1000 / 60 % 60;
 			uint seconde = WorldMgr.GetCurrentDayTime() / 1000 % 60;
