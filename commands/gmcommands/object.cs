@@ -37,6 +37,7 @@ namespace DOL.GS.Commands
 	              "'/object fastcreate [name] [modelID]' to create the specified object",
 	              "'/object model <newModel>' to set the model to newModel",
 	              "'/object emblem <newEmblem>' to set the emblem to newEmblem",
+				  "'/object realm <0/1/2/3>' to set the targeted object realm",
 	              "'/object name <newName>' to set the targeted object name to newName",
 	              "'/object noname' to remove the targeted object name",
 	              "'/object remove' to remove the targeted object",
@@ -178,6 +179,19 @@ namespace DOL.GS.Commands
 						}
 						break;
 					}
+				case "realm":
+					{
+						eRealm realm = eRealm.None;
+						if (args[2] == "0") realm = eRealm.None;
+						if (args[2] == "1") realm = eRealm.Albion;
+						if (args[2] == "2") realm = eRealm.Midgard;
+						if (args[2] == "3") realm = eRealm.Hibernia;
+						targetObject.Realm = realm;
+						targetObject.SaveIntoDatabase();
+						DisplayMessage(client, "Object realm changed to: " + targetObject.Realm);
+						
+						break;
+					}
 				case "name":
 					{
 						if (param != "")
@@ -197,6 +211,7 @@ namespace DOL.GS.Commands
 					}
 				case "save":
 					{
+						targetObject.LoadedFromScript = false;
 						targetObject.SaveIntoDatabase();
 						DisplayMessage(client, "Object saved to Database");
 						break;
@@ -268,6 +283,7 @@ namespace DOL.GS.Commands
 			}
 
 			//Fill the object variables
+			obj.LoadedFromScript = false;
 			obj.X = client.Player.X;
 			obj.Y = client.Player.Y;
 			obj.Z = client.Player.Z;
@@ -276,6 +292,7 @@ namespace DOL.GS.Commands
 			obj.Name = "New Object";
 			obj.Model = 100;
 			obj.Emblem = 0;
+			obj.Realm = 0;
 			obj.AddToWorld();
 			obj.SaveIntoDatabase();
 
