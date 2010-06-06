@@ -1104,6 +1104,38 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Searches for all objects from a specific region
+		/// </summary>
+		/// <param name="regionID">The region to search</param>
+		/// <param name="objectType">The type of the object you search</param>
+		/// <returns>All objects with the specified parameters</returns>
+		public static GameObject[] GetobjectsFromRegion( ushort regionID, Type objectType)
+		{
+			Region reg = (Region)m_regions[regionID];
+			if (reg == null)
+				return new GameObject[0];
+			GameObject[] objs = reg.Objects;
+			ArrayList returnObjs = new ArrayList();
+			for (int i = 0; i < objs.Length; i++)
+			{
+				GameObject obj = objs[i];
+				if (obj != null && objectType.IsInstanceOfType(obj))
+					returnObjs.Add(obj);
+			}
+			return (GameObject[])returnObjs.ToArray(objectType);
+		}
+		
+		/// <summary>
+        /// Searches for all GameStaticItem from a specific region
+		/// </summary>
+		/// <param name="regionID">The region to search</param>
+		/// <returns>All NPCs with the specified parameters</returns>
+        public static GameStaticItem[] GetStaticItemFromRegion(ushort regionID)
+		{
+            return (GameStaticItem[])GetobjectsFromRegion(regionID, typeof(GameStaticItem));
+		}
+
+		/// <summary>
 		/// Searches for all objects with the given name, from a specific region and realm
 		/// </summary>
 		/// <param name="name">The name of the object to search</param>

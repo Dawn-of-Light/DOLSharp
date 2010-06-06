@@ -31,13 +31,15 @@ namespace DOL.Database
 	{
 		private string		m_type;
 		private string		m_name;
-		private int				m_x;
-		private int				m_y;
-		private int				m_z;
+		private int			m_x;
+		private int			m_y;
+		private int			m_z;
 		private ushort		m_heading;
 		private ushort		m_model;
 		private ushort		m_region;
-		private int		m_emblem;
+		private int			m_emblem;
+		private byte 		m_realm;
+		
 
 		public WorldObject()
 		{
@@ -155,6 +157,7 @@ namespace DOL.Database
 				m_model = value;
 			}
 		}
+		
 		[DataElement(AllowDbNull=false)]
 		public int Emblem
 		{
@@ -169,5 +172,18 @@ namespace DOL.Database
 			}
 		}
 		
+		[DataElement(AllowDbNull = false)]
+		public byte Realm
+		{
+			get
+			{
+				return m_realm;
+			}
+			set
+			{
+				Dirty = true;
+				m_realm = value;
+			}
+		}
 	}
 }
