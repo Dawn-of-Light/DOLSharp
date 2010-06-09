@@ -127,6 +127,8 @@ GamePlayer.ItemBonusName.Bonus16:			Matter resistance
 GamePlayer.ItemBonusName.Bonus17:			Slash resistance
 GamePlayer.ItemBonusName.Bonus18:			Spirit resistance
 GamePlayer.ItemBonusName.Bonus19:			Thrust resistance
+GamePlayer.LavaBurnTimerCallback.YourInLava:	You are in Lava and take damage!			
+GamePlayer.LavaBurnTimerCallback.Take34%Damage:	You take 34% of your max hits in damage.
 GamePlayer.OnItemEquipped.Increased:		Your {0} has increased.
 GamePlayer.OnItemEquipped.Magic:			The magic of {0} flows through you.
 GamePlayer.OnItemEquipped.WieldBothHands:	You wield {0} in both hands.
