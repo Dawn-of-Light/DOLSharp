@@ -368,6 +368,7 @@
 		<offsety>64</offsety>
 		<offsetx>56</offsetx>
 		<regionID>30</regionID>
+    <IsLava>1</IsLava>
 	</Zone41>
 	<Zone42>
 		<description>Ashen Isles</description>
@@ -377,6 +378,7 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>30</regionID>
+    <IsLava>1</IsLava>
 	</Zone42>
 	<Zone43>
 		<description>Green Glades</description>
@@ -755,6 +757,7 @@
 		<offsety>64</offsety>
 		<offsetx>56</offsetx>
 		<regionID>73</regionID>
+    <IsLava>1</IsLava>
 	</Zone84>
 	<Zone85>
 		<description>Ashen Isles</description>
@@ -764,6 +767,7 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>73</regionID>
+    <IsLava>1</IsLava>
 	</Zone85>
 	<Zone86>
 		<description>Green Glades</description>
@@ -935,6 +939,7 @@
 		<offsety>78</offsety>
 		<offsetx>100</offsetx>
 		<regionID>100</regionID>
+    <IsLava>1</IsLava>
 	</Zone104>
 	<Zone105>
 		<description>Myrkwood Forest</description>
@@ -1259,6 +1264,7 @@
 		<offsety>64</offsety>
 		<offsetx>56</offsetx>
 		<regionID>130</regionID>
+    <IsLava>1</IsLava>
 	</Zone141>
 	<Zone142>
 		<description>Ashen Isles</description>
@@ -1268,6 +1274,7 @@
 		<offsety>64</offsety>
 		<offsetx>64</offsetx>
 		<regionID>130</regionID>
+    <IsLava>1</IsLava>
 	</Zone142>
 	<Zone143>
 		<description>Green Glades</description>
