@@ -9977,6 +9977,22 @@ namespace DOL.GS
 				if (value == m_swimming) return;
 				m_swimming = value;
 				Notify(GamePlayerEvent.SwimmingStatus, this);
+                //Handle Lava Damage
+                if (m_swimming && CurrentZone.IsLava == 1)
+                {
+                    if (m_lavaBurningTimer == null)
+                    {
+                        m_lavaBurningTimer = new RegionTimer(this);
+                        m_lavaBurningTimer.Callback = new RegionTimerCallback(LavaBurnTimerCallback);
+                        m_lavaBurningTimer.Interval = 2000;
+                        m_lavaBurningTimer.Start(1);
+                    }
+                }
+                if (!m_swimming && CurrentZone.IsLava == 1 && m_lavaBurningTimer != null)
+                {
+                    m_lavaBurningTimer.Stop();
+                    m_lavaBurningTimer = null;
+                }
 			}
 		}
 
@@ -10038,6 +10054,7 @@ namespace DOL.GS
 
 		protected RegionTimer m_drowningTimer;
 		protected RegionTimer m_holdBreathTimer;
+        protected RegionTimer m_lavaBurningTimer;
 		/// <summary>
 		/// The diving state of this player
 		/// </summary>
@@ -10120,6 +10137,19 @@ namespace DOL.GS
 			//if (changeSpeed)
 			//	Out.SendUpdateMaxSpeed();
 		}
+
+        protected int LavaBurnTimerCallback(RegionTimer callingTimer)
+        {
+            if (!IsAlive || ObjectState != eObjectState.Active || !IsSwimming)
+                return 0;
+            if (this.Client.Account.PrivLevel == 1)
+            {
+                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.YourInLava"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.Take34%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                TakeDamage(null, eDamageType.Natural, (int)(MaxHealth * 0.34), 0);
+            }
+            return 2000;
+        }
 
 		/// <summary>
 		/// The sitting state of this player
