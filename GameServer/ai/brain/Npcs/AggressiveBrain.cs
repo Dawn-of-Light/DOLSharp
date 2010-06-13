@@ -18,9 +18,11 @@
  */
 using System;
 using System.Collections.Generic;
+using DOL.Database;
 using DOL.GS;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.GS.ServerProperties;
 using DOL.GS.Spells;
 using System.Collections;
 using log4net;
@@ -230,7 +232,7 @@ namespace DOL.AI.Brain
                 else
                 {
                     if (AttackBehaviour is MeleeBehaviour)
-                        if (Body.CanCastHarmfulSpells && Util.Chance(25))
+                        if (Body.CanCastHarmfulSpells && Util.Chance(Properties.GAMENPC_CHANCES_TO_CAST))
                             AttackBehaviour = CastingBehaviour;
                 }
 
