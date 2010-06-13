@@ -25,6 +25,7 @@ using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.ServerProperties;
 using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.Movement;
@@ -289,7 +290,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected override Style GetStyleToUse()
 		{
-			if (Styles.Count > 0 && Util.Chance(20 + Styles.Count))
+			if (Styles.Count > 0 && Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE + Styles.Count))
 			{
 				Style style = (Style)Styles[Util.Random(Styles.Count - 1)];
 				if (StyleProcessor.CanUseStyle(this, style, AttackWeapon))

@@ -303,7 +303,6 @@ namespace DOL.GS.ServerProperties
 
 		#endregion
 
-
 		#region WORLD
 		/// <summary>
 		/// Epic encounters strength: 100 is 100% base strength
@@ -495,8 +494,8 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("rates","item_sell_ratio", "Merchants are buying items at the % of initial value", 50)]
 		public static int ITEM_SELL_RATIO;
-		#endregion
-		
+		#endregion	
+
 		#region NPCs
 		/// <summary>
 		/// What level to start increasing mob damage
@@ -559,6 +558,18 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("npc", "gamenpc_default_classtype", "Change the classtype of any npc of classtype DOL.GS.GameNPC to this.", "DOL.GS.GameNPC")]
 		public static readonly string GAMENPC_DEFAULT_CLASSTYPE;
 
+		/// <summary>
+		/// Chances for npc (including pet) to style (chance is calculated randomly according to this value + the number of style the NPC own) 
+		/// </summary>
+		[ServerProperty("npc", "gamenpc_chances_to_style", "Change the chance to fire a style for a mob or a pet", 20)]
+		public static readonly int GAMENPC_CHANCES_TO_STYLE;
+
+				/// <summary>
+		/// Chances for npc (including pet) to cast (chance is calculated randomly according to this value + the number of spells the NPC own) 
+		/// </summary>
+		[ServerProperty("npc", "gamenpc_chances_to_cast", "Change the chance to cast a spell for a mob or a pet", 25)]
+		public static readonly int GAMENPC_CHANCES_TO_CAST;
+		
 		#endregion
 		
 		#region PVP / RVR
