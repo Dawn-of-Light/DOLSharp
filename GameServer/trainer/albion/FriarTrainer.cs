@@ -98,7 +98,7 @@ namespace DOL.GS.Trainer
 		/// <returns></returns>
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
-			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Acolyte && player.Race == (int) eRace.Briton);
+			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Acolyte && (player.Race == (int) eRace.Briton || player.Race == (int) eRace.Highlander));
 		}
 
 		/// <summary>
