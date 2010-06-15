@@ -22,7 +22,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Spells
 {
 	/// <summary>
-    /// Summary description for TurretPBAoESpellHandler.
+	/// Summary description for TurretPBAoESpellHandler.
 	/// </summary>
 	[SpellHandler("TurretPBAoE")]
 	public class PetPBAoE : DirectDamageSpellHandler
@@ -31,6 +31,10 @@ namespace DOL.GS.Spells
 		{
 		}
 
+		public override bool HasPositiveEffect {
+			get { return false; }
+		}
+		
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if(!(Caster is GamePlayer))
@@ -52,7 +56,7 @@ namespace DOL.GS.Spells
 
 			if(target == null || !Caster.IsControlledNPC(target))
 			{
-			  target = Caster.ControlledNpcBrain.Body as TurretPet;
+				target = Caster.ControlledNpcBrain.Body as TurretPet;
 			}
 			return base.CheckBeginCast(target);
 		}
@@ -85,9 +89,9 @@ namespace DOL.GS.Spells
 						turretAd.Attacker = turret;
 						ad.Target.OnAttackedByEnemy(turretAd);
 
-						aggroBrain.AddToAggroList(turret, (ad.Damage + ad.CriticalDamage)*3);					
+						aggroBrain.AddToAggroList(turret, (ad.Damage + ad.CriticalDamage)*3);
 					}
-					aggroBrain.AddToAggroList(Caster, ad.Damage);		
+					aggroBrain.AddToAggroList(Caster, ad.Damage);
 				}
 			}
 			base.DamageTarget(ad, showEffectAnimation);
