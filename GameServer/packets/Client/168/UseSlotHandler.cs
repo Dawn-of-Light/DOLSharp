@@ -22,20 +22,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles spell cast requests from client
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0xD9^168,"Handles slot activation (click on icon)")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.UseSlot, ClientStatus.PlayerInGame)]
 	public class UseSlotHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet) 
+		#region IPacketHandler Members
+
+		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			int flagSpeedData = packet.ReadShort ();
+			int flagSpeedData = packet.ReadShort();
 			int slot = packet.ReadByte();
 			int type = packet.ReadByte();
 
 			new UseSlotAction(client.Player, flagSpeedData, slot, type).Start(1);
 
-			//client.Out.SendDebugMessage("Slot {0} activated!", slot);
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: UseSlotAction
 
 		/// <summary>
 		/// Handles player use slot actions
@@ -46,10 +51,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// The speed and flags data
 			/// </summary>
 			protected readonly int m_flagSpeedData;
+
 			/// <summary>
 			/// The slot index
 			/// </summary>
 			protected readonly int m_slot;
+
 			/// <summary>
 			/// The use type
 			/// </summary>
@@ -74,20 +81,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
-				if ((m_flagSpeedData & 0x200) != 0) 
+				var player = (GamePlayer) m_actionSource;
+				if ((m_flagSpeedData & 0x200) != 0)
 				{
-					player.CurrentSpeed = -(m_flagSpeedData & 0x1ff);  // backward movement
-				} 
-				else 
+					player.CurrentSpeed = -(m_flagSpeedData & 0x1ff); // backward movement
+				}
+				else
 				{
-					player.CurrentSpeed = m_flagSpeedData & 0x1ff;     // forwardmovement
+					player.CurrentSpeed = m_flagSpeedData & 0x1ff; // forwardmovement
 				}
 				player.IsStrafing = (m_flagSpeedData & 0x4000) != 0;
-				player.TargetInView = (m_flagSpeedData & 0xa000) != 0;     // why 2 bits? that has to be figured out
+				player.TargetInView = (m_flagSpeedData & 0xa000) != 0; // why 2 bits? that has to be figured out
 				player.GroundTargetInView = ((m_flagSpeedData & 0x1000) != 0);
 				player.UseSlot(m_slot, m_useType);
 			}
 		}
+
+		#endregion
 	}
 }

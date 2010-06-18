@@ -182,16 +182,20 @@ namespace DOL.GS.PacketHandler
 				// Pick up a class
 				if (type.IsClass != true)
 					continue;
+
 				if (type.GetInterface("DOL.GS.PacketHandler.IPacketHandler") == null)
 					continue;
+
 				if (!type.Namespace.ToLower().EndsWith(version.ToLower()))
 					continue;
+
 				var packethandlerattribs =
 					(PacketHandlerAttribute[]) type.GetCustomAttributes(typeof (PacketHandlerAttribute), true);
 				if (packethandlerattribs.Length > 0)
 				{
 					count++;
 					RegisterPacketHandler(packethandlerattribs[0].Code, (IPacketHandler) Activator.CreateInstance(type));
+					PacketPreprocessing.RegisterPacketDefinition(packethandlerattribs[0].Code, packethandlerattribs[0].PreprocessorID);
 				}
 			}
 			return count;
@@ -855,7 +859,9 @@ namespace DOL.GS.PacketHandler
 
 			IPacketHandler packetHandler = null;
 			if (code < m_packetHandlers.Length)
+			{
 				packetHandler = m_packetHandlers[code];
+			}
 
 			else if (log.IsErrorEnabled)
 			{
@@ -867,14 +873,13 @@ namespace DOL.GS.PacketHandler
 				          	packet.ToArray()));
 			}
 
-			//TODO remove debug output
-			//if (packet.ID != (0x12^168) && packet.ID != (0x0b^168) && packet.ID != (0x01^168)) {
-			if (log.IsDebugEnabled)
-				log.Debug(Marshal.ToHexDump(
-				          	String.Format("===> <{2}> Packet 0x{0:X2} (0x{1:X2}) length: {3} handled by {4} (ThreadId={5})", code,
-				          	              code ^ 168, (m_client.Account != null) ? m_client.Account.Name : m_client.TcpEndpoint,
-				          	              packet.PacketSize, packetHandler, Thread.CurrentThread.ManagedThreadId),
-				          	packet.ToArray()));
+			// make sure we can handle this packet at this stage
+			var preprocess = PacketPreprocessing.CanProcessPacket(m_client, packet);
+			if(!preprocess)
+			{
+				// this packet can't be processed by this client right now, for whatever reason
+				return;
+			}
 
 			if (packetHandler != null)
 			{

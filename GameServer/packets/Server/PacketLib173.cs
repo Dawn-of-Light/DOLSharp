@@ -53,7 +53,7 @@ namespace DOL.GS.PacketHandler
 
         public override void SendWarlockChamberEffect(GamePlayer player)
         {
-            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 
             pak.WriteShort((ushort)player.ObjectID);
             pak.WriteByte((byte)3);
@@ -130,7 +130,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
 		{
 			if (m_gameClient.Player == null) return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.UpdateIcons));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.UpdateIcons));
 			long initPos = pak.Position;
 
 			int fxcount = 0;
@@ -226,7 +226,7 @@ namespace DOL.GS.PacketHandler
 				int count = entries.Length;
 				while (entries != null && count > index)
 				{
-					GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ClientRegions));
+					GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ClientRegions));
 					for (int i = 0; i < 4; i++)
 					{
 						while (index < count && (int)m_gameClient.ClientType <= entries[index].expansion)
@@ -271,7 +271,7 @@ namespace DOL.GS.PacketHandler
 				default: throw new Exception("CharacterOverview requested for unknown realm " + realm);
 			}
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterOverview));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterOverview));
 			pak.FillString(m_gameClient.Account.Name, 24);
 			IList<InventoryItem> items;
 			Character[] characters = m_gameClient.Account.Characters;
@@ -462,7 +462,7 @@ namespace DOL.GS.PacketHandler
 							if (reg == null || reg.Expansion != 1)
 								pak.WriteByte(0x00);
 							else
-								pak.WriteByte(0x01); //0x01=char in SI zone, classic client can't "play"
+								pak.WriteByte(0x01); //0x01=char in ShroudedIsles zone, classic client can't "play"
 							//pak.WriteByte(0x00);
                             pak.WriteByte((byte)characters[j].Constitution);
 							//pak.Fill(0x00,2);
@@ -481,7 +481,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendKeepInfo(AbstractGameKeep keep)
 		{
 			if (m_gameClient.Player == null) return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepInfo));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepInfo));
 
 			pak.WriteShort((ushort)keep.KeepID);
 			pak.WriteShort(0);
@@ -501,7 +501,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (player == null)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 			pak.WriteShort((ushort)player.ObjectID);
 			pak.WriteByte(0x3); // show Hex
 			pak.WriteByte(effect1);
@@ -518,7 +518,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null || npc == null)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 
 			pak.WriteShort((ushort)npc.ObjectID);
 			pak.WriteByte(0x7); // Quest visual effect
@@ -533,7 +533,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.ClientState == GameClient.eClientState.CharScreen)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Message));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Message));
 			pak.WriteShort(0xFFFF);
 			pak.WriteShort((ushort)m_gameClient.SessionID);
 			pak.WriteByte((byte)type);
@@ -600,7 +600,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 			SendRegions();
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionChanged));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RegionChanged));
 
             //Dinberg - Changing to allow instances...
             pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
@@ -612,7 +612,7 @@ namespace DOL.GS.PacketHandler
 
 		protected override void SendQuestPacket(AbstractQuest quest, int index)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry));
 
 			pak.WriteByte((byte)index);
 			if (quest.Step <= 0)
@@ -653,7 +653,7 @@ namespace DOL.GS.PacketHandler
 		{
 			string name = BuildTaskString();
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry));
 			pak.WriteByte(0); //index
 			pak.WriteShortLowEndian((ushort)name.Length);
 			pak.WriteByte((byte)0);
@@ -664,7 +664,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon, int time)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.SiegeWeaponInterface));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponInterface));
 			ushort flag = (ushort)((siegeWeapon.EnableToMove ? 1 : 0) | siegeWeapon.AmmoType << 8);
 			pak.WriteShort(flag); //byte Ammo,  byte SiegeMoving(1/0)
 			pak.WriteByte(0);

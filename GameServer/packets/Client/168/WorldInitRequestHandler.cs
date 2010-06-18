@@ -166,7 +166,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.Out.SendUpdateMoney();
 				player.Out.SendCharStatsUpdate();
 
-				ArrayList friends = player.Friends;
+				var friends = player.Friends;
 				var onlineFriends = new List<string>();
 				foreach (string friendName in friends)
 				{

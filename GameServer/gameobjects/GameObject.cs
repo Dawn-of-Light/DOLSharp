@@ -426,8 +426,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The name of the Object
 		/// </summary>
-		protected string m_guild;
-
+		protected string m_guildName;
 
 		/// <summary>
 		/// The model of the Object
@@ -461,14 +460,11 @@ namespace DOL.GS
 			get { return m_name; }
 			set { m_name = value; }
 		}
-		
-		/// <summary>
-		/// Gets or Sets the current Guild of the Object
-		/// </summary>
-		public virtual string Guild
+
+		public virtual string GuildName
 		{
-			get { return m_guild; }
-			set { m_guild = value; }
+			get { return m_guildName; }
+			set { m_guildName = value; }
 		}
 
 		/// <summary>

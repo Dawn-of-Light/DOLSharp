@@ -16,103 +16,112 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using DOL.Database;
-using DOL.Language;
 using DOL.GS.Keeps;
+using DOL.GS.ServerProperties;
+using DOL.Language;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x31 ^ 168, "Handles open/close door requests!")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.DoorRequest, ClientStatus.PlayerInGame)]
 	public class DoorRequestHandler : IPacketHandler
 	{
+		public static int HandlerDoorID;
 
-		public static int m_handlerDoorID;
+		#region IPacketHandler Members
+
 		/// <summary>
 		/// door index which is unique
 		/// </summary>
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			int doorID = (int)packet.ReadInt();
-			m_handlerDoorID = doorID;
-			byte doorState = (byte)packet.ReadByte();
-			int doorType = doorID / 100000000;
+			var doorID = (int) packet.ReadInt();
+			HandlerDoorID = doorID;
+			var doorState = (byte) packet.ReadByte();
+			int doorType = doorID/100000000;
+
 			if (client.Account.PrivLevel > 1)
 			{
 				if (doorType == 7)
 				{
-					int ownerKeepId = (doorID / 100000) % 1000;
-					int towerNum = (doorID / 10000) % 10;
-					int keepID = ownerKeepId + towerNum * 256;
-					int componentID = (doorID / 100) % 100;
-					int doorIndex = doorID % 10;
-					client.Out.SendDebugMessage("Keep Door ID: {0} state:{1} (Owner Keep: {6} KeepID:{2} ComponentID:{3} DoorIndex:{4} TowerNumber:{5})", doorID, doorState, keepID, componentID, doorIndex, towerNum, ownerKeepId);
+					int ownerKeepId = (doorID/100000)%1000;
+					int towerNum = (doorID/10000)%10;
+					int keepID = ownerKeepId + towerNum*256;
+					int componentID = (doorID/100)%100;
+					int doorIndex = doorID%10;
+					client.Out.SendDebugMessage(
+						"Keep Door ID: {0} state:{1} (Owner Keep: {6} KeepID:{2} ComponentID:{3} DoorIndex:{4} TowerNumber:{5})", doorID,
+						doorState, keepID, componentID, doorIndex, towerNum, ownerKeepId);
 				}
 				else if (doorType == 9)
 				{
-					int doorIndex = doorID - doorType * 10000000;
-					client.Out.SendDebugMessage("House DoorID:{0} state:{1} (doorType:{2} doorIndex:{3})", doorID, doorState, doorType, doorIndex);
+					int doorIndex = doorID - doorType*10000000;
+					client.Out.SendDebugMessage("House DoorID:{0} state:{1} (doorType:{2} doorIndex:{3})", doorID, doorState, doorType,
+					                            doorIndex);
 				}
 				else
 				{
-					int zoneDoor = (int)(doorID / 1000000);
-					int fixture = (int)(doorID - zoneDoor * 1000000);
+					int zoneDoor = (doorID/1000000);
+					int fixture = (doorID - zoneDoor*1000000);
 					int fixturePiece = fixture;
 					fixture /= 100;
-					fixturePiece = fixturePiece - fixture * 100;
+					fixturePiece = fixturePiece - fixture*100;
 
-					// For ToA the client always sends the same ID so we need to construct an id using the current zone
-					if (client.Player.CurrentRegion.Expansion == (int)eExpansion.ToA)
+					// For TrialsOfAtlantis the client always sends the same ID so we need to construct an id using the current zone
+					if (client.Player.CurrentRegion.Expansion == (int) eClientExpansion.TrialsOfAtlantis)
 					{
-						doorID -= zoneDoor * 1000000;
+						doorID -= zoneDoor*1000000;
 						zoneDoor = client.Player.CurrentZone.ID;
-						doorID += zoneDoor * 1000000;
-						m_handlerDoorID = doorID;
+						doorID += zoneDoor*1000000;
+						HandlerDoorID = doorID;
 					}
 
-					client.Out.SendDebugMessage("DoorID:{0} state:{1} zone:{2} fixture:{3} fixturePiece:{4} Type:{5})", doorID, doorState, zoneDoor, fixture, fixturePiece, doorType);
+					client.Out.SendDebugMessage("DoorID:{0} state:{1} zone:{2} fixture:{3} fixturePiece:{4} Type:{5})", doorID,
+					                            doorState, zoneDoor, fixture, fixturePiece, doorType);
 				}
 			}
 
-			GameDoor target = client.Player.TargetObject as GameDoor;
-			
-			if( target != null && !client.Player.IsWithinRadius( target, 500 ) )
+			var target = client.Player.TargetObject as GameDoor;
+
+			if (target != null && !client.Player.IsWithinRadius(target, 500))
 			{
 				client.Player.Out.SendMessage("You are too far to open this door", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return 0;
 			}
-		
-			DBDoor DOOR = GameServer.Database.SelectObject<DBDoor>("InternalID = '" + doorID + "'");
 
-			if (DOOR != null)
+			var door = GameServer.Database.SelectObject<DBDoor>("InternalID = '" + doorID + "'");
+
+			if (door != null)
 			{
-				if( doorType == 7 || doorType == 9 )
+				if (doorType == 7 || doorType == 9)
 				{
 					new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
 					return 1;
 				}
-				
-				if (client.Account.PrivLevel == 1 )
+
+				if (client.Account.PrivLevel == 1)
 				{
-					if (DOOR.Locked == 0)
+					if (door.Locked == 0)
 					{
-						if (DOOR.Health == 0)
+						if (door.Health == 0)
 						{
 							new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
-							return 1;					
+							return 1;
 						}
+
 						if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 						{
-							if( DOOR.Realm != 0)
+							if (door.Realm != 0)
 							{
 								new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
 								return 1;
 							}
 						}
-						if( GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal )
+
+						if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal)
 						{
-							if( (eRealm)client.Player.Realm == (eRealm)DOOR.Realm || DOOR.Realm == 6 )
+							if (client.Player.Realm == (eRealm) door.Realm || door.Realm == 6)
 							{
 								new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
 								return 1;
@@ -120,24 +129,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 					}
 				}
-				if( client.Account.PrivLevel > 1 )
+
+				if (client.Account.PrivLevel > 1)
 				{
 					new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
 					return 1;
 				}
 			}
-			
-			if (DOOR == null)
+
+			if (door == null)
 			{
 				if (doorType != 9 && client.Account.PrivLevel > 1 && client.Player.CurrentRegion.IsInstance == false)
 				{
 					if (client.Player.TempProperties.getProperty(DoorMgr.WANT_TO_ADD_DOORS, false))
 					{
-						client.Player.Out.SendCustomDialog("This door is not in the database. Place yourself nearest to this door and click Accept to add it.", new CustomDialogResponse(AddingDoor));
+						client.Player.Out.SendCustomDialog(
+							"This door is not in the database. Place yourself nearest to this door and click Accept to add it.", AddingDoor);
 					}
 					else
 					{
-						client.Player.Out.SendMessage("This door is not in the database. Use '/door show' to enable the add door dialog when targeting doors.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						client.Player.Out.SendMessage(
+							"This door is not in the database. Use '/door show' to enable the add door dialog when targeting doors.",
+							eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
 				}
 
@@ -147,23 +160,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 			return 0;
 		}
 
-		public void AddingDoor ( GamePlayer player, byte response )
+		#endregion
+
+		public void AddingDoor(GamePlayer player, byte response)
 		{
-			if( response != 0x01 )
+			if (response != 0x01)
 				return;
 
-			int doorType = m_handlerDoorID / 100000000;
-			if( doorType == 7 )
+			int doorType = HandlerDoorID/100000000;
+			if (doorType == 7)
 			{
-				PositionMgr.CreateDoor(m_handlerDoorID, player);
+				PositionMgr.CreateDoor(HandlerDoorID, player);
 			}
 			else
 			{
-				DBDoor door = new DBDoor( );
+				var door = new DBDoor();
 				door.ObjectId = null;
-				door.InternalID = m_handlerDoorID;
+				door.InternalID = HandlerDoorID;
 				door.Name = "door";
-				door.Type = m_handlerDoorID / 100000000;
+				door.Type = HandlerDoorID/100000000;
 				door.Level = 20;
 				door.Realm = 6;
 				door.MaxHealth = 2545;
@@ -175,11 +190,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				door.Heading = player.Heading;
 				GameServer.Database.AddObject(door);
 
-				player.Out.SendMessage("Added door " + m_handlerDoorID + " to the database!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				DoorMgr.Init( );
+				player.Out.SendMessage("Added door " + HandlerDoorID + " to the database!", eChatType.CT_Important,
+				                       eChatLoc.CL_SystemWindow);
+				DoorMgr.Init();
 			}
 		}
-		  
+
+		#region Nested type: ChangeDoorAction
 
 		/// <summary>
 		/// Handles the door state change actions
@@ -190,6 +207,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// The target door Id
 			/// </summary>
 			protected readonly int m_doorId;
+
 			/// <summary>
 			/// The door state
 			/// </summary>
@@ -213,7 +231,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 				List<IDoor> doorList = DoorMgr.getDoorByID(m_doorId);
 
 				if (doorList.Count > 0)
@@ -225,7 +243,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							break;
 						if (mydoor is GameKeepDoor)
 						{
-							GameKeepDoor door = mydoor as GameKeepDoor;
+							var door = mydoor as GameKeepDoor;
 							//portal keeps left click = right click
 							if (door.Component.Keep is GameKeepTower && door.Component.Keep.KeepComponents.Count > 1)
 								door.Interact(player);
@@ -233,7 +251,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							if (player.IsWithinRadius(mydoor, GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE * 2))
+							if (player.IsWithinRadius(mydoor, Properties.WORLD_PICKUP_DISTANCE*2))
 							{
 								if (m_doorState == 0x01)
 									mydoor.Open();
@@ -245,11 +263,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 
 					if (!success)
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "DoorRequestHandler.OnTick.TooFarAway", doorList[0].Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(
+							LanguageMgr.GetTranslation(player.Client, "DoorRequestHandler.OnTick.TooFarAway", doorList[0].Name),
+							eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-
 					//new frontiers we don't want this, i.e. relic gates etc
 					if (player.CurrentRegionID == 163 && player.Client.Account.PrivLevel == 1)
 						return;
@@ -264,7 +283,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					 */
 
 					//else basic quick hack
-					GameDoor door = new GameDoor();
+					var door = new GameDoor();
 					door.DoorID = m_doorId;
 					door.X = player.X;
 					door.Y = player.Y;
@@ -273,7 +292,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 					door.CurrentRegion = player.CurrentRegion;
 					door.Open();
 				}
-			}			
+			}
 		}
+
+		#endregion
 	}
 }

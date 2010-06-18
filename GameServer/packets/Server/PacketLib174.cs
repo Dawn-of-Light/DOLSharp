@@ -61,7 +61,7 @@ namespace DOL.GS.PacketHandler
 				default: throw new Exception("CharacterOverview requested for unknown realm " + realm);
 			}
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterOverview));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterOverview));
 			pak.FillString(m_gameClient.Account.Name, 24);
 			IList<InventoryItem> items;
 			Character[] characters = m_gameClient.Account.Characters;
@@ -253,7 +253,7 @@ namespace DOL.GS.PacketHandler
 							if (reg == null || reg.Expansion != 1)
 								pak.WriteByte(0x00);
 							else
-								pak.WriteByte(0x01); //0x01=char in SI zone, classic client can't "play"
+								pak.WriteByte(0x01); //0x01=char in ShroudedIsles zone, classic client can't "play"
 							//pak.WriteByte(0x00); // unk2
                             pak.WriteByte((byte)characters[j].Constitution);
 							written = true;
@@ -293,7 +293,7 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate172));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerCreate172));
 			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
 			pak.WriteShort(playerToCreate.Model);
@@ -348,7 +348,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null) return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PositionAndObjectID));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PositionAndObjectID));
 			pak.WriteShort((ushort)m_gameClient.Player.ObjectID); //This is the player's objectid not Sessionid!!!
 			pak.WriteShort((ushort)m_gameClient.Player.Z);
 			pak.WriteInt((uint)m_gameClient.Player.X);
@@ -407,7 +407,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 			SendRegions();
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionChanged));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RegionChanged));
             //Dinberg - Changing to allow instances...
             pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
             //Dinberg:Instances - also need to continue the bluff here, with zoneSkinID, for 
@@ -423,7 +423,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget, ushort spellid, ushort boltTime, bool noSound, byte success)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.SpellEffectAnimation));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SpellEffectAnimation));
 			pak.WriteShort((ushort)spellCaster.ObjectID);
 			pak.WriteShort(spellid);
 			pak.WriteShort((ushort)(spellTarget == null ? 0 : spellTarget.ObjectID));
@@ -442,7 +442,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x03); //subtype
 				pak.WriteByte((byte)first);
 				SendTCP(pak);
-				pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+				pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
 				pak.WriteByte(0x01); //subcode
 				pak.WriteByte((byte)maxSkills); //number of entry
 				pak.WriteByte(0x03); //subtype
@@ -505,7 +505,7 @@ namespace DOL.GS.PacketHandler
 				OwnerDF = eRealm.Hibernia;
 				OwnerDFTowers = HibTowers;
 			}
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.WarmapBonuses));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.WarmapBonuses));
 			int RealmKeeps = 0;
 			int RealmTowers = 0;
 			switch ((eRealm)m_gameClient.Player.Realm)
@@ -537,7 +537,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EquipmentUpdate));
 
 			ICollection<InventoryItem> items = null;
 			if (living.Inventory != null)
@@ -589,7 +589,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null || living == null)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 
 			pak.WriteShort((ushort)living.ObjectID);
 			pak.WriteByte(0x4); // Vampire (can fly)

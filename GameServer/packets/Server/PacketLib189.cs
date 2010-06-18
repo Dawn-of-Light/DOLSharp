@@ -49,7 +49,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendLivingEquipmentUpdate(GameLiving living)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EquipmentUpdate));
 
 			ICollection<InventoryItem> items = null;
 			if (living.Inventory != null)
@@ -146,7 +146,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="windowType"></param>
 		public override void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
 			GameVault houseVault = m_gameClient.Player.ActiveVault;
 			pak.WriteByte((byte)(items.Count));
 			pak.WriteByte(0x00); // new in 189b+, show shield in left hand
@@ -174,7 +174,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="preAction"></param>
 		protected override void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
 			GameVault houseVault = m_gameClient.Player.ActiveVault;
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
 			pak.WriteByte(0); // CurrentSpeed & 0xFF (not used for player, only for NPC)
@@ -359,7 +359,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendHouse(House house)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseCreate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate));
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteShort((ushort)house.Z);
 			pak.WriteInt((uint)house.X);
@@ -392,7 +392,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendGarden(House house)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden));
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteShort(0); // sheduled for repossession (in hours) new in 1.89b+
 			pak.WriteByte((byte)house.OutdoorItems.Count);
@@ -412,7 +412,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendGarden(House house, int i)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden));
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteShort(0); // sheduled for repossession (in hours) new in 1.89b+
 			pak.WriteByte(0x01);
@@ -428,7 +428,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendHouseOccupied(House house, bool flagHouseOccuped)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden));
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteShort(0); // sheduled for repossession (in hours) new in 1.89b+
 			pak.WriteByte(0x00);
@@ -439,7 +439,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendEnterHouse(House house)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseEnter));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseEnter));
 
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteShort((ushort)25000);         //constant!

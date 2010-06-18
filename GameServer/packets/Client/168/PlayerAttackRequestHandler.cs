@@ -16,22 +16,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0xDC^168,"Handles Player Attack Request")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerAttackRequest, ClientStatus.PlayerInGame)]
 	public class PlayerAttackRequestHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			byte mode = (byte)packet.ReadByte();
-			bool userAction = packet.ReadByte() == 0; // set to 0 if user pressed the button, set to 1 if client decided to stop attack
+			var mode = (byte) packet.ReadByte();
+			bool userAction = packet.ReadByte() == 0;
+				// set to 0 if user pressed the button, set to 1 if client decided to stop attack
 
 			new AttackRequestHandler(client.Player, mode != 0, userAction).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: AttackRequestHandler
 
 		/// <summary>
 		/// Handles change attack mode requests
@@ -42,6 +48,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// True if attack should be started
 			/// </summary>
 			protected readonly bool m_start;
+
 			/// <summary>
 			/// True if user initiated the action else was done by the client
 			/// </summary>
@@ -64,24 +71,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
-				if(player.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
+				if (player.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
 				{
-					if(m_userAction) player.Out.SendMessage("You can't enter melee combat mode with a fired weapon!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					if (m_userAction)
+						player.Out.SendMessage("You can't enter melee combat mode with a fired weapon!", eChatType.CT_YouHit,
+						                       eChatLoc.CL_SystemWindow);
 					return;
 				}
 
-				if(m_start)
+				if (m_start)
 				{
 					player.StartAttack(player.TargetObject);
 					// unstealth right after entering combat mode if anything is targeted
-					if(player.AttackState && player.TargetObject != null)
+					if (player.AttackState && player.TargetObject != null)
 						player.Stealth(false);
 				}
 				else
 					player.StopAttack();
 			}
 		}
+
+		#endregion
 	}
 }

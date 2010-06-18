@@ -123,7 +123,7 @@ namespace DOL.GS.GameEvents
 				{
 					loc = (StartLocation) ClassicLocations[ch.Race][ch.Class];
 				}
-				else if (ch.Region == 51 || ch.Region == 151 || ch.Region == 181) // all SI regions
+				else if (ch.Region == 51 || ch.Region == 151 || ch.Region == 181) // all ShroudedIsles regions
 				{
 					loc = (StartLocation) ShroudedIslesLocations[ch.Race][ch.Class];
 				}

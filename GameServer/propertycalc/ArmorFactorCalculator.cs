@@ -45,7 +45,7 @@ namespace DOL.GS.PropertyCalc
 				af = Math.Min((int)(living.Level * 1.875), living.SpecBuffBonusCategory[(int)property]);
 				// debuff
 				af -= living.DebuffCategory[(int)property];
-				// ToA af bonus
+				// TrialsOfAtlantis af bonus
 				af += Math.Min(living.Level, living.ItemBonus[(int)property]);
 				// uncapped category
 				af += living.BuffBonusCategory4[(int)property];

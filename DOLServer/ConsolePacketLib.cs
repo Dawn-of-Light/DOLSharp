@@ -68,7 +68,7 @@ namespace DOLGameServerConsole
 			}
 		}
 
-		public byte GetPacketCode(ePackets packetCode) { return 0; }
+		public byte GetPacketCode(eServerPackets packetCode) { return 0; }
 		public void SendTCP(GSTCPPacketOut packet) { }
 		public void SendWarlockChamberEffect(GamePlayer player) { }
 		public void SendTCP(byte[] buf) { }

@@ -49,6 +49,11 @@ namespace DOL.GS.PacketHandler
 		protected string m_desc;
 
 		/// <summary>
+		/// Holds the ID of the preprocessor to use for this packet.
+		/// </summary>
+		protected int m_preprocessorId;
+
+		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="type">Type of packet to handle</param>
@@ -59,6 +64,52 @@ namespace DOL.GS.PacketHandler
 			m_type = type;
 			m_code = code;
 			m_desc = desc;
+			m_preprocessorId = (int)ClientStatus.None;
+		}
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="type">Type of packet to handle</param>
+		/// <param name="code">ID of the packet to handle</param>
+		/// <param name="desc">Description of the packet handler</param>
+		/// <param name="preprocessorId">ID of the preprocessor to use for this packet</param>
+		public PacketHandlerAttribute(PacketHandlerType type, int code, string desc, int preprocessorId)
+		{
+			m_type = type;
+			m_code = code;
+			m_desc = desc;
+			m_preprocessorId = preprocessorId;
+		}
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="type">Type of packet to handle</param>
+		/// <param name="code">ID of the packet to handle</param>
+		/// <param name="desc">Description of the packet handler</param>
+		/// <param name="preprocessorId">ID of the preprocessor to use for this packet</param>
+		public PacketHandlerAttribute(PacketHandlerType type, int code, string desc, ClientStatus preprocessorId)
+		{
+			m_type = type;
+			m_code = code;
+			m_desc = desc;
+			m_preprocessorId = (int) preprocessorId;
+		}
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="type">Type of packet to handle</param>
+		/// <param name="code">ID of the packet to handle</param>
+		/// <param name="desc">Description of the packet handler</param>
+		/// <param name="preprocessorId">ID of the preprocessor to use for this packet</param>
+		public PacketHandlerAttribute(PacketHandlerType type, eClientPackets code, ClientStatus preprocessorId)
+		{
+			m_type = type;
+			m_code = (int)code;
+			m_desc = "";
+			m_preprocessorId = (int)preprocessorId;
 		}
 
 		/// <summary>
@@ -91,6 +142,17 @@ namespace DOL.GS.PacketHandler
 			get
 			{
 				return m_desc;
+			}
+		}
+
+		/// <summary>
+		/// Gets the preprocessor ID associated with this packet.
+		/// </summary>
+		public int PreprocessorID
+		{
+			get
+			{
+				return m_preprocessorId;
 			}
 		}
 	}

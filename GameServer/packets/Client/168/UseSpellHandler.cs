@@ -27,15 +27,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles spell cast requests from client
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0xD5^168,"Handles spell cast requests")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.UseSpell, ClientStatus.PlayerInGame)]
 	public class UseSpellHandler : IPacketHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet) 
+		#region IPacketHandler Members
+
+		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int flagSpeedData = packet.ReadShort();
 			int heading = packet.ReadShort();
@@ -46,11 +48,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 				int yOffsetInZone = packet.ReadShort();
 				int currentZoneID = packet.ReadShort();
 				int realZ = packet.ReadShort();
-				Zone newZone = WorldMgr.GetZone((ushort)currentZoneID);
+
+				Zone newZone = WorldMgr.GetZone((ushort) currentZoneID);
 				if (newZone == null)
 				{
-					if (log.IsWarnEnabled)
-						log.Warn("Unknown zone in UseSpellHandler: "+currentZoneID+" player: "+client.Player.Name);
+					if (Log.IsWarnEnabled)
+						Log.Warn("Unknown zone in UseSpellHandler: " + currentZoneID + " player: " + client.Player.Name);
 				}
 				else
 				{
@@ -64,12 +67,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int spellLevel = packet.ReadByte();
 			int spellLineIndex = packet.ReadByte();
 
-			client.Player.Heading = (ushort)(heading & 0xfff);
+			client.Player.Heading = (ushort) (heading & 0xfff);
 
 			new UseSpellAction(client.Player, flagSpeedData, spellLevel, spellLineIndex).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: UseSpellAction
 
 		/// <summary>
 		/// Handles player use spell actions
@@ -79,16 +86,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <summary>
 			/// Defines a logger for this class.
 			/// </summary>
-			private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+			private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 			/// <summary>
 			/// The speed and flags data
 			/// </summary>
 			protected readonly int m_flagSpeedData;
+
 			/// <summary>
 			/// The used spell level
 			/// </summary>
 			protected readonly int m_spellLevel;
+
 			/// <summary>
 			/// The used spell line index
 			/// </summary>
@@ -101,7 +110,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="flagSpeedData">The speed and flags data</param>
 			/// <param name="spellLevel">The used spell level</param>
 			/// <param name="spellLineIndex">The used spell line index</param>
-			public UseSpellAction(GamePlayer actionSource, int flagSpeedData, int spellLevel, int spellLineIndex) : base(actionSource)
+			public UseSpellAction(GamePlayer actionSource, int flagSpeedData, int spellLevel, int spellLineIndex)
+				: base(actionSource)
 			{
 				m_flagSpeedData = flagSpeedData;
 				m_spellLevel = spellLevel;
@@ -113,18 +123,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
 				if ((m_flagSpeedData & 0x200) != 0)
 				{
-					player.CurrentSpeed = -(m_flagSpeedData & 0x1ff);		// backward movement
-				} 
-				else 
+					player.CurrentSpeed = -(m_flagSpeedData & 0x1ff); // backward movement
+				}
+				else
 				{
-					player.CurrentSpeed = m_flagSpeedData & 0x1ff;		// forward movement
+					player.CurrentSpeed = m_flagSpeedData & 0x1ff; // forward movement
 				}
 				player.IsStrafing = (m_flagSpeedData & 0x4000) != 0;
-				player.TargetInView = (m_flagSpeedData & 0xa000) != 0;	// why 2 bits? that has to be figured out
+				player.TargetInView = (m_flagSpeedData & 0xa000) != 0; // why 2 bits? that has to be figured out
 				player.GroundTargetInView = ((m_flagSpeedData & 0x1000) != 0);
 
 				IList spelllines = player.GetSpellLines();
@@ -134,7 +144,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					if (m_spellLineIndex < spelllines.Count)
 					{
-						castLine = (SpellLine)spelllines[m_spellLineIndex];
+						castLine = (SpellLine) spelllines[m_spellLineIndex];
 						List<Spell> spells = SkillBase.GetSpellList(castLine.KeyName);
 						foreach (Spell spell in spells)
 						{
@@ -146,22 +156,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 					}
 				}
-				if(castSpell!=null)
+				if (castSpell != null)
 				{
 					player.CastSpell(castSpell, castLine);
 					return;
 				}
 				else
 				{
-					if (log.IsWarnEnabled)
-						log.Warn("Client <"+player.Client.Account.Name+"> requested incorrect spell at level "+m_spellLevel+" in spell-line "+castLine.Name);
+					if (Log.IsWarnEnabled)
+						Log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell at level " + m_spellLevel +
+						         " in spell-line " + castLine.Name);
 				}
-				if(castLine==null)
+				if (castLine == null)
 				{
-					if (log.IsWarnEnabled)
-						log.Warn("Client <"+player.Client.Account.Name+"> requested incorrect spell-line index");
+					if (Log.IsWarnEnabled)
+						Log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell-line index");
 				}
 			}
 		}
+
+		#endregion
 	}
 }

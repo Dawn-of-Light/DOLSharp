@@ -1,4 +1,4 @@
-﻿/*
+/*
 * DAWN OF LIGHT - The first free open source DAoC server emulator
 *
 * This program is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ namespace DOL.GS.PacketHandler
 					throw new Exception("CharacterOverview requested for unknown realm " + realm);
 			}
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterOverview));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterOverview));
 			pak.FillString(m_gameClient.Account.Name, 24);
 			IList<InventoryItem> items;
 			Character[] characters = m_gameClient.Account.Characters;
@@ -261,7 +261,7 @@ namespace DOL.GS.PacketHandler
 							}
 							else
 							{
-								pak.WriteByte(0x01); //0x01=char in SI zone, classic client can't "play"
+								pak.WriteByte(0x01); //0x01=char in ShroudedIsles zone, classic client can't "play"
 							}
 							pak.WriteByte((byte)characters[j].Constitution);
 							pak.Fill(0x0, 4);//new trailing bytes in 1.99

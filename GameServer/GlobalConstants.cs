@@ -976,11 +976,11 @@ namespace DOL.GS
         Female = 2
     }
 
-	public enum eExpansion : int
+	public enum eClientExpansion : int
 	{
 		None = 1,
-		SI = 2,
-		ToA = 3,
+		ShroudedIsles = 2,
+		TrialsOfAtlantis = 3,
 		Catacombs = 4,
 		DarknessRising = 5,
 		Labyrinth = 6

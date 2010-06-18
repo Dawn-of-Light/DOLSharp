@@ -1722,7 +1722,8 @@ namespace DOL.GS
 			{
 				if (m_guild == null)
 					return "";
-				else return m_guild.Name;
+				
+				return m_guild.Name;
 			}
 			set
 			{ }
@@ -9589,7 +9590,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the player's guild
 		/// </summary>
-		public new Guild Guild
+		public Guild Guild
 		{
 			get { return m_guild; }
 			set
@@ -9682,21 +9683,29 @@ namespace DOL.GS
 		/// Gets or sets the friends of this player
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public ArrayList Friends
+		public List<string> Friends
 		{
 			get
 			{
 				if (PlayerCharacter != null && PlayerCharacter.SerializedFriendsList != null)
-					return new ArrayList(PlayerCharacter.SerializedFriendsList.Split(','));
-				return new ArrayList(0);
+					return new List<string>(PlayerCharacter.SerializedFriendsList.Split(','));
+
+				return new List<string>();
 			}
 			set
 			{
-				if (PlayerCharacter == null) return;
+				if (PlayerCharacter == null) 
+					return;
+
 				if (value == null)
+				{
 					PlayerCharacter.SerializedFriendsList = "";
+				}
 				else
-					PlayerCharacter.SerializedFriendsList = String.Join(",", (string[])value.ToArray(typeof(string)));
+				{
+					PlayerCharacter.SerializedFriendsList = string.Join(",", value.ToArray());
+				}
+
 				GameServer.Database.SaveObject(PlayerCharacter);
 			}
 		}
@@ -9731,7 +9740,7 @@ namespace DOL.GS
 		/// <param name="remove">true to remove this friend, false to add it</param>
 		public void ModifyFriend(string friendName, bool remove)
 		{
-			ArrayList currentFriends = Friends;
+			var currentFriends = Friends;
 			if (remove && currentFriends != null)
 			{
 				if (currentFriends.Contains(friendName))

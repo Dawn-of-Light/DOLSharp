@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.Effects;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -24,15 +23,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Called when player removes concentration spell in conc window
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0xDE^168,"Handles remove conc effect requests from client")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.RemoveConcentrationEffect, ClientStatus.PlayerInGame)]
 	public class RemoveConcentrationEffectHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int index = packet.ReadByte();
+
 			new CancelEffectHandler(client.Player, index).Start(1);
+
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: CancelEffectHandler
 
 		/// <summary>
 		/// Handles player cancel effect requests
@@ -59,20 +66,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
 				IConcentrationEffect effect = null;
-				lock (player.ConcentrationEffects) 
+				lock (player.ConcentrationEffects)
 				{
-					if (m_index < player.ConcentrationEffects.Count) 
+					if (m_index < player.ConcentrationEffects.Count)
 					{
 						effect = player.ConcentrationEffects[m_index];
 						player.ConcentrationEffects.Remove(effect);
 					}
 				}
+
 				if (effect != null)
+				{
 					effect.Cancel(false);
+				}
 			}
 		}
+
+		#endregion
 	}
 }
