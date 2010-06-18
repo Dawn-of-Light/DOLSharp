@@ -288,6 +288,8 @@ namespace DOL.GS.Spells
 						}
 					}
 
+					target.ModifyAttack(ad);
+
 					m_handler.SendDamageMessages(ad);
 					m_handler.DamageTarget(ad, false, 0x14);
 					target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, caster);
