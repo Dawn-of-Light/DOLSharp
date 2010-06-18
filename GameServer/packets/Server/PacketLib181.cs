@@ -49,7 +49,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 			base.SendSpellList();
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
 			pak.WriteByte(0x02); //subcode
 			pak.WriteByte(0x00);
 			pak.WriteByte(99); //subtype (new subtype 99 in 1.80e)
@@ -62,7 +62,7 @@ namespace DOL.GS.PacketHandler
 			if (text == null)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DetailWindow));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DetailWindow));
 
 			pak.WriteByte(0); // new in 1.75
 			pak.WriteByte(0); // new in 1.81
@@ -82,7 +82,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendPlayerTitles()
 		{
 			IList titles = m_gameClient.Player.Titles;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DetailWindow));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DetailWindow));
 
 			pak.WriteByte(1); // new in 1.75
 			pak.WriteByte(0); // new in 1.81
@@ -118,7 +118,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PetWindow));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PetWindow));
 			pak.WriteShort((ushort)(pet == null ? 0 : pet.ObjectID));
 			pak.WriteByte(0x00); //unused
 			pak.WriteByte(0x00); //unused

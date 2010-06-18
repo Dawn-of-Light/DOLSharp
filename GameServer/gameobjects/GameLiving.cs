@@ -5331,20 +5331,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the guildname of this living
-		/// </summary>
-		public virtual string GuildName
-		{
-			get
-			{
-				return m_guildName;
-			}
-			set
-			{
-				m_guildName = value;
-			}
-		}
-		/// <summary>
 		/// Gets or sets the target of this living
 		/// </summary>
 		public virtual GameObject TargetObject

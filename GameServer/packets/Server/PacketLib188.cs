@@ -45,7 +45,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient == null || m_gameClient.Player == null)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.XFire);
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)eServerPackets.XFire);
 			pak.WriteShort((ushort)m_gameClient.Player.ObjectID);
 			pak.WriteByte(flag);
 			pak.WriteByte(0x00);

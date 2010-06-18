@@ -51,7 +51,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendKeepInfo(AbstractGameKeep keep)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepInfo));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepInfo));
 
 			pak.WriteShort((ushort)keep.KeepID);
 			pak.WriteShort(0);//zone id not sure
@@ -68,7 +68,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendKeepRealmUpdate(AbstractGameKeep keep)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepRealmUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepRealmUpdate));
 
 			pak.WriteShort((ushort)keep.KeepID);
 			pak.WriteByte((byte)keep.Realm);
@@ -78,7 +78,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendKeepRemove(AbstractGameKeep keep)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepRemove));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepRemove));
 
 			pak.WriteShort((ushort)keep.KeepID);
 			SendTCP(pak);
@@ -86,7 +86,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendKeepComponentInfo(GameKeepComponent keepComponent)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepComponentInfo));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentInfo));
 
 			pak.WriteShort((ushort)keepComponent.Keep.KeepID);
 			pak.WriteShort((ushort)keepComponent.ID);
@@ -108,7 +108,7 @@ namespace DOL.GS.PacketHandler
 		}
 		public override void SendKeepComponentDetailUpdate(GameKeepComponent keepComponent)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepComponentDetailUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentDetailUpdate));
 
 			pak.WriteShort((ushort)keepComponent.Keep.KeepID);
 			pak.WriteShort((ushort)keepComponent.ID);
@@ -125,7 +125,7 @@ namespace DOL.GS.PacketHandler
 		}
 		public override void SendKeepComponentUpdate(AbstractGameKeep keep, bool LevelUp)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepComponentUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentUpdate));
 
 			pak.WriteShort((ushort)keep.KeepID);
 			pak.WriteByte((byte)keep.Realm);
@@ -151,7 +151,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendKeepClaim(AbstractGameKeep keep, byte flag)
 		{
 			if (m_gameClient.Player == null || keep == null) return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepClaim));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepClaim));
 
 			pak.WriteShort((ushort)keep.KeepID);
 			pak.WriteByte(flag);//0-Info,1-KeepTargetLevel,2-KeepLordType,4-Release
@@ -163,7 +163,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendKeepComponentInteract(GameKeepComponent component)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepComponentInteractResponse));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentInteractResponse));
 
 			pak.WriteShort((ushort)component.Keep.KeepID);
 			pak.WriteByte((byte)component.Keep.Realm);
@@ -183,7 +183,7 @@ namespace DOL.GS.PacketHandler
 		}
 		public override void SendKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepComponentHookpointUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentHookpointUpdate));
 			pak.WriteShort((ushort)component.Keep.KeepID);
 			pak.WriteShort((ushort)component.ID);
 			ArrayList freeHookpoints = new ArrayList();
@@ -201,7 +201,7 @@ namespace DOL.GS.PacketHandler
 		}
 		public override void SendClearKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepComponentHookpointUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentHookpointUpdate));
 			pak.WriteShort((ushort)component.Keep.KeepID);
 			pak.WriteShort((ushort)component.ID);
 			pak.WriteByte((byte)0);
@@ -211,7 +211,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendHookPointStore(GameKeepHookPoint hookPoint)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.KeepComponentHookpointStore));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentHookpointStore));
 
 			pak.WriteShort((ushort)hookPoint.Component.Keep.KeepID);
 			pak.WriteShort((ushort)hookPoint.Component.ID);
@@ -249,7 +249,7 @@ namespace DOL.GS.PacketHandler
 
 		protected override void SendQuestPacket(AbstractQuest quest, int index)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry));
 
 			pak.WriteByte((byte)index);
 			if (quest.Step <= 0)
@@ -285,7 +285,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null) return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.WarMapClaimedKeeps));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.WarMapClaimedKeeps));
 			int KeepCount = 0;
 			int TowerCount = 0;
 			foreach (AbstractGameKeep keep in list)
@@ -463,7 +463,7 @@ namespace DOL.GS.PacketHandler
 				default:
 					break;
 			}
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.WarmapBonuses));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.WarmapBonuses));
 
 			pak.WriteByte((byte)RealmKeeps);
 			int magic = RelicMgr.GetRelicCount(m_gameClient.Player.Realm, eRelicType.Magic);
@@ -476,7 +476,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.WarMapDetailUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.WarMapDetailUpdate));
 			pak.WriteByte((byte)fights.Count);// count - Fights (Byte)
 			pak.WriteByte((byte)groups.Count);// count - Groups (Byte)
 			// order first fights after than groups

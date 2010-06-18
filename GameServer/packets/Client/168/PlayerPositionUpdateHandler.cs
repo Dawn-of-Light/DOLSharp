@@ -619,12 +619,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 				con168[11] = 0;
 			}
 
-			GSUDPPacketOut outpak168 = new GSUDPPacketOut(client.Out.GetPacketCode(ePackets.PlayerPosition));
+			GSUDPPacketOut outpak168 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
 			//Now copy the whole content of the packet
 			outpak168.Write(con168, 0, 18/*con168.Length*/);
 			outpak168.WritePacketLength();
 
-			GSUDPPacketOut outpak172 = new GSUDPPacketOut(client.Out.GetPacketCode(ePackets.PlayerPosition));
+			GSUDPPacketOut outpak172 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
 			//Now copy the whole content of the packet
 			outpak172.Write(con172, 0, 18/*con172.Length*/);
 			outpak172.WritePacketLength();
@@ -663,7 +663,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						if (outpak190 == null)
 						{
-							outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(ePackets.PlayerPosition));
+							outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
 							outpak190.Write(con172, 0, 18/*con172.Length*/);
 							outpak190.WriteByte(client.Player.ManaPercent);
 							outpak190.WriteByte(client.Player.EndurancePercent);

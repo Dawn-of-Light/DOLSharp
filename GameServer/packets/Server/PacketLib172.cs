@@ -68,7 +68,7 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate172));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerCreate172));
 			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
 			pak.WriteShort(playerToCreate.Model);
@@ -110,7 +110,7 @@ namespace DOL.GS.PacketHandler
 
 		protected override void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
 			pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
@@ -221,7 +221,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EquipmentUpdate));
 
 			ICollection<InventoryItem> items = null;
 			if (living.Inventory != null)
@@ -277,7 +277,7 @@ namespace DOL.GS.PacketHandler
 				return;
 			if (m_gameClient.Player.TradeWindow == null)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.TradeWindow));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TradeWindow));
 			lock (m_gameClient.Player.TradeWindow.Sync)
 			{
 				foreach (InventoryItem item in m_gameClient.Player.TradeWindow.TradeItems)

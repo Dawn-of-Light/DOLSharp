@@ -166,7 +166,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					GameServer.Database.DeleteObject((house.IndoorItems[(position)]).DatabaseItem);
 					house.IndoorItems.Remove(position);
 
-					var pak = new GSTCPPacketOut(client.Out.GetPacketCode(ePackets.HousingItem));
+					var pak = new GSTCPPacketOut(client.Out.GetPacketCode(eServerPackets.HousingItem));
 					pak.WriteShort((ushort) housenumber);
 					pak.WriteByte(0x01);
 					pak.WriteByte(0x00);

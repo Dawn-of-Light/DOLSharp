@@ -16,33 +16,34 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 
 using DOL.Events;
-using DOL.GS.Keeps;
 using DOL.GS.Housing;
+using DOL.GS.Keeps;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x2A ^ 168, "handle DialogBox Response")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.DialogResponse, ClientStatus.PlayerInGame)]
 	public class DialogResponseHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort data1 = packet.ReadShort();
 			ushort data2 = packet.ReadShort();
 			ushort data3 = packet.ReadShort();
-			byte messageType = (byte)packet.ReadByte();
-			byte response = (byte)packet.ReadByte();
+			var messageType = (byte) packet.ReadByte();
+			var response = (byte) packet.ReadByte();
 
-			//DOLConsole.WriteLine("MessageType="+messageType+" Response="+response+" data1="+data1+" data2="+data2+" data3="+data3);
-
-			new DialogBoxResponseAction(client.Player, data1, data2, data3, messageType, response)
-				.Start(1);
+			new DialogBoxResponseAction(client.Player, data1, data2, data3, messageType, response).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: DialogBoxResponseAction
 
 		/// <summary>
 		/// Handles dialog responses from players
@@ -53,22 +54,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// The general data field
 			/// </summary>
 			protected readonly int m_data1;
+
 			/// <summary>
 			/// The general data field
 			/// </summary>
 			protected readonly int m_data2;
+
 			/// <summary>
 			/// The general data field
 			/// </summary>
 			protected readonly int m_data3;
+
 			/// <summary>
 			/// The dialog type
 			/// </summary>
 			protected readonly int m_messageType;
+
 			/// <summary>
 			/// The players response
 			/// </summary>
-			protected readonly int m_response;
+			protected readonly byte m_response;
 
 			/// <summary>
 			/// Constructs a new DialogBoxResponseAction
@@ -79,7 +84,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="data3">The general data field</param>
 			/// <param name="messageType">The dialog type</param>
 			/// <param name="response">The players response</param>
-			public DialogBoxResponseAction(GamePlayer actionSource, int data1, int data2, int data3, int messageType, int response)
+			public DialogBoxResponseAction(GamePlayer actionSource, int data1, int data2, int data3, int messageType,
+			                               byte response)
 				: base(actionSource)
 			{
 				m_data1 = data1;
@@ -94,38 +100,43 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
-				switch ((eDialogCode)m_messageType)
+				switch ((eDialogCode) m_messageType)
 				{
 					case eDialogCode.CustomDialog:
 						{
 							if (m_data2 == 0x01)
 							{
-								CustomDialogResponse callback = null;
+								CustomDialogResponse callback;
 								lock (player)
 								{
 									callback = player.CustomDialogCallback;
 									player.CustomDialogCallback = null;
 								}
-								if (callback == null) return;
-								callback(player, (byte)m_response);
+
+								if (callback == null)
+									return;
+
+								callback(player, m_response);
 							}
 							break;
 						}
 					case eDialogCode.GuildInvite:
 						{
-							GamePlayer guildLeader = WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort)m_data1) as GamePlayer;
-							if (m_response == 0x01)//accept
+							var guildLeader = WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort) m_data1) as GamePlayer;
+							if (m_response == 0x01) //accept
 							{
 								if (guildLeader == null)
 								{
-									player.Out.SendMessage("You need to be in the same region as the guild leader to accept an invitation.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									player.Out.SendMessage("You need to be in the same region as the guild leader to accept an invitation.",
+									                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (player.Guild != null)
 								{
-									player.Out.SendMessage("You are still in a guild, you'll have to leave it first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									player.Out.SendMessage("You are still in a guild, you'll have to leave it first.", eChatType.CT_System,
+									                       eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (guildLeader.Guild != null)
@@ -133,34 +144,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 									guildLeader.Guild.AddPlayer(player);
 									return;
 								}
-								else
-								{
-									player.Out.SendMessage("Player doing the invite is not in a guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-							}
-							else
-							{
-								if (guildLeader != null)
-								{
-									guildLeader.Out.SendMessage(player.Name + " declined your invite.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								}
+
+								player.Out.SendMessage("Player doing the invite is not in a guild!", eChatType.CT_System,
+								                       eChatLoc.CL_SystemWindow);
 								return;
 							}
+
+							if (guildLeader != null)
+							{
+								guildLeader.Out.SendMessage(player.Name + " declined your invite.", eChatType.CT_System,
+								                            eChatLoc.CL_SystemWindow);
+							}
+							return;
 						}
 					case eDialogCode.GuildLeave:
 						{
-							if (m_response == 0x01)//accepte
+							if (m_response == 0x01) //accepte
 							{
 								if (player.Guild == null)
 								{
 									player.Out.SendMessage("You are not in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
-								else
-								{
-									player.Guild.RemovePlayer(player.Name, player);
-								}
+
+								player.Guild.RemovePlayer(player.Name, player);
 							}
 							else
 							{
@@ -171,12 +178,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 					case eDialogCode.QuestSubscribe:
 						{
-							GameLiving questNPC = (GameLiving)WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort)m_data2);
+							var questNPC = (GameLiving) WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort) m_data2);
 							if (questNPC == null)
 								return;
 
-							QuestEventArgs args = new QuestEventArgs(questNPC, player, (ushort)m_data1);
-							if (m_response == 0x01)//accept
+							var args = new QuestEventArgs(questNPC, player, (ushort) m_data1);
+							if (m_response == 0x01) //accept
 							{
 								//TODO add quest to player
 								//Note: This is done withing quest code since we have to check requirements, etc for each quest individually
@@ -187,24 +194,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 									player.Notify(GamePlayerEvent.AcceptQuest, player, args);
 								return;
 							}
+							if (m_data3 == 0x01)
+							{
+								player.Notify(GamePlayerEvent.ContinueQuest, player, args);
+							}
 							else
 							{
-								if (m_data3 == 0x01)
-									player.Notify(GamePlayerEvent.ContinueQuest, player, args);
-								else
-									player.Notify(GamePlayerEvent.DeclineQuest, player, args);
-								//player.Out.SendMessage("You decline to subcribe to quest", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
+								player.Notify(GamePlayerEvent.DeclineQuest, player, args);
 							}
+							return;
 						}
 					case eDialogCode.GroupInvite:
 						{
 							if (m_response == 0x01)
 							{
 								GameClient cln = WorldMgr.GetClientFromID(m_data1);
-								if (cln == null) return;
+								if (cln == null)
+									return;
+
 								GamePlayer groupLeader = cln.Player;
-								if (groupLeader == null) return;
+								if (groupLeader == null)
+									return;
+
 								if (player.Group != null)
 								{
 									player.Out.SendMessage("You are still in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -231,15 +242,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 									GameEventMgr.Notify(GamePlayerEvent.AcceptGroup, player);
 									return;
 								}
-								else
-								{
-									Group group = new Group(groupLeader);
-									GroupMgr.AddGroup(group, group);
-									group.AddMember(groupLeader);
-									group.AddMember(player);
-									GameEventMgr.Notify(GamePlayerEvent.AcceptGroup, player);
-									return;
-								}
+
+								var group = new Group(groupLeader);
+								GroupMgr.AddGroup(group, group);
+
+								group.AddMember(groupLeader);
+								group.AddMember(player);
+
+								GameEventMgr.Notify(GamePlayerEvent.AcceptGroup, player);
+
+								return;
 							}
 							break;
 						}
@@ -249,15 +261,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								if (player.Guild == null)
 								{
-									player.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									player.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!",
+									                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
+
 								AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
 								if (keep == null)
 								{
-									player.Out.SendMessage("You have to be near the keep to claim it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									player.Out.SendMessage("You have to be near the keep to claim it.", eChatType.CT_System,
+									                       eChatLoc.CL_SystemWindow);
 									return;
 								}
+
 								if (keep.CheckForClaim(player))
 								{
 									keep.Claim(player);
@@ -270,64 +286,98 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							if (m_response == 0x00)
 							{
-								if (player.TempProperties.getProperty<long>(Housing.HousingConstants.MoneyForHouseRent, -1) != -1)
+								if (player.TempProperties.getProperty<long>(HousingConstants.MoneyForHouseRent, -1) != -1)
 								{
-									player.TempProperties.removeProperty(Housing.HousingConstants.MoneyForHouseRent);
+									player.TempProperties.removeProperty(HousingConstants.MoneyForHouseRent);
 								}
-								if (player.TempProperties.getProperty<long>(Housing.HousingConstants.BPsForHouseRent, -1) != -1)
+
+								if (player.TempProperties.getProperty<long>(HousingConstants.BPsForHouseRent, -1) != -1)
 								{
-									player.TempProperties.removeProperty(Housing.HousingConstants.BPsForHouseRent);
+									player.TempProperties.removeProperty(HousingConstants.BPsForHouseRent);
 								}
-								player.TempProperties.removeProperty(Housing.HousingConstants.HouseForHouseRent);
+
+								player.TempProperties.removeProperty(HousingConstants.HouseForHouseRent);
+
 								return;
 							}
-							House house = player.TempProperties.getProperty<object>(Housing.HousingConstants.HouseForHouseRent, null) as House;
 
-							long MoneyToAdd = player.TempProperties.getProperty<long>(Housing.HousingConstants.MoneyForHouseRent, -1);
-							if (MoneyToAdd != -1)
+							var house = player.TempProperties.getProperty<House>(HousingConstants.HouseForHouseRent, null);
+							var moneyToAdd = player.TempProperties.getProperty<long>(HousingConstants.MoneyForHouseRent, -1);
+							var bpsToMoney = player.TempProperties.getProperty<long>(HousingConstants.BPsForHouseRent, -1);
+
+							if (moneyToAdd != -1)
 							{
-								if (MoneyToAdd + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * 4)
-									MoneyToAdd = (HouseMgr.GetRentByModel(house.Model) * 4) - house.KeptMoney;
+								// if we're giving money and already have some in the lockbox, make sure we don't
+								// take more than what would cover 4 weeks of rent.
+								if (moneyToAdd + house.KeptMoney > HouseMgr.GetRentByModel(house.Model)*4)
+									moneyToAdd = (HouseMgr.GetRentByModel(house.Model)*4) - house.KeptMoney;
 
-								if (!player.RemoveMoney(MoneyToAdd))
+								// take the money from the player
+								if (!player.RemoveMoney(moneyToAdd))
 									return;
 
-								house.KeptMoney += MoneyToAdd;
+								// add the money to the lockbox
+								house.KeptMoney += moneyToAdd;
+
+								// save the house and the player
 								house.SaveIntoDatabase();
 								player.SaveIntoDatabase();
-								player.Out.SendMessage("You deposit " + Money.GetString(MoneyToAdd) + " in the lockbox.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								player.Out.SendMessage("The lockbox now has " + Money.GetString(house.KeptMoney) + " in it.  The weekly payment is " + Money.GetString(HouseMgr.GetRentByModel(house.Model)) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								player.Out.SendMessage("The house is now prepaid for the next " + (house.KeptMoney / HouseMgr.GetRentByModel(house.Model)) + " payments.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								player.TempProperties.removeProperty(Housing.HousingConstants.MoneyForHouseRent);
+
+								// notify the player of what we took and how long they are prepaid for
+								player.Out.SendMessage("You deposit " + Money.GetString(moneyToAdd) + " in the lockbox.", eChatType.CT_System,
+								                       eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(
+									"The lockbox now has " + Money.GetString(house.KeptMoney) + " in it.  The weekly payment is " +
+									Money.GetString(HouseMgr.GetRentByModel(house.Model)) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(
+									"The house is now prepaid for the next " + (house.KeptMoney/HouseMgr.GetRentByModel(house.Model)) +
+									" payments.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+								// clean up
+								player.TempProperties.removeProperty(HousingConstants.MoneyForHouseRent);
 							}
 							else
 							{
-								long BPsToMoney = player.TempProperties.getProperty<long>(Housing.HousingConstants.BPsForHouseRent);
-								if (BPsToMoney + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * 4)
-									BPsToMoney = (HouseMgr.GetRentByModel(house.Model) * 4) - house.KeptMoney;
+								if (bpsToMoney + house.KeptMoney > HouseMgr.GetRentByModel(house.Model)*4)
+									bpsToMoney = (HouseMgr.GetRentByModel(house.Model)*4) - house.KeptMoney;
 
-								if (!player.RemoveBountyPoints(Money.GetGold(BPsToMoney)))
+								if (!player.RemoveBountyPoints(Money.GetGold(bpsToMoney)))
 									return;
 
-								house.KeptMoney += BPsToMoney;
+								// add the bps to the lockbox
+								house.KeptMoney += bpsToMoney;
+
+								// save the house and the player
 								house.SaveIntoDatabase();
 								player.SaveIntoDatabase();
-								player.Out.SendMessage("You deposit " + Money.GetString(BPsToMoney) + " in the lockbox.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								player.Out.SendMessage("The lockbox now has " + Money.GetString(house.KeptMoney) + " in it.  The weekly payment is " + Money.GetString(HouseMgr.GetRentByModel(house.Model)) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								player.Out.SendMessage("The house is now prepaid for the next " + (house.KeptMoney / HouseMgr.GetRentByModel(house.Model)) + " payments.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								player.TempProperties.removeProperty(Housing.HousingConstants.BPsForHouseRent);
+
+								// notify the player of what we took and how long they are prepaid for
+								player.Out.SendMessage("You deposit " + Money.GetString(bpsToMoney) + " in the lockbox.", eChatType.CT_System,
+								                       eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(
+									"The lockbox now has " + Money.GetString(house.KeptMoney) + " in it.  The weekly payment is " +
+									Money.GetString(HouseMgr.GetRentByModel(house.Model)) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(
+									"The house is now prepaid for the next " + (house.KeptMoney/HouseMgr.GetRentByModel(house.Model)) +
+									" payments.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+								// clean up
+								player.TempProperties.removeProperty(HousingConstants.BPsForHouseRent);
 							}
 
-						 player.TempProperties.removeProperty(Housing.HousingConstants.MoneyForHouseRent);
+							// clean up
+							player.TempProperties.removeProperty(HousingConstants.MoneyForHouseRent);
 							break;
 						}
 					case eDialogCode.MasterLevelWindow:
 						{
-							player.Out.SendMasterLevelWindow((byte)m_response);
+							player.Out.SendMasterLevelWindow(m_response);
 							break;
 						}
 				}
 			}
 		}
+
+		#endregion
 	}
 }

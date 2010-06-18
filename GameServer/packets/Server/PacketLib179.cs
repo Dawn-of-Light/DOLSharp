@@ -47,7 +47,7 @@ namespace DOL.GS.PacketHandler
 			if (player == null)
 				return;
 			
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
 			pak.WriteByte(0x03); //subcode
 			pak.WriteByte(0x0f); //number of entry
 			pak.WriteByte(0x00); //subtype
@@ -114,7 +114,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterPointsUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterPointsUpdate));
 			pak.WriteInt((uint)m_gameClient.Player.RealmPoints);
 			pak.WriteShort(m_gameClient.Player.LevelPermill);
 			pak.WriteShort((ushort) m_gameClient.Player.SkillSpecialtyPoints);

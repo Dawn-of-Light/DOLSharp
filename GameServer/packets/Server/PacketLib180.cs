@@ -50,7 +50,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (player == null || player.ObjectState != GameObject.eObjectState.Active)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ControlledHorse));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ControlledHorse));
 			if (player.HasHorse)
 			{
 				pak.WriteShort(0); // for set self horse OID must be zero
@@ -83,7 +83,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (player == null || player.ObjectState != GameObject.eObjectState.Active)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ControlledHorse));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ControlledHorse));
 			if (!flag || !player.HasHorse)
 			{
 				pak.WriteShort((ushort)player.ObjectID);
@@ -149,7 +149,7 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate172));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerCreate172));
 
 			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
@@ -225,7 +225,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte( (byte)( first == 0 ? 99 : 0x03 ) ); //subtype
 				pak.WriteByte((byte)first);
 				SendTCP(pak);
-				pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+				pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
 				pak.WriteByte(0x01); //subcode
 				pak.WriteByte((byte)maxSkills); //number of entry
 				pak.WriteByte(0x03); //subtype
@@ -247,7 +247,7 @@ namespace DOL.GS.PacketHandler
 			int maxSkills = 0;
 			int firstSkills = 0;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
 			bool flagSendHybrid = true;
 			if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
 				flagSendHybrid = false;

@@ -65,7 +65,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendVersionAndCryptKey()
 		{
 			//Construct the new packet
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.CryptKey)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CryptKey)))
 			{
 				//Enable encryption
 				#if !NOENCRYPTION
@@ -102,7 +102,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendLoginDenied(eLoginError et)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.LoginDenied)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.LoginDenied)))
 			{
 				pak.WriteByte((byte) et); // Error Code
 				/*
@@ -127,7 +127,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendLoginGranted(byte color)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.LoginGranted)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.LoginGranted)))
 			{
 				/*
 				if(is_si)
@@ -151,7 +151,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendSessionID()
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.SessionID)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SessionID)))
 			{
 				pak.WriteShortLowEndian((ushort) m_gameClient.SessionID);
 				SendTCP(pak);
@@ -160,7 +160,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendPingReply(ulong timestamp, ushort sequence)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.PingReply)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PingReply)))
 			{
 				pak.WriteInt((uint) timestamp);
 				pak.Fill(0x00, 4);
@@ -172,7 +172,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendRealm(eRealm realm)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Realm)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Realm)))
 			{
 				pak.WriteByte((byte) realm);
 				SendTCP(pak);
@@ -197,7 +197,7 @@ namespace DOL.GS.PacketHandler
 					throw new Exception("CharacterOverview requested for unknown realm " + realm);
 			}
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterOverview)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterOverview)))
 			{
 				pak.FillString(m_gameClient.Account.Name, 24);
 				Character[] characters = m_gameClient.Account.Characters;
@@ -358,7 +358,7 @@ namespace DOL.GS.PacketHandler
 							if (reg == null || reg.Expansion != 1)
 								pak.WriteByte(0x00);
 							else
-								pak.WriteByte(0x01); //0x01=char in SI zone, classic client can't "play"
+								pak.WriteByte(0x01); //0x01=char in ShroudedIsles zone, classic client can't "play"
 							//pak.WriteByte(0x00);
 							pak.WriteByte((byte) characters[j].Constitution);
 							//pak.Fill(0x00,2);
@@ -376,7 +376,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendDupNameCheckReply(string name, bool nameExists)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.DupNameCheckReply)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DupNameCheckReply)))
 			{
 				pak.FillString(name, 30);
 				pak.FillString(m_gameClient.Account.Name, 20);
@@ -388,7 +388,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendBadNameCheckReply(string name, bool bad)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.BadNameCheckReply)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.BadNameCheckReply)))
 			{
 				pak.FillString(name, 30);
 				pak.FillString(m_gameClient.Account.Name, 20);
@@ -403,7 +403,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.AttackMode)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.AttackMode)))
 			{
 				pak.WriteByte((byte) (attackState ? 0x01 : 0x00));
 				pak.Fill(0x00, 3);
@@ -414,7 +414,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendCharCreateReply(string name)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterCreateReply)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterCreateReply)))
 			{
 				pak.FillString(name, 24);
 				SendTCP(pak);
@@ -426,7 +426,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.StatsUpdate), 36))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.StatsUpdate), 36))
 			{
 				pak.WriteShort((ushort) m_gameClient.Player.GetBaseStat(eStat.STR));
 				pak.WriteShort((ushort) m_gameClient.Player.GetBaseStat(eStat.DEX));
@@ -477,7 +477,7 @@ namespace DOL.GS.PacketHandler
 			int count = entries.Length;
 			while (count > index)
 			{
-				using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.ClientRegions)))
+				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ClientRegions)))
 				{
 					for (int i = 0; i < 4; i++)
 					{
@@ -517,7 +517,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendGameOpenReply()
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.GameOpenReply)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.GameOpenReply)))
 			{
 				pak.WriteByte(0x00);
 				SendTCP(pak);
@@ -529,7 +529,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.PositionAndObjectID)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PositionAndObjectID)))
 			{
 				pak.WriteShort((ushort) m_gameClient.Player.ObjectID); //This is the player's objectid not Sessionid!!!
 				pak.WriteShort((ushort) m_gameClient.Player.Z);
@@ -552,7 +552,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterJump)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterJump)))
 			{
 				pak.WriteInt((uint) (headingOnly ? 0 : m_gameClient.Player.X));
 				pak.WriteInt((uint) (headingOnly ? 0 : m_gameClient.Player.Y));
@@ -573,7 +573,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendPlayerInitFinished(byte mobs)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterInitFinished)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterInitFinished)))
 			{
 				pak.WriteByte(mobs);
 				SendTCP(pak);
@@ -582,7 +582,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendUDPInitReply()
 		{
-			var pak = new GSUDPPacketOut(GetPacketCode(ePackets.UDPInitReply));
+			var pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.UDPInitReply));
 			Region playerRegion = null;
 			if (!m_gameClient.Socket.Connected)
 				return;
@@ -604,7 +604,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendTime()
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Time)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Time)))
 			{
 				pak.WriteInt(WorldMgr.GetCurrentDayTime());
 				pak.WriteInt(WorldMgr.GetDayIncrement());
@@ -625,7 +625,7 @@ namespace DOL.GS.PacketHandler
 					return;
 			}
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Message)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Message)))
 			{
 				pak.WriteShort((ushort) m_gameClient.SessionID);
 				pak.WriteShort(0x00);
@@ -673,7 +673,7 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerCreate)))
 			{
 				pak.WriteShort((ushort) playerToCreate.Client.SessionID);
 				pak.WriteShort((ushort) playerToCreate.ObjectID);
@@ -718,7 +718,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendObjectGuildID(GameObject obj, Guild guild)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectGuildID)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectGuildID)))
 			{
 				pak.WriteShort((ushort) obj.ObjectID);
 				if (guild == null)
@@ -818,7 +818,7 @@ namespace DOL.GS.PacketHandler
 					targetOID = (ushort) target.ObjectID;
 			}
 
-			var pak = new GSUDPPacketOut(GetPacketCode(ePackets.ObjectUpdate));
+			var pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.ObjectUpdate));
 			pak.WriteShort((ushort) speed);
 			if (obj is GameNPC)
 				pak.WriteShort((ushort) (obj.Heading & 0xFFF));
@@ -851,7 +851,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendPlayerQuit(bool totalOut)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Quit)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Quit)))
 			{
 				pak.WriteByte((byte) (totalOut ? 0x01 : 0x00));
 				if (m_gameClient.Player == null)
@@ -870,7 +870,7 @@ namespace DOL.GS.PacketHandler
 			else if (obj is GameNPC)
 				oType = (((GameLiving) obj).IsAlive ? 1 : 0);
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.RemoveObject)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RemoveObject)))
 			{
 				pak.WriteShort((ushort) obj.ObjectID);
 				pak.WriteShort((ushort) oType);
@@ -886,7 +886,7 @@ namespace DOL.GS.PacketHandler
 			if (obj.CurrentHouse != m_gameClient.Player.CurrentHouse)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectCreate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectCreate)))
 			{
 				pak.WriteShort((ushort) obj.ObjectID);
 				if (obj is GameStaticItem)
@@ -925,7 +925,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendDebugMode(bool on)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.DebugMode)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DebugMode)))
 			{
 				if (m_gameClient.Account.PrivLevel == 1)
 				{
@@ -955,7 +955,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendModelAndSizeChange(ushort objectId, ushort newModel, byte newSize)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.ModelChange)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ModelChange)))
 			{
 				pak.WriteShort(objectId);
 				pak.WriteShort(newModel);
@@ -966,7 +966,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendEmoteAnimation(GameObject obj, eEmote emote)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.EmoteAnimation)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EmoteAnimation)))
 			{
 				pak.WriteShort((ushort) obj.ObjectID);
 				pak.WriteByte((byte) emote);
@@ -987,7 +987,7 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.NPCCreate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.NPCCreate)))
 			{
 				int speed = 0;
 				ushort speedZ = 0;
@@ -1047,7 +1047,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse ||
 			    living.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EquipmentUpdate)))
 			{
 				pak.WriteShort((ushort) living.ObjectID);
 				pak.WriteByte((byte) ((living.IsCloakHoodUp ? 0x01 : 0x00) | (int) living.ActiveQuiverSlot));
@@ -1093,7 +1093,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionChanged)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RegionChanged)))
 			{
 				//Dinberg - Changing to allow instances...
 				pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
@@ -1106,7 +1106,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterPointsUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterPointsUpdate)))
 			{
 				pak.WriteInt((uint) m_gameClient.Player.RealmPoints);
 				pak.WriteShort(m_gameClient.Player.LevelPermill);
@@ -1122,7 +1122,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.MoneyUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MoneyUpdate)))
 			{
 				pak.WriteByte((byte) m_gameClient.Player.PlayerCharacter.Copper);
 				pak.WriteByte((byte) m_gameClient.Player.PlayerCharacter.Silver);
@@ -1138,7 +1138,7 @@ namespace DOL.GS.PacketHandler
 			//Speed is in % not a fixed value!
 			if (m_gameClient.Player == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.MaxSpeed)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MaxSpeed)))
 			{
 				pak.WriteShort((ushort) (m_gameClient.Player.MaxSpeed*100/GamePlayer.PLAYER_BASE_SPEED));
 				pak.WriteByte((byte) (m_gameClient.Player.IsTurningDisabled ? 0x01 : 0x00));
@@ -1155,7 +1155,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID,
 		                                        int style, byte stance, byte result, byte targetHealthPercent)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.CombatAnimation)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CombatAnimation)))
 			{
 				if (attacker != null)
 					pak.WriteShort((ushort) attacker.ObjectID);
@@ -1193,7 +1193,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterStatusUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterStatusUpdate)))
 			{
 				pak.WriteByte(m_gameClient.Player.HealthPercent);
 				pak.WriteByte(m_gameClient.Player.ManaPercent);
@@ -1208,7 +1208,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendSpellCastAnimation(GameLiving spellCaster, ushort spellID, ushort castingTime)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.SpellCastAnimation)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SpellCastAnimation)))
 			{
 				pak.WriteShort((ushort) spellCaster.ObjectID);
 				pak.WriteShort(spellID);
@@ -1221,7 +1221,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget, ushort spellid,
 		                                             ushort boltTime, bool noSound, byte success)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.SpellEffectAnimation)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SpellEffectAnimation)))
 			{
 				pak.WriteShort((ushort) spellCaster.ObjectID);
 				pak.WriteShort(spellid);
@@ -1243,7 +1243,7 @@ namespace DOL.GS.PacketHandler
 			}
 			if (slot == -1)
 				Log.Error("SendRiding error, slot is -1 with rider " + rider.Name + " steed " + steed.Name);
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Riding)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Riding)))
 			{
 				pak.WriteShort((ushort) rider.ObjectID);
 				pak.WriteShort((ushort) steed.ObjectID);
@@ -1258,7 +1258,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.FindGroupUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.FindGroupUpdate)))
 			{
 				if (list != null)
 				{
@@ -1295,7 +1295,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendGroupInviteCommand(GamePlayer invitingPlayer, string inviteMessage)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog)))
 			{
 				pak.WriteByte(0x00);
 				pak.WriteByte(0x05);
@@ -1312,7 +1312,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendGuildInviteCommand(GamePlayer invitingPlayer, string inviteMessage)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog)))
 			{
 				pak.WriteByte(0x00);
 				pak.WriteByte(0x03);
@@ -1329,7 +1329,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendGuildLeaveCommand(GamePlayer invitingPlayer, string inviteMessage)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog)))
 			{
 				pak.WriteByte(0x00);
 				pak.WriteByte(0x08);
@@ -1356,7 +1356,7 @@ namespace DOL.GS.PacketHandler
 		// data 3 defines wether it's subscribe or abort
 		public virtual void SendQuestSubscribeCommand(GameNPC invitingNPC, ushort questid, string inviteMessage)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog)))
 			{
 				pak.WriteByte(0x00);
 				pak.WriteByte(0x64);
@@ -1377,7 +1377,7 @@ namespace DOL.GS.PacketHandler
 		// data 3 defines wether it's subscribe or abort
 		public virtual void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog)))
 			{
 				pak.WriteByte(0x00);
 				pak.WriteByte(0x64);
@@ -1397,7 +1397,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4,
 		                                  eDialogType type, bool autoWrapText, string message)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog)))
 			{
 				pak.WriteByte(0x00);
 				pak.WriteByte((byte) code);
@@ -1426,7 +1426,7 @@ namespace DOL.GS.PacketHandler
 				m_gameClient.Player.CustomDialogCallback = callback;
 			}
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog)))
 			{
 				pak.WriteByte(0x00);
 				pak.WriteByte((byte) eDialogCode.CustomDialog);
@@ -1510,7 +1510,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 			{
 				pak.WriteByte(0x06);
 
@@ -1582,7 +1582,7 @@ namespace DOL.GS.PacketHandler
 			if (group == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.GroupMemberUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.GroupMemberUpdate)))
 			{
 				lock (group)
 				{
@@ -1604,7 +1604,7 @@ namespace DOL.GS.PacketHandler
 			Group group = m_gameClient.Player.Group;
 			if (group == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.GroupMemberUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.GroupMemberUpdate)))
 			{
 				foreach (GameLiving living in group.GetMembersInTheGroup())
 					WriteGroupMemberUpdate(pak, updateIcons, living);
@@ -1690,15 +1690,15 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendDoorState(IDoor door)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.DoorState)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DoorState)))
 			{
 				ushort zone = (ushort)(door.DoorID / 1000000);
 				Zone doorZone = WorldMgr.GetZone(zone);
 				int doorType = door.DoorID / 100000000;
 				uint flag = door.Flag;
 
-				// by default give all unflagged above ground non keep doors a default sound (excluding ToA zones)
-				if (flag == 0 && doorType != 7 && doorZone != null && !doorZone.IsDungeon && doorZone.ZoneRegion.Expansion != (int)eExpansion.ToA)
+				// by default give all unflagged above ground non keep doors a default sound (excluding TrialsOfAtlantis zones)
+				if (flag == 0 && doorType != 7 && doorZone != null && !doorZone.IsDungeon && doorZone.ZoneRegion.Expansion != (int)eClientExpansion.TrialsOfAtlantis)
 				{
 					flag = 1;
 				}
@@ -1724,7 +1724,7 @@ namespace DOL.GS.PacketHandler
 					if (itemsInPage == null || itemsInPage.Count == 0)
 						continue;
 
-					using (pak = new GSTCPPacketOut(GetPacketCode(ePackets.MerchantWindow)))
+					using (pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
 					{
 						pak.WriteByte((byte) itemsInPage.Count); //Item count on this page
 						pak.WriteByte((byte) windowType); //Unknown 0x00
@@ -1815,7 +1815,7 @@ namespace DOL.GS.PacketHandler
 			}
 			else
 			{
-				using (pak = new GSTCPPacketOut(GetPacketCode(ePackets.MerchantWindow)))
+				using (pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
 				{
 					pak.WriteByte(0); //Item count on this page
 					pak.WriteByte((byte) windowType); //Unknown 0x00
@@ -1830,7 +1830,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.TradeWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TradeWindow)))
 			{
 				lock (m_gameClient.Player.TradeWindow.Sync)
 				{
@@ -1902,7 +1902,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendCloseTradeWindow()
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.TradeWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TradeWindow)))
 			{
 				pak.Fill(0x00, 40);
 				SendTCP(pak);
@@ -1911,7 +1911,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendPlayerDied(GamePlayer killedPlayer, GameObject killer)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerDeath)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerDeath)))
 			{
 				pak.WriteShort((ushort) killedPlayer.ObjectID);
 				if (killer != null)
@@ -1925,7 +1925,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendPlayerRevive(GamePlayer revivedPlayer)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerRevive)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerRevive)))
 			{
 				pak.WriteShort((ushort) revivedPlayer.ObjectID);
 				pak.WriteShort(0x00);
@@ -1939,7 +1939,7 @@ namespace DOL.GS.PacketHandler
 			if (player == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 			{
 				pak.WriteByte(0x03); //subcode
 				pak.WriteByte(0x0d); //number of entry
@@ -2008,7 +2008,7 @@ namespace DOL.GS.PacketHandler
 			int maxSkills = 0;
 			int firstSkills = 0;
 
-			var pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+			var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
 
 			try
 			{
@@ -2197,7 +2197,7 @@ namespace DOL.GS.PacketHandler
 						}
 					}
 
-					using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate)))
+					using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 					{
 						pak.WriteByte(0x02); //subcode
 						pak.WriteByte((byte) (spellcount + 1)); //number of entry
@@ -2228,7 +2228,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 			{
 				pak.WriteByte(0x08); //subcode
 				pak.WriteByte((byte) m_gameClient.Player.CraftingSkills.Count); //count
@@ -2252,7 +2252,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 			{
 				pak.WriteByte(0x05); //subcode
 				pak.WriteByte(6); //number of entries
@@ -2287,7 +2287,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Encumberance)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Encumberance)))
 			{
 				pak.WriteShort((ushort) m_gameClient.Player.MaxEncumberance); // encumb total
 				pak.WriteShort((ushort) m_gameClient.Player.Encumberance); // encumb used
@@ -2300,7 +2300,7 @@ namespace DOL.GS.PacketHandler
 			if (text == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.DetailWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DetailWindow)))
 			{
 				if (caption == null)
 					caption = "";
@@ -2337,7 +2337,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendAddFriends(string[] friendNames)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.AddFriend)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.AddFriend)))
 			{
 				foreach (string friend in friendNames)
 					pak.WritePascalString(friend);
@@ -2348,7 +2348,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendRemoveFriends(string[] friendNames)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.RemoveFriend)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RemoveFriend)))
 			{
 				foreach (string friend in friendNames)
 					pak.WritePascalString(friend);
@@ -2359,7 +2359,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendTimerWindow(string title, int seconds)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.TimerWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TimerWindow)))
 			{
 				pak.WriteShort((ushort) seconds);
 				pak.WriteByte((byte) title.Length);
@@ -2371,7 +2371,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendCloseTimerWindow()
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.TimerWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TimerWindow)))
 			{
 				pak.WriteShort(0);
 				pak.WriteByte(0);
@@ -2382,7 +2382,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendChampionTrainerWindow(int type)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.TrainerWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
 			{
 				pak.WriteByte((byte) type);
 				pak.WriteByte((byte) m_gameClient.Player.ChampionSpecialtyPoints);
@@ -2430,7 +2430,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendTrainerWindow()
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.TrainerWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
 			{
 				IList specs = m_gameClient.Player.GetSpecList();
 				pak.WriteByte((byte) specs.Count);
@@ -2481,7 +2481,7 @@ namespace DOL.GS.PacketHandler
 					}
 				}
 
-				using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.TrainerWindow)))
+				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
 				{
 					pak.WriteByte((byte) offeredRA.Count);
 					pak.WriteByte((byte) m_gameClient.Player.RealmSpecialtyPoints);
@@ -2506,7 +2506,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendInterruptAnimation(GameLiving living)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.InterruptSpellCast)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InterruptSpellCast)))
 			{
 				pak.WriteShort((ushort) living.ObjectID);
 				pak.WriteShort(1);
@@ -2521,7 +2521,7 @@ namespace DOL.GS.PacketHandler
 
 			if (skill.SkillType == eSkillPage.Abilities || skill.SkillType == eSkillPage.RealmAbilities)
 			{
-				using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.DisableSkills)))
+				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
 				{
 					pak.WriteShort((ushort) duration);
 					int id = -1;
@@ -2546,7 +2546,7 @@ namespace DOL.GS.PacketHandler
 			}
 			if (skill.SkillType == eSkillPage.Spells)
 			{
-				using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.DisableSkills)))
+				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
 				{
 					if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
 					{
@@ -2627,7 +2627,7 @@ namespace DOL.GS.PacketHandler
 			byte fxcount = 0;
 			if (m_gameClient.Player == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.UpdateIcons)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.UpdateIcons)))
 			{
 				lock (m_gameClient.Player.EffectList)
 				{
@@ -2662,7 +2662,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendLevelUpSound()
 		{
 			// not sure what package this is, but it triggers the mob color update
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionSound)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RegionSound)))
 			{
 				pak.WriteShort((ushort) m_gameClient.Player.ObjectID);
 				pak.WriteByte(1); //level up sounds
@@ -2673,7 +2673,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendRegionEnterSound(byte soundId)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.RegionSound)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RegionSound)))
 			{
 				pak.WriteShort((ushort) m_gameClient.Player.ObjectID);
 				pak.WriteByte(2); //region enter sounds
@@ -2694,7 +2694,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendEmblemDialogue()
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.EmblemDialogue)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EmblemDialogue)))
 			{
 				pak.Fill(0x00, 4);
 				SendTCP(pak);
@@ -2704,7 +2704,7 @@ namespace DOL.GS.PacketHandler
 		//FOR GM to test param and see min and max of each param
 		public virtual void SendWeather(uint x, uint width, ushort speed, ushort fogdiffusion, ushort intensity)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Weather)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Weather)))
 			{
 				pak.WriteInt(x);
 				pak.WriteInt(width);
@@ -2718,7 +2718,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendPlayerModelTypeChange(GamePlayer player, byte modelType)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerModelTypeChange)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerModelTypeChange)))
 			{
 				pak.WriteShort((ushort) player.ObjectID);
 				pak.WriteByte(modelType);
@@ -2729,7 +2729,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendObjectDelete(GameObject obj)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectDelete)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectDelete)))
 			{
 				pak.WriteShort((ushort) obj.ObjectID);
 				pak.WriteShort(1); //TODO: unknown
@@ -2742,7 +2742,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.ConcentrationList)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ConcentrationList)))
 			{
 				lock (m_gameClient.Player.ConcentrationEffects)
 				{
@@ -2769,7 +2769,7 @@ namespace DOL.GS.PacketHandler
 
 		public void SendChangeTarget(GameObject newTarget)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.ChangeTarget)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ChangeTarget)))
 			{
 				pak.WriteShort((ushort) (newTarget == null ? 0 : newTarget.ObjectID));
 				pak.WriteShort(0); // unknown
@@ -2779,7 +2779,7 @@ namespace DOL.GS.PacketHandler
 
 		public void SendChangeGroundTarget(Point3D newTarget)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.ChangeGroundTarget)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ChangeGroundTarget)))
 			{
 				pak.WriteInt((uint) (newTarget == null ? 0 : newTarget.X));
 				pak.WriteInt((uint) (newTarget == null ? 0 : newTarget.Y));
@@ -2791,7 +2791,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState,
 		                                  eWalkState walkState)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.PetWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PetWindow)))
 			{
 				pak.WriteShort((ushort) (pet == null ? 0 : pet.ObjectID));
 				pak.WriteByte(0x00); //unused
@@ -2898,7 +2898,7 @@ namespace DOL.GS.PacketHandler
 		//housing
 		public virtual void SendHouse(House house)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseCreate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteShort((ushort) house.Z);
@@ -2924,7 +2924,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendRemoveHouse(House house)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseCreate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteShort((ushort) house.Z);
@@ -2940,7 +2940,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendHousePayRentDialog(string title)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog)))
 			{
 				pak.WriteByte(0x00);
 				pak.WriteByte((byte) eDialogCode.HousePayRent);
@@ -2956,7 +2956,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendGarden(House house)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteByte((byte) house.OutdoorItems.Count);
@@ -2977,7 +2977,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendGarden(House house, int i)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteByte(0x01);
@@ -2993,7 +2993,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendHouseOccupied(House house, bool flagHouseOccuped)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseChangeGarden)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteByte(0x00);
@@ -3005,7 +3005,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendEnterHouse(House house)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseEnter)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseEnter)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteShort(25000); //constant!
@@ -3033,7 +3033,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendExitHouse(House house)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseExit)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseExit)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteShort(0); //unknown
@@ -3043,7 +3043,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendToggleHousePoints(House house)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseTogglePoints)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseTogglePoints)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteByte(0x04);
@@ -3058,7 +3058,7 @@ namespace DOL.GS.PacketHandler
 			if(house == null)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseUserPermissions)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseUserPermissions)))
 			{
 				pak.WriteByte((byte)house.HousePermissions.Count()); // number of permissions
 				pak.WriteByte(0x00); // ?
@@ -3083,7 +3083,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendFurniture(House house)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HousingItem)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HousingItem)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteByte((byte) house.IndoorItems.Count);
@@ -3101,7 +3101,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendFurniture(House house, int i)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HousingItem)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HousingItem)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteByte(0x01); //cnt
@@ -3115,7 +3115,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendRentReminder(House house)
 		{
 			//0:00:58.047 S=>C 0xF7 show help window (topicIndex:106 houseLot?:4281)
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HelpWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HelpWindow)))
 			{
 				pak.WriteShort(106); //short index
 				pak.WriteShort((ushort) house.HouseNumber); //short lot
@@ -3126,7 +3126,7 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendStarterHelp()
 		{
 			//* 0:00:57.984 S=>C 0xF7 show help window (topicIndex:1 houseLot?:0)
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.HelpWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HelpWindow)))
 			{
 				pak.WriteShort(1); //short index
 				pak.WriteShort(0); //short lot
@@ -3136,7 +3136,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendPlaySound(eSoundType soundType, ushort soundID)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlaySound)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlaySound)))
 			{
 				pak.WriteShort((ushort) soundType);
 				pak.WriteShort(soundID);
@@ -3171,7 +3171,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMovingObjectCreate(GameMovingObject obj)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.MovingObjectCreate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MovingObjectCreate)))
 			{
 				pak.WriteShort((ushort) obj.ObjectID);
 				pak.WriteShort(0);
@@ -3193,7 +3193,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon, int time)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.SiegeWeaponInterface)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponInterface)))
 			{
 				var flag = (ushort) ((siegeWeapon.EnableToMove ? 1 : 0) | siegeWeapon.AmmoType << 8);
 				pak.WriteShort(flag); //byte Ammo,  byte SiegeMoving(1/0)
@@ -3238,7 +3238,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendSiegeWeaponCloseInterface()
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.SiegeWeaponInterface)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponInterface)))
 			{
 				pak.WriteShort(0);
 				pak.WriteShort(1);
@@ -3251,7 +3251,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (siegeWeapon == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.SiegeWeaponAnimation)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
 			{
 				pak.WriteInt((uint) siegeWeapon.ObjectID);
 				pak.WriteInt(
@@ -3282,7 +3282,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (siegeWeapon == null)
 				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.SiegeWeaponAnimation)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
 			{
 				pak.WriteInt((uint) siegeWeapon.ObjectID);
 				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.X));
@@ -3328,7 +3328,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.SoundEffect)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SoundEffect)))
 			{
 				pak.WriteShort(soundId);
 				pak.WriteShort(zoneId);
@@ -3385,7 +3385,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMarketExplorerWindow()
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.MarketExplorerWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MarketExplorerWindow)))
 			{
 				pak.WriteByte(255);
 				pak.Fill(0, 3);
@@ -3395,7 +3395,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMarketExplorerWindow(IList<InventoryItem> items, byte page, byte maxpage)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.MarketExplorerWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MarketExplorerWindow)))
 			{
 				pak.WriteByte((byte) (page < items.Count/20 ? 20 : items.Count%20));
 				pak.WriteByte(page);
@@ -3511,7 +3511,7 @@ namespace DOL.GS.PacketHandler
 				mlxpPercent = 100.0; // ML10 has no MLXP, so always 100%
 			}
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.MasterLevelWindow)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MasterLevelWindow)))
 			{
 				pak.WriteByte((byte) mlxpPercent); // MLXP (displayed in window)
 				pak.WriteByte(0x64);
@@ -3555,7 +3555,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendConsignmentMerchantMoney(long copper)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.ConsignmentMerchantMoney)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ConsignmentMerchantMoney)))
 			{
 				pak.WriteByte((byte)Money.GetCopper(copper));
 				pak.WriteByte((byte)Money.GetSilver(copper));
@@ -3632,7 +3632,7 @@ namespace DOL.GS.PacketHandler
 
 		protected virtual void SendQuestPacket(AbstractQuest quest, int index)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry)))
 			{
 				pak.WriteByte((byte) index);
 
@@ -3779,7 +3779,7 @@ namespace DOL.GS.PacketHandler
 
 		protected virtual void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate)))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate)))
 			{
 				pak.WriteByte((byte) (slots == null ? 0 : slots.Count));
 				pak.WriteByte(

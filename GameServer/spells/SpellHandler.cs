@@ -3628,7 +3628,7 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 			int primaryResistModifier = ad.Target.GetResist(damageType);
 
 			/* Resist Pierce
-			 * Resipierce is a special bonus which has been introduced with ToA.
+			 * Resipierce is a special bonus which has been introduced with TrialsOfAtlantis.
 			 * At the calculation of SpellDamage, it reduces the resistance that the victim recives
 			 * through ITEMBONUSES for the specified percentage.
 			 * http://de.daocpedia.eu/index.php/Resistenz_durchdringen (translated)
