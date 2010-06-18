@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -25,26 +24,30 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x13 ^ 168, "Skill action request")]
-	public class UseSkillHandler : DOL.GS.PacketHandler.IPacketHandler
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.UseSkill, ClientStatus.PlayerInGame)]
+	public class UseSkillHandler : IPacketHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		#region IPacketHandler Members
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			if (client.Player == null) return 1;
-
 			int flagSpeedData = packet.ReadShort();
 			int index = packet.ReadByte();
 			int type = packet.ReadByte();
-			
+
 			new UseSkillAction(client.Player, flagSpeedData, index, type).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: UseSkillAction
 
 		/// <summary>
 		/// Handles player use skill actions
@@ -55,10 +58,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// The speed and flags data
 			/// </summary>
 			protected readonly int m_flagSpeedData;
+
 			/// <summary>
 			/// The skill index
 			/// </summary>
 			protected readonly int m_index;
+
 			/// <summary>
 			/// The skill type
 			/// </summary>
@@ -84,19 +89,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 				int index = m_index;
 
 				if ((m_flagSpeedData & 0x200) != 0)
 				{
-					player.CurrentSpeed = -(m_flagSpeedData & 0x1ff);	// backward movement
+					player.CurrentSpeed = -(m_flagSpeedData & 0x1ff); // backward movement
 				}
 				else
 				{
-					player.CurrentSpeed = m_flagSpeedData & 0x1ff;	// forwardmovement
+					player.CurrentSpeed = m_flagSpeedData & 0x1ff; // forwardmovement
 				}
+
 				player.IsStrafing = (m_flagSpeedData & 0x4000) != 0;
-				player.TargetInView = (m_flagSpeedData & 0xa000) != 0;	// why 2 bits? that has to be figured out
+				player.TargetInView = (m_flagSpeedData & 0xa000) != 0; // why 2 bits? that has to be figured out
 				player.GroundTargetInView = ((m_flagSpeedData & 0x1000) != 0);
 
 				//DOLConsole.LogDump
@@ -127,7 +133,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								lock (player.lockSpellLinesList)
 								{
-									Dictionary<string, KeyValuePair<Spell, SpellLine>> spelllist = player.GetUsableSpells(spelllines, false);
+									var spelllist = player.GetUsableSpells(spelllines, false);
 
 									if (index >= spelllist.Count)
 									{
@@ -135,7 +141,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									}
 									else
 									{
-										Dictionary<string, KeyValuePair<Spell, SpellLine>>.ValueCollection.Enumerator spellenum = spelllist.Values.GetEnumerator();
+										var spellenum = spelllist.Values.GetEnumerator();
 										int i = 0;
 										while (spellenum.MoveNext())
 										{
@@ -174,7 +180,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					if (sk is Style)
 					{
-						StyleProcessor.TryToUseStyle(player, (Style)sk);
+						StyleProcessor.TryToUseStyle(player, (Style) sk);
 						return;
 					}
 					//player.Out.SendMessage("you triggered skill "+sk.Name, eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
@@ -182,32 +188,35 @@ namespace DOL.GS.PacketHandler.Client.v168
 					int reuseTime = player.GetSkillDisabledDuration(sk);
 					if (reuseTime > 60000)
 					{
-						player.Out.SendMessage(string.Format("You must wait {0} minutes {1} seconds to use this ability!", reuseTime / 60000, reuseTime % 60000 / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(
+							string.Format("You must wait {0} minutes {1} seconds to use this ability!", reuseTime/60000, reuseTime%60000/1000),
+							eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						if (player.Client.Account.PrivLevel < 2) return;
 					}
 					else if (reuseTime > 0)
 					{
-						player.Out.SendMessage(string.Format("You must wait {0} seconds to use this ability!", reuseTime / 1000 + 1), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						if (player.Client.Account.PrivLevel < 2) return;
+						player.Out.SendMessage(string.Format("You must wait {0} seconds to use this ability!", reuseTime/1000 + 1),
+						                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						
+						if (player.Client.Account.PrivLevel < 2) 
+							return;
 					}
 
 					if (sk is Ability)
 					{
-						Ability ab = sk as Ability;
+						var ab = sk as Ability;
 						IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler(ab.KeyName);
 						if (handler != null)
 						{
 							handler.Execute(ab, player);
 							return;
 						}
-						else
-						{
-							ab.Execute(player);
-						}
+						
+						ab.Execute(player);
 					}
 					if (sk is Specialization)
 					{
-						Specialization spec = sk as Specialization;
+						var spec = sk as Specialization;
 						ISpecActionHandler handler = SkillBase.GetSpecActionHandler(spec.KeyName);
 						if (handler != null)
 						{
@@ -218,14 +227,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				else
 				{
-					if (log.IsWarnEnabled)
-						log.Warn("skill not handled because it was not found on player, shouldn't happen");
+					if (Log.IsWarnEnabled)
+						Log.Warn("skill not handled because it was not found on player, shouldn't happen");
 				}
+
 				if (sk == null)
 				{
 					player.Out.SendMessage("Skill is not implemented.", eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
 				}
 			}
 		}
+
+		#endregion
 	}
 }

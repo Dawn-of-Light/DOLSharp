@@ -46,7 +46,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendFindGroupWindowUpdate(GamePlayer[] list)
 		{
 			if (m_gameClient.Player==null) return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.FindGroupUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.FindGroupUpdate));
 			if (list!=null)
 			{
 				pak.WriteByte((byte)list.Length);
@@ -94,7 +94,7 @@ namespace DOL.GS.PacketHandler
 			if (obj.CurrentHouse != m_gameClient.Player.CurrentHouse)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ObjectCreate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectCreate));
 			pak.WriteShort((ushort)obj.ObjectID);
 			if (obj is GameStaticItem)
 				pak.WriteShort((ushort)(obj as GameStaticItem).Emblem);
@@ -136,7 +136,7 @@ namespace DOL.GS.PacketHandler
 
 		protected override void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.InventoryUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
 			pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
@@ -256,7 +256,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.EquipmentUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EquipmentUpdate));
 
 			ICollection<InventoryItem> items = null;
 			if (living.Inventory != null)
@@ -312,7 +312,7 @@ namespace DOL.GS.PacketHandler
 		 * public override void SendPlayerBanner(GamePlayer player, int GuildEmblem)
 		{
 			if (player == null) return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 			pak.WriteShort((ushort) player.ObjectID);
 			pak.WriteByte(12);
 			if (GuildEmblem == 0)
@@ -332,7 +332,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendHouse(House house)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseCreate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate));
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteShort((ushort)house.Z);
 			pak.WriteInt((uint)house.X);
@@ -356,7 +356,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendEnterHouse(House house)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.HouseEnter));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseEnter));
 
 			pak.WriteShort((ushort)house.HouseNumber);
 			pak.WriteShort((ushort)25000);         //constant!
@@ -422,7 +422,7 @@ namespace DOL.GS.PacketHandler
 			//cannot show banners for players that have no guild.
 			if (show && player.Guild == null)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.VisualEffect);
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)eServerPackets.VisualEffect);
 			pak.WriteShort((ushort)player.ObjectID);
 			pak.WriteByte(0xC); // show Banner
 			pak.WriteByte((byte)((show) ? 0 : 1)); // 0-enable, 1-disable

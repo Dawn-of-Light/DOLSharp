@@ -16,19 +16,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x6f ^ 168, "Handles Player Sit Request")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerSitRequest, ClientStatus.PlayerInGame)]
 	public class PlayerSitRequestHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			byte status = (byte)packet.ReadByte();
+			var status = (byte) packet.ReadByte();
+
 			new SitRequestHandler(client.Player, status != 0x00).Start(1);
+
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: SitRequestHandler
 
 		/// <summary>
 		/// Handles player sit requests
@@ -55,9 +61,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
+
 				player.Sit(m_sit);
 			}
 		}
+
+		#endregion
 	}
 }

@@ -46,7 +46,7 @@ namespace DOL.GS
 			LootList lootList = new LootList();
 
 			// check to see if we are in ToA
-			if (mob.CurrentRegion.Expansion == (int)eExpansion.ToA && killer.CurrentRegion.Expansion == (int)eExpansion.ToA)
+			if (mob.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis && killer.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis)
 			{
 				if (mob.Level >= 45 && Util.Chance(ServerProperties.Properties.SCROLL_DROP_RATE))
 				{

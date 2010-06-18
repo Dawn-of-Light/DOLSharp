@@ -49,7 +49,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterPointsUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterPointsUpdate));
 			pak.WriteInt((uint)m_gameClient.Player.RealmPoints);
 			pak.WriteShort(m_gameClient.Player.LevelPermill);
 			pak.WriteShort((ushort)m_gameClient.Player.SkillSpecialtyPoints);
@@ -67,7 +67,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CharacterStatusUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterStatusUpdate));
 			pak.WriteByte(m_gameClient.Player.HealthPercent);
 			pak.WriteByte(m_gameClient.Player.ManaPercent);
 			pak.WriteByte(sittingFlag);
@@ -89,7 +89,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
 		{
 			if (m_gameClient.Player == null) return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.UpdateIcons));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.UpdateIcons));
 			long initPos = pak.Position;
 
 			int fxcount = 0;
@@ -175,7 +175,7 @@ namespace DOL.GS.PacketHandler
 				MLXPpercent = 100.0 * (double)m_gameClient.Player.MLExperience / (double)m_gameClient.Player.GetMLExperienceForLevel((int)(m_gameClient.Player.MLLevel+1));
 			else MLXPpercent = 100.0; // ML10 has no MLXP, so always 100%
 
-			GSTCPPacketOut pak = new GSTCPPacketOut((byte)ePackets.MasterLevelWindow);
+			GSTCPPacketOut pak = new GSTCPPacketOut((byte)eServerPackets.MasterLevelWindow);
 			pak.WriteByte((byte)MLXPpercent); // MLXP (displayed in window)
 			pak.WriteByte((byte)100);
 			pak.WriteByte((byte)(m_gameClient.Player.MLLevel+1)); // ML level + 1

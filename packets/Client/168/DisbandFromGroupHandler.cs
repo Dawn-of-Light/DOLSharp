@@ -16,22 +16,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	/// <summary>
 	/// Handles the disband group packet
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x37^168,"Handles the disband group packet")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.DisbandFromGroup, ClientStatus.PlayerInGame)]
 	public class DisbandFromGroupHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			new PlayerDisbandAction(client.Player).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: PlayerDisbandAction
 
 		/// <summary>
 		/// Handles players disband actions
@@ -51,24 +55,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
-				if(player.Group == null)
+				if (player.Group == null)
 					return;
 
 				GameLiving disbandMember = player;
 
 				if (player.TargetObject != null &&
-					player.TargetObject is GameLiving &&
-					(player.TargetObject as GameLiving).Group != null &&
-					(player.TargetObject as GameLiving).Group == player.Group)
+				    player.TargetObject is GameLiving &&
+				    (player.TargetObject as GameLiving).Group != null &&
+				    (player.TargetObject as GameLiving).Group == player.Group)
 					disbandMember = player.TargetObject as GameLiving;
-				
+
 				if (disbandMember != player && player != player.Group.Leader)
 					return;
-				
+
 				player.Group.RemoveMember(disbandMember);
 			}
 		}
+
+		#endregion
 	}
 }

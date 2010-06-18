@@ -60,7 +60,7 @@ namespace DOL.GS.PacketHandler
 
 		protected override void SendQuestPacket(AbstractQuest quest, int index)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry));
 
 			pak.WriteByte((byte) index);
 			if (quest.Step <= 0)
@@ -103,7 +103,7 @@ namespace DOL.GS.PacketHandler
 		{
 			string name = BuildTaskString();
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry));
 			pak.WriteByte(0); //index
 			pak.WriteShortLowEndian((ushort)name.Length);
 			pak.WriteByte((byte)0);
