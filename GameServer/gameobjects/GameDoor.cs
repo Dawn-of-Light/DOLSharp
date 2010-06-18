@@ -90,7 +90,7 @@ namespace DOL.GS
 			m_level = 0;
 			m_model = 0xFFFF;
 			m_doorID = m_dbdoor.InternalID;
-            m_guild = m_dbdoor.Guild;
+            m_guildName = m_dbdoor.Guild;
             m_Realm = (eRealm)m_dbdoor.Realm;
             m_level = m_dbdoor.Level;
             m_health = m_dbdoor.MaxHealth;
@@ -113,7 +113,7 @@ namespace DOL.GS
 			obj.Name = this.Name;
 			obj.InternalID = this.DoorID;
 			obj.Type = DoorID / 100000000;
-            obj.Guild = this.Guild;
+            obj.Guild = this.GuildName;
 			obj.Flags = this.Flag;
             obj.Realm = (byte)this.Realm;
             obj.Level = this.Level;

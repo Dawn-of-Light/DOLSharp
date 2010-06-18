@@ -42,7 +42,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendBlinkPanel(byte flag)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 			GamePlayer player = base.m_gameClient.Player;
 
 			pak.WriteShort((ushort)player.ObjectID);

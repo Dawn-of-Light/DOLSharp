@@ -146,7 +146,7 @@ namespace DOL.GS.Commands
 
                             //Add to world...
                             obj.Name = element.ObjectId.Substring(0, 18);
-                            obj.Guild = element.ObjectId.Substring(18);
+                            obj.GuildName = element.ObjectId.Substring(18);
 
                             obj.X = element.X;
                             obj.Y = element.Y;
@@ -169,7 +169,7 @@ namespace DOL.GS.Commands
                         GameObject obj = client.Player.TargetObject;
                         if (obj == null)
                             return;
-                        string ObjectId = obj.Name + obj.Guild;
+                        string ObjectId = obj.Name + obj.GuildName;
                         DataObject o = GameServer.Database.FindObjectByKey<DBInstanceXElement>(ObjectId);
 
                         if (o == null)

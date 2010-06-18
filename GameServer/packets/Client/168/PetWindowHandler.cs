@@ -22,26 +22,27 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x8A, "Handles pet window commands")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PetWindow, ClientStatus.PlayerInGame)]
 	public class PetWindowHandler : IPacketHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		#region IPacketHandler Members
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			if (client.Player == null) return 0;
-
-			byte aggroState = (byte)packet.ReadByte(); 	// 1-Aggressive, 2-Deffensive, 3-Passive
-			byte walkState = (byte)packet.ReadByte(); 	// 1-Follow, 2-Stay, 3-GoTarg, 4-Here
-			byte command = (byte)packet.ReadByte();		// 1-Attack, 2-Release
+			var aggroState = (byte) packet.ReadByte(); // 1-Aggressive, 2-Deffensive, 3-Passive
+			var walkState = (byte) packet.ReadByte(); // 1-Follow, 2-Stay, 3-GoTarg, 4-Here
+			var command = (byte) packet.ReadByte(); // 1-Attack, 2-Release
 
 			//[Ganrod] Nidel: Animist can removed his TurretFnF without MainPet.
-			if (client.Player.TargetObject != null && command.Equals(2) && client.Player.ControlledNpcBrain == null && client.Player.CharacterClass.ID == (int)eCharacterClass.Animist)
+			if (client.Player.TargetObject != null && command == 2 && client.Player.ControlledNpcBrain == null &&
+			    client.Player.CharacterClass.ID == (int) eCharacterClass.Animist)
 			{
-				TurretPet turret = client.Player.TargetObject as TurretPet;
+				var turret = client.Player.TargetObject as TurretPet;
 				if (turret != null && turret.Brain is TurretFNFBrain && client.Player.IsControlledNPC(turret))
 				{
 					//release
@@ -49,6 +50,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return 1;
 				}
 			}
+
 			//[Ganrod] Nidel: Call only if player has controllednpc
 			if (client.Player.ControlledNpcBrain != null)
 			{
@@ -59,6 +61,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			return 0;
 		}
 
+		#endregion
+
+		#region Nested type: HandlePetCommandAction
+
 		/// <summary>
 		/// Handles pet command actions
 		/// </summary>
@@ -68,14 +74,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// The pet aggro state
 			/// </summary>
 			protected readonly int m_aggroState;
-			/// <summary>
-			/// The pet walk state
-			/// </summary>
-			protected readonly int m_walkState;
+
 			/// <summary>
 			/// The pet command
 			/// </summary>
 			protected readonly int m_command;
+
+			/// <summary>
+			/// The pet walk state
+			/// </summary>
+			protected readonly int m_walkState;
 
 			/// <summary>
 			/// Constructs a new HandlePetCommandAction
@@ -97,42 +105,68 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
 				switch (m_aggroState)
 				{
-					case 0: break; // ignore
-					case 1: player.CommandNpcAgressive(); break;
-					case 2: player.CommandNpcDefensive(); break;
-					case 3: player.CommandNpcPassive(); break;
+					case 0:
+						break; // ignore
+					case 1:
+						player.CommandNpcAgressive();
+						break;
+					case 2:
+						player.CommandNpcDefensive();
+						break;
+					case 3:
+						player.CommandNpcPassive();
+						break;
 					default:
-						if (log.IsWarnEnabled)
-							log.Warn("unknown aggro state " + m_aggroState + ", player=" + player.Name + "  version=" + player.Client.Version + "  client type=" + player.Client.ClientType);
+						if (Log.IsWarnEnabled)
+							Log.Warn("unknown aggro state " + m_aggroState + ", player=" + player.Name + "  version=" + player.Client.Version +
+							         "  client type=" + player.Client.ClientType);
 						break;
 				}
 				switch (m_walkState)
 				{
-					case 0: break; // ignore
-					case 1: player.CommandNpcFollow(); break;
-					case 2: player.CommandNpcStay(); break;
-					case 3: player.CommandNpcGoTarget(); break;
-					case 4: player.CommandNpcComeHere(); break;
+					case 0:
+						break; // ignore
+					case 1:
+						player.CommandNpcFollow();
+						break;
+					case 2:
+						player.CommandNpcStay();
+						break;
+					case 3:
+						player.CommandNpcGoTarget();
+						break;
+					case 4:
+						player.CommandNpcComeHere();
+						break;
 					default:
-						if (log.IsWarnEnabled)
-							log.Warn("unknown walk state " + m_walkState + ", player=" + player.Name + "  version=" + player.Client.Version + "  client type=" + player.Client.ClientType);
+						if (Log.IsWarnEnabled)
+							Log.Warn("unknown walk state " + m_walkState + ", player=" + player.Name + "  version=" + player.Client.Version +
+							         "  client type=" + player.Client.ClientType);
 						break;
 				}
 				switch (m_command)
 				{
-					case 0: break; // ignore
-					case 1: player.CommandNpcAttack(); break;
-					case 2: player.CommandNpcRelease(); break;
+					case 0:
+						break; // ignore
+					case 1:
+						player.CommandNpcAttack();
+						break;
+					case 2:
+						player.CommandNpcRelease();
+						break;
 					default:
-						if (log.IsWarnEnabled)
-							log.Warn("unknown command state " + m_command + ", player=" + player.Name + "  version=" + player.Client.Version + "  client type=" + player.Client.ClientType);
+						if (Log.IsWarnEnabled)
+							Log.Warn("unknown command state " + m_command + ", player=" + player.Name + "  version=" + player.Client.Version +
+							         "  client type=" + player.Client.ClientType);
 						break;
 				}
 			}
 		}
+
+		#endregion
 	}
 }

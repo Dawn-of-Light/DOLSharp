@@ -16,17 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Reflection;
 using DOL.GS.Housing;
-using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x0B, "Handles Enter/Leave house requests")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.HouseEnterLeave, ClientStatus.PlayerInGame)]
 	public class HouseEnterLeaveHandler : IPacketHandler
 	{
-		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		#region IPacketHandler Members
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)

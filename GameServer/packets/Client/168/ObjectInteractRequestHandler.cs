@@ -16,25 +16,30 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0xD2^168,"Handles right click on mobs or objects!")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.ObjectInteractRequest, ClientStatus.PlayerInGame)]
 	public class ObjectInteractRequestHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-//			packet.Skip(10);
+			// packet.Skip(10);
 			uint playerX = packet.ReadInt();
 			uint playerY = packet.ReadInt();
 			int sessionId = packet.ReadShort();
 			ushort targetOid = packet.ReadShort();
 
+#warning TODO: utilize these client-sent coordinates to possibly check for exploits which are spoofing position packets but not spoofing them everywhere
 			new InteractActionHandler(client.Player, targetOid).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: InteractActionHandler
 
 		/// <summary>
 		/// Handles player interact actions
@@ -61,13 +66,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 				Region region = player.CurrentRegion;
-				if (region == null) return;
-				GameObject obj = region.GetObject((ushort)m_targetOid);
-				if(obj == null) return;
+				if (region == null)
+					return;
+
+				GameObject obj = region.GetObject((ushort) m_targetOid);
+				if (obj == null)
+					return;
+
 				obj.Interact(player);
 			}
 		}
+
+		#endregion
 	}
 }

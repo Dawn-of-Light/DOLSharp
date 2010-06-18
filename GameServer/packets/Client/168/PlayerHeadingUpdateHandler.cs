@@ -78,7 +78,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			con[8] = (byte)((con[8] & 0x80) | client.Player.HealthPercent);
 
-			GSUDPPacketOut outpak = new GSUDPPacketOut(client.Out.GetPacketCode(ePackets.PlayerHeading));
+			GSUDPPacketOut outpak = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerHeading));
 			//Now copy the whole content of the packet
 			outpak.Write(con, 0, /*con.Length*/10);
 			outpak.WritePacketLength();
@@ -96,7 +96,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						if (outpak190 == null)
 						{
-	 						outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(ePackets.PlayerHeading));
+	 						outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerHeading));
 	 						byte[] con190 = (byte[]) con.Clone();
 							//Now copy the whole content of the packet
 							outpak190.Write(con190, 0, /*con190.Lenght*/10);

@@ -16,20 +16,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 using System.Collections;
 using System.Collections.Generic;
 using DOL.AI.Brain;
-using DOL.GS;
+using DOL.Database;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.Quests;
-using DOL.Database;
 
 namespace DOL.GS.PacketHandler
 {
-	public enum ePackets : byte
+	public enum eServerPackets : byte
 	{
-		InventoryUpdate	= 0x02,
+		InventoryUpdate = 0x02,
 		HouseUserPermissions = 0x03,
 		CharacterJump = 0x04,
 		HousingPersmissions = 0x05,
@@ -125,9 +125,9 @@ namespace DOL.GS.PacketHandler
 		ObjectDelete = 0xE1,
 		EmblemDialogue = 0xE2,
 		SiegeWeaponAnimation = 0xE3,
-		TradeWindow	= 0xEA,
+		TradeWindow = 0xEA,
 		ObjectDataUpdate = 0xEE,
-		RegionSound	= 0xEF,
+		RegionSound = 0xEF,
 		CharacterCreateReply = 0xF0,
 		TimerWindow = 0xF3,
 		SiegeWeaponInterface = 0xF5,
@@ -140,6 +140,34 @@ namespace DOL.GS.PacketHandler
 		Realm = 0xFE,
 		MasterLevelWindow = 0x13,
 	}
+
+	public enum eClientPackets : byte
+	{
+		PlayerCancelsEffect = 0xF8,			// 0x50 ^ 168
+		PlayerAttackRequest = 0x74,			// 0xDC ^ 168
+		PlayerAppraiseItemRequest = 0xE0,	// 0x48 ^ 168
+		PetWindow = 0x8A,
+		ObjectInteractRequest = 0x7A,		// 0xD2 ^ 168
+		InviteToGroup = 0x87,				// 0x2F ^ 168
+		HouseEnterLeave = 0x0B,
+		DoorRequest = 0x99,					// 0x31 ^ 168
+		DisbandFromGroup = 0xA8,			// 0x37 ^ 168
+		DialogResponse = 0x82,				// 0x2A ^ 168
+		CheckLOSRequest = 0xD0,
+		WorldInit = 0xD4,					// 0x7C ^ 168
+		UseSpell = 0x7D,					// 0xD5 ^ 168
+		UseSlot = 0x71,						// 0xD9 ^ 168
+		UseSkill = 0xBB,					// 0x13 ^ 168
+		RemoveConcentrationEffect = 0x76,	// 0xDE ^ 168
+		PlayerRegionChangeRequest = 0x90,	// 0x38 ^ 168
+		QuestRewardChosen = 0x40,
+		PlayerTarget = 0xB0,				// 0x18 ^ 168
+		PlayerSitRequest = 0xC7,			// 0x6F ^ 168
+		PlayerInitRequest = 0xE8,			// 0x40 ^ 168
+		PlayerGroundTarget = 0xEC,			// 0x44 ^ 168
+		PlayerDismountRequest = 0xC8,		// 0x60 ^ 168
+	}
+
 	/// <summary>
 	/// Enum for LoginDeny reasons
 	/// </summary>
@@ -169,7 +197,7 @@ namespace DOL.GS.PacketHandler
 		CafesAccountIsSuspended = 0x16,
 		NotAuthorizedToUseExpansionVersion = 0x17, // "You are not authorized to use the expansion version!" (1.98 US)
 		ServiceNotAvailable = 0xaa
-	};
+	} ;
 
 	/// <summary>
 	/// Chat locations on the client window
@@ -179,7 +207,7 @@ namespace DOL.GS.PacketHandler
 		CL_ChatWindow = 0x0,
 		CL_PopupWindow = 0x1,
 		CL_SystemWindow = 0x2
-	};
+	} ;
 
 	/// <summary>
 	/// Types of chat messages
@@ -230,7 +258,7 @@ namespace DOL.GS.PacketHandler
 		CT_ScreenCenterSmaller = 0xC9,
 		CT_ScreenCenter_And_CT_System = 0xCA,
 		CT_ScreenCenterSmaller_And_CT_System = 0xCB,
-	};
+	} ;
 
 	public enum eEmote : byte
 	{
@@ -308,7 +336,7 @@ namespace DOL.GS.PacketHandler
 		BindAlb = 0x49,
 		BindMid = 0x4a,
 		BindHib = 0x4b,
-	};
+	} ;
 
 	public enum eMerchantWindowType : byte
 	{
@@ -333,33 +361,38 @@ namespace DOL.GS.PacketHandler
 	public struct RegionEntry
 	{
 		/// <summary>
-		/// Region id
-		/// </summary>
-		public ushort   id;
-		/// <summary>
-		/// Name of the region
-		/// </summary>
-		public string name;
-		/// <summary>
-		/// Port client receives on
-		/// </summary>
-		public string fromPort;
-		/// <summary>
-		/// Port the region receives on
-		/// </summary>
-		public string toPort;
-		/// <summary>
-		/// Region IP address
-		/// </summary>
-		public string ip;
-		/// <summary>
 		/// Region expansion
 		/// </summary>
 		public int expansion;
 
-	};
+		/// <summary>
+		/// Port client receives on
+		/// </summary>
+		public string fromPort;
+
+		/// <summary>
+		/// Region id
+		/// </summary>
+		public ushort id;
+
+		/// <summary>
+		/// Region IP address
+		/// </summary>
+		public string ip;
+
+		/// <summary>
+		/// Name of the region
+		/// </summary>
+		public string name;
+
+		/// <summary>
+		/// Port the region receives on
+		/// </summary>
+		public string toPort;
+	} ;
 
 	public delegate void CustomDialogResponse(GamePlayer player, byte response);
+
 	public delegate void CheckLOSResponse(GamePlayer player, ushort response, ushort targetOID);
 
 	public enum eSoundType : ushort
@@ -398,6 +431,7 @@ namespace DOL.GS.PacketHandler
 		WarmapWindowMidgard = 0x32,
 		QuestSubscribe = 0x64,
 	}
+
 	public enum eRealmWarmapKeepFlags : byte
 	{
 		Claimed = 0x04,
@@ -405,37 +439,57 @@ namespace DOL.GS.PacketHandler
 		Teleportable = 0x10,
 	}
 
-    public enum ePanel : byte
-    {
-        Command_Window = 0,
-        Journal_Button = 1,
-        Map_Button = 2,
-        Sit_Button = 3,
-        Stats_Index_Window = 4,
-        Attributes_Button = 5,
-        Inventory_Button = 6,
-        Specializations_Button = 7,
-        CombatStyles_Button = 8,
-        MagicSpells_Button = 9,
-        Group_Button = 0x0A,
-        MiniInfo_Window = 0x0B,
-        CommandEnter_Window = 0x0C,
-        QuickBar1_Window = 0x0D,
-        QBar1_Bank1Button = 0x0E,
-        QBar1_Bank2Button = 0x0F,
-        QBar1_Bank3Button = 0x10,
-        QBar1_Bank4Button = 0x11,
-        QBar1_Bank5Button = 0x12,
-        QBar1_Bank6Button = 0x13,
-        QBar1_Bank7Button = 0x14,
-        QBar1_Bank8Button = 0x15,
-        QBar1_Bank9Button = 0x16,
-        QBar1_Bank10Button = 0x17,
-    }
-    
+	public enum ePanel : byte
+	{
+		Command_Window = 0,
+		Journal_Button = 1,
+		Map_Button = 2,
+		Sit_Button = 3,
+		Stats_Index_Window = 4,
+		Attributes_Button = 5,
+		Inventory_Button = 6,
+		Specializations_Button = 7,
+		CombatStyles_Button = 8,
+		MagicSpells_Button = 9,
+		Group_Button = 0x0A,
+		MiniInfo_Window = 0x0B,
+		CommandEnter_Window = 0x0C,
+		QuickBar1_Window = 0x0D,
+		QBar1_Bank1Button = 0x0E,
+		QBar1_Bank2Button = 0x0F,
+		QBar1_Bank3Button = 0x10,
+		QBar1_Bank4Button = 0x11,
+		QBar1_Bank5Button = 0x12,
+		QBar1_Bank6Button = 0x13,
+		QBar1_Bank7Button = 0x14,
+		QBar1_Bank8Button = 0x15,
+		QBar1_Bank9Button = 0x16,
+		QBar1_Bank10Button = 0x17,
+	}
+
 	public interface IPacketLib
 	{
-		byte GetPacketCode(ePackets packetCode);
+		/// <summary>
+		/// The bow prepare animation
+		/// </summary>
+		int BowPrepare { get; }
+
+		/// <summary>
+		/// The bow shoot animation
+		/// </summary>
+		int BowShoot { get; }
+
+		/// <summary>
+		/// one dual weapon hit animation
+		/// </summary>
+		int OneDualWeaponHit { get; }
+
+		/// <summary>
+		/// both dual weapons hit animation
+		/// </summary>
+		int BothDualWeaponHit { get; }
+
+		byte GetPacketCode(eServerPackets packetCode);
 		void SendTCP(GSTCPPacketOut packet);
 		void SendTCP(byte[] buf);
 		void SendTCPRaw(GSTCPPacketOut packet);
@@ -482,22 +536,31 @@ namespace DOL.GS.PacketHandler
 		void SendUpdatePoints();
 		void SendUpdateMoney();
 		void SendUpdateMaxSpeed();
-		void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent);
+
+		void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style,
+		                         byte stance, byte result, byte targetHealthPercent);
+
 		void SendStatusUpdate();
 		void SendStatusUpdate(byte sittingFlag);
 		void SendSpellCastAnimation(GameLiving spellCaster, ushort spellID, ushort castingTime);
-		void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget,ushort spellid, ushort boltTime, bool noSound, byte success);
+
+		void SendSpellEffectAnimation(GameObject spellCaster, GameObject spellTarget, ushort spellid, ushort boltTime,
+		                              bool noSound, byte success);
+
 		void SendRiding(GameObject rider, GameObject steed, bool dismount);
 		void SendFindGroupWindowUpdate(GamePlayer[] list);
 		void SendGroupInviteCommand(GamePlayer invitingPlayer, string inviteMessage);
-		void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4, eDialogType type, bool autoWrapText, string message);
-		void SendCustomDialog(string msg, DOL.GS.PacketHandler.CustomDialogResponse callback);
-		void SendCheckLOS(GameObject Checker, GameObject Target, DOL.GS.PacketHandler.CheckLOSResponse callback);
-		void SendGuildLeaveCommand(GamePlayer invitingPlayer,string inviteMessage);
-		void SendGuildInviteCommand(GamePlayer invitingPlayer,string inviteMessage);
+
+		void SendDialogBox(eDialogCode code, ushort data1, ushort data2, ushort data3, ushort data4, eDialogType type,
+		                   bool autoWrapText, string message);
+
+		void SendCustomDialog(string msg, CustomDialogResponse callback);
+		void SendCheckLOS(GameObject Checker, GameObject Target, CheckLOSResponse callback);
+		void SendGuildLeaveCommand(GamePlayer invitingPlayer, string inviteMessage);
+		void SendGuildInviteCommand(GamePlayer invitingPlayer, string inviteMessage);
 		void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest);
 		void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest);
-		void SendQuestSubscribeCommand(GameNPC invitingNPC,ushort questid, string inviteMessage);
+		void SendQuestSubscribeCommand(GameNPC invitingNPC, ushort questid, string inviteMessage);
 		void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage);
 		void SendGroupWindowUpdate();
 		void SendGroupMemberUpdate(bool updateIcons, GameLiving living);
@@ -524,7 +587,7 @@ namespace DOL.GS.PacketHandler
 		void SendRemoveFriends(string[] friendNames);
 		void SendTimerWindow(string title, int seconds);
 		void SendCloseTimerWindow();
-        void SendChampionTrainerWindow(int type);
+		void SendChampionTrainerWindow(int type);
 		void SendTrainerWindow();
 		void SendInterruptAnimation(GameLiving living);
 		void SendDisableSkill(Skill skill, int duration);
@@ -548,7 +611,7 @@ namespace DOL.GS.PacketHandler
 		void SendPlaySound(eSoundType soundType, ushort soundID);
 		void SendNPCsQuestEffect(GameNPC npc, bool flag);
 		void SendMasterLevelWindow(byte ml);
-		void SendHexEffect(GamePlayer player,byte effect1,byte effect2,byte effect3,byte effect4,byte effect5);
+		void SendHexEffect(GamePlayer player, byte effect1, byte effect2, byte effect3, byte effect4, byte effect5);
 		void SendRvRGuildBanner(GamePlayer player, bool show);
 		void SendSiegeWeaponAnimation(GameSiegeWeapon siegeWeapon);
 		void SendSiegeWeaponFireAnimation(GameSiegeWeapon siegeWeapon, int timer);
@@ -563,10 +626,10 @@ namespace DOL.GS.PacketHandler
 		void SendKeepComponentInfo(GameKeepComponent keepComponent);
 		void SendKeepComponentDetailUpdate(GameKeepComponent keepComponent);
 		void SendKeepClaim(AbstractGameKeep keep, byte flag);
-		void SendKeepComponentUpdate(AbstractGameKeep keep,bool LevelUp);
+		void SendKeepComponentUpdate(AbstractGameKeep keep, bool LevelUp);
 		void SendKeepComponentInteract(GameKeepComponent component);
-		void SendKeepComponentHookPoint(GameKeepComponent component,int selectedHookPointIndex);
-		void SendClearKeepComponentHookPoint(GameKeepComponent component,int selectedHookPointIndex);
+		void SendKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex);
+		void SendClearKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex);
 		void SendHookPointStore(GameKeepHookPoint hookPoint);
 		void SendWarmapUpdate(ICollection<AbstractGameKeep> list);
 		void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups);
@@ -591,7 +654,7 @@ namespace DOL.GS.PacketHandler
 		void SendHouseUsersPermissions(House house);
 
 		void SendStarterHelp();
-        void SendPlayerFreeLevelUpdate();
+		void SendPlayerFreeLevelUpdate();
 
 		void SendMovingObjectCreate(GameMovingObject obj);
 		void SendSetControlledHorse(GamePlayer player);
@@ -603,30 +666,15 @@ namespace DOL.GS.PacketHandler
 		void SendRegionColorSheme(byte color);
 		void SendVampireEffect(GameLiving living, bool show);
 		void SendXFireInfo(byte flag);
-        void SendMinotaurRelicMapRemove(byte id);
-        void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z);
-        void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag);
-        void SendMinotaurRelicBarUpdate(GamePlayer player, int xp);
+		void SendMinotaurRelicMapRemove(byte id);
+		void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z);
+		void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag);
+		void SendMinotaurRelicBarUpdate(GamePlayer player, int xp);
+
 		/// <summary>
 		/// Makes a specific UI Part "blink"
 		/// </summary>
 		/// <param name="flag">The UI part as byte (See ePanel enum for details)</param>
-        void SendBlinkPanel(byte flag);
-		/// <summary>
-		/// The bow prepare animation
-		/// </summary>
-		int BowPrepare { get;}
-		/// <summary>
-		/// The bow shoot animation
-		/// </summary>
-		int BowShoot { get;}
-		/// <summary>
-		/// one dual weapon hit animation
-		/// </summary>
-		int OneDualWeaponHit{ get;}
-		/// <summary>
-		/// both dual weapons hit animation
-		/// </summary>
-		int BothDualWeaponHit{ get;}
+		void SendBlinkPanel(byte flag);
 	}
 }

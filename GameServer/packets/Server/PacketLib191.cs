@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.ConcentrationList));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ConcentrationList));
 			lock (m_gameClient.Player.ConcentrationEffects)
 			{
 				pak.WriteByte((byte)(m_gameClient.Player.ConcentrationEffects.Count));

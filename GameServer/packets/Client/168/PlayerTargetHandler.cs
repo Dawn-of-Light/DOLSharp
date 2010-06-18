@@ -16,9 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.GS.Keeps;
 using DOL.Events;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -26,9 +24,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles player target changes
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x18^168,"Handles player target changes")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerTarget, ClientStatus.PlayerInGame)]
 	public class PlayerTargetHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		/// <summary>
 		/// Handles every received packet
 		/// </summary>
@@ -39,6 +39,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			ushort targetID = packet.ReadShort();
 			ushort flags = packet.ReadShort();
+
 			/*
 			 * 0x8000 = 'examine' bit
 			 * 0x4000 = LOS1 bit; is 0 if no LOS
@@ -46,16 +47,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			 * 0x0001 = players attack mode bit (not targets!)
 			 */
 
-			ChangeTargetAction action = new ChangeTargetAction(
-				client.Player,
-				targetID,
-				!((flags & (0x4000 | 0x2000)) == 0),
-				(flags & 0x8000) != 0);
-
-			action.Start(1);
+			new ChangeTargetAction(client.Player, targetID, !((flags & (0x4000 | 0x2000)) == 0), (flags & 0x8000) != 0).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: ChangeTargetAction
 
 		/// <summary>
 		/// Changes players target
@@ -63,17 +62,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 		protected class ChangeTargetAction : RegionAction
 		{
 			/// <summary>
+			/// The 'examine target' bit
+			/// </summary>
+			protected readonly bool m_examineTarget;
+
+			/// <summary>
 			/// The new target OID
 			/// </summary>
 			protected readonly int m_newTargetId;
+
 			/// <summary>
 			/// The 'target in view' flag
 			/// </summary>
 			protected readonly bool m_targetInView;
-			/// <summary>
-			/// The 'examine target' bit
-			/// </summary>
-			protected readonly bool m_examineTarget;
 
 			/// <summary>
 			/// Constructs a new TargetChangeAction
@@ -82,7 +83,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="newTargetId">The new target OID</param>
 			/// <param name="targetInView">The target LOS bit</param>
 			/// <param name="examineTarget">The 'examine target' bit</param>
-			public ChangeTargetAction(GamePlayer actionSource, int newTargetId, bool targetInView, bool examineTarget) : base(actionSource)
+			public ChangeTargetAction(GamePlayer actionSource, int newTargetId, bool targetInView, bool examineTarget)
+				: base(actionSource)
 			{
 				m_newTargetId = newTargetId;
 				m_targetInView = targetInView;
@@ -94,9 +96,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
-				GameObject myTarget = player.CurrentRegion.GetObject((ushort)m_newTargetId);
+				GameObject myTarget = player.CurrentRegion.GetObject((ushort) m_newTargetId);
 				player.TargetObject = myTarget;
 				player.TargetInView = m_targetInView;
 
@@ -122,10 +124,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (player.IsPraying)
 				{
-					GameGravestone gravestone = myTarget as GameGravestone;
+					var gravestone = myTarget as GameGravestone;
 					if (gravestone == null || !gravestone.InternalID.Equals(player.InternalID))
 					{
-						player.Out.SendMessage("You are no longer targetting your grave. Your prayers fail.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage("You are no longer targetting your grave. Your prayers fail.", eChatType.CT_System,
+						                       eChatLoc.CL_SystemWindow);
 						player.PrayTimerStop();
 					}
 				}
@@ -133,5 +136,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				GameEventMgr.Notify(GamePlayerEvent.ChangeTarget, player, null);
 			}
 		}
+
+		#endregion
 	}
 }

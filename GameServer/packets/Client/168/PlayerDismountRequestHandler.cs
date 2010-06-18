@@ -16,21 +16,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using DOL.GS;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x60^168,"Handles dismount from horse request")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerDismountRequest, ClientStatus.PlayerInGame)]
 	public class PlayerDismountRequestHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			new DismountRequestHandler(client.Player).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: DismountRequestHandler
 
 		/// <summary>
 		/// Handles player dismount requests
@@ -50,15 +53,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
-				if(!player.IsRiding)
+				if (!player.IsRiding)
 				{
-					player.Out.SendMessage("You are not riding any steed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					ChatUtil.SendSystemMessage(player, "You are not riding any steed!");
 					return;
 				}
+
 				player.DismountSteed(false);
 			}
 		}
+
+		#endregion
 	}
 }

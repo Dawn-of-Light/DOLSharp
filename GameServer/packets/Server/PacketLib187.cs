@@ -56,7 +56,7 @@ namespace DOL.GS.PacketHandler
 		protected override void SendQuestWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest,
 			bool offer)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.Dialog));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog));
 			ushort QuestID = QuestMgr.GetIDForQuestType(quest.GetType());
 			pak.WriteShort((offer) ? (byte)0x22 : (byte)0x21); // Dialog
 			pak.WriteShort(QuestID);
@@ -205,7 +205,7 @@ namespace DOL.GS.PacketHandler
 			}
 
 			RewardQuest quest = q as RewardQuest;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.QuestEntry));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry));
 			pak.WriteByte((byte)index);
 			pak.WriteByte((byte)quest.Name.Length);
 			pak.WriteShort(0x00); // unknown

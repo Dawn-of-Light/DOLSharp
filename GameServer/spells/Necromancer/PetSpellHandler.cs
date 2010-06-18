@@ -64,7 +64,7 @@ namespace DOL.GS.Spells
 
 		/// <summary>
 		/// Calculate casting time based on delve and dexterity stat bonus.
-		/// Necromancers do not benefit from ToA Casting Speed Bonuses.
+		/// Necromancers do not benefit from TrialsOfAtlantis Casting Speed Bonuses.
 		/// </summary>
 		/// <returns></returns>
 		public override int CalculateCastingTime()

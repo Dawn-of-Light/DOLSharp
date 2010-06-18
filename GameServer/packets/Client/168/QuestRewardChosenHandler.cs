@@ -16,12 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 
 using DOL.Events;
-using DOL.GS.Keeps;
-using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -29,43 +25,48 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// Handler for quest reward dialog response.
 	/// </summary>
 	/// <author>Aredhel</author>
-	[PacketHandler(PacketHandlerType.TCP, 0x40, "Quest reward chosen handler")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.QuestRewardChosen, ClientStatus.PlayerInGame)]
 	public class QuestRewardChosenHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			byte response = (byte)packet.ReadByte();
+			var response = (byte) packet.ReadByte();
 			if (response != 1) // confirm
 				return 1;
-			byte countChosen = (byte)packet.ReadByte();
 
-			int[] itemsChosen = new int[8];
+			var countChosen = (byte) packet.ReadByte();
+
+			var itemsChosen = new int[8];
 			for (int i = 0; i < 8; ++i)
 				itemsChosen[i] = packet.ReadByte();
 
-			ushort data2 = packet.ReadShort();	// unknown
-			ushort data3 = packet.ReadShort();	// unknown
-			ushort data4 = packet.ReadShort();	// unknown
+			ushort data2 = packet.ReadShort(); // unknown
+			ushort data3 = packet.ReadShort(); // unknown
+			ushort data4 = packet.ReadShort(); // unknown
 
 			ushort questID = packet.ReadShort();
 			ushort questGiverID = packet.ReadShort();
 
-			new QuestRewardChosenAction(client.Player, countChosen, itemsChosen,
-				questGiverID, questID)
-				.Start(1);
+			new QuestRewardChosenAction(client.Player, countChosen, itemsChosen, questGiverID, questID).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: QuestRewardChosenAction
 
 		/// <summary>
 		/// Send dialog response via Notify().
 		/// </summary>
 		protected class QuestRewardChosenAction : RegionAction
 		{
-			private int m_countChosen;
-			private int[] m_itemsChosen;
-			private int m_questGiverID;
-			private int m_questID;
+			private readonly int m_countChosen;
+			private readonly int[] m_itemsChosen;
+			private readonly int m_questGiverID;
+			private readonly int m_questID;
 
 			/// <summary>
 			/// Constructs a new QuestRewardChosenAction.
@@ -76,7 +77,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="questGiverID">ID of the quest NPC.</param>
 			/// <param name="questID">ID of the quest.</param>
 			public QuestRewardChosenAction(GamePlayer actionSource, int countChosen, int[] itemsChosen,
-				int questGiverID, int questID)
+			                               int questGiverID, int questID)
 				: base(actionSource)
 			{
 				m_countChosen = countChosen;
@@ -90,13 +91,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
 				player.Notify(GamePlayerEvent.QuestRewardChosen, player,
-					new QuestRewardChosenEventArgs(m_questGiverID, m_questID, m_countChosen,
-						m_itemsChosen));
+				              new QuestRewardChosenEventArgs(m_questGiverID, m_questID, m_countChosen, m_itemsChosen));
+
 				return;
 			}
 		}
+
+		#endregion
 	}
 }

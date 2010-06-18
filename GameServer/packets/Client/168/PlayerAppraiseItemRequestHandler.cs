@@ -16,26 +16,31 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.Housing;
 using DOL.Database;
+using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x48^168,"Player Appraise Item")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerAppraiseItemRequest, ClientStatus.PlayerInGame)]
 	public class PlayerAppraiseItemRequestHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			uint X = packet.ReadInt();
 			uint Y = packet.ReadInt();
-			ushort id =(ushort) packet.ReadShort();
-			ushort item_slot=(ushort) packet.ReadShort();
+			ushort id = packet.ReadShort();
+			ushort item_slot = packet.ReadShort();
 
 			new AppraiseActionHandler(client.Player, item_slot).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: AppraiseActionHandler
 
 		/// <summary>
 		/// Handles item apprise actions
@@ -62,22 +67,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
 				if (player.TargetObject == null)
 					return;
 
-				InventoryItem item = player.Inventory.GetItem((eInventorySlot)m_slot);
+				InventoryItem item = player.Inventory.GetItem((eInventorySlot) m_slot);
 
 				if (player.TargetObject is GameMerchant)
 				{
-					((GameMerchant)player.TargetObject).OnPlayerAppraise(player, item, false);
+					((GameMerchant) player.TargetObject).OnPlayerAppraise(player, item, false);
 				}
 				else if (player.TargetObject is GameLotMarker)
 				{
-					((GameLotMarker)player.TargetObject).OnPlayerAppraise(player, item, false);
+					((GameLotMarker) player.TargetObject).OnPlayerAppraise(player, item, false);
 				}
 			}
 		}
+
+		#endregion
 	}
 }

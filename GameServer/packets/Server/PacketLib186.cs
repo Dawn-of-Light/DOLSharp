@@ -75,7 +75,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.CombatAnimation));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CombatAnimation));
 			if (attacker != null)
 				pak.WriteShort((ushort)attacker.ObjectID);
 			else
@@ -100,14 +100,14 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendMinotaurRelicMapRemove(byte id)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.MinotaurRelicMapRemove));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MinotaurRelicMapRemove));
             pak.WriteIntLowEndian((uint)id);
 			SendTCP(pak);
 		}
 		
 		public override void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.MinotaurRelicMapUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MinotaurRelicMapUpdate));
 
 			pak.WriteIntLowEndian((uint)id);
             pak.WriteIntLowEndian((uint)region);
@@ -120,7 +120,7 @@ namespace DOL.GS.PacketHandler
 		
 		public override void SendMinotaurRelicWindow(GamePlayer player, int effect, bool flag)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 
 			pak.WriteShort((ushort)player.ObjectID);
 			pak.WriteByte((byte)13);
@@ -140,7 +140,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendMinotaurRelicBarUpdate(GamePlayer player, int xp)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 
 			pak.WriteShort((ushort)player.ObjectID);
 			pak.WriteByte((byte)14);

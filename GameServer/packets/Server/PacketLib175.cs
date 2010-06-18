@@ -48,7 +48,7 @@ namespace DOL.GS.PacketHandler
 			if (text == null)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DetailWindow));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DetailWindow));
 
 			pak.WriteByte(0); // new in 1.75
 			if (caption == null)
@@ -67,7 +67,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendPlayerTitles()
 		{
 			IList titles = m_gameClient.Player.Titles;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.DetailWindow));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DetailWindow));
 
 			pak.WriteByte(1); // new in 1.75
 			pak.WritePascalString("Player Statistics"); //window caption
@@ -102,7 +102,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendPlayerTitleUpdate(GamePlayer player)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VisualEffect));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 
 			pak.WriteShort((ushort)player.ObjectID);
 			pak.WriteByte(0x0B); // subcode
@@ -129,7 +129,7 @@ namespace DOL.GS.PacketHandler
 			if (player == null)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.VariousUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
 			pak.WriteByte(0x03); //subcode
 			pak.WriteByte(0x0e); //number of entry
 			pak.WriteByte(0x00); //subtype
@@ -257,7 +257,7 @@ namespace DOL.GS.PacketHandler
 			}
 
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.StatsUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.StatsUpdate));
 
 			// base
 			for (int i = 0; i < updateStats.Length; i++)
@@ -384,7 +384,7 @@ namespace DOL.GS.PacketHandler
 			}
 
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.StatsUpdate));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.StatsUpdate));
 
 			// racial resists
 			for (int i = 0; i < updateResists.Length; i++)
@@ -451,7 +451,7 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.PlayerCreate172));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerCreate172));
 			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
 			pak.WriteShort(playerToCreate.Model);
@@ -495,7 +495,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendLoginGranted(byte color)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(ePackets.LoginGranted));
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.LoginGranted));
 			pak.WriteByte(0x01); //isSI
 			pak.WriteByte(ParseVersion((int)m_gameClient.Version, true));
 			pak.WriteByte(ParseVersion((int)m_gameClient.Version, false));

@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.Effects;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -24,9 +23,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles effect cancel requests
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x50^168,"Handles player cancel effect requests")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerCancelsEffect, ClientStatus.PlayerInGame)]
 	public class PlayerCancelsEffectHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int effectID = packet.ReadShort();
@@ -35,6 +36,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: CancelEffectHandler
 
 		/// <summary>
 		/// Handles players cancel effect actions
@@ -61,25 +66,27 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
 				IGameEffect found = null;
-				lock (player.EffectList) 
+				lock (player.EffectList)
 				{
-					foreach (IGameEffect effect in player.EffectList) 
+					foreach (IGameEffect effect in player.EffectList)
 					{
-						if (effect.InternalID == m_effectId) 
+						if (effect.InternalID == m_effectId)
 						{
 							found = effect;
 							break;
 						}
 					}
 				}
-				if (found != null) 
+				if (found != null)
 				{
 					found.Cancel(true);
 				}
 			}
 		}
+
+		#endregion
 	}
 }

@@ -16,19 +16,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x2F^168, "handle invite to group")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.InviteToGroup, ClientStatus.PlayerInGame)]
 	public class InviteToGroupHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			new HandleGroupInviteAction(client.Player).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: HandleGroupInviteAction
 
 		/// <summary>
 		/// Handles group invlite actions
@@ -48,48 +52,51 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				GamePlayer player = (GamePlayer)m_actionSource;
+				var player = (GamePlayer) m_actionSource;
 
-				if(player.TargetObject == null || player.TargetObject == player)
+				if (player.TargetObject == null || player.TargetObject == player)
 				{
-					player.Out.SendMessage("You have not selected a valid player as your target.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					ChatUtil.SendSystemMessage(player, "You have not selected a valid player as your target.");
 					return;
 				}
 
-				if(!(player.TargetObject is GamePlayer))
+				if (!(player.TargetObject is GamePlayer))
 				{
-					player.Out.SendMessage("You have not selected a valid player as your target.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					ChatUtil.SendSystemMessage(player, "You have not selected a valid player as your target.");
 					return;
 				}
 
-				GamePlayer target = (GamePlayer)player.TargetObject;
+				var target = (GamePlayer) player.TargetObject;
 
-				if(player.Group != null && player.Group.Leader != player)
+				if (player.Group != null && player.Group.Leader != player)
 				{
-					player.Out.SendMessage("You are not the leader of your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					ChatUtil.SendSystemMessage(player, "You are not the leader of your group.");
 					return;
 				}
-				if(player.Group != null && player.Group.MemberCount >= Group.MAX_GROUP_SIZE)
+				if (player.Group != null && player.Group.MemberCount >= Group.MAX_GROUP_SIZE)
 				{
-					player.Out.SendMessage("The group is full.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-					return;
-				}
-
-				if(!GameServer.ServerRules.IsAllowedToGroup(player, target, false))
-				{
+					ChatUtil.SendSystemMessage(player, "The group is full.");
 					return;
 				}
 
-				if(target.Group != null)
+				if (!GameServer.ServerRules.IsAllowedToGroup(player, target, false))
+					return;
+
+				if (target.Group != null)
 				{
-					player.Out.SendMessage("The player is still in a group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					ChatUtil.SendSystemMessage(player, "The player is still in a group.");
 					return;
 				}
 
-				player.Out.SendMessage("You have invited " + target.Name + " to join your group.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				target.Out.SendGroupInviteCommand(player, player.Name + " has invited you to join\n" + player.GetPronoun(1, false) + " group. Do you wish to join?");
-				target.Out.SendMessage(player.Name + " has invited you to join "+ player.GetPronoun(1, false) +" group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				ChatUtil.SendSystemMessage(player, "You have invited " + target.Name + " to join your group.");
+				target.Out.SendGroupInviteCommand(player,
+				                                  player.Name + " has invited you to join\n" + player.GetPronoun(1, false) +
+				                                  " group. Do you wish to join?");
+				ChatUtil.SendSystemMessage(target,
+				                           player.Name + " has invited you to join " + player.GetPronoun(1, false) + " group.");
 			}
 		}
+
+		#endregion
 	}
 }

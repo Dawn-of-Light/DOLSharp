@@ -16,35 +16,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0xD0, "handle Check LOS")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.CheckLOSRequest, ClientStatus.PlayerInGame)]
 	public class CheckLOSResponseHandler : IPacketHandler
 	{
+		#region IPacketHandler Members
+
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			ushort checker_oid = packet.ReadShort();
-			ushort target_oid = packet.ReadShort();
+			ushort checkerOID = packet.ReadShort();
+			ushort targetOID = packet.ReadShort();
 			ushort response = packet.ReadShort();
 			ushort unknow = packet.ReadShort();
 
-			//if (client.Account.PrivLevel > 1)
-			//	client.Out.SendMessage(string.Format("CheckLOSResponse: oid1:0x{0:X4} oid2:0x{1:X4} response:0x{2:X4} unk:0x{3:X4}",
-			//	checker_oid, target_oid, response, unknow), eChatType.CT_System,eChatLoc.CL_SystemWindow);
-
-			HandleCheckAction action = new HandleCheckAction(
-				client.Player,
-				checker_oid,
-				target_oid,
-				response);
-
-			action.Start(1);
+			new HandleCheckAction(client.Player, checkerOID, targetOID, response).Start(1);
 
 			return 1;
 		}
+
+		#endregion
+
+		#region Nested type: HandleCheckAction
 
 		/// <summary>
 		/// Handles the LOS check response
@@ -55,14 +49,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// The LOS source OID
 			/// </summary>
 			protected readonly int m_checkerOid;
-			/// <summary>
-			/// The LOS target OID
-			/// </summary>
-			protected readonly int m_targetOid;
+
 			/// <summary>
 			/// The request response
 			/// </summary>
 			protected readonly int m_response;
+
+			/// <summary>
+			/// The LOS target OID
+			/// </summary>
+			protected readonly int m_targetOid;
 
 			/// <summary>
 			/// Constructs a new HandleCheckAction
@@ -83,13 +79,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				string key = string.Format("LOS C:0x{0} T:0x{1}",m_checkerOid,m_targetOid);
-				GamePlayer player = (GamePlayer)m_actionSource;
-				CheckLOSResponse callback = (CheckLOSResponse)player.TempProperties.getProperty<object>(key, null);
-				if(callback == null) return;
-				callback(player, (ushort)m_response, (ushort)m_targetOid);
+				string key = string.Format("LOS C:0x{0} T:0x{1}", m_checkerOid, m_targetOid);
+
+				var player = (GamePlayer) m_actionSource;
+
+				var callback = player.TempProperties.getProperty<CheckLOSResponse>(key, null);
+				if (callback == null)
+					return;
+
+				callback(player, (ushort) m_response, (ushort) m_targetOid);
+
 				player.TempProperties.removeProperty(key);
 			}
 		}
+
+		#endregion
 	}
 }

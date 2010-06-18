@@ -462,7 +462,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						ch.AccountSlot = i + ch.Realm * 100;
 
 						//The following byte contains
-						//1bit=start location ... in SI you can choose ...
+						//1bit=start location ... in ShroudedIsles you can choose ...
 						//1bit=first race bit
 						//1bit=unknown
 						//1bit=gender (0=male, 1=female)
@@ -544,7 +544,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						ch.Zpos = 2463;
 						ch.Direction = 5947;
 
-						if (ch.Region == 51 && ch.Realm == 1)//Albion SI start point (I hope)
+						if (ch.Region == 51 && ch.Realm == 1)//Albion ShroudedIsles start point (I hope)
 						{
 							ch.Xpos = 526252;
 							ch.Ypos = 542415;
@@ -561,7 +561,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
 							//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
 						}
-						if (ch.Region == 151 && ch.Realm == 2)//Midgard SI start point
+						if (ch.Region == 151 && ch.Realm == 2)//Midgard ShroudedIsles start point
 						{
 							ch.Xpos = 293720;
 							ch.Ypos = 356408;
@@ -578,7 +578,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
 							//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
 						}
-						if (ch.Region == 181 && ch.Realm == 3)//Hibernia SI start point
+						if (ch.Region == 181 && ch.Realm == 3)//Hibernia ShroudedIsles start point
 						{
 							ch.Xpos = 426483;
 							ch.Ypos = 440626;
