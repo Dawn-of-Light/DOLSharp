@@ -60,7 +60,7 @@ namespace DOL.GS
 		/// <param name="owner"></param>
 		public BDSubPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
 
-		public override int MaxSpeed
+		public override short MaxSpeed
 		{
 			get
 			{

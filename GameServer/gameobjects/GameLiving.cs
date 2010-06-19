@@ -383,8 +383,8 @@ namespace DOL.GS
             }
         }
 
-		protected int m_race;
-		public virtual int Race
+		protected short m_race;
+		public virtual short Race
 		{
 			get { return m_race; }
 			set { m_race = value; }
@@ -4627,16 +4627,6 @@ namespace DOL.GS
 			return 0;
 		}
 
-		// /// <summary>
-		// /// Old temp properties
-		// /// </summary>
-		// protected int[] m_oldTempProps = new int[(int)eProperty.MaxProperty];
-
-		// /// <summary>
-		// /// New temp properties
-		// /// </summary>
-		// protected int[] m_newTempProps = new int[(int)eProperty.MaxProperty];
-
 		/// <summary>
 		/// has to be called after properties were changed and updates are needed
 		/// TODO: not sure about property change detection, has to be reviewed
@@ -4823,15 +4813,15 @@ namespace DOL.GS
 		/// <summary>
 		/// The default frequency of regenerating health in milliseconds
 		/// </summary>
-		protected int m_healthRegenerationPeriod;
+		protected short m_healthRegenerationPeriod;
 		/// <summary>
 		/// The default frequency of regenerating power in milliseconds
 		/// </summary>
-		protected int m_powerRegenerationPeriod;
+		protected short m_powerRegenerationPeriod;
 		/// <summary>
 		/// The default frequency of regenerating endurance in milliseconds
 		/// </summary>
-		protected int m_enduRegenerationPeriod;
+		protected short m_enduRegenerationPeriod;
 		/// <summary>
 		/// The lock object for lazy regen timers initialization
 		/// </summary>
@@ -5040,18 +5030,10 @@ namespace DOL.GS
 		}
 		#endregion
 		#region Mana/Health/Endurance/Concentration/Delete
-		// /// <summary>
-		// /// Maxiumum value that can be in m_health
-		// /// </summary>
-		// protected int m_maxHealth;
 		/// <summary>
 		/// Amount of mana
 		/// </summary>
 		protected int m_mana;
-		// /// <summary>
-		// /// Maximum value that can be in m_mana
-		// /// </summary>
-		// protected int m_maxMana;
 		/// <summary>
 		/// Amount of endurance
 		/// </summary>
@@ -5266,15 +5248,11 @@ namespace DOL.GS
 		/// <summary>
 		/// The current speed of this living
 		/// </summary>
-		protected int m_currentSpeed;
+		protected short m_currentSpeed;
 		/// <summary>
 		/// The base maximum speed of this living
 		/// </summary>
-		protected int m_maxSpeedBase;
-		/// <summary>
-		/// The guildname of this living
-		/// </summary>
-		protected string m_guildName;
+		protected short m_maxSpeedBase;
 		/// <summary>
 		/// Holds the Living's Coordinate inside the current Region
 		/// </summary>
@@ -5297,7 +5275,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the current speed of this living
 		/// </summary>
-		public virtual int CurrentSpeed
+		public virtual short CurrentSpeed
 		{
 			get
 			{
@@ -5313,18 +5291,18 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the maxspeed of this living
 		/// </summary>
-		public virtual int MaxSpeed
+		public virtual short MaxSpeed
 		{
 			get
 			{
-				return GetModified(eProperty.MaxSpeed);
+				return (short)GetModified(eProperty.MaxSpeed);
 			}
 		}
 
 		/// <summary>
 		/// Gets or sets the base max speed of this living
 		/// </summary>
-		public virtual int MaxSpeedBase
+		public virtual short MaxSpeedBase
 		{
 			get { return m_maxSpeedBase; }
 			set { m_maxSpeedBase = value; }

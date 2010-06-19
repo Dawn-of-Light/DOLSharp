@@ -112,7 +112,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.CurrentSpeed = 0;
 			}
 			else
-				client.Player.CurrentSpeed = speed;
+				client.Player.CurrentSpeed = (short)speed;
 
 			//Don't use the "sit" flag (data&0x1000) because it is
 			//useful only for displaying sit status to other clients,

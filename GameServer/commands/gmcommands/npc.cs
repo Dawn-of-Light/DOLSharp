@@ -157,10 +157,10 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						int speed = 200;
+						short speed = 200;
 						if (args.Length == 4)
 						{
-							speed = Convert.ToInt32(args[3]);
+							speed = Convert.ToInt16(args[3]);
 						}
 
 						int X = 0;

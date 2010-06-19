@@ -153,9 +153,9 @@ namespace DOL.GS
 			return base.AttackDamage(weapon) * 1.0 * m_DragonDifficulty/100;
 		}
 
-		public override int MaxSpeedBase
+		public override short MaxSpeedBase
 		{
-			get { return 191 + (Level * 2); }
+			get { return (short)(191 + (Level * 2)); }
 			set { m_maxSpeedBase = value; }
 		}
 

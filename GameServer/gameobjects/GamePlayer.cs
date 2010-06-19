@@ -2447,9 +2447,9 @@ namespace DOL.GS
 		/// Gets or sets this player's race id
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public override int Race
+		public override short Race
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.Race : 0; }
+			get { return (short)(PlayerCharacter != null ? PlayerCharacter.Race : 0); }
 			set { if (PlayerCharacter != null) PlayerCharacter.Race = value; }
 		}
 
@@ -9870,7 +9870,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the current speed of this player
 		/// </summary>
-		public override int CurrentSpeed
+		public override short CurrentSpeed
 		{
 			set
 			{
@@ -10193,9 +10193,9 @@ namespace DOL.GS
 		/// Gets or sets the max speed of this player
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public override int MaxSpeedBase
+		public override short MaxSpeedBase
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.MaxSpeed : base.MaxSpeedBase; }
+			get { return (short)(PlayerCharacter != null ? PlayerCharacter.MaxSpeed : base.MaxSpeedBase); }
 			set
 			{
 				base.MaxSpeedBase = value;
