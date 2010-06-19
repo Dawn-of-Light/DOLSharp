@@ -94,7 +94,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Group size limit
 		/// </summary>
-		public const int MAX_GROUP_SIZE = 8;
+		public const byte MAX_GROUP_SIZE = 8;
 
 		/// <summary>
 		/// This holds the status of the group
@@ -129,7 +129,7 @@ namespace DOL.GS
 			}
 
 			living.Group = this;
-			living.GroupIndex = MemberCount - 1;
+			living.GroupIndex = (byte)(MemberCount - 1);
 
 			UpdateGroupWindow();
 			// update icons of joined player to everyone in the group
@@ -199,7 +199,7 @@ namespace DOL.GS
 			}
 
 			living.Group = null;
-			living.GroupIndex = -1;
+			living.GroupIndex = 0xFF;
 			if (living is GamePlayer)
 			{
 				((GamePlayer)living).Out.SendGroupWindowUpdate();
@@ -242,7 +242,7 @@ namespace DOL.GS
 						foreach (GameLiving member in m_groupMembers)
 						{
 							member.Group = null;
-							member.GroupIndex = -1;
+							member.GroupIndex = 0xFF;
 							GameEventMgr.Notify(GroupEvent.MemberDisbanded, this, new MemberDisbandedEventArgs(member));
 						}
 					}
@@ -264,7 +264,7 @@ namespace DOL.GS
 		{
 			lock (m_groupMembers)
 			{
-				for (int i = 0; i < m_groupMembers.Count; i++)
+				for (byte i = 0; i < m_groupMembers.Count; i++)
 				{
 					(m_groupMembers[i]).GroupIndex = i;
 				}
@@ -379,7 +379,7 @@ namespace DOL.GS
 				if (!m_groupMembers.Contains(player))
 					return false;
 
-				int ind;
+				byte ind;
 
 				ind = player.GroupIndex;
 				m_groupMembers[ind] = m_groupMembers[0];
@@ -479,9 +479,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the number of players inside this group
 		/// </summary>
-		public int MemberCount
+		public byte MemberCount
 		{
-			get { return m_groupMembers.Count; }
+			get { return (byte)m_groupMembers.Count; }
 		}
 	}
 }

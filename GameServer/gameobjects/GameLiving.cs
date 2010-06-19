@@ -1937,90 +1937,6 @@ namespace DOL.GS
                 OnInterruptTick(attacker, attackType);
         }
 
-		/// <summary>
-		/// Interrupts the target every second for the specified duration.
-		/// </summary>
-		/*protected class InterruptAction : RegionAction
-		{
-            /// <summary>
-            /// Creates a new interrupt action.
-            /// </summary>
-            /// <param name="attack"></param>
-            /// <param name="duration"></param>
-			public InterruptAction(AttackData attack, int duration)
-				: base(attack.Target)
-			{
-				if (attack.Attacker == null)
-					throw new ArgumentNullException("attacker");
-
-                Attacker = attack.Attacker;
-                AttackType = attack.AttackType;
-				Duration = duration;	
-				Interval = 1000;
-			}
-
-            /// <summary>
-            /// Creates a new interrupt action.
-            /// </summary>
-            /// <param name="target"></param>
-            /// <param name="attacker"></param>
-            /// <param name="attackType"></param>
-            /// <param name="duration"></param>
-            public InterruptAction(GameLiving target, GameLiving attacker, AttackData.eAttackType attackType, int duration)
-                : base(target)
-            {
-                if (attacker == null)
-                    throw new ArgumentNullException("attacker");
-
-                Attacker = attacker;
-                AttackType = attackType;
-                Duration = duration;
-                Interval = 1000;
-            }
-
-            private GameLiving Attacker { get; set; }
-            private int Duration { get; set; }
-            private AttackData.eAttackType AttackType { get; set; }
-
-			/// <summary>
-			/// Called on every timer tick
-			/// </summary>
-			protected override void OnTick()
-            {
-                GameLiving target = (GameLiving)m_actionSource;
-                Duration -= Interval;
-
-                if (Duration <= 0)
-                {
-                    Stop();
-                    Interrupt(target);
-                    target.IsBeingInterrupted = false;
-                    target.Notify(GameLivingEvent.InterruptExpired, target);
-                    return;
-                }
-
-                Interrupt(target);
-            }
-
-            private void Interrupt(GameLiving target)
-            {
-                if (!target.IsAlive || target.ObjectState != eObjectState.Active)
-                    return;
-
-                if (target.CurrentSpellHandler != null)
-                {
-                    if (!target.CurrentSpellHandler.CasterIsAttacked(Attacker))
-                        return;
-                }
-
-                if (target.AttackState && target.ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-                    target.OnInterruptTick(Attacker, AttackType);
-
-                target.Notify(GameLivingEvent.Interrupted, target, new InterruptedEventArgs(Attacker));
-            }
-		}*/
-
-
         protected long m_interruptTime = 0;
         public long InterruptTime
         {
@@ -4813,15 +4729,15 @@ namespace DOL.GS
 		/// <summary>
 		/// The default frequency of regenerating health in milliseconds
 		/// </summary>
-		protected short m_healthRegenerationPeriod;
+		protected const ushort m_healthRegenerationPeriod = 3000;
 		/// <summary>
 		/// The default frequency of regenerating power in milliseconds
 		/// </summary>
-		protected short m_powerRegenerationPeriod;
+		protected const ushort m_powerRegenerationPeriod = 3000;
 		/// <summary>
 		/// The default frequency of regenerating endurance in milliseconds
 		/// </summary>
-		protected short m_enduRegenerationPeriod;
+		protected const ushort m_enduRegenerationPeriod = 1000;
 		/// <summary>
 		/// The lock object for lazy regen timers initialization
 		/// </summary>
@@ -6239,15 +6155,15 @@ namespace DOL.GS
 		#endregion
 		#region ControlledNpc
 
-		private int pet_count = 0;
+		private byte m_petCount = 0;
 
 		/// <summary>
-		/// Gets the pet count for the player
+		/// Gets the pet count for this living
 		/// </summary>
-		public int PetCounter
+		public byte PetCount
 		{
-			get { return pet_count; }
-			set { pet_count = value; }
+			get { return m_petCount; }
+			set { m_petCount = value; }
 		}
 
 		/// <summary>
@@ -6307,16 +6223,16 @@ namespace DOL.GS
 
 		#region Group
 		/// <summary>
-		/// Holds the group of this player
+		/// Holds the group of this living
 		/// </summary>
 		protected Group m_group;
 		/// <summary>
-		/// Holds the index of this player inside of the group
+		/// Holds the index of this living inside of the group
 		/// </summary>
-		protected int m_groupIndex;
+		protected byte m_groupIndex;
 
 		/// <summary>
-		/// Gets or sets the player's group
+		/// Gets or sets the living's group
 		/// </summary>
 		public Group Group
 		{
@@ -6325,9 +6241,9 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the index of this player inside of the group
+		/// Gets or sets the index of this living inside of the group
 		/// </summary>
-		public int GroupIndex
+		public byte GroupIndex
 		{
 			get { return m_groupIndex; }
 			set { m_groupIndex = value; }
@@ -6349,9 +6265,6 @@ namespace DOL.GS
 			m_activeQuiverSlot = eActiveQuiverSlot.None;
 			m_rangedAttackState = eRangedAttackState.None;
 			m_rangedAttackType = eRangedAttackType.Normal;
-			m_healthRegenerationPeriod = 3000;
-			m_powerRegenerationPeriod = 3000;
-			m_enduRegenerationPeriod = 1000;
 			m_xpGainers = new HybridDictionary();
 			m_effects = CreateEffectsList();
 			m_concEffects = new ConcentrationList(this);
