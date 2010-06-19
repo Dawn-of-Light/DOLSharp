@@ -45,10 +45,16 @@ namespace DOL.GS.PacketHandler
 		/// <param name="preprocessorId">the ID of the preprocessor for the given packet ID</param>
 		public static void RegisterPacketDefinition(int packetId, int preprocessorId)
 		{
-			// going to assume that if key already exists this is simply an overload of the packet and should use the same preprocessor
-			if (_packetIdToPreprocessMap.ContainsKey(packetId) == false)
+			// if they key doesn't exist, add it, and if it does, replace it
+			if (!_packetIdToPreprocessMap.ContainsKey(packetId))
+			{
 				_packetIdToPreprocessMap.Add(packetId, preprocessorId);
-		}
+			}
+			else
+			{
+				_packetIdToPreprocessMap[packetId] = preprocessorId;
+			}
+	}
 
 		/// <summary>
 		/// Registers a preprocessor.
