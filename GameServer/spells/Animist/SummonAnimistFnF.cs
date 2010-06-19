@@ -55,7 +55,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (Caster.PetCounter >= Properties.TURRET_PLAYER_CAP_COUNT)
+			if (Caster.PetCount >= Properties.TURRET_PLAYER_CAP_COUNT)
 			{
 				MessageToCaster("You cannot control anymore Turrets!", eChatType.CT_SpellResisted);
 				return false;
@@ -79,7 +79,7 @@ namespace DOL.GS.Spells
       (pet.Brain as TurretBrain).Think();
       //[Ganrod] Nidel: Set only one spell.
       (pet as TurretPet).TurretSpell = pet.Spells[0] as Spell;
-      Caster.PetCounter++;
+      Caster.PetCount++;
     }
 
 	  protected override void SetBrainToOwner(IControlledBrain brain)
@@ -130,7 +130,7 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			Caster.PetCounter--;
+			Caster.PetCount--;
 
 			return base.OnEffectExpires(effect, noMessages);
 		}

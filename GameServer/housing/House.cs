@@ -842,7 +842,7 @@ namespace DOL.GS.Housing
 			          		Z = Z + zaddition,
 			          		Level = 50,
 			          		Realm = (eRealm) realm,
-			          		HouseNumber = HouseNumber,
+			          		HouseNumber = (ushort)HouseNumber,
 			          		Name = "GameConsignmentMerchant Merchant",
 			          		Heading = heading,
 			          		Model = 144

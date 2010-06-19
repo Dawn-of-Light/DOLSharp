@@ -2251,12 +2251,12 @@ namespace DOL.GS.Commands
 
 		private void house(GameClient client, GameNPC targetMob, string[] args)
 		{
-			int house;
+			ushort house;
 			House H;
 
 			try
 			{
-				house = Convert.ToInt32(args[2]);
+				house = Convert.ToUInt16(args[2]);
 				H = HouseMgr.GetHouse(house);
 
 				if (H != null)
@@ -2349,9 +2349,9 @@ namespace DOL.GS.Commands
 
 		private void bodytype(GameClient client, GameNPC targetMob, string[] args)
 		{
-			int type;
+			ushort type;
 
-			if (args.Length > 2 && int.TryParse(args[2], out type))
+			if (args.Length > 2 && ushort.TryParse(args[2], out type))
 			{
 				targetMob.BodyType = type;
 				targetMob.SaveIntoDatabase();

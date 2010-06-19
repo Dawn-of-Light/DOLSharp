@@ -62,7 +62,7 @@ namespace DOL.Database
 		private int m_npcTemplateID;
 		private int m_race;
 		private int m_bodyType;
-		private int m_inHouse;
+		private int m_houseNumber;
 		private string m_brain;
 		private string m_pathID;
 		private int m_maxdistance;
@@ -86,7 +86,7 @@ namespace DOL.Database
 			m_respawnInterval = -1; // random respawn by default
 			m_guild = "";
 			m_bodyType = 0;
-			m_inHouse = -1;
+			m_houseNumber = 0;
 			m_brain = "";
 			m_pathID = "";
 			m_maxdistance = 0;
@@ -605,8 +605,8 @@ namespace DOL.Database
 		[DataElement(AllowDbNull = false)]
 		public int HouseNumber
 		{
-			get { return m_inHouse; }
-			set { Dirty = true; m_inHouse = value; }
+			get { return m_houseNumber; }
+			set { Dirty = true; m_houseNumber = value; }
 		}
 
 		/// <summary>

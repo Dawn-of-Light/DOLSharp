@@ -272,7 +272,7 @@ namespace DOL.GS
 			if (i >= m_controlledNpcBrain.Length)
 				return false;
 			m_controlledNpcBrain[i] = controlledNpc;
-			PetCounter++;
+			PetCount++;
 			return base.AddControlledNpc(controlledNpc);
 		}
 
@@ -309,7 +309,7 @@ namespace DOL.GS
 					m_controlledNpcBrain[i] = null;
 
 					//Only decrement, we just lost one pet
-					PetCounter--;
+					PetCount--;
 
 					return base.RemoveControlledNpc(controlledNpc);
 				}
