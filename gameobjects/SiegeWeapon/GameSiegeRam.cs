@@ -193,7 +193,7 @@ namespace DOL.GS
 			}
 		}
 
-		public override int MaxSpeed
+		public override short MaxSpeed
 		{
 			get
 			{
@@ -205,7 +205,7 @@ namespace DOL.GS
 					if (ab != null)
 						speed *= 1 + (ab.Amount / 100);
 				}
-				return (int)speed;
+				return (short)speed;
 			}
 		}
 	}

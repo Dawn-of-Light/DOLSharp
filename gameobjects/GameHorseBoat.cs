@@ -71,7 +71,7 @@ namespace DOL.GS
 			}
 		}
 
-		public override int MaxSpeed
+		public override short MaxSpeed
 		{
 			get
 			{

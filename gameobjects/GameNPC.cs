@@ -647,7 +647,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the current speed of the npc
 		/// </summary>
-		public override int CurrentSpeed
+		public override short CurrentSpeed
 		{
 			set
 			{
@@ -1224,7 +1224,7 @@ namespace DOL.GS
 		/// <param name="ty"></param>
 		/// <param name="tz"></param>
 		/// <param name="speed"></param>
-		public virtual void WalkTo(int targetX, int targetY, int targetZ, int speed)
+		public virtual void WalkTo(int targetX, int targetY, int targetZ, short speed)
 		{
 			WalkTo(new Point3D(targetX, targetY, targetZ), speed);
 		}
@@ -1234,7 +1234,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="p"></param>
 		/// <param name="speed"></param>
-		public virtual void WalkTo(IPoint3D target, int speed)
+		public virtual void WalkTo(IPoint3D target, short speed)
 		{
 			if (IsTurningDisabled)
 				return;
@@ -1278,7 +1278,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void WalkToSpawn()
 		{
-			WalkToSpawn((int) (MaxSpeed/2.0));
+			WalkToSpawn((short)(MaxSpeed/2.0));
 		}
 
 		/// <summary>
@@ -1294,7 +1294,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Walk to the spawn point with specified speed
 		/// </summary>
-		public virtual void WalkToSpawn(int speed)
+		public virtual void WalkToSpawn(short speed)
 		{
 			StopAttack();
 			StopFollowing();
@@ -1319,7 +1319,7 @@ namespace DOL.GS
 		/// is called
 		/// </summary>
 		/// <param name="speed">walk speed</param>
-		public virtual void Walk(int speed)
+		public virtual void Walk(short speed)
 		{
 			Notify(GameNPCEvent.Walk, this, new WalkEventArgs(speed));
 
@@ -1618,7 +1618,7 @@ namespace DOL.GS
 		/// let the npc travel on its path
 		/// </summary>
 		/// <param name="speed">Speed on path</param>
-		public void MoveOnPath(int speed)
+		public void MoveOnPath(short speed)
 		{
 			if (IsMovingOnPath)
 				StopMovingOnPath();
@@ -1648,7 +1648,7 @@ namespace DOL.GS
 			if (CurrentWayPoint != null)
 			{
 				GameEventMgr.AddHandler(this, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnArriveAtWaypoint));
-				WalkTo(CurrentWayPoint, Math.Min(speed, CurrentWayPoint.MaxSpeed));
+				WalkTo(CurrentWayPoint, Math.Min(speed, (short)CurrentWayPoint.MaxSpeed));
 				m_IsMovingOnPath = true;
 				Notify(GameNPCEvent.PathMoveStarts, this);
 			}
@@ -1750,7 +1750,7 @@ namespace DOL.GS
 
 				if (npc.CurrentWayPoint != null)
 				{
-					npc.WalkTo(npc.CurrentWayPoint, Math.Min(npc.PathingNormalSpeed, npc.CurrentWayPoint.MaxSpeed));
+					npc.WalkTo(npc.CurrentWayPoint, (short)Math.Min(npc.PathingNormalSpeed, npc.CurrentWayPoint.MaxSpeed));
 				}
 				else
 				{
@@ -1843,7 +1843,7 @@ namespace DOL.GS
 			m_y = npc.Y;
 			m_z = npc.Z;
 			m_Heading = (ushort)(npc.Heading & 0xFFF);
-			m_maxSpeedBase = npc.Speed;
+			m_maxSpeedBase = (short)npc.Speed;
 			m_currentSpeed = 0;
 			CurrentRegionID = npc.Region;
 			Realm = (eRealm)npc.Realm;
@@ -1944,7 +1944,7 @@ namespace DOL.GS
 				}
 			}
 
-			m_race = npc.Race;
+			m_race = (short)npc.Race;
 			m_bodyType = npc.BodyType;
 			m_houseNumber = npc.HouseNumber;
 			m_maxdistance = npc.MaxDistance;
@@ -2127,7 +2127,7 @@ namespace DOL.GS
 			#region Misc Stats
 			this.MaxDistance = template.MaxDistance;
 			this.TetherRange = template.TetherRange;
-			this.Race = template.Race;
+			this.Race = (short)template.Race;
 			this.BodyType = template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = template.Flags;
@@ -2658,13 +2658,13 @@ namespace DOL.GS
 				if(path != null)
 				{
 					CurrentWayPoint = path;
-					MoveOnPath(path.MaxSpeed);
+					MoveOnPath((short)path.MaxSpeed);
 				}
 			}
 
 			if (m_houseNumber > 0 && !(this is GameConsignmentMerchant))
 			{
-				log.Info("NPC '" + Name + "' added to house N�" + m_houseNumber);
+				log.Info("NPC '" + Name + "' added to house " + m_houseNumber);
 				CurrentHouse = HouseMgr.GetHouse(m_houseNumber);
 				if (CurrentHouse == null)
 					log.Warn("House " + CurrentHouse + " for NPC " + Name + " doesn't exist !!!");
@@ -3474,7 +3474,7 @@ namespace DOL.GS
 			{
 				base.Health = value;
 				//Slow mobs down when they are hurt!
-				int maxSpeed = MaxSpeed;
+				short maxSpeed = MaxSpeed;
 				if (CurrentSpeed > maxSpeed)
 					CurrentSpeed = maxSpeed;
 			}
