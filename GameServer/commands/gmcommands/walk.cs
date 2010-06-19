@@ -64,14 +64,14 @@ namespace DOL.GS.Commands
 			int xoff = 0;
 			int yoff = 0;
 			int zoff = 0;
-			ushort speed = 50;
+			short speed = 50;
 
 			try
 			{
 				xoff = Convert.ToInt16(args[1]);
 				yoff = Convert.ToInt16(args[2]);
 				zoff = Convert.ToInt16(args[3]);
-				speed = Convert.ToUInt16(args[4]);
+				speed = Convert.ToInt16(args[4]);
 			}
 			catch (Exception)
 			{

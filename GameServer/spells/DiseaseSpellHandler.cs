@@ -146,7 +146,7 @@ namespace DOL.GS.Spells
 			GameNPC npc = effect.Owner as GameNPC;
 			if (npc != null)
 			{
-				int maxSpeed = npc.MaxSpeed;
+				short maxSpeed = npc.MaxSpeed;
 				if (npc.CurrentSpeed > maxSpeed)
 					npc.CurrentSpeed = maxSpeed;
 			}

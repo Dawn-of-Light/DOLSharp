@@ -31,7 +31,7 @@ namespace DOL.Database
 		static string boat_owner;
 		static string boat_name;
 		static ushort boat_model;
-		static int boat_maxspeedbase;
+		static short boat_maxspeedbase;
 
 		public DBBoat()
 		{
@@ -115,7 +115,7 @@ namespace DOL.Database
 		/// The Max speed base of the boat
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public int BoatMaxSpeedBase
+		public short BoatMaxSpeedBase
 		{
 			get
 			{

@@ -213,7 +213,7 @@ namespace DOL.GS.Commands
 				DisplayMessage(client, "No path created yet! Use /path create first!");
 				return;
 			}
-			int speed = Math.Min(((GameNPC)client.Player.TargetObject).MaxSpeedBase, path.MaxSpeed);
+			short speed = Math.Min(((GameNPC)client.Player.TargetObject).MaxSpeedBase, (short)path.MaxSpeed);
 
 			// clear any current path
 			((GameNPC)client.Player.TargetObject).CurrentWayPoint = null;

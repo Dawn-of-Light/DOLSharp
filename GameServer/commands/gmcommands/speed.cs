@@ -45,9 +45,9 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-            ushort speed;
+            short speed;
 
-            if ( ushort.TryParse( args[1], out speed ) )
+            if ( short.TryParse( args[1], out speed ) )
             {
                 target.MaxSpeedBase = speed;
 

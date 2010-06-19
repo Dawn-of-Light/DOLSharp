@@ -20,7 +20,7 @@ namespace DOL.GS
         private string boat_owner;
         private string boat_name;
         private ushort boat_model;
-        private int boat_maxspeedbase;
+        private short boat_maxspeedbase;
 
 		private RegionTimer m_removeTimer = null;
 
@@ -96,7 +96,7 @@ namespace DOL.GS
             }
         }
 
-        public override int MaxSpeedBase
+        public override short MaxSpeedBase
         {
             get
             {
