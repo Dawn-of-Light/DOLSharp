@@ -270,8 +270,8 @@ namespace DOL.GS.GameEvents
 							//We set our new speed with a small random
 							//variance up and down
 							Random rnd = new Random();
-							int speed = CurrentSpeed + rnd.Next(20) - 10;
-							CurrentSpeed = (ushort) speed;
+							short speed = (short)(CurrentSpeed + rnd.Next(20) - 10);
+							CurrentSpeed = speed;
 
 							//If our speed drops below 500 we set it to 500
 							//if it get's higher than 550 we set it to 550
@@ -309,7 +309,7 @@ namespace DOL.GS.GameEvents
 				m_currentPathPoint++;
 				//Walk to the target spot ... our speed is 500+random 20
 				Random rnd = new Random();
-				WalkTo(x, y, 0, (ushort) (500 + rnd.Next(20)));
+				WalkTo(x, y, 0, (short)(500 + rnd.Next(20)));
 			}
 
 			//This function is used to return the next pathpoint for a horse

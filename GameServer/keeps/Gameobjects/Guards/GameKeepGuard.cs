@@ -848,7 +848,7 @@ namespace DOL.GS.Keeps
 		/// <param name="ty"></param>
 		/// <param name="tz"></param>
 		/// <param name="speed"></param>
-		public override void WalkTo(int tx, int ty, int tz, int speed)
+		public override void WalkTo(int tx, int ty, int tz, short speed)
 		{
 			int offX = 0; int offY = 0;
 			if (IsMovingOnPath && PatrolGroup != null)

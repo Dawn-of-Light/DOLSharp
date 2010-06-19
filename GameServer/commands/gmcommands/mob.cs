@@ -701,9 +701,9 @@ namespace DOL.GS.Commands
 			}
 
 
-			int raceID = 0;
+			short raceID = 0;
 
-			if (!int.TryParse(args[2], out raceID))
+			if (!short.TryParse(args[2], out raceID))
 			{
 				string raceName = string.Join(" ", args, 2, args.Length - 2);
 
@@ -715,7 +715,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-					raceID = npcRace.ID;
+					raceID = (short)npcRace.ID;
 				}
 			}
 
@@ -1172,11 +1172,11 @@ namespace DOL.GS.Commands
 
 		private void speed(GameClient client, GameNPC targetMob, string[] args)
 		{
-			int maxSpeed;
+			short maxSpeed;
 
 			try
 			{
-				maxSpeed = Convert.ToUInt16(args[2]);
+				maxSpeed = Convert.ToInt16(args[2]);
 				targetMob.MaxSpeedBase = maxSpeed;
 				targetMob.SaveIntoDatabase();
 				client.Out.SendMessage("Mob MaxSpeed changed to: " + targetMob.MaxSpeedBase, eChatType.CT_System, eChatLoc.CL_SystemWindow);

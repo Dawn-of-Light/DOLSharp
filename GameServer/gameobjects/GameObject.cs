@@ -424,7 +424,7 @@ namespace DOL.GS
 		protected string m_name;
 		
 		/// <summary>
-		/// The name of the Object
+		/// The guild name of the Object
 		/// </summary>
 		protected string m_guildName;
 

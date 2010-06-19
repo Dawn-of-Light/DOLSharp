@@ -152,7 +152,7 @@ namespace DOL.AI.Brain
             {
                 PathPoint path = MovementMgr.LoadPath(Body.PathID);
                 Body.CurrentWayPoint = path;
-                Body.MoveOnPath(path.MaxSpeed);
+				Body.MoveOnPath((short)path.MaxSpeed);
             }
 
             //If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
