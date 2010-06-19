@@ -164,12 +164,12 @@ namespace DOL.GS
 		/// </summary>
 		int AggroRange { get;}
 
-		int Race { get; }
+		ushort Race { get; }
 
 		/// <summary>
 		/// Gets the body type of the npc
 		/// </summary>
-		int BodyType { get;}
+		ushort BodyType { get;}
 		
 		/// <summary>
 		/// The Mob's max distance from its spawn before return automatically

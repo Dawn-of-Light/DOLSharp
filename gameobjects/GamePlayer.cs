@@ -1486,7 +1486,7 @@ namespace DOL.GS
 		/// <summary>
 		/// helper state var for different release phases
 		/// </summary>
-		private int m_releasePhase = 0;
+		private byte m_releasePhase = 0;
 
 		/// <summary>
 		/// callback every second to control realtime release
@@ -1529,7 +1529,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The delay to wait until xp is regained, in milliseconds
 		/// </summary>
-		protected const int PRAY_DELAY = 5000;
+		protected const ushort PRAY_DELAY = 5000;
 		/// <summary>
 		/// Property that saves the gravestone in the pray timer
 		/// </summary>
@@ -14586,7 +14586,7 @@ namespace DOL.GS
 
 			m_saveInDB = true; // always save char data in db
 			m_class = new DefaultCharacterClass();
-			m_groupIndex = -1;
+			m_groupIndex = 0xFF;
 			LoadFromDatabase(theChar);
 			m_currentAreas = new ArrayList();
 		}

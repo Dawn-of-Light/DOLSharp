@@ -62,20 +62,20 @@ namespace DOL.GS
 		// Normal = 1
 		// Big = 2
 		// Huge = 3
-		private int m_FormationSpacing = 1;
+		private byte m_formationSpacing = 1;
 
 		/// <summary>
 		/// The Minions's x-offset from it's commander
 		/// </summary>
-		public int FormationSpacing
+		public byte FormationSpacing
 		{
-			get { return m_FormationSpacing; }
+			get { return m_formationSpacing; }
 			set
 			{
 				//BD range values vary from 1 to 3.  It is more appropriate to just ignore the
 				//incorrect values than throw an error since this isn't a very important area.
 				if (value > 0 && value < 4)
-					m_FormationSpacing = value;
+					m_formationSpacing = value;
 			}
 		}
 
@@ -344,21 +344,21 @@ namespace DOL.GS
 			set { m_isConfused = value; }
 		}
 
-		private int m_bodyType;
+		private ushort m_bodyType;
 		/// <summary>
 		/// The NPC's body type
 		/// </summary>
-		public int BodyType
+		public ushort BodyType
 		{
 			get { return m_bodyType; }
 			set { m_bodyType = value; }
 		}
 
-		private int m_houseNumber;
+		private ushort m_houseNumber;
 		/// <summary>
 		/// The NPC's current house
 		/// </summary>
-		public int HouseNumber
+		public ushort HouseNumber
 		{
 			get { return m_houseNumber; }
 			set { m_houseNumber = value; }
@@ -669,7 +669,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets sets the speed for traveling on path
 		/// </summary>
-		public int PathingNormalSpeed
+		public short PathingNormalSpeed
 		{
 			get { return m_pathingNormalSpeed; }
 			set { m_pathingNormalSpeed = value; }
@@ -677,7 +677,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Stores the speed for traveling on path
 		/// </summary>
-		protected int m_pathingNormalSpeed;
+		protected short m_pathingNormalSpeed;
 
 		/// <summary>
 		/// Gets the current X of this living. Don't modify this property
@@ -1833,36 +1833,36 @@ namespace DOL.GS
 			base.LoadFromDatabase(obj);
 			if (!(obj is Mob)) return;
 			m_loadedFromScript = false;
-			Mob npc = (Mob)obj;
-			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(npc.NPCTemplateID);
+			Mob dbMob = (Mob)obj;
+			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID);
 			if (npcTemplate != null)
 				LoadTemplate(npcTemplate);
-			Name = npc.Name;
-			GuildName = npc.Guild;
-			m_x = npc.X;
-			m_y = npc.Y;
-			m_z = npc.Z;
-			m_Heading = (ushort)(npc.Heading & 0xFFF);
-			m_maxSpeedBase = (short)npc.Speed;
+			Name = dbMob.Name;
+			GuildName = dbMob.Guild;
+			m_x = dbMob.X;
+			m_y = dbMob.Y;
+			m_z = dbMob.Z;
+			m_Heading = (ushort)(dbMob.Heading & 0xFFF);
+			m_maxSpeedBase = (short)dbMob.Speed;
 			m_currentSpeed = 0;
-			CurrentRegionID = npc.Region;
-			Realm = (eRealm)npc.Realm;
-			Model = npc.Model;
-			Size = npc.Size;
-			Level = npc.Level;	// health changes when GameNPC.Level changes
-			Flags = npc.Flags;
-			m_packageID = npc.PackageID;
+			CurrentRegionID = dbMob.Region;
+			Realm = (eRealm)dbMob.Realm;
+			Model = dbMob.Model;
+			Size = dbMob.Size;
+			Level = dbMob.Level;	// health changes when GameNPC.Level changes
+			Flags = dbMob.Flags;
+			m_packageID = dbMob.PackageID;
 
-			Strength = (short)npc.Strength;
-			Constitution = (short)npc.Constitution;
-			Dexterity = (short)npc.Dexterity;
-			Quickness = (short)npc.Quickness;
-			Intelligence = (short)npc.Intelligence;
-			Piety = (short)npc.Piety;
-			Charisma = (short)npc.Charisma;
-			Empathy = (short)npc.Empathy;
+			Strength = (short)dbMob.Strength;
+			Constitution = (short)dbMob.Constitution;
+			Dexterity = (short)dbMob.Dexterity;
+			Quickness = (short)dbMob.Quickness;
+			Intelligence = (short)dbMob.Intelligence;
+			Piety = (short)dbMob.Piety;
+			Charisma = (short)dbMob.Charisma;
+			Empathy = (short)dbMob.Empathy;
 
-			MeleeDamageType = (eDamageType)npc.MeleeDamageType;
+			MeleeDamageType = (eDamageType)dbMob.MeleeDamageType;
 			if (MeleeDamageType == 0)
 			{
 				MeleeDamageType = eDamageType.Slash;
@@ -1870,16 +1870,16 @@ namespace DOL.GS
 			m_activeWeaponSlot = eActiveWeaponSlot.Standard;
 			ActiveQuiverSlot = eActiveQuiverSlot.None;
 
-			m_faction = FactionMgr.GetFactionByID(npc.FactionID);
-			LoadEquipmentTemplateFromDatabase(npc.EquipmentTemplateID);
+			m_faction = FactionMgr.GetFactionByID(dbMob.FactionID);
+			LoadEquipmentTemplateFromDatabase(dbMob.EquipmentTemplateID);
 
-			if (npc.RespawnInterval == -1)
-				npc.RespawnInterval = 0;
-			m_respawnInterval = npc.RespawnInterval * 1000;
+			if (dbMob.RespawnInterval == -1)
+				dbMob.RespawnInterval = 0;
+			m_respawnInterval = dbMob.RespawnInterval * 1000;
 
-			m_pathID = npc.PathID;
+			m_pathID = dbMob.PathID;
 
-			if (npc.Brain != "")
+			if (dbMob.Brain != "")
 			{
 				try
 				{
@@ -1889,7 +1889,7 @@ namespace DOL.GS
 					ABrain brain = null;
 					foreach (Assembly asm in asms)
 					{
-						brain = (ABrain)asm.CreateInstance(npc.Brain, false);
+						brain = (ABrain)asm.CreateInstance(dbMob.Brain, false);
 						if (brain != null)
 							break;
 					}
@@ -1898,15 +1898,15 @@ namespace DOL.GS
 				}
 				catch
 				{
-					log.ErrorFormat("GameNPC error in LoadFromDatabase: can not instantiate brain of type {0} for npc {1}, name = {2}.", npc.Brain, npc.ClassType, npc.Name);
+					log.ErrorFormat("GameNPC error in LoadFromDatabase: can not instantiate brain of type {0} for npc {1}, name = {2}.", dbMob.Brain, dbMob.ClassType, dbMob.Name);
 				}
 			}
 
 			IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 			{
-				aggroBrain.AggroLevel = npc.AggroLevel;
-				aggroBrain.AggroRange = npc.AggroRange;
+				aggroBrain.AggroLevel = dbMob.AggroLevel;
+				aggroBrain.AggroRange = dbMob.AggroRange;
 				if(aggroBrain.AggroRange == Constants.USE_AUTOVALUES)
 				{
 					if (Realm == eRealm.None)
@@ -1944,14 +1944,14 @@ namespace DOL.GS
 				}
 			}
 
-			m_race = (short)npc.Race;
-			m_bodyType = npc.BodyType;
-			m_houseNumber = npc.HouseNumber;
-			m_maxdistance = npc.MaxDistance;
-			m_roamingRange = npc.RoamingRange;
-			m_isCloakHoodUp = npc.IsCloakHoodUp;
-			m_visibleActiveWeaponSlots = npc.VisibleWeaponSlots;
-			Gender = (Gender)npc.Gender;
+			m_race = (short)dbMob.Race;
+			m_bodyType = (ushort)dbMob.BodyType;
+			m_houseNumber = (ushort)dbMob.HouseNumber;
+			m_maxdistance = dbMob.MaxDistance;
+			m_roamingRange = dbMob.RoamingRange;
+			m_isCloakHoodUp = dbMob.IsCloakHoodUp;
+			m_visibleActiveWeaponSlots = dbMob.VisibleWeaponSlots;
+			Gender = (Gender)dbMob.Gender;
 		}
 
 		/// <summary>
@@ -2128,7 +2128,7 @@ namespace DOL.GS
 			this.MaxDistance = template.MaxDistance;
 			this.TetherRange = template.TetherRange;
 			this.Race = (short)template.Race;
-			this.BodyType = template.BodyType;
+			this.BodyType = (ushort)template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = template.Flags;
 			this.MeleeDamageType = template.MeleeDamageType;
@@ -4685,7 +4685,6 @@ namespace DOL.GS
 			//			CurrentSpeed = 0; // cause position addition recalculation
 			MaxSpeedBase = 200;
 			GuildName = "";
-			m_healthRegenerationPeriod = 3000;
 
 			m_brainSync = m_brains.SyncRoot;
 			m_followTarget = new WeakRef(null);
