@@ -66,8 +66,8 @@ namespace DOL.GS
 		protected IList m_abilities;
 		protected byte m_aggroLevel;
 		protected int m_aggroRange;
-		protected int m_race;
-		protected int m_bodyType;
+		protected ushort m_race;
+		protected ushort m_bodyType;
 		protected int m_maxdistance;
 		protected int m_tetherRange;
 
@@ -171,7 +171,8 @@ namespace DOL.GS
 			m_inventory = data.EquipmentTemplateID;
 			m_aggroLevel = data.AggroLevel;
 			m_aggroRange = data.AggroRange;
-			m_bodyType = data.BodyType;
+			m_race = (ushort)data.Race;
+			m_bodyType = (ushort)data.BodyType;
 			m_maxdistance = data.MaxDistance;
 			m_tetherRange = data.TetherRange;
 		}
@@ -484,13 +485,13 @@ namespace DOL.GS
 			set { m_aggroRange = value; }
 		}
 
-		public int Race
+		public ushort Race
 		{
 			get { return m_race; }
 			set { m_race = value; }
 		}
 
-		public int BodyType
+		public ushort BodyType
 		{
 			get { return m_bodyType; }
 			set { m_bodyType = value; }

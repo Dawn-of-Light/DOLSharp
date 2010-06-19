@@ -43,7 +43,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (Caster.PetCounter >= ServerProperties.Properties.THEURGIST_PET_CAP)
+			if (Caster.PetCount >= ServerProperties.Properties.THEURGIST_PET_CAP)
 			{
 				MessageToCaster("You have too many controlled creatures!", eChatType.CT_SpellResisted);
 				return false;
@@ -66,7 +66,7 @@ namespace DOL.GS.Spells
             (pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
 			(pet.Brain as TheurgistPetBrain).Think();
 
-			Caster.PetCounter++;
+			Caster.PetCount++;
 		}
 
 		/// <summary>
@@ -77,8 +77,8 @@ namespace DOL.GS.Spells
 		/// <returns>Immunity timer (in milliseconds).</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			if (Caster.PetCounter > 0)
-				Caster.PetCounter--;
+			if (Caster.PetCount > 0)
+				Caster.PetCount--;
 
 			return base.OnEffectExpires(effect, noMessages);
 		}

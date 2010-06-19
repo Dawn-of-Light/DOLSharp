@@ -69,7 +69,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (Caster is GamePlayer && (((GamePlayer)Caster).ControlledNpcBrain.Body.ControlledNpcList == null || ((GamePlayer)Caster).ControlledNpcBrain.Body.PetCounter >= ((GamePlayer)Caster).ControlledNpcBrain.Body.ControlledNpcList.Length))
+			if (Caster is GamePlayer && (((GamePlayer)Caster).ControlledNpcBrain.Body.ControlledNpcList == null || ((GamePlayer)Caster).ControlledNpcBrain.Body.PetCount >= ((GamePlayer)Caster).ControlledNpcBrain.Body.ControlledNpcList.Length))
 			{
 				MessageToCaster("Your general already has as many followers as he can command!", eChatType.CT_SpellResisted);
 				return false;
