@@ -709,6 +709,8 @@ namespace DOL.GS.Keeps
 
 		#region Database
 
+		string m_dataObjectID = "";
+
 		/// <summary>
 		/// Load the guard from the database
 		/// </summary>
@@ -723,7 +725,8 @@ namespace DOL.GS.Keeps
 					AbstractGameKeep keep = (area as KeepArea).Keep;
 					Component = new GameKeepComponent();
 					Component.Keep = keep;
-					Component.Keep.Guards.Add(mobobject.ObjectId, this);
+					m_dataObjectID = mobobject.ObjectId;
+					Component.Keep.Guards.Add(m_dataObjectID, this);
 					break;
 				}
 			}
@@ -735,20 +738,32 @@ namespace DOL.GS.Keeps
 		{
 			if (Component != null)
 			{
-				Component.Keep.Guards.Remove(this.ObjectID);
+				if (Component.Keep.Guards.ContainsKey(m_dataObjectID))
+				{
+					Component.Keep.Guards.Remove(m_dataObjectID);
+				}
+				else
+				{
+					log.Warn("Can't find " + Name + " in Component Guard list.");
+				}
+
 				Component.Delete();
 			}
 
 			HookPoint = null;
 			Component = null;
+			Inventory.ClearInventory();
 			Inventory = null;
 			Position = null;
 			TempProperties.removeAllProperties();
 
 			base.Delete();
-			CurrentRegion = null;
-		}
 
+			SetOwnBrain(null);
+			CurrentRegion = null;
+
+			GameEventMgr.RemoveAllHandlersForObject(this);
+		}
 
 		public override void Delete()
 		{
