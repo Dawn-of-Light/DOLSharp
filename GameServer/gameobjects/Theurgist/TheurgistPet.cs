@@ -8,10 +8,6 @@ namespace DOL.GS
 	{
 		public TheurgistPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
 
-		public override int MaxHealth
-		{
-			get { return Level * 15; }
-		}
-		public override void OnAttackedByEnemy(AttackData ad) { }
+		public override void OnAttackedByEnemy(AttackData ad) { /* do nothing */ }
 	}
 }
