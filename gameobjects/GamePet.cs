@@ -168,13 +168,20 @@ namespace DOL.GS
 		#region Stats
 
 		/// <summary>
-		/// Base strength. 
+		/// Pet strength is determined by using template stength as a percentage multiplier
+		/// So A template value of 50 would mean pet strength is 50% of normal, 150 = 150% of normal, etc
 		/// </summary>
 		public override short Strength
 		{
 			get
 			{
-				return (short)(20 + Level * 6);
+				short str = (short)(20 + Level * 6);
+				if (base.Strength > 0)
+				{
+					str = (short)(str * base.Strength * .01);
+				}
+
+				return Math.Max((short)1, str);
 			}
 		}
 
@@ -185,19 +192,24 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (short)(60 + Level / 2);
+				if (base.Constitution == 0)
+					return 30;
+				else
+					return base.Constitution;
 			}
 		}
 
 		/// <summary>
-		/// Base dexterity. Make greater necroservant slightly more dextrous than
-		/// all the other pets.
+		/// Base dexterity. 
 		/// </summary>
 		public override short Dexterity
 		{
 			get
 			{
-				return 60;
+				if (base.Dexterity == 0)
+					return 30;
+				else
+					return base.Dexterity;
 			}
 		}
 
@@ -208,9 +220,30 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (short)(60 + Level / 3);
+				if (base.Quickness == 0)
+					return 30;
+				else
+					return base.Quickness;
 			}
 		}
+
+		public override int MaxHealth
+		{
+			get
+			{
+				int hp = base.MaxHealth;
+				double hpPercent = 1.0;
+
+				// apply boosted hp reduction
+				if (Constitution > 0 && Constitution < 30)
+				{
+					hpPercent = (Constitution * 3.4) * .01;
+				}
+
+				return (int)(hp * hpPercent);
+			}
+		}
+
 
 		#endregion
 
