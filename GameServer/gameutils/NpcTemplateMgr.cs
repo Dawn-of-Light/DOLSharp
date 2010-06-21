@@ -100,10 +100,19 @@ namespace DOL.GS
 				lock (m_mobTemplates.SyncRoot)
 				{
 					var objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
+
+					// remove all the db templates
+					foreach (DBNpcTemplate dbTemplate in objs)
+					{
+						RemoveTemplate(new NpcTemplate(dbTemplate));
+					}
+
+					// add them back in
 					foreach (DBNpcTemplate dbTemplate in objs)
 					{
 						AddTemplate(new NpcTemplate(dbTemplate));
 					}
+
 					return true;
 				}
 			}
@@ -111,6 +120,21 @@ namespace DOL.GS
 			{
 				log.Error(e);
 				return false;
+			}
+		}
+
+		/// <summary>
+		/// Removes a template
+		/// </summary>
+		/// <param name="template">mob template</param>
+		public static void RemoveTemplate(INpcTemplate template)
+		{
+			lock (m_mobTemplates.SyncRoot)
+			{
+				if (m_mobTemplates[template.TemplateId] != null)
+				{
+					m_mobTemplates[template.TemplateId] = null;
+				}
 			}
 		}
 
