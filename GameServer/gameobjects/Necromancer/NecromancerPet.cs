@@ -116,7 +116,7 @@ namespace DOL.GS
 			if (owner != null)
 			{
 				String message = String.Format("Hail, {0}. As my summoner, you may target me and say Arawn to learn more about the abilities I possess.",
-					(owner.PlayerCharacter.Gender == 0) ? "Master" : "Mistress");
+					(owner.DBCharacter.Gender == 0) ? "Master" : "Mistress");
 				SayTo(owner, eChatLoc.CL_SystemWindow, message);
 			}
 		}

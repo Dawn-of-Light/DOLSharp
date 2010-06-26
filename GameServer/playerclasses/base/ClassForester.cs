@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Forester, "Forester", "Forester")]
-	public class ClassForester : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Forester, "Forester", "Forester")]
+	public class ClassForester : DOL.GS.CharacterClassBase
 	{
 		public ClassForester()
 		{

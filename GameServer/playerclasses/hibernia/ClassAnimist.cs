@@ -25,17 +25,20 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Animist, "Animist", "Forester")]
-	public class ClassAnimist : ClassForester
+	[CharacterClassAttribute((int)eCharacterClass.Animist, "Animist", "Forester")]
+	public class ClassAnimist : CharacterClassAnimist
 	{
 		public ClassAnimist() : base() 
 		{
-			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.PathofAffinity");
 			m_specializationMultiplier = 10;
+			m_wsbase = 280;
+			m_baseHP = 560;
+			m_manaStat = eStat.INT;
+
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.PathofAffinity");
 			m_primaryStat = eStat.INT;
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.DEX;
-			m_manaStat = eStat.INT;
 		}
 
 		public override string GetTitle(int level) 
@@ -53,6 +56,11 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
+		public override eClassType ClassType
+		{
+			get { return eClassType.ListCaster; }
+		}
+
 		/// <summary>
 		/// Update all skills and add new for current level
 		/// </summary>
@@ -60,6 +68,21 @@ namespace DOL.GS.PlayerClass
 		public override void OnLevelUp(GamePlayer player)
 		{
 			base.OnLevelUp(player);
+
+			// Forester
+
+			// Specializations
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Arboreal_Path));
+
+			// Spell lines
+			player.AddSpellLine(SkillBase.GetSpellLine("Arboreal Path"));
+
+			// Abilities
+			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
+			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Cloth));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
+
+			// Animist
 
 			// Specializations
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Creeping_Path));

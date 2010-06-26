@@ -46,17 +46,17 @@ namespace DOL.GS.RealmAbilities
 				player.Out.SendMessage("You cannot use this ability while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.ControlledNpcBrain == null)
+			if (player.ControlledBrain == null)
 			{
 				player.Out.SendMessage("You must have a pet controlled to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (!player.IsWithinRadius( player.ControlledNpcBrain.Body, m_range ))
+			if (!player.IsWithinRadius( player.ControlledBrain.Body, m_range ))
 			{
 				player.Out.SendMessage("Your pet is too far away!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-            GameSpellEffect ml9=SpellHandler.FindEffectOnTarget(player.ControlledNpcBrain.Body,"SummonMastery");
+            GameSpellEffect ml9=SpellHandler.FindEffectOnTarget(player.ControlledBrain.Body,"SummonMastery");
             if (ml9 != null)
             {
                 player.Out.SendMessage("Your Pet already has an ability of this type active", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);

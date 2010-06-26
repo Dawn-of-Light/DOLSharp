@@ -24,7 +24,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Healer, "Healer", "Seer")]
+	[CharacterClassAttribute((int)eCharacterClass.Healer, "Healer", "Seer")]
 	public class ClassHealer : ClassSeer
 	{
 		public ClassHealer() : base() 

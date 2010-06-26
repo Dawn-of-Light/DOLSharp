@@ -48,13 +48,13 @@ namespace DOL.GS.Commands
 			}
 
 			//Check to see if the BD has a commander and minions
-			if (player.ControlledNpcBrain == null)
+			if (player.ControlledBrain == null)
 			{
 				client.Out.SendMessage("You don't have a commander!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			bool haveminion = false;
-			foreach (AI.Brain.IControlledBrain icb in player.ControlledNpcBrain.Body.ControlledNpcList)
+			foreach (AI.Brain.IControlledBrain icb in player.ControlledBrain.Body.ControlledNpcList)
 			{
 				if (icb != null)
 				{
@@ -72,15 +72,15 @@ namespace DOL.GS.Commands
 			{
 				//Triangle Formation
 				case "triangle":
-					player.ControlledNpcBrain.Body.Formation = GameNPC.eFormationType.Triangle;
+					player.ControlledBrain.Body.Formation = GameNPC.eFormationType.Triangle;
 					break;
 				//Line formation
 				case "line":
-					player.ControlledNpcBrain.Body.Formation = GameNPC.eFormationType.Line;
+					player.ControlledBrain.Body.Formation = GameNPC.eFormationType.Line;
 					break;
 				//Protect formation
 				case "protect":
-					player.ControlledNpcBrain.Body.Formation = GameNPC.eFormationType.Protect;
+					player.ControlledBrain.Body.Formation = GameNPC.eFormationType.Protect;
 					break;
 				default:
 					client.Out.SendMessage("Unrecognized argument: " + args[1], eChatType.CT_System, eChatLoc.CL_SystemWindow);

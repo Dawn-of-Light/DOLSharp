@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Druid, "Druid", "Naturalist")]
+	[CharacterClassAttribute((int)eCharacterClass.Druid, "Druid", "Naturalist")]
 	public class ClassDruid : ClassNaturalist
 	{
 		public ClassDruid() : base() 

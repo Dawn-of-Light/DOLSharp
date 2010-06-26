@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Warden, "Warden", "Naturalist")]
+	[CharacterClassAttribute((int)eCharacterClass.Warden, "Warden", "Naturalist")]
 	public class ClassWarden : ClassNaturalist
 	{
 		public ClassWarden() : base() 

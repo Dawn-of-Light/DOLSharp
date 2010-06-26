@@ -26,8 +26,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Mauler_Mid, "Mauler", "Viking")]
-	public class ClassMaulerMid : CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Mauler_Mid, "Mauler", "Viking")]
+	public class ClassMaulerMid : CharacterClassBase
 	{
 		public ClassMaulerMid()
 			: base()

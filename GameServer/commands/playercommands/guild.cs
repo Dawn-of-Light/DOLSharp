@@ -371,7 +371,7 @@ namespace DOL.GS.Commands
 								if (myclient == null)
 								{
 									// Patch 1.84: look for offline players
-									obj = GameServer.Database.SelectObject<Character>("Name='" + GameServer.Database.Escape(playername) + "'");
+									obj = GameServer.Database.SelectObject<DOLCharacters>("Name='" + GameServer.Database.Escape(playername) + "'");
 								}
 								else
 									obj = myclient.Player;
@@ -386,7 +386,7 @@ namespace DOL.GS.Commands
 							ushort guildRank = 9;
 							string plyName = "";
 							GamePlayer ply = obj as GamePlayer;
-							Character ch = obj as Character;
+							DOLCharacters ch = obj as DOLCharacters;
 							if (obj is GamePlayer)
 							{
 								plyName = ply.Name;
@@ -449,13 +449,13 @@ namespace DOL.GS.Commands
 
 							string playername = String.Join(" ", args, 2, args.Length - 2);
 							// Patch 1.84: look for offline players
-							var chs = GameServer.Database.SelectObjects<Character>("AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + client.Player.GuildID + "'");
+							var chs = GameServer.Database.SelectObjects<DOLCharacters>("AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + client.Player.GuildID + "'");
 							if (chs.Count > 0)
 							{
 								GameClient myclient = WorldMgr.GetClientByAccountName(playername, false);
 								string plys = "";
 								bool isOnline = (myclient != null);
-								foreach (Character ch in chs)
+								foreach (DOLCharacters ch in chs)
 								{
 									plys += (plys != "" ? "," : "") + ch.Name;
 									if (isOnline && ch.Name == myclient.Player.Name)
@@ -1043,7 +1043,7 @@ namespace DOL.GS.Commands
 								if (myclient == null)
 								{
 									// Patch 1.84: look for offline players
-									obj = GameServer.Database.SelectObject<Character>("Name='" + GameServer.Database.Escape(playername) + "'");
+									obj = GameServer.Database.SelectObject<DOLCharacters>("Name='" + GameServer.Database.Escape(playername) + "'");
 								}
 								else
 									obj = myclient.Player;
@@ -1058,7 +1058,7 @@ namespace DOL.GS.Commands
 							ushort guildRank = 9;
 							string plyName = "";
 							GamePlayer ply = obj as GamePlayer;
-							Character ch = obj as Character;
+							DOLCharacters ch = obj as DOLCharacters;
 							if (obj is GamePlayer)
 							{
 								plyName = ply.Name;
@@ -1142,7 +1142,7 @@ namespace DOL.GS.Commands
 								if (myclient == null)
 								{
 									// Patch 1.84: look for offline players
-									obj = GameServer.Database.SelectObject<Character>("Name='" + GameServer.Database.Escape(playername) + "'");
+									obj = GameServer.Database.SelectObject<DOLCharacters>("Name='" + GameServer.Database.Escape(playername) + "'");
 								}
 								else
 									obj = myclient.Player;
@@ -1157,7 +1157,7 @@ namespace DOL.GS.Commands
 							ushort guildRank = 1;
 							string plyName = "";
 							GamePlayer ply = obj as GamePlayer;
-							Character ch = obj as Character;
+							DOLCharacters ch = obj as DOLCharacters;
 							if (obj is GamePlayer)
 							{
 								plyName = ply.Name;
@@ -1523,7 +1523,7 @@ namespace DOL.GS.Commands
 								}
 								else
 								{
-									Character c = GameServer.Database.SelectObject<Character>("Name = '" + GameServer.Database.Escape(playername) + "'");
+									DOLCharacters c = GameServer.Database.SelectObject<DOLCharacters>("Name = '" + GameServer.Database.Escape(playername) + "'");
 									//if (c == null)
 									//c = (Character)GameServer.Database.SelectObject<CharacterArchive>("Name = '" + GameServer.Database.Escape(playername) + "'");
 
@@ -1535,11 +1535,11 @@ namespace DOL.GS.Commands
 
 									accountId = c.Name;
 								}
-								List<Character> chars = new List<Character>();
-								chars.AddRange(GameServer.Database.SelectObjects<Character>("AccountID = '" + accountId + "'"));
+								List<DOLCharacters> chars = new List<DOLCharacters>();
+								chars.AddRange(GameServer.Database.SelectObjects<DOLCharacters>("AccountID = '" + accountId + "'"));
 								//chars.AddRange((Character[])GameServer.Database.SelectObjects<CharacterArchive>("AccountID = '" + accountId + "'"));
 
-								foreach (Character ply in chars)
+								foreach (DOLCharacters ply in chars)
 								{
 									ply.GuildID = "";
 									ply.GuildRank = 0;
@@ -1557,7 +1557,7 @@ namespace DOL.GS.Commands
 								}
 								else
 								{
-									Character c = GameServer.Database.SelectObject<Character>("Name = '" + GameServer.Database.Escape(args[2]) + "'");
+									DOLCharacters c = GameServer.Database.SelectObject<DOLCharacters>("Name = '" + GameServer.Database.Escape(args[2]) + "'");
 									//if (c == null)
 									//    c = (Character)GameServer.Database.SelectObject<CharacterArchive>("Name = '" + GameServer.Database.Escape(args[2]) + "'");
 									if (c == null)

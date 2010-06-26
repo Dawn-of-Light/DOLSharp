@@ -160,7 +160,7 @@ namespace DOL.GS.Commands
                         }
 
                         string charname = args[2];
-                        Character cha = GetCharacter(charname);
+                        DOLCharacters cha = GetCharacter(charname);
 
                         if (cha == null)
                         {
@@ -190,7 +190,7 @@ namespace DOL.GS.Commands
                         string charname = args[2];
                         string accountname = args[3];
 
-                        Character cha = GetCharacter(charname);
+                        DOLCharacters cha = GetCharacter(charname);
                         if (cha == null)
                         {
                             DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", charname));
@@ -225,7 +225,7 @@ namespace DOL.GS.Commands
                         for (freeslot = firstAccountSlot; freeslot < firstAccountSlot + 8; freeslot++)
                         {
                             bool found = false;
-                            foreach (Character ch in acc.Characters)
+                            foreach (DOLCharacters ch in acc.Characters)
                             {
                                 if (ch.Realm == cha.Realm && ch.AccountSlot == freeslot)
                                 {
@@ -334,7 +334,7 @@ namespace DOL.GS.Commands
                         }
 
                         string CharName = args[2];
-                        Character Char = GetCharacter(CharName);
+                        DOLCharacters Char = GetCharacter(CharName);
                         
                         if (Char == null)
                         {
@@ -369,12 +369,12 @@ namespace DOL.GS.Commands
 		/// </summary>
 		/// <param name="charname">the charactername</param>
 		/// <returns>the found character or null</returns>
-		private Character GetCharacter(string charname)
+		private DOLCharacters GetCharacter(string charname)
 		{
 			GameClient client = WorldMgr.GetClientByPlayerName(charname, true, false);
 			if (client != null)
-				return client.Player.PlayerCharacter;
-			return GameServer.Database.SelectObject<Character>("Name='" + GameServer.Database.Escape(charname) + "'");
+				return client.Player.DBCharacter;
+			return GameServer.Database.SelectObject<DOLCharacters>("Name='" + GameServer.Database.Escape(charname) + "'");
 		}
 
 		/// <summary>
@@ -395,7 +395,7 @@ namespace DOL.GS.Commands
 		/// Kicks an active playing character from the server
 		/// </summary>
 		/// <param name="cha">the character</param>
-		private void KickCharacter(Character cha)
+		private void KickCharacter(DOLCharacters cha)
 		{
 			GameClient playingclient = WorldMgr.GetClientByPlayerName(cha.Name, true, false);
 			if (playingclient != null)
@@ -416,7 +416,7 @@ namespace DOL.GS.Commands
 			if (client != null)
 				return client.Account.Name;
 
-			Character ch = GameServer.Database.SelectObject<Character>("Name='" + GameServer.Database.Escape(charname) + "'");
+			DOLCharacters ch = GameServer.Database.SelectObject<DOLCharacters>("Name='" + GameServer.Database.Escape(charname) + "'");
 			if (ch != null)
 				return ch.AccountName;
 			else

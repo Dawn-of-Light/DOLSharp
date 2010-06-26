@@ -74,7 +74,7 @@ namespace DOL.GS.Spells
                 case "pet":
                     if (Caster is GamePlayer)
                     {
-                        IControlledBrain npc = ((GamePlayer)Caster).ControlledNpcBrain;
+                        IControlledBrain npc = ((GamePlayer)Caster).ControlledBrain;
                         if (npc != null)
                             list.Add(npc.Body);
                     }
@@ -148,7 +148,7 @@ namespace DOL.GS.Spells
 						if (group == null)
 						{
 							list.Add(m_caster);
-							IControlledBrain npc = m_caster.ControlledNpcBrain;
+							IControlledBrain npc = m_caster.ControlledBrain;
 							if (npc != null)
 							{
 								if (m_caster.IsWithinRadius(npc.Body, spellRange))
@@ -163,7 +163,7 @@ namespace DOL.GS.Spells
 								if (m_caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
-								IControlledBrain npc = living.ControlledNpcBrain;
+								IControlledBrain npc = living.ControlledBrain;
 								if (npc != null)
 								{
 									if (living.IsWithinRadius(npc.Body, spellRange))
@@ -272,7 +272,7 @@ namespace DOL.GS.Spells
                 case "pet":
                     if (Caster is GamePlayer)
                     {
-                        IControlledBrain npc = ((GamePlayer)Caster).ControlledNpcBrain;
+                        IControlledBrain npc = ((GamePlayer)Caster).ControlledBrain;
                         if (npc != null)
                             list.Add(npc.Body);
                     }
@@ -346,7 +346,7 @@ namespace DOL.GS.Spells
 						if (group == null)
 						{
 							list.Add(m_caster);
-							IControlledBrain npc = m_caster.ControlledNpcBrain;
+							IControlledBrain npc = m_caster.ControlledBrain;
 							if (npc != null)
 							{
 								if (m_caster.IsWithinRadius(npc.Body, spellRange))
@@ -361,7 +361,7 @@ namespace DOL.GS.Spells
 								if (m_caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
-								IControlledBrain npc = living.ControlledNpcBrain;
+								IControlledBrain npc = living.ControlledBrain;
 								if (npc != null)
 								{
 									if (m_caster.IsWithinRadius(npc.Body, spellRange))
@@ -460,7 +460,7 @@ namespace DOL.GS.Spells
                 case "pet":
                     if (Caster is GamePlayer)
                     {
-                        IControlledBrain npc = ((GamePlayer)Caster).ControlledNpcBrain;
+                        IControlledBrain npc = ((GamePlayer)Caster).ControlledBrain;
                         if (npc != null)
                             list.Add(npc.Body);
                     }
@@ -534,7 +534,7 @@ namespace DOL.GS.Spells
 						if (group == null)
 						{
 							list.Add(m_caster);
-							IControlledBrain npc = m_caster.ControlledNpcBrain;
+							IControlledBrain npc = m_caster.ControlledBrain;
 							if (npc != null)
 							{
 								if (m_caster.IsWithinRadius(npc.Body, spellRange))
@@ -549,7 +549,7 @@ namespace DOL.GS.Spells
 								if (m_caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
-								IControlledBrain npc = living.ControlledNpcBrain;
+								IControlledBrain npc = living.ControlledBrain;
 								if (npc != null)
 								{
 									if (living.IsWithinRadius(npc.Body, spellRange))
@@ -649,7 +649,7 @@ namespace DOL.GS.Spells
                 case "pet":
                     if (Caster is GamePlayer)
                     {
-                        IControlledBrain npc = ((GamePlayer)Caster).ControlledNpcBrain;
+                        IControlledBrain npc = ((GamePlayer)Caster).ControlledBrain;
                         if (npc != null)
                             list.Add(npc.Body);
                     }
@@ -723,7 +723,7 @@ namespace DOL.GS.Spells
 						if (group == null)
 						{
 							list.Add(m_caster);
-							IControlledBrain npc = m_caster.ControlledNpcBrain;
+							IControlledBrain npc = m_caster.ControlledBrain;
 							if (npc != null)
 							{
 								if (m_caster.IsWithinRadius(npc.Body, spellRange))
@@ -738,7 +738,7 @@ namespace DOL.GS.Spells
 								if (m_caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
-								IControlledBrain npc = living.ControlledNpcBrain;
+								IControlledBrain npc = living.ControlledBrain;
 								if (npc != null)
 								{
 									if (living.IsWithinRadius(npc.Body, spellRange))
@@ -859,7 +859,7 @@ namespace DOL.GS.Spells
                 case "pet":
                     if (Caster is GamePlayer)
                     {
-                        IControlledBrain npc = ((GamePlayer)Caster).ControlledNpcBrain;
+                        IControlledBrain npc = ((GamePlayer)Caster).ControlledBrain;
                         if (npc != null)
                             list.Add(npc.Body);
                     }
@@ -933,7 +933,7 @@ namespace DOL.GS.Spells
 						if (group == null)
 						{
 							list.Add(m_caster);
-							IControlledBrain npc = m_caster.ControlledNpcBrain;
+							IControlledBrain npc = m_caster.ControlledBrain;
 							if (npc != null)
 							{
 								if (m_caster.IsWithinRadius(npc.Body, spellRange))
@@ -948,7 +948,7 @@ namespace DOL.GS.Spells
 								if (m_caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
-								IControlledBrain npc = living.ControlledNpcBrain;
+								IControlledBrain npc = living.ControlledBrain;
 								if (npc != null)
 								{
 									if (living.IsWithinRadius(npc.Body, spellRange))

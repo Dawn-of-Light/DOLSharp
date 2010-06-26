@@ -40,7 +40,7 @@ namespace DOL.GS.Commands
 					// NOT SURE FOR THIS MESSAGE
 					message = "Your FreeLevel has been removed.";
 					// we decline THIS ONE, but next level, we will gain another freelevel !!
-					client.Player.PlayerCharacter.LastFreeLevel = client.Player.Level - 1;
+					client.Player.DBCharacter.LastFreeLevel = client.Player.Level - 1;
 					client.Player.Out.SendPlayerFreeLevelUpdate();
 				}
 				else
@@ -61,12 +61,12 @@ namespace DOL.GS.Commands
 					message = "You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).";
 					break;
 				case 3:
-					TimeSpan t = (client.Player.PlayerCharacter.LastFreeLeveled.AddDays(7) - DateTime.Now);
+					TimeSpan t = (client.Player.DBCharacter.LastFreeLeveled.AddDays(7) - DateTime.Now);
 					// NOT SURE FOR THIS MESSAGE
 					message = "You will be eligible for a free level in : " + t.Days + " days " + t.Hours + " hours " + t.Minutes + " minutes.";
 					break;
 				case 4:
-					TimeSpan t2 = (client.Player.PlayerCharacter.LastFreeLeveled.AddDays(7) - DateTime.Now);
+					TimeSpan t2 = (client.Player.DBCharacter.LastFreeLeveled.AddDays(7) - DateTime.Now);
 					// NOT SURE FOR THIS MESSAGE
 					message = "You will be eligible for a free level after your next level, and  in : " + t2.Days + " days " + t2.Hours + " hours " + t2.Minutes + " minutes.";
 					break;

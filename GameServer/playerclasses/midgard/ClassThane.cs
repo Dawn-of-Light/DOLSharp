@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Thane, "Thane", "Viking")]
+	[CharacterClassAttribute((int)eCharacterClass.Thane, "Thane", "Viking")]
 	public class ClassThane : ClassViking
 	{
 

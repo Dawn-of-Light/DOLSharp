@@ -101,7 +101,7 @@ namespace DOL.GS.Spells
       if((pet.Brain as TurretFNFBrain) == null)
         return;
 
-      if(Caster.ControlledNpcBrain == null)
+      if(Caster.ControlledBrain == null)
       {
         ((GamePlayer)Caster).Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
       }

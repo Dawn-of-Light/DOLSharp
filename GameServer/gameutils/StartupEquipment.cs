@@ -31,7 +31,7 @@ namespace DOL.GS
 		/// Add starter equipment to the character
 		/// </summary>
 		/// <param name="c">The character</param>
-		public static void AddEquipment(Character c)
+		public static void AddEquipment(DOLCharacters c)
 		{
 			Hashtable usedSlots = new Hashtable();
 

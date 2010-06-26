@@ -218,9 +218,9 @@ namespace DOL.GS
 
 			GameServer.Database.DeleteObject(fromItem);
 
-			if (fromItem.OwnerID != player.PlayerCharacter.ObjectId)
+			if (fromItem.OwnerID != player.DBCharacter.ObjectId)
 			{
-				fromItem.OwnerID = player.PlayerCharacter.ObjectId;
+				fromItem.OwnerID = player.DBCharacter.ObjectId;
 			}
 
 			if (fromItem.SellPrice != 0)

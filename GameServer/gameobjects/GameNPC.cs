@@ -4397,9 +4397,9 @@ namespace DOL.GS
 
 				if (living != null && living.EffectList.GetOfType(typeof(DOL.GS.Effects.NecromancerShadeEffect)) != null)
 				{
-					if (living is GamePlayer && (living as GamePlayer).ControlledNpcBrain != null)
+					if (living is GamePlayer && (living as GamePlayer).ControlledBrain != null)
 					{
-						TargetObject = (living as GamePlayer).ControlledNpcBrain.Body;
+						TargetObject = (living as GamePlayer).ControlledBrain.Body;
 					}
 				}
 
@@ -4448,12 +4448,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the controlled object of this NPC
 		/// </summary>
-		public override IControlledBrain ControlledNpcBrain
+		public override IControlledBrain ControlledBrain
 		{
 			get
 			{
-				if (m_controlledNpcBrain == null) return null;
-				return m_controlledNpcBrain[0];
+				if (m_controlledBrain == null) return null;
+				return m_controlledBrain[0];
 			}
 		}
 
@@ -4462,7 +4462,7 @@ namespace DOL.GS
 		/// </summary>
 		public IControlledBrain[] ControlledNpcList
 		{
-			get { return m_controlledNpcBrain; }
+			get { return m_controlledBrain; }
 		}
 
 		/// <summary>

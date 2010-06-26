@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Eldritch, "Eldritch", "Magician")]
+	[CharacterClassAttribute((int)eCharacterClass.Eldritch, "Eldritch", "Magician")]
 	public class ClassEldritch : ClassMagician
 	{
 		public ClassEldritch() : base() 

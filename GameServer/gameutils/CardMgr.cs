@@ -249,13 +249,13 @@ namespace DOL.GS
         /* True if Player is the dealer for his group */
         public static bool IsDealer(GameClient player)
         {
-            return m_dealerDecks.ContainsKey(player.Player.PlayerCharacter.ObjectId);
+            return m_dealerDecks.ContainsKey(player.Player.DBCharacter.ObjectId);
         }
 
         /* True if Player already has a hand in progress */
         public static bool IsPlayer(GameClient player)
         {
-            return m_playerHands.ContainsKey(player.Player.PlayerCharacter.ObjectId);
+            return m_playerHands.ContainsKey(player.Player.DBCharacter.ObjectId);
         }
 
         /* Removes dealer rights from the player */
@@ -263,14 +263,14 @@ namespace DOL.GS
         {
             if(IsDealer(player))
             {
-                m_dealerDecks.Remove(player.Player.PlayerCharacter.ObjectId);
+                m_dealerDecks.Remove(player.Player.DBCharacter.ObjectId);
             }
         }
 
         /* Removes the player's hand from the manager, use when player leaves the server! */
         public static void QuitPlaying(GameClient player)
         {
-            if (IsPlayer(player)) m_playerHands.Remove(player.Player.PlayerCharacter.ObjectId);
+            if (IsPlayer(player)) m_playerHands.Remove(player.Player.DBCharacter.ObjectId);
         }
 
         /* Makes the player the group dealer and prepares the decks */
@@ -297,7 +297,7 @@ namespace DOL.GS
             try
             {
                 if (player.Player.Group == null) return;
-                m_dealerDecks.Add(player.Player.PlayerCharacter.ObjectId, newDecks);
+                m_dealerDecks.Add(player.Player.DBCharacter.ObjectId, newDecks);
                 foreach (GamePlayer Groupee in player.Player.Group.GetPlayersInTheGroup())
                 {
                     DiscardAll(Groupee.Client);
@@ -325,13 +325,13 @@ namespace DOL.GS
             if(!IsPlayer(player))
             {
                 hand = new PlayerHand(player);
-                m_playerHands.Add(player.Player.PlayerCharacter.ObjectId, hand);
+                m_playerHands.Add(player.Player.DBCharacter.ObjectId, hand);
             }
             else
             {
-                hand = (PlayerHand)m_playerHands[player.Player.PlayerCharacter.ObjectId];
+                hand = (PlayerHand)m_playerHands[player.Player.DBCharacter.ObjectId];
             }
-            deck = (DealerDeck)m_dealerDecks[dealer.Player.PlayerCharacter.ObjectId];
+            deck = (DealerDeck)m_dealerDecks[dealer.Player.DBCharacter.ObjectId];
             if(!deck.HasCard()) { return; }
             c = deck.GetCard();
             if (c == null)
@@ -360,7 +360,7 @@ namespace DOL.GS
                 source.Player.Out.SendMessage((source == target ? "You have" : target.Player.Name + " has") + " no cards.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            (m_playerHands[target.Player.PlayerCharacter.ObjectId] as PlayerHand).Held(source);
+            (m_playerHands[target.Player.DBCharacter.ObjectId] as PlayerHand).Held(source);
             return;
         }
 
@@ -385,10 +385,10 @@ namespace DOL.GS
             Card c = null;
             if (!IsPlayer(player))
             { player.Out.SendMessage("You have no cards to discard.", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
-            c = (m_playerHands[player.Player.PlayerCharacter.ObjectId] as PlayerHand).Discard(selection);
+            c = (m_playerHands[player.Player.DBCharacter.ObjectId] as PlayerHand).Discard(selection);
             if (c != null)
             {
-                if(IsDealer(c.Dealer)) (m_dealerDecks[c.Dealer.Player.PlayerCharacter.ObjectId] as DealerDeck).ReturnCard(c);
+                if(IsDealer(c.Dealer)) (m_dealerDecks[c.Dealer.Player.DBCharacter.ObjectId] as DealerDeck).ReturnCard(c);
             }
         }
 
@@ -398,8 +398,8 @@ namespace DOL.GS
             GameClient Dealer = null;
             DealerDeck deck = null;
             if (!IsPlayer(player)) return;
-            if ((Dealer = GroupDealer(player)) != null) deck = (DealerDeck)m_dealerDecks[Dealer.Player.PlayerCharacter.ObjectId];
-            foreach (Card c in (m_playerHands[player.Player.PlayerCharacter.ObjectId] as PlayerHand).DiscardAll())
+            if ((Dealer = GroupDealer(player)) != null) deck = (DealerDeck)m_dealerDecks[Dealer.Player.DBCharacter.ObjectId];
+            foreach (Card c in (m_playerHands[player.Player.DBCharacter.ObjectId] as PlayerHand).DiscardAll())
                 if(deck != null && c.Dealer == Dealer) deck.ReturnCard(c);
             return;
         }

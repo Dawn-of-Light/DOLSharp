@@ -498,29 +498,22 @@ namespace DOL.GS
 			GameEventMgr.Notify(GameClientEvent.Connected, this);
 		}
 
+		public void LoadPlayer(int accountindex)
+		{
+			LoadPlayer(accountindex, Properties.PLAYER_CLASS);
+		}
+
 		/// <summary>
 		/// Loads a player from the DB
 		/// </summary>
 		/// <param name="accountindex">Index of the character within the account</param>
-		public void LoadPlayer(int accountindex)
+		public void LoadPlayer(int accountindex, string playerClass)
 		{
 			m_activeCharIndex = accountindex;
 			GamePlayer player = null;
-			Character car = m_account.Characters[m_activeCharIndex];
+			DOLCharacters car = m_account.Characters[m_activeCharIndex];
 
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
-			string playerClass;
-
-			switch ((eCharacterClass)(car.Class))
-			{
-				case eCharacterClass.Disciple:
-				case eCharacterClass.Necromancer:
-					playerClass = "DOL.GS.GameNecromancer";
-					break;
-				default:
-					playerClass = Properties.PLAYER_CLASS;
-					break;
-			}
 
 			try
 			{
@@ -558,16 +551,7 @@ namespace DOL.GS
 
 			if (player == null)
 			{
-				switch ((eCharacterClass)(car.Class))
-				{
-					case eCharacterClass.Disciple:
-					case eCharacterClass.Necromancer:
-						player = new GameNecromancer(this, car);
-						break;
-					default:
-						player = new GamePlayer(this, car);
-						break;
-				}
+				player = new GamePlayer(this, car);
 			}
 
 			Thread.MemoryBarrier();

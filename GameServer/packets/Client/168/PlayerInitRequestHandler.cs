@@ -188,9 +188,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.LevelCap"),
 							                       eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-							player.MoveTo((ushort) player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos,
-							              player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos,
-							              (ushort) player.PlayerCharacter.BindHeading);
+							player.MoveTo((ushort) player.DBCharacter.BindRegion, player.DBCharacter.BindXpos,
+							              player.DBCharacter.BindYpos, player.DBCharacter.BindZpos,
+							              (ushort) player.DBCharacter.BindHeading);
 							break;
 						}
 					}
@@ -242,9 +242,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.SaferLocation"),
 				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.MoveTo((ushort) player.PlayerCharacter.BindRegion, player.PlayerCharacter.BindXpos,
-				              player.PlayerCharacter.BindYpos, player.PlayerCharacter.BindZpos,
-				              (ushort) player.PlayerCharacter.BindHeading);
+				player.MoveTo((ushort) player.DBCharacter.BindRegion, player.DBCharacter.BindXpos,
+				              player.DBCharacter.BindYpos, player.DBCharacter.BindZpos,
+				              (ushort) player.DBCharacter.BindHeading);
 			}
 
 			private static void SendHouseRentRemindersToPlayer(GamePlayer player)

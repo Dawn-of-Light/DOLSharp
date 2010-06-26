@@ -47,7 +47,7 @@ namespace DOL.GS.Spells
 			 * -Select automatically Main controlled Turret if player don't have target or Turret target.
 			 * -Cast only on our turrets.
 			 */
-			if(Caster.ControlledNpcBrain == null || Caster.ControlledNpcBrain.Body == null)
+			if(Caster.ControlledBrain == null || Caster.ControlledBrain.Body == null)
 			{
 				MessageToCaster("You must cast this spell on a creature you are controlling.", eChatType.CT_System);
 				return false;
@@ -56,7 +56,7 @@ namespace DOL.GS.Spells
 
 			if(target == null || !Caster.IsControlledNPC(target))
 			{
-				target = Caster.ControlledNpcBrain.Body as TurretPet;
+				target = Caster.ControlledBrain.Body as TurretPet;
 			}
 			return base.CheckBeginCast(target);
 		}
@@ -72,9 +72,9 @@ namespace DOL.GS.Spells
 					TurretPet turret = null;
 					if(Caster.TargetObject == null || !Caster.IsControlledNPC(Caster.TargetObject as TurretPet))
 					{
-						if(Caster.ControlledNpcBrain != null && Caster.ControlledNpcBrain.Body != null)
+						if(Caster.ControlledBrain != null && Caster.ControlledBrain.Body != null)
 						{
-							turret = Caster.ControlledNpcBrain.Body as TurretPet;
+							turret = Caster.ControlledBrain.Body as TurretPet;
 						}
 					}
 					else if(Caster.IsControlledNPC(Caster.TargetObject as TurretPet))

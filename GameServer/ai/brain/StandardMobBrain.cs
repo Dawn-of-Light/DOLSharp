@@ -101,7 +101,7 @@ namespace DOL.AI.Brain
 
             // If the NPC is tethered and has been pulled too far it will
 			// de-aggro and return to its spawn point.
-			if (Body.IsOutOfTetherRange)
+			if (Body.IsOutOfTetherRange && !Body.InCombat)
 			{
 				Body.WalkToSpawn();
 				return;
@@ -1106,7 +1106,7 @@ namespace DOL.AI.Brain
 				case "SummonMinion":
 					//If the list is null, lets make sure it gets initialized!
 					if (Body.ControlledNpcList == null)
-						Body.InitControlledNpcBrain(2);
+						Body.InitControlledBrainArray(2);
 					else
 					{
 						//Let's check to see if the list is full - if it is, we can't cast another minion.

@@ -26,7 +26,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Valewalker, "Valewalker", "Forester")]
+	[CharacterClassAttribute((int)eCharacterClass.Valewalker, "Valewalker", "Forester")]
 	public class ClassValewalker : ClassForester
 	{
 		public ClassValewalker() : base()

@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Blademaster, "Blademaster", "Guardian")]
+	[CharacterClassAttribute((int)eCharacterClass.Blademaster, "Blademaster", "Guardian")]
 	public class ClassBlademaster : ClassGuardian
 	{
 		public ClassBlademaster() : base() 

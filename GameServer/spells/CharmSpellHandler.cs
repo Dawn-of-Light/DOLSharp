@@ -116,14 +116,14 @@ namespace DOL.GS.Spells
 			}
 
 			//You should be able to chain pulsing charm on the same mob
-			if(Spell.Pulse!=0 && Caster is GamePlayer && (((GamePlayer)Caster).ControlledNpcBrain!=null && ((GamePlayer)Caster).ControlledNpcBrain.Body==(GameNPC)selectedTarget))
+			if(Spell.Pulse!=0 && Caster is GamePlayer && (((GamePlayer)Caster).ControlledBrain!=null && ((GamePlayer)Caster).ControlledBrain.Body==(GameNPC)selectedTarget))
 			{
 				((GamePlayer)Caster).CommandNpcRelease();
 			}
 			
 			if (!base.CheckBeginCast(selectedTarget)) return false;
 
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpcBrain != null)
+			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledBrain != null)
 			{
 				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
 				return false;
@@ -162,7 +162,7 @@ namespace DOL.GS.Spells
 				    }
                 return;
                 }
-				if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpcBrain != null)
+				if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledBrain != null)
 				{
 					MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
 					return;
@@ -245,13 +245,13 @@ namespace DOL.GS.Spells
 					GameEventMgr.AddHandler(npc, GameLivingEvent.PetReleased, new DOLEventHandler(ReleaseEventHandler));
 				}
 
-				if (player.ControlledNpcBrain != m_controlledBrain)
+				if (player.ControlledBrain != m_controlledBrain)
 				{
 					// sorc: "The slough serpent is enthralled!" ct_spell
 					Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message1, npc.GetName(0, false)), eChatType.CT_Spell);
 					MessageToCaster(npc.GetName(0, true) + " is now under your control.", eChatType.CT_Spell);
 
-					player.SetControlledNpcBrain(m_controlledBrain);
+					player.SetControlledBrain(m_controlledBrain);
 				}
 
 				npc.BroadcastUpdate();
@@ -320,7 +320,7 @@ namespace DOL.GS.Spells
 				{
 					GameEventMgr.RemoveHandler(npc, GameLivingEvent.PetReleased, new DOLEventHandler(ReleaseEventHandler));
 
-					player.SetControlledNpcBrain(null);
+					player.SetControlledBrain(null);
 					MessageToCaster("You lose control of " + npc.GetName(0, false) + "!", eChatType.CT_SpellExpires);
 
 					npc.BroadcastUpdate();

@@ -154,10 +154,10 @@ namespace DOL.GS.Effects
 		public virtual void RestoreAllEffects()
 		{
 			GamePlayer player = m_owner as GamePlayer;
-			if (player == null || player.PlayerCharacter == null || GameServer.Database == null)
+			if (player == null || player.DBCharacter == null || GameServer.Database == null)
 				return;
 
-			var effs = GameServer.Database.SelectObjects<PlayerXEffect>("ChardID = '" + GameServer.Database.Escape(player.PlayerCharacter.ObjectId) + "'");
+			var effs = GameServer.Database.SelectObjects<PlayerXEffect>("ChardID = '" + GameServer.Database.Escape(player.DBCharacter.ObjectId) + "'");
 			if (effs == null)
 				return;
 
@@ -231,7 +231,7 @@ namespace DOL.GS.Effects
 					if (effx.SpellLine == GlobalSpellsLines.Reserved_Spells)
 						continue;
 
-					effx.ChardID = player.PlayerCharacter.ObjectId;
+					effx.ChardID = player.DBCharacter.ObjectId;
 					GameServer.Database.AddObject(effx);
 				}
 			}

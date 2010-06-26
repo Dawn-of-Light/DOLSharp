@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Mentalist, "Mentalist", "Magician")]
+	[CharacterClassAttribute((int)eCharacterClass.Mentalist, "Mentalist", "Magician")]
 	public class ClassMentalist : ClassMagician
 	{
 		public ClassMentalist() : base() 

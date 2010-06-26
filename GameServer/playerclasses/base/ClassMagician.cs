@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Magician, "Magician", "Magician")]
-	public class ClassMagician : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Magician, "Magician", "Magician")]
+	public class ClassMagician : DOL.GS.CharacterClassBase
 	{
 		public ClassMagician()
 		{
