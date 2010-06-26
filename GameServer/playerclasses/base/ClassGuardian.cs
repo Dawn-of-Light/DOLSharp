@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Guardian, "Guardian", "Guardian")]
-	public class ClassGuardian : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Guardian, "Guardian", "Guardian")]
+	public class ClassGuardian : DOL.GS.CharacterClassBase
 	{
 		public ClassGuardian() : base() {
 			m_specializationMultiplier = 10;

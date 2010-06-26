@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Viking, "Viking", "Viking")]
-	public class ClassViking : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Viking, "Viking", "Viking")]
+	public class ClassViking : DOL.GS.CharacterClassBase
 	{
 		public ClassViking() : base() {
 			m_specializationMultiplier = 10;

@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Disciple, "Disciple", "Disciple")]
-	public class ClassDisciple : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Disciple, "Disciple", "Disciple")]
+	public class ClassDisciple : CharacterClassNecromancer
 	{
 		public ClassDisciple()
 		{

@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Seer, "Seer", "Seer")]
-	public class ClassSeer : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Seer, "Seer", "Seer")]
+	public class ClassSeer : DOL.GS.CharacterClassBase
 	{
 		public ClassSeer() : base() {
 			m_specializationMultiplier = 10;

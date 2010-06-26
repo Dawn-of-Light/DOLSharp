@@ -26,10 +26,10 @@ namespace DOL
 	namespace Database
 	{
 		/// <summary>
-		/// The character the account own. it store GamePlayer in DB
+		/// The player character. Stores GamePlayer in DB
 		/// </summary>
 		[DataTable(TableName = "DOLCharacters")]
-		public class Character : DataObject
+		public class DOLCharacters : DataObject
 		{
 			private string m_accountName;
 			private int m_accountSlot;
@@ -197,7 +197,7 @@ namespace DOL
 			/// <summary>
 			/// Create the character row in table
 			/// </summary>
-			public Character()
+			public DOLCharacters()
 			{
 				m_creationDate = DateTime.Now;
 				m_concentration = 100;

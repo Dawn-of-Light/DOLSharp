@@ -24,7 +24,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Shaman, "Shaman", "Seer")]
+	[CharacterClassAttribute((int)eCharacterClass.Shaman, "Shaman", "Seer")]
 	public class ClassShaman : ClassSeer
 	{
 		public ClassShaman() : base() 

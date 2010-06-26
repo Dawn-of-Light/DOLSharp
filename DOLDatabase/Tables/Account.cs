@@ -221,7 +221,7 @@ namespace DOL
 			/// List of charcter the account own
 			/// </summary>
 			[Relation(LocalField = "Name", RemoteField = "AccountName", AutoLoad = true, AutoDelete=true)]
-			public Character[] Characters;
+			public DOLCharacters[] Characters;
 
 			/// <summary>
 			/// Remove ban

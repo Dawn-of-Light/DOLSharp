@@ -27,7 +27,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Minstrel, "Minstrel", "Rogue")]
+	[CharacterClassAttribute((int)eCharacterClass.Minstrel, "Minstrel", "Rogue")]
 	public class ClassMinstrel : ClassAlbionRogue
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Instruments };

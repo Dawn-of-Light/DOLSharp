@@ -33,11 +33,11 @@ namespace DOL.Tests
 
 		protected GamePlayer CreateMockGamePlayer()
 		{
-			Character character= null;
+			DOLCharacters character= null;
 			Account account = GameServer.Database.SelectObject<Account>("");
 			Assert.IsNotNull(account);
 
-			foreach (Character charact in account.Characters)
+			foreach (DOLCharacters charact in account.Characters)
 			{
 				if (charact!=null)
 					character = charact;

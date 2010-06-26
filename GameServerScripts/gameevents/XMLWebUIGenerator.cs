@@ -277,7 +277,7 @@ namespace DOL.GS.Scripts
 				si.NumAccounts = GameServer.Database.GetObjectCount<Account>();
 				si.NumMobs = GameServer.Database.GetObjectCount<Mob>();
 				si.NumInventoryItems = GameServer.Database.GetObjectCount<InventoryItem>();
-				si.NumPlayerChars = GameServer.Database.GetObjectCount<Character>();
+				si.NumPlayerChars = GameServer.Database.GetObjectCount<DOLCharacters>();
 				si.NumMerchantItems = GameServer.Database.GetObjectCount<MerchantItem>();
 				si.NumItemTemplates = GameServer.Database.GetObjectCount<ItemTemplate>();
 				si.NumWorldObjects = GameServer.Database.GetObjectCount<WorldObject>();

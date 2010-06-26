@@ -25,17 +25,25 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Bonedancer, "Bonedancer", "Mystic")]
-	public class ClassBonedancer : ClassMystic
+	[CharacterClassAttribute((int)eCharacterClass.Bonedancer, "Bonedancer", "Mystic")]
+	public class ClassBonedancer : CharacterClassBoneDancer
 	{
 		public ClassBonedancer() : base()
 		{
-			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofBodgar");
 			m_specializationMultiplier = 10;
+			m_wsbase = 280;
+			m_baseHP = 560;
+			m_manaStat = eStat.PIE;
+
+			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofBodgar");
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.QUI;
-			m_manaStat = eStat.PIE;
+		}
+
+		public override eClassType ClassType
+		{
+			get { return eClassType.ListCaster; }
 		}
 
 		public override string GetTitle(int level) 
@@ -55,9 +63,24 @@ namespace DOL.GS.PlayerClass
 
 		public override void OnLevelUp(GamePlayer player) 
 		{
-			
 			base.OnLevelUp(player);
 
+			// Mystic
+
+			// Specializations
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Darkness));
+			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Suppression));
+
+			// Spell lines
+			player.AddSpellLine(SkillBase.GetSpellLine("Darkness"));
+			player.AddSpellLine(SkillBase.GetSpellLine("Suppression"));
+
+			// Abilities
+			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
+			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Cloth));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
+
+			// Bonedancer
 		
 			// Specializations
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.BoneArmy));			

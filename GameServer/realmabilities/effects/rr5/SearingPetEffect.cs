@@ -126,9 +126,9 @@ namespace DOL.GS.Effects
         private static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
         {
             GamePlayer player = sender as GamePlayer;
-            if (player != null && player.ControlledNpcBrain != null && player.ControlledNpcBrain.Body != null)
+            if (player != null && player.ControlledBrain != null && player.ControlledBrain.Body != null)
             {
-                GameNPC pet = player.ControlledNpcBrain.Body as GameNPC;
+                GameNPC pet = player.ControlledBrain.Body as GameNPC;
                 SearingPetEffect SearingPet = (SearingPetEffect)pet.EffectList.GetOfType(typeof(SearingPetEffect));
                 if (SearingPet != null)
                     SearingPet.Cancel(false);

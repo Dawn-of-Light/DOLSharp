@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.AlbionRogue, "Rogue", "Rogue")]
-	public class ClassAlbionRogue : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.AlbionRogue, "Rogue", "Rogue")]
+	public class ClassAlbionRogue : DOL.GS.CharacterClassBase
 	{
 		public ClassAlbionRogue() : base() {
 			m_specializationMultiplier = 10;

@@ -698,7 +698,7 @@ namespace DOL.GS
 		/// <param name="asm">the assembly to search through</param>
 		/// <param name="id">the classid to search</param>
 		/// <returns>ClassSpec that was found or null if not found</returns>
-		public static IClassSpec FindClassSpec(int id)
+		public static ICharacterClass FindCharacterClass(int id)
 		{
 			ArrayList asms = new ArrayList(Scripts);
 			asms.Add(typeof(GameServer).Assembly);
@@ -708,23 +708,23 @@ namespace DOL.GS
 				{
 					// Pick up a class
 					if (type.IsClass != true) continue;
-					if (type.GetInterface("DOL.GS.IClassSpec") == null) continue;
+					if (type.GetInterface("DOL.GS.ICharacterClass") == null) continue;
 
 					try
 					{
-						object[] objs = type.GetCustomAttributes(typeof(PlayerClassAttribute), false);
-						foreach (PlayerClassAttribute attrib in objs)
+						object[] objs = type.GetCustomAttributes(typeof(CharacterClassAttribute), false);
+						foreach (CharacterClassAttribute attrib in objs)
 						{
 							if (attrib.ID == id)
 							{
-								return (IClassSpec)Activator.CreateInstance(type);
+								return (ICharacterClass)Activator.CreateInstance(type);
 							}
 						}
 					}
 					catch (Exception e)
 					{
 						if (log.IsErrorEnabled)
-							log.Error("FindClassSpec", e);
+							log.Error("FindCharacterClass", e);
 					}
 				}
 			}

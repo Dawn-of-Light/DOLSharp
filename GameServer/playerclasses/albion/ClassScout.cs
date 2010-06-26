@@ -27,7 +27,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Scout, "Scout", "Rogue")]
+	[CharacterClassAttribute((int)eCharacterClass.Scout, "Scout", "Rogue")]
 	public class ClassScout : ClassAlbionRogue
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Archery };

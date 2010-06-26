@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Acolyte, "Acolyte", "Acolyte")]
-	public class ClassAcolyte : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Acolyte, "Acolyte", "Acolyte")]
+	public class ClassAcolyte : DOL.GS.CharacterClassBase
 	{
 		public ClassAcolyte() : base() {
 			m_specializationMultiplier = 10;

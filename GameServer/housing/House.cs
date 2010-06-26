@@ -1253,11 +1253,11 @@ namespace DOL.GS.Housing
 			if (!_databaseItem.GuildHouse)
 			{
 				// check if character is explicit owner
-				if (_databaseItem.OwnerID == player.PlayerCharacter.ObjectId)
+				if (_databaseItem.OwnerID == player.DBCharacter.ObjectId)
 					return true;
 
 				// check account-wide if not a guild house
-				IEnumerable<Character> charsOnAccount = from chr in player.Client.Account.Characters
+				IEnumerable<DOLCharacters> charsOnAccount = from chr in player.Client.Account.Characters
 				                                        where chr.ObjectId == _databaseItem.OwnerID
 				                                        select chr;
 

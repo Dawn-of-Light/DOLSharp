@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Elementalist, "Elementalist", "Elementalist")]
-	public class ClassElementalist : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Elementalist, "Elementalist", "Elementalist")]
+	public class ClassElementalist : DOL.GS.CharacterClassBase
 	{
 		public ClassElementalist()
 		{

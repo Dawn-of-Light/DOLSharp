@@ -27,7 +27,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Ranger, "Ranger", "Stalker")]
+	[CharacterClassAttribute((int)eCharacterClass.Ranger, "Ranger", "Stalker")]
 	public class ClassRanger : ClassStalker
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Archery };

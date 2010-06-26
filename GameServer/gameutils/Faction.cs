@@ -235,20 +235,20 @@ namespace DOL.GS
 		public void ChangeAggroLevel(GamePlayer player, int amount)
 		{
 			// remember the player
-			if (!m_updatePlayer.Contains(player.PlayerCharacter.ObjectId))
+			if (!m_updatePlayer.Contains(player.DBCharacter.ObjectId))
 			{
-				m_updatePlayer.Add(player.PlayerCharacter.ObjectId);
+				m_updatePlayer.Add(player.DBCharacter.ObjectId);
 			}
 			int oldAggro;
 			// remember the player's relation to the faction
-			if (m_playerxFaction.ContainsKey(player.PlayerCharacter.ObjectId))
+			if (m_playerxFaction.ContainsKey(player.DBCharacter.ObjectId))
 			{
-				oldAggro = (int)m_playerxFaction[player.PlayerCharacter.ObjectId];
+				oldAggro = (int)m_playerxFaction[player.DBCharacter.ObjectId];
 			}
 			else
 			{
 				oldAggro = BaseAggroLevel;
-				m_playerxFaction.Add(player.PlayerCharacter.ObjectId, BaseAggroLevel);
+				m_playerxFaction.Add(player.DBCharacter.ObjectId, BaseAggroLevel);
 			}
 			// get the new relation
 			int newAggro = oldAggro + amount;
@@ -265,7 +265,7 @@ namespace DOL.GS
 			if (newAggro != oldAggro)
 			{
 				// save the change
-				m_playerxFaction[player.PlayerCharacter.ObjectId] = newAggro;
+				m_playerxFaction[player.DBCharacter.ObjectId] = newAggro;
 				// tell the player
 				string msg = "Your relationship with " + this.Name + " has ";
 				if (amount > 0)
@@ -287,8 +287,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int GetAggroToFaction(GamePlayer player)
 		{
-			if (m_playerxFaction.ContainsKey(player.PlayerCharacter.ObjectId))
-				return (int)m_playerxFaction[player.PlayerCharacter.ObjectId];
+			if (m_playerxFaction.ContainsKey(player.DBCharacter.ObjectId))
+				return (int)m_playerxFaction[player.DBCharacter.ObjectId];
 			else
 				return BaseAggroLevel;
 		}

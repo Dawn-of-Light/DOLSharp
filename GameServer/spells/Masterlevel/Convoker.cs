@@ -559,7 +559,7 @@ namespace DOL.GS.Spells
         {
             GamePlayer player = Caster as GamePlayer;
 
-            m_living = player.ControlledNpcBrain.Body;
+            m_living = player.ControlledBrain.Body;
             //m_living.Level += 20;
             m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += 75;
             m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] += 75;

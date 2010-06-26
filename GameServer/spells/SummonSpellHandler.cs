@@ -99,7 +99,7 @@ namespace DOL.GS.Spells
 
 		protected virtual void SetBrainToOwner(IControlledBrain brain)
 		{
-			Caster.SetControlledNpcBrain(brain);
+			Caster.SetControlledBrain(brain);
 		}
 
 		protected virtual byte GetPetLevel()
@@ -218,7 +218,7 @@ namespace DOL.GS.Spells
 			IControlledBrain brain = pet.Brain as IControlledBrain;
 			GamePlayer player = brain.Owner as GamePlayer;
 
-			player.SetControlledNpcBrain(null);
+			player.SetControlledBrain(null);
 			GameEventMgr.RemoveHandler(pet, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
 
 			GameSpellEffect effect = FindEffectOnTarget(pet, this);

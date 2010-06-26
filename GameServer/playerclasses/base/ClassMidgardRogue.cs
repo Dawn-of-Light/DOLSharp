@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.MidgardRogue, "Rogue", "Rogue")]
-	public class ClassMidgardRogue : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.MidgardRogue, "Rogue", "Rogue")]
+	public class ClassMidgardRogue : DOL.GS.CharacterClassBase
 	{
 		public ClassMidgardRogue() : base() {
 			m_specializationMultiplier = 10;

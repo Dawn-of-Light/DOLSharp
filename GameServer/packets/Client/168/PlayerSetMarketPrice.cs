@@ -48,7 +48,7 @@ namespace DOL.GS.PacketHandler.Client.v168
             if (!house.HasOwnerPermissions(client.Player))
                 return 0;
             int dbSlot = (int)eInventorySlot.Consignment_First + slot;
-            InventoryItem item = GameServer.Database.SelectObject<InventoryItem>("OwnerID = '" + client.Player.PlayerCharacter.ObjectId + "' AND SlotPosition = '" + dbSlot.ToString() + "'");
+            InventoryItem item = GameServer.Database.SelectObject<InventoryItem>("OwnerID = '" + client.Player.DBCharacter.ObjectId + "' AND SlotPosition = '" + dbSlot.ToString() + "'");
             if (item != null)
             {
                 item.SellPrice = (int)price;

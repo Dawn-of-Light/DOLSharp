@@ -200,7 +200,7 @@ namespace DOL.GS.PacketHandler
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterOverview)))
 			{
 				pak.FillString(m_gameClient.Account.Name, 24);
-				Character[] characters = m_gameClient.Account.Characters;
+				DOLCharacters[] characters = m_gameClient.Account.Characters;
 				if (characters == null)
 				{
 					pak.Fill(0x0, 1848);
@@ -1124,11 +1124,11 @@ namespace DOL.GS.PacketHandler
 				return;
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MoneyUpdate)))
 			{
-				pak.WriteByte((byte) m_gameClient.Player.PlayerCharacter.Copper);
-				pak.WriteByte((byte) m_gameClient.Player.PlayerCharacter.Silver);
-				pak.WriteShort((ushort) m_gameClient.Player.PlayerCharacter.Gold);
-				pak.WriteShort((ushort) m_gameClient.Player.PlayerCharacter.Mithril);
-				pak.WriteShort((ushort) m_gameClient.Player.PlayerCharacter.Platinum);
+				pak.WriteByte((byte) m_gameClient.Player.DBCharacter.Copper);
+				pak.WriteByte((byte) m_gameClient.Player.DBCharacter.Silver);
+				pak.WriteShort((ushort) m_gameClient.Player.DBCharacter.Gold);
+				pak.WriteShort((ushort) m_gameClient.Player.DBCharacter.Mithril);
+				pak.WriteShort((ushort) m_gameClient.Player.DBCharacter.Platinum);
 				SendTCP(pak);
 			}
 		}

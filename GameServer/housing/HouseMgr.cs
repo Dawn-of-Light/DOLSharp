@@ -433,7 +433,7 @@ namespace DOL.GS.Housing
 			}
 			else
 			{
-				foreach (Character c in player.Client.Account.Characters)
+				foreach (DOLCharacters c in player.Client.Account.Characters)
 				{
 					if (house.OwnerID == c.ObjectId)
 						return true;
@@ -465,7 +465,7 @@ namespace DOL.GS.Housing
 				{
 					var house = entry.Value;
 
-					if (house.OwnerID == p.PlayerCharacter.ObjectId)
+					if (house.OwnerID == p.DBCharacter.ObjectId)
 						return house;
 				}
 			}

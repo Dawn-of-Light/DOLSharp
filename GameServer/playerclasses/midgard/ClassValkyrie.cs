@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Valkyrie, "Valkyrie", "Viking")]
+	[CharacterClassAttribute((int)eCharacterClass.Valkyrie, "Valkyrie", "Viking")]
 	public class ClassValkyrie : ClassViking
 	{
 

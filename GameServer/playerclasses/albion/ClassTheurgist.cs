@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Theurgist, "Theurgist", "Elementalist")]
+	[CharacterClassAttribute((int)eCharacterClass.Theurgist, "Theurgist", "Elementalist")]
 	public class ClassTheurgist : ClassElementalist
 	{
 		public ClassTheurgist() : base() 

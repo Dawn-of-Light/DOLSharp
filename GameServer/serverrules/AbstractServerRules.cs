@@ -197,7 +197,7 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
-		public virtual bool CountsTowardsSlashLevel(Character player)
+		public virtual bool CountsTowardsSlashLevel(DOLCharacters player)
 		{
 			return true;
 		}
@@ -286,9 +286,9 @@ namespace DOL.GS.ServerRules
 				return false;
 
 			//Checking for shadowed necromancer, can't be attacked.
-			if(defender.ControlledNpcBrain != null)
-				if(defender.ControlledNpcBrain.Body != null)
-					if(defender.ControlledNpcBrain.Body is NecromancerPet)
+			if(defender.ControlledBrain != null)
+				if(defender.ControlledBrain.Body != null)
+					if(defender.ControlledBrain.Body is NecromancerPet)
 			{
 				if (quiet == false) MessageToLiving(attacker, "You can't attack a shadowed necromancer!");
 				return false;
@@ -1148,7 +1148,7 @@ namespace DOL.GS.ServerRules
 			killedPlayer.LastDeathRealmPoints = 0;
 			// "player has been killed recently"
 			long noExpSeconds = ServerProperties.Properties.RP_WORTH_SECONDS;
-			if (killedPlayer.PlayerCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
+			if (killedPlayer.DBCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
 			{
 				lock (killedPlayer.XPGainers.SyncRoot)
 				{
