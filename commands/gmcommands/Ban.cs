@@ -111,7 +111,7 @@ namespace DOL.GS.Commands
 						#endregion Default
 				}
 
-				b.Author = client.Player.PlayerCharacter.Name;
+				b.Author = client.Player.DBCharacter.Name;
 				b.Ip = accip;
 				b.Account = accname;
 				b.DateBan = DateTime.Now;

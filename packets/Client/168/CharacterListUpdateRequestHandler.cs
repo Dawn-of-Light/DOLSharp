@@ -105,7 +105,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 
 					String select = String.Format("Name = '{0}'", GameServer.Database.Escape(charname));
-					Character character = GameServer.Database.SelectObject<Character>(select);
+					DOLCharacters character = GameServer.Database.SelectObject<DOLCharacters>(select);
 					if (character != null)
 					{
 						if (character.AccountName != client.Account.Name)
@@ -176,7 +176,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								flagChangedStats |= stats[7] != character.Charisma;
 								if (flagChangedStats)
 								{
-									IClassSpec cl = ScriptMgr.FindClassSpec(character.Class);
+									ICharacterClass cl = ScriptMgr.FindCharacterClass(character.Class);
 
 									if (cl != null)
 									{
@@ -280,7 +280,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 											character.Empathy = (byte)stats[6];
 											character.Charisma = (byte)stats[7];
 											//if (client.Player != null && character.Name == client.Player.Name && client.ActiveCharIndex != -1 && client.Account.Characters[client.ActiveCharIndex].Name == character.Name)
-											Character[] chars = client.Account.Characters;
+											DOLCharacters[] chars = client.Account.Characters;
 											for (int z = 0; z < chars.Length; z++)
 											{
 												if (chars[z].Name != character.Name) continue;
@@ -290,14 +290,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 												//client.Account.Characters = null;
 												if (client.Player != null)
 												{
-													client.Player.PlayerCharacter.Strength = (byte)stats[0];
-													client.Player.PlayerCharacter.Constitution = (byte)stats[1];
-													client.Player.PlayerCharacter.Dexterity = (byte)stats[2];
-													client.Player.PlayerCharacter.Quickness = (byte)stats[3];
-													client.Player.PlayerCharacter.Intelligence = (byte)stats[4];
-													client.Player.PlayerCharacter.Piety = (byte)stats[5];
-													client.Player.PlayerCharacter.Empathy = (byte)stats[6];
-													client.Player.PlayerCharacter.Charisma = (byte)stats[7];
+													client.Player.DBCharacter.Strength = (byte)stats[0];
+													client.Player.DBCharacter.Constitution = (byte)stats[1];
+													client.Player.DBCharacter.Dexterity = (byte)stats[2];
+													client.Player.DBCharacter.Quickness = (byte)stats[3];
+													client.Player.DBCharacter.Intelligence = (byte)stats[4];
+													client.Player.DBCharacter.Piety = (byte)stats[5];
+													client.Player.DBCharacter.Empathy = (byte)stats[6];
+													client.Player.DBCharacter.Charisma = (byte)stats[7];
 												}
 												client.Account.Characters[z].Strength = (byte)stats[0];
 												client.Account.Characters[z].Constitution = (byte)stats[1];
@@ -379,7 +379,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// create new character
 
 						Account account = client.Account;
-						Character ch = new Character();
+						DOLCharacters ch = new DOLCharacters();
 						ch.AccountName = account.Name;
 						ch.Name = charname;
 
@@ -713,7 +713,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			return 1;
 		}
-		private static int RevertClass(Character ch)
+		private static int RevertClass(DOLCharacters ch)
 		{
 			switch (ch.Class)
 			{
@@ -772,7 +772,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			}
 		}
-		private void setBasicCraftingForNewCharacter(Character ch)
+		private void setBasicCraftingForNewCharacter(DOLCharacters ch)
 		{
 			string serializedAllCraftingSkills = "";
 			foreach (int craftingSkillId in Enum.GetValues(typeof(eCraftingSkill)))
@@ -815,7 +815,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			/// <param name="ch">The character to check</param>
 			/// <returns>True if valid</returns>
-			public static bool IsCharacterValid(Character ch)
+			public static bool IsCharacterValid(DOLCharacters ch)
 			{
 				bool valid = true;
 				try

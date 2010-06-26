@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Hero, "Hero", "Guardian", "Heroine")]
+	[CharacterClassAttribute((int)eCharacterClass.Hero, "Hero", "Guardian", "Heroine")]
 	public class ClassHero : ClassGuardian
 	{
 		public ClassHero() : base() 

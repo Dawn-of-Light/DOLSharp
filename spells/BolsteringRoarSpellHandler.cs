@@ -52,7 +52,7 @@ namespace DOL.GS.Spells
                                 if (groupPlayer != casterPlayer && groupPlayer.IsAlive)
                                 {
                                     list.Add(groupPlayer);
-                                    IControlledBrain npc = groupPlayer.ControlledNpcBrain;
+                                    IControlledBrain npc = groupPlayer.ControlledBrain;
                                     if (npc != null)
                                     {
                                         if (casterPlayer.IsWithinRadius( npc.Body, spellRange ))

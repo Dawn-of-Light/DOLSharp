@@ -24,7 +24,7 @@ using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	[PlayerClassAttribute((int)eCharacterClass.Shadowblade, "Shadowblade", "MidgardRogue")]
+	[CharacterClassAttribute((int)eCharacterClass.Shadowblade, "Shadowblade", "MidgardRogue")]
 	public class ClassShadowblade : ClassMidgardRogue
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };

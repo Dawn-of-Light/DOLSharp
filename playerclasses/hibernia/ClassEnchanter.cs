@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Enchanter, "Enchanter", "Magician", "Enchantress")]
+	[CharacterClassAttribute((int)eCharacterClass.Enchanter, "Enchanter", "Magician", "Enchantress")]
 	public class ClassEnchanter : ClassMagician
 	{
 		public ClassEnchanter() : base() 

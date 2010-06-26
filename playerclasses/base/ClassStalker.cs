@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Stalker, "Stalker", "Stalker")]
-	public class ClassStalker : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Stalker, "Stalker", "Stalker")]
+	public class ClassStalker : DOL.GS.CharacterClassBase
 	{
 		public ClassStalker() : base() {
 			m_specializationMultiplier = 10;

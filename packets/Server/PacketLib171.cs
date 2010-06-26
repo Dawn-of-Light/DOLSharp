@@ -332,7 +332,7 @@ namespace DOL.GS.PacketHandler
 
 			byte flag = player.FreeLevelState;
 
-			TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - player.PlayerCharacter.LastFreeLeveled.Ticks));
+			TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - player.DBCharacter.LastFreeLeveled.Ticks));
 
 			ushort time = 0;
 			//time is in minutes

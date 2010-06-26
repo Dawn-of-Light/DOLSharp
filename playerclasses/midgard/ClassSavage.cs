@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Savage, "Savage", "Viking")]
+	[CharacterClassAttribute((int)eCharacterClass.Savage, "Savage", "Viking")]
 	public class ClassSavage : ClassViking
 	{
 

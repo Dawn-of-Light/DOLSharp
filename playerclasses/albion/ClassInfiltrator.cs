@@ -27,7 +27,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Infiltrator, "Infiltrator", "Rogue")]
+	[CharacterClassAttribute((int)eCharacterClass.Infiltrator, "Infiltrator", "Rogue")]
 	public class ClassInfiltrator : ClassAlbionRogue
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };

@@ -21,12 +21,12 @@ namespace DOL.GS.RealmAbilities
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 			GamePlayer player = living as GamePlayer;
 			if (player == null) return;
-			if (player.ControlledNpcBrain == null) return;
-			if (player.ControlledNpcBrain.Body == null) return;
-			player.ControlledNpcBrain.Body.AddAbility(SkillBase.GetAbility(Abilities.CCImmunity));
-			new ResoluteMinionEffect().Start(player.ControlledNpcBrain.Body);
+			if (player.ControlledBrain == null) return;
+			if (player.ControlledBrain.Body == null) return;
+			player.ControlledBrain.Body.AddAbility(SkillBase.GetAbility(Abilities.CCImmunity));
+			new ResoluteMinionEffect().Start(player.ControlledBrain.Body);
 			foreach (GamePlayer visPlayer in player.GetPlayersInRadius((ushort)WorldMgr.VISIBILITY_DISTANCE))
-				visPlayer.Out.SendSpellEffectAnimation(player, player.ControlledNpcBrain.Body, 7047, 0, false, 0x01);
+				visPlayer.Out.SendSpellEffectAnimation(player, player.ControlledBrain.Body, 7047, 0, false, 0x01);
 			DisableSkill(living);
         }
 		public override int GetReUseDelay(int level) { return 300; }

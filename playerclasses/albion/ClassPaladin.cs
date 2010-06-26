@@ -26,7 +26,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Paladin, "Paladin", "Fighter")]
+	[CharacterClassAttribute((int)eCharacterClass.Paladin, "Paladin", "Fighter")]
 	public class ClassPaladin : ClassFighter
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Chants };

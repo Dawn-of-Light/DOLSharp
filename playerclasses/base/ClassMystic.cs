@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Mystic, "Mystic", "Mystic")]
-	public class ClassMystic : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Mystic, "Mystic", "Mystic")]
+	public class ClassMystic : DOL.GS.CharacterClassBase
 	{
 		public ClassMystic()
 		{

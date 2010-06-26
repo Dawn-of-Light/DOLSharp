@@ -165,7 +165,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 						long mgold = getmoney(client.Player);
-						if ((client.Player.PlayerCharacter.Gold + 1000 * client.Player.PlayerCharacter.Platinum) < mgold)
+						if ((client.Player.DBCharacter.Gold + 1000 * client.Player.DBCharacter.Platinum) < mgold)
 						{
 							DisplayMessage(client, "You don't have enough money! You need " + mgold + " gold!");
 							return;

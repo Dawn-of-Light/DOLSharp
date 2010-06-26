@@ -35,7 +35,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string charName = packet.ReadString(30);
-			Character[] chars = client.Account.Characters;
+			DOLCharacters[] chars = client.Account.Characters;
 			if (chars == null)
 				return 0;
 			for (int i = 0; i < chars.Length; i++)

@@ -60,7 +60,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>true if the player is suitable for this title.</returns>
 		public override bool IsSuitable(GamePlayer player)
 		{
-			TimeSpan t = DateTime.Now.Subtract(player.PlayerCharacter.CreationDate);
+			TimeSpan t = DateTime.Now.Subtract(player.DBCharacter.CreationDate);
 			return t.TotalDays >= 178; // ~half year
 		}
 	}

@@ -52,19 +52,19 @@ namespace DOL.GS
 			{
 				case "returned commander":
 				case "decayed commander":
-					InitControlledNpcBrain(0);
+					InitControlledBrainArray(0);
 					break;
 				case "skeletal commander":
-					InitControlledNpcBrain(1);
+					InitControlledBrainArray(1);
 					break;
 				case "bone commander":
-					InitControlledNpcBrain(2);
+					InitControlledBrainArray(2);
 					break;
 				case "dread commander":
 				case "dread guardian":
 				case "dread lich":
 				case "dread archer":
-					InitControlledNpcBrain(3);
+					InitControlledBrainArray(3);
 					break;
 			}
 		}
@@ -78,7 +78,7 @@ namespace DOL.GS
 			if (owner != null)
 			{
 				String message = String.Format("Hail, {0}. As my summoner, you may target me and say Commander to learn more about the abilities I possess.",
-					(owner.PlayerCharacter.Gender == 0) ? "Master" : "Mistress");
+					(owner.DBCharacter.Gender == 0) ? "Master" : "Mistress");
 				SayTo(owner, eChatLoc.CL_SystemWindow, message);
 			}
 		}
@@ -269,9 +269,9 @@ namespace DOL.GS
 					break;
 			}
 			//If we didn't find a spot return false
-			if (i >= m_controlledNpcBrain.Length)
+			if (i >= m_controlledBrain.Length)
 				return false;
-			m_controlledNpcBrain[i] = controlledNpc;
+			m_controlledBrain[i] = controlledNpc;
 			PetCount++;
 			return base.AddControlledNpc(controlledNpc);
 		}
@@ -304,9 +304,9 @@ namespace DOL.GS
 				if (found)
 				{
 					//First lets store the brain to kill it
-					IControlledBrain tempBrain = m_controlledNpcBrain[i];
+					IControlledBrain tempBrain = m_controlledBrain[i];
 					//Lets get rid of the brain asap
-					m_controlledNpcBrain[i] = null;
+					m_controlledBrain[i] = null;
 
 					//Only decrement, we just lost one pet
 					PetCount--;

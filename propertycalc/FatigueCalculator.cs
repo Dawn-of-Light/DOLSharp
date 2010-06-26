@@ -20,7 +20,7 @@ namespace DOL.GS.PropertyCalc
 			{
 				GamePlayer player = living as GamePlayer;
 
-				int endurance = player.PlayerCharacter != null ? player.PlayerCharacter.MaxEndurance : 100;
+				int endurance = player.DBCharacter != null ? player.DBCharacter.MaxEndurance : 100;
 				endurance += (int)(endurance * (Math.Min(15, living.ItemBonus[(int)property]) * .01));
 				return endurance;
 			}

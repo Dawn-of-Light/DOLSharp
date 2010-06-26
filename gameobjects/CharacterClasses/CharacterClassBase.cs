@@ -19,6 +19,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DOL.GS;
+using DOL.AI.Brain;
+using DOL.GS.Effects;
+using DOL.Events;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
@@ -26,179 +30,12 @@ using DOL.Language;
 namespace DOL.GS
 {
 	/// <summary>
-	/// Denotes a class as a DOL Character class
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-	public class PlayerClassAttribute : Attribute
-	{
-		protected string m_name;
-		protected string m_femaleName;
-		protected string m_basename;
-		protected int m_id;
-
-		public PlayerClassAttribute(int id, string name, string basename, string femalename)
-		{
-			m_basename = basename;
-			m_name = name;
-			m_id = id;
-			m_femaleName = femalename;
-		}
-
-		public PlayerClassAttribute(int id, string name, string basename)
-		{
-			m_basename = basename;
-			m_name = name;
-			m_id = id;
-		}
-
-		public int ID
-		{
-			get
-			{
-				return m_id;
-			}
-		}
-
-		public string Name
-		{
-			get
-			{
-				return m_name;
-			}
-		}
-
-		public string BaseName
-		{
-			get
-			{
-				return m_basename;
-			}
-		}
-
-		public string FemaleName
-		{
-			get
-			{
-				return m_femaleName;
-			}
-		}
-	}
-
-
-	/// <summary>
-	/// Interface thats required for finding the Character Classes among the other scripts
-	/// TODO: perhaps redundand, because DOLClassAttribute/CharacterClassSpec can be used
-	/// </summary>
-	public interface IClassSpec
-	{
-		int ID
-		{
-			get;
-		}
-
-		string Name
-		{
-			get;
-		}
-
-		string BaseName
-		{
-			get;
-		}
-
-		string Profession
-		{
-			get;
-		}
-
-		int BaseHP
-		{
-			get;
-		}
-
-		int SpecPointsMultiplier
-		{
-			get;
-		}
-
-		eStat PrimaryStat
-		{
-			get;
-		}
-
-		eStat SecondaryStat
-		{
-			get;
-		}
-		eStat TertiaryStat
-		{
-			get;
-		}
-		eStat ManaStat
-		{
-			get;
-		}
-		int WeaponSkillBase
-		{
-			get;
-		}
-		int WeaponSkillRangedBase
-		{
-			get;
-		}
-
-		eClassType ClassType
-		{
-			get;
-		}
-
-		/// <summary>
-		/// The maximum number of pulsing spells the class can have active simultaneously
-		/// </summary>
-		ushort MaxPulsingSpells
-		{
-			get;
-		}
-
-		string GetTitle(int level);
-		void OnLevelUp(GamePlayer player);
-		void OnRealmLevelUp(GamePlayer player);
-		void OnSkillTrained(GamePlayer player, Specialization skill);
-		bool CanUseLefthandedWeapon(GamePlayer player);
-		IList<string> GetAutotrainableSkills();
-		string FemaleName
-		{
-			get;
-		}
-		void SwitchToFemaleName();
-		bool HasAdvancedFromBaseClass();
-	}
-
-	/// <summary>
-	/// The type of character class
-	/// </summary>
-	public enum eClassType : int
-	{
-		/// <summary>
-		/// The class has access to all spells
-		/// </summary>
-		ListCaster,
-		/// <summary>
-		/// The class has access to best one or two spells
-		/// </summary>
-		Hybrid,
-		/// <summary>
-		/// The class has no spells
-		/// </summary>
-		PureTank,
-	}
-
-
-	/// <summary>
 	/// The Base class for all Character Classes in DOL
 	/// </summary>
-	public abstract class CharacterClassSpec : IClassSpec
+	public abstract class CharacterClassBase : ICharacterClass
 	{
+		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// id of class in Client
 		/// </summary>
@@ -268,9 +105,14 @@ namespace DOL.GS
 		/// </summary>
 		protected int m_wsbaseRanged = 440;
 
+		/// <summary>
+		/// The GamePlayer for this character
+		/// </summary>
+		public GamePlayer Player { get; set; }
+
 		private static readonly string[] AutotrainableSkills = new string[0];
 
-		public CharacterClassSpec()
+		public CharacterClassBase()
 		{
 			m_id = 0;
 			m_name = "Unknown Class";
@@ -278,19 +120,24 @@ namespace DOL.GS
 			m_profession = "";
 
 			// initialize members from attributes
-			Attribute[] attrs = Attribute.GetCustomAttributes(this.GetType(), typeof(PlayerClassAttribute));
+			Attribute[] attrs = Attribute.GetCustomAttributes(this.GetType(), typeof(CharacterClassAttribute));
 			foreach (Attribute attr in attrs)
 			{
-				if (attr is PlayerClassAttribute)
+				if (attr is CharacterClassAttribute)
 				{
-					m_id = ((PlayerClassAttribute)attr).ID;
-					m_name = ((PlayerClassAttribute)attr).Name;
-					m_basename = ((PlayerClassAttribute)attr).BaseName;
-					if (Util.IsEmpty(((PlayerClassAttribute)attr).FemaleName) == false)
-						m_femaleName = ((PlayerClassAttribute)attr).FemaleName;
+					m_id = ((CharacterClassAttribute)attr).ID;
+					m_name = ((CharacterClassAttribute)attr).Name;
+					m_basename = ((CharacterClassAttribute)attr).BaseName;
+					if (Util.IsEmpty(((CharacterClassAttribute)attr).FemaleName) == false)
+						m_femaleName = ((CharacterClassAttribute)attr).FemaleName;
 					break;
 				}
 			}
+		}
+
+		public virtual void Init(GamePlayer player)
+		{
+			Player = player;
 		}
 
 		public void SwitchToFemaleName()
@@ -451,13 +298,147 @@ namespace DOL.GS
 		{
 			return true;
 		}
+
+		public virtual void SetControlledBrain(IControlledBrain controlledBrain)
+		{
+			if (controlledBrain == Player.ControlledBrain) return;
+			if (controlledBrain == null)
+			{
+				Player.Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
+				Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client, "GamePlayer.SetControlledNpc.ReleaseTarget2", Player.ControlledBrain.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client, "GamePlayer.SetControlledNpc.ReleaseTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			else
+			{
+				if (controlledBrain.Owner != Player)
+					throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Player.Name + ", owner=" + controlledBrain.Owner.Name + ")", "controlledNpc");
+				if (Player.ControlledBrain == null)
+					Player.InitControlledBrainArray(1);
+				Player.Out.SendPetWindow(controlledBrain.Body, ePetWindowAction.Open, controlledBrain.AggressionState, controlledBrain.WalkState);
+				if (controlledBrain.Body != null)
+				{
+					Player.Out.SendNPCCreate(controlledBrain.Body); // after open pet window again send creation NPC packet
+					if (controlledBrain.Body.Inventory != null)
+						Player.Out.SendLivingEquipmentUpdate(controlledBrain.Body);
+				}
+			}
+
+			Player.ControlledBrain = controlledBrain;
+
+		}
+
+		/// <summary>
+		/// Releases controlled object
+		/// </summary>
+		public virtual void CommandNpcRelease()
+		{
+			IControlledBrain controlledBrain = Player.ControlledBrain;
+			if (controlledBrain == null)
+				return;
+
+			GameNPC npc = controlledBrain.Body;
+			if (npc == null)
+				return;
+
+			Player.Notify(GameLivingEvent.PetReleased, npc);
+		}
+
+		/// <summary>
+		/// Invoked when pet is released.
+		/// </summary>
+		public virtual void OnPetReleased()
+		{
+		}
+
+		/// <summary>
+		/// Can this character start an attack?
+		/// </summary>
+		/// <param name="attackTarget"></param>
+		/// <returns></returns>
+		public virtual bool StartAttack(GameObject attackTarget)
+		{
+			return true;
+		}
+
+
+		/// <summary>
+		/// Return the health percent of this character
+		/// </summary>
+		public virtual byte HealthPercentGroupWindow
+		{
+			get
+			{
+				return Player.HealthPercent;
+			}
+		}
+
+
+		/// <summary>
+		/// Create a shade effect for this player.
+		/// </summary>
+		/// <returns></returns>
+		public virtual ShadeEffect CreateShadeEffect()
+		{
+			return new ShadeEffect();
+		}
+
+		/// <summary>
+		/// Changes shade state of the player.
+		/// </summary>
+		/// <param name="state">The new state.</param>
+		public virtual void Shade(bool state)
+		{
+			if (Player.IsShade == state)
+			{
+				if (state && (Player.ObjectState == GameObject.eObjectState.Active))
+					Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client, "GamePlayer.Shade.AlreadyShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
+			if (state)
+			{
+				// Turn into a shade.
+				Player.Model = Player.ShadeModel;
+				Player.ShadeEffect = CreateShadeEffect();
+				Player.ShadeEffect.Start(Player);
+			}
+			else
+			{
+				// Drop shade form.
+				Player.ShadeEffect.Stop();
+				Player.ShadeEffect = null;
+				Player.Model = Player.CreationModel;
+				Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client, "GamePlayer.Shade.NoLongerShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+		}
+
+		/// <summary>
+		/// Called when player is removed from world.
+		/// </summary>
+		/// <returns></returns>
+		public virtual bool RemoveFromWorld()
+		{
+			return true;
+		}
+
+		/// <summary>
+		/// What to do when this character dies
+		/// </summary>
+		/// <param name="killer"></param>
+		public virtual void Die(GameObject killer)
+		{
+		}
+
+		public virtual void Notify(DOLEvent e, object sender, EventArgs args)
+		{
+		}
 	}
 
 	/// <summary>
 	/// Usable default Character Class, if not other can be found or used
 	/// just for getting things valid in problematic situations
 	/// </summary>
-	public class DefaultCharacterClass : CharacterClassSpec
+	public class DefaultCharacterClass : CharacterClassBase
 	{
 		public DefaultCharacterClass()
 			: base()

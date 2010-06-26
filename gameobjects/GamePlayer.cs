@@ -68,11 +68,11 @@ namespace DOL.GS
 		/// based on!
 		/// (renamed and private, cause if derive is needed overwrite PlayerCharacter)
 		/// </summary>
-		private Character m_dbCharacter;
+		private DOLCharacters m_dbCharacter;
 		/// <summary>
-		/// The database id this character belong to
+		/// The guild id this character belong to
 		/// </summary>
-		protected string m_guildid;
+		protected string m_guildId;
 		/// <summary>
 		/// Char spec points checked on load
 		/// </summary>
@@ -275,7 +275,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The character the player is based on
 		/// </summary>
-		public Character PlayerCharacter
+		public DOLCharacters DBCharacter
 		{
 			get { return m_dbCharacter; }
 		}
@@ -296,8 +296,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool IsAnonymous
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.IsAnonymous && (ServerProperties.Properties.ANON_MODIFIER != -1) : false; }
-			set { if (PlayerCharacter != null) PlayerCharacter.IsAnonymous = value; }
+			get { return DBCharacter != null ? DBCharacter.IsAnonymous && (ServerProperties.Properties.ANON_MODIFIER != -1) : false; }
+			set { if (DBCharacter != null) DBCharacter.IsAnonymous = value; }
 		}
 
 		/// <summary>
@@ -316,8 +316,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool NoHelp
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.NoHelp : false; }
-			set { if (PlayerCharacter != null) PlayerCharacter.NoHelp = value; }
+			get { return DBCharacter != null ? DBCharacter.NoHelp : false; }
+			set { if (DBCharacter != null) DBCharacter.NoHelp = value; }
 		}
 
 		/// <summary>
@@ -325,8 +325,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool ShowGuildLogins
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.ShowGuildLogins : false; }
-			set { if (PlayerCharacter != null) PlayerCharacter.ShowGuildLogins = value; }
+			get { return DBCharacter != null ? DBCharacter.ShowGuildLogins : false; }
+			set { if (DBCharacter != null) DBCharacter.ShowGuildLogins = value; }
 		}
 
 		/// <summary>
@@ -335,8 +335,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool GainXP
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.GainXP : true; }
-			set { if (PlayerCharacter != null) PlayerCharacter.GainXP = value; }
+			get { return DBCharacter != null ? DBCharacter.GainXP : true; }
+			set { if (DBCharacter != null) DBCharacter.GainXP = value; }
 		}
 
 		/// <summary>
@@ -345,8 +345,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool GainRP
 		{
-			get { return (PlayerCharacter != null ? PlayerCharacter.GainRP : true); }
-			set { if (PlayerCharacter != null) PlayerCharacter.GainRP = value; }
+			get { return (DBCharacter != null ? DBCharacter.GainRP : true); }
+			set { if (DBCharacter != null) DBCharacter.GainRP = value; }
 		}
 
 		/// <summary>
@@ -355,8 +355,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool RPFlag
 		{
-			get { return (PlayerCharacter != null ? PlayerCharacter.RPFlag : true); }
-			set { if (PlayerCharacter != null) PlayerCharacter.RPFlag = value; }
+			get { return (DBCharacter != null ? DBCharacter.RPFlag : true); }
+			set { if (DBCharacter != null) DBCharacter.RPFlag = value; }
 		}
 
 		/// <summary>
@@ -365,8 +365,8 @@ namespace DOL.GS
 		/// </summary>
 		public string GuildNote
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.GuildNote : String.Empty; }
-			set { if (PlayerCharacter != null) PlayerCharacter.GuildNote = value; }
+			get { return DBCharacter != null ? DBCharacter.GuildNote : String.Empty; }
+			set { if (DBCharacter != null) DBCharacter.GuildNote = value; }
 		}
 
 		/// <summary>
@@ -375,8 +375,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool Autoloot
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.Autoloot : true; }
-			set { if (PlayerCharacter != null) PlayerCharacter.Autoloot = value; }
+			get { return DBCharacter != null ? DBCharacter.Autoloot : true; }
+			set { if (DBCharacter != null) DBCharacter.Autoloot = value; }
 		}
 
 		/// <summary>
@@ -385,8 +385,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool Advisor
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.Advisor : false; }
-			set { if (PlayerCharacter != null) PlayerCharacter.Advisor = value; }
+			get { return DBCharacter != null ? DBCharacter.Advisor : false; }
+			set { if (DBCharacter != null) DBCharacter.Advisor = value; }
 		}
 
 		private bool m_canUseSlashLevel = false;
@@ -703,11 +703,11 @@ namespace DOL.GS
 			// DamienOphyr: Overwrite current position with Bind position in database, MoveTo() is inoperant
 			if (CurrentRegion.IsInstance)
 			{
-					PlayerCharacter.Region = PlayerCharacter.BindRegion;
-					PlayerCharacter.Xpos =PlayerCharacter.BindXpos;
-					PlayerCharacter.Ypos= PlayerCharacter.BindYpos;
-					PlayerCharacter.Zpos =PlayerCharacter.BindZpos;
-					PlayerCharacter.Direction=PlayerCharacter.BindHeading;
+					DBCharacter.Region = DBCharacter.BindRegion;
+					DBCharacter.Xpos =DBCharacter.BindXpos;
+					DBCharacter.Ypos= DBCharacter.BindYpos;
+					DBCharacter.Zpos =DBCharacter.BindZpos;
+					DBCharacter.Direction=DBCharacter.BindHeading;
 			}
 			
 			//check for battleground caps
@@ -856,7 +856,7 @@ namespace DOL.GS
 		/// <param name="forced">if true, can bind anywhere</param>
 		public virtual void Bind(bool forced)
 		{
-			Character character = PlayerCharacter; // if property will be derived with cost-intensive code, so its only getted one time
+			DOLCharacters character = DBCharacter; // if property will be derived with cost-intensive code, so its only getted one time
 			if (character == null) return;
 
 			if (CurrentRegion.IsInstance)
@@ -1093,7 +1093,7 @@ namespace DOL.GS
 		/// <param name="forced">if true, will release even if not dead</param>
 		public virtual void Release(eReleaseType releaseCommand, bool forced)
 		{
-			Character character = PlayerCharacter;
+			DOLCharacters character = DBCharacter;
 			if (character == null) return;
 			
 			// check if valid housebind
@@ -1689,11 +1689,11 @@ namespace DOL.GS
 		/// </summary>
 		public virtual string LastName
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.LastName : string.Empty; }
+			get { return DBCharacter != null ? DBCharacter.LastName : string.Empty; }
 			set
 			{
-				if (PlayerCharacter == null) return;
-				PlayerCharacter.LastName = value;
+				if (DBCharacter == null) return;
+				DBCharacter.LastName = value;
 				//update last name for all players if client is playing
 				if (ObjectState == eObjectState.Active)
 				{
@@ -1735,11 +1735,11 @@ namespace DOL.GS
 		/// </summary>
 		public override string Name
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.Name : string.Empty; }
+			get { return DBCharacter != null ? DBCharacter.Name : string.Empty; }
 			set
 			{
-				if (PlayerCharacter == null) return;
-				PlayerCharacter.Name = value;
+				if (DBCharacter == null) return;
+				DBCharacter.Name = value;
 				//base.Name = value; // only need if there will be some special code in base-property in future
 				//update name for all players if client is playing
 				if (ObjectState == eObjectState.Active)
@@ -1788,12 +1788,12 @@ namespace DOL.GS
 		/// </remarks>
 		public override ushort Model
 		{
-			get { return PlayerCharacter != null ? (ushort)PlayerCharacter.CurrentModel : base.Model; }
+			get { return DBCharacter != null ? (ushort)DBCharacter.CurrentModel : base.Model; }
 			set
 			{
-				if (PlayerCharacter == null || PlayerCharacter.CurrentModel == value) return;
+				if (DBCharacter == null || DBCharacter.CurrentModel == value) return;
 
-				PlayerCharacter.CurrentModel = value;
+				DBCharacter.CurrentModel = value;
 				Notify(GamePlayerEvent.ModelChanged, this);
 				//base.Model; // only need if there will be some special code in base-property in future
 				if (ObjectState == eObjectState.Active)
@@ -1855,16 +1855,16 @@ namespace DOL.GS
 				//flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
 				if (Level >= 48)
 					return 1;
-				TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - PlayerCharacter.LastFreeLeveled.Ticks));
+				TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - DBCharacter.LastFreeLeveled.Ticks));
 				if (t.Days >= ServerProperties.Properties.FREELEVEL_DAYS)
 				{
-					if (Level >= PlayerCharacter.LastFreeLevel + 2)
+					if (Level >= DBCharacter.LastFreeLevel + 2)
 						return 2;
 					else return 5;
 				}
 				else
 				{
-					if (Level >= PlayerCharacter.LastFreeLevel + 2)
+					if (Level >= DBCharacter.LastFreeLevel + 2)
 						return 3;
 					else return 4;
 				}
@@ -1877,8 +1877,8 @@ namespace DOL.GS
 		/// </summary>
 		public int TotalConstitutionLostAtDeath
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.ConLostAtDeath : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.ConLostAtDeath = value; }
+			get { return DBCharacter != null ? DBCharacter.ConLostAtDeath : 0; }
+			set { if (DBCharacter != null) DBCharacter.ConLostAtDeath = value; }
 		}
 
 		/// <summary>
@@ -1892,7 +1892,7 @@ namespace DOL.GS
 			int oldstat = GetBaseStat(stat);
 			base.ChangeBaseStat(stat, val);
 			int newstat = GetBaseStat(stat);
-			Character character = PlayerCharacter; // to call it only once, if in future there will be some special code to get the character
+			DOLCharacters character = DBCharacter; // to call it only once, if in future there will be some special code to get the character
 			// Graveen: always positive and not null. This allows /player stats to substract values safely
 			if (newstat < 1) newstat = 1;
 			if (character != null && oldstat != newstat)
@@ -2150,7 +2150,7 @@ namespace DOL.GS
 		/// </summary>
 		public override int Health
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.Health : base.Health; }
+			get { return DBCharacter != null ? DBCharacter.Health : base.Health; }
 			set
 			{
 				//DOLConsole.WriteSystem("Health="+value);
@@ -2165,8 +2165,8 @@ namespace DOL.GS
 
 				int oldPercent = HealthPercent;
 				base.Health = value;
-				if (PlayerCharacter != null)
-					PlayerCharacter.Health = value;
+				if (DBCharacter != null)
+					DBCharacter.Health = value;
 				if (oldPercent != HealthPercent)
 				{
 					if (Group != null)
@@ -2220,6 +2220,14 @@ namespace DOL.GS
 			return Math.Max(1, (int)hp4);
 		}
 
+		public override byte HealthPercentGroupWindow
+		{
+			get
+			{
+				return CharacterClass.HealthPercentGroupWindow;
+			}
+		}
+
 		/// <summary>
 		/// Calculate max mana for this player based on level and mana stat level
 		/// </summary>
@@ -2265,7 +2273,7 @@ namespace DOL.GS
 		/// </summary>
 		public override int Mana
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.Mana : base.Mana; }
+			get { return DBCharacter != null ? DBCharacter.Mana : base.Mana; }
 			set
 			{
 				value = Math.Min(value, MaxMana);
@@ -2278,8 +2286,8 @@ namespace DOL.GS
 				}
 				int oldPercent = ManaPercent;
 				base.Mana = value;
-				if (PlayerCharacter != null)
-					PlayerCharacter.Mana = value;
+				if (DBCharacter != null)
+					DBCharacter.Mana = value;
 				if (oldPercent != ManaPercent)
 				{
 					if (Group != null)
@@ -2311,7 +2319,7 @@ namespace DOL.GS
 		/// </summary>
 		public override int Endurance
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.Endurance : base.Endurance; }
+			get { return DBCharacter != null ? DBCharacter.Endurance : base.Endurance; }
 			set
 			{
 				value = Math.Min(value, MaxEndurance);
@@ -2326,8 +2334,8 @@ namespace DOL.GS
 					StartEnduranceRegeneration();
 				int oldPercent = EndurancePercent;
 				base.Endurance = value;
-				if (PlayerCharacter != null)
-					PlayerCharacter.Endurance = value;
+				if (DBCharacter != null)
+					DBCharacter.Endurance = value;
 				if (oldPercent != EndurancePercent)
 				{
 					//ogre: 1.69+ endurance is displayed on group window
@@ -2351,8 +2359,8 @@ namespace DOL.GS
 				if (MaxEndurance == value)
 					return;
 				base.MaxEndurance = value;
-				if (PlayerCharacter != null)
-					PlayerCharacter.MaxEndurance = value;
+				if (DBCharacter != null)
+					DBCharacter.MaxEndurance = value;
 				UpdatePlayerStatus();
 			}
 		}
@@ -2430,17 +2438,12 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Players class
-		/// </summary>
-		protected IClassSpec m_class;
-
-		/// <summary>
 		/// Gets/sets the player's race name
 		/// </summary>
 		public string RaceName
 		{
 			//get { return RACENAMES[Race]; }
-			get { return RACENAMES(Client, PlayerCharacter.Race, PlayerCharacter.Gender); }
+			get { return RACENAMES(Client, DBCharacter.Race, DBCharacter.Gender); }
 		}
 
 		/// <summary>
@@ -2449,16 +2452,21 @@ namespace DOL.GS
 		/// </summary>
 		public override short Race
 		{
-			get { return (short)(PlayerCharacter != null ? PlayerCharacter.Race : 0); }
-			set { if (PlayerCharacter != null) PlayerCharacter.Race = value; }
+			get { return (short)(DBCharacter != null ? DBCharacter.Race : 0); }
+			set { if (DBCharacter != null) DBCharacter.Race = value; }
 		}
+
+		/// <summary>
+		/// Players class
+		/// </summary>
+		protected ICharacterClass m_characterClass;
 
 		/// <summary>
 		/// Gets the player's character class
 		/// </summary>
-		public IClassSpec CharacterClass
+		public ICharacterClass CharacterClass
 		{
-			get { return m_class; }
+			get { return m_characterClass; }
 		}
 
 		/// <summary>
@@ -2468,7 +2476,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public bool SetCharacterClass(int id)
 		{
-			IClassSpec cl = ScriptMgr.FindClassSpec(id);
+			ICharacterClass cl = ScriptMgr.FindCharacterClass(id);
 
 			if (cl == null)
 			{
@@ -2476,10 +2484,14 @@ namespace DOL.GS
 					log.Error("No CharacterClass with ID " + id + " found");
 				return false;
 			}
-			m_class = cl;
-			if (Util.IsEmpty(m_class.FemaleName) == false && PlayerCharacter.Gender == 1)
-				m_class.SwitchToFemaleName();
-			PlayerCharacter.Class = m_class.ID;
+
+			m_characterClass = cl;
+			m_characterClass.Player = this;
+
+			if (Util.IsEmpty(m_characterClass.FemaleName) == false && DBCharacter.Gender == 1)
+				m_characterClass.SwitchToFemaleName();
+
+			DBCharacter.Class = m_characterClass.ID;
 
 			if (Group != null)
 			{
@@ -2554,8 +2566,8 @@ namespace DOL.GS
 		/// </summary>
 		public int RespecAmountAllSkill
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountAllSkill : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountAllSkill = value; }
+			get { return DBCharacter != null ? DBCharacter.RespecAmountAllSkill : 0; }
+			set { if (DBCharacter != null) DBCharacter.RespecAmountAllSkill = value; }
 		}
 
 		/// <summary>
@@ -2564,8 +2576,8 @@ namespace DOL.GS
 		/// </summary>
 		public int RespecAmountSingleSkill
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountSingleSkill : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountSingleSkill = value; }
+			get { return DBCharacter != null ? DBCharacter.RespecAmountSingleSkill : 0; }
+			set { if (DBCharacter != null) DBCharacter.RespecAmountSingleSkill = value; }
 		}
 
 		/// <summary>
@@ -2574,8 +2586,8 @@ namespace DOL.GS
 		/// </summary>
 		public int RespecAmountRealmSkill
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountRealmSkill : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountRealmSkill = value; }
+			get { return DBCharacter != null ? DBCharacter.RespecAmountRealmSkill : 0; }
+			set { if (DBCharacter != null) DBCharacter.RespecAmountRealmSkill = value; }
 		}
 
 		/// <summary>
@@ -2584,8 +2596,8 @@ namespace DOL.GS
 		/// </summary>
 		public int RespecAmountDOL
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountDOL : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountDOL = value; }
+			get { return DBCharacter != null ? DBCharacter.RespecAmountDOL : 0; }
+			set { if (DBCharacter != null) DBCharacter.RespecAmountDOL = value; }
 		}
 
 		/// <summary>
@@ -2594,8 +2606,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool IsLevelRespecUsed
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.IsLevelRespecUsed : true; }
-			set { if (PlayerCharacter != null) PlayerCharacter.IsLevelRespecUsed = value; }
+			get { return DBCharacter != null ? DBCharacter.IsLevelRespecUsed : true; }
+			set { if (DBCharacter != null) DBCharacter.IsLevelRespecUsed = value; }
 		}
 
 		/// <summary>
@@ -2604,8 +2616,8 @@ namespace DOL.GS
 		/// </summary>
 		public int RespecBought
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.RespecBought : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.RespecBought = value; }
+			get { return DBCharacter != null ? DBCharacter.RespecBought : 0; }
+			set { if (DBCharacter != null) DBCharacter.RespecBought = value; }
 		}
 
 		/// <summary>
@@ -3529,8 +3541,8 @@ namespace DOL.GS
 		/// </summary>
 		public long BountyPoints
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.BountyPoints : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.BountyPoints = value; }
+			get { return DBCharacter != null ? DBCharacter.BountyPoints : 0; }
+			set { if (DBCharacter != null) DBCharacter.BountyPoints = value; }
 		}
 
 		/// <summary>
@@ -3539,8 +3551,8 @@ namespace DOL.GS
 		/// </summary>
 		public long RealmPoints
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.RealmPoints : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.RealmPoints = value; }
+			get { return DBCharacter != null ? DBCharacter.RealmPoints : 0; }
+			set { if (DBCharacter != null) DBCharacter.RealmPoints = value; }
 		}
 
 		/// <summary>
@@ -3549,8 +3561,8 @@ namespace DOL.GS
 		/// </summary>
 		public int SkillSpecialtyPoints
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.SkillSpecialtyPoints : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.SkillSpecialtyPoints = value; }
+			get { return DBCharacter != null ? DBCharacter.SkillSpecialtyPoints : 0; }
+			set { if (DBCharacter != null) DBCharacter.SkillSpecialtyPoints = value; }
 		}
 
 		/// <summary>
@@ -3559,8 +3571,8 @@ namespace DOL.GS
 		/// </summary>
 		public int RealmSpecialtyPoints
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.RealmSpecialtyPoints : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.RealmSpecialtyPoints = value; }
+			get { return DBCharacter != null ? DBCharacter.RealmSpecialtyPoints : 0; }
+			set { if (DBCharacter != null) DBCharacter.RealmSpecialtyPoints = value; }
 		}
 
 		/// <summary>
@@ -3568,11 +3580,11 @@ namespace DOL.GS
 		/// </summary>
 		public int RealmLevel
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.RealmLevel : 0; }
+			get { return DBCharacter != null ? DBCharacter.RealmLevel : 0; }
 			set
 			{
-				if (PlayerCharacter != null)
-					PlayerCharacter.RealmLevel = value;
+				if (DBCharacter != null)
+					DBCharacter.RealmLevel = value;
 				CharacterClass.OnRealmLevelUp(this);
 			}
 		}
@@ -3587,14 +3599,14 @@ namespace DOL.GS
 		{
 			if (Realm != eRealm.None)
 			{
-				int m_RR = PlayerCharacter.RealmLevel / 10;
+				int m_RR = DBCharacter.RealmLevel / 10;
 
 				switch (m_RR)
 				{
 						//Because realm levels are only start to count at realm rank 1 (and so we need 120 levels to get realm rank 13), our first case
 						//will be start with 0 (realm rank 1) and our last case will be end with 12 (realm rank 13)
 					case 0:
-						if (PlayerCharacter.RealmLevel < 1)
+						if (DBCharacter.RealmLevel < 1)
 						{
 							/*******************************************************************************************************************/
 							/* This titles are only used by characters where realm level == 0. If players realm points are higher ( > ) then 0 */
@@ -3990,7 +4002,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return RealmRankTitles(Realm, PlayerCharacter.Gender);
+				return RealmRankTitles(Realm, DBCharacter.Gender);
 			}
 		}
 
@@ -4738,7 +4750,7 @@ namespace DOL.GS
 			}
 
 			m_currentXP += expTotal; // force usage of this method, Experience property cannot be set
-			PlayerCharacter.Experience = m_currentXP;
+			DBCharacter.Experience = m_currentXP;
 
 			if (expTotal >= 0)
 			{
@@ -4772,13 +4784,13 @@ namespace DOL.GS
 		/// </summary>
 		public override byte Level
 		{
-			get { return PlayerCharacter != null ? (byte)PlayerCharacter.Level : base.Level; }
+			get { return DBCharacter != null ? (byte)DBCharacter.Level : base.Level; }
 			set
 			{
 				int oldLevel = Level;
 				base.Level = value;
-				if (PlayerCharacter != null)
-					PlayerCharacter.Level = value;
+				if (DBCharacter != null)
+					DBCharacter.Level = value;
 				if (oldLevel > 0)
 				{
 					if (value > oldLevel)
@@ -4801,8 +4813,8 @@ namespace DOL.GS
 		/// </summary>
 		public virtual bool IsLevelSecondStage
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.IsLevelSecondStage : false; }
-			set { if (PlayerCharacter != null) PlayerCharacter.IsLevelSecondStage = value; }
+			get { return DBCharacter != null ? DBCharacter.IsLevelSecondStage : false; }
+			set { if (DBCharacter != null) DBCharacter.IsLevelSecondStage = value; }
 		}
 
 		/// <summary>
@@ -4987,8 +4999,8 @@ namespace DOL.GS
 				StartPowerRegeneration();
 			}
 
-			if (PlayerCharacter != null)
-				PlayerCharacter.DeathCount = 0;
+			if (DBCharacter != null)
+				DBCharacter.DeathCount = 0;
 
 			if (Group != null)
 			{
@@ -5040,8 +5052,8 @@ namespace DOL.GS
 
 			SkillSpecialtyPoints += specpoints;
 			//death penalty reset on mini-ding
-			if (PlayerCharacter != null)
-				PlayerCharacter.DeathCount = 0;
+			if (DBCharacter != null)
+				DBCharacter.DeathCount = 0;
 
 			if (Group != null)
 			{
@@ -5134,8 +5146,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool CancelStyle
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.CancelStyle : false; }
-			set { if (PlayerCharacter != null) PlayerCharacter.CancelStyle = value; }
+			get { return DBCharacter != null ? DBCharacter.CancelStyle : false; }
+			set { if (DBCharacter != null) DBCharacter.CancelStyle = value; }
 		}
 		/// <summary>
 		/// Decides which style living will use in this moment
@@ -5163,8 +5175,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool SafetyFlag
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.SafetyFlag : false; }
-			set { if (PlayerCharacter != null) PlayerCharacter.SafetyFlag = value; }
+			get { return DBCharacter != null ? DBCharacter.SafetyFlag : false; }
+			set { if (DBCharacter != null) DBCharacter.SafetyFlag = value; }
 		}
 
 		/// <summary>
@@ -5173,11 +5185,11 @@ namespace DOL.GS
 		/// </summary>
 		public override bool IsCloakHoodUp
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.IsCloakHoodUp : base.IsCloakHoodUp; }
+			get { return DBCharacter != null ? DBCharacter.IsCloakHoodUp : base.IsCloakHoodUp; }
 			set
 			{
 				//base.IsCloakHoodUp = value; // only needed if some special code will be added in base-property in future
-				PlayerCharacter.IsCloakHoodUp = value;
+				DBCharacter.IsCloakHoodUp = value;
 
 				Out.SendInventoryItemsUpdate(null);
 				UpdateEquipmentAppearance();
@@ -5201,11 +5213,11 @@ namespace DOL.GS
 		{
 			get
 			{
-				return PlayerCharacter != null ? PlayerCharacter.IsCloakInvisible : base.IsCloakInvisible;
+				return DBCharacter != null ? DBCharacter.IsCloakInvisible : base.IsCloakInvisible;
 			}
 			set
 			{
-				PlayerCharacter.IsCloakInvisible = value;
+				DBCharacter.IsCloakInvisible = value;
 
 				Out.SendInventoryItemsUpdate(null);
 				UpdateEquipmentAppearance();
@@ -5229,11 +5241,11 @@ namespace DOL.GS
 		{
 			get
 			{
-				return PlayerCharacter != null ? PlayerCharacter.IsHelmInvisible : base.IsHelmInvisible;
+				return DBCharacter != null ? DBCharacter.IsHelmInvisible : base.IsHelmInvisible;
 			}
 			set
 			{
-				PlayerCharacter.IsHelmInvisible = value;
+				DBCharacter.IsHelmInvisible = value;
 
 				Out.SendInventoryItemsUpdate(null);
 				UpdateEquipmentAppearance();
@@ -5255,8 +5267,8 @@ namespace DOL.GS
 		/// </summary>
 		public virtual bool SpellQueue
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.SpellQueue : false; }
-			set { if (PlayerCharacter != null) PlayerCharacter.SpellQueue = value; }
+			get { return DBCharacter != null ? DBCharacter.SpellQueue : false; }
+			set { if (DBCharacter != null) DBCharacter.SpellQueue = value; }
 		}
 
 
@@ -5395,6 +5407,11 @@ namespace DOL.GS
 		/// <param name="attackTarget">the target to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
+			if (CharacterClass.StartAttack(attackTarget) == false)
+			{
+				return;
+			}
+
 			if (!IsAlive)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.YouCantCombat"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
@@ -5402,19 +5419,14 @@ namespace DOL.GS
 			}
 
 			// Necromancer with summoned pet cannot attack
-			if (ControlledNpcBrain != null)
-				if (ControlledNpcBrain.Body != null)
-					if (ControlledNpcBrain.Body is NecromancerPet)
+			if (ControlledBrain != null)
+				if (ControlledBrain.Body != null)
+					if (ControlledBrain.Body is NecromancerPet)
 			{
 				Out.SendMessage("You cannot enter combat in shade mode!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			//			if(IsShade)
-			//			{
-			//				Out.SendMessage("You cannot enter combat mode in shade mode!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-			//				return;
-			//			}
 			if (IsStunned)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CantAttackStunned"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
@@ -5473,7 +5485,7 @@ namespace DOL.GS
 			{
 				if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
 				{
-					if ((eCharacterClass)PlayerCharacter.Class == eCharacterClass.Scout || (eCharacterClass)PlayerCharacter.Class == eCharacterClass.Hunter || (eCharacterClass)PlayerCharacter.Class == eCharacterClass.Ranger)
+					if ((eCharacterClass)DBCharacter.Class == eCharacterClass.Scout || (eCharacterClass)DBCharacter.Class == eCharacterClass.Hunter || (eCharacterClass)DBCharacter.Class == eCharacterClass.Ranger)
 					{
 						// There is no feedback on live when attempting to fire a bow with arrows
 						return;
@@ -7036,6 +7048,8 @@ namespace DOL.GS
 		/// <param name="killer">the killer</param>
 		public override void Die(GameObject killer)
 		{
+			CharacterClass.Die(killer);
+
 			bool realmDeath = killer != null && killer.Realm != eRealm.None;
 
 			TargetObject = null;
@@ -7232,7 +7246,7 @@ namespace DOL.GS
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.LoseExperience"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 					// if this is the first death in level, you lose only half the penalty
-					switch (PlayerCharacter.DeathCount)
+					switch (DBCharacter.DeathCount)
 					{
 						case 0:
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DeathN1"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
@@ -7244,13 +7258,13 @@ namespace DOL.GS
 							break;
 					}
 
-					PlayerCharacter.DeathCount++;
+					DBCharacter.DeathCount++;
 
 					long xpLoss = (ExperienceForNextLevel - ExperienceForCurrentLevel) * xpLossPercent / 1000;
 					GainExperience(eXPSource.Other, -xpLoss, 0, 0, 0, false, true);
 					TempProperties.setProperty(DEATH_EXP_LOSS_PROPERTY, xpLoss);
 
-					int conLoss = PlayerCharacter.DeathCount;
+					int conLoss = DBCharacter.DeathCount;
 					if (conLoss > 3)
 						conLoss = 3;
 					else if (conLoss < 1)
@@ -7277,7 +7291,7 @@ namespace DOL.GS
 			// no other way to keep correct message order...
 			GameServer.ServerRules.OnPlayerKilled(this, killer);
 			if (m_releaseType != eReleaseType.Duel)
-				PlayerCharacter.DeathTime = PlayedTime;
+				DBCharacter.DeathTime = PlayedTime;
 		}
 
 		public override void EnemyKilled(GameLiving enemy)
@@ -7296,13 +7310,13 @@ namespace DOL.GS
 					if (player.Attackers.Contains(enemy))
 						player.RemoveAttacker(enemy);
 
-					if (player.ControlledNpcBrain != null && player.ControlledNpcBrain.Body.Attackers.Contains(enemy))
-						player.ControlledNpcBrain.Body.RemoveAttacker(enemy);
+					if (player.ControlledBrain != null && player.ControlledBrain.Body.Attackers.Contains(enemy))
+						player.ControlledBrain.Body.RemoveAttacker(enemy);
 				}
 			}
 
-			if (ControlledNpcBrain != null && ControlledNpcBrain.Body.Attackers.Contains(enemy))
-				ControlledNpcBrain.Body.RemoveAttacker(enemy);
+			if (ControlledBrain != null && ControlledBrain.Body.Attackers.Contains(enemy))
+				ControlledBrain.Body.RemoveAttacker(enemy);
 
 			base.EnemyKilled(enemy);
 		}
@@ -7315,7 +7329,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				IControlledBrain npc = ControlledNpcBrain;
+				IControlledBrain npc = ControlledBrain;
 				if (npc != null && npc.Body.InCombat)
 					return true;
 				return base.InCombat;
@@ -8095,7 +8109,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual long GetCurrentMoney()
 		{
-			return Money.GetMoney(PlayerCharacter.Mithril, PlayerCharacter.Platinum, PlayerCharacter.Gold, PlayerCharacter.Silver, PlayerCharacter.Copper);
+			return Money.GetMoney(DBCharacter.Mithril, DBCharacter.Platinum, DBCharacter.Gold, DBCharacter.Silver, DBCharacter.Copper);
 		}
 
 		/// <summary>
@@ -8128,11 +8142,11 @@ namespace DOL.GS
 		{
 			long newMoney = GetCurrentMoney() + money;
 
-			PlayerCharacter.Copper = Money.GetCopper(newMoney);
-			PlayerCharacter.Silver = Money.GetSilver(newMoney);
-			PlayerCharacter.Gold = Money.GetGold(newMoney);
-			PlayerCharacter.Platinum = Money.GetPlatinum(newMoney);
-			PlayerCharacter.Mithril = Money.GetMithril(newMoney);
+			DBCharacter.Copper = Money.GetCopper(newMoney);
+			DBCharacter.Silver = Money.GetSilver(newMoney);
+			DBCharacter.Gold = Money.GetGold(newMoney);
+			DBCharacter.Platinum = Money.GetPlatinum(newMoney);
+			DBCharacter.Mithril = Money.GetMithril(newMoney);
 
 			Out.SendUpdateMoney();
 
@@ -8178,11 +8192,11 @@ namespace DOL.GS
 
 			long newMoney = GetCurrentMoney() - money;
 
-			PlayerCharacter.Mithril = Money.GetMithril(newMoney);
-			PlayerCharacter.Platinum = Money.GetPlatinum(newMoney);
-			PlayerCharacter.Gold = Money.GetGold(newMoney);
-			PlayerCharacter.Silver = Money.GetSilver(newMoney);
-			PlayerCharacter.Copper = Money.GetCopper(newMoney);
+			DBCharacter.Mithril = Money.GetMithril(newMoney);
+			DBCharacter.Platinum = Money.GetPlatinum(newMoney);
+			DBCharacter.Gold = Money.GetGold(newMoney);
+			DBCharacter.Silver = Money.GetSilver(newMoney);
+			DBCharacter.Copper = Money.GetCopper(newMoney);
 
 			Out.SendUpdateMoney();
 
@@ -9334,6 +9348,11 @@ namespace DOL.GS
 		/// <returns>true if removed, false if removing failed</returns>
 		public override bool RemoveFromWorld()
 		{
+			if (CharacterClass.RemoveFromWorld() == false)
+			{
+				return false;
+			}
+
 			if (ObjectState == eObjectState.Active)
 			{
 				DismountSteed(true);
@@ -9532,12 +9551,12 @@ namespace DOL.GS
 				if (this.IsUnderwater)
 					this.IsDiving = true;
 
-				if (ControlledNpcBrain != null &&
-				    ControlledNpcBrain.WalkState != eWalkState.Stay
-				    && this.IsWithinRadius( ControlledNpcBrain.Body, 1000 ) )
+				if (ControlledBrain != null &&
+				    ControlledBrain.WalkState != eWalkState.Stay
+				    && this.IsWithinRadius( ControlledBrain.Body, 1000 ) )
 				{
 					Point2D point = this.GetPointFromHeading( this.Heading, 64 );
-					ControlledNpcBrain.Body.MovePet(CurrentRegionID, point.X, point.Y, Z, (ushort)((this.Heading + 2048) % 4096), false);
+					ControlledBrain.Body.MovePet(CurrentRegionID, point.X, point.Y, Z, (ushort)((this.Heading + 2048) % 4096), false);
 				}
 			}
 			return true;
@@ -9546,11 +9565,11 @@ namespace DOL.GS
 		//Eden - Move to bind, and check if the loc is allowed
 		public bool MoveToBind()
 		{
-			Region rgn = WorldMgr.GetRegion((ushort)PlayerCharacter.BindRegion);
-			if (rgn == null || rgn.GetZone(PlayerCharacter.BindXpos, PlayerCharacter.BindYpos) == null)
+			Region rgn = WorldMgr.GetRegion((ushort)DBCharacter.BindRegion);
+			if (rgn == null || rgn.GetZone(DBCharacter.BindXpos, DBCharacter.BindYpos) == null)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("Player: " + Name + " unknown bind point : (R/X/Y) " + PlayerCharacter.BindRegion + "/" + PlayerCharacter.BindXpos + "/" + PlayerCharacter.BindYpos);
+					log.Error("Player: " + Name + " unknown bind point : (R/X/Y) " + DBCharacter.BindRegion + "/" + DBCharacter.BindXpos + "/" + DBCharacter.BindYpos);
 				//Kick the player, avoid server freeze
 				Client.Out.SendPlayerQuit(true);
 				SaveIntoDatabase();
@@ -9575,7 +9594,7 @@ namespace DOL.GS
 			}
 
 			if (GameServer.ServerRules.IsAllowedToMoveToBind(this))
-				return MoveTo((ushort)PlayerCharacter.BindRegion, PlayerCharacter.BindXpos, PlayerCharacter.BindYpos, PlayerCharacter.BindZpos, (ushort)PlayerCharacter.BindHeading);
+				return MoveTo((ushort)DBCharacter.BindRegion, DBCharacter.BindXpos, DBCharacter.BindYpos, DBCharacter.BindZpos, (ushort)DBCharacter.BindHeading);
 
 			return false;
 		}
@@ -9629,7 +9648,7 @@ namespace DOL.GS
 			{
 				m_guildRank = value;
 				if (value != null)
-					PlayerCharacter.GuildRank = value.RankLevel;//maybe mistake here and need to change and make an index var
+					DBCharacter.GuildRank = value.RankLevel;//maybe mistake here and need to change and make an index var
 			}
 		}
 
@@ -9639,8 +9658,8 @@ namespace DOL.GS
 		/// </summary>
 		public string GuildID
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.GuildID : string.Empty; }
-			set { if (PlayerCharacter != null) PlayerCharacter.GuildID = value; }
+			get { return DBCharacter != null ? DBCharacter.GuildID : string.Empty; }
+			set { if (DBCharacter != null) DBCharacter.GuildID = value; }
 		}
 
 		/// <summary>
@@ -9649,8 +9668,8 @@ namespace DOL.GS
 		/// </summary>
 		public bool ClassNameFlag
 		{
-			get { return PlayerCharacter.FlagClassName; }
-			set { PlayerCharacter.FlagClassName = value; }
+			get { return DBCharacter.FlagClassName; }
+			set { DBCharacter.FlagClassName = value; }
 		}
 
 		/// <summary>
@@ -9687,26 +9706,26 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (PlayerCharacter != null && PlayerCharacter.SerializedFriendsList != null)
-					return new List<string>(PlayerCharacter.SerializedFriendsList.Split(','));
+				if (DBCharacter != null && DBCharacter.SerializedFriendsList != null)
+					return new List<string>(DBCharacter.SerializedFriendsList.Split(','));
 
 				return new List<string>();
 			}
 			set
 			{
-				if (PlayerCharacter == null) 
+				if (DBCharacter == null) 
 					return;
 
 				if (value == null)
 				{
-					PlayerCharacter.SerializedFriendsList = "";
+					DBCharacter.SerializedFriendsList = "";
 				}
 				else
 				{
-					PlayerCharacter.SerializedFriendsList = string.Join(",", value.ToArray());
+					DBCharacter.SerializedFriendsList = string.Join(",", value.ToArray());
 				}
 
-				GameServer.Database.SaveObject(PlayerCharacter);
+				GameServer.Database.SaveObject(DBCharacter);
 			}
 		}
 
@@ -9718,18 +9737,18 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (PlayerCharacter != null && PlayerCharacter.SerializedIgnoreList != null)
-					return new ArrayList(PlayerCharacter.SerializedIgnoreList.Split(','));
+				if (DBCharacter != null && DBCharacter.SerializedIgnoreList != null)
+					return new ArrayList(DBCharacter.SerializedIgnoreList.Split(','));
 				return new ArrayList(0);
 			}
 			set
 			{
-				if (PlayerCharacter == null) return;
+				if (DBCharacter == null) return;
 				if (value == null)
-					PlayerCharacter.SerializedIgnoreList = "";
+					DBCharacter.SerializedIgnoreList = "";
 				else
-					PlayerCharacter.SerializedIgnoreList = String.Join(",", (string[])value.ToArray(typeof(string)));
-				GameServer.Database.SaveObject(PlayerCharacter);
+					DBCharacter.SerializedIgnoreList = String.Join(",", (string[])value.ToArray(typeof(string)));
+				GameServer.Database.SaveObject(DBCharacter);
 			}
 		}
 
@@ -9839,7 +9858,7 @@ namespace DOL.GS
 			set
 			{
 				base.X = value;
-				PlayerCharacter.Xpos = base.X;
+				DBCharacter.Xpos = base.X;
 			}
 		}
 
@@ -9851,7 +9870,7 @@ namespace DOL.GS
 			set
 			{
 				base.Y = value;
-				PlayerCharacter.Ypos = base.Y;
+				DBCharacter.Ypos = base.Y;
 			}
 		}
 
@@ -9863,7 +9882,7 @@ namespace DOL.GS
 			set
 			{
 				base.Z = value;
-				PlayerCharacter.Zpos = base.Z;
+				DBCharacter.Zpos = base.Z;
 			}
 		}
 
@@ -9890,7 +9909,7 @@ namespace DOL.GS
 			set
 			{
 				base.CurrentRegion = value;
-				PlayerCharacter.Region = CurrentRegionID;
+				DBCharacter.Region = CurrentRegionID;
 			}
 		}
 
@@ -9927,11 +9946,11 @@ namespace DOL.GS
 		/// </summary>
 		public override eRealm Realm
 		{
-			get { return PlayerCharacter != null ? (eRealm)PlayerCharacter.Realm : base.Realm; }
+			get { return DBCharacter != null ? (eRealm)DBCharacter.Realm : base.Realm; }
 			set
 			{
 				base.Realm = value;
-				PlayerCharacter.Realm = (byte)value;
+				DBCharacter.Realm = (byte)value;
 			}
 		}
 
@@ -9943,7 +9962,7 @@ namespace DOL.GS
 			set
 			{
 				base.Heading = value;
-				PlayerCharacter.Direction = value;
+				DBCharacter.Direction = value;
 
 				if (AttackState && ActiveWeaponSlot != eActiveWeaponSlot.Distance)
 				{
@@ -10195,11 +10214,11 @@ namespace DOL.GS
 		/// </summary>
 		public override short MaxSpeedBase
 		{
-			get { return (short)(PlayerCharacter != null ? PlayerCharacter.MaxSpeed : base.MaxSpeedBase); }
+			get { return (short)(DBCharacter != null ? DBCharacter.MaxSpeed : base.MaxSpeedBase); }
 			set
 			{
 				base.MaxSpeedBase = value;
-				PlayerCharacter.MaxSpeed = value;
+				DBCharacter.MaxSpeed = value;
 			}
 		}
 
@@ -11286,11 +11305,11 @@ namespace DOL.GS
 			get
 			{
 				DateTime rightNow = DateTime.Now;
-				DateTime oldLast = PlayerCharacter.LastPlayed;
+				DateTime oldLast = DBCharacter.LastPlayed;
 				// Get the total amount of time played between now and lastplayed
 				// This is safe as lastPlayed is updated on char load.
 				TimeSpan playaPlayed = rightNow.Subtract(oldLast);
-				TimeSpan newPlayed = playaPlayed + TimeSpan.FromSeconds(PlayerCharacter.PlayedTime);
+				TimeSpan newPlayed = playaPlayed + TimeSpan.FromSeconds(DBCharacter.PlayedTime);
 				return (long)newPlayed.TotalSeconds;
 			}
 		}
@@ -11377,11 +11396,11 @@ namespace DOL.GS
 					spellLines.AppendFormat("{0}|{1}", line.KeyName, line.Level);
 				}
 			}
-			PlayerCharacter.SerializedAbilities = ab;
-			PlayerCharacter.SerializedSpecs = sp;
-			PlayerCharacter.SerializedSpellLines = spellLines.ToString();
-			PlayerCharacter.DisabledSpells = disabledSpells;
-			PlayerCharacter.DisabledAbilities = disabledAbilities;
+			DBCharacter.SerializedAbilities = ab;
+			DBCharacter.SerializedSpecs = sp;
+			DBCharacter.SerializedSpellLines = spellLines.ToString();
+			DBCharacter.DisabledSpells = disabledSpells;
+			DBCharacter.DisabledAbilities = disabledAbilities;
 
 		}
 
@@ -11391,7 +11410,7 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual void LoadSkillsFromCharacter()
 		{
-			Character character = PlayerCharacter; // if its derived and filled with some code
+			DOLCharacters character = DBCharacter; // if its derived and filled with some code
 			if (character == null) return; // no character => exit
 
 			//Lohx - champion abilities
@@ -11570,9 +11589,9 @@ namespace DOL.GS
 		public override void LoadFromDatabase(DataObject obj)
 		{
 			base.LoadFromDatabase(obj);
-			if (!(obj is Character))
+			if (!(obj is DOLCharacters))
 				return;
-			m_dbCharacter = (Character)obj;
+			m_dbCharacter = (DOLCharacters)obj;
 
 			m_customFaceAttributes[(int)eCharFacePart.EyeSize] = m_dbCharacter.EyeSize;
 			m_customFaceAttributes[(int)eCharFacePart.LipSize] = m_dbCharacter.LipSize;
@@ -11584,9 +11603,9 @@ namespace DOL.GS
 
 			#region guild handling
 			//TODO: overwork guild handling (VaNaTiC)
-			m_guildid = m_dbCharacter.GuildID;
-			if (m_guildid != null)
-				m_guild = GuildMgr.GetGuildByGuildID(m_guildid);
+			m_guildId = m_dbCharacter.GuildID;
+			if (m_guildId != null)
+				m_guild = GuildMgr.GetGuildByGuildID(m_guildId);
 			else
 				m_guild = null;
 
@@ -11767,7 +11786,7 @@ namespace DOL.GS
 			//this is nice because i want to check the property often for the new catacombs classes
 
 			//find all characters in the database
-			foreach (Character plr in Client.Account.Characters)
+			foreach (DOLCharacters plr in Client.Account.Characters)
 			{
 				//where the level of one of the characters if 50
 				if (plr.Level == ServerProperties.Properties.SLASH_LEVEL_REQUIREMENT && GameServer.ServerRules.CountsTowardsSlashLevel(plr))
@@ -11810,9 +11829,9 @@ namespace DOL.GS
 				GameServer.Database.SaveObject(m_dbCharacter);
 				Inventory.SaveIntoDatabase(InternalID);
 
-				Character cachedCharacter = null;
+				DOLCharacters cachedCharacter = null;
 
-				foreach (Character accountChar in Client.Account.Characters)
+				foreach (DOLCharacters accountChar in Client.Account.Characters)
 				{
 					if (accountChar.ObjectId == InternalID)
 					{
@@ -11876,7 +11895,7 @@ namespace DOL.GS
 		/// <returns>pronoun of this object</returns>
 		public override string GetPronoun(int form, bool firstLetterUppercase)
 		{
-			if (PlayerCharacter.Gender == 0) // male
+			if (DBCharacter.Gender == 0) // male
 				switch (form)
 			{
 				default:
@@ -11925,7 +11944,7 @@ namespace DOL.GS
 
 		public string GetPronoun(GameClient Client, int form, bool capitalize)
 		{
-			if (PlayerCharacter.Gender == 0)
+			if (DBCharacter.Gender == 0)
 				switch (form)
 			{
 				default:
@@ -12528,6 +12547,7 @@ namespace DOL.GS
 		#region Notify
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
+			CharacterClass.Notify(e, sender, args);
 			base.Notify(e, sender, args);
 
 			// events will only fire for currently active quests.
@@ -12737,7 +12757,7 @@ namespace DOL.GS
 		/// </summary>
 		protected void SaveCraftingSkills()
 		{
-			PlayerCharacter.CraftingPrimarySkill = (byte)CraftingPrimarySkill;
+			DBCharacter.CraftingPrimarySkill = (byte)CraftingPrimarySkill;
 
 			string cs = "";
 
@@ -12757,7 +12777,7 @@ namespace DOL.GS
 				}
 			}
 
-			PlayerCharacter.SerializedCraftingSkills = cs;
+			DBCharacter.SerializedCraftingSkills = cs;
 		}
 
 		/// <summary>
@@ -12765,18 +12785,18 @@ namespace DOL.GS
 		/// </summary>
 		protected void LoadCraftingSkills()
 		{
-			if (PlayerCharacter.SerializedCraftingSkills == "" || PlayerCharacter.CraftingPrimarySkill == 0)
+			if (DBCharacter.SerializedCraftingSkills == "" || DBCharacter.CraftingPrimarySkill == 0)
 			{
 				CraftingPrimarySkill = eCraftingSkill.NoCrafting;
 				return;
 			}
 			try
 			{
-				CraftingPrimarySkill = (eCraftingSkill)PlayerCharacter.CraftingPrimarySkill;
+				CraftingPrimarySkill = (eCraftingSkill)DBCharacter.CraftingPrimarySkill;
 
 				lock (craftingSkills.SyncRoot)
 				{
-					string[] craftingSkill = PlayerCharacter.SerializedCraftingSkills.Split(';');
+					string[] craftingSkill = DBCharacter.SerializedCraftingSkills.Split(';');
 					foreach (string skill in craftingSkill)
 					{
 						string[] values = skill.Split('|');
@@ -12832,7 +12852,7 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.Error(Name + ": error in loading playerCraftingSkills => " + PlayerCharacter.SerializedCraftingSkills, e);
+					log.Error(Name + ": error in loading playerCraftingSkills => " + DBCharacter.SerializedCraftingSkills, e);
 			}
 		}
 
@@ -13011,30 +13031,9 @@ namespace DOL.GS
 		/// Sets the controlled object for this player
 		/// </summary>
 		/// <param name="controlledNpc"></param>
-		public override void SetControlledNpcBrain(IControlledBrain controlledNpcBrain)
+		public override void SetControlledBrain(IControlledBrain controlledBrain)
 		{
-			if (controlledNpcBrain == ControlledNpcBrain) return;
-			if (controlledNpcBrain == null)
-			{
-				Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SetControlledNpc.ReleaseTarget2", ControlledNpcBrain.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.SetControlledNpc.ReleaseTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-			else
-			{
-				if (controlledNpcBrain.Owner != this)
-					throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpcBrain.Owner.Name + ")", "controlledNpc");
-				if (m_controlledNpcBrain == null)
-					InitControlledNpcBrain(1);
-				Out.SendPetWindow(controlledNpcBrain.Body, ePetWindowAction.Open, controlledNpcBrain.AggressionState, controlledNpcBrain.WalkState);
-				if (controlledNpcBrain.Body != null)
-				{
-					Out.SendNPCCreate(controlledNpcBrain.Body); // after open pet window again send creation NPC packet
-					if (controlledNpcBrain.Body.Inventory != null)
-						Out.SendLivingEquipmentUpdate(controlledNpcBrain.Body);
-				}
-			}
-			m_controlledNpcBrain[0] = controlledNpcBrain;
+			CharacterClass.SetControlledBrain(controlledBrain);
 		}
 
 		/// <summary>
@@ -13042,7 +13041,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcAttack()
 		{
-			IControlledBrain npc = ControlledNpcBrain;
+			IControlledBrain npc = ControlledBrain;
 			if (npc == null || npc.Body.IsConfused || !GameServer.ServerRules.IsAllowedToAttack(this, TargetObject as GameLiving, false))
 				return;
 
@@ -13067,30 +13066,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcRelease()
 		{
-			//[Ganrod] Nidel: Animist can removed his TurretFnF.
-			TurretPet turretFnF = TargetObject as TurretPet;
-			if (turretFnF != null && turretFnF.Brain is TurretFNFBrain && IsControlledNPC(turretFnF))
-			{
-				Notify(GameLivingEvent.PetReleased, turretFnF);
-				return;
-			}
-
-			IControlledBrain controlledBrain = ControlledNpcBrain;
-			if (controlledBrain == null)
-				return;
-
-			BDPet subpet = TargetObject as BDPet;
-			if (subpet != null && subpet.Brain is BDPetBrain && ControlledNpcBrain is CommanderBrain && (ControlledNpcBrain as CommanderBrain).FindPet(subpet.Brain as IControlledBrain))
-			{
-				Notify(GameLivingEvent.PetReleased, subpet);
-				return;
-			}
-
-			GameNPC npc = controlledBrain.Body;
-			if (npc == null)
-				return;
-
-			Notify(GameLivingEvent.PetReleased, npc);
+			CharacterClass.CommandNpcRelease();
 		}
 
 		/// <summary>
@@ -13098,7 +13074,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcFollow()
 		{
-			IControlledBrain npc = ControlledNpcBrain;
+			IControlledBrain npc = ControlledBrain;
 			if (npc == null)
 				return;
 
@@ -13113,7 +13089,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcStay()
 		{
-			IControlledBrain npc = ControlledNpcBrain;
+			IControlledBrain npc = ControlledBrain;
 			if (npc == null)
 				return;
 
@@ -13128,7 +13104,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcComeHere()
 		{
-			IControlledBrain npc = ControlledNpcBrain;
+			IControlledBrain npc = ControlledBrain;
 			if (npc == null)
 				return;
 
@@ -13143,7 +13119,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcGoTarget()
 		{
-			IControlledBrain npc = ControlledNpcBrain;
+			IControlledBrain npc = ControlledBrain;
 			if (npc == null)
 				return;
 
@@ -13164,7 +13140,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcPassive()
 		{
-			IControlledBrain npc = ControlledNpcBrain;
+			IControlledBrain npc = ControlledBrain;
 			if (npc == null)
 				return;
 
@@ -13182,7 +13158,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcAgressive()
 		{
-			IControlledBrain npc = ControlledNpcBrain;
+			IControlledBrain npc = ControlledBrain;
 			if (npc == null)
 				return;
 
@@ -13197,7 +13173,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcDefensive()
 		{
-			IControlledBrain npc = ControlledNpcBrain;
+			IControlledBrain npc = ControlledBrain;
 			if (npc == null)
 				return;
 
@@ -13210,10 +13186,16 @@ namespace DOL.GS
 
 		#region Shade
 
+		protected ShadeEffect m_ShadeEffect = null;
+
 		/// <summary>
 		/// The shade effect of this player
 		/// </summary>
-		protected ShadeEffect m_ShadeEffect = null;
+		public ShadeEffect ShadeEffect
+		{
+			get { return m_ShadeEffect; }
+			set { m_ShadeEffect = value; }
+		}
 
 		/// <summary>
 		/// Gets flag indication whether player is in shade mode
@@ -13229,7 +13211,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected virtual ShadeEffect CreateShadeEffect()
 		{
-			return new ShadeEffect();
+			return CharacterClass.CreateShadeEffect();
 		}
 
 		/// <summary>
@@ -13260,30 +13242,30 @@ namespace DOL.GS
 				{
 						// Albion Models.
 
-						case "Inconnu": return (ushort)(PlayerCharacter.Gender + 1351);
-						case "Briton": return (ushort)(PlayerCharacter.Gender + 1353);
-						case "Highlander": return (ushort)(PlayerCharacter.Gender + 1355);
-						case "Saracen": return (ushort)(PlayerCharacter.Gender + 1357);
-						case "Avalonian": return (ushort)(PlayerCharacter.Gender + 1359);
-						case "Half Ogre": return (ushort)(PlayerCharacter.Gender + 1361);
+						case "Inconnu": return (ushort)(DBCharacter.Gender + 1351);
+						case "Briton": return (ushort)(DBCharacter.Gender + 1353);
+						case "Highlander": return (ushort)(DBCharacter.Gender + 1355);
+						case "Saracen": return (ushort)(DBCharacter.Gender + 1357);
+						case "Avalonian": return (ushort)(DBCharacter.Gender + 1359);
+						case "Half Ogre": return (ushort)(DBCharacter.Gender + 1361);
 
 						// Midgard Models.
 
-						case "Troll": return (ushort)(PlayerCharacter.Gender + 1363);
-						case "Norse": return (ushort)(PlayerCharacter.Gender + 1365);
-						case "Kobold": return (ushort)(PlayerCharacter.Gender + 1367);
-						case "Dwarf": return (ushort)(PlayerCharacter.Gender + 1369);
-						case "Valkyn": return (ushort)(PlayerCharacter.Gender + 1371);
-						case "Frostalf": return (ushort)(PlayerCharacter.Gender + 1373);
+						case "Troll": return (ushort)(DBCharacter.Gender + 1363);
+						case "Norse": return (ushort)(DBCharacter.Gender + 1365);
+						case "Kobold": return (ushort)(DBCharacter.Gender + 1367);
+						case "Dwarf": return (ushort)(DBCharacter.Gender + 1369);
+						case "Valkyn": return (ushort)(DBCharacter.Gender + 1371);
+						case "Frostalf": return (ushort)(DBCharacter.Gender + 1373);
 
 						// Hibernia Models.
 
-						case "Firbolg": return (ushort)(PlayerCharacter.Gender + 1375);
-						case "Celt": return (ushort)(PlayerCharacter.Gender + 1377);
-						case "Lurikeen": return (ushort)(PlayerCharacter.Gender + 1379);
-						case "Elf": return (ushort)(PlayerCharacter.Gender + 1381);
-						case "Sylvan": return (ushort)(PlayerCharacter.Gender + 1383);
-						case "Shar": return (ushort)(PlayerCharacter.Gender + 1385);
+						case "Firbolg": return (ushort)(DBCharacter.Gender + 1375);
+						case "Celt": return (ushort)(DBCharacter.Gender + 1377);
+						case "Lurikeen": return (ushort)(DBCharacter.Gender + 1379);
+						case "Elf": return (ushort)(DBCharacter.Gender + 1381);
+						case "Sylvan": return (ushort)(DBCharacter.Gender + 1383);
+						case "Shar": return (ushort)(DBCharacter.Gender + 1385);
 				}
 
 				return Model;
@@ -13296,30 +13278,7 @@ namespace DOL.GS
 		/// <param name="state">The new state.</param>
 		public virtual void Shade(bool state)
 		{
-			if (IsShade == state)
-			{
-				if (state && (ObjectState == eObjectState.Active))
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.AlreadyShade"),
-					                eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
-			if (state)
-			{
-				// Turn into a shade.
-				Model = ShadeModel;
-				m_ShadeEffect = CreateShadeEffect();
-				m_ShadeEffect.Start(this);
-			}
-			else
-			{
-				// Drop shade form.
-				m_ShadeEffect.Stop();
-				m_ShadeEffect = null;
-				Model = CreationModel;
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Shade.NoLongerShade"),
-				                eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
+			CharacterClass.Shade(state);
 		}
 		#endregion
 
@@ -13502,7 +13461,7 @@ namespace DOL.GS
 				if (value == null)
 					value = PlayerTitleMgr.ClearTitle;
 				m_currentTitle = value;
-				PlayerCharacter.CurrentTitleType = value.GetType().FullName;
+				DBCharacter.CurrentTitleType = value.GetType().FullName;
 
 				//update newTitle for all players if client is playing
 				if (ObjectState == eObjectState.Active)
@@ -13548,10 +13507,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsAlbionPlayers
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsAlbionPlayers : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsAlbionPlayers : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsAlbionPlayers = value;
+				if (DBCharacter != null) DBCharacter.KillsAlbionPlayers = value;
 				Notify(GamePlayerEvent.KillsAlbionPlayersChanged, this);
 				Notify(GamePlayerEvent.KillsTotalPlayersChanged, this);
 			}
@@ -13563,10 +13522,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsMidgardPlayers
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsMidgardPlayers : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsMidgardPlayers : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsMidgardPlayers = value;
+				if (DBCharacter != null) DBCharacter.KillsMidgardPlayers = value;
 				Notify(GamePlayerEvent.KillsMidgardPlayersChanged, this);
 				Notify(GamePlayerEvent.KillsTotalPlayersChanged, this);
 			}
@@ -13578,10 +13537,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsHiberniaPlayers
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsHiberniaPlayers : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsHiberniaPlayers : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsHiberniaPlayers = value;
+				if (DBCharacter != null) DBCharacter.KillsHiberniaPlayers = value;
 				Notify(GamePlayerEvent.KillsHiberniaPlayersChanged, this);
 				Notify(GamePlayerEvent.KillsTotalPlayersChanged, this);
 			}
@@ -13593,10 +13552,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsAlbionDeathBlows
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsAlbionDeathBlows : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsAlbionDeathBlows : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsAlbionDeathBlows = value;
+				if (DBCharacter != null) DBCharacter.KillsAlbionDeathBlows = value;
 				Notify(GamePlayerEvent.KillsTotalDeathBlowsChanged, this);
 			}
 		}
@@ -13607,10 +13566,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsMidgardDeathBlows
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsMidgardDeathBlows : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsMidgardDeathBlows : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsMidgardDeathBlows = value;
+				if (DBCharacter != null) DBCharacter.KillsMidgardDeathBlows = value;
 				Notify(GamePlayerEvent.KillsTotalDeathBlowsChanged, this);
 			}
 		}
@@ -13621,10 +13580,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsHiberniaDeathBlows
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsHiberniaDeathBlows : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsHiberniaDeathBlows : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsHiberniaDeathBlows = value;
+				if (DBCharacter != null) DBCharacter.KillsHiberniaDeathBlows = value;
 				Notify(GamePlayerEvent.KillsTotalDeathBlowsChanged, this);
 			}
 		}
@@ -13635,10 +13594,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsAlbionSolo
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsAlbionSolo : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsAlbionSolo : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsAlbionSolo = value;
+				if (DBCharacter != null) DBCharacter.KillsAlbionSolo = value;
 				Notify(GamePlayerEvent.KillsTotalSoloChanged, this);
 			}
 		}
@@ -13649,10 +13608,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsMidgardSolo
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsMidgardSolo : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsMidgardSolo : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsMidgardSolo = value;
+				if (DBCharacter != null) DBCharacter.KillsMidgardSolo = value;
 				Notify(GamePlayerEvent.KillsTotalSoloChanged, this);
 			}
 		}
@@ -13663,10 +13622,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsHiberniaSolo
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsHiberniaSolo : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsHiberniaSolo : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsHiberniaSolo = value;
+				if (DBCharacter != null) DBCharacter.KillsHiberniaSolo = value;
 				Notify(GamePlayerEvent.KillsTotalSoloChanged, this);
 			}
 		}
@@ -13677,10 +13636,10 @@ namespace DOL.GS
 		/// </summary>
 		public int CapturedKeeps
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.CapturedKeeps : 0; }
+			get { return DBCharacter != null ? DBCharacter.CapturedKeeps : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.CapturedKeeps = value;
+				if (DBCharacter != null) DBCharacter.CapturedKeeps = value;
 				Notify(GamePlayerEvent.CapturedKeepsChanged, this);
 			}
 		}
@@ -13691,10 +13650,10 @@ namespace DOL.GS
 		/// </summary>
 		public int CapturedTowers
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.CapturedTowers : 0; }
+			get { return DBCharacter != null ? DBCharacter.CapturedTowers : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.CapturedTowers = value;
+				if (DBCharacter != null) DBCharacter.CapturedTowers = value;
 				Notify(GamePlayerEvent.CapturedTowersChanged, this);
 			}
 		}
@@ -13705,10 +13664,10 @@ namespace DOL.GS
 		/// </summary>
 		public int CapturedRelics
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.CapturedRelics : 0; }
+			get { return DBCharacter != null ? DBCharacter.CapturedRelics : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.CapturedRelics = value;
+				if (DBCharacter != null) DBCharacter.CapturedRelics = value;
 				Notify(GamePlayerEvent.CapturedRelicsChanged, this);
 			}
 		}
@@ -13719,10 +13678,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsDragon
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsDragon : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsDragon : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsDragon = value;
+				if (DBCharacter != null) DBCharacter.KillsDragon = value;
 				Notify(GamePlayerEvent.KillsDragonChanged, this);
 			}
 		}
@@ -13733,8 +13692,8 @@ namespace DOL.GS
 		/// </summary>
 		public int DeathsPvP
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.DeathsPvP : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.DeathsPvP = value; }
+			get { return DBCharacter != null ? DBCharacter.DeathsPvP : 0; }
+			set { if (DBCharacter != null) DBCharacter.DeathsPvP = value; }
 		}
 
 		/// <summary>
@@ -13743,10 +13702,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsLegion
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsLegion : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsLegion : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsLegion = value;
+				if (DBCharacter != null) DBCharacter.KillsLegion = value;
 				Notify(GamePlayerEvent.KillsLegionChanged, this);
 			}
 		}
@@ -13757,10 +13716,10 @@ namespace DOL.GS
 		/// </summary>
 		public int KillsEpicBoss
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.KillsEpicBoss : 0; }
+			get { return DBCharacter != null ? DBCharacter.KillsEpicBoss : 0; }
 			set
 			{
-				if (PlayerCharacter != null) PlayerCharacter.KillsEpicBoss = value;
+				if (DBCharacter != null) DBCharacter.KillsEpicBoss = value;
 				Notify(GamePlayerEvent.KillsEpicBossChanged, this);
 			}
 		}
@@ -14105,16 +14064,16 @@ namespace DOL.GS
 		/// </summary>
 		public virtual bool Champion
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.Champion : false; }
-			set { if (PlayerCharacter != null) PlayerCharacter.Champion = value; }
+			get { return DBCharacter != null ? DBCharacter.Champion : false; }
+			set { if (DBCharacter != null) DBCharacter.Champion = value; }
 		}
 		/// <summary>
 		/// Champion level
 		/// </summary>
 		public virtual int ChampionLevel
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.ChampionLevel : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.ChampionLevel = value; }
+			get { return DBCharacter != null ? DBCharacter.ChampionLevel : 0; }
+			set { if (DBCharacter != null) DBCharacter.ChampionLevel = value; }
 		}
 
 		/// <summary>
@@ -14129,24 +14088,24 @@ namespace DOL.GS
 		/// </summary>
 		public virtual long ChampionExperience
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.ChampionExperience : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.ChampionExperience = value; }
+			get { return DBCharacter != null ? DBCharacter.ChampionExperience : 0; }
+			set { if (DBCharacter != null) DBCharacter.ChampionExperience = value; }
 		}
 		/// <summary>
 		/// Champion Available speciality points
 		/// </summary>
 		public virtual int ChampionSpecialtyPoints
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.ChampionSpecialtyPoints : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.ChampionSpecialtyPoints = value; }
+			get { return DBCharacter != null ? DBCharacter.ChampionSpecialtyPoints : 0; }
+			set { if (DBCharacter != null) DBCharacter.ChampionSpecialtyPoints = value; }
 		}
 		/// <summary>
 		/// Serialised Champion spells
 		/// </summary>
 		public virtual string ChampionSpells
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.ChampionSpells : null; }
-			set { if (PlayerCharacter != null) PlayerCharacter.ChampionSpells = value; }
+			get { return DBCharacter != null ? DBCharacter.ChampionSpells : null; }
+			set { if (DBCharacter != null) DBCharacter.ChampionSpells = value; }
 		}
 		/// <summary>
 		/// Returns how far into the champion level we have progressed
@@ -14188,8 +14147,8 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int RespecAmountChampionSkill
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.RespecAmountChampionSkill : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.RespecAmountChampionSkill = value; }
+			get { return DBCharacter != null ? DBCharacter.RespecAmountChampionSkill : 0; }
+			set { if (DBCharacter != null) DBCharacter.RespecAmountChampionSkill = value; }
 		}
 		/// <summary>
 		/// Returns the xp that are needed for the specified level
@@ -14400,32 +14359,32 @@ namespace DOL.GS
 		/// </summary>
 		public virtual byte ML
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.ML : (byte)0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.ML = value; }
+			get { return DBCharacter != null ? DBCharacter.ML : (byte)0; }
+			set { if (DBCharacter != null) DBCharacter.ML = value; }
 		}
 		/// <summary>
 		/// Gets and sets the ML Level of this character
 		/// </summary>
 		public virtual int MLLevel
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.MLLevel : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.MLLevel = value; }
+			get { return DBCharacter != null ? DBCharacter.MLLevel : 0; }
+			set { if (DBCharacter != null) DBCharacter.MLLevel = value; }
 		}
 		/// <summary>
 		/// Gets and sets ML Experience
 		/// </summary>
 		public virtual long MLExperience
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.MLExperience : 0; }
-			set { if (PlayerCharacter != null) PlayerCharacter.MLExperience = value; }
+			get { return DBCharacter != null ? DBCharacter.MLExperience : 0; }
+			set { if (DBCharacter != null) DBCharacter.MLExperience = value; }
 		}
 		/// <summary>
 		/// Gets and sets the ML validated flag. This allow to get new ML to arbiter
 		/// </summary>
 		public virtual bool MLGranted
 		{
-			get { return PlayerCharacter != null ? PlayerCharacter.MLGranted : false; }
-			set { if (PlayerCharacter != null) PlayerCharacter.MLGranted = value; }
+			get { return DBCharacter != null ? DBCharacter.MLGranted : false; }
+			set { if (DBCharacter != null) DBCharacter.MLGranted = value; }
 		}
 		/// <summary>
 		/// Check ML step completition
@@ -14552,7 +14511,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="client">The GameClient for this player</param>
 		/// <param name="theChar">The character for this player</param>
-		public GamePlayer(GameClient client, Character theChar)
+		public GamePlayer(GameClient client, DOLCharacters theChar)
 			: base()
 		{
 			IsJumping = false;
@@ -14585,7 +14544,7 @@ namespace DOL.GS
 			m_isWireframe = false;
 
 			m_saveInDB = true; // always save char data in db
-			m_class = new DefaultCharacterClass();
+			m_characterClass = new DefaultCharacterClass();
 			m_groupIndex = 0xFF;
 			LoadFromDatabase(theChar);
 			m_currentAreas = new ArrayList();

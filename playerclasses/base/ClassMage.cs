@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Mage, "Mage", "Mage")]
-	public class ClassMage : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Mage, "Mage", "Mage")]
+	public class ClassMage : DOL.GS.CharacterClassBase
 	{
 		public ClassMage()
 		{

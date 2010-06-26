@@ -24,7 +24,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Friar, "Friar", "Acolyte")]
+	[CharacterClassAttribute((int)eCharacterClass.Friar, "Friar", "Acolyte")]
 	public class ClassFriar : ClassAcolyte
 	{
 		public ClassFriar() : base()
