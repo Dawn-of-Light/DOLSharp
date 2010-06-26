@@ -24,7 +24,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Heretic, "Heretic", "Acolyte")]
+	[CharacterClassAttribute((int)eCharacterClass.Heretic, "Heretic", "Acolyte")]
 	public class ClassHeretic : ClassAcolyte
 	{
 		public ClassHeretic() : base()

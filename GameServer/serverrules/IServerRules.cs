@@ -364,7 +364,7 @@ namespace DOL.GS.ServerRules
 		/// </summary>
 		/// <param name="player">The player</param>
 		/// <returns>True if the player can use /level</returns>
-		bool CountsTowardsSlashLevel(Character player);
+		bool CountsTowardsSlashLevel(DOLCharacters player);
 		
 		/// <summary>
 		/// Gets the NPC name based on server type

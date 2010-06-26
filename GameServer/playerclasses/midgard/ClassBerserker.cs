@@ -24,7 +24,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Berserker, "Berserker", "Viking")]
+	[CharacterClassAttribute((int)eCharacterClass.Berserker, "Berserker", "Viking")]
 	public class ClassBerserker : ClassViking
 	{
 		public ClassBerserker() : base() 

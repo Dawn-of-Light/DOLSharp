@@ -191,7 +191,7 @@ namespace DOL.AI.Brain
                 // warnings to owner at t = 10 seconds and t = 5 seconds.
 
                 int secondsRemaining = (args as TetherEventArgs).Seconds;
-                (Owner as GameNecromancer).SetTetherTimer(secondsRemaining);
+                SetTetherTimer(secondsRemaining);
 
                 if (secondsRemaining == 10)
                     MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
@@ -208,6 +208,30 @@ namespace DOL.AI.Brain
                     "AI.Brain.Necromancer.HaveLostBondToPet"), eChatType.CT_System);
             }
 		}
+
+		/// <summary>
+		/// Set the tether timer if pet gets out of range or comes back into range.
+		/// </summary>
+		/// <param name="seconds"></param>
+		public void SetTetherTimer(int seconds)
+		{
+			NecromancerShadeEffect shadeEffect = Owner.EffectList.GetOfType(typeof(NecromancerShadeEffect)) as NecromancerShadeEffect;
+
+			if (shadeEffect != null)
+			{
+				lock (shadeEffect)
+					shadeEffect.SetTetherTimer(seconds);
+				ArrayList effectList = new ArrayList(1);
+				effectList.Add(shadeEffect);
+				int effectsCount = 1;
+				if (Owner is GamePlayer)
+				{
+					(Owner as GamePlayer).Out.SendUpdateIcons(effectList, ref effectsCount);
+				}
+			}
+		}
+
+
 
 		#endregion
 
@@ -402,7 +426,7 @@ namespace DOL.AI.Brain
                     m_tetherTimer.Stop();
                     m_tetherTimer = null;
 
-                    (Owner as GameNecromancer).SetTetherTimer(-1);
+                    SetTetherTimer(-1);
                 }
             }
         }

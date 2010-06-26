@@ -53,25 +53,25 @@ namespace DOL.GS.Scripts
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Lord"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Albion&&player.RealmLevel>=100&&player.RealmLevel<110&&player.PlayerCharacter.Gender==0); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Albion&&player.RealmLevel>=100&&player.RealmLevel<110&&player.DBCharacter.Gender==0); }
 	}
 	public class AlbionRR11F : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Lady"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Albion&&player.RealmLevel>=100&&player.RealmLevel<110&&player.PlayerCharacter.Gender==1); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Albion&&player.RealmLevel>=100&&player.RealmLevel<110&&player.DBCharacter.Gender==1); }
 	}
 	public class AlbionRR12M : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Baronet"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Albion&&player.RealmLevel>=110&&player.RealmLevel<120&&player.PlayerCharacter.Gender==0); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Albion&&player.RealmLevel>=110&&player.RealmLevel<120&&player.DBCharacter.Gender==0); }
 	}
 	public class AlbionRR12F : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Baronetess"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Albion&&player.RealmLevel>=110&&player.RealmLevel<120&&player.PlayerCharacter.Gender==1); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Albion&&player.RealmLevel>=110&&player.RealmLevel<120&&player.DBCharacter.Gender==1); }
 	}
 	#endregion Ablion
 	#region Hibernia
@@ -121,25 +121,25 @@ namespace DOL.GS.Scripts
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Barun"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Hibernia&&player.RealmLevel>=100&&player.RealmLevel<110&&player.PlayerCharacter.Gender==0); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Hibernia&&player.RealmLevel>=100&&player.RealmLevel<110&&player.DBCharacter.Gender==0); }
 	}
 	public class HiberniaRR11F : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Banbharun"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Hibernia&&player.RealmLevel>=100&&player.RealmLevel<110&&player.PlayerCharacter.Gender==1); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Hibernia&&player.RealmLevel>=100&&player.RealmLevel<110&&player.DBCharacter.Gender==1); }
 	}
 	public class HiberniaRR12M : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Ard Tiarna"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Hibernia&&player.RealmLevel>=110&&player.RealmLevel<120&&player.PlayerCharacter.Gender==0); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Hibernia&&player.RealmLevel>=110&&player.RealmLevel<120&&player.DBCharacter.Gender==0); }
 	}
 	public class HiberniaRR12F : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Ard Bantiarna"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Hibernia&&player.RealmLevel>=110&&player.RealmLevel<120&&player.PlayerCharacter.Gender==1); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Hibernia&&player.RealmLevel>=110&&player.RealmLevel<120&&player.DBCharacter.Gender==1); }
 	}
 	#endregion Hibernia
 	#region Midgard
@@ -189,25 +189,25 @@ namespace DOL.GS.Scripts
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Herra"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Midgard&&player.RealmLevel>=100&&player.RealmLevel<110&&player.PlayerCharacter.Gender==0); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Midgard&&player.RealmLevel>=100&&player.RealmLevel<110&&player.DBCharacter.Gender==0); }
 	}
 	public class MidgardRR11F : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Fru"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Midgard&&player.RealmLevel>=100&&player.RealmLevel<110&&player.PlayerCharacter.Gender==1); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Midgard&&player.RealmLevel>=100&&player.RealmLevel<110&&player.DBCharacter.Gender==1); }
 	}
 	public class MidgardRR12M : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Hersir"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Midgard&&player.RealmLevel>=110&&player.RealmLevel<120&&player.PlayerCharacter.Gender==0); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Midgard&&player.RealmLevel>=110&&player.RealmLevel<120&&player.DBCharacter.Gender==0); }
 	}
 	public class MidgardRR12F : SimplePlayerTitle
 	{
 		public override string GetDescription(GamePlayer player) { return "Realm Rank"; }
 		public override string GetValue(GamePlayer player) { return "Baronsfru"; }
-		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Midgard&&player.RealmLevel>=110&&player.RealmLevel<120&&player.PlayerCharacter.Gender==1); }
+		public override bool IsSuitable(GamePlayer player) { return (player.Realm==eRealm.Midgard&&player.RealmLevel>=110&&player.RealmLevel<120&&player.DBCharacter.Gender==1); }
 	}
 	#endregion Midgard
 	#endregion RealmRank Titles

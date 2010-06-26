@@ -77,7 +77,7 @@ namespace DOL.GS.GameEvents
 			CharacterEventArgs chArgs = args as CharacterEventArgs;
 			if (chArgs == null)
 				return;
-			Character ch = chArgs.Character;
+			DOLCharacters ch = chArgs.Character;
 			try
 			{
 				StartLocation loc = null;
@@ -164,7 +164,7 @@ namespace DOL.GS.GameEvents
 		/// Binds character to current location
 		/// </summary>
 		/// <param name="ch"></param>
-		protected static void BindCharacter(Character ch)
+		protected static void BindCharacter(DOLCharacters ch)
 		{
 			ch.BindRegion = ch.Region;
 			ch.BindHeading = ch.Direction;

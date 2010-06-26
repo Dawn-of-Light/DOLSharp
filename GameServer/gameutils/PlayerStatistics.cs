@@ -329,7 +329,7 @@ namespace DOL.GS.GameEvents
 		public static uint RPsEarnedFromKill(GamePlayer killer, GamePlayer killedPlayer)
 		{
 			long noExpSeconds = ServerProperties.Properties.RP_WORTH_SECONDS;
-			if (killedPlayer.PlayerCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
+			if (killedPlayer.DBCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
 				return 0;
 
 			float totaldmg = 0f;

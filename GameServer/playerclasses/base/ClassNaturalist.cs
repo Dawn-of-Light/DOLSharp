@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Naturalist, "Naturalist", "Naturalist")]
-	public class ClassNaturalist : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Naturalist, "Naturalist", "Naturalist")]
+	public class ClassNaturalist : DOL.GS.CharacterClassBase
 	{
 		public ClassNaturalist()
 		{

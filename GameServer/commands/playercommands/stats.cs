@@ -122,10 +122,10 @@ namespace DOL.GS.Commands
 			LastUpdatedTime = client.Player.CurrentRegion.Time;
 
 			#region /stats top
-			var chars = GameServer.Database.SelectObjects<Character>("RealmPoints > 213881 AND GuildID!='" + staff + "' ORDER BY RealmPoints DESC LIMIT 30");
+			var chars = GameServer.Database.SelectObjects<DOLCharacters>("RealmPoints > 213881 AND GuildID!='" + staff + "' ORDER BY RealmPoints DESC LIMIT 30");
 			if (toplist != null) toplist.Clear();
 			int count = 1;
-			foreach (Character chr in chars)
+			foreach (DOLCharacters chr in chars)
 			{
 				toplist.Add( "\n" + count.ToString() + " - [ " + chr.Name + " ] with " + String.Format( "{0:0,0}", chr.RealmPoints ) + " RP - [ " + ( ( ( chr.RealmLevel + 10 ) / 10 ) + "L" + ( ( chr.RealmLevel + 10 ) % 10 ) ) + " ]" );
 				count++; if (count > 20) break;

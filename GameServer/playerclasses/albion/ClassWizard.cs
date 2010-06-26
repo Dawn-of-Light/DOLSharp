@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Wizard, "Wizard", "Elementalist")]
+	[CharacterClassAttribute((int)eCharacterClass.Wizard, "Wizard", "Elementalist")]
 	public class ClassWizard : ClassElementalist
 	{
 		public ClassWizard() : base() 

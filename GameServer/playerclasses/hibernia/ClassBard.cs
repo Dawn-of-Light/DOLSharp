@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Bard, "Bard", "Naturalist")]
+	[CharacterClassAttribute((int)eCharacterClass.Bard, "Bard", "Naturalist")]
 	public class ClassBard : ClassNaturalist
 	{
 		public ClassBard() : base() 

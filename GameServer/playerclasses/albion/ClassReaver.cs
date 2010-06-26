@@ -27,7 +27,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	///
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Reaver, "Reaver", "Fighter")]
+	[CharacterClassAttribute((int)eCharacterClass.Reaver, "Reaver", "Fighter")]
 	public class ClassReaver : ClassFighter
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Flexible };

@@ -114,7 +114,7 @@ namespace DOL.GS.Housing
 				                       eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 				{
 					DatabaseItem.LastPaid = DateTime.Now;
-					DatabaseItem.OwnerID = player.PlayerCharacter.ObjectId;
+					DatabaseItem.OwnerID = player.DBCharacter.ObjectId;
 				}
 				else
 				{

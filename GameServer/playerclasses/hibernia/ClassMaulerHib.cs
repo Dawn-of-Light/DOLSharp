@@ -26,8 +26,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Mauler_Hib, "Mauler", "Guardian")]
-	public class ClassMaulerHib : CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Mauler_Hib, "Mauler", "Guardian")]
+	public class ClassMaulerHib : CharacterClassBase
 	{
 		public ClassMaulerHib()
 			: base()

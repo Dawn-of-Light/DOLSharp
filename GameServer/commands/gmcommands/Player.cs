@@ -104,7 +104,7 @@ namespace DOL.GS.Commands
 							player = client.Player;
 
 						String select = String.Format("Name = '{0}'", GameServer.Database.Escape(args[2]));
-						var character = GameServer.Database.SelectObject<Character>(select);
+						var character = GameServer.Database.SelectObject<DOLCharacters>(select);
 
 						if (character != null)
 						{
@@ -782,7 +782,7 @@ namespace DOL.GS.Commands
 
 						if (args[2] == "list")
 						{
-							string[] list = player.PlayerCharacter.SerializedFriendsList.Split(',');
+							string[] list = player.DBCharacter.SerializedFriendsList.Split(',');
 							client.Out.SendCustomTextWindow(player.Name + "'s Friend List", list);
 							return;
 						}
@@ -1747,7 +1747,7 @@ namespace DOL.GS.Commands
 					{
 						string characterNames = string.Empty;
 
-						foreach (Character acctChar in targetClient.Account.Characters)
+						foreach (DOLCharacters acctChar in targetClient.Account.Characters)
 						{
 							if (acctChar != null)
 								characterNames += acctChar.Name + " " + acctChar.LastName + "\n";

@@ -39,7 +39,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			var command = (byte) packet.ReadByte(); // 1-Attack, 2-Release
 
 			//[Ganrod] Nidel: Animist can removed his TurretFnF without MainPet.
-			if (client.Player.TargetObject != null && command == 2 && client.Player.ControlledNpcBrain == null &&
+			if (client.Player.TargetObject != null && command == 2 && client.Player.ControlledBrain == null &&
 			    client.Player.CharacterClass.ID == (int) eCharacterClass.Animist)
 			{
 				var turret = client.Player.TargetObject as TurretPet;
@@ -52,7 +52,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			//[Ganrod] Nidel: Call only if player has controllednpc
-			if (client.Player.ControlledNpcBrain != null)
+			if (client.Player.ControlledBrain != null)
 			{
 				new HandlePetCommandAction(client.Player, aggroState, walkState, command).Start(1);
 				return 1;

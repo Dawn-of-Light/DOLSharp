@@ -41,7 +41,7 @@ namespace DOL.GS.Spells
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledNpcBrain != null)
+			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledBrain != null)
 			{
 				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
 				return false;

@@ -27,7 +27,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Nightshade, "Nightshade", "Stalker")]
+	[CharacterClassAttribute((int)eCharacterClass.Nightshade, "Nightshade", "Stalker")]
 	public class ClassNightshade : ClassStalker
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };

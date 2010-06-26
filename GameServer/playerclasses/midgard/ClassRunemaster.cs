@@ -25,7 +25,7 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Runemaster, "Runemaster", "Mystic")]
+	[CharacterClassAttribute((int)eCharacterClass.Runemaster, "Runemaster", "Mystic")]
 	public class ClassRunemaster : ClassMystic
 	{
 		public ClassRunemaster() : base()

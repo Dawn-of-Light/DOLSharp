@@ -340,7 +340,7 @@ namespace DOL.GS
 				var guilds = GameServer.Database.SelectObjects<DBGuild>("GuildName='" + GameServer.Database.Escape(guildName) + "'");
 				foreach (var guild in guilds)
 				{
-					foreach (var cha in GameServer.Database.SelectObjects<Character>("GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
+					foreach (var cha in GameServer.Database.SelectObjects<DOLCharacters>("GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
 					{
 						cha.GuildID = "";
 					}
@@ -472,10 +472,10 @@ namespace DOL.GS
 
 				AddGuild(myguild);
 
-				var guildCharacters = GameServer.Database.SelectObjects<Character>(string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
+				var guildCharacters = GameServer.Database.SelectObjects<DOLCharacters>(string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
 				var tempList = new SortedList<string, SocialWindowMember>(guildCharacters.Count);
 
-				foreach (Character ch in guildCharacters)
+				foreach (DOLCharacters ch in guildCharacters)
 				{
 					var member = new SocialWindowMember(ch.Name, ch.Level.ToString(), ch.Class.ToString(), ch.GuildRank.ToString(), "0", ch.LastPlayed.ToShortDateString(), ch.GuildNote);
 					tempList.Add(ch.Name, member);

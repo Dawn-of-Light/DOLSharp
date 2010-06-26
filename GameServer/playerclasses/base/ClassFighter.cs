@@ -25,8 +25,8 @@ namespace DOL.GS.PlayerClass
 	/// <summary>
 	/// 
 	/// </summary>
-	[PlayerClassAttribute((int)eCharacterClass.Fighter, "Fighter", "Fighter")]
-	public class ClassFighter : DOL.GS.CharacterClassSpec
+	[CharacterClassAttribute((int)eCharacterClass.Fighter, "Fighter", "Fighter")]
+	public class ClassFighter : DOL.GS.CharacterClassBase
 	{
 		public ClassFighter() : base() 
 		{

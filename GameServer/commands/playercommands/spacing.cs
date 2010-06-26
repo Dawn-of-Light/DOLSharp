@@ -48,13 +48,13 @@ namespace DOL.GS.Commands
 			}
 
 			//Check to see if the BD has a commander and minions
-			if (player.ControlledNpcBrain == null)
+			if (player.ControlledBrain == null)
 			{
 				DisplayMessage(player, "You don't have a commander!");
 				return;
 			}
 			bool haveminion = false;
-			foreach (AI.Brain.IControlledBrain icb in player.ControlledNpcBrain.Body.ControlledNpcList)
+			foreach (AI.Brain.IControlledBrain icb in player.ControlledBrain.Body.ControlledNpcList)
 			{
 				if (icb != null)
 					haveminion = true;
@@ -69,15 +69,15 @@ namespace DOL.GS.Commands
 			{
 				//Triangle Formation
 				case "normal":
-					player.ControlledNpcBrain.Body.FormationSpacing = 1;
+					player.ControlledBrain.Body.FormationSpacing = 1;
 					break;
 				//Line formation
 				case "big":
-					player.ControlledNpcBrain.Body.FormationSpacing = 2;
+					player.ControlledBrain.Body.FormationSpacing = 2;
 					break;
 				//Protect formation
 				case "huge":
-					player.ControlledNpcBrain.Body.FormationSpacing = 3;
+					player.ControlledBrain.Body.FormationSpacing = 3;
 					break;
 				default:
 					DisplayMessage(player, "Unrecognized argument: " + args[1]);

@@ -50,7 +50,7 @@ namespace DOL.GS.RealmAbilities
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Necromancer)
             {
-                NecromancerPet necroPet = (NecromancerPet)player.ControlledNpcBrain.Body;
+                NecromancerPet necroPet = (NecromancerPet)player.ControlledBrain.Body;
                 lock (necroPet.EffectList)
                 {
                     foreach (IGameEffect effect in necroPet.EffectList)
@@ -103,8 +103,8 @@ namespace DOL.GS.RealmAbilities
                 {
                     if (player.CharacterClass.ID == (int)eCharacterClass.Necromancer)
                     {
-                        rangePlayer.Out.SendSpellEffectAnimation(player.ControlledNpcBrain.Body,
-                            player.ControlledNpcBrain.Body, 7011, 0,
+                        rangePlayer.Out.SendSpellEffectAnimation(player.ControlledBrain.Body,
+                            player.ControlledBrain.Body, 7011, 0,
                             false, (byte)(removed ? 1 : 0));
                     }
 

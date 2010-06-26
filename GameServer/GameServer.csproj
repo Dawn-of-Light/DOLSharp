@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -343,6 +343,14 @@
     <Compile Include="gameobjects\Atlantis\Teleporter\SpawnDjinnStone.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\SummonDjinnStone.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\SummonedDjinn.cs" />
+    <Compile Include="gameobjects\CharacterClasses\Albion\CharacterClassNecromancer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gameobjects\CharacterClasses\CharacterClassAttribute.cs" />
+    <Compile Include="gameobjects\CharacterClasses\Hibernia\CharacterClassAnimist.cs" />
+    <Compile Include="gameobjects\CharacterClasses\ICharacterClass.cs" />
+    <Compile Include="gameobjects\CharacterClasses\CharacterClassBase.cs" />
+    <Compile Include="gameobjects\CharacterClasses\Midgard\CharacterClassBoneDancer.cs" />
     <Compile Include="gameobjects\GameVault.cs" />
     <Compile Include="gameobjects\CustomNPC\Teleporters\SimpleTeleporter.cs" />
     <Compile Include="gameobjects\GameTrainingDummy.cs" />
@@ -762,7 +770,6 @@
     <Compile Include="gameobjects\GameMovingObject.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameobjects\Necromancer\GameNecromancer.cs" />
     <Compile Include="gameobjects\GameNPC.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1502,9 +1509,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameutils\PathPoint.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\PlayerClass.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameutils\PlayerTradeWindow.cs">

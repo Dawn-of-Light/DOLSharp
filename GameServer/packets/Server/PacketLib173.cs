@@ -274,7 +274,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterOverview));
 			pak.FillString(m_gameClient.Account.Name, 24);
 			IList<InventoryItem> items;
-			Character[] characters = m_gameClient.Account.Characters;
+			DOLCharacters[] characters = m_gameClient.Account.Characters;
 			if (characters == null)
 			{
 				pak.Fill(0x0, 1840);

@@ -199,7 +199,7 @@ namespace DOL.GS.Scripts
 			m_js.AppendFormat("var numInvItems = {0}", GameServer.Database.GetObjectCount<InventoryItem>());
 			m_js.Append(nl.NewLine);
 
-			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount<Character>());
+			m_js.AppendFormat("var numPlrChars = {0}", GameServer.Database.GetObjectCount<DOLCharacters>());
 			m_js.Append(nl.NewLine);
 
 			m_js.AppendFormat("var numMerchantItems = {0}", GameServer.Database.GetObjectCount<MerchantItem>());

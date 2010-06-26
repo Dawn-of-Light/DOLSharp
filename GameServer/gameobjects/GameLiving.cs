@@ -1832,7 +1832,7 @@ namespace DOL.GS
 				{
 					GamePlayer owner = brain.GetPlayerOwner();
 					excludes.Add(owner);
-					if (owner != null && owner.ControlledNpcBrain != null && ad.Target == owner.ControlledNpcBrain.Body)
+					if (owner != null && owner.ControlledBrain != null && ad.Target == owner.ControlledBrain.Body)
 					{
 						switch (ad.AttackResult)
 						{
@@ -6169,53 +6169,60 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the controlled object
 		/// </summary>
-		protected IControlledBrain[] m_controlledNpcBrain = null;
+		protected IControlledBrain[] m_controlledBrain = null;
 
 		/// <summary>
 		/// Initializes the ControlledNpcs for the GameLiving class
 		/// </summary>
 		/// <param name="num">Number of places to allocate.  If negative, sets to null.</param>
-		public void InitControlledNpcBrain(int num)
+		public void InitControlledBrainArray(int num)
 		{
 			if (num > 0)
-				m_controlledNpcBrain = new IControlledBrain[num];
+				m_controlledBrain = new IControlledBrain[num];
 			else
 			{
-				m_controlledNpcBrain = null;
+				m_controlledBrain = null;
 				return;
 			}
 		}
 
-		public virtual IControlledBrain ControlledNpcBrain
+		/// <summary>
+		/// Get or set the ControlledBrain.  Set always uses m_controlledBrain[0]
+		/// </summary>
+		public virtual IControlledBrain ControlledBrain
 		{
 			get
 			{
-				if (m_controlledNpcBrain == null) 
+				if (m_controlledBrain == null) 
 					return null;
 
-				return m_controlledNpcBrain[0];
+				return m_controlledBrain[0];
+			}
+			set
+			{
+				m_controlledBrain[0] = value;
 			}
 		}
 
-    public virtual bool IsControlledNPC(GameNPC npc)
-    {
-      if (npc == null)
-      {
-        return false;
-      }
-      IControlledBrain brain = npc.Brain as IControlledBrain;
-      if (brain == null)
-      {
-        return false;
-      }
-      return brain.GetPlayerOwner() == this;
-    }
+		public virtual bool IsControlledNPC(GameNPC npc)
+		{
+			if (npc == null)
+			{
+				return false;
+			}
+			IControlledBrain brain = npc.Brain as IControlledBrain;
+			if (brain == null)
+			{
+				return false;
+			}
+			return brain.GetPlayerOwner() == this;
+		}
 
 		/// <summary>
 		/// Sets the controlled object for this player
 		/// </summary>
 		/// <param name="controlledNpc"></param>
-		public virtual void SetControlledNpcBrain(IControlledBrain controlledNpcBrain)
+		public virtual void SetControlledBrain(IControlledBrain controlledBrain)
 		{
 		}
 
