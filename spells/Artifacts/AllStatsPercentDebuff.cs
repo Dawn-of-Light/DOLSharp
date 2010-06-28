@@ -33,7 +33,6 @@ namespace DOL.GS.Spells
         protected int StrDebuff = 0;
         protected int DexDebuff = 0;
         protected int ConDebuff = 0;
-        protected int AcuDebuff = 0;
         protected int EmpDebuff = 0;
         protected int QuiDebuff = 0;
         protected int IntDebuff = 0;
@@ -52,7 +51,6 @@ namespace DOL.GS.Spells
             StrDebuff = (int)((double)effect.Owner.GetModified(eProperty.Strength) * percentValue);
             DexDebuff = (int)((double)effect.Owner.GetModified(eProperty.Dexterity) * percentValue);
             ConDebuff = (int)((double)effect.Owner.GetModified(eProperty.Constitution) * percentValue);
-            AcuDebuff = (int)((double)effect.Owner.GetModified(eProperty.Acuity) * percentValue);
             EmpDebuff = (int)((double)effect.Owner.GetModified(eProperty.Empathy) * percentValue);
             QuiDebuff = (int)((double)effect.Owner.GetModified(eProperty.Quickness) * percentValue);
             IntDebuff = (int)((double)effect.Owner.GetModified(eProperty.Intelligence) * percentValue);
@@ -63,7 +61,6 @@ namespace DOL.GS.Spells
             effect.Owner.DebuffCategory[(int)eProperty.Dexterity] += DexDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Strength] += StrDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Constitution] += ConDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Acuity] += AcuDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Piety] += PieDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Empathy] += EmpDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Quickness] += QuiDebuff;
@@ -86,7 +83,6 @@ namespace DOL.GS.Spells
             effect.Owner.DebuffCategory[(int)eProperty.Dexterity] -= DexDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Strength] -= StrDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Constitution] -= ConDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Acuity] -= AcuDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Piety] -= PieDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Empathy] -= EmpDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Quickness] -= QuiDebuff;
