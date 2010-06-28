@@ -114,7 +114,7 @@ namespace DOL.GS
 			get
 			{
 				if (Player.ControlledBrain == null) 
-					return Player.HealthPercentGroupWindow;
+					return Player.HealthPercent;
 
 				return Player.ControlledBrain.Body.HealthPercent;
 			}
