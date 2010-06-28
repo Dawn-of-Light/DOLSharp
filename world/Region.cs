@@ -252,13 +252,18 @@ namespace DOL.GS
 		}
 
 
-		~Region()
-		{
-			log.Debug("Region destructor called for " + Description);
-		}
-
-
 		#endregion
+
+		/// <summary>
+		/// Handles players leaving this region via a zonepoint
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="zonePoint"></param>
+		/// <returns>false to halt processing of this request</returns>
+		public virtual bool OnZonePoint(GamePlayer player, ZonePoint zonePoint)
+		{
+			return true;
+		}
 
 		#region Properties
 
@@ -342,7 +347,7 @@ namespace DOL.GS
         //Dinberg: Changed this to virtual, so that Instances can take a unique Name, for things like quest instances.
 
 		/// <summary>
-		/// The Region Description eg. Cursed Forest
+		/// The Regi on Description eg. Cursed Forest
 		/// </summary>
 		public virtual string Description
 		{
