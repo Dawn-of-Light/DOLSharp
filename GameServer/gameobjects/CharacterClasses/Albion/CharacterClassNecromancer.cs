@@ -133,15 +133,15 @@ namespace DOL.GS
 		/// Changes shade state of the player
 		/// </summary>
 		/// <param name="state">The new state</param>
-		public override void Shade(bool state)
+		public override void Shade(bool makeShade)
 		{
 			bool wasShade = Player.IsShade;
-			base.Shade(state);
+			base.Shade(makeShade);
 
-			if (wasShade == state)
+			if (wasShade == makeShade)
 				return;
 
-			if (state)
+			if (makeShade)
 			{
 				// Necromancer has become a shade. Have any previous NPC 
 				// attackers aggro on pet now, as they can't attack the 
