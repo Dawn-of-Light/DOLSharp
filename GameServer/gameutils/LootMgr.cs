@@ -322,7 +322,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="mob"></param>
 		/// <returns></returns>
-		private static IList GetLootGenerators(GameNPC mob)
+		public static IList GetLootGenerators(GameNPC mob)
 		{
 			IList filteredGenerators = new ArrayList();
 			ILootGenerator exclusiveGenerator = null;
