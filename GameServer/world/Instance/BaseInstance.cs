@@ -232,7 +232,7 @@ namespace DOL.GS
         /// Invoked when the player attempts to use a door or zone point inside an instance.
         /// </summary>
         /// <returns>True if the player should be moved to default locations.</returns>
-        public virtual bool OnInstanceDoor(GamePlayer player, ushort zonePointID)
+        public virtual bool OnInstanceDoor(GamePlayer player, ZonePoint zonePoint)
         {
             //zone point ID is also used for larger instances, eg Jordheim, with multiple exits.
             return true;

@@ -257,12 +257,6 @@ namespace DOL.GS
 			DOL.Events.GameEventMgr.RemoveAllHandlersForObject(this);
 		}
 
-		~Zone()
-		{
-			Console.WriteLine("Destructor called for zone " + Description);
-		}
-
-
 		private void InitializeZone()
 		{
 			if (m_initialized) return;
