@@ -121,13 +121,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 								return 1;
 						}
 
-						caption = invItem.Name;
-
 						// Aredhel: Start of a more sophisticated item delve system.
 						// The idea is to have every item inherit from an item base class,
 						// this base class will provide a method
 						//
-						// public virtual void Delve(List<String>)
+						// public virtual void Delve(List<String>, GamePlayer player)
 						//
 						// which can be overridden in derived classes to provide additional
 						// information. Same goes for spells, just add the spell delve
@@ -137,6 +135,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// example when adding new item types (artifacts, for example) you
 						// provide *only* an overridden Delve() method, use the base
 						// Delve() and you're done, spells, charges and everything else.
+
+						// Let the player class create the appropriate item to delve
+						caption = invItem.Name;
+
+						if (client.Player.DelveInventoryItem(invItem, objectInfo))
+							break;
+
+						#region Old Delve
 
 						if (invItem is InventoryArtifact)
 						{
@@ -269,6 +275,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 
 						break;
+
+						#endregion Old Delve
 					}
 					#endregion
 					#region Spell
@@ -382,6 +390,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						caption = item.Name;
 
+						if (client.Player.DelveInventoryItem(new InventoryItem(item), objectInfo))
+							break;
+
+						#region Old Delve
+
+						// fallback to old delve
+
 						if (item.Item_Type == (int)eInventorySlot.Horse)
 						{
 							WriteHorseInfo(objectInfo, item, client, "");
@@ -435,6 +450,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 							WriteTechnicalInfo(objectInfo, new InventoryItem(item), item.MaxDurability, item.MaxCondition);
 						}
 						break;
+
+						#endregion Old Delve
 					}
 					#endregion
 					#region Effect
@@ -681,7 +698,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (invItem == null)
 							return 1;
 
+						// Let the player class create the appropriate item to delve
 						caption = invItem.Name;
+
+						if (client.Player.DelveInventoryItem(invItem, objectInfo))
+							break;
+
+						#region Old Delve
+						// fallback to old delve
 
 						if (invItem.Item_Type == (int)eInventorySlot.Horse)
 						{
@@ -736,6 +760,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 
 						break;
+
+						#endregion Old Delve
 					}
 					#endregion
 					#region Ability

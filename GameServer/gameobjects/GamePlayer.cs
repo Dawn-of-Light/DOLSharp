@@ -14510,8 +14510,8 @@ namespace DOL.GS
 		/// Creates a new player
 		/// </summary>
 		/// <param name="client">The GameClient for this player</param>
-		/// <param name="theChar">The character for this player</param>
-		public GamePlayer(GameClient client, DOLCharacters theChar)
+		/// <param name="dbChar">The character for this player</param>
+		public GamePlayer(GameClient client, DOLCharacters dbChar)
 			: base()
 		{
 			IsJumping = false;
@@ -14519,7 +14519,7 @@ namespace DOL.GS
 			m_rangeAttackAmmo = new WeakRef(null);
 			m_rangeAttackTarget = new WeakRef(null);
 			m_client = client;
-			m_dbCharacter = theChar;
+			m_dbCharacter = dbChar;
 			m_controlledHorse = new ControlledHorse(this);
 			m_buff1Bonus = new PropertyIndexer((int)eProperty.MaxProperty); // set up a fixed indexer for players
 			m_buff2Bonus = new PropertyIndexer((int)eProperty.MaxProperty);
@@ -14534,22 +14534,67 @@ namespace DOL.GS
 			m_lastUpdateArray = 0;
 			m_canFly = false;
 			m_lastWorldUpdate = Environment.TickCount;
-			m_inventory = new GamePlayerInventory(this);
+
+			CreateInventory();
 			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemEquipped, new DOLEventHandler(OnItemEquipped));
 			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemUnequipped, new DOLEventHandler(OnItemUnequipped));
 			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemBonusChanged, new DOLEventHandler(OnItemBonusChanged));
+
 			m_enteredGame = false;
 			m_customDialogCallback = null;
 			m_sitting = false;
 			m_isWireframe = false;
-
-			m_saveInDB = true; // always save char data in db
 			m_characterClass = new DefaultCharacterClass();
 			m_groupIndex = 0xFF;
-			LoadFromDatabase(theChar);
 			m_currentAreas = new ArrayList();
+
+			m_saveInDB = true;
+			LoadFromDatabase(dbChar);
 		}
-		
+
+		/// <summary>
+		/// Create this players inventory
+		/// </summary>
+		protected virtual void CreateInventory()
+		{
+			m_inventory = new GamePlayerInventory(this);
+		}
+
+		/// <summary>
+		/// Player is delving an item
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="delveInfo"></param>
+		/// <returns>false if delve not handled</returns>
+		public virtual bool DelveInventoryItem(InventoryItem invItem, List<string> delveInfo)
+		{
+			Type t = invItem.GetType();
+			MethodInfo m = t.GetMethod("Delve"); // Delve(List<String>, GamePlayer player)
+
+			if (m != null)
+			{
+				try
+				{
+					List<String> delve = new List<String>();
+					m.Invoke(invItem, new object[] { delve, this });
+
+					foreach (string line in delve)
+					{
+						delveInfo.Add(line);
+					}
+
+					return true;
+				}
+				catch
+				{
+					log.ErrorFormat("Found delve for {0} but invoke failed.", t.FullName);
+				}
+			}
+
+			return false;
+		}
+
+
 		public double GetEvadeChance()
 		{
 			double evadeChance = 0;

@@ -85,10 +85,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			if (client.Account.PrivLevel > 1)
+			{
 				client.Out.SendMessage("JumpSpotID = " + jumpSpotID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("ZonePoint Region = " + zonePoint.Region + ", ClassType = '" + zonePoint.ClassType + "'", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
 
 			//Dinberg: Fix - some jump points are handled code side, such as instances.
 			//As such, region MAY be zero in the database, so this causes an issue.
+
 			if (zonePoint.Region != 0)
 			{
 				Region reg = WorldMgr.GetRegion(zonePoint.Region);
@@ -103,6 +107,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 							return 1;
 						}
 					}
+
+					// Allow the region to either deny exit or handle the zonepoint in a custom way
+					if (client.Player.CurrentRegion.OnZonePoint(client.Player, zonePoint) == false)
+					{
+						return 1;
+					}
 				}
 			}
 
@@ -116,7 +126,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			IJumpPointHandler check = null;
-			if (!string.IsNullOrEmpty(zonePoint.ClassType))
+			if (string.IsNullOrEmpty(zonePoint.ClassType) == false)
 			{
 				check = (IJumpPointHandler) m_instanceByName[zonePoint.ClassType];
 
