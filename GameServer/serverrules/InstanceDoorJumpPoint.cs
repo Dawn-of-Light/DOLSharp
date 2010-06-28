@@ -41,7 +41,7 @@ namespace DOL.GS.ServerRules
             if (player.CurrentRegion is BaseInstance == false)
                 return true;
 
-            if (((BaseInstance)player.CurrentRegion).OnInstanceDoor(player, targetPoint.Id))
+            if (((BaseInstance)player.CurrentRegion).OnInstanceDoor(player, targetPoint))
                 return true;
             else
                 return false; //Let instance handle zoning by itself in this case...

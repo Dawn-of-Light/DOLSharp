@@ -1816,7 +1816,7 @@ namespace DOL.GS.Commands
 					if (item.SlotPosition >= (int)eInventorySlot.FirstBackpack &&
 						item.SlotPosition <= (int)eInventorySlot.LastBackpack)
 					{
-						text.Add("    " + item.Name + " (" + item.Id_nb + ")");
+						text.Add(item.Count.ToString("000") + " " + item.Name + " (" + item.Id_nb + ")");
 					}
 				}
 			}
@@ -1829,7 +1829,7 @@ namespace DOL.GS.Commands
 				{
 					if (item.SlotPosition >= (int)eInventorySlot.FirstVault && item.SlotPosition <= (int)eInventorySlot.LastVault)
 					{
-						text.Add("    " + item.Name + " (" + item.Id_nb + ")");
+						text.Add(item.Count.ToString("000") + " " + item.Name + " (" + item.Id_nb + ")");
 					}
 				}
 			}
@@ -1843,7 +1843,7 @@ namespace DOL.GS.Commands
 					if (item.SlotPosition >= (int)eInventorySlot.HouseVault_First &&
 						item.SlotPosition <= (int)eInventorySlot.HouseVault_Last)
 					{
-						text.Add("    " + item.Name + " (" + item.Id_nb + ")");
+						text.Add(item.Count.ToString("000") + " " + item.Name + " (" + item.Id_nb + ")");
 					}
 				}
 			}
@@ -1857,7 +1857,7 @@ namespace DOL.GS.Commands
 					if (item.SlotPosition >= (int)eInventorySlot.Consignment_First &&
 						item.SlotPosition <= (int)eInventorySlot.Consignment_Last)
 					{
-						text.Add("    " + item.Name + " (" + item.Id_nb + ")");
+						text.Add(item.Count.ToString("000") + " " + item.Name + " (" + item.Id_nb + ")");
 					}
 				}
 			}
@@ -1875,7 +1875,7 @@ namespace DOL.GS.Commands
 		{
 			var text = new List<string>();
 			text.Add(" ");
-			text.Add("PLAYER INFORMATION (Client # " + player.Client.SessionID + ")");
+			text.Add("PLAYER INFORMATION (Client # " + player.Client.SessionID + ", " + player.GetType().FullName + ")");
 			text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
 			text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " +
 					 player.CharacterClass.Name);
