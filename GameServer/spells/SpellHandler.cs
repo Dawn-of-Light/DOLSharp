@@ -1593,6 +1593,8 @@ return false;
 					((GamePlayer)m_caster).ClearSpellQueue();
 				}
 			}
+
+			m_startReuseTimer = false;
 			OnAfterSpellCastSequence();
 		}
 
