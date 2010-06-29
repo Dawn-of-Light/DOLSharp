@@ -8618,8 +8618,14 @@ namespace DOL.GS
 								}
 								else if (Client.Account.PrivLevel == 1 && (changeTime < delay || (CurrentRegion.Time - itemdelay) < itemreuse)) //2 minutes reuse timer
 								{
-									if ((CurrentRegion.Time - itemdelay) < itemreuse) Out.SendMessage("You must wait " + (itemreuse - (CurrentRegion.Time - itemdelay)) / 1000 + " more second before discharge " + useItem.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									else Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									if ((CurrentRegion.Time - itemdelay) < itemreuse)
+									{
+										Out.SendMessage("You must wait " + (itemreuse - (CurrentRegion.Time - itemdelay)) / 1000 + " more second before discharge " + useItem.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									}
+									else
+									{
+										Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									}
 									return;
 								}
 								else
@@ -8651,6 +8657,8 @@ namespace DOL.GS
 
 														if (spellHandler.CastSpell())
 														{
+															bool castOk = spellHandler.StartReuseTimer;
+
 															if (spell.SubSpellID > 0)
 															{
 																Spell subspell = SkillBase.GetSpellByID(spell.SubSpellID);
@@ -8668,9 +8676,12 @@ namespace DOL.GS
 																useItem.Charges--;
 															}
 
-															TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-															TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
-															TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
+															if (castOk)
+															{
+																TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+																TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+																TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
+															}
 														}
 													}
 													else
