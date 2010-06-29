@@ -960,6 +960,7 @@
     <Compile Include="packets\Server\PacketLib1102.cs" />
     <Compile Include="packets\Server\PacketLib1101.cs" />
     <Compile Include="packets\Server\PacketLib1100.cs" />
+    <Compile Include="packets\Server\PacketLib1104.cs" />
     <Compile Include="packets\Server\PacketLib197.cs" />
     <Compile Include="packets\Server\PacketLib196.cs" />
     <Compile Include="packets\Server\PacketLib188.cs" />
