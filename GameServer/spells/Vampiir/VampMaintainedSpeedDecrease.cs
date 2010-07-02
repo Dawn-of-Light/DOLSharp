@@ -44,10 +44,48 @@ namespace DOL.GS.Spells
 			return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
 		}
 
+		/// <summary>
+		/// Check each pulse to see if spell can be maintained
+		/// </summary>
+		/// <param name="effect"></param>
+		public override void OnEffectPulse(GameSpellEffect effect)
+		{
+			GameLiving t = effect.Owner;
+			GameLiving target = t.TargetObject as GameLiving;
+
+			if (m_caster.Mana < Spell.PulsePower)
+			{
+				effect.Cancel(false);
+				return;
+			}
+
+			if (!m_caster.IsAlive || 
+				!effect.Owner.IsAlive || 
+				!m_caster.IsWithinRadius(effect.Owner, Spell.Range) || 
+				m_caster.IsMezzed || 
+				m_caster.IsStunned || 
+				effect.Owner.ObjectState != GameObject.eObjectState.Active ||
+				(m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true))
+			{
+				effect.Cancel(false);
+				return;
+			}
+			if (!m_caster.TargetInView)
+			{
+				effect.Cancel(false);
+				return;
+			}
+
+			base.OnEffectPulse(effect);
+
+			m_caster.Mana -= effect.Spell.PulsePower;
+		}
+
+
 		protected override void OnAttacked(DOLEvent e, object sender, EventArgs arguments)
 		{
-			//It is a maintained spell - it doesn't cancel when they are attacked
-			//base.OnAttacked(e, sender, arguments);
+			// Spell can be used in combat, do nothing
 		}
+
 	}
 }
