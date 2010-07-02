@@ -63,6 +63,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 0;
 			}
 
+            if (client.Version >= GameClient.eClientVersion.Version1104)
+            {
+                packet.ReadIntLowEndian(); //unk
+            }
+
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
 			for (int i = 0; i < charsCount; i++)
 			{
