@@ -2684,12 +2684,14 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendDebugMessage(string format, params object[] parameters)
 		{
-			SendMessage(String.Format("[DEBUG] " + format, parameters), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (m_gameClient.Account.PrivLevel > (int)ePrivLevel.Player)
+				SendMessage(String.Format("[DEBUG] " + format, parameters), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		public virtual void SendDebugPopupMessage(string format, params object[] parameters)
 		{
-			SendMessage(String.Format("[DEBUG] " + format, parameters), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+			if (m_gameClient.Account.PrivLevel > (int)ePrivLevel.Player)
+				SendMessage(String.Format("[DEBUG] " + format, parameters), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 		}
 
 		public virtual void SendEmblemDialogue()
