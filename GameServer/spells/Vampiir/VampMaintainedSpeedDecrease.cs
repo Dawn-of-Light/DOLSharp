@@ -50,8 +50,11 @@ namespace DOL.GS.Spells
 		/// <param name="effect"></param>
 		public override void OnEffectPulse(GameSpellEffect effect)
 		{
-			GameLiving t = effect.Owner;
-			GameLiving target = t.TargetObject as GameLiving;
+			if (effect.Owner.ObjectState != GameObject.eObjectState.Active || m_caster.ObjectState != GameObject.eObjectState.Active)
+			{
+				effect.Cancel(false);
+				return;
+			}
 
 			if (m_caster.Mana < Spell.PulsePower)
 			{
@@ -60,16 +63,16 @@ namespace DOL.GS.Spells
 			}
 
 			if (!m_caster.IsAlive || 
-				!effect.Owner.IsAlive || 
+				!effect.Owner.IsAlive ||
+				m_caster.IsMezzed ||
+				m_caster.IsStunned ||
 				!m_caster.IsWithinRadius(effect.Owner, Spell.Range) || 
-				m_caster.IsMezzed || 
-				m_caster.IsStunned || 
-				effect.Owner.ObjectState != GameObject.eObjectState.Active ||
 				(m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true))
 			{
 				effect.Cancel(false);
 				return;
 			}
+
 			if (!m_caster.TargetInView)
 			{
 				effect.Cancel(false);
