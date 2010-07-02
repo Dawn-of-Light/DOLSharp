@@ -2734,12 +2734,12 @@ namespace DOL.GS
 			// Proc #1
 
 			if (weapon.ProcSpellID != 0 && Util.ChanceDouble(procChance))
-				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), weapon.ProcSpellID);
+				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), weapon.ProcSpellID, false);
 
 			// Proc #2
 
 			if (weapon.ProcSpellID1 != 0 && Util.ChanceDouble(procChance))
-				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), weapon.ProcSpellID1);
+				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), weapon.ProcSpellID1, false);
 
 			// Poison
 
@@ -2753,7 +2753,7 @@ namespace DOL.GS
 					return;
 				}
 
-				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons), weapon.PoisonSpellID);
+				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons), weapon.PoisonSpellID, true);
 
 				// Spymaster Enduring Poison
 
@@ -2773,7 +2773,7 @@ namespace DOL.GS
 		/// Will assume spell is in GlobalSpellsLines.Item_Effects even if it's not and use the weapons LevelRequirement
 		/// Item_Effects must be used here because various spell handlers recognize this line to alter variance and other spell parameters
 		/// </summary>
-		protected void StartWeaponMagicalEffect(InventoryItem weapon, AttackData ad, SpellLine spellLine, int spellID)
+		protected void StartWeaponMagicalEffect(InventoryItem weapon, AttackData ad, SpellLine spellLine, int spellID, bool ignoreLevel)
 		{
 			if (weapon == null)
 				return;
@@ -2789,14 +2789,18 @@ namespace DOL.GS
 
 				if (procSpell != null)
 				{
-					int requiredLevel = weapon.Template.LevelRequirement > 0 ? weapon.Template.LevelRequirement : Math.Min(50, weapon.Level);
-					if (requiredLevel > Level)
+					if (ignoreLevel == false)
 					{
-						if (this is GamePlayer)
+						int requiredLevel = weapon.Template.LevelRequirement > 0 ? weapon.Template.LevelRequirement : Math.Min(50, weapon.Level);
+
+						if (requiredLevel > Level)
 						{
-							(this as GamePlayer).Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							if (this is GamePlayer)
+							{
+								(this as GamePlayer).Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+							}
+							return;
 						}
-						return;
 					}
 
 					ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, procSpell, spellLine);
