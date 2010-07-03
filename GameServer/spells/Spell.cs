@@ -70,6 +70,7 @@ namespace DOL.GS
 		protected bool m_costpower = true;
 		protected readonly bool m_allowbolt = false;
 		protected int m_overriderange = 0;
+		protected bool m_isShearable = false;
 		
 		#region member access properties
 		#region warlocks
@@ -283,6 +284,15 @@ namespace DOL.GS
 		public bool IsFocus
 		{
 			get { return m_isfocus; }
+		}
+
+		/// <summary>
+		/// This spell can be sheared even if cast by self
+		/// </summary>
+		public bool IsShearable
+		{
+			get { return m_isShearable; }
+			set { m_isShearable = value; }
 		}
 
         /// <summary>

@@ -169,17 +169,18 @@ namespace DOL.GS.Spells
 			{
 				if (effect.Spell.SpellType == ShearSpellType)
 				{
-					if (effect.Owner == effect.SpellHandler.Caster || effect.Spell.Value > Spell.Value)
+					if ((effect.Owner != effect.SpellHandler.Caster || effect.Spell.IsShearable) && effect.Spell.Value <= Spell.Value)
+					{
+						SendEffectAnimation(target, 0, false, 1);
+						effect.Cancel(false);
+						MessageToCaster("Your spell rips away some of your target's enhancing magic.", eChatType.CT_Spell);
+						MessageToLiving(target, "Some of your enhancing magic has been ripped away by a spell!", eChatType.CT_Spell);
+					}
+					else
 					{
 						SendEffectAnimation(target, 0, false, 0);
 						MessageToCaster("The target's connection to their enhancement is too strong for you to remove.", eChatType.CT_SpellResisted);
-						return;
 					}
-
-					SendEffectAnimation(target, 0, false, 1);
-					effect.Cancel(false);
-					MessageToCaster("Your spell rips away some of your target's enhancing magic.", eChatType.CT_Spell);
-					MessageToLiving(target, "Some of your enhancing magic has been ripped away by a spell!", eChatType.CT_Spell);
 
 					return;
 				}
