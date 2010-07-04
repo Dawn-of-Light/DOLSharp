@@ -109,7 +109,8 @@ namespace DOL.GS.Commands
 		 "'/mob select' select the mob within 100 radius (used for selection of non-targettable GameNPC)",
 		 "'/mob load <Mob_ID>' load the Mob_ID from the DB and update the Mob cache",
 		 "'/mob reload <name>' reload the targetted or named mob(s) from the database",
-		 "'/mob findname <name> <#>' search for a mob with a name like <name> with maximum <#> (def. 10) matches"
+		 "'/mob findname <name> <#>' search for a mob with a name like <name> with maximum <#> (def. 10) matches",
+         "'/mob trigger <type> <action> <text>' adds a trigger to targeted mob, such as saying something when it dies.  Use '/mob trigger help' for more info."
 		)]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -233,6 +234,7 @@ namespace DOL.GS.Commands
 					case "load": load(client, args); break;
 					case "reload": reload(client, targetMob, args); break;
 					case "findname": findname(client, args); break;
+                    case "trigger": trigger(client, targetMob, args); break;
 					default:
 						DisplaySyntax(client);
 						return;
@@ -2620,6 +2622,75 @@ namespace DOL.GS.Commands
 
 			client.Out.SendCustomTextWindow("Mob State", text);
 		}
+
+        private void trigger(GameClient client, GameNPC targetMob, string[] args)
+        {
+            string type = "";
+            string text = "";
+            string action = "";
+            try
+            {
+                type = args[2].ToLower();
+
+                if (type == "help" || type == "")
+                {
+                    client.Out.SendMessage("The trigger command lets you add sentences for the mob to say when he spawns, aggros or dies.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    client.Out.SendMessage("Triggers apply to all mobs with the same mob name.  Each mob name can have multiple triggers and trigger types.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    client.Out.SendMessage("The aggro and die trigger types allow for keywords of [name] (gets replaced with the players name), [class] (gets replaced with the players class) and [mobname] gets replaced with the mobs name.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    client.Out.SendMessage("Ex: /mob trigger aggro say This is what I'll say when I aggro!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    client.Out.SendMessage("Ex: /mob trigger die say This is what I'll say when I die!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    client.Out.SendMessage("Ex: /mob trigger spawn say This is what I'll say when I spawn!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    client.Out.SendMessage("Ex: /mob trigger aggro say I really hate [class]'s like you!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    client.Out.SendMessage("Ex: /mob trigger aggro say Prepare to die [name]!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    client.Out.SendMessage("Ex: /mob trigger aggro say I've been waiting for this moment ever since I was a young [mobname]!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    client.Out.SendMessage("The keywords [name] and [class] and [mobname] only apply to the aggro and die trigger type.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    client.Out.SendMessage("Usage: /mob trigger <type(die,aggro,spawn)> <action(say)> <sentence(can include [name],[class],[mobname])>", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                    return;
+                }
+
+                if ((type != "spawn" && type != "aggro" && type != "die") || type == "")
+                {
+                    client.Out.SendMessage("You must specify a proper type for the trigger <Spawn, Aggro, Die>.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Out.SendMessage("example: Die Say This is what I will say when I die!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+
+                action = args[3].ToLower();
+
+                if (action != "say" || action == "")
+                {
+                    client.Out.SendMessage("You must specify a proper action for the trigger <say>.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Out.SendMessage("example: Die Say This is what I will say when I die!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+
+                if (args.Length > 3) { text = String.Join(" ", args, 4, args.Length - 4); }
+
+                if (text == "")
+                {
+                client.Out.SendMessage("You must specify some text for the trigger.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage("If using the aggro trigger you may use [name] and [class] keywords.  see '/mob trigger help' for more info.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage("example: Die Say This is what I will say when I die!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+                if ((type == "spawn") && (text.Contains("[name]") || text.Contains("[class]") || text.Contains("[mobname]")))
+                {
+                    client.Out.SendMessage("Keywords are only valid for the aggro and die trigger types and cannot be used with spawn.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+
+                DBMobXTrigger trigger = new DBMobXTrigger(targetMob.Name, type, action, GameServer.Database.Escape(text));
+                trigger.Dirty = true;
+                trigger.AllowAdd = true;
+                GameServer.Database.AddObject(trigger);
+                client.Out.SendMessage(action + " trigger added to mobs with name " + targetMob.Name + " when they " + type + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            catch (Exception)
+            {
+                DisplaySyntax(client, args[1]);
+            }
+        }
 
 	}
 }
