@@ -29,11 +29,6 @@ namespace DOL.GS
 	/// </summary>
 	public class GameTrainingDummy : GameNPC
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public GameTrainingDummy() : base()
 		{
 			m_maxSpeedBase = 0;

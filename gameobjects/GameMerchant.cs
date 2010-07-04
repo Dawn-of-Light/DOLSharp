@@ -35,11 +35,6 @@ namespace DOL.GS
 	public class GameMerchant : GameNPC
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Constructor
 		/// </summary>
 		public GameMerchant()

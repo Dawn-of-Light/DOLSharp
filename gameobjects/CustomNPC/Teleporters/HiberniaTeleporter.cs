@@ -36,11 +36,6 @@ namespace DOL.GS
 	public class HiberniaTeleporter : GameTeleporter
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Player right-clicked the teleporter.
 		/// </summary>
 		/// <param name="player"></param>

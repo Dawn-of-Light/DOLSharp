@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 using DOL.AI;
@@ -32,7 +33,6 @@ using DOL.GS.Quests;
 using DOL.GS.Spells;
 using DOL.GS.Utils;
 using DOL.Language;
-using log4net;
 
 namespace DOL.GS
 {
@@ -42,11 +42,6 @@ namespace DOL.GS
 	/// </summary>
 	public class GameNPC : GameLiving
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		/// <summary>
 		/// Constant for determining if already at a point
 		/// </summary>
@@ -112,6 +107,7 @@ namespace DOL.GS
 		}
 
 		#endregion
+		
 		#region Sizes/Properties
 		/// <summary>
 		/// Holds the size of the NPC
@@ -364,6 +360,7 @@ namespace DOL.GS
 			set { m_houseNumber = value; }
 		}
 		#endregion
+		
 		#region Stats
 
 
@@ -470,6 +467,7 @@ namespace DOL.GS
 			set { m_charStat[eStat.CHR - eStat._First] = value; }
 		}
 		#endregion
+		
 		#region Flags/Position/SpawnPosition/UpdateTick/Tether
 		/// <summary>
 		/// Various flags for this npc
@@ -835,6 +833,7 @@ namespace DOL.GS
 		}
 
 		#endregion
+		
 		#region Movement
 		/// <summary>
 		/// Timer to be set if an OnArriveAtTarget
@@ -1573,6 +1572,7 @@ namespace DOL.GS
 		}
 
 		#endregion
+		
 		#region Path (Movement)
 		/// <summary>
 		/// Gets sets the currentwaypoint that npc has to wander to
@@ -1759,6 +1759,7 @@ namespace DOL.GS
 			}
 		}
 		#endregion
+		
 		#region Inventory/LoadfromDB
 		private NpcTemplate m_npcTemplate;
 		/// <summary>
@@ -2266,6 +2267,7 @@ namespace DOL.GS
 		}
 
 		#endregion
+		
 		#region Quest
 		/// <summary>
 		/// Holds all the quests this npc can give to players
@@ -2411,6 +2413,7 @@ namespace DOL.GS
 		}
 
 		#endregion
+		
 		#region Riding
 		//NPC's can have riders :-)
 		/// <summary>
@@ -2583,6 +2586,7 @@ namespace DOL.GS
 			}
 		}
 		#endregion
+		
 		#region Add/Remove/Create/Remove/Update
 		/// <summary>
 		/// Broadcasts the npc to all players around
@@ -2671,12 +2675,17 @@ namespace DOL.GS
 				else
 					log.Info("Confirmed number: " + CurrentHouse.HouseNumber.ToString());
 			}
-			// [Ganrod] Nidel: Hack pour mettre full life au respawn.
+			
+			// [Ganrod] Nidel: spawn full life
 			if (!InCombat && IsAlive && base.Health < MaxHealth)
 			{
 				base.Health = MaxHealth;
 			}
-            HandleTriggerSay("spawn", this);
+			
+			// ambient text
+			if (GameServer.Instance.ServerStatus == eGameServerStatus.GSS_Open)
+				FireAmbientSentence(eAmbientTrigger.spawning);
+			
 			return true;
 		}
 
@@ -2826,6 +2835,7 @@ namespace DOL.GS
 		}
 
 		#endregion
+		
 		#region AI
 
 		/// <summary>
@@ -2940,6 +2950,7 @@ namespace DOL.GS
 			}
 		}
 		#endregion
+		
 		#region GetAggroLevelString
 
 		/// <summary>
@@ -3109,7 +3120,22 @@ namespace DOL.GS
 					}
 				}*/
 		#endregion
+		
 		#region Interact/WhisperReceive/SayTo
+		
+		/// <summary>
+		/// The possible triggers for GameNPC ambient actions
+		/// </summary>
+		public enum eAmbientTrigger
+		{
+			spawning,
+			dieing,
+			aggroing,
+			fighting,
+			roaming,
+			killing,
+		}
+		
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler
 		/// </summary>
@@ -3225,7 +3251,7 @@ namespace DOL.GS
 			{
 				case eChatLoc.CL_PopupWindow:
 					target.Out.SendMessage(resultText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    Message.ChatToArea(this, LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.SpeaksTo", GetName(0, true), target.GetName(0, false)), eChatType.CT_System, WorldMgr.SAY_DISTANCE, target);
+					Message.ChatToArea(this, LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.SpeaksTo", GetName(0, true), target.GetName(0, false)), eChatType.CT_System, WorldMgr.SAY_DISTANCE, target);
 					break;
 				case eChatLoc.CL_ChatWindow:
 					target.Out.SendMessage(resultText, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
@@ -3236,7 +3262,7 @@ namespace DOL.GS
 			}
 		}
 		#endregion
-
+		
 		#region Combat
 
 		/// <summary>
@@ -3561,7 +3587,7 @@ namespace DOL.GS
 		/// </summary>
 		public override void Die(GameObject killer)
 		{
-            HandleTriggerSay("die", this, killer as GameLiving);
+			FireAmbientSentence(eAmbientTrigger.dieing, killer as GameLiving);
 
 			if(killer!=null)
 			{
@@ -3766,10 +3792,10 @@ namespace DOL.GS
 				{
 					SwitchToMelee(attacker);
 				}
-				else if (ActiveWeaponSlot != eActiveWeaponSlot.Distance && 
-							Inventory != null && 
-							Inventory.GetItem(eInventorySlot.DistanceWeapon) != null && 
-							GetDistanceTo(attacker) > 500)
+				else if (ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
+				         Inventory != null &&
+				         Inventory.GetItem(eInventorySlot.DistanceWeapon) != null &&
+				         GetDistanceTo(attacker) > 500)
 				{
 					SwitchToRanged(attacker);
 				}
@@ -4419,6 +4445,7 @@ namespace DOL.GS
 		}
 
 		#endregion
+		
 		#region Notify
 
 		/// <summary>
@@ -4445,98 +4472,61 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// Handle triggers
-        /// </summary>
-        /// <param name="action">The trigger action</param>
-        /// <param name="npc">The NPC to handle the trigger for</param>
-        public void HandleTriggerSay(string type, GameNPC npc)
-        {
-            IList<DBMobXTrigger> triggers = GameServer.Database.SelectObjects<DBMobXTrigger>("`Name` = '" + GameServer.Database.Escape(npc.Name) + "' AND `Type` = '" + type + "'");
-            List<string> triggertexts = new List<string>();
-            foreach (DBMobXTrigger trigger in triggers)
-            {
-                triggertexts.Add(trigger.Text);
-            }
-            if (triggertexts.Count == 0) { return; }
-            if (triggertexts.Count > 1)
-            {
-                int rand = Util.Random(triggertexts.Count);
-                npc.Say(triggertexts[rand].Replace("\\'", "'"));
-                return;
-            }
-            if (triggertexts.Count == 1)
-            {
-                npc.Say(triggertexts[0].Replace("\\'", "'"));
-            }
-            return;
-        }
+		/// <summary>
+		/// Handle triggers for ambient sentences mobs can tell
+		/// </summary>
+		/// <param name="action">The trigger action</param>
+		/// <param name="npc">The NPC to handle the trigger for</param>
+		public void FireAmbientSentence(eAmbientTrigger trigger, GameLiving living)
+		{
+			#warning Graveen: MobXAmbient must stay pre-cached
+			List<MobXAmbientBehaviour> mxa =
+				(from i in GameServer.Database.SelectAllObjects<MobXAmbientBehaviour>()
+				 where (i.Source == Name || (NPCTemplate != null && i.Source == NPCTemplate.Name)) && i.Trigger == trigger.ToString()
+				 select i).ToList();
+			
+			// grab random sentence
+			if (mxa.Count==0) return;
+			int choosen = Util.Random(mxa.Count-1);
+			if (!Util.Chance(mxa[choosen].Chance)) return;
+			string text = mxa[choosen].Text.Replace("[sourcename]",Name).Replace("[targetname]",living==null?string.Empty:living.Name);
+			
+			// issuing emote
+			Emote((eEmote)mxa[choosen].Emote);
+			
+			// issuing text
+			if (living is GamePlayer)
+			{
+				text = text.Replace("[class]",(living as GamePlayer).CharacterClass.Name).Replace("[race]",(living as GamePlayer).RaceName);
+			}
+			if (living is GameNPC)
+			{
+				if (living is GamePet) text = text.Replace("[class]","pet").Replace("[race]","pet");
+				if (living is GameNPC) text = text.Replace("[class]","mob").Replace("[race]","mob");
+			}
+			
+			if (text.Contains("[b]"))
+			{
+				text = text.Replace("[b]","");
+				foreach(GamePlayer player in CurrentRegion.GetPlayersInRadius(X,Y,Z, 25000,false))
+					player.Out.SendMessage(text,eChatType.CT_Broadcast,eChatLoc.CL_ChatWindow);
+				return;
+			}
+			if (text.Contains("[y]"))
+			{
+				Yell(text.Replace("[y]",""));
+				return;
+			}
 
-        /// <summary>
-        /// Handle triggers with gameplayer, for use with aggro trigger.
-        /// </summary>
-        /// <param name="action">The trigger action</param>
-        /// <param name="npc">The NPC to handle the trigger for</param>
-        /// <param name="player">The player who triggered the trigger</param>
-        public void HandleTriggerSay(string type, GameNPC npc, GameLiving living)
-        {
-            string saytext = "";
-            IList<DBMobXTrigger> triggers = GameServer.Database.SelectObjects<DBMobXTrigger>("`Name` = '" + GameServer.Database.Escape(npc.Name) + "' AND `Type` = '" + type + "'");
-            List<string> triggertexts = new List<string>();
-            foreach (DBMobXTrigger trigger in triggers)
-            {
-                triggertexts.Add(trigger.Text);
-            }
-            if (triggertexts.Count == 0) { return; }
-            if (triggertexts.Count > 1)
-            {
-                int textcount = triggertexts.Count - 1;
-                int rand = Util.Random(textcount);
+			Say(text);
+		}
 
-                saytext = triggertexts[rand];
-                saytext = saytext.Replace("\\'", "'");
-                if (living is GamePlayer)
-                {
-                    GamePlayer player = living as GamePlayer;
-                    saytext = saytext.Replace("[class]", player.CharacterClass.Name);
-                    saytext = saytext.Replace("[name]", player.Name);
-                    saytext = saytext.Replace("[mobname]", npc.Name);
-                }
-                else
-                {
-                    saytext = saytext.Replace("[class]", "mob");
-                    saytext = saytext.Replace("[name]", living.Name);
-                    saytext = saytext.Replace("[mobname]", npc.Name);
-                }
-                    npc.Say(saytext);
-                return;
-            }
-            if (triggertexts.Count == 1)
-            {
-                saytext = triggertexts[0];
-                saytext = saytext.Replace("\\'", "'");
-                if (living is GamePlayer)
-                {
-                    GamePlayer player = living as GamePlayer;
-                    saytext = saytext.Replace("[class]", player.CharacterClass.Name);
-                    saytext = saytext.Replace("[name]", player.Name);
-                    saytext = saytext.Replace("[mobname]", npc.Name);
-                }
-                else
-                {
-                    saytext = saytext.Replace("[class]", "mob");
-                    saytext = saytext.Replace("[name]", living.Name);
-                    saytext = saytext.Replace("[mobname]", npc.Name);
-                }
-                npc.Say(saytext);
-            }
-            return;
-        }
-
-
- 
-
+		public void FireAmbientSentence(eAmbientTrigger trigger)
+		{
+			FireAmbientSentence(trigger, null);
+		}
 		#endregion
+		
 		#region ControlledNPCs
 
 		/// <summary>

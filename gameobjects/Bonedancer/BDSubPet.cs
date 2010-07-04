@@ -36,11 +36,6 @@ namespace DOL.GS
 	public class BDSubPet : BDPet
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Holds the different subpet ids
 		/// </summary>
 		public enum SubPetType : byte
