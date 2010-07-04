@@ -37,11 +37,6 @@ namespace DOL.GS
 	public class AlbionTeleporter : GameTeleporter
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Add equipment to the teleporter.
 		/// </summary>
 		/// <returns></returns>

@@ -34,11 +34,6 @@ namespace DOL.GS
 	public class GameBoatStableMaster : GameMerchant
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Called when the living is about to get an item from someone
 		/// else
 		/// </summary>

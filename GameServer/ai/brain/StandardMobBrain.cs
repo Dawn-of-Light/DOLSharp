@@ -21,15 +21,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
-using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Effects;
+using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
-using DOL.GS.Spells;
-using DOL.GS.Movement;
-using DOL.GS.RealmAbilities;
 using DOL.Language;
 using log4net;
 
@@ -86,20 +83,20 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
-            //Satyr:
-            //This is a general information. When i review this Think-Procedure and the interaction between it and some
-            //code of GameNPC.cs i have the feeling this is a mixture of much ideas of diffeent people, much unfinished
-            //features like random-walk which does not actually fit to the rest of this Brain-logic.
-            //In other words:
-            //If somebody feeling like redoing this stuff completly i would appreciate it. It might be worth redoing
-            //instead of trying desperately to make something work that is simply chaoticly moded by too much
-            //diffeent inputs.
-            //For NOW i made the aggro working the following way (close to live but not yet 100% equal):
-            //Mobs will not aggro on their way back home (in fact they should even under some special circumstances)
-            //They will completly forget all Aggro when respawned and returned Home.
+			//Satyr:
+			//This is a general information. When i review this Think-Procedure and the interaction between it and some
+			//code of GameNPC.cs i have the feeling this is a mixture of much ideas of diffeent people, much unfinished
+			//features like random-walk which does not actually fit to the rest of this Brain-logic.
+			//In other words:
+			//If somebody feeling like redoing this stuff completly i would appreciate it. It might be worth redoing
+			//instead of trying desperately to make something work that is simply chaoticly moded by too much
+			//diffeent inputs.
+			//For NOW i made the aggro working the following way (close to live but not yet 100% equal):
+			//Mobs will not aggro on their way back home (in fact they should even under some special circumstances)
+			//They will completly forget all Aggro when respawned and returned Home.
 
 
-            // If the NPC is tethered and has been pulled too far it will
+			// If the NPC is tethered and has been pulled too far it will
 			// de-aggro and return to its spawn point.
 			if (Body.IsOutOfTetherRange && !Body.InCombat)
 			{
@@ -114,52 +111,55 @@ namespace DOL.AI.Brain
 			// check for returning to home if to far away
 			if (Body.MaxDistance != 0 && !Body.IsReturningHome)
 			{
-                int distance = Body.GetDistanceTo( Body.SpawnPoint );
+				int distance = Body.GetDistanceTo( Body.SpawnPoint );
 				int maxdistance = Body.MaxDistance > 0 ? Body.MaxDistance : -Body.MaxDistance * AggroRange / 100;
-                if (maxdistance > 0 && distance > maxdistance)
-                {
-                    Body.WalkToSpawn();
-                    return;
-                }
+				if (maxdistance > 0 && distance > maxdistance)
+				{
+					Body.WalkToSpawn();
+					return;
+				}
 			}
 
-            //If this NPC can randomly walk around, we allow it to walk around
-            if (!Body.AttackState && CanRandomWalk && Util.Chance(DOL.GS.ServerProperties.Properties.GAMENPC_RANDOMWALK_CHANCE))
-            {
-                IPoint3D target = CalcRandomWalkTarget();
-                if (target != null && !Util.IsNearDistance(target.X, target.Y, target.Z, 
-                    Body.X, Body.Y, Body.Z, GameNPC.CONST_WALKTOTOLERANCE))
-                    Body.WalkTo(target, 50);
-            }
-            //If the npc can move, and the npc is not casting, not moving, and not attacking or in combat
-            else if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat)
-            {
-                //If the npc is not at it's spawn position, we tell it to walk to it's spawn position
-                //Satyr: If we use a tolerance to stop their Way back home we also need the same
-                //Tolerance to check if we need to go home AGAIN, otherwise we might be told to go home
-                //for a few units only and this may end before the next Arrive-At-Target Event is fired and in this case
-                //We would never lose the state "IsReturningHome", which is then followed by other erros related to agro again to players
-                if ( !Util.IsNearDistance( Body.X, Body.Y, Body.Z, Body.SpawnPoint.X, Body.SpawnPoint.Y, Body.SpawnPoint.Z, GameNPC.CONST_WALKTOTOLERANCE ) )
-                    Body.WalkToSpawn();
-                else if (Body.Heading != Body.SpawnHeading)
-                        Body.Heading = Body.SpawnHeading;
-            }
+			//If this NPC can randomly walk around, we allow it to walk around
+			if (!Body.AttackState && CanRandomWalk && Util.Chance(DOL.GS.ServerProperties.Properties.GAMENPC_RANDOMWALK_CHANCE))
+			{
+				IPoint3D target = CalcRandomWalkTarget();
+				if (target != null && !Util.IsNearDistance(target.X, target.Y, target.Z,
+				                                           Body.X, Body.Y, Body.Z, GameNPC.CONST_WALKTOTOLERANCE))
+				{
+					Body.WalkTo(target, 50);
+					Body.FireAmbientSentence(GameNPC.eAmbientTrigger.roaming);
+				}
+			}
+			//If the npc can move, and the npc is not casting, not moving, and not attacking or in combat
+			else if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat)
+			{
+				//If the npc is not at it's spawn position, we tell it to walk to it's spawn position
+				//Satyr: If we use a tolerance to stop their Way back home we also need the same
+				//Tolerance to check if we need to go home AGAIN, otherwise we might be told to go home
+				//for a few units only and this may end before the next Arrive-At-Target Event is fired and in this case
+				//We would never lose the state "IsReturningHome", which is then followed by other erros related to agro again to players
+				if ( !Util.IsNearDistance( Body.X, Body.Y, Body.Z, Body.SpawnPoint.X, Body.SpawnPoint.Y, Body.SpawnPoint.Z, GameNPC.CONST_WALKTOTOLERANCE ) )
+					Body.WalkToSpawn();
+				else if (Body.Heading != Body.SpawnHeading)
+					Body.Heading = Body.SpawnHeading;
+			}
 
-            //Mob will now always walk on their path
-            if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving
-                && !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath
-                && Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
-            {
-                PathPoint path = MovementMgr.LoadPath(Body.PathID);
-                Body.CurrentWayPoint = path;
+			//Mob will now always walk on their path
+			if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving
+			    && !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath
+			    && Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
+			{
+				PathPoint path = MovementMgr.LoadPath(Body.PathID);
+				Body.CurrentWayPoint = path;
 				Body.MoveOnPath((short)path.MaxSpeed);
-            }
+			}
 
-            //If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
-            if( !Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && Body.IsWithinRadius( Body.SpawnPoint, 500 ) == false )
-            {
-                Body.WalkToSpawn(); // Mobs do not walk back at 2x their speed..
-            }
+			//If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
+			if( !Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && Body.IsWithinRadius( Body.SpawnPoint, 500 ) == false )
+			{
+				Body.WalkToSpawn(); // Mobs do not walk back at 2x their speed..
+			}
 
 			if (Body.IsReturningHome == false)
 			{
@@ -172,6 +172,7 @@ namespace DOL.AI.Brain
 
 				if (HasAggro)
 				{
+					Body.FireAmbientSentence(GameNPC.eAmbientTrigger.fighting);
 					AttackMostWanted();
 					return;
 				}
@@ -194,7 +195,7 @@ namespace DOL.AI.Brain
 				return;
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
-			  if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true)) continue;
+				if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true)) continue;
 				if (m_aggroTable.ContainsKey(npc))
 					continue; // add only new NPCs
 				if (!npc.IsAlive || npc.ObjectState != GameObject.eObjectState.Active)
@@ -220,7 +221,7 @@ namespace DOL.AI.Brain
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
 			{
 
-			  if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true)) continue;
+				if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true)) continue;
 				// Don't aggro on immune players.
 
 				if (player.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
@@ -324,7 +325,7 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
-		/// Checks whether living has someone on its aggrolist		
+		/// Checks whether living has someone on its aggrolist
 		/// </summary>
 		public virtual bool HasAggro
 		{
@@ -362,7 +363,7 @@ namespace DOL.AI.Brain
 		// LOS Check on natural aggro (aggrorange & aggrolevel)
 		// This part is here due to los check constraints;
 		// Otherwise, it should be in CheckPlayerAggro() method.
-		private bool m_AggroLOS;		
+		private bool m_AggroLOS;
 		public virtual bool AggroLOS
 		{
 			get { return m_AggroLOS; }
@@ -378,7 +379,7 @@ namespace DOL.AI.Brain
 		
 		/// <summary>
 		/// Add living to the aggrolist
-		/// aggroamount can be negative to lower amount of aggro		
+		/// aggroamount can be negative to lower amount of aggro
 		/// </summary>
 		/// <param name="living"></param>
 		/// <param name="aggroamount"></param>
@@ -388,7 +389,7 @@ namespace DOL.AI.Brain
 		}
 		
 		public virtual void AddToAggroList(GameLiving living, int aggroamount, bool NaturalAggro)
-		{		
+		{
 			if (m_body.IsConfused) return;
 
 			// tolakram - duration spell effects will attempt to add to aggro after npc is dead
@@ -396,11 +397,9 @@ namespace DOL.AI.Brain
 
 			if (living == null) return;
 
-            //Handle trigger to say sentance on first aggro.
-            if (m_aggroTable.Count < 1)
-            {
-                this.Body.HandleTriggerSay("aggro", this.Body, living);
-            }
+			//Handle trigger to say sentance on first aggro.
+			if (m_aggroTable.Count < 1)
+				Body.FireAmbientSentence(GameNPC.eAmbientTrigger.aggroing, living);
 			
 			// Check LOS (walls, pits, etc...) before  attacking, player + pet
 			// Be sure the aggrocheck is triggered by the brain on Think() method
@@ -422,12 +421,12 @@ namespace DOL.AI.Brain
 					if (!AggroLOS) return;
 				}
 			}
-	
+			
 			// only protect if gameplayer and aggroamout > 0
 			if (living is GamePlayer && aggroamount > 0)
 			{
 				GamePlayer player = (GamePlayer)living;
-	
+				
 				if (player.Group != null)
 				{ // player is in group, add whole group to aggro list
 					lock (m_aggroTable.SyncRoot)
@@ -562,7 +561,7 @@ namespace DOL.AI.Brain
 			lock (m_aggroTable.SyncRoot)
 			{
 				m_aggroTable.Clear();
-                Body.TempProperties.removeProperty(Body.Attackers);
+				Body.TempProperties.removeProperty(Body.Attackers);
 			}
 		}
 
@@ -614,10 +613,10 @@ namespace DOL.AI.Brain
 					GameLiving living = (GameLiving)aggros.Key;
 
 					// check to make sure this target is still valid
-					if (living.IsAlive == false || 
-						living.ObjectState != GameObject.eObjectState.Active ||
-						living.IsStealthed ||
-						Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE)
+					if (living.IsAlive == false ||
+					    living.ObjectState != GameObject.eObjectState.Active ||
+					    living.IsStealthed ||
+					    Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE)
 					{
 						removable.Add(living);
 						continue;
@@ -626,15 +625,15 @@ namespace DOL.AI.Brain
 					// Don't bother about necro shade, can't attack it anyway.
 					if (living.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
 						continue;
-						
+					
 					long amount = (long)aggros.Value;
 
 					if (living.IsAlive
-						&& amount > maxAggro
-						&& living.CurrentRegion == Body.CurrentRegion
-						&& living.ObjectState == GameObject.eObjectState.Active)
+					    && amount > maxAggro
+					    && living.CurrentRegion == Body.CurrentRegion
+					    && living.ObjectState == GameObject.eObjectState.Active)
 					{
-                        int distance = Body.GetDistanceTo( living );
+						int distance = Body.GetDistanceTo( living );
 						int maxAggroDistance = (this is IControlledBrain) ? MAX_PET_AGGRO_DISTANCE : MAX_AGGRO_DISTANCE;
 
 						if (distance <= maxAggroDistance)
@@ -813,8 +812,8 @@ namespace DOL.AI.Brain
 		protected virtual void OnAttackedByEnemy(AttackData ad)
 		{
 			if (!Body.AttackState
-				&& Body.IsAlive
-				&& Body.ObjectState == GameObject.eObjectState.Active)
+			    && Body.IsAlive
+			    && Body.ObjectState == GameObject.eObjectState.Active)
 			{
 				if (ad.AttackResult == GameLiving.eAttackResult.Missed)
 				{
@@ -915,7 +914,7 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
-		/// Get mobs to add on the puller's group, their numbers depend on the 
+		/// Get mobs to add on the puller's group, their numbers depend on the
 		/// group's size.
 		/// </summary>
 		/// <param name="attackData">The data associated with the puller's attack.</param>
@@ -945,7 +944,7 @@ namespace DOL.AI.Brain
 					{
 						if (numAdds >= maxAdds) break;
 
-						// If it's a friend, have it attack a random target in the 
+						// If it's a friend, have it attack a random target in the
 						// attacker's group.
 
 						if (npc.IsFriend(Body) && npc.IsAggressive && npc.IsAvailable)
@@ -1062,7 +1061,7 @@ namespace DOL.AI.Brain
 			Body.TargetObject = null;
 			switch (spell.SpellType)
 			{
-				#region Buffs
+					#region Buffs
 				case "StrengthConstitutionBuff":
 				case "DexterityQuicknessBuff":
 				case "StrengthBuff":
@@ -1098,9 +1097,9 @@ namespace DOL.AI.Brain
 						}
 						break;
 					}
-				#endregion
+					#endregion
 
-				#region Disease Cure/Poison Cure/Summon
+					#region Disease Cure/Poison Cure/Summon
 				case "CureDisease":
 					if (!Body.IsDiseased)
 						break;
@@ -1129,9 +1128,9 @@ namespace DOL.AI.Brain
 					}
 					Body.TargetObject = Body;
 					break;
-				#endregion
+					#endregion
 
-				#region Heals
+					#region Heals
 				case "Heal":
 					// Chance to heal self when dropping below 30%, do NOT spam it.
 
@@ -1142,7 +1141,7 @@ namespace DOL.AI.Brain
 					}
 
 					break;
-				#endregion
+					#endregion
 			}
 
 			if (Body.TargetObject != null)
@@ -1196,7 +1195,7 @@ namespace DOL.AI.Brain
 
 			switch (spell.SpellType)
 			{
-				#region Enemy Spells
+					#region Enemy Spells
 				case "DirectDamage":
 				case "Lifedrain":
 				case "DexterityDebuff":
@@ -1210,9 +1209,9 @@ namespace DOL.AI.Brain
 						Body.TargetObject = lastTarget;
 					}
 					break;
-				#endregion
+					#endregion
 
-				#region Combat Spells
+					#region Combat Spells
 				case "CombatHeal":
 				case "DamageAdd":
 				case "ArmorFactorBuff":
@@ -1227,7 +1226,7 @@ namespace DOL.AI.Brain
 						Body.TargetObject = Body;
 					}
 					break;
-				#endregion
+					#endregion
 			}
 
 			if (Body.TargetObject != null)
@@ -1301,12 +1300,12 @@ namespace DOL.AI.Brain
 			}
 
 			roamingRadius = Util.Random(0, Math.Max(100, roamingRadius));
-
+			
 			double angle = Util.Random(0, 360) / (2 * Math.PI);
 			double targetX = Body.SpawnPoint.X + Util.Random( -roamingRadius, roamingRadius );
-            double targetY = Body.SpawnPoint.Y + Util.Random( -roamingRadius, roamingRadius );
+			double targetY = Body.SpawnPoint.Y + Util.Random( -roamingRadius, roamingRadius );
 
-            return new Point3D( (int)targetX, (int)targetY, Body.SpawnPoint.Z );
+			return new Point3D( (int)targetX, (int)targetY, Body.SpawnPoint.Z );
 		}
 
 		#endregion

@@ -35,11 +35,6 @@ namespace DOL.GS
 	/// <author>Aredhel</author>	
 	public class Gjalpinulva : GameDragon
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		#region Add Spawns
 
 		private ArrayList m_retrieverList = new ArrayList();

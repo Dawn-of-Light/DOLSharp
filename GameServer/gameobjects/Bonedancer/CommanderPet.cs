@@ -36,11 +36,6 @@ namespace DOL.GS
 	public class CommanderPet : BDPet
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Create a commander.
 		/// </summary>
 		/// <param name="npcTemplate"></param>

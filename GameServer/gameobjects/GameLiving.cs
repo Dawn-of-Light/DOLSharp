@@ -25,7 +25,6 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -33,8 +32,7 @@ using DOL.GS.PropertyCalc;
 using DOL.GS.SkillHandler;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
-
-using log4net;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -44,23 +42,18 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class GameLiving : GameObject
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		#region Combat
 		/// <summary>
 		/// Holds the AttackData object of last attack
 		/// </summary>
 		public const string LAST_ATTACK_DATA = "LastAttackData";
 
-        protected string m_lastInterruptMessage;
-        public string LastInterruptMessage
-        {
-            get { return m_lastInterruptMessage; }
-            set { m_lastInterruptMessage = value; }
-        }
+		protected string m_lastInterruptMessage;
+		public string LastInterruptMessage
+		{
+			get { return m_lastInterruptMessage; }
+			set { m_lastInterruptMessage = value; }
+		}
 
 		/// <summary>
 		/// Holds the AttackData object of the last left-hand attack
@@ -349,39 +342,39 @@ namespace DOL.GS
 		}
 
 
-        /// <summary>
-        /// Chance to fumble an attack.
-        /// </summary>
-        public virtual double ChanceToFumble
-        {
-            get
-            {
-                double chanceToFumble = GetModified(eProperty.FumbleChance);
-                chanceToFumble *= 0.001;
+		/// <summary>
+		/// Chance to fumble an attack.
+		/// </summary>
+		public virtual double ChanceToFumble
+		{
+			get
+			{
+				double chanceToFumble = GetModified(eProperty.FumbleChance);
+				chanceToFumble *= 0.001;
 
-                if (chanceToFumble > 0.99) chanceToFumble = 0.99;
-                if (chanceToFumble < 0) chanceToFumble = 0;
+				if (chanceToFumble > 0.99) chanceToFumble = 0.99;
+				if (chanceToFumble < 0) chanceToFumble = 0;
 
-                return chanceToFumble;
-            }
-        }
+				return chanceToFumble;
+			}
+		}
 
-        /// <summary>
-        /// Chance to be missed by an attack.
-        /// </summary>
-        public virtual double ChanceToBeMissed
-        {
-            get
-            {
-                double chanceToBeMissed = GetModified(eProperty.MissHit);
-                chanceToBeMissed *= 0.001;
+		/// <summary>
+		/// Chance to be missed by an attack.
+		/// </summary>
+		public virtual double ChanceToBeMissed
+		{
+			get
+			{
+				double chanceToBeMissed = GetModified(eProperty.MissHit);
+				chanceToBeMissed *= 0.001;
 
-                if (chanceToBeMissed > 0.99) chanceToBeMissed = 0.99;
-                if (chanceToBeMissed < 0) chanceToBeMissed = 0;
+				if (chanceToBeMissed > 0.99) chanceToBeMissed = 0.99;
+				if (chanceToBeMissed < 0) chanceToBeMissed = 0;
 
-                return chanceToBeMissed;
-            }
-        }
+				return chanceToBeMissed;
+			}
+		}
 
 		protected short m_race;
 		public virtual short Race
@@ -457,7 +450,7 @@ namespace DOL.GS
 		}
 
 		protected bool m_disarmed = false;
-        protected long m_disarmedtime = 0;
+		protected long m_disarmedtime = 0;
 		/// <summary>
 		/// Is the living disarmed
 		/// </summary>
@@ -465,23 +458,23 @@ namespace DOL.GS
 		{
 			get { return (m_disarmedtime > 0 && m_disarmedtime > CurrentRegion.Time); }
 		}
-        public long DisarmedTime
-        {
-            get { return m_disarmedtime; }
-            set { m_disarmedtime = value; }
-        }
+		public long DisarmedTime
+		{
+			get { return m_disarmedtime; }
+			set { m_disarmedtime = value; }
+		}
 
-        protected bool m_issilenced = false;
-        protected long m_silencedtime = 0;
-        public bool IsSilenced
-        {
-            get { return (m_silencedtime > 0 && m_silencedtime > CurrentRegion.Time); }
-        }
-        public long SilencedTime
-        {
-            get { return m_silencedtime; }
-            set { m_silencedtime = value; }
-        }
+		protected bool m_issilenced = false;
+		protected long m_silencedtime = 0;
+		public bool IsSilenced
+		{
+			get { return (m_silencedtime > 0 && m_silencedtime > CurrentRegion.Time); }
+		}
+		public long SilencedTime
+		{
+			get { return m_silencedtime; }
+			set { m_silencedtime = value; }
+		}
 
 		/// <summary>
 		/// Gets the current strafing mode
@@ -748,45 +741,45 @@ namespace DOL.GS
 		/// <returns>Style to use or null if none</returns>
 		protected virtual Style GetStyleToUse()
 		{
-            InventoryItem weapon;
-            if (NextCombatStyle == null) return null;
-            if (NextCombatStyle.WeaponTypeRequirement == (int)eObjectType.Shield)
-                weapon = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-            else weapon = AttackWeapon;
+			InventoryItem weapon;
+			if (NextCombatStyle == null) return null;
+			if (NextCombatStyle.WeaponTypeRequirement == (int)eObjectType.Shield)
+				weapon = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+			else weapon = AttackWeapon;
 
-            if (StyleProcessor.CanUseStyle(this, NextCombatStyle, weapon))
-                return NextCombatStyle;
+			if (StyleProcessor.CanUseStyle(this, NextCombatStyle, weapon))
+				return NextCombatStyle;
 
-            if (NextCombatBackupStyle == null) return NextCombatStyle;
+			if (NextCombatBackupStyle == null) return NextCombatStyle;
 
-            return NextCombatBackupStyle;
+			return NextCombatBackupStyle;
 		}
 
-        /// <summary>
-        /// Holds the Style that this living should use next
-        /// </summary>
-        protected Style m_nextCombatStyle;
-        /// <summary>
-        /// Holds the backup style for the style that the living should use next
-        /// </summary>
-        protected Style m_nextCombatBackupStyle;
-        
-        /// <summary>
-        /// Gets or Sets the next combat style to use
-        /// </summary>
-        public Style NextCombatStyle
-        {
-            get { return m_nextCombatStyle; }
-            set { m_nextCombatStyle = value; }
-        }
-        /// <summary>
-        /// Gets or Sets the next combat backup style to use
-        /// </summary>
-        public Style NextCombatBackupStyle
-        {
-            get { return m_nextCombatBackupStyle; }
-            set { m_nextCombatBackupStyle = value; }
-        }
+		/// <summary>
+		/// Holds the Style that this living should use next
+		/// </summary>
+		protected Style m_nextCombatStyle;
+		/// <summary>
+		/// Holds the backup style for the style that the living should use next
+		/// </summary>
+		protected Style m_nextCombatBackupStyle;
+		
+		/// <summary>
+		/// Gets or Sets the next combat style to use
+		/// </summary>
+		public Style NextCombatStyle
+		{
+			get { return m_nextCombatStyle; }
+			set { m_nextCombatStyle = value; }
+		}
+		/// <summary>
+		/// Gets or Sets the next combat backup style to use
+		/// </summary>
+		public Style NextCombatBackupStyle
+		{
+			get { return m_nextCombatBackupStyle; }
+			set { m_nextCombatBackupStyle = value; }
+		}
 
 		/// <summary>
 		/// Gets the current attackspeed of this living in milliseconds
@@ -912,9 +905,9 @@ namespace DOL.GS
 				{
 					switch (ActiveWeaponSlot)
 					{
-						case eActiveWeaponSlot.Standard: return Inventory.GetItem(eInventorySlot.RightHandWeapon);
-						case eActiveWeaponSlot.TwoHanded: return Inventory.GetItem(eInventorySlot.TwoHandWeapon);
-						case eActiveWeaponSlot.Distance: return Inventory.GetItem(eInventorySlot.DistanceWeapon);
+							case eActiveWeaponSlot.Standard: return Inventory.GetItem(eInventorySlot.RightHandWeapon);
+							case eActiveWeaponSlot.TwoHanded: return Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+							case eActiveWeaponSlot.Distance: return Inventory.GetItem(eInventorySlot.DistanceWeapon);
 					}
 				}
 				return null;
@@ -951,25 +944,25 @@ namespace DOL.GS
 		/// </summary>
 		public virtual bool AttackState { get; protected set; }
 
-        /// <summary>
-        /// Whether or not the living can be attacked.
-        /// </summary>
-        public override bool IsAttackable
-        {
-            get
-            {
-                return (IsAlive && 
-                    !IsStealthed &&
-                    EffectList.GetOfType(typeof(NecromancerShadeEffect)) == null &&
-                    ObjectState == GameObject.eObjectState.Active);
-            }
-        }
+		/// <summary>
+		/// Whether or not the living can be attacked.
+		/// </summary>
+		public override bool IsAttackable
+		{
+			get
+			{
+				return (IsAlive &&
+				        !IsStealthed &&
+				        EffectList.GetOfType(typeof(NecromancerShadeEffect)) == null &&
+				        ObjectState == GameObject.eObjectState.Active);
+			}
+		}
 
-        /// <summary>
-        /// Whether the living is actually attacking something.
-        /// </summary>
-        public virtual bool IsAttacking
-        {
+		/// <summary>
+		/// Whether the living is actually attacking something.
+		/// </summary>
+		public virtual bool IsAttacking
+		{
 			get { return (AttackState && (m_attackAction != null) && m_attackAction.IsAlive); }
 		}
 
@@ -1000,29 +993,29 @@ namespace DOL.GS
 			return 0;
 		}
 
-        /// <summary>
-        /// Whether this living is crowd controlled.
-        /// </summary>
-        public virtual bool IsCrowdControlled
-        {
-            get
-            {
-                return (IsStunned || IsMezzed);
-            }
-        }
+		/// <summary>
+		/// Whether this living is crowd controlled.
+		/// </summary>
+		public virtual bool IsCrowdControlled
+		{
+			get
+			{
+				return (IsStunned || IsMezzed);
+			}
+		}
 
-        /// <summary>
-        /// Whether this living can actually do anything.
-        /// </summary>
-        public virtual bool IsIncapacitated
-        {
-            get
-            {
-                return (ObjectState != eObjectState.Active || !IsAlive || IsStunned || IsMezzed);
-            }
-        }
-        
-        /// <summary>
+		/// <summary>
+		/// Whether this living can actually do anything.
+		/// </summary>
+		public virtual bool IsIncapacitated
+		{
+			get
+			{
+				return (ObjectState != eObjectState.Active || !IsAlive || IsStunned || IsMezzed);
+			}
+		}
+		
+		/// <summary>
 		/// returns if this living is alive
 		/// </summary>
 		public virtual bool IsAlive
@@ -1030,16 +1023,16 @@ namespace DOL.GS
 			get { return Health > 0; }
 		}
 
-        /// <summary>
-        /// True if living is low on health, else false.
-        /// </summary>
-        public virtual bool IsLowHealth
-        {
-            get
-            {
-                return (Health < 0.1 * MaxHealth);
-            }
-        }
+		/// <summary>
+		/// True if living is low on health, else false.
+		/// </summary>
+		public virtual bool IsLowHealth
+		{
+			get
+			{
+				return (Health < 0.1 * MaxHealth);
+			}
+		}
 
 		protected bool m_isMuted = false;
 		/// <summary>
@@ -1438,13 +1431,13 @@ namespace DOL.GS
 			else if (weapon == null)
 				ad.AttackType = AttackData.eAttackType.MeleeOneHand;
 			else switch (weapon.Item_Type)
-				{
-					default:
-					case Slot.RIGHTHAND:
+			{
+				default:
+				case Slot.RIGHTHAND:
 					case Slot.LEFTHAND: ad.AttackType = AttackData.eAttackType.MeleeOneHand; break;
 					case Slot.TWOHAND: ad.AttackType = AttackData.eAttackType.MeleeTwoHand; break;
 					case Slot.RANGED: ad.AttackType = AttackData.eAttackType.Ranged; break;
-				}
+			}
 
 			//No target, stop the attack
 			if (ad.Target == null)
@@ -1462,7 +1455,7 @@ namespace DOL.GS
 
 			//Check if the target is in front of attacker
 			if (!ignoreLOS && ad.AttackType != AttackData.eAttackType.Ranged && this is GamePlayer &&
-		  !(ad.Target is GameKeepComponent) && !(IsObjectInFront(ad.Target, 120, true) && TargetInView))
+			    !(ad.Target is GameKeepComponent) && !(IsObjectInFront(ad.Target, 120, true) && TargetInView))
 			{
 				ad.AttackResult = eAttackResult.TargetNotVisible;
 				return ad;
@@ -1527,14 +1520,14 @@ namespace DOL.GS
 
 			// calculate damage only if we hit the target
 			if (ad.AttackResult == eAttackResult.HitUnstyled
-				|| ad.AttackResult == eAttackResult.HitStyle)
+			    || ad.AttackResult == eAttackResult.HitStyle)
 			{
 				double damage = AttackDamage(weapon) * effectiveness;
 
 				if (Level > ServerProperties.Properties.MOB_DAMAGE_INCREASE_STARTLEVEL &&
-					ServerProperties.Properties.MOB_DAMAGE_INCREASE_PERLEVEL > 0 &&
-					damage > 0 &&
-					this is GameNPC && (this as GameNPC).Brain is IControlledBrain == false)
+				    ServerProperties.Properties.MOB_DAMAGE_INCREASE_PERLEVEL > 0 &&
+				    damage > 0 &&
+				    this is GameNPC && (this as GameNPC).Brain is IControlledBrain == false)
 				{
 					double modifiedDamage = ServerProperties.Properties.MOB_DAMAGE_INCREASE_PERLEVEL * (Level - ServerProperties.Properties.MOB_DAMAGE_INCREASE_STARTLEVEL);
 					damage += (modifiedDamage * effectiveness);
@@ -1690,9 +1683,9 @@ namespace DOL.GS
 
 			switch (ad.AttackResult)
 			{
-				case eAttackResult.Parried: message = ad.Attacker.GetName(0, true) + " attacks " + ad.Target.GetName(0, false) + " and is parried!"; break;
-				case eAttackResult.Evaded: message = ad.Attacker.GetName(0, true) + " attacks " + ad.Target.GetName(0, false) + " and is evaded!"; break;
-				case eAttackResult.Missed: message = ad.Attacker.GetName(0, true) + " attacks " + ad.Target.GetName(0, false) + " and misses!"; break;
+					case eAttackResult.Parried: message = ad.Attacker.GetName(0, true) + " attacks " + ad.Target.GetName(0, false) + " and is parried!"; break;
+					case eAttackResult.Evaded: message = ad.Attacker.GetName(0, true) + " attacks " + ad.Target.GetName(0, false) + " and is evaded!"; break;
+					case eAttackResult.Missed: message = ad.Attacker.GetName(0, true) + " attacks " + ad.Target.GetName(0, false) + " and misses!"; break;
 				case eAttackResult.Blocked:
 					{
 						message = ad.Attacker.GetName(0, true) + " attacks " + ad.Target.GetName(0, false) + " and is blocked!";
@@ -1749,7 +1742,7 @@ namespace DOL.GS
 						}
 						break;
 					}
-				default: broadcast = false; break;
+					default: broadcast = false; break;
 			}
 
 			#region Prevent Flight
@@ -1763,7 +1756,7 @@ namespace DOL.GS
 						bool preCheck = false;
 						if (ad.Target is GamePlayer) //only start if we are behind the player
 						{
-                            float angle = ad.Target.GetAngle( ad.Attacker );
+							float angle = ad.Target.GetAngle( ad.Attacker );
 							if (angle >= 150 && angle < 210) preCheck = true;
 						}
 						else preCheck = true;
@@ -1865,7 +1858,7 @@ namespace DOL.GS
 									}
 									break;
 								}
-							default: break;
+								default: break;
 						}
 					}
 				}
@@ -1884,85 +1877,85 @@ namespace DOL.GS
 			return ad;
 		}
 
-        private RegionAction InterruptTimer { get; set; }
+		private RegionAction InterruptTimer { get; set; }
 
-        /// <summary>
-        /// Starts the interrupt timer on this living.
-        /// </summary>
-        /// <param name="attack"></param>
-        /// <param name="duration"></param>
+		/// <summary>
+		/// Starts the interrupt timer on this living.
+		/// </summary>
+		/// <param name="attack"></param>
+		/// <param name="duration"></param>
 		public virtual void StartInterruptTimer(AttackData attack, int duration)
 		{
-            if (!IsAlive || ObjectState != eObjectState.Active)
-            {
-                InterruptTime = 0;
-                InterruptAction = 0;
-                return;
-            }
-            if (InterruptTime < CurrentRegion.Time + duration)
-                InterruptTime = CurrentRegion.Time + duration;
+			if (!IsAlive || ObjectState != eObjectState.Active)
+			{
+				InterruptTime = 0;
+				InterruptAction = 0;
+				return;
+			}
+			if (InterruptTime < CurrentRegion.Time + duration)
+				InterruptTime = CurrentRegion.Time + duration;
 
-            //new InterruptAction(this, attacker, duration, attackType).Start(1);
+			//new InterruptAction(this, attacker, duration, attackType).Start(1);
 
-            if (attack != null && attack.Attacker != null)
-            {
-                if (CurrentSpellHandler != null)
-                    CurrentSpellHandler.CasterIsAttacked(attack.Attacker);
-                if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-                    OnInterruptTick(attack.Attacker, attack.AttackType);
-            }
+			if (attack != null && attack.Attacker != null)
+			{
+				if (CurrentSpellHandler != null)
+					CurrentSpellHandler.CasterIsAttacked(attack.Attacker);
+				if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+					OnInterruptTick(attack.Attacker, attack.AttackType);
+			}
 		}
 
-        /// <summary>
-        /// Starts the interrupt timer on this living.
-        /// </summary>
-        /// <param name="duration"></param>
-        /// <param name="attackType"></param>
-        /// <param name="attacker"></param>
-        public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
-        {
-            if (!IsAlive || ObjectState != eObjectState.Active)
-            {
-                InterruptTime = 0;
-                InterruptAction = 0;
-                return;
-            }
-            if (InterruptTime < CurrentRegion.Time + duration)
-                InterruptTime = CurrentRegion.Time + duration;
-            //new InterruptAction(this, attacker, duration, attackType).Start(1);
+		/// <summary>
+		/// Starts the interrupt timer on this living.
+		/// </summary>
+		/// <param name="duration"></param>
+		/// <param name="attackType"></param>
+		/// <param name="attacker"></param>
+		public virtual void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
+		{
+			if (!IsAlive || ObjectState != eObjectState.Active)
+			{
+				InterruptTime = 0;
+				InterruptAction = 0;
+				return;
+			}
+			if (InterruptTime < CurrentRegion.Time + duration)
+				InterruptTime = CurrentRegion.Time + duration;
+			//new InterruptAction(this, attacker, duration, attackType).Start(1);
 
-            if (CurrentSpellHandler != null)
-                CurrentSpellHandler.CasterIsAttacked(attacker);
-            if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-                OnInterruptTick(attacker, attackType);
-        }
+			if (CurrentSpellHandler != null)
+				CurrentSpellHandler.CasterIsAttacked(attacker);
+			if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+				OnInterruptTick(attacker, attackType);
+		}
 
-        protected long m_interruptTime = 0;
-        public long InterruptTime
-        {
-            get { return m_interruptTime; }
-            set
-            {
-                if (CurrentRegion != null)
-                    InterruptAction = CurrentRegion.Time;
-                m_interruptTime = value;
-            }
-        }
+		protected long m_interruptTime = 0;
+		public long InterruptTime
+		{
+			get { return m_interruptTime; }
+			set
+			{
+				if (CurrentRegion != null)
+					InterruptAction = CurrentRegion.Time;
+				m_interruptTime = value;
+			}
+		}
 
-        protected long m_interruptAction = 0;
-        public long InterruptAction
-        {
-            get { return m_interruptAction; }
-            set { m_interruptAction = value; }
-        }
+		protected long m_interruptAction = 0;
+		public long InterruptAction
+		{
+			get { return m_interruptAction; }
+			set { m_interruptAction = value; }
+		}
 
 		/// <summary>
 		/// Yields true if interrupt action is running on this living.
 		/// </summary>
-        public bool IsBeingInterrupted
-        {
-            get { return (m_interruptTime > CurrentRegion.Time); }
-        }
+		public bool IsBeingInterrupted
+		{
+			get { return (m_interruptTime > CurrentRegion.Time); }
+		}
 
 		/// <summary>
 		/// Does needed interrupt checks and interrupts this living
@@ -1977,8 +1970,8 @@ namespace DOL.GS
 				if (RangedAttackType == eRangedAttackType.SureShot)
 				{
 					if (attackType != AttackData.eAttackType.MeleeOneHand
-					&& attackType != AttackData.eAttackType.MeleeTwoHand
-					&& attackType != AttackData.eAttackType.MeleeDualWield)
+					    && attackType != AttackData.eAttackType.MeleeTwoHand
+					    && attackType != AttackData.eAttackType.MeleeDualWield)
 						return false;
 				}
 				double mod = GetConLevel(attacker);
@@ -2052,8 +2045,8 @@ namespace DOL.GS
 		protected virtual AttackAction CreateAttackAction()
 		{
 			return (m_attackAction == null)
-                ? new AttackAction(this)
-                : m_attackAction;
+				? new AttackAction(this)
+				: m_attackAction;
 		}
 
 		/// <summary>
@@ -2209,7 +2202,7 @@ namespace DOL.GS
 						}
 					}
 
-                    ticksToTarget = 1 + owner.GetDistanceTo( attackTarget ) * 100 / 150; // 150 units per 1/10s
+					ticksToTarget = 1 + owner.GetDistanceTo( attackTarget ) * 100 / 150; // 150 units per 1/10s
 				}
 				else
 				{
@@ -2241,7 +2234,7 @@ namespace DOL.GS
 					if (owner is GamePlayer)
 					{
 						if (owner.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield
-						&& attackWeapon != null && (attackWeapon.Item_Type == Slot.RIGHTHAND || attackWeapon.Item_Type == Slot.LEFTHAND))
+						    && attackWeapon != null && (attackWeapon.Item_Type == Slot.RIGHTHAND || attackWeapon.Item_Type == Slot.LEFTHAND))
 						{
 							leftHandSwingCount = owner.CalculateLeftHandSwingCount();
 
@@ -2261,16 +2254,16 @@ namespace DOL.GS
 					ticksToTarget = 1;
 				}
 
-                //Genesis : check attack range here, effect: npc's and players will start attack faster instead of waiting another round if the previous failed
-                if (attackTarget != null
-                    && owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance
-                    && !owner.IsWithinRadius( attackTarget, owner.AttackRange ))
-                {
-                    Interval = 100;
-                    return;
-                }
-                
-                new WeaponOnTargetAction(owner, attackTarget, attackWeapon, leftWeapon, leftHandSwingCount, effectiveness, interruptDuration, combatStyle).Start(ticksToTarget);  // really start the attack
+				//Genesis : check attack range here, effect: npc's and players will start attack faster instead of waiting another round if the previous failed
+				if (attackTarget != null
+				    && owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance
+				    && !owner.IsWithinRadius( attackTarget, owner.AttackRange ))
+				{
+					Interval = 100;
+					return;
+				}
+				
+				new WeaponOnTargetAction(owner, attackTarget, attackWeapon, leftWeapon, leftHandSwingCount, effectiveness, interruptDuration, combatStyle).Start(ticksToTarget);  // really start the attack
 
 				//Are we inactive?
 				if (owner.ObjectState != eObjectState.Active)
@@ -2438,33 +2431,33 @@ namespace DOL.GS
 				InventoryItem mainWeapon = m_attackWeapon;
 				InventoryItem leftWeapon = m_leftWeapon;
 
-            // CMH
-            // 1.89
-            //- Pets will no longer continue to attack a character after the character has stealthed.
-            // 1.88
-            //- Monsters, pets and Non-Player Characters (NPCs) will now halt their pursuit when the character being chased stealths.
-            if (owner is GameNPC
-               && m_target is GamePlayer
-               && ((GamePlayer)m_target).IsStealthed)
-            {
-               // note due to the 2 lines above all npcs stop attacking
-               GameNPC npc = (GameNPC)owner;
-               npc.StopAttack();
-               npc.TargetObject = null;
-               Stop(); // stop the full tick timer? looks like other code is doing this
+				// CMH
+				// 1.89
+				//- Pets will no longer continue to attack a character after the character has stealthed.
+				// 1.88
+				//- Monsters, pets and Non-Player Characters (NPCs) will now halt their pursuit when the character being chased stealths.
+				if (owner is GameNPC
+				    && m_target is GamePlayer
+				    && ((GamePlayer)m_target).IsStealthed)
+				{
+					// note due to the 2 lines above all npcs stop attacking
+					GameNPC npc = (GameNPC)owner;
+					npc.StopAttack();
+					npc.TargetObject = null;
+					Stop(); // stop the full tick timer? looks like other code is doing this
 
-               // target death caused this below, so I'm replicating it
-               if (npc.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
-                  npc.Inventory != null &&
-                  npc.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
-                  npc.SwitchWeapon(eActiveWeaponSlot.Distance);
-               return;
-            }
+					// target death caused this below, so I'm replicating it
+					if (npc.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
+					    npc.Inventory != null &&
+					    npc.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+						npc.SwitchWeapon(eActiveWeaponSlot.Distance);
+					return;
+				}
 
 				if (!owner.CanUseLefthandedWeapon
-					|| (mainWeapon != null && mainWeapon.Item_Type != Slot.RIGHTHAND && mainWeapon.Item_Type != Slot.LEFTHAND)
-					|| leftWeapon == null
-					|| leftWeapon.Object_Type == (int)eObjectType.Shield)
+				    || (mainWeapon != null && mainWeapon.Item_Type != Slot.RIGHTHAND && mainWeapon.Item_Type != Slot.LEFTHAND)
+				    || leftWeapon == null
+				    || leftWeapon.Object_Type == (int)eObjectType.Shield)
 				{
 					// no left hand used, all is simple here
 					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, m_effectiveness, m_interruptDuration, false);
@@ -2518,7 +2511,7 @@ namespace DOL.GS
 							RealmAbilities.L3RAPropertyEnhancer ra = living.GetAbility(typeof(RealmAbilities.ReflexAttackAbility)) as RealmAbilities.L3RAPropertyEnhancer;
 							if (ra != null && Util.Chance(ra.Amount))
 							{
-                                AttackData ReflexAttackAD = living.MakeAttack(owner, living.AttackWeapon, null, 1, m_interruptDuration, false, true);
+								AttackData ReflexAttackAD = living.MakeAttack(owner, living.AttackWeapon, null, 1, m_interruptDuration, false, true);
 								living.DealDamage(ReflexAttackAD);
 								living.SendAttackingCombatMessages(ReflexAttackAD);
 							}
@@ -2614,8 +2607,8 @@ namespace DOL.GS
 							if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance) owner.StopAttack();
 							Stop();
 							if (owner is GameNPC && owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
-								((GameNPC)owner).Inventory != null &&
-								((GameNPC)owner).Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+							    ((GameNPC)owner).Inventory != null &&
+							    ((GameNPC)owner).Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
 								owner.SwitchWeapon(eActiveWeaponSlot.Distance);
 							return;
 						}
@@ -2749,7 +2742,7 @@ namespace DOL.GS
 				{
 					if (this is GamePlayer)
 						(this as GamePlayer).Out.SendMessage("Your target is protected against your poison by a magical effect.",
-							eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						                                     eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -2818,35 +2811,35 @@ namespace DOL.GS
 		/// <param name="attackTarget">The object to attack.</param>
 		public virtual void StartAttack(GameObject attackTarget)
 		{
-            // Aredhel: Let the brain handle this, no need to call StartAttack
-            // if the body can't do anything anyway.
-            if (IsIncapacitated)
-                return;
+			// Aredhel: Let the brain handle this, no need to call StartAttack
+			// if the body can't do anything anyway.
+			if (IsIncapacitated)
+				return;
 
 			if (IsEngaging)
-                CancelEngageEffect();
+				CancelEngageEffect();
 
-            AttackState = true;
+			AttackState = true;
 
 			int speed = AttackSpeed(AttackWeapon);
 
 			if (speed > 0)
 			{
-			    m_attackAction = CreateAttackAction();
+				m_attackAction = CreateAttackAction();
 
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				{
-                    RangedAttackState = eRangedAttackState.Aim;
+					RangedAttackState = eRangedAttackState.Aim;
 
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                        player.Out.SendCombatAnimation(this, null, (ushort)(AttackWeapon == null ? 0 : AttackWeapon.Model), 
-                            0x00, player.Out.BowPrepare, (byte)(speed / 100), 0x00, 0x00);
+						player.Out.SendCombatAnimation(this, null, (ushort)(AttackWeapon == null ? 0 : AttackWeapon.Model),
+						                               0x00, player.Out.BowPrepare, (byte)(speed / 100), 0x00, 0x00);
 
-					m_attackAction.Start((RangedAttackType == eRangedAttackType.RapidFire) ? speed / 2 : speed); 
+					m_attackAction.Start((RangedAttackType == eRangedAttackType.RapidFire) ? speed / 2 : speed);
 				}
 				else
 				{
-                    if (m_attackAction.TimeUntilElapsed < 500)
+					if (m_attackAction.TimeUntilElapsed < 500)
 						m_attackAction.Start(500);
 				}
 			}
@@ -2859,18 +2852,18 @@ namespace DOL.GS
 		{
 		}
 
-        /// <summary>
-        /// Remove engage effect on this living if it is present.
-        /// </summary>
-        private void CancelEngageEffect()
-        {
-            EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
+		/// <summary>
+		/// Remove engage effect on this living if it is present.
+		/// </summary>
+		private void CancelEngageEffect()
+		{
+			EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
 
-            if (effect != null)
-                effect.Cancel(false);
+			if (effect != null)
+				effect.Cancel(false);
 
-            IsEngaging = false;
-        }
+			IsEngaging = false;
+		}
 
 		/// <summary>
 		/// Interrupts a ranged attack.
@@ -2889,21 +2882,21 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StopAttack()
 		{
-            CancelEngageEffect();
+			CancelEngageEffect();
 			AttackState = false;
 
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				InterruptRangedAttack();
 		}
 
-        /// <summary>
-        /// Minimum melee critical damage as a percentage of the
-        /// raw damage.
-        /// </summary>
-        protected virtual float MinMeleeCriticalDamage
-        {
-            get { return 0.1f; }
-        }
+		/// <summary>
+		/// Minimum melee critical damage as a percentage of the
+		/// raw damage.
+		/// </summary>
+		protected virtual float MinMeleeCriticalDamage
+		{
+			get { return 0.1f; }
+		}
 
 		/// <summary>
 		/// Calculates melee critical damage of this living.
@@ -2915,41 +2908,41 @@ namespace DOL.GS
 		{
 			if (Util.Chance(AttackCriticalChance(weapon)))
 			{
-                int maxCriticalDamage = (attackData.Target is GamePlayer)
-                    ? attackData.Damage / 2
-                    : attackData.Damage;
+				int maxCriticalDamage = (attackData.Target is GamePlayer)
+					? attackData.Damage / 2
+					: attackData.Damage;
 
-                int minCriticalDamage = (int)(attackData.Damage * MinMeleeCriticalDamage);
+				int minCriticalDamage = (int)(attackData.Damage * MinMeleeCriticalDamage);
 
-                return Util.Random(minCriticalDamage, maxCriticalDamage);
+				return Util.Random(minCriticalDamage, maxCriticalDamage);
 			}
 
 			return 0;
 		}
 
-        protected bool IsValidTarget
-        {
-            get
-            {
-                return EffectList.GetAllOfType(typeof(NecromancerShadeEffect)).Count <= 0;
-            }
-        }
+		protected bool IsValidTarget
+		{
+			get
+			{
+				return EffectList.GetAllOfType(typeof(NecromancerShadeEffect)).Count <= 0;
+			}
+		}
 
-        public GamePlayer GetPlayerAttacker(GameLiving living)
-        {
-            if (living is GamePlayer)
-                return living as GamePlayer;
+		public GamePlayer GetPlayerAttacker(GameLiving living)
+		{
+			if (living is GamePlayer)
+				return living as GamePlayer;
 
-            GameNPC npc = living as GameNPC;
+			GameNPC npc = living as GameNPC;
 
-            if (npc != null)
-            {
-                if (npc.Brain is IControlledBrain && (npc.Brain as IControlledBrain).Owner is GamePlayer)
-                    return (npc.Brain as IControlledBrain).Owner as GamePlayer;
-            }
+			if (npc != null)
+			{
+				if (npc.Brain is IControlledBrain && (npc.Brain as IControlledBrain).Owner is GamePlayer)
+					return (npc.Brain as IControlledBrain).Owner as GamePlayer;
+			}
 
-            return null;
-        }
+			return null;
+		}
 
 		/// <summary>
 		/// Returns the result of an enemy attack,
@@ -2960,8 +2953,8 @@ namespace DOL.GS
 		/// <returns>the result of the attack</returns>
 		public virtual eAttackResult CalculateEnemyAttackResult(AttackData ad, InventoryItem weapon)
 		{
-            if (!IsValidTarget)
-                return eAttackResult.NoValidTarget;
+			if (!IsValidTarget)
+				return eAttackResult.NoValidTarget;
 
 			//1.To-Hit modifiers on styles do not any effect on whether your opponent successfully Evades, Blocks, or Parries. – Grab Bag 2/27/03
 			//2.The correct Order of Resolution in combat is Intercept, Evade, Parry, Block (Shield), Guard, Hit/Miss, and then Bladeturn. – Grab Bag 2/27/03, Grab Bag 4/4/03
@@ -3050,8 +3043,8 @@ namespace DOL.GS
 					// if you are stuned or mesmeried you cannot intercept...
 					InterceptEffect inter = effect as InterceptEffect;
 					if (intercept == null && inter != null && inter.InterceptTarget == this && !inter.InterceptSource.IsStunned && !inter.InterceptSource.IsMezzed
-						&& !inter.InterceptSource.IsSitting && inter.InterceptSource.ObjectState == eObjectState.Active && inter.InterceptSource.IsAlive
-						&& this.IsWithinRadius(inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE) && Util.Chance(inter.InterceptChance))
+					    && !inter.InterceptSource.IsSitting && inter.InterceptSource.ObjectState == eObjectState.Active && inter.InterceptSource.IsAlive
+					    && this.IsWithinRadius(inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE) && Util.Chance(inter.InterceptChance))
 					{
 						intercept = inter;
 						continue;
@@ -3072,42 +3065,42 @@ namespace DOL.GS
 			// Bodyguard - the Aredhel way. Alas, this is not perfect yet as clearly,
 			// this code belongs in GamePlayer, but it's a start to end this clutter.
 			// Temporarily saving the below information here.
-			// Defensive chances (evade/parry) are reduced by 20%, but target of bodyguard 
+			// Defensive chances (evade/parry) are reduced by 20%, but target of bodyguard
 			// can't be attacked in melee until bodyguard is killed or moves out of range.
 
-            if (this is GamePlayer)
-            {
-                GamePlayer playerAttacker = GetPlayerAttacker(ad.Attacker);
+			if (this is GamePlayer)
+			{
+				GamePlayer playerAttacker = GetPlayerAttacker(ad.Attacker);
 
-                if (playerAttacker != null)
-                {
-                    GameLiving attacker = ad.Attacker;
+				if (playerAttacker != null)
+				{
+					GameLiving attacker = ad.Attacker;
 
-                    if (attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance)
-                    {
-                        GamePlayer target = this as GamePlayer;
-                        GamePlayer bodyguard = target.Bodyguard;
+					if (attacker.ActiveWeaponSlot != eActiveWeaponSlot.Distance)
+					{
+						GamePlayer target = this as GamePlayer;
+						GamePlayer bodyguard = target.Bodyguard;
 
-                        if (bodyguard != null)
-                        {
-                            target.Out.SendMessage(String.Format("You were protected by {0} from the attack from {1}!", bodyguard.Name, attacker.Name),
-                                eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+						if (bodyguard != null)
+						{
+							target.Out.SendMessage(String.Format("You were protected by {0} from the attack from {1}!", bodyguard.Name, attacker.Name),
+							                       eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 
-                            bodyguard.Out.SendMessage(String.Format("You have protected {0} from the attack from {1}!", target.Name, attacker.Name),
-                                eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+							bodyguard.Out.SendMessage(String.Format("You have protected {0} from the attack from {1}!", target.Name, attacker.Name),
+							                          eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 
-                            if (attacker == playerAttacker)
-                                playerAttacker.Out.SendMessage(string.Format("You attempt to attack {0}, {1} is bodyguarded by {2}!",
-                                    target.Name, target.Name, bodyguard.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-                            else
-                                playerAttacker.Out.SendMessage(string.Format("Your pet attempts to attack {0}, {1} is bodyguarded by {2}!",
-                                    target.Name, target.Name, bodyguard.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							if (attacker == playerAttacker)
+								playerAttacker.Out.SendMessage(string.Format("You attempt to attack {0}, {1} is bodyguarded by {2}!",
+								                                             target.Name, target.Name, bodyguard.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+							else
+								playerAttacker.Out.SendMessage(string.Format("Your pet attempts to attack {0}, {1} is bodyguarded by {2}!",
+								                                             target.Name, target.Name, bodyguard.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 
-                            return eAttackResult.Bodyguarded;
-                        }
-                    }
-                }
-            }
+							return eAttackResult.Bodyguarded;
+						}
+					}
+				}
+			}
 
 			if (phaseshift != null)
 				return eAttackResult.Missed;
@@ -3218,13 +3211,13 @@ namespace DOL.GS
 
 			// Guard
 			if (guard != null &&
-				guard.GuardSource.ObjectState == eObjectState.Active &&
-				guard.GuardSource.IsStunned == false &&
-				guard.GuardSource.IsMezzed == false &&
-				guard.GuardSource.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
-				//				guard.GuardSource.AttackState &&
-				guard.GuardSource.IsAlive &&
-				!stealthStyle)
+			    guard.GuardSource.ObjectState == eObjectState.Active &&
+			    guard.GuardSource.IsStunned == false &&
+			    guard.GuardSource.IsMezzed == false &&
+			    guard.GuardSource.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
+			    //				guard.GuardSource.AttackState &&
+			    guard.GuardSource.IsAlive &&
+			    !stealthStyle)
 			{
 				// check distance
 				if (guard.GuardSource.IsWithinRadius(guard.GuardTarget, GuardAbilityHandler.GUARD_DISTANCE))
@@ -3238,28 +3231,28 @@ namespace DOL.GS
 						// insert actual formula for guarding here, this is just a guessed one based on block.
 						int guardLevel = guard.GuardSource.GetAbilityLevel(Abilities.Guard); // multiply by 3 to be a bit qorse than block (block woudl be 5 since you get guard I with shield 5, guard II with shield 10 and guard III with shield 15)
 						double guardchance = 0;
-						if (guard.GuardSource is GameNPC) 
-                            guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * 0.001;
-						else 
-                            guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * leftHand.Quality * 0.00001;
+						if (guard.GuardSource is GameNPC)
+							guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * 0.001;
+						else
+							guardchance = guard.GuardSource.GetModified(eProperty.BlockChance) * leftHand.Quality * 0.00001;
 						guardchance *= guardLevel * 0.3 + 0.05;
 						guardchance += attackerConLevel * 0.05;
-      					int shieldSize = 0;
+						int shieldSize = 0;
 						if (leftHand != null)
 							shieldSize = leftHand.Type_Damage;
-						if (guard.GuardSource is GameNPC) 
-                            shieldSize = 1;
+						if (guard.GuardSource is GameNPC)
+							shieldSize = 1;
 
-                        if (guardchance < 0.01)
-                            guardchance = 0.01;
-                        else if (ad.Attacker is GamePlayer && guardchance > .6)
-                            guardchance = .6;
-                        else if (shieldSize == 1 && ad.Attacker is GameNPC && guardchance > .8)
-                            guardchance = .8;
-                        else if (shieldSize == 2 && ad.Attacker is GameNPC && guardchance > .9)
-                            guardchance = .9;
-                        else if (shieldSize == 3 && ad.Attacker is GameNPC && guardchance > .99)
-                            guardchance = .99;
+						if (guardchance < 0.01)
+							guardchance = 0.01;
+						else if (ad.Attacker is GamePlayer && guardchance > .6)
+							guardchance = .6;
+						else if (shieldSize == 1 && ad.Attacker is GameNPC && guardchance > .8)
+							guardchance = .8;
+						else if (shieldSize == 2 && ad.Attacker is GameNPC && guardchance > .9)
+							guardchance = .9;
+						else if (shieldSize == 3 && ad.Attacker is GameNPC && guardchance > .99)
+							guardchance = .99;
 
 						if (ad.AttackType == AttackData.eAttackType.MeleeDualWield) guardchance /= 2;
 						if (Util.ChanceDouble(guardchance))
@@ -3273,12 +3266,12 @@ namespace DOL.GS
 
 			//Dashing Defense
 			if (dashing != null &&
-				dashing.GuardSource.ObjectState == eObjectState.Active &&
-				dashing.GuardSource.IsStunned == false &&
-				dashing.GuardSource.IsMezzed == false &&
-				dashing.GuardSource.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
-				dashing.GuardSource.IsAlive &&
-				!stealthStyle)
+			    dashing.GuardSource.ObjectState == eObjectState.Active &&
+			    dashing.GuardSource.IsStunned == false &&
+			    dashing.GuardSource.IsMezzed == false &&
+			    dashing.GuardSource.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
+			    dashing.GuardSource.IsAlive &&
+			    !stealthStyle)
 			{
 				// check distance
 				if (dashing.GuardSource.IsWithinRadius(dashing.GuardTarget, DashingDefenseEffect.GUARD_DISTANCE))
@@ -3353,9 +3346,9 @@ namespace DOL.GS
 			missrate -= ad.Attacker.GetModified(eProperty.ToHitBonus);
 			// PVE group missrate
 			if (this is GameNPC && ad.Attacker is GamePlayer &&
-				((GamePlayer)ad.Attacker).Group != null &&
-				(int)(0.90 * ((GamePlayer)ad.Attacker).Group.Leader.Level) >= ad.Attacker.Level &&
-				ad.Attacker.IsWithinRadius(((GamePlayer)ad.Attacker).Group.Leader, 3000))
+			    ((GamePlayer)ad.Attacker).Group != null &&
+			    (int)(0.90 * ((GamePlayer)ad.Attacker).Group.Leader.Level) >= ad.Attacker.Level &&
+			    ad.Attacker.IsWithinRadius(((GamePlayer)ad.Attacker).Group.Leader, 3000))
 			{
 				missrate -= (int)(5 * ((GamePlayer)ad.Attacker).Group.Leader.GetConLevel(this));
 			}
@@ -3411,13 +3404,13 @@ namespace DOL.GS
 				InventoryItem ammo = RangeAttackAmmo;
 				if (ammo != null)
 					switch ((ammo.SPD_ABS >> 4) & 0x3)
-					{
+				{
 						// http://rothwellhome.org/guides/archery.htm
 						case 0: missrate += 15; break; // Rough
 						//						case 1: missrate -= 0; break;
 						case 2: missrate -= 15; break; // doesn't exist (?)
 						case 3: missrate -= 25; break; // Footed
-					}
+				}
 			}
 			if (this is GamePlayer && ((GamePlayer)this).IsSitting)
 			{
@@ -3429,11 +3422,11 @@ namespace DOL.GS
 				return eAttackResult.Missed;
 			}
 
-            if (ad.IsRandomFumble)
-                return eAttackResult.Fumbled;
+			if (ad.IsRandomFumble)
+				return eAttackResult.Fumbled;
 
-            if (ad.IsRandomMiss)
-                return eAttackResult.Missed;
+			if (ad.IsRandomMiss)
+				return eAttackResult.Missed;
 
 
 			// Bladeturn
@@ -3441,11 +3434,11 @@ namespace DOL.GS
 			/*
 			 * http://www.camelotherald.com/more/31.shtml
 			 * - Bladeturns can now be penetrated by attacks from higher level monsters and
-			 * players. The chance of the bladeturn deflecting a higher level attack is 
+			 * players. The chance of the bladeturn deflecting a higher level attack is
 			 * approximately the caster's level / the attacker's level.
-			 * Please be aware that everything in the game is 
-			 * level/chance based - nothing works 100% of the time in all cases. 
-			 * It was a bug that caused it to work 100% of the time - now it takes the 
+			 * Please be aware that everything in the game is
+			 * level/chance based - nothing works 100% of the time in all cases.
+			 * It was a bug that caused it to work 100% of the time - now it takes the
 			 * levels of the players involved into account.
 			 */
 			// "The blow penetrated the magical barrier!"
@@ -3457,7 +3450,7 @@ namespace DOL.GS
 					penetrate = true;
 
 				if (ad.Attacker.RangedAttackType == eRangedAttackType.Long // stealth styles pierce bladeturn
-				|| (ad.AttackType == AttackData.eAttackType.Ranged && ad.Target != bladeturn.SpellHandler.Caster && ad.Attacker is GamePlayer && ((GamePlayer)ad.Attacker).HasAbility(Abilities.PenetratingArrow)))  // penetrating arrow attack pierce bladeturn
+				    || (ad.AttackType == AttackData.eAttackType.Ranged && ad.Target != bladeturn.SpellHandler.Caster && ad.Attacker is GamePlayer && ((GamePlayer)ad.Attacker).HasAbility(Abilities.PenetratingArrow)))  // penetrating arrow attack pierce bladeturn
 					penetrate = true;
 
 
@@ -3664,7 +3657,7 @@ namespace DOL.GS
 				if( lefthand != null )
 					shieldSize = lefthand.Type_Damage;
 				if( player != null && attackerCount > shieldSize )
-                    blockChance *= (shieldSize / attackerCount);
+					blockChance *= (shieldSize / attackerCount);
 
 				blockChance *= 0.001;
 				// no chance bonus with ranged attacks?
@@ -3676,12 +3669,12 @@ namespace DOL.GS
 					blockChance = 0.01;
 				else if (blockChance > 0.60 && ad.Attacker is GamePlayer)
 					blockChance = 0.60;
-                else if (shieldSize == 1 && ad.Attacker is GameNPC && blockChance > .8)
-                    blockChance = .8;
-                else if (shieldSize == 2 && ad.Attacker is GameNPC && blockChance > .9)
-                    blockChance = .9;
-                else if (shieldSize == 3 && ad.Attacker is GameNPC && blockChance > .99)
-                    blockChance = .99;
+				else if (shieldSize == 1 && ad.Attacker is GameNPC && blockChance > .8)
+					blockChance = .8;
+				else if (shieldSize == 2 && ad.Attacker is GameNPC && blockChance > .9)
+					blockChance = .9;
+				else if (shieldSize == 3 && ad.Attacker is GameNPC && blockChance > .99)
+					blockChance = .99;
 
 				// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate
 				if( engage != null && AttackState && engage.EngageTarget == ad.Attacker )
@@ -3721,7 +3714,7 @@ namespace DOL.GS
 		}
 
 
-        /// <summary>
+		/// <summary>
 		/// This method is called whenever this living
 		/// should take damage from some source
 		/// </summary>
@@ -3787,41 +3780,41 @@ namespace DOL.GS
 
 			bool wasAlive = IsAlive;
 
-            //[Freya] Nidel: Use2's Flask
-            if(this is GamePlayer)
-            {
-                bool isFatalBlow = (damageAmount + criticalAmount) >= Health;
+			//[Freya] Nidel: Use2's Flask
+			if(this is GamePlayer)
+			{
+				bool isFatalBlow = (damageAmount + criticalAmount) >= Health;
 
-                if (isFatalBlow)
-                {
-                    GameSpellEffect deadFlask = SpellHandler.FindEffectOnTarget(this, "DeadFlask");
-                    if(deadFlask != null)
-                    {
-                        if(Util.Chance((int)deadFlask.Spell.Value))
-                        {
-                            if (IsLowHealth)
-                                Notify(GameLivingEvent.LowHealth, this, null);
-                            return;
-                        }
-                    }
-                }
-            }
+				if (isFatalBlow)
+				{
+					GameSpellEffect deadFlask = SpellHandler.FindEffectOnTarget(this, "DeadFlask");
+					if(deadFlask != null)
+					{
+						if(Util.Chance((int)deadFlask.Spell.Value))
+						{
+							if (IsLowHealth)
+								Notify(GameLivingEvent.LowHealth, this, null);
+							return;
+						}
+					}
+				}
+			}
 
 			Health -= damageAmount + criticalAmount;
 
-            if (!IsAlive)
-            {
-                if (wasAlive)
-                    Die(source);
+			if (!IsAlive)
+			{
+				if (wasAlive)
+					Die(source);
 
-                lock (m_xpGainers.SyncRoot)
-                    m_xpGainers.Clear();
-            }
-            else
-            {
-                if (IsLowHealth)
-                    Notify(GameLivingEvent.LowHealth, this, null);
-            }
+				lock (m_xpGainers.SyncRoot)
+					m_xpGainers.Clear();
+			}
+			else
+			{
+				if (IsLowHealth)
+					Notify(GameLivingEvent.LowHealth, this, null);
+			}
 		}
 
 		/// <summary>
@@ -3835,10 +3828,10 @@ namespace DOL.GS
 
 			if (ad.IsHit)
 			{
-                if ( this is GameNPC && ActiveWeaponSlot == eActiveWeaponSlot.Distance && this.IsWithinRadius( ad.Attacker, 150 ) )
-                    ( (GameNPC)this ).SwitchToMelee( ad.Attacker );
+				if ( this is GameNPC && ActiveWeaponSlot == eActiveWeaponSlot.Distance && this.IsWithinRadius( ad.Attacker, 150 ) )
+					( (GameNPC)this ).SwitchToMelee( ad.Attacker );
 
-                AddAttacker( ad.Attacker );
+				AddAttacker( ad.Attacker );
 				if (ad.Attacker.Realm == 0 || this.Realm == 0)
 				{
 					LastAttackedByEnemyTickPvE = CurrentRegion.Time;
@@ -3881,11 +3874,11 @@ namespace DOL.GS
 
 				switch (ad.AttackResult)
 				{
-					case eAttackResult.Missed: resultByte = 0; break;
-					case eAttackResult.Evaded: resultByte = 3; break;
-					case eAttackResult.Fumbled: resultByte = 4; break;
-					case eAttackResult.HitUnstyled: resultByte = 10; break;
-					case eAttackResult.HitStyle: resultByte = 11; break;
+						case eAttackResult.Missed: resultByte = 0; break;
+						case eAttackResult.Evaded: resultByte = 3; break;
+						case eAttackResult.Fumbled: resultByte = 4; break;
+						case eAttackResult.HitUnstyled: resultByte = 10; break;
+						case eAttackResult.HitStyle: resultByte = 11; break;
 
 					case eAttackResult.Parried:
 						resultByte = 1;
@@ -4138,7 +4131,7 @@ namespace DOL.GS
 			EffectList.CancelAll();
 
 			// Stop the regeneration timers
-			StopHealthRegeneration();	
+			StopHealthRegeneration();
 			StopPowerRegeneration();
 			StopEnduranceRegeneration();
 
@@ -4579,7 +4572,7 @@ namespace DOL.GS
 		/// The name of the states
 		/// </summary>
 		public static readonly string[] STAT_NAMES = new string[]{"Unknown Stat","Strength", "Dexterity", "Constitution", "Quickness", "Intelligence",
-									"Piety", "Empathy", "Charisma"};
+			"Piety", "Empathy", "Charisma"};
 
 		/// <summary>
 		/// base values for char stats
@@ -4610,7 +4603,7 @@ namespace DOL.GS
 		/// </summary>
 		protected static readonly eProperty[] m_damageTypeToResistBonusConversion = new eProperty[] {
 			eProperty.Resist_Natural, //0,
-		  eProperty.Resist_Crush,
+			eProperty.Resist_Crush,
 			eProperty.Resist_Slash,
 			eProperty.Resist_Thrust,
 			0, 0, 0, 0, 0, 0,
@@ -4884,19 +4877,19 @@ namespace DOL.GS
 		protected virtual int PowerRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
 			if (this is GamePlayer &&
-				(((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir ||
-				(((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63))) // Maulers
+			    (((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir ||
+			     (((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63))) // Maulers
 			{
 				double MinMana = MaxMana * 0.15;
-                double OnePercMana = Math.Ceiling(MaxMana * 0.01);
+				double OnePercMana = Math.Ceiling(MaxMana * 0.01);
 
 				if (!InCombat)
 				{
 					if (ManaPercent < 15)
-                    {
-                        ChangeMana(this, eManaChangeType.Regenerate, (int)OnePercMana);
-                        return 4000;
-                    }
+					{
+						ChangeMana(this, eManaChangeType.Regenerate, (int)OnePercMana);
+						return 4000;
+					}
 					else if (ManaPercent > 15)
 					{
 						ChangeMana(this, eManaChangeType.Regenerate, (int)(-OnePercMana));
@@ -5011,17 +5004,17 @@ namespace DOL.GS
 
 		public virtual int Mana
 		{
-			get 
-			{ 
-				return m_mana; 
+			get
+			{
+				return m_mana;
 			}
 			set
-			{	
+			{
 				int maxmana = MaxMana;
 				m_mana = Math.Min(value, maxmana);
 				m_mana = Math.Max(m_mana, 0);
 				if (IsAlive && (m_mana < maxmana || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID == (int)eCharacterClass.Vampiir)
-					   || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63)))
+				                || (this is GamePlayer && ((GamePlayer)this).CharacterClass.ID > 59 && ((GamePlayer)this).CharacterClass.ID < 63)))
 				{
 					StartPowerRegeneration();
 				}
@@ -5294,12 +5287,12 @@ namespace DOL.GS
 		public double TickSpeedX { get; protected set; }
 
 		/// <summary>
-        /// The tick speed in Y direction.
+		/// The tick speed in Y direction.
 		/// </summary>
 		public double TickSpeedY { get; protected set; }
 
 		/// <summary>
-        /// The tick speed in Z direction.
+		/// The tick speed in Z direction.
 		/// </summary>
 		public double TickSpeedZ { get; protected set; }
 
@@ -5310,63 +5303,63 @@ namespace DOL.GS
 		{
 			int speed = CurrentSpeed;
 
-            if (speed == 0)
-                SetTickSpeed(0, 0, 0);
-            else
-            {
-                // Living will move in the direction it is currently heading.
+			if (speed == 0)
+				SetTickSpeed(0, 0, 0);
+			else
+			{
+				// Living will move in the direction it is currently heading.
 
-                double heading = Heading * HEADING_TO_RADIAN;
-                SetTickSpeed(-Math.Sin(heading), Math.Cos(heading), 0, speed);
-            }
+				double heading = Heading * HEADING_TO_RADIAN;
+				SetTickSpeed(-Math.Sin(heading), Math.Cos(heading), 0, speed);
+			}
 		}
 
-        /// <summary>
-        /// Set the tick speed, that is the distance covered in one tick.
-        /// </summary>
-        /// <param name="dx"></param>
-        /// <param name="dy"></param>
-        /// <param name="dz"></param>
-        protected void SetTickSpeed(double dx, double dy, double dz)
-        {
-            TickSpeedX = dx;
-            TickSpeedY = dy;
-            TickSpeedZ = dz;
-        }
+		/// <summary>
+		/// Set the tick speed, that is the distance covered in one tick.
+		/// </summary>
+		/// <param name="dx"></param>
+		/// <param name="dy"></param>
+		/// <param name="dz"></param>
+		protected void SetTickSpeed(double dx, double dy, double dz)
+		{
+			TickSpeedX = dx;
+			TickSpeedY = dy;
+			TickSpeedZ = dz;
+		}
 
-        /// <summary>
-        /// Set the tick speed, that is the distance covered in one tick.
-        /// </summary>
-        /// <param name="dx"></param>
-        /// <param name="dy"></param>
-        /// <param name="dz"></param>
-        /// <param name="speed"></param>
-        protected void SetTickSpeed(double dx, double dy, double dz, int speed)
-        {
-            double tickSpeed = speed * 0.001;
-            SetTickSpeed(dx * tickSpeed, dy * tickSpeed, dz * tickSpeed);
-        }
+		/// <summary>
+		/// Set the tick speed, that is the distance covered in one tick.
+		/// </summary>
+		/// <param name="dx"></param>
+		/// <param name="dy"></param>
+		/// <param name="dz"></param>
+		/// <param name="speed"></param>
+		protected void SetTickSpeed(double dx, double dy, double dz, int speed)
+		{
+			double tickSpeed = speed * 0.001;
+			SetTickSpeed(dx * tickSpeed, dy * tickSpeed, dz * tickSpeed);
+		}
 
 		/// <summary>
 		/// The tick at which the movement started.
 		/// </summary>
 		public int MovementStartTick { get; set; }
 
-        /// <summary>
-        /// Elapsed ticks since movement started.
-        /// </summary>
-        protected int MovementElapsedTicks
-        {
-            get { return Environment.TickCount - MovementStartTick; }
-        }
+		/// <summary>
+		/// Elapsed ticks since movement started.
+		/// </summary>
+		protected int MovementElapsedTicks
+		{
+			get { return Environment.TickCount - MovementStartTick; }
+		}
 
 		/// <summary>
 		/// True if the living is moving, else false.
 		/// </summary>
-		public virtual bool IsMoving 
-        {
-            get { return m_currentSpeed != 0; }
-        }
+		public virtual bool IsMoving
+		{
+			get { return m_currentSpeed != 0; }
+		}
 
 		/// <summary>
 		/// The current X position of this living.
@@ -5375,9 +5368,9 @@ namespace DOL.GS
 		{
 			get
 			{
-                return (IsMoving)
-                    ? (int)(base.X + MovementElapsedTicks * TickSpeedX)
-                    : base.X;
+				return (IsMoving)
+					? (int)(base.X + MovementElapsedTicks * TickSpeedX)
+					: base.X;
 			}
 			set
 			{
@@ -5392,9 +5385,9 @@ namespace DOL.GS
 		{
 			get
 			{
-                return (IsMoving)
-                    ? (int)(base.Y + MovementElapsedTicks * TickSpeedY)
-                    : base.Y;
+				return (IsMoving)
+					? (int)(base.Y + MovementElapsedTicks * TickSpeedY)
+					: base.Y;
 			}
 			set
 			{
@@ -5409,9 +5402,9 @@ namespace DOL.GS
 		{
 			get
 			{
-                return (IsMoving)
-                    ? (int)(base.Z + MovementElapsedTicks * TickSpeedZ)
-                    : base.Z;
+				return (IsMoving)
+					? (int)(base.Z + MovementElapsedTicks * TickSpeedZ)
+					: base.Z;
 			}
 			set
 			{
@@ -5567,7 +5560,7 @@ namespace DOL.GS
 			if (!this.IsWithinRadius(target, WorldMgr.WHISPER_DISTANCE))
 				return false;
 			Notify(GameLivingEvent.Whisper, this, new WhisperEventArgs(target, str));
-            return (target is GameLiving) ? ((GameLiving)target).WhisperReceive(this, str) : false;
+			return (target is GameLiving) ? ((GameLiving)target).WhisperReceive(this, str) : false;
 		}
 		/// <summary>
 		/// Makes this living do an emote-animation
@@ -5944,28 +5937,7 @@ namespace DOL.GS
 		}
 
 		#endregion
-
-        /// <summary>
-        /// Handle event notifications.
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        public override void Notify(DOLEvent e, object sender, EventArgs args)
-        {
-            if (e == GameLivingEvent.Interrupted && args != null)
-            {
-                if (CurrentSpellHandler != null)
-                    CurrentSpellHandler.CasterIsAttacked((args as InterruptedEventArgs).Attacker);
-
-                return;
-            }
-
-            base.Notify(e, sender, args);
-        }
-
 		#region Spell Cast
-
 		/// <summary>
 		/// Multiplier for melee and magic.
 		/// </summary>
@@ -5980,48 +5952,48 @@ namespace DOL.GS
 			get { return m_runningSpellHandler != null && m_runningSpellHandler.IsCasting; }
 		}
 
-        /// <summary>
-        /// Returns true if the living has the spell effect, else false.
-        /// </summary>
-        /// <param name="spell"></param>
-        /// <returns></returns>
-        public override bool HasEffect(Spell spell)
-        {
-            lock (EffectList)
-            {
-                foreach (IGameEffect effect in EffectList)
-                {
-                    if (effect is GameSpellEffect)
-                    {
-                        GameSpellEffect spellEffect = effect as GameSpellEffect;
+		/// <summary>
+		/// Returns true if the living has the spell effect, else false.
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public override bool HasEffect(Spell spell)
+		{
+			lock (EffectList)
+			{
+				foreach (IGameEffect effect in EffectList)
+				{
+					if (effect is GameSpellEffect)
+					{
+						GameSpellEffect spellEffect = effect as GameSpellEffect;
 
-                        if (spellEffect.Spell.SpellType == spell.SpellType &&
-                            spellEffect.Spell.EffectGroup == spell.EffectGroup)
-                            return true;
-                    }
-                }
-            }
+						if (spellEffect.Spell.SpellType == spell.SpellType &&
+						    spellEffect.Spell.EffectGroup == spell.EffectGroup)
+							return true;
+					}
+				}
+			}
 
-            return base.HasEffect(spell);
-        }
+			return base.HasEffect(spell);
+		}
 
-        /// <summary>
-        /// Checks if the target has a type of effect
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="spell"></param>
-        /// <returns></returns>
-        public override bool HasEffect(Type effectType)
-        {
-            lock (EffectList)
-            {
-                foreach (IGameEffect effect in EffectList)
-                    if (effect.GetType() == effectType)
-                        return true;
-            }
+		/// <summary>
+		/// Checks if the target has a type of effect
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public override bool HasEffect(Type effectType)
+		{
+			lock (EffectList)
+			{
+				foreach (IGameEffect effect in EffectList)
+					if (effect.GetType() == effectType)
+						return true;
+			}
 
-            return base.HasEffect(effectType);
-        }
+			return base.HasEffect(effectType);
+		}
 
 		/// <summary>
 		/// Holds the currently running spell handler
@@ -6090,25 +6062,25 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// Whether or not the living can cast a harmful spell 
-        /// at the moment.
-        /// </summary>
-        public virtual bool CanCastHarmfulSpells
-        {
-            get
-            {
-                return (!IsIncapacitated);
-            }
-        }
+		/// <summary>
+		/// Whether or not the living can cast a harmful spell
+		/// at the moment.
+		/// </summary>
+		public virtual bool CanCastHarmfulSpells
+		{
+			get
+			{
+				return (!IsIncapacitated);
+			}
+		}
 
-        public virtual IList<Spell> HarmfulSpells
-        {
-            get
-            {
-                return new List<Spell>();
-            }
-        }
+		public virtual IList<Spell> HarmfulSpells
+		{
+			get
+			{
+				return new List<Spell>();
+			}
+		}
 
 		#endregion
 		#region LoadCalculators
@@ -6197,7 +6169,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (m_controlledBrain == null) 
+				if (m_controlledBrain == null)
 					return null;
 
 				return m_controlledBrain[0];
@@ -6231,7 +6203,6 @@ namespace DOL.GS
 		}
 
 		#endregion
-
 		#region Group
 		/// <summary>
 		/// Holds the group of this living
@@ -6260,7 +6231,26 @@ namespace DOL.GS
 			set { m_groupIndex = value; }
 		}
 		#endregion
+		
+		/// <summary>
+		/// Handle event notifications.
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		public override void Notify(DOLEvent e, object sender, EventArgs args)
+		{
+			if (e == GameLivingEvent.Interrupted && args != null)
+			{
+				if (CurrentSpellHandler != null)
+					CurrentSpellHandler.CasterIsAttacked((args as InterruptedEventArgs).Attacker);
 
+				return;
+			}
+
+			base.Notify(e, sender, args);
+		}
+		
 		/// <summary>
 		/// Constructor to create a new GameLiving
 		/// </summary>
