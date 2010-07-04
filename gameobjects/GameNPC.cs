@@ -2676,6 +2676,7 @@ namespace DOL.GS
 			{
 				base.Health = MaxHealth;
 			}
+            HandleTriggerSay("spawn", this);
 			return true;
 		}
 
@@ -3560,6 +3561,8 @@ namespace DOL.GS
 		/// </summary>
 		public override void Die(GameObject killer)
 		{
+            HandleTriggerSay("die", this, killer as GameLiving);
+
 			if(killer!=null)
 			{
 				if (IsWorthReward)
@@ -4441,6 +4444,97 @@ namespace DOL.GS
 				}
 			}
 		}
+
+        /// <summary>
+        /// Handle triggers
+        /// </summary>
+        /// <param name="action">The trigger action</param>
+        /// <param name="npc">The NPC to handle the trigger for</param>
+        public void HandleTriggerSay(string type, GameNPC npc)
+        {
+            IList<DBMobXTrigger> triggers = GameServer.Database.SelectObjects<DBMobXTrigger>("`Name` = '" + GameServer.Database.Escape(npc.Name) + "' AND `Type` = '" + type + "'");
+            List<string> triggertexts = new List<string>();
+            foreach (DBMobXTrigger trigger in triggers)
+            {
+                triggertexts.Add(trigger.Text);
+            }
+            if (triggertexts.Count == 0) { return; }
+            if (triggertexts.Count > 1)
+            {
+                int rand = Util.Random(triggertexts.Count);
+                npc.Say(triggertexts[rand].Replace("\\'", "'"));
+                return;
+            }
+            if (triggertexts.Count == 1)
+            {
+                npc.Say(triggertexts[0].Replace("\\'", "'"));
+            }
+            return;
+        }
+
+        /// <summary>
+        /// Handle triggers with gameplayer, for use with aggro trigger.
+        /// </summary>
+        /// <param name="action">The trigger action</param>
+        /// <param name="npc">The NPC to handle the trigger for</param>
+        /// <param name="player">The player who triggered the trigger</param>
+        public void HandleTriggerSay(string type, GameNPC npc, GameLiving living)
+        {
+            string saytext = "";
+            IList<DBMobXTrigger> triggers = GameServer.Database.SelectObjects<DBMobXTrigger>("`Name` = '" + GameServer.Database.Escape(npc.Name) + "' AND `Type` = '" + type + "'");
+            List<string> triggertexts = new List<string>();
+            foreach (DBMobXTrigger trigger in triggers)
+            {
+                triggertexts.Add(trigger.Text);
+            }
+            if (triggertexts.Count == 0) { return; }
+            if (triggertexts.Count > 1)
+            {
+                int textcount = triggertexts.Count - 1;
+                int rand = Util.Random(textcount);
+
+                saytext = triggertexts[rand];
+                saytext = saytext.Replace("\\'", "'");
+                if (living is GamePlayer)
+                {
+                    GamePlayer player = living as GamePlayer;
+                    saytext = saytext.Replace("[class]", player.CharacterClass.Name);
+                    saytext = saytext.Replace("[name]", player.Name);
+                    saytext = saytext.Replace("[mobname]", npc.Name);
+                }
+                else
+                {
+                    saytext = saytext.Replace("[class]", "mob");
+                    saytext = saytext.Replace("[name]", living.Name);
+                    saytext = saytext.Replace("[mobname]", npc.Name);
+                }
+                    npc.Say(saytext);
+                return;
+            }
+            if (triggertexts.Count == 1)
+            {
+                saytext = triggertexts[0];
+                saytext = saytext.Replace("\\'", "'");
+                if (living is GamePlayer)
+                {
+                    GamePlayer player = living as GamePlayer;
+                    saytext = saytext.Replace("[class]", player.CharacterClass.Name);
+                    saytext = saytext.Replace("[name]", player.Name);
+                    saytext = saytext.Replace("[mobname]", npc.Name);
+                }
+                else
+                {
+                    saytext = saytext.Replace("[class]", "mob");
+                    saytext = saytext.Replace("[name]", living.Name);
+                    saytext = saytext.Replace("[mobname]", npc.Name);
+                }
+                npc.Say(saytext);
+            }
+            return;
+        }
+
+
+ 
 
 		#endregion
 		#region ControlledNPCs
