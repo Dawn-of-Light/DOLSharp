@@ -26,11 +26,6 @@ namespace DOL.GS
 {
 	public abstract class CraftNPC : GameNPC
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public abstract string GUILD_ORDER { get; }
 
 		public abstract string ACCEPTED_BY_ORDER_NAME { get; }

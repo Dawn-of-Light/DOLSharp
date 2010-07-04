@@ -38,11 +38,6 @@ namespace DOL.GS
 	 */
 	public class GameHorseBoat : GameMovingObject
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public GameHorseBoat()
 			: base()
 		{

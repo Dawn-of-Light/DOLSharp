@@ -34,9 +34,6 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class GameKeepComponent : GameLiving, IComparable
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-
 		protected readonly ushort INVISIBLE_MODEL = 150;
 
 		public enum eComponentSkin : byte

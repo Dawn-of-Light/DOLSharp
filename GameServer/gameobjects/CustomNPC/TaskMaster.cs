@@ -7,8 +7,6 @@ namespace DOL.GS
 {
 	public class TaskMaster : GameNPC
 	{
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        
         public override bool Interact(GamePlayer player)
 		{
 			if (!base.Interact(player))

@@ -28,8 +28,6 @@ namespace DOL.GS
 	/// </summary>
 	public class GameStaticItem : GameObject
 	{
-		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		/// <summary>
 		/// The emblem of the Object
 		/// </summary>

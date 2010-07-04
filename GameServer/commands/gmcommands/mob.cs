@@ -34,84 +34,84 @@ using DOL.GS.Utils;
 namespace DOL.GS.Commands
 {
 	[Cmd("&mob", //command to handle
-		 ePrivLevel.GM, //minimum privelege level
-		 "Mob creation and modification commands", //command description
-		// usage
-		 "'/mob create [ClassName(DOL.GS.GameNPC)] [eRealm(0)]' to create a new mob",
-		 "'/mob fastcreate <ModelID> <level> [save(default = 0; use 1 to save)] <name>' to create mob with specified info",
-		 "'/mob nfastcreate <ModelID> <level> <number> [radius(10)] [name]' to create multiple mobs within radius",
-		 "'/mob nrandcreate <number> [radius(50)]' to create multiple random mobs within radius",
-		 "'/mob model <ModelID> [OID]' to set the mob's model, optionally using OID if mob isn't targeted",
-		 "'/mob size <size>' to set the mob's size (1..255)",
-		 "'/mob name <name>' to set the mob's name",
-		 "'/mob guild <guild name>' to set the mob's guild name (blank to remove)",
-		 "'/mob peace' toggle whether the mob can be attacked",
-		 "'/mob aggro <level>' to set mob's aggro level (0..100)%",
-		 "'/mob range <distance>' to set mob's aggro range",
-		 "'/mob distance <maxdistance>' set mob max distance from its spawn (>0=real, 0=no check, <0=percent of aggro range)",
-		 "'/mob roaming <distance>' set mob random range radius (0=noroaming, -1=standard, >0=individual)",
-		 "'/mob damagetype <eDamageType>' set mob damage type",
-		 "'/mob movehere' move mob to player's location",
-		 "'/mob location' say location information in the chat window",
-		 "'/mob remove [true]' to remove this mob from the DB; specify true to also remove loot templates (if no other mobs of same name exist)",
-		 "'/mob ghost' makes this mob ghost-like",
-		 "'/mob stealth' makes the mob stealthed (invisible)",
-		 "'/mob torch' turns this mobs torch on and off",
-		 "'/mob statue' toggles statue effect",
-		 "'/mob fly [height]' makes this mob able to fly by changing the Z coordinate; moves mob up by height",
-		 "'/mob swimming' toggles mob's swimming flag (helpful for flying mobs)",
-		 "'/mob noname' still possible to target this mob, but removes the name from above mob",
-		 "'/mob notarget' makes it impossible to target this mob and removes the name from above it",
-		 "'/mob kill' kills the mob without removing it from the DB",
-		 "'/mob heal' restores the mob's health to maximum",
-		 "'/mob attack <PlayerName>' command mob to attack a player",
-		 "'/mob info' extended information about the mob",
-		 "'/mob state' show mob state (attackers, effects)",
-		 "'/mob info' extended information about the mob",
-		 "'/mob realm <eRealm>' set the mob's realm",
-		 "'/mob speed <speed>' set the mob's max speed",
-		 "'/mob level <level>' set the mob's level",
-		 "'/mob levela <level>' set the mob's level and auto adjust stats",
-		 "'/mob brain <ClassName>' set the mob's brain",
-		 "'/mob respawn <duration>' set the mob's respawn time (in ms)",
-		 "'/mob questinfo' show mob's quest info",
-		 "'/mob equipinfo' show mob's inventory info",
-		 "'/mob equiptemplate load <EquipmentTemplateID>' to load the inventory template from the database, it is open for modification after",
-		 "'/mob equiptemplate create' to create an empty inventory template",
-		 "'/mob equiptemplate add <slot> <model> [color] [effect] [extension]' to add an item to the inventory template",
-		 "'/mob equiptemplate remove <slot>' to remove item from the specified slot in the inventory template",
-		 "'/mob equiptemplate clear' to remove the inventory template from mob",
-		 "'/mob equiptemplate save <EquipmentTemplateID> [replace]' to save the inventory template with a new name",
-		 "'/mob equiptemplate close' to finish the inventory template you are creating",
-		 "'/mob dropcount [number]' to set number of drops for mob (omit number to view current value)",
-		 "'/mob addloot <ItemTemplateID> <chance> [count]' to add loot to the mob's unique drop table.  Optionally specify count of how many to drop if chance = 100%",
-		 "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob.",
-		 "'/mob addmobxlt <max num drops>' Add a MobXLootTemplate entry for this mob in order to set the max number of drops per kill",
-		 "'/mob viewloot [random] [inv]' to view the selected mob's loot table.  Use random to simulate a kill drop, random inv to simulate and generate the loots",
-		 "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
-		 "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table",
-		 "'/mob refreshloot' to refresh all loot generators for this mob",
-		 "'/mob copy [name]' copies a mob exactly and places it at your location",
-		 "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
-		 "'/mob npctemplate create <NPCTemplateID>' creates a new template from selected mob",
-		 "'/mob class <ClassName>' replaces mob with a clone of the specified class",
-		 "'/mob path <PathID>' associate the mob to the specified path",
-		 "'/mob house <HouseNumber>' set NPC's house number",
-		 "'/mob <stat> <amount>' Set the mob's stats (str, con, dex, qui, int, emp, pie, cha)",
-		 "'/mob tether <tether range>' set mob tether range (>0: check, <=0: no check)",
-		 "'/mob hood' toggle cloak hood visibility",
-		 "'/mob cloak' toggle cloak visibility",
-		 "'/mob race [ID]' view or set NPC's race (ID can be # or name)",
-		 "'/mob race reload' reload race resists from the database",
-		 "'/mob bodytype <ID>' changing the mob's bodytype",
-		 "'/mob gender <0 = neutral | 1 = male | 2 = female>' set gender for this mob",
-		 "'/mob package <string>' set the package ID for this mob",
-		 "'/mob select' select the mob within 100 radius (used for selection of non-targettable GameNPC)",
-		 "'/mob load <Mob_ID>' load the Mob_ID from the DB and update the Mob cache",
-		 "'/mob reload <name>' reload the targetted or named mob(s) from the database",
-		 "'/mob findname <name> <#>' search for a mob with a name like <name> with maximum <#> (def. 10) matches",
-         "'/mob trigger <type> <action> <text>' adds a trigger to targeted mob, such as saying something when it dies.  Use '/mob trigger help' for more info."
-		)]
+	     ePrivLevel.GM, //minimum privelege level
+	     "Mob creation and modification commands", //command description
+	     // usage
+	     "'/mob create [ClassName(DOL.GS.GameNPC)] [eRealm(0)]' to create a new mob",
+	     "'/mob fastcreate <ModelID> <level> [save(default = 0; use 1 to save)] <name>' to create mob with specified info",
+	     "'/mob nfastcreate <ModelID> <level> <number> [radius(10)] [name]' to create multiple mobs within radius",
+	     "'/mob nrandcreate <number> [radius(50)]' to create multiple random mobs within radius",
+	     "'/mob model <ModelID> [OID]' to set the mob's model, optionally using OID if mob isn't targeted",
+	     "'/mob size <size>' to set the mob's size (1..255)",
+	     "'/mob name <name>' to set the mob's name",
+	     "'/mob guild <guild name>' to set the mob's guild name (blank to remove)",
+	     "'/mob peace' toggle whether the mob can be attacked",
+	     "'/mob aggro <level>' to set mob's aggro level (0..100)%",
+	     "'/mob range <distance>' to set mob's aggro range",
+	     "'/mob distance <maxdistance>' set mob max distance from its spawn (>0=real, 0=no check, <0=percent of aggro range)",
+	     "'/mob roaming <distance>' set mob random range radius (0=noroaming, -1=standard, >0=individual)",
+	     "'/mob damagetype <eDamageType>' set mob damage type",
+	     "'/mob movehere' move mob to player's location",
+	     "'/mob location' say location information in the chat window",
+	     "'/mob remove [true]' to remove this mob from the DB; specify true to also remove loot templates (if no other mobs of same name exist)",
+	     "'/mob ghost' makes this mob ghost-like",
+	     "'/mob stealth' makes the mob stealthed (invisible)",
+	     "'/mob torch' turns this mobs torch on and off",
+	     "'/mob statue' toggles statue effect",
+	     "'/mob fly [height]' makes this mob able to fly by changing the Z coordinate; moves mob up by height",
+	     "'/mob swimming' toggles mob's swimming flag (helpful for flying mobs)",
+	     "'/mob noname' still possible to target this mob, but removes the name from above mob",
+	     "'/mob notarget' makes it impossible to target this mob and removes the name from above it",
+	     "'/mob kill' kills the mob without removing it from the DB",
+	     "'/mob heal' restores the mob's health to maximum",
+	     "'/mob attack <PlayerName>' command mob to attack a player",
+	     "'/mob info' extended information about the mob",
+	     "'/mob state' show mob state (attackers, effects)",
+	     "'/mob info' extended information about the mob",
+	     "'/mob realm <eRealm>' set the mob's realm",
+	     "'/mob speed <speed>' set the mob's max speed",
+	     "'/mob level <level>' set the mob's level",
+	     "'/mob levela <level>' set the mob's level and auto adjust stats",
+	     "'/mob brain <ClassName>' set the mob's brain",
+	     "'/mob respawn <duration>' set the mob's respawn time (in ms)",
+	     "'/mob questinfo' show mob's quest info",
+	     "'/mob equipinfo' show mob's inventory info",
+	     "'/mob equiptemplate load <EquipmentTemplateID>' to load the inventory template from the database, it is open for modification after",
+	     "'/mob equiptemplate create' to create an empty inventory template",
+	     "'/mob equiptemplate add <slot> <model> [color] [effect] [extension]' to add an item to the inventory template",
+	     "'/mob equiptemplate remove <slot>' to remove item from the specified slot in the inventory template",
+	     "'/mob equiptemplate clear' to remove the inventory template from mob",
+	     "'/mob equiptemplate save <EquipmentTemplateID> [replace]' to save the inventory template with a new name",
+	     "'/mob equiptemplate close' to finish the inventory template you are creating",
+	     "'/mob dropcount [number]' to set number of drops for mob (omit number to view current value)",
+	     "'/mob addloot <ItemTemplateID> <chance> [count]' to add loot to the mob's unique drop table.  Optionally specify count of how many to drop if chance = 100%",
+	     "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob.",
+	     "'/mob addmobxlt <max num drops>' Add a MobXLootTemplate entry for this mob in order to set the max number of drops per kill",
+	     "'/mob viewloot [random] [inv]' to view the selected mob's loot table.  Use random to simulate a kill drop, random inv to simulate and generate the loots",
+	     "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
+	     "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table",
+	     "'/mob refreshloot' to refresh all loot generators for this mob",
+	     "'/mob copy [name]' copies a mob exactly and places it at your location",
+	     "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
+	     "'/mob npctemplate create <NPCTemplateID>' creates a new template from selected mob",
+	     "'/mob class <ClassName>' replaces mob with a clone of the specified class",
+	     "'/mob path <PathID>' associate the mob to the specified path",
+	     "'/mob house <HouseNumber>' set NPC's house number",
+	     "'/mob <stat> <amount>' Set the mob's stats (str, con, dex, qui, int, emp, pie, cha)",
+	     "'/mob tether <tether range>' set mob tether range (>0: check, <=0: no check)",
+	     "'/mob hood' toggle cloak hood visibility",
+	     "'/mob cloak' toggle cloak visibility",
+	     "'/mob race [ID]' view or set NPC's race (ID can be # or name)",
+	     "'/mob race reload' reload race resists from the database",
+	     "'/mob bodytype <ID>' changing the mob's bodytype",
+	     "'/mob gender <0 = neutral | 1 = male | 2 = female>' set gender for this mob",
+	     "'/mob package <string>' set the package ID for this mob",
+	     "'/mob select' select the mob within 100 radius (used for selection of non-targettable GameNPC)",
+	     "'/mob load <Mob_ID>' load the Mob_ID from the DB and update the Mob cache",
+	     "'/mob reload <name>' reload the targetted or named mob(s) from the database",
+	     "'/mob findname <name> <#>' search for a mob with a name like <name> with maximum <#> (def. 10) matches",
+	     "'/mob trigger <type> <chance> <emote> <text>' adds a trigger to targeted mob class.  Use '/mob trigger help' for more info."
+	    )]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private const ushort AUTOSELECT_RADIUS = 100; // /mob select command
@@ -131,16 +131,16 @@ namespace DOL.GS.Commands
 					targetMob = (GameNPC)client.Player.TargetObject;
 
 				if (args[1] != "create"
-					&& args[1] != "fastcreate"
-					&& args[1] != "nrandcreate"
-					&& args[1] != "nfastcreate"
-					&& args[1] != "npctemplate"
-					&& args[1] != "model"
-					&& args[1] != "copy"
-					&& args[1] != "select"
-					&& args[1] != "reload"
-					&& args[1] != "findname"
-					&& targetMob == null)
+				    && args[1] != "fastcreate"
+				    && args[1] != "nrandcreate"
+				    && args[1] != "nfastcreate"
+				    && args[1] != "npctemplate"
+				    && args[1] != "model"
+				    && args[1] != "copy"
+				    && args[1] != "select"
+				    && args[1] != "reload"
+				    && args[1] != "findname"
+				    && targetMob == null)
 				{
 					// it is not a mob
 					if (client.Player.TargetObject != null)
@@ -159,62 +159,62 @@ namespace DOL.GS.Commands
 
 				switch (args[1])
 				{
-					case "create": create(client, args); break;
-					case "fastcreate": fastcreate(client, args); break;
-					case "nfastcreate": nfastcreate(client, args); break;
-					case "nrandcreate": nrandcreate(client, args); break;
-					case "model": model(client, targetMob, args); break;
-					case "size": size(client, targetMob, args); break;
-					case "name": name(client, targetMob, args); break;
-					case "guild": guild(client, targetMob, args); break;
-					case "peace": peace(client, targetMob, args); break;
-					case "aggro": aggro(client, targetMob, args); break;
-					case "range": range(client, targetMob, args); break;
-					case "distance": distance(client, targetMob, args); break;
-					case "roaming": roaming(client, targetMob, args); break;
-					case "damagetype": damagetype(client, targetMob, args); break;
-					case "movehere": movehere(client, targetMob, args); break;
-					case "location": location(client, targetMob, args); break;
-					case "remove": remove(client, targetMob, args); break;
+						case "create": create(client, args); break;
+						case "fastcreate": fastcreate(client, args); break;
+						case "nfastcreate": nfastcreate(client, args); break;
+						case "nrandcreate": nrandcreate(client, args); break;
+						case "model": model(client, targetMob, args); break;
+						case "size": size(client, targetMob, args); break;
+						case "name": name(client, targetMob, args); break;
+						case "guild": guild(client, targetMob, args); break;
+						case "peace": peace(client, targetMob, args); break;
+						case "aggro": aggro(client, targetMob, args); break;
+						case "range": range(client, targetMob, args); break;
+						case "distance": distance(client, targetMob, args); break;
+						case "roaming": roaming(client, targetMob, args); break;
+						case "damagetype": damagetype(client, targetMob, args); break;
+						case "movehere": movehere(client, targetMob, args); break;
+						case "location": location(client, targetMob, args); break;
+						case "remove": remove(client, targetMob, args); break;
 					case "transparent": // deprecated, use "ghost"
-					case "ghost": ghost(client, targetMob, args); break;
-					case "stealth": stealth(client, targetMob, args); break;
-					case "torch": torch(client, targetMob, args); break;
-					case "statue": statue(client, targetMob, args); break;
-					case "fly": fly(client, targetMob, args); break;
-					case "swimming": swimming(client, targetMob, args); break;
-					case "noname": noname(client, targetMob, args); break;
-					case "notarget": notarget(client, targetMob, args); break;
-					case "kill": kill(client, targetMob, args); break;
-					case "flags": flags(client, targetMob, args); break;
+						case "ghost": ghost(client, targetMob, args); break;
+						case "stealth": stealth(client, targetMob, args); break;
+						case "torch": torch(client, targetMob, args); break;
+						case "statue": statue(client, targetMob, args); break;
+						case "fly": fly(client, targetMob, args); break;
+						case "swimming": swimming(client, targetMob, args); break;
+						case "noname": noname(client, targetMob, args); break;
+						case "notarget": notarget(client, targetMob, args); break;
+						case "kill": kill(client, targetMob, args); break;
+						case "flags": flags(client, targetMob, args); break;
 					case "regen":  // deprecated, use "heal"
-					case "heal": heal(client, targetMob, args); break;
-					case "attack": attack(client, targetMob, args); break;
-					case "info": info(client, targetMob, args); break;
-					case "stats": stats(client, targetMob, args); break;
-					case "state": state(client, targetMob); break;
-					case "realm": realm(client, targetMob, args); break;
-					case "speed": speed(client, targetMob, args); break;
-					case "level": level(client, targetMob, args); break;
-					case "levela": levela(client, targetMob, args); break;
-					case "brain": brain(client, targetMob, args); break;
-					case "respawn": respawn(client, targetMob, args); break;
-					case "questinfo": questinfo(client, targetMob, args); break;
-					case "equipinfo": equipinfo(client, targetMob, args); break;
-					case "equiptemplate": equiptemplate(client, targetMob, args); break;
-					case "dropcount": dropcount(client, targetMob, args); break;
-					case "addloot": addloot(client, targetMob, args); break;
-					case "addotd": addotd(client, targetMob, args); break;
-					case "addmobxlt": addmobxlt(client, targetMob, args); break;
-					case "viewloot": viewloot(client, targetMob, args); break;
-					case "removeloot": removeloot(client, targetMob, args); break;
-					case "removeotd": removeotd(client, targetMob, args); break;
-					case "refreshloot": refreshloot(client, targetMob, args); break;
-					case "copy": copy(client, targetMob, args); break;
-					case "npctemplate": npctemplate(client, targetMob, args); break;
-					case "class": setClass(client, targetMob, args); break;
-					case "path": path(client, targetMob, args); break;
-					case "house": house(client, targetMob, args); break;
+						case "heal": heal(client, targetMob, args); break;
+						case "attack": attack(client, targetMob, args); break;
+						case "info": info(client, targetMob, args); break;
+						case "stats": stats(client, targetMob, args); break;
+						case "state": state(client, targetMob); break;
+						case "realm": realm(client, targetMob, args); break;
+						case "speed": speed(client, targetMob, args); break;
+						case "level": level(client, targetMob, args); break;
+						case "levela": levela(client, targetMob, args); break;
+						case "brain": brain(client, targetMob, args); break;
+						case "respawn": respawn(client, targetMob, args); break;
+						case "questinfo": questinfo(client, targetMob, args); break;
+						case "equipinfo": equipinfo(client, targetMob, args); break;
+						case "equiptemplate": equiptemplate(client, targetMob, args); break;
+						case "dropcount": dropcount(client, targetMob, args); break;
+						case "addloot": addloot(client, targetMob, args); break;
+						case "addotd": addotd(client, targetMob, args); break;
+						case "addmobxlt": addmobxlt(client, targetMob, args); break;
+						case "viewloot": viewloot(client, targetMob, args); break;
+						case "removeloot": removeloot(client, targetMob, args); break;
+						case "removeotd": removeotd(client, targetMob, args); break;
+						case "refreshloot": refreshloot(client, targetMob, args); break;
+						case "copy": copy(client, targetMob, args); break;
+						case "npctemplate": npctemplate(client, targetMob, args); break;
+						case "class": setClass(client, targetMob, args); break;
+						case "path": path(client, targetMob, args); break;
+						case "house": house(client, targetMob, args); break;
 					case "str":
 					case "con":
 					case "dex":
@@ -222,19 +222,19 @@ namespace DOL.GS.Commands
 					case "int":
 					case "emp":
 					case "pie":
-					case "cha": stat(client, targetMob, args); break;
-					case "tether": tether(client, targetMob, args); break;
-					case "hood": hood(client, targetMob, args); break;
-					case "cloak": cloak(client, targetMob, args); break;
-					case "bodytype": bodytype(client, targetMob, args); break;
-					case "race": race(client, targetMob, args); break;
-					case "gender": gender(client, targetMob, args); break;
-					case "package": package(client, targetMob, args); break;
-					case "select": select(AUTOSELECT_RADIUS, client); break;
-					case "load": load(client, args); break;
-					case "reload": reload(client, targetMob, args); break;
-					case "findname": findname(client, args); break;
-                    case "trigger": trigger(client, targetMob, args); break;
+						case "cha": stat(client, targetMob, args); break;
+						case "tether": tether(client, targetMob, args); break;
+						case "hood": hood(client, targetMob, args); break;
+						case "cloak": cloak(client, targetMob, args); break;
+						case "bodytype": bodytype(client, targetMob, args); break;
+						case "race": race(client, targetMob, args); break;
+						case "gender": gender(client, targetMob, args); break;
+						case "package": package(client, targetMob, args); break;
+						case "select": select(AUTOSELECT_RADIUS, client); break;
+						case "load": load(client, args); break;
+						case "reload": reload(client, targetMob, args); break;
+						case "findname": findname(client, args); break;
+						case "trigger": trigger(client, targetMob, args); break;
 					default:
 						DisplaySyntax(client);
 						return;
@@ -813,12 +813,12 @@ namespace DOL.GS.Commands
 		private void location(GameClient client, GameNPC targetMob, string[] args)
 		{
 			client.Out.SendMessage("\"" + targetMob.Name + "\", " +
-								   targetMob.CurrentRegionID + ", " +
-								   targetMob.X + ", " +
-								   targetMob.Y + ", " +
-								   targetMob.Z + ", " +
-								   targetMob.Heading,
-								   eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			                       targetMob.CurrentRegionID + ", " +
+			                       targetMob.X + ", " +
+			                       targetMob.Y + ", " +
+			                       targetMob.Z + ", " +
+			                       targetMob.Heading,
+			                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void remove(GameClient client, GameNPC targetMob, string[] args)
@@ -1082,15 +1082,15 @@ namespace DOL.GS.Commands
 				info.Add(" + Body Type:  " + targetMob.BodyType);
 
 			info.Add(" + Resist Crush/Slash/Thrust:  " + targetMob.GetDamageResist(eProperty.Resist_Crush)
-					 + " / " + targetMob.GetDamageResist(eProperty.Resist_Slash)
-					 + " / " + targetMob.GetDamageResist(eProperty.Resist_Thrust));
+			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Slash)
+			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Thrust));
 			info.Add(" +  -- Heat/Cold/Matter/Natural:  " + targetMob.GetDamageResist(eProperty.Resist_Heat)
-					 + " / " + targetMob.GetDamageResist(eProperty.Resist_Cold)
-					 + " / " + targetMob.GetDamageResist(eProperty.Resist_Matter)
-					 + " / " + targetMob.GetDamageResist(eProperty.Resist_Natural));
+			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Cold)
+			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Matter)
+			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Natural));
 			info.Add(" +  -- Body/Spirit/Energy:  " + targetMob.GetDamageResist(eProperty.Resist_Body)
-					 + " / " + targetMob.GetDamageResist(eProperty.Resist_Spirit)
-					 + " / " + targetMob.GetDamageResist(eProperty.Resist_Energy));
+			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Spirit)
+			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Energy));
 			info.Add(" + Position:  " + targetMob.X + ", " + targetMob.Y + ", " + targetMob.Z + ", " + targetMob.Heading);
 
 			if (targetMob.GuildName != null && targetMob.GuildName.Length > 0)
@@ -1136,15 +1136,15 @@ namespace DOL.GS.Commands
 			info.Add("");
 			for (eProperty property = eProperty.Stat_First; property <= eProperty.Stat_Last; ++property)
 				info.Add(String.Format("{0}: {1}",
-										GlobalConstants.PropertyToName(property),
-										targetMob.GetModified(property)));
+				                       GlobalConstants.PropertyToName(property),
+				                       targetMob.GetModified(property)));
 			info.Add("");
 			info.Add("Modified resists:");
 			info.Add("");
 			for (eProperty property = eProperty.Resist_First + 1; property <= eProperty.Resist_Last; ++property)
 				info.Add(String.Format("{0}: {1}",
-										GlobalConstants.PropertyToName(property),
-										targetMob.GetModified(property)));
+				                       GlobalConstants.PropertyToName(property),
+				                       targetMob.GetModified(property)));
 			info.Add("");
 			info.Add("Miscellaneous:");
 			info.Add("");
@@ -2288,17 +2288,17 @@ namespace DOL.GS.Commands
 
 				switch (statType)
 				{
-					case "STR": targetMob.Strength = statval; break;
+						case "STR": targetMob.Strength = statval; break;
 					case "CON":
 						targetMob.Constitution = statval;
 						targetMob.Health = targetMob.MaxHealth;
 						break;
-					case "DEX": targetMob.Dexterity = statval; break;
-					case "QUI": targetMob.Quickness = statval; break;
-					case "INT": targetMob.Intelligence = statval; break;
-					case "EMP": targetMob.Empathy = statval; break;
-					case "PIE": targetMob.Piety = statval; break;
-					case "CHA": targetMob.Charisma = statval; break;
+						case "DEX": targetMob.Dexterity = statval; break;
+						case "QUI": targetMob.Quickness = statval; break;
+						case "INT": targetMob.Intelligence = statval; break;
+						case "EMP": targetMob.Empathy = statval; break;
+						case "PIE": targetMob.Piety = statval; break;
+						case "CHA": targetMob.Charisma = statval; break;
 				}
 
 				targetMob.SaveIntoDatabase();
@@ -2381,8 +2381,8 @@ namespace DOL.GS.Commands
 				targetMob.Gender = (Gender)gender;
 				targetMob.SaveIntoDatabase();
 				client.Out.SendMessage(String.Format("Mob gender changed to {0}.",
-													 targetMob.Gender.ToString().ToLower()),
-									   eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				                                     targetMob.Gender.ToString().ToLower()),
+				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			catch (Exception)
 			{
@@ -2623,74 +2623,62 @@ namespace DOL.GS.Commands
 			client.Out.SendCustomTextWindow("Mob State", text);
 		}
 
-        private void trigger(GameClient client, GameNPC targetMob, string[] args)
-        {
-            string type = "";
-            string text = "";
-            string action = "";
-            try
-            {
-                type = args[2].ToLower();
+		private void trigger(GameClient client, GameNPC targetMob, string[] args)
+		{
+			string type = "";
+			string text = "";
+			ushort emote = 0;
+			ushort chance = 0;
+			try
+			{
+				type = args[2].ToLower();
 
-                if (type == "help" || type == "")
-                {
-                    client.Out.SendMessage("The trigger command lets you add sentences for the mob to say when he spawns, aggros or dies.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    client.Out.SendMessage("Triggers apply to all mobs with the same mob name.  Each mob name can have multiple triggers and trigger types.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    client.Out.SendMessage("The aggro and die trigger types allow for keywords of [name] (gets replaced with the players name), [class] (gets replaced with the players class) and [mobname] gets replaced with the mobs name.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    client.Out.SendMessage("Ex: /mob trigger aggro say This is what I'll say when I aggro!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    client.Out.SendMessage("Ex: /mob trigger die say This is what I'll say when I die!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    client.Out.SendMessage("Ex: /mob trigger spawn say This is what I'll say when I spawn!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    client.Out.SendMessage("Ex: /mob trigger aggro say I really hate [class]'s like you!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    client.Out.SendMessage("Ex: /mob trigger aggro say Prepare to die [name]!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    client.Out.SendMessage("Ex: /mob trigger aggro say I've been waiting for this moment ever since I was a young [mobname]!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    client.Out.SendMessage("The keywords [name] and [class] and [mobname] only apply to the aggro and die trigger type.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    client.Out.SendMessage("Usage: /mob trigger <type(die,aggro,spawn)> <action(say)> <sentence(can include [name],[class],[mobname])>", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    return;
-                }
+				if (type == "help" || type == "")
+				{
+					client.Out.SendMessage("The trigger command lets you add sentences for the mob to say when he spawns, aggros, fights or dies.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Triggers apply to all mobs with the same mob name.  Each mob name can have multiple triggers and trigger types.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("The aggro and die trigger types allow for keywords of [targetname] (gets replaced with the target name), [class] [race] (gets replaced with the players class/race) and [sourcename] gets replaced with the source name.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Ex: /mob trigger aggro 50 10 This is what I'll say 50% time when I aggro!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Ex: /mob trigger die 100 5 This is what I'll say when I die!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Ex: /mob trigger aggro 100 0 [y]I really hate [class]'s like you!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Ex: /mob trigger roam 5 12 Prepare to die [targetname]!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Ex: /mob trigger aggro 5 0 [b]I've been waiting for this moment ever since I was a young [sourcename]!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Usage: /mob trigger <type(die,aggro,spawn,fight,kill,roam)> <chance in percent> <emote (0 for no emote)> <sentence(can include [targetname],[sourcename],[class],[race])(can also be formatted with [y] for yelled and [b] for broadcasted sentence)>", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					return;
+				}
 
-                if ((type != "spawn" && type != "aggro" && type != "die") || type == "")
-                {
-                    client.Out.SendMessage("You must specify a proper type for the trigger <Spawn, Aggro, Die>.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    client.Out.SendMessage("example: Die Say This is what I will say when I die!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    return;
-                }
+				if ((type != "spawn" && type != "aggro" && type != "die" && type != "fight" && type != "roam" && type != "kill") || type == "")
+				{
+					client.Out.SendMessage("You must specify a proper type for the trigger <Spawn, Aggro, Die, Fight>.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("example: Die None This is what I will say when I die!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+				try{
+					emote = Convert.ToUInt16((args[4]));
+					chance = Convert.ToUInt16((args[3]));
+				} catch{
+					client.Out.SendMessage("You must specify a valid chance percent/emote number", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				if (args.Length > 4) { text = String.Join(" ", args, 5, args.Length - 5); }
 
-                action = args[3].ToLower();
+				if (text == "")
+				{
+					client.Out.SendMessage("You must specify some text for the trigger.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
 
-                if (action != "say" || action == "")
-                {
-                    client.Out.SendMessage("You must specify a proper action for the trigger <say>.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    client.Out.SendMessage("example: Die Say This is what I will say when I die!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    return;
-                }
-
-                if (args.Length > 3) { text = String.Join(" ", args, 4, args.Length - 4); }
-
-                if (text == "")
-                {
-                client.Out.SendMessage("You must specify some text for the trigger.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                client.Out.SendMessage("If using the aggro trigger you may use [name] and [class] keywords.  see '/mob trigger help' for more info.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                client.Out.SendMessage("example: Die Say This is what I will say when I die!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    return;
-                }
-                if ((type == "spawn") && (text.Contains("[name]") || text.Contains("[class]") || text.Contains("[mobname]")))
-                {
-                    client.Out.SendMessage("Keywords are only valid for the aggro and die trigger types and cannot be used with spawn.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    return;
-                }
-
-                DBMobXTrigger trigger = new DBMobXTrigger(targetMob.Name, type, action, GameServer.Database.Escape(text));
-                trigger.Dirty = true;
-                trigger.AllowAdd = true;
-                GameServer.Database.AddObject(trigger);
-                client.Out.SendMessage(action + " trigger added to mobs with name " + targetMob.Name + " when they " + type + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return;
-            }
-            catch (Exception)
-            {
-                DisplaySyntax(client, args[1]);
-            }
-        }
+				MobXAmbientBehaviour trigger = new MobXAmbientBehaviour(targetMob.Name, type + "ing",emote, GameServer.Database.Escape(text), chance);
+				trigger.Dirty = true;
+				trigger.AllowAdd = true;
+				GameServer.Database.AddObject(trigger);
+				client.Out.SendMessage(" Trigger added to mobs with name " + targetMob.Name + " when they " + type + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			catch (Exception)
+			{
+				DisplaySyntax(client, args[1]);
+			}
+		}
 
 	}
 }

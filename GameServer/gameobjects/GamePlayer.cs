@@ -51,10 +51,6 @@ namespace DOL.GS
 	public class GamePlayer : GameLiving
 	{
 		private readonly object m_LockObject = new object();
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Client/Character/VariousFlags
 
@@ -7047,7 +7043,11 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="killer">the killer</param>
 		public override void Die(GameObject killer)
-		{
+		{	
+			// ambiant talk
+			if (killer is GameNPC)
+				(killer as GameNPC).FireAmbientSentence(GameNPC.eAmbientTrigger.killing, this);
+			
 			CharacterClass.Die(killer);
 
 			bool realmDeath = killer != null && killer.Realm != eRealm.None;

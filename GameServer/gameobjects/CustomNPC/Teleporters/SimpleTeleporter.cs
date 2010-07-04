@@ -43,8 +43,6 @@ namespace DOL.GS
 	/// <author>Tolakram; from SI teleporter created by Aredhel</author>
 	public class SimpleTeleporter : GameTeleporter
 	{
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		protected override string Type
 		{
 			get

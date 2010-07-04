@@ -35,11 +35,6 @@ namespace DOL.GS
 	/// <author>Aredhel</author>
 	public class HiberniaSITeleporter : GameTeleporter
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		private String[] m_destination = { 
 			"Grove of Domnann",
 			"Droighaid",
