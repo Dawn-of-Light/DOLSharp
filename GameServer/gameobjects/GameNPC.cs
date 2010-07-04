@@ -2682,7 +2682,10 @@ namespace DOL.GS
 				base.Health = MaxHealth;
 			}
 			
-			// ambient text
+			// list of ambient texts
+			if (!string.IsNullOrEmpty(Name))
+				ambientTexts = GameServer.Database.SelectObjects<MobXAmbientBehaviour>("`Source` ='" + GameServer.Database.Escape(Name) + "';");
+
 			if (GameServer.Instance.ServerStatus == eGameServerStatus.GSS_Open)
 				FireAmbientSentence(eAmbientTrigger.spawning);
 			
@@ -3135,6 +3138,11 @@ namespace DOL.GS
 			roaming,
 			killing,
 		}
+		
+		/// <summary>
+		/// The ambient texts
+		/// </summary>
+		public IList<MobXAmbientBehaviour> ambientTexts;
 		
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler
@@ -4479,14 +4487,11 @@ namespace DOL.GS
 		/// <param name="npc">The NPC to handle the trigger for</param>
 		public void FireAmbientSentence(eAmbientTrigger trigger, GameLiving living)
 		{
-			#warning Graveen: MobXAmbient must stay pre-cached
-			List<MobXAmbientBehaviour> mxa =
-				(from i in GameServer.Database.SelectAllObjects<MobXAmbientBehaviour>()
-				 where (i.Source == Name || (NPCTemplate != null && i.Source == NPCTemplate.Name)) && i.Trigger == trigger.ToString()
-				 select i).ToList();
+			if (ambientTexts == null) return;
+			List<MobXAmbientBehaviour> mxa = (from i in ambientTexts where i.Trigger == trigger.ToString() select i).ToList();
+			if (mxa.Count==0) return;
 			
 			// grab random sentence
-			if (mxa.Count==0) return;
 			int choosen = Util.Random(mxa.Count-1);
 			if (!Util.Chance(mxa[choosen].Chance)) return;
 			string text = mxa[choosen].Text.Replace("[sourcename]",Name).Replace("[targetname]",living==null?string.Empty:living.Name);
