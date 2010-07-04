@@ -32,11 +32,6 @@ namespace DOL.GS
     /// <author>Aredhel</author>
     public abstract class AncientBoundDjinn : GameTeleporter
     {
-        /// <summary>
-        /// Defines a logger for this class.
-        /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         private const int NpcTemplateId = 3000;      
         private const int ZOffset = 63;
 

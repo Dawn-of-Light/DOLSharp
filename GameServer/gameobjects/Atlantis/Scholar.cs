@@ -37,11 +37,6 @@ namespace DOL.GS
     public class Scholar : Researcher
     {
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Create a new scholar.
 		/// </summary>
         public Scholar()

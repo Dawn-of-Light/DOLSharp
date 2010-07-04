@@ -19,7 +19,6 @@ namespace DOL.GS
 		public static int hibregion = 130;
 		public static int midregion = 30;
 		public static int playerregion;
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private static bool InProgress = false;
 

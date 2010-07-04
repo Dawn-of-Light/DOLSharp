@@ -34,11 +34,6 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class GameRelicDoor : GameLiving, IDoor
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		#region properties
 
 		private int m_doorID;

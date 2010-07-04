@@ -21,11 +21,7 @@ namespace DOL.GS.Atlantis
     /// </summary>
     public class BasicEncounterMob : GameNPC
     {
-        public static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-        public override void SaveIntoDatabase()
-        {
-        }
+    	public override void SaveIntoDatabase() {}
 
         public virtual void CastSpellnoLOSchecks(Spell spell, SpellLine line)
         {

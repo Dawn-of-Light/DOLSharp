@@ -40,11 +40,6 @@ namespace DOL.GS
 	public class NecromancerPet : GamePet
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Proc IDs for various pet weapons.
 		/// </summary>
 		private enum Procs 

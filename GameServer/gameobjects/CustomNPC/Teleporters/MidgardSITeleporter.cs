@@ -35,11 +35,6 @@ namespace DOL.GS
 	/// <author>Aredhel</author>
 	public class MidgardSITeleporter : GameTeleporter
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		private String[] m_destination = { 
 			"Aegirhamn",
 			"Bjarken",

@@ -42,12 +42,6 @@ namespace DOL.GS
 	public abstract class GameDragon : GameNPC
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		
-		/// <summary>
 		/// Set the dragon difficulty in percent of its max abilities
 		/// 100 = full strength
 		/// </summary>
