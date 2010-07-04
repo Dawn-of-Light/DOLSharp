@@ -1121,9 +1121,19 @@ namespace DOL.GS.Commands
 			info.Add(" ");
 			info.Add(" + Mob_ID:  " + targetMob.InternalID);
 
+			if (targetMob.ambientTexts != null)
+			{
+				info.Add (" ");
+				info.Add ("Ambient Texts:");
+				foreach(var txt in targetMob.ambientTexts)
+				{
+					info.Add(" - (" + txt.Trigger + " " + txt.Chance + "% with emote #" + txt.Emote + ")");
+					info.Add("    " + txt.Text);
+				}
+			}
 			client.Out.SendCustomTextWindow("[ " + targetMob.Name + " ]", info);
 		}
-
+		
 		private void stats(GameClient client, GameNPC targetMob, string[] args)
 		{
 			if (targetMob == null)
