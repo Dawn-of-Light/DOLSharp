@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{43BFC675-13B7-4AA8-97F6-6109948849CC}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -139,6 +139,7 @@
     <Compile Include="Handlers\XMLObjectDatabase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tables\MobXTrigger.cs" />
     <Compile Include="Transaction\IsolationLevel.cs" />
     <Compile Include="DatabaseException.cs">
       <SubType>Code</SubType>

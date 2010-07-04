@@ -395,6 +395,12 @@ namespace DOL.AI.Brain
 			if (!m_body.IsAlive) return;
 
 			if (living == null) return;
+
+            //Handle trigger to say sentance on first aggro.
+            if (m_aggroTable.Count < 1)
+            {
+                this.Body.HandleTriggerSay("aggro", this.Body, living);
+            }
 			
 			// Check LOS (walls, pits, etc...) before  attacking, player + pet
 			// Be sure the aggrocheck is triggered by the brain on Think() method
