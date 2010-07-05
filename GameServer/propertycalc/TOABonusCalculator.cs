@@ -131,12 +131,6 @@ namespace DOL.GS.PropertyCalc
                 + living.ItemBonus[(int)property]
                 - living.DebuffCategory[(int)property]);
 
-            // Relic bonus calculated before RA bonuses
-			if (living is GamePlayer || living is GamePet)
-			{
-				percent += (int)(100 * RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Magic));
-			}
-
             // Add RA bonus
             percent += living.AbilityBonus[(int)property];
 

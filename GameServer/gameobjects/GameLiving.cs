@@ -793,7 +793,7 @@ namespace DOL.GS
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
 				speed *= 1.5; // mob archer speed too fast
-				speed *= 1.0 - GetModified(eProperty.ArcherySpeed) * 0.01;
+				speed *= 1.0 - GetModified(eProperty.CastingSpeed) * 0.01;
 			}
 			else
 			{
@@ -816,9 +816,12 @@ namespace DOL.GS
 				//Melee damage buff,debuff,RA
 				effectiveness += GetModified(eProperty.MeleeDamage) * 0.01;
 			}
+			else if (weapon.Item_Type == Slot.RANGED && (weapon.Object_Type == (int)eObjectType.Longbow || weapon.Object_Type == (int)eObjectType.RecurvedBow || weapon.Object_Type == (int)eObjectType.CompositeBow))
+			{
+				effectiveness += GetModified(eProperty.SpellDamage) * 0.01;
+			}
 			else if (weapon.Item_Type == Slot.RANGED)
 			{
-				//Ranged damage buff,debuff,RA
 				effectiveness += GetModified(eProperty.RangedDamage) * 0.01;
 			}
 			damage *= effectiveness;
@@ -1627,7 +1630,8 @@ namespace DOL.GS
 				// patch to missed when 0 damage
 				if (ad.Damage == 0)
 				{
-					if (log.IsDebugEnabled)
+					// log this as a possible error if we should do some damage to target
+					if (ad.Target.Level <= Level + 5)
 					{
 						log.ErrorFormat("Possible Damage Error: {0} Damage = 0 -> miss vs {1}.  AttackDamage {2}, weapon name {3}", Name, (ad.Target == null ? "null" : ad.Target.Name), AttackDamage(weapon), (weapon == null ? "None" : weapon.Name));
 					}

@@ -6711,11 +6711,17 @@ namespace DOL.GS
 				//TODO if attackweapon is ranged -> attackdamage is arrow damage
 				int DPS = weapon.DPS_AF;
 
+				// apply relic bonus prior to cap
+				DPS = (int)((double)DPS * (1.0 + RelicMgr.GetRelicBonusModifier(Realm, eRelicType.Strength)));
+
+				log.DebugFormat("Modified DPS after relic bonus: {0}", DPS);
+
 				// apply damage cap before quality
 				// http://www.classesofcamelot.com/faq.asp?mode=view&cat=10
 				int cap = 12 + 3 * Level;
 				if (RealmLevel > 39)
 					cap += 3;
+
 				if (DPS > cap)
 				{
 					DPS = cap;
@@ -6960,7 +6966,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					// no archery bonus
+					// no archery bonus, this is calculaed in spell handler for new archery
 					speed *= (1.0 - (qui - 60) * 0.002);
 				}
 			}
