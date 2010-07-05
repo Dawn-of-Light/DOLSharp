@@ -161,7 +161,9 @@ namespace DOL.GS.Spells
 					missrate += targetAD.Style.BonusToDefense;
 				}
 
-				AttackData ad = m_handler.CalculateDamageToTarget(target, 0.5); // half of the damage is magical
+				// half of the damage is magical
+				// subtract any spelldamage bonus and re-calculate after half damage is calculated
+				AttackData ad = m_handler.CalculateDamageToTarget(target, 0.5 - (caster.GetModified(eProperty.SpellDamage) * 0.01)); 
 
 				// check for bladeturn miss
 				if (ad.AttackResult == GameLiving.eAttackResult.Missed)
@@ -184,6 +186,8 @@ namespace DOL.GS.Spells
 					}
 					return;
 				}
+
+				ad.Damage = (int)((double)ad.Damage * (1.0 + caster.GetModified(eProperty.SpellDamage) * 0.01));
 
 				bool arrowBlock = false;
 
@@ -245,11 +249,10 @@ namespace DOL.GS.Spells
 					}
 				}
 
-				// A shield block will block all arrow damage but not the magic damage (acid / poison shot).
-				// Because of this we have to handle the block with special code and not set AttackResult to blocked.
-
 				if (arrowBlock == false)
 				{
+					// now calculate the magical part of arrow damage (similar to bolt calculation).  Part 1 Physical, Part 2 Magical
+
 					double damage = m_handler.Spell.Damage / 2; // another half is physical damage
 					if (target is GamePlayer)
 						ad.ArmorHitLocation = ((GamePlayer)target).CalculateArmorHitLocation(ad);
@@ -264,16 +267,43 @@ namespace DOL.GS.Spells
 					damage *= 1.0 - Math.Min(0.85, ad.Target.GetArmorAbsorb(ad.ArmorHitLocation));
 					ad.Modifier = (int)(damage * (ad.Target.GetResist(ad.DamageType) + SkillBase.GetArmorResist(armor, ad.DamageType)) / -100.0);
 					damage += ad.Modifier;
+
+					double effectiveness = caster.Effectiveness;
+					effectiveness += (caster.GetModified(eProperty.SpellDamage) * 0.01);
+					damage = damage * effectiveness;
+
+					damage *= (1.0 + RelicMgr.GetRelicBonusModifier(caster.Realm, eRelicType.Magic));
+
 					if (damage < 0) damage = 0;
+
 					ad.Damage += (int)damage;
 
-					ad.UncappedDamage = ad.Damage;
-					ad.Damage = (int)Math.Min(ad.Damage, m_handler.Spell.Damage * 3);
-
-					if (caster is GamePlayer)
+					if (caster.AttackWeapon != null)
 					{
-						ad.Damage = (int)(ad.Damage * ((GamePlayer)caster).Effectiveness);
+						// Quality
+						ad.Damage -= (int)(ad.Damage * (100 - caster.AttackWeapon.Quality) * .01);
+
+						// Condition
+						ad.Damage = (int)((double)ad.Damage * Math.Min(1.0, (double)caster.AttackWeapon.Condition / (double)caster.AttackWeapon.MaxCondition));
+
+						// Patch Note:  http://support.darkageofcamelot.com/kb/article.php?id=931
+						// - The Damage Per Second (DPS) of your bow will have an effect on your damage for archery shots. If the effective DPS 
+						//   of your equipped bow is less than that of your max DPS for the level of archery shot you are using, the damage of your 
+						//   shot will be reduced. Max DPS for a particular level can be found by using this equation: (.3 * level) + 1.2
+
+						int spellRequiredDPS = 12 + 3 * m_handler.Spell.Level;
+
+						if (caster.AttackWeapon.DPS_AF < spellRequiredDPS)
+						{
+							double percentReduction = (double)caster.AttackWeapon.DPS_AF / (double)spellRequiredDPS;
+							ad.Damage = (int)(ad.Damage * percentReduction);
+						}
 					}
+
+					if (ad.Damage < 0) ad.Damage = 0;
+
+					ad.UncappedDamage = ad.Damage;
+					ad.Damage = (int)Math.Min(ad.Damage, m_handler.DamageCap(effectiveness));
 
 					if (ad.CriticalDamage > 0)
 					{

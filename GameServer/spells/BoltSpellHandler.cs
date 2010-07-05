@@ -151,13 +151,21 @@ namespace DOL.GS.Spells
 				// Bolts are treated as physical attacks for the purpose of ABS only
 				// Based on this I am normalizing the miss rate for npc's to be that of a standard spell
 
-				int missrate = (caster is GameNPC) ? 25 : 15;
+				int missrate = 0;
 
 				if (caster is GamePlayer && target is GamePlayer)
 				{
-					// note: Need to check attackers and attackers distance to determine correct combat penalty.  See article above.
 					if (target.InCombat)
-						missrate += 5;
+					{
+						foreach (GameLiving attacker in target.Attackers)
+						{
+							if (attacker != caster && target.GetDistanceTo(attacker) <= 200)
+							{
+								// each attacker within 200 units adds a 20% chance to miss
+								missrate += 20;
+							}
+						}
+					}
 				}
 
 				if (target is GameNPC || caster is GameNPC)
@@ -174,7 +182,7 @@ namespace DOL.GS.Spells
 					missrate += targetAD.Style.BonusToDefense;
 				}
 
-				AttackData ad = m_handler.CalculateDamageToTarget(target, 0.5); // half of the damage is magical
+				AttackData ad = m_handler.CalculateDamageToTarget(target, 0.5 - (caster.GetModified(eProperty.SpellDamage) * 0.01));
 
 				if (Util.Chance(missrate)) 
 				{
@@ -192,6 +200,7 @@ namespace DOL.GS.Spells
 					return;
 				}
 
+				ad.Damage = (int)((double)ad.Damage * (1.0 + caster.GetModified(eProperty.SpellDamage) * 0.01));
 
 				// Block
 				bool blocked = false;
@@ -203,11 +212,9 @@ namespace DOL.GS.Spells
 					{
 						if (target.IsObjectInFront(caster, 180) && lefthand.Object_Type == (int)eObjectType.Shield) 
 						{
-							// TODO: shield size, which field to use?
-							// TODO: 30% chance to block arrows/bolts
 							double shield = 0.5 * player.GetModifiedSpecLevel(Specs.Shields);
-							double blockchance = ((player.Dexterity*2)-100)/40.0 + shield + (0*3) + 5;
-                            blockchance += 30;
+							double blockchance = ((player.Dexterity*2)-100)/40.0 + shield + 5;
+							// Removed 30% increased chance to block, can find no clear evidence this is correct - tolakram
 							blockchance -= target.GetConLevel(caster) * 5;
 							if (blockchance >= 100) blockchance = 99;
 							if (blockchance <= 0) blockchance = 1;
@@ -250,6 +257,8 @@ namespace DOL.GS.Spells
 					}
 				}
 
+				double effectiveness = 1.0 + (caster.GetModified(eProperty.SpellDamage) * 0.01);
+
 				// simplified melee damage calculation
 				if (blocked == false)
 				{
@@ -269,22 +278,22 @@ namespace DOL.GS.Spells
 					damage *= 1.0 - Math.Min(0.85, ad.Target.GetArmorAbsorb(ad.ArmorHitLocation));
 					ad.Modifier = (int)(damage * (ad.Target.GetResist(ad.DamageType) + SkillBase.GetArmorResist(armor, ad.DamageType)) / -100.0);
 					damage += ad.Modifier;
+
+					damage = damage * effectiveness;
+					damage *= (1.0 + RelicMgr.GetRelicBonusModifier(caster.Realm, eRelicType.Magic));
+
 					if (damage < 0) damage = 0;
 					ad.Damage += (int)damage;
 				}
 
-				// apply total damage cap	
-				// tolakram - do not apply to siege shot (how aweful is this?)
 				if (m_handler is SiegeArrow == false)
 				{
 					ad.UncappedDamage = ad.Damage;
-					ad.Damage = (int)Math.Min(ad.Damage, m_handler.Spell.Damage * 3);
+					ad.Damage = (int)Math.Min(ad.Damage, m_handler.DamageCap(effectiveness));
 				}
 
-				if(caster is GamePlayer)
-					ad.Damage = (int)(ad.Damage*((GamePlayer)caster).Effectiveness);
+				ad.Damage = (int)(ad.Damage*((GamePlayer)caster).Effectiveness);
 
-				// fix critical damage
 				if (blocked == false && ad.CriticalDamage > 0)
 				{
 					int critMax = (target is GamePlayer) ? ad.Damage/2 : ad.Damage;
