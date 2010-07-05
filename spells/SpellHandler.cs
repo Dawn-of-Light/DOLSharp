@@ -1560,7 +1560,7 @@ return false;
 		/// <returns></returns>
 		public virtual int CalculateSpellRange()
 		{
-			int range = Math.Max(32, (int)(Spell.Range * Caster.GetModified((Spell.SpellType != "Archery" ? eProperty.SpellRange : eProperty.ArcheryRange)) * 0.01));
+			int range = Math.Max(32, (int)(Spell.Range * Caster.GetModified(eProperty.SpellRange) * 0.01));
 			return range;
 			//Dinberg: add for warlock range primer
 		}
@@ -1792,7 +1792,7 @@ return false;
 				percent = 1.0 - ((dex - 60) * 0.15 + (dex - 250) * 0.05) * 0.01;
 			}
 			if (player != null)
-				percent *= 1.0 - m_caster.GetModified((Spell.SpellType != "Archery" ? eProperty.CastingSpeed : eProperty.ArcherySpeed)) * 0.01;
+				percent *= 1.0 - m_caster.GetModified(eProperty.CastingSpeed) * 0.01;
 
 			ticks = (int)(ticks * Math.Max(0.4, percent));
 			if (ticks < 1)
@@ -3581,8 +3581,15 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 			double spellDamage = CalculateDamageBase();
 
 			if (m_caster is GamePlayer)
-				effectiveness += m_caster.GetModified((Spell.SpellType != "Archery" ? eProperty.SpellDamage : eProperty.RangedDamage)) * 0.01;
+			{
+				effectiveness += m_caster.GetModified(eProperty.SpellDamage) * 0.01;
 
+				// Relic bonus applied to damage, does not alter effectiveness or increase cap
+				spellDamage *= (1.0 + RelicMgr.GetRelicBonusModifier(m_caster.Realm, eRelicType.Magic));
+
+			}
+
+			// Apply casters effectiveness
 			spellDamage *= m_caster.Effectiveness;
 
 			int finalDamage = Util.Random((int)(minVariance * spellDamage), (int)(maxVariance * spellDamage));
@@ -3592,7 +3599,7 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 			int hitChance = CalculateToHitChance(ad.Target);
 			finalDamage = AdjustDamageForHitChance(finalDamage, hitChance);
 
-			// apply effectiveness
+			// apply spell effectiveness
 			finalDamage = (int)(finalDamage * effectiveness);
 
 			if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)))
@@ -3678,17 +3685,16 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 
 			#endregion
 
-
-			// cap to +200% of base damage
-			if (finalDamage > Spell.Damage * 3 * effectiveness)
+			// Apply damage cap (this can be raised by effectiveness)
+			if (finalDamage > DamageCap(effectiveness))
 			{
-				finalDamage = (int)(Spell.Damage * 3 * effectiveness);
+				finalDamage = (int)DamageCap(effectiveness);
 			}
 
 			if (finalDamage < 0)
 				finalDamage = 0;
 
-			int criticalchance = (Spell.SpellType != "Archery" ? m_caster.SpellCriticalChance : m_caster.GetModified(eProperty.CriticalArcheryHitChance));
+			int criticalchance = (m_caster.SpellCriticalChance);
 			if (Util.Chance(Math.Min(50, criticalchance)) && (finalDamage >= 1))
 			{
 				int critmax = (ad.Target is GamePlayer) ? finalDamage / 2 : finalDamage;
@@ -3720,6 +3726,12 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 
 			m_lastAttackData = ad;
 			return ad;
+		}
+
+		public virtual double DamageCap(double effectiveness)
+		{
+
+			return Spell.Damage * 3.0 * effectiveness;
 		}
 
 		/// <summary>

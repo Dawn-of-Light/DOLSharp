@@ -38,13 +38,7 @@ namespace DOL.GS.PropertyCalc
 			int percent = Math.Min(10, living.BaseBuffBonusCategory[(int)property]
 				-living.DebuffCategory[(int)property]
 				+living.ItemBonus[(int)property]);
-	
-			// Relic bonus
-			if (living is GamePlayer)
-			{
-				percent += (int)(100 * RelicMgr.GetRelicBonusModifier(living.Realm, eRelicType.Strength));
-			}
-			
+
 			return percent;
 		}
 	}
