@@ -57,8 +57,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string inventoryID)
 		{
-			//ArtifactManager.LoadArtifacts(); //loading artifacts
-			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items)
 			{
 				try
 				{
@@ -111,7 +110,51 @@ namespace DOL.GS
 							}
 							else
 							{
-								m_items.Add(itemSlot, item);
+								IPlayerInventoryItem playerItem = null;
+
+								if (item.ClassType != null && item.ClassType != "")
+								{
+									foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+									{
+										try
+										{
+											playerItem = assembly.CreateInstance(item.ClassType, false, BindingFlags.CreateInstance, null, new object[] { item }, null, null) as IPlayerInventoryItem;
+										}
+										catch (Exception)
+										{
+										}
+
+										if (playerItem != null)
+										{
+											break;
+										}
+									}
+								}
+
+								if (playerItem == null || (playerItem is InventoryItem) == false)
+								{
+									if (item.ClassType != null && item.ClassType != "")
+									{
+										Log.WarnFormat("Failed to load inventory ClassType {0}, item {1}, for player {2}!", item.ClassType, item.Name, m_player.Name);
+									}
+
+									playerItem = new PlayerInventoryItem(item);
+								}
+
+								if (playerItem.CheckValid(m_player))
+								{
+									m_items.Add(itemSlot, playerItem as InventoryItem);
+								}
+								else
+								{
+									Log.ErrorFormat("Item '{0}', ClassType '{1}' failed valid test for player '{2}'!", item.Name, item.ClassType, m_player.Name);
+									PlayerInventoryItem invalidItem = new PlayerInventoryItem();
+									invalidItem.Name = "Invalid Item";
+									invalidItem.OwnerID = item.OwnerID;
+									invalidItem.SlotPosition = item.SlotPosition;
+									invalidItem.AllowAdd = false;
+									m_items.Add(itemSlot, invalidItem);
+								}
 							}
 
 							if (Log.IsWarnEnabled)
