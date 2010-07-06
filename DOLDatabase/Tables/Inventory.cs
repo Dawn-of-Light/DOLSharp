@@ -724,6 +724,11 @@ namespace DOL.Database
 			get { return Template.PackageID; }
 			set { Template.PackageID = value; }
 		}
+		public string ClassType
+		{
+			get { return Template.ClassType; }
+			set { Template.ClassType = value; }
+		}
 
 		
 		#endregion
