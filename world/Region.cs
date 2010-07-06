@@ -480,6 +480,49 @@ namespace DOL.GS
 			get { return ID; }
 		}
 
+		/// <summary>
+		/// Should this region respond to time manager send requests
+		/// Normally yes, might be disabled for some instances.
+		/// </summary>
+		public virtual bool UseTimeManager
+		{
+			get { return true; }
+			set { }
+		}
+
+
+		/// <summary>
+		/// Each region can return it's own game time
+		/// By default let WorldMgr handle it
+		/// </summary>
+		public virtual uint GameTime
+		{
+			get { return WorldMgr.GetCurrentGameTime(); }
+			set { }
+		}
+
+
+		/// <summary>
+		/// Get the day increment for this region.
+		/// By default let WorldMgr handle it
+		/// </summary>
+		public virtual uint DayIncrement
+		{
+			get { return WorldMgr.GetDayIncrement(); }
+			set { }
+		}
+
+
+		/// <summary>
+		/// Get the weather manager for this region
+		/// By default use WeatherMgr
+		/// </summary>
+		public virtual void SendWeather(GamePlayer player)
+		{
+			WeatherMgr.SendWeather(WeatherMgr.GetWeatherForRegion(ID), player);
+		}
+
+
 		#endregion
 
 		#region Methods

@@ -30,9 +30,7 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			// starts a new day with 'speed' at 'time'(1/1000)
-			// /time speed time
-			if (client.Account.PrivLevel > 1)
+			if (client.Account.PrivLevel == (int)ePrivLevel.Admin) // admins only
 			{
 				try
 				{
@@ -51,20 +49,37 @@ namespace DOL.GS.Commands
 				}
 				catch
 				{
-					client.Out.SendMessage(
-					"Usage: /time <speed> <time>",
-					eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+					client.Out.SendMessage("ADMIN Usage: /time <speed> (24 is normal, higher numbers make faster days) <time> (1 - 1000) - Reset days with new length, starting at the given time.",
+											eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
-			//1000/60/54 to be like 77760 = 54*60*24
-			// so for mythic day contain 24 hours each hours contain 60 minutes and each minute contain 54 seconde ;)
-			uint hour = WorldMgr.GetCurrentDayTime() / 1000 / 60 / 60;
-			uint minute = WorldMgr.GetCurrentDayTime() / 1000 / 60 % 60;
-			uint seconde = WorldMgr.GetCurrentDayTime() / 1000 % 60;
 
-			client.Out.SendMessage("it is " + hour.ToString() + "H" + minute.ToString() + "min" + seconde.ToString() + "sec",
-								   eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (client.Player != null)
+			{
+				uint cTime = WorldMgr.GetCurrentGameTime(client.Player);
+
+				uint hour = cTime / 1000 / 60 / 60;
+				uint minute = cTime / 1000 / 60 % 60;
+				uint seconds = cTime / 1000 % 60;
+				bool pm = false;
+
+				if (hour == 0)
+				{
+					hour = 12;
+				}
+				else if (hour == 12)
+				{
+					pm = true;
+				}
+				else if (hour > 12)
+				{
+					hour -= 12;
+					pm = true;
+				}
+
+				client.Out.SendMessage("It is " + hour.ToString() + ":" + minute.ToString("00") + ":" + seconds.ToString("00") + (pm ? " pm" : ""),
+									   eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
 		}
 	}
 }
