@@ -104,6 +104,7 @@ namespace DOL.Database
 			Description = template.Description;
 			IsIndestructible = template.IsIndestructible;
 			IsNotLosingDur = template.IsNotLosingDur;
+			ClassType = template.ClassType;
 		}
 	
 		public override bool Dirty {

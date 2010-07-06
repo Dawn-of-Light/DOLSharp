@@ -124,6 +124,7 @@ namespace DOL.Database
 		protected string m_description;
 		
 		protected string m_packageID;
+		protected string m_classType;
 
 		public ItemTemplate()
 		{
@@ -192,8 +193,8 @@ namespace DOL.Database
 			m_bonusLevel = 0;
 			m_levelRequirement = 0;
 			m_description = "";
-
-
+			m_packageID = "";
+			m_classType = "";
 		}
 		
 		[PrimaryKey]
@@ -1117,7 +1118,21 @@ namespace DOL.Database
 				this.m_description = value;
 			}
 		}
-		
+
+
+		[DataElement(AllowDbNull = true, Varchar = 255)]
+		public string ClassType
+		{
+			get
+			{
+				return this.m_classType;
+			}
+			set
+			{
+				this.m_classType = value;
+			}
+		}
+
 		// Various Methods		
 		public virtual byte BaseDurabilityPercent
 		{
