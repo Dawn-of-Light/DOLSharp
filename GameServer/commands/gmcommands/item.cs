@@ -73,6 +73,7 @@ namespace DOL.GS.Commands
 	     "GMCommands.Item.Usage.TemplateID",
 	     "GMCommands.Item.Usage.FindID",
 	     "GMCommands.Item.Usage.FindName",
+		 "/item classtype <ClassType> <slot> - Set this items ClassType",
 	     "/item saveunique <id_nb> <slot> - save item as an unique one",
 	     "/item load <id_nb> - Load an item from the DB and replace or add item to the ItemTemplate cache",
 	     "/item loadartifacts - Re-load all the artifact entries from the DB.  ItemTemplates must be loaded separately and prior to loading artifacts.",
@@ -1254,6 +1255,29 @@ namespace DOL.GS.Commands
 							break;
 						}
 						#endregion Realm
+					#region ClassType
+					case "classtype":
+						{
+							string classType = args[2];
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (int.TryParse(args[args.Length - 1], out slot) == false)
+							{
+								slot = (int)eInventorySlot.LastBackpack;
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							item.ClassType = classType;
+							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							break;
+						}
+					#endregion ClassType
 						#region TemplateID
 					case "templateid":
 						{

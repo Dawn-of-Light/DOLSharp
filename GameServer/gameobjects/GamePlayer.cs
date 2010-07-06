@@ -14588,7 +14588,13 @@ namespace DOL.GS
 			Type t = invItem.GetType();
 			MethodInfo m = t.GetMethod("Delve"); // Delve(List<String>, GamePlayer player)
 
-			if (m != null)
+			if (m == null)
+			{
+				// use default delve
+				PlayerInventoryItem item = new PlayerInventoryItem(invItem);
+				item.Delve(delveInfo, this);
+			}
+			else
 			{
 				try
 				{
@@ -14599,16 +14605,15 @@ namespace DOL.GS
 					{
 						delveInfo.Add(line);
 					}
-
-					return true;
 				}
 				catch
 				{
+					delveInfo.Add("Delve failed for this item.");
 					log.ErrorFormat("Found delve for {0} but invoke failed.", t.FullName);
 				}
 			}
 
-			return false;
+			return true;
 		}
 
 
