@@ -45,9 +45,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			uint hour = WorldMgr.GetCurrentDayTime() / 1000 / 60 / 60;
-			uint minute = WorldMgr.GetCurrentDayTime() / 1000 / 60 % 60;
-			uint seconde = WorldMgr.GetCurrentDayTime() / 1000 % 60;
+			uint hour = WorldMgr.GetCurrentGameTime() / 1000 / 60 / 60;
+			uint minute = WorldMgr.GetCurrentGameTime() / 1000 / 60 % 60;
+			uint seconde = WorldMgr.GetCurrentGameTime() / 1000 % 60;
 				
 			string name = "(NoName)";
 			var info = new List<string>();

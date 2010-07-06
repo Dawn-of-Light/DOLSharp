@@ -279,10 +279,15 @@ namespace DOL.GS
 		/// <param name="player">The player entering the region</param>
 		public static void UpdatePlayerWeather(GamePlayer player)
 		{
-			WeatherMgr mgr = GetWeatherForRegion(player.CurrentRegionID);
+			player.CurrentRegion.SendWeather(player);
+		}
+
+		public static void SendWeather(WeatherMgr mgr, GamePlayer player)
+		{
 			if (mgr != null && mgr.IsActive)
 				player.Out.SendWeather(mgr.CurrentWeatherLine, mgr.m_width, mgr.m_speed, mgr.m_fogDiffusion, mgr.m_intensity);
 		}
+
 		#endregion
 
 		#region Load/Unload

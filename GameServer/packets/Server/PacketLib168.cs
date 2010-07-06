@@ -612,8 +612,16 @@ namespace DOL.GS.PacketHandler
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Time)))
 			{
-				pak.WriteInt(WorldMgr.GetCurrentDayTime());
-				pak.WriteInt(WorldMgr.GetDayIncrement());
+				if (m_gameClient != null && m_gameClient.Player != null)
+				{
+					pak.WriteInt(WorldMgr.GetCurrentGameTime(m_gameClient.Player));
+					pak.WriteInt(WorldMgr.GetDayIncrement(m_gameClient.Player));
+				}
+				else
+				{
+					pak.WriteInt(WorldMgr.GetCurrentGameTime());
+					pak.WriteInt(WorldMgr.GetDayIncrement());
+				}
 				SendTCP(pak);
 			}
 		}

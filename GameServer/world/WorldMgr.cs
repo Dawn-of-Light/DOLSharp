@@ -539,9 +539,9 @@ namespace DOL.GS
 				m_WorldUpdateThread.IsBackground = true;
 				m_WorldUpdateThread.Start();
 
-				m_dayIncrement = Math.Max(1, Math.Min(512, ServerProperties.Properties.WORLD_DAY_INCREMENT)); // increments > 512 do not render smoothly on clients
-				m_dayStartTick = Environment.TickCount - (int)(DAY / m_dayIncrement / 2); // set start time to 12pm
-				m_dayResetTimer = new Timer(new TimerCallback(DayReset), null, DAY / m_dayIncrement / 2, DAY / m_dayIncrement);
+				m_dayIncrement = Math.Max(0, Math.Min(1000, ServerProperties.Properties.WORLD_DAY_INCREMENT)); // increments > 1000 do not render smoothly on clients
+				m_dayStartTick = Environment.TickCount - (int)(DAY / Math.Max(1, m_dayIncrement) / 2); // set start time to 12pm
+				m_dayResetTimer = new Timer(new TimerCallback(DayReset), null, DAY / Math.Max(1, m_dayIncrement) / 2, DAY / Math.Max(1, m_dayIncrement));
 
 				m_pingCheckTimer = new Timer(new TimerCallback(PingCheck), null, 10 * 1000, 0); // every 10s a check
 
@@ -682,7 +682,12 @@ namespace DOL.GS
 		{
 			m_dayStartTick = Environment.TickCount;
 			foreach (GameClient client in GetAllPlayingClients())
-				client.Out.SendTime();
+			{
+				if (client.Player != null && client.Player.CurrentRegion != null && client.Player.CurrentRegion.UseTimeManager)
+				{
+					client.Out.SendTime();
+				}
+			}
 		}
 
 		/// <summary>
@@ -693,27 +698,73 @@ namespace DOL.GS
 		public static void StartDay(uint dayInc, uint dayStart)
 		{
 			m_dayIncrement = dayInc;
-			m_dayStartTick = Environment.TickCount - (int)(dayStart / m_dayIncrement); // set start time to ...
-			m_dayResetTimer.Change((DAY - dayStart) / m_dayIncrement, Timeout.Infinite);
+
+			if (m_dayIncrement == 0)
+			{
+				// day should stand still so pause the timer
+				m_dayStartTick = (int)(dayStart);
+				m_dayResetTimer.Change(Timeout.Infinite, Timeout.Infinite);
+			}
+			else
+			{
+				m_dayStartTick = Environment.TickCount - (int)(dayStart / m_dayIncrement); // set start time to ...
+				m_dayResetTimer.Change((DAY - dayStart) / m_dayIncrement, Timeout.Infinite);
+			}
+
 			foreach (GameClient client in GetAllPlayingClients())
-				client.Out.SendTime();
+			{
+				if (client.Player != null && client.Player.CurrentRegion != null && client.Player.CurrentRegion.UseTimeManager)
+				{
+					client.Out.SendTime();
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the game time for a players current region
+		/// </summary>
+		/// <param name="client"></param>
+		/// <returns></returns>
+		public static uint GetCurrentGameTime(GamePlayer player)
+		{
+			if (player.CurrentRegion != null)
+				return player.CurrentRegion.GameTime;
+
+			return GetCurrentGameTime();
 		}
 
 		/// <summary>
-		/// Gets the current daytime
+		/// Gets the current game time
 		/// </summary>
 		/// <returns>current time</returns>
-		public static uint GetCurrentDayTime()
+		public static uint GetCurrentGameTime()
 		{
-			long diff = Environment.TickCount - m_dayStartTick;
-			long curTime = diff * m_dayIncrement;
-			return (uint)(curTime % DAY);
+			if (m_dayIncrement == 0)
+			{
+				return (uint)m_dayStartTick;
+			}
+			else
+			{
+				long diff = Environment.TickCount - m_dayStartTick;
+				long curTime = diff * m_dayIncrement;
+				return (uint)(curTime % DAY);
+			}
 		}
 
 		/// <summary>
 		/// Returns the day increment
 		/// </summary>
 		/// <returns>the day increment</returns>
+		public static uint GetDayIncrement(GamePlayer player)
+		{
+			if (player.CurrentRegion != null)
+				return player.CurrentRegion.DayIncrement;
+
+			return GetDayIncrement();
+		}
+
+
 		public static uint GetDayIncrement()
 		{
 			return m_dayIncrement;
