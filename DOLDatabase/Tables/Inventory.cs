@@ -719,10 +719,13 @@ namespace DOL.Database
 			get { return Template.CanDropAsLoot;}
 			set { Template.CanDropAsLoot = value;}
 		}
+		public string PackageID
+		{
+			get { return Template.PackageID; }
+			set { Template.PackageID = value; }
+		}
+
 		
-		//not used
-		//protected int m_flags;
-		//protected string m_packageID;
 		#endregion
 		
 		// Wrapped methods/accessors from ItemTemplate
