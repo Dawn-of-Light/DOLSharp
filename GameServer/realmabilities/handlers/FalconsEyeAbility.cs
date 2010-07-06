@@ -11,7 +11,7 @@ namespace DOL.GS.RealmAbilities
 	public class FalconsEyeAbility : RAPropertyEnhancer
 	{
 		public FalconsEyeAbility(DBAbility dba, int level)
-			: base(dba, level, eProperty.CriticalArcheryHitChance)
+			: base(dba, level, eProperty.CriticalSpellHitChance)
 		{
 		}
 
