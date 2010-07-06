@@ -1842,7 +1842,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds if the player can gain a FreeLevel
 		/// </summary>
-		public byte FreeLevelState
+		public virtual byte FreeLevelState
 		{
 			get
 			{

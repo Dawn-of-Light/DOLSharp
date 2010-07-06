@@ -256,9 +256,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (!invItem.IsDropable)
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotSold"));
 
-						if (invItem.Description != null)
-							objectInfo.Add(invItem.Description);
-
 						if (invItem.IsIndestructible)
 							objectInfo.Add("Cannot be destroyed.");
 
@@ -1160,6 +1157,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				output.Add("   Instrument: " + GlobalConstants.InstrumentTypeToName(item.DPS_AF));
 			}
+
+			output.Add(" ");
+			output.Add("            Flags: " + item.Flags);
+			output.Add("        PackageID: " + item.PackageID);
 		}
 
 		protected string GetShortItemInfo(InventoryItem item, GameClient client)
