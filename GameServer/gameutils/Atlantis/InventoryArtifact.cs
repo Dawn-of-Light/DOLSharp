@@ -34,7 +34,7 @@ namespace DOL.GS
 	/// An artifact inside an inventory.
 	/// </summary>
 	/// <author>Aredhel</author>
-	public class InventoryArtifact : InventoryItem
+	public class InventoryArtifact : GameInventoryItem
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -212,7 +212,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Artifact delve information.
 		/// </summary>
-		public virtual void Delve(List<String> delve, GamePlayer player)
+		public override void Delve(List<String> delve, GamePlayer player)
 		{
 			if (player == null)
 				return;
