@@ -25,9 +25,9 @@ using System.Collections.Generic;
 namespace DOL.GS
 {
 	/// <summary>
-	/// Interface for a PlayerInventoryItem
+	/// Interface for a GameInventoryItem
 	/// </summary>		
-	public interface IPlayerInventoryItem
+	public interface IGameInventoryItem
 	{
 		bool CheckValid(GamePlayer player);
 		void Delve(List<String> delve, GamePlayer player);

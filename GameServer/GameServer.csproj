@@ -721,6 +721,7 @@
     <Compile Include="gameobjects\GamePet.cs" />
     <Compile Include="gameobjects\GameTeleporter.cs" />
     <Compile Include="gameobjects\Theurgist\TheurgistPet.cs" />
+    <Compile Include="gameobjects\WorldInventoryItem.cs" />
     <Compile Include="gameutils\AppealMgr.cs" />
     <Compile Include="gameutils\Atlantis\InventoryArtifact.cs" />
     <Compile Include="gameobjects\Atlantis\Researcher.cs" />
@@ -755,9 +756,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameobjects\GameHouseVault.cs" />
-    <Compile Include="gameobjects\GameInventoryItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="gameobjects\GameLiving.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -833,8 +831,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameutils\ChatUtil.cs" />
-    <Compile Include="gameutils\IPlayerInventoryItem.cs" />
-    <Compile Include="gameutils\PlayerInventoryItem.cs" />
+    <Compile Include="gameobjects\IGameInventoryItem.cs" />
+    <Compile Include="gameobjects\GameInventoryItem.cs" />
     <Compile Include="gameutils\GameNPCInventory.cs" />
     <Compile Include="gameutils\GuildBanner.cs" />
     <Compile Include="gameutils\GuildEvents.cs" />

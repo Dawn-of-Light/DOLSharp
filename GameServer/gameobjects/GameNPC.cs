@@ -4073,8 +4073,8 @@ namespace DOL.GS
 						loot.Z = Z;
 						loot.Heading = Heading;
 						loot.CurrentRegion = CurrentRegion;
-						(loot as GameInventoryItem).Item.IsCrafted = false;
-						(loot as GameInventoryItem).Item.Creator = Name;
+						(loot as WorldInventoryItem).Item.IsCrafted = false;
+						(loot as WorldInventoryItem).Item.Creator = Name;
 					}
 					else
 					{
@@ -4083,27 +4083,27 @@ namespace DOL.GS
 						if (lootTemplate is ItemUnique)
 						{
 							GameServer.Database.AddObject(lootTemplate);
-							invitem = new InventoryItem(lootTemplate as ItemUnique);
+							invitem = GameInventoryItem.Create<ItemUnique>(lootTemplate as ItemUnique);
 						}
 						else
-							invitem = new InventoryItem(lootTemplate);
+							invitem = GameInventoryItem.Create<ItemTemplate>(lootTemplate);
 						
-						loot = new GameInventoryItem(invitem);
+						loot = new WorldInventoryItem(invitem);
 						loot.X = X;
 						loot.Y = Y;
 						loot.Z = Z;
 						loot.Heading = Heading;
 						loot.CurrentRegion = CurrentRegion;
-						(loot as GameInventoryItem).Item.IsCrafted = false;
-						(loot as GameInventoryItem).Item.Creator = Name;
+						(loot as WorldInventoryItem).Item.IsCrafted = false;
+						(loot as WorldInventoryItem).Item.Creator = Name;
 
 						// This may seem like an odd place for this code, but loot-generating code further up the line
 						// is dealing strictly with ItemTemplate objects, while you need the InventoryItem in order
 						// to be able to set the Count property.
 						// Converts single drops of loot with PackSize > 1 (and MaxCount >= PackSize) to stacks of Count = PackSize
-						if ( ( (GameInventoryItem)loot ).Item.PackSize > 1 && ( (GameInventoryItem)loot ).Item.MaxCount >= ( (GameInventoryItem)loot ).Item.PackSize )
+						if ( ( (WorldInventoryItem)loot ).Item.PackSize > 1 && ( (WorldInventoryItem)loot ).Item.MaxCount >= ( (WorldInventoryItem)loot ).Item.PackSize )
 						{
-							( (GameInventoryItem)loot ).Item.Count = ( (GameInventoryItem)loot ).Item.PackSize;
+							( (WorldInventoryItem)loot ).Item.Count = ( (WorldInventoryItem)loot ).Item.PackSize;
 						}
 					}
 

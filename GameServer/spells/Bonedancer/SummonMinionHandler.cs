@@ -116,7 +116,8 @@ namespace DOL.GS.Spells
 						pet.Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
 					else
 						pet.Inventory.RemoveItem(pet.Inventory.GetItem(eInventorySlot.DistanceWeapon));
-					pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, new InventoryItem(temp));
+
+					pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, GameInventoryItem.Create<ItemTemplate>(temp));
 				}
 				pet.UpdateNPCEquipmentAppearance();
 			}

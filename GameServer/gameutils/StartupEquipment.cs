@@ -64,8 +64,8 @@ namespace DOL.GS
 					if (!isFind)
 						continue;
 				}
-				
-				InventoryItem inventoryItem = new InventoryItem(item.Template);
+
+				InventoryItem inventoryItem = GameInventoryItem.Create<ItemTemplate>(item.Template);
 				inventoryItem.OwnerID = c.ObjectId;
 				inventoryItem.Realm = c.Realm;
 

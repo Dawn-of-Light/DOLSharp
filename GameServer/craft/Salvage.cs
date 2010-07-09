@@ -136,7 +136,7 @@ namespace DOL.GS
 			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
 			{
 				template = GameServer.Database.FindObjectByKey<ItemTemplate>(rawmaterial.IngredientId_nb);
-				item = new InventoryItem(template);
+				item = GameInventoryItem.Create<ItemTemplate>(template);
 				item.Count = rawmaterial.Count;
 				if (!player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 				{
@@ -220,7 +220,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					newItem = new InventoryItem(material.RawMaterial);
+					newItem = GameInventoryItem.Create<ItemTemplate>(material.RawMaterial);
 					newItem.Count = -countToAdd;
 					player.Inventory.AddItem((eInventorySlot)de.Key, newItem);
 				}

@@ -68,7 +68,7 @@ namespace DOL.Tests
 			InventoryTestCreation();
 			Console.WriteLine("Creation of Ghost Inventory entry based on ItemTemplate");
 
-			InventoryItem ii = new InventoryItem(itemt);
+			InventoryItem ii = GameInventoryItem.Create<ItemTemplate>(itemt);
 			player.Inventory.AddItem(eInventorySlot.FirstBackpack, ii);
 			Assert.IsNotNull(ii, "ii-t #1 : " + ii.Template.Id_nb + " created & added to " + ii.OwnerID);
 			var iicheck = GameServer.Database.FindObjectByKey<InventoryItem>(ii.ObjectId);
@@ -84,7 +84,7 @@ namespace DOL.Tests
 			InventoryTestCreation();
 			Console.WriteLine("Creation of Inventory entry based on ItemUnique");
 
-			InventoryItem ii = new InventoryItem(itemu);
+			InventoryItem ii = GameInventoryItem.Create<ItemUnique>(itemu);
 			player.Inventory.AddItem(eInventorySlot.FirstBackpack, ii);
 			Assert.IsNotNull(ii, "ii-u #1 : " + ii.Template.Id_nb + " created & added to " + ii.OwnerID);
 			var iicheck = GameServer.Database.FindObjectByKey<InventoryItem>(ii.ObjectId);
