@@ -89,7 +89,7 @@ namespace DOL.GS.Commands
 						}
 						info.Add(" ");
 
-						GameInventoryItem invItem = targetObject as GameInventoryItem;
+						WorldInventoryItem invItem = targetObject as WorldInventoryItem;
 						if( invItem != null )
 						{
 							info.Add (" Count: " + invItem.Item.Count);

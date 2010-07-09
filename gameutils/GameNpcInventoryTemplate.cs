@@ -158,7 +158,7 @@ namespace DOL.GS
 
 					if (!m_usedInventoryItems.ContainsKey(itemID))
 					{					
-						item = new InventoryItem();
+						item = new GameInventoryItem();
 						item.Template = new ItemTemplate();
 						item.Template.Id_nb = itemID;
 						item.Model = model;
@@ -258,7 +258,7 @@ namespace DOL.GS
 				{
 					InventoryItem oldItem = de.Value;
 
-					InventoryItem item = new InventoryItem();
+					InventoryItem item = new GameInventoryItem();
 					item.Template = new ItemTemplate();
 					item.Template.Id_nb = oldItem.Id_nb;
 					item.Model = oldItem.Model;

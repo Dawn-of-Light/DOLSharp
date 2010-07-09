@@ -346,7 +346,7 @@ namespace DOL.GS
 		public virtual bool addGift(String template, GamePlayer player)
 		{
 			ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(template);
-			if (!player.Inventory.AddTemplate(new InventoryItem(temp), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(temp), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

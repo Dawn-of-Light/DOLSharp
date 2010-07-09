@@ -441,7 +441,7 @@ namespace DOL.GS.Commands
 					info.Add(" OID: " + target.ObjectID);
 					info.Add (" Type: " + target.GetType());
 
-					GameInventoryItem invItem = target as GameInventoryItem;
+					WorldInventoryItem invItem = target as WorldInventoryItem;
 					if( invItem != null )
 					{
 						info.Add (" Count: " + invItem.Item.Count);
