@@ -554,7 +554,7 @@ namespace DOL.GS
 						
 						ItemUnique unique = new ItemUnique(craftItemData.ItemTemplate);
 						GameServer.Database.AddObject(unique);
-						newItem = new InventoryItem(unique);
+						newItem = GameInventoryItem.Create<ItemUnique>(unique);
 						newItem.IsCrafted = true;
 						newItem.Creator = player.Name;
 						newItem.Quality = GetQuality(player, craftItemData);

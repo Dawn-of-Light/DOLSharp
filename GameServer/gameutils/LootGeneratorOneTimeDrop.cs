@@ -202,7 +202,7 @@ namespace DOL.GS
 
 										if (item != null)
 										{
-											if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(item)))
+											if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(item)))
 											{
 												CharacterXOneTimeDrop charXDrop = new CharacterXOneTimeDrop();
 												charXDrop.CharacterID = player.InternalID;

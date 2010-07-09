@@ -28,7 +28,7 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			GameInventoryItem item = client.Player.TargetObject as GameInventoryItem;
+			WorldInventoryItem item = client.Player.TargetObject as WorldInventoryItem;
 			if (item == null)
 				return;
 			client.Player.SalvageItem(item.Item);

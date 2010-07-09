@@ -146,7 +146,7 @@ namespace DOL.GS
 					return;
 				}
 
-				if (!player.Inventory.AddTemplate(new InventoryItem(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -204,7 +204,7 @@ namespace DOL.GS
 					return;
 				}
 
-				if (!player.Inventory.AddTemplate(new InventoryItem (template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -429,7 +429,7 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeedBP", totalValue), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				if (!player.Inventory.AddTemplate(new InventoryItem(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -468,9 +468,9 @@ namespace DOL.GS
 
 	public abstract class GameCountMerchant : GameMerchant
 	{
-		protected GameInventoryItem m_moneyItem;
+		protected WorldInventoryItem m_moneyItem;
 
-		public GameInventoryItem moneyItem
+		public WorldInventoryItem moneyItem
 		{
 			get { return m_moneyItem; }
 		}
@@ -532,7 +532,7 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeed2", totalValue, m_countText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				if (!player.Inventory.AddTemplate(new InventoryItem(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
@@ -570,7 +570,7 @@ namespace DOL.GS
 		public GameDiamondSealsMerchant()
 			: base()
 		{
-			m_moneyItem = GameInventoryItem.CreateFromTemplate("DiamondSeal");
+			m_moneyItem = WorldInventoryItem.CreateFromTemplate("DiamondSeal");
 			m_countText = m_moneyItem.Name;
 		}
 	}
@@ -580,7 +580,7 @@ namespace DOL.GS
 		public GameSapphireSealsMerchant()
 			: base()
 		{
-			m_moneyItem = GameInventoryItem.CreateFromTemplate("SapphireSeal");
+			m_moneyItem = WorldInventoryItem.CreateFromTemplate("SapphireSeal");
 			m_countText = m_moneyItem.Name;
 		}
 
@@ -591,7 +591,7 @@ namespace DOL.GS
 		public GameEmeraldSealsMerchant()
 			: base()
 		{
-			m_moneyItem = GameInventoryItem.CreateFromTemplate("EmeraldSeal");
+			m_moneyItem = WorldInventoryItem.CreateFromTemplate("EmeraldSeal");
 			m_countText = m_moneyItem.Name;
 		}
 	}
@@ -601,7 +601,7 @@ namespace DOL.GS
 		public GameAuruliteMerchant()
 			: base()
 		{
-			m_moneyItem = GameInventoryItem.CreateFromTemplate("aurulite");
+			m_moneyItem = WorldInventoryItem.CreateFromTemplate("aurulite");
 			m_countText = m_moneyItem.Name;
 		}
 	}

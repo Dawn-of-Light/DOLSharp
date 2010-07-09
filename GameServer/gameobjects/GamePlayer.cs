@@ -10992,7 +10992,7 @@ namespace DOL.GS
 		/// <returns>true if dropped</returns>
 		public virtual bool DropItem(eInventorySlot slot_pos)
 		{
-			GameInventoryItem tempItem;
+			WorldInventoryItem tempItem;
 			return DropItem(slot_pos, out tempItem);
 		}
 
@@ -11003,7 +11003,7 @@ namespace DOL.GS
 		/// <param name="slot_pos">SlotPosition to drop</param>
 		/// <param name="droppedItem">out GameItem that was created</param>
 		/// <returns>true if dropped</returns>
-		public virtual bool DropItem(eInventorySlot slot_pos, out GameInventoryItem droppedItem)
+		public virtual bool DropItem(eInventorySlot slot_pos, out WorldInventoryItem droppedItem)
 		{
 			droppedItem = null;
 			if (slot_pos >= eInventorySlot.FirstBackpack && slot_pos <= eInventorySlot.LastBackpack)
@@ -11032,9 +11032,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="item">the item to create on the ground</param>
 		/// <returns>the GameInventoryItem on the ground</returns>
-		public virtual GameInventoryItem CreateItemOnTheGround(InventoryItem item)
+		public virtual WorldInventoryItem CreateItemOnTheGround(InventoryItem item)
 		{
-			GameInventoryItem gameItem = new GameInventoryItem(item); // fixed
+			WorldInventoryItem gameItem = new WorldInventoryItem(item); // fixed
 
 			Point2D itemloc = this.GetPointFromHeading( this.Heading, 30 );
 			gameItem.X = itemloc.X;
@@ -11086,9 +11086,9 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (floorObject is GameInventoryItem)
+			if (floorObject is WorldInventoryItem)
 			{
-				GameInventoryItem floorItem = floorObject as GameInventoryItem;
+				WorldInventoryItem floorItem = floorObject as WorldInventoryItem;
 
 				lock (floorItem)
 				{
@@ -11179,7 +11179,7 @@ namespace DOL.GS
 					{
 						bool good = false;
 						if (floorItem.Item.IsStackable)
-							good = Inventory.AddTemplate(new InventoryItem (floorItem.Item), floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+							good = Inventory.AddTemplate(GameInventoryItem.Create<InventoryItem>(floorItem.Item), floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 						else
 							good = Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
 
@@ -11272,10 +11272,8 @@ namespace DOL.GS
 				GameHouseVault houseVault = floorObject as GameHouseVault;
 				if (houseVault.Detach())
 				{
-					ItemTemplate template =
-						GameServer.Database.FindObjectByKey<ItemTemplate>(houseVault.TemplateID);
-					Inventory.AddItem(eInventorySlot.FirstEmptyBackpack,
-					                  new InventoryItem(template));
+					ItemTemplate template =	GameServer.Database.FindObjectByKey<ItemTemplate>(houseVault.TemplateID);
+					Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(template));
 				}
 				return true;
 			}
@@ -14585,32 +14583,17 @@ namespace DOL.GS
 		/// <returns>false if delve not handled</returns>
 		public virtual bool DelveInventoryItem(InventoryItem invItem, List<string> delveInfo)
 		{
-			Type t = invItem.GetType();
-			MethodInfo m = t.GetMethod("Delve"); // Delve(List<String>, GamePlayer player)
-
-			if (m == null)
+			if (invItem is IGameInventoryItem)
 			{
-				// use default delve
-				PlayerInventoryItem item = new PlayerInventoryItem(invItem);
-				item.Delve(delveInfo, this);
+				(invItem as IGameInventoryItem).Delve(delveInfo, this);
 			}
 			else
 			{
-				try
-				{
-					List<String> delve = new List<String>();
-					m.Invoke(invItem, new object[] { delve, this });
+				GameInventoryItem tempItem = new GameInventoryItem(invItem);
+				tempItem.Delve(delveInfo, this);
 
-					foreach (string line in delve)
-					{
-						delveInfo.Add(line);
-					}
-				}
-				catch
-				{
-					delveInfo.Add("Delve failed for this item.");
-					log.ErrorFormat("Found delve for {0} but invoke failed.", t.FullName);
-				}
+				//delveInfo.Add("Error: This item does not implement interface 'IGameInventoryItem' and cannot be delved.");
+				//log.ErrorFormat("Error: Item of type '{0}' does not implement interface 'IGameInventoryItem' and cannot be delved.", invItem.GetType().FullName);
 			}
 
 			return true;

@@ -46,7 +46,7 @@ namespace DOL.GS.Behaviour.Actions
         public override void Perform(DOLEvent e, object sender, EventArgs args)
         {
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
-            InventoryItem inventoryItem = new InventoryItem(P);
+			InventoryItem inventoryItem = GameInventoryItem.Create<ItemTemplate>(P as ItemTemplate);
 
             player.CreateItemOnTheGround(inventoryItem);
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.DropItemAction.DropsFrontYou", inventoryItem.Name), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);

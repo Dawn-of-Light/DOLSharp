@@ -1447,7 +1447,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			return ReceiveItem(source, new InventoryItem(template));
+			return ReceiveItem(source, GameInventoryItem.Create<ItemTemplate>(template));
 		}
 
 		/// <summary>
@@ -1456,7 +1456,7 @@ namespace DOL.GS
 		/// <param name="source"></param>
 		/// <param name="item"></param>
 		/// <returns>true if player took the item</returns>
-		public virtual bool ReceiveItem(GameLiving source, GameInventoryItem item)
+		public virtual bool ReceiveItem(GameLiving source, WorldInventoryItem item)
 		{
 			return ReceiveItem(source, item.Item);
 		}

@@ -110,36 +110,7 @@ namespace DOL.GS
 							}
 							else
 							{
-								IPlayerInventoryItem playerItem = null;
-
-								if (item.ClassType != null && item.ClassType != "")
-								{
-									foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-									{
-										try
-										{
-											playerItem = assembly.CreateInstance(item.ClassType, false, BindingFlags.CreateInstance, null, new object[] { item }, null, null) as IPlayerInventoryItem;
-										}
-										catch (Exception)
-										{
-										}
-
-										if (playerItem != null)
-										{
-											break;
-										}
-									}
-								}
-
-								if (playerItem == null || (playerItem is InventoryItem) == false)
-								{
-									if (item.ClassType != null && item.ClassType != "")
-									{
-										Log.WarnFormat("Failed to load inventory ClassType {0}, item {1}, for player {2}!", item.ClassType, item.Name, m_player.Name);
-									}
-
-									playerItem = new PlayerInventoryItem(item);
-								}
+								GameInventoryItem playerItem = GameInventoryItem.Create<InventoryItem>(item);
 
 								if (playerItem.CheckValid(m_player))
 								{
@@ -148,7 +119,7 @@ namespace DOL.GS
 								else
 								{
 									Log.ErrorFormat("Item '{0}', ClassType '{1}' failed valid test for player '{2}'!", item.Name, item.ClassType, m_player.Name);
-									PlayerInventoryItem invalidItem = new PlayerInventoryItem();
+									GameInventoryItem invalidItem = new GameInventoryItem();
 									invalidItem.Name = "Invalid Item";
 									invalidItem.OwnerID = item.OwnerID;
 									invalidItem.SlotPosition = item.SlotPosition;
@@ -1405,6 +1376,7 @@ namespace DOL.GS
 					    || (itemObjType == 36) // Plate
 					    || (itemObjType == 37) // Reinforced
 					    || (itemObjType == 38) // Scale
+						|| (itemObjType == 45) // Instrument
 					    || ((itemObjType == 41) && (itemItemType == 7))) // horse saddle 
 					{
 						canApply = true;

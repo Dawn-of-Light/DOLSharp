@@ -767,7 +767,7 @@ namespace DOL.GS.Housing
 			var template = GameServer.Database.SelectObject<ItemTemplate>("Name = '" + GameServer.Database.Escape(obj.Name) + "'");
 			if (template != null)
 			{
-				player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, new InventoryItem(template));
+				player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(template));
 			}
 		}
 

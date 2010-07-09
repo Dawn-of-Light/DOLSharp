@@ -991,7 +991,7 @@ namespace DOL.GS
 						}
 						else if (itemCount < 0) // new item should be added
 						{
-							item = new InventoryItem(template);
+							item = GameInventoryItem.Create<InventoryItem>(template);
 							item.Count = -itemCount;
 							AddItem(itemSlot, item);
 						}

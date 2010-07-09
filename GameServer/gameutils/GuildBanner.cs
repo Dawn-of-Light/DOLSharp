@@ -17,7 +17,7 @@ namespace DOL.GS
         GamePlayer m_player;
         GamePlayer m_killer;
         InventoryItem m_item;
-        GameInventoryItem gameItem;
+        WorldInventoryItem gameItem;
         public GuildBanner(GamePlayer player) { m_player = player; }
         public GamePlayer Player
         {
@@ -36,7 +36,8 @@ namespace DOL.GS
                             m_player.IsCarryingGuildBanner = true;
                             m_player.Stealth(false);
                             AddHandlers();
-                            InventoryItem item = new InventoryItem(GuildBannerItem);
+							// TODO: This is not saved because itemtemplate is never added to db ... needs reworked - tolakram
+                            InventoryItem item = GameInventoryItem.Create<ItemTemplate>(GuildBannerItem);
                             m_item = item;
                             m_player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item);
                             if (m_timer != null)
@@ -145,7 +146,7 @@ namespace DOL.GS
                 m_killer = killa;
                 m_player.IsCarryingGuildBanner = false;
                 m_player.Inventory.RemoveItem(m_item);
-                gameItem = new GameInventoryItem(m_item);
+                gameItem = new WorldInventoryItem(m_item);
 
                 Point2D point = m_player.GetPointFromHeading( m_player.Heading, 30 );
                 gameItem.X = point.X;

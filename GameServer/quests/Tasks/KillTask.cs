@@ -242,7 +242,7 @@ namespace DOL.GS.Quests
 						{
 							ArrayList dropMessages = new ArrayList();
 							InventoryItem itemdrop = GenerateItem(ItemName, 1, ObjectModels[ItemIndex]);
-							GameInventoryItem droppeditem = new GameInventoryItem(itemdrop);
+							WorldInventoryItem droppeditem = new WorldInventoryItem(itemdrop);
 							for (int a = 0; a < Owners.Count; a++)
 							{
 								droppeditem.AddOwner((GameObject)Owners[a]);
