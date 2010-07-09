@@ -49,14 +49,14 @@ namespace DOL.Tests
 			template.MaxCount = 10;
 			if (template == null)
 				Console.WriteLine("template null");
-			if (gameLivingInventory.AddTemplate(new InventoryItem (template),7,eInventorySlot.RightHandWeapon,eInventorySlot.FourthQuiver))
+			if (gameLivingInventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), 7, eInventorySlot.RightHandWeapon, eInventorySlot.FourthQuiver))
 				Console.WriteLine("addtemplate 7 blank item");
 			else
 				Console.WriteLine("can not add 7 blank item");
 			Console.WriteLine("----PRINT AFTER FIRST ADD 7 TEMPLATE-----");
 			PrintInventory(gameLivingInventory);
 
-          	if (gameLivingInventory.AddTemplate(new InventoryItem (template),4,eInventorySlot.RightHandWeapon,eInventorySlot.FourthQuiver))
+			if (gameLivingInventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), 4, eInventorySlot.RightHandWeapon, eInventorySlot.FourthQuiver))
 				Console.WriteLine("addtemplate 4 blank item");
 			else
 				Console.WriteLine("can not add 4 blank item");

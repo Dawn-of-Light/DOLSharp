@@ -232,7 +232,7 @@ namespace DOL.GS
 				return;
 			}
 
-			Inventory.AddItem(slot, new InventoryItem(temp));
+			Inventory.AddItem(slot, GameInventoryItem.Create<ItemTemplate>(temp));
 			SwitchWeapon(aSlot);
 			AddStatsToWeapon();
 			UpdateNPCEquipmentAppearance();

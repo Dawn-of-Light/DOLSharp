@@ -96,7 +96,7 @@ namespace DOL.GS.Commands
 						#region Blank
 					case "blank":
 						{
-							InventoryItem item = new InventoryItem();
+							GameInventoryItem item = new GameInventoryItem();
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Blank.ItemCreated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -111,7 +111,7 @@ namespace DOL.GS.Commands
 						#region Scroll
 					case "scroll":
 						{
-							GameInventoryItem scroll = ArtifactMgr.CreateScroll(args[2], Convert.ToInt16(args[3]));
+							WorldInventoryItem scroll = ArtifactMgr.CreateScroll(args[2], Convert.ToInt16(args[3]));
 							if (scroll == null)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Scroll.NotFound", args[3], args[2]), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
@@ -147,7 +147,7 @@ namespace DOL.GS.Commands
 									}
 								}
 
-								InventoryItem item = new InventoryItem(template);
+								InventoryItem item = GameInventoryItem.Create<ItemTemplate>(template);
 								if (item.IsStackable)
 								{
 									item.Count = count;
@@ -252,7 +252,7 @@ namespace DOL.GS.Commands
 							}
 							DetailDisplayHandler itemhandler = new DetailDisplayHandler();
 							var objectInfo = new List<string>();
-							itemhandler.WriteTechnicalInfo(objectInfo, new InventoryItem(obj), 0,0);
+							itemhandler.WriteTechnicalInfo(objectInfo, GameInventoryItem.Create<ItemTemplate>(obj), 0, 0);
 							client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "GMCommands.Item.Info.Informations", obj.Id_nb), objectInfo);
 							break;
 						}

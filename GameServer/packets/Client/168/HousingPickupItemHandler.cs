@@ -65,7 +65,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						GameServer.Database.DeleteObject(oitem.DatabaseItem); //delete the database instance
 
 						// return indoor item into inventory item, add to player inventory
-						var invitem = new InventoryItem((house.OutdoorItems[i]).BaseItem);
+						var invitem = GameInventoryItem.Create<ItemTemplate>((house.OutdoorItems[i]).BaseItem);
 						client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
 						house.OutdoorItems.Remove(i);
 
@@ -96,7 +96,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					if (iitem.BaseItem != null)
 					{
-						var item = new InventoryItem((house.IndoorItems[(position)]).BaseItem);
+						var item = GameInventoryItem.Create<ItemTemplate>((house.IndoorItems[(position)]).BaseItem);
 						if (GetItemBack(item))
 						{
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
@@ -140,7 +140,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						string[] idnb = iitem.DatabaseItem.BaseItemID.Split('_');
 						it.Name = idnb[1] + "'s Banner";
 
-						var inv = new InventoryItem(it);
+						// TODO: Once again with guild banners, templates are memory only and will not load correctly once player logs out - tolakram
+						var inv = GameInventoryItem.Create<ItemTemplate>(it);
 						if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, inv))
 						{
 							string invMsg = string.Format("The {0} is cleared from the {1}.", inv.Name,

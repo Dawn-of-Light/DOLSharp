@@ -78,7 +78,7 @@ namespace DOL.GS.Spells
             if (useItem == null || !ArtifactMgr.IsArtifactScroll(useItem))
                 return;
 
-			GameInventoryItem combinedScroll = GameInventoryItem.CreateFromTemplate("artifact_scroll");
+			WorldInventoryItem combinedScroll = WorldInventoryItem.CreateFromTemplate("artifact_scroll");
 			if (combinedScroll == null)
 				return;
 

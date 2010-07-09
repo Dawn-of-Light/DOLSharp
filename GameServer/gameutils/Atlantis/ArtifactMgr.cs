@@ -770,7 +770,7 @@ namespace DOL.GS
 		/// <param name="scroll2"></param>
 		/// <param name="combinesToBook"></param>
 		/// <returns></returns>
-		public static GameInventoryItem CombineScrolls(InventoryItem scroll1, InventoryItem scroll2,
+		public static WorldInventoryItem CombineScrolls(InventoryItem scroll1, InventoryItem scroll2,
 		                                               ref bool combinesToBook)
 		{
 			if (!CanCombine(scroll1, scroll2))
@@ -790,7 +790,7 @@ namespace DOL.GS
 		/// <param name="artifactID"></param>
 		/// <param name="pageNumbers"></param>
 		/// <returns></returns>
-		private static GameInventoryItem CreatePages(String artifactID, Book pageNumbers)
+		private static WorldInventoryItem CreatePages(String artifactID, Book pageNumbers)
 		{
 			if (artifactID == null || pageNumbers == Book.NoPage)
 				return null;
@@ -802,7 +802,7 @@ namespace DOL.GS
 			if (artifact == null)
 				return null;
 			
-			GameInventoryItem scroll = GameInventoryItem.CreateUniqueFromTemplate("artifact_scroll");
+			WorldInventoryItem scroll = WorldInventoryItem.CreateUniqueFromTemplate("artifact_scroll");
 			if (scroll == null)
 				return null;
 
@@ -864,7 +864,7 @@ namespace DOL.GS
 		/// <param name="artifactID">The artifact's ID.</param>
 		/// <param name="pageNumber">Scroll page number (1-3).</param>
 		/// <returns>An item that can be picked up by a player (or null).</returns>
-		public static GameInventoryItem CreateScroll(String artifactID, int pageNumber)
+		public static WorldInventoryItem CreateScroll(String artifactID, int pageNumber)
 		{
 			if (pageNumber < 1 || pageNumber > 3)
 				return null;

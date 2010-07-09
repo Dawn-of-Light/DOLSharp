@@ -35,9 +35,6 @@ namespace DOL.Database
 	[DataTable(TableName = "Inventory")]
 	public class InventoryItem : DataObject
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Inventory fields
@@ -82,7 +79,8 @@ namespace DOL.Database
 		
 		protected string m_creator;			// crafter or mob dropping it, but also quest, etc...
 		[DataElement(AllowDbNull = true)]
-		public string Creator {
+		public virtual string Creator
+		{
 			get { return m_creator; }
 			set { Dirty = true; m_creator = value; }
 		}
@@ -97,7 +95,7 @@ namespace DOL.Database
 		
 		protected int m_count; 				// count of items, for stack
 		[DataElement(AllowDbNull = true)]
-		public int Count
+		public virtual int Count
 		{
 			get{return m_count;}
 			set{Dirty = true;m_count = value;}
@@ -105,7 +103,7 @@ namespace DOL.Database
 		
 		protected int m_sellPrice;			// sell price in CM
 		[DataElement(AllowDbNull = true)]
-		public int SellPrice
+		public virtual int SellPrice
 		{
 			get{return m_sellPrice;}
 			set{Dirty = true;m_sellPrice = value;}
@@ -123,19 +121,22 @@ namespace DOL.Database
 		// apparence fields
 		protected int m_color;
 		[DataElement(AllowDbNull = true)]
-		public int Color {
+		public virtual int Color
+		{
 			get { return m_color; }
 			set {Dirty = true; m_color = value; }
 		}
 		protected int m_emblem;
 		[DataElement(AllowDbNull = true)]
-		public int Emblem {
+		public virtual int Emblem
+		{
 			get { return m_emblem; }
 			set { Dirty = true;m_emblem = value; }
 		}
 		protected byte m_extension;
 		[DataElement(AllowDbNull = true)]
-		public byte Extension {
+		public virtual byte Extension
+		{
 			get { return m_extension; }
 			set { Dirty = true;m_extension = value; }
 		}
@@ -143,13 +144,15 @@ namespace DOL.Database
 		// item health
 		protected int m_condition;
 		[DataElement(AllowDbNull = false)]
-		public int Condition {
+		public virtual int Condition
+		{
 			get { return m_condition; }
 			set { Dirty = true;m_condition = value; }
 		}
 		protected int m_durability;
 		[DataElement(AllowDbNull = false)]
-		public int Durability {
+		public virtual int Durability
+		{
 			get { return m_durability; }
 			set { Dirty = true;m_durability = value; }
 		}
@@ -157,37 +160,42 @@ namespace DOL.Database
 		// poison & current charges
 		protected int m_poisonSpellID;
 		[DataElement(AllowDbNull = true)]
-		public int PoisonSpellID {
+		public virtual int PoisonSpellID
+		{
 			get { return m_poisonSpellID; }
 			set { Dirty = true;m_poisonSpellID = value; }
 		}
 		protected int m_poisonMaxCharges;
 		[DataElement(AllowDbNull = true)]
-		public int PoisonMaxCharges {
+		public virtual int PoisonMaxCharges
+		{
 			get { return m_poisonMaxCharges; }
 			set { Dirty = true;m_poisonMaxCharges = value; }
 		}
 		protected int m_poisonCharges;
 		[DataElement(AllowDbNull = true)]
-		public int PoisonCharges {
+		public virtual int PoisonCharges
+		{
 			get { return m_poisonCharges; }
 			set { Dirty = true;m_poisonCharges = value; }
 		}
 		protected int m_charges;
 		[DataElement(AllowDbNull = true)]
-		public int Charges {
+		public virtual int Charges
+		{
 			get { return m_charges; }
 			set { Dirty = true;m_charges = value; }
 		}
 		protected int m_charges1;
 		[DataElement(AllowDbNull = true)]
-		public int Charges1 {
+		public virtual int Charges1
+		{
 			get { return m_charges1; }
 			set { Dirty = true;m_charges1 = value; }
 		}
 		
 		private DateTime m_lastUsedDateTime;	// last used DT
-		public int CanUseAgainIn
+		public virtual int CanUseAgainIn
 		{
 			get
 			{
@@ -213,7 +221,7 @@ namespace DOL.Database
 		
 		private int m_cooldown;				// item cooldown
 		[DataElement(AllowDbNull = false)]
-		public int Cooldown
+		public virtual int Cooldown
 		{
 			get { return CanUseAgainIn; }
 			set { Dirty =true;m_cooldown = value; }
@@ -282,7 +290,7 @@ namespace DOL.Database
 		/// or from an Artifact will never be saved too.
 		/// </summary>
 		/// <param name="itemTemplate"></param>
-		public InventoryItem(ItemTemplate template):base()
+		protected InventoryItem(ItemTemplate template):base()
 		{
 			m_ownerID = null;
 			Template = template;
@@ -306,7 +314,7 @@ namespace DOL.Database
 		/// ItemUnique will always be created in the ItemUnique table
 		/// </summary>
 		/// <param name="itemTemplate"></param>
-		public InventoryItem(ItemUnique template):base()
+		protected InventoryItem(ItemUnique template):base()
 		{
 			m_ownerID = null;
 			Template = (ItemTemplate)template;
@@ -330,7 +338,7 @@ namespace DOL.Database
 		/// Creates a new Inventoryitem based on the given InventoryItem
 		/// </summary>
 		/// <param name="inventoryItem"></param>
-		public InventoryItem(InventoryItem template)
+		protected InventoryItem(InventoryItem template)
 		{
 			Template = template.Template;
 			m_itemplate_id = template.ITemplate_Id;
@@ -353,8 +361,8 @@ namespace DOL.Database
 			m_poisonSpellID = template.PoisonSpellID;
 			m_experience = template.Experience;
 		}
-		
-		public void SetCooldown()
+
+		public virtual void SetCooldown()
 		{
 			CanUseAgainIn = m_cooldown;
 		}
@@ -405,326 +413,328 @@ namespace DOL.Database
 		#region ItemTemplate wrapper fields
 		// ItemTemplate wrapper, should be removed
 		// The proper use in the code must be (inventory).Template.Property, instead of (inventory).Property
-		public int Level
+		public virtual int Level
 		{
 			get { return Template.Level; }
 			set { Template.Level = value; }
 		}
 
 		// dur_con
-		public int MaxCondition
+		public virtual int MaxCondition
 		{
 			get { return Template.MaxCondition; }
 			set { Template.MaxCondition = value; }
 		}
-		public int MaxDurability
+		public virtual int MaxDurability
 		{
 			get { return Template.MaxDurability; }
 			set { Template.MaxDurability = value; }
 		}
 
-		public int Weight
+		public virtual int Weight
 		{
 			get { return Template.Weight * m_count; }
 			set { Template.Weight = value; }
 		}
 
 		// weapon/armor
-		public int DPS_AF
+		public virtual int DPS_AF
 		{
 			get { return Template.DPS_AF; }
 			set { Template.DPS_AF = value; }
 		}
-		public int SPD_ABS
+		public virtual int SPD_ABS
 		{
 			get { return Template.SPD_ABS; }
 			set { Template.SPD_ABS = value; }
 		}
-		public int Hand
+		public virtual int Hand
 		{
 			get { return Template.Hand; }
 			set { Template.Hand = value; }
 		}
-		public int Type_Damage
+		public virtual int Type_Damage
 		{
 			get { return Template.Type_Damage; }
 			set { Template.Type_Damage = value; }
 		}
-		public int Object_Type
+		public virtual int Object_Type
 		{
 			get { return Template.Object_Type; }
 			set { Template.Object_Type = value; }
 		}
-		public int Item_Type
+		public virtual int Item_Type
 		{
 			get { return Template.Item_Type; }
 			set { Template.Item_Type = value; }
 		}
 		
 		// properties
-		public bool IsDropable
+		public virtual bool IsDropable
 		{
 			get { return Template.IsDropable; }
 			set { Template.IsDropable = value; }
 		}
 
-		public bool IsPickable
+		public virtual bool IsPickable
 		{
 			get { return Template.IsPickable; }
 			set { Template.IsPickable = value; }
 		}
-		public bool IsTradable
+		public virtual bool IsTradable
 		{
 			get { return Template.IsTradable; }
 			set { Template.IsTradable = value; }
 		}
-		public bool IsIndestructible {
+		public virtual bool IsIndestructible
+		{
 			get { return Template.IsIndestructible; }
 			set { Template.IsIndestructible = value; }
 		}
-		public bool IsNotLosingDur {
+		public virtual bool IsNotLosingDur
+		{
 			get { return Template.IsNotLosingDur; }
 			set { Template.IsNotLosingDur = value; }
 		}
 		
 		// stack
-		public int MaxCount
+		public virtual int MaxCount
 		{
 			get { return Template.MaxCount; }
 			set { Template.MaxCount = value; }
 		}
-		public int PackSize
+		public virtual int PackSize
 		{
 			get { return Template.PackSize; }
 			set { Template.PackSize = value; }
 		}
 		
 		// proc & charges
-		public int ProcSpellID
+		public virtual int ProcSpellID
 		{
 			get { return Template.ProcSpellID; }
 			set { Template.ProcSpellID = value; }
 		}
-		public int MaxCharges
+		public virtual int MaxCharges
 		{
 			get { return Template.MaxCharges; }
 			set { Template.MaxCharges = value;}
 		}
-		public int ProcSpellID1
+		public virtual int ProcSpellID1
 		{
 			get { return Template.ProcSpellID1; }
 			set { Template.ProcSpellID1 = value; }
 		}
-		public int SpellID
+		public virtual int SpellID
 		{
 			get { return Template.SpellID; }
 			set { Template.SpellID = value; }
 		}
-		public int SpellID1
+		public virtual int SpellID1
 		{
 			get { return Template.SpellID1; }
 			set { Template.SpellID1 = value; }
 		}
-		public int MaxCharges1
+		public virtual int MaxCharges1
 		{
 			get { return Template.MaxCharges1; }
 			set { Template.MaxCharges1 = value; }
 		}
-		
-		public int CanUseEvery
+
+		public virtual int CanUseEvery
 		{
 			get { return Template.CanUseEvery; }
 			set { Template.CanUseEvery = value; }
 		}
-		
-		public int Realm
+
+		public virtual int Realm
 		{
 			get { return Template.Realm; }
 			set { Template.Realm = value; }
 		}
-		public string AllowedClasses
+		public virtual string AllowedClasses
 		{
 			get { return Template.AllowedClasses; }
 			set { Template.AllowedClasses = value; }
 		}
-		public string Name
+		public virtual string Name
 		{
 			get { return Template.Name; }
 			set { Template.Name = value; }
 		}
-		
-		public string Id_nb
+
+		public virtual string Id_nb
 		{
 			get {return Template.Id_nb; }
 			set { Template.Id_nb = value;}
 		}
-		public int Model
+		public virtual int Model
 		{
 			get { return Template.Model; }
 			set { Template.Model = value;}
 		}
-		public int Effect
+		public virtual int Effect
 		{
 			get { return Template.Effect; }
 			set { Template.Effect = value;}
 		}
-		public int Quality
+		public virtual int Quality
 		{
 			get { return Template.Quality; }
 			set { Template.Quality = value; }
 		}
-		public long Price
+		public virtual long Price
 		{
 			get { return Template.Price; }
 			set { Template.Price = value; }
 		}
-		
-		public int ExtraBonus
+
+		public virtual int ExtraBonus
 		{
 			get { return Template.ExtraBonus; }
 			set { Template.ExtraBonus = value; }
 		}
-		public int Bonus
+		public virtual int Bonus
 		{
 			get { return Template.Bonus; }
 			set { Template.Bonus = value; }
 		}
-		public int Bonus1
+		public virtual int Bonus1
 		{
 			get { return Template.Bonus1; }
 			set { Template.Bonus1 = value; }
 		}
-		public int Bonus2
+		public virtual int Bonus2
 		{
 			get { return Template.Bonus2; }
 			set { Template.Bonus2 = value; }
 		}
-		public int Bonus3
+		public virtual int Bonus3
 		{
 			get { return Template.Bonus3; }
 			set { Template.Bonus3 = value; }
 		}
-		public int Bonus4
+		public virtual int Bonus4
 		{
 			get { return Template.Bonus4; }
 			set { Template.Bonus4 = value; }
 		}
-		public int Bonus5
+		public virtual int Bonus5
 		{
 			get { return Template.Bonus5; }
 			set { Template.Bonus5 = value; }
 		}
-		public int Bonus6
+		public virtual int Bonus6
 		{
 			get { return Template.Bonus6; }
 			set { Template.Bonus6 = value; }
 		}
-		public int Bonus7
+		public virtual int Bonus7
 		{
 			get { return Template.Bonus7; }
 			set { Template.Bonus7 = value; }
 		}
-		public int Bonus8
+		public virtual int Bonus8
 		{
 			get { return Template.Bonus8; }
 			set { Template.Bonus8 = value; }
 		}
-		public int Bonus9
+		public virtual int Bonus9
 		{
 			get { return Template.Bonus9; }
 			set { Template.Bonus9 = value; }
 		}
-		public int Bonus10
+		public virtual int Bonus10
 		{
 			get { return Template.Bonus10; }
 			set { Template.Bonus10 = value; }
 		}
-		public int ExtraBonusType
+		public virtual int ExtraBonusType
 		{
 			get { return Template.ExtraBonusType; }
 			set { Template.ExtraBonusType = value; }
 		}
-		public int Bonus1Type
+		public virtual int Bonus1Type
 		{
 			get { return Template.Bonus1Type; }
 			set { Template.Bonus1Type = value; }
 		}
-		public int Bonus2Type
+		public virtual int Bonus2Type
 		{
 			get { return Template.Bonus2Type; }
 			set { Template.Bonus2Type = value; }
 		}
-		public int Bonus3Type
+		public virtual int Bonus3Type
 		{
 			get { return Template.Bonus3Type; }
 			set { Template.Bonus3Type = value; }
 		}
-		public int Bonus4Type
+		public virtual int Bonus4Type
 		{
 			get { return Template.Bonus4Type; }
 			set { Template.Bonus4Type = value; }
 		}
-		public int Bonus5Type
+		public virtual int Bonus5Type
 		{
 			get { return Template.Bonus5Type; }
 			set { Template.Bonus5Type = value; }
 		}
-		public int Bonus6Type
+		public virtual int Bonus6Type
 		{
 			get { return Template.Bonus6Type; }
 			set { Template.Bonus6Type = value; }
 		}
-		public int Bonus7Type
+		public virtual int Bonus7Type
 		{
 			get { return Template.Bonus7Type; }
 			set { Template.Bonus7Type = value; }
 		}
-		public int Bonus8Type
+		public virtual int Bonus8Type
 		{
 			get { return Template.Bonus8Type; }
 			set { Template.Bonus8Type = value; }
 		}
-		public int Bonus9Type
+		public virtual int Bonus9Type
 		{
 			get { return Template.Bonus9Type; }
 			set { Template.Bonus9Type = value; }
 		}
-		public int Bonus10Type
+		public virtual int Bonus10Type
 		{
 			get { return Template.Bonus10Type; }
 			set { Template.Bonus10Type = value; }
 		}
-		public string Description
+		public virtual string Description
 		{
 			get { return Template.Description;}
 			set { Template.Description = value;}
 		}
-		public int Flags
+		public virtual int Flags
 		{
 			get { return Template.Flags; }
 			set { Template.Flags = value; }
 		}
-		public int BonusLevel
+		public virtual int BonusLevel
 		{
 			get { return Template.BonusLevel;}
 			set { Template.BonusLevel = value;}
 		}
-		public int LevelRequirement
+		public virtual int LevelRequirement
 		{
 			get { return Template.LevelRequirement; }
 			set { Template.LevelRequirement = value; }
 		}
-		public bool CanDropAsLoot
+		public virtual bool CanDropAsLoot
 		{
 			get { return Template.CanDropAsLoot;}
 			set { Template.CanDropAsLoot = value;}
 		}
-		public string PackageID
+		public virtual string PackageID
 		{
 			get { return Template.PackageID; }
 			set { Template.PackageID = value; }
 		}
-		public string ClassType
+		public virtual string ClassType
 		{
 			get { return Template.ClassType; }
 			set { Template.ClassType = value; }
@@ -734,7 +744,7 @@ namespace DOL.Database
 		#endregion
 		
 		// Wrapped methods/accessors from ItemTemplate
-		public byte DurabilityPercent
+		public virtual byte DurabilityPercent
 		{
 			get
 			{
@@ -742,17 +752,17 @@ namespace DOL.Database
 			}
 		}
 
-		public byte ConditionPercent
+		public virtual byte ConditionPercent
 		{
 			get	{
 				return (byte)Math.Round((Template.MaxCondition > 0) ? (double)Condition / Template.MaxCondition * 100 : 0);
 			}
 		}
-		public bool IsMagical
+		public virtual bool IsMagical
 		{
 			get{ return Template.IsMagical;}
 		}
-		public bool IsStackable
+		public virtual bool IsStackable
 		{
 			get{ return Template.IsStackable;}
 		}
