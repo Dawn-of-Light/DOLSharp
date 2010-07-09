@@ -104,6 +104,10 @@ namespace DOL.GS
 							// up item type checks and implement item delve information in
 							// a natural way, i.e. through inheritance.
 
+							// Tolakram - Leaving this functionality as is for now.  InventoryArtifact now inherits from
+							// GameInventoryItem and utilizes the new Delve system.  No need to set ClassType for all artifacts when
+							// this code works fine as is.
+
 							if (ArtifactMgr.IsArtifact(item))
 							{
 								m_items.Add(itemSlot, new InventoryArtifact(item));
