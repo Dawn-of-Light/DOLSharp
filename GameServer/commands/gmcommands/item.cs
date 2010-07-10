@@ -250,9 +250,9 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Info.ItemTemplateUnknown", args[2]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							DetailDisplayHandler itemhandler = new DetailDisplayHandler();
+							GameInventoryItem invItem = GameInventoryItem.Create<ItemTemplate>(obj);
 							var objectInfo = new List<string>();
-							itemhandler.WriteTechnicalInfo(objectInfo, GameInventoryItem.Create<ItemTemplate>(obj), 0, 0);
+							invItem.WriteTechnicalInfo(objectInfo);
 							client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "GMCommands.Item.Info.Informations", obj.Id_nb), objectInfo);
 							break;
 						}

@@ -14581,19 +14581,21 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		/// <param name="delveInfo"></param>
 		/// <returns>false if delve not handled</returns>
-		public virtual bool DelveInventoryItem(InventoryItem invItem, List<string> delveInfo)
+		public virtual bool DelveItem<T>(T item, List<string> delveInfo)
 		{
-			if (invItem is IGameInventoryItem)
+			if (item is IGameInventoryItem)
 			{
-				(invItem as IGameInventoryItem).Delve(delveInfo, this);
+				(item as IGameInventoryItem).Delve(delveInfo, this);
+			}
+			else if (item is ItemTemplate)
+			{
+				GameInventoryItem tempItem = new GameInventoryItem(item as ItemTemplate);
+				tempItem.Delve(delveInfo, this);
 			}
 			else
 			{
-				GameInventoryItem tempItem = new GameInventoryItem(invItem);
-				tempItem.Delve(delveInfo, this);
-
-				//delveInfo.Add("Error: This item does not implement interface 'IGameInventoryItem' and cannot be delved.");
-				//log.ErrorFormat("Error: Item of type '{0}' does not implement interface 'IGameInventoryItem' and cannot be delved.", invItem.GetType().FullName);
+				delveInfo.Add("Error, unable to delve this item!");
+				log.ErrorFormat("Error delving item of ClassType {0}", item.GetType().FullName);
 			}
 
 			return true;
