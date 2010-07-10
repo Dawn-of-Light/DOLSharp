@@ -30,7 +30,7 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (GameServer.Instance.Configuration.ServerType != eGameServerType.GST_PvP)
+			if (client.Player.IsPvP == false)
 				return;
 
 			if(args.Length >= 2 && args[1].ToLower() == "off")
