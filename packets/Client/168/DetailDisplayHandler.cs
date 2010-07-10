@@ -139,7 +139,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// Let the player class create the appropriate item to delve
 						caption = invItem.Name;
 
-						if (client.Player.DelveInventoryItem(invItem, objectInfo))
+						if (client.Player.DelveItem<InventoryItem>(invItem, objectInfo))
 							break;
 
 						#region Old Delve
@@ -387,7 +387,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						caption = item.Name;
 
-						if (client.Player.DelveInventoryItem(GameInventoryItem.Create<ItemTemplate>(item), objectInfo))
+						if (client.Player.DelveItem<ItemTemplate>(item, objectInfo))
 							break;
 
 						#region Old Delve
@@ -698,7 +698,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// Let the player class create the appropriate item to delve
 						caption = invItem.Name;
 
-						if (client.Player.DelveInventoryItem(invItem, objectInfo))
+						if (client.Player.DelveItem<InventoryItem>(invItem, objectInfo))
 							break;
 
 						#region Old Delve
