@@ -51,6 +51,8 @@ SkillBase.RegisterPropertyNames.Creeping:				Creeping
 SkillBase.RegisterPropertyNames.CreepingPathFocus:		Creeping Path Focus
 SkillBase.RegisterPropertyNames.CriticalArcheryHit:		Bonus to critical archery hit chance
 SkillBase.RegisterPropertyNames.CriticalMeleeHit:		Bonus to critical melee hit chance
+SkillBase.RegisterPropertyNames.CriticalSpellHit:		Bonus to critical spell hit chance
+SkillBase.RegisterPropertyNames.CriticalHealHit:		Bonus to critical heal hit chance
 SkillBase.RegisterPropertyNames.CriticalStrike:			Critical Strike
 SkillBase.RegisterPropertyNames.Crossbows:				Crossbows
 SkillBase.RegisterPropertyNames.Crush:					Crush

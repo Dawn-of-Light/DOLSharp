@@ -47,6 +47,8 @@ SkillBase.RegisterPropertyNames.Creeping:		Creeping
 SkillBase.RegisterPropertyNames.CreepingPathFocus:	Creeping
 SkillBase.RegisterPropertyNames.CriticalArcheryHit:	Chancenbonus auf kritischen Ferntreffer
 SkillBase.RegisterPropertyNames.CriticalMeleeHit:	Chancenbonus auf kritischen Nahkampftreffer
+SkillBase.RegisterPropertyNames.CriticalSpellHit:		Bonus to critical spell hit chance
+SkillBase.RegisterPropertyNames.CriticalHealHit:		Bonus to critical heal hit chance
 SkillBase.RegisterPropertyNames.CriticalStrike:		Kritischer Treffer
 SkillBase.RegisterPropertyNames.Crossbows:		Armbrust
 SkillBase.RegisterPropertyNames.Crush:			Schlag
