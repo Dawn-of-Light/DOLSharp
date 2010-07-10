@@ -1228,10 +1228,10 @@ namespace DOL.GS
 			                                                                      "SkillBase.RegisterPropertyNames.WeaponSkill"));
 			m_propertyNames.Add(eProperty.AllSkills, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 			                                                                    "SkillBase.RegisterPropertyNames.AllSkills"));
-			m_propertyNames.Add(eProperty.CriticalArcheryHitChance, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
-			                                                                                   "SkillBase.RegisterPropertyNames.CriticalArcheryHit"));
-			m_propertyNames.Add(eProperty.CriticalMeleeHitChance, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
-			                                                                                 "SkillBase.RegisterPropertyNames.CriticalMeleeHit"));
+			m_propertyNames.Add(eProperty.CriticalArcheryHitChance, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "SkillBase.RegisterPropertyNames.CriticalArcheryHit"));
+			m_propertyNames.Add(eProperty.CriticalMeleeHitChance, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "SkillBase.RegisterPropertyNames.CriticalMeleeHit"));
+			m_propertyNames.Add(eProperty.CriticalSpellHitChance, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "SkillBase.RegisterPropertyNames.CriticalSpellHit"));
+			m_propertyNames.Add(eProperty.CriticalHealHitChance, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "SkillBase.RegisterPropertyNames.CriticalHealHit"));
 			#endregion
 		}
 
