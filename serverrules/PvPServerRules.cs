@@ -139,7 +139,7 @@ namespace DOL.GS.ServerRules
 			if (player.Client.IsPlaying == false) return;
 
 			if (player.Level < m_safetyLevel && player.SafetyFlag)
-				player.Out.SendMessage("Your temporary pvp invulnerability timer has expired, but your safety flag is still on.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("Your temporary pvp invulnerability timer has expired, but your /safety flag is still on.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			else
 				player.Out.SendMessage("Your temporary pvp invulnerability timer has expired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
