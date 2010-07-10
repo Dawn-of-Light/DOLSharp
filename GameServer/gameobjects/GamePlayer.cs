@@ -14587,6 +14587,11 @@ namespace DOL.GS
 			{
 				(item as IGameInventoryItem).Delve(delveInfo, this);
 			}
+			else if (item is InventoryItem)
+			{
+				GameInventoryItem tempItem = new GameInventoryItem(item as InventoryItem);
+				tempItem.Delve(delveInfo, this);
+			}
 			else if (item is ItemTemplate)
 			{
 				GameInventoryItem tempItem = new GameInventoryItem(item as ItemTemplate);
