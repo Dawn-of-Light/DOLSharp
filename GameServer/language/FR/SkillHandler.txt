@@ -46,6 +46,8 @@ SkillBase.RegisterPropertyNames.Creeping:            Voie Sylvestre
 SkillBase.RegisterPropertyNames.CreepingPathFocus:      Focus : Voie Sylvestre
 SkillBase.RegisterPropertyNames.CriticalArcheryHit:      Bonus aux chances de critique Archerie
 SkillBase.RegisterPropertyNames.CriticalMeleeHit:      Bonus aux chance de critique en mélée
+SkillBase.RegisterPropertyNames.CriticalSpellHit:		Bonus to critical spell hit chance
+SkillBase.RegisterPropertyNames.CriticalHealHit:		Bonus to critical heal hit chance
 SkillBase.RegisterPropertyNames.CriticalStrike:         Attaques Surnoises
 SkillBase.RegisterPropertyNames.Crossbows:            Arbalètes
 SkillBase.RegisterPropertyNames.Crush:               Contendant
