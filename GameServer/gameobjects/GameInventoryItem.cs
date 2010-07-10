@@ -252,7 +252,7 @@ namespace DOL.GS
 			}
 		}
 
-		public void WriteUsableClasses(IList<string> output, GameClient client)
+		protected virtual void WriteUsableClasses(IList<string> output, GameClient client)
 		{
 			if (string.IsNullOrEmpty(AllowedClasses) || AllowedClasses == "0")
 				return;
@@ -273,9 +273,9 @@ namespace DOL.GS
 				}
 			}
 		}
-		
 
-		public void WriteMagicalBonuses(IList<string> output, GameClient client, bool shortInfo)
+
+		protected virtual void WriteMagicalBonuses(IList<string> output, GameClient client, bool shortInfo)
 		{
 			int oldCount = output.Count;
 
@@ -601,7 +601,7 @@ namespace DOL.GS
 		}
 
 
-		protected void WriteBonusLine(IList<string> list, int bonusCat, int bonusValue)
+		protected virtual void WriteBonusLine(IList<string> list, int bonusCat, int bonusValue)
 		{
 			if (bonusCat != 0 && bonusValue != 0 && !SkillBase.CheckPropertyType((eProperty)bonusCat, ePropertyType.Focus))
 			{
@@ -642,7 +642,7 @@ namespace DOL.GS
 			}
 		}
 
-		protected void WriteFocusLine(IList<string> list, int focusCat, int focusLevel)
+		protected virtual void WriteFocusLine(IList<string> list, int focusCat, int focusLevel)
 		{
 			if (SkillBase.CheckPropertyType((eProperty)focusCat, ePropertyType.Focus))
 			{
@@ -652,7 +652,7 @@ namespace DOL.GS
 		}
 
 
-		protected bool IsPvEBonus(eProperty property)
+		protected virtual bool IsPvEBonus(eProperty property)
 		{
 			switch (property)
 			{
@@ -675,7 +675,7 @@ namespace DOL.GS
 		}
 
 
-		protected void WritePoisonInfo(IList<string> list, GameClient client)
+		protected virtual void WritePoisonInfo(IList<string> list, GameClient client)
 		{
 			if (PoisonSpellID != 0)
 			{
@@ -714,7 +714,7 @@ namespace DOL.GS
 		}
 
 
-		private void WritePotionInfo(IList<string> list, GameClient client)
+		protected virtual void WritePotionInfo(IList<string> list, GameClient client)
 		{
 			if (SpellID != 0)
 			{
@@ -768,7 +768,7 @@ namespace DOL.GS
 		}
 
 
-		private static void WritePotionSpellsInfos(IList<string> list, GameClient client, Spell spl, NamedSkill line)
+		protected static void WritePotionSpellsInfos(IList<string> list, GameClient client, Spell spl, NamedSkill line)
 		{
 			if (spl != null)
 			{
@@ -804,7 +804,7 @@ namespace DOL.GS
 		}
 
 
-		public void DelveShieldStats(IList<string> output, GameClient client)
+		protected virtual void DelveShieldStats(IList<string> output, GameClient client)
 		{
 			double itemDPS = DPS_AF / 10.0;
 			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * client.Player.Level);
@@ -834,7 +834,7 @@ namespace DOL.GS
 		}
 
 
-		public virtual void DelveWeaponStats(List<String> delve, GamePlayer player)
+		protected virtual void DelveWeaponStats(List<String> delve, GamePlayer player)
 		{
 			double itemDPS = DPS_AF / 10.0;
 			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * player.Level);
@@ -879,7 +879,7 @@ namespace DOL.GS
 			}
 		}
 
-		public virtual void DelveArmorStats(List<String> delve, GamePlayer player)
+		protected virtual void DelveArmorStats(List<String> delve, GamePlayer player)
 		{
 			delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod"));
 
@@ -931,7 +931,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="output"></param>
 		/// <param name="item"></param>
-		public void WriteTechnicalInfo(List<String> delve)
+		public virtual void WriteTechnicalInfo(List<String> delve)
 		{
 			delve.Add(" ");
 			delve.Add("--- Item technical information ---");
