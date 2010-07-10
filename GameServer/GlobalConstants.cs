@@ -775,7 +775,7 @@ namespace DOL.GS
 		CriticalMeleeHitChance = 214,
 		CriticalArcheryHitChance = 215,
 		CriticalSpellHitChance = 216,
-		CriticalHealHitChance = 222,
+		CriticalHealHitChance = 232,
 		WaterSpeed = 217,
 		SpellLevel = 218,
         MissHit = 219,

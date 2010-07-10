@@ -25,7 +25,7 @@ GMCommands.Announce.ConfirmAnnounce:		Annonce dem {0}: {1}
 
 # /area Command
 GMCommands.Area.Description:				Création d'un "aréa"
-GMCommands.Area.Usage.Create:				/area create <name> <type(circle|square)> <radius> <broadcast(y|n)> <soundid>
+GMCommands.Area.Usage.Create:				/area create <name> <type(circle|square|safe|bind)> <radius> <broadcast(y|n)> <soundid>
 GMCommands.Area.AreaCreated:				Area created - Description: {0}, X={1}, Y={2}, Z={3}, Radius={4}, Broadcast={5}, Sound={6}.
 
 
