@@ -308,6 +308,17 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Is this player PvP enabled
+		/// </summary>
+		public virtual bool IsPvP
+		{
+			get
+			{
+				return GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the no help flag for this player
 		/// </summary>
 		public bool NoHelp
