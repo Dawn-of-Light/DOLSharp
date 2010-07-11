@@ -126,7 +126,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								b.Reason = String.Format("Autoban CharName '{0}' on wrong Account '{1}'", GameServer.Database.Escape(charname), GameServer.Database.Escape(client.Account.Name));
 								GameServer.Database.AddObject(b);
 								GameServer.Database.SaveObject(b);
-								GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+								GameServer.Instance.LogCheatAction(string.Format(b.Reason + ". Client Account: {0}, DB Account: {1}", client.Account.Name, character.AccountName));
 							}
 
 							client.Disconnect();
