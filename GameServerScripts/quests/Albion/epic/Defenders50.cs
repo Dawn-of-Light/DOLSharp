@@ -1399,7 +1399,7 @@ namespace DOL.GS.Quests.Albion
 					case 1:
 						return "[Step #1] Seek out Cailleach Uragaig in Lyonesse Loc 29k,33k kill her!";
 					case 2:
-						return "[Step #2] Give the sealed pouch to Lidmann Halse.";
+						return "[Step #2] Give the sealed pouch to Lidmann Halsey.";
 				}
 				return base.Description;
 			}
