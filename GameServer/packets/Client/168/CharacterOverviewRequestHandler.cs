@@ -34,6 +34,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			string accountName = packet.ReadString(24);
 
+			log.DebugFormat("Character Overview: Packet account name: {0}, client account name: {1}, client.Player: {2}", accountName, client.Account.Name, client.Player == null ? "null" : client.Player.Name);
+
+			if (client.Player != null)
+			{
+				client.Player.SaveIntoDatabase();
+				GameServer.Database.SaveObject(client.Account);
+				client.Player = null;
+			}
+
 			GameServer.Database.FillObjectRelations(client.Account);
 
 			//reset realm if no characters
