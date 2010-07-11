@@ -72,19 +72,19 @@ namespace DOL.GS
 			if ((GuildName == null || GuildName.Length == 0) && player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
 			{
 				SayTo(player, "I have not been set up properly, I need a guild name in order to work.");
+				SayTo(player, "You can set what I say to players by setting the packageid with /mob package \"Some Text\"");
 				return true;
 			}
 
 			LoadDestinations();
 
-			if (PackageID == string.Empty && player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
-			{
-				SayTo(player, "You can set what I say to players by setting the packageid with /mob package \"Some Text\"");
-			}
-
 			if (PackageID != string.Empty)
 			{
 				SayTo(player, PackageID);
+			}
+			else
+			{
+				SayTo(player, "Choose a destination ...");
 			}
 
 			int numDestinations = 0;
