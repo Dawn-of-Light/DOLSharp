@@ -63,6 +63,9 @@ namespace DOL.GS
 			if (!base.Interact(player))
 				return false;
 
+			if (player.InCombat)
+				return false;
+
 			if (Realm != eRealm.None && Realm != player.Realm && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
 				return false;
 
@@ -115,6 +118,9 @@ namespace DOL.GS
 			GamePlayer player = source as GamePlayer;
 
 			if (player == null)
+				return false;
+
+			if (player.InCombat)
 				return false;
 
 			if (player.Client.Account.PrivLevel > 1 && text.ToLower() == "refresh")
