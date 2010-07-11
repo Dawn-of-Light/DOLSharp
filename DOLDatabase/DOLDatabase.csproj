@@ -139,6 +139,7 @@
     <Compile Include="Handlers\XMLObjectDatabase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tables\DOLCharactersBackup.cs" />
     <Compile Include="Tables\MobXAmbientBehaviour.cs" />
     <Compile Include="Transaction\IsolationLevel.cs" />
     <Compile Include="DatabaseException.cs">
