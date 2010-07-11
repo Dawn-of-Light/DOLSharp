@@ -403,7 +403,7 @@ namespace DOL.GS
 				{
 					ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(lootTemplate.ItemTemplateID);
 
-					if (drop.Realm == (int)player.Realm || drop.Realm == 0 || ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+					if (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems)
 					{
 						if (lootTemplate.Chance == 100)
 						{
@@ -421,7 +421,7 @@ namespace DOL.GS
 						{
 							string key = drop.Name.ToLower();
 
-							if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+							if (player.CanUseCrossRealmItems)
 							{
 								// make sure the key is unique by adding the realm number
 								key += drop.Realm;

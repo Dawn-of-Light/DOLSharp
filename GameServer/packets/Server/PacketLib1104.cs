@@ -39,7 +39,6 @@ namespace DOL.GS.PacketHandler
         public PacketLib1104(GameClient client)
             : base(client)
         {
-            // BluRaven: dumb support, untested. Report if buggy.
         }
 
         public override void SendCharacterOverview(eRealm realm)
@@ -285,5 +284,20 @@ namespace DOL.GS.PacketHandler
 
             SendTCP(pak);
         }
+
+		public override void SendDupNameCheckReply(string name, bool nameExists)
+		{
+			// This presents the user with Name Not Allowed which may not be correct but at least it prevents duplicate char creation
+			// - tolakram
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DupNameCheckReply)))
+			{
+				pak.FillString(name, 30);
+				pak.FillString(m_gameClient.Account.Name, 24);
+				pak.WriteByte((byte)(nameExists ? 0x1 : 0x0));
+				pak.Fill(0x0, 3);
+				SendTCP(pak);
+			}
+		}
+
     }
 }

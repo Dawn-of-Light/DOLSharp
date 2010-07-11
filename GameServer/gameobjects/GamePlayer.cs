@@ -318,6 +318,15 @@ namespace DOL.GS
 			}
 		}
 
+
+		public virtual bool CanUseCrossRealmItems
+		{
+			get
+			{
+				return ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS;
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets the no help flag for this player
 		/// </summary>

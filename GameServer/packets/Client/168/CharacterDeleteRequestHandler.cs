@@ -24,21 +24,24 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
+	/// <summary>
+	/// No longer used after version 1.104
+	/// </summary>
 	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x68 ^ 168, "Handles character delete requests")]
 	public class CharacterDeleteRequestHandler : IPacketHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string charName = packet.ReadString(30);
 			DOLCharacters[] chars = client.Account.Characters;
+
 			if (chars == null)
 				return 0;
+
 			for (int i = 0; i < chars.Length; i++)
+			{
 				if (chars[i].Name.ToLower().Equals(charName.ToLower()))
 				{
 					if (client.ActiveCharIndex == i)
@@ -64,7 +67,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					catch (Exception e)
 					{
 						if (Log.IsErrorEnabled)
-							Log.Error("Error deleting char items, char OID="+chars[i].ObjectId, e);
+							Log.Error("Error deleting char items, char OID=" + chars[i].ObjectId, e);
 					}
 
 					// delete quests
@@ -81,9 +84,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 					catch (Exception e)
 					{
 						if (Log.IsErrorEnabled)
-							Log.Error("Error deleting char quests, char OID="+chars[i].ObjectId, e);
+							Log.Error("Error deleting char quests, char OID=" + chars[i].ObjectId, e);
 					}
-					
+
 					// delete ML steps
 					try
 					{
@@ -98,8 +101,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					catch (Exception e)
 					{
 						if (Log.IsErrorEnabled)
-							Log.Error("Error deleting char ml steps, char OID="+chars[i].ObjectId, e);
-					}					
+							Log.Error("Error deleting char ml steps, char OID=" + chars[i].ObjectId, e);
+					}
 
 					GameServer.Database.DeleteObject(chars[i]);
 					// 2008-01-29 Kakuri - Obsolete
@@ -125,6 +128,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					break;
 				}
+			}
 			return 1;
 		}
 	}

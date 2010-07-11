@@ -881,7 +881,7 @@
     <Compile Include="packets\Client\168\BadNameCheckRequestHandler.cs" />
     <Compile Include="packets\Client\168\BuyHookPointHandler.cs" />
     <Compile Include="packets\Client\168\CharacterDeleteRequestHandler.cs" />
-    <Compile Include="packets\Client\168\CharacterListUpdateRequestHandler.cs" />
+    <Compile Include="packets\Client\168\CharacterCreateRequestHandler.cs" />
     <Compile Include="packets\Client\168\CharacterOverviewRequestHandler.cs" />
     <Compile Include="packets\Client\168\CharacterSelectRequestHandler.cs" />
     <Compile Include="packets\Client\168\checklosrequesthandler.cs" />
