@@ -32,7 +32,7 @@ using log4net;
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x57 ^ 168, "Handles character creation requests")]
-	public class CharacterListUpdateRequestHandler : IPacketHandler
+	public class CharacterCreateRequestHandler : IPacketHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -43,6 +43,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			//DOLConsole.WriteLine("Character creation!\n");
 			string accountName = packet.ReadString(24);
+
 			if (!accountName.StartsWith(client.Account.Name))// TODO more correctly check, client send accountName as account-S, -N, -H (if it not fit in 20, then only account)
 			{
 				if (ServerProperties.Properties.BAN_HACKERS)
@@ -65,7 +66,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
             if (client.Version >= GameClient.eClientVersion.Version1104)
             {
-                packet.ReadIntLowEndian(); //unk
+                packet.ReadIntLowEndian(); //unk - probably indicates customize or create
             }
 
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
@@ -74,6 +75,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 				string charname = packet.ReadString(24);
 				if (charname.Length == 0)
 				{
+					// 1.104+  if character is not in list but is in DB then delete the character
+					if (client.Version >= GameClient.eClientVersion.Version1104)
+					{
+						CheckForDeletedCharacter(accountName, client, i);
+					}
+
 					//If the charname is empty, skip the other bytes
 					packet.Skip(160);
 					if (client.Version >= GameClient.eClientVersion.Version199)
@@ -797,6 +804,108 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			ch.SerializedCraftingSkills = serializedAllCraftingSkills;
 			ch.CraftingPrimarySkill = (int)eCraftingSkill.BasicCrafting;
+		}
+
+
+		private void CheckForDeletedCharacter(string accountName, GameClient client, int slot)
+		{
+			int charSlot = 9999;
+
+			if (accountName.EndsWith("-S")) charSlot = 100 + slot;
+			else if (accountName.EndsWith("-N")) charSlot = 200 + slot;
+			else if (accountName.EndsWith("-H")) charSlot = 300 + slot;
+
+			DOLCharacters[] allChars = client.Account.Characters;
+
+			if (allChars != null)
+			{
+				foreach (DOLCharacters character in allChars)
+				{
+					if (character.AccountSlot == charSlot && client.ClientState == GameClient.eClientState.CharScreen)
+					{
+						log.WarnFormat("DB Character Delete:  Account {0}, Character: {1}, slot position: {2}, client slot {3}", accountName, character.Name, character.AccountSlot, slot);
+
+						GameEventMgr.Notify(DatabaseEvent.CharacterDeleted, null, new CharacterEventArgs(character, client));
+
+						if (Properties.BACKUP_DELETED_CHARACTERS)
+						{
+							DOLCharactersBackup backupCharacter = new DOLCharactersBackup(character);
+							GameServer.Database.AddObject(backupCharacter);
+							log.WarnFormat("DB Character {0} backed up to DOLCharactersBackup and no associated content deleted.", character.ObjectId);
+						}
+						else
+						{
+							// delete associated data
+
+							try
+							{
+								var objs = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
+								foreach (InventoryItem item in objs)
+								{
+									GameServer.Database.DeleteObject(item);
+								}
+							}
+							catch (Exception e)
+							{
+								if (log.IsErrorEnabled)
+									log.Error("Error deleting char items, char OID=" + character.ObjectId, e);
+							}
+
+							// delete quests
+							try
+							{
+								var objs = GameServer.Database.SelectObjects<DBQuest>("Character_ID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
+								foreach (DBQuest quest in objs)
+								{
+									GameServer.Database.DeleteObject(quest);
+								}
+							}
+							catch (Exception e)
+							{
+								if (log.IsErrorEnabled)
+									log.Error("Error deleting char quests, char OID=" + character.ObjectId, e);
+							}
+
+							// delete ML steps
+							try
+							{
+								var objs = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("Character_ID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
+								foreach (DBCharacterXMasterLevel mlstep in objs)
+								{
+									GameServer.Database.DeleteObject(mlstep);
+								}
+							}
+							catch (Exception e)
+							{
+								if (log.IsErrorEnabled)
+									log.Error("Error deleting char ml steps, char OID=" + character.ObjectId, e);
+							}
+						}
+
+						string deletedChar = character.Name;
+
+						GameServer.Database.DeleteObject(character);
+						client.Account.Characters = null;
+						client.Player = null;
+						GameServer.Database.FillObjectRelations(client.Account);
+
+						if (client.Account.Characters == null || client.Account.Characters.Length == 0)
+						{
+							if (log.IsInfoEnabled)
+								log.Info(string.Format("Account {0} has no more chars. Realm reset!", client.Account.Name));
+
+							//Client has no more characters, so the client can choose the realm again!
+							client.Account.Realm = 0;
+						}
+
+						GameServer.Database.SaveObject(client.Account);
+
+						// Log deletion
+						AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterDelete, "", deletedChar);
+					}
+				}
+			}
+
 		}
 
 		#region CheckCharacter
