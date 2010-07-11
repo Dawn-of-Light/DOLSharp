@@ -318,7 +318,9 @@ namespace DOL.GS
 			}
 		}
 
-
+		/// <summary>
+		/// Can this player use cross realm items
+		/// </summary>
 		public virtual bool CanUseCrossRealmItems
 		{
 			get
