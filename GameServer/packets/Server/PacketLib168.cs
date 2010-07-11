@@ -382,12 +382,6 @@ namespace DOL.GS.PacketHandler
 				pak.FillString(m_gameClient.Account.Name, 20);
 				pak.WriteByte((byte) (nameExists ? 0x1 : 0x0));
 				pak.Fill(0x0, 3);
-
-                if (m_gameClient.Version >= GameClient.eClientVersion.Version1104)
-                {
-                    pak.Fill(0, 4);
-                }
-
 				SendTCP(pak);
 			}
 		}
