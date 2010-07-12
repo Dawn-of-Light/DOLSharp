@@ -1277,7 +1277,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void WalkToSpawn()
 		{
-			WalkToSpawn((short)(MaxSpeed/2.0));
+			WalkToSpawn((short)(50));
 		}
 
 		/// <summary>
