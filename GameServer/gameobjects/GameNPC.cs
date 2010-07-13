@@ -4579,7 +4579,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Whether this NPC is available to add on a fight.
 		/// </summary>
-		public bool IsAvailable
+		public virtual bool IsAvailable
 		{
 			get { return !(Brain is IControlledBrain) && !InCombat; }
 		}
@@ -4587,7 +4587,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Whether this NPC is aggressive.
 		/// </summary>
-		public bool IsAggressive
+		public virtual bool IsAggressive
 		{
 			get
 			{
@@ -4601,7 +4601,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="npc">The NPC that is checked against.</param>
 		/// <returns></returns>
-		public bool IsFriend(GameNPC npc)
+		public virtual bool IsFriend(GameNPC npc)
 		{
 			if (Faction == null || npc.Faction == null)
 				return false;
@@ -4613,7 +4613,7 @@ namespace DOL.GS
 		/// Broadcast loot to the raid.
 		/// </summary>
 		/// <param name="dropMessages">List of drop messages to broadcast.</param>
-		protected void BroadcastLoot(ArrayList dropMessages)
+		protected virtual void BroadcastLoot(ArrayList dropMessages)
 		{
 			if (dropMessages.Count > 0)
 			{
