@@ -26,6 +26,7 @@ using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Utils;
+using DOL.GS.ServerProperties;
 using log4net;
 
 namespace DOL.GS
@@ -42,14 +43,6 @@ namespace DOL.GS
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Region Variables
-		/// <summary>
-		/// IMPORTANT: This variable defines the maximum number of objects
-		/// that can exist in a realm! Setting it lower will quicken up certain
-		/// loops but you can not add more than this number of objects to the realm
-		/// at any given time then! Setting it higher will slow down certain
-		/// loops but allows for more objects
-		/// </summary>
-		public static readonly int MAXOBJECTS = 30000;
 
 		/// <summary>
 		/// This is the minimumsize for object array that is allocated when
@@ -551,8 +544,8 @@ namespace DOL.GS
 		/// <param name="count">The size of new objects array, limited by MAXOBJECTS</param>
 		public void PreAllocateRegionSpace(int count)
 		{
-			if (count > MAXOBJECTS)
-				count = MAXOBJECTS;
+			if (count > Properties.REGION_MAX_OBJECTS)
+				count = Properties.REGION_MAX_OBJECTS;
 			lock (ObjectsSyncLock)
 			{
 				if (m_objects.Length > count) return;
@@ -865,7 +858,7 @@ namespace DOL.GS
 							objID = 0;
 
 						}
-						else if (objectsRef.Length >= MAXOBJECTS)
+						else if (objectsRef.Length >= Properties.REGION_MAX_OBJECTS)
 						{
 
 							// no available slot
@@ -881,8 +874,8 @@ namespace DOL.GS
 							int size = (int)(m_objects.Length * 1.20);
 							if (size < m_objects.Length + 256)
 								size = m_objects.Length + 256;
-							if (size > MAXOBJECTS)
-								size = MAXOBJECTS;
+							if (size > Properties.REGION_MAX_OBJECTS)
+								size = Properties.REGION_MAX_OBJECTS;
 							objectsRef = new GameObject[size]; // grow the array by 20%, at least 256
 							Array.Copy(m_objects, objectsRef, m_objects.Length);
 							objID = m_objects.Length; // new object adds right behind the last object in old array

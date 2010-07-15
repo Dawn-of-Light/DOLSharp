@@ -31,5 +31,7 @@ namespace DOL.GS
 	{
 		bool CheckValid(GamePlayer player);
 		void Delve(List<String> delve, GamePlayer player);
+		void OnStrikeTarget(GamePlayer player, GameObject target);
+		void OnStruckByEnemy(GamePlayer player, GameLiving enemy);
 	}
 }
