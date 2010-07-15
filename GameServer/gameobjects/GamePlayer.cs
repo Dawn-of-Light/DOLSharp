@@ -14563,12 +14563,12 @@ namespace DOL.GS
 			}
 			else if (item is InventoryItem)
 			{
-				GameInventoryItem tempItem = new GameInventoryItem(item as InventoryItem);
+				GameInventoryItem tempItem = GameInventoryItem.Create<InventoryItem>(item as InventoryItem);
 				tempItem.Delve(delveInfo, this);
 			}
 			else if (item is ItemTemplate)
 			{
-				GameInventoryItem tempItem = new GameInventoryItem(item as ItemTemplate);
+				GameInventoryItem tempItem = GameInventoryItem.Create<ItemTemplate>(item as ItemTemplate);
 				tempItem.Delve(delveInfo, this);
 			}
 			else
