@@ -61,6 +61,8 @@ namespace DOL.GS
 			{
 				try
 				{
+					m_items.Clear();
+
 					// We only want to cache items in the players personal inventory and personal vault.
 					// If we cache ALL items them all vault code must make sure to update cache, which is not ideal
 					// in addition, a player with a housing vault may still have an item in cache that may have been
