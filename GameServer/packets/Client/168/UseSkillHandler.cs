@@ -180,7 +180,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					if (sk is Style)
 					{
-						StyleProcessor.TryToUseStyle(player, (Style) sk);
+						player.ExecuteWeaponStyle((Style)sk);
 						return;
 					}
 					//player.Out.SendMessage("you triggered skill "+sk.Name, eChatType.CT_Advise, eChatLoc.CL_SystemWindow);

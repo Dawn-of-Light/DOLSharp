@@ -6052,38 +6052,9 @@ namespace DOL.GS
 					//durability percent can reach zero
 					// if item durability reachs 0, item is useless and become broken item
 
-					if (weapon != null && weapon.ConditionPercent > 70 && Util.Chance(15))
+					if (weapon != null && weapon is GameInventoryItem)
 					{
-						int oldPercent = weapon.ConditionPercent;
-						double con = GetConLevel(Level, weapon.Level);
-						if (con < -3.0)
-							con = -3.0;
-						int sub = (int)(con + 4);
-						if (oldPercent < 91)
-						{
-							sub *= 2;
-						}
-
-						// Subtract condition
-						weapon.Condition -= sub;
-						if (weapon.Condition < 0)
-							weapon.Condition = 0;
-
-						// Update displayed AF only if condition changed
-						if (weapon.ConditionPercent != oldPercent)
-						{
-							// stats and max hits can't change, why update with every hit?
-							// item 's buff do not depend of condition
-							// Out.SendCharStatsUpdate();
-							if (weapon.ConditionPercent == 90)
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CouldRepair", weapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							else if (weapon.ConditionPercent == 80)
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedRepair", weapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							else if (weapon.ConditionPercent == 70)
-								Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedRepairDire", weapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							Out.SendUpdateWeaponAndArmorStats();
-							Out.SendInventorySlotsUpdate(new int[] { weapon.SlotPosition });
-						}
+						(weapon as GameInventoryItem).OnStrikeTarget(this, target);
 					}
 					//Camouflage
 					if (target is GamePlayer && HasAbility(Abilities.Camouflage))
@@ -6150,6 +6121,16 @@ namespace DOL.GS
 					break;
 			}
 			return ad;
+		}
+
+
+		/// <summary>
+		/// Try and execute a weapon style
+		/// </summary>
+		/// <param name="style"></param>
+		public virtual void ExecuteWeaponStyle(Style style)
+		{
+			StyleProcessor.TryToUseStyle(this, style);
 		}
 
 		/// <summary>
@@ -6270,38 +6251,9 @@ namespace DOL.GS
 							// Durability percent can reach zero
 							// If item durability reachs 0, item is useless and become broken item
 
-							if (item != null && item.ConditionPercent > 70 && Util.Chance(15))
+							if (item != null && item is GameInventoryItem)
 							{
-								int oldPercent = item.ConditionPercent;
-								double con = GetConLevel(Level, item.Level);
-								if (con < -3.0)
-									con = -3.0;
-								int sub = (int)(con + 4);
-								if (oldPercent < 91)
-								{
-									sub *= 2;
-								}
-
-								// Subtract condition
-								item.Condition -= sub;
-								if (item.Condition < 0)
-									item.Condition = 0;
-
-								// Update displayed AF only if condition changed
-								if (item.ConditionPercent != oldPercent)
-								{
-									// stats and max hits can't change, why update with every hit?
-									// item 's buff do not depend of condition
-									// Out.SendCharStatsUpdate();
-									if (item.ConditionPercent == 90)
-										Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CouldRepair", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									else if (item.ConditionPercent == 80)
-										Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedRepair", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									else if (item.ConditionPercent == 70)
-										Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.NeedRepairDire", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									Out.SendUpdateWeaponAndArmorStats();
-									Out.SendInventorySlotsUpdate(new int[] { item.SlotPosition });
-								}
+								(item as GameInventoryItem).OnStruckByEnemy(this, ad.Attacker);
 							}
 						}
 
@@ -14565,8 +14517,8 @@ namespace DOL.GS
 			m_itemBonus = new PropertyIndexer((int)eProperty.MaxProperty);
 			m_lastUniqueLocations = new GameLocation[4];
 			m_objectUpdates = new BitArray[2];
-			m_objectUpdates[0] = new BitArray(Region.MAXOBJECTS);
-			m_objectUpdates[1] = new BitArray(Region.MAXOBJECTS);
+			m_objectUpdates[0] = new BitArray(Properties.REGION_MAX_OBJECTS);
+			m_objectUpdates[1] = new BitArray(Properties.REGION_MAX_OBJECTS);
 			m_housingUpdateArray = null;
 			m_lastUpdateArray = 0;
 			m_canFly = false;
