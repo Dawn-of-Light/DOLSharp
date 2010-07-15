@@ -124,6 +124,93 @@ namespace DOL.GS
 			return playerItem;
 		}
 
+		/// <summary>
+		/// This inventory strikes an enemy
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="target"></param>
+		public virtual void OnStrikeTarget(GamePlayer player, GameObject target)
+		{
+			if (ConditionPercent > 70 && Util.Chance(15))
+			{
+				int oldPercent = ConditionPercent;
+				double con = GamePlayer.GetConLevel(player.Level, Level);
+				if (con < -3.0)
+					con = -3.0;
+				int sub = (int)(con + 4);
+				if (oldPercent < 91)
+				{
+					sub *= 2;
+				}
+
+				// Subtract condition
+				Condition -= sub;
+				if (Condition < 0)
+					Condition = 0;
+
+				// Update displayed AF only if condition changed
+				if (ConditionPercent != oldPercent)
+				{
+					// stats and max hits can't change, why update with every hit?
+					// item 's buff do not depend of condition
+					// Out.SendCharStatsUpdate();
+					if (ConditionPercent == 90)
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.CouldRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					else if (ConditionPercent == 80)
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.NeedRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					else if (ConditionPercent == 70)
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.NeedRepairDire", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+					player.Out.SendUpdateWeaponAndArmorStats();
+					player.Out.SendInventorySlotsUpdate(new int[] { SlotPosition });
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// This inventory is struck by an enemy
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="enemy"></param>
+		public virtual void OnStruckByEnemy(GamePlayer player, GameLiving enemy)
+		{
+			if (ConditionPercent > 70 && Util.Chance(15))
+			{
+				int oldPercent = ConditionPercent;
+				double con = GamePlayer.GetConLevel(player.Level, Level);
+				if (con < -3.0)
+					con = -3.0;
+				int sub = (int)(con + 4);
+				if (oldPercent < 91)
+				{
+					sub *= 2;
+				}
+
+				// Subtract condition
+				Condition -= sub;
+				if (Condition < 0)
+					Condition = 0;
+
+				// Update displayed AF only if condition changed
+				if (ConditionPercent != oldPercent)
+				{
+					// stats and max hits can't change, why update with every hit?
+					// item 's buff do not depend of condition
+					// Out.SendCharStatsUpdate();
+					if (ConditionPercent == 90)
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.CouldRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					else if (ConditionPercent == 80)
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.NeedRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					else if (ConditionPercent == 70)
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.NeedRepairDire", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+					player.Out.SendUpdateWeaponAndArmorStats();
+					player.Out.SendInventorySlotsUpdate(new int[] { SlotPosition });
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Delve this item

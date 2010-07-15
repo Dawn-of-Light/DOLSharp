@@ -301,6 +301,13 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server", "use_dblanguage", "Use Database Language datas instead of files (if empty = build the table from files)", false)]
 		public static bool USE_DBLANGUAGE;
 
+		/// <summary>
+		/// Set the maximum number of objects allowed in a region.  Smaller numbers offer better performance.  This is used to allocate arrays for both Regions and GamePlayers
+		/// </summary>
+		[ServerProperty("server", "region_max_objects", "Set the maximum number of objects allowed in a region.  Smaller numbers offer better performance.  This can't be changed while the server is running. (256 - 65535)", (ushort)30000)]
+		public static readonly ushort REGION_MAX_OBJECTS;
+
+
 		#endregion
 
 		#region WORLD
