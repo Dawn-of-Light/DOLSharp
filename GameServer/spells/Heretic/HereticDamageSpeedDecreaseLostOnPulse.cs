@@ -136,8 +136,23 @@ namespace DOL.GS.Spells
 
             OnDirectEffect(effect.Owner, effect.Effectiveness);
 
-            m_caster.Mana -= effect.Spell.PulsePower;
-        }
+			// A really lame way to charge the correct amount of power per pulse since this spell is cast and maintained without pulsing. - Tolakram
+			if (m_focusTargets.Count > 1)
+			{
+				double powerPerTarget = (double)(effect.Spell.PulsePower / m_focusTargets.Count);
+
+				int powerUsed = (int)powerPerTarget;
+				if (Util.ChanceDouble(((double)powerPerTarget - (double)powerUsed)))
+					powerUsed += 1;
+
+				if (powerUsed > 0)
+					m_caster.Mana -= powerUsed;
+			}
+			else
+			{
+				m_caster.Mana -= effect.Spell.PulsePower;
+			}
+		}
 
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
