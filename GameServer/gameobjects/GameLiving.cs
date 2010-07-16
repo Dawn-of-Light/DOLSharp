@@ -1543,13 +1543,14 @@ namespace DOL.GS
 
 				InventoryItem weaponTypeToUse = null;
 
-				if (weapon != null)
+				// Albion dual spec penalty, which sets minimum damage to the base damage spec
+				if (weapon != null && (this is GamePlayer) && Realm == eRealm.Albion)
 				{
 					weaponTypeToUse = new InventoryItem();
 					weaponTypeToUse.Object_Type = weapon.Object_Type;
 					weaponTypeToUse.SlotPosition = weapon.SlotPosition;
 
-					if ((weapon.Object_Type == (int)eObjectType.TwoHandedWeapon) || (weapon.Object_Type == (int)eObjectType.PolearmWeapon))
+					if (GameServer.ServerRules.IsObjectTypesEqual((eObjectType)weapon.Object_Type, eObjectType.TwoHandedWeapon) || GameServer.ServerRules.IsObjectTypesEqual((eObjectType)weapon.Object_Type, eObjectType.PolearmWeapon))
 					{
 						if (weapon.Type_Damage == (int)eDamageType.Crush)
 						{

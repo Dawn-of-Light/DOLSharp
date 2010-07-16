@@ -1263,15 +1263,18 @@ namespace DOL.AI.Brain
 						continue;
 
 					GameSpellEffect speffect = effect as GameSpellEffect;
-					//if the effect's spell's spelltype is not the same as the checking spell's spelltype keep going
-					if (speffect.Spell.SpellType != spell.SpellType)
-						continue;
 
-					//if the effect's spell's effectgroup is the same as the checking spell's spellgroup return the answer true
+					//if the effect effectgroup is the same as the checking spells effectgroup then these are considered the same
 					if (speffect.Spell.EffectGroup == spell.EffectGroup)
 						return true;
+
+					//otherwise continue unless the SpellType is the same
+					if (speffect.Spell.SpellType == spell.SpellType)
+						return true;
+
 				}
 			}
+
 			//the answer is no, the effect has not been found
 			return false;
 		}
