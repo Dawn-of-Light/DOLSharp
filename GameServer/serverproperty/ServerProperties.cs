@@ -501,6 +501,15 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("rates","item_sell_ratio", "Merchants are buying items at the % of initial value", 50)]
 		public static int ITEM_SELL_RATIO;
+
+		/// <summary>
+		/// Chance for condition loss on weapons and armor
+		/// </summary>
+		[ServerProperty("rates", "item_condition_loss_chance", "What chance does armor or weapon have to lose condition?", 5)]
+		public static int ITEM_CONDITION_LOSS_CHANCE;
+
+
+
 		#endregion	
 
 		#region NPCs
