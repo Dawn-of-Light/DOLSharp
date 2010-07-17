@@ -4060,7 +4060,7 @@ namespace DOL.GS
 		/// <param name="modify">Should we apply the rp modifer</param>
 		/// <param name="sendMessage">Wether to send a message like "You have gained N realmpoints"</param>
 		/// <param name="notify"></param>
-		public void GainRealmPoints(long amount, bool modify, bool sendMessage, bool notify)
+		public virtual void GainRealmPoints(long amount, bool modify, bool sendMessage, bool notify)
 		{
 			if (!GainRP)
 				return;
@@ -12657,6 +12657,47 @@ namespace DOL.GS
 				return true;
 			}
 		}
+
+		/// <summary>
+		/// Get the crafting speed multiplier for this player
+		/// This might be modified by region or equipment
+		/// </summary>
+		public virtual double CraftingSpeed
+		{
+			get
+			{
+				double speed = Properties.CRAFTING_SPEED;
+
+				if (speed <= 0)
+					speed = 1.0;
+
+				if (CurrentRegion.IsCapitalCity && Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS > 0)
+				{
+					return speed * Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS;
+				}
+
+				return speed;
+			}
+		}
+
+		/// <summary>
+		/// Get the crafting skill bonus for this player.
+		/// This might be modified by region or equipment
+		/// Values represents a percent; 0 - 100
+		/// </summary>
+		public virtual int CraftingSkillBonus
+		{
+			get 
+			{
+				if (CurrentRegion.IsCapitalCity)
+				{
+					return Properties.CAPITAL_CITY_CRAFTING_SKILL_GAIN_BONUS;
+				}
+
+				return 0;
+			}
+		}
+
 		protected bool HasPlayerReachedNewCraftingTitle(int skillLevel)
 		{
 			// no titles after 1000 any more, checked in 1.97
