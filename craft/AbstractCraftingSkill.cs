@@ -664,7 +664,8 @@ namespace DOL.GS
 			// In capital cities bonuses to crafting apply (patch 1.86)
 			if (player.CurrentRegion.IsCapitalCity)
 			{
-				chance += Properties.CAPITAL_CITY_CRAFTING_SKILL_GAIN_BONUS;
+				chance += player.CraftingSkillBonus;
+
 				if (chance < 0)
 					chance = 0;
 				if (chance > 100)
@@ -687,15 +688,10 @@ namespace DOL.GS
 				materialsCount += (ushort)rawmaterial.Count;
 			}
 
-			//at least 1s
 			int craftingTime = (int)(baseMultiplier * materialsCount / 4);
 
-			if (Properties.CRAFTING_SPEED != 0)
-				craftingTime = (int)(craftingTime / Properties.CRAFTING_SPEED);
-
-			// In capital cities bonuses to crafting apply (patch 1.86)
-			if (player.CurrentRegion.IsCapitalCity && Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS != 0)
-				craftingTime = (int)(craftingTime / Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS);
+			// Player does check for capital city bonus as well
+			craftingTime = (int)(craftingTime / player.CraftingSpeed);
 
 			//keep bonuses reduction in crafting time
 			if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Craft_Timers_5, (eRealm)player.Realm))

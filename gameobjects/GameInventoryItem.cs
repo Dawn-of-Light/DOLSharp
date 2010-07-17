@@ -131,7 +131,7 @@ namespace DOL.GS
 		/// <param name="target"></param>
 		public virtual void OnStrikeTarget(GamePlayer player, GameObject target)
 		{
-			if (ConditionPercent > 70 && Util.Chance(5))
+			if (ConditionPercent > 70 && Util.Chance(ServerProperties.Properties.ITEM_CONDITION_LOSS_CHANCE))
 			{
 				int oldPercent = ConditionPercent;
 				double con = GamePlayer.GetConLevel(player.Level, Level);
@@ -175,7 +175,7 @@ namespace DOL.GS
 		/// <param name="enemy"></param>
 		public virtual void OnStruckByEnemy(GamePlayer player, GameLiving enemy)
 		{
-			if (ConditionPercent > 70 && Util.Chance(5))
+			if (ConditionPercent > 70 && Util.Chance(ServerProperties.Properties.ITEM_CONDITION_LOSS_CHANCE))
 			{
 				int oldPercent = ConditionPercent;
 				double con = GamePlayer.GetConLevel(player.Level, Level);
