@@ -649,14 +649,20 @@ namespace DOL.AI.Brain
 		{
 			if (AggressionState == eAggressionState.Passive)
 				return null;
+
 			if (m_orderAttackTarget != null)
 			{
-				if (m_orderAttackTarget.IsAlive && m_orderAttackTarget.ObjectState == GameObject.eObjectState.Active && !m_orderAttackTarget.IsStealthed)
+				if (m_orderAttackTarget.IsAlive &&
+					m_orderAttackTarget.ObjectState == GameObject.eObjectState.Active &&
+					!m_orderAttackTarget.IsStealthed &&
+					GameServer.ServerRules.IsAllowedToAttack(this.Body, m_orderAttackTarget, true))
+				{
 					return m_orderAttackTarget;
+				}
+
 				m_orderAttackTarget = null;
 			}
 
-			//VaNaTiC->
 			lock (m_aggroTable.SyncRoot)
 			{
 				IDictionaryEnumerator aggros = m_aggroTable.GetEnumerator();
@@ -664,20 +670,18 @@ namespace DOL.AI.Brain
 				while (aggros.MoveNext())
 				{
 					GameLiving living = (GameLiving)aggros.Key;
-					// 1st we check only if living is mezzed,
-					// cause if so there is no need to look
-					// through all effects for a root
+
 					if (living.IsMezzed ||
 						living.IsStealthed || 
 						living.IsAlive == false || 
 						living.ObjectState != GameObject.eObjectState.Active ||
-						Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE)
+						Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE ||
+						GameServer.ServerRules.IsAllowedToAttack(this.Body, living, true) == false)
 					{
 						removable.Add(living);
 					}
 					else
 					{
-						// no mezz was found, then we have to look if living is rooted
 						GameSpellEffect root = SpellHandler.FindEffectOnTarget(living, "SpeedDecrease");
 						if (root != null && root.Spell.Value == 99)
 						{
@@ -692,7 +696,6 @@ namespace DOL.AI.Brain
 					Body.RemoveAttacker(living);
 				}
 			}
-			//VaNaTiC<-
 
 			return base.CalculateNextAttackTarget();
 		}
