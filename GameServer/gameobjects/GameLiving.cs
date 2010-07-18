@@ -1632,7 +1632,7 @@ namespace DOL.GS
 				if (ad.Damage == 0)
 				{
 					// log this as a possible error if we should do some damage to target
-					if (ad.Target.Level <= Level + 5)
+					if (ad.Target.Level <= Level + 5 && weapon != null)
 					{
 						log.ErrorFormat("Possible Damage Error: {0} Damage = 0 -> miss vs {1}.  AttackDamage {2}, weapon name {3}", Name, (ad.Target == null ? "null" : ad.Target.Name), AttackDamage(weapon), (weapon == null ? "None" : weapon.Name));
 					}
