@@ -86,9 +86,12 @@ Scripts.Players.Bountyrent.NoHouseError:	Vous ne possédez pas de maison !
 
 
 # /Broadcast
-Scripts.Players.Broadcast.Message:			[Region] {0} : {1}
+Scripts.Players.Broadcast.Message:			[Broadcast] {0}: {1}
 Scripts.Players.Broadcast.NoHere:			Vous ne pouvez pas diffuser dans le canal régional ici.
 Scripts.Players.Broadcast.NoText:			Vous devez dire quelque-chose...
+Scripts.Players.Region.Message:				[Region] {0}: {1}
+Scripts.Players.LFG.Message:				[LFG] {0}: {1}
+Scripts.Players.Trade.Message:				[Trade] {0}: {1}
 
 # /Cancelstyle
 Scripts.Players.Cancelstyle.Set:			L'annulation de style est maintenant {0}.

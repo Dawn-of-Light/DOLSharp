@@ -155,9 +155,12 @@ Scripts.Players.Bountyrent.InHouseError:		Ihr müsst Euch in Eurem Haus befinden
 Scripts.Players.Bountyrent.NoHouseError:		Ihr besitzt kein Haus!
 
 # /Broadcast
-Scripts.Players.Broadcast.Message:			{0}: **{1}**
+Scripts.Players.Broadcast.Message:			[Broadcast] {0}: {1}
 Scripts.Players.Broadcast.NoHere:			Ihr könnt hier keinen Rundspruch machen.
 Scripts.Players.Broadcast.NoText:			Hmmm...Ihr solltet aufhören, dauernd mit Euch selbst zu reden.
+Scripts.Players.Region.Message:				[Region] {0}: {1}
+Scripts.Players.LFG.Message:				[LFG] {0}: {1}
+Scripts.Players.Trade.Message:				[Trade] {0}: {1}
 
 # /Cancelstyle
 Scripts.Players.Cancelstyle.Set:			Kampfstil-Abbruch {0}geschaltet.
