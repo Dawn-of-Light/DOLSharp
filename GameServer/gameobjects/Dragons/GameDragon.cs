@@ -192,10 +192,19 @@ namespace DOL.GS
 					log.Debug(attacker.Name);
 			}
 
+			bool canReportNews = true;
+
 			// due to issues with attackers the following code will send a notify to all in area in order to force quest credit
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				player.Notify(GameLivingEvent.EnemyKilled, killer, new EnemyKilledEventArgs(this));
+
+				if (canReportNews && GameServer.ServerRules.CanGenerateNews(player) == false)
+				{
+					if (player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
+						canReportNews = false;
+				}
+
 			}
 
 			base.Die(killer);
@@ -205,7 +214,10 @@ namespace DOL.GS
 				BroadcastMessage(String.Format(message, Name));
 			}
 
-			ReportNews(killer);
+			if (canReportNews)
+			{
+				ReportNews(killer);
+			}
 		}
 
 		#region Damage & Heal Events
