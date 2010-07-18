@@ -485,9 +485,12 @@ Scripts.Players.Bountyrent.InHouseError:		You have to be in your house to use th
 Scripts.Players.Bountyrent.NoHouseError:		You don't own a house!
 
 # /Broadcast
-Scripts.Players.Broadcast.Message:			[Broadcast] {0} : {1}
+Scripts.Players.Broadcast.Message:			[Broadcast] {0}: {1}
 Scripts.Players.Broadcast.NoHere:			You cannot broadcast here.
 Scripts.Players.Broadcast.NoText:			You must broadcast something...
+Scripts.Players.Region.Message:				[Region] {0}: {1}
+Scripts.Players.LFG.Message:				[LFG] {0}: {1}
+Scripts.Players.Trade.Message:				[Trade] {0}: {1}
 
 # /Cancelstyle
 Scripts.Players.Cancelstyle.Set:			Cancel Style now set to {0}.

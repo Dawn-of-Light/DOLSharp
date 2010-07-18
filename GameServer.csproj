@@ -240,6 +240,9 @@
     <Compile Include="commands\PlayerCommands\cloak.cs" />
     <Compile Include="commands\PlayerCommands\cmdhelp.cs" />
     <Compile Include="commands\PlayerCommands\appeal.cs" />
+    <Compile Include="commands\PlayerCommands\trade.cs" />
+    <Compile Include="commands\PlayerCommands\LFG.cs" />
+    <Compile Include="commands\PlayerCommands\region.cs" />
     <Compile Include="commands\PlayerCommands\QuestCommands.cs" />
     <Compile Include="commands\PlayerCommands\filter.cs" />
     <Compile Include="commands\playercommands\realm.cs" />
