@@ -78,8 +78,20 @@ namespace DOL.GS.Commands
 
 					if (npcs.Length > 0)
 					{
+						// for multiple npc's first try to jump to the npc in the players current region
+						GameNPC jumpTarget = npcs[0];
+
+						foreach (GameNPC npc in npcs)
+						{
+							if (npc.CurrentRegionID == client.Player.CurrentRegionID)
+							{
+								jumpTarget = npc;
+								break;
+							}
+						}
+
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", npcs[0].CurrentRegion.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Player.MoveTo(npcs[0].CurrentRegionID, npcs[0].X, npcs[0].Y, npcs[0].Z, npcs[0].Heading);
+						client.Player.MoveTo(jumpTarget.CurrentRegionID, jumpTarget.X, jumpTarget.Y, jumpTarget.Z, jumpTarget.Heading);
 						return;
 					}
 
@@ -113,8 +125,20 @@ namespace DOL.GS.Commands
 
 					if (npcs.Length > 0)
 					{
+						// for multiple npc's first try to jump to the npc in the players current region
+						GameNPC jumpTarget = npcs[0];
+
+						foreach (GameNPC npc in npcs)
+						{
+							if (npc.CurrentRegionID == client.Player.CurrentRegionID)
+							{
+								jumpTarget = npc;
+								break;
+							}
+						}
+
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", npcs[0].CurrentRegion.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Player.MoveTo(npcs[0].CurrentRegionID, npcs[0].X, npcs[0].Y, npcs[0].Z, npcs[0].Heading);
+						client.Player.MoveTo(jumpTarget.CurrentRegionID, jumpTarget.X, jumpTarget.Y, jumpTarget.Z, jumpTarget.Heading);
 						return;
 					}
 
