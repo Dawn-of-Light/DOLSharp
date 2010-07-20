@@ -446,7 +446,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="delve"></param>
 		/// <param name="player"></param>
-		public virtual void DelveWeaponStats(List<String> delve, GamePlayer player)
+		protected override void DelveWeaponStats(List<String> delve, GamePlayer player)
 		{
 			double itemDPS = DPS_AF / 10.0;
 			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * player.Level);
@@ -492,7 +492,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="delve"></param>
 		/// <param name="player"></param>
-		public virtual void DelveArmorStats(List<String> delve, GamePlayer player)
+		protected override void DelveArmorStats(List<String> delve, GamePlayer player)
 		{
 			delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod"));
 
@@ -543,7 +543,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="output"></param>
 		/// <param name="item"></param>
-		public void WriteTechnicalInfo(List<String> delve)
+		public override void WriteTechnicalInfo(List<String> delve)
 		{
 			delve.Add(" ");
 			delve.Add("--- Artifact/Item technical information ---");
