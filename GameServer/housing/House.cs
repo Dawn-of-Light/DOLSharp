@@ -663,36 +663,45 @@ namespace DOL.GS.Housing
 						if (npt == null)
 							return null;
 
-						var hNPC = (GameNPC) Assembly.GetAssembly(typeof (GameServer)).CreateInstance(npt.ClassType, false);
-
-						if (hNPC == null)
+						try
 						{
-							foreach (Assembly asm in ScriptMgr.Scripts)
+
+							var hNPC = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(npt.ClassType, false);
+
+							if (hNPC == null)
 							{
-								hNPC = (GameNPC) asm.CreateInstance(npt.ClassType, false);
-								if (hNPC != null) break;
+								foreach (Assembly asm in ScriptMgr.Scripts)
+								{
+									hNPC = (GameNPC)asm.CreateInstance(npt.ClassType, false);
+									if (hNPC != null) break;
+								}
 							}
-						}
 
-						if (hNPC == null)
+							if (hNPC == null)
+							{
+								HouseMgr.Log.Error("[Housing] Can't create instance of type: " + npt.ClassType);
+								return null;
+							}
+
+							hNPC.LoadTemplate(npt);
+
+							hNPC.Name = item.Name;
+							hNPC.CurrentHouse = this;
+							hNPC.InHouse = true;
+							hNPC.X = x;
+							hNPC.Y = y;
+							hNPC.Z = z;
+							hNPC.Heading = heading;
+							hNPC.CurrentRegionID = RegionID;
+							hNPC.Realm = (eRealm)item.Realm;
+							hNPC.Flags ^= (uint)GameNPC.eFlags.PEACE;
+							hNPC.AddToWorld();
+						}
+						catch (Exception ex)
 						{
-							HouseMgr.Log.Error("[Housing] Can't create instance of type: " + npt.ClassType);
-							return null;
+							Log.Error("Error filling housing hookpoint using npc template " + npt.Name, ex);
 						}
 
-						hNPC.LoadTemplate(npt);
-
-						hNPC.Name = item.Name;
-						hNPC.CurrentHouse = this;
-						hNPC.InHouse = true;
-						hNPC.X = x;
-						hNPC.Y = y;
-						hNPC.Z = z;
-						hNPC.Heading = heading;
-						hNPC.CurrentRegionID = RegionID;
-						hNPC.Realm = (eRealm) item.Realm;
-						hNPC.Flags ^= (uint) GameNPC.eFlags.PEACE;
-						hNPC.AddToWorld();
 						break;
 					}
 				case eObjectType.HouseBindstone:
