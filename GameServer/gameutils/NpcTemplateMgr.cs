@@ -76,7 +76,14 @@ namespace DOL.GS
 					var objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
 					foreach (DBNpcTemplate dbTemplate in objs)
 					{
-						AddTemplate(new NpcTemplate(dbTemplate));
+						try
+						{
+							AddTemplate(new NpcTemplate(dbTemplate));
+						}
+						catch (Exception ex)
+						{
+							log.Error("Error loading template " + dbTemplate.Name, ex);
+						}
 					}
 
 					return true;
