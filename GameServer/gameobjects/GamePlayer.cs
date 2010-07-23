@@ -4072,6 +4072,18 @@ namespace DOL.GS
 				if (modifier != -1)
 					amount = (long)(amount * modifier);
 
+                //[StephenxPimente]: Zone Bonus Support
+                if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
+                {
+                    int zoneBonus = (((int)amount * ZoneBonus.GetRPBonus(this)) / 100);
+                    if (zoneBonus > 0)
+                    {
+                        Out.SendMessage(ZoneBonus.GetBonusMessage(this, (int)(zoneBonus * ServerProperties.Properties.RP_RATE), ZoneBonus.eZoneBonusType.RP),
+                            eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                        GainRealmPoints((long)(zoneBonus * ServerProperties.Properties.RP_RATE), false, false, false);
+                    }
+                }
+
 				//[Freya] Nidel: ToA Rp Bonus
 				long rpBonus = GetModified(eProperty.RealmPoints);
 				if (rpBonus > 0)
@@ -4205,6 +4217,18 @@ namespace DOL.GS
 				double modifier = ServerProperties.Properties.BP_RATE;
 				if (modifier != -1)
 					amount = (long)(amount * modifier);
+
+                //[StephenxPimente]: Zone Bonus Support
+                if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
+                {
+                    int zoneBonus = (((int)amount * ZoneBonus.GetBPBonus(this)) / 100);
+                    if (zoneBonus > 0)
+                    {
+                        Out.SendMessage(ZoneBonus.GetBonusMessage(this, (int)(zoneBonus * ServerProperties.Properties.BP_RATE), ZoneBonus.eZoneBonusType.BP),
+                            eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                        GainBountyPoints((long)(zoneBonus * ServerProperties.Properties.BP_RATE), false, false, false);
+                    }
+                }
 
 				//[Freya] Nidel: ToA Bp Bonus
 				long bpBonus = GetModified(eProperty.BountyPoints);
@@ -4680,6 +4704,19 @@ namespace DOL.GS
 				expTotal -= expGroupBonus;
 				expTotal -= expCampBonus;
 				expTotal -= expOutpostBonus;
+
+                //[StephenxPimentel] - Zone Bonus XP Support
+                if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
+                {
+                    int zoneBonus = (((int)expTotal * ZoneBonus.GetXPBonus(this)) / 100);
+                    if (zoneBonus > 0)
+                    {
+                        Out.SendMessage(ZoneBonus.GetBonusMessage(this, (int)(zoneBonus * ServerProperties.Properties.XP_RATE), ZoneBonus.eZoneBonusType.XP),
+                            eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                        GainExperience(eXPSource.Other, (long)(zoneBonus * ServerProperties.Properties.XP_RATE), 0, 0, 0, false, false, false);
+                    }
+                }
+
 
 				if (this.CurrentRegion.IsRvR)
 					expTotal = (long)(expTotal * ServerProperties.Properties.RvR_XP_RATE);
@@ -9997,7 +10034,7 @@ namespace DOL.GS
 				m_swimming = value;
 				Notify(GamePlayerEvent.SwimmingStatus, this);
                 //Handle Lava Damage
-                if (m_swimming && CurrentZone.IsLava == 1)
+                if (m_swimming && CurrentZone.IsLava == true)
                 {
                     if (m_lavaBurningTimer == null)
                     {
@@ -10007,7 +10044,7 @@ namespace DOL.GS
                         m_lavaBurningTimer.Start(1);
                     }
                 }
-                if (!m_swimming && CurrentZone.IsLava == 1 && m_lavaBurningTimer != null)
+                if (!m_swimming && CurrentZone.IsLava == true && m_lavaBurningTimer != null)
                 {
                     m_lavaBurningTimer.Stop();
                     m_lavaBurningTimer = null;

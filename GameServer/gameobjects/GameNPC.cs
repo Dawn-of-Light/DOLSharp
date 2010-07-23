@@ -4045,6 +4045,21 @@ namespace DOL.GS
 					if (GameMoney.IsItemMoney(lootTemplate.Name))
 					{
 						long value = lootTemplate.Price;
+
+                        //[StephenxPimentel] - Zone Bonus XP Support
+                        if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
+                        {
+                            GamePlayer killerPlayer = killer as GamePlayer;
+
+                            int zoneBonus = (((int)value * ZoneBonus.GetCoinBonus(killerPlayer) / 100));
+                            if (zoneBonus > 0)
+                            {
+                                killerPlayer.AddMoney((long)zoneBonus * (long)ServerProperties.Properties.MONEY_DROP, 
+                                    ZoneBonus.GetBonusMessage(killerPlayer, (int)(zoneBonus * ServerProperties.Properties.MONEY_DROP), ZoneBonus.eZoneBonusType.COIN),
+                                    eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                            }
+                        }
+
 						if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Coin_Drop_5, (eRealm)killer.Realm))
 							value += (value / 100) * 5;
 						else if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Coin_Drop_3, (eRealm)killer.Realm))

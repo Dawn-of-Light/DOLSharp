@@ -397,6 +397,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("world", "task_give_random_item", "Task is also rewarded with ROG ?", false)]
 		public static bool TASK_GIVE_RANDOM_ITEM;
+
+        /// <summary>
+        /// Should we enable Zone Bonuses?
+        /// </summary>
+        [ServerProperty("world", "enable_zone_bonuses", "Are Zone Bonuses Enabled?", false)]
+        public static bool ENABLE_ZONE_BONUSES;
 		#endregion
 		
 		#region RATES
