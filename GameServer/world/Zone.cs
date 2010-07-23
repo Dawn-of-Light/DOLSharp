@@ -29,6 +29,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 
+using DOL.Database;
+
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
 
@@ -192,12 +194,18 @@ namespace DOL.GS
         /// <summary>
         /// Does this zone contain Lava
         /// </summary>
-        private readonly int m_IsLava;
+        private readonly bool m_IsLava;
 
 		/// <summary>
 		/// already initialized?
 		/// </summary>
 		private bool m_initialized = false;
+
+
+        private int m_bonusXP = 0;
+        private int m_bonusRP = 0;
+        private int m_bonusBP = 0;
+        private int m_bonusCoin = 0;
 
 		#endregion
 
@@ -214,7 +222,7 @@ namespace DOL.GS
 		/// <param name="width">the Width of this zone</param>
 		/// <param name="height">the Height of this zone</param>
         /// <param name="zoneskinID">For clientside positioning in instances: The 'fake' zoneid we send to clients.</param>
-		public Zone(Region region, ushort id, string desc, int xoff, int yoff, int width, int height, ushort zoneskinID, int waterlevel, int islava)
+		public Zone(Region region, ushort id, string desc, int xoff, int yoff, int width, int height, ushort zoneskinID, int waterlevel, bool islava, int xpBonus, int rpBonus, int bpBonus, int coinBonus)
 		{
 			m_Region = region;
 			m_ID = id;
@@ -227,9 +235,15 @@ namespace DOL.GS
 			m_waterlevel = waterlevel;
             m_IsLava = islava;
 
+            m_bonusXP = xpBonus;
+            m_bonusRP = rpBonus;
+            m_bonusBP = bpBonus;
+            m_bonusCoin = coinBonus;
+
 			// initialise subzone objects and counters
 			m_subZoneElements = new SubNodeElement[SUBZONE_NBR][];
 			m_initialized = false;
+
 		}
 
 		public void Delete()
@@ -498,7 +512,7 @@ namespace DOL.GS
         /// <summary>
         /// Returns 1 if this zone has lava
         /// </summary>
-        public int IsLava
+        public bool IsLava
         {
             get { return m_IsLava; }
         }
@@ -1394,5 +1408,40 @@ namespace DOL.GS
 		}
 
 		#endregion
+
+        #region Zone Bonuses
+        /// <summary>
+        /// Bonus XP Gained (%)
+        /// </summary>
+        public int BonusExperience
+        {
+            get { return m_bonusXP; }
+            set { m_bonusXP = value; }
+        }
+        /// <summary>
+        /// Bonus RP Gained (%)
+        /// </summary>
+        public int BonusRealmpoints
+        {
+            get { return m_bonusRP; }
+            set { m_bonusRP = value; }
+        }
+        /// <summary>
+        /// Bonus BP Gained (%)
+        /// </summary>
+        public int BonusBountypoints
+        {
+            get { return m_bonusBP; }
+            set { m_bonusBP = value; }
+        }
+        /// <summary>
+        /// Bonus Money Gained (%)
+        /// </summary>
+        public int BonusCoin
+        {
+            get { return m_bonusCoin; }
+            set { m_bonusCoin = value; }
+        } 
+        #endregion
 	}
 }

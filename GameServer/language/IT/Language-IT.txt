@@ -965,3 +965,9 @@ PlayerStatistic.PvE.KillsDragon:			Dragon Uccisi
 PlayerStatistic.PvE.KillsEpic:				Boss Epici Uccisi
 PlayerStatistic.PvE.KillsLegion:			Legion Uccisi
 
+# ZONE BONUSES
+
+ZoneBonus.AdditionalXP: You gain an additional {0} experience for adventuring in this zone!
+ZoneBonus.AdditionalRP: You gain an additional {0} realmpoints for adventuring in this zone!
+ZoneBonus.AdditionalBP: You gain an additional {0} bountypoints for adventuring in this zone!
+ZoneBonus.AdditionalCoin: You gain additional coins for adventuring in this zone!

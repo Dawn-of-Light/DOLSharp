@@ -221,6 +221,7 @@
     <Compile Include="commands\GMCommands\titlegm.cs" />
     <Compile Include="commands\GMCommands\walk.cs" />
     <Compile Include="commands\GMCommands\weather.cs" />
+    <Compile Include="commands\GMCommands\ZoneBonus.cs" />
     <Compile Include="commands\PlayerCommands\advice.cs" />
     <Compile Include="commands\PlayerCommands\advisor.cs" />
     <Compile Include="commands\PlayerCommands\afk.cs" />
@@ -2528,6 +2529,7 @@
     <Compile Include="world\Zone.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="world\ZoneBonus.cs" />
     <Compile Include="world\ZoneData.cs" />
     <EmbeddedResource Include="config\logconfig.xml" />
     <EmbeddedResource Include="config\regions.xml">

@@ -346,3 +346,10 @@ HousingPlaceItemHandler.PutMoney:			Dal jsi penize na tvuj dum.
 Scripts.Players.Language.Set:				Zmenil jsi jazyk na: {0}.
 Scripts.Players.Language.Current:			Jazyk je prave nastaven na: {0}.
 
+# ZONE BONUSES
+
+ZoneBonus.AdditionalXP: You gain an additional {0} experience for adventuring in this zone!
+ZoneBonus.AdditionalRP: You gain an additional {0} realmpoints for adventuring in this zone!
+ZoneBonus.AdditionalBP: You gain an additional {0} bountypoints for adventuring in this zone!
+ZoneBonus.AdditionalCoin: You gain additional coins for adventuring in this zone!
+
