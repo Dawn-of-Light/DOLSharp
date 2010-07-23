@@ -320,15 +320,15 @@ namespace DOL.GS
 
 			//If the files are missing this method
 			//creates the default values
-			CheckRegionAndZoneConfigs();
+            CheckRegionAndZoneConfigs(); 
+            XMLConfigFile zoneCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.ZoneConfigFile)); ;
+            
+            XMLConfigFile regionCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.RegionConfigFile));
 
-			XMLConfigFile zoneCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.ZoneConfigFile));
-			XMLConfigFile regionCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.RegionConfigFile));
-
-			if (log.IsDebugEnabled)
-			{
-				log.Debug(string.Format("{0} blocks read from {1}", regionCfg.Children.Count, GameServer.Instance.Configuration.RegionConfigFile));
-				log.Debug(string.Format("{0} blocks read from {1}", zoneCfg.Children.Count, GameServer.Instance.Configuration.ZoneConfigFile));
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(string.Format("{0} blocks read from {1}", regionCfg.Children.Count, GameServer.Instance.Configuration.RegionConfigFile));
+                log.Debug(string.Format("{0} blocks read from {1}", zoneCfg.Children.Count, GameServer.Instance.Configuration.ZoneConfigFile));
             }
 
             #region Instances
@@ -346,156 +346,193 @@ namespace DOL.GS
 
             // Load available teleport locations.
 
-			var objs = GameServer.Database.SelectAllObjects<Teleport>();
-			m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
-			int[] numTeleports = new int[3];
-			foreach (Teleport teleport in objs)
-			{
-				Dictionary<string, Teleport> teleportList;
-				if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
-					teleportList = m_teleportLocations[(eRealm)teleport.Realm];
-				else
-				{
-					teleportList = new Dictionary<string, Teleport>();
-					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
-				}
+            var objs = GameServer.Database.SelectAllObjects<Teleport>();
+            m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
+            int[] numTeleports = new int[3];
+            foreach (Teleport teleport in objs)
+            {
+                Dictionary<string, Teleport> teleportList;
+                if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
+                    teleportList = m_teleportLocations[(eRealm)teleport.Realm];
+                else
+                {
+                    teleportList = new Dictionary<string, Teleport>();
+                    m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
+                }
                 String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
-				if (teleportList.ContainsKey(teleportKey))
-				{
-					log.Error("WorldMgr.EarlyInit teleporters - Cannot add " + teleportKey + " already exists");
-					continue;
-				}
-				teleportList.Add(teleportKey, teleport);
-				if (teleport.Realm >= 1 && teleport.Realm <= 3)
-					numTeleports[teleport.Realm - 1]++;
-			}
-			log.Info(String.Format("Loaded {0} Albion, {1} Midgard and {2} Hibernia teleport locations",
-				numTeleports[0], numTeleports[1], numTeleports[2]));
+                if (teleportList.ContainsKey(teleportKey))
+                {
+                    log.Error("WorldMgr.EarlyInit teleporters - Cannot add " + teleportKey + " already exists");
+                    continue;
+                }
+                teleportList.Add(teleportKey, teleport);
+                if (teleport.Realm >= 1 && teleport.Realm <= 3)
+                    numTeleports[teleport.Realm - 1]++;
+            }
+            log.Info(String.Format("Loaded {0} Albion, {1} Midgard and {2} Hibernia teleport locations",
+                numTeleports[0], numTeleports[1], numTeleports[2]));
 
-			objs = null;
+            objs = null;
 
-			// sort the regions by mob count
+            // sort the regions by mob count
 
-			log.Debug("loading mobs from DB...");
+            log.Debug("loading mobs from DB...");
 
-			var mobList = new List<Mob>();
+            var mobList = new List<Mob>();
 
-			if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
-			{
-				string[] astr = ServerProperties.Properties.DEBUG_LOAD_REGIONS.Split(';');
+            if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
+            {
+                string[] astr = ServerProperties.Properties.DEBUG_LOAD_REGIONS.Split(';');
 
-				foreach (string loadRegion in astr)
-				{
-					mobList.AddRange(GameServer.Database.SelectObjects<Mob>("region = " + loadRegion));
-				}
-			}
-			else
-			{
-				mobList.AddRange(GameServer.Database.SelectAllObjects<Mob>());
-			}
+                foreach (string loadRegion in astr)
+                {
+                    mobList.AddRange(GameServer.Database.SelectObjects<Mob>("region = " + loadRegion));
+                }
+            }
+            else
+            {
+                mobList.AddRange(GameServer.Database.SelectAllObjects<Mob>());
+            }
 
-			var mobsByRegionId = new Dictionary<ushort, List<Mob>>(512);
-			foreach (Mob mob in mobList)
-			{
-				List<Mob> list;
+            var mobsByRegionId = new Dictionary<ushort, List<Mob>>(512);
+            foreach (Mob mob in mobList)
+            {
+                List<Mob> list;
 
-				if(!mobsByRegionId.TryGetValue(mob.Region, out list))
-				{
-					list = new List<Mob>(1024);
-					mobsByRegionId.Add(mob.Region, list);
-				}
+                if (!mobsByRegionId.TryGetValue(mob.Region, out list))
+                {
+                    list = new List<Mob>(1024);
+                    mobsByRegionId.Add(mob.Region, list);
+                }
 
-				list.Add(mob);
-			}
+                list.Add(mob);
+            }
 
-			var regions = new List<RegionData>(512);
-			foreach (var entry in regionCfg.Children)
-			{
-				string name = entry.Key;
-				ConfigElement config = entry.Value;
+            var regions = new List<RegionData>(512);
+            foreach (var entry in regionCfg.Children)
+            {
+                string name = entry.Key;
+                ConfigElement config = entry.Value;
 
-				RegionData data = new RegionData();
-				data.Id = (ushort)config[ENTRY_REG_ID].GetInt();
-				data.Name = name;
-				data.Description = config[ENTRY_REG_DESC].GetString();
-				data.Ip = config[ENTRY_REG_IP].GetString();
-				data.Port = (ushort)config[ENTRY_REG_PORT].GetInt();
-				data.WaterLevel = config[ENTRY_REG_WATER_LEVEL].GetInt();
-				data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
-				data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
-				data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
+                RegionData data = new RegionData();
+                data.Id = (ushort)config[ENTRY_REG_ID].GetInt();
+                data.Name = name;
+                data.Description = config[ENTRY_REG_DESC].GetString();
+                data.Ip = config[ENTRY_REG_IP].GetString();
+                data.Port = (ushort)config[ENTRY_REG_PORT].GetInt();
+                data.WaterLevel = config[ENTRY_REG_WATER_LEVEL].GetInt();
+                data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
+                data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
+                data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
 
-				List<Mob> mobs;
+                List<Mob> mobs;
 
-				if (!mobsByRegionId.TryGetValue(data.Id, out mobs))
-				{
-					data.Mobs = new Mob[0];
-				}
-				else
-				{
-					data.Mobs = mobs.ToArray();
-				}
+                if (!mobsByRegionId.TryGetValue(data.Id, out mobs))
+                {
+                    data.Mobs = new Mob[0];
+                }
+                else
+                {
+                    data.Mobs = mobs.ToArray();
+                }
 
-				regions.Add(data);
+                regions.Add(data);
 
                 //Dinberg - save the data by ID.
-				if (m_regionData.ContainsKey(data.Id))
-				{
-					log.Error("Duplicate key in region table - " + data.Id + ", EarlyInit in WorldMgr failed.");
-				}
-				else
-				{
-					m_regionData.Add(data.Id, data);
-				}
-			}
+                if (m_regionData.ContainsKey(data.Id))
+                {
+                    log.Error("Duplicate key in region table - " + data.Id + ", EarlyInit in WorldMgr failed.");
+                }
+                else
+                {
+                    m_regionData.Add(data.Id, data);
+                }
+            }
 
-			regions.Sort();
+            regions.Sort();
 
-			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w2");
+            log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w2");
 
-			int cpuCount = GameServer.Instance.Configuration.CpuCount;
-			if (cpuCount < 1)
-				cpuCount = 1;
+            int cpuCount = GameServer.Instance.Configuration.CpuCount;
+            if (cpuCount < 1)
+                cpuCount = 1;
 
-			GameTimer.TimeManager[] timers = new GameTimer.TimeManager[cpuCount];
-			for (int i = 0; i < cpuCount; i++)
-			{
-				timers[i] = new GameTimer.TimeManager("RegionTime" + (i + 1).ToString());
-			}
+            GameTimer.TimeManager[] timers = new GameTimer.TimeManager[cpuCount];
+            for (int i = 0; i < cpuCount; i++)
+            {
+                timers[i] = new GameTimer.TimeManager("RegionTime" + (i + 1).ToString());
+            }
 
-			m_regionTimeManagers = timers;
+            m_regionTimeManagers = timers;
 
-			for (int i = 0; i < regions.Count; i++)
-			{
-				RegionData region = (RegionData)regions[i];
-				RegisterRegion(timers[FastMath.Abs(i % (cpuCount * 2) - cpuCount) % cpuCount], region);
-			}
+            for (int i = 0; i < regions.Count; i++)
+            {
+                RegionData region = (RegionData)regions[i];
+                RegisterRegion(timers[FastMath.Abs(i % (cpuCount * 2) - cpuCount) % cpuCount], region);
+            }
 
-			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w3");
+            log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w3");
 
-			foreach (var entry in zoneCfg.Children)
-			{
-				//string name = (string) entry.Key;
-				ConfigElement config = entry.Value;
+            //stephenxpimentel - changed to SQL.
+            if (GameServer.Database.GetObjectCount<Zones>() < 473)
+            {
+               foreach (var entry in zoneCfg.Children)
+               {
+                   //string name = (string) entry.Key;
+                   ConfigElement config = entry.Value;
 
+                   Zones checkZone = GameServer.Database.FindObjectByKey<Zones>(config[ENTRY_ZONE_ZONEID].GetInt());
+                   if (checkZone == null)
+                   {
+                       Zones dbZone = new Zones();
+                       dbZone.Height = config[ENTRY_ZONE_HEIGHT].GetInt(0);
+                       dbZone.Width = config[ENTRY_ZONE_WIDTH].GetInt(0);
+                       dbZone.OffsetY = config[ENTRY_ZONE_OFFY].GetInt(0);
+                       dbZone.OffsetX = config[ENTRY_ZONE_OFFX].GetInt(0);
+                       dbZone.Name = config[ENTRY_ZONE_DESC].GetString("");
+                       dbZone.RegionID = (ushort)config[ENTRY_ZONE_REGIONID].GetInt(0);
+                       dbZone.ZoneID = config[ENTRY_ZONE_ZONEID].GetInt(0);
+                       dbZone.WaterLevel = config[ENTRY_ZONE_WATER_LEVEL].GetInt(0);
+
+                       if (config[ENTRY_ZONE_LAVA].GetInt(0) != 0)
+                       {
+                           dbZone.IsLava = true;
+                       }
+                       else
+                       {
+                           dbZone.IsLava = false;
+                       }
+
+                       log.Debug(string.Format("Zone {0} was not found in the database. Added!", dbZone.ZoneID));
+                       GameServer.Database.AddObject(dbZone);
+                   }
+               }
+            }
+
+			
+
+            foreach (Zones dbZone in GameServer.Database.SelectAllObjects<Zones>())
+            {
                 ZoneData zoneData = new ZoneData();
-                zoneData.Height = (byte)config[ENTRY_ZONE_HEIGHT].GetInt();
-                zoneData.Width = (byte)config[ENTRY_ZONE_WIDTH].GetInt();
-                zoneData.OffY = (byte)config[ENTRY_ZONE_OFFY].GetInt();
-                zoneData.OffX = (byte)config[ENTRY_ZONE_OFFX].GetInt();
-                zoneData.Description = config[ENTRY_ZONE_DESC].GetString();
-                zoneData.RegionID = (ushort)config[ENTRY_ZONE_REGIONID].GetInt();
-                zoneData.ZoneID = (ushort)config[ENTRY_ZONE_ZONEID].GetInt();
-				zoneData.WaterLevel = (int)config[ENTRY_ZONE_WATER_LEVEL].GetInt(-1);
-                zoneData.IsLava = (int)config[ENTRY_ZONE_LAVA].GetInt(0);
-                RegisterZone(zoneData, zoneData.ZoneID, zoneData.RegionID, zoneData.Description);
+                zoneData.Height = (byte)dbZone.Height;
+                zoneData.Width = (byte)dbZone.Width;
+                zoneData.OffY = (byte)dbZone.OffsetY;
+                zoneData.OffX = (byte)dbZone.OffsetX;
+                zoneData.Description = dbZone.Name;
+                zoneData.RegionID = dbZone.RegionID;
+                zoneData.ZoneID = (ushort)dbZone.ZoneID;
+                zoneData.WaterLevel = dbZone.WaterLevel;
+                zoneData.IsLava = dbZone.IsLava;
+                RegisterZone(zoneData, zoneData.ZoneID, zoneData.RegionID, zoneData.Description, 
+                    dbZone.Experience, dbZone.Realmpoints, dbZone.Bountypoints, dbZone.Coin);
 
                 //Save the zonedata.
                 if (!m_zonesData.ContainsKey(zoneData.RegionID))
                     m_zonesData.Add(zoneData.RegionID, new List<ZoneData>());
 
                 m_zonesData[zoneData.RegionID].Add(zoneData);
-			}
+
+            }
 
 			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w4");
 
@@ -1046,7 +1083,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Registers a Zone into a Region
 		/// </summary>
-        public static void RegisterZone(ZoneData data, ushort zoneID, ushort regionID, string zoneName)
+        public static void RegisterZone(ZoneData data, ushort zoneID, ushort regionID, string zoneName, int xpBonus, int rpBonus, int bpBonus, int coinBonus)
         {
             Region reg = GetRegion(regionID);
             if (reg == null)
@@ -1060,7 +1097,8 @@ namespace DOL.GS
                 data.WaterLevel = reg.WaterLevel;
             
             Zone zone = new Zone(
-                reg, zoneID, zoneName, data.OffX * 8192, data.OffY * 8192, data.Width * 8192, data.Height * 8192, data.ZoneID, data.WaterLevel, data.IsLava);
+                reg, zoneID, zoneName, data.OffX * 8192, data.OffY * 8192, data.Width * 8192, data.Height * 8192, data.ZoneID, data.WaterLevel, data.IsLava, 
+                xpBonus, rpBonus, bpBonus, coinBonus);
 
             //Dinberg:Instances
             //ZoneID will always be constant as last parameter, because ZoneSkinID will effectively be a bluff, to remember
@@ -2276,7 +2314,7 @@ namespace DOL.GS
                         log.Error("Zone limit reached in instance creation!");
 
                     //create a zone of this ID.
-                    RegisterZone(dat, zoneID, ID, dat.Description + " (Instance)");
+                    RegisterZone(dat, zoneID, ID, dat.Description + " (Instance)", 0, 0, 0, 0);
                 }
             }
 
