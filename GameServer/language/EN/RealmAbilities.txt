@@ -5,12 +5,52 @@ AdrenalineRushAbility.AddEffectsInfo.Info3:
 AdrenalineRushAbility.AddEffectsInfo.Info4:		
 AdrenalineRushAbility.AddEffectsInfo.Info5:		
 
+# /BedazzlingAuraAbility
+BedazzlingAuraAbility.AddEffectsInfo.Info1:
+BedazzlingAuraAbility.AddEffectsInfo.Info2:
+BedazzlingAuraAbility.AddEffectsInfo.Info3:
+BedazzlingAuraAbility.AddEffectsInfo.Info4:
+BedazzlingAuraAbility.AddEffectsInfo.Info5:
+
 # /ConcentrationAbility
 ConcentrationAbility.AddEffectsInfo.Info1:	Level 1: Value: 25%
 ConcentrationAbility.AddEffectsInfo.Info2:	Level 2: Value: 60%
 ConcentrationAbility.AddEffectsInfo.Info3:	Level 3: Value: 100%
 ConcentrationAbility.AddEffectsInfo.Info4:	Target: Self
 ConcentrationAbility.AddEffectsInfo.Info5:	Casting time: instant
+
+# /JuggernautAbility
+JuggernautAbility.AddEffectsInfo.Info1:
+JuggernautAbility.AddEffectsInfo.Info2:
+JuggernautAbility.AddEffectsInfo.Info3:
+JuggernautAbility.AddEffectsInfo.Info4:
+JuggernautAbility.AddEffectsInfo.Info5:
+
+# /MasteryofConcentrationAbility
+MasteryofConcentrationAbility.AddEffectsInfo.Info1:
+MasteryofConcentrationAbility.AddEffectsInfo.Info2:
+MasteryofConcentrationAbility.AddEffectsInfo.Info3:
+MasteryofConcentrationAbility.AddEffectsInfo.Info4:
+MasteryofConcentrationAbility.AddEffectsInfo.Info5:
+
+# /MysticCrystalLoreAbility
+MysticCrystalLoreAbility.AddEffectsInfo.Info1:	Level 1: Value: 25%
+MysticCrystalLoreAbility.AddEffectsInfo.Info2:	Level 2: Value: 60%
+MysticCrystalLoreAbility.AddEffectsInfo.Info3:	Level 2: Value: 100%
+MysticCrystalLoreAbility.AddEffectsInfo.Info4:	Target: Self
+MysticCrystalLoreAbility.AddEffectsInfo.Info5:	Casting time: instant
+MysticCrystalLoreAbility.AddEffectsInfo.Info6:
+
+# /NegativeMaelstromAbility
+NegativeMaelstromAbility.AddEffectsInfo.Info1:
+NegativeMaelstromAbility.AddEffectsInfo.Info2:
+NegativeMaelstromAbility.AddEffectsInfo.Info3:
+NegativeMaelstromAbility.AddEffectsInfo.Info4:
+NegativeMaelstromAbility.AddEffectsInfo.Info5:
+NegativeMaelstromAbility.AddEffectsInfo.Info6:
+NegativeMaelstromAbility.AddEffectsInfo.Info7:
+NegativeMaelstromAbility.AddEffectsInfo.Info8:
+NegativeMaelstromAbility.AddEffectsInfo.Info9:
 
 # /RAPropertyEnhancer
 RAPropertyEnhancer.DelveInfo.Info1:		Level {0}: Amount: {1}{2}

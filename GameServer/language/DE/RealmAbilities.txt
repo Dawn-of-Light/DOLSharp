@@ -5,12 +5,52 @@ AdrenalineRushAbility.AddEffectsInfo.Info3:	Stufe 3: Dauer: 20 Sekunden
 AdrenalineRushAbility.AddEffectsInfo.Info4:	Ziel: Selbst
 AdrenalineRushAbility.AddEffectsInfo.Info5:	Zauberzeit: Sofort
 
+# /BedazzlingAuraAbility
+BedazzlingAuraAbility.AddEffectsInfo.Info1:	Stufe 1: Dauer: 30 Sekunden
+BedazzlingAuraAbility.AddEffectsInfo.Info2:	Stufe 2: Dauer: 30 Sekunden
+BedazzlingAuraAbility.AddEffectsInfo.Info3:	Stufe 3: Dauer: 30 Sekunden
+BedazzlingAuraAbility.AddEffectsInfo.Info4:	Ziel: Gruppe
+BedazzlingAuraAbility.AddEffectsInfo.Info5:	Zauberzeit: Sofort
+
 # /ConcentrationAbility
-#ConcentrationAbility.AddEffectsInfo.Info1:
-#ConcentrationAbility.AddEffectsInfo.Info2:
-#ConcentrationAbility.AddEffectsInfo.Info3:
-#ConcentrationAbility.AddEffectsInfo.Info4:	
-#ConcentrationAbility.AddEffectsInfo.Info5:	
+ConcentrationAbility.AddEffectsInfo.Info1:	Stufe 1: Wert: 25%
+ConcentrationAbility.AddEffectsInfo.Info2:	Stufe 1: Wert: 60%
+ConcentrationAbility.AddEffectsInfo.Info3:	Stufe 1: Wert: 100%
+ConcentrationAbility.AddEffectsInfo.Info4:	Ziel: Selbst
+ConcentrationAbility.AddEffectsInfo.Info5:	Zauberzeit: Sofort
+
+# /JuggernautAbility
+JuggernautAbility.AddEffectsInfo.Info1:		Stufe 1: Dauer: 1:00 Minute
+JuggernautAbility.AddEffectsInfo.Info2:		Stufe 2: Dauer: 1:00 Minute
+JuggernautAbility.AddEffectsInfo.Info3:		Stufe 3: Dauer: 1:00 Minute
+JuggernautAbility.AddEffectsInfo.Info4:		Ziel: kontrolliertes Ziel
+JuggernautAbility.AddEffectsInfo.Info5:		Zauberzeit: Sofort
+
+# /MasteryofConcentrationAbility
+MasteryofConcentrationAbility.AddEffectsInfo.Info1:	Stufe 1: Dauer: 30 Sekunden
+MasteryofConcentrationAbility.AddEffectsInfo.Info2:	Stufe 2: Dauer: 30 Sekunden
+MasteryofConcentrationAbility.AddEffectsInfo.Info3:	Stufe 3: Dauer: 30 Sekunden
+MasteryofConcentrationAbility.AddEffectsInfo.Info4:	Ziel: Selbst
+MasteryofConcentrationAbility.AddEffectsInfo.Info5:	Zauberzeit: Sofort
+
+# /MysticCrystalLoreAbility
+MysticCrystalLoreAbility.AddEffectsInfo.Info1:	Stufe 1: Betrag: 25%
+MysticCrystalLoreAbility.AddEffectsInfo.Info2:	Stufe 2: Betrag: 60%
+MysticCrystalLoreAbility.AddEffectsInfo.Info3:	Stufe 3: Betrag: 100%
+MysticCrystalLoreAbility.AddEffectsInfo.Info4:	Ziel: Selbst
+MysticCrystalLoreAbility.AddEffectsInfo.Info5:	Zauberzeit: Sofort
+MysticCrystalLoreAbility.AddEffectsInfo.Info6:	Dieser Zauberspruch kann nicht während eines Kampfes ausgesprochen werden.
+
+# /NegativeMaelstromAbility
+NegativeMaelstromAbility.AddEffectsInfo.Info1:	Stufe 1: Dauer: 30 Sekunden
+NegativeMaelstromAbility.AddEffectsInfo.Info2:	Stufe 2: Dauer: 30 Sekunden
+NegativeMaelstromAbility.AddEffectsInfo.Info3:	Stufe 3: Dauer: 30 Sekunden
+NegativeMaelstromAbility.AddEffectsInfo.Info4:	Ziel: Bereich
+NegativeMaelstromAbility.AddEffectsInfo.Info5:	Reichweite: 1500
+NegativeMaelstromAbility.AddEffectsInfo.Info6:	Frequenz: 4.5 Sekunden
+NegativeMaelstromAbility.AddEffectsInfo.Info7:	Zauberzeit: 2.0 Sekunden
+NegativeMaelstromAbility.AddEffectsInfo.Info8:	Radius: 350
+NegativeMaelstromAbility.AddEffectsInfo.Info9:	Schadensart: Kälte
 
 # /RAPropertyEnhancer
 RAPropertyEnhancer.DelveInfo.Info1:		Stufe {0}: Wert: {1}{2}
