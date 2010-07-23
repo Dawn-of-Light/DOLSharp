@@ -53,13 +53,13 @@ namespace DOL.GS
         public int WaterLevel
         { get { return m_waterLevel; } set { m_waterLevel = value; } }
 
-        public int IsLava
+        public bool IsLava
         { get { return m_IsLava; } set { m_IsLava = value; } }
 
         private byte m_OffX, m_OffY, m_Height, m_Width;
         private ushort m_ZoneID, m_RegionID;
         private string m_description;
         private int m_waterLevel;
-        private int m_IsLava;
+        private bool m_IsLava;
     }
 }
