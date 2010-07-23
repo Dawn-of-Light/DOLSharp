@@ -474,7 +474,7 @@ namespace DOL.GS
             log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w3");
 
             //stephenxpimentel - changed to SQL.
-            if (GameServer.Database.GetObjectCount<Zones>() < 473)
+            if (GameServer.Database.GetObjectCount<Zones>() < zoneCfg.Children.Count)
             {
                foreach (var entry in zoneCfg.Children)
                {
