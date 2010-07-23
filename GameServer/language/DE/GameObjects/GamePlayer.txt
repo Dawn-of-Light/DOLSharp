@@ -46,7 +46,7 @@ GamePlayer.Attack.TooFarAway:				{0} ist zu weit weg für einen Angriff!
 GamePlayer.Attack.TooTired:				Es ist Euch zu anstrengend, das Ziel noch länger anzuvisieren!	
 GamePlayer.Attack.Type.Shot:				Schuss	
 GamePlayer.Attack.Type.Throw:				Wurf	
-GamePlayer.Attack.WithYour:				
+GamePlayer.Attack.WithYour:				 
 GamePlayer.Attack.YouAttack:				Ihr greift an,
 GamePlayer.Attack.YouShot:				Ihr schießt	
 GamePlayer.Bind.Bound:					Eure Seele ist nun an diesen Ort gebunden.
