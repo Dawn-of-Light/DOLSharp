@@ -36,7 +36,7 @@ MasteryofConcentrationAbility.AddEffectsInfo.Info5:
 # /MysticCrystalLoreAbility
 MysticCrystalLoreAbility.AddEffectsInfo.Info1:	Level 1: Value: 25%
 MysticCrystalLoreAbility.AddEffectsInfo.Info2:	Level 2: Value: 60%
-MysticCrystalLoreAbility.AddEffectsInfo.Info3:	Level 2: Value: 100%
+MysticCrystalLoreAbility.AddEffectsInfo.Info3:	Level 3: Value: 100%
 MysticCrystalLoreAbility.AddEffectsInfo.Info4:	Target: Self
 MysticCrystalLoreAbility.AddEffectsInfo.Info5:	Casting time: instant
 MysticCrystalLoreAbility.AddEffectsInfo.Info6:
