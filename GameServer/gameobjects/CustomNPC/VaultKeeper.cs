@@ -18,6 +18,7 @@
  */
 //							Written by Doulbousiouf (01/11/2004)					//
 using System.Collections;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -44,10 +45,9 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList();
-			//IList list = base.GetExamineMessages(player);
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and vaultkeeper.");
-			list.Add("[Right click to display a vault window]");
-			return list;
+            list.Add(LanguageMgr.GetTranslation(player.Client, "VaultKeeper.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client, "VaultKeeper.RightClick"));
+            return list;
 		}
 
 		#endregion Examine Message

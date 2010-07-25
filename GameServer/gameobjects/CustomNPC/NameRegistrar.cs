@@ -2,33 +2,24 @@
    Written by Gavinius */
 
 using System;
-using DOL;
-using DOL.GS;
-using DOL.Database;
 using System.Collections;
-using DOL.GS.PacketHandler;
+using DOL;
+using DOL.Database;
+using DOL.GS;
 using DOL.GS.Commands;
+using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS
 {
 	[NPCGuildScript("Name Registrar")]
 	public class NameRegistrar : GameNPC
 	{
-		private const string TOWARDSTR = " towards you.";
-
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList(2);
-			string AggroString = GetAggroLevelString(player, false);
-
-			/* Adjust aggro string */
-			if (AggroString.EndsWith(TOWARDSTR))
-			{
-					AggroString = AggroString.Remove(AggroString.Length - TOWARDSTR.Length, TOWARDSTR.Length);
-			}
-
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + AggroString + ".");
-			return list;
+            list.Add(LanguageMgr.GetTranslation(player.Client, "NameRegistrar.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            return list;
 		}
 
 		public override bool Interact(GamePlayer player)
@@ -42,10 +33,10 @@ namespace DOL.GS
 
 				/* Check if level and/or crafting skill let you have a lastname */
 				if (player.Level < LastnameCommandHandler.LASTNAME_MIN_LEVEL && CraftSkill < LastnameCommandHandler.LASTNAME_MIN_CRAFTSKILL)
-					SayTo(player, eChatLoc.CL_SystemWindow, "Return to me when you are " + LastnameCommandHandler.LASTNAME_MIN_LEVEL + "th level to choose a last name.");
+					SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "NameRegistrar.ReturnToMe", LastnameCommandHandler.LASTNAME_MIN_LEVEL));
 				else
-					SayTo(player, eChatLoc.CL_SystemWindow, "I can make you known by a last name of your choice. Use the /lastname <name> command.");
-				return true;
+                    SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "NameRegistrar.LastName"));
+                return true;
 			}
 			return false;
 		}
