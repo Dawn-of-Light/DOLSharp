@@ -309,12 +309,7 @@ namespace DOL.GS.Quests.Albion
 				swampRatTail.Id_nb = "swamp_rat_tail";
 				swampRatTail.IsPickable = true;
 				swampRatTail.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(swampRatTail);
+				GameServer.Database.AddObject(swampRatTail);
 			}
 
 			swampSlimeItem = GameServer.Database.FindObjectByKey<ItemTemplate>("swamp_slime");
@@ -333,12 +328,7 @@ namespace DOL.GS.Quests.Albion
 				swampSlimeItem.Id_nb = "swamp_slime";
 				swampSlimeItem.IsPickable = true;
 				swampSlimeItem.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(swampSlimeItem);
+				GameServer.Database.AddObject(swampSlimeItem);
 			}
 
 			scrollDunwyn = GameServer.Database.FindObjectByKey<ItemTemplate>("scroll_for_dunwyn");
@@ -357,12 +347,7 @@ namespace DOL.GS.Quests.Albion
 				scrollDunwyn.Id_nb = "scroll_for_dunwyn";
 				scrollDunwyn.IsPickable = true;
 				scrollDunwyn.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(scrollDunwyn);
+				GameServer.Database.AddObject(scrollDunwyn);
 			}
 
 			listDunwyn = GameServer.Database.FindObjectByKey<ItemTemplate>("list_for_dunwyn");
@@ -381,12 +366,7 @@ namespace DOL.GS.Quests.Albion
 				listDunwyn.Id_nb = "list_for_dunwyn";
 				listDunwyn.IsPickable = true;
 				listDunwyn.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(listDunwyn);
+				GameServer.Database.AddObject(listDunwyn);
 			}
 
 			riverSpritlingClaw = GameServer.Database.FindObjectByKey<ItemTemplate>("river_spritling_claw");
@@ -405,12 +385,7 @@ namespace DOL.GS.Quests.Albion
 				riverSpritlingClaw.Id_nb = "river_spritling_claw";
 				riverSpritlingClaw.IsPickable = true;
 				riverSpritlingClaw.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(riverSpritlingClaw);
+				GameServer.Database.AddObject(riverSpritlingClaw);
 			}
 
 			princessOberasHead = GameServer.Database.FindObjectByKey<ItemTemplate>("princess_oberas_head");
@@ -429,12 +404,7 @@ namespace DOL.GS.Quests.Albion
 				princessOberasHead.Id_nb = "princess_oberas_head";
 				princessOberasHead.IsPickable = true;
 				princessOberasHead.IsDropable = false;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(princessOberasHead);
+				GameServer.Database.AddObject(princessOberasHead);
 			}
 
 			// item db check
@@ -477,12 +447,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsHelm.MaxCondition = 1000;
 				recruitsHelm.Durability = 1000;
 				recruitsHelm.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsHelm);
+				GameServer.Database.AddObject(recruitsHelm);
 			}
 
 			// item db check
@@ -525,12 +490,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsCap.MaxCondition = 1000;
 				recruitsCap.Durability = 1000;
 				recruitsCap.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsCap);
+				GameServer.Database.AddObject(recruitsCap);
 			}
 
 			recruitsRing = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_silver_ring");
@@ -562,12 +522,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsRing.MaxCondition = 1000;
 				recruitsRing.Durability = 1000;
 				recruitsRing.MaxDurability = 1000;
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsRing);
+				GameServer.Database.AddObject(recruitsRing);
 			}
 
 			#endregion

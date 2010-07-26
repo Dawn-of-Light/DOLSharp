@@ -195,13 +195,7 @@ namespace DOL.GS.Quests.Albion
 				bundleOfDecayedZombieLegs.MaxCondition = 1000;
 				bundleOfDecayedZombieLegs.Durability = 1000;
 				bundleOfDecayedZombieLegs.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(bundleOfDecayedZombieLegs);
+				GameServer.Database.AddObject(bundleOfDecayedZombieLegs);
 			}
 
 			#endregion

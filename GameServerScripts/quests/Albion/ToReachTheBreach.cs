@@ -85,7 +85,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsIntelligentBelt.Weight = 3;
 				RecruitsIntelligentBelt.Model = 597;
 				RecruitsIntelligentBelt.Color = 0;
-				RecruitsIntelligentBelt.Object_Type = (int)eObjectType.GenericArmor;
+				RecruitsIntelligentBelt.Object_Type = (int)eObjectType.Magical;
 				RecruitsIntelligentBelt.Item_Type = (int)eEquipmentItems.WAIST;
 				RecruitsIntelligentBelt.Price = Money.GetMoney(0,0,0,0,10);
 				RecruitsIntelligentBelt.Quality = 100;
@@ -102,6 +102,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsIntelligentBelt.Bonus4 = 8;
 				RecruitsIntelligentBelt.Bonus4Type = (int)eProperty.MaxHealth;
 				RecruitsIntelligentBelt.IsDropable = false;
+				GameServer.Database.AddObject(RecruitsIntelligentBelt);
 			}
 			RecruitsMightyBelt = GameServer.Database.FindObjectByKey<ItemTemplate>("RecruitsMightyBelt");
 			if(RecruitsMightyBelt == null)
@@ -113,7 +114,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsMightyBelt.Weight = 3;
 				RecruitsMightyBelt.Model = 597;
 				RecruitsMightyBelt.Color = 0;
-				RecruitsMightyBelt.Object_Type = (int)eObjectType.GenericArmor;
+				RecruitsMightyBelt.Object_Type = (int)eObjectType.Magical;
 				RecruitsMightyBelt.Item_Type = (int)eEquipmentItems.WAIST;
 				RecruitsMightyBelt.Price = Money.GetMoney(0,0,0,0,10);
 				RecruitsMightyBelt.Quality = 100;
@@ -130,6 +131,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsMightyBelt.Bonus4 = 8;
 				RecruitsMightyBelt.Bonus4Type = (int)eProperty.MaxHealth;
 				RecruitsMightyBelt.IsDropable = false;
+				GameServer.Database.AddObject(RecruitsMightyBelt);
 			}
 			RecruitsPiousBelt = GameServer.Database.FindObjectByKey<ItemTemplate>("RecruitsPiousBelt");
 			if(RecruitsPiousBelt == null)
@@ -141,7 +143,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsPiousBelt.Weight = 3;
 				RecruitsPiousBelt.Model = 597;
 				RecruitsPiousBelt.Color = 0;
-				RecruitsPiousBelt.Object_Type = (int)eObjectType.GenericArmor;
+				RecruitsPiousBelt.Object_Type = (int)eObjectType.Magical;
 				RecruitsPiousBelt.Item_Type = (int)eEquipmentItems.WAIST;
 				RecruitsPiousBelt.Price = Money.GetMoney(0,0,0,0,10);
 				RecruitsPiousBelt.Quality = 100;
@@ -158,6 +160,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsPiousBelt.Bonus4 = 8;
 				RecruitsPiousBelt.Bonus4Type = (int)eProperty.MaxHealth;
 				RecruitsPiousBelt.IsDropable = false;
+				GameServer.Database.AddObject(RecruitsPiousBelt);
 			}
 			#endregion
 

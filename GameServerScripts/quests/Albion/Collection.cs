@@ -209,7 +209,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(fairyGeneralWings);
 			}
 
@@ -233,7 +233,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(dustyOldMap);
 			}
 
@@ -279,7 +279,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(recruitsArms);
 			}
 
@@ -323,7 +323,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(recruitsSleeves);
 			}
 

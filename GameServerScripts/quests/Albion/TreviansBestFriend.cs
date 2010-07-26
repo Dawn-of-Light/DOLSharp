@@ -415,7 +415,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(treviansHoodedCloak);
 			}
 
@@ -468,7 +468,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(bootsOfRescuer);
 			}
 
@@ -521,7 +521,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(bootsOfBaneful);
 			}
 
@@ -573,7 +573,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(bootsOfProtector);
 			}
 
@@ -622,7 +622,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(bootsOfErudition);
 			}
 
@@ -673,7 +673,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(bootsOfReverence);
 			}
 
@@ -724,7 +724,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(bootsOfShadow);
 			}
 
@@ -775,7 +775,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(bootsOfEvanescent);
 			}
 
@@ -823,7 +823,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(bootsOfInfluence);
 			}
 
@@ -874,7 +874,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(bootsOfTheDevoted);
 			}
 
@@ -906,7 +906,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(whistleReward);
 			}
 
