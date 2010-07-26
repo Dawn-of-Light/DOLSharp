@@ -491,7 +491,7 @@ namespace DOL.GS.Commands
 					info.Add( " + Guild : " + target.GuildName );
 					info.Add( " + Health : " + target.Health +" / "+ target.MaxHealth);
 					info.Add(" + Statut : " + statut);
-					info.Add(" + Type : " + DoorRequestHandler.HandlerDoorID / 100000000);
+					info.Add(" + Type : " + DoorRequestHandler.m_handlerDoorID / 100000000);
 					info.Add(" ");
 					info.Add(" + X : " + target.X);  
 					info.Add(" + Y : " + target.Y);

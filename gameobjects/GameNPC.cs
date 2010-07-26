@@ -2272,7 +2272,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all the quests this npc can give to players
 		/// </summary>
-		protected readonly ArrayList m_questListToGive = new ArrayList(1);
+		protected readonly ArrayList m_questListToGive = new ArrayList();
 
 		/// <summary>
 		/// Gets the questlist of this player
@@ -2283,7 +2283,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Adds a quest type to the npc questlist
+		/// Adds a scripted quest type to the npc questlist
 		/// </summary>
 		/// <param name="questType">The quest type to add</param>
 		/// <returns>true if added, false if the npc has already the quest!</returns>
@@ -2300,7 +2300,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Adds a quest to the npc questlist
+		/// removes a scripted quest from this npc
 		/// </summary>
 		/// <param name="questType">The questType to remove</param>
 		/// <returns>true if added, false if the npc has already the quest!</returns>
@@ -2322,6 +2322,7 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Check if the npc can give the specified quest to a player
+		/// Used for scripted quests
 		/// </summary>
 		/// <param name="questType">The type of the quest</param>
 		/// <param name="player">The player who search a quest</param>
@@ -2343,6 +2344,7 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Should the NPC show a quest indicator, this can be overriden for custom handling
+		/// Checks both scripted and data quests
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns>True if the NPC should show quest indicator, false otherwise</returns>
@@ -2353,11 +2355,13 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Check if the npc can give one quest to a player
+		/// Checks both scripted and data quests
 		/// </summary>
 		/// <param name="player">The player to check</param>
 		/// <returns>true if yes, false if the npc can give any quest</returns>
 		public bool CanGiveOneQuest(GamePlayer player)
 		{
+			// Scripted quests
 			lock (m_questListToGive.SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListToGive)
@@ -2368,11 +2372,27 @@ namespace DOL.GS
 						return true;
 				}
 			}
+
+			// Data driven quests
+			lock (m_dataQuests)
+			{
+				foreach (DataQuest quest in DataQuestList)
+				{
+					if (quest.CheckQuestQualification(player) && 
+						quest.StartType != DataQuest.eStartType.Collection && 
+						quest.StartType != DataQuest.eStartType.KillComplete)
+					{
+						return true;
+					}
+				}
+			}
+
 			return false;
 		}
 
 		/// <summary>
 		/// Give a quest a to specific player
+		/// used for scripted quests
 		/// </summary>
 		/// <param name="questType">The quest type</param>
 		/// <param name="player">The player that gets the quest</param>
@@ -2395,7 +2415,8 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Checks if this npc already have a specified quest
+		/// Checks if this npc already has a specified quest
+		/// used for scripted quests
 		/// </summary>
 		/// <param name="questType">The quest type</param>
 		/// <returns>the quest if the npc have the quest or null if not</returns>

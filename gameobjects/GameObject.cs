@@ -18,12 +18,14 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
 using DOL.Database;
 using DOL.Events;
 using DOL.Language;
+using DOL.GS.Quests;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
@@ -791,6 +793,14 @@ namespace DOL.GS
 			/*********** END OF MODIFICATION ***********/
 
 			m_spawnTick = CurrentRegion.Time;
+
+			if (m_isDataQuestsLoaded == false)
+			{
+				// for optimization just load these once
+				LoadDataQuests();
+				m_isDataQuestsLoaded = true;
+			}
+
 			return true;
 		}
 
@@ -875,6 +885,80 @@ namespace DOL.GS
 
 		#endregion
 
+		#region Quests
+
+		/// <summary>
+		/// A cache of every DBDataQuest object
+		/// </summary>
+		protected static IList<DBDataQuest> m_dataQuestCache = null;
+
+		/// <summary>
+		/// List of DataQuests available for this object
+		/// </summary>
+		protected List<DataQuest> m_dataQuests = new List<DataQuest>();
+
+		/// <summary>
+		/// Flag to prevent loading quests on every respawn
+		/// </summary>
+		protected bool m_isDataQuestsLoaded = false;
+
+		/// <summary>
+		/// Fill the data quest cache with all DBDataQuest objects
+		/// </summary>
+		public static void FillDataQuestCache()
+		{
+			if (m_dataQuestCache != null)
+			{
+				m_dataQuestCache = null;
+			}
+
+			m_dataQuestCache = GameServer.Database.SelectAllObjects<DBDataQuest>();
+		}
+
+		/// <summary>
+		/// Load any data driven quests for this object
+		/// </summary>
+		public void LoadDataQuests()
+		{
+			if (m_dataQuestCache == null)
+			{
+				FillDataQuestCache();
+			}
+
+			m_dataQuests.Clear();
+
+			foreach (DBDataQuest quest in m_dataQuestCache)
+			{
+				if (quest.StartRegionID == CurrentRegionID && quest.StartName == Name)
+				{
+					DataQuest dq = new DataQuest(quest);
+					AddDataQuest(dq);
+				}
+			}
+		}
+
+		public void AddDataQuest(DataQuest quest)
+		{
+			if (m_dataQuests.Contains(quest) == false)
+				m_dataQuests.Add(quest);
+		}
+
+		public void RemoveDataQuest(DataQuest quest)
+		{
+			if (m_dataQuests.Contains(quest))
+				m_dataQuests.Remove(quest);
+		}
+
+		/// <summary>
+		/// All the data driven quests this object
+		/// </summary>
+		public List<DataQuest> DataQuestList
+		{
+			get { return m_dataQuests; }
+		}
+
+		#endregion Quests
+
 		#region Interact
 
 		/// <summary>
@@ -890,8 +974,15 @@ namespace DOL.GS
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));
 				return false;
 			}
+
 			Notify(GameObjectEvent.Interact, this, new InteractEventArgs(player));
 			player.Notify(GameObjectEvent.InteractWith, player, new InteractWithEventArgs(this));
+
+			foreach (DataQuest q in DataQuestList)
+			{
+				// Notify all our potential quests of the interaction so we can check for quest offers
+				q.Notify(GameObjectEvent.Interact, this, new InteractEventArgs(player));
+			}
 
 			return true;
 		}
@@ -1428,6 +1519,17 @@ namespace DOL.GS
 		/// <returns>true if the item was successfully received</returns>
 		public virtual bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
+			foreach (DataQuest quest in DataQuestList)
+			{
+				quest.Notify(GameLivingEvent.ReceiveItem, this, new ReceiveItemEventArgs(source, this, item));
+			}
+
+			if (item == null || item.OwnerID == null)
+			{
+				// item was taken
+				return true;
+			}
+
 			return false;
 		}
 

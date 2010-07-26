@@ -22,7 +22,7 @@ using DOL.GS;
 namespace DOL.Events
 {
 	/// <summary>
-	/// Zusammenfassung für SourceEventArgs.
+	/// The source of an event
 	/// </summary>
 	public class SourceEventArgs : EventArgs
 	{
@@ -34,7 +34,7 @@ namespace DOL.Events
 		}
 
 		/// <summary>
-		/// Gets the GameLiving source who was saying something
+		/// The GameLiving who caused this event
 		/// </summary>
 		public virtual GameLiving Source
 		{

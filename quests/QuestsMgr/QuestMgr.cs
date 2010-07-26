@@ -34,6 +34,7 @@ namespace DOL.GS.Quests
 	/// <summary>
 	/// Declares the quest managed, all questDescriptor instances
 	/// must be registered here to be usable
+	/// This manager is used for scripted quests
 	/// </summary>
     public sealed class QuestMgr
     {
