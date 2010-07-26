@@ -25,62 +25,65 @@ using DOL.Language;
 namespace DOL.GS.Commands
 {
 	[Cmd("&item",
-	     ePrivLevel.GM,
-	     "GMCommands.Item.Description",
-	     "GMCommands.Item.Information",
-	     "GMCommands.Item.Usage.Blank",
-	     "GMCommands.Item.Usage.Info",
-	     "GMCommands.Item.Usage.Create",
-	     "GMCommands.Item.Usage.Count",
-	     "GMCommands.Item.Usage.MaxCount",
-	     "GMCommands.Item.Usage.PackSize",
-	     "GMCommands.Item.Usage.Model",
-	     "GMCommands.Item.Usage.Extension",
-	     "GMCommands.Item.Usage.Color",
-	     "GMCommands.Item.Usage.Effect",
-	     "GMCommands.Item.Usage.Name",
-	     "GMCommands.Item.Usage.CrafterName",
-	     "GMCommands.Item.Usage.Type",
-	     "GMCommands.Item.Usage.Object",
-	     "GMCommands.Item.Usage.Hand",
-	     "GMCommands.Item.Usage.DamageType",
-	     "GMCommands.Item.Usage.Emblem",
-	     "GMCommands.Item.Usage.Price",
-	     "GMCommands.Item.Usage.Condition",
-	     "GMCommands.Item.Usage.Quality",
-	     "GMCommands.Item.Usage.Durability",
-	     "GMCommands.Item.Usage.isPickable",
-	     "GMCommands.Item.Usage.IsNotLosingDUR",
-	     "GMCommands.Item.Usage.IsIndestructible",
-	     "GMCommands.Item.Usage.isDropable",
-	     "GMCommands.Item.Usage.IsTradable",
-	     "GMCommands.Item.Usage.IsStackable",
-	     "GMCommands.Item.Usage.CanDropAsLoot",
-	     "GMCommands.Item.Usage.Bonus",
-	     "GMCommands.Item.Usage.mBonus",
-	     "GMCommands.Item.Usage.Weight",
-	     "GMCommands.Item.Usage.DPS_AF",
-	     "GMCommands.Item.Usage.SPD_ABS",
-	     "GMCommands.Item.Usage.Material",
-	     "GMCommands.Item.Usage.Scroll",
-	     "GMCommands.Item.Usage.Spell",
-	     "GMCommands.Item.Usage.Spell1",
-	     "GMCommands.Item.Usage.Proc",
-	     "GMCommands.Item.Usage.Proc1",
-	     "GMCommands.Item.Usage.Poison",
-	     "GMCommands.Item.Usage.Realm",
-	     "GMCommands.Item.Usage.SaveTemplate",
-	     "GMCommands.Item.Usage.TemplateID",
-	     "GMCommands.Item.Usage.FindID",
-	     "GMCommands.Item.Usage.FindName",
+		 ePrivLevel.GM,
+		 "GMCommands.Item.Description",
+		 "GMCommands.Item.Information",
+		 "GMCommands.Item.Usage.Blank",
+		 "GMCommands.Item.Usage.Info",
+		 "GMCommands.Item.Usage.Create",
+		 "GMCommands.Item.Usage.Count",
+		 "GMCommands.Item.Usage.MaxCount",
+		 "GMCommands.Item.Usage.PackSize",
+		 "GMCommands.Item.Usage.Model",
+		 "GMCommands.Item.Usage.Extension",
+		 "GMCommands.Item.Usage.Color",
+		 "GMCommands.Item.Usage.Effect",
+		 "GMCommands.Item.Usage.Name",
+		 "/item description <Description> <slot> - set the description of this item",
+		 "GMCommands.Item.Usage.CrafterName",
+		 "GMCommands.Item.Usage.Type",
+		 "GMCommands.Item.Usage.Object",
+		 "GMCommands.Item.Usage.Hand",
+		 "GMCommands.Item.Usage.DamageType",
+		 "GMCommands.Item.Usage.Emblem",
+		 "GMCommands.Item.Usage.Price",
+		 "GMCommands.Item.Usage.Condition",
+		 "GMCommands.Item.Usage.Quality",
+		 "GMCommands.Item.Usage.Durability",
+		 "GMCommands.Item.Usage.isPickable",
+		 "GMCommands.Item.Usage.IsNotLosingDUR",
+		 "GMCommands.Item.Usage.IsIndestructible",
+		 "GMCommands.Item.Usage.isDropable",
+		 "GMCommands.Item.Usage.IsTradable",
+		 "GMCommands.Item.Usage.IsStackable",
+		 "GMCommands.Item.Usage.CanDropAsLoot",
+		 "GMCommands.Item.Usage.Bonus",
+		 "GMCommands.Item.Usage.mBonus",
+		 "GMCommands.Item.Usage.Weight",
+		 "GMCommands.Item.Usage.DPS_AF",
+		 "GMCommands.Item.Usage.SPD_ABS",
+		 "GMCommands.Item.Usage.Material",
+		 "GMCommands.Item.Usage.Scroll",
+		 "GMCommands.Item.Usage.Spell",
+		 "GMCommands.Item.Usage.Spell1",
+		 "GMCommands.Item.Usage.Proc",
+		 "GMCommands.Item.Usage.Proc1",
+		 "GMCommands.Item.Usage.Poison",
+		 "GMCommands.Item.Usage.Realm",
+		 "GMCommands.Item.Usage.SaveTemplate",
+		 "GMCommands.Item.Usage.TemplateID",
+		 "GMCommands.Item.Usage.FindID",
+		 "GMCommands.Item.Usage.FindName",
 		 "/item classtype <ClassType> <slot> - Set this items ClassType",
-	     "/item saveunique <id_nb> <slot> - save item as an unique one",
-	     "/item load <id_nb> - Load an item from the DB and replace or add item to the ItemTemplate cache",
-	     "/item loadartifacts - Re-load all the artifact entries from the DB.  ItemTemplates must be loaded separately and prior to loading artifacts.",
-	     "/item loadpackage <packageid> | **all** - Load all the items in a package from the DB and replace or add to the ItemTemplate cache. **all** is loading all items [! SLOW !]",
-	     "/item loadspells - Read each item spell from the database and update the global spell list")]
+		 "/item saveunique <id_nb> <slot> - save item as an unique one",
+		 "/item load <id_nb> - Load an item from the DB and replace or add item to the ItemTemplate cache",
+		 "/item loadartifacts - Re-load all the artifact entries from the DB.  ItemTemplates must be loaded separately and prior to loading artifacts.",
+		 "/item loadpackage <packageid> | **all** - Load all the items in a package from the DB and replace or add to the ItemTemplate cache. **all** is loading all items [! SLOW !]",
+		 "/item loadspells - Read each item spell from the database and update the global spell list")]
 	public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private const string BLANK_ITEM = "blank_item";
+
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
@@ -93,10 +96,13 @@ namespace DOL.GS.Commands
 			{
 				switch (args[1].ToLower())
 				{
-						#region Blank
+					#region Blank
 					case "blank":
 						{
-							GameInventoryItem item = new GameInventoryItem();
+							ItemTemplate newTemplate = new ItemTemplate();
+							newTemplate.Name = "(blank item)";
+							newTemplate.Id_nb = BLANK_ITEM;
+							GameInventoryItem item = new GameInventoryItem(newTemplate);
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Blank.ItemCreated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -107,8 +113,8 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
-						#endregion Blank
-						#region Scroll
+					#endregion Blank
+					#region Scroll
 					case "scroll":
 						{
 							WorldInventoryItem scroll = ArtifactMgr.CreateScroll(args[2], Convert.ToInt16(args[3]));
@@ -121,8 +127,8 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Scroll.Created", scroll.Item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							break;
 						}
-						#endregion Scroll
-						#region Create
+					#endregion Scroll
+					#region Create
 					case "create":
 						{
 							ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(args[2]);
@@ -159,8 +165,8 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
-						#endregion Create
-						#region Count
+					#endregion Create
+					#region Count
 					case "count":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -194,8 +200,8 @@ namespace DOL.GS.Commands
 							client.Player.UpdateEncumberance();
 							break;
 						}
-						#endregion Count
-						#region MaxCount
+					#endregion Count
+					#region MaxCount
 					case "maxcount":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -217,8 +223,8 @@ namespace DOL.GS.Commands
 								item.MaxCount = 1;
 							break;
 						}
-						#endregion MaxCount
-						#region PackSize
+					#endregion MaxCount
+					#region PackSize
 					case "packsize":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -240,8 +246,8 @@ namespace DOL.GS.Commands
 								item.PackSize = 1;
 							break;
 						}
-						#endregion PackSize
-						#region Info
+					#endregion PackSize
+					#region Info
 					case "info":
 						{
 							ItemTemplate obj = GameServer.Database.FindObjectByKey<ItemTemplate>(args[2]);
@@ -256,8 +262,8 @@ namespace DOL.GS.Commands
 							client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "GMCommands.Item.Info.Informations", obj.Id_nb), objectInfo);
 							break;
 						}
-						#endregion Info
-						#region Model
+					#endregion Info
+					#region Model
 					case "model":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -284,8 +290,8 @@ namespace DOL.GS.Commands
 								client.Player.UpdateEquipmentAppearance();
 							break;
 						}
-						#endregion Model
-						#region Extension
+					#endregion Model
+					#region Extension
 					case "extension":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -312,8 +318,8 @@ namespace DOL.GS.Commands
 								client.Player.UpdateEquipmentAppearance();
 							break;
 						}
-						#endregion Extension
-						#region Color
+					#endregion Extension
+					#region Color
 					case "color":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -340,8 +346,8 @@ namespace DOL.GS.Commands
 								client.Player.UpdateEquipmentAppearance();
 							break;
 						}
-						#endregion Color
-						#region Effect
+					#endregion Color
+					#region Effect
 					case "effect":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -368,8 +374,8 @@ namespace DOL.GS.Commands
 								client.Player.UpdateEquipmentAppearance();
 							break;
 						}
-						#endregion Effect
-						#region Type
+					#endregion Effect
+					#region Type
 					case "type":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -394,8 +400,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Type
-						#region Object
+					#endregion Type
+					#region Object
 					case "object":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -420,8 +426,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Object
-						#region Hand
+					#endregion Object
+					#region Hand
 					case "hand":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -446,8 +452,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Hand
-						#region DamageType
+					#endregion Hand
+					#region DamageType
 					case "damagetype":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -472,20 +478,20 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion DamageType
-						#region Name
+					#endregion DamageType
+					#region Name
 					case "name":
 						{
 							string name = args[2];
 							int slot = (int)eInventorySlot.LastBackpack;
 
-							if ( int.TryParse( args[args.Length - 1], out slot ) )
+							if (int.TryParse(args[args.Length - 1], out slot))
 							{
-								name = string.Join( " ", args, 2, args.Length - 3 );
+								name = string.Join(" ", args, 2, args.Length - 3);
 							}
 							else
 							{
-								name = string.Join( " ", args, 2, args.Length - 2 );
+								name = string.Join(" ", args, 2, args.Length - 2);
 								slot = (int)eInventorySlot.LastBackpack;
 							}
 
@@ -500,8 +506,36 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Name
-						#region CrafterName
+					#endregion Name
+					#region Description
+					case "description":
+						{
+							string desc = args[2];
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (int.TryParse(args[args.Length - 1], out slot))
+							{
+								desc = string.Join(" ", args, 2, args.Length - 3);
+							}
+							else
+							{
+								desc = string.Join(" ", args, 2, args.Length - 2);
+								slot = (int)eInventorySlot.LastBackpack;
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							item.Description = desc;
+							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							break;
+						}
+					#endregion Name
+					#region CrafterName
 					case "craftername":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -527,8 +561,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion CrafterName
-						#region Emblem
+					#endregion CrafterName
+					#region Emblem
 					case "emblem":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -555,8 +589,8 @@ namespace DOL.GS.Commands
 								client.Player.UpdateEquipmentAppearance();
 							break;
 						}
-						#endregion Emblem
-						#region Level
+					#endregion Emblem
+					#region Level
 					case "level":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -581,8 +615,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Level
-						#region Price
+					#endregion Level
+					#region Price
 					case "price":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -603,12 +637,12 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							item.Price = Money.GetMoney(0,(int)(Convert.ToInt16(args[2]) % 1000),(int)(Convert.ToInt16(args[3]) % 1000),(int)(Convert.ToByte(args[4]) % 100),(int)(Convert.ToByte(args[5]) % 100));
+							item.Price = Money.GetMoney(0, (int)(Convert.ToInt16(args[2]) % 1000), (int)(Convert.ToInt16(args[3]) % 1000), (int)(Convert.ToByte(args[4]) % 100), (int)(Convert.ToByte(args[5]) % 100));
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Price
-						#region Condition
+					#endregion Price
+					#region Condition
 					case "condition":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -636,8 +670,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Condition
-						#region Durability
+					#endregion Condition
+					#region Durability
 					case "durability":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -665,8 +699,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Durability
-						#region Quality
+					#endregion Durability
+					#region Quality
 					case "quality":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -692,8 +726,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Quality
-						#region Bonus
+					#endregion Quality
+					#region Bonus
 					case "bonus":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -719,8 +753,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Bonus
-						#region mBonus
+					#endregion Bonus
+					#region mBonus
 					case "mbonus":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -852,8 +886,8 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
-						#endregion mBonus
-						#region Weight
+					#endregion mBonus
+					#region Weight
 					case "weight":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -878,8 +912,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Weight
-						#region DPS_AF - DPS - AF
+					#endregion Weight
+					#region DPS_AF - DPS - AF
 					case "dps_af":
 					case "dps":
 					case "af":
@@ -906,8 +940,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion DPS_AF - DPS - AF
-						#region SPD_ABS - SPD - ABS
+					#endregion DPS_AF - DPS - AF
+					#region SPD_ABS - SPD - ABS
 					case "spd_abs":
 					case "spd":
 					case "abs":
@@ -934,8 +968,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion SPD_ABS - SPD - ABS
-						#region IsDropable
+					#endregion SPD_ABS - SPD - ABS
+					#region IsDropable
 					case "isdropable":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -959,8 +993,8 @@ namespace DOL.GS.Commands
 							item.IsDropable = Convert.ToBoolean(args[2]);
 							break;
 						}
-						#endregion IsDropable
-						#region IsPickable
+					#endregion IsDropable
+					#region IsPickable
 					case "ispickable":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -984,8 +1018,8 @@ namespace DOL.GS.Commands
 							item.IsPickable = Convert.ToBoolean(args[2]);
 							break;
 						}
-						#endregion IsPickable
-						#region IsNotLosingDur
+					#endregion IsPickable
+					#region IsNotLosingDur
 					case "isnotlosingdur":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1006,11 +1040,11 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							item.IsNotLosingDur  = Convert.ToBoolean(args[2]);
+							item.IsNotLosingDur = Convert.ToBoolean(args[2]);
 							break;
 						}
-						#endregion IsNotLosingDur
-						#region IsIndestructible
+					#endregion IsNotLosingDur
+					#region IsIndestructible
 					case "isindestructible":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1034,8 +1068,8 @@ namespace DOL.GS.Commands
 							item.IsIndestructible = Convert.ToBoolean(args[2]);
 							break;
 						}
-						#endregion IsIndestructible
-						#region IsTradable
+					#endregion IsIndestructible
+					#region IsTradable
 					case "istradable":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1059,8 +1093,8 @@ namespace DOL.GS.Commands
 							item.IsTradable = Convert.ToBoolean(args[2]);
 							break;
 						}
-						#endregion IsTradable
-						#region CanDropAsLoot
+					#endregion IsTradable
+					#region CanDropAsLoot
 					case "candropasloot":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1084,8 +1118,8 @@ namespace DOL.GS.Commands
 							item.CanDropAsLoot = Convert.ToBoolean(args[2]);
 							break;
 						}
-						#endregion CanDropAsLoot
-						#region Spell
+					#endregion CanDropAsLoot
+					#region Spell
 					case "spell":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1115,8 +1149,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Spell
-						#region Spell1
+					#endregion Spell
+					#region Spell1
 					case "spell1":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1146,8 +1180,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Spell1
-						#region Proc
+					#endregion Spell1
+					#region Proc
 					case "proc":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1172,8 +1206,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Proc
-						#region Proc1
+					#endregion Proc
+					#region Proc1
 					case "proc1":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1198,8 +1232,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Proc1
-						#region Poison
+					#endregion Proc1
+					#region Poison
 					case "poison":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1229,8 +1263,8 @@ namespace DOL.GS.Commands
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
-						#endregion Poison
-						#region Realm
+					#endregion Poison
+					#region Realm
 					case "realm":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1254,7 +1288,7 @@ namespace DOL.GS.Commands
 							item.Realm = int.Parse(args[2]);
 							break;
 						}
-						#endregion Realm
+					#endregion Realm
 					#region ClassType
 					case "classtype":
 						{
@@ -1278,7 +1312,7 @@ namespace DOL.GS.Commands
 							break;
 						}
 					#endregion ClassType
-						#region TemplateID
+					#region TemplateID
 					case "templateid":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1302,8 +1336,8 @@ namespace DOL.GS.Commands
 							item.Id_nb = args[2];
 							break;
 						}
-						#endregion TemplateID
-						#region SaveTemplate
+					#endregion TemplateID
+					#region SaveTemplate / SaveUnique
 					case "savetemplate":
 					case "saveunique":
 						{
@@ -1348,7 +1382,7 @@ namespace DOL.GS.Commands
 							}
 
 							// if a blank item was created then AllowAdd will be false here
-							if (idnb == string.Empty && (item.AllowAdd == false || args[1] == "saveunique"))
+							if (idnb == string.Empty && (item.AllowAdd == false || item.Id_nb == BLANK_ITEM || args[1] == "saveunique"))
 							{
 								DisplayMessage(client, "You need to provide a new id_nb for this item.");
 								return;
@@ -1357,7 +1391,6 @@ namespace DOL.GS.Commands
 							{
 								idnb = item.Id_nb;
 							}
-
 
 							ItemTemplate temp = null;
 							if (args[1] == "savetemplate")
@@ -1369,11 +1402,10 @@ namespace DOL.GS.Commands
 							// save the new item
 							if (temp == null)
 							{
-								if (args[1]== "savetemplate")
+								if (args[1] == "savetemplate")
 								{
 									try
 									{
-										item.Template.AllowAdd = true;
 										item.Template.Id_nb = idnb;
 										GameServer.Database.AddObject(item.Template);
 										item.ITemplate_Id = idnb;
@@ -1435,16 +1467,16 @@ namespace DOL.GS.Commands
 									return;
 								}
 							}
-							
+
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.SaveTemplate.ItemSaved", idnb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
-						#endregion SaveTemplate
-						#region FindID
+					#endregion SaveTemplate / SaveUnique
+					#region FindID
 					case "findid":
 						{
 							string name = string.Join(" ", args, 2, args.Length - 2);
-							if(name != "")
+							if (name != "")
 							{
 								var items = GameServer.Database.SelectObjects<ItemTemplate>("id_nb like '%" + GameServer.Database.Escape(name) + "%'");
 								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Count), new object[] { });
@@ -1455,12 +1487,12 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
-						#endregion FindID
-						#region FindName
+					#endregion FindID
+					#region FindName
 					case "findname":
 						{
 							string name = string.Join(" ", args, 2, args.Length - 2);
-							if(name != "")
+							if (name != "")
 							{
 								var items = GameServer.Database.SelectObjects<ItemTemplate>("name like '%" + GameServer.Database.Escape(name) + "%'");
 								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Count), new object[] { });
@@ -1471,8 +1503,8 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
-						#endregion FindName
-						#region Load
+					#endregion FindName
+					#region Load
 					case "load":
 						{
 							if (GameServer.Database.UpdateInCache<ItemTemplate>(args[2]))
@@ -1487,14 +1519,14 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
-						#endregion Load
-						#region LoadPackage
+					#endregion Load
+					#region LoadPackage
 					case "loadpackage":
 						{
 							if (args[2] != "")
 							{
 								if (args[2] == "**all**") args[2] = String.Empty;
-								
+
 								var packageItems = GameServer.Database.SelectObjects<ItemTemplate>("PackageID = '" + args[2] + "'") as ItemTemplate[];
 
 								if (packageItems != null)
@@ -1519,15 +1551,15 @@ namespace DOL.GS.Commands
 							}
 							break;
 						}
-						#endregion LoadPackage
-						#region LoadArtifacts
+					#endregion LoadPackage
+					#region LoadArtifacts
 					case "loadartifacts":
 						{
 							DisplayMessage(client, "{0} Artifacts re-loaded.", DOL.GS.ArtifactMgr.LoadArtifacts());
 						}
 						break;
-						#endregion LoadArtifacts
-						#region LoadSpells
+					#endregion LoadArtifacts
+					#region LoadSpells
 					case "loadspells":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1555,7 +1587,7 @@ namespace DOL.GS.Commands
 							LoadSpell(client, item.ProcSpellID1);
 							break;
 						}
-						#endregion LoadSpells
+					#endregion LoadSpells
 				}
 			}
 			catch

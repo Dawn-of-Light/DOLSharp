@@ -75,6 +75,7 @@ namespace DOL.GS.Commands
 	     "'/mob brain <ClassName>' set the mob's brain",
 	     "'/mob respawn <duration>' set the mob's respawn time (in ms)",
 	     "'/mob questinfo' show mob's quest info",
+		 "'/mob refreshquests' Update this mobs list of data quests",
 	     "'/mob equipinfo' show mob's inventory info",
 	     "'/mob equiptemplate load <EquipmentTemplateID>' to load the inventory template from the database, it is open for modification after",
 	     "'/mob equiptemplate create' to create an empty inventory template",
@@ -200,6 +201,7 @@ namespace DOL.GS.Commands
 					case "brain": brain(client, targetMob, args); break;
 					case "respawn": respawn(client, targetMob, args); break;
 					case "questinfo": questinfo(client, targetMob, args); break;
+					case "refreshquests": refreshquests(client, targetMob, args); break;
 					case "equipinfo": equipinfo(client, targetMob, args); break;
 					case "equiptemplate": equiptemplate(client, targetMob, args); break;
 					case "dropcount": dropcount(client, targetMob, args); break;
@@ -1299,15 +1301,37 @@ namespace DOL.GS.Commands
 
 		private void questinfo(GameClient client, GameNPC targetMob, string[] args)
 		{
-			if (targetMob.QuestListToGive.Count == 0)
+			if (targetMob.QuestListToGive.Count == 0 && targetMob.DataQuestList.Count == 0)
 			{
 				client.Out.SendMessage("Mob does not have any quests.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				client.Out.SendMessage("-----------------------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				client.Out.SendMessage("Scripted Quests: ------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
 				foreach (AbstractQuest quest in targetMob.QuestListToGive)
 					client.Out.SendMessage("Quest Name: [" + quest.Name + "]", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
+				client.Out.SendMessage("Data Quests: ----------------------------", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
+				foreach (DataQuest dq in targetMob.DataQuestList)
+					client.Out.SendMessage("Quest Name: [" + dq.Name + "] : " + (DataQuest.eStartType)dq.DBDataQuest.StartType, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
+			}
+		}
+
+		private void refreshquests(GameClient client, GameNPC targetMob, string[] args)
+		{
+			try
+			{
+				GameObject.FillDataQuestCache();
+				targetMob.LoadDataQuests();
+				client.Out.SendMessage(targetMob.DataQuestList.Count + " Data Quests loaded for this mob.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error refreshing quests.", ex);
+				throw;
 			}
 		}
 

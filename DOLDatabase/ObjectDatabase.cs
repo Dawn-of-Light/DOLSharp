@@ -342,13 +342,13 @@ namespace DOL.Database
 				return;
 
 			bool primary = false;
+			bool usePrimaryKey = false;
 			bool relations = false;
 			MemberInfo primaryIndexMember = null;
 
 			string tableName = GetTableOrViewName(objType);
 			var ds = new DataSet();
 			var table = new DataTable(tableName);
-			table.Columns.Add(tableName + "_ID", typeof(string));
 
 			MemberInfo[] myMembers = objType.GetMembers();
 
@@ -368,6 +368,8 @@ namespace DOL.Database
 						table.Columns.Add(myMembers[i].Name, ((FieldInfo)myMembers[i]).FieldType);
 
 					table.Columns[myMembers[i].Name].AutoIncrement = ((PrimaryKey)myAttributes[0]).AutoIncrement;
+
+					usePrimaryKey = table.Columns[myMembers[i].Name].AutoIncrement;
 
 					var index = new DataColumn[1];
 					index[0] = table.Columns[myMembers[i].Name];
@@ -396,10 +398,17 @@ namespace DOL.Database
 					{
 						table.Constraints.Add(new UniqueConstraint("UNIQUE_" + myMembers[i].Name, table.Columns[myMembers[i].Name]));
 					}
-					if (((DataElement)myAttributes[0]).Index)
+
+					if (((DataElement)myAttributes[0]).IndexColumns != string.Empty)
+					{
+						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEX", true);
+						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEXCOLUMNS", ((DataElement)myAttributes[0]).IndexColumns);
+					}
+					else if (((DataElement)myAttributes[0]).Index)
 					{
 						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEX", true);
 					}
+
 					if (((DataElement)myAttributes[0]).Varchar > 0)
 					{
 						table.Columns[myMembers[i].Name].ExtendedProperties.Add("VARCHAR", ((DataElement)myAttributes[0]).Varchar);
@@ -414,6 +423,11 @@ namespace DOL.Database
 						relations = true;
 					}
 				}
+			}
+
+			if (usePrimaryKey == false)
+			{
+				table.Columns.Add(tableName + "_ID", typeof(string));
 			}
 
 			if (primary == false)
@@ -976,9 +990,11 @@ namespace DOL.Database
 					object[] attrib = objMembers[i].GetCustomAttributes(typeof(DataElement), true);
 					object[] relAttrib = GetRelationAttributes(objMembers[i]);
 
+					bool usePrimaryKey = keyAttrib.Length > 0 && (keyAttrib[0] as PrimaryKey).AutoIncrement;
+
 					if (attrib.Length > 0 || keyAttrib.Length > 0 || relAttrib.Length > 0 || readonlyAttrib.Length > 0)
 					{
-						var info = new BindingInfo(objMembers[i], keyAttrib.Length > 0, relAttrib.Length > 0, readonlyAttrib.Length > 0,
+						var info = new BindingInfo(objMembers[i], keyAttrib.Length > 0, usePrimaryKey, relAttrib.Length > 0, readonlyAttrib.Length > 0,
 						                           (attrib.Length > 0) ? (DataElement)attrib[0] : null);
 						list.Add(info);
 					}
@@ -1070,11 +1086,13 @@ namespace DOL.Database
 			public readonly bool ReadOnly;
 			public DataElement DataElementAttribute;
 			public bool PrimaryKey;
+			public bool UsePrimaryKey;
 
-			public BindingInfo(MemberInfo member, bool primaryKey, bool hasRelation, bool readOnly, DataElement attrib)
+			public BindingInfo(MemberInfo member, bool primaryKey, bool usePrimaryKey, bool hasRelation, bool readOnly, DataElement attrib)
 			{
 				Member = member;
 				PrimaryKey = primaryKey;
+				UsePrimaryKey = usePrimaryKey;
 				HasRelation = hasRelation;
 				DataElementAttribute = attrib;
 				ReadOnly = readOnly;

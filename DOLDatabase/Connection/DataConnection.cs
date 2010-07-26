@@ -600,9 +600,17 @@ namespace DOL.Database.Connection
 						&& !primaryKeys.ContainsKey(table.Columns[i].ColumnName)
 					    && !table.Columns[i].Unique)
 					{
-						columndef += ", INDEX (`" + table.Columns[i].ColumnName + "`)";
+						columndef += ", INDEX (`" + table.Columns[i].ColumnName + "`";
+
+						if (table.Columns[i].ExtendedProperties.ContainsKey("INDEXCOLUMNS"))
+						{
+							columndef += ", " + table.Columns[i].ExtendedProperties["INDEXCOLUMNS"];
+						}
+
+						columndef += ")";
 					}
 				}
+
 				sb.Append("CREATE TABLE IF NOT EXISTS `" + table.TableName + "` (" + columndef + ")");
 
 				try
@@ -821,59 +829,6 @@ namespace DOL.Database.Connection
 				case ConnectionType.DATABASE_MYSQL:
 					{
 						return; // not needed anymore
-						/*
-											MySqlConnection conn = null;
-											try
-											{
-												DOLConsole.LogLine("write "+tableName);
-												conn = new MySqlConnection(connString);
-
-												DOLConsole.LogLine("open connection "+tableName);
-												conn.Open();
-												MySqlDataAdapter adapter = m_mysqladapter[tableName] as MySqlDataAdapter;
-												if (adapter == null) 	// only create if previous not exist, saves time
-												{
-													DOLConsole.LogLine("build adapter "+tableName);
-													adapter = new MySqlDataAdapter("SELECT * from `" + tableName + "`", conn);
-													DOLConsole.LogLine("build commandbuilder "+tableName);
-													MySqlCommandBuilder builder = new MySqlCommandBuilder(adapter, true);	// last one wins
-													DOLConsole.LogLine("create delete command "+tableName);
-													adapter.DeleteCommand = builder.GetDeleteCommand();
-													DOLConsole.LogLine("create update command "+tableName);
-													adapter.UpdateCommand = builder.GetUpdateCommand();
-													DOLConsole.LogLine("create insert command "+tableName);
-													adapter.InsertCommand = builder.GetInsertCommand();
-													m_mysqladapter[tableName] = adapter;
-												}
-
-												DOLConsole.LogLine("commit changes "+tableName);
-												DataSet changes;
-												// last one wins means we dont have to bother with concurrency modification
-												//lock (dataSet)  // lock dataset to prevent changes to it
-												//{ 
-													adapter.ContinueUpdateOnError = true;
-													DOLConsole.LogLine("get changes "+tableName);
-													changes = dataSet.GetChanges();
-													DOLConsole.LogLine(changes.Tables[tableName].Rows.Count+" "+tableName+" to commit");
-													DOLConsole.LogLine("commit changes"+tableName);
-													int count = adapter.Update(changes, tableName);
-													DOLConsole.LogLine(count+" changes committed "+tableName);
-													DOLConsole.LogLine("accept changes "+tableName);
-													dataSet.AcceptChanges(); 
-													DOLConsole.LogLine("changes accepted "+tableName);
-												//}
-												DOLConsole.LogLine("changes complete "+tableName);
-												PrintDatasetErrors(changes);
-												conn.Close();
-											}
-											catch (Exception ex)
-											{
-												try { if (conn!=null) conn.Close(); } catch {}
-												throw new DatabaseException("Could not save the Database-Table", ex);
-											}
-					
-
-											break;*/
 					}
 				case ConnectionType.DATABASE_OLEDB:
 					{
