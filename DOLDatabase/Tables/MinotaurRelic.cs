@@ -37,6 +37,8 @@ namespace DOL.Database
 		private string m_relictarget;
 		private int m_spell;
 		private int m_effect;
+        private string m_protectorClassType;
+        private bool m_spawnLocked;
 
 		/// <summary>
 		/// Create a relic row
@@ -55,7 +57,29 @@ namespace DOL.Database
 				Dirty = true;
 				m_spell = value;
 			}
-		}
+        }
+
+        [DataElement(AllowDbNull = false)]
+        public bool SpawnLocked
+        {
+            get { return m_spawnLocked; }
+            set
+            {
+                Dirty = true;
+                m_spawnLocked = value;
+            }
+        }
+
+        [DataElement(AllowDbNull = false)]
+        public string ProtectorClassType
+        {
+            get { return m_protectorClassType; }
+            set
+            {
+                Dirty = true;
+                m_protectorClassType = value;
+            }
+        }
 
 		[DataElement(AllowDbNull = false)]
 		public string relicTarget

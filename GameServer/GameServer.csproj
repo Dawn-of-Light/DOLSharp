@@ -882,6 +882,8 @@
     <Compile Include="language\LanguageMgr.cs" />
     <Compile Include="minotaurrelics\MinotaurRelic.cs" />
     <Compile Include="minotaurrelics\MinotaurRelicManager.cs" />
+    <Compile Include="minotaurrelics\Protectors\ArrektosProtector.cs" />
+    <Compile Include="minotaurrelics\Protectors\BaseProtector.cs" />
     <Compile Include="packets\Client\168\BadNameCheckRequestHandler.cs" />
     <Compile Include="packets\Client\168\BuyHookPointHandler.cs" />
     <Compile Include="packets\Client\168\CharacterDeleteRequestHandler.cs" />
