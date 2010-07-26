@@ -1727,15 +1727,17 @@ return false;
 		public virtual int CalculateCastingTime()
 		{
 			int ticks = m_spell.CastTime;
+
 			if (Spell.InstrumentRequirement != 0 || SpellLine.KeyName == GlobalSpellsLines.Item_Spells
 			    || m_spellLine.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
 			{
 				return ticks;
 			}
+
 			GamePlayer player = m_caster as GamePlayer;
 			if (player != null)
 			{
-				//Fix for Warlock castingtime
+				//Fix for Warlock castingtime <-- this is a bad comment.  What needed fixed and why?
 				if (player.CharacterClass.ID == (int)eCharacterClass.Warlock)
 				{
 					if (Spell.SpellType == "Chamber")
@@ -1763,14 +1765,19 @@ return false;
 						return ticks;
 				}
 			}
-			double percent = 1.0;
-			int dex = Caster.GetModified(eProperty.Dexterity);
-			if(SpellLine.KeyName.Contains("Champion Abilities")) dex=100; //Vico: No casting time diminution for CL Spells
 
 			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
 			{
-				return 2000; //always 2 sec
+				// Most casters have access to the Quickcast ability (or the Necromancer equivalent, Facilitate Painworking).
+				// This ability will allow you to cast a spell without interruption.
+				// http://support.darkageofcamelot.com/kb/article.php?id=022
+				return ticks;
 			}
+
+
+			double percent = 1.0;
+			int dex = Caster.GetModified(eProperty.Dexterity);
+			if(SpellLine.KeyName.Contains("Champion Abilities")) dex=100; //Vico: No casting time diminution for CL Spells
 			//http://daoc.nisrv.com/modules.php?name=DD_DMG_Calculator
 			//Q: Would you please give more detail as to how dex affects a caster?
 			//For instance, I understand that when I have my dex maxed I will cast 25% faster.
