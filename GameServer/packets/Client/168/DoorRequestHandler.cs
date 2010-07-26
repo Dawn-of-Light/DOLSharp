@@ -27,7 +27,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP, eClientPackets.DoorRequest, ClientStatus.PlayerInGame)]
 	public class DoorRequestHandler : IPacketHandler
 	{
-		public static int HandlerDoorID;
+		public static int m_handlerDoorID;
 
 		#region IPacketHandler Members
 
@@ -37,11 +37,32 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			var doorID = (int) packet.ReadInt();
-			HandlerDoorID = doorID;
+			m_handlerDoorID = doorID;
 			var doorState = (byte) packet.ReadByte();
 			int doorType = doorID/100000000;
 
-			if (client.Account.PrivLevel > 1)
+			int radius = ServerProperties.Properties.WORLD_PICKUP_DISTANCE * 2;
+			int zoneDoor = (int)(doorID / 1000000);
+
+			string debugText = "";
+
+			// For ToA the client always sends the same ID so we need to construct an id using the current zone
+			if (client.Player.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis)
+			{
+				debugText = "ToA DoorID: " + doorID + " ";
+
+				doorID -= zoneDoor * 1000000;
+				zoneDoor = client.Player.CurrentZone.ID;
+				doorID += zoneDoor * 1000000;
+				m_handlerDoorID = doorID;
+
+				// experimental to handle a few odd TOA door issues
+				if (client.Player.CurrentRegion.IsDungeon)
+					radius *= 4;
+			}
+
+			// debug text
+			if (client.Account.PrivLevel > 1 || Properties.ENABLE_DEBUG)
 			{
 				if (doorType == 7)
 				{
@@ -62,29 +83,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				else
 				{
-					int zoneDoor = (doorID/1000000);
 					int fixture = (doorID - zoneDoor*1000000);
 					int fixturePiece = fixture;
 					fixture /= 100;
 					fixturePiece = fixturePiece - fixture*100;
 
-					// For TrialsOfAtlantis the client always sends the same ID so we need to construct an id using the current zone
-					if (client.Player.CurrentRegion.Expansion == (int) eClientExpansion.TrialsOfAtlantis)
-					{
-						doorID -= zoneDoor*1000000;
-						zoneDoor = client.Player.CurrentZone.ID;
-						doorID += zoneDoor*1000000;
-						HandlerDoorID = doorID;
-					}
-
-					client.Out.SendDebugMessage("DoorID:{0} state:{1} zone:{2} fixture:{3} fixturePiece:{4} Type:{5})", doorID,
-					                            doorState, zoneDoor, fixture, fixturePiece, doorType);
+					client.Out.SendDebugMessage("{6}DoorID:{0} state:{1} zone:{2} fixture:{3} fixturePiece:{4} Type:{5}",
+												doorID, doorState, zoneDoor, fixture, fixturePiece, doorType, debugText);
 				}
 			}
 
 			var target = client.Player.TargetObject as GameDoor;
 
-			if (target != null && !client.Player.IsWithinRadius(target, 500))
+			if (target != null && !client.Player.IsWithinRadius(target, radius))
 			{
 				client.Player.Out.SendMessage("You are too far to open this door", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return 0;
@@ -96,7 +107,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (doorType == 7 || doorType == 9)
 				{
-					new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
+					new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
 					return 1;
 				}
 
@@ -106,7 +117,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						if (door.Health == 0)
 						{
-							new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
+							new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
 							return 1;
 						}
 
@@ -114,7 +125,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							if (door.Realm != 0)
 							{
-								new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
+								new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
 								return 1;
 							}
 						}
@@ -123,7 +134,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							if (client.Player.Realm == (eRealm) door.Realm || door.Realm == 6)
 							{
-								new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
+								new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
 								return 1;
 							}
 						}
@@ -132,7 +143,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (client.Account.PrivLevel > 1)
 				{
-					new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
+					client.Out.SendDebugMessage("GM: Forcing locked door open.");
+					new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
 					return 1;
 				}
 			}
@@ -154,7 +166,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 
-				new ChangeDoorAction(client.Player, doorID, doorState).Start(1);
+				new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
 				return 1;
 			}
 			return 0;
@@ -167,18 +179,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (response != 0x01)
 				return;
 
-			int doorType = HandlerDoorID/100000000;
+			int doorType = m_handlerDoorID/100000000;
 			if (doorType == 7)
 			{
-				PositionMgr.CreateDoor(HandlerDoorID, player);
+				PositionMgr.CreateDoor(m_handlerDoorID, player);
 			}
 			else
 			{
 				var door = new DBDoor();
 				door.ObjectId = null;
-				door.InternalID = HandlerDoorID;
+				door.InternalID = m_handlerDoorID;
 				door.Name = "door";
-				door.Type = HandlerDoorID/100000000;
+				door.Type = m_handlerDoorID/100000000;
 				door.Level = 20;
 				door.Realm = 6;
 				door.MaxHealth = 2545;
@@ -190,7 +202,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				door.Heading = player.Heading;
 				GameServer.Database.AddObject(door);
 
-				player.Out.SendMessage("Added door " + HandlerDoorID + " to the database!", eChatType.CT_Important,
+				player.Out.SendMessage("Added door " + m_handlerDoorID + " to the database!", eChatType.CT_Important,
 				                       eChatLoc.CL_SystemWindow);
 				DoorMgr.Init();
 			}
@@ -214,16 +226,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 			protected readonly int m_doorState;
 
 			/// <summary>
+			/// allowed distance to door
+			/// </summary>
+			protected readonly int m_radius;
+
+			/// <summary>
 			/// Constructs a new ChangeDoorAction
 			/// </summary>
 			/// <param name="actionSource">The action source</param>
 			/// <param name="doorId">The target door Id</param>
 			/// <param name="doorState">The door state</param>
-			public ChangeDoorAction(GamePlayer actionSource, int doorId, int doorState)
+			public ChangeDoorAction(GamePlayer actionSource, int doorId, int doorState, int radius)
 				: base(actionSource)
 			{
 				m_doorId = doorId;
 				m_doorState = doorState;
+				m_radius = radius;
 			}
 
 			/// <summary>
@@ -251,7 +269,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							if (player.IsWithinRadius(mydoor, Properties.WORLD_PICKUP_DISTANCE*2))
+							if (player.IsWithinRadius(mydoor, m_radius))
 							{
 								if (m_doorState == 0x01)
 									mydoor.Open();
@@ -281,6 +299,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					report.Submitter = player.Name;
 					GameServer.Database.AddObject(report);
 					 */
+
+					player.Out.SendDebugMessage("Door {0} not found in door list, opening via GM door hack.", m_doorId);
 
 					//else basic quick hack
 					var door = new GameDoor();

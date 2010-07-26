@@ -21,9 +21,9 @@ using System;
 namespace DOL.Database.Attributes
 {
 	/// <summary>
-	/// Attribute to indicate the PrimaryKey of an DatabaseObject .
+	/// Attribute to indicate the PrimaryKey of an DatabaseObject.
+	/// Set AutoIncrement to true to eliminate the TableName_ID column.
 	/// </summary>
-	/// 
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public class PrimaryKey : Attribute
 	{
@@ -36,9 +36,9 @@ namespace DOL.Database.Attributes
 		}
 
 		/// <summary>
-		/// Indicates if this column will auto increment
+		/// Indicates if this column will auto increment.
+		/// Setting to true will eliminate the tablename_id column for this table.
 		/// </summary>
-		/// <value><c>true</c> if <c>null</c> is allowed</value>
 		public bool AutoIncrement { get; set; }
 	}
 }

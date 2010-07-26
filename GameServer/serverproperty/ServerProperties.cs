@@ -51,9 +51,10 @@ namespace DOL.GS.ServerProperties
 		#region SYSTEM / LOGGING / DEBUG
 		/// <summary>
 		/// Enable Debug mode - used to alter some features during server startup to make debugging easier
+		/// Can be changed while server is running but may require restart to enable all debug features
 		/// </summary>
 		[ServerProperty("system", "enable_debug", "Enable Debug mode? Used to alter some features during server startup to make debugging easier", false)]
-		public static readonly bool ENABLE_DEBUG;
+		public static bool ENABLE_DEBUG;
 
 		/// <summary>
 		/// Turn on logging of player vs player kills
