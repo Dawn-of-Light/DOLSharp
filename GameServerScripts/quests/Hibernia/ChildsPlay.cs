@@ -223,7 +223,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringpaddedboots_hib);
             }
             daringpaddedcap_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedcap_hib");
@@ -296,7 +296,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringpaddedcap_hib);
             }
             daringpaddedgloves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedgloves_hib");
@@ -369,7 +369,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringpaddedgloves_hib);
             }
             daringpaddedpants_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedpants_hib");
@@ -442,7 +442,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringpaddedpants_hib);
             }
             daringpaddedsleeves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedsleeves_hib");
@@ -515,7 +515,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringpaddedsleeves_hib);
             }
             daringpaddedvest_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedvest_hib");
@@ -588,7 +588,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringpaddedvest_hib);
             }
             daringleatherboots_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherboots_hib");
@@ -661,7 +661,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringleatherboots_hib);
             }
             daringleathercap_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathercap_hib");
@@ -734,7 +734,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringleathercap_hib);
             }
             daringleathergloves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathergloves_hib");
@@ -807,7 +807,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringleathergloves_hib);
             }
             daringleatherjerkin_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherjerkin_hib");
@@ -880,7 +880,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringleatherjerkin_hib);
             }
             daringleatherleggings_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherleggings_hib");
@@ -953,7 +953,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringleatherleggings_hib);
             }
             daringleathersleeves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathersleeves_hib");
@@ -1026,7 +1026,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringleathersleeves_hib);
             }
             daringstuddedboots_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedboots_hib");
@@ -1099,7 +1099,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringstuddedboots_hib);
             }
             daringstuddedcap_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedcap_hib");
@@ -1172,7 +1172,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringstuddedcap_hib);
             }
             daringstuddedgloves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedgloves_hib");
@@ -1245,7 +1245,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringstuddedgloves_hib);
             }
             daringstuddedjerkin_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedjerkin_hib");
@@ -1318,7 +1318,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringstuddedjerkin_hib);
             }
             daringstuddedleggings_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedleggings_hib");
@@ -1391,7 +1391,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringstuddedleggings_hib);
             }
             daringstuddedsleeves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedsleeves_hib");
@@ -1464,7 +1464,7 @@ namespace DOL.GS.Quests.Hibernia
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
+                
                     GameServer.Database.AddObject(daringstuddedsleeves_hib);
             }
 

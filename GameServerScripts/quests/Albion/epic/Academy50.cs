@@ -248,7 +248,7 @@ namespace DOL.GS.Quests.Albion
 				sealed_pouch.Quality = 100;
 				sealed_pouch.Weight = 12;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(sealed_pouch);
 			}
 // end item
@@ -291,7 +291,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Energy;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				WizardEpicBoots = item;
@@ -334,7 +334,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Spirit;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				WizardEpicHelm = item;
@@ -377,7 +377,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Heat;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				WizardEpicGloves = item;
@@ -417,7 +417,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3 = 24;
 				item.Bonus3Type = (int) eProperty.MaxHealth;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				WizardEpicVest = item;
@@ -457,7 +457,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3 = 8;
 				item.Bonus3Type = (int) eResist.Energy;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				WizardEpicLegs = item;
@@ -497,7 +497,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3 = 16;
 				item.Bonus3Type = (int) eStat.INT;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				WizardEpicArms = item;
@@ -540,7 +540,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Cold;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				MinstrelEpicBoots = item;
@@ -584,7 +584,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Energy;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				MinstrelEpicHelm = item;
@@ -628,7 +628,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Heat;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				MinstrelEpicGloves = item;
@@ -671,7 +671,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 6;
 				item.Bonus4Type = (int) eResist.Energy;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				MinstrelEpicVest = item;
@@ -714,7 +714,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Heat;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				MinstrelEpicLegs = item;
@@ -757,7 +757,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Body;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				MinstrelEpicArms = item;
@@ -799,7 +799,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Energy;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				SorcerorEpicBoots = item;
@@ -843,7 +843,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Thrust;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				SorcerorEpicHelm = item;
@@ -887,7 +887,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Heat;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				SorcerorEpicGloves = item;
@@ -927,7 +927,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3 = 24;
 				item.Bonus3Type = (int) eProperty.MaxHealth;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				SorcerorEpicVest = item;
@@ -970,7 +970,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus4 = 8;
 				item.Bonus4Type = (int) eResist.Spirit;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				SorcerorEpicLegs = item;
@@ -1010,7 +1010,7 @@ namespace DOL.GS.Quests.Albion
 				item.Bonus3 = 18;
 				item.Bonus3Type = (int) eStat.INT;
 
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(item);
 
 				SorcerorEpicArms = item;

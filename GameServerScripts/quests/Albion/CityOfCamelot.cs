@@ -239,7 +239,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(scrollUrqhart);
 			}
 
@@ -264,7 +264,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(receiptBombard);
 			}
 
@@ -288,7 +288,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(chestOfCoins);
 			}
 
@@ -312,7 +312,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(letterFrederick);
 			}
 
@@ -337,7 +337,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(assistantNecklace);
 			}
 
@@ -384,7 +384,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(recruitsRoundShield);
 			}
 
@@ -431,7 +431,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(recruitsBracer);
 			}
 

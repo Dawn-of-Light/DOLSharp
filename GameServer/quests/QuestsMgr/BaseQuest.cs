@@ -61,9 +61,15 @@ namespace DOL.GS.Quests
 
 
 		/// <summary>
-		/// Global Constant for all quests to define wether npcs and items should be saved in db or not.
+		/// DO NOT USE, always true.
+		/// Tolakram - this is not used anymore due to the fact items were saved based on the same setting
+		/// With the new inventory system all items must be saved. To optionally not save NPC's use ServerProperties.Properties.SAVE_QUEST_MOBS_INTO_DATABASE
 		/// </summary>
-		public static bool SAVE_INTO_DATABASE = ServerProperties.Properties.SAVE_QUEST_MOBS_INTO_DATABASE;
+		public static bool SAVE_INTO_DATABASE = true;
+		
+		// Tolakram - this is not used anymore due to the fact items were saved based on the same setting
+		// With the new inventory system all items must be saved.
+		// To optionally not save NPC's use ServerProperties.Properties.SAVE_QUEST_MOBS_INTO_DATABASE
 
 		public Queue m_animEmoteTeleportTimerQueue = new Queue();
 		public Queue m_animEmoteObjectQueue = new Queue();
