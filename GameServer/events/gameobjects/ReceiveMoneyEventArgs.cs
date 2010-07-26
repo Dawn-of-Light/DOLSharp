@@ -23,11 +23,11 @@ using DOL.GS;
 namespace DOL.Events
 {
 	/// <summary>
-	/// Holds the arguments for the ReceiveItem event of GameLivings
+	/// Holds the arguments for the ReceiveItem event of GameObjects
 	/// </summary>
 	public class ReceiveItemEventArgs : SourceEventArgs
 	{
-		private GameLiving target;
+		private GameObject target;
 		private InventoryItem item;
 
 		/// <summary>
@@ -36,7 +36,7 @@ namespace DOL.Events
 		/// <param name="source">the source of the item</param>
 		/// <param name="target">the target of the item</param>
 		/// <param name="item">the item to transfer</param>
-		public ReceiveItemEventArgs(GameLiving source, GameLiving target, InventoryItem item)
+		public ReceiveItemEventArgs(GameLiving source, GameObject target, InventoryItem item)
 			: base(source)
 		{
 			this.target = target;
@@ -44,9 +44,9 @@ namespace DOL.Events
 		}
 
 		/// <summary>
-		/// Gets the GameLiving who receives the item
+		/// Gets the GameObject who receives the item
 		/// </summary>
-		public GameLiving Target
+		public GameObject Target
 		{
 			get { return target; }
 		}

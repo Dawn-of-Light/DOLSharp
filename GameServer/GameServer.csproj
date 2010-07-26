@@ -1253,6 +1253,7 @@
     <Compile Include="quests\QuestsMgr\Actions\OfferQuestAction.cs" />
     <Compile Include="quests\QuestsMgr\Actions\SetQuestStepAction.cs" />
     <Compile Include="quests\QuestsMgr\BaseQuest.cs" />
+    <Compile Include="quests\QuestsMgr\DataQuest.cs" />
     <Compile Include="quests\QuestsMgr\QuestBehaviour.cs" />
     <Compile Include="quests\QuestsMgr\QuestBuilder.cs" />
     <Compile Include="quests\QuestsMgr\QuestMgr.cs" />

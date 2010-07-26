@@ -31,6 +31,7 @@ namespace DOL.Database.Attributes
 			AllowDbNull = true;
 			Unique = false;
 			Index = false;
+			IndexColumns = string.Empty;
 			Varchar = 0;
 		}
 
@@ -52,6 +53,12 @@ namespace DOL.Database.Attributes
 		/// </summary>
 		/// <value><c>true</c>if column of value should be indexed</value>
 		public bool Index { get; set; }
+
+		/// <summary>
+		/// Indicates what columns are added to an index that includes this column
+		/// <value><c>'ColumnName,ColumnName...'</c></value>
+		/// </summary>
+		public string IndexColumns { get; set; }
 
 		/// <summary>
 		/// Indicates that a string column will be created as type VarChar with the length provided

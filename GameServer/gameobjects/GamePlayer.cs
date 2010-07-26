@@ -11777,6 +11777,28 @@ namespace DOL.GS
 				}
 			}
 
+			// load all the data driven quests for this player
+			var dataQuests = GameServer.Database.SelectObjects<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
+			foreach (CharacterXDataQuest quest in dataQuests)
+			{
+				DBDataQuest dbDataQuest = GameServer.Database.SelectObject<DBDataQuest>("ID = " + quest.DataQuestID);
+				if (dbDataQuest != null && dbDataQuest.StartType != (byte)DataQuest.eStartType.Collection)
+				{
+					DataQuest dataQuest = new DataQuest(this, dbDataQuest, quest);
+
+					if (quest.Step > 0)
+					{
+						log.DebugFormat("Added DataQuest {0} with ID {1} to current quest list of player {2}", dataQuest.Name, dataQuest.ID, Name);
+						m_questList.Add((AbstractQuest)dataQuest);
+					}
+					else
+					{
+						log.DebugFormat("Added DataQuest {0} with ID {1} to finished quest list of player {2}", dataQuest.Name, dataQuest.ID, Name);
+						m_questListFinished.Add((AbstractQuest)dataQuest);
+					}
+				}
+			}
+
 			// Load Task object of player ...
 			var tasks = GameServer.Database.SelectObjects<DBTask>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
 			if (tasks.Count == 1)
@@ -12454,12 +12476,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all the quests currently active on this player
 		/// </summary>
-		protected readonly ArrayList m_questList = new ArrayList(1);
+		protected List<AbstractQuest> m_questList = new List<AbstractQuest>();
 
 		/// <summary>
 		/// Holds all already finished quests off this player
 		/// </summary>
-		protected readonly ArrayList m_questListFinished = new ArrayList(1);
+		protected List<AbstractQuest> m_questListFinished = new List<AbstractQuest>();
 
 		protected RegionTimer m_questActionTimer = null;
 
@@ -12472,29 +12494,30 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the questlist of this player
 		/// </summary>
-		public IList QuestList
+		public List<AbstractQuest> QuestList
 		{
 			get { return m_questList; }
 		}
 
 		/// <summary>
-		/// Gets the questlist of this player
+		/// Gets the finished quests of this player
 		/// </summary>
-		public IList QuestListFinished
+		public List<AbstractQuest> QuestListFinished
 		{
 			get { return m_questListFinished; }
 		}
 
 		/// <summary>
 		/// Adds a quest to the players questlist
+		/// Can be used by both scripted quests and data quests
 		/// </summary>
 		/// <param name="quest">The quest to add</param>
 		/// <returns>true if added, false if player is already doing the quest!</returns>
 		public bool AddQuest(AbstractQuest quest)
 		{
-			lock (m_questList)
+			lock (QuestList)
 			{
-				if (IsDoingQuest(quest.GetType()) != null)
+				if (IsDoingQuest(quest) != null)
 					return false;
 
 				m_questList.Add(quest);
@@ -12506,6 +12529,7 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Remove credit for this type of encounter.
+		/// Used for scripted quests
 		/// </summary>
 		/// <param name="questType"></param>
 		/// <returns></returns>
@@ -12514,15 +12538,18 @@ namespace DOL.GS
 			if (questType == null)
 				return false;
 
-			lock (m_questListFinished)
+			lock (QuestListFinished)
 			{
 				foreach (AbstractQuest q in m_questListFinished)
 				{
-					if (q.GetType().Equals(questType) && q.Step == -1)
+					if (q is DataQuest == false)
 					{
-						m_questListFinished.Remove(q);
-						q.DeleteFromDatabase();
-						return true;
+						if (q.GetType().Equals(questType) && q.Step == -1)
+						{
+							m_questListFinished.Remove(q);
+							q.DeleteFromDatabase();
+							return true;
+						}
 					}
 				}
 			}
@@ -12531,20 +12558,23 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Checks if a player has done a specific quest
+		/// Checks if a player has done a specific quest type
+		/// This is used for scripted quests
 		/// </summary>
 		/// <param name="questType">The quest type</param>
 		/// <returns>the number of times the player did this quest</returns>
 		public int HasFinishedQuest(Type questType)
 		{
 			int counter = 0;
-			lock (m_questListFinished)
+			lock (QuestListFinished)
 			{
 				foreach (AbstractQuest q in m_questListFinished)
 				{
-					//DOLConsole.WriteLine("HasFinished: "+q.GetType().FullName+" Step="+q.Step);
-					if (q.GetType().Equals(questType) && q.Step == -1)
-						counter++;
+					if (q is DataQuest == false)
+					{
+						if (q.GetType().Equals(questType))
+							counter++;
+					}
 				}
 			}
 			return counter;
@@ -12552,17 +12582,41 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Checks if this player is currently doing the specified quest
+		/// Can be used by scripted and data quests
+		/// </summary>
+		/// <param name="questType">The quest type</param>
+		/// <returns>the quest if player is doing the quest or null if not</returns>
+		public AbstractQuest IsDoingQuest(AbstractQuest quest)
+		{
+			lock (QuestList)
+			{
+				foreach (AbstractQuest q in m_questList)
+				{
+					if (q.GetType().Equals(quest.GetType()) && q.IsDoingQuest(quest))
+						return q;
+				}
+			}
+			return null;
+		}
+
+
+		/// <summary>
+		/// Checks if this player is currently doing the specified quest type
+		/// This is used for scripted quests
 		/// </summary>
 		/// <param name="questType">The quest type</param>
 		/// <returns>the quest if player is doing the quest or null if not</returns>
 		public AbstractQuest IsDoingQuest(Type questType)
 		{
-			lock (m_questList)
+			lock (QuestList)
 			{
 				foreach (AbstractQuest q in m_questList)
 				{
-					if (q.GetType().Equals(questType) && q.Step != -1)
-						return q;
+					if (q is DataQuest == false)
+					{
+						if (q.GetType().Equals(questType))
+							return q;
+					}
 				}
 			}
 			return null;
@@ -12577,8 +12631,15 @@ namespace DOL.GS
 			base.Notify(e, sender, args);
 
 			// events will only fire for currently active quests.
-			foreach (AbstractQuest q in (ArrayList)m_questList.Clone())
-				q.Notify(e, sender, args);
+			lock (QuestList)
+			{
+				List<AbstractQuest> cloneList = new List<AbstractQuest>(m_questList);
+				foreach (AbstractQuest q in cloneList)
+				{
+					// player forwards every single notify message to all active quests
+					q.Notify(e, sender, args);
+				}
+			}
 
 			if (Task != null)
 				Task.Notify(e, sender, args);

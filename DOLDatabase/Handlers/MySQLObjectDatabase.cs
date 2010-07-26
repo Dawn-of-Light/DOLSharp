@@ -30,20 +30,15 @@ namespace DOL.Database.Handlers
 			{
 				string tableName = dataObject.TableName;
 
-				if (dataObject.ObjectId == null)
-				{
-					dataObject.ObjectId = IDGenerator.GenerateID();
-				}
-
 				var columns = new StringBuilder();
 				var values = new StringBuilder();
 
 				MemberInfo[] objMembers = dataObject.GetType().GetMembers();
 				bool hasRelations = false;
+				bool usePrimary = false;
+				string primaryColumnName = "";
+				bool firstColumn = true;
 				string dateFormat = Connection.GetDBDateFormat();
-
-				columns.Append("`" + tableName + "_ID`");
-				values.Append("'" + Escape(dataObject.ObjectId) + "'");
 
 				for (int i = 0; i < objMembers.Length; i++)
 				{
@@ -54,6 +49,14 @@ namespace DOL.Database.Handlers
 					}
 					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof(PrimaryKey), true);
 					object[] attrib = objMembers[i].GetCustomAttributes(typeof(DataElement), true);
+
+					// if a primary key field is using auto increment then use it as the key instead of the tablename_id column
+					if (keyAttrib.Length > 0 && (keyAttrib[0] as PrimaryKey).AutoIncrement)
+					{
+						usePrimary = true;
+						primaryColumnName = objMembers[i].Name;
+					}
+
 					if (attrib.Length > 0 || keyAttrib.Length > 0)
 					{
 						object val = null;
@@ -66,9 +69,15 @@ namespace DOL.Database.Handlers
 							val = ((FieldInfo)objMembers[i]).GetValue(dataObject);
 						}
 
-						columns.Append(", ");
-						values.Append(", ");
+						if (firstColumn == false)
+						{
+							columns.Append(", ");
+							values.Append(", ");
+						}
+
 						columns.Append("`" + objMembers[i].Name + "`");
+
+						firstColumn = false;
 
 						if (val is bool)
 						{
@@ -97,18 +106,64 @@ namespace DOL.Database.Handlers
 					}
 				}
 
+				if (usePrimary == false)
+				{
+					if (dataObject.ObjectId == null)
+					{
+						dataObject.ObjectId = IDGenerator.GenerateID();
+					}
+
+					// Add the silly Tablename_ID column
+					columns.Insert(0, "`" + tableName + "_ID`, ");
+					values.Insert(0, "'" + Escape(dataObject.ObjectId) + "', ");
+				}
+
 				string sql = "INSERT INTO `" + tableName + "` (" + columns + ") VALUES (" + values + ")";
 
 				if (Log.IsDebugEnabled)
 					Log.Debug(sql);
 
-				int res = Connection.ExecuteNonQuery(sql);
-				if (res == 0)
+				if (usePrimary)
 				{
-					if (Log.IsErrorEnabled)
-						Log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId + "Query = " + sql);
-					return false;
+					object objID = Connection.ExecuteScalar(sql + "; SELECT LAST_INSERT_ID();");
+					int newID = Convert.ToInt32(objID);
+					if (newID == 0)
+					{
+						if (Log.IsErrorEnabled)
+							Log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId + "Query = " + sql);
+						return false;
+					}
+					else
+					{
+						for (int i = 0; i < objMembers.Length; i++)
+						{
+							if (objMembers[i].Name == primaryColumnName)
+							{
+								if (objMembers[i] is PropertyInfo)
+								{
+									((PropertyInfo)objMembers[i]).SetValue(dataObject, newID, null);
+								}
+								else if (objMembers[i] is FieldInfo)
+								{
+									((FieldInfo)objMembers[i]).SetValue(dataObject, newID);
+								}
+
+								break;
+							}
+						}
+					}
 				}
+				else
+				{
+					int res = Connection.ExecuteNonQuery(sql);
+					if (res == 0)
+					{
+						if (Log.IsErrorEnabled)
+							Log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId + "Query = " + sql);
+						return false;
+					}
+				}
+
 
 				if (hasRelations)
 				{
@@ -146,6 +201,8 @@ namespace DOL.Database.Handlers
 				bool hasRelations = false;
 				bool first = true;
 				string dateFormat = Connection.GetDBDateFormat();
+				string primaryKeyColumn = string.Empty;
+				object primaryKeyValue = null;
 
 				for (int i = 0; i < bindingInfo.Length; i++)
 				{
@@ -160,6 +217,7 @@ namespace DOL.Database.Handlers
 					{
 						hasRelations = bind.HasRelation;
 					}
+
 					if (!bind.HasRelation)
 					{
 						object val = null;
@@ -210,12 +268,28 @@ namespace DOL.Database.Handlers
 						sb.Append('\'');
 						sb.Append(val);
 						sb.Append('\'');
+
+						if (bind.UsePrimaryKey)
+						{
+							primaryKeyColumn = bind.Member.Name;
+							primaryKeyValue = val;
+						}
+
+
 					}
 				}
 
-				sb.Append(" WHERE `" + tableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'");
+				if (primaryKeyColumn != string.Empty)
+				{
+					sb.Append(" WHERE `" + primaryKeyColumn + "` = '" + primaryKeyValue + "'");
+				}
+				else
+				{
+					sb.Append(" WHERE `" + tableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'");
+				}
 
 				string sql = sb.ToString();
+
 				if (Log.IsDebugEnabled)
 					Log.Debug(sql);
 
@@ -250,8 +324,47 @@ namespace DOL.Database.Handlers
 		{
 			try
 			{
-				string sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + dataObject.TableName + "_ID` = '" +
-							 Escape(dataObject.ObjectId) + "'";
+				BindingInfo[] bindingInfo = GetBindingInfo(dataObject.GetType());
+
+				string primaryKeyColumn = string.Empty;
+				object primaryKeyValue = null;
+
+				for (int i = 0; i < bindingInfo.Length; i++)
+				{
+					BindingInfo bind = bindingInfo[i];
+					object val;
+
+					if (bind.Member is PropertyInfo)
+					{
+						val = ((PropertyInfo)bind.Member).GetValue(dataObject, null);
+					}
+					else if (bind.Member is FieldInfo)
+					{
+						val = ((FieldInfo)bind.Member).GetValue(dataObject);
+					}
+					else
+					{
+						continue;
+					}
+
+					if (bind.UsePrimaryKey)
+					{
+						primaryKeyColumn = bind.Member.Name;
+						primaryKeyValue = val;
+					}
+
+				}
+
+				string sql;
+
+				if (primaryKeyColumn != string.Empty)
+				{
+					sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + primaryKeyColumn + "` = '" + Escape(primaryKeyValue.ToString()) + "'";
+				}
+				else
+				{
+					sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + dataObject.TableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'";
+				}
 
 				if (Log.IsDebugEnabled)
 					Log.Debug(sql);
@@ -383,8 +496,11 @@ namespace DOL.Database.Handlers
 			var dataObjects = new List<DataObject>(64);
 
 			// build sql command
-			var sb = new StringBuilder("SELECT `" + tableName + "_ID`, ");
+
+			//var sb = new StringBuilder("SELECT `" + tableName + "_ID`, ");
+			var sb = new StringBuilder("");
 			bool first = true;
+			bool usePrimaryKey = false;
 
 			BindingInfo[] bindingInfo = GetBindingInfo(objectType);
 			for (int i = 0; i < bindingInfo.Length; i++)
@@ -400,7 +516,21 @@ namespace DOL.Database.Handlers
 						first = false;
 					}
 					sb.Append("`" + bindingInfo[i].Member.Name + "`");
+
+					if (bindingInfo[i].UsePrimaryKey)
+					{
+						usePrimaryKey = true;
+					}
 				}
+			}
+
+			if (usePrimaryKey)
+			{
+				sb.Insert(0, "SELECT ");
+			}
+			else
+			{
+				sb.Insert(0, "SELECT `" + tableName + "_ID`, ");
 			}
 
 			sb.Append(" FROM `" + tableName + "`");
@@ -527,8 +657,10 @@ namespace DOL.Database.Handlers
 			var dataObjects = new List<TObject>(64);
 
 			// build sql command
-			var sb = new StringBuilder("SELECT `" + tableName + "_ID`, ");
+			var sb = new StringBuilder("");
 			bool first = true;
+
+			bool usePrimaryKey = false;
 
 			BindingInfo[] bindingInfo = GetBindingInfo(typeof(TObject));
 			for (int i = 0; i < bindingInfo.Length; i++)
@@ -544,7 +676,19 @@ namespace DOL.Database.Handlers
 						first = false;
 					}
 					sb.Append("`" + bindingInfo[i].Member.Name + "`");
+
+					if (bindingInfo[i].UsePrimaryKey)
+						usePrimaryKey = true;
 				}
+			}
+
+			if (usePrimaryKey)
+			{
+				sb.Insert(0, "SELECT ");
+			}
+			else
+			{
+				sb.Insert(0, "SELECT `" + tableName + "_ID`, ");
 			}
 
 			sb.Append(" FROM `" + tableName + "`");
@@ -566,14 +710,17 @@ namespace DOL.Database.Handlers
 												while (reader.Read())
 												{
 													reader.GetValues(data);
-													var id = (string)data[0];
-
-													// fill new data object
 													var obj = Activator.CreateInstance(typeof(TObject)) as TObject;
-													obj.ObjectId = id;
+													int field = 0;
+
+													if (usePrimaryKey == false)
+													{
+														// fill the silly TableName_ID field
+														obj.ObjectId = (string)data[0];
+														field = 1;
+													}
 
 													bool hasRelations = false;
-													int field = 1;
 													// we can use hard index access because we iterate the same order here
 													for (int i = 0; i < bindingInfo.Length; i++)
 													{

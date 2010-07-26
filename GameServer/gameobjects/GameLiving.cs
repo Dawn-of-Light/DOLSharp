@@ -3971,11 +3971,9 @@ namespace DOL.GS
 			Health += changeAmount;
 			int healthChanged = Health - oldHealth;
 
-			Notify(GameLivingEvent.HealthChanged, this, new HealthChangedEventArgs(changeSource, healthChangeType, healthChanged));
-
 			//Notify our enemies that we were healed by other means than
 			//natural regeneration, this allows for aggro on healers!
-			if (healthChangeType != eHealthChangeType.Regenerate)
+			if (healthChanged > 0 && healthChangeType != eHealthChangeType.Regenerate)
 			{
 				IList attackers;
 				lock (m_attackers.SyncRoot) { attackers = (IList)m_attackers.Clone(); }
@@ -5546,6 +5544,11 @@ namespace DOL.GS
 					return false;
 				}
 				player.TempProperties.setProperty("WHISPERDELAY", CurrentRegion.Time);
+
+				foreach (DOL.GS.Quests.DataQuest q in DataQuestList)
+				{
+					q.Notify(GamePlayerEvent.WhisperReceive, this, new WhisperReceiveEventArgs(player, this, str));
+				}
 			}
 
 			Notify(GameLivingEvent.WhisperReceive, this, new WhisperReceiveEventArgs(source, this, str));
@@ -5600,10 +5603,17 @@ namespace DOL.GS
 				return true;
 			}
 
-			if (source is GamePlayer)
-				((GamePlayer)source).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)source).Client, "GameLiving.ReceiveItem", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (base.ReceiveItem(source, item) == false)
+			{
+				if (source is GamePlayer)
+				{
+					((GamePlayer)source).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)source).Client, "GameLiving.ReceiveItem", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 
-			return base.ReceiveItem(source, item);
+				return false;
+			}
+
+			return true;
 		}
 
 		/// <summary>
