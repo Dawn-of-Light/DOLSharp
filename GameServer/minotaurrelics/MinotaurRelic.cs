@@ -1,3 +1,21 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +30,7 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.GS.Spells;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -46,6 +65,8 @@ namespace DOL.GS
 		protected ISpellHandler m_spellHandler;
 		protected GameSpellEffect m_gameSpellEffect;
 		public IList<GamePlayer> Playerlist = new List<GamePlayer>();
+        protected string m_protectorClassType;
+        protected bool m_spawnLocked;
 
 		/// <summary>
 		/// gets or sets the current Owner of this Relic
@@ -62,6 +83,16 @@ namespace DOL.GS
 			set { m_relicID = value; }
 		}
 
+        public string ProtectorClassType
+        {
+            get { return m_protectorClassType; }
+            set { m_protectorClassType = value; }
+        }
+        public bool SpawnLocked
+        {
+            get { return m_spawnLocked; }
+            set { m_spawnLocked = value; }
+        }
 		/// <summary>
 		/// gets or sets the current XP of this Relic
 		/// </summary>
@@ -168,6 +199,9 @@ namespace DOL.GS
 
 			XP = MinotaurRelicManager.MAX_RELIC_EXP;
 
+            ProtectorClassType = m_dbRelic.ProtectorClassType;
+            SpawnLocked = m_dbRelic.SpawnLocked;
+
 			//set still empty fields
 			Emblem = 0;
 			Level = 99;
@@ -189,6 +223,8 @@ namespace DOL.GS
 			m_dbRelic.Name = Name;
 			m_dbRelic.Model = Model;
 			m_dbRelic.relicSpell = RelicSpellID;
+            m_dbRelic.ProtectorClassType = ProtectorClassType;
+            m_dbRelic.SpawnLocked = SpawnLocked;
 
 			if (InternalID == null)
 			{
@@ -204,6 +240,16 @@ namespace DOL.GS
 		public override bool Interact(GamePlayer player)
 		{
 			if (!base.Interact(player)) return false;
+
+            foreach (GameNPC npc in GetNPCsInRadius(100))
+            {
+                if (npc.Model == 1583)
+                {
+                    player.Out.SendMessage("You cannot pickup " + GetName(0, false) + ". It is locked!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return false;
+                }
+            }
+
 			if (!player.IsAlive)
 			{
 				player.Out.SendMessage("You cannot pickup " + GetName(0, false) + ". You are dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -577,7 +623,7 @@ namespace DOL.GS
 				{
 					if (pl.MinotaurRelic != null)
 					{
-						player.Out.SendMessage("Someone in your group already have a Relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage("Someone in your group already has a Relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						PlayerLoosesRelic(player, false);
 						return;
 					}
@@ -587,6 +633,38 @@ namespace DOL.GS
 			PlayerLoosesRelic(player, false);
 		}
 		#endregion
+
+        public override bool AddToWorld()
+        {
+            if (SpawnLocked)
+            {
+                if (X == SpawnX && Y == SpawnY)
+                {
+                    if (ProtectorClassType != string.Empty)
+                    {
+                        GameObject protector = (GameObject)(GetType().Assembly.CreateInstance(ProtectorClassType, false));
+                        if (protector.GetType() != null)
+                        {
+                            //each individual protector will need to have all info needed to add to world
+                            //location, name, model, level, etc. hard coded into its class type (script)
+                            //aswell as adding the Locked effect on the relic where it spawns, and removing
+                            //the effect when dead.
+                            protector.AddToWorld();
+
+                            return base.AddToWorld();
+                        }
+                        else
+                        {
+                            log.Debug(string.Format("[Minotaur Relic] ClassType: {0} was not found, Relic not loaded!", ProtectorClassType));
+                            return false;
+                        }
+
+                    }
+                }
+            }
+
+            return base.AddToWorld();
+        }
 
 		public override string ToString()
 		{
