@@ -230,12 +230,7 @@ using DOL.AI.Brain;
 				enchanterdtenebrousflask.SpellID1 = 0;
 				enchanterdtenebrousflask.MaxCharges1 = 0;
 				enchanterdtenebrousflask.Charges1 = 0;
-				
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(enchanterdtenebrousflask);
+				GameServer.Database.AddObject(enchanterdtenebrousflask);
 				}
 			quarterfulltenebrousflask = GameServer.Database.FindObjectByKey<ItemTemplate>("quarterfulltenebrousflask");
 			if (quarterfulltenebrousflask == null)
@@ -303,12 +298,7 @@ using DOL.AI.Brain;
 				quarterfulltenebrousflask.SpellID1 = 0;
 				quarterfulltenebrousflask.MaxCharges1 = 0;
 				quarterfulltenebrousflask.Charges1 = 0;
-				
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(quarterfulltenebrousflask);
+				GameServer.Database.AddObject(quarterfulltenebrousflask);
 				}
 			halffulltenebrousflask = GameServer.Database.FindObjectByKey<ItemTemplate>("halffulltenebrousflask");
 			if (halffulltenebrousflask == null)
@@ -376,12 +366,7 @@ using DOL.AI.Brain;
 				halffulltenebrousflask.SpellID1 = 0;
 				halffulltenebrousflask.MaxCharges1 = 0;
 				halffulltenebrousflask.Charges1 = 0;
-				
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(halffulltenebrousflask);
+				GameServer.Database.AddObject(halffulltenebrousflask);
 				}
 			threequarterfulltenebrousflask = GameServer.Database.FindObjectByKey<ItemTemplate>("threequarterfulltenebrousflask");
 			if (threequarterfulltenebrousflask == null)
@@ -449,12 +434,7 @@ using DOL.AI.Brain;
 				threequarterfulltenebrousflask.SpellID1 = 0;
 				threequarterfulltenebrousflask.MaxCharges1 = 0;
 				threequarterfulltenebrousflask.Charges1 = 0;
-				
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(threequarterfulltenebrousflask);
+				GameServer.Database.AddObject(threequarterfulltenebrousflask);
 				}
 			fullflaskoftenebrousessence = GameServer.Database.FindObjectByKey<ItemTemplate>("fullflaskoftenebrousessence");
 			if (fullflaskoftenebrousessence == null)
@@ -522,12 +502,7 @@ using DOL.AI.Brain;
 				fullflaskoftenebrousessence.SpellID1 = 0;
 				fullflaskoftenebrousessence.MaxCharges1 = 0;
 				fullflaskoftenebrousessence.Charges1 = 0;
-				
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(fullflaskoftenebrousessence);
+				GameServer.Database.AddObject(fullflaskoftenebrousessence);
 				}
 			
 

@@ -207,12 +207,7 @@ namespace DOL.GS.Quests.Albion
                 magicalWood.IsDropable = false;
                 magicalWood.IsPickable = false;
                 magicalWood.Weight = 5;
-
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddObject(magicalWood);
+                GameServer.Database.AddObject(magicalWood);
             }
 
             dullBlackGem = GameServer.Database.FindObjectByKey<ItemTemplate>("dull_black_gem");
@@ -247,12 +242,7 @@ namespace DOL.GS.Quests.Albion
                 dullBlackGem.MaxCondition = 1000;
                 dullBlackGem.Durability = 1000;
                 dullBlackGem.MaxDurability = 1000;
-
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddObject(dullBlackGem);
+                GameServer.Database.AddObject(dullBlackGem);
             }
 
             #endregion

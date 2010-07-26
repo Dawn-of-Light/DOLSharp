@@ -193,12 +193,7 @@ namespace DOL.GS.Quests.Albion
                 boarCarcass.Model = 540;
                 boarCarcass.IsDropable = false;
                 boarCarcass.IsPickable = false;
-
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
-                    GameServer.Database.AddObject(boarCarcass);
+                GameServer.Database.AddObject(boarCarcass);
             }
 
 

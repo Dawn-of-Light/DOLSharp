@@ -100,9 +100,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsCloak.MaxCondition = 50000;
 				RecruitsCloak.Durability = 50000;
 				RecruitsCloak.MaxDurability = 50000;
-
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(RecruitsCloak);
+				GameServer.Database.AddObject(RecruitsCloak);
 			}
 			LetterToPompin = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_to_pompin");
 			if (LetterToPompin == null)
@@ -115,9 +113,7 @@ namespace DOL.GS.Quests.Albion
 				LetterToPompin.Extension = 1;
 				LetterToPompin.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.Init.Text2");
 				LetterToPompin.Id_nb = "letter_to_pompin";
-
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(LetterToPompin);
+				GameServer.Database.AddObject(LetterToPompin);
 			}
 			#endregion
 

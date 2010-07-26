@@ -265,7 +265,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created wolfPeltCloak in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(spiderSilkenRobe);
 			}
 
@@ -311,7 +311,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(ringedSpiderChitinTunic);
 			}
 
@@ -357,7 +357,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(studdedSpiderEyeVest);
 			}
 
@@ -402,7 +402,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(spiderEmblazonedTunic);
 			}
 
@@ -448,7 +448,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(embossedSpiderTunic);
 			}
 
@@ -469,7 +469,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(bloatedFang);
 			}
 
@@ -490,7 +490,7 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(spiderChitin);
 			}
 

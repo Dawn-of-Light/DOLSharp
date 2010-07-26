@@ -206,12 +206,7 @@ namespace DOL.GS.Quests.Albion
                  spritelingToes.IsDropable = false;
                  spritelingToes.IsPickable = false;
                  spritelingToes.Weight = 2;
-
-                 //You don't have to store the created item in the db if you don't want,
-                 //it will be recreated each time it is not found, just comment the following
-                 //line if you rather not modify your database
-                 if (SAVE_INTO_DATABASE)
-                     GameServer.Database.AddObject(spritelingToes);
+                 GameServer.Database.AddObject(spritelingToes);
              }
 
              wormRot = GameServer.Database.FindObjectByKey<ItemTemplate>("worm_rot");
@@ -227,12 +222,7 @@ namespace DOL.GS.Quests.Albion
                  spritelingToes.Model = 102; //TODO Model-ID 
                  wormRot.IsDropable = false;
                  wormRot.IsPickable = false;
-
-                 //You don't have to store the created item in the db if you don't want,
-                 //it will be recreated each time it is not found, just comment the following
-                 //line if you rather not modify your database
-                 if (SAVE_INTO_DATABASE)
-                     GameServer.Database.AddObject(wormRot);
+                 GameServer.Database.AddObject(wormRot);
              }
 
              snakeSkin = GameServer.Database.FindObjectByKey<ItemTemplate>("green_skin");
@@ -249,12 +239,7 @@ namespace DOL.GS.Quests.Albion
                  snakeSkin.IsDropable = false;
                  snakeSkin.IsPickable = false;
                  snakeSkin.Weight = 3;
-
-                 //You don't have to store the created item in the db if you don't want,
-                 //it will be recreated each time it is not found, just comment the following
-                 //line if you rather not modify your database
-                 if (SAVE_INTO_DATABASE)
-                     GameServer.Database.AddObject(snakeSkin);
+                 GameServer.Database.AddObject(snakeSkin);
              }
             #endregion
 

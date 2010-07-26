@@ -90,13 +90,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsNecklaceofMight.Quality = 100;
 				RecruitsNecklaceofMight.MaxCondition = 50000;
 				RecruitsNecklaceofMight.MaxDurability = 50000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(RecruitsNecklaceofMight);
+				GameServer.Database.AddObject(RecruitsNecklaceofMight);
 			}
 			//Recruit's Necklace of Insight
 			RecruitsNecklaceofInsight = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_necklace_of_insight");
@@ -129,13 +123,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsNecklaceofInsight.MaxCondition = 50000;
 				RecruitsNecklaceofInsight.Durability = 50000;
 				RecruitsNecklaceofInsight.MaxDurability = 50000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(RecruitsNecklaceofInsight);
+				GameServer.Database.AddObject(RecruitsNecklaceofInsight);
 			}
 			//Recruit's Necklace of Faith
 			RecruitsNecklaceofFaith = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_necklace_of_faith");
@@ -168,13 +156,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsNecklaceofFaith.MaxCondition = 50000;
 				RecruitsNecklaceofFaith.Durability = 50000;
 				RecruitsNecklaceofFaith.MaxDurability = 50000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(RecruitsNecklaceofFaith);
+				GameServer.Database.AddObject(RecruitsNecklaceofFaith);
 			}
 
 			ItemTemplate punySkeletonSkull = new ItemTemplate();

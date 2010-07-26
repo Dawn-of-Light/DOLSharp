@@ -284,7 +284,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(scrollHylvian);
 			}
 
@@ -309,7 +309,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(receiptFreagus);
 			}
 
@@ -333,7 +333,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(chestOfCoins);
 			}
 
@@ -357,7 +357,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(letterAddrir);
 			}
 
@@ -382,7 +382,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(assistantNecklace);
 			}
 
@@ -429,7 +429,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(recruitsRoundShield);
 			}
 
@@ -476,7 +476,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
+				
 					GameServer.Database.AddObject(recruitsBracer);
 			}
 
