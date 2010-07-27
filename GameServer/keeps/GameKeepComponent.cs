@@ -172,7 +172,15 @@ namespace DOL.GS.Keeps
 
 		public override eRealm Realm
 		{
-			get { return Keep.Realm; }
+			get 
+			{
+				if (Keep != null)
+				{
+					return Keep.Realm; 
+				}
+
+				return eRealm.None;
+			}
 		}
 
 		private Hashtable m_hookPoints;
