@@ -38,6 +38,7 @@ namespace DOL.Database
 		private string m_sourceText;
 		private string m_stepType;
 		private string m_stepText;
+		private string m_stepItemTemplates;
 		private string m_advanceText;
 		private string m_targetName;
 		private string m_targetText;
@@ -47,6 +48,7 @@ namespace DOL.Database
 		private byte m_maxLevel;
 		private string m_rewardMoney;
 		private string m_rewardXP;
+		private string m_optionalRewardItemTemplates;
 		private string m_finalRewardItemTemplates;
 
 
@@ -166,6 +168,17 @@ namespace DOL.Database
 		}
 
 		/// <summary>
+		/// Items given to the player at a step
+		/// Format: id_nb|idnb
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string StepItemTemplates
+		{
+			get { return m_stepItemTemplates; }
+			set { m_stepItemTemplates = value; Dirty = true; }
+		}
+
+		/// <summary>
 		/// Text required to advance to the next step
 		/// Format: Step 1 Text|Step 2 Text
 		/// </summary>
@@ -259,6 +272,17 @@ namespace DOL.Database
 		{
 			get { return m_rewardXP; }
 			set { m_rewardXP = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// The ItemTemplate id_nb(s) to give as a optional rewards
+		/// Format:  #id_nb1|id_nb2 with first character being the number of choices
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string OptionalRewardItemTemplates
+		{
+			get { return m_optionalRewardItemTemplates; }
+			set { m_optionalRewardItemTemplates = value; Dirty = true; }
 		}
 
 		/// <summary>
