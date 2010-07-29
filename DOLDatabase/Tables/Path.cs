@@ -69,8 +69,5 @@ namespace DOL.Database
 			get { return m_region; }
 			set { m_region = value; }
 		}
-
-		[Relation(LocalField = "PathID", RemoteField = "PathID", AutoLoad = true, AutoDelete=true)]
-		public DBPathPoint[] PathPoints;
 	}
 }

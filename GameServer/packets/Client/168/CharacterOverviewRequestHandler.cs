@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
  */
 using System.Reflection;
 using DOL.Database;
@@ -34,12 +33,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			string accountName = packet.ReadString(24);
 
+			client.ClientState = GameClient.eClientState.CharScreen;
+
 			if (client.Player != null)
 			{
 				client.Player.SaveIntoDatabase();
 				GameServer.Database.SaveObject(client.Account);
-				client.Player = null;
 			}
+
+			client.Player = null;
 
 			GameServer.Database.FillObjectRelations(client.Account);
 
@@ -101,8 +103,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// use saved realm ignoring what user has chosen if server rules do not allow to choose the realm
 					chosenRealm = (eRealm)client.Account.Realm;
 				}
-				client.ClientState=GameClient.eClientState.CharScreen;
-				client.Player = null;
+
 				client.Out.SendCharacterOverview(chosenRealm);
 			}
 			return 1;
