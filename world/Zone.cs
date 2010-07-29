@@ -189,7 +189,12 @@ namespace DOL.GS
 		/// <summary>
         /// The waterlevel of this zone
         /// </summary>
-        private readonly int m_waterlevel;
+        private int m_waterlevel;
+
+		/// <summary>
+		/// Does this zone support diving?
+		/// </summary>
+		private bool m_isDivingEnabled;
 
         /// <summary>
         /// Does this zone contain Lava
@@ -222,7 +227,7 @@ namespace DOL.GS
 		/// <param name="width">the Width of this zone</param>
 		/// <param name="height">the Height of this zone</param>
         /// <param name="zoneskinID">For clientside positioning in instances: The 'fake' zoneid we send to clients.</param>
-		public Zone(Region region, ushort id, string desc, int xoff, int yoff, int width, int height, ushort zoneskinID, int waterlevel, bool islava, int xpBonus, int rpBonus, int bpBonus, int coinBonus)
+		public Zone(Region region, ushort id, string desc, int xoff, int yoff, int width, int height, ushort zoneskinID, bool isDivingEnabled, int waterlevel, bool islava, int xpBonus, int rpBonus, int bpBonus, int coinBonus)
 		{
 			m_Region = region;
 			m_ID = id;
@@ -233,6 +238,7 @@ namespace DOL.GS
 			m_Height = height;
             m_zoneSkinID = zoneskinID;
 			m_waterlevel = waterlevel;
+			m_isDivingEnabled = isDivingEnabled;
             m_IsLava = islava;
 
             m_bonusXP = xpBonus;
@@ -507,7 +513,14 @@ namespace DOL.GS
         public int Waterlevel
         {
             get { return m_waterlevel; }
+			set { m_waterlevel = value; }
         }
+
+		public bool IsDivingEnabled
+		{
+			get { return m_isDivingEnabled; }
+			set { m_isDivingEnabled = value; }
+		}
 
         /// <summary>
         /// Returns 1 if this zone has lava

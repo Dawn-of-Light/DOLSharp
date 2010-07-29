@@ -50,8 +50,11 @@ namespace DOL.GS
         public string Description
         { get { return m_description; } set { m_description = value; } }
 
-        public int WaterLevel
-        { get { return m_waterLevel; } set { m_waterLevel = value; } }
+        public byte DivingFlag
+        { get { return m_divingFlag; } set { m_divingFlag = value; } }
+
+		public int WaterLevel
+		{ get { return m_waterLevel; } set { m_waterLevel = value; } }
 
         public bool IsLava
         { get { return m_IsLava; } set { m_IsLava = value; } }
@@ -60,6 +63,7 @@ namespace DOL.GS
         private ushort m_ZoneID, m_RegionID;
         private string m_description;
         private int m_waterLevel;
+		private byte m_divingFlag;
         private bool m_IsLava;
     }
 }

@@ -184,6 +184,7 @@
     <Compile Include="commands\GMcommands\blink.cs" />
     <Compile Include="commands\GMCommands\cast.cs" />
     <Compile Include="commands\GMCommands\ClientList.cs" />
+    <Compile Include="commands\GMCommands\zone.cs" />
     <Compile Include="commands\GMCommands\crafting.cs" />
     <Compile Include="commands\GMCommands\debug.cs" />
     <Compile Include="commands\GMCommands\debugjump.cs" />
@@ -221,7 +222,6 @@
     <Compile Include="commands\GMCommands\titlegm.cs" />
     <Compile Include="commands\GMCommands\walk.cs" />
     <Compile Include="commands\GMCommands\weather.cs" />
-    <Compile Include="commands\GMCommands\ZoneBonus.cs" />
     <Compile Include="commands\PlayerCommands\advice.cs" />
     <Compile Include="commands\PlayerCommands\advisor.cs" />
     <Compile Include="commands\PlayerCommands\afk.cs" />

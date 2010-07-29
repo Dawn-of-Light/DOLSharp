@@ -646,7 +646,8 @@ namespace DOL.GS.Commands
 					info.Add(" Zone Y: "+ client.Player.CurrentZone.YOffset);
 					info.Add(" Zone Width: "+ client.Player.CurrentZone.Width);
 					info.Add(" Zone Height: "+ client.Player.CurrentZone.Height);
-					info.Add(" Zone Waterlevel: "+ client.Player.CurrentZone.Waterlevel);
+					info.Add(" Zone DivingEnabled: " + client.Player.CurrentZone.IsDivingEnabled);
+					info.Add(" Zone Waterlevel: " + client.Player.CurrentZone.Waterlevel);
 					info.Add(" ");
 					info.Add(" Region Name: "+ client.Player.CurrentRegion.Name);
                     info.Add(" Region Description: " + client.Player.CurrentRegion.Description);
@@ -657,7 +658,6 @@ namespace DOL.GS.Commands
 					info.Add(" Region IsDungeon: "+ client.Player.CurrentRegion.IsDungeon);
                     info.Add(" Zone in Region: " + client.Player.CurrentRegion.Zones.Count);
                     info.Add(" Region WaterLevel: " + client.Player.CurrentRegion.WaterLevel);
-                    info.Add(" Region DivingEnabled: " + client.Player.CurrentRegion.DivingEnabled);
                     info.Add(" Region HousingEnabled: " + client.Player.CurrentRegion.HousingEnabled);
                     info.Add(" Region IsDisabled: " + client.Player.CurrentRegion.IsDisabled);
 					info.Add(" ");
