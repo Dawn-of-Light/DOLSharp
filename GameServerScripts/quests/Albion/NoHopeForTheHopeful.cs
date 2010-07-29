@@ -57,55 +57,82 @@ namespace DOL.GS.Quests.Albion
 		{
 			#region defineItems
 
-			ItemTemplate intelligentBracer = CreateBracer();
-			intelligentBracer.Id_nb = "recruits_intelligent_bracer";
-			intelligentBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text1");
-			intelligentBracer.Bonus1 = 4;
-			intelligentBracer.Bonus1Type = (int)eProperty.Acuity;
-			intelligentBracer.Bonus2 = 3;
-			intelligentBracer.Bonus2Type = (int)eProperty.Constitution;
-			intelligentBracer.Bonus3 = 2;
-			intelligentBracer.Bonus3Type = (int)eProperty.Resist_Slash;
 
-			ItemTemplate mightyBracer = CreateBracer();
-			mightyBracer.Id_nb = "recruits_mighty_bracer";
-			mightyBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text2");
-			mightyBracer.Bonus1 = 4;
-			mightyBracer.Bonus1Type = (int)eProperty.Strength;
-			mightyBracer.Bonus2 = 4;
-			mightyBracer.Bonus2Type = (int)eProperty.Constitution;
-			mightyBracer.Bonus3 = 2;
-			mightyBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+			ItemTemplate intelligentBracer = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_intelligent_bracer");
+			if (intelligentBracer == null)
+			{
+				intelligentBracer = CreateBracer();
+				intelligentBracer.Id_nb = "recruits_intelligent_bracer";
+				intelligentBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text1");
+				intelligentBracer.Bonus1 = 4;
+				intelligentBracer.Bonus1Type = (int)eProperty.Acuity;
+				intelligentBracer.Bonus2 = 3;
+				intelligentBracer.Bonus2Type = (int)eProperty.Constitution;
+				intelligentBracer.Bonus3 = 2;
+				intelligentBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+				GameServer.Database.AddObject(intelligentBracer);
+			}
 
-			ItemTemplate slyBracer = CreateBracer();
-			slyBracer.Id_nb = "recruits_sly_bracer";
-			slyBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text3");
-			slyBracer.Bonus1 = 4;
-			slyBracer.Bonus1Type = (int)eProperty.Dexterity;
-			slyBracer.Bonus2 = 4;
-			slyBracer.Bonus2Type = (int)eProperty.Quickness;
-			slyBracer.Bonus3 = 2;
-			slyBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+			ItemTemplate mightyBracer = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_mighty_bracer");
+			if (mightyBracer == null)
+			{
+				mightyBracer = CreateBracer();
+				mightyBracer.Id_nb = "recruits_mighty_bracer";
+				mightyBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text2");
+				mightyBracer.Bonus1 = 4;
+				mightyBracer.Bonus1Type = (int)eProperty.Strength;
+				mightyBracer.Bonus2 = 4;
+				mightyBracer.Bonus2Type = (int)eProperty.Constitution;
+				mightyBracer.Bonus3 = 2;
+				mightyBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+				GameServer.Database.AddObject(mightyBracer);
+			}
 
-			ItemTemplate piousBracer = CreateBracer();
-			piousBracer.Id_nb = "recruits_pious_bracer";
-			piousBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text4");
-			piousBracer.Bonus1 = 4;
-			piousBracer.Bonus1Type = (int)eProperty.Acuity;
-			piousBracer.Bonus2 = 3;
-			piousBracer.Bonus2Type = (int)eProperty.Dexterity;
-			piousBracer.Bonus3 = 2;
-			piousBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+			ItemTemplate slyBracer = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_sly_bracer");
+			if (slyBracer == null)
+			{
+				slyBracer = CreateBracer();
+				slyBracer.Id_nb = "recruits_sly_bracer";
+				slyBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text3");
+				slyBracer.Bonus1 = 4;
+				slyBracer.Bonus1Type = (int)eProperty.Dexterity;
+				slyBracer.Bonus2 = 4;
+				slyBracer.Bonus2Type = (int)eProperty.Quickness;
+				slyBracer.Bonus3 = 2;
+				slyBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+				GameServer.Database.AddObject(slyBracer);
+			}
+
+			ItemTemplate piousBracer = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_pious_bracer");
+			if (piousBracer == null)
+			{
+				piousBracer = CreateBracer();
+				piousBracer.Id_nb = "recruits_pious_bracer";
+				piousBracer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text4");
+				piousBracer.Bonus1 = 4;
+				piousBracer.Bonus1Type = (int)eProperty.Acuity;
+				piousBracer.Bonus2 = 3;
+				piousBracer.Bonus2Type = (int)eProperty.Dexterity;
+				piousBracer.Bonus3 = 2;
+				piousBracer.Bonus3Type = (int)eProperty.Resist_Slash;
+				GameServer.Database.AddObject(piousBracer);
+			}
 
 			#endregion
 
-			ItemTemplate banditCloak = new ItemTemplate();
-			banditCloak.Weight = 0;
-			banditCloak.Condition = 50000;
-			banditCloak.MaxCondition = 50000;
-			banditCloak.Model = 669;
-			banditCloak.Extension = 1;
-			banditCloak.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text5");
+			ItemTemplate banditCloak = GameServer.Database.FindObjectByKey<ItemTemplate>("quest_bandit_cloak");
+			if (banditCloak == null)
+			{
+				banditCloak = new ItemTemplate();
+				banditCloak.Id_nb = "quest_bandit_cloak";
+				banditCloak.Weight = 0;
+				banditCloak.Condition = 50000;
+				banditCloak.MaxCondition = 50000;
+				banditCloak.Model = 669;
+				banditCloak.Extension = 1;
+				banditCloak.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.NoHopeForTheHopeful.Init.Text5");
+				GameServer.Database.AddObject(banditCloak);
+			}
 
 			Level = 1;
 			QuestGiver = sirDorian;

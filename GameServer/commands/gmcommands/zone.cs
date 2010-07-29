@@ -85,6 +85,7 @@ namespace DOL.GS.Commands
 					}
 
 					client.Out.SendCustomTextWindow("[ " + client.Player.CurrentZone.Description + " ]", info);
+					return;
 				}
 
 				if (args[1].ToLower() == "divingflag")
