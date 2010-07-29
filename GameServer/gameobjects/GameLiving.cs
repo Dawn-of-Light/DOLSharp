@@ -4085,7 +4085,7 @@ namespace DOL.GS
 			//Send our attackers some note
 			ArrayList clone = m_attackers.Clone() as ArrayList;
 			//If any of the pet's attacked, this will hold the gameplayer to send the message to
-			List<GamePlayer> virtualAttackers = null;
+			List<GamePlayer> playerAttackers = null;
 
 			foreach (GameObject obj in clone)
 			{
@@ -4100,11 +4100,11 @@ namespace DOL.GS
 						if (!clone.Contains(player))
 						{
 							//Make the list if it's null
-							if (virtualAttackers == null)
-								virtualAttackers = new List<GamePlayer>();
+							if (playerAttackers == null)
+								playerAttackers = new List<GamePlayer>();
 							//Ok, this is important.  If they aren't already in the list, we should add them ONLY ONCE!
-							if (!virtualAttackers.Contains(player))
-								virtualAttackers.Add(player);
+							if (!playerAttackers.Contains(player))
+								playerAttackers.Add(player);
 						}
 					}
 
@@ -4113,12 +4113,17 @@ namespace DOL.GS
 			}
 
 			//Now that we properly redirected to the player only once, lets notify them!
-			if (virtualAttackers != null)
+			if (playerAttackers != null)
 			{
-				foreach (GamePlayer player in virtualAttackers)
+				foreach (GamePlayer player in playerAttackers)
 				{
 					player.EnemyKilled(this);
 				}
+			}
+
+			foreach (DOL.GS.Quests.DataQuest q in DataQuestList)
+			{
+				q.Notify(GamePlayerEvent.Dying, this, new DyingEventArgs(killer, playerAttackers));
 			}
 
 			m_attackers.Clear();

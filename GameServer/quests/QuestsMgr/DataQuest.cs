@@ -56,25 +56,29 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public enum eStartType : byte
 		{
-			Standard = 0,		// Talk to npc, accept quest, go through steps
-			Collection = 1,		// player turns drops into npc for xp, quest not added to player quest log
-			AutoStart = 2,		// quest is auto started simply by interacting with start object
-			KillComplete = 3,	// Killing the Start NPC grants and finished the quest, similar to One Time Drops
+			Standard = 0,			// Talk to npc, accept quest, go through steps
+			Collection = 1,			// Player turns drops into npc for xp, quest not added to player quest log, has no steps
+			AutoStart = 2,			// Standard quest is auto started simply by interacting with start object
+			KillComplete = 3,		// Killing the Start living grants and finished the quest, similar to One Time Drops, not logged in GamePlayer log
+			InteractComplete = 4,	// Interacting with start object grants and finishes the quest, not logged in GamePlayer log
+			Unknown = 255
 		}
 
 		/// <summary>
 		/// The type of each quest step
+		/// All quests with steps must end in a Finish step
 		/// </summary>
 		public enum eStepType : byte
 		{
-			Kill = 0,			// Kill the target to advance the quest
-			KillFinish = 1,		// Killing the target finishes the quest and gives the reward
-			Deliver = 2,		// Deliver an item to the target to advance the quest
-			DeliverFinish = 3,	// Deliver an item to the target to finish the quest
-			Interact = 4,		// Interact with the target to advance the step
-			InteractFinish = 5,	// Interact with the target to finish the quest
-			Whisper = 6,		// Whisper to the target to advance the quest
-			WhisperFinish = 7,	// Whisper to the target to finish the quest
+			Kill = 0,				// Kill the target to advance the quest
+			KillFinish = 1,			// Killing the target finishes the quest and gives the reward
+			Deliver = 2,			// Deliver an item to the target to advance the quest
+			DeliverFinish = 3,		// Deliver an item to the target to finish the quest
+			Interact = 4,			// Interact with the target to advance the step
+			InteractFinish = 5,		// Interact with the target to finish the quest
+			Whisper = 6,			// Whisper to the target to advance the quest
+			WhisperFinish = 7,		// Whisper to the target to finish the quest
+			Unknown = 255
 		}
 
 		protected List<ushort> m_sourceRegions = new List<ushort>();
@@ -85,10 +89,15 @@ namespace DOL.GS.Quests
 		protected List<string> m_targetTexts = new List<string>();
 		protected List<eStepType> m_stepTypes = new List<eStepType>();
 		protected List<string> m_stepTexts = new List<string>();
+		protected List<string> m_stepItemTemplates = new List<string>();
 		protected List<string> m_advanceTexts = new List<string>();
 		protected List<long> m_rewardXPs = new List<long>();
 		protected List<long> m_rewardMoneys = new List<long>();
+		byte m_numOptionalRewards = 0;
+		protected List<string> m_optionalRewards = new List<string>();
 		protected List<string> m_finalRewards = new List<string>();
+
+		#region Construction
 
 		/// <summary>
 		/// Create an empty Quest
@@ -142,6 +151,7 @@ namespace DOL.GS.Quests
 			ParseQuestData();
 		}
 
+		#endregion Construction
 
 		#region Parse Quest Data
 
@@ -180,10 +190,13 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.SourceText;
-				parse1 = lastParse.Split('|');
-				foreach (string str in parse1)
+				if (lastParse != null)
 				{
-					m_sourceTexts.Add(str);
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
+					{
+						m_sourceTexts.Add(str);
+					}
 				}
 
 				lastParse = m_dataQuest.TargetName;
@@ -238,6 +251,16 @@ namespace DOL.GS.Quests
 					}
 				}
 
+				lastParse = m_dataQuest.StepItemTemplates;
+				if (lastParse != null)
+				{
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
+					{
+						m_stepItemTemplates.Add(str);
+					}
+				}
+
 				lastParse = m_dataQuest.AdvanceText;
 				if (lastParse != null)
 				{
@@ -262,6 +285,17 @@ namespace DOL.GS.Quests
 					m_rewardXPs.Add(Convert.ToInt64(str));
 				}
 
+				lastParse = m_dataQuest.OptionalRewardItemTemplates;
+				if (lastParse != null)
+				{
+					m_numOptionalRewards = Convert.ToByte(lastParse.Substring(0, 1));
+					parse1 = lastParse.Substring(1).Split('|');
+					foreach (string str in parse1)
+					{
+						m_optionalRewards.Add(str);
+					}
+				}
+
 				lastParse = m_dataQuest.FinalRewardItemTemplates;
 				if (lastParse != null)
 				{
@@ -280,6 +314,8 @@ namespace DOL.GS.Quests
 		}
 
 		#endregion Parse Quest Data
+
+		#region Properties
 
 		/// <summary>
 		/// Name of this quest to show in quest log
@@ -379,7 +415,7 @@ namespace DOL.GS.Quests
 				if (Step == 0)
 					return m_dataQuest.Description;
 				else
-					return m_stepTexts[Step - 1];
+					return StepText;
 			}
 		}
 
@@ -412,6 +448,30 @@ namespace DOL.GS.Quests
 			}
 		}
 
+		#endregion Properties
+
+		#region Utility
+
+		/// <summary>
+		/// Get or create the CharacterXDataQuest for this player
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		protected virtual CharacterXDataQuest GetCharacterQuest(GamePlayer player)
+		{
+			CharacterXDataQuest charQuest = GameServer.Database.SelectObject<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(player.InternalID) + "' AND DataQuestID = " + ID);
+
+			if (charQuest == null)
+			{
+				charQuest = new CharacterXDataQuest(player.InternalID, ID);
+				charQuest.Count = 0;
+				charQuest.Step = 0;
+				GameServer.Database.AddObject(charQuest);
+			}
+
+			return charQuest;
+		}
+
 		/// <summary>
 		/// Can this player do this quest
 		/// </summary>
@@ -419,6 +479,9 @@ namespace DOL.GS.Quests
 		/// <returns></returns>
 		public override bool CheckQuestQualification(GamePlayer player)
 		{
+			if (player.Level < DBDataQuest.MinLevel || player.Level > DBDataQuest.MaxLevel)
+				return false;
+
 			if (StartType == eStartType.Collection)
 			{
 				CharacterXDataQuest charQuest = GetCharacterQuest(player);
@@ -459,7 +522,6 @@ namespace DOL.GS.Quests
 			return true;
 		}
 
-
 		/// <summary>
 		/// Is the player currently doing this quest
 		/// </summary>
@@ -474,6 +536,343 @@ namespace DOL.GS.Quests
 
 			return false;
 		}
+
+
+		/// <summary>
+		/// Update the quest indicator
+		/// </summary>
+		/// <param name="npc"></param>
+		/// <param name="player"></param>
+		public virtual void UpdateQuestIndicator(GameNPC npc, GamePlayer player)
+		{
+			player.Out.SendNPCsQuestEffect(npc, npc.ShowQuestIndicator(player));
+		}
+
+
+
+		/// <summary>
+		/// Source name for the current step
+		/// </summary>
+		protected string SourceName
+		{
+			get
+			{
+				try
+				{
+					return m_sourceNames[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] SourceName error for Step " + Step, ex);
+				}
+
+				return "";
+			}
+		}
+
+		/// <summary>
+		/// Source region for the current step
+		/// </summary>
+		protected ushort SourceRegion
+		{
+			get
+			{
+				try
+				{
+					return m_sourceRegions[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] SourceRegion error for Step " + Step, ex);
+				}
+
+				return 0;
+			}
+		}
+
+		/// <summary>
+		/// Source text for the current step
+		/// </summary>
+		protected string SourceText
+		{
+			get
+			{
+				try
+				{
+					return m_sourceTexts[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] SourceText error for Step " + Step, ex);
+				}
+
+				return "Error retrieving source text for step " + Step;
+			}
+		}
+
+		/// <summary>
+		/// Target name for the current step
+		/// </summary>
+		protected string TargetName
+		{
+			get
+			{
+				try
+				{
+					return m_targetNames[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] TargetName error for Step " + Step, ex);
+				}
+
+				return "";
+			}
+		}
+
+		/// <summary>
+		/// Target region for the current step
+		/// </summary>
+		protected ushort TargetRegion
+		{
+			get
+			{
+				try
+				{
+					return m_targetRegions[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] TargetRegion error for Step " + Step, ex);
+				}
+
+				return 0;
+			}
+		}
+
+		/// <summary>
+		/// Target text for the current step
+		/// </summary>
+		protected string TargetText
+		{
+			get
+			{
+				try
+				{
+					return m_targetTexts[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] TargetText error for Step " + Step, ex);
+				}
+
+				return "Error retrieving target text for step " + Step;
+			}
+		}
+
+		/// <summary>
+		/// Current step type
+		/// </summary>
+		protected eStepType StepType
+		{
+			get
+			{
+				try
+				{
+					return m_stepTypes[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] StepType error for Step " + Step, ex);
+				}
+
+				return eStepType.Unknown;
+			}
+		}
+
+		/// <summary>
+		/// Step description to show in quest log for the current step
+		/// </summary>
+		protected string StepText
+		{
+			get
+			{
+				try
+				{
+					return m_stepTexts[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] StepText error for Step " + Step, ex);
+				}
+
+				return "Error retrieving step text for step " + Step;
+			}
+		}
+
+		/// <summary>
+		/// An item template to give to the player for this step
+		/// </summary>
+		protected string StepItemTemplate
+		{
+			get
+			{
+				try
+				{
+					return m_stepItemTemplates[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] StepItemTemplate error for Step " + Step, ex);
+				}
+
+				return "";
+			}
+		}
+
+
+		/// <summary>
+		/// Text needed to advance the step or end the quest for the current step
+		/// </summary>
+		protected string AdvanceText
+		{
+			get
+			{
+				try
+				{
+					return m_advanceTexts[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] AdvanceText error for Step " + Step, ex);
+				}
+
+				return "";
+			}
+		}
+
+
+		/// <summary>
+		/// Any money reward for the current step
+		/// </summary>
+		protected long RewardMoney
+		{
+			get
+			{
+				try
+				{
+					return m_rewardMoneys[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] RewardMoney error for Step " + Step, ex);
+				}
+
+				return 0;
+			}
+		}
+
+
+		/// <summary>
+		/// Any xp reward for the current step
+		/// </summary>
+		protected long RewardXP
+		{
+			get
+			{
+				try
+				{
+					return m_rewardXPs[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] RewardXP error for Step " + Step, ex);
+				}
+
+				return 0;
+			}
+		}
+
+
+		/// <summary>
+		/// Try to advance the quest step, doing any actions required to start the next step
+		/// </summary>
+		/// <param name="obj">The object that is advancing the step</param>
+		/// <returns></returns>
+		protected virtual bool AdvanceQuestStep(GameObject obj)
+		{
+			try
+			{
+				// Send any target text to end this step
+
+				if (TargetText != "")
+				{
+					SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+
+				eStepType nextStepType = m_stepTypes[Step];
+				bool advance = true;
+
+				// If next step requires giving the player an item then we need to check to make sure
+				// player has enough inventory space to accept the item, otherwise do not advance the step
+
+				if (nextStepType == eStepType.Deliver || 
+					nextStepType == eStepType.DeliverFinish)
+				{
+					ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(m_stepItemTemplates[Step + 1]);
+					if (item == null)
+					{
+						throw new Exception("Can't find ItemTemplate " + m_stepItemTemplates[Step + 1]);
+					}
+
+					if (obj != null && obj is GameLiving)
+					{
+						advance = GiveItem(obj as GameLiving, m_questPlayer, item, false);
+					}
+					else
+					{
+						advance = GiveItem(m_questPlayer, item, false);
+					}
+				}
+
+				if (advance)
+				{
+					// Since we can advance first give any rewards for the current step
+
+					if (RewardMoney > 0)
+					{
+						m_questPlayer.AddMoney(RewardMoney, "You are awarded {0}!");
+					}
+
+					if (RewardXP > 0)
+					{
+						m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, RewardXP);
+					}
+
+					// Then advance step
+
+					Step++;
+
+					// Then say any source text for the new step
+
+					if (SourceText != "")
+					{
+						SendMessage(m_questPlayer, SourceText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+
+					return true;
+				}
+			}
+			catch (Exception ex)
+			{
+				log.Error("DataQuest [" + ID + "] AdvanceQuestStep error when advancing from Step " + Step, ex);
+			}
+
+			return false;
+		}
+
+
+		#endregion Utility
 
 
 		#region Notify
@@ -502,6 +901,8 @@ namespace DOL.GS.Quests
 						//log.DebugFormat("DataQuest CheckOffer: Player {0} is interacting with {1}", p.Name, o.Name);
 						CheckOfferQuest(p, o);
 					}
+
+					return;
 				}
 
 				// Interact when already doing quest
@@ -512,6 +913,8 @@ namespace DOL.GS.Quests
 
 					//log.DebugFormat("DataQuest Interact: Player {0} is interacting with {1}", p.Name, a.Target.Name);
 					OnPlayerInteract(p, a.Target);
+
+					return;
 				}
 
 				// Player is giving an item to something
@@ -520,7 +923,9 @@ namespace DOL.GS.Quests
 					GiveItemEventArgs a = args as GiveItemEventArgs;
 
 					//log.DebugFormat("DataQuest: GiveItem {0} receives {1} from {2}", a.Target.Name, a.Item.Name, a.Source.Name);
-					OnGiveItem(a.Source, a.Target, a.Item);
+					OnPlayerGiveItem(a.Source, a.Target, a.Item);
+
+					return;
 				}
 
 				// Living is receiving an item, should a quest react to this
@@ -532,8 +937,10 @@ namespace DOL.GS.Quests
 					if (p != null)
 					{
 						//log.DebugFormat("DataQuest: ReceiveItem {0} receives {1} from {2}", a.Target.Name, a.Item.Name, a.Source.Name);
-						OnItemReceived(p, a.Target, a.Item);
+						OnNPCReceiveItem(p, a.Target, a.Item);
 					}
+
+					return;
 				}
 
 				// Whisper
@@ -545,9 +952,37 @@ namespace DOL.GS.Quests
 					if (p != null)
 					{
 						//log.DebugFormat("DataQuest: WhisperReceived {0} receives whisper {1} from {2}", a.Target.Name, a.Text, a.Source.Name);
-						OnWhisperReceived(p, a.Target, a.Text);
+						OnNPCReceiveWhisper(p, a.Target, a.Text);
 					}
+
+					return;
 				}
+
+				// NPC is dying, check for KillComplete quests
+				if (e == GameLivingEvent.Dying)
+				{
+					DyingEventArgs a = args as DyingEventArgs;
+					GameLiving dying = sender as GameLiving;
+					GameObject killer = a.Killer;
+					List<GamePlayer> playerKillers = a.PlayerKillers;
+
+					OnLivingIsDying(dying, killer, playerKillers);
+
+					return;
+				}
+
+				// Enemy of player with quest was killed, check quests and steps
+				if (e == GamePlayerEvent.EnemyKilled)
+				{
+					EnemyKilledEventArgs a = args as EnemyKilledEventArgs;
+					GamePlayer player = sender as GamePlayer;
+					GameLiving killed = a.Target;
+
+					OnEnemyKilled(player, killed);
+
+					return;
+				}
+
 
 			}
 			catch (Exception ex)
@@ -559,29 +994,141 @@ namespace DOL.GS.Quests
 		#endregion Notify
 
 
+		#region Notification Handlers
+
 		/// <summary>
 		/// A player has interacted with an object that has a DataQuest.
 		/// Check to see if we can offer this quest to the player and display the text
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="obj"></param>
-		public virtual void CheckOfferQuest(GamePlayer player, GameObject obj)
+		protected virtual void CheckOfferQuest(GamePlayer player, GameObject obj)
 		{
 			// Can we offer this quest to the player?
 			if (CheckQuestQualification(player))
 			{
+				if (StartType == eStartType.InteractComplete)
+				{
+					// This quest finishes with the interaction and is not placed in player quest log
+
+					CharacterXDataQuest charQuest = GetCharacterQuest(player);
+
+					if (charQuest.Count < MaxQuestCount)
+					{
+						if (Description != "")
+						{
+							SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						}
+
+						lock (player.Inventory)
+						{
+							if (player.Inventory.IsSlotsFree(m_finalRewards.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+							{
+								foreach (string idnb in m_finalRewards)
+								{
+									ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
+									if (item != null)
+									{
+										GiveItem((obj is GameLiving ? obj as GameLiving : null), player, item, false);
+									}
+								}
+
+								if (m_rewardXPs[0] > 0)
+								{
+									player.GainExperience(GameLiving.eXPSource.Quest, m_rewardXPs[0]);
+								}
+
+								if (m_rewardMoneys[0] > 0)
+								{
+									player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
+								}
+							}
+							else
+							{
+								SendMessage(player, "Your inventory does not have enough space to finish this quest!", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								return;
+							}
+						}
+
+						charQuest.Count++;
+						GameServer.Database.SaveObject(charQuest);
+					}
+					return;
+				}
+
+				if (StartType == eStartType.AutoStart)
+				{
+					CharacterXDataQuest charQuest = GetCharacterQuest(player);
+					DataQuest dq = new DataQuest(player, obj, DBDataQuest, charQuest);
+					dq.Step = 1;
+					player.AddQuest(dq);
+					if (m_sourceTexts[0] != "")
+					{
+						SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+					return;
+				}
+
+				// Standard offer quest dialog
 				SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 			}
 		}
 
+
 		/// <summary>
-		/// Update the quest indicator
+		/// Check quests offered to see if receiving an item should be processed
+		/// Used for Collection and Item Start quest types
 		/// </summary>
-		/// <param name="npc"></param>
 		/// <param name="player"></param>
-		public virtual void UpdateQuestIndicator(GameNPC npc, GamePlayer player)
+		/// <param name="obj"></param>
+		/// <param name="item"></param>
+		protected virtual void CheckOfferedQuestReceiveItem(GamePlayer player, GameObject obj, InventoryItem item)
 		{
-			player.Out.SendNPCsQuestEffect(npc, npc.ShowQuestIndicator(player));
+			// checking the quests we can offer to see if this is a collection quest or if the item starts a quest
+			//log.DebugFormat("Checking collection quests: '{0}' of type '{1}', wants item '{2}'", Name, (eStartType)DBDataQuest.StartType, DBDataQuest.CollectItemTemplate == null ? "" : DBDataQuest.CollectItemTemplate);
+
+			// check to see if this object has a collection quest and if so accept the item and generate the reward
+			// collection quests do not go into the GamePlayer quest lists
+			if (StartType == eStartType.Collection && item.Id_nb == DBDataQuest.CollectItemTemplate)
+			{
+				CharacterXDataQuest charQuest = GetCharacterQuest(player);
+
+				if (charQuest.Count < MaxQuestCount)
+				{
+					RemoveItem(obj, player, item, false);
+					charQuest.Count++;
+					charQuest.Step = 0;
+					GameServer.Database.SaveObject(charQuest);
+					long rewardXP = 0;
+					if (long.TryParse(DBDataQuest.RewardXP, out rewardXP))
+					{
+						player.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
+					}
+					SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Check offered quests to see if whisper should be processed
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="living"></param>
+		/// <param name="text"></param>
+		protected virtual void CheckOfferedQuestWhisper(GamePlayer player, GameLiving living, string text)
+		{
+			//log.DebugFormat("Checking accept quest: '{0}' ID: {1} of type '{2}', key word '{3}', is qualified {4}", Name, ID, (eStartType)DBDataQuest.StartType, DBDataQuest.AcceptText, CheckQuestQualification(player));
+
+			if (CheckQuestQualification(player) && DBDataQuest.StartType == (byte)eStartType.Standard && DBDataQuest.AcceptText == text)
+			{
+				//log.DebugFormat("Adding quest {0} to player {1}", Name, player.Name);
+				CharacterXDataQuest charQuest = GetCharacterQuest(player);
+				DataQuest dq = new DataQuest(player, living, DBDataQuest, charQuest);
+				dq.Step = 1;
+				player.AddQuest(dq);
+				SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+			}
 		}
 
 
@@ -591,15 +1138,53 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="obj"></param>
-		public virtual void OnPlayerInteract(GamePlayer player, GameObject obj)
+		protected virtual void OnPlayerInteract(GamePlayer player, GameObject obj)
 		{
 			//log.DebugFormat("Player {0} has quest and is interacting with {1}.", player.Name, obj.Name);
 
-			if (m_targetNames[Step - 1] == obj.Name && m_targetRegions[Step - 1] == obj.CurrentRegionID)
+			if (TargetName == obj.Name && TargetRegion == obj.CurrentRegionID)
 			{
-				if (m_stepTypes[Step - 1] == eStepType.InteractFinish)
+				switch (StepType)
 				{
-					FinishQuest(obj);
+					case eStepType.Interact:
+						{
+							AdvanceQuestStep(obj);
+						}
+						break;
+
+					case eStepType.InteractFinish:
+						{
+							FinishQuest(obj);
+						}
+						break;
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// A player doing a quest has given an item to something.  All active quests check to see if they need to respond to this.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="obj"></param>
+		/// <param name="item"></param>
+		protected virtual void OnPlayerGiveItem(GamePlayer player, GameObject obj, InventoryItem item)
+		{
+			if (TargetName == obj.Name && TargetRegion == obj.CurrentRegionID && StepItemTemplate == item.Id_nb)
+			{
+				switch (StepType)
+				{
+					case eStepType.Deliver:
+						{
+							AdvanceQuestStep(obj);
+						}
+						break;
+
+					case eStepType.DeliverFinish:
+						{
+							FinishQuest(obj);
+						}
+						break;
 				}
 			}
 		}
@@ -612,52 +1197,15 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		/// <param name="obj"></param>
 		/// <param name="item"></param>
-		public virtual void OnItemReceived(GamePlayer player, GameObject obj, InventoryItem item)
+		protected virtual void OnNPCReceiveItem(GamePlayer player, GameObject obj, InventoryItem item)
 		{
 			if (m_questPlayer == null)
 			{
-				// checking the quests we can offer to see if this is a collection quest or if the item starts a quest
-
-				// check to see if this object has a collection quest and if so accept the item and generate the reward
-				// collection quests do not go into a players quest list
-
-				//log.DebugFormat("Checking collection quests: '{0}' of type '{1}', wants item '{2}'", Name, (eStartType)DBDataQuest.StartType, DBDataQuest.CollectItemTemplate == null ? "" : DBDataQuest.CollectItemTemplate);
-
-				if (DBDataQuest.StartType == (byte)eStartType.Collection && item.Id_nb == DBDataQuest.CollectItemTemplate)
-				{
-					CharacterXDataQuest charQuest = GetCharacterQuest(player);
-
-					if (charQuest.Count < MaxQuestCount)
-					{
-						RemoveItem(obj, player, item, false);
-						charQuest.Count++;
-						charQuest.Step = 0;
-						GameServer.Database.SaveObject(charQuest);
-						long rewardXP = 0;
-						if (long.TryParse(DBDataQuest.RewardXP, out rewardXP))
-						{
-							player.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
-						}
-
-						SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					}
-				}
-
+				// Player may want to start this quest
+				CheckOfferedQuestReceiveItem(player, obj, item);
 				return;
 			}
 		}
-
-
-		/// <summary>
-		/// A player doing a quest has given an item to something.  All active quests check to see if they need to respond to this.
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="obj"></param>
-		/// <param name="item"></param>
-		public virtual void OnGiveItem(GamePlayer player, GameObject obj, InventoryItem item)
-		{
-		}
-
 
 		/// <summary>
 		/// A player has whispered to a GameLiving
@@ -666,44 +1214,79 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		/// <param name="living"></param>
 		/// <param name="text"></param>
-		public virtual void OnWhisperReceived(GamePlayer player, GameLiving living, string text)
+		protected virtual void OnNPCReceiveWhisper(GamePlayer player, GameLiving living, string text)
 		{
-			// Player may want to start this quest
 			if (m_questPlayer == null)
 			{
-				//log.DebugFormat("Checking accept quest: '{0}' ID: {1} of type '{2}', key word '{3}', is qualified {4}", Name, ID, (eStartType)DBDataQuest.StartType, DBDataQuest.AcceptText, CheckQuestQualification(player));
-
-				if (CheckQuestQualification(player) && DBDataQuest.StartType == (byte)eStartType.Standard && DBDataQuest.AcceptText == text)
-				{
-					//log.DebugFormat("Adding quest {0} to player {1}", Name, player.Name);
-					CharacterXDataQuest charQuest = GetCharacterQuest(player);
-					DataQuest dq = new DataQuest(player, living, DBDataQuest, charQuest);
-					dq.Step = 1;
-					player.AddQuest(dq);
-
-					SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				}
-
+				// Player may want to start this quest
+				CheckOfferedQuestWhisper(player, living, text);
 				return;
 			}
 
-			// Player is doing this quest
-
-		}
-
-
-		protected virtual CharacterXDataQuest GetCharacterQuest(GamePlayer player)
-		{
-			CharacterXDataQuest charQuest = GameServer.Database.SelectObject<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(player.InternalID) + "' AND DataQuestID = " + ID);
-
-			if (charQuest == null)
+			if (TargetName == living.Name && TargetRegion == living.CurrentRegionID && AdvanceText == text)
 			{
-				charQuest = new CharacterXDataQuest(player.InternalID, ID);
-				GameServer.Database.AddObject(charQuest);
-			}
+				switch (StepType)
+				{
+					case eStepType.Whisper:
+						{
+							AdvanceQuestStep(living);
+						}
+						break;
 
-			return charQuest;
+					case eStepType.WhisperFinish:
+						{
+							FinishQuest(living);
+						}
+						break;
+				}
+			}
 		}
+
+		/// <summary>
+		/// The living offering a dataquest is dying.  Do we have any kill quests we need to activate?
+		/// </summary>
+		/// <param name="dying"></param>
+		/// <param name="killer"></param>
+		/// <param name="playerKillers"></param>
+		protected virtual void OnLivingIsDying(GameLiving dying, GameObject killer, List<GamePlayer> playerKillers)
+		{
+			log.Error("KillComplete quests not supported yet.");
+			// not done
+		}
+
+
+		/// <summary>
+		/// Enemy of a player with a dataquest is killed, check for quest advancement
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="enemy"></param>
+		protected virtual void OnEnemyKilled(GamePlayer player, GameLiving living)
+		{
+			if (TargetName == living.Name && TargetRegion == living.CurrentRegionID)
+			{
+				switch (StepType)
+				{
+					case eStepType.Kill:
+						{
+							AdvanceQuestStep(living);
+						}
+						break;
+
+					case eStepType.KillFinish:
+						{
+							FinishQuest(living);
+						}
+						break;
+				}
+			}
+		}
+
+
+
+
+
+		#endregion Notification Handlers
+
 
 		public override void FinishQuest()
 		{
@@ -718,6 +1301,8 @@ namespace DOL.GS.Quests
 		{
 			if (m_questPlayer == null || m_charQuest == null || m_charQuest.IsValid == false)
 				return;
+
+			SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 
 			int lastStep = Step;
 

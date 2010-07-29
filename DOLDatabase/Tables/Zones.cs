@@ -37,6 +37,7 @@ namespace DOL
             private ushort m_regionID;
             private int m_waterLevel;
             private bool m_isLava;
+			private byte m_divingFlag = 0;
 
             private int m_bonusXP;
             private int m_bonusRP;
@@ -54,6 +55,7 @@ namespace DOL
                 m_regionID = 0;
                 m_waterLevel = 0;
                 m_isLava = false;
+				m_divingFlag = 0;
 
                 m_bonusXP = 0;
                 m_bonusRP = 0;
@@ -114,6 +116,22 @@ namespace DOL
                     m_isLava = value;
                 }
             }
+			/// <summary>
+			/// Diving flag for zones to override region.  0 = use region, 1 = Force Yes, 2 = Force No
+			/// </summary>
+			[DataElement(AllowDbNull = false)]
+			public byte DivingFlag
+			{
+				get
+				{
+					return m_divingFlag;
+				}
+				set
+				{
+					Dirty = true;
+					m_divingFlag = value;
+				}
+			}
             [DataElement(AllowDbNull = false)]
             public int WaterLevel
             {
