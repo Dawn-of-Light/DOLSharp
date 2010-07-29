@@ -295,7 +295,6 @@ namespace DOL.GS.Keeps
 
 			if (dbpath != null)
 			{
-				pathpoints = dbpath.PathPoints;
 				pathType = (ePathType)dbpath.PathType;
 			}
 			if (pathpoints == null)
