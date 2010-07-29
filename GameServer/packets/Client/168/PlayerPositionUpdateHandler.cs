@@ -200,6 +200,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Player.MaxLastZ = int.MinValue;
 				}
 
+				// Update water level and diving flag for the new zone
+				client.Out.SendPlayerPositionAndObjectID();
+
 				/*
 				 * "You have entered Burial Tomb."
 				 * "Burial Tomb"

@@ -1806,19 +1806,32 @@ namespace DOL.GS
 		/// </remarks>
 		public override ushort Model
 		{
-			get { return DBCharacter != null ? (ushort)DBCharacter.CurrentModel : base.Model; }
+			get 
+			{
+				return base.Model;
+			}
 			set
 			{
-				if (DBCharacter == null || DBCharacter.CurrentModel == value) return;
-
-				DBCharacter.CurrentModel = value;
-				Notify(GamePlayerEvent.ModelChanged, this);
-				//base.Model; // only need if there will be some special code in base-property in future
-				if (ObjectState == eObjectState.Active)
-					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				if (base.Model != value)
 				{
-					if (player == null) continue;
-					player.Out.SendModelChange(this, Model);
+					base.Model = value;
+
+					// Only GM's can persist model changes - Tolakram
+					if (Client.Account.PrivLevel > (int)ePrivLevel.Player && DBCharacter != null && DBCharacter.CurrentModel != base.Model)
+					{
+						DBCharacter.CurrentModel = base.Model;
+					}
+
+					if (ObjectState == eObjectState.Active)
+					{
+						Notify(GamePlayerEvent.ModelChanged, this);
+
+						foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						{
+							if (player == null) continue;
+							player.Out.SendModelChange(this, Model);
+						}
+					}
 				}
 			}
 		}
@@ -11618,6 +11631,8 @@ namespace DOL.GS
 			if (!(obj is DOLCharacters))
 				return;
 			m_dbCharacter = (DOLCharacters)obj;
+
+			Model = (ushort)m_dbCharacter.CurrentModel;
 
 			m_customFaceAttributes[(int)eCharFacePart.EyeSize] = m_dbCharacter.EyeSize;
 			m_customFaceAttributes[(int)eCharFacePart.LipSize] = m_dbCharacter.LipSize;

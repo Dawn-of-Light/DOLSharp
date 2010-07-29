@@ -408,8 +408,9 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Gets or Sets diving flag for region
+		/// Note: This flag should normally be checked at the zone level
 		/// </summary>
-		public virtual bool DivingEnabled
+		public virtual bool IsRegionDivingEnabled
 		{
 			get { return m_regionData.DivingEnabled; }
 		}

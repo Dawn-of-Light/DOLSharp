@@ -493,6 +493,7 @@ namespace DOL.GS
                        dbZone.RegionID = (ushort)config[ENTRY_ZONE_REGIONID].GetInt(0);
                        dbZone.ZoneID = config[ENTRY_ZONE_ZONEID].GetInt(0);
                        dbZone.WaterLevel = config[ENTRY_ZONE_WATER_LEVEL].GetInt(0);
+					   dbZone.DivingFlag = 0;
 
                        if (config[ENTRY_ZONE_LAVA].GetInt(0) != 0)
                        {
@@ -522,6 +523,7 @@ namespace DOL.GS
                 zoneData.RegionID = dbZone.RegionID;
                 zoneData.ZoneID = (ushort)dbZone.ZoneID;
                 zoneData.WaterLevel = dbZone.WaterLevel;
+				zoneData.DivingFlag = dbZone.DivingFlag;
                 zoneData.IsLava = dbZone.IsLava;
                 RegisterZone(zoneData, zoneData.ZoneID, zoneData.RegionID, zoneData.Description, 
                     dbZone.Experience, dbZone.Realmpoints, dbZone.Bountypoints, dbZone.Coin);
@@ -1083,22 +1085,46 @@ namespace DOL.GS
 		/// <summary>
 		/// Registers a Zone into a Region
 		/// </summary>
-        public static void RegisterZone(ZoneData data, ushort zoneID, ushort regionID, string zoneName, int xpBonus, int rpBonus, int bpBonus, int coinBonus)
+        public static void RegisterZone(ZoneData zoneData, ushort zoneID, ushort regionID, string zoneName, int xpBonus, int rpBonus, int bpBonus, int coinBonus)
         {
-            Region reg = GetRegion(regionID);
-            if (reg == null)
+            Region region = GetRegion(regionID);
+            if (region == null)
             {
-                if (log.IsWarnEnabled)
-                    log.Warn("Could not find Region " + regionID + " for Zone " + data.Description);
+				if (log.IsWarnEnabled)
+				{
+					log.Warn("Could not find Region " + regionID + " for Zone " + zoneData.Description);
+				}
                 return;
             }
             
-            if (data.WaterLevel < 0)
-                data.WaterLevel = reg.WaterLevel;
+			// Making an assumption that a zone waterlevel of 0 means it is not set and we should use the regions waterlevel - Tolakram
+			if (zoneData.WaterLevel == 0)
+			{
+				zoneData.WaterLevel = region.WaterLevel;
+			}
+
+			bool isDivingEnabled = region.IsRegionDivingEnabled;
+
+			if (zoneData.DivingFlag == 1)
+				isDivingEnabled = true;
+			else if (zoneData.DivingFlag == 2)
+				isDivingEnabled = false;
             
-            Zone zone = new Zone(
-                reg, zoneID, zoneName, data.OffX * 8192, data.OffY * 8192, data.Width * 8192, data.Height * 8192, data.ZoneID, data.WaterLevel, data.IsLava, 
-                xpBonus, rpBonus, bpBonus, coinBonus);
+            Zone zone = new Zone(region, 
+								 zoneID, 
+								 zoneName, 
+								 zoneData.OffX * 8192, 
+								 zoneData.OffY * 8192, 
+								 zoneData.Width * 8192, 
+								 zoneData.Height * 8192, 
+								 zoneData.ZoneID, 
+								 isDivingEnabled,
+								 zoneData.WaterLevel, 
+								 zoneData.IsLava, 
+				                 xpBonus, 
+								 rpBonus, 
+								 bpBonus, 
+								 coinBonus);
 
             //Dinberg:Instances
             //ZoneID will always be constant as last parameter, because ZoneSkinID will effectively be a bluff, to remember
@@ -1112,15 +1138,16 @@ namespace DOL.GS
                     width * 8192,
                     height * 8192);*/
 
-            lock (reg.Zones.SyncRoot)
+            lock (region.Zones.SyncRoot)
             {
-                reg.Zones.Add(zone);
+                region.Zones.Add(zone);
             }
             lock (m_zones.SyncRoot)
             {
                 m_zones.Add(zoneID, zone);
             }
-            log.Info("Added a zone, " + data.Description + ", to region " + reg.Name);
+
+            log.Info("Added a zone, " + zoneData.Description + ", to region " + region.Name);
         }
 
 		/// <summary>
