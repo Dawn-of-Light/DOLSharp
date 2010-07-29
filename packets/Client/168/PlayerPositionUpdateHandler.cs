@@ -191,7 +191,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 
 			Zone lastPositionUpdateZone = client.Player.LastPositionUpdateZone;
-			if (newZone != lastPositionUpdateZone)
+			bool zoneChange = newZone != lastPositionUpdateZone;
+			if (zoneChange)
 			{
 				//If the region changes -> make sure we don't take any falling damage
 				if (lastPositionUpdateZone != null
@@ -202,6 +203,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				// Update water level and diving flag for the new zone
 				client.Out.SendPlayerPositionAndObjectID();
+				zoneChange = true;
 
 				/*
 				 * "You have entered Burial Tomb."
@@ -273,6 +275,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Player.X = realX;
 			client.Player.Y = realY;
 			client.Player.Z = realZ;
+
+			if (zoneChange)
+			{
+				// update client zone information for waterlevel and diving
+				client.Out.SendPlayerPositionAndObjectID();
+			}
+
 			// used to predict current position, should be before
 			// any calculation (like fall damage)
 			client.Player.MovementStartTick = Environment.TickCount;
