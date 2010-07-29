@@ -356,7 +356,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(m_gameClient.Player.Heading);
 
 			int flags = 0;
-			if (m_gameClient.Player.CurrentRegion.DivingEnabled)
+			if (m_gameClient.Player.CurrentZone.IsDivingEnabled)
 				flags = 0x80 | (m_gameClient.Player.IsUnderwater ? 0x01 : 0x00);
 			pak.WriteByte((byte)(flags));
 
