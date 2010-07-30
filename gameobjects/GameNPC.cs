@@ -2380,7 +2380,8 @@ namespace DOL.GS
 				{
 					if (quest.CheckQuestQualification(player) && 
 						quest.StartType != DataQuest.eStartType.Collection && 
-						quest.StartType != DataQuest.eStartType.KillComplete)
+						quest.StartType != DataQuest.eStartType.KillComplete &&
+						quest.StartType != DataQuest.eStartType.InteractComplete)
 					{
 						return true;
 					}

@@ -31,7 +31,7 @@ namespace DOL.GS.Trainer
 	{
 		public override eCharacterClass TrainedClass
 		{
-			get { return eCharacterClass.Mauler_Mid; }
+			get { return eCharacterClass.MaulerMid; }
 		}
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace DOL.GS.Trainer
 						player.RemoveAllStyles();
 
 						// Mauler_mid = 61
-						PromotePlayer(player, (int)eCharacterClass.Mauler_Mid, "Welcome young Mauler. May your time in Midgard be rewarding.", null);
+						PromotePlayer(player, (int)eCharacterClass.MaulerMid, "Welcome young Mauler. May your time in Midgard be rewarding.", null);
 
 						// drop any equiped-non usable item, in inventory or on the ground if full
 						CheckAbilityToUseItem(player);

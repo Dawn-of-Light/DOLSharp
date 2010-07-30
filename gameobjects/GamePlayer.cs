@@ -4765,9 +4765,9 @@ namespace DOL.GS
 				case eCharacterClass.Warlock:
 				case eCharacterClass.Bainshee:
 				case eCharacterClass.Vampiir:
-				case eCharacterClass.Mauler_Alb:
-				case eCharacterClass.Mauler_Hib:
-				case eCharacterClass.Mauler_Mid:
+				case eCharacterClass.MaulerAlb:
+				case eCharacterClass.MaulerHib:
+				case eCharacterClass.MaulerMid:
 					{
 						//we don't want to allow catacombs classes to use free levels and
 						//have a 50% bonus
@@ -11803,12 +11803,10 @@ namespace DOL.GS
 
 					if (quest.Step > 0)
 					{
-						log.DebugFormat("Added DataQuest {0} with ID {1} to current quest list of player {2}", dataQuest.Name, dataQuest.ID, Name);
 						m_questList.Add((AbstractQuest)dataQuest);
 					}
 					else
 					{
-						log.DebugFormat("Added DataQuest {0} with ID {1} to finished quest list of player {2}", dataQuest.Name, dataQuest.ID, Name);
 						m_questListFinished.Add((AbstractQuest)dataQuest);
 					}
 				}

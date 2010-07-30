@@ -47,9 +47,9 @@ namespace DOL.GS.Spells
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
             if (target is GamePlayer && (((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.Vampiir
-                || ((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.Mauler_Alb
-                || ((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.Mauler_Mid
-                || ((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.Mauler_Hib)) { MessageToCaster("This spell has no effect on this class!", eChatType.CT_Spell); return; }
+                || ((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.MaulerAlb
+                || ((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.MaulerMid
+                || ((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.MaulerHib)) { MessageToCaster("This spell has no effect on this class!", eChatType.CT_Spell); return; }
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 		public override int BonusCategory1 { get { return 1; } }

@@ -31,18 +31,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			string accountName = packet.ReadString(24);
-
 			client.ClientState = GameClient.eClientState.CharScreen;
-
-			if (client.Player != null)
-			{
-				client.Player.SaveIntoDatabase();
-				GameServer.Database.SaveObject(client.Account);
-			}
-
+			GameServer.Database.SaveObject(client.Account);
 			client.Player = null;
-
 			GameServer.Database.FillObjectRelations(client.Account);
 
 			//reset realm if no characters
@@ -50,6 +41,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				client.Account.Realm = (int)eRealm.None;
 			}
+
+			string accountName = packet.ReadString(24);
 
 			if(accountName.EndsWith("-X")) 
 			{
