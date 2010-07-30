@@ -31,7 +31,7 @@ namespace DOL.GS.Trainer
     {
         public override eCharacterClass TrainedClass
         {
-            get { return eCharacterClass.Mauler_Alb; }
+            get { return eCharacterClass.MaulerAlb; }
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace DOL.GS.Trainer
                         player.RemoveAllStyles();
 
                         // Mauler_Alb = 60
-                        PromotePlayer(player, (int)eCharacterClass.Mauler_Alb, "Welcome young Mauler. May your time in Albion be rewarding.", null);
+                        PromotePlayer(player, (int)eCharacterClass.MaulerAlb, "Welcome young Mauler. May your time in Albion be rewarding.", null);
 
 						// drop any equiped-non usable item, in inventory or on the ground if full
 						CheckAbilityToUseItem(player);

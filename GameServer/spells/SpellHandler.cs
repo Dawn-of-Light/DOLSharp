@@ -3440,9 +3440,9 @@ target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 				    && this.SpellLine.KeyName != GlobalSpellsLines.Combat_Styles_Effect
 				    && this.m_spellLine.KeyName != GlobalSpellsLines.Mundane_Poisons
 				    && this.SpellLine.KeyName != GlobalSpellsLines.Item_Effects
-				    && player.CharacterClass.ID != (int)eCharacterClass.Mauler_Alb
-				    && player.CharacterClass.ID != (int)eCharacterClass.Mauler_Mid
-				    && player.CharacterClass.ID != (int)eCharacterClass.Mauler_Hib
+				    && player.CharacterClass.ID != (int)eCharacterClass.MaulerAlb
+				    && player.CharacterClass.ID != (int)eCharacterClass.MaulerMid
+				    && player.CharacterClass.ID != (int)eCharacterClass.MaulerHib
 				    && player.CharacterClass.ID != (int)eCharacterClass.Vampiir)
 				{
 					int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);

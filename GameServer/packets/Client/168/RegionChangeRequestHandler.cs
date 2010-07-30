@@ -46,8 +46,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			ushort jumpSpotID = packet.ReadShort();
 
-			Log.Debug("Handle jump packet: " + jumpSpotID);
-
 			eRealm targetRealm = client.Player.Realm;
 
 			if (client.Player.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis)

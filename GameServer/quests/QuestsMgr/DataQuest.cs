@@ -39,7 +39,56 @@ namespace DOL.GS.Quests
 	/// This represents a data driven quest
 	/// DataQuests are defined in the database instead of a script.
 	/// 
-	/// -------- DataQuests only support collection and single step 'interact' or 'kill' at the moment ---------
+	/// Each Quest should have a complete set of startup parameters.  All of these are non serialized.
+	/// 
+	/// Name, StartType, StartName, StartRegionID, AcceptText and Description.  These determine who offers the quest and what text is displayed
+	/// to the player considering accepting the quest.
+	/// 
+	/// Once a quest is started each step behaves in a set order.  
+	/// 
+	/// Source -> Target -> Advance to Next Step 
+	/// 
+	/// Step 1 is considered the first step, and for each step
+	/// Source is considered who started the Step and Target is considered who ends the Step.   For each Step the following columns must
+	/// have serialized values, separated by | for each Step, including Step 1.  If the last value for any step is empty then the string should
+	/// end with a double pipe |
+	/// 
+	/// SourceName;RegionID - both the SourceName and TargetName fields must be in the format Name;RegionID|Name;RegionID...
+	/// 
+	/// SourceText - what the source says to you when beginning a step.  If a source starting the next step has no text then an empty 
+	/// string can be provided using || with nothing between the pipes.
+	/// 
+	/// StepType - The type of step from eStepType
+	/// 
+	/// StepText - The text for the step that appears in the players quest journal
+	/// 
+	/// StepItemTemplates - Any items that need to be given to the player at the start of the step.  If no items are given to a player
+	/// at any of the steps then this can be null, otherwise it must have values for each step.  Empty values || are ok.
+	/// 
+	/// AdvanceText - The text needed, if any, to advance this step.  If no step requires advance text then this can be null, otherwise
+	/// text must be provided for every step.  Empty values || are ok.
+	/// 
+	/// TargetName;RegionID
+	/// 
+	/// TargetText - Text shown to player when current step ends.
+	/// 
+	/// CollectItemTemplate - Item that needs to be collected to end the current step.  If no items are ever collected this can be kept null,
+	/// otherwise it needs an entry for each step.  Empty values || are ok.
+	/// 
+	/// MaxCount, MinLevel, MaxLevel - Single values to determine who can do quest.  All must be provided.
+	/// 
+	/// RewardMoney - Serialized list of money rewarded for each step.  All steps must have a value, 0 is ok.
+	/// 
+	/// RewardXP - Serialized list of XP rewarded each step.  All steps must have a value, 0 is ok.
+	/// 
+	/// OptionalRewardItemTemplates - A serialized list of optional rewards to be presented to the player at the end of a Reward quest.
+	/// The first value must be a number from 0 to 8 followed by the item list.  ex: 2id_nb|id_nb  For quests without optional rewards
+	/// this field can be null.
+	/// 
+	/// FinalRewardItemTemplates - A serialized list of rewards to be given to the player at the end of a quest.  For quests without
+	/// rewards this field can be null.
+	/// 
+	/// FinishText - The text to show the player once the quest has completed.
 	/// 
 	/// </summary>
 	public class DataQuest : AbstractQuest
@@ -91,6 +140,7 @@ namespace DOL.GS.Quests
 		protected List<string> m_stepTexts = new List<string>();
 		protected List<string> m_stepItemTemplates = new List<string>();
 		protected List<string> m_advanceTexts = new List<string>();
+		protected List<string> m_collectItems = new List<string>();
 		protected List<long> m_rewardXPs = new List<long>();
 		protected List<long> m_rewardMoneys = new List<long>();
 		byte m_numOptionalRewards = 0;
@@ -268,6 +318,16 @@ namespace DOL.GS.Quests
 					foreach (string str in parse1)
 					{
 						m_advanceTexts.Add(str);
+					}
+				}
+
+				lastParse = m_dataQuest.CollectItemTemplate;
+				if (lastParse != null)
+				{
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
+					{
+						m_collectItems.Add(str);
 					}
 				}
 
@@ -803,13 +863,6 @@ namespace DOL.GS.Quests
 		{
 			try
 			{
-				// Send any target text to end this step
-
-				if (TargetText != "")
-				{
-					SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				}
-
 				eStepType nextStepType = m_stepTypes[Step];
 				bool advance = true;
 
@@ -819,10 +872,10 @@ namespace DOL.GS.Quests
 				if (nextStepType == eStepType.Deliver || 
 					nextStepType == eStepType.DeliverFinish)
 				{
-					ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(m_stepItemTemplates[Step + 1]);
+					ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(m_stepItemTemplates[Step]);
 					if (item == null)
 					{
-						throw new Exception("Can't find ItemTemplate " + m_stepItemTemplates[Step + 1]);
+						throw new Exception("Can't find ItemTemplate " + m_stepItemTemplates[Step]);
 					}
 
 					if (obj != null && obj is GameLiving)
@@ -852,12 +905,20 @@ namespace DOL.GS.Quests
 					// Then advance step
 
 					Step++;
+					m_questPlayer.Out.SendQuestListUpdate();
 
 					// Then say any source text for the new step
 
 					if (SourceText != "")
 					{
-						SendMessage(m_questPlayer, SourceText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						if (obj.Realm == eRealm.None)
+						{
+							SendMessage(m_questPlayer, SourceText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+						}
+						else
+						{
+							SendMessage(m_questPlayer, SourceText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						}
 					}
 
 					return true;
@@ -943,7 +1004,7 @@ namespace DOL.GS.Quests
 					return;
 				}
 
-				// Whisper
+				// Whisper 
 				if (e == GamePlayerEvent.WhisperReceive)
 				{
 					WhisperReceiveEventArgs a = args as WhisperReceiveEventArgs;
@@ -956,6 +1017,17 @@ namespace DOL.GS.Quests
 					}
 
 					return;
+				}
+
+				if (e == GamePlayerEvent.Whisper)
+				{
+					WhisperEventArgs a = args as WhisperEventArgs;
+					GamePlayer p = sender as GamePlayer;
+
+					if (p != null)
+					{
+						OnPlayerWhisper(p, a.Target, a.Text);
+					}
 				}
 
 				// NPC is dying, check for KillComplete quests
@@ -1066,6 +1138,10 @@ namespace DOL.GS.Quests
 					{
 						SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
+					if (obj is GameNPC)
+					{
+						UpdateQuestIndicator(obj as GameNPC, player);
+					}
 					return;
 				}
 
@@ -1128,6 +1204,10 @@ namespace DOL.GS.Quests
 				dq.Step = 1;
 				player.AddQuest(dq);
 				SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				if (living is GameNPC)
+				{
+					UpdateQuestIndicator(living as GameNPC, player);
+				}
 			}
 		}
 
@@ -1140,14 +1220,17 @@ namespace DOL.GS.Quests
 		/// <param name="obj"></param>
 		protected virtual void OnPlayerInteract(GamePlayer player, GameObject obj)
 		{
-			//log.DebugFormat("Player {0} has quest and is interacting with {1}.", player.Name, obj.Name);
-
 			if (TargetName == obj.Name && TargetRegion == obj.CurrentRegionID)
 			{
 				switch (StepType)
 				{
 					case eStepType.Interact:
 						{
+							if (TargetText != "")
+							{
+								SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+
 							AdvanceQuestStep(obj);
 						}
 						break;
@@ -1157,34 +1240,68 @@ namespace DOL.GS.Quests
 							FinishQuest(obj);
 						}
 						break;
+
+					default:
+						{
+							if (TargetText != "")
+							{
+								SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+						}
+						break;
 				}
 			}
 		}
 
 
 		/// <summary>
-		/// A player doing a quest has given an item to something.  All active quests check to see if they need to respond to this.
+		/// A player doing this quest has given an item to something.  All active quests check to see if they need to respond to this.
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="obj"></param>
 		/// <param name="item"></param>
 		protected virtual void OnPlayerGiveItem(GamePlayer player, GameObject obj, InventoryItem item)
 		{
-			if (TargetName == obj.Name && TargetRegion == obj.CurrentRegionID && StepItemTemplate == item.Id_nb)
-			{
-				switch (StepType)
-				{
-					case eStepType.Deliver:
-						{
-							AdvanceQuestStep(obj);
-						}
-						break;
+			if (item == null || item.OwnerID == null || m_collectItems.Count == 0)
+				return;
 
-					case eStepType.DeliverFinish:
-						{
-							FinishQuest(obj);
-						}
-						break;
+			//log.DebugFormat("player giving item {0}, looking for item {1}", item.Id_nb, m_collectItems[Step - 1]);
+
+			if (TargetName == obj.Name && TargetRegion == obj.CurrentRegionID && m_collectItems[Step - 1] == item.Id_nb)
+			{
+				RemoveItem(obj, player, item, true);
+
+				// if we turn over the item then advance the step
+
+				if (item.OwnerID == null)
+				{
+					switch (StepType)
+					{
+						case eStepType.Deliver:
+							{
+								if (TargetText != "")
+								{
+									if (obj.Realm == eRealm.None)
+									{
+										// mobs and other non realm objects send chat text and not popup text.
+										SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+									}
+									else
+									{
+										SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+									}
+								}
+
+								AdvanceQuestStep(obj);
+							}
+							break;
+
+						case eStepType.DeliverFinish:
+							{
+								FinishQuest(obj);
+							}
+							break;
+					}
 				}
 			}
 		}
@@ -1222,20 +1339,31 @@ namespace DOL.GS.Quests
 				CheckOfferedQuestWhisper(player, living, text);
 				return;
 			}
+		}
 
-			if (TargetName == living.Name && TargetRegion == living.CurrentRegionID && AdvanceText == text)
+		/// <summary>
+		/// A player doing this quest whispers something to a living
+		/// </summary>
+		/// <param name="p"></param>
+		/// <param name="living"></param>
+		/// <param name="text"></param>
+		public virtual void OnPlayerWhisper(GamePlayer p, GameObject obj, string text)
+		{
+			//log.DebugFormat("Whisper {0}, listening for {1}, on step type {2}", text, AdvanceText, m_stepTypes[Step - 1]);
+
+			if (TargetName == obj.Name && TargetRegion == obj.CurrentRegionID && AdvanceText == text)
 			{
 				switch (StepType)
 				{
 					case eStepType.Whisper:
 						{
-							AdvanceQuestStep(living);
+							AdvanceQuestStep(obj);
 						}
 						break;
 
 					case eStepType.WhisperFinish:
 						{
-							FinishQuest(living);
+							FinishQuest(obj);
 						}
 						break;
 				}
@@ -1250,8 +1378,64 @@ namespace DOL.GS.Quests
 		/// <param name="playerKillers"></param>
 		protected virtual void OnLivingIsDying(GameLiving dying, GameObject killer, List<GamePlayer> playerKillers)
 		{
-			log.Error("KillComplete quests not supported yet.");
-			// not done
+			/*
+			// Can we offer this quest to the player?
+			if (CheckQuestQualification(player))
+			{
+				if (StartType == eStartType.KillComplete)
+				{
+					// This quest finishes with the interaction and is not placed in player quest log
+
+					CharacterXDataQuest charQuest = GetCharacterQuest(player);
+
+					if (charQuest.Count < MaxQuestCount)
+					{
+						if (Description != "")
+						{
+							SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						}
+
+						lock (player.Inventory)
+						{
+							if (player.Inventory.IsSlotsFree(m_finalRewards.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+							{
+								foreach (string idnb in m_finalRewards)
+								{
+									ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
+									if (item != null)
+									{
+										GiveItem((obj is GameLiving ? obj as GameLiving : null), player, item, false);
+									}
+								}
+
+								if (m_rewardXPs[0] > 0)
+								{
+									player.GainExperience(GameLiving.eXPSource.Quest, m_rewardXPs[0]);
+								}
+
+								if (m_rewardMoneys[0] > 0)
+								{
+									player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
+								}
+							}
+							else
+							{
+								SendMessage(player, "Your inventory does not have enough space to finish this quest!", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								return;
+							}
+						}
+
+						charQuest.Count++;
+						GameServer.Database.SaveObject(charQuest);
+						if (obj is GameNPC)
+						{
+							UpdateQuestIndicator(obj as GameNPC, player);
+						}
+					}
+					return;
+				}
+			}
+			*/
 		}
 
 
@@ -1268,6 +1452,18 @@ namespace DOL.GS.Quests
 				{
 					case eStepType.Kill:
 						{
+							if (TargetText != "")
+							{
+								if (living.Realm == eRealm.None)
+								{
+									// mobs and other non realm objects send chat text and not popup text.
+									SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+								}
+								else
+								{
+									SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								}
+							}
 							AdvanceQuestStep(living);
 						}
 						break;
@@ -1302,8 +1498,6 @@ namespace DOL.GS.Quests
 			if (m_questPlayer == null || m_charQuest == null || m_charQuest.IsValid == false)
 				return;
 
-			SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-
 			int lastStep = Step;
 
 			// try rewards first
@@ -1314,10 +1508,41 @@ namespace DOL.GS.Quests
 				{
 					foreach (string idnb in m_finalRewards)
 					{
-						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
-						if (item != null)
+						string parsed = ParseItemString(idnb, m_questPlayer);
+
+						if (parsed.EndsWith("%"))
 						{
-							GiveItem(m_questPlayer, item);
+							// multiple objects, need to check free slots again before giving items
+
+							IList<ItemTemplate> items = GameServer.Database.SelectObjects<ItemTemplate>("id_nb like '" + parsed.Replace(";", "") + "'");
+
+							if (items.Count > 0 && items.Count <= 10) // arbitrary limit of 10
+							{
+								if (m_questPlayer.Inventory.IsSlotsFree(items.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+								{
+									foreach (ItemTemplate item in items)
+									{
+										GiveItem(m_questPlayer, item);
+									}
+								}
+								else
+								{
+									SendMessage(m_questPlayer, "Your inventory does not have enough space to finish this quest!", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+									return;
+								}
+							}
+							else
+							{
+								log.ErrorFormat("DataQuest: Reward item count incorrect, {0} items returned for quest {1}. where: {2}", items.Count, ID, parsed);
+							}
+						}
+						else
+						{
+							ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
+							if (item != null)
+							{
+								GiveItem(m_questPlayer, item);
+							}
 						}
 					}
 
@@ -1373,12 +1598,47 @@ namespace DOL.GS.Quests
 			}
 
 			m_questPlayer.Out.SendQuestListUpdate();
-			SendMessage(m_questPlayer, m_targetTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
+			if (m_dataQuest.FinishText != null && m_dataQuest.FinishText != "")
+			{
+				if (obj.Realm == eRealm.None)
+				{
+					// mobs and other non realm objects send chat text and not popup text.
+					SendMessage(m_questPlayer, m_dataQuest.FinishText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				}
+				else
+				{
+					SendMessage(m_questPlayer, m_dataQuest.FinishText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+			}
 
 			if (obj != null && obj is GameNPC)
 			{
 				UpdateQuestIndicator(obj as GameNPC, m_questPlayer);
 			}
+
+			if (m_startNPC != null)
+			{
+				UpdateQuestIndicator(m_startNPC, m_questPlayer);
+			}
+		}
+
+
+		/// <summary>
+		/// Replace special characters in an item string
+		/// Supported parsing:
+		/// %c = character class
+		/// </summary>
+		/// <param name="idnb"></param>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		protected virtual string ParseItemString(string idnb, GamePlayer player)
+		{
+			string parsed = idnb;
+
+			parsed = parsed.Replace("%c", ((eCharacterClass)player.CharacterClass.ID).ToString());
+
+			return parsed;
 		}
 
 

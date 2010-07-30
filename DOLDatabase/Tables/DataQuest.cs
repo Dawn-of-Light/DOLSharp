@@ -50,6 +50,7 @@ namespace DOL.Database
 		private string m_rewardXP;
 		private string m_optionalRewardItemTemplates;
 		private string m_finalRewardItemTemplates;
+		private string m_finishText;
 
 
 		public DBDataQuest()
@@ -212,7 +213,7 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// ItemTemplate id_nb to be collected on each step
+		/// ItemTemplate id_nb to be collected to finish the current step
 		/// Format: id_nb|id_nb||  steps with no item to collect should be blank
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -294,6 +295,16 @@ namespace DOL.Database
 		{
 			get { return m_finalRewardItemTemplates; }
 			set { m_finalRewardItemTemplates = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// Text to show the user once the quest is finished.  Can be null of no text.
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string FinishText
+		{
+			get { return m_finishText; }
+			set { m_finishText = value; Dirty = true; }
 		}
 
 
