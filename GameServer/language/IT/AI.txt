@@ -7,5 +7,6 @@ AI.Brain.Necromancer.PetTooFarBeLostSecIm:	Il tuo pet è troppo lontano da te e 
 AI.Brain.Necromancer.PetTooFarBeLostSec:	Il tuo pet è troppo lontano da te e sarà rilasciato in {0} secondi.
 AI.Brain.Necromancer.HaveLostBondToPet:		Hai perso il tuo legame con il pet.
 AI.Brain.Necromancer.SpellNoLongerInQueue:	Incantesimo {0} non è più in coda {1}.
+AI.Brain.Necromancer.NoPower:				You don't have enough power to cast this spell.
 AI.Brain.StandardMobBrain.YouProtDist:		Stai proteggendo {0} e distraendo {1}.
 

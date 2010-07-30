@@ -529,12 +529,15 @@ namespace DOL.GS.Spells
             //[StephenxPimentel] Check if the necro has MoC effect before interrupting.
             if (Caster is NecromancerPet)
             {
-                if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof
-                    (MasteryofConcentrationEffect)) != null)
+                if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof (MasteryofConcentrationEffect)) != null)
                 {
                     return false;
                 }
-            }
+				if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof(FacilitatePainworkingEffect)) != null)
+				{
+					return false;
+				}
+			}
 			if (Spell.Uninterruptible)
 				return false;
 			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)

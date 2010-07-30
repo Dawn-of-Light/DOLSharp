@@ -35,6 +35,7 @@ namespace DOL.GS.Quests.Albion
 		private static ItemTemplate RecruitsNecklaceofMight = null;
 		private static ItemTemplate RecruitsNecklaceofInsight = null;
 		private static ItemTemplate RecruitsNecklaceofFaith = null;
+		private static ItemTemplate PunySkeletonSkull = null;
 
 		public AfterTheAccident()
 			: base()
@@ -159,13 +160,19 @@ namespace DOL.GS.Quests.Albion
 				GameServer.Database.AddObject(RecruitsNecklaceofFaith);
 			}
 
-			ItemTemplate punySkeletonSkull = new ItemTemplate();
-			punySkeletonSkull.Weight = 1;
-			punySkeletonSkull.Condition = 50000;
-			punySkeletonSkull.MaxCondition = 50000;
-			punySkeletonSkull.Model = 540;
-			punySkeletonSkull.Extension = 1;
-			punySkeletonSkull.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text4");
+			PunySkeletonSkull = GameServer.Database.FindObjectByKey<ItemTemplate>("puny_skeleton_skull");
+			if (PunySkeletonSkull == null)
+			{
+				PunySkeletonSkull = new ItemTemplate();
+				PunySkeletonSkull.Id_nb = "puny_skeleton_skull";
+				PunySkeletonSkull.Weight = 1;
+				PunySkeletonSkull.Condition = 50000;
+				PunySkeletonSkull.MaxCondition = 50000;
+				PunySkeletonSkull.Model = 540;
+				PunySkeletonSkull.Extension = 1;
+				PunySkeletonSkull.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text4");
+				GameServer.Database.AddObject(PunySkeletonSkull);
+			}
 
 			#endregion
 
@@ -177,7 +184,7 @@ namespace DOL.GS.Quests.Albion
 			Rewards.AddOptionalItem(RecruitsNecklaceofFaith);
 			Rewards.ChoiceOf = 1;
 
-			punySkeletonGoal = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Init.Text5"), QuestGoal.GoalType.KillTask, 2, punySkeletonSkull);
+			punySkeletonGoal = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.Init.Text5"), QuestGoal.GoalType.KillTask, 2, PunySkeletonSkull);
 		}
 
 		[ScriptLoadedEvent]
