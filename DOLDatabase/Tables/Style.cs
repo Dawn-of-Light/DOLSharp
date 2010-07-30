@@ -151,7 +151,7 @@ namespace DOL.Database
 		public virtual int ID
 		{
 			get { return m_ID; }
-			set { m_ID = value; }
+			set { m_ID = value; Dirty = true; }
 		}
 
 		/// <summary>
