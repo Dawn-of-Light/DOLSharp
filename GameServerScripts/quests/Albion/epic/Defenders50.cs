@@ -1307,7 +1307,7 @@ namespace DOL.GS.Quests.Albion
 				player.CharacterClass.ID != (byte) eCharacterClass.Scout &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Theurgist &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Friar &&
-				player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Alb)
+				player.CharacterClass.ID != (byte) eCharacterClass.MaulerAlb)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already
@@ -1499,7 +1499,7 @@ namespace DOL.GS.Quests.Albion
 					GiveItem(m_questPlayer, FriarEpicLegs);
 					GiveItem(m_questPlayer, FriarEpicVest);
 				}
-				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mauler_Alb)
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.MaulerAlb)
 				{
 					GiveItem(m_questPlayer, MaulerAlbEpicArms);
 					GiveItem(m_questPlayer, MaulerAlbEpicBoots);

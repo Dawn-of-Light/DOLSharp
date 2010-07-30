@@ -1233,7 +1233,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Reaver, 		// Reaver = 19,
 						(int)eCharacterClass.Disciple,	   // Disciple = 20,
 						(int)eCharacterClass.Heretic, 		// Heretic = 33,
-						(int)eCharacterClass.Mauler_Alb },	// Mauler_Alb = 60,
+						(int)eCharacterClass.MaulerAlb },	// Mauler_Alb = 60,
 					new int[]{
 						(int)eCharacterClass.Thane, 		// Thane = 21,
 						(int)eCharacterClass.Warrior, 		// Warrior = 22,
@@ -1253,7 +1253,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Seer, 			// Seer = 37,
 						(int)eCharacterClass.MidgardRogue,	// MidgardRogue = 38,
 						(int)eCharacterClass.Warlock, 		// Warlock = 59,
-						(int)eCharacterClass.Mauler_Mid }, 	// Mauler_Mid = 61,
+						(int)eCharacterClass.MaulerMid }, 	// Mauler_Mid = 61,
 					new int[]{
 						(int)eCharacterClass.Bainshee, 		// Bainshee = 39,
 						(int)eCharacterClass.Eldritch, 		// Eldritch = 40,
@@ -1275,7 +1275,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Valewalker, 	// Valewalker = 56,
 						(int)eCharacterClass.Forester, 		// Forester = 57,
 						(int)eCharacterClass.Vampiir, 		// Vampiir = 58,
-						(int)eCharacterClass.Mauler_Hib } 	// Mauler_Hib = 62,
+						(int)eCharacterClass.MaulerHib } 	// Mauler_Hib = 62,
 				};
 
 				RACES_CLASSES = new int[][]
@@ -1294,7 +1294,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Cabalist,
 						(int)eCharacterClass.Theurgist,
 						(int)eCharacterClass.Necromancer,
-						(int)eCharacterClass.Mauler_Alb,
+						(int)eCharacterClass.MaulerAlb,
 						(int)eCharacterClass.Wizard,
 						(int)eCharacterClass.Minstrel,
 						(int)eCharacterClass.Infiltrator,
@@ -1357,7 +1357,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Spiritmaster,
 						(int)eCharacterClass.Runemaster,
 						(int)eCharacterClass.Savage,
-						(int)eCharacterClass.Mauler_Mid,
+						(int)eCharacterClass.MaulerMid,
 						(int)eCharacterClass.Shadowblade,
 						(int)eCharacterClass.Hunter,
 						(int)eCharacterClass.Viking,
@@ -1401,7 +1401,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Warlock,
 						(int)eCharacterClass.Hunter,
 						(int)eCharacterClass.Shadowblade,
-						(int)eCharacterClass.Mauler_Mid,
+						(int)eCharacterClass.MaulerMid,
 						(int)eCharacterClass.Viking,
 						(int)eCharacterClass.Mystic,
 						(int)eCharacterClass.Seer,
@@ -1414,7 +1414,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Hero,
 						(int)eCharacterClass.Vampiir,
 						(int)eCharacterClass.Champion,
-						(int)eCharacterClass.Mauler_Hib,
+						(int)eCharacterClass.MaulerHib,
 						(int)eCharacterClass.Mentalist,
 						(int)eCharacterClass.Bainshee,
 						(int)eCharacterClass.Ranger,
@@ -1459,7 +1459,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Bainshee,
 						(int)eCharacterClass.Nightshade,
 						(int)eCharacterClass.Ranger,
-						(int)eCharacterClass.Mauler_Hib,
+						(int)eCharacterClass.MaulerHib,
 						(int)eCharacterClass.Guardian,
 						(int)eCharacterClass.Stalker,
 						(int)eCharacterClass.Magician }, // Lurikeen
@@ -1473,7 +1473,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Mercenary,
 						(int)eCharacterClass.Infiltrator,
 						(int)eCharacterClass.Scout,
-						(int)eCharacterClass.Mauler_Alb,
+						(int)eCharacterClass.MaulerAlb,
 						(int)eCharacterClass.Fighter,
 						(int)eCharacterClass.Acolyte,
 						(int)eCharacterClass.Mage,
@@ -1534,21 +1534,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 						(int)eCharacterClass.Magician }, // Shar
 					new int[] {
 						(int)eCharacterClass.Heretic,
-						(int)eCharacterClass.Mauler_Alb,
+						(int)eCharacterClass.MaulerAlb,
 						(int)eCharacterClass.Armsman,
 						(int)eCharacterClass.Mercenary,
 						(int)eCharacterClass.Fighter,
 						(int)eCharacterClass.Acolyte },//AlbMinotaur
 					new int[] {
 						(int)eCharacterClass.Berserker,
-						(int)eCharacterClass.Mauler_Mid,
+						(int)eCharacterClass.MaulerMid,
 						(int)eCharacterClass.Thane,
 						(int)eCharacterClass.Viking,
 						(int)eCharacterClass.Warrior }, //MidMinotaur
 					new int[] {
 						(int)eCharacterClass.Hero,
 						(int)eCharacterClass.Blademaster,
-						(int)eCharacterClass.Mauler_Hib,
+						(int)eCharacterClass.MaulerHib,
 						(int)eCharacterClass.Warden,
 						(int)eCharacterClass.Guardian,
 						(int)eCharacterClass.Naturalist }, //HibMinotaur
@@ -1569,7 +1569,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case (int)eCharacterClass.Armsman: return (int)eCharacterClass.Fighter;
 				case (int)eCharacterClass.Mercenary: return (int)eCharacterClass.Fighter;
 				case (int)eCharacterClass.Paladin: return (int)eCharacterClass.Fighter;
-				case (int)eCharacterClass.Mauler_Alb: return (int)eCharacterClass.Fighter;
+				case (int)eCharacterClass.MaulerAlb: return (int)eCharacterClass.Fighter;
 				case (int)eCharacterClass.Reaver: return (int)eCharacterClass.Fighter;
 				case (int)eCharacterClass.Cleric: return (int)eCharacterClass.Acolyte;
 				case (int)eCharacterClass.Friar: return (int)eCharacterClass.Acolyte;
@@ -1586,7 +1586,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case (int)eCharacterClass.Hero: return (int)eCharacterClass.Guardian;
 				case (int)eCharacterClass.Champion: return (int)eCharacterClass.Guardian;
 				case (int)eCharacterClass.Blademaster: return (int)eCharacterClass.Guardian;
-				case (int)eCharacterClass.Mauler_Hib: return (int)eCharacterClass.Guardian;
+				case (int)eCharacterClass.MaulerHib: return (int)eCharacterClass.Guardian;
 				case (int)eCharacterClass.Bard: return (int)eCharacterClass.Naturalist;
 				case (int)eCharacterClass.Druid: return (int)eCharacterClass.Naturalist;
 				case (int)eCharacterClass.Warden: return (int)eCharacterClass.Naturalist;
@@ -1601,7 +1601,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case (int)eCharacterClass.Valewalker: return (int)eCharacterClass.Forester;
 				//Mid
 				case (int)eCharacterClass.Berserker: return (int)eCharacterClass.Viking;
-				case (int)eCharacterClass.Mauler_Mid: return (int)eCharacterClass.Viking;
+				case (int)eCharacterClass.MaulerMid: return (int)eCharacterClass.Viking;
 				case (int)eCharacterClass.Savage: return (int)eCharacterClass.Viking;
 				case (int)eCharacterClass.Skald: return (int)eCharacterClass.Viking;
 				case (int)eCharacterClass.Thane: return (int)eCharacterClass.Viking;

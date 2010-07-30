@@ -31,7 +31,7 @@ namespace DOL.GS.Trainer
     {
         public override eCharacterClass TrainedClass
         {
-            get { return eCharacterClass.Mauler_Hib; }
+            get { return eCharacterClass.MaulerHib; }
         }
 
         public const string WEAPON_ID1 = "maulerhib_item_staff";
@@ -107,7 +107,7 @@ namespace DOL.GS.Trainer
                     player.RemoveAllStyles();
 
                     // Mauler_Hib = 62
-                    PromotePlayer(player, (int)eCharacterClass.Mauler_Hib, LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceive.Text1"), null);
+                    PromotePlayer(player, (int)eCharacterClass.MaulerHib, LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceive.Text1"), null);
 
                     CheckAbilityToUseItem(player);
                 }

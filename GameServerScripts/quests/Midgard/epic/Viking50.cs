@@ -2017,7 +2017,7 @@ namespace DOL.GS.Quests.Midgard
 				player.CharacterClass.ID != (byte) eCharacterClass.Thane &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Skald &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Savage &&
-                player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Mid &&
+                player.CharacterClass.ID != (byte) eCharacterClass.MaulerMid &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Valkyrie)
 				return false;
 
@@ -2240,7 +2240,7 @@ namespace DOL.GS.Quests.Midgard
 							GiveItem(m_questPlayer, ValkyrieEpicVest);
 							break;
 						}
-					case eCharacterClass.Mauler_Mid:
+					case eCharacterClass.MaulerMid:
 						{
 							GiveItem(m_questPlayer, MaulerMidEpicArms);
 							GiveItem(m_questPlayer, MaulerMidEpicBoots);
