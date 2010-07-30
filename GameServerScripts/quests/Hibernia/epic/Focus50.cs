@@ -1340,7 +1340,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (player.CharacterClass.ID != (byte) eCharacterClass.Hero &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Ranger &&
-                player.CharacterClass.ID != (byte) eCharacterClass.Mauler_Hib &&
+                player.CharacterClass.ID != (byte) eCharacterClass.MaulerHib &&
                 player.CharacterClass.ID != (byte) eCharacterClass.Warden &&
 				player.CharacterClass.ID != (byte) eCharacterClass.Eldritch)
 				return false;
@@ -1534,7 +1534,7 @@ namespace DOL.GS.Quests.Hibernia
 					GiveItem(m_questPlayer, WardenEpicLegs);
 					GiveItem(m_questPlayer, WardenEpicVest);
 				}
-				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.Mauler_Hib)
+				else if (m_questPlayer.CharacterClass.ID == (byte)eCharacterClass.MaulerHib)
 				{
 					GiveItem(m_questPlayer, MaulerHibEpicBoots);
 					GiveItem(m_questPlayer, MaulerHibEpicArms);

@@ -327,9 +327,9 @@ namespace DOL.GS.Spells
             {
                 GamePlayer player = target as GamePlayer;
                 if (player.CharacterClass.ID == (int)eCharacterClass.Vampiir 
-                    || player.CharacterClass.ID == (int)eCharacterClass.Mauler_Hib
-                    || player.CharacterClass.ID == (int)eCharacterClass.Mauler_Mid
-                    || player.CharacterClass.ID == (int)eCharacterClass.Mauler_Alb)
+                    || player.CharacterClass.ID == (int)eCharacterClass.MaulerHib
+                    || player.CharacterClass.ID == (int)eCharacterClass.MaulerMid
+                    || player.CharacterClass.ID == (int)eCharacterClass.MaulerAlb)
                     return;
             }
 

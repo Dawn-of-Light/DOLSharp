@@ -51,9 +51,9 @@ namespace DOL.GS.Commands
 					case eCharacterClass.Warlock:
 					case eCharacterClass.Vampiir:
 					case eCharacterClass.Bainshee:
-					case eCharacterClass.Mauler_Alb:
-					case eCharacterClass.Mauler_Hib:
-					case eCharacterClass.Mauler_Mid:
+					case eCharacterClass.MaulerAlb:
+					case eCharacterClass.MaulerHib:
+					case eCharacterClass.MaulerMid:
 						{
 							client.Player.Out.SendMessage("Your class cannot use /level command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
