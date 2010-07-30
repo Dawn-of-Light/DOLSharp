@@ -432,6 +432,45 @@ namespace DOL.GS
 			get { return "Necro Pet Insta Spells"; }
 		}
 
+
+		public override void CastSpell(Spell spell, SpellLine line)
+		{
+			if (IsStunned || IsMezzed)
+			{
+				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.CrowdControlled));
+				return;
+			}
+
+			if ((m_runningSpellHandler != null && spell.CastTime > 0))
+			{
+				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
+				return;
+			}
+
+			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
+			if (spellhandler != null)
+			{
+				int power = spellhandler.PowerCost(Owner);
+
+				if (Owner.Mana < power)
+				{
+					Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.NotEnoughPower));
+					return;
+				}
+
+				m_runningSpellHandler = spellhandler;
+				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+				spellhandler.CastSpell();
+			}
+			else
+			{
+				if (log.IsWarnEnabled)
+					log.Warn(Name + " wants to cast but spell " + spell.Name + " not implemented yet");
+				return;
+			}
+		}
+
+
 		/// <summary>
 		/// Insta cast baseline buffs (STR+DEX) on the pet.
 		/// </summary>

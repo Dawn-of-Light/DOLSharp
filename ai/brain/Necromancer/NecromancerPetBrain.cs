@@ -67,6 +67,7 @@ namespace DOL.AI.Brain
 		public override void Notify(DOL.Events.DOLEvent e, object sender, EventArgs args)
 		{
 			base.Notify(e, sender, args);
+
 			if (e == GameNPCEvent.PetSpell)
 			{
 				PetSpellEventArgs petSpell = (PetSpellEventArgs)args;
@@ -81,11 +82,15 @@ namespace DOL.AI.Brain
                         petSpell.Spell.Name));
                 }
 
-                if (!Body.IsCasting && !Body.AttackState)
-                    CheckSpellQueue();
-                else
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
-                        "AI.Brain.Necromancer.CastSpellAfterAction", Body.Name), eChatType.CT_System);
+				if (!Body.IsCasting && !Body.AttackState)
+				{
+					CheckSpellQueue();
+				}
+				else
+				{
+					MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
+						"AI.Brain.Necromancer.CastSpellAfterAction", Body.Name), eChatType.CT_System);
+				}
 			}
             else if (e == GameLivingEvent.CastFinished)
             {
@@ -93,6 +98,7 @@ namespace DOL.AI.Brain
                 // there are more, keep casting.
 
                 RemoveSpellFromQueue();
+
                 if (SpellsQueued)
                 {
                     DebugMessageToOwner("More spells to cast, grab the next one");
@@ -109,20 +115,28 @@ namespace DOL.AI.Brain
             else if (e == GameLivingEvent.CastFailed)
             {
                 // Tell owner why cast has failed.
-				// this can crash, spell not always defined - tolakram
-				//DebugMessageToOwner(String.Format("Cast failed for '{0}')",
-				//    (args as CastFailedEventArgs).SpellHandler.Spell.Name));
 
                 switch ((args as CastFailedEventArgs).Reason)
                 {
                     case CastFailedEventArgs.Reasons.TargetTooFarAway:
+
                         MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
                             "AI.Brain.Necromancer.ServantFarAwayToCast"), eChatType.CT_SpellResisted);
                         break;
+
                     case CastFailedEventArgs.Reasons.TargetNotInView:
+
                         MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
                             "AI.Brain.Necromancer.PetCantSeeTarget", Body.Name), eChatType.CT_SpellResisted);
                         break;
+
+					case CastFailedEventArgs.Reasons.NotEnoughPower:
+
+						RemoveSpellFromQueue();
+						MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
+							"AI.Brain.Necromancer.NoPower", Body.Name), eChatType.CT_SpellResisted);
+
+						break;
                 }
             }
             else if (e == GameLivingEvent.CastSucceeded)
@@ -142,10 +156,8 @@ namespace DOL.AI.Brain
 
                 if (spellLine.Name != (Body as NecromancerPet).PetInstaSpellLine)
                 {
-                    Owner.Notify(GameLivingEvent.CastStarting, Body,
-                        new CastingEventArgs(Body.CurrentSpellHandler));
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
-                        "AI.Brain.Necromancer.PetCastingSpell", Body.Name), eChatType.CT_System);
+                    Owner.Notify(GameLivingEvent.CastStarting, Body, new CastingEventArgs(Body.CurrentSpellHandler));
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetCastingSpell", Body.Name), eChatType.CT_System);
                 }
 
                 // If pet is casting an offensive spell and is not set to
@@ -267,9 +279,7 @@ namespace DOL.AI.Brain
 				}
 				else
 				{
-                    DebugMessageToOwner(String.Format("Invalid target for spell '{0}', removing it...",
-                        m_spellQueue.Peek().Spell.Name));
-
+                    DebugMessageToOwner(String.Format("Invalid target for spell '{0}', removing it...", m_spellQueue.Peek().Spell.Name));
 					RemoveSpellFromQueue();
 				}
 			}
@@ -482,14 +492,14 @@ namespace DOL.AI.Brain
         /// <param name="message"></param>
         private void DebugMessageToOwner(String message)
         {
-#if DEBUG
-            //int tick = Environment.TickCount;
-            //int seconds = tick / 1000;
-            //int minutes = seconds / 60;
+			if (DOL.GS.ServerProperties.Properties.ENABLE_DEBUG)
+			{
+				int tick = Environment.TickCount;
+				int seconds = tick / 1000;
+				int minutes = seconds / 60;
 
-            //MessageToOwner(String.Format("[{0:00}:{1:00}.{2:000}] {3}", 
-            //    minutes % 60, seconds % 60, tick % 1000, message), eChatType.CT_Guild);
-#endif
+				MessageToOwner(String.Format("[{0:00}:{1:00}.{2:000}] {3}",	minutes % 60, seconds % 60, tick % 1000, message), eChatType.CT_Staff);
+			}
         }
 
 		#endregion
