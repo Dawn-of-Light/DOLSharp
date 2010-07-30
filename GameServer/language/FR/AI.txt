@@ -7,5 +7,6 @@ AI.Brain.Necromancer.PetTooFarBeLostSecIm:	Votre servant est trop éloigné de v
 AI.Brain.Necromancer.PetTooFarBeLostSec:	Votre servant est trop éloigné de vous ! Vous allez le perdre dans {0} secondes.
 AI.Brain.Necromancer.HaveLostBondToPet:		Le lien entre vous et votre servant vient d'être rompu.
 AI.Brain.Necromancer.SpellNoLongerInQueue:	Le sort {0} n'est plus dans la file d'attente {1}.
+AI.Brain.Necromancer.NoPower:				You don't have enough power to cast this spell.
 AI.Brain.StandardMobBrain.YouProtDist:		Vous vous protégez {0} et distrayez {1}.
 

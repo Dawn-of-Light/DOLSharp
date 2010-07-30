@@ -127,7 +127,7 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GameLivingEvent CastFailed = new GameLivingEvent("GameLiving.CastFailed");
 		/// <summary>
-		/// The CastFailed event is fired whenever the GameLiving's cast succeeded
+		/// The CastSucceeded event is fired whenever the GameLiving's cast succeeded
 		/// </summary>
 		public static readonly GameLivingEvent CastSucceeded = new GameLivingEvent("GameLiving.CastSucceeded");
 		/// <summary>
