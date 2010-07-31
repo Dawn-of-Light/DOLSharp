@@ -533,10 +533,6 @@ namespace DOL.GS.Spells
                 {
                     return false;
                 }
-				if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof(FacilitatePainworkingEffect)) != null)
-				{
-					return false;
-				}
 			}
 			if (Spell.Uninterruptible)
 				return false;

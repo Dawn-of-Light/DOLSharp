@@ -788,7 +788,7 @@ namespace DOL.GS
 		/// <returns>effective speed of the attack. average if more than one weapon.</returns>
 		public virtual int AttackSpeed(params InventoryItem[] weapon)
 		{
-			double speed = 3400 * (1.0 - (GetModified(eProperty.Quickness) - 60) / 500.0);
+			double speed = 3000 * (1.0 - (GetModified(eProperty.Quickness) - 60) / 500.0);
 
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
