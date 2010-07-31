@@ -50,6 +50,8 @@ namespace DOL.GS.Movement
 				m_pathCache.Add(path.PathID, path);
 			}
 
+			int duplicateCount = 0;
+
 			IList<DBPathPoint> allPathPoints = GameServer.Database.SelectAllObjects<DBPathPoint>();
 			foreach (DBPathPoint pathPoint in allPathPoints)
 			{
@@ -61,7 +63,7 @@ namespace DOL.GS.Movement
 					}
 					else
 					{
-						log.WarnFormat("Duplicate step {0} ignored for path {1}.", pathPoint.Step, pathPoint.PathID);
+						duplicateCount++;
 					}
 				}
 				else
@@ -72,6 +74,7 @@ namespace DOL.GS.Movement
 				}
 			}
 
+			log.ErrorFormat("{0} duplicate steps ignored while loading paths.", duplicateCount);
 			log.InfoFormat("Path cache filled with {0} paths.", m_pathCache.Count);
 		}
 
