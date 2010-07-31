@@ -22,6 +22,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using log4net;
+using DOL.Language;
 
 namespace DOL.GS.GameEvents
 {
@@ -44,23 +45,11 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-			switch (ServerProperties.Properties.SERV_LANGUAGE)
+			foreach (eRealm currentRealm in Enum.GetValues(typeof(eRealm)))
 			{
-				case "EN":
-					CheckGuild("Clan Cotswold");
-					CheckGuild("Mularn Protectors");
-					CheckGuild("Tir na Nog Adventurers");
-					break;
-				case "DE":
-					CheckGuild("Klan Cotswold");
-					CheckGuild("Beschützer von Mularn");
-					CheckGuild("Tir na Nog-Abenteurer");
-					break;
-				default:
-					CheckGuild("Clan Cotswold");
-					CheckGuild("Mularn Protectors");
-					CheckGuild("Tir na Nog Adventurers");
-					break;
+				if (currentRealm == eRealm.None ||currentRealm == eRealm.Door)
+					continue;
+				CheckGuild(currentRealm,LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Guild.StartupGuild."+GlobalConstants.RealmToName (currentRealm)));
 			}
 		}
 
@@ -69,30 +58,15 @@ namespace DOL.GS.GameEvents
 		/// if not, the guild is created with default values
 		/// </summary>
 		/// <param name="guildName">The guild name that is being checked</param>
-		private static void CheckGuild(string guildName)
+		private static void CheckGuild(eRealm currentRealm, string guildName)
 		{
 			if (!GuildMgr.DoesGuildExist(guildName))
 			{
-				Guild newguild = GuildMgr.CreateGuild(null, guildName);
+				Guild newguild = GuildMgr.CreateGuild(currentRealm, guildName);
 				newguild.Ranks[8].OcHear = true;
-				switch (ServerProperties.Properties.SERV_LANGUAGE)
-				{
-					case "EN":
-						newguild.Motd = "Use /gu <text> to talk in this starter guild.";
-						newguild.Omotd = "Type /gc quit to leave this starter guild.";
-						newguild.Ranks[8].Title = "Initiate";
-						break;
-					case "DE":
-						newguild.Motd = "Gebt '/gu <text>' ein, um mit den Mitgliedern dieser Startgilde zu sprechen.";
-						newguild.Omotd = "Gebt '/gc quit' ein, um die Startgilde zu verlassen.";
-						newguild.Ranks[8].Title = "Abenteurer";
-						break;
-					default:
-						newguild.Motd = "Use /gu <text> to talk in this starter guild.";
-						newguild.Omotd = "Type /gc quit to leave this starter guild.";
-						newguild.Ranks[8].Title = "Initiate";
-						break;
-				}
+				newguild.Motd = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE,"Guild.StartupGuild.Motd");
+				newguild.Omotd = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE,"Guild.StartupGuild.Omotd");
+				newguild.Ranks[8].Title =  LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE,"Guild.StartupGuild.Title");
 			}
 		}
 	}

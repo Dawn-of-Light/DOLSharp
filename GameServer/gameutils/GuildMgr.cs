@@ -170,23 +170,33 @@ namespace DOL.GS
 		/// <returns>GuildEntry</returns>
 		public static Guild CreateGuild(GamePlayer creator, string guildName)
 		{
+			if (DoesGuildExist(guildName))
+			{
+				if (creator != null)
+					creator.Out.SendMessage(guildName + " already exists!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				
+				return null;
+			}
+			return CreateNewGuild(creator.Realm, guildName);
+		}
+		public static Guild CreateGuild(eRealm realm, string guildName)
+		{
+			return CreateNewGuild(realm, guildName);
+		}
+		
+		static Guild CreateNewGuild(eRealm realm, string guildName)
+		{
 			try
 			{
-				if (DoesGuildExist(guildName))
-				{
-					if (creator != null)
-						creator.Out.SendMessage(guildName + " already exists!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return null;
-				}
 				DBGuild dbGuild = new DBGuild();
 				dbGuild.GuildName = guildName;
 				dbGuild.GuildID = System.Guid.NewGuid().ToString();
-				dbGuild.Realm = (byte)creator.Realm;
+				dbGuild.Realm = (byte)realm;
 				Guild newguild = new Guild(dbGuild);
 				CreateRanks(newguild);
 				AddGuild(newguild);
 				newguild.AddToDatabase();
-
+				
 				if (log.IsDebugEnabled)
 					log.Debug("Create guild; guild name=\"" + guildName + "\" Realm=" + GlobalConstants.RealmToName(newguild.Realm));
 
@@ -194,8 +204,7 @@ namespace DOL.GS
 			}
 			catch (Exception e)
 			{
-				if (log.IsErrorEnabled)
-					log.Error("CreateGuild", e);
+				if (log.IsErrorEnabled) log.Error("CreateGuild", e);
 				return null;
 			}
 		}
@@ -328,13 +337,13 @@ namespace DOL.GS
 		/// <summary>
 		/// Deletes a guild
 		/// </summary>
-        public static bool DeleteGuild(string guildName)
-        {
-            try
-            {
-                Guild removeGuild = GetGuildByName(guildName);
-                // Does guild exist, if not return false.
-                if (removeGuild == null)
+		public static bool DeleteGuild(string guildName)
+		{
+			try
+			{
+				Guild removeGuild = GetGuildByName(guildName);
+				// Does guild exist, if not return false.
+				if (removeGuild == null)
 					return false;
 
 				var guilds = GameServer.Database.SelectObjects<DBGuild>("GuildName='" + GameServer.Database.Escape(guildName) + "'");
@@ -348,36 +357,36 @@ namespace DOL.GS
 					GameServer.Database.DeleteObject(guild);
 				}
 
-                //[StephenxPimentel] We need to delete the guild specific ranks aswell!
-                var ranks = GameServer.Database.SelectObjects<DBRank>("`GuildID` = '" + removeGuild.ID + "'");
-                foreach (var guildRank in ranks)
-                {
-                    GameServer.Database.DeleteObject(guildRank);
-                }
+				//[StephenxPimentel] We need to delete the guild specific ranks aswell!
+				var ranks = GameServer.Database.SelectObjects<DBRank>("`GuildID` = '" + removeGuild.ID + "'");
+				foreach (var guildRank in ranks)
+				{
+					GameServer.Database.DeleteObject(guildRank);
+				}
 
 
-                lock (removeGuild.ListOnlineMembers())
-                {
-                    foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
-                    {
-                        ply.Guild = null;
-                        ply.GuildID = "";
-                        ply.GuildName = "";
-                        ply.GuildRank = null;
-                    }
-                }
+				lock (removeGuild.ListOnlineMembers())
+				{
+					foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
+					{
+						ply.Guild = null;
+						ply.GuildID = "";
+						ply.GuildName = "";
+						ply.GuildRank = null;
+					}
+				}
 
-                RemoveGuild(removeGuild);
+				RemoveGuild(removeGuild);
 
-                return true;
-            }
-            catch (Exception e)
-            {
-                if (log.IsErrorEnabled)
-                    log.Error("DeleteGuild", e);
-                return false;
-            }
-        }
+				return true;
+			}
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("DeleteGuild", e);
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// Returns a guild according to the matching name
@@ -450,17 +459,17 @@ namespace DOL.GS
 				var myguild = new Guild(obj);
 
 				if (obj.Ranks == null ||
-					obj.Ranks.Length < 10 || 
-					obj.Ranks[0] == null ||
-					obj.Ranks[1] == null ||
-					obj.Ranks[2] == null ||
-					obj.Ranks[3] == null ||
-					obj.Ranks[4] == null ||
-					obj.Ranks[5] == null ||
-					obj.Ranks[6] == null ||
-					obj.Ranks[7] == null ||
-					obj.Ranks[8] == null ||
-					obj.Ranks[9] == null)
+				    obj.Ranks.Length < 10 ||
+				    obj.Ranks[0] == null ||
+				    obj.Ranks[1] == null ||
+				    obj.Ranks[2] == null ||
+				    obj.Ranks[3] == null ||
+				    obj.Ranks[4] == null ||
+				    obj.Ranks[5] == null ||
+				    obj.Ranks[6] == null ||
+				    obj.Ranks[7] == null ||
+				    obj.Ranks[8] == null ||
+				    obj.Ranks[9] == null)
 				{
 					log.ErrorFormat("GuildMgr: Ranks missing for {0}, creating new ones!", myguild.Name);
 
@@ -590,13 +599,13 @@ namespace DOL.GS
 			public string Name
 			{
 				get { return m_name; }
-			} 
+			}
 			string m_level;
 			public string Level
 			{
 				get { return m_level; }
-				set { m_level = value; } 
-			} 
+				set { m_level = value; }
+			}
 			string m_characterClassID;
 			public string ClassID
 			{
@@ -666,22 +675,22 @@ namespace DOL.GS
 				m_guildNote = note;
 			}
 
-            public SocialWindowMember(GamePlayer player)
-            {
-                m_name = player.Name;
+			public SocialWindowMember(GamePlayer player)
+			{
+				m_name = player.Name;
 				m_level = player.Level.ToString();
 				m_characterClassID = player.CharacterClass.ID.ToString();
-                m_rank = player.GuildRank.RankLevel.ToString(); ;
+				m_rank = player.GuildRank.RankLevel.ToString(); ;
 				m_group = player.Group == null ? "1" : player.Group.MemberCount.ToString();
 				m_zoneOnline = player.CurrentZone.ToString();
 				m_guildNote = player.GuildNote;
-            }
+			}
 
 
 			public string ToString(int position, int guildPop)
 			{
 				return string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
-					position, guildPop, m_name, m_level, m_characterClassID, m_rank, m_group, m_zoneOnline, m_guildNote);
+				                     position, guildPop, m_name, m_level, m_characterClassID, m_rank, m_group, m_zoneOnline, m_guildNote);
 			}
 
 			public void UpdateMember(GamePlayer player)
