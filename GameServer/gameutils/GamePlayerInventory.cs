@@ -19,11 +19,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS
 {
@@ -67,9 +66,9 @@ namespace DOL.GS
 					// If we cache ALL items them all vault code must make sure to update cache, which is not ideal
 					// in addition, a player with a housing vault may still have an item in cache that may have been
 					// removed by another player with the appropriate house permission.  - Tolakram
-					var items = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(inventoryID) + 
-																					"' AND (SlotPosition <= " + (int)eInventorySlot.LastVault + 
-																					" OR (SlotPosition >= 500 AND SlotPosition < 600))");
+					var items = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(inventoryID) +
+					                                                             "' AND (SlotPosition <= " + (int)eInventorySlot.LastVault +
+					                                                             " OR (SlotPosition >= 500 AND SlotPosition < 600))");
 
 					foreach (InventoryItem item in items)
 					{
@@ -95,7 +94,7 @@ namespace DOL.GS
 								if (Log.IsErrorEnabled)
 								{
 									Log.ErrorFormat("Error loading {0}'s ({1}) inventory!\nDuplicate item {2} found in slot {3}; Skipping!",
-										m_player.Name, inventoryID, item.Name, itemSlot);
+									                m_player.Name, inventoryID, item.Name, itemSlot);
 								}
 
 								continue;
@@ -138,12 +137,12 @@ namespace DOL.GS
 							{
 								// bows don't use damage type - no warning needed
 								if (GlobalConstants.IsWeapon(item.Object_Type)
-									&& item.Type_Damage == 0
-									&& item.Object_Type != (int)eObjectType.CompositeBow
-									&& item.Object_Type != (int)eObjectType.Crossbow
-									&& item.Object_Type != (int)eObjectType.Longbow
-									&& item.Object_Type != (int)eObjectType.Fired
-									&& item.Object_Type != (int)eObjectType.RecurvedBow)
+								    && item.Type_Damage == 0
+								    && item.Object_Type != (int)eObjectType.CompositeBow
+								    && item.Object_Type != (int)eObjectType.Crossbow
+								    && item.Object_Type != (int)eObjectType.Longbow
+								    && item.Object_Type != (int)eObjectType.Fired
+								    && item.Object_Type != (int)eObjectType.RecurvedBow)
 								{
 									Log.Warn(m_player.Name + ": weapon with damage type 0 is loaded \"" + item.Name + "\" (" + item.ObjectId + ")");
 								}
@@ -151,11 +150,11 @@ namespace DOL.GS
 						}
 						catch (Exception ex)
 						{
-							Log.Error("Error loading player inventory (" + inventoryID + "), Inventory_ID: " + 
-										item.ObjectId + 
-										" (" + (item.ITemplate_Id == null ? "" : item.ITemplate_Id) + 
-										", " + (item.UTemplate_Id == null ? "" : item.UTemplate_Id) + 
-										"), slot: " + item.SlotPosition, ex);
+							Log.Error("Error loading player inventory (" + inventoryID + "), Inventory_ID: " +
+							          item.ObjectId +
+							          " (" + (item.ITemplate_Id == null ? "" : item.ITemplate_Id) +
+							          ", " + (item.UTemplate_Id == null ? "" : item.UTemplate_Id) +
+							          "), slot: " + item.SlotPosition, ex);
 						}
 					}
 
@@ -303,7 +302,7 @@ namespace DOL.GS
 			if (!base.AddItem(slot, item))
 				return false;
 
-			// guild banner code here? 
+			// guild banner code here?
 			switch (item.Model)
 			{
 				case 3223:
@@ -476,7 +475,7 @@ namespace DOL.GS
 				case eInventorySlot.FirstEmptyBackpack:
 					slot = FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 					break;
-				// INVENTAIRE DES CHEVAUX
+					// INVENTAIRE DES CHEVAUX
 				case eInventorySlot.LastEmptyBagHorse:
 					slot = FindLastEmptySlot(eInventorySlot.FirstBagHorse, eInventorySlot.LastBagHorse);
 					break;
@@ -493,8 +492,8 @@ namespace DOL.GS
 			    || (slot >= eInventorySlot.Consignment_First && slot <= eInventorySlot.Consignment_Last)
 			    || (slot == eInventorySlot.PlayerPaperDoll)
 			    || (slot == eInventorySlot.Mythical)
-				// INVENTAIRE DES CHEVAUX
-				|| (slot >= eInventorySlot.FirstBagHorse && slot <= eInventorySlot.LastBagHorse))
+			    // INVENTAIRE DES CHEVAUX
+			    || (slot >= eInventorySlot.FirstBagHorse && slot <= eInventorySlot.LastBagHorse))
 				return slot;
 
 
@@ -569,9 +568,9 @@ namespace DOL.GS
 					valid = false;
 				
 				/*************** Horse Inventory **************/
-				if (m_player.Client.Account.PrivLevel == 1 && 
-					((toSlot >= eInventorySlot.FirstBagHorse && toSlot <= eInventorySlot.LastBagHorse) ||
-					(fromSlot >= eInventorySlot.FirstBagHorse && fromSlot <= eInventorySlot.LastBagHorse)))
+				if (m_player.Client.Account.PrivLevel == 1 &&
+				    ((toSlot >= eInventorySlot.FirstBagHorse && toSlot <= eInventorySlot.LastBagHorse) ||
+				     (fromSlot >= eInventorySlot.FirstBagHorse && fromSlot <= eInventorySlot.LastBagHorse)))
 				{
 					
 					if (m_player.Inventory.GetItem(eInventorySlot.Horse) == null)
@@ -1054,7 +1053,7 @@ namespace DOL.GS
 				{
 					if (toItem != null)
 						window.RemoveItemToTrade(toItem);
-						window.RemoveItemToTrade(fromItem);
+					window.RemoveItemToTrade(fromItem);
 				}
 
 
@@ -1173,8 +1172,8 @@ namespace DOL.GS
 			m_items.TryGetValue(fromSlot, out fromItem);
 			m_items.TryGetValue(toSlot, out toItem);
 
-			if ((toSlot > eInventorySlot.HorseArmor && toSlot < eInventorySlot.FirstQuiver) 
-				|| (toSlot > eInventorySlot.FourthQuiver && toSlot < eInventorySlot.FirstBackpack))
+			if ((toSlot > eInventorySlot.HorseArmor && toSlot < eInventorySlot.FirstQuiver)
+			    || (toSlot > eInventorySlot.FourthQuiver && toSlot < eInventorySlot.FirstBackpack))
 				return false;
 
 			if (itemCount == 0)
@@ -1382,8 +1381,8 @@ namespace DOL.GS
 					    || (itemObjType == 36) // Plate
 					    || (itemObjType == 37) // Reinforced
 					    || (itemObjType == 38) // Scale
-						|| (itemObjType == 45) // Instrument
-					    || ((itemObjType == 41) && (itemItemType == 7))) // horse saddle 
+					    || (itemObjType == 45) // Instrument
+					    || ((itemObjType == 41) && (itemItemType == 7))) // horse saddle
 					{
 						canApply = true;
 					}
