@@ -56,7 +56,7 @@ namespace DOL.GS.Commands
 			obj.CurrentRegion = client.Player.CurrentRegion;
 			obj.Heading = client.Player.Heading;
 			obj.Name = name;
-            obj.Model = 488;
+            obj.Model = 1293;
 			obj.Emblem = 0;
 			obj.AddToWorld();
 
