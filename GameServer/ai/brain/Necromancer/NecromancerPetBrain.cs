@@ -223,12 +223,6 @@ namespace DOL.AI.Brain
                         }
                     }
                 }
-
-				// if we haven't been attacked in a while then start the queued spell now
-				if (SpellsQueued && Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 5 * 1000)
-				{
-					CheckSpellQueue();
-				}
             }
             else if (e == GameNPCEvent.SwitchedTarget && sender == Body.TargetObject &&
                 sender is GameNPC && !(sender as GameNPC).IsCrowdControlled)
