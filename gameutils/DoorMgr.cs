@@ -30,7 +30,7 @@ namespace DOL.GS
 {
 	/// <summary>
 	/// DoorMgr is manager of all door regular door and keep door
-	/// </summary>		
+	/// </summary>
 	public sealed class DoorMgr
 	{
 		private static Dictionary<int, List<IDoor>> m_doors = new Dictionary<int, List<IDoor>>();
@@ -39,13 +39,14 @@ namespace DOL.GS
 
 		/// <summary>
 		/// this function load all door from DB
-		/// </summary>	
+		/// </summary>
 		public static bool Init()
 		{
 			var dbdoors = GameServer.Database.SelectAllObjects<DBDoor>();
 			foreach (DBDoor door in dbdoors)
 			{
 				LoadDoor(door);
+				//if (!LoadDoor(door)) return false;
 			}
 			return true;
 		}
@@ -54,8 +55,13 @@ namespace DOL.GS
 		{
 			IDoor mydoor = null;
 			ushort zone = (ushort)(door.InternalID / 1000000);
+
+			// Grav: bad internalID ?
+			Zone currentZone = WorldMgr.GetZone(zone);
+			if (currentZone == null) return false;
+			
 			//check if the door is a keep door
-			foreach (AbstractArea area in WorldMgr.GetZone(zone).GetAreasOfSpot(door.X, door.Y, door.Z))
+			foreach (AbstractArea area in currentZone.GetAreasOfSpot(door.X, door.Y, door.Z))
 			{
 				if (area is KeepArea)
 				{

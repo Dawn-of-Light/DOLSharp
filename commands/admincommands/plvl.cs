@@ -29,7 +29,8 @@ namespace DOL.GS.Commands
 		"AdminCommands.plvl.Usage",
 		"AdminCommands.plvl.Usage.Single",
 		"AdminCommands.plvl.Usage.SingleAccount",
-		"AdminCommands.plvl.Usage.Remove")]
+        "AdminCommands.plvl.Usage.Remove",
+        "AdminCommands.plvl.Usage.RemoveAccount")]
 	public class PlvlCommand : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -116,7 +117,33 @@ namespace DOL.GS.Commands
 
 						break;
 					}
-				#endregion Remove
+                #endregion Remove
+
+                #region Remove Account
+                case "removeaccount":
+                    {
+                        if (args.Length < 2)
+                        {
+                            DisplaySyntax(client);
+                            return;
+                        }
+
+                        if (args.Length > 3)
+                        {
+                            GameClient targetClient = WorldMgr.GetClientByPlayerName(args[3], true, true);
+
+                            if (targetClient != null)
+                                target = targetClient.Player;
+                        }
+
+                        if (SinglePermission.removePermissionAccount(target, args[2]))
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.RemoveSingleAccountPermission", target.Client.Account.Name, args[2]));
+                        else
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.NoPermissionForCommand", target.Client.Account.Name, args[2]));
+
+                        break;
+                    }
+                #endregion Remove
 
 				#region Default
 				default:
