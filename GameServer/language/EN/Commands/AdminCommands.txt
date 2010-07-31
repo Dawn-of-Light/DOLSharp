@@ -12,10 +12,12 @@ AdminCommands.plvl.Usage:							/plvl <newPlvl> [PlayerName]
 AdminCommands.plvl.Usage.Single:					/plvl single <command> [PlayerName]
 AdminCommands.plvl.Usage.SingleAccount:				/plvl singleaccount <command> [AccountName]
 AdminCommands.plvl.Usage.Remove:					/plvl remove <command> [PlayerName]
+AdminCommands.plvl.Usage.RemoveAccount:				/plvl removeaccount <command> [AccountName]
 AdminCommands.plvl.NoSelectPlayer:					You must select a player to changes permission on him.
 AdminCommands.plvl.AddedSinglePermission:			You add the single permission to {0} for {1} command.
 AdminCommands.plvl.AddedSingleAccountPermission:	You add the single permission to account {0} for {1} command.
 AdminCommands.plvl.RemoveSinglePermission:			You removed the single permission of {0} for {1} command.
+AdminCommands.plvl.RemoveSingleAccountPermission:	You removed the single permission of account {0} for {1} command.
 AdminCommands.plvl.NoPermissionForCommand:			There is no permission of {0} for {1} command.
 AdminCommands.plvl.YourPlvlHasBeenSetted:			Your privilege level has been set to {0}.
 AdminCommands.plvl.PlayerPlvlHasBeenSetted:			{0} privilege level has been set to {1}.

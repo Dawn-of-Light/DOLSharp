@@ -68,11 +68,6 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <Name>ICSharpCode.SharpZipLib</Name>
-      <HintPath>..\sharedModules\ICSharpCode.SharpZLib\ICSharpCode.SharpZipLib.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="log4net">
       <Name>log4net</Name>
       <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>

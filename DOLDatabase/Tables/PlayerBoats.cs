@@ -27,11 +27,11 @@ namespace DOL.Database
 	[DataTable(TableName = "PlayerBoats")]
 	public class DBBoat : DataObject
 	{
-		static string boat_id;
-		static string boat_owner;
-		static string boat_name;
-		static ushort boat_model;
-		static short boat_maxspeedbase;
+		private string boat_id;
+		private string boat_owner;
+		private string boat_name;
+		private ushort boat_model;
+		private short boat_maxspeedbase;
 
 		public DBBoat()
 		{
