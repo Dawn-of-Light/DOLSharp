@@ -16,7 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -67,7 +69,7 @@ namespace DOL.GS.Commands
 	[CmdAttribute("&angry", ePrivLevel.Player, "Look angrily around", "/angry")]
 	[CmdAttribute("&lookfar", ePrivLevel.Player, "Lets you look into the distance", "/lookfar")]
 	[CmdAttribute("&smile", ePrivLevel.Player, "Make a big smile", "/smile")]
-	[CmdAttribute("&stench", ePrivLevel.Player, "Wave away the local stench", "/stench")] 
+	[CmdAttribute("&stench", ePrivLevel.Player, "Wave away the local stench", "/stench")]
 	public class EmoteCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private const ushort EMOTE_RANGE_TO_TARGET = 2048; // 2064 was out of range and 2020 in range;
@@ -92,14 +94,27 @@ namespace DOL.GS.Commands
 			if (client.Player.TargetObject != null)
 			{
 				// target not in range
-                if( client.Player.IsWithinRadius( client.Player.TargetObject, EMOTE_RANGE_TO_TARGET ) == false )
+				if( client.Player.IsWithinRadius( client.Player.TargetObject, EMOTE_RANGE_TO_TARGET ) == false )
 				{
 					DisplayMessage(client, "You don't see your target around here.");
 					return;
 				}
 			}
-
-
+			const string EMOTE_TICK = "Emote_Tick";
+			long Tick = client.Player.TempProperties.getProperty<long>(EMOTE_TICK);
+			if (Tick > 0 && client.Player.CurrentRegion.Time - Tick  <= 0) //
+			{
+				client.Player.TempProperties.removeProperty(EMOTE_TICK);
+			}
+			
+			long changeTime = client.Player.CurrentRegion.Time - Tick;
+			if (changeTime < ServerProperties.Properties.EMOTE_DELAY && Tick > 0)
+			{
+				string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Emotes.Message" + Util.Random(1,4).ToString());
+				client.Player.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			client.Player.TempProperties.setProperty(EMOTE_TICK, client.Player.CurrentRegion.Time);
 			eEmote emoteID;
 			string[] emoteMessages;
 
@@ -108,7 +123,7 @@ namespace DOL.GS.Commands
 				case "&angry":
 					emoteID = eEmote.Angry;
 					emoteMessages = EMOTE_MESSAGES_ANGRY;
-					break; 
+					break;
 				case "&bang":
 					emoteID = eEmote.BangOnShield;
 					emoteMessages = EMOTE_MESSAGES_BANG;
@@ -172,7 +187,7 @@ namespace DOL.GS.Commands
 				case "&lookfar":
 					emoteID = eEmote.Rider_LookFar;
 					emoteMessages = EMOTE_MESSAGES_RIDER_LOOKFAR;
-					break; 
+					break;
 				case "&kiss":
 					emoteID = eEmote.BlowKiss;
 					emoteMessages = EMOTE_MESSAGES_KISS;
@@ -228,11 +243,11 @@ namespace DOL.GS.Commands
 				case "&smile":
 					emoteID = eEmote.Smile;
 					emoteMessages = EMOTE_MESSAGES_SMILE;
-					break; 
+					break;
 				case "&stench":
 					emoteID = eEmote.Rider_Stench;
 					emoteMessages = EMOTE_MESSAGES_RIDER_STENCH;
-					break; 
+					break;
 				case "&surrender":
 					emoteID = eEmote.Surrender;
 					emoteMessages = EMOTE_MESSAGES_SURRENDER;
@@ -323,8 +338,8 @@ namespace DOL.GS.Commands
 			}
 
 			foreach (GamePlayer player in sourcePlayer.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                if (!player.IsIgnoring(sourcePlayer))
-                 player.Out.SendEmoteAnimation(sourcePlayer, emoteID);
+				if (!player.IsIgnoring(sourcePlayer))
+					player.Out.SendEmoteAnimation(sourcePlayer, emoteID);
 
 			SendEmoteMessages(sourcePlayer, targetObject as GamePlayer, messageToSource, messageToTarget, messageToOthers);
 
@@ -337,14 +352,14 @@ namespace DOL.GS.Commands
 		{
 			SendEmoteMessage(sourcePlayer, messageToSource);
 
-            if (targetPlayer != null)
-            {
-                if (!targetPlayer.IsIgnoring(sourcePlayer))
-                SendEmoteMessage(targetPlayer, messageToTarget);
-            }
+			if (targetPlayer != null)
+			{
+				if (!targetPlayer.IsIgnoring(sourcePlayer))
+					SendEmoteMessage(targetPlayer, messageToTarget);
+			}
 
 			foreach (GamePlayer player in sourcePlayer.GetPlayersInRadius(EMOTE_RANGE_TO_OTHERS))
-                if (player != sourcePlayer && player != targetPlayer && !player.IsIgnoring(sourcePlayer)) // client and target gets unique messages
+				if (player != sourcePlayer && player != targetPlayer && !player.IsIgnoring(sourcePlayer)) // client and target gets unique messages
 					SendEmoteMessage(player, messageToOthers);
 
 			return;
@@ -658,30 +673,30 @@ namespace DOL.GS.Commands
 		};
 
 		private readonly string[] EMOTE_MESSAGES_ANGRY = {
-                                              "You look angrily around.",
-                                              "{0} looks angrily.",
-                                              "You look angrily at {0}.",
-                                              "{0} looks angrily at {1}.",
-      };
+			"You look angrily around.",
+			"{0} looks angrily.",
+			"You look angrily at {0}.",
+			"{0} looks angrily at {1}.",
+		};
 
 		private readonly string[] EMOTE_MESSAGES_RIDER_LOOKFAR = {
-                                                    "You look into the distance.",
-                                                    "{0} looks into the distance.",
-                                                    "You look into the distance.",
-                                                    "{0} looks into the distance.",
-      };
+			"You look into the distance.",
+			"{0} looks into the distance.",
+			"You look into the distance.",
+			"{0} looks into the distance.",
+		};
 
 		private readonly string[] EMOTE_MESSAGES_RIDER_STENCH = {
-                                                   "You wave away the local stench.",
-                                                   "{0} waves away the local stench.",
-                                                   "You wave away the stench of {0}.",
-                                                   "{0} waves away the stench of {1}.",
-      };
+			"You wave away the local stench.",
+			"{0} waves away the local stench.",
+			"You wave away the stench of {0}.",
+			"{0} waves away the stench of {1}.",
+		};
 		private readonly string[] EMOTE_MESSAGES_SMILE = {
-                                               "You smile happily.",
-                                               "{0} smiles happily.",
-                                               "You smile at {0}.",
-                                               "{0} smiles at {1}.",
-      }; 
+			"You smile happily.",
+			"{0} smiles happily.",
+			"You smile at {0}.",
+			"{0} smiles at {1}.",
+		};
 	}
 }

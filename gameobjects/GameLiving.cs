@@ -818,7 +818,16 @@ namespace DOL.GS
 			}
 			else if (weapon.Item_Type == Slot.RANGED && (weapon.Object_Type == (int)eObjectType.Longbow || weapon.Object_Type == (int)eObjectType.RecurvedBow || weapon.Object_Type == (int)eObjectType.CompositeBow))
 			{
-				effectiveness += GetModified(eProperty.SpellDamage) * 0.01;
+				// RDSandersJR: Check to see if we are using old archery if so, use RangedDamge
+				if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
+				{
+					effectiveness += GetModified(eProperty.RangedDamage) * 0.01;
+				}
+				// RDSandersJR: If we are NOT using old archery it should be SpellDamage
+				else if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
+				{
+					effectiveness += GetModified(eProperty.SpellDamage) * 0.01;
+				}
 			}
 			else if (weapon.Item_Type == Slot.RANGED)
 			{

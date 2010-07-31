@@ -18,17 +18,16 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Styles;
 using DOL.Language;
 using log4net;
-using System.Threading;
 
 namespace DOL.GS
 {
@@ -324,8 +323,19 @@ namespace DOL.GS
 			m_objectTypeToSpec.Add(eObjectType.TwoHandedWeapon, Specs.Two_Handed);
 			m_objectTypeToSpec.Add(eObjectType.PolearmWeapon, Specs.Polearms);
 			m_objectTypeToSpec.Add(eObjectType.Flexible, Specs.Flexible);
-			m_objectTypeToSpec.Add(eObjectType.Longbow, Specs.Archery);
 			m_objectTypeToSpec.Add(eObjectType.Crossbow, Specs.Crossbow);
+			
+			// RDSandersJR: Check to see if we are using old archery if so, use RangedDamge
+			if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
+			{
+				m_objectTypeToSpec.Add(eObjectType.Longbow, Specs.Longbow);
+			}
+			// RDSandersJR: If we are NOT using old archery it should be SpellDamage
+			else if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
+			{
+				m_objectTypeToSpec.Add(eObjectType.Longbow, Specs.Archery);
+			}
+			
 			//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown); break);
 
 			//mid
@@ -335,8 +345,18 @@ namespace DOL.GS
 			m_objectTypeToSpec.Add(eObjectType.Axe, Specs.Axe);
 			m_objectTypeToSpec.Add(eObjectType.HandToHand, Specs.HandToHand);
 			m_objectTypeToSpec.Add(eObjectType.Spear, Specs.Spear);
-			m_objectTypeToSpec.Add(eObjectType.CompositeBow, Specs.Archery);
 			m_objectTypeToSpec.Add(eObjectType.Thrown, Specs.Thrown_Weapons);
+			
+			// RDSandersJR: Check to see if we are using old archery if so, use RangedDamge
+			if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
+			{
+				m_objectTypeToSpec.Add(eObjectType.CompositeBow, Specs.CompositeBow);
+			}
+			// RDSandersJR: If we are NOT using old archery it should be SpellDamage
+			else if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
+			{
+				m_objectTypeToSpec.Add(eObjectType.CompositeBow, Specs.Archery);
+			}
 
 			//hib
 			m_objectTypeToSpec.Add(eObjectType.Blunt, Specs.Blunt);
@@ -345,10 +365,19 @@ namespace DOL.GS
 			m_objectTypeToSpec.Add(eObjectType.LargeWeapons, Specs.Large_Weapons);
 			m_objectTypeToSpec.Add(eObjectType.CelticSpear, Specs.Celtic_Spear);
 			m_objectTypeToSpec.Add(eObjectType.Scythe, Specs.Scythe);
-			m_objectTypeToSpec.Add(eObjectType.RecurvedBow, Specs.Archery);
-
 			m_objectTypeToSpec.Add(eObjectType.Shield, Specs.Shields);
 			m_objectTypeToSpec.Add(eObjectType.Poison, Specs.Envenom);
+			
+			// RDSandersJR: Check to see if we are using old archery if so, use RangedDamge
+			if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
+			{
+				m_objectTypeToSpec.Add(eObjectType.RecurvedBow, Specs.RecurveBow);
+			}
+			// RDSandersJR: If we are NOT using old archery it should be SpellDamage
+			else if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
+			{
+				m_objectTypeToSpec.Add(eObjectType.RecurvedBow, Specs.Archery);
+			}
 		}
 
 		/// <summary>
@@ -2230,7 +2259,7 @@ namespace DOL.GS
 						resistValue = m_raceResists[race][resistIndex];
 					}
 					else
-			{
+					{
 						log.Warn( "No resists defined for type:  " + type.ToString() );
 					}
 				}
