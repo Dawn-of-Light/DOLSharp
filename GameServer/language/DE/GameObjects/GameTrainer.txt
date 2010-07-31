@@ -1,7 +1,7 @@
 ﻿# /GameTrainer
 GameTrainer.AddGift.NotEnoughSpace:		Es ist nicht genug Platz in Eurem Gepäck für das Geschenk. Bitte nehmt erst etwas heraus.
 GameTrainer.CheckAbilityToUseItem.Text1:	Ihr habt nicht länger die Fähigkeiten, {0} zu benutzen.
-GameTrainer.GetExamineMessages.RightClick:		
+GameTrainer.GetExamineMessages.RightClick:	(Ein Rechtsklick öffnet das Ausbildungsfenster.)
 GameTrainer.GetExamineMessages.YouExamine:	Es interessiert Euch {0}. {1} ist Euch {2} gesonnen und bildet als {3} den Nachwuchs aus.
 GameTrainer.GetExamineMessages.YouTarget:	Es wird {0} als Ziel erfasst.
 GameTrainer.Interact.CaseRespecialize:		spezialisieren

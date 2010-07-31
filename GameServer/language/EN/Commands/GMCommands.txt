@@ -79,19 +79,19 @@ GMCommands.DebugJump.UnknownRegion:			Unknown region ({0}).
 GMCommands.DebugJump.RegionNotSuppByClient:	Region ({0}) is not supported by your client.
 
 # /door Command
-GMCommands.door.Description:				Modfication des portes
-GMCommands.door.Name:					'/door name <name>' to change door name
-GMCommands.door.Level:					'/door level <level>' to change door level
-GMCommands.door.Realm:					'/door realm <realm>' change door realm. If realm = 0, the door won't open unless killed
-GMCommands.door.Guild:					'/door guild <guild>' change door guild
-GMCommands.door.Info:					'/door info' show informations
-GMCommands.door.Heal:					'/door heal' set door health to max
-GMCommands.door.Kill:					'/door kill' set door health to 0 (door open)
-GMCommands.door.Locked:					'/door locked' lock the door - you can code items to unlock it 
-GMCommands.door.Unlocked:				'/door unlocked' unlock the door - you can code items to lock it 
-GMCommands.door.Update:					'/door update' update door in the database you GM xyz coords
-GMCommands.door.Delete:					'/door delete' delete the target door
-GMCommands.door.Add:					'/door add' add a door
+GMCommands.Door.Description:				Modfication des portes
+GMCommands.Door.Name:					'/door name <name>' to change door name
+GMCommands.Door.Level:					'/door level <level>' to change door level
+GMCommands.Door.Realm:					'/door realm <realm>' change door realm. If realm = 0, the door won't open unless killed
+GMCommands.Door.Guild:					'/door guild <guild>' change door guild
+GMCommands.Door.Info:					'/door info' show informations
+GMCommands.Door.Heal:					'/door heal' set door health to max
+GMCommands.Door.Kill:					'/door kill' set door health to 0 (door open)
+GMCommands.Door.Locked:					'/door locked' lock the door - you can code items to unlock it 
+GMCommands.Door.Unlocked:				'/door unlocked' unlock the door - you can code items to lock it 
+GMCommands.Door.Update:					'/door update' update door in the database you GM xyz coords
+GMCommands.Door.Delete:					'/door delete' delete the target door
+GMCommands.Door.Add:					'/door add' add a door
 
 # /faction Command
 GMCommands.Faction.Description:				Create a faction and assign friend and enemy faction
