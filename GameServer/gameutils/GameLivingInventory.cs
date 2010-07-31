@@ -31,52 +31,52 @@ namespace DOL.GS
 	public abstract class GameLivingInventory : IGameInventory
 	{
 		public static readonly eInventorySlot[] EQUIP_SLOTS =
-			{
-				eInventorySlot.Horse,
-				eInventorySlot.HorseArmor,
-				eInventorySlot.HorseBarding,
-				eInventorySlot.RightHandWeapon,
-				eInventorySlot.LeftHandWeapon,
-				eInventorySlot.TwoHandWeapon,
-				eInventorySlot.DistanceWeapon,
-				eInventorySlot.FirstQuiver,
-				eInventorySlot.SecondQuiver,
-				eInventorySlot.ThirdQuiver,
-				eInventorySlot.FourthQuiver,
-				eInventorySlot.HeadArmor,
-				eInventorySlot.HandsArmor,
-				eInventorySlot.FeetArmor,
-				eInventorySlot.Jewellery,
-				eInventorySlot.TorsoArmor,
-				eInventorySlot.Cloak,
-				eInventorySlot.LegsArmor,
-				eInventorySlot.ArmsArmor,
-				eInventorySlot.Neck,
-				eInventorySlot.Waist,
-				eInventorySlot.LeftBracer,
-				eInventorySlot.RightBracer,
-				eInventorySlot.LeftRing,
-				eInventorySlot.RightRing,
-				eInventorySlot.Mythical,
-			};
+		{
+			eInventorySlot.Horse,
+			eInventorySlot.HorseArmor,
+			eInventorySlot.HorseBarding,
+			eInventorySlot.RightHandWeapon,
+			eInventorySlot.LeftHandWeapon,
+			eInventorySlot.TwoHandWeapon,
+			eInventorySlot.DistanceWeapon,
+			eInventorySlot.FirstQuiver,
+			eInventorySlot.SecondQuiver,
+			eInventorySlot.ThirdQuiver,
+			eInventorySlot.FourthQuiver,
+			eInventorySlot.HeadArmor,
+			eInventorySlot.HandsArmor,
+			eInventorySlot.FeetArmor,
+			eInventorySlot.Jewellery,
+			eInventorySlot.TorsoArmor,
+			eInventorySlot.Cloak,
+			eInventorySlot.LegsArmor,
+			eInventorySlot.ArmsArmor,
+			eInventorySlot.Neck,
+			eInventorySlot.Waist,
+			eInventorySlot.LeftBracer,
+			eInventorySlot.RightBracer,
+			eInventorySlot.LeftRing,
+			eInventorySlot.RightRing,
+			eInventorySlot.Mythical,
+		};
 
 		protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		//Defines the visible slots that will be displayed to players
 		protected static readonly eInventorySlot[] VISIBLE_SLOTS =
-			{
-				eInventorySlot.RightHandWeapon,
-				eInventorySlot.LeftHandWeapon,
-				eInventorySlot.TwoHandWeapon,
-				eInventorySlot.DistanceWeapon,
-				eInventorySlot.HeadArmor,
-				eInventorySlot.HandsArmor,
-				eInventorySlot.FeetArmor,
-				eInventorySlot.TorsoArmor,
-				eInventorySlot.Cloak,
-				eInventorySlot.LegsArmor,
-				eInventorySlot.ArmsArmor
-			};
+		{
+			eInventorySlot.RightHandWeapon,
+			eInventorySlot.LeftHandWeapon,
+			eInventorySlot.TwoHandWeapon,
+			eInventorySlot.DistanceWeapon,
+			eInventorySlot.HeadArmor,
+			eInventorySlot.HandsArmor,
+			eInventorySlot.FeetArmor,
+			eInventorySlot.TorsoArmor,
+			eInventorySlot.Cloak,
+			eInventorySlot.LegsArmor,
+			eInventorySlot.ArmsArmor
+		};
 
 		#region Constructor/Declaration/LoadDatabase/SaveDatabase
 
@@ -296,8 +296,8 @@ namespace DOL.GS
 			    || (slot >= eInventorySlot.HorseArmor && slot <= eInventorySlot.Horse)
 			    || (slot >= eInventorySlot.Waist && slot <= eInventorySlot.Mythical)
 			    || (slot == eInventorySlot.Ground)
-				// INVENTAIRE DES CHEVAUX
-				|| (slot >= eInventorySlot.FirstBagHorse && slot <= eInventorySlot.LastBagHorse))
+			    // INVENTAIRE DES CHEVAUX
+			    || (slot >= eInventorySlot.FirstBagHorse && slot <= eInventorySlot.LastBagHorse))
 				return slot;
 
 			return eInventorySlot.Invalid;
@@ -321,7 +321,7 @@ namespace DOL.GS
 				if (first == eInventorySlot.Invalid || last == eInventorySlot.Invalid)
 					return eInventorySlot.Invalid;
 
-				// If first/last slots are identical, check to see if the slot is full/empty and return based on 
+				// If first/last slots are identical, check to see if the slot is full/empty and return based on
 				// whether we instructed to find an empty or a full slot.
 				if (first == last)
 				{
@@ -716,10 +716,10 @@ namespace DOL.GS
 				return null;
 
 			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
-			{			          
+			{
 				InventoryItem item;
 				m_items.TryGetValue(slot, out item);
-					return item;
+				return item;
 				//else
 				//	return null;
 			}
@@ -923,7 +923,7 @@ namespace DOL.GS
 
 				if (!fits)
 				{
-					// We couldn't manage to find existing stacks, or enough existing stacks, to add our items to.  
+					// We couldn't manage to find existing stacks, or enough existing stacks, to add our items to.
 					// We now need to find totally open slots to put our items in.
 					for (i = minSlot; i <= maxSlot; i++)
 					{

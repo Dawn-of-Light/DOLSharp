@@ -30,7 +30,7 @@ namespace DOL.GS.PlayerClass
 	[CharacterClassAttribute((int)eCharacterClass.Scout, "Scout", "Rogue")]
 	public class ClassScout : ClassAlbionRogue
 	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Archery };
+		private static readonly string[] AutotrainableSkills = new[] { Specs.Archery, Specs.Longbow };
 
 		public ClassScout()
 			: base()
@@ -64,19 +64,31 @@ namespace DOL.GS.PlayerClass
             get { return eClassType.Hybrid; }
         }
 
-		public override IList<string> GetAutotrainableSkills()
+        public override IList<string> GetAutotrainableSkills()
 		{
 			return AutotrainableSkills;
 		}
-
+				
 		public override void OnLevelUp(GamePlayer player)
-		{
+		{		
 			base.OnLevelUp(player);
 
-            player.AddSpecialization(SkillBase.GetSpecialization(Specs.Archery));
+			// RDSandersJR: Check to see if we are using old archery if so, use Specs.Longbow
+			if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
+			{
+				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Longbow));
+			}
+			// RDSandersJR: If we are NOT using old archery load Specs.Archery,
+			//              Spellline("Archery") and Abilites.Weapon_Archery
+			else if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
+			{
+				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Archery));
+            	player.AddSpellLine(SkillBase.GetSpellLine("Archery"));
+				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Archery));
+			}
+            
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-            player.AddSpellLine(SkillBase.GetSpellLine("Archery"));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Archery));
+			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Longbows));
 			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
 
 			if (player.Level >= 10)
@@ -112,6 +124,79 @@ namespace DOL.GS.PlayerClass
 
 			switch (skill.KeyName)
 			{
+				case Specs.Longbow:
+					if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
+					{
+						if (skill.Level < 3)
+						{
+							// do nothing
+						}
+						else if (skill.Level < 6)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 1));
+						}
+						else if (skill.Level < 9)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 2));
+						}
+						else if (skill.Level < 12)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 3));
+						}
+						else if (skill.Level < 15)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 4));
+						}
+						else if (skill.Level < 18)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 5));
+						}
+						else if (skill.Level < 21)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 6));
+						}
+						else if (skill.Level < 24)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 7));
+						}
+						else if (skill.Level < 27)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 8));
+						}
+						else if (skill.Level >= 27)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 9));
+						}
+
+						if (skill.Level >= 45)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.RapidFire, 2));
+						}
+						else if (skill.Level >= 35)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.RapidFire, 1));
+						}
+
+						if (skill.Level >= 45)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.SureShot));
+						}
+
+						if (skill.Level >= 50)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 3));
+						}
+						else if (skill.Level >= 40)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 2));
+						}
+						else if (skill.Level >= 30)
+						{
+							player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 1));
+						}
+					}
+					break;
+										
 				case Specs.Stealth:
 					if (skill.Level >= 10)
 					{
