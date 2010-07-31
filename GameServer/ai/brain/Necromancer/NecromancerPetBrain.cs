@@ -46,14 +46,61 @@ namespace DOL.AI.Brain
 		{
 		}
 
+
+		public override int ThinkInterval
+		{
+			get { return 2000; }
+		}
+
+
         /// <summary>
         /// Brain main loop.
         /// </summary>
 		public override void Think()
 		{
             CheckTether();
+
+			// Necro pets need there own think as they may need to cast a spell in any state
 			if (IsActive)
-				base.Think();
+			{
+				GamePlayer playerowner = GetPlayerOwner();
+
+				if (!playerowner.CurrentUpdateArray[Body.ObjectID - 1])
+				{
+					playerowner.Out.SendObjectUpdate(Body);
+					playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
+				}
+
+				if (SpellsQueued)
+				{
+					// if spells are queued then handle them first
+
+					if (!Body.IsCasting)
+					{
+						CheckSpellQueue();
+					}
+				}
+				else if (AggressionState == eAggressionState.Aggressive)
+				{
+					CheckPlayerAggro();
+					CheckNPCAggro();
+				}
+
+				AttackMostWanted();
+
+				// Do not discover stealthed players
+				if (Body.TargetObject != null)
+				{
+					if (Body.TargetObject is GamePlayer)
+					{
+						if (Body.IsAttacking && (Body.TargetObject as GamePlayer).IsStealthed)
+						{
+							Body.StopAttack();
+							FollowOwner();
+						}
+					}
+				}
+			}
 		}
 
 		#region Events
@@ -71,25 +118,20 @@ namespace DOL.AI.Brain
 			if (e == GameNPCEvent.PetSpell)
 			{
 				PetSpellEventArgs petSpell = (PetSpellEventArgs)args;
+				bool hadQueuedSpells = false;
+
+				if (SpellsQueued)
+				{
+					MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.CastSpellAfterAction", Body.Name), eChatType.CT_System);
+					hadQueuedSpells = true;
+				}
+
 				AddToSpellQueue(petSpell.Spell, petSpell.SpellLine, petSpell.Target);
 
-				// If we're not currently casting or meleeing, cast 
-				// right away.
-
-                if (!Body.IsCasting && Body.AttackState)
-                {
-                    DebugMessageToOwner(String.Format("Spell '{0}' relayed from shade, but pet in melee",
-                        petSpell.Spell.Name));
-                }
-
-				if (!Body.IsCasting && !Body.AttackState)
+				// immediate casts are ok if we're not doing anything else
+				if (hadQueuedSpells == false && Body.AttackState == false && Body.IsCasting == false)
 				{
 					CheckSpellQueue();
-				}
-				else
-				{
-					MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
-						"AI.Brain.Necromancer.CastSpellAfterAction", Body.Name), eChatType.CT_System);
 				}
 			}
             else if (e == GameLivingEvent.CastFinished)
@@ -98,19 +140,24 @@ namespace DOL.AI.Brain
                 // there are more, keep casting.
 
                 RemoveSpellFromQueue();
+				AttackMostWanted();
 
                 if (SpellsQueued)
                 {
-                    DebugMessageToOwner("More spells to cast, grab the next one");
-                    CheckSpellQueue();
-                }
+                    DebugMessageToOwner("More spells to cast");
+				}
                 else
                 {
-                    DebugMessageToOwner("No more spells to cast, start melee");
-                    AttackMostWanted();
+                    DebugMessageToOwner("No more spells to cast");
                 }
 
                 Owner.Notify(GamePlayerEvent.CastFinished, Owner, args);
+
+				if (SpellsQueued && Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 5 * 1000)
+				{
+					CheckSpellQueue();
+				}
+
             }
             else if (e == GameLivingEvent.CastFailed)
             {
@@ -176,6 +223,12 @@ namespace DOL.AI.Brain
                         }
                     }
                 }
+
+				// if we haven't been attacked in a while then start the queued spell now
+				if (SpellsQueued && Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 5 * 1000)
+				{
+					CheckSpellQueue();
+				}
             }
             else if (e == GameNPCEvent.SwitchedTarget && sender == Body.TargetObject &&
                 sender is GameNPC && !(sender as GameNPC).IsCrowdControlled)
@@ -187,14 +240,6 @@ namespace DOL.AI.Brain
             }
             else if (e == GameNPCEvent.AttackFinished)
             {
-                // If there are spells in the queue, hold the melee attack
-                // and start casting.
-
-                if (SpellsQueued)
-                    CheckSpellQueue();
-                else
-                    AttackMostWanted();
-
                 Owner.Notify(GamePlayerEvent.AttackFinished, Owner, args);
             }
             else if (e == GameNPCEvent.OutOfTetherRange)
@@ -265,7 +310,8 @@ namespace DOL.AI.Brain
 				// Cast spell on the target, but don't automatically
 				// make it our new target.
 
-                if ((spellTarget != null && spellTarget.IsAlive) || spell.Target.ToLower() == "self")
+				// Target must be alive, or this is a self spell, or this is a pbaoe spell
+                if ((spellTarget != null && spellTarget.IsAlive) || spell.Target.ToLower() == "self" || spell.Range == 0)
 				{
 					Body.TargetObject = spellTarget;
 
