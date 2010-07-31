@@ -56,7 +56,7 @@ namespace DOL.GS.Commands
 			obj.CurrentRegion = client.Player.CurrentRegion;
 			obj.Heading = client.Player.Heading;
 			obj.Name = name;
-			obj.Model = 1293;
+            obj.Model = 488;
 			obj.Emblem = 0;
 			obj.AddToWorld();
 
@@ -102,7 +102,7 @@ namespace DOL.GS.Commands
 			//Remove old temp objects
 			RemoveAllTempPathObjects(client);
 
-			PathPoint startpoint = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, 100000, ePathType.Once);
+			PathPoint startpoint = new PathPoint(client.Player.X, client.Player.Y, client.Player.Z, 5000, ePathType.Once);
 			client.Player.TempProperties.setProperty(TEMP_PATH_FIRST, startpoint);
 			client.Player.TempProperties.setProperty(TEMP_PATH_LAST, startpoint);
 			client.Player.Out.SendMessage("Path creation started! You can add new pathpoints via /path add now!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

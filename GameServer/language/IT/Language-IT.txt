@@ -315,7 +315,7 @@ GamePlayer.SaveIntoDatabase.CharacterSaved:	Il tuo personaggio e' stato salvato.
 GamePlayer.Say.YouSay:					Dici, "{0}"
 GamePlayer.SayReceive.Says:				{0} dice, "{1}"
 GamePlayer.SayReceive.FalseLanguage:			{0} dice qualcosa in un linguaggio che non comprendi.
-GamePlayer.SendReceive.sends:				{0} dice, {1}
+GamePlayer.SendReceive.Sends:				{0} dice, {1}
 GamePlayer.SendReceive.FalseLanguage:			{0} dice qualcosa in una lingua che non capisci.
 GamePlayer.SendReceive.Afk:				{0} e' attualmente AFK.
 GamePlayer.SendReceive.AfkMessage:			<AFK> {0} dice, "{1}"

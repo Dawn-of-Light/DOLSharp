@@ -88,19 +88,19 @@ GMCommands.DebugJump.UnknownRegion:			Region({0}) Inconnue.
 GMCommands.DebugJump.RegionNotSuppByClient:	La region ({0}) n'est pas supportée par votre client.
 
 # /Door Command
-GMCommands.door.Description:				Modfication des portes
-GMCommands.door.Name:					'/door name <texte>'change le nom de la porte.
-GMCommands.door.Level:					'/door level <valeur>'change le level de la porte. 
-GMCommands.door.Realm:					'/door realm <valeur>'change le realm de la porte. ! Attention si realm 0 la porte ne s'ouvre pas tant qu'elle est pas tuée
-GMCommands.door.Guild:					'/door guild <texte>'change la guilde de la porte.
-GMCommands.door.Info:					'/door info' donne les info de la porte.
-GMCommands.door.Heal:					'/door heal' redonne le maximum de vie a la porte.
-GMCommands.door.Kill:					'/door kill' "tue la porte".
-GMCommands.door.Locked:					'/door locked 'verouille completement la porte.
-GMCommands.door.Unlocked:				'/door unlocked 'deverouille la porte.
-GMCommands.door.Update:					'/door update 'maj de la porte avec X Y Z de l'admin.
-GMCommands.door.Delete:					'/door delete 'supprime la porte ciblée.
-GMCommands.door.Add:					'/door add' ajoute une porte
+GMCommands.Door.Description:				Modfication des portes
+GMCommands.Door.Name:					'/door name <texte>'change le nom de la porte.
+GMCommands.Door.Level:					'/door level <valeur>'change le level de la porte. 
+GMCommands.Door.Realm:					'/door realm <valeur>'change le realm de la porte. ! Attention si realm 0 la porte ne s'ouvre pas tant qu'elle est pas tuée
+GMCommands.Door.Guild:					'/door guild <texte>'change la guilde de la porte.
+GMCommands.Door.Info:					'/door info' donne les info de la porte.
+GMCommands.Door.Heal:					'/door heal' redonne le maximum de vie a la porte.
+GMCommands.Door.Kill:					'/door kill' "tue la porte".
+GMCommands.Door.Locked:					'/door locked 'verouille completement la porte.
+GMCommands.Door.Unlocked:				'/door unlocked 'deverouille la porte.
+GMCommands.Door.Update:					'/door update 'maj de la porte avec X Y Z de l'admin.
+GMCommands.Door.Delete:					'/door delete 'supprime la porte ciblée.
+GMCommands.Door.Add:					'/door add' ajoute une porte
 
 # /faction Command
 GMCommands.Faction.Description:				Créer une faction et assigner ami et ennemi de faction
