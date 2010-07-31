@@ -66,7 +66,7 @@ namespace DOL.GS
 		/// <summary>
 		/// DoorRealmNumber to allow dynamic allocation of realm specific arrays.
 		/// </summary>
-		Door = 6,	
+		Door = 6,
 	};
 
 	public enum eItemFlags
@@ -508,9 +508,9 @@ namespace DOL.GS
 		Undefined = 0,
 		// Note, these are set in the ItemDB now.  Changing
 		//any order will screw things up.
-        // char stats
-        #region Stats
-        Stat_First = 1,
+		// char stats
+		#region Stats
+		Stat_First = 1,
 		Strength = 1,
 		Dexterity = 2,
 		Constitution = 3,
@@ -523,10 +523,10 @@ namespace DOL.GS
 
 		MaxMana = 9,
 		MaxHealth = 10,
-        #endregion
+		#endregion
 
-        #region Resists
-        // resists
+		#region Resists
+		// resists
 		Resist_First = 11,
 		Resist_Body = 11,
 		Resist_Cold = 12,
@@ -538,10 +538,10 @@ namespace DOL.GS
 		Resist_Spirit = 18,
 		Resist_Thrust = 19,
 		Resist_Last = 19,
-        #endregion
+		#endregion
 
-        #region Skills
-        // skills
+		#region Skills
+		// skills
 		Skill_First = 20,
 		Skill_Two_Handed = 20,
 		Skill_Body = 21,
@@ -640,10 +640,10 @@ namespace DOL.GS
 		Skill_SpectralGuard = 114,
 		Skill_Archery = 115,
 		Skill_Last = 115,
-        #endregion
+		#endregion
 
-        #region Focus
-        // Classic Focii
+		#region Focus
+		// Classic Focii
 		Focus_Darkness = 120,
 		Focus_Suppression = 121,
 		Focus_Runecarving = 122,
@@ -680,9 +680,9 @@ namespace DOL.GS
 		Focus_Cursing = 160,
 		Focus_Hexing = 161,
 		Focus_Witchcraft = 162,
-        #endregion
+		#endregion
 
-        MaxSpeed = 145,
+		MaxSpeed = 145,
 		MaxConcentration = 147,
 
 		ArmorFactor = 148,
@@ -722,8 +722,8 @@ namespace DOL.GS
 		StunDuration = 177,
 		SpeedDecreaseDuration = 178,
 
-        #region Catacombs
-        //Catacombs
+		#region Catacombs
+		//Catacombs
 		BladeturnReinforcement = 179,
 		DefensiveBonus = 180,
 		NegativeReduction = 182,
@@ -732,10 +732,10 @@ namespace DOL.GS
 		SpellPowerCost = 185,
 		StyleCostReduction = 186,
 		ToHitBonus = 187,
-        #endregion
+		#endregion
 
-        #region TOA
-        //TOA
+		#region TOA
+		//TOA
 		ToABonus_First = 188,
 		ArcherySpeed = 188,
 		ArrowRecovery = 189,
@@ -751,10 +751,10 @@ namespace DOL.GS
 		SpellDuration = 199,
 		StyleDamage = 200,
 		ToABonus_Last = 200,
-        #endregion
+		#endregion
 
-        #region Cap Bonuses
-        //Caps bonuses
+		#region Cap Bonuses
+		//Caps bonuses
 		StatCapBonus_First = 201,
 		StrCapBonus = 201,
 		DexCapBonus = 202,
@@ -768,9 +768,9 @@ namespace DOL.GS
 		MaxHealthCapBonus = 210,
 		PowerPoolCapBonus = 211,
 		StatCapBonus_Last = 211,
-        #endregion
+		#endregion
 
-        WeaponSkill = 212,
+		WeaponSkill = 212,
 		AllSkills = 213,
 		CriticalMeleeHitChance = 214,
 		CriticalArcheryHitChance = 215,
@@ -778,11 +778,11 @@ namespace DOL.GS
 		CriticalHealHitChance = 232,
 		WaterSpeed = 217,
 		SpellLevel = 218,
-        MissHit = 219,
-        KeepDamage = 220,
+		MissHit = 219,
+		KeepDamage = 220,
 
-        #region Resist Cap Increases
-        //Resist cap increases
+		#region Resist Cap Increases
+		//Resist cap increases
 		ResCapBonus_First = 221,
 		BodyResCapBonus = 221,
 		ColdResCapBonus = 222,
@@ -794,11 +794,11 @@ namespace DOL.GS
 		SpiritResCapBonus = 228,
 		ThrustResCapBonus = 229,
 		ResCapBonus_Last = 229,
-        #endregion
+		#endregion
 
-        //[Freya] Nidel: 
-        BountyPoints = 247,
-        XpPoints = 248,
+		//[Freya] Nidel:
+		BountyPoints = 247,
+		XpPoints = 248,
 		//Eden - new bonus
 		Resist_Natural = 249,
 		ExtraHP = 250,
@@ -806,7 +806,7 @@ namespace DOL.GS
 		StyleAbsorb = 252,
 		RealmPoints = 253,
 		ArcaneSyphon = 254,
-        MaxProperty = 255
+		MaxProperty = 255
 	}
 
 	/// <summary>
@@ -966,15 +966,15 @@ namespace DOL.GS
 		Wood = 4,
 	}
 
-    /// <summary>
-    /// The gender.
-    /// </summary>
-    public enum Gender : byte
-    {
-        Neutral = 0,
-        Male = 1,
-        Female = 2
-    }
+	/// <summary>
+	/// The gender.
+	/// </summary>
+	public enum Gender : byte
+	{
+		Neutral = 0,
+		Male = 1,
+		Female = 2
+	}
 
 	public enum eClientExpansion : int
 	{
@@ -1034,41 +1034,41 @@ namespace DOL.GS
 			return false;
 		}
 
-        /// <summary>
-        /// Offensive, Defensive, or Positional
-        /// </summary>
-        public static string StyleOpeningTypeToName(int openingType)
-        {
-            return Enum.GetName(typeof(Styles.Style.eOpening), openingType);
-        }
-        /// <summary>
-        /// Position, Back, Side, Front
-        /// </summary>
-        public static string StyleOpeningPositionToName(int openingRequirement)
-        {
-            return Enum.GetName(typeof(Styles.Style.eOpeningPosition), openingRequirement);
-        }
-        /// <summary>
-        /// Attack Result. Any, Miss, Hit, Parry, Block, Evade, Fumble, Style.
-        /// </summary>
-        public static string StyleAttackResultToName(int attackResult)
-        {
-            return Enum.GetName(typeof(Styles.Style.eAttackResult), attackResult);
-        }
+		/// <summary>
+		/// Offensive, Defensive, or Positional
+		/// </summary>
+		public static string StyleOpeningTypeToName(int openingType)
+		{
+			return Enum.GetName(typeof(Styles.Style.eOpening), openingType);
+		}
+		/// <summary>
+		/// Position, Back, Side, Front
+		/// </summary>
+		public static string StyleOpeningPositionToName(int openingRequirement)
+		{
+			return Enum.GetName(typeof(Styles.Style.eOpeningPosition), openingRequirement);
+		}
+		/// <summary>
+		/// Attack Result. Any, Miss, Hit, Parry, Block, Evade, Fumble, Style.
+		/// </summary>
+		public static string StyleAttackResultToName(int attackResult)
+		{
+			return Enum.GetName(typeof(Styles.Style.eAttackResult), attackResult);
+		}
 
-        public static string InstrumentTypeToName(int instrumentTypeID)
-        {
-            return Enum.GetName(typeof(eInstrumentType), instrumentTypeID);
-        }
+		public static string InstrumentTypeToName(int instrumentTypeID)
+		{
+			return Enum.GetName(typeof(eInstrumentType), instrumentTypeID);
+		}
 
 		public static string AmmunitionTypeToDamageName(int ammutype)
 		{
 			ammutype &= 0x3;
 			switch (ammutype)
 			{
-				case 1: return "medium";
-				case 2: return "heavy";
-				case 3: return "X-heavy";
+					case 1: return "medium";
+					case 2: return "heavy";
+					case 3: return "X-heavy";
 			}
 			return "light";
 		}
@@ -1078,9 +1078,9 @@ namespace DOL.GS
 			ammutype = (ammutype >> 2) & 0x3;
 			switch (ammutype)
 			{
-				case 1: return "medium";
-				case 2: return "long";
-				case 3: return "X-long";
+					case 1: return "medium";
+					case 2: return "long";
+					case 3: return "X-long";
 			}
 			return "short";
 		}
@@ -1090,17 +1090,17 @@ namespace DOL.GS
 			ammutype = (ammutype >> 4) & 0x3;
 			switch (ammutype)
 			{
-				case 1: return "normal";
-				case 2: return "improved";
-				case 3: return "enhanced";
+					case 1: return "normal";
+					case 2: return "improved";
+					case 3: return "enhanced";
 			}
 			return "reduced";
 		}
 
-        public static string ShieldTypeToName(int shieldTypeID)
-        {
-            return Enum.GetName(typeof(ShieldLevel), shieldTypeID);
-        }
+		public static string ShieldTypeToName(int shieldTypeID)
+		{
+			return Enum.GetName(typeof(ShieldLevel), shieldTypeID);
+		}
 
 		public static string ArmorLevelToName(int armorLevel, eRealm realm)
 		{
@@ -1110,44 +1110,44 @@ namespace DOL.GS
 					{
 						switch (armorLevel)
 						{
-							case ArmorLevel.Cloth: return "cloth";
-							case ArmorLevel.Chain: return "chain";
-							case ArmorLevel.Leather: return "leather";
-							case ArmorLevel.Plate: return "plate";
-							case ArmorLevel.Studded: return "studded";
-							default: return "undefined";
+								case ArmorLevel.Cloth: return "cloth";
+								case ArmorLevel.Chain: return "chain";
+								case ArmorLevel.Leather: return "leather";
+								case ArmorLevel.Plate: return "plate";
+								case ArmorLevel.Studded: return "studded";
+								default: return "undefined";
 						}
 					}
 				case eRealm.Midgard:
 					{
 						switch (armorLevel)
 						{
-							case ArmorLevel.Cloth: return "cloth";
-							case ArmorLevel.Chain: return "chain";
-							case ArmorLevel.Leather: return "leather";
-							case ArmorLevel.Studded: return "studded";
-							default: return "undefined";
+								case ArmorLevel.Cloth: return "cloth";
+								case ArmorLevel.Chain: return "chain";
+								case ArmorLevel.Leather: return "leather";
+								case ArmorLevel.Studded: return "studded";
+								default: return "undefined";
 						}
 					}
 				case eRealm.Hibernia:
 					{
 						switch (armorLevel)
 						{
-							case ArmorLevel.Cloth: return "cloth";
-							case ArmorLevel.Scale: return "scale";
-							case ArmorLevel.Leather: return "leather";
-							case ArmorLevel.Reinforced: return "reinforced";
-							default: return "undefined";
+								case ArmorLevel.Cloth: return "cloth";
+								case ArmorLevel.Scale: return "scale";
+								case ArmorLevel.Leather: return "leather";
+								case ArmorLevel.Reinforced: return "reinforced";
+								default: return "undefined";
 						}
 					}
-				default: return "undefined";
+					default: return "undefined";
 			}
 		}
 
-        public static string WeaponDamageTypeToName(int weaponDamageTypeID)
-        {
-            return Enum.GetName(typeof(eWeaponDamageType), weaponDamageTypeID);
-        }
+		public static string WeaponDamageTypeToName(int weaponDamageTypeID)
+		{
+			return Enum.GetName(typeof(eWeaponDamageType), weaponDamageTypeID);
+		}
 
 		public static string NameToShortName(string name)
 		{
@@ -1172,49 +1172,49 @@ namespace DOL.GS
 		{
 			switch (objectTypeID)
 			{
-				case 0: return "generic (item)";
-				case 1: return "generic (weapon)";
-				case 2: return "crushing (weapon)";
-				case 3: return "slashing (weapon)";
-				case 4: return "thrusting (weapon)";
-				case 5: return "fired (weapon)";
-				case 6: return "twohanded (weapon)";
-				case 7: return "polearm (weapon)";
-				case 8: return "staff (weapon)";
-				case 9: return "longbow (weapon)";
-				case 10: return "crossbow (weapon)";
-				case 11: return "sword (weapon)";
-				case 12: return "hammer (weapon)";
-				case 13: return "axe (weapon)";
-				case 14: return "spear (weapon)";
-				case 15: return "composite bow (weapon)";
-				case 16: return "thrown (weapon)";
-				case 17: return "left axe (weapon)";
-				case 18: return "recurve bow (weapon)";
-				case 19: return "blades (weapon)";
-				case 20: return "blunt (weapon)";
-				case 21: return "piercing (weapon)";
-				case 22: return "large (weapon)";
-				case 23: return "celtic spear (weapon)";
-				case 24: return "flexible (weapon)";
-				case 25: return "hand to hand (weapon)";
-				case 26: return "scythe (weapon)";
-				case 27: return "Fist Wraps (weapon)";
-				case 28: return "Mauler Staff (weapon)";
-				case 31: return "generic (armor)";
-				case 32: return "cloth (armor)";
-				case 33: return "leather (armor)";
-				case 34: return "studded leather (armor)";
-				case 35: return "chain (armor)";
-				case 36: return "plate (armor)";
-				case 37: return "reinforced (armor)";
-				case 38: return "scale (armor)";
-				case 41: return "magical (item)";
-				case 42: return "shield (armor)";
-				case 43: return "arrow (item)";
-				case 44: return "bolt (item)";
-				case 45: return "instrument (item)";
-				case 46: return "poison (item)";
+					case 0: return "generic (item)";
+					case 1: return "generic (weapon)";
+					case 2: return "crushing (weapon)";
+					case 3: return "slashing (weapon)";
+					case 4: return "thrusting (weapon)";
+					case 5: return "fired (weapon)";
+					case 6: return "twohanded (weapon)";
+					case 7: return "polearm (weapon)";
+					case 8: return "staff (weapon)";
+					case 9: return "longbow (weapon)";
+					case 10: return "crossbow (weapon)";
+					case 11: return "sword (weapon)";
+					case 12: return "hammer (weapon)";
+					case 13: return "axe (weapon)";
+					case 14: return "spear (weapon)";
+					case 15: return "composite bow (weapon)";
+					case 16: return "thrown (weapon)";
+					case 17: return "left axe (weapon)";
+					case 18: return "recurve bow (weapon)";
+					case 19: return "blades (weapon)";
+					case 20: return "blunt (weapon)";
+					case 21: return "piercing (weapon)";
+					case 22: return "large (weapon)";
+					case 23: return "celtic spear (weapon)";
+					case 24: return "flexible (weapon)";
+					case 25: return "hand to hand (weapon)";
+					case 26: return "scythe (weapon)";
+					case 27: return "Fist Wraps (weapon)";
+					case 28: return "Mauler Staff (weapon)";
+					case 31: return "generic (armor)";
+					case 32: return "cloth (armor)";
+					case 33: return "leather (armor)";
+					case 34: return "studded leather (armor)";
+					case 35: return "chain (armor)";
+					case 36: return "plate (armor)";
+					case 37: return "reinforced (armor)";
+					case 38: return "scale (armor)";
+					case 41: return "magical (item)";
+					case 42: return "shield (armor)";
+					case 43: return "arrow (item)";
+					case 44: return "bolt (item)";
+					case 45: return "instrument (item)";
+					case 46: return "poison (item)";
 			}
 			return "unknown (item)";
 		}
@@ -1224,25 +1224,25 @@ namespace DOL.GS
 		{
 			switch (slotID)
 			{
-				case 0x0A: return "righthand";
-				case 0x0B: return "lefthand";
-				case 0x0C: return "twohanded";
-				case 0x0D: return "distance";
-				case 0x15: return "head";
-				case 0x16: return "hand";
-				case 0x17: return "feet";
-				case 0x18: return "jewel";
-				case 0x19: return "torso";
-				case 0x1A: return "cloak";
-				case 0x1B: return "legs";
-				case 0x1C: return "arms";
-				case 0x1D: return "neck";
-				case 0x20: return "belt";
-				case 0x21: return "leftbracer";
-				case 0x22: return "rightbracer";
-				case 0x23: return "leftring";
-				case 0x24: return "rightring";
-				case 0x25: return "mythirian";
+					case 0x0A: return "righthand";
+					case 0x0B: return "lefthand";
+					case 0x0C: return "twohanded";
+					case 0x0D: return "distance";
+					case 0x15: return "head";
+					case 0x16: return "hand";
+					case 0x17: return "feet";
+					case 0x18: return "jewel";
+					case 0x19: return "torso";
+					case 0x1A: return "cloak";
+					case 0x1B: return "legs";
+					case 0x1C: return "arms";
+					case 0x1D: return "neck";
+					case 0x20: return "belt";
+					case 0x21: return "leftbracer";
+					case 0x22: return "rightbracer";
+					case 0x23: return "leftring";
+					case 0x24: return "rightring";
+					case 0x25: return "mythirian";
 			}
 			return "generic inventory";
 		}
@@ -1252,156 +1252,156 @@ namespace DOL.GS
 		{
 			switch (name)
 			{
-				//Horses
-				case "mount": return 0xA9;
-				//Righthand Weapon Type
-				case "righthand": return 0x0A;
-				case "right": return 0x0A;
-				case "ri": return 0x0A;
+					//Horses
+					case "mount": return 0xA9;
+					//Righthand Weapon Type
+					case "righthand": return 0x0A;
+					case "right": return 0x0A;
+					case "ri": return 0x0A;
 
-				//Lefthand Weapon Type
-				case "lefthand": return 0x0B;
-				case "left": return 0x0B;
-				case "lef": return 0x0B;
+					//Lefthand Weapon Type
+					case "lefthand": return 0x0B;
+					case "left": return 0x0B;
+					case "lef": return 0x0B;
 
-				//Twohanded Weapon Type
-				case "twohanded": return 0x0C;
-				case "two": return 0x0C;
-				case "tw": return 0x0C;
+					//Twohanded Weapon Type
+					case "twohanded": return 0x0C;
+					case "two": return 0x0C;
+					case "tw": return 0x0C;
 
-				//Distance Weapon Type
-				case "distance": return 0x0D;
-				case "dist": return 0x0D;
-				case "di": return 0x0D;
-				case "bow": return 0x0D;
-				case "crossbow": return 0x0D;
-				case "longbow": return 0x0D;
-				case "throwing": return 0x0D;
-				case "thrown": return 0x0D;
-				case "fire": return 0x0D;
-				case "firing": return 0x0D;
+					//Distance Weapon Type
+					case "distance": return 0x0D;
+					case "dist": return 0x0D;
+					case "di": return 0x0D;
+					case "bow": return 0x0D;
+					case "crossbow": return 0x0D;
+					case "longbow": return 0x0D;
+					case "throwing": return 0x0D;
+					case "thrown": return 0x0D;
+					case "fire": return 0x0D;
+					case "firing": return 0x0D;
 
-				//Head Armor Type
-				case "head": return 0x15;
-				case "helm": return 0x15;
-				case "he": return 0x15;
+					//Head Armor Type
+					case "head": return 0x15;
+					case "helm": return 0x15;
+					case "he": return 0x15;
 
-				//Hand Armor Type
-				case "hands": return 0x16;
-				case "hand": return 0x16;
-				case "ha": return 0x16;
-				case "gloves": return 0x16;
-				case "glove": return 0x16;
-				case "gl": return 0x16;
+					//Hand Armor Type
+					case "hands": return 0x16;
+					case "hand": return 0x16;
+					case "ha": return 0x16;
+					case "gloves": return 0x16;
+					case "glove": return 0x16;
+					case "gl": return 0x16;
 
-				//Boot Armor Type
-				case "boots": return 0x17;
-				case "boot": return 0x17;
-				case "boo": return 0x17;
-				case "feet": return 0x17;
-				case "fe": return 0x17;
-				case "foot": return 0x17;
-				case "fo": return 0x17;
+					//Boot Armor Type
+					case "boots": return 0x17;
+					case "boot": return 0x17;
+					case "boo": return 0x17;
+					case "feet": return 0x17;
+					case "fe": return 0x17;
+					case "foot": return 0x17;
+					case "fo": return 0x17;
 
-				//Jewel Type
-				case "jewels": return 0x18;
-				case "jewel": return 0x18;
-				case "je": return 0x18;
-				case "j": return 0x18;
-				case "gems": return 0x18;
-				case "gem": return 0x18;
-				case "gemstone": return 0x18;
-				case "stone": return 0x18;
+					//Jewel Type
+					case "jewels": return 0x18;
+					case "jewel": return 0x18;
+					case "je": return 0x18;
+					case "j": return 0x18;
+					case "gems": return 0x18;
+					case "gem": return 0x18;
+					case "gemstone": return 0x18;
+					case "stone": return 0x18;
 
-				//Body Armor Type
-				case "torso": return 0x19;
-				case "to": return 0x19;
-				case "body": return 0x19;
-				case "bod": return 0x19;
-				case "robes": return 0x19;
-				case "robe": return 0x19;
-				case "ro": return 0x19;
+					//Body Armor Type
+					case "torso": return 0x19;
+					case "to": return 0x19;
+					case "body": return 0x19;
+					case "bod": return 0x19;
+					case "robes": return 0x19;
+					case "robe": return 0x19;
+					case "ro": return 0x19;
 
-				//Cloak Armor Type
-				case "cloak": return 0x1A;
-				case "cloa": return 0x1A;
-				case "clo": return 0x1A;
-				case "cl": return 0x1A;
-				case "cape": return 0x1A;
-				case "ca": return 0x1A;
-				case "gown": return 0x1A;
-				case "mantle": return 0x1A;
-				case "ma": return 0x1A;
-				case "shawl": return 0x1A;
+					//Cloak Armor Type
+					case "cloak": return 0x1A;
+					case "cloa": return 0x1A;
+					case "clo": return 0x1A;
+					case "cl": return 0x1A;
+					case "cape": return 0x1A;
+					case "ca": return 0x1A;
+					case "gown": return 0x1A;
+					case "mantle": return 0x1A;
+					case "ma": return 0x1A;
+					case "shawl": return 0x1A;
 
-				//Leg Armor Type
-				case "legs": return 0x1B;
-				case "leg": return 0x1B;
+					//Leg Armor Type
+					case "legs": return 0x1B;
+					case "leg": return 0x1B;
 
-				//Arms Armor Type
-				case "arms": return 0x1C;
-				case "arm": return 0x1C;
-				case "ar": return 0x1C;
+					//Arms Armor Type
+					case "arms": return 0x1C;
+					case "arm": return 0x1C;
+					case "ar": return 0x1C;
 
-				//Neck Armor Type
-				case "neck": return 0x1D;
-				case "ne": return 0x1D;
-				case "scruff": return 0x1D;
-				case "nape": return 0x1D;
-				case "throat": return 0x1D;
-				case "necklace": return 0x1D;
-				case "necklet": return 0x1D;
+					//Neck Armor Type
+					case "neck": return 0x1D;
+					case "ne": return 0x1D;
+					case "scruff": return 0x1D;
+					case "nape": return 0x1D;
+					case "throat": return 0x1D;
+					case "necklace": return 0x1D;
+					case "necklet": return 0x1D;
 
-				//Belt Armor Type
-				case "belt": return 0x20;
-				case "b": return 0x20;
-				case "girdle": return 0x20;
-				case "waistbelt": return 0x20;
+					//Belt Armor Type
+					case "belt": return 0x20;
+					case "b": return 0x20;
+					case "girdle": return 0x20;
+					case "waistbelt": return 0x20;
 
-				//Left Bracers Type
-				case "leftbracers": return 0x21;
-				case "leftbracer": return 0x21;
-				case "leftbr": return 0x21;
-				case "lbracers": return 0x21;
-				case "lbracer": return 0x21;
-				case "leb": return 0x21;
-				case "lbr": return 0x21;
-				case "lb": return 0x21;
+					//Left Bracers Type
+					case "leftbracers": return 0x21;
+					case "leftbracer": return 0x21;
+					case "leftbr": return 0x21;
+					case "lbracers": return 0x21;
+					case "lbracer": return 0x21;
+					case "leb": return 0x21;
+					case "lbr": return 0x21;
+					case "lb": return 0x21;
 
-				//Right Bracers Type
-				case "rightbracers": return 0x22;
-				case "rightbracer": return 0x22;
-				case "rightbr": return 0x22;
-				case "rbracers": return 0x22;
-				case "rbracer": return 0x22;
-				case "rib": return 0x22;
-				case "rbr": return 0x22;
-				case "rb": return 0x22;
+					//Right Bracers Type
+					case "rightbracers": return 0x22;
+					case "rightbracer": return 0x22;
+					case "rightbr": return 0x22;
+					case "rbracers": return 0x22;
+					case "rbracer": return 0x22;
+					case "rib": return 0x22;
+					case "rbr": return 0x22;
+					case "rb": return 0x22;
 
-				//Left Ring Type
-				case "leftrings": return 0x23;
-				case "leftring": return 0x23;
-				case "leftr": return 0x23;
-				case "lrings": return 0x23;
-				case "lring": return 0x23;
-				case "lri": return 0x23;
-				case "ler": return 0x23;
-				case "lr": return 0x23;
+					//Left Ring Type
+					case "leftrings": return 0x23;
+					case "leftring": return 0x23;
+					case "leftr": return 0x23;
+					case "lrings": return 0x23;
+					case "lring": return 0x23;
+					case "lri": return 0x23;
+					case "ler": return 0x23;
+					case "lr": return 0x23;
 
-				//Right Ring Type
-				case "rightrings": return 0x24;
-				case "rightring": return 0x24;
-				case "rightr": return 0x24;
-				case "rrings": return 0x24;
-				case "rring": return 0x24;
-				case "rri": return 0x24;
-				case "rir": return 0x24;
-				case "rr": return 0x24;
+					//Right Ring Type
+					case "rightrings": return 0x24;
+					case "rightring": return 0x24;
+					case "rightr": return 0x24;
+					case "rrings": return 0x24;
+					case "rring": return 0x24;
+					case "rri": return 0x24;
+					case "rir": return 0x24;
+					case "rr": return 0x24;
 
-				//Mythirians
-				case "myth": return 0x25;
-				case "mythirian": return 0x25;
-				case "mythirians": return 0x25;
+					//Mythirians
+					case "myth": return 0x25;
+					case "mythirian": return 0x25;
+					case "mythirians": return 0x25;
 			}
 			return 0x00;
 		}
@@ -1409,22 +1409,23 @@ namespace DOL.GS
 		{
 			switch (realm)
 			{
-				case eRealm.None: return "None";
-				case eRealm.Albion: return "Albion";
-				case eRealm.Midgard: return "Midgard";
-				case eRealm.Hibernia: return "Hibernia";
-				default: return "";
+					case eRealm.None: return "None";
+					case eRealm.Albion: return "Albion";
+					case eRealm.Midgard: return "Midgard";
+					case eRealm.Hibernia: return "Hibernia";
+					case eRealm.Door: return "Door";
+					default: return "";
 			}
 		}
 		public static int EmblemOfRealm(eRealm realm)
 		{
 			switch (realm)
 			{
-				case eRealm.None: return 0;
-				case eRealm.Albion: return 464;
-				case eRealm.Midgard: return 465;
-				case eRealm.Hibernia: return 466;
-				default: return 0;
+					case eRealm.None: return 0;
+					case eRealm.Albion: return 464;
+					case eRealm.Midgard: return 465;
+					case eRealm.Hibernia: return 466;
+					default: return 0;
 			}
 		}
 
@@ -1432,25 +1433,25 @@ namespace DOL.GS
 		{
 			switch (property)
 			{
-				case eProperty.Strength: return "Strength";
-				case eProperty.Dexterity: return "Dexterity";
-				case eProperty.Constitution: return "Constitution";
-				case eProperty.Quickness: return "Quickness";
-				case eProperty.Intelligence: return "Intelligence";
-				case eProperty.Piety: return "Piety";
-				case eProperty.Empathy: return "Empathy";
-				case eProperty.Charisma: return "Charisma";
-                case eProperty.Resist_Body: return "Body Resist";
-				case eProperty.Resist_Cold: return "Cold Resist";
-				case eProperty.Resist_Crush: return "Crush Resist";
-				case eProperty.Resist_Energy: return "Energy Resist";
-				case eProperty.Resist_Heat: return "Heat Resist";
-				case eProperty.Resist_Matter: return "Matter Resist";
-				case eProperty.Resist_Slash: return "Slash Resist";
-				case eProperty.Resist_Spirit: return "Spirit Resist";
-				case eProperty.Resist_Thrust: return "Thrust Resist";
-				case eProperty.Resist_Natural: return "Essence Resist";
-				default: return "not implemented";
+					case eProperty.Strength: return "Strength";
+					case eProperty.Dexterity: return "Dexterity";
+					case eProperty.Constitution: return "Constitution";
+					case eProperty.Quickness: return "Quickness";
+					case eProperty.Intelligence: return "Intelligence";
+					case eProperty.Piety: return "Piety";
+					case eProperty.Empathy: return "Empathy";
+					case eProperty.Charisma: return "Charisma";
+					case eProperty.Resist_Body: return "Body Resist";
+					case eProperty.Resist_Cold: return "Cold Resist";
+					case eProperty.Resist_Crush: return "Crush Resist";
+					case eProperty.Resist_Energy: return "Energy Resist";
+					case eProperty.Resist_Heat: return "Heat Resist";
+					case eProperty.Resist_Matter: return "Matter Resist";
+					case eProperty.Resist_Slash: return "Slash Resist";
+					case eProperty.Resist_Spirit: return "Spirit Resist";
+					case eProperty.Resist_Thrust: return "Thrust Resist";
+					case eProperty.Resist_Natural: return "Essence Resist";
+					default: return "not implemented";
 			}
 		}
 
@@ -1458,18 +1459,18 @@ namespace DOL.GS
 		{
 			switch (damage)
 			{
-				case eDamageType.Body: return "Body";
-				case eDamageType.Cold: return "Cold";
-				case eDamageType.Crush: return "Crush";
-				case eDamageType.Energy: return "Energy";
-				case eDamageType.Falling: return "Falling";
-				case eDamageType.Heat: return "Heat";
-				case eDamageType.Matter: return "Matter";
-				case eDamageType.Natural: return "Natural";
-				case eDamageType.Slash: return "Slash";
-				case eDamageType.Spirit: return "Spirit";
-				case eDamageType.Thrust: return "Thrust";
-				default: return "unknown damagetype " + damage.ToString();
+					case eDamageType.Body: return "Body";
+					case eDamageType.Cold: return "Cold";
+					case eDamageType.Crush: return "Crush";
+					case eDamageType.Energy: return "Energy";
+					case eDamageType.Falling: return "Falling";
+					case eDamageType.Heat: return "Heat";
+					case eDamageType.Matter: return "Matter";
+					case eDamageType.Natural: return "Natural";
+					case eDamageType.Slash: return "Slash";
+					case eDamageType.Spirit: return "Spirit";
+					case eDamageType.Thrust: return "Thrust";
+					default: return "unknown damagetype " + damage.ToString();
 			}
 		}
 
@@ -1477,18 +1478,18 @@ namespace DOL.GS
 		{
 			switch ((int)(craftLevel / 100))
 			{
-                case 0: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Helper");
-                case 1: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.JuniorApprentice");
-                case 2: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Apprentice");
-                case 3: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Neophyte");
-                case 4: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Assistant");
-                case 5: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Junior");
-                case 6: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Journeyman");
-                case 7: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Senior");
-                case 8: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Master");
-                case 9: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Grandmaster");
-                case 10: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Legendary");
-                case 11: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.LegendaryGrandmaster");
+					case 0: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Helper");
+					case 1: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.JuniorApprentice");
+					case 2: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Apprentice");
+					case 3: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Neophyte");
+					case 4: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Assistant");
+					case 5: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Junior");
+					case 6: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Journeyman");
+					case 7: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Senior");
+					case 8: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Master");
+					case 9: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Grandmaster");
+					case 10: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Legendary");
+					case 11: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.LegendaryGrandmaster");
 			}
 			if (craftLevel > 1100)
 			{
@@ -1512,7 +1513,7 @@ namespace DOL.GS
 		{
 			switch ((eObjectType)item.Object_Type)
 			{
-				//Albion
+					//Albion
 				case eObjectType.CrushingWeapon:
 				case eObjectType.SlashingWeapon:
 				case eObjectType.ThrustWeapon:
@@ -1526,7 +1527,7 @@ namespace DOL.GS
 				case eObjectType.Bolt:
 					return new eRealm[] { eRealm.Albion };
 
-				//Midgard
+					//Midgard
 				case eObjectType.Sword:
 				case eObjectType.Hammer:
 				case eObjectType.Axe:
@@ -1537,7 +1538,7 @@ namespace DOL.GS
 				case eObjectType.HandToHand:
 					return new eRealm[] { eRealm.Midgard };
 
-				//Hibernia
+					//Hibernia
 				case eObjectType.Fired:
 				case eObjectType.RecurvedBow:
 				case eObjectType.Blades:
@@ -1550,7 +1551,7 @@ namespace DOL.GS
 				case eObjectType.Scale:
 					return new eRealm[] { eRealm.Hibernia };
 
-				//Special
+					//Special
 				case eObjectType.Studded:
 				case eObjectType.Chain:
 					return new eRealm[] { eRealm.Albion, eRealm.Midgard };
@@ -1558,10 +1559,10 @@ namespace DOL.GS
 				case eObjectType.Instrument:
 					return new eRealm[] { eRealm.Albion, eRealm.Hibernia };
 
-				//Common Armor
+					//Common Armor
 				case eObjectType.Cloth:
 				case eObjectType.Leather:
-				//Misc
+					//Misc
 				case eObjectType.GenericItem:
 				case eObjectType.GenericWeapon:
 				case eObjectType.GenericArmor:
@@ -1620,94 +1621,94 @@ namespace DOL.GS
 		{
 			switch (name)
 			{
-				case Specs.Slash: return 0x01;
-				case Specs.Thrust: return 0x02;
-				case Specs.Parry: return 0x08;
-				case Specs.Sword: return 0x0E;
-				case Specs.Hammer: return 0x10;
-				case Specs.Axe: return 0x11;
-				case Specs.Left_Axe: return 0x12;
-				case Specs.Stealth: return 0x13;
-				case Specs.Spear: return 0x1A;
-				case Specs.Mending: return 0x1D;
-				case Specs.Augmentation: return 0x1E;
-				case Specs.Crush: return 0x21;
-				case Specs.Pacification: return 0x22;
-				//				case Specs.Cave_Magic:      return 0x25; ?
-				case Specs.Darkness: return 0x26;
-				case Specs.Suppression: return 0x27;
-				case Specs.Runecarving: return 0x2A;
-				case Specs.Shields: return 0x2B;
-				case Specs.Flexible: return 0x2E;
-				case Specs.Staff: return 0x2F;
-				case Specs.Summoning: return 0x30;
-				case Specs.Stormcalling: return 0x32;
-				case Specs.Beastcraft: return 0x3E;
-				case Specs.Polearms: return 0x40;
-				case Specs.Two_Handed: return 0x41;
-				case Specs.Fire_Magic: return 0x42;
-				case Specs.Wind_Magic: return 0x43;
-				case Specs.Cold_Magic: return 0x44;
-				case Specs.Earth_Magic: return 0x45;
-				case Specs.Light: return 0x46;
-				case Specs.Matter_Magic: return 0x47;
-				case Specs.Body_Magic: return 0x48;
-				case Specs.Spirit_Magic: return 0x49;
-				case Specs.Mind_Magic: return 0x4A;
-				case Specs.Void: return 0x4B;
-				case Specs.Mana: return 0x4C;
-				case Specs.Dual_Wield: return 0x4D;
-				case Specs.CompositeBow: return 0x4E;
-				case Specs.Battlesongs: return 0x52;
-				case Specs.Enhancement: return 0x53;
-				case Specs.Enchantments: return 0x54;
-				case Specs.Rejuvenation: return 0x58;
-				case Specs.Smite: return 0x59;
-				case Specs.Longbow: return 0x5A;
-				case Specs.Crossbow: return 0x5B;
-				case Specs.Chants: return 0x61;
-				case Specs.Instruments: return 0x62;
-				case Specs.Blades: return 0x65;
-				case Specs.Blunt: return 0x66;
-				case Specs.Piercing: return 0x67;
-				case Specs.Large_Weapons: return 0x68;
-				case Specs.Mentalism: return 0x69;
-				case Specs.Regrowth: return 0x6A;
-				case Specs.Nurture: return 0x6B;
-				case Specs.Nature: return 0x6C;
-				case Specs.Music: return 0x6D;
-				case Specs.Celtic_Dual: return 0x6E;
-				case Specs.Celtic_Spear: return 0x70;
-				case Specs.RecurveBow: return 0x71;
-				case Specs.Valor: return 0x72;
-				case Specs.Pathfinding: return 0x74;
-				case Specs.Envenom: return 0x75;
-				case Specs.Critical_Strike: return 0x76;
-				case Specs.Deathsight: return 0x78;
-				case Specs.Painworking: return 0x79;
-				case Specs.Death_Servant: return 0x7A;
-				case Specs.Soulrending: return 0x7B;
-				case Specs.HandToHand: return 0x7C;
-				case Specs.Scythe: return 0x7D;
-				//				case Specs.Bone_Army:       return 0x7E; ?
-				case Specs.Arboreal_Path: return 0x7F;
-				case Specs.Creeping_Path: return 0x81;
-				case Specs.Verdant_Path: return 0x82;
-				case Specs.OdinsWill: return 0x85;
-				case Specs.SpectralForce: return 0x86; // Spectral Guard ?
-				case Specs.PhantasmalWail: return 0x87;
-				case Specs.EtherealShriek: return 0x88;
-				case Specs.ShadowMastery: return 0x89;
-				case Specs.VampiiricEmbrace: return 0x8A;
-				case Specs.Dementia: return 0x8B;
-				case Specs.Witchcraft: return 0x8C;
-				case Specs.Cursing: return 0x8D;
-				case Specs.Hexing: return 0x8E;
-				case Specs.Fist_Wraps: return 0x93;
-				case Specs.Mauler_Staff: return 0x94;
-                case Specs.SpectralGuard: return 0x95;
-				case Specs.Archery : return 0x9B;
-				default: return 0;
+					case Specs.Slash: return 0x01;
+					case Specs.Thrust: return 0x02;
+					case Specs.Parry: return 0x08;
+					case Specs.Sword: return 0x0E;
+					case Specs.Hammer: return 0x10;
+					case Specs.Axe: return 0x11;
+					case Specs.Left_Axe: return 0x12;
+					case Specs.Stealth: return 0x13;
+					case Specs.Spear: return 0x1A;
+					case Specs.Mending: return 0x1D;
+					case Specs.Augmentation: return 0x1E;
+					case Specs.Crush: return 0x21;
+					case Specs.Pacification: return 0x22;
+					//				case Specs.Cave_Magic:      return 0x25; ?
+					case Specs.Darkness: return 0x26;
+					case Specs.Suppression: return 0x27;
+					case Specs.Runecarving: return 0x2A;
+					case Specs.Shields: return 0x2B;
+					case Specs.Flexible: return 0x2E;
+					case Specs.Staff: return 0x2F;
+					case Specs.Summoning: return 0x30;
+					case Specs.Stormcalling: return 0x32;
+					case Specs.Beastcraft: return 0x3E;
+					case Specs.Polearms: return 0x40;
+					case Specs.Two_Handed: return 0x41;
+					case Specs.Fire_Magic: return 0x42;
+					case Specs.Wind_Magic: return 0x43;
+					case Specs.Cold_Magic: return 0x44;
+					case Specs.Earth_Magic: return 0x45;
+					case Specs.Light: return 0x46;
+					case Specs.Matter_Magic: return 0x47;
+					case Specs.Body_Magic: return 0x48;
+					case Specs.Spirit_Magic: return 0x49;
+					case Specs.Mind_Magic: return 0x4A;
+					case Specs.Void: return 0x4B;
+					case Specs.Mana: return 0x4C;
+					case Specs.Dual_Wield: return 0x4D;
+					case Specs.CompositeBow: return 0x4E;
+					case Specs.Battlesongs: return 0x52;
+					case Specs.Enhancement: return 0x53;
+					case Specs.Enchantments: return 0x54;
+					case Specs.Rejuvenation: return 0x58;
+					case Specs.Smite: return 0x59;
+					case Specs.Longbow: return 0x5A;
+					case Specs.Crossbow: return 0x5B;
+					case Specs.Chants: return 0x61;
+					case Specs.Instruments: return 0x62;
+					case Specs.Blades: return 0x65;
+					case Specs.Blunt: return 0x66;
+					case Specs.Piercing: return 0x67;
+					case Specs.Large_Weapons: return 0x68;
+					case Specs.Mentalism: return 0x69;
+					case Specs.Regrowth: return 0x6A;
+					case Specs.Nurture: return 0x6B;
+					case Specs.Nature: return 0x6C;
+					case Specs.Music: return 0x6D;
+					case Specs.Celtic_Dual: return 0x6E;
+					case Specs.Celtic_Spear: return 0x70;
+					case Specs.RecurveBow: return 0x71;
+					case Specs.Valor: return 0x72;
+					case Specs.Pathfinding: return 0x74;
+					case Specs.Envenom: return 0x75;
+					case Specs.Critical_Strike: return 0x76;
+					case Specs.Deathsight: return 0x78;
+					case Specs.Painworking: return 0x79;
+					case Specs.Death_Servant: return 0x7A;
+					case Specs.Soulrending: return 0x7B;
+					case Specs.HandToHand: return 0x7C;
+					case Specs.Scythe: return 0x7D;
+					//				case Specs.Bone_Army:       return 0x7E; ?
+					case Specs.Arboreal_Path: return 0x7F;
+					case Specs.Creeping_Path: return 0x81;
+					case Specs.Verdant_Path: return 0x82;
+					case Specs.OdinsWill: return 0x85;
+					case Specs.SpectralForce: return 0x86; // Spectral Guard ?
+					case Specs.PhantasmalWail: return 0x87;
+					case Specs.EtherealShriek: return 0x88;
+					case Specs.ShadowMastery: return 0x89;
+					case Specs.VampiiricEmbrace: return 0x8A;
+					case Specs.Dementia: return 0x8B;
+					case Specs.Witchcraft: return 0x8C;
+					case Specs.Cursing: return 0x8D;
+					case Specs.Hexing: return 0x8E;
+					case Specs.Fist_Wraps: return 0x93;
+					case Specs.Mauler_Staff: return 0x94;
+					case Specs.SpectralGuard: return 0x95;
+					case Specs.Archery : return 0x9B;
+					default: return 0;
 			}
 		}
 	}
