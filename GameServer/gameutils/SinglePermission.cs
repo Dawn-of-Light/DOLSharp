@@ -65,6 +65,17 @@ namespace DOL.GS
 			}
 			GameServer.Database.DeleteObject(obj);
 			return true;
-		}
+        }
+
+        public static bool removePermissionAccount(GamePlayer player, string command)
+        {
+            DataObject obj = GameServer.Database.SelectObject<DBSinglePermission>("Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.Client.Account.Name) + "'");
+            if (obj == null)
+            {
+                return false;
+            }
+            GameServer.Database.DeleteObject(obj);
+            return true;
+        }
 	}
 }

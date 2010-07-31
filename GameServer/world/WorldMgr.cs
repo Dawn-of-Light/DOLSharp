@@ -95,13 +95,13 @@ namespace DOL.GS
 		public const int OBJ_UPDATE_DISTANCE = 4096;
 
 		/// <summary>
-		/// This will store available teleport destinations as read from the 'teleport' table.  These are 
+		/// This will store available teleport destinations as read from the 'teleport' table.  These are
 		/// stored in a dictionary of dictionaries because the name of the teleport destination (the
 		/// 'TeleportID' field from the table) does not have to be unique across realms.  Duplicate
 		/// 'TeleportID' fields are permitted so long as the 'Realm' field is different for each.
 		/// </summary>
 		private static Dictionary<eRealm, Dictionary<string, Teleport>> m_teleportLocations;
-        private static object m_syncTeleport = new object();
+		private static object m_syncTeleport = new object();
 
 		// this is used to hold the player ids with timestamp of ld, that ld near an enemy keep structure, to allow grace period relog
 		public static Dictionary<string, DateTime> RvRLinkDeadPlayers = new Dictionary<string, DateTime>();
@@ -115,56 +115,56 @@ namespace DOL.GS
 		/// the player who is teleporting.  A teleport will be allowed so long as the 'Realm' field in
 		/// the 'teleport' table matches the 'Realm' field for the teleporter's record in the 'mob' table.
 		/// For example, a Lurikeen teleporter with a 'mob' table entry that has the Realm field set to 3
-		/// (Hibernia), will happily teleport an Albion player to Jordheim so long as the Jordheim record 
-		/// in the 'teleport' table is also tagged as Realm 3.  So, the Realm field in the 'teleport' 
-		/// table is not the realm of the destination, but the realm of the NPCs that are allowed to 
+		/// (Hibernia), will happily teleport an Albion player to Jordheim so long as the Jordheim record
+		/// in the 'teleport' table is also tagged as Realm 3.  So, the Realm field in the 'teleport'
+		/// table is not the realm of the destination, but the realm of the NPCs that are allowed to
 		/// teleport a player to that location.
 		/// </param>
-        /// <param name="teleportKey">Composite key into teleport dictionary.</param>
+		/// <param name="teleportKey">Composite key into teleport dictionary.</param>
 		/// <returns></returns>
 		public static Teleport GetTeleportLocation(eRealm realm, String teleportKey)
 		{
-            lock (m_syncTeleport)
-            {
-                return (m_teleportLocations.ContainsKey(realm)) ?
-                    (m_teleportLocations[realm].ContainsKey(teleportKey) ?
-                        m_teleportLocations[realm][teleportKey] :
-                        null) :
-                    null;
-            }
+			lock (m_syncTeleport)
+			{
+				return (m_teleportLocations.ContainsKey(realm)) ?
+					(m_teleportLocations[realm].ContainsKey(teleportKey) ?
+					 m_teleportLocations[realm][teleportKey] :
+					 null) :
+					null;
+			}
 		}
 
-        /// <summary>
-        /// Add a new teleport destination (used by /teleport add).
-        /// </summary>
-        /// <param name="teleport"></param>
-        /// <returns></returns>
-        public static bool AddTeleportLocation(Teleport teleport)
-        {
-            eRealm realm = (eRealm)teleport.Realm;
-            String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
+		/// <summary>
+		/// Add a new teleport destination (used by /teleport add).
+		/// </summary>
+		/// <param name="teleport"></param>
+		/// <returns></returns>
+		public static bool AddTeleportLocation(Teleport teleport)
+		{
+			eRealm realm = (eRealm)teleport.Realm;
+			String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
 
-            lock (m_syncTeleport)
-            {
-                Dictionary<String, Teleport> teleports = null;
-                if (m_teleportLocations.ContainsKey(realm))
-                {
-                    if (m_teleportLocations[realm].ContainsKey(teleportKey))
-                        return false;   // Double entry.
+			lock (m_syncTeleport)
+			{
+				Dictionary<String, Teleport> teleports = null;
+				if (m_teleportLocations.ContainsKey(realm))
+				{
+					if (m_teleportLocations[realm].ContainsKey(teleportKey))
+						return false;   // Double entry.
 
-                    teleports = m_teleportLocations[realm];
-                }
+					teleports = m_teleportLocations[realm];
+				}
 
-                if (teleports == null)
-                {
-                    teleports = new Dictionary<String, Teleport>();
-                    m_teleportLocations.Add(realm, teleports);
-                }
+				if (teleports == null)
+				{
+					teleports = new Dictionary<String, Teleport>();
+					m_teleportLocations.Add(realm, teleports);
+				}
 
-                teleports.Add(teleportKey, teleport);
-                return true;
-            }
-        }
+				teleports.Add(teleportKey, teleport);
+				return true;
+			}
+		}
 
 		/// <summary>
 		/// This hashtable holds all regions in the world
@@ -284,15 +284,15 @@ namespace DOL.GS
 		/// Zone height INI field
 		/// </summary>
 		private const string ENTRY_ZONE_HEIGHT = "height";
-        /// <summary>
-        /// Zone water level INI field
-        /// </summary>
-        private const string ENTRY_ZONE_WATER_LEVEL = "waterlevel";
-       
-        /// <summary>
-        /// Does this zone contain Lava
-        /// </summary>
-        private const string ENTRY_ZONE_LAVA = "IsLava";
+		/// <summary>
+		/// Zone water level INI field
+		/// </summary>
+		private const string ENTRY_ZONE_WATER_LEVEL = "waterlevel";
+		
+		/// <summary>
+		/// Does this zone contain Lava
+		/// </summary>
+		private const string ENTRY_ZONE_LAVA = "IsLava";
 
 		/// <summary>
 		/// Relocation threads for relocation of zones
@@ -310,7 +310,7 @@ namespace DOL.GS
 		/// <param name="regionsData">The loaded regions data</param>
 		public static bool EarlyInit(out RegionData[] regionsData)
 		{
-            
+			
 			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w1");
 
 			lock (m_regions.SyncRoot)
@@ -320,221 +320,221 @@ namespace DOL.GS
 
 			//If the files are missing this method
 			//creates the default values
-            CheckRegionAndZoneConfigs(); 
-            XMLConfigFile zoneCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.ZoneConfigFile)); ;
-            
-            XMLConfigFile regionCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.RegionConfigFile));
+			CheckRegionAndZoneConfigs();
+			XMLConfigFile zoneCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.ZoneConfigFile)); ;
+			
+			XMLConfigFile regionCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.RegionConfigFile));
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(string.Format("{0} blocks read from {1}", regionCfg.Children.Count, GameServer.Instance.Configuration.RegionConfigFile));
-                log.Debug(string.Format("{0} blocks read from {1}", zoneCfg.Children.Count, GameServer.Instance.Configuration.ZoneConfigFile));
-            }
+			if (log.IsDebugEnabled)
+			{
+				log.Debug(string.Format("{0} blocks read from {1}", regionCfg.Children.Count, GameServer.Instance.Configuration.RegionConfigFile));
+				log.Debug(string.Format("{0} blocks read from {1}", zoneCfg.Children.Count, GameServer.Instance.Configuration.ZoneConfigFile));
+			}
 
-            #region Instances
+			#region Instances
 
-            //Dinberg: We now need to save regionData, indexed by regionID, for instances.
-            //The information generated here is oddly ordered by number of mbos in the region,
-            //so I'm contriving to generate this list myself.
-            m_regionData = new Hashtable();
+			//Dinberg: We now need to save regionData, indexed by regionID, for instances.
+			//The information generated here is oddly ordered by number of mbos in the region,
+			//so I'm contriving to generate this list myself.
+			m_regionData = new Hashtable();
 
-            //We also will need to store zones, because we need at least one zone per region - hence
-            //we will create zones inside our instances or the player gets banned by anti-telehack scripts.
-            m_zonesData = new Dictionary<ushort, List<ZoneData>>();
+			//We also will need to store zones, because we need at least one zone per region - hence
+			//we will create zones inside our instances or the player gets banned by anti-telehack scripts.
+			m_zonesData = new Dictionary<ushort, List<ZoneData>>();
 
-            #endregion
+			#endregion
 
-            // Load available teleport locations.
+			// Load available teleport locations.
 
-            var objs = GameServer.Database.SelectAllObjects<Teleport>();
-            m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
-            int[] numTeleports = new int[3];
-            foreach (Teleport teleport in objs)
-            {
-                Dictionary<string, Teleport> teleportList;
-                if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
-                    teleportList = m_teleportLocations[(eRealm)teleport.Realm];
-                else
-                {
-                    teleportList = new Dictionary<string, Teleport>();
-                    m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
-                }
-                String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
-                if (teleportList.ContainsKey(teleportKey))
-                {
-                    log.Error("WorldMgr.EarlyInit teleporters - Cannot add " + teleportKey + " already exists");
-                    continue;
-                }
-                teleportList.Add(teleportKey, teleport);
-                if (teleport.Realm >= 1 && teleport.Realm <= 3)
-                    numTeleports[teleport.Realm - 1]++;
-            }
-            log.Info(String.Format("Loaded {0} Albion, {1} Midgard and {2} Hibernia teleport locations",
-                numTeleports[0], numTeleports[1], numTeleports[2]));
+			var objs = GameServer.Database.SelectAllObjects<Teleport>();
+			m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
+			int[] numTeleports = new int[3];
+			foreach (Teleport teleport in objs)
+			{
+				Dictionary<string, Teleport> teleportList;
+				if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
+					teleportList = m_teleportLocations[(eRealm)teleport.Realm];
+				else
+				{
+					teleportList = new Dictionary<string, Teleport>();
+					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
+				}
+				String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
+				if (teleportList.ContainsKey(teleportKey))
+				{
+					log.Error("WorldMgr.EarlyInit teleporters - Cannot add " + teleportKey + " already exists");
+					continue;
+				}
+				teleportList.Add(teleportKey, teleport);
+				if (teleport.Realm >= 1 && teleport.Realm <= 3)
+					numTeleports[teleport.Realm - 1]++;
+			}
+			log.Info(String.Format("Loaded {0} Albion, {1} Midgard and {2} Hibernia teleport locations",
+			                       numTeleports[0], numTeleports[1], numTeleports[2]));
 
-            objs = null;
+			objs = null;
 
-            // sort the regions by mob count
+			// sort the regions by mob count
 
-            log.Debug("loading mobs from DB...");
+			log.Debug("loading mobs from DB...");
 
-            var mobList = new List<Mob>();
+			var mobList = new List<Mob>();
 
-            if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
-            {
-                string[] astr = ServerProperties.Properties.DEBUG_LOAD_REGIONS.Split(';');
+			if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
+			{
+				string[] astr = ServerProperties.Properties.DEBUG_LOAD_REGIONS.Split(';');
 
-                foreach (string loadRegion in astr)
-                {
-                    mobList.AddRange(GameServer.Database.SelectObjects<Mob>("region = " + loadRegion));
-                }
-            }
-            else
-            {
-                mobList.AddRange(GameServer.Database.SelectAllObjects<Mob>());
-            }
+				foreach (string loadRegion in astr)
+				{
+					mobList.AddRange(GameServer.Database.SelectObjects<Mob>("region = " + loadRegion));
+				}
+			}
+			else
+			{
+				mobList.AddRange(GameServer.Database.SelectAllObjects<Mob>());
+			}
 
-            var mobsByRegionId = new Dictionary<ushort, List<Mob>>(512);
-            foreach (Mob mob in mobList)
-            {
-                List<Mob> list;
+			var mobsByRegionId = new Dictionary<ushort, List<Mob>>(512);
+			foreach (Mob mob in mobList)
+			{
+				List<Mob> list;
 
-                if (!mobsByRegionId.TryGetValue(mob.Region, out list))
-                {
-                    list = new List<Mob>(1024);
-                    mobsByRegionId.Add(mob.Region, list);
-                }
+				if (!mobsByRegionId.TryGetValue(mob.Region, out list))
+				{
+					list = new List<Mob>(1024);
+					mobsByRegionId.Add(mob.Region, list);
+				}
 
-                list.Add(mob);
-            }
+				list.Add(mob);
+			}
 
-            var regions = new List<RegionData>(512);
-            foreach (var entry in regionCfg.Children)
-            {
-                string name = entry.Key;
-                ConfigElement config = entry.Value;
+			var regions = new List<RegionData>(512);
+			foreach (var entry in regionCfg.Children)
+			{
+				string name = entry.Key;
+				ConfigElement config = entry.Value;
 
-                RegionData data = new RegionData();
-                data.Id = (ushort)config[ENTRY_REG_ID].GetInt();
-                data.Name = name;
-                data.Description = config[ENTRY_REG_DESC].GetString();
-                data.Ip = config[ENTRY_REG_IP].GetString();
-                data.Port = (ushort)config[ENTRY_REG_PORT].GetInt();
-                data.WaterLevel = config[ENTRY_REG_WATER_LEVEL].GetInt();
-                data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
-                data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
-                data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
+				RegionData data = new RegionData();
+				data.Id = (ushort)config[ENTRY_REG_ID].GetInt();
+				data.Name = name;
+				data.Description = config[ENTRY_REG_DESC].GetString();
+				data.Ip = config[ENTRY_REG_IP].GetString();
+				data.Port = (ushort)config[ENTRY_REG_PORT].GetInt();
+				data.WaterLevel = config[ENTRY_REG_WATER_LEVEL].GetInt();
+				data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
+				data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
+				data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
 
-                List<Mob> mobs;
+				List<Mob> mobs;
 
-                if (!mobsByRegionId.TryGetValue(data.Id, out mobs))
-                {
-                    data.Mobs = new Mob[0];
-                }
-                else
-                {
-                    data.Mobs = mobs.ToArray();
-                }
+				if (!mobsByRegionId.TryGetValue(data.Id, out mobs))
+				{
+					data.Mobs = new Mob[0];
+				}
+				else
+				{
+					data.Mobs = mobs.ToArray();
+				}
 
-                regions.Add(data);
+				regions.Add(data);
 
-                //Dinberg - save the data by ID.
-                if (m_regionData.ContainsKey(data.Id))
-                {
-                    log.Error("Duplicate key in region table - " + data.Id + ", EarlyInit in WorldMgr failed.");
-                }
-                else
-                {
-                    m_regionData.Add(data.Id, data);
-                }
-            }
+				//Dinberg - save the data by ID.
+				if (m_regionData.ContainsKey(data.Id))
+				{
+					log.Error("Duplicate key in region table - " + data.Id + ", EarlyInit in WorldMgr failed.");
+				}
+				else
+				{
+					m_regionData.Add(data.Id, data);
+				}
+			}
 
-            regions.Sort();
+			regions.Sort();
 
-            log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w2");
+			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w2");
 
-            int cpuCount = GameServer.Instance.Configuration.CpuCount;
-            if (cpuCount < 1)
-                cpuCount = 1;
+			int cpuCount = GameServer.Instance.Configuration.CpuCount;
+			if (cpuCount < 1)
+				cpuCount = 1;
 
-            GameTimer.TimeManager[] timers = new GameTimer.TimeManager[cpuCount];
-            for (int i = 0; i < cpuCount; i++)
-            {
-                timers[i] = new GameTimer.TimeManager("RegionTime" + (i + 1).ToString());
-            }
+			GameTimer.TimeManager[] timers = new GameTimer.TimeManager[cpuCount];
+			for (int i = 0; i < cpuCount; i++)
+			{
+				timers[i] = new GameTimer.TimeManager("RegionTime" + (i + 1).ToString());
+			}
 
-            m_regionTimeManagers = timers;
+			m_regionTimeManagers = timers;
 
-            for (int i = 0; i < regions.Count; i++)
-            {
-                RegionData region = (RegionData)regions[i];
-                RegisterRegion(timers[FastMath.Abs(i % (cpuCount * 2) - cpuCount) % cpuCount], region);
-            }
+			for (int i = 0; i < regions.Count; i++)
+			{
+				RegionData region = (RegionData)regions[i];
+				RegisterRegion(timers[FastMath.Abs(i % (cpuCount * 2) - cpuCount) % cpuCount], region);
+			}
 
-            log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w3");
+			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w3");
 
-            //stephenxpimentel - changed to SQL.
-            if (GameServer.Database.GetObjectCount<Zones>() < zoneCfg.Children.Count)
-            {
-               foreach (var entry in zoneCfg.Children)
-               {
-                   //string name = (string) entry.Key;
-                   ConfigElement config = entry.Value;
+			//stephenxpimentel - changed to SQL.
+			if (GameServer.Database.GetObjectCount<Zones>() < zoneCfg.Children.Count)
+			{
+				foreach (var entry in zoneCfg.Children)
+				{
+					//string name = (string) entry.Key;
+					ConfigElement config = entry.Value;
 
-                   Zones checkZone = GameServer.Database.FindObjectByKey<Zones>(config[ENTRY_ZONE_ZONEID].GetInt());
-                   if (checkZone == null)
-                   {
-                       Zones dbZone = new Zones();
-                       dbZone.Height = config[ENTRY_ZONE_HEIGHT].GetInt(0);
-                       dbZone.Width = config[ENTRY_ZONE_WIDTH].GetInt(0);
-                       dbZone.OffsetY = config[ENTRY_ZONE_OFFY].GetInt(0);
-                       dbZone.OffsetX = config[ENTRY_ZONE_OFFX].GetInt(0);
-                       dbZone.Name = config[ENTRY_ZONE_DESC].GetString("");
-                       dbZone.RegionID = (ushort)config[ENTRY_ZONE_REGIONID].GetInt(0);
-                       dbZone.ZoneID = config[ENTRY_ZONE_ZONEID].GetInt(0);
-                       dbZone.WaterLevel = config[ENTRY_ZONE_WATER_LEVEL].GetInt(0);
-					   dbZone.DivingFlag = 0;
+					Zones checkZone = GameServer.Database.FindObjectByKey<Zones>(config[ENTRY_ZONE_ZONEID].GetInt());
+					if (checkZone == null)
+					{
+						Zones dbZone = new Zones();
+						dbZone.Height = config[ENTRY_ZONE_HEIGHT].GetInt(0);
+						dbZone.Width = config[ENTRY_ZONE_WIDTH].GetInt(0);
+						dbZone.OffsetY = config[ENTRY_ZONE_OFFY].GetInt(0);
+						dbZone.OffsetX = config[ENTRY_ZONE_OFFX].GetInt(0);
+						dbZone.Name = config[ENTRY_ZONE_DESC].GetString("");
+						dbZone.RegionID = (ushort)config[ENTRY_ZONE_REGIONID].GetInt(0);
+						dbZone.ZoneID = config[ENTRY_ZONE_ZONEID].GetInt(0);
+						dbZone.WaterLevel = config[ENTRY_ZONE_WATER_LEVEL].GetInt(0);
+						dbZone.DivingFlag = 0;
 
-                       if (config[ENTRY_ZONE_LAVA].GetInt(0) != 0)
-                       {
-                           dbZone.IsLava = true;
-                       }
-                       else
-                       {
-                           dbZone.IsLava = false;
-                       }
+						if (config[ENTRY_ZONE_LAVA].GetInt(0) != 0)
+						{
+							dbZone.IsLava = true;
+						}
+						else
+						{
+							dbZone.IsLava = false;
+						}
 
-                       log.Debug(string.Format("Zone {0} was not found in the database. Added!", dbZone.ZoneID));
-                       GameServer.Database.AddObject(dbZone);
-                   }
-               }
-            }
+						log.Debug(string.Format("Zone {0} was not found in the database. Added!", dbZone.ZoneID));
+						GameServer.Database.AddObject(dbZone);
+					}
+				}
+			}
 
 			
 
-            foreach (Zones dbZone in GameServer.Database.SelectAllObjects<Zones>())
-            {
-                ZoneData zoneData = new ZoneData();
-                zoneData.Height = (byte)dbZone.Height;
-                zoneData.Width = (byte)dbZone.Width;
-                zoneData.OffY = (byte)dbZone.OffsetY;
-                zoneData.OffX = (byte)dbZone.OffsetX;
-                zoneData.Description = dbZone.Name;
-                zoneData.RegionID = dbZone.RegionID;
-                zoneData.ZoneID = (ushort)dbZone.ZoneID;
-                zoneData.WaterLevel = dbZone.WaterLevel;
+			foreach (Zones dbZone in GameServer.Database.SelectAllObjects<Zones>())
+			{
+				ZoneData zoneData = new ZoneData();
+				zoneData.Height = (byte)dbZone.Height;
+				zoneData.Width = (byte)dbZone.Width;
+				zoneData.OffY = (byte)dbZone.OffsetY;
+				zoneData.OffX = (byte)dbZone.OffsetX;
+				zoneData.Description = dbZone.Name;
+				zoneData.RegionID = dbZone.RegionID;
+				zoneData.ZoneID = (ushort)dbZone.ZoneID;
+				zoneData.WaterLevel = dbZone.WaterLevel;
 				zoneData.DivingFlag = dbZone.DivingFlag;
-                zoneData.IsLava = dbZone.IsLava;
-                RegisterZone(zoneData, zoneData.ZoneID, zoneData.RegionID, zoneData.Description, 
-                    dbZone.Experience, dbZone.Realmpoints, dbZone.Bountypoints, dbZone.Coin);
+				zoneData.IsLava = dbZone.IsLava;
+				RegisterZone(zoneData, zoneData.ZoneID, zoneData.RegionID, zoneData.Description,
+				             dbZone.Experience, dbZone.Realmpoints, dbZone.Bountypoints, dbZone.Coin);
 
-                //Save the zonedata.
-                if (!m_zonesData.ContainsKey(zoneData.RegionID))
-                    m_zonesData.Add(zoneData.RegionID, new List<ZoneData>());
+				//Save the zonedata.
+				if (!m_zonesData.ContainsKey(zoneData.RegionID))
+					m_zonesData.Add(zoneData.RegionID, new List<ZoneData>());
 
-                m_zonesData[zoneData.RegionID].Add(zoneData);
+				m_zonesData[zoneData.RegionID].Add(zoneData);
 
-            }
+			}
 
 			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - w4");
 
@@ -623,7 +623,7 @@ namespace DOL.GS
 					{
 						// check ping timeout if we are in charscreen or in playing state
 						if (client.ClientState == GameClient.eClientState.CharScreen ||
-							client.ClientState == GameClient.eClientState.Playing)
+						    client.ClientState == GameClient.eClientState.Playing)
 						{
 							if (client.PingTime + PING_TIMEOUT * 1000 * 1000 * 10 < DateTime.Now.Ticks)
 							{
@@ -1058,8 +1058,8 @@ namespace DOL.GS
 				while (iter.MoveNext())
 				{
 					Region reg = (Region)iter.Value;
-                    //Dinberg - we want to use the skinID, not the ID, for regions like this.
-                    regs[i].id = reg.ID; // reg.Skin;// reg.ID; //Dinberg - changed it back.
+					//Dinberg - we want to use the skinID, not the ID, for regions like this.
+					regs[i].id = reg.ID; // reg.Skin;// reg.ID; //Dinberg - changed it back.
 					regs[i].ip = ip;
 					regs[i].toPort = port;
 					regs[i].name = reg.Name;
@@ -1085,18 +1085,18 @@ namespace DOL.GS
 		/// <summary>
 		/// Registers a Zone into a Region
 		/// </summary>
-        public static void RegisterZone(ZoneData zoneData, ushort zoneID, ushort regionID, string zoneName, int xpBonus, int rpBonus, int bpBonus, int coinBonus)
-        {
-            Region region = GetRegion(regionID);
-            if (region == null)
-            {
+		public static void RegisterZone(ZoneData zoneData, ushort zoneID, ushort regionID, string zoneName, int xpBonus, int rpBonus, int bpBonus, int coinBonus)
+		{
+			Region region = GetRegion(regionID);
+			if (region == null)
+			{
 				if (log.IsWarnEnabled)
 				{
 					log.Warn("Could not find Region " + regionID + " for Zone " + zoneData.Description);
 				}
-                return;
-            }
-            
+				return;
+			}
+			
 			// Making an assumption that a zone waterlevel of 0 means it is not set and we should use the regions waterlevel - Tolakram
 			if (zoneData.WaterLevel == 0)
 			{
@@ -1109,28 +1109,28 @@ namespace DOL.GS
 				isDivingEnabled = true;
 			else if (zoneData.DivingFlag == 2)
 				isDivingEnabled = false;
-            
-            Zone zone = new Zone(region, 
-								 zoneID, 
-								 zoneName, 
-								 zoneData.OffX * 8192, 
-								 zoneData.OffY * 8192, 
-								 zoneData.Width * 8192, 
-								 zoneData.Height * 8192, 
-								 zoneData.ZoneID, 
-								 isDivingEnabled,
-								 zoneData.WaterLevel, 
-								 zoneData.IsLava, 
-				                 xpBonus, 
-								 rpBonus, 
-								 bpBonus, 
-								 coinBonus);
+			
+			Zone zone = new Zone(region,
+			                     zoneID,
+			                     zoneName,
+			                     zoneData.OffX * 8192,
+			                     zoneData.OffY * 8192,
+			                     zoneData.Width * 8192,
+			                     zoneData.Height * 8192,
+			                     zoneData.ZoneID,
+			                     isDivingEnabled,
+			                     zoneData.WaterLevel,
+			                     zoneData.IsLava,
+			                     xpBonus,
+			                     rpBonus,
+			                     bpBonus,
+			                     coinBonus);
 
-            //Dinberg:Instances
-            //ZoneID will always be constant as last parameter, because ZoneSkinID will effectively be a bluff, to remember
-            //the original region that spawned this one!
+			//Dinberg:Instances
+			//ZoneID will always be constant as last parameter, because ZoneSkinID will effectively be a bluff, to remember
+			//the original region that spawned this one!
 
-            /*reg,
+			/*reg,
                     zoneID,
                     desc,
                     offx * 8192,
@@ -1138,17 +1138,17 @@ namespace DOL.GS
                     width * 8192,
                     height * 8192);*/
 
-            lock (region.Zones.SyncRoot)
-            {
-                region.Zones.Add(zone);
-            }
-            lock (m_zones.SyncRoot)
-            {
-                m_zones.Add(zoneID, zone);
-            }
+			lock (region.Zones.SyncRoot)
+			{
+				region.Zones.Add(zone);
+			}
+			lock (m_zones.SyncRoot)
+			{
+				m_zones.Add(zoneID, zone);
+			}
 
-            log.Info("Added a zone, " + zoneData.Description + ", to region " + region.Name);
-        }
+			log.Info("Added a zone, " + zoneData.Description + ", to region " + region.Name);
+		}
 
 		/// <summary>
 		/// Starts all RegionMgrs inside the Regions
@@ -1200,7 +1200,13 @@ namespace DOL.GS
 		/// <returns>the zone object or null</returns>
 		public static Zone GetZone(ushort zoneID)
 		{
-			return (Zone)m_zones[zoneID];
+			if (! m_zones.Contains(zoneID))
+			{
+				log.Error("Trying to access inexistent ZoneID "+ zoneID);
+				return null;
+			}
+			else
+				return (Zone)m_zones[zoneID];
 		}
 
 
@@ -1215,11 +1221,11 @@ namespace DOL.GS
 			{
 				for (int i = 0; i < m_clients.Length; i++)
 					if (m_clients[i] == null)
-					{
-						m_clients[i] = obj;
-						obj.SessionID = i + 1;
-						return i + 1;
-					}
+				{
+					m_clients[i] = obj;
+					obj.SessionID = i + 1;
+					return i + 1;
+				}
 			}
 			return -1;
 		}
@@ -1247,13 +1253,13 @@ namespace DOL.GS
 		}
 		
 		/// <summary>
-        /// Searches for all GameStaticItem from a specific region
+		/// Searches for all GameStaticItem from a specific region
 		/// </summary>
 		/// <param name="regionID">The region to search</param>
 		/// <returns>All NPCs with the specified parameters</returns>
-        public static GameStaticItem[] GetStaticItemFromRegion(ushort regionID)
+		public static GameStaticItem[] GetStaticItemFromRegion(ushort regionID)
 		{
-            return (GameStaticItem[])GetobjectsFromRegion(regionID, typeof(GameStaticItem));
+			return (GameStaticItem[])GetobjectsFromRegion(regionID, typeof(GameStaticItem));
 		}
 
 		/// <summary>
@@ -1280,26 +1286,26 @@ namespace DOL.GS
 			return (GameObject[])returnObjs.ToArray(objectType);
 		}
 
-        //Added by Dinberg, i want to know if we should so freely enumerate reg.Objects?
-        /// <summary>
-        /// Returns the npcs in a given region
-        /// </summary>
-        /// <returns></returns>
-        public static GameNPC[] GetNPCsFromRegion(ushort regionID)
-        {
-            Region reg = (Region)m_regions[regionID];
-            if (reg == null)
-                return new GameNPC[0];
-            GameObject[] objs = reg.Objects;
-            ArrayList returnObjs = new ArrayList();
-            for (int i = 0; i < objs.Length; i++)
-            {
-                    GameNPC obj = objs[i] as GameNPC;
-                    if (obj != null)
-                        returnObjs.Add(obj);
-            }
-            return (GameNPC[])returnObjs.ToArray(typeof(GameNPC));
-        }
+		//Added by Dinberg, i want to know if we should so freely enumerate reg.Objects?
+		/// <summary>
+		/// Returns the npcs in a given region
+		/// </summary>
+		/// <returns></returns>
+		public static GameNPC[] GetNPCsFromRegion(ushort regionID)
+		{
+			Region reg = (Region)m_regions[regionID];
+			if (reg == null)
+				return new GameNPC[0];
+			GameObject[] objs = reg.Objects;
+			ArrayList returnObjs = new ArrayList();
+			for (int i = 0; i < objs.Length; i++)
+			{
+				GameNPC obj = objs[i] as GameNPC;
+				if (obj != null)
+					returnObjs.Add(obj);
+			}
+			return (GameNPC[])returnObjs.ToArray(typeof(GameNPC));
+		}
 
 		/// <summary>
 		/// Searches for all objects with the given name and realm in ALL regions!
@@ -1473,111 +1479,111 @@ namespace DOL.GS
 			return;
 		}
 
-        //Various functions to get a list of players/mobs/items
-        #region getdistance
-        /// <summary>
-        /// Get's the distance of two GameObjects
-        /// </summary>
-        /// <param name="obj1">Object1</param>
-        /// <param name="obj2">Object2</param>
-        /// <returns>The distance in units or -1 if they are not the same Region</returns>
-        [Obsolete( "Use Point3D.GetDistance" )]
-        public static int GetDistance( GameObject obj1, GameObject obj2 )
-        {
-            if ( obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion )
-                return -1;
-            return GetDistance( obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z );
-        }
+		//Various functions to get a list of players/mobs/items
+		#region getdistance
+		/// <summary>
+		/// Get's the distance of two GameObjects
+		/// </summary>
+		/// <param name="obj1">Object1</param>
+		/// <param name="obj2">Object2</param>
+		/// <returns>The distance in units or -1 if they are not the same Region</returns>
+		[Obsolete( "Use Point3D.GetDistance" )]
+		public static int GetDistance( GameObject obj1, GameObject obj2 )
+		{
+			if ( obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion )
+				return -1;
+			return GetDistance( obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z );
+		}
 
-        /// <summary>
-        /// Get's the distance of two GameObjects
-        /// </summary>
-        /// <param name="obj1">Object1</param>
-        /// <param name="obj2">Object2</param>
-        /// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
-        /// <returns>The distance in units or -1 if they are not the same Region</returns>
-        [Obsolete( "Use Point3D.GetDistance" )]
-        public static int GetDistance( GameObject obj1, GameObject obj2, double zfactor )
-        {
-            if ( obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion )
-                return -1;
-            return GetDistance( obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z, zfactor );
-        }
+		/// <summary>
+		/// Get's the distance of two GameObjects
+		/// </summary>
+		/// <param name="obj1">Object1</param>
+		/// <param name="obj2">Object2</param>
+		/// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
+		/// <returns>The distance in units or -1 if they are not the same Region</returns>
+		[Obsolete( "Use Point3D.GetDistance" )]
+		public static int GetDistance( GameObject obj1, GameObject obj2, double zfactor )
+		{
+			if ( obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion )
+				return -1;
+			return GetDistance( obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z, zfactor );
+		}
 
-        /// <summary>
-        /// Gets the distance of two arbitary points in space
-        /// </summary>
-        /// <param name="x1">X of Point1</param>
-        /// <param name="y1">Y of Point1</param>
-        /// <param name="z1">Z of Point1</param>
-        /// <param name="x2">X of Point2</param>
-        /// <param name="y2">Y of Point2</param>
-        /// <param name="z2">Z of Point2</param>
-        /// <returns>The distance</returns>
-        [Obsolete( "Use Point3D.GetDistance" )]
-        public static int GetDistance( int x1, int y1, int z1, int x2, int y2, int z2 )
-        {
-            long xdiff = (long)x1 - x2;
-            long ydiff = (long)y1 - y2;
+		/// <summary>
+		/// Gets the distance of two arbitary points in space
+		/// </summary>
+		/// <param name="x1">X of Point1</param>
+		/// <param name="y1">Y of Point1</param>
+		/// <param name="z1">Z of Point1</param>
+		/// <param name="x2">X of Point2</param>
+		/// <param name="y2">Y of Point2</param>
+		/// <param name="z2">Z of Point2</param>
+		/// <returns>The distance</returns>
+		[Obsolete( "Use Point3D.GetDistance" )]
+		public static int GetDistance( int x1, int y1, int z1, int x2, int y2, int z2 )
+		{
+			long xdiff = (long)x1 - x2;
+			long ydiff = (long)y1 - y2;
 
-            long zdiff = (long)z1 - z2;
-            return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff + zdiff * zdiff );
-        }
+			long zdiff = (long)z1 - z2;
+			return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff + zdiff * zdiff );
+		}
 
-        /// <summary>
-        /// Gets the distance of two arbitary points in space
-        /// </summary>
-        /// <param name="x1">X of Point1</param>
-        /// <param name="y1">Y of Point1</param>
-        /// <param name="z1">Z of Point1</param>
-        /// <param name="x2">X of Point2</param>
-        /// <param name="y2">Y of Point2</param>
-        /// <param name="z2">Z of Point2</param>
-        /// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
-        /// <returns>The distance</returns>
-        [Obsolete( "Use Point3D.GetDistance" )]
-        public static int GetDistance( int x1, int y1, int z1, int x2, int y2, int z2, double zfactor )
-        {
-            long xdiff = (long)x1 - x2;
-            long ydiff = (long)y1 - y2;
+		/// <summary>
+		/// Gets the distance of two arbitary points in space
+		/// </summary>
+		/// <param name="x1">X of Point1</param>
+		/// <param name="y1">Y of Point1</param>
+		/// <param name="z1">Z of Point1</param>
+		/// <param name="x2">X of Point2</param>
+		/// <param name="y2">Y of Point2</param>
+		/// <param name="z2">Z of Point2</param>
+		/// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
+		/// <returns>The distance</returns>
+		[Obsolete( "Use Point3D.GetDistance" )]
+		public static int GetDistance( int x1, int y1, int z1, int x2, int y2, int z2, double zfactor )
+		{
+			long xdiff = (long)x1 - x2;
+			long ydiff = (long)y1 - y2;
 
-            long zdiff = (long)( ( z1 - z2 ) * zfactor );
-            return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff + zdiff * zdiff );
-        }
+			long zdiff = (long)( ( z1 - z2 ) * zfactor );
+			return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff + zdiff * zdiff );
+		}
 
-        /// <summary>
-        /// Gets the distance of an Object to an arbitary point
-        /// </summary>
-        /// <param name="obj">GameObject used as Point1</param>
-        /// <param name="x">X of Point2</param>
-        /// <param name="y">Y of Point2</param>
-        /// <param name="z">Z of Point2</param>
-        /// <returns>The distance</returns>
-        [Obsolete( "Use Point3D.GetDistance" )]
-        public static int GetDistance( GameObject obj, int x, int y, int z )
-        {
-            return GetDistance( obj.X, obj.Y, obj.Z, x, y, z );
-        }
-        #endregion get distance
+		/// <summary>
+		/// Gets the distance of an Object to an arbitary point
+		/// </summary>
+		/// <param name="obj">GameObject used as Point1</param>
+		/// <param name="x">X of Point2</param>
+		/// <param name="y">Y of Point2</param>
+		/// <param name="z">Z of Point2</param>
+		/// <returns>The distance</returns>
+		[Obsolete( "Use Point3D.GetDistance" )]
+		public static int GetDistance( GameObject obj, int x, int y, int z )
+		{
+			return GetDistance( obj.X, obj.Y, obj.Z, x, y, z );
+		}
+		#endregion get distance
 
-        #region check distance
-        [Obsolete( "Use Point3D.IsWithinRadius" )]
+		#region check distance
+		[Obsolete( "Use Point3D.IsWithinRadius" )]
 		public static bool CheckDistance(int x1, int y1, int z1, int x2, int y2, int z2, int radius)
 		{
 			return CheckSquareDistance(x1, y1, z1, x2, y2, z2, radius * radius);
 		}
-        [Obsolete( "Use Point3D.IsWithinRadius" )]
-        public static bool CheckDistance( IPoint3D obj, IPoint3D obj2, int radius )
+		[Obsolete( "Use Point3D.IsWithinRadius" )]
+		public static bool CheckDistance( IPoint3D obj, IPoint3D obj2, int radius )
 		{
 			return CheckDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, radius);
 		}
-        [Obsolete( "Use Point3D.IsWithinRadius" )]
-        public static bool CheckDistance( GameObject obj, int x2, int y2, int z2, int radius )
+		[Obsolete( "Use Point3D.IsWithinRadius" )]
+		public static bool CheckDistance( GameObject obj, int x2, int y2, int z2, int radius )
 		{
 			return CheckDistance(obj.X, obj.Y, obj.Z, x2, y2, z2, radius);
 		}
-        [Obsolete( "Use Point3D.IsWithinRadius" )]
-        public static bool CheckDistance( GameObject obj, GameObject obj2, int radius )
+		[Obsolete( "Use Point3D.IsWithinRadius" )]
+		public static bool CheckDistance( GameObject obj, GameObject obj2, int radius )
 		{
 			if (obj == null || obj2 == null)
 				return false;
@@ -1587,26 +1593,26 @@ namespace DOL.GS
 		}
 		#endregion
 		#region check square distance
-        [Obsolete( "Use Point3D.IsWithinRadius" )]
-        private static bool CheckSquareDistance( int x1, int y1, int z1, int x2, int y2, int z2, int squareRadius )
+		[Obsolete( "Use Point3D.IsWithinRadius" )]
+		private static bool CheckSquareDistance( int x1, int y1, int z1, int x2, int y2, int z2, int squareRadius )
 		{
 			long xdiff = (long)x1 - x2;
 			long ydiff = (long)y1 - y2;
 			long zdiff = (long)z1 - z2;
 			return (xdiff * xdiff + ydiff * ydiff + zdiff * zdiff <= squareRadius);
 		}
-        [Obsolete( "Use Point3D.IsWithinRadius" )]
-        private static bool CheckSquareDistance( IPoint3D obj, IPoint3D obj2, int squareRadius )
+		[Obsolete( "Use Point3D.IsWithinRadius" )]
+		private static bool CheckSquareDistance( IPoint3D obj, IPoint3D obj2, int squareRadius )
 		{
 			return CheckSquareDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, squareRadius);
 		}
-        [Obsolete( "Use Point3D.IsWithinRadius" )]
-        private static bool CheckSquareDistance( GameObject obj, int x2, int y2, int z2, int squareRadius )
+		[Obsolete( "Use Point3D.IsWithinRadius" )]
+		private static bool CheckSquareDistance( GameObject obj, int x2, int y2, int z2, int squareRadius )
 		{
 			return CheckSquareDistance(obj.X, obj.Y, obj.Z, x2, y2, z2, squareRadius);
 		}
-        [Obsolete( "Use Point3D.IsWithinRadius" )]
-        private static bool CheckSquareDistance( GameObject obj, GameObject obj2, int squareRadius )
+		[Obsolete( "Use Point3D.IsWithinRadius" )]
+		private static bool CheckSquareDistance( GameObject obj, GameObject obj2, int squareRadius )
 		{
 			if (obj.CurrentRegion != obj2.CurrentRegion)
 				return false;
@@ -1629,9 +1635,9 @@ namespace DOL.GS
 					if (client != null)
 					{
 						if (client.IsPlaying
-							&& client.Player != null
-							&& client.Player.ObjectState == GameObject.eObjectState.Active
-							&& client.Player.Realm == realm)
+						    && client.Player != null
+						    && client.Player.ObjectState == GameObject.eObjectState.Active
+						    && client.Player.Realm == realm)
 							count++;
 					}
 				}
@@ -1655,9 +1661,9 @@ namespace DOL.GS
 					if (client != null)
 					{
 						if (client.IsPlaying
-							&& client.Player != null
-							&& client.Player.ObjectState == GameObject.eObjectState.Active
-							&& client.Player.Realm == realm)
+						    && client.Player != null
+						    && client.Player.ObjectState == GameObject.eObjectState.Active
+						    && client.Player.Realm == realm)
 							targetClients.Add(client);
 					}
 				}
@@ -1681,9 +1687,9 @@ namespace DOL.GS
 					if (client != null)
 					{
 						if (client.IsPlaying
-							&& client.Player != null
-							&& client.Player.ObjectState == GameObject.eObjectState.Active
-							&& client.Player.CurrentRegionID == regionID)
+						    && client.Player != null
+						    && client.Player.ObjectState == GameObject.eObjectState.Active
+						    && client.Player.CurrentRegionID == regionID)
 							count++;
 					}
 				}
@@ -1707,10 +1713,10 @@ namespace DOL.GS
 					if (client != null)
 					{
 						if (client.IsPlaying
-							&& client.Player != null
-							&& client.Player.ObjectState == GameObject.eObjectState.Active
-							&& client.Player.CurrentRegionID == regionID
-							&& client.Player.Realm == realm)
+						    && client.Player != null
+						    && client.Player.ObjectState == GameObject.eObjectState.Active
+						    && client.Player.CurrentRegionID == regionID
+						    && client.Player.Realm == realm)
 							count++;
 					}
 				}
@@ -1734,9 +1740,9 @@ namespace DOL.GS
 					if (client != null)
 					{
 						if (client.IsPlaying
-							&& client.Player != null
-							&& client.Player.ObjectState == GameObject.eObjectState.Active
-							&& client.Player.CurrentRegionID == regionID)
+						    && client.Player != null
+						    && client.Player.ObjectState == GameObject.eObjectState.Active
+						    && client.Player.CurrentRegionID == regionID)
 							targetClients.Add(client);
 					}
 				}
@@ -1745,25 +1751,25 @@ namespace DOL.GS
 			return targetClients;
 		}
 
-        /// <summary>
-        /// Find a GameClient by the Player's ID
-        /// Case-insensitive, make sure you use returned Player.Name instead of what player typed.
-        /// </summary>
-        /// <param name="playerID">ID to search</param>
-        /// <param name="exactMatch">true if AccountName match exactly</param>
-        /// <param name="activeRequired"></param>
-        /// <returns>The found GameClient or null</returns>
-        public static GameClient GetClientByPlayerID(string playerID, bool exactMatch, bool activeRequired)
-        {
-            foreach (GameClient client in WorldMgr.GetAllPlayingClients())
-            {
-                if (client.Player.InternalID == playerID)
-                    return client;
-            }
-            return null;
-        }
-        
-        /// <summary>
+		/// <summary>
+		/// Find a GameClient by the Player's ID
+		/// Case-insensitive, make sure you use returned Player.Name instead of what player typed.
+		/// </summary>
+		/// <param name="playerID">ID to search</param>
+		/// <param name="exactMatch">true if AccountName match exactly</param>
+		/// <param name="activeRequired"></param>
+		/// <returns>The found GameClient or null</returns>
+		public static GameClient GetClientByPlayerID(string playerID, bool exactMatch, bool activeRequired)
+		{
+			foreach (GameClient client in WorldMgr.GetAllPlayingClients())
+			{
+				if (client.Player.InternalID == playerID)
+					return client;
+			}
+			return null;
+		}
+		
+		/// <summary>
 		/// Finds a GameClient by the AccountName
 		/// </summary>
 		/// <param name="accountName">AccountName to search</param>
@@ -1779,7 +1785,7 @@ namespace DOL.GS
 					if (client != null)
 					{
 						if ((exactMatch && client.Account.Name.ToLower() == accountName)
-							|| (!exactMatch && client.Account.Name.ToLower().StartsWith(accountName)))
+						    || (!exactMatch && client.Account.Name.ToLower().StartsWith(accountName)))
 						{
 							return client;
 						}
@@ -1920,9 +1926,9 @@ namespace DOL.GS
 				foreach (GameClient client in m_clients)
 				{
 					if (client != null
-						&& client.IsPlaying
-						&& client.Player != null
-						&& client.Player.ObjectState == GameObject.eObjectState.Active)
+					    && client.IsPlaying
+					    && client.Player != null
+					    && client.Player.ObjectState == GameObject.eObjectState.Active)
 						targetClients.Add(client);
 				}
 			}
@@ -1941,9 +1947,9 @@ namespace DOL.GS
 				foreach (GameClient client in m_clients)
 				{
 					if (client != null
-						&& client.IsPlaying
-						&& client.Player != null
-						&& client.Player.ObjectState == GameObject.eObjectState.Active)
+					    && client.IsPlaying
+					    && client.Player != null
+					    && client.Player.ObjectState == GameObject.eObjectState.Active)
 						count++;
 				}
 			}
@@ -2164,27 +2170,27 @@ namespace DOL.GS
 				}
 			}
 			return savedCount;
-        }
+		}
 
-        #region Instances
+		#region Instances
 
-        //Dinberg: We must now store the region data here. This is incase admins wish to create instances
-        //that require information from regions Data, like instance of underwater ToA areas as a prime
-        //example!
-        /// <summary>
-        /// Stores the region Data parsed from the regions xml file.
-        /// </summary>
-        private static Hashtable m_regionData;
+		//Dinberg: We must now store the region data here. This is incase admins wish to create instances
+		//that require information from regions Data, like instance of underwater ToA areas as a prime
+		//example!
+		/// <summary>
+		/// Stores the region Data parsed from the regions xml file.
+		/// </summary>
+		private static Hashtable m_regionData;
 
 		public static Hashtable RegionData
 		{
 			get { return m_regionData; }
 		}
 
-        /// <summary>
-        /// Stores the zone data parsed from the zones file by RegionID.
-        /// </summary>
-        private static Dictionary<ushort, List<ZoneData>> m_zonesData;
+		/// <summary>
+		/// Stores the zone data parsed from the zones file by RegionID.
+		/// </summary>
+		private static Dictionary<ushort, List<ZoneData>> m_zonesData;
 
 		public static Dictionary<ushort, List<ZoneData>> ZonesData
 		{
@@ -2202,10 +2208,10 @@ namespace DOL.GS
 			return CreateInstance(0, skinID, instanceType);
 		}
 
-        /// <summary>
-        /// Where do we start looking for an instance id from if none is requested?
-        /// </summary>
-        public const int DEFAULT_VALUE_FOR_INSTANCE_ID_SEARCH_START = 1000;
+		/// <summary>
+		/// Where do we start looking for an instance id from if none is requested?
+		/// </summary>
+		public const int DEFAULT_VALUE_FOR_INSTANCE_ID_SEARCH_START = 1000;
 
 
 		/// <summary>
@@ -2215,72 +2221,72 @@ namespace DOL.GS
 		/// <param name="skinID"></param>
 		/// <param name="instanceType"></param>
 		/// <returns></returns>
-        public static BaseInstance CreateInstance(ushort requestedID, ushort skinID, Type instanceType)
-        {
-            //TODO: Typeof field so TaskDungeonInstance, QuestInstance etc can be created.
-            if ((instanceType.IsSubclassOf(typeof(BaseInstance)) || instanceType == typeof(BaseInstance)) == false)
-            {
-                log.Error("Invalid type given for instance creation: " + instanceType + ". Returning null instance now.");
-                return null;
-            }
+		public static BaseInstance CreateInstance(ushort requestedID, ushort skinID, Type instanceType)
+		{
+			//TODO: Typeof field so TaskDungeonInstance, QuestInstance etc can be created.
+			if ((instanceType.IsSubclassOf(typeof(BaseInstance)) || instanceType == typeof(BaseInstance)) == false)
+			{
+				log.Error("Invalid type given for instance creation: " + instanceType + ". Returning null instance now.");
+				return null;
+			}
 
-            BaseInstance instance = null;
+			BaseInstance instance = null;
 
-            //To create the instance, we need to select the region relevant to the SkinID.
-            RegionData data = (RegionData)m_regionData[skinID];
+			//To create the instance, we need to select the region relevant to the SkinID.
+			RegionData data = (RegionData)m_regionData[skinID];
 
-            if (data == null)
-            {
-                log.Warn("Data for region " + skinID + " not found on instance create!");
-                return null;
-            }
+			if (data == null)
+			{
+				log.Warn("Data for region " + skinID + " not found on instance create!");
+				return null;
+			}
 
-            //Having selected the ID, we must select a time manager.
-            //For now, for simplicity so we can get the system running we will just take the first TimeManager
-            //in our list. This is because I don't want to risk causing an error by sharing an important resource
-            //like the TimeManager until I get some good testing and ensure work thus far is clean.
+			//Having selected the ID, we must select a time manager.
+			//For now, for simplicity so we can get the system running we will just take the first TimeManager
+			//in our list. This is because I don't want to risk causing an error by sharing an important resource
+			//like the TimeManager until I get some good testing and ensure work thus far is clean.
 
-            //Later, we will share the resources over the different threads.
+			//Later, we will share the resources over the different threads.
 
-            GameTimer.TimeManager time = m_regionTimeManagers[0];
+			GameTimer.TimeManager time = m_regionTimeManagers[0];
 
-            if (time == null)
-            {
-                log.Warn("TimeManager not found on instance create!");
-                return null;
-            }
+			if (time == null)
+			{
+				log.Warn("TimeManager not found on instance create!");
+				return null;
+			}
 
-            //I've placed constructor info outside of the lock, to prevent a time delay on parallel threads.
-            ConstructorInfo info = instanceType.GetConstructor(new Type[] { typeof(ushort), typeof(GameTimer.TimeManager), typeof(RegionData)});
+			//I've placed constructor info outside of the lock, to prevent a time delay on parallel threads.
+			ConstructorInfo info = instanceType.GetConstructor(new Type[] { typeof(ushort), typeof(GameTimer.TimeManager), typeof(RegionData)});
 
-            if (info == null)
-            {
-                log.Error("Classtype " + instanceType + " did not have a cosntructor that matched the requirement!");
-                return null;
-            }
+			if (info == null)
+			{
+				log.Error("Classtype " + instanceType + " did not have a cosntructor that matched the requirement!");
+				return null;
+			}
 
-            bool RequestedAnID = requestedID == 0 ? false : true;
+			bool RequestedAnID = requestedID == 0 ? false : true;
 
 			ushort ID = requestedID;
 
-            //Get the unique ID for this instance or try to create an instance at the requested ID
+			//Get the unique ID for this instance or try to create an instance at the requested ID
 
-            //We need to keep the lock over this whole area until we have successfully inserted the instance, 
-            //incase a parallel thread also receives a request to create an instance. We cant have the two colliding!
-            //If they did, one instance generation would fail.
+			//We need to keep the lock over this whole area until we have successfully inserted the instance,
+			//incase a parallel thread also receives a request to create an instance. We cant have the two colliding!
+			//If they did, one instance generation would fail.
 
-            //I'm welcome to suggestions on how to improve this
-            //              -Dinberg.
-            lock (m_regions.SyncRoot)
-            {
+			//I'm welcome to suggestions on how to improve this
+			//              -Dinberg.
+			lock (m_regions.SyncRoot)
+			{
 				if (!RequestedAnID)
 				{
-                    ID = DEFAULT_VALUE_FOR_INSTANCE_ID_SEARCH_START;
+					ID = DEFAULT_VALUE_FOR_INSTANCE_ID_SEARCH_START;
 					while (ID < ushort.MaxValue)
 					{
 						//Look for a space in the regions table...
-                        if (!m_regions.ContainsKey(ID))
-                            break;
+						if (!m_regions.ContainsKey(ID))
+							break;
 
 						//If no space here, no worries - move quickly to the next ID and continue.
 						ID++;
@@ -2292,27 +2298,27 @@ namespace DOL.GS
 					return null;
 				}
 
-                //In the unlikely event of 65535 regions, I'd still like to be warned!
-                if (ID == ushort.MaxValue)
-                {
-                    log.Warn("ID was ushort.MaxValue - Region Table is full upon instance creation! Aborting now.");
-                    return null;
-                }
+				//In the unlikely event of 65535 regions, I'd still like to be warned!
+				if (ID == ushort.MaxValue)
+				{
+					log.Warn("ID was ushort.MaxValue - Region Table is full upon instance creation! Aborting now.");
+					return null;
+				}
 
-                //Having selected the data we need, create the Instance.
-                try
-                {
-                    instance = (BaseInstance)info.Invoke(new object[] { ID, time, data });//new Instance(ID, time, data); 
-                    m_regions.Add(ID, instance);
-                }
-                catch (Exception e)
-                {
-                    log.Error("Error on instance creation - " + e.Message + e.StackTrace);
-                    return null;
-                }
-            }
+				//Having selected the data we need, create the Instance.
+				try
+				{
+					instance = (BaseInstance)info.Invoke(new object[] { ID, time, data });//new Instance(ID, time, data);
+					m_regions.Add(ID, instance);
+				}
+				catch (Exception e)
+				{
+					log.Error("Error on instance creation - " + e.Message + e.StackTrace);
+					return null;
+				}
+			}
 
-            // But its not over there. We need to put a zone into the instance.
+			// But its not over there. We need to put a zone into the instance.
 
 			List<ZoneData> list = null;
 
@@ -2321,42 +2327,42 @@ namespace DOL.GS
 				list = m_zonesData[data.Id];
 			}
 
-            if (list == null)
-            {
-                log.Warn("No zones found for given skinID on instance creation, " + skinID);
-                return null;
-            }
+			if (list == null)
+			{
+				log.Warn("No zones found for given skinID on instance creation, " + skinID);
+				return null;
+			}
 
-            ushort zoneID = 0;
+			ushort zoneID = 0;
 
-            foreach (ZoneData dat in list)
-            {
-                //we need to get an id for each one.
-                lock (m_zones.SyncRoot)
-                {
-                    while (m_zones.ContainsKey(zoneID))
-                        zoneID++;
+			foreach (ZoneData dat in list)
+			{
+				//we need to get an id for each one.
+				lock (m_zones.SyncRoot)
+				{
+					while (m_zones.ContainsKey(zoneID))
+						zoneID++;
 
-                    if (zoneID == ushort.MaxValue)
-                        log.Error("Zone limit reached in instance creation!");
+					if (zoneID == ushort.MaxValue)
+						log.Error("Zone limit reached in instance creation!");
 
-                    //create a zone of this ID.
-                    RegisterZone(dat, zoneID, ID, dat.Description + " (Instance)", 0, 0, 0, 0);
-                }
-            }
+					//create a zone of this ID.
+					RegisterZone(dat, zoneID, ID, dat.Description + " (Instance)", 0, 0, 0, 0);
+				}
+			}
 
 			// Start the instance and execute any final startup tasks
 			instance.Start();
 
-            return instance;
-        }
+			return instance;
+		}
 
-        /// <summary>
-        /// Removes the given instance from the server.
-        /// </summary>
-        /// <param name="instance"></param>
-        public static void RemoveInstance(BaseInstance instance)
-        {
+		/// <summary>
+		/// Removes the given instance from the server.
+		/// </summary>
+		/// <param name="instance"></param>
+		public static void RemoveInstance(BaseInstance instance)
+		{
 			//Remove the region
 			lock (m_regions.SyncRoot)
 			{
@@ -2374,11 +2380,11 @@ namespace DOL.GS
 
 			instance.OnCollapse();
 
-            //Destroy the region once and for all.
-            instance = null;
-        }
+			//Destroy the region once and for all.
+			instance = null;
+		}
 
 
-        #endregion
-    }
+		#endregion
+	}
 }
