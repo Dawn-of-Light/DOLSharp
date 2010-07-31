@@ -613,7 +613,7 @@ namespace DOL.GS
 						log.Info("Generating RSA key, may take a minute, please wait...");
 					if (!InitComponent(CryptLib168.GenerateRSAKey(), "RSA key generation"))
 						return false;
-					*/
+				 */
 
 				//---------------------------------------------------------------
 				//Try to start the Language Manager
@@ -1193,8 +1193,8 @@ namespace DOL.GS
 
 				try
 				{
-					//We will search our assemblies for DataTables by reflection so 
-					//it is not neccessary anymore to register new tables with the 
+					//We will search our assemblies for DataTables by reflection so
+					//it is not neccessary anymore to register new tables with the
 					//server, it is done automatically!
 					foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 					{
@@ -1222,34 +1222,10 @@ namespace DOL.GS
 						log.Error("Error registering Tables", e);
 					return false;
 				}
-
-				// 2008-01-29 Kakuri - Obsolete
-				/*try
-					{
-						m_database.LoadDatabaseTables();
-					}
-					catch (DatabaseException e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Error loading Database", e);
-						return false;
-					}*/
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Database Initialization: true");
 			return true;
-		}
-
-		/// <summary>
-		/// Writes the database to disk
-		/// </summary>
-		// 2008-01-29 Kakuri - Obsolete
-		[Obsolete("This doesn't do anything with MySQL Database")]
-		public void SaveDatabase()
-		{
-			// 2008-01-29 Kakuri - Obsolete
-			//if ( m_database != null )
-			//	m_database.WriteDatabaseTables();
 		}
 
 		/// <summary>
@@ -1361,7 +1337,6 @@ namespace DOL.GS
 				throw new ApplicationException("Fatal Error: Could not initialize Game Server", e);
 			}
 		}
-
 		#endregion
 	}
 }
