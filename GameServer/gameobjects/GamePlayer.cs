@@ -6984,22 +6984,28 @@ namespace DOL.GS
 					//Table b: Formula used: drawspeed = bowspeed * (1-(quickness - 50)*0.002) * (1-MoA*0.03) - ((archeryspeedbonus/100 * basebowspeed))
 
 					//For now use the standard weapon formula, later add ranger haste etc.
-					speed *= (1.0 - (qui - 60) * 0.002) * 0.01 * GetModified(eProperty.ArcherySpeed);
-					if (RangedAttackType == eRangedAttackType.Critical)
-						speed = speed * 2 - (GetAbilityLevel(Abilities.Critical_Shot) - 1) * speed / 10;
-				}
-				else
-				{
-					// no archery bonus, this is calculaed in spell handler for new archery
-					speed *= (1.0 - (qui - 60) * 0.002);
-				}
-			}
-			else
-			{
-				// TODO use haste
-				//Weapon Speed*(1-(Quickness-60)/500]*(1-Haste)
-				speed *= (1.0 - (qui - 60) * 0.002) * 0.01 * GetModified(eProperty.MeleeSpeed);
-			}
+                    speed *= (1.0 - (qui - 60) * 0.002);
+                    double percent = 0;
+                    // Calcul ArcherySpeed bonus to substract
+                    percent = speed * 0.01 * GetModified(eProperty.ArcherySpeed);
+                    // Apply RA difference
+                    speed -= percent;
+                    //log.Debug("speed = " + speed + " percent = " + percent + " eProperty.archeryspeed = " + GetModified(eProperty.ArcherySpeed));
+                    if (RangedAttackType == eRangedAttackType.Critical)
+                        speed = speed * 2 - (GetAbilityLevel(Abilities.Critical_Shot) - 1) * speed / 10;
+                }
+                else
+                {
+                    // no archery bonus
+                    speed *= (1.0 - (qui - 60) * 0.002);
+                }
+            }
+            else
+            {
+                // TODO use haste
+                //Weapon Speed*(1-(Quickness-60)/500]*(1-Haste)
+                speed *= (1.0 - (qui - 60) * 0.002) * 0.01 * GetModified(eProperty.MeleeSpeed);
+            }
 
 			// apply speed cap
 			if (speed < 15)

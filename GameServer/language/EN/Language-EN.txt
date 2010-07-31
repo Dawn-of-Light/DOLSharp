@@ -422,6 +422,12 @@ Scripts.Players.Battlegroup.Public:			The battlegroup is now public.
 Scripts.Players.Battlegroup.Usage:			Usage: /bg <text>
 Scripts.Players.Battlegroup.UsageInvite:		Usage: /bg invite <playername>
 
+# /Emotes
+Scripts.Players.Emotes.Message1:            Looks like somebody had too much caffeine today.
+Scripts.Players.Emotes.Message2:            Whoah! Slow down there. Take a few moments, calm down and collect your thoughts.
+Scripts.Players.Emotes.Message3:            Be careful or your face will stay that way.
+Scripts.Players.Emotes.Message4:            Slow down, you type too fast, you got to make the moment last.
+
 # /Realm
 Scripts.Players.Realm.AlbKeeps:            Albion Outposts
 Scripts.Players.Realm.DarknessFalls:      Darkness Falls

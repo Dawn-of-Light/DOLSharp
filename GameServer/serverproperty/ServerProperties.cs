@@ -17,10 +17,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
-using System.Globalization;
 using System;
+using System.Globalization;
 using System.Reflection;
+
 using DOL.Database;
 using log4net;
 
@@ -203,17 +203,23 @@ namespace DOL.GS.ServerProperties
 		public static bool ALLOW_DUAL_LOGINS;
 
 		/// <summary>
+		/// The emote delay
+		/// </summary>
+		[ServerProperty("system", "emote_delay", "The emote delay, default 3000ms before another emote.", 3000)]
+		public static int EMOTE_DELAY;
+		
+		/// <summary>
 		/// This specifies the max number of inventory items to send in an update packet
 		/// </summary>
-		[ServerProperty("server", "max_items_per_packet", "Max number of inventory items sent per packet.", 30)]
+		[ServerProperty("system", "max_items_per_packet", "Max number of inventory items sent per packet.", 30)]
 		public static int MAX_ITEMS_PER_PACKET;
 
 		/// <summary>
 		/// Number of times speed hack detected before banning.  Must be multiples of 5 (20, 25, 30, etc)
 		/// </summary>
-		[ServerProperty("server", "speedhack_tolerance", "Number of times speed hack detected before banning.  Multiples of 5 (20, 25, 30, etc)", 20)]
+		[ServerProperty("system", "speedhack_tolerance", "Number of times speed hack detected before banning.  Multiples of 5 (20, 25, 30, etc)", 20)]
 		public static int SPEEDHACK_TOLERANCE;
-		
+
 		#endregion
 		
 		#region SERVER
@@ -399,11 +405,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("world", "task_give_random_item", "Task is also rewarded with ROG ?", false)]
 		public static bool TASK_GIVE_RANDOM_ITEM;
 
-        /// <summary>
-        /// Should we enable Zone Bonuses?
-        /// </summary>
-        [ServerProperty("world", "enable_zone_bonuses", "Are Zone Bonuses Enabled?", false)]
-        public static bool ENABLE_ZONE_BONUSES;
+		/// <summary>
+		/// Should we enable Zone Bonuses?
+		/// </summary>
+		[ServerProperty("world", "enable_zone_bonuses", "Are Zone Bonuses Enabled?", false)]
+		public static bool ENABLE_ZONE_BONUSES;
 		#endregion
 		
 		#region RATES
@@ -517,7 +523,7 @@ namespace DOL.GS.ServerProperties
 
 
 
-		#endregion	
+		#endregion
 
 		#region NPCs
 		/// <summary>
@@ -582,13 +588,13 @@ namespace DOL.GS.ServerProperties
 		public static readonly string GAMENPC_DEFAULT_CLASSTYPE;
 
 		/// <summary>
-		/// Chances for npc (including pet) to style (chance is calculated randomly according to this value + the number of style the NPC own) 
+		/// Chances for npc (including pet) to style (chance is calculated randomly according to this value + the number of style the NPC own)
 		/// </summary>
 		[ServerProperty("npc", "gamenpc_chances_to_style", "Change the chance to fire a style for a mob or a pet", 20)]
 		public static readonly int GAMENPC_CHANCES_TO_STYLE;
 
-				/// <summary>
-		/// Chances for npc (including pet) to cast (chance is calculated randomly according to this value + the number of spells the NPC own) 
+		/// <summary>
+		/// Chances for npc (including pet) to cast (chance is calculated randomly according to this value + the number of spells the NPC own)
 		/// </summary>
 		[ServerProperty("npc", "gamenpc_chances_to_cast", "Change the chance to cast a spell for a mob or a pet", 25)]
 		public static readonly int GAMENPC_CHANCES_TO_CAST;
