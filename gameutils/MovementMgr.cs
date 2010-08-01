@@ -73,8 +73,8 @@ namespace DOL.GS.Movement
 					m_pathpointCache.Add(pathPoint.PathID, pList);
 				}
 			}
-
-			log.ErrorFormat("{0} duplicate steps ignored while loading paths.", duplicateCount);
+            if (duplicateCount > 0)
+                log.ErrorFormat("{0} duplicate steps ignored while loading paths.", duplicateCount);
 			log.InfoFormat("Path cache filled with {0} paths.", m_pathCache.Count);
 		}
 
