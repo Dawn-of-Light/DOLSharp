@@ -124,10 +124,17 @@ namespace DOL.AI.Brain
 			if (!Body.AttackState && CanRandomWalk && Util.Chance(DOL.GS.ServerProperties.Properties.GAMENPC_RANDOMWALK_CHANCE))
 			{
 				IPoint3D target = CalcRandomWalkTarget();
-				if (target != null && !Util.IsNearDistance(target.X, target.Y, target.Z,
-				                                           Body.X, Body.Y, Body.Z, GameNPC.CONST_WALKTOTOLERANCE))
+				if (target != null)
 				{
-					Body.WalkTo(target, 50);
+					if (Util.IsNearDistance(target.X, target.Y, target.Z, Body.X, Body.Y, Body.Z, GameNPC.CONST_WALKTOTOLERANCE))
+					{
+						Body.TurnTo(Body.GetHeading(target));
+					}
+					else
+					{
+						Body.WalkTo(target, 50);
+					}
+
 					Body.FireAmbientSentence(GameNPC.eAmbientTrigger.roaming);
 				}
 			}
@@ -1295,15 +1302,19 @@ namespace DOL.AI.Brain
 
 		public virtual IPoint3D CalcRandomWalkTarget()
 		{
-			int roamingRadius = Body.CurrentRegion.IsDungeon ? 50 : 300;
+			int maxRoamingRadius = Body.CurrentRegion.IsDungeon ? 5 : 500;
+			int minRoamingRadius = Body.CurrentRegion.IsDungeon ? 1 : 100;
 
 			if (Body.RoamingRange > 0)
 			{
-				roamingRadius = Body.RoamingRange;
+				maxRoamingRadius = Body.RoamingRange;
+
+				if (minRoamingRadius >= maxRoamingRadius)
+					minRoamingRadius = maxRoamingRadius / 3;
 			}
 
-			roamingRadius = Util.Random(0, Math.Max(100, roamingRadius));
-			
+			int roamingRadius = Util.Random(minRoamingRadius, maxRoamingRadius);
+
 			double angle = Util.Random(0, 360) / (2 * Math.PI);
 			double targetX = Body.SpawnPoint.X + Util.Random( -roamingRadius, roamingRadius );
 			double targetY = Body.SpawnPoint.Y + Util.Random( -roamingRadius, roamingRadius );
