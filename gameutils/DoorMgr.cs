@@ -33,6 +33,8 @@ namespace DOL.GS
 	/// </summary>
 	public sealed class DoorMgr
 	{
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		private static Dictionary<int, List<IDoor>> m_doors = new Dictionary<int, List<IDoor>>();
 
 		public const string WANT_TO_ADD_DOORS = "WantToAddDoors";
@@ -45,8 +47,11 @@ namespace DOL.GS
 			var dbdoors = GameServer.Database.SelectAllObjects<DBDoor>();
 			foreach (DBDoor door in dbdoors)
 			{
-				LoadDoor(door);
-				//if (!LoadDoor(door)) return false;
+				if (!LoadDoor(door))
+				{
+					log.Error("Unable to load door id " + door.ObjectId + ", correct your database");
+					return false;
+				}
 			}
 			return true;
 		}
@@ -56,7 +61,6 @@ namespace DOL.GS
 			IDoor mydoor = null;
 			ushort zone = (ushort)(door.InternalID / 1000000);
 
-			// Grav: bad internalID ?
 			Zone currentZone = WorldMgr.GetZone(zone);
 			if (currentZone == null) return false;
 			
