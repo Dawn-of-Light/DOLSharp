@@ -62,9 +62,8 @@ namespace DOL
 				m_bonusBP = 0;
 				m_bonusCoin = 0;
 			}
-
-			// Grav: zone table must have autoincrement set when built from xml file
-			[PrimaryKey(AutoIncrement=true)]
+			
+			[PrimaryKey]
 			public int ZoneID
 			{
 				get
