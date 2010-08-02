@@ -51,6 +51,8 @@ namespace DOL.Database
 		private string m_optionalRewardItemTemplates;
 		private string m_finalRewardItemTemplates;
 		private string m_finishText;
+		private string m_questDependency;
+		private string m_classType;
 
 
 		public DBDataQuest()
@@ -305,6 +307,28 @@ namespace DOL.Database
 		{
 			get { return m_finishText; }
 			set { m_finishText = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// The name or names of other quests that need to be done before this quest can be offered.
+		/// Can be null if no dependency
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string QuestDependency
+		{
+			get { return m_questDependency; }
+			set { m_questDependency = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// Code that can be used for various quest activities
+		/// Can be null, currently not used
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string ClassType
+		{
+			get { return m_classType; }
+			set { m_classType = value; Dirty = true; }
 		}
 
 
