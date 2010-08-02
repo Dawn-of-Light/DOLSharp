@@ -541,11 +541,11 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		protected virtual CharacterXDataQuest GetCharacterQuest(GamePlayer player)
+		protected virtual CharacterXDataQuest GetCharacterQuest(GamePlayer player, bool create)
 		{
 			CharacterXDataQuest charQuest = GameServer.Database.SelectObject<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(player.InternalID) + "' AND DataQuestID = " + ID);
 
-			if (charQuest == null)
+			if (charQuest == null && create)
 			{
 				charQuest = new CharacterXDataQuest(player.InternalID, ID);
 				charQuest.Count = 0;
@@ -568,8 +568,8 @@ namespace DOL.GS.Quests
 
 			if (StartType == eStartType.Collection)
 			{
-				CharacterXDataQuest charQuest = GetCharacterQuest(player);
-				if (charQuest.Count >= MaxQuestCount)
+				CharacterXDataQuest charQuest = GetCharacterQuest(player, false);
+				if (charQuest != null && charQuest.Count >= MaxQuestCount)
 				{
 					return false;
 				}
@@ -1134,7 +1134,7 @@ namespace DOL.GS.Quests
 				{
 					// This quest finishes with the interaction and is not placed in player quest log
 
-					CharacterXDataQuest charQuest = GetCharacterQuest(player);
+					CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
 
 					if (charQuest.Count < MaxQuestCount)
 					{
@@ -1181,7 +1181,7 @@ namespace DOL.GS.Quests
 
 				if (StartType == eStartType.AutoStart)
 				{
-					CharacterXDataQuest charQuest = GetCharacterQuest(player);
+					CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
 					DataQuest dq = new DataQuest(player, obj, DBDataQuest, charQuest);
 					dq.Step = 1;
 					player.AddQuest(dq);
@@ -1218,7 +1218,7 @@ namespace DOL.GS.Quests
 			// collection quests do not go into the GamePlayer quest lists
 			if (StartType == eStartType.Collection && item.Id_nb == DBDataQuest.CollectItemTemplate)
 			{
-				CharacterXDataQuest charQuest = GetCharacterQuest(player);
+				CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
 
 				if (charQuest.Count < MaxQuestCount)
 				{
@@ -1250,7 +1250,7 @@ namespace DOL.GS.Quests
 			if (CheckQuestQualification(player) && DBDataQuest.StartType == (byte)eStartType.Standard && DBDataQuest.AcceptText == text)
 			{
 				//log.DebugFormat("Adding quest {0} to player {1}", Name, player.Name);
-				CharacterXDataQuest charQuest = GetCharacterQuest(player);
+				CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
 				DataQuest dq = new DataQuest(player, living, DBDataQuest, charQuest);
 				dq.Step = 1;
 				player.AddQuest(dq);
@@ -1437,7 +1437,7 @@ namespace DOL.GS.Quests
 				{
 					// This quest finishes with the interaction and is not placed in player quest log
 
-					CharacterXDataQuest charQuest = GetCharacterQuest(player);
+					CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
 
 					if (charQuest.Count < MaxQuestCount)
 					{
@@ -1673,12 +1673,9 @@ namespace DOL.GS.Quests
 				UpdateQuestIndicator(m_startNPC, m_questPlayer);
 			}
 
-			if (m_questDependencies.Count > 0)
+			foreach (GameNPC npc in m_questPlayer.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				foreach (GameNPC npc in m_questPlayer.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					UpdateQuestIndicator(npc, m_questPlayer);
-				}
+				UpdateQuestIndicator(npc, m_questPlayer);
 			}
 		}
 
