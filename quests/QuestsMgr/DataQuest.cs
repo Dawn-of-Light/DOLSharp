@@ -90,6 +90,12 @@ namespace DOL.GS.Quests
 	/// 
 	/// FinishText - The text to show the player once the quest has completed.
 	/// 
+	/// QuestDependency - If this quest is dependent on other quests being done first then the name(s) of those quests should be here.
+	/// This can be null if no dependencies.
+	/// 
+	/// ClassType - For future use.  The plan is to allow a hybrid of data quests and code execution at the various quest parts.
+	/// This can be null.
+	/// 
 	/// </summary>
 	public class DataQuest : AbstractQuest
 	{
@@ -146,6 +152,8 @@ namespace DOL.GS.Quests
 		byte m_numOptionalRewards = 0;
 		protected List<string> m_optionalRewards = new List<string>();
 		protected List<string> m_finalRewards = new List<string>();
+		protected List<string> m_questDependencies = new List<string>();
+		string classType = "";
 
 		#region Construction
 
@@ -365,6 +373,22 @@ namespace DOL.GS.Quests
 						m_finalRewards.Add(str);
 					}
 				}
+
+				lastParse = m_dataQuest.QuestDependency;
+				if (lastParse != null)
+				{
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
+					{
+						m_questDependencies.Add(str);
+					}
+				}
+
+				lastParse = m_dataQuest.ClassType;
+				if (lastParse != null)
+				{
+					classType = lastParse;
+				}
 			}
 
 			catch (Exception ex)
@@ -553,6 +577,16 @@ namespace DOL.GS.Quests
 				return true;
 			}
 
+			lock (player.QuestList)
+			{
+				foreach (AbstractQuest q in player.QuestList)
+				{
+					if (q is DataQuest && (q as DataQuest).ID == ID)
+					{
+						return false;  // player is currently doing this quest
+					}
+				}
+			}
 
 			lock (player.QuestListFinished)
 			{
@@ -566,15 +600,32 @@ namespace DOL.GS.Quests
 						}
 					}
 				}
-			}
 
-			lock (player.QuestList)
-			{
-				foreach (AbstractQuest q in player.QuestList)
+				// check to see if this quest requires another to be done first
+				if (m_questDependencies.Count > 0)
 				{
-					if (q is DataQuest && (q as DataQuest).ID == ID)
+					bool found = false;
+
+					foreach (string str in m_questDependencies)
 					{
-						return false;  // player is currently doing this quest
+						foreach (AbstractQuest q in player.QuestListFinished)
+						{
+							if (q is DataQuest && (q as DataQuest).Name.ToLower() == str.ToLower())
+							{
+								found = true;
+								break;
+							}
+						}
+
+						if (found)
+						{
+							break;
+						}
+					}
+
+					if (!found)
+					{
+						return false;
 					}
 				}
 			}
@@ -1620,6 +1671,14 @@ namespace DOL.GS.Quests
 			if (m_startNPC != null)
 			{
 				UpdateQuestIndicator(m_startNPC, m_questPlayer);
+			}
+
+			if (m_questDependencies.Count > 0)
+			{
+				foreach (GameNPC npc in m_questPlayer.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					UpdateQuestIndicator(npc, m_questPlayer);
+				}
 			}
 		}
 
