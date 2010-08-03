@@ -187,6 +187,7 @@
     <Compile Include="quests\Albion\IreFairyIre.cs" />
     <Compile Include="quests\Albion\LawrencesOil.cs" />
     <Compile Include="quests\Albion\MarlinsSalesPitch.cs" />
+    <Compile Include="quests\Albion\MovementAndInteraction.cs" />
     <Compile Include="quests\Albion\NoHopeForTheHopeful.cs" />
     <Compile Include="quests\Albion\Nuisances.cs" />
     <Compile Include="quests\Albion\RecruitingNothingButTrouble.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="quests\Examples and  Tutorials\MasterLevel encounter\ML1FireIsland.cs" />
     <Compile Include="quests\Examples and  Tutorials\Search quest\WingsOfTheIsleHibernia.cs" />
     <Compile Include="quests\Hibernia\BaseAddrirQuest.cs" />
+    <Compile Include="quests\Hibernia\BasicsOfCombat.cs" />
     <Compile Include="quests\Hibernia\ChildsPlay.cs" />
     <Compile Include="quests\Hibernia\CityOfTirnaNog.cs" />
     <Compile Include="quests\Hibernia\epic\Essence50.cs" />
@@ -214,6 +216,7 @@
     <Compile Include="quests\Hibernia\epic\Harmony50.cs" />
     <Compile Include="quests\Hibernia\ImportantDelivery.cs" />
     <Compile Include="quests\Hibernia\MagicalBacklash.cs" />
+    <Compile Include="quests\Hibernia\MovementAndInteraction.cs" />
     <Compile Include="quests\Hibernia\Nuisances.cs" />
     <Compile Include="quests\Hibernia\SearchForKnowledge.cs" />
     <Compile Include="quests\Hibernia\ToReachTheBreach.cs" />
@@ -238,6 +241,7 @@
     <Compile Include="quests\Midgard\Learn_The_Hunt.cs" />
     <Compile Include="quests\Midgard\Mauler_Invasion.cs" />
     <Compile Include="quests\Midgard\Mead_Run.cs" />
+    <Compile Include="quests\Midgard\MovementAndInteraction.cs" />
     <Compile Include="quests\Midgard\Nuisances.cs" />
     <Compile Include="quests\Midgard\Rindas_Lost_Key.cs" />
     <Compile Include="quests\Midgard\StolenEggs.cs" />
@@ -245,10 +249,9 @@
     <Compile Include="quests\Midgard\The_Birthday_Gift.cs" />
     <Compile Include="quests\Midgard\TraitorInMularn.cs" />
     <Compile Include="quests\Midgard\Trial_of_Strength.cs" />
-    <None Include="quests\Albion\BaseFrederickPathPoints.xml" />
-    <None Include="quests\Hibernia\BaseAddrirPathPoints.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="quests" />
     <Folder Include="quests\Albion" />
     <Folder Include="quests\Albion\epic" />
     <Folder Include="quests\Examples and  Tutorials" />
@@ -264,6 +267,10 @@
     <Folder Include="quests\Hibernia\epic" />
     <Folder Include="quests\Midgard" />
     <Folder Include="quests\Midgard\epic" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="quests\Albion\BaseFrederickPathPoints.xml" />
+    <None Include="quests\Hibernia\BaseAddrirPathPoints.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

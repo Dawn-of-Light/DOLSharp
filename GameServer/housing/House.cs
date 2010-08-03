@@ -665,9 +665,14 @@ namespace DOL.GS.Housing
 
 						try
 						{
+							string defaultClassType = npt.ClassType;
+							if (string.IsNullOrEmpty(npt.ClassType))
+							{
+								defaultClassType="DOL.GS.GameNPC";
+								Log.Warn ("[housing] null classtype in hookpoint attachment, using GameNPC instead");
+							}
 
-							var hNPC = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(npt.ClassType, false);
-
+							var hNPC = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(defaultClassType, false);
 							if (hNPC == null)
 							{
 								foreach (Assembly asm in ScriptMgr.Scripts)
@@ -844,18 +849,18 @@ namespace DOL.GS.Housing
 			var tY = (int) ((Y - (500*Math.Cos(angle))) + Math.Cos(angle - multi)*range);
 
 			var con = new GameConsignmentMerchant
-			          	{
-			          		CurrentRegionID = RegionID,
-			          		X = tX,
-			          		Y = tY,
-			          		Z = Z + zaddition,
-			          		Level = 50,
-			          		Realm = (eRealm) realm,
-			          		HouseNumber = (ushort)HouseNumber,
-			          		Name = "GameConsignmentMerchant Merchant",
-			          		Heading = heading,
-			          		Model = 144
-			          	};
+			{
+				CurrentRegionID = RegionID,
+				X = tX,
+				Y = tY,
+				Z = Z + zaddition,
+				Level = 50,
+				Realm = (eRealm) realm,
+				HouseNumber = (ushort)HouseNumber,
+				Name = "GameConsignmentMerchant Merchant",
+				Heading = heading,
+				Model = 144
+			};
 
 			con.Flags |= (uint) GameNPC.eFlags.PEACE;
 			con.LoadedFromScript = false;
@@ -1158,20 +1163,20 @@ namespace DOL.GS.Housing
 
 			// try character permissions first
 			IEnumerable<DBHouseCharsXPerms> charPermissions = from cp in _housePermissions.Values
-			                                                  where
-			                                                  	cp.TargetName == player.Name &&
-			                                                  	cp.PermissionType == (int) PermissionType.Player
-			                                                  select cp;
+				where
+				cp.TargetName == player.Name &&
+				cp.PermissionType == (int) PermissionType.Player
+				select cp;
 
 			if (charPermissions.Count() > 0)
 				return charPermissions.First();
 
 			// try account permissions next
 			IEnumerable<DBHouseCharsXPerms> acctPermissions = from cp in _housePermissions.Values
-			                                                  where
-			                                                  	cp.TargetName == player.Client.Account.Name &&
-			                                                  	cp.PermissionType == (int) PermissionType.Account
-			                                                  select cp;
+				where
+				cp.TargetName == player.Client.Account.Name &&
+				cp.PermissionType == (int) PermissionType.Account
+				select cp;
 
 			if (acctPermissions.Count() > 0)
 				return acctPermissions.First();
@@ -1180,10 +1185,10 @@ namespace DOL.GS.Housing
 			{
 				// try guild permissions next
 				IEnumerable<DBHouseCharsXPerms> guildPermissions = from cp in _housePermissions.Values
-				                                                   where
-				                                                   	player.Guild.Name == cp.TargetName &&
-				                                                   	cp.PermissionType == (int) PermissionType.Guild
-				                                                   select cp;
+					where
+					player.Guild.Name == cp.TargetName &&
+					cp.PermissionType == (int) PermissionType.Guild
+					select cp;
 
 				if (guildPermissions.Count() > 0)
 					return guildPermissions.First();
@@ -1191,8 +1196,8 @@ namespace DOL.GS.Housing
 
 			// look for the catch-all permissions last
 			IEnumerable<DBHouseCharsXPerms> allPermissions = from cp in _housePermissions.Values
-			                                                 where cp.TargetName == "All"
-			                                                 select cp;
+				where cp.TargetName == "All"
+				select cp;
 
 			if (allPermissions.Count() > 0)
 				return allPermissions.First();
@@ -1258,7 +1263,7 @@ namespace DOL.GS.Housing
 			if (player == null)
 				return false;
 
-			// check by character name/account if not guild house	
+			// check by character name/account if not guild house
 			if (!_databaseItem.GuildHouse)
 			{
 				// check if character is explicit owner
@@ -1267,8 +1272,8 @@ namespace DOL.GS.Housing
 
 				// check account-wide if not a guild house
 				IEnumerable<DOLCharacters> charsOnAccount = from chr in player.Client.Account.Characters
-				                                        where chr.ObjectId == _databaseItem.OwnerID
-				                                        select chr;
+					where chr.ObjectId == _databaseItem.OwnerID
+					select chr;
 
 				if (charsOnAccount.Count() > 0)
 					return true;
@@ -1452,7 +1457,7 @@ namespace DOL.GS.Housing
 			int i = 0;
 			foreach (
 				DBHouseIndoorItem dbiitem in
-					GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = '" + HouseNumber + "'"))
+				GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = '" + HouseNumber + "'"))
 			{
 				_indoorItems.Add(i++, new IndoorItem(dbiitem));
 			}
@@ -1460,21 +1465,21 @@ namespace DOL.GS.Housing
 			i = 0;
 			foreach (
 				DBHouseOutdoorItem dboitem in
-					GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = '" + HouseNumber + "'"))
+				GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = '" + HouseNumber + "'"))
 			{
 				_outdoorItems.Add(i++, new OutdoorItem(dboitem));
 			}
 
 			foreach (
 				DBHouseCharsXPerms d in GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = '" + HouseNumber + "'")
-				)
+			)
 			{
 				_housePermissions.Add(GetOpenPermissionSlot(), d);
 			}
 
 			foreach (
 				DBHousePermissions dbperm in
-					GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = '" + HouseNumber + "'"))
+				GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = '" + HouseNumber + "'"))
 			{
 				_permissionLevels.Add(dbperm.PermissionLevel, dbperm);
 			}
