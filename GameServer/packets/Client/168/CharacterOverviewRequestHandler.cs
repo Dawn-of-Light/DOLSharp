@@ -34,6 +34,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.ClientState = GameClient.eClientState.CharScreen;
 			GameServer.Database.SaveObject(client.Account);
 			client.Player = null;
+			GameServer.Database.UpdateInCache<Account>(client.Account.ObjectId);
 			GameServer.Database.FillObjectRelations(client.Account);
 
 			//reset realm if no characters
