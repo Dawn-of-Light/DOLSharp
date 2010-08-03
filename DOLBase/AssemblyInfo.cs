@@ -26,4 +26,5 @@ using System.Reflection;
 [assembly: AssemblyCopyright("Dawn of Light Development Team")]
 [assembly: AssemblyTrademark("Dawn of Light Development Team")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.9.3.2015")]
+
+[assembly: AssemblyVersion("1.9.4.2500")]
