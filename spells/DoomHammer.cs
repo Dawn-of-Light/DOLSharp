@@ -25,8 +25,8 @@ namespace DOL.GS.Spells
 			}
 			return base.CheckBeginCast(selectedTarget);
 		}
-		public override double CalculateDamageBase() { return Spell.Damage; }
-		public override void ApplyEffectOnTarget(GameLiving target,double effectiveness)
+		public override double CalculateDamageBase(GameLiving target) { return Spell.Damage; }
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			GamePlayer player=target as GamePlayer;
 			base.ApplyEffectOnTarget(Caster,effectiveness);

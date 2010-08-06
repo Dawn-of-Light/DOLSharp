@@ -3409,7 +3409,7 @@ target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 		/// Calculates the base 100% spell damage which is then modified by damage variance factors
 		/// </summary>
 		/// <returns></returns>
-		public virtual double CalculateDamageBase()
+		public virtual double CalculateDamageBase(GameLiving target)
 		{
 			double spellDamage = Spell.Damage;
 			GamePlayer player = Caster as GamePlayer;
@@ -3584,7 +3584,7 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 			double maxVariance;
 
 			CalculateDamageVariance(target, out minVariance, out maxVariance);
-			double spellDamage = CalculateDamageBase();
+			double spellDamage = CalculateDamageBase(target);
 
 			if (m_caster is GamePlayer)
 			{
