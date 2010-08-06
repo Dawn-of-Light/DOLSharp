@@ -124,6 +124,23 @@ namespace DOL.GS
 			return playerItem;
 		}
 
+
+		/// <summary>
+		/// Player equips this item
+		/// </summary>
+		/// <param name="player"></param>
+		public virtual void OnEquipped(GamePlayer player)
+		{
+		}
+
+		/// <summary>
+		/// Player unequips this item
+		/// </summary>
+		/// <param name="player"></param>
+		public virtual void OnUnEquipped(GamePlayer player)
+		{
+		}
+
 		/// <summary>
 		/// This inventory strikes an enemy
 		/// </summary>
