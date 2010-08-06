@@ -245,7 +245,7 @@ namespace DOL.GS.Spells
 			DamageTarget(ad, false);
 		}
 
-		public override double CalculateDamageBase()
+		public override double CalculateDamageBase(GameLiving target)
 		{
 			double spellDamage = Spell.Damage;
 			GamePlayer player = null;

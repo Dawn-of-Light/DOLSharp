@@ -282,7 +282,7 @@ namespace DOL.GS.Spells
 		/// Calculates the base 100% spell damage which is then modified by damage variance factors
 		/// </summary>
 		/// <returns></returns>
-		public override double CalculateDamageBase()
+		public override double CalculateDamageBase(GameLiving target)
 		{
 			double spellDamage = Spell.Damage;
 			GamePlayer player = Caster as GamePlayer;

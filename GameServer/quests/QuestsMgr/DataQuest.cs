@@ -68,7 +68,8 @@ namespace DOL.GS.Quests
 	/// AdvanceText - The text needed, if any, to advance this step.  If no step requires advance text then this can be null, otherwise
 	/// text must be provided for every step.  Empty values || are ok.
 	/// 
-	/// TargetName;RegionID
+	/// TargetName;RegionID - in addition the name can be a location (X,Y,Z,Radius) if used by a step that requires a location.  For example:
+	/// 10000,10000,5000,300;1 would be X = 10000, Y = 10000, Z = 5000, Radius = 300 in Region 1
 	/// 
 	/// TargetText - Text shown to player when current step ends.
 	/// 
@@ -93,8 +94,9 @@ namespace DOL.GS.Quests
 	/// QuestDependency - If this quest is dependent on other quests being done first then the name(s) of those quests should be here.
 	/// This can be null if no dependencies.
 	/// 
-	/// ClassType - For future use.  The plan is to allow a hybrid of data quests and code execution at the various quest parts.
-	/// This can be null.
+	/// AllowedClasses - Player classes that can get this quest
+	/// 
+	/// ClassType - For future use and customization
 	/// 
 	/// </summary>
 	public class DataQuest : AbstractQuest
@@ -133,6 +135,8 @@ namespace DOL.GS.Quests
 			InteractFinish = 5,		// Interact with the target to finish the quest
 			Whisper = 6,			// Whisper to the target to advance the quest
 			WhisperFinish = 7,		// Whisper to the target to finish the quest
+			Search = 8,				// Search in a specified location
+			SearchFinish = 9,		// Search in a specified location to finish the quest
 			Unknown = 255
 		}
 
@@ -153,6 +157,7 @@ namespace DOL.GS.Quests
 		protected List<string> m_optionalRewards = new List<string>();
 		protected List<string> m_finalRewards = new List<string>();
 		protected List<string> m_questDependencies = new List<string>();
+		protected List<byte> m_allowedClasses = new List<byte>();
 		string classType = "";
 
 		#region Construction
@@ -384,6 +389,16 @@ namespace DOL.GS.Quests
 					}
 				}
 
+				lastParse = m_dataQuest.AllowedClasses;
+				if (lastParse != null)
+				{
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
+					{
+						m_allowedClasses.Add(Convert.ToByte(str));
+					}
+				}
+
 				lastParse = m_dataQuest.ClassType;
 				if (lastParse != null)
 				{
@@ -566,6 +581,14 @@ namespace DOL.GS.Quests
 			if (player.Level < DBDataQuest.MinLevel || player.Level > DBDataQuest.MaxLevel)
 				return false;
 
+			if (m_allowedClasses.Count > 0)
+			{
+				if (m_allowedClasses.Contains((byte)player.CharacterClass.ID) == false)
+				{
+					return false;
+				}
+			}
+
 			if (StartType == eStartType.Collection)
 			{
 				CharacterXDataQuest charQuest = GetCharacterQuest(player, false);
@@ -604,7 +627,7 @@ namespace DOL.GS.Quests
 				// check to see if this quest requires another to be done first
 				if (m_questDependencies.Count > 0)
 				{
-					bool found = false;
+					int numFound = 0;
 
 					foreach (string str in m_questDependencies)
 					{
@@ -612,18 +635,14 @@ namespace DOL.GS.Quests
 						{
 							if (q is DataQuest && (q as DataQuest).Name.ToLower() == str.ToLower())
 							{
-								found = true;
+								numFound++;
 								break;
 							}
 						}
 
-						if (found)
-						{
-							break;
-						}
 					}
 
-					if (!found)
+					if (numFound < m_questDependencies.Count)
 					{
 						return false;
 					}

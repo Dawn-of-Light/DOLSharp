@@ -2734,18 +2734,18 @@ namespace DOL.GS
 			if (ad.Target is GameKeepComponent || ad.Target is GameKeepDoor)
 				return;
 
-			// Proc chance is 2.5% per SPD, i.e. 10% for a 4.0 SPD weapon.
+			// Proc chance is 2.5% per SPD, i.e. 10% for a 3.5 SPD weapon. - Tolakram, changed average speed to 3.5
 
-			double procChance = weapon.SPD_ABS * 0.0025;
+			int procChance = (int)Math.Ceiling(((weapon.ProcChance > 0 ? weapon.ProcChance : 10) * (weapon.SPD_ABS / 35.0)));
 
 			// Proc #1
 
-			if (weapon.ProcSpellID != 0 && Util.ChanceDouble(procChance))
+			if (weapon.ProcSpellID != 0 && Util.Chance(procChance))
 				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), weapon.ProcSpellID, false);
 
 			// Proc #2
 
-			if (weapon.ProcSpellID1 != 0 && Util.ChanceDouble(procChance))
+			if (weapon.ProcSpellID1 != 0 && Util.Chance(procChance))
 				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), weapon.ProcSpellID1, false);
 
 			// Poison
@@ -3176,8 +3176,8 @@ namespace DOL.GS
 
 							if (requiredLevel <= Level)
 							{
-								bool useProc1 = reactiveItem.ProcSpellID != 0 && Util.Chance(10);
-								bool useProc2 = reactiveItem.ProcSpellID1 != 0 && Util.Chance(10);
+								bool useProc1 = reactiveItem.ProcSpellID != 0;
+								bool useProc2 = reactiveItem.ProcSpellID1 != 0;
 
 								if (useProc1 || useProc2)
 								{
@@ -3191,10 +3191,13 @@ namespace DOL.GS
 
 											if (spell != null)
 											{
-												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-												if (spellHandler != null)
+												if (Util.Chance(reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10))
 												{
-													spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target, reactiveItem);
+													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+													if (spellHandler != null)
+													{
+														spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target, reactiveItem);
+													}
 												}
 											}
 										}
@@ -3205,10 +3208,13 @@ namespace DOL.GS
 
 											if (spell != null)
 											{
-												ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-												if (spellHandler != null)
+												if (Util.Chance(reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10))
 												{
-													spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target, reactiveItem);
+													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+													if (spellHandler != null)
+													{
+														spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target, reactiveItem);
+													}
 												}
 											}
 										}

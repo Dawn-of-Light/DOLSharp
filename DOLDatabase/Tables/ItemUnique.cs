@@ -93,6 +93,7 @@ namespace DOL.Database
 			SpellID1 = template.SpellID1;
 			ProcSpellID = template.ProcSpellID;
 			ProcSpellID1 = template.ProcSpellID1;
+			ProcChance = template.ProcChance;
 			PoisonSpellID = template.PoisonSpellID;
 			PoisonCharges = template.PoisonCharges;
 			PoisonMaxCharges = template.PoisonMaxCharges;

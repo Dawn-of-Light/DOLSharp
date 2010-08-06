@@ -1193,6 +1193,8 @@ namespace DOL.GS
 			return (Region)m_regions[regionID];
 		}
 
+		public static ushort m_lastZoneError = 0;
+
 		/// <summary>
 		/// Gets a Zone object by it's ID
 		/// </summary>
@@ -1200,13 +1202,18 @@ namespace DOL.GS
 		/// <returns>the zone object or null</returns>
 		public static Zone GetZone(ushort zoneID)
 		{
-			if (! m_zones.Contains(zoneID))
+			if (!m_zones.Contains(zoneID))
 			{
-				log.Error("Trying to access inexistent ZoneID "+ zoneID);
+				if (m_lastZoneError != zoneID)
+				{
+					log.Error("Trying to access inexistent ZoneID " + zoneID + " " + Environment.StackTrace);
+					m_lastZoneError = zoneID;
+				}
+
 				return null;
 			}
-			else
-				return (Zone)m_zones[zoneID];
+
+			return (Zone)m_zones[zoneID];
 		}
 
 
