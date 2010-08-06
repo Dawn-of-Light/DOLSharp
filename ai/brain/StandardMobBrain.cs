@@ -158,8 +158,15 @@ namespace DOL.AI.Brain
 			    && Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
 			{
 				PathPoint path = MovementMgr.LoadPath(Body.PathID);
-				Body.CurrentWayPoint = path;
-				Body.MoveOnPath((short)path.MaxSpeed);
+				if (path != null)
+				{
+					Body.CurrentWayPoint = path;
+					Body.MoveOnPath((short)path.MaxSpeed);
+				}
+				else
+				{
+					log.ErrorFormat("Path {0} not found for mob {1}.", Body.PathID, Body.Name);
+				}
 			}
 
 			//If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading

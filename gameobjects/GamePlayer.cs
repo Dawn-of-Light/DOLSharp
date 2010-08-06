@@ -10661,6 +10661,12 @@ namespace DOL.GS
 			if (arguments is ItemEquippedArgs == false) return;
 			InventoryItem item = ((ItemEquippedArgs)arguments).Item;
 			if (item == null) return;
+
+			if (item is IGameInventoryItem)
+			{
+				(item as IGameInventoryItem).OnEquipped(this);
+			}
+
 			if (item.Item_Type >= Slot.RIGHTHAND && item.Item_Type <= Slot.RANGED)
 			{
 				if (item.Hand == 1) // 2h
@@ -10813,7 +10819,10 @@ namespace DOL.GS
 			int prevSlot = (int)((ItemUnequippedArgs)arguments).PreviousSlotPosition;
 			if (item == null) return;
 
-			//			DOLConsole.WriteLine("unequipped item '" + item.Name + "' !");
+			if (item is IGameInventoryItem)
+			{
+				(item as IGameInventoryItem).OnUnEquipped(this);
+			}
 
 			if (item.Item_Type >= Slot.RIGHTHAND && item.Item_Type <= Slot.RANGED)
 			{
