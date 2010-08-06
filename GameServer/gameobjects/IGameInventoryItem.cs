@@ -30,8 +30,10 @@ namespace DOL.GS
 	public interface IGameInventoryItem
 	{
 		bool CheckValid(GamePlayer player);
-		void Delve(List<String> delve, GamePlayer player);
+		void OnEquipped(GamePlayer player);
+		void OnUnEquipped(GamePlayer player);
 		void OnStrikeTarget(GameLiving owner, GameObject target);
 		void OnStruckByEnemy(GameLiving owner, GameLiving enemy);
+		void Delve(List<String> delve, GamePlayer player);
 	}
 }
