@@ -111,6 +111,7 @@ namespace DOL.Database
 		protected int m_procSpellID1;
 		protected int m_charges1;
 		protected int m_maxCharges1;
+		protected byte m_procChance;
 		protected int m_poisonSpellID;
 		protected int m_poisonMaxCharges;
 		protected int m_poisonCharges;
@@ -182,6 +183,7 @@ namespace DOL.Database
 			m_spellID1 = 0;
 			m_procSpellID = 0;
 			m_procSpellID1 = 0;
+			m_procChance = 0;
 			m_charges1 = 0;
 			m_maxCharges1 = 0;
 			m_poisonCharges = 0;
@@ -982,6 +984,17 @@ namespace DOL.Database
 			{
 				
 				m_procSpellID1 = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public virtual byte ProcChance
+		{
+			get { return m_procChance; }
+			set
+			{
+
+				m_procChance = value;
 			}
 		}
 

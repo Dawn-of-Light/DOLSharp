@@ -52,6 +52,7 @@ namespace DOL.Database
 		private string m_finalRewardItemTemplates;
 		private string m_finishText;
 		private string m_questDependency;
+		private string m_allowedClasses;
 		private string m_classType;
 
 
@@ -311,13 +312,23 @@ namespace DOL.Database
 
 		/// <summary>
 		/// The name or names of other quests that need to be done before this quest can be offered.
-		/// Can be null if no dependency
+		/// Name Quest One|Name Quest Two... Can be null if no dependency
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public string QuestDependency
 		{
 			get { return m_questDependency; }
 			set { m_questDependency = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// Player classes that can do this quest.  Null for all.
+		/// </summary>
+		[DataElement(AllowDbNull = true, Varchar = 200)]
+		public string AllowedClasses
+		{
+			get { return m_allowedClasses; }
+			set { m_allowedClasses = value; Dirty = true; }
 		}
 
 		/// <summary>

@@ -1051,6 +1051,7 @@ namespace DOL.GS
 			delve.Add(" Is stackable: " + (IsStackable ? "yes" : "no"));
 			delve.Add("  ProcSpellID: " + ProcSpellID);
 			delve.Add(" ProcSpellID1: " + ProcSpellID1);
+			delve.Add("   ProcChance: " + ProcChance);
 			delve.Add("      SpellID: " + SpellID + " (" + Charges + "/" + MaxCharges + ")");
 			delve.Add("     SpellID1: " + SpellID1 + " (" + Charges1 + "/" + MaxCharges1 + ")");
 			delve.Add("PoisonSpellID: " + PoisonSpellID + " (" + PoisonCharges + "/" + PoisonMaxCharges + ") ");

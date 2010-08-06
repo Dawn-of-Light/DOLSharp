@@ -541,6 +541,12 @@ namespace DOL.Database
 			set { Template.MaxCharges1 = value; }
 		}
 
+		public virtual byte ProcChance
+		{
+			get { return Template.ProcChance; }
+			set { Template.ProcChance = value; }
+		}
+
 		public virtual int CanUseEvery
 		{
 			get { return Template.CanUseEvery; }

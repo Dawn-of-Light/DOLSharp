@@ -31,7 +31,7 @@ namespace DOL.GS.Spells
     {
 		public ArcheryDoTSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override double CalculateDamageBase()
+		public override double CalculateDamageBase(GameLiving target)
         {
             return Spell.Damage;
         }

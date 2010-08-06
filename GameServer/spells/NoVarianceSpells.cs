@@ -29,7 +29,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("DamageSpeedDecreaseNoVariance")]
     public class DamageSpeedDecreaseNoVarianceSpellHandler : DamageSpeedDecreaseSpellHandler
 	{
-		public override double CalculateDamageBase()
+		public override double CalculateDamageBase(GameLiving target)
 		{
 			return Spell.Damage;
 		}
@@ -50,7 +50,7 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("DirectDamageNoVariance")]
     public class DirectDamageNoVarianceSpellHandler : DirectDamageSpellHandler
     {
-        public override double CalculateDamageBase()
+		public override double CalculateDamageBase(GameLiving target)
         {
             return Spell.Damage;
         }
