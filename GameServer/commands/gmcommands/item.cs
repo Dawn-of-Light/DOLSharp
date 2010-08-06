@@ -1233,6 +1233,32 @@ namespace DOL.GS.Commands
 							break;
 						}
 					#endregion Proc1
+					#region ProcChance
+					case "procchance":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							item.ProcChance = Convert.ToByte(args[2]);
+							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							break;
+						}
+					#endregion ProcChance
 					#region Poison
 					case "poison":
 						{

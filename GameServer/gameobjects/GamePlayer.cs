@@ -6320,37 +6320,47 @@ namespace DOL.GS
 							{
 								int requiredLevel = reactiveItem.Template.LevelRequirement > 0 ? reactiveItem.Template.LevelRequirement : Math.Min(50, reactiveItem.Level);
 
-								SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-
-								if (reactiveItem.ProcSpellID != 0 && requiredLevel <= Level && Util.Chance(10))
+								if (requiredLevel <= Level)
 								{
+									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+
 									if (reactiveEffectLine != null)
 									{
-										Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID, reactiveEffectLine);
-
-										if (spell != null)
+										if (reactiveItem.ProcSpellID != 0)
 										{
-											ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-											if (spellHandler != null)
+											Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID, reactiveEffectLine);
+
+											if (spell != null)
 											{
-												spellHandler.StartSpell(ad.Attacker, reactiveItem);
+												int chance = reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10;
+
+												if (Util.Chance(chance))
+												{
+													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+													if (spellHandler != null)
+													{
+														spellHandler.StartSpell(ad.Attacker, reactiveItem);
+													}
+												}
 											}
 										}
-									}
-								}
 
-								if (reactiveItem.ProcSpellID1 != 0 && requiredLevel <= Level && Util.Chance(10))
-								{
-									if (reactiveEffectLine != null)
-									{
-										Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID1, reactiveEffectLine);
-
-										if (spell != null)
+										if (reactiveItem.ProcSpellID1 != 0)
 										{
-											ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-											if (spellHandler != null)
+											Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID1, reactiveEffectLine);
+
+											if (spell != null)
 											{
-												spellHandler.StartSpell(ad.Attacker, reactiveItem);
+												int chance = reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10;
+
+												if (Util.Chance(chance))
+												{
+													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+													if (spellHandler != null)
+													{
+														spellHandler.StartSpell(ad.Attacker, reactiveItem);
+													}
+												}
 											}
 										}
 									}
