@@ -720,11 +720,11 @@ namespace DOL.GS
 			// DamienOphyr: Overwrite current position with Bind position in database, MoveTo() is inoperant
 			if (CurrentRegion.IsInstance)
 			{
-					DBCharacter.Region = DBCharacter.BindRegion;
-					DBCharacter.Xpos =DBCharacter.BindXpos;
-					DBCharacter.Ypos= DBCharacter.BindYpos;
-					DBCharacter.Zpos =DBCharacter.BindZpos;
-					DBCharacter.Direction=DBCharacter.BindHeading;
+				DBCharacter.Region = DBCharacter.BindRegion;
+				DBCharacter.Xpos =DBCharacter.BindXpos;
+				DBCharacter.Ypos= DBCharacter.BindYpos;
+				DBCharacter.Zpos =DBCharacter.BindZpos;
+				DBCharacter.Direction=DBCharacter.BindHeading;
 			}
 			
 			//check for battleground caps
@@ -1805,7 +1805,7 @@ namespace DOL.GS
 		/// </remarks>
 		public override ushort Model
 		{
-			get 
+			get
 			{
 				return base.Model;
 			}
@@ -4084,17 +4084,17 @@ namespace DOL.GS
 				if (modifier != -1)
 					amount = (long)(amount * modifier);
 
-                //[StephenxPimente]: Zone Bonus Support
-                if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
-                {
-                    int zoneBonus = (((int)amount * ZoneBonus.GetRPBonus(this)) / 100);
-                    if (zoneBonus > 0)
-                    {
-                        Out.SendMessage(ZoneBonus.GetBonusMessage(this, (int)(zoneBonus * ServerProperties.Properties.RP_RATE), ZoneBonus.eZoneBonusType.RP),
-                            eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                        GainRealmPoints((long)(zoneBonus * ServerProperties.Properties.RP_RATE), false, false, false);
-                    }
-                }
+				//[StephenxPimente]: Zone Bonus Support
+				if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
+				{
+					int zoneBonus = (((int)amount * ZoneBonus.GetRPBonus(this)) / 100);
+					if (zoneBonus > 0)
+					{
+						Out.SendMessage(ZoneBonus.GetBonusMessage(this, (int)(zoneBonus * ServerProperties.Properties.RP_RATE), ZoneBonus.eZoneBonusType.RP),
+						                eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						GainRealmPoints((long)(zoneBonus * ServerProperties.Properties.RP_RATE), false, false, false);
+					}
+				}
 
 				//[Freya] Nidel: ToA Rp Bonus
 				long rpBonus = GetModified(eProperty.RealmPoints);
@@ -4230,17 +4230,17 @@ namespace DOL.GS
 				if (modifier != -1)
 					amount = (long)(amount * modifier);
 
-                //[StephenxPimente]: Zone Bonus Support
-                if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
-                {
-                    int zoneBonus = (((int)amount * ZoneBonus.GetBPBonus(this)) / 100);
-                    if (zoneBonus > 0)
-                    {
-                        Out.SendMessage(ZoneBonus.GetBonusMessage(this, (int)(zoneBonus * ServerProperties.Properties.BP_RATE), ZoneBonus.eZoneBonusType.BP),
-                            eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                        GainBountyPoints((long)(zoneBonus * ServerProperties.Properties.BP_RATE), false, false, false);
-                    }
-                }
+				//[StephenxPimente]: Zone Bonus Support
+				if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
+				{
+					int zoneBonus = (((int)amount * ZoneBonus.GetBPBonus(this)) / 100);
+					if (zoneBonus > 0)
+					{
+						Out.SendMessage(ZoneBonus.GetBonusMessage(this, (int)(zoneBonus * ServerProperties.Properties.BP_RATE), ZoneBonus.eZoneBonusType.BP),
+						                eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						GainBountyPoints((long)(zoneBonus * ServerProperties.Properties.BP_RATE), false, false, false);
+					}
+				}
 
 				//[Freya] Nidel: ToA Bp Bonus
 				long bpBonus = GetModified(eProperty.BountyPoints);
@@ -4717,17 +4717,17 @@ namespace DOL.GS
 				expTotal -= expCampBonus;
 				expTotal -= expOutpostBonus;
 
-                //[StephenxPimentel] - Zone Bonus XP Support
-                if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
-                {
-                    int zoneBonus = (((int)expTotal * ZoneBonus.GetXPBonus(this)) / 100);
-                    if (zoneBonus > 0)
-                    {
-                        Out.SendMessage(ZoneBonus.GetBonusMessage(this, (int)(zoneBonus * ServerProperties.Properties.XP_RATE), ZoneBonus.eZoneBonusType.XP),
-                            eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                        GainExperience(eXPSource.Other, (long)(zoneBonus * ServerProperties.Properties.XP_RATE), 0, 0, 0, false, false, false);
-                    }
-                }
+				//[StephenxPimentel] - Zone Bonus XP Support
+				if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
+				{
+					int zoneBonus = (((int)expTotal * ZoneBonus.GetXPBonus(this)) / 100);
+					if (zoneBonus > 0)
+					{
+						Out.SendMessage(ZoneBonus.GetBonusMessage(this, (int)(zoneBonus * ServerProperties.Properties.XP_RATE), ZoneBonus.eZoneBonusType.XP),
+						                eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						GainExperience(eXPSource.Other, (long)(zoneBonus * ServerProperties.Properties.XP_RATE), 0, 0, 0, false, false, false);
+					}
+				}
 
 
 				if (this.CurrentRegion.IsRvR)
@@ -6993,28 +6993,28 @@ namespace DOL.GS
 					//Table b: Formula used: drawspeed = bowspeed * (1-(quickness - 50)*0.002) * (1-MoA*0.03) - ((archeryspeedbonus/100 * basebowspeed))
 
 					//For now use the standard weapon formula, later add ranger haste etc.
-                    speed *= (1.0 - (qui - 60) * 0.002);
-                    double percent = 0;
-                    // Calcul ArcherySpeed bonus to substract
-                    percent = speed * 0.01 * GetModified(eProperty.ArcherySpeed);
-                    // Apply RA difference
-                    speed -= percent;
-                    //log.Debug("speed = " + speed + " percent = " + percent + " eProperty.archeryspeed = " + GetModified(eProperty.ArcherySpeed));
-                    if (RangedAttackType == eRangedAttackType.Critical)
-                        speed = speed * 2 - (GetAbilityLevel(Abilities.Critical_Shot) - 1) * speed / 10;
-                }
-                else
-                {
-                    // no archery bonus
-                    speed *= (1.0 - (qui - 60) * 0.002);
-                }
-            }
-            else
-            {
-                // TODO use haste
-                //Weapon Speed*(1-(Quickness-60)/500]*(1-Haste)
-                speed *= (1.0 - (qui - 60) * 0.002) * 0.01 * GetModified(eProperty.MeleeSpeed);
-            }
+					speed *= (1.0 - (qui - 60) * 0.002);
+					double percent = 0;
+					// Calcul ArcherySpeed bonus to substract
+					percent = speed * 0.01 * GetModified(eProperty.ArcherySpeed);
+					// Apply RA difference
+					speed -= percent;
+					//log.Debug("speed = " + speed + " percent = " + percent + " eProperty.archeryspeed = " + GetModified(eProperty.ArcherySpeed));
+					if (RangedAttackType == eRangedAttackType.Critical)
+						speed = speed * 2 - (GetAbilityLevel(Abilities.Critical_Shot) - 1) * speed / 10;
+				}
+				else
+				{
+					// no archery bonus
+					speed *= (1.0 - (qui - 60) * 0.002);
+				}
+			}
+			else
+			{
+				// TODO use haste
+				//Weapon Speed*(1-(Quickness-60)/500]*(1-Haste)
+				speed *= (1.0 - (qui - 60) * 0.002) * 0.01 * GetModified(eProperty.MeleeSpeed);
+			}
 
 			// apply speed cap
 			if (speed < 15)
@@ -7088,7 +7088,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="killer">the killer</param>
 		public override void Die(GameObject killer)
-		{	
+		{
 			// ambiant talk
 			if (killer is GameNPC)
 				(killer as GameNPC).FireAmbientSentence(GameNPC.eAmbientTrigger.killing, this);
@@ -9769,7 +9769,7 @@ namespace DOL.GS
 			}
 			set
 			{
-				if (DBCharacter == null) 
+				if (DBCharacter == null)
 					return;
 
 				if (value == null)
@@ -10061,22 +10061,22 @@ namespace DOL.GS
 				if (value == m_swimming) return;
 				m_swimming = value;
 				Notify(GamePlayerEvent.SwimmingStatus, this);
-                //Handle Lava Damage
-                if (m_swimming && CurrentZone.IsLava == true)
-                {
-                    if (m_lavaBurningTimer == null)
-                    {
-                        m_lavaBurningTimer = new RegionTimer(this);
-                        m_lavaBurningTimer.Callback = new RegionTimerCallback(LavaBurnTimerCallback);
-                        m_lavaBurningTimer.Interval = 2000;
-                        m_lavaBurningTimer.Start(1);
-                    }
-                }
-                if (!m_swimming && CurrentZone.IsLava == true && m_lavaBurningTimer != null)
-                {
-                    m_lavaBurningTimer.Stop();
-                    m_lavaBurningTimer = null;
-                }
+				//Handle Lava Damage
+				if (m_swimming && CurrentZone.IsLava == true)
+				{
+					if (m_lavaBurningTimer == null)
+					{
+						m_lavaBurningTimer = new RegionTimer(this);
+						m_lavaBurningTimer.Callback = new RegionTimerCallback(LavaBurnTimerCallback);
+						m_lavaBurningTimer.Interval = 2000;
+						m_lavaBurningTimer.Start(1);
+					}
+				}
+				if (!m_swimming && CurrentZone.IsLava == true && m_lavaBurningTimer != null)
+				{
+					m_lavaBurningTimer.Stop();
+					m_lavaBurningTimer = null;
+				}
 			}
 		}
 
@@ -10138,7 +10138,7 @@ namespace DOL.GS
 
 		protected RegionTimer m_drowningTimer;
 		protected RegionTimer m_holdBreathTimer;
-        protected RegionTimer m_lavaBurningTimer;
+		protected RegionTimer m_lavaBurningTimer;
 		/// <summary>
 		/// The diving state of this player
 		/// </summary>
@@ -10222,18 +10222,18 @@ namespace DOL.GS
 			//	Out.SendUpdateMaxSpeed();
 		}
 
-        protected int LavaBurnTimerCallback(RegionTimer callingTimer)
-        {
-            if (!IsAlive || ObjectState != eObjectState.Active || !IsSwimming)
-                return 0;
-            if (this.Client.Account.PrivLevel == 1)
-            {
-                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.YourInLava"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.Take34%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-                TakeDamage(null, eDamageType.Natural, (int)(MaxHealth * 0.34), 0);
-            }
-            return 2000;
-        }
+		protected int LavaBurnTimerCallback(RegionTimer callingTimer)
+		{
+			if (!IsAlive || ObjectState != eObjectState.Active || !IsSwimming)
+				return 0;
+			if (this.Client.Account.PrivLevel == 1)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.YourInLava"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.Take34%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				TakeDamage(null, eDamageType.Natural, (int)(MaxHealth * 0.34), 0);
+			}
+			return 2000;
+		}
 
 		/// <summary>
 		/// The sitting state of this player
@@ -12831,7 +12831,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int CraftingSkillBonus
 		{
-			get 
+			get
 			{
 				if (CurrentRegion.IsCapitalCity)
 				{
@@ -13411,38 +13411,35 @@ namespace DOL.GS
 
 				if (CharacterClass.ID == (int)eCharacterClass.Necromancer)
 					return 822;
-
-				switch (RaceName)
+				
+				switch (Race)
 				{
 						// Albion Models.
-
-						case "Inconnu": return (ushort)(DBCharacter.Gender + 1351);
-						case "Briton": return (ushort)(DBCharacter.Gender + 1353);
-						case "Highlander": return (ushort)(DBCharacter.Gender + 1355);
-						case "Saracen": return (ushort)(DBCharacter.Gender + 1357);
-						case "Avalonian": return (ushort)(DBCharacter.Gender + 1359);
-						case "Half Ogre": return (ushort)(DBCharacter.Gender + 1361);
+						case 13: return (ushort)(DBCharacter.Gender + 1351); //Inconnu
+						case 1:  return (ushort)(DBCharacter.Gender + 1353); //Briton
+						case 2:  return (ushort)(DBCharacter.Gender + 1359); //Avalonian
+						case 3:  return (ushort)(DBCharacter.Gender + 1355); //Highlander
+						case 4:  return (ushort)(DBCharacter.Gender + 1357); //Saracen
+						case 5:  return (ushort)(DBCharacter.Gender + 1365); //Norseman
+						case 16: return (ushort)(DBCharacter.Gender + 1361); //HalfOgre
 
 						// Midgard Models.
-
-						case "Troll": return (ushort)(DBCharacter.Gender + 1363);
-						case "Norse": return (ushort)(DBCharacter.Gender + 1365);
-						case "Kobold": return (ushort)(DBCharacter.Gender + 1367);
-						case "Dwarf": return (ushort)(DBCharacter.Gender + 1369);
-						case "Valkyn": return (ushort)(DBCharacter.Gender + 1371);
-						case "Frostalf": return (ushort)(DBCharacter.Gender + 1373);
+						case 6:  return (ushort)(DBCharacter.Gender + 1363); //Troll
+						case 7:  return (ushort)(DBCharacter.Gender + 1365); //Dwarf
+						case 8:  return (ushort)(DBCharacter.Gender + 1367); //Kobold
+						case 14: return (ushort)(DBCharacter.Gender + 1371); //Valkyn
+						case 17: return (ushort)(DBCharacter.Gender + 1373); //Frostalf
 
 						// Hibernia Models.
-
-						case "Firbolg": return (ushort)(DBCharacter.Gender + 1375);
-						case "Celt": return (ushort)(DBCharacter.Gender + 1377);
-						case "Lurikeen": return (ushort)(DBCharacter.Gender + 1379);
-						case "Elf": return (ushort)(DBCharacter.Gender + 1381);
-						case "Sylvan": return (ushort)(DBCharacter.Gender + 1383);
-						case "Shar": return (ushort)(DBCharacter.Gender + 1385);
+						case 10: return (ushort)(DBCharacter.Gender + 1375); //Firbolg
+						case 9:  return (ushort)(DBCharacter.Gender + 1377); //Celt
+						case 12: return (ushort)(DBCharacter.Gender + 1379); //Lurikeen
+						case 11: return (ushort)(DBCharacter.Gender + 1381); //Elf
+						case 15: return (ushort)(DBCharacter.Gender + 1383); //Sylvan
+						case 18: return (ushort)(DBCharacter.Gender + 1385); //Shar
+						
+						default: return Model;
 				}
-
-				return Model;
 			}
 		}
 
@@ -14820,7 +14817,7 @@ namespace DOL.GS
 			 none
 
 			<End Info>
-			*/
+			 */
 
 			//AbilityBonus[(int)((eProperty)updateResists[i])]
 			info.Add(LanguageMgr.GetTranslation(Client, "PlayerBonusesListRequestHandler.HandlePacket.Resist"));
@@ -14940,7 +14937,7 @@ namespace DOL.GS
 			string BonusName = ((eProperty)iBonusType).ToString();
 			string str = BonusName.ToString().Replace("_", " ") + ": ";
 			return str + iBonus + (((iBonusType < 20) && (iBonusType > 10)) ? "%" : "");
-			*/
+			 */
 			//This displays the bonuses just like the Live servers. there is a check against the pts/% differences
 			string str = ((iBonusType == 150) | (iBonusType == 210) | (iBonusType == 10) | (iBonusType == 151) | (iBonusType == 186)) ? "pts of " : "% to ";  //150(Health Regen) 151(PowerRegen) and 186(Style reductions) need the prefix of "pts of " to be correct
 
@@ -14949,11 +14946,11 @@ namespace DOL.GS
 			//Lifeflight add
 
 			//iBonusTypes that cap at 10
-			//SpellRange, ArcheryRange, MeleeSpeed, MeleeDamage, RangedDamage, ArcherySpeed, 
+			//SpellRange, ArcheryRange, MeleeSpeed, MeleeDamage, RangedDamage, ArcherySpeed,
 			//CastingSpeed, ResistPierce, SpellDamage, StyleDamage
 			if (iBonusType == (int)eProperty.SpellRange || iBonusType == (int)eProperty.ArcheryRange || iBonusType == (int)eProperty.MeleeSpeed
-				 || iBonusType == (int)eProperty.MeleeDamage || iBonusType == (int)eProperty.RangedDamage || iBonusType == (int)eProperty.ArcherySpeed
-				 || iBonusType == (int)eProperty.CastingSpeed || iBonusType == (int)eProperty.ResistPierce || iBonusType == (int)eProperty.SpellDamage || iBonusType == (int)eProperty.StyleDamage)
+			    || iBonusType == (int)eProperty.MeleeDamage || iBonusType == (int)eProperty.RangedDamage || iBonusType == (int)eProperty.ArcherySpeed
+			    || iBonusType == (int)eProperty.CastingSpeed || iBonusType == (int)eProperty.ResistPierce || iBonusType == (int)eProperty.SpellDamage || iBonusType == (int)eProperty.StyleDamage)
 			{
 				if (iBonus > 10)
 					iBonus = 10;
