@@ -275,7 +275,7 @@ namespace DOL.GS.GameEvents
 
                 if (killer.Group != null)
                 {
-                    foreach (GamePlayer member in killer.Group.GetMembersInTheGroup())
+                    foreach (GamePlayer member in killer.Group.GetPlayersInTheGroup())
                     {
                         if (member != killer)
                         {

@@ -591,7 +591,8 @@ namespace DOL.GS.Commands
 						#region Buybanner
 					case "buybanner":
 						{
-							long Costs = (client.Player.Guild.GuildLevel * 100);
+							long bannerPrice = (client.Player.Guild.GuildLevel * 100);
+
 							if (client.Player.Guild == null)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -602,12 +603,14 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerAlready"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
+
 							client.Player.Guild.UpdateGuildWindow();
-							if (client.Player.Guild.BountyPoints > Costs)
+
+							if (client.Player.Guild.BountyPoints > bannerPrice || client.Account.PrivLevel > (int)ePrivLevel.Player)
 							{
-								client.Player.Guild.RemoveBountyPoints(Costs);
+								client.Player.Guild.RemoveBountyPoints(bannerPrice);
 								client.Player.Guild.GuildBanner = true;
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerBought", Costs), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerBought", bannerPrice), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 							}
 							else
 							{
@@ -632,31 +635,43 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNone"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							if (client.Player.Group == null)
+							if (client.Player.Group == null && client.Account.PrivLevel == (int)ePrivLevel.Player)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 							foreach (GamePlayer player in client.Player.Guild.ListOnlineMembers())
 							{
-								if (player.IsCarryingGuildBanner)
+								if (player.GuildBanner != null)
 								{
 									client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerGuildSummoned"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 									return;
 								}
 							}
-							foreach (GamePlayer playa in client.Player.Group.GetPlayersInTheGroup())
+
+							if (client.Player.Group != null)
 							{
-								if (playa.IsCarryingGuildBanner)
+								foreach (GamePlayer playa in client.Player.Group.GetPlayersInTheGroup())
 								{
-									client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerGroupSummoned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
+									if (playa.GuildBanner != null)
+									{
+										client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerGroupSummoned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										return;
+									}
 								}
 							}
-							GuildBanner banner = new GuildBanner(client.Player);
-							banner.Start();
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerSummoned"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							client.Player.Guild.UpdateGuildWindow();
+
+							if (client.Player.CurrentRegion.IsRvR)
+							{
+								GuildBanner banner = new GuildBanner(client.Player);
+								banner.Start();
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerSummoned"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								client.Player.Guild.UpdateGuildWindow();
+							}
+							else
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNotRvR"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+							}
 							break;
 						}
 						#endregion
@@ -750,7 +765,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNone"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							if (client.Player.Group == null)
+							if (client.Player.Group == null && client.Account.PrivLevel == (int)ePrivLevel.Player)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
@@ -762,9 +777,10 @@ namespace DOL.GS.Commands
 							}
 							foreach (GamePlayer player in client.Player.Guild.ListOnlineMembers())
 							{
-								if (player.IsCarryingGuildBanner && client.Player.Name == player.Name)
+								if (player.GuildBanner != null && client.Player.Name == player.Name)
 								{
-									client.Player.IsCarryingGuildBanner = false;
+									player.Inventory.RemoveItem(player.GuildBanner.BannerItem);
+									client.Player.GuildBanner = null;
 								}
 							}
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerUnsummoned"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);

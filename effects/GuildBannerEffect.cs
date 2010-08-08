@@ -32,8 +32,8 @@ namespace DOL.GS.Effects
 		//http://support.darkageofcamelot.com/kb/article.php?id=786
 
 		// - Spells on banners will emit >SHORT< duration PBAOE buff spells around the banner's carrier.
-		//TODO assumed 10 secs, find correct duration 
-		protected const int duration = 10000 - 1; 
+		// Using standard pulsing spell pulse of 6 seconds, duration of 8 seconds - Tolakram
+		protected const int duration = 8000; 
 
 		/// <summary>
 		/// Starts the matching GuildBannerEffect with type (by carrierCharacterClass) and effectiveness
