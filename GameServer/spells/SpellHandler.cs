@@ -3520,9 +3520,11 @@ target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 				spellLevel += (int)effect.Spell.Value;
 			}
 
-			//Andraste
-			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect
-			    || m_spellLine.KeyName == GlobalSpellsLines.Champion_Spells) spellLevel = 50; // why not have spell in db at 50 level ?
+			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect ||
+				m_spellLine.KeyName == GlobalSpellsLines.Champion_Spells)
+			{
+				spellLevel = Math.Min((byte)50, target.Level);
+			}
 
 			int bonustohit = m_caster.GetModified(eProperty.ToHitBonus);
 
@@ -3532,21 +3534,21 @@ target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 				bonustohit += (int)resPierce.Spell.Value;
 
 			/*
-http://www.camelotherald.com/news/news_article.php?storyid=704
+			http://www.camelotherald.com/news/news_article.php?storyid=704
 
-Q: Spell resists. Can you give me more details as to how the system works?
+			Q: Spell resists. Can you give me more details as to how the system works?
 
-A: Here's the answer, straight from the desk of the spell designer:
+			A: Here's the answer, straight from the desk of the spell designer:
 
-"Spells have a factor of (spell level / 2) added to their chance to hit. (Spell level defined as the level the spell is awarded, chance to hit defined as
-the chance of avoiding the "Your target resists the spell!" message.) Subtracted from the modified to-hit chance is the target's (level / 2).
-So a L50 caster casting a L30 spell at a L50 monster or player, they have a base chance of 85% to hit, plus 15%, minus 25% for a net chance to hit of 75%.
-If the chance to hit goes over 100% damage or duration is increased, and if it goes below 55%, you still have a 55% chance to hit but your damage
-or duration is penalized. If the chance to hit goes below 0, you cannot hit at all. Once the spell hits, damage and duration are further modified
-by resistances.
+			"Spells have a factor of (spell level / 2) added to their chance to hit. (Spell level defined as the level the spell is awarded, chance to hit defined as
+			the chance of avoiding the "Your target resists the spell!" message.) Subtracted from the modified to-hit chance is the target's (level / 2).
+			So a L50 caster casting a L30 spell at a L50 monster or player, they have a base chance of 85% to hit, plus 15%, minus 25% for a net chance to hit of 75%.
+			If the chance to hit goes over 100% damage or duration is increased, and if it goes below 55%, you still have a 55% chance to hit but your damage
+			or duration is penalized. If the chance to hit goes below 0, you cannot hit at all. Once the spell hits, damage and duration are further modified
+			by resistances.
 
-Note:  The last section about maintaining a chance to hit of 55% has been proven incorrect with live testing.  The code below is very close to live like.
-- Tolakram
+			Note:  The last section about maintaining a chance to hit of 55% has been proven incorrect with live testing.  The code below is very close to live like.
+			- Tolakram
 			 */
 
 			int hitchance = 85 + ((spellLevel - target.Level) / 2) + bonustohit;

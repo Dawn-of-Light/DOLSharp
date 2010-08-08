@@ -66,7 +66,8 @@ namespace DOL.GS.Spells
 
 				if (player != null)
 				{
-					spellDamage = target.MaxHealth * -Spell.Damage * .01;
+					// This equation is used to simulate live values - Tolakram
+					spellDamage = (target.MaxHealth * -Spell.Damage * .01) / 2.5;
 				}
 
 				if (spellDamage < 0)
@@ -83,7 +84,7 @@ namespace DOL.GS.Spells
 		{
 			if (Spell.Damage < 0)
 			{
-				return (m_spellTarget.MaxHealth * -Spell.Damage * .01) * effectiveness;
+				return (m_spellTarget.MaxHealth * -Spell.Damage * .01) * 3.0 * effectiveness;
 			}
 
 			return base.DamageCap(effectiveness);

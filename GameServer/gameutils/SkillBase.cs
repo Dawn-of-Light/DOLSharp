@@ -2187,16 +2187,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Will attempt to find a spell by ID or in a SpellLine
+		/// Will attempt to find either in the spell line given or in the list of all spells
 		/// </summary>
 		/// <param name="spellID"></param>
 		/// <param name="line"></param>
 		/// <returns></returns>
 		public static Spell FindSpell(int spellID, SpellLine line)
 		{
-			Spell spell = GetSpellByID(spellID);
+			Spell spell = null;
 
-			if (spell == null && line != null)
+			if (line != null)
 			{
 				List<Spell> spells = GetSpellList(line.KeyName);
 				foreach (Spell lineSpell in spells)
@@ -2207,6 +2207,11 @@ namespace DOL.GS
 						break;
 					}
 				}
+			}
+
+			if (spell == null)
+			{
+				spell = GetSpellByID(spellID);
 			}
 
 			return spell;
