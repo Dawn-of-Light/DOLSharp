@@ -112,14 +112,13 @@ namespace DOL.GS
 				m_doorUpdateList = new Dictionary<int,eDoorState>();
 				m_doorUpdateRegionID = CurrentRegionID;
 				m_doorUpdateList.Add(door.ObjectID, door.State);
-
-				Out.SendDoorState(door);
+				Out.SendDoorState(CurrentRegion, door);
 			}
 			else
 			{
 				if (m_doorUpdateList.ContainsKey(door.ObjectID) == false || m_doorUpdateList[door.ObjectID] != door.State)
 				{
-					Out.SendDoorState(door);
+					Out.SendDoorState(CurrentRegion, door);
 					m_doorUpdateList[door.ObjectID] = door.State;
 				}
 			}

@@ -161,6 +161,18 @@ namespace DOL.GS.Spells
 			set { m_ignoreDamageCap = value; }
 		}
 
+		protected bool m_useMinVariance = false;
+
+		/// <summary>
+		/// Should this spell use the minimum variance for the type?
+		/// Followup style effects, for example, always use the minimum variance
+		/// </summary>
+		public bool UseMinVariance
+		{
+			get { return m_useMinVariance; }
+			set { m_useMinVariance = value; }
+		}
+
 
 		/// <summary>
 		/// The CastingCompleteEvent
@@ -3305,7 +3317,30 @@ target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 		/// <param name="max">returns max variance</param>
 		public virtual void CalculateDamageVariance(GameLiving target, out double min, out double max)
 		{
-			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects || m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName == GlobalSpellsLines.Reserved_Spells)
+			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects)
+			{
+				min = 1.0;
+				max = 1.25;
+				return;
+			}
+
+			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+			{
+				if (UseMinVariance)
+				{
+					min = 1.50;
+				}
+				else
+				{
+					min = 1.00;
+				}
+
+				max = 1.50;
+
+				return;
+			}
+
+			if (m_spellLine.KeyName == GlobalSpellsLines.Reserved_Spells)
 			{
 				min = max = 1.0;
 				return;
@@ -3736,7 +3771,6 @@ Note:  The last section about maintaining a chance to hit of 55% has been proven
 
 		public virtual double DamageCap(double effectiveness)
 		{
-
 			return Spell.Damage * 3.0 * effectiveness;
 		}
 

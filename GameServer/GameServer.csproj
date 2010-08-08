@@ -2096,7 +2096,6 @@
     <Compile Include="spells\ConfusionSpellHandler.cs" />
     <Compile Include="spells\Conversion.cs" />
     <Compile Include="spells\ConvertPet.cs" />
-    <Compile Include="spells\DirectDamagePercentSpellHandler.cs" />
     <Compile Include="spells\CostumeSpellHandler.cs" />
     <Compile Include="spells\CureAllSpellHandler.cs" />
     <Compile Include="spells\DamageReductionPowerReturn.cs" />

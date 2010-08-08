@@ -503,7 +503,13 @@ namespace DOL.GS.Styles
 									effect = CreateMagicEffect(living, attackData.Target, procToExecute.SpellID);
 									//effect could be null if the SpellID is bigger than ushort
 									if (effect != null)
+									{
 										attackData.StyleEffects.Add(effect);
+										if (attackData.Style.OpeningRequirementType == Style.eOpening.Offensive || attackData.Style.OpeningRequirementType == Style.eOpening.Defensive)
+										{
+											effect.UseMinVariance = true;
+										}
+									}
 								}
 							}
 						}
@@ -514,7 +520,13 @@ namespace DOL.GS.Styles
 							//effect could be null if the SpellID is bigger than ushort
 							effect = CreateMagicEffect(living, attackData.Target, attackData.Style.Procs[random].SpellID);
 							if (effect != null)
+							{
 								attackData.StyleEffects.Add(effect);
+								if (attackData.Style.OpeningRequirementType == Style.eOpening.Offensive || attackData.Style.OpeningRequirementType == Style.eOpening.Defensive)
+								{
+									effect.UseMinVariance = true;
+								}
+							}
 						}
 					}
 
@@ -646,6 +658,7 @@ namespace DOL.GS.Styles
 			{
 				return null;
 			}
+
 
 			return spellHandler;
 		}
