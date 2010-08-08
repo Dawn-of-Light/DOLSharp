@@ -1696,17 +1696,16 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendDoorState(IDoor door)
+		public virtual void SendDoorState(Region region, IDoor door)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DoorState)))
 			{
 				ushort zone = (ushort)(door.DoorID / 1000000);
-				Zone doorZone = WorldMgr.GetZone(zone);
 				int doorType = door.DoorID / 100000000;
 				uint flag = door.Flag;
 
 				// by default give all unflagged above ground non keep doors a default sound (excluding TrialsOfAtlantis zones)
-				if (flag == 0 && doorType != 7 && doorZone != null && !doorZone.IsDungeon && doorZone.ZoneRegion.Expansion != (int)eClientExpansion.TrialsOfAtlantis)
+				if (flag == 0 && doorType != 7 && region != null && region.IsDungeon == false && region.Expansion != (int)eClientExpansion.TrialsOfAtlantis)
 				{
 					flag = 1;
 				}

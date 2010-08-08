@@ -134,7 +134,7 @@ namespace DOLGameServerConsole
 		public void SendInventoryItemsUpdate(byte preAction, ICollection<InventoryItem> itemsToUpdate) { }
 		public void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, byte windowType) { }
 		public void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType) { }
-		public void SendDoorState(IDoor door) { }
+		public void SendDoorState(Region region, IDoor door) { }
 		public void SendMerchantWindow(MerchantTradeItems itemlist, eMerchantWindowType windowType) { }
 		public void SendTradeWindow() { }
 		public void SendCloseTradeWindow() { }

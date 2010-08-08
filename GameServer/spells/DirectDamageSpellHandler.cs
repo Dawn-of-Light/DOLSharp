@@ -49,6 +49,47 @@ namespace DOL.GS.Spells
 
 		private const string LOSEFFECTIVENESS = "LOS Effectivness";
 
+
+
+		/// <summary>
+		/// Calculates the base 100% spell damage which is then modified by damage variance factors
+		/// </summary>
+		/// <returns></returns>
+		public override double CalculateDamageBase(GameLiving target)
+		{
+			GamePlayer player = Caster as GamePlayer;
+
+			// % damage procs
+			if (Spell.Damage < 0)
+			{
+				double spellDamage = 0;
+
+				if (player != null)
+				{
+					spellDamage = target.MaxHealth * -Spell.Damage * .01;
+				}
+
+				if (spellDamage < 0)
+					spellDamage = 0;
+
+				return spellDamage;
+			}
+
+			return base.CalculateDamageBase(target);
+		}
+
+
+		public override double DamageCap(double effectiveness)
+		{
+			if (Spell.Damage < 0)
+			{
+				return (m_spellTarget.MaxHealth * -Spell.Damage * .01) * effectiveness;
+			}
+
+			return base.DamageCap(effectiveness);
+		}
+
+
 		/// <summary>
 		/// execute direct effect
 		/// </summary>
