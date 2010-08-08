@@ -1429,30 +1429,30 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							GamePlayer obj = client.Player.TargetObject as GamePlayer;
+							GamePlayer newLeader = client.Player.TargetObject as GamePlayer;
 							if (args.Length > 2)
 							{
 								GameClient temp = WorldMgr.GetClientByPlayerName(args[2], true, false);
 								if (temp != null && GameServer.ServerRules.IsAllowedToGroup(client.Player, temp.Player, true))
-									obj = temp.Player;
+									newLeader = temp.Player;
 							}
-							if (obj == null)
+							if (newLeader == null)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							if (obj.Guild != client.Player.Guild)
+							if (newLeader.Guild != client.Player.Guild)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 
-							obj.GuildRank = obj.Guild.GetRankByID(0);
-							obj.SaveIntoDatabase();
-							obj.Out.SendMessage(LanguageMgr.GetTranslation(obj.Client, "Scripts.Player.Guild.MadeLeader", obj.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+							newLeader.GuildRank = newLeader.Guild.GetRankByID(0);
+							newLeader.SaveIntoDatabase();
+							newLeader.Out.SendMessage(LanguageMgr.GetTranslation(newLeader.Client, "Scripts.Player.Guild.MadeLeader", newLeader.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 							foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
 							{
-								ply.Out.SendMessage(LanguageMgr.GetTranslation(ply.Client, "Scripts.Player.Guild.MadeLeaderOther", client.Player.Name, obj.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								ply.Out.SendMessage(LanguageMgr.GetTranslation(ply.Client, "Scripts.Player.Guild.MadeLeaderOther", newLeader.Name, newLeader.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 							}
 							client.Player.Guild.UpdateGuildWindow();
 						}
