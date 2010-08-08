@@ -126,6 +126,44 @@ namespace DOL.GS
 
 
 		/// <summary>
+		/// Player receives this item (added to players inventory)
+		/// </summary>
+		/// <param name="player"></param>
+		public virtual void OnReceive(GamePlayer player)
+		{
+		}
+
+		/// <summary>
+		/// Player loses this item (removed from inventory)
+		/// </summary>
+		/// <param name="player"></param>
+		public virtual void OnLose(GamePlayer player)
+		{
+		}
+
+		/// <summary>
+		/// Drop this item on the ground
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public virtual WorldInventoryItem Drop(GamePlayer player)
+		{
+			WorldInventoryItem worldItem = new WorldInventoryItem(this);
+
+			Point2D itemloc = player.GetPointFromHeading(player.Heading, 30);
+			worldItem.X = itemloc.X;
+			worldItem.Y = itemloc.Y;
+			worldItem.Z = player.Z;
+			worldItem.Heading = player.Heading;
+			worldItem.CurrentRegionID = player.CurrentRegionID;
+
+			worldItem.AddOwner(player);
+			worldItem.AddToWorld();
+
+			return worldItem;
+		}
+
+		/// <summary>
 		/// Player equips this item
 		/// </summary>
 		/// <param name="player"></param>
