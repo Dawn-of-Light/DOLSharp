@@ -121,6 +121,13 @@ namespace DOL.GS.Spells
 		/// </summary>
 		bool IgnoreDamageCap { get; set; }
 
+
+		/// <summary>
+		/// Should this spell use the minimum variance for the type?
+		/// Followup style effects, for example, always use the minimum variance
+		/// </summary>
+		bool UseMinVariance { get; set; }
+
 		/// <summary>
 		/// Actions to take when the effect starts
 		/// </summary>

@@ -269,8 +269,42 @@ namespace DOL.GS.Spells
         /// <param name="max">store max variance here</param>
         public virtual void CalculateHealVariance(out int min, out int max)
         {
-            double spellValue = m_spell.Value;
-            GamePlayer casterPlayer = m_caster as GamePlayer;
+			double spellValue = m_spell.Value;
+			GamePlayer casterPlayer = m_caster as GamePlayer;
+
+			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects)
+			{
+				if (m_spell.Value > 0)
+				{
+					min = (int)(spellValue * 0.75);
+					max = (int)(spellValue * 1.25);
+					return;
+				}
+			}
+
+			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+			{
+				if (m_spell.Value > 0)
+				{
+					if (UseMinVariance)
+					{
+						min = (int)(spellValue * 1.25);
+					}
+					else
+					{
+						min = (int)(spellValue * 0.75);
+					}
+
+					max = (int)(spellValue * 1.25);
+					return;
+				}
+			}
+
+			if (m_spellLine.KeyName == GlobalSpellsLines.Reserved_Spells)
+			{
+				min = max = (int)spellValue;
+				return;
+			}
 
             // percents if less than zero
             if (spellValue < 0)
