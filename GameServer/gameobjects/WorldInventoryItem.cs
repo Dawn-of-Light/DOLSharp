@@ -57,16 +57,20 @@ namespace DOL.GS
 			m_item.OwnerID = null;
 			this.Level = (byte)item.Level;
 			this.Model = (ushort)item.Model;
+			this.Emblem = item.Emblem;
 			this.Name = item.Name;
 			if (item.Template is ItemUnique)
 			{
 				ItemUnique unique = new ItemUnique(item.Template);
 				GameServer.Database.AddObject(unique);
-				m_item.Template  = unique;
+				m_item.Template = unique;
 				m_item.UTemplate_Id = unique.Id_nb;
 			}
 			else
+			{
 				m_item.Template = item.Template;
+			}
+
 			m_item.AllowAdd = true;
 		}
 
@@ -144,6 +148,7 @@ namespace DOL.GS
 
 			invItem.Level = (byte)template.Level;
 			invItem.Model = (ushort)template.Model;
+			invItem.Emblem = template.Emblem;
 			invItem.Name = template.Name;
 
 			return invItem;
@@ -164,6 +169,7 @@ namespace DOL.GS
 
 			invItem.Level = (byte)template.Level;
 			invItem.Model = (ushort)template.Model;
+			invItem.Emblem = template.Emblem;
 			invItem.Name = template.Name;
 
 			return invItem;

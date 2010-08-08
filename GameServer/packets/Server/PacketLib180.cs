@@ -210,7 +210,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 			SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 
-			if (playerToCreate.IsCarryingGuildBanner)
+			if (playerToCreate.GuildBanner != null)
 			{
 				SendRvRGuildBanner(playerToCreate, true);
 			}

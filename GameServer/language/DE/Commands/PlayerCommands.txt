@@ -284,6 +284,7 @@ Scripts.Player.Guild.BannerNone:			Eure Gilde besitzt kein Gildenbanner.
 Scripts.Player.Guild.BannerNotAfford:			Ihr benötigt 50.000 Kopfgeldpunkte, um ein Gildenbanner kaufen zu können.
 Scripts.Player.Guild.BannerSummoned:			Ihr habt das Gildenbanner gehisst.
 Scripts.Player.Guild.BannerUnsummoned:			Ihr habt das Gildenbanner eingeholt.	
+Scripts.Player.Guild.BannerNotRvR:			You need to be in an RvR zone to summon a guild banner!
 Scripts.Player.Guild.BuffActivated:			[Gildenbonuszauber] {0} hat 1000 Gildenverdienstpunkte ausgegeben, und einen Gildenbonuszauber aktiviert!
 Scripts.Player.Guild.BuffBountyPoints:			Eure Gilde wird für die nächsten 24 Stunden einen 5% Bonus auf Kopfgeldpunkte erhalten!
 Scripts.Player.Guild.BuffBPActivated:			[Gildenbonuszauber] Eure Gilde wird für die nächsten 24 Stunden einen Bonus auf Kopfgeldpunkte erhalten!	

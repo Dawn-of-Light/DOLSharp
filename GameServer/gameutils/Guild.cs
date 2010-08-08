@@ -905,7 +905,7 @@ namespace DOL.GS
 				{
 					foreach (GamePlayer plr in player.Guild.ListOnlineMembers())
 					{
-						if (plr.IsCarryingGuildBanner)
+						if (plr.GuildBanner != null)
 						{
 							bannerStatus = "Summoned";
 						}

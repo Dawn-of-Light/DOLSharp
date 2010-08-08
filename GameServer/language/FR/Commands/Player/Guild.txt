@@ -32,6 +32,7 @@ Scripts.Player.Guild.BannerNone:			Votre guilde ne possède pas de bannière de 
 Scripts.Player.Guild.BannerNotAfford:			Vous avez besoin de 50,000 points de mérite pour acheter une bannière de guilde!
 Scripts.Player.Guild.BannerSummoned:			Vous avez invoqué votre bannière de guilde.	
 Scripts.Player.Guild.BannerUnsummoned:			Vous avez retiré votre bannière de guilde.	
+Scripts.Player.Guild.BannerNotRvR:			You need to be in an RvR zone to summon a guild banner!
 Scripts.Player.Guild.BuffActivated:			[Guild Buff] {0} a utilisé  1000 Points de Mérite de Guilde et a activé une Amélioration de Guilde!	
 Scripts.Player.Guild.BuffBountyPoints:			Votre guilde gagnera maintenant 5 % aux primes de royaume de plus pendant 24 heures !	
 Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Votre guilde recevra un bonus aux primes de royaume pendant 24 heures !	
