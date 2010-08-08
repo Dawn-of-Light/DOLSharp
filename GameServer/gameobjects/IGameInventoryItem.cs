@@ -30,6 +30,9 @@ namespace DOL.GS
 	public interface IGameInventoryItem
 	{
 		bool CheckValid(GamePlayer player);
+		void OnReceive(GamePlayer player);
+		void OnLose(GamePlayer player);
+		WorldInventoryItem Drop(GamePlayer player);
 		void OnEquipped(GamePlayer player);
 		void OnUnEquipped(GamePlayer player);
 		void OnStrikeTarget(GameLiving owner, GameObject target);

@@ -302,20 +302,6 @@ namespace DOL.GS
 			if (!base.AddItem(slot, item))
 				return false;
 
-			// guild banner code here?
-			switch (item.Model)
-			{
-				case 3223:
-					item.Model = 3359;
-					break;
-				case 3224:
-					item.Model = 3361;
-					break;
-				case 3225:
-					item.Model = 3360;
-					break;
-			}
-
 			item.OwnerID = m_player.InternalID;
 
 			if (addObject)
@@ -330,6 +316,11 @@ namespace DOL.GS
 
 			if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
 				m_player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(item, eInventorySlot.Invalid));
+
+			if (item is IGameInventoryItem)
+			{
+				(item as IGameInventoryItem).OnReceive(m_player);
+			}
 
 			return true;
 		}
@@ -401,6 +392,11 @@ namespace DOL.GS
 			else if (IsEquippedSlot(oldSlot))
 			{
 				m_player.Notify(PlayerInventoryEvent.ItemUnequipped, this, new ItemUnequippedArgs(item, oldSlot));
+			}
+
+			if (item is IGameInventoryItem)
+			{
+				(item as IGameInventoryItem).OnLose(m_player);
 			}
 
 			return true;

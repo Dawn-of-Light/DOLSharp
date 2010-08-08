@@ -620,6 +620,7 @@ Scripts.Player.Guild.BannerNone:			Your guild does not own a guild banner.
 Scripts.Player.Guild.BannerNotAfford:			You need 50,000 bounty points to purchase a guild banner!	
 Scripts.Player.Guild.BannerSummoned:			You have summoned your guild banner.	
 Scripts.Player.Guild.BannerUnsummoned:			You have unsummoned your guild banner.	
+Scripts.Player.Guild.BannerNotRvR:			You need to be in an RvR zone to summon a guild banner!
 Scripts.Player.Guild.BuffActivated:			[Guild Buff] {0} has spent 1000 Guild Merit Points and activated a Guild Buff!	
 Scripts.Player.Guild.BuffBountyPoints:			Your guild will now gain 5% bonus to bounty points for 24 hours!	
 Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Your guild will now get a bonus to bounty points for 24 hours!	

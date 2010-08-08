@@ -11082,17 +11082,26 @@ namespace DOL.GS
 		/// <returns>the GameInventoryItem on the ground</returns>
 		public virtual WorldInventoryItem CreateItemOnTheGround(InventoryItem item)
 		{
-			WorldInventoryItem gameItem = new WorldInventoryItem(item); // fixed
+			WorldInventoryItem gameItem = null;
 
-			Point2D itemloc = this.GetPointFromHeading( this.Heading, 30 );
-			gameItem.X = itemloc.X;
-			gameItem.Y = itemloc.Y;
-			gameItem.Z = Z;
-			gameItem.Heading = Heading;
-			gameItem.CurrentRegionID = CurrentRegionID;
+			if (item is IGameInventoryItem)
+			{
+				gameItem = (item as IGameInventoryItem).Drop(this);
+			}
+			else
+			{
+				gameItem = new WorldInventoryItem(item); // fixed
 
-			gameItem.AddOwner(this);
-			gameItem.AddToWorld();
+				Point2D itemloc = this.GetPointFromHeading(this.Heading, 30);
+				gameItem.X = itemloc.X;
+				gameItem.Y = itemloc.Y;
+				gameItem.Z = Z;
+				gameItem.Heading = Heading;
+				gameItem.CurrentRegionID = CurrentRegionID;
+
+				gameItem.AddOwner(this);
+				gameItem.AddToWorld();
+			}
 
 			return gameItem;
 		}
@@ -11112,7 +11121,7 @@ namespace DOL.GS
 			if (floorObject.ObjectState != eObjectState.Active)
 				return false;
 
-			if (floorObject is GameStaticItemTimed && !((GameStaticItemTimed)floorObject).IsOwner(this))
+			if (floorObject is GameStaticItemTimed && ((GameStaticItemTimed)floorObject).IsOwner(this) == false && Client.Account.PrivLevel == (int)ePrivLevel.Player)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.LootDoesntBelongYou"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -14111,28 +14120,45 @@ namespace DOL.GS
 		#endregion
 
 		#region GuildBanner
-		protected bool m_isCarryingGuildBanner = false;
+		protected GuildBanner m_guildBanner = null;
 
 		/// <summary>
 		/// Gets/Sets the visibility of the carryable RvrGuildBanner. Wont work if the player has no guild.
 		/// </summary>
-		public bool IsCarryingGuildBanner
+		public GuildBanner GuildBanner
 		{
-			get { return m_isCarryingGuildBanner; }
+			get { return m_guildBanner; }
 			set
 			{
 				//cant send guildbanner for players without guild.
-				if (value == true && Guild == null)
+				if (Guild == null)
 					return;
-				if (value != m_isCarryingGuildBanner)
+
+				m_guildBanner = value;
+
+				if (value != null)
 				{
 					foreach (GamePlayer playerToUpdate in GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 					{
 						if (playerToUpdate == null) continue;
+
 						if (playerToUpdate != null && playerToUpdate.Client.IsPlaying)
-							playerToUpdate.Out.SendRvRGuildBanner(this, value);
+						{
+							playerToUpdate.Out.SendRvRGuildBanner(this, true);
+						}
 					}
-					m_isCarryingGuildBanner = value;
+				}
+				else
+				{
+					foreach (GamePlayer playerToUpdate in GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+					{
+						if (playerToUpdate == null) continue;
+
+						if (playerToUpdate != null && playerToUpdate.Client.IsPlaying)
+						{
+							playerToUpdate.Out.SendRvRGuildBanner(this, false);
+						}
+					}
 				}
 			}
 		}
