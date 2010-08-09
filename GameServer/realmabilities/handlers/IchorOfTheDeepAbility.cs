@@ -56,49 +56,49 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-			//150 dam/10 sec || 400/20  || 600/30 
+			//150 dam/10 sec || 400/20  || 600/30
 			switch (Level)
 			{
-				case 1: dmgValue = 150; duration = 10000; break;
-				case 2: dmgValue = 400; duration = 20000; break;
-				case 3: dmgValue = 600; duration = 30000; break;
-				default: return;
-            }
+					case 1: dmgValue = 150; duration = 10000; break;
+					case 2: dmgValue = 400; duration = 20000; break;
+					case 3: dmgValue = 600; duration = 30000; break;
+					default: return;
+			}
 
-            #region resist and det
-            GameLiving m_target = caster.TargetObject as GameLiving;
+			#region resist and det
+			GameLiving m_target = caster.TargetObject as GameLiving;
 
-            int primaryResistModifier = m_target.GetResist(eDamageType.Spirit);
-            int secondaryResistModifier = m_target.SpecBuffBonusCategory[(int)eProperty.Resist_Spirit];
-            int rootdet = ((m_target.GetModified(eProperty.SpeedDecreaseDuration) - 100) * -1);
+			int primaryResistModifier = m_target.GetResist(eDamageType.Spirit);
+			int secondaryResistModifier = m_target.SpecBuffBonusCategory[(int)eProperty.Resist_Spirit];
+			int rootdet = ((m_target.GetModified(eProperty.SpeedDecreaseDuration) - 100) * -1);
 
-            int ResistModifier = 0;
-            ResistModifier += (int)((dmgValue * (double)primaryResistModifier) * -0.01);
-            ResistModifier += (int)((dmgValue + (double)ResistModifier) * (double)secondaryResistModifier * -0.01);
-
-
-            if (m_target is GamePlayer)
-               {
-                   dmgValue += ResistModifier;
-               }
-            if (m_target is GameNPC)
-               {
-                   dmgValue += ResistModifier;
-               }
- 
-            int rootmodifier = 0;
-            rootmodifier += (int)((duration * (double)primaryResistModifier) * -0.01);
-            rootmodifier += (int)((duration + (double)primaryResistModifier) * (double)secondaryResistModifier * -0.01);
-            rootmodifier += (int)((duration + (double)rootmodifier) * (double)rootdet * -0.01);
- 
-            duration += rootmodifier;
-
-            if (duration < 1)
-                duration = 1;
-            #endregion
+			int ResistModifier = 0;
+			ResistModifier += (int)((dmgValue * (double)primaryResistModifier) * -0.01);
+			ResistModifier += (int)((dmgValue + (double)ResistModifier) * (double)secondaryResistModifier * -0.01);
 
 
-            foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			if (m_target is GamePlayer)
+			{
+				dmgValue += ResistModifier;
+			}
+			if (m_target is GameNPC)
+			{
+				dmgValue += ResistModifier;
+			}
+			
+			int rootmodifier = 0;
+			rootmodifier += (int)((duration * (double)primaryResistModifier) * -0.01);
+			rootmodifier += (int)((duration + (double)primaryResistModifier) * (double)secondaryResistModifier * -0.01);
+			rootmodifier += (int)((duration + (double)rootmodifier) * (double)rootdet * -0.01);
+			
+			duration += rootmodifier;
+
+			if (duration < 1)
+				duration = 1;
+			#endregion
+
+
+			foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
 				if (i_player == caster) i_player.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				else i_player.Out.SendMessage(caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
@@ -118,14 +118,14 @@ namespace DOL.GS.RealmAbilities
 				return 0;
 			}
 
-			if (!caster.TargetInView)
+			if (caster.IsMoving)
 			{
-				caster.Out.SendMessage(caster.TargetObject.Name + " is not in view.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-				caster.DisableSkill(this, 3 * 1000);
+				caster.Out.SendMessage("You move and interrupt your spellcast!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				caster.DisableSkill(this, 3000);
 				return 0;
 			}
 
-            if ( !caster.IsWithinRadius( caster.TargetObject, 1875 ) )
+			if ( !caster.IsWithinRadius( caster.TargetObject, 1875 ) )
 			{
 				caster.Out.SendMessage(caster.TargetObject.Name + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				caster.DisableSkill(this, 3 * 1000);
@@ -161,7 +161,7 @@ namespace DOL.GS.RealmAbilities
 
 				if (mob.HasAbility(Abilities.CCImmunity) || mob.HasAbility(Abilities.RootImmunity) || mob.HasAbility(Abilities.DamageImmunity))
 					continue;
-					
+				
 				GameSpellEffect mez = SpellHandler.FindEffectOnTarget(mob, "Mesmerize");
 				if (mez != null)
 					mez.Cancel(false);
