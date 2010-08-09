@@ -11068,7 +11068,12 @@ namespace DOL.GS
 					if (!Inventory.RemoveItem(item)) return false;
 
 					droppedItem = CreateItemOnTheGround(item);
-					Notify(PlayerInventoryEvent.ItemDropped, this, new ItemDroppedEventArgs(item, droppedItem));
+
+					if (droppedItem != null)
+					{
+						Notify(PlayerInventoryEvent.ItemDropped, this, new ItemDroppedEventArgs(item, droppedItem));
+					}
+
 					return true;
 				}
 			}
