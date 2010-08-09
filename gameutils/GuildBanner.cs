@@ -126,25 +126,32 @@ namespace DOL.GS
 
         private int TimerTick(RegionTimer timer)
         {
-            foreach (GamePlayer playa in m_player.GetPlayersInRadius(1500))
+            foreach (GamePlayer player in m_player.GetPlayersInRadius(1500))
             {
-                if (playa.Group != null && m_player.Group != null && m_player.Group.IsInTheGroup(playa))
+                if (player.Group != null && m_player.Group != null && m_player.Group.IsInTheGroup(player))
                 {
-                    if (!(GameServer.ServerRules.IsAllowedToAttack(m_player, playa, false)))
+                    if (GameServer.ServerRules.IsAllowedToAttack(m_player, player, true) == false)
                     {
-                        GuildBannerEffect effect = GuildBannerEffect.CreateEffectOfClass(m_player, playa);
+                        GuildBannerEffect effect = GuildBannerEffect.CreateEffectOfClass(m_player, player);
+
                         if (effect != null)
                         {
-                            if (playa.EffectList.GetOfType(typeof(GuildBannerEffect)) == null)
-                            {
-                                effect.Start(playa);
-                            }
+							GuildBannerEffect oldEffect = player.EffectList.GetOfType(effect.GetType()) as GuildBannerEffect;
+							if (oldEffect == null)
+							{
+								effect.Start(player);
+							}
+							else
+							{
+								oldEffect.Stop();
+								effect.Start(player);
+							}
                         }
                     }
                 }
             }
 
-            return 6000; // Using standard pulsing spell pulse of 6 seconds, duration of 8 seconds - Tolakram
+            return 9000; // Pulsing every 9 seconds with a duration of 9 seconds - Tolakram
         }
 
         protected virtual void AddHandlers()
@@ -152,7 +159,8 @@ namespace DOL.GS
             GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLoseBanner));
             GameEventMgr.AddHandler(m_player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(PlayerLoseBanner));
             GameEventMgr.AddHandler(m_player, GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerLoseBanner));
-            GameEventMgr.AddHandler(m_player, GamePlayerEvent.Dying, new DOLEventHandler(PlayerDied));
+			GameEventMgr.AddHandler(m_player, GamePlayerEvent.RegionChanging, new DOLEventHandler(PlayerLoseBanner));
+			GameEventMgr.AddHandler(m_player, GamePlayerEvent.Dying, new DOLEventHandler(PlayerDied));
         }
 
 		protected virtual void RemoveHandlers()
@@ -160,6 +168,7 @@ namespace DOL.GS
 			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLoseBanner));
 			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(PlayerLoseBanner));
 			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerLoseBanner));
+			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.RegionChanging, new DOLEventHandler(PlayerLoseBanner));
 			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Dying, new DOLEventHandler(PlayerDied));
 		}
 
@@ -170,7 +179,10 @@ namespace DOL.GS
 			try 
 			{
 				// Remove item from inventory but do not delete it from DB
-				m_player.Inventory.RemoveItem(m_item);
+				if (m_player.Inventory.RemoveItem(m_item) == false)
+				{
+					throw new Exception();
+				}
 			} 
 			catch
 			{
