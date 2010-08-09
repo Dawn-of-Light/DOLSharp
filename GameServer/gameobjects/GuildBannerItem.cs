@@ -36,7 +36,8 @@ namespace DOL.GS
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private bool m_hasHandlers = false;
+		private Guild m_ownerGuild = null;
+		private GamePlayer m_summonPlayer = null;
 
 		public GuildBannerItem()
 			: base()
@@ -55,40 +56,20 @@ namespace DOL.GS
 			ObjectId = item.ObjectId;
 		}
 
-		private void AddQuitHandlers(GamePlayer player)
+		/// <summary>
+		/// What guild owns this banner
+		/// </summary>
+		public Guild OwnerGuild
 		{
-			GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerQuits));
-			GameEventMgr.AddHandler(player, GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerQuits));
+			get { return m_ownerGuild; }
+			set { m_ownerGuild = value; }
 		}
 
-		private void RemoveQuitHandlers(GamePlayer player)
+		public GamePlayer SummonPlayer
 		{
-			GameEventMgr.RemoveHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerQuits));
-			GameEventMgr.RemoveHandler(player, GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerQuits));
+			get { return m_summonPlayer; }
+			set { m_summonPlayer = value; }
 		}
-
-		private void PlayerQuits(DOLEvent e, object sender, EventArgs args)
-		{
-			try
-			{
-				GamePlayer player = sender as GamePlayer;
-
-				if (player != null)
-				{
-					player.Inventory.RemoveItem(this);
-				}
-				else
-				{
-					throw new Exception(sender.ToString());
-				}
-			}
-			catch (Exception ex)
-			{
-				log.ErrorFormat("Failed to remove guild banner {0} from non guild player!  Sender: {1}", ex.Message);
-			};
-		}
-
-
 
 		/// <summary>
 		/// Player receives this item (added to players inventory)
@@ -96,63 +77,12 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public override void OnReceive(GamePlayer player)
 		{
-			if (player.Guild != null && Template.Id_nb == "GuildBanner_" + player.Guild.GuildID && player.GuildBanner == null)
+			if (player != SummonPlayer)
 			{
-				// first off we make sure we've recorded that our guild has recovered a banner, if needed
+				// for guild banners we don't actually add it to inventory but instead register
+				// if it is rescued by a friendly player or taken by the enemy
 
-				if (player.Guild != null && player.Guild.GuildBanner == false)
-				{
-					player.Guild.GuildBanner = true;
-				}
-
-				// now check to see if this is a valid summon, or if something went wrong
-
-				if (player.Group == null && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.BannerNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Inventory.RemoveItem(this);
-					return;
-				}
-
-				foreach (GamePlayer guildPlayer in player.Guild.ListOnlineMembers())
-				{
-					if (guildPlayer.GuildBanner != null)
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.BannerGuildSummoned"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-						player.Inventory.RemoveItem(this);
-						return;
-					}
-				}
-
-				if (player.Group != null)
-				{
-					foreach (GamePlayer groupPlayer in player.Group.GetPlayersInTheGroup())
-					{
-						if (groupPlayer.GuildBanner != null)
-						{
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.BannerGroupSummoned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							player.Inventory.RemoveItem(this);
-							return;
-						}
-					}
-				}
-
-				if (player.CurrentRegion.IsRvR)
-				{
-					GuildBanner banner = new GuildBanner(player);
-					banner.Start();
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.BannerSummoned"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					player.Guild.UpdateGuildWindow();
-				}
-				else
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Guild.BannerNotRvR"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					player.Inventory.RemoveItem(this);
-				}
-			}
-			else
-			{
-				// use the model to determine if we are a group member or an enemy
+				player.Inventory.RemoveItem(this);
 
 				int trophyModel = 0;
 				eRealm realm = eRealm.None;
@@ -179,18 +109,22 @@ namespace DOL.GS
 					ItemUnique template = new ItemUnique(Template);
 					template.ClassType = "";
 					template.Model = trophyModel;
+					template.IsDropable = true;
+					template.IsIndestructible = false;
 
 					GameServer.Database.AddObject(template);
-					player.Inventory.RemoveItem(this);
 					GameInventoryItem trophy = new GameInventoryItem(template);
 					player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, trophy);
+					OwnerGuild.SendMessageToGuildMembers(player.Name + " of " + GlobalConstants.RealmToName(player.Realm) + " has captured your guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					// If a player duplicates a banner they will pick it up here and have duplicates
-					// but the duplicates do nothing and will be removed on logout
-					AddQuitHandlers(player);
-					m_hasHandlers = true;
+					// A friendly player has picked up the banner.
+					if (OwnerGuild != null)
+					{
+						OwnerGuild.GuildBanner = true;
+						OwnerGuild.SendMessageToGuildMembers(player.Name + " has recovered your guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+					}
 				}
 			}
 		}
@@ -205,11 +139,6 @@ namespace DOL.GS
 			{
 				player.GuildBanner.Stop();
 			}
-
-			if (m_hasHandlers)
-			{
-				RemoveQuitHandlers(player);
-			}
 		}
 
 
@@ -221,26 +150,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override WorldInventoryItem Drop(GamePlayer player)
 		{
-			WorldInventoryItem worldItem = WorldInventoryItem.CreateFromTemplate(this);
-
-			Point2D itemloc = player.GetPointFromHeading(player.Heading, 30);
-			worldItem.X = itemloc.X;
-			worldItem.Y = itemloc.Y;
-			worldItem.Z = player.Z;
-			worldItem.Heading = player.Heading;
-			worldItem.CurrentRegionID = player.CurrentRegionID;
-
-			worldItem.AddOwner(player);
-
-			if (player.Guild != null && Template.Id_nb == "GuildBanner_" + player.Guild.GuildID)
-			{
-				player.Guild.GuildBanner = false;
-				player.Guild.SendMessageToGuildMembers(player.Name + " has dropped the guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-			}
-
-			worldItem.AddToWorld();
-
-			return worldItem;
+			return null;
 		}
 
 
