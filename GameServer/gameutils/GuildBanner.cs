@@ -16,8 +16,7 @@ namespace DOL.GS
 
         RegionTimer m_timer;
         GamePlayer m_player;
-        GamePlayer m_killer;
-        InventoryItem m_item;
+		GuildBannerItem m_item;
         WorldInventoryItem gameItem;
 
         public GuildBanner(GamePlayer player)
@@ -43,9 +42,9 @@ namespace DOL.GS
                 {
 					bool groupHasBanner = false;
 
-                    foreach (GamePlayer playa in m_player.Group.GetPlayersInTheGroup())
+                    foreach (GamePlayer groupPlayer in m_player.Group.GetPlayersInTheGroup())
                     {
-                        if (playa.GuildBanner != null)
+                        if (groupPlayer.GuildBanner != null)
 						{
 							groupHasBanner = true;
 							break;
@@ -54,26 +53,32 @@ namespace DOL.GS
 
                     if (groupHasBanner == false)
                     {
-                        m_player.GuildBanner = this;
-                        m_player.Stealth(false);
-                        AddHandlers();
-
-						m_item = m_player.Inventory.GetFirstItemByID(GuildBannerTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-
 						if (m_item == null)
 						{
-							InventoryItem item = new GuildBannerItem(GuildBannerTemplate);
+							GuildBannerItem item = new GuildBannerItem(GuildBannerTemplate);
 
-							//if (item.Emblem != m_player.Guild.Emblem)
+							item.OwnerGuild = m_player.Guild;
+							item.SummonPlayer = m_player;
+
+							if (m_player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item) == false)
 							{
-								item.Template.Dirty = true;
-								GameServer.Database.SaveObject(item.Template);
-								GameServer.Database.UpdateInCache<ItemTemplate>(item.Template);
+								m_player.Out.SendMessage("You need room in your inventory to carry this banner!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+
+								if (m_timer != null)
+								{
+									m_timer.Stop();
+									m_timer = null;
+								}
+
+								return;
 							}
 
 							m_item = item;
-							m_player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item);
 						}
+
+						m_player.GuildBanner = this;
+						m_player.Stealth(false);
+						AddHandlers();
 
                         if (m_timer != null)
                         {
@@ -104,7 +109,6 @@ namespace DOL.GS
                 m_player.Out.SendMessage("You have left the group and your guild banner disappears!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
                 m_player.GuildBanner = null;
                 m_player.Inventory.RemoveItem(m_item);
-                // m_player.Guild.GuildBanner = false; // I don't think guild loses banner just because player disbanded from group
                 if (m_timer != null)
                 {
                     m_timer.Stop();
@@ -116,7 +120,8 @@ namespace DOL.GS
         public void Stop()
         {
             m_player.GuildBanner = null;
-            RemoveHandlers();
+			m_item.SummonPlayer = null;
+			RemoveHandlers();
             if (m_timer != null)
             {
                 m_timer.Stop();
@@ -196,31 +201,46 @@ namespace DOL.GS
             DyingEventArgs arg = args as DyingEventArgs;
             if (arg == null) return;
             GameObject killer = arg.Killer as GameObject;
-            if (killer is GamePlayer)
-            {
-                GamePlayer killa = killer as GamePlayer;
-                m_killer = killa;
-                m_player.GuildBanner = null;
-                m_player.Inventory.RemoveItem(m_item);
-				gameItem = WorldInventoryItem.CreateFromTemplate(m_item);
+			GamePlayer playerKiller = null;
 
+			if (killer is GamePlayer)
+			{
+				playerKiller = killer as GamePlayer;
+			}
+			else if (killer is GameNPC && (killer as GameNPC).Brain != null && (killer as GameNPC).Brain is AI.Brain.IControlledBrain)
+			{
+				playerKiller = ((killer as GameNPC).Brain as AI.Brain.IControlledBrain).Owner as GamePlayer;
+			}
+
+            if (playerKiller != null)
+            {
+				Stop();
+                m_player.Inventory.RemoveItem(m_item);
+				m_player.Guild.GuildBanner = false;
+				m_player.Guild.SendMessageToGuildMembers(m_player.Name + " has lost the guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+
+				gameItem = new WorldInventoryItem(m_item);
                 Point2D point = m_player.GetPointFromHeading( m_player.Heading, 30 );
                 gameItem.X = point.X;
                 gameItem.Y = point.Y;
                 gameItem.Z = m_player.Z;
                 gameItem.Heading = m_player.Heading;
                 gameItem.CurrentRegionID = m_player.CurrentRegionID;
-                if (m_killer.Group != null)
+
+				// Guild banner can be picked up by anyone in the enemy group
+                if (playerKiller.Group != null)
                 {
-                    foreach (GamePlayer player in m_killer.Group.GetPlayersInTheGroup())
+					foreach (GamePlayer player in playerKiller.Group.GetPlayersInTheGroup())
                     {
                         gameItem.AddOwner(player);
                     }
                 }
                 else
                 {
-                    gameItem.AddOwner(m_killer);
+					gameItem.AddOwner(playerKiller);
                 }
+
+				// Guild banner can be picked up by anyone in the dead players group
 				if (m_player.Group != null)
 				{
 					foreach (GamePlayer player in m_player.Group.GetPlayersInTheGroup())
@@ -230,12 +250,7 @@ namespace DOL.GS
 				}
 
                 gameItem.StartPickupTimer(10);
-                m_player.Guild.GuildBanner = false;
-                m_player.Guild.SendMessageToGuildMembers(m_player.Name + " has lost the guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-                gameItem.Emblem = m_item.Emblem;
                 gameItem.AddToWorld();
-
-                Stop();
             }
 
 
@@ -249,44 +264,37 @@ namespace DOL.GS
                 if (m_guildBannerTemplate == null)
                 {
 					string guildIDNB = "GuildBanner_" + m_player.Guild.GuildID;
-					// string guildIDNB = "GuildBanner_" + GameServer.Database.Escape(m_player.Guild.Name).Replace(";", "");
 
-					// see if this guild already has banner created
-					m_guildBannerTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(guildIDNB);
-
-					if (m_guildBannerTemplate == null)
+					m_guildBannerTemplate = new ItemTemplate();
+					m_guildBannerTemplate.CanDropAsLoot = false;
+					m_guildBannerTemplate.Id_nb = guildIDNB;
+					m_guildBannerTemplate.IsDropable = false;
+					m_guildBannerTemplate.IsPickable = true;
+					m_guildBannerTemplate.IsTradable = false;
+					m_guildBannerTemplate.IsIndestructible = true;
+					m_guildBannerTemplate.Item_Type = 41;
+					m_guildBannerTemplate.Level = 1;
+					m_guildBannerTemplate.MaxCharges = 1;
+					m_guildBannerTemplate.MaxCount = 1;
+					m_guildBannerTemplate.Emblem = m_player.Guild.Emblem;
+					switch (m_player.Realm)
 					{
-						m_guildBannerTemplate = new ItemTemplate();
-						m_guildBannerTemplate.CanDropAsLoot = false;
-						m_guildBannerTemplate.Id_nb = guildIDNB;
-						m_guildBannerTemplate.IsDropable = true;
-						m_guildBannerTemplate.IsPickable = true;
-						m_guildBannerTemplate.IsTradable = false;
-						m_guildBannerTemplate.Item_Type = 41;
-						m_guildBannerTemplate.Level = 1;
-						m_guildBannerTemplate.MaxCharges = 1;
-						m_guildBannerTemplate.MaxCount = 1;
-						m_guildBannerTemplate.Emblem = m_player.Guild.Emblem;
-						switch (m_player.Realm)
-						{
-							case eRealm.Albion:
-								m_guildBannerTemplate.Model = 3223;
-								break;
-							case eRealm.Midgard:
-								m_guildBannerTemplate.Model = 3224;
-								break;
-							case eRealm.Hibernia:
-								m_guildBannerTemplate.Model = 3225;
-								break;
-						}
-						m_guildBannerTemplate.Name = m_player.Guild.Name + "'s Banner";
-						m_guildBannerTemplate.Object_Type = (int)eObjectType.HouseWallObject;
-						m_guildBannerTemplate.Realm = 0;
-						m_guildBannerTemplate.Quality = 100;
-						m_guildBannerTemplate.ClassType = "DOL.GS.GuildBannerItem";
-						m_guildBannerTemplate.PackageID = "GuildBanner";
-						GameServer.Database.AddObject(m_guildBannerTemplate);
+						case eRealm.Albion:
+							m_guildBannerTemplate.Model = 3223;
+							break;
+						case eRealm.Midgard:
+							m_guildBannerTemplate.Model = 3224;
+							break;
+						case eRealm.Hibernia:
+							m_guildBannerTemplate.Model = 3225;
+							break;
 					}
+					m_guildBannerTemplate.Name = m_player.Guild.Name + "'s Banner";
+					m_guildBannerTemplate.Object_Type = (int)eObjectType.HouseWallObject;
+					m_guildBannerTemplate.Realm = 0;
+					m_guildBannerTemplate.Quality = 100;
+					m_guildBannerTemplate.ClassType = "DOL.GS.GuildBannerItem";
+					m_guildBannerTemplate.PackageID = "GuildBanner";
                 }
 
                 return m_guildBannerTemplate;
