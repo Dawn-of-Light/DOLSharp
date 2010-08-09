@@ -32,8 +32,25 @@ namespace DOL.GS.Effects
 		//http://support.darkageofcamelot.com/kb/article.php?id=786
 
 		// - Spells on banners will emit >SHORT< duration PBAOE buff spells around the banner's carrier.
-		// Using standard pulsing spell pulse of 6 seconds, duration of 8 seconds - Tolakram
-		protected const int duration = 8000; 
+		// Pulsing every 9 seconds with a duration of 9 seconds - Tolakram
+		protected const int duration = 9000;
+
+
+		/// <summary>
+		/// send updates about the changes
+		/// </summary>
+		/// <param name="target"></param>
+		public virtual void SendUpdates(GameLiving owner)
+		{
+			GamePlayer player = owner as GamePlayer;
+
+			if (player != null)
+			{
+				player.Out.SendCharStatsUpdate();
+				player.Out.SendCharResistsUpdate();
+				player.Out.SendStatusUpdate();
+			}
+		}
 
 		/// <summary>
 		/// Starts the matching GuildBannerEffect with type (by carrierCharacterClass) and effectiveness
@@ -184,7 +201,7 @@ namespace DOL.GS.Effects
 			m_owner.BuffBonusCategory4[(int)eProperty.Resist_Heat] += effValue;
 			m_owner.BuffBonusCategory4[(int)eProperty.Resist_Matter] += effValue;
 			m_owner.BuffBonusCategory4[(int)eProperty.Resist_Spirit] += effValue;
-
+			SendUpdates(m_owner);
 		}
 
 		public override void Stop()
@@ -197,6 +214,7 @@ namespace DOL.GS.Effects
 			m_owner.BuffBonusCategory4[(int)eProperty.Resist_Matter] -= effValue;
 			m_owner.BuffBonusCategory4[(int)eProperty.Resist_Spirit] -= effValue;
 			base.Stop();
+			SendUpdates(m_owner);
 		}
 		#endregion
 
@@ -245,8 +263,7 @@ namespace DOL.GS.Effects
 			m_owner.BuffBonusCategory4[(int)eProperty.Resist_Crush] += effValue;
 			m_owner.BuffBonusCategory4[(int)eProperty.Resist_Slash] += effValue;
 			m_owner.BuffBonusCategory4[(int)eProperty.Resist_Thrust] += effValue;
-
-
+			SendUpdates(m_owner);
 		}
 
 		public override void Stop()
@@ -256,6 +273,7 @@ namespace DOL.GS.Effects
 			m_owner.BuffBonusCategory4[(int)eProperty.Resist_Slash] -= effValue;
 			m_owner.BuffBonusCategory4[(int)eProperty.Resist_Thrust] -= effValue;
 			base.Stop();
+			SendUpdates(m_owner);
 		}
 		#endregion
 
@@ -303,7 +321,8 @@ namespace DOL.GS.Effects
 			int effValue = (int)(Effectiveness * 6);
 			m_owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDuration] += effValue;
 			m_owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDuration] += effValue;
-			m_owner.BaseBuffBonusCategory[(int)eProperty.StunDuration] += effValue;			
+			m_owner.BaseBuffBonusCategory[(int)eProperty.StunDuration] += effValue;
+			SendUpdates(m_owner);
 		}
 
 		public override void Stop()
@@ -313,6 +332,7 @@ namespace DOL.GS.Effects
 			m_owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDuration] -= effValue;
 			m_owner.BaseBuffBonusCategory[(int)eProperty.StunDuration] -= effValue;			
 			base.Stop();
+			SendUpdates(m_owner);
 		}
 		#endregion
 

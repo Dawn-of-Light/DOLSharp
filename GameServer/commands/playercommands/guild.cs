@@ -640,9 +640,9 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							foreach (GamePlayer player in client.Player.Guild.ListOnlineMembers())
+							foreach (GamePlayer guildPlayer in client.Player.Guild.ListOnlineMembers())
 							{
-								if (player.GuildBanner != null)
+								if (guildPlayer.GuildBanner != null)
 								{
 									client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerGuildSummoned"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 									return;
@@ -651,9 +651,9 @@ namespace DOL.GS.Commands
 
 							if (client.Player.Group != null)
 							{
-								foreach (GamePlayer playa in client.Player.Group.GetPlayersInTheGroup())
+								foreach (GamePlayer groupPlayer in client.Player.Group.GetPlayersInTheGroup())
 								{
-									if (playa.GuildBanner != null)
+									if (groupPlayer.GuildBanner != null)
 									{
 										client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerGroupSummoned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return;
