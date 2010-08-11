@@ -135,6 +135,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tables\CharacterXDataQuest.cs" />
+    <Compile Include="Tables\StartupLocation.cs" />
     <Compile Include="Tables\DataQuest.cs" />
     <Compile Include="Tables\Zones.cs" />
     <Compile Include="Tables\DOLCharactersBackup.cs" />
