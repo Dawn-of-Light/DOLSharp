@@ -91,7 +91,7 @@ namespace DOL.GS.GameEvents
 						mySL = startupLocations[0];
 					}
 					else
-					// find class-based SL
+						// find class-based SL
 					{
 						startupLocations = GameServer.Database.SelectObjects<StartupLocation>("ClassIDs LIKE '%" + ch.Class+ "%'");
 						foreach (var curSL in startupLocations)
@@ -106,17 +106,19 @@ namespace DOL.GS.GameEvents
 									break;
 								}
 							}
-							if (mySL != null)
-							{
-								loc = new StartLocation(mySL.XPos, mySL.YPos, mySL.ZPos, mySL.Heading);
-								ch.Region = mySL.Region;
-								break;
-							}
+							if (mySL != null) break;
 						}
+					}
+					
+					// fill loc with our found SL
+					if (mySL != null)
+					{
+						loc = new StartLocation(mySL.XPos, mySL.YPos, mySL.ZPos, mySL.Heading);
+						ch.Region = mySL.Region;
 					}
 				}
 				
-				// no custom SL or custom SL not found 
+				// no custom SL or custom SL not found
 				if (mySL == null)
 				{
 					// tutorial all realms use the same region
