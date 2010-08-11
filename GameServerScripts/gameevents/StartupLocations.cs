@@ -50,21 +50,18 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-			if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS)
-				return;
-			bool result = InitLocationTables();
 			GameEventMgr.AddHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
+			if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS) return;
+			bool result = InitLocationTables();
 			if (log.IsInfoEnabled)
 				log.Info("StartupLocations initialized");
 		}
 
-
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
-			if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS)
-				return;
 			GameEventMgr.RemoveHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
+			if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS) return;
 			ClassicLocations = null;
 			ShroudedIslesLocations = null;
 		}
@@ -82,63 +79,104 @@ namespace DOL.GS.GameEvents
 			{
 				StartLocation loc = null;
 				GameClient client = chArgs.GameClient;
-				// tutorial all realms use the same region
-				// except if disabled in SP, v1.93+ start is in tutorial zone
-				if ((ch.Region == 27 || (int)client.Version >= (int) GameClient.eClientVersion.Version193) && !ServerProperties.Properties.DISABLE_TUTORIAL)
+				StartupLocation mySL = null;
+				
+				// do we have custom locations into the DB ?
+				if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS)
 				{
-					switch (ch.Realm)
+					// find realm-based SL
+					var startupLocations = GameServer.Database.SelectObjects<StartupLocation>("ClassIDs LIKE '%" + GlobalConstants.RealmToName((eRealm)ch.Realm).Substring(0,3) + "%'");
+					if (startupLocations.Count > 0)
 					{
-						case 1: // alb
-							loc = new StartLocation(95644, 101313, 5340, 1024);
-							break;
-						case 2: // mid
-							loc = new StartLocation(226716, 232385, 5340, 1024);
-							break;
-						case 3: // hib
-							loc = new StartLocation(357788, 363457, 5340, 1024);
-							break;
+						mySL = startupLocations[0];
+					}
+					else
+					// find class-based SL
+					{
+						startupLocations = GameServer.Database.SelectObjects<StartupLocation>("ClassIDs LIKE '%" + ch.Class+ "%'");
+						foreach (var curSL in startupLocations)
+						{
+							foreach (var classID in curSL.ClassIDs.Split(new char[]{';'},StringSplitOptions.RemoveEmptyEntries))
+							{
+								int charClass = 0;
+								int.TryParse(classID, out charClass);
+								if (charClass == ch.Class)
+								{
+									mySL = curSL;
+									break;
+								}
+							}
+							if (mySL != null)
+							{
+								loc = new StartLocation(mySL.XPos, mySL.YPos, mySL.ZPos, mySL.Heading);
+								ch.Region = mySL.Region;
+								break;
+							}
+						}
 					}
 				}
-				else if ((int)client.Version >= (int)GameClient.eClientVersion.Version193)
+				
+				// no custom SL or custom SL not found 
+				if (mySL == null)
 				{
-					// no base classes, so we choose a common startuplocation per realm
-					switch (ch.Realm)
+					// tutorial all realms use the same region
+					// except if disabled in SP, v1.93+ start is in tutorial zone
+					if ((ch.Region == 27 || (int)client.Version >= (int) GameClient.eClientVersion.Version193) && !ServerProperties.Properties.DISABLE_TUTORIAL)
 					{
-						case 1: // alb
-							loc = new StartLocation(562418, 512268, 2500, 2980);
-							break;
-						case 2: // mid
-							loc = new StartLocation(802869, 726016, 4699, 1399);
-							break;
-						case 3: // hib
-							loc = new StartLocation(347279, 489681, 5200, 2332);
-							break;
+						switch (ch.Realm)
+						{
+							case 1: // alb
+								loc = new StartLocation(95644, 101313, 5340, 1024);
+								break;
+							case 2: // mid
+								loc = new StartLocation(226716, 232385, 5340, 1024);
+								break;
+							case 3: // hib
+								loc = new StartLocation(357788, 363457, 5340, 1024);
+								break;
+						}
+					}
+					else if ((int)client.Version >= (int)GameClient.eClientVersion.Version193)
+					{
+						// no base classes, so we choose a common startuplocation per realm
+						switch (ch.Realm)
+						{
+							case 1: // alb
+								loc = new StartLocation(562418, 512268, 2500, 2980);
+								break;
+							case 2: // mid
+								loc = new StartLocation(802869, 726016, 4699, 1399);
+								break;
+							case 3: // hib
+								loc = new StartLocation(347279, 489681, 5200, 2332);
+								break;
+						}
+					}
+					else if ((int)client.Version >= (int)GameClient.eClientVersion.Version180)
+					{
+						loc = (StartLocation)MainTownStartingLocations[ch.Class];
+					}
+					else if (ch.Region == 1 || ch.Region == 100 || ch.Region == 200) // all classic regions
+					{
+						loc = (StartLocation) ClassicLocations[ch.Race][ch.Class];
+					}
+					else if (ch.Region == 51 || ch.Region == 151 || ch.Region == 181) // all ShroudedIsles regions
+					{
+						loc = (StartLocation) ShroudedIslesLocations[ch.Race][ch.Class];
+					}
+					else
+					{
+						log.DebugFormat("tried to create char in unknown region {0}", ch.Region);
+						switch (ch.Realm)
+						{
+								default: ch.Region = 1; break;
+								case 2: ch.Region = 100; break;
+								case 3: ch.Region = 200; break;
+						}
+						loc = (StartLocation)ClassicLocations[ch.Race][ch.Class];
 					}
 				}
-				else if ((int)client.Version >= (int)GameClient.eClientVersion.Version180)
-				{
-					loc = (StartLocation)MainTownStartingLocations[ch.Class];
-				}
-				else if (ch.Region == 1 || ch.Region == 100 || ch.Region == 200) // all classic regions
-				{
-					loc = (StartLocation) ClassicLocations[ch.Race][ch.Class];
-				}
-				else if (ch.Region == 51 || ch.Region == 151 || ch.Region == 181) // all ShroudedIsles regions
-				{
-					loc = (StartLocation) ShroudedIslesLocations[ch.Race][ch.Class];
-				}
-				else
-				{
-					log.DebugFormat("tried to create char in unknown region {0}", ch.Region);
-					switch (ch.Realm)
-					{
-							default: ch.Region = 1; break;
-							case 2: ch.Region = 100; break;
-							case 3: ch.Region = 200; break;
-					}
-					loc = (StartLocation)ClassicLocations[ch.Race][ch.Class];
-				}
-
+				
 				if (loc == null)
 				{
 					log.Warn("startup location not found: account=" + ch.AccountName + "; char name=" + ch.Name + "; region=" + ch.Region + "; realm=" + ch.Realm + "; class=" + ch.Class + " (" + (eCharacterClass) ch.Class + "); race=" + ch.Race + " (" + (eRace)ch.Race + ")");
@@ -237,7 +275,7 @@ namespace DOL.GS.GameEvents
 				ClassicLocations[(int) eRace.Firbolg][(int) eCharacterClass.Guardian] = new StartLocation(ZoneToRegion(54813, 35), ZoneToRegion(49963, 51), 5200, LocDirectionToHeading(352));
 				ClassicLocations[(int) eRace.Firbolg][(int) eCharacterClass.Naturalist] = new StartLocation(ZoneToRegion(54154, 35), ZoneToRegion(49302, 51), 5200, LocDirectionToHeading(355));
 				ClassicLocations[(int) eRace.HiberniaMinotaur][(int)eCharacterClass.Naturalist] = new StartLocation(ZoneToRegion(54154, 35), ZoneToRegion(49302, 51), 5200, LocDirectionToHeading(335));
-				ClassicLocations[(int) eRace.HiberniaMinotaur][(int)eCharacterClass.Guardian] = new StartLocation(ZoneToRegion(54154, 35), ZoneToRegion(49302, 51), 5200, LocDirectionToHeading(335));		
+				ClassicLocations[(int) eRace.HiberniaMinotaur][(int)eCharacterClass.Guardian] = new StartLocation(ZoneToRegion(54154, 35), ZoneToRegion(49302, 51), 5200, LocDirectionToHeading(335));
 				ClassicLocations[(int) eRace.Frostalf][(int) eCharacterClass.MidgardRogue] = new StartLocation(ZoneToRegion(53306, 88), ZoneToRegion(19878, 90), 4600, LocDirectionToHeading(281));
 				ClassicLocations[(int) eRace.Frostalf][(int) eCharacterClass.Mystic] = new StartLocation(ZoneToRegion(54582, 88), ZoneToRegion(16626, 90), 4600, LocDirectionToHeading(69));
 				ClassicLocations[(int) eRace.Frostalf][(int) eCharacterClass.Seer] = new StartLocation(ZoneToRegion(27540, 88), ZoneToRegion(13100, 98), 4408, LocDirectionToHeading(238));
