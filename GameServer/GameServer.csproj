@@ -319,6 +319,7 @@
     <Compile Include="commands\PlayerCommands\target.cs" />
     <Compile Include="commands\PlayerCommands\task.cs" />
     <Compile Include="commands\PlayerCommands\time.cs" />
+    <Compile Include="commands\playercommands\train.cs" />
     <Compile Include="commands\PlayerCommands\ViewReports.cs" />
     <Compile Include="commands\PlayerCommands\where.cs" />
     <Compile Include="commands\PlayerCommands\whisper.cs" />

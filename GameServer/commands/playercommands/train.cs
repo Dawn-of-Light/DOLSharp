@@ -29,7 +29,7 @@ namespace DOL.GS.Scripts.Commands
 	[Cmd(
 		"&train",
 		ePrivLevel.Player,
-		"Trains a line by the specified amount.",
+		"Trains a line by the specified amount",
 		"/train <line> <level>",
 		"e.g. /train Dual Wield 50")]
 	public class TrainCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -41,6 +41,10 @@ namespace DOL.GS.Scripts.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
+			// no longer used since 1.105
+			if (client.Version >= GameClient.eClientVersion.Version1105)
+				client.Out.SendTrainerWindow();
+			
 			// Make sure the player is at a trainer.
 			if (!(client.Player.TargetObject is GameTrainer))
 			{
