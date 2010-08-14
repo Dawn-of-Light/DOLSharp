@@ -895,14 +895,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.DontBelongGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
-						if (!client.Player.Guild.GotAccess(client.Player, eGuildRank.GcSpeak))
+						if (!client.Player.Guild.GotAccess(client.Player, Guild.eRank.GcSpeak))
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoPermissionToSpeak"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return 1;
 						}
 						foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
 						{
-							if (!client.Player.Guild.GotAccess(ply, eGuildRank.GcHear)) continue;
+							if (!client.Player.Guild.GotAccess(ply, Guild.eRank.GcHear)) continue;
 							ply.Out.SendMessage(str, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 						}
 						return 1;

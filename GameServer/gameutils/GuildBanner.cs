@@ -29,7 +29,7 @@ namespace DOL.GS
             get { return m_player; }
         }
 
-		public InventoryItem BannerItem
+		public GuildBannerItem BannerItem
 		{
 			get { return m_item; }
 		}
@@ -59,20 +59,6 @@ namespace DOL.GS
 
 							item.OwnerGuild = m_player.Guild;
 							item.SummonPlayer = m_player;
-
-							if (m_player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item) == false)
-							{
-								m_player.Out.SendMessage("You need room in your inventory to carry this banner!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-
-								if (m_timer != null)
-								{
-									m_timer.Stop();
-									m_timer = null;
-								}
-
-								return;
-							}
-
 							m_item = item;
 						}
 
@@ -104,11 +90,10 @@ namespace DOL.GS
                     }
                 }
             }
-            else
+            else if (m_player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
             {
                 m_player.Out.SendMessage("You have left the group and your guild banner disappears!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
                 m_player.GuildBanner = null;
-                m_player.Inventory.RemoveItem(m_item);
                 if (m_timer != null)
                 {
                     m_timer.Stop();
@@ -119,8 +104,6 @@ namespace DOL.GS
 
         public void Stop()
         {
-            m_player.GuildBanner = null;
-			m_item.SummonPlayer = null;
 			RemoveHandlers();
             if (m_timer != null)
             {
@@ -161,7 +144,8 @@ namespace DOL.GS
 
         protected virtual void AddHandlers()
         {
-            GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLoseBanner));
+			GameEventMgr.AddHandler(m_player, GamePlayerEvent.LeaveGroup, new DOLEventHandler(PlayerLoseBanner));
+			GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLoseBanner));
             GameEventMgr.AddHandler(m_player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(PlayerLoseBanner));
             GameEventMgr.AddHandler(m_player, GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerLoseBanner));
 			GameEventMgr.AddHandler(m_player, GamePlayerEvent.RegionChanging, new DOLEventHandler(PlayerLoseBanner));
@@ -170,6 +154,7 @@ namespace DOL.GS
 
 		protected virtual void RemoveHandlers()
 		{
+			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.LeaveGroup, new DOLEventHandler(PlayerLoseBanner));
 			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLoseBanner));
 			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(PlayerLoseBanner));
 			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerLoseBanner));
@@ -180,20 +165,9 @@ namespace DOL.GS
 		protected void PlayerLoseBanner(DOLEvent e, object sender, EventArgs args)
         {
 			Stop();
-
-			try 
-			{
-				// Remove item from inventory but do not delete it from DB
-				if (m_player.Inventory.RemoveItem(m_item) == false)
-				{
-					throw new Exception();
-				}
-			} 
-			catch
-			{
-				log.ErrorFormat("Failed to remove guild banner {0} from player {1}!", m_item.Name, m_player.Name);
-			};
-
+			m_player.GuildBanner = null;
+			m_player.Guild.SendMessageToGuildMembers(string.Format("{0} has put away the guild banner!", m_player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+			m_player = null;
         }
 
         protected void PlayerDied(DOLEvent e, object sender, EventArgs args)
@@ -212,48 +186,46 @@ namespace DOL.GS
 				playerKiller = ((killer as GameNPC).Brain as AI.Brain.IControlledBrain).Owner as GamePlayer;
 			}
 
-            if (playerKiller != null)
-            {
-				Stop();
-                m_player.Inventory.RemoveItem(m_item);
-				m_player.Guild.GuildBanner = false;
-				m_player.Guild.SendMessageToGuildMembers(m_player.Name + " has lost the guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+			Stop();
+			m_player.Guild.SendMessageToGuildMembers(m_player.Name + " has dropped the guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 
-				gameItem = new WorldInventoryItem(m_item);
-                Point2D point = m_player.GetPointFromHeading( m_player.Heading, 30 );
-                gameItem.X = point.X;
-                gameItem.Y = point.Y;
-                gameItem.Z = m_player.Z;
-                gameItem.Heading = m_player.Heading;
-                gameItem.CurrentRegionID = m_player.CurrentRegionID;
+			gameItem = new WorldInventoryItem(m_item);
+			Point2D point = m_player.GetPointFromHeading(m_player.Heading, 30);
+            gameItem.X = point.X;
+            gameItem.Y = point.Y;
+            gameItem.Z = m_player.Z;
+            gameItem.Heading = m_player.Heading;
+            gameItem.CurrentRegionID = m_player.CurrentRegionID;
+			gameItem.AddOwner(m_player);
 
+			if (playerKiller != null)
+			{
 				// Guild banner can be picked up by anyone in the enemy group
-                if (playerKiller.Group != null)
-                {
-					foreach (GamePlayer player in playerKiller.Group.GetPlayersInTheGroup())
-                    {
-                        gameItem.AddOwner(player);
-                    }
-                }
-                else
-                {
-					gameItem.AddOwner(playerKiller);
-                }
-
-				// Guild banner can be picked up by anyone in the dead players group
-				if (m_player.Group != null)
+				if (playerKiller.Group != null)
 				{
-					foreach (GamePlayer player in m_player.Group.GetPlayersInTheGroup())
+					foreach (GamePlayer player in playerKiller.Group.GetPlayersInTheGroup())
 					{
 						gameItem.AddOwner(player);
 					}
 				}
+				else
+				{
+					gameItem.AddOwner(playerKiller);
+				}
+			}
 
-                gameItem.StartPickupTimer(10);
-                gameItem.AddToWorld();
-            }
+			// Guild banner can be picked up by anyone in the dead players group
+			if (m_player.Group != null)
+			{
+				foreach (GamePlayer player in m_player.Group.GetPlayersInTheGroup())
+				{
+					gameItem.AddOwner(player);
+				}
+			}
 
-
+            gameItem.StartPickupTimer(10);
+			m_item.OnLose(m_player);
+            gameItem.AddToWorld();
         }
 
         protected ItemTemplate m_guildBannerTemplate;

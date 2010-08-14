@@ -1282,7 +1282,7 @@ namespace DOL.GS.Housing
 			// check based on guild
 			if (player.Guild != null)
 			{
-				return OwnerID == player.Guild.GuildID && player.Guild.GotAccess(player, eGuildRank.Leader);
+				return OwnerID == player.Guild.GuildID && player.Guild.GotAccess(player, Guild.eRank.Leader);
 			}
 
 			// no character/account/guild match, not an owner

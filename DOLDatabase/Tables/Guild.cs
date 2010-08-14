@@ -43,15 +43,18 @@ namespace DOL.Database
 		private string m_webpage;
 		private string m_email;
 		private bool m_guildBanner;
+		private DateTime m_guildBannerLostTime;
 		private bool m_guildDues;
 		private double m_guildBank;
 		private long m_guildDuesPercent;
 		private bool m_guildHouse;
 		private int m_guildHouseNumber;
 
-		/// <summary>
-		/// Create a guild
-		/// </summary>
+		private long m_guildLevel;
+		private byte m_bonusType;
+		private DateTime m_bonusStartTime;
+		private long m_meritPoints;
+
 		public DBGuild()
 		{
 			m_guildname = "default guild name";
@@ -66,77 +69,12 @@ namespace DOL.Database
 			m_guildDuesPercent = 0;
 			m_guildHouse = false;
 			m_guildHouseNumber = 0;
+			m_meritPoints = 0;
+			m_bonusType = 0;
+			m_bonusStartTime = new DateTime(2000, 1, 1);
+			m_guildBannerLostTime = new DateTime(2000, 1, 1);
 		}
 
-		#region guild level/buff
-		private long m_GuildLevel;
-		private long m_BuffType;
-		private DateTime m_BuffTime;
-		private long m_meritPoints;
-		/// <summary>
-		/// Guild level
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public long GuildLevel
-		{
-			get
-			{
-				return m_GuildLevel;
-			}
-			set
-			{
-				Dirty = true;
-				m_GuildLevel = value;
-			}
-		}
-
-		/// <summary>
-		/// Buff flag of guild // BUFFTYPE
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public long BuffType
-		{
-			get
-			{
-				return m_BuffType;
-			}
-			set
-			{
-				Dirty = true;
-				m_BuffType = value;
-			}
-		}
-
-		/// <summary>
-		/// Buff flag of guild // BUFFTIME
-		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public DateTime BuffTime
-		{
-			get
-			{
-				return m_BuffTime;
-			}
-			set
-			{
-				Dirty = true;
-				m_BuffTime = value;
-			}
-		}
-		[DataElement(AllowDbNull = false)]
-		public long MeritPoints
-		{
-			get
-			{
-				return m_meritPoints;
-			}
-			set
-			{
-				Dirty = true;
-				m_meritPoints = value;
-			}
-		}
-		#endregion
 
 		/// <summary>
 		/// A unique ID for the guild
@@ -172,9 +110,6 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// Guild Realm.  This is readonly after creation
-		/// </summary>
 		[ReadOnly]
 		[DataElement(AllowDbNull = true)]
 		public byte Realm
@@ -188,8 +123,8 @@ namespace DOL.Database
 				m_realm = value;
 			}
 		}
-		
-		[DataElement(AllowDbNull = true)] // can be primary too
+
+		[DataElement(AllowDbNull = true)]
 		public bool GuildBanner
 		{
 			get
@@ -202,9 +137,21 @@ namespace DOL.Database
 				m_guildBanner = value;
 			}
 		}
-		/// <summary>
-		/// Message of the day of the guild
-		/// </summary>
+
+		[DataElement(AllowDbNull = false)]
+		public DateTime GuildBannerLostTime
+		{
+			get
+			{
+				return m_guildBannerLostTime;
+			}
+			set
+			{
+				Dirty = true;
+				m_guildBannerLostTime = value;
+			}
+		}
+
 		[DataElement(AllowDbNull = true)]
 		public string Motd
 		{
@@ -218,10 +165,7 @@ namespace DOL.Database
 				m_motd = value;
 			}
 		}
-		
-		/// <summary>
-		/// officier message of the day
-		/// </summary>
+
 		[DataElement(AllowDbNull = true)]
 		public string oMotd
 		{
@@ -235,10 +179,7 @@ namespace DOL.Database
 				m_omotd = value;
 			}
 		}
-		
-		/// <summary>
-		/// alliance id when guild join an alliance
-		/// </summary>
+
 		[DataElement(AllowDbNull = true, Index=true)]
 		public string AllianceID
 		{
@@ -253,9 +194,6 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// emblem of guild
-		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public int Emblem
 		{
@@ -270,9 +208,6 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// realm point of guild
-		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public long RealmPoints
 		{
@@ -287,9 +222,6 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// bounty point of guild
-		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public long BountyPoints
 		{
@@ -304,9 +236,6 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// Webpage for the guild
-		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public string Webpage
 		{
@@ -318,9 +247,6 @@ namespace DOL.Database
 			}
 		}
 
-		/// <summary>
-		/// Email for the guild
-		/// </summary>
 		[DataElement(AllowDbNull = true)]
 		public string Email
 		{
@@ -342,6 +268,7 @@ namespace DOL.Database
 				m_guildDues = value;
 			}
 		}
+
 		[DataElement(AllowDbNull = true)]
 		public double Bank
 		{
@@ -352,6 +279,7 @@ namespace DOL.Database
 				m_guildBank = value;
 			}
 		}
+
 		[DataElement(AllowDbNull = true)]
 		public long DuesPercent
 		{
@@ -362,6 +290,7 @@ namespace DOL.Database
 				m_guildDuesPercent = value;
 			}
 		}
+
 		[DataElement(AllowDbNull = false)]
 		public bool HaveGuildHouse
 		{
@@ -372,6 +301,7 @@ namespace DOL.Database
 				m_guildHouse = value;
 			}
 		}
+
 		[DataElement(AllowDbNull = false)]
 		public int GuildHouseNumber
 		{
@@ -382,13 +312,62 @@ namespace DOL.Database
 				m_guildHouseNumber = value;
 			}
 		}
-		/*
-		/// <summary>
-		/// characters in guild
-		/// </summary>
-		[Relation(LocalField = "GuildID", RemoteField = "GuildID", AutoLoad = true, AutoDelete=false)]
-		public Character[] Characters;
-		 */
+
+		[DataElement(AllowDbNull = true)]
+		public long GuildLevel
+		{
+			get
+			{
+				return m_guildLevel;
+			}
+			set
+			{
+				Dirty = true;
+				m_guildLevel = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public byte BonusType
+		{
+			get
+			{
+				return m_bonusType;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonusType = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public DateTime BonusStartTime
+		{
+			get
+			{
+				return m_bonusStartTime;
+			}
+			set
+			{
+				Dirty = true;
+				m_bonusStartTime = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public long MeritPoints
+		{
+			get
+			{
+				return m_meritPoints;
+			}
+			set
+			{
+				Dirty = true;
+				m_meritPoints = value;
+			}
+		}
 
 		/// <summary>
 		/// rank rules
