@@ -10081,7 +10081,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The suck state of this player
+		/// The stuck state of this player
 		/// </summary>
 		private bool m_stuckFlag = false;
 
@@ -12794,13 +12794,15 @@ namespace DOL.GS
 				return true;
 			}
 		}
+
+		/// <summary>
+		/// Can actions done by this player reward merit points to the players guild?
+		/// </summary>
 		public bool IsEligibleToGiveMeritPoints
 		{
 			get
 			{
-				if (this.Guild == null)
-					return false;
-				if (this.Client.Account.PrivLevel > 1)
+				if (Guild == null || Client.Account.PrivLevel > 1)
 					return false;
 				
 				return true;
@@ -12819,6 +12821,11 @@ namespace DOL.GS
 
 				if (speed <= 0)
 					speed = 1.0;
+
+				if (Guild != null && Guild.BonusType == Guild.eBonusType.CraftingHaste)
+				{
+					speed *= (1.0 + Properties.GUILD_BUFF_CRAFTING * .01);
+				}
 
 				if (CurrentRegion.IsCapitalCity && Properties.CAPITAL_CITY_CRAFTING_SPEED_BONUS > 0)
 				{

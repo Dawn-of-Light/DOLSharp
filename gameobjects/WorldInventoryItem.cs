@@ -153,6 +153,7 @@ namespace DOL.GS
 
 			return invItem;
 		}
+
 		public static WorldInventoryItem CreateUniqueFromTemplate(ItemTemplate template)
 		{
 			if (template == null)
@@ -175,8 +176,24 @@ namespace DOL.GS
 			return invItem;
 		}
 
+		public override bool RemoveFromWorld()
+		{
+			if (base.RemoveFromWorld())
+			{
+				if (m_item is IGameInventoryItem)
+				{
+					(m_item as IGameInventoryItem).OnRemoveFromWorld();
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
 		#region PickUpTimer
 		private RegionTimer m_pickup;
+
 		/// <summary>
 		/// Starts a new pickuptimer with the given time (in seconds)
 		/// </summary>
@@ -190,12 +207,14 @@ namespace DOL.GS
 			}
 			m_pickup = new RegionTimer(this, new RegionTimerCallback(CallBack), time * 1000);
 		}
+
 		private int CallBack(RegionTimer timer)
 		{
 			m_pickup.Stop();
 			m_pickup = null;
 			return 0;
 		}
+
 		public void StopPickupTimer()
 		{
 			foreach (GamePlayer player in Owners)
@@ -208,6 +227,7 @@ namespace DOL.GS
 			m_pickup.Stop();
 			m_pickup = null;
 		}
+
 		public int GetPickupTime
 		{
 			get

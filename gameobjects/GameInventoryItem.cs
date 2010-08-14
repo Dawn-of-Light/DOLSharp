@@ -164,6 +164,13 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// This object is being removed from the world
+		/// </summary>
+		public virtual void OnRemoveFromWorld()
+		{
+		}
+
+		/// <summary>
 		/// Player equips this item
 		/// </summary>
 		/// <param name="player"></param>

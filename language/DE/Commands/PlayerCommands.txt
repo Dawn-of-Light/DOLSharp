@@ -328,7 +328,7 @@ Scripts.Player.Guild.Help.GuildARemoveAlli:		/gc aremove alliance [#] - eine Gil
 Scripts.Player.Guild.Help.GuildAutoRemove:		/gc autoremove <playername> - entfernt einen Charakter aus der Gilde, auch wenn dieser nicht eingeloggt ist
 Scripts.Player.Guild.Help.GuildAutoRemoveAcc:		/gc autoremove account <playername> - entfernt alle Charakter eines Spielers aus der Gilde, auch wenn dieser nicht eingeloggt ist
 Scripts.Player.Guild.Help.GuildBannerSummon:		/gc summon - hisst das Gildenbanner, sofern vorhanden	
-Scripts.Player.Guild.Help.GuildBuff:			/gc buff <realmpoints/bountypoints> - einen Bonuszauber für die Gilde kaufen	
+Scripts.Player.Guild.Help.GuildBuff:			/gc buff <artifact, crafting, rps, bps, xp or mlxp> - einen Bonuszauber für die Gilde kaufen	
 Scripts.Player.Guild.Help.GuildBuyBanner:		/gc buybanner - ein Gildenbanner kaufen	
 Scripts.Player.Guild.Help.GuildCancel:			/gc cancel <option> [value] - alle vorherigen Befehle zurückziehen	
 Scripts.Player.Guild.Help.GuildClaim:			/gc claim - eine Festung für die Gilde in Anspruch nehmen

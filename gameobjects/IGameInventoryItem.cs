@@ -33,6 +33,7 @@ namespace DOL.GS
 		void OnReceive(GamePlayer player);
 		void OnLose(GamePlayer player);
 		WorldInventoryItem Drop(GamePlayer player);
+		void OnRemoveFromWorld();
 		void OnEquipped(GamePlayer player);
 		void OnUnEquipped(GamePlayer player);
 		void OnStrikeTarget(GameLiving owner, GameObject target);

@@ -462,10 +462,16 @@ namespace DOL.GS.ServerProperties
 		public static double BP_RATE;
 		
 		/// <summary>
-		/// The damage players do against monsters
+		/// The damage players do against monsters with melee
 		/// </summary>
-		[ServerProperty("rates","pve_damage", "The PvE Damage Modifier - Edit this to change the amount of damage done when fighting mobs e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
-		public static double PVE_DAMAGE;
+		[ServerProperty("rates","pve_melee_damage", "The PvE Melee Damage Modifier - Edit this to change the amount of melee damage done when fighting mobs e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
+		public static double PVE_MELEE_DAMAGE;
+
+		/// <summary>
+		/// The damage players do against monsters with spells
+		/// </summary>
+		[ServerProperty("rates", "pve_spell_damage", "The PvE Spell Damage Modifier - Edit this to change the amount of spell damage done when fighting mobs e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
+		public static double PVE_SPELL_DAMAGE;
 
 		/// <summary>
 		/// The percent per con difference (-1 = blue, 0 = yellow, 1 = OJ, 2 = red ...) subtracted to hitchance for spells in PVE.  0 is none, 5 is 5% per con, etc.  Default is 10%
@@ -474,11 +480,17 @@ namespace DOL.GS.ServerProperties
 		public static uint PVE_SPELL_CONHITPERCENT;
 
 		/// <summary>
-		/// The damage players do against players
+		/// The damage players do against players with melee
 		/// </summary>
-		[ServerProperty("rates","pvp_damage", "The PvP Damage Modifier - Edit this to change the amountof damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
-		public static double PVP_DAMAGE;
-		
+		[ServerProperty("rates","pvp_melee_damage", "The PvP Melee Damage Modifier - Edit this to change the amount of melee damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
+		public static double PVP_MELEE_DAMAGE;
+
+		/// <summary>
+		/// The damage players do against players with spells
+		/// </summary>
+		[ServerProperty("rates", "pvp_spell_damage", "The PvP Spell Damage Modifier - Edit this to change the amount of spell damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
+		public static double PVP_SPELL_DAMAGE;
+
 		/// <summary>
 		/// The money drop modifier
 		/// </summary>
@@ -1128,7 +1140,60 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("guild","guilds_claim_limit", "How many things do we allow guilds to claim?", 1)]
 		public static int GUILDS_CLAIM_LIMIT;
+
+		/// <summary>
+		/// Guild Crafting Buff bonus amount
+		/// </summary>
+		[ServerProperty("guild", "guild_buff_crafting", "Percent speed gain for the guild crafting buff?", (ushort)5)]
+		public static ushort GUILD_BUFF_CRAFTING;
+
+		/// <summary>
+		/// Guild XP Buff bonus amount
+		/// </summary>
+		[ServerProperty("guild", "guild_buff_xp", "Extra XP gain percent for the guild PvE XP buff?", (ushort)5)]
+		public static ushort GUILD_BUFF_XP;
+
+		/// <summary>
+		/// Guild RP Buff bonus amount
+		/// </summary>
+		[ServerProperty("guild", "guild_buff_rp", "Extra RP gain percent for the guild RP buff?", (ushort)2)]
+		public static ushort GUILD_BUFF_RP;
+
+		/// <summary>
+		/// Guild BP Buff bonus amount -  this is not available on live, disabled by default
+		/// </summary>
+		[ServerProperty("guild", "guild_buff_bp", "Extra BP gain percent for the guild BP buff?", (ushort)0)]
+		public static ushort GUILD_BUFF_BP;
+
+		/// <summary>
+		/// Guild artifact XP Buff bonus amount
+		/// </summary>
+		[ServerProperty("guild", "guild_buff_artifact_xp", "Extra artifact XP gain percent for the guild artifact XP buff?", (ushort)5)]
+		public static ushort GUILD_BUFF_ARTIFACT_XP;
+
+		/// <summary>
+		/// Guild masterlevel XP Buff bonus amount
+		/// </summary>
+		[ServerProperty("guild", "guild_buff_masterlevel_xp", "Extra masterlevel XP gain percent for the guild masterlevel XP buff?", (ushort)20)]
+		public static ushort GUILD_BUFF_MASTERLEVEL_XP;
+
+		/// <summary>
+		/// How much merit to reward guild when dragon is killed, if any.
+		/// </summary>
+		[ServerProperty("guild", "guild_merit_on_dragon_kill", "How much merit to reward guild when dragon is killed, if any.", (ushort)0)]
+		public static ushort GUILD_MERIT_ON_DRAGON_KILL;
+
+		/// <summary>
+		/// When a banner is lost to the enemy how long is the wait before purchase is allowed?  In Minutes.
+		/// </summary>
+		[ServerProperty("guild", "guild_banner_lost_time", "When a banner is lost to the enemy how many minutes is the wait before purchase is allowed?", (ushort)1440)]
+		public static ushort GUILD_BANNER_LOST_TIME;
+
+
+
 		#endregion
+
+
 		
 		#region CRAFT
 		/// <summary>

@@ -327,7 +327,7 @@ namespace DOL.GS
 			if (player == null || xpArgs == null)
 				return;
 
-			// Atrifacts only gain XP on NPC and player kills
+			// Artifacts only gain XP on NPC and player kills
 			if (xpArgs.XPSource != GameLiving.eXPSource.Player && xpArgs.XPSource != GameLiving.eXPSource.NPC)
 				return;
 			
@@ -373,6 +373,14 @@ namespace DOL.GS
 				}
 
 				return;
+			}
+
+			if (player.Guild != null && player.Guild.BonusType == Guild.eBonusType.ArtifactXP)
+			{
+				long xpBonus = (long)(xpAmount * ServerProperties.Properties.GUILD_BUFF_ARTIFACT_XP * .01);
+				xpAmount += xpBonus;
+				player.Out.SendMessage(string.Format("Your {0} gains additional experience due to your guild's buff!", item.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
 			}
 
 			// All artifacts share the same XP table, we make them level

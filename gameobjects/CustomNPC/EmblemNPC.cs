@@ -90,7 +90,7 @@ namespace DOL.GS
 
 				}
 
-				if (!t.Guild.GotAccess(t, eGuildRank.Emblem))
+				if (!t.Guild.GotAccess(t, Guild.eRank.Emblem))
 				{
 					t.Out.SendMessage("You do not have enough privileges for that.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
