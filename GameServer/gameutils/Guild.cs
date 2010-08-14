@@ -25,42 +25,80 @@ using DOL.Language;
 using DOL.GS.Keeps;
 using log4net;
 using DOL.GS.Housing;
-using DOL.Regiment;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	
-	public enum eGuildRank : int
-	{
-		Emblem,
-		AcHear,
-		AcSpeak,
-		Demote,
-		Promote,
-		GcHear,
-		GcSpeak,
-		Invite,
-		OcHear,
-		OcSpeak,
-		Remove,
-		Leader,
-		Alli,
-		View,
-		Claim,
-		Upgrade,
-		Release,
-		Buff,
-		Dues,
-		Withdraw
-	}
 	/// <summary>
 	/// Guild inside the game.
 	/// </summary>
-	/// 
 	public class Guild
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		public enum eRank : int
+		{
+			Emblem,
+			AcHear,
+			AcSpeak,
+			Demote,
+			Promote,
+			GcHear,
+			GcSpeak,
+			Invite,
+			OcHear,
+			OcSpeak,
+			Remove,
+			Leader,
+			Alli,
+			View,
+			Claim,
+			Upgrade,
+			Release,
+			Buff,
+			Dues,
+			Withdraw
+		}
+
+		public enum eBonusType : byte
+		{
+			None = 0,
+			RealmPoints = 1,
+			BountyPoints = 2,	// not live like?
+			MasterLevelXP = 3,	// Not implemented
+			CraftingHaste = 4,
+			ArtifactXP = 5,
+			Experience = 6
+		}
+
+		public static string BonusTypeToName(eBonusType bonusType)
+		{
+			string bonusName = "None";
+
+			switch (bonusType)
+			{
+				case Guild.eBonusType.ArtifactXP:
+					bonusName = "Artifact XP";
+					break;
+				case Guild.eBonusType.BountyPoints:
+					bonusName = "Bounty Points";
+					break;
+				case Guild.eBonusType.CraftingHaste:
+					bonusName = "Crafting Speed";
+					break;
+				case Guild.eBonusType.Experience:
+					bonusName = "PvE Experience";
+					break;
+				case Guild.eBonusType.MasterLevelXP:
+					bonusName = "Master Level XP";
+					break;
+				case Guild.eBonusType.RealmPoints:
+					bonusName = "Realm Points";
+					break;
+			}
+
+			return bonusName;
+		}
 
 		/// <summary>
 		/// This holds all players inside the guild
@@ -265,6 +303,24 @@ namespace DOL.GS
 			set
 			{
 				this.m_DBguild.GuildBanner = value;
+				this.SaveIntoDatabase();
+			}
+		}
+
+		public DateTime GuildBannerLostTime
+		{
+			get
+			{
+				if (m_DBguild.GuildBannerLostTime == null)
+				{
+					return new DateTime(2010, 1, 1);
+				}
+
+				return m_DBguild.GuildBannerLostTime;
+			}
+			set
+			{
+				this.m_DBguild.GuildBannerLostTime = value;
 				this.SaveIntoDatabase();
 			}
 		}
@@ -580,7 +636,7 @@ namespace DOL.GS
 		/// Looks up if a given client have access for the specific command in this guild
 		/// </summary>
 		/// <returns>true or false</returns>
-		public bool GotAccess(GamePlayer member, eGuildRank rankneededforcommand)
+		public bool GotAccess(GamePlayer member, Guild.eRank rankneededforcommand)
 		{
 			try
 			{
@@ -602,83 +658,83 @@ namespace DOL.GS
 
 					switch (rankneededforcommand)
 					{
-						case eGuildRank.Emblem:
+						case Guild.eRank.Emblem:
 							{
 								return member.GuildRank.Emblem;
 							}
-						case eGuildRank.AcHear:
+						case Guild.eRank.AcHear:
 							{
 								return member.GuildRank.AcHear;
 							}
-						case eGuildRank.AcSpeak:
+						case Guild.eRank.AcSpeak:
 							{
 								return member.GuildRank.AcSpeak;
 							}
-						case eGuildRank.Demote:
+						case Guild.eRank.Demote:
 							{
 								return member.GuildRank.Promote;
 							}
-						case eGuildRank.Promote:
+						case Guild.eRank.Promote:
 							{
 								return member.GuildRank.Promote;
 							}
-						case eGuildRank.GcHear:
+						case Guild.eRank.GcHear:
 							{
 								return member.GuildRank.GcHear;
 							}
-						case eGuildRank.GcSpeak:
+						case Guild.eRank.GcSpeak:
 							{
 								return member.GuildRank.GcSpeak;
 							}
-						case eGuildRank.Invite:
+						case Guild.eRank.Invite:
 							{
 								return member.GuildRank.Invite;
 							}
-						case eGuildRank.OcHear:
+						case Guild.eRank.OcHear:
 							{
 								return member.GuildRank.OcHear;
 							}
-						case eGuildRank.OcSpeak:
+						case Guild.eRank.OcSpeak:
 							{
 								return member.GuildRank.OcSpeak;
 							}
-						case eGuildRank.Remove:
+						case Guild.eRank.Remove:
 							{
 								return member.GuildRank.Remove;
 							}
-						case eGuildRank.Alli:
+						case Guild.eRank.Alli:
 							{
 								return member.GuildRank.Alli;
 							}
-						case eGuildRank.View:
+						case Guild.eRank.View:
 							{
 								return member.GuildRank.View;
 							}
-						case eGuildRank.Claim:
+						case Guild.eRank.Claim:
 							{
 								return member.GuildRank.Claim;
 							}
-						case eGuildRank.Release:
+						case Guild.eRank.Release:
 							{
 								return member.GuildRank.Release;
 							}
-						case eGuildRank.Upgrade:
+						case Guild.eRank.Upgrade:
 							{
 								return member.GuildRank.Upgrade;
 							}
-						case eGuildRank.Dues:
+						case Guild.eRank.Dues:
 							{
 								return member.GuildRank.Dues;
 							}
-						case eGuildRank.Withdraw:
+						case Guild.eRank.Withdraw:
 							{
 								return member.GuildRank.Withdraw;
 							}
-						case eGuildRank.Leader:
+						case Guild.eRank.Leader:
 							{
 								return (member.GuildRank.RankLevel == 0);
 							}
-						case eGuildRank.Buff:
+						case Guild.eRank.Buff:
 							{
 								return member.GuildRank.Buff;
 							}
@@ -754,7 +810,7 @@ namespace DOL.GS
 			{
 				foreach (GamePlayer pl in m_guildMembers.Values)
 				{
-					if (!GotAccess(pl, eGuildRank.GcHear))
+					if (!GotAccess(pl, Guild.eRank.GcHear))
 					{
 						continue;
 					}
@@ -819,32 +875,36 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the guild buff type
 		/// </summary>
-		public long BuffType
+		public eBonusType BonusType
 		{
 			get 
 			{ 
-				return this.m_DBguild.BuffType; 
+				return (eBonusType)m_DBguild.BonusType; 
 			}
 			set 
 			{
-				this.m_DBguild.BuffType = value;
+				this.m_DBguild.BonusType = (byte)value;
 				this.SaveIntoDatabase();
 			}
 		}
 
-		//First time run this QRY -> update guild set BuffTime=NOW(); to set the bufftime properly
 		/// <summary>
 		/// Gets or sets the guild buff time
 		/// </summary>
-		public DateTime BuffTime
+		public DateTime BonusStartTime
 		{
 			get 
-			{ 
-				return this.m_DBguild.BuffTime; 
+			{
+				if (m_DBguild.BonusStartTime == null)
+				{
+					return new DateTime(2010, 1, 1);
+				}
+
+				return this.m_DBguild.BonusStartTime; 
 			}
 			set 
 			{
-				this.m_DBguild.BuffTime = value;
+				this.m_DBguild.BonusStartTime = value;
 				this.SaveIntoDatabase();
 			}
 		}
@@ -899,6 +959,8 @@ namespace DOL.GS
 		private string bannerStatus;
 		public string GuildBannerStatus(GamePlayer player)
 		{
+			bannerStatus = "None";
+
 			if (player.Guild != null)
 			{
 				if (player.Guild.GuildBanner)
@@ -907,7 +969,14 @@ namespace DOL.GS
 					{
 						if (plr.GuildBanner != null)
 						{
-							bannerStatus = "Summoned";
+							if (plr.GuildBanner.BannerItem.Status == GuildBannerItem.eStatus.Active)
+							{
+								bannerStatus = "Summoned";
+							}
+							else
+							{
+								bannerStatus = "Dropped";
+							}
 						}
 					}
 					if (bannerStatus == "None")
@@ -919,6 +988,7 @@ namespace DOL.GS
 			}
 			return bannerStatus;
 		}
+
 		public void UpdateMember(GamePlayer player)
 		{
 			if (player.Guild != this)

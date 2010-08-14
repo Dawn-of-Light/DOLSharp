@@ -664,7 +664,7 @@ Scripts.Player.Guild.Help.GuildARemoveAlli:		'/gc aremove alliance [#]' to Remov
 Scripts.Player.Guild.Help.GuildAutoRemove:		'/gc autoremove <playername>' 	
 Scripts.Player.Guild.Help.GuildAutoRemoveAcc:		'/gc autoremove account <playername>'	
 Scripts.Player.Guild.Help.GuildBannerSummon:		'/gc summon' summons the guild banner if you have one	
-Scripts.Player.Guild.Help.GuildBuff:			'/gc buff <realmpoints/bountypoints>' sets the guild buff to gain bounty or realm points	
+Scripts.Player.Guild.Help.GuildBuff:			'/gc buff <artifact, crafting, rps, bps, xp or mlxp>' sets the guild buff 	
 Scripts.Player.Guild.Help.GuildBuyBanner:		'/gc buybanner' - Spend points to buy a guild banner.	
 Scripts.Player.Guild.Help.GuildCancel:			'/gc cancel <option> [value]' to cancel all command done before	
 Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' to claim a keep	

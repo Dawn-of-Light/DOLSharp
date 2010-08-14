@@ -472,7 +472,7 @@ namespace DOL.Database.Connection
 					}
 					else if (systype == typeof (DateTime))
 					{
-						column += "DATETIME";
+						column += "DATETIME DEFAULT '2000-01-01'";
 					}
 					else if (systype == typeof (sbyte))
 					{
@@ -634,8 +634,11 @@ namespace DOL.Database.Connection
 					string alterTable = "ALTER TABLE `" + table.TableName + "` ADD (" + columndef + ")";
 					try
 					{
+						log.Warn("Altering table " + table.TableName);
 						if (log.IsDebugEnabled)
+						{
 							log.Debug(alterTable);
+						}
 						ExecuteNonQuery(alterTable);
 					}
 					catch (Exception e)

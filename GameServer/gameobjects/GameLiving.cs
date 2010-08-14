@@ -1612,11 +1612,11 @@ namespace DOL.GS
 
 				if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GamePlayer)
 				{
-					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_DAMAGE);
+					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_MELEE_DAMAGE);
 				}
 				else if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GameNPC)
 				{
-					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_DAMAGE);
+					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_MELEE_DAMAGE);
 				}
 
 				ad.UncappedDamage = ad.Damage;

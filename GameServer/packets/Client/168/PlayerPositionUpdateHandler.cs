@@ -503,7 +503,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			//**************//
 			//FALLING DAMAGE//
 			//**************//
-			if (GameServer.ServerRules.CanTakeFallDamage(client.Player))
+			if (GameServer.ServerRules.CanTakeFallDamage(client.Player) && client.Player.IsSwimming == false)
 			{
 				int maxLastZ = client.Player.MaxLastZ;
 				/* Are we on the ground? */
