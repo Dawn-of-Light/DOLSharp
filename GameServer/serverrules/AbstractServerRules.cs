@@ -419,6 +419,7 @@ namespace DOL.GS.ServerRules
 		{
 			if (player.Client.Account.PrivLevel > 1)
 				return false;
+
 			return true;
 		}
 

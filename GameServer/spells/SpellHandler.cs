@@ -3648,9 +3648,9 @@ target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
 			if ((m_caster is GamePlayer || (m_caster is GameNPC && (m_caster as GameNPC).Brain is IControlledBrain && m_caster.Realm != 0)))
 			{
 				if (target is GamePlayer)
-					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVP_DAMAGE);
+					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVP_SPELL_DAMAGE);
 				else if (target is GameNPC)
-					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVE_DAMAGE);
+					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVE_SPELL_DAMAGE);
 			}
 
 			// Well the PenetrateResistBuff is NOT ResistPierce

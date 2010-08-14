@@ -305,8 +305,15 @@ namespace DOL.GS
 		/// <param name="message">The message to be broadcast.</param>
 		public void BroadcastMessage(String message)
 		{
-			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE + 1500))
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+			{
 				player.Out.SendMessage(message, eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+
+				if (Properties.GUILD_MERIT_ON_DRAGON_KILL > 0 && player.IsEligibleToGiveMeritPoints)
+				{
+					GuildEventHandler.MeritForNPCKilled(player, this, Properties.GUILD_MERIT_ON_DRAGON_KILL);
+				}
+			}
 		}
 
 		/// <summary>

@@ -36,8 +36,17 @@ namespace DOL.GS
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		public enum eStatus : byte
+		{
+			Active = 1,
+			Dropped = 2,
+			Recovered = 3
+		}
+
+
 		private Guild m_ownerGuild = null;
 		private GamePlayer m_summonPlayer = null;
+		private eStatus m_status = eStatus.Active;
 
 		public GuildBannerItem()
 			: base()
@@ -71,60 +80,70 @@ namespace DOL.GS
 			set { m_summonPlayer = value; }
 		}
 
+		public eStatus Status
+		{
+			get { return m_status; }
+		}
+
+
 		/// <summary>
 		/// Player receives this item (added to players inventory)
 		/// </summary>
 		/// <param name="player"></param>
 		public override void OnReceive(GamePlayer player)
 		{
-			if (player != SummonPlayer)
+			// for guild banners we don't actually add it to inventory but instead register
+			// if it is rescued by a friendly player or taken by the enemy
+
+			player.Inventory.RemoveItem(this);
+
+			int trophyModel = 0;
+			eRealm realm = eRealm.None;
+
+			switch (Model)
 			{
-				// for guild banners we don't actually add it to inventory but instead register
-				// if it is rescued by a friendly player or taken by the enemy
+				case 3223:
+					trophyModel = 3359;
+					realm = eRealm.Albion;
+					break;
+				case 3224:
+					trophyModel = 3361;
+					realm = eRealm.Midgard;
+					break;
+				case 3225:
+					trophyModel = 3360;
+					realm = eRealm.Hibernia;
+					break;
+			}
 
-				player.Inventory.RemoveItem(this);
+			// if picked up by an enemy then turn this into a trophy
+			if (realm != player.Realm)
+			{
+				ItemUnique template = new ItemUnique(Template);
+				template.ClassType = "";
+				template.Model = trophyModel;
+				template.IsDropable = true;
+				template.IsIndestructible = false;
 
-				int trophyModel = 0;
-				eRealm realm = eRealm.None;
+				GameServer.Database.AddObject(template);
+				GameInventoryItem trophy = new GameInventoryItem(template);
+				player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, trophy);
+				OwnerGuild.SendMessageToGuildMembers(player.Name + " of " + GlobalConstants.RealmToName(player.Realm) + " has captured your guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+				OwnerGuild.GuildBannerLostTime = DateTime.Now;
+			}
+			else
+			{
+				m_status = eStatus.Recovered;
 
-				switch (Model)
+				// A friendly player has picked up the banner.
+				if (OwnerGuild != null)
 				{
-					case 3223:
-						trophyModel = 3359;
-						realm = eRealm.Albion;
-						break;
-					case 3224:
-						trophyModel = 3361;
-						realm = eRealm.Midgard;
-						break;
-					case 3225:
-						trophyModel = 3360;
-						realm = eRealm.Hibernia;
-						break;
+					OwnerGuild.SendMessageToGuildMembers(player.Name + " has recovered your guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 				}
 
-				// if picked up by an enemy then turn this into a trophy
-				if (realm != player.Realm)
+				if (SummonPlayer != null)
 				{
-					ItemUnique template = new ItemUnique(Template);
-					template.ClassType = "";
-					template.Model = trophyModel;
-					template.IsDropable = true;
-					template.IsIndestructible = false;
-
-					GameServer.Database.AddObject(template);
-					GameInventoryItem trophy = new GameInventoryItem(template);
-					player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, trophy);
-					OwnerGuild.SendMessageToGuildMembers(player.Name + " of " + GlobalConstants.RealmToName(player.Realm) + " has captured your guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-				}
-				else
-				{
-					// A friendly player has picked up the banner.
-					if (OwnerGuild != null)
-					{
-						OwnerGuild.GuildBanner = true;
-						OwnerGuild.SendMessageToGuildMembers(player.Name + " has recovered your guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-					}
+					SummonPlayer.GuildBanner = null;
 				}
 			}
 		}
@@ -135,9 +154,10 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public override void OnLose(GamePlayer player)
 		{
-			if (player.Guild != null && Template.Id_nb == "GuildBanner_" + player.Guild.GuildID && player.GuildBanner != null)
+			if (player.GuildBanner != null)
 			{
 				player.GuildBanner.Stop();
+				m_status = eStatus.Dropped;
 			}
 		}
 
@@ -151,6 +171,29 @@ namespace DOL.GS
 		public override WorldInventoryItem Drop(GamePlayer player)
 		{
 			return null;
+		}
+
+
+		public override void OnRemoveFromWorld()
+		{
+			if (Status == eStatus.Dropped)
+			{
+				if (SummonPlayer != null)
+				{
+					SummonPlayer.GuildBanner = null;
+					SummonPlayer = null;
+				}
+
+				if (OwnerGuild != null)
+				{
+					// banner was dropped and not picked up, must be re-purchased
+					OwnerGuild.GuildBanner = false;
+					OwnerGuild.SendMessageToGuildMembers("Your guild banner has been lost!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+					OwnerGuild = null;
+				}
+			}
+
+			base.OnRemoveFromWorld();
 		}
 
 

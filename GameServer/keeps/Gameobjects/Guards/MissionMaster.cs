@@ -232,7 +232,7 @@ namespace DOL.GS.Keeps
 								return false;
 							}
 
-							if (!player.Guild.GotAccess(player, eGuildRank.OcSpeak))
+							if (!player.Guild.GotAccess(player, Guild.eRank.OcSpeak))
 							{
 								SayTo(player, "You are not high enough rank in your guild!");
 								return false;

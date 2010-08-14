@@ -75,7 +75,7 @@ Scripts.Player.Guild.Help.GuildARemoveAlli:		'/gc aremove alliance [#]' Expulse 
 Scripts.Player.Guild.Help.GuildAutoRemove:		'/gc autoremove <Nom du joueur>' Expulse un personnage de la guilde.
 Scripts.Player.Guild.Help.GuildAutoRemoveAcc:		'/gc autoremove account <Nom du joueur>' Expulse de la guilde tous les personnages d'un compte.
 Scripts.Player.Guild.Help.GuildBannerSummon:		'/gc summon' Invoque la bannière de guilde.	
-Scripts.Player.Guild.Help.GuildBuff:			'/gc buff <realmpoints/bountypoints>' Achète un bonus de mérite de guilde.
+Scripts.Player.Guild.Help.GuildBuff:			'/gc buff <artifact, crafting, rps, bps, xp or mlxp>' Achète un bonus de mérite de guilde.
 Scripts.Player.Guild.Help.GuildBuyBanner:		'/gc buybanner' - Achéte une bannière de guilde.	
 Scripts.Player.Guild.Help.GuildCancel:			'/gc cancel <option> [value]' Annule une invitation à rejoindre la guilde.
 Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' Réclame une tour ou un fort pour la guilde.
