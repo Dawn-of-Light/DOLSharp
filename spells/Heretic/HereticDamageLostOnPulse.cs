@@ -212,11 +212,11 @@ namespace DOL.GS.Spells
                 ad.AttackResult = GameLiving.eAttackResult.Missed;
 				ad.SpellHandler = this;
                 target.OnAttackedByEnemy(ad);
-                target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+                target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
             }
             else if (Spell.CastTime > 0)
             {
-                target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+                target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
             }
 
             if (target is GameNPC)

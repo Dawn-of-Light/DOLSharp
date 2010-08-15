@@ -61,7 +61,7 @@ namespace DOL.GS.Spells
 
 			// Interrupt only if target is actually casting
 			if (target.IsCasting && Spell.Target.ToLower() != "cone")
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+				target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
 		}
 
 		/// <summary>
@@ -74,7 +74,7 @@ namespace DOL.GS.Spells
 
 			// Interrupt only if target is actually casting
 			if (target.IsCasting && Spell.Target.ToLower() != "cone")
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+				target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 		}
 
 		/// <summary>

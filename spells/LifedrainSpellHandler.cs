@@ -36,7 +36,7 @@ namespace DOL.GS.Spells
 				SendDamageMessages(ad);
 				DamageTarget(ad, true);
 				StealLife(ad);
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+				target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
 			}
 		}
 

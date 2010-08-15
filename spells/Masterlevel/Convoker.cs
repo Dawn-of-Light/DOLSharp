@@ -744,7 +744,7 @@ namespace DOL.GS.Spells
             int mana = (int)(Spell.Damage);
 			target.ChangeMana(target, GameLiving.eManaChangeType.Spell, (-mana));
             //~yemla~Power rend shouldn't inrupt if im correct? A.k ML9 Perfector Power Drainging Ward Please more info on it.
-            //target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+            //target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
         }
 
         public virtual void SendCasterMessage(GameLiving target, int mana)

@@ -41,7 +41,7 @@ namespace DOL.GS.Spells
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
-			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+			target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 		}
 
 		public override void OnEffectStart(GameSpellEffect effect)
@@ -62,7 +62,7 @@ namespace DOL.GS.Spells
 					//Spell value below 0 means it's 100% chance to confuse.
 					GamePlayer player = effect.Owner as GamePlayer;
 
-					player.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+					player.StartInterruptTimer(player.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 				}
 
 				effect.Cancel(false);

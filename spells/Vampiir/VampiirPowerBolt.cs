@@ -119,7 +119,7 @@ namespace DOL.GS.Spells
 				ad.SpellHandler = m_handler;
 				target.OnAttackedByEnemy(ad);
 				
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, caster);
+				target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, caster);
 			}
 		}
 
