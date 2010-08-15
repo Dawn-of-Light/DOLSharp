@@ -138,6 +138,7 @@
     <Compile Include="GameServer\gameutils\RegionTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GameServer\gameutils\Train1105.cs" />
     <Compile Include="GameServer\gameutils\ZoneTest.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -24,7 +24,7 @@ using DOL.GS;
 using NUnit.Framework;
 
 namespace DOL.Tests
-{	
+{
 	public class DOLTestCase
 	{
 		public DOLTestCase()
@@ -41,15 +41,15 @@ namespace DOL.Tests
 			{
 				if (charact!=null)
 					character = charact;
-			}			
+			}
 			Assert.IsNotNull(character);
 			
 			GameClient client = new GameClient(GameServer.Instance);
-			client.Version = GameClient.eClientVersion.Version1101;
+			client.Version = GameClient.eClientVersion.Version1105;
 			client.Socket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
 			client.Account = account;
 			client.PacketProcessor = new DOL.GS.PacketHandler.PacketProcessor(client);
-			client.Out = new DOL.GS.PacketHandler.PacketLib1101(client);
+			client.Out = new DOL.GS.PacketHandler.PacketLib1105(client);
 			client.Player = new GamePlayer(client,character);
 			Assert.IsNotNull(client.Player,"GamePlayer instance created");
 			
@@ -90,7 +90,7 @@ namespace DOL.Tests
 		}
 		public void cd()
 		{
-			Console.WriteLine("GC: "+Directory.GetCurrentDirectory()); 
+			Console.WriteLine("GC: "+Directory.GetCurrentDirectory());
 		}
 		[TestFixtureTearDown] public void Dispose()
 		{
@@ -99,22 +99,22 @@ namespace DOL.Tests
 			// It could have been done with TestSuits, but they are now removed from NUnit, if I'm right.
 			
 			/*
-			if (GameServer.IsRunning) 
+			if (GameServer.IsRunning)
 			{
 				GameServer.Instance.Stop();
 				Console.WriteLine("GameServer stopped");
-			} 
+			}
 			else
 			{
 				Console.WriteLine("GameServer is not running, skip stop of Gameserver...");
 			}
-			*/
+			 */
 			
 		}
 
 		#region Watch
 
-		static long gametick;		
+		static long gametick;
 
 		/// <summary>
 		/// use startWatch to start taking the time
@@ -129,16 +129,16 @@ namespace DOL.Tests
 		/// <summary>
 		/// stop watch will count the Gamticks since last call of startWatch
 		/// 
-		/// Note: This value does not represent the time it will take on a 
+		/// Note: This value does not represent the time it will take on a
 		/// actual server since we have no actual user load etc...
 		/// </summary>
 		public static void StopWatch()
-		{	
+		{
 			Console.WriteLine("Stop watch: "+Environment.TickCount);
 			long elapsed = Environment.TickCount - gametick;
 			Console.WriteLine(elapsed+" ticks(ms) elapsed");
 		}
-	
+		
 		#endregion
 	}
 }
