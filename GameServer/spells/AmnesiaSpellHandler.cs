@@ -98,7 +98,7 @@ namespace DOL.GS.Spells
 			if (Spell.CastTime == 0)
 			{
 				// start interrupt even for resisted instant amnesia
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+				target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 			}
 		}
 

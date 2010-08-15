@@ -125,27 +125,6 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public const string INTERRUPT_TIMEOUT_PROPERTY = "CAST_INTERRUPT_TIMEOUT";
 		/// <summary>
-		/// The duration for the spell interrupt duration
-		/// </summary>
-		public static int SPELL_INTERRUPT_DURATION
-		{
-			get { return ServerProperties.Properties.SPELL_INTERRUPT_DURATION; }
-		}
-		/// <summary>
-		/// The recast delay after interrupted spell
-		/// </summary>
-		public static int SPELL_INTERRUPT_RECAST
-		{
-			get { return ServerProperties.Properties.SPELL_INTERRUPT_RECAST; }
-		}
-		/// <summary>
-		/// The additionnal interrupt timer
-		/// </summary>
-		public static int SPELL_INTERRUPT_AGAIN
-		{
-			get { return ServerProperties.Properties.SPELL_INTERRUPT_AGAIN; }
-		}
-		/// <summary>
 		/// The property key for focus spells
 		/// </summary>
 		protected const string FOCUS_SPELL = "FOCUSING_A_SPELL";
@@ -557,11 +536,12 @@ namespace DOL.GS.Spells
 			if (IsCasting && Stage < 2)
 			{
 				double mod = Caster.GetConLevel(attacker);
-				double chance = 65;
+				double chance = Caster.BaseInterruptChance;
 				chance += mod * 10;
 				chance = Math.Max(1, chance);
 				chance = Math.Min(99, chance);
 				if(attacker is GamePlayer) chance=99;
+
 				if (Util.Chance((int)chance))
 				{
 					Caster.LastInterruptMessage = attacker.GetName(0, true) + " attacks you and your spell is interrupted!";
@@ -665,9 +645,9 @@ namespace DOL.GS.Spells
 
 			if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null && m_caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) == null)
 			{
-				if (Caster.InterruptAction > 0 && Caster.InterruptAction + SPELL_INTERRUPT_RECAST > Caster.CurrentRegion.Time)
+				if (Caster.InterruptAction > 0 && Caster.InterruptAction + Caster.SpellInterruptRecastTime > Caster.CurrentRegion.Time)
 				{
-					if (!quiet) MessageToCaster("You must wait " + (((Caster.InterruptAction + SPELL_INTERRUPT_RECAST) - Caster.CurrentRegion.Time) / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
+					if (!quiet) MessageToCaster("You must wait " + (((Caster.InterruptAction + Caster.SpellInterruptRecastTime) - Caster.CurrentRegion.Time) / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
 					return false;
 				}
 			}
@@ -1310,7 +1290,7 @@ namespace DOL.GS.Spells
 						if(Caster.LastInterruptMessage != "") MessageToCaster(Caster.LastInterruptMessage, eChatType.CT_SpellResisted);
 						else MessageToCaster("You are interrupted and must wait " + ((Caster.InterruptTime - m_started) / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
 					}
-					Caster.InterruptAction = Caster.CurrentRegion.Time - SPELL_INTERRUPT_AGAIN;
+					Caster.InterruptAction = Caster.CurrentRegion.Time - Caster.SpellInterruptRecastAgain;
 					return false;
 				}
 			}
@@ -2934,10 +2914,10 @@ return false;
 			/*if (target is GamePlayer)
 {
 if (target.IsCasting && (Spell.Damage > 0 || Spell.CastTime > 0))
-target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
 }*/
 			if(!(Spell.SpellType.ToLower().IndexOf("debuff")>=0 && Spell.CastTime==0))
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+				target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
 
 
 			if (target.Realm == 0 || Caster.Realm == 0)

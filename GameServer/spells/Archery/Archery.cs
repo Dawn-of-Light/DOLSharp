@@ -415,7 +415,7 @@ namespace DOL.GS.Spells
                 if (attacker is GamePlayer) chance = 100;
                 if (Util.Chance((int)chance))
                 {
-                    Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + SPELL_INTERRUPT_DURATION);
+                    Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + Caster.SpellInterruptDuration);
                     MessageToLiving(Caster, attacker.GetName(0, true) + " attacks you and your shot is interrupted!", eChatType.CT_SpellResisted);
                     InterruptCasting();
                     return true;

@@ -62,7 +62,7 @@ namespace DOL.GS.Spells
 
 			if (Spell.CastTime > 0) 
 			{
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+				target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 			}
 			if(target is GameNPC) 
 			{
@@ -150,7 +150,7 @@ namespace DOL.GS.Spells
 			timer.Interval = 650;
 			timer.Start(1 + (effect.Duration >> 1));
 
-			effect.Owner.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+			effect.Owner.StartInterruptTimer(effect.Owner.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 		}
 
 

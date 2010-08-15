@@ -5685,13 +5685,16 @@ namespace DOL.GS
 		/// <summary>
 		/// Stops all attacks this player is making
 		/// </summary>
-		public override void StopAttack()
+		/// <param name="forced">Is this a forced stop or is the client suggesting we stop?</param>
+		public override void StopAttack(bool forced)
 		{
 			NextCombatStyle = null;
 			NextCombatBackupStyle = null;
-			base.StopAttack();
+			base.StopAttack(forced);
 			if (IsAlive)
+			{
 				Out.SendAttackMode(AttackState);
+			}
 		}
 
 
@@ -6746,8 +6749,6 @@ namespace DOL.GS
 
 				// apply relic bonus prior to cap
 				DPS = (int)((double)DPS * (1.0 + RelicMgr.GetRelicBonusModifier(Realm, eRelicType.Strength)));
-
-				log.DebugFormat("Modified DPS after relic bonus: {0}", DPS);
 
 				// apply damage cap before quality
 				// http://www.classesofcamelot.com/faq.asp?mode=view&cat=10
