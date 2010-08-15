@@ -224,6 +224,12 @@ namespace DOL.GS.ServerProperties
 		
 		#region SERVER
 		/// <summary>
+		/// Use pre 1.105 train or livelike
+		/// </summary>
+		[ServerProperty("server","custom_train", "Train is custom pre-1.105 one ? (false set it to livelike 1.105+)", true)]
+		public static bool CUSTOM_TRAIN;
+		
+		/// <summary>
 		/// Record news in database
 		/// </summary>
 		[ServerProperty("server","record_news", "Record News in database?", true)]

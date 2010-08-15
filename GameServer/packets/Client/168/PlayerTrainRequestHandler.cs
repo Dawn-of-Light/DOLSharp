@@ -173,7 +173,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			client.Out.SendMessage("This command is not implemented", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("This command is not implemented.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 0;
 		}
 	}
@@ -187,8 +187,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			client.Out.SendMessage("This command is not implemented", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 0;
+			client.Out.SendTrainerWindow();
+			return packet.ReadByte();
 		}
 	}
 }

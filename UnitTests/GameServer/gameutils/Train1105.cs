@@ -16,15 +16,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Reflection;
+using System;
+using DOL;
+using DOL.Database;
+using DOL.GS;
+using DOL.GS.PacketHandler;
+using DOL.Tests;
+using NUnit.Framework;
 
-[assembly: AssemblyTitle("Dawn of Light - GameServerScripts")]
-[assembly: AssemblyDescription("Contains all the scripted code used to extend Game Server")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dawn of Light Development Team")]
-[assembly: AssemblyProduct("DAoC Server Side Emulation Package - Dawn of Light")]
-[assembly: AssemblyCopyright("Dawn of Light Development Team")]
-[assembly: AssemblyTrademark("Dawn of Light Development Team")]
-[assembly: AssemblyCulture("")]
-
-[assembly: AssemblyVersion("1.9.5.*")]
+namespace DOL.Tests
+{
+	/// <summary>
+	/// Unit tests for the new Inventory system
+	/// </summary>
+	[TestFixture]
+	public class Train1105 : DOLTestCase
+	{
+		[Test]
+		void TrainNow()
+		{
+			GamePlayer player = CreateMockGamePlayer();
+			Assert.IsNotNull (player);
+			player.Out.SendTrainerWindow();
+			return;
+		}
+	}
+}

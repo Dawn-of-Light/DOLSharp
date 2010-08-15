@@ -41,9 +41,12 @@ namespace DOL.GS.Scripts.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
-			// no longer used since 1.105
-			if (client.Version >= GameClient.eClientVersion.Version1105)
+			// no longer used since 1.105, except if we explicitely want
+			if (client.Version >= GameClient.eClientVersion.Version1105 && !ServerProperties.Properties.CUSTOM_TRAIN)
+			{
 				client.Out.SendTrainerWindow();
+				return;
+			}
 			
 			// Make sure the player is at a trainer.
 			if (!(client.Player.TargetObject is GameTrainer))
