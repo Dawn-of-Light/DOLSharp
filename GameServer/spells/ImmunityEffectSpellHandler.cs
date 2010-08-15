@@ -74,7 +74,7 @@ namespace DOL.GS.Spells
 			base.ApplyEffectOnTarget(target, effectiveness);
 
 			if (Spell.CastTime > 0) {
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+				target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 			}
 			if(target is GameNPC) {
 				IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;

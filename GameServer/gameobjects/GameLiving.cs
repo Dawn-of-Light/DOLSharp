@@ -1945,7 +1945,7 @@ namespace DOL.GS
 		}
 
 		protected long m_interruptTime = 0;
-		public long InterruptTime
+		public virtual long InterruptTime
 		{
 			get { return m_interruptTime; }
 			set
@@ -1957,7 +1957,7 @@ namespace DOL.GS
 		}
 
 		protected long m_interruptAction = 0;
-		public long InterruptAction
+		public virtual long InterruptAction
 		{
 			get { return m_interruptAction; }
 			set { m_interruptAction = value; }
@@ -1966,9 +1966,41 @@ namespace DOL.GS
 		/// <summary>
 		/// Yields true if interrupt action is running on this living.
 		/// </summary>
-		public bool IsBeingInterrupted
+		public virtual bool IsBeingInterrupted
 		{
 			get { return (m_interruptTime > CurrentRegion.Time); }
+		}
+
+		/// <summary>
+		/// Base chance this living can be interrupted
+		/// </summary>
+		public virtual int BaseInterruptChance
+		{
+			get { return 65; }
+		}
+
+		/// <summary>
+		/// How long does an interrupt last?
+		/// </summary>
+		public virtual int SpellInterruptDuration
+		{
+			get { return ServerProperties.Properties.SPELL_INTERRUPT_DURATION; }
+		}
+
+		/// <summary>
+		/// The amount of time the caster has to wait before being able to cast again
+		/// </summary>
+		public virtual int SpellInterruptRecastTime
+		{
+			get { return ServerProperties.Properties.SPELL_INTERRUPT_RECAST; }
+		}
+
+		/// <summary>
+		/// Additional interrupt time if interrupted again
+		/// </summary>
+		public virtual int SpellInterruptRecastAgain
+		{
+			get { return ServerProperties.Properties.SPELL_INTERRUPT_AGAIN; }
 		}
 
 		/// <summary>
@@ -1989,7 +2021,7 @@ namespace DOL.GS
 						return false;
 				}
 				double mod = GetConLevel(attacker);
-				double interruptChance = 65;
+				double interruptChance = BaseInterruptChance;
 				interruptChance += mod * 10;
 				interruptChance = Math.Max(1, interruptChance);
 				interruptChance = Math.Min(99, interruptChance);
@@ -2618,12 +2650,8 @@ namespace DOL.GS
 					case eAttackResult.NoTarget:
 					case eAttackResult.TargetDead:
 						{
-							if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance) owner.StopAttack();
 							Stop();
-							if (owner is GameNPC && owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
-							    ((GameNPC)owner).Inventory != null &&
-							    ((GameNPC)owner).Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
-								owner.SwitchWeapon(eActiveWeaponSlot.Distance);
+							owner.OnTargetDeadOrNoTarget();
 							return;
 						}
 					case eAttackResult.NotAllowed_ServerRules:
@@ -2892,9 +2920,38 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Our target is dead or we don't have a target
+		/// </summary>
+		public virtual void OnTargetDeadOrNoTarget()
+		{
+			log.Debug("GameLiving OnTargetDeadOrNoTarget");
+
+			if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
+			{
+				StopAttack();
+			}
+
+			if (this is GameNPC && ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
+				((GameNPC)this).Inventory != null &&
+				((GameNPC)this).Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+			{
+				SwitchWeapon(eActiveWeaponSlot.Distance);
+			}
+		}
+
+		/// <summary>
 		/// Stops all attacks this GameLiving is currently making.
 		/// </summary>
 		public virtual void StopAttack()
+		{
+			StopAttack(true);
+		}
+
+		/// <summary>
+		/// Stop all attackes this GameLiving is currently making
+		/// </summary>
+		/// <param name="forced">Is this a forced stop or is the client suggesting we stop?</param>
+		public virtual void StopAttack(bool forced)
 		{
 			CancelEngageEffect();
 			AttackState = false;

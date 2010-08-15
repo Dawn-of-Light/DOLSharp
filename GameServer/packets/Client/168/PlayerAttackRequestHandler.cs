@@ -89,7 +89,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 						player.Stealth(false);
 				}
 				else
-					player.StopAttack();
+				{
+					player.StopAttack(false);
+				}
 			}
 		}
 

@@ -107,7 +107,7 @@ namespace DOL.GS.Spells
 					spellhandler.StartSpell(target);
 				}
 					
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, caster);
+				target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, caster);
 			}
 		}
 

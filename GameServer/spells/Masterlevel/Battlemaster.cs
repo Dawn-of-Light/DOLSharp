@@ -37,7 +37,7 @@ namespace DOL.GS.Spells
                 ((GamePlayer)target).Out.SendMessage(" You lose " + end + " endurance!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
             (m_caster as GamePlayer).Out.SendMessage("" + target.Name + " loses " + end + " endurance!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 
-            target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+            target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
         }
     }
     #endregion
@@ -73,7 +73,7 @@ namespace DOL.GS.Spells
             int mana = (int)(Spell.Damage);
             target.ChangeMana(target, GameLiving.eManaChangeType.Spell, (-mana));
 
-            target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+            target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
         }
     }
     #endregion
@@ -332,7 +332,7 @@ namespace DOL.GS.Spells
             AttackData ad = CalculateDamageToTarget(target, effectiveness);
             DamageTarget(ad, true);
             SendDamageMessages(ad);
-            target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+            target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
         }
         
         

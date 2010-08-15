@@ -31,7 +31,7 @@ namespace DOL.GS.Spells
 			}
 
 			StealEndurance(target,end);
-			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+			target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 		}
 
 		
