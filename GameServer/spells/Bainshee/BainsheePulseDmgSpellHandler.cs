@@ -165,7 +165,7 @@ namespace DOL.GS.Spells
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
 			DamageTarget(ad, true);
 			SendDamageMessages(ad);
-			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, ad.AttackType, Caster);
+			target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
 		}
 		/*
 		 * We need to send resist spell los check packets because spell resist is calculated first, and

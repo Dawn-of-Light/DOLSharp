@@ -149,7 +149,7 @@ namespace DOL.GS.Spells
 			if (target == null) return;
 			if (!target.IsAlive || target.ObjectState!=GameLiving.eObjectState.Active) return;
 
-			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+			target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 			GameSpellEffect mez = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
             if (mez != null)
             {
@@ -207,7 +207,7 @@ namespace DOL.GS.Spells
 			base.OnSpellResisted(target);
 			if (Spell.Damage == 0 && Spell.CastTime == 0)
 			{
-				target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+				target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 			}
 		}
 
@@ -281,7 +281,7 @@ namespace DOL.GS.Spells
 			if (target == null) return;
 			if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
 
-			target.StartInterruptTimer(SPELL_INTERRUPT_DURATION, AttackData.eAttackType.Spell, Caster);
+			target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 			if (target is GameNPC)
 			{
 				GameNPC npc = (GameNPC)target;
