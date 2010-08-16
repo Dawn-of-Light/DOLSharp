@@ -1792,7 +1792,7 @@ return false;
 			if (player != null)
 				percent *= 1.0 - m_caster.GetModified(eProperty.CastingSpeed) * 0.01;
 
-			ticks = (int)(ticks * Math.Max(0.4, percent));
+			ticks = (int)(ticks * Math.Max(m_caster.CastingSpeedCap, percent));
 			if (ticks < 1)
 				ticks = 1; // at least 1 tick
 			return ticks;

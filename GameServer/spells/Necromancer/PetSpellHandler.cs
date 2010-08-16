@@ -70,7 +70,7 @@ namespace DOL.GS.Spells
 		public override int CalculateCastingTime()
 		{
 			int ticks = m_spell.CastTime;
-			ticks = (int)(ticks * Math.Max(0.4, DexterityCastTimeReduction));
+			ticks = (int)(ticks * Math.Max(m_caster.CastingSpeedCap, DexterityCastTimeReduction));
 			if (ticks < 1)
 				ticks = 1;
 			return ticks;

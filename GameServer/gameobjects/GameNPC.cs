@@ -3308,7 +3308,7 @@ namespace DOL.GS
 		public const string Last_LOS_Target_Property = "last_LOS_checkTarget";
 		public const string Last_LOS_Tick_Property = "last_LOS_checkTick";
 
-		private GameObject m_targetLOSObject = null;
+		protected GameObject m_targetLOSObject = null;
 
 		/// <summary>
 		/// Starts a melee attack on a target
