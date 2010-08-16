@@ -846,6 +846,15 @@ namespace DOL.GS
 		{
 			return AttackDamage(weapon) * (2.82 + 0.00009 * AttackSpeed(weapon));
 		}
+
+		/// <summary>
+		/// Minimum reduction possible to spell casting speed (CastTime * CastingSpeedCap)
+		/// </summary>
+		public virtual double CastingSpeedCap
+		{
+			get { return 0.4; }
+		}
+
 		/// <summary>
 		/// Returns the AttackRange of this living
 		/// </summary>

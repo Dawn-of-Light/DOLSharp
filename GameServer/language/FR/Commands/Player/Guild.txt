@@ -173,6 +173,7 @@ Scripts.Player.Guild.Purged:				{0} est purgé.
 Scripts.Player.Guild.RankACHearSet:			Vous avez {0} l'accés à ACHear au rang {1}.	
 Scripts.Player.Guild.RankACSpeakSet:			Vous avez {0} l'ACSpeak au rang {1}.	
 Scripts.Player.Guild.RankAlliSet:			Vous avez {0} l'Alliance au rang {1}.	
+Scripts.Player.Guild.RankBuffSet:			Vous avez {0} les Buff de fort au rang {1}.	
 Scripts.Player.Guild.RankClaimSet:			Vous avez {0} les captures de fort au rang {1}.	
 Scripts.Player.Guild.RankDuesSet:			Vous avez {0} la taxe de guilde au rang {1}.	
 Scripts.Player.Guild.RankEmblemSet:			Vous avez {0} l'emblème au rang {1}.	
