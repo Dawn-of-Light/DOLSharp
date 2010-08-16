@@ -147,7 +147,7 @@ namespace DOL.GS
 					cl.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameRelicPad.MountRelic.Captured", GlobalConstants.RealmToName((eRealm)relic.CurrentCarrier.Realm), relic.Name), eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 					cl.Out.SendMessage(message + "\n" + message + "\n" + message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
-				NewsMgr.CreateNews(message, 0, eNewsType.RvRGlobal, false);
+				NewsMgr.CreateNews(message, relic.CurrentCarrier.Realm, eNewsType.RvRGlobal, false);
 
 				/* Increasing of CapturedRelics */
 				//select targets to increase CapturedRelics
@@ -198,7 +198,7 @@ namespace DOL.GS
 					if (cl.Player.ObjectState != eObjectState.Active) continue;
 					cl.Out.SendMessage(message + "\n" + message + "\n" + message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
-				NewsMgr.CreateNews(message, 0, eNewsType.RvRGlobal, false);
+				NewsMgr.CreateNews(message, relic.CurrentCarrier.Realm, eNewsType.RvRGlobal, false);
 
 				Notify(RelicPadEvent.RelicStolen, this, new RelicPadEventArgs(relic.CurrentCarrier, relic));
 			}
