@@ -762,6 +762,7 @@ Scripts.Player.Guild.Purged:				{0} has been purged.
 Scripts.Player.Guild.RankACHearSet:			You have {0} the ACHear of the rank {1}.	
 Scripts.Player.Guild.RankACSpeakSet:			You have {0} the ACSpeak of the rank {1}.	
 Scripts.Player.Guild.RankAlliSet:			You have {0} the Alliance of the rank {1}.	
+Scripts.Player.Guild.RankBuffSet:			You have {0} the Buff of the rank {1}.	
 Scripts.Player.Guild.RankClaimSet:			You have {0} the Claim of the rank {1}.	
 Scripts.Player.Guild.RankDuesSet:			You have {0} the Dues of the rank {1}.	
 Scripts.Player.Guild.RankEmblemSet:			You have {0} the emblem of the rank {1}.	
