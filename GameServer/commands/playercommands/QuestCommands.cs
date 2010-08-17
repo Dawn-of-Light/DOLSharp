@@ -33,6 +33,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "search"))
+				return;
+
 			GamePlayer player = client.Player;
 
 			if (player == null)

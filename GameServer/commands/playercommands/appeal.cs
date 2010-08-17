@@ -38,11 +38,19 @@ namespace DOL.GS.Commands
     {
         public void OnCommand(GameClient client, string[] args)
         {
-            if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
+			if (IsSpammingCommand(client.Player, "appeal"))
+				return;
+
+			if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
             {
                 AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.SystemDisabled"));
                 return;
             }
+
+			if (client.Player.IsMuted)
+			{
+				return;
+			}
 
             //Help display
             if (args.Length == 1)

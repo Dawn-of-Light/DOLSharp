@@ -42,6 +42,9 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (IsSpammingCommand(client.Player, "report"))
+				return;
+
 			if (args.Length < 2)
 			{
 				DisplaySyntax(client);

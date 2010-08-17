@@ -38,7 +38,7 @@ namespace DOL.GS.Commands
 			}
 
 			long changeTime = client.Player.CurrentRegion.Time - YELLTick;
-			if (changeTime < 500 && YELLTick > 0)
+			if (changeTime < 750 && YELLTick > 0)
 			{
 				DisplayMessage(client, "Slow down! Think before you say each word!");
 				return;

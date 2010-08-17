@@ -74,6 +74,9 @@ namespace DOL.GS.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "who"))
+				return;
+
 			int listStart = 1;
 			ArrayList filters = null;
 			ArrayList clientsList = new ArrayList();

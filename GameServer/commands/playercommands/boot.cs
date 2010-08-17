@@ -12,6 +12,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "boot"))
+				return;
+
             House house = client.Player.CurrentHouse;
 			if (house == null)
 			{

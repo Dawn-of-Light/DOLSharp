@@ -69,6 +69,9 @@ namespace DOL.GS.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "realm"))
+				return;
+
 			string albKeeps = "";
 			string midKeeps = "";
 			string hibKeeps = "";

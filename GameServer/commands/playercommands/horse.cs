@@ -14,6 +14,9 @@ namespace DOL.GS.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "horse", 3000))
+				return;
+
 			if (!client.Player.IsOnHorse)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "HorseEmote.MustBeOnMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);

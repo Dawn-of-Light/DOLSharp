@@ -30,14 +30,11 @@ namespace DOL.GS.Commands
 		"/viewreports")]
 	public class ViewReportsCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		/// <summary>
-		/// method to handle /boat commands from a client
-		/// </summary>
-		/// <param name="client"></param>
-		/// <param name="args"></param>
-		/// <returns></returns>
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "viewreports"))
+				return;
+
 			try
 			{
 				// We recieved args, and must be admin

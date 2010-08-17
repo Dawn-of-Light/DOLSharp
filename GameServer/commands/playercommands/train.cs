@@ -41,6 +41,11 @@ namespace DOL.GS.Scripts.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "train"))
+			{
+				return;
+			}
+
 			// no longer used since 1.105, except if we explicitely want
 			if (client.Version >= GameClient.eClientVersion.Version1105 && !ServerProperties.Properties.CUSTOM_TRAIN)
 			{

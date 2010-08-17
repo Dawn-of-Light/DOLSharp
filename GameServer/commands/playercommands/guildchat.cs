@@ -46,6 +46,13 @@ namespace DOL.GS.Commands
 				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
+			if (IsSpammingCommand(client.Player, "guildchat", 500))
+			{
+				DisplayMessage(client, "Slow down! Think before you say each word!");
+				return;
+			}
+
 			string message = "[Guild] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
 			client.Player.Guild.SendMessageToGuildMembers(message, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 		}
@@ -77,6 +84,13 @@ namespace DOL.GS.Commands
 				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
+			if (IsSpammingCommand(client.Player, "osend", 500))
+			{
+				DisplayMessage(client, "Slow down! Think before you say each word!");
+				return;
+			}
+
 			string message = "[Officers] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
 			foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
 			{

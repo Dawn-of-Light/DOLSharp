@@ -34,6 +34,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "cmdhelp"))
+				return;
+
 			ePrivLevel privilegeLevel = (ePrivLevel)client.Account.PrivLevel;
 			bool isCommand = true;
 

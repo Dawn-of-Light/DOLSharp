@@ -35,6 +35,13 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage("Use: SEND <TARGET> <TEXT TO SEND>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+
+			if (IsSpammingCommand(client.Player, "send", 500))
+			{
+				DisplayMessage(client, "Slow down! Think before you say each word!");
+				return;
+			}
+
 			string targetName = args[1];
 			string message = string.Join(" ", args, 2, args.Length - 2);
 

@@ -27,6 +27,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "hood"))
+				return;
+
 			client.Player.IsCloakHoodUp = !client.Player.IsCloakHoodUp;
 		}
 	}

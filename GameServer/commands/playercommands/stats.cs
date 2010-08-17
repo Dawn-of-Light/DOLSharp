@@ -47,6 +47,9 @@ namespace DOL.GS.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "stats"))
+				return;
+
 			if (client == null) return;
 			if (LastUpdatedTime == 0) { LastUpdatedTime = client.Player.CurrentRegion.Time; }
 			TimeToChange = (LastUpdatedTime + 60000); //1minutes between list refreshing

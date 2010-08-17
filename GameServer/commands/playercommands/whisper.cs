@@ -36,6 +36,12 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (IsSpammingCommand(client.Player, "whisper", 500))
+			{
+				DisplayMessage(client, "Slow down! Think before you say each word!");
+				return;
+			}
+
 			GameObject obj = client.Player.TargetObject;
 			if (obj == null)
 			{

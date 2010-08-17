@@ -27,6 +27,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "quit"))
+				return;
+
 			client.Player.Quit(false);
 		}
 	}

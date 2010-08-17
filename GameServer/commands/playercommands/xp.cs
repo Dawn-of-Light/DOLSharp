@@ -35,6 +35,9 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (IsSpammingCommand(client.Player, "xp"))
+				return;
+
 			if (args[1].ToLower().Equals("on"))
 			{
 				client.Player.GainXP = true;
