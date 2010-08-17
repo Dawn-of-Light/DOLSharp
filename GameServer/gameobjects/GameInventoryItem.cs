@@ -277,6 +277,17 @@ namespace DOL.GS
 
 
 		/// <summary>
+		/// Try and use this item
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns>true if item use is handled here</returns>
+		public virtual bool Use(GamePlayer player)
+		{
+			return false;
+		}
+
+
+		/// <summary>
 		/// Delve this item
 		/// </summary>
 		/// <param name="delve"></param>

@@ -38,6 +38,7 @@ namespace DOL.GS
 		void OnUnEquipped(GamePlayer player);
 		void OnStrikeTarget(GameLiving owner, GameObject target);
 		void OnStruckByEnemy(GameLiving owner, GameLiving enemy);
+		bool Use(GamePlayer player);
 		void Delve(List<String> delve, GamePlayer player);
 	}
 }
