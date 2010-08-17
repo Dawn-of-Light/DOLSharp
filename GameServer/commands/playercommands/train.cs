@@ -28,6 +28,7 @@ namespace DOL.GS.Scripts.Commands
 {
 	[Cmd(
 		"&train",
+		new string[] { "&trainline", "&trainskill" }, // new aliases to work around 1.105 client /train command
 		ePrivLevel.Player,
 		"Trains a line by the specified amount",
 		"/train <line> <level>",
