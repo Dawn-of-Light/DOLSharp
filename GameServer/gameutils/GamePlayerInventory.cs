@@ -1139,6 +1139,14 @@ namespace DOL.GS
 			    fromItem.SlotPosition > (int) eInventorySlot.LastBackpack)
 				return false;
 
+			if (fromItem is IGameInventoryItem)
+			{
+				if ((fromItem as IGameInventoryItem).Combine(m_player, toItem))
+				{
+					return true;
+				}
+			}
+
 			//Is the fromItem a dye or dyepack?
 			//TODO shouldn't be done with model check
 			switch (fromItem.Model)

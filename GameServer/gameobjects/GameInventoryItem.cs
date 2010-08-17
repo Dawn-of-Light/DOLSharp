@@ -288,6 +288,17 @@ namespace DOL.GS
 
 
 		/// <summary>
+		/// Combine this item with the target item
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="targetItem"></param>
+		/// <returns>true if combine is handled here</returns>
+		public virtual bool Combine(GamePlayer player, InventoryItem targetItem)
+		{
+			return false;
+		}
+
+		/// <summary>
 		/// Delve this item
 		/// </summary>
 		/// <param name="delve"></param>
