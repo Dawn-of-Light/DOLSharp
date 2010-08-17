@@ -1005,14 +1005,17 @@ namespace DOL.GS
 
 	public class GlobalConstants
 	{
+		/// <summary>
+		/// Check an Object_Type to determine if it's a Bow weapon
+		/// </summary>
+		/// <param name="objectType"></param>
+		/// <returns></returns>
 		public static bool IsBowWeapon(eObjectType objectType)
 		{
 			return (objectType == eObjectType.CompositeBow || objectType == eObjectType.Longbow || objectType == eObjectType.RecurvedBow);
 		}
 		/// <summary>
-		/// ITEMTYPE != OBJECTYPE
-		/// ITEMTYPE = SLOT
-		/// OBJECTTYPE = REAL TYPE
+		/// Check an Object_Type to determine if it's a weapon
 		/// </summary>
 		/// <param name="objectTypeID"></param>
 		/// <returns></returns>
@@ -1022,9 +1025,7 @@ namespace DOL.GS
 			return false;
 		}
 		/// <summary>
-		/// ITEMTYPE != OBJECTYPE
-		/// ITEMTYPE = SLOT
-		/// OBJECTTYPE = REAL TYPE
+		/// Check an Object_Type to determine if it's armor
 		/// </summary>
 		/// <param name="objectTypeID"></param>
 		/// <returns></returns>
@@ -1033,7 +1034,6 @@ namespace DOL.GS
 			if (objectTypeID >= 32 && objectTypeID <= 38) return true;
 			return false;
 		}
-
 		/// <summary>
 		/// Offensive, Defensive, or Positional
 		/// </summary>
