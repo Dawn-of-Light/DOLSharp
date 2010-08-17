@@ -27,6 +27,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "noqueue"))
+				return;
+
 			client.Player.SpellQueue = !client.Player.SpellQueue;
 
 			if (client.Player.SpellQueue)

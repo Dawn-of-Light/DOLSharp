@@ -29,6 +29,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "gtrange"))
+				return;
+
 			if (client.Player.GroundTarget != null)
 			{
                 int range = client.Player.GetDistanceTo( client.Player.GroundTarget );

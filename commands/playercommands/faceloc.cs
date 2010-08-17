@@ -36,6 +36,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "faceloc"))
+				return;
+
 			if (client.Player.IsTurningDisabled)
 			{
 				DisplayMessage(client, "You can't use this command now!");

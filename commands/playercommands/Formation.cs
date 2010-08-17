@@ -28,6 +28,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "formation"))
+				return;
+
 			GamePlayer player = client.Player;
 
 			//No one else needs to use this spell

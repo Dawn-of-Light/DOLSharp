@@ -12,6 +12,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "setwho"))
+				return;
+
 			if (args.Length < 2)
 			{
 				DisplayMessage(client, "You need to specify if you want to change to class or trade");

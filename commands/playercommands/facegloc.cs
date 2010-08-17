@@ -37,6 +37,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "facegloc"))
+				return;
+
 			if (args.Length < 3)
 			{
 				client.Out.SendMessage("Please enter X and Y coordinates.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

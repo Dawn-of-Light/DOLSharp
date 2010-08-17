@@ -37,6 +37,9 @@ namespace DOL.GS.Commands
 		/// <returns></returns>
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "emote"))
+				return;
+
 			// no emotes if dead
 			if (!client.Player.IsAlive)
 			{

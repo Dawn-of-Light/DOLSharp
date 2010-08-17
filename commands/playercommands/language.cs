@@ -32,6 +32,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "language"))
+				return;
+
 			if (DOL.GS.ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE == false)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Current", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);

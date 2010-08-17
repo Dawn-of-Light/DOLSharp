@@ -28,6 +28,46 @@ namespace DOL.GS.Commands
 	{
 		protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+
+		/// <summary>
+		/// Is this player spamming this command
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="commandName"></param>
+		/// <returns></returns>
+		public bool IsSpammingCommand(GamePlayer player, string commandName)
+		{
+			return IsSpammingCommand(player, commandName, ServerProperties.Properties.COMMAND_SPAM_DELAY);
+		}
+
+		/// <summary>
+		/// Is this player spamming this command
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="commandName"></param>
+		/// <param name="delay">How long is the spam delay</param>
+		/// <returns>true if less than spam protection interval</returns>
+		public bool IsSpammingCommand(GamePlayer player, string commandName, int delay)
+		{
+			string spamKey = commandName + "NOSPAM";
+			long tick = player.TempProperties.getProperty<long>(spamKey, 0);
+
+			if (tick > 0 && player.CurrentRegion.Time - tick <= 0)
+			{
+				player.TempProperties.removeProperty(spamKey);
+			}
+
+			long changeTime = player.CurrentRegion.Time - tick;
+
+			if (tick > 0 && (player.CurrentRegion.Time - tick) < delay)
+			{
+				return true;
+			}
+
+			player.TempProperties.setProperty(spamKey, player.CurrentRegion.Time);
+			return false;
+		}
+
 		public virtual void DisplayMessage(GamePlayer player, string message)
 		{
 			DisplayMessage(player.Client, message, new object[] {});

@@ -26,6 +26,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "assist"))
+				return;
+
 			GamePlayer assistPlayer = null;
 			if (args.Length > 1)
 			{

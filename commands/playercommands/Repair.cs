@@ -31,6 +31,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "repair"))
+				return;
+
 			WorldInventoryItem item = client.Player.TargetObject as WorldInventoryItem;
 			if (item != null)
 			{

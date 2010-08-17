@@ -26,6 +26,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "where"))
+				return;
+
 			if (args.Length == 1)
 			{
 				DisplaySyntax(client);

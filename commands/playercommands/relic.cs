@@ -50,6 +50,9 @@ namespace DOL.GS.Commands
 
         public void OnCommand(GameClient client, string[] args)
         {
+			if (IsSpammingCommand(client.Player, "relic"))
+				return;
+
             string albStr = "", albPwr = "", midStr = "", midPwr = "", hibStr = "", hibPwr = "";
 			var relicInfo = new List<string>();
 
