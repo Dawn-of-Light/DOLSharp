@@ -8296,6 +8296,15 @@ namespace DOL.GS
 					}
 					return;
 				}
+
+				if (useItem is IGameInventoryItem)
+				{
+					if ((useItem as IGameInventoryItem).Use(this))
+					{
+						return;
+					}
+				}
+
 				if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
