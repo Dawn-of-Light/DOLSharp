@@ -53,6 +53,12 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (client.Player.IsMuted)
+			{
+				client.Player.Out.SendMessage("You have been muted and cannot emote!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			string ownRealm = string.Join(" ", args, 1, args.Length - 1);
 			ownRealm = "<" + client.Player.Name + " " + ownRealm + " >";
 
