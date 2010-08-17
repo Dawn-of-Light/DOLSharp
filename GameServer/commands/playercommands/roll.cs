@@ -49,6 +49,12 @@ namespace DOL.GS.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "roll", 500))
+			{
+				DisplayMessage(client, "Slow down!");
+				return;
+			}
+
 			// no args - display usage
 			if (args.Length < 2)
 			{

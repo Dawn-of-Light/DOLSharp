@@ -1432,6 +1432,7 @@ namespace DOL.GS.Commands
 								{
 									try
 									{
+										Log.Debug("add template " + item.Template.Id_nb);
 										item.Template.Id_nb = idnb;
 										GameServer.Database.AddObject(item.Template);
 										item.ITemplate_Id = idnb;
@@ -1446,7 +1447,7 @@ namespace DOL.GS.Commands
 								{
 									try
 									{
-										Log.Debug("save unique " + item.Template.Id_nb);
+										Log.Debug("add unique " + item.Template.Id_nb);
 										ItemUnique unique = new ItemUnique(item.Template);
 										unique.Id_nb = idnb;
 										GameServer.Database.AddObject(unique);
@@ -1462,6 +1463,7 @@ namespace DOL.GS.Commands
 							}
 							else // update the item
 							{
+								Log.Debug("update template " + item.Template.Id_nb);
 								item.Template.Dirty = true;
 								GameServer.Database.SaveObject(item.Template);
 								GameServer.Database.UpdateInCache<ItemTemplate>(item.Template);

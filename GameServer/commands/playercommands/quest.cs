@@ -30,6 +30,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "quest"))
+				return;
+
 			string message = "\n";
 			if (client.Player.QuestList.Count == 0)
 				message += "You have no currently pending quests.\n";

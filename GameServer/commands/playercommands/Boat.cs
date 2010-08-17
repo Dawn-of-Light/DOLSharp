@@ -25,6 +25,9 @@ namespace DOL.GS.Commands
 		/// <returns></returns>
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "boat"))
+				return;
+
 			try
 			{
 				switch (args[1])

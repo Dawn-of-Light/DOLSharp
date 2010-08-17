@@ -34,6 +34,9 @@ namespace DOL.GS.Commands
 			if (client.Player == null)
 				return;
 
+			if (IsSpammingCommand(client.Player, "news"))
+				return;
+
 			NewsMgr.DisplayNews(client);
 		}
 	}

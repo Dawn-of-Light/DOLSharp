@@ -39,6 +39,9 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (IsSpammingCommand(client.Player, "advice"))
+				return;
+
 			string msg = "";
 			if (args.Length >= 2)
 			{

@@ -36,6 +36,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "checkappeal"))
+				return;
+
 			if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
 			{
 				AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.SystemDisabled"));

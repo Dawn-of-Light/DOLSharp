@@ -34,6 +34,15 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (IsSpammingCommand(client.Player, "invite"))
+				return;
+
+			if (client.Player.IsMuted)
+			{
+				client.Player.Out.SendMessage("You have been muted and cannot invite others into a group.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			string targetName = string.Join(" ", args, 1, args.Length - 1);
 			GamePlayer target;
 

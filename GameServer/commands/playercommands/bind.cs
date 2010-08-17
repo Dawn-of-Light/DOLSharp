@@ -36,6 +36,9 @@ namespace DOL.GS.Commands
 		/// <param name="args"></param>
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "bind"))
+				return;
+
 			client.Player.Bind(false);
 		}
 	}
