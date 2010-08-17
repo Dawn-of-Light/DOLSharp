@@ -34,6 +34,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "settitle"))
+				return;
+
 			int index = -1;
 			if (args.Length > 1)
 			{

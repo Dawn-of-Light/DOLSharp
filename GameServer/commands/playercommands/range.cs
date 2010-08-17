@@ -30,6 +30,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "range"))
+				return;
+
 			GameLiving living = client.Player.TargetObject as GameLiving;
 			if (client.Player.TargetObject == null)
 				DisplayMessage(client, (LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NeedTarget")));

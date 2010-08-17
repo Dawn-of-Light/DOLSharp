@@ -35,6 +35,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "played"))
+				return;
+
 			int yearsPlayed = 0;
 			int monthsPlayed = 0;
 			TimeSpan showPlayed = TimeSpan.FromSeconds(client.Player.PlayedTime);

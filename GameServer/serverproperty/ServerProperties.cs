@@ -207,7 +207,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("system", "emote_delay", "The emote delay, default 3000ms before another emote.", 3000)]
 		public static int EMOTE_DELAY;
-		
+
+		/// <summary>
+		/// Command spam protection delay
+		/// </summary>
+		[ServerProperty("system", "command_spam_delay", "The spam delay, default 1500ms before the same command can be issued again.", 1500)]
+		public static int COMMAND_SPAM_DELAY;
+
 		/// <summary>
 		/// This specifies the max number of inventory items to send in an update packet
 		/// </summary>

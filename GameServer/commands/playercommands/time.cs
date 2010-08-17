@@ -26,10 +26,13 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"time in game",
 		"/time")]
-	public class TimeCommandHandler : ICommandHandler
+	public class TimeCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "time", 1000))
+				return;
+
 			if (client.Account.PrivLevel == (int)ePrivLevel.Admin) // admins only
 			{
 				try

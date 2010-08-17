@@ -28,6 +28,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "groundassist"))
+				return;
+
 			GameLiving target = client.Player.TargetObject as GameLiving;
 			if (args.Length > 1)
 			{

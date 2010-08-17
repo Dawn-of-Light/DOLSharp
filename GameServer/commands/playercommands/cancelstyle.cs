@@ -28,6 +28,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "cancelstyle"))
+				return;
+
 			client.Player.CancelStyle = !client.Player.CancelStyle;
 			DisplayMessage(client, string.Format(LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Set",
 				(client.Player.CancelStyle ? LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.On") : LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Off")))));

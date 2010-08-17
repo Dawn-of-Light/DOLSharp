@@ -19,6 +19,9 @@ namespace DOL.GS.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "email"))
+				return;
+
 			if (args.Length == 1)
 			{
 				client.Out.SendMessage("Usage: /email <address>",

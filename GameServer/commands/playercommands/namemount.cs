@@ -10,6 +10,10 @@ namespace DOL.GS.Commands
 		{
 			if (client.Player == null || args.Length < 2)
 				return;
+
+			if (IsSpammingCommand(client.Player, "namemount"))
+				return;
+
 			string horseName = args[1];
 			if (!client.Player.HasHorse)
 				return;

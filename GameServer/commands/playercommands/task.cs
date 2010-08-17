@@ -33,11 +33,14 @@ using DOL.GS.Quests;
 namespace DOL.GS.Commands
 {
 	//[CmdAttribute("&task", ePrivLevel.Player, "Ask for a Task from Guards or Merchants", "/task")]
-	[CmdAttribute("&task", ePrivLevel.Player, "Show the actuell task", "/task")]
+	[CmdAttribute("&task", ePrivLevel.Player, "Show the actual task", "/task")]
 	public class TaskCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "task"))
+				return;
+
 			if (args.Length > 1)
 			{
 				if (args[1] == "abort")

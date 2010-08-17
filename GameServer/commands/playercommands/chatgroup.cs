@@ -33,6 +33,15 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "chat"))
+				return;
+
+			if (client.Player.IsMuted)
+			{
+				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 			if (mychatgroup == null)
 			{
@@ -79,6 +88,9 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (IsSpammingCommand(client.Player, "chatgroup"))
+				return;
+
 			if (args.Length < 2)
 			{
 				PrintHelp(client);

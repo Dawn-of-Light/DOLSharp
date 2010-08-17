@@ -36,6 +36,12 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (IsSpammingCommand(client.Player, "group", 500))
+			{
+				DisplayMessage(client, "Slow down! Think before you say each word!");
+				return;
+			}
+
 			if (args.Length >= 2)
 			{
 				string msg = "";
