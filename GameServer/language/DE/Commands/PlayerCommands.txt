@@ -92,6 +92,15 @@ Scripts.Players.Battlegroup.Public:			Dies ist nun eine öffentliche Kampfgruppe
 Scripts.Players.Battlegroup.Usage:			Verwendet: /bc <text>
 Scripts.Players.Battlegroup.UsageInvite:		Verwendet: /bg invite <playername>
 
+# /FreeLevel
+PLCommands.FreeLevel.AboveMaximumLevel:			Eure Erfahrung ist zu groß für eine weitere freie Stufe.
+PLCommands.FreeLevel.EligibleFreeLevel:			Ihr seid nun würdig, eine freie Stufe zu erhalten. Klickt auf Euren Ausbilder, um sie zu bekommen! (Der Befehl "/freelevel decline" entfernt diese freie Stufe.)
+PLCommands.FreeLevel.FreeLevelIn:			Ihr habt eine neue Stufe erreicht und seid Eurer nächsten freien Stufe in {0} Tage, {1} Stunden und {2} Minuten  würdig.
+PLCommands.FreeLevel.FreeLevelIn2:			Ihr müsst noch {0} Tage, {1} Stunden und {2} Minuten warten, bis der Zeitraum der nächsten freien Stufe beginnt.
+PLCommands.FreeLevel.FreeLevelSoon:			Ihr braucht eine weitere Stufe, um der nächsten freien Stufe würdig zu sein.
+PLCommands.FreeLevel.NoFreeLevel:			Ihr habt keine freie Stufe !
+PLCommands.FreeLevel.Removed:				Diese freie Stufe wurde entfernt.
+
 # /Realm
 Scripts.Players.Realm.AlbKeeps:            	Albion Festungen
 Scripts.Players.Realm.DarknessFalls:      	Darkness Falls

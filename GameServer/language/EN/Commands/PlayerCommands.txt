@@ -1,0 +1,8 @@
+# /FreeLevel
+PLCommands.FreeLevel.AboveMaximumLevel:	You are above the maximum level to obtain a free level.
+PLCommands.FreeLevel.EligibleFreeLevel:	You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).
+PLCommands.FreeLevel.FreeLevelIn:	You will be eligible for a free level in : {0} days {1} hours {2} minutes.
+PLCommands.FreeLevel.FreeLevelIn2:	You will be eligible for a free level after your next level, and  in : {0} days {1} hours {2} minutes.
+PLCommands.FreeLevel.FreeLevelSoon:	You will be eligible for a free level as soon as you obtain a level.
+PLCommands.FreeLevel.NoFreeLevel:	You don't have any FreeLevel !
+PLCommands.FreeLevel.Removed:		Your FreeLevel has been removed.
