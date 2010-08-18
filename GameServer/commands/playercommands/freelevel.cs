@@ -18,6 +18,8 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
+
 
 namespace DOL.GS.Commands
 {
@@ -38,7 +40,7 @@ namespace DOL.GS.Commands
 				if (state == 2)
 				{
 					// NOT SURE FOR THIS MESSAGE
-					message = "Your FreeLevel has been removed.";
+                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.Removed");
 					// we decline THIS ONE, but next level, we will gain another freelevel !!
 					client.Player.DBCharacter.LastFreeLevel = client.Player.Level - 1;
 					client.Player.Out.SendPlayerFreeLevelUpdate();
@@ -46,33 +48,32 @@ namespace DOL.GS.Commands
 				else
 				{
 					// NOT SURE FOR THIS MESSAGE
-					message = "You don't have any FreeLevel !";
-				}
+                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.NoFreeLevel");
+                }
 				client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+            TimeSpan t = (client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS) - DateTime.Now);
 
 			switch (state)
 			{
 				case 1:
-					message = "You are above the maximum level to obtain a free level.";
-					break;
+                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.AboveMaximumLevel");
+                    break;
 				case 2:
-					message = "You are eligible for a free level! Click on your trainer to receive it (or type /freelevel decline to discard your free level).";
-					break;
+                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.EligibleFreeLevel");
+                    break;
 				case 3:
-					TimeSpan t = (client.Player.DBCharacter.LastFreeLeveled.AddDays(7) - DateTime.Now);
-					// NOT SURE FOR THIS MESSAGE
-					message = "You will be eligible for a free level in : " + t.Days + " days " + t.Hours + " hours " + t.Minutes + " minutes.";
-					break;
+                    // NOT SURE FOR THIS MESSAGE
+                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.FreeLevelIn", t.Days, t.Hours, t.Minutes);
+                    break;
 				case 4:
-					TimeSpan t2 = (client.Player.DBCharacter.LastFreeLeveled.AddDays(7) - DateTime.Now);
 					// NOT SURE FOR THIS MESSAGE
-					message = "You will be eligible for a free level after your next level, and  in : " + t2.Days + " days " + t2.Hours + " hours " + t2.Minutes + " minutes.";
-					break;
+                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.FreeLevelIn2", t.Days, t.Hours, t.Minutes);
+                    break;
 				case 5:
-					message = "You will be eligible for a free level as soon as you obtain a level.";
-					break;
+                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.FreeLevelSoon");
+                    break;
 
 			}
 			client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
