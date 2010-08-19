@@ -676,8 +676,7 @@ namespace DOL.GS
 		/// <param name="radius">the radius to check against</param>
 		/// <param name="partialList">an initial (eventually empty but initialized, i.e. never null !!) list of objects</param>
 		/// <returns>partialList augmented with the new objects verigying both type and radius in the current Zone</returns>
-		//internal GameObjectSet GetObjectsInRadius(eGameObjectType type, int x, int y, int z, ushort radius, GameObjectSet partialList) {
-		internal ArrayList GetObjectsInRadius(eGameObjectType type, int x, int y, int z, ushort radius, ArrayList partialList)
+		internal ArrayList GetObjectsInRadius(eGameObjectType type, int x, int y, int z, ushort radius, ArrayList partialList, bool ignoreZ)
 		{
 			if (!m_initialized) InitializeZone();
 			// initialise parameters
@@ -741,7 +740,7 @@ namespace DOL.GS
 							{
 								// we are in the subzone of the observation point
 								// => check all distances for all objects in the subzone
-								UnsafeAddToListWithDistanceCheck(startElement, x, y, z, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements);
+								UnsafeAddToListWithDistanceCheck(startElement, x, y, z, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, ignoreZ);
 								UnsafeUpdateSubZoneTimestamp(currentSubZoneIndex, typeIndex);
 							}
 						}
@@ -774,7 +773,7 @@ namespace DOL.GS
 
 									lock (startElement)
 									{
-										UnsafeAddToListWithDistanceCheck(startElement, x, y, z, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements);
+										UnsafeAddToListWithDistanceCheck(startElement, x, y, z, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, ignoreZ);
 										UnsafeUpdateSubZoneTimestamp(currentSubZoneIndex, typeIndex);
 									}
 								}
@@ -859,7 +858,8 @@ namespace DOL.GS
 			int subZoneIndex,
 			ArrayList partialList,
 			DOL.GS.Collections.Hashtable inZoneElements,
-			DOL.GS.Collections.Hashtable outOfZoneElements)
+			DOL.GS.Collections.Hashtable outOfZoneElements,
+			bool ignoreZ)
 		{
 
 			// => check all distances for all objects in the subzone
@@ -886,7 +886,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					if (CheckSquareDistance(x, y, z, currentObject.X, currentObject.Y, currentObject.Z, sqRadius) && !partialList.Contains(currentObject))
+					if (CheckSquareDistance(x, y, z, currentObject.X, currentObject.Y, currentObject.Z, sqRadius, ignoreZ) && !partialList.Contains(currentObject))
 					{
 						// the current object exists, is Active and still in the current subzone
 						// moreover it is in the right range and not yet in the result set
@@ -1135,7 +1135,7 @@ namespace DOL.GS
 		/// <param name="z2">Z of Point2</param>
 		/// <param name="sqDistance">the square distance to check for</param>
 		/// <returns>The distance</returns>
-		public static bool CheckSquareDistance(int x1, int y1, int z1, int x2, int y2, int z2, uint sqDistance)
+		public static bool CheckSquareDistance(int x1, int y1, int z1, int x2, int y2, int z2, uint sqDistance, bool ignoreZ)
 		{
 			int xDiff = x1 - x2;
 			long dist = ((long)xDiff) * xDiff;
@@ -1153,8 +1153,11 @@ namespace DOL.GS
 				return false;
 			}
 
-			int zDiff = z1 - z2;
-			dist += ((long)zDiff) * zDiff;
+			if (ignoreZ == false)
+			{
+				int zDiff = z1 - z2;
+				dist += ((long)zDiff) * zDiff;
+			}
 
 			if (dist > sqDistance)
 			{

@@ -69,7 +69,7 @@ namespace DOL.GS.Spells
 		{
 			if (target != null && target.CurrentRegion != null)
 			{
-				foreach (GameNPC npc in target.CurrentRegion.GetNPCsInRadius(target.X, target.Y, target.Z, (ushort)Spell.Radius, false))
+				foreach (GameNPC npc in target.CurrentRegion.GetNPCsInRadius(target.X, target.Y, target.Z, (ushort)Spell.Radius, false, true))
 				{
 					if (npc == null || !npc.IsAlive)
 					{
