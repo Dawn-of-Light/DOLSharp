@@ -2504,7 +2504,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="id">id of the character class</param>
 		/// <returns>success</returns>
-		public bool SetCharacterClass(int id)
+		public virtual bool SetCharacterClass(int id)
 		{
 			ICharacterClass cl = ScriptMgr.FindCharacterClass(id);
 

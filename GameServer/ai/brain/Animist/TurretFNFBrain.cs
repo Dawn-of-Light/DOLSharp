@@ -24,10 +24,11 @@ namespace DOL.AI.Brain
 {
 	public class TurretFNFBrain : TurretBrain
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public TurretFNFBrain(GameLiving owner) : base(owner)
 		{
 		}
-
 
 		/// <summary>
 		/// Get a random target from aggro table
@@ -35,7 +36,8 @@ namespace DOL.AI.Brain
 		/// <returns></returns>
 		protected override GameLiving CalculateNextAttackTarget()
 		{
-			List<GameLiving> livingList = new List<GameLiving>();
+			List<GameLiving> newTargets = new List<GameLiving>();
+			List<GameLiving> oldTargets = new List<GameLiving>();
 			base.CalculateNextAttackTarget();
 			lock(m_aggroTable.SyncRoot)
 			{
@@ -44,124 +46,90 @@ namespace DOL.AI.Brain
 					if(!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
 						continue;
 
-					if(!Body.IsWithinRadius( living, MAX_AGGRO_DISTANCE ))
+					if (living.IsMezzed || living.IsStealthed)
 						continue;
 
-					if(!Body.IsWithinRadius( living, ((TurretPet)Body).TurretSpell.Range ))
+					if (!Body.IsWithinRadius(living, MAX_AGGRO_DISTANCE, true))
 						continue;
 
-                    if (living.IsMezzed || living.IsStealthed)
-                        continue;
+					if (!Body.IsWithinRadius(living, ((TurretPet)Body).TurretSpell.Range, true))
+						continue;
 
-                    if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
-                        continue;
+					if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+						continue;
 
-                    if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && living.HasAbility(Abilities.RootImmunity))
-                        continue;
+					if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && living.HasAbility(Abilities.RootImmunity))
+						continue;
 
-					livingList.Add(living);
+					newTargets.Add(living);
 				}
 			}
-            if (livingList.Count < 1)
+
+            foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range, true))
             {
-                foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
-                {
-                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
-                        continue;
+                if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                    continue;
 
-                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
-                        continue;
+                if (living.IsPvPInvulnerability)
+                    continue;
 
-                    if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
-                        continue;
+                if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                    continue;
 
-                    if (living.IsMezzed || living.IsStealthed)
-                        continue;
+                if (living.IsMezzed || living.IsStealthed)
+                    continue;
 
-                    //lifeflight add, shouldn't be able to attack player with timer on
-                    if (living.IsPvPInvulnerability)
-                        continue;
+                if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+                    continue;
 
-                    if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
-                        continue;
-
-                    livingList.Add(living as GameLiving);
-                }
-                foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
-                {
-                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
-                        continue;
-
-                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
-                        continue;
-
-                    if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
-                        continue;
-
-                    if (living.IsMezzed || living.IsStealthed)
-                        continue;
-
-                    if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
-                        continue;
-
-                    if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && (living.HasAbility(Abilities.RootImmunity) || living.HasAbility(Abilities.DamageImmunity)))
-                        continue;
-
-                    livingList.Add(living as GameLiving);
-                }
+				if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+				{
+					oldTargets.Add(living);
+				}
+				else
+				{
+					newTargets.Add(living as GameLiving);
+				}
             }
-            if (livingList.Count < 1)
+
+            foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range, true))
             {
-                foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
-                {
-                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
-                        continue;
+                if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+                    continue;
 
-                    //lifeflight add, shouldn't be able to attack player with timer on
-                    if (living.IsPvPInvulnerability)
-                        continue;
+                if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+                    continue;
 
-                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
-                        continue;
+                if (living.IsMezzed || living.IsStealthed)
+                    continue;
 
-                    /*if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
-                        continue;*/
+                if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+                    continue;
 
-                    if (living.IsMezzed || living.IsStealthed)
-                        continue;
+                if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && (living.HasAbility(Abilities.RootImmunity) || living.HasAbility(Abilities.DamageImmunity)))
+                    continue;
 
-                    if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
-                        continue;
-
-                    livingList.Add(living as GameLiving);
-                }
-                foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
-                {
-                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
-                        continue;
-
-                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
-                        continue;
-
-                    /*if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
-                        continue;*/
-
-                    if (living.IsMezzed || living.IsStealthed)
-                        continue;
-
-                    if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
-                        continue;
-
-                    if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && (living.HasAbility(Abilities.RootImmunity) || living.HasAbility(Abilities.DamageImmunity)))
-                        continue;
-
-                    livingList.Add(living as GameLiving);
-                }
-            }
-            if (livingList.Count > 0)
-			{
-				return livingList[Util.Random(livingList.Count - 1)];
+				if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+				{
+					oldTargets.Add(living);
+				}
+				else
+				{
+					newTargets.Add(living as GameLiving);
+				}
 			}
+
+			// always favor previous targets and new targets that have not been attacked first, then re-attack old targets
+
+            if (newTargets.Count > 0)
+			{
+				return newTargets[Util.Random(newTargets.Count - 1)];
+			}
+			else if (oldTargets.Count > 0)
+			{
+				return oldTargets[Util.Random(oldTargets.Count - 1)];
+			}
+
 			m_aggroTable.Clear();
 			return null;
 		}

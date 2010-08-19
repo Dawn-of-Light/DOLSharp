@@ -4550,8 +4550,10 @@ namespace DOL.GS
 			if (text.Contains("[b]"))
 			{
 				text = text.Replace("[b]","");
-				foreach(GamePlayer player in CurrentRegion.GetPlayersInRadius(X,Y,Z, 25000,false))
-					player.Out.SendMessage(text,eChatType.CT_Broadcast,eChatLoc.CL_ChatWindow);
+				foreach (GamePlayer player in CurrentRegion.GetPlayersInRadius(X, Y, Z, 25000, false, false))
+				{
+					player.Out.SendMessage(text, eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
+				}
 				return;
 			}
 			if (text.Contains("[y]"))

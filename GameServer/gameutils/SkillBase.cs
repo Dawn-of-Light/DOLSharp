@@ -2057,12 +2057,24 @@ namespace DOL.GS
 			return true;
 		}
 
+
 		/// <summary>
-		///
+		/// Get a loaded specialization, warn if not found and create a dummy entry
 		/// </summary>
 		/// <param name="keyname"></param>
 		/// <returns></returns>
 		public static Specialization GetSpecialization(string keyname)
+		{
+			return GetSpecialization(keyname, true);
+		}
+
+		/// <summary>
+		/// Get a specialization
+		/// </summary>
+		/// <param name="keyname"></param>
+		/// <param name="create">if not found generate a warning and create a dummy entry</param>
+		/// <returns></returns>
+		public static Specialization GetSpecialization(string keyname, bool create)
 		{
 			if (m_specsByName.ContainsKey(keyname))
 			{
@@ -2072,9 +2084,18 @@ namespace DOL.GS
 					return (Specialization)spec.Clone();
 				}
 			}
-			if (log.IsWarnEnabled)
-				log.Warn("Specialization " + keyname + " unknown");
-			return new Specialization(keyname, "?" + keyname, 0);
+
+			if (create)
+			{
+				if (log.IsWarnEnabled)
+				{
+					log.Warn("Specialization " + keyname + " unknown");
+				}
+
+				return new Specialization(keyname, "?" + keyname, 0);
+			}
+
+			return null;
 		}
 
 		/// <summary>

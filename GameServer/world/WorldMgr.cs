@@ -2046,7 +2046,7 @@ namespace DOL.GS
 			Region reg = GetRegion(regionid);
 			if (reg == null)
 				return new Region.EmptyEnumerator();
-			return reg.GetPlayersInRadius(x, y, z, radiusToCheck, withDistance);
+			return reg.GetPlayersInRadius(x, y, z, radiusToCheck, withDistance, false);
 		}
 
 		/// <summary>
@@ -2105,7 +2105,7 @@ namespace DOL.GS
 			Region reg = GetRegion(regionid);
 			if (reg == null)
 				return new Region.EmptyEnumerator();
-			return reg.GetNPCsInRadius(x, y, z, radiusToCheck, withDistance);
+			return reg.GetNPCsInRadius(x, y, z, radiusToCheck, withDistance, false);
 		}
 
 		/// <summary>
