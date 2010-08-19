@@ -33,8 +33,8 @@ namespace DOL.GS
 	/// </summary>
 	public class Specialization : NamedSkill {
 
-		public Specialization(string keyname, string displayname, ushort icon) : base(keyname, displayname, icon, 1) {
-		}
+		public Specialization(string keyname, string displayname, ushort icon) : 
+			base(keyname, displayname, icon, 1) { }
 
 		/// <summary>
 		/// icon id (>=0x190) or 0 if spec is not clickable

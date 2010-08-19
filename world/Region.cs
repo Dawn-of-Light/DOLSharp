@@ -1298,14 +1298,6 @@ namespace DOL.GS
 
 		#region New Get in radius
 
-		/*protected void ObjectPositionChangedHandler (DOLEvent e, object sender,EventArgs arg)
-		{
-			ObjectUpdatePositionEventArg oup = (ObjectUpdatePositionEventArg)arg;
-			GameLiving glv = oup.GameLiving;
-			m_RegionMgr.AddMovingObject(glv);
-		}*/
-
-
 		/// <summary>
 		/// Gets objects in a radius around a point
 		/// </summary>
@@ -1316,14 +1308,14 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		protected IEnumerable GetInRadius(Zone.eGameObjectType type, int x, int y, int z, ushort radius, bool withDistance)
+		protected IEnumerable GetInRadius(Zone.eGameObjectType type, int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
 		{
 			// check if we are around borders of a zone
 			Zone startingZone = GetZone(x, y);
 
 			if (startingZone != null)
 			{
-				ArrayList res = startingZone.GetObjectsInRadius(type, x, y, z, radius, new ArrayList());
+				ArrayList res = startingZone.GetObjectsInRadius(type, x, y, z, radius, new ArrayList(), ignoreZ);
 
 				uint sqRadius = (uint)radius * radius;
 
@@ -1338,7 +1330,7 @@ namespace DOL.GS
 						&& (currentZone.TotalNumberOfObjects > 0)
 						&& CheckShortestDistance(currentZone, x, y, sqRadius))
 					{
-						res = currentZone.GetObjectsInRadius(type, x, y, z, radius, res);
+						res = currentZone.GetObjectsInRadius(type, x, y, z, radius, res, ignoreZ);
 					}
 				}
 				//Return required enumerator
@@ -1433,7 +1425,7 @@ namespace DOL.GS
 		/// <returns>IEnumerable to be used with foreach</returns>
 		public IEnumerable GetItemsInRadius(int x, int y, int z, ushort radius, bool withDistance)
 		{
-			return GetInRadius(Zone.eGameObjectType.ITEM, x, y, z, radius, withDistance);
+			return GetInRadius(Zone.eGameObjectType.ITEM, x, y, z, radius, withDistance, false);
 		}
 
 		/// <summary>
@@ -1445,9 +1437,9 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		public IEnumerable GetNPCsInRadius(int x, int y, int z, ushort radius, bool withDistance)
+		public IEnumerable GetNPCsInRadius(int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
 		{
-			return GetInRadius(Zone.eGameObjectType.NPC, x, y, z, radius, withDistance);
+			return GetInRadius(Zone.eGameObjectType.NPC, x, y, z, radius, withDistance, ignoreZ);
 		}
 
 		/// <summary>
@@ -1459,9 +1451,9 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		public IEnumerable GetPlayersInRadius(int x, int y, int z, ushort radius, bool withDistance)
+		public IEnumerable GetPlayersInRadius(int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
 		{
-			return GetInRadius(Zone.eGameObjectType.PLAYER, x, y, z, radius, withDistance);
+			return GetInRadius(Zone.eGameObjectType.PLAYER, x, y, z, radius, withDistance, ignoreZ);
 		}
 
 		/// <summary>
@@ -1475,7 +1467,7 @@ namespace DOL.GS
 		/// <returns>IEnumerable to be used with foreach</returns>
 		public virtual IEnumerable GetDoorsInRadius(int x, int y, int z, ushort radius, bool withDistance)
 		{
-			return GetInRadius(Zone.eGameObjectType.DOOR, x, y, z, radius, withDistance);
+			return GetInRadius(Zone.eGameObjectType.DOOR, x, y, z, radius, withDistance, false);
 		}
 
 		#endregion
