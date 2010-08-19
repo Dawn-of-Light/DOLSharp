@@ -1109,185 +1109,6 @@ namespace DOL.GS
 		#endregion
 
 		#region ObjectsInRadius
-		/********************ADDED BY KONIK & WITCHKING FOR NEW GETINRADIUS SYSTEM********************/
-		/*#region OIRData
-		public class OIRData
-		{
-			private class OIRElement
-			{
-				private IEnumerable[][] m_enumeratorLists = null;
-
-				/// <summary>
-				/// Constructor
-				/// </summary>
-				public OIRElement()
-				{
-					m_enumeratorLists = new IEnumerable[3][];
-					for (int i = 0; i < m_enumeratorLists.Length; i++)
-					{
-						m_enumeratorLists[i] = new IEnumerable[2];
-					}
-				}
-
-				/// <summary>
-				/// This function will check if the data cache must be recomputed or if we can use the cache
-				/// </summary>
-				/// <param name="mustUpdate">force the update of the list</param>
-				/// <param name="p_currentRegion">The current region</param>
-				/// <param name="p_type">Type of object to retreive</param>
-				/// <param name="p_X">X position in region</param>
-				/// <param name="p_Y">Y position in region</param>
-				/// <param name="p_Z">Z position in region</param>
-				/// <param name="p_radius">Radius to check</param>
-				/// <param name="p_withDistance">We want the distance</param>
-				/// <returns></returns>
-				public IEnumerable GetInRadius(bool mustUpdate, Region p_currentRegion, Zone.eGameObjectType p_type, int p_X, int p_Y, int p_Z, ushort p_radius, bool p_withDistance)
-				{
-					int type = (int)p_type;
-					int distanceIndex = (p_withDistance) ? 0 : 1;
-					IEnumerable candidateEnumerator = m_enumeratorLists[type][distanceIndex];
-
-					// get the right list and update it if necessary
-					if (mustUpdate || (candidateEnumerator == null))
-					{
-						switch (p_type)
-						{
-							case Zone.eGameObjectType.ITEM: m_enumeratorLists[type][distanceIndex] = p_currentRegion.GetItemsInRadius(p_X, p_Y, p_Z, p_radius, p_withDistance); break;
-							case Zone.eGameObjectType.NPC: m_enumeratorLists[type][distanceIndex] = p_currentRegion.GetNPCsInRadius(p_X, p_Y, p_Z, p_radius, p_withDistance); break;
-							default: m_enumeratorLists[type][distanceIndex] = p_currentRegion.GetPlayerInRadius(p_X, p_Y, p_Z, p_radius, p_withDistance); break;
-						};
-
-						candidateEnumerator = m_enumeratorLists[type][distanceIndex];
-					}
-
-					((IEnumerator)candidateEnumerator).Reset();
-					return candidateEnumerator;
-				}
-			}
-
-
-			// the region attached to this OIRData
-			private Region m_currentRegion = null;
-
-			// the OIRElements of this OIRData
-			private readonly DOL.GS.Collections.Hashtable m_oirElements = new DOL.GS.Collections.Hashtable();
-
-			// constants
-			private const short UPDATE_RATE_ALIVE = 100;
-			private const short UPDATE_RATE_DEAD = 500;
-			private const short POS_OFFSET = 35;
-
-			// timing information
-			private readonly int[] m_lastUpdate = new int[3];
-
-			// position information
-			private readonly XYZStruct[] m_lastXYZ = new XYZStruct[3 << 1]; // 3types and two fields for distance and without
-
-			public struct XYZStruct
-			{
-				public int X;
-				public int Y;
-				public int Z;
-			}
-
-			/// <summary>
-			/// Constructor
-			/// </summary>
-			public OIRData()
-			{
-				//				for (int i = 0; i < m_lastX.Length; i++) 
-				//				{
-				//					m_lastX[i] = new int[2];
-				//					m_lastY[i] = new int[2];
-				//					m_lastZ[i] = new int[2];
-				//				}
-			}
-			/// <summary>
-			/// This function will check if the data cache must be recomputed or if we can use the cache
-			/// </summary>
-			/// <param name="p_obj">The GameObject object instance</param>
-			/// <param name="p_useCache">use the cache</param>
-			/// <param name="p_currentRegion">The current region</param>
-			/// <param name="p_type">Type of object to retreive</param>
-			/// <param name="p_X">X position in region</param>
-			/// <param name="p_Y">Y position in region</param>
-			/// <param name="p_Z">Z position in region</param>
-			/// <param name="p_radius">Radius to check</param>
-			/// <param name="p_withDistance">We want the distance</param>
-			/// <returns></returns>
-			public IEnumerable GetInRadius(GameObject p_obj, Region p_currentRegion, Zone.eGameObjectType p_type, int p_X, int p_Y, int p_Z, ushort p_radius, bool p_withDistance, bool p_useCache)
-			{
-				// first check that we didn't changed region
-				OIRElement curElem = null;
-				if (p_currentRegion != m_currentRegion)
-				{
-					// if we changed region empty hashtable
-					m_oirElements.Clear();
-
-					// set the new current region
-					m_currentRegion = p_currentRegion;
-
-					// force an update
-					p_useCache = false;
-				}
-				else
-				{
-					// try to get the OIRElement for the current radius
-					curElem = (OIRElement)m_oirElements[p_radius];
-				}
-
-				// if nothing found create and set the element for this radius
-				if (curElem == null)
-				{
-					curElem = new OIRElement();
-					m_oirElements[p_radius] = curElem;
-				}
-
-				// set some variables
-				int type = (int)p_type;
-				int index = (p_withDistance) ? 0 : 1;
-				int currentTick = Environment.TickCount;
-				bool mustUpdate = false;
-				bool isAlive = true;
-				int neededTick = 0;
-
-				// get the right time tracker
-				neededTick = m_lastUpdate[type];
-
-				// check if the gameobject is dead
-				isAlive = p_obj is GameLiving && ((GameLiving)p_obj).IsAlive;
-
-				int i = (type << 1) + index;
-				// check that we must update data
-				if (!p_useCache ||
-					(isAlive && //we are alive and
-					(currentTick >= (neededTick + UPDATE_RATE_ALIVE) ||  // its a long time we didn't update
-					(FastMath.Abs(m_lastXYZ[i].X - p_X) > POS_OFFSET) || // we have moved at least POS_DECAL in one direction
-					(FastMath.Abs(m_lastXYZ[i].Y - p_Y) > POS_OFFSET) ||
-					(FastMath.Abs(m_lastXYZ[i].Z - p_Z) > POS_OFFSET)
-					)
-					) || (!isAlive && // we are dead
-					(currentTick >= (neededTick + UPDATE_RATE_DEAD)       // its a long time we didnt update
-					)
-					)
-					)
-				{
-					mustUpdate = true;
-					m_lastXYZ[i].X = p_X;
-					m_lastXYZ[i].Y = p_Y;
-					m_lastXYZ[i].Z = p_Z;
-
-					m_lastUpdate[type] = currentTick;
-				}
-
-				// get the right object list
-				return curElem.GetInRadius(mustUpdate, p_currentRegion, p_type, p_X, p_Y, p_Z, p_radius, p_withDistance);
-			}
-		}
-
-		protected readonly OIRData m_oirData = new OIRData();
-		#endregion*/
-
 
 		/// <summary>
 		/// Gets all players close to this object inside a certain radius
@@ -1296,22 +1117,29 @@ namespace DOL.GS
 		/// <returns>An enumerator</returns>
 		public IEnumerable GetPlayersInRadius(ushort radiusToCheck)
 		{
-			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
-			return GetPlayersInRadius(false, radiusToCheck, false);
-			/***************************************************************/
+			return GetPlayersInRadius(false, radiusToCheck, false, false);
 		}
 
-		/// <summary>
-		/// Gets all players close to this object inside a certain radius
-		/// </summary>
-		/// <param name="useCache">true may return a cached result, false not.</param>
-		/// <param name="radiusToCheck">the radius to check</param>
-		/// <returns>An enumerator</returns>
+
+		public IEnumerable GetPlayersInRadius(ushort radiusToCheck, bool ignoreZ)
+		{
+			return GetPlayersInRadius(false, radiusToCheck, false, ignoreZ);
+		}
+
 		public IEnumerable GetPlayersInRadius(bool useCache, ushort radiusToCheck)
 		{
-			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
-			return GetPlayersInRadius(useCache, radiusToCheck, false);
-			/***************************************************************/
+			return GetPlayersInRadius(useCache, radiusToCheck, false, false);
+		}
+
+		/// <summary>
+		/// Gets all players close to this object inside a certain radius
+		/// </summary>
+		/// <param name="useCache">true may return a cached result, false not.</param>
+		/// <param name="radiusToCheck">the radius to check</param>
+		/// <returns>An enumerator</returns>
+		public IEnumerable GetPlayersInRadius(bool useCache, ushort radiusToCheck, bool ignoreZ)
+		{
+			return GetPlayersInRadius(useCache, radiusToCheck, false, ignoreZ);
 		}
 
 
@@ -1322,11 +1150,9 @@ namespace DOL.GS
 		/// <param name="radiusToCheck">the radius to check</param>
 		/// <param name="withDistance">if the objects are to be returned with distance</param>
 		/// <returns>An enumerator</returns>
-		public IEnumerable GetPlayersInRadius(ushort radiusToCheck, bool withDistance)
+		public IEnumerable GetPlayersInRadius(ushort radiusToCheck, bool withDistance, bool ignoreZ)
 		{
-			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
-			return GetPlayersInRadius(true, radiusToCheck, withDistance);
-			/***************************************************************/
+			return GetPlayersInRadius(true, radiusToCheck, withDistance, ignoreZ);
 		}
 
 		/// <summary>
@@ -1336,9 +1162,8 @@ namespace DOL.GS
 		/// <param name="radiusToCheck">the radius to check</param>
 		/// <param name="withDistance">if the objects are to be returned with distance</param>
 		/// <returns>An enumerator</returns>
-		public IEnumerable GetPlayersInRadius(bool useCache, ushort radiusToCheck, bool withDistance)
+		public IEnumerable GetPlayersInRadius(bool useCache, ushort radiusToCheck, bool withDistance, bool ignoreZ)
 		{
-			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
 			if (CurrentRegion != null)
 			{
 				//Eden - avoid server freeze
@@ -1353,11 +1178,10 @@ namespace DOL.GS
 				}
 				else
 				{
-					return CurrentRegion.GetPlayersInRadius(X, Y, Z, radiusToCheck, withDistance);
+					return CurrentRegion.GetPlayersInRadius(X, Y, Z, radiusToCheck, withDistance, ignoreZ);
 				}
 			}
 			return new Region.EmptyEnumerator();
-			/***************************************************************/
 		}
 
 		/// <summary>
@@ -1367,14 +1191,12 @@ namespace DOL.GS
 		/// <returns>An enumerator</returns>
 		public IEnumerable GetNPCsInRadius(ushort radiusToCheck)
 		{
-			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
-			/*
-			if (CurrentRegion != null)
-				return m_oirData.GetInRadius(this,CurrentRegion,Zone.eGameObjectType.NPC, X, Y, Z, radiusToCheck, false);
-			return new Region.EmptyEnumerator();
-			*/
-			return GetNPCsInRadius(true, radiusToCheck, false);
-			/***************************************************************/
+			return GetNPCsInRadius(true, radiusToCheck, false, false);
+		}
+
+		public IEnumerable GetNPCsInRadius(ushort radiusToCheck, bool ignoreZ)
+		{
+			return GetNPCsInRadius(true, radiusToCheck, false, ignoreZ);
 		}
 
 		/// <summary>
@@ -1385,14 +1207,12 @@ namespace DOL.GS
 		/// <returns>An enumerator</returns>
 		public IEnumerable GetNPCsInRadius(bool useCache, ushort radiusToCheck)
 		{
-			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
-			/*
-			if (CurrentRegion != null)
-				return m_oirData.GetInRadius(this,CurrentRegion,Zone.eGameObjectType.NPC, X, Y, Z, radiusToCheck, false);
-			return new Region.EmptyEnumerator();
-			*/
-			return GetNPCsInRadius(useCache, radiusToCheck, false);
-			/***************************************************************/
+			return GetNPCsInRadius(useCache, radiusToCheck, false, false);
+		}
+
+		public IEnumerable GetNPCsInRadius(bool useCache, ushort radiusToCheck, bool ignoreZ)
+		{
+			return GetNPCsInRadius(useCache, radiusToCheck, false, ignoreZ);
 		}
 
 		/// <summary>
@@ -1402,9 +1222,8 @@ namespace DOL.GS
 		/// <param name="radiusToCheck">the radius to check</param>
 		/// <param name="withDistance">if the objects are to be returned with distance</param>
 		/// <returns>An enumerator</returns>
-		public IEnumerable GetNPCsInRadius(bool useCache, ushort radiusToCheck, bool withDistance)
+		public IEnumerable GetNPCsInRadius(bool useCache, ushort radiusToCheck, bool withDistance, bool ignoreZ)
 		{
-			/******* MODIFIED BY KONIK & WITCHKING FOR NEW ZONE SYSTEM *********/
 			if (CurrentRegion != null)
 			{
 				//Eden - avoid server freeze
@@ -1419,13 +1238,12 @@ namespace DOL.GS
 				}
 				else
 				{
-					IEnumerable result = CurrentRegion.GetNPCsInRadius(X, Y, Z, radiusToCheck, withDistance);
+					IEnumerable result = CurrentRegion.GetNPCsInRadius(X, Y, Z, radiusToCheck, withDistance, ignoreZ);
 					return result;
 				}
 			}
 
 			return new Region.EmptyEnumerator();
-			/***************************************************************/
 		}
 
 		/// <summary>

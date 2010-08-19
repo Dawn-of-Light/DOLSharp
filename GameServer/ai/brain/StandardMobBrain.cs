@@ -207,7 +207,8 @@ namespace DOL.AI.Brain
 		{
 			if (Body.AttackState)
 				return;
-			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
+
+			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange, true))
 			{
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true)) continue;
 				if (m_aggroTable.ContainsKey(npc))
@@ -232,9 +233,9 @@ namespace DOL.AI.Brain
 			//Check if we are already attacking, return if yes
 			if (Body.AttackState)
 				return;
-			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
-			{
 
+			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange, true))
+			{
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true)) continue;
 				// Don't aggro on immune players.
 
