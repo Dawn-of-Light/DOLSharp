@@ -2594,7 +2594,7 @@ namespace DOL.GS
 		/// Gets/Sets amount of full skill respecs
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int RespecAmountAllSkill
+		public virtual int RespecAmountAllSkill
 		{
 			get { return DBCharacter != null ? DBCharacter.RespecAmountAllSkill : 0; }
 			set { if (DBCharacter != null) DBCharacter.RespecAmountAllSkill = value; }
@@ -2604,7 +2604,7 @@ namespace DOL.GS
 		/// Gets/Sets amount of single-line respecs
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int RespecAmountSingleSkill
+		public virtual int RespecAmountSingleSkill
 		{
 			get { return DBCharacter != null ? DBCharacter.RespecAmountSingleSkill : 0; }
 			set { if (DBCharacter != null) DBCharacter.RespecAmountSingleSkill = value; }
@@ -2614,7 +2614,7 @@ namespace DOL.GS
 		/// Gets/Sets amount of realm skill respecs
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int RespecAmountRealmSkill
+		public virtual int RespecAmountRealmSkill
 		{
 			get { return DBCharacter != null ? DBCharacter.RespecAmountRealmSkill : 0; }
 			set { if (DBCharacter != null) DBCharacter.RespecAmountRealmSkill = value; }
@@ -2624,7 +2624,7 @@ namespace DOL.GS
 		/// Gets/Sets amount of DOL respecs
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int RespecAmountDOL
+		public virtual int RespecAmountDOL
 		{
 			get { return DBCharacter != null ? DBCharacter.RespecAmountDOL : 0; }
 			set { if (DBCharacter != null) DBCharacter.RespecAmountDOL = value; }
@@ -2634,7 +2634,7 @@ namespace DOL.GS
 		/// Gets/Sets level respec usage flag
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public bool IsLevelRespecUsed
+		public virtual bool IsLevelRespecUsed
 		{
 			get { return DBCharacter != null ? DBCharacter.IsLevelRespecUsed : true; }
 			set { if (DBCharacter != null) DBCharacter.IsLevelRespecUsed = value; }
@@ -2644,7 +2644,7 @@ namespace DOL.GS
 		/// Gets/Sets amount of bought respecs
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int RespecBought
+		public virtual int RespecBought
 		{
 			get { return DBCharacter != null ? DBCharacter.RespecBought : 0; }
 			set { if (DBCharacter != null) DBCharacter.RespecBought = value; }
@@ -2654,7 +2654,7 @@ namespace DOL.GS
 		/// give player a new Specialization
 		/// </summary>
 		/// <param name="skill"></param>
-		public void AddSpecialization(Specialization skill)
+		public virtual void AddSpecialization(Specialization skill)
 		{
 			if (skill == null)
 				return;
@@ -2687,7 +2687,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="specKeyName">The spec keyname to remove</param>
 		/// <returns>true if removed</returns>
-		public bool RemoveSpecialization(string specKeyName)
+		public virtual bool RemoveSpecialization(string specKeyName)
 		{
 			Specialization playerSpec = null;
 			lock (m_specialization.SyncRoot)
@@ -2710,7 +2710,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="line">The spell line to remove</param>
 		/// <returns>true if removed</returns>
-		private bool RemoveSpellLine(SpellLine line)
+		protected virtual bool RemoveSpellLine(SpellLine line)
 		{
 			if (!m_spellLines.Contains(line))
 				return false;
@@ -2727,7 +2727,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="lineKeyName">The spell line keyname to remove</param>
 		/// <returns>true if removed</returns>
-		public bool RemoveSpellLine(string lineKeyName)
+		public virtual bool RemoveSpellLine(string lineKeyName)
 		{
 			SpellLine line = GetSpellLine(lineKeyName);
 			if (line == null)
@@ -2735,7 +2735,7 @@ namespace DOL.GS
 			return RemoveSpellLine(line);
 		}
 
-		public int RespecAll()
+		public virtual int RespecAll()
 		{
 			int specPoints = RespecAllLines(); // Wipe skills and styles.
 
@@ -2746,7 +2746,7 @@ namespace DOL.GS
 			return specPoints;
 		}
 
-		public int RespecDOL()
+		public virtual int RespecDOL()
 		{
 			int specPoints = RespecAllLines(); // Wipe skills and styles.
 
@@ -2755,7 +2755,7 @@ namespace DOL.GS
 			return specPoints;
 		}
 
-		public int RespecSingle(Specialization specLine)
+		public virtual int RespecSingle(Specialization specLine)
 		{
 			int specPoints = RespecSingleLine(specLine); // Wipe skills and styles.
 			RespecAmountSingleSkill--; // Decriment players respecs available.
@@ -2766,7 +2766,7 @@ namespace DOL.GS
 			return specPoints;
 		}
 
-		public int RespecRealm()
+		public virtual int RespecRealm()
 		{
 			int respecPoints = 0;
 			foreach (Ability ab in GetAllAbilities())
@@ -2784,7 +2784,7 @@ namespace DOL.GS
 			return respecPoints;
 		}
 
-		private int RespecAllLines()
+		protected virtual int RespecAllLines()
 		{
 			int specPoints = 0;
 			IList specList = GetSpecList();
@@ -2805,7 +2805,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="specLine">spec line being respec'd</param>
 		/// <returns>Amount of points spent in that line</returns>
-		private int RespecSingleLine(Specialization specLine)
+		protected virtual int RespecSingleLine(Specialization specLine)
 		{
 			int specPoints = (specLine.Level * (specLine.Level + 1) - 2) / 2;
 			// Graveen - autotrain 1.87
@@ -2830,7 +2830,7 @@ namespace DOL.GS
 		/// that can change at any time
 		/// </summary>
 		/// <returns>list of Spec's</returns>
-		public IList GetSpecList()
+		public virtual IList GetSpecList()
 		{
 			return m_specList;
 		}
@@ -2844,7 +2844,7 @@ namespace DOL.GS
 		/// that can change at any time
 		/// </summary>
 		/// <returns>list of Skill's</returns>
-		public IList GetNonTrainableSkillList()
+		public virtual IList GetNonTrainableSkillList()
 		{
 			return m_skillList;
 		}
@@ -2854,7 +2854,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="keyName">the key name</param>
 		/// <returns>the found specialization or null</returns>
-		public Specialization GetSpecialization(string keyName)
+		public virtual Specialization GetSpecialization(string keyName)
 		{
 			return m_specialization[keyName] as Specialization;
 		}
@@ -2865,7 +2865,7 @@ namespace DOL.GS
 		/// <param name="name">the name of the specialization line</param>
 		/// <param name="caseSensitive">false for case-insensitive compare</param>
 		/// <returns>found specialization or null</returns>
-		public Specialization GetSpecializationByName(string name, bool caseSensitive)
+		public virtual Specialization GetSpecializationByName(string name, bool caseSensitive)
 		{
 			lock (m_specList.SyncRoot)
 			{
@@ -2889,7 +2889,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The best armor level this player can use.
 		/// </summary>
-		public int BestArmorLevel
+		public virtual int BestArmorLevel
 		{
 			get
 			{
@@ -2945,7 +2945,7 @@ namespace DOL.GS
 		}
 		#endregion Abilities
 
-		public void RemoveAllSkills()
+		public virtual void RemoveAllSkills()
 		{
 			ArrayList skills = new ArrayList();
 			lock (m_skillList.SyncRoot)
@@ -2960,7 +2960,7 @@ namespace DOL.GS
 			}
 		}
 
-		public void RemoveAllSpecs()
+		public virtual void RemoveAllSpecs()
 		{
 			ArrayList specs = new ArrayList();
 			lock (m_specList.SyncRoot)
@@ -2975,7 +2975,7 @@ namespace DOL.GS
 			}
 		}
 
-		public void RemoveAllSpellLines()
+		public virtual void RemoveAllSpellLines()
 		{
 			ArrayList lines = new ArrayList();
 			lock (lockSpellLinesList)
@@ -2992,7 +2992,7 @@ namespace DOL.GS
 			}
 		}
 
-		public void RemoveAllStyles()
+		public virtual void RemoveAllStyles()
 		{
 			ArrayList styles = new ArrayList();
 			lock (m_styles.SyncRoot)
@@ -3010,7 +3010,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="keyName"></param>
 		/// <returns></returns>
-		public bool HasSpecialization(string keyName)
+		public virtual bool HasSpecialization(string keyName)
 		{
 			return m_specialization[keyName] is Specialization;
 		}
@@ -3123,7 +3123,7 @@ namespace DOL.GS
 		/// Adds a spell line to the player
 		/// </summary>
 		/// <param name="line"></param>
-		public void AddSpellLine(SpellLine line)
+		public virtual void AddSpellLine(SpellLine line)
 		{
 			if (line == null)
 				return;
@@ -3150,7 +3150,7 @@ namespace DOL.GS
 		/// iterate only with locking SyncRoot on the list!
 		/// </summary>
 		/// <returns></returns>
-		public List<SpellLine> GetSpellLines()
+		public virtual List<SpellLine> GetSpellLines()
 		{
 			return m_spellLines;
 		}
@@ -3160,7 +3160,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="keyname"></param>
 		/// <returns></returns>
-		public SpellLine GetSpellLine(string keyname)
+		public virtual SpellLine GetSpellLine(string keyname)
 		{
 			lock (lockSpellLinesList)
 			{
@@ -3177,7 +3177,7 @@ namespace DOL.GS
 		/// gets a list of available styles
 		/// lock SyncRoot to iterate in the list!
 		/// </summary>
-		public IList GetStyleList()
+		public virtual IList GetStyleList()
 		{
 			return m_styles;
 		}
@@ -3187,7 +3187,7 @@ namespace DOL.GS
 		/// This is for hybrid classes only
 		/// </summary>
 		/// <returns></returns>
-		public int GetSpellCount()
+		public virtual int GetSpellCount()
 		{
 			lock (lockSpellLinesList)
 			{
@@ -3202,7 +3202,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="line"></param>
 		/// <returns></returns>
-		virtual protected bool AllowMultipleSpellVersions(SpellLine line)
+		protected virtual bool AllowMultipleSpellVersions(SpellLine line)
 		{
 			bool allow = false;
 
@@ -3625,7 +3625,7 @@ namespace DOL.GS
 		/// <param name="Realm"></param>
 		/// <param name="Gender"></param>
 		/// <returns></returns>
-		public string RealmRankTitles(eRealm Realm, int Gender)
+		public virtual string RealmRankTitles(eRealm Realm, int Gender)
 		{
 			if (Realm != eRealm.None)
 			{
@@ -4028,7 +4028,7 @@ namespace DOL.GS
 		/// Gets player realm rank name
 		/// sirru mod 20.11.06
 		/// </summary>
-		public string RealmTitle
+		public virtual string RealmTitle
 		{
 			get
 			{
@@ -4174,7 +4174,7 @@ namespace DOL.GS
 		/// <param name="loc">The chat location</param>
 		/// <param name="str">The message</param>
 		/// <param name="type">The chat type</param>
-		public bool RemoveBountyPoints(long amount, string str, eChatType type, eChatLoc loc)
+		public virtual bool RemoveBountyPoints(long amount, string str, eChatType type, eChatLoc loc)
 		{
 			if (BountyPoints < amount)
 				return false;
@@ -4221,7 +4221,7 @@ namespace DOL.GS
 		/// <param name="amount">The amount of bounty points gained</param>
 		/// <param name="multiply">Should this amount be multiplied by the BP Rate</param>
 		/// <param name="sendMessage">Wether to send a message like "You have gained N bountypoints"</param>
-		public void GainBountyPoints(long amount, bool modify, bool sendMessage, bool notify)
+		public virtual void GainBountyPoints(long amount, bool modify, bool sendMessage, bool notify)
 		{
 			if (modify)
 			{
@@ -5211,7 +5211,7 @@ namespace DOL.GS
 		/// Gets or Sets the cancel style flag
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public bool CancelStyle
+		public virtual bool CancelStyle
 		{
 			get { return DBCharacter != null ? DBCharacter.CancelStyle : false; }
 			set { if (DBCharacter != null) DBCharacter.CancelStyle = value; }
@@ -5240,7 +5240,7 @@ namespace DOL.GS
 		/// Gets/Sets safety flag
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public bool SafetyFlag
+		public virtual bool SafetyFlag
 		{
 			get { return DBCharacter != null ? DBCharacter.SafetyFlag : false; }
 			set { if (DBCharacter != null) DBCharacter.SafetyFlag = value; }
@@ -5754,7 +5754,7 @@ namespace DOL.GS
 		/// Check the selected range ammo and decides if it's compatible with select weapon
 		/// </summary>
 		/// <returns>True if compatible, false if not</returns>
-		protected bool CheckRangedAmmoCompatibilityWithActiveWeapon()
+		protected virtual bool CheckRangedAmmoCompatibilityWithActiveWeapon()
 		{
 			InventoryItem weapon = AttackWeapon;
 			if (weapon != null)

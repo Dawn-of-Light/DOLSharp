@@ -54,7 +54,7 @@ namespace DOL.GS.Commands
 		const string BUY_RESPEC = "buy_respec";
 		
 		
-		public static readonly int[] canbuyonlevel =
+		public static readonly int[] m_numCanBuyOnLevel =
 			{
 				1,1,1,1,1, //1-5
 				2,2,2,2,2,2,2, //6-12
@@ -65,9 +65,10 @@ namespace DOL.GS.Commands
 				7,7,7,7,7, //34-38
 				8,8,8,8,8,8, //39-44
 				9,9,9,9,9, //45-49
-				10}; //50
+				10 //50
+			}; 
 		
-		public static readonly int[] priceforbuy =
+		public static readonly int[] m_respecCost =
 			{
 				1,2,3, //13
 				2,5,9, //14
@@ -106,7 +107,8 @@ namespace DOL.GS.Commands
 				1582,3957,7123,11080,15037,19786,24535,29283,34032, //47
 				1714,4286,7716,12003,16290,21434,26578,31722,36867, //48
 				1853,4634,8341,12976,17610,23171,28732,34293,39854, //49
-				2000,5000,9000,14000,19000,25000,31000,37000,43000,50000}; //50
+				2000,5000,9000,14000,19000,25000,31000,37000,43000,50000 //50
+			};
 
 		public void OnCommand(GameClient client, string[] args)
 		{
@@ -159,12 +161,12 @@ namespace DOL.GS.Commands
 				case "buy":
 					{
 						// Buy respec
-						if (!canbuy(client.Player))
+						if (!CanBuyRespec(client.Player))
 						{
 							DisplayMessage(client, "You can't buy a respec on this level again.");
 							return;
 						}
-						long mgold = getmoney(client.Player);
+						long mgold = RespecCost(client.Player);
 						if ((client.Player.DBCharacter.Gold + 1000 * client.Player.DBCharacter.Platinum) < mgold)
 						{
 							DisplayMessage(client, "You don't have enough money! You need " + mgold + " gold!");
@@ -183,7 +185,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						client.Out.SendCustomDialog("CAUTION: All Respec changes are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
+						client.Out.SendCustomDialog("CAUTION: All respec changes are final with no second chance. Proceed carefully!", new CustomDialogResponse(RespecDialogResponse));
 						client.Player.TempProperties.setProperty(ALL_RESPEC, true);
 						break;
 					}
@@ -196,7 +198,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						client.Out.SendCustomDialog("CAUTION: All Respec changes are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
+						client.Out.SendCustomDialog("CAUTION: All respec changes are final with no second chance. Proceed carefully!", new CustomDialogResponse(RespecDialogResponse));
 						client.Player.TempProperties.setProperty(DOL_RESPEC, true);
 						break;
 					}
@@ -208,7 +210,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						client.Out.SendCustomDialog("CAUTION: All Respec changes are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
+						client.Out.SendCustomDialog("CAUTION: All respec changes are final with no second chance. Proceed carefully!", new CustomDialogResponse(RespecDialogResponse));
 						client.Player.TempProperties.setProperty(RA_RESPEC, true);
 						break;
 					}
@@ -234,32 +236,37 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						client.Out.SendCustomDialog("CAUTION: All Respec changs are final with no 2nd chance. Proceed Carefully!", new CustomDialogResponse(RespecDialogResponse));
+						client.Out.SendCustomDialog("CAUTION: All respec changes are final with no second chance. Proceed carefully!", new CustomDialogResponse(RespecDialogResponse));
 						client.Player.TempProperties.setProperty(LINE_RESPEC, specLine);
 						break;
 					}
 			}
 		}
 		
-		private bool canbuy(GamePlayer player)
+		private bool CanBuyRespec(GamePlayer player)
 		{
-			if (player.RespecBought < canbuyonlevel[player.Level-1])
+			if (player.RespecBought < m_numCanBuyOnLevel[player.Level-1])
 				return true;
+
 			return false;
 		}
 
-		private long getmoney(GamePlayer player)
+		private long RespecCost(GamePlayer player)
 		{
 			if (player.Level <= 12) //1-12
-				return priceforbuy[0];
+				return m_respecCost[0];
+
 			if (player.Level > 12) //13-50
 			{
-				if (canbuy(player))
+				if (CanBuyRespec(player))
 				{
 					int t = 0;
 					for (int i = 13; i < player.Level; i++)
-						t += canbuyonlevel[i - 1];
-					return priceforbuy[t + player.RespecBought];
+					{
+						t += m_numCanBuyOnLevel[i - 1];
+					}
+
+					return m_respecCost[t + player.RespecBought];
 				}
 			}
 			return 0;
@@ -296,11 +303,13 @@ namespace DOL.GS.Commands
 			}
 			if (player.TempProperties.getProperty(BUY_RESPEC, false))
 			{
-				player.RespecAmountSingleSkill++;
-				player.RespecBought++;
 				player.TempProperties.removeProperty(BUY_RESPEC);
-				player.RemoveMoney(getmoney(player)*10000);
-				DisplayMessage(player, "You bought a single line respec!");
+				if (player.RemoveMoney(RespecCost(player) * 10000))
+				{
+					player.RespecAmountSingleSkill++;
+					player.RespecBought++;
+					DisplayMessage(player, "You bought a single line respec!");
+				}
 				player.Out.SendUpdateMoney();
 			}			
 			// Assign full points returned
