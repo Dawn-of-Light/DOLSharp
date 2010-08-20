@@ -16,6 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
+using DOL.Language;
+
 namespace DOL.GS
 {
 	[NPCGuildScript("Siegecrafting Master")]
@@ -37,16 +40,16 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Siegecrafters";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SiegecraftingMaster.GuildOrder");
+            }
 		}
 
 		public override string ACCEPTED_BY_ORDER_NAME
 		{
 			get
 			{
-				return "Siegecrafters";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SiegecraftingMaster.AcceptedByOrderName");
+            }
 		}
 
 		/// <summary>
@@ -64,8 +67,8 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Would you like to join the Order of [Siegecrafters]? As an siegecrafter, you can expect to construct elaborate instruments of war to aid in the defense of our realm!";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SiegecraftingMaster.InitialEntersentence");
+            }
 		}
 	}
 }

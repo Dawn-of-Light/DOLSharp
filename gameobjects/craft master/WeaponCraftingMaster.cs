@@ -17,6 +17,8 @@
 *
 */
 
+using DOL.Language;
+
 namespace DOL.GS
 {
 	/// <summary>
@@ -47,16 +49,16 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Weaponcrafters";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "WeaponCraftingMaster.GuildOrder");
+            }
 		}
 
 		public override string ACCEPTED_BY_ORDER_NAME
 		{
 			get
 			{
-				return "Weaponsmiths";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "WeaponCraftingMaster.AcceptedByOrderName");
+            }
 		}
 
 		public override eCraftingSkill TheCraftingSkill
@@ -68,8 +70,8 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Would you like to join the Order of [Weaponcrafters]? As a crafter of weapons, you can expect to forge swords, axes, hammers and spears. While you will excel in weapon crafting and have good skills in armor crafting, you can expect great difficulty in tailoring and fletching. A well-trained weapon crafter also has a great bit of skill to perform siege crafting should it be of need.";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "WeaponCraftingMaster.InitialEntersentence");
+            }
 		}
 	}
 }

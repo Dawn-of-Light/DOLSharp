@@ -17,6 +17,8 @@
 *
 */
 
+using DOL.Language;
+
 namespace DOL.GS
 {
 	[NPCGuildScript("Basic Crafters Master")]
@@ -51,12 +53,12 @@ namespace DOL.GS
 
 		public override string GUILD_ORDER
 		{
-			get { return "Basic Crafting"; }
+            get { return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "BasicCraftingMaster.GuildOrder"); }
 		}
 
 		public override string ACCEPTED_BY_ORDER_NAME
 		{
-			get { return "Basic Crafters"; }
+            get { return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "BasicCraftingMaster.AcceptedByOrderName"); }
 		}
 		public override string InitialEntersentence
 		{

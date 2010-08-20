@@ -34,8 +34,8 @@ namespace DOL.GS
 		public BasicCrafting()
 		{
 			Icon = 0x0F;
-			Name = "Basic Crafting";
-			eSkill = eCraftingSkill.BasicCrafting;
+            Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.BasicCrafting");
+            eSkill = eCraftingSkill.BasicCrafting;
 		}
 
 		public override string CRAFTER_TITLE_PREFIX
@@ -43,7 +43,7 @@ namespace DOL.GS
 			get
 			{
 				return "Crafter's";
-			}
+            }
 		}
 
 		protected override bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)

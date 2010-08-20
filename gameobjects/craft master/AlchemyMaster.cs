@@ -16,6 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
+using DOL.Language;
+
 namespace DOL.GS
 {
 	[NPCGuildScript("Alchemists Master")]
@@ -39,16 +42,16 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Alchemists";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AlchemistsMaster.GuildOrder");
+            }
 		}
 
 		public override string ACCEPTED_BY_ORDER_NAME
 		{
 			get
 			{
-				return "Alchemists";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AlchemistsMaster.AcceptedByOrderName");
+            }
 		}
 		public override eCraftingSkill TheCraftingSkill
 		{
@@ -58,8 +61,8 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Would you like to join the Order of [Alchemists]? As a Alchemist, you have the ability to make dyes, poisons, and various magical potions.  You also have the ability to make magical tinctures that can add both offensive and defensive magical effects to crafted items.  You have some skill in Spellcraft, as well as being able to Jewelcraft with great skill.";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AlchemistsMaster.InitialEntersentence");
+            }
 		}
 	}
 }

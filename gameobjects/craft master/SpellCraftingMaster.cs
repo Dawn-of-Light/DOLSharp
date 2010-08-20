@@ -17,6 +17,8 @@
  *
  */
 
+using DOL.Language;
+
 namespace DOL.GS
 {
 	/// <summary>
@@ -43,16 +45,16 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Spellcrafters";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SpellCraftingMaster.GuildOrder");
+            }
 		}
 
 		public override string ACCEPTED_BY_ORDER_NAME
 		{
 			get
 			{
-				return "Spellcrafters";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SpellCraftingMaster.AcceptedByOrderName");
+            }
 		}
 
 		public override eCraftingSkill TheCraftingSkill
@@ -64,8 +66,8 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Would you like to join the Order of [Spellcrafters]? As a Spellcrafter, you have the ability to create gems that can be imbued onto crafted items to give them new amazing magical properties.  You also have some skill in Alchemy, as well as being able to Jewelcraft with great skill.";
-;			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SpellCraftingMaster.InitialEntersentence");
+            }
 		}
 	}
 }
