@@ -114,7 +114,20 @@ namespace DOL.GS.Commands
                         break;
                     }
                 #endregion Spell
-                #region Sound
+				#region Style
+				case "style":
+					{
+						if (client.Player.AttackWeapon == null)
+						{
+							DisplayMessage(client, "You need an active weapon to play style animation.");
+							return;
+						}
+
+						client.Player.Out.SendCombatAnimation(client.Player, null, (ushort)client.Player.AttackWeapon.Model, 0, id, 0, (byte)11, 100);
+						break;
+					}
+				#endregion Style
+				#region Sound
                 case "sound":
                     DisplayMessage(client,
                         LanguageMgr.GetTranslation(client, "GMCommands.Cast.SoundPlayed", id.ToString()));

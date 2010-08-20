@@ -47,7 +47,7 @@ GMCommands.Ban.BBanned:						Acconto {0} e IP {1} sono stati bannati.
 
 # /cast Command
 GMCommands.Cast.Description:				Lancia una magia/effetto
-GMCommands.Cast.Usage:						'/cast <id> <effect|cast|spell>' Lancia la Magia/EffettoVisuale associato con <IdMagia>
+GMCommands.Cast.Usage:						'/cast <id> <effect|cast|spell|sound|style>' Lancia la Magia/EffettoVisuale associato con <IdMagia>
 GMCommands.Cast.InvalidId:					ID non valido.
 GMCommands.Cast.IdNegative:					ID non può essere negativo.
 GMCommands.Cast.EffectExecuted:				Animazione dell'effetto eseguito. Id={0}
