@@ -47,7 +47,7 @@ GMCommands.Cast.Spell.CastOnLiving:			You cast {0} on {1}.
 GMCommands.Cast.Spell.CastOnSelf:			You cast {0} on self.
 GMCommands.Cast.Spell.GMCastOnYou:			{0} {1} cast {2} on you.
 GMCommands.Cast.Spell.Inexistent:			Spell inexistent. Id={0}
-GMCommands.Cast.Usage:					'/cast <id> <effect|cast|spell>' Cast the Spell/VisualEffect associated with <SpellID>
+GMCommands.Cast.Usage:					'/cast <id> <effect|cast|spell|sound|style>' Cast the Spell/VisualEffect associated with <SpellID>
 
 # /crafting Command
 GMCommands.Crafting.AlreadyHaveSkill:			{0} already have the crafting skill {1}.

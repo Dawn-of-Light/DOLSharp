@@ -46,7 +46,7 @@ Scripts.GM.Ban.MustTarget:					Vous devez sélectionner une cible !
 
 # /cast Command
 GMCommands.Cast.Description:				Lance l'effet visuel d'un sort
-GMCommands.Cast.Usage:						'/cast <id> <effect|cast|spell>' Cast the Spell/VisualEffect associated with <SpellID>
+GMCommands.Cast.Usage:						'/cast <id> <effect|cast|spell|sound|style>' Cast the Spell/VisualEffect associated with <SpellID>
 GMCommands.Cast.InvalidId:					ID invalide.
 GMCommands.Cast.IdNegative:					L'ID ne peut etre negative.
 GMCommands.Cast.EffectExecuted:				Effect animation executed. Id={0}
