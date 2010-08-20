@@ -16,6 +16,9 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 *
 */
+
+using DOL.Language;
+
 namespace DOL.GS
 {
 	/// <summary>
@@ -46,16 +49,16 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Armorcrafters";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ArmorCraftingMaster.GuildOrder");
+            }
 		}
 
 		public override string ACCEPTED_BY_ORDER_NAME
 		{
 			get
 			{
-				return "Armorsmiths";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ArmorCraftingMaster.AcceptedByOrderName");
+            }
 		}
 
 		public override eCraftingSkill TheCraftingSkill
@@ -67,8 +70,8 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Would you like to join the Order of [Armorcrafters]? As a crafter of armor, you can expect to create armor of various types, from studded leather to chain mail armor. While you will excel in armor crafting and have good skills in tailoring and weapon craft, you can expect great difficulty in fletching. A well-trained armor crafter also has a small bit of skill to perform siege crafting should it be of need.";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ArmorCraftingMaster.InitialEntersentence");
+            }
 		}
 	}
 }
