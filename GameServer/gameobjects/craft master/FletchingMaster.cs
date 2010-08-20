@@ -17,6 +17,8 @@
 *
 */
 
+using DOL.Language;
+
 namespace DOL.GS
 {
 	/// <summary>
@@ -47,16 +49,16 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Fletchers";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "FletchingMaster.GuildOrder");
+            }
 		}
 
 		public override string ACCEPTED_BY_ORDER_NAME
 		{
 			get
 			{
-				return "Fletchers";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "FletchingMaster.AcceptedByOrderName");
+            }
 		}
 
 		public override eCraftingSkill TheCraftingSkill
@@ -68,8 +70,8 @@ namespace DOL.GS
 		{
 			get 
 			{ 
-				return "Would you like to join the Order of [Fletchers]? As a Fletcher, you can expect to create bows, arrows and staves. While you will excel in fletching and have good skills in weapon crafting, you can expect great difficulty in armor crafting and tailoring. A well-trained Fletcher also has a great bit of skill to perform siege crafting should it be of need."; 
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "FletchingMaster.InitialEntersentence");
+            }
 		}
 	}
 }

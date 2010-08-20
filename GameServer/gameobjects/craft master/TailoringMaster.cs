@@ -16,8 +16,10 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 *
 */
+using DOL.Language;
 
 namespace DOL.GS
+
 {
 	/// <summary>
 	/// the master for armorcrafting
@@ -47,16 +49,16 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Tailors";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "TailorsMaster.GuildOrder");
+            }
 		}
 
 		public override string ACCEPTED_BY_ORDER_NAME
 		{
 			get
 			{
-				return "Tailors";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "TailorsMaster.AcceptedByOrderName");
+            }
 		}
 
 		public override eCraftingSkill TheCraftingSkill
@@ -68,8 +70,8 @@ namespace DOL.GS
 		{
 			get
 			{
-				return "Would you like to join the Order of [Tailors]? As a Tailor, you can expect to sew cloth and leather armor. While you will excel in tailoring and have good skills in fletching, you can expect great difficulty in weapon crafting and armor crafting. A well-trained Tailor also has a small bit of skill to perform siege crafting should it be of need.";
-			}
+                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "TailorsMaster.InitialEntersentence");
+            }
 		}
 	}
 }

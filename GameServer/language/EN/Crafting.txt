@@ -29,7 +29,6 @@ Crafting.Name.Evocation:				Spellcrafting
 Crafting.Name.Fletching:				Fletching
 Crafting.Name.Gemcutting:				Gemcutting
 Crafting.Name.Herbcrafting:				Herbcraft
-Crafting.Name.Jewelcraft:				Jewelcraft
 Crafting.Name.Leathercrafting:			Leathercrafting
 Crafting.Name.Metalworking:				Metalworking
 Crafting.Name.Siegecraft:				Siegecraft
@@ -74,6 +73,30 @@ CraftersProfession.Tailor:					Tailor
 CraftersProfession.Weaponcrafter:			Weaponcrafter
 CraftersProfession.Siegecrafter:			Siegecrafter
 
+# /CraftingMaster
+TailorsMaster.AcceptedByOrderName:			Tailors
+TailorsMaster.GuildOrder:				Tailors
+TailorsMaster.InitialEntersentence:			Would you like to join the Order of [Tailors]? As a Tailor, you can expect to sew cloth and leather armor. While you will excel in tailoring and have good skills in fletching, you can expect great difficulty in weapon crafting and armor crafting. A well-trained Tailor also has a small bit of skill to perform siege crafting should it be of need.
+SpellCraftingMaster.AcceptedByOrderName:		Spellcrafters
+SpellCraftingMaster.GuildOrder:				Spellcrafters
+SpellCraftingMaster.InitialEntersentence:		Would you like to join the Order of [Spellcrafters]? As a Spellcrafter, you have the ability to create gems that can be imbued onto crafted items to give them new amazing magical properties.  You also have some skill in Alchemy, as well as being able to Jewelcraft with great skill.
+SiegecraftingMaster.AcceptedByOrderName:		Siegecrafters
+SiegecraftingMaster.GuildOrder:				Siegecrafters
+SiegecraftingMaster.InitialEntersentence:		Would you like to join the Order of [Siegecrafters]? As an siegecrafter, you can expect to construct elaborate instruments of war to aid in the defense of our realm!
+FletchingMaster.AcceptedByOrderName:			Fletchers
+FletchingMaster.GuildOrder:				Fletchers
+FletchingMaster.InitialEntersentence:			Would you like to join the Order of [Fletchers]? As a Fletcher, you can expect to create bows, arrows and staves. While you will excel in fletching and have good skills in weapon crafting, you can expect great difficulty in armor crafting and tailoring. A well-trained Fletcher also has a great bit of skill to perform siege crafting should it be of need.
+BasicCraftingMaster.AcceptedByOrderName:		Basic Crafting
+BasicCraftingMaster.GuildOrder:				Basic Crafters
+ArmorCraftingMaster.AcceptedByOrderName:		Armorsmiths
+ArmorCraftingMaster.GuildOrder:				Armorcrafters
+ArmorCraftingMaster.InitialEntersentence:		Would you like to join the Order of [Armorcrafters]? As a crafter of armor, you can expect to create armor of various types, from studded leather to chain mail armor. While you will excel in armor crafting and have good skills in tailoring and weapon craft, you can expect great difficulty in fletching. A well-trained armor crafter also has a small bit of skill to perform siege crafting should it be of need.
+AlchemistsMaster.AcceptedByOrderName:			Alchemists
+AlchemistsMaster.GuildOrder:				Alchemists
+AlchemistsMaster.InitialEntersentence:			Would you like to join the Order of [Alchemists]? As a Alchemist, you have the ability to make dyes, poisons, and various magical potions.  You also have the ability to make magical tinctures that can add both offensive and defensive magical effects to crafted items.  You have some skill in Spellcraft, as well as being able to Jewelcraft with great skill.
+WeaponCraftingMaster.AcceptedByOrderName:		Weaponsmiths
+WeaponCraftingMaster.GuildOrder:			Weaponcrafters
+WeaponCraftingMaster.InitialEntersentence:		Would you like to join the Order of [Weaponcrafters]? As a crafter of weapons, you can expect to forge swords, axes, hammers and spears. While you will excel in weapon crafting and have good skills in armor crafting, you can expect great difficulty in tailoring and fletching. A well-trained weapon crafter also has a great bit of skill to perform siege crafting should it be of need.
 
 # /AbstractCraftingSkill
 AbstractCraftingSkill.BuildCraftedItem.BackpackFull:	Your backpack is full. {0} is created on the ground.

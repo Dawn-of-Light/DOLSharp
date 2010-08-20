@@ -31,7 +31,6 @@ Crafting.Name.Evocation:				Arcanes
 Crafting.Name.Fletching:				Empennage
 Crafting.Name.Gemcutting:				Gemmes
 Crafting.Name.Herbcrafting:				Herboristerie
-Crafting.Name.Jewelcraft:				Joaillier
 Crafting.Name.Leathercrafting:				Maroquinerie
 Crafting.Name.Metalworking:				Métallurgie
 Crafting.Name.Siegecraft:				Ingénieurie
