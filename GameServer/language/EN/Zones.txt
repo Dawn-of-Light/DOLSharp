@@ -1,0 +1,630 @@
+Zone.Description.CamelotHills:						Camelot Hills
+Zone.ScreenDescription.CamelotHills:				Camelot Hills
+Zone.Description.SalisburyPlains:					Salisbury Plains
+Zone.ScreenDescription.SalisburyPlains:				Salisbury Plains
+Zone.Description.BlackMtns.South:					Black Mtns. South
+Zone.ScreenDescription.BlackMtns.South:			    Black Mtns. South
+Zone.Description.BlackMtns.North:					Black Mtns. North
+Zone.ScreenDescription.BlackMtns.North:				Black Mtns. North
+Zone.Description.Dartmoor:							Dartmoor
+Zone.ScreenDescription.Dartmoor:					Dartmoor
+Zone.Description.Cornwall:							Cornwall
+Zone.ScreenDescription.Cornwall:					Cornwall
+Zone.Description.LlynBarfog:						Llyn Barfog
+Zone.ScreenDescription.Llyn Barfog:					Llyn Barfog
+Zone.Description.CampacorentinForest:				Campacorentin Forest
+Zone.ScreenDescription.CampacorentinForest:			Campacorentin Forest
+Zone.Description.AvalonMarsh:						Avalon Marsh
+Zone.ScreenDescription.AvalonMarsh:					Avalon Marsh
+Zone.Description.Lyonesse:							Lyonesse
+Zone.ScreenDescription.Lyonesse:					Lyonesse
+Zone.Description.ForestSauvage:						Forest Sauvage
+Zone.ScreenDescription.ForestSauvage:				Forest Sauvage
+Zone.Description.Snowdonia:							Snowdonia
+Zone.ScreenDescription.Snowdonia:					Snowdonia
+Zone.Description.Caerwent:							Caerwent
+Zone.ScreenDescription.Caerwent:					Caerwent
+Zone.Description.PennineMountains:					Pennine Mountains
+Zone.ScreenDescription.PennineMountains:			Pennine Mountains
+Zone.Description.Labyrinth:							Labyrinth
+Zone.ScreenDescription.Labyrinth:					Labyrinth
+Zone.Description.Hadrian'sWall:						Hadrian's Wall
+Zone.ScreenDescription.Hadrian'sWall:				Hadrian's Wall
+Zone.Description.OldSarum:							Old Sarum
+Zone.ScreenDescription.OldSarum:					Old Sarum
+Zone.Description.Rilan:								Rilan
+Zone.ScreenDescription.Rilan:						Rilan
+Zone.Description.Dalton:							Dalton
+Zone.ScreenDescription.Dalton:						Dalton
+Zone.Description.StonehengeBarrows:					Stonehenge Barrows
+Zone.ScreenDescription.StonehengeBarrows:			Stonehenge Barrows
+Zone.Description.Brisworthy:						Brisworthy
+Zone.ScreenDescription.Brisworthy:					Brisworthy
+Zone.Description.TombofMithra:						Tomb of Mithra
+Zone.ScreenDescription.TombofMithra:				Tomb of Mithra
+Zone.Description.KeltoiFogou:						Keltoi Fogou
+Zone.ScreenDescription.KeltoiFogou:					Keltoi Fogou
+Zone.Description.CatacombsofCardova:				Catacombs of Cardova
+Zone.ScreenDescription.CatacombsofCardova:			Catacombs of Cardova
+Zone.Description.Tepok'sMine:						Tepok's Mine
+Zone.ScreenDescription.Tepok'sMine:					Tepok's Mine
+Zone.Description.CityofCamelot:						City of Camelot
+Zone.ScreenDescription.CityofCamelot:				City of Camelot
+Zone.Description.Constantine'sSound:					Constantine's Sound
+Zone.ScreenDescription.Constantine'sSound:			Constantine's Sound
+Zone.Description.Grenlock'sSound:					Grenlock's Sound
+Zone.ScreenDescription.Grenlock'sSound:				Grenlock's Sound
+Zone.Description.Lamfhota'sSound:					Lamfhota's Sound
+Zone.ScreenDescription.Lamfhota'sSound:				Lamfhota's Sound
+Zone.Description.OceanusHesperos:					Oceanus Hesperos
+Zone.ScreenDescription.OceanusHesperos:				Oceanus Hesperos
+Zone.Description.Mesothalassa:						Mesothalassa
+Zone.ScreenDescription.Mesothalassa:				Mesothalassa
+Zone.Description.OceanusBoreal:						Oceanus Boreal
+Zone.ScreenDescription.OceanusBoreal:				Oceanus Boreal
+Zone.Description.OceanusNotos:						Oceanus Notos
+Zone.ScreenDescription.OceanusNotos:				Oceanus Notos
+Zone.Description.OceanusAnatole:					Oceanus Anatole
+Zone.ScreenDescription.OceanusAnatole:				Oceanus Anatole
+Zone.Description.Cetus'Pit:							Cetus' Pit
+Zone.ScreenDescription.Cetus'Pit:					Cetus' Pit
+Zone.Description.SobekiteEternal:					Sobekite Eternal
+Zone.ScreenDescription.SobekiteEternal:				Sobekite Eternal
+Zone.Description.TempleofTwilight:					Temple of Twilight
+Zone.ScreenDescription.TempleofTwilight:			Temple of Twilight
+Zone.Description.StygianDelta:						Stygian Delta
+Zone.ScreenDescription.StygianDelta:				Stygian Delta
+Zone.Description.LandofAtum:						Land of Atum
+Zone.ScreenDescription.LandofAtum:					Land of Atum
+Zone.Description.HallsofMa'ati:						Halls of Ma'ati
+Zone.ScreenDescription.HallsofMa'ati:				Halls of Ma'ati
+Zone.Description.Typhon'sReach:						Typhon's Reach
+Zone.ScreenDescription.Typhon'sReach:				Typhon's Reach
+Zone.Description.AshenIsles:						Ashen Isles
+Zone.ScreenDescription.AshenIsles:					Ashen Isles
+Zone.Description.GreenGlades:						Green Glades
+Zone.ScreenDescription.GreenGlades:					Green Glades
+Zone.Description.ArborGlen:							Arbor Glen
+Zone.ScreenDescription.ArborGlen:					Arbor Glen
+Zone.Description.theGreatPyramidofStygia:			the Great Pyramid of Stygia
+Zone.ScreenDescription.theGreatPyramidofStygia:		the Great Pyramid of Stygia
+Zone.Description.DeepVolcanus:						Deep Volcanus
+Zone.ScreenDescription.DeepVolcanus:				Deep Volcanus
+Zone.Description.CityofAerus:						City of Aerus
+Zone.ScreenDescription.CityofAerus:					City of Aerus
+Zone.Description.UnusedMine:						Unused Mine
+Zone.ScreenDescription.UnusedMine:					Unused Mine
+Zone.Description.Rugnog'sHaven:						Rugnog's Haven
+Zone.ScreenDescription.Rugnog'sHaven:				Rugnog's Haven
+Zone.Description.AvalonCity:						Avalon City
+Zone.ScreenDescription.AvalonCity:					Avalon City
+Zone.Description.IsleofGlass:						Isle of Glass
+Zone.ScreenDescription.IsleofGlass:					Isle of Glass
+Zone.Description.AvalonIsle:						Avalon Isle
+Zone.ScreenDescription.AvalonIsle:					Avalon Isle
+Zone.Description.DalesofDevwy:						Dales of Devwy
+Zone.ScreenDescription.DalesofDevwy:				Dales of Devwy
+Zone.Description.Caldey:							Caldey
+Zone.ScreenDescription.Caldey:						Caldey
+Zone.Description.Gwyddneau:							Gwyddneau
+Zone.ScreenDescription.Gwyddneau:					Gwyddneau
+Zone.Description.Aldland:							Aldland
+Zone.ScreenDescription.Aldland:						Aldland
+Zone.Description.InishailIsland:					Inishail Island
+Zone.ScreenDescription.InishailIsland:				Inishail Island
+Zone.Description.Midgard'sUndergroundForest:			Underground Forest
+Zone.ScreenDescription.Midgard'sUndergroundForest:	Underground Forest
+Zone.Description.Albion'sGlashtinForges:				Glashtin Forges
+Zone.ScreenDescription.Albion'sGlashtinForges:		Glashtin Forges
+Zone.Description.CaerSidi:							Caer Sidi
+Zone.ScreenDescription.CaerSidi:					Caer Sidi
+Zone.Description.Krondon:							Krondon
+Zone.ScreenDescription.Krondon:						Krondon
+Zone.Description.CrystalCave:						Crystal Cave
+Zone.ScreenDescription.CrystalCave:					Crystal Cave
+Zone.Description.RomanAqueducts:					Roman Aqueducts
+Zone.ScreenDescription.RomanAqueducts:				Roman Aqueducts
+Zone.Description.Aylesbury:							Aylesbury
+Zone.ScreenDescription.Aylesbury:					Aylesbury
+Zone.Description.InconnuCrypt:						Inconnu Crypt
+Zone.ScreenDescription.InconnuCrypt:				Inconnu Crypt
+Zone.Description.Albion'sUndergroundForest:			Underground Forest
+Zone.ScreenDescription.Albion'sUndergroundForest:	Underground Forest
+Zone.Description.TheDeadlandsofAnnwn:				The Deadlands of Annwn
+Zone.ScreenDescription.TheDeadlandsofAnnwn:			The Deadlands of Annwn
+Zone.Description.LowerCrypt:						Lower Crypt
+Zone.ScreenDescription.LowerCrypt:					Lower Crypt
+Zone.Description.Albion'sDarkspire:					Darkspire
+Zone.ScreenDescription.Albion'sDarkspire:			Darkspire
+Zone.Description.RuinsofAtlantis:					Ruins of Atlantis
+Zone.ScreenDescription.RuinsofAtlantis:				Ruins of Atlantis
+Zone.Description.RuineraravAtlantis:				Ruinerar av Atlantis
+Zone.ScreenDescription.RuineraravAtlantis:			Ruinerar av Atlantis
+Zone.Description.ScriosdeAtlantis:					Scrios de Atlantis
+Zone.ScreenDescription.ScriosdeAtlantis:			Scrios de Atlantis
+Zone.Description.VeilRift:							Veil Rift
+Zone.ScreenDescription.VeilRift:					Veil Rift
+Zone.Description.SharLabyrinth:						Shar Labyrinth
+Zone.ScreenDescription.SharLabyrinth:				Shar Labyrinth
+Zone.Description.TheQueen'sLabyrinth:				The Queen's Labyrinth
+Zone.ScreenDescription.TheQueen'sLabyrinth:			The Queen's Labyrinth
+Zone.Description.Hibernia'sFrontlines:				Frontlines
+Zone.ScreenDescription.Hibernia'sFrontlines:		Frontlines
+Zone.Description.Hibernia'sUndergroundForest:		Underground Forest
+Zone.ScreenDescription.Hibernia'sUndergroundForest:	Underground Forest
+Zone.Description.Hibernia'sDeadlands:				Deadlands
+Zone.ScreenDescription.Hibernia'sDeadlands:			Deadlands
+Zone.Description.Hibernia'sDarkspire:				Darkspire
+Zone.ScreenDescription.Hibernia'sDarkspire:			Darkspire
+Zone.Description.Hibernia'sGlashtinForge:			Glashtin Forge
+Zone.ScreenDescription.Hibernia'sGlashtinForge:		Glashtin Forge
+Zone.Description.ValeofMularn:						Vale of Mularn
+Zone.ScreenDescription.ValeofMularn:				Vale of Mularn
+Zone.Description.EastSvealand:						East Svealand
+Zone.ScreenDescription.EastSvealand:				East Svealand
+Zone.Description.WestSvealand:						West Svealand
+Zone.ScreenDescription.WestSvealand:				West Svealand
+Zone.Description.Gotar:								Gotar
+Zone.ScreenDescription.Gotar:						Gotar
+Zone.Description.Muspelheim:						Muspelheim
+Zone.ScreenDescription.Muspelheim:					Muspelheim
+Zone.Description.MyrkwoodForest:					Myrkwood Forest
+Zone.ScreenDescription.MyrkwoodForest:				Myrkwood Forest
+Zone.Description.SkonaRavine:						Skona Ravine
+Zone.ScreenDescription.SkonaRavine:					Skona Ravine
+Zone.Description.VanernSwamp:						Vanern Swamp
+Zone.ScreenDescription.VanernSwamp:					Vanern Swamp
+Zone.Description.Raumarik:							Raumarik
+Zone.ScreenDescription.Raumarik:					Raumarik
+Zone.Description.Albion'sFrontlines:				Frontlines
+Zone.ScreenDescription.Albion'sFrontlines:			Frontlines
+Zone.Description.Uppland:							Uppland
+Zone.ScreenDescription.Uppland:						Uppland
+Zone.Description.YggdraForest:						Yggdra Forest
+Zone.ScreenDescription.YggdraForest:				Yggdra Forest
+Zone.Description.JamtlandMountains:					Jamtland Mountains
+Zone.ScreenDescription.JamtlandMountains:			Jamtland Mountains
+Zone.Description.Erikstaad:							Erikstaad
+Zone.ScreenDescription.Erikstaad:					Erikstaad
+Zone.Description.Odin'sGate:						Odin's Gate
+Zone.ScreenDescription.Odin'sGate:					Odin's Gate
+Zone.Description.Malmohus:							Malmohus
+Zone.ScreenDescription.Malmohus:					Malmohus
+Zone.Description.Arothi:							Arothi
+Zone.ScreenDescription.Arothi:						Arothi
+Zone.Description.Carlingford:						Carlingford
+Zone.ScreenDescription.Carlingford:					Carlingford
+Zone.Description.Wyndham:							Wyndham
+Zone.ScreenDescription.Wyndham:						Wyndham
+Zone.Description.Jordheim:							Jordheim
+Zone.ScreenDescription.Jordheim:					Jordheim
+Zone.Description.Frisia:							Frisia
+Zone.ScreenDescription.Frisia:						Frisia
+Zone.Description.Kaupang:							Kaupang
+Zone.ScreenDescription.Kaupang:						Kaupang
+Zone.Description.Aphophian:							Aphophian
+Zone.ScreenDescription.Aphophian:					Aphophian
+Zone.Description.Hephaestian:						Hephaestian
+Zone.ScreenDescription.Hephaestian:					Hephaestian
+Zone.Description.Spindelhalla:						Spindelhalla
+Zone.ScreenDescription.Spindelhalla:				Spindelhalla
+Zone.Description.VendoCaverns:						Vendo Caverns
+Zone.ScreenDescription.VendoCaverns:				Vendo Caverns
+Zone.Description.Varulvhamn:						Varulvhamn
+Zone.ScreenDescription.Varulvhamn:					Varulvhamn
+Zone.Description.CursedTomb:						Cursed Tomb
+Zone.ScreenDescription.CursedTomb					Cursed Tomb
+Zone.Description.Nisse'sLair:						Nisse's Lair
+Zone.ScreenDescription.Nisse'sLair:					Nisse's Lair
+Zone.Description.TheFrontlines:						the Frontlines
+Zone.ScreenDescription.TheFrontlines:				the Frontlines
+Zone.Description.Nyttheim:							Nyttheim
+Zone.ScreenDescription.Nyttheim:					Nyttheim
+Zone.Description.Trollheim:							Trollheim
+Zone.ScreenDescription.Trollheim:					Trollheim
+Zone.Description.Aegir'sLanding:					Aegir's Landing
+Zone.ScreenDescription.Aegir'sLanding:				Aegir's Landing
+Zone.Description.GripklosaMountains:				Gripklosa Mountains
+Zone.ScreenDescription.GripklosaMountains:			Gripklosa Mountains
+Zone.Description.DellingCrater:						Delling Crater
+Zone.ScreenDescription.DellingCrater:				Delling Crater
+Zone.Description.Faraheim:							Faraheim
+Zone.ScreenDescription.Faraheim:					Faraheim
+Zone.Description.MuninSound:						Munin Sound
+Zone.ScreenDescription.MuninSound:					Munin Sound
+Zone.Description.Iarnwood:							Iarnwood
+Zone.ScreenDescription.Iarnwood:					Iarnwood
+Zone.Description.DummyZone:							Dummy Zone
+Zone.ScreenDescription.DummyZone:					Dummy Zone
+Zone.Description.Modernagrav:						Modernagrav
+Zone.ScreenDescription.Modernagrav:					Modernagrav
+Zone.Description.TuscaranGlacier:					Tuscaran Glacier
+Zone.ScreenDescription.TuscaranGlacier:				Tuscaran Glacier
+Zone.Description.Iarnvidiur'sLair:					Iarnvidiur's Lair
+Zone.ScreenDescription.Iarnvidiur'sLair:			Iarnvidiur's Lair
+Zone.Description.Midgard'sDeadlands:				Deadlands
+Zone.ScreenDescription.Midgard'sDeadlands:			Deadlands
+Zone.Description.Agramon:							Agramon
+Zone.ScreenDescription.Agramon:						Agramon
+Zone.Description.IrishSea:							Irish Sea
+Zone.ScreenDescription.IrishSea:					Irish Sea
+Zone.Description.CathalValley:						Cathal Valley
+Zone.ScreenDescription.CathalValley:				Cathal Valley
+Zone.Description.UnamedSea2:						Unamed Sea 2
+Zone.ScreenDescription.UnamedSea2:					Unamed Sea 2
+Zone.Description.EmainMacha:						Emain Macha
+Zone.ScreenDescription.EmainMacha:					Emain Macha
+Zone.Description.Breifine:							Breifine
+Zone.ScreenDescription.Breifine:					Breifine
+Zone.Description.CruachanGorge:						Cruachan Gorge
+Zone.ScreenDescription.CruachanGorge:				Cruachan Gorge
+Zone.Description.MountCollory:						Mount Collory
+Zone.ScreenDescription.MountCollory:				Mount Collory
+Zone.Description.Fomor:								Fomor
+Zone.ScreenDescription.Fomor:						Fomor
+Zone.Description.Domnann:							Domnann
+Zone.ScreenDescription.Domnann:						Domnann
+Zone.Description.CaillteGarran:						Caillte Garran
+Zone.ScreenDescription.CaillteGarran:				Caillte Garran
+Zone.Description.ValeofBalor:						Vale of Balor
+Zone.ScreenDescription.ValeofBalor:					Vale of Balor
+Zone.Description.CothromGorge:						Cothrom Gorge
+Zone.ScreenDescription.CothromGorge:				Cothrom Gorge
+Zone.Description.World'sEnd:						World's End
+Zone.ScreenDescription.World'sEnd:					World's End
+Zone.Description.VigilantRock:						Vigilant Rock
+Zone.ScreenDescription.VigilantRock:				Vigilant Rock
+Zone.Description.AlltaFearann:						Allta Fearann
+Zone.ScreenDescription.AlltaFearann:				Allta Fearann
+Zone.Description.Midgard'sDarkspire:				Darkspire
+Zone.ScreenDescription.Midgard'sDarkspire:			Darkspire
+Zone.Description.Midgard'sGlashtinForges:			Glashtin Forges
+Zone.ScreenDescription.Midgard'sGlashtinForges:		Glashtin Forges
+Zone.Description.TurSuil:							Tur Suil
+Zone.ScreenDescription.TurSuil:						Tur Suil
+Zone.Description.Galladoria:						Galladoria
+Zone.ScreenDescription.Galladoria:					Galladoria
+Zone.Description.LeSanctuaireDuHautConsule:			Le Sanctuaire Du Haut Consule
+Zone.ScreenDescription.LeSanctuaireDuHautConsule:	Le Sanctuaire Du Haut Consule
+Zone.Description.Midgard'sOtherworld:				Otherworld
+Zone.ScreenDescription.Midgard'sOtherworld:			Otherworld
+Zone.Description.Albion'sOtherworld:				Otherworld
+Zone.ScreenDescription.Albion'sOtherworld:			Otherworld
+Zone.Description.TheOtherworld:						Otherworld
+Zone.ScreenDescription.TheOtherworld:				Otherworld
+Zone.Description.Shaitan:							Shaitan
+Zone.ScreenDescription.Shaitan:						Shaitan
+Zone.Description.Volurgon:							Volurgon
+Zone.ScreenDescription.Volurgon:					Volurgon
+Zone.Description.LoughDerg:							Lough Derg
+Zone.ScreenDescription.LoughDerg:					Lough Derg
+Zone.Description.SilvermineMts.:					Silvermine Mts.
+Zone.ScreenDescription.SilvermineMts.:				Silvermine Mts.
+Zone.Description.ShannonEstuary:					Shannon Estuary
+Zone.ScreenDescription.ShannonEstuary:				Shannon Estuary
+Zone.Description.CliffsofMoher:						Cliffs of Moher
+Zone.ScreenDescription.CliffsofMoher:				Cliffs of Moher
+Zone.Description.LoughGur:							Lough Gur
+Zone.ScreenDescription.LoughGur:					Lough Gur
+Zone.Description.BogofCullen:						Bog of Cullen
+Zone.ScreenDescription.BogofCullen:					Bog of Cullen
+Zone.Description.ValleyofBriLeith:					Valley of Bri Leith
+Zone.ScreenDescription.ValleyofBriLeith:			Valley of Bri Leith
+Zone.Description.Connacht:							Connacht
+Zone.ScreenDescription.Connacht:					Connacht
+Zone.Description.CursedForest:						Cursed Forest
+Zone.ScreenDescription.CursedForest:				Cursed Forest
+Zone.Description.TirnaNog:							Tir na Nog
+Zone.ScreenDescription.TirnaNog:					Tir na Nog
+Zone.Description.Meath:								Meath
+Zone.ScreenDescription.Meath:						Meath
+Zone.Description.Dunshire:							Dunshire
+Zone.ScreenDescription.Dunshire:					Dunshire
+Zone.Description.SheeroeHills:						Sheeroe Hills
+Zone.ScreenDescription.SheeroeHills:				Sheeroe Hills
+Zone.Description.Torrylin:							Torrylin
+Zone.ScreenDescription.Torrylin:					Torrylin
+Zone.Description.Kilcullen:							Kilcullen
+Zone.ScreenDescription.Kilcullen:					Kilcullen
+Zone.Description.Saeranthal:						Saeranthal
+Zone.ScreenDescription.Saeranthal:					Saeranthal
+Zone.Description.CoruscatingMine:					Coruscating Mine
+Zone.ScreenDescription.CoruscatingMine:				Coruscating Mine
+Zone.Description.MuireTomb:							Muire Tomb
+Zone.ScreenDescription.MuireTomb:					Muire Tomb
+Zone.Description.SpraggonDen:						Spraggon Den
+Zone.ScreenDescription.SpraggonDen:					Spraggon Den
+Zone.Description.KoalinthCaverns:					Koalinth Caverns
+Zone.ScreenDescription.KoalinthCaverns:				Koalinth Caverns
+Zone.Description.TreibhCaillte:						Treibh Caillte
+Zone.ScreenDescription.TreibhCaillte:				Treibh Caillte
+Zone.Description.Aberillan:							Aberillan
+Zone.ScreenDescription.Aberillan:					Aberillan
+Zone.Description.Midgard'sAbandonedMines:			Abandoned Mines
+Zone.ScreenDescription.Midgard'sAbandonedMines:		Abandoned Mines
+Zone.Description.Albion'sAbandonedMines:			Abandoned Mines
+Zone.ScreenDescription.Albion'sAbandonedMines:		Abandoned Mines
+Zone.Description.Hibernia'sAbandonedMines:			Abandoned Mines
+Zone.ScreenDescription.Hibernia'sAbandonedMines:	Abandoned Mines
+Zone.Description.BurialGrounds:						Burial Grounds
+Zone.ScreenDescription.BurialGrounds:				Burial Grounds
+Zone.Description.ArtOutside:						ArtOutside
+Zone.ScreenDescription.ArtOutside:					ArtOutside
+Zone.Description.ArtInside:							ArtInside
+Zone.ScreenDescription.ArtInside:					ArtInside
+Zone.Description.Summoner'sHall:					Summoner's Hall
+Zone.ScreenDescription.Summoner'sHall:				Summoner's Hall
+Zone.Description.TheProvingGrounds:					The Proving Grounds
+Zone.ScreenDescription.TheProvingGrounds:			The Proving Grounds
+Zone.Description.TheLionsDen:						The Lions Den
+Zone.ScreenDescription.TheLionsDen:					The Lions Den
+Zone.Description.TheHillsofClaret:					The Hills of Claret
+Zone.ScreenDescription.TheHillsofClaret:			The Hills of Claret
+Zone.Description.Killaloe:							Killaloe
+Zone.ScreenDescription.Killaloe:					Killaloe
+Zone.Description.Thidranki:							Thidranki
+Zone.ScreenDescription.Thidranki:					Thidranki
+Zone.Description.Braemar:							Braemar
+Zone.ScreenDescription.Braemar:						Braemar
+Zone.Description.Wilton:							Wilton
+Zone.ScreenDescription.Wilton:						Wilton
+Zone.Description.Molvik:							Molvik
+Zone.ScreenDescription.Molvik:						Molvik
+Zone.Description.TestBG:							TestBG
+Zone.ScreenDescription.TestBG:						TestBG
+Zone.Description.KoboldUndercity:					Kobold Undercity
+Zone.ScreenDescription.KoboldUndercity:				Kobold Undercity
+Zone.Description.PassageofConflict:					Passage of Conflict
+Zone.ScreenDescription.PassageofConflict:			Passage of Conflict
+Zone.Description.DarknessFalls:						Darkness Falls
+Zone.ScreenDescription.DarknessFalls:				Darkness Falls
+Zone.Description.Leirvik:							Leirvik
+Zone.ScreenDescription.Leirvik:						Leirvik
+Zone.Description.ForgottenMines:					Forgotten Mines
+Zone.ScreenDescription.ForgottenMines:				Forgotten Mines
+Zone.Description.Chiltern:							Chiltern
+Zone.ScreenDescription.Chiltern:					Chiltern
+Zone.Description.Sherborne:							Sherborne
+Zone.ScreenDescription.Sherborne:					Sherborne
+Zone.Description.Stoneleigh:						Stoneleigh
+Zone.ScreenDescription.Stoneleigh:					Stoneleigh
+Zone.Description.Holmestrand:						Holmestrand
+Zone.ScreenDescription.Holmestrand:					Holmestrand
+Zone.Description.Nittedal:							Nittedal
+Zone.ScreenDescription.Nittedal:					Nittedal
+Zone.Description.Stavgaard:							Stavgaard
+Zone.ScreenDescription.Stavgaard:					Stavgaard
+Zone.Description.Tullamore:							Tullamore
+Zone.ScreenDescription.Tullamore:					Tullamore
+Zone.Description.Moycullen:							Moycullen
+Zone.ScreenDescription.Moycullen:					Moycullen
+Zone.Description.Broughshane:						Broughshane
+Zone.ScreenDescription.Broughshane:					Broughshane
+Zone.Description.DampCavern:						Damp Cavern
+Zone.ScreenDescription.DampCavern:					Damp Cavern
+Zone.Description.ForgottenSepulchre:				Forgotten Sepulchre
+Zone.ScreenDescription.ForgottenSepulchre:			Forgotten Sepulchre
+Zone.Description.ConcealedGuardhouse:				Concealed Guardhouse
+Zone.ScreenDescription.ConcealedGuardhouse:			Concealed Guardhouse
+Zone.Description.TheGossamerGrotto:					The Gossamer Grotto
+Zone.ScreenDescription.TheGossamerGrotto:			The Gossamer Grotto
+Zone.Description.UndergroundTunnel:					Underground Tunnel
+Zone.ScreenDescription.UndergroundTunnel:			Underground Tunnel
+Zone.Description.BurialTomb:						Burial Tomb
+Zone.ScreenDescription.BurialTomb:					Burial Tomb
+Zone.Description.DesecratedGrounds:					Desecrated Grounds
+Zone.ScreenDescription.DesecratedGrounds:			Desecrated Grounds
+Zone.Description.Hib30Dungeon:						Hib 30 Dungeon
+Zone.ScreenDescription.Hib30Dungeon:				Hib 30 Dungeon
+Zone.Description.CavernsofMadness:					Caverns of Madness
+Zone.ScreenDescription.CavernsofMadness:			Caverns of Madness
+Zone.Description.Mid30Dungeon:						Mid 30 Dungeon
+Zone.ScreenDescription.Mid30Dungeon:				Mid 30 Dungeon
+Zone.Description.Jarlsberg'sHideout:				Jarlsberg's Hideout
+Zone.ScreenDescription.Jarlsberg'sHideout:			Jarlsberg's Hideout
+Zone.Description.TheFoothillsofAlbion:				The Foothills of Albion
+Zone.ScreenDescription.TheFoothillsofAlbion:		The Foothills of Albion
+Zone.Description.ThievesDen:						Thieves Den
+Zone.ScreenDescription.ThievesDen:					Thieves Den
+Zone.Description.RebelHalfOrcLair:					Rebel Half Orc Lair
+Zone.ScreenDescription.RebelHalfOrcLair:			Rebel Half Orc Lair
+Zone.Description.TheHauntedHalls:					The Haunted Halls
+Zone.ScreenDescription.TheHauntedHalls:				The Haunted Halls
+Zone.Description.TheFoothillsofMidgard:				The Foothills of Midgard
+Zone.ScreenDescription.TheFoothillsofMidgard:		The Foothills of Midgard
+Zone.Description.TheFoothillsofHibernia:			The Foothills of Hibernia
+Zone.ScreenDescription.TheFoothillsofHibernia:		The Foothills of Hibernia
+Zone.Description.DemonicPrison:						Demonic Prison
+Zone.ScreenDescription.DemonicPrison:				Demonic Prison
+Zone.Description.BrimstoneCaverns:					Brimstone Caverns
+Zone.ScreenDescription.BrimstoneCaverns:			Brimstone Caverns
+Zone.Description.HallsofHelgardh:					Halls of Helgardh
+Zone.ScreenDescription.HallsofHelgardh:				Halls of Helgardh
+Zone.Description.CaveofCruachan:					Cave of Cruachan
+Zone.ScreenDescription.CaveofCruachan:				Cave of Cruachan
+Zone.Description.MidLaunch2:						Mid Launch 2
+Zone.ScreenDescription.MidLaunch2:					Mid Launch 2
+Zone.Description.AlbLaunch2:						Alb Launch 2
+Zone.ScreenDescription.AlbLaunch2:					Alb Launch 2
+Zone.Description.HibLaunch2:						Hib Launch 2
+Zone.ScreenDescription.HibLaunch2:					Hib Launch 2
+Zone.Description.TomtePrison:						Tomte Prison
+Zone.ScreenDescription.TomtePrison:					Tomte Prison
+Zone.Description.Nisse'sRetreat:					Nisse's Retreat
+Zone.ScreenDescription.Nisse'sRetreat:				Nisse's Retreat
+Zone.Description.LairoftheDemonLord:				Lair of the Demon Lord
+Zone.ScreenDescription.LairoftheDemonLord:			Lair of the Demon Lord
+Zone.Description.TheBaron'sGaol:					The Baron's Gaol
+Zone.ScreenDescription.TheBaron'sGaol:				The Baron's Gaol
+Zone.Description.Lios'sEternalRest:					Lios's Eternal Rest
+Zone.ScreenDescription.Lios'sEternalRest:			Lios's Eternal Rest
+Zone.Description.Lich'esUnrest:						Liche's Unrest
+Zone.ScreenDescription.Liche'sUnrest:				Liche's Unrest
+Zone.Description.Nephraal'sGaol:					Nephraal's Gaol
+Zone.ScreenDescription.Nephraal'sGaol:				Nephraal's Gaol
+Zone.Description.Morfesa'sGaol:						Morfesa's Gaol
+Zone.ScreenDescription.Morfesa'sGaol:				Morfesa's Gaol
+Zone.Description.DenofBones:						Den of Bones
+Zone.ScreenDescription.DenofBones:					Den of Bones
+Zone.Description.TheLostBurrow:						The Lost Burrow
+Zone.ScreenDescription.TheLostBurrow:				The Lost Burrow
+Zone.Description.Hib45Dungeon:						Hib 45 Dungeon
+Zone.ScreenDescription.Hib45Dungeon:				Hib 45 Dungeon
+Zone.Description.Alb45Dungeon:						Alb 45 Dungeon
+Zone.ScreenDescription.Alb45Dungeon:				Alb 45 Dungeon
+Zone.Description.TheCursedLair:						The Cursed Lair
+Zone.ScreenDescription.TheCursedLair:				The Cursed Lair
+Zone.Description.TheBurrow:							The Burrow
+Zone.ScreenDescription.TheBurrow:					The Burrow
+Zone.Description.Mid45Dungeon:						Mid 45 Dungeon
+Zone.ScreenDescription.Mid45Dungeon:				Mid 45 Dungeon
+Zone.Description.KingEirik'sThroneRoom:				King Eirik's Throne Room
+Zone.ScreenDescription.KingEirik'sThroneRoom:		King Eirik's Throne Room
+Zone.Description.Arachnid'sLabyrinth:				Arachnid's Labyrinth
+Zone.ScreenDescription.Arachnid'sLabyrinth:			Arachnid's Labyrinth
+Zone.Description.TheMaster'sLair:					The Master's Lair
+Zone.ScreenDescription.TheMaster'sLair:				The Master's Lair
+Zone.Description.Anataeus'Sanctuary:				Anataeus' Sanctuary
+Zone.ScreenDescription.Anataeus'Sanctuary:			Anataeus' Sanctuary
+Zone.Description.KeeperIraeda'sSanctuary:			Keeper Iraeda's Sanctuary
+Zone.ScreenDescription.KeeperIraeda'sSanctuary:		Keeper Iraeda's Sanctuary
+Zone.Description.BanditLair:						Bandit Lair
+Zone.ScreenDescription.BanditLair:					Bandit Lair
+Zone.Description.GnollLair:							Gnoll Lair
+Zone.ScreenDescription.GnollLair:					Gnoll Lair
+Zone.Description.Vandr'sBane:						Vandr's Bane
+Zone.ScreenDescription.Vandr'sBane:					Vandr's Bane
+Zone.Description.PastandPresent:					Past and Present
+Zone.ScreenDescription.PastandPresent:				Past and Present
+Zone.Description.Half-OrcCamp:						Half-Orc Camp
+Zone.ScreenDescription.Half-OrcCamp:				Half-Orc Camp
+Zone.Description.BrutalRealization:					Brutal Realization
+Zone.ScreenDescription.BrutalRealization:			Brutal Realization
+Zone.Description.HistoryRepeatsItself:				History Repeats Itself
+Zone.ScreenDescription.HistoryRepeatsItself:		History Repeats Itself
+Zone.Description.HoundsofArawn:						Hounds of Arawn
+Zone.ScreenDescription.HoundsofArawn:				Hounds of Arawn
+Zone.Description.PassageofEchoes:					Passage of Echoes
+Zone.ScreenDescription.PassageofEchoes:				Passage of Echoes
+Zone.Description.UnrestfulTomb:						Unrestful Tomb
+Zone.ScreenDescription.UnrestfulTomb:				Unrestful Tomb
+Zone.Description.LostPassages:						Lost Passages
+Zone.ScreenDescription.LostPassages:				Lost Passages
+Zone.Description.Goblin'sCookery:					Goblin's Cookery
+Zone.ScreenDescription.Goblin'sCookery:				Goblin's Cookery
+Zone.Description.TheBeastmaster'sDen:				The Beastmaster's Den
+Zone.ScreenDescription.TheBeastmaster'sDen:			The Beastmaster's Den
+Zone.Description.KeeperGarran'sSanctuary:			Keeper Garran's Sanctuary
+Zone.ScreenDescription.KeeperGarran'sSanctuary:		Keeper Garran's Sanctuary
+Zone.Description.TheFuneraryHall:					The Funerary Hall
+Zone.ScreenDescription.TheFuneraryHall:				The Funerary Hall
+Zone.Description.LairofDoom:						Lair of Doom
+Zone.ScreenDescription.LairofDoom:					Lair of Doom
+Zone.Description.TheArena:							The Arena
+Zone.ScreenDescription.TheArena:					The Arena
+Zone.Description.TheFuneraryHall:					The Funerary Hall
+Zone.ScreenDescription.TheFuneraryHall:				The Funerary Hall
+Zone.Description.TheRitualHall:						The Ritual Hall
+Zone.ScreenDescription.TheRitualHall:				The Ritual Hall
+Zone.Description.TheBetrayer'sDen:					The Betrayer's Den
+Zone.ScreenDescription.TheBetrayer'sDen:			The Betrayer's Den
+Zone.Description.theSunderedTombs:					the Sundered Tombs
+Zone.ScreenDescription.theSunderedTombs:			the Sundered Tombs
+Zone.Description.ShaftsoftheTenebrae:				Shafts of the Tenebrae
+Zone.ScreenDescription.ShaftsoftheTenebrae:			Shafts of the Tenebrae
+Zone.Description.LairoftheExiled:					Lair of the Exiled
+Zone.ScreenDescription.LairoftheExiled:				Lair of the Exiled
+Zone.Description.LaTourdesArcanesALB:				La Tour des Arcanes ALB
+Zone.ScreenDescription.LaTourdesArcanesALB:			La Tour des Arcanes ALB
+Zone.Description.LaTourdesArcanesMID:				La Tour des Arcanes MID
+Zone.ScreenDescription.LaTourdesArcanesMID:			La Tour des Arcanes MID
+Zone.Description.LaTourdesArcanesHIB:				La Tour des Arcanes HIB
+Zone.ScreenDescription.LaTourdesArcanesHIB:			La Tour des Arcanes HIB
+Zone.Description.TheHallofReawakening:				The Hall of Reawakening
+Zone.ScreenDescription.TheHallofReawakening:		The Hall of Reawakening
+Zone.Description.TheHiddenCrypt:					The Hidden Crypt
+Zone.ScreenDescription.TheHiddenCrypt:				The Hidden Crypt
+Zone.Description.KingConstantine'sThroneRoom:		King Constantine's Throne Room
+Zone.ScreenDescription.KingConstantine'sThroneRoom:	King Constantine's Throne Room
+Zone.Description.KingLamfhotas'ThroneRoom:			King Lamfhotas' Throne Room
+Zone.ScreenDescription.KingLamfhotas'ThroneRoom:	King Lamfhotas' Throne Room
+Zone.Description.DepthsofDespair:					Depths of Despair
+Zone.ScreenDescription.DepthsofDespair:				Depths of Despair
+Zone.Description.theRealmoftheDamned:				the Realm of the Damned
+Zone.ScreenDescription.theRealmoftheDamned:			the Realm of the Damned
+Zone.Description.TheLostWing:						The Lost Wing
+Zone.ScreenDescription.TheLostWing:					The Lost Wing
+Zone.Description.Deliah'sSanctuary:					Deliah's Sanctuary
+Zone.ScreenDescription.Deliah'sSanctuary:			Deliah's Sanctuary
+Zone.Description.TheCursedBarrow:					The Cursed Barrow
+Zone.ScreenDescription.TheCursedBarrow:				The Cursed Barrow
+Zone.Description.Snyblem'sLair:						Snyblem's Lair
+Zone.ScreenDescription.Snyblem'sLair:				Snyblem's Lair
+Zone.Description.thePlutonianShore:					the Plutonian Shore
+Zone.ScreenDescription.thePlutonianShore:			the Plutonian Shore
+Zone.Description.DismalGrotto:						Dismal Grotto
+Zone.ScreenDescription.DismalGrotto:				Dismal Grotto
+Zone.Description.Snarg'sGrotto:						Snarg's Grotto
+Zone.ScreenDescription.Snarg'sGrotto:				Snarg's Grotto
+Zone.Description.MazeofTribulation:					Maze of Tribulation
+Zone.ScreenDescription.MazeofTribulation:			Maze of Tribulation
+Zone.Description.TheSmeltingPot:					The Smelting Pot
+Zone.ScreenDescription.TheSmeltingPot:				The Smelting Pot
+Zone.Description.ForgesofFlame:						Forges of Flame
+Zone.ScreenDescription.ForgesofFlame:				Forges of Flame
+Zone.Description.HammerHugak'sSmithy:				Hammer Hugak's Smithy
+Zone.ScreenDescription.HammerHugak'sSmithy:			Hammer Hugak's Smithy
+Zone.Description.theGoblinWorkshop:					the Goblin Workshop
+Zone.ScreenDescription.theGoblinWorkshop:			the Goblin Workshop
+Zone.Description.Wolak'sCrucible:					Wolak's Crucible
+Zone.ScreenDescription.Wolak'sCrucible:				Wolak's Crucible
+Zone.Description.Marik'sWorkroom:					Marik's Workroom
+Zone.ScreenDescription.Marik'sWorkroom:				Marik's Workroom
+Zone.Description.TheSteward'sCrypt:					The Steward's Crypt
+Zone.ScreenDescription.TheSteward'sCrypt:			The Steward's Crypt
+Zone.Description.Serf'sFolly:						Serf's Folly
+Zone.ScreenDescription.Serf'sFolly:					Serf's Folly
+Zone.Description.DarkCavern:						Dark Cavern
+Zone.ScreenDescription.DarkCavern:					Dark Cavern
+Zone.Description.Blathnait'sRefuge:					Blathnait's Refuge
+Zone.ScreenDescription.Blathnait'sRefuge:			Blathnait's Refuge
+Zone.Description.BrokenMirrors:						Broken Mirrors
+Zone.ScreenDescription.BrokenMirrors:				Broken Mirrors
+Zone.Description.TheAccursedCaves:					The Accursed Caves
+Zone.ScreenDescription.TheAccursedCaves:			The Accursed Caves
+Zone.Description.HalfOrcCommandPost:				Half Orc Command Post
+Zone.ScreenDescription.HalfOrcCommandPost:			Half Orc Command Post
+Zone.Description.RiseoftheSpraggons:				Rise of the Spraggons
+Zone.ScreenDescription.RiseoftheSpraggons:			Rise of the Spraggons
+Zone.Description.TheWarrens:						The Warrens
+Zone.ScreenDescription.TheWarrens:					The Warrens
+Zone.Description.TheAncient'sRetreat:				The Ancient's Retreat
+Zone.ScreenDescription.TheAncient'sRetreat:			The Ancient's Retreat
+Zone.Description.TheShaman'sInnerSanctum:			The Shaman's Inner Sanctum
+Zone.ScreenDescription.TheShaman'sInnerSanctum:		The Shaman's Inner Sanctum
+Zone.Description.TheBrawler'sDen:					The Brawler's Den
+Zone.ScreenDescription.TheBrawler'sDen:				The Brawler's Den
+Zone.Description.Felena'sSorrow:					Felena's Sorrow
+Zone.ScreenDescription.Felena'sSorrow:				Felena's Sorrow
+Zone.Description.ThePitofDespair:					The Pit of Despair
+Zone.ScreenDescription.ThePitofDespair:				The Pit of Despair
+Zone.Description.TheForgottenVein:					The Forgotten Vein
+Zone.ScreenDescription.TheForgottenVein:			The Forgotten Vein
+Zone.Description.Demonsbreach:						Demons breach
+Zone.ScreenDescription.Demonsbreach:				Demons breach
+Zone.Description.MazeofMadness:						Maze of Madness
+Zone.ScreenDescription.MazeofMadness:				Maze of Madness
+Zone.Description.theShatteredLands:					the Shattered Lands
+Zone.ScreenDescription.theShatteredLands:			the Shattered Lands
+Zone.Description.theGnollsDen:						the Gnolls Den
+Zone.ScreenDescription.theGnollsDen:				the Gnolls Den
+Zone.Description.InnerSanctum:						Inner Sanctum
+Zone.ScreenDescription.InnerSanctum:				Inner Sanctum
+Zone.Description.theDeep:							the Deep
+Zone.ScreenDescription.theDeep:						the Deep
+Zone.Description.MidLaunch:							Mid Launch
+Zone.ScreenDescription.MidLaunch:					Mid Launch
+Zone.Description.AlbLaunch:							Alb Launch
+Zone.ScreenDescription.AlbLaunch:					Alb Launch
+Zone.Description.HibLaunch:							Hib Launch
+Zone.ScreenDescription.HibLaunch:					Hib Launch

@@ -226,6 +226,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("system", "speedhack_tolerance", "Number of times speed hack detected before banning.  Multiples of 5 (20, 25, 30, etc)", 20)]
 		public static int SPEEDHACK_TOLERANCE;
 
+		/// <summary>
+		/// Display centered screen messages if a player enters an area.
+		/// </summary>
+		[ServerProperty("system", "display_area_enter_screen_desc", "Display centered screen messages if a player enters an area.", false)]
+		public static bool DISPLAY_AREA_ENTER_SCREEN_DESC;
+
 		#endregion
 		
 		#region SERVER
