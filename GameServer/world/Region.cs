@@ -289,13 +289,23 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Is the Region instanced
+		/// Is the Region a temporary instance
 		/// </summary>
 		public virtual bool IsInstance
 		{
 			get
 			{
-                //Dinberg: Region will always return false now, because only class type 'Instance' will return true.
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Is this region a standard DAoC region or a custom server region
+		/// </summary>
+		public virtual bool IsCustom
+		{
+			get
+			{
 				return false;
 			}
 		}

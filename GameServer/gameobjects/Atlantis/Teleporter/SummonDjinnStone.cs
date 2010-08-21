@@ -28,6 +28,8 @@ namespace DOL.GS
 	/// <author>Aredhel</author>
 	public class SummonDjinnStone : DjinnStone
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Creates and summons the djinn if it isn't already up.
 		/// </summary>

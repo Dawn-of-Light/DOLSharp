@@ -50,6 +50,8 @@ namespace DOL.GS
 	/// </summary>
 	public class GamePlayer : GameLiving
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private readonly object m_LockObject = new object();
 
 		#region Client/Character/VariousFlags
@@ -12566,6 +12568,18 @@ namespace DOL.GS
 		public List<AbstractQuest> QuestListFinished
 		{
 			get { return m_questListFinished; }
+		}
+
+		/// <summary>
+		/// Add a quest to the players finished list
+		/// </summary>
+		/// <param name="quest"></param>
+		public void AddFinishedQuest(AbstractQuest quest)
+		{
+			lock (m_questListFinished)
+			{
+				m_questListFinished.Add(quest);
+			}
 		}
 
 		/// <summary>

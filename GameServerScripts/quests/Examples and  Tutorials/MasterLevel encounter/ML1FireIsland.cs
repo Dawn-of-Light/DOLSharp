@@ -15,6 +15,8 @@ namespace DOL.GS
 {
 	public class Ianetor : GameNPC
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public static int albregion = 73;
 		public static int hibregion = 130;
 		public static int midregion = 30;
