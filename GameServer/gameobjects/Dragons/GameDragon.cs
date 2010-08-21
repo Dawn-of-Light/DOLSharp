@@ -41,6 +41,8 @@ namespace DOL.GS
 	/// <author>Aredhel</author>
 	public abstract class GameDragon : GameNPC
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Set the dragon difficulty in percent of its max abilities
 		/// 100 = full strength

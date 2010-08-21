@@ -54,9 +54,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				targetRealm = client.Player.CurrentZone.GetRealm();
 			}
 
-			var zonePoint =
-				GameServer.Database.SelectObject<ZonePoint>("`Id` = '" + jumpSpotID + "' AND (`Realm` = '" + (byte)targetRealm +
-															"' OR `Realm` = '0' OR `Realm` = NULL)");
+			var zonePoint =	GameServer.Database.SelectObject<ZonePoint>("`Id` = '" + jumpSpotID + "' AND (`Realm` = '" + (byte)targetRealm +
+																		"' OR `Realm` = '0' OR `Realm` = NULL)");
 
 			if (zonePoint == null)
 			{
@@ -98,7 +97,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				Region reg = WorldMgr.GetRegion(zonePoint.Region);
 				if (reg != null)
 				{
-					if (reg.IsDisabled)
+					// check for target region disabled if player is in a standard region
+					// otherwise the custom region should handle OnZonePoint for this check
+					if (client.Player.CurrentRegion.IsCustom == false && reg.IsDisabled)
 					{
 						if ((client.Player.Mission is TaskDungeonMission &&
 							 (client.Player.Mission as TaskDungeonMission).TaskRegion.Skin == reg.Skin) == false)
@@ -125,12 +126,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return 1;
 			}
 
-			IJumpPointHandler check = null;
+			IJumpPointHandler customHandler = null;
 			if (string.IsNullOrEmpty(zonePoint.ClassType) == false)
 			{
-				check = (IJumpPointHandler)m_instanceByName[zonePoint.ClassType];
+				customHandler = (IJumpPointHandler)m_instanceByName[zonePoint.ClassType];
 
-				if (check == null)
+				// check for db change to update cached handler
+				if (customHandler != null && customHandler.GetType().FullName != zonePoint.ClassType)
+				{
+					customHandler = null;
+				}
+
+				if (customHandler == null)
 				{
 					//Dinberg - Instances need to use a special handler. This is because some instances will result
 					//in duplicated zonepoints, such as if Tir Na Nog were to be instanced for a quest.
@@ -152,11 +159,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						try
 						{
-							check = (IJumpPointHandler)Activator.CreateInstance(t);
+							customHandler = (IJumpPointHandler)Activator.CreateInstance(t);
 						}
 						catch (Exception e)
 						{
-							check = null;
+							customHandler = null;
 							Log.Error(
 								string.Format("jump point {0}: error creating a new instance of jump point handler {1}", zonePoint.Id,
 											  zonePoint.ClassType), e);
@@ -164,13 +171,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 
-				if (check != null)
+				if (customHandler != null)
 				{
-					m_instanceByName[zonePoint.ClassType] = check;
+					m_instanceByName[zonePoint.ClassType] = customHandler;
 				}
 			}
 
-			new RegionChangeRequestHandler(client.Player, zonePoint, check).Start(1);
+			new RegionChangeRequestHandler(client.Player, zonePoint, customHandler).Start(1);
 
 			return 1;
 		}
@@ -200,14 +207,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="actionSource">The action source</param>
 			/// <param name="zonePoint">The target zone point</param>
 			/// <param name="checker">The jump point checker instance</param>
-			public RegionChangeRequestHandler(GamePlayer actionSource, ZonePoint zonePoint, IJumpPointHandler checker)
+			public RegionChangeRequestHandler(GamePlayer actionSource, ZonePoint zonePoint, IJumpPointHandler checkHandler)
 				: base(actionSource)
 			{
 				if (zonePoint == null)
 					throw new ArgumentNullException("zonePoint");
 
 				m_zonePoint = zonePoint;
-				m_checkHandler = checker;
+				m_checkHandler = checkHandler;
 			}
 
 			/// <summary>
