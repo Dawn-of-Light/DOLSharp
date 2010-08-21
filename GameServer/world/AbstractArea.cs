@@ -19,9 +19,8 @@
 using System;
 using DOL.Database;
 using DOL.Events;
-using DOL.Language;
-using DOL.GS;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -75,7 +74,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Constant holding max number of areas per zone, increase if more ares are needed,
 		/// this will slightly increase memory usage on server
-		/// </summary>		
+		/// </summary>
 		public const ushort MAX_AREAS_PER_ZONE = 50;
 
 		/// <summary>
@@ -197,7 +196,12 @@ namespace DOL.GS
 			if (m_displayMessage && Description != null && Description != "")
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractArea.Entered", Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.Out.SendMessage(Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+
+				//Changed by Apo 9. August 2010: Areas never send an screen description, but we will support it with an server property
+				if (ServerProperties.Properties.DISPLAY_AREA_ENTER_SCREEN_DESC)
+				{
+					player.Out.SendMessage(Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+				}
 			}
 			if (Sound != 0)
 			{
