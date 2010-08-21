@@ -16,38 +16,27 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-/*
- * Modified by Konik & WitchKing 15.03.2005
- * Modified the way that the GetXXXInRadius works.
- * A lot faster and more accurate now...
- */
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 
-using DOL.Database;
-
-using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
-
 using log4net;
 
 namespace DOL.GS
 {
 	/// <summary>
 	/// This class represents one Zone in DAOC. It holds all relevant information
-	/// that is needed to do different calculations. 
+	/// that is needed to do different calculations.
 	/// </summary>
 	public class Zone
 	{
 		/* 
         This file has been extensively modified for the new subzone management system
         So for old version please have a look in old release
-        */
+		 */
 
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -155,11 +144,11 @@ namespace DOL.GS
 		/// </summary>
 		private readonly ushort m_ID;
 
-        /// <summary>
-        /// The id of the fake zone we send to the client.
-        /// This is used for instances, which also need to create fake zones aswell as regions!
-        /// </summary>
-        private ushort m_zoneSkinID;
+		/// <summary>
+		/// The id of the fake zone we send to the client.
+		/// This is used for instances, which also need to create fake zones aswell as regions!
+		/// </summary>
+		private ushort m_zoneSkinID;
 
 		/// <summary>
 		/// The description of the Zone eg. "Camelot Hills"
@@ -187,19 +176,19 @@ namespace DOL.GS
 		private readonly int m_Height;
 
 		/// <summary>
-        /// The waterlevel of this zone
-        /// </summary>
-        private int m_waterlevel;
+		/// The waterlevel of this zone
+		/// </summary>
+		private int m_waterlevel;
 
 		/// <summary>
 		/// Does this zone support diving?
 		/// </summary>
 		private bool m_isDivingEnabled;
 
-        /// <summary>
-        /// Does this zone contain Lava
-        /// </summary>
-        private readonly bool m_IsLava;
+		/// <summary>
+		/// Does this zone contain Lava
+		/// </summary>
+		private readonly bool m_IsLava;
 
 		/// <summary>
 		/// already initialized?
@@ -207,10 +196,10 @@ namespace DOL.GS
 		private bool m_initialized = false;
 
 
-        private int m_bonusXP = 0;
-        private int m_bonusRP = 0;
-        private int m_bonusBP = 0;
-        private int m_bonusCoin = 0;
+		private int m_bonusXP = 0;
+		private int m_bonusRP = 0;
+		private int m_bonusBP = 0;
+		private int m_bonusCoin = 0;
 
 		#endregion
 
@@ -226,7 +215,7 @@ namespace DOL.GS
 		/// <param name="yoff">the Y offset of this zone inside the region</param>
 		/// <param name="width">the Width of this zone</param>
 		/// <param name="height">the Height of this zone</param>
-        /// <param name="zoneskinID">For clientside positioning in instances: The 'fake' zoneid we send to clients.</param>
+		/// <param name="zoneskinID">For clientside positioning in instances: The 'fake' zoneid we send to clients.</param>
 		public Zone(Region region, ushort id, string desc, int xoff, int yoff, int width, int height, ushort zoneskinID, bool isDivingEnabled, int waterlevel, bool islava, int xpBonus, int rpBonus, int bpBonus, int coinBonus)
 		{
 			m_Region = region;
@@ -236,15 +225,15 @@ namespace DOL.GS
 			m_YOffset = yoff;
 			m_Width = width;
 			m_Height = height;
-            m_zoneSkinID = zoneskinID;
+			m_zoneSkinID = zoneskinID;
 			m_waterlevel = waterlevel;
 			m_isDivingEnabled = isDivingEnabled;
-            m_IsLava = islava;
+			m_IsLava = islava;
 
-            m_bonusXP = xpBonus;
-            m_bonusRP = rpBonus;
-            m_bonusBP = bpBonus;
-            m_bonusCoin = coinBonus;
+			m_bonusXP = xpBonus;
+			m_bonusRP = rpBonus;
+			m_bonusBP = bpBonus;
+			m_bonusCoin = coinBonus;
 
 			// initialise subzone objects and counters
 			m_subZoneElements = new SubNodeElement[SUBZONE_NBR][];
@@ -350,7 +339,7 @@ namespace DOL.GS
 			else if (id == 109 || id == 196 || id == 227) return eRealm.Albion;
 			else if (id == 58) return eRealm.Midgard;
 			else if (id == 148 || id == 149 || id == 162 || id == 188 || id == 189 ||
-				id == 195 || id == 226 || id == 229 || id == 243) return eRealm.Midgard;
+			         id == 195 || id == 226 || id == 229 || id == 243) return eRealm.Midgard;
 			else if (id >= 92 && id <= 99) return eRealm.Hibernia;
 			else if (id == 197 || id == 228) return eRealm.Hibernia;
 			//instanced dungeons
@@ -371,23 +360,23 @@ namespace DOL.GS
 			else if (id >= 171 && id <= 174) return eRealm.Hibernia;
 			else if (id >= 175 && id <= 178) return eRealm.Albion;
 			//new frontier and common
-			//bg1 Fort Brolorn 
+			//bg1 Fort Brolorn
 			else if (id == 234) return eRealm.Midgard;
-			//bg5 Leonis Keep 
+			//bg5 Leonis Keep
 			else if (id == 235) return eRealm.Hibernia;
-			//bg10 Caer Claret 
+			//bg10 Caer Claret
 			else if (id == 236) return eRealm.Albion;
-			//bg15 Dun Killaloe 
+			//bg15 Dun Killaloe
 			else if (id == 237) return eRealm.Hibernia;
-			//bg20 Thidranki Faste 
+			//bg20 Thidranki Faste
 			else if (id == 238) return eRealm.Midgard;
-			//bg25 Dun Braemer 
+			//bg25 Dun Braemer
 			else if (id == 239) return eRealm.Hibernia;
-			//bg30 Caer Wilton 
+			//bg30 Caer Wilton
 			else if (id == 240) return eRealm.Albion;
-			//bg35 Molvik Faste 
+			//bg35 Molvik Faste
 			else if (id == 241) return eRealm.Midgard;
-			//bg40 Leirvik Castle 
+			//bg40 Leirvik Castle
 			else if (id == 242) return eRealm.Hibernia;
 
 			//todo get the base realm for the other bgs not just the first 3
@@ -462,12 +451,12 @@ namespace DOL.GS
 			get { return m_ID; }
 		}
 
-        //Dinberg: added for instances.
-        /// <summary>
-        /// The ID we send to the client, for client-side positioning of gameobjects and npcs.
-        /// </summary>
-        public ushort ZoneSkinID
-        { get { return m_zoneSkinID; } }
+		//Dinberg: added for instances.
+		/// <summary>
+		/// The ID we send to the client, for client-side positioning of gameobjects and npcs.
+		/// </summary>
+		public ushort ZoneSkinID
+		{ get { return m_zoneSkinID; } }
 
 		/// <summary>
 		/// Return the description of this zone
@@ -510,11 +499,11 @@ namespace DOL.GS
 			get { return m_Height; }
 		}
 
-        public int Waterlevel
-        {
-            get { return m_waterlevel; }
+		public int Waterlevel
+		{
+			get { return m_waterlevel; }
 			set { m_waterlevel = value; }
-        }
+		}
 
 		public bool IsDivingEnabled
 		{
@@ -522,13 +511,13 @@ namespace DOL.GS
 			set { m_isDivingEnabled = value; }
 		}
 
-        /// <summary>
-        /// Returns 1 if this zone has lava
-        /// </summary>
-        public bool IsLava
-        {
-            get { return m_IsLava; }
-        }
+		/// <summary>
+		/// Returns 1 if this zone has lava
+		/// </summary>
+		public bool IsLava
+		{
+			get { return m_IsLava; }
+		}
 
 		/// <summary>
 		/// Returns the total number of objects held in the zone
@@ -769,7 +758,7 @@ namespace DOL.GS
 								else
 								{
 									// the current subzone is partially enclosed within the radius
-									// => only add the objects within the right area 
+									// => only add the objects within the right area
 
 									lock (startElement)
 									{
@@ -1006,8 +995,8 @@ namespace DOL.GS
 			GameObject currentObject = currentElement.data;
 
 			if ((currentObject != null) &&
-				(((int)currentObject.ObjectState) == (int)GameObject.eObjectState.Active)
-				&& (currentObject.CurrentRegion == ZoneRegion))
+			    (((int)currentObject.ObjectState) == (int)GameObject.eObjectState.Active)
+			    && (currentObject.CurrentRegion == ZoneRegion))
 			{
 				// the current object exists, is Active and still in the Region where this Zone is located
 
@@ -1262,12 +1251,12 @@ namespace DOL.GS
 		#region Get random NPC
 
 		/// <summary>
-        /// Get's a random NPC based on a con level
-        /// </summary>
+		/// Get's a random NPC based on a con level
+		/// </summary>
 		/// <param name="realm"></param>
 		/// <param name="compareLevel"></param>
-        /// <param name="conLevel">-3 grey, -2 green, -1 blue, 0 yellow, 1 - orange, 2 red, 3 purple</param>
-        /// <returns></returns>
+		/// <param name="conLevel">-3 grey, -2 green, -1 blue, 0 yellow, 1 - orange, 2 red, 3 purple</param>
+		/// <returns></returns>
 		public GameNPC GetRandomNPCByCon(eRealm realm, int compareLevel, int conLevel)
 		{
 			List<GameNPC> npcs = GetNPCsOfZone(new eRealm[] { realm }, 0, 0, compareLevel, conLevel, true);
@@ -1425,39 +1414,39 @@ namespace DOL.GS
 
 		#endregion
 
-        #region Zone Bonuses
-        /// <summary>
-        /// Bonus XP Gained (%)
-        /// </summary>
-        public int BonusExperience
-        {
-            get { return m_bonusXP; }
-            set { m_bonusXP = value; }
-        }
-        /// <summary>
-        /// Bonus RP Gained (%)
-        /// </summary>
-        public int BonusRealmpoints
-        {
-            get { return m_bonusRP; }
-            set { m_bonusRP = value; }
-        }
-        /// <summary>
-        /// Bonus BP Gained (%)
-        /// </summary>
-        public int BonusBountypoints
-        {
-            get { return m_bonusBP; }
-            set { m_bonusBP = value; }
-        }
-        /// <summary>
-        /// Bonus Money Gained (%)
-        /// </summary>
-        public int BonusCoin
-        {
-            get { return m_bonusCoin; }
-            set { m_bonusCoin = value; }
-        } 
-        #endregion
+		#region Zone Bonuses
+		/// <summary>
+		/// Bonus XP Gained (%)
+		/// </summary>
+		public int BonusExperience
+		{
+			get { return m_bonusXP; }
+			set { m_bonusXP = value; }
+		}
+		/// <summary>
+		/// Bonus RP Gained (%)
+		/// </summary>
+		public int BonusRealmpoints
+		{
+			get { return m_bonusRP; }
+			set { m_bonusRP = value; }
+		}
+		/// <summary>
+		/// Bonus BP Gained (%)
+		/// </summary>
+		public int BonusBountypoints
+		{
+			get { return m_bonusBP; }
+			set { m_bonusBP = value; }
+		}
+		/// <summary>
+		/// Bonus Money Gained (%)
+		/// </summary>
+		public int BonusCoin
+		{
+			get { return m_bonusCoin; }
+			set { m_bonusCoin = value; }
+		}
+		#endregion
 	}
 }
