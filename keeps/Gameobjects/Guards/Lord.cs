@@ -12,6 +12,8 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class GuardLord : GameKeepGuard
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private eRealm m_lastRealm = eRealm.None;
 		private long m_lastKillTime = 0;
 

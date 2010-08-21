@@ -39,6 +39,8 @@ namespace DOL.GS
 	/// <author>Aredhel</author>
 	public class NecromancerPet : GamePet
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Proc IDs for various pet weapons.
 		/// </summary>

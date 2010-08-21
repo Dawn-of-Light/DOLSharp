@@ -31,6 +31,8 @@ namespace DOL.GS
 	/// </summary>
 	public class WorldInventoryItem : GameStaticItemTimed
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// The InventoryItem that is contained within
 		/// </summary>
