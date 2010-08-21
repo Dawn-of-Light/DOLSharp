@@ -36,6 +36,8 @@ namespace DOL.GS
     /// <author>Aredhel</author>
     public class Scholar : Researcher
     {
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Create a new scholar.
 		/// </summary>

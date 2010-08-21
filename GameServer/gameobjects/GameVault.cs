@@ -29,6 +29,8 @@ namespace DOL.GS
 	/// <author>Aredhel, Tolakram</author>
 	public class GameVault : GameStaticItem
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Number of items a single vault can hold.
 		/// </summary>

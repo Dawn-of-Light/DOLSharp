@@ -7,7 +7,9 @@ namespace DOL.GS
 {
 	public class TaskMaster : GameNPC
 	{
-        public override bool Interact(GamePlayer player)
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		public override bool Interact(GamePlayer player)
 		{
 			if (!base.Interact(player))
 				return false;

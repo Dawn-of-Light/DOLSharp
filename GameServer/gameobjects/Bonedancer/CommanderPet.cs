@@ -35,6 +35,8 @@ namespace DOL.GS
 {
 	public class CommanderPet : BDPet
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Create a commander.
 		/// </summary>
