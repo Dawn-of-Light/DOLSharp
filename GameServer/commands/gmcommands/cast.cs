@@ -30,9 +30,12 @@ namespace DOL.GS.Commands
       "&cast",
       ePrivLevel.GM,
       "GMCommands.Cast.Description",
+	  "/cast loadspell <spellid> Load a spell from the DB into the global spell cache",
       "GMCommands.Cast.Usage")]
     public class CastCommandHandler : AbstractCommandHandler, ICommandHandler
     {
+		private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public void OnCommand(GameClient client, string[] args)
         {
             if (args.Length < 2)
@@ -58,6 +61,22 @@ namespace DOL.GS.Commands
                 DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.IdNegative"));
                 return;
             }
+
+			if (type == "loadspell")
+			{
+				if (id != 0)
+				{
+					if (SkillBase.UpdateSpell(id))
+					{
+						Log.DebugFormat("Spell ID {0} added / updated in the global spell list", id);
+						DisplayMessage(client, "Spell ID {0} added / updated in the global spell list", id);
+						return;
+					}
+				}
+
+				DisplayMessage(client, "Error loading Spell ID {0}!", id);
+				return;
+			}
 
             GameLiving target = client.Player.TargetObject as GameLiving;
             if (target == null)
