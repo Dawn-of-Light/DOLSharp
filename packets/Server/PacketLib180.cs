@@ -46,6 +46,51 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
+		//Added by Stexx78 - Only for hybrids , send mls and cls spells
+		public virtual void SendToHybridMLandCL(GamePlayer player)
+		{
+			GSTCPPacketOut pak;
+			IList spelllines = m_gameClient.Player.GetSpellLines();
+			byte linenumber = 0;
+			lock (spelllines.SyncRoot)
+			{
+				foreach (SpellLine line in spelllines)
+				{
+					if (m_gameClient.Player.IsAdvancedSpellLine(line))
+					{
+						IList spells = SkillBase.GetSpellList(line.KeyName);
+						int spellcount = 0;
+						for (int i = 0; i < spells.Count; i++)
+						{
+							if (((Spell)spells[i]).Level <= line.Level)
+							{
+								spellcount++;
+							}
+						}
+						pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
+						pak.WriteByte(0x02); //subcode
+						pak.WriteByte((byte)(spellcount + 1)); //number of entry
+						pak.WriteByte(0x02); //subtype
+						pak.WriteByte(linenumber); //number of line
+						pak.WriteByte(0); // level, not used when spell line
+						pak.WriteShort(0); // icon, not used when spell line
+						pak.WritePascalString(line.Name);
+						foreach (Spell spell in spells)
+						{
+							if (spell.Level <= line.Level)
+							{
+								pak.WriteByte((byte)spell.Level);
+								pak.WriteShort(spell.Icon);
+								pak.WritePascalString(spell.Name);
+							}
+						}
+						SendTCP(pak);
+					}
+					linenumber++;
+				}
+			}
+		}
+
 		public override void SendSetControlledHorse(GamePlayer player)
 		{
 			if (player == null || player.ObjectState != GameObject.eObjectState.Active)
@@ -155,7 +200,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)playerToCreate.ObjectID);
 			pak.WriteShort(playerToCreate.Model);
 			pak.WriteShort((ushort)playerToCreate.Z);
-            //Dinberg:Instances - send out the 'fake' zone ID to the client for positioning purposes.
+			//Dinberg:Instances - send out the 'fake' zone ID to the client for positioning purposes.
 			pak.WriteShort(playerZone.ZoneSkinID);
 			pak.WriteShort((ushort)playerRegion.GetXOffInZone(playerToCreate.X, playerToCreate.Y));
 			pak.WriteShort((ushort)playerRegion.GetYOffInZone(playerToCreate.X, playerToCreate.Y));
@@ -182,9 +227,9 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerName(m_gameClient.Player, playerToCreate));
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerGuildName(m_gameClient.Player, playerToCreate));
 			pak.WritePascalString(GameServer.ServerRules.GetPlayerLastName(m_gameClient.Player, playerToCreate));
-            //RR 12 / 13
-            pak.WritePascalString(GameServer.ServerRules.GetPlayerPrefixName(m_gameClient.Player, playerToCreate));
-            pak.WritePascalString(playerToCreate.CurrentTitle.GetValue(playerToCreate)); // new in 1.74, NewTitle
+			//RR 12 / 13
+			pak.WritePascalString(GameServer.ServerRules.GetPlayerPrefixName(m_gameClient.Player, playerToCreate));
+			pak.WritePascalString(playerToCreate.CurrentTitle.GetValue(playerToCreate)); // new in 1.74, NewTitle
 			if (playerToCreate.IsOnHorse)
 			{
 				pak.WriteByte(playerToCreate.ActiveHorse.ID);
@@ -299,8 +344,8 @@ namespace DOL.GS.PacketHandler
 								if (m_gameClient.Player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
 								{
 									if (skill.Name == Abilities.VampiirConstitution ||
-											skill.Name == Abilities.VampiirDexterity ||
-											skill.Name == Abilities.VampiirStrength)
+									    skill.Name == Abilities.VampiirDexterity ||
+									    skill.Name == Abilities.VampiirStrength)
 										str = " +" + ((m_gameClient.Player.Level - 5) * 3).ToString();
 									else if (skill.Name == Abilities.VampiirQuickness)
 										str = " +" + ((m_gameClient.Player.Level - 5) * 2).ToString();
@@ -374,6 +419,8 @@ namespace DOL.GS.PacketHandler
 									pak.WriteShort(spell.Value.Key.Icon);
 									pak.WritePascalString(spell.Value.Key.Name);
 								}
+								//Added by stexx78 - Add ML and CL lines and spells.
+								SendToHybridMLandCL(m_gameClient.Player);
 							}
 						}
 					}
@@ -387,8 +434,8 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)firstSkills);
 				SendTCP(pak);
 			}
-
-			SendSpellList();
+			if (flagSendHybrid == false) // added by stexx78 , only puretank and listcaster use sendspelllist()
+				SendSpellList();
 		}
 
 	}
