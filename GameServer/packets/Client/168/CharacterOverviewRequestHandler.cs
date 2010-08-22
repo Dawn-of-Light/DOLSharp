@@ -32,10 +32,33 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			client.ClientState = GameClient.eClientState.CharScreen;
-			GameServer.Database.SaveObject(client.Account);
+			if (client.Player != null)
+			{
+				try
+				{
+					// find the cached character and force it to update with the latest saved character
+					DOLCharacters cachedCharacter = null;
+					foreach (DOLCharacters accountChar in client.Account.Characters)
+					{
+						if (accountChar.ObjectId == client.Player.InternalID)
+						{
+							cachedCharacter = accountChar;
+							break;
+						}
+					}
+
+					if (cachedCharacter != null)
+					{
+						cachedCharacter = client.Player.DBCharacter;
+					}
+				}
+				catch (System.Exception ex)
+				{
+					log.ErrorFormat("Error attempting to update cached player. {0}", ex.Message);
+				}
+			}
+
 			client.Player = null;
-			GameServer.Database.UpdateInCache<Account>(client.Account.ObjectId);
-			GameServer.Database.FillObjectRelations(client.Account);
 
 			//reset realm if no characters
 			if((client.Account.Characters == null || client.Account.Characters.Length <= 0) && client.Account.Realm != (int)eRealm.None)
