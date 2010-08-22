@@ -88,6 +88,11 @@ namespace DOL.GS.Scripts.Commands
 			{
 				spec = client.Player.GetSpecialization(dbSpec.KeyName);
 			}
+			else
+			{
+				// if this is a custom line it might not be in the db so search for exact match on player
+				spec = client.Player.GetSpecialization(line);
+			}
 
 			if (spec == null)
 			{
