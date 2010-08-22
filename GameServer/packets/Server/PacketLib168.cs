@@ -2179,17 +2179,17 @@ namespace DOL.GS.PacketHandler
 		{
 			IList spelllines = m_gameClient.Player.GetSpellLines();
 			byte linenumber = 0;
-
-			bool isHybrid = true;
+			// by stexx78 - Changed bool var name to isPureTank because hybrid are handled totally in SendUpdatePlayerSkills()
+			bool isPureTank = true;
 			if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
-				isHybrid = false;
+				isPureTank = false;
 
 			lock (spelllines.SyncRoot)
 			{
 				foreach (SpellLine line in spelllines)
 				{
-					// for hybrids only send the advanced spell lines here
-					if (isHybrid && m_gameClient.Player.IsAdvancedSpellLine(line) == false)
+					// For Puretank only send the advanced spell lines here
+					if (isPureTank && m_gameClient.Player.IsAdvancedSpellLine(line) == false)
 						continue;
 
 					// make a copy
