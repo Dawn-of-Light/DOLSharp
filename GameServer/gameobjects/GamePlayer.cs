@@ -3239,23 +3239,25 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="line"></param>
 		/// <returns></returns>
+		/// By Stexx78 , corrected the names of spellline !
 		public virtual bool IsAdvancedSpellLine(SpellLine line)
 		{
 			switch (line.KeyName)
 			{
-				case "champion abilities":
-				case "convoker":
-				case "banelord":
-				case "stormlord":
-				case "perfecter":
-				case "sojourner":
-				case "spymaster":
-				case "battlemaster":
-				case "warlord":
+				case "Convoker":
+				case "Banelord":
+				case "Stormlord":
+				case "Perfecter":
+				case "Sojourner":
+				case "Spymaster":
+				case "Battlemaster":
+				case "Warlord":
 					return true;
 			}
-
-			return false;
+			if (line.Name == "Champion Abilities") // works with line.name and not with line.Keyname, don't know why =) Prob a dbentry
+				return true;
+			else
+				return false;
 		}
 
 		/// <summary>
