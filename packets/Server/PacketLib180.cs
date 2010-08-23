@@ -434,7 +434,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)firstSkills);
 				SendTCP(pak);
 			}
-			if (flagSendHybrid == false) // added by stexx78 , only puretank and listcaster use sendspelllist()
+			//if (flagSendHybrid == false) // added by stexx78 , only puretank and listcaster use sendspelllist()
 				SendSpellList();
 		}
 
