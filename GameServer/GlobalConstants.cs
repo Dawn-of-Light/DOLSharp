@@ -594,7 +594,7 @@ namespace DOL.GS
 		Skill_Composite = 68,
 		Skill_Battlesongs = 69,
 		Skill_Enchantments = 70,
-
+		// 71 Available for a Skill
 		Skill_Blades = 72,
 		Skill_Blunt = 73,
 		Skill_Piercing = 74,
@@ -642,8 +642,8 @@ namespace DOL.GS
 		Skill_Last = 115,
 		#endregion
 
-		#region Focus
-		// Classic Focii
+		// 116 - 119 Available
+
 		Focus_Darkness = 120,
 		Focus_Suppression = 121,
 		Focus_Runecarving = 122,
@@ -655,84 +655,63 @@ namespace DOL.GS
 		Focus_Light = 128,
 		Focus_Body = 129,
 		Focus_Matter = 130,
-
+		// 131 Available
 		Focus_Mind = 132,
 		Focus_Void = 133,
 		Focus_Mana = 134,
 		Focus_Enchantments = 135,
 		Focus_Mentalism = 136,
 		Focus_Summoning = 137,
-		// SI Focii
-		// Mid
 		Focus_BoneArmy = 138,
-		// Alb
 		Focus_PainWorking = 139,
 		Focus_DeathSight = 140,
 		Focus_DeathServant = 141,
-		// Hib
 		Focus_Verdant = 142,
 		Focus_CreepingPath = 143,
 		Focus_Arboreal = 144,
-		// Catacombs Focii
+		MaxSpeed = 145,
+		// 146 Available
+		MaxConcentration = 147,
+		ArmorFactor = 148,
+		ArmorAbsorption = 149,
+		HealthRegenerationRate = 150,
+		PowerRegenerationRate = 151,
+		EnduranceRegenerationRate = 152,
+		SpellRange = 153,
+		ArcheryRange = 154,
+		MeleeSpeed = 155,
+		Acuity = 156,
 		Focus_EtherealShriek = 157,
 		Focus_PhantasmalWail = 158,
 		Focus_SpectralForce = 159,
 		Focus_Cursing = 160,
 		Focus_Hexing = 161,
 		Focus_Witchcraft = 162,
-		#endregion
-
-		MaxSpeed = 145,
-		MaxConcentration = 147,
-
-		ArmorFactor = 148,
-		ArmorAbsorption = 149,
-
-		HealthRegenerationRate = 150,
-		PowerRegenerationRate = 151,
-		EnduranceRegenerationRate = 152,
-
-		SpellRange = 153,
-		ArcheryRange = 154,
-
-		MeleeSpeed = 155,
-		Acuity = 156,
-		DPS = 230,
-		MagicAbsorption = 231,
-
 		AllMagicSkills = 163,
 		AllMeleeWeaponSkills = 164,
 		AllFocusLevels = 165,
+		LivingEffectiveLevel = 166,
 		AllDualWieldingSkills = 167,
 		AllArcherySkills = 168,
-
-		LivingEffectiveLevel = 166,
-
 		EvadeChance = 169,
 		BlockChance = 170,
 		ParryChance = 171,
 		FatigueConsumption = 172,
-		FumbleChance = 175,
-		SpellFumbleChance = 223,
-
 		MeleeDamage = 173,
 		RangedDamage = 174,
-
+		FumbleChance = 175,
 		MesmerizeDuration = 176,
 		StunDuration = 177,
 		SpeedDecreaseDuration = 178,
-
-		#region Catacombs
-		//Catacombs
 		BladeturnReinforcement = 179,
 		DefensiveBonus = 180,
+		SpellFumbleChance = 181,
 		NegativeReduction = 182,
 		PieceAblative = 183,
 		ReactionaryStyleDamage = 184,
 		SpellPowerCost = 185,
 		StyleCostReduction = 186,
 		ToHitBonus = 187,
-		#endregion
 
 		#region TOA
 		//TOA
@@ -775,7 +754,6 @@ namespace DOL.GS
 		CriticalMeleeHitChance = 214,
 		CriticalArcheryHitChance = 215,
 		CriticalSpellHitChance = 216,
-		CriticalHealHitChance = 232,
 		WaterSpeed = 217,
 		SpellLevel = 218,
 		MissHit = 219,
@@ -796,16 +774,21 @@ namespace DOL.GS
 		ResCapBonus_Last = 229,
 		#endregion
 
-		//[Freya] Nidel:
+		DPS = 230,
+		MagicAbsorption = 231,
+		CriticalHealHitChance = 232,
+	
+		// 233 - 246 Available
+
 		BountyPoints = 247,
 		XpPoints = 248,
-		//Eden - new bonus
 		Resist_Natural = 249,
 		ExtraHP = 250,
 		Conversion = 251,
 		StyleAbsorb = 252,
 		RealmPoints = 253,
 		ArcaneSyphon = 254,
+		// 255 Available
 		MaxProperty = 255
 	}
 
