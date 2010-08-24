@@ -468,11 +468,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			#endregion Starting Guilds
 
-			if (Properties.STARTING_LEVEL > 1)
-			{
-				ch.Experience = GameServer.ServerRules.GetExperienceForLevel(Properties.STARTING_LEVEL);
-			}
-
 			if (Properties.STARTING_MONEY > 0)
 			{
 				long value = Properties.STARTING_MONEY;
