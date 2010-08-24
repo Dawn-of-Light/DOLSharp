@@ -126,7 +126,7 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("system","player_class", "What class should the server use for players", "DOL.GS.GamePlayer")]
 		public static readonly string PLAYER_CLASS;
-		
+
 		/// <summary>
 		/// A serialised list of RegionIDs that will load objects
 		/// </summary>
@@ -235,7 +235,7 @@ namespace DOL.GS.ServerProperties
         /// <summary>
         /// Whether or not to enable the audit log
         /// </summary>
-        [ServerProperty("system", "enable_audit_log", "Whether or not to enable the audit log")]
+		[ServerProperty("system", "enable_audit_log", "Whether or not to enable the audit log", false)]
 	    public static bool ENABLE_AUDIT_LOG;
 
 		#endregion
@@ -434,6 +434,7 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("world", "enable_zone_bonuses", "Are Zone Bonuses Enabled?", false)]
 		public static bool ENABLE_ZONE_BONUSES;
+
 		#endregion
 		
 		#region RATES
@@ -1216,8 +1217,6 @@ namespace DOL.GS.ServerProperties
 
 
 		#endregion
-
-
 		
 		#region CRAFT
 		/// <summary>
