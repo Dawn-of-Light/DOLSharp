@@ -160,6 +160,9 @@ namespace DOL.GS
 
 		public static void AddAuditEntry(int type, int subType, string oldValue, string newValue)
 		{
+            if (!ServerProperties.Properties.ENABLE_AUDIT_LOG)
+                return;
+
 			// create the transaction
 			var transactionHistory = new AuditEntry
 			                         	{
@@ -190,6 +193,9 @@ namespace DOL.GS
 
 		public static void AddAuditEntry(GameClient client, int type, int subType, string oldValue, string newValue)
 		{
+            if(!ServerProperties.Properties.ENABLE_AUDIT_LOG)
+                return;
+
 			// create the transaction
 			var transactionHistory = new AuditEntry
 			                         	{
