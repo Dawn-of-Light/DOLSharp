@@ -232,6 +232,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("system", "display_area_enter_screen_desc", "Display centered screen messages if a player enters an area.", false)]
 		public static bool DISPLAY_AREA_ENTER_SCREEN_DESC;
 
+        /// <summary>
+        /// Whether or not to enable the audit log
+        /// </summary>
+        [ServerProperty("system", "enable_audit_log", "Whether or not to enable the audit log")]
+	    public static bool ENABLE_AUDIT_LOG;
+
 		#endregion
 		
 		#region SERVER
