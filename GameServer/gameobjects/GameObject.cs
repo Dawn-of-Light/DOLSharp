@@ -455,6 +455,14 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// What level is displayed to another player
+		/// </summary>
+		public virtual byte GetDisplayLevel(GamePlayer player)
+		{
+			return Level;
+		}
+
+		/// <summary>
 		/// Gets or Sets the current Name of the Object
 		/// </summary>
 		public virtual string Name

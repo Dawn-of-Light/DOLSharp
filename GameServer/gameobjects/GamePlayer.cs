@@ -4543,13 +4543,34 @@ namespace DOL.GS
 		#region Level/Experience
 
 		/// <summary>
-		/// The maximum level a player can reach
+		/// What is the maximum level a player can achieve?
+		/// To alter this in a custom GamePlayer class you must override this method and 
+		/// provide your own XPForLevel array with MaxLevel + 1 entries
 		/// </summary>
-		public const int MAX_LEVEL = 50;
+		public virtual byte MaxLevel
+		{
+			get { return 50; }
+		}
+
+		/// <summary>
+		/// How much experience is needed for a given level?
+		/// </summary>
+		public virtual long GetExperienceNeededForLevel(int level)
+		{
+			if (level > MaxLevel)
+				return XPForLevel[MaxLevel];
+
+			if (level <= 0)
+				return XPForLevel[0];
+
+			return XPForLevel[level - 1];
+		}
+
 		/// <summary>
 		/// A table that holds the required XP/Level
+		/// This must include a final entry for MaxLevel + 1
 		/// </summary>
-		public static readonly long[] XPLevel =
+		private static readonly long[] XPForLevel =
 		{
 			0, // xp to level 1
 			50, // xp to level 2
@@ -4616,11 +4637,6 @@ namespace DOL.GS
 		public virtual long Experience
 		{
 			get { return m_currentXP; }
-			//			set
-			//			{
-			//				m_currentXP=value;
-			//				m_character.Experience=m_currentXP;
-			//			}
 		}
 
 		/// <summary>
@@ -4630,7 +4646,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return GameServer.ServerRules.GetExperienceForLevel(Level + 1);
+				return GetExperienceNeededForLevel(Level + 1);
 			}
 		}
 
@@ -4641,7 +4657,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return GameServer.ServerRules.GetExperienceForLevel(Level);
+				return GetExperienceNeededForLevel(Level);
 			}
 		}
 
@@ -4665,7 +4681,7 @@ namespace DOL.GS
 				if (Experience < ExperienceForCurrentLevel)
 					return 0;
 				//No progess after maximum level
-				if (Level > MAX_LEVEL) // needed to get exp after 50
+				if (Level > MaxLevel)
 					return 0;
 				return (ushort)(1000 * (Experience - ExperienceForCurrentLevel) / (ExperienceForNextLevel - ExperienceForCurrentLevel));
 			}
@@ -4834,13 +4850,13 @@ namespace DOL.GS
 						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainExperience.TalkToTrainer"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
 				}
-				else if (Level >= 40 && Level < MAX_LEVEL && !IsLevelSecondStage && Experience >= ExperienceForCurrentLevelSecondStage)
+				else if (Level >= 40 && Level < MaxLevel && !IsLevelSecondStage && Experience >= ExperienceForCurrentLevelSecondStage)
 				{
 					OnLevelSecondStage();
 					Notify(GamePlayerEvent.LevelSecondStage, this);
 					SaveIntoDatabase(); // save char on levelup
 				}
-				else if (Level < MAX_LEVEL && Experience >= ExperienceForNextLevel)
+				else if (Level < MaxLevel && Experience >= ExperienceForNextLevel)
 				{
 					Level++;
 					SaveIntoDatabase(); // save char on levelup
@@ -4876,6 +4892,14 @@ namespace DOL.GS
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// What level is displayed to another player
+		/// </summary>
+		public override byte GetDisplayLevel(GamePlayer player)
+		{
+			return Math.Min((byte)50, Level);
 		}
 
 		/// <summary>
@@ -6324,7 +6348,7 @@ namespace DOL.GS
 
 							if (reactiveItem != null)
 							{
-								int requiredLevel = reactiveItem.Template.LevelRequirement > 0 ? reactiveItem.Template.LevelRequirement : Math.Min(50, reactiveItem.Level);
+								int requiredLevel = reactiveItem.Template.LevelRequirement > 0 ? reactiveItem.Template.LevelRequirement : Math.Min(MaxLevel, reactiveItem.Level);
 
 								if (requiredLevel <= Level)
 								{
@@ -7279,16 +7303,15 @@ namespace DOL.GS
 				int xpLossPercent;
 				if (Level < 40)
 				{
-					xpLossPercent = MAX_LEVEL - Level;
+					xpLossPercent = MaxLevel - Level;
 				}
 				else
 				{
-					xpLossPercent = MAX_LEVEL - 40;
+					xpLossPercent = MaxLevel - 40;
 				}
 
 				if (realmDeath)
 				{
-					//
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DeadRVR"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
 					xpLossPercent = 0;
 				}
@@ -8567,7 +8590,7 @@ namespace DOL.GS
 								{
 									if (potionEffectLine != null)
 									{
-										int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(50, useItem.Level);
+										int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(MaxLevel, useItem.Level);
 
 										if (requiredLevel <= Level)
 										{
@@ -8698,7 +8721,7 @@ namespace DOL.GS
 											if (useItem.SpellID == 0)
 												return;
 
-											int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(50, useItem.Level);
+											int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(MaxLevel, useItem.Level);
 
 											if (requiredLevel <= Level)
 											{
@@ -8763,7 +8786,7 @@ namespace DOL.GS
 											if (useItem.SpellID1 == 0)
 												return;
 
-											int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(50, useItem.Level);
+											int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(MaxLevel, useItem.Level);
 
 											if (requiredLevel <= Level)
 											{
@@ -8860,7 +8883,7 @@ namespace DOL.GS
 
 				if (spell != null)
 				{
-					int requiredLevel = item.Template.LevelRequirement > 0 ? item.Template.LevelRequirement : Math.Min(50, item.Level);
+					int requiredLevel = item.Template.LevelRequirement > 0 ? item.Template.LevelRequirement : Math.Min(MaxLevel, item.Level);
 
 					if (requiredLevel > Level)
 					{
@@ -11675,11 +11698,43 @@ namespace DOL.GS
 
 
 		/// <summary>
-		/// Should we check to make sure spec points are correct when this player loads?
+		/// Verify this player has the correct number of spec points for the players level
 		/// </summary>
-		public virtual bool CheckSpecPoints
+		public virtual bool VerifySpecPoints()
 		{
-			get { return true; }
+			// calc normal spec points for the level & classe
+			int allpoints = -1;
+			for (int i = 1; i <= Level; i++)
+			{
+				if (i <= 5) allpoints += i; //start levels
+				if (i > 5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
+				if (i > 40) allpoints += CharacterClass.SpecPointsMultiplier * (i - 1) / 20; //half levels
+			}
+			if (IsLevelSecondStage == true && Level != 50)
+				allpoints += CharacterClass.SpecPointsMultiplier * Level / 20; // add current half level
+
+			// calc spec points player have (autotrain is not anymore processed here - 1.87 livelike)
+			int mypoints = SkillSpecialtyPoints;
+			foreach (Specialization spec in GetSpecList())
+			{
+				mypoints += (spec.Level * (spec.Level + 1) - 2) / 2;
+				mypoints -= GetAutoTrainPoints(spec, 0);
+			}
+
+			// check if correct, if not respec. Not applicable to GMs
+			SpecPointsOk = true;
+			if (allpoints != mypoints)
+			{
+				log.WarnFormat("Spec points total for player {0} incorrect: {1} instead of {2}.", Name, mypoints, allpoints);
+				if (Client.Account.PrivLevel == 1)
+				{
+					mypoints = RespecAllLines();
+					SkillSpecialtyPoints = allpoints;
+					SpecPointsOk = false;
+				}
+			}
+
+			return SpecPointsOk;
 		}
 
 		/// <summary>
@@ -11748,8 +11803,6 @@ namespace DOL.GS
 
 			for (int i = 0; i < m_lastUniqueLocations.Length; i++)
 			{
-				//FIXME: Whats this if the normal pos not used and the bind-pos is used???
-				//m_lastUniqueLocations[i] = new GameLocation(null, (ushort)m_character.Region, m_character.Xpos, m_character.Ypos, m_character.Zpos);
 				m_lastUniqueLocations[i] = new GameLocation(null, CurrentRegionID, m_x, m_y, m_z);
 			}
 			#endregion
@@ -11778,6 +11831,13 @@ namespace DOL.GS
 
 			if (m_dbCharacter.PlayedTime == 0)
 			{
+				if (Properties.STARTING_LEVEL > 1 && m_dbCharacter.Experience < GetExperienceNeededForLevel(Properties.STARTING_LEVEL - 1))
+				{
+					m_dbCharacter.Experience = GetExperienceNeededForLevel(Properties.STARTING_LEVEL - 1);
+					m_dbCharacter.Level = Properties.STARTING_LEVEL;
+					m_currentXP = m_dbCharacter.Experience;
+				}
+
 				Health = MaxHealth;
 				Mana = MaxMana;
 				Endurance = MaxEndurance; // has to be set after max, same applies to other values with max properties
@@ -11790,10 +11850,8 @@ namespace DOL.GS
 			}
 
 			if (Health <= 0)
-			{ // after death we have max health
-				// TODO: instead of this here, we have to handle release if linkdead
-				// and prevent quit after dying ...
-				Health = MaxHealth;
+			{ 
+				Health = 1;
 			}
 
 			if (RealmLevel == 0)
@@ -11804,42 +11862,7 @@ namespace DOL.GS
 			LoadSkillsFromCharacter();
 			LoadCraftingSkills();
 
-			# region SkillSpecialtypoints coherence check
-			if (CheckSpecPoints)
-			{
-				// calc normal spec points for the level & classe
-				int allpoints = -1;
-				for (int i = 1; i <= Level; i++)
-				{
-					if (i <= 5) allpoints += i; //start levels
-					if (i > 5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
-					if (i > 40) allpoints += CharacterClass.SpecPointsMultiplier * (i - 1) / 20; //half levels
-				}
-				if (IsLevelSecondStage == true && Level != 50)
-					allpoints += CharacterClass.SpecPointsMultiplier * Level / 20; // add current half level
-
-				// calc spec points player have (autotrain is not anymore processed here - 1.87 livelike)
-				int mypoints = SkillSpecialtyPoints;
-				foreach (Specialization spec in GetSpecList())
-				{
-					mypoints += (spec.Level * (spec.Level + 1) - 2) / 2;
-					mypoints -= GetAutoTrainPoints(spec, 0);
-				}
-
-				// check if correct, if not respec. Not applicable to GMs
-				SpecPointsOk = true;
-				if (allpoints != mypoints)
-				{
-					log.WarnFormat("Spec points total for player {0} incorrect: {1} instead of {2}.", Name, mypoints, allpoints);
-					if (Client.Account.PrivLevel == 1)
-					{
-						mypoints = RespecAllLines();
-						SkillSpecialtyPoints = allpoints;
-						SpecPointsOk = false;
-					}
-				}
-			}
-			#endregion
+			VerifySpecPoints();
 
 			//Load the quests for this player
 			var quests = GameServer.Database.SelectObjects<DBQuest>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
