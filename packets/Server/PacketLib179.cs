@@ -54,7 +54,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x00); //unk
 			//entry :
 
-			pak.WriteByte(player.Level); //level
+			pak.WriteByte(player.GetDisplayLevel(m_gameClient.Player)); //level
 			pak.WritePascalString(player.Name); // player name
 			pak.WriteByte((byte) (player.MaxHealth >> 8)); // maxhealth high byte ?
 			pak.WritePascalString(player.CharacterClass.Name); // class name

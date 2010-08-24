@@ -69,7 +69,7 @@ namespace DOL.GS.Commands
 			//level x from the current level and give it to the player
 
 			// only do this if the players level is  < target level
-			if (client.Player.Experience >= GamePlayer.XPLevel[ServerProperties.Properties.SLASH_LEVEL_TARGET - 1])
+			if (client.Player.Experience >= client.Player.GetExperienceNeededForLevel(ServerProperties.Properties.SLASH_LEVEL_TARGET - 1))
 			{
 				client.Player.Out.SendMessage("/level only allows you to level to " + ServerProperties.Properties.SLASH_LEVEL_TARGET, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -81,7 +81,7 @@ namespace DOL.GS.Commands
 				targetLevel = 20;
 
 			long newXP;
-			newXP = GamePlayer.XPLevel[targetLevel - 1] - client.Player.Experience;
+			newXP = client.Player.GetExperienceNeededForLevel(targetLevel - 1) - client.Player.Experience;
 
 			if (newXP < 0)
 				newXP = 0;

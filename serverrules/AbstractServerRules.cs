@@ -423,15 +423,6 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
-		public virtual long GetExperienceForLevel(int level)
-		{
-			if (level > GamePlayer.MAX_LEVEL)
-				return GamePlayer.XPLevel[GamePlayer.MAX_LEVEL]; // exp for level 51, needed to get exp after 50
-			if (level <= 0)
-				return GamePlayer.XPLevel[0];
-			return GamePlayer.XPLevel[level - 1];
-		}
-
 		public virtual long GetExperienceForLiving(int level)
 		{
 			level = (level < 0) ? 0 : level;

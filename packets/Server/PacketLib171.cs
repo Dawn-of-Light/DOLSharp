@@ -155,7 +155,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(speedZ);
 			pak.WriteShort(npc.Model);
 			pak.WriteByte(npc.Size);
-			byte level = npc.Level;
+			byte level = npc.GetDisplayLevel(m_gameClient.Player);
 			if((npc.Flags&(uint)GameNPC.eFlags.STATUE)!=0)
 			{
 				level |= 0x80;

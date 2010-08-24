@@ -2819,7 +2819,7 @@ namespace DOL.GS
 		/// Will assume spell is in GlobalSpellsLines.Item_Effects even if it's not and use the weapons LevelRequirement
 		/// Item_Effects must be used here because various spell handlers recognize this line to alter variance and other spell parameters
 		/// </summary>
-		protected void StartWeaponMagicalEffect(InventoryItem weapon, AttackData ad, SpellLine spellLine, int spellID, bool ignoreLevel)
+		protected virtual void StartWeaponMagicalEffect(InventoryItem weapon, AttackData ad, SpellLine spellLine, int spellID, bool ignoreLevel)
 		{
 			if (weapon == null)
 				return;
