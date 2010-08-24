@@ -175,13 +175,6 @@ namespace DOL.GS.ServerRules
 		bool CanTakeFallDamage(GamePlayer player);
 
 		/// <summary>
-		/// Experience needed for specific level
-		/// </summary>
-		/// <param name="level"></param>
-		/// <returns></returns>
-		long GetExperienceForLevel(int level);
-
-		/// <summary>
 		/// Experience living is worth
 		/// </summary>
 		/// <param name="level">the level of living</param>

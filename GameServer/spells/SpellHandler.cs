@@ -2856,8 +2856,12 @@ return false;
 
 			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects && m_spellItem != null)
 			{
-				int itemSpellLevel = m_spellItem.Template.LevelRequirement > 0 ? m_spellItem.Template.LevelRequirement : Math.Min(50, m_spellItem.Level);
-				return 100 - (85 + ((itemSpellLevel - target.Level) / 2));
+				GamePlayer playerCaster = Caster as GamePlayer;
+				if (playerCaster != null)
+				{
+					int itemSpellLevel = m_spellItem.Template.LevelRequirement > 0 ? m_spellItem.Template.LevelRequirement : Math.Min(playerCaster.MaxLevel, m_spellItem.Level);
+					return 100 - (85 + ((itemSpellLevel - target.Level) / 2));
+				}
 			}
 
 			return 100 - CalculateToHitChance(target);
@@ -3483,27 +3487,39 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 		public virtual int CalculateToHitChance(GameLiving target)
 		{
 			int spellLevel = Spell.Level;
+
 			GameLiving caster = null;
 			if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpcBrain)
+			{
 				caster = ((ControlledNpcBrain)((GameNPC)m_caster).Brain).Owner;
-			else caster = m_caster;
+			}
+			else
+			{
+				caster = m_caster;
+			}
+
 			int spellbonus = caster.GetModified(eProperty.SpellLevel);
 			spellLevel += spellbonus;
-			//Cap on lvl 50 for spell level
-			if (spellLevel > 50)
-				spellLevel = 50;
+
+			GamePlayer playerCaster = caster as GamePlayer;
+
+			if (playerCaster != null)
+			{
+				if (spellLevel > playerCaster.MaxLevel)
+				{
+					spellLevel = playerCaster.MaxLevel;
+				}
+			}
 
 			GameSpellEffect effect = FindEffectOnTarget(m_caster, "HereticPiercingMagic");
-			spellLevel = Spell.Level;
 			if (effect != null)
 			{
 				spellLevel += (int)effect.Spell.Value;
 			}
 
-			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect ||
-				m_spellLine.KeyName == GlobalSpellsLines.Champion_Spells)
+			if (playerCaster != null && (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName == GlobalSpellsLines.Champion_Spells))
 			{
-				spellLevel = Math.Min((byte)50, target.Level);
+				spellLevel = Math.Min(playerCaster.MaxLevel, target.Level);
 			}
 
 			int bonustohit = m_caster.GetModified(eProperty.ToHitBonus);

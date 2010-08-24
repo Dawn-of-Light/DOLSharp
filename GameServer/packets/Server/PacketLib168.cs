@@ -700,7 +700,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte) (playerToCreate.IsAlive ? 0x1 : 0x0));
 				pak.WriteByte(0x00);
 				pak.WriteByte(GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, playerToCreate));
-				pak.WriteByte(playerToCreate.Level);
+				pak.WriteByte(playerToCreate.GetDisplayLevel(m_gameClient.Player));
 				pak.WriteByte((byte) (playerToCreate.IsStealthed ? 0x01 : 0x00));
 				pak.WriteByte(0x00); //Unused (??)
 				pak.WritePascalString(GameServer.ServerRules.GetPlayerName(m_gameClient.Player, playerToCreate));
@@ -1013,7 +1013,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort(speedZ);
 				pak.WriteShort(npc.Model);
 				pak.WriteByte(npc.Size);
-				pak.WriteByte(npc.Level);
+				pak.WriteByte(npc.GetDisplayLevel(m_gameClient.Player));
 
 				var flags = (byte) (GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, npc) << 6);
 				if ((npc.Flags & (uint) GameNPC.eFlags.GHOST) != 0) flags |= 0x01;
@@ -1954,7 +1954,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x00); //unk
 				//entry :
 
-				pak.WriteByte(player.Level); //level
+				pak.WriteByte(player.GetDisplayLevel(m_gameClient.Player)); //level
 				pak.WritePascalString(player.Name); // player name
 				pak.WriteByte((byte) (player.MaxHealth >> 8)); // maxhealth high byte ?
 				pak.WritePascalString(player.CharacterClass.Name); // class name
@@ -3189,7 +3189,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteInt((uint) obj.X);
 				pak.WriteInt((uint) obj.Y);
 				pak.WriteShort(obj.Model);
-				int flag = (obj.Type() | ((byte) obj.Realm == 3 ? 0x40 : (byte) obj.Realm << 4) | obj.Level << 9);
+				int flag = (obj.Type() | ((byte)obj.Realm == 3 ? 0x40 : (byte)obj.Realm << 4) | obj.GetDisplayLevel(m_gameClient.Player) << 9);
 				pak.WriteShort((ushort) flag); //(0x0002-for Ship,0x7D42-for catapult,0x9602,0x9612,0x9622-for ballista)
 				pak.WriteShort(obj.Emblem); //emblem
 				pak.WriteShort(0);
