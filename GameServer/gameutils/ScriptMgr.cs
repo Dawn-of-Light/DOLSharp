@@ -558,6 +558,7 @@ namespace DOL.GS
 				param.GenerateInMemory = false;
 				param.WarningLevel = 2;
 				param.CompilerOptions = @"/lib:." + Path.DirectorySeparatorChar + "lib";
+			    param.ReferencedAssemblies.Add("System.Core.dll");
 
 				string[] filepaths = new string[files.Count];
 				for (int i = 0; i < files.Count; i++)
