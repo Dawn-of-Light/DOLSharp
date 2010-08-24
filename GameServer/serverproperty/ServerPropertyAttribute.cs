@@ -38,14 +38,6 @@ namespace DOL.GS.ServerProperties
 		/// <param name="description">property desc</param>
 		/// <param name="defaultValue">property default value</param>
 		/// <param name="category">property category (previously area)</param>
-		public ServerPropertyAttribute(string key, string description, object defaultValue)
-		{
-			m_category = "";
-			m_key = key;
-			m_description = description;
-			m_defaultValue = defaultValue;
-		}
-
 		public ServerPropertyAttribute(string category, string key, string description, object defaultValue)
 		{
 			m_category = category;
