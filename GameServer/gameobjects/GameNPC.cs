@@ -1962,6 +1962,11 @@ namespace DOL.GS
 		/// </summary>
 		public override void DeleteFromDatabase()
 		{
+			if (Brain != null && Brain is IControlledBrain)
+			{
+				return;
+			}
+
 			if (InternalID != null)
 			{
 				Mob mob = GameServer.Database.FindObjectByKey<Mob>(InternalID);
@@ -1980,6 +1985,12 @@ namespace DOL.GS
 			if (CurrentRegion.IsInstance)
 			{
 				LoadedFromScript = true;
+				return;
+			}
+
+			if (Brain != null && Brain is IControlledBrain)
+			{
+				// do not allow saving of controlled npc's
 				return;
 			}
 
