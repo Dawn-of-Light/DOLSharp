@@ -174,6 +174,11 @@ namespace DOL.GS.Spells
 			SetBrainToOwner(brain);
 
 			effect.Start(pet);
+
+			if (Caster is GamePlayer)
+			{
+				(Caster as GamePlayer).OnPetSummoned(pet);
+			}
 		}
 
 		public override int CalculateSpellResistChance(GameLiving target)
