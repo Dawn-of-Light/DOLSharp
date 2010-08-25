@@ -587,6 +587,15 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// A new pet has been summoned, do we do anything?
+		/// </summary>
+		/// <param name="pet"></param>
+		public virtual void OnPetSummoned(GamePet pet)
+		{
+		}
+
+
+		/// <summary>
 		/// last attack tick in either pve or pvp
 		/// </summary>
 		public virtual long LastAttackTick
