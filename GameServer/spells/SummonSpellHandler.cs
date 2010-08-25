@@ -175,10 +175,7 @@ namespace DOL.GS.Spells
 
 			effect.Start(pet);
 
-			if (Caster is GamePlayer)
-			{
-				(Caster as GamePlayer).OnPetSummoned(pet);
-			}
+			Caster.OnPetSummoned(pet);
 		}
 
 		public override int CalculateSpellResistChance(GameLiving target)
