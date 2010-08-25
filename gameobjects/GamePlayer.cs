@@ -13283,6 +13283,14 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// A new pet has been summoned, do we do anything?
+		/// </summary>
+		/// <param name="pet"></param>
+		public virtual void OnPetSummoned(GamePet pet)
+		{
+		}
+
+		/// <summary>
 		/// Commands controlled object to attack
 		/// </summary>
 		public virtual void CommandNpcAttack()
