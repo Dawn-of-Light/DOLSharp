@@ -2476,12 +2476,14 @@ return false;
 
 			if (Caster is GamePlayer && (Caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Warlock && m_spell.IsSecondary)
 			{
-				GameSpellEffect affect = SpellHandler.FindEffectOnTarget(Caster, "Uninterruptable");
-				if (affect != null)
-				{
-					int nerf = (int)(affect.Spell.Value);
-					effectiveness *= (1 - (nerf * 0.01));
-				}
+                Spell uninterruptibleSpell = Caster.TempProperties.getProperty<Spell>(UninterruptableSpellHandler.WARLOCK_UNINTERRUPTABLE_SPELL);
+
+                if (uninterruptibleSpell != null && uninterruptibleSpell.Value > 0)
+                {
+                    double nerf = uninterruptibleSpell.Value;
+                    effectiveness *= (1 - (nerf * 0.01));
+                    Caster.TempProperties.removeProperty(UninterruptableSpellHandler.WARLOCK_UNINTERRUPTABLE_SPELL);
+                }
 			}
 
 			foreach (GameLiving t in targets)

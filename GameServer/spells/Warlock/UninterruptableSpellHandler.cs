@@ -38,6 +38,8 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Uninterruptable")]
 	public class UninterruptableSpellHandler : PrimerSpellHandler
 	{
+        public static string WARLOCK_UNINTERRUPTABLE_SPELL = "WARLOCK_UNINTERRUPTABLE_SPELL";
+
        	public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (!base.CheckBeginCast(selectedTarget)) return false;
@@ -49,6 +51,14 @@ namespace DOL.GS.Spells
             if (UninterruptableSpell != null) { MessageToCaster("You must finish casting Uninterruptable before you can cast it again", eChatType.CT_System); return false; }
             return true;
 		}
+        public override void FinishSpellCast(GameLiving target)
+        {
+            Caster.TempProperties.setProperty(WARLOCK_UNINTERRUPTABLE_SPELL, Spell);
+
+            base.FinishSpellCast(target);
+
+
+        }
 		/// <summary>
         /// Calculates the power to cast the spell
         /// </summary>
