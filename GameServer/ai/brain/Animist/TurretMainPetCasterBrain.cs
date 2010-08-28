@@ -51,7 +51,10 @@ namespace DOL.AI.Brain
 
         protected override GameLiving CalculateNextAttackTarget()
         {
-            GameLiving normal = base.CalculateNextAttackTarget();
+			List<GameLiving> newTargets = new List<GameLiving>();
+			List<GameLiving> oldTargets = new List<GameLiving>();
+
+			GameLiving normal = base.CalculateNextAttackTarget();
 
             if (AggressionState != eAggressionState.Aggressive || normal != null)
                 return normal;
@@ -65,93 +68,74 @@ namespace DOL.AI.Brain
                     if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
                         continue;
 
-                    if (!Body.IsWithinRadius( living, MAX_AGGRO_DISTANCE ))
+                    if (!Body.IsWithinRadius(living, MAX_AGGRO_DISTANCE, true))
                         continue;
 
-                    if (!Body.IsWithinRadius( living, ((TurretPet)Body).TurretSpell.Range ))
+                    if (!Body.IsWithinRadius(living, ((TurretPet)Body).TurretSpell.Range, true))
                         continue;
 
                     if (living.IsMezzed || living.IsStealthed)
                         continue;
 
-                    livingList.Add(living);
-                }
+					newTargets.Add(living);
+				}
             }
-            if (livingList.Count < 1)
-            {
-                foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
-                {
-                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
-                        continue;
 
-                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
-                        continue;
+			foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range, Body.CurrentRegion.IsDungeon ? false : true))
+			{
+				if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+					continue;
 
-                    if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
-                        continue;
+				if (living.IsPvPInvulnerability)
+					continue;
 
-                    if (living.IsMezzed || living.IsStealthed)
-                        continue;
+				if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+					continue;
 
-                    livingList.Add(living as GameLiving);
-                }
-                foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
-                {
-                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
-                        continue;
+				if (living.IsMezzed || living.IsStealthed)
+					continue;
 
-                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
-                        continue;
+				if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+				{
+					oldTargets.Add(living);
+				}
+				else
+				{
+					newTargets.Add(living as GameLiving);
+				}
+			}
 
-                    if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
-                        continue;
+			foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range, Body.CurrentRegion.IsDungeon ? false : true))
+			{
+				if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
+					continue;
 
-                    if (living.IsMezzed || living.IsStealthed)
-                        continue;
+				if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
+					continue;
 
-                    livingList.Add(living as GameLiving);
-                }
-            }
-            if (livingList.Count < 1)
-            {
-                foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
-                {
-                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
-                        continue;
+				if (living.IsMezzed || living.IsStealthed)
+					continue;
 
-                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
-                        continue;
+				if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
+				{
+					oldTargets.Add(living);
+				}
+				else
+				{
+					newTargets.Add(living as GameLiving);
+				}
+			}
 
-                    /*if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
-                        continue;*/
+			if (newTargets.Count > 0)
+			{
+				return newTargets[Util.Random(newTargets.Count - 1)];
+			}
+			else if (oldTargets.Count > 0)
+			{
+				return oldTargets[Util.Random(oldTargets.Count - 1)];
+			}
 
-                    if (living.IsMezzed || living.IsStealthed)
-                        continue;
-
-                    livingList.Add(living as GameLiving);
-                }
-                foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
-                {
-                    if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
-                        continue;
-
-                    if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)
-                        continue;
-
-                    /*if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
-                        continue;*/
-
-                    if (living.IsMezzed || living.IsStealthed)
-                        continue;
-
-                    livingList.Add(living as GameLiving);
-                }
-            }
-            if (livingList.Count > 0)
-            {
-                return livingList[Util.Random(livingList.Count - 1)];
-            }
-            m_aggroTable.Clear();
+			m_aggroTable.Clear();
             return null;
         }
 
