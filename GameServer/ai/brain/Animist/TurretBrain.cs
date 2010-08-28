@@ -184,7 +184,7 @@ namespace DOL.AI.Brain
 		/// <returns></returns>
 		public GameLiving GetDefensiveTarget(Spell spell)
 		{
-			foreach(GamePlayer player in Body.GetPlayersInRadius((ushort) spell.Range))
+			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)spell.Range, Body.CurrentRegion.IsDungeon ? false : true))
 			{
 				if(!GameServer.ServerRules.IsSameRealm(Body, player, false))
 					continue;
@@ -206,7 +206,7 @@ namespace DOL.AI.Brain
 
 				ListDefensiveTarget.Add(player);
 			}
-			foreach(GameNPC npc in Body.GetNPCsInRadius((ushort) spell.Range))
+			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)spell.Range, Body.CurrentRegion.IsDungeon ? false : true))
 			{
 				if(!GameServer.ServerRules.IsSameRealm(Body, npc, false))
 					continue;
