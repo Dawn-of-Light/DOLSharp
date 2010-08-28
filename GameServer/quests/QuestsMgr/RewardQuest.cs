@@ -628,8 +628,8 @@ namespace DOL.GS.Quests
 				int currentLevel = player.Level;
 				if (currentLevel > player.MaxLevel)
 					return 0;
-				long experienceToLevel = player.GetExperienceNeededForLevel(currentLevel) -
-					player.GetExperienceNeededForLevel(currentLevel - 1);
+				long experienceToLevel = player.GetExperienceNeededForLevel(currentLevel + 1) -
+					player.GetExperienceNeededForLevel(currentLevel);
 
 				return (int)((m_experience * 100) / experienceToLevel);
 			}
