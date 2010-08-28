@@ -73,7 +73,17 @@ namespace DOL.GS
 						}
 						else
 						{
-							mount = new GameHorse();
+                            mount = new GameHorse();
+
+                            foreach (GameNPC npc in GetNPCsInRadius(400))
+                            { 
+                                if (npc.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.HorseName"))
+                                {
+                                    mount.Model = npc.Model;
+                                    mount.Name = npc.Name;
+                                    break;
+                                }
+                            }
 						}
 						
 						switch ((eRace)player.Race)
