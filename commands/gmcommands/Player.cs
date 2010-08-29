@@ -57,7 +57,7 @@ namespace DOL.GS.Commands
 		)]
 	public class PlayerCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		#region ICommandHandler Members
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public void OnCommand(GameClient client, string[] args)
 		{
@@ -177,23 +177,23 @@ namespace DOL.GS.Commands
 
 				#endregion
 
-				#region level
+				#region level / reset
 
+				case "reset":
 				case "level":
 					{
 						try
 						{
-							byte newLevel = Convert.ToByte(args[2]);
 							var player = client.Player.TargetObject as GamePlayer;
-
-							if (args.Length != 3)
-							{
-								DisplaySyntax(client);
-								return;
-							}
-
 							if (player == null)
 								player = client.Player;
+
+							byte newLevel = 1;
+
+							if (args[1] == "level")
+							{
+								newLevel = Convert.ToByte(args[2]);
+							}
 
 							if (newLevel <= 0 || newLevel > 255)
 							{
@@ -201,41 +201,61 @@ namespace DOL.GS.Commands
 													   eChatLoc.CL_SystemWindow);
 								return;
 							}
-							int curLevel = player.Level;
-							if (newLevel == curLevel)
-								return;
-							bool curSecondStage = player.IsLevelSecondStage;
-							if (newLevel > curLevel && curSecondStage)
-							{
-								player.GainExperience(GameLiving.eXPSource.Other, player.GetExperienceValueForLevel(++curLevel));
-							}
-							if (newLevel != curLevel || !curSecondStage)
-								player.Level = newLevel;
 
-							// If new level is more than 40, then we have
-							// to add the skill points from half-levels
-							if (newLevel > 40)
+							if (newLevel < player.Level || args[1] == "reset")
 							{
-								if (curLevel < 40)
-									curLevel = 40;
-								for (int i = curLevel; i < newLevel; i++)
+								player.Reset();
+							}
+
+							int curLevel = player.Level;
+
+							if (newLevel > curLevel)
+							{
+								bool curSecondStage = player.IsLevelSecondStage;
+								if (newLevel > curLevel && curSecondStage)
 								{
-									// we skip the first add if was in level 2nd stage
-									if (curSecondStage)
-										curSecondStage = false;
-									else
-										player.SkillSpecialtyPoints += player.CharacterClass.SpecPointsMultiplier * i / 20;
+									player.GainExperience(GameLiving.eXPSource.Other, player.GetExperienceValueForLevel(++curLevel));
+								}
+								if (newLevel != curLevel || !curSecondStage)
+									player.Level = newLevel;
+
+								// If new level is more than 40, then we have
+								// to add the skill points from half-levels
+								if (newLevel > 40)
+								{
+									if (curLevel < 40)
+										curLevel = 40;
+									for (int i = curLevel; i < newLevel; i++)
+									{
+										// we skip the first add if was in level 2nd stage
+										if (curSecondStage)
+											curSecondStage = false;
+										else
+											player.SkillSpecialtyPoints += player.CharacterClass.SpecPointsMultiplier * i / 20;
+									}
 								}
 							}
 
-							client.Out.SendMessage("You changed " + player.Name + "'s level successfully to " + newLevel + "!",
-												   eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-							player.Out.SendMessage(
-								client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your level to " + newLevel + "!",
-								eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							if (args[1] == "reset")
+							{
+								client.Out.SendMessage("You have reset " + player.Name + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(
+									client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has respecced your skills and reset your spec points!",
+									eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							}
+							else
+							{
+								client.Out.SendMessage("You changed " + player.Name + "'s level successfully to " + newLevel + "!",
+													   eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(
+									client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has changed your level to " + newLevel + "!",
+									eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							}
+
 
 							player.Out.SendUpdatePlayer();
 							player.Out.SendUpdatePoints();
+							player.Out.SendCharStatsUpdate();
 							player.UpdatePlayerStatus();
 							player.SaveIntoDatabase();
 						}
@@ -1761,8 +1781,6 @@ namespace DOL.GS.Commands
 				#endregion allcharacters
 			}
 		}
-
-		#endregion
 
 		private void SendResistEffect(GamePlayer target)
 		{

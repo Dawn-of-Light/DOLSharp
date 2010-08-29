@@ -2737,6 +2737,38 @@ namespace DOL.GS
 			return RemoveSpellLine(line);
 		}
 
+		/// <summary>
+		/// Reset this player to level 1, respec all skills, remove all spec points, and reset stats
+		/// </summary>
+		public virtual void Reset()
+		{
+			byte originalLevel = Level;
+			Level = 1;
+			m_currentXP = 0;
+			DBCharacter.Experience = 0;
+			RespecAllLines();
+			SkillSpecialtyPoints = 0;
+
+			if (Level < originalLevel && originalLevel > 5)
+			{
+				for (int i = 6; i <= originalLevel; i++)
+				{
+					if (CharacterClass.PrimaryStat != eStat.UNDEFINED)
+					{
+						ChangeBaseStat(CharacterClass.PrimaryStat, -1);
+					}
+					if (CharacterClass.SecondaryStat != eStat.UNDEFINED && ((i - 6) % 2 == 0))
+					{
+						ChangeBaseStat(CharacterClass.SecondaryStat, -1);
+					}
+					if (CharacterClass.TertiaryStat != eStat.UNDEFINED && ((i - 6) % 3 == 0))
+					{
+						ChangeBaseStat(CharacterClass.TertiaryStat, -1);
+					}
+				}
+			}
+		}
+
 		public virtual int RespecAll()
 		{
 			int specPoints = RespecAllLines(); // Wipe skills and styles.
@@ -4987,10 +5019,10 @@ namespace DOL.GS
 			
 			// Adjust stats
 			bool statsChanged = false;
-			// unless level 5, no need to check & compute stats. Helps for 1.93+
-			if (Level >= 5)
+			// stat increases start at level 6
+			if (Level > 5)
 			{
-				for (int i = Level; i > previouslevel; i--)
+				for (int i = Level; i > Math.Max(previouslevel, 5); i--)
 				{
 					if (CharacterClass.PrimaryStat != eStat.UNDEFINED)
 					{
