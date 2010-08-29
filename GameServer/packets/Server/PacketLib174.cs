@@ -356,13 +356,16 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(m_gameClient.Player.Heading);
 
 			int flags = 0;
+			Zone zone = m_gameClient.Player.CurrentZone;
+			if (zone == null) return;
+
 			if (m_gameClient.Player.CurrentZone.IsDivingEnabled)
 				flags = 0x80 | (m_gameClient.Player.IsUnderwater ? 0x01 : 0x00);
+
 			pak.WriteByte((byte)(flags));
 
 			pak.WriteByte(0x00);	//TODO Unknown (Instance ID: 0xB0-0xBA, 0xAA-0xAF)
-			Zone zone = m_gameClient.Player.CurrentZone;
-			if (zone == null) return;
+
 			if (zone.IsDungeon)
 			{
 				pak.WriteShort((ushort)(zone.XOffset / 0x2000));

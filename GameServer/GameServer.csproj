@@ -1259,6 +1259,7 @@
     <Compile Include="quests\QuestsMgr\Actions\SetQuestStepAction.cs" />
     <Compile Include="quests\QuestsMgr\BaseQuest.cs" />
     <Compile Include="quests\QuestsMgr\DataQuest.cs" />
+    <Compile Include="quests\QuestsMgr\IDataQuestStep.cs" />
     <Compile Include="quests\QuestsMgr\QuestBehaviour.cs" />
     <Compile Include="quests\QuestsMgr\QuestBuilder.cs" />
     <Compile Include="quests\QuestsMgr\QuestMgr.cs" />
@@ -2738,7 +2739,6 @@
   <ItemGroup>
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
-    <Folder Include="spells\NightShade" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
