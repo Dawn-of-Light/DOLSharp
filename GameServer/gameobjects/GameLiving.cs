@@ -4709,6 +4709,7 @@ namespace DOL.GS
 			}
 			else
 			{
+				log.ErrorFormat("No resist found for damage type {0} on living {1}!", (int)damageType, Name);
 				return 0;
 			}
 		}

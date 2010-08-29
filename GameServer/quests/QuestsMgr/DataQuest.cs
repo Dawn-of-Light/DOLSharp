@@ -1023,7 +1023,7 @@ namespace DOL.GS.Quests
 
 					// Then say any source text for the new step
 
-					if (SourceText != "")
+					if (string.IsNullOrEmpty(SourceText) == false)
 					{
 						if (obj.Realm == eRealm.None)
 						{
@@ -1340,7 +1340,7 @@ namespace DOL.GS.Quests
 				{
 					case eStepType.Interact:
 						{
-							if (TargetText != "")
+							if (string.IsNullOrEmpty(TargetText) == false)
 							{
 								SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
@@ -1357,7 +1357,7 @@ namespace DOL.GS.Quests
 
 					default:
 						{
-							if (TargetText != "")
+							if (string.IsNullOrEmpty(TargetText) == false)
 							{
 								SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
@@ -1393,7 +1393,7 @@ namespace DOL.GS.Quests
 					{
 						case eStepType.Deliver:
 							{
-								if (TargetText != "")
+								if (string.IsNullOrEmpty(TargetText) == false)
 								{
 									if (obj.Realm == eRealm.None)
 									{
@@ -1566,7 +1566,7 @@ namespace DOL.GS.Quests
 				{
 					case eStepType.Kill:
 						{
-							if (TargetText != "")
+							if (string.IsNullOrEmpty(TargetText) == false)
 							{
 								if (living.Realm == eRealm.None)
 								{
