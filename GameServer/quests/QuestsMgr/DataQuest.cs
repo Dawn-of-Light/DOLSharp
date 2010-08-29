@@ -96,7 +96,7 @@ namespace DOL.GS.Quests
 	/// 
 	/// AllowedClasses - Player classes that can get this quest
 	/// 
-	/// ClassType - For future use and customization
+	/// ClassType - Any class of type IDataQuestStep which is called on each quest step and when the quest is finished.
 	/// 
 	/// </summary>
 	public class DataQuest : AbstractQuest
@@ -107,6 +107,7 @@ namespace DOL.GS.Quests
 		protected DBDataQuest m_dataQuest = null;
 		protected CharacterXDataQuest m_charQuest = null;
 		protected GameNPC m_startNPC = null;
+		protected IDataQuestStep m_customQuestStep = null;
 
 		/// <summary>
 		/// How does this quest start
@@ -923,6 +924,45 @@ namespace DOL.GS.Quests
 			}
 		}
 
+		protected virtual bool ExecuteCustomQuestStep(int step, bool isFinish)
+		{
+			bool canContinue = true;
+
+			if (string.IsNullOrEmpty(classType) == false)
+			{
+				if (m_customQuestStep == null)
+				{
+					foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+					{
+						if (assembly.GetType(classType) != null)
+						{
+							try
+							{
+								m_customQuestStep = assembly.CreateInstance(classType, false, BindingFlags.CreateInstance, null, new object[] { }, null, null) as IDataQuestStep;
+							}
+							catch (Exception)
+							{
+							}
+
+							break;
+						}
+					}
+				}
+
+				if (m_customQuestStep == null)
+				{
+					log.ErrorFormat("Failed to construct custom DataQuest step of ClassType {0}!  Quest will continue anyway.", classType);
+				}
+			}
+
+			if (m_customQuestStep != null)
+			{
+				canContinue = m_customQuestStep.Execute(QuestPlayer, step, isFinish);
+			}
+
+			return canContinue;
+		}
+
 
 		/// <summary>
 		/// Try to advance the quest step, doing any actions required to start the next step
@@ -934,27 +974,31 @@ namespace DOL.GS.Quests
 			try
 			{
 				eStepType nextStepType = m_stepTypes[Step];
-				bool advance = true;
+				bool advance = false;
 
-				// If next step requires giving the player an item then we need to check to make sure
-				// player has enough inventory space to accept the item, otherwise do not advance the step
-
-				if (nextStepType == eStepType.Deliver || 
-					nextStepType == eStepType.DeliverFinish)
+				if (ExecuteCustomQuestStep(Step, false))
 				{
-					ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(m_stepItemTemplates[Step]);
-					if (item == null)
-					{
-						throw new Exception("Can't find ItemTemplate " + m_stepItemTemplates[Step]);
-					}
+					advance = true;
 
-					if (obj != null && obj is GameLiving)
+					// If next step requires giving the player an item then we need to check to make sure
+					// player has enough inventory space to accept the item, otherwise do not advance the step
+
+					if (nextStepType == eStepType.Deliver || nextStepType == eStepType.DeliverFinish)
 					{
-						advance = GiveItem(obj as GameLiving, m_questPlayer, item, false);
-					}
-					else
-					{
-						advance = GiveItem(m_questPlayer, item, false);
+						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(m_stepItemTemplates[Step]);
+						if (item == null)
+						{
+							throw new Exception("Can't find ItemTemplate " + m_stepItemTemplates[Step]);
+						}
+
+						if (obj != null && obj is GameLiving)
+						{
+							advance = GiveItem(obj as GameLiving, m_questPlayer, item, false);
+						}
+						else
+						{
+							advance = GiveItem(m_questPlayer, item, false);
+						}
 					}
 				}
 
@@ -1569,6 +1613,9 @@ namespace DOL.GS.Quests
 				return;
 
 			int lastStep = Step;
+
+			if (ExecuteCustomQuestStep(Step, true) == false)
+				return;
 
 			// try rewards first
 

@@ -4026,9 +4026,7 @@ namespace DOL.GS
 		/// <param name="ad">AttackData</param>
 		public virtual void DealDamage(AttackData ad)
 		{
-			//TODO fire event that we are dealing damage
-
-			ad.Target.TakeDamage(this, ad.DamageType, ad.Damage, ad.CriticalDamage);
+			ad.Target.TakeDamage(ad);
 		}
 
 		/// <summary>
@@ -4567,12 +4565,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				if (log.IsInfoEnabled)
-					log.Info("No calculator for requested Property found: " + property.ToString());
-				/*
-				 * if (log.IsDebugEnabled)
-					log.Debug(Environment.StackTrace);
-				 */
+				log.ErrorFormat("{0} did not find property calculator for property ID {1}.", Name, (int)property);
 			}
 			return 0;
 		}
@@ -4586,8 +4579,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				if (log.IsInfoEnabled)
-					log.Info("No calculator for requested Property found: " + property.ToString());
+				log.ErrorFormat("{0} did not find base property calculator for property ID {1}.", Name, (int)property);
 			}
 			return 0;
 		}
@@ -4606,12 +4598,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				if (log.IsInfoEnabled)
-					log.Info("No buff bonus calculator for requested Property found: " + property.ToString());
-				/*
-				 * if (log.IsDebugEnabled)
-					log.Debug(Environment.StackTrace);
-				 */
+				log.ErrorFormat("{0} did not find buff property calculator for property ID {1}.", Name, (int)property);
 			}
 			return 0;
 		}
@@ -4630,12 +4617,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				if (log.IsInfoEnabled)
-					log.Info("No item bonus calculator for requested Property found: " + property.ToString());
-				/*
-				 * if (log.IsDebugEnabled)
-					log.Debug(Environment.StackTrace);
-				 */
+				log.ErrorFormat("{0} did not find item property calculator for property ID {1}.", Name, (int)property);
 			}
 			return 0;
 		}

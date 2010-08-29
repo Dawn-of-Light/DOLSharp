@@ -988,6 +988,31 @@ namespace DOL.GS
 
 	public class GlobalConstants
 	{
+		public static string StatToName(eStat stat)
+		{
+			switch (stat)
+			{
+				case eStat.STR:
+					return "Strength";
+				case eStat.DEX:
+					return "Dexterity";
+				case eStat.CON:
+					return "Constitution";
+				case eStat.QUI:
+					return "Quickness";
+				case eStat.INT:
+					return "Intelligence";
+				case eStat.PIE:
+					return "Piety";
+				case eStat.EMP:
+					return "Empathy";
+				case eStat.CHR:
+					return "Charisma";
+			}
+
+			return "Unknown";
+		}
+
 		/// <summary>
 		/// Check an Object_Type to determine if it's a Bow weapon
 		/// </summary>

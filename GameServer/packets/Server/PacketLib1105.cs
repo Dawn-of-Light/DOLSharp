@@ -46,7 +46,7 @@ namespace DOL.GS.PacketHandler
 		public override void SendTrainerWindow()
 		{
 			// TODO: 1.105 Trainer window handling
-			m_gameClient.Out.SendMessage("This command is not implemented", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			m_gameClient.Out.SendMessage("The new trainer window for client 1.105 has not been implemented yet.  To train use /trainline <LineName> <Amount> or roll back your client to an earlier version.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 		}
 	}
 }
