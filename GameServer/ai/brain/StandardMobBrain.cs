@@ -108,6 +108,8 @@ namespace DOL.AI.Brain
 			//Check for just positive spells
 			CheckSpells(eCheckSpellType.Defensive);
 
+			// Note: Offensive spells are checked in GameNPC:SpellAction timer
+
 			// check for returning to home if to far away
 			if (Body.MaxDistance != 0 && !Body.IsReturningHome)
 			{

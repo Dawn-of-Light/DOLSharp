@@ -4347,7 +4347,16 @@ namespace DOL.GS
 				if (this == null || this.ObjectState != eObjectState.Active || !this.IsAlive || this.TargetObject == null || (this.TargetObject is GameLiving && this.TargetObject.ObjectState != eObjectState.Active || !(this.TargetObject as GameLiving).IsAlive))
 					SpellTimer.Stop();
 				else
-					SpellTimer.Start(1);
+				{
+					int interval = 1500;
+
+					if (Brain != null)
+					{
+						interval = Math.Min(interval, Brain.ThinkInterval);
+					}
+
+					SpellTimer.Start(interval);
+				}
 			}
 			if (m_runningSpellHandler != null)
 			{
@@ -4404,7 +4413,15 @@ namespace DOL.GS
 					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius( owner.TargetObject, STICKMINIMUMRANGE ) )
 						((GameNPC)owner).Follow(owner.TargetObject, STICKMINIMUMRANGE, STICKMAXIMUMRANGE);
 				}
-				Interval = 500;
+
+				if (owner.Brain != null)
+				{
+					Interval = Math.Min(1500, owner.Brain.ThinkInterval);
+				}
+				else
+				{
+					Interval = 1500;
+				}
 			}
 		}
 
