@@ -2944,8 +2944,6 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void OnTargetDeadOrNoTarget()
 		{
-			log.Debug("GameLiving OnTargetDeadOrNoTarget");
-
 			if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
 			{
 				StopAttack();
@@ -6136,9 +6134,14 @@ namespace DOL.GS
 				return;
 			}
 
-			if ((m_runningSpellHandler != null && spell.CastTime > 0))
+			if ((m_runningSpellHandler != null))
 			{
-				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
+				if (spell.CastTime > 0)
+				{
+					Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
+				}
+
+				// Instants cast too close together can fail as well but we just ignore it
 				return;
 			}
 

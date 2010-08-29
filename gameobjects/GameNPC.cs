@@ -4437,13 +4437,28 @@ namespace DOL.GS
 		/// <param name="line"></param>
 		public override void CastSpell(Spell spell, SpellLine line)
 		{
-			// Aredhel: Waiting on the LOS check completely f* up Facilitate
-			// Painworking timing, avoid LOS checks for necro pets AT ALL!
+			if (IsIncapacitated)
+				return;
 
 			if (this is NecromancerPet)
 			{
+				// Aredhel: Waiting on the LOS check completely f* up Facilitate
+				// Painworking timing, avoid LOS checks for necro pets AT ALL!
+
 				base.CastSpell(spell, line);
 				return;
+			}
+
+			if (m_runningSpellHandler != null || TempProperties.getProperty<Spell>(LOSCURRENTSPELL, null) != null)
+			{
+				return;
+			}
+
+			if (line.KeyName == GlobalSpellsLines.Mob_Spells)
+			{
+				// NPC spells will get the level equal to their caster
+				spell = (Spell)spell.Clone();
+				spell.Level = Level;
 			}
 
 			// Let's do a few checks to make sure it doesn't just wait on the LOS check
@@ -4475,27 +4490,34 @@ namespace DOL.GS
 					TempProperties.setProperty(LOSCURRENTSPELL, spell);
 					TempProperties.setProperty(LOSCURRENTLINE, line);
 					TempProperties.setProperty(LOSSPELLTARGET, TargetObject);
-					LOSChecker.Out.SendCheckLOS(LOSChecker, this, new CheckLOSResponse(PetStartSpellAttackCheckLOS));
+					LOSChecker.Out.SendCheckLOS(LOSChecker, this, new CheckLOSResponse(StartSpellAttackCheckLOS));
 				}
 			}
 			else
+			{
 				TempProperties.setProperty(LOSTEMPCHECKER, tempProp - 1);
+			}
+
 			return;
 
 		}
 
-		public void PetStartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
+		public void StartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
-			SpellLine line = (SpellLine)TempProperties.getProperty<object>(LOSCURRENTLINE, null);
-			Spell spell = (Spell)TempProperties.getProperty<object>(LOSCURRENTSPELL, null);
+			SpellLine line = TempProperties.getProperty<SpellLine>(LOSCURRENTLINE, null);
+			Spell spell = TempProperties.getProperty<Spell>(LOSCURRENTSPELL, null);
+			GameObject target = TempProperties.getProperty<GameObject>(LOSSPELLTARGET, null);
+			GameObject lasttarget = TargetObject;
+
+			TempProperties.removeProperty(LOSSPELLTARGET);
+			TempProperties.removeProperty(LOSTEMPCHECKER);
+			TempProperties.removeProperty(LOSCURRENTLINE);
+			TempProperties.removeProperty(LOSCURRENTSPELL);
+			TempProperties.setProperty(LOSTEMPCHECKER, 0);
 
 			if ((response & 0x100) == 0x100 && line != null && spell != null)
 			{
-				GameObject target = (GameObject)TempProperties.getProperty<object>(LOSSPELLTARGET, null);
-				GameObject lasttarget = TargetObject;
 				TargetObject = target;
-
-				// Tolakram - check to see if we targeted a necro shade and if so switch to the pet
 
 				GameLiving living = TargetObject as GameLiving;
 
@@ -4511,12 +4533,9 @@ namespace DOL.GS
 				TargetObject = lasttarget;
 			}
 			else
+			{
 				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.TargetNotInView));
-
-			TempProperties.setProperty(LOSSPELLTARGET, null);
-			TempProperties.setProperty(LOSTEMPCHECKER, null);
-			TempProperties.setProperty(LOSCURRENTLINE, null);
-			TempProperties.setProperty(LOSTEMPCHECKER, 0);
+			}
 		}
 
 		#endregion
