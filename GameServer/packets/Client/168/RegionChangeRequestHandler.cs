@@ -59,8 +59,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (zonePoint == null)
 			{
-				client.Out.SendMessage("Invalid Jump : [" + jumpSpotID + "]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				if (client.Account.PrivLevel > 1)
+				{
+					client.Out.SendMessage("Invalid Jump : [" + jumpSpotID + "]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+
+				zonePoint = new ZonePoint();
+				zonePoint.Id = jumpSpotID;
 			}
 
 			//tutorial zone
@@ -105,16 +110,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 							 (client.Player.Mission as TaskDungeonMission).TaskRegion.Skin == reg.Skin) == false)
 						{
 							client.Out.SendMessage("This region has been disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							if (client.Account.PrivLevel == 1)
+							{
+								return 1;
+							}
 						}
 					}
-
-					// Allow the region to either deny exit or handle the zonepoint in a custom way
-					if (client.Player.CurrentRegion.OnZonePoint(client.Player, zonePoint) == false)
-					{
-						return 1;
-					}
 				}
+			}
+
+			// Allow the region to either deny exit or handle the zonepoint in a custom way
+			if (client.Player.CurrentRegion.OnZonePoint(client.Player, zonePoint) == false)
+			{
+				return 1;
 			}
 
 			//check caps for battleground

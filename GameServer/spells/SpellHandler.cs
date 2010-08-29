@@ -119,6 +119,13 @@ namespace DOL.GS.Spells
 		/// AttackData result for this spell, if any
 		/// </summary>
 		protected AttackData m_lastAttackData = null;
+		/// <summary>
+		/// AttackData result for this spell, if any
+		/// </summary>
+		public AttackData LastAttackData
+		{
+			get { return m_lastAttackData; }
+		}
 
 		/// <summary>
 		/// The property key for the interrupt timeout

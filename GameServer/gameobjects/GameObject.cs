@@ -1000,6 +1000,15 @@ namespace DOL.GS
 		#region Combat
 
 		/// <summary>
+		/// This living takes damage
+		/// </summary>
+		/// <param name="ad">AttackData containing damage details</param>
+		public virtual void TakeDamage(AttackData ad)
+		{
+			TakeDamage(ad.Attacker, ad.DamageType, ad.Damage, ad.CriticalDamage);
+		}
+
+		/// <summary>
 		/// This method is called whenever this living 
 		/// should take damage from some source
 		/// </summary>
