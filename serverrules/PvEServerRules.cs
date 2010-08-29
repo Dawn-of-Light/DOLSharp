@@ -71,6 +71,21 @@ namespace DOL.GS.ServerRules
 				return false;
 			}
 
+			//allow attacks on same realm only under the following circumstances
+			if (attacker.Realm == defender.Realm)
+			{
+				//allow confused mobs to attack same realm
+				if (attacker is GameNPC && (attacker as GameNPC).IsConfused)
+					return true;
+
+				// else, don't allow mobs to attack mobs
+				if (attacker.Realm == eRealm.None)
+					return false;
+
+				if (quiet == false) MessageToLiving(attacker, "You can't attack a member of your realm!");
+				return false;
+			}
+
 			return true;
 		}
 
