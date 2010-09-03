@@ -182,8 +182,11 @@ namespace DOL.GS.GameEvents
 										{
 											npc.StopMovingOnPath();
 											PathPoint path = MovementMgr.LoadPath(npc.PathID);
-											npc.CurrentWayPoint = path;
-											npc.MoveOnPath((short)path.MaxSpeed);
+											if (path != null)
+											{
+												npc.CurrentWayPoint = path;
+												npc.MoveOnPath((short)path.MaxSpeed);
+											}
 										}
                                         try
 										{
