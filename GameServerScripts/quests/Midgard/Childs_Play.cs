@@ -1556,7 +1556,7 @@ namespace DOL.GS.Quests.Midgard
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedsleeves);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedvest);
                     }
-                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Rogue"))
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.MidgardRogue"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringleatherboots);
                         GiveItem(Charles, quest.m_questPlayer, daringleathercap);

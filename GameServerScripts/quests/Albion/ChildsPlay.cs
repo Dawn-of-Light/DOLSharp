@@ -1575,7 +1575,7 @@ namespace DOL.GS.Quests.Albion
 						GiveItem(Charles, quest.m_questPlayer, daringpaddedvest_alb);
 						quest.FinishQuest();
 					}
-					if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Rogue"))
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.AlbionRogue"))
 					{
 						GiveItem(Charles, quest.m_questPlayer, daringleatherboots_alb);
 						GiveItem(Charles, quest.m_questPlayer, daringleathercap_alb);
