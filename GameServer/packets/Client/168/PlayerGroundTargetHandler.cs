@@ -101,7 +101,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (player.Steed is GameBoat)
 						// Ichi - && player.GroundTarget.Z > player.CurrentZone.ZoneRegion.WaterLevel) return;
 					{
-						if (player.Steed.BoatOwnerID == player.InternalID)
+						if (player.Steed.OwnerID == player.InternalID)
 						{
 							player.Out.SendMessage("You usher your boat forward.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							player.Steed.WalkTo(player.GroundTarget, player.Steed.MaxSpeed);

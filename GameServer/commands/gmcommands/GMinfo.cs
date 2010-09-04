@@ -153,8 +153,8 @@ namespace DOL.GS.Commands
 					if (target.PathID != null && target.PathID.Length > 0)
 						info.Add(" + Path: " + target.PathID);
 						
-					if (target.BoatOwnerID != null && target.BoatOwnerID.Length > 0)
-						info.Add(" + Boat OwnerID: " + target.BoatOwnerID);
+					if (target.OwnerID != null && target.OwnerID.Length > 0)
+						info.Add(" + OwnerID: " + target.OwnerID);
 						
 					info.Add(" ");
 					if (target.Strength > 0)

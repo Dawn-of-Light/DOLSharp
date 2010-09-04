@@ -414,7 +414,7 @@ namespace DOL.GS.Commands
 						{
 							GameBoat targetBoat = BoatMgr.GetBoatByName(client.Player.TargetObject.Name);
 
-							if (client.Player.Steed.BoatOwnerID == client.Player.InternalID)// needs to be player on own boat
+							if (client.Player.Steed.OwnerID == client.Player.InternalID)// needs to be player on own boat
 							{
 								if (client.Player.TargetObject == null)
 								{
@@ -433,7 +433,7 @@ namespace DOL.GS.Commands
 						}
 					case "stopfollow":
 						{
-							if (client.Player.Steed.BoatOwnerID == client.Player.InternalID)// needs to be player on own boat
+							if (client.Player.Steed.OwnerID == client.Player.InternalID)// needs to be player on own boat
 							{
 								client.Player.Steed.StopFollowing();
 								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Boat.StopFollow"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);

@@ -58,7 +58,7 @@ namespace DOL.GS
 		/// <param name="ad"></param>
 		public override void OnAttackedByEnemy(AttackData ad)
 		{
-			if (ad.IsHit)
+			if (ad.IsHit && ad.CausesCombat)
 			{
 				if (ad.Attacker.Realm == 0 || this.Realm == 0)
 				{

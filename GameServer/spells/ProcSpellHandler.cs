@@ -35,7 +35,9 @@ namespace DOL.GS.Spells
     /// </summary>
     public abstract class BaseProcSpellHandler : SpellHandler
     {
-        //VaNaTiC->
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		//VaNaTiC->
         /*
         /// <summary>
         /// Defines a logger for this class.
@@ -250,7 +252,9 @@ namespace DOL.GS.Spells
     [SpellHandler("OffensiveProc")]
     public class OffensiveProcSpellHandler : BaseProcSpellHandler
     {
-        /// <summary>
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
         /// The event type to hook on
         /// </summary>
         protected override DOLEvent EventType

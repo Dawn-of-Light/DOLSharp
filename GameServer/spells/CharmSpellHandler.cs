@@ -40,6 +40,8 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Charm")]
 	public class CharmSpellHandler : SpellHandler
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Holds the charmed Npc for pulsing spells
 		/// </summary>

@@ -27,7 +27,10 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("Confusion")]
 	public class ConfusionSpellHandler : SpellHandler
 	{
-		public ConfusionSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		public ConfusionSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
 		{}
 
 		ArrayList targetList = new ArrayList();

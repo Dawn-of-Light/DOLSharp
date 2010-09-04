@@ -167,7 +167,9 @@ namespace DOL.GS.Spells
     [SpellHandler("EssenceFlamesProc")]
     public class EssenceFlamesProcSpellHandler : OffensiveProcSpellHandler
     {
-        /// <summary>
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
         /// Handler fired whenever effect target is attacked
         /// </summary>
         /// <param name="e"></param>
