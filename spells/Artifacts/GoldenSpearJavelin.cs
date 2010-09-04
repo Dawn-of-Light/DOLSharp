@@ -29,7 +29,9 @@ namespace DOL.GS.Spells
     [SpellHandler("GoldenSpearJavelin")]
     public class GoldenSpearJavelin : SummonItemSpellHandler
     {
-        private ItemTemplate _artefJavelin;
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		private ItemTemplate _artefJavelin;
 
         public GoldenSpearJavelin(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)

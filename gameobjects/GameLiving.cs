@@ -3919,14 +3919,15 @@ namespace DOL.GS
 		/// <param name="ad">information about the attack</param>
 		public virtual void OnAttackedByEnemy(AttackData ad)
 		{
-			Notify(GameLivingEvent.AttackedByEnemy, this, new AttackedByEnemyEventArgs(ad));
-
-			if (ad.IsHit)
+			if (ad.IsHit && ad.CausesCombat)
 			{
-				if ( this is GameNPC && ActiveWeaponSlot == eActiveWeaponSlot.Distance && this.IsWithinRadius( ad.Attacker, 150 ) )
-					( (GameNPC)this ).SwitchToMelee( ad.Attacker );
+				Notify(GameLivingEvent.AttackedByEnemy, this, new AttackedByEnemyEventArgs(ad));
+
+				if (this is GameNPC && ActiveWeaponSlot == eActiveWeaponSlot.Distance && this.IsWithinRadius(ad.Attacker, 150))
+					((GameNPC)this).SwitchToMelee(ad.Attacker);
 
 				AddAttacker( ad.Attacker );
+
 				if (ad.Attacker.Realm == 0 || this.Realm == 0)
 				{
 					LastAttackedByEnemyTickPvE = CurrentRegion.Time;

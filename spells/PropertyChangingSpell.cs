@@ -36,6 +36,8 @@ namespace DOL.GS.Spells
 	
 	public abstract class PropertyChangingSpell : SpellHandler
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Execute property changing spell
 		/// </summary>

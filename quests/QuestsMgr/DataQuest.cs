@@ -1285,16 +1285,23 @@ namespace DOL.GS.Quests
 
 				if (charQuest.Count < MaxQuestCount)
 				{
-					RemoveItem(obj, player, item, false);
-					charQuest.Count++;
-					charQuest.Step = 0;
-					GameServer.Database.SaveObject(charQuest);
-					long rewardXP = 0;
-					if (long.TryParse(DBDataQuest.RewardXP, out rewardXP))
+					if (item.Count == 1)
 					{
-						player.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
+						RemoveItem(obj, player, item, false);
+						charQuest.Count++;
+						charQuest.Step = 0;
+						GameServer.Database.SaveObject(charQuest);
+						long rewardXP = 0;
+						if (long.TryParse(DBDataQuest.RewardXP, out rewardXP))
+						{
+							player.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
+						}
+						SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
-					SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					else
+					{
+						SendMessage(player, "You need to unstack these first.", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
 				}
 			}
 		}
