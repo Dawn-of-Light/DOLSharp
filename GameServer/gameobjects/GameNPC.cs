@@ -4440,8 +4440,43 @@ namespace DOL.GS
 		private const string LOSCURRENTLINE = "LOSCURRENTLINE";
 		private const string LOSSPELLTARGET = "LOSSPELLTARGET";
 
+
 		/// <summary>
-		/// Does a check for a gameplayer to start gamenpcs have LOS checks
+		/// Cast a spell, with optional LOS check
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <param name="line"></param>
+		/// <param name="checkLOS"></param>
+		public virtual void CastSpell(Spell spell, SpellLine line, bool checkLOS)
+		{
+			if (IsIncapacitated)
+				return;
+
+			if (checkLOS)
+			{
+				CastSpell(spell, line);
+			}
+			else
+			{
+				Spell spellToCast = null;
+
+				if (line.KeyName == GlobalSpellsLines.Mob_Spells)
+				{
+					// NPC spells will get the level equal to their caster
+					spellToCast = (Spell)spell.Clone();
+					spellToCast.Level = Level;
+				}
+				else
+				{
+					spellToCast = spell;
+				}
+
+				base.CastSpell(spellToCast, line);
+			}
+		}
+
+		/// <summary>
+		/// Cast a spell with LOS check to a player
 		/// </summary>
 		/// <param name="spell"></param>
 		/// <param name="line"></param>
@@ -4464,11 +4499,17 @@ namespace DOL.GS
 				return;
 			}
 
+			Spell spellToCast = null;
+
 			if (line.KeyName == GlobalSpellsLines.Mob_Spells)
 			{
 				// NPC spells will get the level equal to their caster
-				spell = (Spell)spell.Clone();
-				spell.Level = Level;
+				spellToCast = (Spell)spell.Clone();
+				spellToCast.Level = Level;
+			}
+			else
+			{
+				spellToCast = spell;
 			}
 
 			// Let's do a few checks to make sure it doesn't just wait on the LOS check
@@ -4479,7 +4520,7 @@ namespace DOL.GS
 				GamePlayer LOSChecker = TargetObject as GamePlayer;
 				if (LOSChecker == null)
 				{
-					foreach (GamePlayer ply in GetPlayersInRadius(300))
+					foreach (GamePlayer ply in GetPlayersInRadius(350))
 					{
 						if (ply != null)
 						{
@@ -4492,12 +4533,12 @@ namespace DOL.GS
 				if (LOSChecker == null)
 				{
 					TempProperties.setProperty(LOSTEMPCHECKER, 0);
-					base.CastSpell(spell, line);
+					base.CastSpell(spellToCast, line);
 				}
 				else
 				{
 					TempProperties.setProperty(LOSTEMPCHECKER, 10);
-					TempProperties.setProperty(LOSCURRENTSPELL, spell);
+					TempProperties.setProperty(LOSCURRENTSPELL, spellToCast);
 					TempProperties.setProperty(LOSCURRENTLINE, line);
 					TempProperties.setProperty(LOSSPELLTARGET, TargetObject);
 					LOSChecker.Out.SendCheckLOS(LOSChecker, this, new CheckLOSResponse(StartSpellAttackCheckLOS));
