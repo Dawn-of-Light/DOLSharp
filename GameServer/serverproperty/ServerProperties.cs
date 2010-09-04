@@ -516,6 +516,13 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("rates", "pvp_spell_damage", "The PvP Spell Damage Modifier - Edit this to change the amount of spell damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
 		public static double PVP_SPELL_DAMAGE;
 
+
+		/// <summary>
+		/// Critical strike opening style effectiveness.  Increase this to make CS styles BS, BSII and Perf Artery more effective
+		/// </summary>
+		[ServerProperty("rates", "cs_opening_effectiveness", "Critical strike opening style effectiveness.  Increase this to make CS styles BS, BSII and Perf Artery more effective", 1.0)]
+		public static double CS_OPENING_EFFECTIVENESS;
+
 		/// <summary>
 		/// The money drop modifier
 		/// </summary>
