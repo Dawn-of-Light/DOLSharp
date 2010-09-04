@@ -410,11 +410,54 @@ namespace DOL.GS.Styles
 						if (brain == null)
 							effectivness *= 2;
 					}
+
 					//Style worked! Print out some nice info and add the damage! :)
 					//Growth Rate * Style Spec * Effective Speed / Unstyled Damage Cap
-					int styleddamagecap = (int)((living.UnstyledDamageCap(weapon) + (attackData.Style.GrowthRate * living.GetModifiedSpecLevel(attackData.Style.Spec) * living.AttackSpeed(weapon) * 0.001)) * effectivness);
-					double factor = (attackData.Style.GrowthRate * living.GetModifiedSpecLevel(attackData.Style.Spec) * living.AttackSpeed(weapon) * 0.001) / living.UnstyledDamageCap(weapon);
-					attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor);
+
+					int styledDamageCap = 0;
+					double factor = 1.0;
+
+					//critical strike for rogue
+					// from: http://www.classesofcamelot.com/other/styles/Styles.htm
+					//Assassination styles (BS, BS2, PA) work differently than normal styles.  
+					//Since these styles can only be used as an opener from stealth, these styles have had the DPS portion coded out 
+					//and just add a static damage value.  This allows for assassins to use fast weapons and still hit hard with their assassination styles.  
+					//Furthermore, since the assassination styles add a static damage amount, faster weapons actually allow for a higher DPS than slower 
+					//weapons in this case.  Thus, one can debate the benefits of a slow assassination weapon versus a fast one.
+					//
+					//Backstab I Cap = ~5 + Critical Strike Spec * 14 / 3 + Nonstyle Cap
+					//Backstab II Cap = 45 + Critical Strike Spec * 6 + Nonstyle Cap
+					//Perforate Artery Cap = 75 + Critical Strike Spec * 9 + Nonstyle Cap
+					//
+					if (attackData.Target is GameNPC || attackData.Target is GamePlayer)
+					{
+						if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstab")))
+						{
+							factor = (5 + player.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3) / living.UnstyledDamageCap(weapon);
+							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor);
+							styledDamageCap = (int)((5 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3 + living.UnstyledDamageCap(weapon))) * effectivness);
+						}
+						else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstabII")))
+						{
+							factor = (45 + player.GetModifiedSpecLevel(Specs.Critical_Strike) * 6) / living.UnstyledDamageCap(weapon);
+							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor);
+							styledDamageCap = (int)((45 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 6 + living.UnstyledDamageCap(weapon))) * effectivness);
+						}
+						else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNamePerforateArtery")))
+						{
+							factor = (75 + player.GetModifiedSpecLevel(Specs.Critical_Strike) * 9) / living.UnstyledDamageCap(weapon);
+							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor);
+							styledDamageCap = (int)((75 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 9 + living.UnstyledDamageCap(weapon))) * effectivness);
+						}
+					}
+
+					if (styledDamageCap == 0)
+					{
+						styledDamageCap = (int)((living.UnstyledDamageCap(weapon) + (attackData.Style.GrowthRate * living.GetModifiedSpecLevel(attackData.Style.Spec) * living.AttackSpeed(weapon) * 0.001)) * effectivness);
+						factor = (attackData.Style.GrowthRate * living.GetModifiedSpecLevel(attackData.Style.Spec) * living.AttackSpeed(weapon) * 0.001) / living.UnstyledDamageCap(weapon);
+						attackData.StyleDamage = (int)Math.Max(attackData.Style.GrowthRate > 0 ? 1 : 0, attackData.UncappedDamage * factor);
+					}
+
 					attackData.StyleDamage = (int)(attackData.StyleDamage * living.GetModified(eProperty.StyleDamage) / 100.0);
 
 					//Eden - style absorb bonus
@@ -424,37 +467,13 @@ namespace DOL.GS.Styles
 						absorb=(int)Math.Floor((double)attackData.StyleDamage * ((double)attackData.Target.GetModified(eProperty.StyleAbsorb)/100));
 						attackData.StyleDamage -= absorb;
 					}
-					//					Log.Debug("unstyled cap="+player.UnstyledDamageCap(weapon)+"  factor="+factor+"  weapon spec="+player.WeaponSpecLevel(weapon)+"  attack speed="+player.AttackSpeed(weapon)+"  GR="+attackData.Style.GrowthRate);
+
 					//Increase regular damage by styledamage ... like on live servers
 					attackData.Damage += attackData.StyleDamage;
 
 					// apply styled damage cap
-					attackData.Damage = Math.Min(attackData.Damage, styleddamagecap);
+					attackData.Damage = Math.Min(attackData.Damage, styledDamageCap);
 
-					//critical strike for rogue
-					//TODO: remove this  from style processor and make a real critical shot
-					//Starting damage are
-					//PA: 75 + (CSSkill * 9) + Damage Cap 
-					//BSII: 45 + (CSSkill * 6) + Damage Cap 
-					//BS: 5 + (CSSkill * 14 / 3) + Damage Cap
-					if (attackData.Target is GameNPC || attackData.Target is GamePlayer)
-					{
-						if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstab")))
-						{
-							player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-							attackData.Damage += 5 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3);
-						}
-						else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstabII")))
-						{
-							player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.BackStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-							attackData.Damage += 45 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 6);
-						}
-						else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNamePerforateArtery")))
-						{
-							player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.ThroatStrike"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-							attackData.Damage += 75 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 9);
-						}
-					}
 
 					if (player != null)
 					{

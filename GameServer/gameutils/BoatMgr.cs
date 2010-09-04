@@ -134,7 +134,7 @@ namespace DOL.GS
                 boat.theBoatDB.BoatMaxSpeedBase = boat.MaxSpeedBase;
                 boat.theBoatDB.BoatModel = boat.Model;
                 boat.theBoatDB.BoatName = boat.Name;
-                boat.BoatOwnerID = creator.InternalID;
+                boat.OwnerID = creator.InternalID;
                 boat.Flags ^= (uint)GameNPC.eFlags.PEACE;
 
                 AddBoat(boat);
@@ -318,7 +318,7 @@ namespace DOL.GS
             if (playerstrID == null || boat == null)
                 return false;
 
-            if (playerstrID == boat.BoatOwnerID)
+            if (playerstrID == boat.OwnerID)
                 return true;
             else
                 return false;

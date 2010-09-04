@@ -31,6 +31,8 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("DirectDamage")]
 	public class DirectDamageSpellHandler : SpellHandler
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private bool m_castFailed = false;
 
 		/// <summary>

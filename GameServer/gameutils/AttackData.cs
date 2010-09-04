@@ -49,6 +49,7 @@ namespace DOL.GS
 		private bool m_isOffHand;
 		private InventoryItem m_weapon;
 		private bool m_isSpellResisted = false;
+		private bool m_causesCombat = true;
 
 		/// <summary>
 		/// Constructs new AttackData
@@ -312,5 +313,14 @@ namespace DOL.GS
                     : false;
             }
         }
+
+		/// <summary>
+		/// Does this attack put the living in combat?
+		/// </summary>
+		public bool CausesCombat
+		{
+			get { return m_causesCombat; }
+			set { m_causesCombat = value; }
+		}
 	}
 }

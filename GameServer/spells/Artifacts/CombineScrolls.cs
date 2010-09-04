@@ -32,7 +32,9 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("CombineScrolls")]
     class CombineScrolls : SpellHandler
     {
-        public CombineScrolls(GameLiving caster, Spell spell, SpellLine spellLine)
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		public CombineScrolls(GameLiving caster, Spell spell, SpellLine spellLine)
             : base(caster, spell, spellLine) { }
 
         /// <summary>

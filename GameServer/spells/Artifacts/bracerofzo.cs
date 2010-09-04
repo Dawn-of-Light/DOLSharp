@@ -30,7 +30,9 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("ZoSummon")]
     public class BracerOfZo : SpellHandler
     {
-        public override bool IsUnPurgeAble { get { return true; } }
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		public override bool IsUnPurgeAble { get { return true; } }
 		
 		protected ZoarkatPet[] deamons = new ZoarkatPet[3];
         
