@@ -1766,6 +1766,12 @@ return false;
 				// Most casters have access to the Quickcast ability (or the Necromancer equivalent, Facilitate Painworking).
 				// This ability will allow you to cast a spell without interruption.
 				// http://support.darkageofcamelot.com/kb/article.php?id=022
+
+				if (Caster is NecromancerPet || FindStaticEffectOnTarget(Caster, typeof(NecromancerShadeEffect)) != null)
+				{
+					return 2000;  // Will this fix necromancer FP?
+				}
+
 				return ticks;
 			}
 
