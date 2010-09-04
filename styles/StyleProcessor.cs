@@ -434,19 +434,19 @@ namespace DOL.GS.Styles
 						if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstab")))
 						{
 							factor = (5 + player.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3) / living.UnstyledDamageCap(weapon);
-							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor);
+							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor * ServerProperties.Properties.CS_OPENING_EFFECTIVENESS);
 							styledDamageCap = (int)((5 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3 + living.UnstyledDamageCap(weapon))) * effectivness);
 						}
 						else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstabII")))
 						{
 							factor = (45 + player.GetModifiedSpecLevel(Specs.Critical_Strike) * 6) / living.UnstyledDamageCap(weapon);
-							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor);
+							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor * ServerProperties.Properties.CS_OPENING_EFFECTIVENESS);
 							styledDamageCap = (int)((45 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 6 + living.UnstyledDamageCap(weapon))) * effectivness);
 						}
 						else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNamePerforateArtery")))
 						{
 							factor = (75 + player.GetModifiedSpecLevel(Specs.Critical_Strike) * 9) / living.UnstyledDamageCap(weapon);
-							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor);
+							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor * ServerProperties.Properties.CS_OPENING_EFFECTIVENESS);
 							styledDamageCap = (int)((75 + (player.GetModifiedSpecLevel(Specs.Critical_Strike) * 9 + living.UnstyledDamageCap(weapon))) * effectivness);
 						}
 					}
