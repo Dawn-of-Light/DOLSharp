@@ -30,7 +30,9 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("Bomber")]
     public class BomberSpellHandler : SummonSpellHandler
     {
-        const string BOMBERTARGET = "bombertarget";
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		const string BOMBERTARGET = "bombertarget";
 
         public BomberSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 

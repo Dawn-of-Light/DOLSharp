@@ -28,6 +28,8 @@ namespace DOL.GS.Spells
 	[SpellHandler("StyleBleeding")]
 	public class StyleBleeding : SpellHandler
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// The property name for bleed value
 		/// </summary>
@@ -41,7 +43,8 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
-			effect.Owner.TempProperties.setProperty(BLEED_VALUE_PROPERTY, (int)Spell.Damage + (int)Spell.Damage * Util.Random(25) / 100 );  // + random max 25%
+			SendEffectAnimation(effect.Owner, 0, false, 1);
+			effect.Owner.TempProperties.setProperty(BLEED_VALUE_PROPERTY, (int)Spell.Damage + (int)Spell.Damage * Util.Random(25) / 100);  // + random max 25%
 		}
 
 		/// <summary>
@@ -114,6 +117,7 @@ namespace DOL.GS.Spells
 			ad.DamageType = Spell.DamageType;
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 			ad.SpellHandler = this;
+			ad.CausesCombat = false;
 
 			return ad;
 		}

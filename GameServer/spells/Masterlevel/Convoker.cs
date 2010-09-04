@@ -440,7 +440,9 @@ namespace DOL.GS.Spells
     [SpellHandler("BrittleGuard")]
     public class BrittleGuardSpellHandler : MasterlevelHandling
     {
-    	GameNPC summoned = null;
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		GameNPC summoned = null;
     	GameSpellEffect beffect = null;
         public BrittleGuardSpellHandler(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
@@ -584,7 +586,9 @@ namespace DOL.GS.Spells
     [SpellHandler("SummonTitan")]
     public class Convoker10SpellHandler : MasterlevelHandling
     {
-        private int x, y, z;
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		private int x, y, z;
 		GameNPC summoned = null;
 		RegionTimer m_growTimer;
 		private const int C_GROWTIMER = 2000;

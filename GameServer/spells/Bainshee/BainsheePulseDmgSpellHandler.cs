@@ -31,7 +31,9 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("BainsheePulseDmg")]
 	public class BainsheePulseDmgSpellHandler : SpellHandler
 	{
-        public const string FOCUS_WEAK = "FocusSpellHandler.Online";
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		public const string FOCUS_WEAK = "FocusSpellHandler.Online";
 		/// <summary>
 		/// Execute direct damage spell
 		/// </summary>

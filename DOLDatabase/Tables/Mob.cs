@@ -66,7 +66,7 @@ namespace DOL.Database
 		private string m_brain;
 		private string m_pathID;
 		private int m_maxdistance;
-		private string m_boat_ownerid;
+		private string m_ownerID;
 		private int m_roamingRange;
 		private bool m_isCloakHoodUp;
 		private string m_packageID;
@@ -98,7 +98,7 @@ namespace DOL.Database
 			m_Piety = 30;
 			m_Empathy = 30;
 			m_Charisma = 30;
-			m_boat_ownerid = "";
+			m_ownerID = "";
 			m_roamingRange = -1;
 			m_gender = 0;
 		}
@@ -663,19 +663,19 @@ namespace DOL.Database
 			}
 		}
 		/// <summary>
-		/// The Mob's owner if mob is boat
+		/// An OwnerID for this mob
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public string BoatOwnerID
+		[DataElement(AllowDbNull = false, Varchar = 255)]
+		public string OwnerID
 		{
 			get
 			{
-				return m_boat_ownerid;
+				return m_ownerID;
 			}
 			set
 			{
 				Dirty = true;
-				m_boat_ownerid = value;
+				m_ownerID = value;
 			}
 		}
 

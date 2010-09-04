@@ -150,15 +150,17 @@ namespace DOL.GS
 			}
 		}
 
+		protected string m_ownerID;
+
 		/// <summary>
-		/// Gets or sets the owner of this npc
+		/// Gets or sets the owner ID for this NPC.
 		/// </summary>
-		public string BoatOwnerID
+		public virtual string OwnerID
 		{
-			get { return m_boatowner_id; }
+			get { return m_ownerID; }
 			set
 			{
-				m_boatowner_id = value;
+				m_ownerID = value;
 			}
 		}
 
@@ -1839,7 +1841,9 @@ namespace DOL.GS
 			Mob dbMob = (Mob)obj;
 			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID);
 			if (npcTemplate != null)
+			{
 				LoadTemplate(npcTemplate);
+			}
 			Name = dbMob.Name;
 			GuildName = dbMob.Guild;
 			m_x = dbMob.X;
@@ -1877,7 +1881,9 @@ namespace DOL.GS
 			LoadEquipmentTemplateFromDatabase(dbMob.EquipmentTemplateID);
 
 			if (dbMob.RespawnInterval == -1)
+			{
 				dbMob.RespawnInterval = 0;
+			}
 			m_respawnInterval = dbMob.RespawnInterval * 1000;
 
 			m_pathID = dbMob.PathID;
@@ -1955,6 +1961,7 @@ namespace DOL.GS
 			m_isCloakHoodUp = dbMob.IsCloakHoodUp;
 			m_visibleActiveWeaponSlots = dbMob.VisibleWeaponSlots;
 			Gender = (Gender)dbMob.Gender;
+			OwnerID = dbMob.OwnerID;
 		}
 
 		/// <summary>
@@ -2067,6 +2074,7 @@ namespace DOL.GS
 			mob.Gender = (byte)Gender;
 			mob.VisibleWeaponSlots = this.m_visibleActiveWeaponSlots;
 			mob.PackageID = PackageID;
+			mob.OwnerID = OwnerID;
 
 			if (InternalID == null)
 			{
@@ -2074,7 +2082,9 @@ namespace DOL.GS
 				InternalID = mob.ObjectId;
 			}
 			else
+			{
 				GameServer.Database.SaveObject(mob);
+			}
 		}
 
 		/// <summary>
@@ -4791,6 +4801,8 @@ namespace DOL.GS
 			copyTarget.X = X;
 			copyTarget.Y = Y;
 			copyTarget.Z = Z;
+			copyTarget.OwnerID = OwnerID;
+			copyTarget.PackageID = PackageID;
 
 			if ( Abilities != null && Abilities.Count > 0 )
 			{
@@ -4846,8 +4858,6 @@ namespace DOL.GS
 			return copyTarget;
 		}
 
-
-		private string m_boatowner_id;
 		/// <summary>
 		/// Constructs a NPC
 		/// </summary>
@@ -4873,7 +4883,7 @@ namespace DOL.GS
 			m_flags = 0;
 			m_maxdistance = 0;
 			m_roamingRange = 0; // default to non roaming - tolakram
-			m_boatowner_id = "";
+			m_ownerID = "";
 
 			if ( m_spawnPoint == null )
 				m_spawnPoint = new Point3D();
@@ -4912,7 +4922,7 @@ namespace DOL.GS
 			Charisma = (short)template.Charisma;
 			Empathy = (short)template.Empathy;
 
-			m_boatowner_id = "";
+			m_ownerID = "";
 		}
 	}
 }

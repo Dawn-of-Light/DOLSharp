@@ -42,6 +42,8 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public abstract class SummonSpellHandler : SpellHandler
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		protected GamePet pet = null;
 
 		public SummonSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }

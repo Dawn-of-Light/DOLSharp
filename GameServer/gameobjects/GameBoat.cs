@@ -1,3 +1,22 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,27 +33,27 @@ namespace DOL.GS
 {
 	public class GameBoat : GameMovingObject
 	{
-        private byte m_type = 0;
-        protected DBBoat m_DBboat;
-        private string boat_id;
-        private string boat_owner;
-        private string boat_name;
-        private ushort boat_model;
-        private short boat_maxspeedbase;
+        private byte m_boatType = 0;
+        protected DBBoat m_dbBoat;
+        private string m_boatID;
+        private string m_boatOwner;
+        private string m_boatName;
+        private ushort m_boatModel;
+        private short m_boatMaxSpeedBase;
 
 		private RegionTimer m_removeTimer = null;
 
         public GameBoat(byte type)
             : base()
         {
-            m_type = type;
-            base.BoatOwnerID = OwnerID;
+            m_boatType = type;
+            base.OwnerID = BoatOwner;
         }
 
         public GameBoat()
 			: base()
         {
-            base.BoatOwnerID = OwnerID;
+            base.OwnerID = BoatOwner;
         }
 
 		public override bool AddToWorld()
@@ -51,19 +70,19 @@ namespace DOL.GS
         /// </summary>
         public DBBoat theBoatDB
         {
-            get { return m_DBboat; }
-            set { m_DBboat = value; }
+            get { return m_dbBoat; }
+            set { m_dbBoat = value; }
         }
 
         public string BoatID
         {
             get
             {
-                return boat_id;
+                return m_boatID;
             }
             set
             {
-                boat_id = value;
+                m_boatID = value;
             }
         }
         
@@ -71,11 +90,11 @@ namespace DOL.GS
         {
             get
             {
-                return boat_name;
+                return m_boatName;
             }
             set
             {
-                boat_name = value;
+                m_boatName = value;
             }
         }
 
@@ -83,11 +102,11 @@ namespace DOL.GS
         {
             get
             {
-                return boat_model;
+                return m_boatModel;
             }
             set
             {
-                boat_model = value;
+                m_boatModel = value;
             }
         }
 
@@ -95,23 +114,23 @@ namespace DOL.GS
         {
             get
             {
-                return boat_maxspeedbase;
+                return m_boatMaxSpeedBase;
             }
             set
             {
-                boat_maxspeedbase = value;
+                m_boatMaxSpeedBase = value;
             }
         }
 
-        public string OwnerID
+        public string BoatOwner
         {
             get
             {
-                return boat_owner;
+                return m_boatOwner;
             }
             set
             {
-                boat_owner = value;
+                m_boatOwner = value;
             }
         }
 
@@ -119,7 +138,7 @@ namespace DOL.GS
         {
             get
             {
-                switch (m_type)
+                switch (m_boatType)
                 {
                     case 0: return 8;
                     case 1: return 8;
@@ -139,7 +158,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				switch (m_type)
+				switch (m_boatType)
 				{
                     case 0: return 1;
                     case 1: return 1;
@@ -219,7 +238,7 @@ namespace DOL.GS
         /// <returns></returns>
         public override bool Interact(GamePlayer player)
         {
-            if (this.BoatOwnerID != "")            
+            if (this.OwnerID != "")            
                 return false;
               
  	        return base.Interact(player);
@@ -234,25 +253,25 @@ namespace DOL.GS
             if (!(obj is DBBoat))
                 return;
 
-            m_DBboat = (DBBoat)obj;
-            boat_id = m_DBboat.ObjectId;
-            boat_name = m_DBboat.BoatName;
-            boat_maxspeedbase = m_DBboat.BoatMaxSpeedBase;
-            boat_model = m_DBboat.BoatModel;
-            boat_owner = m_DBboat.BoatOwner;
-            switch (boat_model)
+            m_dbBoat = (DBBoat)obj;
+            m_boatID = m_dbBoat.ObjectId;
+            m_boatName = m_dbBoat.BoatName;
+            m_boatMaxSpeedBase = m_dbBoat.BoatMaxSpeedBase;
+            m_boatModel = m_dbBoat.BoatModel;
+            m_boatOwner = m_dbBoat.BoatOwner;
+            switch (m_boatModel)
             {
-                case 1616: m_type = 0; break;
-                case 2648: m_type = 1; break;
-                case 2646: m_type = 2; break;
-                case 2647: m_type = 3; break;
-                case 1615: m_type = 4; break;
-                case 1595: m_type = 5; break;
-                case 1612: m_type = 6; break;
-                case 1613: m_type = 7; break;
-                case 1614: m_type = 8; break;
+                case 1616: m_boatType = 0; break;
+                case 2648: m_boatType = 1; break;
+                case 2646: m_boatType = 2; break;
+                case 2647: m_boatType = 3; break;
+                case 1615: m_boatType = 4; break;
+                case 1595: m_boatType = 5; break;
+                case 1612: m_boatType = 6; break;
+                case 1613: m_boatType = 7; break;
+                case 1614: m_boatType = 8; break;
             }
-            theBoatDB = m_DBboat;
+            theBoatDB = m_dbBoat;
             base.LoadFromDatabase(obj);
         }
 
