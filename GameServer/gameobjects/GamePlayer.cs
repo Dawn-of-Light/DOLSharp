@@ -2737,38 +2737,6 @@ namespace DOL.GS
 			return RemoveSpellLine(line);
 		}
 
-		/// <summary>
-		/// Reset this player to level 1, respec all skills, remove all spec points, and reset stats
-		/// </summary>
-		public virtual void Reset()
-		{
-			byte originalLevel = Level;
-			Level = 1;
-			m_currentXP = 0;
-			DBCharacter.Experience = 0;
-			RespecAllLines();
-			SkillSpecialtyPoints = 0;
-
-			if (Level < originalLevel && originalLevel > 5)
-			{
-				for (int i = 6; i <= originalLevel; i++)
-				{
-					if (CharacterClass.PrimaryStat != eStat.UNDEFINED)
-					{
-						ChangeBaseStat(CharacterClass.PrimaryStat, -1);
-					}
-					if (CharacterClass.SecondaryStat != eStat.UNDEFINED && ((i - 6) % 2 == 0))
-					{
-						ChangeBaseStat(CharacterClass.SecondaryStat, -1);
-					}
-					if (CharacterClass.TertiaryStat != eStat.UNDEFINED && ((i - 6) % 3 == 0))
-					{
-						ChangeBaseStat(CharacterClass.TertiaryStat, -1);
-					}
-				}
-			}
-		}
-
 		public virtual int RespecAll()
 		{
 			int specPoints = RespecAllLines(); // Wipe skills and styles.
@@ -5019,10 +4987,10 @@ namespace DOL.GS
 			
 			// Adjust stats
 			bool statsChanged = false;
-			// stat increases start at level 6
-			if (Level > 5)
+			// unless level 5, no need to check & compute stats. Helps for 1.93+
+			if (Level >= 5)
 			{
-				for (int i = Level; i > Math.Max(previouslevel, 5); i--)
+				for (int i = Level; i > previouslevel; i--)
 				{
 					if (CharacterClass.PrimaryStat != eStat.UNDEFINED)
 					{
@@ -8385,8 +8353,8 @@ namespace DOL.GS
 							{
 								if (Level < useItem.Level)
 								{
-									Out.SendMessage("You must have " + useItem.Level + " level for summon this horse", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.SummonHorseLevel", useItem.Level), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
 								}
 								if (!IsAlive)
 								{
@@ -8400,8 +8368,8 @@ namespace DOL.GS
 								}
 								if (CurrentZone.IsDungeon)
 								{
-									Out.SendMessage("You cannot summon a mount in a dungeon!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountInDungeon"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
 								}
 								if (CurrentRegion.IsRvR && !ActiveHorse.IsSummonRvR)
 								{

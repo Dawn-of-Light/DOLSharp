@@ -294,6 +294,7 @@ GamePlayer.UseSlot.AutoReleaseShotReload:	Vous allez maintenant tirer et recharg
 GamePlayer.UseSlot.CantCallMountSeated:		Vous ne pouvez pas appeler votre monture si vous êtes assis(e).
 GamePlayer.UseSlot.CantFire:				Vous ne pouvez pas lancer ou utiliser cet objet.
 GamePlayer.UseSlot.CantMountCombat:			Vous êtes en combat, et ne pouvez pas appeler votre monture.
+GamePlayer.UseSlot.CantMountInDungeon:			You cannot summon a mount in a dungeon!
 GamePlayer.UseSlot.CantMountMoving:			Vous ne pouvez pas monter sur un cheval lorsque vous bougez.
 GamePlayer.UseSlot.CantMountSteath:			Vous ne pouvez pas monter sur un cheval si vous êtes en furtivité.
 GamePlayer.UseSlot.CantMountWhileDead:		Vous ne pouvez pas monter sur votre cheval, vous êtes mort(e) !
@@ -307,6 +308,7 @@ GamePlayer.UseSlot.NoAutoReleaseShotReload:	Vous ne tirerez ou ne rechargerez pl
 GamePlayer.UseSlot.NotEnouthPower:			Vous n'êtes pas assez puissant(e) pour utiliser le sortilège de cet objet.
 GamePlayer.UseSlot.OutOfCharges:           	 {0} n'a plus de charge.
 GamePlayer.UseSlot.StopCallingMount:		Vous arrêtez d'appeler votre monture.
+GamePlayer.UseSlot.SummonHorseLevel:			You must have {0} level for summon this horse.
 GamePlayer.UseSlot.WhistleMount:			Vous sifflez votre monture.
 GamePlayer.UseSlot.MustWaitBeforeUse:		Vous devez attendre {0} secondes de plus avant d'utiliser cet objet.
 GamePlayer.UseSlot.CantUseState:			Vous ne pouvez pas utiliser {0} dans votre état actuel.
