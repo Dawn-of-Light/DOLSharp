@@ -289,7 +289,8 @@ GamePlayer.UseSlot.AutoReleaseShot:			Eurer Schuss wird nun automatisch freigege
 GamePlayer.UseSlot.AutoReleaseShotReload:		Eurer Schuss wird nun automatisch nachgeladen und freigegeben.			
 GamePlayer.UseSlot.CantCallMountSeated:			Ihr könnt Euer Pferd nicht rufen, während Ihr dasitzt.		
 GamePlayer.UseSlot.CantFire:				Ihr könnt diesen Gegenstand weder abschießen noch benutzen!	
-GamePlayer.UseSlot.CantMountCombat:			Ihr könnt Euer Pferd nicht während eines Kampfes rufen.		
+GamePlayer.UseSlot.CantMountCombat:			Ihr könnt Euer Pferd nicht während eines Kampfes rufen.
+GamePlayer.UseSlot.CantMountInDungeon:			Ihr könnt Euer Pferd in einem Dungeon nicht rufen!		
 GamePlayer.UseSlot.CantMountMoving:			Ihr könnt nicht aufsteigen, während Ihr Euch bewegt.		
 GamePlayer.UseSlot.CantMountSteath:			Ihr könnt nicht aufsitzen, während Ihr getarnt seid.		
 GamePlayer.UseSlot.CantMountWhileDead:			Ihr könnt nicht aufsteigen, weil Ihr tot seid.		
@@ -304,7 +305,8 @@ GamePlayer.UseSlot.MustWaitBeforeUse:			Ihr müsst noch {0} Sekunden warten, bev
 GamePlayer.UseSlot.NoAutoReleaseShotReload:		Eurer Schuss wird nun nicht länger automatisch nachgeladen und freigegeben.			
 GamePlayer.UseSlot.NotEnouthPower:			Ihr seit nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.		
 GamePlayer.UseSlot.OutOfCharges:			{0} hat keine Ladungen mehr.
-GamePlayer.UseSlot.StopCallingMount:			Ihr ruft nicht mehr nach Eurem Pferd.		
+GamePlayer.UseSlot.StopCallingMount:			Ihr ruft nicht mehr nach Eurem Pferd.
+GamePlayer.UseSlot.SummonHorseLevel:			Ihr könnt dieses Pferd erst ab der Erfahrungsstufe {0} rufen.		
 GamePlayer.UseSlot.Used:			        {0} wird bereits verwendet.
 GamePlayer.UseSlot.WhistleMount:			Ihr pfeift nach Eurem Pferd.
 GamePlayer.Whisper.SelectTarget:			Wählt jemanden aus, dem Ihr etwas zuflüstern wollt!

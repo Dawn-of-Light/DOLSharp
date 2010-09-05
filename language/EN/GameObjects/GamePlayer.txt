@@ -292,7 +292,8 @@ GamePlayer.UseSlot.AutoReleaseShot:				You will now automatically release your s
 GamePlayer.UseSlot.AutoReleaseShotReload:		You will now automatically release your shot and reload.			
 GamePlayer.UseSlot.CantCallMountSeated:			You cannot call your mount while seated.		
 GamePlayer.UseSlot.CantFire:					You can't fire or use this item!	
-GamePlayer.UseSlot.CantMountCombat:				You are in combat and cannot call your mount.		
+GamePlayer.UseSlot.CantMountCombat:				You are in combat and cannot call your mount.
+GamePlayer.UseSlot.CantMountInDungeon:			You cannot summon a mount in a dungeon!		
 GamePlayer.UseSlot.CantMountMoving:				You can't mount while you're moving.		
 GamePlayer.UseSlot.CantMountSteath:				You can't mount while you're in stealth.		
 GamePlayer.UseSlot.CantMountWhileDead:			You can't mount while you're dead.		
@@ -305,7 +306,8 @@ GamePlayer.UseSlot.MustDismountBefore:			You must to dismount before.
 GamePlayer.UseSlot.NoAutoReleaseShotReload:		You will no longer automatically release your shot or reload.			
 GamePlayer.UseSlot.NotEnouthPower:				You are not powerful enough to use this item's spell.		
 GamePlayer.UseSlot.OutOfCharges:				The {0} is out of charges.
-GamePlayer.UseSlot.StopCallingMount:			You stop calling your mount.		
+GamePlayer.UseSlot.StopCallingMount:			You stop calling your mount.
+GamePlayer.UseSlot.SummonHorseLevel:			You must have {0} level for summon this horse.
 GamePlayer.UseSlot.WhistleMount:				You whistle for your mount.
 GamePlayer.UseSlot.MustWaitBeforeUse:			You must wait {0} more second before use potion!
 GamePlayer.UseSlot.CantUseState:			    You can't use {0} in your state.	
