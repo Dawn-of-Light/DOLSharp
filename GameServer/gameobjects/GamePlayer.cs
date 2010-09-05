@@ -6881,6 +6881,27 @@ namespace DOL.GS
 			}
 		}
 
+
+		/// <summary>
+		/// Can this player cast the given spell while in combat?
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public override bool CanCastInCombat(Spell spell)
+		{
+			if (CharacterClass is PlayerClass.ClassVampiir ||
+				CharacterClass is PlayerClass.ClassMaulerAlb ||
+				CharacterClass is PlayerClass.ClassMaulerMid ||
+				CharacterClass is PlayerClass.ClassMaulerHib ||
+				(CharacterClass is PlayerClass.ClassWarden && spell.SpellType == "HealOverTime") ||
+				(CharacterClass is PlayerClass.ClassFriar && spell.SpellType == "HealOverTime"))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 		/// <summary>
 		/// The chance for a critical hit
 		/// </summary>
@@ -10856,9 +10877,11 @@ namespace DOL.GS
 				Out.SendCharStatsUpdate();
 				Out.SendCharResistsUpdate();
 				Out.SendUpdateWeaponAndArmorStats();
+				Out.SendUpdateMaxSpeed();
 				Out.SendEncumberance();
 				Out.SendUpdatePlayerSkills();
 				UpdatePlayerStatus();
+
 
 				if (IsAlive)
 				{
@@ -11005,6 +11028,7 @@ namespace DOL.GS
 				Out.SendCharStatsUpdate();
 				Out.SendCharResistsUpdate();
 				Out.SendUpdateWeaponAndArmorStats();
+				Out.SendUpdateMaxSpeed();
 				Out.SendEncumberance();
 				Out.SendUpdatePlayerSkills();
 				UpdatePlayerStatus();

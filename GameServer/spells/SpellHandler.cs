@@ -631,19 +631,10 @@ namespace DOL.GS.Spells
 
 			if (m_caster.AttackState && m_spell.CastTime != 0)
 			{
-				if (m_caster is GamePlayer)
+				if (m_caster.CanCastInCombat(Spell) == false)
 				{
-					GamePlayer player = m_caster as GamePlayer;
-					if (!(player.CharacterClass is PlayerClass.ClassVampiir)
-					    && !(player.CharacterClass is PlayerClass.ClassMaulerAlb)
-					    && !(player.CharacterClass is PlayerClass.ClassMaulerMid)
-					    && !(player.CharacterClass is PlayerClass.ClassMaulerHib)
-					    && !(player.CharacterClass is PlayerClass.ClassWarden && Spell.SpellType == "HealOverTime")
-					    && !(player.CharacterClass is PlayerClass.ClassFriar && Spell.SpellType == "HealOverTime"))
-					{
-						m_caster.StopAttack();
-						return false;
-					}
+					m_caster.StopAttack();
+					return false;
 				}
 			}
 
@@ -809,14 +800,6 @@ namespace DOL.GS.Spells
 					return false;
 				}
 			}
-			// We have a mauler - Take power when a spell is used
-			//if (Caster is GamePlayer)
-			//{
-			//    if ((Caster as GamePlayer).CharacterClass.ID > 59 && (Caster as GamePlayer).CharacterClass.ID < 63)
-			//    {
-			//        (Caster as GamePlayer).ChangeMana((Caster as GamePlayer), GameLiving.eManaChangeType.Spell, -m_spell.Power);
-			//    }
-			//}
 
 			// Cancel engage if user starts attack
 			if (m_caster.IsEngaging)
