@@ -867,6 +867,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Can this living cast the given spell while in combat?
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public virtual bool CanCastInCombat(Spell spell)
+		{
+			return false;
+		}
+
+		/// <summary>
 		/// Returns the AttackRange of this living
 		/// </summary>
 		public virtual int AttackRange
