@@ -134,9 +134,11 @@ namespace DOL.GS.PropertyCalc
 							{
 								speed *= 1.25;
 
-								if (owner.IsSprinting)
+								double ownerSpeedAdjust = (double)owner.MaxSpeed / (double)GamePlayer.PLAYER_BASE_SPEED;
+
+								if (ownerSpeedAdjust > 1.0)
 								{
-									speed *= 1.3;
+									speed *= ownerSpeedAdjust;
 								}
 
 								if (owner.IsOnHorse)
