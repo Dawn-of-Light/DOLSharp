@@ -410,13 +410,14 @@ namespace DOL.GS
 				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.CannotSold"));
 
 			if (IsIndestructible)
-				delve.Add("Cannot be destroyed.");
+                delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.CannotDestroyed"));
 
-			if (BonusLevel > 0)
+			if (BonusLevel >= 0)
 			{
 				delve.Add(" ");
-				delve.Add(string.Format("Bonus Level: {0}", BonusLevel));
-			}
+                delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.BonusLevel", BonusLevel));
+
+            }
 
 			//Add admin info
 			if (player.Client.Account.PrivLevel > 1)

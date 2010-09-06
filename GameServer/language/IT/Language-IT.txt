@@ -470,6 +470,8 @@ DetailDisplayHandler.GetShortItemInfo.NoSell:		 Non puo' essere Venduto.
 DetailDisplayHandler.GetShortItemInfo.NoTrade:		 Non puo' essere Scambiato.
 DetailDisplayHandler.HandlePacket.Any:			Qualsiasi
 DetailDisplayHandler.HandlePacket.Back:			(Indietro)
+DetailDisplayHandler.HandlePacket.BonusLevel:		Bonus Level: {0}
+DetailDisplayHandler.HandlePacket.CannotDestroyed:	Cannot be destroyed.
 DetailDisplayHandler.HandlePacket.CannotDropped:	Non puo' essere Lasciato a terra o nella tua banca.
 DetailDisplayHandler.HandlePacket.CannotSold:		Non puo' essere Venduto ai mercanti.
 DetailDisplayHandler.HandlePacket.CannotTraded:		Non puo' essere Scambiato con gli altri giocatori.

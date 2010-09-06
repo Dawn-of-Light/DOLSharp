@@ -5,6 +5,8 @@ DetailDisplayHandler.GetShortItemInfo.NoSell:		 Nicht verkaufbar.
 DetailDisplayHandler.GetShortItemInfo.NoTrade:		 Nicht handelbar.
 DetailDisplayHandler.HandlePacket.Any:			Egal
 DetailDisplayHandler.HandlePacket.Back:			(von Hinten)
+DetailDisplayHandler.HandlePacket.BonusLevel:		Bonusstufe: {0}
+DetailDisplayHandler.HandlePacket.CannotDestroyed:	Kann nicht zerstört werden.
 DetailDisplayHandler.HandlePacket.CannotDropped:	Kann nicht abgelegt oder beim Schatzhüter hinterlegt werden.
 DetailDisplayHandler.HandlePacket.CannotSold:		Kann nicht an Händler verkauft werden.
 DetailDisplayHandler.HandlePacket.CannotTraded:		Kann nicht gehandelt werden.
