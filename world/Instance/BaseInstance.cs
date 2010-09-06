@@ -36,7 +36,9 @@ namespace DOL.GS
     ///</summary>
     public class BaseInstance : Region
     {
-        /// <summary>
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
         /// Creates an instance object. This shouldn't be used directly - Please use WorldMgr.CreateInstance
         /// to create an instance.
         /// </summary>
@@ -57,11 +59,6 @@ namespace DOL.GS
 			StartRegionMgr();
 			BeginAutoClosureCountdown(10);
 		}
-
-        /// <summary>
-        /// Defines a logger for this class.
-        /// </summary>
-        protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         #region Inheritance and Region
 

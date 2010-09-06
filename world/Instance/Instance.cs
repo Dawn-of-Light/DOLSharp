@@ -35,6 +35,8 @@ namespace DOL.GS
     /// </summary>
     public class Instance : BaseInstance
     {
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Creates an instance object. This shouldn't be used directly - Please use WorldMgr.CreateInstance
         /// to create an instance.
