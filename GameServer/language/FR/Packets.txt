@@ -5,6 +5,8 @@ DetailDisplayHandler.GetShortItemInfo.NoSell:		 Ne peut être vendu.
 DetailDisplayHandler.GetShortItemInfo.NoTrade:		 Ne peut être échangé.
 DetailDisplayHandler.HandlePacket.Any:			Tous
 DetailDisplayHandler.HandlePacket.Back:			(Dos)
+DetailDisplayHandler.HandlePacket.BonusLevel:		Bonus Level: {0}
+DetailDisplayHandler.HandlePacket.CannotDestroyed:	Cannot be destroyed.
 DetailDisplayHandler.HandlePacket.CannotDropped:	Ne peut être jeté ou mis au coffre.
 DetailDisplayHandler.HandlePacket.CannotSold:		Ne peut être vendu.
 DetailDisplayHandler.HandlePacket.CannotTraded:		Ne peut être échangé.

@@ -47,6 +47,8 @@ DetailDisplayHandler.GetShortItemInfo.NoSell:		 No Sell.
 DetailDisplayHandler.GetShortItemInfo.NoTrade:		 No Trade.
 DetailDisplayHandler.HandlePacket.Any:			Any
 DetailDisplayHandler.HandlePacket.Back:			(Back)
+DetailDisplayHandler.HandlePacket.BonusLevel:		Bonus Level: {0}
+DetailDisplayHandler.HandlePacket.CannotDestroyed:	Cannot be destroyed.
 DetailDisplayHandler.HandlePacket.CannotDropped:	Cannot be dropped or put in your bank.
 DetailDisplayHandler.HandlePacket.CannotSold:		Cannot be sold to merchants.
 DetailDisplayHandler.HandlePacket.CannotTraded:		Cannot be traded to other players.
