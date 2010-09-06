@@ -257,12 +257,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotSold"));
 
 						if (invItem.IsIndestructible)
-							objectInfo.Add("Cannot be destroyed.");
+                            objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.CannotDestroyed"));
+
 
 						if (invItem.BonusLevel > 0)
 						{
 							objectInfo.Add(" ");
-							objectInfo.Add(string.Format("Bonus Level: {0}", invItem.BonusLevel));
+                            objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.BonusLevel", invItem.BonusLevel));
+
 						}
 
 						//Add admin info
