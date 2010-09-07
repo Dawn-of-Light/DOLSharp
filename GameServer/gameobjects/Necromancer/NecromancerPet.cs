@@ -472,6 +472,42 @@ namespace DOL.GS
 			}
 		}
 
+		public override void OnAfterSpellCastSequence(ISpellHandler handler)
+		{
+			if (SpellTimer != null)
+			{
+				if (this == null || this.ObjectState != eObjectState.Active || !this.IsAlive || this.TargetObject == null || (this.TargetObject is GameLiving && this.TargetObject.ObjectState != eObjectState.Active || !(this.TargetObject as GameLiving).IsAlive))
+					SpellTimer.Stop();
+				else
+					SpellTimer.Start(1);
+			}
+			if (m_runningSpellHandler != null)
+			{
+				//prevent from relaunch
+				m_runningSpellHandler.CastingCompleteEvent -= new CastingCompleteCallback(OnAfterSpellCastSequence);
+				m_runningSpellHandler = null;
+			}
+
+			Brain.Notify(GameNPCEvent.CastFinished, this, new CastingEventArgs(handler));
+		}
+
+		public override bool CanCastInCombat(Spell spell)
+		{
+			// Necromancer pets can always start to cast while in combat
+			return true;
+		}
+
+		public override void ModifyAttack(AttackData attackData)
+		{
+			base.ModifyAttack(attackData);
+
+			if ((Owner as GamePlayer).Client.Account.PrivLevel > (int)ePrivLevel.Player)
+			{
+				attackData.Damage = 0;
+				attackData.CriticalDamage = 0;
+			}
+		}
+
 
 		/// <summary>
 		/// Insta cast baseline buffs (STR+DEX) on the pet.

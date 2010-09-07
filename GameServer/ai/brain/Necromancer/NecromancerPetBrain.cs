@@ -49,7 +49,14 @@ namespace DOL.AI.Brain
 
 		public override int ThinkInterval
 		{
-			get { return 2000; }
+			get { return 1000; }
+		}
+
+
+		public override int CastInterval
+		{
+			get { return 500; }
+			set { }
 		}
 
 
@@ -144,11 +151,11 @@ namespace DOL.AI.Brain
 
                 if (SpellsQueued)
                 {
-                    DebugMessageToOwner("More spells to cast");
+                    DebugMessageToOwner("+ Cast finished, more spells to cast");
 				}
                 else
                 {
-                    DebugMessageToOwner("No more spells to cast");
+                    DebugMessageToOwner("- Cast finished, no more spells to cast");
                 }
 
                 Owner.Notify(GamePlayerEvent.CastFinished, Owner, args);
@@ -374,9 +381,7 @@ namespace DOL.AI.Brain
 			{
                 if (m_spellQueue.Count > 0)
                 {
-                    DebugMessageToOwner(String.Format("Grabbing spell '{0}' from the start of the queue in order to cast it",
-                        m_spellQueue.Peek().Spell.Name));
-
+                    DebugMessageToOwner(String.Format("Grabbing spell '{0}' from the start of the queue in order to cast it", m_spellQueue.Peek().Spell.Name));
                     return m_spellQueue.Peek();
                 }
 			}
@@ -404,8 +409,7 @@ namespace DOL.AI.Brain
 			{
                 if (m_spellQueue.Count > 0)
                 {
-                    DebugMessageToOwner(String.Format("Removing spell '{0}' from the start of the queue",
-                        m_spellQueue.Peek().Spell.Name));
+                    DebugMessageToOwner(String.Format("Removing spell '{0}' from the start of the queue", m_spellQueue.Peek().Spell.Name));
 
                     m_spellQueue.Dequeue();
                 }

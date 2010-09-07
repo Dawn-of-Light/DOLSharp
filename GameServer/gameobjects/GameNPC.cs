@@ -4426,7 +4426,7 @@ namespace DOL.GS
 
 				if (owner.Brain != null)
 				{
-					Interval = Math.Min(1500, owner.Brain.ThinkInterval);
+					Interval = Math.Min(1500, owner.Brain.CastInterval);
 				}
 				else
 				{
@@ -4484,15 +4484,6 @@ namespace DOL.GS
 		{
 			if (IsIncapacitated)
 				return;
-
-			if (this is NecromancerPet)
-			{
-				// Aredhel: Waiting on the LOS check completely f* up Facilitate
-				// Painworking timing, avoid LOS checks for necro pets AT ALL!
-
-				base.CastSpell(spell, line);
-				return;
-			}
 
 			if (m_runningSpellHandler != null || TempProperties.getProperty<Spell>(LOSCURRENTSPELL, null) != null)
 			{
