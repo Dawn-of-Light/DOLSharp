@@ -434,7 +434,9 @@ namespace DOL.GS.Spells
 				else
 				{
 					if (Caster.ControlledBrain == null || Caster.ControlledBrain.Body == null || !(Caster.ControlledBrain.Body is NecromancerPet))
+					{
 						SendCastAnimation(0);
+					}
 
 					FinishSpellCast(m_spellTarget);
 				}
@@ -652,8 +654,15 @@ namespace DOL.GS.Spells
 				int left = m_caster.GetSkillDisabledDuration(m_spell);
 				if (left > 0)
 				{
-					if (!quiet) MessageToCaster("You must wait " + (left / 1000 + 1).ToString() + " seconds to use this spell!", eChatType.CT_System);
-					return false;
+					if (m_caster is NecromancerPet && ((m_caster as NecromancerPet).Owner as GamePlayer).Client.Account.PrivLevel > (int)ePrivLevel.Player)
+					{
+						// Ignore Recast Timer
+					}
+					else
+					{
+						if (!quiet) MessageToCaster("You must wait " + (left / 1000 + 1).ToString() + " seconds to use this spell!", eChatType.CT_System);
+						return false;
+					}
 				}
 			}
 
@@ -812,8 +821,10 @@ namespace DOL.GS.Spells
 			}
 
 			if (!(Caster is GamePlayer))
-				Caster.Notify(GameLivingEvent.CastSucceeded, this,
-				              new PetSpellEventArgs(Spell, SpellLine, selectedTarget));
+			{
+				Caster.Notify(GameLivingEvent.CastSucceeded, this, new PetSpellEventArgs(Spell, SpellLine, selectedTarget));
+			}
+
 			return true;
 		}
 
@@ -1749,11 +1760,6 @@ return false;
 				// Most casters have access to the Quickcast ability (or the Necromancer equivalent, Facilitate Painworking).
 				// This ability will allow you to cast a spell without interruption.
 				// http://support.darkageofcamelot.com/kb/article.php?id=022
-
-				if (Caster is NecromancerPet || FindStaticEffectOnTarget(Caster, typeof(NecromancerShadeEffect)) != null)
-				{
-					return 2000;  // Will this fix necromancer FP?
-				}
 
 				return ticks;
 			}
@@ -2823,6 +2829,10 @@ return false;
 		/// <param name="effect"></param>
 		public virtual void OnEffectPulse(GameSpellEffect effect)
 		{
+			if (effect.Owner.IsAlive == false)
+			{
+				effect.Cancel(false);
+			}
 		}
 
 		/// <summary>

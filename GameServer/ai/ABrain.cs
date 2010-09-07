@@ -101,6 +101,15 @@ namespace DOL.AI
 		}
 
 		/// <summary>
+		/// How fast can this brain cast, in milliseconds
+		/// </summary>
+		public virtual int CastInterval
+		{
+			get { return ThinkInterval; }
+			set { }
+		}
+
+		/// <summary>
 		/// Starts the brain thinking
 		/// </summary>
 		/// <returns>true if started</returns>
