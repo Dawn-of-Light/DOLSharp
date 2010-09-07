@@ -206,11 +206,15 @@ namespace DOL.GS.Spells
 		public override void OnEffectPulse(GameSpellEffect effect)
 		{
 			base.OnEffectPulse(effect);
-			// An acidic cloud surrounds you!
-			MessageToLiving(effect.Owner, Spell.Message1, eChatType.CT_Spell);
-			// {0} is surrounded by an acidic cloud!
-			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), eChatType.CT_YouHit, effect.Owner);
-			OnDirectEffect(effect.Owner, effect.Effectiveness);
+
+			if (effect.Owner.IsAlive)
+			{
+				// An acidic cloud surrounds you!
+				MessageToLiving(effect.Owner, Spell.Message1, eChatType.CT_Spell);
+				// {0} is surrounded by an acidic cloud!
+				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), eChatType.CT_YouHit, effect.Owner);
+				OnDirectEffect(effect.Owner, effect.Effectiveness);
+			}
 		}
 
 		/// <summary>
