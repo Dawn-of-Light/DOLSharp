@@ -873,7 +873,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool CanCastInCombat(Spell spell)
 		{
-			return false;
+			// by default npc's can start casting spells while in combat
+			return true;
 		}
 
 		/// <summary>
@@ -6145,14 +6146,9 @@ namespace DOL.GS
 				return;
 			}
 
-			if ((m_runningSpellHandler != null))
+			if ((m_runningSpellHandler != null && spell.CastTime > 0))
 			{
-				if (spell.CastTime > 0)
-				{
-					Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
-				}
-
-				// Instants cast too close together can fail as well but we just ignore it
+				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
 				return;
 			}
 
