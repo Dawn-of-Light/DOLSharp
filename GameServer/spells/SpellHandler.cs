@@ -1761,7 +1761,11 @@ return false;
 				// This ability will allow you to cast a spell without interruption.
 				// http://support.darkageofcamelot.com/kb/article.php?id=022
 
-				return ticks;
+				// A: You're right. The answer I should have given was that Quick Cast reduces the time needed to cast to a flat two seconds, 
+				// and that a spell that has been quick casted cannot be interrupted. ...
+				// http://www.camelotherald.com/news/news_article.php?storyid=1383
+
+				return 2000;
 			}
 
 
