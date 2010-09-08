@@ -402,7 +402,7 @@ namespace DOL.GS
 			delve.Add(String.Format("Casting time: {0}",
 				(CastTime == 0) ? "instant" : String.Format("{0} sec", CastTime)));
 
-			if (Target == "Enemy" || Target == "Area" || Target == "Cone")
+			if (Target.ToLower() == "enemy" || Target.ToLower() == "area" || Target.ToLower() == "cone")
 				delve.Add(String.Format("Damage: {0}", 
 					GlobalConstants.DamageTypeToName((eDamageType)DamageType)));
 
