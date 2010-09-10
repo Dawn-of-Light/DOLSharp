@@ -861,10 +861,18 @@ namespace DOL.GS
 		/// <summary>
 		/// Minimum reduction possible to spell casting speed (CastTime * CastingSpeedCap)
 		/// </summary>
-		public virtual double CastingSpeedCap
+		public virtual double CastingSpeedReductionCap
 		{
 			get { return 0.4; }
 		}
+
+        /// <summary>
+        /// Minimum casting speed allowed, in ticks (milliseconds)
+        /// </summary>
+        public virtual int MinimumCastingSpeed
+        {
+            get { return 100; }
+        }
 
 		/// <summary>
 		/// Can this living cast the given spell while in combat?

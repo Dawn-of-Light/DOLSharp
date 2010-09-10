@@ -1769,41 +1769,32 @@ return false;
 			}
 
 
-			double percent = 1.0;
-			int dex = Caster.GetModified(eProperty.Dexterity);
-			if(SpellLine.KeyName.Contains("Champion Abilities")) dex=100; //Vico: No casting time diminution for CL Spells
-			//http://daoc.nisrv.com/modules.php?name=DD_DMG_Calculator
-			//Q: Would you please give more detail as to how dex affects a caster?
-			//For instance, I understand that when I have my dex maxed I will cast 25% faster.
-			//How does this work incrementally? And will a lurikeen be able to cast faster in the end than another race?
-			//A: From a dex of 50 to a dex of 250, the formula lets you cast 1% faster for each ten points.
-			//From a dex of 250 to the maximum possible (which as you know depends on your starting total),
-			//your speed increases 1% for every twenty points.
+			double percent = DexterityCastTimeReduction;
 
-			if (dex < 60)
-			{
-				//do nothing.  THis may prove inaccurate for level 10 trolls
-			}
-			else if (dex < 250)
-			{
-				percent = 1.0 - (dex - 60) * 0.15 * 0.01;
-			}
-			else
-			{
-				percent = 1.0 - ((dex - 60) * 0.15 + (dex - 250) * 0.05) * 0.01;
-			}
+            // Tolakram - this is bad code.  Someone needs to explain what this is supposed to do and offer a patch
+            // For example, should casting speed be decrased at all?  Should the castspeed bonus apply?
+			//if(SpellLine.KeyName.Contains("Champion Abilities"))
+            //    dex=100; //Vico: No casting time diminution for CL Spells
+
 			if (player != null)
 				percent *= 1.0 - m_caster.GetModified(eProperty.CastingSpeed) * 0.01;
 
-			ticks = (int)(ticks * Math.Max(m_caster.CastingSpeedCap, percent));
-			if (ticks < 1)
-				ticks = 1; // at least 1 tick
+			ticks = (int)(ticks * Math.Max(m_caster.CastingSpeedReductionCap, percent));
+			if (ticks < m_caster.MinimumCastingSpeed)
+				ticks = m_caster.MinimumCastingSpeed;
 			return ticks;
 		}
 
 		/// <summary>
 		/// The casting time reduction based on dexterity bonus.
-		/// </summary>
+        /// http://daoc.nisrv.com/modules.php?name=DD_DMG_Calculator
+        /// Q: Would you please give more detail as to how dex affects a caster?
+        /// For instance, I understand that when I have my dex maxed I will cast 25% faster.
+        /// How does this work incrementally? And will a lurikeen be able to cast faster in the end than another race?
+        /// A: From a dex of 50 to a dex of 250, the formula lets you cast 1% faster for each ten points.
+        /// From a dex of 250 to the maximum possible (which as you know depends on your starting total),
+        /// your speed increases 1% for every twenty points.
+        /// </summary>
 		public virtual double DexterityCastTimeReduction
 		{
 			get
