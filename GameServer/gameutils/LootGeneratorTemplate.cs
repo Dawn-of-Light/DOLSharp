@@ -331,8 +331,10 @@ namespace DOL.GS
 										{
 											loot.AddFixed(drop, lootTemplate.Count);
 										}
-
-										loot.AddRandom(lootTemplate.Chance, drop);
+										else
+										{
+											loot.AddRandom(lootTemplate.Chance, drop);
+										}
 									}
 								}
 							}

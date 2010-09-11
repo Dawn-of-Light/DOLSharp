@@ -871,7 +871,7 @@ namespace DOL.GS
         /// </summary>
         public virtual int MinimumCastingSpeed
         {
-            get { return 100; }
+            get { return 500; }
         }
 
 		/// <summary>
