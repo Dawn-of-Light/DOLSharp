@@ -85,8 +85,6 @@ namespace DOL.GS.Commands
 	{
 		private static readonly new log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		private const string BLANK_ITEM = "blank_item";
-
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
@@ -104,7 +102,7 @@ namespace DOL.GS.Commands
 						{
 							ItemTemplate newTemplate = new ItemTemplate();
 							newTemplate.Name = "(blank item)";
-							newTemplate.Id_nb = BLANK_ITEM;
+							newTemplate.Id_nb = InventoryItem.BLANK_ITEM;
 							GameInventoryItem item = new GameInventoryItem(newTemplate);
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							{
@@ -1470,7 +1468,7 @@ namespace DOL.GS.Commands
 							}
 
 							// if a blank item was created then AllowAdd will be false here
-							if (idnb == string.Empty && (item.AllowAdd == false || item.Id_nb == BLANK_ITEM || args[1] == "addunique"))
+							if (idnb == string.Empty && (item.AllowAdd == false || item.Id_nb == InventoryItem.BLANK_ITEM || args[1] == "addunique"))
 							{
 								DisplayMessage(client, "You need to provide a new id_nb for this item.");
 								return;
@@ -1494,10 +1492,13 @@ namespace DOL.GS.Commands
 								{
 									try
 									{
+										client.Player.Inventory.RemoveItem(item);
+										ItemTemplate itemTemplate = item.Template.Clone() as ItemTemplate;
+										itemTemplate.Id_nb = idnb;
+										GameServer.Database.AddObject(itemTemplate);
 										Log.Debug("add template " + item.Template.Id_nb);
-										item.Template.Id_nb = idnb;
-										GameServer.Database.AddObject(item.Template);
-										item.ITemplate_Id = idnb;
+										GameInventoryItem newItem = GameInventoryItem.Create<ItemTemplate>(itemTemplate);
+										client.Player.Inventory.AddItem((eInventorySlot)slot, newItem);
 									}
 									catch (Exception ex)
 									{
@@ -1509,12 +1510,13 @@ namespace DOL.GS.Commands
 								{
 									try
 									{
+										client.Player.Inventory.RemoveItem(item);
 										Log.Debug("add unique " + item.Template.Id_nb);
 										ItemUnique unique = new ItemUnique(item.Template);
 										unique.Id_nb = idnb;
 										GameServer.Database.AddObject(unique);
-										item.ITemplate_Id = null;
-										item.UTemplate_Id = idnb;
+										GameInventoryItem newItem = GameInventoryItem.Create<ItemUnique>(unique);
+										client.Player.Inventory.AddItem((eInventorySlot)slot, newItem);
 									}
 									catch (Exception ex)
 									{
