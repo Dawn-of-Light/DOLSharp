@@ -33,6 +33,8 @@ namespace DOL.GS
 	/// </summary>
 	public class GamePlayerInventory : GameLivingInventory
 	{
+		private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		#region Constructor/Declaration/LoadDatabase/SaveDatabase
 
 		/// <summary>
@@ -205,6 +207,9 @@ namespace DOL.GS
 							if (currentItem == null)
 								continue;
 
+							if (currentItem.Id_nb == InventoryItem.BLANK_ITEM)
+								continue;
+
 							if (GetValidInventorySlot((eInventorySlot) currentItem.SlotPosition) == eInventorySlot.Invalid)
 							{
 								if (Log.IsErrorEnabled)
@@ -304,15 +309,17 @@ namespace DOL.GS
 
 			item.OwnerID = m_player.InternalID;
 
-			if (addObject)
+			if (item.Id_nb != InventoryItem.BLANK_ITEM)
 			{
-				GameServer.Database.AddObject(item);
+				if (addObject)
+				{
+					GameServer.Database.AddObject(item);
+				}
+				else
+				{
+					GameServer.Database.SaveObject(item);
+				}
 			}
-			else
-			{
-				GameServer.Database.SaveObject(item);
-			}
-
 
 			if (IsEquippedSlot((eInventorySlot)item.SlotPosition))
 				m_player.Notify(PlayerInventoryEvent.ItemEquipped, this, new ItemEquippedArgs(item, eInventorySlot.Invalid));
@@ -360,13 +367,16 @@ namespace DOL.GS
 			if (!base.RemoveItem(item))
 				return false;
 
-			if (deleteObject)
+			if (item.Id_nb != InventoryItem.BLANK_ITEM)
 			{
-				GameServer.Database.DeleteObject(item);
-			}
-			else
-			{
-				GameServer.Database.SaveObject(item);
+				if (deleteObject)
+				{
+					GameServer.Database.DeleteObject(item);
+				}
+				else
+				{
+					GameServer.Database.SaveObject(item);
+				}
 			}
 
 			ITradeWindow window = m_player.TradeWindow;
@@ -1236,11 +1246,11 @@ namespace DOL.GS
 
 			base.ExchangeItems(fromSlot, toSlot);
 
-			if (fromItem != null)
+			if (fromItem != null && fromItem.Id_nb != InventoryItem.BLANK_ITEM)
 			{
 				GameServer.Database.SaveObject(fromItem);
 			}
-			if (toItem != null && toItem != fromItem)
+			if (toItem != null && toItem != fromItem && toItem.Id_nb != InventoryItem.BLANK_ITEM)
 			{
 				GameServer.Database.SaveObject(toItem);
 			}
