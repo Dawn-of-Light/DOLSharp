@@ -75,13 +75,16 @@ namespace DOL.GS.Commands
 		 "GMCommands.Item.Usage.FindID",
 		 "GMCommands.Item.Usage.FindName",
 		 "/item classtype <ClassType> <slot> - Set this items ClassType",
-		 "/item saveunique <id_nb> <slot> - save item as an unique one",
+		 "/item addunique <id_nb> <slot> - save item as an unique one",
+		 "/item saveunique <id_nb> <slot> - update a unique item",
 		 "/item load <id_nb> - Load an item from the DB and replace or add item to the ItemTemplate cache",
 		 "/item loadartifacts - Re-load all the artifact entries from the DB.  ItemTemplates must be loaded separately and prior to loading artifacts.",
 		 "/item loadpackage <packageid> | **all** - Load all the items in a package from the DB and replace or add to the ItemTemplate cache. **all** is loading all items [! SLOW !]",
 		 "/item loadspells - Read each item spell from the database and update the global spell list")]
 	public class ItemCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static readonly new log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private const string BLANK_ITEM = "blank_item";
 
 		public void OnCommand(GameClient client, string[] args)
@@ -1363,8 +1366,7 @@ namespace DOL.GS.Commands
 							break;
 						}
 					#endregion TemplateID
-					#region SaveTemplate / SaveUnique
-					case "savetemplate":
+					#region SaveUnique
 					case "saveunique":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1407,8 +1409,68 @@ namespace DOL.GS.Commands
 								return;
 							}
 
+							if (item.Template is ItemUnique)
+							{
+								ItemUnique itemUnique = item.Template as ItemUnique;
+								Log.Debug("update ItemUnique " + item.Template.Id_nb);
+								GameServer.Database.SaveObject(itemUnique);
+								client.Out.SendMessage(string.Format("ItemUnique {0} updated!", itemUnique.Id_nb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							else
+							{
+								DisplayMessage(client, "This is not an ItemUnique.  To create a new ItemUnique use addunique");
+								return;
+							}
+						}
+						break;
+					#endregion SaveUnique
+
+					#region SaveTemplate / AddUnique
+					case "savetemplate":
+					case "addunique":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+							string idnb = string.Empty;
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+								if (slot > (int)eInventorySlot.LastBackpack)
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+								if (slot < 0)
+								{
+									slot = 0;
+								}
+
+								idnb = args[2];
+							}
+							else if (args.Length >= 3)
+							{
+								idnb = args[2];
+							}
+							else if (args.Length < 2)
+							{
+								DisplaySyntax(client);
+								return;
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
 							// if a blank item was created then AllowAdd will be false here
-							if (idnb == string.Empty && (item.AllowAdd == false || item.Id_nb == BLANK_ITEM || args[1] == "saveunique"))
+							if (idnb == string.Empty && (item.AllowAdd == false || item.Id_nb == BLANK_ITEM || args[1] == "addunique"))
 							{
 								DisplayMessage(client, "You need to provide a new id_nb for this item.");
 								return;
@@ -1443,7 +1505,7 @@ namespace DOL.GS.Commands
 										return;
 									}
 								}
-								else //saveunique
+								else //addunique
 								{
 									try
 									{
