@@ -1110,7 +1110,14 @@ namespace DOL.GS
 			delve.Add(" ");
 			delve.Add("--- Item technical information ---");
 			delve.Add(" ");
-			delve.Add("Item Template: " + Id_nb);
+			if (Template is ItemUnique)
+			{
+				delve.Add("  Item Unique: " + Id_nb);
+			}
+			else
+			{
+				delve.Add("Item Template: " + Id_nb);
+			}
 			delve.Add("         Name: " + Name);
 			delve.Add("    ClassType: " + this.GetType().FullName);
 			delve.Add(" ");

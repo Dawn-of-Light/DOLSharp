@@ -30,6 +30,8 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class GameLivingInventory : IGameInventory
 	{
+		private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public static readonly eInventorySlot[] EQUIP_SLOTS =
 		{
 			eInventorySlot.Horse,
@@ -59,8 +61,6 @@ namespace DOL.GS
 			eInventorySlot.RightRing,
 			eInventorySlot.Mythical,
 		};
-
-		protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		//Defines the visible slots that will be displayed to players
 		protected static readonly eInventorySlot[] VISIBLE_SLOTS =

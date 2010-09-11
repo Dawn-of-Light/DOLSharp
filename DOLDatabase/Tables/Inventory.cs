@@ -37,6 +37,8 @@ namespace DOL.Database
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		public const string BLANK_ITEM = "blank_item";
+
 		#region Inventory fields
 
 		protected string m_ownerID; 		// owner id
