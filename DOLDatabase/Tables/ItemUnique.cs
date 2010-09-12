@@ -102,9 +102,11 @@ namespace DOL.Database
 			CanUseEvery = template.CanUseEvery;
 			Flags = template.Flags;
 			BonusLevel = template.BonusLevel;
+			LevelRequirement = template.LevelRequirement;
 			Description = template.Description;
 			IsIndestructible = template.IsIndestructible;
 			IsNotLosingDur = template.IsNotLosingDur;
+			PackageID = template.PackageID;
 			ClassType = template.ClassType;
 		}
 	

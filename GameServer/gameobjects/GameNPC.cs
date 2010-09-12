@@ -3883,7 +3883,7 @@ namespace DOL.GS
 
 				if (Name != Name.ToLower())
 				{
-					minutes += 10;
+					minutes += 5;
 				}
 
 				if (Level <= 65 && Realm == 0)
@@ -3897,7 +3897,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					int add = (Level - 65) + ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL + 10;
+					int add = (Level - 65) + ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL;
 					return (minutes + add) * 60000;
 				}
 			}
