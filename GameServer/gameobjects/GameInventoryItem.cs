@@ -412,11 +412,10 @@ namespace DOL.GS
 			if (IsIndestructible)
                 delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.CannotDestroyed"));
 
-			if (BonusLevel >= 0)
+			if (BonusLevel > 0)
 			{
 				delve.Add(" ");
                 delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.BonusLevel", BonusLevel));
-
             }
 
 			//Add admin info
@@ -1147,6 +1146,8 @@ namespace DOL.GS
 			delve.Add("      SpellID: " + SpellID + " (" + Charges + "/" + MaxCharges + ")");
 			delve.Add("     SpellID1: " + SpellID1 + " (" + Charges1 + "/" + MaxCharges1 + ")");
 			delve.Add("PoisonSpellID: " + PoisonSpellID + " (" + PoisonCharges + "/" + PoisonMaxCharges + ") ");
+			delve.Add("LevelRequired: " + LevelRequirement);
+			delve.Add("   BonusLevel: " + BonusLevel);
 
 			if (GlobalConstants.IsWeapon(Object_Type))
 			{
