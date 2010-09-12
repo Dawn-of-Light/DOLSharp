@@ -70,13 +70,14 @@ namespace DOL.GS.Commands
 		 "GMCommands.Item.Usage.Proc1",
 		 "GMCommands.Item.Usage.Poison",
 		 "GMCommands.Item.Usage.Realm",
-		 "GMCommands.Item.Usage.SaveTemplate",
-		 "GMCommands.Item.Usage.TemplateID",
-		 "GMCommands.Item.Usage.FindID",
-		 "GMCommands.Item.Usage.FindName",
 		 "/item classtype <ClassType> <slot> - Set this items ClassType",
+		 "/item levelrequired <level> <slot> - Set the required level needed to use spells and procs on this item",
+		 "/item bonuslevel <level> <slot> - Set the level required for item bonuses to effect player",
+		 "GMCommands.Item.Usage.SaveTemplate",
 		 "/item addunique <id_nb> <slot> - save item as an unique one",
 		 "/item saveunique <id_nb> <slot> - update a unique item",
+		 "GMCommands.Item.Usage.FindID",
+		 "GMCommands.Item.Usage.FindName",
 		 "/item load <id_nb> - Load an item from the DB and replace or add item to the ItemTemplate cache",
 		 "/item loadartifacts - Re-load all the artifact entries from the DB.  ItemTemplates must be loaded separately and prior to loading artifacts.",
 		 "/item loadpackage <packageid> | **all** - Load all the items in a package from the DB and replace or add to the ItemTemplate cache. **all** is loading all items [! SLOW !]",
@@ -1316,6 +1317,60 @@ namespace DOL.GS.Commands
 							break;
 						}
 					#endregion Realm
+					#region Level Required
+					case "levelrequired":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							int setting = Convert.ToInt32(args[2]);
+							item.LevelRequirement = setting;
+							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							break;
+						}
+					#endregion Level Required
+					#region Bonus Level
+					case "bonuslevel":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+							if (args.Length >= 4)
+							{
+								try
+								{
+									slot = Convert.ToInt32(args[3]);
+								}
+								catch
+								{
+									slot = (int)eInventorySlot.LastBackpack;
+								}
+							}
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							int setting = Convert.ToInt32(args[2]);
+							item.BonusLevel = setting;
+							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							break;
+						}
+					#endregion Bonus Level
 					#region ClassType
 					case "classtype":
 						{
@@ -1339,31 +1394,6 @@ namespace DOL.GS.Commands
 							break;
 						}
 					#endregion ClassType
-					#region TemplateID
-					case "templateid":
-						{
-							int slot = (int)eInventorySlot.LastBackpack;
-							if (args.Length >= 4)
-							{
-								try
-								{
-									slot = Convert.ToInt32(args[3]);
-								}
-								catch
-								{
-									slot = (int)eInventorySlot.LastBackpack;
-								}
-							}
-							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
-							if (item == null)
-							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							item.Id_nb = args[2];
-							break;
-						}
-					#endregion TemplateID
 					#region SaveUnique
 					case "saveunique":
 						{
@@ -1422,7 +1452,6 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion SaveUnique
-
 					#region SaveTemplate / AddUnique
 					case "savetemplate":
 					case "addunique":
@@ -1468,18 +1497,24 @@ namespace DOL.GS.Commands
 							}
 
 							// if a blank item was created then AllowAdd will be false here
-							if (idnb == string.Empty && (item.AllowAdd == false || item.Id_nb == InventoryItem.BLANK_ITEM || args[1] == "addunique"))
+							if (idnb == string.Empty && (item.AllowAdd == false || item.Id_nb == InventoryItem.BLANK_ITEM || args[1].ToLower() == "addunique"))
 							{
 								DisplayMessage(client, "You need to provide a new id_nb for this item.");
 								return;
 							}
 							else if (idnb == string.Empty)
 							{
+								if (args[1].ToLower() == "savetemplate" && item.Template is ItemUnique)
+								{
+									DisplayMessage(client, "You need to provide a new id_nb to save this ItemUnique as an ItemTemplate.");
+									return;
+								}
+
 								idnb = item.Id_nb;
 							}
 
 							ItemTemplate temp = null;
-							if (args[1] == "savetemplate")
+							if (args[1].ToLower() == "savetemplate")
 							{
 								// if the item is allready in the database
 								temp = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
@@ -1488,15 +1523,16 @@ namespace DOL.GS.Commands
 							// save the new item
 							if (temp == null)
 							{
-								if (args[1] == "savetemplate")
+								if (args[1].ToLower() == "savetemplate")
 								{
 									try
 									{
 										client.Player.Inventory.RemoveItem(item);
-										ItemTemplate itemTemplate = item.Template.Clone() as ItemTemplate;
+										ItemTemplate itemTemplate = new ItemTemplate(item.Template);
 										itemTemplate.Id_nb = idnb;
 										GameServer.Database.AddObject(itemTemplate);
-										Log.Debug("add template " + item.Template.Id_nb);
+										Log.Debug("Added New Item Template: " + itemTemplate.Id_nb);
+										DisplayMessage(client, "Added New Item Template: " + itemTemplate.Id_nb);
 										GameInventoryItem newItem = GameInventoryItem.Create<ItemTemplate>(itemTemplate);
 										client.Player.Inventory.AddItem((eInventorySlot)slot, newItem);
 									}
@@ -1511,10 +1547,11 @@ namespace DOL.GS.Commands
 									try
 									{
 										client.Player.Inventory.RemoveItem(item);
-										Log.Debug("add unique " + item.Template.Id_nb);
 										ItemUnique unique = new ItemUnique(item.Template);
 										unique.Id_nb = idnb;
 										GameServer.Database.AddObject(unique);
+										Log.Debug("Added New ItemUnique: " + unique.Id_nb + " (" + unique.ObjectId + ")");
+										DisplayMessage(client, "Added New ItemUnique: " + unique.Id_nb + " (" + unique.ObjectId + ")");
 										GameInventoryItem newItem = GameInventoryItem.Create<ItemUnique>(unique);
 										client.Player.Inventory.AddItem((eInventorySlot)slot, newItem);
 									}
@@ -1527,40 +1564,13 @@ namespace DOL.GS.Commands
 							}
 							else // update the item
 							{
-								Log.Debug("update template " + item.Template.Id_nb);
 								item.Template.Dirty = true;
 								GameServer.Database.SaveObject(item.Template);
 								GameServer.Database.UpdateInCache<ItemTemplate>(item.Template);
+								Log.Debug("Updated ItemTemplate: " + item.Template.Id_nb);
+								DisplayMessage(client, "Updated ItemTemplate: " + item.Template.Id_nb);
 							}
 
-
-							if (!item.AllowAdd) // blank item previously created
-							{
-								try
-								{
-									item.AllowAdd = true;
-									GameServer.Database.AddObject(item);
-								}
-								catch (Exception ex)
-								{
-									DisplayMessage(client, "Error adding inventory item: " + ex.Message);
-									return;
-								}
-							}
-							else
-							{
-								try
-								{
-									GameServer.Database.SaveObject(item);
-								}
-								catch (Exception ex)
-								{
-									DisplayMessage(client, "Error saving inventory item: " + ex.Message);
-									return;
-								}
-							}
-
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.SaveTemplate.ItemSaved", idnb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
 					#endregion SaveTemplate / SaveUnique
