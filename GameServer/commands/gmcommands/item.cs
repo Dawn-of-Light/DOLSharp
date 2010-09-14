@@ -71,6 +71,7 @@ namespace DOL.GS.Commands
 		 "GMCommands.Item.Usage.Poison",
 		 "GMCommands.Item.Usage.Realm",
 		 "/item classtype <ClassType> <slot> - Set this items ClassType",
+		 "/item packageid <PackageID> <slot> - Set this items PackageID",
 		 "/item levelrequired <level> <slot> - Set the required level needed to use spells and procs on this item",
 		 "/item bonuslevel <level> <slot> - Set the level required for item bonuses to effect player",
 		 "GMCommands.Item.Usage.SaveTemplate",
@@ -1394,6 +1395,29 @@ namespace DOL.GS.Commands
 							break;
 						}
 					#endregion ClassType
+					#region PackageID
+					case "packageid":
+						{
+							string packageID = args[2];
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (int.TryParse(args[args.Length - 1], out slot) == false)
+							{
+								slot = (int)eInventorySlot.LastBackpack;
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							item.PackageID = packageID;
+							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							break;
+						}
+					#endregion PackageID
 					#region SaveUnique
 					case "saveunique":
 						{
