@@ -251,7 +251,7 @@ namespace DOL.Database
 				if (m_item == null)
 				{
 					if (OwnerID != null && OwnerID != "")
-						log.ErrorFormat("Template null for {0} Inventory.  Can't find template {1}{2}!", OwnerID, (ITemplate_Id == null ? "" : ITemplate_Id), (UTemplate_Id == null ? "" : UTemplate_Id));
+						log.ErrorFormat("Template null for player {0} Inventory.  Can't find template {1}{2} for item in slot {3}!", OwnerID, (ITemplate_Id == null ? "" : ITemplate_Id), (UTemplate_Id == null ? "" : UTemplate_Id), m_slot_pos);
 
 					return new ItemTemplate();
 				}
