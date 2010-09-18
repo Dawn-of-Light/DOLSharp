@@ -34,7 +34,7 @@ namespace DOL.GS
 		/// Holds the random number generator instance
 		/// </summary>
 		[ThreadStatic]
-		private static Random m_random;
+		private static Random m_random = null;
 
 		/// <summary>
 		/// Gets the random number generator
@@ -43,10 +43,12 @@ namespace DOL.GS
 		{
 			get
 			{
-				Random rnd = m_random;
-				if (rnd == null)
-					m_random = rnd = new Random((int) DateTime.Now.Ticks);
-				return rnd;
+				if (m_random == null)
+				{
+					m_random = new Random((int)DateTime.Now.Ticks);
+				}
+
+				return m_random;
 			}
 		}
 
