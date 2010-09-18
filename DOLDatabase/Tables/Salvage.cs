@@ -30,6 +30,7 @@ namespace DOL.Database
 		private int m_objectType;
 		private int m_salvageLevel;
 		private string m_id_nb;
+        private int m_realm;
 
 		/// <summary>
 		/// Create salvage
@@ -89,6 +90,23 @@ namespace DOL.Database
 				m_id_nb = value;
 			}
 		}
+
+        /// <summary>
+        /// Realm of item to salvage
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public int Realm
+        {
+            get
+            {
+                return m_realm;
+            }
+            set
+            {
+                Dirty = true;
+                m_realm = value;
+            }
+        }
 
 		/// <summary>
 		/// The raw material to give when salvage
