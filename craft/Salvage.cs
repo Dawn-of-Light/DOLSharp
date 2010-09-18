@@ -71,6 +71,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static int BeginWork(GamePlayer player, InventoryItem item)
 		{
+            DBSalvage material;
+
 			if (!IsAllowedToBeginWork(player, item))
 			{
 				return 0;
@@ -78,9 +80,13 @@ namespace DOL.GS
 
 			int salvageLevel = CraftingMgr.GetItemCraftLevel(item) / 100;
 			if(salvageLevel > 9) salvageLevel = 9; // max 9
-			
-			DBSalvage material = GameServer.Database.SelectObject<DBSalvage>("ObjectType ='"+item.Object_Type+"' AND SalvageLevel ='"+salvageLevel+"'");
-			if (material == null || material.RawMaterial == null)
+
+            if (ServerProperties.Properties.USE_SALVAGE_PER_REALM)
+                material = GameServer.Database.SelectObject<DBSalvage>("ObjectType ='" + item.Object_Type + "' AND SalvageLevel ='" + salvageLevel + "' AND Realm ='" + item.Realm + "'");
+            else
+                material = GameServer.Database.SelectObject<DBSalvage>("ObjectType ='" + item.Object_Type + "' AND SalvageLevel ='" + salvageLevel + "'");
+
+            if (material == null || material.RawMaterial == null)
 			{
 				player.Out.SendMessage("Salvage material for object type (" + item.Object_Type + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
