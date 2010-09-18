@@ -67,6 +67,7 @@ namespace DOL.Database
 		private int m_bodyType = 0;
 		private int m_maxdistance = 0;
 		private int m_tetherRange = 0;
+        private byte m_visibleWeaponSlots = 0;
 
 		/// <summary>
 		/// Constructor
@@ -495,5 +496,20 @@ namespace DOL.Database
 				m_tetherRange = value;
 			}
 		}
+
+        [DataElement(AllowDbNull = false)]
+        public byte VisibleWeaponSlots
+        {
+            get
+            {
+                return m_visibleWeaponSlots;
+            }
+            set
+            {
+                Dirty = true;
+                m_visibleWeaponSlots = value;
+            }
+        }
+
 	}
 }
