@@ -8574,22 +8574,7 @@ namespace DOL.GS
 					    && useItem.SpellID > 0
 					    && useItem.MaxCharges == 0)
 					{
-						int cooldown = useItem.CanUseAgainIn;
-						if (cooldown > 0 && Client.Account.PrivLevel == (uint)ePrivLevel.Player)
-						{
-							int minutes = cooldown / 60;
-							int seconds = cooldown % 60;
-							Out.SendMessage(String.Format("You must wait {0} to discharge this item!",
-							                              (minutes <= 0)
-							                              ? String.Format("{0} more seconds", seconds)
-							                              : String.Format("{0} more minutes and {1} seconds",
-							                                              minutes, seconds)),
-							                eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}
-						else
-						{
-							UseMagicalItem(useItem, type);
-						}
+						UseMagicalItem(useItem, type);
 						return;
 					}
 
@@ -8765,132 +8750,19 @@ namespace DOL.GS
 								}
 								else
 								{
-									SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-
-									if (chargeEffectLine != null)
+									if (type == 1) //use1
 									{
-										if (type == 1) //use1
-										{
-											if (useItem.SpellID == 0)
-												return;
+										if (useItem.SpellID == 0)
+											return;
 
-											int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(MaxLevel, useItem.Level);
+										UseItemCharge(useItem, type);
+									}
+									else if (type == 2) //use2
+									{
+										if (useItem.SpellID1 == 0)
+											return;
 
-											if (requiredLevel <= Level)
-											{
-												Spell spell = SkillBase.FindSpell(useItem.SpellID, chargeEffectLine);
-
-												if (spell != null)
-												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-													if (spellHandler != null)
-													{
-														if (IsOnHorse && !spellHandler.HasPositiveEffect)
-															IsOnHorse = false;
-
-														Stealth(false);
-
-														if (spellHandler.CastSpell())
-														{
-															bool castOk = spellHandler.StartReuseTimer;
-
-															if (spell.SubSpellID > 0)
-															{
-																Spell subspell = SkillBase.GetSpellByID(spell.SubSpellID);
-																if (subspell != null)
-																{
-																	ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(this, subspell, chargeEffectLine);
-																	if (subSpellHandler != null)
-																	{
-																		subSpellHandler.CastSpell();
-																	}
-																}
-															}
-															if (useItem.MaxCharges > 0)
-															{
-																useItem.Charges--;
-															}
-
-															if (castOk)
-															{
-																TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-																TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
-																TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
-															}
-														}
-													}
-													else
-													{
-														Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													}
-												}
-												else
-												{
-													Out.SendMessage("Charge effect ID " + spell.ID + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												}
-											}
-											else
-											{
-												Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											}
-										}
-										else if (type == 2) //use2
-										{
-											if (useItem.SpellID1 == 0)
-												return;
-
-											int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(MaxLevel, useItem.Level);
-
-											if (requiredLevel <= Level)
-											{
-												Spell spell = SkillBase.FindSpell(useItem.SpellID1, chargeEffectLine);
-
-												if (spell != null)
-												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-													if (spellHandler != null)
-													{
-														if (IsOnHorse && !spellHandler.HasPositiveEffect)
-															IsOnHorse = false;
-
-														Stealth(false);
-
-														if (spellHandler.CastSpell())
-														{
-															if (spell.SubSpellID > 0)
-															{
-																Spell subspell = SkillBase.GetSpellByID(spell.SubSpellID);
-
-																if (subspell != null)
-																{
-																	ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(this, subspell, chargeEffectLine);
-																	if (subSpellHandler != null)
-																	{
-																		subSpellHandler.CastSpell();
-																	}
-																}
-															}
-															if (useItem.MaxCharges > 0)
-															{
-																useItem.Charges--;
-															}
-
-															TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-															TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
-															TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
-														}
-													}
-													else
-													{
-														Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													}
-												}
-												else
-												{
-													Out.SendMessage("Charge effect ID " + spell.ID + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												}
-											}
-										}
+										UseItemCharge(useItem, type);
 									}
 								}
 							}
@@ -8902,15 +8774,117 @@ namespace DOL.GS
 			}
 		}
 
+
+		/// <summary>
+		/// Use a charged ability on an item
+		/// </summary>
+		/// <param name="useItem"></param>
+		/// <param name="type">1 == use1, 2 == use2</param>
+		protected virtual void UseItemCharge(InventoryItem useItem, int type)
+		{
+			int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(MaxLevel, useItem.Level);
+
+			if (requiredLevel > Level)
+			{
+				Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
+			SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+			Spell spell = null;
+
+			if (type == 1)
+			{
+				spell = SkillBase.FindSpell(useItem.SpellID, chargeEffectLine);
+			}
+			else
+			{
+				spell = SkillBase.FindSpell(useItem.SpellID1, chargeEffectLine);
+			}
+
+			if (spell != null)
+			{
+				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
+				if (spellHandler != null)
+				{
+					if (IsOnHorse && !spellHandler.HasPositiveEffect)
+						IsOnHorse = false;
+
+					Stealth(false);
+
+					if (spellHandler.CastSpell())
+					{
+						bool castOk = spellHandler.StartReuseTimer;
+
+						if (spell.SubSpellID > 0)
+						{
+							Spell subspell = SkillBase.GetSpellByID(spell.SubSpellID);
+							if (subspell != null)
+							{
+								ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(this, subspell, chargeEffectLine);
+								if (subSpellHandler != null)
+								{
+									subSpellHandler.CastSpell();
+								}
+							}
+						}
+						if (useItem.MaxCharges > 0)
+						{
+							useItem.Charges--;
+						}
+
+						if (castOk)
+						{
+							TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+							TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+							TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
+						}
+					}
+				}
+				else
+				{
+					Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+			}
+			else
+			{
+				if (type == 1)
+				{
+					Out.SendMessage("Charge effect ID " + useItem.SpellID + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					Out.SendMessage("Charge effect ID " + useItem.SpellID1 + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+			}
+		}
+
+
 		/// <summary>
 		/// Use a magical item's spell.
 		/// </summary>
 		/// <param name="item"></param>
 		/// <param name="type"></param>
-		protected bool UseMagicalItem(InventoryItem item, int type)
+		protected virtual bool UseMagicalItem(InventoryItem item, int type)
 		{
 			if (item == null)
 				return false;
+
+			int cooldown = item.CanUseAgainIn;
+			if (cooldown > 0 && Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+			{
+				int minutes = cooldown / 60;
+				int seconds = cooldown % 60;
+				Out.SendMessage(String.Format("You must wait {0} to discharge this item!",
+											  (minutes <= 0)
+											  ? String.Format("{0} more seconds", seconds)
+											  : String.Format("{0} more minutes and {1} seconds",
+															  minutes, seconds)),
+								eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				return false;
+			}
+
 
 			//Eden
 			if (IsMezzed || (IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || !IsAlive)
