@@ -1225,7 +1225,7 @@ namespace DOL.GS.ServerProperties
 
 		#endregion
 		
-		#region CRAFT
+		#region CRAFT / SALVAGE
 		/// <summary>
 		/// The crafting speed modifier
 		/// </summary>
@@ -1243,6 +1243,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("craft","capital_city_crafting_speed_bonus", "Crafting speed bonus in capital cities; 2 = 2x, 3 = 3x, ..., 1 = standard", 1.0)]
 		public static double CAPITAL_CITY_CRAFTING_SPEED_BONUS;
+
+        /// <summary>
+        /// Use salvage per realm and get back material to use in chars realm
+        /// </summary>
+        [ServerProperty("salvage", "use_salvage_per_realm", "Enable to get back material to use in chars realm. Disable to get back the same material in all realms.", false)]
+        public static bool USE_SALVAGE_PER_REALM;
+
 		#endregion
 		
 		#region ACCOUNT
