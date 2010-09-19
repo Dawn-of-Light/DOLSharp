@@ -386,7 +386,10 @@ namespace DOL.GS.Quests
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
 					{
-						m_questDependencies.Add(str);
+						if (str != "")
+						{
+							m_questDependencies.Add(str);
+						}
 					}
 				}
 
@@ -640,7 +643,6 @@ namespace DOL.GS.Quests
 								break;
 							}
 						}
-
 					}
 
 					if (numFound < m_questDependencies.Count)
