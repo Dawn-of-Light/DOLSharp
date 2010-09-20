@@ -24,71 +24,75 @@ using DOL.Events;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler for speed decreasing spells.  Special for vampiirs
-	/// </summary>
-	[SpellHandler("VampSpeedDecrease")]
-	public class VampMaintainedSpeedDecrease : SpeedDecreaseSpellHandler
-	{
-		public VampMaintainedSpeedDecrease(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    /// <summary>
+    /// Spell handler for speed decreasing spells.  Special for vampiirs
+    /// </summary>
+    [SpellHandler("VampSpeedDecrease")]
+    public class VampMaintainedSpeedDecrease : SpeedDecreaseSpellHandler
+    {
+        public VampMaintainedSpeedDecrease(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		/// <summary>
-		/// Creates the corresponding spell effect for the spell
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="effectiveness"></param>
-		/// <returns></returns>
-		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
-		{
-			//We don't want an immunity timer for this
-			return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
-		}
+        /// <summary>
+        /// Creates the corresponding spell effect for the spell
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="effectiveness"></param>
+        /// <returns></returns>
+        protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
+        {
+            //We don't want an immunity timer for this
+            return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
+        }
 
-		/// <summary>
-		/// Check each pulse to see if spell can be maintained
-		/// </summary>
-		/// <param name="effect"></param>
-		public override void OnEffectPulse(GameSpellEffect effect)
-		{
-			if (effect.Owner.ObjectState != GameObject.eObjectState.Active || m_caster.ObjectState != GameObject.eObjectState.Active)
-			{
-				effect.Cancel(false);
-				return;
-			}
+        /// <summary>
+        /// Check each pulse to see if spell can be maintained
+        /// </summary>
+        /// <param name="effect"></param>
+        public override void OnEffectPulse(GameSpellEffect effect)
+        {
+            if (effect.Owner.ObjectState != GameObject.eObjectState.Active || m_caster.ObjectState != GameObject.eObjectState.Active)
+            {
+                effect.Cancel(false);
+                return;
+            }
 
-			if (m_caster.Mana < Spell.PulsePower)
-			{
-				effect.Cancel(false);
-				return;
-			}
+            if (m_caster.Mana < Spell.PulsePower)
+            {
+                effect.Cancel(false);
+                return;
+            }
 
-			if (!m_caster.IsAlive || 
-				!effect.Owner.IsAlive ||
-				m_caster.IsMezzed ||
-				m_caster.IsStunned ||
-				!m_caster.IsWithinRadius(effect.Owner, Spell.Range) || 
-				(m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true))
-			{
-				effect.Cancel(false);
-				return;
-			}
+            if (!m_caster.IsAlive ||
+                !effect.Owner.IsAlive ||
+                m_caster.IsMezzed ||
+                m_caster.IsStunned ||
+                !m_caster.IsWithinRadius(effect.Owner, CalculateSpellRange()) ||
+                (m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true))
+            {
+                effect.Cancel(false);
+                return;
+            }
+            if (!m_caster.IsWithinRadius(effect.Owner, CalculateSpellRange()))
+            {
+                effect.Cancel(false);
+                return;
+            }
+            if (!m_caster.TargetInView)
+            {
+                effect.Cancel(false);
+                return;
+            }
 
-			if (!m_caster.TargetInView)
-			{
-				effect.Cancel(false);
-				return;
-			}
+            base.OnEffectPulse(effect);
 
-			base.OnEffectPulse(effect);
-
-			m_caster.Mana -= effect.Spell.PulsePower;
-		}
+            m_caster.Mana -= effect.Spell.PulsePower;
+        }
 
 
-		protected override void OnAttacked(DOLEvent e, object sender, EventArgs arguments)
-		{
-			// Spell can be used in combat, do nothing
-		}
+        protected override void OnAttacked(DOLEvent e, object sender, EventArgs arguments)
+        {
+            // Spell can be used in combat, do nothing
+        }
 
-	}
+    }
 }
