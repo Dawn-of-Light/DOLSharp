@@ -1590,7 +1590,7 @@ namespace DOL.GS.Commands
 							{
 								item.Template.Dirty = true;
 								GameServer.Database.SaveObject(item.Template);
-								GameServer.Database.UpdateInCache<ItemTemplate>(item.Template);
+								GameServer.Database.UpdateInCache<ItemTemplate>(item.Template.Id_nb);
 								Log.Debug("Updated ItemTemplate: " + item.Template.Id_nb);
 								DisplayMessage(client, "Updated ItemTemplate: " + item.Template.Id_nb);
 							}

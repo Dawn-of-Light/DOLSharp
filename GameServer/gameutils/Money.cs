@@ -35,32 +35,32 @@ namespace DOL.GS
 
 		public static int GetMithril(long money)
 		{
-			return (int) (money/100/100/1000/1000);
+			return (int) (money/100L/100L/1000L/1000L);
 		}
 
 		public static int GetPlatinum(long money)
 		{
-			return (int) (money/100/100/1000%1000);
+			return (int) (money/100L/100L/1000L%1000L);
 		}
 
 		public static int GetGold(long money)
 		{
-			return (int) (money/100/100%1000);
+			return (int) (money/100L/100L%1000L);
 		}
 
 		public static int GetSilver(long money)
 		{
-			return (int) (money/100%100);
+			return (int) (money/100L%100L);
 		}
 
 		public static int GetCopper(long money)
 		{
-			return (int) (money%100);
+			return (int) (money%100L);
 		}
 
 		public static long GetMoney(int mithril, int platinum, int gold, int silver, int copper)
 		{
-			return (((mithril*1000L + platinum)*1000L + gold)*100L + silver)*100L + copper;
+			return ((((long)mithril * 1000L + (long)platinum) * 1000L + (long)gold) * 100L + (long)silver) * 100L + (long)copper;
 		}
 
 		/// <summary>
