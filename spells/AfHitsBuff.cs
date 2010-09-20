@@ -22,44 +22,84 @@ using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using System.Collections.Generic;
 
-namespace DOL.GS.Spells {
+namespace DOL.GS.Spells
+{
 
- [SpellHandlerAttribute("AfHitsBuff")]
- public class AfHitsBuffSpellHandler:PropertyChangingSpell {
-  public override int BonusCategory1 { get { return 1; } }
-  public override eProperty Property1 { get { return eProperty.MaxHealth; } }
-  public override void OnEffectStart(GameSpellEffect effect) {
-   base.OnEffectStart(effect);
-   double bonus;
-   double bonus2 = 0;
-   if
-       (m_spell.Value < 0) 
-   {
-       bonus = bonus2 / 100; 
-   }
-   else
-   { 
-       bonus = m_spell.Value / 100; }
-   effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.ArmorFactor,this,bonus);
-   effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxHealth, this, bonus);
-   SendUpdates(effect.Owner); }
+    [SpellHandlerAttribute("AfHitsBuff")]
+    public class AfHitsBuffSpellHandler : SpellHandler
+    {
+        public override void OnEffectStart(GameSpellEffect effect)
+        {
 
- public override int OnEffectExpires(GameSpellEffect effect,bool noMessages) {
-  base.OnEffectExpires(effect,noMessages);
-  effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.ArmorFactor,this);
-  effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxHealth, this);
-  SendUpdates(effect.Owner);
-  return 0; }
+            base.OnEffectStart(effect);
 
- protected override void SendUpdates(GameLiving target) {
-  GamePlayer player=target as GamePlayer;
-  if(player!=null) {
-   player.Out.SendCharStatsUpdate();
-   player.Out.SendUpdateWeaponAndArmorStats();
-   player.UpdatePlayerStatus(); } }
-	
- public AfHitsBuffSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+            double playerAF = 0;
+            double bonusAF = 0;
+            double bonusHP = 0;
 
-}}
+            foreach (InventoryItem item in effect.Owner.Inventory.EquippedItems)
+            {
+                if (item.Object_Type >= (int)eObjectType._FirstArmor && item.Object_Type <= (int)eObjectType._LastArmor)
+                {
+                    playerAF += item.DPS_AF;
+                }
+            }
 
+            playerAF += effect.Owner.GetModifiedFromItems(eProperty.ArmorFactor);
+
+            if (m_spell.Value < 0)
+            {
+                bonusAF = ((m_spell.Value * -1) * playerAF) / 100;
+                bonusHP = ((m_spell.Value * -1) * effect.Owner.MaxHealth) / 100;
+            }
+            else
+            {
+                bonusAF = m_spell.Value;
+                bonusHP = m_spell.Value;
+            }
+
+
+            GameLiving living = effect.Owner as GameLiving;
+            living.TempProperties.setProperty("BONUS_HP", bonusHP);
+            living.TempProperties.setProperty("BONUS_AF", bonusAF);
+            living.AbilityBonus[(int)eProperty.MaxHealth] += (int)bonusHP;
+            living.ItemBonus[(int)eProperty.ArmorFactor] += (int)bonusAF;
+
+            SendUpdates(effect.Owner);
+        }
+
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            base.OnEffectExpires(effect, noMessages);
+
+            GameLiving living = effect.Owner as GameLiving;
+            double bonusAF = living.TempProperties.getProperty<double>("BONUS_AF");
+            double bonusHP = living.TempProperties.getProperty<double>("BONUS_HP");
+
+            living.ItemBonus[(int)eProperty.ArmorFactor] -= (int)bonusAF;
+            living.AbilityBonus[(int)eProperty.MaxHealth] -= (int)bonusHP;
+
+            living.TempProperties.removeProperty("BONUS_AF");
+            living.TempProperties.removeProperty("BONUS_HP");
+
+            SendUpdates(effect.Owner);
+            return 0;
+        }
+        public void SendUpdates(GameLiving target)
+        {
+            GamePlayer player = target as GamePlayer;
+            if (player != null)
+            {
+                player.Out.SendUpdatePlayer();
+                player.Out.SendCharStatsUpdate();
+                player.Out.SendUpdateWeaponAndArmorStats();
+                player.UpdatePlayerStatus();
+            }
+        }
+
+        public AfHitsBuffSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
+
+    }
+}
