@@ -279,6 +279,7 @@ namespace DOL.GS.PacketHandler
 						if (Properties.IGNORE_TOO_LONG_OUTCOMING_PACKET)
 						{
 							log.Error("ALERT: Oversize packet detected and discarded.");
+							m_client.Out.SendMessage("ALERT: Error sending an update to your client. Oversize packet detected and discarded. Please /report this issue!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 						}
 						else
 						{
