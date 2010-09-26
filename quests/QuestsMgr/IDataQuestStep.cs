@@ -5,6 +5,6 @@ namespace DOL.GS.Quests
 {
 	public interface IDataQuestStep
 	{
-		bool Execute(GamePlayer player, int step, bool isFinish);
+		bool Execute(DataQuest dataQuest, GamePlayer player, int step, bool isFinish);
 	}
 }
