@@ -106,6 +106,7 @@ namespace DOL.GS.Quests
 		protected int m_step = 1;
 		protected DBDataQuest m_dataQuest = null;
 		protected CharacterXDataQuest m_charQuest = null;
+		protected GameObject m_startObject = null;
 		protected GameNPC m_startNPC = null;
 		protected IDataQuestStep m_customQuestStep = null;
 
@@ -119,6 +120,7 @@ namespace DOL.GS.Quests
 			AutoStart = 2,			// Standard quest is auto started simply by interacting with start object
 			KillComplete = 3,		// Killing the Start living grants and finished the quest, similar to One Time Drops, not logged in GamePlayer log
 			InteractComplete = 4,	// Interacting with start object grants and finishes the quest, not logged in GamePlayer log
+			RewardQuest = 200,		// A reward quest, where reward dialog is given to player on quest offer and complete.  NOT SUPPORTED YET
 			Unknown = 255
 		}
 
@@ -207,9 +209,14 @@ namespace DOL.GS.Quests
 			m_dataQuest = dataQuest;
 			m_charQuest = charQuest;
 
-			if (sourceObject != null && sourceObject is GameNPC)
+			if (sourceObject != null)
 			{
-				m_startNPC = sourceObject as GameNPC;
+				if (sourceObject is GameNPC)
+				{
+					m_startNPC = sourceObject as GameNPC;
+				}
+
+				m_startObject = sourceObject;
 			}
 
 			ParseQuestData();
@@ -438,6 +445,32 @@ namespace DOL.GS.Quests
 		public virtual eStartType StartType
 		{
 			get { return (eStartType)m_dataQuest.StartType; }
+		}
+
+		/// <summary>
+		/// What object started this quest
+		/// </summary>
+		public virtual GameObject StartObject
+		{
+			get { return m_startObject; }
+		}
+
+
+		/// <summary>
+		/// List of optional rewards for this quest
+		/// </summary>
+		public virtual List<string> OptionalRewards
+		{
+			get { return m_optionalRewards; }
+		}
+
+
+		/// <summary>
+		/// List of final rewards for this quest
+		/// </summary>
+		public virtual List<string> FinalRewards
+		{
+			get { return m_finalRewards; }
 		}
 
 		/// <summary>
@@ -959,7 +992,7 @@ namespace DOL.GS.Quests
 
 			if (m_customQuestStep != null)
 			{
-				canContinue = m_customQuestStep.Execute(QuestPlayer, step, isFinish);
+				canContinue = m_customQuestStep.Execute(this, QuestPlayer, step, isFinish);
 			}
 
 			return canContinue;
