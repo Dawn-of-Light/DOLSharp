@@ -17,19 +17,20 @@
  *
  */
 using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
-using DOL.GS.Spells;
-using DOL.AI.Brain;
-using DOL.Events;
-using log4net;
-using DOL.GS.PacketHandler;
-using DOL.Database;
 using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
+using DOL.AI.Brain;
+using DOL.Database;
+using DOL.Events;
+using DOL.GS;
 using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
+using DOL.GS.Spells;
 using DOL.GS.Styles;
+using DOL.Language;
+using log4net;
 
 namespace DOL.GS
 {
@@ -45,25 +46,29 @@ namespace DOL.GS
 		public CommanderPet(INpcTemplate npcTemplate)
 			: base(npcTemplate)
 		{
-			switch (Name.ToLower())
-			{
-				case "returned commander":
-				case "decayed commander":
-					InitControlledBrainArray(0);
-					break;
-				case "skeletal commander":
-					InitControlledBrainArray(1);
-					break;
-				case "bone commander":
-					InitControlledBrainArray(2);
-					break;
-				case "dread commander":
-				case "dread guardian":
-				case "dread lich":
-				case "dread archer":
-					InitControlledBrainArray(3);
-					break;
-			}
+            if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.ReturnedCommander"))
+            {
+                InitControlledBrainArray(0);
+            }
+
+            if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DecayedCommander") ||
+                Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.SkeletalCommander"))
+            {
+                InitControlledBrainArray(1);
+            }
+
+            if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.BoneCommander"))
+            {
+                InitControlledBrainArray(2);
+            }
+
+            if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadCommander") ||
+                Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadGuardian") ||
+                Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadLich") ||
+                Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadArcher"))
+            {
+                InitControlledBrainArray(3);
+            }
 		}
 
 		/// <summary>
@@ -74,10 +79,11 @@ namespace DOL.GS
 			GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
 			if (owner != null)
 			{
-				String message = String.Format("Hail, {0}. As my summoner, you may target me and say Commander to learn more about the abilities I possess.",
-					(owner.DBCharacter.Gender == 0) ? "Master" : "Mistress");
-				SayTo(owner, eChatLoc.CL_SystemWindow, message);
-			}
+                String message = String.Format(LanguageMgr.GetTranslation(owner.Client, "GameObjects.CommanderPet.HailMaster"),
+                    (owner.DBCharacter.Gender == 0) ? LanguageMgr.GetTranslation(owner.Client, "GameObjects.Master") : LanguageMgr.GetTranslation(owner.Client, "GameObjects.Mistress"),
+                    (owner.DBCharacter.Gender == 0) ? LanguageMgr.GetTranslation(owner.Client, "GameObjects.CommanderPet.HailMaster.SummonerMale") : LanguageMgr.GetTranslation(owner.Client, "GameObjects.CommanderPet.HailMaster.SummonerFemale"));
+                SayTo(owner, eChatLoc.CL_SystemWindow, message);
+            }
 		}
 
 		/// <summary>
@@ -97,113 +103,154 @@ namespace DOL.GS
 			for (int i = 0; i < strargs.Length; i++)
 			{
 				String curStr = strargs[i];
-				string text = null;
-				switch (curStr)
-				{
-					case "commander":
-						switch (Name)
-						{
-							case "dread guardian":
-								text = "The dread guardian says, \"As one of Bogdar's chosen guardians, I have mastered the ability to [harm] his enemies and [empower] myself with extra defenses.  I also have various [combat] tactics at your disposal.\"";
-								break;
-							case "dread lich":
-								text = "The dread lich says, \"As one of Bogdar's mystics, I have mastered many dark [spells].  I also have the means to [empower] my spells to be more effective.  I also have various [combat] tactics at your disposal.\"";
-								break;
-							case "dread archer":
-								text = "The dread archer says, \"As one of Bogdar's favored archers, you can [empower] me to be more effective with my bow.  I also have various [combat] tactics at your disposal.\"";
-								break;
-							case "dread commander":
-							case "decayed commander":
-							case "returned commander":
-							case "skeletal commander":
-							case "bone commander":
-								text = "The " + Name + " says, \"As one of Bogdar's commanders, I have mastered many of the fossil [weapons] within his bone army.  Which weapon shall I wield for you?  I also have various [combat] tactics at your disposal.\"";
-								break;
-						}
-						break;
-					case "spells":
-						if (Name != "dread lich")
-							return false;
-						text = "The dread lich says, \"My arsenal consists of [snare], [debilitating], and pure [damage] spells.  I cast debilitating spells when first summoned but you can command me to cast a particular type of spells if you so desire.\"";
-						break;
-					case "empower":
-						if (Name == "dread guardian" || Name == "dread lich" || Name == "dread archer")
-						{
-							foreach (Spell spell in Spells)
-							{
-								if (spell.Name == "Empower")
-								{
-									CastSpell(spell, null);
-									break;
-								}
-							}
-						}
-						break;
-					case "combat":
-						text = "The " + Name + " says, \"From the start I order the minions under my control to [assist] me with a target your choose for me to kill.  Issuing the command again will make them cease assisting.  I am also able to [taunt] your enemies so that they will focus on me instead of you.\"";
-						break;
-					case "snares":
-						break;
-					case "debilitating":
-						break;
-					case "damage":
-						break;
-					case "assist":
-						//TODO: implement this - I have no idea how to do that...
-						break;
-					case "taunt":
-						bool found = false;
-						foreach (Spell spell in Spells)
-						{
-							//If the taunt spell's ID is changed - this needs to be changed
-							if (spell.ID == 60127)
-							{
-								Spells.Remove(spell);
-								player.Out.SendMessage("Your commander will no long taunt its enemies!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-								found = true;
-								break;
-							}
-						}
-						if (found) break;
-						//TODO: change this so it isn't hardcoded
-						Spell tauntspell = SkillBase.GetSpellByID(60127);
-						player.Out.SendMessage("Your commander will start to taunt its enemies!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-						if (tauntspell != null)
-							Spells.Add(tauntspell);
-						else
-							Console.WriteLine("Couldn't find BD pet's taunt spell");
-						break;
-					case "weapons":
-						if (Name != "dread commander" && Name != "decayed commander" && Name != "returned commander" && Name != "skeletal commander" && Name != "bone commander") break;
-						text = "The " + Name + " says, \"I have mastered the [one handed sword], the [two handed sword], the [one handed hammer], the [two handed hammer], the [one handed axe] and the [two handed axe].\"";
-						break;
-					case "one":
-						i++;
-						if (i + 1 >= strargs.Length)
-							return false;
-						CommanderSwitchWeapon(eInventorySlot.RightHandWeapon, eActiveWeaponSlot.Standard, strargs[++i]);
-						break;
-					case "two":
-						i++;
-						if (i + 1 >= strargs.Length)
-							return false;
-						CommanderSwitchWeapon(eInventorySlot.TwoHandWeapon, eActiveWeaponSlot.TwoHanded, strargs[++i]);
-						break;
-					case "harm":
-						if (Name != "dread guardian")
-							return false;
-						text = "The dread guardian says, \"Bogdar has granted me with the ability to [drain] the life of our enemies or to [suppress] and hurt their spirit.  I cast spirit damaging spells when first summoned but you can command me to cast a particular type of spell if you so desire.\"";
-						break;
-					case "drain":
-						break;
-					case "suppress":
-						break;
-					default:
-						return false;
-				}
-				if (text == null)
-					return false;
-				player.Out.SendMessage(text, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Commander"))
+                {
+                    if (Name == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadGuardian"))
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.DreadGuardian", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    }
+
+                    if (Name == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadLich"))
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.DreadLich", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    }
+
+                    if (Name == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadArcher"))
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.DreadArcher", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    }
+
+                    if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadCommander") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DecayedCommander") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.ReturnedCommander") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.SkeletalCommander") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.BoneCommander"))
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.XCommander", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    }
+
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Combat"))
+                {
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Combat", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Assist"))
+                {
+                    //TODO: implement this - I have no idea how to do that...
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Assist.Text"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Taunt"))
+                {
+                    bool found = false;
+                    foreach (Spell spell in Spells)
+                    {
+                        //If the taunt spell's ID is changed - this needs to be changed
+                        if (spell.ID == 60127)
+                        {
+                            Spells.Remove(spell);
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.CommNoTaunt"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) break;
+                    //TODO: change this so it isn't hardcoded
+                    Spell tauntspell = SkillBase.GetSpellByID(60127);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.CommStartTaunt"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+                    if (tauntspell != null)
+                        Spells.Add(tauntspell);
+                    else
+                        Console.WriteLine("Couldn't find BD pet's taunt spell");
+                    break;
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Weapons"))
+                {
+                    if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadCommander") &&
+                        Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DecayedCommander") &&
+                        Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.ReturnedCommander") &&
+                        Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.SkeletalCommander") &&
+                        Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.BoneCommander"))
+                    {
+                        break;
+                    }
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.DiffCommander", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Spells"))
+                {
+                    if (Name.ToLower() != LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadLich"))
+                    {
+                        return false;
+                    }
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.DreadLich2", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Empower"))
+                {
+                    if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadGuardian") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadLich") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadArcher"))
+                    {
+                        foreach (Spell spell in Spells)
+                        {
+                            if (spell.Name == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Spell.Empower"))
+                                {
+                                CastSpell(spell, null);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Snares"))
+                {
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Debilitating"))
+                {
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Damage"))
+                {
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.One"))
+                {
+                    i++;
+                    if (i + 1 >= strargs.Length)
+                        return false;
+                    CommanderSwitchWeapon(eInventorySlot.RightHandWeapon, eActiveWeaponSlot.Standard, strargs[++i]);
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Two"))
+                {
+                    i++;
+                    if (i + 1 >= strargs.Length)
+                        return false;
+                    CommanderSwitchWeapon(eInventorySlot.TwoHandWeapon, eActiveWeaponSlot.TwoHanded, strargs[++i]);
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Harm"))
+                {
+                    if (Name.ToLower() != LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadGuardian"))
+                    {
+                        return false;
+                    }
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.DreadGuardian2", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Drain"))
+                {
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client, "GameObjects.CommanderPet.WR.Const.Suppress"))
+                {
+                }
 			}
 			return base.WhisperReceive(source, str);
 		}
@@ -218,14 +265,15 @@ namespace DOL.GS
 		{
 			if (Inventory == null)
 				return;
-			
-			string itemId = string.Format("BD_Commander_{0}_{1}", slot.ToString(), weaponType);
-			InventoryItem item = Inventory.GetItem(slot);
 
-			if (item != null)
-				Inventory.RemoveItem(item);
+            string itemId = string.Format("BD_Commander_{0}_{1}", slot.ToString(), weaponType);
+            //all weapons removed before
+            InventoryItem item = Inventory.GetItem(eInventorySlot.RightHandWeapon);
+            if (item != null) Inventory.RemoveItem(item);
+            item = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+            if (item != null) Inventory.RemoveItem(item);
 
-			ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(itemId);
+            ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(itemId);
 
 			if (temp == null)
 			{

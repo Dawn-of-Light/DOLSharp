@@ -28,6 +28,7 @@ using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Spells
@@ -67,14 +68,15 @@ namespace DOL.GS.Spells
 		{
 			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledBrain == null)
 			{
-				MessageToCaster("You must have a controlled leader monster to summon into a group!", eChatType.CT_SpellResisted);
-				return false;
+                MessageToCaster(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonMinionHandler.CheckBeginCast.Text1"), eChatType.CT_SpellResisted);
+                return false;
 			}
 
 			if (Caster is GamePlayer && (((GamePlayer)Caster).ControlledBrain.Body.ControlledNpcList == null || ((GamePlayer)Caster).ControlledBrain.Body.PetCount >= ((GamePlayer)Caster).ControlledBrain.Body.ControlledNpcList.Length))
 			{
-				MessageToCaster("Your general already has as many followers as he can command!", eChatType.CT_SpellResisted);
-				return false;
+                MessageToCaster(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonMinionHandler.CheckBeginCast.Text2"), eChatType.CT_SpellResisted);
+
+                return false;
 			}
 			return base.CheckBeginCast(selectedTarget);
 		}
@@ -226,12 +228,11 @@ namespace DOL.GS.Spells
 		{
 			get
 			{
-				var list = new List<string>();
-
-				list.Add(string.Format("Target: {0}", Spell.Target));
-				list.Add(string.Format("Power cost: {0}", Math.Abs(Spell.Power)));
-				list.Add(String.Format("Casting time: {0}", (Spell.CastTime / 1000).ToString("0.0## sec")));
-				return list;
+				var delve = new List<string>();
+                delve.Add(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonMinionHandler.DelveInfo.Text1", Spell.Target)));
+                delve.Add(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonMinionHandler.DelveInfo.Text2", Math.Abs(Spell.Power))));
+                delve.Add(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonMinionHandler.DelveInfo.Text3", (Spell.CastTime / 1000).ToString("0.0## Sekunden"))));
+                return delve;
 			}
 		}
 	}

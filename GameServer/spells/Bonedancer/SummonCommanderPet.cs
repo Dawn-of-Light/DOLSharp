@@ -17,14 +17,14 @@
  *
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using DOL.GS.Effects;
 using DOL.AI.Brain;
-using DOL.GS.PacketHandler;
 using DOL.Events;
+using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
-using System.Collections;
 using DOL.Language;
 
 namespace DOL.GS.Spells
@@ -43,9 +43,9 @@ namespace DOL.GS.Spells
 		{
 			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledBrain != null)
 			{
-				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
-				return false;
-			}
+                MessageToCaster(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonCommanderPet.CheckBeginCast.Text"), eChatType.CT_SpellResisted);
+                return false;
+            }
 			return base.CheckBeginCast(selectedTarget);
 		}
 
@@ -84,16 +84,16 @@ namespace DOL.GS.Spells
 		{
 			get
 			{
-				var delve = new List<string>();
-				delve.Add("Function: summon");
-				delve.Add("");
-				delve.Add("Summons a pet to serve the caster.");
-				delve.Add("");
-				delve.Add(String.Format("Target: {0}", Spell.Target));
-				delve.Add(String.Format("Power cost: {0}%", Math.Abs(Spell.Power)));
-				delve.Add(String.Format("Casting time: {0}", (Spell.CastTime / 1000).ToString("0.0## sec")));
-				return delve;
-			}
+                var delve = new List<string>();
+                delve.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonCommanderPet.DelveInfo.Text1"));
+                delve.Add("");
+                delve.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonCommanderPet.DelveInfo.Text2"));
+                delve.Add("");
+                delve.Add(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonCommanderPet.DelveInfo.Text3", Spell.Target)));
+                delve.Add(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonCommanderPet.DelveInfo.Text4", Math.Abs(Spell.Power))));
+                delve.Add(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SummonCommanderPet.DelveInfo.Text5", (Spell.CastTime / 1000).ToString("0.0## Sekunden"))));
+                return delve;
+            }
 		}
 	}
 }
