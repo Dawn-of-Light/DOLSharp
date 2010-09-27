@@ -10,7 +10,7 @@ GameObjects.CommanderPet.DecayedCommander:		decayed commander
 GameObjects.CommanderPet.ReturnedCommander:		returned commander
 GameObjects.CommanderPet.SkeletalCommander:		skeletal commander
 GameObjects.CommanderPet.BoneCommander:			bone commander			
-GameObjects.CommanderPet.HailMaster:			Hail, {0}. As my summoner, you may target me and say Commander to learn more about the abilities I possess.
+# in mobxambientbehaviournow: GameObjects.CommanderPet.HailMaster:			Hail, {0}. As my summoner, you may target me and say Commander to learn more about the abilities I possess.
 GameObjects.CommanderPet.WR.Const.Commander:	commander
 GameObjects.CommanderPet.WR.Const.Spells:		spells
 GameObjects.CommanderPet.WR.Const.Empower:		empower

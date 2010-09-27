@@ -59,7 +59,7 @@ namespace DOL.GS
 
 		public GameLiving Owner
 		{
-			get 
+			get
 			{
 				if (Brain is IControlledBrain)
 				{
@@ -136,7 +136,7 @@ namespace DOL.GS
 				case Specs.Critical_Strike:
 				case Specs.Large_Weapons:
 					return Level;
-				default: return (Brain as IControlledBrain).GetPlayerOwner().GetModifiedSpecLevel(keyName);
+					default: return (Brain as IControlledBrain).GetPlayerOwner().GetModifiedSpecLevel(keyName);
 			}
 		}
 
@@ -186,7 +186,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Base constitution. 
+		/// Base constitution.
 		/// </summary>
 		public override short Constitution
 		{
@@ -200,7 +200,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Base dexterity. 
+		/// Base dexterity.
 		/// </summary>
 		public override short Dexterity
 		{
@@ -214,7 +214,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Base quickness. 
+		/// Base quickness.
 		/// </summary>
 		public override short Quickness
 		{
@@ -260,8 +260,8 @@ namespace DOL.GS
 			{
 				switch ((eWeaponDamageType)weapon.Type_Damage)
 				{
-					case eWeaponDamageType.Crush: return eDamageType.Crush;
-					case eWeaponDamageType.Slash: return eDamageType.Slash;
+						case eWeaponDamageType.Crush: return eDamageType.Crush;
+						case eWeaponDamageType.Slash: return eDamageType.Slash;
 				}
 			}
 
@@ -283,9 +283,9 @@ namespace DOL.GS
 					if (item != null)
 						weaponSpeed += item.SPD_ABS;
 					else
-					{
-						weaponSpeed += 34;
-					}
+				{
+					weaponSpeed += 34;
+				}
 				weaponSpeed = (weapons.Length > 0) ? weaponSpeed / weapons.Length : 34.0;
 			}
 			else
@@ -367,9 +367,17 @@ namespace DOL.GS
 			base.Die(killer);
 			CurrentRegion = null;
 		}
-
-		public virtual void HailMaster()
+		
+		/// <summary>
+		/// Spawn texts are in database
+		/// </summary>
+		protected override void BuildAmbientTexts()
 		{
+			base.BuildAmbientTexts();
+			
+			// also add the pet specific ambient texts if none found
+			if (ambientTexts.Count == 0)
+				ambientTexts = GameServer.Database.SelectObjects<MobXAmbientBehaviour>("`Source` ='pet';");
 		}
 
 		public override bool IsObjectGreyCon(GameObject obj)

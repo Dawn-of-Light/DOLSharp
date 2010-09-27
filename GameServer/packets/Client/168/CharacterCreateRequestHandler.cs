@@ -69,10 +69,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 0;
 			}
 
-            if (client.Version >= GameClient.eClientVersion.Version1104)
-            {
-                packet.ReadIntLowEndian(); //unk - probably indicates customize or create
-            }
+			if (client.Version >= GameClient.eClientVersion.Version1104)
+			{
+				packet.ReadIntLowEndian(); //unk - probably indicates customize or create
+			}
 
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
 			for (int i = 0; i < charsCount; i++)
@@ -218,8 +218,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int occurences = 0;
 			List<string> disabled_classes = new List<string>(Properties.DISABLED_CLASSES.Split(';'));
 			occurences = (from j in disabled_classes
-						  where j == ch.Class.ToString()
-						  select j).Count();
+			              where j == ch.Class.ToString()
+			              select j).Count();
 
 			if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
 			{
@@ -273,8 +273,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			List<string> disabled_races = new List<string>(Properties.DISABLED_RACES.Split(';'));
 			occurences = (from j in disabled_races
-						  where j == ch.Race.ToString()
-						  select j).Count();
+			              where j == ch.Race.ToString()
+			              select j).Count();
 			if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
 			{
 				log.Debug("Client " + client.Account.Name + " tried to create a disabled race: " + (eRace)ch.Race);
@@ -317,8 +317,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (log.IsWarnEnabled)
 					log.Warn(ch.AccountName + " tried to create invalid character:" +
-							 "\nchar name=" + ch.Name + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
-							 "\nstr=" + ch.Strength + ", con=" + ch.Constitution + ", dex=" + ch.Dexterity + ", qui=" + ch.Quickness + ", int=" + ch.Intelligence + ", pie=" + ch.Piety + ", emp=" + ch.Empathy + ", chr=" + ch.Charisma);
+					         "\nchar name=" + ch.Name + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
+					         "\nstr=" + ch.Strength + ", con=" + ch.Constitution + ", dex=" + ch.Dexterity + ", qui=" + ch.Quickness + ", int=" + ch.Intelligence + ", pie=" + ch.Piety + ", emp=" + ch.Empathy + ", chr=" + ch.Charisma);
 
 				if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
 				else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
@@ -339,9 +339,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				switch (ch.Realm)
 				{
-					case 1: ch.Region = 1; break;
-					case 2: ch.Region = 100; break;
-					case 3: ch.Region = 200; break;
+						case 1: ch.Region = 1; break;
+						case 2: ch.Region = 100; break;
+						case 3: ch.Region = 200; break;
 				}
 			}
 
@@ -459,7 +459,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								break;
 						}
 						break;
-					default: break;
+						default: break;
 				}
 
 				if (ch.GuildID != "")
@@ -468,6 +468,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			#endregion Starting Guilds
 
+			if (Properties.STARTING_BPS > 0)
+				ch.BountyPoints = Properties.STARTING_BPS;
+			
 			if (Properties.STARTING_MONEY > 0)
 			{
 				long value = Properties.STARTING_MONEY;
@@ -632,15 +635,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 								pointsUsed += Math.Max(0, result - 15); //three points used
 
 								log.Info(string.Format("{0,-2} {1,-3}:{2, 3} {3,3} {4,3} {5,3} {6,2} {7} {8}",
-													   statCategory,
-													   (stat == eStat.STR) ? "STR" : stat.ToString(),
-													   stats[j],
-													   leveledStats[j],
-													   stats[j] - leveledStats[j],
-													   raceStats[j],
-													   result,
-													   pointsUsed,
-													   (validBeginStat) ? "" : "Not Valid"));
+								                       statCategory,
+								                       (stat == eStat.STR) ? "STR" : stat.ToString(),
+								                       stats[j],
+								                       leveledStats[j],
+								                       stats[j] - leveledStats[j],
+								                       raceStats[j],
+								                       result,
+								                       pointsUsed,
+								                       (validBeginStat) ? "" : "Not Valid"));
 
 								points += pointsUsed;
 
@@ -1560,58 +1563,58 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			switch (ch.Class)
 			{
-				//Alb
-				case (int)eCharacterClass.Armsman: return (int)eCharacterClass.Fighter;
-				case (int)eCharacterClass.Mercenary: return (int)eCharacterClass.Fighter;
-				case (int)eCharacterClass.Paladin: return (int)eCharacterClass.Fighter;
-				case (int)eCharacterClass.MaulerAlb: return (int)eCharacterClass.Fighter;
-				case (int)eCharacterClass.Reaver: return (int)eCharacterClass.Fighter;
-				case (int)eCharacterClass.Cleric: return (int)eCharacterClass.Acolyte;
-				case (int)eCharacterClass.Friar: return (int)eCharacterClass.Acolyte;
-				case (int)eCharacterClass.Heretic: return (int)eCharacterClass.Acolyte;
-				case (int)eCharacterClass.Infiltrator: return (int)eCharacterClass.AlbionRogue;
-				case (int)eCharacterClass.Scout: return (int)eCharacterClass.AlbionRogue;
-				case (int)eCharacterClass.Minstrel: return (int)eCharacterClass.AlbionRogue;
-				case (int)eCharacterClass.Cabalist: return (int)eCharacterClass.Mage;
-				case (int)eCharacterClass.Sorcerer: return (int)eCharacterClass.Mage;
-				case (int)eCharacterClass.Theurgist: return (int)eCharacterClass.Elementalist;
-				case (int)eCharacterClass.Wizard: return (int)eCharacterClass.Elementalist;
-				case (int)eCharacterClass.Necromancer: return (int)eCharacterClass.Disciple;
-				//Hib
-				case (int)eCharacterClass.Hero: return (int)eCharacterClass.Guardian;
-				case (int)eCharacterClass.Champion: return (int)eCharacterClass.Guardian;
-				case (int)eCharacterClass.Blademaster: return (int)eCharacterClass.Guardian;
-				case (int)eCharacterClass.MaulerHib: return (int)eCharacterClass.Guardian;
-				case (int)eCharacterClass.Bard: return (int)eCharacterClass.Naturalist;
-				case (int)eCharacterClass.Druid: return (int)eCharacterClass.Naturalist;
-				case (int)eCharacterClass.Warden: return (int)eCharacterClass.Naturalist;
-				case (int)eCharacterClass.Ranger: return (int)eCharacterClass.Stalker;
-				case (int)eCharacterClass.Nightshade: return (int)eCharacterClass.Stalker;
-				case (int)eCharacterClass.Vampiir: return (int)eCharacterClass.Stalker;
-				case (int)eCharacterClass.Bainshee: return (int)eCharacterClass.Magician;
-				case (int)eCharacterClass.Eldritch: return (int)eCharacterClass.Magician;
-				case (int)eCharacterClass.Enchanter: return (int)eCharacterClass.Magician;
-				case (int)eCharacterClass.Mentalist: return (int)eCharacterClass.Magician;
-				case (int)eCharacterClass.Animist: return (int)eCharacterClass.Forester;
-				case (int)eCharacterClass.Valewalker: return (int)eCharacterClass.Forester;
-				//Mid
-				case (int)eCharacterClass.Berserker: return (int)eCharacterClass.Viking;
-				case (int)eCharacterClass.MaulerMid: return (int)eCharacterClass.Viking;
-				case (int)eCharacterClass.Savage: return (int)eCharacterClass.Viking;
-				case (int)eCharacterClass.Skald: return (int)eCharacterClass.Viking;
-				case (int)eCharacterClass.Thane: return (int)eCharacterClass.Viking;
-				case (int)eCharacterClass.Valkyrie: return (int)eCharacterClass.Viking;
-				case (int)eCharacterClass.Warrior: return (int)eCharacterClass.Viking;
-				case (int)eCharacterClass.Hunter: return (int)eCharacterClass.MidgardRogue;
-				case (int)eCharacterClass.Shadowblade: return (int)eCharacterClass.MidgardRogue;
-				case (int)eCharacterClass.Healer: return (int)eCharacterClass.Seer;
-				case (int)eCharacterClass.Shaman: return (int)eCharacterClass.Seer;
-				case (int)eCharacterClass.Bonedancer: return (int)eCharacterClass.Mystic;
-				case (int)eCharacterClass.Runemaster: return (int)eCharacterClass.Mystic;
-				case (int)eCharacterClass.Warlock: return (int)eCharacterClass.Mystic;
-				case (int)eCharacterClass.Spiritmaster: return (int)eCharacterClass.Mystic;
-				//older client support
-				default: return ch.Class;
+					//Alb
+					case (int)eCharacterClass.Armsman: return (int)eCharacterClass.Fighter;
+					case (int)eCharacterClass.Mercenary: return (int)eCharacterClass.Fighter;
+					case (int)eCharacterClass.Paladin: return (int)eCharacterClass.Fighter;
+					case (int)eCharacterClass.MaulerAlb: return (int)eCharacterClass.Fighter;
+					case (int)eCharacterClass.Reaver: return (int)eCharacterClass.Fighter;
+					case (int)eCharacterClass.Cleric: return (int)eCharacterClass.Acolyte;
+					case (int)eCharacterClass.Friar: return (int)eCharacterClass.Acolyte;
+					case (int)eCharacterClass.Heretic: return (int)eCharacterClass.Acolyte;
+					case (int)eCharacterClass.Infiltrator: return (int)eCharacterClass.AlbionRogue;
+					case (int)eCharacterClass.Scout: return (int)eCharacterClass.AlbionRogue;
+					case (int)eCharacterClass.Minstrel: return (int)eCharacterClass.AlbionRogue;
+					case (int)eCharacterClass.Cabalist: return (int)eCharacterClass.Mage;
+					case (int)eCharacterClass.Sorcerer: return (int)eCharacterClass.Mage;
+					case (int)eCharacterClass.Theurgist: return (int)eCharacterClass.Elementalist;
+					case (int)eCharacterClass.Wizard: return (int)eCharacterClass.Elementalist;
+					case (int)eCharacterClass.Necromancer: return (int)eCharacterClass.Disciple;
+					//Hib
+					case (int)eCharacterClass.Hero: return (int)eCharacterClass.Guardian;
+					case (int)eCharacterClass.Champion: return (int)eCharacterClass.Guardian;
+					case (int)eCharacterClass.Blademaster: return (int)eCharacterClass.Guardian;
+					case (int)eCharacterClass.MaulerHib: return (int)eCharacterClass.Guardian;
+					case (int)eCharacterClass.Bard: return (int)eCharacterClass.Naturalist;
+					case (int)eCharacterClass.Druid: return (int)eCharacterClass.Naturalist;
+					case (int)eCharacterClass.Warden: return (int)eCharacterClass.Naturalist;
+					case (int)eCharacterClass.Ranger: return (int)eCharacterClass.Stalker;
+					case (int)eCharacterClass.Nightshade: return (int)eCharacterClass.Stalker;
+					case (int)eCharacterClass.Vampiir: return (int)eCharacterClass.Stalker;
+					case (int)eCharacterClass.Bainshee: return (int)eCharacterClass.Magician;
+					case (int)eCharacterClass.Eldritch: return (int)eCharacterClass.Magician;
+					case (int)eCharacterClass.Enchanter: return (int)eCharacterClass.Magician;
+					case (int)eCharacterClass.Mentalist: return (int)eCharacterClass.Magician;
+					case (int)eCharacterClass.Animist: return (int)eCharacterClass.Forester;
+					case (int)eCharacterClass.Valewalker: return (int)eCharacterClass.Forester;
+					//Mid
+					case (int)eCharacterClass.Berserker: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.MaulerMid: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Savage: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Skald: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Thane: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Valkyrie: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Warrior: return (int)eCharacterClass.Viking;
+					case (int)eCharacterClass.Hunter: return (int)eCharacterClass.MidgardRogue;
+					case (int)eCharacterClass.Shadowblade: return (int)eCharacterClass.MidgardRogue;
+					case (int)eCharacterClass.Healer: return (int)eCharacterClass.Seer;
+					case (int)eCharacterClass.Shaman: return (int)eCharacterClass.Seer;
+					case (int)eCharacterClass.Bonedancer: return (int)eCharacterClass.Mystic;
+					case (int)eCharacterClass.Runemaster: return (int)eCharacterClass.Mystic;
+					case (int)eCharacterClass.Warlock: return (int)eCharacterClass.Mystic;
+					case (int)eCharacterClass.Spiritmaster: return (int)eCharacterClass.Mystic;
+					//older client support
+					default: return ch.Class;
 
 			}
 		}
