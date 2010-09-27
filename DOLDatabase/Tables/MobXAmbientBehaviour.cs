@@ -31,6 +31,7 @@ public class MobXAmbientBehaviour : DataObject
 	private ushort m_emote;
 	private string m_text;
 	private ushort m_chance;
+	private string m_voice;
 
 	/// <summary>
 	/// Constructor
@@ -47,15 +48,17 @@ public class MobXAmbientBehaviour : DataObject
 		m_emote = 0;
 		m_text = string.Empty;
 		m_chance = 0;
+		m_voice = string.Empty;
 	}
 
-	public MobXAmbientBehaviour(string name, string trigger, ushort emote, string text, ushort chance)
+	public MobXAmbientBehaviour(string name, string trigger, ushort emote, string text, ushort chance, string voice)
 	{
 		m_source = name;
 		m_trigger = trigger;
 		m_emote = emote;
 		m_text = text;
 		m_chance = chance;
+		m_voice = voice;
 	}
 
 	[DataElement(AllowDbNull = false)]
@@ -93,4 +96,10 @@ public class MobXAmbientBehaviour : DataObject
 		set { m_chance = value; }
 	}
 
+	[DataElement(AllowDbNull = true)]
+	public string Voice
+	{
+		get { return m_voice; }
+		set { m_voice = value; }
+	}
 }
