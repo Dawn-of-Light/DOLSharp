@@ -344,35 +344,7 @@ namespace DOL.GS
 
 			#endregion
 
-			// Load available teleport locations.
-
-			var objs = GameServer.Database.SelectAllObjects<Teleport>();
-			m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
-			int[] numTeleports = new int[3];
-			foreach (Teleport teleport in objs)
-			{
-				Dictionary<string, Teleport> teleportList;
-				if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
-					teleportList = m_teleportLocations[(eRealm)teleport.Realm];
-				else
-				{
-					teleportList = new Dictionary<string, Teleport>();
-					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
-				}
-				String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
-				if (teleportList.ContainsKey(teleportKey))
-				{
-					log.Error("WorldMgr.EarlyInit teleporters - Cannot add " + teleportKey + " already exists");
-					continue;
-				}
-				teleportList.Add(teleportKey, teleport);
-				if (teleport.Realm >= 1 && teleport.Realm <= 3)
-					numTeleports[teleport.Realm - 1]++;
-			}
-			log.Info(String.Format("Loaded {0} Albion, {1} Midgard and {2} Hibernia teleport locations",
-			                       numTeleports[0], numTeleports[1], numTeleports[2]));
-
-			objs = null;
+			log.Info(LoadTeleports());
 
 			// sort the regions by mob count
 
@@ -541,6 +513,42 @@ namespace DOL.GS
 			regionsData = regions.ToArray();
 			return true;
 		}
+
+
+		/// <summary>
+		/// Load available teleport locations.
+		/// </summary>
+		public static string LoadTeleports()
+		{
+			var objs = GameServer.Database.SelectAllObjects<Teleport>();
+			m_teleportLocations = new Dictionary<eRealm, Dictionary<string, Teleport>>();
+			int[] numTeleports = new int[3];
+			foreach (Teleport teleport in objs)
+			{
+				Dictionary<string, Teleport> teleportList;
+				if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
+					teleportList = m_teleportLocations[(eRealm)teleport.Realm];
+				else
+				{
+					teleportList = new Dictionary<string, Teleport>();
+					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
+				}
+				String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
+				if (teleportList.ContainsKey(teleportKey))
+				{
+					log.Error("WorldMgr.EarlyInit teleporters - Cannot add " + teleportKey + " already exists");
+					continue;
+				}
+				teleportList.Add(teleportKey, teleport);
+				if (teleport.Realm >= 1 && teleport.Realm <= 3)
+					numTeleports[teleport.Realm - 1]++;
+			}
+
+			objs = null;
+
+			return String.Format("Loaded {0} Albion, {1} Midgard and {2} Hibernia teleport locations", numTeleports[0], numTeleports[1], numTeleports[2]);
+		}
+
 
 		/// <summary>
 		/// Initializes the WorldMgr. This function must be called
