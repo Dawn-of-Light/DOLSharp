@@ -50,3 +50,18 @@ NearsightSpellHandler.DelveInfo.Function:		Wirkung: {0}
 # ProcSpellHandler
 ProcSpellHandler.DelveInfo.Function:			Wirkung: {0}
 
+# SummonCommanderPet
+SummonCommanderPet.CheckBeginCast.Text:			Ihr habt doch schon ein Wesen unter Eurer Kontrolle ... lasst das erst frei!
+SummonCommanderPet.CheckBeginCast.Text:			You already have a charmed creature, release it first!
+SummonCommanderPet.DelveInfo.Text1:			Wirkung: Beschwören
+SummonCommanderPet.DelveInfo.Text2:			Ruft ein Wesen, um dem Zauberer zu dienen.
+SummonCommanderPet.DelveInfo.Text3:			Ziel: {0}
+SummonCommanderPet.DelveInfo.Text4:			Magiekraftkosten: {0}%
+SummonCommanderPet.DelveInfo.Text5:			Zauberzeit: {0}
+
+#SummonMinionHandler
+SummonMinionHandler.CheckBeginCast.Text1:		Ihr müsst eines der Anführer-Monster kontrollieren, um der Gruppe weitere Monster hinzuzufügen!
+SummonMinionHandler.CheckBeginCast.Text2:		Euer Anführer hat schon seine maximale Anzahl an Gefolgsleuten erreicht!
+SummonMinionHandler.DelveInfo.Text1:			Ziel: {0}
+SummonMinionHandler.DelveInfo.Text2:			Magiekraftkosten: {0}%
+SummonMinionHandler.DelveInfo.Text3:			Zauberzeit: {0}
