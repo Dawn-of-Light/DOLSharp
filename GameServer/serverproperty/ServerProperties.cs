@@ -521,6 +521,24 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("rates", "pvp_spell_damage", "The PvP Spell Damage Modifier - Edit this to change the amount of spell damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
 		public static double PVP_SPELL_DAMAGE;
+		
+        /// <summary>
+        /// The highest possible Block Rate against an Enemy (Hard Cap)
+        /// </summary>
+        [ServerProperty("rates", "block_cap", "Block Rate Cap Modifier - Edit this to change the highest possible block rate against an enemy (Hard Cap) in game e.g .60 = 60%", 0.60)]
+        public static double BLOCK_CAP;
+
+        ///<summary>
+        /// The highest possible Evade Rate against an Enemy (Hard Cap)
+        /// </summary>
+        [ServerProperty("rates", "evade_cap", "Evade Rate Cap Modifier - Edit this to change the highest possible evade rate against an enemy (Hard Cap) in game e.g .50 = 50%", 0.50)]
+        public static double EVADE_CAP;
+
+        ///<summary>
+        ///The highest possible Parry Rate against an Enemy (Hard Cap)
+        /// </summary>
+        [ServerProperty("rates", "parry_cap", "Parry Rate Cap Modifier - Edit this to change the highest possible parry rate against an enemy (Hard Cap) in game e.g .50 = 50%", 0.50)]
+        public static double PARRY_CAP;
 
 		/// <summary>
 		/// Critical strike opening style effectiveness.  Increase this to make CS styles BS, BSII and Perf Artery more effective
