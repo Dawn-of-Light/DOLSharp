@@ -37,7 +37,7 @@ namespace DOL.GS
 
 		public override bool Interact(GamePlayer player)
 		{
-			if (player == null)
+			if (player == null || player.InCombat)
 				return false;
 
 			if (base.Interact(player))
@@ -81,7 +81,7 @@ namespace DOL.GS
 			if (base.WhisperReceive(source, str))
 			{
 				GamePlayer player = source as GamePlayer;
-				if (player == null)
+				if (player == null || player.InCombat)
 					return false;
 
 				if (GameServer.ServerRules.IsSameRealm(this, player, true))

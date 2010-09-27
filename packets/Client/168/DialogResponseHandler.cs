@@ -233,7 +233,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (groupLeader.Group != null)
 								{
 									if (groupLeader.Group.Leader != groupLeader) return;
-									if (groupLeader.Group.MemberCount >= Group.MAX_GROUP_SIZE)
+                                    if (groupLeader.Group.MemberCount >= ServerProperties.Properties.GROUP_MAX_MEMBER)
 									{
 										player.Out.SendMessage("The group is full.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return;
