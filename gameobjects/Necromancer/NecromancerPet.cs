@@ -104,20 +104,6 @@ namespace DOL.GS
             }
 		}
 
-		/// <summary>
-		/// Address the master.
-		/// </summary>
-		public override void HailMaster()
-		{
-			GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
-			if (owner != null)
-			{
-				String message = String.Format("Hail, {0}. As my summoner, you may target me and say Arawn to learn more about the abilities I possess.",
-					(owner.DBCharacter.Gender == 0) ? "Master" : "Mistress");
-				SayTo(owner, eChatLoc.CL_SystemWindow, message);
-			}
-		}
-
 		#region Stats
 
 		/// <summary>
