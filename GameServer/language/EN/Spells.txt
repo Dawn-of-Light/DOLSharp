@@ -50,3 +50,17 @@ NearsightSpellHandler.DelveInfo.Function:		Function: {0}
 # ProcSpellHandler
 ProcSpellHandler.DelveInfo.Function:			Function: {0}
 
+# SummonCommanderPet
+SummonCommanderPet.CheckBeginCast.Text:			You already have a charmed creature, release it first!
+SummonCommanderPet.DelveInfo.Text1:			Function: summon
+SummonCommanderPet.DelveInfo.Text2:			Summons a pet to serve the caster.
+SummonCommanderPet.DelveInfo.Text3:			Target: {0}
+SummonCommanderPet.DelveInfo.Text4:			Power cost: {0}%
+SummonCommanderPet.DelveInfo.Text5:			Casting time: {0}
+
+#SummonMinionHandler
+SummonMinionHandler.CheckBeginCast.Text1:		You must have a controlled leader monster to summon into a group!
+SummonMinionHandler.CheckBeginCast.Text2:		Your general already has as many followers as he can command!
+SummonMinionHandler.DelveInfo.Text1:			Target: {0}
+SummonMinionHandler.DelveInfo.Text2:			Power cost: {0}%
+SummonMinionHandler.DelveInfo.Text3:			Casting time: {0}
