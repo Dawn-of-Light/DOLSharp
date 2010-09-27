@@ -73,7 +73,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					ChatUtil.SendSystemMessage(player, "You are not the leader of your group.");
 					return;
 				}
-				if (player.Group != null && player.Group.MemberCount >= Group.MAX_GROUP_SIZE)
+                
+                if (player.Group != null && player.Group.MemberCount >= ServerProperties.Properties.GROUP_MAX_MEMBER)
 				{
 					ChatUtil.SendSystemMessage(player, "The group is full.");
 					return;

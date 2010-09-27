@@ -313,7 +313,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("server","battlegroup_max_member", "Max number of members allowed in a battlegroup.", 64)]
 		public static int BATTLEGROUP_MAX_MEMBER;
-		
+
+        /// <summary>
+        ///  This specifies the max amount of people in one group.
+        /// </summary>
+        [ServerProperty("server","group_max_member", "Max number of members allowed in a group.", 8)]
+        public static int GROUP_MAX_MEMBER;
+
 		/// <summary>
 		/// Sets the disabled commands for the server split by ;
 		/// </summary>
@@ -515,7 +521,6 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("rates", "pvp_spell_damage", "The PvP Spell Damage Modifier - Edit this to change the amount of spell damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
 		public static double PVP_SPELL_DAMAGE;
-
 
 		/// <summary>
 		/// Critical strike opening style effectiveness.  Increase this to make CS styles BS, BSII and Perf Artery more effective

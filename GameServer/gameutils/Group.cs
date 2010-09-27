@@ -92,11 +92,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Group size limit
-		/// </summary>
-		public const byte MAX_GROUP_SIZE = 8;
-
-		/// <summary>
 		/// This holds the status of the group
 		/// eg. looking for members etc ...
 		/// </summary>
@@ -117,8 +112,8 @@ namespace DOL.GS
 		/// <param name="player">GamePlayer to be added to the group</param>
 		/// <returns>true if added successfully</returns>
 		public virtual bool AddMember(GameLiving living) 
-		{
-			if (this.MemberCount >= MAX_GROUP_SIZE)
+        {
+            if (this.MemberCount >= ServerProperties.Properties.GROUP_MAX_MEMBER)
 				return false;
 
 			lock (m_groupMembers)

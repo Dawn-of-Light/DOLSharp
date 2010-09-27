@@ -827,13 +827,16 @@ namespace DOL.GS
 		///</summary>
 		public const string Beastcraft_NEW = "Beastcraft";
 		
-		public const string Banelord = "Banelord";
-		public const string Battlemaster = "Battlemaster";
-		public const string Warlord = "Warlord";
-		public const string Spymaster = "Spymaster";
-		public const string Convoker = "Convoker";
-		public const string Perfecter = "Perfecter";
-		public const string Stormlord = "Stormlord";
-		public const string Sojourner = "Sojourner";
+		/// <summary>
+		/// Master level line names
+		/// </summary>
+		public const string Banelord 		= "Banelord";
+		public const string Battlemaster 	= "Battlemaster";
+		public const string Warlord 		= "Warlord";
+		public const string Spymaster 	= "Spymaster";
+		public const string Convoker 		= "Convoker";
+		public const string Perfecter 	= "Perfecter";
+		public const string Stormlord 	= "Stormlord";
+		public const string Sojourner 	= "Sojourner";
 	}
 }
