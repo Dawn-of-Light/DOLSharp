@@ -866,13 +866,13 @@ namespace DOL.GS
 			get { return 0.4; }
 		}
 
-        /// <summary>
-        /// Minimum casting speed allowed, in ticks (milliseconds)
-        /// </summary>
-        public virtual int MinimumCastingSpeed
-        {
-            get { return 500; }
-        }
+		/// <summary>
+		/// Minimum casting speed allowed, in ticks (milliseconds)
+		/// </summary>
+		public virtual int MinimumCastingSpeed
+		{
+			get { return 500; }
+		}
 
 		/// <summary>
 		/// Can this living cast the given spell while in combat?
@@ -2973,8 +2973,8 @@ namespace DOL.GS
 			}
 
 			if (this is GameNPC && ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
-				((GameNPC)this).Inventory != null &&
-				((GameNPC)this).Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+			    ((GameNPC)this).Inventory != null &&
+			    ((GameNPC)this).Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
 			{
 				SwitchWeapon(eActiveWeaponSlot.Distance);
 			}
@@ -3647,8 +3647,8 @@ namespace DOL.GS
 
 				if( evadeChance < 0.01 )
 					evadeChance = 0.01;
-				else if( evadeChance > 0.50 && ad.Attacker is GamePlayer && ad.Target is GamePlayer )
-					evadeChance = 0.50; //50% evade cap RvR only; http://www.camelotherald.com/more/664.shtml
+				else if( evadeChance > ServerProperties.Properties.EVADE_CAP && ad.Attacker is GamePlayer && ad.Target is GamePlayer )
+					evadeChance = ServerProperties.Properties.EVADE_CAP; //50% evade cap RvR only; http://www.camelotherald.com/more/664.shtml
 				else if( evadeChance > 0.995 )
 					evadeChance = 0.995;
 			}
@@ -3717,8 +3717,8 @@ namespace DOL.GS
 
 					if( parryChance < 0.01 )
 						parryChance = 0.01;
-					else if( parryChance > 0.50 && ad.Attacker is GamePlayer && ad.Target is GamePlayer )
-						parryChance = 0.50;
+					else if( parryChance > ServerProperties.Properties.PARRY_CAP && ad.Attacker is GamePlayer && ad.Target is GamePlayer )
+						parryChance = ServerProperties.Properties.PARRY_CAP;
 					else if( parryChance > 0.995 )
 						parryChance = 0.995;
 				}
@@ -3785,8 +3785,8 @@ namespace DOL.GS
 
 				if (blockChance < 0.01)
 					blockChance = 0.01;
-				else if (blockChance > 0.60 && ad.Attacker is GamePlayer)
-					blockChance = 0.60;
+				else if (blockChance > ServerProperties.Properties.BLOCK_CAP && ad.Attacker is GamePlayer)
+					blockChance = ServerProperties.Properties.BLOCK_CAP;
 				else if (shieldSize == 1 && ad.Attacker is GameNPC && blockChance > .8)
 					blockChance = .8;
 				else if (shieldSize == 2 && ad.Attacker is GameNPC && blockChance > .9)
