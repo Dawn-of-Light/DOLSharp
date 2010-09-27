@@ -37,10 +37,13 @@ namespace DOL.GS.Commands
 		"&teleport",
 		ePrivLevel.GM,
         "Manage teleport destinations",
-        "'/teleport add <ID> <type>' add a teleport destination")]
+        "'/teleport add <ID> <type>' add a teleport destination",
+		"'/teleport reload' reload all teleport locations from the db")]
     public class TeleportCommandHandler : AbstractCommandHandler, ICommandHandler
     {
-        /// <summary>
+		private static readonly new log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
         /// Handle command.
         /// </summary>
         /// <param name="client"></param>
@@ -75,6 +78,14 @@ namespace DOL.GS.Commands
                         AddTeleport(client, args[2], teleportType);
                     }
                     break;
+
+				case "reload":
+
+					string results = WorldMgr.LoadTeleports();
+					log.Info(results);
+					client.Out.SendMessage(results, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					break;
+
                 default:
                     DisplaySyntax(client);
                     break;
