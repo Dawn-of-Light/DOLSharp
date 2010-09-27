@@ -1,0 +1,41 @@
+# Bonedancer
+GameObjects.CommanderPet.BoneCommander:			bone commander
+GameObjects.CommanderPet.DecayedCommander:		decayed commander
+GameObjects.CommanderPet.DreadArcher:			dread archer
+GameObjects.CommanderPet.DreadCommander:		dread commander
+GameObjects.CommanderPet.DreadGuardian:			dread guardian
+GameObjects.CommanderPet.DreadLich:			dread lich
+GameObjects.CommanderPet.HailMaster:			Hail, {0}. As my {1}, you may target me and say Commander to learn more about the abilities I possess.
+GameObjects.CommanderPet.HailMaster.SummonerFemale:	summoner
+GameObjects.CommanderPet.HailMaster.SummonerMale:	summoner
+GameObjects.CommanderPet.ReturnedCommander:		returned commander
+GameObjects.CommanderPet.SkeletalCommander:		skeletal commander
+GameObjects.CommanderPet.WR.Assist.Text:		not implemented yet
+GameObjects.CommanderPet.WR.Combat:			The {0} says, "From the start I order the minions under my control to [assist] me with a target your choose for me to kill.  Issuing the command again will make them cease assisting.  I am also able to [taunt] your enemies so that they will focus on me instead of you."
+GameObjects.CommanderPet.WR.CommNoTaunt:		Your commander will no long taunt its enemies!
+GameObjects.CommanderPet.WR.CommStartTaunt:		Your commander will start to taunt its enemies!
+GameObjects.CommanderPet.WR.Const.Assist:		assist
+GameObjects.CommanderPet.WR.Const.Combat:		combat
+GameObjects.CommanderPet.WR.Const.Commander:		commander
+GameObjects.CommanderPet.WR.Const.Damage:		damage
+GameObjects.CommanderPet.WR.Const.Debilitating:		debilitating
+GameObjects.CommanderPet.WR.Const.Drain:		drain
+GameObjects.CommanderPet.WR.Const.Empower:		empower
+GameObjects.CommanderPet.WR.Const.Harm:			harm
+GameObjects.CommanderPet.WR.Const.One:			one
+GameObjects.CommanderPet.WR.Const.Snares:		snare
+GameObjects.CommanderPet.WR.Const.Spells:		spells
+GameObjects.CommanderPet.WR.Const.Suppress:		suppress
+GameObjects.CommanderPet.WR.Const.Taunt:		taunt
+GameObjects.CommanderPet.WR.Const.Two:			two
+GameObjects.CommanderPet.WR.Const.Weapons:		weapons
+GameObjects.CommanderPet.WR.DiffCommander:		The {0} says, "I have mastered the [one handed sword], the [two handed sword], the [one handed hammer], the [two handed hammer], the [one handed axe] and the [two handed axe]."
+GameObjects.CommanderPet.WR.DreadArcher:		The {0} says, "As one of Bogdar's favored archers, you can [empower] me to be more effective with my bow. I also have various [combat] tactics at your disposal."
+GameObjects.CommanderPet.WR.DreadGuardian:		The {0} says, "As one of Bogdar's chosen guardians, I have mastered the ability to [harm] his enemies and [empower] myself with extra defenses.  I also have various [combat] tactics at your disposal."
+GameObjects.CommanderPet.WR.DreadGuardian2:		The {0} says, "Bogdar has granted me with the ability to [drain] the life of our enemies or to [suppress] and hurt their spirit. I cast spirit damaging spells when first summoned but you can command me to cast a particular type of spell if you so desire."
+GameObjects.CommanderPet.WR.DreadLich:			The {0} says, "As one of Bogdar's mystics, I have mastered many dark [spells].  I also have the means to [empower] my spells to be more effective.  I also have various [combat] tactics at your disposal."
+GameObjects.CommanderPet.WR.DreadLich2:			The {0} says, "My arsenal consists of [snare], [debilitating], and pure [damage] spells.  I cast debilitating spells when first summoned but you can command me to cast a particular type of spells if you so desire."
+GameObjects.CommanderPet.WR.Spell.Empower:		Empower
+GameObjects.CommanderPet.WR.XCommander:			The {0} says, "As one of Bogdar's commanders, I have mastered many of the fossil [weapons] within his bone army.  Which weapon shall I wield for you?  I also have various [combat] tactics at your disposal."
+GameObjects.Master:					Master
+GameObjects.Mistress:					Mistress
