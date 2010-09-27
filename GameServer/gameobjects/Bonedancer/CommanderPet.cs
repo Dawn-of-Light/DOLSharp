@@ -72,21 +72,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Address the master.
-		/// </summary>
-		public override void HailMaster()
-		{
-			GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
-			if (owner != null)
-			{
-                String message = String.Format(LanguageMgr.GetTranslation(owner.Client, "GameObjects.CommanderPet.HailMaster"),
-                    (owner.DBCharacter.Gender == 0) ? LanguageMgr.GetTranslation(owner.Client, "GameObjects.Master") : LanguageMgr.GetTranslation(owner.Client, "GameObjects.Mistress"),
-                    (owner.DBCharacter.Gender == 0) ? LanguageMgr.GetTranslation(owner.Client, "GameObjects.CommanderPet.HailMaster.SummonerMale") : LanguageMgr.GetTranslation(owner.Client, "GameObjects.CommanderPet.HailMaster.SummonerFemale"));
-                SayTo(owner, eChatLoc.CL_SystemWindow, message);
-            }
-		}
-
-		/// <summary>
 		/// Called when owner sends a whisper to the pet
 		/// </summary>
 		/// <param name="e"></param>

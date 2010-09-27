@@ -232,11 +232,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("system", "display_area_enter_screen_desc", "Display centered screen messages if a player enters an area.", false)]
 		public static bool DISPLAY_AREA_ENTER_SCREEN_DESC;
 
-        /// <summary>
-        /// Whether or not to enable the audit log
-        /// </summary>
+		/// <summary>
+		/// Whether or not to enable the audit log
+		/// </summary>
 		[ServerProperty("system", "enable_audit_log", "Whether or not to enable the audit log", false)]
-	    public static bool ENABLE_AUDIT_LOG;
+		public static bool ENABLE_AUDIT_LOG;
 
 		#endregion
 		
@@ -314,11 +314,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server","battlegroup_max_member", "Max number of members allowed in a battlegroup.", 64)]
 		public static int BATTLEGROUP_MAX_MEMBER;
 
-        /// <summary>
-        ///  This specifies the max amount of people in one group.
-        /// </summary>
-        [ServerProperty("server","group_max_member", "Max number of members allowed in a group.", 8)]
-        public static int GROUP_MAX_MEMBER;
+		/// <summary>
+		///  This specifies the max amount of people in one group.
+		/// </summary>
+		[ServerProperty("server","group_max_member", "Max number of members allowed in a group.", 8)]
+		public static int GROUP_MAX_MEMBER;
 
 		/// <summary>
 		/// Sets the disabled commands for the server split by ;
@@ -522,23 +522,23 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("rates", "pvp_spell_damage", "The PvP Spell Damage Modifier - Edit this to change the amount of spell damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
 		public static double PVP_SPELL_DAMAGE;
 		
-        /// <summary>
-        /// The highest possible Block Rate against an Enemy (Hard Cap)
-        /// </summary>
-        [ServerProperty("rates", "block_cap", "Block Rate Cap Modifier - Edit this to change the highest possible block rate against an enemy (Hard Cap) in game e.g .60 = 60%", 0.60)]
-        public static double BLOCK_CAP;
+		/// <summary>
+		/// The highest possible Block Rate against an Enemy (Hard Cap)
+		/// </summary>
+		[ServerProperty("rates", "block_cap", "Block Rate Cap Modifier - Edit this to change the highest possible block rate against an enemy (Hard Cap) in game e.g .60 = 60%", 0.60)]
+		public static double BLOCK_CAP;
 
-        ///<summary>
-        /// The highest possible Evade Rate against an Enemy (Hard Cap)
-        /// </summary>
-        [ServerProperty("rates", "evade_cap", "Evade Rate Cap Modifier - Edit this to change the highest possible evade rate against an enemy (Hard Cap) in game e.g .50 = 50%", 0.50)]
-        public static double EVADE_CAP;
+		///<summary>
+		/// The highest possible Evade Rate against an Enemy (Hard Cap)
+		/// </summary>
+		[ServerProperty("rates", "evade_cap", "Evade Rate Cap Modifier - Edit this to change the highest possible evade rate against an enemy (Hard Cap) in game e.g .50 = 50%", 0.50)]
+		public static double EVADE_CAP;
 
-        ///<summary>
-        ///The highest possible Parry Rate against an Enemy (Hard Cap)
-        /// </summary>
-        [ServerProperty("rates", "parry_cap", "Parry Rate Cap Modifier - Edit this to change the highest possible parry rate against an enemy (Hard Cap) in game e.g .50 = 50%", 0.50)]
-        public static double PARRY_CAP;
+		///<summary>
+		///The highest possible Parry Rate against an Enemy (Hard Cap)
+		/// </summary>
+		[ServerProperty("rates", "parry_cap", "Parry Rate Cap Modifier - Edit this to change the highest possible parry rate against an enemy (Hard Cap) in game e.g .50 = 50%", 0.50)]
+		public static double PARRY_CAP;
 
 		/// <summary>
 		/// Critical strike opening style effectiveness.  Increase this to make CS styles BS, BSII and Perf Artery more effective
@@ -1045,6 +1045,12 @@ namespace DOL.GS.ServerProperties
 		public static long STARTING_MONEY;
 
 		/// <summary>
+		/// The amount of Bounty Points a player starts with
+		/// </summary>
+		[ServerProperty("classes", "starting_bps", "Starting Bounty Points - Edit this to change the amount of Bounty Points the new characters start the game with", 0)]
+		public static long STARTING_BPS;
+		
+		/// <summary>
 		/// The level of experience a player should start with
 		/// </summary>
 		[ServerProperty("classes","starting_level", "Starting Level - Edit this to set which levels experience a new player start the game with", 1)]
@@ -1267,11 +1273,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("craft","capital_city_crafting_speed_bonus", "Crafting speed bonus in capital cities; 2 = 2x, 3 = 3x, ..., 1 = standard", 1.0)]
 		public static double CAPITAL_CITY_CRAFTING_SPEED_BONUS;
 
-        /// <summary>
-        /// Use salvage per realm and get back material to use in chars realm
-        /// </summary>
-        [ServerProperty("salvage", "use_salvage_per_realm", "Enable to get back material to use in chars realm. Disable to get back the same material in all realms.", false)]
-        public static bool USE_SALVAGE_PER_REALM;
+		/// <summary>
+		/// Use salvage per realm and get back material to use in chars realm
+		/// </summary>
+		[ServerProperty("salvage", "use_salvage_per_realm", "Enable to get back material to use in chars realm. Disable to get back the same material in all realms.", false)]
+		public static bool USE_SALVAGE_PER_REALM;
 
 		#endregion
 		

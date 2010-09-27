@@ -74,7 +74,6 @@ namespace DOL.GS.Spells
 			{
 				MessageToCaster(Spell.Message1, eChatType.CT_Spell);
 			}
-			pet.HailMaster();
 		}
 
 		#region ApplyEffectOnTarget Gets

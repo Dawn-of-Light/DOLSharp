@@ -75,7 +75,7 @@ namespace DOL.GS.Commands
 	     "'/mob brain <ClassName>' set the mob's brain",
 	     "'/mob respawn <duration>' set the mob's respawn time (in ms)",
 	     "'/mob questinfo' show mob's quest info",
-		 "'/mob refreshquests' Update this mobs list of data quests",
+	     "'/mob refreshquests' Update this mobs list of data quests",
 	     "'/mob equipinfo' show mob's inventory info",
 	     "'/mob equiptemplate load <EquipmentTemplateID>' to load the inventory template from the database, it is open for modification after",
 	     "'/mob equiptemplate create' to create an empty inventory template",
@@ -163,63 +163,63 @@ namespace DOL.GS.Commands
 
 				switch (args[1])
 				{
-					case "create": create(client, args); break;
-					case "fastcreate": fastcreate(client, args); break;
-					case "nfastcreate": nfastcreate(client, args); break;
-					case "nrandcreate": nrandcreate(client, args); break;
-					case "model": model(client, targetMob, args); break;
-					case "size": size(client, targetMob, args); break;
-					case "name": name(client, targetMob, args); break;
-					case "guild": guild(client, targetMob, args); break;
-					case "peace": peace(client, targetMob, args); break;
-					case "aggro": aggro(client, targetMob, args); break;
-					case "range": range(client, targetMob, args); break;
-					case "distance": distance(client, targetMob, args); break;
-					case "roaming": roaming(client, targetMob, args); break;
-					case "damagetype": damagetype(client, targetMob, args); break;
-					case "movehere": movehere(client, targetMob, args); break;
-					case "location": location(client, targetMob, args); break;
-					case "remove": remove(client, targetMob, args); break;
+						case "create": create(client, args); break;
+						case "fastcreate": fastcreate(client, args); break;
+						case "nfastcreate": nfastcreate(client, args); break;
+						case "nrandcreate": nrandcreate(client, args); break;
+						case "model": model(client, targetMob, args); break;
+						case "size": size(client, targetMob, args); break;
+						case "name": name(client, targetMob, args); break;
+						case "guild": guild(client, targetMob, args); break;
+						case "peace": peace(client, targetMob, args); break;
+						case "aggro": aggro(client, targetMob, args); break;
+						case "range": range(client, targetMob, args); break;
+						case "distance": distance(client, targetMob, args); break;
+						case "roaming": roaming(client, targetMob, args); break;
+						case "damagetype": damagetype(client, targetMob, args); break;
+						case "movehere": movehere(client, targetMob, args); break;
+						case "location": location(client, targetMob, args); break;
+						case "remove": remove(client, targetMob, args); break;
 					case "transparent": // deprecated, use "ghost"
-					case "ghost": ghost(client, targetMob, args); break;
-					case "stealth": stealth(client, targetMob, args); break;
-					case "torch": torch(client, targetMob, args); break;
-					case "statue": statue(client, targetMob, args); break;
-					case "fly": fly(client, targetMob, args); break;
-					case "swimming": swimming(client, targetMob, args); break;
-					case "noname": noname(client, targetMob, args); break;
-					case "notarget": notarget(client, targetMob, args); break;
-					case "kill": kill(client, targetMob, args); break;
-					case "flags": flags(client, targetMob, args); break;
+						case "ghost": ghost(client, targetMob, args); break;
+						case "stealth": stealth(client, targetMob, args); break;
+						case "torch": torch(client, targetMob, args); break;
+						case "statue": statue(client, targetMob, args); break;
+						case "fly": fly(client, targetMob, args); break;
+						case "swimming": swimming(client, targetMob, args); break;
+						case "noname": noname(client, targetMob, args); break;
+						case "notarget": notarget(client, targetMob, args); break;
+						case "kill": kill(client, targetMob, args); break;
+						case "flags": flags(client, targetMob, args); break;
 					case "regen":  // deprecated, use "heal"
-					case "heal": heal(client, targetMob, args); break;
-					case "attack": attack(client, targetMob, args); break;
-					case "info": info(client, targetMob, args); break;
-					case "stats": stats(client, targetMob, args); break;
-					case "state": state(client, targetMob); break;
-					case "realm": realm(client, targetMob, args); break;
-					case "speed": speed(client, targetMob, args); break;
-					case "level": level(client, targetMob, args); break;
-					case "levela": levela(client, targetMob, args); break;
-					case "brain": brain(client, targetMob, args); break;
-					case "respawn": respawn(client, targetMob, args); break;
-					case "questinfo": questinfo(client, targetMob, args); break;
-					case "refreshquests": refreshquests(client, targetMob, args); break;
-					case "equipinfo": equipinfo(client, targetMob, args); break;
-					case "equiptemplate": equiptemplate(client, targetMob, args); break;
-					case "dropcount": dropcount(client, targetMob, args); break;
-					case "addloot": addloot(client, targetMob, args); break;
-					case "addotd": addotd(client, targetMob, args); break;
-					case "addmobxlt": addmobxlt(client, targetMob, args); break;
-					case "viewloot": viewloot(client, targetMob, args); break;
-					case "removeloot": removeloot(client, targetMob, args); break;
-					case "removeotd": removeotd(client, targetMob, args); break;
-					case "refreshloot": refreshloot(client, targetMob, args); break;
-					case "copy": copy(client, targetMob, args); break;
-					case "npctemplate": npctemplate(client, targetMob, args); break;
-					case "class": setClass(client, targetMob, args); break;
-					case "path": path(client, targetMob, args); break;
-					case "house": house(client, targetMob, args); break;
+						case "heal": heal(client, targetMob, args); break;
+						case "attack": attack(client, targetMob, args); break;
+						case "info": info(client, targetMob, args); break;
+						case "stats": stats(client, targetMob, args); break;
+						case "state": state(client, targetMob); break;
+						case "realm": realm(client, targetMob, args); break;
+						case "speed": speed(client, targetMob, args); break;
+						case "level": level(client, targetMob, args); break;
+						case "levela": levela(client, targetMob, args); break;
+						case "brain": brain(client, targetMob, args); break;
+						case "respawn": respawn(client, targetMob, args); break;
+						case "questinfo": questinfo(client, targetMob, args); break;
+						case "refreshquests": refreshquests(client, targetMob, args); break;
+						case "equipinfo": equipinfo(client, targetMob, args); break;
+						case "equiptemplate": equiptemplate(client, targetMob, args); break;
+						case "dropcount": dropcount(client, targetMob, args); break;
+						case "addloot": addloot(client, targetMob, args); break;
+						case "addotd": addotd(client, targetMob, args); break;
+						case "addmobxlt": addmobxlt(client, targetMob, args); break;
+						case "viewloot": viewloot(client, targetMob, args); break;
+						case "removeloot": removeloot(client, targetMob, args); break;
+						case "removeotd": removeotd(client, targetMob, args); break;
+						case "refreshloot": refreshloot(client, targetMob, args); break;
+						case "copy": copy(client, targetMob, args); break;
+						case "npctemplate": npctemplate(client, targetMob, args); break;
+						case "class": setClass(client, targetMob, args); break;
+						case "path": path(client, targetMob, args); break;
+						case "house": house(client, targetMob, args); break;
 					case "str":
 					case "con":
 					case "dex":
@@ -227,20 +227,20 @@ namespace DOL.GS.Commands
 					case "int":
 					case "emp":
 					case "pie":
-					case "cha": stat(client, targetMob, args); break;
-					case "tether": tether(client, targetMob, args); break;
-					case "hood": hood(client, targetMob, args); break;
-					case "cloak": cloak(client, targetMob, args); break;
-					case "bodytype": bodytype(client, targetMob, args); break;
-					case "race": race(client, targetMob, args); break;
-					case "gender": gender(client, targetMob, args); break;
-					case "packageid": packageid(client, targetMob, args); break;
-					case "ownerid": ownerid(client, targetMob, args); break;
-					case "select": select(AUTOSELECT_RADIUS, client); break;
-					case "load": load(client, args); break;
-					case "reload": reload(client, targetMob, args); break;
-					case "findname": findname(client, args); break;
-					case "trigger": trigger(client, targetMob, args); break;
+						case "cha": stat(client, targetMob, args); break;
+						case "tether": tether(client, targetMob, args); break;
+						case "hood": hood(client, targetMob, args); break;
+						case "cloak": cloak(client, targetMob, args); break;
+						case "bodytype": bodytype(client, targetMob, args); break;
+						case "race": race(client, targetMob, args); break;
+						case "gender": gender(client, targetMob, args); break;
+						case "packageid": packageid(client, targetMob, args); break;
+						case "ownerid": ownerid(client, targetMob, args); break;
+						case "select": select(AUTOSELECT_RADIUS, client); break;
+						case "load": load(client, args); break;
+						case "reload": reload(client, targetMob, args); break;
+						case "findname": findname(client, args); break;
+						case "trigger": trigger(client, targetMob, args); break;
 					default:
 						DisplaySyntax(client);
 						return;
@@ -2705,22 +2705,25 @@ namespace DOL.GS.Commands
 				{
 					client.Out.SendMessage("The trigger command lets you add sentences for the mob to say when he spawns, aggros, fights or dies.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					client.Out.SendMessage("Triggers apply to all mobs with the same mob name.  Each mob name can have multiple triggers and trigger types.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					client.Out.SendMessage("The aggro and die trigger types allow for keywords of [targetname] (gets replaced with the target name), [class] [race] (gets replaced with the players class/race) and [sourcename] gets replaced with the source name.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("The aggro and die trigger types allow for keywords of {targetname} (gets replaced with the target name), {class} {race} (gets replaced with the players class/race) and {sourcename} gets replaced with the source name and {controller}, the pet's controller.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					client.Out.SendMessage("Ex: /mob trigger aggro 50 10 This is what I'll say 50% time when I aggro!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					client.Out.SendMessage("Ex: /mob trigger die 100 5 This is what I'll say when I die!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					client.Out.SendMessage("Ex: /mob trigger aggro 100 0 [y]I really hate [class]'s like you!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					client.Out.SendMessage("Ex: /mob trigger roam 5 12 Prepare to die [targetname]!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					client.Out.SendMessage("Ex: /mob trigger aggro 5 0 [b]I've been waiting for this moment ever since I was a young [sourcename]!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					client.Out.SendMessage("Usage: /mob trigger <type(die,aggro,spawn,fight,kill,roam)> <chance in percent> <emote (0 for no emote)> <sentence(can include [targetname],[sourcename],[class],[race])(can also be formatted with [y] for yelled and [b] for broadcasted sentence)>", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Ex: /mob trigger aggro 100 0 {y}I really hate {class}'s like you!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Ex: /mob trigger roam 5 12 Prepare to die {targetname}!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Ex: /mob trigger aggro 5 0 {b}I've been waiting for this moment ever since I was a young {sourcename}!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage("Usage: /mob trigger <type(die,aggro,spawn,fight,kill,roam)> <chance in percent> <emote (0 for no emote)> <sentence(can include {targetname},{sourcename},{class},{race}, {controller})(can also be formatted with {y} for yelled and {b} for broadcasted sentence)>", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					return;
 				}
-
-				if ((type != "spawn" && type != "aggro" && type != "die" && type != "fight" && type != "roam" && type != "kill") || type == "")
-				{
-					client.Out.SendMessage("You must specify a proper type for the trigger <Spawn, Aggro, Die, Fight>.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage("example: Die None This is what I will say when I die!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				
+				GameNPC.eAmbientTrigger trig;
+				try {
+					trig = (GameNPC.eAmbientTrigger) Enum.Parse(typeof(GameNPC.eAmbientTrigger),type, true);
+				} catch {
+					client.Out.SendMessage("You must specify a proper type for the trigger <Spawning, Aggroing, Dieing, Fighting, Moving, Roaming>.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage("example: Dieing None This is what I will say when I die!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
+				
 				try{
 					emote = Convert.ToUInt16((args[4]));
 					chance = Convert.ToUInt16((args[3]));
@@ -2735,7 +2738,13 @@ namespace DOL.GS.Commands
 					return;
 				}
 
-				MobXAmbientBehaviour trigger = new MobXAmbientBehaviour(targetMob.Name, type + "ing",emote, GameServer.Database.Escape(text), chance);
+				string voice = string.Empty;
+				if (text.Contains("{b}"))
+					voice = "b";
+				if (text.Contains("{y}"))
+					voice = "y";
+				text = text.Replace("{b}",string.Empty).Replace("{y}",string.Empty);
+				MobXAmbientBehaviour trigger = new MobXAmbientBehaviour(targetMob.Name, trig.ToString(), emote, GameServer.Database.Escape(text), chance, voice);
 				trigger.Dirty = true;
 				trigger.AllowAdd = true;
 				GameServer.Database.AddObject(trigger);

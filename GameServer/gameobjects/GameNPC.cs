@@ -1638,6 +1638,9 @@ namespace DOL.GS
 
 			if( this.IsWithinRadius( CurrentWayPoint, 100 ) )
 			{
+				// reaching a waypoint can start an ambient sentence
+				FireAmbientSentence(eAmbientTrigger.moving);
+				
 				if (CurrentWayPoint.Type == ePathType.Path_Reverse && CurrentWayPoint.FiredFlag)
 					CurrentWayPoint = CurrentWayPoint.Prev;
 				else
@@ -2401,10 +2404,10 @@ namespace DOL.GS
 			{
 				foreach (DataQuest quest in DataQuestList)
 				{
-					if (quest.CheckQuestQualification(player) && 
-						quest.StartType != DataQuest.eStartType.Collection && 
-						quest.StartType != DataQuest.eStartType.KillComplete &&
-						quest.StartType != DataQuest.eStartType.InteractComplete)
+					if (quest.CheckQuestQualification(player) &&
+					    quest.StartType != DataQuest.eStartType.Collection &&
+					    quest.StartType != DataQuest.eStartType.KillComplete &&
+					    quest.StartType != DataQuest.eStartType.InteractComplete)
 					{
 						return true;
 					}
@@ -2727,14 +2730,22 @@ namespace DOL.GS
 				base.Health = MaxHealth;
 			}
 			
-			// list of ambient texts
-			if (!string.IsNullOrEmpty(Name))
-				ambientTexts = GameServer.Database.SelectObjects<MobXAmbientBehaviour>("`Source` ='" + GameServer.Database.Escape(Name) + "';");
-
+			// create the ambiant text list for this NPC
+			BuildAmbientTexts();
 			if (GameServer.Instance.ServerStatus == eGameServerStatus.GSS_Open)
 				FireAmbientSentence(eAmbientTrigger.spawning);
 			
 			return true;
+		}
+
+		/// <summary>
+		/// Fill the ambient text list for this NPC
+		/// </summary>
+		protected virtual void BuildAmbientTexts()
+		{
+			// list of ambient texts
+			if (!string.IsNullOrEmpty(Name))
+				ambientTexts = GameServer.Database.SelectObjects<MobXAmbientBehaviour>("`Source` ='" + GameServer.Database.Escape(Name) + "';");
 		}
 
 		/// <summary>
@@ -3182,6 +3193,7 @@ namespace DOL.GS
 			fighting,
 			roaming,
 			killing,
+			moving,
 		}
 		
 		/// <summary>
@@ -4091,19 +4103,19 @@ namespace DOL.GS
 					{
 						long value = lootTemplate.Price;
 
-                        //[StephenxPimentel] - Zone Bonus XP Support
-                        if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
-                        {
-                            GamePlayer killerPlayer = killer as GamePlayer;
+						//[StephenxPimentel] - Zone Bonus XP Support
+						if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
+						{
+							GamePlayer killerPlayer = killer as GamePlayer;
 
-                            int zoneBonus = (((int)value * ZoneBonus.GetCoinBonus(killerPlayer) / 100));
-                            if (zoneBonus > 0)
-                            {
-                                killerPlayer.AddMoney((long)zoneBonus * (long)ServerProperties.Properties.MONEY_DROP, 
-                                    ZoneBonus.GetBonusMessage(killerPlayer, (int)(zoneBonus * ServerProperties.Properties.MONEY_DROP), ZoneBonus.eZoneBonusType.COIN),
-                                    eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                            }
-                        }
+							int zoneBonus = (((int)value * ZoneBonus.GetCoinBonus(killerPlayer) / 100));
+							if (zoneBonus > 0)
+							{
+								killerPlayer.AddMoney((long)zoneBonus * (long)ServerProperties.Properties.MONEY_DROP,
+								                      ZoneBonus.GetBonusMessage(killerPlayer, (int)(zoneBonus * ServerProperties.Properties.MONEY_DROP), ZoneBonus.eZoneBonusType.COIN),
+								                      eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							}
+						}
 
 						if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Coin_Drop_5, (eRealm)killer.Realm))
 							value += (value / 100) * 5;
@@ -4622,37 +4634,32 @@ namespace DOL.GS
 			// grab random sentence
 			int choosen = Util.Random(mxa.Count-1);
 			if (!Util.Chance(mxa[choosen].Chance)) return;
-			string text = mxa[choosen].Text.Replace("[sourcename]",Name).Replace("[targetname]",living==null?string.Empty:living.Name);
+			
+			string text = mxa[choosen].Text.Replace("{sourcename}",Name).Replace("{targetname}",living==null?string.Empty:living.Name).Replace("{controller}",((Brain as IControlledBrain).Owner as GamePlayer).Name);
 			
 			// issuing emote
 			Emote((eEmote)mxa[choosen].Emote);
 			
 			// issuing text
 			if (living is GamePlayer)
-			{
-				text = text.Replace("[class]",(living as GamePlayer).CharacterClass.Name).Replace("[race]",(living as GamePlayer).RaceName);
-			}
+				text = text.Replace("{class}",(living as GamePlayer).CharacterClass.Name).Replace("{race}",(living as GamePlayer).RaceName);
 			if (living is GameNPC)
-			{
-				if (living is GamePet) text = text.Replace("[class]","pet").Replace("[race]","pet");
-				if (living is GameNPC) text = text.Replace("[class]","mob").Replace("[race]","mob");
-			}
+				text = text.Replace("{class}","NPC").Replace("{race}","NPC");
 			
-			if (text.Contains("[b]"))
+			// broadcasted , yelled or talked ?
+			if (mxa[choosen].Voice.StartsWith("b"))
 			{
-				text = text.Replace("[b]","");
 				foreach (GamePlayer player in CurrentRegion.GetPlayersInRadius(X, Y, Z, 25000, false, false))
 				{
 					player.Out.SendMessage(text, eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
 				}
 				return;
 			}
-			if (text.Contains("[y]"))
+			if (mxa[choosen].Voice.StartsWith("y"))
 			{
-				Yell(text.Replace("[y]",""));
+				Yell(text);
 				return;
 			}
-
 			Say(text);
 		}
 
