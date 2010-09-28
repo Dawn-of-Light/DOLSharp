@@ -4635,7 +4635,7 @@ namespace DOL.GS
 			int choosen = Util.Random(mxa.Count-1);
 			if (!Util.Chance(mxa[choosen].Chance)) return;
 			
-			string text = mxa[choosen].Text.Replace("{sourcename}",Name).Replace("{targetname}",living==null?string.Empty:living.Name).Replace("{controller}",((Brain as IControlledBrain).Owner as GamePlayer).Name);
+			string text = mxa[choosen].Text.Replace("{sourcename}",Name).Replace("{targetname}",living==null?string.Empty:living.Name).Replace("{controller}",((Brain as IControlledBrain).GetPlayerOwner() as GamePlayer).Name);
 			
 			// issuing emote
 			Emote((eEmote)mxa[choosen].Emote);
