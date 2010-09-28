@@ -26,6 +26,7 @@ using System.Reflection;
 using DOL.GS.Utils;
 using DOL.GS.Quests;
 using DOL.GS.PacketHandler.Client.v168;
+using log4net;
 
 namespace DOL.GS.Commands
 {
@@ -41,7 +42,7 @@ namespace DOL.GS.Commands
 		"'/teleport reload' reload all teleport locations from the db")]
     public class TeleportCommandHandler : AbstractCommandHandler, ICommandHandler
     {
-		private static readonly new log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
         /// Handle command.

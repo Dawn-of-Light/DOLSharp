@@ -142,7 +142,7 @@ namespace DOL.GS.Keeps
 				: base()
 			{
 				m_name = "teleport spell effect";
-				m_flags = (uint)GameNPC.eFlags.PEACE + (uint)GameNPC.eFlags.DONTSHOWNAME;
+				m_flags = eFlags.PEACE | eFlags.DONTSHOWNAME;
 				m_size = 255;
 				m_model = 0x783;
 				m_maxSpeedBase = 0;

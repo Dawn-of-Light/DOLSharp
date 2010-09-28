@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Shaman Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Shaman Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Shaman Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ShamanTrainer : GameTrainer
 	{
@@ -38,15 +38,14 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Shaman)
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches.
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
+				OfferTraining(player);
 			}
 			else
 			{
@@ -65,17 +64,17 @@ namespace DOL.GS.Trainer
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks wether a player can be promoted or not
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public static bool CanPromotePlayer(GamePlayer player) 
+		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Seer && (player.Race == (int) eRace.Kobold || player.Race == (int) eRace.Frostalf
-				|| player.Race == (int)eRace.Troll || player.Race == (int)eRace.Dwarf));
+			                                                                                      || player.Race == (int)eRace.Troll || player.Race == (int)eRace.Dwarf));
 		}
 
 		/// <summary>
@@ -85,19 +84,19 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+			
 			switch (text) {
-			case "join the House of Ymir":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Shaman, "Welcome young Shaman! May your time in Midgard army be rewarding!", null);	// TODO: gifts
-				}
-				break;
+				case "join the House of Ymir":
+					// promote player to other class
+					if (CanPromotePlayer(player)) {
+						PromotePlayer(player, (int)eCharacterClass.Shaman, "Welcome young Shaman! May your time in Midgard army be rewarding!", null);	// TODO: gifts
+					}
+					break;
 			}
-			return true;		
+			return true;
 		}
 	}
 }

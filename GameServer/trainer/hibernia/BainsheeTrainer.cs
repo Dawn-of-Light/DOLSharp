@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Bainshee Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Bainshee Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Bainshee Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class BainsheeTrainer : GameTrainer
 	{
@@ -49,20 +49,18 @@ namespace DOL.GS.Trainer
 		{
 			if (!base.Interact(player)) return false;
 
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int)eCharacterClass.Bainshee)
+			// check if class matches.
+			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.Interact.Text2", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-            }
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.Interact.Text2", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			}
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.Interact.Text1", this.Name, player.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-                    if (!player.IsLevelRespecUsed)
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.Interact.Text1", this.Name, player.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
 					}
@@ -83,7 +81,7 @@ namespace DOL.GS.Trainer
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level >= 5 && player.DBCharacter.Gender == 1 && player.CharacterClass.ID == (int)eCharacterClass.Magician && (player.Race == (int)eRace.Celt || player.Race == (int)eRace.Elf
-				|| player.Race == (int)eRace.Lurikeen));
+			                                                                                                                             || player.Race == (int)eRace.Lurikeen));
 		}
 
 		/// <summary>
@@ -96,22 +94,22 @@ namespace DOL.GS.Trainer
 		{
 			if (!base.WhisperReceive(source, text)) return false;
 			GamePlayer player = source as GamePlayer;
-            String lowerCase = text.ToLower();
+			String lowerCase = text.ToLower();
 
-            if (lowerCase == LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.WhisperReceiveCase.Text1"))
-            {
-            // promote player to other class
-					if (CanPromotePlayer(player))
-					{
-						player.RemoveAllSpellLines();
-						player.RemoveAllSkills();
-						player.RemoveAllSpecs();
-						player.RemoveAllStyles();
-						player.Out.SendUpdatePlayerSkills();
-						player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
-                        PromotePlayer(player, (int)eCharacterClass.Bainshee, LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
-                        player.ReceiveItem(this, WEAPON_ID1);
-					}				
+			if (lowerCase == LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.WhisperReceiveCase.Text1"))
+			{
+				// promote player to other class
+				if (CanPromotePlayer(player))
+				{
+					player.RemoveAllSpellLines();
+					player.RemoveAllSkills();
+					player.RemoveAllSpecs();
+					player.RemoveAllStyles();
+					player.Out.SendUpdatePlayerSkills();
+					player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
+					PromotePlayer(player, (int)eCharacterClass.Bainshee, LanguageMgr.GetTranslation(player.Client, "BainsheeTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
+					player.ReceiveItem(this, WEAPON_ID1);
+				}
 			}
 			return true;
 		}

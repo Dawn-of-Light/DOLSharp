@@ -32,9 +32,9 @@ namespace DOL.GS
 	/// </summary>
 	public class GameHousingHastener : GameMerchant
 	{
-		public override uint Flags
+		public override eFlags Flags
 		{
-			get { return (uint)GameNPC.eFlags.PEACE; }
+			get { return eFlags.PEACE; }
 		}
 
 		/// <summary>

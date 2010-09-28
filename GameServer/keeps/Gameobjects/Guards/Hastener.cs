@@ -29,9 +29,9 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class FrontierHastener : GameKeepGuard
 	{
-		public override uint Flags
+		public override eFlags Flags
 		{
-			get { return (uint)GameNPC.eFlags.PEACE; }
+			get { return eFlags.PEACE; }
 		}
 
 		#region Examine/Interact Message

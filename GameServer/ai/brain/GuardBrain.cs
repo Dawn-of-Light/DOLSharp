@@ -72,7 +72,7 @@ namespace DOL.AI.Brain
 			{
 				if (m_aggroTable.ContainsKey(npc))
 					continue; // add only new npcs
-				if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0)
+				if ((npc.Flags & GameNPC.eFlags.FLYING) != 0)
 					continue; // let's not try to attack flying mobs
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
 					continue;

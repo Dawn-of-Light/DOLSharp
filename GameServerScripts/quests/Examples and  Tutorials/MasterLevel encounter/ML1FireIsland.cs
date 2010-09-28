@@ -353,8 +353,8 @@ namespace DOL.GS
 			fire.RoamingRange = 0;
 			fire.RespawnInterval = 0;
 			fire.BodyType = 0;
-			fire.Flags ^= (uint)GameNPC.eFlags.CANTTARGET;
-			fire.Flags ^= (uint)GameNPC.eFlags.DONTSHOWNAME;
+			fire.Flags ^= GameNPC.eFlags.CANTTARGET;
+			fire.Flags ^= GameNPC.eFlags.DONTSHOWNAME;
 
 			FireBrain brain = new FireBrain();
 			brain.AggroLevel = 100;
@@ -519,7 +519,7 @@ namespace DOL.GS
 			ianetor1.Z = 8481;
 			ianetor1.Heading = 3720;
 			ianetor1.RoamingRange = 0;
-			ianetor1.Flags ^= (uint)GameNPC.eFlags.PEACE;
+			ianetor1.Flags ^= GameNPC.eFlags.PEACE;
 			ianetor1.CurrentSpeed = 0;
 			ianetor1.MaxSpeedBase = 0;
 			ianetor1.AddToWorld();
@@ -539,7 +539,7 @@ namespace DOL.GS
 			ianetor2.Z = 8481;
 			ianetor2.Heading = 1735;
 			ianetor2.RoamingRange = 0;
-			ianetor2.Flags ^= (uint)GameNPC.eFlags.PEACE;
+			ianetor2.Flags ^= GameNPC.eFlags.PEACE;
 			ianetor2.CurrentSpeed = 0;
 			ianetor2.MaxSpeedBase = 0;
 			ianetor2.AddToWorld();

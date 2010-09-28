@@ -19,13 +19,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
-using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
 using DOL.Language;
 
 namespace DOL.GS
@@ -129,22 +126,28 @@ namespace DOL.GS
 		{
 			if (!base.Interact(player)) return false;
 
-			player.GainExperience(GameLiving.eXPSource.Other, 0);//levelup
-
-			if (player.FreeLevelState == 2)
-			{
-				player.DBCharacter.LastFreeLevel = player.Level;
-				//long xp = GameServer.ServerRules.GetExperienceForLevel(player.PlayerCharacter.LastFreeLevel + 3) - GameServer.ServerRules.GetExperienceForLevel(player.PlayerCharacter.LastFreeLevel + 2);
-				long xp = player.GetExperienceNeededForLevel(player.DBCharacter.LastFreeLevel + 1) - player.GetExperienceNeededForLevel(player.DBCharacter.LastFreeLevel);
-				//player.PlayerCharacter.LastFreeLevel = player.Level;
-				player.GainExperience(GameLiving.eXPSource.Other, xp);
-				player.DBCharacter.LastFreeLeveled = DateTime.Now;
-				player.Out.SendPlayerFreeLevelUpdate();
-			}
-
 			// Turn to face player
 			TurnTo(player, 10000);
 
+			// Unknown class must be used for multitrainer
+			if (player.CharacterClass.ID == (int)TrainedClass || TrainedClass == eCharacterClass.Unknown)
+			{
+				player.Out.SendTrainerWindow();
+				
+				player.GainExperience(GameLiving.eXPSource.Other, 0);//levelup
+
+				if (player.FreeLevelState == 2)
+				{
+					player.DBCharacter.LastFreeLevel = player.Level;
+					//long xp = GameServer.ServerRules.GetExperienceForLevel(player.PlayerCharacter.LastFreeLevel + 3) - GameServer.ServerRules.GetExperienceForLevel(player.PlayerCharacter.LastFreeLevel + 2);
+					long xp = player.GetExperienceNeededForLevel(player.DBCharacter.LastFreeLevel + 1) - player.GetExperienceNeededForLevel(player.DBCharacter.LastFreeLevel);
+					//player.PlayerCharacter.LastFreeLevel = player.Level;
+					player.GainExperience(GameLiving.eXPSource.Other, xp);
+					player.DBCharacter.LastFreeLeveled = DateTime.Now;
+					player.Out.SendPlayerFreeLevelUpdate();
+				}
+			}
+			
 			if (TrainerType > 0 && player.Level >= 50)
 				player.Out.SendChampionTrainerWindow(TrainerType);
 
@@ -372,7 +375,6 @@ namespace DOL.GS
 		{
 			SayTo(player, eChatLoc.CL_ChatWindow,
 			      LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.WouldYouLikeTo"));
-			player.Out.SendTrainerWindow();
 		}
 		
 		/// <summary>

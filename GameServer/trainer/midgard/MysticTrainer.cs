@@ -25,7 +25,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Mystic Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Mystic Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Mystic Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class MysticTrainer : GameTrainer
 	{
@@ -45,17 +45,13 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Mystic)
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-
-				// popup the training window
-				player.Out.SendTrainerWindow();
-							
 				// player can be promoted
 				if (player.Level>=5)
 				{
@@ -63,14 +59,14 @@ namespace DOL.GS.Trainer
 				}
 				else
 				{
-					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					OfferTraining(player);
 				}
 
 				// ask for basic equipment if player doesnt own it
 				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.MinEquipable, eInventorySlot.LastBackpack) == null)
 				{
 					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice branch]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				}				
+				}
 			}
 			else
 			{
@@ -86,36 +82,36 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;	
+		{
+			if (!base.WhisperReceive(source, text)) return false;
 			GamePlayer player = source as GamePlayer;
 
 			switch (text) {
-			case "Runemaster":
-				if(player.Race == (int) eRace.Frostalf || player.Race == (int) eRace.Kobold || player.Race == (int) eRace.Norseman || player.Race == (int) eRace.Dwarf){
-					player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				}
-				else{
-					player.Out.SendMessage(this.Name + " says, \"The path of a Runemaster is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				}
-				return true;
-			case "Spiritmaster":
-				if(player.Race == (int) eRace.Kobold || player.Race == (int) eRace.Frostalf || player.Race == (int) eRace.Norseman){
-					player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				}
-				else{
-					player.Out.SendMessage(this.Name + " says, \"The path of a Spiritmaster is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				}
-				return true;
-			case "practice branch":
-				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
-				{
-					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
-				}
-				return true;
-			
+				case "Runemaster":
+					if(player.Race == (int) eRace.Frostalf || player.Race == (int) eRace.Kobold || player.Race == (int) eRace.Norseman || player.Race == (int) eRace.Dwarf){
+						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					}
+					else{
+						player.Out.SendMessage(this.Name + " says, \"The path of a Runemaster is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					}
+					return true;
+				case "Spiritmaster":
+					if(player.Race == (int) eRace.Kobold || player.Race == (int) eRace.Frostalf || player.Race == (int) eRace.Norseman){
+						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					}
+					else{
+						player.Out.SendMessage(this.Name + " says, \"The path of a Spiritmaster is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					}
+					return true;
+				case "practice branch":
+					if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+					{
+						player.ReceiveItem(this,PRACTICE_WEAPON_ID);
+					}
+					return true;
+					
 			}
-			return true;			
+			return true;
 		}
 	}
 }

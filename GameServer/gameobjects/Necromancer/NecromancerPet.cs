@@ -17,19 +17,13 @@
  *
  */
 using System;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
-using DOL.GS.Spells;
 using DOL.AI.Brain;
-using DOL.Events;
-using log4net;
-using DOL.GS.PacketHandler;
 using DOL.Database;
-using System.Collections;
+using DOL.Events;
 using DOL.GS.Effects;
-using DOL.GS.Styles;
+using DOL.GS.PacketHandler;
+using DOL.GS.Spells;
 
 namespace DOL.GS
 {
@@ -44,13 +38,13 @@ namespace DOL.GS
 		/// <summary>
 		/// Proc IDs for various pet weapons.
 		/// </summary>
-		private enum Procs 
-		{ 
+		private enum Procs
+		{
 			Cold = 32050,
-			Disease = 32014, 
+			Disease = 32014,
 			Heat = 32053,
-			Poison = 32013, 
-			Stun = 2165 
+			Poison = 32013,
+			Stun = 2165
 		};
 
 		/// <summary>
@@ -62,46 +56,46 @@ namespace DOL.GS
 		/// <param name="owner">Player who summoned this pet.</param>
 		/// <param name="summonConBonus">Item constitution bonuses of the player.</param>
 		/// <param name="summonHitsBonus">Hits bonuses of the player.</param>
-		public NecromancerPet(INpcTemplate npcTemplate, int summonConBonus, 
-			int summonHitsBonus) : base(npcTemplate)
+		public NecromancerPet(INpcTemplate npcTemplate, int summonConBonus,
+		                      int summonHitsBonus) : base(npcTemplate)
 		{
-            // Transfer bonuses.
-            
+			// Transfer bonuses.
+			
 			m_summonConBonus = summonConBonus;
 			m_summonHitsBonus = summonHitsBonus;
 
-            // Set immunities/load equipment/etc.
+			// Set immunities/load equipment/etc.
 
-            switch (Name)
-            {
+			switch (Name)
+			{
 				case "lesser zombie servant":
 				case "zombie servant":
 					EffectList.Add(new MezzRootImmunityEffect());
 					LoadEquipmentTemplate("barehand_weapon");
 					InventoryItem item;
 					if (Inventory != null &&
-						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
+					    (item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
 						item.ProcSpellID = (int)Procs.Stun;
 					break;
-                case "reanimated servant" : 
+				case "reanimated servant" :
 					LoadEquipmentTemplate("reanimated_servant");
-                    break;
-                case "necroservant": 
+					break;
+				case "necroservant":
 					LoadEquipmentTemplate("necroservant");
-                    break;
+					break;
 				case "greater necroservant":
 					LoadEquipmentTemplate("barehand_weapon");
-					if (Inventory != null && 
-						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
+					if (Inventory != null &&
+					    (item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
 						item.ProcSpellID = (int)Procs.Poison;
-						break;
-                case "abomination": 
+					break;
+				case "abomination":
 					LoadEquipmentTemplate("abomination_fiery_sword");
-                    break;
+					break;
 				default:
 					LoadEquipmentTemplate("barehand_weapon");
 					break;
-            }
+			}
 		}
 
 		#region Stats
@@ -254,7 +248,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Base strength. 
+		/// Base strength.
 		/// </summary>
 		public override short Strength
 		{
@@ -271,7 +265,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Base constitution. 
+		/// Base constitution.
 		/// </summary>
 		public override short Constitution
 		{
@@ -306,7 +300,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Base quickness. 
+		/// Base quickness.
 		/// </summary>
 		public override short Quickness
 		{
@@ -326,21 +320,21 @@ namespace DOL.GS
 
 		#region Melee
 
-        /// <summary>
-        /// Draw the weapon, but don't actually start a melee attack.
-        /// </summary>
-        public void DrawWeapon()
-        {
-            if (!AttackState)
-            {
-                AttackState = true;
+		/// <summary>
+		/// Draw the weapon, but don't actually start a melee attack.
+		/// </summary>
+		public void DrawWeapon()
+		{
+			if (!AttackState)
+			{
+				AttackState = true;
 
-                foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                    player.Out.SendObjectUpdate(this);
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					player.Out.SendObjectUpdate(this);
 
-                AttackState = false;
-            }
-        }
+				AttackState = false;
+			}
+		}
 
 		/// <summary>
 		/// Whether or not pet can use left hand weapon.
@@ -355,7 +349,7 @@ namespace DOL.GS
 					case "zombie servant":
 					case "greater necroservant":
 						return true;
-					default: 
+					default:
 						return false;
 				}
 
@@ -394,7 +388,7 @@ namespace DOL.GS
 				tauntEffect.Stop();
 				if (owner != null)
 					owner.Out.SendMessage(String.Format("{0} seems to be less aggressive than before.",
-						GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					                                    GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
@@ -402,7 +396,7 @@ namespace DOL.GS
 
 				if (owner != null)
 					owner.Out.SendMessage(String.Format("{0} enters an aggressive stance.",
-						GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					                                    GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				new TauntEffect().Start(this);
 			}
@@ -553,8 +547,8 @@ namespace DOL.GS
 		/// </summary>
 		public void Taunt()
 		{
-            if (IsIncapacitated)
-                return;
+			if (IsIncapacitated)
+				return;
 
 			SpellLine chantsLine = SkillBase.GetSpellLine("Chants");
 			if (chantsLine == null)
@@ -583,11 +577,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// Actions to be taken when the pet receives a whisper.
-        /// </summary>
-        /// <param name="source">Source of the whisper.</param>
-        /// <param name="text">"Text that was whispered</param>
-        /// <returns>True if whisper was handled, false otherwise.</returns>
+		/// Actions to be taken when the pet receives a whisper.
+		/// </summary>
+		/// <param name="source">Source of the whisper.</param>
+		/// <param name="text">"Text that was whispered</param>
+		/// <returns>True if whisper was handled, false otherwise.</returns>
 		public override bool WhisperReceive(GameLiving source, string text)
 		{
 			GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
@@ -606,36 +600,36 @@ namespace DOL.GS
 							case "zombie servant":
 							case "reanimated servant":
 							case "necroservant":
-                                SayTo(owner, taunt);
+								SayTo(owner, taunt);
 								return true;
-							case "greater necroservant": 
-                                SayTo(owner, taunt + " I can also inflict [poison] or [disease] on your enemies. " 
-                                    + empower);
+							case "greater necroservant":
+								SayTo(owner, taunt + " I can also inflict [poison] or [disease] on your enemies. "
+								      + empower);
 								return true;
-							case "abomination": 
-                                SayTo(owner, "As one of the chosen warriors of Arawn, I have a mighty arsenal of [weapons] at your disposal. If you wish it, I am able to [taunt] your enemies so that they will focus on me instead of you. "
-								    + empower);
+							case "abomination":
+								SayTo(owner, "As one of the chosen warriors of Arawn, I have a mighty arsenal of [weapons] at your disposal. If you wish it, I am able to [taunt] your enemies so that they will focus on me instead of you. "
+								      + empower);
 								return true;
-							default: 
-                                return false;
+							default:
+								return false;
 						}
 					}
 				case "disease":
 					InventoryItem item;
 					if (Inventory != null &&
-						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
+					    (item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
 					{
 						item.ProcSpellID = (int)Procs.Disease;
 						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					}
 					return true;
 				case "empower":
-                    SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
+					SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					Empower();
 					return true;
 				case "poison":
-					if (Inventory != null && 
-						(item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
+					if (Inventory != null &&
+					    (item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
 					{
 						item.ProcSpellID = (int)Procs.Poison;
 						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
@@ -643,7 +637,7 @@ namespace DOL.GS
 					return true;
 				case "taunt":
 					ToggleTauntMode();
-                    return true;
+					return true;
 				case "weapons":
 					{
 						if (Name != "abomination")
@@ -652,12 +646,12 @@ namespace DOL.GS
 						SayTo(owner, "What weapon do you command me to wield? A [fiery sword], [icy sword], [poisonous sword] or a [flaming mace], [frozen mace], [venomous mace]?");
 						return true;
 					}
-				case "fiery sword": 
-				case "icy sword": 
-				case "poisonous sword": 
-				case "flaming mace": 
+				case "fiery sword":
+				case "icy sword":
+				case "poisonous sword":
+				case "flaming mace":
 				case "frozen mace":
-				case "venomous mace": 
+				case "venomous mace":
 					{
 						if (Name != "abomination")
 							return false;
@@ -667,15 +661,15 @@ namespace DOL.GS
 							SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 						return true;
 					}
-				default: return false;
+					default: return false;
 			}
 		}
 
-        /// <summary>
-        /// Load equipment for the pet.
-        /// </summary>
-        /// <param name="templateID">Equipment Template ID.</param>
-        /// <returns>True on success, else false.</returns>
+		/// <summary>
+		/// Load equipment for the pet.
+		/// </summary>
+		/// <param name="templateID">Equipment Template ID.</param>
+		/// <returns>True on success, else false.</returns>
 		private bool LoadEquipmentTemplate(String templateID)
 		{
 			if (templateID.Length > 0)
@@ -691,11 +685,11 @@ namespace DOL.GS
 						item.SPD_ABS = 50;
 						switch (templateID)
 						{
-							case "abomination_fiery_sword": 
+							case "abomination_fiery_sword":
 							case "abomination_flaming_mace":
 								item.ProcSpellID = (int)Procs.Heat;
 								break;
-							case "abomination_icy_sword": 
+							case "abomination_icy_sword":
 							case "abomination_frozen_mace":
 								item.ProcSpellID = (int)Procs.Cold;
 								break;
@@ -730,17 +724,17 @@ namespace DOL.GS
 			}
 			return false;
 		}
-        /// <summary>
-        /// Pet stayed out of range for too long, despawn it.
-        /// </summary>
-        public void CutTether()
-        {
-            GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
-            if (owner == null)
-                return;
+		/// <summary>
+		/// Pet stayed out of range for too long, despawn it.
+		/// </summary>
+		public void CutTether()
+		{
+			GamePlayer owner = ((Brain as IControlledBrain).Owner) as GamePlayer;
+			if (owner == null)
+				return;
 			Brain.Stop();
-            owner.Notify(GameNPCEvent.PetLost);
-            Die(null);
-        }
+			owner.Notify(GameNPCEvent.PetLost);
+			Die(null);
+		}
 	}
 }

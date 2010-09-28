@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Hero Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Hero Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Hero Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class HeroTrainer : GameTrainer
 	{
@@ -44,23 +44,21 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Hero) 
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches.
+			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "HeroTrainer.Interact.Text2", this.Name, player.GetName(0, false)), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			} 
-			else 
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "HeroTrainer.Interact.Text2", this.Name, player.GetName(0, false)), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			}
+			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "HeroTrainer.Interact.Text1", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "HeroTrainer.Interact.Text1", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
@@ -72,17 +70,17 @@ namespace DOL.GS.Trainer
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks whether a player can be promoted or not
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public static bool CanPromotePlayer(GamePlayer player) 
+		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Guardian && (player.Race == (int) eRace.Celt || player.Race == (int) eRace.Firbolg
-				|| player.Race == (int)eRace.Lurikeen || player.Race == (int)eRace.Shar || player.Race == (int)eRace.Sylvan || player.Race == (int)eRace.HiberniaMinotaur));
+			                                                                                          || player.Race == (int)eRace.Lurikeen || player.Race == (int)eRace.Shar || player.Race == (int)eRace.Sylvan || player.Race == (int)eRace.HiberniaMinotaur));
 		}
 
 		/// <summary>
@@ -92,21 +90,21 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
+		{
+			if (!base.WhisperReceive(source, text)) return false;
 			GamePlayer player = source as GamePlayer;
-            String lowerCase = text.ToLower();
+			String lowerCase = text.ToLower();
 
-            if (lowerCase == LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceiveCase.Text1"))
-				{
+			if (lowerCase == LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceiveCase.Text1"))
+			{
 				// promote player to other class
-					if (CanPromotePlayer(player))
-					{
-                        PromotePlayer(player, (int)eCharacterClass.Hero, LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
-						player.ReceiveItem(this, ARMOR_ID1);
-					}
+				if (CanPromotePlayer(player))
+				{
+					PromotePlayer(player, (int)eCharacterClass.Hero, LanguageMgr.GetTranslation(player.Client, "HeroTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
+					player.ReceiveItem(this, ARMOR_ID1);
 				}
-			return true;		
+			}
+			return true;
 		}
 	}
 }

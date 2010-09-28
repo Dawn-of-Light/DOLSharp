@@ -129,7 +129,7 @@ namespace DOL.GS.Effects
             spirits[spiritId].X = EffectOwner.X + Util.Random(20, 40) - Util.Random(20, 40);
             spirits[spiritId].Y = EffectOwner.Y + Util.Random(20, 40) - Util.Random(20, 40);
             spirits[spiritId].Z = EffectOwner.Z;
-            spirits[spiritId].Flags |= (uint)GameNPC.eFlags.DONTSHOWNAME;
+            spirits[spiritId].Flags |= GameNPC.eFlags.DONTSHOWNAME;
             spirits[spiritId].SetOwnBrain(new StandardMobBrain());
             spirits[spiritId].AddToWorld();
             spirits[spiritId].TargetObject = targetPlayer;

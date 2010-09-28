@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Armsman Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Armsman Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Fighter Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ArmsmanTrainer : GameTrainer
 	{
@@ -54,20 +54,19 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Armsman) 
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches.
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
-			} 
+				OfferTraining(player);
+			}
 			else
 			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) 
+				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Defenders of Albion] and defend our realm as an Armsman?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
@@ -75,24 +74,24 @@ namespace DOL.GS.Trainer
 						OfferRespecialize(player);
 					}
 				}
-				else 
+				else
 				{
 					DismissPlayer(player);
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks wether a player can be promoted or not
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public static bool CanPromotePlayer(GamePlayer player) 
+		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Fighter && (player.Race == (int) eRace.Briton || player.Race == (int) eRace.Avalonian
-				|| player.Race == (int) eRace.Highlander || player.Race == (int) eRace.Saracen || player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.HalfOgre
-				|| player.Race == (int) eRace.AlbionMinotaur));
+			                                                                                         || player.Race == (int) eRace.Highlander || player.Race == (int) eRace.Saracen || player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.HalfOgre
+			                                                                                         || player.Race == (int) eRace.AlbionMinotaur));
 		}
 
 		/// <summary>
@@ -102,46 +101,46 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-		
-			if (CanPromotePlayer(player)) 
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+			
+			if (CanPromotePlayer(player))
 			{
-				switch (text) 
+				switch (text)
 				{
 					case "join the Defenders of Albion":
-				
+						
 						player.Out.SendMessage(this.Name + " says, \"Very well. Choose a weapon, and you shall become one of us. Which would you have, [slashing], [crushing], [thrusting] or [polearms]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
-				
+						
 						break;
 					case "slashing":
-					
+						
 						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Sword of the Initiate. Welcome to the Defenders of Albion.", null);
 						player.ReceiveItem(this,WEAPON_ID1);
-					
+						
 						break;
 					case "crushing":
-					
+						
 						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Mace of the Initiate. Welcome to the Defenders of Albion.", null);
 						player.ReceiveItem(this,WEAPON_ID2);
-					
+						
 						break;
 					case "thrusting":
-					
+						
 						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Rapier of the Initiate. Welcome to the Defenders of Albion.", null);
 						player.ReceiveItem(this,WEAPON_ID3);
-					
+						
 						break;
 					case "polearms":
-					
+						
 						PromotePlayer(player, (int)eCharacterClass.Armsman, "Here is your Pike of the Initiate. Welcome to the Defenders of Albion.", null);
 						player.ReceiveItem(this,WEAPON_ID4);
-					
+						
 						break;
 				}
 			}
-			return true;		
+			return true;
 		}
 	}
 }

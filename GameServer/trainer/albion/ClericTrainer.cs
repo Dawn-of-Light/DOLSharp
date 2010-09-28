@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Cleric Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Cleric Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Cleric Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ClericTrainer : GameTrainer
 	{
@@ -44,17 +44,16 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Cleric)
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches.
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
+				OfferTraining(player);
 			}
-			else 
+			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
@@ -64,14 +63,14 @@ namespace DOL.GS.Trainer
 					{
 						OfferRespecialize(player);
 					}
-				} 
-				else 
+				}
+				else
 				{
 					DismissPlayer(player);
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks wether a player can be promoted or not
@@ -81,7 +80,7 @@ namespace DOL.GS.Trainer
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Acolyte && (player.Race == (int) eRace.Briton || player.Race == (int) eRace.Avalonian
-				|| player.Race == (int) eRace.Highlander));
+			                                                                                         || player.Race == (int) eRace.Highlander));
 		}
 
 		/// <summary>
@@ -91,20 +90,20 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+			
 			switch (text) {
-			case "join the Church of Albion":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Cleric, "Welcome my child! Walk the path of light, shout to all the words of our beloved church and rid the land of the faithless! Here is your Mace of the Initiate. It is our standard gift to all new members.", null);
-					player.ReceiveItem(this,WEAPON_ID1);
-				}
-				break;
+				case "join the Church of Albion":
+					// promote player to other class
+					if (CanPromotePlayer(player)) {
+						PromotePlayer(player, (int)eCharacterClass.Cleric, "Welcome my child! Walk the path of light, shout to all the words of our beloved church and rid the land of the faithless! Here is your Mace of the Initiate. It is our standard gift to all new members.", null);
+						player.ReceiveItem(this,WEAPON_ID1);
+					}
+					break;
 			}
-			return true;		
+			return true;
 		}
 	}
 }
