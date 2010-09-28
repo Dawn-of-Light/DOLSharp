@@ -120,7 +120,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Description to show to start quest
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = true)]
 		public string Description
 		{
 			get { return m_description; }
@@ -131,7 +131,7 @@ namespace DOL.Database
 		/// Who to talk to for each step
 		/// Format: SourceName;RegionID|SourceName;RegionID
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = true)]
 		public string SourceName
 		{
 			get { return m_sourceName; }
@@ -142,7 +142,7 @@ namespace DOL.Database
 		/// The text for each source
 		/// Format:  Step 1 Source text|Step 2 Source text
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = true)]
 		public string SourceText
 		{
 			get { return m_sourceText; }
@@ -260,7 +260,7 @@ namespace DOL.Database
 		/// Reward Money to give at each step, 0 for none
 		/// Format: 111|222|0|333
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = true)]
 		public string RewardMoney
 		{
 			get { return m_rewardMoney; }
@@ -271,7 +271,7 @@ namespace DOL.Database
 		/// Reward XP to give at each step, 0 for none
 		/// Format: 123456789|99876543|0|10000000
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = true)]
 		public string RewardXP
 		{
 			get { return m_rewardXP; }
