@@ -74,7 +74,7 @@ namespace DOL.GS
             LockedEffect.Z = Relic.Z;
             LockedEffect.Heading = Relic.Heading;
             LockedEffect.CurrentRegionID = Relic.CurrentRegionID;
-            LockedEffect.Flags = (uint)GameNPC.eFlags.CANTTARGET;
+            LockedEffect.Flags = GameNPC.eFlags.CANTTARGET;
             LockedEffect.AddToWorld();
 
             return true;

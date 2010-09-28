@@ -130,7 +130,7 @@ namespace DOL.GS.Quests.Hibernia
 				Revelin.Y = 706197;
 				Revelin.Z = 6351;
 				Revelin.Heading = 2127;
-				Revelin.Flags ^= (uint)GameNPC.eFlags.PEACE;
+				Revelin.Flags ^= GameNPC.eFlags.PEACE;
 				Revelin.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{

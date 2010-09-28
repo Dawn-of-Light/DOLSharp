@@ -477,7 +477,7 @@ namespace DOL.GS
 		/// Various flags for this npc
 		/// </summary>
 		[Flags]
-		public enum eFlags : int
+		public enum eFlags : uint
 		{
 			/// <summary>
 			/// The npc is translucent (like a ghost)
@@ -520,7 +520,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds various flags of this npc
 		/// </summary>
-		protected uint m_flags;
+		protected eFlags m_flags;
 		/// <summary>
 		/// Spawn point
 		/// </summary>
@@ -554,16 +554,16 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets the flags of this npc
 		/// </summary>
-		public virtual uint Flags
+		public virtual eFlags Flags
 		{
 			get { return m_flags; }
 			set
 			{
-				uint oldflags = m_flags;
+				eFlags oldflags = m_flags;
 				m_flags = value;
 				if (ObjectState == eObjectState.Active)
 				{
-					if (oldflags!=m_flags)
+					if (oldflags != m_flags)
 					{
 						foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
@@ -580,13 +580,7 @@ namespace DOL.GS
 
 		public override bool IsUnderwater
 		{
-			get
-			{
-				if ( ( m_flags & (int)eFlags.SWIMMING ) == (int)eFlags.SWIMMING )
-					return true;
-				else
-					return base.IsUnderwater;
-			}
+			get { return (m_flags & eFlags.SWIMMING) == eFlags.SWIMMING || base.IsUnderwater; }
 		}
 
 
@@ -773,7 +767,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (Flags & (uint)eFlags.STEALTH) > 0;
+				return (Flags & eFlags.STEALTH) != 0;
 			}
 		}
 
@@ -1860,7 +1854,7 @@ namespace DOL.GS
 			Model = dbMob.Model;
 			Size = dbMob.Size;
 			Level = dbMob.Level;	// health changes when GameNPC.Level changes
-			Flags = dbMob.Flags;
+			Flags = (eFlags)dbMob.Flags;
 			m_packageID = dbMob.PackageID;
 
 			Strength = (short)dbMob.Strength;
@@ -2046,7 +2040,7 @@ namespace DOL.GS
 			mob.Charisma = Charisma;
 
 			mob.ClassType = this.GetType().ToString();
-			mob.Flags = Flags;
+			mob.Flags = (uint)Flags;
 			mob.Speed = MaxSpeedBase;
 			mob.RespawnInterval = m_respawnInterval / 1000;
 			mob.HouseNumber = HouseNumber;
@@ -2157,7 +2151,7 @@ namespace DOL.GS
 			this.Race = (short)template.Race;
 			this.BodyType = (ushort)template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
-			this.Flags = template.Flags;
+			this.Flags = (eFlags)template.Flags;
 			this.MeleeDamageType = template.MeleeDamageType;
 			this.ParryChance = template.ParryChance;
 			this.EvadeChance = template.EvadeChance;

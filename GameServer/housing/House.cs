@@ -699,7 +699,7 @@ namespace DOL.GS.Housing
 							hNPC.Heading = heading;
 							hNPC.CurrentRegionID = RegionID;
 							hNPC.Realm = (eRealm)item.Realm;
-							hNPC.Flags ^= (uint)GameNPC.eFlags.PEACE;
+							hNPC.Flags ^= GameNPC.eFlags.PEACE;
 							hNPC.AddToWorld();
 						}
 						catch (Exception ex)
@@ -862,7 +862,7 @@ namespace DOL.GS.Housing
 				Model = 144
 			};
 
-			con.Flags |= (uint) GameNPC.eFlags.PEACE;
+			con.Flags |= GameNPC.eFlags.PEACE;
 			con.LoadedFromScript = false;
 			con.RoamingRange = 0;
 

@@ -18,11 +18,9 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Language;
@@ -81,8 +79,8 @@ namespace DOL.GS.Spells
 		protected virtual void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
 		{
 			Point2D point = Caster.GetPointFromHeading( Caster.Heading, 64 );
-            x = point.X;
-            y = point.Y;
+			x = point.X;
+			y = point.Y;
 			z = Caster.Z;
 			heading = (ushort)((Caster.Heading + 2048) % 4096);
 			region = Caster.CurrentRegion;
@@ -165,7 +163,7 @@ namespace DOL.GS.Spells
 			pet.Level = GetPetLevel();
 
 			pet.AddToWorld();
-				
+			
 			//Check for buffs
 			if (brain is ControlledNpcBrain)
 				(brain as ControlledNpcBrain).CheckSpells(StandardMobBrain.eCheckSpellType.Defensive);

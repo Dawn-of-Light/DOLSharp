@@ -344,7 +344,7 @@ namespace DOL.GS
 			merchant.Size = Size;
 			merchant.Level = Level;
             merchant.Gender = (byte)Gender;
-			merchant.Flags = Flags;
+			merchant.Flags = (uint)Flags;
 			merchant.PathID = PathID;
 			IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)

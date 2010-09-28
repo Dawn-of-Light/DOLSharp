@@ -119,11 +119,11 @@ namespace DOL.GS.ServerRules
 
 			//Peace flag NPCs are same realm
 			if (target is GameNPC)
-				if ((((GameNPC)target).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+				if ((((GameNPC)target).Flags & GameNPC.eFlags.PEACE) != 0)
 					return true;
 
 			if (source is GameNPC)
-				if ((((GameNPC)source).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+				if ((((GameNPC)source).Flags & GameNPC.eFlags.PEACE) != 0)
 					return true;
 
 			if(quiet == false) MessageToLiving(source, target.GetName(0, true) + " is not a member of your realm!");

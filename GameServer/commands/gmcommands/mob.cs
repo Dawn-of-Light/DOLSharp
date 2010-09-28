@@ -313,7 +313,7 @@ namespace DOL.GS.Commands
 			mob.MaxSpeedBase = 200;
 			mob.GuildName = "";
 			mob.Size = 50;
-			mob.Flags |= (uint)GameNPC.eFlags.PEACE;
+			mob.Flags |= GameNPC.eFlags.PEACE;
 			mob.AddToWorld();
 			mob.LoadedFromScript = false; // allow saving
 			mob.SaveIntoDatabase();
@@ -661,9 +661,9 @@ namespace DOL.GS.Commands
 
 		private void peace(GameClient client, GameNPC targetMob, string[] args)
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.PEACE;
+			targetMob.Flags ^= GameNPC.eFlags.PEACE;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage("Mob PEACE flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.PEACE) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("Mob PEACE flag is set to " + ((targetMob.Flags & GameNPC.eFlags.PEACE) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void aggro(GameClient client, GameNPC targetMob, string[] args)
@@ -873,41 +873,41 @@ namespace DOL.GS.Commands
 			uint flag;
 			uint.TryParse(args[2], out flag);
 
-			targetMob.Flags = flag;
+			targetMob.Flags = (GameNPC.eFlags)flag;
 			targetMob.SaveIntoDatabase();
 			client.Out.SendMessage("Mob flags are set to " + targetMob.Flags.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void ghost(GameClient client, GameNPC targetMob, string[] args)
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.GHOST;
+			targetMob.Flags ^= GameNPC.eFlags.GHOST;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage("Mob GHOST flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.GHOST) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("Mob GHOST flag is set to " + ((targetMob.Flags & GameNPC.eFlags.GHOST) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void stealth(GameClient client, GameNPC targetMob, string[] args)
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.STEALTH;
+			targetMob.Flags ^= GameNPC.eFlags.STEALTH;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage("Mob STEALTH flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.STEALTH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("Mob STEALTH flag is set to " + ((targetMob.Flags & GameNPC.eFlags.STEALTH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void torch(GameClient client, GameNPC targetMob, string[] args)
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.TORCH;
+			targetMob.Flags ^= GameNPC.eFlags.TORCH;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage("Mob TORCH flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.TORCH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("Mob TORCH flag is set to " + ((targetMob.Flags & GameNPC.eFlags.TORCH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void statue(GameClient client, GameNPC targetMob, string[] args)
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.STATUE;
+			targetMob.Flags ^= GameNPC.eFlags.STATUE;
 			targetMob.SaveIntoDatabase();
 
-			if ((targetMob.Flags & (uint)GameNPC.eFlags.STATUE) > 0)
+			if ((targetMob.Flags & GameNPC.eFlags.STATUE) > 0)
 				client.Out.SendMessage("You have set the STATUE flag - you will need to use \"/debug on\" to target this NPC.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
-			client.Out.SendMessage(targetMob.Name + "'s STATUE flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.STATUE) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(targetMob.Name + "'s STATUE flag is set to " + ((targetMob.Flags & GameNPC.eFlags.STATUE) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void fly(GameClient client, GameNPC targetMob, string[] args)
@@ -924,35 +924,35 @@ namespace DOL.GS.Commands
 				}
 			}
 
-			targetMob.Flags ^= (uint)GameNPC.eFlags.FLYING;
+			targetMob.Flags ^= GameNPC.eFlags.FLYING;
 
-			if ((targetMob.Flags & (uint)GameNPC.eFlags.FLYING) != 0)
+			if ((targetMob.Flags & GameNPC.eFlags.FLYING) != 0)
 				targetMob.MoveTo(targetMob.CurrentRegionID, targetMob.X, targetMob.Y, targetMob.Z + height, targetMob.Heading);
 
 			targetMob.SaveIntoDatabase();
 
-			client.Out.SendMessage(targetMob.Name + "'s FLYING flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.FLYING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(targetMob.Name + "'s FLYING flag is set to " + ((targetMob.Flags & GameNPC.eFlags.FLYING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void swimming(GameClient client, GameNPC targetMob, string[] args)
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.SWIMMING;
+			targetMob.Flags ^= GameNPC.eFlags.SWIMMING;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage("Mob SWIMMING flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.SWIMMING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("Mob SWIMMING flag is set to " + ((targetMob.Flags & GameNPC.eFlags.SWIMMING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void noname(GameClient client, GameNPC targetMob, string[] args)
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.DONTSHOWNAME;
+			targetMob.Flags ^= GameNPC.eFlags.DONTSHOWNAME;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage("Mob DONTSHOWNAME flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.DONTSHOWNAME) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("Mob DONTSHOWNAME flag is set to " + ((targetMob.Flags & GameNPC.eFlags.DONTSHOWNAME) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void notarget(GameClient client, GameNPC targetMob, string[] args)
 		{
-			targetMob.Flags ^= (uint)GameNPC.eFlags.CANTTARGET;
+			targetMob.Flags ^= GameNPC.eFlags.CANTTARGET;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage("Mob CANTTARGET flag is set to " + ((targetMob.Flags & (uint)GameNPC.eFlags.CANTTARGET) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("Mob CANTTARGET flag is set to " + ((targetMob.Flags & GameNPC.eFlags.CANTTARGET) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void kill(GameClient client, GameNPC targetMob, string[] args)

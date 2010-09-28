@@ -247,11 +247,11 @@ namespace DOL.GS.ServerRules
 
 			// PEACE NPCs can't be attacked/attack
 			if (attacker is GameNPC)
-				if ((((GameNPC)attacker).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+				if ((((GameNPC)attacker).Flags & GameNPC.eFlags.PEACE) != 0)
 					return false;
 
 			if (defender is GameNPC)
-				if ((((GameNPC)defender).Flags & (uint)GameNPC.eFlags.PEACE) != 0)
+				if ((((GameNPC)defender).Flags & GameNPC.eFlags.PEACE) != 0)
 					return false;
 
 			//GMs can't be attacked

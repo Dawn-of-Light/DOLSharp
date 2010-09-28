@@ -44,10 +44,9 @@ namespace DOL.GS.Trainer
 			if (!base.Interact(player)) return false;
 
 			// check if class matches.
-			if (player.CharacterClass.ID > 59 && player.CharacterClass.ID < 63)
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
+				OfferTraining(player);
 			}
 			else
 			{
@@ -76,7 +75,7 @@ namespace DOL.GS.Trainer
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Viking && (player.Race == (int)eRace.Norseman
-			        || player.Race == (int)eRace.MidgardMinotaur || player.Race == (int)eRace.Kobold));
+			                                                                                         || player.Race == (int)eRace.MidgardMinotaur || player.Race == (int)eRace.Kobold));
 		}
 
 		/// <summary>

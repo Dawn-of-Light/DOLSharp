@@ -651,7 +651,7 @@ namespace DOL.GS.Spells
             summoned.CurrentSpeed = 0;
             summoned.Size = 10;
             summoned.Level = 100;
-            summoned.Flags |= (uint)GameNPC.eFlags.PEACE;
+            summoned.Flags |= GameNPC.eFlags.PEACE;
             summoned.AddToWorld();
             controlledBrain.AggressionState = eAggressionState.Aggressive;
             effect.Start(summoned);
@@ -911,7 +911,7 @@ public class MLBrain : GuardBrain
         {
             if (m_aggroTable.ContainsKey(npc))
                 continue; // add only new npcs
-            if ((npc.Flags & (uint)GameNPC.eFlags.FLYING) != 0)
+            if ((npc.Flags & GameNPC.eFlags.FLYING) != 0)
                 continue; // let's not try to attack flying mobs
             if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
                 continue;
