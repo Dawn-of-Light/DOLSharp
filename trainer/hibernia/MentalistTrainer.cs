@@ -49,10 +49,8 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Mentalist)
+			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MentalistTrainer.Interact.Text2", this.Name, player.GetName(0, false)), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			} 
 			else 

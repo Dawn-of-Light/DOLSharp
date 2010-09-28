@@ -180,7 +180,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 	
 	/// <summary>
 	/// handles Train clicks from Trainer Window
-	/// 53 is since 1.105
 	/// </summary>
 	[PacketHandlerAttribute(PacketHandlerType.TCP, 0xD3 ^ 168, "Call Player Train Window")]
 	public class PlayerTrainWindowHandler : IPacketHandler

@@ -25,7 +25,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Guardian Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Guardian Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Guardian Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class GuardianTrainer : GameTrainer
 	{
@@ -46,17 +46,13 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Guardian)
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches
+			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-
-				// popup the training window
-				player.Out.SendTrainerWindow();
-							
 				// player can be promoted
 				if (player.Level>=5)
 				{
@@ -64,7 +60,7 @@ namespace DOL.GS.Trainer
 				}
 				else
 				{
-					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					OfferTraining (player);
 				}
 
 				// ask for basic equipment if player doesnt own it
@@ -91,51 +87,51 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;	
+		{
+			if (!base.WhisperReceive(source, text)) return false;
 			GamePlayer player = source as GamePlayer;
 
 			switch (text) {
-			case "Hero":
-				if(player.Race == (int)eRace.Celt || player.Race == (int)eRace.Firbolg || player.Race == (int)eRace.Lurikeen || player.Race == (int)eRace.Shar || player.Race == (int)eRace.Sylvan || player.Race == (int)eRace.HiberniaMinotaur)
-				{
-					player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				}
-				else{
-					player.Out.SendMessage(this.Name + " says, \"The path of a Hero is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				}
-				return true;
-			case "Champion":
-				if(player.Race == (int) eRace.Celt || player.Race == (int) eRace.Elf || player.Race == (int) eRace.Lurikeen || player.Race == (int) eRace.Shar){
-					player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				}
-				else{
-					player.Out.SendMessage(this.Name + " says, \"The path of a Champion is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				}
-				return true;
-			case "Blademaster":
-				if(player.Race == (int)eRace.Celt || player.Race == (int)eRace.Elf || player.Race == (int)eRace.Firbolg || player.Race == (int)eRace.Shar || player.Race == (int)eRace.HiberniaMinotaur)
-				{
-					player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				}
-				else{
-					player.Out.SendMessage(this.Name + " says, \"The path of a Blademaster is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				}
-				return true;
-			case "practice weapon":
-				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
-				{
-					player.ReceiveItem(this,PRACTICE_WEAPON_ID);
-				}
-				return true;
-			case "training shield":
-				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
-				{
-					player.ReceiveItem(this,PRACTICE_SHIELD_ID);
-				}
-				return true;
+				case "Hero":
+					if(player.Race == (int)eRace.Celt || player.Race == (int)eRace.Firbolg || player.Race == (int)eRace.Lurikeen || player.Race == (int)eRace.Shar || player.Race == (int)eRace.Sylvan || player.Race == (int)eRace.HiberniaMinotaur)
+					{
+						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+					else{
+						player.Out.SendMessage(this.Name + " says, \"The path of a Hero is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+					return true;
+				case "Champion":
+					if(player.Race == (int) eRace.Celt || player.Race == (int) eRace.Elf || player.Race == (int) eRace.Lurikeen || player.Race == (int) eRace.Shar){
+						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+					else{
+						player.Out.SendMessage(this.Name + " says, \"The path of a Champion is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+					return true;
+				case "Blademaster":
+					if(player.Race == (int)eRace.Celt || player.Race == (int)eRace.Elf || player.Race == (int)eRace.Firbolg || player.Race == (int)eRace.Shar || player.Race == (int)eRace.HiberniaMinotaur)
+					{
+						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+					else{
+						player.Out.SendMessage(this.Name + " says, \"The path of a Blademaster is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+					return true;
+				case "practice weapon":
+					if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+					{
+						player.ReceiveItem(this,PRACTICE_WEAPON_ID);
+					}
+					return true;
+				case "training shield":
+					if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+					{
+						player.ReceiveItem(this,PRACTICE_SHIELD_ID);
+					}
+					return true;
 			}
-			return true;			
+			return true;
 		}
 	}
 }

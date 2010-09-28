@@ -169,7 +169,7 @@ namespace DOL.GS.Commands
 
 						foreach( GameNPC npc in client.Player.GetNPCsInRadius( WorldMgr.VISIBILITY_DISTANCE ) )
 									{
-							if( ( npc.Flags & (int)GameNPC.eFlags.CANTTARGET ) != 0 || ( npc.Flags & (int)GameNPC.eFlags.DONTSHOWNAME ) != 0 )
+							if( ( npc.Flags & GameNPC.eFlags.CANTTARGET ) != 0 || ( npc.Flags & GameNPC.eFlags.DONTSHOWNAME ) != 0 )
 										{
 								client.Out.SendNPCCreate( npc );
 										}

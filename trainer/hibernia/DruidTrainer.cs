@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Druid Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Druid Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Druid Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class DruidTrainer : GameTrainer
 	{
@@ -44,18 +44,16 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Druid)
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches.
+			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
 				player.Out.SendMessage(this.Name + " says, \"I shall impart all that I know, young Druid.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			} 
-			else 
+			}
+			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
@@ -72,17 +70,17 @@ namespace DOL.GS.Trainer
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks whether a player can be promoted or not
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public static bool CanPromotePlayer(GamePlayer player) 
+		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Naturalist && (player.Race == (int) eRace.Celt || player.Race == (int) eRace.Firbolg
-				|| player.Race == (int)eRace.Sylvan || player.Race == (int)eRace.HiberniaMinotaur));
+			                                                                                            || player.Race == (int)eRace.Sylvan || player.Race == (int)eRace.HiberniaMinotaur));
 		}
 
 		/// <summary>
@@ -92,20 +90,20 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+			
 			switch (text) {
-			case "Druid":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Druid, "The path of the Druid suits you, " + source.GetName(0, false) + ". Welcome. Take this, " + source.GetName(0, false) + ". You are a Druid now. Stick to our ways, and you shall go far.", null);
-					player.ReceiveItem(this,ARMOR_ID1);
-				}
-				break;
+				case "Druid":
+					// promote player to other class
+					if (CanPromotePlayer(player)) {
+						PromotePlayer(player, (int)eCharacterClass.Druid, "The path of the Druid suits you, " + source.GetName(0, false) + ". Welcome. Take this, " + source.GetName(0, false) + ". You are a Druid now. Stick to our ways, and you shall go far.", null);
+						player.ReceiveItem(this,ARMOR_ID1);
+					}
+					break;
 			}
-			return true;		
+			return true;
 		}
 	}
 }

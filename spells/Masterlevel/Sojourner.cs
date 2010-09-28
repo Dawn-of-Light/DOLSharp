@@ -109,7 +109,7 @@ namespace DOL.GS.Spells
                 merchant.MaxSpeedBase = 0;
                 merchant.GuildName = "";
                 merchant.Size = 50;
-                merchant.Flags |= (uint)GameNPC.eFlags.PEACE;
+                merchant.Flags |= GameNPC.eFlags.PEACE;
                 merchant.TradeItems = new MerchantTradeItems("ML_transmuteritems");
             }
         }
@@ -213,9 +213,9 @@ namespace DOL.GS.Spells
             npc.MaxSpeedBase = 400;
             npc.Level = 55;
             npc.CurrentRegion = Caster.CurrentRegion;
-            npc.Flags |= (uint)GameNPC.eFlags.PEACE;
-            npc.Flags |= (uint)GameNPC.eFlags.DONTSHOWNAME;
-			npc.Flags |= (uint)GameNPC.eFlags.CANTTARGET;
+            npc.Flags |= GameNPC.eFlags.PEACE;
+            npc.Flags |= GameNPC.eFlags.DONTSHOWNAME;
+			npc.Flags |= GameNPC.eFlags.CANTTARGET;
             BlankBrain brain = new BlankBrain();
             npc.SetOwnBrain(brain);
             npc.AddToWorld();

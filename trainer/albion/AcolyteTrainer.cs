@@ -25,7 +25,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Acolyte Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Acolyte Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Acolyte Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class AcolyteTrainer : GameTrainer
 	{
@@ -51,13 +51,9 @@ namespace DOL.GS.Trainer
 		{
 			if (!base.Interact(player)) return false;
 
-			// check if class matches				
-			if (player.CharacterClass.ID == (int)eCharacterClass.Acolyte)
+			// check if class matches
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-
-				// popup the training window
-				player.Out.SendTrainerWindow();
-
 				// player can be promoted
 				if (player.Level >= 5)
 				{
@@ -65,7 +61,7 @@ namespace DOL.GS.Trainer
 				}
 				else
 				{
-					//player.Out.SendMessage(this.Name + " says, \"Select what you like to train.\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					OfferTraining(player);
 				}
 
 				// ask for basic equipment if player doesnt own it

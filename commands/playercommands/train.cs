@@ -24,7 +24,7 @@ using DOL.Database;
 using DOL.GS.Commands;
 using DOL.GS.PacketHandler;
 
-namespace DOL.GS.Scripts.Commands
+namespace DOL.GS.Commands
 {
 	[Cmd(
 		"&train",

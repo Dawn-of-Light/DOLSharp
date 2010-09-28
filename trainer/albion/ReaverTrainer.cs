@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Reaver Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Reaver Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Reaver Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ReaverTrainer : GameTrainer
 	{
@@ -42,17 +42,16 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Reaver) 
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches.
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
-			} 
-			else 
+				OfferTraining(player);
+			}
+			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
@@ -62,14 +61,14 @@ namespace DOL.GS.Trainer
 					{
 						OfferRespecialize(player);
 					}
-				} 
+				}
 				else
 				{
 					DismissPlayer(player);
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks wether a player can be promoted or not
@@ -79,7 +78,7 @@ namespace DOL.GS.Trainer
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Fighter && (player.Race == (int) eRace.Briton
-   				|| player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.Saracen));
+			                                                                                         || player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.Saracen));
 		}
 
 		/// <summary>
@@ -89,14 +88,14 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+			
 			switch (text) {
 				case "Temple of Arawn":
 					// promote player to other class
-					if (CanPromotePlayer(player)) 
+					if (CanPromotePlayer(player))
 					{
 						//TODO:
 						//##Melarlian says, "You have come to seek admittance into the [Temple of Arawn] to worship the old god that your ancestors worshipped?"
@@ -106,7 +105,7 @@ namespace DOL.GS.Trainer
 					}
 					break;
 			}
-			return true;		
+			return true;
 		}
 	}
 }

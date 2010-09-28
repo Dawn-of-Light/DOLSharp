@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Heretic Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Heretic Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Heretic Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class HereticTrainer : GameTrainer
 	{
@@ -49,11 +49,10 @@ namespace DOL.GS.Trainer
 		{
 			if (!base.Interact(player)) return false;
 
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int)eCharacterClass.Heretic)
+			// check if class matches.
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
+				OfferTraining(player);
 			}
 			else
 			{
@@ -82,7 +81,7 @@ namespace DOL.GS.Trainer
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Acolyte && (player.Race == (int)eRace.Briton || player.Race == (int)eRace.Avalonian
-				|| player.Race == (int)eRace.Inconnu || player.Race == (int)eRace.AlbionMinotaur));
+			                                                                                          || player.Race == (int)eRace.Inconnu || player.Race == (int)eRace.AlbionMinotaur));
 		}
 
 		/// <summary>
