@@ -233,7 +233,7 @@ namespace DOL.GS.Quests.Albion
 				alice.Heading = 3766;
 				alice.MaxSpeedBase = 200;
 				alice.EquipmentTemplateID = "200276";
-				alice.Flags = 18;
+				alice.Flags = (GameNPC.eFlags) 18;
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;

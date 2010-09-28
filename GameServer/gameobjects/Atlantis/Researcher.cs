@@ -64,7 +64,7 @@ namespace DOL.GS
 			}
 
             Inventory = template.CloseTemplate();
-            Flags = 16;	// Peace flag.
+            Flags = eFlags.PEACE;	// Peace flag.
             return base.AddToWorld();
         }
 

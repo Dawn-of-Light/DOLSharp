@@ -47,7 +47,7 @@ namespace DOL.GS.Spells
 
 			if (pet != null)
 			{
-				pet.Flags |= (uint)GameNPC.eFlags.PEACE; //must be peace!
+				pet.Flags |= GameNPC.eFlags.PEACE; //must be peace!
 
 				//No brain for now, so just follow owner.
 				pet.Follow(Caster, 100, WorldMgr.VISIBILITY_DISTANCE);

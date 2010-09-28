@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Theurgist Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Theurgist Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Theurgist Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class TheurgistTrainer : GameTrainer
 	{
@@ -44,17 +44,16 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Theurgist)
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches.
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
+				OfferTraining(player);
 			}
-			else 
+			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
@@ -64,14 +63,14 @@ namespace DOL.GS.Trainer
 					{
 						OfferRespecialize(player);
 					}
-				} 
-				else 
+				}
+				else
 				{
 					DismissPlayer(player);
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks wether a player can be promoted or not
@@ -81,7 +80,7 @@ namespace DOL.GS.Trainer
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Elementalist && (player.Race == (int) eRace.Briton
-				|| player.Race == (int) eRace.Avalonian || player.Race == (int) eRace.HalfOgre));
+			                                                                                              || player.Race == (int) eRace.Avalonian || player.Race == (int) eRace.HalfOgre));
 		}
 
 		/// <summary>
@@ -91,20 +90,20 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+			
 			switch (text) {
-			case "join the Defenders of Albion":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Theurgist, "I know you shall do your best to guard the realm from those that would harm it! To help you with this task, here is a gift from the Defenders! Use it well!", null);
-					player.ReceiveItem(this,WEAPON_ID);
-				}
-				break;
+				case "join the Defenders of Albion":
+					// promote player to other class
+					if (CanPromotePlayer(player)) {
+						PromotePlayer(player, (int)eCharacterClass.Theurgist, "I know you shall do your best to guard the realm from those that would harm it! To help you with this task, here is a gift from the Defenders! Use it well!", null);
+						player.ReceiveItem(this,WEAPON_ID);
+					}
+					break;
 			}
-			return true;		
+			return true;
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Blademaster Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Blademaster Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Blademaster Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class BlademasterTrainer : GameTrainer
 	{
@@ -44,21 +44,19 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Blademaster)
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches.
+			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
 				player.Out.SendMessage(this.Name + " says, \"Do you wish to learn some more, " + player.Name + "? Step up and receive your training!\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			}
-			else 
+			else
 			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) 
+				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"" + player.Name + ", do you choose the Path of Harmony, and life as a [Blademaster]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
@@ -72,17 +70,17 @@ namespace DOL.GS.Trainer
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks whether a player can be promoted or not
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public static bool CanPromotePlayer(GamePlayer player) 
+		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Guardian && (player.Race == (int) eRace.Celt || player.Race == (int) eRace.Firbolg
-				|| player.Race == (int)eRace.Elf || player.Race == (int)eRace.Shar || player.Race == (int)eRace.HiberniaMinotaur));
+			                                                                                          || player.Race == (int)eRace.Elf || player.Race == (int)eRace.Shar || player.Race == (int)eRace.HiberniaMinotaur));
 		}
 
 		/// <summary>
@@ -92,20 +90,20 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+			
 			switch (text) {
-			case "Blademaster":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Blademaster, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Blademaster. Here, take this gift to aid you.", null);
-					player.ReceiveItem(this,ARMOR_ID1);
-				}
-				break;
+				case "Blademaster":
+					// promote player to other class
+					if (CanPromotePlayer(player)) {
+						PromotePlayer(player, (int)eCharacterClass.Blademaster, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Blademaster. Here, take this gift to aid you.", null);
+						player.ReceiveItem(this,ARMOR_ID1);
+					}
+					break;
 			}
-			return true;		
+			return true;
 		}
 	}
 }

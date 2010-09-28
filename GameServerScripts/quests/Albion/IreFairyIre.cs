@@ -618,7 +618,7 @@ namespace DOL.GS.Quests.Albion
 			dragonflyHatchling.Model = 819;
 			dragonflyHatchling.Name = "Dragonfly Hatchling";
 			dragonflyHatchling.GuildName = "Part of " + questTitle + " Quest";
-			dragonflyHatchling.Flags ^= (uint)GameNPC.eFlags.PEACE;
+			dragonflyHatchling.Flags ^= GameNPC.eFlags.PEACE;
 			dragonflyHatchling.CurrentRegionID = 1;
 			dragonflyHatchling.Size = 25;
 			dragonflyHatchling.Level = 3;

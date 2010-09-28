@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Champion Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Champion Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Champion Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ChampionTrainer : GameTrainer
 	{
@@ -44,18 +44,16 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Champion) 
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches.
+			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
 				player.Out.SendMessage(this.Name + " says, \"I'm glad to see you taking an interest in your training, " + player.Name + ". There is always room to grow and learn!\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			} 
-			else 
+			}
+			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
@@ -65,24 +63,24 @@ namespace DOL.GS.Trainer
 					{
 						OfferRespecialize(player);
 					}
-				} 
-				else 
+				}
+				else
 				{
 					DismissPlayer(player);
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks whether a player can be promoted or not
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public static bool CanPromotePlayer(GamePlayer player) 
+		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Guardian && (player.Race == (int) eRace.Celt || player.Race == (int) eRace.Elf
-				|| player.Race == (int) eRace.Lurikeen || player.Race == (int) eRace.Shar));
+			                                                                                          || player.Race == (int) eRace.Lurikeen || player.Race == (int) eRace.Shar));
 		}
 
 		/// <summary>
@@ -92,20 +90,20 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+			
 			switch (text) {
-			case "Champion":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Champion, "Welcome " + source.GetName(0, false) + ". Let us see if you will become a worthy Champion. Take this gift, " + source.GetName(0, false) + ". It is to aid you while you grow into a true Champion.", null);
-					player.ReceiveItem(this,ARMOR_ID1);
-				}
-				break;
+				case "Champion":
+					// promote player to other class
+					if (CanPromotePlayer(player)) {
+						PromotePlayer(player, (int)eCharacterClass.Champion, "Welcome " + source.GetName(0, false) + ". Let us see if you will become a worthy Champion. Take this gift, " + source.GetName(0, false) + ". It is to aid you while you grow into a true Champion.", null);
+						player.ReceiveItem(this,ARMOR_ID1);
+					}
+					break;
 			}
-			return true;		
+			return true;
 		}
 	}
 }

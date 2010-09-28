@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Warlock Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Warlock Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Warlock Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class WarlockTrainer : GameTrainer
 	{
@@ -33,7 +33,7 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Warlock; }
 		}
 
-        public const string WEAPON_ID = "warlock_item";
+		public const string WEAPON_ID = "warlock_item";
 
 		/// <summary>
 		/// Interact with trainer
@@ -44,11 +44,10 @@ namespace DOL.GS.Trainer
 		{
 			if (!base.Interact(player)) return false;
 
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int)eCharacterClass.Warlock)
+			// check if class matches.
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
+				OfferTraining(player);
 			}
 			else
 			{
@@ -77,7 +76,7 @@ namespace DOL.GS.Trainer
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Mystic && (player.Race == (int)eRace.Frostalf || player.Race == (int)eRace.Norseman
-				|| player.Race == (int)eRace.Kobold));
+			                                                                                         || player.Race == (int)eRace.Kobold));
 		}
 
 		/// <summary>
@@ -104,7 +103,7 @@ namespace DOL.GS.Trainer
 						player.Out.SendUpdatePlayerSkills();
 						player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
 						PromotePlayer(player, (int)eCharacterClass.Warlock, "Welcome young Warlock! May your time in Midgard army be rewarding!", null);
-                        player.ReceiveItem(this, WEAPON_ID);
+						player.ReceiveItem(this, WEAPON_ID);
 					}
 					break;
 			}

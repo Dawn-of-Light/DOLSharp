@@ -135,7 +135,7 @@ namespace DOL.GS
                 boat.theBoatDB.BoatModel = boat.Model;
                 boat.theBoatDB.BoatName = boat.Name;
                 boat.OwnerID = creator.InternalID;
-                boat.Flags ^= (uint)GameNPC.eFlags.PEACE;
+                boat.Flags ^= GameNPC.eFlags.PEACE;
 
                 AddBoat(boat);
                 GameServer.Database.AddObject(boat.theBoatDB);

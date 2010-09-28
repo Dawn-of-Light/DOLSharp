@@ -698,7 +698,7 @@ namespace DOL.GS
 						{
 							if (log.IsErrorEnabled)
 								log.Error("Failed: " + myMob.GetType().FullName + ":LoadFromDatabase(" + mob.GetType().FullName + ");", e);
-							throw e;
+							throw;
 						}
 
 						myMob.AddToWorld();
@@ -710,28 +710,19 @@ namespace DOL.GS
 			{
 				foreach (WorldObject item in staticObjs)
 				{
-					GameStaticItem myItem = null;
-
-					if (item.ClassType != null && item.ClassType.Length > 0)
+					GameStaticItem myItem;
+					if (!string.IsNullOrEmpty(item.ClassType))
 					{
-						try
-						{
-							myItem = (GameStaticItem)gasm.CreateInstance(item.ClassType, false);
-						}
-						catch
-						{
-						}
+						myItem = gasm.CreateInstance(item.ClassType, false) as GameStaticItem;
 						if (myItem == null)
 						{
 							foreach (Assembly asm in ScriptMgr.Scripts)
 							{
 								try
 								{
-									myItem = (GameStaticItem)asm.CreateInstance(item.ClassType, false);
+									myItem = (GameStaticItem) asm.CreateInstance(item.ClassType, false);
 								}
-								catch
-								{
-								}
+								catch {}
 								if (myItem != null)
 									break;
 							}
@@ -740,17 +731,12 @@ namespace DOL.GS
 						}
 					}
 					else
-					{
 						myItem = new GameStaticItem();
-					}
 
-					if (myItem != null)
-					{
-						myItem.LoadFromDatabase(item);
-						myItem.AddToWorld();
-						//						if (!myItem.AddToWorld())
-						//							log.ErrorFormat("Failed to add the item to the world: {0}", myItem.ToString());
-					}
+					myItem.LoadFromDatabase(item);
+					myItem.AddToWorld();
+					//						if (!myItem.AddToWorld())
+					//							log.ErrorFormat("Failed to add the item to the world: {0}", myItem.ToString());
 				}
 			}
 

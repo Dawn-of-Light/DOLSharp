@@ -47,10 +47,8 @@ namespace DOL.GS.Trainer
  			if (!base.Interact(player)) return false;
 								
 			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Nightshade)
+			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
 				player.Out.SendMessage(this.Name + " says, \"Here for a bit of training, " + player.Name + "? Step up and get it!\"", eChatType.CT_System, eChatLoc.CL_PopupWindow); //popup window on live
 			} 
 			else 

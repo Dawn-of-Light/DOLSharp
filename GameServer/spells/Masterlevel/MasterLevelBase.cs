@@ -1269,7 +1269,7 @@ namespace DOL.GS
             this.Realm = 0;
             this.Level = 1;
             this.MaxSpeedBase = 0;
-            this.Flags |= (uint)GameNPC.eFlags.DONTSHOWNAME;
+            this.Flags |= GameNPC.eFlags.DONTSHOWNAME;
             this.Health = this.MaxHealth;
         }
 
@@ -1372,8 +1372,8 @@ namespace DOL.GS
             this.MaxSpeedBase = 191;
             this.Model = 3457;
             this.Name = "Storm";
-            this.Flags |= (uint)GameNPC.eFlags.DONTSHOWNAME;
-			this.Flags |= (uint)GameNPC.eFlags.CANTTARGET;
+            this.Flags |= GameNPC.eFlags.DONTSHOWNAME;
+			this.Flags |= GameNPC.eFlags.CANTTARGET;
             this.Movable = true;
         }
 

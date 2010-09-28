@@ -24,7 +24,7 @@ namespace DOL.GS.Trainer
 {
 	/// <summary>
 	/// Infiltrator Trainer
-	/// </summary>	
+	/// </summary>
 	[NPCGuildScript("Infiltrator Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Infiltrator Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class InfiltratorTrainer : GameTrainer
 	{
@@ -38,20 +38,19 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
- 		public override bool Interact(GamePlayer player)
- 		{		
- 			if (!base.Interact(player)) return false;
-								
-			// check if class matches.				
-			if (player.CharacterClass.ID == (int) eCharacterClass.Infiltrator)
+		public override bool Interact(GamePlayer player)
+		{
+			if (!base.Interact(player)) return false;
+			
+			// check if class matches.
+			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				// popup the training window
-				player.Out.SendTrainerWindow();
-			} 
+				OfferTraining(player);
+			}
 			else
 			{
 				// perhaps player can be promoted
-				if (CanPromotePlayer(player)) 
+				if (CanPromotePlayer(player))
 				{
 					player.Out.SendMessage(this.Name + " says, \"You have come far to find us! Is it your wish to [join the Guild of Shadows] and become our dagger of the night? An Infiltrator!\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
@@ -65,7 +64,7 @@ namespace DOL.GS.Trainer
 				}
 			}
 			return true;
- 		}
+		}
 
 		/// <summary>
 		/// checks wether a player can be promoted or not
@@ -75,7 +74,7 @@ namespace DOL.GS.Trainer
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.AlbionRogue && (player.Race == (int) eRace.Briton
-				|| player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.Saracen));
+			                                                                                             || player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.Saracen));
 		}
 
 		/// <summary>
@@ -85,19 +84,19 @@ namespace DOL.GS.Trainer
 		/// <param name="text"></param>
 		/// <returns></returns>
 		public override bool WhisperReceive(GameLiving source, string text)
-		{				
-			if (!base.WhisperReceive(source, text)) return false;			
-			GamePlayer player = source as GamePlayer;			
-	
+		{
+			if (!base.WhisperReceive(source, text)) return false;
+			GamePlayer player = source as GamePlayer;
+			
 			switch (text) {
-			case "join the Guild of Shadows":
-				// promote player to other class
-				if (CanPromotePlayer(player)) {
-					PromotePlayer(player, (int)eCharacterClass.Infiltrator, "TODO: (correct text) You joined the Guild of Shadows as an Infiltrator.", null);	// TODO: gifts
-				}
-				break;
+				case "join the Guild of Shadows":
+					// promote player to other class
+					if (CanPromotePlayer(player)) {
+						PromotePlayer(player, (int)eCharacterClass.Infiltrator, "TODO: (correct text) You joined the Guild of Shadows as an Infiltrator.", null);	// TODO: gifts
+					}
+					break;
 			}
-			return true;		
+			return true;
 		}
 	}
 }

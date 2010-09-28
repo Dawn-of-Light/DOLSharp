@@ -43,7 +43,7 @@ namespace DOL.GS
 		{
 			Model = 2650;
 			Level = 0;
-			Flags = 16;
+			Flags = eFlags.PEACE;
 			Name = "boat";
 			MaxSpeedBase = 1000;
 			BlankBrain brain = new BlankBrain();
