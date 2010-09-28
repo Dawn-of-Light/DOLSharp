@@ -6268,7 +6268,7 @@ namespace DOL.GS
 		/// Initializes the ControlledNpcs for the GameLiving class
 		/// </summary>
 		/// <param name="num">Number of places to allocate.  If negative, sets to null.</param>
-		public void InitControlledBrainArray(int num)
+		public virtual void InitControlledBrainArray(int num)
 		{
 			if (num > 0)
 				m_controlledBrain = new IControlledBrain[num];
