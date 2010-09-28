@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
+using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.Language;
@@ -118,8 +119,8 @@ namespace DOL.GS.Quests
 			Standard = 0,			// Talk to npc, accept quest, go through steps
 			Collection = 1,			// Player turns drops into npc for xp, quest not added to player quest log, has no steps
 			AutoStart = 2,			// Standard quest is auto started simply by interacting with start object
-			KillComplete = 3,		// Killing the Start living grants and finished the quest, similar to One Time Drops, not logged in GamePlayer log
-			InteractComplete = 4,	// Interacting with start object grants and finishes the quest, not logged in GamePlayer log
+			KillComplete = 3,		// Killing the Start living grants and finished the quest, similar to One Time Drops
+			InteractComplete = 4,	// Interacting with start object grants and finishes the quest
 			RewardQuest = 200,		// A reward quest, where reward dialog is given to player on quest offer and complete.  NOT SUPPORTED YET
 			Unknown = 255
 		}
@@ -243,20 +244,23 @@ namespace DOL.GS.Quests
 				string[] parse1;
 
 				lastParse = m_dataQuest.SourceName;
-				parse1 = lastParse.Split('|');
-				foreach (string str in parse1)
+				if (lastParse != null)
 				{
-					if (str == string.Empty)
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
 					{
-						// if there's not npc for this step then empty is ok
-						m_sourceNames.Add("");
-						m_sourceRegions.Add(0);
-					}
-					else
-					{
-						string[] parse2 = str.Split(';');
-						m_sourceNames.Add(parse2[0]);
-						m_sourceRegions.Add(Convert.ToUInt16(parse2[1]));
+						if (str == string.Empty)
+						{
+							// if there's not npc for this step then empty is ok
+							m_sourceNames.Add("");
+							m_sourceRegions.Add(0);
+						}
+						else
+						{
+							string[] parse2 = str.Split(';');
+							m_sourceNames.Add(parse2[0]);
+							m_sourceRegions.Add(Convert.ToUInt16(parse2[1]));
+						}
 					}
 				}
 
@@ -353,17 +357,23 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.RewardMoney;
-				parse1 = lastParse.Split('|');
-				foreach (string str in parse1)
+				if (lastParse != null)
 				{
-					m_rewardMoneys.Add(Convert.ToInt64(str));
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
+					{
+						m_rewardMoneys.Add(Convert.ToInt64(str));
+					}
 				}
 
 				lastParse = m_dataQuest.RewardXP;
-				parse1 = lastParse.Split('|');
-				foreach (string str in parse1)
+				if (lastParse != null)
 				{
-					m_rewardXPs.Add(Convert.ToInt64(str));
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
+					{
+						m_rewardXPs.Add(Convert.ToInt64(str));
+					}
 				}
 
 				lastParse = m_dataQuest.OptionalRewardItemTemplates;
@@ -549,9 +559,20 @@ namespace DOL.GS.Quests
 			get
 			{
 				if (Step == 0)
-					return m_dataQuest.Description;
+				{
+					if (m_dataQuest.Description == null)
+					{
+						return "";
+					}
+					else
+					{
+						return m_dataQuest.Description;
+					}
+				}
 				else
+				{
 					return StepText;
+				}
 			}
 		}
 
@@ -1230,49 +1251,75 @@ namespace DOL.GS.Quests
 			{
 				if (StartType == eStartType.InteractComplete)
 				{
-					// This quest finishes with the interaction and is not placed in player quest log
+					// This quest finishes with the interaction
 
 					CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
 
 					if (charQuest.Count < MaxQuestCount)
 					{
-						if (Description != "")
+						if (Description.Trim() != "")
 						{
 							SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 						}
 
-						lock (player.Inventory)
+						if (m_finalRewards.Count > 0)
 						{
-							if (player.Inventory.IsSlotsFree(m_finalRewards.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+							lock (player.Inventory)
 							{
-								foreach (string idnb in m_finalRewards)
+								if (player.Inventory.IsSlotsFree(m_finalRewards.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 								{
-									ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
-									if (item != null)
+									foreach (string idnb in m_finalRewards)
 									{
-										GiveItem((obj is GameLiving ? obj as GameLiving : null), player, item, false);
+										ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
+										if (item != null)
+										{
+											GiveItem((obj is GameLiving ? obj as GameLiving : null), player, item, false);
+										}
 									}
 								}
-
-								if (m_rewardXPs[0] > 0)
+								else
 								{
-									player.GainExperience(GameLiving.eXPSource.Quest, m_rewardXPs[0]);
-								}
-
-								if (m_rewardMoneys[0] > 0)
-								{
-									player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
+									SendMessage(player, "Your inventory does not have enough space to finish this quest!", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+									return;
 								}
 							}
-							else
-							{
-								SendMessage(player, "Your inventory does not have enough space to finish this quest!", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								return;
-							}
+						}
+
+						if (m_rewardXPs.Count > 0 && m_rewardXPs[0] > 0)
+						{
+							player.GainExperience(GameLiving.eXPSource.Quest, m_rewardXPs[0]);
+						}
+
+						if (m_rewardMoneys.Count > 0 && m_rewardMoneys[0] > 0)
+						{
+							player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
 						}
 
 						charQuest.Count++;
 						GameServer.Database.SaveObject(charQuest);
+
+						bool add = false;
+						lock (player.QuestListFinished)
+						{
+							foreach (AbstractQuest q in player.QuestListFinished)
+							{
+								if (q is DataQuest && (q as DataQuest).ID == ID)
+								{
+									add = false;
+									break;
+								}
+							}
+						}
+
+						if (add)
+						{
+							player.QuestListFinished.Add(this);
+						}
+
+						player.Out.SendQuestListUpdate();
+
+						player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "AbstractQuest.FinishQuest.Completed", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "AbstractQuest.FinishQuest.Completed", Name)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
 					return;
 				}
@@ -1534,64 +1581,106 @@ namespace DOL.GS.Quests
 		/// <param name="playerKillers"></param>
 		protected virtual void OnLivingIsDying(GameLiving dying, GameObject killer, List<GamePlayer> playerKillers)
 		{
-			/*
-			// Can we offer this quest to the player?
-			if (CheckQuestQualification(player))
+			if (StartType == eStartType.KillComplete)
 			{
-				if (StartType == eStartType.KillComplete)
+				if (playerKillers == null)
 				{
-					// This quest finishes with the interaction and is not placed in player quest log
+					GamePlayer player = killer as GamePlayer;
 
-					CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
-
-					if (charQuest.Count < MaxQuestCount)
+					if (player == null)
 					{
-						if (Description != "")
+						GameNPC npc = killer as GameNPC;
+						if (npc != null)
 						{
-							SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						}
-
-						lock (player.Inventory)
-						{
-							if (player.Inventory.IsSlotsFree(m_finalRewards.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+							if (npc.Brain != null && npc.Brain is IControlledBrain)
 							{
-								foreach (string idnb in m_finalRewards)
-								{
-									ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
-									if (item != null)
-									{
-										GiveItem((obj is GameLiving ? obj as GameLiving : null), player, item, false);
-									}
-								}
-
-								if (m_rewardXPs[0] > 0)
-								{
-									player.GainExperience(GameLiving.eXPSource.Quest, m_rewardXPs[0]);
-								}
-
-								if (m_rewardMoneys[0] > 0)
-								{
-									player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
-								}
+								player = (npc.Brain as IControlledBrain).GetPlayerOwner();
 							}
-							else
-							{
-								SendMessage(player, "Your inventory does not have enough space to finish this quest!", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-								return;
-							}
-						}
-
-						charQuest.Count++;
-						GameServer.Database.SaveObject(charQuest);
-						if (obj is GameNPC)
-						{
-							UpdateQuestIndicator(obj as GameNPC, player);
 						}
 					}
-					return;
+
+					if (player == null)
+						return;
+
+					playerKillers = new List<GamePlayer>();
+					playerKillers.Add(player);
+				}
+
+				foreach (GamePlayer player in playerKillers)
+				{
+					if (CheckQuestQualification(player))
+					{
+						CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
+
+						if (charQuest.Count < MaxQuestCount)
+						{
+							if (Description.Trim() != "")
+							{
+								SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+
+							if (m_finalRewards.Count > 0)
+							{
+								lock (player.Inventory)
+								{
+									if (player.Inventory.IsSlotsFree(m_finalRewards.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+									{
+										foreach (string idnb in m_finalRewards)
+										{
+											ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
+											if (item != null)
+											{
+												GiveItem(dying, player, item, false);
+											}
+										}
+									}
+									else
+									{
+										SendMessage(player, "Your inventory does not have enough space to finish this quest!", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+										return;
+									}
+								}
+							}
+
+							if (m_rewardXPs.Count > 0 && m_rewardXPs[0] > 0)
+							{
+								player.GainExperience(GameLiving.eXPSource.Quest, m_rewardXPs[0]);
+							}
+
+							if (m_rewardMoneys.Count > 0 && m_rewardMoneys[0] > 0)
+							{
+								player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
+							}
+
+							charQuest.Count++;
+							GameServer.Database.SaveObject(charQuest);
+
+							bool add = false;
+							lock (player.QuestListFinished)
+							{
+								foreach (AbstractQuest q in player.QuestListFinished)
+								{
+									if (q is DataQuest && (q as DataQuest).ID == ID)
+									{
+										add = false;
+										break;
+									}
+								}
+							}
+
+							if (add)
+							{
+								player.QuestListFinished.Add(this);
+							}
+
+							player.Out.SendQuestListUpdate();
+
+							player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "AbstractQuest.FinishQuest.Completed", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "AbstractQuest.FinishQuest.Completed", Name)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						}
+					}
 				}
 			}
-			*/
 		}
 
 
@@ -1729,6 +1818,7 @@ namespace DOL.GS.Quests
 			GameServer.Database.SaveObject(m_charQuest);
 
 			m_questPlayer.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(m_questPlayer.Client, "AbstractQuest.FinishQuest.Completed", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+			m_questPlayer.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(m_questPlayer.Client, "AbstractQuest.FinishQuest.Completed", Name)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 			// Remove this quest from the players active quest list and either
 			// Add or update the quest in the players finished list
