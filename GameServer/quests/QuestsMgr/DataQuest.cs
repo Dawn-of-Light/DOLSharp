@@ -244,7 +244,7 @@ namespace DOL.GS.Quests
 				string[] parse1;
 
 				lastParse = m_dataQuest.SourceName;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -265,7 +265,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.SourceText;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -275,7 +275,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.TargetName;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -296,7 +296,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.TargetText;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -307,7 +307,7 @@ namespace DOL.GS.Quests
 
 
 				lastParse = m_dataQuest.StepType;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -317,7 +317,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.StepText;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -327,7 +327,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.StepItemTemplates;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -337,7 +337,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.AdvanceText;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -347,7 +347,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.CollectItemTemplate;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -357,7 +357,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.RewardMoney;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -367,7 +367,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.RewardXP;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -377,7 +377,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.OptionalRewardItemTemplates;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					m_numOptionalRewards = Convert.ToByte(lastParse.Substring(0, 1));
 					parse1 = lastParse.Substring(1).Split('|');
@@ -388,7 +388,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.FinalRewardItemTemplates;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -398,7 +398,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.QuestDependency;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -411,7 +411,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.AllowedClasses;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -421,7 +421,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.ClassType;
-				if (lastParse != null)
+				if (string.IsNullOrEmpty(lastParse) == false)
 				{
 					classType = lastParse;
 				}
