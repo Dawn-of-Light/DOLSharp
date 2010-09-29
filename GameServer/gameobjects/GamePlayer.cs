@@ -4579,7 +4579,7 @@ namespace DOL.GS
 
 		/// <summary>
 		/// What is the maximum level a player can achieve?
-		/// To alter this in a custom GamePlayer class you must override this method and 
+		/// To alter this in a custom GamePlayer class you must override this method and
 		/// provide your own XPForLevel array with MaxLevel + 1 entries
 		/// </summary>
 		public virtual byte MaxLevel
@@ -6893,11 +6893,11 @@ namespace DOL.GS
 		public override bool CanCastInCombat(Spell spell)
 		{
 			if (CharacterClass is PlayerClass.ClassVampiir ||
-				CharacterClass is PlayerClass.ClassMaulerAlb ||
-				CharacterClass is PlayerClass.ClassMaulerMid ||
-				CharacterClass is PlayerClass.ClassMaulerHib ||
-				(CharacterClass is PlayerClass.ClassWarden && spell.SpellType == "HealOverTime") ||
-				(CharacterClass is PlayerClass.ClassFriar && spell.SpellType == "HealOverTime"))
+			    CharacterClass is PlayerClass.ClassMaulerAlb ||
+			    CharacterClass is PlayerClass.ClassMaulerMid ||
+			    CharacterClass is PlayerClass.ClassMaulerHib ||
+			    (CharacterClass is PlayerClass.ClassWarden && spell.SpellType == "HealOverTime") ||
+			    (CharacterClass is PlayerClass.ClassFriar && spell.SpellType == "HealOverTime"))
 			{
 				return true;
 			}
@@ -8409,7 +8409,7 @@ namespace DOL.GS
 							{
 								if (Level < useItem.Level)
 								{
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.SummonHorseLevel", useItem.Level), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.SummonHorseLevel", useItem.Level), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (!IsAlive)
@@ -8424,7 +8424,7 @@ namespace DOL.GS
 								}
 								if (CurrentZone.IsDungeon)
 								{
-                                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountInDungeon"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountInDungeon"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (CurrentRegion.IsRvR && !ActiveHorse.IsSummonRvR)
@@ -8879,11 +8879,11 @@ namespace DOL.GS
 				int minutes = cooldown / 60;
 				int seconds = cooldown % 60;
 				Out.SendMessage(String.Format("You must wait {0} to discharge this item!",
-											  (minutes <= 0)
-											  ? String.Format("{0} more seconds", seconds)
-											  : String.Format("{0} more minutes and {1} seconds",
-															  minutes, seconds)),
-								eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				                              (minutes <= 0)
+				                              ? String.Format("{0} more seconds", seconds)
+				                              : String.Format("{0} more minutes and {1} seconds",
+				                                              minutes, seconds)),
+				                eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				return false;
 			}
@@ -11883,7 +11883,7 @@ namespace DOL.GS
 			}
 
 			if (Health <= 0)
-			{ 
+			{
 				Health = 1;
 			}
 
