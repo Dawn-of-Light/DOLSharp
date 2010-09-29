@@ -25,28 +25,40 @@ using DOL.AI.Brain;
 
 namespace DOL.GS
 {
-    public class TurretPet : GamePet
-    {
-        public TurretPet(INpcTemplate template)
-            : base(template)
-        {
-        }
+	public class TurretPet : GamePet
+	{
+		public TurretPet(INpcTemplate template)
+			: base(template)
+		{
+		}
 
-        private Spell turretSpell;
+		private Spell turretSpell;
 
-        /// <summary>
-        /// Get first spell only
-        /// </summary>
-        public Spell TurretSpell
-        {
-            get { return turretSpell; }
-            set { turretSpell = value; }
-        }
+		/// <summary>
+		/// Get first spell only
+		/// </summary>
+		public Spell TurretSpell
+		{
+			get { return turretSpell; }
+			set { turretSpell = value; }
+		}
 
-        public override void StartAttack(GameObject attackTarget)
-        {
-            if (attackTarget == null)
-                return;
+		/// <summary>
+		/// Not all summoned turrets 'll throw ambient texts
+		/// let's say 20%
+		/// </summary>
+		protected override void BuildAmbientTexts()
+		{
+			base.BuildAmbientTexts();
+			if (ambientTexts.Count>0)
+				foreach (var at in ambientTexts)
+					at.Chance /= 5;
+		}
+		
+		public override void StartAttack(GameObject attackTarget)
+		{
+			if (attackTarget == null)
+				return;
 
 			if (attackTarget is GameLiving && GameServer.ServerRules.IsAllowedToAttack(this, (GameLiving)attackTarget, true) == false)
 				return;
@@ -78,17 +90,17 @@ namespace DOL.GS
 			{
 				base.StartAttack(TargetObject);
 			}
-    }
+		}
 
-    /// <summary>
-    /// [Ganrod] Nidel: Don't interrupt turret cast.
-    /// </summary>
-    /// <param name="duration"></param>
-    /// <param name="attackType"></param>
-    /// <param name="attacker"></param>
-    public override void StartInterruptTimer(AttackData attack, int duration)
-    {
-        return;
-    }
-  }
+		/// <summary>
+		/// [Ganrod] Nidel: Don't interrupt turret cast.
+		/// </summary>
+		/// <param name="duration"></param>
+		/// <param name="attackType"></param>
+		/// <param name="attacker"></param>
+		public override void StartInterruptTimer(AttackData attack, int duration)
+		{
+			return;
+		}
+	}
 }

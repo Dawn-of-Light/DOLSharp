@@ -17,7 +17,9 @@
  *
  */
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
+using DOL.GS.Commands;
 using DOL.GS.RealmAbilities;
 using log4net;
 
@@ -165,29 +167,171 @@ namespace DOL.GS.PacketHandler.Client.v168
 	}
 	
 	/// <summary>
-	/// handles Train clicks from Trainer Window
-	/// 53 is since 1.105
+	/// Handles Train clicks from Trainer Window
 	/// </summary>
 	[PacketHandlerAttribute(PacketHandlerType.TCP, 0xFB ^ 168, "Handles Player Train")]
 	public class PlayerTrainHandler : IPacketHandler
 	{
 		public int HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			client.Out.SendMessage("This command is not implemented.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			// A trainer of the appropriate class must be around (or global trainer, with TrainedClass = eCharacterClass.Unknow
+			GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
+			if (trainer == null || (trainer.TrainedClass != (eCharacterClass)client.Player.CharacterClass.ID && trainer.TrainedClass !=  eCharacterClass.Unknown))
+			{
+				client.Out.SendMessage("You must select a valid trainer for your class.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+				return 0;
+			}
+			
+			//Specializations - 8 trainable specs max?
+			uint size = 8;
+			long position = packet.Position;
+			IList<uint> skills = new List<uint>();
+			Dictionary<uint, uint> amounts = new Dictionary<uint, uint>();
+			bool stop = false;
+			for (uint i = 0; i < size; i++)
+			{
+				uint code = packet.ReadInt();
+				if (!stop)
+				{
+					if (code == 0xFFFFFFFF) stop = true;
+					else
+					{
+						if (!skills.Contains(code))
+							skills.Add(code);
+					}
+				}
+			}
+
+			foreach (uint code in skills)
+			{
+				uint val = packet.ReadInt();
+
+				if (!amounts.ContainsKey(code) && val > 1)
+					amounts.Add(code, val);
+			}
+
+			IList specs = client.Player.GetSpecList();
+			uint skillcount = 0;
+			IList<string> done = new List<string>();
+			bool trained = false;
+			
+			// Graveen: the trainline command is called
+			foreach (Specialization spec in specs)
+			{
+				if (amounts.ContainsKey(skillcount))
+				{
+					if (spec.Level < amounts[skillcount])
+					{
+						TrainCommandHandler train = new TrainCommandHandler();
+						train.OnCommand(client, new string[] { "&trainline", spec.KeyName, amounts[skillcount].ToString() });
+						trained = true;
+					}
+				}
+				skillcount++;
+			}
+
+			//RealmAbilities
+			packet.Seek(position + 64, System.IO.SeekOrigin.Begin);
+			size = 50;//50 RA's max?
+			amounts.Clear();
+			for (uint i = 0; i < size; i++)
+			{
+				uint val = packet.ReadInt();
+
+				if (val > 0 && !amounts.ContainsKey(i))
+				{
+					amounts.Add(i, val);
+				}
+			}
+			uint index = 0;
+			if (amounts != null && amounts.Count > 0)
+			{
+				List<RealmAbility> ras = SkillBase.GetClassRealmAbilities(client.Player.CharacterClass.ID);
+				foreach (RealmAbility ra in ras)
+				{
+					if (ra is RR5RealmAbility)
+						continue;
+
+					if (amounts.ContainsKey(index))
+					{
+						RealmAbility playerRA = (RealmAbility)client.Player.GetAbility(ra.KeyName);
+						if (playerRA != null
+						    && (playerRA.Level >= ra.MaxLevel || playerRA.Level >= amounts[index]))
+						{
+							index++;
+							continue;
+						}
+
+						int cost = 0;
+						for (int i = playerRA != null ? playerRA.Level : 0; i < amounts[index]; i++)
+							cost += ra.CostForUpgrade(i);
+						if (client.Player.RealmSpecialtyPoints < cost)
+						{
+							client.Out.SendMessage(ra.Name + " costs " + (cost) + " realm ability points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage("You don't have that many realm ability points left to get this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							index++;
+							continue;
+						}
+						if (!ra.CheckRequirement(client.Player))
+						{
+							client.Out.SendMessage("You are not experienced enough to get " + ra.Name + " now. Come back later.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							index++;
+							continue;
+						}
+
+						bool valid = false;
+						if (playerRA != null)
+						{
+							playerRA.Level = (int)amounts[index];
+							valid = true;
+						}
+						else
+						{
+							RealmAbility ability = SkillBase.GetAbility(ra.KeyName, (int)amounts[index]) as RealmAbility;
+							if (ability != null)
+							{
+								valid = true;
+								client.Player.AddAbility(ability, false);
+							}
+						}
+						if (valid)
+						{
+							client.Player.RealmSpecialtyPoints -= cost;
+							client.Out.SendUpdatePoints();
+							client.Out.SendUpdatePlayer();
+							client.Out.SendCharResistsUpdate();
+							client.Out.SendCharStatsUpdate();
+							client.Out.SendUpdatePlayerSkills();
+							client.Out.SendTrainerWindow();
+							trained = true;
+						}
+						else
+						{
+							client.Out.SendMessage("Unfortunately your training failed. Please report that to admins or game master. Thank you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+					}
+
+					index++;
+				}
+			}
+			
+			if (trained)
+				client.Player.SaveIntoDatabase();
+
 			return 0;
 		}
-	}
-	
-	/// <summary>
-	/// handles Train clicks from Trainer Window
-	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0xD3 ^ 168, "Call Player Train Window")]
-	public class PlayerTrainWindowHandler : IPacketHandler
-	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		
+		/// <summary>
+		/// Summon trainer window
+		/// </summary>
+		[PacketHandlerAttribute(PacketHandlerType.TCP, 0xD3 ^ 168, "Call Player Train Window")]
+		public class PlayerTrainWindowHandler : IPacketHandler
 		{
-			client.Out.SendTrainerWindow();
-			return packet.ReadByte();
+			public int HandlePacket(GameClient client, GSPacketIn packet)
+			{
+				client.Out.SendTrainerWindow();
+				return packet.ReadByte();
+			}
 		}
 	}
 }
