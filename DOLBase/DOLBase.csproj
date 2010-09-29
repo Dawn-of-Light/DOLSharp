@@ -141,6 +141,7 @@
     <Compile Include="Network\IPacket.cs" />
     <Compile Include="Network\PacketIn.cs" />
     <Compile Include="Network\PacketOut.cs" />
+    <Compile Include="Network\UPnPNat.cs" />
     <Compile Include="Statistics.cs">
       <SubType>Code</SubType>
     </Compile>

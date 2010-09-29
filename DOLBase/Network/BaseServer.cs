@@ -139,62 +139,41 @@ namespace DOL.Network
 		/// <returns>True if the server was successfully started</returns>
 		public virtual bool Start()
 		{
-			/*if(Configuration.EnableUPNP)
+			if (Configuration.EnableUPnP)
 			{
 				try
 				{
 					UPnPNat nat = new UPnPNat();
-					ArrayList list = new ArrayList();
-					foreach(PortMappingInfo info in nat.PortMappings)
-					{
-						list.Add(info);
-					}
-					if(Log.IsDebugEnabled)
-					{
-						Log.Debug("Current UPnP mappings:");
-						foreach(PortMappingInfo info in list)
-						{
-							Log.DebugFormat("({0}) {1} - {2} -> {3}:{4}({5})", info.Enabled ? "(Enabled)" : "(Disabled)", info.Description, info.ExternalPort, info.InternalHostName, info.InternalPort, info.Protocol);
-						}
-					}
+					Log.Debug("[UPNP] Current UPnP mappings:");
+					foreach (var info in nat.ListForwardedPort())
+						Log.DebugFormat("[UPNP] {0} - {1} -> {2}:{3}({4})",
+						                info.description,
+						                info.externalPort,
+						                info.internalIP,
+						                info.internalPort,
+						                info.protocol);
 					IPAddress localAddr = Configuration.IP;
-					string address = "";
-					if(localAddr.ToString() == IPAddress.Any.ToString())
-					{
-						IPAddress[] addr = Dns.GetHostByName(Dns.GetHostName()).AddressList;
-						address = addr[0].ToString();
-					}
-					else
-					{
-						address = Configuration.IP.ToString();
-					}
-
-					PortMappingInfo pmiUdp = new PortMappingInfo("DOL UDP", "UDP", address, Configuration.UDPPort, Configuration.UDPPort, true);
-					PortMappingInfo pmiTcp = new PortMappingInfo("DOL TCP", "TCP", address, Configuration.Port, Configuration.Port, true);
-					nat.AddPortMapping(pmiUdp);
-					nat.AddPortMapping(pmiTcp);
-
+					nat.ForwardPort(Configuration.UDPPort, Configuration.UDPPort, ProtocolType.Udp, "DOL UDP", localAddr);
+					nat.ForwardPort(Configuration.Port, Configuration.Port, ProtocolType.Tcp, "DOL TCP", localAddr);
 					if(Configuration.DetectRegionIP)
 					{
 						try
 						{
-							Configuration.RegionIP = nat.PortMappings[0].ExternalIPAddress;
+							Configuration.RegionIP = nat.GetExternalIP();
 							if(Log.IsDebugEnabled)
-								Log.Debug("Found the RegionIP: " + Configuration.RegionIP);
+								Log.Debug("[UPNP] Found the RegionIP: " + Configuration.RegionIP);
 						}
-						catch(Exception)
+						catch(Exception e)
 						{
-							if(Log.IsDebugEnabled)
-								Log.Debug("Unable to detect the RegionIP, It is possible that no mappings exist yet");
+							Log.Warn("[UPNP] Unable to detect the RegionIP, It is possible that no mappings exist yet", e);
 						}
 					}
 				}
-				catch(Exception)
+				catch(Exception e)
 				{
-					if(Log.IsDebugEnabled)
-						Log.Debug("Unable to access the UPnP Internet Gateway Device");
+					Log.Warn("[UPNP] Unable to access the UPnP Internet Gateway Device", e);
 				}
-			}*/
+			}
 			//Test if we have a valid port yet
 			//if not try  binding.
 			if (_listen == null && !InitSocket())

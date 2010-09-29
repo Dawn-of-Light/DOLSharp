@@ -4622,6 +4622,7 @@ namespace DOL.GS
 		public void FireAmbientSentence(eAmbientTrigger trigger, GameLiving living)
 		{
 			if (ambientTexts == null) return;
+			if (ambientTexts.Count == 0) return;
 			List<MobXAmbientBehaviour> mxa = (from i in ambientTexts where i.Trigger == trigger.ToString() select i).ToList();
 			if (mxa.Count==0) return;
 			

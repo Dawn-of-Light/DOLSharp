@@ -400,6 +400,7 @@ namespace DOL.Database
 			}
 			set
 			{
+				/* Useless check, already doing these in getter accessor
 				// null ownerid items are never saved
 				if (string.IsNullOrEmpty(m_ownerID))
 					base.Dirty =  false;
@@ -408,7 +409,8 @@ namespace DOL.Database
 				if (string.IsNullOrEmpty(m_utemplate_id) && string.IsNullOrEmpty(m_itemplate_id))
 					base.Dirty = false;
 				else
-					base.Dirty = value;
+				*/
+				base.Dirty = value;
 			}
 		}
 		
