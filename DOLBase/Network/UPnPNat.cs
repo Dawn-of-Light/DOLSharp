@@ -57,11 +57,11 @@ public class UPnPNat
 	private static XmlDocument _GetSOAPRequest(string url, string soap, string function)
 	{
 		string req = "<?xml version=\"1.0\"?>" +
-		"<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-		"<s:Body>" +
-		soap +
-		"</s:Body>" +
-		"</s:Envelope>";
+			"<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+			"<s:Body>" +
+			soap +
+			"</s:Body>" +
+			"</s:Envelope>";
 		WebRequest r = WebRequest.Create(url);
 		r.Method = "POST";
 		byte[] b = Encoding.UTF8.GetBytes(req);
@@ -90,39 +90,38 @@ public class UPnPNat
 		Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 		s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
 		const string req = "M-SEARCH * HTTP/1.1\r\n" +
-						   "HOST: 239.255.255.250:1900\r\n" +
-						   "ST:upnp:rootdevice\r\n" +
-						   "MAN:\"ssdp:discover\"\r\n" +
-						   "MX:3\r\n\r\n";
+			"HOST: 239.255.255.250:1900\r\n" +
+			"ST:upnp:rootdevice\r\n" +
+			"MAN:\"ssdp:discover\"\r\n" +
+			"MX:3\r\n\r\n";
 		byte[] data = Encoding.ASCII.GetBytes(req);
 		IPEndPoint ipe = new IPEndPoint(IPAddress.Broadcast, 1900);
 		byte[] buffer = new byte[0x1000];
 
-		DateTime start = DateTime.Now;
+		// Graveen: quickfix
+		s.ReceiveTimeout = 1000;
 
+		s.SendTo(data, ipe);
+		s.SendTo(data, ipe);
+		s.SendTo(data, ipe);
+
+		int length = 0;
 		do
 		{
-			s.SendTo(data, ipe);
-			s.SendTo(data, ipe);
-			s.SendTo(data, ipe);
+			length = s.Receive(buffer);
 
-			int length;
-			do
+			string resp = Encoding.ASCII.GetString(buffer, 0, length).ToLower();
+			if (resp.Contains("upnp:rootdevice"))
 			{
-				length = s.Receive(buffer);
-
-				string resp = Encoding.ASCII.GetString(buffer, 0, length).ToLower();
-				if (resp.Contains("upnp:rootdevice"))
+				resp = resp.Substring(resp.ToLower().IndexOf("location:") + 9);
+				resp = resp.Substring(0, resp.IndexOf("\r")).Trim();
+				if (!string.IsNullOrEmpty(_serviceUrl = _GetServiceUrl(resp)))
 				{
-					resp = resp.Substring(resp.ToLower().IndexOf("location:") + 9);
-					resp = resp.Substring(0, resp.IndexOf("\r")).Trim();
-					if (!string.IsNullOrEmpty(_serviceUrl = _GetServiceUrl(resp)))
-					{
-						return true;
-					}
+					return true;
 				}
-			} while (length > 0);
-		} while (start.Subtract(DateTime.Now) < _timeout);
+			}
+		} while (length > 0);
+
 		return false;
 	}
 
@@ -191,10 +190,10 @@ public class UPnPNat
 		{
 			foreach (var ip in Dns.GetHostAddresses(Dns.GetHostName()))
 				if (ip.GetAddressBytes().Length == 4)
-				{
-					internalIp = ip;
-					break;
-				}
+			{
+				internalIp = ip;
+				break;
+			}
 			if (internalIp == null)
 				throw new Exception("LAN IP not found !");
 		}
