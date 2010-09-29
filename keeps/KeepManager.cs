@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -205,18 +206,17 @@ namespace DOL.GS.Keeps
 			if (!ServerProperties.Properties.LOAD_KEEPS || !ServerProperties.Properties.LOAD_HOOKPOINTS)
 				return;
 
-			Hashtable hookPointList = new Hashtable();
+			Dictionary<string, List<DBKeepHookPoint>> hookPointList = new Dictionary<string, List<DBKeepHookPoint>>();
 
 			var dbkeepHookPoints = GameServer.Database.SelectAllObjects<DBKeepHookPoint>();
 			foreach (DBKeepHookPoint dbhookPoint in dbkeepHookPoints)
 			{
-				ArrayList currentArray;
+				List<DBKeepHookPoint> currentArray;
 				string key = dbhookPoint.KeepComponentSkinID + "H:" + dbhookPoint.Height;
 				if (!hookPointList.ContainsKey(key))
-				{
-					hookPointList.Add(key, new ArrayList());
-				}
-				currentArray = (ArrayList)hookPointList[key];
+					hookPointList.Add(key, currentArray = new List<DBKeepHookPoint>());
+				else
+					currentArray = hookPointList[key];
 				currentArray.Add(dbhookPoint);
 			}
 			foreach (AbstractGameKeep keep in m_keeps.Values)
@@ -226,10 +226,10 @@ namespace DOL.GS.Keeps
 					string key = component.Skin + "H:" + component.Height;
 					if ((hookPointList.ContainsKey(key)))
 					{
-						ArrayList HPlist = hookPointList[key] as ArrayList;
+						List<DBKeepHookPoint> HPlist = hookPointList[key];
 						if ((HPlist != null) && (HPlist.Count != 0))
 						{
-							foreach (DBKeepHookPoint dbhookPoint in (ArrayList)hookPointList[key])
+							foreach (DBKeepHookPoint dbhookPoint in hookPointList[key])
 							{
 								GameKeepHookPoint myhookPoint = new GameKeepHookPoint(dbhookPoint, component);
 								component.HookPoints.Add(dbhookPoint.HookPointID, myhookPoint);
@@ -250,13 +250,15 @@ namespace DOL.GS.Keeps
 			Logger.Info("Loading HookPoint items");
 
 			//fill existing hookpoints with objects
+			IList<DBKeepHookPointItem> items = GameServer.Database.SelectAllObjects<DBKeepHookPointItem>();
 			foreach (AbstractGameKeep keep in m_keeps.Values)
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
 					foreach (GameKeepHookPoint hp in component.HookPoints.Values)
 					{
-						DBKeepHookPointItem item = GameServer.Database.SelectObject<DBKeepHookPointItem>("KeepID = '" + component.Keep.KeepID + "' AND ComponentID = '" + component.ID + "' AND HookPointID = '" + hp.ID + "'");
+						var item = items.FirstOrDefault(
+							it => it.KeepID == component.Keep.KeepID && it.ComponentID == component.ID && it.HookPointID == hp.ID);
 						if (item != null)
 							HookPointItem.Invoke(component.HookPoints[hp.ID] as GameKeepHookPoint, item.ClassType);
 					}
@@ -763,9 +765,7 @@ namespace DOL.GS.Keeps
 
 		private static void LoadBattlegroundCaps()
 		{
-			var bgs = GameServer.Database.SelectAllObjects<Battleground>();
-			foreach (Battleground bg in bgs)
-				m_battlegrounds.Add(bg);
+			m_battlegrounds.AddRange(GameServer.Database.SelectAllObjects<Battleground>());
 		}
 
 		public static Battleground GetBattleground(ushort region)
