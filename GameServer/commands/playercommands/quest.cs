@@ -24,6 +24,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&quest",
+		new string[] {"&quests"},
 		ePrivLevel.Player,
 		"Display the players completed quests", "/quest")]
 	public class QuestCommandHandler : AbstractCommandHandler, ICommandHandler
