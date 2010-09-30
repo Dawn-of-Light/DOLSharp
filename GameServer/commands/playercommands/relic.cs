@@ -25,10 +25,11 @@ using DOL.GS.ServerRules;
 
 namespace DOL.GS.Commands
 {
-   [CmdAttribute(
-      "&relics",
-      ePrivLevel.Player,
-        "Displays the current relic status.", "/relics")]
+	[CmdAttribute(
+	"&relics",
+	new string[] {"&relic"},
+	ePrivLevel.Player,
+	"Displays the current relic status.", "/relics")]
    public class RelicCommandHandler : AbstractCommandHandler, ICommandHandler
    {
         /*          Relic status
