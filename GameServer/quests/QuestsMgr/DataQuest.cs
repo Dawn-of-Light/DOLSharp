@@ -1298,7 +1298,7 @@ namespace DOL.GS.Quests
 						charQuest.Count++;
 						GameServer.Database.SaveObject(charQuest);
 
-						bool add = false;
+						bool add = true;
 						lock (player.QuestListFinished)
 						{
 							foreach (AbstractQuest q in player.QuestListFinished)
@@ -1655,7 +1655,7 @@ namespace DOL.GS.Quests
 							charQuest.Count++;
 							GameServer.Database.SaveObject(charQuest);
 
-							bool add = false;
+							bool add = true;
 							lock (player.QuestListFinished)
 							{
 								foreach (AbstractQuest q in player.QuestListFinished)
@@ -1826,7 +1826,6 @@ namespace DOL.GS.Quests
 			m_questPlayer.QuestList.Remove(this);
 
 			bool add = true;
-
 			lock (m_questPlayer.QuestListFinished)
 			{
 				foreach (AbstractQuest q in m_questPlayer.QuestListFinished)
