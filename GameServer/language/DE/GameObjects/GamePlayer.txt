@@ -283,7 +283,7 @@ GamePlayer.SwitchQuiver.ShootWith:			Ihr wollt schießen mit: {0}.
 GamePlayer.SwitchWeapon.SpellCancelled:			Euer Zauberspruch wurde abgebrochen!		
 GamePlayer.UpdateEncumberance.Encumbered:		Ihr seid überlastet!			
 GamePlayer.UpdateEncumberance.EncumberedMoveSlowly:	Ihr seid überlastet und bewegt Euch deshalb langsamer.				
-GamePlayer.UpdateSpellLine.GainPower:			Ihr erhaltet einen Eintrag in Eure "{0}"-Zauberliste!		
+GamePlayer.UpdateSpellLine.GainPower:			Ihr verbessert Euch bei den Zaubern der "{0}"-Linie!		
 GamePlayer.UseSlot.AttemptToUse:			Ihr versucht folgendes zu benutzen: {0}.
 GamePlayer.UseSlot.AutoReleaseShot:			Eurer Schuss wird nun automatisch freigegeben.		
 GamePlayer.UseSlot.AutoReleaseShotReload:		Eurer Schuss wird nun automatisch nachgeladen und freigegeben.			
