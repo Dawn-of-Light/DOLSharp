@@ -15,6 +15,13 @@ DelveInfo.RecastTime:					Recast time:
 DelveInfo.Target:					Target: {0}
 DelveInfo.Value:					Value: {0}
 
+# AblativeArmor
+AblativeArmor.DelveInfo.Function:			Function: melee hitpoint buffer (?)
+AblativeArmor.DelveInfo.Absorption1:			Absorption: {0}%
+AblativeArmor.DelveInfo.Absorption2:			Absorption: 100%
+AblativeArmor.DelveInfo.Absorption3:			Absorption: 25%
+AblativeArmor.DelveInfo.CastingTime:			Instant
+
 # DamageSpeedDecrease
 DamageSpeedDecrease.DelveInfo.Decrease:			Speed decrease: {0}%
 DamageSpeedDecrease.DelveInfo.Function:			Function: damage/speed decrease

@@ -24,6 +24,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Spells
@@ -164,71 +165,59 @@ namespace DOL.GS.Spells
 			}
 			return 0;
 		}
-		#region Devle Info
+		#region Delve Info
 		public override IList<string> DelveInfo
 		{
 			get
 			{
-				var list = new List<string>(16);
+                var list = new List<string>();
 
-				//Name
-				list.Add("Name: " + Spell.Name);
-				list.Add("");
-
-				//Description
-				list.Add("Description: " + Spell.Description);
-				list.Add("");
-
-				//Target
-				list.Add("Target: " + Spell.Target);
-
-				//SpellType
-				list.Add(GetAblativeType());
-
-				//Damage
-				if (Spell.Damage != 0)
-					list.Add("Absorption: " + Spell.Damage + "%");
+                list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AblativeArmor.DelveInfo.Function"));
+                list.Add("");
+                list.Add(Spell.Description);
+                list.Add("");
+                if (Spell.Damage != 0)
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AblativeArmor.DelveInfo.Absorption1", Spell.Damage));
                 if (Spell.Damage > 100)
-                    list.Add("Absorption: 100%");
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AblativeArmor.DelveInfo.Absorption2"));
                 if (Spell.Damage == 0)
-                    list.Add("Absorption: 25%");
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AblativeArmor.DelveInfo.Absorption3"));
+                if (Spell.Value != 0)
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Value", Spell.Value));
+                list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Target", Spell.Target));
+                if (Spell.Range != 0)
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Range", Spell.Range));
+                if (Spell.Duration >= ushort.MaxValue * 1000)
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + " Permanent.");
+                else if (Spell.Duration > 60000)
+					list.Add(string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + Spell.Duration / 60000 + ":" + (Spell.Duration % 60000 / 1000).ToString("00") + " min"));
+                else if (Spell.Duration != 0)
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.Duration") + (Spell.Duration / 1000).ToString("0' sec';'Permanent.';'Permanent.'"));
+                if (Spell.Power != 0)
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.PowerCost", Spell.Power.ToString("0;0'%'")));
+                if (Spell.CastTime < 0.1)
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "AblativeArmor.DelveInfo.CastingTime"));
+                else if (Spell.CastTime > 0)
+                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DelveInfo.CastingTime", (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'")));
+                
+                if (ServerProperties.Properties.SERV_LANGUAGE != "DE")
+                {
+                    //SpellType
+                    list.Add(GetAblativeType());
 
-				//Value
-				if (Spell.Value != 0)
-					list.Add("Value: " + Spell.Value);
+                    //Radius
+                    if (Spell.Radius != 0)
+                        list.Add("Radius: " + Spell.Radius);
 
-				//Cast
-				if (Spell.CastTime < 0.1)
-					list.Add("Casting time: Instant");
-				else if (Spell.CastTime > 0)
-					list.Add("Casting time: " + (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
+                    //Frequency
+                    if (Spell.Frequency != 0)
+                        list.Add("Frequency: " + (Spell.Frequency * 0.001).ToString("0.0"));
 
-				//Duration
-				if (Spell.Duration >= ushort.MaxValue * 1000)
-					list.Add("Duration: Permanent.");
-				else if (Spell.Duration > 60000)
-					list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration / 60000, (Spell.Duration % 60000 / 1000).ToString("00")));
-				else if (Spell.Duration != 0)
-
-					//Range
-					if (Spell.Range != 0)
-						list.Add("Range: " + Spell.Range);
-
-				//Radius
-				if (Spell.Radius != 0)
-					list.Add("Radius: " + Spell.Radius);
-
-				//Cost
-				list.Add("Power cost: " + Spell.Power.ToString("0;0'%'"));
-
-				//Frequency
-				if (Spell.Frequency != 0)
-					list.Add("Frequency: " + (Spell.Frequency * 0.001).ToString("0.0"));
-
-				//DamageType
-				if (Spell.DamageType != 0)
-					list.Add("Damage Type: " + Spell.DamageType);
-				return list;
+                    //DamageType
+                    if (Spell.DamageType != 0)
+                        list.Add("Damage Type: " + Spell.DamageType);
+                }
+                return list;
 			}
 			#endregion
 		}
