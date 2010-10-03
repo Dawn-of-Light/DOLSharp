@@ -24,13 +24,13 @@ using DOL.GS.Quests;
 using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.Tests
+namespace DOL.Server
 {
 	/// <summary>
 	/// Zusammenfassung für GamePlayerTest.
 	/// </summary>
 	[TestFixture]
-	public class MoneyTaskTest : DOLTestCase
+	public class MoneyTaskTest : ServerTests
 	{
 		public MoneyTaskTest()
 		{

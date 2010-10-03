@@ -23,14 +23,13 @@ using DOL.Tests;
 using DOL.GS;
 using NUnit.Framework;
 
-namespace DOL.Tests
+namespace DOL.Server
 {
-	
 	/// <summary>
 	/// Unittest for the LootMgr Class
 	/// </summary>
 	[TestFixture]
-	public class LootManagerTest : DOLTestCase
+	public class LootManagerTest : ServerTests
 	{
 		public LootManagerTest()
 		{
