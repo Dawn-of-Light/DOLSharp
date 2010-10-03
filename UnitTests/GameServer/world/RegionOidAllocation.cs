@@ -23,10 +23,10 @@ using DOL.Tests;
 using DOL.GS;
 using NUnit.Framework;
 
-namespace DOL.Tests
+namespace DOL.Server
 {
 	[TestFixture]
-	public class RegionOidAllocationTest : DOLTestCase
+	public class RegionOidAllocationTest : ServerTests
 	{
 		public Region m_reg;
 		public int id;

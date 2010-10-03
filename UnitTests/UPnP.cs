@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -16,27 +16,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL;
-using DOL.GS;
-using DOL.Tests;
-using DOL.Language;
+using DOL.Network;
 using NUnit.Framework;
 
-namespace DOL.Server
-{	
+namespace DOL.Net
+{
 	[TestFixture]
-	public class LanguageTest: ServerTests
+	public class uPnP
 	{
-		public LanguageTest()
+		UPnPNat upnp;
+		
+		public uPnP(){}
+		
+		[TestFixtureSetUp]
+		public void init()
 		{
+			upnp = new UPnPNat();
 		}
+		
 		[Test]
-		public void TestGetString()
+		public void Discover()
 		{
-			Console.WriteLine("TestGetString();");
-			Console.WriteLine(LanguageMgr.GetTranslation ("test","fail default string"));
-			Assert.IsTrue(true, "ok");
+			Assert.IsTrue(upnp.Discover());
 		}
 	}
 }

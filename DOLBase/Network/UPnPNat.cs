@@ -8,23 +8,27 @@ using System.IO;
 
 public class UPnPNat
 {
-	public struct PortForwading
+	public class PortForwading
 	{
 		public IPAddress internalIP;
 		public int internalPort;
 		public int externalPort;
 		public ProtocolType protocol;
 		public string description;
+		public bool enabled;
+
+		public PortForwading()
+		{
+			internalIP = IPAddress.None;
+			internalPort = 0;
+			externalPort = 0;
+			protocol = ProtocolType.Unspecified;
+			description = "(Unknown)";
+			enabled = false;
+		}
 	}
 
-	private TimeSpan _timeout = new TimeSpan(0, 0, 0, 3);
 	private string _serviceUrl;
-
-	public TimeSpan TimeOut
-	{
-		get { return _timeout; }
-		set { _timeout = value; }
-	}
 
 	private static string _CombineUrls(string resp, string p)
 	{
@@ -78,7 +82,6 @@ public class UPnPNat
 
 	public UPnPNat()
 	{
-		Discover();
 	}
 
 	/// <summary>
@@ -105,7 +108,7 @@ public class UPnPNat
 		s.SendTo(data, ipe);
 		s.SendTo(data, ipe);
 
-		int length = 0;
+		int length;
 		do
 		{
 			length = s.Receive(buffer);
@@ -145,12 +148,27 @@ public class UPnPNat
 					"<NewPortMappingIndex>" + index + "</NewPortMappingIndex>" +
 					"</m:GetGenericPortMappingEntry>",
 					"GetGenericPortMappingEntry");
-				PortForwading port;
-				port.internalIP = IPAddress.Parse(xdoc.SelectSingleNode("//NewInternalClient/text()").Value);
-				port.internalPort = int.Parse(xdoc.SelectSingleNode("//NewInternalPort/text()").Value);
-				port.externalPort = int.Parse(xdoc.SelectSingleNode("//NewExternalPort/text()").Value);
-				port.protocol = (ProtocolType)Enum.Parse(typeof(ProtocolType), xdoc.SelectSingleNode("//NewProtocol/text()").Value, true);
-				port.description = xdoc.SelectSingleNode("//NewPortMappingDescription/text()").Value;
+				XmlNamespaceManager nsMgr = new XmlNamespaceManager(xdoc.NameTable);
+				nsMgr.AddNamespace("tns", "urn:schemas-upnp-org:device-1-0");
+				PortForwading port = new PortForwading();
+				XmlNode node = xdoc.SelectSingleNode("//NewInternalClient/text()", nsMgr);
+				if (node != null)
+					port.internalIP = IPAddress.Parse(node.Value);
+				node = xdoc.SelectSingleNode("//NewInternalPort/text()", nsMgr);
+				if (node != null)
+					port.internalPort = int.Parse(node.Value);
+				node = xdoc.SelectSingleNode("//NewExternalPort/text()", nsMgr);
+				if (node != null)
+					port.externalPort = int.Parse(node.Value);
+				node = xdoc.SelectSingleNode("//NewProtocol/text()", nsMgr);
+				if (node != null)
+					port.protocol = (ProtocolType)Enum.Parse(typeof(ProtocolType), node.Value, true);
+				node = xdoc.SelectSingleNode("//NewPortMappingDescription/text()", nsMgr);
+				if (node != null)
+					port.description = node.Value;
+				node = xdoc.SelectSingleNode("//NewEnabled/text()", nsMgr);
+				if (node != null)
+					port.enabled = node.Value != "0";
 				forwadedPort.Add(port);
 			}
 			catch (WebException)

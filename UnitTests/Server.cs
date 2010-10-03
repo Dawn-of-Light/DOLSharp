@@ -25,9 +25,9 @@ using NUnit.Framework;
 
 namespace DOL.Tests
 {
-	public class DOLTestCase
+	public class ServerTests
 	{
-		public DOLTestCase()
+		public ServerTests()
 		{
 		}
 

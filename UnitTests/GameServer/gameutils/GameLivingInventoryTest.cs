@@ -19,18 +19,19 @@
 using System;
 using DOL;
 using DOL.GS;
+using DOL.Tests;
 using DOL.Database;
 using NUnit.Framework;
 
-namespace DOL.Tests
-{	
+namespace DOL.Server
+{
 	public class TestInventory : GameLivingInventory
 	{
 		//done that to test in direct the GameLivingInventory
 	}
 
 	[TestFixture]
-	public class GameLivingInventoryTest : DOLTestCase
+	public class GameLivingInventoryTest : ServerTests
 	{
 		public GameLivingInventoryTest() : base()
 		{
@@ -61,9 +62,9 @@ namespace DOL.Tests
 			else
 				Console.WriteLine("can not add 4 blank item");
 			Console.WriteLine("----PRINT AFTER SECOND ADD 4 TEMPLATE-----");
-            PrintInventory(gameLivingInventory);
+			PrintInventory(gameLivingInventory);
 			//here must have 10 item in a slot and 1 in another
-            
+			
 		}
 		public void PrintInventory(GameLivingInventory gameLivingInventory)
 		{

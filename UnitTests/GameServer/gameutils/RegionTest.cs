@@ -25,13 +25,13 @@ using DOL.GS;
 using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.Tests
+namespace DOL.Server
 {
 	/// <summary>
 	/// Unittest for the Region Class
 	/// </summary>
 	[TestFixture]
-	public class RegionTest : DOLTestCase
+	public class RegionTest : ServerTests
 	{		
 		public static bool notified = false;
 
