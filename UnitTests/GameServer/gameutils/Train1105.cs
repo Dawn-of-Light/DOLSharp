@@ -24,13 +24,13 @@ using DOL.GS.PacketHandler;
 using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.Tests
+namespace DOL.Server
 {
 	/// <summary>
 	/// Unit tests for the new Inventory system
 	/// </summary>
 	[TestFixture]
-	public class Train1105 : DOLTestCase
+	public class Train1105 : ServerTests
 	{
 		[Test]
 		void TrainNow()

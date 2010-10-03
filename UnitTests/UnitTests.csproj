@@ -66,6 +66,7 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="UPnP.cs" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj">
       <Name>DOLBase</Name>
       <Project>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</Project>
@@ -120,7 +121,7 @@
     <Compile Include="GameServer\gameutils\InventoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DOLTestCase.cs">
+    <Compile Include="Server.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GameServer\gameutils\DatabaseTest.cs">

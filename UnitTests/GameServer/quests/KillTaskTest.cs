@@ -24,13 +24,13 @@ using DOL.GS.Quests;
 using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.Tests
+namespace DOL.Server
 {
 	/// <summary>
 	/// Zusammenfassung für GamePlayerTest.
 	/// </summary>
 	[TestFixture]
-	public class KillTaskTest : DOLTestCase
+	public class KillTaskTest : ServerTests
 	{
 		public KillTaskTest()
 		{

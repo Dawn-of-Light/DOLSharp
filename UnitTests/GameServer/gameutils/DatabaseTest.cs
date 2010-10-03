@@ -24,13 +24,13 @@ using DOL.GS.PacketHandler;
 using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.Tests
+namespace DOL.Server
 {
 	/// <summary>
 	/// Unit tests for the Zone Class
 	/// </summary>
 	[TestFixture]
-	public class DatabaseTest : DOLTestCase
+	public class DatabaseTest : ServerTests
 	{				
 
 		public DatabaseTest()

@@ -144,14 +144,20 @@ namespace DOL.Network
 				try
 				{
 					UPnPNat nat = new UPnPNat();
-					Log.Debug("[UPNP] Current UPnP mappings:");
-					foreach (var info in nat.ListForwardedPort())
-						Log.DebugFormat("[UPNP] {0} - {1} -> {2}:{3}({4})",
-						                info.description,
-						                info.externalPort,
-						                info.internalIP,
-						                info.internalPort,
-						                info.protocol);
+					if (!nat.Discover())
+						throw new Exception("[UPNP] Unable to access the UPnP Internet Gateway Device");
+					if (Log.IsDebugEnabled)
+					{
+						Log.Debug("[UPNP] Current UPnP mappings:");
+						foreach (var info in nat.ListForwardedPort())
+							Log.DebugFormat("[UPNP] {0} - {1} -> {2}:{3}({4}) ({5})",
+							                info.description,
+							                info.externalPort,
+							                info.internalIP,
+							                info.internalPort,
+							                info.protocol,
+							                info.enabled ? "enabled" : "disabled");
+					}
 					IPAddress localAddr = Configuration.IP;
 					nat.ForwardPort(Configuration.UDPPort, Configuration.UDPPort, ProtocolType.Udp, "DOL UDP", localAddr);
 					nat.ForwardPort(Configuration.Port, Configuration.Port, ProtocolType.Tcp, "DOL TCP", localAddr);
@@ -171,7 +177,7 @@ namespace DOL.Network
 				}
 				catch(Exception e)
 				{
-					Log.Warn("[UPNP] Unable to access the UPnP Internet Gateway Device", e);
+					Log.Warn(e.Message, e);
 				}
 			}
 			//Test if we have a valid port yet
