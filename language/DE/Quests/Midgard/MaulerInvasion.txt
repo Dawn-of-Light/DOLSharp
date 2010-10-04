@@ -1,0 +1,25 @@
+Mid.MaulerInvasion.EnemyKilled:		Schwarzmalmerjunges
+Mid.MaulerInvasion.NPCKreimhilde:	Kreimhilde die Wikingerin
+Mid.MaulerInvasion.OfferQuest:		Werdet Ihr Kreimhilde der Wikingerin dabei helfen, die Schwarzmalmerjungen-Population zu reduzieren? [Stufen 1- 5]
+Mid.MaulerInvasion.QuestTitle:		Malmerinvasion
+Mid.MaulerInvasion.Step1:		Besorgt das Fell von zwei Schwarzmalmerjungen für Kreimhilde. Man findet die Jungen auf dem Feld östlich von Kreimhilde, sowie bei den Bäumen im Südosten und auf dem Feld im Westen.
+Mid.MaulerInvasion.Step2:		Besorgt ein zweites Fell eines Schwarzmalmerjungen. Man findet die Jungen auf dem Feld östlich von Kreimhilde der Wikingerin, sowie bei den Bäumen im Südosten und auf dem Feld im Westen.
+Mid.MaulerInvasion.Step3:		Kehrt zurück zu Kreimhilde der Wikingerin in Mularn.
+Mid.MaulerInvasion.Step4:		Gebt ein Fell eines Schwarzmalmerjungen Kreimhilde der Wikingerin.
+Mid.MaulerInvasion.Step5:		Gebt das zweite Fell eines Schwarzmalmerjungen Kreimhilde der Wikingerin.
+Mid.MaulerInvasion.Talk1:		Gut gemacht, junger Abenteurer. Ihr scheint Euch gut zu machen, und das gefällt mir. Wir hatten kürzlich [einige Schwierigkeiten] in Mularn, und ich hoffe, dass es die Jünglinge wie Euch nicht zu sehr beeinflusst hat.
+Mid.MaulerInvasion.Talk2:		Ich bin sicher, dass Ihr ein Geheimnis für Euch behalten könnt. Wir haben einige Probleme mit den Schwarzmalmerjungen in letzter Zeit gehabt. Des Nachts schleichen sie sich in die Stadt und verursachen dort [alle Arten] von Problemen.
+Mid.MaulerInvasion.Talk3:		Sie sind in Danicas Haus eingedrungen und haben in den Kisten herumgegraben, die sie dort hat. Lyna und Raelyan haben mir berichtet, dass sie morgens Bärenmist auf den Stufen zu ihren Häusern gefunden haben, und Schankwirt Nognar hat mir anvertraut, dass Gäste zurück in die Schänke gelaufen kamen, nachdem sie Knurren und Brummen draußen gehört haben. Die Situation gerät [außer Kontrolle]!
+Mid.MaulerInvasion.Talk4:		Ich habe Kunde nach Jordheim geschickt und um mehr Wachen gebeten, die sie aus der Stadt heraushalten, aber duch das Chaos in den Grenzlanden und die Probleme in der Kobold-Höhlenstadt sind unsere Kräfte sehr ausgedünnt. Die Oberhäupter von Jordheim haben mir aber Geld geschickt, sodass ich Abenteurer [anheuern kann], damit sie mir helfen.
+Mid.MaulerInvasion.Talk5:		Das ist richtig. Wenn Ihr helfen wollt, einige von diesen Schwarzmalmerjungen loszuwerden, werde ich Euch dafür bezahlen. Ich hoffe, dass sie sich nicht mehr nach Mularn hineinwagen, wenn ihre Anzahl verringert ist. Warum denkt Ihr nicht über [mein Angebot] nach und lasst es mich wissen, ob Ihr helfen wollt?
+Mid.MaulerInvasion.Talk6:		Ich verstehe. Diese Art Arbeit ist nicht für jeden geeignet. Vielleicht kann ich jemand anderen finden, der mir helfen kann. Habt dennoch Dank
+Mid.MaulerInvasion.Talk7:		Ihr werdet Eure Entscheidung nicht bereuen! Falls Ihr sie noch nicht gesehen habt, es gibt einige Plätze, wo man die Schwarzmalmerjungen finden kann. Einige sind östlich von hier hinter Schankwirt Nognars Bar. Außerdem findet Ihr einige bei den Bäumen südöstlich von hier, genauso auf dem Feld westlich von hier. Bringt mir das Fell von zwei Jungen und ich werde Euch dafür entlohnen.
+Mid.MaulerInvasion.Talk8:		Willkomen zurück. Ich bin froh zu sehen, dass Ihr Eure Begegnung mit den Schwarzmalmerjungen überlebt habt. Habt Ihr die Felle für mich?
+Mid.MaulerInvasion.Talk9:		Wunderbar! Aber um das Kopfgeld zu erhalten, das ich ausgesetzt habe, brauche ich zwei Felle. Habt Ihr noch ein zweites Fell eines Schwarzmalmerjungen?
+Mid.MaulerInvasion.Talk10:		Ich werde sie nach Jordheim schicken als Beweis, dass wir ein Problem hier haben. Ich sollte Euren Namen erwähnen, damit sie wissen, welcher mutige Abenteurer sie besorgt hat. Hier ist das Geld, das ich Euch versprach!
+Mid.MaulerInvasion.Whisper1:		einige schwierigkeiten
+Mid.MaulerInvasion.Whisper2:		alle arten
+Mid.MaulerInvasion.Whisper3:		außer kontrolle
+Mid.MaulerInvasion.Whisper4:		anheuern kann
+Mid.MaulerInvasion.Whisper5:		mein angebot
+
