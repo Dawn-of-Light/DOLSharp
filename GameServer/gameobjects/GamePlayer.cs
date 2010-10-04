@@ -9325,6 +9325,11 @@ namespace DOL.GS
 					return false;
 			}
 
+			if (CurrentRegion.IsDungeon)
+			{
+				return false;
+			}
+
 			if (GameRelic.IsPlayerCarryingRelic(this))
 			{
 				return false;
