@@ -1,5 +1,4 @@
-﻿	
-/*
+﻿/*
 * DAWN OF LIGHT - The first free open source DAoC server emulator
 *
 * This program is free software; you can redistribute it and/or
@@ -28,14 +27,16 @@
 
 using System;
 using System.Reflection;
+using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
-using log4net;
-using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
-using DOL.AI.Brain;
+using DOL.GS.PacketHandler;
+using DOL.GS.Quests;
+using DOL.Language;
+using log4net;
+
 
 	namespace DOL.GS.Quests.Midgard {
 	
@@ -61,11 +62,10 @@ using DOL.AI.Brain;
 		*
 		*/
 
-		protected const string questTitle = "The Birthday Gift";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.QuestTitle");
 
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 4;
-	
 	
 		private static GameNPC BarkeepNognar = null;
 		
@@ -110,15 +110,16 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Barkeep Nognar",(eRealm) 2);
+            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.NPCBarkeepNognar"), (eRealm)2);
+
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(100).IsDisabled)
 				{
 				BarkeepNognar = new DOL.GS.GameMerchant();
 					BarkeepNognar.Model = 212;
-				BarkeepNognar.Name = "Barkeep Nognar";
-				if (log.IsWarnEnabled)
+                BarkeepNognar.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.NPCBarkeepNognar");
+                if (log.IsWarnEnabled)
 					log.Warn("Could not find " + BarkeepNognar.Name + ", creating ...");
 				BarkeepNognar.GuildName = "Part of " + questTitle + " Quest";
 				BarkeepNognar.Realm = eRealm.Midgard;
@@ -133,7 +134,6 @@ using DOL.AI.Brain;
 				BarkeepNognar.Heading = 4073;
 				BarkeepNognar.RespawnInterval = -1;
 				BarkeepNognar.BodyType = 0;
-				
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -155,14 +155,15 @@ using DOL.AI.Brain;
 				BarkeepNognar = npcs[0];
 			}
 		
-			npcs = WorldMgr.GetNPCsByName("Barkeep Prugar",(eRealm) 2);
+            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.NPCBarkeepPrugar"), (eRealm)2);
+
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(101).IsDisabled)
 				{
 				BarkeepPrugar = new DOL.GS.GameMerchant();
 					BarkeepPrugar.Model = 213;
-				BarkeepPrugar.Name = "Barkeep Prugar";
+                BarkeepPrugar.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.NPCBarkeepPrugar");
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + BarkeepPrugar.Name + ", creating ...");
 				BarkeepPrugar.GuildName = "Part of " + questTitle + " Quest";
@@ -178,7 +179,6 @@ using DOL.AI.Brain;
 				BarkeepPrugar.Heading = 1194;
 				BarkeepPrugar.RespawnInterval = -1;
 				BarkeepPrugar.BodyType = 0;
-				
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -272,10 +272,6 @@ using DOL.AI.Brain;
 				rattlingskeletonpendant.MaxCharges1 = 0;
 				rattlingskeletonpendant.Charges1 = 0;
 				
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddObject(rattlingskeletonpendant);
 				}
 			giftandnoteforprugar = GameServer.Database.FindObjectByKey<ItemTemplate>("giftandnoteforprugar");
@@ -345,13 +341,8 @@ using DOL.AI.Brain;
 				giftandnoteforprugar.MaxCharges1 = 0;
 				giftandnoteforprugar.Charges1 = 0;
 				
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
 					GameServer.Database.AddObject(giftandnoteforprugar);
 				}
-			
 
 			#endregion
 
@@ -367,49 +358,51 @@ using DOL.AI.Brain;
 				a.AddTrigger(eTriggerType.Interact,null,BarkeepNognar);
 			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),BarkeepNognar);
 			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),null,(eComparator)5);
-			a.AddAction(eActionType.Talk,"Well hello there. Please come have a drink and talk. I have a small favor to ask. That?s if you are [interested].",BarkeepNognar);
-			AddBehaviour(a);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk1"), BarkeepNognar);
+            AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
-				a.AddTrigger(eTriggerType.Whisper,"interested",BarkeepNognar);
+            a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Whisper1"), BarkeepNognar);
+
 			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),BarkeepNognar);
 			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),null,(eComparator)5);
-			a.AddAction(eActionType.Talk,"This bar, as well as one in Jordheim, has been passed down from generation to generation. They began with my great grandfather and have been passed down until they have reached my brother and me. We are honored to serve the people of Mularn and Jordheim for so many years. The job is extremely tiring and demanding and time off is a treasured experience. My apprentice will not be returning until the day after tomorrow and that will be [too late].",BarkeepNognar);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk2"), BarkeepNognar);
+
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
-				a.AddTrigger(eTriggerType.Whisper,"too late",BarkeepNognar);
-			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),BarkeepNognar);
+            a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Whisper2"), BarkeepNognar);
+            a.AddRequirement(eRequirementType.QuestGivable, typeof(DOL.GS.Quests.Midgard.thebirthdaygift), BarkeepNognar);
 			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),null,(eComparator)5);
-			a.AddAction(eActionType.Talk,"See, my younger brother?s birthday is tomorrow and I want to get him something special. I want to get him a gift that will remind him of our childhood. That was a time when we where not so caught up in work and the [happenings] around us.",BarkeepNognar);
-			AddBehaviour(a);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk3"), BarkeepNognar);
+            AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
-				a.AddTrigger(eTriggerType.Whisper,"happenings",BarkeepNognar);
+            a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Whisper3"), BarkeepNognar);
 			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),BarkeepNognar);
 			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),null,(eComparator)5);
-			a.AddAction(eActionType.Talk,"As children we used to play in the field beside this bar and tease the rattling skeletons to no end. The skeletons wore pendants which, as children, we thought were magical. We would try our hardest to snatch one from around their neck but never had the courage to do it. The pendants have no magical powers and are just common adornments of the skeletons. We [discovered] this when we where a bit older.",BarkeepNognar);
-			AddBehaviour(a);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk4"), BarkeepNognar);
+            AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
-				a.AddTrigger(eTriggerType.Whisper,"discovered",BarkeepNognar);
-			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),BarkeepNognar);
+                a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Whisper4"), BarkeepNognar);
+            a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),BarkeepNognar);
 			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),null,(eComparator)5);
-			a.AddAction(eActionType.Talk,"I wish to get one of those pendants for Prugar for his birthday. I think it would be a fun way to remind him of how close we used to be and how much fun we had as kids. I also want to remind him not to be so serious all of the time. ",BarkeepNognar);
-			a.AddAction(eActionType.OfferQuest,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),"Will you help get Prugar's birthday gift? (Levels 1-4)");
-			AddBehaviour(a);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk5"), BarkeepNognar);
+            a.AddAction(eActionType.OfferQuest, typeof(DOL.GS.Quests.Midgard.thebirthdaygift), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.OfferQuest"));
+            AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
 				a.AddTrigger(eTriggerType.DeclineQuest,null,typeof(DOL.GS.Quests.Midgard.thebirthdaygift));
-			a.AddAction(eActionType.Talk,"No problem. See you.",BarkeepNognar);
-			AddBehaviour(a);
+                a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk6"), BarkeepNognar);
+            AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
 				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.thebirthdaygift));
 			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),BarkeepNognar);
-			a.AddAction(eActionType.Talk,"Thank you. This means the world to me and I greatly [appreciate] your help.",BarkeepNognar);
-			AddBehaviour(a);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk7"), BarkeepNognar);
+            AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
-				a.AddTrigger(eTriggerType.Whisper,"appreciate",BarkeepNognar);
+            a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Whisper5"), BarkeepNognar);
 			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),1,(eComparator)3);
-			a.AddAction(eActionType.Talk,"All you need to do is go to the northwest side of the bar and kill a rattling skeleton. Once you get a pendant return to me with it.",BarkeepNognar);
-			AddBehaviour(a);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk8"), BarkeepNognar);
+            AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
-				a.AddTrigger(eTriggerType.EnemyKilled,"rattling skeleton",null);
+            a.AddTrigger(eTriggerType.EnemyKilled, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.EnemyKilled"), null);
 			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),1,(eComparator)3);
 			a.AddAction(eActionType.GiveItem,rattlingskeletonpendant,null);
 			a.AddAction(eActionType.IncQuestStep,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),null);
@@ -417,39 +410,39 @@ using DOL.AI.Brain;
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
 				a.AddTrigger(eTriggerType.Interact,null,BarkeepNognar);
 			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),2,(eComparator)3);
-			a.AddAction(eActionType.Talk,"You have returned safely. Were you able to get a pendant from one of the skeletons? ",BarkeepNognar);
-			AddBehaviour(a);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk9"), BarkeepNognar);
+            AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
 				a.AddTrigger(eTriggerType.GiveItem,BarkeepNognar,rattlingskeletonpendant);
 			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),2,(eComparator)3);
-			a.AddAction(eActionType.Talk,"This is perfect! I hope Prugar finds as much humor and meaning in this gift as I do. If you give me one moment I will [wrap this gift] and compose a letter to be delivered along with it.",BarkeepNognar);
-			a.AddAction(eActionType.TakeItem,rattlingskeletonpendant,null);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk10"), BarkeepNognar);
+            a.AddAction(eActionType.TakeItem, rattlingskeletonpendant, null);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepNognar,-1);
-				a.AddTrigger(eTriggerType.Whisper,"wrap this gift",BarkeepNognar);
+            a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Whisper6"), BarkeepNognar);
 			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),2,(eComparator)3);
-			a.AddRequirement(eRequirementType.InventoryItem,rattlingskeletonpendant,null,(eComparator)1);
-			a.AddAction(eActionType.Talk,"Here you go. If you would please deliver this to Prugar, that would be great. He can be found in Jordheim at the bar. As you enter Jordheim?s gates stay to the right. When you come to the next fork stay left. The bar is the long building on your right. The bar's door is on the end with a scrolled sign hanging above it. Thanks again. ",BarkeepNognar);
-			a.AddAction(eActionType.IncQuestStep,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),null);
+            a.AddRequirement(eRequirementType.InventoryItem, rattlingskeletonpendant, 0, (eComparator)3);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk11"), BarkeepNognar);
+            a.AddAction(eActionType.IncQuestStep, typeof(DOL.GS.Quests.Midgard.thebirthdaygift), null);
 			a.AddAction(eActionType.GiveItem,giftandnoteforprugar,BarkeepNognar);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepPrugar,-1);
 				a.AddTrigger(eTriggerType.Interact,null,BarkeepPrugar);
 			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),3,(eComparator)3);
-			a.AddAction(eActionType.Talk,"Hello stranger! You have a gift for me? Who sent it?",BarkeepPrugar);
-			AddBehaviour(a);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk12"), BarkeepPrugar);
+            AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepPrugar,-1);
 				a.AddTrigger(eTriggerType.GiveItem,BarkeepPrugar,giftandnoteforprugar);
 			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),3,(eComparator)3);
-			a.AddAction(eActionType.Talk,"My dear brother remembered my birthday. Thank you so much. This is such a wonderful [surprise].",BarkeepPrugar);
-			a.AddAction(eActionType.TakeItem,giftandnoteforprugar,null);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk13"), BarkeepPrugar);
+            a.AddAction(eActionType.TakeItem, giftandnoteforprugar, null);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(BarkeepPrugar,-1);
-				a.AddTrigger(eTriggerType.Whisper,"surprise",BarkeepPrugar);
+            a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Whisper7"), BarkeepPrugar);
 			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),3,(eComparator)3);
-			a.AddRequirement(eRequirementType.InventoryItem,giftandnoteforprugar,null,(eComparator)1);
-			a.AddAction(eActionType.Talk,"Please take this coin as a token of my appreciation. If you are interested, I have another task for you.",BarkeepPrugar);
-			a.AddAction(eActionType.GiveXP,20,null);
+            a.AddRequirement(eRequirementType.InventoryItem, giftandnoteforprugar, 0, (eComparator)3);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Talk14"), BarkeepPrugar);
+            a.AddAction(eActionType.GiveXP, 20, null);
 			a.AddAction(eActionType.GiveGold,27,null);
 			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.thebirthdaygift),null);
 			AddBehaviour(a);
@@ -509,13 +502,13 @@ using DOL.AI.Brain;
 			{
 				
 					case 1:
-						return "[Step #1] Speak with Barkeep Nognar about his brother's gift. When he is done speaking make your way to the field northwest of the bar in Mularn and kill a rattling skeleton. Once you obtain the pendant return to Barkeep Nognar.";
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Step1");
 				
 					case 2:
-						return "[Step #2] Once the rattling pendant has been obtained return to Barkeep Nognar in Mularn.";
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Step2");
 				
 					case 3:
-						return "[Step #3] As you enter Jordheim stay to the right. When you come to the next fork stay left. The bar is on your right and the door is on the end with a scrolled sign above it. Speak with Barkeep Prugar, when asked hand him his gift.";
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.Step3");
 				
 					default:
 						return " No Queststep Description available.";

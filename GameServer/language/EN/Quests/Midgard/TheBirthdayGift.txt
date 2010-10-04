@@ -1,0 +1,29 @@
+Mid.TheBirthdayGift.EnemyKilled:	rattling skeleton
+Mid.TheBirthdayGift.NPCBarkeepNognar:	Barkeep Nognar
+Mid.TheBirthdayGift.NPCBarkeepPrugar:	Barkeep Prugar
+Mid.TheBirthdayGift.OfferQuest:		Will you help get Prugar's birthday gift? (Levels 1-4)
+Mid.TheBirthdayGift.QuestTitle:		The Birthday Gift
+Mid.TheBirthdayGift.Step1:		[Step #1] Speak with Barkeep Nognar about his brother's gift. When he is done speaking make your way to the field northwest of the bar in Mularn and kill a rattling skeleton. Once you obtain the pendant return to Barkeep Nognar.
+Mid.TheBirthdayGift.Step2:		[Step #2] Once the rattling pendant has been obtained return to Barkeep Nognar in Mularn.
+Mid.TheBirthdayGift.Step3:		[Step #3] As you enter Jordheim stay to the right. When you come to the next fork stay left. The bar is on your right and the door is on the end with a scrolled sign above it. Speak with Barkeep Prugar, when asked hand him his gift.
+Mid.TheBirthdayGift.Talk1:		Well hello there. Please come have a drink and talk. I have a small favor to ask. That?s if you are [interested].
+Mid.TheBirthdayGift.Talk2:		This bar, as well as one in Jordheim, has been passed down from generation to generation. They began with my great grandfather and have been passed down until they have reached my brother and me. We are honored to serve the people of Mularn and Jordheim for so many years. The job is extremely tiring and demanding and time off is a treasured experience. My apprentice will not be returning until the day after tomorrow and that will be [too late].
+Mid.TheBirthdayGift.Talk3:		See, my younger brother?s birthday is tomorrow and I want to get him something special. I want to get him a gift that will remind him of our childhood. That was a time when we where not so caught up in work and the [happenings] around us.
+Mid.TheBirthdayGift.Talk4:		As children we used to play in the field beside this bar and tease the rattling skeletons to no end. The skeletons wore pendants which, as children, we thought were magical. We would try our hardest to snatch one from around their neck but never had the courage to do it. The pendants have no magical powers and are just common adornments of the skeletons. We [discovered] this when we where a bit older.
+Mid.TheBirthdayGift.Talk5:		I wish to get one of those pendants for Prugar for his birthday. I think it would be a fun way to remind him of how close we used to be and how much fun we had as kids. I also want to remind him not to be so serious all of the time.
+Mid.TheBirthdayGift.Talk6:		No problem. See you.
+Mid.TheBirthdayGift.Talk7:		Thank you. This means the world to me and I greatly [appreciate] your help.
+Mid.TheBirthdayGift.Talk8:		All you need to do is go to the northwest side of the bar and kill a rattling skeleton. Once you get a pendant return to me with it.
+Mid.TheBirthdayGift.Talk9:		You have returned safely. Were you able to get a pendant from one of the skeletons?
+Mid.TheBirthdayGift.Talk10:		This is perfect! I hope Prugar finds as much humor and meaning in this gift as I do. If you give me one moment I will [wrap this gift] and compose a letter to be delivered along with it.
+Mid.TheBirthdayGift.Talk11:		Here you go. If you would please deliver this to Prugar, that would be great. He can be found in Jordheim at the bar. As you enter Jordheim?s gates stay to the right. When you come to the next fork stay left. The bar is the long building on your right. The bar's door is on the end with a scrolled sign hanging above it. Thanks again.
+Mid.TheBirthdayGift.Talk12:		Hello stranger! You have a gift for me? Who sent it?
+Mid.TheBirthdayGift.Talk13:		My dear brother remembered my birthday. Thank you so much. This is such a wonderful [surprise].
+Mid.TheBirthdayGift.Talk14:		Please take this coin as a token of my appreciation. If you are interested, I have another task for you.
+Mid.TheBirthdayGift.Whisper1:		interested
+Mid.TheBirthdayGift.Whisper2:		too late
+Mid.TheBirthdayGift.Whisper3:		happenings
+Mid.TheBirthdayGift.Whisper4:		discovered
+Mid.TheBirthdayGift.Whisper5:		appreciate
+Mid.TheBirthdayGift.Whisper6:		wrap this gift
+Mid.TheBirthdayGift.Whisper7:		surprise
