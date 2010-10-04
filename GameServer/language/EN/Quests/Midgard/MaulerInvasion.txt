@@ -1,0 +1,24 @@
+Mid.MaulerInvasion.EnemyKilled:		black mauler cub
+Mid.MaulerInvasion.NPCKreimhilde:	Viking Kreimhilde
+Mid.MaulerInvasion.OfferQuest:		Will you help Viking Kreimhilde reduce the black mauler cub population? [Levels 1-4]
+Mid.MaulerInvasion.QuestTitle:		Mauler Invasion
+Mid.MaulerInvasion.Step1:		[Step #1] Get two black mauler cub pelts for Viking Kreimhilde in Mularn. The cubs can be found in the field northwest of Viking Kreimhilde as well as in the trees to the southeast and the field to the west.
+Mid.MaulerInvasion.Step2:		[Step #2] Get a second black mauler cub pelt. The cubs can be found in the field northwest of Viking Kreimhilde as well as in the trees to the southeast and the field to the west.
+Mid.MaulerInvasion.Step3:		[Step #3] Return to Viking Kreimhilde in Mularn
+Mid.MaulerInvasion.Step4:		[Step #4] Give one of the black mauler cub pelts to Viking Kreimhilde.
+Mid.MaulerInvasion.Step5:		[Step #5] Give the second black mauler cub pelt to Viking Kreimhilde.
+Mid.MaulerInvasion.Talk1:		Well met, young adventurer. You look like you are doing well, and for that I am pleased. We've had [some trouble] around Mularn lately, and I've been hoping that it hasn't affected you younglings too much.
+Mid.MaulerInvasion.Talk2:		I'm trusting that you can keep a secret, Byin. We've been having some trouble with the black mauler cubs lately. I don't know what's gotten into them, but at night they come sneaking into town and cause [all sorts] of problems.
+Mid.MaulerInvasion.Talk3:		They've gotten into Danica's house and dug around in the chests she keeps in there. Lyna and Raelyan have reported to me that they've discovered bear droppings on their front steps in the morning, and Barkeep Nognar has confided to me that customers have come running back into the bar after hearing growls and snarls outside. The situation is getting [out of hand]!
+Mid.MaulerInvasion.Talk4:		I've sent word to Jordheim, asking for more guards to help keep the cubs out of the town, but with the chaos in the Frontiers and the problems below in the Kobold Undercity, our forces are stretched thin. The leaders of Jordheim did send me money so that I [could hire] adventurers to help me.
+Mid.MaulerInvasion.Talk5:		That's right. If you agree to help me get rid of a few of these black mauler cubs, I will pay you. I figure if we can cull down the population a bit they will be less likely to venture into Mularn. Why don't you think about [my offer] and let me know if you'd like to help.
+Mid.MaulerInvasion.Talk6:		No problem. See you.
+Mid.MaulerInvasion.Talk7:		You will not regret your decision! Now, if you haven't seen them, the black mauler cubs can be found in a few places. There are some northwest of here, in the field just past Barkeep Nognar's bar. You'll also find some in the trees southeast of here as well as in the field west of here. Bring me the pelts of two of the cubs and I shall pay you for them.
+Mid.MaulerInvasion.Talk8:		Welcome back. I'm glad to see you survived your encounters with the black mauler cubs. Do you have any pelts for me?
+Mid.MaulerInvasion.Talk9:		Wonderful! But to receive the bounty I offer I need two pelts. Do you have a second black mauler pelt?
+Mid.MaulerInvasion.Talk10:		Excellent! I shall send these on to Jordheim as proof there really is problem here in Mularn. I shall send your name along with the pelts so they know which brave adventurer obtained them. Here is the money I promised you. Spend it wisely!
+Mid.MaulerInvasion.Whisper1:		some trouble
+Mid.MaulerInvasion.Whisper2:		all sorts
+Mid.MaulerInvasion.Whisper3:		out of hand
+Mid.MaulerInvasion.Whisper4:		could hire
+Mid.MaulerInvasion.Whisper5:		my offer
