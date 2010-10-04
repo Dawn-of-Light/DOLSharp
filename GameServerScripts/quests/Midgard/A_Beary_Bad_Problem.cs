@@ -28,17 +28,18 @@
 
 using System;
 using System.Reflection;
+using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
-using log4net;
-using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
-using DOL.AI.Brain;
+using DOL.GS.PacketHandler;
+using DOL.GS.Quests;
+using DOL.Language;
+using log4net;
 
-	namespace DOL.GS.Quests.Midgard {
-	
+namespace DOL.GS.Quests.Midgard
+{
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * BaseQuest	  	 
@@ -61,7 +62,7 @@ using DOL.AI.Brain;
 		*
 		*/
 
-		protected const string questTitle = "A Beary Bad Problem";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.QuestTitle");
 
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 50;
@@ -108,12 +109,12 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Viking Kreimhilde",(eRealm) 2);
+            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.NPCKreimhilde"),(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				VikingKreimhilde = new DOL.GS.GameNPC();
-					VikingKreimhilde.Model = 218;
-				VikingKreimhilde.Name = "Viking Kreimhilde";
+				VikingKreimhilde.Model = 218;
+                VikingKreimhilde.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.NPCKreimhilde");
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + VikingKreimhilde.Name + ", creating ...");
 				VikingKreimhilde.GuildName = "Part of " + questTitle + " Quest";
@@ -129,7 +130,6 @@ using DOL.AI.Brain;
 				VikingKreimhilde.Heading = 2116;
 				VikingKreimhilde.RespawnInterval = -1;
 				VikingKreimhilde.BodyType = 0;
-				
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -222,11 +222,7 @@ using DOL.AI.Brain;
 				silverringofhealth.MaxCharges1 = 0;
 				silverringofhealth.Charges1 = 0;
 				
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(silverringofhealth);
+				GameServer.Database.AddObject(silverringofhealth);
 				}
 			blackmaulercubpelt = GameServer.Database.FindObjectByKey<ItemTemplate>("blackmaulercubpelt");
 			if (blackmaulercubpelt == null)
@@ -295,11 +291,7 @@ using DOL.AI.Brain;
 				blackmaulercubpelt.MaxCharges1 = 0;
 				blackmaulercubpelt.Charges1 = 0;
 				
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(blackmaulercubpelt);
+				GameServer.Database.AddObject(blackmaulercubpelt);
 				}
 			
 
@@ -314,34 +306,34 @@ using DOL.AI.Brain;
 		QuestBuilder builder = QuestMgr.getBuilder(typeof(Abearybadproblem));
 			QuestBehaviour a;
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
-				a.AddTrigger(eTriggerType.Interact,null,VikingKreimhilde);
+			    a.AddTrigger(eTriggerType.Interact,null,VikingKreimhilde);
 			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),VikingKreimhilde);
 			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),null,(eComparator)5);
-			a.AddAction(eActionType.Talk,"So you're one of the new arrivals, eh? Sorry, I overheard your conversation with your trainer over there.",VikingKreimhilde);
-			a.AddAction(eActionType.Talk,"What you were told about our lack of local Viking guards is quite true, I'm afraid. King Eirik has spread out our defenses quite thin, leaving folks around these parts pretty nervous about their safety. Not that he can be blamed, we just have too many foes to worry about in these trying times. ",VikingKreimhilde);
-			a.AddAction(eActionType.Talk,"If you're truly willing to help like you say, then I could use your help. The population of \"natural\" wildlife has been getting out of hand lately, and there are more and more accounts of unfortunate \"incidents\" involving out townsfolk and wild animals. Recently, a young boy was savagely attacked by a black mauler bear while hiking with his family in the nearby mountains to the north.",VikingKreimhilde);
-			a.AddAction(eActionType.Talk,"I've had a few people already volunteer to help thin out the nearby bear population. Would you be willing to help out, as well?",VikingKreimhilde);
-			a.AddAction(eActionType.OfferQuest,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),"Accept A beary Bad Problem Quest?");
-			AddBehaviour(a);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.Talk1"), VikingKreimhilde);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.Talk2"), VikingKreimhilde);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.Talk3"), VikingKreimhilde);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.Talk4"), VikingKreimhilde);
+            a.AddAction(eActionType.OfferQuest, typeof(DOL.GS.Quests.Midgard.Abearybadproblem), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.OfferQuest"));
+            AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
-				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.Abearybadproblem));
+			    a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.Abearybadproblem));
 			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),VikingKreimhilde);
 			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),1);
-			AddBehaviour(a);
+		    AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
-				a.AddTrigger(eTriggerType.DeclineQuest,null,typeof(DOL.GS.Quests.Midgard.Abearybadproblem));
-			AddBehaviour(a);
+			    a.AddTrigger(eTriggerType.DeclineQuest,null,typeof(DOL.GS.Quests.Midgard.Abearybadproblem));
+		    AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
-				a.AddTrigger(eTriggerType.EnemyKilled,"black mauler cub",null);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),1,(eComparator)3);
+                a.AddTrigger(eTriggerType.EnemyKilled, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.EnemyKilled"), null);
+            a.AddRequirement(eRequirementType.QuestStep, typeof(DOL.GS.Quests.Midgard.Abearybadproblem), 1, (eComparator)3);
 			a.AddAction(eActionType.GiveItem,blackmaulercubpelt,null);
 			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),2);
-			AddBehaviour(a);
+		    AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
 				a.AddTrigger(eTriggerType.Interact,null,VikingKreimhilde);
 			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.Abearybadproblem),2,(eComparator)3);
-			a.AddAction(eActionType.Talk,"Good Job!",VikingKreimhilde);
-			a.AddAction(eActionType.GiveXP,22,null);
+            a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.GoodJob"), VikingKreimhilde);
+            a.AddAction(eActionType.GiveXP, 22, null);
 			a.AddAction(eActionType.GiveGold,23,null);
 			a.AddAction(eActionType.TakeItem,blackmaulercubpelt,null);
 			a.AddAction(eActionType.GiveItem,silverringofhealth,VikingKreimhilde);
@@ -366,8 +358,6 @@ using DOL.AI.Brain;
 			// Custom Scriptunloaded Code Begin
 			
 			// Custom Scriptunloaded Code End
-
-			
 
 			/* If VikingKreimhilde has not been initialized, then we don't have to remove any
 			 * hooks from him ;-)
@@ -402,10 +392,10 @@ using DOL.AI.Brain;
 			{
 				
 					case 1:
-						return "[Step #1] Kill a Black Mauler Cub";
+                    return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.Step1");
 				
 					case 2:
-						return "[Step #2] Return to Viking";
+                    return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.Step2");
 				
 					default:
 						return " No Queststep Description available.";

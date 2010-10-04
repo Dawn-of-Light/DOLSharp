@@ -1,0 +1,11 @@
+Mid.ABearyBadProblem.EnemyKilled:	black mauler cub
+Mid.ABearyBadProblem.GoodJob:		Good Job!
+Mid.ABearyBadProblem.NPCKreimhilde:	Viking Kreimhilde
+Mid.ABearyBadProblem.OfferQuest:	Accept A beary Bad Problem Quest?
+Mid.ABearyBadProblem.QuestTitle:	A Beary Bad Problem
+Mid.ABearyBadProblem.Step1:		[Step #1] Kill a Black Mauler Cub
+Mid.ABearyBadProblem.Step2:		[Step #2] Return to Viking
+Mid.ABearyBadProblem.Talk1:		So you're one of the new arrivals, eh? Sorry, I overheard your conversation with your trainer over there.
+Mid.ABearyBadProblem.Talk2:		What you were told about our lack of local Viking guards is quite true, I'm afraid. King Eirik has spread out our defenses quite thin, leaving folks around these parts pretty nervous about their safety. Not that he can be blamed, we just have too many foes to worry about in these trying times.
+Mid.ABearyBadProblem.Talk3:		If you're truly willing to help like you say, then I could use your help. The population of "natural" wildlife has been getting out of hand lately, and there are more and more accounts of unfortunate "incidents" involving out townsfolk and wild animals. Recently, a young boy was savagely attacked by a black mauler bear while hiking with his family in the nearby mountains to the north.
+Mid.ABearyBadProblem.Talk4:		I've had a few people already volunteer to help thin out the nearby bear population. Would you be willing to help out, as well?
