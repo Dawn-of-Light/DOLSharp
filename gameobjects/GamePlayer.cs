@@ -14459,11 +14459,18 @@ namespace DOL.GS
 				return CLXPLevel[0];
 			return CLXPLevel[level];
 		}
+
+		
+		public void GainChampionExperience(long experience)
+		{
+			GainChampionExperience(experience, eXPSource.Other);
+		}
+
 		/// <summary>
 		/// The process that gains exp
 		/// </summary>
 		/// <param name="experience">Amount of Experience</param>
-		public virtual void GainChampionExperience(long experience)
+		public virtual void GainChampionExperience(long experience, eXPSource source)
 		{
 			if (ChampionExperience >= 320000)
 			{
@@ -14476,26 +14483,54 @@ namespace DOL.GS
 			// - if champion max level reached
 			// - if experience is negative
 			// - if praying at your grave
-			if (!Champion || ChampionLevel == CL_MAX_LEVEL || experience <=0 || IsPraying )
+			if (!Champion || ChampionLevel == CL_MAX_LEVEL || experience <= 0 || IsPraying)
 				return;
-			
-			double modifier = ServerProperties.Properties.XP_RATE;
-			// 1 CLXP point per 333K normal XP
-			if (this.CurrentRegion.IsRvR)
-				experience = (long)((double)experience * modifier / 333000);
-			else // 1 CLXP point per 2 Million normal XP
-				experience = (long)((double)experience * modifier / 2000000);
 
-			// Wtf this screws up level 0
-			if (ChampionExperience + experience < ChampionExperienceForCurrentLevel)
-				experience = ChampionExperienceForCurrentLevel - ChampionExperience;
-			
+			if (source != eXPSource.GM)
+			{
+				double modifier = ServerProperties.Properties.CL_XP_RATE;
+
+				// 1 CLXP point per 333K normal XP
+				if (this.CurrentRegion.IsRvR)
+				{
+					experience = (long)((double)experience * modifier / 333000);
+				}
+				else // 1 CLXP point per 2 Million normal XP
+				{
+					experience = (long)((double)experience * modifier / 2000000);
+				}
+			}
+
 			System.Globalization.NumberFormatInfo format = System.Globalization.NumberFormatInfo.InvariantInfo;
 			Out.SendMessage("You get " + experience.ToString("N0", format) + " champion experience points.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
-			ChampionExperience += experience; // force usage of this method, Experience property cannot be set
+			ChampionExperience += experience;
 			Out.SendUpdatePoints();
 		}
+
+		/// <summary>
+		/// Remove all Champion levels and XP from this character.
+		/// This will not remove gained abilities
+		/// </summary>
+		public virtual void RemoveChampionLevels()
+		{
+			ChampionExperience = 0;
+			ChampionLevel = 0;
+			ChampionSpecialtyPoints = 0;
+			ChampionSpells = "";
+			RemoveSpellLine(GlobalSpellsLines.Champion_Spells + Name);
+			SkillBase.UnRegisterSpellLine(GlobalSpellsLines.Champion_Spells + Name);
+			Champion = false;
+
+			UpdateSpellLineLevels(false);
+			RefreshSpecDependantSkills(true);
+			Out.SendUpdatePlayer();
+			Out.SendUpdatePoints();
+			Out.SendUpdatePlayerSkills();
+			UpdatePlayerStatus();
+		}
+
+
 		/// <summary>
 		/// Holds what happens when your champion level goes up;
 		/// </summary>

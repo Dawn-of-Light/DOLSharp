@@ -988,6 +988,28 @@ namespace DOL.GS
 
 	public class GlobalConstants
 	{
+		public static bool IsExpansionEnabled(int expansion)
+		{
+			bool enabled = true;
+
+			string[] disabled = ServerProperties.Properties.DISABLED_EXPANSIONS.Split(';');
+			foreach (string ex in disabled)
+			{
+				int exNum = 0;
+				if (int.TryParse(ex, out exNum))
+				{
+					if (exNum == expansion)
+					{
+						enabled = false;
+						break;
+					}
+				}
+			}
+
+			return enabled;
+		}
+
+
 		public static string StatToName(eStat stat)
 		{
 			switch (stat)

@@ -25,15 +25,12 @@ namespace DOL.GS
 {
 	/// <summary>
 	/// Teleporter for entering and leaving the throne room.
-	/// For the time being, this is a dummy class, to be overridden with
-	/// the actual teleport code at some later stage. For now it will
-	/// simply state that the King is busy right now and hand out
-	/// Personal Bind Recall Stones - that way we don't need to add another
-	/// custom NPC.
 	/// </summary>
 	/// <author>Aredhel</author>
 	public class ThroneRoomTeleporter : GameNPC
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Interact with the NPC.
 		/// </summary>
@@ -44,35 +41,28 @@ namespace DOL.GS
 			if (!base.Interact(player) || player == null)
 				return false;
 
-			String king;
-
-			switch (Realm)
+			if (GlobalConstants.IsExpansionEnabled((int)eClientExpansion.DarknessRising))
 			{
-				case eRealm.Albion:
-					king = "Constantine";
-					break;
-				case eRealm.Midgard:
-					king = "Eirik";
-					break;
-				case eRealm.Hibernia:
-					king = "Lamfhota";
-					break;
-				default: 
-					king = "Dinberg";
-					break;
+				if (player.CurrentRegion.Expansion == (int)eClientExpansion.DarknessRising)
+				{
+					SayTo(player, "Do you wish to [exit]?");
+				}
+				else
+				{
+					SayTo(player, "Do you require an audience with the [King]?");
+				}
+				return true;
 			}
+			else
+			{
+				String reply = "I am afraid, but the King is busy right now.";
 
-			String reply = String.Format("I am afraid, but King {0} is busy right now.", king);
+				if (player.Inventory.CountItemTemplate("Personal_Bind_Recall_Stone", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == 0)
+					reply += " If you're only here to get your Personal Bind Recall Stone then I'll see what I can [do].";
 
-			InventoryItem personalBindRecallStone =
-				player.Inventory.GetFirstItemByID("Personal_Bind_Recall_Stone",
-				eInventorySlot.Min_Inv, eInventorySlot.Max_Inv);
-
-			if (personalBindRecallStone == null)
-				reply += " If you're only here to get your Personal Bind Recall Stone then I'll see what I can [do].";
-
-			SayTo(player, reply);
-			return false;
+				SayTo(player, reply);
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -88,16 +78,80 @@ namespace DOL.GS
 
 			GamePlayer player = source as GamePlayer;
 
+			if ((text.ToLower() == "king" || text.ToLower() == "exit") && GlobalConstants.IsExpansionEnabled((int)eClientExpansion.DarknessRising))
+			{
+				uint throneRegionID = 0;
+				string teleportThroneID = "error";
+				string teleportExitID = "error";
+
+				switch (Realm)
+				{
+					case eRealm.Albion:
+						throneRegionID = 394;
+						teleportThroneID = "AlbThroneRoom";
+						teleportExitID = "AlbThroneExit";
+						break;
+					case eRealm.Midgard:
+						throneRegionID = 360;
+						teleportThroneID = "MidThroneRoom";
+						teleportExitID = "MidThroneExit";
+						break;
+					case eRealm.Hibernia:
+						throneRegionID = 395;
+						teleportThroneID = "HibThroneRoom";
+						teleportExitID = "HibThroneExit";
+						break;
+				}
+
+				if (throneRegionID == 0)
+				{
+					log.ErrorFormat("Can't find King for player {0} speaking to {1} of realm {2}!", player.Name, Name, Realm);
+					player.Out.SendMessage("Server error, can't find throne room.", DOL.GS.PacketHandler.eChatType.CT_Staff, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
+					return false;
+				}
+
+				Teleport teleport = null;
+
+				if (player.CurrentRegionID == throneRegionID)
+				{
+					teleport = GameServer.Database.SelectObject<Teleport>("TeleportID = '" + teleportExitID + "'");
+					if (teleport == null)
+					{
+						log.ErrorFormat("Can't find throne room exit TeleportID {0}!", teleportExitID);
+						player.Out.SendMessage("Server error, can't find exit to this throne room.  Moving you to your last bind point.", DOL.GS.PacketHandler.eChatType.CT_Staff, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
+						player.MoveToBind();
+					}
+				}
+				else
+				{
+					teleport = GameServer.Database.SelectObject<Teleport>("TeleportID = '" + teleportThroneID + "'");
+					if (teleport == null)
+					{
+						log.ErrorFormat("Can't find throne room TeleportID {0}!", teleportThroneID);
+						player.Out.SendMessage("Server error, can't find throne room teleport location.", DOL.GS.PacketHandler.eChatType.CT_Staff, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
+					}
+				}
+
+				if (teleport != null)
+				{
+					SayTo(player, "You may enter!");
+					player.MoveTo((ushort)teleport.RegionID, teleport.X, teleport.Y, teleport.Z, (ushort)teleport.Heading);
+				}
+
+				return true;
+			}
+
+
 			if (text.ToLower() == "do")
 			{
-				if (player.Inventory.GetFirstItemByID("Personal_Bind_Recall_Stone",
-					eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
+				if (player.Inventory.CountItemTemplate("Personal_Bind_Recall_Stone", eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == 0)
 				{
 					SayTo(player, "Very well then. Here's your Personal Bind Recall Stone, may it serve you well.");
 					player.ReceiveItem(this, "Personal_Bind_Recall_Stone");
 				}
 				return false;
 			}
+
 			return true;
 		}
 	}
