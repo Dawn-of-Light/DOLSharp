@@ -134,7 +134,7 @@ namespace DOL.GS
 
 				if (teleport != null)
 				{
-					SayTo(player, "You may enter!");
+					SayTo(player, "Very well ...");
 					player.MoveTo((ushort)teleport.RegionID, teleport.X, teleport.Y, teleport.Z, (ushort)teleport.Heading);
 				}
 

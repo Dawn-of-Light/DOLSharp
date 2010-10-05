@@ -33,7 +33,7 @@ using DOL.AI.Brain;
 namespace DOL.GS
 {
 	/// <summary>
-	/// The Animist character class.
+	/// The Bonedancer character class.
 	/// </summary>
 	public class CharacterClassBoneDancer : CharacterClassBase
 	{
