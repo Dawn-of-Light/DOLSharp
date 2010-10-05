@@ -25,7 +25,7 @@ namespace DOL.GS.Quests.Albion
 {
 	public class AfterTheAccident : RewardQuest
 	{
-		protected const string questTitle = "After The Accident";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.AfterTheAccident.QuestTitle");
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 5;
 

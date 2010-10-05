@@ -32,7 +32,7 @@ namespace DOL.GS.Quests.Albion
 {
 	public class DredgeUpAPledge : RewardQuest
 	{
-		protected const string questTitle = "Dredge Up a Pledge";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.DredgeUpAPledge.QuestTitle");
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 5;
 

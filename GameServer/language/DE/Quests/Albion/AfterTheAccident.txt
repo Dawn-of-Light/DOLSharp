@@ -1,5 +1,4 @@
-﻿# Nach dem Unfall
-Alb.AfterTheAccident.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
+﻿Alb.AfterTheAccident.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
 Alb.AfterTheAccident.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
 Alb.AfterTheAccident.Conclusion.Text1:			Gute Arbeit, {0}! Es mag nicht den Anschein erwecken, ihre Anzahl stark geschwächt zu haben, aber jedes bisschen zählt! Ich weiß, dass wir sie mit ausreichend Leuten letzten Endes beseitigen werden.
 Alb.AfterTheAccident.Init.Text1:			Rekruten-Halskette der Macht
@@ -8,6 +7,7 @@ Alb.AfterTheAccident.Init.Text3:			Rekruten-Halskette des Glaubens
 Alb.AfterTheAccident.Init.Text4:			Schädel eines mickrigen Skeletts
 Alb.AfterTheAccident.Init.Text5:			Tötet zwei mickrige Skelette
 Alb.AfterTheAccident.Notify.Text1:			mickriges Skelett
+Alb.AfterTheAccident.QuestTitle:			Nach dem Unfall
 Alb.AfterTheAccident.Story:				Ich habe während meiner Wachgänge durch Cotswold viele Dinge gesehen, über die ich mir ernsthaft Sorgen mache. Die Toten, die eigentlich tot sein sollten, sind ruhelos und wandeln auf der Oberfläche, während sie friedlich unter ihr ruhen sollten. Auch wenn das kein neues Phänomen ist, werden immer mehr Skelette, Zombies und dergleichen seit dem verfluchten Missgeschick gesichtet.\n\nIhr habt vielleicht von dem Riss gehört, der sich auftat, als die Fingerfuchtler der Akademie das Avalon-Portal aus den Sümpfen hier nach Cotswold brachten. Sie haben ein Tor zur Hölle geöffnet und ich glaube nicht, dass irgendjemand bereits weiß, was dies zu bedeuten hat. Sie sagen, sie hätten es verschlossen, aber da bin ich mir nicht so sicher.\n\nIch weiß nur, dass diese Abscheulichkeiten nicht einfach so in der Landschaft herumstreunen dürfen. Ich bin dazu befugt, jedem ein Kopfgeld zu bezahlen, der sie niederstreckt und mit einem Beweis der Tat zu mir zurückkehrt.
 Alb.AfterTheAccident.Summary:				Tötet zwei mickrige Skelette und kehrt mit deren Schädeln als Beweis zu Sir Prescott zurück.
 

@@ -32,7 +32,8 @@ namespace DOL.GS.Quests.Albion
 {
 	public class RecruitingNothingButTrouble : RewardQuest
 	{
-		protected const string questTitle = "Recruiting Nothing But Trouble";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.RecruitingNothingButTrouble.QuestTitle");
+
 		protected const int minimumLevel = 2;
 		protected const int maximumLevel = 5;
 
