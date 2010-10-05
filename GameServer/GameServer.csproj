@@ -356,6 +356,7 @@
     <Compile Include="gameobjects\CharacterClasses\ICharacterClass.cs" />
     <Compile Include="gameobjects\CharacterClasses\CharacterClassBase.cs" />
     <Compile Include="gameobjects\CharacterClasses\Midgard\CharacterClassBoneDancer.cs" />
+    <Compile Include="gameobjects\CustomNPC\RoyalTreasuryClerk.cs" />
     <Compile Include="gameobjects\GuildBannerItem.cs" />
     <Compile Include="gameobjects\GameVault.cs" />
     <Compile Include="gameobjects\CustomNPC\Teleporters\SimpleTeleporter.cs" />

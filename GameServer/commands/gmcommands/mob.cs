@@ -2060,6 +2060,7 @@ namespace DOL.GS.Commands
 			if (args.Length > 2)
 			{
 				string mobName = string.Join(" ", args, 2, args.Length - 2);
+				mobName = mobName.Replace("'", "\'");
 
 				Mob dbMob = GameServer.Database.SelectObject<Mob>("Name = '" + mobName + "'");
 

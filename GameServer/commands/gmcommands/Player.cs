@@ -33,6 +33,8 @@ namespace DOL.GS.Commands
 		"/player name <newName>",
 		"/player lastname <change|reset> <newLastName>",
 		"/player level <newLevel>",
+		"/player reset - Reset and re-level a player to their current level.",
+		"/player clearchampion - Remove all Champion XP and levels from this player.",
 		"/player realm <newRealm>",
 		"/player inventory [wear|bag|vault|house|cons]",
 		"/player <rps|bps|xp|xpa|clxp> <amount>",
@@ -188,7 +190,7 @@ namespace DOL.GS.Commands
 							if (player == null)
 								player = client.Player;
 
-							byte newLevel = 1;
+							byte newLevel = player.Level;
 
 							if (args[1] == "level")
 							{
@@ -269,6 +271,39 @@ namespace DOL.GS.Commands
 					break;
 
 				#endregion
+
+				#region Clear Champion
+
+				case "clearchampion":
+
+					try
+					{
+						var player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
+							player = client.Player;
+
+						player.RemoveChampionLevels();
+
+						client.Out.SendMessage("You have cleared " + player.Name + "'s Champion levels!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(
+							client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has cleared your Champion levels!",
+							eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
+						player.Out.SendUpdatePlayer();
+						player.Out.SendUpdatePoints();
+						player.Out.SendCharStatsUpdate();
+						player.UpdatePlayerStatus();
+						player.SaveIntoDatabase();
+					}
+
+					catch (Exception)
+					{
+						DisplaySyntax(client);
+						return;
+					}
+					break;
+
+				#endregion Clear Champion
 
 				#region realm
 
@@ -573,7 +608,7 @@ namespace DOL.GS.Commands
 								player = client.Player;
 
 							long amount = long.Parse(args[2]);
-							player.GainChampionExperience(amount);
+							player.GainChampionExperience(amount, GameLiving.eXPSource.GM);
 							client.Out.SendMessage("You gave " + player.Name + " " + amount + " Champion experience succesfully!",
 												   eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							player.Out.SendMessage(
@@ -1898,8 +1933,9 @@ namespace DOL.GS.Commands
 			text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " +
 					 player.CharacterClass.Name);
 			text.Add("  - Guild : " + player.GuildName);
-			text.Add("  - XPs/RPs/BPs : " + player.Experience + " xps, " + player.RealmPoints + " rps, " + player.BountyPoints +
-					 " bps");
+			text.Add("  - XPs/RPs/BPs : " + player.Experience + " xp, " + player.RealmPoints + " rp, " + player.BountyPoints + " bp");
+			text.Add("  - MLXP/ML : " + player.MLExperience + " mlxp, ML " + player.ML + ", MLGranted: " + player.MLGranted);
+			text.Add("  - CLXP/CL : " + player.ChampionExperience + " clxp, CL " + player.ChampionLevel + ", Champion: " + player.Champion);
 			text.Add("  - Craftingskill : " + player.CraftingPrimarySkill + "");
 			text.Add("  - Money : " + Money.GetString(player.GetCurrentMoney()) + "");
 			text.Add("  - Model ID : " + player.Model);
