@@ -125,7 +125,7 @@ namespace DOL.GS.ServerProperties
 		/// What class should the server use for players
 		/// </summary>
 		[ServerProperty("system","player_class", "What class should the server use for players", "DOL.GS.GamePlayer")]
-		public static readonly string PLAYER_CLASS;
+		public static string PLAYER_CLASS;
 
 		/// <summary>
 		/// A serialised list of RegionIDs that will load objects
@@ -473,6 +473,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("rates","xp_rate", "The Experience Points Rate Modifier - Edit this to change the rate at which you gain experience points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
 		public static double XP_RATE;
+
+		/// <summary>
+		/// The CL Experience Rate
+		/// </summary>
+		[ServerProperty("rates", "cl_xp_rate", "The Champion Level Experience Points Rate Modifier - Edit this to change the rate at which you gain CL experience points e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
+		public static double CL_XP_RATE;
 
 		/// <summary>
 		/// RvR Zones XP Rate

@@ -330,6 +330,7 @@ namespace DOL.GS
 			Mission,
 			Task,
 			Praying,
+			GM,
 			Other
 		}
 

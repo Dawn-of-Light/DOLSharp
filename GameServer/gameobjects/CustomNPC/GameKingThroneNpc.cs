@@ -26,6 +26,8 @@ namespace DOL.GS
 	// This class has to be completed and may be inherited for scripting purpose (like quests)
 	public class KingNPC : GameNPC
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public KingNPC()
 			: base()
 		{
@@ -79,6 +81,8 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "KingNPC.WhisperReceive.AlreadyChampion"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					return false;
 				}
+
+				player.RemoveChampionLevels();
 				player.Champion = true;
 				player.Out.SendUpdatePlayer();
 				player.SaveIntoDatabase();
