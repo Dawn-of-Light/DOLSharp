@@ -32,7 +32,7 @@ namespace DOL.GS.Quests.Albion
 {
 	public class TombWithAView : RewardQuest
 	{
-		protected const string questTitle = "Tomb With A View";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.TombWithAView.QuestTitle");
 		protected const int minimumLevel = 2;
 		protected const int maximumLevel = 5;//3
 

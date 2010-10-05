@@ -32,7 +32,7 @@ namespace DOL.GS.Quests.Albion
 {
 	public class WhenGoodBrowniesGoBad : RewardQuest
 	{
-		protected const string questTitle = "When Good Brownies Go Bad";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.QuestTitle");
 		protected const int minimumLevel = 2;
 		protected const int maximumLevel = 5;
 

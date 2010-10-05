@@ -72,7 +72,7 @@ namespace DOL.GS.Quests.Hibernia
 		 * 
 		 */
 
-		protected const string questTitle = "Important Delivery (Hib)";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.ImportantDelivery.QuestTitle");
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 1;
 

@@ -8,6 +8,7 @@ Hib.MagicalBacklash.Init.Text4:				Recruit's Staff
 Hib.MagicalBacklash.Init.Text5:				Orchard Nipper Wing
 Hib.MagicalBacklash.Init.Text6:				Kill orchard nippers for wings.
 Hib.MagicalBacklash.Notify.Text1:			orchard nipper
+Hib.MagicalBacklash.QuestTitle:				Magical Backlash
 Hib.MagicalBacklash.Story:				Have you come in for safety? Living in a land full of magic makes you more aware of your surroundings, but that same magic has caused us problems. Mag Mell isn't the peaceful village it once was. We're plagued with one problem after the next, some of which were cause by carelessness.\n\nOnce, while toying with unrefined magic, those careless Shar tore a hole in the Veil leading into Hibernia. The overload of magical energy turned many of our creatures mad. Little was left untainted by this magical backlash. Even the magic of the burrows and mounds shifted.\n\nThey say the Cursed Burrow dwellers are venturing beyond their domain. Taskmaster Sevinia, our local dungeon scholar, asked me to slay some of the orchard nippers near the lair. I'm sorry to say I'll not go near it. The Cursed Burrow terrifies me, but I can't back out of a community duty, and I can't have her, Fagan, or anyone else thinking I'm gutless or that I'm shirking responsibility.\n\n
 Hib.MagicalBacklash.Summary:				Find the Cursed Burrow and slay orchard nippers near the entrance until you receive a set of wings. Return to Josson one you collect a set of Orchard Nipper wings to show proof that you completed the task.
 

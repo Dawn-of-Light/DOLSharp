@@ -37,7 +37,7 @@ namespace DOL.GS.Quests.Hibernia
 {
 	public class ToReachTheBreach : RewardQuest
 	{
-		protected const string questTitle = "To Reach the Breach";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.ToReachTheBreach.QuestTitle");
 		protected const int minimumLevel = 2;
 		protected const int maximumLevel = 5;
 

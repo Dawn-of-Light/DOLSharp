@@ -1,5 +1,4 @@
-﻿# Wichtige Lieferung
-Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+﻿Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
 Hib.ImportantDelivery.CheckPlayerAbortQuest.NoAbort:	Gut, macht also weiter und beendet Eure Aufgabe!
 Hib.ImportantDelivery.CheckPlayerAcceptQuest.Accept:	Ich gratuliere Euch! Ihr seid nun einen Schritt weiter, um die Welt von Hibernia zu verstehen. In dieser Phase der Ausbildung werde ich Euch in verschiedene Teile des Reiches schicken, um einige bestellte Sachen bei bestimmten Leuten abzuliefern. Ihr solltet von Zeit zu Zeit Eure NOTIZEN aufschlagen, um zu sehen, welcher Schritt als nächstes getan werden muss, um Eure Aufgabe zuerledigen. Ihr könnt auf diese über die BEFEHLE-Taste in Eurem [Charakterbogen] zugreifen.
 Hib.ImportantDelivery.CheckPlayerAcceptQuest.NoAccept:	Auch gut. Kommt bitte zurück, falls Ihr Eure Meinung ändern solltet.
@@ -19,6 +18,7 @@ Hib.ImportantDelivery.FinishQuest.RecieveReward:	Ihr erhaltet {0} als Belohnung.
 Hib.ImportantDelivery.Notify.RentingHorse:		Guten Tag, {0}. Falls Ihr daran interessiert seid ein Reitpferd zu mieten, dann kauft ein Ticket und gebt es mir. Ich wünsche Euch einen sicheren Weg!
 Hib.ImportantDelivery.Notify.Supplies:			Ah! Die Vorräte, auf die ich schon warte. Ich danke Euch {0}. Diese werden uns auf alle Fälle in den kommenden Wochen weiter helfen. Ich habe einen weiteren [Auftrag]. Seit Ihr daran interessiert?
 Hib.ImportantDelivery.Notify.Vegetables:		Ah! Das muss von Aethic aus Tir na mBeo sein. Ich habe schon eine ganze Weile auf gutes Gemüse gewartet. Meine Familie, mein Pferd und ich werden eine ganze Zeit damit auskommen. Meinen Dank an Euch. Hier nehmt diese [Belohnung] für Eure harte Arbeit.
+Hib.ImportantDelivery.QuestTitle:			Wichtige Lieferung
 Hib.ImportantDelivery.TalkToAddrir.Abort:		Wollt Ihr wirklich diese Aufgabe abbrechen, wobei Euch alle damit verbundenen Gegenstände verloren gehen?
 Hib.ImportantDelivery.TalkToAddrir.CaseCharSheet:	Charakterbogen
 Hib.ImportantDelivery.TalkToAddrir.CaseExpedite:	beschleunigen

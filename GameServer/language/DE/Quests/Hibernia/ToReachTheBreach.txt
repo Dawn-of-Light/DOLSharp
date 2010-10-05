@@ -1,11 +1,11 @@
-﻿# Den Durchbruch erreichen
-Hib.ToReachTheBreach.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
+﻿Hib.ToReachTheBreach.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
 Hib.ToReachTheBreach.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
 Hib.ToReachTheBreach.Conclusion.Text1:			Ihr habt den Weg zum Dämonenbruch gefunden, was? Merkt Euch die Stelle gut, {0}, denn Eure Hilfe könnte dort eines Tages benödigt werden. Wir können nicht zulassen, dass Horden von Dämonen, Albionern und Midgardern frei in unserem Land herumlaufen!
 Hib.ToReachTheBreach.Init.Text1:			einfühlsamer Rekruten-Gürtel
 Hib.ToReachTheBreach.Init.Text2:			stämmiger Rekruten-Gürtel
 Hib.ToReachTheBreach.Init.Text3:			empatischer Rekruten-Gürtel
 Hib.ToReachTheBreach.Init.Text4:			Begebt Euch zum Eingang des Dämonenbruchs
+Hib.ToReachTheBreach.QuestTitle:			Den Durchbruch erreichen
 Hib.ToReachTheBreach.Story:				Auftragstellerin Sevinia arbeitet gewissenhaft gegen das Böse, das in unser Land einsickert. Erst kürzlich wurde eine neue Quelle des Bösen sichtbar, der Dämonenbruch. Die Siabra-Erzmagier haben mit den Energien nahe Mag Mell herumgespielt. Sie entfachten einen Sturm arkaner Energie, der die Wildtiere verjagte, die Toten belebte und schließlich einen Durchgang zur Dämonenebene schuf. Unsere Feinde aus Albion und Midgard, die dadurch fast Zugang zu unserer Heimat erhalten haben, sind aber noch weit schlimmer als der Hof der Unseelie selbst.\n\nZum Glück haben die Ältesten unseres Pfades das Loch sofort verschlossen und den Zugang versperrt. Aber wir brauchen eine dauerhafte Lösung. Wir fürchten, unsere Feinde wollen den Schutz, der das Loch versiegelt, zerstören.\n\nDie Leute aus dem Ort steigen immer wieder hinab, um unsere Feinde zu dezimieren. Macht Euch mit der Gegend vertraut, sodass Ihr wisst, wohin Ihr gehen müsst, wenn Ihr unsere Feinde im Zaum halten wollt.
 Hib.ToReachTheBreach.Summary:				Reist zum Eingang des Dämonenbruchs. Kehrt zurück zu Richael, wenn Ihr den Bruch besucht habt.
 

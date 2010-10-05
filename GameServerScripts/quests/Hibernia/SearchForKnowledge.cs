@@ -32,7 +32,7 @@ namespace DOL.GS.Quests.Hibernia
 {
 	public class SearchForKnowledge : RewardQuest
 	{
-		protected const string questTitle = "Search For Knowledge";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.QuestTitle");
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 5;
 

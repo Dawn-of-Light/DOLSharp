@@ -9,6 +9,7 @@ Alb.NoHopeForTheHopeful.Init.Text4:			Recruit's Pious Bracer
 Alb.NoHopeForTheHopeful.Init.Text5:			Bandit Cloak
 Alb.NoHopeForTheHopeful.Init.Text6:			Defeat two bandit hopefuls
 Alb.NoHopeForTheHopeful.Notify:				bandit hopeful
+Alb.NoHopeForTheHopeful.QuestTitle:			No Hope For The Hopeful
 Alb.NoHopeForTheHopeful.Story:				So you're one of the new arrivals, eh? Welcome to our village! Its always a pleasure to meet newcomers.\n\nYou may've heard a bit of a rumor about a lack of local guards here. Unfortunately, it's true, I'm afraid. King Constantine has spread out our defenses quite thin, leaving folks around these parts pretty nervous about their safety. Not that he can be blamed, we just have too many foes to worry about in these trying times.\n\nIf you're truly willing to help like you say, then I could use your assistance. One never-ending problem we endure is the trouble stirred up by local brigands that seem to cover the countryside like a plague. The more we arrest, the more we find days later. They're like insects... where you see one, there are hundreds more you don't see.\n\nWould you be willing to help us out? Our people should feel free to go about their days without the constant worry of being set upon by thugs. Kill two bandit hopefuls and bring me two Bandit Cloaks as proof of this deed.
 Alb.NoHopeForTheHopeful.Summary:			Find and defeat two bandit hopefuls, then return to Sir Dorian for your reward.
 
