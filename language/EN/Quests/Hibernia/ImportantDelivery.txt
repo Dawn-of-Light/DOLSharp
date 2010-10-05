@@ -18,6 +18,7 @@ Hib.ImportantDelivery.FinishQuest.RecieveReward:	You recieve {0} as a reward.
 Hib.ImportantDelivery.Notify.RentingHorse:		Good day, {0}. If you are interested in renting a horse, purchase a ticket, then hand it to me. Have a safe trip!
 Hib.ImportantDelivery.Notify.Supplies:			Ah! The supplies I have been waiting for. Thank you {0}. These will help us tremendously in the coming weeks. I have another [errand] if you are up for it.
 Hib.ImportantDelivery.Notify.Vegetables:		Ah, the vegetables I've been waiting for from Aethic. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.
+Hib.ImportantDelivery.QuestTitle:			Important Delivery (Hib)
 Hib.ImportantDelivery.TalkToAddrir.Abort:		Do you really want to abort this quest, all items gained during quest will be lost?
 Hib.ImportantDelivery.TalkToAddrir.CaseCharSheet:	character sheet
 Hib.ImportantDelivery.TalkToAddrir.CaseExpedite:	expedite
