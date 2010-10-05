@@ -1715,96 +1715,9 @@ return false;
 		/// <returns>effective casting time in milliseconds</returns>
 		public virtual int CalculateCastingTime()
 		{
-			int ticks = m_spell.CastTime;
-
-			if (Spell.InstrumentRequirement != 0 || SpellLine.KeyName == GlobalSpellsLines.Item_Spells
-			    || m_spellLine.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
-			{
-				return ticks;
-			}
-
-			GamePlayer player = m_caster as GamePlayer;
-			if (player != null)
-			{
-				//Fix for Warlock castingtime <-- this is a bad comment.  What needed fixed and why?
-				if (player.CharacterClass.ID == (int)eCharacterClass.Warlock)
-				{
-					if (Spell.SpellType == "Chamber")
-						return ticks;
-
-					if ((m_spellLine.KeyName == "Cursing"
-					     || m_spellLine.KeyName == "Cursing Spec"
-					     || m_spellLine.KeyName == "Hexing"
-					     || m_spellLine.KeyName == "Witchcraft")
-					    && (Spell.SpellType != "ArmorFactorBuff"
-					        && Spell.SpellType != "Bladeturn"
-					        && Spell.SpellType != "ArmorAbsorptionBuff"
-					        && Spell.SpellType != "MatterResistDebuff"
-					        && Spell.SpellType != "Uninterruptable"
-					        && Spell.SpellType != "Powerless"
-					        && Spell.SpellType != "Range"
-					        && Spell.Name != "Lesser Twisting Curse"
-					        && Spell.Name != "Twisting Curse"
-					        && Spell.Name != "Lesser Winding Curse"
-					        && Spell.Name != "Winding Curse"
-					        && Spell.Name != "Lesser Wrenching Curse"
-					        && Spell.Name != "Wrenching Curse"
-					        && Spell.Name != "Lesser Warping Curse"
-					        && Spell.Name != "Warping Curse"))
-						return ticks;
-				}
-			}
-
-			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
-			{
-				// Most casters have access to the Quickcast ability (or the Necromancer equivalent, Facilitate Painworking).
-				// This ability will allow you to cast a spell without interruption.
-				// http://support.darkageofcamelot.com/kb/article.php?id=022
-
-				// A: You're right. The answer I should have given was that Quick Cast reduces the time needed to cast to a flat two seconds, 
-				// and that a spell that has been quick casted cannot be interrupted. ...
-				// http://www.camelotherald.com/news/news_article.php?storyid=1383
-
-				return 2000;
-			}
-
-
-			double percent = DexterityCastTimeReduction;
-
-            // Tolakram - this is bad code.  Someone needs to explain what this is supposed to do and offer a patch
-            // For example, should casting speed be decrased at all?  Should the castspeed bonus apply?
-			//if(SpellLine.KeyName.Contains("Champion Abilities"))
-            //    dex=100; //Vico: No casting time diminution for CL Spells
-
-			if (player != null)
-				percent *= 1.0 - m_caster.GetModified(eProperty.CastingSpeed) * 0.01;
-
-			ticks = (int)(ticks * Math.Max(m_caster.CastingSpeedReductionCap, percent));
-			if (ticks < m_caster.MinimumCastingSpeed)
-				ticks = m_caster.MinimumCastingSpeed;
-			return ticks;
+			return m_caster.CalculateCastingTime(m_spellLine, m_spell);
 		}
 
-		/// <summary>
-		/// The casting time reduction based on dexterity bonus.
-        /// http://daoc.nisrv.com/modules.php?name=DD_DMG_Calculator
-        /// Q: Would you please give more detail as to how dex affects a caster?
-        /// For instance, I understand that when I have my dex maxed I will cast 25% faster.
-        /// How does this work incrementally? And will a lurikeen be able to cast faster in the end than another race?
-        /// A: From a dex of 50 to a dex of 250, the formula lets you cast 1% faster for each ten points.
-        /// From a dex of 250 to the maximum possible (which as you know depends on your starting total),
-        /// your speed increases 1% for every twenty points.
-        /// </summary>
-		public virtual double DexterityCastTimeReduction
-		{
-			get
-			{
-				int dex = Caster.GetModified(eProperty.Dexterity);
-				if (dex < 60) return 1.0;
-				else if (dex < 250) return 1.0 - (dex - 60) * 0.15 * 0.01;
-				else return 1.0 - ((dex - 60) * 0.15 + (dex - 250) * 0.05) * 0.01;
-			}
-		}
 
 		#region animations
 
