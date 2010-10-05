@@ -32,7 +32,7 @@ namespace DOL.GS.Quests.Albion
 {
 	public class ANewHeroesWelcome : RewardQuest
 	{
-		protected const string questTitle = "A New Heroes Welcome";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.QuestTitle");
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 5;
 

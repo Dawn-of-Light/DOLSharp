@@ -5,6 +5,7 @@ Hib.ToReachTheBreach.Init.Text1:			Recruit's Intelligent Belt
 Hib.ToReachTheBreach.Init.Text2:			Recruit's Mighty Belt
 Hib.ToReachTheBreach.Init.Text3:			Recruit's Pious Belt
 Hib.ToReachTheBreach.Init.Text4:			Find the entrance to the Demon's Breach
+Hib.ToReachTheBreach.QuestTitle:			To Reach the Breach
 Hib.ToReachTheBreach.Story:				Taskmaster Sevinia is working diligently against the evil trickling into our land from the dungeons. Recently, more evil has surfaced in the form of Demon's Breach.  The Siabran archmages of the Unseelie court meddled with the energies near Mag Mell. Believing the area was a nexus for only two planes, they unleashed a storm of arcane energy, altering the disposition of the wildlife, animating the dead, and creating a tear into a demonic plane. To worsen matters Midgard and Albion gained access to this plane.  The foes unleashed on Hibernia by the Siabran carelessness will do more damage then the Unseelie.\n\nFortunately, our Path elders noticed this immediately, and they capped the hole, barring entry into our world.  We need a more permanent solution.  There's worry our enemies will break the ward sealing the lair.
 Hib.ToReachTheBreach.Summary:				Find the entrance to the Demon's Breach. Return to Richael once you've visited the Breach.
 

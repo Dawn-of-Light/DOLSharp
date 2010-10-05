@@ -32,7 +32,7 @@ namespace DOL.GS.Quests.Albion
 {
 	public class CemmethsOrders : RewardQuest
 	{
-		protected const string questTitle = "Cemmeth's Orders";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.QuestTitle");
 		protected const int minimumLevel = 4;
 		protected const int maximumLevel = 7;
 

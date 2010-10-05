@@ -32,7 +32,7 @@ namespace DOL.GS.Quests.Albion
 {
 	public class WhenBloodSpeaks : RewardQuest
 	{
-		protected const string questTitle = "When Blood Speaks";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.QuestTitle");
 		protected const int minimumLevel = 3;
 		protected const int maximumLevel = 5;
 
