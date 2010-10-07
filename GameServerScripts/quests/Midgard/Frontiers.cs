@@ -38,7 +38,9 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
+
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -73,9 +75,9 @@ namespace DOL.GS.Quests.Midgard
 		 * 
 		 */
 
-		protected const string questTitle = "Frontiers (Mid)";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.QuestTitle");
 		protected const int minimumLevel = 3;
-		protected const int maximumLevel = 3;
+		protected const int maximumLevel = 4;
 
 		private static GameNPC dalikor = null;
 		private static GameNPC annark = null;
@@ -158,7 +160,6 @@ namespace DOL.GS.Quests.Midgard
 
 			dalikor = GetDalikor();
 
-
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Stor Gothi Annark", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
@@ -192,14 +193,14 @@ namespace DOL.GS.Quests.Midgard
 			else
 				annark = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Scryer Idora", eRealm.Midgard);
+            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.NPCScryerIdora"), eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Scryer Idora, creating ...");
 				idora = new GameNPC();
 				idora.Model = 227;
-				idora.Name = "Scryer Idora";
+                idora.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.NPCScryerIdora");
 				idora.GuildName = "Part of " + questTitle + " Quest";
 				idora.Realm = eRealm.Midgard;
 				idora.CurrentRegionID = 234;
@@ -249,12 +250,13 @@ namespace DOL.GS.Quests.Midgard
 			ticketToSvasudFaste = CreateTicketTo("Svasud Faste", "hs_mularn_svasudfaste");
 			ticketToMularn = CreateTicketTo("Mularn", "hs_svasudfaste_mularn");
 
-			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Griffin Handler Njiedi", eRealm.Midgard, typeof (GameStableMaster));
+            npcs = (GameNPC[])WorldMgr.GetObjectsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.NPCGriffinHandlerNjiedi"), eRealm.Midgard, typeof(GameStableMaster));
 			if (npcs.Length == 0)
 			{
 				njiedi = new GameStableMaster();
 				njiedi.Model = 158;
-				njiedi.Name = "Griffin Handler Njiedi";
+                njiedi.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.NPCGriffinHandlerNjiedi");
+
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + njiedi.Name + ", creating ...");
 				njiedi.GuildName = "Stable Master";
@@ -297,16 +299,14 @@ namespace DOL.GS.Quests.Midgard
 				njiedi = npcs[0] as GameStableMaster;
 			}
 
-
 			njiedi.TradeItems = new MerchantTradeItems(null);
 			if (!njiedi.TradeItems.AddTradeItem(1, eMerchantWindowSlot.FirstEmptyInPage, ticketToSvasudFaste))
 				if (log.IsWarnEnabled)
 					log.Warn("ticketToSvasudFaste not added");
 
-
 			foreach (GameNPC npc in njiedi.GetNPCsInRadius(400))
 			{
-                if (npc.Name == "Gryphon")
+                if (npc.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.NPCGryphon"))
 				{
 					griffin = npc;
 					break;
@@ -316,7 +316,8 @@ namespace DOL.GS.Quests.Midgard
 			{
 				griffin = new GameNPC();
 				griffin.Model = 1236; // //819;
-				griffin.Name = "Gryphon";
+                griffin.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.NPCGryphon");
+
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + griffin.Name + ", creating ...");
 				griffin.GuildName = "Part of " + questTitle + " Quest";
@@ -412,12 +413,7 @@ namespace DOL.GS.Quests.Midgard
 				noteForNjiedi.IsPickable = true;
 				noteForNjiedi.IsDropable = false;
 
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(noteForNjiedi);
+				GameServer.Database.AddObject(noteForNjiedi);
 			}
 
 			// item db check
@@ -438,11 +434,7 @@ namespace DOL.GS.Quests.Midgard
 				askefruerPlans.IsPickable = true;
 				askefruerPlans.IsDropable = false;
 
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(askefruerPlans);
+				GameServer.Database.AddObject(askefruerPlans);
 			}
 
 			translatedPlans = GameServer.Database.FindObjectByKey<ItemTemplate>("translated_askefruer_plans");
@@ -462,11 +454,7 @@ namespace DOL.GS.Quests.Midgard
 				translatedPlans.IsPickable = true;
 				translatedPlans.IsDropable = false;
 
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(translatedPlans);
+				GameServer.Database.AddObject(translatedPlans);
 			}
 
 			// item db check
@@ -498,7 +486,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsLegs.Bonus1 = 12;
 				recruitsLegs.Bonus1Type = (int) eProperty.MaxHealth; // hit
 
-
 				recruitsLegs.Bonus2 = 2;
 				recruitsLegs.Bonus2Type = (int) eResist.Slash;
 
@@ -511,11 +498,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsLegs.Durability = 1000;
 				recruitsLegs.MaxDurability = 1000;
 
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsLegs);
+				GameServer.Database.AddObject(recruitsLegs);
 			}
 
 			// item db check
@@ -547,7 +530,6 @@ namespace DOL.GS.Quests.Midgard
 				recruitsPants.Bonus1 = 12;
 				recruitsPants.Bonus1Type = (int) eProperty.MaxHealth; // hit
 
-
 				recruitsPants.Bonus2 = 2;
 				recruitsPants.Bonus2Type = (int) eResist.Slash;
 
@@ -560,11 +542,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsPants.Durability = 1000;
 				recruitsPants.MaxDurability = 1000;
 
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsPants);
+				GameServer.Database.AddObject(recruitsPants);
 			}
 
 			#endregion						
@@ -687,22 +665,22 @@ namespace DOL.GS.Quests.Midgard
 				if (quest == null)
 				{
 					//Player is not doing the quest...
-					dalikor.SayTo(player, "Greetings again recruit. I spoke with the elders, and they have told me to speak with you about taking these plans to [Scryer Idora].");
-					return;
+                    dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Talk1"));
+                    return;
 				}
 				else
 				{
 					switch (quest.Step)
 					{
 						case 1:
-							dalikor.SayTo(player, "Wonderful Eeinken. Now here, take the plans and also this scroll for Griffin Handler Njiedi. Give him the scroll so he knows where to send you. You can find him near the gates to Jordheim. I wish you luck and speed on your journey Eeinken");
+                            dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Talk2", player.Name));
 							break;
 						case 5:
-							dalikor.SayTo(player, "It's good to see you've made it back from the Proving Grounds recruit Eeinken. Do you have the translated plans for me?");
-							break;
+                            dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Talk3", player.Name));
+                            break;
 						case 6:
-							dalikor.SayTo(player, "It is as I feared. The Fallen Askefruer have their eyes set on taking over Mularn and using it as their new kingdom! Though, how they will achieve this is beyond my comprehension. I will surely have to speak with the elders more. But now that I have finished reading it, I have something here for your [efforts].");
-							break;
+                            dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Talk4"));
+                            break;
 					}
 					return;
 				}
@@ -711,40 +689,38 @@ namespace DOL.GS.Quests.Midgard
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
 				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
-				if (quest == null)
-				{
-					//Do some small talk :)
-					switch (wArgs.Text)
-					{
-							//If the player offered his "help", we send the quest dialog now!
-						case "Scryer Idora":
-							dalikor.SayTo(player, "She is currently helping the newly recruited in the Proving Grounds. We are desperate for her expertise in exotic languages. We believe she is the [only one] who can translate this quickly.");
-							break;
-						case "only one":
-							dalikor.SayTo(player, "Will you help out the elders and the rest of Mularn by [delivering] these plans to her?");
-							break;
-						case "delivering":
-							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(Frontiers)), "Will you take this package to the Frontiers for Dalikor?");
-							break;
-					}
-				}
-				else
-				{
-					switch (wArgs.Text)
-					{
-						case "efforts":
-							dalikor.SayTo(player, "The elders have instructed me to give you these leggings as a sign of appreciation for doing these tasks for Mularn. I will present what you have given us to the council. Don't wander far Eeinken, I'm sure there is much more to do.");
-							if (quest.Step == 6)
-							{
-								quest.FinishQuest();
-							}
-							break;
-						case "abort":
-							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
-							break;
-
-					}
-				}
+                if (quest == null)
+                {
+                    //Do some small talk :)
+                    //If the player offered his "help", we send the quest dialog now!
+                    if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Whisper1"))
+                    {
+                        dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Talk5"));
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Whisper2"))
+                    {
+                        dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Talk6"));
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Whisper3"))
+                    {
+                        player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(Frontiers)), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.OfferQuest"));
+                    }
+                }
+                else
+                {
+                    if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Whisper4"))
+                    {
+                        dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Talk7", player.Name));
+                        if (quest.Step == 6)
+                        {
+                            quest.FinishQuest();
+                        }
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.Whisper5"))
+                    {
+                        player.Out.SendCustomDialog(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToDalikor.AbortQuest"), new CustomDialogResponse(CheckPlayerAbortQuest));
+                    }
+                }
 			}
 		}
 
@@ -787,8 +763,8 @@ namespace DOL.GS.Quests.Midgard
 				{
 					if (quest.Step == 1)
 					{
-						njiedi.SayTo(player, "Greetings my friend. How may I help you today?");
-					}
+                        njiedi.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToNjiedi.Talk1"));
+                    }
 				}
 			}
 		}
@@ -815,18 +791,18 @@ namespace DOL.GS.Quests.Midgard
 					//Player is not doing the quest...
 					if (quest.Step == 3 || quest.Step == 2)
 					{
-						idora.SayTo(player, "Welcome to the Proving Grounds Viking. I am Idora, a shadowblade by profession, but a scryer by hobby. How may I help you today?");
-					}
+                        idora.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToIdora.Talk1", player.CharacterClass.Name));
+                    }
 					else if (quest.Step == 4)
 					{
 						if (quest.idoraDone)
 						{
-							idora.SayTo(player, "Ah, yes, I am now [done] with the translation.");
-						}
+                            idora.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToIdora.Talk2"));
+                        }
 						else
 						{
-							idora.SayTo(player, "Wait a minute... I'm almost finished.");
-						}
+                            idora.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToIdora.Talk3"));
+                        }
 					}
 					return;
 				}
@@ -839,21 +815,19 @@ namespace DOL.GS.Quests.Midgard
 				if (quest != null)
 				{
 					//Do some small talk :)
-					switch (wArgs.Text)
-					{
-						case "done":
-							idora.SayTo(player, "Here you are my intreprid young traveler. It has all been translated now. Take it back to Dalikor. I hope I was able to help today. Come back and visit me soon!");
-							idora.SayTo(player, "Oh and take this horse ticket and give it to Vorgar at Svasud Faste he will bring you back home safely.");
-							if (quest.Step == 4)
-							{
-								GiveItem(idora, player, translatedPlans);
-								GiveItem(idora, player, ticketToMularn);
-								quest.Step = 5;
+                    if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToIdora.Whisper1"))
+                    {
+                        idora.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToIdora.Talk4"));
+                        idora.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToIdora.Talk5"));
+                        if (quest.Step == 4)
+                        {
+                            GiveItem(idora, player, translatedPlans);
+                            GiveItem(idora, player, ticketToMularn);
+                            quest.Step = 5;
+                            quest.TeleportTo(player, idora, locationVorgar, 50);
+                        }
+                    }
 
-								quest.TeleportTo(player, idora, locationVorgar, 50);
-							}
-							break;
-					}
 				}
 			}
 		}
@@ -877,16 +851,14 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (quest != null && quest.Step == 2)
 				{
-					annark.SayTo(player, "Huginn and Munnin guide you all and return with news of your journeys.");
-					quest.Step = 3;
-
+                    annark.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToAnnark.Talk1"));
+                    quest.Step = 3;
 					quest.TeleportTo(player, annark, locationIdora, 30);
 					return;
 				}
 
 				return;
 			}
-
 		}
 
 		/// <summary>
@@ -924,12 +896,12 @@ namespace DOL.GS.Quests.Midgard
 
 			if (response == 0x00)
 			{
-				SendSystemMessage(player, "Good, no go out there and finish your work!");
-			}
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.CheckPlayerAbortQuest.Text1"));
+            }
 			else
 			{
-				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
-				quest.AbortQuest();
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.CheckPlayerAbortQuest.Text2", questTitle));
+                quest.AbortQuest();
 			}
 		}
 
@@ -952,20 +924,20 @@ namespace DOL.GS.Quests.Midgard
 
 			if (response == 0x00)
 			{
-				SendReply(player, "Oh well, if you change your mind, please come back!");
-			}
+                SendReply(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.CheckPlayerAcceptQuest.Text1"));
+            }
 			else
 			{
 				//Check if we can add the quest!
 				if (!dalikor.GiveQuest(typeof (Frontiers), player, 1))
 					return;
 
-				dalikor.SayTo(player, "Wonderful Eeinken. Now here, take the plans and also this scroll for Griffin Handler Njiedi. Give him the scroll so he knows where to send you. You can find him near the gates to Jordheim. I wish you luck and speed on your journey Eeinken.");
+                dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.CheckPlayerAcceptQuest.Text2", player.Name));
 
 				GiveItem(dalikor, player, noteForNjiedi);
 				GiveItem(dalikor, player, askefruerPlans);
-				player.AddMoney(Money.GetMoney(0, 0, 0, 6, 0), "You recieve {0} for the ride to Svasud Faste");
-			}
+                player.AddMoney(Money.GetMoney(0, 0, 0, 6, 0), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.CheckPlayerAcceptQuest.Text3"));
+            }
 		}
 
 		protected virtual int AliceTranslation(RegionTimer callingTimer)
@@ -999,18 +971,18 @@ namespace DOL.GS.Quests.Midgard
 				switch (Step)
 				{
 					case 1:
-						return "[Step #1] You must deliver the Askefruer Plans Dalikor gave you to Scryer Idora in the Frontiers. You must first take the scroll to Griffin Handler Njiedi near the Jordheim Gates.";
-					case 2:
-						return "[Step #2] Take the griffin to Svasud Faste. When you are there, speak with Stor Gothi Annark who will then teleport you to the Frontiers.";
-					case 3:
-						return "[Step #3] Give the Askefruer Plans to Idora.";
-					case 4:
-						return "[Step #4] Wait for Scryer Idora to finish translating the plans. If she stops speaking with you, ask her if she is [done] with her translations.";
-					case 5:
-						return "[Step #5] Take the translated plans back to Dalikor at the tower near Mularn. You can give the ticket Idora gave you to Stable Master Vorgar for a faster ride home.";
-					case 6:
-						return "[Step #6] Wait for Dalikor to finsh reading the translated text.";
-				}
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Description.Text1");
+                    case 2:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Description.Text2");
+                    case 3:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Description.Text3");
+                    case 4:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Description.Text4");
+                    case 5:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Description.Text5");
+                    case 6:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Description.Text6");
+                }
 				return base.Description;
 			}
 		}
@@ -1033,8 +1005,8 @@ namespace DOL.GS.Quests.Midgard
 					RemoveItem(njiedi, player, noteForNjiedi);
 
 					njiedi.TurnTo(m_questPlayer);
-					njiedi.SayTo(m_questPlayer, "Ah, from my old friend Dalikor. Let's see what he says. Ah, I am to give you transportation to Svasud Faste. No problem. All you need to do is purchase a ticket from my store.");
-					m_questPlayer.Out.SendEmoteAnimation(dalikor, eEmote.Ponder);
+                    njiedi.SayTo(m_questPlayer, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Notify.Text1"));
+                    m_questPlayer.Out.SendEmoteAnimation(dalikor, eEmote.Ponder);
 
 					Step = 2;
 					return;
@@ -1048,9 +1020,9 @@ namespace DOL.GS.Quests.Midgard
 					RemoveItem(idora, player, askefruerPlans);
 
 					idora.TurnTo(m_questPlayer);
-					idora.SayTo(m_questPlayer, "Hmm...What's this now? A letter? For me? Interesting. Ah, I see it is from my old friend, Dalikor, something about plans written in fairy. I can translate this if you can wait just a few moments.");
-					m_questPlayer.Out.SendEmoteAnimation(idora, eEmote.Ponder);
-					SendEmoteMessage(player, "Scryer Idora takes out a piece of parchment and begins to translate the scroll you brought to her. In just a few short minutes, she is done with the translation.");
+                    idora.SayTo(m_questPlayer, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Notify.Text2"));
+                    m_questPlayer.Out.SendEmoteAnimation(idora, eEmote.Ponder);
+                    SendEmoteMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Notify.Text3"));
 
 					new RegionTimer(gArgs.Target, new RegionTimerCallback(AliceTranslation), 30000);
 
@@ -1066,9 +1038,9 @@ namespace DOL.GS.Quests.Midgard
 					RemoveItem(dalikor, player, translatedPlans);
 
 					dalikor.TurnTo(m_questPlayer);
-					dalikor.SayTo(m_questPlayer, "Excellent work. Now, if you will please just wait a moment, I need to read this.");
-					m_questPlayer.Out.SendEmoteAnimation(dalikor, eEmote.Ponder);
-					SendEmoteMessage(player, "Dalikor holds up the parchment and slowly reads the information written on it. When he is done, he folds it up and places it in his pocket.");
+                    dalikor.SayTo(m_questPlayer, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Notify.Text4"));
+                    m_questPlayer.Out.SendEmoteAnimation(dalikor, eEmote.Ponder);
+                    SendEmoteMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.Notify.Text5"));
 
 					Step = 6;
 					return;
@@ -1091,7 +1063,6 @@ namespace DOL.GS.Quests.Midgard
 			RemoveItem(m_questPlayer, ticketToMularn, false);
 			RemoveItem(m_questPlayer, noteForNjiedi, false);
 			RemoveItem(m_questPlayer, translatedPlans, false);
-
 		}
 
 		public override void FinishQuest()
@@ -1105,8 +1076,7 @@ namespace DOL.GS.Quests.Midgard
 				GiveItem(dalikor, m_questPlayer, recruitsPants);
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 240, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 5, Util.Random(50)), "You recieve {0} as a reward.");
-
+            m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 5, Util.Random(50)), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.FinishQuest.Text1"));
 		}
 
 	}

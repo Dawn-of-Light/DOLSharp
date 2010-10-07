@@ -52,7 +52,7 @@ namespace DOL.GS.Quests.Hibernia
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected const string questTitle = "Child's Play";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "ChildsPlay.QuestTitle");
 
         protected const int minimumLevel = 1;
         protected const int maximumLevel = 4;

@@ -1,15 +1,22 @@
-﻿
+﻿# BaseQuest
+BaseQuest.TeleportTo.Text1:			{0} is being teleported to {1}.
 
-BaseQuest.RemoveItem.GiveItemToPlayer:				You give the {0} to {1}
-BaseQuest.RemoveItem.CannotRemoveBecouseDontHave:	You cannot remove the {0} because you don't have it.
-BaseQuest.GiveItem.BackpackIsFullCreatedOnGround:	Your backpack is full. {0} is created on the ground.
-BaseQuest.TeleportTo.BeingTeleported:				{0} is being teleported to {1}.
+#RewardQuest
+RewardQuest.Notify:				You must choose a reward!
+RewardQuest.OnQuestAssigned:			You have acquired the {0} quest.
+RewardQuest.Description:			Quest Goal : {0} ({1}/{2})
 
-RewardQuest.Notify.ChooseReward:					You must choose a reward!
-RewardQuest.Notify.AcquiredQuest:					You have acquired the {0} quest.
+#AbstractQuest
+AbstractQuest.FinishQuest.Completed:		You have completed the {0} quest!
+AbstractQuest.AbortQuest:			Quest cleared!
+AbstractQuest.OnQuestAssigned.GetQuest:		You have been given the {0} quest.
 
-AbstractQuest.AbortQuest:				Quest cleared!
-AbstractQuest.FinishQuest.Completed:				You have completed the {0} quest!
-AbstractQuest.OnQuestAssigned.GetQuest:				You have been given the {0} quest.
+
+
+
+
+
+
+
 
 
