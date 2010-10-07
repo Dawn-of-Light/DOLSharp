@@ -4172,13 +4172,13 @@ namespace DOL.GS
 				}
 				else
 					Notify(GamePlayerEvent.RLLevelUp, this);
-				if (GameServer.ServerRules.CanGenerateNews(this) && ((RealmLevel >= 40 && RealmLevel % 10 == 0) || RealmLevel >= 60))
+				if (CanGenerateNews && ((RealmLevel >= 40 && RealmLevel % 10 == 0) || RealmLevel >= 60))
 				{
 					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRank", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
 					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.ReachedRank", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
 					NewsMgr.CreateNews(newsmessage, this.Realm, eNewsType.RvRLocal, true);
 				}
-				if (GameServer.ServerRules.CanGenerateNews(this) && RealmPoints >= 1000000 && RealmPoints - amount < 1000000)
+				if (CanGenerateNews && RealmPoints >= 1000000 && RealmPoints - amount < 1000000)
 				{
 					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
 					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
@@ -4992,7 +4992,7 @@ namespace DOL.GS
 					}
 				case 50:
 					{
-						if (GameServer.ServerRules.CanGenerateNews(this))
+						if (CanGenerateNews)
 						{
 							string message = LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
 							string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
@@ -5004,6 +5004,7 @@ namespace DOL.GS
 
 			// Graveen: give a DOL respec on the GIVE_DOL_RESPEC_ON_LEVELS levels
 			byte level_respec = 0;
+
 			foreach (string str in ServerProperties.Properties.GIVE_DOL_RESPEC_AT_LEVEL.Split(';'))
 			{
 				if( !byte.TryParse( str, out level_respec ) )
@@ -5011,8 +5012,13 @@ namespace DOL.GS
 
 				if (Level == level_respec)
 				{
+					int oldAmount = RespecAmountDOL;
 					RespecAmountDOL++;
-					Out.SendMessage("As you reached level " + Level + ", you are awarded a DOL (full) respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
+					if (oldAmount != RespecAmountDOL)
+					{
+						Out.SendMessage("As you reached level " + Level + ", you are awarded a DOL (full) respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					}
 				}
 			}
 
@@ -12928,7 +12934,7 @@ namespace DOL.GS
 					{
 						GameEventMgr.Notify(GamePlayerEvent.NextCraftingTierReached, this,new NextCraftingTierReachedEventArgs(skill,currentSkillLevel) );
 					}
-					if (GameServer.ServerRules.CanGenerateNews(this) && currentSkillLevel >= 1000 && currentSkillLevel - count < 1000)
+					if (CanGenerateNews && currentSkillLevel >= 1000 && currentSkillLevel - count < 1000)
 					{
 						string message = string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.GainCraftingSkill.ReachedSkill", Name, craftingSkill.Name));
 						NewsMgr.CreateNews(message, Realm, eNewsType.PvE, true);
@@ -12938,18 +12944,34 @@ namespace DOL.GS
 			}
 		}
 
+
+		protected bool m_isEligibleToGiveMeritPoints = true;
+
 		/// <summary>
 		/// Can actions done by this player reward merit points to the players guild?
 		/// </summary>
-		public bool IsEligibleToGiveMeritPoints
+		public virtual bool IsEligibleToGiveMeritPoints
 		{
 			get
 			{
-				if (Guild == null || Client.Account.PrivLevel > 1)
+				if (Guild == null || Client.Account.PrivLevel > 1 || m_isEligibleToGiveMeritPoints == false)
 					return false;
 				
 				return true;
 			}
+
+			set { m_isEligibleToGiveMeritPoints = value; }
+		}
+
+		protected bool m_canGenerateNews = true;
+
+		/// <summary>
+		/// Can this player generate news items?
+		/// </summary>
+		public virtual bool CanGenerateNews
+		{
+			get { return m_canGenerateNews && GameServer.ServerRules.CanGenerateNews(this); }
+			set { m_canGenerateNews = value; }
 		}
 
 		/// <summary>
