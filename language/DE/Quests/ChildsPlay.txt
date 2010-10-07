@@ -1,10 +1,10 @@
-﻿# Kinderspiele
-ChildsPlay.CheckPlayerAbortQuest.Text1:		Gut, macht also weiter und beendet Eure Aufgabe!
+﻿ChildsPlay.CheckPlayerAbortQuest.Text1:		Gut, macht also weiter und beendet Eure Aufgabe!
 ChildsPlay.CheckPlayerAbortQuest.Text2:		Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
 ChildsPlay.CheckPlayerAcceptQuest.Text1:	Ach, komm schon. Du bist nicht besser als dieser Lilienliebhaber... Lilienbauch... Lilien... ach, vergiss es... dieser dumme Raymond! Nun, was machen wir jetzt, um Spaß zu haben?
 ChildsPlay.CheckPlayerAcceptQuest.Text2:	Großartig! Wir werden, öhm, einfach hier warten, während du dich darum kümmerst. Siehst du, Raymond, nicht jeder ist so ein Riesenfeigling wie du. Feigling!
 ChildsPlay.FinishQuest.Text1:			{0} gehören Euch als Belohnung!
 ChildsPlay.PlayerEnterStatueArea.Text1:		Ihr habt die Statue erreicht, von der Euch Charles erzählt hat. Kehrt zu ihm zurück und erzählt ihm von Eurem Mut.
+ChildsPlay.QuestTitle:				Kinderspiele
 ChildsPlay.TalkToCharles.Text1:			Hallo, {0}. Bist du es je müde geworden, dasselbe Spiel immer wieder zu spielen? Genauso ist es hier. Die Erwachsenen sagen, alles was wir tun können, ist hier sitzen und 'Wahrheit oder Wagemut' spielen. Sicher war es am Anfang lustig, doch den meisten von uns wurde langweilig und Raymond ist zu feige, sich auf irgendeine der [Mutproben] einzulassen, die ich mir für ihn ausdenke.
 ChildsPlay.TalkToCharles.Text2:			Du bist in einem Stück zurück! Ich meine, ähm, Willkommen zurück! Hat dir die Statue gefallen? Hat sie dir Angst eingejagt? Heißt das, du bleibst und spielst das Spiel erneut mit uns? Dann nimm dies hier, ich brauche es nicht mehr.
 ChildsPlay.TalkToCharles.Text3:		

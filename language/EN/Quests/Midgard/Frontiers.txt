@@ -1,0 +1,43 @@
+Mid.Frontiers.CheckPlayerAbortQuest.Text1:	Good, no go out there and finish your work!
+Mid.Frontiers.CheckPlayerAbortQuest.Text2:	Aborting Quest {0}. You can start over again if you want.
+Mid.Frontiers.CheckPlayerAcceptQuest.Text1:	Oh well, if you change your mind, please come back!
+Mid.Frontiers.CheckPlayerAcceptQuest.Text2:	Wonderful {0}. Now here, take the plans and also this scroll for Griffin Handler Njiedi. Give him the scroll so he knows where to send you. You can find him near the gates to Jordheim. I wish you luck and speed on your journey {0}.
+Mid.Frontiers.CheckPlayerAcceptQuest.Text3:	You recieve {0} for the ride to Svasud Faste
+Mid.Frontiers.Description.Text1:		[Step #1] You must deliver the Askefruer Plans Dalikor gave you to Scryer Idora in the Frontiers. You must first take the scroll to Griffin Handler Njiedi near the Jordheim Gates.
+Mid.Frontiers.Description.Text2:		[Step #2] Take the griffin to Svasud Faste. When you are there, speak with Stor Gothi Annark who will then teleport you to the Frontiers.
+Mid.Frontiers.Description.Text3:		[Step #3] Give the Askefruer Plans to Idora.
+Mid.Frontiers.Description.Text4:		[Step #4] Wait for Scryer Idora to finish translating the plans. If she stops speaking with you, ask her if she is [done] with her translations.
+Mid.Frontiers.Description.Text5:		[Step #5] Take the translated plans back to Dalikor at the tower near Mularn. You can give the ticket Idora gave you to Stable Master Vorgar for a faster ride home.
+Mid.Frontiers.Description.Text6:		[Step #6] Wait for Dalikor to finsh reading the translated text.
+Mid.Frontiers.FinishQuest.Text1:		You recieve {0} as a reward.
+Mid.Frontiers.Notify.Text1:			Ah, from my old friend Dalikor. Let's see what he says. Ah, I am to give you transportation to Svasud Faste. No problem. All you need to do is purchase a ticket from my store.
+Mid.Frontiers.Notify.Text2:			Hmm...What's this now? A letter? For me? Interesting. Ah, I see it is from my old friend, Dalikor, something about plans written in fairy. I can translate this if you can wait just a few moments.
+Mid.Frontiers.Notify.Text3:			Scryer Idora takes out a piece of parchment and begins to translate the scroll you brought to her. In just a few short minutes, she is done with the translation.
+Mid.Frontiers.Notify.Text4:			Excellent work. Now, if you will please just wait a moment, I need to read this.
+Mid.Frontiers.Notify.Text5:			Dalikor holds up the parchment and slowly reads the information written on it. When he is done, he folds it up and places it in his pocket.
+Mid.Frontiers.NPCGriffinHandlerNjiedi:		Griffin Handler Njiedi
+Mid.Frontiers.NPCGryphon:			Gryphon
+Mid.Frontiers.NPCScryerIdora:			Scryer Idora
+Mid.Frontiers.QuestTitle:			Frontiers (Mid)
+Mid.Frontiers.TalkToAnnark.Talk1:		Huginn and Munnin guide you all and return with news of your journeys.
+Mid.Frontiers.TalkToDalikor.AbortQuest:		Do you really want to abort this quest, \nall items gained during quest will be lost?
+Mid.Frontiers.TalkToDalikor.OfferQuest:		Will you take this package to the Frontiers for Dalikor?
+Mid.Frontiers.TalkToDalikor.Talk1:		Greetings again recruit. I spoke with the elders, and they have told me to speak with you about taking these plans to [Scryer Idora].
+Mid.Frontiers.TalkToDalikor.Talk2:		Wonderful {0}. Now here, take the plans and also this scroll for Griffin Handler Njiedi. Give him the scroll so he knows where to send you. You can find him near the gates to Jordheim. I wish you luck and speed on your journey {0}.
+Mid.Frontiers.TalkToDalikor.Talk3:		It's good to see you've made it back from the Proving Grounds recruit {0}. Do you have the translated plans for me?
+Mid.Frontiers.TalkToDalikor.Talk4:		It is as I feared. The Fallen Askefruer have their eyes set on taking over Mularn and using it as their new kingdom! Though, how they will achieve this is beyond my comprehension. I will surely have to speak with the elders more. But now that I have finished reading it, I have something here for your [efforts].
+Mid.Frontiers.TalkToDalikor.Talk5:		She is currently helping the newly recruited in the Proving Grounds. We are desperate for her expertise in exotic languages. We believe she is the [only one] who can translate this quickly.
+Mid.Frontiers.TalkToDalikor.Talk6:		Will you help out the elders and the rest of Mularn by [delivering] these plans to her?
+Mid.Frontiers.TalkToDalikor.Talk7:		The elders have instructed me to give you these leggings as a sign of appreciation for doing these tasks for Mularn. I will present what you have given us to the council. Don't wander far {0}, I'm sure there is much more to do.
+Mid.Frontiers.TalkToDalikor.Whisper1:		Scryer Idora
+Mid.Frontiers.TalkToDalikor.Whisper2:		only one
+Mid.Frontiers.TalkToDalikor.Whisper3:		delivering
+Mid.Frontiers.TalkToDalikor.Whisper4:		efforts
+Mid.Frontiers.TalkToDalikor.Whisper5:		abort
+Mid.Frontiers.TalkToIdora.Talk1:		Welcome to the Proving Grounds {0}. I am Idora, a shadowblade by profession, but a scryer by hobby. How may I help you today?
+Mid.Frontiers.TalkToIdora.Talk2:		Ah, yes, I am now [done] with the translation.
+Mid.Frontiers.TalkToIdora.Talk3:		Wait a minute... I'm almost finished.
+Mid.Frontiers.TalkToIdora.Talk4:		Here you are my intreprid young traveler. It has all been translated now. Take it back to Dalikor. I hope I was able to help today. Come back and visit me soon!"
+Mid.Frontiers.TalkToIdora.Talk5:		Oh and take this horse ticket and give it to Vorgar at Svasud Faste he will bring you back home safely.
+Mid.Frontiers.TalkToIdora.Whisper1:		done
+Mid.Frontiers.TalkToNjiedi.Talk1:		Greetings my friend. How may I help you today?
