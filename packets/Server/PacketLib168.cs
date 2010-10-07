@@ -1360,6 +1360,22 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
+		public virtual void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, DataQuest quest)
+		{
+		}
+
+		public virtual void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DataQuest quest)
+		{
+		}
+
+		protected virtual void SendQuestWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest, bool offer)
+		{
+		}
+
+		protected virtual void SendQuestWindow(GameNPC questNPC, GamePlayer player, DataQuest quest, bool offer)
+		{
+		}
+
 		// i'm reusing the questsubscribe command for quest abort since its 99% the same, only different event dets fired
 		// data 3 defines wether it's subscribe or abort
 		public virtual void SendQuestSubscribeCommand(GameNPC invitingNPC, ushort questid, string inviteMessage)
@@ -3632,11 +3648,6 @@ namespace DOL.GS.PacketHandler
 		private byte WarlockChamberEffectId(GameSpellEffect effect)
 		{
 			return 0; // ??
-		}
-
-		protected virtual void SendQuestWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest,
-		                                       bool offer)
-		{
 		}
 
 		protected virtual void SendQuestPacket(AbstractQuest quest, int index)

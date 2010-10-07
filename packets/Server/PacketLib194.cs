@@ -34,6 +34,78 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+
+		public override void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, DataQuest quest)
+		{
+			SendQuestWindow(questNPC, player, quest, true);
+		}
+
+		public override void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DataQuest quest)
+		{
+			SendQuestWindow(questNPC, player, quest, false);
+		}
+
+		protected override void SendQuestWindow(GameNPC questNPC, GamePlayer player, DataQuest quest, bool offer)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog));
+			ushort QuestID = quest.ClientQuestID;
+			pak.WriteShort((offer) ? (byte)0x22 : (byte)0x21); // Dialog
+			pak.WriteShort(QuestID);
+			pak.WriteShort((ushort)questNPC.ObjectID);
+			pak.WriteByte(0x00); // unknown
+			pak.WriteByte(0x00); // unknown
+			pak.WriteByte(0x00); // unknown
+			pak.WriteByte(0x00); // unknown
+			pak.WriteByte((offer) ? (byte)0x02 : (byte)0x01); // Accept/Decline or Finish/Not Yet
+			pak.WriteByte(0x01); // Wrap
+			pak.WritePascalString(quest.Name);
+
+			String personalizedSummary = BehaviourUtils.GetPersonalizedMessage(quest.Description, player);
+			if (personalizedSummary.Length > 255)
+			{
+				pak.WritePascalString(personalizedSummary.Substring(0, 255)); // Summary is max 255 bytes !
+			}
+			else
+			{
+				pak.WritePascalString(personalizedSummary);
+			}
+
+			if (offer)
+			{
+				//String personalizedStory = BehaviourUtils.GetPersonalizedMessage(quest.Story, player);
+				pak.WriteShort((ushort)quest.Story.Length);
+				pak.WriteStringBytes(quest.Story);
+			}
+			else
+			{
+				pak.WriteShort((ushort)quest.FinishText.Length);
+				pak.WriteStringBytes(quest.FinishText);
+			}
+			pak.WriteShort(QuestID);
+			pak.WriteByte((byte)quest.StepTexts.Count); // #goals count
+			foreach (string text in quest.StepTexts)
+			{
+				pak.WritePascalString(String.Format("{0}\r", text));
+			}
+			pak.WriteInt((uint)(0));
+			//	pak.WriteByte((byte)quest.Level);
+			//	pak.WriteByte((byte)quest.Rewards.MoneyPercent);
+			pak.WriteByte((byte)0);
+			pak.WriteByte((byte)quest.FinalRewards.Count);
+			foreach (ItemTemplate reward in quest.FinalRewards)
+			{
+				WriteTemplateData(pak, reward, 1);
+			}
+			pak.WriteByte((byte)quest.NumOptionalRewardsChoice);
+			pak.WriteByte((byte)quest.OptionalRewards.Count);
+			foreach (ItemTemplate reward in quest.OptionalRewards)
+			{
+				WriteTemplateData(pak, reward, 1);
+			}
+			SendTCP(pak);
+		}
+
+
 		protected override void SendQuestWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest,	bool offer)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog));
