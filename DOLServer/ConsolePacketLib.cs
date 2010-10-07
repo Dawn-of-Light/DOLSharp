@@ -125,6 +125,8 @@ namespace DOLGameServerConsole
 		public void SendQuestSubscribeCommand(GameNPC invitingNPC, ushort questid, string inviteMessage) { }
 		public void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest) { }
 		public void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest) { }
+		public void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, DataQuest quest) { }
+		public void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DataQuest quest) { }
 		public void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage) { }
 		public void SendGroupWindowUpdate() { }
 		public void SendGroupMemberUpdate(bool updateIcons, GameLiving living) { }

@@ -32,7 +32,9 @@ namespace DOL.GS.Quests.Hibernia
 {
 	public class SearchForKnowledge : RewardQuest
 	{
-        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.QuestTitle");
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.QuestTitle");
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 5;
 

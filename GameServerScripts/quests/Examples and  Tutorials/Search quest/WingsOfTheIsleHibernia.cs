@@ -70,6 +70,8 @@ namespace DOL.GS.Quests.Hibernia
 
 	public class WingsOfTheIsleHibernia : RewardQuest
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/* Declare the variables we need inside our quest.
 		 * You can declare static variables here, which will be available in 
 		 * ALL instance of your quest and should be initialized ONLY ONCE inside

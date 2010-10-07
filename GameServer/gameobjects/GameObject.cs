@@ -924,6 +924,14 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Get a preloaded list of all data quests
+		/// </summary>
+		public static IList<DBDataQuest> DataQuestCache
+		{
+			get { return m_dataQuestCache; }
+		}
+
+		/// <summary>
 		/// Load any data driven quests for this object
 		/// </summary>
 		public void LoadDataQuests()
@@ -940,6 +948,7 @@ namespace DOL.GS
 				if (quest.StartRegionID == CurrentRegionID && quest.StartName == Name)
 				{
 					DataQuest dq = new DataQuest(quest);
+					dq.StartObject = this;
 					AddDataQuest(dq);
 				}
 			}
