@@ -29,11 +29,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Behaviour;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 
 /* I suggest you declare yourself some namespaces for your quests
@@ -270,8 +270,8 @@ namespace DOL.GS.Quests
 
 			if (location.Name != null)
 			{
-				m_questPlayer.Out.SendMessage(target.Name + " is being teleported to " + location.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
+                m_questPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "BaseQuest.TeleportTo.Text1", target.Name, location.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
 
 		}
 

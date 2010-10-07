@@ -217,16 +217,6 @@ PlayerPositionUpdateHandler.FallPercent:		You take {0}% of your max hits in dama
 PlayerPositionUpdateHandler.SafeFall:			The damage was lessened by your Safe Fall ability!
 PlayerPositionUpdateHandler.UnknownZone:		Unknown zone, moving to bind point.
 
-# QUESTS
-# /Atlantis
-# /ArtifactQuest
-ArtifactQuest.GiveItem.BackpackFull:			Your backpack is full, please make room and try again.
-
-# /ArtifactTurnInQuest
-ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artifact Scholar
-ArtifactTurnInQuest.Init.ArtifactScholarFemale:		Artifact Scholar
-ArtifactTurnInQuest.FinishQuest.Completed:		You have completed the {0} quest!
-
 # REALMABILITIES
 # /Handlers
 # /DashingDefenseAbility
