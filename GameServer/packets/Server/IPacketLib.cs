@@ -560,6 +560,8 @@ namespace DOL.GS.PacketHandler
 		void SendGuildInviteCommand(GamePlayer invitingPlayer, string inviteMessage);
 		void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest);
 		void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest);
+		void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, DataQuest quest);
+		void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DataQuest quest);
 		void SendQuestSubscribeCommand(GameNPC invitingNPC, ushort questid, string inviteMessage);
 		void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage);
 		void SendGroupWindowUpdate();
