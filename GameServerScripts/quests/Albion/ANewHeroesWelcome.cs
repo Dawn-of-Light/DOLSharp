@@ -32,7 +32,9 @@ namespace DOL.GS.Quests.Albion
 {
 	public class ANewHeroesWelcome : RewardQuest
 	{
-        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.QuestTitle");
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.QuestTitle");
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 5;
 

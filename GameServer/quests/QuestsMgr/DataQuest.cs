@@ -112,6 +112,12 @@ namespace DOL.GS.Quests
 		protected IDataQuestStep m_customQuestStep = null;
 
 		/// <summary>
+		/// In order to avoid conflicts with scripted quests data quest ID's are added to this number when sending a quest ID to the client
+		/// </summary>
+		public const ushort DATAQUEST_CLIENTOFFSET = 32767;
+
+
+		/// <summary>
 		/// How does this quest start
 		/// </summary>
 		public enum eStartType : byte
@@ -121,7 +127,7 @@ namespace DOL.GS.Quests
 			AutoStart = 2,			// Standard quest is auto started simply by interacting with start object
 			KillComplete = 3,		// Killing the Start living grants and finished the quest, similar to One Time Drops
 			InteractComplete = 4,	// Interacting with start object grants and finishes the quest
-			RewardQuest = 200,		// A reward quest, where reward dialog is given to player on quest offer and complete.  NOT SUPPORTED YET
+			RewardQuest = 200,		// A reward quest, where reward dialog is given to player on quest offer and complete.  
 			Unknown = 255
 		}
 
@@ -136,7 +142,7 @@ namespace DOL.GS.Quests
 			Deliver = 2,			// Deliver an item to the target to advance the quest
 			DeliverFinish = 3,		// Deliver an item to the target to finish the quest
 			Interact = 4,			// Interact with the target to advance the step
-			InteractFinish = 5,		// Interact with the target to finish the quest
+			InteractFinish = 5,		// Interact with the target to finish the quest.  This is required to end a RewardQuest
 			Whisper = 6,			// Whisper to the target to advance the quest
 			WhisperFinish = 7,		// Whisper to the target to finish the quest
 			Search = 8,				// Search in a specified location
@@ -157,9 +163,10 @@ namespace DOL.GS.Quests
 		protected List<string> m_collectItems = new List<string>();
 		protected List<long> m_rewardXPs = new List<long>();
 		protected List<long> m_rewardMoneys = new List<long>();
-		byte m_numOptionalRewards = 0;
-		protected List<string> m_optionalRewards = new List<string>();
-		protected List<string> m_finalRewards = new List<string>();
+		byte m_numOptionalRewardsChoice = 1;
+		protected List<ItemTemplate> m_optionalRewards = new List<ItemTemplate>();
+		protected List<ItemTemplate> m_optionalRewardChoice = new List<ItemTemplate>();
+		protected List<ItemTemplate> m_finalRewards = new List<ItemTemplate>();
 		protected List<string> m_questDependencies = new List<string>();
 		protected List<byte> m_allowedClasses = new List<byte>();
 		string classType = "";
@@ -222,6 +229,14 @@ namespace DOL.GS.Quests
 
 			ParseQuestData();
 		}
+
+		[ScriptLoadedEvent]
+		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
+		{
+			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(RewardQuestNotify));
+			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(RewardQuestNotify));
+		}
+
 
 		#endregion Construction
 
@@ -379,11 +394,19 @@ namespace DOL.GS.Quests
 				lastParse = m_dataQuest.OptionalRewardItemTemplates;
 				if (string.IsNullOrEmpty(lastParse) == false)
 				{
-					m_numOptionalRewards = Convert.ToByte(lastParse.Substring(0, 1));
+					m_numOptionalRewardsChoice = Convert.ToByte(lastParse.Substring(0, 1));
 					parse1 = lastParse.Substring(1).Split('|');
 					foreach (string str in parse1)
 					{
-						m_optionalRewards.Add(str);
+						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(str);
+						if (item != null)
+						{
+							m_optionalRewards.Add(item);
+						}
+						else
+						{
+							log.ErrorFormat("DataQuest: Optional reward ItemTemplate not found: {0}", str);
+						}
 					}
 				}
 
@@ -393,7 +416,15 @@ namespace DOL.GS.Quests
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
 					{
-						m_finalRewards.Add(str);
+						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(str);
+						if (item != null)
+						{
+							m_finalRewards.Add(item);
+						}
+						else
+						{
+							log.ErrorFormat("DataQuest: Final reward ItemTemplate not found: {0}", str);
+						}
 					}
 				}
 
@@ -463,24 +494,45 @@ namespace DOL.GS.Quests
 		public virtual GameObject StartObject
 		{
 			get { return m_startObject; }
+			set { m_startObject = value; }
 		}
-
-
-		/// <summary>
-		/// List of optional rewards for this quest
-		/// </summary>
-		public virtual List<string> OptionalRewards
-		{
-			get { return m_optionalRewards; }
-		}
-
 
 		/// <summary>
 		/// List of final rewards for this quest
 		/// </summary>
-		public virtual List<string> FinalRewards
+		public virtual List<ItemTemplate> FinalRewards
 		{
 			get { return m_finalRewards; }
+		}
+
+		/// <summary>
+		/// How many optional items can the player choose
+		/// </summary>
+		public virtual byte NumOptionalRewardsChoice
+		{
+			get { return m_numOptionalRewardsChoice; }
+			set { m_numOptionalRewardsChoice = value; }
+		}
+
+		/// <summary>
+		/// List of optional rewards for this quest
+		/// </summary>
+		public virtual List<ItemTemplate> OptionalRewards
+		{
+			get { return m_optionalRewards; }
+		}
+
+		public virtual List<ItemTemplate> OptionalRewardsChoice
+		{
+			get { return m_optionalRewardChoice; }
+		}
+
+		/// <summary>
+		/// Final text to display to player when quest is finished
+		/// </summary>
+		public virtual string FinishText
+		{
+			get { return m_dataQuest.FinishText; }
 		}
 
 		/// <summary>
@@ -509,6 +561,15 @@ namespace DOL.GS.Quests
 		}
 
 		/// <summary>
+		/// Unique quest ID to send to the client
+		/// </summary>
+		public virtual ushort ClientQuestID
+		{
+			get { return (ushort)(m_dataQuest.ID + DATAQUEST_CLIENTOFFSET); }
+		}
+
+
+		/// <summary>
 		/// Minimum level this quest can be done
 		/// </summary>
 		public override int Level
@@ -523,6 +584,14 @@ namespace DOL.GS.Quests
 		public virtual int MaxLevel
 		{
 			get { return m_dataQuest.MaxLevel; }
+		}
+
+		/// <summary>
+		/// Text of every step in this quest
+		/// </summary>
+		public virtual List<string> StepTexts
+		{
+			get { return m_stepTexts; }
 		}
 
 
@@ -572,6 +641,24 @@ namespace DOL.GS.Quests
 				else
 				{
 					return StepText;
+				}
+			}
+		}
+
+		/// <summary>
+		/// The Story to display if this is a Reward Quest
+		/// </summary>
+		public virtual string Story
+		{
+			get
+			{
+				if (m_sourceTexts.Count > 0)
+				{
+					return m_sourceTexts[0];
+				}
+				else
+				{
+					return "SourceTexts[0] undefined!";
 				}
 			}
 		}
@@ -630,6 +717,28 @@ namespace DOL.GS.Quests
 		}
 
 		/// <summary>
+		/// Static version used for reward quest accepts
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="player"></param>
+		/// <param name="create"></param>
+		/// <returns></returns>
+		protected static CharacterXDataQuest GetCharacterQuest(int id, GamePlayer player, bool create)
+		{
+			CharacterXDataQuest charQuest = GameServer.Database.SelectObject<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(player.InternalID) + "' AND DataQuestID = " + id);
+
+			if (charQuest == null && create)
+			{
+				charQuest = new CharacterXDataQuest(player.InternalID, id);
+				charQuest.Count = 0;
+				charQuest.Step = 0;
+				GameServer.Database.AddObject(charQuest);
+			}
+
+			return charQuest;
+		}
+
+		/// <summary>
 		/// Can this player do this quest
 		/// </summary>
 		/// <param name="player"></param>
@@ -647,7 +756,7 @@ namespace DOL.GS.Quests
 				}
 			}
 
-			if (ExecuteCustomQuestStep(player, 0, eStepCheckType.Offer) == false)
+			if (ExecuteCustomQuestStep(player, 0, eStepCheckType.Qualification) == false)
 				return false;
 
 
@@ -952,6 +1061,11 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
+					if (m_rewardMoneys.Count == 0)
+					{
+						return 0;
+					}
+
 					return m_rewardMoneys[Step - 1];
 				}
 				catch (Exception ex)
@@ -973,6 +1087,11 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
+					if (m_rewardXPs.Count == 0)
+					{
+						return 0;
+					}
+
 					return m_rewardXPs[Step - 1];
 				}
 				catch (Exception ex)
@@ -1229,11 +1348,71 @@ namespace DOL.GS.Quests
 					return;
 				}
 
+				// Reward Quest optional items are chosen
+				if (e == GamePlayerEvent.QuestRewardChosen)
+				{
+					QuestRewardChosenEventArgs rewardArgs = args as QuestRewardChosenEventArgs;
+					if (rewardArgs == null)
+						return;
+
+					// Check if this particular quest has been finished.
+
+					if (ClientQuestID != rewardArgs.QuestID)
+						return;
+
+					for (int reward = 0; reward < rewardArgs.CountChosen; ++reward)
+					{
+						m_optionalRewardChoice.Add(OptionalRewards[rewardArgs.ItemsChosen[reward]]);
+					}
+
+					if (NumOptionalRewardsChoice > 0 && rewardArgs.CountChosen <= 0)
+					{
+						QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+						return;
+					}
+
+					FinishQuest(null, false);
+					return;
+				}
+
 
 			}
 			catch (Exception ex)
 			{
 				log.Error("DataQuest Notify Error", ex);
+			}
+		}
+
+		public static void RewardQuestNotify(DOLEvent e, object sender, EventArgs args)
+		{
+			// Reward Quest accept
+			if (e == GamePlayerEvent.AcceptQuest)
+			{
+				QuestEventArgs qargs = args as QuestEventArgs;
+				if (qargs == null)
+					return;
+
+				GamePlayer player = qargs.Player;
+				GameLiving giver = qargs.Source;
+
+				foreach (DBDataQuest quest in GameObject.DataQuestCache)
+				{
+					if ((quest.ID + DATAQUEST_CLIENTOFFSET) == qargs.QuestID)
+					{
+						CharacterXDataQuest charQuest = GetCharacterQuest(quest.ID, player, true);
+						DataQuest dq = new DataQuest(player, giver, quest, charQuest);
+						dq.Step = 1;
+						player.AddQuest(dq);
+						if (giver is GameNPC)
+						{
+							player.Out.SendNPCsQuestEffect(giver as GameNPC, (giver as GameNPC).ShowQuestIndicator(player));
+						}
+						player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
+						break;
+					}
+				}
+
+				return;
 			}
 		}
 
@@ -1274,9 +1453,8 @@ namespace DOL.GS.Quests
 								{
 									if (player.Inventory.IsSlotsFree(m_finalRewards.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 									{
-										foreach (string idnb in m_finalRewards)
+										foreach (ItemTemplate item in m_finalRewards)
 										{
-											ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
 											if (item != null)
 											{
 												GiveItem((obj is GameLiving ? obj as GameLiving : null), player, item, false);
@@ -1348,8 +1526,23 @@ namespace DOL.GS.Quests
 					return;
 				}
 
-				// Standard offer quest dialog
-				SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				// Send offer quest dialog
+				if (StartType == eStartType.RewardQuest)
+				{
+					GameNPC offerNPC = obj as GameNPC;
+					if (offerNPC != null)
+					{
+						// Note: If the offer is handled by the custom step then it should return false to prevent a double offer
+						if (ExecuteCustomQuestStep(player, 0, eStepCheckType.Offer))
+						{
+							player.Out.SendQuestOfferWindow(offerNPC, player, this);
+						}
+					}
+				}
+				else
+				{
+					SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
 			}
 		}
 
@@ -1447,7 +1640,26 @@ namespace DOL.GS.Quests
 
 					case eStepType.InteractFinish:
 						{
-							FinishQuest(obj);
+							if (StartType == eStartType.RewardQuest)
+							{
+								GameNPC finishNPC = obj as GameNPC;
+								if (finishNPC != null)
+								{
+									// Custom step can modify rewards here.  Should return false if it sends the reward window
+									if (ExecuteCustomQuestStep(player, 0, eStepCheckType.Finish))
+									{
+										player.Out.SendQuestRewardWindow(finishNPC, player, this);
+									}
+								}
+								else
+								{
+									log.ErrorFormat("DataQuest Finish is RewardQuest but object {0} is not an NPC!", obj.Name);
+								}
+							}
+							else
+							{
+								FinishQuest(obj, true);
+							}
 						}
 						break;
 
@@ -1508,7 +1720,7 @@ namespace DOL.GS.Quests
 
 						case eStepType.DeliverFinish:
 							{
-								FinishQuest(obj);
+								FinishQuest(obj, true);
 							}
 							break;
 					}
@@ -1573,7 +1785,7 @@ namespace DOL.GS.Quests
 
 					case eStepType.WhisperFinish:
 						{
-							FinishQuest(obj);
+							FinishQuest(obj, true);
 						}
 						break;
 				}
@@ -1634,9 +1846,8 @@ namespace DOL.GS.Quests
 									{
 										if (player.Inventory.IsSlotsFree(m_finalRewards.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 										{
-											foreach (string idnb in m_finalRewards)
+											foreach (ItemTemplate item in m_finalRewards)
 											{
-												ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
 												if (item != null)
 												{
 													GiveItem(dying, player, item, false);
@@ -1725,7 +1936,7 @@ namespace DOL.GS.Quests
 
 					case eStepType.KillFinish:
 						{
-							FinishQuest(living);
+							FinishQuest(living, true);
 						}
 						break;
 				}
@@ -1741,66 +1952,42 @@ namespace DOL.GS.Quests
 
 		public override void FinishQuest()
 		{
-			FinishQuest(null);
+			FinishQuest(null, true);
 		}
 
 
 		/// <summary>
 		/// Finish the quest and update the player quest list
 		/// </summary>
-		public virtual void FinishQuest(GameObject obj)
+		public virtual void FinishQuest(GameObject obj, bool checkCustomStep)
 		{
 			if (m_questPlayer == null || m_charQuest == null || m_charQuest.IsValid == false)
 				return;
 
 			int lastStep = Step;
 
-			if (ExecuteCustomQuestStep(QuestPlayer, Step, eStepCheckType.Finish) == false)
+			if (checkCustomStep && ExecuteCustomQuestStep(QuestPlayer, Step, eStepCheckType.Finish) == false)
 				return;
 
 			// try rewards first
 
 			lock (m_questPlayer.Inventory)
 			{
-				if (m_questPlayer.Inventory.IsSlotsFree(m_finalRewards.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (m_questPlayer.Inventory.IsSlotsFree(m_finalRewards.Count + m_optionalRewardChoice.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
-					foreach (string idnb in m_finalRewards)
+					foreach (ItemTemplate item in m_finalRewards)
 					{
-						string parsed = ParseItemString(idnb, m_questPlayer);
-
-						if (parsed.EndsWith("%"))
+						if (item != null)
 						{
-							// multiple objects, need to check free slots again before giving items
-
-							IList<ItemTemplate> items = GameServer.Database.SelectObjects<ItemTemplate>("id_nb like '" + parsed.Replace(";", "") + "'");
-
-							if (items.Count > 0 && items.Count <= 10) // arbitrary limit of 10
-							{
-								if (m_questPlayer.Inventory.IsSlotsFree(items.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-								{
-									foreach (ItemTemplate item in items)
-									{
-										GiveItem(m_questPlayer, item);
-									}
-								}
-								else
-								{
-									SendMessage(m_questPlayer, "Your inventory does not have enough space to finish this quest!", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									return;
-								}
-							}
-							else
-							{
-								log.ErrorFormat("DataQuest: Reward item count incorrect, {0} items returned for quest {1}. where: {2}", items.Count, ID, parsed);
-							}
+							GiveItem(m_questPlayer, item);
 						}
-						else
+					}
+
+					foreach (ItemTemplate item in m_optionalRewardChoice)
+					{
+						if (item != null)
 						{
-							ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
-							if (item != null)
-							{
-								GiveItem(m_questPlayer, item);
-							}
+							GiveItem(m_questPlayer, item);
 						}
 					}
 
@@ -1857,9 +2044,13 @@ namespace DOL.GS.Quests
 
 			m_questPlayer.Out.SendQuestListUpdate();
 
-			if (m_dataQuest.FinishText != null && m_dataQuest.FinishText != "")
+			if (StartType == eStartType.RewardQuest)
 			{
-				if (obj.Realm == eRealm.None)
+				m_questPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
+			}
+			else if (m_dataQuest.FinishText != null && m_dataQuest.FinishText != "")
+			{
+				if (obj != null && obj.Realm == eRealm.None)
 				{
 					// mobs and other non realm objects send chat text and not popup text.
 					SendMessage(m_questPlayer, m_dataQuest.FinishText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
