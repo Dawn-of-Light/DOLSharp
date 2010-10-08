@@ -1,0 +1,50 @@
+Mid.StolenEggs.CheckPlayerAbortQuest.Text1:	Das ist gut, dann geht und beendet Euren Auftrag!
+Mid.StolenEggs.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder anfangen.
+Mid.StolenEggs.CheckPlayerAcceptQuest.Text1:	Auch gut, falls Ihr Eure Meinung ändert, wisst Ihr, wo ich mich findet!
+Mid.StolenEggs.CheckPlayerAcceptQuest.Text2:	Danke. Sprecht mit Hyndla, der Wikingerin, in der Nähe der Jordheimtore. Passanten berichteten, sie hätten seltsame Kreaturen an den Straßenrändern gesehen, als sie dort entlang reisten. Fragt sie nach dem genauen Gebiet. Nochmals Dank, {0}.
+Mid.StolenEggs.Descriptiont.Text1:		Sucht Hyndla, die Wikingerin nahe der Tore von Jordheim. Fragt sie, ob ihr verdächtiges [Askefruer]-Verhalten auffiel oder zu Ohren kam.
+Mid.StolenEggs.Descriptiont.Text2:		Geht gen Haggerfel, dann nordnordöstlich entlang der Straße von Haggerfel, bis Ihr drei Baumstümpfe seht. Sucht nach der Gruppe mit den vier Bäumen, denn dort hält sich die Kreatur versteckt.
+Mid.StolenEggs.Descriptiont.Text3:		Besiegt den Askefruer-Ausbilder!
+Mid.StolenEggs.Descriptiont.Text4:		Ihr könnt nun mit dem Greifenjungen interagieren. Um dies zu tun, klickt rechts mit der Maus auf es. Falls Ihr das Greifenjunge verliert, kehrt zurück zu Greifenabrichter Njiedi.
+Mid.StolenEggs.Descriptiont.Text5:		Bringt Greifenabrichter Njiedi nahe der Tore von Jordheim sein Junges zurück. Gebt ihm die Peitsche, wenn er fragt. Falls das Junge verloren gehen sollte, setzt Euren Weg zu Njiedi fort. Das Junge wird den Heimweg allein finden.
+Mid.StolenEggs.Descriptiont.Text6:		Sprecht mit Greifenabrichter Njiedi. Fragt ihn nach seiner [Dankbarkeit] für Eure Bemühungen.
+Mid.StolenEggs.Descriptiont.Text7:		Kehrt zurück zu Dalikor an den Wachturm nahe Mularn. Sagt ihm, dass Ihr Njiedis Greifenjunges [erfolgreich] zurückgebracht habt.
+Mid.StolenEggs.FinishQuest.Text1:		Ihr erhaltet {0} als Belohnung.
+Mid.StolenEggs.InitGrifflet.NPCGrifflet:	Greifenjunges
+Mid.StolenEggs.Notify.Text1:			{0} sagt: "Besiegt von einer landgebundenen Kreatur! Wie kann das nur sein?"
+Mid.StolenEggs.Notify.Text2:			Ihr erschlagt die Kreatur und aus der Hand des Askefruer-Ausbilders fällt eine Peitsche.
+Mid.StolenEggs.Notify.Text3:			Eine Peitsche? Das ist frevelhaft! Ich sehe, dass sie versucht haben ihn zu foltern. Diese Askefruer sind wahrlich boshafte Kreaturen. Ich hoffe, Ihr rottet sie eines Tages aus, {0}. Hier, nehmt dies als ein Zeichen meiner [Dankbarkeit].
+Mid.StolenEggs.NPCAskefruerTrainer:		Askefruer-Ausbilder
+Mid.StolenEggs.NPCGriffinHandlerNjiedi:		Greifenabrichter Njiedi
+Mid.StolenEggs.NPCVikingHyndla:			Hyndla die Wikingerin
+Mid.StolenEggs.QuestTitle:			Gestohlene Eier
+Mid.StolenEggs.TalkToDalikor.AbortQuest:	Wollt Ihr diese Quest wirklich abbrechen?
+Mid.StolenEggs.TalkToDalikor.OfferQuest:	Werdet Ihr herausfinden, wo das Greifenei geblieben ist? [Erfahrungsstufe 4]
+Mid.StolenEggs.TalkToDalikor.Talk1:		Willkommen, mein Freund. Wir scheinen vor einer neuen Askefruersituation zu stehen. Die Ältesten wollen die Wachen nicht zur Unterstützung gehen lassen, daher fällt die Aufgabe erneut an Euch. Lasst mich die Lage [erklären].
+Mid.StolenEggs.TalkToDalikor.Talk2:		Ah, Rekrut, Ihr seid zurückgekehrt. Ich nehme an, Eure Mission war [erfolgreich]?
+Mid.StolenEggs.TalkToDalikor.Talk3:		Vor über einem Tag überprüfte Njiedi das frische Gelege seines Greifpaares. Er hoffte, einige Starke in der Gruppe zu haben, als er feststellte, dass eines der Eier [weg] war.
+Mid.StolenEggs.TalkToDalikor.Talk4:		Er war nicht sofort alarmiert, da Eier manchmal die Gewohnheit haben, aus dem Nest zu rollen. Er suchte im Horst, aber er konnte das vermisste Ei nicht finden. Als die Eltern zum Brutplatz zurückkamen, geriet das Weibchen in [Panik].
+Mid.StolenEggs.TalkToDalikor.Talk5:		Sie war es auch, die bemerkte, dass eines der Eier fehlte. Sie flog um den Brutplatz herum und konnte weder von Njiedi noch von ihrem Männchen beruhigt werden. Dann bemerkte Njiedi, dass ein kleiner Bereich des Nestes [herausgeschnitten] war.
+Mid.StolenEggs.TalkToDalikor.Talk6:		Die Öffnung war sehr klein und zu weit vom Nest entfernt, als dass sie durch Menschenwerk verursacht wurde. Er fand den herausgerissenen Teil eines Flügels in der Öffnung. Als Njiedi ihn mir brachte erkannte ich, dass er von einem [Askefruer] stammt.
+Mid.StolenEggs.TalkToDalikor.Talk7:		Ich bin zu beschäftigt, um zu klären, wo der Askefreuer das Ei entnahm, aber ich weiß, dass Njiedi und seine Greifvögel sehnsüchtig auf die Rückkehr des Eies warten. Falls das Kleine zu lange fernbleibt, wird es sterben. Werdet Ihr sie [unterstützen]?
+Mid.StolenEggs.TalkToDalikor.Talk8:		Ausgezeichnet! Ich hörte, dass das Küken bereits geschlüpft sei! Ich hoffe, das arme Ding wurde nicht schwer verletzt. Nun ist es wieder in liebevoller Obhut seiner Eltern und kann emotional und physisch genesen. Ihr habt Euch etwas [verdient].
+Mid.StolenEggs.TalkToDalikor.Talk9:		Hier, bitte mein Freund. Ich weiß, dass es ist nicht viel ist, aber eine kleine Münze tut niemandem weh. Es bedeutet Njiedi und mir sehr viel, dass Ihr in dieser Situation so selbstlos geholfen habt. Unser Greifenjunges wäre ohne Euch gestorben. Danke.
+Mid.StolenEggs.TalkToDalikor.Whisper1:		erklären
+Mid.StolenEggs.TalkToDalikor.Whisper2:		weg
+Mid.StolenEggs.TalkToDalikor.Whisper3:		Panik
+Mid.StolenEggs.TalkToDalikor.Whisper4:		herausgeschnitten
+Mid.StolenEggs.TalkToDalikor.Whisper5:		Askefruer
+Mid.StolenEggs.TalkToDalikor.Whisper6:		unterstützen
+Mid.StolenEggs.TalkToDalikor.Whisper7:		erfolgreich
+Mid.StolenEggs.TalkToDalikor.Whisper8:		verdient
+Mid.StolenEggs.TalkToDalikor.Whisper9:		abort
+Mid.StolenEggs.TalkToGrifflet.Talk1:		Das Greifenjunge summt zufrieden.
+Mid.StolenEggs.TalkToHyndla.Talk1:		Seid gegrüßt, {0} aus Midgard. Wie kann ich Euch zu Diensten sein?
+Mid.StolenEggs.TalkToHyndla.Talk2:		Dalikor muss Euch gesandt haben. Ja, ich habe kürzlich von einigen verdächtigen Aktivitäten nördlich von Haggerfel gehört. Passanten sahen eine rosafarbene Kreatur mit einer Art von Ei. Aber Njiedi kann seine verzweifelten [Greifen] nicht verlassen.
+Mid.StolenEggs.TalkToHyndla.Talk3:		Das mir genannte Gebiet war nicht klar umrissen, aber ich kann Euch ein allgemeines nennen. Reist zunächst gen Haggerfel. Dort angekommen, richtet Euch auf der Straße nordnordöstlich, vorbei an den zwei [Baumstümpfen], die zu Eurer Rechten liegen.
+Mid.StolenEggs.TalkToHyndla.Talk4:		Einfach die Straße geradeaus, weiter nordnordöstlich, seht Ihr eine Gruppe von vier sehr großen Pinien. Die rosa Kreatur wurde in der Nähe gesehen. Ich wünschte, ich könnte Euch mehr sagen. Viel Glück beim Finden, {0}.
+Mid.StolenEggs.TalkToHyndla.Whisper1:		Greifen
+Mid.StolenEggs.TalkToHyndla.Whisper2:		Baumstümpfen
+Mid.StolenEggs.TalkToNjiedi.Talk1:		Oh, danke {0}, dass Ihr das Greifenjunge zurückbringt. Ich weiß, dass seine Eltern erleichtert sind, dass es zurück ist. Wie habt Ihr es geschafft, es zurückzubringen? Haben die Askefruer etwas benutzt? Eine Kette oder Zaumzeug?
+Mid.StolenEggs.TalkToNjiedi.Talk2:		Es ist nicht viel, aber ich pflegte mich meinerzeit auf Abenteuer zu begeben. Ich bin sicher, Ihr werdet es gebrauchen können. Nun, ich denke ich sollte Dalikor bereichten, was geschehen ist.
+Mid.StolenEggs.TalkToNjiedi.Whisper1:		Dankbarkeit

@@ -37,7 +37,9 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
+
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
  *       DOL.GS.Quests.Midgard
@@ -72,7 +74,8 @@ namespace DOL.GS.Quests.Midgard
 		 * 
 		 */
 
-		protected const string questTitle = "Stolen Eggs";
+        protected static string questTitle = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.QuestTitle");
+
 		protected const int minimumLevel = 4;
 		protected const int maximumLevel = 4;
 
@@ -86,7 +89,6 @@ namespace DOL.GS.Quests.Midgard
 		private bool askefruerGriffinHandlerAttackStarted = false;
 
 		private static ItemTemplate trainerWhip = null;
-		private static ItemTemplate dustyOldMap = null;
 		private static ItemTemplate recruitsVest = null;
 		private static ItemTemplate recruitsQuiltedVest = null;
 
@@ -148,13 +150,13 @@ namespace DOL.GS.Quests.Midgard
 
 			dalikor = GetDalikor();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Viking Hyndla", eRealm.Midgard);
-			if (npcs.Length == 0)
+            GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCVikingHyndla"), eRealm.Midgard);
+            if (npcs.Length == 0)
 			{
 				hyndla = new GameNPC();
 				hyndla.Model = 9;
-				hyndla.Name = "Viking Hyndla";
-				if (log.IsWarnEnabled)
+                hyndla.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCVikingHyndla");
+                if (log.IsWarnEnabled)
 					log.Warn("Could not find " + hyndla.Name + ", creating ...");
 				hyndla.GuildName = "Part of " + questTitle + " Quest";
 				hyndla.Realm = eRealm.Midgard;
@@ -178,13 +180,14 @@ namespace DOL.GS.Quests.Midgard
 			else
 				hyndla = npcs[0];
 
-			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Griffin Handler Njiedi", eRealm.Midgard, typeof (GameStableMaster));
+            npcs = (GameNPC[])WorldMgr.GetObjectsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCGriffinHandlerNjiedi"), eRealm.Midgard, typeof(GameStableMaster));
+
 			if (npcs.Length == 0)
 			{
 				njiedi = new GameStableMaster();
 				njiedi.Model = 158;
-				njiedi.Name = "Griffin Handler Njiedi";
-				if (log.IsWarnEnabled)
+                njiedi.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCGriffinHandlerNjiedi");
+                if (log.IsWarnEnabled)
 					log.Warn("Could not find " + njiedi.Name + ", creating ...");
 				njiedi.GuildName = "Stable Master";
 				njiedi.Realm = eRealm.Midgard;
@@ -226,18 +229,19 @@ namespace DOL.GS.Quests.Midgard
 				njiedi = npcs[0] as GameStableMaster;
 			}
 
-			npcs = WorldMgr.GetNPCsByName("Askefruer Trainer", eRealm.None);
-			if (npcs.Length == 0)
+//			npcs = WorldMgr.GetNPCsByName("Askefruer Trainer", eRealm.None);
+            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCAskefruerTrainer"), eRealm.None);
+            if (npcs.Length == 0)
 			{
 				askefruerTrainer = new GameNPC();
 
-				askefruerTrainer.Name = "Askefruer Trainer";
-				askefruerTrainer.X = GameLocation.ConvertLocalXToGlobalX(54739, 100);
+                askefruerTrainer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCAskefruerTrainer");
+                askefruerTrainer.X = GameLocation.ConvertLocalXToGlobalX(54739, 100);
 				askefruerTrainer.Y = GameLocation.ConvertLocalYToGlobalY(18264, 100);
 				askefruerTrainer.Z = 5195;
 				askefruerTrainer.Heading = 79;
 				askefruerTrainer.Model = 678;
-				askefruerTrainer.GuildName = "Part of " + questTitle + " Quest";
+				//askefruerTrainer.GuildName = "Part of " + questTitle + " Quest";
 				askefruerTrainer.Realm = eRealm.None;
 				askefruerTrainer.CurrentRegionID = 100;
 				askefruerTrainer.Size = 49;
@@ -279,11 +283,7 @@ namespace DOL.GS.Quests.Midgard
 				trainerWhip.IsPickable = true;
 				trainerWhip.IsDropable = false;
 
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(trainerWhip);
+				GameServer.Database.AddObject(trainerWhip);
 			}
 
 			// item db check
@@ -328,11 +328,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsVest.Durability = 1000;
 				recruitsVest.MaxDurability = 1000;
 
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsVest);
+				GameServer.Database.AddObject(recruitsVest);
 			}
 
 			// item db check
@@ -373,11 +369,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsQuiltedVest.Durability = 1000;
 				recruitsQuiltedVest.MaxDurability = 1000;
 
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsQuiltedVest);
+				GameServer.Database.AddObject(recruitsQuiltedVest);
 			}
 
 			#endregion
@@ -475,30 +467,29 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (quest != null)
 				{
-					hyndla.SayTo(player, "Greetings to you Viking of Midgard. How may I be of service to you?");
-					hyndla.SayTo(player, "Dalikor must have sent you. Yes, I have recently heard of some suspicious activity north of Haggerfel. Passersby have reported seeing a pink colored creature with an egg of sorts. I have told Njiedi, but he is unable to leave his distraught [griffins].");
-				}
+                    hyndla.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToHyndla.Talk1", player.CharacterClass.Name));
+                    hyndla.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToHyndla.Talk2"));
+                }
 			}
 			else if (e == GameLivingEvent.WhisperReceive)
 			{
 				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 				if (quest != null)
 				{
-					switch (wArgs.Text)
-					{
-						case "griffins":
-							hyndla.SayTo(player, "The area location given to me was vague, but I can give you a general area. First travel towards Haggerfel. Once you reach it, head north-northeast on the road, past the two [tree stumps]. They will be on your right.");
-							break;
-						case "tree stumps":
-							hyndla.SayTo(player, "Just down the road, still heading north-northeast, you will see a group of four very tall pine trees. The pink creature was seen in that vicinity. I wish I could give you more, but that's all I have. Good luck in finding this thing Eeinken.");
-							if (quest.Step == 1)
-							{
-								quest.Step = 2;
-								quest.initGrifflet();
-								quest.grifflet.AddToWorld();
-							}
-							break;
-					}
+                    if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToHyndla.Whisper1"))
+                    {
+                        hyndla.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToHyndla.Talk3"));
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToHyndla.Whisper2"))
+                    {
+                        hyndla.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToHyndla.Talk4", player.Name));
+                        if (quest.Step == 1)
+                        {
+                            quest.Step = 2;
+                            quest.initGrifflet();
+                            quest.grifflet.AddToWorld();
+                        }
+                    }
 				}
 
 			}
@@ -520,8 +511,7 @@ namespace DOL.GS.Quests.Midgard
 				{
 					quest.askefruerGriffinHandlerAttackStarted = true;
 
-					SendSystemMessage(player, askefruerTrainer.GetName(0, true) + " says, \"You shall not take what is rightfully ours land-bound abomination!\"");
-					IOldAggressiveBrain aggroBrain = m_askefruerTrainer.Brain as IOldAggressiveBrain;
+                    IOldAggressiveBrain aggroBrain = m_askefruerTrainer.Brain as IOldAggressiveBrain;
 					if (aggroBrain != null)
 						aggroBrain.AddToAggroList(player, 70);
 
@@ -547,8 +537,8 @@ namespace DOL.GS.Quests.Midgard
 			grifflet = new GameNPC();
 
 			grifflet.Model = 1236;
-			grifflet.Name = "Grifflet";
-			grifflet.GuildName = "Part of " + m_questPlayer.GetName(0, false) + "'s " + questTitle + " Quest";
+            grifflet.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.InitGrifflet.NPCGrifflet");
+            //grifflet.GuildName = "Part of " + m_questPlayer.GetName(0, false) + "'s " + questTitle + " Quest";
 			grifflet.Flags ^= GameNPC.eFlags.PEACE;
 			grifflet.CurrentRegionID = askefruerTrainer.CurrentRegionID;
 			grifflet.Size = 20;
@@ -567,7 +557,7 @@ namespace DOL.GS.Quests.Midgard
 			//You don't have to store the created mob in the db if you don't want,
 			//it will be recreated each time it is not found, just comment the following
 			//line if you rather not modify your database
-			//dragonflyHatchling.SaveIntoDatabase();                            
+            //grifflet.SaveIntoDatabase();                            
 
 			GameEventMgr.AddHandler(grifflet, GameLivingEvent.Interact, new DOLEventHandler(TalkToGrifflet));
 
@@ -599,15 +589,15 @@ namespace DOL.GS.Quests.Midgard
 				if (quest == null)
 				{
 					//Player is not doing the quest...
-					dalikor.SayTo(player, "Welcome back my friend. We seem to have another Askefruer situation on our hands. The elders don't want to take the guards away from their stations to help, so the task has fallen to you again. Let me [explain] the situation.");
-					return;
+                    dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Talk1"));
+                    return;
 				}
 				else
 				{
 					if (quest.Step == 7)
 					{
-						dalikor.SayTo(player, "Ah, recruit, you've returned. I take it you were [successful] in your mission?");
-					}
+                        dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Talk2"));
+                    }
 					return;
 				}
 			}
@@ -618,49 +608,50 @@ namespace DOL.GS.Quests.Midgard
 				if (quest == null)
 				{
 					//Do some small talk :)
-					switch (wArgs.Text)
-					{
-						case "explain":
-							dalikor.SayTo(player, "About a day ago, Njiedi was monitoring the recent clutch that was layed by his mated pair of griffins. He is hoping to have a few strong riders out of the group when he noticed one of the eggs had gone [missing].");
-							break;
-						case "missing":
-							dalikor.SayTo(player, "He wasn't immediately alarmed, as sometimes eggs have a habit of rolling out of the nest. He looked around the hatchery but could not find the missing egg. When the parents of the clutch came in, the female went to the nest and started to [panic].");
-							break;
-						case "panic":
-							dalikor.SayTo(player, "She too noticed that one of the eggs was missing. She began to fly around the hatchery and could not be calmed by Njiedi or even her mate. That's when Njiedi noticed a small area of the netting around the hatchery was [cut].");
-							break;
-						case "cut":
-							dalikor.SayTo(player, "The opening was very small and it was too far away from the nest to be the work of a person. There was a piece of torn wing on the opening. When Njiedi brought it to me, I recognized it immediately as part of an [Askefruer] wing.");
-							break;
-						case "Askefruer":
-							dalikor.SayTo(player, "I am too busy dealing with the elders to find where this Askefruer has taken the egg, but I know Njiedi and his mated griffins are eager to have the egg returned. If it is out of the nest too long, the baby inside will die. Will you [assist] them?");
-							break;
-
-							//If the player offered his "help", we send the quest dialog now!
-						case "assist":
-							player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(StolenEggs)), "Will you find out where the griffin egg has gone?");
-							break;
-					}
+                    if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Whisper1"))
+                    {
+                        dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Talk3"));
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Whisper2"))
+                    {
+                        dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Talk4"));
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Whisper3"))
+                    {
+                        dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Talk5"));
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Whisper4"))
+                    {
+                        dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Talk6"));
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Whisper5"))
+                    {
+                        dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Talk7"));
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Whisper6"))
+                    {
+                        //If the player offered his "help", we send the quest dialog now!
+                        player.Out.SendQuestSubscribeCommand(dalikor, QuestMgr.GetIDForQuestType(typeof(StolenEggs)), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.OfferQuest"));
+                    }
 				}
 				else
 				{
-					switch (wArgs.Text)
-					{
-						case "successful":
-							dalikor.SayTo(player, "Excellent! I heard the egg had already hatched, amazing! I hope the poor thing wasn't hurt too badly. Now it is back in the loving care of its parents, so it should be able to heal emotionally and physically. But I think you [deserve] something.");
-							break;
-
-						case "deserve":
-							dalikor.SayTo(player, "Here you are my friend. I know it's not much, but a little coin in one's purse never hurts. It means a lot Njiedi, as well as me, that you have so selflessly helped in this situation. That little grifflet would have died without your help. Thank you.");
-							if (quest.Step == 7)
-							{
-								quest.FinishQuest();
-							}
-							break;
-						case "abort":
-							player.Out.SendCustomDialog("Do you really want to abort this quest, \nall items gained during quest will be lost?", new CustomDialogResponse(CheckPlayerAbortQuest));
-							break;
-					}
+                    if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Whisper7"))
+                    {
+						dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Talk8"));
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Whisper8"))
+                    {
+						dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Talk9"));
+						if (quest.Step == 7)
+						{
+							quest.FinishQuest();
+						}
+                    }
+                    else if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.Whisper9"))
+                    {
+						player.Out.SendCustomDialog(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToDalikor.AbortQuest"), new CustomDialogResponse(CheckPlayerAbortQuest));
+                    }
 				}
 			}
 		}
@@ -702,9 +693,9 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (quest != null && quest.grifflet == sender && quest.Step == 4)
 				{
-					SendSystemMessage(player, "The grifflet hums quitely.");
-
+                    SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToGrifflet.Talk1"));
 					quest.grifflet.MaxSpeedBase = player.MaxSpeedBase;
+                    quest.grifflet.Realm = eRealm.Midgard;
 					quest.grifflet.Follow(player, 30, 2000);
 					quest.Step = 5;
 					return;
@@ -738,7 +729,7 @@ namespace DOL.GS.Quests.Midgard
 				{
 					if (quest.Step == 5)
 					{
-						njiedi.SayTo(player, "Oh thank you Eeinken for bringing back the grifflet. I know his parents will be relieved he's returned safe and sound. How did you manage to get him back? Did the Askefruer use anything? A chain? A bridle?");
+                        njiedi.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToNjiedi.Talk1", player.Name));
 
 						if (quest.grifflet != null)
 						{
@@ -748,8 +739,8 @@ namespace DOL.GS.Quests.Midgard
 					}
 					else if (quest.Step == 6)
 					{
-						njiedi.SayTo(player, "I know this isn't much, but I used to do a bit of adventuring in my time. I'm sure you'll be able to use this. Now, I think you should return to Master Frederick and let him or her know what's going on.");
-						if (player.HasAbilityToUseItem(recruitsVest))
+                        njiedi.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToNjiedi.Talk2"));
+                        if (player.HasAbilityToUseItem(recruitsVest))
 							GiveItem(njiedi, player, recruitsVest);
 						else
 							GiveItem(njiedi, player, recruitsQuiltedVest);
@@ -764,20 +755,18 @@ namespace DOL.GS.Quests.Midgard
 				WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs) args;
 				if (quest != null)
 				{
-					switch (wArgs.Text)
-					{
-						case "appreciation":
-							SendReply(player, "I know this isn't much, but I used to do a bit of adventuring in my time. I'm sure you'll be able to use this. Now, I think you should return to Dalikor and let him know what's going on.");
-							if (quest.Step == 6)
-							{
-								if (player.HasAbilityToUseItem(recruitsVest))
-									GiveItem(njiedi, player, recruitsVest);
-								else
-									GiveItem(njiedi, player, recruitsQuiltedVest);
-								quest.Step = 7;
-							}
-							break;
-					}
+                    if (wArgs.Text == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToNjiedi.Whisper1"))
+                    {
+                        njiedi.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToNjiedi.Talk2"));
+                        if (quest.Step == 6)
+                        {
+                            if (player.HasAbilityToUseItem(recruitsVest))
+                                GiveItem(njiedi, player, recruitsVest);
+                            else
+                                GiveItem(njiedi, player, recruitsQuiltedVest);
+                            quest.Step = 7;
+                        }
+                    }
 				}
 			}
 		}
@@ -849,12 +838,12 @@ namespace DOL.GS.Quests.Midgard
 
 			if (response == 0x00)
 			{
-				SendSystemMessage(player, "Good, no go out there and finish your work!");
-			}
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.CheckPlayerAbortQuest.Text1"));
+            }
 			else
 			{
-				SendSystemMessage(player, "Aborting Quest " + questTitle + ". You can start over again if you want.");
-				quest.AbortQuest();
+                SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.CheckPlayerAbortQuest.Text2", questTitle));
+                quest.AbortQuest();
 			}
 		}
 
@@ -877,18 +866,17 @@ namespace DOL.GS.Quests.Midgard
 
 			if (response == 0x00)
 			{
-				SendReply(player, "Oh well, if you change your mind, please come back!");
-			}
+                dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.CheckPlayerAcceptQuest.Text1"));
+            }
 			else
 			{
 				//Check if we can add the quest!
 				if (!dalikor.GiveQuest(typeof (StolenEggs), player, 1))
 					return;
 
-				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-
-				SendReply(player, "Thank you Eeinken. I want you to speak with Viking Hyndla near the Jordheim gates. Several passersby have reported seeing strange creatures on the sides of the roads as they traveled here. Ask her if she can give you a specific location. Thank you again Eeinken.");
-			}
+                GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+                dalikor.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.CheckPlayerAcceptQuest.Text2", player.Name));
+            }
 		}
 
 		/* Now we set the quest name.
@@ -915,19 +903,19 @@ namespace DOL.GS.Quests.Midgard
 				switch (Step)
 				{
 					case 1:
-						return "[Step #1] Find Viking Hyndla near the gates of Jordheim. Ask her if she has seen or heard of any suspicious [Askefruer] behavior.";
-					case 2:
-						return "[Step #2] Head towards Haggerfel. Travel north-northeast down the road from Haggerfel until you see two tree stumps. Look for the four tree groves. That is where the creature is hiding.";
-					case 3:
-						return "[Step #3] Defeat the Askefruer trainer!";
-					case 4:
-						return "[Step #4] You may now interact with the grifflet. To interact with him, right click on him.";
-					case 5:
-						return "[Step #5] Take the grifflet back to Griffin Handler Njiedi near the gates of Jordheim. Hand him the whip when he asks. If the grifflet gets lost, proceed to Griffin Handler Njiedi. The grifflet will find his way home.";
-					case 6:
-						return "[Step #6] Speak with Griffin Handler Njiedi.";
-					case 7:
-						return "[Step #7] Return to Dalikor at the guard tower near Mularn. Tell him you [successfully] returned the grifflet to Njiedi.";
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.Descriptiont.Text1");
+                    case 2:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.Descriptiont.Text2");
+                    case 3:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.Descriptiont.Text3");
+                    case 4:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.Descriptiont.Text4");
+                    case 5:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.Descriptiont.Text5");
+                    case 6:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.Descriptiont.Text6");
+                    case 7:
+                        return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.Descriptiont.Text7");
 				}
 				return base.Description;
 			}
@@ -946,8 +934,9 @@ namespace DOL.GS.Quests.Midgard
 
 				if (gArgs.Target == askefruerTrainer)
 				{
-					SendSystemMessage("You slay the creature and pluck a whip from the Askefruer trainer's hands.");
-					GiveItem(gArgs.Target, player, trainerWhip);
+                    SendSystemMessage(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.Notify.Text1", askefruerTrainer.GetName(0, true)));
+                    SendSystemMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.Notify.Text2"));
+                    GiveItem(gArgs.Target, player, trainerWhip);
 					Step = 4;
 					return;
 				}
@@ -958,13 +947,12 @@ namespace DOL.GS.Quests.Midgard
 				GiveItemEventArgs gArgs = (GiveItemEventArgs) args;
 				if (gArgs.Target.Name == njiedi.Name && gArgs.Item.Id_nb == trainerWhip.Id_nb)
 				{
-					njiedi.SayTo(player, "A whip?! This is outrageous! I see they were just trying to torture him. These Askefruer are truly malicious creatures. I hope you wipe them out one day Eeinken. Here, take this as a sign of my [appreciation] for the return of the little one.");
-					RemoveItem(njiedi, player, trainerWhip);
+                    njiedi.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.Notify.Text3", player.Name));
+                    RemoveItem(njiedi, player, trainerWhip);
 					Step = 6;
 					return;
 				}
 			}
-
 		}
 
 		public override void AbortQuest()
@@ -972,7 +960,6 @@ namespace DOL.GS.Quests.Midgard
 			base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			RemoveItem(m_questPlayer, trainerWhip, false);
-			RemoveItem(m_questPlayer, dustyOldMap, false);
 
 			if (m_questPlayer.HasAbilityToUseItem(recruitsVest))
 				RemoveItem(m_questPlayer, recruitsVest, false);
@@ -984,17 +971,15 @@ namespace DOL.GS.Quests.Midgard
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}
 
-
 		public override void FinishQuest()
 		{
 			base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
 
 			//Give reward to player here ...              
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 507, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 7, Util.Random(50)), "You recieve {0} as a reward.");
+            m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 7, Util.Random(50)), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.FinishQuest.Text1"));
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}
-
 	}
 }
