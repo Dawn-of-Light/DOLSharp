@@ -297,9 +297,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 								break;
 							}
 						}
-
-						if (spell == null)
-							return 1;
+                        if (spell == null)
+                            return 1;
 
 						caption = spell.Name;
 						WriteSpellInfo(objectInfo, spell, spellLine, client);
@@ -774,13 +773,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 							IList allabilitys = client.Player.GetAllAbilities();
 							foreach (Ability checkab in allabilitys)
 							{
-								if (checkab.Name == abil.Name)
-								{
-									if (checkab.DelveInfo.Count > 0)
-										objectInfo.AddRange(checkab.DelveInfo);
-									else
-										objectInfo.Add("There is no special information.");
-								}
+                                if (checkab.Name == abil.Name)
+                                {
+                                    if (checkab.DelveInfo.Count > 0)
+                                        objectInfo.AddRange(checkab.DelveInfo);
+                                    else
+                                        objectInfo.Add("There is no special information.");
+
+
+                                }
 							}
 						}
 						break;
@@ -1038,9 +1039,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				// TODO: find last CL line index
 				#endregion
-				default:
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoInformation"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+                default:
+                    {
+                        //[StephenxPimentel]: we need to find a way to delve the spells/styles as
+                        //champion abilities here. Our Champion Ability support can't handle this atm though.
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoInformation"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return 1;
+                    }
 			}
 
 			if (objectInfo.Count > 0)
