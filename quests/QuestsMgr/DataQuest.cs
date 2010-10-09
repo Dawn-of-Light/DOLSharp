@@ -1348,7 +1348,7 @@ namespace DOL.GS.Quests
 					return;
 				}
 
-				// Reward Quest optional items are chosen
+				// Player is trying to finish a Reward Quest
 				if (e == GamePlayerEvent.QuestRewardChosen)
 				{
 					QuestRewardChosenEventArgs rewardArgs = args as QuestRewardChosenEventArgs;
@@ -1359,6 +1359,8 @@ namespace DOL.GS.Quests
 
 					if (ClientQuestID != rewardArgs.QuestID)
 						return;
+
+					m_optionalRewardChoice.Clear();
 
 					for (int reward = 0; reward < rewardArgs.CountChosen; ++reward)
 					{
