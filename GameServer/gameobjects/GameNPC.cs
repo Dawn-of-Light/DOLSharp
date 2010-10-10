@@ -1837,10 +1837,12 @@ namespace DOL.GS
 			m_loadedFromScript = false;
 			Mob dbMob = (Mob)obj;
 			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID);
-			if (npcTemplate != null)
+			
+			if (npcTemplate != null && npcTemplate.ReplaceMobValues == 0)
 			{
 				LoadTemplate(npcTemplate);
 			}
+			
 			Name = dbMob.Name;
 			GuildName = dbMob.Guild;
 			m_x = dbMob.X;
@@ -1959,6 +1961,11 @@ namespace DOL.GS
 			m_visibleActiveWeaponSlots = dbMob.VisibleWeaponSlots;
 			Gender = (Gender)dbMob.Gender;
 			OwnerID = dbMob.OwnerID;
+			
+			if (npcTemplate != null && npcTemplate.ReplaceMobValues > 0)
+			{
+				LoadTemplate(npcTemplate);
+			}
 		}
 
 		/// <summary>
@@ -4808,8 +4815,6 @@ namespace DOL.GS
 			copyTarget.IsCloakHoodUp = IsCloakHoodUp;
 			copyTarget.IsCloakInvisible = IsCloakInvisible;
 			copyTarget.IsHelmInvisible = IsHelmInvisible;
-			copyTarget.IsImmuneToMagic = IsImmuneToMagic;
-			copyTarget.IsImmuneToMelee = IsImmuneToMelee;
 			copyTarget.LeftHandSwingChance = LeftHandSwingChance;
 			copyTarget.Level = Level;
 			copyTarget.LoadedFromScript = LoadedFromScript;
@@ -4946,17 +4951,6 @@ namespace DOL.GS
 			m_template = template;
 
 			LoadTemplate(template);
-
-			Strength = (short)template.Strength;
-			Constitution = (short)template.Constitution;
-			Dexterity = (short)template.Dexterity;
-			Quickness = (short)template.Quickness;
-			Intelligence = (short)template.Intelligence;
-			Piety = (short)template.Piety;
-			Charisma = (short)template.Charisma;
-			Empathy = (short)template.Empathy;
-
-			m_ownerID = "";
 		}
 	}
 }
