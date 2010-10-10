@@ -375,9 +375,9 @@ GamePlayer.UseSlot.AutoReleaseShotReload:	Rilasci automaticamente il colpo e ric
 GamePlayer.UseSlot.CantFire:				Non puoi usare questo oggetto!
 GamePlayer.UseSlot.CantCallMountSeated:		Non puoi richiamare la cavalcatura mentre stai seduto.
 GamePlayer.UseSlot.CantMountCombat:			Non puoi montare sulla cavalcatura mentre sei in combattimento.
-GamePlayer.UseSlot.CantMountInDungeon:			You cannot summon a mount in a dungeon!
+GamePlayer.UseSlot.CantMountHere:			You cannot summon a mount in a dungeon!
 GamePlayer.UseSlot.CantMountMoving:			Non puoi montare sulla cavalcatura mentre ti muovi.
-GamePlayer.UseSlot.CantMountSteath:			Non puoi montare sulla cavalcatura mentre sei invisibile.
+GamePlayer.UseSlot.CantMountStealthed:			Non puoi montare sulla cavalcatura mentre sei invisibile.
 GamePlayer.UseSlot.CantMountWhileDead:		Non puoi montare sulla cavalcatura quando sei morto.
 GamePlayer.UseSlot.CantSeeTarget:			Non riesci a vedere il bersaglio!
 GamePlayer.UseSlot.CantSummonRvR:			Non puoi richiamare questa cavalcatura nelle zone RvR.

@@ -8402,8 +8402,12 @@ namespace DOL.GS
 		/// Called when the player uses an inventory in a slot
 		/// eg. by clicking on the icon in the qickbar dragged from a slot
 		/// </summary>
-		/// <param name="slot"></param>
-		/// <param name="type">Which /use command was used (0=simple click on icon, 1=use, 2=/use2)</param>
+		/// <param name="slot">inventory slot used</param>
+		/// <param name="type">type of slot use (0=simple click on icon, 1=use, 2=/use2)</param>
+		public virtual void UseSlot(eInventorySlot slot, eUseType type)
+		{
+			UseSlot((int)slot, (int)type);
+		}	
 		public virtual void UseSlot(int slot, int type)
 		{
 			if (!IsAlive)
@@ -8463,46 +8467,14 @@ namespace DOL.GS
 									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.SummonHorseLevel", useItem.Level), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
-								if (!IsAlive)
+								
+								string reason = GameServer.ServerRules.ReasonForDisallowMounting(this);
+								if (!String.IsNullOrEmpty(reason))
 								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountWhileDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									Out.SendMessage(LanguageMgr.GetTranslation(Client, reason), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									return;
 								}
-								if (Steed != null)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustDismountBefore"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (CurrentZone.IsDungeon)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountInDungeon"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (CurrentRegion.IsRvR && !ActiveHorse.IsSummonRvR)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantSummonRvR"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (IsMoving)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountMoving"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (IsSitting)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantCallMountSeated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (IsStealthed)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountSteath"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (InCombat)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantMountCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
+								
 								if (IsSummoningMount)
 								{
 									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.StopCallingMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);

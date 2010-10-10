@@ -1,0 +1,54 @@
+
+# /serverproperties Command
+AdminCommands.ServerProperties.Description:			Herlaad server eigenschappen van de database
+AdminCommands.ServerProperties.Usage:				/serverproperties
+AdminCommands.ServerProperties.DataBaseXML:			XML is cached sorry, je kan niet de server eigenschappen vernieuwen tenzij van MySQL gebruiken!
+AdminCommands.ServerProperties.PropertiesRefreshed:		server eigenschappen vernieuwen!
+
+
+# /plvl Command
+AdminCommands.plvl.Description:					verander recht niveau en voeg een Interne toestemming aan de speler
+AdminCommands.plvl.Usage:					/plvl <nieuw niveau rang> [Spelernaam]
+AdminCommands.plvl.Usage.Single:				/plvl single <commando> [spelernaam]
+AdminCommands.plvl.Usage.SingleAccount:				/plvl singleaccount <commando> [Accountnaam]
+AdminCommands.plvl.Usage.Remove:				/plvl remove <commando> [PlayerNaam]
+AdminCommands.plvl.Usage.RemoveAccount:				/plvl removeaccount <commando> [AccountNaam]
+AdminCommands.plvl.NoSelectPlayer:				U moet een speler selecteren om zijn toestemming te veranderen.
+AdminCommands.plvl.AddedSinglePermission:			U voegt de interne toestemming om {0} voor {1} commando.
+AdminCommands.plvl.AddedSingleAccountPermission:		U voegt de interne toestemming om account {0} voor {1} commando.
+AdminCommands.plvl.RemoveSinglePermission:			U Verwijdert de interne toestemming van {0} voor {1} commando.
+AdminCommands.plvl.RemoveSingleAccountPermission:		You removed the single permission of account {0} for {1} commando.
+AdminCommands.plvl.NoPermissionForCommand:			er is geen toestemming van {0} voor {1} commando.
+AdminCommands.plvl.YourPlvlHasBeenSetted:			Uw voorrecht is ingesteld op {0}.
+AdminCommands.plvl.PlayerPlvlHasBeenSetted:			{0} voorrecht is ingesteld op {1}.
+
+# /code Command
+AdminCommands.Code.Description:					Voert aangepaste code!
+AdminCommands.Code.Usage:					/code <codesnippet>
+AdminCommands.Code.ErrorCompiling:				Fout Compileren Expression:
+AdminCommands.Code.CodeExecuted:				Code uitgevoerd...
+
+
+# /account Command
+AdminCommands.Account.Description:				Account modification command
+AdminCommands.Account.Usage.Create:				/account create <AccountNaam> <Wachtwoord>
+AdminCommands.Account.Usage.ChangePassword:			/account changepassword <AccountNaam> <Nieuw Wachtwoord>
+AdminCommands.Account.Usage.Delete:				/account delete <AccountName>
+AdminCommands.Account.Usage.DeleteChar:				/account deletecharacter <PersonageNaam>
+AdminCommands.Account.Usage.MoveChar:				/account movecharacter <PersonageNaam> <Nieuw AccountNaam>
+AdminCommands.Account.Usage.Status:				/account status <AccountNaam> <Niveau>
+AdminCommands.Account.Usage.UnBan:				/account unban <AccountNaam>
+AdminCommands.Account.Usage.AccountName:			/account accountname <PersonageNaam>
+AdminCommands.Account.AccountNotFound:				Account {0} niet gevonden!
+AdminCommands.Account.AccountDeleted:				Account {0} verwijderd!
+AdminCommands.Account.CharacterNotFound:			Personage {0} niet gevonden!
+AdminCommands.Account.CharacterDeleted:				Personage {0} verwijderd!
+AdminCommands.Account.CharNotFromValidRealm:			De personage is niet van een geldige rijk!
+AdminCommands.Account.AccountHasNoFreeSlots:			Account {0} heeft geen vrije personage slots voor dit rijk!
+AdminCommands.Account.CharacterMovedToAccount:			Personage {0} verplaatst naar Account {1}!
+AdminCommands.Account.InvalidAccountName:			ongeldig account naam.
+AdminCommands.Account.InvalidAccountNameOrPassword:		Account naam en wachtwoord moet ten minsten 4 letter zijn.
+AdminCommands.Account.AccountNameAlreadyRegistered:		Deze account naam is al geregistreerd.
+AdminCommands.Account.AccountCreated:				Account gemaakt!
+AdminCommands.Account.AccNameForChar:				Account naam voor personage {0} is: {1}
+

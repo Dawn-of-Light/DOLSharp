@@ -19,18 +19,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Net;
 using System.Reflection;
 
-using DOL.Database;
 using DOL.AI.Brain;
-using DOL.GS;
+using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 using DOL.Language;
-
 using log4net;
 
 namespace DOL.GS.ServerRules
@@ -415,6 +411,51 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
+		/// <summary>
+		/// is player allowed to ride his personal mount ?
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns>string representing why player is not allowed to mount, else empty string</returns>
+		public virtual string ReasonForDisallowMounting(GamePlayer player)
+		{
+			// pre conditions
+			if (!player.IsAlive) return "GamePlayer.UseSlot.CantMountWhileDead";
+			if (player.Steed != null) return "GamePlayer.UseSlot.MustDismountBefore";
+			
+			// gm/admin overrides the other checks
+			if (player.Client.Account.PrivLevel != (uint)ePrivLevel.Player) return string.Empty;
+			
+			// player restrictions
+			if (player.IsMoving) return "GamePlayer.UseSlot.CantMountMoving";
+			if (player.InCombat) return "GamePlayer.UseSlot.CantMountCombat";
+			if (player.IsSitting) return "GamePlayer.UseSlot.CantCallMountSeated";
+			if (player.IsStealthed) return "GamePlayer.UseSlot.CantMountStealthed";
+			
+			// zones checks:
+			// white list: always allows
+			string currentRegion = player.CurrentRegion.ID.ToString();
+			if (ServerProperties.Properties.ALLOW_PERSONNAL_MOUNT_IN_REGIONS.Contains(currentRegion))
+			{
+				var regions = ServerProperties.Properties.ALLOW_PERSONNAL_MOUNT_IN_REGIONS.Split(new char[]{';'},StringSplitOptions.RemoveEmptyEntries);
+				foreach (var region in regions)
+					if (region == currentRegion)
+						return string.Empty;
+			}
+			
+			// restrictions: dungeons, instances, capitals, rvr horses
+			if (player.CurrentRegion.IsDungeon ||
+			    player.CurrentRegion.IsInstance ||
+			    player.CurrentRegion.IsCapitalCity)
+				return "GamePlayer.UseSlot.CantMountHere";
+			// perhaps need to be tweaked for PvPServerRules
+			if (player.CurrentRegion.IsRvR && !player.ActiveHorse.IsSummonRvR)
+				return "GamePlayer.UseSlot.CantSummonRvR";
+			
+			// sounds good !
+			return string.Empty;
+			
+		}
+		
 		public virtual bool CanTakeFallDamage(GamePlayer player)
 		{
 			if (player.Client.Account.PrivLevel > 1)
