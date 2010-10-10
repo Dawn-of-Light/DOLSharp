@@ -114,6 +114,17 @@ namespace DOL.GS
 	}
 
 	/// <summary>
+	/// The use type applyed to the item:
+	/// clic on icon in quickbar, /use or /use2
+	/// </summary>
+	public enum eUseType
+	{
+		clic = 0,
+		use1 = 1,
+		use2 = 2,
+	}
+	
+	/// <summary>
 	/// Interface for GameInventory
 	/// </summary>		
 	public interface IGameInventory
