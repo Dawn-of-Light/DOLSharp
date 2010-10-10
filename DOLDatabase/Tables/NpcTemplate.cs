@@ -68,6 +68,7 @@ namespace DOL.Database
 		private int m_maxdistance = 0;
 		private int m_tetherRange = 0;
         private byte m_visibleWeaponSlots = 0;
+        private int m_replaceMobValues =  0;
 
 		/// <summary>
 		/// Constructor
@@ -510,6 +511,18 @@ namespace DOL.Database
                 m_visibleWeaponSlots = value;
             }
         }
-
+        [DataElement(AllowDbNull = true)]
+        public int ReplaceMobValues
+        {
+            get
+            {
+                return m_replaceMobValues;
+            }
+            set
+            {
+                Dirty = true;
+                m_replaceMobValues = value;
+            }
+        }
 	}
 }
