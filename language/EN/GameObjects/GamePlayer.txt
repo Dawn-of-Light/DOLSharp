@@ -293,9 +293,9 @@ GamePlayer.UseSlot.AutoReleaseShotReload:		You will now automatically release yo
 GamePlayer.UseSlot.CantCallMountSeated:			You cannot call your mount while seated.		
 GamePlayer.UseSlot.CantFire:					You can't fire or use this item!	
 GamePlayer.UseSlot.CantMountCombat:				You are in combat and cannot call your mount.
-GamePlayer.UseSlot.CantMountInDungeon:			You cannot summon a mount in a dungeon!		
+GamePlayer.UseSlot.CantMountHere:			You cannot summon a mount here!		
 GamePlayer.UseSlot.CantMountMoving:				You can't mount while you're moving.		
-GamePlayer.UseSlot.CantMountSteath:				You can't mount while you're in stealth.		
+GamePlayer.UseSlot.CantMountStealthed				You can't mount while you're in stealth.		
 GamePlayer.UseSlot.CantMountWhileDead:			You can't mount while you're dead.		
 GamePlayer.UseSlot.CantSeeTarget:				You can't see your target!		
 GamePlayer.UseSlot.CantSummonRvR:				You cannot summon that mount in RvR zones.		

@@ -184,6 +184,7 @@
     <Compile Include="commands\GMcommands\blink.cs" />
     <Compile Include="commands\GMCommands\cast.cs" />
     <Compile Include="commands\GMCommands\ClientList.cs" />
+    <Compile Include="commands\gmcommands\translate.cs" />
     <Compile Include="commands\GMCommands\zone.cs" />
     <Compile Include="commands\GMCommands\crafting.cs" />
     <Compile Include="commands\GMCommands\debug.cs" />
@@ -273,7 +274,7 @@
     <Compile Include="commands\PlayerCommands\helm.cs" />
     <Compile Include="commands\PlayerCommands\hood.cs" />
     <Compile Include="commands\PlayerCommands\horse.cs" />
-    <Compile Include="commands\PlayerCommands\horsesummon.cs" />
+    <Compile Include="commands\playercommands\summon.cs" />
     <Compile Include="commands\PlayerCommands\house.cs" />
     <Compile Include="commands\PlayerCommands\houseface.cs" />
     <Compile Include="commands\PlayerCommands\housefriend.cs" />
@@ -2549,7 +2550,8 @@
     <EmbeddedResource Include="config\zones.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <None Include="language\CZ\Language-CZ.txt" />
+    <None Include="language\CU\CZ - General.txt" />
+    <None Include="language\CU\ES - General.txt" />
     <None Include="language\DE\AI.txt" />
     <None Include="language\DE\Atlantis.txt" />
     <None Include="language\DE\Behaviour.txt" />
@@ -2669,7 +2671,6 @@
     <None Include="language\EN\Spells.txt" />
     <None Include="language\EN\Trainer.txt" />
     <None Include="language\EN\World.txt" />
-    <None Include="language\ES\Language-ES.txt" />
     <None Include="language\FR\AI.txt" />
     <None Include="language\FR\Atlantis.txt" />
     <None Include="language\FR\Commands\AdminCommands.txt" />
@@ -2730,6 +2731,7 @@
     <None Include="language\IT\Commands\GMCommands.txt" />
     <None Include="language\IT\Effects.txt" />
     <None Include="language\IT\Language-IT.txt" />
+    <None Include="language\CU\NL - AdminCommands.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="language\DE\PlayerRealmTitles.txt" />
@@ -2741,6 +2743,7 @@
   <ItemGroup>
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
+    <Folder Include="language\CU" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

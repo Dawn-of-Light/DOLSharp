@@ -290,9 +290,9 @@ GamePlayer.UseSlot.AutoReleaseShotReload:		Eurer Schuss wird nun automatisch nac
 GamePlayer.UseSlot.CantCallMountSeated:			Ihr könnt Euer Pferd nicht rufen, während Ihr dasitzt.		
 GamePlayer.UseSlot.CantFire:				Ihr könnt diesen Gegenstand weder abschießen noch benutzen!	
 GamePlayer.UseSlot.CantMountCombat:			Ihr könnt Euer Pferd nicht während eines Kampfes rufen.
-GamePlayer.UseSlot.CantMountInDungeon:			Ihr könnt Euer Pferd in einem Dungeon nicht rufen!		
+GamePlayer.UseSlot.CantMountHere:			Ihr könnt Euer Pferd in einem Dungeon nicht rufen!		
 GamePlayer.UseSlot.CantMountMoving:			Ihr könnt nicht aufsteigen, während Ihr Euch bewegt.		
-GamePlayer.UseSlot.CantMountSteath:			Ihr könnt nicht aufsitzen, während Ihr getarnt seid.		
+GamePlayer.UseSlot.CantMountStealthed:			Ihr könnt nicht aufsitzen, während Ihr getarnt seid.		
 GamePlayer.UseSlot.CantMountWhileDead:			Ihr könnt nicht aufsteigen, weil Ihr tot seid.		
 GamePlayer.UseSlot.CantSeeTarget:			Ihr könnt Euer Ziel nicht sehen!		
 GamePlayer.UseSlot.CantSummonRvR:			Ihr könnt das Pferd nicht in RvR-Zonen rufen.		

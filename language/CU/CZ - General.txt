@@ -306,9 +306,8 @@ GamePlayer.UseSlot.CantUseFromBackpack:	Nemuzes tento predmet pouzit z tveho bat
 GamePlayer.UseSlot.CantCallMountSeated:		Nemuzes privolat tveho kone kdyz na nem sedis.
 GamePlayer.UseSlot.CantFire:				Nemuzes strilet nebo pouzit tento predmet!
 GamePlayer.UseSlot.CantMountCombat:			Jsi v boji a nemuzes zavolat sveho kone.
-GamePlayer.UseSlot.CantMountInDungeon:			You cannot summon a mount in a dungeon!
 GamePlayer.UseSlot.CantMountMoving:			Nemuzes nasednout behem pohybu.
-GamePlayer.UseSlot.CantMountSteath:			Nemuzes nasednout kdyz jsi ve stealthu.
+GamePlayer.UseSlot.CantMountStealthed:			Nemuzes nasednout kdyz jsi ve stealthu.
 GamePlayer.UseSlot.CantMountWhileDead:		Nemuzes nasednout kdyz jis mrtvy.
 GamePlayer.UseSlot.CantSeeTarget:			Nevidis svuj cil!
 GamePlayer.UseSlot.CantSummonRvR:			Nemuzes privolat tohoto kone v RVR zonach.

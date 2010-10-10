@@ -440,6 +440,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("world", "enable_zone_bonuses", "Are Zone Bonuses Enabled?", false)]
 		public static bool ENABLE_ZONE_BONUSES;
+		
+		/// <summary>
+		/// List of ZoneId where personnal mount is allowed
+		/// </summary>
+		[ServerProperty("world", "allow_personnal_mount_in_regions", "CSV Regions where player mount is allowed", "")]
+		public static string ALLOW_PERSONNAL_MOUNT_IN_REGIONS;
 
 		#endregion
 		

@@ -162,6 +162,13 @@ namespace DOL.GS.ServerRules
 		bool IsAllowedToZone(GamePlayer player, Region region);
 
 		/// <summary>
+		/// Is this player allowed to ride his personnal mount ?
+		/// </summary>
+		/// <param name="player">player summoning the horse</param>
+		/// <returns>empty string for mount allowed, any other for not allowed reason</returns>
+		string ReasonForDisallowMounting(GamePlayer player);
+		
+		/// <summary>
 		/// Short description of server rules
 		/// </summary>
 		/// <returns></returns>
