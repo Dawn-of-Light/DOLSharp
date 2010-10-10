@@ -187,5 +187,9 @@ namespace DOL.GS
 		/// </summary>
 		int TetherRange { get; }
 		
+		/// <summary>
+		/// Do we want the npctemplate replace db mob's values ? 
+		/// </summary>
+		int ReplaceMobValues { get; }
 	}
 }

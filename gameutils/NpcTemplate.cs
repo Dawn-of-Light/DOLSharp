@@ -70,6 +70,7 @@ namespace DOL.GS
 		protected ushort m_bodyType;
 		protected int m_maxdistance;
 		protected int m_tetherRange;
+		protected int m_replaceMobValues;
 
 		/// <summary>
 		/// Constructs a new NpcTemplate
@@ -175,6 +176,8 @@ namespace DOL.GS
 			m_bodyType = (ushort)data.BodyType;
 			m_maxdistance = data.MaxDistance;
 			m_tetherRange = data.TetherRange;
+			
+			m_replaceMobValues = data.ReplaceMobValues;			
 		}
 
 
@@ -209,7 +212,7 @@ namespace DOL.GS
 			m_size = mob.Size.ToString();
 			m_templateId = GetNextFreeTemplateId();
 			m_tetherRange = mob.TetherRange;
-
+			
 			if ( mob.Abilities != null && mob.Abilities.Count > 0 )
 			{
 				if ( m_abilities == null )
@@ -505,14 +508,8 @@ namespace DOL.GS
 		/// </summary>
 		public int MaxDistance
 		{
-			get
-			{
-				return m_maxdistance;
-			}
-			set
-			{
-				m_maxdistance = value;
-			}
+			get { return m_maxdistance;	}
+			set	{ m_maxdistance = value;	}
 		}
 
 		/// <summary>
@@ -525,6 +522,15 @@ namespace DOL.GS
 		{
 			get { return m_tetherRange; }
 			set { m_tetherRange = value; }
+		}
+		
+		/// <summary>
+		/// Should we get this template values as reference or mob's one ?
+		/// </summary>
+		public int ReplaceMobValues
+		{
+			get { return m_replaceMobValues;  }
+			set { m_replaceMobValues = value; }
 		}
 
 		public virtual void SaveIntoDatabase()
