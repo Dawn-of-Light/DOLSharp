@@ -60,8 +60,6 @@ namespace DOL.GS.RealmAbilities
 		}
 	}
 
-
-
 	public class TimedRealmAbility : RealmAbility
 	{
 
@@ -200,7 +198,7 @@ namespace DOL.GS.RealmAbilities
 		/// <param name="living"></param>
 		/// <param name="bitmask"></param>
 		/// <returns></returns>
-		public bool CheckPreconditions(GameLiving living, long bitmask)
+		public virtual bool CheckPreconditions(GameLiving living, long bitmask)
 		{
 			GamePlayer player = living as GamePlayer;
 			if ((bitmask & DEAD) != 0 && !living.IsAlive)
