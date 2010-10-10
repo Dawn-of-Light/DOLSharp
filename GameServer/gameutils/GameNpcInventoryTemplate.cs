@@ -153,11 +153,11 @@ namespace DOL.GS
 						//Let's remove the old item!
 						m_items.Remove(slot);
 					}
-					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect, extension);	
+					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect, extension);
 					InventoryItem item = null;
 
 					if (!m_usedInventoryItems.ContainsKey(itemID))
-					{					
+					{
 						item = new GameInventoryItem();
 						item.Template = new ItemTemplate();
 						item.Template.Id_nb = itemID;
@@ -291,34 +291,34 @@ namespace DOL.GS
 		public override bool LoadFromDatabase(string templateID)
 		{
 			if (Util.IsEmpty(templateID) || templateID == "\r\n" || templateID == "0")
-			{
-				//if (log.IsWarnEnabled)
-				//log.Warn("Null or empty string template reference");
-
 				return false;
-			}
 
 			lock (m_items)
 			{
+				IList<NPCEquipment> npcEquip;
+				
 				if (m_npcEquipmentCache.ContainsKey(templateID))
-				{
-					List<NPCEquipment> npcEquip = m_npcEquipmentCache[templateID];
+					npcEquip = m_npcEquipmentCache[templateID];
+				else
+					npcEquip = GameServer.Database.SelectObjects<NPCEquipment>("`templateID`= '" + templateID +"'");
 
-					foreach (NPCEquipment npcItem in npcEquip)
+				if (npcEquip == null || npcEquip.Count == 0)
+				{
+					if (log.IsWarnEnabled)
+						log.Warn(string.Format("Failed loading NPC inventory template: {0}", templateID));
+					return false;
+				}
+				
+				foreach (NPCEquipment npcItem in npcEquip)
+				{
+					if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Effect, npcItem.Extension))
 					{
-						if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Effect, npcItem.Extension))
-						{
-							if (log.IsWarnEnabled)
-								log.Warn("Error adding NPC equipment, ObjectId=" + npcItem.ObjectId);
-						}
+						if (log.IsWarnEnabled)
+							log.Warn("Error adding NPC equipment, ObjectId=" + npcItem.ObjectId);
 					}
-					return true;
 				}
 			}
-
-			if (log.IsWarnEnabled)
-				log.Warn(string.Format("Failed loading NPC inventory template: {0}", templateID));
-			return false;
+			return true;
 		}
 
 		/// <summary>
