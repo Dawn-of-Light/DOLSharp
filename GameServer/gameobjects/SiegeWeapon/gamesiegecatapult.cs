@@ -17,9 +17,7 @@
  *
  */
 using System;
-using DOL.Database;
 using System.Collections;
-
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -80,6 +78,11 @@ namespace DOL.GS
 				{
 					list.Add(npc);
 				}
+			}
+			
+			if (!list.Contains(this.TargetObject))
+			{
+				list.Add(this.TargetObject);
 			}
 			return list;
 		}
