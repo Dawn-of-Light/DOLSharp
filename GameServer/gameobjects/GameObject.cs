@@ -1032,32 +1032,6 @@ namespace DOL.GS
 
 		#endregion
 
-		#region Immunity
-
-		private bool m_immuneToMagic = false;
-
-		/// <summary>
-		/// Whether or not this object is immune to magic.
-		/// </summary>
-		public bool IsImmuneToMagic
-		{
-			get { return m_immuneToMagic; }
-			set { m_immuneToMagic = value; }
-		}
-
-		private bool m_immuneToMelee = false;
-
-		/// <summary>
-		/// Whether or not this object is immune to melee.
-		/// </summary>
-		public bool IsImmuneToMelee
-		{
-			get { return m_immuneToMelee; }
-			set { m_immuneToMelee = value; }
-		}
-
-		#endregion
-
 		#region ConLevel/DurLevel
 
 		/// <summary>
