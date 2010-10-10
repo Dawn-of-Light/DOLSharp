@@ -27,13 +27,12 @@ namespace DOL.Database
 	[DataTable(TableName = "Language")]
 	public class DBLanguage : DataObject
 	{
-		protected string m_translationid;
-		protected string m_EN = "";
-		protected string m_DE = "";
-		protected string m_FR = "";
-		protected string m_IT = "";
-		protected string m_ES = "";
-		protected string m_CZ = "";
+		protected string m_translationid; // the global translation string
+		protected string m_EN = ""; // EN native translation of global translation string
+		protected string m_DE = ""; // DE translation of global translation string
+		protected string m_FR = ""; // FR translation of global translation string
+		protected string m_IT = ""; // IT translation of global translation string
+		protected string m_CU = ""; // Custom language translation of global translation string
 		protected string m_packageID;
 
 		/// <summary>
@@ -94,25 +93,15 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Spanish
+		/// Custom language (other)
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public string ES
+		public string CU
 		{
-			get { return m_ES; }
-			set { Dirty = true; m_ES = value; }
+			get { return m_CU; }
+			set { Dirty = true; m_CU = value; }
 		}
-
-		/// <summary>
-		/// Russian
-		/// </summary>
-		[DataElement(AllowDbNull = true)]
-		public string CZ
-		{
-			get { return m_CZ; }
-			set { Dirty = true; m_CZ = value; }
-		}
-
+		
 		/// <summary>
 		/// Package ID
 		/// </summary>
