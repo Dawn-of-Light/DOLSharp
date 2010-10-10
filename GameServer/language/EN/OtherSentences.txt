@@ -3,6 +3,8 @@
 # Languages
 System.LanguagesName.English:				English
 System.LanguagesName.Italian:				Italian
+System.LanguagesName.French:				French
+System.LanguagesName.German:				German
 
 
 # System

@@ -21,8 +21,8 @@ namespace DOL.GS.Commands
 			}
 			finally
 			{
-				if (client.Account.PrivLevel > 1 && client.Player.IsOnHorse == false)
-					client.Player.IsOnHorse = true;
+				if (client.Player.Inventory.GetItem(eInventorySlot.Horse) != null)
+					client.Player.UseSlot(eInventorySlot.Horse, eUseType.clic);
 			}
 		}
 	}
