@@ -396,7 +396,7 @@ namespace DOL.Language
 		/// <returns></returns>
 		public static string GetTranslation(GameClient client, string TranslationID, params object[] args)
 		{
-			if (client == null)
+			if (client == null || client.Account == null)
 				return GetTranslation(DOL.GS.ServerProperties.Properties.SERV_LANGUAGE, TranslationID, args);
 
 			if(client.Player != null && client.Account.PrivLevel > 1)

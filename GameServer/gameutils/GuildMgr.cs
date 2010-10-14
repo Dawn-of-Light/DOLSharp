@@ -638,11 +638,11 @@ namespace DOL.GS
 			}
 			#endregion
 
-			public string this[int i]
+			public string this[eSocialWindowIndex i]
 			{
 				get
 				{
-					switch ((eSocialWindowIndex)i)
+					switch (i)
 					{
 						case eSocialWindowIndex.Name:
 							return Name;

@@ -123,7 +123,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Name
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public string Name
 		{
 			get
@@ -602,7 +602,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The mob's current house
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int HouseNumber
 		{
 			get { return m_houseNumber; }

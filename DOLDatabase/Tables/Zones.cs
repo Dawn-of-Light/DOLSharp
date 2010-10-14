@@ -76,7 +76,7 @@ namespace DOL
 					m_zoneID = value;
 				}
 			}
-			[DataElement(AllowDbNull = false)]
+			[DataElement(AllowDbNull = false, Index = true)]
 			public ushort RegionID
 			{
 				get
