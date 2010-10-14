@@ -56,7 +56,7 @@ namespace DOL
 			/// <summary>
 			/// The item template id of the OTD
 			/// </summary>
-			[DataElement(AllowDbNull = false, Varchar = 100)]
+			[DataElement(AllowDbNull = false, Varchar = 100, Index = true)]
 			public string ItemTemplateID
 			{
 				get

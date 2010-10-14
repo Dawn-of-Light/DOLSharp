@@ -1438,7 +1438,7 @@ namespace DOL.GS.Commands
 												{
 													GuildMgr.SocialWindowMember member = guildMembers[player.Name];
 													member.UpdateMember(player);
-													string key = member[(int)index];
+													string key = member[index];
 													if (sortedList.ContainsKey(key))
 														key += sortedList.Count.ToString();
 
@@ -1463,7 +1463,7 @@ namespace DOL.GS.Commands
 													//Make sure that since they are offline they get the offline flag!
 													member.GroupSize = "0";
 												//Add based on the new index
-												string key = member[(int)index];
+												string key = member[index];
 												if (sortedList.ContainsKey(key))
 												{
 													key += sortedList.Count.ToString();

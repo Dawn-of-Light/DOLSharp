@@ -42,7 +42,7 @@ namespace DOL.Database
 			m_classType = classType;
 		}
 
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int KeepID
 		{
 			get { return m_keepID; }
@@ -53,7 +53,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int ComponentID
 		{
 			get { return m_componentID; }
@@ -64,7 +64,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int HookPointID
 		{
 			get { return m_hookPointID; }

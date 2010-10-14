@@ -61,14 +61,14 @@ public class DBAppeal : DataObject
 		m_text = text;
 	}
 
-	[DataElement(AllowDbNull = false)]
+	[DataElement(AllowDbNull = false, Index = true)]
 	public string Name
 	{
 		get { return m_name; }
 		set { m_name = value; }
 	}
 
-	[DataElement(AllowDbNull = false)]
+	[DataElement(AllowDbNull = false, Index = true)]
 	public string Account
 	{
 		get { return m_account; }

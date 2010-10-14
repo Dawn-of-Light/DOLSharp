@@ -26,7 +26,7 @@ namespace DOL.Database
 	/// keep hook point in DB
 	/// </summary>
 	/// 
-	[DataTable(TableName="KeepHookPoint")]
+	[DataTable(TableName = "KeepHookPoint")]
 	public class DBKeepHookPoint : DataObject
 	{
 		private int m_x;
@@ -40,11 +40,11 @@ namespace DOL.Database
 		public DBKeepHookPoint()
 		{
 		}
-		
+
 		/// <summary>
 		/// Hook Point
 		/// </summary>
-		[DataElement(AllowDbNull=false,Unique=false)]
+		[DataElement(AllowDbNull = false, Unique = false, Index = true)]
 		public int HookPointID
 		{
 			get
@@ -61,7 +61,7 @@ namespace DOL.Database
 		/// <summary>
 		/// skin of component with hookpoint is linked
 		/// </summary>
-		[DataElement(AllowDbNull=false,Unique=false)]
+		[DataElement(AllowDbNull = false, Unique = false)]
 		public int KeepComponentSkinID
 		{
 			get
@@ -74,7 +74,7 @@ namespace DOL.Database
 				m_keepComponentSkinID = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// Z position of door
 		/// </summary>
@@ -146,15 +146,15 @@ namespace DOL.Database
 		/// <summary>
 		/// Height of door
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = true, Index = true)]
 		public int Height
 		{
 			set
 			{
 				Dirty = true;
-				m_height=value;
+				m_height = value;
 			}
-			get{return m_height;}
+			get { return m_height; }
 		}
 	}
 }

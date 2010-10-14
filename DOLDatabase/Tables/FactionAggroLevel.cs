@@ -27,12 +27,12 @@ namespace DOL.Database
 	/// Aggro level of faction against character
 	/// </summary>
 	/// 
-	[DataTable(TableName="FactionAggroLevel")]
+	[DataTable(TableName = "FactionAggroLevel")]
 	public class DBFactionAggroLevel : DataObject
 	{
-		private string     m_characterID;
-		private int	    m_factionID;
-		private int 	m_AggroLevel;
+		private string m_characterID;
+		private int m_factionID;
+		private int m_AggroLevel;
 
 		/// <summary>
 		/// Create faction aggro level against character
@@ -43,11 +43,11 @@ namespace DOL.Database
 			m_factionID = 0;
 			m_AggroLevel = 0;
 		}
-		
+
 		/// <summary>
 		/// Character
 		/// </summary>
-		[DataElement(AllowDbNull=false,Unique=false)]
+		[DataElement(AllowDbNull = false, Varchar = 100, Index = true)]
 		public string CharacterID
 		{
 			get
@@ -64,7 +64,7 @@ namespace DOL.Database
 		/// <summary>
 		/// index of this faction
 		/// </summary>
-		[DataElement(AllowDbNull=false,Unique=false)]
+		[DataElement(AllowDbNull = false, Unique = false)]
 		public int FactionID
 		{
 			get
@@ -77,11 +77,11 @@ namespace DOL.Database
 				m_factionID = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// aggro level/ relationship of faction against character
 		/// </summary>
-		[DataElement(AllowDbNull=false,Unique=false)]
+		[DataElement(AllowDbNull = false, Unique = false)]
 		public int AggroLevel
 		{
 			get
@@ -94,6 +94,5 @@ namespace DOL.Database
 				m_AggroLevel = value;
 			}
 		}
-		
 	}
 }

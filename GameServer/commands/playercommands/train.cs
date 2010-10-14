@@ -50,11 +50,8 @@ namespace DOL.GS.Commands
 			// no longer used since 1.105, except if we explicitely want
 			if (client.Version >= GameClient.eClientVersion.Version1105)
 			{
-				Log.Warn("version >1105");
 				if (!ServerProperties.Properties.CUSTOM_TRAIN)
 				{
-					Log.Warn("Not CT");
-
 					client.Out.SendTrainerWindow();
 					return;
 				}

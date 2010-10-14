@@ -65,7 +65,7 @@ namespace DOL.Database
 		/// <summary>
 		/// ID for this teleport location.
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Index = true)] // Dre: Index or Unique ?
 		public String TeleportID
 		{
 			get { return m_teleportID; }
