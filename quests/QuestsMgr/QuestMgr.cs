@@ -272,7 +272,7 @@ namespace DOL.GS.Quests
 			IDictionaryEnumerator questEnumerator = m_questTypeMap.GetEnumerator();
 			while (questEnumerator.MoveNext())
 			{
-				if (questEnumerator.Value == questType)
+				if ((Type)questEnumerator.Value == questType)
 					return (ushort)questEnumerator.Key;
 			}
 			return 0;
