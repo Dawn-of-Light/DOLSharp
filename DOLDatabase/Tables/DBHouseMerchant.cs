@@ -39,7 +39,7 @@ namespace DOL.Database
         /// <summary>
         /// The Housenumber of the Merchant
         /// </summary>
-        [DataElement(AllowDbNull = false)]
+        [DataElement(AllowDbNull = false, Index = true)]
         public int HouseNumber
         {
             get

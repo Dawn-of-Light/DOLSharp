@@ -21,8 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
-using DOL.Database;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
@@ -37,13 +35,14 @@ namespace DOL.GS.Commands
 	              "'/object fastcreate [name] [modelID]' to create the specified object",
 	              "'/object model <newModel>' to set the model to newModel",
 	              "'/object emblem <newEmblem>' to set the emblem to newEmblem",
-				  "'/object realm <0/1/2/3>' to set the targeted object realm",
+	              "'/object realm <0/1/2/3>' to set the targeted object realm",
 	              "'/object name <newName>' to set the targeted object name to newName",
 	              "'/object noname' to remove the targeted object name",
 	              "'/object remove' to remove the targeted object",
+	              "'/object copy' to copy the targeted object",
 	              "'/object save' to save the object",
-				  "'/object reload' to reload the object",
-				  "'/object target' to automatically target the nearest object")]
+	              "'/object reload' to reload the object",
+	              "'/object target' to automatically target the nearest object")]
 	public class ObjectCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -82,7 +81,7 @@ namespace DOL.GS.Commands
 						info.Add(" Model: " + targetObject.Model);
 						info.Add(" Emblem: " + targetObject.Emblem);
 						info.Add(" Realm: " + targetObject.Realm);
-                        if (targetObject.Owners.LongLength > 0)
+						if (targetObject.Owners.LongLength > 0)
 						{
 							info.Add(" ");
 							info.Add(" Owner: " + targetObject.Owners[0].Name);
@@ -209,6 +208,30 @@ namespace DOL.GS.Commands
 						DisplayMessage(client, "Object name removed");
 						break;
 					}
+				case "copy":
+					{
+						GameStaticItem item = CreateItemInstance(client, targetObject.GetType().FullName);
+						if (item == null)
+						{
+							ChatUtil.SendSystemMessage(client, "There was an error creating an instance of " + targetObject.GetType().FullName + "!");
+							return;
+						}
+						item.X = client.Player.X;
+						item.Y = client.Player.Y;
+						item.Z = client.Player.Z;
+						item.CurrentRegion = client.Player.CurrentRegion;
+						item.Heading = client.Player.Heading;
+						item.Level = targetObject.Level;
+						item.Name = targetObject.Name;
+						item.Model = targetObject.Model;
+						item.Realm = targetObject.Realm;
+						item.Emblem = targetObject.Emblem;
+						item.LoadedFromScript = targetObject.LoadedFromScript;
+						item.AddToWorld();
+						item.SaveIntoDatabase();
+						DisplayMessage(client, "Obj created: OID=" + item.ObjectID);
+						break;
+					}
 				case "save":
 					{
 						targetObject.LoadedFromScript = false;
@@ -244,39 +267,41 @@ namespace DOL.GS.Commands
 			}
 		}
 
-		GameStaticItem CreateItem( GameClient client, string itemClassName )
+		GameStaticItem CreateItemInstance(GameClient client, string itemClassName)
+		{
+			GameStaticItem obj = null;
+			ArrayList asms = new ArrayList(ScriptMgr.Scripts);
+			asms.Add(typeof(GameServer).Assembly);
+
+			foreach (Assembly script in asms)
+			{
+				try
+				{
+					client.Out.SendDebugMessage(script.FullName);
+					obj = (GameStaticItem)script.CreateInstance(itemClassName, false);
+
+					if (obj != null)
+						break;
+				}
+				catch (Exception e)
+				{
+					DisplayMessage(client, e.ToString());
+				}
+			}
+			return obj;
+		}
+
+		GameStaticItem CreateItem(GameClient client, string itemClassName)
 		{
 			GameStaticItem obj;
 
-			if ( itemClassName != null && itemClassName.Length > 0 )
-			{
-				obj = null;
-				ArrayList asms = new ArrayList( ScriptMgr.Scripts );
-				asms.Add( typeof( GameServer ).Assembly );
-
-				foreach ( Assembly script in asms )
-				{
-					try
-					{
-						client.Out.SendDebugMessage( script.FullName );
-						obj = (GameStaticItem)script.CreateInstance( itemClassName, false );
-
-						if ( obj != null )
-							break;
-					}
-					catch ( Exception e )
-					{
-						DisplayMessage( client, e.ToString() );
-					}
-				}
-			}
+			if (!string.IsNullOrEmpty(itemClassName))
+				obj = CreateItemInstance(client, itemClassName);
 			else
-			{
 				obj = new GameStaticItem();
-			}
 
 
-			if ( obj == null )
+			if (obj == null)
 			{
 				client.Out.SendMessage( "There was an error creating an instance of " + itemClassName + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
 				return null;

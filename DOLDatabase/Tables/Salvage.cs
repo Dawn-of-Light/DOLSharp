@@ -43,7 +43,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Object type of item to salvage
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull=false, Index = true)]
 		public int ObjectType
 		{
 			get
@@ -60,7 +60,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The salvage level of the row
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull=false, Index = true)]
 		public int SalvageLevel
 		{
 			get
@@ -94,7 +94,7 @@ namespace DOL.Database
         /// <summary>
         /// Realm of item to salvage
         /// </summary>
-        [DataElement(AllowDbNull = false)]
+        [DataElement(AllowDbNull = false, Index = true)]
         public int Realm
         {
             get

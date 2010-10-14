@@ -158,7 +158,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Internal index of Door
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = true, Index = true)]
 		public int InternalID
 		{
 			get

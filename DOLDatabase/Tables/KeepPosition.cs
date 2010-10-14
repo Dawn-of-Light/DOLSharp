@@ -32,7 +32,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Skin ID of the Keep Component the Position is assigned to
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = true, Index = true)]
 		public int ComponentSkin
 		{
 			get
@@ -66,7 +66,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The KeepObjectID, consider this a template ID
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = true, Index = true)]
 		public string TemplateID
 		{
 			get
@@ -83,7 +83,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Height that this position is stored for, 0,1,2,3
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = true, Index = true)]
 		public int Height
 		{
 			get
@@ -169,7 +169,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The type of object this position will hold
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = true, Index = true)]
 		public string ClassType
 		{
 			get

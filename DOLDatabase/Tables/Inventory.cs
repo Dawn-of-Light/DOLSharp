@@ -88,7 +88,7 @@ namespace DOL.Database
 		}
 		
 		protected int m_slot_pos;			// slot in inventory
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = true, Index = true)]
 		public int SlotPosition
 		{
 			get{return m_slot_pos;}
