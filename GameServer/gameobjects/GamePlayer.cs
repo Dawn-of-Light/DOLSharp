@@ -287,6 +287,15 @@ namespace DOL.GS
 			set { m_enteredGame = value; }
 		}
 
+        protected DateTime m_previousLoginDate = DateTime.MinValue;
+        /// <summary>
+        /// What was the last time this player logged in?
+        /// </summary>
+        public DateTime PreviousLoginDate
+        {
+            get { return m_previousLoginDate; }
+        }
+
 		/// <summary>
 		/// Gets or sets the anonymous flag for this player
 		/// (delegate to property in PlayerCharacter)
@@ -791,7 +800,7 @@ namespace DOL.GS
 					return false;
 				}
 
-				string stats = PlayerStatistic.GetStatsMessage(this);
+				string stats = Statistics.GetStatisticsMessage();
 				if (stats != "")
 					Out.SendMessage(stats, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
@@ -2006,6 +2015,25 @@ namespace DOL.GS
 		{
 			get { return GetModified(eProperty.Charisma); }
 		}
+
+        protected IPlayerStatistics m_statistics = null;
+
+        /// <summary>
+        /// Get the statistics for this player
+        /// </summary>
+        public virtual IPlayerStatistics Statistics
+        {
+            get { return m_statistics; }
+        }
+
+        /// <summary>
+        /// Create played statistics for this player
+        /// </summary>
+        public virtual void CreateStatistics()
+        {
+            m_statistics = new PlayerStatistics(this);
+        }
+
 		#endregion
 
 		#region Health/Mana/Endurance/Regeneration
@@ -11979,8 +12007,9 @@ namespace DOL.GS
 					m_mlsteps.Add(mlstep);
 			}
 
-			// Has to be updated on load to ensure time offline isn't
-			// added to character /played.
+            m_previousLoginDate = m_dbCharacter.LastPlayed;
+
+			// Has to be updated on load to ensure time offline isn't added to character /played.
 			m_dbCharacter.LastPlayed = DateTime.Now;
 
 			m_titles.Clear();
@@ -12016,6 +12045,12 @@ namespace DOL.GS
 		{
 			try
 			{
+                // Ff this player is a GM always check and set the IgnoreStatistics flag
+                if (Client.Account.PrivLevel > 1 && m_dbCharacter.IgnoreStatistics == false)
+                {
+                    m_dbCharacter.IgnoreStatistics = true;
+                }
+
 				SaveSkillsToCharacter();
 				SaveCraftingSkills();
 				m_dbCharacter.PlayedTime = PlayedTime;  //We have to set the PlayedTime on the character before setting the LastPlayed
@@ -14922,6 +14957,8 @@ namespace DOL.GS
 
 			m_saveInDB = true;
 			LoadFromDatabase(dbChar);
+
+            CreateStatistics();
 		}
 
 		/// <summary>
