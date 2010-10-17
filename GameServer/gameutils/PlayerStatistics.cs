@@ -19,21 +19,49 @@
  
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
+using DOL.Database;
 using DOL.GS;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using log4net;
+using DOL.Events;
 using DOL.GS.Spells;
+using log4net;
 
 namespace DOL.GS
 {
-	public class PlayerStatistic
+	public class PlayerStatistics : IPlayerStatistics
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		private static string PLAYER_STATISTICS_PROPERTY = "PLAYER_STATISTICS_PROPERTY";
 
-		protected GamePlayer m_Player = null;
+        private const int TIME_BETWEEN_UPDATES = 60000; // 1 minute
+
+        private static bool m_hasBeenRun = false;
+        private static long m_lastUpdatedTime = 0;
+        private static long m_timeToChange = 0;
+
+        private static IList<string> toplist = new List<string>();
+        private static string statsrp;
+        private static string statslrp;
+        private static string statskills;
+        private static string statsdeath;
+        private static string statsirs;
+        private static string statsheal;
+        private static string statsres;
+
+        public class StatToCount
+        {
+            public string name;
+            public uint count;
+
+            public StatToCount(string name, uint count)
+            {
+                this.name = name;
+                this.count = count;
+            }
+        }
+
+		protected GamePlayer m_player = null;
 		protected uint m_TotalRP = 0;
 		protected uint m_RealmPointsEarnedFromKills = 0;
 		protected ushort m_KillsThatHaveEarnedRPs = 0;
@@ -47,7 +75,7 @@ namespace DOL.GS
 
 		public GamePlayer Player
 		{
-			get { return m_Player; }
+			get { return m_player; }
 		}
 
 		public uint TotalRP
@@ -119,53 +147,200 @@ namespace DOL.GS
 		}
 		#endregion
 
-		public PlayerStatistic(GamePlayer player)
+		public PlayerStatistics(GamePlayer player)
 		{
-			m_Player = player;
+            DOL.GS.GameEvents.PlayerStatisticsEvent.CheckHandlers();
+			m_player = player;
 			m_LoginTime = DateTime.Now;
-			SetStatistic(Player, this);
 		}
 
-		public static void SetStatistic(GamePlayer player, PlayerStatistic stats)
-		{
-			player.TempProperties.setProperty(PLAYER_STATISTICS_PROPERTY, stats);
-		}
 
-		public static PlayerStatistic GetStatistic(GamePlayer player)
-		{
-			PlayerStatistic stats = player.TempProperties.getProperty<object>(PLAYER_STATISTICS_PROPERTY, null) as PlayerStatistic;
-			return stats;
-		}
+        public static void CreateServerStats(GameClient client)
+        {
+            GamePlayer player = client.Player;
 
-		public static string GetStatsMessage(GamePlayer player)
-		{
-			PlayerStatistic stats = PlayerStatistic.GetStatistic(player);
+            if (m_lastUpdatedTime == 0)
+            {
+                m_lastUpdatedTime = player.CurrentRegion.Time;
+            }
 
-			if (stats == null)
-				return "";
+            m_timeToChange = (m_lastUpdatedTime + TIME_BETWEEN_UPDATES);
 
-			TimeSpan onlineTime = DateTime.Now.Subtract(stats.LoginTime);
+            if (player.CurrentRegion.Time < m_timeToChange && m_hasBeenRun)
+            {
+                return;
+            }
 
-			string stringOnlineTime = "Online time: " + onlineTime.Days + " days, " + onlineTime.Hours + " hours, " + onlineTime.Minutes + " minutes, " + onlineTime.Seconds + " seconds\n";
-			if (onlineTime.Days < 1)
-				stringOnlineTime = "Online time: " + onlineTime.Hours + " hours, " + onlineTime.Minutes + " minutes, " + onlineTime.Seconds + " seconds\n";
+            #region /stats top
+            var chars = GameServer.Database.SelectObjects<DOLCharacters>("RealmPoints > 213881 ORDER BY RealmPoints DESC LIMIT 100"); // assuming we can get at least 20 players
+            if (toplist.Count > 0)
+            {
+                toplist.Clear();
+            }
+            int count = 1;
+            foreach (DOLCharacters chr in chars)
+            {
+                if (chr.IgnoreStatistics == false)
+                {
+                    var account = GameServer.Database.SelectObject<Account>("Name = '" + chr.AccountName + "'");
 
-			string message = 		"Options: /stats [ top | rp | kills | deathblows | irs | heal | rez | <name> ]\n"+
-									"Statistics for " + player.Name + " this Session:\n" +
-									"Total RP: " + stats.TotalRP + "\n" +
-									"RP earned from kills: " + stats.RealmPointsEarnedFromKills + "\n" +
-									"Kills that have earned RP: " + stats.KillsThatHaveEarnedRPs + "\n" +
-									"Deathblows: " + stats.Deathblows + "\n" +
-									"Deaths: " + stats.Deaths + "\n" +
-									"HP healed: " + stats.HitPointsHealed + "\n" +
-									"Resurrections performed: " + stats.RessurectionsPerformed + "\n" +
-									stringOnlineTime +
-									"RP/hour: " + stats.RPsPerHour(stats.TotalRP, onlineTime) + "\n" +
-									"Kills per death: " + Divide((uint)stats.KillsThatHaveEarnedRPs, (uint)stats.Deaths) + "\n" +
-									"RP per kill: " + Divide(stats.RealmPointsEarnedFromKills, (uint)stats.KillsThatHaveEarnedRPs) + "\n" +
-									"\"I Remain Standing...\": " + Divide(stats.RealmPointsEarnedFromKills, (uint)stats.Deaths) + "\n";
-			return message;
-		}
+                    if (account != null && account.PrivLevel == 1)
+                    {
+                        toplist.Add("\n" + count.ToString() + " - [ " + chr.Name + " ] with " + String.Format("{0:0,0}", chr.RealmPoints) + " RP - [ " + (((chr.RealmLevel + 10) / 10) + "L" + ((chr.RealmLevel + 10) % 10)) + " ]");
+                        if (++count > 20)
+                            break;
+                    }
+                }
+            }
+
+            if (count == 1)
+            {
+                toplist.Add("None found!");
+            }
+            #endregion /stats top
+
+            List<StatToCount> allstatsrp = new List<StatToCount>();
+            List<StatToCount> allstatslrp = new List<StatToCount>();
+            List<StatToCount> allstatskills = new List<StatToCount>();
+            List<StatToCount> allstatsdeath = new List<StatToCount>();
+            List<StatToCount> allstatsirs = new List<StatToCount>();
+            List<StatToCount> allstatsheal = new List<StatToCount>();
+            List<StatToCount> allstatsres = new List<StatToCount>();
+
+            foreach (GameClient c in WorldMgr.GetAllPlayingClients())
+            {
+                if (c == null || c.Account.PrivLevel != 1 || c.Player.DBCharacter.IgnoreStatistics)
+                    continue;
+
+                PlayerStatistics stats = player.Statistics as PlayerStatistics;
+                if (stats != null)
+                {
+                    if (c.Player.RealmLevel > 31)
+                    {
+                        allstatsrp.Add(new StatToCount(c.Player.Name, stats.TotalRP));
+                        TimeSpan onlineTime = DateTime.Now.Subtract(stats.LoginTime);
+                        allstatslrp.Add(new StatToCount(c.Player.Name, (uint)Math.Round(stats.RPsPerHour(stats.TotalRP, onlineTime))));
+                        uint deaths = stats.Deaths; if (deaths < 1) deaths = 1;
+                        allstatsirs.Add(new StatToCount(c.Player.Name, (uint)Math.Round((double)stats.TotalRP / (double)deaths)));
+                    }
+                    allstatskills.Add(new StatToCount(c.Player.Name, stats.KillsThatHaveEarnedRPs));
+                    allstatsdeath.Add(new StatToCount(c.Player.Name, stats.Deathblows));
+                    allstatsheal.Add(new StatToCount(c.Player.Name, stats.HitPointsHealed));
+                    allstatsres.Add(new StatToCount(c.Player.Name, stats.RessurectionsPerformed));
+                }
+            }
+            allstatsrp.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsrp.Reverse();
+            allstatslrp.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatslrp.Reverse();
+            allstatskills.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatskills.Reverse();
+            allstatsdeath.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsdeath.Reverse();
+            allstatsirs.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsirs.Reverse();
+            allstatsheal.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsheal.Reverse();
+            allstatsres.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsres.Reverse();
+
+            statsrp = ""; statslrp = ""; statskills = ""; statsdeath = ""; statsirs = ""; statsheal = ""; statsres = "";
+            for (int c = 0; c < allstatsrp.Count; c++) { if (c > 19 || allstatsrp[c].count < 1) break; statsrp += (c + 1) + ". " + allstatsrp[c].name + " with " + allstatsrp[c].count.ToString() + " RP\n"; }
+            for (int c = 0; c < allstatslrp.Count; c++) { if (c > 19 || allstatslrp[c].count < 1) break; statslrp += (c + 1) + ". " + allstatslrp[c].name + " with " + allstatslrp[c].count.ToString() + " RP/hour\n"; }
+            for (int c = 0; c < allstatskills.Count; c++) { if (c > 19 || allstatskills[c].count < 1) break; statskills += (c + 1) + ". " + allstatskills[c].name + " with " + allstatskills[c].count.ToString() + " kills\n"; }
+            for (int c = 0; c < allstatsdeath.Count; c++) { if (c > 19 || allstatsdeath[c].count < 1) break; statsdeath += (c + 1) + ". " + allstatsdeath[c].name + " with " + allstatsdeath[c].count.ToString() + " deathblows\n"; }
+            for (int c = 0; c < allstatsirs.Count; c++) { if (c > 19 || allstatsirs[c].count < 1) break; statsirs += (c + 1) + ". " + allstatsirs[c].name + " with " + allstatsirs[c].count.ToString() + " RP/death\n"; }
+            for (int c = 0; c < allstatsheal.Count; c++) { if (c > 19 || allstatsheal[c].count < 1) break; statsheal += (c + 1) + ". " + allstatsheal[c].name + " with " + allstatsheal[c].count.ToString() + " HP\n"; }
+            for (int c = 0; c < allstatsres.Count; c++) { if (c > 19 || allstatsres[c].count < 1) break; statsres += (c + 1) + ". " + allstatsres[c].name + " with " + allstatsres[c].count.ToString() + " res\n"; }
+
+            m_lastUpdatedTime = player.CurrentRegion.Time;
+            m_hasBeenRun = true;
+        }
+
+        /// <summary>
+        /// Return a formatted string showing a players stats
+        /// </summary>
+        /// <returns></returns>
+        public virtual string GetStatisticsMessage()
+        {
+            TimeSpan onlineTime = DateTime.Now.Subtract(LoginTime);
+
+            string stringOnlineTime = "Online time: " + onlineTime.Days + " days, " + onlineTime.Hours + " hours, " + onlineTime.Minutes + " minutes, " + onlineTime.Seconds + " seconds\n";
+            if (onlineTime.Days < 1)
+                stringOnlineTime = "Online time: " + onlineTime.Hours + " hours, " + onlineTime.Minutes + " minutes, " + onlineTime.Seconds + " seconds\n";
+
+            // First line should include all the options available for the stats command
+            string message = "Options: /stats [ top | rp | kills | deathblows | irs | heal | rez | player <name|target> ]\n" +
+                                    "Statistics for " + Player.Name + " this Session:\n" +
+                                    "Total RP: " + TotalRP + "\n" +
+                                    "RP earned from kills: " + RealmPointsEarnedFromKills + "\n" +
+                                    "Kills that have earned RP: " + KillsThatHaveEarnedRPs + "\n" +
+                                    "Deathblows: " + Deathblows + "\n" +
+                                    "Deaths: " + Deaths + "\n" +
+                                    "HP healed: " + HitPointsHealed + "\n" +
+                                    "Resurrections performed: " + RessurectionsPerformed + "\n" +
+                                    stringOnlineTime +
+                                    "RP/hour: " + RPsPerHour(TotalRP, onlineTime) + "\n" +
+                                    "Kills per death: " + Divide((uint)KillsThatHaveEarnedRPs, (uint)Deaths) + "\n" +
+                                    "RP per kill: " + Divide(RealmPointsEarnedFromKills, (uint)KillsThatHaveEarnedRPs) + "\n" +
+                                    "\"I Remain Standing...\": " + Divide(RealmPointsEarnedFromKills, (uint)Deaths) + "\n";
+            return message;
+        }
+
+
+        /// <summary>
+        /// Get serverwide player statistics
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        public virtual void DisplayServerStatistics(GameClient client, string command, string playerName)
+        {
+            CreateServerStats(client);
+
+            switch (command)
+            {
+                case "top":
+                    client.Out.SendCustomTextWindow("Top 20 Players", toplist);
+                    break;
+                case "rp":
+                    client.Player.Out.SendMessage("Top 20 for Realm Points\n" + statsrp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    break;
+                case "lrp":
+                    client.Player.Out.SendMessage("Top 20 for RP / Hour\n" + statslrp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    break;
+                case "kills":
+                    client.Player.Out.SendMessage("Top 20 Killers\n" + statskills, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    break;
+                case "deathblows":
+                    client.Player.Out.SendMessage("Top 20 Deathblows\n" + statsdeath, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    break;
+                case "irs":
+                    client.Player.Out.SendMessage("Top 20 \"I Remain Standing\"\n" + statsirs, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    break;
+                case "heal":
+                    client.Player.Out.SendMessage("Top 20 Healers\n" + statsheal, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    break;
+                case "rez":
+                    client.Player.Out.SendMessage("Top 20 Resurrectors\n" + statsres, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    break;
+                case "player":
+                    GameClient clientc = WorldMgr.GetClientByPlayerName(playerName, false, true);
+                    if (clientc == null)
+                    {
+                        client.Player.Out.SendMessage("No player with name '" + playerName + "' found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return;
+                    }
+
+                    if (clientc.Player.StatsAnonFlag)
+                    {
+                        client.Player.Out.SendMessage(playerName + " doesn't want you to view his stats.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return;
+                    }
+
+                    client.Player.Out.SendMessage(clientc.Player.Statistics.GetStatisticsMessage(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    break;
+
+                default:
+                    client.Player.Out.SendMessage("Options: /stats [ top | rp | kills | deathblows | irs | heal | rez | player <name|target> ]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    break;
+            }
+
+        }
+
 
 		public static uint Divide(uint dividend, uint divisor)
 		{
@@ -198,38 +373,21 @@ namespace DOL.GS.GameEvents
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		[ScriptLoadedEvent]
-		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
-		{
-			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(GameEnteredCallback));
-			GameEventMgr.AddHandler(GameLivingEvent.GainedRealmPoints, new DOLEventHandler(GainedRealmPointsCallback));
-			GameEventMgr.AddHandler(GameLivingEvent.Dying, new DOLEventHandler(DyingCallback));
-			GameEventMgr.AddHandler(GameLivingEvent.CastFinished, new DOLEventHandler(FinishCastSpellCallback));
-			GameEventMgr.AddHandler(GameLivingEvent.HealthChanged, new DOLEventHandler(HealthChangedCallback));
-		}
+        private static bool m_handlersLoaded = false;
 
-		[ScriptUnloadedEvent]
-		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
-		{
-			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(GameEnteredCallback));
-			GameEventMgr.RemoveHandler(GameLivingEvent.GainedRealmPoints, new DOLEventHandler(GainedRealmPointsCallback));
-			GameEventMgr.RemoveHandler(GameLivingEvent.Dying, new DOLEventHandler(DyingCallback));
-			GameEventMgr.RemoveHandler(GameLivingEvent.CastFinished, new DOLEventHandler(FinishCastSpellCallback));
-			GameEventMgr.RemoveHandler(GameLivingEvent.HealthChanged, new DOLEventHandler(HealthChangedCallback));
-		}
-
-		public static void GameEnteredCallback(DOLEvent e, object sender, EventArgs args)
-		{
-			GamePlayer player = sender as GamePlayer;
-
-			if (player == null)
-				return;
-
-			if (PlayerStatistic.GetStatistic(player) != null)
-				return;
-			else
-				new PlayerStatistic(player);
-		}
+        // Load these when the first player logs in
+        // Coded like this so they won't be loaded if the server uses custom statistics
+        public static void CheckHandlers()
+        {
+            if (m_handlersLoaded == false)
+            {
+                m_handlersLoaded = true;
+                GameEventMgr.AddHandler(GameLivingEvent.GainedRealmPoints, new DOLEventHandler(GainedRealmPointsCallback));
+                GameEventMgr.AddHandler(GameLivingEvent.Dying, new DOLEventHandler(DyingCallback));
+                GameEventMgr.AddHandler(GameLivingEvent.CastFinished, new DOLEventHandler(FinishCastSpellCallback));
+                GameEventMgr.AddHandler(GameLivingEvent.HealthChanged, new DOLEventHandler(HealthChangedCallback));
+            }
+        }
 
 		public static void GainedRealmPointsCallback(DOLEvent e, object sender, EventArgs args)
 		{
@@ -239,14 +397,12 @@ namespace DOL.GS.GameEvents
 			if (player == null || gargs == null)
 				return;
 
-			PlayerStatistic stats = PlayerStatistic.GetStatistic(player);
+			PlayerStatistics stats = player.Statistics as PlayerStatistics;
 
 			if (stats == null)
 				return;
 
 			stats.TotalRP += (uint)gargs.RealmPoints;
-
-			PlayerStatistic.SetStatistic(player, stats);
 		}
 
 		public static void DyingCallback(DOLEvent e, object sender, EventArgs args)
@@ -261,8 +417,8 @@ namespace DOL.GS.GameEvents
 			if (killer == null)
 				return;
 
-			PlayerStatistic killerStats = PlayerStatistic.GetStatistic(killer);
-			PlayerStatistic dyingPlayerStats = PlayerStatistic.GetStatistic(dyingPlayer);
+            PlayerStatistics killerStats = killer.Statistics as PlayerStatistics;
+            PlayerStatistics dyingPlayerStats = dyingPlayer.Statistics as PlayerStatistics;
 
 			if (killerStats == null || dyingPlayerStats == null)
 				return;
@@ -279,19 +435,18 @@ namespace DOL.GS.GameEvents
                     {
                         if (member != killer)
                         {
-                            PlayerStatistic memberStats = PlayerStatistic.GetStatistic(member);
-                            memberStats.KillsThatHaveEarnedRPs++;
-                            memberStats.RealmPointsEarnedFromKills += RPsEarnedFromKill(member, dyingPlayer);
-                            PlayerStatistic.SetStatistic(member, memberStats);
+                            PlayerStatistics memberStats = member.Statistics as PlayerStatistics;
+                            if (memberStats != null)
+                            {
+                                memberStats.KillsThatHaveEarnedRPs++;
+                                memberStats.RealmPointsEarnedFromKills += RPsEarnedFromKill(member, dyingPlayer);
+                            }
                         }
                     }
                 }
 			}
 
 			dyingPlayerStats.Deaths++;
-
-			PlayerStatistic.SetStatistic(dyingPlayer, dyingPlayerStats);
-			PlayerStatistic.SetStatistic(killer, killerStats);
 		}
 
 		public static void FinishCastSpellCallback(DOLEvent e, object sender, EventArgs args)
@@ -304,9 +459,11 @@ namespace DOL.GS.GameEvents
 
 			if (fargs.SpellHandler.Spell.SpellType == "Resurrect")
 			{
-				PlayerStatistic stats = PlayerStatistic.GetStatistic(caster);
-				stats.RessurectionsPerformed++;
-				PlayerStatistic.SetStatistic(caster, stats);
+				PlayerStatistics stats = caster.Statistics as PlayerStatistics;
+                if (stats != null)
+                {
+                    stats.RessurectionsPerformed++;
+                }
 			}
 		}
 
@@ -318,11 +475,13 @@ namespace DOL.GS.GameEvents
 				GamePlayer player = hargs.ChangeSource as GamePlayer;
 				if (player == null)
 					return;
-				PlayerStatistic stats = PlayerStatistic.GetStatistic(player);
-				if (stats == null)
-					return;
-				stats.HitPointsHealed += (uint)hargs.ChangeAmount;
-				PlayerStatistic.SetStatistic(player, stats);
+
+                PlayerStatistics stats = player.Statistics as PlayerStatistics;
+
+                if (stats != null)
+                {
+                    stats.HitPointsHealed += (uint)hargs.ChangeAmount;
+                }
 			}
 		}
 

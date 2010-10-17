@@ -194,6 +194,9 @@ namespace DOL
 			private int m_mlLevel;
 			private bool m_mlGranted;
 
+            // Should this player stats be ignored when tabulating statistics?
+            private bool m_ignoreStatistics = false;
+
 			/// <summary>
 			/// Create the character row in table
 			/// </summary>
@@ -228,6 +231,7 @@ namespace DOL
 				m_noHelp = false;
 				m_showGuildLogins = false;
 				m_roleplay = false;
+                m_ignoreStatistics = false;
 			}
 
 			/// <summary>
@@ -659,7 +663,7 @@ namespace DOL
 			/// Name of this character. all name of character is unique
 			/// </summary>
 			[DataElement(AllowDbNull = false, Unique = true)]
-			public string Name
+			public virtual string Name
 			{
 				get
 				{
@@ -2287,54 +2291,19 @@ namespace DOL
 				}
 			}
 
-			#region Relations
-			
-			/*	Graveen: disabled due tout huge slowdown on server start
-             
             /// <summary>
-            /// Remove DBCharacterXMasterLevel
+            /// Do we ignore all statistics for this player?
             /// </summary>
-            [Relation(LocalField = "Name", RemoteField = "CharName", AutoLoad = true, AutoDelete = true)]
-            public DBCharacterXMasterLevel[] CharXML;
-
-            /// <summary>
-            /// Remove InventoryItem
-            /// </summary>
-            [Relation(LocalField = "ObjectId", RemoteField = "OwnerID", AutoLoad = true, AutoDelete = true)]
-            public InventoryItem[] Items;
-
-            /// <summary>
-            /// Remove DBOTDXCharacter
-            /// </summary>
-            [Relation(LocalField = "Name", RemoteField = "CharacterName", AutoLoad = true, AutoDelete = true)]
-            public DBOTDXCharacter[] otdXchar;
-
-            /// <summary>
-            /// Remove DBBoat
-            /// </summary>
-            [Relation(LocalField = "ObjectId", RemoteField = "BoatOwner", AutoLoad = true, AutoDelete = true)]
-            public DBBoat[] boats;
-
-            /// <summary>
-            /// Remove PlayerXEffect
-            /// </summary>
-            [Relation(LocalField = "ObjectId", RemoteField = "ChardID", AutoLoad = true, AutoDelete = true)]
-            public PlayerXEffect[] plrXeffects;
-
-            /// <summary>
-            /// Remove DBQuest
-            /// </summary>
-            [Relation(LocalField = "Name", RemoteField = "CharName", AutoLoad = true, AutoDelete = true)]
-            public DBQuest[] quests;
-
-            /// <summary>
-            /// Remove DBSinglePermission
-            /// </summary>
-            [Relation(LocalField = "ObjectId", RemoteField = "PlayerID", AutoLoad = true, AutoDelete = true)]
-            public DBSinglePermission[] singlePermissions;
-			 */
-			#endregion Relations
-
+            [DataElement(AllowDbNull = true)]
+            public bool IgnoreStatistics
+            {
+                get { return m_ignoreStatistics; }
+                set 
+                { 
+                    Dirty = true; 
+                    m_ignoreStatistics = value;
+                }
+            }
 		}
 	}
 }

@@ -106,7 +106,8 @@ namespace DOL
 				this.HairStyle = character.HairStyle;
 				this.HasGravestone = character.HasGravestone;
 				this.Health = character.Health;
-				this.Intelligence = character.Intelligence;
+                this.IgnoreStatistics = character.IgnoreStatistics;
+                this.Intelligence = character.Intelligence;
 				this.IsAnonymous = character.IsAnonymous;
 				this.IsCloakHoodUp = character.IsCloakHoodUp;
 				this.IsCloakInvisible = character.IsCloakInvisible;
@@ -177,7 +178,6 @@ namespace DOL
 				this.Xpos = character.Xpos;
 				this.Ypos = character.Ypos;
 				this.Zpos = character.Zpos;
-
 			}
 
 			/// <summary>
@@ -196,6 +196,23 @@ namespace DOL
 					m_dolCharactersID = value;
 				}
 			}
+
+            /// <summary>
+            /// Name of this character - indexed but not unique for backups
+            /// </summary>
+            [DataElement(AllowDbNull = false, Index = true)]
+            public override string Name
+            {
+                get
+                {
+                    return base.Name;
+                }
+                set
+                {
+                    Dirty = true;
+                    base.Name = value;
+                }
+            }
 
 			/// <summary>
 			/// The deletion date of this character
