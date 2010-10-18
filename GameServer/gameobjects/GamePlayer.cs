@@ -294,6 +294,7 @@ namespace DOL.GS
         public DateTime PreviousLoginDate
         {
             get { return m_previousLoginDate; }
+            set { m_previousLoginDate = value; }
         }
 
 		/// <summary>
