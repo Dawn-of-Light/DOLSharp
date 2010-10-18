@@ -38,11 +38,19 @@ namespace DOL.GS.Commands
 		private const string CantTrainSpec = "You can't train in this specialization again this level!";
 		private const string NotEnoughPointsLeft = "You don't have that many specialization points left for this level.";
 
+		// Allow to automate this command: no checks for spam command
+		private bool automated = false;
+		public TrainCommandHandler() {}
+		public TrainCommandHandler(bool automated)
+		{
+			this.automated = automated;
+		}
+		
 		#region ICommandHandler Members
 
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (IsSpammingCommand(client.Player, "train"))
+			if (!automated && IsSpammingCommand(client.Player, "train"))
 			{
 				return;
 			}
