@@ -182,7 +182,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return 0;
 			}
 			
-			//Specializations - 8 trainable specs max?
+			//Specializations - 8 trainable specs max
 			uint size = 8;
 			long position = packet.Position;
 			IList<uint> skills = new List<uint>();
@@ -222,7 +222,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					if (spec.Level < amounts[skillcount])
 					{
-						TrainCommandHandler train = new TrainCommandHandler();
+						TrainCommandHandler train = new TrainCommandHandler(true);
 						train.OnCommand(client, new string[] { "&trainline", spec.KeyName, amounts[skillcount].ToString() });
 						trained = true;
 					}
