@@ -212,7 +212,7 @@ namespace DOL.GS
                 if (c == null || c.Account.PrivLevel != 1 || c.Player.DBCharacter.IgnoreStatistics)
                     continue;
 
-                PlayerStatistics stats = player.Statistics as PlayerStatistics;
+                PlayerStatistics stats = c.Player.Statistics as PlayerStatistics;
                 if (stats != null)
                 {
                     if (c.Player.RealmLevel > 31)
