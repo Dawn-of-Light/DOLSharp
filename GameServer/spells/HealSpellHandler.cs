@@ -272,7 +272,7 @@ namespace DOL.GS.Spells
 			double spellValue = m_spell.Value;
 			GamePlayer casterPlayer = m_caster as GamePlayer;
 
-			if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects)
+            if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects)
 			{
 				if (m_spell.Value > 0)
 				{
@@ -282,7 +282,17 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+            if (m_spellLine.KeyName == GlobalSpellsLines.Potions_Effects)
+            {
+                if (m_spell.Value > 0)
+                {
+                    min = (int)(spellValue * 1.00);
+                    max = (int)(spellValue * 1.25);
+                    return;
+                }
+            }
+
+            if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
 			{
 				if (m_spell.Value > 0)
 				{
