@@ -36,6 +36,11 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		protected byte icons;
+		public byte Icons {
+			get { return icons; }
+		}
+
 		/// <summary>
 		/// Constructs a new PacketLib for Version 1.90 clients
 		/// </summary>
@@ -43,6 +48,8 @@ namespace DOL.GS.PacketHandler
 		public PacketLib190(GameClient client)
 			: base(client)
 		{
+			// SendUpdateIcons
+			icons = 0;
 		}
 
 		public override void SendUpdatePoints()
@@ -98,7 +105,7 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.WriteByte(0);	// effects count set in the end
 				pak.WriteByte(0);	// unknown
-				pak.WriteByte(0);	// unknown
+				pak.WriteByte(Icons);	// unknown
 				pak.WriteByte(0);	// unknown
 				foreach (IGameEffect effect in m_gameClient.Player.EffectList)
 				{
