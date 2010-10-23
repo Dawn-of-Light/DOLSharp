@@ -431,6 +431,10 @@ namespace DOL.GS.ServerRules
 			if (player.IsSitting) return "GamePlayer.UseSlot.CantCallMountSeated";
 			if (player.IsStealthed) return "GamePlayer.UseSlot.CantMountStealthed";
 			
+			// You are carrying a relic ? You can't use a mount !
+			if (GameRelic.IsPlayerCarryingRelic(player))
+				return "GamePlayer.UseSlot.CantMountRelicCarrier";
+			
 			// zones checks:
 			// white list: always allows
 			string currentRegion = player.CurrentRegion.ID.ToString();
