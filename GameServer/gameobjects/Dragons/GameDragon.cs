@@ -343,19 +343,11 @@ namespace DOL.GS
 		protected int AwardDragonKillPoint()
 		{
 			int count = 0;
-			lock (this.XPGainers.SyncRoot)
-			{
-				foreach (System.Collections.DictionaryEntry de in this.XPGainers)
-				{
-					GameObject obj = (GameObject)de.Key;
-					if (obj is GamePlayer)
-					{
-						GamePlayer player = obj as GamePlayer;
-						player.KillsDragon++;
-						count++;
-					}
-				}
-			}
+            foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+            {
+                player.KillsDragon++;
+                count++;
+            }
 			return count;
 		}
 
