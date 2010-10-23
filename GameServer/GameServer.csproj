@@ -2646,7 +2646,6 @@
     <None Include="language\EN\PlayerClasses.txt" />
     <None Include="language\EN\PlayerRaces.txt" />
     <None Include="language\EN\PlayerTitles.txt" />
-    <None Include="language\EN\Quests.txt" />
     <None Include="language\EN\Quests\Albion\A Few Repairs.txt" />
     <None Include="language\EN\Quests\Albion\AfterTheAccident.txt" />
     <None Include="language\EN\Quests\Albion\ANewHeroesWelcome.txt" />
@@ -2665,7 +2664,6 @@
     <None Include="language\EN\Quests\Hibernia\SearchForKnowledge.txt" />
     <None Include="language\EN\Quests\Hibernia\ToReachTheBreach.txt" />
     <None Include="language\EN\Quests\Hibernia\WingsOfTheIsle.txt" />
-    <None Include="language\EN\Quests\RewardQuest.txt" />
     <None Include="language\EN\RealmAbilities.txt" />
     <None Include="language\EN\ServerRules.txt" />
     <None Include="language\EN\SkillHandler.txt" />

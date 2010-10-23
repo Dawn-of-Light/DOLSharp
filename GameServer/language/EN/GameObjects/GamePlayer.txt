@@ -296,7 +296,8 @@ GamePlayer.UseSlot.CantMountCombat:				You are in combat and cannot call your mo
 GamePlayer.UseSlot.CantMountHere:			You cannot summon a mount here!		
 GamePlayer.UseSlot.CantMountMoving:				You can't mount while you're moving.		
 GamePlayer.UseSlot.CantMountStealthed				You can't mount while you're in stealth.		
-GamePlayer.UseSlot.CantMountWhileDead:			You can't mount while you're dead.		
+GamePlayer.UseSlot.CantMountWhileDead:			You can't mount while you're dead.
+GamePlayer.UseSlot.CantMountRelicCarrier:		You can't mount while carrying a Relic!
 GamePlayer.UseSlot.CantSeeTarget:				You can't see your target!		
 GamePlayer.UseSlot.CantSummonRvR:				You cannot summon that mount in RvR zones.		
 GamePlayer.UseSlot.CantUseFromBackpack:		You can't use this item from your backpack. Equip it before!			
