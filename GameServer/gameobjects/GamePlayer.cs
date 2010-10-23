@@ -287,15 +287,15 @@ namespace DOL.GS
 			set { m_enteredGame = value; }
 		}
 
-        protected DateTime m_previousLoginDate = DateTime.MinValue;
-        /// <summary>
-        /// What was the last time this player logged in?
-        /// </summary>
-        public DateTime PreviousLoginDate
-        {
-            get { return m_previousLoginDate; }
-            set { m_previousLoginDate = value; }
-        }
+		protected DateTime m_previousLoginDate = DateTime.MinValue;
+		/// <summary>
+		/// What was the last time this player logged in?
+		/// </summary>
+		public DateTime PreviousLoginDate
+		{
+			get { return m_previousLoginDate; }
+			set { m_previousLoginDate = value; }
+		}
 
 		/// <summary>
 		/// Gets or sets the anonymous flag for this player
@@ -2017,23 +2017,23 @@ namespace DOL.GS
 			get { return GetModified(eProperty.Charisma); }
 		}
 
-        protected IPlayerStatistics m_statistics = null;
+		protected IPlayerStatistics m_statistics = null;
 
-        /// <summary>
-        /// Get the statistics for this player
-        /// </summary>
-        public virtual IPlayerStatistics Statistics
-        {
-            get { return m_statistics; }
-        }
+		/// <summary>
+		/// Get the statistics for this player
+		/// </summary>
+		public virtual IPlayerStatistics Statistics
+		{
+			get { return m_statistics; }
+		}
 
-        /// <summary>
-        /// Create played statistics for this player
-        /// </summary>
-        public virtual void CreateStatistics()
-        {
-            m_statistics = new PlayerStatistics(this);
-        }
+		/// <summary>
+		/// Create played statistics for this player
+		/// </summary>
+		public virtual void CreateStatistics()
+		{
+			m_statistics = new PlayerStatistics(this);
+		}
 
 		#endregion
 
@@ -8113,8 +8113,8 @@ namespace DOL.GS
 			int ticks = spell.CastTime;
 
 			if (spell.InstrumentRequirement != 0 ||
-				line.KeyName == GlobalSpellsLines.Item_Spells ||
-				line.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
+			    line.KeyName == GlobalSpellsLines.Item_Spells ||
+			    line.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
 			{
 				return ticks;
 			}
@@ -8128,7 +8128,7 @@ namespace DOL.GS
 				// This ability will allow you to cast a spell without interruption.
 				// http://support.darkageofcamelot.com/kb/article.php?id=022
 
-				// A: You're right. The answer I should have given was that Quick Cast reduces the time needed to cast to a flat two seconds, 
+				// A: You're right. The answer I should have given was that Quick Cast reduces the time needed to cast to a flat two seconds,
 				// and that a spell that has been quick casted cannot be interrupted. ...
 				// http://www.camelotherald.com/news/news_article.php?storyid=1383
 
@@ -8436,7 +8436,7 @@ namespace DOL.GS
 		public virtual void UseSlot(eInventorySlot slot, eUseType type)
 		{
 			UseSlot((int)slot, (int)type);
-		}	
+		}
 		public virtual void UseSlot(int slot, int type)
 		{
 			if (!IsAlive)
@@ -9371,36 +9371,30 @@ namespace DOL.GS
 		/// <returns>true if mounted successfully or false if not</returns>
 		public virtual bool MountSteed(GameNPC steed, bool forced)
 		{
+			// Sanity 'coherence' checks
 			if (Steed != null)
-			{
 				if (!DismountSteed(forced))
 					return false;
-			}
-
-			if (CurrentRegion.IsDungeon)
-			{
-				return false;
-			}
-
-			if (GameRelic.IsPlayerCarryingRelic(this))
-			{
-				return false;
-			}
-
-			if (OnMountSteed != null && !OnMountSteed(this, steed, forced) && !forced)
-				return false;
-
-			if (!steed.RiderMount(this, forced) && !forced)
-				return false;
 
 			if (IsOnHorse)
 				IsOnHorse = false;
+			
+			if (!steed.RiderMount(this, forced) && !forced)
+				return false;
+			
+			if (OnMountSteed != null && !OnMountSteed(this, steed, forced) && !forced)
+				return false;
 
+			// Standard checks, as specified in rules
+			if (GameServer.ServerRules.ReasonForDisallowMounting(this) != string.Empty && !forced)
+				return false;
+			
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				if (player == null) continue;
 				player.Out.SendRiding(this, steed, false);
 			}
+			
 			return true;
 		}
 
@@ -12008,7 +12002,7 @@ namespace DOL.GS
 					m_mlsteps.Add(mlstep);
 			}
 
-            m_previousLoginDate = m_dbCharacter.LastPlayed;
+			m_previousLoginDate = m_dbCharacter.LastPlayed;
 
 			// Has to be updated on load to ensure time offline isn't added to character /played.
 			m_dbCharacter.LastPlayed = DateTime.Now;
@@ -12046,11 +12040,11 @@ namespace DOL.GS
 		{
 			try
 			{
-                // Ff this player is a GM always check and set the IgnoreStatistics flag
-                if (Client.Account.PrivLevel > 1 && m_dbCharacter.IgnoreStatistics == false)
-                {
-                    m_dbCharacter.IgnoreStatistics = true;
-                }
+				// Ff this player is a GM always check and set the IgnoreStatistics flag
+				if (Client.Account.PrivLevel > 1 && m_dbCharacter.IgnoreStatistics == false)
+				{
+					m_dbCharacter.IgnoreStatistics = true;
+				}
 
 				SaveSkillsToCharacter();
 				SaveCraftingSkills();
@@ -14959,7 +14953,7 @@ namespace DOL.GS
 			m_saveInDB = true;
 			LoadFromDatabase(dbChar);
 
-            CreateStatistics();
+			CreateStatistics();
 		}
 
 		/// <summary>
