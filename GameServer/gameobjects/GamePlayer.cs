@@ -13855,7 +13855,7 @@ namespace DOL.GS
 		/// Gets or sets the count of albion players killed.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsAlbionPlayers
+		public virtual int KillsAlbionPlayers
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsAlbionPlayers : 0; }
 			set
@@ -13870,7 +13870,7 @@ namespace DOL.GS
 		/// Gets or sets the count of midgard players killed.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsMidgardPlayers
+        public virtual int KillsMidgardPlayers
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsMidgardPlayers : 0; }
 			set
@@ -13885,7 +13885,7 @@ namespace DOL.GS
 		/// Gets or sets the count of hibernia players killed.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsHiberniaPlayers
+        public virtual int KillsHiberniaPlayers
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsHiberniaPlayers : 0; }
 			set
@@ -13900,7 +13900,7 @@ namespace DOL.GS
 		/// Gets or sets the count of death blows on albion players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsAlbionDeathBlows
+        public virtual int KillsAlbionDeathBlows
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsAlbionDeathBlows : 0; }
 			set
@@ -13914,7 +13914,7 @@ namespace DOL.GS
 		/// Gets or sets the count of death blows on midgard players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsMidgardDeathBlows
+        public virtual int KillsMidgardDeathBlows
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsMidgardDeathBlows : 0; }
 			set
@@ -13928,7 +13928,7 @@ namespace DOL.GS
 		/// Gets or sets the count of death blows on hibernia players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsHiberniaDeathBlows
+        public virtual int KillsHiberniaDeathBlows
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsHiberniaDeathBlows : 0; }
 			set
@@ -13942,7 +13942,7 @@ namespace DOL.GS
 		/// Gets or sets the count of killed solo albion players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsAlbionSolo
+        public virtual int KillsAlbionSolo
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsAlbionSolo : 0; }
 			set
@@ -13956,7 +13956,7 @@ namespace DOL.GS
 		/// Gets or sets the count of killed solo midgard players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsMidgardSolo
+        public virtual int KillsMidgardSolo
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsMidgardSolo : 0; }
 			set
@@ -13970,7 +13970,7 @@ namespace DOL.GS
 		/// Gets or sets the count of killed solo hibernia players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsHiberniaSolo
+        public virtual int KillsHiberniaSolo
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsHiberniaSolo : 0; }
 			set
@@ -13984,7 +13984,7 @@ namespace DOL.GS
 		/// Gets or sets the count of captured keeps.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int CapturedKeeps
+        public virtual int CapturedKeeps
 		{
 			get { return DBCharacter != null ? DBCharacter.CapturedKeeps : 0; }
 			set
@@ -13998,7 +13998,7 @@ namespace DOL.GS
 		/// Gets or sets the count of captured towers.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int CapturedTowers
+        public virtual int CapturedTowers
 		{
 			get { return DBCharacter != null ? DBCharacter.CapturedTowers : 0; }
 			set
@@ -14012,7 +14012,7 @@ namespace DOL.GS
 		/// Gets or sets the count of captured relics.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int CapturedRelics
+        public virtual int CapturedRelics
 		{
 			get { return DBCharacter != null ? DBCharacter.CapturedRelics : 0; }
 			set
@@ -14026,7 +14026,7 @@ namespace DOL.GS
 		/// Gets or sets the count of dragons killed.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsDragon
+        public virtual int KillsDragon
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsDragon : 0; }
 			set
@@ -14040,7 +14040,7 @@ namespace DOL.GS
 		/// Gets or sets the pvp deaths
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int DeathsPvP
+        public virtual int DeathsPvP
 		{
 			get { return DBCharacter != null ? DBCharacter.DeathsPvP : 0; }
 			set { if (DBCharacter != null) DBCharacter.DeathsPvP = value; }
@@ -14050,7 +14050,7 @@ namespace DOL.GS
 		/// Gets or sets the count of killed Legions.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsLegion
+        public virtual int KillsLegion
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsLegion : 0; }
 			set
@@ -14064,7 +14064,7 @@ namespace DOL.GS
 		/// Gets or sets the count of killed Epic Boss.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int KillsEpicBoss
+        public virtual int KillsEpicBoss
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsEpicBoss : 0; }
 			set
