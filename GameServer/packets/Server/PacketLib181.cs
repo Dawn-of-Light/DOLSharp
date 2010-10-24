@@ -89,7 +89,7 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString("Player Statistics"); //window caption
 
 			byte line = 1;
-			foreach (string str in GameServer.ServerRules.FormatPlayerStatistics(m_gameClient.Player))
+			foreach (string str in m_gameClient.Player.FormatStatistics())
 			{
 				pak.WriteByte(line++);
 				pak.WritePascalString(str);

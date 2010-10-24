@@ -66,7 +66,7 @@ namespace DOL.GS
 		/// based on!
 		/// (renamed and private, cause if derive is needed overwrite PlayerCharacter)
 		/// </summary>
-		private DOLCharacters m_dbCharacter;
+		protected DOLCharacters m_dbCharacter;
 		/// <summary>
 		/// The guild id this character belong to
 		/// </summary>
@@ -2033,6 +2033,15 @@ namespace DOL.GS
 		public virtual void CreateStatistics()
 		{
 			m_statistics = new PlayerStatistics(this);
+		}
+
+		/// <summary>
+		/// Formats this players statistics.
+		/// </summary>
+		/// <returns>List of strings.</returns>
+		public virtual IList<string> FormatStatistics()
+		{
+			return GameServer.ServerRules.FormatPlayerStatistics(this);
 		}
 
 		#endregion
