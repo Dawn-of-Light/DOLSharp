@@ -2343,7 +2343,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendPlayerTitles()
 		{
-			IList<string> text = GameServer.ServerRules.FormatPlayerStatistics(m_gameClient.Player);
+			IList<string> text = m_gameClient.Player.FormatStatistics();
 
 			text.Add(" ");
 			text.Add("Titles:");
