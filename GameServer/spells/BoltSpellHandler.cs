@@ -292,7 +292,7 @@ namespace DOL.GS.Spells
 					ad.Damage = (int)Math.Min(ad.Damage, m_handler.DamageCap(effectiveness));
 				}
 
-				ad.Damage = (int)(ad.Damage*((GamePlayer)caster).Effectiveness);
+				ad.Damage = (int)(ad.Damage * caster.Effectiveness);
 
 				if (blocked == false && ad.CriticalDamage > 0)
 				{
