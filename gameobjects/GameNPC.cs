@@ -4638,9 +4638,13 @@ namespace DOL.GS
 			if (!Util.Chance(mxa[choosen].Chance)) return;
 			
 			string controller = string.Empty;
-			if (this is GamePet)
-				controller = ((Brain as IControlledBrain).GetPlayerOwner() as GamePlayer).Name;
-			
+			if (this is GamePet && Brain is IControlledBrain)
+			{
+				GamePlayer playerOwner = (Brain as IControlledBrain).GetPlayerOwner();
+				if (playerOwner != null)
+					controller = playerOwner.Name;
+			}
+
 			string text = mxa[choosen].Text.Replace("{sourcename}",Name).Replace("{targetname}",living==null?string.Empty:living.Name).Replace("{controller}", controller);
 			
 			// issuing emote
