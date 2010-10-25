@@ -959,7 +959,14 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
-					return m_targetTexts[Step - 1];
+					if (m_targetTexts.Count > 0)
+					{
+						return m_targetTexts[Step - 1];
+					}
+					else
+					{
+						return string.Empty;
+					}
 				}
 				catch (Exception ex)
 				{
