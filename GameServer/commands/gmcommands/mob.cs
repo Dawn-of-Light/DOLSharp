@@ -2173,6 +2173,9 @@ namespace DOL.GS.Commands
 				mob.SetOwnBrain(sbrain);
 			}
 
+			mob.PackageID = targetMob.PackageID;
+			mob.OwnerID = targetMob.OwnerID;
+
 			mob.AddToWorld();
 			mob.LoadedFromScript = false;
 			mob.SaveIntoDatabase();
