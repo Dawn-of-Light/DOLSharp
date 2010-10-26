@@ -597,7 +597,24 @@ namespace DOL.GS.Quests
 
 		public virtual short Count
 		{
-			get { return m_charQuest.Count; }
+			get 
+			{
+				if (m_charQuest != null)
+				{
+					return m_charQuest.Count;
+				}
+
+				try
+				{
+					log.ErrorFormat("m_charQuest null for quest {0}:{1} on character {2}", ID, Name, QuestPlayer == null ? "null" : QuestPlayer.Name);
+				}
+				catch
+				{
+					log.ErrorFormat("Error retrieving count for DataQuest {0}", ID);
+				}
+
+				return 0; 
+			}
 			set
 			{
 				short oldCount = m_charQuest.Count;
