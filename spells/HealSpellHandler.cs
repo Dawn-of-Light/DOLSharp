@@ -319,10 +319,7 @@ namespace DOL.GS.Spells
             // percents if less than zero
             if (spellValue < 0)
             {
-                if (casterPlayer != null)
-                    spellValue = (spellValue / -100.0) * casterPlayer.CalculateMaxHealth(casterPlayer.Level, casterPlayer.GetBaseStat(eStat.CON));
-                else
-                    spellValue = (spellValue / -100.0) * m_caster.MaxHealth;
+                spellValue = (spellValue / -100.0) * m_caster.MaxHealth;
 
                 min = max = (int)spellValue;
                 return;
