@@ -28,14 +28,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int code = packet.ReadByte();
 			int RealmMap = packet.ReadByte();
 			int keepId = packet.ReadByte();
 
 			if (client == null || client.Player == null)
-				return 1;
+				return;
 
 			//hack fix new keep ids
 			if ((int)client.Version >= (int)GameClient.eClientVersion.Version190)
@@ -70,7 +70,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (client.Account.PrivLevel == (int)ePrivLevel.Player &&
 							(client.Player.InCombat || client.Player.CurrentRegionID != 163 || GameRelic.IsPlayerCarryingRelic(client.Player)))
 						{
-							return 0;
+							return;
 						}
 
 						AbstractGameKeep keep = null;
@@ -82,7 +82,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (keep == null && keepId > 6)
 						{
-							return 1;
+							return;
 						}
 
 						if (client.Account.PrivLevel == (int)ePrivLevel.Player)
@@ -95,12 +95,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								if (keep.Realm != client.Player.Realm)
 								{
-									return 0;
+									return;
 								}
 
 								if (keep is GameKeep && ((keep as GameKeep).OwnsAllTowers == false || keep.InCombat))
 								{
-									return 0;
+									return;
 								}
 
 								// Missing: Supply line check
@@ -124,7 +124,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							if (!found)
 							{
 								client.Player.Out.SendMessage("You cannot teleport unless you are near a valid portal stone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return 0;
+								return;
 							}
 						}
 
@@ -171,7 +171,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						break;
 					}
 			}
-			return 1;
 		}
 	}
 

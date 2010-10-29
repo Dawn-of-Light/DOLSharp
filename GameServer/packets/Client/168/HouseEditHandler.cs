@@ -25,14 +25,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort playerID = packet.ReadShort(); // no use for that.
 
 			// house is null, return
 			var house = client.Player.CurrentHouse;
 			if(house == null)
-				return 1;
+				return;
 
 			// grab all valid changes
 			var changes = new List<int>();
@@ -52,8 +52,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				house.Edit(client.Player, changes);
 			}
-
-			return 1;
 		}
 
 		#endregion

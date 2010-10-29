@@ -70,12 +70,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public const string SHSPEEDCOUNTER = "MYSPEEDHACKCOUNTER";
 
 		//static int lastZ=int.MinValue;
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			//Tiv: in very rare cases client send 0xA9 packet before sending S<=C 0xE8 player wolrd initialize
 			if ((client.Player.ObjectState != GameObject.eObjectState.Active) ||
 				(client.ClientState != GameClient.eClientState.Playing))
-				return 1;
+				return;
 
 			int EnvironmentTick = Environment.TickCount;
 			int packetVersion;
@@ -159,7 +159,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			Zone newZone = WorldMgr.GetZone(currentZoneID);
 			if (newZone == null)
 			{
-				if(client.Player==null) return 1;
+				if(client.Player==null) return;
 				if(!client.Player.TempProperties.getProperty("isbeingbanned",false))
 				{
 					if (log.IsErrorEnabled)
@@ -169,7 +169,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.MoveToBind();
 				}
 
-				return 1; // TODO: what should we do? player lost in space
+				return; // TODO: what should we do? player lost in space
 			}
 
 			// move to bind if player fell through the floor
@@ -182,7 +182,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					(ushort)client.Player.DBCharacter.BindZpos,
 					(ushort)client.Player.DBCharacter.BindHeading
 					);
-				return 1;
+				return;
 			}
 
 			int realX = newZone.XOffset + xOffsetInZone;
@@ -421,7 +421,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									client.Player.Quit(true);
 								}
 								client.Disconnect();
-								return 1;
+								return;
 							}
 						}
 					}
@@ -473,7 +473,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					client.Out.SendPlayerQuit(true);
 					client.Disconnect();
-					return 1;
+					return;
 				}
 			}
 
@@ -714,8 +714,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Player.TradeWindow.CloseTrade();
 				}
 			}
-
-			return 1;
 		}
 	}
 }

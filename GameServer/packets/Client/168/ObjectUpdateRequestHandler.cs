@@ -32,7 +32,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
@@ -82,8 +82,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				client.Player.HousingUpdateArray = null;
 			}
-
-			return 1;
 		}
 	}
 }

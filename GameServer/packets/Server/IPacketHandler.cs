@@ -32,6 +32,6 @@ namespace DOL.GS.PacketHandler
 		/// <param name="client">The client that sent the packet</param>
 		/// <param name="packet">The received packet data</param>
 		/// <returns></returns>
-		int HandlePacket(GameClient client, GSPacketIn packet);
+		void HandlePacket(GameClient client, GSPacketIn packet);
 	}
 }

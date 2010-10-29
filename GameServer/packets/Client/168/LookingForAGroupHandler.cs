@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	public class LookingForAGroupHandler : IPacketHandler
 	{
 		//rewritten by Corillian so if it doesn't work you know who to yell at ;)
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			byte grouped = (byte)packet.ReadByte();
 			ArrayList list = new ArrayList();
@@ -56,7 +56,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			client.Out.SendFindGroupWindowUpdate((GamePlayer[])list.ToArray(typeof(GamePlayer)));
-			return 1;
 		}
 	}
 }

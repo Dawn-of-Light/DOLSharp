@@ -23,7 +23,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			// packet.Skip(10);
 			uint playerX = packet.ReadInt();
@@ -33,8 +33,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 #warning TODO: utilize these client-sent coordinates to possibly check for exploits which are spoofing position packets but not spoofing them everywhere
 			new InteractActionHandler(client.Player, targetOid).Start(1);
-
-			return 1;
 		}
 
 		#endregion

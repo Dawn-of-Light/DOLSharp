@@ -27,7 +27,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string name=packet.ReadString(30);
 			string select = string.Format("Name = '{0}'", GameServer.Database.Escape(name));
@@ -35,7 +35,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			bool nameExists = (character != null);
 
 			client.Out.SendDupNameCheckReply(name, nameExists);
-			return 1;
 		}
 	}
 }

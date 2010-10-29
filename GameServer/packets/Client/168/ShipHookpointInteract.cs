@@ -24,7 +24,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP, 0xE4, "ship hookpoint interact")]
 	public class ShipHookpointInteractHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort unk1 = packet.ReadShort();
 			ushort objectOid = packet.ReadShort();
@@ -39,7 +39,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int unk6 = packet.ReadShort();
 
 			if (client.Player.Steed == null || client.Player.Steed is GameBoat == false)
-				return 0;
+				return;
 
 			switch (flag)
 			{
@@ -68,7 +68,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						break;
 					}
 			}
-			return 1;
 		}
 	}
 }

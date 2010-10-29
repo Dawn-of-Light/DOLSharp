@@ -28,7 +28,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort data1 = packet.ReadShort();
 			ushort data2 = packet.ReadShort();
@@ -37,8 +37,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			var response = (byte) packet.ReadByte();
 
 			new DialogBoxResponseAction(client.Player, data1, data2, data3, messageType, response).Start(1);
-
-			return 1;
 		}
 
 		#endregion

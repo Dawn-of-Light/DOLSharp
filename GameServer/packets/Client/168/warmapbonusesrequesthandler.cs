@@ -24,10 +24,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP,0xCE^168,"Show warmap bonuses")]
 	public class WarmapBonusesRequestHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			client.Out.SendWarmapBonuses();
-			return 1;
 		}
 	}
 }

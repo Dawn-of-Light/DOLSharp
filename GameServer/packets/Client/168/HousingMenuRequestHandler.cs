@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int housenumber = packet.ReadShort();
 			int menuid = packet.ReadByte();
@@ -33,10 +33,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			var house = HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
 			if (house == null)
-				return 1;
+				return;
 
 			if (client.Player == null)
-				return 1;
+				return;
 
 			client.Player.CurrentHouse = house;
 
@@ -44,25 +44,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				case 0: // Exterior decoration (Garden)
 					if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
-						return 1;
+						return;
 					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorShopItems, eMerchantWindowType.HousingOutsideShop);
 					break;
 
 				case 1: // Interior decoration
 					if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
-						return 1;
+						return;
 					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorShopItems, eMerchantWindowType.HousingInsideShop);
 					break;
 
 				case 2: // Exterior menu
 					if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
-						return 1;
+						return;
 					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorMenuItems, eMerchantWindowType.HousingOutsideMenu);
 					break;
 				case 3: // interior npc
 					{
 						if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
-							return 1;
+							return;
 
 						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorNPCMenuItems, eMerchantWindowType.HousingNPC);
 						break;
@@ -70,7 +70,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case 4: // vault menu
 					{
 						if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
-							return 1;
+							return;
 
 						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorVaultMenuItems, eMerchantWindowType.HousingVault);
 						break;
@@ -78,7 +78,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case 5: // craft menu
 					{
 						if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
-							return 1;
+							return;
 
 						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorCraftMenuItems, eMerchantWindowType.HousingCrafting);
 						break;
@@ -86,7 +86,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case 6: // bindstone menu
 					{
 						if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
-							return 1;
+							return;
 
 						client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorBindstoneMenuItems,
 						                                     eMerchantWindowType.HousingBindstone);
@@ -98,7 +98,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				case 8: // Interior menu (flag = 0x00 - roof, 0xFF - floor or wall)
 					if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
-						return 1;
+						return;
 					client.Player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorMenuItems, eMerchantWindowType.HousingInsideMenu);
 					break;
 
@@ -107,7 +107,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					                       eChatLoc.CL_SystemWindow);
 					break;
 			}
-			return 1;
 		}
 
 		#endregion

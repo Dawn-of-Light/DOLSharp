@@ -26,31 +26,31 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP, 0xf5, "Handles Siege command Request")]
 	public class SiegeWeaponActionHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			packet.ReadShort();//unk
 			int action = packet.ReadByte();
 			int ammo = packet.ReadByte();//(ammo type if command = 'select ammo' ?)
-			if (client.Player.SiegeWeapon == null) return 1;
+			if (client.Player.SiegeWeapon == null) return;
 			if (client.Player.IsStealthed)
 			{
 				client.Out.SendMessage("You can't control a siege weapon while hidden!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			if (client.Player.IsSitting)
 			{
 				client.Out.SendMessage("You can't fire a siege weapon while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			if (!client.Player.IsAlive || client.Player.IsMezzed || client.Player.IsStunned)
 			{
 				client.Out.SendMessage("You can't control a siege weapon now!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
             if( !client.Player.IsWithinRadius( client.Player.SiegeWeapon, GameSiegeWeapon.SIEGE_WEAPON_CONTROLE_DISTANCE ) )
 			{
 				client.Out.SendMessage(client.Player.SiegeWeapon.GetName(0, true) + " is too far away for you to control!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 
 			switch (action)
@@ -71,7 +71,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						break;
 					}
 			}
-			return 1;
 		}
 	}
 }

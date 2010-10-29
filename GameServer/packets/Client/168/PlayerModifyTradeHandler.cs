@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP,0x43^168,"Player Accepts Trade")]
 	public class PlayerModifyTradeHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			byte isok =(byte) packet.ReadByte();
 			byte repair =(byte) packet.ReadByte();
@@ -34,7 +34,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			ITradeWindow trade = client.Player.TradeWindow;
 			if (trade == null)
-				return 1;
+				return;
 			if (isok==0)
 			{
 				trade.CloseTrade();
@@ -71,7 +71,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				trade.AcceptTrade();
 			}
-			return 0;
 		}
 	}
 }
