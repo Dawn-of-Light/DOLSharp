@@ -19,37 +19,45 @@ namespace DOL.GS.RealmAbilities
 		/// <param name="living"></param>
 		public override void Execute(GameLiving living)
 		{
-			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
+			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED )) return;
 
 			bool deactivate = false;
 
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				if (player.Group != null)
+				if (!player.InCombat)//[Shawn add] Check if player is in combat
 				{
-					SendCasterSpellEffectAndCastMessage(living, 7066, true);
-					foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
+					if (player.Group != null)
 					{
-						if (!CheckPreconditions(member, DEAD) && living.IsWithinRadius( member, 2000 ))
+						SendCasterSpellEffectAndCastMessage(living, 7066, true);
+						foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
 						{
-							if (restoreMana(member, player))
+							if (!CheckPreconditions(member, DEAD) && living.IsWithinRadius(member, 2000))
+							{
+								if (restoreMana(member, player))
+									deactivate = true;
+							}
+						}
+					}
+					else
+					{
+						if (!CheckPreconditions(player, DEAD))
+						{
+							if (restoreMana(player, player))
 								deactivate = true;
 						}
 					}
 				}
 				else
 				{
-					if (!CheckPreconditions(player, DEAD))
-					{
-						if (restoreMana(player, player))
-							deactivate = true;
-					}
+					player.Out.SendMessage("You are in combat, and cannot use this ability!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);//[Send Message out if Player is In Combat]
 				}
+				if (deactivate)
+					DisableSkill(living);
 			}
-			if (deactivate)
-				DisableSkill(living);
 		}
+		
 
 		private bool restoreMana(GameLiving target, GamePlayer owner)
 		{

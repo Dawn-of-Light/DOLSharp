@@ -1,0 +1,4 @@
+# GAMEGUARD
+GameGuard.Albion.StartAttackSay:					Allez en enfer, Démon!
+GameGuard.Midgard.StartAttackSay:					Mort aux intrus!
+GameGuard.Hibernia.StartAttackSay:					Les Intrus doivent mourir!

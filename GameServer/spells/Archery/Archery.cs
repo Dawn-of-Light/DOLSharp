@@ -34,14 +34,14 @@ namespace DOL.GS.Spells
 	{
 		public enum eShotType
 		{
-			Other = 0, 
+			Other = 0,
 			Critical = 1,
 			Power = 2,
 			PointBlank = 3,
 			Rapid = 4
 		}
 
-        public override bool CheckBeginCast(GameLiving selectedTarget)
+		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (m_caster.ObjectState != GameLiving.eObjectState.Active)	return false;
 			if (!m_caster.IsAlive)
@@ -49,6 +49,8 @@ namespace DOL.GS.Spells
 				MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
 				return false;
 			}
+			
+			// Is PS ?
 			GameSpellEffect Phaseshift = SpellHandler.FindEffectOnTarget(Caster, "Phaseshift");
 			if (Phaseshift != null && (Spell.InstrumentRequirement == 0 || Spell.SpellType == "Mesmerize"))
 			{
@@ -56,7 +58,15 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			// Apply Mentalist RA5L
+			// Is Shield Disarm ?
+			ShieldTripDisarmEffect shieldDisarm = (ShieldTripDisarmEffect)Caster.EffectList.GetOfType(typeof(ShieldTripDisarmEffect));
+			if (shieldDisarm != null)
+			{
+				MessageToCaster("You're disarmed and can't cast a spell", eChatType.CT_System);
+				return false;
+			}
+
+			// Is Mentalist RA5L ?
 			SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
 			if (SelectiveBlindness != null)
 			{
@@ -69,11 +79,14 @@ namespace DOL.GS.Spells
 					return false;
 				}
 			}
-            if (selectedTarget!=null&&selectedTarget.HasAbility("DamageImmunity"))
+			
+			// Is immune ?
+			if (selectedTarget!=null&&selectedTarget.HasAbility("DamageImmunity"))
 			{
 				MessageToCaster(selectedTarget.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
 				return false;
-			} 
+			}
+			
 			if (m_caster.IsSitting)
 			{
 				MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
@@ -116,27 +129,27 @@ namespace DOL.GS.Spells
 			}
 			
 			if (Caster != null && Caster is GamePlayer && Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)Caster.AttackWeapon.Object_Type))
-            {
-                if (Spell.LifeDrainReturn == (int)eShotType.Critical && (!(Caster.IsStealthed)))
-                {
+			{
+				if (Spell.LifeDrainReturn == (int)eShotType.Critical && (!(Caster.IsStealthed)))
+				{
 					MessageToCaster("You must be stealthed and wielding a bow to use this ability!", eChatType.CT_SpellResisted);
-                    return false;
-                }
+					return false;
+				}
 
 				return true;
-            }
-            else
-            {
+			}
+			else
+			{
 				if (Spell.LifeDrainReturn == (int)eShotType.Critical)
-                {
+				{
 					MessageToCaster("You must be stealthed and wielding a bow to use this ability!", eChatType.CT_SpellResisted);
-                    return false;
-                }
+					return false;
+				}
 
-            	MessageToCaster("You must be wielding a bow to use this ability!", eChatType.CT_SpellResisted);
-                return false;
-            }
-        }
+				MessageToCaster("You must be wielding a bow to use this ability!", eChatType.CT_SpellResisted);
+				return false;
+			}
+		}
 		
 		public override void SendSpellMessages()
 		{
@@ -377,53 +390,53 @@ namespace DOL.GS.Spells
 
 			ticks = (int)(ticks * Math.Max(m_caster.CastingSpeedReductionCap, percent));
 
-            if (ticks < m_caster.MinimumCastingSpeed)
-                ticks = m_caster.MinimumCastingSpeed; 
+			if (ticks < m_caster.MinimumCastingSpeed)
+				ticks = m_caster.MinimumCastingSpeed;
 
 			return ticks;
 		}
 
-        public override int PowerCost(GameLiving target) { return 0; }
+		public override int PowerCost(GameLiving target) { return 0; }
 
-        public override int CalculateEnduranceCost()
-        {
-            #region [Freya] Nidel: Arcane Syphon chance
-		    int syphon = Caster.GetModified(eProperty.ArcaneSyphon);
-            if (syphon > 0)
-            {
-                if(Util.Chance(syphon))
-                {
-                    return 0;
-                }
-            }
-            #endregion
-            return (int)(Caster.MaxEndurance * (Spell.Power * .01));
-        }
+		public override int CalculateEnduranceCost()
+		{
+			#region [Freya] Nidel: Arcane Syphon chance
+			int syphon = Caster.GetModified(eProperty.ArcaneSyphon);
+			if (syphon > 0)
+			{
+				if(Util.Chance(syphon))
+				{
+					return 0;
+				}
+			}
+			#endregion
+			return (int)(Caster.MaxEndurance * (Spell.Power * .01));
+		}
 		
-        public override bool CasterIsAttacked(GameLiving attacker)
-        {
-            if (Spell.Uninterruptible)
-                return false;
+		public override bool CasterIsAttacked(GameLiving attacker)
+		{
+			if (Spell.Uninterruptible)
+				return false;
 
-            if (IsCasting && Stage < 2)
-            {
-                double mod = Caster.GetConLevel(attacker);
-                double chance = 65;
-                chance += mod * 10;
-                chance = Math.Max(1, chance);
-                chance = Math.Min(99, chance);
-                if (attacker is GamePlayer) chance = 100;
-                if (Util.Chance((int)chance))
-                {
-                    Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + Caster.SpellInterruptDuration);
-                    MessageToLiving(Caster, attacker.GetName(0, true) + " attacks you and your shot is interrupted!", eChatType.CT_SpellResisted);
-                    InterruptCasting();
-                    return true;
-                }
-            }
-            return true;
-        }
-        
+			if (IsCasting && Stage < 2)
+			{
+				double mod = Caster.GetConLevel(attacker);
+				double chance = 65;
+				chance += mod * 10;
+				chance = Math.Max(1, chance);
+				chance = Math.Min(99, chance);
+				if (attacker is GamePlayer) chance = 100;
+				if (Util.Chance((int)chance))
+				{
+					Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + Caster.SpellInterruptDuration);
+					MessageToLiving(Caster, attacker.GetName(0, true) + " attacks you and your shot is interrupted!", eChatType.CT_SpellResisted);
+					InterruptCasting();
+					return true;
+				}
+			}
+			return true;
+		}
+		
 		public override IList<string> DelveInfo
 		{
 			get
@@ -466,5 +479,5 @@ namespace DOL.GS.Spells
 		}
 
 		public Archery(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-	}	
+	}
 }
