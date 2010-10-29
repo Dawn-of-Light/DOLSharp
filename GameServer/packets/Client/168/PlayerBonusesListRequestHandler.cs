@@ -34,10 +34,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			if (client.Player == null)
-				return 0;
+				return;
 
 			int code = packet.ReadByte();
 			if (code != 0)
@@ -51,8 +51,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Player.GetBonuses(info);
 
 			client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "PlayerBonusesListRequestHandler.HandlePacket.Bonuses"), info);
-
-			return 1;
 		}
 	}
 }

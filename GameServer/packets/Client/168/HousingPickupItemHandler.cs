@@ -35,7 +35,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <param name="client"></param>
 		/// <param name="packet"></param>
 		/// <returns></returns>
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int unknown = packet.ReadByte();
 			int position = packet.ReadByte();
@@ -44,15 +44,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			House house = HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
 
-			if (house == null) return 1;
-			if (client.Player == null) return 1;
+			if (house == null) return;
+			if (client.Player == null) return;
 
 			switch (method)
 			{
 				case 1: //garden item
 					// no permission to remove items from the garden, return
 					if (!house.CanChangeGarden(client.Player, DecorationPermissions.Remove))
-						return 1;
+						return;
 
 					foreach (var entry in house.OutdoorItems)
 					{
@@ -74,7 +74,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						ChatUtil.SendSystemMessage(client, "Garden object removed.");
 						ChatUtil.SendSystemMessage(client, string.Format("You get {0} and put it in your backpack.", invitem.Name));
-						return 1;
+						return;
 					}
 
 					//no object @ position
@@ -85,13 +85,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case 3: //wall/floor mode
 					// no permission to remove items from the interior, return
 					if (!house.CanChangeInterior(client.Player, DecorationPermissions.Remove))
-						return 1;
+						return;
 
 					IndoorItem iitem = house.IndoorItems[position];
 					if (iitem == null)
 					{
 						client.Player.Out.SendMessage("error: id was null", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-						return 1;
+						return;
 					} //should this ever happen?
 
 					if (iitem.BaseItem != null)
@@ -109,7 +109,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							else
 							{
 								ChatUtil.SendSystemMessage(client, "You need place in your inventory !");
-								return 1;
+								return;
 							}
 						}
 						else
@@ -152,7 +152,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						else
 						{
 							ChatUtil.SendSystemMessage(client, "You need place in your inventory !");
-							return 1;
+							return;
 						}
 					}
 					else if (method == 2)
@@ -181,7 +181,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					break;
 			}
-			return 1;
 		}
 
 		#endregion

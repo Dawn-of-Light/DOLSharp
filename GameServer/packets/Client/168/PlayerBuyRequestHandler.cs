@@ -32,10 +32,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			if (client.Player == null)
-				return 0;
+				return;
 
 			uint X = packet.ReadInt();
 			uint Y = packet.ReadInt();
@@ -59,7 +59,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				default:
 					{
 						if (client.Player.TargetObject == null)
-							return 0;
+							return;
 
 						//Forward the buy process to the merchant
 						if (client.Player.TargetObject is GameMerchant)
@@ -74,7 +74,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						break;
 					}
 			}
-			return 1;
 		}
 	}
 }

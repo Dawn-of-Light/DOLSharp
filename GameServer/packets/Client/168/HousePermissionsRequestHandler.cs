@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int pid = packet.ReadShort();
 			ushort housenumber = packet.ReadShort();
@@ -33,15 +33,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// house is null, return
 			var house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
-				return 1;
+				return;
 
 			// player is null, return
 			if (client.Player == null)
-				return 1;
+				return;
 
 			// player has no owner permissions and isn't a GM or admin, return
 			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel <= 1)
-				return 1;
+				return;
 
 			// send out the house permissions
 			using (var pak = new GSTCPPacketOut(client.Out.GetPacketCode(eServerPackets.HousingPersmissions)))
@@ -75,8 +75,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				client.Out.SendTCP(pak);
 			}
-
-			return 1;
 		}
 
 		#endregion

@@ -26,7 +26,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			uint X = packet.ReadInt();
 			uint Y = packet.ReadInt();
@@ -34,8 +34,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort item_slot = packet.ReadShort();
 
 			new AppraiseActionHandler(client.Player, item_slot).Start(1);
-
-			return 1;
 		}
 
 		#endregion

@@ -32,13 +32,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string charName = packet.ReadString(30);
 			DOLCharacters[] chars = client.Account.Characters;
 
 			if (chars == null)
-				return 0;
+				return;
 
 			for (int i = 0; i < chars.Length; i++)
 			{
@@ -129,7 +129,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					break;
 				}
 			}
-			return 1;
 		}
 	}
 }

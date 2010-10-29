@@ -26,10 +26,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP,0x1D^168,"Handles Pick up object request")]
 	public class PlayerPickUpRequestHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			if (client.Player == null)
-				return 1;
+				return;
 			uint X = packet.ReadInt();
 			uint Y = packet.ReadInt();
 			ushort id =(ushort) packet.ReadShort();
@@ -39,16 +39,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (target == null)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPickUpRequestHandler.HandlePacket.Target"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			if (target.ObjectState != GameObject.eObjectState.Active)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPickUpRequestHandler.HandlePacket.InvalidTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			}
 			
 			client.Player.PickupObject(target, false);
-			return 1;
 		}
 	}
 }

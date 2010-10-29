@@ -35,7 +35,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <param name="client">The client that sent the packet</param>
 		/// <param name="packet">The received packet data</param>
 		/// <returns></returns>
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort targetID = packet.ReadShort();
 			ushort flags = packet.ReadShort();
@@ -47,9 +47,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			 * 0x0001 = players attack mode bit (not targets!)
 			 */
 
-			new ChangeTargetAction(client.Player, targetID, !((flags & (0x4000 | 0x2000)) == 0), (flags & 0x8000) != 0).Start(1);
-
-			return 1;
+			new ChangeTargetAction(client.Player, targetID, (flags & (0x4000 | 0x2000)) != 0, (flags & 0x8000) != 0).Start(1);
 		}
 
 		#endregion

@@ -115,18 +115,18 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-
-			Dictionary<int, InventoryItem> items = new Dictionary<int, InventoryItem>();
-
-			if (updateItems == null || updateItems.Count == 0)
+			if (updateItems == null)
+				updateItems = new Dictionary<int, InventoryItem>();
+			if (updateItems.Count <= ServerProperties.Properties.MAX_ITEMS_PER_PACKET)
 			{
-				SendInventoryItemsPartialUpdate(items, windowType);
+				SendInventoryItemsPartialUpdate(updateItems, windowType);
 				return;
 			}
 
-			foreach (int slot in updateItems.Keys)
+			var items = new Dictionary<int, InventoryItem>(ServerProperties.Properties.MAX_ITEMS_PER_PACKET);
+			foreach (var item in updateItems)
 			{
-				items.Add(slot, updateItems[slot]);
+				items.Add(item.Key, item.Value);
 				if (items.Count >= ServerProperties.Properties.MAX_ITEMS_PER_PACKET)
 				{
 					SendInventoryItemsPartialUpdate(items, windowType);
@@ -144,7 +144,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		/// <param name="items"></param>
 		/// <param name="windowType"></param>
-		public override void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType)
+		protected override void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
 			GameVault houseVault = m_gameClient.Player.ActiveVault;
@@ -156,12 +156,12 @@ namespace DOL.GS.PacketHandler
 			else
 				pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
 			// ^ in 1.89b+, 0 bit - showing hooded cloack, if not hooded not show cloack at all ?
-			pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
+			pak.WriteByte(m_gameClient.Player.VisibleActiveWeaponSlots);
 			pak.WriteByte(windowType); //preAction (0x00 - Do nothing)
-			foreach (int slot in items.Keys)
+			foreach (var entry in items)
 			{
-				pak.WriteByte((byte)(slot));
-				WriteItemData(pak, items[slot]);
+				pak.WriteByte((byte)(entry.Key));
+				WriteItemData(pak, entry.Value);
 			}
 			SendTCP(pak);
 		}

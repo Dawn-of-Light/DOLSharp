@@ -24,7 +24,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort checkerOID = packet.ReadShort();
 			ushort targetOID = packet.ReadShort();
@@ -32,8 +32,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort unknow = packet.ReadShort();
 
 			new HandleCheckAction(client.Player, checkerOID, targetOID, response).Start(1);
-
-			return 1;
 		}
 
 		#endregion

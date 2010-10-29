@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int unk1 = packet.ReadByte();
 			int position = packet.ReadByte();
@@ -35,27 +35,27 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			// rotation only works for inside items
 			if (!client.Player.InHouse)
-				return 1;
+				return;
 
 			// house is null, return
 			var house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
-				return 1;
+				return;
 
 			// player is null, return
 			if (client.Player == null)
-				return 1;
+				return;
 
 			// no permission to change the interior, return
 			if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
-				return 1;
+				return;
 
 			// grab the item in question
 			IndoorItem iitem = house.IndoorItems[position];
 			if (iitem == null)
 			{
 				client.Player.Out.SendMessage("error: id was null", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-				return 1;
+				return;
 			} //should this ever happen?
 
 			// adjust the item's roation
@@ -80,8 +80,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				plr.Client.Out.SendFurniture(house, position);
 			}
-
-			return 1;
 		}
 
 		#endregion

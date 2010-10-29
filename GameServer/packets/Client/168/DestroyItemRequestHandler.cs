@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x28 ^ 168, "Handles destroy item requests from client")]
 	public class DestroyItemRequestHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			packet.Skip(4);
 			int slot = packet.ReadShort();
@@ -36,25 +36,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					client.Out.SendMessage(String.Format("You can't destroy {0}!",
 						item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+					return;
 				}
 
 				if (item.Id_nb == "ARelic")
 				{
 					client.Out.SendMessage("You cannot destroy a relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+					return;
 				}
 
 				if (client.Player.Inventory.EquippedItems.Contains(item))
 				{
 					client.Out.SendMessage("You cannot destroy an equipped item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+					return;
 				}
 
 				if (client.Player.Inventory.RemoveItem(item))
 					client.Out.SendMessage("You destroy the " + item.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			return 0;
 		}
 	}
 }

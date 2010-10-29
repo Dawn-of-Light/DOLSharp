@@ -24,7 +24,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP,0xCC^168,"buy hookpoint siege weapon/mob")]
 	public class BuyHookPointHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort keepId = packet.ReadShort();
 			ushort wallId = packet.ReadShort();
@@ -36,9 +36,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int unk4 = packet.ReadByte();
 //			client.Player.Out.SendMessage("x="+unk2+"y="+unk3+"z="+unk4,eChatType.CT_Say,eChatLoc.CL_SystemWindow);
 			AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
-			if (keep == null) return 1;
+			if (keep == null) return;
 			GameKeepComponent component = keep.KeepComponents[wallId] as GameKeepComponent;
-			if (component == null) return 1;
+			if (component == null) return;
 			/*GameKeepHookPoint hookpoint = component.HookPoints[hookpointID] as GameKeepHookPoint;
 			if (hookpoint == null) return 1;
 			*/
@@ -55,8 +55,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (item != null)
 					item.Invoke(client.Player, payType, component.HookPoints[hookpointID] as GameKeepHookPoint, component);
 			}
-
-			return 1;
 		}
 	}
 }

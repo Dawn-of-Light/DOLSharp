@@ -23,7 +23,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP,0x5C^168,"Handles crypt key requests")]
 	public class CryptKeyRequestHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int rc4 = packet.ReadByte();
 			byte clientType = (byte)packet.ReadByte();
@@ -47,7 +47,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			  //Send the crypt key to the client
 				client.Out.SendVersionAndCryptKey();
 			}
-			return 1;
 		}
 	}
 }

@@ -47,10 +47,10 @@ namespace DOL.GS.PacketHandler.Client.v168
         }
 
 
-        public int HandlePacket(GameClient client, GSPacketIn packet)
+        public void HandlePacket(GameClient client, GSPacketIn packet)
         {
             if (client.Player == null)
-                return 0;
+                return;
 
             string filter = packet.ReadString(64);
             int slot = (int)packet.ReadInt();
@@ -260,7 +260,6 @@ namespace DOL.GS.PacketHandler.Client.v168
             }
             else
                 client.Player.Out.SendMessage("No Items found", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
-            return 1;
         }
     }
 }

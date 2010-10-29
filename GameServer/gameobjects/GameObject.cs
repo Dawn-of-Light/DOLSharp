@@ -274,17 +274,6 @@ namespace DOL.GS
 			}
         }
 
-        /// <summary>
-        /// Checks if an object is within a given radius
-        /// </summary>
-        /// <param name="obj">Target object</param>
-        /// <param name="radius">Radius</param>
-        /// <returns>False if the object is null, in a different region, or outside the radius; otherwise true</returns>
-        public bool IsWithinRadius( GameObject obj, int radius)
-        {
-			return IsWithinRadius(obj, radius, false);
-		}
-
 		/// <summary>
 		/// Checks if an object is within a given radius, optionally ignoring z values
 		/// </summary>
@@ -292,7 +281,7 @@ namespace DOL.GS
 		/// <param name="radius">Radius</param>
 		/// <param name="ignoreZ">Ignore Z values</param>
 		/// <returns>False if the object is null, in a different region, or outside the radius; otherwise true</returns>
-		public bool IsWithinRadius(GameObject obj, int radius, bool ignoreZ)
+		public bool IsWithinRadius(GameObject obj, int radius, bool ignoreZ = false)
 		{
 			if (obj == null)
 				return false;
@@ -303,19 +292,6 @@ namespace DOL.GS
 			return base.IsWithinRadius(obj, radius, ignoreZ);
 		}
 
-
-		/// <summary>
-		/// determines wether a target object is front
-		/// in front is defined as north +- viewangle/2
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="viewangle"></param>
-		/// <returns></returns>
-		public virtual bool IsObjectInFront(GameObject target, double viewangle)
-		{
-			return IsObjectInFront(target, viewangle, true);
-		}
-
 		/// <summary>
 		/// determines wether a target object is front
 		/// in front is defined as north +- viewangle/2
@@ -324,7 +300,7 @@ namespace DOL.GS
 		/// <param name="viewangle"></param>
 		/// <param name="rangeCheck"></param>
 		/// <returns></returns>
-		public virtual bool IsObjectInFront(GameObject target, double viewangle, bool rangeCheck)
+		public virtual bool IsObjectInFront(GameObject target, double viewangle, bool rangeCheck = true)
 		{
 			if (target == null)
 				return false;

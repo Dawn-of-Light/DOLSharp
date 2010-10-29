@@ -38,7 +38,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int unknow1 = packet.ReadByte(); // 1=Money 0=Item (?)
 			int slot = packet.ReadByte(); // Item/money slot
@@ -54,10 +54,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// house must exist
 			House house = HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
 			if (house == null)
-				return 1;
+				return;
 
 			if (client.Player == null)
-				return 1;
+				return;
 
 			if ((slot >= 244) && (slot <= 248)) // money
 			{
@@ -65,7 +65,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (!house.CanPayRent(client.Player))
 				{
 					client.Out.SendInventorySlotsUpdate(new[] { slot });
-					return 1;
+					return;
 				}
 
 				long moneyToAdd = _position;
@@ -93,13 +93,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.Out.SendInventorySlotsUpdate(null);
 				client.Player.Out.SendHousePayRentDialog("Housing07");
 
-				return 1;
+				return;
 			}
 
 			// make sure the item dropped still exists
 			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot)slot);
 			if (orgitem == null)
-				return 1;
+				return;
 
 			if (orgitem.Id_nb == "house_removal_deed")
 			{
@@ -109,7 +109,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (!house.HasOwnerPermissions(client.Player))
 				{
 					ChatUtil.SendSystemMessage(client.Player, "You may not remove Houses that you don't own");
-					return 1;
+					return;
 				}
 
 				client.Player.TempProperties.setProperty(DeedWeak, new WeakRef(orgitem));
@@ -117,7 +117,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseRemoveOffer"),
 												   HouseRemovalDialogue);
 
-				return 0;
+				return;
 			}
 
 			if (orgitem.Id_nb.Contains("cottage_deed") || orgitem.Id_nb.Contains("house_deed") ||
@@ -130,7 +130,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					ChatUtil.SendSystemMessage(client, "You may not change other peoples houses");
 
-					return 1;
+					return;
 				}
 
 				client.Player.TempProperties.setProperty(DeedWeak, new WeakRef(orgitem));
@@ -139,7 +139,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 											  eChatLoc.CL_PopupWindow);
 				client.Player.Out.SendCustomDialog("Are you sure you want to upgrade your House?", HouseUpgradeDialogue);
 
-				return 0;
+				return;
 			}
 
 			if (orgitem.Name == "deed of guild transfer")
@@ -149,7 +149,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					client.Out.SendInventorySlotsUpdate(new[] { slot });
 					ChatUtil.SendSystemMessage(client, "You must be a member of a guild to do that");
-					return 1;
+					return;
 				}
 
 				// player needs to own the house to be able to xfer it
@@ -157,7 +157,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					client.Out.SendInventorySlotsUpdate(new[] { slot });
 					ChatUtil.SendSystemMessage(client, "You do not own this house.");
-					return 1;
+					return;
 				}
 
 				// guild can't already have a house
@@ -165,7 +165,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					client.Out.SendInventorySlotsUpdate(new[] { slot });
 					ChatUtil.SendSystemMessage(client, "Your Guild already owns a house.");
-					return 1;
+					return;
 				}
 
 				// player needs to be a GM in the guild to xfer his personal house to the guild
@@ -173,13 +173,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					client.Out.SendInventorySlotsUpdate(new[] { slot });
 					ChatUtil.SendSystemMessage(client, "You are not the leader of a guild.");
-					return 1;
+					return;
 				}
 
 				HouseMgr.HouseTransferToGuild(client.Player);
 				client.Player.Inventory.RemoveItem(orgitem);
 				client.Player.Guild.UpdateGuildWindow();
-				return 0;
+				return;
 			}
 
 			if(house.CanChangeInterior(client.Player, DecorationPermissions.Remove))
@@ -188,14 +188,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					house.IndoorGuildBanner = false;
 					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.InteriorBannersRemoved", null);
-					return 0;
+					return;
 				}
 
 				if (orgitem.Name == "interior shield removal")
 				{
 					house.IndoorGuildShield = false;
 					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.InteriorShieldsRemoved", null);
-					return 0;
+					return;
 				}
 
 				if (orgitem.Name == "carpet removal")
@@ -205,7 +205,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					house.Rug3Color = 0;
 					house.Rug4Color = 0;
 					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.CarpetsRemoved", null);
-					return 0;
+					return;
 				}
 			}
 
@@ -215,14 +215,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					house.OutdoorGuildBanner = false;
 					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.OutdoorBannersRemoved", null);
-					return 0;
+					return;
 				}
 
 				if (orgitem.Name == "exterior shield removal")
 				{
 					house.OutdoorGuildShield = false;
 					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.OutdoorShieldsRemoved", null);
-					return 0;
+					return;
 				}
 			}
 
@@ -238,12 +238,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			else if (objType >= 59 && objType <= 64) // Outdoor Roof/Wall/Door/Porch/Wood/Shutter/awning Material item type
 			{
 				ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.HouseUseMaterials", null);
-				return 1;
+				return;
 			}
 			else if (objType == 56 || objType == 52 || (objType >= 69 && objType <= 71)) // Indoor carpets 1-4
 			{
 				ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.HouseUseCarpets", null);
-				return 1;
+				return;
 			}
 			else if (objType == 57 || objType == 58 // Exterior banner/shield
 					 || objType == 66 || objType == 67) // Interior banner/shield
@@ -267,7 +267,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
 					{
 						client.Out.SendInventorySlotsUpdate(new[] { slot });
-						return 1;
+						return;
 					}
 
 					// garden is already full, return
@@ -276,7 +276,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.GardenMaxObjects", null);
 						client.Out.SendInventorySlotsUpdate(new[] { slot });
 
-						return 1;
+						return;
 					}
 
 					// create an outdoor item to represent the item being placed
@@ -321,7 +321,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
 					{
 						client.Out.SendInventorySlotsUpdate(new[] { slot });
-						return 1;
+						return;
 					}
 
 					// not a wall object, return
@@ -329,7 +329,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.NotWallObject", null);
 						client.Out.SendInventorySlotsUpdate(new[] { slot });
-						return 1;
+						return;
 					}
 
 					// not a floor object, return
@@ -337,7 +337,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.NotFloorObject", null);
 						client.Out.SendInventorySlotsUpdate(new[] { slot });
-						return 1;
+						return;
 					}
 
 					// interior already has max items, return
@@ -345,7 +345,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.IndoorMaxItems", GetMaxIndoorItemsForHouse(house.Model));
 						client.Out.SendInventorySlotsUpdate(new[] { slot });
-						return 1;
+						return;
 					}
 
 					// create an indoor item to represent the item being placed
@@ -427,7 +427,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
 						{
 							client.Out.SendInventorySlotsUpdate(new[] { slot });
-							return 1;
+							return;
 						}
 
 						switch (orgitem.Id_nb)
@@ -444,7 +444,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.PorchAlready", null);
 									client.Out.SendInventorySlotsUpdate(new[] { slot });
 								}
-								return 1;
+								return;
 							case "porch_remove_deed":
 								// try and remove the porch
 								if (house.RemovePorch())
@@ -457,7 +457,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.PorchNone", null);
 									client.Out.SendInventorySlotsUpdate(new[] { slot });
 								}
-								return 1;
+								return;
 							case "consignment_deed":
 								{
 									// make sure there is a porch for this consignment merchant!
@@ -465,7 +465,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									{
 										ChatUtil.SendSystemMessage(client, "Your House needs a Porch first.");
 										client.Out.SendInventorySlotsUpdate(new[] { slot });
-										return 1;
+										return;
 									}
 
 									// try and add a new consignment merchant
@@ -479,12 +479,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 										ChatUtil.SendSystemMessage(client, "You can not add a GameConsignmentMerchant Merchant here.");
 										client.Out.SendInventorySlotsUpdate(new[] { slot });
 									}
-									return 1;
+									return;
 								}
 							default:
 								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.PorchNotItem", null);
 								client.Out.SendInventorySlotsUpdate(new[] { slot });
-								return 1;
+								return;
 						}
 					}
 
@@ -494,7 +494,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
 						{
 							client.Out.SendInventorySlotsUpdate(new[] { slot });
-							return 1;
+							return;
 						}
 						
 						// if the hookpoint doesn't exist, prompt player to Log it in the database for us
@@ -521,7 +521,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (hpitem.Position == point.Position)
 								{
 									ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointAlready", null);
-									return 1;
+									return;
 								}
 							}
 
@@ -554,7 +554,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (!house.CanChangeExternalAppearance(client.Player))
 					{
 						client.Out.SendInventorySlotsUpdate(new[] { slot });
-						return 1;
+						return;
 					}
 
 					if (objType == 57) // We have outdoor banner
@@ -599,7 +599,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						Log.Error("HOUSING: " + client.Player.Name + " working with invalid position " + _position + " in house " +
 								  house.HouseNumber + " model " + house.Model);
 
-						return 1;
+						return;
 					}
 
 					// if hookpoint doesn't exist, prompt player to Log it in the database for us
@@ -611,7 +611,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"),  LogLocation);
 
-						return 1;
+						return;
 					}
 
 					// make sure we have space to add another vult
@@ -622,7 +622,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 													  eChatLoc.CL_SystemWindow);
 						client.Out.SendInventorySlotsUpdate(new[] { slot });
 
-						return 1;
+						return;
 					}
 
 					Log.Debug("HOUSING: " + client.Player.Name + " placing house vault at position " + _position + " in house " +
@@ -638,11 +638,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// save the house and broadcast uodates
 					house.SaveIntoDatabase();
 					house.SendUpdate();
-					return 0;
+					return;
 				default:
 					break;
 			}
-			return 1;
 		}
 
 		#endregion

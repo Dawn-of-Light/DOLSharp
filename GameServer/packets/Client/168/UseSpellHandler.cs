@@ -37,7 +37,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int flagSpeedData = packet.ReadShort();
 			int heading = packet.ReadShort();
@@ -70,8 +70,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Player.Heading = (ushort) (heading & 0xfff);
 
 			new UseSpellAction(client.Player, flagSpeedData, spellLevel, spellLineIndex).Start(1);
-
-			return 1;
 		}
 
 		#endregion

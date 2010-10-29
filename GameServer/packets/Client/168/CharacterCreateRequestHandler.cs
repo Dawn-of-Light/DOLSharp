@@ -43,7 +43,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string accountName = packet.ReadString(24);
 
@@ -66,7 +66,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 
 				client.Disconnect();
-				return 0;
+				return;
 			}
 
 			if (client.Version >= GameClient.eClientVersion.Version1104)
@@ -120,7 +120,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 
 							client.Disconnect();
-							return 1;
+							return;
 						}
 					}
 
@@ -145,7 +145,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 
 							client.Disconnect();
-							return 1;
+							return;
 						}
 
 						byte customizationMode = (byte)packet.ReadByte();
@@ -158,18 +158,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 					else
 					{
 						// create new character and return
-						return CreateCharacter(client, packet, charName, i);
+						CreateCharacter(client, packet, charName, i);
 					}
 				}
 			}
-
-			return 1;
 		}
 
 
 		#region Create Character
 
-		private int CreateCharacter(GameClient client, GSPacketIn packet, string charName, int accountSlot)
+		private void CreateCharacter(GameClient client, GSPacketIn packet, string charName, int accountSlot)
 		{
 			log.Debug("Create Character");
 
@@ -225,7 +223,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				log.Debug("Client " + client.Account.Name + " tried to create a disabled classe: " + (eCharacterClass)ch.Class);
 				client.Out.SendCharacterOverview((eRealm)ch.Realm);
-				return 1;
+			    return;
 			}
 
 			if (client.Version >= GameClient.eClientVersion.Version193)
@@ -254,7 +252,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
 					client.Disconnect();
 				}
-				return 1;
+			    return;
 			}
 
 			ch.AccountSlot = accountSlot + ch.Realm * 100;
@@ -279,7 +277,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				log.Debug("Client " + client.Account.Name + " tried to create a disabled race: " + (eRace)ch.Race);
 				client.Out.SendCharacterOverview((eRealm)ch.Realm);
-				return 1;
+			    return;
 			}
 
 			ch.Gender = ((startRaceGender >> 4) & 0x01);
@@ -322,7 +320,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
 				else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
-				return 1;
+			    return;
 			}
 
 			ch.CreationDate = DateTime.Now;
@@ -520,7 +518,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			GameServer.Database.FillObjectRelations(client.Account);
 			client.Out.SendCharacterOverview((eRealm)ch.Realm);
 
-			return 1;
+		    return;
 		}
 
 		#endregion Create Character

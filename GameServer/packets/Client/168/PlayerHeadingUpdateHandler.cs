@@ -32,18 +32,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			if (client == null || client.Player == null)
-				return 0;
+				return;
 
-			if (client.Player.ObjectState != GameObject.eObjectState.Active) return 0;
+			if (client.Player.ObjectState != GameObject.eObjectState.Active) return;
 
 			ushort sessionId = packet.ReadShort(); // session ID
 			if (client.SessionID != sessionId)
 			{
 //				GameServer.BanAccount(client, 120, "Hack sessionId", string.Format("Wrong sessionId:0x{0} in 0xBA packet (SessionID:{1})", sessionId, client.SessionID));
-				return 0; // client hack
+				return; // client hack
 			}
 			ushort head = packet.ReadShort();
 			client.Player.Heading = (ushort)(head & 0xFFF);
@@ -112,7 +112,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						player.Out.SendUDPRaw(outpak);
 				}
 			}
-			return 1;
 		}
 	}
 }

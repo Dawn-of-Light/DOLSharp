@@ -43,9 +43,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			if (client == null) return 1;
+			if (client == null) return;
 			uint unk_186 = 0;
 			ushort objectType = packet.ReadShort();
 			if (client.Version >= GameClient.eClientVersion.Version186)
@@ -87,18 +87,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 									GameConsignmentMerchant con = client.Player.ActiveConMerchant;
 									invItem = con.ConInventory[objectID];
 									if (invItem == null)
-										return 1;
+										return;
 								}
 								else if (client.Player.ActiveVault != null)
 								{
 									GameVault vault = client.Player.ActiveVault;
 									invItem = vault.GetVaultInventory(client.Player)[objectID];
 									if (invItem == null)
-										return 1;
+										return;
 								}
 								else
 								{
-									return 1;
+									return;
 								}
 							}
 						}
@@ -109,16 +109,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								list = client.Player.TempProperties.getProperty<object>("TempSearchKey", null) as List<InventoryItem>;
 								if (list == null)
-									return 1;
+									return;
 							}
 
 							if (objectID >= list.Count)
-								return 1;
+								return;
 
 							invItem = list[objectID];
 
 							if (invItem == null)
-								return 1;
+								return;
 						}
 
 						// Aredhel: Start of a more sophisticated item delve system.
@@ -286,7 +286,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						SpellLine spellLine = client.Player.GetSpellLines()[lineID] as SpellLine;
 						if (spellLine == null)
-							return 1;
+							return;
 
 						Spell spell = null;
 						foreach (Spell spl in SkillBase.GetSpellList(spellLine.KeyName))
@@ -298,7 +298,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 						}
                         if (spell == null)
-                            return 1;
+                            return;
 
 						caption = spell.Name;
 						WriteSpellInfo(objectInfo, spell, spellLine, client);
@@ -352,7 +352,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							if (client.Player.TargetObject != null && client.Player.TargetObject is GameMerchant)
 								merchant = (GameMerchant)client.Player.TargetObject;
 							if (merchant == null)
-								return 1;
+								return;
 
 							int pagenumber = objectID / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 							int slotnumber = objectID % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
@@ -364,12 +364,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 							ushort questID = (ushort)((unk_186 << 12) | (ushort)(objectID >> 4));
 							int index = objectID & 0x0F;
 							if (questID == 0)
-								return 1; // questID == 0, wrong ID ?
+								return; // questID == 0, wrong ID ?
 							AbstractQuest q = client.Player.IsDoingQuest(QuestMgr.GetQuestTypeForID(questID));
 							if (q == null)
-								return 1;// player not doing this quest
+								return;// player not doing this quest
 							if (!(q is RewardQuest))
-								return 1; // this is not new quest
+								return; // this is not new quest
 							List<ItemTemplate> rewards = null;
 							if (index < 8)
 								rewards = (q as RewardQuest).Rewards.BasicItems;
@@ -384,7 +384,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 						}
 						if (item == null)
-							return 1;
+							return;
 
 						caption = item.Name;
 
@@ -688,13 +688,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						ITradeWindow playerTradeWindow = client.Player.TradeWindow;
 						if (playerTradeWindow == null)
-							return 1;
+							return;
 
 						if (playerTradeWindow.PartnerTradeItems != null && objectID < playerTradeWindow.PartnerItemsCount)
 							invItem = (InventoryItem)playerTradeWindow.PartnerTradeItems[objectID];
 
 						if (invItem == null)
-							return 1;
+							return;
 
 						// Let the player class create the appropriate item to delve
 						caption = invItem.Name;
@@ -876,64 +876,64 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case 12: // Item info to Group Chat
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (invItem == null) return 1;
+						if (invItem == null) return;
 						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Item", client.Player.Name, GetShortItemInfo(invItem, client));
 						if (client.Player.Group == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						client.Player.Group.SendMessageToGroupMembers(str, eChatType.CT_Group, eChatLoc.CL_ChatWindow);
-						return 1;
+						return;
 					}
 				#endregion
 				#region Guild
 				case 13: // Item info to Guild Chat
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (invItem == null) return 1;
+						if (invItem == null) return;
 						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.GuildItem", client.Player.Name, GetShortItemInfo(invItem, client));
 						if (client.Player.Guild == null)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.DontBelongGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						if (!client.Player.Guild.GotAccess(client.Player, Guild.eRank.GcSpeak))
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoPermissionToSpeak"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
 						{
 							if (!client.Player.Guild.GotAccess(ply, Guild.eRank.GcHear)) continue;
 							ply.Out.SendMessage(str, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 						}
-						return 1;
+						return;
 					}
 				#endregion
 				#region ChatGroup
 				case 15: // Item info to Chat group
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (invItem == null) return 1;
+						if (invItem == null) return;
 
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MustBeInChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						if (mychatgroup.Listen == true && (((bool)mychatgroup.Members[client.Player]) == false))
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(invItem, client));
 						foreach (GamePlayer ply in mychatgroup.Members.Keys)
 						{
 							ply.Out.SendMessage(str, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
-						return 1;
+						return;
 					}
 				#endregion
 				#region Repair
@@ -948,7 +948,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryStrange"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
-						return 1;
+						return;
 					}
 				#endregion
 				#region Self Craft
@@ -963,7 +963,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryStrange"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
-						return 1;
+						return;
 					}
 				#endregion
 				#region Salvage
@@ -978,32 +978,32 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryStrange"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
-						return 1;
+						return;
 					}
 				#endregion
 				#region BattleGroup
 				case 103: // Item info to battle group
 					{
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-						if (invItem == null) return 1;
+						if (invItem == null) return;
 
 						BattleGroup mybattlegroup = (BattleGroup)client.Player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 						if (mybattlegroup == null)
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MustBeInBattleGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						if (mybattlegroup.Listen == true && (((bool)mybattlegroup.Members[client.Player]) == false))
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return 1;
+							return;
 						}
 						string str = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(invItem, client));
 						foreach (GamePlayer ply in mybattlegroup.Members.Keys)
 						{
 							ply.Out.SendMessage(str, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
-						return 1;
+						return;
 					}
 				#endregion
 				#region ChampionAbilities delve from trainer window
@@ -1044,7 +1044,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                         //[StephenxPimentel]: we need to find a way to delve the spells/styles as
                         //champion abilities here. Our Champion Ability support can't handle this atm though.
                         client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoInformation"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return 1;
+                        return;
                     }
 			}
 
@@ -1056,8 +1056,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				log.ErrorFormat("DetailDisplayHandler no info for objectID {0} of type {1}. Item: {2}, client: {3}", objectID, objectType, (item == null ? (invItem == null ? "null" : invItem.Id_nb) : item.Id_nb), client);
 			}
-
-			return 1;
 		}
 
 		public void WriteSpellInfo(IList<string> output, Spell spell, SpellLine spellLine, GameClient client)
