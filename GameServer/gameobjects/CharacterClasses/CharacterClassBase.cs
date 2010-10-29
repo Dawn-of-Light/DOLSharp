@@ -180,6 +180,15 @@ namespace DOL.GS
 			get { return m_specializationMultiplier; }
 		}
 
+		/// <summary>
+		/// This is specifically used for adjusting spec points as needed for new training window
+		/// For standard DOL classes this will simply return the standard spec multiplier
+		/// </summary>
+		public int AdjustedSpecPointsMultiplier
+		{
+			get { return m_specializationMultiplier; }
+		}
+
 		public eStat PrimaryStat
 		{
 			get { return m_primaryStat; }
