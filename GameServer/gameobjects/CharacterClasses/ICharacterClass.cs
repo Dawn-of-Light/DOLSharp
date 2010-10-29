@@ -63,6 +63,15 @@ namespace DOL.GS
 			get;
 		}
 
+		/// <summary>
+		/// This is specifically used for adjusting spec points as needed for new training window
+		/// For standard DOL classes this will simply return the standard spec multiplier
+		/// </summary>
+		int AdjustedSpecPointsMultiplier
+		{
+			get;
+		}
+
 		eStat PrimaryStat
 		{
 			get;

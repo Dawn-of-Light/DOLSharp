@@ -70,17 +70,24 @@ namespace DOL.GS.PacketHandler
 			paksub.WriteByte(0);
 			paksub.WriteByte(0);
 
-			// Autotrain
+			// Fill out an array that tells the client how many spec points are available at each of
+			// this characters levels.  This seems to only be used for the 'Level Required' display on
+			// the new trainer window.  I've changed the calls below to use AdjustedSpecPointsMultiplier
+			// to enable servers that allow levels > 50 to train properly by modifying points available per level. - Tolakram
+
 			for (byte i = 2; i <= 50; i++)
 			{
 				int specpoints = 0;
+
 				if (i <= 5)
 					specpoints = i;
+
 				if (i > 5)
-					specpoints = i * m_gameClient.Player.CharacterClass.SpecPointsMultiplier / 10;
+					specpoints = i * m_gameClient.Player.CharacterClass.AdjustedSpecPointsMultiplier / 10;
 
 				if (i > 40 && i != 50)
-					specpoints += i * m_gameClient.Player.CharacterClass.SpecPointsMultiplier / 20;
+					specpoints += i * m_gameClient.Player.CharacterClass.AdjustedSpecPointsMultiplier / 20;
+
 				paksub.WriteByte((byte)specpoints);
 			}
 
