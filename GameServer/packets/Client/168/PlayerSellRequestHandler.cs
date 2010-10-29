@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP,0xD1^168,"Handles player selling")]
 	public class PlayerSellRequestHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			uint x = packet.ReadInt();
 			uint y = packet.ReadInt();
@@ -35,14 +35,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Player.TargetObject == null)
 			{
 				client.Out.SendMessage("You must select an NPC to sell to.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 
 			lock (client.Player.Inventory)
 			{
 				InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)item_slot);
 				if (item == null)
-					return 0;
+					return;
 
 				int itemCount = Math.Max(1, item.Count);
 				int packSize = Math.Max(1, item.PackSize);
@@ -58,7 +58,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					((GameLotMarker)client.Player.TargetObject).OnPlayerSell(client.Player, item);
 				}
 			}
-			return 0;
 		}
 	}
 }

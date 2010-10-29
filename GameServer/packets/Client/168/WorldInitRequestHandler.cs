@@ -33,16 +33,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			if (client == null || client.Player == null)
-				return 0;
+				return;
 
 			client.UdpConfirm = false;
 
 			new WorldInitAction(client.Player).Start(1);
-
-			return 1;
 		}
 
 		/// <summary>

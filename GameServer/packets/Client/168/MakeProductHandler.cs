@@ -27,11 +27,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP,0x45^168,"Handles the crafted product answer")]
 	public class MakeProductHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort ItemID = packet.ReadShort();
 			client.Player.CraftItem(ItemID);
-			return 1;
 		}
 	}
 }

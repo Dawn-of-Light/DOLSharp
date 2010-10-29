@@ -33,27 +33,27 @@ namespace DOL.GS.PacketHandler.Client.v168
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public int HandlePacket(GameClient client, GSPacketIn packet)
+        public void HandlePacket(GameClient client, GSPacketIn packet)
         {
 			// player is null, return
             if (client.Player == null)
-                return 0;
+                return;
 
 			// active consignment merchant is null, return
             GameConsignmentMerchant con = client.Player.ActiveConMerchant;
             if (con == null)
-                return 0;
+                return;
 
 			// current house is null, return
             House house = HouseMgr.GetHouse(con.HouseNumber);
             if (house == null)
-                return 0;
+                return;
 
 			// make sure player has permissions to withdraw from the consignment merchant
             if (!house.CanUseConsignmentMerchant(client.Player, ConsignmentPermissions.Withdraw))
             {
                 client.Player.Out.SendMessage("You don't have permission to withdraw money from this merchant!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
-                return 0;
+                return;
             }
 
         	var totalConMoney = con.TotalMoney;
@@ -74,8 +74,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				con.TotalMoney -= totalConMoney;
             }
-
-            return 1;
         }
     }
 }

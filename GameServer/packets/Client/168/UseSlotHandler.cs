@@ -27,15 +27,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int flagSpeedData = packet.ReadShort();
 			int slot = packet.ReadByte();
 			int type = packet.ReadByte();
 
 			new UseSlotAction(client.Player, flagSpeedData, slot, type).Start(1);
-
-			return 1;
 		}
 
 		#endregion

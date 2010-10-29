@@ -23,7 +23,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int packetVersion;
 			switch (client.Version)
@@ -96,8 +96,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				client.Out.SendSessionID();
 			}
-
-			return 1;
 		}
 
 		#endregion

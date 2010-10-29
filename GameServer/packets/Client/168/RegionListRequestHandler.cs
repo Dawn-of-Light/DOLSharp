@@ -23,10 +23,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP,0x35^168,"Handles sending the region overview")]
 	public class RegionListRequestHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			client.Out.SendRegions();
-			return 1;
 		}
 	}
 }

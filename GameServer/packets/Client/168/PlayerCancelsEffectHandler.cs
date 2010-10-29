@@ -28,13 +28,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int effectID = packet.ReadShort();
 
 			new CancelEffectHandler(client.Player, effectID).Start(1);
-
-			return 1;
 		}
 
 		#endregion

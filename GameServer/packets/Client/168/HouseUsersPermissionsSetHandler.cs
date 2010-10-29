@@ -27,7 +27,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int permissionSlot = packet.ReadByte();
 			int newPermissionLevel = packet.ReadByte();
@@ -36,15 +36,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// house is null, return
 			var house = HouseMgr.GetHouse(houseNumber);
 			if (house == null)
-				return 1;
+				return;
 
 			// player is null, return
 			if (client.Player == null)
-				return 1;
+				return;
 
 			// can't set permissions unless you're the owner.
 			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel <= 1)
-				return 1;
+				return;
 
 			// check if we're setting or removing permissions
 			if (newPermissionLevel == 100)
@@ -55,8 +55,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				house.AdjustPermissionSlot(permissionSlot, newPermissionLevel);
 			}
-
-			return 1;
 		}
 
 		#endregion

@@ -30,11 +30,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			var response = (byte) packet.ReadByte();
 			if (response != 1) // confirm
-				return 1;
+				return;
 
 			var countChosen = (byte) packet.ReadByte();
 
@@ -50,8 +50,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort questGiverID = packet.ReadShort();
 
 			new QuestRewardChosenAction(client.Player, countChosen, itemsChosen, questGiverID, questID).Start(1);
-
-			return 1;
 		}
 
 		#endregion

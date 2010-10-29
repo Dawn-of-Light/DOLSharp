@@ -34,7 +34,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// door index which is unique
 		/// </summary>
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			var doorID = (int) packet.ReadInt();
 			m_handlerDoorID = doorID;
@@ -98,7 +98,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (target != null && !client.Player.IsWithinRadius(target, radius))
 			{
 				client.Player.Out.SendMessage("You are too far to open this door", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				return 0;
+				return;
 			}
 
 			var door = GameServer.Database.SelectObject<DBDoor>("InternalID = '" + doorID + "'");
@@ -108,7 +108,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (doorType == 7 || doorType == 9)
 				{
 					new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
-					return 1;
+					return;
 				}
 
 				if (client.Account.PrivLevel == 1)
@@ -118,7 +118,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (door.Health == 0)
 						{
 							new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
-							return 1;
+							return;
 						}
 
 						if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
@@ -126,7 +126,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							if (door.Realm != 0)
 							{
 								new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
-								return 1;
+								return;
 							}
 						}
 
@@ -135,7 +135,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							if (client.Player.Realm == (eRealm) door.Realm || door.Realm == 6)
 							{
 								new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
-								return 1;
+								return;
 							}
 						}
 					}
@@ -145,7 +145,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					client.Out.SendDebugMessage("GM: Forcing locked door open.");
 					new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
-					return 1;
+					return;
 				}
 			}
 
@@ -167,9 +167,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 
 				new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
-				return 1;
+				return;
 			}
-			return 0;
 		}
 
 		#endregion

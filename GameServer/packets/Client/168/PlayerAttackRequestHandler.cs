@@ -24,15 +24,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			var mode = (byte) packet.ReadByte();
 			bool userAction = packet.ReadByte() == 0;
 				// set to 0 if user pressed the button, set to 1 if client decided to stop attack
 
 			new AttackRequestHandler(client.Player, mode != 0, userAction).Start(1);
-
-			return 1;
 		}
 
 		#endregion

@@ -23,7 +23,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP,0x2C^168,"handle Change LFG flag")]
 	public class LookingForAGroupFlagHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{  
 			byte code =(byte) packet.ReadByte();
 			switch(code)
@@ -42,7 +42,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					break;
 			}
-			return 1;
 		}
 	}
 }

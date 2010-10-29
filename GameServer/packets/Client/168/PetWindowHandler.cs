@@ -32,7 +32,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			var aggroState = (byte) packet.ReadByte(); // 1-Aggressive, 2-Deffensive, 3-Passive
 			var walkState = (byte) packet.ReadByte(); // 1-Follow, 2-Stay, 3-GoTarg, 4-Here
@@ -47,7 +47,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					//release
 					new HandlePetCommandAction(client.Player, 0, 0, 2).Start(1);
-					return 1;
+					return;
 				}
 			}
 
@@ -55,10 +55,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Player.ControlledBrain != null)
 			{
 				new HandlePetCommandAction(client.Player, aggroState, walkState, command).Start(1);
-				return 1;
+				return;
 			}
-
-			return 0;
 		}
 
 		#endregion

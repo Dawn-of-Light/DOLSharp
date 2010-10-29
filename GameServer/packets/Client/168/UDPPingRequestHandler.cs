@@ -39,14 +39,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <param name="client">Client that sent the packet</param>
 		/// <param name="packet">Packet data</param>
 		/// <returns>Non zero if function was successfull</returns>
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string localIP = packet.ReadString(22);
 			ushort localPort = packet.ReadShort();
 			// TODO check changed localIP
 			client.LocalIP = localIP;
 			client.UdpPingTime = DateTime.Now.Ticks;
-			return 1;
 		}
 	}
 }

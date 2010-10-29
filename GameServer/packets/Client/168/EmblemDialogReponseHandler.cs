@@ -27,12 +27,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP,0x4A^168,"Handles destroy item requests from client")]
 	public class EmblemDialogReponseHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			if(client.Player.Guild == null)
-				return 0;
+				return;
 			if(!client.Player.Guild.GotAccess(client.Player, Guild.eRank.Leader))
-				return 0;
+				return;
 			int primarycolor = packet.ReadByte() & 0x0F; //4bits
 			int secondarycolor = packet.ReadByte() & 0x07; //3bits
 			int pattern = packet.ReadByte() & 0x03; //2bits
@@ -42,10 +42,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (GuildMgr.IsEmblemUsed(newemblem))
 			{
 				client.Player.Out.SendMessage("This emblem is already in use by another guild, please choose another!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
-				return 0;
+				return;
 			}
 			GuildMgr.ChangeEmblem(client.Player, oldemblem, newemblem);
-			return 1;
 		}
 	}
 }

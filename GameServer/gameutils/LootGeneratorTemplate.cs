@@ -101,11 +101,7 @@ namespace DOL.GS
 
 						foreach (LootTemplate dbTemplate in dbLootTemplates)
 						{
-							try
-							{
-								loot = m_lootTemplates[dbTemplate.TemplateName.ToLower()];
-							}
-							catch (KeyNotFoundException)
+							if (!m_lootTemplates.TryGetValue(dbTemplate.TemplateName.ToLower(), out loot))
 							{
 								loot = new Dictionary<string, LootTemplate>();
 								m_lootTemplates[dbTemplate.TemplateName.ToLower()] = loot;
@@ -116,16 +112,12 @@ namespace DOL.GS
 							if (drop == null)
 							{
 								if (log.IsErrorEnabled)
-								{
 									log.Error("ItemTemplate: " + dbTemplate.ItemTemplateID + " is not found, it is referenced from loottemplate: " + dbTemplate.TemplateName);
-								}
 							}
 							else
 							{
 								if (!loot.ContainsKey(dbTemplate.ItemTemplateID.ToLower()))
-								{
 									loot.Add(dbTemplate.ItemTemplateID.ToLower(), dbTemplate);
-								}
 							}
 						}
 					}
@@ -160,18 +152,14 @@ namespace DOL.GS
 					{
 						foreach (MobXLootTemplate dbMobXTemplate in dbMobXLootTemplates)
 						{
-							if (m_mobXLootTemplates.ContainsKey(dbMobXTemplate.MobName.ToLower()))
+							// There can be multiple MobXLootTemplates for a mob, each pointing to a different loot template
+							List<MobXLootTemplate> mobxLootTemplates;
+							if (!m_mobXLootTemplates.TryGetValue(dbMobXTemplate.MobName.ToLower(), out mobxLootTemplates))
 							{
-								// There can be multiple MobXLootTemplates for a mob, each pointing to a different loot template
-								List<MobXLootTemplate> mobxLootTemplates = m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()];
-								mobxLootTemplates.Add(dbMobXTemplate);
+								mobxLootTemplates = new List<MobXLootTemplate>();
+								m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()] = mobxLootTemplates;
 							}
-							else
-							{
-								List<MobXLootTemplate> newMobXLootTemplates = new List<MobXLootTemplate>();
-								newMobXLootTemplates.Add(dbMobXTemplate);
-								m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()] = newMobXLootTemplates;
-							}
+							mobxLootTemplates.Add(dbMobXTemplate);
 						}
 					}
 				}
@@ -203,25 +191,19 @@ namespace DOL.GS
 				{
 					foreach (MobXLootTemplate mxlt in mxlts)
 					{
-						if (m_mobXLootTemplates.ContainsKey(mxlt.MobName.ToLower()))
+						List<MobXLootTemplate> mobxLootTemplates;
+						if (!m_mobXLootTemplates.TryGetValue(mxlt.MobName.ToLower(), out mobxLootTemplates))
 						{
-							List<MobXLootTemplate> mobxLootTemplates = m_mobXLootTemplates[mxlt.MobName.ToLower()];
-							mobxLootTemplates.Add(mxlt);
+							mobxLootTemplates = new List<MobXLootTemplate>();
+							m_mobXLootTemplates[mxlt.MobName.ToLower()] = mobxLootTemplates;
 						}
-						else
-						{
-							List<MobXLootTemplate> newMobXLootTemplates = new List<MobXLootTemplate>();
-							newMobXLootTemplates.Add(mxlt);
-							m_mobXLootTemplates[mxlt.MobName.ToLower()] = newMobXLootTemplates;
-						}
+						mobxLootTemplates.Add(mxlt);
 
 						RefreshLootTemplate(mxlt.LootTemplateName);
 
 
 						if (mxlt.LootTemplateName.ToLower() == mob.Name.ToLower())
-						{
 							isDefaultLootTemplateRefreshed = true;
-						}
 					}
 				}
 			}
@@ -229,9 +211,7 @@ namespace DOL.GS
 			// now force a refresh of the mobs default loot template
 
 			if (isDefaultLootTemplateRefreshed == false)
-			{
 				RefreshLootTemplate(mob.Name);
-			}
 		}
 
 		protected void RefreshLootTemplate(string templateName)

@@ -29,7 +29,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			client.ClientState = GameClient.eClientState.CharScreen;
 			if (client.Player != null)
@@ -103,7 +103,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (log.IsErrorEnabled)
 							log.Error("User has chosen unknown realm: "+accountName+"; account="+client.Account.Name);
 						client.Out.SendRealm(eRealm.None);
-						return 1;
+						return;
 					}
 
 					if (client.Account.Realm == (int)eRealm.None && !GameServer.ServerRules.IsAllowedCharsInAllRealms(client))
@@ -123,7 +123,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				client.Out.SendCharacterOverview(chosenRealm);
 			}
-			return 1;
 		}
 	}
 }
