@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int pid = packet.ReadShort();
 			int housenumber = packet.ReadShort();
@@ -34,11 +34,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// house is null, return
 			House house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
-				return 1;
+				return;
 
 			new EnterLeaveHouseAction(client.Player, house, enter).Start(1);
-
-			return 1;
 		}
 
 		#endregion

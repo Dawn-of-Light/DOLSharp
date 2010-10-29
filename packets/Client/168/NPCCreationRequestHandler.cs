@@ -23,13 +23,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP,0x16^168,"Handles requests for npcs(0x72) in game")]
 	public class NPCCreationRequestHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort id = packet.ReadShort();
 //			GameNPC npc = (GameNPC)WorldMgr.GetObjectTypeByIDFromRegion(client.Player.CurrentRegionID, id, typeof(GameNPC));
-			if(client.Player==null) return 1;
+			if(client.Player==null) return;
 			Region region = client.Player.CurrentRegion;
-			if (region == null) return 1;
+			if (region == null) return;
 			GameNPC npc = region.GetObject(id) as GameNPC;
 
 			if(npc != null)
@@ -44,7 +44,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//Causing the client to issue another NPC CREATION REQUEST!
 				//client.Out.SendNPCUpdate(npc); <-- BIG NO NO
 			}
-			return 1;
 		}
 	}
 }

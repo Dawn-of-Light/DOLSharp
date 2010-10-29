@@ -30,17 +30,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string localIP = packet.ReadString(22);
 			ushort localPort = packet.ReadShort();
 			client.LocalIP = localIP;
 			client.Out.SendUDPInitReply();
-			if (client.Account.PrivLevel > 1 && ServerProperties.Properties.ENABLE_DEBUG)
-			{
-				client.Out.SendDebugMessage("local IP:{0} port:{1}", localIP, localPort);
-			}
-			return 1;
+		    if (client.Account.PrivLevel > 1 && ServerProperties.Properties.ENABLE_DEBUG)
+		        client.Out.SendDebugMessage("local IP:{0} port:{1}", localIP, localPort);
 		}
 	}
 }

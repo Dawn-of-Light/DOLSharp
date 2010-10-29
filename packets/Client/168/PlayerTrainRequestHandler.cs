@@ -37,7 +37,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			uint x = packet.ReadInt();
 			uint y = packet.ReadInt();
@@ -55,17 +55,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (client.Player.HaveChampionSpell(spec.SpellID))
 					{
 						client.Out.SendMessage("You already have that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
+						return;
 					}
 					if (!client.Player.IsCSAvailable(idline, row, skillindex))
 					{
 						client.Out.SendMessage("You do not meet the requirements for that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
+						return;
 					}
 					if ((client.Player.ChampionSpecialtyPoints - spec.Cost) < 0)
 					{
 						client.Out.SendMessage("You do not have enough champion specialty points for that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
+						return;
 					}
 					client.Player.ChampionSpecialtyPoints -= spec.Cost;
 					SpellLine sl = SkillBase.GetSpellLine(GlobalSpellsLines.Champion_Spells + client.Player.Name);
@@ -85,10 +85,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Out.SendMessage("You gain an ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendChampionTrainerWindow(idline);
 					client.Out.SendUpdatePlayerSkills();
-					return 1;
+					return;
 				}
 				else { client.Out.SendMessage("Didn't find spec!", eChatType.CT_System, eChatLoc.CL_SystemWindow); }
-				return 1;
+				return;
 			}
 
 			IList speclist = client.Player.GetSpecList();
@@ -98,7 +98,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (spec.Level >= client.Player.Level)
 				{
 					client.Out.SendMessage("You can't train in this specialization again this level!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 
 				// Graveen - autotrain 1.87 - allow players to train their AT specs even if no pts left
@@ -112,13 +112,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					client.Out.SendUpdatePoints();
 					client.Out.SendTrainerWindow();
-					return 1;
+					return;
 				}
 				else
 				{
 					client.Out.SendMessage("That specialization costs " + (spec.Level + 1) + " specialization points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage("You don't have that many specialization points left for this level.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 1;
+					return;
 				}
 			}
 			else if (skillindex >= 100)
@@ -132,12 +132,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						client.Out.SendMessage(ra.Name + " costs " + (cost) + " realm ability points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						client.Out.SendMessage("You don't have that many realm ability points left to get this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
+						return;
 					}
 					if (!ra.CheckRequirement(client.Player))
 					{
 						client.Out.SendMessage("You are not experienced enough to get " + ra.Name + " now. Come back later.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return 1;
+						return;
 					}
 					// get a copy of the ability since we use prototypes
 					RealmAbility ability = SkillBase.GetAbility(ra.KeyName, ra.Level) as RealmAbility;
@@ -155,14 +155,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Out.SendMessage("Unfortunately your training failed. Please report that to admins or game master. Thank you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						log.Error("Realm Ability " + ra.Name + "(" + ra.KeyName + ") unexpected not found");
 					}
-					return 1;
+					return;
 				}
 			}
 
 			if (log.IsErrorEnabled)
 				log.Error("Player <" + client.Player.Name + "> requested to train incorrect skill index");
-
-			return 1;
 		}
 	}
 	
@@ -172,14 +170,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, 0xFB ^ 168, "Handles Player Train")]
 	public class PlayerTrainHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			// A trainer of the appropriate class must be around (or global trainer, with TrainedClass = eCharacterClass.Unknow
 			GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
 			if (trainer == null || (trainer.TrainedClass != (eCharacterClass)client.Player.CharacterClass.ID && trainer.TrainedClass !=  eCharacterClass.Unknown))
 			{
 				client.Out.SendMessage("You must select a valid trainer for your class.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
-				return 0;
+				return;
 			}
 			
 			//Specializations - 8 trainable specs max
@@ -317,8 +315,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			
 			if (trained)
 				client.Player.SaveIntoDatabase();
-
-			return 0;
 		}
 		
 		/// <summary>
@@ -327,10 +323,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		[PacketHandlerAttribute(PacketHandlerType.TCP, 0xD3 ^ 168, "Call Player Train Window")]
 		public class PlayerTrainWindowHandler : IPacketHandler
 		{
-			public int HandlePacket(GameClient client, GSPacketIn packet)
+			public void HandlePacket(GameClient client, GSPacketIn packet)
 			{
 				client.Out.SendTrainerWindow();
-				return packet.ReadByte();
+				//packet.ReadByte();
 			}
 		}
 	}

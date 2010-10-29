@@ -4622,11 +4622,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Handle triggers for ambient sentences mobs can tell
+		/// Handle triggers for ambient sentences
 		/// </summary>
 		/// <param name="action">The trigger action</param>
 		/// <param name="npc">The NPC to handle the trigger for</param>
-		public void FireAmbientSentence(eAmbientTrigger trigger, GameLiving living)
+		public void FireAmbientSentence(eAmbientTrigger trigger, GameLiving living = null)
 		{
 			if (ambientTexts == null) return;
 			if (ambientTexts.Count == 0) return;
@@ -4634,21 +4634,19 @@ namespace DOL.GS
 			if (mxa.Count==0) return;
 			
 			// grab random sentence
-			int choosen = Util.Random(mxa.Count-1);
-			if (!Util.Chance(mxa[choosen].Chance)) return;
+			var choosen = mxa[Util.Random(mxa.Count-1)];
+			if (!Util.Chance(choosen.Chance)) return;
 			
 			string controller = string.Empty;
-			if (this is GamePet && Brain is IControlledBrain)
+			if (Brain is IControlledBrain)
 			{
 				GamePlayer playerOwner = (Brain as IControlledBrain).GetPlayerOwner();
 				if (playerOwner != null)
 					controller = playerOwner.Name;
 			}
+			string text = choosen.Text.Replace("{sourcename}",Name).Replace("{targetname}",living==null?string.Empty:living.Name).Replace("{controller}", controller);
 
-			string text = mxa[choosen].Text.Replace("{sourcename}",Name).Replace("{targetname}",living==null?string.Empty:living.Name).Replace("{controller}", controller);
-			
-			// issuing emote
-			Emote((eEmote)mxa[choosen].Emote);
+			Emote((eEmote)choosen.Emote);
 			
 			// issuing text
 			if (living is GamePlayer)
@@ -4657,7 +4655,7 @@ namespace DOL.GS
 				text = text.Replace("{class}","NPC").Replace("{race}","NPC");
 			
 			// broadcasted , yelled or talked ?
-			if (mxa[choosen].Voice.StartsWith("b"))
+			if (choosen.Voice.StartsWith("b"))
 			{
 				foreach (GamePlayer player in CurrentRegion.GetPlayersInRadius(X, Y, Z, 25000, false, false))
 				{
@@ -4665,17 +4663,12 @@ namespace DOL.GS
 				}
 				return;
 			}
-			if (mxa[choosen].Voice.StartsWith("y"))
+			if (choosen.Voice.StartsWith("y"))
 			{
 				Yell(text);
 				return;
 			}
 			Say(text);
-		}
-
-		public void FireAmbientSentence(eAmbientTrigger trigger)
-		{
-			FireAmbientSentence(trigger, null);
 		}
 		#endregion
 		
@@ -4752,8 +4745,7 @@ namespace DOL.GS
 		{
 			if (Faction == null || npc.Faction == null)
 				return false;
-			else
-				return (npc.Faction == Faction || Faction.FriendFactions.Contains(npc.Faction));
+			return (npc.Faction == Faction || Faction.FriendFactions.Contains(npc.Faction));
 		}
 
 		/// <summary>

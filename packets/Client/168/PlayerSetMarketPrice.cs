@@ -32,10 +32,10 @@ namespace DOL.GS.PacketHandler.Client.v168
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public const string NEW_PRICE = "newPrice";
-        public int HandlePacket(GameClient client, GSPacketIn packet)
+        public void HandlePacket(GameClient client, GSPacketIn packet)
         {
             if (client.Player == null)
-                return 0;
+                return;
 
             int slot = packet.ReadByte();
             int unk1 = packet.ReadByte();
@@ -44,9 +44,9 @@ namespace DOL.GS.PacketHandler.Client.v168
             GameConsignmentMerchant con = client.Player.ActiveConMerchant;
             House house = HouseMgr.GetHouse(con.HouseNumber);
             if (house == null)
-                return 0;
+                return;
             if (!house.HasOwnerPermissions(client.Player))
-                return 0;
+                return;
             int dbSlot = (int)eInventorySlot.Consignment_First + slot;
             InventoryItem item = GameServer.Database.SelectObject<InventoryItem>("OwnerID = '" + client.Player.DBCharacter.ObjectId + "' AND SlotPosition = '" + dbSlot.ToString() + "'");
             if (item != null)
@@ -61,7 +61,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
             // another update required here,currently the player needs to reopen the window to see the price, thats why we msg him
             client.Out.SendMessage("New price set! (open the merchant window again to see the price)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            return 1;
         }
     }
 }

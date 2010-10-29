@@ -30,7 +30,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort id = packet.ReadShort();
 			GameClient target = WorldMgr.GetClientFromID(id);
@@ -38,7 +38,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (log.IsWarnEnabled)
 					log.Warn(string.Format("Client {0} requested invalid client {1}",client.SessionID,id));
-				return 0;
+				return;
 			}
 
 			//DOLConsole.WriteLine("player creation request "+target.Player.Name);
@@ -47,8 +47,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Out.SendPlayerCreate(target.Player);
 				client.Out.SendLivingEquipmentUpdate(target.Player);
 			}
-
-			return 1;
 		}
 	}
 }

@@ -449,7 +449,7 @@ namespace DOL.GS.Keeps
 		/// <param name="target"></param>
 		/// <param name="viewangle"></param>
 		/// <returns></returns>
-		public override bool IsObjectInFront(GameObject target, double viewangle)
+		public override bool IsObjectInFront(GameObject target, double viewangle, bool rangeCheck = true)
 		{
 			return true;
 		}

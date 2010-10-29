@@ -74,7 +74,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string ipAddress = client.TcpEndpointAddress;
 
@@ -138,7 +138,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
 				GameServer.Instance.Disconnect(client);
 
-				return 1;
+				return;
 			}
 
 			// check connection allowed with serverrules
@@ -151,7 +151,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					GameServer.Instance.Disconnect(client);
 
-					return 1;
+					return;
 				}
 			}
 			catch (Exception e)
@@ -173,7 +173,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (state != GameClient.eClientState.NotConnected)
 					{
 						Log.DebugFormat("wrong client state on connect {0} {1}", userName, state.ToString());
-						return 1;
+						return;
 					}
 
 					if (Log.IsInfoEnabled)
@@ -190,7 +190,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							client.Out.SendLoginDenied(eLoginError.AccountAlreadyLoggedIn);
 
-							return 1;
+							return;
 						} // in login
 
 						if (findclient.ClientState == GameClient.eClientState.Linkdead)
@@ -210,7 +210,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						GameServer.Instance.Disconnect(client);
 
-						return 1;
+						return;
 					}
 
 					bool goodname = true;
@@ -232,7 +232,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Out.SendLoginDenied(eLoginError.AccountInvalid);
 						GameServer.Instance.Disconnect(client);
 
-						return 1;
+						return;
 					}
 					else
 					{
@@ -255,7 +255,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									if (Log.IsInfoEnabled)
 										Log.Info("Account creation failed, no password set for Account: " + userName);
 
-									return 1;
+									return;
 								}
 
 								// check for account bombing
@@ -272,7 +272,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 										client.Out.SendLoginDenied(eLoginError.PersonalAccountIsOutOfTime);
 										GameServer.Instance.Disconnect(client);
 
-										return 1;
+										return;
 									}
 
 									totalacc++;
@@ -284,7 +284,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									client.Out.SendLoginDenied(eLoginError.AccountNoAccessThisGame);
 									GameServer.Instance.Disconnect(client);
 
-									return 1;
+									return;
 								}
 
 								// per timeslice - for preventing account bombing via different ip
@@ -298,7 +298,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 										client.Out.SendLoginDenied(eLoginError.PersonalAccountIsOutOfTime);
 										GameServer.Instance.Disconnect(client);
 
-										return 1;
+										return;
 									}
 								}
 
@@ -331,7 +331,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								client.Out.SendLoginDenied(eLoginError.AccountNotFound);
 								GameServer.Instance.Disconnect(client);
 
-								return 1;
+								return;
 							}
 						}
 						else
@@ -354,7 +354,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								GameServer.Instance.Disconnect(client);
 
-								return 1;
+								return;
 							}
 
 							// save player infos
@@ -382,7 +382,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
 						client.Disconnect();
 
-						return 1;
+						return;
 					}
 
 					client.Out.SendLoginGranted();
@@ -412,8 +412,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				ExitLock(userName);
 			}
-
-			return 1;
 		}
 
 		#endregion

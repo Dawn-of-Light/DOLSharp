@@ -42,7 +42,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort jumpSpotID = packet.ReadShort();
 
@@ -112,7 +112,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Out.SendMessage("This region has been disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							if (client.Account.PrivLevel == 1)
 							{
-								return 1;
+								return;
 							}
 						}
 					}
@@ -122,7 +122,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// Allow the region to either deny exit or handle the zonepoint in a custom way
 			if (client.Player.CurrentRegion.OnZonePoint(client.Player, zonePoint) == false)
 			{
-				return 1;
+				return;
 			}
 
 			//check caps for battleground
@@ -131,7 +131,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (client.Player.Level < bg.MinLevel && client.Player.Level > bg.MaxLevel &&
 					client.Player.RealmLevel >= bg.MaxRealmLevel)
-					return 1;
+					return;
 			}
 
 			IJumpPointHandler customHandler = null;
@@ -186,8 +186,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			new RegionChangeRequestHandler(client.Player, zonePoint, customHandler).Start(1);
-
-			return 1;
 		}
 
 		#endregion

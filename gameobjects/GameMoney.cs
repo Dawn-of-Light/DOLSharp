@@ -59,7 +59,7 @@ namespace DOL.GS
 		public static bool IsItemMoney(string name) {
 			for (int i=0; i<NAMES.Length; i++) {
 				if (name == NAMES[i]) return true;
-			}			
+			}
 			return false;
 		}
 

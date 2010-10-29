@@ -28,13 +28,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int index = packet.ReadByte();
 
 			new CancelEffectHandler(client.Player, index).Start(1);
-
-			return 1;
 		}
 
 		#endregion

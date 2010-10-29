@@ -24,7 +24,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP,0x07^168,"Handles the players commands")]
 	public class PlayerCommandHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			packet.Skip(8);
 			string cmdLine = packet.ReadString(255);
@@ -36,7 +36,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				client.Out.SendMessage("No such command ("+cmdLine+")",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 			}
-			return 1;
 		}
 	}
 }

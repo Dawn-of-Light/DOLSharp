@@ -24,7 +24,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP,0x6A^168,"Checks for bad character names")]
 	public class BadNameCheckRequestHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string name=packet.ReadString(30);
 			//TODO do bad name checks here from some database with
@@ -48,7 +48,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			//DOLConsole.WriteLine(String.Format("Name {0} seems to be a good name!",name));
 
 			client.Out.SendBadNameCheckReply(name,bad);
-			return 1;
 		}
 	}
 }

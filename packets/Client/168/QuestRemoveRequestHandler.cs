@@ -26,7 +26,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP, 0x4F, "Quest remove request")]
 	public class QuestRemoveRequestHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort unk1 = packet.ReadShort();
 			ushort questIndex = packet.ReadShort();
@@ -56,8 +56,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (quest != null)
 				quest.AbortQuest();
-
-			return 1;
 		}
 	}
 }

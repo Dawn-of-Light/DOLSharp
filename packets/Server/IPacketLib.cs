@@ -571,7 +571,6 @@ namespace DOL.GS.PacketHandler
 		void SendInventorySlotsUpdate(ICollection<int> slots);
 		void SendInventoryItemsUpdate(byte preAction, ICollection<InventoryItem> itemsToUpdate);
 		void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, byte windowType);
-		void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType);
 		void SendDoorState(Region region, IDoor door);
 		void SendMerchantWindow(MerchantTradeItems itemlist, eMerchantWindowType windowType);
 		void SendTradeWindow();

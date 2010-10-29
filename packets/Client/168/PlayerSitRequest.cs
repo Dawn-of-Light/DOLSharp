@@ -23,13 +23,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			var status = (byte) packet.ReadByte();
 
 			new SitRequestHandler(client.Player, status != 0x00).Start(1);
-
-			return 1;
 		}
 
 		#endregion

@@ -26,7 +26,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		#region IPacketHandler Members
 
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int level = packet.ReadByte();
 			int unk1 = packet.ReadByte();
@@ -34,20 +34,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			// make sure permission level is within bounds
 			if (level < HousingConstants.MinPermissionLevel || level > HousingConstants.MaxPermissionLevel)
-				return 1;
+				return;
 
 			// house is null, return
 			var house = HouseMgr.GetHouse(housenumber);
 			if (house == null)
-				return 1;
+				return;
 
 			// player is null, return
 			if (client.Player == null)
-				return 1;
+				return;
 
 			// player has no owner permissions and isn't a GM or admin, return
 			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel <= 1)
-				return 1;
+				return;
 
 			// read in the permission values
 			DBHousePermissions permission = house.PermissionLevels[level];
@@ -70,8 +70,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			// save the updated permission
 			GameServer.Database.SaveObject(permission);
-
-			return 1;
 		}
 
 		#endregion

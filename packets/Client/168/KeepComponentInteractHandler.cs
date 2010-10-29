@@ -26,7 +26,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP, 0xC7 ^ 168, "Keep component interact")]
 	public class KeepComponentInteractHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort keepId = packet.ReadShort();
 			ushort wallId = packet.ReadShort();
@@ -36,7 +36,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
 
 			if (keep == null || !(GameServer.ServerRules.IsSameRealm(client.Player, (GameKeepComponent)keep.KeepComponents[wallId], true) || client.Account.PrivLevel > 1))
-				return 0;
+				return;
 
 			if (responce == 0x00)//show info
 				client.Out.SendKeepComponentInteract(((GameKeepComponent)keep.KeepComponents[wallId]));
@@ -51,7 +51,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Out.SendClearKeepComponentHookPoint(hp, HPindex);
 				client.Out.SendHookPointStore(hp.HookPoints[HPindex] as GameKeepHookPoint);
 			}
-			return 1;
 		}
 	}
 }

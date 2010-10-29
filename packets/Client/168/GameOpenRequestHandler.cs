@@ -23,7 +23,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP,0x17^168,"Checks if UDP is working for the client")]
 	public class GameOpenRequestHandler : IPacketHandler
 	{
-		public int HandlePacket(GameClient client, GSPacketIn packet)
+		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int flag = packet.ReadByte();
 			client.UdpPingTime = DateTime.Now.Ticks;
@@ -33,7 +33,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Out.SendUpdatePoints(); // based on 1.74 logs
 			if (client.Player != null)
 				client.Player.UpdateDisabledSkills(); // based on 1.74 logs
-			return 1;
 		}
 	}
 }

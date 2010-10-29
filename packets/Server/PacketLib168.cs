@@ -1671,7 +1671,7 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-		public virtual void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType)
+		protected virtual void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType)
 		{
 		}
 
