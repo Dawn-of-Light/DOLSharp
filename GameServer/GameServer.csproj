@@ -2733,11 +2733,19 @@
     <None Include="language\CU\NL - AdminCommands.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="language\DE\GameObjects\GameDoor.txt" />
+    <Content Include="language\DE\GameObjects\GameGuard.txt" />
     <Content Include="language\DE\PlayerRealmTitles.txt" />
     <Content Include="language\DE\Quests\Hibernia\WingsOfTheIsle.txt" />
+    <Content Include="language\EN\GameObjects\GameDoor.txt" />
+    <Content Include="language\EN\GameObjects\GameGuard.txt" />
     <Content Include="language\EN\PlayerRealmTitles.txt" />
     <Content Include="language\EN\Zones.txt" />
+    <Content Include="language\FR\GameObjects\GameDoor.txt" />
+    <Content Include="language\FR\GameObjects\GameGuard.txt" />
     <Content Include="language\FR\Quests\Hibernia\WingsOfTheIsle.txt" />
+    <Content Include="language\IT\GameObject\GameDoor.txt" />
+    <Content Include="language\IT\GameObject\GameGuard.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="language\DE\Quests\Midgard\" />

@@ -386,7 +386,8 @@ namespace DOL.GS
 			{
 				if( !m_openDead && this.Realm != eRealm.Door )
 				{
-					attackerPlayer.Out.SendMessage("The door is now open", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    attackerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(attackerPlayer.Client, "GameDoor.NowOpen", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 				}
 				if( !m_openDead && this.Realm != eRealm.Door )
 				{
@@ -394,21 +395,19 @@ namespace DOL.GS
 			
 					if( !IsAlive )
 					{
-						attackerPlayer.Out.SendMessage("The door is now open", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        attackerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(attackerPlayer.Client, "GameDoor.NowOpen", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						Die(source);
 						m_openDead = true;
 						RegenDoorHealth();
 						if( Locked == 0 )
 							Open( );
-				
-				
+								
 						Group attackerGroup = attackerPlayer.Group;
 						if( attackerGroup != null )
 						{
 							foreach( GameLiving living in attackerGroup.GetMembersInTheGroup( ) )
 							{
-						 		((GamePlayer)living).Out.SendMessage("The door is now open", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
+                                ((GamePlayer)living).Out.SendMessage(LanguageMgr.GetTranslation(attackerPlayer.Client, "GameDoor.NowOpen", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 						}
 					}
