@@ -52,10 +52,82 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		public override void SendTrainerWindow()
 		{
-			// type 0 & type 1
-			base.SendTrainerWindow();
-
 			if (m_gameClient == null || m_gameClient.Player == null) return;
+
+			// type 0 & type 1
+
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
+			{
+				IList specs = m_gameClient.Player.GetSpecList();
+				pak.WriteByte((byte)specs.Count);
+				pak.WriteByte((byte)m_gameClient.Player.SkillSpecialtyPoints);
+				pak.WriteByte(0);
+				pak.WriteByte(0);
+
+				int i = 0;
+				foreach (Specialization spec in specs)
+				{
+					pak.WriteByte((byte)i++);
+					pak.WriteByte((byte)Math.Min(50, spec.Level));
+					pak.WriteByte((byte)(Math.Min(50, spec.Level) + 1));
+					pak.WritePascalString(spec.Name);
+				}
+				SendTCP(pak);
+			}
+
+			// realm abilities
+			List<RealmAbility> raList = SkillBase.GetClassRealmAbilities(m_gameClient.Player.CharacterClass.ID);
+			if (raList != null && raList.Count > 0)
+			{
+				var offeredRA = new List<RealmAbility>();
+				foreach (RealmAbility ra in raList)
+				{
+					var playerRA = (RealmAbility)m_gameClient.Player.GetAbility(ra.KeyName);
+					if (playerRA != null)
+					{
+						if (playerRA.Level < playerRA.MaxLevel)
+						{
+							var ab = SkillBase.GetAbility(playerRA.KeyName, playerRA.Level + 1) as RealmAbility;
+							if (ab != null)
+							{
+								offeredRA.Add(ab);
+							}
+							else
+							{
+								log.Error("Ability " + ab.Name + " not found!");
+							}
+						}
+					}
+					else
+					{
+						if (ra.Level < ra.MaxLevel)
+						{
+							offeredRA.Add(ra);
+						}
+					}
+				}
+
+				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
+				{
+					pak.WriteByte((byte)offeredRA.Count);
+					pak.WriteByte((byte)m_gameClient.Player.RealmSpecialtyPoints);
+					pak.WriteByte(1);
+					pak.WriteByte(0);
+
+					int i = 0;
+					foreach (RealmAbility ra in offeredRA)
+					{
+						pak.WriteByte((byte)i++);
+						pak.WriteByte((byte)ra.Level);
+						pak.WriteByte((byte)ra.CostForUpgrade(ra.Level - 1));
+						bool canBeUsed = ra.CheckRequirement(m_gameClient.Player);
+						pak.WritePascalString((canBeUsed ? "" : "[") + ra.Name + (canBeUsed ? "" : "]"));
+					}
+
+					m_gameClient.Player.TempProperties.setProperty("OFFERED_RA", offeredRA);
+					SendTCP(pak);
+				}
+			}
 
 			// type 4 (skills) & type 3 (description)
 			GSTCPPacketOut paksub = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow));
@@ -127,7 +199,7 @@ namespace DOL.GS.PacketHandler
 						foreach (Spell sp in lss)
 						{
 							pak.WritePascalString(sp.Name);
-							paksub.WriteByte((byte)sp.Level);
+							paksub.WriteByte((byte)Math.Min(50, sp.Level));
 							paksub.WriteShort((ushort)sp.Icon);
 							paksub.WriteByte((byte)sp.SkillType);
 							paksub.WriteByte(0);	// unk
@@ -162,7 +234,7 @@ namespace DOL.GS.PacketHandler
 							foreach (var st in lst)
 							{
 								pak.WritePascalString(st.Name);
-								paksub.WriteByte((byte)st.Level);
+								paksub.WriteByte((byte)Math.Min(50, st.Level));
 								paksub.WriteShort((ushort)st.Icon);
 								paksub.WriteByte((byte)st.SkillType);
 								paksub.WriteByte((byte)st.OpeningRequirementType);
