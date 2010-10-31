@@ -304,8 +304,8 @@ namespace DOL.Database
 			m_extension = template.Extension;
 			m_condition = template.MaxCondition;
 			m_durability = template.MaxDurability;
-			m_charges = template.MaxCharges;
-			m_charges1 = template.MaxCharges1;
+			m_charges = template.Charges > 0 ? template.Charges : template.MaxCharges;
+			m_charges1 = template.Charges1 > 0 ? template.Charges1 : template.MaxCharges1;
 			m_poisonCharges = template.PoisonCharges;
 			m_poisonMaxCharges = template.PoisonMaxCharges;
 			m_poisonSpellID = template.PoisonSpellID;
