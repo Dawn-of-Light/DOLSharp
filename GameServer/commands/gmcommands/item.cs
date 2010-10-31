@@ -74,7 +74,9 @@ namespace DOL.GS.Commands
 		 "/item packageid <PackageID> <slot> - Set this items PackageID",
 		 "/item levelrequired <level> <slot> - Set the required level needed to use spells and procs on this item",
 		 "/item bonuslevel <level> <slot> - Set the level required for item bonuses to effect player",
-		 "GMCommands.Item.Usage.SaveTemplate",
+		 "/item flags <flags> <slot> - Set the flags for this item",
+		 "/item updatetemplate <slot> - Changes to this item will also be made to the ItemTemplate and can be saved in the DB.",
+		 "/item save <TemplateID> [slot #]' - Create a new template or save an existing one",
 		 "/item addunique <id_nb> <slot> - save item as an unique one",
 		 "/item saveunique <id_nb> <slot> - update a unique item",
 		 "GMCommands.Item.Usage.FindID",
@@ -199,6 +201,7 @@ namespace DOL.GS.Commands
 							{
 								item.Count = Convert.ToInt32(args[2]);
 							}
+
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							client.Player.UpdateEncumberance();
 							break;
@@ -316,6 +319,12 @@ namespace DOL.GS.Commands
 								return;
 							}
 							item.Extension = Convert.ToByte(args[2]);
+
+							if (item.Template is ItemUnique || (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate))
+							{
+								item.Template.Extension = item.Extension;
+							}
+
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							if (item.SlotPosition < (int)eInventorySlot.FirstBackpack)
 								client.Player.UpdateEquipmentAppearance();
@@ -344,6 +353,12 @@ namespace DOL.GS.Commands
 								return;
 							}
 							item.Color = Convert.ToUInt16(args[2]);
+
+							if (item.Template is ItemUnique || (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate))
+							{
+								item.Template.Color = item.Color;
+							}
+
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							if (item.SlotPosition < (int)eInventorySlot.FirstBackpack)
 								client.Player.UpdateEquipmentAppearance();
@@ -587,6 +602,12 @@ namespace DOL.GS.Commands
 								return;
 							}
 							item.Emblem = Convert.ToInt32(args[2]);
+
+							if (item.Template is ItemUnique || (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate))
+							{
+								item.Template.Emblem = item.Emblem;
+							}
+
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							if (item.SlotPosition < (int)eInventorySlot.FirstBackpack)
 								client.Player.UpdateEquipmentAppearance();
@@ -670,6 +691,10 @@ namespace DOL.GS.Commands
 							int maxcon = Convert.ToInt32(args[3]);
 							item.Condition = con;
 							item.MaxCondition = maxcon;
+							if (item.Template is ItemUnique || (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate))
+							{
+								item.Template.Condition = item.Condition;
+							}
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
@@ -698,6 +723,10 @@ namespace DOL.GS.Commands
 							int Dur = Convert.ToInt32(args[2]);
 							int MaxDur = Convert.ToInt32(args[3]);
 							item.Durability = Dur;
+							if (item.Template is ItemUnique || (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate))
+							{
+								item.Template.Durability = item.Durability;
+							}
 							item.MaxDurability = MaxDur;
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
@@ -1148,6 +1177,11 @@ namespace DOL.GS.Commands
 							int SpellID = Convert.ToInt32(args[4]);
 							item.Charges = Charges;
 							item.MaxCharges = MaxCharges;
+							if (item.Template is ItemUnique || (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate))
+							{
+								item.Template.Charges = item.Charges;
+								item.Template.MaxCharges = item.MaxCharges;
+							}
 							item.SpellID = SpellID;
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
@@ -1179,6 +1213,11 @@ namespace DOL.GS.Commands
 							int SpellID1 = Convert.ToInt32(args[4]);
 							item.Charges1 = Charges;
 							item.MaxCharges1 = MaxCharges;
+							if (item.Template is ItemUnique || (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate))
+							{
+								item.Template.Charges1 = item.Charges1;
+								item.Template.MaxCharges1 = item.MaxCharges1;
+							}
 							item.SpellID1 = SpellID1;
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
@@ -1288,6 +1327,11 @@ namespace DOL.GS.Commands
 							int SpellID = Convert.ToInt32(args[4]);
 							item.PoisonCharges = Charges;
 							item.PoisonMaxCharges = MaxCharges;
+							if (item.Template is ItemUnique || (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate))
+							{
+								item.Template.PoisonCharges = item.PoisonCharges;
+								item.Template.PoisonMaxCharges = item.PoisonMaxCharges;
+							}
 							item.PoisonSpellID = SpellID;
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
@@ -1418,6 +1462,58 @@ namespace DOL.GS.Commands
 							break;
 						}
 					#endregion PackageID
+					#region Flags
+					case "flags":
+						{
+							int flags = Convert.ToInt32(args[2]);
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (args.Length == 4)
+							{
+								slot = Convert.ToInt32(args[3]);
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							item.Flags = flags;
+							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							break;
+						}
+					#endregion Flags
+					#region UpdateTemplate
+					case "updatetemplate":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+							if (args.Length == 3)
+							{
+								slot = Convert.ToInt32(args[2]);
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							if (item.Template is ItemUnique)
+							{
+								DisplayMessage(client, "This command is only applicable for items based on an ItemTemplate");
+							}
+							else
+							{
+								(item.Template as ItemTemplate).AllowUpdate = true;
+								client.Out.SendMessage("** All changes made to this item will also be made to the source ItemTemplate: " + item.Template.Id_nb, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+								DisplayMessage(client, "** All changes made to this item will also be made to the source ItemTemplate: " + item.Template.Id_nb);
+							}
+							break;
+						}
+					#endregion UpdateTemplate
 					#region SaveUnique
 					case "saveunique":
 						{
@@ -1476,8 +1572,8 @@ namespace DOL.GS.Commands
 						}
 						break;
 					#endregion SaveUnique
-					#region SaveTemplate / AddUnique
-					case "savetemplate":
+					#region Save / AddUnique
+					case "save":
 					case "addunique":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1528,7 +1624,7 @@ namespace DOL.GS.Commands
 							}
 							else if (idnb == string.Empty)
 							{
-								if (args[1].ToLower() == "savetemplate" && item.Template is ItemUnique)
+								if (args[1].ToLower() == "save" && item.Template is ItemUnique)
 								{
 									DisplayMessage(client, "You need to provide a new id_nb to save this ItemUnique as an ItemTemplate.");
 									return;
@@ -1538,7 +1634,7 @@ namespace DOL.GS.Commands
 							}
 
 							ItemTemplate temp = null;
-							if (args[1].ToLower() == "savetemplate")
+							if (args[1].ToLower() == "save")
 							{
 								// if the item is allready in the database
 								temp = GameServer.Database.FindObjectByKey<ItemTemplate>(idnb);
@@ -1547,7 +1643,7 @@ namespace DOL.GS.Commands
 							// save the new item
 							if (temp == null)
 							{
-								if (args[1].ToLower() == "savetemplate")
+								if (args[1].ToLower() == "save")
 								{
 									try
 									{
@@ -1591,13 +1687,18 @@ namespace DOL.GS.Commands
 								item.Template.Dirty = true;
 								GameServer.Database.SaveObject(item.Template);
 								GameServer.Database.UpdateInCache<ItemTemplate>(item.Template.Id_nb);
-								Log.Debug("Updated ItemTemplate: " + item.Template.Id_nb);
-								DisplayMessage(client, "Updated ItemTemplate: " + item.Template.Id_nb);
+								DisplayMessage(client, "Updated Inventory Item: " + item.Id_nb);
+
+								if (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate)
+								{
+									Log.Debug("Updated ItemTemplate: " + item.Template.Id_nb);
+									DisplayMessage(client, "++ Source ItemTemplate Updated!");
+								}
 							}
 
 						}
 						break;
-					#endregion SaveTemplate / SaveUnique
+					#endregion Save / AddUnique
 					#region FindID
 					case "findid":
 						{
