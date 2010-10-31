@@ -34,12 +34,27 @@ namespace DOL.Database
 		/// in example for CreatorSuite
 		/// </summary>
 		public static bool UnlockDirty = false;
+
+
+		protected bool m_allowUpdate = false;
+
+		/// <summary>
+		/// Allow this item to be updated.  This allows the dirty flag to work just for this item.
+		/// Primarily used when editing items in game via /item
+		/// </summary>
+		public bool AllowUpdate
+		{
+			get { return (m_allowUpdate || UnlockDirty); }
+			set { m_allowUpdate = value; }
+		}
+
+
 		public override bool Dirty
 		{
 			get { return base.Dirty; }
 			set 
 			{
-				if (UnlockDirty)
+				if (UnlockDirty || AllowUpdate)
 					base.Dirty = value;
 				else
 					base.Dirty = false;
@@ -148,6 +163,8 @@ namespace DOL.Database
 
 		public ItemTemplate()
 		{
+			AllowUpdate = false;
+
 			m_id_nb = m_blankItem;
 			m_name = "(blank item)";
 			m_level = 0;
@@ -220,6 +237,8 @@ namespace DOL.Database
 
 		public ItemTemplate(ItemTemplate template)
 		{
+			AllowUpdate = false;
+
 			m_id_nb = template.Id_nb;
 			Name = template.Name;
 			Bonus = template.Bonus;
