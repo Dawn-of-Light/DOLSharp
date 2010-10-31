@@ -497,8 +497,11 @@ namespace DOL.GS
 				if (ProcSpellID != 0 || ProcSpellID1 != 0 || SpellID != 0 || SpellID1 != 0)
 				{
 					int requiredLevel = LevelRequirement > 0 ? LevelRequirement : Math.Min(50, Level);
-					output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2", requiredLevel));
-					output.Add(" ");
+					if (requiredLevel > 1)
+					{
+						output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2", requiredLevel));
+						output.Add(" ");
+					}
 				}
 
 				if (Object_Type == (int)eObjectType.Magical && Item_Type == (int)eInventorySlot.FirstBackpack) // potion
@@ -1106,9 +1109,10 @@ namespace DOL.GS
 		/// <param name="item"></param>
 		public virtual void WriteTechnicalInfo(List<String> delve)
 		{
-			delve.Add(" ");
-			delve.Add("--- Item technical information ---");
-			delve.Add(" ");
+			delve.Add("");
+			delve.Add("--- Technical Information ---");
+			delve.Add("");
+
 			if (Template is ItemUnique)
 			{
 				delve.Add("  Item Unique: " + Id_nb);
@@ -1116,10 +1120,14 @@ namespace DOL.GS
 			else
 			{
 				delve.Add("Item Template: " + Id_nb);
+				delve.Add("Allow Updates: " + (Template as ItemTemplate).AllowUpdate);
 			}
+
+			delve.Add("");
+
 			delve.Add("         Name: " + Name);
 			delve.Add("    ClassType: " + this.GetType().FullName);
-			delve.Add(" ");
+			delve.Add("");
 			delve.Add("        Level: " + Level);
 			delve.Add("       Object: " + GlobalConstants.ObjectTypeToName(Object_Type) + " (" + Object_Type + ")");
 			delve.Add("         Type: " + GlobalConstants.SlotToName(Item_Type) + " (" + Item_Type + ")");
