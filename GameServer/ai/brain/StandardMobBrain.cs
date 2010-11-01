@@ -1101,6 +1101,8 @@ namespace DOL.AI.Brain
 				case "BodySpiritEnergyBuff":
 				case "HeatColdMatterBuff":
 				case "CrushSlashThrustBuff":
+				case "AllMagicResistsBuff":
+				case "AllMeleeResistsBuff":
 				case "OffensiveProc":
 				case "DefensiveProc":
 				case "Bladeturn":
