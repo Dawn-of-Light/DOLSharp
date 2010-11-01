@@ -69,7 +69,7 @@ namespace DOL.GS.PacketHandler
 				{
 					pak.WriteByte((byte)i++);
 					pak.WriteByte((byte)Math.Min(50, spec.Level));
-					pak.WriteByte((byte)(Math.Min(50, spec.Level) + 1));
+					pak.WriteByte((byte)(Math.Min(50, spec.Level) + 1)); 
 					pak.WritePascalString(spec.Name);
 				}
 				SendTCP(pak);
@@ -143,25 +143,32 @@ namespace DOL.GS.PacketHandler
 			paksub.WriteByte(0);
 
 			// Fill out an array that tells the client how many spec points are available at each of
-			// this characters levels.  This seems to only be used for the 'Level Required' display on
+			// this characters levels.  This seems to only be used for the 'Minimum Level' display on
 			// the new trainer window.  I've changed the calls below to use AdjustedSpecPointsMultiplier
 			// to enable servers that allow levels > 50 to train properly by modifying points available per level. - Tolakram
 
+			// There is a bug here that is calculating too few spec points and causing level 50 players to 
+			// be unable to train RA.  Setting this to max for now to disable 'Minimum Level' feature on train window.
+			// I think bug is that auto train points must be added to this calculation.
+			// -Tolakram
+
 			for (byte i = 2; i <= 50; i++)
 			{
-				int specpoints = 0;
+				//int specpoints = 0;
 
-				if (i <= 5)
-					specpoints = i;
+				//if (i <= 5)
+				//    specpoints = i;
 
-				if (i > 5)
-					specpoints = i * m_gameClient.Player.CharacterClass.AdjustedSpecPointsMultiplier / 10;
+				//if (i > 5)
+				//    specpoints = i * m_gameClient.Player.CharacterClass.AdjustedSpecPointsMultiplier / 10;
 
-				if (i > 40 && i != 50)
-					specpoints += i * m_gameClient.Player.CharacterClass.AdjustedSpecPointsMultiplier / 20;
+				//if (i > 40 && i != 50)
+				//    specpoints += i * m_gameClient.Player.CharacterClass.AdjustedSpecPointsMultiplier / 20;
 
-				paksub.WriteByte((byte)specpoints);
+				//paksub.WriteByte((byte)specpoints);
+				paksub.WriteByte((byte)255);
 			}
+
 
 			byte count = 0;
 			int skillindex = 0;
