@@ -143,12 +143,6 @@ namespace DOL.GS.Spells
 			// check only if brain wasn't changed at least once
 			if (m_controlledBrain == null)
 			{
-				if (target.Name.ToLower() != target.Name)
-				{
-					MessageToCaster("You can't charm this creature!", eChatType.CT_SpellResisted);
-					return;
-				}
-
 				if (target.Realm != 0 || target is GameNPC == false)
 				{
 					MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
@@ -156,15 +150,15 @@ namespace DOL.GS.Spells
 				}
                 //ToDo: Proper check for bodytypes but for now allowing ability to charm all bodytypes if amnesiachance is 0 so can have Bodytypes implemented without breaking charming - Sand
                 if (m_spell.AmnesiaChance != 0)
-                {    
-                    if ((target as GameNPC).BodyType != m_spell.AmnesiaChance)
+                {
+                    if (((GameNPC)target).BodyType != m_spell.AmnesiaChance)
 				    {
 			   	        MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
 				        return;
 				    }
-                return;
+                    return;
                 }
-				if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledBrain != null)
+				if (Caster.ControlledBrain != null)
 				{
 					MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
 					return;
