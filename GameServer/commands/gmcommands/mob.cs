@@ -1810,10 +1810,10 @@ namespace DOL.GS.Commands
 		{
 			refreshloot(client, targetMob, null);
 
-			if (args[2] == "random")
+			if (args.Length > 2 && args[2] == "random")
 			{
 				// generated loots go in inventory
-				if (!String.IsNullOrEmpty(args[3]))
+				if (args.Length > 3 && args[3] == "inv")
 				{
 					targetMob.AddXPGainer(client.Player, 1);
 					targetMob.DropLoot(client.Player);
@@ -1823,7 +1823,6 @@ namespace DOL.GS.Commands
 
 				ItemTemplate[] templates = LootMgr.GetLoot(targetMob, client.Player);
 				DisplayMessage(client, "[ " + targetMob.Name + "'s Loot Table ]\n\n");
-
 				foreach (ItemTemplate temp in templates)
 				{
 					string message = string.Format("Name: {0}, Id_nb: {1}", temp.Name, temp.Id_nb);
@@ -1835,7 +1834,7 @@ namespace DOL.GS.Commands
 				var text = new List<string>();
 				text.Add("");
 
-				IList<LootOTD> otds = GameServer.Database.SelectObjects<LootOTD>("MobName = '" + GameServer.Database.Escape(targetMob.Name.Replace("'", "\'")) + "'");
+				IList<LootOTD> otds = GameServer.Database.SelectObjects<LootOTD>("MobName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
 
 				if (otds != null && otds.Count > 0)
 				{

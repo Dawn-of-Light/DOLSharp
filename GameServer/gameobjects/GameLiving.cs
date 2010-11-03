@@ -992,7 +992,7 @@ namespace DOL.GS
 		public virtual double GetWeaponSkill(InventoryItem weapon)
 		{
 			const double bs = 128.0 / 50.0;	// base factor (not 400)
-			return (int)((Level + 1) * bs * (1 + (GetWeaponStat(weapon) - 50) * 0.005) * (Level * 2 / 50));
+			return (int)((Level + 1) * bs * (1 + (GetWeaponStat(weapon) - 50) * 0.005) * Level * 2 / 50);
 		}
 
 		/// <summary>
