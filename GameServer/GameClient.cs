@@ -136,7 +136,7 @@ namespace DOL.GS
            Version1104 = 1104,
 			Version1105 = 1105,
 			Version1106 = 1106,
-			Version1106 = 1107,
+			Version1107 = 1107,
 			_LastVersion = 1107,
 		}
 
