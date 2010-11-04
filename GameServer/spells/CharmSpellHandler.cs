@@ -148,21 +148,31 @@ namespace DOL.GS.Spells
 					MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
 					return;
 				}
-                //ToDo: Proper check for bodytypes but for now allowing ability to charm all bodytypes if amnesiachance is 0 so can have Bodytypes implemented without breaking charming - Sand
-                if (m_spell.AmnesiaChance != 0)
-                {
-                    if (((GameNPC)target).BodyType != m_spell.AmnesiaChance)
-				    {
-			   	        MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
-				        return;
-				    }
-                    return;
-                }
+
+				if (m_spell.AmnesiaChance != 0)
+				{
+					if (((GameNPC)target).BodyType != m_spell.AmnesiaChance)
+					{
+						MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
+						return;
+					}
+				}
+				else
+				{
+					//ToDo: Proper check for bodytypes but for now allowing ability to charm all bodytypes if amnesiachance is 0 so can have Bodytypes implemented without breaking charming - Sand
+					if (target.Name != target.Name.ToLower())
+					{
+						MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
+						return;
+					}
+				}
+
 				if (Caster.ControlledBrain != null)
 				{
 					MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
 					return;
 				}
+
 				IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
 				if (brain != null && (brain.Owner as GamePlayer)!=Caster)
 				{
