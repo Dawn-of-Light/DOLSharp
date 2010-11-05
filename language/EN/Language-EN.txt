@@ -338,12 +338,17 @@ Scripts.Players.Appeal.CurrentStaffAvailable:	There are currently {0} staff avai
 Scripts.Players.Appeal.SystemDisabled:			The appeal system is currently disabled.
 
 # /Assist
-Scripts.Players.Assist.CantAssistYourself:		You can't assist yourself.
-Scripts.Players.Assist.DoesntHaveTarget:	 	doesn't currently have a target.
-Scripts.Players.Assist.DontSee:				You don't see {0} around here!
-Scripts.Players.Assist.NoTarget:			You have no target.
-Scripts.Players.Assist.NotValid:			Target is not valid.
-Scripts.Players.Assist.YouAssist:			You assist {0}.
+#Scripts.Players.Assist.CantAssistYourself:		You can't assist yourself.
+#Scripts.Players.Assist.DoesntHaveTarget:	 	doesn't currently have a target.
+#Scripts.Players.Assist.DontSee:				You don't see {0} around here!
+#Scripts.Players.Assist.NoTarget:				You have no target.
+#Scripts.Players.Assist.NotValid:				Target is not valid.
+Scripts.Players.Assist.DoesntHaveTarget:		{0} doesn't currently have a target.
+Scripts.Players.Assist.MemberNotFound:			There is no one by that name around here.
+Scripts.Players.Assist.NoRealmMember:			{0} is not a member of your realm!
+Scripts.Players.Assist.NotValid:				{0} is not a valid assist target!
+Scripts.Players.Assist.SelectMember:			You must select the member of your realm you wish to assist.
+Scripts.Players.Assist.YouAssist:				You assist {0}.
 
 # /Autoloot
 Scripts.Players.Autoloot.Off:				Your autoloot is off. You will no longer attempt to automatically loot anything that drops in your area.
