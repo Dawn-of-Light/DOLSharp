@@ -30,6 +30,11 @@ namespace DOL.GS.Spells
     [SpellHandler("VampSpeedDecrease")]
     public class VampMaintainedSpeedDecrease : SpeedDecreaseSpellHandler
     {
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+		protected GameLiving m_originalTarget = null;
+		protected bool m_isPulsing = false;
+
         public VampMaintainedSpeedDecrease(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
         /// <summary>
@@ -40,53 +45,53 @@ namespace DOL.GS.Spells
         /// <returns></returns>
         protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
         {
-            //We don't want an immunity timer for this
+			m_originalTarget = target;
+
+			// this acts like a pulsing spell effect, but with 0 frequency.
             return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
         }
 
-        /// <summary>
-        /// Check each pulse to see if spell can be maintained
-        /// </summary>
-        /// <param name="effect"></param>
-        public override void OnEffectPulse(GameSpellEffect effect)
-        {
-            if (effect.Owner.ObjectState != GameObject.eObjectState.Active || m_caster.ObjectState != GameObject.eObjectState.Active)
-            {
-                effect.Cancel(false);
-                return;
-            }
+		/// <summary>
+		/// This spell is a pulsing spell, not a pulsing effect, so we check spell pulse
+		/// </summary>
+		/// <param name="effect"></param>
+		public override void OnSpellPulse(PulsingSpellEffect effect)
+		{
+			if (m_originalTarget == null || Caster.ObjectState != GameObject.eObjectState.Active || m_originalTarget.ObjectState != GameObject.eObjectState.Active)
+			{
+				MessageToCaster("Your spell was cancelled.", eChatType.CT_SpellExpires);
+				effect.Cancel(false);
+				return;
+			}
 
-            if (m_caster.Mana < Spell.PulsePower)
-            {
-                effect.Cancel(false);
-                return;
-            }
+			if (!Caster.IsAlive ||
+				!m_originalTarget.IsAlive ||
+				Caster.IsMezzed ||
+				Caster.IsStunned ||
+				Caster.IsSitting ||
+				(Caster.TargetObject is GameLiving ? m_originalTarget != Caster.TargetObject as GameLiving : true))
+			{
+				MessageToCaster("Your spell was cancelled.", eChatType.CT_SpellExpires);
+				effect.Cancel(false);
+				return;
+			}
 
-            if (!m_caster.IsAlive ||
-                !effect.Owner.IsAlive ||
-                m_caster.IsMezzed ||
-                m_caster.IsStunned ||
-                !m_caster.IsWithinRadius(effect.Owner, CalculateSpellRange()) ||
-                (m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true))
-            {
-                effect.Cancel(false);
-                return;
-            }
-            if (!m_caster.IsWithinRadius(effect.Owner, CalculateSpellRange()))
-            {
-                effect.Cancel(false);
-                return;
-            }
-            if (!m_caster.TargetInView)
-            {
-                effect.Cancel(false);
-                return;
-            }
+			if (!Caster.IsWithinRadius(m_originalTarget, CalculateSpellRange()))
+			{
+				MessageToCaster("Your target is no longer in range.", eChatType.CT_SpellExpires);
+				effect.Cancel(false);
+				return;
+			}
 
-            base.OnEffectPulse(effect);
+			if (!Caster.TargetInView)
+			{
+				MessageToCaster("Your target is no longer in view.", eChatType.CT_SpellExpires);
+				effect.Cancel(false);
+				return;
+			}
 
-            m_caster.Mana -= effect.Spell.PulsePower;
-        }
+			base.OnSpellPulse(effect);
+		}
 
 
         protected override void OnAttacked(DOLEvent e, object sender, EventArgs arguments)
