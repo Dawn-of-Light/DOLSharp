@@ -182,29 +182,41 @@ namespace DOL.GS.Effects
 		/// <param name="playerCanceled">true if canceled by the player</param>
 		public virtual void Cancel(bool playerCanceled)
 		{
-			if (playerCanceled && !m_handler.HasPositiveEffect) {
+			if (playerCanceled && !m_handler.HasPositiveEffect) 
+			{
 				if (Owner is GamePlayer)
+				{
 					((GamePlayer)Owner).Out.SendMessage(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "Effects.GameSpellEffect.CantRemoveEffect"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+
 				return;
 			}
 
 			lock (m_LockObject)
-			{				
+			{
+				StopTimers();
+
 				if (m_expired)
 					return;
 
 				m_expired = true;
-				StopTimers();
-				if(m_owner != null) {
+
+				if(m_owner != null) 
+				{
 					m_owner.EffectList.Remove(this);
+
 					if (Spell.Concentration > 0) 
 					{
 						SpellHandler.Caster.ConcentrationEffects.Remove(this);
 					}
 					if (RestoredEffect)
+					{
 						m_handler.OnRestoredEffectExpires(this, RestoreVars, false);
+					}
 					else
+					{
 						m_handler.OnEffectExpires(this, false);
+					}
 				}
 			}
 		}

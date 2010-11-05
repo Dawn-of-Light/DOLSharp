@@ -246,6 +246,7 @@ namespace DOL.GS.Spells
 			}
 			else
 			{
+				MessageToCaster("You do not have enough mana and your spell was cancelled.", eChatType.CT_SpellExpires);
 				effect.Cancel(false);
 			}
 		}
