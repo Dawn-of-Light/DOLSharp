@@ -454,6 +454,17 @@ namespace DOL.GS.Commands
                                         NoValidTarget(client, targetGuard);
                                         return;
                                     }
+
+                                    //We cannot assist npc's of an enemy realm.
+                                    if (!SameRealm(client, client.Player.TargetObject as GameNPC, true))
+                                        return;
+
+                                    //We cannot assist our target when it has no target
+                                    if (!HasTarget(client, (client.Player.TargetObject as GameNPC)))
+                                        return;
+
+                                    YouAssist(client, (client.Player.TargetObject as GameNPC).GetName(0, false), (client.Player.TargetObject as GameNPC).TargetObject);
+                                    return;
                                 }
                             } break;
                             #endregion
