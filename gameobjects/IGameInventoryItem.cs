@@ -30,7 +30,7 @@ namespace DOL.GS
 	public interface IGameInventoryItem
 	{
 		/// <summary>
-		/// Is this item valid, checked when loading inventory
+		/// Is this item valid?
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>

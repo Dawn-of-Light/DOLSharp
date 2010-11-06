@@ -468,7 +468,7 @@ namespace DOL.AI.Brain
 
 			switch (spell.SpellType)
 			{
-					#region Buffs
+				#region Buffs
 				case "StrengthConstitutionBuff":
 				case "DexterityQuicknessBuff":
 				case "StrengthBuff":
@@ -491,9 +491,12 @@ namespace DOL.AI.Brain
 				case "BodySpiritEnergyBuff":
 				case "HeatColdMatterBuff":
 				case "CrushSlashThrustBuff":
+				case "AllMagicResistsBuff":
+				case "AllMeleeResistsBuff":
 				case "OffensiveProc":
 				case "DefensiveProc":
 				case "Bladeturn":
+				case "ToHitBuff":
 					{
 						//Buff self
 						if (!LivingHasEffect(Body, spell))
@@ -541,20 +544,79 @@ namespace DOL.AI.Brain
 						}
 					}
 					break;
-					#endregion
+				#endregion Buffs
 
-					#region Disease Cure/Poison Cure/Summon
+				#region Disease Cure/Poison Cure/Summon
 				case "CureDisease":
-					if (!Body.IsDiseased)
+					//Cure self
+					if (Body.IsDiseased)
+					{
+						Body.TargetObject = Body;
 						break;
-					Body.TargetObject = Body;
+					}
+
+					//Cure owner
+					owner = (this as IControlledBrain).Owner;
+					if (owner.IsDiseased)
+					{
+						Body.TargetObject = owner;
+						break;
+					}
+
+					// Cure group members
+
+					player = GetPlayerOwner();
+
+					if (player.Group != null)
+					{
+						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
+						{
+							if (p.IsDiseased)
+							{
+								Body.TargetObject = p;
+								break;
+							}
+						}
+					}
+					break;
+				case "CurePoison":
+					//Cure self
+					if (LivingIsPoisoned(Body))
+					{
+						Body.TargetObject = Body;
+						break;
+					}
+
+					//Cure owner
+					owner = (this as IControlledBrain).Owner;
+					if (LivingIsPoisoned(owner))
+					{
+						Body.TargetObject = owner;
+						break;
+					}
+
+					// Cure group members
+
+					player = GetPlayerOwner();
+
+					if (player.Group != null)
+					{
+						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
+						{
+							if (LivingIsPoisoned(p))
+							{
+								Body.TargetObject = p;
+								break;
+							}
+						}
+					}
 					break;
 				case "Summon":
 					Body.TargetObject = Body;
 					break;
 					#endregion
 
-					#region Heals
+				#region Heals
 				case "Heal":
 					//Heal self
 					if (Body.HealthPercent < 75)
@@ -573,7 +635,7 @@ namespace DOL.AI.Brain
 
 					player = GetPlayerOwner();
 
-					if (player.Group != null && player.CharacterClass.ID == (int)eCharacterClass.Enchanter)
+					if (player.Group != null && (spell.Target.ToLower() == "realm" || spell.Target.ToLower() == "group"))
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
