@@ -56,6 +56,9 @@ namespace DOL.GS.GameEvents
 		/// <param name="arguments"></param>
 		private static void PlayerEntered(DOLEvent e, object sender, EventArgs arguments)
 		{
+			if (ServerProperties.Properties.SHOW_LOGINS == false)
+				return;
+
 			GamePlayer player = sender as GamePlayer;
 			if (player == null) return;
 			if (player.IsAnonymous) return;
@@ -89,6 +92,9 @@ namespace DOL.GS.GameEvents
 		/// <param name="arguments"></param>
 		private static void PlayerQuit(DOLEvent e, object sender, EventArgs arguments)
 		{
+			if (ServerProperties.Properties.SHOW_LOGINS == false)
+				return;
+
 			GamePlayer player = sender as GamePlayer;
 			if (player == null) return;
 			if (player.IsAnonymous) return;

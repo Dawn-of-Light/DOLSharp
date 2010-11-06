@@ -166,6 +166,7 @@ namespace DOL.GS.Quests
 		byte m_numOptionalRewardsChoice = 1;
 		protected List<ItemTemplate> m_optionalRewards = new List<ItemTemplate>();
 		protected List<ItemTemplate> m_optionalRewardChoice = new List<ItemTemplate>();
+		protected int[] m_rewardItemsChosen = null;
 		protected List<ItemTemplate> m_finalRewards = new List<ItemTemplate>();
 		protected List<string> m_questDependencies = new List<string>();
 		protected List<byte> m_allowedClasses = new List<byte>();
@@ -522,9 +523,20 @@ namespace DOL.GS.Quests
 			get { return m_optionalRewards; }
 		}
 
+		/// <summary>
+		/// List of all the items the player has chosen
+		/// </summary>
 		public virtual List<ItemTemplate> OptionalRewardsChoice
 		{
 			get { return m_optionalRewardChoice; }
+		}
+
+		/// <summary>
+		/// Array of each optional reward item choice (0-7)
+		/// </summary>
+		public virtual int[] RewardItemsChosen
+		{
+			get { return m_rewardItemsChosen; }
 		}
 
 		/// <summary>
@@ -1385,23 +1397,31 @@ namespace DOL.GS.Quests
 						return;
 
 					m_optionalRewardChoice.Clear();
+					m_rewardItemsChosen = rewardArgs.ItemsChosen;
 
-					for (int reward = 0; reward < rewardArgs.CountChosen; ++reward)
+					if (ExecuteCustomQuestStep(QuestPlayer, 0, eStepCheckType.RewardsChosen))
 					{
-						m_optionalRewardChoice.Add(OptionalRewards[rewardArgs.ItemsChosen[reward]]);
-					}
+						if (OptionalRewards.Count > 0)
+						{
+							for (int reward = 0; reward < rewardArgs.CountChosen; ++reward)
+							{
+								m_optionalRewardChoice.Add(OptionalRewards[rewardArgs.ItemsChosen[reward]]);
+							}
 
-					if (NumOptionalRewardsChoice > 0 && rewardArgs.CountChosen <= 0)
-					{
-						QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
-						return;
-					}
+							if (NumOptionalRewardsChoice > 0 && rewardArgs.CountChosen <= 0)
+							{
+								QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+								return;
+							}
 
-					FinishQuest(null, false);
-					return;
+							FinishQuest(null, false);
+						}
+						else
+						{
+							log.ErrorFormat("DataQuest ID {0}: Optional item list is empty on RewardsChosen!", ID);
+						}
+					}
 				}
-
-
 			}
 			catch (Exception ex)
 			{
