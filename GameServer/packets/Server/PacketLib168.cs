@@ -745,17 +745,14 @@ namespace DOL.GS.PacketHandler
 		{
 			Zone z = obj.CurrentZone;
 			if (z == null)
+				return;
+
+			if (m_gameClient.Player == null || obj.CurrentHouse != m_gameClient.Player.CurrentHouse ||
+				obj.CurrentRegion != m_gameClient.Player.CurrentRegion)
 			{
-				//if (Log.IsWarnEnabled)
-				//{
-				//    Log.Warn("SendObjectUpdate: obj zone == null to " + m_gameClient.Player.Name + " in " + m_gameClient.Player.CurrentZone.Description + " (" + m_gameClient.Player.CurrentRegion.Name + ") : " + obj.Name + " (" + obj.InternalID + ")");
-				//}
 				return;
 			}
 
-			if (m_gameClient.Player == null || obj.CurrentHouse != m_gameClient.Player.CurrentHouse ||
-			    obj.CurrentRegion != m_gameClient.Player.CurrentRegion)
-				return;
 			var xOffsetInZone = (ushort) (obj.X - z.XOffset);
 			var yOffsetInZone = (ushort) (obj.Y - z.YOffset);
 			ushort xOffsetInTargetZone = 0;
@@ -784,9 +781,13 @@ namespace DOL.GS.PacketHandler
 					flags |= 0x01;
 				}
 				if (npc.IsUnderwater)
+				{
 					flags |= 0x10;
+				}
 				if ((npc.Flags & GameNPC.eFlags.FLYING) != 0)
+				{
 					flags |= 0x20;
+				}
 
 				if (npc.IsMoving && !npc.IsAtTargetPosition)
 				{
@@ -806,31 +807,29 @@ namespace DOL.GS.PacketHandler
 
 					if (speed > 0x07FF)
 					{
-						if (Log.IsErrorEnabled)
-							Log.Error("Too high NPC speed. (" + speed + ")" + npc.Name);
 						speed = 0x07FF;
 					}
 					else if (speed < 0)
 					{
-						if (Log.IsErrorEnabled)
-							Log.Error("NPC speed can't be negative. (" + speed + ")" + npc.Name);
 						speed = 0;
 					}
-
-					//flags|=0x10;
 				}
 
 				GameObject target = npc.TargetObject;
-				if (npc.AttackState && target != null && target.ObjectState == GameObject.eObjectState.Active &&
-				    !npc.IsTurningDisabled)
+				if (npc.AttackState && target != null && target.ObjectState == GameObject.eObjectState.Active && !npc.IsTurningDisabled)
 					targetOID = (ushort) target.ObjectID;
 			}
 
 			var pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.ObjectUpdate));
 			pak.WriteShort((ushort) speed);
 			if (obj is GameNPC)
-				pak.WriteShort((ushort) (obj.Heading & 0xFFF));
-			else pak.WriteShort(obj.Heading);
+			{
+				pak.WriteShort((ushort)(obj.Heading & 0xFFF));
+			}
+			else
+			{
+				pak.WriteShort(obj.Heading);
+			}
 			pak.WriteShort(xOffsetInZone);
 			pak.WriteShort(xOffsetInTargetZone);
 			pak.WriteShort(yOffsetInZone);
@@ -841,8 +840,13 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort) targetOID);
 			//health
 			if (obj is GameLiving)
+			{
 				pak.WriteByte((obj as GameLiving).HealthPercent);
-			else pak.WriteByte(0);
+			}
+			else
+			{
+				pak.WriteByte(0);
+			}
 			//Dinberg:Instances - zoneskinID for positioning of objects clientside.
 			flags |= (byte) (((z.ZoneSkinID & 0x100) >> 6) | ((targetZone & 0x100) >> 5));
 			pak.WriteByte(flags);

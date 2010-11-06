@@ -9,6 +9,7 @@ namespace DOL.GS.Quests
 		Offer,
 		Step,
 		Finish,
+		RewardsChosen,
 	}
 
 	public interface IDataQuestStep
