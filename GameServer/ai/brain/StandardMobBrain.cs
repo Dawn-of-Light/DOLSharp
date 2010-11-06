@@ -1078,7 +1078,7 @@ namespace DOL.AI.Brain
 			Body.TargetObject = null;
 			switch (spell.SpellType)
 			{
-					#region Buffs
+				#region Buffs
 				case "StrengthConstitutionBuff":
 				case "DexterityQuicknessBuff":
 				case "StrengthBuff":
@@ -1106,6 +1106,7 @@ namespace DOL.AI.Brain
 				case "OffensiveProc":
 				case "DefensiveProc":
 				case "Bladeturn":
+				case "ToHitBuff":
 					{
 						// Buff self, if not in melee, but not each and every mob
 						// at the same time, because it looks silly.
@@ -1116,11 +1117,16 @@ namespace DOL.AI.Brain
 						}
 						break;
 					}
-					#endregion
+				#endregion Buffs
 
-					#region Disease Cure/Poison Cure/Summon
+				#region Disease Cure/Poison Cure/Summon
 				case "CureDisease":
 					if (!Body.IsDiseased)
+						break;
+					Body.TargetObject = Body;
+					break;
+				case "CurePoison":
+					if (!LivingIsPoisoned(Body))
 						break;
 					Body.TargetObject = Body;
 					break;
@@ -1147,9 +1153,9 @@ namespace DOL.AI.Brain
 					}
 					Body.TargetObject = Body;
 					break;
-					#endregion
+				#endregion Disease Cure/Poison Cure/Summon
 
-					#region Heals
+				#region Heals
 				case "Heal":
 					// Chance to heal self when dropping below 30%, do NOT spam it.
 
@@ -1218,7 +1224,13 @@ namespace DOL.AI.Brain
 				case "DirectDamage":
 				case "Lifedrain":
 				case "DexterityDebuff":
+				case "StrengthConstitutionDebuff":
+				case "CombatSpeedDebuff":
 				case "DamageOverTime":
+				case "MeleeDamageDebuff":
+				case "AllStatsPercentDebuff":
+				case "CrushSlashThrustDebuff":
+				case "EffectivenessDebuff":
 				case "Disease":
 				case "Stun":
 				case "Mez":
@@ -1297,6 +1309,26 @@ namespace DOL.AI.Brain
 			//the answer is no, the effect has not been found
 			return false;
 		}
+
+		protected bool LivingIsPoisoned(GameLiving target)
+		{
+			foreach (IGameEffect effect in target.EffectList)
+			{
+				//If the effect we are checking is not a gamespelleffect keep going
+				if (effect is GameSpellEffect == false)
+					continue;
+
+				GameSpellEffect speffect = effect as GameSpellEffect;
+
+				// if this is a DOT then target is poisoned
+				if (speffect.Spell.SpellType == "DamageOverTime")
+					return true;
+			}
+
+			return false;
+		}
+
+
 		#endregion
 
 		#region Random Walk

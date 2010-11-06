@@ -35,6 +35,8 @@ namespace DOL.GS
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		protected GamePlayer m_owner = null;
+
 		public GameInventoryItem()
 			: base()
 		{
@@ -64,6 +66,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool CheckValid(GamePlayer player)
 		{
+			m_owner = player;
 			return true;
 		}
 
@@ -131,6 +134,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnReceive(GamePlayer player)
 		{
+			m_owner = player;
 		}
 
 		/// <summary>
@@ -139,6 +143,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnLose(GamePlayer player)
 		{
+			m_owner = null;
 		}
 
 		/// <summary>
@@ -176,6 +181,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnEquipped(GamePlayer player)
 		{
+			CheckValid(player);
 		}
 
 		/// <summary>
@@ -184,6 +190,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnUnEquipped(GamePlayer player)
 		{
+			CheckValid(player);
 		}
 
 		/// <summary>

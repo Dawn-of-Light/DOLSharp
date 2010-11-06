@@ -344,6 +344,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server", "region_max_objects", "Set the maximum number of objects allowed in a region.  Smaller numbers offer better performance.  This can't be changed while the server is running. (256 - 65535)", (ushort)30000)]
 		public static readonly ushort REGION_MAX_OBJECTS;
 
+		/// <summary>
+		/// Show logins
+		/// </summary>
+		[ServerProperty("server", "show_logins", "Show login messages when players log in and out of game?", true)]
+		public static bool SHOW_LOGINS;
+
 
 		#endregion
 

@@ -3155,7 +3155,7 @@ namespace DOL.GS
 			foreach (Specialization spec in specs)
 			{
 				m_specList.Remove(spec);
-				m_specialization[spec.KeyName] = null;
+				m_specialization.Remove(spec.KeyName);
 			}
 		}
 
@@ -9633,6 +9633,7 @@ namespace DOL.GS
 			if (CurrentRegion is BaseInstance)
 				((BaseInstance)CurrentRegion).OnPlayerEnterInstance(this);
 
+			RefreshItemBonuses();
 			return true;
 		}
 
@@ -11192,6 +11193,70 @@ namespace DOL.GS
 
 					if (Endurance < MaxEndurance) StartEnduranceRegeneration();
 					else if (Endurance > MaxEndurance) Endurance = MaxEndurance;
+				}
+			}
+		}
+
+		protected virtual void RefreshItemBonuses()
+		{
+			m_itemBonus = new PropertyIndexer();
+
+			foreach (InventoryItem item in Inventory.EquippedItems)
+			{
+				if (item == null)
+					continue;
+
+				if (item is IGameInventoryItem)
+				{
+					(item as IGameInventoryItem).CheckValid(this);
+				}
+
+				if (item.IsMagical)
+				{
+					if (item.Bonus1 != 0)
+					{
+						ItemBonus[item.Bonus1Type] += item.Bonus1;
+					}
+					if (item.Bonus2 != 0)
+					{
+						ItemBonus[item.Bonus2Type] += item.Bonus2;
+					}
+					if (item.Bonus3 != 0)
+					{
+						ItemBonus[item.Bonus3Type] += item.Bonus3;
+					}
+					if (item.Bonus4 != 0)
+					{
+						ItemBonus[item.Bonus4Type] += item.Bonus4;
+					}
+					if (item.Bonus5 != 0)
+					{
+						ItemBonus[item.Bonus5Type] += item.Bonus5;
+					}
+					if (item.Bonus6 != 0)
+					{
+						ItemBonus[item.Bonus6Type] += item.Bonus6;
+					}
+					if (item.Bonus7 != 0)
+					{
+						ItemBonus[item.Bonus7Type] += item.Bonus7;
+					}
+					if (item.Bonus8 != 0)
+					{
+						ItemBonus[item.Bonus8Type] += item.Bonus8;
+					}
+					if (item.Bonus9 != 0)
+					{
+						ItemBonus[item.Bonus9Type] += item.Bonus9;
+					}
+					if (item.Bonus10 != 0)
+					{
+						ItemBonus[item.Bonus10Type] += item.Bonus10;
+					}
+					if (item.ExtraBonus != 0)
+					{
+						ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
+					}
 				}
 			}
 		}
