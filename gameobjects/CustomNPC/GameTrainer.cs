@@ -349,10 +349,13 @@ namespace DOL.GS
 		public virtual bool addGift(String template, GamePlayer player)
 		{
 			ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(template);
-			if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(temp), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			if (temp != null)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
+				if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(temp), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				{
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
 			}
 			return true;
 		}
