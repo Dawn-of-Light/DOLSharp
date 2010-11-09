@@ -1200,19 +1200,30 @@ namespace DOL.GS.Quests
 
 					if (nextStepType == eStepType.Deliver || nextStepType == eStepType.DeliverFinish)
 					{
-						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(m_stepItemTemplates[Step]);
-						if (item == null)
+						if (string.IsNullOrEmpty(m_stepItemTemplates[Step].Trim()) == false)
 						{
-							throw new Exception("Can't find ItemTemplate " + m_stepItemTemplates[Step]);
-						}
+							ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(m_stepItemTemplates[Step]);
+							if (item == null)
+							{
+								string errorMsg = string.Format("Next Step is {0} but StepItemTemplate {1} not found in DB!", nextStepType.ToString(), m_stepItemTemplates[Step]);
+								QuestPlayer.Out.SendMessage(errorMsg, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+								throw new Exception(errorMsg);
+							}
 
-						if (obj != null && obj is GameLiving)
-						{
-							advance = GiveItem(obj as GameLiving, m_questPlayer, item, false);
+							if (obj != null && obj is GameLiving)
+							{
+								advance = GiveItem(obj as GameLiving, m_questPlayer, item, false);
+							}
+							else
+							{
+								advance = GiveItem(m_questPlayer, item, false);
+							}
 						}
 						else
 						{
-							advance = GiveItem(m_questPlayer, item, false);
+							string errorMsg = string.Format("Next Step is {0} but StepItemTemplate is null or blank!", nextStepType.ToString());
+							QuestPlayer.Out.SendMessage(errorMsg, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+							throw new Exception(errorMsg);
 						}
 					}
 				}
