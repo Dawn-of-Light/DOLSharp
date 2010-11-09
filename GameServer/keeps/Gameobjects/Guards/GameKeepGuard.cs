@@ -138,12 +138,6 @@ namespace DOL.GS.Keeps
 			return Math.Max(0.0, abs * 0.01);
 		}
 
-
-		/// <summary>
-		/// Bools holding weather this guard is male or female.
-		/// </summary>
-		public bool IsMale = true;
-
 		/// <summary>
 		/// Guards always have Mana to cast spells
 		/// </summary>
@@ -676,7 +670,7 @@ namespace DOL.GS.Keeps
 				default:
 					{
 						// Subjective
-						if (IsMale)
+						if (Gender == GS.Gender.Male)
                             s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.He");
                         else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.She");
 						if (!firstLetterUppercase)
@@ -686,7 +680,7 @@ namespace DOL.GS.Keeps
 				case 1:
 					{
 						// Possessive
-						if (IsMale)
+                        if (Gender == Gender.Male)
                             s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.His");
                         else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Hers");
 						if (!firstLetterUppercase)
@@ -696,7 +690,7 @@ namespace DOL.GS.Keeps
 				case 2:
 					{
 						// Objective
-						if (IsMale)
+                        if (Gender == Gender.Male)
                             s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Him");
                         else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Her");
 						if (!firstLetterUppercase)
