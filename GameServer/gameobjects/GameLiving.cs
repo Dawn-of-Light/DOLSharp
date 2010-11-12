@@ -4241,40 +4241,65 @@ namespace DOL.GS
 				GameServer.ServerRules.OnLivingKilled(this, killer);
 			}
 
-			//Stop attacks
 			StopAttack();
 
-			//Send our attackers some note
+			if (m_attackers.Contains(killer) == false)
+				m_attackers.Add(killer);
+
 			ArrayList clone = m_attackers.Clone() as ArrayList;
-			//If any of the pet's attacked, this will hold the gameplayer to send the message to
 			List<GamePlayer> playerAttackers = null;
 
 			foreach (GameObject obj in clone)
 			{
 				if (obj is GameLiving)
 				{
-					//Fix for players receiving multiple kills
-					//First, let's check to see if we're a pet
+					GamePlayer player = obj as GamePlayer;
+
 					if (obj as GameNPC != null && (obj as GameNPC).Brain is IControlledBrain)
 					{
-						//Ok, we're a pet - if our Player owner isn't in the attacker list, let's make them a 'virtual' attacker
-						GamePlayer player = ((obj as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
-						if (!clone.Contains(player))
+						// Ok, we're a pet - if our Player owner isn't in the attacker list, let's make them a 'virtual' attacker
+						player = ((obj as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+						if (player != null)
 						{
-							//Make the list if it's null
-							if (playerAttackers == null)
-								playerAttackers = new List<GamePlayer>();
-							//Ok, this is important.  If they aren't already in the list, we should add them ONLY ONCE!
-							if (!playerAttackers.Contains(player))
-								playerAttackers.Add(player);
+							if (clone.Contains(player) == false)
+							{
+								if (playerAttackers == null)
+									playerAttackers = new List<GamePlayer>();
+
+								if (playerAttackers.Contains(player) == false)
+									playerAttackers.Add(player);
+							}
+
+							// Pet gets the killed message as well
+							((GameLiving)obj).EnemyKilled(this);
 						}
 					}
 
-					((GameLiving)obj).EnemyKilled(this);
+					if (player != null)
+					{
+						if (playerAttackers.Contains(player) == false)
+						{
+							playerAttackers.Add(player);
+						}
+
+						if (player.Group != null)
+						{
+							foreach (GamePlayer groupPlayer in player.Group.GetPlayersInTheGroup())
+							{
+								if (groupPlayer.IsWithinRadius(this, WorldMgr.MAX_EXPFORKILL_DISTANCE) && playerAttackers.Contains(groupPlayer) == false)
+								{
+									playerAttackers.Add(groupPlayer);
+								}
+							}
+						}
+					}
+					else
+					{
+						((GameLiving)obj).EnemyKilled(this);
+					}
 				}
 			}
 
-			//Now that we properly redirected to the player only once, lets notify them!
 			if (playerAttackers != null)
 			{
 				foreach (GamePlayer player in playerAttackers)
