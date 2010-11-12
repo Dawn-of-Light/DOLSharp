@@ -4277,6 +4277,9 @@ namespace DOL.GS
 
 					if (player != null)
 					{
+						if (playerAttackers == null)
+							playerAttackers = new List<GamePlayer>();
+
 						if (playerAttackers.Contains(player) == false)
 						{
 							playerAttackers.Add(player);
