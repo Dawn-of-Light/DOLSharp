@@ -1877,6 +1877,14 @@ namespace DOL.GS.Quests
 					playerKillers.Add(player);
 				}
 
+				if (killer is GamePlayer)
+				{
+					if (playerKillers.Contains(killer as GamePlayer) == false)
+					{
+						playerKillers.Add(killer as GamePlayer);
+					}
+				}
+
 				foreach (GamePlayer player in playerKillers)
 				{
 					if (CheckQuestQualification(player))
