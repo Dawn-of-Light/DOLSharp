@@ -208,7 +208,10 @@ namespace DOL.GS.Commands
 							return;
 						}
 						component.Skin = skin;
-						//todo update view of player
+                        foreach (GameClient cli in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
+                        {
+                            cli.Out.SendKeepComponentInfo(component);
+                        }
 						component.SaveInDB = true;
 						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.KeepComponents.Skin.YChangeSkin"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
