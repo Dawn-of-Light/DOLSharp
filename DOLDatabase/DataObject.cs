@@ -184,5 +184,14 @@ namespace DOL.Database
 
 			return false;
 		}
+
+
+		public override string ToString()
+		{
+			string str = "DataObject: " + TableName;
+
+			str += ", ObjectID{" + ObjectId + "}";
+			return str;
+		}
 	}
 }

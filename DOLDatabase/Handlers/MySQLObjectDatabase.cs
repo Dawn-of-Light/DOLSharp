@@ -179,7 +179,7 @@ namespace DOL.Database.Handlers
 			catch (Exception e)
 			{
 				if (Log.IsErrorEnabled)
-					Log.Error("Error while adding data object " + dataObject.TableName + " " + dataObject.ObjectId, e);
+					Log.Error("Error while adding data object: " + dataObject.ToString(), e);
 			}
 
 			return false;
@@ -312,7 +312,7 @@ namespace DOL.Database.Handlers
 			catch (Exception e)
 			{
 				if (Log.IsErrorEnabled)
-					Log.Error("Error while adding dataobject " + dataObject.TableName + " " + dataObject.ObjectId, e);
+					Log.Error("Error while saving data object: " + dataObject.ToString(), e);
 			}
 		}
 
@@ -373,7 +373,7 @@ namespace DOL.Database.Handlers
 				if (res == 0)
 				{
 					if (Log.IsErrorEnabled)
-						Log.Error("Deleting " + dataObject.TableName + " object failed! ID=" + dataObject.ObjectId + " " + Environment.StackTrace);
+						Log.Error("Deleting " + dataObject.ToString() + " object failed!" + " " + Environment.StackTrace);
 				}
 
 				dataObject.IsValid = false;
@@ -385,7 +385,7 @@ namespace DOL.Database.Handlers
 			}
 			catch (Exception e)
 			{
-				throw new DatabaseException("Deleting Databaseobject failed !", e);
+				throw new DatabaseException("Deleting DataObject " + dataObject.ToString() + " failed !", e);
 			}
 		}
 
