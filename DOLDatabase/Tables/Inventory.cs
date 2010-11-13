@@ -780,5 +780,18 @@ namespace DOL.Database
 		{
 			return Template.GetName(article,firstLetterUppercase);
 		}
+
+		public override string ToString()
+		{
+			string str = base.ToString();
+
+			str += ", Name{" + Name + "}";
+			str += ", OwnerID{" + OwnerID + "}";
+			str += ", SlotPosition{" + SlotPosition + "}";
+			str += ", Count{" + Count + "}";
+
+			return str;
+		}
+
 	}
 }
