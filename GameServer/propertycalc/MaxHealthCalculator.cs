@@ -39,8 +39,12 @@ namespace DOL.GS.PropertyCalc
 			}
 			else if ( living is GameKeepComponent )
 			{
-				GameKeepComponent keepcomp = living as GameKeepComponent;
-				return (keepcomp.Keep.EffectiveLevel(keepcomp.Keep.Level) + 1) * keepcomp.Keep.BaseLevel * 200;
+				GameKeepComponent keepComp = living as GameKeepComponent;
+
+				if (keepComp.Keep != null)
+					return (keepComp.Keep.EffectiveLevel(keepComp.Keep.Level) + 1) * keepComp.Keep.BaseLevel * 200;
+
+				return 0;
 			}
 			else if ( living is GameKeepDoor )
 			{
