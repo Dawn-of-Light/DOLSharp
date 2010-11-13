@@ -768,6 +768,11 @@ namespace DOL.GS.Keeps
 
 		public override string ToString()
 		{
+			if (Keep == null)
+			{
+				return "Keep is null!";
+			}
+
 			return new StringBuilder(base.ToString())
 				.Append(" ComponentID=").Append(ID)
 				.Append(" Skin=").Append(Skin)

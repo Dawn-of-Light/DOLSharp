@@ -732,13 +732,20 @@ namespace DOL.GS.Keeps
 		{
 			if (Component != null)
 			{
-				if (Component.Keep.Guards.ContainsKey(m_dataObjectID))
+				if (Component.Keep != null)
 				{
-					Component.Keep.Guards.Remove(m_dataObjectID);
+					if (Component.Keep.Guards.ContainsKey(m_dataObjectID))
+					{
+						Component.Keep.Guards.Remove(m_dataObjectID);
+					}
+					else
+					{
+						log.Warn("Can't find " + Name + " in Component Guard list.");
+					}
 				}
 				else
 				{
-					log.Warn("Can't find " + Name + " in Component Guard list.");
+					log.Warn("Keep is null on delete of guard " + Name + ".");
 				}
 
 				Component.Delete();
