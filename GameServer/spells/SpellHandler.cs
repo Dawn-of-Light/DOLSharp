@@ -368,6 +368,8 @@ namespace DOL.GS.Spells
 
 		public virtual bool CastSpell(GameLiving targetObject)
 		{
+			bool success = true;
+
 			m_spellTarget = targetObject;
 
 			Caster.Notify(GameLivingEvent.CastStarting, m_caster, new CastingEventArgs(this));
@@ -420,36 +422,41 @@ namespace DOL.GS.Spells
 			}
 			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, m_spellTarget, Spell, m_spellLine))
 			{
-				if (CheckBeginCast(m_spellTarget) == false)
-					return false;
-
-				if (m_caster is GamePlayer && (m_caster as GamePlayer).IsOnHorse && !HasPositiveEffect)
+				if (CheckBeginCast(m_spellTarget))
 				{
-					(m_caster as GamePlayer).IsOnHorse = false;
-				}
+					if (m_caster is GamePlayer && (m_caster as GamePlayer).IsOnHorse && !HasPositiveEffect)
+					{
+						(m_caster as GamePlayer).IsOnHorse = false;
+					}
 
-				if (!Spell.IsInstantCast)
-				{
-					StartCastTimer(m_spellTarget);
+					if (!Spell.IsInstantCast)
+					{
+						StartCastTimer(m_spellTarget);
 
-					if ((Caster is GamePlayer && (Caster as GamePlayer).IsStrafing) || Caster.IsMoving)
-						CasterMoves();
+						if ((Caster is GamePlayer && (Caster as GamePlayer).IsStrafing) || Caster.IsMoving)
+							CasterMoves();
+					}
+					else
+					{
+						if (Caster.ControlledBrain == null || Caster.ControlledBrain.Body == null || !(Caster.ControlledBrain.Body is NecromancerPet))
+						{
+							SendCastAnimation(0);
+						}
+
+						FinishSpellCast(m_spellTarget);
+					}
 				}
 				else
 				{
-					if (Caster.ControlledBrain == null || Caster.ControlledBrain.Body == null || !(Caster.ControlledBrain.Body is NecromancerPet))
-					{
-						SendCastAnimation(0);
-					}
-
-					FinishSpellCast(m_spellTarget);
+					success = false;
 				}
 			}
 
+			// This is critical to restore the casters state and allow them to cast another spell
 			if (!IsCasting)
 				OnAfterSpellCastSequence();
 
-			return true;
+			return success;
 		}
 
 
