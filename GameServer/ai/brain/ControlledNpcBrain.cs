@@ -505,7 +505,7 @@ namespace DOL.AI.Brain
 							break;
 						}
 
-						if (spell.Target == "Realm")
+						if (spell.Target == "Realm" || spell.Target == "Group")
 						{
 							owner = (this as IControlledBrain).Owner;
 							player = null;
@@ -530,6 +530,7 @@ namespace DOL.AI.Brain
 									}
 								}
 							}
+
 							player = GetPlayerOwner();
 
 							//Buff player
@@ -539,6 +540,18 @@ namespace DOL.AI.Brain
 								{
 									Body.TargetObject = player;
 									break;
+								}
+
+								if (player.Group != null)
+								{
+									foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
+									{
+										if (!LivingHasEffect(p, spell))
+										{
+											Body.TargetObject = p;
+											break;
+										}
+									}
 								}
 							}
 						}

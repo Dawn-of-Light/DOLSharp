@@ -418,8 +418,11 @@ namespace DOL.GS.Spells
 				else
 					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
 			}
-			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, m_spellTarget, Spell, m_spellLine) && CheckBeginCast(m_spellTarget))
+			else if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, m_spellTarget, Spell, m_spellLine))
 			{
+				if (CheckBeginCast(m_spellTarget) == false)
+					return false;
+
 				if (m_caster is GamePlayer && (m_caster as GamePlayer).IsOnHorse && !HasPositiveEffect)
 				{
 					(m_caster as GamePlayer).IsOnHorse = false;
