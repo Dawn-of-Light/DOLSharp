@@ -1284,6 +1284,21 @@ namespace DOL.AI.Brain
 			if (target == null)
 				return true;
 
+			if (target is GamePlayer && (target as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Vampiir)
+			{
+				switch (spell.SpellType)
+				{
+					case "StrengthConstitutionBuff":
+					case "DexterityQuicknessBuff":
+					case "StrengthBuff":
+					case "DexterityBuff":
+					case "ConstitutionBuff":
+					case "AcuityBuff":
+
+						return true;
+				}
+			}
+
 			lock (target.EffectList)
 			{
 				//Check through each effect in the target's effect list
