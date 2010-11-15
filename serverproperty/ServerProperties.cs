@@ -149,7 +149,7 @@ namespace DOL.GS.ServerProperties
 		/// allow_change_language
 		/// </summary>
 		[ServerProperty("system","allow_change_language", "Should we allow clients to change their language ?", false)]
-		public static readonly bool ALLOW_CHANGE_LANGUAGE;
+		public static bool ALLOW_CHANGE_LANGUAGE;
 
 		/// <summary>
 		/// StatSave Interval
@@ -179,7 +179,7 @@ namespace DOL.GS.ServerProperties
 		/// Ban Hackers
 		/// </summary>
 		[ServerProperty("system","ban_hackers", "Should we ban hackers, if set to true, bans will be done, if set to false, kicks will be done", false)]
-		public static readonly bool BAN_HACKERS;
+		public static bool BAN_HACKERS;
 		
 		/// <summary>
 		/// Is the database translated
@@ -287,7 +287,7 @@ namespace DOL.GS.ServerProperties
 		/// Use Custom Start Locations
 		/// </summary>
 		[ServerProperty("server","use_custom_start_locations", "Set to true if you will use another script to set your start locations", false)]
-		public static readonly bool USE_CUSTOM_START_LOCATIONS;
+		public static bool USE_CUSTOM_START_LOCATIONS;
 
 
 		/// <summary>
@@ -670,19 +670,19 @@ namespace DOL.GS.ServerProperties
 		/// Override the classtype of any npc with a classtype of DOL.GS.GameNPC
 		/// </summary>
 		[ServerProperty("npc", "gamenpc_default_classtype", "Change the classtype of any npc of classtype DOL.GS.GameNPC to this.", "DOL.GS.GameNPC")]
-		public static readonly string GAMENPC_DEFAULT_CLASSTYPE;
+		public static string GAMENPC_DEFAULT_CLASSTYPE;
 
 		/// <summary>
 		/// Chances for npc (including pet) to style (chance is calculated randomly according to this value + the number of style the NPC own)
 		/// </summary>
 		[ServerProperty("npc", "gamenpc_chances_to_style", "Change the chance to fire a style for a mob or a pet", 20)]
-		public static readonly int GAMENPC_CHANCES_TO_STYLE;
+		public static int GAMENPC_CHANCES_TO_STYLE;
 
 		/// <summary>
 		/// Chances for npc (including pet) to cast (chance is calculated randomly according to this value + the number of spells the NPC own)
 		/// </summary>
 		[ServerProperty("npc", "gamenpc_chances_to_cast", "Change the chance to cast a spell for a mob or a pet", 25)]
-		public static readonly int GAMENPC_CHANCES_TO_CAST;
+		public static int GAMENPC_CHANCES_TO_CAST;
 		
 		#endregion
 		
@@ -951,19 +951,19 @@ namespace DOL.GS.ServerProperties
 		/// Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.
 		/// </summary>
 		[ServerProperty("keeps","use_new_keeps", "Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.", 2)]
-		public static readonly int USE_NEW_KEEPS;
+		public static int USE_NEW_KEEPS;
 
 		/// <summary>
 		/// Should guards loaded from db be equipped by Keepsystem? (false=load equipment from db)
 		/// </summary>
 		[ServerProperty("keeps", "autoequip_guards_loaded_from_db", "Should guards loaded from db be equipped by Keepsystem? (false=load equipment from db)", true)]
-		public static readonly bool AUTOEQUIP_GUARDS_LOADED_FROM_DB;
+		public static bool AUTOEQUIP_GUARDS_LOADED_FROM_DB;
 
 		/// <summary>
 		/// Should guards loaded from db be modeled by Keepsystem? (false=load from db)
 		/// </summary>
 		[ServerProperty("keeps", "automodel_guards_loaded_from_db", "Should guards loaded from db be modeled by Keepsystem? (false=load from db)", true)]
-		public static readonly bool AUTOMODEL_GUARDS_LOADED_FROM_DB;
+		public static bool AUTOMODEL_GUARDS_LOADED_FROM_DB;
 		#endregion
 		
 		#region PVE / TOA
@@ -1013,6 +1013,12 @@ namespace DOL.GS.ServerProperties
 		#endregion
 		
 		#region HOUSING
+		/// <summary>
+		/// Maximum number of houses supported on this server.  Limits the size of the housing array used for updates
+		/// </summary>
+		[ServerProperty("housing", "max_num_houses", "Max number of houses supported on this server.", 2500)]
+		public static int MAX_NUM_HOUSES;
+
 		/// <summary>
 		/// Sets the max allowed items inside/outside a house.
 		/// If Outdoor is increased past 30, they vanish. It seems to be hardcoded in client
