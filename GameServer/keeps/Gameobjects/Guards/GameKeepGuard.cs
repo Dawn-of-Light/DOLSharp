@@ -753,7 +753,8 @@ namespace DOL.GS.Keeps
 
 			HookPoint = null;
 			Component = null;
-			Inventory.ClearInventory();
+			if (Inventory != null)
+				Inventory.ClearInventory();
 			Inventory = null;
 			Position = null;
 			TempProperties.removeAllProperties();

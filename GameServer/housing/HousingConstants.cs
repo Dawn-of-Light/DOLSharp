@@ -63,7 +63,6 @@ namespace DOL.GS.Housing
 		public const string HouseForHouseRent = "HouseForHouseRent";
 		public const int HouseViewingDistance = 10120; //guessed, but i'm sure its > vis dist.
 		public const int MaxHookpointLocations = 200;
-		public const int MaximumHouseCount = 2500;
 		public const int MaxPermissionLevel = 9;
 		public const int MinPermissionLevel = 1;
 		public const string MoneyForHouseRent = "MoneyForHouseRent";

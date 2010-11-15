@@ -32,11 +32,12 @@ namespace DOL.GS.Housing
 {
 	public class HouseMgr
 	{
-		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static Timer CheckRentTimer;
+		private static Timer CheckRentTimer = null;
 		private static Dictionary<ushort, Dictionary<int, House>> _houseList;
 		private static Dictionary<ushort, int> _idList;
+
 
 		public static bool Start()
 		{
@@ -67,7 +68,6 @@ namespace DOL.GS.Housing
 
 			int houses = 0;
 			int lotmarkers = 0;
-			int id = 0;
 
 			foreach (DBHouse house in GameServer.Database.SelectAllObjects<DBHouse>())
 			{
@@ -88,7 +88,7 @@ namespace DOL.GS.Housing
 				if (house.Model != 0)
 				{
 					// create new house object for the given house definition
-					var newHouse = new House(house) { UniqueID = id++ };
+					var newHouse = new House(house) { UniqueID = house.HouseNumber };
 
 					newHouse.LoadFromDatabase();
 
@@ -104,13 +104,110 @@ namespace DOL.GS.Housing
 				}
 			}
 
-			if (Log.IsInfoEnabled)
-				Log.Info("[Housing] Loaded " + houses + " houses and " + lotmarkers + " lotmarkers in " + regions + " regions!");
+			if (log.IsInfoEnabled)
+				log.Info("[Housing] Loaded " + houses + " houses and " + lotmarkers + " lotmarkers in " + regions + " regions!");
 
 			// start the timer for checking rents
-			CheckRentTimer = new Timer(CheckRents, null, HousingConstants.RentTimerInterval, HousingConstants.RentTimerInterval);
+
+			if (CheckRentTimer == null)
+				CheckRentTimer = new Timer(CheckRents, null, HousingConstants.RentTimerInterval, HousingConstants.RentTimerInterval);
 
 			return true;
+		}
+
+		/// <summary>
+		/// Load housing and house markers for a region
+		/// </summary>
+		/// <param name="regionID"></param>
+		/// <returns></returns>
+		public static bool LoadHousingForRegion(ushort regionID)
+		{
+			IList<DBHouse> regionHousing = GameServer.Database.SelectObjects<DBHouse>("RegionID = " + regionID);
+
+			if (regionHousing == null || regionHousing.Count == 0)
+				return false;
+
+			int houses = 0;
+			int lotmarkers = 0;
+
+			// re-initialize lists for this region
+
+			if (!_houseList.ContainsKey(regionID))
+			{
+				_houseList.Add(regionID, new Dictionary<int, House>());
+			}
+			else
+			{
+				_houseList[regionID] = new Dictionary<int, House>();
+			}
+
+			if (!_idList.ContainsKey(regionID))
+			{
+				_idList.Add(regionID, 0);
+			}
+			else
+			{
+				_idList[regionID] = 0;
+			}
+
+			Dictionary<int, House> housesForRegion;
+			_houseList.TryGetValue(regionID, out housesForRegion);
+
+			if (housesForRegion == null)
+			{
+				log.WarnFormat("LoadHousingForRegion: No dictionary defined for region ID {0}", regionID);
+				return false;
+			}
+
+
+			foreach (DBHouse house in regionHousing)
+			{
+				// if we already loaded this house, that's no bueno, but just skip
+				if (housesForRegion.ContainsKey(house.HouseNumber))
+					continue;
+
+				// if the house actually exists (isn't a lot anymore) then we just load it
+				// from the database as normal
+				if (house.Model != 0)
+				{
+					// create new house object for the given house definition
+					var newHouse = new House(house) { UniqueID = house.HouseNumber };
+
+					newHouse.LoadFromDatabase();
+
+					// store the house
+					housesForRegion.Add(newHouse.HouseNumber, newHouse);
+					houses++;
+				}
+				else
+				{
+					// we have a lot - need to spawn a lot marker for this one
+					GameLotMarker.SpawnLotMarker(house);
+					lotmarkers++;
+				}
+			}
+
+			if (log.IsInfoEnabled)
+				log.Info("[Housing] Loaded " + houses + " houses and " + lotmarkers + " lotmarkers for region " + regionID + "!");
+
+			return true;
+		}
+
+		/// <summary>
+		/// Remove all housing for this regionID
+		/// </summary>
+		/// <param name="regionID"></param>
+		public static void RemoveHousingForRegion(ushort regionID)
+		{
+			if (_houseList.ContainsKey(regionID))
+			{
+				_houseList.Remove(regionID);
+			}
+
+			if (_idList.ContainsKey(regionID))
+			{
+				_idList.Remove(regionID);
+			}
 		}
 
 		public static void Stop()
@@ -575,7 +672,7 @@ namespace DOL.GS.Housing
 
 		public static void CheckRents(object state)
 		{
-			Log.Debug("[Housing] Starting timed rent check");
+			log.Debug("[Housing] Starting timed rent check");
 
 			TimeSpan diff;
 			var houseRemovalList = new List<House>();
