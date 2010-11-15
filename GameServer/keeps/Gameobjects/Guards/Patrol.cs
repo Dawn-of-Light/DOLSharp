@@ -138,7 +138,7 @@ namespace DOL.GS.Keeps
 
 		public void DeletePatrol()
 		{
-			if (Component != null)
+			if (Component != null && Component.Keep != null)
 			{
 				Component.Keep.Patrols.Remove(this);
 			}

@@ -284,6 +284,11 @@ namespace DOL.GS.Housing
 			_housePermissions = new Dictionary<int, DBHouseCharsXPerms>();
 		}
 
+		~House()
+		{
+			Log.DebugFormat("House destructor called for House #{0} in region {1}", HouseNumber, RegionID);
+		}
+
 		/// <summary>
 		/// The spot you are teleported to when you exit this house.
 		/// </summary>
@@ -684,7 +689,7 @@ namespace DOL.GS.Housing
 
 							if (hNPC == null)
 							{
-								HouseMgr.Log.Error("[Housing] Can't create instance of type: " + npt.ClassType);
+								HouseMgr.log.Error("[Housing] Can't create instance of type: " + npt.ClassType);
 								return null;
 							}
 

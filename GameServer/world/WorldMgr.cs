@@ -919,7 +919,7 @@ namespace DOL.GS
 									{
 										if (client.Player.HousingUpdateArray == null)
 										{
-											client.Player.HousingUpdateArray = new BitArray(HousingConstants.MaximumHouseCount, false);
+											client.Player.HousingUpdateArray = new BitArray(ServerProperties.Properties.MAX_NUM_HOUSES, false);
 										}
 
 										var houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
@@ -927,25 +927,28 @@ namespace DOL.GS
 										{
 											foreach (House house in houses.Values)
 											{
-												if (client.Player.IsWithinRadius(house, HousingConstants.HouseViewingDistance))
+												if (house.UniqueID < client.Player.HousingUpdateArray.Length)
 												{
-													if (!client.Player.HousingUpdateArray[house.UniqueID])
+													if (client.Player.IsWithinRadius(house, HousingConstants.HouseViewingDistance))
 													{
-														client.Out.SendHouse(house);
-														client.Out.SendGarden(house);
-														
-														if (house.IsOccupied)
+														if (!client.Player.HousingUpdateArray[house.UniqueID])
 														{
-															client.Out.SendHouseOccupied(house, true);
-														}
+															client.Out.SendHouse(house);
+															client.Out.SendGarden(house);
 
-														client.Player.HousingUpdateArray[house.UniqueID] = true;
-														housesUpdated++;
+															if (house.IsOccupied)
+															{
+																client.Out.SendHouseOccupied(house, true);
+															}
+
+															client.Player.HousingUpdateArray[house.UniqueID] = true;
+															housesUpdated++;
+														}
 													}
-												}
-												else
-												{
-													client.Player.HousingUpdateArray[house.UniqueID] = false;
+													else
+													{
+														client.Player.HousingUpdateArray[house.UniqueID] = false;
+													}
 												}
 											}
 										}
