@@ -1016,7 +1016,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Maximum number of houses supported on this server.  Limits the size of the housing array used for updates
 		/// </summary>
-		[ServerProperty("housing", "max_num_houses", "Max number of houses supported on this server.", 2500)]
+		[ServerProperty("housing", "max_num_houses", "Max number of houses supported on this server.", 5000)]
 		public static int MAX_NUM_HOUSES;
 
 		/// <summary>
