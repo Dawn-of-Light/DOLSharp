@@ -9798,9 +9798,7 @@ namespace DOL.GS
 			//Current Speed = 0 when moved ... else X,Y,Z continue to be modified
 			CurrentSpeed = 0;
 			MovementStartTick = Environment.TickCount;
-			int m_originalX = X;
-			int m_originalY = Y;
-			int m_originalZ = Z;
+			Point3D originalPoint = new Point3D(X, Y, Z);
 			X = x;
 			Y = y;
 			Z = z;
@@ -9811,6 +9809,11 @@ namespace DOL.GS
 			{
 				//Set our new region
 				CurrentRegionID = regionID;
+
+				LastWorldUpdate = Environment.TickCount;
+				CurrentUpdateArray.SetAll(false);
+				HousingUpdateArray = null;
+
 				//Send the region update packet, the rest will be handled
 				//by the packethandlers
 				Out.SendRegionChanged();
@@ -9819,26 +9822,53 @@ namespace DOL.GS
 			{
 				//Add the player to the new coordinates
 				Out.SendPlayerJump(false);
-				LastWorldUpdate = Environment.TickCount;
-				CurrentUpdateArray.SetAll(false);
-				foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					Out.SendNPCCreate(npc);
-					if (npc.Inventory != null)
-						Out.SendLivingEquipmentUpdate(npc);
-					//Send health update only if mob-health is not 100%
-					if (npc.HealthPercent != 100)
-						Out.SendObjectUpdate(npc);
-					CurrentUpdateArray[npc.ObjectID - 1] = true;
-				}
 
-				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				// are we jumping far enough to force a complete refresh?
+				if (GetDistanceTo(originalPoint) > (WorldMgr.VISIBILITY_DISTANCE / 2))
 				{
-					if (player != null && player != this)
+					LastWorldUpdate = Environment.TickCount;
+					CurrentUpdateArray.SetAll(false);
+					HousingUpdateArray = null;
+
+					foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						player.Out.SendPlayerCreate(this);
-						Out.SendPlayerCreate(player);
-						Out.SendLivingEquipmentUpdate(player);
+						Out.SendNPCCreate(npc);
+						if (npc.Inventory != null)
+							Out.SendLivingEquipmentUpdate(npc);
+						//Send health update only if mob-health is not 100%
+						if (npc.HealthPercent != 100)
+							Out.SendObjectUpdate(npc);
+						CurrentUpdateArray[npc.ObjectID - 1] = true;
+					}
+
+					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
+						if (player != null && player != this)
+						{
+							if (IsStealthed == false || player.CanDetect(this))
+							{
+								player.Out.SendPlayerCreate(this);
+							}
+
+							if (player.IsStealthed == false || CanDetect(player))
+							{
+								Out.SendPlayerCreate(player);
+								Out.SendLivingEquipmentUpdate(player);
+							}
+						}
+					}
+				}
+				else
+				{
+					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
+						if (player != null && player != this)
+						{
+							if (IsStealthed == false || player.CanDetect(this))
+							{
+								player.Out.SendPlayerCreate(this);
+							}
+						}
 					}
 				}
 
