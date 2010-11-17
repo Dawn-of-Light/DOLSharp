@@ -110,8 +110,10 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if(IsPortalKeepGuard) return 255;
-				else return base.Level;
+				if(IsPortalKeepGuard)
+					return 255;
+
+				return base.Level;
 			}
 			set
 			{

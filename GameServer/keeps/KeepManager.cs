@@ -742,22 +742,28 @@ namespace DOL.GS.Keeps
 					if (keep.Region != NEW_FRONTIERS) 
 						continue;
 
+					byte newLevel = keep.BaseLevel;
+
 					if (ServerProperties.Properties.BALANCE_TOWERS_SEPARATE)
 					{
 						if (keep is GameKeepTower)
-							keep.BaseLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmTowerBonusLevel((eRealm)keep.Realm));
+							newLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmTowerBonusLevel((eRealm)keep.Realm));
 						else
-							keep.BaseLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmKeepBonusLevel((eRealm)keep.Realm));
+							newLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmKeepBonusLevel((eRealm)keep.Realm));
 					}
 					else
 					{
-						keep.BaseLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmKeepBonusLevel((eRealm)keep.Realm) + KeepMgr.GetRealmTowerBonusLevel((eRealm)keep.Realm));
+						newLevel = (byte)(keep.DBKeep.BaseLevel + KeepMgr.GetRealmKeepBonusLevel((eRealm)keep.Realm) + KeepMgr.GetRealmTowerBonusLevel((eRealm)keep.Realm));
 					}
 
-
-					foreach (GameKeepGuard guard in keep.Guards.Values)
+					if (keep.BaseLevel != newLevel)
 					{
-						TemplateMgr.SetGuardLevel(guard);
+						keep.BaseLevel = newLevel;
+
+						foreach (GameKeepGuard guard in keep.Guards.Values)
+						{
+							TemplateMgr.SetGuardLevel(guard);
+						}
 					}
 				}
 			}
