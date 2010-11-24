@@ -17,7 +17,7 @@
  *
  */
 
-// #define OUTPUT_DEBUG_INFO
+//#define OUTPUT_DEBUG_INFO
 
 using System;
 using System.Collections;
@@ -41,11 +41,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region DEBUG
-		#if OUTPUT_DEBUG_INFO
 		private static int lastX = 0;
 		private static int lastY = 0;
+		private static int lastZ = 0;
 		private static int lastUpdateTick = 0;
+
+		#region DEBUG
+		#if OUTPUT_DEBUG_INFO
 		/// <summary>
 		/// The tolerance for speedhack etc. ... 180% of max speed
 		/// This might sound much, but actually it is not because even
@@ -253,6 +255,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						builder.Append(client.Account.Name);
 						builder.Append(" IP=");
 						builder.Append(client.TcpEndpoint);
+						builder.Append(" Distance=");
+						builder.Append(plyDist);
 						GameServer.Instance.LogCheatAction(builder.ToString());
 					}
 					client.Player.TempProperties.setProperty(SPEEDHACKCOUNTER, counter);
@@ -341,7 +345,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Player.IsJumping)
 			{
 				SHcount = 0;
-				client.Player.IsJumping = false;
 			}
 
 			if (SHlastTick != 0 && SHlastTick != EnvironmentTick)
@@ -354,7 +357,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (SHcount > 1 && client.Account.PrivLevel > 1)
 						{
-							client.Out.SendMessage(string.Format("SH: ({0}) detected: {1}, count {2}", 500 / (EnvironmentTick - SHlastTick), EnvironmentTick - SHlastTick, SHcount), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(string.Format("SH: ({0}) detected: {1}, count {2}", 500 / (EnvironmentTick - SHlastTick), EnvironmentTick - SHlastTick, SHcount), eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 						}
 
 						if (SHcount % 5 == 0)
@@ -558,23 +561,110 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			//**************//
 
+			int timediff = Environment.TickCount - lastUpdateTick;
+			Point3D lastPosition = new Point3D(lastX, lastY, 0);
+			int distance = lastPosition.GetDistanceTo(new Point3D(realX, realY, 0));
+			int coordsPerSec = distance * 1000 / timediff;
+
+			int jumpDetect = 0;
+
+			if (distance < 100 && lastZ > 0)
+				jumpDetect = realZ - lastZ;
+
 			#region DEBUG
 			#if OUTPUT_DEBUG_INFO
 			if (lastX != 0 && lastY != 0)
 			{
-				if (log.IsDebugEnabled)
-				{
-					int timediff = Environment.TickCount - lastUpdateTick;
-					Point3D lastPosition = new Point3D(lastX, lastY, 0);
-					int distance = lastPosition.GetDistanceTo(new Point3D(realX, realY, 0));
-					log.Debug(client.Player.Name + ": distance = " + distance + ", speed = " + oldSpeed + ",  coords/sec=" + (distance*1000/timediff));
-				}
+				log.Debug(client.Player.Name + ": distance = " + distance + ", speed = " + oldSpeed + ",  coords/sec=" + coordsPerSec);
 			}
-			lastX = realX;
-			lastY = realY;
-			lastUpdateTick = Environment.TickCount;
+			if (jumpDetect > 0)
+			{
+				log.Debug(client.Player.Name + ": jumpdetect = " + jumpDetect);
+			}
 			#endif
 			#endregion DEBUG
+
+			lastX = realX;
+			lastY = realY;
+			lastZ = realZ;
+			lastUpdateTick = Environment.TickCount;
+
+			int tolerance = ServerProperties.Properties.CPS_TOLERANCE;
+
+			if (client.Player.Steed != null)
+				tolerance += client.Player.Steed.MaxSpeed;
+			else
+				tolerance += client.Player.MaxSpeed;
+
+			if (client.Player.IsJumping)
+			{
+				coordsPerSec = 0;
+				jumpDetect = 0;
+				client.Player.IsJumping = false;
+			}
+
+			if (coordsPerSec > tolerance || jumpDetect > ServerProperties.Properties.JUMP_TOLERANCE)
+			{
+				StringBuilder builder = new StringBuilder();
+				builder.Append("MOVEHACK_DETECT");
+				builder.Append(": CharName=");
+				builder.Append(client.Player.Name);
+				builder.Append(" Account=");
+				builder.Append(client.Account.Name);
+				builder.Append(" IP=");
+				builder.Append(client.TcpEndpointAddress);
+				builder.Append(" CPS:=");
+				builder.Append(coordsPerSec);
+				builder.Append(" JT=");
+				builder.Append(jumpDetect);
+				builder.Append(" FLY=");
+				builder.Append(fly);
+				ChatUtil.SendDebugMessage(client, builder.ToString());
+
+				if (client.Account.PrivLevel == 1)
+				{
+					GameServer.Instance.LogCheatAction(builder.ToString());
+
+					if (ServerProperties.Properties.BAN_HACKERS && false) // banning disabled until this technique is proven accurate
+					{
+						DBBannedAccount b = new DBBannedAccount();
+						b.Author = "SERVER";
+						b.Ip = client.TcpEndpointAddress;
+						b.Account = client.Account.Name;
+						b.DateBan = DateTime.Now;
+						b.Type = "B";
+						b.Reason = string.Format("Autoban MOVEHACK:(CPS:{0}, JT:{1}) on player:{2}", coordsPerSec, jumpDetect, client.Player.Name);
+						GameServer.Database.AddObject(b);
+						GameServer.Database.SaveObject(b);
+
+						for (int i = 0; i < 8; i++)
+						{
+							string message = "You have been auto kicked and banned for hacking!";
+							client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+						}
+
+						client.Out.SendPlayerQuit(true);
+						client.Player.SaveIntoDatabase();
+						client.Player.Quit(true);
+					}
+					else
+					{
+						for (int i = 0; i < 8; i++)
+						{
+							string message = "You have been auto kicked for hacking!";
+							client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+						}
+
+						client.Out.SendPlayerQuit(true);
+						client.Player.SaveIntoDatabase();
+						client.Player.Quit(true);
+					}
+					client.Disconnect();
+					return;
+				}
+			}
 
 			byte[] con168 = packet.ToArray();
 			//Riding is set here!
@@ -655,7 +745,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (player == client.Player)
 					continue;
 				//no position updates in different houses
-				if (player.CurrentHouse != client.Player.CurrentHouse)
+				if ((client.Player.InHouse || player.InHouse) && player.CurrentHouse != client.Player.CurrentHouse)
 					continue;
 
                 if (client.Player.MinotaurRelic != null)
