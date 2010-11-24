@@ -227,6 +227,18 @@ namespace DOL.GS.ServerProperties
 		public static int SPEEDHACK_TOLERANCE;
 
 		/// <summary>
+		/// Coords per second tolerance before player is identified as a hacker?
+		/// </summary>
+		[ServerProperty("system", "cps_tolerance", "Coords per second tolerance before player is identified as a hacker?", 1000)]
+		public static int CPS_TOLERANCE;
+
+		/// <summary>
+		/// Z distance tolerance before player is identified as a jump hacker
+		/// </summary>
+		[ServerProperty("system", "jump_tolerance", "Z distance tolerance before player is identified as a jump hacker?", 200)]
+		public static int JUMP_TOLERANCE;
+
+		/// <summary>
 		/// Display centered screen messages if a player enters an area.
 		/// </summary>
 		[ServerProperty("system", "display_area_enter_screen_desc", "Display centered screen messages if a player enters an area.", false)]
@@ -1020,12 +1032,20 @@ namespace DOL.GS.ServerProperties
 		public static int MAX_NUM_HOUSES;
 
 		/// <summary>
-		/// Sets the max allowed items inside/outside a house.
-		/// If Outdoor is increased past 30, they vanish. It seems to be hardcoded in client
+		/// The starting NPCTemplate ID to use for housing NPC's
+		/// </summary>
+		[ServerProperty("housing", "housing_starting_npctemplate_id", "The starting NPCTemplate ID to use for housing NPC's", 500)]
+		public static int HOUSING_STARTING_NPCTEMPLATE_ID;
+
+		/// <summary>
+		/// Sets the max allowed items inside a house.
 		/// </summary>
 		[ServerProperty("housing","max_indoor_house_items", "Max number of items allowed inside a players house.", 40)]
 		public static int MAX_INDOOR_HOUSE_ITEMS;
 
+		/// <summary>
+		/// Max outdoor items.  If Outdoor is increased past 30 they vanish. It seems to be hardcoded in client
+		/// </summary>
 		[ServerProperty("housing","max_outdoor_house_items", "Max number of items allowed in a players garden.", 30)]
 		public static int MAX_OUTDOOR_HOUSE_ITEMS;
 		
@@ -1052,6 +1072,24 @@ namespace DOL.GS.ServerProperties
 
 		[ServerProperty("housing","housing_lot_price_minimum", "Minimum lot price.", 300L * 100L * 100L)] // 300g
 		public static long HOUSING_LOT_PRICE_MINIMUM;
+
+		/// <summary>
+		/// How often, in days, is rent due?  0 for never, negative for testing repossession
+		/// </summary>
+		[ServerProperty("housing", "rent_due_days", "How often, in days, is rent due?  0 for never, negative for testing repossession.", 7)]
+		public static int RENT_DUE_DAYS;
+
+		/// <summary>
+		/// How often, in minutes, do we check for rent?
+		/// </summary>
+		[ServerProperty("housing", "rent_check_interval", "How often, in minutes, do we check for rent?", 120)]
+		public static int RENT_CHECK_INTERVAL;
+
+		/// <summary>
+		/// How many rent payments can be stored in the lockbox?
+		/// </summary>
+		[ServerProperty("housing", "rent_lockbox_payments", "How many rent payments can be stored in the lockbox?", 4)]
+		public static int RENT_LOCKBOX_PAYMENTS;
 
 		#endregion
 		
