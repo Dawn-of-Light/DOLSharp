@@ -561,15 +561,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			//**************//
 
-			int timediff = Environment.TickCount - lastUpdateTick;
-			Point3D lastPosition = new Point3D(lastX, lastY, 0);
-			int distance = lastPosition.GetDistanceTo(new Point3D(realX, realY, 0));
-			int coordsPerSec = distance * 1000 / timediff;
-
+			int coordsPerSec = 0;
 			int jumpDetect = 0;
+			int timediff = Environment.TickCount - lastUpdateTick;
+			int distance = 0;
 
-			if (distance < 100 && lastZ > 0)
-				jumpDetect = realZ - lastZ;
+			if (timediff > 0)
+			{
+				Point3D lastPosition = new Point3D(lastX, lastY, 0);
+				distance = lastPosition.GetDistanceTo(new Point3D(realX, realY, 0));
+				coordsPerSec = distance * 1000 / timediff;
+
+				if (distance < 100 && lastZ > 0)
+					jumpDetect = realZ - lastZ;
+			}
+
 
 			#region DEBUG
 			#if OUTPUT_DEBUG_INFO
@@ -603,7 +609,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.IsJumping = false;
 			}
 
-			if (coordsPerSec > tolerance || jumpDetect > ServerProperties.Properties.JUMP_TOLERANCE)
+			if (client.Player.CanFly == false && (coordsPerSec > tolerance || jumpDetect > ServerProperties.Properties.JUMP_TOLERANCE))
 			{
 				StringBuilder builder = new StringBuilder();
 				builder.Append("MOVEHACK_DETECT");
