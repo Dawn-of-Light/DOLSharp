@@ -597,9 +597,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			int tolerance = ServerProperties.Properties.CPS_TOLERANCE;
 
-			if (client.Player.Steed != null)
+			if (client.Player.Steed != null && client.Player.Steed.MaxSpeed > 0)
 				tolerance += client.Player.Steed.MaxSpeed;
-			else
+			else if (client.Player.MaxSpeed > 0)
 				tolerance += client.Player.MaxSpeed;
 
 			if (client.Player.IsJumping)
@@ -623,52 +623,55 @@ namespace DOL.GS.PacketHandler.Client.v168
 				builder.Append(coordsPerSec);
 				builder.Append(" JT=");
 				builder.Append(jumpDetect);
-				builder.Append(" FLY=");
-				builder.Append(fly);
+				builder.Append(" T=");
+				builder.Append(tolerance);
 				ChatUtil.SendDebugMessage(client, builder.ToString());
 
 				if (client.Account.PrivLevel == 1)
 				{
 					GameServer.Instance.LogCheatAction(builder.ToString());
 
-					if (ServerProperties.Properties.BAN_HACKERS && false) // banning disabled until this technique is proven accurate
+					if (ServerProperties.Properties.ENABLE_MOVEDETECT)
 					{
-						DBBannedAccount b = new DBBannedAccount();
-						b.Author = "SERVER";
-						b.Ip = client.TcpEndpointAddress;
-						b.Account = client.Account.Name;
-						b.DateBan = DateTime.Now;
-						b.Type = "B";
-						b.Reason = string.Format("Autoban MOVEHACK:(CPS:{0}, JT:{1}) on player:{2}", coordsPerSec, jumpDetect, client.Player.Name);
-						GameServer.Database.AddObject(b);
-						GameServer.Database.SaveObject(b);
-
-						for (int i = 0; i < 8; i++)
+						if (ServerProperties.Properties.BAN_HACKERS && false) // banning disabled until this technique is proven accurate
 						{
-							string message = "You have been auto kicked and banned for hacking!";
-							client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-							client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
-						}
+							DBBannedAccount b = new DBBannedAccount();
+							b.Author = "SERVER";
+							b.Ip = client.TcpEndpointAddress;
+							b.Account = client.Account.Name;
+							b.DateBan = DateTime.Now;
+							b.Type = "B";
+							b.Reason = string.Format("Autoban MOVEHACK:(CPS:{0}, JT:{1}) on player:{2}", coordsPerSec, jumpDetect, client.Player.Name);
+							GameServer.Database.AddObject(b);
+							GameServer.Database.SaveObject(b);
 
-						client.Out.SendPlayerQuit(true);
-						client.Player.SaveIntoDatabase();
-						client.Player.Quit(true);
-					}
-					else
-					{
-						for (int i = 0; i < 8; i++)
+							for (int i = 0; i < 8; i++)
+							{
+								string message = "You have been auto kicked and banned for hacking!";
+								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+							}
+
+							client.Out.SendPlayerQuit(true);
+							client.Player.SaveIntoDatabase();
+							client.Player.Quit(true);
+						}
+						else
 						{
-							string message = "You have been auto kicked for hacking!";
-							client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-							client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
-						}
+							for (int i = 0; i < 8; i++)
+							{
+								string message = "You have been auto kicked for hacking!";
+								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+							}
 
-						client.Out.SendPlayerQuit(true);
-						client.Player.SaveIntoDatabase();
-						client.Player.Quit(true);
+							client.Out.SendPlayerQuit(true);
+							client.Player.SaveIntoDatabase();
+							client.Player.Quit(true);
+						}
+						client.Disconnect();
+						return;
 					}
-					client.Disconnect();
-					return;
 				}
 			}
 
