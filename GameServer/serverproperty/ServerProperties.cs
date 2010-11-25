@@ -227,6 +227,12 @@ namespace DOL.GS.ServerProperties
 		public static int SPEEDHACK_TOLERANCE;
 
 		/// <summary>
+		/// Turn on move detect
+		/// </summary>
+		[ServerProperty("system", "enable_movedetect", "Should the move detect code be enabled to kick possible movement hackers?", false)]
+		public static bool ENABLE_MOVEDETECT;
+
+		/// <summary>
 		/// Coords per second tolerance before player is identified as a hacker?
 		/// </summary>
 		[ServerProperty("system", "cps_tolerance", "Coords per second tolerance before player is identified as a hacker?", 1000)]
