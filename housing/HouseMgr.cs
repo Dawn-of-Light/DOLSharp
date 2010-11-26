@@ -498,6 +498,14 @@ namespace DOL.GS.Housing
 			{
 				GameServer.Database.DeleteObject(item);
 			}
+
+			foreach (DBHouseHookpointItem item in house.HousepointItems.Values)
+			{
+				if (item.GameObject is GameObject)
+				{
+					(item.GameObject as GameObject).Delete();
+				}
+			}
 			house.HousepointItems.Clear();
 		}
 
