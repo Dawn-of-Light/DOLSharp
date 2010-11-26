@@ -468,13 +468,18 @@ namespace DOL.GS.Housing
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lockbox", Money.GetString(KeptMoney)));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentalPrice", Money.GetString(HouseMgr.GetRentByModel(Model))));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
+			if (ServerProperties.Properties.RENT_DUE_DAYS > 0)
+				text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
+			else
+				text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentDueIn", "No Rent! 0", "0"));
+
 			text.Add(" ");
 
 			if (player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
 			{
 				text.Add("GM: Model: " + Model);
 				text.Add("GM: Realm: " + GlobalConstants.RealmToName(Realm));
+				text.Add("GM: Last Paid: " + LastPaid);
 				text.Add(" ");
 			}
 
