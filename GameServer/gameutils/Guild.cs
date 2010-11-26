@@ -165,13 +165,17 @@ namespace DOL.GS
 		{
 			get
 			{
+				if (m_DBguild.GuildHouseNumber == 0)
+					m_DBguild.HaveGuildHouse = false;
+
 				return m_DBguild.GuildHouseNumber;
 			}
 			set
 			{
 				m_DBguild.GuildHouseNumber = value;
+
 				if (value == 0)
-					this.m_DBguild.HaveGuildHouse = false;
+					m_DBguild.HaveGuildHouse = false;
 				else
 					m_DBguild.HaveGuildHouse = true;
 			}
@@ -181,6 +185,9 @@ namespace DOL.GS
 		{
 			get
 			{
+				if (m_DBguild.GuildHouseNumber == 0)
+					m_DBguild.HaveGuildHouse = false;
+
 				return m_DBguild.HaveGuildHouse;
 			}
 			set
