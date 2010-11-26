@@ -269,7 +269,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case 1:
 						{
 							if (client.Player.InHouse)
+							{
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
 								return;
+							}
 
 							// no permissions to add to the garden, return
 							if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
@@ -328,7 +331,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case 3:
 						{
 							if (client.Player.InHouse == false)
+							{
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
 								return;
+							}
 
 							// no permission to add to the interior, return
 							if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
@@ -503,7 +509,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case 5:
 						{
 							if (client.Player.InHouse == false)
+							{
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
 								return;
+							}
 
 							// no permission to add to the interior, return
 							if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
@@ -555,9 +564,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 								// add the item to the database
 								GameServer.Database.AddObject(point);
 
-								// fill the hookpoint
-								house.FillHookpoint(orgitem.Template, (uint)_position, orgitem.Id_nb, client.Player.Heading);
-								house.HousepointItems[point.HookpointID] = point;
+								if (house.HousepointItems.ContainsKey(point.HookpointID) == false)
+								{
+									house.HousepointItems.Add(point.HookpointID, point);
+									house.FillHookpoint((uint)_position, orgitem.Id_nb, client.Player.Heading, 0);
+								}
+								else
+								{
+									string error = string.Format("Hookpoint already has item on attempt to attach {0} to hookpoint {1} for house {2}!", orgitem.Id_nb, _position, house.HouseNumber);
+									log.ErrorFormat(error);
+									throw new Exception(error);
+								}
+
 
 								// remove the original item from the player's inventory
 								client.Player.Inventory.RemoveItem(orgitem);
@@ -622,7 +640,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					case 7: // House vault.
 						{
 							if (client.Player.InHouse == false)
+							{
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
 								return;
+							}
 
 							// make sure the hookpoint position is valid
 							if (_position > HousingConstants.MaxHookpointLocations)
@@ -687,6 +708,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					default:
 						{
 							ChatUtil.SendDebugMessage(client, "Place Item: Unknown method, do nothing.");
+							client.Out.SendInventorySlotsUpdate(null);
 							break;
 						}
 				}
