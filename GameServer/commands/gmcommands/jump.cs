@@ -94,6 +94,7 @@ namespace DOL.GS.Commands
 
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", npcs[0].CurrentRegion.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							client.Player.MoveTo(jumpTarget.CurrentRegionID, jumpTarget.X, jumpTarget.Y, jumpTarget.Z, jumpTarget.Heading);
+							client.Player.InHouse = jumpTarget.InHouse;
 							return;
 						}
 
@@ -110,6 +111,9 @@ namespace DOL.GS.Commands
 							client.Player.MoveTo(clientc.Player.CurrentRegionID, clientc.Player.X, clientc.Player.Y, clientc.Player.Z, client.Player.Heading);
 						return;
 					}
+
+					client.Out.SendMessage("You don't have an expansion needed to jump to this location.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 					return;
 				}
 				#endregion Jump to PlayerName
