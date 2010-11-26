@@ -5943,8 +5943,13 @@ namespace DOL.GS
 		/// <returns>true if player has ability to use item</returns>
 		public virtual bool HasAbilityToUseItem(ItemTemplate item)
 		{
-			//Andraste: Merchants show in gray items that the player class can't wear, i done it here
-			if (item == null) return false;
+			if (item == null) 
+				return false;
+
+			// allow usage of all house items
+			if ((item.Object_Type == 0 || item.Object_Type >= (int)eObjectType._FirstHouse) && item.Object_Type <= (int)eObjectType._LastHouse)
+				return true;
+
 			if (this is GamePlayer)
 			{
 				if (Util.IsEmpty(item.AllowedClasses)) item.AllowedClasses = "0";

@@ -38,7 +38,7 @@ namespace DOL.GS
 
 		private readonly string _templateID;
 		private readonly object _vaultLock = new object();
-		private DBHousepointItem _hookedItem;
+		private DBHouseHookpointItem _hookedItem;
 
 		/// <summary>
 		/// Create a new house vault.
@@ -82,10 +82,10 @@ namespace DOL.GS
 				return false;
 
 			// register vault in the DB.
-			var hookedItem = new DBHousepointItem
+			var hookedItem = new DBHouseHookpointItem
 			                 	{
-			                 		HouseID = house.HouseNumber,
-			                 		Position = hookpointID,
+			                 		HouseNumber = house.HouseNumber,
+			                 		HookpointID = hookpointID,
 			                 		Heading = (ushort) (heading%4096),
 			                 		ItemTemplateID = _templateID,
 			                 		Index = (byte) Index
@@ -103,14 +103,14 @@ namespace DOL.GS
 		/// <param name="house"></param>
 		/// <param name="hookedItem"></param>
 		/// <returns></returns>
-		public bool Attach(House house, DBHousepointItem hookedItem)
+		public bool Attach(House house, DBHouseHookpointItem hookedItem)
 		{
 			if (house == null || hookedItem == null)
 				return false;
 
 			_hookedItem = hookedItem;
 
-			IPoint3D position = house.GetHookpointLocation(hookedItem.Position);
+			IPoint3D position = house.GetHookpointLocation(hookedItem.HookpointID);
 			if (position == null)
 				return false;
 

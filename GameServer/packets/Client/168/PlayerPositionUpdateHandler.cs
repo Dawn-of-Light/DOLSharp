@@ -41,29 +41,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static int lastX = 0;
-		private static int lastY = 0;
-		private static int lastZ = 0;
-		private static int lastUpdateTick = 0;
-
-		#region DEBUG
-		#if OUTPUT_DEBUG_INFO
-		/// <summary>
-		/// The tolerance for speedhack etc. ... 180% of max speed
-		/// This might sound much, but actually it is not because even
-		/// without speedhack the distance varies very much ...
-		/// It seems the client lets you walk curves FASTER than straight ahead!
-		/// Very funny ;-)
-		/// </summary>
-		public const int DIST_TOLERANCE = 180;
-		/// <summary>
-		/// Stores the last update tick inside the player
-		/// </summary>
-		#endif
-		#endregion DEBUG
-
-		public const string LASTUPDATETICK = "PLAYERPOSITION_LASTUPDATETICK";
 		public const string LASTMOVEMENTTICK = "PLAYERPOSITION_LASTMOVEMENTTICK";
+
 		/// <summary>
 		/// Stores the count of times the player is above speedhack tolerance!
 		/// If this value reaches 10 or more, a logfile entry is written.
@@ -74,7 +53,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		//static int lastZ=int.MinValue;
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			//Tiv: in very rare cases client send 0xA9 packet before sending S<=C 0xE8 player wolrd initialize
+			//Tiv: in very rare cases client send 0xA9 packet before sending S<=C 0xE8 player world initialize
 			if ((client.Player.ObjectState != GameObject.eObjectState.Active) ||
 				(client.ClientState != GameClient.eClientState.Playing))
 				return;
@@ -90,11 +69,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				packetVersion = 168;
 			}
 
-			#region DEBUG
-			#if OUTPUT_DEBUG_INFO
 			int oldSpeed = client.Player.CurrentSpeed;
-			#endif
-			#endregion
 
 			//read the state of the player
 			packet.Skip(2); //PID
@@ -107,23 +82,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if ((data & 0x200) != 0)
 				speed = -speed;
-			
+
 			if (client.Player.IsMezzed || client.Player.IsStunned)
 			{
 				// Nidel: updating client.Player.CurrentSpeed instead of speed
 				client.Player.CurrentSpeed = 0;
 			}
 			else
+			{
 				client.Player.CurrentSpeed = (short)speed;
-
-			//Don't use the "sit" flag (data&0x1000) because it is
-			//useful only for displaying sit status to other clients,
-			//but NOT useful at all for changing sit states, use
-			//speed instead!
-			//Movement can only make players stand, but not sit them down...
-			//moved to player.CurrentSpeed:
-			//if(client.Player.CurrentSpeed!=0 && client.Player.Sitting)
-			//	client.Player.Sit(false);
+			}
 
 			client.Player.IsStrafing = ((data & 0xe000) != 0);
 
@@ -189,16 +157,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			int realX = newZone.XOffset + xOffsetInZone;
 			int realY = newZone.YOffset + yOffsetInZone;
-			//DOLConsole.WriteLine("zx="+newZone.XOffset+" zy="+newZone.YOffset+" XOff="+xOffsetInZone+" YOff="+yOffsetInZone+" curZ="+currentZoneID);
 
-
-			Zone lastPositionUpdateZone = client.Player.LastPositionUpdateZone;
-			bool zoneChange = newZone != lastPositionUpdateZone;
+			bool zoneChange = newZone != client.Player.LastPositionUpdateZone;
 			if (zoneChange)
 			{
 				//If the region changes -> make sure we don't take any falling damage
-				if (lastPositionUpdateZone != null
-					&& newZone.ZoneRegion.ID != lastPositionUpdateZone.ZoneRegion.ID)
+				if (client.Player.LastPositionUpdateZone != null && newZone.ZoneRegion.ID != client.Player.LastPositionUpdateZone.ZoneRegion.ID)
 				{
 					client.Player.MaxLastZ = int.MinValue;
 				}
@@ -219,60 +183,128 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.LastPositionUpdateZone = newZone;
 			}
 
-			int lastTick = client.Player.TempProperties.getProperty<int>(LASTUPDATETICK);
+			int coordsPerSec = 0;
+			int jumpDetect = 0;
+			int timediff = Environment.TickCount - client.Player.LastPositionUpdateTick;
+			int distance = 0;
+
+			if (timediff > 0)
+			{
+				distance = client.Player.LastPositionUpdatePoint.GetDistanceTo(new Point3D(realX, realY, realZ));
+				coordsPerSec = distance * 1000 / timediff;
+
+				if (distance < 100 && client.Player.LastPositionUpdatePoint.Z > 0)
+				{
+					jumpDetect = realZ - client.Player.LastPositionUpdatePoint.Z;
+				}
+			}
 
 			#region DEBUG
 			#if OUTPUT_DEBUG_INFO
-			if (lastTick != 0 && client.Account.PrivLevel == 1)
+			if (client.Player.LastPositionUpdatePoint.X != 0 && client.Player.LastPositionUpdatePoint.Y != 0)
 			{
-				int tickDiff = Environment.TickCount - lastTick;
-				int maxDist = 0;
-				if (client.Player.Steed != null)
-					maxDist = tickDiff*client.Player.Steed.MaxSpeed/1000; //If mounted, take mount speed
-				else
-					maxDist = tickDiff*client.Player.MaxSpeed/1000; //else take player speed
-
-				maxDist = (maxDist*DIST_TOLERANCE/100);
-
-				int plyDist = client.Player.GetDistanceTo(new Point3D(realX, realY, 0), 0);
-
-				//We ignore distances below 100 coordinates because below that the toleranze
-				//is nonexistent... eg. sometimes bumping into a wall would cause you to move
-				//more than you actually should etc...
-				if (plyDist > 100 && plyDist > maxDist)
-				{
-					int counter = client.Player.TempProperties.getProperty<int>(SPEEDHACKCOUNTER);
-					counter++;
-					if (counter%10 == 0)
-					{
-						StringBuilder builder = new StringBuilder();
-						builder.Append("SPEEDHACK[");
-						builder.Append(counter);
-						builder.Append("]: ");
-						builder.Append("CharName=");
-						builder.Append(client.Player.Name);
-						builder.Append(" Account=");
-						builder.Append(client.Account.Name);
-						builder.Append(" IP=");
-						builder.Append(client.TcpEndpoint);
-						builder.Append(" Distance=");
-						builder.Append(plyDist);
-						GameServer.Instance.LogCheatAction(builder.ToString());
-					}
-					client.Player.TempProperties.setProperty(SPEEDHACKCOUNTER, counter);
-				}
+				log.Debug(client.Player.Name + ": distance = " + distance + ", speed = " + oldSpeed + ",  coords/sec=" + coordsPerSec);
+			}
+			if (jumpDetect > 0)
+			{
+				log.Debug(client.Player.Name + ": jumpdetect = " + jumpDetect);
 			}
 			#endif
 			#endregion DEBUG
 
-			client.Player.TempProperties.setProperty(LASTUPDATETICK, Environment.TickCount);
+			client.Player.LastPositionUpdateTick = Environment.TickCount;
+			client.Player.LastPositionUpdatePoint.X = realX;
+			client.Player.LastPositionUpdatePoint.Y = realY;
+			client.Player.LastPositionUpdatePoint.Z = realZ;
+
+			int tolerance = ServerProperties.Properties.CPS_TOLERANCE;
+
+			if (client.Player.Steed != null && client.Player.Steed.MaxSpeed > 0)
+			{
+				tolerance += client.Player.Steed.MaxSpeed;
+			}
+			else if (client.Player.MaxSpeed > 0)
+			{
+				tolerance += client.Player.MaxSpeed;
+			}
+
+			if (client.Player.IsJumping)
+			{
+				coordsPerSec = 0;
+				jumpDetect = 0;
+				client.Player.IsJumping = false;
+			}
+
+			if (client.Player.CanFly == false && (coordsPerSec > tolerance || jumpDetect > ServerProperties.Properties.JUMP_TOLERANCE))
+			{
+				StringBuilder builder = new StringBuilder();
+				builder.Append("MOVEHACK_DETECT");
+				builder.Append(": CharName=");
+				builder.Append(client.Player.Name);
+				builder.Append(" Account=");
+				builder.Append(client.Account.Name);
+				builder.Append(" IP=");
+				builder.Append(client.TcpEndpointAddress);
+				builder.Append(" CPS:=");
+				builder.Append(coordsPerSec);
+				builder.Append(" JT=");
+				builder.Append(jumpDetect);
+				ChatUtil.SendDebugMessage(client, builder.ToString());
+
+				if (client.Account.PrivLevel == 1)
+				{
+					GameServer.Instance.LogCheatAction(builder.ToString());
+
+					if (ServerProperties.Properties.ENABLE_MOVEDETECT)
+					{
+						if (ServerProperties.Properties.BAN_HACKERS && false) // banning disabled until this technique is proven accurate
+						{
+							DBBannedAccount b = new DBBannedAccount();
+							b.Author = "SERVER";
+							b.Ip = client.TcpEndpointAddress;
+							b.Account = client.Account.Name;
+							b.DateBan = DateTime.Now;
+							b.Type = "B";
+							b.Reason = string.Format("Autoban MOVEHACK:(CPS:{0}, JT:{1}) on player:{2}", coordsPerSec, jumpDetect, client.Player.Name);
+							GameServer.Database.AddObject(b);
+							GameServer.Database.SaveObject(b);
+
+							for (int i = 0; i < 8; i++)
+							{
+								string message = "You have been auto kicked and banned due to movement hack detection!";
+								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+							}
+
+							client.Out.SendPlayerQuit(true);
+							client.Player.SaveIntoDatabase();
+							client.Player.Quit(true);
+						}
+						else
+						{
+							for (int i = 0; i < 8; i++)
+							{
+								string message = "You have been auto kicked due to movement hack detection!";
+								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+							}
+
+							client.Out.SendPlayerQuit(true);
+							client.Player.SaveIntoDatabase();
+							client.Player.Quit(true);
+						}
+						client.Disconnect();
+						return;
+					}
+				}
+			}
 
 			ushort headingflag = packet.ReadShort();
 			client.Player.Heading = (ushort)(headingflag & 0xFFF);
 			ushort flyingflag = packet.ReadShort();
 			byte flags = (byte)packet.ReadByte();
 
-			if(client.Player.X!=realX || client.Player.Y!=realY)
+			if (client.Player.X != realX || client.Player.Y != realY)
 			{
 				client.Player.TempProperties.setProperty(LASTMOVEMENTTICK, client.Player.CurrentRegion.Time);
 			}
@@ -560,120 +592,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 			//**************//
-
-			int coordsPerSec = 0;
-			int jumpDetect = 0;
-			int timediff = Environment.TickCount - lastUpdateTick;
-			int distance = 0;
-
-			if (timediff > 0)
-			{
-				Point3D lastPosition = new Point3D(lastX, lastY, 0);
-				distance = lastPosition.GetDistanceTo(new Point3D(realX, realY, 0));
-				coordsPerSec = distance * 1000 / timediff;
-
-				if (distance < 100 && lastZ > 0)
-					jumpDetect = realZ - lastZ;
-			}
-
-
-			#region DEBUG
-			#if OUTPUT_DEBUG_INFO
-			if (lastX != 0 && lastY != 0)
-			{
-				log.Debug(client.Player.Name + ": distance = " + distance + ", speed = " + oldSpeed + ",  coords/sec=" + coordsPerSec);
-			}
-			if (jumpDetect > 0)
-			{
-				log.Debug(client.Player.Name + ": jumpdetect = " + jumpDetect);
-			}
-			#endif
-			#endregion DEBUG
-
-			lastX = realX;
-			lastY = realY;
-			lastZ = realZ;
-			lastUpdateTick = Environment.TickCount;
-
-			int tolerance = ServerProperties.Properties.CPS_TOLERANCE;
-
-			if (client.Player.Steed != null && client.Player.Steed.MaxSpeed > 0)
-				tolerance += client.Player.Steed.MaxSpeed;
-			else if (client.Player.MaxSpeed > 0)
-				tolerance += client.Player.MaxSpeed;
-
-			if (client.Player.IsJumping)
-			{
-				coordsPerSec = 0;
-				jumpDetect = 0;
-				client.Player.IsJumping = false;
-			}
-
-			if (client.Player.CanFly == false && (coordsPerSec > tolerance || jumpDetect > ServerProperties.Properties.JUMP_TOLERANCE))
-			{
-				StringBuilder builder = new StringBuilder();
-				builder.Append("MOVEHACK_DETECT");
-				builder.Append(": CharName=");
-				builder.Append(client.Player.Name);
-				builder.Append(" Account=");
-				builder.Append(client.Account.Name);
-				builder.Append(" IP=");
-				builder.Append(client.TcpEndpointAddress);
-				builder.Append(" CPS:=");
-				builder.Append(coordsPerSec);
-				builder.Append(" JT=");
-				builder.Append(jumpDetect);
-				builder.Append(" T=");
-				builder.Append(tolerance);
-				ChatUtil.SendDebugMessage(client, builder.ToString());
-
-				if (client.Account.PrivLevel == 1)
-				{
-					GameServer.Instance.LogCheatAction(builder.ToString());
-
-					if (ServerProperties.Properties.ENABLE_MOVEDETECT)
-					{
-						if (ServerProperties.Properties.BAN_HACKERS && false) // banning disabled until this technique is proven accurate
-						{
-							DBBannedAccount b = new DBBannedAccount();
-							b.Author = "SERVER";
-							b.Ip = client.TcpEndpointAddress;
-							b.Account = client.Account.Name;
-							b.DateBan = DateTime.Now;
-							b.Type = "B";
-							b.Reason = string.Format("Autoban MOVEHACK:(CPS:{0}, JT:{1}) on player:{2}", coordsPerSec, jumpDetect, client.Player.Name);
-							GameServer.Database.AddObject(b);
-							GameServer.Database.SaveObject(b);
-
-							for (int i = 0; i < 8; i++)
-							{
-								string message = "You have been auto kicked and banned for hacking!";
-								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
-							}
-
-							client.Out.SendPlayerQuit(true);
-							client.Player.SaveIntoDatabase();
-							client.Player.Quit(true);
-						}
-						else
-						{
-							for (int i = 0; i < 8; i++)
-							{
-								string message = "You have been auto kicked for hacking!";
-								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
-							}
-
-							client.Out.SendPlayerQuit(true);
-							client.Player.SaveIntoDatabase();
-							client.Player.Quit(true);
-						}
-						client.Disconnect();
-						return;
-					}
-				}
-			}
 
 			byte[] con168 = packet.ToArray();
 			//Riding is set here!

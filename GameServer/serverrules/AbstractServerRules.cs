@@ -23,6 +23,7 @@ using System.Reflection;
 
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
@@ -1773,6 +1774,102 @@ namespace DOL.GS.ServerRules
 		{
 			return target.GuildName;
 		}
+
+
+		/// <summary>
+		/// Get the items (merchant) list name for a lot marker in the specified region
+		/// </summary>
+		/// <param name="regionID"></param>
+		/// <returns></returns>
+		public virtual string GetLotMarkerListName(ushort regionID)
+		{
+			switch (regionID)
+			{
+				case 2:
+					return "housing_alb_lotmarker";
+				case 102:
+					return "housing_mid_lotmarker";
+				case 202:
+					return "housing_hib_lotmarker";
+				default:
+					return "housing_custom_lotmarker";
+			}
+		}
+
+
+		/// <summary>
+		/// Send merchant window containing housing items that can be purchased by a player.  If this list is customized 
+		/// then the customized list must also be handled in BuyHousingItem
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="merchantType"></param>
+		public virtual void SendHousingMerchantWindow(GamePlayer player, DOL.GS.PacketHandler.eMerchantWindowType merchantType)
+		{
+			switch (merchantType)
+			{
+				case eMerchantWindowType.HousingInsideShop:
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorShopItems, eMerchantWindowType.HousingInsideShop);
+					break;
+				case eMerchantWindowType.HousingOutsideShop:
+					player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorShopItems, eMerchantWindowType.HousingOutsideShop);
+					break;
+				case eMerchantWindowType.HousingBindstoneHookpoint:
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorBindstoneShopItems, eMerchantWindowType.HousingBindstoneHookpoint);
+					break;
+				case eMerchantWindowType.HousingCraftingHookpoint:
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorCraftShopItems, eMerchantWindowType.HousingCraftingHookpoint);
+					break;
+				case eMerchantWindowType.HousingNPCHookpoint:
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorNPCShopItems, eMerchantWindowType.HousingNPCHookpoint);
+					break;
+				case eMerchantWindowType.HousingVaultHookpoint:
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorVaultShopItems, eMerchantWindowType.HousingVaultHookpoint);
+					break;
+				default:
+					player.Out.SendMessage("Unknown merchant type!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+					log.ErrorFormat("Unknown merchant type {0}", merchantType);
+					break;
+			}
+		}
+
+
+		/// <summary>
+		/// Buys an item off a housing merchant.  If the list has been customized then this must be modified to 
+		/// match that customized list.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="slot"></param>
+		/// <param name="count"></param>
+		/// <param name="merchantType"></param>
+		public virtual void BuyHousingItem(GamePlayer player, ushort slot, byte count, DOL.GS.PacketHandler.eMerchantWindowType merchantType)
+		{
+			MerchantTradeItems items = null;
+
+			switch (merchantType)
+			{
+				case eMerchantWindowType.HousingInsideShop:
+					items = HouseTemplateMgr.IndoorShopItems;
+					break;
+				case eMerchantWindowType.HousingOutsideShop:
+					items = HouseTemplateMgr.OutdoorShopItems;
+					break;
+				case eMerchantWindowType.HousingBindstoneHookpoint:
+					items = HouseTemplateMgr.IndoorBindstoneShopItems;
+					break;
+				case eMerchantWindowType.HousingCraftingHookpoint:
+					items = HouseTemplateMgr.IndoorCraftShopItems;
+					break;
+				case eMerchantWindowType.HousingNPCHookpoint:
+					items = HouseTemplateMgr.IndoorNPCShopItems;
+					break;
+				case eMerchantWindowType.HousingVaultHookpoint:
+					items = HouseTemplateMgr.IndoorVaultShopItems;
+					break;
+			}
+
+			GameMerchant.OnPlayerBuy(player, slot, count, items);
+		}
+
 		
 		#region MessageToLiving
 		/// <summary>

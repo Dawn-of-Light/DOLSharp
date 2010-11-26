@@ -558,7 +558,7 @@ namespace DOL.GS.Commands
 					name = house.Name;
 		
 					int level = house.Model - ((house.Model - 1)/4)*4;
-					TimeSpan due = (house.LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
+					TimeSpan due = (house.LastPaid.AddDays(ServerProperties.Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.Now);
 					
 					info.Add("  ------- HOUSE ------\n");
 					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Owner", name));
@@ -601,7 +601,7 @@ namespace DOL.GS.Commands
 					info.Add(" ");
 					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Lockbox", Money.GetString(house.KeptMoney)));
 					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.RentalPrice", Money.GetString(HouseMgr.GetRentByModel(house.Model))));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(house.Model)*4)));
+					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)));
 					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
 
 					client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.HouseOwner", name), info);
