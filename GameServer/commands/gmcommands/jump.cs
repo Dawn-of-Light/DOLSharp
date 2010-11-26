@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace DOL.GS.Commands
 		"/jump to <#ClientID> ex. /jump to #10",
 		"GMCommands.Jump.Usage.ToNameRealmID",
 		"GMCommands.Jump.Usage.ToXYZRegionID",
+		"/jump to house <house number>",
 		"GMCommands.Jump.Usage.PlayerNameToXYZ",
 		"GMCommands.Jump.Usage.PlayerNameToXYZRegID",
 		"GMCommands.Jump.Usage.PlayerNToPlayerN",
@@ -54,6 +56,21 @@ namespace DOL.GS.Commands
 					return;
 				}
 				#endregion Jump to GT
+				#region Jump to house
+				else if (args.Length == 4 && args[1] == "to" && args[2] == "house")
+				{
+					House house = HouseMgr.GetHouse(Convert.ToInt32(args[3]));
+					if (house != null)
+					{
+						client.Player.MoveTo(house.OutdoorJumpPoint);
+					}
+					else
+					{
+						client.Out.SendMessage("This house number is not owned by anyone!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					return;
+				}
+				#endregion Jump to house
 				#region Jump to PlayerName or ClientID
 				if (args.Length == 3 && args[1] == "to")
 				{
