@@ -129,7 +129,7 @@ namespace DOL.GS.Commands
 					return;
 				}
 
-				if (houses.Count == 1)
+				if (houses.Count == 1 && newModel != (houses[0] as House).Model)
 				{
 					HouseMgr.RemoveHouseItems(houses[0] as House);
 					(houses[0] as House).Model = newModel;
