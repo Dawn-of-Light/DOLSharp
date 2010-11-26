@@ -350,87 +350,82 @@ namespace DOL.GS.Housing
 			house.SendUpdate();
 		}
 
-		public static void UpgradeHouse(House house, InventoryItem deed)
+		public static bool UpgradeHouse(House house, InventoryItem deed)
 		{
+			int newModel = 0;
+			switch (deed.Id_nb)
+			{
+				case "housing_alb_cottage_deed":
+					newModel = 1;
+					break;
+				case "housing_alb_house_deed":
+					newModel = 2;
+					break;
+				case "housing_alb_villa_deed":
+					newModel = 3;
+					break;
+				case "housing_alb_mansion_deed":
+					newModel = 4;
+					break;
+				case "housing_mid_cottage_deed":
+					newModel = 5;
+					break;
+				case "housing_mid_house_deed":
+					newModel = 6;
+					break;
+				case "housing_mid_villa_deed":
+					newModel = 7;
+					break;
+				case "housing_mid_mansion_deed":
+					newModel = 8;
+					break;
+				case "housing_hib_cottage_deed":
+					newModel = 9;
+					break;
+				case "housing_hib_house_deed":
+					newModel = 10;
+					break;
+				case "housing_hib_villa_deed":
+					newModel = 11;
+					break;
+				case "housing_hib_mansion_deed":
+					newModel = 12;
+					break;
+			}
+
+			if (newModel == 0)
+				return false;
+
 			// remove all players from the home before we upgrade it
 			foreach (GamePlayer player in house.GetAllPlayersInHouse())
 			{
 				player.LeaveHouse();
 			}
 
-			// remove all indoor items
-			var iobjs = GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = " + house.HouseNumber);
-
-			foreach (DBHouseIndoorItem item in iobjs)
+			// if there is a consignment merchant, we have to readd him since we changed the house
+			var merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + house.HouseNumber + "'");
+			int oldMerchantMoney = 0;
+			if (merchant != null)
 			{
-				GameServer.Database.DeleteObject(item);
+				oldMerchantMoney = merchant.Quantity;
 			}
 
-			// remove all outdoor items
-			var oobjs = GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = " + house.HouseNumber);
-
-			foreach (DBHouseOutdoorItem item in oobjs)
-			{
-				GameServer.Database.DeleteObject(item);
-			}
-
-			// figure out the new model to set the house
-			int newmodel = 1;
-			switch (deed.Id_nb)
-			{
-				case "housing_alb_cottage_deed":
-					newmodel = 1;
-					break;
-				case "housing_alb_house_deed":
-					newmodel = 2;
-					break;
-				case "housing_alb_villa_deed":
-					newmodel = 3;
-					break;
-				case "housing_alb_mansion_deed":
-					newmodel = 4;
-					break;
-				case "housing_mid_cottage_deed":
-					newmodel = 5;
-					break;
-				case "housing_mid_house_deed":
-					newmodel = 6;
-					break;
-				case "housing_mid_villa_deed":
-					newmodel = 7;
-					break;
-				case "housing_mid_mansion_deed":
-					newmodel = 8;
-					break;
-				case "housing_hib_cottage_deed":
-					newmodel = 9;
-					break;
-				case "housing_hib_house_deed":
-					newmodel = 10;
-					break;
-				case "housing_hib_villa_deed":
-					newmodel = 11;
-					break;
-				case "housing_hib_mansion_deed":
-					newmodel = 12;
-					break;
-			}
+			RemoveHouseItems(house);
 
 			// change the model of the house
-			house.Model = newmodel;
+			house.Model = newModel;
+
+			// re-add the merchant if there was one
+			if (merchant != null)
+			{
+				house.AddConsignment(oldMerchantMoney);
+			}
 
 			// save the house, and broadcast an update
 			house.SaveIntoDatabase();
 			house.SendUpdate();
 
-			// if there is a consignment merchant, we have to readd him since we changed the house
-			var merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + house.HouseNumber + "'");
-			if (merchant != null)
-			{
-				int oldValue = merchant.Quantity;
-				house.RemoveConsignment();
-				house.AddConsignment(oldValue);
-			}
+			return true;
 		}
 
 		public static void RemoveHouse(House house)

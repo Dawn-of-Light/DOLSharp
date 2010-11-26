@@ -131,6 +131,7 @@ namespace DOL.GS.Commands
 
 				if (houses.Count == 1)
 				{
+					HouseMgr.RemoveHouseItems(houses[0] as House);
 					(houses[0] as House).Model = newModel;
 					(houses[0] as House).SaveIntoDatabase();
 
