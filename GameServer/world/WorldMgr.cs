@@ -86,6 +86,10 @@ namespace DOL.GS
 		/// </summary>
 		public const int VISIBILITY_DISTANCE = 3600;
 		/// <summary>
+		/// Moving greater than this distance requires the player to do a full world refresh
+		/// </summary>
+		public const int REFRESH_DISTANCE = 1000;
+		/// <summary>
 		/// Is the square distance a player can see
 		/// </summary>
 		public const int VISIBILITY_SQUARE_DISTANCE = 12960000;

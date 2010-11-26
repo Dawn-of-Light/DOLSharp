@@ -27,36 +27,49 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "housepointitem")]
-	public class DBHousepointItem : DataObject
+	[DataTable(TableName = "househookpointitem")]
+	public class DBHouseHookpointItem : DataObject
 	{
-		private int m_houseID; // the number of the house
-		private uint m_position; // the housepoint slot
+		private long m_id;
+		private int m_houseNumber; // the number of the house
+		private uint m_hookpointID;
 		private ushort m_heading;
 		private string m_templateID; // the item template id of the item placed
 		private byte m_index;
 
-		public DBHousepointItem(){}
+		public DBHouseHookpointItem(){}
 
-		[DataElement(AllowDbNull = false)]
-		public int HouseID
+		[PrimaryKey(AutoIncrement = true)]
+		public long ID
 		{
-			get { return m_houseID; }
+			get { return m_id; }
 			set
 			{
 				Dirty = true;
-				m_houseID = value;
+				m_id = value;
+			}
+		}
+
+
+		[DataElement(AllowDbNull = false)]
+		public int HouseNumber
+		{
+			get { return m_houseNumber; }
+			set
+			{
+				Dirty = true;
+				m_houseNumber = value;
 			}
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public uint Position
+		public uint HookpointID
 		{
-			get { return m_position; }
+			get { return m_hookpointID; }
 			set
 			{
 				Dirty = true;
-				m_position = value;
+				m_hookpointID = value;
 			}
 		}
 

@@ -426,11 +426,20 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or Sets housing flag for region
+		/// Does this region contain housing?
 		/// </summary>
 		public virtual bool HousingEnabled
 		{
 			get { return m_regionData.HousingEnabled; }
+		}
+
+		/// <summary>
+		/// Should this region use the housing manager?
+		/// Standard regions always use the housing manager if housing is enabled, custom regions might not.
+		/// </summary>
+		public virtual bool UseHousingManager
+		{
+			get { return HousingEnabled; }
 		}
 
 		/// <summary>

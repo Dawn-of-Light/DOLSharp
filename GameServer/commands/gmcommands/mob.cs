@@ -65,7 +65,6 @@ namespace DOL.GS.Commands
 	     "'/mob kill' kills the mob without removing it from the DB",
 	     "'/mob heal' restores the mob's health to maximum",
 	     "'/mob attack <PlayerName>' command mob to attack a player",
-	     "'/mob info' extended information about the mob",
 	     "'/mob state' show mob state (attackers, effects)",
 	     "'/mob info' extended information about the mob",
 	     "'/mob realm <eRealm>' set the mob's realm",
@@ -1099,10 +1098,17 @@ namespace DOL.GS.Commands
 			info.Add(" +  -- Body/Spirit/Energy:  " + targetMob.GetDamageResist(eProperty.Resist_Body)
 			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Spirit)
 			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Energy));
-			info.Add(" + Position:  " + targetMob.X + ", " + targetMob.Y + ", " + targetMob.Z + ", " + targetMob.Heading);
+			info.Add(" + Position (X, Y, Z, H):  " + targetMob.X + ", " + targetMob.Y + ", " + targetMob.Z + ", " + targetMob.Heading);
 
 			if (targetMob.GuildName != null && targetMob.GuildName.Length > 0)
 				info.Add(" + Guild: " + targetMob.GuildName);
+
+			if (targetMob.InHouse)
+			{
+				info.Add(" ");
+				info.Add(" + In House # " + targetMob.CurrentHouse.HouseNumber);
+				info.Add(" ");
+			}
 
 			info.Add(string.Format(" + Flags: {0} (0x{1})", ((GameNPC.eFlags)targetMob.Flags).ToString("G"), targetMob.Flags.ToString("X")));
 			info.Add(" + OID: " + targetMob.ObjectID);

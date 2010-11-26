@@ -970,9 +970,9 @@ namespace DOL.GS
 			if (!bound && InHouse && CurrentHouse != null) // lets do a double check, more safe
 			{
 				House house = CurrentHouse;
-				var obj = GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = '" + house.HouseNumber.ToString() + "'");
+				var obj = GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + house.HouseNumber.ToString() + "'");
 				bool canbindhere = false;
-				foreach (DBHousepointItem hpi in obj)
+				foreach (DBHouseHookpointItem hpi in obj)
 				{
 					if (hpi.ItemTemplateID.Contains("_bindstone"))
 					{
@@ -9792,7 +9792,7 @@ namespace DOL.GS
 			}
 
 			//Remove the last update tick property, to prevent speedhack messages during zoning and teleporting!
-			TempProperties.removeProperty(PlayerPositionUpdateHandler.LASTUPDATETICK);
+			LastPositionUpdateTick = 0;
 
 			//Set the new destination
 			//Current Speed = 0 when moved ... else X,Y,Z continue to be modified
@@ -9824,39 +9824,9 @@ namespace DOL.GS
 				Out.SendPlayerJump(false);
 
 				// are we jumping far enough to force a complete refresh?
-				if (GetDistanceTo(originalPoint) > (WorldMgr.VISIBILITY_DISTANCE / 2))
+				if (GetDistanceTo(originalPoint) > WorldMgr.REFRESH_DISTANCE)
 				{
-					LastWorldUpdate = Environment.TickCount;
-					CurrentUpdateArray.SetAll(false);
-					HousingUpdateArray = null;
-
-					foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					{
-						Out.SendNPCCreate(npc);
-						if (npc.Inventory != null)
-							Out.SendLivingEquipmentUpdate(npc);
-						//Send health update only if mob-health is not 100%
-						if (npc.HealthPercent != 100)
-							Out.SendObjectUpdate(npc);
-						CurrentUpdateArray[npc.ObjectID - 1] = true;
-					}
-
-					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					{
-						if (player != null && player != this)
-						{
-							if (IsStealthed == false || player.CanDetect(this))
-							{
-								player.Out.SendPlayerCreate(this);
-							}
-
-							if (player.IsStealthed == false || CanDetect(player))
-							{
-								Out.SendPlayerCreate(player);
-								Out.SendLivingEquipmentUpdate(player);
-							}
-						}
-					}
+					RefreshWorld();
 				}
 				else
 				{
@@ -9888,8 +9858,46 @@ namespace DOL.GS
 			return true;
 		}
 
+		/// <summary>
+		/// Refresh all objects around the player
+		/// </summary>
+		public virtual void RefreshWorld()
+		{
+			LastWorldUpdate = Environment.TickCount;
+			CurrentUpdateArray.SetAll(false);
+			HousingUpdateArray = null;
+
+			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				Out.SendNPCCreate(npc);
+				if (npc.Inventory != null)
+					Out.SendLivingEquipmentUpdate(npc);
+				//Send health update only if mob-health is not 100%
+				if (npc.HealthPercent != 100)
+					Out.SendObjectUpdate(npc);
+				CurrentUpdateArray[npc.ObjectID - 1] = true;
+			}
+
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if (player != null && player != this)
+				{
+					if (IsStealthed == false || player.CanDetect(this))
+					{
+						player.Out.SendPlayerCreate(this);
+					}
+
+					if (player.IsStealthed == false || CanDetect(player))
+					{
+						Out.SendPlayerCreate(player);
+						Out.SendLivingEquipmentUpdate(player);
+					}
+				}
+			}
+		}
+
 		//Eden - Move to bind, and check if the loc is allowed
-		public bool MoveToBind()
+		public virtual bool MoveToBind()
 		{
 			Region rgn = WorldMgr.GetRegion((ushort)DBCharacter.BindRegion);
 			if (rgn == null || rgn.GetZone(DBCharacter.BindXpos, DBCharacter.BindYpos) == null)
@@ -10155,11 +10163,6 @@ namespace DOL.GS
 		public const string MAX_LAST_Z = "max_last_z";
 
 		/// <summary>
-		/// Property that saves zone on last postion update
-		/// </summary>
-		public const string LAST_POSITION_UPDATE_ZONE = "LastPositionUpdateZone";
-
-		/// <summary>
 		/// The base speed of the player
 		/// </summary>
 		public const int PLAYER_BASE_SPEED = 191;
@@ -10251,6 +10254,29 @@ namespace DOL.GS
 		{
 			get { return m_lastPositionUpdateZone; }
 			set { m_lastPositionUpdateZone = value; }
+		}
+
+
+		private int m_lastPositionUpdateTick = 0;
+
+		/// <summary>
+		/// The environment tick count when this players position was last updated
+		/// </summary>
+		public int LastPositionUpdateTick
+		{
+			get { return m_lastPositionUpdateTick; }
+			set { m_lastPositionUpdateTick = value; }
+		}
+
+		private Point3D m_lastPositionUpdatePoint = new Point3D(0, 0, 0);
+
+		/// <summary>
+		/// The last recorded position of this player
+		/// </summary>
+		public Point3D LastPositionUpdatePoint
+		{
+			get { return m_lastPositionUpdatePoint; }
+			set { m_lastPositionUpdatePoint = value; }
 		}
 
 		/// <summary>

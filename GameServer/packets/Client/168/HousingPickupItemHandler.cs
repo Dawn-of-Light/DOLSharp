@@ -24,9 +24,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handle housing pickup item requests from the client.
 	/// </summary>
-	[PacketHandler(PacketHandlerType.TCP, 0x0D, "Handles things like pickup indoor/outdoor items")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerPickupHouseItem, ClientStatus.PlayerInGame)]
 	public class HousingPickupItemHandler : IPacketHandler
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		#region IPacketHandler Members
 
 		/// <summary>
@@ -46,6 +48,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (house == null) return;
 			if (client.Player == null) return;
+
+			//log.DebugFormat("House PickupItem - Method: {0}, Position: {0}", method, position);
 
 			switch (method)
 			{

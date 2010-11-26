@@ -381,5 +381,32 @@ namespace DOL.GS.ServerRules
 		/// <param name="target">The considered NPC</param>
 		/// <returns>The guild name of the target</returns>
 		string GetNPCGuildName(GamePlayer source, GameNPC target);
+
+		/// <summary>
+		/// Get the items (merchant) list name for a lot marker in the specified region
+		/// </summary>
+		/// <param name="regionID"></param>
+		/// <returns></returns>
+		string GetLotMarkerListName(ushort regionID);
+
+		/// <summary>
+		/// Send merchant window containing housing items that can be purchased by a player.  If this list is customized 
+		/// then the customized list must also be handled in BuyHousingItem
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="merchantType"></param>
+		void SendHousingMerchantWindow(GamePlayer player, DOL.GS.PacketHandler.eMerchantWindowType merchantType);
+
+
+		/// <summary>
+		/// Buys an item off a housing merchant.  If the list has been customized then this must be modified to 
+		/// match that customized list.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="slot"></param>
+		/// <param name="count"></param>
+		/// <param name="merchantType"></param>
+		void BuyHousingItem(GamePlayer player, ushort slot, byte count, DOL.GS.PacketHandler.eMerchantWindowType merchantType);
+
 	}
 }

@@ -24,83 +24,95 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "house_hookpointoffset")]
+	[DataTable(TableName = "househookpointoffset")]
 	public class HouseHookpointOffset : DataObject
 	{
-		private int m_model;
-		private int m_hookpoint;
-		private int m_offX;
-		private int m_offY;
-		private int m_offZ;
-		private int m_offH;
+		private long m_id;
+		private int m_houseModel;
+		private int m_hookpointID;
+		private int m_x;
+		private int m_y;
+		private int m_z;
+		private int m_heading;
 
 		public HouseHookpointOffset()
 		{
 		}
 
-		[DataElement(AllowDbNull = false)]
-		public int Model
+		[PrimaryKey(AutoIncrement = true)]
+		public long ID
 		{
-			get { return m_model; }
+			get { return m_id; }
 			set
 			{
 				Dirty = true;
-				m_model = value;
+				m_id = value;
 			}
 		}
 
 		[DataElement(AllowDbNull = false)]
-		public int Hookpoint
+		public int HouseModel
 		{
-			get { return m_hookpoint; }
+			get { return m_houseModel; }
 			set
 			{
 				Dirty = true;
-				m_hookpoint = value;
+				m_houseModel = value;
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
-		public int OffX
+		[DataElement(AllowDbNull = false)]
+		public int HookpointID
 		{
-			get { return m_offX; }
+			get { return m_hookpointID; }
 			set
 			{
 				Dirty = true;
-				m_offX = value;
+				m_hookpointID = value;
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
-		public int OffY
+		[DataElement(AllowDbNull = false)]
+		public int X
 		{
-			get { return m_offY; }
+			get { return m_x; }
 			set
 			{
 				Dirty = true;
-				m_offY = value;
+				m_x = value;
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
-		public int OffZ
+		[DataElement(AllowDbNull = false)]
+		public int Y
 		{
-			get { return m_offZ; }
+			get { return m_y; }
 			set
 			{
 				Dirty = true;
-				m_offZ = value;
+				m_y = value;
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
-		public int OffH
+		[DataElement(AllowDbNull = false)]
+		public int Z
 		{
-			get { return m_offH; }
+			get { return m_z; }
 			set
 			{
 				Dirty = true;
-				m_offH = value;
+				m_z = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int Heading
+		{
+			get { return m_heading; }
+			set
+			{
+				Dirty = true;
+				m_heading = value;
 			}
 		}
 	}

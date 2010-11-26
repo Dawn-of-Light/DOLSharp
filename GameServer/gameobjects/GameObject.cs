@@ -129,6 +129,21 @@ namespace DOL.GS
 			set { m_CurrentRegion = value; }
 		}
 
+		protected string m_ownerID;
+
+		/// <summary>
+		/// Gets or sets the owner ID for this object
+		/// </summary>
+		public virtual string OwnerID
+		{
+			get { return m_ownerID; }
+			set
+			{
+				m_ownerID = value;
+			}
+		}
+
+
 		/// <summary>
 		/// Get's or sets the current Region by the ID
 		/// </summary>
@@ -374,17 +389,44 @@ namespace DOL.GS
 			set { }
 		}
 
+
 		private House m_currentHouse;
+		/// <summary>
+		/// Either the house an object is in or working on (player editing a house)
+		/// </summary>
 		public House CurrentHouse
 		{
 			get { return m_currentHouse; }
 			set { m_currentHouse = value; }
 		}
+
+		/// <summary>
+		/// Is this object in a house
+		/// </summary>
 		private bool m_inHouse;
 		public bool InHouse
 		{
 			get { return m_inHouse; }
 			set { m_inHouse = value; }
+		}
+
+		/// <summary>
+		/// Is this object visible to another?
+		/// This does not check for stealth.
+		/// </summary>
+		/// <param name="checkObject"></param>
+		/// <returns></returns>
+		public virtual bool IsVisibleTo(GameObject checkObject)
+		{
+			if (checkObject == null ||
+				CurrentRegion != checkObject.CurrentRegion ||
+				InHouse != checkObject.InHouse ||
+				(InHouse && checkObject.InHouse && CurrentHouse != checkObject.CurrentHouse))
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		#endregion
@@ -963,7 +1005,7 @@ namespace DOL.GS
 		{
 			if (player.Client.Account.PrivLevel == 1 && !this.IsWithinRadius(player, WorldMgr.INTERACT_DISTANCE))
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation("GameObject.Interact.TooFarAway", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.Interact.TooFarAway", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));
 				return false;
 			}

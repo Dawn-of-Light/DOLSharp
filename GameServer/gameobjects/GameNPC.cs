@@ -150,20 +150,6 @@ namespace DOL.GS
 			}
 		}
 
-		protected string m_ownerID;
-
-		/// <summary>
-		/// Gets or sets the owner ID for this NPC.
-		/// </summary>
-		public virtual string OwnerID
-		{
-			get { return m_ownerID; }
-			set
-			{
-				m_ownerID = value;
-			}
-		}
-
 		/// <summary>
 		/// Gets or sets the heading of this NPC
 		/// </summary>

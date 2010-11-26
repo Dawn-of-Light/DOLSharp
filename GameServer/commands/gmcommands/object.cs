@@ -86,6 +86,12 @@ namespace DOL.GS.Commands
 							info.Add(" ");
 							info.Add(" Owner: " + targetObject.Owners[0].Name);
 						}
+						if (string.IsNullOrEmpty(targetObject.OwnerID) == false)
+						{
+							info.Add(" ");
+							info.Add(" OwnerID: " + targetObject.OwnerID);
+						}
+
 						info.Add(" ");
 
 						WorldInventoryItem invItem = targetObject as WorldInventoryItem;

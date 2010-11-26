@@ -32,11 +32,11 @@ namespace DOL.GS.Housing
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private readonly DBHouse _databaseItem;
 		private readonly Dictionary<int, DBHouseCharsXPerms> _housePermissions;
-		private readonly Dictionary<uint, DBHousepointItem> _housepointItems;
+		private readonly Dictionary<uint, DBHouseHookpointItem> _housepointItems;
 		private readonly Dictionary<int, IndoorItem> _indoorItems;
 		private readonly Dictionary<int, OutdoorItem> _outdoorItems;
 		private readonly Dictionary<int, DBHousePermissions> _permissionLevels;
@@ -60,6 +60,20 @@ namespace DOL.GS.Housing
 		{
 			get { return _databaseItem.Model; }
 			set { _databaseItem.Model = value; }
+		}
+
+		public eRealm Realm
+		{
+			get
+			{
+				if (Model < 5)
+					return eRealm.Albion;
+
+				if (Model < 9)
+					return eRealm.Midgard;
+
+				return eRealm.Hibernia;
+			}
 		}
 
 		public int Emblem
@@ -194,7 +208,7 @@ namespace DOL.GS.Housing
 			get { return _outdoorItems; }
 		}
 
-		public IDictionary<uint, DBHousepointItem> HousepointItems
+		public IDictionary<uint, DBHouseHookpointItem> HousepointItems
 		{
 			get { return _housepointItems; }
 		}
@@ -207,6 +221,11 @@ namespace DOL.GS.Housing
 		public IEnumerable<KeyValuePair<int, DBHouseCharsXPerms>> HousePermissions
 		{
 			get { return _housePermissions.OrderBy(entry => entry.Value.CreationTime); }
+		}
+
+		public IDictionary<int, DBHouseCharsXPerms> CharXPermissions
+		{
+			get { return _housePermissions; }
 		}
 
 		public IDictionary<int, DBHousePermissions> PermissionLevels
@@ -280,13 +299,13 @@ namespace DOL.GS.Housing
 			_permissionLevels = new Dictionary<int, DBHousePermissions>();
 			_indoorItems = new Dictionary<int, IndoorItem>();
 			_outdoorItems = new Dictionary<int, OutdoorItem>();
-			_housepointItems = new Dictionary<uint, DBHousepointItem>();
+			_housepointItems = new Dictionary<uint, DBHouseHookpointItem>();
 			_housePermissions = new Dictionary<int, DBHouseCharsXPerms>();
 		}
 
 		~House()
 		{
-			Log.DebugFormat("House destructor called for House #{0} in region {1}", HouseNumber, RegionID);
+			log.DebugFormat("House destructor called for House #{0} in region {1}", HouseNumber, RegionID);
 		}
 
 		/// <summary>
@@ -340,59 +359,61 @@ namespace DOL.GS.Housing
 			player.InHouse = true;
 			player.CurrentHouse = this;
 
+			ushort heading = 0;
+
 			switch (Model)
 			{
 					//thx to sp4m
 				default:
-					player.MoveTo(RegionID, X, Y, 25022, player.Heading);
+					player.MoveTo(RegionID, X, Y, 25022, heading);
 					break;
 
 				case 1:
-					player.MoveTo(RegionID, X + 80, Y + 100, ((25025)), player.Heading);
+					player.MoveTo(RegionID, X + 80, Y + 100, ((25025)), heading);
 					break;
 
 				case 2:
-					player.MoveTo(RegionID, X - 260, Y + 100, ((24910)), player.Heading);
+					player.MoveTo(RegionID, X - 260, Y + 100, ((24910)), heading);
 					break;
 
 				case 3:
-					player.MoveTo(RegionID, X - 200, Y + 100, ((24800)), player.Heading);
+					player.MoveTo(RegionID, X - 200, Y + 100, ((24800)), heading);
 					break;
 
 				case 4:
-					player.MoveTo(RegionID, X - 350, Y - 30, ((24660)), player.Heading);
+					player.MoveTo(RegionID, X - 350, Y - 30, ((24660)), heading);
 					break;
 
 				case 5:
-					player.MoveTo(RegionID, X + 230, Y - 480, ((25100)), player.Heading);
+					player.MoveTo(RegionID, X + 230, Y - 480, ((25100)), heading);
 					break;
 
 				case 6:
-					player.MoveTo(RegionID, X - 80, Y - 660, ((24700)), player.Heading);
+					player.MoveTo(RegionID, X - 80, Y - 660, ((24700)), heading);
 					break;
 
 				case 7:
-					player.MoveTo(RegionID, X - 80, Y - 660, ((24700)), player.Heading);
+					player.MoveTo(RegionID, X - 80, Y - 660, ((24700)), heading);
 					break;
 
 				case 8:
-					player.MoveTo(RegionID, X - 90, Y - 625, ((24670)), player.Heading);
+					player.MoveTo(RegionID, X - 90, Y - 625, ((24670)), heading);
 					break;
 
 				case 9:
-					player.MoveTo(RegionID, X + 400, Y - 160, ((25150)), player.Heading);
+					player.MoveTo(RegionID, X + 400, Y - 160, ((25150)), heading);
 					break;
 
 				case 10:
-					player.MoveTo(RegionID, X + 400, Y - 80, ((25060)), player.Heading);
+					player.MoveTo(RegionID, X + 400, Y - 80, ((25060)), heading);
 					break;
 
 				case 11:
-					player.MoveTo(RegionID, X + 400, Y - 60, ((24900)), player.Heading);
+					player.MoveTo(RegionID, X + 400, Y - 60, ((24900)), heading);
 					break;
 
 				case 12:
-					player.MoveTo(RegionID, X, Y - 620, ((24595)), player.Heading);
+					player.MoveTo(RegionID, X, Y - 620, ((24595)), heading);
 					break;
 			}
 
@@ -431,14 +452,32 @@ namespace DOL.GS.Housing
 		/// <param name="player">the player</param>
 		public void SendHouseInfo(GamePlayer player)
 		{
-			int level = Model - ((Model - 1)/4)*4;
-			TimeSpan due = (LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
+			int level = Model - ((Model - 1) / 4) * 4;
+			TimeSpan due = (LastPaid.AddDays(ServerProperties.Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.Now);
 			var text = new List<string>();
 
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Owner", Name));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lotnum", HouseNumber));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Level", level));
+
+			if (level > 0)
+				text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Level", level));
+			else
+				text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Level", "Lot"));
+
 			text.Add(" ");
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lockbox", Money.GetString(KeptMoney)));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentalPrice", Money.GetString(HouseMgr.GetRentByModel(Model))));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
+			text.Add(" ");
+
+			if (player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
+			{
+				text.Add("GM: Model: " + Model);
+				text.Add("GM: Realm: " + GlobalConstants.RealmToName(Realm));
+				text.Add(" ");
+			}
+
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Porch"));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.PorchEnabled", (Porch ? "Y" : "N")));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.PorchRoofColor", PorchRoofColor));
@@ -452,32 +491,20 @@ namespace DOL.GS.Housing
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.WindowMaterial", WindowMaterial));
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.ExteriorUpgrades"));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildBanner",
-			                                    ((OutdoorGuildBanner) ? "Y" : "N")));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildShield",
-			                                    ((OutdoorGuildShield) ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildBanner", ((OutdoorGuildBanner) ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.OutdoorGuildShield", ((OutdoorGuildShield) ? "Y" : "N")));
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.InteriorUpgrades"));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildBanner",
-			                                    ((IndoorGuildBanner) ? "Y" : "N")));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildShield",
-			                                    ((IndoorGuildShield) ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildBanner", ((IndoorGuildBanner) ? "Y" : "N")));
+			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.IndoorGuildShield", ((IndoorGuildShield) ? "Y" : "N")));
 			text.Add(" ");
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.InteriorCarpets"));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug1Color", Rug1Color));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug2Color", Rug2Color));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug3Color", Rug3Color));
 			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Rug4Color", Rug4Color));
-			text.Add(" ");
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.Lockbox", Money.GetString(KeptMoney)));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentalPrice",
-			                                    Money.GetString(HouseMgr.GetRentByModel(Model))));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.MaxLockbox",
-			                                    Money.GetString(HouseMgr.GetRentByModel(Model)*4)));
-			text.Add(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
 
-			player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.HouseOwner", Name),
-			                                text);
+			player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(player.Client, "House.SendHouseInfo.HouseOwner", Name), text);
 		}
 
 		public int GetPorchAndGuildEmblemFlags()
@@ -533,9 +560,9 @@ namespace DOL.GS.Housing
 		public int GetFreeVaultNumber()
 		{
 			var usedVaults = new[] {false, false, false, false};
-			string sqlWhere = string.Format("HouseID = '{0}' AND ItemTemplateID LIKE '%_vault'", HouseNumber);
+			string sqlWhere = string.Format("HouseNumber = '{0}' AND ItemTemplateID LIKE '%_vault'", HouseNumber);
 
-			foreach (DBHousepointItem housePointItem in GameServer.Database.SelectObjects<DBHousepointItem>(sqlWhere))
+			foreach (DBHouseHookpointItem housePointItem in GameServer.Database.SelectObjects<DBHouseHookpointItem>(sqlWhere))
 			{
 				if (housePointItem.Index >= 0 && housePointItem.Index <= 3)
 				{
@@ -558,21 +585,20 @@ namespace DOL.GS.Housing
 
 		public static bool AddNewOffset(HouseHookpointOffset o)
 		{
-			if (o.Hookpoint <= HousingConstants.MaxHookpointLocations)
+			if (o.HookpointID <= HousingConstants.MaxHookpointLocations)
 			{
-				HousingConstants.RelativeHookpointsCoords[o.Model][o.Hookpoint] = new[] {o.OffX, o.OffY, o.OffZ, o.OffH};
+				HousingConstants.RelativeHookpointsCoords[o.HouseModel][o.HookpointID] = new[] {o.X, o.Y, o.Z, o.Heading};
 				return true;
 			}
 
-			Log.Error("[Housing]: HouseHookPointOffset exceeds array size.  Model " + o.Model + ", hookpoint " + o.Hookpoint);
+			log.Error("[Housing]: HouseHookPointOffset exceeds array size.  Model " + o.HouseModel + ", hookpoint " + o.HookpointID);
 
 			return false;
 		}
 
 		public static void LoadHookpointOffsets()
 		{
-			//initialise array
-			for (int i = 12; i > 0; i--)
+			for (int i = HousingConstants.MaxHouseModel; i > 0; i--)
 			{
 				for (int j = 1; j < HousingConstants.RelativeHookpointsCoords[i].Length; j++)
 				{
@@ -602,9 +628,9 @@ namespace DOL.GS.Housing
 
 		private int GetHookpointPosition(int objX, int objY, int objZ)
 		{
-			int position = 16; //start with a position it can never be that can be checked for
+			int position = -1;
 
-			for (int i = 0; i < 15; i++)
+			for (int i = 0; i < HousingConstants.MaxHookpointLocations; i++)
 			{
 				if (HousingConstants.RelativeHookpointsCoords[Model][i] != null)
 				{
@@ -638,11 +664,12 @@ namespace DOL.GS.Housing
 		/// <param name="item">The itemtemplate of the item used to fill the hookpoint (can be null if templateid is filled)</param>
 		/// <param name="position">The position of the hookpoint</param>
 		/// <param name="templateID">The template id of the item (can be blank if item is filled)</param>
-		public GameObject FillHookpoint(ItemTemplate item, uint position, string templateID)
+		/// <param name="heading">The requested heading of this house item</param>
+		public GameObject FillHookpoint(ItemTemplate item, uint position, string templateID, ushort heading)
 		{
 			if (item == null)
 			{
-				item = GameServer.Database.SelectObject<ItemTemplate>("Id_nb = '" + GameServer.Database.Escape(templateID) + "'");
+				item = GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
 
 				if (item == null)
 					return null;
@@ -657,59 +684,94 @@ namespace DOL.GS.Housing
 			int x = location.X;
 			int y = location.Y;
 			int z = location.Z;
-			ushort heading = GetHookpointHeading(position);
 			GameStaticItem sItem = null;
 
 			switch ((eObjectType) item.Object_Type)
 			{
 				case eObjectType.HouseNPC:
 					{
-						NpcTemplate npt = NpcTemplateMgr.GetTemplate(item.Bonus);
-						if (npt == null)
-							return null;
+						NpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(item.Bonus);
 
 						try
 						{
-							string defaultClassType = npt.ClassType;
-							if (string.IsNullOrEmpty(npt.ClassType))
+							string defaultClassType = ServerProperties.Properties.GAMENPC_DEFAULT_CLASSTYPE;
+
+							if (npcTemplate == null || string.IsNullOrEmpty(npcTemplate.ClassType))
 							{
-								defaultClassType="DOL.GS.GameNPC";
-								Log.Warn ("[housing] null classtype in hookpoint attachment, using GameNPC instead");
+								log.Warn("[Housing] null classtype in hookpoint attachment, using GAMENPC_DEFAULT_CLASSTYPE instead");
+							}
+							else
+							{
+								defaultClassType = npcTemplate.ClassType;
 							}
 
-							var hNPC = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(defaultClassType, false);
-							if (hNPC == null)
+							var npc = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(defaultClassType, false);
+							if (npc == null)
 							{
 								foreach (Assembly asm in ScriptMgr.Scripts)
 								{
-									hNPC = (GameNPC)asm.CreateInstance(npt.ClassType, false);
-									if (hNPC != null) break;
+									npc = (GameNPC)asm.CreateInstance(defaultClassType, false);
+									if (npc != null) break;
 								}
 							}
 
-							if (hNPC == null)
+							if (npc == null)
 							{
-								HouseMgr.log.Error("[Housing] Can't create instance of type: " + npt.ClassType);
+								HouseMgr.log.Error("[Housing] Can't create instance of type: " + defaultClassType);
 								return null;
 							}
 
-							hNPC.LoadTemplate(npt);
+							npc.Model = 0;
 
-							hNPC.Name = item.Name;
-							hNPC.CurrentHouse = this;
-							hNPC.InHouse = true;
-							hNPC.X = x;
-							hNPC.Y = y;
-							hNPC.Z = z;
-							hNPC.Heading = heading;
-							hNPC.CurrentRegionID = RegionID;
-							hNPC.Realm = (eRealm)item.Realm;
-							hNPC.Flags ^= GameNPC.eFlags.PEACE;
-							hNPC.AddToWorld();
+							if (npcTemplate != null)
+							{
+								npc.LoadTemplate(npcTemplate);
+							}
+							else
+							{
+								npc.Size = 50;
+								npc.Level = 50;
+								npc.GuildName = "No Template Found";
+							}
+
+							if (npc.Model == 0)
+							{
+								// defaults if templates are missing
+								if (Realm == eRealm.Albion)
+								{
+									npc.Model = (ushort)Util.Random(7, 8);
+								}
+								else if (Realm == eRealm.Midgard)
+								{
+									npc.Model = (ushort)Util.Random(160, 161);
+								}
+								else
+								{
+									npc.Model = (ushort)Util.Random(309, 310);
+								}
+							}
+
+							// always set the npc realm to the house model realm
+							npc.Realm = Realm;
+
+							npc.Name = item.Name;
+							npc.CurrentHouse = this;
+							npc.InHouse = true;
+							npc.OwnerID = templateID;
+							npc.X = x;
+							npc.Y = y;
+							npc.Z = z;
+							npc.Heading = GetHookpointHeading(position); // house npc's always take on hookpoint heading
+							npc.CurrentRegionID = RegionID;
+							if ((npc.Flags & GameNPC.eFlags.PEACE) == 0)
+							{
+								npc.Flags ^= GameNPC.eFlags.PEACE;
+							}
+							npc.AddToWorld();
 						}
 						catch (Exception ex)
 						{
-							Log.Error("Error filling housing hookpoint using npc template " + npt.Name, ex);
+							log.Error("Error filling housing hookpoint using npc template ID " + item.Bonus, ex);
 						}
 
 						break;
@@ -719,6 +781,7 @@ namespace DOL.GS.Housing
 						sItem = new GameStaticItem();
 						sItem.CurrentHouse = this;
 						sItem.InHouse = true;
+						sItem.OwnerID = templateID;
 						sItem.X = x;
 						sItem.Y = y;
 						sItem.Z = z;
@@ -736,6 +799,7 @@ namespace DOL.GS.Housing
 						sItem = new GameStaticItem();
 						sItem.CurrentHouse = this;
 						sItem.InHouse = true;
+						sItem.OwnerID = templateID;
 						sItem.X = x;
 						sItem.Y = y;
 						sItem.Z = z;
@@ -758,32 +822,31 @@ namespace DOL.GS.Housing
 				return;
 			}
 
-			int posi = GetHookpointPosition(obj.X, obj.Y, obj.Z);
-			if (posi == 16) //the standard return value if none is found
+			int position = GetHookpointPosition(obj.X, obj.Y, obj.Z);
+
+			if (position < 0)
+			{
+				ChatUtil.SendSystemMessage(player, "Invalid hookpoint position " + position);
 				return;
+			}
 
-			//get the housepoint item
-			string sqlWhere = string.Format("Position = '{0}' AND HouseID = '{1}'", posi, obj.CurrentHouse.HouseNumber);
+			string sqlWhere = string.Format("HookpointID = '{0}' AND HouseNumber = '{1}'", position, obj.CurrentHouse.HouseNumber);
 
-			var item = GameServer.Database.SelectObject<DBHousepointItem>(sqlWhere);
+			var item = GameServer.Database.SelectObject<DBHouseHookpointItem>(sqlWhere);
 			if (item == null)
+			{
+				ChatUtil.SendSystemMessage(player, "No hookpoint item found at position " + position);
 				return;
+			}
 
 			obj.Delete();
 			GameServer.Database.DeleteObject(item);
 
-			// Need to clear the current house points so we can replace items
-			player.CurrentHouse.HousepointItems.Clear();
-			/* what is this used for? it causes errors and there is no reason for it
-			foreach (DBHousepointItem hpitem in GameServer.Database.SelectObjects(typeof(DBHousepointItem), "HouseID = '" + player.CurrentHouse.HouseNumber + "'"))
-			{
-				FillHookpoint(null, hpitem.Position, hpitem.ItemTemplateID);
-				this.HousepointItems[hpitem.Position] = hpitem;
-			} */
+			player.CurrentHouse.HousepointItems.Remove((uint)position);
 
 			player.CurrentHouse.SendUpdate();
 
-			var template = GameServer.Database.SelectObject<ItemTemplate>("Name = '" + GameServer.Database.Escape(obj.Name) + "'");
+			var template = GameServer.Database.FindObjectByKey<ItemTemplate>(obj.OwnerID);
 			if (template != null)
 			{
 				player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(template));
@@ -1268,6 +1331,9 @@ namespace DOL.GS.Housing
 			if (player == null)
 				return false;
 
+			if (player.Client.Account.PrivLevel == (int)ePrivLevel.Admin)
+				return true;
+
 			// check by character name/account if not guild house
 			if (!_databaseItem.GuildHouse)
 			{
@@ -1460,42 +1526,44 @@ namespace DOL.GS.Housing
 		public void LoadFromDatabase()
 		{
 			int i = 0;
-			foreach (
-				DBHouseIndoorItem dbiitem in
-				GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = '" + HouseNumber + "'"))
+			_indoorItems.Clear();
+			foreach (DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = '" + HouseNumber + "'"))
 			{
 				_indoorItems.Add(i++, new IndoorItem(dbiitem));
 			}
 
 			i = 0;
-			foreach (
-				DBHouseOutdoorItem dboitem in
-				GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = '" + HouseNumber + "'"))
+			_outdoorItems.Clear();
+			foreach (DBHouseOutdoorItem dboitem in GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = '" + HouseNumber + "'"))
 			{
 				_outdoorItems.Add(i++, new OutdoorItem(dboitem));
 			}
 
-			foreach (
-				DBHouseCharsXPerms d in GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = '" + HouseNumber + "'")
-			)
+			_housePermissions.Clear();
+			foreach (DBHouseCharsXPerms d in GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = '" + HouseNumber + "'"))
 			{
 				_housePermissions.Add(GetOpenPermissionSlot(), d);
 			}
 
-			foreach (
-				DBHousePermissions dbperm in
-				GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = '" + HouseNumber + "'"))
+			_permissionLevels.Clear();
+			foreach (DBHousePermissions dbperm in GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = '" + HouseNumber + "'"))
 			{
-				_permissionLevels.Add(dbperm.PermissionLevel, dbperm);
+				if (_permissionLevels.ContainsKey(dbperm.PermissionLevel) == false)
+				{
+					_permissionLevels.Add(dbperm.PermissionLevel, dbperm);
+				}
+				else
+				{
+					log.ErrorFormat("Duplicate permission level {0} for house {1}", dbperm.PermissionLevel, HouseNumber);
+				}
 			}
 
-			foreach (
-				DBHousepointItem item in GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = '" + HouseNumber + "'"))
+			HousepointItems.Clear();
+			foreach (DBHouseHookpointItem item in GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + HouseNumber + "'"))
 			{
 				if (item.ItemTemplateID.EndsWith("_vault"))
 				{
-					var template =
-						GameServer.Database.SelectObject<ItemTemplate>("Id_nb = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
+					var template =	GameServer.Database.SelectObject<ItemTemplate>("Id_nb = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
 					if (template == null)
 						continue;
 
@@ -1504,14 +1572,11 @@ namespace DOL.GS.Housing
 				}
 				else
 				{
-					FillHookpoint(null, item.Position, item.ItemTemplateID);
+					FillHookpoint(null, item.HookpointID, item.ItemTemplateID, item.Heading);
 				}
 
-				HousepointItems[item.Position] = item;
+				HousepointItems[item.HookpointID] = item;
 			}
-
-			// sort character permissions by creation time, oldest to newest
-			//HousePermissions.Sort((a, b) => a.CreationTime.CompareTo(b.CreationTime));
 		}
 
 		#endregion
