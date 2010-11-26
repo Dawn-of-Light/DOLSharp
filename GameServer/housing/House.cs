@@ -670,29 +670,32 @@ namespace DOL.GS.Housing
 		/// <param name="position">The position of the hookpoint</param>
 		/// <param name="templateID">The template id of the item (can be blank if item is filled)</param>
 		/// <param name="heading">The requested heading of this house item</param>
-		public GameObject FillHookpoint(ItemTemplate item, uint position, string templateID, ushort heading)
+		public bool FillHookpoint(uint position, string templateID, ushort heading, int index)
 		{
+			ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
+
 			if (item == null)
-			{
-				item = GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
-
-				if (item == null)
-					return null;
-			}
-
+				return false;
 
 			//get location from slot
 			IPoint3D location = GetHookpointLocation(position);
 			if (location == null)
-				return null;
+				return false;
 
 			int x = location.X;
 			int y = location.Y;
 			int z = location.Z;
-			GameStaticItem sItem = null;
+			GameObject hookpointObject = null;
 
-			switch ((eObjectType) item.Object_Type)
+			switch ((eObjectType)item.Object_Type)
 			{
+				case eObjectType.HouseVault:
+					{
+						var houseVault = new GameHouseVault(item, index);
+						houseVault.Attach(this, position, heading);
+						hookpointObject = houseVault;
+						break;
+					}
 				case eObjectType.HouseNPC:
 					{
 						NpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(item.Bonus);
@@ -723,7 +726,7 @@ namespace DOL.GS.Housing
 							if (npc == null)
 							{
 								HouseMgr.log.Error("[Housing] Can't create instance of type: " + defaultClassType);
-								return null;
+								return false;
 							}
 
 							npc.Model = 0;
@@ -773,6 +776,7 @@ namespace DOL.GS.Housing
 								npc.Flags ^= GameNPC.eFlags.PEACE;
 							}
 							npc.AddToWorld();
+							hookpointObject = npc;
 						}
 						catch (Exception ex)
 						{
@@ -783,40 +787,42 @@ namespace DOL.GS.Housing
 					}
 				case eObjectType.HouseBindstone:
 					{
-						sItem = new GameStaticItem();
-						sItem.CurrentHouse = this;
-						sItem.InHouse = true;
-						sItem.OwnerID = templateID;
-						sItem.X = x;
-						sItem.Y = y;
-						sItem.Z = z;
-						sItem.Heading = heading;
-						sItem.CurrentRegionID = RegionID;
-						sItem.Name = item.Name;
-						sItem.Model = (ushort) item.Model;
-						sItem.AddToWorld();
+						hookpointObject = new GameStaticItem();
+						hookpointObject.CurrentHouse = this;
+						hookpointObject.InHouse = true;
+						hookpointObject.OwnerID = templateID;
+						hookpointObject.X = x;
+						hookpointObject.Y = y;
+						hookpointObject.Z = z;
+						hookpointObject.Heading = heading;
+						hookpointObject.CurrentRegionID = RegionID;
+						hookpointObject.Name = item.Name;
+						hookpointObject.Model = (ushort) item.Model;
+						hookpointObject.AddToWorld();
 						//0:07:45.984 S=>C 0xD9 item/door create v171 (oid:0x0DDB emblem:0x0000 heading:0x0DE5 x:596203 y:530174 z:24723 model:0x05D2 health:  0% flags:0x04(realm:0) extraBytes:0 unk1_171:0x0096220C name:"Hibernia bindstone")
 						//add bind point
 						break;
 					}
 				case eObjectType.HouseInteriorObject:
 					{
-						sItem = new GameStaticItem();
-						sItem.CurrentHouse = this;
-						sItem.InHouse = true;
-						sItem.OwnerID = templateID;
-						sItem.X = x;
-						sItem.Y = y;
-						sItem.Z = z;
-						sItem.Heading = heading;
-						sItem.CurrentRegionID = RegionID;
-						sItem.Name = item.Name;
-						sItem.Model = (ushort) item.Model;
-						sItem.AddToWorld();
+						hookpointObject = new GameStaticItem();
+						hookpointObject.CurrentHouse = this;
+						hookpointObject.InHouse = true;
+						hookpointObject.OwnerID = templateID;
+						hookpointObject.X = x;
+						hookpointObject.Y = y;
+						hookpointObject.Z = z;
+						hookpointObject.Heading = heading;
+						hookpointObject.CurrentRegionID = RegionID;
+						hookpointObject.Name = item.Name;
+						hookpointObject.Model = (ushort) item.Model;
+						hookpointObject.AddToWorld();
 						break;
 					}
 			}
-			return sItem;
+
+			HousepointItems[position].GameObject = hookpointObject;
+			return true;
 		}
 
 		public void EmptyHookpoint(GamePlayer player, GameObject obj)
@@ -1566,21 +1572,15 @@ namespace DOL.GS.Housing
 			HousepointItems.Clear();
 			foreach (DBHouseHookpointItem item in GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + HouseNumber + "'"))
 			{
-				if (item.ItemTemplateID.EndsWith("_vault"))
+				if (HousepointItems.ContainsKey(item.HookpointID) == false)
 				{
-					var template =	GameServer.Database.SelectObject<ItemTemplate>("Id_nb = '" + GameServer.Database.Escape(item.ItemTemplateID) + "'");
-					if (template == null)
-						continue;
-
-					var houseVault = new GameHouseVault(template, item.Index);
-					houseVault.Attach(this, item);
+					HousepointItems.Add(item.HookpointID, item);
+					FillHookpoint(item.HookpointID, item.ItemTemplateID, item.Heading, item.Index);
 				}
 				else
 				{
-					FillHookpoint(null, item.HookpointID, item.ItemTemplateID, item.Heading);
+					log.ErrorFormat("Duplicate item {0} attached to hookpoint {1} for house {2}!", item.ItemTemplateID, item.HookpointID, HouseNumber);
 				}
-
-				HousepointItems[item.HookpointID] = item;
 			}
 		}
 

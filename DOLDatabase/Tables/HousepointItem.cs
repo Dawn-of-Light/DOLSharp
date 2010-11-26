@@ -109,5 +109,15 @@ namespace DOL.Database
 				m_index = value;
 			}
 		}
+
+		private object m_gameObject = null;
+		/// <summary>
+		/// The game object attached to this hookpoint
+		/// </summary>
+		public object GameObject
+		{
+			get { return m_gameObject; }
+			set { m_gameObject = value; }
+		}
 	}
 }
