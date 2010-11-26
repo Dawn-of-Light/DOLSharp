@@ -1175,6 +1175,7 @@ namespace DOL.GS
 		public void LogCheatAction(string text)
 		{
 			m_cheatLog.Logger.Log(typeof (GameServer), Level.Alert, text, null);
+			log.Debug(text);
 		}
 
 		#endregion

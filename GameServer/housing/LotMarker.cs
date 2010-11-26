@@ -25,6 +25,8 @@ namespace DOL.GS.Housing
 {
 	public class GameLotMarker : GameStaticItem
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private DBHouse m_dbitem;
 
 		public GameLotMarker()
@@ -66,7 +68,7 @@ namespace DOL.GS.Housing
 			if (house != null)
 			{
 				//the player might be targeting a lot he already purchased that has no house on it yet
-				if (house.HouseNumber != DatabaseItem.HouseNumber)
+				if (house.HouseNumber != DatabaseItem.HouseNumber && player.Client.Account.PrivLevel != (int)ePrivLevel.Admin)
 				{
 					ChatUtil.SendSystemMessage(player, "You already own a house!");
 					return false;
@@ -75,9 +77,7 @@ namespace DOL.GS.Housing
 
 			if (string.IsNullOrEmpty(DatabaseItem.OwnerID))
 			{
-				player.Out.SendCustomDialog(
-					"Do you want to buy this lot?\r\n It costs " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + "!",
-					BuyLot);
+				player.Out.SendCustomDialog("Do you want to buy this lot?\r\n It costs " + Money.GetString(HouseTemplateMgr.GetLotPrice(DatabaseItem)) + "!", BuyLot);
 			}
 			else
 			{
@@ -104,7 +104,7 @@ namespace DOL.GS.Housing
 				if (!string.IsNullOrEmpty(DatabaseItem.OwnerID))
 					return;
 
-				if (HouseMgr.GetHouseNumberByPlayer(player) != 0)
+				if (HouseMgr.GetHouseNumberByPlayer(player) != 0 && player.Client.Account.PrivLevel != (int)ePrivLevel.Admin)
 				{
 					ChatUtil.SendMerchantMessage(player, "You already own another lot or house (Number " + HouseMgr.GetHouseNumberByPlayer(player) + ").");
 					return;
@@ -115,6 +115,7 @@ namespace DOL.GS.Housing
 				{
 					DatabaseItem.LastPaid = DateTime.Now;
 					DatabaseItem.OwnerID = player.DBCharacter.ObjectId;
+					CreateHouse(player, 0);
 				}
 				else
 				{
@@ -137,44 +138,43 @@ namespace DOL.GS.Housing
 			{
 				switch (item.Id_nb)
 				{
-					case "alb_cottage_deed":
+					case "housing_alb_cottage_deed":
 						CreateHouse(player, 1);
 						break;
-					case "alb_house_deed":
+					case "housing_alb_house_deed":
 						CreateHouse(player, 2);
 						break;
-					case "alb_villa_deed":
+					case "housing_alb_villa_deed":
 						CreateHouse(player, 3);
 						break;
-					case "alb_mansion_deed":
+					case "housing_alb_mansion_deed":
 						CreateHouse(player, 4);
 						break;
-					case "mid_cottage_deed":
+					case "housing_mid_cottage_deed":
 						CreateHouse(player, 5);
 						break;
-					case "mid_house_deed":
+					case "housing_mid_house_deed":
 						CreateHouse(player, 6);
 						break;
-					case "mid_villa_deed":
+					case "housing_mid_villa_deed":
 						CreateHouse(player, 7);
 						break;
-					case "mid_mansion_deed":
+					case "housing_mid_mansion_deed":
 						CreateHouse(player, 8);
 						break;
-					case "hib_cottage_deed":
+					case "housing_hib_cottage_deed":
 						CreateHouse(player, 9);
 						break;
-					case "hib_house_deed":
+					case "housing_hib_house_deed":
 						CreateHouse(player, 10);
 						break;
-					case "hib_villa_deed":
+					case "housing_hib_villa_deed":
 						CreateHouse(player, 11);
 						break;
-					case "hib_mansion_deed":
+					case "housing_hib_mansion_deed":
 						CreateHouse(player, 12);
 						break;
 					default:
-						ChatUtil.SendSystemMessage(player, "That would make no sense!");
 						return false;
 				}
 
@@ -192,13 +192,6 @@ namespace DOL.GS.Housing
 		{
 			DatabaseItem.Model = model;
 			DatabaseItem.Name = player.Name;
-				//even though this was set when buying the lot, it might be possible that the house is placed by another character, simply set the name again
-			DatabaseItem.RoofMaterial = 0;
-			DatabaseItem.DoorMaterial = 0;
-			DatabaseItem.WallMaterial = 0;
-			DatabaseItem.TrussMaterial = 0;
-			DatabaseItem.WindowMaterial = 0;
-			DatabaseItem.PorchMaterial = 0;
 
 			if (player.Guild != null)
 			{
@@ -208,14 +201,17 @@ namespace DOL.GS.Housing
 			var house = new House(DatabaseItem);
 			HouseMgr.AddHouse(house);
 
-			// move all players outside the mesh
-			foreach (GamePlayer p in player.GetPlayersInRadius(500))
+			if (model != 0)
 			{
-				house.Exit(p, true);
-			}
+				// move all players outside the mesh
+				foreach (GamePlayer p in player.GetPlayersInRadius(500))
+				{
+					house.Exit(p, true);
+				}
 
-			RemoveFromWorld();
-			Delete();
+				RemoveFromWorld();
+				Delete();
+			}
 		}
 
 		public virtual bool OnPlayerBuy(GamePlayer player, int item_slot, int number)
@@ -241,7 +237,7 @@ namespace DOL.GS.Housing
 				return 0;
 
 			int itemCount = Math.Max(1, item.Count);
-			return item.Price*itemCount/2;
+			return item.Price * itemCount / 2;
 		}
 
 		public override void SaveIntoDatabase()
@@ -276,7 +272,7 @@ namespace DOL.GS.Housing
 					obj.Model = 1306;
 					obj.Name = "Midgard Lot";
 					break; //MID
-				default: //case 202:
+				case 202:
 					obj.Model = 1307;
 					obj.Name = "Hibernia Lot";
 					break; //HIB

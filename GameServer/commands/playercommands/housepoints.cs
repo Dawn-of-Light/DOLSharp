@@ -14,17 +14,11 @@ namespace DOL.GS.Commands
 		public void OnCommand(GameClient client, string[] args)
 		{
             House house = client.Player.CurrentHouse;
-			if (house == null)
+			if (!client.Player.InHouse || house == null)
 			{
                 DisplayMessage(client, "You need to be in a House to use this command!");
 				return;
 			}
-
-            if (!client.Player.InHouse)
-            {
-                DisplayMessage(client, "You need to be in a House to use this command!");
-                return;
-            }
 
             if (!house.HasOwnerPermissions(client.Player))
             {

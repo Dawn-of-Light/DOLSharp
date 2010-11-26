@@ -165,6 +165,7 @@ namespace DOL.GS
 		SpellcraftGem = 48,
 
 		//housing
+		_FirstHouse = 49,
 		GardenObject = 49,
 		HouseWallObject = 50,
 		HouseFloorObject = 51,
@@ -187,6 +188,7 @@ namespace DOL.GS
 		HouseCarpetSecond = 69,
 		HouseCarpetThird = 70,
 		HouseCarpetFourth = 71,
+		_LastHouse = 71,
 
 		//siege weapons
 		SiegeBalista = 80, // need log
@@ -1229,8 +1231,8 @@ namespace DOL.GS
 					case 24: return "flexible (weapon)";
 					case 25: return "hand to hand (weapon)";
 					case 26: return "scythe (weapon)";
-					case 27: return "Fist Wraps (weapon)";
-					case 28: return "Mauler Staff (weapon)";
+					case 27: return "fist wraps (weapon)";
+					case 28: return "mauler staff (weapon)";
 					case 31: return "generic (armor)";
 					case 32: return "cloth (armor)";
 					case 33: return "leather (armor)";
@@ -1245,6 +1247,15 @@ namespace DOL.GS
 					case 44: return "bolt (item)";
 					case 45: return "instrument (item)";
 					case 46: return "poison (item)";
+					case 47: return "alchemy tincture";
+					case 48: return "spellcrafting gem";
+					case 49: return "garden object";
+					case 50: return "house wall object";
+					case 51: return "house floor object";
+					case 53: return "house npc";
+					case 54: return "house vault";
+					case 55: return "house crafting object";
+					case 68: return "house bindstone";
 			}
 			return "unknown (item)";
 		}

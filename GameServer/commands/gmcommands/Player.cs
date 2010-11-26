@@ -1816,6 +1816,7 @@ namespace DOL.GS.Commands
                     break;
 
                 #endregion allcharacters
+
                 #region class
                 case "class":
                     {

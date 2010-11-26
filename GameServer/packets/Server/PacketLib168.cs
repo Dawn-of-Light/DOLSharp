@@ -559,7 +559,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort) m_gameClient.Player.ObjectID);
 				pak.WriteShort((ushort) (headingOnly ? 0 : m_gameClient.Player.Z));
 				pak.WriteShort(m_gameClient.Player.Heading);
-				if (m_gameClient.Player.CurrentHouse == null)
+				if (m_gameClient.Player.InHouse == false || m_gameClient.Player.CurrentHouse == null)
 				{
 					pak.WriteShort(0);
 				}
@@ -675,11 +675,9 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 
-			if (playerToCreate.CurrentHouse != m_gameClient.Player.CurrentHouse)
+			if (playerToCreate.IsVisibleTo(m_gameClient.Player) == false)
 				return;
 
-			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
-				return;
 
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerCreate)))
 			{
@@ -744,11 +742,10 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendObjectUpdate(GameObject obj)
 		{
 			Zone z = obj.CurrentZone;
-			if (z == null)
-				return;
 
-			if (m_gameClient.Player == null || obj.CurrentHouse != m_gameClient.Player.CurrentHouse ||
-				obj.CurrentRegion != m_gameClient.Player.CurrentRegion)
+			if (z == null ||
+				m_gameClient.Player == null ||
+				m_gameClient.Player.IsVisibleTo(obj) == false)
 			{
 				return;
 			}
@@ -895,7 +892,7 @@ namespace DOL.GS.PacketHandler
 			if (obj == null)
 				return;
 
-			if (obj.CurrentHouse != m_gameClient.Player.CurrentHouse)
+			if (obj.IsVisibleTo(m_gameClient.Player) == false)
 				return;
 
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectCreate)))
@@ -989,8 +986,7 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendNPCCreate(GameNPC npc)
 		{
-			if (m_gameClient.Player == null || npc.CurrentHouse != m_gameClient.Player.CurrentHouse ||
-			    npc.CurrentRegion != m_gameClient.Player.CurrentRegion)
+			if (m_gameClient.Player == null || npc.IsVisibleTo(m_gameClient.Player) == false)
 				return;
 
 			if (npc is GameMovingObject)
@@ -1056,9 +1052,9 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendLivingEquipmentUpdate(GameLiving living)
 		{
-			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse ||
-			    living.CurrentRegion != m_gameClient.Player.CurrentRegion)
+			if (m_gameClient.Player == null || living.IsVisibleTo(m_gameClient.Player) == false)
 				return;
+
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EquipmentUpdate)))
 			{
 				pak.WriteShort((ushort) living.ObjectID);
@@ -1754,7 +1750,7 @@ namespace DOL.GS.PacketHandler
 					using (pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
 					{
 						pak.WriteByte((byte) itemsInPage.Count); //Item count on this page
-						pak.WriteByte((byte) windowType); //Unknown 0x00
+						pak.WriteByte((byte) windowType);
 						pak.WriteByte((byte) page); //Page number
 						pak.WriteByte(0x00); //Unused
 
@@ -1764,10 +1760,8 @@ namespace DOL.GS.PacketHandler
 								continue;
 
 							var item = (ItemTemplate) itemsInPage[i];
-							//(ItemTemplate) GameServer.Database.FindObjectByKey(typeof(ItemTemplate),((MerchantItem)tradeItemsList.ItemsList[page*MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS+i]).ItemTemplateID);
 							if (item != null)
 							{
-								//DOLConsole.WriteLine("Item i="+itemIndex);
 								pak.WriteByte((byte) i); //Item index on page
 								pak.WriteByte((byte) item.Level);
 								// some objects use this for count
@@ -3060,12 +3054,12 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendExitHouse(House house)
+		public virtual void SendExitHouse(House house, ushort unknown = 0)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseExit)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
-				pak.WriteShort(0); //unknown
+				pak.WriteShort(unknown);
 				SendTCP(pak);
 			}
 		}
