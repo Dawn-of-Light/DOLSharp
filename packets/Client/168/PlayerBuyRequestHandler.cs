@@ -48,12 +48,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				case eMerchantWindowType.HousingInsideShop:
 				case eMerchantWindowType.HousingOutsideShop:
-				case eMerchantWindowType.HousingBindstone:
-				case eMerchantWindowType.HousingCrafting:
-				case eMerchantWindowType.HousingNPC:
-				case eMerchantWindowType.HousingVault:
+				case eMerchantWindowType.HousingBindstoneHookpoint:
+				case eMerchantWindowType.HousingCraftingHookpoint:
+				case eMerchantWindowType.HousingNPCHookpoint:
+				case eMerchantWindowType.HousingVaultHookpoint:
 					{
-						HouseMgr.SpecialBuy(client.Player, item_slot, item_count, menu_id);
+						HouseMgr.BuyHousingItem(client.Player, item_slot, item_count, (eMerchantWindowType)menu_id);
 						break;
 					}
 				default:

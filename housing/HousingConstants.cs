@@ -62,11 +62,12 @@ namespace DOL.GS.Housing
 		public const string BPsForHouseRent = "BPsForHouseRent";
 		public const string HouseForHouseRent = "HouseForHouseRent";
 		public const int HouseViewingDistance = 10120; //guessed, but i'm sure its > vis dist.
-		public const int MaxHookpointLocations = 200;
+		public const int MaxHookpointLocations = 40;
+		public const int MaxHouseModel = 12;
 		public const int MaxPermissionLevel = 9;
 		public const int MinPermissionLevel = 1;
 		public const string MoneyForHouseRent = "MoneyForHouseRent";
-		public const int RentTimerInterval = 1000*60*60*2; // check every 2 hours
+		public const string AllowAddHouseHookpoint = "housing_add_hookpoints";
 
 		/// <summary>
 		/// Number of items a single house vault can hold.

@@ -251,8 +251,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (house != null)
 				{
-					TimeSpan due = (house.LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
-					if (due.Days < 7 && house.KeptMoney < HouseMgr.GetRentByModel(house.Model))
+					TimeSpan due = (house.LastPaid.AddDays(Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.Now);
+					if ((due.Days <= 0 || due.Days < Properties.RENT_DUE_DAYS) && house.KeptMoney < HouseMgr.GetRentByModel(house.Model))
 						player.Out.SendRentReminder(house);
 				}
 
@@ -261,8 +261,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					House ghouse = HouseMgr.GetGuildHouseByPlayer(player);
 					if (ghouse != null)
 					{
-						TimeSpan due = (ghouse.LastPaid.AddDays(7).AddHours(1) - DateTime.Now);
-						if (due.Days < 7 && ghouse.KeptMoney < HouseMgr.GetRentByModel(ghouse.Model))
+						TimeSpan due = (ghouse.LastPaid.AddDays(Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.Now);
+						if ((due.Days <= 0 || due.Days < Properties.RENT_DUE_DAYS) && ghouse.KeptMoney < HouseMgr.GetRentByModel(ghouse.Model))
 							player.Out.SendRentReminder(ghouse);
 					}
 				}

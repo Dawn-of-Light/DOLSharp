@@ -287,10 +287,7 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 
-			if (playerToCreate.CurrentHouse != m_gameClient.Player.CurrentHouse)
-				return;
-
-			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
+			if (m_gameClient.Player == null || playerToCreate.IsVisibleTo(m_gameClient.Player) == false)
 				return;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerCreate172));
@@ -537,7 +534,7 @@ namespace DOL.GS.PacketHandler
 		}
 		public override void SendLivingEquipmentUpdate(GameLiving living)
 		{
-			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
+			if (m_gameClient.Player == null || living.IsVisibleTo(m_gameClient.Player) == false)
 				return;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EquipmentUpdate));

@@ -24,7 +24,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x12^168,"Handles player direction updates")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerHeadingUpdate, ClientStatus.PlayerInGame)]
 	public class PlayerHeadingUpdateHandler : IPacketHandler
 	{
 		/// <summary>
@@ -45,6 +45,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 //				GameServer.BanAccount(client, 120, "Hack sessionId", string.Format("Wrong sessionId:0x{0} in 0xBA packet (SessionID:{1})", sessionId, client.SessionID));
 				return; // client hack
 			}
+
 			ushort head = packet.ReadShort();
 			client.Player.Heading = (ushort)(head & 0xFFF);
 			packet.Skip(1); // unknown

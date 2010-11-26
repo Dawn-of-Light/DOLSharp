@@ -166,6 +166,8 @@ namespace DOL.GS.PacketHandler
 		PlayerInitRequest = 0xE8,			// 0x40 ^ 168
 		PlayerGroundTarget = 0xEC,			// 0x44 ^ 168
 		PlayerDismountRequest = 0xC8,		// 0x60 ^ 168
+		PlayerHeadingUpdate = 0xBA,			// 0x12 ^ 168  also known as Short State
+		PlayerPickupHouseItem = 0x0D,
 	}
 
 	/// <summary>
@@ -344,12 +346,12 @@ namespace DOL.GS.PacketHandler
 		Bp = 0x01,
 		Count = 0x02,
 		HousingOutsideMenu = 0x04,
-		HousingNPC = 0x05,
+		HousingNPCHookpoint = 0x05,
 		HousingInsideShop = 0x06,
 		HousingOutsideShop = 0x07,
-		HousingVault = 0x08,
-		HousingCrafting = 0x09,
-		HousingBindstone = 0x0A,
+		HousingVaultHookpoint = 0x08,
+		HousingCraftingHookpoint = 0x09,
+		HousingBindstoneHookpoint = 0x0A,
 		HousingInsideMenu = 0x0B,
 		HousingTicket = 0x0C,
 		HousingGuildTicket = 0x0D,
@@ -643,7 +645,7 @@ namespace DOL.GS.PacketHandler
 		void SendGarden(House house);
 		void SendGarden(House house, int i);
 		void SendEnterHouse(House house);
-		void SendExitHouse(House house);
+		void SendExitHouse(House house, ushort unknown = 0);
 		void SendFurniture(House house);
 		void SendFurniture(House house, int i);
 		void SendHousePayRentDialog(string title);

@@ -188,10 +188,7 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 
-			if (playerToCreate.CurrentHouse != m_gameClient.Player.CurrentHouse)
-				return;
-
-			if (playerToCreate.CurrentRegion != m_gameClient.Player.CurrentRegion)
+			if (playerToCreate.IsVisibleTo(m_gameClient.Player) == false)
 				return;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerCreate172));

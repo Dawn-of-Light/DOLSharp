@@ -33,614 +33,651 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		private const string DeedWeak = "deedItem";
 		private const string TargetHouse = "targetHouse";
-		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		private int _position;
 
 		#region IPacketHandler Members
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			int unknow1 = packet.ReadByte(); // 1=Money 0=Item (?)
-			int slot = packet.ReadByte(); // Item/money slot
-			ushort housenumber = packet.ReadShort(); // N° of house
-			int unknow2 = (byte)packet.ReadByte();
-			_position = (byte)packet.ReadByte();
-			int method = packet.ReadByte(); // 2=Wall 3=Floor
-			int rotation = packet.ReadByte(); // garden items only
-			var xpos = (short)packet.ReadShort(); // x for inside objs
-			var ypos = (short)packet.ReadShort(); // y for inside objs.
-			//Log.Info("U1: " + unknow1 + " - U2: " + unknow2);
-
-			// house must exist
-			House house = HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
-			if (house == null)
-				return;
-
-			if (client.Player == null)
-				return;
-
-			if ((slot >= 244) && (slot <= 248)) // money
+			try
 			{
-				// check that player has permission to pay rent
-				if (!house.CanPayRent(client.Player))
-				{
-					client.Out.SendInventorySlotsUpdate(new[] { slot });
+				int unknow1 = packet.ReadByte(); // 1=Money 0=Item (?)
+				int slot = packet.ReadByte(); // Item/money slot
+				ushort housenumber = packet.ReadShort(); // N° of house
+				int unknow2 = (byte)packet.ReadByte();
+				_position = (byte)packet.ReadByte();
+				int method = packet.ReadByte(); // 2=Wall 3=Floor
+				int rotation = packet.ReadByte(); // garden items only
+				var xpos = (short)packet.ReadShort(); // x for inside objs
+				var ypos = (short)packet.ReadShort(); // y for inside objs.
+				//Log.Info("U1: " + unknow1 + " - U2: " + unknow2);
+
+				// house must exist
+				House house = HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
+				if (house == null)
 					return;
-				}
 
-				long moneyToAdd = _position;
-				switch (slot)
-				{
-					case 248:
-						moneyToAdd *= 1;
-						break;
-					case 247:
-						moneyToAdd *= 100;
-						break;
-					case 246:
-						moneyToAdd *= 10000;
-						break;
-					case 245:
-						moneyToAdd *= 10000000;
-						break;
-					case 244:
-						moneyToAdd *= 10000000000;
-						break;
-				}
-
-				client.Player.TempProperties.setProperty(HousingConstants.MoneyForHouseRent, moneyToAdd);
-				client.Player.TempProperties.setProperty(HousingConstants.HouseForHouseRent, house);
-				client.Player.Out.SendInventorySlotsUpdate(null);
-				client.Player.Out.SendHousePayRentDialog("Housing07");
-
-				return;
-			}
-
-			// make sure the item dropped still exists
-			InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot)slot);
-			if (orgitem == null)
-				return;
-
-			if (orgitem.Id_nb == "house_removal_deed")
-			{
-				client.Out.SendInventorySlotsUpdate(null);
-
-				// make sure player has owner permissions
-				if (!house.HasOwnerPermissions(client.Player))
-				{
-					ChatUtil.SendSystemMessage(client.Player, "You may not remove Houses that you don't own");
+				if (client.Player == null)
 					return;
-				}
 
-				client.Player.TempProperties.setProperty(DeedWeak, new WeakRef(orgitem));
-				client.Player.TempProperties.setProperty(TargetHouse, house);
-				client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseRemoveOffer"),
-												   HouseRemovalDialogue);
+				ChatUtil.SendDebugMessage(client, string.Format("HousingPlaceItem: slot: {0}, position: {1}, method: {2}, xpos: {3}, ypos: {4}", slot, _position, method, xpos, ypos));
 
-				return;
-			}
-
-			if (orgitem.Id_nb.Contains("cottage_deed") || orgitem.Id_nb.Contains("house_deed") ||
-				orgitem.Id_nb.Contains("villa_deed") || orgitem.Id_nb.Contains("mansion_deed"))
-			{
-				client.Out.SendInventorySlotsUpdate(null);
-				
-				// make sure player has owner permissions
-				if (!house.HasOwnerPermissions(client.Player))
+				if ((slot >= 244) && (slot <= 248)) // money
 				{
-					ChatUtil.SendSystemMessage(client, "You may not change other peoples houses");
-
-					return;
-				}
-
-				client.Player.TempProperties.setProperty(DeedWeak, new WeakRef(orgitem));
-				client.Player.TempProperties.setProperty(TargetHouse, house);
-				client.Player.Out.SendMessage("Warning:\n This will remove all items from your current house!", eChatType.CT_System,
-											  eChatLoc.CL_PopupWindow);
-				client.Player.Out.SendCustomDialog("Are you sure you want to upgrade your House?", HouseUpgradeDialogue);
-
-				return;
-			}
-
-			if (orgitem.Name == "deed of guild transfer")
-			{
-				// player needs to be in a guild to xfer a house to a guild
-				if (client.Player.Guild == null)
-				{
-					client.Out.SendInventorySlotsUpdate(new[] { slot });
-					ChatUtil.SendSystemMessage(client, "You must be a member of a guild to do that");
-					return;
-				}
-
-				// player needs to own the house to be able to xfer it
-				if (!house.HasOwnerPermissions(client.Player))
-				{
-					client.Out.SendInventorySlotsUpdate(new[] { slot });
-					ChatUtil.SendSystemMessage(client, "You do not own this house.");
-					return;
-				}
-
-				// guild can't already have a house
-				if (client.Player.Guild.GuildOwnsHouse)
-				{
-					client.Out.SendInventorySlotsUpdate(new[] { slot });
-					ChatUtil.SendSystemMessage(client, "Your Guild already owns a house.");
-					return;
-				}
-
-				// player needs to be a GM in the guild to xfer his personal house to the guild
-				if (!client.Player.Guild.GotAccess(client.Player, Guild.eRank.Leader))
-				{
-					client.Out.SendInventorySlotsUpdate(new[] { slot });
-					ChatUtil.SendSystemMessage(client, "You are not the leader of a guild.");
-					return;
-				}
-
-				HouseMgr.HouseTransferToGuild(client.Player);
-				client.Player.Inventory.RemoveItem(orgitem);
-				client.Player.Guild.UpdateGuildWindow();
-				return;
-			}
-
-			if(house.CanChangeInterior(client.Player, DecorationPermissions.Remove))
-			{
-				if (orgitem.Name == "interior banner removal")
-				{
-					house.IndoorGuildBanner = false;
-					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.InteriorBannersRemoved", null);
-					return;
-				}
-
-				if (orgitem.Name == "interior shield removal")
-				{
-					house.IndoorGuildShield = false;
-					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.InteriorShieldsRemoved", null);
-					return;
-				}
-
-				if (orgitem.Name == "carpet removal")
-				{
-					house.Rug1Color = 0;
-					house.Rug2Color = 0;
-					house.Rug3Color = 0;
-					house.Rug4Color = 0;
-					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.CarpetsRemoved", null);
-					return;
-				}
-			}
-
-			if (house.CanChangeExternalAppearance(client.Player))
-			{
-				if (orgitem.Name == "exterior banner removal")
-				{
-					house.OutdoorGuildBanner = false;
-					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.OutdoorBannersRemoved", null);
-					return;
-				}
-
-				if (orgitem.Name == "exterior shield removal")
-				{
-					house.OutdoorGuildShield = false;
-					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.OutdoorShieldsRemoved", null);
-					return;
-				}
-			}
-
-			int objType = orgitem.Object_Type;
-			if (objType == 49) // Garden items 
-			{
-				method = 1;
-			}
-			else if (orgitem.Id_nb == "porch_deed" || orgitem.Id_nb == "porch_remove_deed" || orgitem.Id_nb == "consignment_deed")
-			{
-				method = 4;
-			}
-			else if (objType >= 59 && objType <= 64) // Outdoor Roof/Wall/Door/Porch/Wood/Shutter/awning Material item type
-			{
-				ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.HouseUseMaterials", null);
-				return;
-			}
-			else if (objType == 56 || objType == 52 || (objType >= 69 && objType <= 71)) // Indoor carpets 1-4
-			{
-				ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.HouseUseCarpets", null);
-				return;
-			}
-			else if (objType == 57 || objType == 58 // Exterior banner/shield
-					 || objType == 66 || objType == 67) // Interior banner/shield
-			{
-				method = 6;
-			}
-			else if (objType == 53 || objType == 55 || objType == 68)
-			{
-				method = 5;
-			}
-			else if (objType == (int)eObjectType.HouseVault)
-			{
-				method = 7;
-			}
-
-			int pos;
-			switch (method)
-			{
-				case 1:
-					// no permissions to add to the garden, return
-					if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
+					// check that player has permission to pay rent
+					if (!house.CanPayRent(client.Player))
 					{
 						client.Out.SendInventorySlotsUpdate(new[] { slot });
 						return;
 					}
 
-					// garden is already full, return
-					if (house.OutdoorItems.Count >= Properties.MAX_OUTDOOR_HOUSE_ITEMS)
+					long moneyToAdd = _position;
+					switch (slot)
 					{
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.GardenMaxObjects", null);
-						client.Out.SendInventorySlotsUpdate(new[] { slot });
+						case 248:
+							moneyToAdd *= 1;
+							break;
+						case 247:
+							moneyToAdd *= 100;
+							break;
+						case 246:
+							moneyToAdd *= 10000;
+							break;
+						case 245:
+							moneyToAdd *= 10000000;
+							break;
+						case 244:
+							moneyToAdd *= 10000000000;
+							break;
+					}
+
+					client.Player.TempProperties.setProperty(HousingConstants.MoneyForHouseRent, moneyToAdd);
+					client.Player.TempProperties.setProperty(HousingConstants.HouseForHouseRent, house);
+					client.Player.Out.SendInventorySlotsUpdate(null);
+					client.Player.Out.SendHousePayRentDialog("Housing07");
+
+					return;
+				}
+
+				// make sure the item dropped still exists
+				InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot)slot);
+				if (orgitem == null)
+					return;
+
+				if (orgitem.Id_nb == "house_removal_deed")
+				{
+					client.Out.SendInventorySlotsUpdate(null);
+
+					// make sure player has owner permissions
+					if (!house.HasOwnerPermissions(client.Player))
+					{
+						ChatUtil.SendSystemMessage(client.Player, "You may not remove Houses that you don't own");
+						return;
+					}
+
+					client.Player.TempProperties.setProperty(DeedWeak, new WeakRef(orgitem));
+					client.Player.TempProperties.setProperty(TargetHouse, house);
+					client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseRemoveOffer"), HouseRemovalDialogue);
+
+					return;
+				}
+
+				if (orgitem.Id_nb.Contains("cottage_deed") || orgitem.Id_nb.Contains("house_deed") ||
+					orgitem.Id_nb.Contains("villa_deed") || orgitem.Id_nb.Contains("mansion_deed"))
+				{
+					client.Out.SendInventorySlotsUpdate(null);
+
+					// make sure player has owner permissions
+					if (!house.HasOwnerPermissions(client.Player))
+					{
+						ChatUtil.SendSystemMessage(client, "You may not change other peoples houses");
 
 						return;
 					}
 
-					// create an outdoor item to represent the item being placed
-					var oitem = new OutdoorItem
-									{
-										BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(orgitem.Id_nb),
-										Model = orgitem.Model,
-										Position = (byte)_position,
-										Rotation = (byte)rotation
-									};
+					client.Player.TempProperties.setProperty(DeedWeak, new WeakRef(orgitem));
+					client.Player.TempProperties.setProperty(TargetHouse, house);
+					client.Player.Out.SendMessage("Warning:\n This will remove all items from your current house!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Player.Out.SendCustomDialog("Are you sure you want to upgrade your House?", HouseUpgradeDialogue);
 
-					//add item in db
-					pos = GetFirstFreeSlot(house.OutdoorItems.Keys);
-					DBHouseOutdoorItem odbitem = oitem.CreateDBOutdoorItem(housenumber);
-					oitem.DatabaseItem = odbitem;
+					return;
+				}
 
-					GameServer.Database.AddObject(odbitem);
+				if (orgitem.Name == "deed of guild transfer")
+				{
+					// player needs to be in a guild to xfer a house to a guild
+					if (client.Player.Guild == null)
+					{
+						client.Out.SendInventorySlotsUpdate(new[] { slot });
+						ChatUtil.SendSystemMessage(client, "You must be a member of a guild to do that");
+						return;
+					}
 
-					// remove the item from the player's inventory
+					// player needs to own the house to be able to xfer it
+					if (!house.HasOwnerPermissions(client.Player))
+					{
+						client.Out.SendInventorySlotsUpdate(new[] { slot });
+						ChatUtil.SendSystemMessage(client, "You do not own this house.");
+						return;
+					}
+
+					// guild can't already have a house
+					if (client.Player.Guild.GuildOwnsHouse)
+					{
+						client.Out.SendInventorySlotsUpdate(new[] { slot });
+						ChatUtil.SendSystemMessage(client, "Your Guild already owns a house.");
+						return;
+					}
+
+					// player needs to be a GM in the guild to xfer his personal house to the guild
+					if (!client.Player.Guild.GotAccess(client.Player, Guild.eRank.Leader))
+					{
+						client.Out.SendInventorySlotsUpdate(new[] { slot });
+						ChatUtil.SendSystemMessage(client, "You are not the leader of a guild.");
+						return;
+					}
+
+					HouseMgr.HouseTransferToGuild(client.Player);
 					client.Player.Inventory.RemoveItem(orgitem);
+					client.Player.Guild.UpdateGuildWindow();
+					return;
+				}
 
-					//add item to outdooritems
-					house.OutdoorItems.Add(pos, oitem);
-
-					ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.GardenItemPlaced",
-											   Properties.MAX_OUTDOOR_HOUSE_ITEMS - house.OutdoorItems.Count);
-					ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.GardenItemPlacedName", orgitem.Name);
-
-					// update all nearby players
-					foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(house.RegionID, house, WorldMgr.OBJ_UPDATE_DISTANCE))
+				if (house.CanChangeInterior(client.Player, DecorationPermissions.Remove))
+				{
+					if (orgitem.Name == "interior banner removal")
 					{
-						player.Out.SendGarden(house);
-					}
-
-					// save the house
-					house.SaveIntoDatabase();
-					break;
-
-				case 2:
-				case 3:
-					// no permission to add to the interior, return
-					if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
-					{
-						client.Out.SendInventorySlotsUpdate(new[] { slot });
+						house.IndoorGuildBanner = false;
+						ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.InteriorBannersRemoved", null);
 						return;
 					}
 
-					// not a wall object, return
-					if (!IsSuitableForWall(orgitem) && method == 2)
+					if (orgitem.Name == "interior shield removal")
 					{
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.NotWallObject", null);
-						client.Out.SendInventorySlotsUpdate(new[] { slot });
+						house.IndoorGuildShield = false;
+						ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.InteriorShieldsRemoved", null);
 						return;
 					}
 
-					// not a floor object, return
-					if (objType != 51 && method == 3)
+					if (orgitem.Name == "carpet removal")
 					{
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.NotFloorObject", null);
-						client.Out.SendInventorySlotsUpdate(new[] { slot });
+						house.Rug1Color = 0;
+						house.Rug2Color = 0;
+						house.Rug3Color = 0;
+						house.Rug4Color = 0;
+						ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.CarpetsRemoved", null);
+						return;
+					}
+				}
+
+				if (house.CanChangeExternalAppearance(client.Player))
+				{
+					if (orgitem.Name == "exterior banner removal")
+					{
+						house.OutdoorGuildBanner = false;
+						ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.OutdoorBannersRemoved", null);
 						return;
 					}
 
-					// interior already has max items, return
-					if (house.IndoorItems.Count >= GetMaxIndoorItemsForHouse(house.Model))
+					if (orgitem.Name == "exterior shield removal")
 					{
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.IndoorMaxItems", GetMaxIndoorItemsForHouse(house.Model));
-						client.Out.SendInventorySlotsUpdate(new[] { slot });
+						house.OutdoorGuildShield = false;
+						ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.OutdoorShieldsRemoved", null);
 						return;
 					}
+				}
 
-					// create an indoor item to represent the item being placed
-					var iitem = new IndoorItem
-									{
-										Model = orgitem.Model,
-										Color = orgitem.Color,
-										X = xpos,
-										Y = ypos,
-										Size = 100,
-										Position = _position,
-										PlacementMode = method,
-										BaseItem = null
-									};
+				int objType = orgitem.Object_Type;
+				if (objType == 49) // Garden items 
+				{
+					method = 1;
+				}
+				else if (orgitem.Id_nb == "housing_porch_deed" || orgitem.Id_nb == "housing_porch_remove_deed" || orgitem.Id_nb == "housing_consignment_deed")
+				{
+					method = 4;
+				}
+				else if (objType >= 59 && objType <= 64) // Outdoor Roof/Wall/Door/Porch/Wood/Shutter/awning Material item type
+				{
+					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.HouseUseMaterials", null);
+					return;
+				}
+				else if (objType == 56 || objType == 52 || (objType >= 69 && objType <= 71)) // Indoor carpets 1-4
+				{
+					ChatUtil.SendSystemMessage(client.Player, "Scripts.Player.Housing.HouseUseCarpets", null);
+					return;
+				}
+				else if (objType == 57 || objType == 58 // Exterior banner/shield
+						 || objType == 66 || objType == 67) // Interior banner/shield
+				{
+					method = 6;
+				}
+				else if (objType == 53 || objType == 55 || objType == 68)
+				{
+					method = 5;
+				}
+				else if (objType == (int)eObjectType.HouseVault)
+				{
+					method = 7;
+				}
 
-					// figure out proper rotation for item
-					int properRotation = client.Player.Heading / 10;
-					properRotation = properRotation.Clamp(0, 360);
+				ChatUtil.SendDebugMessage(client, string.Format("Place Item: method: {0}", method));
 
-					if (method == 2 && IsSuitableForWall(orgitem))
-					{
-						properRotation = 360;
-						if (objType != 50)
-						{
-							client.Out.SendInventorySlotsUpdate(new[] { slot });
-						}
-					}
-
-					iitem.Rotation = properRotation;
-
-					pos = GetFirstFreeSlot(house.IndoorItems.Keys);
-					if (objType == 50 || objType == 51)
-					{
-						//its a housing item, so lets take it!
-						client.Player.Inventory.RemoveItem(orgitem);
-
-						//set right base item, so we can recreate it on take.
-						if (orgitem.Id_nb.Contains("GuildBanner"))
-						{
-							iitem.BaseItem = orgitem.Template;
-							iitem.Size = 50; // Banners have to be reduced in size
-						}
-						else
-						{
-							iitem.BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(orgitem.Id_nb);
-						}
-					}
-
-					DBHouseIndoorItem idbitem = iitem.CreateDBIndoorItem(housenumber);
-					iitem.DatabaseItem = idbitem;
-					GameServer.Database.AddObject(idbitem);
-
-					house.IndoorItems.Add(pos, iitem);
-
-					// let player know the item has been placed
-					ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.IndoorItemPlaced", (GetMaxIndoorItemsForHouse(house.Model) - house.IndoorItems.Count));
-
-					switch (method)
-					{
-						case 2:
-							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.IndoorWallPlaced", orgitem.Name);
-							break;
-						case 3:
-							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.IndoorFloorPlaced", orgitem.Name);
-							break;
-					}
-
-					// update furniture for all players in the house
-					foreach (GamePlayer plr in house.GetAllPlayersInHouse())
-					{
-						plr.Out.SendFurniture(house, pos);
-					}
-
-					break;
-
-				case 4:
-					{
-						// no permission to add to the garden, return
+				int pos;
+				switch (method)
+				{
+					case 1:
+						// no permissions to add to the garden, return
 						if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
 						{
 							client.Out.SendInventorySlotsUpdate(new[] { slot });
 							return;
 						}
 
-						switch (orgitem.Id_nb)
+						// garden is already full, return
+						if (house.OutdoorItems.Count >= Properties.MAX_OUTDOOR_HOUSE_ITEMS)
 						{
-							case "porch_deed":
-								// try and add the porch
-								if (house.AddPorch())
-								{
-									// remove the original item from the player's inventory
-									client.Player.Inventory.RemoveItem(orgitem);
-								}
-								else
-								{
-									ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.PorchAlready", null);
-									client.Out.SendInventorySlotsUpdate(new[] { slot });
-								}
-								return;
-							case "porch_remove_deed":
-								// try and remove the porch
-								if (house.RemovePorch())
-								{
-									// remove the original item from the player's inventory
-									client.Player.Inventory.RemoveItem(orgitem);
-								}
-								else
-								{
-									ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.PorchNone", null);
-									client.Out.SendInventorySlotsUpdate(new[] { slot });
-								}
-								return;
-							case "consignment_deed":
-								{
-									// make sure there is a porch for this consignment merchant!
-									if (!house.Porch)
-									{
-										ChatUtil.SendSystemMessage(client, "Your House needs a Porch first.");
-										client.Out.SendInventorySlotsUpdate(new[] { slot });
-										return;
-									}
+							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.GardenMaxObjects", null);
+							client.Out.SendInventorySlotsUpdate(new[] { slot });
 
-									// try and add a new consignment merchant
-									if (house.AddConsignment(0))
-									{
-										// remove the original item from the player's inventory
-										client.Player.Inventory.RemoveItem(orgitem);
-									}
-									else
-									{
-										ChatUtil.SendSystemMessage(client, "You can not add a GameConsignmentMerchant Merchant here.");
-										client.Out.SendInventorySlotsUpdate(new[] { slot });
-									}
-									return;
-								}
-							default:
-								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.PorchNotItem", null);
-								client.Out.SendInventorySlotsUpdate(new[] { slot });
-								return;
+							return;
 						}
-					}
 
-				case 5:
-					{
+						// create an outdoor item to represent the item being placed
+						var oitem = new OutdoorItem
+										{
+											BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(orgitem.Id_nb),
+											Model = orgitem.Model,
+											Position = (byte)_position,
+											Rotation = (byte)rotation
+										};
+
+						//add item in db
+						pos = GetFirstFreeSlot(house.OutdoorItems.Keys);
+						DBHouseOutdoorItem odbitem = oitem.CreateDBOutdoorItem(housenumber);
+						oitem.DatabaseItem = odbitem;
+
+						GameServer.Database.AddObject(odbitem);
+
+						// remove the item from the player's inventory
+						client.Player.Inventory.RemoveItem(orgitem);
+
+						//add item to outdooritems
+						house.OutdoorItems.Add(pos, oitem);
+
+						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.GardenItemPlaced",
+												   Properties.MAX_OUTDOOR_HOUSE_ITEMS - house.OutdoorItems.Count);
+						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.GardenItemPlacedName", orgitem.Name);
+
+						// update all nearby players
+						foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(house.RegionID, house, WorldMgr.OBJ_UPDATE_DISTANCE))
+						{
+							player.Out.SendGarden(house);
+						}
+
+						// save the house
+						house.SaveIntoDatabase();
+						break;
+
+					case 2:
+					case 3:
 						// no permission to add to the interior, return
 						if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
 						{
 							client.Out.SendInventorySlotsUpdate(new[] { slot });
 							return;
 						}
-						
-						// if the hookpoint doesn't exist, prompt player to Log it in the database for us
-						if (house.GetHookpointLocation((uint)_position) == null)
+
+						// not a wall object, return
+						if (!IsSuitableForWall(orgitem) && method == 2)
 						{
+							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.NotWallObject", null);
 							client.Out.SendInventorySlotsUpdate(new[] { slot });
-							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointID", +_position);
-							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointCloser", null);
-
-							client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"), LogLocation);
+							return;
 						}
-						else if (house.GetHookpointLocation((uint)_position) != null)
+
+						// not a floor object, return
+						if (objType != 51 && method == 3)
 						{
-							var point = new DBHousepointItem
-											{
-												HouseID = house.HouseNumber,
-												ItemTemplateID = orgitem.Id_nb,
-												Position = (uint)_position
-											};
+							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.NotFloorObject", null);
+							client.Out.SendInventorySlotsUpdate(new[] { slot });
+							return;
+						}
 
-							// If we already have soemthing here, do not place more
-							foreach ( var hpitem in GameServer.Database.SelectObjects<DBHousepointItem>("HouseID = '" + house.HouseNumber + "'"))
+						// interior already has max items, return
+						if (house.IndoorItems.Count >= GetMaxIndoorItemsForHouse(house.Model))
+						{
+							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.IndoorMaxItems", GetMaxIndoorItemsForHouse(house.Model));
+							client.Out.SendInventorySlotsUpdate(new[] { slot });
+							return;
+						}
+
+						// create an indoor item to represent the item being placed
+						var iitem = new IndoorItem
+										{
+											Model = orgitem.Model,
+											Color = orgitem.Color,
+											X = xpos,
+											Y = ypos,
+											Size = 100,
+											Position = _position,
+											PlacementMode = method,
+											BaseItem = null
+										};
+
+						// figure out proper rotation for item
+						int properRotation = client.Player.Heading / 10;
+						properRotation = properRotation.Clamp(0, 360);
+
+						if (method == 2 && IsSuitableForWall(orgitem))
+						{
+							properRotation = 360;
+							if (objType != 50)
 							{
-								if (hpitem.Position == point.Position)
-								{
-									ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointAlready", null);
-									return;
-								}
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
 							}
+						}
 
-							// add the item to the database
-							GameServer.Database.AddObject(point);
+						iitem.Rotation = properRotation;
 
-							// fill the hookpoint
-							house.FillHookpoint(orgitem.Template, (uint)_position, orgitem.Id_nb);
-							house.HousepointItems[point.Position] = point;
-
-							// remove the original item from the player's inventory
+						pos = GetFirstFreeSlot(house.IndoorItems.Keys);
+						if (objType == 50 || objType == 51)
+						{
+							//its a housing item, so lets take it!
 							client.Player.Inventory.RemoveItem(orgitem);
 
-							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointAdded", null);
+							//set right base item, so we can recreate it on take.
+							if (orgitem.Id_nb.Contains("GuildBanner"))
+							{
+								iitem.BaseItem = orgitem.Template;
+								iitem.Size = 50; // Banners have to be reduced in size
+							}
+							else
+							{
+								iitem.BaseItem = GameServer.Database.FindObjectByKey<ItemTemplate>(orgitem.Id_nb);
+							}
+						}
 
-							// save the house
-							house.SaveIntoDatabase();
+						DBHouseIndoorItem idbitem = iitem.CreateDBIndoorItem(housenumber);
+						iitem.DatabaseItem = idbitem;
+						GameServer.Database.AddObject(idbitem);
+
+						house.IndoorItems.Add(pos, iitem);
+
+						// let player know the item has been placed
+						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.IndoorItemPlaced", (GetMaxIndoorItemsForHouse(house.Model) - house.IndoorItems.Count));
+
+						switch (method)
+						{
+							case 2:
+								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.IndoorWallPlaced", orgitem.Name);
+								break;
+							case 3:
+								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.IndoorFloorPlaced", orgitem.Name);
+								break;
+						}
+
+						// update furniture for all players in the house
+						foreach (GamePlayer plr in house.GetAllPlayersInHouse())
+						{
+							plr.Out.SendFurniture(house, pos);
+						}
+
+						break;
+
+					case 4:
+						{
+							// no permission to add to the garden, return
+							if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
+							{
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
+								return;
+							}
+
+							switch (orgitem.Id_nb)
+							{
+								case "housing_porch_deed":
+									// try and add the porch
+									if (house.AddPorch())
+									{
+										// remove the original item from the player's inventory
+										client.Player.Inventory.RemoveItem(orgitem);
+									}
+									else
+									{
+										ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.PorchAlready", null);
+										client.Out.SendInventorySlotsUpdate(new[] { slot });
+									}
+									return;
+								case "housing_porch_remove_deed":
+									// try and remove the porch
+									if (house.RemovePorch())
+									{
+										// remove the original item from the player's inventory
+										client.Player.Inventory.RemoveItem(orgitem);
+									}
+									else
+									{
+										ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.PorchNone", null);
+										client.Out.SendInventorySlotsUpdate(new[] { slot });
+									}
+									return;
+								case "housing_consignment_deed":
+									{
+										// make sure there is a porch for this consignment merchant!
+										if (!house.Porch)
+										{
+											ChatUtil.SendSystemMessage(client, "Your House needs a Porch first.");
+											client.Out.SendInventorySlotsUpdate(new[] { slot });
+											return;
+										}
+
+										// try and add a new consignment merchant
+										if (house.AddConsignment(0))
+										{
+											// remove the original item from the player's inventory
+											client.Player.Inventory.RemoveItem(orgitem);
+										}
+										else
+										{
+											ChatUtil.SendSystemMessage(client, "You can not add a GameConsignmentMerchant Merchant here.");
+											client.Out.SendInventorySlotsUpdate(new[] { slot });
+										}
+										return;
+									}
+								default:
+									ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.PorchNotItem", null);
+									client.Out.SendInventorySlotsUpdate(new[] { slot });
+									return;
+							}
+						}
+
+					case 5:
+						{
+							// no permission to add to the interior, return
+							if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
+							{
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
+								return;
+							}
+
+							// if the hookpoint doesn't exist, prompt player to Log it in the database for us
+							if (house.GetHookpointLocation((uint)_position) == null)
+							{
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
+
+								if (client.Account.PrivLevel == (int)ePrivLevel.Admin)
+								{
+									if (client.Player.TempProperties.getProperty<bool>(HousingConstants.AllowAddHouseHookpoint, false))
+									{
+
+										ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointID", +_position);
+										ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointCloser", null);
+
+										client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"), LogLocation);
+									}
+									else
+									{
+										ChatUtil.SendDebugMessage(client, "use '/house addhookpoints' to allow addition of new housing hookpoints.");
+									}
+								}
+							}
+							else if (house.GetHookpointLocation((uint)_position) != null)
+							{
+								var point = new DBHouseHookpointItem
+												{
+													HouseNumber = house.HouseNumber,
+													ItemTemplateID = orgitem.Id_nb,
+													HookpointID = (uint)_position
+												};
+
+								// If we already have soemthing here, do not place more
+								foreach (var hpitem in GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + house.HouseNumber + "'"))
+								{
+									if (hpitem.HookpointID == point.HookpointID)
+									{
+										ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointAlready", null);
+										return;
+									}
+								}
+
+								// add the item to the database
+								GameServer.Database.AddObject(point);
+
+								// fill the hookpoint
+								house.FillHookpoint(orgitem.Template, (uint)_position, orgitem.Id_nb, client.Player.Heading);
+								house.HousepointItems[point.HookpointID] = point;
+
+								// remove the original item from the player's inventory
+								client.Player.Inventory.RemoveItem(orgitem);
+
+								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointAdded", null);
+
+								// save the house
+								house.SaveIntoDatabase();
+							}
+							else
+							{
+								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointNot", null);
+							}
+
+							// broadcast updates
+							house.SendUpdate();
+							break;
+						}
+					case 6:
+						// no permission to change external appearance, return
+						if (!house.CanChangeExternalAppearance(client.Player))
+						{
+							client.Out.SendInventorySlotsUpdate(new[] { slot });
+							return;
+						}
+
+						if (objType == 57) // We have outdoor banner
+						{
+							house.OutdoorGuildBanner = true;
+							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.OutdoorBannersAdded", null);
+							client.Player.Inventory.RemoveItem(orgitem);
+						}
+						else if (objType == 58) // We have outdoor shield
+						{
+							house.OutdoorGuildShield = true;
+							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.OutdoorShieldsAdded", null);
+							client.Player.Inventory.RemoveItem(orgitem);
+						}
+						else if (objType == 66) // We have indoor banner
+						{
+							house.IndoorGuildBanner = true;
+							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.InteriorBannersAdded", null);
+							client.Player.Inventory.RemoveItem(orgitem);
+						}
+						else if (objType == 67) // We have indoor shield
+						{
+							house.IndoorGuildShield = true;
+							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.InteriorShieldsAdded", null);
+							client.Player.Inventory.RemoveItem(orgitem);
 						}
 						else
 						{
-							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointNot", null);
+							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.BadShieldBanner", null);
 						}
 
-						// broadcast updates
+						// save the house and broadcast updates
+						house.SaveIntoDatabase();
 						house.SendUpdate();
 						break;
-					}
-				case 6:
-					// no permission to change external appearance, return
-					if (!house.CanChangeExternalAppearance(client.Player))
-					{
-						client.Out.SendInventorySlotsUpdate(new[] { slot });
-						return;
-					}
+					case 7: // House vault.
 
-					if (objType == 57) // We have outdoor banner
-					{
-						house.OutdoorGuildBanner = true;
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.OutdoorBannersAdded", null);
-						client.Player.Inventory.RemoveItem(orgitem);
-					}
-					else if (objType == 58) // We have outdoor shield
-					{
-						house.OutdoorGuildShield = true;
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.OutdoorShieldsAdded", null);
-						client.Player.Inventory.RemoveItem(orgitem);
-					}
-					else if (objType == 66) // We have indoor banner
-					{
-						house.IndoorGuildBanner = true;
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.InteriorBannersAdded", null);
-						client.Player.Inventory.RemoveItem(orgitem);
-					}
-					else if (objType == 67) // We have indoor shield
-					{
-						house.IndoorGuildShield = true;
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.InteriorShieldsAdded", null);
-						client.Player.Inventory.RemoveItem(orgitem);
-					}
-					else
-					{
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.BadShieldBanner", null);
-					}
+						// make sure the hookpoint position is valid
+						if (_position > HousingConstants.MaxHookpointLocations)
+						{
+							ChatUtil.SendSystemMessage(client, "This hookpoint position is unknown, error logged.");
+							log.Error("HOUSING: " + client.Player.Name + " working with invalid position " + _position + " in house " +
+									  house.HouseNumber + " model " + house.Model);
 
-					// save the house and broadcast updates
-					house.SaveIntoDatabase();
-					house.SendUpdate();
-					break;
-				case 7: // House vault.
+							return;
+						}
 
-					// make sure the hookpoint position is valid
-					if (_position > HousingConstants.MaxHookpointLocations)
-					{
-						ChatUtil.SendSystemMessage(client, "This hookpoint position is unknown, error logged.");
-						Log.Error("HOUSING: " + client.Player.Name + " working with invalid position " + _position + " in house " +
+						// if hookpoint doesn't exist, prompt player to Log it in the database for us
+						if (house.GetHookpointLocation((uint)_position) == null)
+						{
+							client.Out.SendInventorySlotsUpdate(new[] { slot });
+
+							if (client.Account.PrivLevel == (int)ePrivLevel.Admin)
+							{
+								if (client.Player.TempProperties.getProperty<bool>(HousingConstants.AllowAddHouseHookpoint, false))
+								{
+
+									ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointID", +_position);
+									ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointCloser", null);
+
+									client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"), LogLocation);
+								}
+								else
+								{
+									ChatUtil.SendDebugMessage(client, "use '/house addhookpoints' to allow addition of new housing hookpoints.");
+								}
+							}
+
+							return;
+						}
+
+						// make sure we have space to add another vult
+						int vaultIndex = house.GetFreeVaultNumber();
+						if (vaultIndex < 0)
+						{
+							client.Player.Out.SendMessage("You can't add any more vaults to this house!", eChatType.CT_System,
+														  eChatLoc.CL_SystemWindow);
+							client.Out.SendInventorySlotsUpdate(new[] { slot });
+
+							return;
+						}
+
+						log.Debug("HOUSING: " + client.Player.Name + " placing house vault at position " + _position + " in house " +
 								  house.HouseNumber + " model " + house.Model);
 
+						// create the new vault and attach it to the house
+						var houseVault = new GameHouseVault(orgitem.Template, vaultIndex);
+						houseVault.Attach(house, (uint)_position, (ushort)((client.Player.Heading + 2048) % 4096));
+
+						// remove the original item from the player's inventory
+						client.Player.Inventory.RemoveItem(orgitem);
+
+						// save the house and broadcast uodates
+						house.SaveIntoDatabase();
+						house.SendUpdate();
 						return;
-					}
+					default:
 
-					// if hookpoint doesn't exist, prompt player to Log it in the database for us
-					if (house.GetHookpointLocation((uint)_position) == null)
-					{
-						client.Out.SendInventorySlotsUpdate(new[] { slot });
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointID", +_position);
-						ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointCloser", null);
-
-						client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"),  LogLocation);
-
-						return;
-					}
-
-					// make sure we have space to add another vult
-					int vaultIndex = house.GetFreeVaultNumber();
-					if (vaultIndex < 0)
-					{
-						client.Player.Out.SendMessage("You can't add any more vaults to this house!", eChatType.CT_System,
-													  eChatLoc.CL_SystemWindow);
-						client.Out.SendInventorySlotsUpdate(new[] { slot });
-
-						return;
-					}
-
-					Log.Debug("HOUSING: " + client.Player.Name + " placing house vault at position " + _position + " in house " +
-							  house.HouseNumber + " model " + house.Model);
-
-					// create the new vault and attach it to the house
-					var houseVault = new GameHouseVault(orgitem.Template, vaultIndex);
-					houseVault.Attach(house, (uint)_position, (ushort)((client.Player.Heading + 2048) % 4096));
-
-					// remove the original item from the player's inventory
-					client.Player.Inventory.RemoveItem(orgitem);
-
-					// save the house and broadcast uodates
-					house.SaveIntoDatabase();
-					house.SendUpdate();
-					return;
-				default:
-					break;
+						ChatUtil.SendDebugMessage(client, "Place Item: Unknown method, do nothing.");
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				log.Error("HousingPlaceItemHandler", ex);
+				client.Out.SendMessage("Error processing housing action; the error has been logged!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				client.Out.SendInventorySlotsUpdate(null);
 			}
 		}
 
@@ -748,29 +785,31 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return;
 
 			var a = new HouseHookpointOffset
-						{
-							Model = player.CurrentHouse.Model,
-							Hookpoint = _position,
-							OffX = player.X - player.CurrentHouse.X,
-							OffY = player.Y - player.CurrentHouse.Y,
-							OffZ = player.Z - 25000,
-							OffH = player.Heading - player.CurrentHouse.Heading
-						};
+			{
+				HouseModel = player.CurrentHouse.Model,
+				HookpointID = _position,
+				X = player.X - player.CurrentHouse.X,
+				Y = player.Y - player.CurrentHouse.Y,
+				Z = player.Z - 25000,
+				Heading = player.Heading - player.CurrentHouse.Heading
+			};
 
 			if (GameServer.Database.AddObject(a) && House.AddNewOffset(a))
 			{
 				ChatUtil.SendSystemMessage(player, "Scripts.Player.Housing.HookPointLogged", _position);
+
+				string action = string.Format("HOUSING: {0} logged new HouseHookpointOffset for model {1}, position {2}, offset {3}, {4}, {5}",
+								  player.Name, a.HouseModel, a.HookpointID, a.X, a.Y, a.Z);
 				
-				Log.Debug(
-					string.Format("HOUSING: {0} logged new HouseHookpointOffset for model {1}, position {2}, offset {3}, {4}, {5}",
-								  player.Name, a.Model, a.Hookpoint, a.OffX, a.OffY, a.OffZ));
+				log.Debug(action);
+				GameServer.Instance.LogGMAction(action);
 			}
 			else
 			{
-				Log.Error(
+				log.Error(
 					string.Format(
 						"HOUSING: Player {0} error adding HouseHookpointOffset for model {1}, position {2}, offset {3}, {4}, {5}",
-						player.Name, a.Model, a.Hookpoint, a.OffX, a.OffY, a.OffZ));
+						player.Name, a.HouseModel, a.HookpointID, a.X, a.Y, a.Z));
 
 				ChatUtil.SendSystemMessage(player, "Error adding position " + _position + ", error recorded in server error Log.");
 			}

@@ -91,7 +91,7 @@ namespace DOL.GS.PacketHandler
 			if (obj == null)
 				return;
 
-			if (obj.CurrentHouse != m_gameClient.Player.CurrentHouse)
+			if (obj.IsVisibleTo(m_gameClient.Player) == false)
 				return;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectCreate));
@@ -254,8 +254,9 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendLivingEquipmentUpdate(GameLiving living)
 		{
-			if (m_gameClient.Player == null || living.CurrentHouse != m_gameClient.Player.CurrentHouse || living.CurrentRegion != m_gameClient.Player.CurrentRegion)
+			if (m_gameClient.Player == null || living.IsVisibleTo(m_gameClient.Player) == false)
 				return;
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EquipmentUpdate));
 
 			ICollection<InventoryItem> items = null;

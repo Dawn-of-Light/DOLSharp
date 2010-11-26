@@ -1138,34 +1138,21 @@ namespace DOL.GS
 			delve.Add("        Level: " + Level);
 			delve.Add("       Object: " + GlobalConstants.ObjectTypeToName(Object_Type) + " (" + Object_Type + ")");
 			delve.Add("         Type: " + GlobalConstants.SlotToName(Item_Type) + " (" + Item_Type + ")");
-			delve.Add("    Extension: " + Extension);
+			delve.Add("");
 			delve.Add("        Model: " + Model);
+			delve.Add("    Extension: " + Extension);
 			delve.Add("        Color: " + Color);
 			delve.Add("       Emblem: " + Emblem);
 			delve.Add("       Effect: " + Effect);
-			delve.Add("  Value/Price: " + Money.GetShortString(Price));
-			delve.Add("       Weight: " + (Weight / 10.0f) + "lbs");
-			delve.Add("      Quality: " + Quality + "%");
-			delve.Add("   Durability: " + Durability + "/" + MaxDurability);
-			delve.Add("    Condition: " + Condition + "/" + MaxCondition);
-			delve.Add("        Realm: " + Realm);
-			delve.Add("  Is dropable: " + (IsDropable ? "yes" : "no"));
-			delve.Add("  Is pickable: " + (IsPickable ? "yes" : "no"));
-			delve.Add("  Is tradable: " + (IsTradable ? "yes" : "no"));
-			delve.Add(" Is alwaysDUR: " + (IsNotLosingDur ? "yes" : "no"));
-			delve.Add("Is Indestruct: " + (IsIndestructible ? "yes" : "no"));
-			delve.Add(" Is stackable: " + (IsStackable ? "yes" : "no"));
-			delve.Add("  ProcSpellID: " + ProcSpellID);
-			delve.Add(" ProcSpellID1: " + ProcSpellID1);
-			delve.Add("   ProcChance: " + ProcChance);
-			delve.Add("      SpellID: " + SpellID + " (" + Charges + "/" + MaxCharges + ")");
-			delve.Add("     SpellID1: " + SpellID1 + " (" + Charges1 + "/" + MaxCharges1 + ")");
-			delve.Add("PoisonSpellID: " + PoisonSpellID + " (" + PoisonCharges + "/" + PoisonMaxCharges + ") ");
-			delve.Add("LevelRequired: " + LevelRequirement);
-			delve.Add("   BonusLevel: " + BonusLevel);
-
+			delve.Add("");
+			delve.Add("       DPS_AF: " + DPS_AF);
+			delve.Add("      SPD_ABS: " + SPD_ABS);
+			delve.Add("         Hand: " + Hand);
+			delve.Add("  Type_Damage: " + Type_Damage);
+			delve.Add("        Bonus: " + Bonus);
 			if (GlobalConstants.IsWeapon(Object_Type))
 			{
+				delve.Add("");
 				delve.Add("         Hand: " + GlobalConstants.ItemHandToName(Hand) + " (" + Hand + ")");
 				delve.Add("Damage/Second: " + (DPS_AF / 10.0f));
 				delve.Add("        Speed: " + (SPD_ABS / 10.0f));
@@ -1174,12 +1161,14 @@ namespace DOL.GS
 			}
 			else if (GlobalConstants.IsArmor(Object_Type))
 			{
+				delve.Add("");
 				delve.Add("  Armorfactor: " + DPS_AF);
 				delve.Add("   Absorption: " + SPD_ABS);
 				delve.Add("        Bonus: " + Bonus);
 			}
 			else if (Object_Type == (int)eObjectType.Shield)
 			{
+				delve.Add("");
 				delve.Add("Damage/Second: " + (DPS_AF / 10.0f));
 				delve.Add("        Speed: " + (SPD_ABS / 10.0f));
 				delve.Add("  Shield type: " + GlobalConstants.ShieldTypeToName(Type_Damage) + " (" + Type_Damage + ")");
@@ -1187,6 +1176,7 @@ namespace DOL.GS
 			}
 			else if (Object_Type == (int)eObjectType.Arrow || Object_Type == (int)eObjectType.Bolt)
 			{
+				delve.Add("");
 				delve.Add(" Ammunition #: " + DPS_AF);
 				delve.Add("       Damage: " + GlobalConstants.AmmunitionTypeToDamageName(SPD_ABS));
 				delve.Add("        Range: " + GlobalConstants.AmmunitionTypeToRangeName(SPD_ABS));
@@ -1195,9 +1185,33 @@ namespace DOL.GS
 			}
 			else if (Object_Type == (int)eObjectType.Instrument)
 			{
+				delve.Add("");
 				delve.Add("   Instrument: " + GlobalConstants.InstrumentTypeToName(DPS_AF));
 			}
-
+			delve.Add("");
+			delve.Add("  Value/Price: " + Money.GetShortString(Price));
+			delve.Add("       Weight: " + (Weight / 10.0f) + "lbs");
+			delve.Add("      Quality: " + Quality + "%");
+			delve.Add("   Durability: " + Durability + "/" + MaxDurability);
+			delve.Add("    Condition: " + Condition + "/" + MaxCondition);
+			delve.Add("        Realm: " + Realm);
+			delve.Add("");
+			delve.Add("  Is dropable: " + (IsDropable ? "yes" : "no"));
+			delve.Add("  Is pickable: " + (IsPickable ? "yes" : "no"));
+			delve.Add("  Is tradable: " + (IsTradable ? "yes" : "no"));
+			delve.Add(" Is alwaysDUR: " + (IsNotLosingDur ? "yes" : "no"));
+			delve.Add("Is Indestruct: " + (IsIndestructible ? "yes" : "no"));
+			delve.Add(" Is stackable: " + (IsStackable ? "yes" : "no"));
+			delve.Add("");
+			delve.Add("  ProcSpellID: " + ProcSpellID);
+			delve.Add(" ProcSpellID1: " + ProcSpellID1);
+			delve.Add("   ProcChance: " + ProcChance);
+			delve.Add("      SpellID: " + SpellID + " (" + Charges + "/" + MaxCharges + ")");
+			delve.Add("     SpellID1: " + SpellID1 + " (" + Charges1 + "/" + MaxCharges1 + ")");
+			delve.Add("PoisonSpellID: " + PoisonSpellID + " (" + PoisonCharges + "/" + PoisonMaxCharges + ") ");
+			delve.Add("");
+			delve.Add("LevelRequired: " + LevelRequirement);
+			delve.Add("   BonusLevel: " + BonusLevel);
 			delve.Add(" ");
 			delve.Add("              Flags: " + Flags);
 			delve.Add("          PackageID: " + PackageID);
