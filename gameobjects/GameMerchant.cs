@@ -304,6 +304,18 @@ namespace DOL.GS
 
 		#endregion
 
+		#region NPCTemplate
+		public override void LoadTemplate(INpcTemplate template)
+		{
+			base.LoadTemplate(template);
+
+			if (string.IsNullOrEmpty(template.ItemsListTemplateID) == false)
+			{
+				TradeItems = new MerchantTradeItems(template.ItemsListTemplateID);
+			}
+		}
+		#endregion NPCTemplate
+
 		#region Database
 
 		/// <summary>

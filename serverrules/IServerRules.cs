@@ -408,5 +408,25 @@ namespace DOL.GS.ServerRules
 		/// <param name="merchantType"></param>
 		void BuyHousingItem(GamePlayer player, ushort slot, byte count, DOL.GS.PacketHandler.eMerchantWindowType merchantType);
 
+		/// <summary>
+		/// Get a housing hookpoint NPC
+		/// </summary>
+		/// <param name="house"></param>
+		/// <param name="templateID"></param>
+		/// <param name="heading"></param>
+		/// <param name="index"></param>
+		/// <returns></returns>
+		GameNPC PlaceHousingNPC(DOL.GS.Housing.House house, ItemTemplate item, IPoint3D location, ushort heading);
+
+		/// <summary>
+		/// Get a static interior object for a house hookpoint
+		/// </summary>
+		/// <param name="house"></param>
+		/// <param name="item"></param>
+		/// <param name="location"></param>
+		/// <param name="heading"></param>
+		/// <returns></returns>
+		GameStaticItem PlaceHousingInteriorItem(DOL.GS.Housing.House house, ItemTemplate item, IPoint3D location, ushort heading);
+
 	}
 }
