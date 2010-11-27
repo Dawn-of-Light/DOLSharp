@@ -44,6 +44,7 @@ namespace DOL.Database
 		private string m_level = "0";
 		private short m_maxSpeed = 50;
 		private string m_equipmentTemplateID = "";
+		private string m_itemsListTemplateID = "";
 		private byte m_flags;
 		private byte m_meleeDamageType = 1;
 		private byte m_parryChance;
@@ -69,6 +70,7 @@ namespace DOL.Database
 		private int m_tetherRange = 0;
         private byte m_visibleWeaponSlots = 0;
         private int m_replaceMobValues =  0;
+		private string m_packageID = "";
 
 		/// <summary>
 		/// Constructor
@@ -200,6 +202,20 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_equipmentTemplateID = value;
+			}
+		}
+
+		/// <summary>
+		/// A MerchantList for this mob
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string ItemsListTemplateID
+		{
+			get { return m_itemsListTemplateID; }
+			set
+			{
+				Dirty = true;
+				m_itemsListTemplateID = value;
 			}
 		}
 
@@ -524,5 +540,16 @@ namespace DOL.Database
                 m_replaceMobValues = value;
             }
         }
+
+		[DataElement(AllowDbNull = true)]
+		public string PackageID
+		{
+			get { return m_packageID; }
+			set
+			{
+				Dirty = true;
+				m_packageID = value;
+			}
+		}
 	}
 }

@@ -71,6 +71,11 @@ namespace DOL.GS
 		string Inventory { get; }
 
 		/// <summary>
+		/// List of items sold by this npc
+		/// </summary>
+		string ItemsListTemplateID { get; }
+
+		/// <summary>
 		/// Gets the template npc melee damage type
 		/// </summary>
 		eDamageType MeleeDamageType { get; }

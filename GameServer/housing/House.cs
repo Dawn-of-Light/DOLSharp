@@ -698,91 +698,7 @@ namespace DOL.GS.Housing
 					}
 				case eObjectType.HouseNPC:
 					{
-						NpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(item.Bonus);
-
-						try
-						{
-							string defaultClassType = ServerProperties.Properties.GAMENPC_DEFAULT_CLASSTYPE;
-
-							if (npcTemplate == null || string.IsNullOrEmpty(npcTemplate.ClassType))
-							{
-								log.Warn("[Housing] null classtype in hookpoint attachment, using GAMENPC_DEFAULT_CLASSTYPE instead");
-							}
-							else
-							{
-								defaultClassType = npcTemplate.ClassType;
-							}
-
-							var npc = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(defaultClassType, false);
-							if (npc == null)
-							{
-								foreach (Assembly asm in ScriptMgr.Scripts)
-								{
-									npc = (GameNPC)asm.CreateInstance(defaultClassType, false);
-									if (npc != null) break;
-								}
-							}
-
-							if (npc == null)
-							{
-								HouseMgr.log.Error("[Housing] Can't create instance of type: " + defaultClassType);
-								return false;
-							}
-
-							npc.Model = 0;
-
-							if (npcTemplate != null)
-							{
-								npc.LoadTemplate(npcTemplate);
-							}
-							else
-							{
-								npc.Size = 50;
-								npc.Level = 50;
-								npc.GuildName = "No Template Found";
-							}
-
-							if (npc.Model == 0)
-							{
-								// defaults if templates are missing
-								if (Realm == eRealm.Albion)
-								{
-									npc.Model = (ushort)Util.Random(7, 8);
-								}
-								else if (Realm == eRealm.Midgard)
-								{
-									npc.Model = (ushort)Util.Random(160, 161);
-								}
-								else
-								{
-									npc.Model = (ushort)Util.Random(309, 310);
-								}
-							}
-
-							// always set the npc realm to the house model realm
-							npc.Realm = Realm;
-
-							npc.Name = item.Name;
-							npc.CurrentHouse = this;
-							npc.InHouse = true;
-							npc.OwnerID = templateID;
-							npc.X = x;
-							npc.Y = y;
-							npc.Z = z;
-							npc.Heading = GetHookpointHeading(position); // house npc's always take on hookpoint heading
-							npc.CurrentRegionID = RegionID;
-							if ((npc.Flags & GameNPC.eFlags.PEACE) == 0)
-							{
-								npc.Flags ^= GameNPC.eFlags.PEACE;
-							}
-							npc.AddToWorld();
-							hookpointObject = npc;
-						}
-						catch (Exception ex)
-						{
-							log.Error("Error filling housing hookpoint using npc template ID " + item.Bonus, ex);
-						}
-
+						hookpointObject = GameServer.ServerRules.PlaceHousingNPC(this, item, location, GetHookpointHeading(position));
 						break;
 					}
 				case eObjectType.HouseBindstone:
@@ -805,18 +721,7 @@ namespace DOL.GS.Housing
 					}
 				case eObjectType.HouseInteriorObject:
 					{
-						hookpointObject = new GameStaticItem();
-						hookpointObject.CurrentHouse = this;
-						hookpointObject.InHouse = true;
-						hookpointObject.OwnerID = templateID;
-						hookpointObject.X = x;
-						hookpointObject.Y = y;
-						hookpointObject.Z = z;
-						hookpointObject.Heading = heading;
-						hookpointObject.CurrentRegionID = RegionID;
-						hookpointObject.Name = item.Name;
-						hookpointObject.Model = (ushort) item.Model;
-						hookpointObject.AddToWorld();
+						hookpointObject = GameServer.ServerRules.PlaceHousingInteriorItem(this, item, location, heading);
 						break;
 					}
 			}

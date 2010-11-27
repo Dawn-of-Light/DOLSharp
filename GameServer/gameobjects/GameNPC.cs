@@ -2081,7 +2081,7 @@ namespace DOL.GS
 		/// Load a NPC template onto this NPC
 		/// </summary>
 		/// <param name="template"></param>
-		public void LoadTemplate(INpcTemplate template)
+		public virtual void LoadTemplate(INpcTemplate template)
 		{
 			IList m_models = new ArrayList();
 			IList m_sizes = new ArrayList();
