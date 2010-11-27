@@ -44,6 +44,7 @@ namespace DOL.GS
 		protected string m_size;
 		protected string m_level;
 		protected string m_equipmentTemplateID;
+		protected string m_itemsListTemplateID;
 		protected short m_maxSpeed;
 		protected byte m_parryChance;
 		protected byte m_evadeChance;
@@ -93,6 +94,7 @@ namespace DOL.GS
 			if (m_level == null)
 				m_level = "0";
 			m_equipmentTemplateID = data.EquipmentTemplateID;
+			m_itemsListTemplateID = data.ItemsListTemplateID;
 			m_maxSpeed = data.MaxSpeed;
 			m_parryChance = data.ParryChance;
 			m_evadeChance = data.EvadeChance;
@@ -252,6 +254,16 @@ namespace DOL.GS
 				m_aggroLevel = (byte)brain.AggroLevel;
 				m_aggroRange = brain.AggroRange;
 			}
+
+			if (string.IsNullOrEmpty(ItemsListTemplateID) == false)
+			{
+				GameMerchant merchant = mob as GameMerchant;
+
+				if (merchant != null)
+				{
+					merchant.TradeItems = new MerchantTradeItems(ItemsListTemplateID);
+				}
+			}
 		}
 
 		protected int GetNextFreeTemplateId()
@@ -329,6 +341,12 @@ namespace DOL.GS
 		{
 			get { return m_equipmentTemplateID; }
 			set { m_equipmentTemplateID = value; }
+		}
+
+		public string ItemsListTemplateID
+		{
+			get { return m_itemsListTemplateID; }
+			set { m_itemsListTemplateID = value; }
 		}
 
 		/// <summary>
@@ -559,6 +577,7 @@ namespace DOL.GS
 			tmp.Dexterity = Dexterity;
 			tmp.Empathy = Empathy;
 			tmp.EquipmentTemplateID = EquipmentTemplateID;
+			tmp.ItemsListTemplateID = ItemsListTemplateID;
 			tmp.EvadeChance = EvadeChance;
 			tmp.Flags = Flags;
 			tmp.GuildName = GuildName;

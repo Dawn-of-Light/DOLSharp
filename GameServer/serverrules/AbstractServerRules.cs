@@ -1870,6 +1870,123 @@ namespace DOL.GS.ServerRules
 			GameMerchant.OnPlayerBuy(player, slot, count, items);
 		}
 
+
+		/// <summary>
+		/// Get a housing hookpoint NPC
+		/// </summary>
+		/// <param name="house"></param>
+		/// <param name="templateID"></param>
+		/// <param name="heading"></param>
+		/// <param name="index"></param>
+		/// <returns></returns>
+		public virtual GameNPC PlaceHousingNPC(DOL.GS.Housing.House house, ItemTemplate item, IPoint3D location, ushort heading)
+		{
+			NpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(item.Bonus);
+
+			try
+			{
+				string defaultClassType = ServerProperties.Properties.GAMENPC_DEFAULT_CLASSTYPE;
+
+				if (npcTemplate == null || string.IsNullOrEmpty(npcTemplate.ClassType))
+				{
+					log.Warn("[Housing] null classtype in hookpoint attachment, using GAMENPC_DEFAULT_CLASSTYPE instead");
+				}
+				else
+				{
+					defaultClassType = npcTemplate.ClassType;
+				}
+
+				var npc = (GameNPC)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(defaultClassType, false);
+				if (npc == null)
+				{
+					foreach (Assembly asm in ScriptMgr.Scripts)
+					{
+						npc = (GameNPC)asm.CreateInstance(defaultClassType, false);
+						if (npc != null) break;
+					}
+				}
+
+				if (npc == null)
+				{
+					HouseMgr.log.Error("[Housing] Can't create instance of type: " + defaultClassType);
+					return null;
+				}
+
+				npc.Model = 0;
+
+				if (npcTemplate != null)
+				{
+					npc.LoadTemplate(npcTemplate);
+				}
+				else
+				{
+					npc.Size = 50;
+					npc.Level = 50;
+					npc.GuildName = "No Template Found";
+				}
+
+				if (npc.Model == 0)
+				{
+					// defaults if templates are missing
+					if (house.Realm == eRealm.Albion)
+					{
+						npc.Model = (ushort)Util.Random(7, 8);
+					}
+					else if (house.Realm == eRealm.Midgard)
+					{
+						npc.Model = (ushort)Util.Random(160, 161);
+					}
+					else
+					{
+						npc.Model = (ushort)Util.Random(309, 310);
+					}
+				}
+
+				// always set the npc realm to the house model realm
+				npc.Realm = house.Realm;
+
+				npc.Name = item.Name;
+				npc.CurrentHouse = house;
+				npc.InHouse = true;
+				npc.OwnerID = item.Id_nb;
+				npc.X = location.X;
+				npc.Y = location.Y;
+				npc.Z = location.Z;
+				npc.Heading = heading;
+				npc.CurrentRegionID = house.RegionID;
+				if ((npc.Flags & GameNPC.eFlags.PEACE) == 0)
+				{
+					npc.Flags ^= GameNPC.eFlags.PEACE;
+				}
+				npc.AddToWorld();
+				return npc;
+			}
+			catch (Exception ex)
+			{
+				log.Error("Error filling housing hookpoint using npc template ID " + item.Bonus, ex);
+			}
+
+			return null;
+		}
+
+
+		public virtual GameStaticItem PlaceHousingInteriorItem(DOL.GS.Housing.House house, ItemTemplate item, IPoint3D location, ushort heading)
+		{
+			GameStaticItem hookpointObject = new GameStaticItem();
+			hookpointObject.CurrentHouse = house;
+			hookpointObject.InHouse = true;
+			hookpointObject.OwnerID = item.Id_nb;
+			hookpointObject.X = location.X;
+			hookpointObject.Y = location.Y;
+			hookpointObject.Z = location.Z;
+			hookpointObject.Heading = heading;
+			hookpointObject.CurrentRegionID = house.RegionID;
+			hookpointObject.Name = item.Name;
+			hookpointObject.Model = (ushort)item.Model;
+			hookpointObject.AddToWorld();
+
+			return hookpointObject;
+		}
 		
 		#region MessageToLiving
 		/// <summary>
