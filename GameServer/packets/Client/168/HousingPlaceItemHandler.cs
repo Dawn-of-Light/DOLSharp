@@ -273,7 +273,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				int pos;
 				switch (method)
 				{
-					case 1:
+					case 1: // GARDEN OBJECT
 						{
 							if (client.Player.InHouse)
 							{
@@ -334,8 +334,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 							house.SaveIntoDatabase();
 							break;
 						}
-					case 2:
-					case 3:
+					case 2: // WALL OBJECT
+					case 3: // FLOOR OBJECT
 						{
 							if (client.Player.InHouse == false)
 							{
@@ -447,7 +447,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							break;
 						}
-					case 4:
+					case 4: // PORCH
 						{
 							// no permission to add to the garden, return
 							if (!house.CanChangeGarden(client.Player, DecorationPermissions.Add))
@@ -513,7 +513,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									return;
 							}
 						}
-					case 5:
+					case 5: // HOOKPOINT
 						{
 							if (client.Player.InHouse == false)
 							{
@@ -523,6 +523,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							// no permission to add to the interior, return
 							if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
+							{
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
+								return;
+							}
+
+							// don't allow non-hookpoint items to be dropped on hookpoints
+							if (IsSuitableForHookpoint(orgitem) == false)
 							{
 								client.Out.SendInventorySlotsUpdate(new[] { slot });
 								return;
@@ -564,12 +571,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 									if (hpitem.HookpointID == point.HookpointID)
 									{
 										ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointAlready", null);
+										client.Out.SendInventorySlotsUpdate(new[] { slot });
 										return;
 									}
 								}
-
-								// add the item to the database
-								GameServer.Database.AddObject(point);
 
 								if (house.HousepointItems.ContainsKey(point.HookpointID) == false)
 								{
@@ -580,9 +585,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 								{
 									string error = string.Format("Hookpoint already has item on attempt to attach {0} to hookpoint {1} for house {2}!", orgitem.Id_nb, _position, house.HouseNumber);
 									log.ErrorFormat(error);
+									client.Out.SendInventorySlotsUpdate(new[] { slot });
 									throw new Exception(error);
 								}
 
+								// add the item to the database
+								GameServer.Database.AddObject(point);
 
 								// remove the original item from the player's inventory
 								client.Player.Inventory.RemoveItem(orgitem);
@@ -595,6 +603,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							else
 							{
 								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointNot", null);
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
 							}
 
 							// broadcast updates
@@ -637,6 +646,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							else
 							{
 								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.BadShieldBanner", null);
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
 							}
 
 							// save the house and broadcast updates
@@ -659,6 +669,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								log.Error("HOUSING: " + client.Player.Name + " working with invalid position " + _position + " in house " +
 										  house.HouseNumber + " model " + house.Model);
 
+								client.Out.SendInventorySlotsUpdate(new[] { slot });
 								return;
 							}
 
@@ -697,8 +708,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 								return;
 							}
 
-							log.Debug("HOUSING: " + client.Player.Name + " placing house vault at position " + _position + " in house " +
-									  house.HouseNumber + " model " + house.Model);
+							// If we already have soemthing here, do not place more
+							foreach (var hpitem in GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + house.HouseNumber + "'"))
+							{
+								if (hpitem.HookpointID == _position)
+								{
+									ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointAlready", null);
+									client.Out.SendInventorySlotsUpdate(new[] { slot });
+									return;
+								}
+							}
 
 							// create the new vault and attach it to the house
 							var houseVault = new GameHouseVault(orgitem.Template, vaultIndex);
@@ -732,8 +751,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		private static bool IsSuitableForWall(InventoryItem item)
 		{
-			#region item types
-
 			switch (item.Object_Type)
 			{
 				case (int)eObjectType.HouseWallObject:
@@ -766,8 +783,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 				default:
 					return false;
 			}
+		}
 
-			#endregion
+
+		private static bool IsSuitableForHookpoint(InventoryItem item)
+		{
+			switch (item.Object_Type)
+			{
+				case (int)eObjectType.HouseVault:
+				case (int)eObjectType.HouseNPC:
+				case (int)eObjectType.HouseBindstone:
+				case (int)eObjectType.HouseInteriorObject:
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		private static int GetMaxIndoorItemsForHouse(int model)
