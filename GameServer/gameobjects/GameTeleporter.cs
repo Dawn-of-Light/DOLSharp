@@ -244,6 +244,8 @@ namespace DOL.GS
 			if (player.InCombat == false && GameRelic.IsPlayerCarryingRelic(player) == false)
 			{
 				player.MoveTo((ushort)destination.RegionID, destination.X, destination.Y, destination.Z, (ushort)destination.Heading);
+				player.CurrentHouse = null;
+				player.InHouse = false;
 			}
 		}
 	}

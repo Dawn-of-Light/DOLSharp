@@ -53,15 +53,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 				var ypos = (short)packet.ReadShort(); // y for inside objs.
 				//Log.Info("U1: " + unknow1 + " - U2: " + unknow2);
 
-				// house must exist
-				House house = HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
-				if (house == null)
-					return;
+				ChatUtil.SendDebugMessage(client, string.Format("HousingPlaceItem: slot: {0}, position: {1}, method: {2}, xpos: {3}, ypos: {4}", slot, _position, method, xpos, ypos));
 
 				if (client.Player == null)
 					return;
 
-				ChatUtil.SendDebugMessage(client, string.Format("HousingPlaceItem: slot: {0}, position: {1}, method: {2}, xpos: {3}, ypos: {4}", slot, _position, method, xpos, ypos));
+				// house must exist
+				House house = HouseMgr.GetHouse(client.Player.CurrentRegionID, housenumber);
+				if (house == null)
+				{
+					client.Player.Out.SendInventorySlotsUpdate(null);
+					return;
+				}
+
 
 				if ((slot >= 244) && (slot <= 248)) // money
 				{
@@ -103,7 +107,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				// make sure the item dropped still exists
 				InventoryItem orgitem = client.Player.Inventory.GetItem((eInventorySlot)slot);
 				if (orgitem == null)
+				{
+					client.Player.Out.SendInventorySlotsUpdate(null);
 					return;
+				}
 
 				if (orgitem.Id_nb == "house_removal_deed")
 				{

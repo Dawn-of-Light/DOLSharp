@@ -7,6 +7,7 @@ namespace DOL.GS.Quests
 	{
 		Qualification,
 		Offer,
+		GiveItem,
 		Step,
 		Finish,
 		RewardsChosen,
