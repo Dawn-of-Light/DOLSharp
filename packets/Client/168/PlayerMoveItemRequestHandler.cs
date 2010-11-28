@@ -39,7 +39,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort fromSlot = packet.ReadShort();
 			ushort itemCount= packet.ReadShort();
 
-			log.Debug("MoveItem, id=" + id + " toSlot=" + toSlot + " fromSlot=" + fromSlot + " itemCount=" + itemCount);
+			//log.Debug("MoveItem, id=" + id + " toSlot=" + toSlot + " fromSlot=" + fromSlot + " itemCount=" + itemCount);
+			//ChatUtil.SendDebugMessage(client, "MoveItem, id=" + id.ToString() + " toSlot=" + toSlot.ToString() + " fromSlot=" + fromSlot.ToString() + " itemCount=" + itemCount.ToString());
 
 			//If our slot is > 1000 it is (objectID+1000) of target
 			if(toSlot>1000)

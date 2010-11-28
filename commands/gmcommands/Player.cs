@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
+using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
@@ -1983,8 +1984,7 @@ namespace DOL.GS.Commands
 			text.Add(" ");
 			text.Add("PLAYER INFORMATION (Client # " + player.Client.SessionID + ", " + player.GetType().FullName + ")");
 			text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
-			text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " +
-					 player.CharacterClass.Name);
+			text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " + player.CharacterClass.Name);
 			text.Add("  - Guild : " + player.GuildName);
 			text.Add("  - XPs/RPs/BPs : " + player.Experience + " xp, " + player.RealmPoints + " rp, " + player.BountyPoints + " bp");
 			text.Add("  - MLXP/ML : " + player.MLExperience + " mlxp, ML " + player.ML + ", MLGranted: " + player.MLGranted);
@@ -1993,6 +1993,12 @@ namespace DOL.GS.Commands
 			text.Add("  - Money : " + Money.GetString(player.GetCurrentMoney()) + "");
 			text.Add("  - Model ID : " + player.Model);
 			text.Add("  - AFK Message: " + player.TempProperties.getProperty<string>(GamePlayer.AFK_MESSAGE) + "");
+			text.Add(" ");
+			text.Add("HOUSE INFORMATION ");
+			text.Add("  - Personal House : " + HouseMgr.GetHouseNumberByPlayer(player));
+			if (player.CurrentHouse != null && player.CurrentHouse.HouseNumber != null)
+				text.Add("  - Current House : " + player.CurrentHouse.HouseNumber);
+			text.Add("  - In House : " + player.InHouse);
 			text.Add(" ");
 			text.Add("ACCOUNT INFORMATION ");
 			text.Add("  - Account Name & IP : " + player.Client.Account.Name + " from " + player.Client.Account.LastLoginIP);

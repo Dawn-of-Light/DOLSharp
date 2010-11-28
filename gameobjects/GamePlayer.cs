@@ -9740,7 +9740,7 @@ namespace DOL.GS
 		{
 			//if we are jumping somewhere away from our house not using house.Exit
 			//we need to make the server know we have left the house
-			if (CurrentHouse != null && CurrentHouse.RegionID != regionID)
+			if ((CurrentHouse != null || InHouse) && CurrentHouse.RegionID != regionID)
 			{
 				InHouse = false;
 				CurrentHouse = null;
