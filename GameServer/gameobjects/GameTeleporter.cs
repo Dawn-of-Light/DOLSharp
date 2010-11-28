@@ -243,9 +243,10 @@ namespace DOL.GS
 		{
 			if (player.InCombat == false && GameRelic.IsPlayerCarryingRelic(player) == false)
 			{
+				if (player.InHouse && player.CurrentHouse != null)
+					player.CurrentHouse.Exit(player, true);
+
 				player.MoveTo((ushort)destination.RegionID, destination.X, destination.Y, destination.Z, (ushort)destination.Heading);
-				player.CurrentHouse = null;
-				player.InHouse = false;
 			}
 		}
 	}
