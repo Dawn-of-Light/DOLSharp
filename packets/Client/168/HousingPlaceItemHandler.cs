@@ -381,7 +381,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 												Color = orgitem.Color,
 												X = xpos,
 												Y = ypos,
-												Size = 100,
+												Size = orgitem.DPS_AF > 3 ? orgitem.DPS_AF : 100, // max size is 255
 												Position = _position,
 												PlacementMode = method,
 												BaseItem = null
