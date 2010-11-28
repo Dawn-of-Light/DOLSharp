@@ -147,6 +147,8 @@ namespace DOL.GS.Quests
 			WhisperFinish = 7,		// Whisper to the target to finish the quest
 			Search = 8,				// Search in a specified location
 			SearchFinish = 9,		// Search in a specified location to finish the quest
+			Collect = 10,			// Player must give the target an item to advance the step
+			CollectFinish = 11,		// Player must give the target an item to finish the quest
 			Unknown = 255
 		}
 
@@ -1035,6 +1037,30 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
+					if (QuestPlayer != null && QuestPlayer.Client.Account.PrivLevel > 1)
+					{
+						string text = m_stepTexts[Step - 1];
+						text += " [DEBUG] Step type = " + StepType;
+						if (StepType == eStepType.Collect || StepType == eStepType.CollectFinish)
+						{
+							text += ": " + CollectItemTemplate;
+						}
+						else if (StepType == eStepType.Deliver || StepType == eStepType.DeliverFinish)
+						{
+							text += ": " + StepItemTemplate;
+						}
+						else if (StepType == eStepType.Whisper || StepType == eStepType.WhisperFinish)
+						{
+							text += ": " + AdvanceText;
+						}
+						else
+						{
+							text += ": " + TargetName;
+						}
+
+						return text;
+					}
+
 					return m_stepTexts[Step - 1];
 				}
 				catch (Exception ex)
@@ -1060,6 +1086,26 @@ namespace DOL.GS.Quests
 				catch (Exception ex)
 				{
 					log.Error("DataQuest [" + ID + "] StepItemTemplate error for Step " + Step, ex);
+				}
+
+				return "";
+			}
+		}
+
+		/// <summary>
+		/// The item template player needs to turn in to advance this quest.
+		/// </summary>
+		protected string CollectItemTemplate
+		{
+			get
+			{
+				try
+				{
+					return m_collectItems[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] CollectItemTemplate error for Step " + Step, ex);
 				}
 
 				return "";
@@ -1262,6 +1308,7 @@ namespace DOL.GS.Quests
 			catch (Exception ex)
 			{
 				log.Error("DataQuest [" + ID + "] AdvanceQuestStep error when advancing from Step " + Step, ex);
+				ChatUtil.SendDebugMessage(QuestPlayer, "[DEBUG] AdvanceQuestStep error when advancing from Step " + Step + ": " + ex.Message);
 			}
 
 			return false;
@@ -1739,9 +1786,11 @@ namespace DOL.GS.Quests
 			if (item == null || item.OwnerID == null || m_collectItems.Count == 0)
 				return;
 
-			//log.DebugFormat("player giving item {0}, looking for item {1}", item.Id_nb, m_collectItems[Step - 1]);
+			ChatUtil.SendDebugMessage(player, string.Format("[DEBUG] giving item {0}, looking for item {1}", item.Id_nb, m_collectItems[Step - 1]));
 
-			if (TargetName == obj.Name && TargetRegion == obj.CurrentRegionID && m_collectItems[Step - 1] == item.Id_nb)
+			if (TargetName == obj.Name && 
+				TargetRegion == obj.CurrentRegionID && item.Id_nb.ToLower().Contains(m_collectItems[Step - 1].ToLower()) &&
+				ExecuteCustomQuestStep(player, Step, eStepCheckType.GiveItem))
 			{
 				RemoveItem(obj, player, item, true);
 
@@ -1752,6 +1801,7 @@ namespace DOL.GS.Quests
 					switch (StepType)
 					{
 						case eStepType.Deliver:
+						case eStepType.Collect:
 							{
 								if (string.IsNullOrEmpty(TargetText) == false)
 								{
@@ -1771,6 +1821,7 @@ namespace DOL.GS.Quests
 							break;
 
 						case eStepType.DeliverFinish:
+						case eStepType.CollectFinish:
 							{
 								FinishQuest(obj, true);
 							}
