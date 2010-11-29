@@ -281,8 +281,6 @@ namespace DOL.GS
 						killedMobXLootTemplates = m_mobXLootTemplates[mob.Name.ToLower()];
 					}
 
-					Dictionary<string, LootTemplate> lootTemplatesToDrop = null;
-
 					// MobXLootTemplate contains a loot template name and the max number of drops allowed for that template.
 					// We don't need an entry in MobXLootTemplate in order to drop loot, only to control the max number of drops.
 
@@ -297,7 +295,7 @@ namespace DOL.GS
 						// In addition, we can use LootTemplate.Count to determine how many of a fixed (100% chance) item can drop
 						if (m_lootTemplates.ContainsKey(mob.Name.ToLower()))
 						{
-							lootTemplatesToDrop = m_lootTemplates[mob.Name.ToLower()];
+							Dictionary<string, LootTemplate> lootTemplatesToDrop = m_lootTemplates[mob.Name.ToLower()];
 
 							if (lootTemplatesToDrop != null)
 							{
@@ -313,7 +311,7 @@ namespace DOL.GS
 										}
 										else
 										{
-											loot.AddRandom(lootTemplate.Chance, drop);
+											loot.AddRandom(lootTemplate.Chance, drop, lootTemplate.Count);
 										}
 									}
 								}
@@ -327,20 +325,20 @@ namespace DOL.GS
 						// and add every 100% chance items to the loots Fixed list and add the rest to the Random list
 						// due to the fact that 100% items always drop regardless of the drop limit
 
-						lootTemplatesToDrop = new Dictionary<string, LootTemplate>();
+						List<LootTemplate> lootTemplatesToDrop = new List<LootTemplate>();
 						foreach (MobXLootTemplate mobXLootTemplate in killedMobXLootTemplates)
 						{
 							loot = GenerateLootFromMobXLootTemplates(mobXLootTemplate, lootTemplatesToDrop, loot, player);
 
 							if (lootTemplatesToDrop != null)
 							{
-								foreach (LootTemplate lootTemplate in lootTemplatesToDrop.Values)
+								foreach (LootTemplate lootTemplate in lootTemplatesToDrop)
 								{
 									ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(lootTemplate.ItemTemplateID);
 
 									if (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems)
 									{
-										loot.AddRandom(lootTemplate.Chance, drop);
+										loot.AddRandom(lootTemplate.Chance, drop, lootTemplate.Count);
 									}
 								}
 							}
@@ -365,7 +363,7 @@ namespace DOL.GS
 		/// <param name="lootList">List to hold loot.</param>
 		/// <param name="player">Player used to determine realm</param>
 		/// <returns>lootList (for readability)</returns>
-		private LootList GenerateLootFromMobXLootTemplates(MobXLootTemplate mobXLootTemplates, Dictionary<string, LootTemplate> lootTemplates, LootList lootList, GamePlayer player)
+		private LootList GenerateLootFromMobXLootTemplates(MobXLootTemplate mobXLootTemplates, List<LootTemplate> lootTemplates, LootList lootList, GamePlayer player)
 		{
 			if (mobXLootTemplates == null || lootTemplates == null || player == null)
 				return lootList;
@@ -390,30 +388,14 @@ namespace DOL.GS
 						if (lootTemplate.Chance == 100)
 						{
 							// Added support for specifying drop count in LootTemplate rather than relying on MobXLootTemplate DropCount
+							// Dre: don't use MobXLootTemplate.DropCount, it's already used by the max number of drops for a mob
 							if (lootTemplate.Count > 0)
-							{
 								lootList.AddFixed(drop, lootTemplate.Count);
-							}
-							else
-							{
-								lootList.AddFixed(drop, mobXLootTemplates.DropCount);
-							}
 						}
 						else
 						{
-							string key = drop.Name.ToLower();
-
-							if (player.CanUseCrossRealmItems)
-							{
-								// make sure the key is unique by adding the realm number
-								key += drop.Realm;
-							}
-
-							if (!lootTemplates.ContainsKey(key))
-							{
-								lootList.DropCount = Math.Max(lootList.DropCount, mobXLootTemplates.DropCount);
-								lootTemplates.Add(key, lootTemplate);
-							}
+							// Dre: don't change LootList.DropCount, it's the max number of drops for a mob (and not the max number of drops for the same item)
+							lootTemplates.Add(lootTemplate);
 						}
 					}
 				}

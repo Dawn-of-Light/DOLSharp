@@ -83,10 +83,9 @@ namespace DOL.GS.Commands
 	     "'/mob equiptemplate clear' to remove the inventory template from mob",
 	     "'/mob equiptemplate save <EquipmentTemplateID> [replace]' to save the inventory template with a new name",
 	     "'/mob equiptemplate close' to finish the inventory template you are creating",
-	     "'/mob dropcount [number]' to set number of drops for mob (omit number to view current value)",
+	     "'/mob dropcount [number]' to set the max number of drops for mob (omit number to view current value)",
 	     "'/mob addloot <ItemTemplateID> <chance> [count]' to add loot to the mob's unique drop table.  Optionally specify count of how many to drop if chance = 100%",
 	     "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob.",
-	     "'/mob addmobxlt <max num drops>' Add a MobXLootTemplate entry for this mob in order to set the max number of drops per kill",
 	     "'/mob viewloot [random] [inv]' to view the selected mob's loot table.  Use random to simulate a kill drop, random inv to simulate and generate the loots",
 	     "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
 	     "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table",
@@ -211,7 +210,6 @@ namespace DOL.GS.Commands
 						case "dropcount": dropcount(client, targetMob, args); break;
 						case "addloot": addloot(client, targetMob, args); break;
 						case "addotd": addotd(client, targetMob, args); break;
-						case "addmobxlt": addmobxlt(client, targetMob, args); break;
 						case "viewloot": viewloot(client, targetMob, args); break;
 						case "removeloot": removeloot(client, targetMob, args); break;
 						case "removeotd": removeotd(client, targetMob, args); break;
@@ -1619,7 +1617,7 @@ namespace DOL.GS.Commands
 		{
 			MobXLootTemplate mxlt = GameServer.Database.SelectObject<MobXLootTemplate>("MobName = '" + GameServer.Database.Escape(targetMob.Name) + "' AND LootTemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
 
-			if (mxlt == null)
+			if (mxlt == null && args.Length < 3)
 			{
 				DisplayMessage(client, "Mob '" + targetMob.Name + "' does not have a MobXLootTemplate, use /mob addmobxlt <max drop count> to add one.");
 				return;
@@ -1631,6 +1629,8 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
+				if (mxlt == null)
+					mxlt = new MobXLootTemplate { MobName = targetMob.Name, LootTemplateName = targetMob.Name };
 				int dropCount = 1;
 
 				try
@@ -1647,7 +1647,10 @@ namespace DOL.GS.Commands
 					dropCount = 1;
 
 				mxlt.DropCount = dropCount;
-				GameServer.Database.AddObject(mxlt);
+				if (!mxlt.IsValid)
+					GameServer.Database.AddObject(mxlt);
+				else
+					GameServer.Database.SaveObject(mxlt);
 				DisplayMessage(client, "Mob '" + targetMob.Name + "' will drop a maximum of " + mxlt.DropCount + " items!");
 			}
 		}
@@ -1729,36 +1732,6 @@ namespace DOL.GS.Commands
 					DisplayMessage(client, "A MobXLootTemplate entry exists for this mob and limits the total drops per kill to " + mxlt.DropCount);
 				}
 
-			}
-			catch (Exception)
-			{
-				DisplaySyntax(client, args[1]);
-			}
-		}
-
-
-		private void addmobxlt(GameClient client, GameNPC targetMob, string[] args)
-		{
-			try
-			{
-				int maxNumDrops = Convert.ToInt32(args[2]);
-
-				MobXLootTemplate mxlt = GameServer.Database.SelectObject<MobXLootTemplate>("MobName = '" + GameServer.Database.Escape(targetMob.Name) + "' AND LootTemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
-				if (mxlt == null)
-				{
-					mxlt = new MobXLootTemplate();
-					mxlt.MobName = targetMob.Name;
-					mxlt.LootTemplateName = targetMob.Name;
-					mxlt.DropCount = maxNumDrops;
-					GameServer.Database.AddObject(mxlt);
-
-					refreshloot(client, targetMob, null);
-					DisplayMessage(client, "New MobXLootTemplate " + targetMob.Name + " added with DropCount set to " + maxNumDrops + "!");
-				}
-				else
-				{
-					DisplayMessage(client, "A MobXLootTemplate exists for " + targetMob.Name + " with DropCount set to " + mxlt.DropCount + ". Use /mob <drop count> to change it.");
-				}
 			}
 			catch (Exception)
 			{
