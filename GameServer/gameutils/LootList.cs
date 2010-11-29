@@ -60,7 +60,7 @@ namespace DOL.GS
 				m_fixedItemDrops.Add(loot);
 		}
 
-		public void AddRandom(int chance, ItemTemplate loot, int count)
+		public void AddRandom(int chance, ItemTemplate loot, int count = 1)
 		{
 			LootEntry entry = new LootEntry(chance, loot, count);
 			m_randomItemDrops.Add(entry);
