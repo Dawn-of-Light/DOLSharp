@@ -32,14 +32,15 @@ namespace DOL.GS.Commands
 		"/jump to <#ClientID> ex. /jump to #10",
 		"GMCommands.Jump.Usage.ToNameRealmID",
 		"GMCommands.Jump.Usage.ToXYZRegionID",
-		"/jump to house <house number>",
+		"/jump to house <myhouse | house number>",
 		"GMCommands.Jump.Usage.PlayerNameToXYZ",
 		"GMCommands.Jump.Usage.PlayerNameToXYZRegID",
 		"GMCommands.Jump.Usage.PlayerNToPlayerN",
 		"GMCommands.Jump.Usage.ToGT",
 		"GMCommands.Jump.Usage.RelXYZ",
 		"GMCommands.Jump.Usage.Push",
-		"GMCommands.Jump.Usage.Pop"
+		"GMCommands.Jump.Usage.Pop",
+		"/jump refresh - force a world refresh around you"
 		)]
 	public class JumpCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -49,6 +50,14 @@ namespace DOL.GS.Commands
 		{
 			try
 			{
+				#region Refresh
+				if (args.Length == 2 && args[1].ToLower() == "refresh")
+				{
+					client.Player.LeaveHouse();
+					client.Player.RefreshWorld();
+					return;
+				}
+				#endregion Refresh
 				#region Jump to GT
 				if (args.Length == 3 && args[1].ToLower() == "to" && args[2].ToLower() == "gt")
 				{
@@ -57,9 +66,17 @@ namespace DOL.GS.Commands
 				}
 				#endregion Jump to GT
 				#region Jump to house
-				else if (args.Length == 4 && args[1] == "to" && args[2] == "house")
+				else if (args.Length >= 3 && args[1].ToLower() == "to" && (args[2].ToLower() == "house" || args[2].ToLower() == "myhouse"))
 				{
-					House house = HouseMgr.GetHouse(Convert.ToInt32(args[3]));
+					House house = null;
+					if (args[2] == "myhouse")
+					{
+						house = HouseMgr.GetHouseByPlayer(client.Player);
+					}
+					else
+					{
+						house = HouseMgr.GetHouse(Convert.ToInt32(args[3]));
+					}
 					if (house != null)
 					{
 						client.Player.MoveTo(house.OutdoorJumpPoint);
@@ -110,8 +127,14 @@ namespace DOL.GS.Commands
 							}
 
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Jump.JumpToX", npcs[0].CurrentRegion.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							client.Player.MoveTo(jumpTarget.CurrentRegionID, jumpTarget.X, jumpTarget.Y, jumpTarget.Z, jumpTarget.Heading);
-							client.Player.InHouse = jumpTarget.InHouse;
+							if (jumpTarget.InHouse && jumpTarget.CurrentHouse != null)
+							{
+								jumpTarget.CurrentHouse.Enter(client.Player);
+							}
+							else
+							{
+								client.Player.MoveTo(jumpTarget.CurrentRegionID, jumpTarget.X, jumpTarget.Y, jumpTarget.Z, jumpTarget.Heading);
+							}
 							return;
 						}
 

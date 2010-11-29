@@ -75,9 +75,8 @@ namespace DOL.GS.Spells
 			UniPortalEffect effect = new UniPortalEffect(this, 1000);
 			effect.Start(player);
 
-			player.MoveTo((ushort)m_destination.RegionID,
-				m_destination.X, m_destination.Y, m_destination.Z,
-				(ushort)m_destination.Heading);
+			player.LeaveHouse();
+			player.MoveTo((ushort)m_destination.RegionID, m_destination.X, m_destination.Y, m_destination.Z, (ushort)m_destination.Heading);
 		}
 	}
 }

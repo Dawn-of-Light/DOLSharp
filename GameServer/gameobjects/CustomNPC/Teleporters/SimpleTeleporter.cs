@@ -78,7 +78,7 @@ namespace DOL.GS
 
 			LoadDestinations();
 
-			if (PackageID != string.Empty)
+			if (string.IsNullOrEmpty(PackageID) == false)
 			{
 				SayTo(player, PackageID);
 			}
