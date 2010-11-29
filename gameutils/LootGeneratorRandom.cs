@@ -157,7 +157,7 @@ namespace DOL.GS
 				if (itemTemplates != null && itemTemplates.Length > 0)
 				{
 					ItemTemplate itemTemplate = itemTemplates[Util.Random(itemTemplates.Length - 1)];
-					loot.AddRandom(100, itemTemplate);
+					loot.AddRandom(100, itemTemplate, 1);
 				}
 			}
 
