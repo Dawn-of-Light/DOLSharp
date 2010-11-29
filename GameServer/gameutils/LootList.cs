@@ -16,10 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
-using DOL.GS;
 
 namespace DOL.GS
 {
@@ -28,32 +26,28 @@ namespace DOL.GS
 	/// </summary>
 	public class LootList
 	{
-		// number of random items to drop
-		int m_dropCount;
+		/// <summary>
+		/// number of random items to drop
+		/// </summary>
+		public int DropCount { get; set; }
 
 		/// <summary>
 		/// m_dropCount items will be chosen from randomitemdrops list depending on their chance, to drop for mob loot
 		/// </summary>
-		ArrayList m_randomItemDrops;
+		private readonly List<LootEntry> m_randomItemDrops;
 
 		/// <summary>
 		/// Items in fixed drop list will ALWAYS drop for mob loot
 		/// </summary>
-		ArrayList m_fixedItemDrops;
+		private readonly List<ItemTemplate> m_fixedItemDrops;
 
 		public LootList() : this(1) { }
 
 		public LootList(int dropCount)
 		{
-			m_dropCount = dropCount;
-			m_fixedItemDrops = new ArrayList(2);
-			m_randomItemDrops = new ArrayList(15);
-		}
-
-		public int DropCount
-		{
-			get { return m_dropCount; }
-			set { m_dropCount = value; }
+			DropCount = dropCount;
+			m_fixedItemDrops = new List<ItemTemplate>(2);
+			m_randomItemDrops = new List<LootEntry>(15);
 		}
 
 		/// <summary>
@@ -66,9 +60,9 @@ namespace DOL.GS
 				m_fixedItemDrops.Add(loot);
 		}
 
-		public void AddRandom(int chance, ItemTemplate loot)
+		public void AddRandom(int chance, ItemTemplate loot, int count)
 		{
-			LootEntry entry = new LootEntry(chance, loot);
+			LootEntry entry = new LootEntry(chance, loot, count);
 			m_randomItemDrops.Add(entry);
 		}
 
@@ -88,8 +82,8 @@ namespace DOL.GS
 				m_fixedItemDrops.AddRange(list.m_fixedItemDrops);
 			}
 
-			if (list.m_dropCount > m_dropCount)
-				m_dropCount = list.m_dropCount;
+			if (list.DropCount > DropCount)
+				DropCount = list.DropCount;
 		}
 
 		/// <summary>
@@ -98,13 +92,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		public ItemTemplate[] GetLoot()
 		{
-			ArrayList loot = new ArrayList(m_fixedItemDrops.Count + m_dropCount);
+			List<ItemTemplate> loot = new List<ItemTemplate>(m_fixedItemDrops.Count + DropCount);
 			loot.AddRange(m_fixedItemDrops);
 
-			int dice;
-			ArrayList lootCandidates = new ArrayList();
-
-			if (m_dropCount > 0)
+			if (DropCount > 0)
 			{
 				// Big logic change. The intended flow of the original code was to iterate over the drop list
 				// DropCount times, each iteration doing the following:
@@ -132,12 +123,11 @@ namespace DOL.GS
 				// and move on.
 
 				// new logic
-				lootCandidates.Clear();
+				var lootCandidates = new List<LootEntry>();
 				foreach (LootEntry lootEntry in m_randomItemDrops)
 				{
-					dice = Util.Random(1, 100);
-					if (lootEntry.Chance >= dice)
-						lootCandidates.Add(lootEntry.ItemTemplate);
+					if (lootEntry.Chance >= Util.Random(1, 100))
+						lootCandidates.Add(lootEntry);
 				}
 				// At this point, the candidate list is filled with items that passed
 				// the %chance to drop, so we need to put DropCount of them into the return loot object.
@@ -150,43 +140,35 @@ namespace DOL.GS
 
 				if (lootCandidates.Count > 0)
 				{
-					for (int i = 0; (i < m_dropCount && lootCandidates.Count != 0); i++)
+					for (int i = 0; (i < DropCount && lootCandidates.Count != 0); i++)
 					{
-						int tmpidx;
-						tmpidx = Util.Random(lootCandidates.Count - 1);
-						loot.Add(lootCandidates[tmpidx]);
-						lootCandidates.RemoveAt(tmpidx);
+						int tmpidx = Util.Random(lootCandidates.Count - 1);
+						loot.Add(lootCandidates[tmpidx].ItemTemplate);
+						if (--(lootCandidates[tmpidx].Count) <= 0)
+							lootCandidates.RemoveAt(tmpidx);
 					}
 
 				}
 			}
 
-			return (ItemTemplate[])loot.ToArray(typeof(ItemTemplate));
+			return loot.ToArray();
 		}
 	}
 
 	/// <summary>
 	/// Container class for entries in the randomdroplist
 	/// </summary>
-	class LootEntry
+	internal class LootEntry
 	{
-		int m_chance;
-		ItemTemplate m_itemTemplate;
+		public readonly int Chance;
+		public readonly ItemTemplate ItemTemplate;
+		public int Count;
 
-		public LootEntry(int chance, ItemTemplate item)
+		public LootEntry(int chance, ItemTemplate item, int count)
 		{
-			m_chance = chance;
-			m_itemTemplate = item;
+			Chance = chance;
+			ItemTemplate = item;
+			Count = count;
 		}
-
-		public ItemTemplate ItemTemplate
-		{
-			get { return m_itemTemplate; }
-		}
-
-        public int Chance
-        {
-            get { return m_chance; }
-        }
 	}
 }

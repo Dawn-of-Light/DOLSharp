@@ -18,13 +18,13 @@
  */
 using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using Microsoft.CSharp;
 using DOL.GS.PacketHandler;
 using DOL.Language;
-using log4net;
 
 namespace DOL.GS.Commands
 {
@@ -37,9 +37,7 @@ namespace DOL.GS.Commands
 	{
 		public static void ExecuteCode(GameClient client, string code)
 		{
-			CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
-			if (provider == null)
-				return;
+			CodeDomProvider provider = new CSharpCodeProvider(new Dictionary<string, string> { { "CompilerVersion", "v4.0" } });
 			CompilerParameters cp = new CompilerParameters();
 			StringBuilder text = new StringBuilder();
 			text.Append("using System;\n");
@@ -74,6 +72,7 @@ namespace DOL.GS.Commands
 			string[] parameters = GameServer.Instance.Configuration.ScriptAssemblies.Split(',');
 			foreach (string param in parameters)
 				cp.ReferencedAssemblies.Add(param); //includes
+			cp.ReferencedAssemblies.Add("System.Core.dll");
 			cp.ReferencedAssemblies.Add(GameServer.Instance.Configuration.ScriptCompilationTarget);
 			cp.CompilerOptions = @"/lib:." + Path.DirectorySeparatorChar + "lib";
 			CompilerResults cr = provider.CompileAssemblyFromSource(cp, text.ToString());

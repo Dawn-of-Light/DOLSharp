@@ -90,7 +90,7 @@ namespace DOL.GS
 			{
 				classType = pClassType.GetValue(item, null) as string;
 
-				if (classType != null && classType != "")
+				if (!string.IsNullOrEmpty(classType))
 				{
 					foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 					{
