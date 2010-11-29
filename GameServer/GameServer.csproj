@@ -841,6 +841,7 @@
     <Compile Include="gameutils\ChatUtil.cs" />
     <Compile Include="gameobjects\IGameInventoryItem.cs" />
     <Compile Include="gameobjects\GameInventoryItem.cs" />
+    <Compile Include="gameutils\LootGeneratorTemplateNew.cs" />
     <Compile Include="gameutils\GameNPCInventory.cs" />
     <Compile Include="gameutils\GuildBanner.cs" />
     <Compile Include="gameutils\GuildEvents.cs" />
