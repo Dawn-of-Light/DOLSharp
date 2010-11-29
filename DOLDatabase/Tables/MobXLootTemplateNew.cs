@@ -30,7 +30,7 @@ namespace DOL.Database
 	/// <summary>
 	/// Database Storage of Mob LootTemplate Relation
 	/// </summary>
-	[DataTable(TableName = "MobXLootTemplateNew")]
+	// Commented for now pending discussion - tolakram [DataTable(TableName = "MobXLootTemplateNew")]
 	public class MobXLootTemplateNew : MobXLootTemplate
 	{
 		/// <summary>
