@@ -50,6 +50,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (!house.CanChangeInterior(client.Player, DecorationPermissions.Add))
 				return;
 
+			if (house.IndoorItems.ContainsKey(position) == false)
+				return;
+
 			// grab the item in question
 			IndoorItem iitem = house.IndoorItems[position];
 			if (iitem == null)

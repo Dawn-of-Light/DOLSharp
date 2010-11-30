@@ -91,12 +91,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (!house.CanChangeInterior(client.Player, DecorationPermissions.Remove))
 						return;
 
+					if (house.IndoorItems.ContainsKey(position) == false)
+						return;
+
 					IndoorItem iitem = house.IndoorItems[position];
 					if (iitem == null)
 					{
 						client.Player.Out.SendMessage("error: id was null", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 						return;
-					} //should this ever happen?
+					} 
 
 					if (iitem.BaseItem != null)
 					{
