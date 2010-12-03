@@ -963,7 +963,7 @@ namespace DOL.GS
 
 			foreach (DBDataQuest quest in m_dataQuestCache)
 			{
-				if (quest.StartRegionID == CurrentRegionID && quest.StartName == Name)
+				if ((quest.StartRegionID == CurrentRegionID || quest.StartRegionID == 0) && quest.StartName == Name)
 				{
 					DataQuest dq = new DataQuest(quest);
 					dq.StartObject = this;
