@@ -43,7 +43,7 @@ namespace DOL.GS.Quests
 	/// Each Quest should have a complete set of startup parameters.  All of these are non serialized.
 	/// 
 	/// Name, StartType, StartName, StartRegionID, AcceptText and Description.  These determine who offers the quest and what text is displayed
-	/// to the player considering accepting the quest.
+	/// to the player considering accepting the quest.  StartRegion of 0 indicates every GameObject with the given name will have this quest.
 	/// 
 	/// Once a quest is started each step behaves in a set order.  
 	/// 
@@ -54,23 +54,25 @@ namespace DOL.GS.Quests
 	/// have serialized values, separated by | for each Step, including Step 1.  If the last value for any step is empty then the string should
 	/// end with a double pipe |
 	/// 
-	/// SourceName;RegionID - both the SourceName and TargetName fields must be in the format Name;RegionID|Name;RegionID...
+	/// SourceName - UNUSED
 	/// 
-	/// SourceText - what the source says to you when beginning a step.  If a source starting the next step has no text then an empty 
+	/// SourceText - What is said to the player when beginning a step.  If a target starting the next step has no text then an empty 
 	/// string can be provided using || with nothing between the pipes.
 	/// 
 	/// StepType - The type of step from eStepType
 	/// 
 	/// StepText - The text for the step that appears in the players quest journal
 	/// 
-	/// StepItemTemplates - Any items that need to be given to the player at the start of the step.  If no items are given to a player
-	/// at any of the steps then this can be null, otherwise it must have values for each step.  Empty values || are ok.
+	/// StepItemTemplates - Any items that need to be given to the player for a step.  Every step can give an item to a player. All
+	/// steps give an item at the completion of the step except Delivery and DeliveryFinish.  If StepItemTemplates are defined for a 
+	/// Delivery step then the item is given at the beginning of the step and accepted by a target to end the step. 
+	/// If no items are given to a player at any of the steps then this can be null, otherwise it must have values for each step. 
+	/// Empty values || are ok. 
 	/// 
 	/// AdvanceText - The text needed, if any, to advance this step.  If no step requires advance text then this can be null, otherwise
 	/// text must be provided for every step.  Empty values || are ok.
 	/// 
-	/// TargetName;RegionID - in addition the name can be a location (X,Y,Z,Radius) if used by a step that requires a location.  For example:
-	/// 10000,10000,5000,300;1 would be X = 10000, Y = 10000, Z = 5000, Radius = 300 in Region 1
+	/// TargetName - Must be in the format Name;RegionID|Name;RegionID.... RegionID can be 0 to indicate any Target of the correct Name can advance the quest
 	/// 
 	/// TargetText - Text shown to player when current step ends.
 	/// 
@@ -137,7 +139,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public enum eStepType : byte
 		{
-			Kill = 0,				// Kill the target to advance the quest
+			Kill = 0,				// Kill the target to advance the quest.
 			KillFinish = 1,			// Killing the target finishes the quest and gives the reward
 			Deliver = 2,			// Deliver an item to the target to advance the quest
 			DeliverFinish = 3,		// Deliver an item to the target to finish the quest
@@ -145,18 +147,21 @@ namespace DOL.GS.Quests
 			InteractFinish = 5,		// Interact with the target to finish the quest.  This is required to end a RewardQuest
 			Whisper = 6,			// Whisper to the target to advance the quest
 			WhisperFinish = 7,		// Whisper to the target to finish the quest
-			Search = 8,				// Search in a specified location
-			SearchFinish = 9,		// Search in a specified location to finish the quest
+
+			Search = 8,				// *NOT IMPLEMENTED* Search in a specified location
+			SearchFinish = 9,		// *NOT IMPLEMENTED* Search in a specified location to finish the quest
+
 			Collect = 10,			// Player must give the target an item to advance the step
 			CollectFinish = 11,		// Player must give the target an item to finish the quest
+
 			Unknown = 255
 		}
 
-		protected List<ushort> m_sourceRegions = new List<ushort>();
-		protected List<string> m_sourceNames = new List<string>();
+		//protected List<string> m_sourceNames = new List<string>();
+		//protected List<ushort> m_sourceRegions = new List<ushort>();
 		protected List<string> m_sourceTexts = new List<string>();
-		protected List<ushort> m_targetRegions = new List<ushort>();
 		protected List<string> m_targetNames = new List<string>();
+		protected List<ushort> m_targetRegions = new List<ushort>();
 		protected List<string> m_targetTexts = new List<string>();
 		protected List<eStepType> m_stepTypes = new List<eStepType>();
 		protected List<string> m_stepTexts = new List<string>();
@@ -261,26 +266,26 @@ namespace DOL.GS.Quests
 			{
 				string[] parse1;
 
-				lastParse = m_dataQuest.SourceName;
-				if (string.IsNullOrEmpty(lastParse) == false)
-				{
-					parse1 = lastParse.Split('|');
-					foreach (string str in parse1)
-					{
-						if (str == string.Empty)
-						{
-							// if there's not npc for this step then empty is ok
-							m_sourceNames.Add("");
-							m_sourceRegions.Add(0);
-						}
-						else
-						{
-							string[] parse2 = str.Split(';');
-							m_sourceNames.Add(parse2[0]);
-							m_sourceRegions.Add(Convert.ToUInt16(parse2[1]));
-						}
-					}
-				}
+				//lastParse = m_dataQuest.SourceName;
+				//if (string.IsNullOrEmpty(lastParse) == false)
+				//{
+				//    parse1 = lastParse.Split('|');
+				//    foreach (string str in parse1)
+				//    {
+				//        if (str == string.Empty)
+				//        {
+				//            // if there's not npc for this step then empty is ok
+				//            m_sourceNames.Add("");
+				//            m_sourceRegions.Add(0);
+				//        }
+				//        else
+				//        {
+				//            string[] parse2 = str.Split(';');
+				//            m_sourceNames.Add(parse2[0]);
+				//            m_sourceRegions.Add(Convert.ToUInt16(parse2[1]));
+				//        }
+				//    }
+				//}
 
 				lastParse = m_dataQuest.SourceText;
 				if (string.IsNullOrEmpty(lastParse) == false)
@@ -884,42 +889,42 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Source name for the current step
 		/// </summary>
-		protected string SourceName
-		{
-			get
-			{
-				try
-				{
-					return m_sourceNames[Step - 1];
-				}
-				catch (Exception ex)
-				{
-					log.Error("DataQuest [" + ID + "] SourceName error for Step " + Step, ex);
-				}
+		//protected string SourceName
+		//{
+		//    get
+		//    {
+		//        try
+		//        {
+		//            return m_sourceNames[Step - 1];
+		//        }
+		//        catch (Exception ex)
+		//        {
+		//            log.Error("DataQuest [" + ID + "] SourceName error for Step " + Step, ex);
+		//        }
 
-				return "";
-			}
-		}
+		//        return "";
+		//    }
+		//}
 
 		/// <summary>
 		/// Source region for the current step
 		/// </summary>
-		protected ushort SourceRegion
-		{
-			get
-			{
-				try
-				{
-					return m_sourceRegions[Step - 1];
-				}
-				catch (Exception ex)
-				{
-					log.Error("DataQuest [" + ID + "] SourceRegion error for Step " + Step, ex);
-				}
+		//protected ushort SourceRegion
+		//{
+		//    get
+		//    {
+		//        try
+		//        {
+		//            return m_sourceRegions[Step - 1];
+		//        }
+		//        catch (Exception ex)
+		//        {
+		//            log.Error("DataQuest [" + ID + "] SourceRegion error for Step " + Step, ex);
+		//        }
 
-				return 0;
-			}
-		}
+		//        return 0;
+		//    }
+		//}
 
 		/// <summary>
 		/// Source text for the current step
@@ -950,7 +955,10 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
-					return m_targetNames[Step - 1];
+					if (m_targetNames.Count > 0)
+					{
+						return m_targetNames[Step - 1];
+					}
 				}
 				catch (Exception ex)
 				{
@@ -970,7 +978,10 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
-					return m_targetRegions[Step - 1];
+					if (m_targetRegions.Count > 0)
+					{
+						return m_targetRegions[Step - 1];
+					}
 				}
 				catch (Exception ex)
 				{
@@ -1040,22 +1051,25 @@ namespace DOL.GS.Quests
 					if (QuestPlayer != null && QuestPlayer.Client.Account.PrivLevel > 1)
 					{
 						string text = m_stepTexts[Step - 1];
-						text += " [DEBUG] Step type = " + StepType;
+						text += " [DEBUG] StepType = " + StepType;
 						if (StepType == eStepType.Collect || StepType == eStepType.CollectFinish)
 						{
 							text += ": " + CollectItemTemplate;
+							text += ", Target: " + TargetName;
 						}
 						else if (StepType == eStepType.Deliver || StepType == eStepType.DeliverFinish)
 						{
 							text += ": " + StepItemTemplate;
+							text += " Target: " + TargetName;
 						}
-						else if (StepType == eStepType.Whisper || StepType == eStepType.WhisperFinish)
+						else 
 						{
+							if (StepType == eStepType.Whisper || StepType == eStepType.WhisperFinish)
+							{
 							text += ": " + AdvanceText;
-						}
-						else
-						{
-							text += ": " + TargetName;
+							}
+
+							text += ", Target: " + TargetName + " sit: " + StepItemTemplate + " cit: " + CollectItemTemplate;
 						}
 
 						return text;
@@ -1081,7 +1095,10 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
-					return m_stepItemTemplates[Step - 1];
+					if (m_stepItemTemplates.Count > 0)
+					{
+						return m_stepItemTemplates[Step - 1].Trim();
+					}
 				}
 				catch (Exception ex)
 				{
@@ -1101,7 +1118,10 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
-					return m_collectItems[Step - 1];
+					if (m_collectItems.Count > 0)
+					{
+						return m_collectItems[Step - 1];
+					}
 				}
 				catch (Exception ex)
 				{
@@ -1122,7 +1142,10 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
-					return m_advanceTexts[Step - 1];
+					if (m_advanceTexts.Count > 0)
+					{
+						return m_advanceTexts[Step - 1];
+					}
 				}
 				catch (Exception ex)
 				{
@@ -1240,30 +1263,58 @@ namespace DOL.GS.Quests
 				if (ExecuteCustomQuestStep(QuestPlayer, Step, eStepCheckType.Step))
 				{
 					advance = true;
+					List<string> stepTemplates = new List<string>();
 
-					// If next step requires giving the player an item then we need to check to make sure
-					// player has enough inventory space to accept the item, otherwise do not advance the step
+					// If completing this step or starting the next step requires giving the player an item then
+					// we need to check to make sure player has enough inventory space to accept the item, otherwise do not advance the step
+
+					if (string.IsNullOrEmpty(StepItemTemplate) == false)
+					{
+						stepTemplates.Add(StepItemTemplate);
+					}
 
 					if (nextStepType == eStepType.Deliver || nextStepType == eStepType.DeliverFinish)
 					{
+						// Allow StepItemTemplate to be empty, assume quest player received item in a previous step or outside of the quest
+
 						if (string.IsNullOrEmpty(m_stepItemTemplates[Step].Trim()) == false)
 						{
-							// Allow StepItemTemplate to be empty, assume quest player received item in a previous step or outside of the quest
-							ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(m_stepItemTemplates[Step]);
-							if (item == null)
-							{
-								string errorMsg = string.Format("Next Step is {0} but StepItemTemplate {1} not found in DB!", nextStepType.ToString(), m_stepItemTemplates[Step]);
-								QuestPlayer.Out.SendMessage(errorMsg, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
-								throw new Exception(errorMsg);
-							}
+							stepTemplates.Add(m_stepItemTemplates[Step].Trim());
+						}
+					}
 
-							if (obj != null && obj is GameLiving)
+					if (stepTemplates.Count > 0)
+					{
+						// check for inventory space
+
+						lock (QuestPlayer.Inventory)
+						{
+							if (QuestPlayer.Inventory.IsSlotsFree(stepTemplates.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 							{
-								advance = GiveItem(obj as GameLiving, m_questPlayer, item, false);
+								foreach (string template in stepTemplates)
+								{
+									ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(template);
+									if (item == null)
+									{
+										string errorMsg = string.Format("StepItemTemplate {0} not found in DB!", template);
+										QuestPlayer.Out.SendMessage(errorMsg, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+										throw new Exception(errorMsg);
+									}
+
+									if (obj != null && obj is GameLiving)
+									{
+										GiveItem(obj as GameLiving, m_questPlayer, item, false);
+									}
+									else
+									{
+										GiveItem(m_questPlayer, item, false);
+									}
+								}
 							}
 							else
 							{
-								advance = GiveItem(m_questPlayer, item, false);
+								QuestPlayer.Out.SendMessage("You don't have enough inventory space to advance this quest.  You need " + stepTemplates.Count + " free slot(s)!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								advance = false;
 							}
 						}
 					}
@@ -1722,7 +1773,7 @@ namespace DOL.GS.Quests
 		/// <param name="obj"></param>
 		protected virtual void OnPlayerInteract(GamePlayer player, GameObject obj)
 		{
-			if (TargetName == obj.Name && TargetRegion == obj.CurrentRegionID)
+			if (TargetName == obj.Name && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0))
 			{
 				switch (StepType)
 				{
@@ -1786,46 +1837,48 @@ namespace DOL.GS.Quests
 			if (item == null || item.OwnerID == null || m_collectItems.Count == 0)
 				return;
 
-			ChatUtil.SendDebugMessage(player, string.Format("[DEBUG] giving item {0}, looking for item {1}", item.Id_nb, m_collectItems[Step - 1]));
-
-			if (TargetName == obj.Name && 
-				TargetRegion == obj.CurrentRegionID && item.Id_nb.ToLower().Contains(m_collectItems[Step - 1].ToLower()) &&
-				ExecuteCustomQuestStep(player, Step, eStepCheckType.GiveItem))
+			if (TargetName == obj.Name && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0))
 			{
-				RemoveItem(obj, player, item, true);
+				ChatUtil.SendDebugMessage(player, string.Format("[DEBUG] giving item {0}, quest wants item {1}", item.Id_nb, m_collectItems[Step - 1]));
 
-				// if we turn over the item then advance the step
-
-				if (item.OwnerID == null)
+				if (item.Id_nb.ToLower().Contains(m_collectItems[Step - 1].ToLower()) &&
+					ExecuteCustomQuestStep(player, Step, eStepCheckType.GiveItem))
 				{
-					switch (StepType)
+					RemoveItem(obj, player, item, true);
+
+					// if we turn over the item then advance the step
+
+					if (item.OwnerID == null)
 					{
-						case eStepType.Deliver:
-						case eStepType.Collect:
-							{
-								if (string.IsNullOrEmpty(TargetText) == false)
+						switch (StepType)
+						{
+							case eStepType.Deliver:
+							case eStepType.Collect:
 								{
-									if (obj.Realm == eRealm.None)
+									if (string.IsNullOrEmpty(TargetText) == false)
 									{
-										// mobs and other non realm objects send chat text and not popup text.
-										SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+										if (obj.Realm == eRealm.None)
+										{
+											// mobs and other non realm objects send chat text and not popup text.
+											SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+										}
+										else
+										{
+											SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+										}
 									}
-									else
-									{
-										SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-									}
+
+									AdvanceQuestStep(obj);
 								}
+								break;
 
-								AdvanceQuestStep(obj);
-							}
-							break;
-
-						case eStepType.DeliverFinish:
-						case eStepType.CollectFinish:
-							{
-								FinishQuest(obj, true);
-							}
-							break;
+							case eStepType.DeliverFinish:
+							case eStepType.CollectFinish:
+								{
+									FinishQuest(obj, true);
+								}
+								break;
+						}
 					}
 				}
 			}
@@ -1876,7 +1929,7 @@ namespace DOL.GS.Quests
 		{
 			//log.DebugFormat("Whisper {0}, listening for {1}, on step type {2}", text, AdvanceText, m_stepTypes[Step - 1]);
 
-			if (TargetName == obj.Name && TargetRegion == obj.CurrentRegionID && AdvanceText == text)
+			if (TargetName == obj.Name && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0) && AdvanceText == text)
 			{
 				switch (StepType)
 				{
@@ -2023,7 +2076,7 @@ namespace DOL.GS.Quests
 		/// <param name="enemy"></param>
 		protected virtual void OnEnemyKilled(GamePlayer player, GameLiving living)
 		{
-			if (TargetName == living.Name && TargetRegion == living.CurrentRegionID)
+			if (TargetName == living.Name && (TargetRegion == living.CurrentRegionID || TargetRegion == 0))
 			{
 				switch (StepType)
 				{
