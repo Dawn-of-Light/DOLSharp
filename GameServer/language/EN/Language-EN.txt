@@ -484,8 +484,21 @@ Scripts.Players.Boot.NoOneOnline:			No one with that name is online to Kick!
 Scripts.Players.Boot.YouRemoved:			You have been removed from the house by {0}!
 
 # /Bountyrent
-Scripts.Players.Bountyrent.InHouseError:		You have to be in your house to use this command!
-Scripts.Players.Bountyrent.NoHouseError:		You don't own a house!
+#Scripts.Players.Bountyrent.InHouseError:		       You have to be in your house to use this command!
+#Scripts.Players.Bountyrent.NoHouseError:		       You don't own a house!
+Scripts.Players.Bountyrent.AlreadyMaxMoney:            This house already has the maximum amount of money placed in the lockbox!
+Scripts.Players.Bountyrent.CmdUsage:                   1 bounty point currently converts to {0} copper. Use /bountyrent personal/guild <amount> to pay.
+Scripts.Players.Bountyrent.CorrectFormat:              Correct format is /bountyrent personal | guild <amount>
+Scripts.Players.Bountyrent.NotAHouseGuildLeader:       This house does not belong to a guild which you are guildmaster of!
+#Apo: please replace "NotEnoughBp" with the correct english message
+Scripts.Players.Bountyrent.NotEnoughBp:                You don't have enough bounty points!
+#Apo: please replace "NotEnoughGuildBp" with the correct english message
+Scripts.Players.Bountyrent.NotEnoughGuildBp:           Your guild don't have enough bounty points!
+Scripts.Players.Bountyrent.NoPayRentPerm:              You don't have permission to use /bountyrent here!
+Scripts.Players.Bountyrent.RangeOfAHouse:		       You must be in range of a house to use the /bountyrent command.
+Scripts.Players.Bountyrent.ToManyMoney:                That is more money than will fit in the lockbock! Deposit cancelled.
+Scripts.Players.Bountyrent.YouSpend:                   You spend {0} personal bounty points to pay for {1} gold pieces worth of rent.
+Scripts.Players.Bountyrent.YouSpendGuild:              You spend {0} guild bounty points to pay for {1} gold pieces worth of rent.
 
 # /Broadcast
 Scripts.Players.Broadcast.Message:			[Broadcast] {0}: {1}
