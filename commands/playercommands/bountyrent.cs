@@ -152,7 +152,7 @@ namespace DOL.GS.Commands
                                     return;
                                 }
 
-                                if ((house.KeptMoney += (BPsToAdd * bpWorth)) > (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS))
+                                if ((house.KeptMoney + (BPsToAdd * bpWorth)) > (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS))
                                 {
                                     client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.ToManyMoney"),
                                         eChatType.CT_System, eChatLoc.CL_SystemWindow);
