@@ -1097,6 +1097,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("housing", "rent_lockbox_payments", "How many rent payments can be stored in the lockbox?", 4)]
 		public static int RENT_LOCKBOX_PAYMENTS;
 
+        /// <summary>
+        /// The worth of 1 (one) bounty point in gold (e.g. 1 bp = 1g -> 10000, 1bp = 10g -> 100000)
+        /// </summary>
+        [ServerProperty("housing", "rent_bounty_point_to_gold", "The worth of 1 (one) bounty point in gold (e.g. 1 bp = 1g -> 10000, 1bp = 10g -> 100000)", 10000)]
+        public static long RENT_BOUNTY_POINT_TO_GOLD;
+
 		#endregion
 		
 		#region CLASSES
