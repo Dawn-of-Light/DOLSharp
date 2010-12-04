@@ -160,8 +160,20 @@ Scripts.Players.Boot.NoOneOnline:			Niemand ist mit diesem Namen online den Ihr 
 Scripts.Players.Boot.YouRemoved:			Ihr wurdet von {0} aus dem Haus geworfen!
 
 # /Bountyrent
-Scripts.Players.Bountyrent.InHouseError:		Ihr müsst Euch in Eurem Haus befinden, um diesen Befehl verwenden zu können!
-Scripts.Players.Bountyrent.NoHouseError:		Ihr besitzt kein Haus!
+#Scripts.Players.Bountyrent.InHouseError:		Ihr müsst Euch in Eurem Haus befinden, um diesen Befehl verwenden zu können!
+#Scripts.Players.Bountyrent.NoHouseError:		Ihr besitzt kein Haus!
+Scripts.Players.Bountyrent.AlreadyMaxMoney:            In dieser Mietkasse ist bereits das Maximum an möglichem Gold!
+Scripts.Players.Bountyrent.CmdUsage:                   1 Kopfgeldpunkt wird zurzeit in {0} Kupfer umgewandelt. Benutzt '/bountyrent personal/guild <amount>' zum Bezahlen.
+Scripts.Players.Bountyrent.CorrectFormat:              Das korrekte Format ist '/bountyrent personal | guild <Anzahl>'
+Scripts.Players.Bountyrent.NotAHouseGuildLeader:       Dieses Haus gehört keiner Gilde, deren Gildenleiter Ihr seid!
+Scripts.Players.Bountyrent.NotEnoughBp:                Ihr habt nicht so viele Kopfgeldpunkte.
+#Apo: please replace "NotEnoughGuildBp" with the correct german message
+Scripts.Players.Bountyrent.NotEnoughGuildBp:           Eure Gilde hat nicht so viele Kopfgeldpunkte.
+Scripts.Players.Bountyrent.NoPayRentPerm:              Ihr habt nicht die Erlaubnis, den '/bountyrent'-Befehl hier zu benutzen!
+Scripts.Players.Bountyrent.RangeOfAHouse:		       Um den '/bountyrent'-Befehl zu benutzen, müsst Ihr Euch in der Nähe eines Hauses aufhalten.
+Scripts.Players.Bountyrent.ToManyMoney:                Soviel Gold passt nicht in die Mietkasse! Einzahlung abgebrochen.
+Scripts.Players.Bountyrent.YouSpend:                   Ihr bezahlt {0} eigene Kopfgeldpunkte was einer Mietzahlung in Hohe von {1} Goldmünzen entspricht.
+Scripts.Players.Bountyrent.YouSpendGuild:              Ihr bezahlt {0} Gildenkopfgeldpunkte was einer Mietzahlung in Hohe von {1} Goldmünzen entspricht.
 
 # /Broadcast
 Scripts.Players.Broadcast.Message:			[Broadcast] {0}: {1}
