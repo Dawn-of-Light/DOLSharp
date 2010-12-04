@@ -58,30 +58,16 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-            string numericAmount = "";
-            foreach (char c in args[2]) //Assist player mistakes and remove letters / special characters
+            long BPsToAdd = 0;
+            try
             {
-                if (!Char.IsNumber(c))
-                    continue;
-
-                numericAmount += c;
+                BPsToAdd = Int64.Parse(args[2]);
             }
-
-            if (String.IsNullOrEmpty(numericAmount))
+            catch
             {
                 client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.CorrectFormat"),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-                return;
-            }
-
-            long BPsToAdd = 0;
-            try
-            {
-                BPsToAdd = Int64.Parse(numericAmount);
-            }
-            catch
-            {
                 return;
             }
 
