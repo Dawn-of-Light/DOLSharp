@@ -26,61 +26,166 @@ namespace DOL.GS.Commands
 	[CmdAttribute("&bountyrent", //command to handle
 		ePrivLevel.Player, //minimum privelege level
 		"Pay house rent with bountypoints", //command description
-		"/bountyrent <personal/guild> <amount>")] //command usage
+        "Use /bountyrent personal/guild <amount> to pay.")]
 	public class BountyRentCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+            long bpWorth = ServerProperties.Properties.RENT_BOUNTY_POINT_TO_GOLD;
+
 			if (args.Length < 2)
 			{
-				DisplaySyntax(client);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.CmdUsage", bpWorth),
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 				return;
 			}
+
+            if (args.Length < 3)
+            {
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.CorrectFormat"),
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                return;
+            }
+
             House house = client.Player.CurrentHouse;
 			if (house == null)
 			{
-                DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.InHouseError"), new object[] { });
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.RangeOfAHouse"),
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 				return;
 			}
-            if (!house.CanPayRent(client.Player))
-			{
-                DisplayMessage(client, "You do not have permission to pay rent for this house.");
-				return;
-			}
+
+            string numericAmount = "";
+            foreach (char c in args[2]) //Assist player mistakes and remove letters / special characters
+            {
+                if (!Char.IsNumber(c))
+                    continue;
+
+                numericAmount += c;
+            }
+
+            if (String.IsNullOrEmpty(numericAmount))
+            {
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.CorrectFormat"),
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                return;
+            }
+
+            long BPsToAdd = 0;
+            try
+            {
+                BPsToAdd = Int64.Parse(numericAmount);
+            }
+            catch
+            {
+                return;
+            }
+
 			switch (args[1].ToLower())
 			{
 				case "personal":
 					{
-						long BPsToAdd = 0;
-						try
-						{
-							BPsToAdd = Int64.Parse(args[2]);
-						}
-						catch
-						{
-							return;
-						}
+                        if (!house.CanPayRent(client.Player))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NoPayRentPerm"),
+                                eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                            return;
+                        }
+
 						if ((client.Player.BountyPoints -= BPsToAdd) < 0)
 						{
-							//  DisplayError(client, "You do not have enough bps!", new object[] { });
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NotEnoughBp"),
+                                eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 							return;
 						}
-						BPsToAdd *= 10000;
-						client.Player.TempProperties.setProperty(HousingConstants.BPsForHouseRent, BPsToAdd);
-						client.Player.TempProperties.setProperty(HousingConstants.HouseForHouseRent, house);
-						client.Player.Out.SendHousePayRentDialog("Housing07");
-						break;
-					}
+
+                        if (house.KeptMoney == (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.AlreadyMaxMoney"),
+                                eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                            return;
+                        }
+
+                        if ((house.KeptMoney + (BPsToAdd * bpWorth)) > (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS))
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.ToManyMoney"),
+                                eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                            return;
+                        }
+
+                        house.KeptMoney += (BPsToAdd * bpWorth);
+                        house.SaveIntoDatabase();
+
+                        client.Player.BountyPoints -= BPsToAdd;
+                        client.Player.SaveIntoDatabase();
+
+                        client.Out.SendUpdatePoints();
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.YouSpend", BPsToAdd, ((BPsToAdd * bpWorth) / bpWorth)),
+                            eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					} break;
 				case "guild":
 					{
-						DisplayMessage(client, "This feature is not yet implemented!", new object[] { });
-						break;
-					}
+                        if (house.DatabaseItem.GuildHouse && client.Player.GuildName == house.DatabaseItem.GuildName)
+                        {
+                            if (house.CanPayRent(client.Player))
+                            {
+                                if ((client.Player.Guild.BountyPoints -= BPsToAdd) < 0)
+                                {
+                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NotEnoughGuildBp"),
+                                        eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+
+                                if (house.KeptMoney == (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS))
+                                {
+                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.AlreadyMaxMoney"),
+                                        eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                                    return;
+                                }
+
+                                if ((house.KeptMoney += (BPsToAdd * bpWorth)) > (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS))
+                                {
+                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.ToManyMoney"),
+                                        eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                                    return;
+                                }
+
+                                house.KeptMoney += (BPsToAdd * bpWorth);
+                                house.SaveIntoDatabase();
+
+                                client.Player.Guild.BountyPoints -= BPsToAdd;
+                                client.Player.Guild.SaveIntoDatabase();
+
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.YouSpendGuild", BPsToAdd, ((BPsToAdd * bpWorth) / bpWorth)),
+                                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                                return;
+                            }
+                            else
+                            {
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NoPayRentPerm"),
+                                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                                return;
+                            }
+                        }
+
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NotAHouseGuildLeader"));
+					} break;
 				default:
 					{
-						DisplaySyntax(client);
-						break;
-					}
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.CorrectFormat"));
+					} break;
 			}
 		}
 	}
