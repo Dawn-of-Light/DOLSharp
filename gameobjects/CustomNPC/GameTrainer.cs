@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using DOL.Database;
 using DOL.Events;
@@ -391,7 +392,7 @@ namespace DOL.GS
 				if (disabled_classes == null)
 				{
 					// creation of disabled_classes list.
-					disabled_classes = new List<string>(ServerProperties.Properties.DISABLED_CLASSES.Split(';'));
+					disabled_classes = ServerProperties.Properties.DISABLED_CLASSES.SplitCSV().ToList();
 				}
 
 				if (disabled_classes.Contains(TrainedClass.ToString()))

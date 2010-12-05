@@ -51,8 +51,7 @@ namespace DOL.GS
 				{
 					int charClass;
 					bool isFind = false;
-					string [] charList = item.Class.Split(';');
-					foreach (string currentItem in charList)
+					foreach (string currentItem in item.Class.SplitCSV(true))
 					{
 						int.TryParse(currentItem, out charClass);
 						if (charClass == c.Class)

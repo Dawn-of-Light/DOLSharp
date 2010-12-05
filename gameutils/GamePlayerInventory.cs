@@ -625,8 +625,7 @@ namespace DOL.GS
 						// but we allow the player to switch the item inside his inventory (check only char slots)
 					{
 						valid = false;
-						string[] allowedclasses = fromItem.AllowedClasses.Split(';');
-						foreach (string allowed in allowedclasses)
+						foreach (string allowed in fromItem.AllowedClasses.SplitCSV(true))
 						{
 							if (m_player.CharacterClass.ID.ToString() == allowed || m_player.Client.Account.PrivLevel > 1)
 							{
@@ -648,8 +647,7 @@ namespace DOL.GS
 						// but we allow the player to switch the item inside his inventory (check only char slots)
 					{
 						valid = false;
-						string[] allowedclasses = toItem.AllowedClasses.Split(';');
-						foreach (string allowed in allowedclasses)
+						foreach (string allowed in toItem.AllowedClasses.SplitCSV(true))
 						{
 							if (m_player.CharacterClass.ID.ToString() == allowed || m_player.Client.Account.PrivLevel > 1)
 							{

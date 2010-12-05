@@ -5937,31 +5937,12 @@ namespace DOL.GS
 		#endregion Abilities
 
 		/// <summary>
-		/// Checks if player has ability to use items of this type
+		/// Checks if living has ability to use items of this type
 		/// </summary>
 		/// <param name="item"></param>
-		/// <returns>true if player has ability to use item</returns>
+		/// <returns>true if living has ability to use item</returns>
 		public virtual bool HasAbilityToUseItem(ItemTemplate item)
 		{
-			if (item == null) 
-				return false;
-
-			// allow usage of all house items
-			if ((item.Object_Type == 0 || item.Object_Type >= (int)eObjectType._FirstHouse) && item.Object_Type <= (int)eObjectType._LastHouse)
-				return true;
-
-			if (this is GamePlayer)
-			{
-				if (Util.IsEmpty(item.AllowedClasses)) item.AllowedClasses = "0";
-				if (item.AllowedClasses != "0")
-				{
-					bool valid = false;
-					string[] allowedclasses = item.AllowedClasses.Split(';');
-					foreach (string allowed in allowedclasses)
-						if ((this as GamePlayer).CharacterClass.ID.ToString() == allowed || (this as GamePlayer).Client.Account.PrivLevel > 1) { valid = true; break; }
-					if (!valid) return false;
-				}
-			}
 			return GameServer.ServerRules.CheckAbilityToUseItem(this, item);
 		}
 

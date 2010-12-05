@@ -2682,18 +2682,18 @@ namespace DOL.GS
 
 
 		protected static readonly int[] m_numRespecsCanBuyOnLevel =
-			{
-				1,1,1,1,1, //1-5
-				2,2,2,2,2,2,2, //6-12
-				3,3,3,3, //13-16
-				4,4,4,4,4,4, //17-22
-				5,5,5,5,5, //23-27
-				6,6,6,6,6,6, //28-33
-				7,7,7,7,7, //34-38
-				8,8,8,8,8,8, //39-44
-				9,9,9,9,9, //45-49
-				10 //50
-			}; 
+		{
+			1,1,1,1,1, //1-5
+			2,2,2,2,2,2,2, //6-12
+			3,3,3,3, //13-16
+			4,4,4,4,4,4, //17-22
+			5,5,5,5,5, //23-27
+			6,6,6,6,6,6, //28-33
+			7,7,7,7,7, //34-38
+			8,8,8,8,8,8, //39-44
+			9,9,9,9,9, //45-49
+			10 //50
+		};
 
 
 		/// <summary>
@@ -2719,46 +2719,46 @@ namespace DOL.GS
 
 
 		protected static readonly int[] m_respecCost =
-			{
-				1,2,3, //13
-				2,5,9, //14
-				3,9,17, //15
-				6,16,30, //16
-				10,26,48,75, //17
-				16,40,72,112, //18
-				22,56,102,159, //19
-				31,78,140,218, //20
-				41,103,187,291, //21
-				54,135,243,378, //22
-				68,171,308,480,652, //23
-				85,214,385,600,814, //24
-				105,263,474,738,1001, //25
-				128,320,576,896,1216, //26
-				153,383,690,1074,1458, //27
-				182,455,820,1275,1731,2278, //28
-				214,535,964,1500,2036,2679, //29
-				250,625,1125,1750,2375,3125, //30
-				289,723,1302,2025,2749,3617, //31
-				332,831,1497,2329,3161,4159, //32
-				380,950,1710,2661,3612,4752, //33
-				432,1080,1944,3024,4104,5400,6696, //34
-				488,1220,2197,3417,4638,6103,7568, //35
-				549,1373,2471,3844,5217,6865,8513, //36
-				615,1537,2767,4305,5843,7688,9533, //37
-				686,1715,3087,4802,6517,8575,10633, //38
-				762,1905,3429,5335,7240,9526,11813,14099, //39
-				843,2109,3796,5906,8015,10546,13078,15609, //40
-				930,2327,4189,6516,8844,11637,14430,17222, //41
-				1024,2560,4608,7168,9728,1280,15872,18944, //42
-				1123,2807,5053,7861,10668,14037,17406,20776, //43
-				1228,3070,5527,8597,11668,15353,19037,22722, //44
-				1339,3349,6029,9378,12725,16748,20767,24787,28806, //45
-				1458,3645,6561,10206,13851,18225,22599,26973,31347, //46
-				1582,3957,7123,11080,15037,19786,24535,29283,34032, //47
-				1714,4286,7716,12003,16290,21434,26578,31722,36867, //48
-				1853,4634,8341,12976,17610,23171,28732,34293,39854, //49
-				2000,5000,9000,14000,19000,25000,31000,37000,43000,50000 //50
-			};
+		{
+			1,2,3, //13
+			2,5,9, //14
+			3,9,17, //15
+			6,16,30, //16
+			10,26,48,75, //17
+			16,40,72,112, //18
+			22,56,102,159, //19
+			31,78,140,218, //20
+			41,103,187,291, //21
+			54,135,243,378, //22
+			68,171,308,480,652, //23
+			85,214,385,600,814, //24
+			105,263,474,738,1001, //25
+			128,320,576,896,1216, //26
+			153,383,690,1074,1458, //27
+			182,455,820,1275,1731,2278, //28
+			214,535,964,1500,2036,2679, //29
+			250,625,1125,1750,2375,3125, //30
+			289,723,1302,2025,2749,3617, //31
+			332,831,1497,2329,3161,4159, //32
+			380,950,1710,2661,3612,4752, //33
+			432,1080,1944,3024,4104,5400,6696, //34
+			488,1220,2197,3417,4638,6103,7568, //35
+			549,1373,2471,3844,5217,6865,8513, //36
+			615,1537,2767,4305,5843,7688,9533, //37
+			686,1715,3087,4802,6517,8575,10633, //38
+			762,1905,3429,5335,7240,9526,11813,14099, //39
+			843,2109,3796,5906,8015,10546,13078,15609, //40
+			930,2327,4189,6516,8844,11637,14430,17222, //41
+			1024,2560,4608,7168,9728,1280,15872,18944, //42
+			1123,2807,5053,7861,10668,14037,17406,20776, //43
+			1228,3070,5527,8597,11668,15353,19037,22722, //44
+			1339,3349,6029,9378,12725,16748,20767,24787,28806, //45
+			1458,3645,6561,10206,13851,18225,22599,26973,31347, //46
+			1582,3957,7123,11080,15037,19786,24535,29283,34032, //47
+			1714,4286,7716,12003,16290,21434,26578,31722,36867, //48
+			1853,4634,8341,12976,17610,23171,28732,34293,39854, //49
+			2000,5000,9000,14000,19000,25000,31000,37000,43000,50000 //50
+		};
 
 
 		/// <summary>
@@ -5155,7 +5155,7 @@ namespace DOL.GS
 			// Graveen: give a DOL respec on the GIVE_DOL_RESPEC_ON_LEVELS levels
 			byte level_respec = 0;
 
-			foreach (string str in ServerProperties.Properties.GIVE_DOL_RESPEC_AT_LEVEL.Split(';'))
+			foreach (string str in ServerProperties.Properties.GIVE_DOL_RESPEC_AT_LEVEL.SplitCSV(true))
 			{
 				if( !byte.TryParse( str, out level_respec ) )
 					level_respec = 0;
@@ -11866,10 +11866,8 @@ namespace DOL.GS
 				tmpStr = character.SerializedAbilities;
 				if (tmpStr != null && tmpStr.Length > 0)
 				{
-					string[] abilities = tmpStr.Split(';');
-
 					//Add the abilities to our skill list!
-					foreach (string ability in abilities)
+					foreach (string ability in tmpStr.SplitCSV())
 					{
 						string[] values = ability.Split('|');
 						if (values.Length >= 2 && !HasAbility(values[0]))
@@ -11885,7 +11883,7 @@ namespace DOL.GS
 					tmpStr = character.DisabledAbilities;
 					if (tmpStr != null && tmpStr.Length > 0)
 					{
-						foreach (string str in tmpStr.Split(';'))
+						foreach (string str in tmpStr.SplitCSV())
 						{
 							string[] values = str.Split('|');
 							if (values.Length >= 2)
@@ -11909,8 +11907,7 @@ namespace DOL.GS
 				tmpStr = character.SerializedSpecs;
 				if (tmpStr != null && tmpStr.Length > 0)
 				{
-					string[] specs = tmpStr.Split(';');
-					foreach (string spec in specs)
+					foreach (string spec in tmpStr.SplitCSV())
 					{
 						string[] values = spec.Split('|');
 						if (values.Length >= 2)
@@ -11939,7 +11936,7 @@ namespace DOL.GS
 			tmpStr = character.DisabledSpells;
 			if (tmpStr != null && tmpStr.Length > 0)
 			{
-				foreach (string str in tmpStr.Split(';'))
+				foreach (string str in tmpStr.SplitCSV())
 				{
 					string[] values = str.Split('|');
 					ushort spellid;
@@ -11962,7 +11959,7 @@ namespace DOL.GS
 				tmpStr = character.SerializedSpellLines;
 				if (tmpStr != null && tmpStr.Length > 0)
 				{
-					foreach (string serializedSpellLine in tmpStr.Split(';'))
+					foreach (string serializedSpellLine in tmpStr.SplitCSV())
 					{
 						string[] values = serializedSpellLine.Split('|');
 						if (values.Length >= 2)
@@ -13391,8 +13388,7 @@ namespace DOL.GS
 
 				lock (craftingSkills.SyncRoot)
 				{
-					string[] craftingSkill = DBCharacter.SerializedCraftingSkills.Split(';');
-					foreach (string skill in craftingSkill)
+					foreach (string skill in DBCharacter.SerializedCraftingSkills.SplitCSV())
 					{
 						string[] values = skill.Split('|');
 						//Load by crafting skill name
@@ -14112,7 +14108,7 @@ namespace DOL.GS
 		/// Gets or sets the count of midgard players killed.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsMidgardPlayers
+		public virtual int KillsMidgardPlayers
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsMidgardPlayers : 0; }
 			set
@@ -14127,7 +14123,7 @@ namespace DOL.GS
 		/// Gets or sets the count of hibernia players killed.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsHiberniaPlayers
+		public virtual int KillsHiberniaPlayers
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsHiberniaPlayers : 0; }
 			set
@@ -14142,7 +14138,7 @@ namespace DOL.GS
 		/// Gets or sets the count of death blows on albion players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsAlbionDeathBlows
+		public virtual int KillsAlbionDeathBlows
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsAlbionDeathBlows : 0; }
 			set
@@ -14156,7 +14152,7 @@ namespace DOL.GS
 		/// Gets or sets the count of death blows on midgard players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsMidgardDeathBlows
+		public virtual int KillsMidgardDeathBlows
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsMidgardDeathBlows : 0; }
 			set
@@ -14170,7 +14166,7 @@ namespace DOL.GS
 		/// Gets or sets the count of death blows on hibernia players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsHiberniaDeathBlows
+		public virtual int KillsHiberniaDeathBlows
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsHiberniaDeathBlows : 0; }
 			set
@@ -14184,7 +14180,7 @@ namespace DOL.GS
 		/// Gets or sets the count of killed solo albion players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsAlbionSolo
+		public virtual int KillsAlbionSolo
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsAlbionSolo : 0; }
 			set
@@ -14198,7 +14194,7 @@ namespace DOL.GS
 		/// Gets or sets the count of killed solo midgard players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsMidgardSolo
+		public virtual int KillsMidgardSolo
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsMidgardSolo : 0; }
 			set
@@ -14212,7 +14208,7 @@ namespace DOL.GS
 		/// Gets or sets the count of killed solo hibernia players.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsHiberniaSolo
+		public virtual int KillsHiberniaSolo
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsHiberniaSolo : 0; }
 			set
@@ -14226,7 +14222,7 @@ namespace DOL.GS
 		/// Gets or sets the count of captured keeps.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int CapturedKeeps
+		public virtual int CapturedKeeps
 		{
 			get { return DBCharacter != null ? DBCharacter.CapturedKeeps : 0; }
 			set
@@ -14240,7 +14236,7 @@ namespace DOL.GS
 		/// Gets or sets the count of captured towers.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int CapturedTowers
+		public virtual int CapturedTowers
 		{
 			get { return DBCharacter != null ? DBCharacter.CapturedTowers : 0; }
 			set
@@ -14254,7 +14250,7 @@ namespace DOL.GS
 		/// Gets or sets the count of captured relics.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int CapturedRelics
+		public virtual int CapturedRelics
 		{
 			get { return DBCharacter != null ? DBCharacter.CapturedRelics : 0; }
 			set
@@ -14268,7 +14264,7 @@ namespace DOL.GS
 		/// Gets or sets the count of dragons killed.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsDragon
+		public virtual int KillsDragon
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsDragon : 0; }
 			set
@@ -14282,7 +14278,7 @@ namespace DOL.GS
 		/// Gets or sets the pvp deaths
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int DeathsPvP
+		public virtual int DeathsPvP
 		{
 			get { return DBCharacter != null ? DBCharacter.DeathsPvP : 0; }
 			set { if (DBCharacter != null) DBCharacter.DeathsPvP = value; }
@@ -14292,7 +14288,7 @@ namespace DOL.GS
 		/// Gets or sets the count of killed Legions.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsLegion
+		public virtual int KillsLegion
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsLegion : 0; }
 			set
@@ -14306,7 +14302,7 @@ namespace DOL.GS
 		/// Gets or sets the count of killed Epic Boss.
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-        public virtual int KillsEpicBoss
+		public virtual int KillsEpicBoss
 		{
 			get { return DBCharacter != null ? DBCharacter.KillsEpicBoss : 0; }
 			set
@@ -14894,14 +14890,11 @@ namespace DOL.GS
 				SpellLine line = new SpellLine(GlobalSpellsLines.Champion_Spells + Name, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
 				line.Level = 50;
 				SkillBase.RegisterSpellLine(line);
-				if (championSpells != null && championSpells.Length > 0)
+				foreach (string cSpell in championSpells.SplitCSV())
 				{
-					foreach (string cSpell in championSpells.Split(';'))
-					{
-						string[] cSpellProp = cSpell.Split('|');
-						if (cSpellProp.Length < 2) continue;
-						championSpellsh.Add(cSpellProp[0], int.Parse(cSpellProp[0]));
-					}
+					string[] cSpellProp = cSpell.Split('|');
+					if (cSpellProp.Length < 2) continue;
+					championSpellsh.Add(cSpellProp[0], int.Parse(cSpellProp[0]));
 				}
 				if (championSpellsh != null)
 				{
@@ -14925,14 +14918,11 @@ namespace DOL.GS
 		public virtual bool HaveChampionSpell(int spellid)
 		{
 			string championSpells = ChampionSpells;
-			if (championSpells != null && championSpells.Length > 0)
+			foreach (string cSpell in championSpells.SplitCSV())
 			{
-				foreach (string cSpell in championSpells.Split(';'))
-				{
-					string[] cSpellProp = cSpell.Split('|');
-					if (cSpellProp.Length < 2) continue;
-					if (int.Parse(cSpellProp[0]) == spellid) return true;
-				}
+				string[] cSpellProp = cSpell.Split('|');
+				if (cSpellProp.Length < 2) continue;
+				if (int.Parse(cSpellProp[0]) == spellid) return true;
 			}
 			return false;
 		}

@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
@@ -171,12 +171,12 @@ namespace DOL.GS
 
 			m_timeManager = time;
 
-			string[] list = null; 
+			List<string> list = null; 
 
 			if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
-				list = ServerProperties.Properties.DEBUG_LOAD_REGIONS.Split(';');
+				list = ServerProperties.Properties.DEBUG_LOAD_REGIONS.SplitCSV(true);
 
-			if (list != null && list.Length > 0)
+			if (list != null && list.Count > 0)
 			{
 				m_loadObjects = false;
 
@@ -190,7 +190,7 @@ namespace DOL.GS
 				}
 			}
 
-			list = ServerProperties.Properties.DISABLED_REGIONS.Split(';');
+			list = ServerProperties.Properties.DISABLED_REGIONS.SplitCSV(true);
 			foreach (string region in list)
 			{
 				if (region.ToString() == ID.ToString())
@@ -200,7 +200,7 @@ namespace DOL.GS
 				}
 			}
 
-			list = ServerProperties.Properties.DISABLED_EXPANSIONS.Split(';');
+			list = ServerProperties.Properties.DISABLED_EXPANSIONS.SplitCSV(true);
 			foreach (string expansion in list)
 			{
 				if (expansion.ToString() == m_regionData.Expansion.ToString())
