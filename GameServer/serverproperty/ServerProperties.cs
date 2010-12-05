@@ -381,7 +381,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// A serialised list of disabled RegionIDs
 		/// </summary>
-		[ServerProperty("world","disabled_regions", "Serialized list of disabled region IDs, separated by semi-colon", "")]
+		[ServerProperty("world","disabled_regions", "Serialized list of disabled region IDs, separated by semi-colon or a range with a dash (ie 1-5;7;9)", "")]
 		public static string DISABLED_REGIONS;
 
 		/// <summary>
@@ -1133,13 +1133,13 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Disable some classes from being created
 		/// </summary>
-		[ServerProperty("classes","disabled_classes", "Serialized list of disabled classes, separated by semi-colon", "")]
+		[ServerProperty("classes","disabled_classes", "Serialized list of disabled classes, separated by semi-colon or a range with a dash (ie 1-5;7;9)", "")]
 		public static string DISABLED_CLASSES;
 		
 		/// <summary>
 		/// Disable some races from being created
 		/// </summary>
-		[ServerProperty("classes","disabled_races", "Serialized list of disabled races, separated by semi-colon", "")]
+		[ServerProperty("classes","disabled_races", "Serialized list of disabled races, separated by semi-colon or a range with a dash (ie 1-5;7;9)", "")]
 		public static string DISABLED_RACES;
 
 		/// <summary>
@@ -1202,7 +1202,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// What levels did we allow a DOL respec ? serialized
 		/// </summary>
-		[ServerProperty("classes","give_dol_respec_at_level", "What levels does we give a DOL respec? (serialized)", "0")]
+		[ServerProperty("classes","give_dol_respec_at_level", "What levels does we give a DOL respec ? separated by a semi-colon or a range with a dash (ie 1-5;7;9)", "0")]
 		public static string GIVE_DOL_RESPEC_AT_LEVEL;
 
 		/// <summary>
