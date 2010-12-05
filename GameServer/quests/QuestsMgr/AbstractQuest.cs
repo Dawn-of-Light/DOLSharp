@@ -310,7 +310,7 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		public virtual void OnQuestAssigned(GamePlayer player)
 		{
-			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "AbstractQuest.OnQuestAssigned.GetQuest", Name)), eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "AbstractQuest.OnQuestAssigned.GetQuest", Name)), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 
 		}
 
