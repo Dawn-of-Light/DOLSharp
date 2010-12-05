@@ -22,6 +22,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using DOL.GS.Utils;
+using System.Linq;
 
 namespace DOL.GS
 {
@@ -105,6 +106,50 @@ namespace DOL.GS
 			return chancePercent > RandomGen.NextDouble();
 		}
 
+		/// <summary>
+		/// Parse a string in CSV mode: handle ';'
+		/// In case of int value
+		/// </summary>
+		/// <param name="str"></param>
+		/// <returns></returns>
+		public static List<string> SplitCSV (this string str, bool rangeCheck = false)
+		{
+			char primarySeparator = ';';
+			char secondarySeparator = '-';
+			
+			// simple parsing on priSep
+			var resultat = str.Split(new char[]{primarySeparator}, StringSplitOptions.RemoveEmptyEntries).ToList();
+			if (!rangeCheck)
+				return resultat;
+			
+			// advanced parsing with range handling
+			List<string> advancedResultat = new List<string>();
+			foreach(var currentResultat in resultat)
+			{
+				if (currentResultat.Contains('-'))
+				{
+					int from =0;
+					int to =0;
+					
+					if (int.TryParse(currentResultat.Split(secondarySeparator)[0], out from) && int.TryParse(currentResultat.Split(secondarySeparator)[1], out to))
+					{
+						if (from > to)
+						{
+							int tmp = to;
+							to = from;
+							from = tmp;
+						}
+						
+						for (int i=from; i<=to; i++)
+							advancedResultat.Add(i.ToString());
+					}
+				}
+				else
+					advancedResultat.Add(currentResultat);
+			}
+			return advancedResultat;
+		}
+		
 		/// <summary>
 		/// Make a sentence, first letter uppercase and replace all parameters
 		/// </summary>

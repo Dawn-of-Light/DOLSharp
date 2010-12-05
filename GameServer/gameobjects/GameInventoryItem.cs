@@ -330,7 +330,7 @@ namespace DOL.GS
 			}
 
 			if ((Object_Type >= (int)eObjectType.GenericWeapon) && (Object_Type <= (int)eObjectType._LastWeapon) ||
-				Object_Type == (int)eObjectType.Instrument)
+			    Object_Type == (int)eObjectType.Instrument)
 			{
 				WriteUsableClasses(delve, player.Client);
 				WriteMagicalBonuses(delve, player.Client, false);
@@ -417,13 +417,13 @@ namespace DOL.GS
 				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.CannotSold"));
 
 			if (IsIndestructible)
-                delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.CannotDestroyed"));
+				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.CannotDestroyed"));
 
 			if (BonusLevel > 0)
 			{
 				delve.Add(" ");
-                delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.BonusLevel", BonusLevel));
-            }
+				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.BonusLevel", BonusLevel));
+			}
 
 			//Add admin info
 			if (player.Client.Account.PrivLevel > 1)
@@ -439,15 +439,14 @@ namespace DOL.GS
 
 			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteUsableClasses.UsableBy"));
 
-			string[] allowedclasses = AllowedClasses.Split(';');
-			foreach (string allowed in allowedclasses)
+			foreach (string allowed in AllowedClasses.SplitCSV(true))
 			{
 				int classID = -1;
 				if (int.TryParse(allowed, out classID))
 				{
 					output.Add("- " + ((eCharacterClass)classID).ToString());
 				}
-				else 
+				else
 				{
 					log.Error(Id_nb + " has an invalid entry for allowed classes '" + allowed + "'");
 				}
@@ -839,9 +838,9 @@ namespace DOL.GS
 		{
 			switch (property)
 			{
-				//case eProperty.BlockChance:
-				//case eProperty.ParryChance:
-				//case eProperty.EvadeChance:
+					//case eProperty.BlockChance:
+					//case eProperty.ParryChance:
+					//case eProperty.EvadeChance:
 				case eProperty.DefensiveBonus:
 				case eProperty.BladeturnReinforcement:
 				case eProperty.NegativeReduction:
@@ -1010,9 +1009,9 @@ namespace DOL.GS
 
 			switch (Type_Damage)
 			{
-				case 1: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Small")); break;
-				case 2: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Medium")); break;
-				case 3: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Large")); break;
+					case 1: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Small")); break;
+					case 2: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Medium")); break;
+					case 3: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Large")); break;
 			}
 		}
 
@@ -1048,9 +1047,9 @@ namespace DOL.GS
 				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicWeaponInfos.Condition", ConditionPercent));
 			}
 
-			delve.Add(LanguageMgr.GetTranslation(player.Client, 
-													"DetailDisplayHandler.WriteClassicWeaponInfos.DamageType",
-													(Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(Type_Damage))));
+			delve.Add(LanguageMgr.GetTranslation(player.Client,
+			                                     "DetailDisplayHandler.WriteClassicWeaponInfos.DamageType",
+			                                     (Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(Type_Damage))));
 
 			delve.Add(" ");
 
