@@ -162,7 +162,6 @@ namespace DOL.Mail
 
 		public static bool SendMail(string to, string subject, string message, string fromName, string fromAddress)
 		{
-			string[] targets = to.Split(';');
 			if (m_enable == false)
 			{
 				Logger.Info("SendMail called but sending mail is not enabled.");
@@ -172,7 +171,7 @@ namespace DOL.Mail
 			{
 				MailMessage mail = new MailMessage();
 
-				foreach (string str in targets)
+				foreach (string str in to.SplitCSV())
 					mail.To.Add(str);
 				mail.Subject = subject;
 
@@ -284,8 +283,7 @@ namespace DOL.Mail
 					// Build the mail.
 					MailMessage mail = new MailMessage();
 
-					string[] targets = to.Split(';');
-					foreach (string str in targets)
+					foreach (string str in to.SplitCSV())
 						if (!String.IsNullOrEmpty(str.Trim())) mail.To.Add(str);
 					mail.Subject = "[ Logs ] " + DateTime.Now.ToString();
 					mail.From = new MailAddress(m_emailAddress, GameServer.Instance.Configuration.ServerName);

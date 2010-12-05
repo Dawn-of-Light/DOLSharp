@@ -1297,8 +1297,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteUsableClasses.UsableBy"));
 
-			string[] allowedclasses = item.AllowedClasses.Split(';');
-			foreach (string allowed in allowedclasses)
+			foreach (string allowed in item.AllowedClasses.SplitCSV(true))
 			{
 				int classID = -1;
 				if (int.TryParse(allowed, out classID))

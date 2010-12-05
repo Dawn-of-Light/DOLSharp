@@ -2093,7 +2093,7 @@ namespace DOL.GS
 			this.GuildName = template.GuildName;
 
 			#region Models
-			foreach (string str in template.Model.Split(';'))
+			foreach (string str in template.Model.SplitCSV(true))
 			{
 				if (str.Length == 0) continue;
 				ushort i = ushort.Parse(str);
@@ -2106,7 +2106,7 @@ namespace DOL.GS
 			byte size = 50;
 			if (!Util.IsEmpty(template.Size))
 			{
-				string[] splitSize = template.Size.Split(';');
+				string[] splitSize = template.Size.SplitCSV(true).ToArray();
 				if (splitSize.Length == 1)
 					size = byte.Parse(splitSize[0]);
 				else size = (byte)Util.Random(int.Parse(splitSize[0]), int.Parse(splitSize[1]));
@@ -2118,7 +2118,7 @@ namespace DOL.GS
 			byte level = 0;
 			if (!Util.IsEmpty(template.Level))
 			{
-				string[] splitLevel = template.Level.Split(';');
+				string[] splitLevel = template.Level.SplitCSV().ToArray();
 				if (splitLevel.Length == 1)
 					level = byte.Parse(splitLevel[0]);
 				else level = (byte)Util.Random(int.Parse(splitLevel[0]), int.Parse(splitLevel[1]));
@@ -2160,7 +2160,7 @@ namespace DOL.GS
 				GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
 				//First let's try to reach the npcequipment table and load that!
 				//We use a ';' split to allow npctemplates to support more than one equipmentIDs
-				string[] equipIDs = template.Inventory.Split(';');
+				string[] equipIDs = template.Inventory.SplitCSV().ToArray();
 				if (!template.Inventory.Contains(":"))
 				{
 					foreach (string str in equipIDs)

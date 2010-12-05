@@ -93,7 +93,7 @@ namespace DOL.GS
 			{
 				string name = m_serializedNames;
 				SortedList nameByLevel = new SortedList();
-				foreach (string levelNamePair in name.Trim().Split(';'))
+				foreach (string levelNamePair in name.Trim().SplitCSV())
 				{
 					if (levelNamePair.Trim().Length <= 0) continue;
 					string[] levelAndName = levelNamePair.Trim().Split('|');

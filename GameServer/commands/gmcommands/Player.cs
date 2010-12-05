@@ -1996,7 +1996,7 @@ namespace DOL.GS.Commands
 			text.Add(" ");
 			text.Add("HOUSE INFORMATION ");
 			text.Add("  - Personal House : " + HouseMgr.GetHouseNumberByPlayer(player));
-			if (player.CurrentHouse != null && player.CurrentHouse.HouseNumber != null)
+			if (player.CurrentHouse != null && player.CurrentHouse.HouseNumber > 0)
 				text.Add("  - Current House : " + player.CurrentHouse.HouseNumber);
 			text.Add("  - In House : " + player.InHouse);
 			text.Add(" ");
