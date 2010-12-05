@@ -993,9 +993,7 @@ namespace DOL.GS
 		public static bool IsExpansionEnabled(int expansion)
 		{
 			bool enabled = true;
-
-			string[] disabled = ServerProperties.Properties.DISABLED_EXPANSIONS.Split(';');
-			foreach (string ex in disabled)
+			foreach (string ex in ServerProperties.Properties.DISABLED_EXPANSIONS.SplitCSV(true))
 			{
 				int exNum = 0;
 				if (int.TryParse(ex, out exNum))

@@ -151,8 +151,7 @@ namespace DOL.GS
 
 			if (data.Abilities != null && data.Abilities.Length > 0)
 			{
-				string[] serializedab = data.Abilities.Split(';');
-				foreach (string splitab in serializedab)
+				foreach (string splitab in data.Abilities.SplitCSV())
 				{
 					string[] ab = splitab.Split('|');
 					if (splitab.Trim().Length == 0) continue;

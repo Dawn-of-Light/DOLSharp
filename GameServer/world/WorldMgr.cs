@@ -358,9 +358,7 @@ namespace DOL.GS
 
 			if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
 			{
-				string[] astr = ServerProperties.Properties.DEBUG_LOAD_REGIONS.Split(';');
-
-				foreach (string loadRegion in astr)
+				foreach (string loadRegion in ServerProperties.Properties.DEBUG_LOAD_REGIONS.SplitCSV(true))
 				{
 					mobList.AddRange(GameServer.Database.SelectObjects<Mob>("region = " + loadRegion));
 				}

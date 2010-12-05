@@ -214,7 +214,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			// Is class disabled ?
 			int occurences = 0;
-			List<string> disabled_classes = new List<string>(Properties.DISABLED_CLASSES.Split(';'));
+			List<string> disabled_classes = Properties.DISABLED_CLASSES.SplitCSV(true);
 			occurences = (from j in disabled_classes
 			              where j == ch.Class.ToString()
 			              select j).Count();
@@ -269,7 +269,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			ch.Race = (startRaceGender & 0x0F) + ((startRaceGender & 0x40) >> 2);
 
-			List<string> disabled_races = new List<string>(Properties.DISABLED_RACES.Split(';'));
+			List<string> disabled_races = new List<string>(Properties.DISABLED_RACES.SplitCSV(true));
 			occurences = (from j in disabled_races
 			              where j == ch.Race.ToString()
 			              select j).Count();
