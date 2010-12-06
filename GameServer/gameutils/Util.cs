@@ -117,6 +117,8 @@ namespace DOL.GS
 			char primarySeparator = ';';
 			char secondarySeparator = '-';
 			
+			if (str==null) return null;
+			
 			// simple parsing on priSep
 			var resultat = str.Split(new char[]{primarySeparator}, StringSplitOptions.RemoveEmptyEntries).ToList();
 			if (!rangeCheck)
@@ -178,7 +180,18 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool IsEmpty(string str, bool zeroMeansEmpty = false)
 		{
-			return (string.IsNullOrEmpty(str) || str.ToLower() == "null" || zeroMeansEmpty?str.Trim()=="0":false);			
+			if (string.IsNullOrEmpty(str))
+				return true;
+			
+			// various common db troubles
+			string currentStr = str.ToLower();
+			if (currentStr == "null" ||currentStr == "\r\n")
+				return true;
+			
+			if (zeroMeansEmpty && currentStr.Trim() == "0")
+				return true;
+
+			return false;
 		}
 
 		/// <summary>
