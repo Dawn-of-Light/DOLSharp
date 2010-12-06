@@ -328,14 +328,13 @@ namespace DOL.Language
         public static string GetTranslation(string language, eTranslationKey eKey, string translationID, string unique)
         {
             log.Debug("Entering GetTranslation");
+
+            if (string.IsNullOrWhiteSpace(translationID))
+                return "The given translation id was null or empty!";
+
             //First, check if the clients language key is an allowed language key.
             if (language == "EN" || !IsLangKeyAllowedToUse(language))
-            {
-                if (string.IsNullOrEmpty(translationID))
-                    return "The given translation id was null or empty!";
-                else
-                    return translationID;
-            }
+                return translationID;
 
             string translation = "";
 
@@ -433,9 +432,9 @@ namespace DOL.Language
                 #endregion
             }
 
-            if (string.IsNullOrEmpty(translation))
+            if (string.IsNullOrWhiteSpace(translation))
             {
-                if (string.IsNullOrEmpty(translationID))
+                if (string.IsNullOrWhiteSpace(translationID))
                     translation = "The given translation id was null or empty!";
                 else
                     translation = translationID;
