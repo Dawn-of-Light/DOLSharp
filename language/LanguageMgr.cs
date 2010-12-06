@@ -28,6 +28,16 @@ using log4net;
 
 namespace DOL.Language
 {
+    public enum eTranslationKey
+    {
+        Area_Description,
+        Area_ScreenDescription,
+        MasterLevelStep,
+        System_Text,
+        Zone_Description,
+        Zone_ScreenDescription,
+    }
+
 	public class LanguageMgr
 	{
 		/// <summary>
@@ -35,7 +45,424 @@ namespace DOL.Language
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
+        #region New language system experimental implementation
+
+        #region Master level steps storage
+
+        #region Complete
+
+        public static string[,] MasterLevelStepsComplete = new string[,]
+        {
+            {
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !"
+            },
+            {
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !"
+            },
+            {
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !"
+            },
+            {
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !"
+            },
+            {
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !"
+            },
+            {
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !"
+            },
+            {
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !"
+            },
+            {
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !"
+            },
+            {
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !",
+                "[Completed] Ianetor has been defeated !"
+            },
+        };
+
+        #endregion
+
+        #region Uncomplete
+
+        public static string[,] MasterLevelStepsUncomplete = new string[,]
+        {
+            {
+                "Ianetor likes to play with fire, and is seeking adventurers to participate in an explosive game in Oceanus Anatole! This is a group encounter.",
+                "The thief that robbed Lornas still lives! This is a group encounter.",
+                "The Zhton and Kynhroe clans of tritons in Messothalassa and Oceanus Boreal are dying, yet they still war with each other! Each clan seeks adventurers to fight for their cause! This is a battlegroup encounter.",
+                "The barrier still holds those taken in by the cursed sea of Oceanus Hesperos! This is a group encounter.",
+                "You have not yet proven yourself agaisnt the might of Lord Krojer's champions in single combat! This is a solo encounter.",
+                "Kirkleis still looks upon himself with hatred in the mirror that mocks his curse! This is a battlegroup encounter.",
+                "The portals lie dark and silent still! The Rassa remains locked away from those who would seek its power! This is a battlegroup encounter.",
+                "The ruby lies in the sand beneath the head that stares one eye into the eternal depth! This is a battlegroup encounter.",
+                "Desmona still wears her crown, the token needed remains unfound! This is a battlegroup encounter.",
+                "Face Cetus with a ring, a ruby, a mirror and a crown! This is a battlegroup encounter."
+            },
+            {
+                "Death stalks you from the shadows in the Temple of the Sobekite Eternal! This is a battlegroup encounter.",
+                "The imposter's assasins are slaying the keepers of the Temple of the Sobekite Eternal! This is a battlegroup encounter.",
+                "The triton chiefs and their followers in the flooded depths of the Temple of the Sobekite Eternal hoard stolen goods! This is a battlegroup encounter.",
+                "Rrionnes' reflection holds the key to her invulerability! This is a battlegroup encounter.",
+                "You have not beaten Chaths' Test of Strategy! This is a group encounter.",
+                "Kanahkt's test seems to be too difficult for you! This is a battlegroup encounter.",
+                "You mush face fear, terror, or horror! This is a battlegroup encounter.",
+                "To prove victorious, you must face yourself! This is a group encounter.",
+                "Defeat the Battle Masters who once defeated the trial of the Sobekite Eternal! This is a battle group encounter.",
+                "An imposter has stolen the Ankh of Life, granting him immortality as long as he resides in the Temple of the Sobekite Eternal! This is a battlegroup encounter."
+            },
+            {
+                "Moirai still holds the runic power behind her magical shielding!",
+                "Kepa has agreed to give you her runic power, will you help?",
+                "Casta still uses her artifacts to slay anyone who enters her lair!",
+                "Laodamedia still rigorously guards her lair!",
+                "Antioos asks for your help in exchange for another runic power!",
+                "A strange barracuda resides in the darkness, glowing with power!",
+                "Shraogh still strikes fear into the heart of those who oppose him!",
+                "The sting ray swarm with an unnatural glowing power!",
+                "Sinovia the octopus devours those who come near!",
+                "Medusa still turns anyone who opposes her into stone! This is a battlegroup encounter."
+            },
+            {
+                "Colossal has yet to be summoned from the scorpions of the Stygian Desert! This is a group encounter.",
+                "The Fortress of Storms has not been taken! This is a battlegroup encounter.",
+                "The Mighty One, the Eye of Ra, is rumored to roam the desert Land of Atum still! This is a group encounter.",
+                "A valuable stone to some is but a bauble to a child! This is a battlegroup encounter.",
+                "The Jann of the Land of Atum whirl among the dunes! This is a battlegroup encounter.",
+                "Oukesson the Ghillian is still multiplying when fought! This is a group encounter.",
+                "The guardians of the river Iter have yet to waken! This is a group encounter.",
+                "he blood of Daehien still flows in the Land of Atum! This is a battlegroup encounter. ",
+                "The marid, Gaurmaes, is still safe behind tornados and dust! This is a battlegroup encounter.",
+                "Martikhoras reigns in his pyramid still! This is a battlegroup encounter."
+            },
+            {
+                "The Canopic Jar - Intestines must be stolen from the Echo of Qebehsenuef! This is a group encounter.",
+                "Another Canopic Jar - Stomach must be stolen from the Echo of Duamutef! This is a group encounter.",
+                "Another Canopic Jar - Lungs must be stolen from the Echo of Hapy! This is a group encounter.",
+                "Another Canopic Jar - Liver must be stolen from the Echo of Imsety! This is a group encounter.",
+                "The gorgons of Aeurs still hold Cau Suraes mirror of Ra! This is a group encounter.",
+                "The bound ones hold the resin that preserves! This is a group encounter.",
+                "The bound ones hold a mask still needed to face Ammut! This is a group encounter.",
+                "Wrappings can be found amongst the bound ones. This is a group encounter.",
+                "You must drink the poisoned waters for the aid of Mahaf! This is a group encounter.",
+                "You must face Ammut in the depths of the Halls of Ma'ati and be judged! This is a battlegroup encounter."
+            },
+            {
+                "Look for a rare uraeus from where they appear. This is a group encounter.",
+                "The sacrifice has yet to take place, the salamander has yet to be born! This is a battlegroup encounter.",
+                "Lateef laments his fate as follower of Am-he and wishes to return to the desert! This is a battlegroup encounter.",
+                "Pallida-uraei has yet to appear! Seek out the homes of the Uraeus! This is a battlegroup encounter.",
+                "The flame spouts in easternmost Volcanus guard the objects, the flames must be cooled! This is a solo encounter.",
+                "Seek out the sacrificer Siraadi amongst the pillars of vengenance in Typhon's Reach! This is a battlegroup encounter.",
+                "Three of Ankhkare guardians guard him well. This is a battlegroup encounter.",
+                "In the center of the island braziers still call efreet! This is a battlegroup encounter.",
+                "Vazul's Fortress in the Azhen Isles has yet to be breached! This is a battlegroup encounter.",
+                "The Chimera still holds strong in her fortress in East Ashen Isles! This is a battlegroup encounter."
+            },
+            {
+                "You must acquire the gauntlet of fire! This is a group encounter.",
+                "You can learn all there is to know of your opponent through combat, but time multiplies when there are four. It is not for you to end the feud, but you can't move on until they have all seen you as a threat. This is a group encounter.",
+                "The Apophians wish to test your endurance. This is a group encounter.",
+                "The Volurgons wish to test your endurance. This is a group encounter.",
+                "The Shaitan wish to test your endurance. This is a group encounter.",
+                "The Hephaestians wish to test your endurance. This is a group encounter.",
+                "You must face a challeng in the Chamber of flame! This is a battlegroup encounter.",
+                "Katorii's gaze destroys all life it falls upon, yes she must be destroyed! This is a battlegroup encounter.",
+                "A mysterious force blocks your path! This is a battlegroup encounter.",
+                "Typhon lies in the lava pool in the center of Volcanus deep! This is a battlegroup encounter."
+            },
+            {
+                "Bisul the jinni still has the control crystal! This is a battlegroup encounter. ",
+                "Agnes shield was destroyed long ago, but it has a twin in his brother Tholoss prossession! This is a battlegroup encounter.",
+                "The sword the great Agne is now in the hands of a mischievous Jinn! This is a battlegroup encounter.",
+                "Once noble and proud Agnes, now bits strewn about a Centaur's home. This is a group encounter.",
+                "Kratos has not handed over the leg of Agne! This is a group encounter.",
+                "Dawars servant bears the head of Agne! This is a battlegroup encounter.",
+                "Find the torso of Agne amongst the statues of Aerus! This is a group encounter.",
+                "A group of gorgons have collaborated to thwart your effort to rebuild Agne by hiding his left arm because the trials resulted in many gorgon deaths in the past! This is a battlegroup encounter.",
+                "The right arm lies in the once great hall of a wreaked Atlantean temple. This is a group encounter.",
+                "First you must defeat Agnes army on his battlefield then you must topple Talos in his temple! This is a battlegroup encounter."
+            },
+            {
+                "Long ago Kyros demonstrated himself to be the ultimate warrior serving many different roles in combat, would you dare challenge him? This is a battlegroup encounter.",
+                "Lachlen was a great explorer who was always prepared to face the unique dangers lurking in each new land! This is a group encounter.",
+                "Long ago Evzen unified three warring territories after each territorys warlord was slain then ruled the combined landsd with an iron fist! This is a battlegroup encounter.",
+                "Four kings likenesses are dormant and must be awakened! This is a battlegroup encounter.",
+                "Nelos would like to teach you a lesson that you might not survive! This a battlegroup encounter.",
+                "Centaur patrols led by Katri hinder you from reaching your goal! This is a battlegroup encounter.",
+                "Only the strongest Iaculi survive as they cannibalize each other. This is a battlegroup encounter.",
+                "You have not yet proven yourself worthy to the Phoenix's Guardians! This is a battlegroup encounter.",
+                "Neola still guards her sisters well. This is a battlegroup encounter.",
+                "The phoenix is not yet weakend, and still reigns above! This is a battlegroup encounter."
+            }
+        };
+
+        #endregion
+
+        #endregion
+
+        /// <summary>
+        /// Returns a list with all language keys that are allowed to use on the server.
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetAllowedLangKeys()
+        {
+            log.Debug("Entering GetAllowedLangKeys");
+
+            List<string> allowedKeys = new List<string>();
+            string[] tmp = DOL.GS.ServerProperties.Properties.ALLOWED_CUSTOM_LANGUAGE_KEYS.Replace(" ", "").Split(';');
+
+            foreach (string allowedKey in tmp)
+                allowedKeys.Add(allowedKey);
+
+            if (!allowedKeys.Contains("EN"))
+                allowedKeys.Add("EN");
+
+            foreach(string str in allowedKeys)
+                log.Debug("GetAllowedLangKeys:" + str);
+
+            return allowedKeys;
+        }
+
+        /// <summary>
+        /// Returns true if the given language key is allowed to use on the server, or false if not.
+        /// </summary>
+        /// <param name="langKey">The language key to check</param>
+        /// <returns></returns>
+        public static bool IsLangKeyAllowedToUse(string langKey)
+        {
+            log.Debug("Entering IsLangKeyAllowedToUse");
+            return GetAllowedLangKeys().Contains(langKey) ? true : false;
+        }
+
+        /// <summary>
+        /// Returns an translated string
+        /// </summary>
+        /// <param name="language">The language</param>
+        /// <param name="eKey">The eTranslationKey to use</param>
+        /// <param name="translationID">The translation id</param>
+        /// <param name="unique"></param>
+        /// <returns></returns>
+        public static string GetTranslation(string language, eTranslationKey eKey, string translationID, string unique)
+        {
+            log.Debug("Entering GetTranslation");
+            //First, check if the clients language key is an allowed language key.
+            if (language == "EN" || !IsLangKeyAllowedToUse(language))
+                return translationID;
+
+            string translation = "";
+
+            //Now let us look what translation type is requested
+            switch (eKey)
+            {
+                #region Area_Description
+                case eTranslationKey.Area_Description:
+                    {
+                        var dbo = GameServer.Database.SelectObject<DBLanguageArea>("TranslationId='" + GameServer.Database.Escape(translationID) + "' AND Language='" + GameServer.Database.Escape(language) + "'");
+                        if (dbo != null)
+                        {
+                            //Lets check if we have text
+                            if (dbo.Description.Trim().Length > 0)
+                                translation = dbo.Description;
+                        }
+
+                    } break;
+                #endregion
+                #region Area_ScreenDescription
+                case eTranslationKey.Area_ScreenDescription:
+                    {
+                        var dbo = GameServer.Database.SelectObject<DBLanguageArea>("TranslationId='" + GameServer.Database.Escape(translationID) + "' AND Language='" + GameServer.Database.Escape(language) + "'");
+                        if (dbo != null)
+                        {
+                            //Lets check if we have text
+                            if (dbo.ScreenDescription.Trim().Length > 0)
+                                translation = dbo.ScreenDescription;
+                        }
+                    } break;
+                #endregion
+                #region MasterLevelStep
+                case eTranslationKey.MasterLevelStep:
+                    {
+                        var dbo = GameServer.Database.SelectObject<DBLanguageMasterLevelStep>("TranslationId='" + GameServer.Database.Escape(translationID) + "' AND Language='" + GameServer.Database.Escape(language) + "'");
+                        if (dbo != null)
+                        {
+                            //Lets check if we have text
+                            if (dbo.Text.Trim().Length > 0)
+                                translation = dbo.Text;
+                        }
+                    } break;
+                #endregion
+                #region System_Text
+                case eTranslationKey.System_Text:
+                    {
+                        log.Debug("Entering case");
+                        if (!string.IsNullOrWhiteSpace(unique))
+                        {
+                            log.Debug("Entering case if block");
+                            var dbo = GameServer.Database.SelectObject<DBLanguageSystemText>("TranslationId='" + GameServer.Database.Escape(translationID) + "' AND TranslationUnique='" + GameServer.Database.Escape(unique) + "' AND Language='" + GameServer.Database.Escape(language) + "'");
+                            if (dbo != null)
+                            {
+                                //Lets check if we have text
+                                if (dbo.Text.Trim().Length > 0)
+                                    translation = dbo.Text;
+                            }
+                        }
+                        else
+                        {
+                            var dbo = GameServer.Database.SelectObject<DBLanguageSystemText>("TranslationId='" + GameServer.Database.Escape(translationID) + "' AND Language='" + GameServer.Database.Escape(language) + "'");
+                            if (dbo != null)
+                            {
+                                log.Debug("Entering case else block");
+                                //Lets check if we have text
+                                if (dbo.Text.Trim().Length > 0)
+                                    translation = dbo.Text;
+                            }
+                        }
+                    } break;
+                #endregion
+                #region Zone_Description
+                case eTranslationKey.Zone_Description:
+                    {
+                        var dbo = GameServer.Database.SelectObject<DBLanguageZone>("TranslationId='" + GameServer.Database.Escape(translationID) + "' AND Language='" + GameServer.Database.Escape(language) + "'");
+                        if (dbo != null)
+                        {
+                            //Lets check if we have text
+                            if (dbo.Description.Trim().Length > 0)
+                                translation = dbo.Description;
+                        }
+                    } break;
+                #endregion
+                #region Zone_ScreenDescription
+                case eTranslationKey.Zone_ScreenDescription:
+                    {
+                        var dbo = GameServer.Database.SelectObject<DBLanguageZone>("TranslationId='" + GameServer.Database.Escape(translationID) + "' AND Language='" + GameServer.Database.Escape(language) + "'");
+                        if (dbo != null)
+                        {
+                            //Lets check if we have text
+                            if (dbo.ScreenDescription.Trim().Length > 0)
+                                translation = dbo.ScreenDescription;
+                        }
+                    } break;
+                #endregion
+            }
+
+            if (string.IsNullOrEmpty(translation))
+                translation = translationID;
+
+            log.Debug("Returning translation:" + translation);
+
+            return translation;
+        }
+
+        /// <summary>
+        /// Translate the sentence
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="eKey"></param>
+        /// <param name="translationID"></param>
+        /// <param name="unique"></param>
+        /// <returns></returns>
+        public static string GetTranslation(GameClient client, eTranslationKey eKey, string translationID, string unique)
+        {
+            if (client == null || client.Account == null)
+                //return GetTranslation(DOL.GS.ServerProperties.Properties.SERV_LANGUAGE, eKey, translationID, unique);
+                return translationID;
+
+            //if (client.Player != null && client.Account.PrivLevel > 1)
+            //{
+            //    bool debug = client.Player.TempProperties.getProperty("LANGUAGEMGR-DEBUG", false);
+            //    if (debug && IDSentences.ContainsKey(TranslationID))
+            //        return "[" + TranslationID + "]=<" + IDSentences[TranslationID][client.Account.Language] + ">";
+            //}
+
+            return GetTranslation(client.Account.Language, eKey, translationID, unique);
+        }
+
+        #endregion
+
+        /// <summary>
 		/// All the sentences [TranslationID] [Language] = [Sentence]
 		/// </summary>
 		public static Dictionary<string, Dictionary<string, string>> IDSentences;

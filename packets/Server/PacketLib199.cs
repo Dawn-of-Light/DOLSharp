@@ -18,11 +18,13 @@
 */
 #define NOENCRYPTION
 using System;
-using System.Reflection;
-using log4net;
-using DOL.Database;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+
+using DOL.Database;
+using DOL.Language;
+using log4net;
 
 namespace DOL.GS.PacketHandler
 {
@@ -124,14 +126,13 @@ namespace DOL.GS.PacketHandler
 								{
 									if (!area.DisplayMessage)
 										continue;
-									description = area.Description;
+
+                                    description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Area_Description, area.Description, "");
 									break;
 								}
 
 								if (description == "")
-								{
-									description = zon.Description;
-								}
+                                    description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Zone_Description, zon.Description, "");
 								pak.FillString(description, 24);
 							}
 							else
