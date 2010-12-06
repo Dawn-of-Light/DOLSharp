@@ -330,7 +330,12 @@ namespace DOL.Language
             log.Debug("Entering GetTranslation");
             //First, check if the clients language key is an allowed language key.
             if (language == "EN" || !IsLangKeyAllowedToUse(language))
-                return translationID;
+            {
+                if (string.IsNullOrEmpty(translationID))
+                    return "The given translation id was null or empty!";
+                else
+                    return translationID;
+            }
 
             string translation = "";
 
@@ -429,7 +434,12 @@ namespace DOL.Language
             }
 
             if (string.IsNullOrEmpty(translation))
-                translation = translationID;
+            {
+                if (string.IsNullOrEmpty(translationID))
+                    translation = "The given translation id was null or empty!";
+                else
+                    translation = translationID;
+            }
 
             log.Debug("Returning translation:" + translation);
 
