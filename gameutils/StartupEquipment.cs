@@ -47,7 +47,7 @@ namespace DOL.GS
 				}
 
 				// deeper check if item is suitable to classid
-				if (!string.IsNullOrEmpty(item.Class) && item.Class != "0")
+				if (!Util.IsEmpty(item.Class, true))
 				{
 					int charClass;
 					bool isFind = false;
