@@ -290,7 +290,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string templateID)
 		{
-			if (Util.IsEmpty(templateID, true) || templateID == "\r\n")
+			if (Util.IsEmpty(templateID, true))
 				return false;
 
 			lock (m_items)
