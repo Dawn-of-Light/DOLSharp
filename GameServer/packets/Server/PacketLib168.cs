@@ -17,15 +17,16 @@
  *
  */
 #define  NOENCRYPTION
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Linq;
-using DOL.AI.Brain;
+
 using DOL.Database;
+using DOL.Language;
+using DOL.AI.Brain;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
@@ -34,7 +35,6 @@ using DOL.GS.Quests;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
-using DOL.Language;
 using log4net;
 
 namespace DOL.GS.PacketHandler
@@ -228,13 +228,15 @@ namespace DOL.GS.PacketHandler
 
 								foreach (AbstractArea area in areas)
 								{
-									if (!area.DisplayMessage) continue;
-									description = area.Description;
+									if (!area.DisplayMessage)
+                                        continue;
+
+                                    description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Area_Description, area.Description, "");
 									break;
 								}
 
 								if (description == "")
-									description = zon.Description;
+                                    description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Zone_Description, zon.Description, "");
 								pak.FillString(description, 24);
 							}
 							else
@@ -3549,19 +3551,11 @@ namespace DOL.GS.PacketHandler
 					{
 						string description = "";
 						if (!m_gameClient.Player.HasFinishedMLStep(mlrequired, i))
-						{
-							description = i + ". " +
-								LanguageMgr.GetTranslation(m_gameClient,
-								                           String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}",
-								                                         mlrequired, i));
-						}
+                            description = i + ". " +
+                                LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsUncomplete[mlrequired - 1, i - 1], "");
 						else
-						{
-							description = i + ". " +
-								LanguageMgr.GetTranslation(m_gameClient,
-								                           String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", mlrequired,
-								                                         i));
-						}
+                            description = i + ". " +
+                                LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsComplete[mlrequired - 1, i - 1], "");
 
 						pak.WritePascalString(description);
 					}

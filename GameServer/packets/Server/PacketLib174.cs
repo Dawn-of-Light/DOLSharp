@@ -19,17 +19,17 @@
 #define NOENCRYPTION
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
-using DOL.GS.Effects;
+using DOL.Language;
 using DOL.Database;
+using DOL.GS.Effects;
 using DOL.GS.Keeps;
+using DOL.GS.PlayerTitles;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
-using DOL.GS.PlayerTitles;
-
 using log4net;
-using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler
 {
@@ -124,13 +124,15 @@ namespace DOL.GS.PacketHandler
 
 								foreach (AbstractArea area in areas)
 								{
-									if (!area.DisplayMessage) continue;
-									description = area.Description;
+									if (!area.DisplayMessage)
+                                        continue;
+
+                                    description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Area_Description, area.Description, "");
 									break;
 								}
 
 								if (description == "")
-									description = zon.Description;
+                                    description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Zone_Description, zon.Description, "");
 								pak.FillString(description, 24);
 							}
 							else
