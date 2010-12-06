@@ -6348,44 +6348,71 @@ namespace DOL.GS
 						InventoryItem leftWeapon = (Inventory == null) ? null : Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 						switch (style.ID)
 						{
-								case 374: targetToHit = 1; break; //Tribal Assault:	Hits 2 targets
-								case 377: targetToHit = 1; break; //Clan's Might:		Hits 2 targets
-								case 379: targetToHit = 2; break; //Totemic Wrath:		Hits 3 targets
-								case 384: targetToHit = 3; break; //Totemic Sacrifice:	Hits 4 targets
+								case 374: targetToHit = 1; break; //Tribal Assault:   Hits 2 targets
+								case 377: targetToHit = 1; break; //Clan's Might:      Hits 2 targets
+								case 379: targetToHit = 2; break; //Totemic Wrath:      Hits 3 targets
+								case 384: targetToHit = 3; break; //Totemic Sacrifice:   Hits 4 targets
+								case 600: targetToHit = 100; break; //Shield Swipe: No Cap on Targets
 								default: targetToHit = 0; break; //For others;
 						}
 						if (targetToHit > 0)
 						{
-							foreach (GamePlayer pl in GetPlayersInRadius(false, (ushort)AttackRange))
+							if (style.ID != 600)
 							{
-								if (pl == null) continue;
-								if (GameServer.ServerRules.IsAllowedToAttack(this, pl, true))
+								foreach (GamePlayer pl in GetPlayersInRadius(false, (ushort)AttackRange))
 								{
-									list.Add(pl);
+									if (pl == null) continue;
+									if (GameServer.ServerRules.IsAllowedToAttack(this, pl, true))
+									{
+										list.Add(pl);
+									}
+								}
+								foreach (GameNPC npc in GetNPCsInRadius(false, (ushort)AttackRange))
+								{
+									if (GameServer.ServerRules.IsAllowedToAttack(this, npc, true))
+									{
+										list.Add(npc);
+									}
+								}
+								list.Remove(target);
+								if (list.Count > 1)
+									while (targets.Count < targetToHit)
+								{
+									random = Util.Random(list.Count - 1);
+									if (!targets.Contains(list[random]))
+										targets.Add(list[random] as GameObject);
+								}
+								foreach (GameObject obj in targets)
+								{
+									if (obj is GamePlayer && ((GamePlayer)obj).IsSitting)
+									{
+										effectiveness *= 2;
+									}
+									new WeaponOnTargetAction(this, obj as GameObject, attackWeapon, leftWeapon, CalculateLeftHandSwingCount(), effectiveness, AttackSpeed(attackWeapon), null).Start(1);  // really start the attack
 								}
 							}
-							foreach (GameNPC npc in GetNPCsInRadius(false, (ushort)AttackRange))
+							else
 							{
-								if (GameServer.ServerRules.IsAllowedToAttack(this, npc, true))
+								foreach (GameNPC npc in GetNPCsInRadius(false, (ushort)AttackRange))
 								{
-									list.Add(npc);
+									if (GameServer.ServerRules.IsAllowedToAttack(this, npc, true))
+									{
+										list.Add(npc);
+									}
 								}
-							}
-							list.Remove(target);
-							if (list.Count > 1)
-								while (targets.Count < targetToHit)
-							{
-								random = Util.Random(list.Count - 1);
-								if (!targets.Contains(list[random]))
-									targets.Add(list[random] as GameObject);
-							}
-							foreach (GameObject obj in targets)
-							{
-								if (obj is GamePlayer && ((GamePlayer)obj).IsSitting)
+								list.Remove(target);
+								if (list.Count > 1)
+									while (targets.Count < targetToHit)
 								{
-									effectiveness *= 2;
+									random = Util.Random(list.Count - 1);
+									if (!targets.Contains(list[random]))
+										targets.Add(list[random] as GameObject);
 								}
-								new WeaponOnTargetAction(this, obj as GameObject, attackWeapon, leftWeapon, CalculateLeftHandSwingCount(), effectiveness, AttackSpeed(attackWeapon), null).Start(1);  // really start the attack
+								foreach (GameNPC obj in targets)
+								{
+									if (obj != ad.Target)
+										this.MakeAttack(obj, attackWeapon, null, 1, ServerProperties.Properties.SPELL_INTERRUPT_DURATION, false, false);
+								}
 							}
 						}
 					}
