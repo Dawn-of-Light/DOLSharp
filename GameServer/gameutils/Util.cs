@@ -176,9 +176,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="str"></param>
 		/// <returns></returns>
-		public static bool IsEmpty(string str)
+		public static bool IsEmpty(string str, bool zeroMeansEmpty = false)
 		{
-			return (string.IsNullOrEmpty(str) || str.ToLower() == "null");
+			return (string.IsNullOrEmpty(str) || str.ToLower() == "null" || zeroMeansEmpty?str.Trim()=="0":false);			
 		}
 
 		/// <summary>

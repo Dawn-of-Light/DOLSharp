@@ -607,6 +607,7 @@ namespace DOL.GS
 					return false;
 				}
 
+				// TODO test & remove the following
 				// graveen = fix for allowedclasses is empty or null
 				if (fromItem != null && Util.IsEmpty(fromItem.AllowedClasses))
 				{
