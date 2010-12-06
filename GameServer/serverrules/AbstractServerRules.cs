@@ -543,10 +543,9 @@ namespace DOL.GS.ServerRules
 			}
 			
 			// classes restriction. 0 means every class
-			if (player != null && !Util.IsEmpty(item.AllowedClasses))
+			if (player != null && !Util.IsEmpty(item.AllowedClasses, true))
 			{
-				List<string> allowedClasses = item.AllowedClasses.SplitCSV(true);
-				if (!allowedClasses.Contains("0") && !allowedClasses.Contains(player.CharacterClass.ID.ToString()))
+				if (!item.AllowedClasses.SplitCSV(true).Contains(player.CharacterClass.ID.ToString()))
 					return false;
 			}
 			

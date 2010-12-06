@@ -434,7 +434,7 @@ namespace DOL.GS
 
 		protected virtual void WriteUsableClasses(IList<string> output, GameClient client)
 		{
-			if (string.IsNullOrEmpty(AllowedClasses) || AllowedClasses == "0")
+			if (Util.IsEmpty(AllowedClasses, true))
 				return;
 
 			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteUsableClasses.UsableBy"));
