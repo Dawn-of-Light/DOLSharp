@@ -21,10 +21,11 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
-using log4net;
+
 using DOL.Language;
 using DOL.GS.Effects;
 using DOL.GS.Quests;
+using log4net;
 
 namespace DOL.GS.PacketHandler
 {
@@ -196,9 +197,12 @@ namespace DOL.GS.PacketHandler
 				for (int i = 1; i < 11; i++)
 				{
 					if (!m_gameClient.Player.HasFinishedMLStep((int)mlrequired, i))
-						description = i.ToString() + ". " + LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", mlrequired, i));
+                        description = i.ToString() + ". " +
+                            LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsUncomplete[mlrequired - 1, i - 1], "");
 					else
-						description = i.ToString() + ". " + LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", mlrequired, i));
+                        description = i.ToString() + ". " +
+                            LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsComplete[mlrequired - 1, i - 1], "");
+
 					pak.WritePascalString(description);
 				}
 			}

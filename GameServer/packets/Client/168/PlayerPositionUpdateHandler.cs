@@ -21,14 +21,15 @@
 
 using System;
 using System.Collections;
+using System.Net;
 using System.Reflection;
 using System.Text;
-using DOL.GS;
+
 using DOL.Database;
-using DOL.Language;
-using System.Net;
-using DOL.GS.PacketHandler;
 using DOL.Events;
+using DOL.Language;
+using DOL.GS;
+using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -163,9 +164,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				//If the region changes -> make sure we don't take any falling damage
 				if (client.Player.LastPositionUpdateZone != null && newZone.ZoneRegion.ID != client.Player.LastPositionUpdateZone.ZoneRegion.ID)
-				{
 					client.Player.MaxLastZ = int.MinValue;
-				}
 
 				// Update water level and diving flag for the new zone
 				client.Out.SendPlayerPositionAndObjectID();
@@ -178,8 +177,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				 * "Current area has a 50% instance bonus."
 				 */
 
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Entered", newZone.Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage(newZone.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You have entered {source}.",
+                    "").Replace("{source}", LanguageMgr.GetTranslation(client, eTranslationKey.Zone_Description, newZone.Description,
+                    "")), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, eTranslationKey.Zone_Description, newZone.Description, ""),
+                    eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+
 				client.Player.LastPositionUpdateZone = newZone;
 			}
 
@@ -269,9 +273,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 							GameServer.Database.AddObject(b);
 							GameServer.Database.SaveObject(b);
 
+                            string message = LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You have been auto kicked and banned due to movement hack detection!", "");
 							for (int i = 0; i < 8; i++)
 							{
-								string message = "You have been auto kicked and banned due to movement hack detection!";
 								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
 							}
@@ -282,9 +286,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
+                            string message = LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You have been auto kicked due to movement hack detection!", "");
 							for (int i = 0; i < 8; i++)
 							{
-								string message = "You have been auto kicked due to movement hack detection!";
 								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
 							}
@@ -389,6 +393,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (SHcount > 1 && client.Account.PrivLevel > 1)
 						{
+                            //Apo: ?? no idea how to name the first parameter for language translation: 1: ??, 2: {detected} ?, 3: {count} ?
 							client.Out.SendMessage(string.Format("SH: ({0}) detected: {1}, count {2}", 500 / (EnvironmentTick - SHlastTick), EnvironmentTick - SHlastTick, SHcount), eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 						}
 
@@ -409,12 +414,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							if (client.Account.PrivLevel > 1)
 							{
-								client.Out.SendMessage("SH: Logging SH cheat.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "SH: Logging SH cheat.",
+                                    ""), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
-								if (SHcount >= ServerProperties.Properties.SPEEDHACK_TOLERANCE)
-								{
-									client.Out.SendMessage("SH: Player would have been banned!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-								}
+                                if (SHcount >= ServerProperties.Properties.SPEEDHACK_TOLERANCE)
+                                {
+                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "SH: Player would have been banned!",
+                                        ""), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                                }
 							}
 
 							if ((client.Account.PrivLevel == 1) && SHcount >= ServerProperties.Properties.SPEEDHACK_TOLERANCE)
@@ -431,9 +438,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 									GameServer.Database.AddObject(b);
 									GameServer.Database.SaveObject(b);
 
+                                    string message = LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You have been auto kicked and banned for speed hacking!", "");
 									for (int i = 0; i < 8; i++)
 									{
-										string message = "You have been auto kicked and banned for speed hacking!";
 										client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 										client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
 									}
@@ -444,9 +451,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 								}
 								else
 								{
+                                    string message = LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You have been auto kicked for speed hacking!", "");
 									for (int i = 0; i < 8; i++)
 									{
-										string message = "You have been auto kicked for speed hacking!";
 										client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 										client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
 									}
@@ -500,7 +507,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						GameServer.Database.AddObject(b);
 						GameServer.Database.SaveObject(b);
 					}
-					string message = "Client Hack Detected!!!";
+					string message = LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "Client Hack detected!", "");
 					for (int i = 0; i < 6; i++)
 					{
 						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -555,13 +562,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					if (fallSpeed > fallMinSpeed)
 					{
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallingDamage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You take falling damage!",
+                            ""), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+
 						int fallPercent = Math.Min(99, (fallSpeed - (fallMinSpeed + 1)) / fallDivide);
 						if (fallPercent > 0)
 						{
-							if (safeFallLevel > 0)
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.SafeFall"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallPercent", fallPercent), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                            if (safeFallLevel > 0)
+                            {
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "The damage was lessened by your Safe Fall ability!",
+                                    ""), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                            }
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You take {percent}% of your max hits in damage.",
+                                "").Replace("{percent}", fallPercent.ToString()), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
 							client.Player.Endurance -= client.Player.MaxEndurance * fallPercent / 100;
 						    double damage = (0.01 * fallPercent * (client.Player.MaxHealth - 1));
@@ -577,7 +590,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 							foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 								player.Out.SendCombatAnimation(null, client.Player, 0, 0, 0, 0, 0, client.Player.HealthPercent);
 						}
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Endurance"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You lose endurance!",
+                            ""), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 					}
 					client.Player.MaxLastZ = client.Player.Z;
 				}
