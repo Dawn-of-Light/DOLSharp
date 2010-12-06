@@ -62,7 +62,7 @@ namespace DOL.Language
                 "[Done] Kirkleis' curse has ended! The statue no longer rains fire!",
                 "[Done] The Rassa has fallen!",
                 "[Done] No shark roams the sea with a gilded ruby for a tummy!",
-                "[Done] The curtain of power has been removed, Desmona no longer wears her harpy crown!",
+                "[Done] The curtain of power has been removed. Desmona no longer wears her harpy crown!",
                 "[Done] Brave are those that brought Cetus down!"
             },
             {
@@ -344,7 +344,7 @@ namespace DOL.Language
                         if (dbo != null)
                         {
                             //Lets check if we have text
-                            if (dbo.Description.Trim().Length > 0)
+                            if (!string.IsNullOrWhiteSpace(dbo.Description))
                                 translation = dbo.Description;
                         }
 
@@ -357,7 +357,7 @@ namespace DOL.Language
                         if (dbo != null)
                         {
                             //Lets check if we have text
-                            if (dbo.ScreenDescription.Trim().Length > 0)
+                            if (!string.IsNullOrWhiteSpace(dbo.ScreenDescription))
                                 translation = dbo.ScreenDescription;
                         }
                     } break;
@@ -369,7 +369,7 @@ namespace DOL.Language
                         if (dbo != null)
                         {
                             //Lets check if we have text
-                            if (dbo.Text.Trim().Length > 0)
+                            if (!string.IsNullOrWhiteSpace(dbo.Text))
                                 translation = dbo.Text;
                         }
                     } break;
@@ -385,7 +385,7 @@ namespace DOL.Language
                             if (dbo != null)
                             {
                                 //Lets check if we have text
-                                if (dbo.Text.Trim().Length > 0)
+                                if (!string.IsNullOrWhiteSpace(dbo.Text))
                                     translation = dbo.Text;
                             }
                         }
@@ -396,7 +396,7 @@ namespace DOL.Language
                             {
                                 log.Debug("Entering case else block");
                                 //Lets check if we have text
-                                if (dbo.Text.Trim().Length > 0)
+                                if (!string.IsNullOrWhiteSpace(dbo.Text))
                                     translation = dbo.Text;
                             }
                         }
@@ -409,7 +409,7 @@ namespace DOL.Language
                         if (dbo != null)
                         {
                             //Lets check if we have text
-                            if (dbo.Description.Trim().Length > 0)
+                            if (!string.IsNullOrWhiteSpace(dbo.Description))
                                 translation = dbo.Description;
                         }
                     } break;
@@ -421,7 +421,7 @@ namespace DOL.Language
                         if (dbo != null)
                         {
                             //Lets check if we have text
-                            if (dbo.ScreenDescription.Trim().Length > 0)
+                            if (!string.IsNullOrWhiteSpace(dbo.ScreenDescription))
                                 translation = dbo.ScreenDescription;
                         }
                     } break;
