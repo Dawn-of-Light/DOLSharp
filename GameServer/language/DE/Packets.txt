@@ -224,96 +224,201 @@ PlayerPositionUpdateHandler.SafeFall:			Der Schaden wurde durch Eure Fallschutz-
 PlayerPositionUpdateHandler.UnknownZone:		Unbekannte Zone! Ihr werdet zu Eurem letzten Bindepunkt gebracht.
 
 # /PacketLib168
-SendMasterLevelWindow.Complete.ML1.Step1:		[Completed] Ianetor has been defeated !	
-SendMasterLevelWindow.Uncomplete.ML1.Step1:		Ianetor spielt gerne mit dem Feuer und sucht Abenteurer, die an einem explosiven Spiel in Oceanus Anatole teilnehmen wollen! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step2:		Der Dieb, der Lornas bestohlen hat, lebt noch immer! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step3:		Die Triton-Sippen der Zhton und Kyhnroe in Messothalassa und Oceanus Boreal sterben, trotzdem bekriegen sie sich noch immer! Beide Sippen suchen nach Abenteurern, die für ihre Sache kämpfen! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step4:		Die Barriere hält noch immer jene zurück, die durch die verfluchte See von Oceanus Hesperos genommen wurden. Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step5:		Ihr habt Euch noch nicht gegen die Macht von Lord Krojers Champions im einzelenen Kampf bewiesen. Dies ist eine Einzelbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step6:		Kirkleis betrachtet sich noch immer mit Hass in dem Spiegel, der seinen Fluch lächerlich macht! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step7:		Das Portal liegt ruhig und dunkel! Der Rassa bleibt weiterhin vor jenen, die seine Macht wollen, verschlossen. Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step8:		Der Rubin liegt im Sand neben dem Kopf, dessen Auge in die ewigen Tiefen start! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step9:		Desmona trägt ihre Krone noch immer, das benötigte Zeichen bleibt verschollen! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step10:		Tretet Cestus mit einem Ring, einem Rubin, einem Spiegel und einer Krone entgegen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Complete.ML1.Step1:		[Erledigt][1.1] Ihr habt Ianetors elementare Flammen gelöscht!
+SendMasterLevelWindow.Complete.ML1.Step2:       [Erledigt][1.2] Der Gerechtigkeit für Lornas wurde Genüge getan!
+SendMasterLevelWindow.Complete.ML1.Step3:       [Erledigt][1.3] Der Gegner wurde besiegt! Die sterbende Sippe kann nun aufblühen!
+SendMasterLevelWindow.Complete.ML1.Step4:       [Erledigt][1.4] Fadrin und seine Barriere sind gefallen! Die Verdammten sind nun frei!
+SendMasterLevelWindow.Complete.ML1.Step5:       [Erledigt][1.5] Ihr habt Eure Macht über Lord Krojers Champions erfolgreich bewiesen!
+SendMasterLevelWindow.Complete.ML1.Step6:       [Erledigt][1.6] Kirkleis Fluch wurde aufgehoben! Die Statue läßt nun kein Feuer mehr regnen!
+SendMasterLevelWindow.Complete.ML1.Step7:       [Erledigt][1.7] Der Rassa wurde besiegt!
+SendMasterLevelWindow.Complete.ML1.Step8:       [Erledigt][1.8] Es schwimmt nun kein Hai mehr im Meer, der einen facettenreichen Rubin im Magen hat!
+SendMasterLevelWindow.Complete.ML1.Step9:       [Erledigt][1.9] Der Vorhang der Macht wurde entfernt. Desmona trägt ihre Harpyienkrone nicht mehr!
+SendMasterLevelWindow.Complete.ML1.Step10:      [Erledigt][1.10] Mutig sind jene, die Cetus besiegt haben!
 
-SendMasterLevelWindow.Uncomplete.ML2.Step1:		Death stalks you from the shadows in the Temple of the Sobekite Eternal! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML2.Step2:		The imposter's assasins are slaying the keepers of the Temple of the Sobekite Eternal! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML2.Step3:		The triton chiefs and their followers in the flooded depths of the Temple of the Sobekite Eternal hoard stolen goods! This is a battlegroup encounter. 
-SendMasterLevelWindow.Uncomplete.ML2.Step4:		Rrionnes' reflection holds the key to her invulerability! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML2.Step5:		You have not beaten Chaths' Test of Strategy! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML2.Step6:		Kanahkt's test seems to be too difficult for you! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML2.Step7:		You mush face fear, terror, or horror! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML2.Step8:		To prove victorious, you must face yourself! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML2.Step9:		Defeat the Battle Masters who once defeated the trial of the Sobekite Eternal! This is a battle group encounter.
-SendMasterLevelWindow.Uncomplete.ML2.Step10:		An imposter has stolen the Ankh of Life, granting him immortality as long as he resides in the Temple of the Sobekite Eternal! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML3.Step1:		Moirai still holds the runic power behind her magical shielding!
-SendMasterLevelWindow.Uncomplete.ML3.Step2:		Kepa has agreed to give you her runic power, will you help?
-SendMasterLevelWindow.Uncomplete.ML3.Step3:		Casta still uses her artifacts to slay anyone who enters her lair!
-SendMasterLevelWindow.Uncomplete.ML3.Step4:		Laodamedia still rigorously guards her lair!
-SendMasterLevelWindow.Uncomplete.ML3.Step5:		Antioos asks for your help in exchange for another runic power!
-SendMasterLevelWindow.Uncomplete.ML3.Step6:		A strange barracuda resides in the darkness, glowing with power!
-SendMasterLevelWindow.Uncomplete.ML3.Step7:		Shraogh still strikes fear into the heart of those who oppose him!
-SendMasterLevelWindow.Uncomplete.ML3.Step8:		The sting ray swarm with an unnatural glowing power!
-SendMasterLevelWindow.Uncomplete.ML3.Step9:		Sinovia the octopus devours those who come near!
-SendMasterLevelWindow.Uncomplete.ML3.Step10:		Medusa still turns anyone who opposes her into stone! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML4.Step1:		Colossal has yet to be summoned from the scorpions of the Stygian Desert! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML4.Step2:		The Fortress of Storms has not been taken! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML4.Step3:		The Mighty One, the Eye of Ra, is rumored to roam the desert Land of Atum still! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML4.Step4:		A valuable stone to some is but a bauble to a child! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML4.Step5:		The Jann of the Land of Atum whirl among the dunes! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML4.Step6:		Oukesson the Ghillian is still multiplying when fought! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML4.Step7:		The guardians of the river Iter have yet to waken! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML4.Step8:		The blood of Daehien still flows in the Land of Atum! This is a battlegroup encounter. 
-SendMasterLevelWindow.Uncomplete.ML4.Step9:		The marid, Gaurmaes, is still safe behind tornados and dust! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML4.Step10:		Martikhoras reigns in his pyramid still! This is a battlegroup encounter. 
-SendMasterLevelWindow.Uncomplete.ML5.Step1:		The Canopic Jar - Intestines must be stolen from the Echo of Qebehsenuef! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML5.Step2:		Another Canopic Jar - Stomach must be stolen from the Echo of Duamutef! This is a group encounter. 
-SendMasterLevelWindow.Uncomplete.ML5.Step3:		Another Canopic Jar - Lungs must be stolen from the Echo of Hapy! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML5.Step4:		Another Canopic Jar - Liver must be stolen from the Echo of Imsety! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML5.Step5:		The gorgons of Aeurs still hold Cau Suraes mirror of Ra! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML5.Step6:		The bound ones hold the resin that preserves! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML5.Step7:		The bound ones hold a mask still needed to face Ammut! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML5.Step8:		Wrappings can be found amongst the bound ones. This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML5.Step9:		You must drink the poisoned waters for the aid of Mahaf! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML5.Step10:		You must face Ammut in the depths of the Halls of Ma'ati and be judged! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML6.Step1:		Look for a rare uraeus from where they appear. This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML6.Step2:		The sacrifice has yet to take place, the salamander has yet to be born! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML6.Step3:		Lateef laments his fate as follower of Am-he and wishes to return to the desert! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML6.Step4:		Pallida-uraei has yet to appear! Seek out the homes of the Uraeus! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML6.Step5:		The flame spouts in easternmost Volcanus guard the objects, the flames must be cooled! This is a solo encounter. 
-SendMasterLevelWindow.Uncomplete.ML6.Step6:		Seek out the sacrificer Siraadi amongst the pillars of vengenance in Typhon's Reach! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML6.Step7:		Three of Ankhkare guardians guard him well. This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML6.Step8:		In the center of the island braziers still call efreet! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML6.Step9:		Vazul's Fortress in the Azhen Isles has yet to be breached! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML6.Step10:		The Chimera still holds strong in her fortress in East Ashen Isles! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step1:		You must acquire the gauntlet of fire! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step2:		You can learn all there is to know of your opponent through combat, but time multiplies when there are four. It is not for you to end the feud, but you can't move on until they have all seen you as a threat. This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step3:		The Apophians wish to test your endurance. This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step4:		The Volurgons wish to test your endurance. This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step5:		The Shaitan wish to test your endurance. This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step6:		The Hephaestians wish to test your endurance. This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step7:		You must face a challeng in the Chamber of flame! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step8:		Katorii's gaze destroys all life it falls upon, yes she must be destroyed! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step9:		A mysterious force blocks your path! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML7.Step10:		Typhon lies in the lava pool in the center of Volcanus deep! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML8.Step1:		Bisul the jinni still has the control crystal! This is a battlegroup encounter. 
-SendMasterLevelWindow.Uncomplete.ML8.Step2:		Agnes shield was destroyed long ago, but it has a twin in his brother Tholoss prossession! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML8.Step3:		The sword the great Agne is now in the hands of a mischievous Jinn! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML8.Step4:		Once noble and proud Agnes, now bits strewn about a Centaur's home. This is a group encounter. 
-SendMasterLevelWindow.Uncomplete.ML8.Step5:		Kratos has not handed over the leg of Agne! This is a group encounter. 
-SendMasterLevelWindow.Uncomplete.ML8.Step6:		Dawars servant bears the head of Agne! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML8.Step7:		Find the torso of Agne amongst the statues of Aerus! This is a group encounter. 
-SendMasterLevelWindow.Uncomplete.ML8.Step8:		A group of gorgons have collaborated to thwart your effort to rebuild Agne by hiding his left arm because the trials resulted in many gorgon deaths in the past! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML8.Step9:		The right arm lies in the once great hall of a wreaked Atlantean temple. This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML8.Step10:		First you must defeat Agnes army on his battlefield then you must topple Talos in his temple! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML9.Step1:		Long ago Kyros demonstrated himself to be the ultimate warrior serving many different roles in combat, would you dare challenge him? This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML9.Step2:		Lachlen was a great explorer who was always prepared to face the unique dangers lurking in each new land! This is a group encounter.
-SendMasterLevelWindow.Uncomplete.ML9.Step3:		Long ago Evzen unified three warring territories after each territorys warlord was slain then ruled the combined landsd with an iron fist! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML9.Step4:		Four kings likenesses are dormant and must be awakened! This is a battlegroup encounter. 
-SendMasterLevelWindow.Uncomplete.ML9.Step5:		Nelos would like to teach you a lesson that you might not survive! This a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML9.Step6:		Centaur patrols led by Katri hinder you from reaching your goal! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML9.Step7:		Only the strongest Iaculi survive as they cannibalize each other. This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML9.Step8:		You have not yet proven yourself worthy to the Phoenix's Guardians! This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML9.Step9:		Neola still guards her sisters well. This is a battlegroup encounter.
-SendMasterLevelWindow.Uncomplete.ML9.Step10:		The phoenix is not yet weakend, and still reigns above! This is a battlegroup encounter.
+SendMasterLevelWindow.Complete.ML2.Step1:		[Erledigt][2.1] Der dunkle Schleicher wurde besiegt!
+SendMasterLevelWindow.Complete.ML2.Step2:       [Erledigt][2.2] Ihr habt die Meuchler beseitigt!
+SendMasterLevelWindow.Complete.ML2.Step3:       [Erledigt][2.3] Ihr habt die Triton-Schätze geraubt!
+SendMasterLevelWindow.Complete.ML2.Step4:       [Erledigt][2.4] Rrionnes Spiegelbild verblasst zusammen mit ihrer Macht!
+SendMasterLevelWindow.Complete.ML2.Step5:       [Erledigt][2.5] Ihr habt Chaths überlistet und seinen Test der Strategie bestanden!
+SendMasterLevelWindow.Complete.ML2.Step6:       [Erledigt][2.6] Ihr habt Kanakhts Test schließlich gemeistert!
+SendMasterLevelWindow.Complete.ML2.Step7:       [Erledigt][2.7] Ihr habt Euch der Dunkelheit der Ewigkeit gestellt!
+SendMasterLevelWindow.Complete.ML2.Step8:       [Erledigt][2.8] Ihr seid Amenemhat erfolgreich entgegen getreten!
+SendMasterLevelWindow.Complete.ML2.Step9:       [Erledigt][2.9] Die Meister des Kampfes sind vor Euch gefallen und haben Eure außergewöhnlichen Fähigkeiten im Kampf anerkannt!
+SendMasterLevelWindow.Complete.ML2.Step10:      [Erledigt][2.10] Der Ankh wurde zerstört und der Betrüger besiegt!
+
+SendMasterLevelWindow.Complete.ML3.Step1:       [Erledigt][3.1] Moirai wurde besiegt und die Rune der Macht gehört Euch!
+SendMasterLevelWindow.Complete.ML3.Step2:       [Erledigt][3.2] Kepa ist gestürzt, ihre Macht gehört Euch!
+SendMasterLevelWindow.Complete.ML3.Step3:       [Erledigt][3.3] Casta wurde besiegt, eine weitere Rune der Macht gehört Euch!
+SendMasterLevelWindow.Complete.ML3.Step4:       [Erledigt][3.4] Laodameia wurde besiegt und eine weitere Rune der Macht eingesammelt!
+SendMasterLevelWindow.Complete.ML3.Step5:       [Erledigt][3.5] Antioos wurde besiegt, eine weitere Rune der Macht gehört Euch!
+SendMasterLevelWindow.Complete.ML3.Step6:       [Erledigt][3.6] Ihr habt den leuchtenden Barrakuda besiegt und eine weitere Rune der Macht gesammelt!
+SendMasterLevelWindow.Complete.ML3.Step7:       [Erledigt][3.7] Shraoghs Herrschaft wurde ein Ende gesetzt und eine weitere Rune der Macht ist in Eurem Besitz!
+SendMasterLevelWindow.Complete.ML3.Step8:       [Erledigt][3.8] Der Stachelrochen wurde besiegt und eine weitere Rune der Macht eingesteckt!
+SendMasterLevelWindow.Complete.ML3.Step9:       [Erledigt][3.9] Der Krake Sinovia wurde besiegt und eine Runde der Macht zu Tage gefördert!
+SendMasterLevelWindow.Complete.ML3.Step10:      [Erledigt][3.10] Medusa wurde besiegt, Ihr wart in einer weiteren Prüfung siegreich!
+
+SendMasterLevelWindow.Complete.ML4.Step1:       [Erledigt][4.1] Colossal wurde zerstört!
+SendMasterLevelWindow.Complete.ML4.Step2:       [Erledigt][4.2] Ihr habt Pharao Seti und seine Festung der Stürme erobert!
+SendMasterLevelWindow.Complete.ML4.Step3:       [Erledigt][4.3] Die Wüste liegt still! Sekhmets Gebrüll ist nicht mehr hörbar!
+SendMasterLevelWindow.Complete.ML4.Step4:       [Erledigt][4.4] Ihr habt den strahlenden Sonnenstein erworben!
+SendMasterLevelWindow.Complete.ML4.Step5:       [Erledigt][4.5] Der Jann spielt nun nicht mehr im Wüstensand!
+SendMasterLevelWindow.Complete.ML4.Step6:       [Erledigt][4.6] Oukesson, der Ghillan, und seine Klone wurden zerstört!
+SendMasterLevelWindow.Complete.ML4.Step7:       [Erledigt][4.7] Der Wächter des Iter ist erwacht!
+SendMasterLevelWindow.Complete.ML4.Step8:       [Erledigt][4.8] Das Blut von Daehien fließt nicht mehr!
+SendMasterLevelWindow.Complete.ML4.Step9:       [Erledigt][4.9] Der Marid Gaurmaes wird das Land von Atum nicht mehr länger heimsuchen!
+SendMasterLevelWindow.Complete.ML4.Step10:      [Erledigt][4.10] Martikhoras hatte ein Treffen mit dem Tod!
+
+SendMasterLevelWindow.Complete.ML5.Step1:       [Erledigt][5.1] Die Urne wurde gefunden!
+SendMasterLevelWindow.Complete.ML5.Step2:       [Erledigt][5.2] Die Urne wurde gefunden!
+SendMasterLevelWindow.Complete.ML5.Step3:       [Erledigt][5.3] Die Urne wurde gefunden!
+SendMasterLevelWindow.Complete.ML5.Step4:       [Erledigt][5-4] Die Urne wurde gefunden!
+SendMasterLevelWindow.Complete.ML5.Step5:       [Erledigt][5.5] Der Spiegel des Ra wurde zurückgebracht, der Eingang zur Halle von Ma'ati leuchtet auf!
+SendMasterLevelWindow.Complete.ML5.Step6:       [Erledigt][5.6] Ihr habt das für die Einbalsamierung notwendige Harz erhalten!
+SendMasterLevelWindow.Complete.ML5.Step7:       [Erledigt][5.7] Die Maske wurde gefunden!
+SendMasterLevelWindow.Complete.ML5.Step8:       [Erledigt][5.8] Ihr habt Euch einige Binden gesichert, bald könnt Ihr Ammut entgegentreten!
+SendMasterLevelWindow.Complete.ML5.Step9:       [Erledigt][5.9] Ihr habt vom Brunnen des Lebens getrunken und Ma'atis Fluch aufgehoben!
+SendMasterLevelWindow.Complete.ML5.Step10:      [Erledigt][5.10] Ihr seid Ammut, dem Verschlinger der Seelen, erfolgreich entgegengetreten!
+
+SendMasterLevelWindow.Complete.ML6.Step1:       [Erledigt][6.1] Ein Haje-Uraei wurde getötet!
+SendMasterLevelWindow.Complete.ML6.Step2:       [Erledigt][6.2] Die Opferung wurde ausgeführt, die Aufgabe ist vollendet!
+SendMasterLevelWindow.Complete.ML6.Step3:       [Erledigt][6.3] Der Weg ist frei für die Rückkehr des Zweiflers in die Wüste!
+SendMasterLevelWindow.Complete.ML6.Step4:       [Erledigt][6.4] Pallida-Uraei wurde gejagt!
+SendMasterLevelWindow.Complete.ML6.Step5:       [Erledigt][6.5] Die Öffnungen wurden abgekühlt und Ihr habt die Asche erhalten!
+SendMasterLevelWindow.Complete.ML6.Step6:       [Erledigt][6.6] Opferpriester Siraadi und seine Sänger sind gestorben, die Macht der Säulen wird abnehmen.
+SendMasterLevelWindow.Complete.ML6.Step7:       [Erledigt][6.7] Die Wächter haben versagt Ankhkare zu beschützen.
+SendMasterLevelWindow.Complete.ML6.Step8:       [Erledigt][6.8] Die Feuer der Bronzeschalen rufen nun nicht länger Efreet herbei!
+SendMasterLevelWindow.Complete.ML6.Step9:       [Erledigt][6.9] Die Minotaurusfestung wurde durchbrochen und der mächtige Vazul besiegt!
+SendMasterLevelWindow.Complete.ML6.Step10:      [Erledigt][6.10] Die Chimäre ist gefallen!
+
+SendMasterLevelWindow.Complete.ML7.Step1:       [Erledigt][7.1] Ihr habt die Handschuhe des Feuers errungen!
+SendMasterLevelWindow.Complete.ML7.Step2:       [Erledigt][7.2] Ihr habt Euch eingehend mit den Vier sich befehdenden Parteien befasst und habt alles über ihre Kampfstrategien gelernt. Ihr habt Euch als geduldig und wachsam erwiesen.
+SendMasterLevelWindow.Complete.ML7.Step3:       [Erledigt][7.3] Ihr habt den Test der Apophians ertragen!
+SendMasterLevelWindow.Complete.ML7.Step4:       [Erledigt][7.4] Ihr habt den Test der Volurgons ertragen!
+SendMasterLevelWindow.Complete.ML7.Step5:       [Erledigt][7.5] Ihr habt den Test der Shaitan ertragen!
+SendMasterLevelWindow.Complete.ML7.Step6:       [Erledigt][7.6] Ihr habt den Test der Hephaestians ertragen!
+SendMasterLevelWindow.Complete.ML7.Step7:       [Erledigt][7.7] Ihr habt Euch der Herausforderung gestellt und die Flamme von Volcanus besiegt!
+SendMasterLevelWindow.Complete.ML7.Step8:       [Erledigt][7.8] Katoriis Block ist so tot wie die Hallen im Herzen von Volcanus!
+SendMasterLevelWindow.Complete.ML7.Step9:       [Erledigt][7.9] Der Weg ist frei!
+SendMasterLevelWindow.Complete.ML7.Step10:      [Erledigt][7.10] Typhon wurde besiegt!
+
+SendMasterLevelWindow.Complete.ML8.Step1:       [Erledigt][8.1] Bisul kontrolliert nicht länger die Statuen!
+SendMasterLevelWindow.Complete.ML8.Step2:       [Erledigt][8.2] Tholos besitzt nicht länger den Schild!
+SendMasterLevelWindow.Complete.ML8.Step3:       [Erledigt][8.3] Das Schwert wurde aus den Klauen des Jinns befreit!
+SendMasterLevelWindow.Complete.ML8.Step4:       [Erledigt][8.4] Agnes Statue wird wieder stehen!
+SendMasterLevelWindow.Complete.ML8.Step5:       [Erledigt][8.5] Kratos hat seine Abmachung eingehalten, und das Bein wurde gefunden!
+SendMasterLevelWindow.Complete.ML8.Step6:       [Erledigt][8.6] Der Kopf von Agne ist gefallen!
+SendMasterLevelWindow.Complete.ML8.Step7:       [Erledigt][8.7] Der Rumpf wurde gefunden!
+SendMasterLevelWindow.Complete.ML8.Step8:       [Erledigt][8.8] Viele Gorgonen wurden getötet und Agnes linker Arm wurde gefunden.
+SendMasterLevelWindow.Complete.ML8.Step9:       [Erledigt][8.9] Der Arm wurde aus der großen Halle gerettet!
+SendMasterLevelWindow.Complete.ML8.Step10:      [Erledigt][8.10] Agnes Armee ist besiegt und Talos gefallen!
+
+SendMasterLevelWindow.Complete.ML9.Step1:       [Erledigt][9.1] Ihr habt den möchtigen Kyros besiegt!
+SendMasterLevelWindow.Complete.ML9.Step2:       [Erledigt][9.2] Lachlen war darauf vorbereitet sich Euch im Kampf zu stellen, aber er verlor trotzdem!
+SendMasterLevelWindow.Complete.ML9.Step3:       [Erledigt][9.3] Evzen wurde vernichtet und die Kriegsherren entmündigt!
+SendMasterLevelWindow.Complete.ML9.Step4:       [Erledigt][9.4] Ihr habt die vier Könige erweckt und im Kampf besiegt!
+SendMasterLevelWindow.Complete.ML9.Step5:       [Erledigt][9.5] Nelos wurde vernichtet, als er Euch eine Lektion erteilte!
+SendMasterLevelWindow.Complete.ML9.Step6:       [Erledigt][9.6] Das Ziel ist in Sicht!
+SendMasterLevelWindow.Complete.ML9.Step7:       [Erledigt][9.7] Der Stärkste aller Iaculi ist tot und Ihr seid nach wie vor am Leben!
+SendMasterLevelWindow.Complete.ML9.Step8:       [Erledigt][9.8] Ihr habt Euch den Phönixwächtern gegenüber als würdig erwiesen.
+SendMasterLevelWindow.Complete.ML9.Step9:       [Erledigt][9.9] Neola hat versagt, ihre Schwestern zu beschützen.
+SendMasterLevelWindow.Complete.ML9.Step10:      [Erledigt][9.10] Der Phönix ist gefallen!
+
+SendMasterLevelWindow.Uncomplete.ML1.Step1:		[1.1] Ianetor spielt gerne mit dem Feuer und sucht Abenteurer, die an einem explosiven Spiel in Oceanus Anatole teilnehmen wollen! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step2:		[1.2] Der Dieb, der Lornas bestohlen hat, lebt noch immer! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step3:		[1.3] Die Triton-Sippen der Zhton und Kyhnroe in Messothalassa und Oceanus Boreal sterben, trotzdem bekriegen sie sich noch immer! Beide Sippen suchen nach Abenteurern, die für ihre Sache kämpfen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step4:		[1.4] Die Barriere hält noch immer jene zurück, die durch die verfluchte See von Oceanus Hesperos genommen wurden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step5:		[1.5] Ihr habt Euch noch nicht gegen die Macht von Lord Krojers Champions im einzelnen Kampf bewiesen! Dies ist eine Einzelbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step6:		[1.6] Kirkleis betrachtet sich noch immer mit Hass in dem Spiegel, der seinen Fluch lächerlich macht! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step7:		[1.7] Das Portal liegt ruhig und dunkel! Der Rassa bleibt weiterhin vor jenen, die seine Macht wollen, verschlossen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step8:		[1.8] Der Rubin liegt im Sand neben dem Kopf, dessen Auge in die ewigen Tiefen starrt! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step9:		[1.9] Desmona trägt ihre Krone noch immer, das benötigte Zeichen bleibt verschollen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step10:	[1.10] Tretet Cetus mit einem Ring, einem Rubin, einem Spiegel und einer Krone entgegen! Dies ist eine Kampfgruppenbegegnung.
+
+SendMasterLevelWindow.Uncomplete.ML2.Step1:		[2.1] Der Tod nähert sich Euch aus dem Schatten im Tempel der Sobekite-Ewigkeit! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step2:		[2.2] Die Assassinen des Betrügers beseitigen die Wächter des Tempels der Sobekite-Ewigkeit! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step3:		[2.3] Die Triton-Häuptlinge und ihre Anhänger horten in den überfluteten Tiefen des Tempels der Sobekite-Ewigkeit gestohlene Güter! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step4:		[2.4] Rrionnes Spiegelbild ist der Schlüssel zu ihrer Unverwundbarkeit! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step5:		[2.5] Ihr habt Chaths Test der Strategie noch nicht bestanden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step6:		[2.6] Kanakhts Test scheint zu schwer für Euch zu sein! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step7:		[2.7] Ihr müsst Euch noch immer Angst, Furcht und Schrecken stellen! Dies ist eine Einzel-, Gruppen- oder Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step8:		[2.8] Um erfolgreich zu sein, müsst Ihr Euch selbst entgegentreten! Dies ist eine Einzelbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step9:		[2.9] Besiegt die Meister des Kampfes, die einst die Prüfung der Sobekite-Ewigkeit geschafft haben! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step10:	[2.10] Ein Betrüger hat den Ankh des Lebens gestohlen, der ihm die Unsterblichkeit garantiert, solange er im Tempel der Sobekite-Ewigkeit bleibt! Dies ist eine Kampfgruppenbegegnung.
+
+SendMasterLevelWindow.Uncomplete.ML3.Step1:		[3.1] Moirai besitzt hinter ihrem magischen Schild noch immer die Rune der Macht! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step2:		[3.2] Kepa ist geschwächt und hält verzweifelt an ihrer Macht fest! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step3:		[3.3] Casta benutzt nach wie vor ihre Artefakte, um jeden zu töten, der ihr Versteck betritt! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step4:		[3.4] Laodameia bewacht nach wie vor energisch ihr Versteck! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step5:		[3.5] Antioos gibt damit an, dass ihre Macht größer als alle anderen sei! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step6:		[3.6] Ein seltsamer Barrakuda wohnt in der Dunkelheit und leuchtet vor Macht! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step7:		[3.7] Shraogh erfüllt die Herzen jener, die ihn herausfordern, weiterhin mit Schrecken! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step8:		[3.8] Der Stachelrochen schwebt mit einem unnatürlichen Leuchten umher! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step9:		[3.9] Der Krake Sinovia frisst jeden, der ihm zu Nahe kommt! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step10:	[3.10] Medusa verwandelt ihre Gegner nach wie vor in Stein! Dies ist eine Kampfgruppenbegegnung.
+
+SendMasterLevelWindow.Uncomplete.ML4.Step1:		[4.1] Colossal muss erst von den Skorpionen in der Wüste von Stygia herbeigerufen werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step2:		[4.2] Die Festung der Stürme wurde nicht eingenommen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step3:		[4.3] Man sagt, dass das mächtige Auge von Ra weiterhin im wüsten Land von Atum umherstreift! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step4:		[4.4] Was für manchen ein wertvoller Juwel ist, ist für eine Göttin nur eine Spielerei! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step5:		[4.5] Der Jann aus dem Land von Atum wirbelt zwischen den Dünen umher! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step6:		[4.6] Oukesson, der Ghillan, vervielfältigt sich nach wie vor, wenn man gegen ihn kämpft. Er wird seinen Schatz erst preisgeben, wenn er wirklich besiegt ist! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step7:		[4.7] Die Wächter des Flusses Iter müssen noch erweckt werden! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step8:		[4.8] Das Blut von Daehien fließt weiterhin im Land von Atum! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step9:		[4.9] Der Marid Gaurmaes wird weiterhin von Staubstürmen geschützt! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step10:	[4.10] Martikhoras herrscht nach wie vor in seiner Pyramide! Dies ist eine Kampfgruppenbegegnung.
+
+SendMasterLevelWindow.Uncomplete.ML5.Step1:		[5.1] Die Totenurne - Die Eingeweide müssen vom Echo des Qebehsenuef gestohlen werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step2:		[5.2] Eine weitere Totenurne - Der Magen muss vom Echo des Duamutef gestohlen werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step3:		[5.3] Eine weitere Totenurne - Die Lungen müssen vom Echo des Hapy gestohlen werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step4:		[5.4] Eine weitere Totenurne - Die Leber muss vom Echo des Imsety gestohlen werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step5:		[5.5] Die Gorgonen von Aerus besitzen weiterhin Cau Suraes Spiegel des Ra! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step6:		[5.6] Die Verbundenen besitzen das Konservierungsharz! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step7:		[5.7] Die Verbundenen besitzen eine Maske, die Ihr noch benötigt, um Ammut entegegenzutreten! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step8:		[5.8] Binden können bei den Verbundenen gefunden werden. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step9:		[5.9] Ihr müsst von den vergifteten Wassern trinken, um von Mahaf Hilfe zu erhalten! Dies ist eine Einzelbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step10:	[5.10] Ihr müsst Ammut in den Tiefen von Ma'atis Hallen entgegentreten und beurteilt werden! Dies ist eine Kampfgruppenbegegnung.
+
+SendMasterLevelWindow.Uncomplete.ML6.Step1:		[6.1] Sucht nach einem seltenen Uraeus da wo sie erscheinen. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step2:		[6.2] Die Opferung findet nun statt, der Salamander wurde geboren! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step3:		[6.3] Lateef beklagt sein Schicksal als Anhänger des Am-he und wünscht sich in die Wüste zurück! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step4:		[6.4] Pallida-Uraei ist erschienen! Sucht die Heimstätten der Uraei! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step5:		[6.5] Die Flammensäulen im östlichen Volcanus bewachen die Gegenstände, die Flammen müssen gekühlt werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step6:		[6.6] Suchet den Opferer Siraadi inmitten der Säulen der Rache in Typhons Gebiet! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step7:		[6.7] Drei der Ankhkare-Wächter beschützen ihn gut. Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step8:		[6.8] Im Zentrum der Insel rufen die Feuer der Bronzeschalen nach wie vor die Efreet herbei! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step9:		[6.9] Vazuls Festung auf den Ascheinseln muß dennoch durchbrochen werden! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step10:	[6.10] Die Chimäre hält sich immer noch in ihrer Festung im Osten der Ascheinsel verschanzt! Dies ist eine Kampfgruppenbegegnung.
+
+SendMasterLevelWindow.Uncomplete.ML7.Step1:		[7.1] Ihr müßt Euch die Handschuhe des Feuers beschaffen! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step2:		[7.2] Lernt alles über Eure Gegner im Kampf, aber wenn es Vier sind, vervielfacht sich die Zeit. Ihr könnt die Fehde nicht beenden, trotzdem müssen Euch erst alle als Bedrohung erkannt haben, damit ihr weitermachen könnt. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step3:		[7.3] Die Apophians wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step4:		[7.4] Die Volurgons wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step5:		[7.5] Die Shaitan wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step6:		[7.6] Die Hephaestians wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step7:		[7.7] Ihr müßt Euch einer Herausforderung in den Kammern der Flammen stellen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step8:		[7.8] Katoriis Blick vernichtet alles Leben auf das er fällt, dennoch muß sie vernichtet werden! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step9:		[7.9] Eine geheimnisvolle Kraft versperrt den Weg! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step10:	[7.10] Typhon liegt im Lavabassin im Zentrum von Volcanus Tiefen! Dies ist eine Kampfgruppenbegegnung.
+
+SendMasterLevelWindow.Uncomplete.ML8.Step1:		[8.1] Der Jinni Bisul besitzt immer noch den Bedienungskristall! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step2:		[8.2] Agnes Schild wurde vor langer Zeit vernichtet, aber es gibt ein Zwillingschild, das sich im Besitz von Tholos befindet! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step3:		[8.3] Das Schwert der großen Agne befindet sich in den Händen eines bösartigen Jinns! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step4:		[8.4] Die einst edle und stolze Agne, ist jetzt über das Zuhause der Zentauren verstreut. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step5:		[8.5] Kratos hat Agnes Bein nicht abgegeben! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step6:		[8.6] Dawars Diener tragen Agnes Kopf! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step7:		[8.7] Findet den Rumpf der Agne inmitten der Statuen von Aerus! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step8:		[8.8] Eine Gruppe Gorgonen hat sich zusammengetan, um Euch beim Wiederaufbau von Agne zu hindern. Sie haben seinen linken Arm versteckt, weil bei den bisherigen Prüfungen etliche Gorgonen getötet wurden. Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step9:		[8.9] Der rechte Arm liegt in einer einst großen Halle eines zerstörten atlantischen Tempels. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step10:	[8.10] Zuerst müßt ihr Agnes Armee auf ihrem Schlachtfeld besiegen, dann Talos in seinem Tempel stürzen! Dies ist eine Kampfgruppenbegegnung.
+
+SendMasterLevelWindow.Uncomplete.ML9.Step1:		[9.1] Vor langer Zeit bewies sich Kyros selbst, dass er der ultimative Krieger ist, indem er verschiedene Rollen im Kampf übernahm. Würdet Ihr Euch trauen ihn herauszufordern? Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step2:		[9.2] Lachlen war ein großer Entdecker, der immer darauf vorbereitet war, sich den einzigartigen Gefahren zu stellen, die in jedem neuen Reich lauern! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step3:		[9.3] Vor langer Zeit vereinigte Evzen drei sich bekriegende Gebiete, nachdem jeder Kriegsherr getötet wurde, regierte er die vereinten Länder mit eiserner Faust! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step4:		[9.4] Vier Bilder von Königen ruhen und müssen erweckt werden! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step5:		[9.5] Nelos würde Euch gern eine Lektion erteilen, die Ihr nicht überleben könnt! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step6:		[9.6] Zentaurenpatrouillen unter der Führung von Katri hindern Euch daran Euer Ziel zu erreichen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step7:		[9.7] Nur die stärksten Iaculi überleben, da sie sich gegenseitig auffressen. Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step8:		[9.8] Ihr habt Euch noch nicht den Phönixwächtern gegenüber als würdig erwiesen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step9:		[9.9] Neola beschützt ihre Schwestern immer noch gut. Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step10:	[9.10] Der Phönix ist noch nicht geschwächt und regiert immer noch! Dies ist eine Kampfgruppenbegegnung.
 

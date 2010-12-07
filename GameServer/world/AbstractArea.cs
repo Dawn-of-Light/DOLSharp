@@ -181,10 +181,16 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnPlayerLeave(GamePlayer player)
 		{
-			if (m_displayMessage && Description != null && Description != "")
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, eTranslationKey.System_Text, "(Region) You have left {source}.",
-                    "").Replace("{source}", LanguageMgr.GetTranslation(player.Client, eTranslationKey.Area_Description, Description, "")),
-                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            if (m_displayMessage && Description != null && Description != "")
+            {
+                if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, eTranslationKey.System_Text, "(Region) You have left {source}.",
+                        "").Replace("{source}", LanguageMgr.GetTranslation(player.Client, eTranslationKey.Area_Description, Description, "")),
+                        eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                else
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractArea.Left", Description),
+                        eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
 
 			player.Notify(AreaEvent.PlayerLeave, this, new AreaEventArgs(this, player));
 		}
@@ -197,15 +203,22 @@ namespace DOL.GS
 		{
 			if (m_displayMessage && Description != null && Description != "")
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, eTranslationKey.System_Text, "(Region) You have entered {source}.",
-                    "").Replace("{source}", LanguageMgr.GetTranslation(player.Client, eTranslationKey.Area_Description, Description, "")),
-                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, eTranslationKey.System_Text, "(Region) You have entered {source}.",
+                        "").Replace("{source}", LanguageMgr.GetTranslation(player.Client, eTranslationKey.Area_Description, Description, "")),
+                        eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                else
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractArea.Entered", Description),
+                        eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				//Changed by Apo 9. August 2010: Areas never send an screen description, but we will support it with an server property
                 if (ServerProperties.Properties.DISPLAY_AREA_ENTER_SCREEN_DESC)
                 {
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, eTranslationKey.Area_ScreenDescription, Description, ""),
-                        eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+                    if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, eTranslationKey.Area_ScreenDescription, Description, ""),
+                            eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+                    else
+                        player.Out.SendMessage(Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
                 }
 			}
 			if (Sound != 0)
