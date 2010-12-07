@@ -6337,81 +6337,97 @@ namespace DOL.GS
 							camouflage.Cancel(false);
 						}
 					}
-					//Savagery targets
+
+					// Multiple Hit check
 					if (ad.AttackResult == eAttackResult.HitStyle)
 					{
-						byte targetToHit = 0;
+						byte numTargetsCanHit = 0;
 						int random;
-						IList targets = new ArrayList(1);
-						IList list = new ArrayList(1);
+						IList extraTargets = new ArrayList();
+						IList listAvailableTargets = new ArrayList();
 						InventoryItem attackWeapon = AttackWeapon;
 						InventoryItem leftWeapon = (Inventory == null) ? null : Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 						switch (style.ID)
 						{
-								case 374: targetToHit = 1; break; //Tribal Assault:   Hits 2 targets
-								case 377: targetToHit = 1; break; //Clan's Might:      Hits 2 targets
-								case 379: targetToHit = 2; break; //Totemic Wrath:      Hits 3 targets
-								case 384: targetToHit = 3; break; //Totemic Sacrifice:   Hits 4 targets
-								case 600: targetToHit = 100; break; //Shield Swipe: No Cap on Targets
-								default: targetToHit = 0; break; //For others;
+								case 374: numTargetsCanHit = 1; break; //Tribal Assault:   Hits 2 targets
+								case 377: numTargetsCanHit = 1; break; //Clan's Might:      Hits 2 targets
+								case 379: numTargetsCanHit = 2; break; //Totemic Wrath:      Hits 3 targets
+								case 384: numTargetsCanHit = 3; break; //Totemic Sacrifice:   Hits 4 targets
+								case 600: numTargetsCanHit = 255; break; //Shield Swipe: No Cap on Targets
+								default: numTargetsCanHit = 0; break; //For others;
 						}
-						if (targetToHit > 0)
+						if (numTargetsCanHit > 0)
 						{
-							if (style.ID != 600)
+							if (style.ID != 600) // Not Shield Swipe
 							{
 								foreach (GamePlayer pl in GetPlayersInRadius(false, (ushort)AttackRange))
 								{
 									if (pl == null) continue;
 									if (GameServer.ServerRules.IsAllowedToAttack(this, pl, true))
 									{
-										list.Add(pl);
+										listAvailableTargets.Add(pl);
 									}
 								}
 								foreach (GameNPC npc in GetNPCsInRadius(false, (ushort)AttackRange))
 								{
 									if (GameServer.ServerRules.IsAllowedToAttack(this, npc, true))
 									{
-										list.Add(npc);
+										listAvailableTargets.Add(npc);
 									}
 								}
-								list.Remove(target);
-								if (list.Count > 1)
-									while (targets.Count < targetToHit)
+
+								// remove primary target
+								listAvailableTargets.Remove(target);
+								numTargetsCanHit = (byte)Math.Min(numTargetsCanHit, listAvailableTargets.Count);
+
+								if (listAvailableTargets.Count > 1)
 								{
-									random = Util.Random(list.Count - 1);
-									if (!targets.Contains(list[random]))
-										targets.Add(list[random] as GameObject);
-								}
-								foreach (GameObject obj in targets)
-								{
-									if (obj is GamePlayer && ((GamePlayer)obj).IsSitting)
+									while (extraTargets.Count < numTargetsCanHit)
 									{
-										effectiveness *= 2;
+										random = Util.Random(listAvailableTargets.Count - 1);
+										if (!extraTargets.Contains(listAvailableTargets[random]))
+											extraTargets.Add(listAvailableTargets[random] as GameObject);
 									}
-									new WeaponOnTargetAction(this, obj as GameObject, attackWeapon, leftWeapon, CalculateLeftHandSwingCount(), effectiveness, AttackSpeed(attackWeapon), null).Start(1);  // really start the attack
+									foreach (GameObject obj in extraTargets)
+									{
+										if (obj is GamePlayer && ((GamePlayer)obj).IsSitting)
+										{
+											effectiveness *= 2;
+										}
+										new WeaponOnTargetAction(this, obj as GameObject, attackWeapon, leftWeapon, CalculateLeftHandSwingCount(), effectiveness, AttackSpeed(attackWeapon), null).Start(1);  // really start the attack
+									}
 								}
 							}
-							else
+							else // shield swipe
 							{
 								foreach (GameNPC npc in GetNPCsInRadius(false, (ushort)AttackRange))
 								{
 									if (GameServer.ServerRules.IsAllowedToAttack(this, npc, true))
 									{
-										list.Add(npc);
+										listAvailableTargets.Add(npc);
 									}
 								}
-								list.Remove(target);
-								if (list.Count > 1)
-									while (targets.Count < targetToHit)
+
+								listAvailableTargets.Remove(target);
+								numTargetsCanHit = (byte)Math.Min(numTargetsCanHit, listAvailableTargets.Count);
+
+								if (listAvailableTargets.Count > 1)
 								{
-									random = Util.Random(list.Count - 1);
-									if (!targets.Contains(list[random]))
-										targets.Add(list[random] as GameObject);
-								}
-								foreach (GameNPC obj in targets)
-								{
-									if (obj != ad.Target)
-										this.MakeAttack(obj, attackWeapon, null, 1, ServerProperties.Properties.SPELL_INTERRUPT_DURATION, false, false);
+									while (extraTargets.Count < numTargetsCanHit)
+									{
+										random = Util.Random(listAvailableTargets.Count - 1);
+										if (!extraTargets.Contains(listAvailableTargets[random]))
+										{
+											extraTargets.Add(listAvailableTargets[random] as GameObject);
+										}
+									}
+									foreach (GameNPC obj in extraTargets)
+									{
+										if (obj != ad.Target)
+										{
+											this.MakeAttack(obj, attackWeapon, null, 1, ServerProperties.Properties.SPELL_INTERRUPT_DURATION, false, false);
+										}
+									}
 								}
 							}
 						}
