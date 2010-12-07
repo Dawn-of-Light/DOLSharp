@@ -336,13 +336,20 @@ namespace DOL.GS.PacketHandler
 								{
 									if (!area.DisplayMessage)
                                         continue;
-
-                                    description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Area_Description, area.Description, "");
+                                    if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
+                                        description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Area_Description, area.Description, "");
+                                    else
+                                        description = area.Description;
 									break;
 								}
 
 								if (description == "")
-                                    description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Zone_Description, zon.Description, "");
+                                {
+                                    if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
+                                        description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Zone_Description, zon.Description, "");
+                                    else
+                                        description = zon.Description;
+                                }
 								pak.FillString(description, 24);
 							}
 							else
