@@ -329,8 +329,8 @@ namespace DOL.Language
         {
             log.Debug("Entering GetTranslation");
 
-            if (string.IsNullOrWhiteSpace(translationID))
-                return "The given translation id was null or empty!";
+            if (Util.IsEmpty(translationID, true))
+                return "translate error";
 
             //First, check if the clients language key is an allowed language key.
             if (language == "EN" || !IsLangKeyAllowedToUse(language))
@@ -348,7 +348,7 @@ namespace DOL.Language
                         if (dbo != null)
                         {
                             //Lets check if we have text
-                            if (!string.IsNullOrWhiteSpace(dbo.Description))
+                            if (!Util.IsEmpty(dbo.Description, true))
                                 translation = dbo.Description;
                         }
 
@@ -361,7 +361,7 @@ namespace DOL.Language
                         if (dbo != null)
                         {
                             //Lets check if we have text
-                            if (!string.IsNullOrWhiteSpace(dbo.ScreenDescription))
+                            if (!Util.IsEmpty(dbo.ScreenDescription, true))
                                 translation = dbo.ScreenDescription;
                         }
                     } break;
@@ -373,7 +373,7 @@ namespace DOL.Language
                         if (dbo != null)
                         {
                             //Lets check if we have text
-                            if (!string.IsNullOrWhiteSpace(dbo.Text))
+                            if (!Util.IsEmpty(dbo.Text, true))
                                 translation = dbo.Text;
                         }
                     } break;
@@ -389,7 +389,7 @@ namespace DOL.Language
                             if (dbo != null)
                             {
                                 //Lets check if we have text
-                                if (!string.IsNullOrWhiteSpace(dbo.Text))
+                                if (!Util.IsEmpty(dbo.Text, true))
                                     translation = dbo.Text;
                             }
                         }
@@ -400,7 +400,7 @@ namespace DOL.Language
                             {
                                 log.Debug("Entering case else block");
                                 //Lets check if we have text
-                                if (!string.IsNullOrWhiteSpace(dbo.Text))
+                                if (!Util.IsEmpty(dbo.Text, true))
                                     translation = dbo.Text;
                             }
                         }
@@ -413,7 +413,7 @@ namespace DOL.Language
                         if (dbo != null)
                         {
                             //Lets check if we have text
-                            if (!string.IsNullOrWhiteSpace(dbo.Description))
+                            if (!Util.IsEmpty(dbo.Description, true))
                                 translation = dbo.Description;
                         }
                     } break;
@@ -425,20 +425,15 @@ namespace DOL.Language
                         if (dbo != null)
                         {
                             //Lets check if we have text
-                            if (!string.IsNullOrWhiteSpace(dbo.ScreenDescription))
+                            if (!Util.IsEmpty(dbo.ScreenDescription, true))
                                 translation = dbo.ScreenDescription;
                         }
                     } break;
                 #endregion
             }
 
-            if (string.IsNullOrWhiteSpace(translation))
-            {
-                if (string.IsNullOrWhiteSpace(translationID))
-                    translation = "The given translation id was null or empty!";
-                else
-                    translation = translationID;
-            }
+            if (Util.IsEmpty(translation, true))
+                translation = translationID; //Will be changed after a little talk with Graveen/Tolakram -> http://www.dolserver.net/viewtopic.php?p=124343#p124343
 
             log.Debug("Returning translation:" + translation);
 
