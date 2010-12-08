@@ -64,7 +64,7 @@ MentalistTrainer.WhisperReceiveCase.Text1:		mentalist
 ## Midgard
 # /BonedancerTrainer
 BonedancerTrainer.Interact.Text1:			{0} says, "Do you desire to [join the House of Bodgar] and defend our realm as a Bonedancer?"
-BonedancerTrainer.Interact.Text2:			{0} says, "insert english text"
+BonedancerTrainer.Interact.Text2:			
 BonedancerTrainer.Interact.Text3:		
 BonedancerTrainer.Interact.Text4:		
 BonedancerTrainer.ReceiveItem.Text1:		

@@ -5,9 +5,6 @@ GameObjects.CommanderPet.DreadArcher:
 GameObjects.CommanderPet.DreadCommander:		
 GameObjects.CommanderPet.DreadGuardian:			
 GameObjects.CommanderPet.DreadLich:			
-GameObjects.CommanderPet.HailMaster:			Grüße, {0}. Als mein{1} könnt Ihr mich anwählen und 'Kommandant' zu mir sagen, um mehr über meine Fähigkeiten zu erfahren.
-GameObjects.CommanderPet.HailMaster.SummonerFemale:	e Beschwörerin
-GameObjects.CommanderPet.HailMaster.SummonerMale:	 Beschwörer
 GameObjects.CommanderPet.ReturnedCommander:		
 GameObjects.CommanderPet.SkeletalCommander:		
 GameObjects.CommanderPet.WR.Assist.Text:		Diese Funktion wurde noch nicht implementiert!
