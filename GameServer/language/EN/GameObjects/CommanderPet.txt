@@ -5,9 +5,6 @@ GameObjects.CommanderPet.DreadArcher:			dread archer
 GameObjects.CommanderPet.DreadCommander:		dread commander
 GameObjects.CommanderPet.DreadGuardian:			dread guardian
 GameObjects.CommanderPet.DreadLich:			dread lich
-GameObjects.CommanderPet.HailMaster:			Hail, {0}. As my {1}, you may target me and say Commander to learn more about the abilities I possess.
-GameObjects.CommanderPet.HailMaster.SummonerFemale:	summoner
-GameObjects.CommanderPet.HailMaster.SummonerMale:	summoner
 GameObjects.CommanderPet.ReturnedCommander:		returned commander
 GameObjects.CommanderPet.SkeletalCommander:		skeletal commander
 GameObjects.CommanderPet.WR.Assist.Text:		not implemented yet
