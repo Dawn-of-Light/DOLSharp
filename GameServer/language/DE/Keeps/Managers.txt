@@ -27,7 +27,7 @@ SetGuardName.Huscarl:		Huscarl
 SetGuardName.Jarl:		Jarl {0}
 SetGuardName.MasterRunes:	Meister der Runen
 SetGuardName.NordicHunter:	Nordmann-Jäger
-SetGuardName.NordicJarl:	Nordmann-Jarl
+SetGuardName.NordicJarl:	Wikinger-Jarl
 SetGuardName.Runemaster:	Runenmeister
 SetGuardName.Shadowblade:	Schattenklinge
 
