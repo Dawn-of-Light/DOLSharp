@@ -76,26 +76,29 @@ namespace DOL.GS
 		/// <param name="house"></param>
 		/// <param name="hookpointID"></param>
 		/// <returns></returns>
-		public bool Attach(House house, uint hookpointID, ushort heading)
-		{
-			if (house == null)
-				return false;
+        public bool Attach(House house, uint hookpointID, ushort heading)
+        {
+            if (house == null)
+                return false;
 
-			// register vault in the DB.
-			var hookedItem = new DBHouseHookpointItem
-			                 	{
-			                 		HouseNumber = house.HouseNumber,
-			                 		HookpointID = hookpointID,
-			                 		Heading = (ushort) (heading%4096),
-			                 		ItemTemplateID = _templateID,
-			                 		Index = (byte) Index
-			                 	};
+            // register vault in the DB.
+            var hookedItem = new DBHouseHookpointItem
+            {
+                HouseNumber = house.HouseNumber,
+                HookpointID = hookpointID,
+                Heading = (ushort)(heading % 4096),
+                ItemTemplateID = _templateID,
+                Index = (byte)Index
+            };
 
-			GameServer.Database.AddObject(hookedItem);
+            var hpitem = GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + house.HouseNumber + "' AND HookpointID = '" + hookpointID + "'");
 
-			// now add the vault to the house.
-			return Attach(house, hookedItem);
-		}
+            if (hpitem == null)
+                GameServer.Database.AddObject(hookedItem);
+
+            // now add the vault to the house.
+            return Attach(house, hookedItem);
+        }
 
 		/// <summary>
 		/// Attach this vault to a hookpoint in a house.
