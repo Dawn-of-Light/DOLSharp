@@ -2421,7 +2421,9 @@ namespace DOL.GS
 				{
 					//Mobs always shot and reload
 					if (owner is GameNPC)
+					{
 						owner.RangedAttackState = eRangedAttackState.AimFireReload;
+					}
 
 					if (owner.RangedAttackState != eRangedAttackState.AimFireReload)
 					{
@@ -2458,6 +2460,7 @@ namespace DOL.GS
 						}
 
 						owner.RangedAttackState = eRangedAttackState.Aim;
+
 						if (owner is GamePlayer)
 						{
 							owner.TempProperties.setProperty(GamePlayer.RANGE_ATTACK_HOLD_START, 0L);
@@ -2964,13 +2967,17 @@ namespace DOL.GS
 
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				{
-					RangedAttackState = eRangedAttackState.Aim;
+					// only start another attack action if we aren't already aiming to shoot
+					if (RangedAttackState != eRangedAttackState.Aim)
+					{
+						RangedAttackState = eRangedAttackState.Aim;
 
-					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						player.Out.SendCombatAnimation(this, null, (ushort)(AttackWeapon == null ? 0 : AttackWeapon.Model),
-						                               0x00, player.Out.BowPrepare, (byte)(speed / 100), 0x00, 0x00);
+						foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+							player.Out.SendCombatAnimation(this, null, (ushort)(AttackWeapon == null ? 0 : AttackWeapon.Model),
+														   0x00, player.Out.BowPrepare, (byte)(speed / 100), 0x00, 0x00);
 
-					m_attackAction.Start((RangedAttackType == eRangedAttackType.RapidFire) ? speed / 2 : speed);
+						m_attackAction.Start((RangedAttackType == eRangedAttackType.RapidFire) ? speed / 2 : speed);
+					}
 				}
 				else
 				{
