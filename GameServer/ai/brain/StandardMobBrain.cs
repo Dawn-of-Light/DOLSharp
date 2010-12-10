@@ -175,6 +175,7 @@ namespace DOL.AI.Brain
 			if( !Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && Body.IsWithinRadius( Body.SpawnPoint, 500 ) == false )
 			{
 				Body.WalkToSpawn(); // Mobs do not walk back at 2x their speed..
+				Body.IsReturningHome = false; // We are returning to spawn but not the long walk home, so aggro still possible
 			}
 
 			if (Body.IsReturningHome == false)
