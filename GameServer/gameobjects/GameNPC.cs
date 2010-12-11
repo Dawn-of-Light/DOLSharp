@@ -2355,6 +2355,16 @@ namespace DOL.GS
 			return 0;
 		}
 
+		protected GameNPC m_teleporterIndicator = null;
+
+		/// <summary>
+		/// Should this NPC have an associated teleporter indicator
+		/// </summary>
+		public virtual bool ShowTeleporterIndicator
+		{
+			get { return false; }
+		}
+
 		/// <summary>
 		/// Should the NPC show a quest indicator, this can be overriden for custom handling
 		/// Checks both scripted and data quests
@@ -2721,6 +2731,27 @@ namespace DOL.GS
 			BuildAmbientTexts();
 			if (GameServer.Instance.ServerStatus == eGameServerStatus.GSS_Open)
 				FireAmbientSentence(eAmbientTrigger.spawning);
+
+
+			if (ShowTeleporterIndicator)
+			{
+				if (m_teleporterIndicator == null)
+				{
+					m_teleporterIndicator = new GameNPC();
+					m_teleporterIndicator.Name = "";
+					m_teleporterIndicator.Model = 1923;
+					m_teleporterIndicator.Flags ^= eFlags.PEACE;
+					m_teleporterIndicator.Flags ^= eFlags.CANTTARGET;
+					m_teleporterIndicator.Flags ^= eFlags.DONTSHOWNAME;
+					m_teleporterIndicator.Flags ^= eFlags.FLYING;
+					m_teleporterIndicator.X = X;
+					m_teleporterIndicator.Y = Y;
+					m_teleporterIndicator.Z = Z + 1;
+					m_teleporterIndicator.CurrentRegionID = CurrentRegionID;
+				}
+
+				m_teleporterIndicator.AddToWorld();
+			}
 			
 			return true;
 		}
@@ -2764,6 +2795,13 @@ namespace DOL.GS
 				brain.Stop();
 			}
 			EffectList.CancelAll();
+
+			if (ShowTeleporterIndicator && m_teleporterIndicator != null)
+			{
+				m_teleporterIndicator.RemoveFromWorld();
+				m_teleporterIndicator = null;
+			}
+
 			return true;
 		}
 

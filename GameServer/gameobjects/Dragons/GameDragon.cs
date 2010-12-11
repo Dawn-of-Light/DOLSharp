@@ -47,12 +47,9 @@ namespace DOL.GS
 		/// Set the dragon difficulty in percent of its max abilities
 		/// 100 = full strength
 		/// </summary>
-		private int m_DragonDifficulty;
 		public virtual int DragonDifficulty
 		{
-			get { return m_DragonDifficulty;}
-			set { m_DragonDifficulty = value;}
-			
+			get { return ServerProperties.Properties.SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;}
 		}
 		
 		/// <summary>
@@ -80,7 +77,6 @@ namespace DOL.GS
 				"A glowing light begins to form on the mound that served as {0}'s lair." };
 
 			TetherRange = 2500;	// TODO: Can be removed once there is an NPCTemplate.
-			m_DragonDifficulty = ServerProperties.Properties.SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
 		}
 
 		public ushort LairRadius
@@ -109,13 +105,13 @@ namespace DOL.GS
 
 		public override double GetArmorAF(eArmorSlot slot)
 		{
-			return 1000 * m_DragonDifficulty / 100;
+			return 1000 * DragonDifficulty / 100;
 		}
 
 		public override double GetArmorAbsorb(eArmorSlot slot)
 		{
 			// 85% ABS is cap.
-			return 0.85 * m_DragonDifficulty / 100;
+			return 0.85 * DragonDifficulty / 100;
 		}
 
 		/// <summary>
@@ -131,8 +127,8 @@ namespace DOL.GS
 			{
 				case eDamageType.Slash : 
 				case eDamageType.Crush :
-				case eDamageType.Thrust: return 65 * m_DragonDifficulty / 100;
-				default: return 99 * m_DragonDifficulty / 100;
+				case eDamageType.Thrust: return 65 * DragonDifficulty / 100;
+				default: return 99 * DragonDifficulty / 100;
 			}
 		}
 
@@ -140,13 +136,13 @@ namespace DOL.GS
 		{
 			get
 			{
-				return 30000 * m_DragonDifficulty / 100;
+				return 30000 * DragonDifficulty / 100;
 			}
 		}
 
 		public override double AttackDamage(InventoryItem weapon)
 		{
-			return base.AttackDamage(weapon) * 1.0 * m_DragonDifficulty/100;
+			return base.AttackDamage(weapon) * 1.0 * DragonDifficulty / 100;
 		}
 
 		public override short MaxSpeedBase
@@ -159,7 +155,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (short)(base.Strength * m_DragonDifficulty / 100);
+				return (short)(base.Strength * DragonDifficulty / 100);
 			}
 		}
 
@@ -170,7 +166,7 @@ namespace DOL.GS
 				int highmod = Level + 50;
 				int lowmod = Level / 3;
 				int result = Util.Random(lowmod, highmod);
-				return result * 60 * 1000 *m_DragonDifficulty/100;
+				return result * 60 * 1000 * DragonDifficulty / 100;
 			}
 		}
 
@@ -757,11 +753,11 @@ namespace DOL.GS
 		{
 			BroadcastMessage(String.Format("{0} is hurled into the air!", target.Name));
 			
-			// Face the target, then push it 600 units up and 400-600 units backwards.
+			// Face the target, then push it 700 units up and 300 - 500 units backwards.
 
 			TurnTo(target);
 
-			Point3D targetPosition = PositionOfTarget(target, 600, Heading, Util.Random(300, 500) );
+			Point3D targetPosition = PositionOfTarget(target, 700, Heading, Util.Random(300, 500) );
 
 			if (target is GamePlayer)
 			{
@@ -814,7 +810,7 @@ namespace DOL.GS
 					spell.Uninterruptible = true;
 					spell.ClientEffect = 4123;
 					spell.Icon = 4123;
-					spell.Duration = 30*m_DragonDifficulty/100;
+					spell.Duration = 30 * DragonDifficulty / 100;
 					spell.Description = "Stun";
 					spell.Name = "Paralyzing Horror";
 					spell.Range = 700;
