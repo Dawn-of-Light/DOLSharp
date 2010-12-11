@@ -329,8 +329,7 @@ namespace DOL.GS.Housing
 		/// </summary>
 		public void SendUpdate()
 		{
-			foreach (
-				GamePlayer player in WorldMgr.GetPlayersCloseToSpot(RegionID, X, Y, Z, HousingConstants.HouseViewingDistance))
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(RegionID, X, Y, Z, HousingConstants.HouseViewingDistance))
 			{
 				player.Out.SendHouse(this);
 				player.Out.SendGarden(this);

@@ -24,7 +24,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// EmblemDialogReponseHandler is the response of client wend when we close the emblem selection dialogue.
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x4A^168,"Handles destroy item requests from client")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x4A ^ 168, "Handles when a player chooses a guild emblem")]
 	public class EmblemDialogReponseHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
