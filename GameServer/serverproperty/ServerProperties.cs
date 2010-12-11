@@ -471,6 +471,13 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("world", "allow_personnal_mount_in_regions", "CSV Regions where player mount is allowed", "")]
 		public static string ALLOW_PERSONNAL_MOUNT_IN_REGIONS;
 
+
+		/// <summary>
+		/// Immunity Timer length when a player logs into game
+		/// </summary>
+		[ServerProperty("world", "timer_player_init", "Immunity Timer when player logs into the game, in seconds", 15)]
+		public static int TIMER_PLAYER_INIT;
+
 		#endregion
 		
 		#region RATES
@@ -710,7 +717,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("pvp","RvRLinkDeathRelogGracePeriod", "The Grace Period in minutes, to allow to relog near enemy structure after a link death.", "20")]
 		public static string RVR_LINK_DEATH_RELOG_GRACE_PERIOD;
-		
+
+		/// <summary>
+		/// PvP Immunity Timer - Killed by Mobs
+		/// </summary>
+		[ServerProperty("pvp", "Timer_Killed_By_Mob", "Immunity Timer When player killed in PvP, in seconds", 30)] //30 seconds default
+		public static int TIMER_KILLED_BY_MOB;
+
 		/// <summary>
 		/// PvP Immunity Timer - Killed by Player
 		/// </summary>
@@ -1010,12 +1023,6 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("pve", "scroll_drop_rate", "Adjust the drop rate (percent chance) for scrolls.", 25)]
 		public static int SCROLL_DROP_RATE;
-		
-		/// <summary>
-		/// PvP Immunity Timer - Killed by Mobs
-		/// </summary>
-		[ServerProperty("pve","Timer_Killed_By_Mob", "Immunity Timer When player killed in PvP, in seconds", 30)] //30 seconds default
-		public static int TIMER_KILLED_BY_MOB;
 		
 		/// <summary>
 		/// Max camp bonus
