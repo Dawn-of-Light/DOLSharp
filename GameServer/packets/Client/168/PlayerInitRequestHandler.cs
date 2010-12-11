@@ -107,11 +107,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				player.Out.SendPlayerInitFinished((byte) mobs);
 				player.TargetObject = null;
-//				player.Out.SendChangeTarget(null); // don't work like expected - prints "can't assist..."
 				player.StartHealthRegeneration();
 				player.StartPowerRegeneration();
 				player.StartEnduranceRegeneration();
-				player.SetPvPInvulnerability(10*1000, null);
+				player.SetPvPInvulnerability(ServerProperties.Properties.TIMER_PLAYER_INIT * 1000, null);
 
 				if (player.Guild != null)
 				{
