@@ -92,11 +92,12 @@ namespace DOL.GS.Commands
 					clientsList.Add(addPlayer.Client);
 					continue;
 				}
-				if (addPlayer.Client != client // allways add self
-				    && client.Account.PrivLevel == (uint)ePrivLevel.Player
-				    && (addPlayer.IsAnonymous
-				        || !GameServer.ServerRules.IsSameRealm(addPlayer, client.Player, true)))
+				if (addPlayer.Client != client // always add self
+					&& client.Account.PrivLevel == (uint)ePrivLevel.Player
+					&& (addPlayer.IsAnonymous || !GameServer.ServerRules.IsSameRealm(addPlayer, client.Player, true)))
+				{
 					continue;
+				}
 				clientsList.Add(addPlayer.Client);
 			}
 

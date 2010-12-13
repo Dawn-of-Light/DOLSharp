@@ -7396,7 +7396,7 @@ namespace DOL.GS
 			m_releaseType = eReleaseType.Normal;
 
 			string location = "";
-			if (CurrentAreas.Count > 0)
+			if (CurrentAreas.Count > 0 && (CurrentAreas[0] is Area.BindArea) == false)
 				location = (CurrentAreas[0] as AbstractArea).Description;
 			else
 				location = CurrentZone.Description;

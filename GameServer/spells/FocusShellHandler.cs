@@ -42,7 +42,7 @@ namespace DOL.GS.Spells
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			//Only works on members of the same realm
-			if (GameServer.ServerRules.IsSameRealm(selectedTarget, Caster, true))
+			if (GameServer.ServerRules.IsAllowedToAttack(selectedTarget, Caster, true) == false)
 			{
 				//This spell doesn't work on pets or monsters
 				if (selectedTarget is GameNPC)

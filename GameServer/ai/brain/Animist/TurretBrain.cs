@@ -186,7 +186,7 @@ namespace DOL.AI.Brain
 		{
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)spell.Range, Body.CurrentRegion.IsDungeon ? false : true))
 			{
-				if(!GameServer.ServerRules.IsSameRealm(Body, player, false))
+				if(GameServer.ServerRules.IsAllowedToAttack(Body, player, true))
 					continue;
 
 				if(!player.IsAlive)
@@ -208,7 +208,7 @@ namespace DOL.AI.Brain
 			}
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)spell.Range, Body.CurrentRegion.IsDungeon ? false : true))
 			{
-				if(!GameServer.ServerRules.IsSameRealm(Body, npc, false))
+				if(GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
 					continue;
 
 				if(!npc.IsAlive)
