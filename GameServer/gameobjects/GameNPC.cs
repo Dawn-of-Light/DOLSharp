@@ -3219,6 +3219,7 @@ namespace DOL.GS
 			roaming,
 			killing,
 			moving,
+			interact,
 		}
 		
 		/// <summary>
@@ -3272,6 +3273,8 @@ namespace DOL.GS
 
 				player.MountSteed(this, true);
 			}
+
+			FireAmbientSentence(eAmbientTrigger.interact, player);
 			return true;
 		}
 
@@ -4654,12 +4657,13 @@ namespace DOL.GS
 		{
 			if (ambientTexts == null) return;
 			if (ambientTexts.Count == 0) return;
+			if (trigger == eAmbientTrigger.interact && living == null) return;
 			List<MobXAmbientBehaviour> mxa = (from i in ambientTexts where i.Trigger == trigger.ToString() select i).ToList();
 			if (mxa.Count==0) return;
-			
+
 			// grab random sentence
-			var choosen = mxa[Util.Random(mxa.Count-1)];
-			if (!Util.Chance(choosen.Chance)) return;
+			var chosen = mxa[Util.Random(mxa.Count-1)];
+			if (!Util.Chance(chosen.Chance)) return;
 			
 			string controller = string.Empty;
 			if (Brain is IControlledBrain)
@@ -4668,18 +4672,29 @@ namespace DOL.GS
 				if (playerOwner != null)
 					controller = playerOwner.Name;
 			}
-			string text = choosen.Text.Replace("{sourcename}",Name).Replace("{targetname}",living==null?string.Empty:living.Name).Replace("{controller}", controller);
 
-			Emote((eEmote)choosen.Emote);
+			string text = chosen.Text.Replace("{sourcename}",Name).Replace("{targetname}",living==null?string.Empty:living.Name).Replace("{controller}", controller);
+
+			if (chosen.Emote != 0)
+			{
+				Emote((eEmote)chosen.Emote);
+			}
 			
 			// issuing text
 			if (living is GamePlayer)
 				text = text.Replace("{class}",(living as GamePlayer).CharacterClass.Name).Replace("{race}",(living as GamePlayer).RaceName);
 			if (living is GameNPC)
 				text = text.Replace("{class}","NPC").Replace("{race}","NPC");
-			
+
+			// for interact text we pop up a window
+			if (trigger == eAmbientTrigger.interact)
+			{
+				(living as GamePlayer).Out.SendMessage(text, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				return;
+			}
+
 			// broadcasted , yelled or talked ?
-			if (choosen.Voice.StartsWith("b"))
+			if (chosen.Voice.StartsWith("b"))
 			{
 				foreach (GamePlayer player in CurrentRegion.GetPlayersInRadius(X, Y, Z, 25000, false, false))
 				{
@@ -4687,7 +4702,7 @@ namespace DOL.GS
 				}
 				return;
 			}
-			if (choosen.Voice.StartsWith("y"))
+			if (chosen.Voice.StartsWith("y"))
 			{
 				Yell(text);
 				return;
