@@ -336,7 +336,7 @@ namespace DOL.GS
 					case "realm":
 						foreach (GamePlayer plr in m_owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
-							if (plr != null && GameServer.ServerRules.IsSameRealm(m_owner, plr, true) && !newPlayerlist.Contains(plr))
+							if (plr != null && GameServer.ServerRules.IsAllowedToAttack(m_owner, plr, true) == false && !newPlayerlist.Contains(plr))
 								newPlayerlist.Add(plr);
 						}
 						break;

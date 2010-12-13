@@ -52,7 +52,7 @@ namespace DOL.GS.ServerRules
 		bool IsAllowedToMoveToBind(GamePlayer player);
 
 		/// <summary>
-		/// Is attacker allowed to attack defender.
+		/// Is attacker allowed to attack defender.  Use this check for all attack / heal / buff decisions
 		/// </summary>
 		/// <param name="attacker">living that makes attack</param>
 		/// <param name="defender">attacker's target</param>
@@ -71,8 +71,9 @@ namespace DOL.GS.ServerRules
 		bool IsAllowedToCastSpell(GameLiving caster, GameLiving target, Spell spell, SpellLine spellLine);
 
 		/// <summary>
-		/// Does source considers target "friendly".
-		/// Used for spells with "Realm" and "Group" spell types, friend list.
+		/// Should the target be considered the same realm as the source?
+		/// Do not use this for attack decisions, use IsAllowedToAttack instead.  This should be used
+		/// to determine things like Can join a guild? Can invite to a battlegroup?  Can rez?
 		/// </summary>
 		/// <param name="source">spell source, considering object</param>
 		/// <param name="target">spell target, considered object</param>

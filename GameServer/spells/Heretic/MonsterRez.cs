@@ -189,14 +189,14 @@ namespace DOL.GS.Spells
 
 			foreach (GamePlayer player in target.GetPlayersInRadius(false, (ushort)Spell.Radius))
 			{
-				if (!GameServer.ServerRules.IsSameRealm(Caster, player, true))
+				if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 				{
 					list.Add(player);
 				}
 			}
 			foreach (GameNPC npc in target.GetNPCsInRadius(false, (ushort)Spell.Radius))
 			{
-				if (!GameServer.ServerRules.IsSameRealm(Caster, npc, true))
+				if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
 				{
 					list.Add(npc);
 				}
@@ -226,14 +226,14 @@ namespace DOL.GS.Spells
 
 			foreach (GamePlayer player in target.GetPlayersInRadius(false, (ushort)Spell.Radius))
 			{
-				if (!GameServer.ServerRules.IsSameRealm(Caster, player, true))
+				if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 				{
 					list.Add(player);
 				}
 			}
 			foreach (GameNPC npc in target.GetNPCsInRadius(false, (ushort)Spell.Radius))
 			{
-				if (!GameServer.ServerRules.IsSameRealm(Caster, npc, true))
+				if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
 				{
 					list.Add(npc);
 				}

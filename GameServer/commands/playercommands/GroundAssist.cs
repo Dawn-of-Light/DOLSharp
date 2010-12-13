@@ -53,7 +53,8 @@ namespace DOL.GS.Commands
 			if (target == null)
 				return;
 
-			if (!GameServer.ServerRules.IsSameRealm(client.Player, target as GameLiving, false))
+			// can't assist an enemy
+			if (GameServer.ServerRules.IsAllowedToAttack(client.Player, target as GameLiving, false))
 				return;
 
 			if (!client.Player.IsWithinRadius( target, 2048 ))

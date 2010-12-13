@@ -20,16 +20,37 @@ namespace DOL.GS.RealmAbilities
 
 		public override void Execute(GameLiving living)
 		{
-			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
+			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) 
+				return;
 			GamePlayer player = living as GamePlayer;
-            //Lifeflight: This should use GameServer.ServerRules.IsSameRealm to check for realm matches, other wise on a PVP server this wont work as intended
-            if (player.TargetObject == null || !(player.TargetObject is GamePlayer) || !GameServer.ServerRules.IsSameRealm(living, player.TargetObject as GameLiving, true) || (GameServer.ServerRules.IsSameRealm(living, player.TargetObject as GameLiving, true) && (player.TargetObject as GameLiving).IsAlive))
-            {
-                player.Out.SendMessage("You have to target a dead member of your realm!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                return;
-            }
 
-			GamePlayer targetPlayer = player.TargetObject as GamePlayer;
+			if (player == null) 
+				return;
+
+			GamePlayer targetPlayer = null;
+			bool isGoodTarget = true;
+
+			if (player.TargetObject == null)
+			{
+				isGoodTarget = false;
+			}
+			else
+			{
+				targetPlayer = player.TargetObject as GamePlayer;
+
+				if (targetPlayer == null ||
+					targetPlayer.IsAlive ||
+					GameServer.ServerRules.IsSameRealm(living, player.TargetObject as GameLiving, true) == false)
+				{
+					isGoodTarget = false;
+				}
+			}
+
+			if (isGoodTarget == false)
+			{
+				player.Out.SendMessage("You have to target a dead member of your realm!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
 			switch (Level)
 			{
