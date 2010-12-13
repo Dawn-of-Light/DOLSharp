@@ -106,7 +106,7 @@ namespace DOL.GS.Spells
                             target = Caster;
                         foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
                         {
-                            if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+                            if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
                             {
                                 list.Add(player);
                             }
@@ -114,7 +114,7 @@ namespace DOL.GS.Spells
                     }
                     else
                     {
-                        if (target != null && GameServer.ServerRules.IsSameRealm(Caster, target, true))
+						if (target != null && GameServer.ServerRules.IsAllowedToAttack(Caster, target, true) == false)
                             list.Add(target);
                     }
                     break;
@@ -127,7 +127,7 @@ namespace DOL.GS.Spells
                                 target = Caster;
                             foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
                             {
-                                if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+								if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
                                 {
                                     list.Add(player);
                                 }
@@ -304,7 +304,7 @@ namespace DOL.GS.Spells
                             target = Caster;
                         foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
                         {
-                            if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
                             {
                                 list.Add(player);
                             }
@@ -312,7 +312,7 @@ namespace DOL.GS.Spells
                     }
                     else
                     {
-                        if (target != null && GameServer.ServerRules.IsSameRealm(Caster, target, true))
+						if (target != null && GameServer.ServerRules.IsAllowedToAttack(Caster, target, true) == false)
                             list.Add(target);
                     }
                     break;
@@ -325,7 +325,7 @@ namespace DOL.GS.Spells
                                 target = Caster;
                             foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
                             {
-                                if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+								if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
                                 {
                                     list.Add(player);
                                 }
@@ -421,6 +421,7 @@ namespace DOL.GS.Spells
         #region Targets
         /// <summary>
         /// Select all targets for this spell
+		/// This code is repeated how many times?  - Tolakram
         /// </summary>
         /// <param name="castTarget"></param>
         /// <returns></returns>
@@ -492,7 +493,7 @@ namespace DOL.GS.Spells
                             target = Caster;
                         foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
                         {
-                            if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
                             {
                                 list.Add(player);
                             }
@@ -500,7 +501,7 @@ namespace DOL.GS.Spells
                     }
                     else
                     {
-                        if (target != null && GameServer.ServerRules.IsSameRealm(Caster, target, true))
+						if (target != null && GameServer.ServerRules.IsAllowedToAttack(Caster, target, true) == false)
                             list.Add(target);
                     }
                     break;
@@ -513,7 +514,7 @@ namespace DOL.GS.Spells
                                 target = Caster;
                             foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
                             {
-                                if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+								if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
                                 {
                                     list.Add(player);
                                 }
@@ -681,7 +682,7 @@ namespace DOL.GS.Spells
                             target = Caster;
                         foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
                         {
-                            if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
                             {
                                 list.Add(player);
                             }
@@ -689,7 +690,7 @@ namespace DOL.GS.Spells
                     }
                     else
                     {
-                        if (target != null && GameServer.ServerRules.IsSameRealm(Caster, target, true))
+						if (target != null && GameServer.ServerRules.IsAllowedToAttack(Caster, target, true) == false)
                             list.Add(target);
                     }
                     break;
@@ -702,7 +703,7 @@ namespace DOL.GS.Spells
                                 target = Caster;
                             foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
                             {
-                                if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+								if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
                                 {
                                     list.Add(player);
                                 }
@@ -891,7 +892,7 @@ namespace DOL.GS.Spells
                             target = Caster;
                         foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
                         {
-                            if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
                             {
                                 list.Add(player);
                             }
@@ -899,7 +900,7 @@ namespace DOL.GS.Spells
                     }
                     else
                     {
-                        if (target != null && GameServer.ServerRules.IsSameRealm(Caster, target, true))
+						if (target != null && GameServer.ServerRules.IsAllowedToAttack(Caster, target, true) == false)
                             list.Add(target);
                     }
                     break;
@@ -912,7 +913,7 @@ namespace DOL.GS.Spells
                                 target = Caster;
                             foreach (GamePlayer player in target.GetPlayersInRadius((ushort)Spell.Radius))
                             {
-                                if (GameServer.ServerRules.IsSameRealm(Caster, player, true))
+								if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
                                 {
                                     list.Add(player);
                                 }

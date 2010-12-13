@@ -688,7 +688,8 @@ namespace DOL.AI.Brain
 		/// <returns></returns>
 		public virtual int CalculateAggroLevelToTarget(GameLiving target)
 		{
-			if (GameServer.ServerRules.IsSameRealm(Body, target, true)) return 0;
+			if (GameServer.ServerRules.IsAllowedToAttack(Body, target, true) == false)
+				return 0;
 
 			// related to the pet owner if applicable
 			if (target is GamePet)

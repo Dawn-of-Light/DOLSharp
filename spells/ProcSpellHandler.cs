@@ -348,7 +348,7 @@ namespace DOL.GS.Spells
 						{
 							foreach (GameLiving realmPlayer in player.GetPlayersInRadius((ushort)m_procSpell.Radius))
 							{
-								if (GameServer.ServerRules.IsSameRealm(player, realmPlayer, true))
+								if (GameServer.ServerRules.IsAllowedToAttack(player, realmPlayer, true) == false)
 								{
 									handler.StartSpell(realmPlayer);
 								}
