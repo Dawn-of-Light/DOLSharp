@@ -96,7 +96,7 @@ namespace DOL.GS.Commands
                         try { npctemplate = int.Parse(args[3]); }
                         catch { }
 
-                        element.NPCTemplate = npctemplate;
+                        element.NPCTemplate = npctemplate.ToString();
 
                         //Save the element to database!
                         GameServer.Database.AddObject(element);
