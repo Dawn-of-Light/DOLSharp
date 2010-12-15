@@ -86,11 +86,29 @@ namespace DOL.Database
 		/// <summary>
 		/// Where applicable, the npc template to create this mob from.
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Varchar = 255)]
 		public string NPCTemplate
 		{
 			get { return m_NPCTemplate; }
 			set { m_NPCTemplate = value; }
+		}
+
+		/// <summary>
+		/// Convert the NPCTemplate to/from int, assuming a single ID
+		/// </summary>
+		public int NPCTemplateID
+		{
+			get
+			{
+				int i = 0;
+				int.TryParse(NPCTemplate, out i);
+				return i;
+			}
+
+			set
+			{
+				NPCTemplate = value.ToString();
+			}
 		}
 
 	}
