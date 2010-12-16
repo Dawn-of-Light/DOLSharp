@@ -81,6 +81,8 @@ AdvancedCraftingSkill.CombineItems.OnlyCombine:		Vous pouvez seulement combiner 
 AdvancedCraftingSkill.IsAllowedToCombine.CraftedItems:	Seulement les objets construits par des artisants peuvent être enchantés!
 AdvancedCraftingSkill.IsAllowedToCombine.Imbue:		Vous avez besoin de quelque chose pour imprégner {0}!
 AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted:	Cet objet ne peut pas être enchanté!
+AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine:	Cet objet ne peut pas être imprégner de cette teinture!
+AdvancedCraftingSkill.IsAllowedToCombine.ProblemCombine:	L'object est mal configuré, prévenez un gm!
 
 # /Alchemy
 Alchemy.IsAllowedToCombine.AlchemyTinctures:		Vous pouvez combiner seulement des teintures créées par un Alchimiste!

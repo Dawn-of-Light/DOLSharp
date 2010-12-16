@@ -118,42 +118,53 @@ namespace DOL.GS
 			return 1;
 		}
 
-		/// <summary>
-		/// Called when player try to use a secondary crafting skill
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="siegeWeapon"></param>
-		/// <returns></returns>
-		public static int BeginWork(GamePlayer player, GameSiegeWeapon siegeWeapon)
-		{
-			if (siegeWeapon == null)
-				return 0;
-			// Galenas
-			siegeWeapon.ReleaseControl();
-			siegeWeapon.RemoveFromWorld();
-			bool error = false;
-			DBCraftedItem craftItemData = GameServer.Database.SelectObject<DBCraftedItem>("Id_nb ='" + GameServer.Database.Escape(siegeWeapon.ItemId) + "'");
-			if (craftItemData == null)
-				return 0;
-			if (craftItemData.RawMaterials == null)
-				return 0;
-			InventoryItem item;
-			ItemTemplate template;
-			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
-			{
-				template = GameServer.Database.FindObjectByKey<ItemTemplate>(rawmaterial.IngredientId_nb);
-				item = GameInventoryItem.Create<ItemTemplate>(template);
-				item.Count = rawmaterial.Count;
-				if (!player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
-				{
-					error = true;
-					break;
-				}
-			}
-			if (error)
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoRoom"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			return 1;
-		}
+        /// <summary>
+        /// Called when player try to use a secondary crafting skill
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="siegeWeapon"></param>
+        /// <returns></returns>
+        public static int BeginWork(GamePlayer player, GameSiegeWeapon siegeWeapon)
+        {
+            if (siegeWeapon == null)
+                return 0;
+            // Galenas
+            siegeWeapon.ReleaseControl();
+            siegeWeapon.RemoveFromWorld();
+            bool error = false;
+            DBCraftedItem craftItemData = GameServer.Database.SelectObject<DBCraftedItem>("Id_nb ='" + siegeWeapon.ItemId + "'");
+            if (craftItemData == null)
+            {
+                log.Info("Salvage Issue: craftItemData is null for" + siegeWeapon.ItemId);
+                return 1;
+            }
+            if (craftItemData.RawMaterials == null)
+            {
+                log.Info("Salvage Issue: RawMaterials is null for" + siegeWeapon.ItemId);
+                return 1;
+            }
+            if (player.IsCrafting)
+            {
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.IsAllowedToBeginWork.EndCurrentAction"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return 0;
+            }
+            InventoryItem item;
+            ItemTemplate template;
+            foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
+            {
+                template = GameServer.Database.FindObjectByKey<ItemTemplate>(rawmaterial.IngredientId_nb);
+                item = GameInventoryItem.Create<ItemTemplate>(template);
+                item.Count = rawmaterial.Count;
+                if (!player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+                {
+                    error = true;
+                    break;
+                }
+            }
+            if (error)
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoRoom"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            return 1;
+        }
 
 		/// <summary>
 		/// Called when craft time is finished

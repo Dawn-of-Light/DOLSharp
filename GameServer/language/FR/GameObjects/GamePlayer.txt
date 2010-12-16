@@ -313,5 +313,6 @@ GamePlayer.UseSlot.WhistleMount:			Vous sifflez votre monture.
 GamePlayer.UseSlot.MustWaitBeforeUse:		Vous devez attendre {0} secondes de plus avant d'utiliser cet objet.
 GamePlayer.UseSlot.CantUseState:			Vous ne pouvez pas utiliser {0} dans votre état actuel.
 GamePlayer.UseSlot.Used:			        Vous utilisez {0}.
+GamePlayer.UseSlot.CantUseCast:				Vous devez finir votre action en cours pour utiliser votre {0}.
 GamePlayer.Whisper.SelectTarget:			Sélectionnez une cible à qui chuchoter.
 
