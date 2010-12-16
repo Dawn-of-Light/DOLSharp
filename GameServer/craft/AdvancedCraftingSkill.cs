@@ -118,6 +118,33 @@ namespace DOL.GS
 				return false;
 			}
 
+
+            InventoryItem itemToCombine = (InventoryItem)player.TradeWindow.TradeItems[0];
+
+            if (itemToCombine.Object_Type == (int)eObjectType.AlchemyTincture)
+            {
+                switch (itemToCombine.Type_Damage)
+                {
+                    case 0: //Type damage 0 = armors
+                        if (!GlobalConstants.IsArmor(item.Object_Type))
+                        {
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return false;
+                        }
+                        break;
+                    case 1: //Type damage 1 = weapons
+                        if (!GlobalConstants.IsWeapon(item.Object_Type))
+                        {
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return false;
+                        }
+                        break;
+                    default:
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.ProblemCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return false;
+                }
+            }
+
 			if (!GlobalConstants.IsArmor(item.Object_Type) && !GlobalConstants.IsWeapon(item.Object_Type))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
