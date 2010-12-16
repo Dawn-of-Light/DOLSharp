@@ -313,6 +313,7 @@ GamePlayer.UseSlot.WhistleMount:				You whistle for your mount.
 GamePlayer.UseSlot.MustWaitBeforeUse:			You must wait {0} more second before use potion!
 GamePlayer.UseSlot.CantUseState:			    You can't use {0} in your state.	
 GamePlayer.UseSlot.Used:			            {0} has been used.
+GamePlayer.UseSlot.CantUseCast:				You need to finish your current action for use your {0}!
 GamePlayer.Whisper.SelectTarget:				Select a target to whisper to!
 
 

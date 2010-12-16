@@ -1,3 +1,5 @@
+GamePlayer.CastSpell.MustWaitBeforeCast:	Vous devez attendre {0} secondes pour lancer un sort!
+
 # DelveInfo
 DelveInfo.CastingTime:					Temps d'Incantation: {0}
 DelveInfo.ConcentrationCost:				Coûts en Concentration: {0}

@@ -107,9 +107,16 @@ namespace DOL.GS.PacketHandler
 		{
 			pak.WriteByte((byte)(living.GroupIndex+1)); // From 1 to 8
 			bool sameRegion = living.CurrentRegion == m_gameClient.Player.CurrentRegion;
-			if (sameRegion)
-			{
-				pak.WriteByte(living.HealthPercent);
+            GamePlayer player = null;
+            if (sameRegion)
+            {
+                player = living as GamePlayer;
+
+                if (player != null)
+                    pak.WriteByte(player.CharacterClass.HealthPercentGroupWindow);
+                else
+                    pak.WriteByte(living.HealthPercent);
+
 				pak.WriteByte(living.ManaPercent);
 				pak.WriteByte(living.EndurancePercent); // new in 1.69
 

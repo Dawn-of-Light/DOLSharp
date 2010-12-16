@@ -595,6 +595,23 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
+
+            if (m_caster is GamePlayer)
+            {
+                long nextSpellAvailTime = m_caster.TempProperties.getProperty<long>(GamePlayer.NEXT_SPELL_AVAIL_TIME_BECAUSE_USE_POTION);
+
+                if (nextSpellAvailTime > m_caster.CurrentRegion.Time)
+                {
+                    ((GamePlayer)m_caster).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "GamePlayer.CastSpell.MustWaitBeforeCast", (nextSpellAvailTime - m_caster.CurrentRegion.Time) / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return false;
+                }
+                if (((GamePlayer)m_caster).Steed != null && ((GamePlayer)m_caster).Steed is GameSiegeRam)
+                {
+                    if (!quiet) MessageToCaster("You can't cast in a siegeram!.", eChatType.CT_System);
+                    return false;
+                }
+            }
+
 			GameSpellEffect Phaseshift = FindEffectOnTarget(Caster, "Phaseshift");
 			if (Phaseshift != null && (Spell.InstrumentRequirement == 0 || Spell.SpellType == "Mesmerize"))
 			{
@@ -1811,6 +1828,14 @@ return false;
 
 			if (Caster is GamePlayer)
 				((GamePlayer)Caster).Stealth(false);
+
+            if (Caster is GamePlayer && !HasPositiveEffect)
+            {
+                if (Caster.AttackWeapon != null && Caster.AttackWeapon is GameInventoryItem)
+                {
+                    (Caster.AttackWeapon as GameInventoryItem).OnStrikeTargetSpell(Caster, target);
+                }
+            }
 
 			// messages
 			if (Spell.InstrumentRequirement == 0 && Spell.ClientEffect != 0 && Spell.CastTime > 0)
