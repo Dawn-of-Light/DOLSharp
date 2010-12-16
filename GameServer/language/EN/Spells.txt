@@ -1,4 +1,6 @@
-﻿# DelveInfo
+﻿GamePlayer.CastSpell.MustWaitBeforeCast:	You need to wait {0} mores secondes for cast a spell!
+
+# DelveInfo
 DelveInfo.CastingTime:					Casting time: {0}
 DelveInfo.ConcentrationCost:				Concentration cost: {0}
 DelveInfo.Damage:					Damage: {0}

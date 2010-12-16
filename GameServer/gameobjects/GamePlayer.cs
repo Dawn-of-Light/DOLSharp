@@ -8367,6 +8367,7 @@ namespace DOL.GS
 		public const string LAST_CHARGED_ITEM_USE_TICK = "LastChargedItemUsedTick";
 		public const string ITEM_USE_DELAY = "ItemUseDelay";
 		public const string NEXT_POTION_AVAIL_TIME = "LastPotionItemUsedTick";
+        public const string NEXT_SPELL_AVAIL_TIME_BECAUSE_USE_POTION = "SpellAvailableTime";
 
 		/// <summary>
 		/// Called when this player receives a trade item
@@ -8860,32 +8861,39 @@ namespace DOL.GS
 											{
 												Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseState", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 											}
-											else
-											{
-												SpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine) as SpellHandler;
-												if (spellHandler != null)
-												{
-													GameLiving target = TargetObject as GameLiving;
+                                            else if (spell.CastTime > 0 && IsCasting)
+                                            {
+                                                Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.CantUseCast", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                            }
+                                            else
+                                            {
+                                                SpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine) as SpellHandler;
+                                                if (spellHandler != null)
+                                                {
+                                                    GameLiving target = TargetObject as GameLiving;
 
-													// Tobz: make sure we have the appropriate target for our charge spell,
-													// otherwise don't waste a charge.
-													if (spell.Target.ToLower() == "enemy")
-													{
-														// we need an enemy target.
-														if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
-														{
-															// not allowed to attack, so they are not an enemy.
-															Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-															return;
-														}
-													}
+                                                    // Tobz: make sure we have the appropriate target for our charge spell,
+                                                    // otherwise don't waste a charge.
+                                                    if (spell.Target.ToLower() == "enemy")
+                                                    {
+                                                        // we need an enemy target.
+                                                        if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
+                                                        {
+                                                            // not allowed to attack, so they are not an enemy.
+                                                            Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                            return;
+                                                        }
+                                                    }
 
-													Stealth(false);
+                                                    Stealth(false);
 
-													if (useItem.Item_Type == (int)eInventorySlot.FirstBackpack)
-													{
-														Emote(eEmote.Drink);
-													}
+                                                    if (useItem.Item_Type == (int)eInventorySlot.FirstBackpack)
+                                                    {
+                                                        Emote(eEmote.Drink);
+
+                                                        if (spell.CastTime > 0)
+                                                            TempProperties.setProperty(NEXT_SPELL_AVAIL_TIME_BECAUSE_USE_POTION, 6 * 1000 + CurrentRegion.Time);
+                                                    }
 
 													//Spell
 													if (spellHandler.StartSpell(target, useItem))
@@ -9086,23 +9094,23 @@ namespace DOL.GS
 		/// <param name="type"></param>
 		protected virtual bool UseMagicalItem(InventoryItem item, int type)
 		{
-			if (item == null)
-				return false;
+            if (item == null)
+                return false;
 
-			int cooldown = item.CanUseAgainIn;
-			if (cooldown > 0 && Client.Account.PrivLevel == (uint)ePrivLevel.Player)
-			{
-				int minutes = cooldown / 60;
-				int seconds = cooldown % 60;
-				Out.SendMessage(String.Format("You must wait {0} to discharge this item!",
-				                              (minutes <= 0)
-				                              ? String.Format("{0} more seconds", seconds)
-				                              : String.Format("{0} more minutes and {1} seconds",
-				                                              minutes, seconds)),
-				                eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            int cooldown = item.CanUseAgainIn;
+            if (cooldown > 0 && Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+            {
+                int minutes = cooldown / 60;
+                int seconds = cooldown % 60;
+                Out.SendMessage(String.Format("You must wait {0} to discharge this item!",
+                                              (minutes <= 0)
+                                              ? String.Format("{0} more seconds", seconds)
+                                              : String.Format("{0} more minutes and {1} seconds",
+                                                              minutes, seconds)),
+                                eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-				return false;
-			}
+                return false;
+            }
 
 
 			//Eden
@@ -9779,127 +9787,154 @@ namespace DOL.GS
 		/// <param name="z">Z target coordinate (0 to put player on floor)</param>
 		/// <param name="heading">Target heading</param>
 		/// <returns>true if move succeeded, false if failed</returns>
-		public override bool MoveTo(ushort regionID, int x, int y, int z, ushort heading)
-		{
-			//if we are jumping somewhere away from our house not using house.Exit
-			//we need to make the server know we have left the house
-			if ((CurrentHouse != null || InHouse) && CurrentHouse.RegionID != regionID)
-			{
-				InHouse = false;
-				CurrentHouse = null;
-			}
-			//if we send a jump, we get off the horse
-			if (IsOnHorse)
-				IsOnHorse = false;
-			//Get the destination region based on the ID
-			Region rgn = WorldMgr.GetRegion(regionID);
-			//If the region doesn't exist, return false or if they aren't allowed to zone here
-			if (rgn == null || !GameServer.ServerRules.IsAllowedToZone(this, rgn))
-				return false;
-			//If the x,y inside this region doesn't point to a zone
-			//return false
-			if (rgn.GetZone(x, y) == null)
-				return false;
+        public override bool MoveTo(ushort regionID, int x, int y, int z, ushort heading)
+        {
+            //if we are jumping somewhere away from our house not using house.Exit
+            //we need to make the server know we have left the house
+            if ((CurrentHouse != null || InHouse) && CurrentHouse.RegionID != regionID)
+            {
+                InHouse = false;
+                CurrentHouse = null;
+            }
+            //if we send a jump, we get off the horse
+            if (IsOnHorse)
+                IsOnHorse = false;
+            //Get the destination region based on the ID
+            Region rgn = WorldMgr.GetRegion(regionID);
+            //If the region doesn't exist, return false or if they aren't allowed to zone here
+            if (rgn == null || !GameServer.ServerRules.IsAllowedToZone(this, rgn))
+                return false;
+            //If the x,y inside this region doesn't point to a zone
+            //return false
+            if (rgn.GetZone(x, y) == null)
+                return false;
 
-			Diving(waterBreath.Normal);
+            Diving(waterBreath.Normal);
 
-			if (SiegeWeapon != null)
-				SiegeWeapon.ReleaseControl();
+            if (SiegeWeapon != null)
+                SiegeWeapon.ReleaseControl();
 
-			if (regionID != CurrentRegionID)
-			{
-				GameEventMgr.Notify(GamePlayerEvent.RegionChanging, this);
-				if (!RemoveFromWorld())
-					return false;
-				//notify event
-				CurrentRegion.Notify(RegionEvent.PlayerLeave, CurrentRegion, new RegionPlayerEventArgs(this));
+            if (regionID != CurrentRegionID)
+            {
+                GameEventMgr.Notify(GamePlayerEvent.RegionChanging, this);
+                if (!RemoveFromWorld())
+                    return false;
+                //notify event
+                CurrentRegion.Notify(RegionEvent.PlayerLeave, CurrentRegion, new RegionPlayerEventArgs(this));
 
-				CancelAllConcentrationEffects(true);
-				CommandNpcRelease();
-			}
-			else
-			{
-				//Just remove the player visible, but leave his OID intact!
-				//If player doesn't change region
-				DismountSteed(true);
-				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					if (player == null) continue;
-					if (player != this)
-					{
-						player.Out.SendObjectRemove(this);
-					}
-				}
+                CancelAllConcentrationEffects(true);
+                if (ControlledBrain != null)
+                    CommandNpcRelease();
+            }
+            else
+            {
+                //Just remove the player visible, but leave his OID intact!
+                //If player doesn't change region
+                if (Steed != null)
+                    DismountSteed(true);
 
-				IsJumping = true;
-			}
+                foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                {
+                    if (player == null) continue;
+                    if (player != this)
+                    {
+                        player.Out.SendObjectRemove(this);
+                    }
+                }
 
-			//Remove the last update tick property, to prevent speedhack messages during zoning and teleporting!
-			LastPositionUpdateTick = 0;
+                IsJumping = true;
+            }
+            bool HasPetToMove = false;
+            //Remove the last update tick property, to prevent speedhack messages during zoning and teleporting!
+            LastPositionUpdateTick = 0;
 
-			//Set the new destination
-			//Current Speed = 0 when moved ... else X,Y,Z continue to be modified
-			CurrentSpeed = 0;
-			MovementStartTick = Environment.TickCount;
-			Point3D originalPoint = new Point3D(X, Y, Z);
-			X = x;
-			Y = y;
-			Z = z;
-			Heading = heading;
+            if (ControlledBrain != null && ControlledBrain.WalkState != eWalkState.Stay && this.IsWithinRadius(ControlledBrain.Body, 1000))
+            {
+                if (CharacterClass.ID != (int)eCharacterClass.Theurgist && CharacterClass.ID != (int)eCharacterClass.Animist)
+                {
+                    HasPetToMove = true;
+                }
+            }
+            //Set the new destination
+            //Current Speed = 0 when moved ... else X,Y,Z continue to be modified
+            CurrentSpeed = 0;
+            MovementStartTick = Environment.TickCount;
+            Point3D originalPoint = new Point3D(X, Y, Z);
+            X = x;
+            Y = y;
+            Z = z;
+            Heading = heading;
 
-			//If the destination is in another region
-			if (regionID != CurrentRegionID)
-			{
-				//Set our new region
-				CurrentRegionID = regionID;
+            //Remove the last update tick property, to prevent speedhack messages during zoning and teleporting!
+            TempProperties.removeProperty(PlayerPositionUpdateHandler.LASTMOVEMENTTICK);
+            //If the destination is in another region
+            if (regionID != CurrentRegionID)
+            {
+                //Set our new region
+                CurrentRegionID = regionID;
 
-				LastWorldUpdate = Environment.TickCount;
-				CurrentUpdateArray.SetAll(false);
-				HousingUpdateArray = null;
+                LastWorldUpdate = Environment.TickCount;
+                CurrentUpdateArray.SetAll(false);
+                HousingUpdateArray = null;
 
-				//Send the region update packet, the rest will be handled
-				//by the packethandlers
-				Out.SendRegionChanged();
-			}
-			else
-			{
-				//Add the player to the new coordinates
-				Out.SendPlayerJump(false);
+                //Send the region update packet, the rest will be handled
+                //by the packethandlers
+                Out.SendRegionChanged();
+            }
+            else
+            {
+                //Add the player to the new coordinates
+                Out.SendPlayerJump(false);
 
-				// are we jumping far enough to force a complete refresh?
-				if (GetDistanceTo(originalPoint) > WorldMgr.REFRESH_DISTANCE)
-				{
-					RefreshWorld();
-				}
-				else
-				{
-					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					{
-						if (player != null && player != this)
-						{
-							if (IsStealthed == false || player.CanDetect(this))
-							{
-								player.Out.SendPlayerCreate(this);
-							}
-						}
-					}
-				}
+                // are we jumping far enough to force a complete refresh?
+                if (GetDistanceTo(originalPoint) > WorldMgr.REFRESH_DISTANCE)
+                {
+                    RefreshWorld();
+                }
+                else
+                {
+                    foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                    {
+                        if (player != null && player != this)
+                        {
+                            if (IsStealthed == false || player.CanDetect(this))
+                            {
+                                player.Out.SendPlayerCreate(this);
+                            }
+                        }
+                    }
+                }
 
-				UpdateEquipmentAppearance();
+                UpdateEquipmentAppearance();
 
-				if (this.IsUnderwater)
-					this.IsDiving = true;
+                if (this.IsUnderwater)
+                    this.IsDiving = true;
 
-				if (ControlledBrain != null &&
-				    ControlledBrain.WalkState != eWalkState.Stay
-				    && this.IsWithinRadius( ControlledBrain.Body, 1000 ) )
-				{
-					Point2D point = this.GetPointFromHeading( this.Heading, 64 );
-					ControlledBrain.Body.MovePet(CurrentRegionID, point.X, point.Y, Z, (ushort)((this.Heading + 2048) % 4096), false);
-				}
-			}
-			return true;
-		}
+                if (HasPetToMove)
+                {
+                    Point2D point = GetPointFromHeading(Heading, 64);
+
+                    IControlledBrain npc = ControlledBrain;
+                    if (npc != null)
+                    {
+                        GameNPC petBody = npc.Body;
+
+                        petBody.MovePet(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
+
+                        if (petBody != null && petBody.ControlledNpcList != null)
+                        {
+                            foreach (IControlledBrain icb in petBody.ControlledNpcList)
+                            {
+                                GameNPC petBody2 = icb.Body;
+                                if (petBody2 != null && IsWithinRadius(petBody2, 500))
+                                    petBody2.MovePet(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
 
 		/// <summary>
 		/// Refresh all objects around the player
@@ -15169,7 +15204,6 @@ namespace DOL.GS
 		}
 
 		#endregion
-
 
 		/// <summary>
 		/// Returns the string representation of the GamePlayer
