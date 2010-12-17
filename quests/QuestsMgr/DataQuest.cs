@@ -79,7 +79,7 @@ namespace DOL.GS.Quests
 	/// CollectItemTemplate - Item that needs to be collected to end the current step.  If no items are ever collected this can be kept null,
 	/// otherwise it needs an entry for each step.  Empty values || are ok.
 	/// 
-	/// MaxCount, MinLevel, MaxLevel - Single values to determine who can do quest.  All must be provided.
+	/// MaxCount, MinLevel, MaxLevel - Single values to determine who can do quest.  All must be provided.  MaxCount == 0 for no limit
 	/// 
 	/// RewardMoney - Serialized list of money rewarded for each step.  All steps must have a value, 0 is ok.
 	/// 
@@ -652,6 +652,9 @@ namespace DOL.GS.Quests
 		{
 			get
 			{
+				if (m_dataQuest.MaxCount == 0)
+					return int.MaxValue;
+
 				return m_dataQuest.MaxCount;
 			}
 		}
