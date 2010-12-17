@@ -80,13 +80,13 @@ namespace DOL.GS.ServerRules
 			//Don't allow attacks on same realm members on Normal Servers
 			if (attacker.Realm == defender.Realm && !(attacker is GamePlayer && ((GamePlayer)attacker).DuelTarget == defender))
 			{
-				// allow mobs to attack mobs
-				if (attacker.Realm == 0)
+				// allow confused mobs to attack same realm
+				if (attacker is GameNPC && (attacker as GameNPC).IsConfused)
 					return true;
 
-				//allow confused mobs to attack same realm
-				if (attacker is GameNPC && (attacker as GameNPC).IsConfused && attacker.Realm == defender.Realm)
-					return true;
+				// Do NOT allow mobs to attack mobs
+				if (attacker.Realm == 0)
+					return false;
 
 				if(quiet == false) MessageToLiving(attacker, "You can't attack a member of your realm!");
 				return false;
