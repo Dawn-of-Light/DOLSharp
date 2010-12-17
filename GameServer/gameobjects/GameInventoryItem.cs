@@ -193,6 +193,16 @@ namespace DOL.GS
 			CheckValid(player);
 		}
 
+        /// <summary>
+		/// This inventory loose conc by spells
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="target"></param>
+        public virtual void OnStrikeTargetSpell(GameLiving owner, GameObject target)
+        {
+            //todo
+            OnStrikeTarget(owner, target);
+        }
 		/// <summary>
 		/// This inventory strikes an enemy
 		/// </summary>
@@ -237,7 +247,6 @@ namespace DOL.GS
 			}
 		}
 
-
 		/// <summary>
 		/// This inventory is struck by an enemy
 		/// </summary>
@@ -281,7 +290,6 @@ namespace DOL.GS
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Try and use this item
@@ -351,10 +359,10 @@ namespace DOL.GS
 				DelveShieldStats(delve, player.Client);
 			}
 
-			if (Object_Type == (int)eObjectType.Magical || Object_Type == (int)eObjectType.AlchemyTincture || Object_Type == (int)eObjectType.SpellcraftGem)
-			{
-				WriteMagicalBonuses(delve, player.Client, false);
-			}
+            if (Object_Type == (int)eObjectType.Magical || Object_Type == (int)eObjectType.AlchemyTincture || Object_Type == (int)eObjectType.SpellcraftGem)
+            {
+                WriteMagicalBonuses(delve, player.Client, false);
+            }
 
 			//***********************************
 			//shows info for Poison Potions
@@ -378,11 +386,11 @@ namespace DOL.GS
 
 				if (minutes == 0)
 				{
-					delve.Add(String.Format("Can use item every: {0} sec", seconds));
+                    delve.Add(String.Format("Can use item every: {0} sec", seconds));
 				}
 				else
 				{
-					delve.Add(String.Format("Can use item every: {0}:{1:00} min", minutes, seconds));
+                    delve.Add(String.Format("Can use item every: {0}:{1:00} min", minutes, seconds));
 				}
 
 				// delve.Add(String.Format("Can use item every: {0:00}:{1:00}", minutes, seconds));
@@ -396,14 +404,12 @@ namespace DOL.GS
 
 					if (minutes == 0)
 					{
-						delve.Add(String.Format("Can use again in: {0} sec", seconds));
+                        delve.Add(String.Format("Can use again in: {0} sec", seconds));
 					}
 					else
 					{
-						delve.Add(String.Format("Can use again in: {0}:{1:00} min", minutes, seconds));
+                        delve.Add(String.Format("Can use again in: {0}:{1:00} min", minutes, seconds));
 					}
-
-					// delve.Add(String.Format("Can use again in: {0:00}:{1:00}", minutes, seconds));
 				}
 			}
 
@@ -634,7 +640,7 @@ namespace DOL.GS
 
 								output.AddRange(spellHandler.DelveInfo);
 								output.Add(" ");
-								output.Add("- This spell is cast when the item is used.");
+                                output.Add("- This spell is cast when the item is used.");
 							}
 							else
 							{
@@ -673,7 +679,7 @@ namespace DOL.GS
 
 								output.AddRange(spellHandler.DelveInfo);
 								output.Add(" ");
-								output.Add("- This spell is cast when the item is used.");
+                                output.Add("- This spell is cast when the item is used.");
 							}
 							else
 							{
@@ -838,9 +844,6 @@ namespace DOL.GS
 		{
 			switch (property)
 			{
-					//case eProperty.BlockChance:
-					//case eProperty.ParryChance:
-					//case eProperty.EvadeChance:
 				case eProperty.DefensiveBonus:
 				case eProperty.BladeturnReinforcement:
 				case eProperty.NegativeReduction:
@@ -929,11 +932,11 @@ namespace DOL.GS
 
 								if (minutes == 0)
 								{
-									list.Add(String.Format("Can use item every: {0} sec", seconds));
+                                    list.Add(String.Format("Can use item every: {0} sec", seconds));
 								}
 								else
 								{
-									list.Add(String.Format("Can use item every: {0}:{1:00} min", minutes, seconds));
+                                    list.Add(String.Format("Can use item every: {0}:{1:00} min", minutes, seconds));
 								}
 							}
 
