@@ -546,7 +546,7 @@ namespace DOL.AI.Brain
 								{
 									foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 									{
-										if (!LivingHasEffect(p, spell))
+										if (!LivingHasEffect(p, spell) && Body.GetDistanceTo(p) <= spell.Range)
 										{
 											Body.TargetObject = p;
 											break;
@@ -584,7 +584,7 @@ namespace DOL.AI.Brain
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
-							if (p.IsDiseased)
+							if (p.IsDiseased && Body.GetDistanceTo(p) <= spell.Range)
 							{
 								Body.TargetObject = p;
 								break;
@@ -616,7 +616,7 @@ namespace DOL.AI.Brain
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
-							if (LivingIsPoisoned(p))
+							if (LivingIsPoisoned(p) && Body.GetDistanceTo(p) <= spell.Range)
 							{
 								Body.TargetObject = p;
 								break;
@@ -652,7 +652,7 @@ namespace DOL.AI.Brain
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
-							if (p.HealthPercent < 75)
+							if (p.HealthPercent < 75 && Body.GetDistanceTo(p) <= spell.Range)
 							{
 								Body.TargetObject = p;
 								break;
