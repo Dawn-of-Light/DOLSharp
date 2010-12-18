@@ -2102,41 +2102,58 @@ namespace DOL.GS
 			this.Model = (ushort)m_models[Util.Random(m_models.Count - 1)];
 			#endregion
 
-			#region Size
-			byte size = 50;
-			if (!Util.IsEmpty(template.Size))
-			{
-				string[] splitSize = template.Size.SplitCSV(true).ToArray();
-				if (splitSize.Length == 1)
-					size = byte.Parse(splitSize[0]);
-				else size = (byte)Util.Random(int.Parse(splitSize[0]), int.Parse(splitSize[1]));
-			}
-			this.Size = size;
-			#endregion
+            #region Size
+            byte size = 50;
+            if (!Util.IsEmpty(template.Size))
+            {
+                string[] splitSize = template.Size.SplitCSV(true).ToArray();
+                if (splitSize.Length == 1)
+                    size = byte.Parse(splitSize[0]);
+                else byte.Parse(splitSize[Util.Random(0, splitSize.Length - 1)]);
+            }
+            else
+            {
+                this.Size = size;
+            }
+            #endregion
 
-			#region Level
-			byte level = 0;
-			if (!Util.IsEmpty(template.Level))
-			{
-				string[] splitLevel = template.Level.SplitCSV().ToArray();
-				if (splitLevel.Length == 1)
-					level = byte.Parse(splitLevel[0]);
-				else level = (byte)Util.Random(int.Parse(splitLevel[0]), int.Parse(splitLevel[1]));
-			}
-			this.Level = level;
-			#endregion
+            #region Level
+            byte level = 0;
+            bool autoset = false;
+            if (!Util.IsEmpty(template.Level))
+            {
+                string[] splitLevel = template.Level.SplitCSV().ToArray();
+                if (splitLevel.Length == 1)
+                {
+                    level = byte.Parse(splitLevel[0]);
+                }
+                else
+                {
+                    level = (byte)int.Parse(splitLevel[Util.Random(0, splitLevel.Length - 1)]);
+                    autoset = template.Strength == 0 ? true : false;
+                }
+            }
+            this.Level = level;
+            #endregion
 
-			#region Stats
-			// Stats
-			this.Constitution = (short)template.Constitution;
-			this.Dexterity = (short)template.Dexterity;
-			this.Strength = (short)template.Strength;
-			this.Quickness = (short)template.Quickness;
-			this.Intelligence = (short)template.Intelligence;
-			this.Piety = (short)template.Piety;
-			this.Empathy = (short)template.Empathy;
-			this.Charisma = (short)template.Charisma;
-			#endregion
+            #region Stats
+            // Stats
+            if (autoset)
+            {
+                this.AutoSetStats();
+            }
+            else
+            {
+                this.Constitution = (short)template.Constitution;
+                this.Dexterity = (short)template.Dexterity;
+                this.Strength = (short)template.Strength;
+                this.Quickness = (short)template.Quickness;
+                this.Intelligence = (short)template.Intelligence;
+                this.Piety = (short)template.Piety;
+                this.Empathy = (short)template.Empathy;
+                this.Charisma = (short)template.Charisma;
+            }
+            #endregion
 
 			#region Misc Stats
 			this.MaxDistance = template.MaxDistance;
