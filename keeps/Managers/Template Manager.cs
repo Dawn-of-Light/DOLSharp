@@ -982,9 +982,13 @@ namespace DOL.GS.Keeps
 				{
 					guard.MaxSpeedBase = 200;
 				}
+				else if (guard.Level < 50)
+				{
+					guard.MaxSpeedBase = 210;
+				}
 				else
 				{
-					guard.MaxSpeedBase = 275;
+					guard.MaxSpeedBase = 250;
 				}
 			}
 			else
@@ -1004,6 +1008,10 @@ namespace DOL.GS.Keeps
 				if (guard is GuardLord)
 				{
 					guard.BaseBuffBonusCategory[i] = 40;
+				}
+				else if (guard.Level < 50)
+				{
+					guard.BaseBuffBonusCategory[i] = guard.Level / 2 + 1;
 				}
 				else
 				{
