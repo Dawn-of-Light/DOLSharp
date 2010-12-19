@@ -44,6 +44,11 @@ namespace DOL.GS.Spells
 
 		protected GamePet pet = null;
 
+		/// <summary>
+		/// Is a summon of this pet silent (no message to caster, or ambient texts)?
+		/// </summary>
+		protected bool m_isSilent = false;
+
 		public SummonSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
 		/// <summary>
@@ -66,7 +71,10 @@ namespace DOL.GS.Spells
 
 			if (Spell.Message1 == string.Empty)
 			{
-				MessageToCaster(String.Format("The {0} is now under your control.", pet.Name), eChatType.CT_Spell);
+				if (m_isSilent == false)
+				{
+					MessageToCaster(String.Format("The {0} is now under your control.", pet.Name), eChatType.CT_Spell);
+				}
 			}
 			else
 			{
@@ -161,6 +169,9 @@ namespace DOL.GS.Spells
 			pet.CurrentSpeed = 0;
 			pet.Realm = Caster.Realm;
 			pet.Level = GetPetLevel();
+
+			if (m_isSilent)
+				pet.IsSilent = true;
 
 			pet.AddToWorld();
 			

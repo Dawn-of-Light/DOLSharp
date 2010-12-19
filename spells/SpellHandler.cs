@@ -2340,7 +2340,7 @@ return false;
 		/// <param name="target"></param>
 		public void CastSubSpells(GameLiving target, SpellLine line)
 		{
-			if (Spell.SubSpellID > 0)
+			if (Spell.SubSpellID > 0 && Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "SummonAnimistFnF" && Spell.SpellType != "SummonAnimistPet" && Spell.SpellType != "Grapple")
 			{
 				List<Spell> spells = SkillBase.GetSpellList(SpellLine.KeyName);
 				foreach (Spell subSpell in spells)
@@ -2348,7 +2348,7 @@ return false;
 					if (subSpell.ID == Spell.SubSpellID)
 					{
 						SpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(Caster, subSpell, line) as SpellHandler;
-						if(subSpellHandler != null)
+						if (subSpellHandler != null)
 						{
 							subSpellHandler.StartSpell(target);
 							subSpellHandler.CastSubSpells(target, line);
