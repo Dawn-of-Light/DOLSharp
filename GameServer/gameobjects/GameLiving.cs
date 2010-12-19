@@ -453,30 +453,43 @@ namespace DOL.GS
 		}
 
 		protected bool m_disarmed = false;
-		protected long m_disarmedtime = 0;
+		protected long m_disarmedTime = 0;
+
 		/// <summary>
 		/// Is the living disarmed
 		/// </summary>
 		public bool IsDisarmed
 		{
-			get { return (m_disarmedtime > 0 && m_disarmedtime > CurrentRegion.Time); }
-		}
-		public long DisarmedTime
-		{
-			get { return m_disarmedtime; }
-			set { m_disarmedtime = value; }
+			get { return (m_disarmedTime > 0 && m_disarmedTime > CurrentRegion.Time); }
 		}
 
-		protected bool m_issilenced = false;
-		protected long m_silencedtime = 0;
+		/// <summary>
+		/// How long is this living disarmed for?
+		/// </summary>
+		public long DisarmedTime
+		{
+			get { return m_disarmedTime; }
+			set { m_disarmedTime = value; }
+		}
+
+		protected bool m_isSilenced = false;
+		protected long m_silencedTime = 0;
+
+		/// <summary>
+		/// Has this living been silenced?
+		/// </summary>
 		public bool IsSilenced
 		{
-			get { return (m_silencedtime > 0 && m_silencedtime > CurrentRegion.Time); }
+			get { return (m_silencedTime > 0 && m_silencedTime > CurrentRegion.Time); }
 		}
+
+		/// <summary>
+		/// How long is this living silenced for?
+		/// </summary>
 		public long SilencedTime
 		{
-			get { return m_silencedtime; }
-			set { m_silencedtime = value; }
+			get { return m_silencedTime; }
+			set { m_silencedTime = value; }
 		}
 
 		/// <summary>
@@ -5375,6 +5388,18 @@ namespace DOL.GS
 					UpdateTickSpeed();
 			}
 		}
+
+		private bool m_fixedSpeed = false;
+
+		/// <summary>
+		/// Does this NPC have a fixed speed, unchanged by any modifiers?
+		/// </summary>
+		public virtual bool FixedSpeed
+		{
+			get { return m_fixedSpeed; }
+			set { m_fixedSpeed = value; }
+		}
+
 		/// <summary>
 		/// Gets or sets the current speed of this living
 		/// </summary>
@@ -5398,6 +5423,9 @@ namespace DOL.GS
 		{
 			get
 			{
+				if (FixedSpeed)
+					return MaxSpeedBase;
+
 				return (short)GetModified(eProperty.MaxSpeed);
 			}
 		}
@@ -5630,6 +5658,19 @@ namespace DOL.GS
 
 		#endregion
 		#region Say/Yell/Whisper/Emote
+
+		private bool m_isSilent = false;
+
+		/// <summary>
+		/// Can this living say anything?
+		/// </summary>
+		public virtual bool IsSilent
+		{
+			get { return m_isSilent; }
+			set { m_isSilent = value; }
+		}
+
+
 		/// <summary>
 		/// This function is called when this object receives a Say
 		/// </summary>
@@ -5650,7 +5691,7 @@ namespace DOL.GS
 		/// <returns>true if text was said successfully</returns>
 		public virtual bool Say(string str)
 		{
-			if (str == null) return false;
+			if (str == null || IsSilent) return false;
 			Notify(GameLivingEvent.Say, this, new SayEventArgs(str));
 			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.SAY_DISTANCE))
 			{
@@ -5695,7 +5736,7 @@ namespace DOL.GS
 		/// <returns>true if text was yelled successfully</returns>
 		public virtual bool Yell(string str)
 		{
-			if (str == null) return false;
+			if (str == null || IsSilent) return false;
 			Notify(GameLivingEvent.Yell, this, new YellEventArgs(str));
 			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.YELL_DISTANCE))
 			{
@@ -5751,7 +5792,7 @@ namespace DOL.GS
 		/// <returns>true if text was whispered successfully</returns>
 		public virtual bool Whisper(GameObject target, string str)
 		{
-			if (target == null || str == null) return false;
+			if (target == null || str == null || IsSilent) return false;
 			if (!this.IsWithinRadius(target, WorldMgr.WHISPER_DISTANCE))
 				return false;
 			Notify(GameLivingEvent.Whisper, this, new WhisperEventArgs(target, str));
