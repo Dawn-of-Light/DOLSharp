@@ -25,7 +25,7 @@ namespace DOL.AI.Brain
 		public GuardBrain()
 			: base()
 		{
-			ThinkInterval = 3000;
+			ThinkInterval = 2000;
 		}
 
 		public override int AggroLevel

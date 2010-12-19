@@ -794,7 +794,7 @@ namespace DOL.GS.Spells
 						break;
 
 					case "realm":
-						if (GameServer.ServerRules.IsAllowedToAttack(Caster, selectedTarget, false))
+						if (GameServer.ServerRules.IsAllowedToAttack(Caster, selectedTarget, true))
 						{
 							return false;
 						}
@@ -1029,7 +1029,7 @@ namespace DOL.GS.Spells
 						break;
 
 					case "Realm":
-						if (GameServer.ServerRules.IsAllowedToAttack(Caster, target, false))
+						if (GameServer.ServerRules.IsAllowedToAttack(Caster, target, true))
 						{
 							return false;
 						}
@@ -1933,41 +1933,41 @@ return false;
 			ArrayList list = new ArrayList(8);
 			GameLiving target = castTarget as GameLiving;
 			bool targetchanged = false;
-			string NewTarget = Spell.Target.ToLower();
-			ushort NewRadius = (ushort)Spell.Radius;
+			string modifiedTarget = Spell.Target.ToLower();
+			ushort modifiedRadius = (ushort)Spell.Radius;
 			int newtarget = 0;
 
 			GameSpellEffect TargetMod = SpellHandler.FindEffectOnTarget(m_caster, "TargetModifier");
 			if (TargetMod != null)
 			{
-				if (NewTarget == "enemy" || NewTarget == "realm" || NewTarget == "group")
+				if (modifiedTarget == "enemy" || modifiedTarget == "realm" || modifiedTarget == "group")
 				{
 					newtarget = (int)TargetMod.Spell.Value;
 
 					switch (newtarget)
 					{
 						case 0: // Apply on heal single
-							if (m_spell.SpellType.ToLower() == "heal" && NewTarget == "realm")
+							if (m_spell.SpellType.ToLower() == "heal" && modifiedTarget == "realm")
 							{
-								NewTarget = "group";
+								modifiedTarget = "group";
 								targetchanged = true;
 							}
 							break;
 						case 1: // Apply on heal group
-							if (m_spell.SpellType.ToLower() == "heal" && NewTarget == "group")
+							if (m_spell.SpellType.ToLower() == "heal" && modifiedTarget == "group")
 							{
-								NewTarget = "realm";
-								NewRadius = (ushort)m_spell.Range;
+								modifiedTarget = "realm";
+								modifiedRadius = (ushort)m_spell.Range;
 								targetchanged = true;
 							}
 							break;
 						case 2: // apply on enemy
-							if (NewTarget == "enemy")
+							if (modifiedTarget == "enemy")
 							{
 								if (m_spell.Radius == 0)
-									NewRadius = 450;
+									modifiedRadius = 450;
 								if (m_spell.Radius != 0)
-									NewRadius += 300;
+									modifiedRadius += 300;
 								targetchanged = true;
 							}
 							break;
@@ -1975,8 +1975,8 @@ return false;
 							if (m_spell.Target.ToLower() == "group"
 							    && m_spell.Pulse != 0)
 							{
-								NewTarget = "realm";
-								NewRadius = (ushort)m_spell.Range;
+								modifiedTarget = "realm";
+								modifiedRadius = (ushort)m_spell.Range;
 								targetchanged = true;
 							}
 							break;
@@ -1989,9 +1989,9 @@ return false;
 				}
 			}
 
-			if (NewTarget == "pet" && Spell.Damage > 0 && Spell.Radius > 0)
+			if (modifiedTarget == "pet" && Spell.Damage > 0 && Spell.Radius > 0)
 			{
-				NewTarget = "enemy";
+				modifiedTarget = "enemy";
 				//[Ganrod] Nidel: can cast TurretPBAoE on selected Pet/Turret
 				if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower())
 				{
@@ -2000,7 +2000,7 @@ return false;
 			}
 
 			#region Process the targets
-			switch (NewTarget)
+			switch (modifiedTarget)
 			{
 				#region GTAoE
 				// GTAoE
@@ -2012,9 +2012,9 @@ return false;
 						list.Add(Caster);
 					}
 					else
-						if (NewRadius > 0)
+						if (modifiedRadius > 0)
 						{
-							foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
+							foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, modifiedRadius))
 							{
 								if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 								{
@@ -2032,7 +2032,7 @@ return false;
 									else list.Add(player);
 								}
 							}
-							foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, NewRadius))
+							foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, modifiedRadius))
 							{
 								if (npc is GameStorm)
 									list.Add(npc);
@@ -2055,9 +2055,9 @@ return false;
 					{
 						//Start-- [Ganrod] Nidel: Can cast Pet spell on our Minion/Turret pet without ControlledNpc
 						// awesome, Pbaoe with target pet spell ?^_^
-						if (NewRadius > 0 && Spell.Range == 0)
+						if (modifiedRadius > 0 && Spell.Range == 0)
 						{
-							foreach (GameNPC pet in Caster.GetNPCsInRadius(NewRadius))
+							foreach (GameNPC pet in Caster.GetNPCsInRadius(modifiedRadius))
 							{
 								if (Caster.IsControlledNPC(pet))
 								{
@@ -2098,7 +2098,7 @@ return false;
 						//Our buff affects every pet in the area of targetted pet (our pets)
 						if (Spell.Radius > 0 && petBody != null)
 						{
-							foreach (GameNPC pet in petBody.GetNPCsInRadius(NewRadius))
+							foreach (GameNPC pet in petBody.GetNPCsInRadius(modifiedRadius))
 							{
 								//ignore target or our main pet already added
 								if (pet == petBody || !Caster.IsControlledNPC(pet))
@@ -2114,12 +2114,12 @@ return false;
 				#endregion
 				#region Enemy
 				case "enemy":
-					if (NewRadius > 0)
+					if (modifiedRadius > 0)
 					{
 						if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower() && (target == null || Spell.Range == 0))
 							target = Caster;
 						if (target == null) return null;
-						foreach (GamePlayer player in target.GetPlayersInRadius(NewRadius))
+						foreach (GamePlayer player in target.GetPlayersInRadius(modifiedRadius))
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 							{
@@ -2136,7 +2136,7 @@ return false;
 								else list.Add(player);
 							}
 						}
-						foreach (GameNPC npc in target.GetNPCsInRadius(NewRadius))
+						foreach (GameNPC npc in target.GetNPCsInRadius(modifiedRadius))
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
 							{
@@ -2170,19 +2170,19 @@ return false;
 				#endregion
 				#region Realm
 				case "realm":
-					if (NewRadius > 0)
+					if (modifiedRadius > 0)
 					{
 						if (target == null || Spell.Range == 0)
 							target = Caster;
 
-						foreach (GamePlayer player in target.GetPlayersInRadius(NewRadius))
+						foreach (GamePlayer player in target.GetPlayersInRadius(modifiedRadius))
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
 							{
 								list.Add(player);
 							}
 						}
-						foreach (GameNPC npc in target.GetNPCsInRadius(NewRadius))
+						foreach (GameNPC npc in target.GetNPCsInRadius(modifiedRadius))
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true) == false)
 							{
@@ -2200,18 +2200,18 @@ return false;
 				#region Self
 				case "self":
 					{
-						if (NewRadius > 0)
+						if (modifiedRadius > 0)
 						{
 							if (target == null || Spell.Range == 0)
 								target = Caster;
-							foreach (GamePlayer player in target.GetPlayersInRadius(NewRadius))
+							foreach (GamePlayer player in target.GetPlayersInRadius(modifiedRadius))
 							{
 								if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true) == false)
 								{
 									list.Add(player);
 								}
 							}
-							foreach (GameNPC npc in target.GetNPCsInRadius(NewRadius))
+							foreach (GameNPC npc in target.GetNPCsInRadius(modifiedRadius))
 							{
 								if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true) == false)
 								{
@@ -2232,7 +2232,7 @@ return false;
 						Group group = m_caster.Group;
 						int spellRange = CalculateSpellRange();
 						if (spellRange == 0)
-							spellRange = NewRadius;
+							spellRange = modifiedRadius;
 
 						//Just add ourself
 						if (group == null)
