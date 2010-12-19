@@ -4672,8 +4672,7 @@ namespace DOL.GS
 		/// <param name="npc">The NPC to handle the trigger for</param>
 		public void FireAmbientSentence(eAmbientTrigger trigger, GameLiving living = null)
 		{
-			if (ambientTexts == null) return;
-			if (ambientTexts.Count == 0) return;
+			if (IsSilent || ambientTexts == null || ambientTexts.Count == 0) return;
 			if (trigger == eAmbientTrigger.interact && living == null) return;
 			List<MobXAmbientBehaviour> mxa = (from i in ambientTexts where i.Trigger == trigger.ToString() select i).ToList();
 			if (mxa.Count==0) return;
