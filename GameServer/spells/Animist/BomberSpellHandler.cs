@@ -34,7 +34,7 @@ namespace DOL.GS.Spells
 
 		const string BOMBERTARGET = "bombertarget";
 
-        public BomberSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+		public BomberSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { m_isSilent = true; }
 
         public override bool CheckBeginCast(GameLiving selectedTarget)
         {
@@ -57,6 +57,8 @@ namespace DOL.GS.Spells
             base.ApplyEffectOnTarget(target, effectiveness);
             pet.TempProperties.setProperty(BOMBERTARGET, target);
             pet.Name = Spell.Name;
+			pet.Flags ^= GameNPC.eFlags.DONTSHOWNAME;
+			pet.FixedSpeed = true;
             pet.Follow(target, 5, Spell.Range * 5); // with Toa bonus, if the bomber was fired > Spell.Range base, it didnt move..
         }
 
@@ -114,8 +116,8 @@ namespace DOL.GS.Spells
             subspell.Level = m_spell.Level;
             if (living.IsWithinRadius(bomber, 350))
             {
-                    ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(SpellLine.KeyName));
-                    spellhandler.StartSpell(living);
+				ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(SpellLine.KeyName));
+                spellhandler.StartSpell(living);
             }
 
             //[Ganrod] Nidel: Delete Bomber after all actions.
