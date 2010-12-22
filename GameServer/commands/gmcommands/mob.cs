@@ -2163,10 +2163,17 @@ namespace DOL.GS.Commands
 			mob.GuildName = targetMob.GuildName;
 			mob.Size = targetMob.Size;
 			mob.NPCTemplate = targetMob.NPCTemplate;
+
 			mob.Inventory = targetMob.Inventory;
-			mob.EquipmentTemplateID = targetMob.EquipmentTemplateID;
 			if (mob.Inventory != null)
 				mob.SwitchWeapon(targetMob.ActiveWeaponSlot);
+
+			mob.EquipmentTemplateID = targetMob.EquipmentTemplateID;
+
+			if (mob is GameMerchant)
+			{
+				(mob as GameMerchant).TradeItems = (targetMob as GameMerchant).TradeItems;
+			}
 
 			ABrain brain = null;
 			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
