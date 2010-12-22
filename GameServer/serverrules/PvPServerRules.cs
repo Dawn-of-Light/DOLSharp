@@ -291,9 +291,10 @@ namespace DOL.GS.ServerRules
 				}
 			}
 
-			// allow mobs to attack mobs
 			if (attacker.Realm == 0 && defender.Realm == 0)
-				return true;
+			{
+				return FactionMgr.CanLivingAttack(attacker, defender);
+			}
 
 			//allow confused mobs to attack same realm
 			if (attacker is GameNPC && (attacker as GameNPC).IsConfused && attacker.Realm == defender.Realm)

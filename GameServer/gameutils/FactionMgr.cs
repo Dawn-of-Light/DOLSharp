@@ -109,5 +109,12 @@ namespace DOL.GS
 			foreach(Faction faction in m_factions.Values)
 				faction.SaveAggroToFaction();
 		}
+
+
+		public static bool CanLivingAttack(GameLiving attacker, GameLiving defender)
+		{
+			// someone who cares about factions should write this
+			return false;
+		}
 	}
 }
