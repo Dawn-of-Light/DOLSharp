@@ -84,9 +84,10 @@ namespace DOL.GS.ServerRules
 				if (attacker is GameNPC && (attacker as GameNPC).IsConfused)
 					return true;
 
-				// Do NOT allow mobs to attack mobs
 				if (attacker.Realm == 0)
-					return false;
+				{
+					return FactionMgr.CanLivingAttack(attacker, defender);
+				}
 
 				if(quiet == false) MessageToLiving(attacker, "You can't attack a member of your realm!");
 				return false;
