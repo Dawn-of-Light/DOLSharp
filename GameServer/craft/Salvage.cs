@@ -101,7 +101,7 @@ namespace DOL.GS
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.BeginSalvage", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			
 			int count = CalculateMaterialCount(player, item, material);
-			if (count < 1)
+            if (count < 1)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoSalvage", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return 0;
@@ -118,53 +118,53 @@ namespace DOL.GS
 			return 1;
 		}
 
-        /// <summary>
-        /// Called when player try to use a secondary crafting skill
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="siegeWeapon"></param>
-        /// <returns></returns>
-        public static int BeginWork(GamePlayer player, GameSiegeWeapon siegeWeapon)
-        {
-            if (siegeWeapon == null)
-                return 0;
-            // Galenas
-            siegeWeapon.ReleaseControl();
-            siegeWeapon.RemoveFromWorld();
-            bool error = false;
+		/// <summary>
+		/// Called when player try to use a secondary crafting skill
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="siegeWeapon"></param>
+		/// <returns></returns>
+		public static int BeginWork(GamePlayer player, GameSiegeWeapon siegeWeapon)
+		{
+			if (siegeWeapon == null)
+				return 0;
+			// Galenas
+			siegeWeapon.ReleaseControl();
+			siegeWeapon.RemoveFromWorld();
+			bool error = false;
             DBCraftedItem craftItemData = GameServer.Database.SelectObject<DBCraftedItem>("Id_nb ='" + siegeWeapon.ItemId + "'");
-            if (craftItemData == null)
+			if (craftItemData == null)
             {
                 log.Info("Salvage Issue: craftItemData is null for" + siegeWeapon.ItemId);
-                return 1;
+				return 1;
             }
-            if (craftItemData.RawMaterials == null)
+			if (craftItemData.RawMaterials == null)
             {
                 log.Info("Salvage Issue: RawMaterials is null for" + siegeWeapon.ItemId);
-                return 1;
+				return 1;
             }
             if (player.IsCrafting)
             {
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.IsAllowedToBeginWork.EndCurrentAction"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return 0;
             }
-            InventoryItem item;
-            ItemTemplate template;
-            foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
-            {
-                template = GameServer.Database.FindObjectByKey<ItemTemplate>(rawmaterial.IngredientId_nb);
-                item = GameInventoryItem.Create<ItemTemplate>(template);
-                item.Count = rawmaterial.Count;
-                if (!player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
-                {
-                    error = true;
-                    break;
-                }
-            }
-            if (error)
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoRoom"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            return 1;
-        }
+			InventoryItem item;
+			ItemTemplate template;
+			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
+			{
+				template = GameServer.Database.FindObjectByKey<ItemTemplate>(rawmaterial.IngredientId_nb);
+				item = GameInventoryItem.Create<ItemTemplate>(template);
+				item.Count = rawmaterial.Count;
+				if (!player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+				{
+					error = true;
+					break;
+				}
+			}
+			if (error)
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoRoom"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			return 1;
+		}
 
 		/// <summary>
 		/// Called when craft time is finished
@@ -299,17 +299,206 @@ namespace DOL.GS
 
 		#region Calcul functions
 
+        /// <summary>
+        /// Calculate the count per Object_Type
+        /// </summary>
+        protected static int GetCountForSalvage(InventoryItem item, DBSalvage material)
+        {
+            long maxCount = 0;
+
+            #region Weapons
+
+            switch ((eObjectType)item.Object_Type)
+            {
+                case eObjectType.RecurvedBow:
+                case eObjectType.CompositeBow:
+                case eObjectType.Longbow:
+                case eObjectType.Crossbow:
+                case eObjectType.Staff:
+                case eObjectType.Fired:
+                    maxCount += 36;
+                    break;
+                case eObjectType.Thrown:
+                case eObjectType.CrushingWeapon:
+                case eObjectType.SlashingWeapon:
+                case eObjectType.ThrustWeapon:
+                case eObjectType.Flexible:
+                case eObjectType.Blades:
+                case eObjectType.Blunt:
+                case eObjectType.Piercing:
+                case eObjectType.Sword:
+                case eObjectType.Hammer:
+                case eObjectType.LeftAxe:
+                case eObjectType.Axe:
+                case eObjectType.HandToHand:
+                    {
+                        int dps = item.DPS_AF;
+                        if (dps > 520)
+                            maxCount += 10;
+                        else
+                            maxCount += 5;
+                        break;
+                    }
+                case eObjectType.TwoHandedWeapon:
+                case eObjectType.PolearmWeapon:
+                case eObjectType.LargeWeapons:
+                case eObjectType.CelticSpear:
+                case eObjectType.Scythe:
+                case eObjectType.Spear:
+                    {
+                        int dps = item.DPS_AF;
+                        if (dps > 520)
+                            maxCount += 15;
+                        else
+                            maxCount += 10;
+                    }
+                    break;
+                case eObjectType.Shield:
+                    switch (item.Type_Damage)
+                    {
+                        case 1:
+                            maxCount += 5;
+                            break;
+                        case 2:
+                            maxCount += 8;
+                            break;
+                        case 3:
+                            maxCount += 12;
+                            break;
+                        default:
+                            maxCount += 5;
+                            break;
+                    }
+                    break;
+                case eObjectType.Instrument:
+                    switch (item.Type_Damage)
+                    {
+                        case 1:
+                            maxCount += 5;
+                            break;
+                        case 2:
+                            maxCount += 8;
+                            break;
+                        case 3:
+                            maxCount += 12;
+                            break;
+                        default:
+                            maxCount += 5;
+                            break;
+
+                    }
+                    break;
+
+                #endregion Weapons
+
+            #region Armor
+
+                case eObjectType.Cloth:
+                case eObjectType.Leather:
+                case eObjectType.Reinforced:
+                case eObjectType.Studded:
+                case eObjectType.Scale:
+                case eObjectType.Chain:
+                case eObjectType.Plate:
+                    switch (item.Item_Type)
+                    {
+                        case Slot.HELM:
+                            maxCount += 12;
+                            break;
+                        case Slot.TORSO:
+                            maxCount += 17;
+                            break;
+                        case Slot.LEGS:
+                            maxCount += 15;
+                            break;
+
+                        case Slot.ARMS:
+                            maxCount += 10;
+                            break;
+
+                        case Slot.HANDS:
+                            maxCount += 6;
+                            break;
+                        case Slot.FEET:
+                            maxCount += 5;
+                            break;
+                        default:
+                            maxCount += 5;
+                            break;
+                    }
+                    break;
+            }
+        #endregion Armor
+
+            #region Modifications
+
+            if (maxCount < 1)
+                maxCount = (int)(item.Price * 0.45 / material.RawMaterial.Price);
+
+            int toadd = 0;
+
+            if (item.Quality > 97 && !item.IsCrafted)
+                for (int i = 97; i < item.Quality;)
+                {
+                    toadd += 3;
+                    i++;
+                }
+
+            if (item.Price > 300000 && !item.IsCrafted)
+            {
+                long i = item.Price;
+                i = item.Price / 100000;
+                toadd += (int)i;
+            }
+
+            if (toadd > 0)
+                maxCount += toadd;
+
+            #region SpecialFix MerchantList
+
+            if (item.Bonus8 > 0)
+                if (item.Bonus8Type == 0 || item.Bonus8Type.ToString() == "")
+                    maxCount = item.Bonus8;
+
+            #endregion SpecialFix MerchantList
+
+            if (item.Condition != item.MaxCondition && item.Condition < item.MaxCondition)
+            {
+                long usureoverall = (maxCount * ((item.Condition / 5) / 1000)) / 100; // assume that all items have 50000 base con
+                maxCount = usureoverall;
+            }
+
+            if (maxCount < 1)
+                maxCount = 1;
+            else if (maxCount > 500)
+                maxCount = 500;
+
+            #endregion Modifications
+
+            return (int)maxCount;
+        }
+
 		/// <summary>
 		/// Calculate the chance of sucess
 		/// </summary>
 		protected static int CalculateMaterialCount(GamePlayer player, InventoryItem item, DBSalvage material)
 		{
-			int maxCount = (int)(item.Price * 0.45 / material.RawMaterial.Price); // crafted item return max 45% of the item value in material
-			if(item.IsCrafted) maxCount = (int)Math.Ceiling((double)maxCount / 2); // merchand item return max the number of material of the same item if it was crafted crafted / 2 and Ceiling (it give max 30% of the base value)
-			
+            int maxCount = 0;
+
+            if (ServerProperties.Properties.USE_NEW_SALVAGE)
+                maxCount = GetCountForSalvage(item, material);
+            else
+            {
+                maxCount = (int)(item.Price * 0.45 / material.RawMaterial.Price); // crafted item return max 45% of the item value in material
+                if (item.IsCrafted)
+                    maxCount = (int)Math.Ceiling((double)maxCount / 2);
+            }
 			int playerPercent = player.GetCraftingSkillValue(CraftingMgr.GetSecondaryCraftingSkillToWorkOnItem(item)) * 100 / CraftingMgr.GetItemCraftLevel(item);
-			if(playerPercent > 100) playerPercent = 100;
-			else if(playerPercent < 75) playerPercent = 75;
+			
+            if (playerPercent > 100) 
+                playerPercent = 100;
+			else if(playerPercent < 75) 
+                playerPercent = 75;
 
 			int minCount = (int)(((maxCount - 1) / 25f) * playerPercent) - ((3 * maxCount) - 4); //75% => min = 1; 100% => min = maxCount;
 			
