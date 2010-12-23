@@ -1360,6 +1360,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("salvage", "use_salvage_per_realm", "Enable to get back material to use in chars realm. Disable to get back the same material in all realms.", false)]
 		public static bool USE_SALVAGE_PER_REALM;
 
+        /// <summary>
+		/// Use salvage per realm and get back material to use in chars realm
+		/// </summary>
+		[ServerProperty("salvage", "use_new_salvage", "Enable to use a new system calcul of salvage count based on object_type.", false)]
+		public static bool USE_NEW_SALVAGE;
+
 		#endregion
 		
 		#region ACCOUNT
