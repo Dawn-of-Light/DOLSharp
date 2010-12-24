@@ -43,6 +43,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public const string LASTMOVEMENTTICK = "PLAYERPOSITION_LASTMOVEMENTTICK";
+		public const string LASTCPSTICK = "PLAYERPOSITION_LASTCPSTICK";
 
 		/// <summary>
 		/// Stores the count of times the player is above speedhack tolerance!
@@ -59,7 +60,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				(client.ClientState != GameClient.eClientState.Playing))
 				return;
 
-			int EnvironmentTick = Environment.TickCount;
+			int environmentTick = Environment.TickCount;
 			int packetVersion;
 			if (client.Version > GameClient.eClientVersion.Version171)
 			{
@@ -250,74 +251,92 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (client.Player.CanFly == false && (coordsPerSec > tolerance || jumpDetect > ServerProperties.Properties.JUMP_TOLERANCE))
 			{
-				StringBuilder builder = new StringBuilder();
-				builder.Append("MOVEHACK_DETECT");
-				builder.Append(": CharName=");
-				builder.Append(client.Player.Name);
-				builder.Append(" Account=");
-				builder.Append(client.Account.Name);
-				builder.Append(" IP=");
-				builder.Append(client.TcpEndpointAddress);
-				builder.Append(" CPS:=");
-				builder.Append(coordsPerSec);
-				builder.Append(" JT=");
-				builder.Append(jumpDetect);
-				ChatUtil.SendDebugMessage(client, builder.ToString());
+				bool isHackDetected = true;
 
-				if (client.Account.PrivLevel == 1)
+				if (coordsPerSec > tolerance)
 				{
-					GameServer.Instance.LogCheatAction(builder.ToString());
+					// check to see if CPS time tolerance is exceeded
+					int lastCPSTick = client.Player.TempProperties.getProperty<int>(LASTCPSTICK, 0);
 
-					if (ServerProperties.Properties.ENABLE_MOVEDETECT)
+					if (environmentTick - lastCPSTick > ServerProperties.Properties.CPS_TIME_TOLERANCE)
 					{
-						if (ServerProperties.Properties.BAN_HACKERS && false) // banning disabled until this technique is proven accurate
-						{
-							DBBannedAccount b = new DBBannedAccount();
-							b.Author = "SERVER";
-							b.Ip = client.TcpEndpointAddress;
-							b.Account = client.Account.Name;
-							b.DateBan = DateTime.Now;
-							b.Type = "B";
-							b.Reason = string.Format("Autoban MOVEHACK:(CPS:{0}, JT:{1}) on player:{2}", coordsPerSec, jumpDetect, client.Player.Name);
-							GameServer.Database.AddObject(b);
-							GameServer.Database.SaveObject(b);
-
-                            string message = "";
-                            if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                                message = LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You have been auto kicked and banned due to movement hack detection!", "");
-                            else
-                                message = "You have been auto kicked and banned due to movement hack detection!";
-							for (int i = 0; i < 8; i++)
-							{
-								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
-							}
-
-							client.Out.SendPlayerQuit(true);
-							client.Player.SaveIntoDatabase();
-							client.Player.Quit(true);
-						}
-						else
-						{
-                            string message = "";
-                            if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                                message = LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You have been auto kicked due to movement hack detection!", "");
-                            else
-                                message = "You have been auto kicked due to movement hack detection!";
-							for (int i = 0; i < 8; i++)
-							{
-								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
-								client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
-							}
-
-							client.Out.SendPlayerQuit(true);
-							client.Player.SaveIntoDatabase();
-							client.Player.Quit(true);
-						}
-						client.Disconnect();
-						return;
+						isHackDetected = false;
 					}
 				}
+
+				if (isHackDetected)
+				{
+					StringBuilder builder = new StringBuilder();
+					builder.Append("MOVEHACK_DETECT");
+					builder.Append(": CharName=");
+					builder.Append(client.Player.Name);
+					builder.Append(" Account=");
+					builder.Append(client.Account.Name);
+					builder.Append(" IP=");
+					builder.Append(client.TcpEndpointAddress);
+					builder.Append(" CPS:=");
+					builder.Append(coordsPerSec);
+					builder.Append(" JT=");
+					builder.Append(jumpDetect);
+					ChatUtil.SendDebugMessage(client, builder.ToString());
+
+					if (client.Account.PrivLevel == 1)
+					{
+						GameServer.Instance.LogCheatAction(builder.ToString());
+
+						if (ServerProperties.Properties.ENABLE_MOVEDETECT)
+						{
+							if (ServerProperties.Properties.BAN_HACKERS && false) // banning disabled until this technique is proven accurate
+							{
+								DBBannedAccount b = new DBBannedAccount();
+								b.Author = "SERVER";
+								b.Ip = client.TcpEndpointAddress;
+								b.Account = client.Account.Name;
+								b.DateBan = DateTime.Now;
+								b.Type = "B";
+								b.Reason = string.Format("Autoban MOVEHACK:(CPS:{0}, JT:{1}) on player:{2}", coordsPerSec, jumpDetect, client.Player.Name);
+								GameServer.Database.AddObject(b);
+								GameServer.Database.SaveObject(b);
+
+								string message = "";
+								if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
+									message = LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You have been auto kicked and banned due to movement hack detection!", "");
+								else
+									message = "You have been auto kicked and banned due to movement hack detection!";
+								for (int i = 0; i < 8; i++)
+								{
+									client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+								}
+
+								client.Out.SendPlayerQuit(true);
+								client.Player.SaveIntoDatabase();
+								client.Player.Quit(true);
+							}
+							else
+							{
+								string message = "";
+								if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
+									message = LanguageMgr.GetTranslation(client, eTranslationKey.System_Text, "You have been auto kicked due to movement hack detection!", "");
+								else
+									message = "You have been auto kicked due to movement hack detection!";
+								for (int i = 0; i < 8; i++)
+								{
+									client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_ChatWindow);
+								}
+
+								client.Out.SendPlayerQuit(true);
+								client.Player.SaveIntoDatabase();
+								client.Player.Quit(true);
+							}
+							client.Disconnect();
+							return;
+						}
+					}
+				}
+
+				client.Player.TempProperties.setProperty(LASTCPSTICK, environmentTick);
 			}
 
 			ushort headingflag = packet.ReadShort();
@@ -400,18 +419,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 				SHcount = 0;
 			}
 
-			if (SHlastTick != 0 && SHlastTick != EnvironmentTick)
+			if (SHlastTick != 0 && SHlastTick != environmentTick)
 			{
 				if (((SHlastStatus == status || (status & 0x8) == 0)) && ((fly & 0x80) != 0x80) && (SHlastFly == fly || (SHlastFly & 0x10) == (fly & 0x10) || !((((SHlastFly & 0x10) == 0x10) && ((fly & 0x10) == 0x0) && (flyingflag & 0x7FF) > 0))))
 				{
-					if ((EnvironmentTick - SHlastTick) < 400)
+					if ((environmentTick - SHlastTick) < 400)
 					{
 						SHcount++;
 
 						if (SHcount > 1 && client.Account.PrivLevel > 1)
 						{
                             //Apo: ?? no idea how to name the first parameter for language translation: 1: ??, 2: {detected} ?, 3: {count} ?
-							client.Out.SendMessage(string.Format("SH: ({0}) detected: {1}, count {2}", 500 / (EnvironmentTick - SHlastTick), EnvironmentTick - SHlastTick, SHcount), eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(string.Format("SH: ({0}) detected: {1}, count {2}", 500 / (environmentTick - SHlastTick), environmentTick - SHlastTick, SHcount), eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 						}
 
 						if (SHcount % 5 == 0)
@@ -420,7 +439,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							builder.Append("TEST_SH_DETECT[");
 							builder.Append(SHcount);
 							builder.Append("] (");
-							builder.Append(EnvironmentTick - SHlastTick);
+							builder.Append(environmentTick - SHlastTick);
 							builder.Append("): CharName=");
 							builder.Append(client.Player.Name);
 							builder.Append(" Account=");
@@ -457,7 +476,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									b.Account = client.Account.Name;
 									b.DateBan = DateTime.Now;
 									b.Type = "B";
-									b.Reason = string.Format("Autoban SH:({0},{1}) on player:{2}", SHcount, EnvironmentTick - SHlastTick, client.Player.Name);
+									b.Reason = string.Format("Autoban SH:({0},{1}) on player:{2}", SHcount, environmentTick - SHlastTick, client.Player.Name);
 									GameServer.Database.AddObject(b);
 									GameServer.Database.SaveObject(b);
 
@@ -503,12 +522,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 						SHcount = 0;
 					}
 
-					SHlastTick = EnvironmentTick;
+					SHlastTick = environmentTick;
 				}
 			}
 			else
 			{
-				SHlastTick = EnvironmentTick;
+				SHlastTick = environmentTick;
 			}
 
 			int state = ((data >> 10) & 7);
