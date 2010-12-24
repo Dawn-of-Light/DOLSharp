@@ -77,7 +77,7 @@ namespace DOL.GS
 			if (player.InCombat)
 				return false;
 
-			if (Realm != eRealm.None && Realm != player.Realm && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
+			if (GameServer.ServerRules.IsSameRealm(this, player, true) == false && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
 				return false;
 
 			if ((GuildName == null || GuildName.Length == 0) && player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
@@ -140,7 +140,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (Realm != eRealm.None && Realm != player.Realm && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
+			if (GameServer.ServerRules.IsSameRealm(this, player, true) == false && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
 				return false;
 
 			Teleport destination = null;
