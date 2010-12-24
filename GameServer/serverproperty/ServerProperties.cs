@@ -239,6 +239,12 @@ namespace DOL.GS.ServerProperties
 		public static int CPS_TOLERANCE;
 
 		/// <summary>
+		/// Time tolerance before player is identified as move hacker
+		/// </summary>
+		[ServerProperty("system", "cps_time_tolerance", "Time tolerance for CPS before player is identified as a move hacker?", 200)]
+		public static int CPS_TIME_TOLERANCE;
+
+		/// <summary>
 		/// Z distance tolerance before player is identified as a jump hacker
 		/// </summary>
 		[ServerProperty("system", "jump_tolerance", "Z distance tolerance before player is identified as a jump hacker?", 200)]
