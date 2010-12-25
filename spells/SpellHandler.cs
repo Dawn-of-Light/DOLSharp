@@ -1833,7 +1833,7 @@ return false;
             {
                 if (Caster.AttackWeapon != null && Caster.AttackWeapon is GameInventoryItem)
                 {
-                    (Caster.AttackWeapon as GameInventoryItem).OnStrikeTargetSpell(Caster, target);
+                    (Caster.AttackWeapon as GameInventoryItem).OnSpellCast(Caster, target, Spell);
                 }
             }
 
