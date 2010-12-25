@@ -63,6 +63,12 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (client.Account.PrivLevel < playerClient.Account.PrivLevel)
+			{
+				DisplayMessage(client, "Your privlevel is not high enough to mute this player.");
+				return;
+			}
+
 			bool mutedAccount = false;
 
 			if (args.Length > 2 && (args[2].ToLower() == "account" || args[2].ToLower() == "allchars"))
