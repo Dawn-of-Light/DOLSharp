@@ -194,15 +194,15 @@ namespace DOL.GS
 		}
 
         /// <summary>
-		/// This inventory loose conc by spells
+		/// This inventory is used for a spell cast (staves lose condition when spells are cast)
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="target"></param>
-        public virtual void OnStrikeTargetSpell(GameLiving owner, GameObject target)
+        public virtual void OnSpellCast(GameLiving owner, GameObject target, Spell spell)
         {
-            //todo
             OnStrikeTarget(owner, target);
         }
+
 		/// <summary>
 		/// This inventory strikes an enemy
 		/// </summary>
