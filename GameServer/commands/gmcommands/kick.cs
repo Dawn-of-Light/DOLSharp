@@ -50,6 +50,12 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (client.Account.PrivLevel < clientc.Account.PrivLevel)
+			{
+				DisplayMessage(client, "Your privlevel is not high enough to kick this player.");
+				return;
+			}
+
 			for (int i = 0; i < 8; i++)
 			{
 				string message;

@@ -2234,6 +2234,7 @@ namespace DOL.GS.Commands
 
 			NpcTemplateMgr.Reload();
 			INpcTemplate template = NpcTemplateMgr.GetTemplate(id);
+
 			if (template == null)
 			{
 				DisplayMessage(client, "No template found for " + id, new object[] { });

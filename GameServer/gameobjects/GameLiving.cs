@@ -6383,11 +6383,12 @@ namespace DOL.GS
 		public virtual void InitControlledBrainArray(int num)
 		{
 			if (num > 0)
+			{
 				m_controlledBrain = new IControlledBrain[num];
+			}
 			else
 			{
 				m_controlledBrain = null;
-				return;
 			}
 		}
 
