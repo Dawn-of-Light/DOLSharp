@@ -32,7 +32,9 @@ namespace DOL.GS.Commands
 		"GMCommands.Ban.Description",
 		"GMCommands.Ban.Usage.IP",
 		"GMCommands.Ban.Usage.Account",
-		"GMCommands.Ban.Usage.Both")]
+		"GMCommands.Ban.Usage.Both",
+		"#<ClientID> can be used in place of player name.  Use /clientlist to see playing clients."
+	)]
 	public class BanCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -43,10 +45,40 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			GameClient gc = WorldMgr.GetClientByPlayerName(args[2],false,false);
+			GameClient gc = null;
+
+			if (args[1].StartsWith("#"))
+			{
+				try
+				{
+					int sessionID = Convert.ToInt32(args[1].Substring(1));
+					gc = WorldMgr.GetClientFromID(sessionID);
+				}
+				catch
+				{
+					DisplayMessage(client, "Invalid client ID");
+				}
+			}
+			else
+			{
+				gc = WorldMgr.GetClientByPlayerName(args[1], false, false);
+			}
+
 			if (gc == null)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Ban.UnableToFindPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
+			if (client.Account.PrivLevel < gc.Account.PrivLevel)
+			{
+				DisplayMessage(client, "Your privlevel is not high enough to ban this player.");
+				return;
+			}
+
+			if (client == gc)
+			{
+				DisplayMessage(client, "Your can't ban yourself!");
 				return;
 			}
 
