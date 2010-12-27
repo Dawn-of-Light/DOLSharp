@@ -985,7 +985,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// All the data driven quests this object
+		/// All the data driven quests for this object
 		/// </summary>
 		public List<DataQuest> DataQuestList
 		{

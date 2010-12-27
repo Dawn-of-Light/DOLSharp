@@ -1692,7 +1692,7 @@ namespace DOL.GS.Quests
 						}
 					}
 				}
-				else
+				else if (string.IsNullOrEmpty(Description) == false)
 				{
 					SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
