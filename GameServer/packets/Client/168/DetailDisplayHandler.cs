@@ -46,27 +46,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			if (client == null) return;
-			uint unk_186 = 0;
+			uint extraID = 0;
 			ushort objectType = packet.ReadShort();
 			if (client.Version >= GameClient.eClientVersion.Version186)
-				unk_186 = packet.ReadInt();
+				extraID = packet.ReadInt();
 			ushort objectID = packet.ReadShort();
 			string caption = "";
 			var objectInfo = new List<string>();
 
 			/*
-			Type    Description           Id
-			1       Inventory item        Slot (ie. 0xC for 2 handed weapon)
-			2       Spell                 spell level + spell line ID * 100 (starting from 0)
-			3       ???
-			4       Merchant item         Slot (divide by 30 to get page)
-			5       Buff/effect           The buff id (each buff has a unique id)
-			6       Style                 style list index = ID-100-abilities count
-			7       Trade window          position in trade window (starting form 0)
-			8       Ability               100+position in players abilities list (?)
-			9       Trainers skill        position in trainers window list
-			10		Market Search		  slot?
+			Type    Description         Id
+			1       Inventory item      Slot (ie. 0xC for 2 handed weapon)
+			2       Spell               spell level + spell line ID * 100 (starting from 0)
+			3       ???					
+			4       Merchant item       Slot (divide by 30 to get page)
+			5       Buff/effect         The buff id (each buff has a unique id)
+			6       Style               style list index = ID-100-abilities count
+			7       Trade window        position in trade window (starting form 0)
+			8       Ability             100+position in players abilities list (?)
+			9       Trainers skill      position in trainers window list
+			10		Market Search		slot?
+			19		Reward Quest		
 			 */
+
+			ChatUtil.SendDebugMessage(client, string.Format("Delve objectType={0}, objectID={1}, extraID={2}", objectType, objectID, extraID));
 
 			ItemTemplate item = null;
 			InventoryItem invItem = null;
@@ -361,28 +364,66 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else if (objectType == 19)
 						{
-							ushort questID = (ushort)((unk_186 << 12) | (ushort)(objectID >> 4));
+							ushort questID = (ushort)((extraID << 12) | (ushort)(objectID >> 4));
 							int index = objectID & 0x0F;
 							if (questID == 0)
 								return; // questID == 0, wrong ID ?
-							AbstractQuest q = client.Player.IsDoingQuest(QuestMgr.GetQuestTypeForID(questID));
-							if (q == null)
-								return;// player not doing this quest
-							if (!(q is RewardQuest))
-								return; // this is not new quest
-							List<ItemTemplate> rewards = null;
-							if (index < 8)
-								rewards = (q as RewardQuest).Rewards.BasicItems;
-							else
+						
+							if (questID <= DataQuest.DATAQUEST_CLIENTOFFSET)
 							{
-								rewards = (q as RewardQuest).Rewards.OptionalItems;
-								index -= 8;
+								AbstractQuest q = client.Player.IsDoingQuest(QuestMgr.GetQuestTypeForID(questID));
+
+								if (q == null)
+									return;// player not doing this quest
+								if (!(q is RewardQuest))
+									return; // this is not new quest
+
+								List<ItemTemplate> rewards = null;
+								if (index < 8)
+									rewards = (q as RewardQuest).Rewards.BasicItems;
+								else
+								{
+									rewards = (q as RewardQuest).Rewards.OptionalItems;
+									index -= 8;
+								}
+								if (rewards != null && index >= 0 && index < rewards.Count)
+								{
+									item = rewards[index];
+								}
 							}
-							if (rewards != null && index >= 0 && index < rewards.Count)
+							else // Data quest support, check for RewardQuest type
 							{
-								item = rewards[index];
+								DataQuest dq = null;
+
+								foreach (DBDataQuest d in GameObject.DataQuestCache)
+								{
+									if (d.ID == questID - DataQuest.DATAQUEST_CLIENTOFFSET)
+									{
+										dq = new DataQuest(d);
+										break;
+									}
+								}
+
+								if (dq != null && dq.StartType == DataQuest.eStartType.RewardQuest)
+								{
+									List<ItemTemplate> rewards = null;
+									if (index < 8)
+										rewards = dq.FinalRewards;
+									else
+									{
+										rewards = dq.OptionalRewards;
+										index -= 8;
+									}
+									if (rewards != null && index >= 0 && index < rewards.Count)
+									{
+										item = rewards[index];
+									}
+								}
 							}
+
 						}
+
+
 						if (item == null)
 							return;
 
