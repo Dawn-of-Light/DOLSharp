@@ -1844,7 +1844,8 @@ namespace DOL.GS.Quests
 			{
 				ChatUtil.SendDebugMessage(player, string.Format("[DEBUG] giving item {0}, quest wants item {1}", item.Id_nb, m_collectItems[Step - 1]));
 
-				if (item.Id_nb.ToLower().Contains(m_collectItems[Step - 1].ToLower()) &&
+				if (string.IsNullOrEmpty(m_collectItems[Step - 1]) == false &&
+					item.Id_nb.ToLower().Contains(m_collectItems[Step - 1].ToLower()) &&
 					ExecuteCustomQuestStep(player, Step, eStepCheckType.GiveItem))
 				{
 					RemoveItem(obj, player, item, true);
