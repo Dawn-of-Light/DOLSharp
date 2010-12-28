@@ -731,7 +731,7 @@ namespace DOL.GS.Housing
 
 		public void EmptyHookpoint(GamePlayer player, GameObject obj)
 		{
-			if (!CanEmptyHookpoint(player))
+			if (player.CurrentHouse != this || CanEmptyHookpoint(player) == false)
 			{
 				ChatUtil.SendSystemMessage(player, "Only the Owner of a House can remove or place Items on Hookpoints!");
 				return;
@@ -1243,7 +1243,7 @@ namespace DOL.GS.Housing
 		public bool HasOwnerPermissions(GamePlayer player)
 		{
 			// make sure player isn't null
-			if (player == null)
+			if (player == null || player.CurrentHouse != this)
 				return false;
 
 			if (player.Client.Account.PrivLevel == (int)ePrivLevel.Admin)
@@ -1293,11 +1293,10 @@ namespace DOL.GS.Housing
 		public bool CanUseVault(GamePlayer player, GameHouseVault vault, VaultPermissions vaultPerms)
 		{
 			// make sure player isn't null
-			if (player == null)
+			if (player == null || player.CurrentHouse != this)
 				return false;
 
-			// owner and GMs+ can do everything
-			if (HasOwnerPermissions(player) || player.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(player))
 				return true;
 
 			// get player house permissions

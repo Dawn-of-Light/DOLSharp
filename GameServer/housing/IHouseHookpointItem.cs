@@ -13,7 +13,7 @@ namespace DOL.GS.Housing
 	{
 		bool Attach(House house, uint hookpointID, ushort heading);
 		bool Attach(House house, DBHouseHookpointItem hookedItem);
-		bool Detach();
+		bool Detach(GamePlayer player);
 		int Index { get; }
 		String TemplateID { get; }
 	}
