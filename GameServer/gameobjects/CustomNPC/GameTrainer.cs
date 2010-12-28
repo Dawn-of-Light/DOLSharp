@@ -118,6 +118,11 @@ namespace DOL.GS
 		}
 		#endregion
 
+		public virtual bool CanTrain(GamePlayer player)
+		{
+			return player.CharacterClass.ID == (int)TrainedClass || TrainedClass == eCharacterClass.Unknown;
+		}
+
 		/// <summary>
 		/// Interact with trainer
 		/// </summary>
@@ -131,7 +136,7 @@ namespace DOL.GS
 			TurnTo(player, 10000);
 
 			// Unknown class must be used for multitrainer
-			if (player.CharacterClass.ID == (int)TrainedClass || TrainedClass == eCharacterClass.Unknown)
+			if (CanTrain(player))
 			{
 				player.Out.SendTrainerWindow();
 				
@@ -168,7 +173,7 @@ namespace DOL.GS
 			if (player == null) return false;
 			
 			//level respec for players
-			if (text == LanguageMgr.GetTranslation(player.Client, "GameTrainer.Interact.CaseRespecialize"))
+			if (CanTrain(player) && text == LanguageMgr.GetTranslation(player.Client, "GameTrainer.Interact.CaseRespecialize"))
 			{
 				if (player.Level == 5 && !player.IsLevelRespecUsed)
 				{

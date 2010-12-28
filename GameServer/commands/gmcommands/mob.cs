@@ -85,13 +85,13 @@ namespace DOL.GS.Commands
 	     "'/mob equiptemplate save <EquipmentTemplateID> [replace]' to save the inventory template with a new name",
 	     "'/mob equiptemplate close' to finish the inventory template you are creating",
 	     "'/mob dropcount [number]' to set the max number of drops for mob (omit number to view current value)",
-		 "'/mob dropcountnew [number]' same as '/mob dropcount' but for the new generator",
+		 "'/mob dropcount2 [number]' same as '/mob dropcount' but for the 'MobDrop' generator",
 	     "'/mob addloot <ItemTemplateID> <chance> [count]' to add loot to the mob's unique drop table.  Optionally specify count of how many to drop if chance = 100%",
-		 "'/mob addlootnew <ItemTemplateID> <chance> [count]' same as '/mob addloot' but for the new generator",
+		 "'/mob addloot2 <ItemTemplateID> <chance> [count]' same as '/mob addloot' but for the 'MobDrop' generator",
 	     "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob.",
 	     "'/mob viewloot [random] [inv]' to view the selected mob's loot table.  Use random to simulate a kill drop, random inv to simulate and generate the loots",
 	     "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
-		 "'/mob removelootnew <ItemTemplateID>' same as '/mob removeloot' but for the new generator",
+		 "'/mob removeloot2 <ItemTemplateID>' same as '/mob removeloot' but for the 'MobDrop' generator",
 	     "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table",
 	     "'/mob refreshloot' to refresh all loot generators for this mob",
 	     "'/mob copy [name]' copies a mob exactly and places it at your location",
@@ -211,14 +211,14 @@ namespace DOL.GS.Commands
 						case "refreshquests": refreshquests(client, targetMob, args); break;
 						case "equipinfo": equipinfo(client, targetMob, args); break;
 						case "equiptemplate": equiptemplate(client, targetMob, args); break;
-						case "dropcount": dropcount<MobXLootTemplate>(client, targetMob, args, ""); break;
-						case "dropcountnew": dropcount<MobXLootTemplateNew>(client, targetMob, args, "_new"); break;
-						case "addloot": addloot<MobXLootTemplate>(client, targetMob, args, ""); break;
-						case "addlootnew": addloot<MobXLootTemplateNew>(client, targetMob, args, "_new"); break;
+						case "dropcount": dropcount<MobXLootTemplate>(client, targetMob, args); break;
+						case "dropcount2": dropcount<MobDropTemplate>(client, targetMob, args); break;
+						case "addloot": addloot<MobXLootTemplate, LootTemplate>(client, targetMob, args); break;
+						case "addloot2": addloot<MobDropTemplate, DropTemplateXItemTemplate>(client, targetMob, args); break;
 						case "addotd": addotd(client, targetMob, args); break;
 						case "viewloot": viewloot(client, targetMob, args); break;
-						case "removeloot": removeloot(client, targetMob, args, ""); break;
-						case "removelootnew": removeloot(client, targetMob, args, "_new"); break;
+						case "removeloot": removeloot<LootTemplate>(client, targetMob, args); break;
+						case "removeloot2": removeloot<DropTemplateXItemTemplate>(client, targetMob, args); break;
 						case "removeotd": removeotd(client, targetMob, args); break;
 						case "refreshloot": refreshloot(client, targetMob, args); break;
 						case "copy": copy(client, targetMob, args); break;
@@ -1620,7 +1620,7 @@ namespace DOL.GS.Commands
 			targetMob.UpdateNPCEquipmentAppearance();
 		}
 
-		private void dropcount<T>(GameClient client, GameNPC targetMob, string[] args, string suffix) where T : MobXLootTemplate
+		private void dropcount<T>(GameClient client, GameNPC targetMob, string[] args) where T : MobXLootTemplate
 		{
 			T mxlt =
 				GameServer.Database.SelectObject<T>("MobName = '" + GameServer.Database.Escape(targetMob.Name) +
@@ -1643,7 +1643,7 @@ namespace DOL.GS.Commands
 				{
 					mxlt = Activator.CreateInstance<T>();
 					mxlt.MobName = targetMob.Name;
-					mxlt.LootTemplateName = targetMob.Name + suffix;
+					mxlt.LootTemplateName = targetMob.Name;
 				}
 				int dropCount;
 				if (!int.TryParse(args[2], out dropCount))
@@ -1664,12 +1664,14 @@ namespace DOL.GS.Commands
 			}
 		}
 
-		private void addloot<T>(GameClient client, GameNPC targetMob, string[] args, string suffix) where T : MobXLootTemplate
+		private void addloot<MobXLootType, LootTemplateType>(GameClient client, GameNPC targetMob, string[] args)
+			where MobXLootType : MobXLootTemplate
+			where LootTemplateType : LootTemplate
 		{
 			try
 			{
 				string lootTemplateID = args[2];
-				string name = targetMob.Name + suffix;
+				string name = targetMob.Name;
 				int chance = Convert.ToInt16(args[3]);
 				int numDrops = 0;
 
@@ -1690,7 +1692,7 @@ namespace DOL.GS.Commands
 				}
 
 				var template =
-					GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape(name) +
+					GameServer.Database.SelectObjects<LootTemplateType>("TemplateName = '" + GameServer.Database.Escape(name) +
 						"' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
 				if (template != null)
 				{
@@ -1699,7 +1701,7 @@ namespace DOL.GS.Commands
 						GameServer.Database.DeleteObject(loot);
 					}
 
-					LootTemplate lt = new LootTemplate();
+					LootTemplateType lt = Activator.CreateInstance<LootTemplateType>();
 					lt.Chance = chance;
 					lt.TemplateName = name;
 					lt.ItemTemplateID = lootTemplateID;
@@ -1716,7 +1718,7 @@ namespace DOL.GS.Commands
 						return;
 					}
 
-					LootTemplate lt = new LootTemplate();
+					LootTemplateType lt = Activator.CreateInstance<LootTemplateType>();
 					lt.Chance = chance;
 					lt.TemplateName = name;
 					lt.ItemTemplateID = lootTemplateID;
@@ -1738,8 +1740,8 @@ namespace DOL.GS.Commands
 						eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 
-				T mxlt =
-					GameServer.Database.SelectObject<T>("MobName = '" + GameServer.Database.Escape(targetMob.Name) +
+				MobXLootType mxlt =
+					GameServer.Database.SelectObject<MobXLootType>("MobName = '" + GameServer.Database.Escape(targetMob.Name) +
 						"' AND LootTemplateName = '" + GameServer.Database.Escape(name) + "'");
 				if (mxlt == null)
 				{
@@ -1860,25 +1862,27 @@ namespace DOL.GS.Commands
 				text.Add("");
 				text.Add("LootGeneratorTemplate:");
 				text.Add("");
-				DisplayLoots<MobXLootTemplate>(text, targetMob.Name, "");
+				DisplayLoots<MobXLootTemplate, LootTemplate>(text, targetMob.Name);
 
 				text.Add("");
-				text.Add("LootGeneratorTemplateNew:");
+				text.Add("LootGeneratorMobTemplate:");
 				text.Add("");
-				DisplayLoots<MobXLootTemplateNew>(text, targetMob.Name, "_new");
+				DisplayLoots<MobDropTemplate, DropTemplateXItemTemplate>(text, targetMob.Name);
 
 				client.Out.SendCustomTextWindow(targetMob.Name + "'s Loot Table", text);
 			}
 		}
 
-		private static void DisplayLoots<T>(List<string> text, string mobName, string suffix) where T : MobXLootTemplate
+		private static void DisplayLoots<MobDropTemplateType, LootTemplateType>(List<string> text, string mobName)
+			where MobDropTemplateType : MobXLootTemplate
+			where LootTemplateType : LootTemplate
 		{
 			bool didDefault = false;
-			var mobXloot = GameServer.Database.SelectObjects<T>("MobName = '" + GameServer.Database.Escape(mobName) + "'");
+			var mobXloot = GameServer.Database.SelectObjects<MobDropTemplateType>("MobName = '" + GameServer.Database.Escape(mobName) + "'");
 			foreach (var mobXtemplate in mobXloot)
 			{
-				didDefault = didDefault || mobXtemplate.LootTemplateName == mobName + suffix;
-				var template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape(mobXtemplate.LootTemplateName) + "'");
+				didDefault = didDefault || mobXtemplate.LootTemplateName == mobName;
+				var template = GameServer.Database.SelectObjects<LootTemplateType>("TemplateName = '" + GameServer.Database.Escape(mobXtemplate.LootTemplateName) + "'");
 				if (template.Count > 0)
 					text.Add("+ Mob's template: " + mobXtemplate.LootTemplateName + " (DropCount: " + mobXtemplate.DropCount + ")");
 				text.AddRange(
@@ -1890,7 +1894,7 @@ namespace DOL.GS.Commands
 			}
 			if (!didDefault)
 			{
-				var template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape(mobName + suffix) + "'");
+				var template = GameServer.Database.SelectObjects<LootTemplateType>("TemplateName = '" + GameServer.Database.Escape(mobName) + "'");
 				if (template.Count > 0)
 					text.Add("+ Default: ");
 				text.AddRange(
@@ -1902,20 +1906,21 @@ namespace DOL.GS.Commands
 			}
 		}
 
-		private void removeloot(GameClient client, GameNPC targetMob, string[] args, string suffix)
+		private void removeloot<LootTemplateType>(GameClient client, GameNPC targetMob, string[] args)
+			where LootTemplateType : LootTemplate
 		{
 			string lootTemplateID = args[2];
-			string name = targetMob.Name + suffix;
+			string name = targetMob.Name;
 
 			if (lootTemplateID.ToLower() == "all items")
 			{
-				var template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape(name) + "'");
+				var template = GameServer.Database.SelectObjects<LootTemplateType>("TemplateName = '" + GameServer.Database.Escape(name) + "'");
 
-				if (template != null)
+				if (template != null && template.Count > 0)
 				{
 					Log.ErrorFormat("{0} removing all items from LootTemplate {1}!", client.Player.Name, name);
 
-					foreach (LootTemplate loot in template)
+					foreach (LootTemplateType loot in template)
 					{
 						Log.ErrorFormat("{0}", loot.ItemTemplateID);
 						GameServer.Database.DeleteObject(loot);
@@ -1931,11 +1936,11 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				IList<LootTemplate> template = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
+				IList<LootTemplateType> template = GameServer.Database.SelectObjects<LootTemplateType>("TemplateName = '" + GameServer.Database.Escape(name) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
 
-				if (template != null)
+				if (template != null && template.Count > 0)
 				{
-					foreach (LootTemplate loot in template)
+					foreach (LootTemplateType loot in template)
 					{
 						GameServer.Database.DeleteObject(loot);
 					}

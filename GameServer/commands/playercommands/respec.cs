@@ -90,10 +90,11 @@ namespace DOL.GS.Commands
 				}
 				DisplayMessage(client, "Use /respec buy to buy an single-line respec.");
 				return;
-			}			
+			}
 
+			GameTrainer trainer = client.Player.TargetObject as GameTrainer;
 			// Player must be speaking with trainer to respec.  (Thus have trainer targeted.) Prevents losing points out in the wild.
-			if (client.Player.TargetObject is GameTrainer == false && args[1].ToLower() != "buy")
+			if (args[1].ToLower() != "buy" && (trainer == null || !trainer.CanTrain(client.Player)))
 			{
 				DisplayMessage(client, "You must be speaking with your trainer to respec.");
 				return;
