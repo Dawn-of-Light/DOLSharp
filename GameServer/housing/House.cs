@@ -1196,7 +1196,7 @@ namespace DOL.GS.Housing
 				return false;
 
 			// owner and GMs+ can do everything
-			if (HasOwnerPermissions(player) || player.Client.Account.PrivLevel > 1)
+			if (HasOwnerPermissions(player))
 				return true;
 
 			// get house permissions for the given player
@@ -1243,7 +1243,7 @@ namespace DOL.GS.Housing
 		public bool HasOwnerPermissions(GamePlayer player)
 		{
 			// make sure player isn't null
-			if (player == null || player.CurrentHouse != this)
+			if (player == null)
 				return false;
 
 			if (player.Client.Account.PrivLevel == (int)ePrivLevel.Admin)
