@@ -740,7 +740,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		protected virtual CharacterXDataQuest GetCharacterQuest(GamePlayer player, bool create)
+		public static CharacterXDataQuest GetCharacterQuest(GamePlayer player, int ID, bool create)
 		{
 			CharacterXDataQuest charQuest = GameServer.Database.SelectObject<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(player.InternalID) + "' AND DataQuestID = " + ID);
 
@@ -801,7 +801,7 @@ namespace DOL.GS.Quests
 
 			if (StartType == eStartType.Collection)
 			{
-				CharacterXDataQuest charQuest = GetCharacterQuest(player, false);
+				CharacterXDataQuest charQuest = GetCharacterQuest(player, ID, false);
 				if (charQuest != null && charQuest.Count >= MaxQuestCount)
 				{
 					return false;
@@ -1589,7 +1589,7 @@ namespace DOL.GS.Quests
 				{
 					// This quest finishes with the interaction
 
-					CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
+					CharacterXDataQuest charQuest = GetCharacterQuest(player, ID, true);
 
 					if (charQuest.Count < MaxQuestCount)
 					{
@@ -1664,7 +1664,7 @@ namespace DOL.GS.Quests
 
 				if (StartType == eStartType.AutoStart)
 				{
-					CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
+					CharacterXDataQuest charQuest = GetCharacterQuest(player, ID, true);
 					DataQuest dq = new DataQuest(player, obj, DBDataQuest, charQuest);
 					dq.Step = 1;
 					player.AddQuest(dq);
@@ -1716,7 +1716,7 @@ namespace DOL.GS.Quests
 			// collection quests do not go into the GamePlayer quest lists
 			if (StartType == eStartType.Collection && item.Id_nb == DBDataQuest.CollectItemTemplate)
 			{
-				CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
+				CharacterXDataQuest charQuest = GetCharacterQuest(player, ID, true);
 
 				if (charQuest.Count < MaxQuestCount)
 				{
@@ -1755,7 +1755,7 @@ namespace DOL.GS.Quests
 			if (CheckQuestQualification(player) && DBDataQuest.StartType == (byte)eStartType.Standard && DBDataQuest.AcceptText == text)
 			{
 				//log.DebugFormat("Adding quest {0} to player {1}", Name, player.Name);
-				CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
+				CharacterXDataQuest charQuest = GetCharacterQuest(player, ID, true);
 				DataQuest dq = new DataQuest(player, living, DBDataQuest, charQuest);
 				dq.Step = 1;
 				player.AddQuest(dq);
@@ -1997,7 +1997,7 @@ namespace DOL.GS.Quests
 				{
 					if (CheckQuestQualification(player))
 					{
-						CharacterXDataQuest charQuest = GetCharacterQuest(player, true);
+						CharacterXDataQuest charQuest = GetCharacterQuest(player, ID, true);
 
 						if (charQuest.Count < MaxQuestCount)
 						{
