@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.Database;
+using DOL.Events;
 using DOL.Language;
 
 namespace DOL.GS
@@ -32,6 +33,17 @@ namespace DOL.GS
 		/// The emblem of the Object
 		/// </summary>
 		protected int m_Emblem;
+
+		/// <summary>
+		/// The respawn interval of this world object
+		/// </summary>
+		protected int m_respawnInterval = 0;
+
+		public int RespawnInterval
+		{
+			get { return m_respawnInterval; }
+			set	{ m_respawnInterval = value; }
+		}
 
 		/// <summary>
 		/// Constructs a new GameStaticItem
@@ -160,6 +172,7 @@ namespace DOL.GS
 			X = item.X;
 			Y = item.Y;
 			Z = item.Z;
+			RespawnInterval = item.RespawnInterval;
 		}
 
 		/// <summary>
@@ -239,6 +252,7 @@ namespace DOL.GS
 			obj.Y = Y;
 			obj.Z = Z;
 			obj.ClassType = this.GetType().ToString();
+			obj.RespawnInterval = RespawnInterval;
 
 			if (InternalID == null)
 			{
@@ -249,6 +263,13 @@ namespace DOL.GS
 			{
 				GameServer.Database.SaveObject(obj);
 			}
+		}
+
+		public override void Delete()
+		{
+			Notify(GameObjectEvent.Delete, this);
+			RemoveFromWorld(0); // will not respawn
+			ObjectState = eObjectState.Deleted;
 		}
 
 		/// <summary>
@@ -283,12 +304,7 @@ namespace DOL.GS
 		/// <returns>true if removed</returns>
 		public override bool RemoveFromWorld()
 		{
-			if (ObjectState == eObjectState.Active)
-			{
-				foreach(GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
-					player.Out.SendObjectRemove(this);
-			}
-			return base.RemoveFromWorld();
+			return RemoveFromWorld(RespawnInterval);
 		}
 
 
@@ -300,14 +316,25 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool RemoveFromWorld(int respawnSeconds)
 		{
-			if (RemoveFromWorld())
+			if (ObjectState == eObjectState.Active)
 			{
-				StartRespawn(Math.Max(1, respawnSeconds));
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
+					player.Out.SendObjectRemove(this);
+			}
+
+			if (base.RemoveFromWorld())
+			{
+				if (respawnSeconds > 0)
+				{
+					StartRespawn(Math.Max(1, respawnSeconds));
+				}
+
 				return true;
 			}
 
 			return false;
 		}
+
 
 		/// <summary>
 		/// Timer used to respawn this object

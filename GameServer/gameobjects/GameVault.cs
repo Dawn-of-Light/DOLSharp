@@ -93,8 +93,7 @@ namespace DOL.GS
 
 			if (!CanView(player))
 			{
-				player.Out.SendMessage("You don't have permission to view this vault!", eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You don't have permission to view this vault!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -162,15 +161,31 @@ namespace DOL.GS
 				}
 				else if (fromSlot >= eInventorySlot.HousingInventory_First && fromSlot <= eInventorySlot.HousingInventory_Last)
 				{
+					if (CanRemoveItems(player) == false)
+					{
+						NotifyObservers(player, null);
+						player.Out.SendMessage("You don't have permissions to remove items from this vault!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
+
 					if (toSlot >= eInventorySlot.HousingInventory_First && toSlot <= eInventorySlot.HousingInventory_Last)
 					{
 						NotifyObservers(player, MoveItemInsideVault(player, fromSlot, toSlot));
 					}
-
-					NotifyObservers(player, MoveItemFromVault(player, fromSlot, toSlot));
+					else
+					{
+						NotifyObservers(player, MoveItemFromVault(player, fromSlot, toSlot));
+					}
 				}
 				else if (toSlot >= eInventorySlot.HousingInventory_First && toSlot <= eInventorySlot.HousingInventory_Last)
 				{
+					if (CanAddItems(player) == false)
+					{
+						NotifyObservers(player, null);
+						player.Out.SendMessage("You don't have permissions to add items to this vault!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
+
 					NotifyObservers(player, MoveItemToVault(player, fromSlot, toSlot));
 				}
 			}

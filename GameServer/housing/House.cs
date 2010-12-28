@@ -1325,6 +1325,8 @@ namespace DOL.GS.Housing
 					break;
 			}
 
+			ChatUtil.SendDebugMessage(player, string.Format("Vault permissions = {0} for vault index {1}", (activeVaultPermissions & vaultPerms), vault.Index));
+
 			return (activeVaultPermissions & vaultPerms) > 0;
 		}
 
