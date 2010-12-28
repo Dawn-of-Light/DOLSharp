@@ -17,27 +17,21 @@
  *
  */
 
-/*
- * Credits go to:
- * - Echostorm's Mob Drop Loot System
- * - Roach's modifications to add loottemplate base mobdrops
- */
-
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
 	/// <summary>
-	/// Database Storage of Mob LootTemplate Relation
+	/// Database Storage of Mob DropTemplate Relation
 	/// </summary>
-	// Commented for now pending discussion - tolakram [DataTable(TableName = "MobXLootTemplateNew")]
-	public class MobXLootTemplateNew : MobXLootTemplate
+	[DataTable(TableName = "MobDropTemplate")]
+	public class MobDropTemplate : MobXLootTemplate
 	{
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public MobXLootTemplateNew()
+		public MobDropTemplate()
 		{
 		}
+
+		[PrimaryKey(AutoIncrement = true)]
+		public long ID { get; set; }
 	}
 }

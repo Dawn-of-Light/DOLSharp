@@ -90,7 +90,8 @@ namespace DOL.GS.GameEvents
 				if (old_time.ContainsKey(mgr) && old_time[mgr] > 0 && old_time[mgr] == mgr.CurrentTime)
 				{
 					if(log.IsErrorEnabled)
-						log.Error(string.Format("----- Found Frozen Region Timer -----\nName: {0} - Current Time: {1}", mgr.Name, mgr.CurrentTime));
+						log.Error(string.Format("----- Found Frozen Region Timer -----\nName: {0} - Current Time: {1} - Stack trace:\n{2}",
+							mgr.Name, mgr.CurrentTime, mgr.GetStacktrace()));
 
 					//if(mgr.Running)
 					try

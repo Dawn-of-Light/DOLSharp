@@ -64,9 +64,10 @@ namespace DOL.GS.Commands
 					return;
 				}
 			}
-			
+
+			GameTrainer trainer = client.Player.TargetObject as GameTrainer;
 			// Make sure the player is at a trainer.
-			if (!(client.Player.TargetObject is GameTrainer))
+			if (trainer == null || !trainer.CanTrain(client.Player))
 			{
 				client.Out.SendMessage("You have to be at your trainer to use this command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
