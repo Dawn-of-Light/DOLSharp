@@ -11773,9 +11773,9 @@ namespace DOL.GS
 			else if (floorObject is GameHouseVault && floorObject.CurrentHouse != null)
 			{
 				GameHouseVault houseVault = floorObject as GameHouseVault;
-				if (houseVault.Detach())
+				if (houseVault.Detach(this))
 				{
-					ItemTemplate template =	GameServer.Database.FindObjectByKey<ItemTemplate>(houseVault.TemplateID);
+					ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(houseVault.TemplateID);
 					Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(template));
 				}
 				return true;
@@ -12623,6 +12623,12 @@ namespace DOL.GS
 		/// <param name="newState">stealth state</param>
 		public virtual void Stealth(bool newState)
 		{
+			if (CraftTimer != null && CraftTimer.IsAlive)
+			{
+				Out.SendMessage("You can't stealth while crafting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			if (IsStealthed == newState)
 				return;
 
