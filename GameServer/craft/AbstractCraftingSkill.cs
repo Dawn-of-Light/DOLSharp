@@ -189,8 +189,8 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual int MakeItem(RegionTimer timer)
 		{
-			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(PLAYER_CRAFTER, null);
-			DBCraftedItem item = (DBCraftedItem)timer.Properties.getProperty<object>(ITEM_CRAFTER, null);
+			GamePlayer player = timer.Properties.getProperty<GamePlayer>(PLAYER_CRAFTER, null);
+			DBCraftedItem item = timer.Properties.getProperty<DBCraftedItem>(ITEM_CRAFTER, null);
 			if (player == null || item == null)
 			{
 				if (log.IsWarnEnabled)
