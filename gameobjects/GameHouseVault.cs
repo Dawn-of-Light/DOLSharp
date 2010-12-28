@@ -134,9 +134,9 @@ namespace DOL.GS
 		/// Remove this vault from a hookpoint in the house.
 		/// </summary>
 		/// <returns></returns>
-		public bool Detach()
+		public bool Detach(GamePlayer player)
 		{
-			if (_hookedItem == null)
+			if (_hookedItem == null || CurrentHouse != player.CurrentHouse || CurrentHouse.CanEmptyHookpoint(player) == false)
 				return false;
 
 			lock (m_vaultSync)
@@ -174,7 +174,7 @@ namespace DOL.GS
 			if (!player.InHouse)
 				return false;
 
-			if (!base.Interact(player) || CurrentHouse == null)
+			if (!base.Interact(player) || CurrentHouse == null || CurrentHouse != player.CurrentHouse)
 				return false;
 
 			lock (_vaultLock)
