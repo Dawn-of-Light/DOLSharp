@@ -38,10 +38,10 @@ namespace DOL.GS.Commands
 	              "'/object realm <0/1/2/3>' to set the targeted object realm",
 	              "'/object name <newName>' to set the targeted object name to newName",
 	              "'/object noname' to remove the targeted object name",
-	              "'/object remove' to remove the targeted object",
+				  "'/object respawninterval <seconds>' to set a respawn time if this object is removed from the world",
+				  "'/object remove' to remove the targeted object",
 	              "'/object copy' to copy the targeted object",
 	              "'/object save' to save the object",
-	              "'/object reload' to reload the object",
 	              "'/object target' to automatically target the nearest object")]
 	public class ObjectCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -252,12 +252,6 @@ namespace DOL.GS.Commands
 						DisplayMessage( client, "Object removed from Clients and Database" );
 						break;
 					}
-				case "reload":
-					{
-						targetObject.RemoveFromWorld(2);
-						DisplayMessage(client, "Object reloading");
-						break;
-					}
 				case "target":
 					{
 						foreach ( GameStaticItem item in client.Player.GetItemsInRadius( 1000 ) )
@@ -268,6 +262,18 @@ namespace DOL.GS.Commands
 						}
 
 						DisplayMessage( client, "No objects in 1000 unit range!" );
+						break;
+					}
+				case "respawninterval":
+					{
+						int respawn = 0;
+						if (int.TryParse(args[2], out respawn))
+						{
+							targetObject.RespawnInterval = respawn;
+							targetObject.SaveIntoDatabase();
+							DisplayMessage(client, "Object RespawnInterval set to " + targetObject.RespawnInterval + " seconds.");
+						}
+
 						break;
 					}
 			}

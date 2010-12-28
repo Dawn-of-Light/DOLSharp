@@ -39,6 +39,7 @@ namespace DOL.Database
 		private ushort		m_region;
 		private int			m_emblem;
 		private byte 		m_realm;
+		private int			m_respawnInterval;
 		
 
 		public WorldObject()
@@ -183,6 +184,23 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_realm = value;
+			}
+		}
+
+		/// <summary>
+		/// Respawn interval, in seconds
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int RespawnInterval
+		{
+			get
+			{
+				return m_respawnInterval;
+			}
+			set
+			{
+				Dirty = true;
+				m_respawnInterval = value;
 			}
 		}
 	}
