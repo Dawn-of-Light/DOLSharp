@@ -38,7 +38,7 @@ namespace DOL.GS.Commands
 	              "'/object realm <0/1/2/3>' to set the targeted object realm",
 	              "'/object name <newName>' to set the targeted object name to newName",
 	              "'/object noname' to remove the targeted object name",
-				  "'/object respawninterval <seconds>' to set a respawn time if this object is removed from the world",
+				  "'/object respawn <seconds>' to set a respawn time if this object is removed from the world",
 				  "'/object remove' to remove the targeted object",
 	              "'/object copy' to copy the targeted object",
 	              "'/object save' to save the object",
@@ -90,6 +90,10 @@ namespace DOL.GS.Commands
 						{
 							info.Add(" ");
 							info.Add(" OwnerID: " + targetObject.OwnerID);
+						}
+						if (targetObject.RespawnInterval > 0)
+						{
+							info.Add("RespawnInterval (seconds): " + targetObject.RespawnInterval);
 						}
 
 						info.Add(" ");
@@ -264,7 +268,7 @@ namespace DOL.GS.Commands
 						DisplayMessage( client, "No objects in 1000 unit range!" );
 						break;
 					}
-				case "respawninterval":
+				case "respawn":
 					{
 						int respawn = 0;
 						if (int.TryParse(args[2], out respawn))
