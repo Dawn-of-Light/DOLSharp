@@ -38,6 +38,14 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// The manager responsible for updating all guards appearance, realm, levles, stats
+		/// </summary>
+		public virtual Type TemplateManager
+		{
+			get { return typeof(TemplateMgr); }
+		}
+
 		public FrontiersPortalStone TeleportStone;
 		public KeepArea Area;
 
