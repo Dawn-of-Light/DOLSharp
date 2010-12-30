@@ -32,7 +32,8 @@ namespace DOL.GS.Commands
 		"/jump to <#ClientID> ex. /jump to #10",
 		"GMCommands.Jump.Usage.ToNameRealmID",
 		"GMCommands.Jump.Usage.ToXYZRegionID",
-		"/jump to house <myhouse | house number>",
+		"/jump to <myhouse | house [#]>",
+		"/jump to region [#] - jump to same location in new region",
 		"GMCommands.Jump.Usage.PlayerNameToXYZ",
 		"GMCommands.Jump.Usage.PlayerNameToXYZRegID",
 		"GMCommands.Jump.Usage.PlayerNToPlayerN",
@@ -88,6 +89,13 @@ namespace DOL.GS.Commands
 					return;
 				}
 				#endregion Jump to house
+				#region Jump t region #
+				if (args.Length == 4 && args[1] == "to" && args[2] == "region")
+				{
+					client.Player.MoveTo(Convert.ToUInt16(args[3]), client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading);
+					return;
+				}
+				#endregion Jump t region #
 				#region Jump to PlayerName or ClientID
 				if (args.Length == 3 && args[1] == "to")
 				{

@@ -625,7 +625,14 @@ namespace DOL.GS.Keeps
 		protected override int RespawnTimerCallback(RegionTimer respawnTimer)
 		{
 			int temp = base.RespawnTimerCallback(respawnTimer);
-			TemplateMgr.RefreshTemplate(this);
+			if (Component != null && Component.Keep != null)
+			{
+				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+			}
+			else
+			{
+				TemplateMgr.RefreshTemplate(this);
+			}
 			return temp;
 		}
 
@@ -727,7 +734,14 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-			TemplateMgr.RefreshTemplate(this);
+			if (Component != null && Component.Keep != null)
+			{
+				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+			}
+			else
+			{
+				TemplateMgr.RefreshTemplate(this);
+			}
 		}
 
 		public void DeleteObject()
@@ -805,7 +819,14 @@ namespace DOL.GS.Keeps
 			m_component = component;
 			component.Keep.Guards[m_templateID] = this;
 			PositionMgr.LoadGuardPosition(pos, this);
-			TemplateMgr.RefreshTemplate(this);
+			if (Component != null && Component.Keep != null)
+			{
+				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+			}
+			else
+			{
+				TemplateMgr.RefreshTemplate(this);
+			}
 			this.AddToWorld();
 		}
 

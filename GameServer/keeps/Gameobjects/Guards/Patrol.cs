@@ -125,7 +125,14 @@ namespace DOL.GS.Keeps
 			guard.Component = Component;
 			guard.PatrolGroup = this;
 			PositionMgr.LoadGuardPosition(SpawnPosition, guard);
-			TemplateMgr.RefreshTemplate(guard);
+			if (Component != null && Component.Keep != null)
+			{
+				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { guard });
+			}
+			else
+			{
+				TemplateMgr.RefreshTemplate(guard);
+			}
 			PatrolGuards.Add(guard);
 			Component.Keep.Guards.Add(DOL.Database.UniqueID.IDGenerator.GenerateID(), guard);
 			guard.AddToWorld();
