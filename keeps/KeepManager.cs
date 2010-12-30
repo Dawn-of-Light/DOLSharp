@@ -762,7 +762,7 @@ namespace DOL.GS.Keeps
 
 						foreach (GameKeepGuard guard in keep.Guards.Values)
 						{
-							TemplateMgr.SetGuardLevel(guard);
+							keep.TemplateManager.GetMethod("SetGuardLevel").Invoke(null, new object[] { guard });
 						}
 					}
 				}

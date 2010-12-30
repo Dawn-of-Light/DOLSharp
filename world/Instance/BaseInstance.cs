@@ -48,7 +48,7 @@ namespace DOL.GS
             m_skinID = data.Id;
             
             //Notify we've created an instance.
-            log.Info("An instance is created! " + Name + ", RegionID: " + ID + ", SkinID: " + Skin);
+            log.Warn("An instance is created! " + Name + ", RegionID: " + ID + ", SkinID: " + Skin);
         }
 
 		/// <summary>
