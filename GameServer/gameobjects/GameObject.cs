@@ -1017,18 +1017,6 @@ namespace DOL.GS
 			{
 				// Notify all our potential quests of the interaction so we can check for quest offers
 				q.Notify(GameObjectEvent.Interact, this, new InteractEventArgs(player));
-
-				if (player.Group != null)
-				{
-					// let's notify every member of group so they can advance quest steps with the group
-					foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
-					{
-						if (p != player && GetDistanceTo(player) <= WorldMgr.MAX_EXPFORKILL_DISTANCE)
-						{
-							p.Notify(GameObjectEvent.InteractWith, p, new InteractWithEventArgs(this));
-						}
-					}
-				}
 			}
 
 			return true;
