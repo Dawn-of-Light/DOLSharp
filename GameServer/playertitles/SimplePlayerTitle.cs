@@ -44,7 +44,7 @@ namespace DOL.GS.PlayerTitles
 		/// </summary>
 		/// <param name="player">The title owner.</param>
 		/// <returns>True if player can not change the title.</returns>
-		public bool IsForced(GamePlayer player)
+		public virtual bool IsForced(GamePlayer player)
 		{
 			return false;
 		}
