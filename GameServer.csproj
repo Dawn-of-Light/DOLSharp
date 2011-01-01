@@ -2767,6 +2767,6 @@
     <SvnVersion LocalPath="." Condition="Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')">
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </SvnVersion>
-    <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
+    <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\*|\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
   </Target>
 </Project>
