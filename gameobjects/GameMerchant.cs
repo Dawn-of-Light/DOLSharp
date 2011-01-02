@@ -479,20 +479,35 @@ namespace DOL.GS
 
 	}
 
-	public abstract class GameCountMerchant : GameMerchant
+	/// <summary>
+	/// A merchant that uses an item as currency instead of money
+	/// </summary>
+	public abstract class GameItemCurrencyMerchant : GameMerchant
 	{
 		protected WorldInventoryItem m_moneyItem;
 
-		public WorldInventoryItem moneyItem
+		/// <summary>
+		/// The item to use as currency
+		/// </summary>
+		public virtual WorldInventoryItem MoneyItem
 		{
 			get { return m_moneyItem; }
 		}
 
-		protected string m_countText;
+		protected string m_moneyItemName;
 
-		public string CountText
+		/// <summary>
+		/// The name of the money item.  Defaults to Item Name
+		/// </summary>
+		public virtual string MoneyItemName
 		{
-			get { return m_countText; }
+			get
+			{
+				if (m_moneyItem != null)
+					return m_moneyItem.Name;
+
+				return "not found";
+			}
 		}
 
 		public override bool Interact(GamePlayer player)
@@ -502,11 +517,11 @@ namespace DOL.GS
 
 			TurnTo(player, 10000);
 			string text = "";
-			if (moneyItem == null || moneyItem.Item == null || m_countText == null || m_countText == "")
+			if (m_moneyItem == null || m_moneyItem.Item == null || m_moneyItemName == null || m_moneyItemName == "")
 				text = LanguageMgr.GetTranslation(player.Client, "GameMerchant.GetExamineMessages.Nothing");
 			else
 			{
-				text = m_countText;
+				text = m_moneyItemName;
 			}
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.GetExamineMessages.BuyItemsFor", this.Name, text), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			return true;
@@ -542,7 +557,7 @@ namespace DOL.GS
 			{
 				if (player.Inventory.CountItemTemplate(m_moneyItem.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) < totalValue)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeed2", totalValue, m_countText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeed2", totalValue, m_moneyItemName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
@@ -554,9 +569,9 @@ namespace DOL.GS
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
-					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtPieces2", amountToBuy, template.GetName(1, false), totalValue, m_countText);
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtPieces2", amountToBuy, template.GetName(1, false), totalValue, m_moneyItemName);
 				else
-					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.Bought2", template.GetName(1, false), totalValue, m_countText);
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.Bought2", template.GetName(1, false), totalValue, m_moneyItemName);
 
 				var items = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 				int removed = 0;
@@ -578,44 +593,44 @@ namespace DOL.GS
 		}
 	}
 
-	public class GameDiamondSealsMerchant : GameCountMerchant
+	public class GameDiamondSealsMerchant : GameItemCurrencyMerchant
 	{
 		public GameDiamondSealsMerchant()
 			: base()
 		{
 			m_moneyItem = WorldInventoryItem.CreateFromTemplate("DiamondSeal");
-			m_countText = m_moneyItem.Name;
+			m_moneyItemName = m_moneyItem.Name;
 		}
 	}
 
-	public class GameSapphireSealsMerchant : GameCountMerchant
+	public class GameSapphireSealsMerchant : GameItemCurrencyMerchant
 	{
 		public GameSapphireSealsMerchant()
 			: base()
 		{
 			m_moneyItem = WorldInventoryItem.CreateFromTemplate("SapphireSeal");
-			m_countText = m_moneyItem.Name;
+			m_moneyItemName = m_moneyItem.Name;
 		}
 
 	}
 
-	public class GameEmeraldSealsMerchant : GameCountMerchant
+	public class GameEmeraldSealsMerchant : GameItemCurrencyMerchant
 	{
 		public GameEmeraldSealsMerchant()
 			: base()
 		{
 			m_moneyItem = WorldInventoryItem.CreateFromTemplate("EmeraldSeal");
-			m_countText = m_moneyItem.Name;
+			m_moneyItemName = m_moneyItem.Name;
 		}
 	}
 
-	public class GameAuruliteMerchant : GameCountMerchant
+	public class GameAuruliteMerchant : GameItemCurrencyMerchant
 	{
 		public GameAuruliteMerchant()
 			: base()
 		{
 			m_moneyItem = WorldInventoryItem.CreateFromTemplate("aurulite");
-			m_countText = m_moneyItem.Name;
+			m_moneyItemName = m_moneyItem.Name;
 		}
 	}
 }
