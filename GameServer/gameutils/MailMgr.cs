@@ -7,10 +7,9 @@ using System.Net.Mail;
 using System.Reflection;
 using System.Threading;
 using System.Xml;
-using DOL.GS;
 
 using DOL.Config;
-
+using DOL.GS;
 using log4net;
 
 namespace DOL.Mail
@@ -31,10 +30,10 @@ namespace DOL.Mail
 			foreach (string file in filesPathsList)
 			{
 				//let's not try and compress already compressed files
-				if (file.Contains(".gz"))
+				if (file.EndsWith(".gz"))
 					continue;
 				Console.WriteLine(file);
-				if (!compressFile(file, file + ".gz"))
+				if (!compressFile(file, file + ".log.gz"))
 					return false;
 			}
 			return true;
@@ -63,7 +62,7 @@ namespace DOL.Mail
 				// Stream to write the compressed file
 				fstream = new FileStream(dest, FileMode.Create);
 
-				// File compression (fsream is automatically closed)
+				// File compression (fstream is automatically closed)
 				GZipStream zipStream = new GZipStream(fstream, CompressionMode.Compress, false);
 				zipStream.Write(buf, 0, buf.Length);
 				zipStream.Close();
