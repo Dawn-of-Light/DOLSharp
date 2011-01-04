@@ -720,7 +720,8 @@ namespace DOL.GS
 			if (mychatgroup != null)
 				mychatgroup.RemovePlayer(this);
 
-			CommandNpcRelease();
+            if (this.ControlledBrain != null)
+                CommandNpcRelease();
 
 			if (SiegeWeapon != null)
 				SiegeWeapon.ReleaseControl();
@@ -7602,7 +7603,9 @@ namespace DOL.GS
 				GameEventMgr.AddHandler(this, GamePlayerEvent.Revive, new DOLEventHandler(OnRevive));
 			}
 
-			CommandNpcRelease();
+            if (this.ControlledBrain != null)
+                CommandNpcRelease();
+
 			if (this.SiegeWeapon != null)
 				SiegeWeapon.ReleaseControl();
 
@@ -13536,29 +13539,47 @@ namespace DOL.GS
 			return Enum.IsDefined(typeof(eCraftingSkill), craftingSkillToCheck);
 		}
 
-		/// <summary>
-		/// This function is called each time a player try to make a item
-		/// </summary>
-		public void CraftItem(ushort itemID)
-		{
-			DBCraftedItem craftitem = GameServer.Database.SelectObject<DBCraftedItem>("CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
-			if (craftitem != null && craftitem.ItemTemplate != null && craftitem.RawMaterials != null)
-			{
-				AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)craftitem.CraftingSkillType);
-				if (skill != null)
-				{
-					skill.CraftItem(craftitem, this);
-				}
-				else
-				{
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-			}
-			else
-			{
-				Out.SendMessage("Craft item (" + itemID + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-		}
+        /// <summary>
+        /// This function is called each time a player try to make a item
+        /// </summary>
+        public void CraftItem(ushort itemID)
+        {
+            DBCraftedItem craftitem = GameServer.Database.SelectObject<DBCraftedItem>("CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
+            if (craftitem != null)
+            {
+
+                ItemTemplate itemtemplateverif = null;
+                itemtemplateverif = GameServer.Database.FindObjectByKey<ItemTemplate>(craftitem.ItemTemplate.Id_nb);
+                var rawmaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = '" + craftitem.ItemTemplate.Id_nb + "'");
+                if (rawmaterials.Count > 0)
+                {
+                    if (itemtemplateverif != null)
+                    {
+                        AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)craftitem.CraftingSkillType);
+                        if (skill != null)
+                        {
+                            skill.CraftItem(craftitem, this);
+                        }
+                        else
+                        {
+                            Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        }
+                    }
+                    else
+                    {
+                        Out.SendMessage("Crafted ItemTemplate (" + craftitem.ItemTemplate.Id_nb + ") not implented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
+                }
+                else
+                {
+                    Out.SendMessage("Craft ItemTemplate (" + craftitem.ItemTemplate.Id_nb + ") have 0 rawmaterials, CraftedItem can't be crafted.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                }
+            }
+            else
+            {
+                Out.SendMessage("CraftedItemID: (" + itemID + ") not implented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+        }
 
 		/// <summary>
 		/// This function is called each time a player try to salvage a item
