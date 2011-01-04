@@ -1668,10 +1668,18 @@ namespace DOL.GS.Quests
 					DataQuest dq = new DataQuest(player, obj, DBDataQuest, charQuest);
 					dq.Step = 1;
 					player.AddQuest(dq);
-					if (m_sourceTexts[0] != "")
+					if (m_sourceTexts.Count > 0)
 					{
-						SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						if (string.IsNullOrEmpty(m_sourceTexts[0]) == false)
+						{
+							SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						}
 					}
+					else
+					{
+						ChatUtil.SendDebugMessage(player, "Source Text missing on AutoStart quest.");
+					}
+
 					if (obj is GameNPC)
 					{
 						UpdateQuestIndicator(obj as GameNPC, player);
@@ -1731,7 +1739,14 @@ namespace DOL.GS.Quests
 						{
 							player.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
 						}
-						SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						if (m_sourceTexts.Count > 0)
+						{
+							SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						}
+						else
+						{
+							ChatUtil.SendDebugMessage(player, "Source Text missing on Collection Quest receive item.");
+						}
 					}
 					else
 					{
@@ -1759,7 +1774,14 @@ namespace DOL.GS.Quests
 				DataQuest dq = new DataQuest(player, living, DBDataQuest, charQuest);
 				dq.Step = 1;
 				player.AddQuest(dq);
-				SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				if (m_sourceTexts.Count > 0)
+				{
+					SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+				else
+				{
+					ChatUtil.SendDebugMessage(player, "Source Text missing on accept quest.");
+				}
 				if (living is GameNPC)
 				{
 					UpdateQuestIndicator(living as GameNPC, player);

@@ -40,17 +40,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The player currently crafting
 		/// </summary>
-		protected const string PLAYER_CRAFTER = "PLAYER_CRAFTER";
-
-		/// <summary>
-		/// The player currently crafting
-		/// </summary>
 		protected const string PLAYER_PARTNER = "PLAYER_PARTNER";
-
-		/// <summary>
-		/// The item in construction
-		/// </summary>
-		protected const string ITEM_CRAFTER = "ITEM_CRAFTER";
 
 		#endregion
 
@@ -86,9 +76,9 @@ namespace DOL.GS
 			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.Repairing", item.Name), workDuration);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(Proceed);
-			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
+			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.PLAYER_CRAFTER, player);
 			player.CraftTimer.Properties.setProperty(PLAYER_PARTNER, tradePartner);
-			player.CraftTimer.Properties.setProperty(ITEM_CRAFTER, item);
+			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.ITEM_BEING_CRAFTED, item);
 			player.CraftTimer.Start(workDuration * 1000);
 			return 1;
 		}
@@ -100,9 +90,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected static int Proceed(RegionTimer timer)
 		{
-			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(PLAYER_CRAFTER, null);
+			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(AbstractCraftingSkill.PLAYER_CRAFTER, null);
 			GamePlayer tradePartner = (GamePlayer)timer.Properties.getProperty<object>(PLAYER_PARTNER, null);
-			InventoryItem item = (InventoryItem)timer.Properties.getProperty<object>(ITEM_CRAFTER, null);
+			InventoryItem item = (InventoryItem)timer.Properties.getProperty<object>(AbstractCraftingSkill.ITEM_BEING_CRAFTED, null);
 
 			if (player == null || item == null)
 			{
@@ -255,8 +245,8 @@ namespace DOL.GS
 			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.Repairing", siegeWeapon.Name), workDuration);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(ProceedSiegeWeapon);
-			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
-			player.CraftTimer.Properties.setProperty(ITEM_CRAFTER, siegeWeapon);
+			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.PLAYER_CRAFTER, player);
+			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.ITEM_BEING_CRAFTED, siegeWeapon);
 			player.CraftTimer.Start(workDuration * 1000);
 			return 1;
 		}
@@ -268,8 +258,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected static int ProceedSiegeWeapon(RegionTimer timer)
 		{
-			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(PLAYER_CRAFTER, null);
-			GameSiegeWeapon siegeWeapon = (GameSiegeWeapon)timer.Properties.getProperty<object>(ITEM_CRAFTER, null);
+			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(AbstractCraftingSkill.PLAYER_CRAFTER, null);
+			GameSiegeWeapon siegeWeapon = (GameSiegeWeapon)timer.Properties.getProperty<object>(AbstractCraftingSkill.ITEM_BEING_CRAFTED, null);
 
 			if (player == null || siegeWeapon == null)
 			{
