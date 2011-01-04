@@ -11539,7 +11539,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				gameItem = new WorldInventoryItem(item); // fixed
+				gameItem = new WorldInventoryItem(item);
 
 				Point2D itemloc = this.GetPointFromHeading(this.Heading, 30);
 				gameItem.X = itemloc.X;

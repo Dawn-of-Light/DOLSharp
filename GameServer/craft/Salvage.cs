@@ -40,16 +40,6 @@ namespace DOL.GS
 		#region Declaration
 
 		/// <summary>
-		/// The player currently crafting
-		/// </summary>
-		protected const string PLAYER_CRAFTER = "PLAYER_CRAFTER";
-
-		/// <summary>
-		/// The item to salvage
-		/// </summary>
-		protected const string ITEM_CRAFTER = "ITEM_CRAFTER";
-
-		/// <summary>
 		/// The material to give
 		/// </summary>
 		protected const string MATERIAL_CRAFTER = "MATERIAL_CRAFTER";
@@ -109,8 +99,8 @@ namespace DOL.GS
 			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.Salvaging", item.Name), count);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(Proceed);
-			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
-			player.CraftTimer.Properties.setProperty(ITEM_CRAFTER, item);
+			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.PLAYER_CRAFTER, player);
+			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.ITEM_BEING_CRAFTED, item);
 			player.CraftTimer.Properties.setProperty(MATERIAL_CRAFTER, material);
 			player.CraftTimer.Properties.setProperty(MATERIAL_COUNT_CRAFTER, count);
 			
@@ -173,8 +163,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected static int Proceed(RegionTimer timer)
 		{
-			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(PLAYER_CRAFTER, null);
-			InventoryItem itemToSalvage = (InventoryItem)timer.Properties.getProperty<object>(ITEM_CRAFTER, null);
+			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(AbstractCraftingSkill.PLAYER_CRAFTER, null);
+			InventoryItem itemToSalvage = (InventoryItem)timer.Properties.getProperty<object>(AbstractCraftingSkill.ITEM_BEING_CRAFTED, null);
 			DBSalvage material = (DBSalvage)timer.Properties.getProperty<object>(MATERIAL_CRAFTER, null);
 			int materialCount = (int)timer.Properties.getProperty<object>(MATERIAL_COUNT_CRAFTER, 0);
 
