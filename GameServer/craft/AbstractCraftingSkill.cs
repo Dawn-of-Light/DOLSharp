@@ -253,7 +253,7 @@ namespace DOL.GS
 				if (rawmaterial.ItemTemplate == null)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.LoseNoMaterials", rawmaterial.IngredientId_nb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					log.Error("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb);
+                    log.Error("Cannot find rawmaterials ItemTemplate ID: " + rawmaterial.IngredientId_nb + " of CratftedItemID: " + craftItemData.CraftedItemID);
 					return false;
 				}
 				switch (rawmaterial.ItemTemplate.Model)
@@ -505,10 +505,11 @@ namespace DOL.GS
 				{
 					if (item == null)
 						continue;
-					if (item.Id_nb != craftItemData.ItemTemplate.Id_nb)
-						continue;
-					if (item.Count >= item.MaxCount)
-						continue;
+                    //Because crafteditem is unique, we have to check by name
+                    if (item.Name != craftItemData.ItemTemplate.Name)
+                        continue;
+                    if (item.Count >= craftItemData.ItemTemplate.MaxCount)
+                        continue;
 
 					int countFree = item.MaxCount - item.Count;
 					if (count > countFree)
