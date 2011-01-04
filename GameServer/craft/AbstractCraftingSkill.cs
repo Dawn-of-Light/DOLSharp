@@ -59,12 +59,12 @@ namespace DOL.GS
 		/// <summary>
 		/// The player currently crafting
 		/// </summary>
-		protected const string PLAYER_CRAFTER = "PLAYER_CRAFTER";
+		public const string PLAYER_CRAFTER = "PLAYER_CRAFTER";
 
 		/// <summary>
 		/// The item in construction
 		/// </summary>
-		protected const string ITEM_CRAFTER = "ITEM_CRAFTER";
+		public const string ITEM_BEING_CRAFTED = "ITEM_BEING_CRAFTED";
 
 		protected const int subSkillCap = 1300;
 
@@ -142,7 +142,7 @@ namespace DOL.GS
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(MakeItem);
 			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
-			player.CraftTimer.Properties.setProperty(ITEM_CRAFTER, item);
+			player.CraftTimer.Properties.setProperty(ITEM_BEING_CRAFTED, item);
 			player.CraftTimer.Start(craftingTime * 1000);
 		}
 
@@ -190,7 +190,7 @@ namespace DOL.GS
 		protected virtual int MakeItem(RegionTimer timer)
 		{
 			GamePlayer player = timer.Properties.getProperty<GamePlayer>(PLAYER_CRAFTER, null);
-			DBCraftedItem item = timer.Properties.getProperty<DBCraftedItem>(ITEM_CRAFTER, null);
+			DBCraftedItem item = timer.Properties.getProperty<DBCraftedItem>(ITEM_BEING_CRAFTED, null);
 			if (player == null || item == null)
 			{
 				if (log.IsWarnEnabled)
@@ -548,30 +548,34 @@ namespace DOL.GS
 					if (countToAdd > 0)	// Add to exiting item
 					{
 						newItem = player.Inventory.GetItem((eInventorySlot)de.Key);
-						player.Inventory.AddCountToStack(newItem, countToAdd);
+						if (newItem != null && player.Inventory.AddCountToStack(newItem, countToAdd))
+						{
+							// count incremented, continue with next change
+							continue;
+						}
 					}
-					else
-					{
-						
-						ItemUnique unique = new ItemUnique(craftItemData.ItemTemplate);
-						GameServer.Database.AddObject(unique);
-						newItem = GameInventoryItem.Create<ItemUnique>(unique);
-						newItem.IsCrafted = true;
-						newItem.Creator = player.Name;
-						newItem.Quality = GetQuality(player, craftItemData);
-						newItem.Count = -countToAdd;
 
-						if ((int)de.Key > 0)		// Create new item in the backpack
-						{
-							player.Inventory.AddItem((eInventorySlot)de.Key, newItem);
-						}
-						else					// Create new item on the ground
-						{
-							player.CreateItemOnTheGround(newItem);
-							player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.BackpackFull", craftItemData.ItemTemplate.Name));
-						}
+					// need to create a new item
+
+					ItemUnique unique = new ItemUnique(craftItemData.ItemTemplate);
+					GameServer.Database.AddObject(unique);
+					newItem = GameInventoryItem.Create<ItemUnique>(unique);
+					newItem.IsCrafted = true;
+					newItem.Creator = player.Name;
+					newItem.Quality = GetQuality(player, craftItemData);
+					newItem.Count = -countToAdd;
+
+					if ((int)de.Key > 0)	// Create new item in the backpack
+					{
+						player.Inventory.AddItem((eInventorySlot)de.Key, newItem);
+					}
+					else					// Create new item on the ground
+					{
+						player.CreateItemOnTheGround(newItem);
+						player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.BackpackFull", craftItemData.ItemTemplate.Name));
 					}
 				}
+
 				player.Inventory.CommitChanges();
 
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Successfully", craftItemData.ItemTemplate.Name, newItem.Quality), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
