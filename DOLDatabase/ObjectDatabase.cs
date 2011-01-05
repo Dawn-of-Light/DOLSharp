@@ -341,8 +341,8 @@ namespace DOL.Database
 			if (TableDatasets.ContainsKey(GetTableOrViewName(objType)))
 				return;
 
-			bool primary = false;
-			bool usePrimaryKey = false;
+			bool primaryKeySpecified = false;
+			bool useAutoIncrementColumn = false;
 			bool relations = false;
 			MemberInfo primaryIndexMember = null;
 
@@ -361,7 +361,7 @@ namespace DOL.Database
 
 				if (myAttributes.Length > 0)
 				{
-					primary = true;
+					primaryKeySpecified = true;
 					if (myMembers[i] is PropertyInfo)
 						table.Columns.Add(myMembers[i].Name, ((PropertyInfo)myMembers[i]).PropertyType);
 					else
@@ -369,7 +369,7 @@ namespace DOL.Database
 
 					table.Columns[myMembers[i].Name].AutoIncrement = ((PrimaryKey)myAttributes[0]).AutoIncrement;
 
-					usePrimaryKey = table.Columns[myMembers[i].Name].AutoIncrement;
+					useAutoIncrementColumn = table.Columns[myMembers[i].Name].AutoIncrement;
 
 					var index = new DataColumn[1];
 					index[0] = table.Columns[myMembers[i].Name];
@@ -425,12 +425,21 @@ namespace DOL.Database
 				}
 			}
 
-			if (usePrimaryKey == false)
+			if (useAutoIncrementColumn == false)
 			{
-				table.Columns.Add(tableName + "_ID", typeof(string));
+				// We define the Tablename_ID column that will always contain a generated unique ID
+
+				DataColumn idColumn = table.Columns.Add(tableName + "_ID", typeof(string));
+
+				if (primaryKeySpecified)
+				{
+					// if another primary key is defined on this table but the TableName_ID column is still being used then force
+					// the creation of a unique index on the the TableName_ID column
+					table.Constraints.Add(new UniqueConstraint(idColumn.ColumnName, idColumn));
+				}
 			}
 
-			if (primary == false)
+			if (primaryKeySpecified == false)
 			{
 				var index = new DataColumn[1];
 				index[0] = table.Columns[tableName + "_ID"];
