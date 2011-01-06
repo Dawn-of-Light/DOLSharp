@@ -623,15 +623,6 @@ namespace DOL.GS.Quests
 					return m_charQuest.Count;
 				}
 
-				try
-				{
-					log.ErrorFormat("m_charQuest null for quest {0}:{1} on character {2}", ID, Name, QuestPlayer == null ? "null" : QuestPlayer.Name);
-				}
-				catch
-				{
-					log.ErrorFormat("Error retrieving count for DataQuest {0}", ID);
-				}
-
 				return 0; 
 			}
 			set
@@ -1864,9 +1855,8 @@ namespace DOL.GS.Quests
 
 			if (TargetName == obj.Name && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0))
 			{
-				ChatUtil.SendDebugMessage(player, string.Format("[DEBUG] giving item {0}, quest wants item {1}", item.Id_nb, m_collectItems[Step - 1]));
-
-				if (string.IsNullOrEmpty(m_collectItems[Step - 1]) == false &&
+				if (m_collectItems.Count >= Step &&
+					string.IsNullOrEmpty(m_collectItems[Step - 1]) == false &&
 					item.Id_nb.ToLower().Contains(m_collectItems[Step - 1].ToLower()) &&
 					ExecuteCustomQuestStep(player, Step, eStepCheckType.GiveItem))
 				{
