@@ -2,9 +2,9 @@
 BaseQuest.TeleportTo.Text1:			{0} est téléporté à {1}.
 
 # /RewardQuest
-RewardQuest.Notify:				You must choose a reward!
-RewardQuest.OnQuestAssigned:			You have acquired the {0} quest.
-RewardQuest.Description:			Quest Goal : {0} ({1}/{2})
+RewardQuest.Notify:				Vous devez choisir une récompense!
+RewardQuest.OnQuestAssigned:			Vous obtenez la quête {0}.
+RewardQuest.Description:			Objectif: {0} ({1}/{2})
 
 # /AbstractQuest
 AbstractQuest.FinishQuest.Completed:		Vous avez terminé la quête: {0}!

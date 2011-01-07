@@ -1,0 +1,92 @@
+﻿# Unknown
+GamePlayer.RealmTitle.UnknownRealm:				Royaume Inconnu
+# Starter titles
+GamePlayer.RealmTitle.Defender:					Defenseur
+GamePlayer.RealmTitle.Invader:					Envahisseur
+# Albion
+# /Male
+GamePlayer.RealmTitle.Male.Guardian:			Défenseur
+GamePlayer.RealmTitle.Male.Warder:				Gardien
+GamePlayer.RealmTitle.Male.Myrmidon:			Chevalier
+GamePlayer.RealmTitle.Male.GryphonKnight:		Chevalier-Griffon
+GamePlayer.RealmTitle.Male.EagleKnight:			Chevalier-Faucon
+GamePlayer.RealmTitle.Male.PhoenixKnight:		Chevalier-Phoénix
+GamePlayer.RealmTitle.Male.AlerionKnight:		Chevalier-Alérion
+GamePlayer.RealmTitle.Male.UnicornKnight:		Chevalier-Licorne
+GamePlayer.RealmTitle.Male.LionKnight:			Chevalier-Lion
+GamePlayer.RealmTitle.Male.DragonKnight:		Chevalier-Dragon
+GamePlayer.RealmTitle.Male.Lord:				Seigneur
+GamePlayer.RealmTitle.Male.Baronet:				Maître
+GamePlayer.RealmTitle.Male.Baron:				Comte
+# /Female
+GamePlayer.RealmTitle.Female.Guardian:			Défenseur
+GamePlayer.RealmTitle.Female.Warder:			Gardienne
+GamePlayer.RealmTitle.Female.Myrmidon:			Chevalière
+GamePlayer.RealmTitle.Female.GryphonKnight:		Chevalière-Griffon
+GamePlayer.RealmTitle.Female.EagleKnight:		Chevalière-Faucon
+GamePlayer.RealmTitle.Female.PhoenixKnight:		Chevalière-Phoénix
+GamePlayer.RealmTitle.Female.AlerionKnight:		Chevalière-Alérion
+GamePlayer.RealmTitle.Female.UnicornKnight:		Chevalière-Licorne
+GamePlayer.RealmTitle.Female.LionKnight:		Chevalière-Lion
+GamePlayer.RealmTitle.Female.DragonKnight:		Chevalière-Dragon
+GamePlayer.RealmTitle.Female.Lady:				Dame
+GamePlayer.RealmTitle.Female.Baronetess:		Maîtresse
+GamePlayer.RealmTitle.Female.Baroness:			Comtesse
+# Midgard
+# /Male
+GamePlayer.RealmTitle.Male.Skiltvakten:			Skiltvakten
+GamePlayer.RealmTitle.Male.IsenVakten:			Isen Vakten
+GamePlayer.RealmTitle.Male.FlammenVakten:		Flammen Vakten
+GamePlayer.RealmTitle.Male.EldingVakten:		Elding Vakten
+GamePlayer.RealmTitle.Male.StormurVakten:		Stormur Vakten
+GamePlayer.RealmTitle.Male.IsenHerra:			Isen Herra
+GamePlayer.RealmTitle.Male.FlammenHerra:		Flammen Herra
+GamePlayer.RealmTitle.Male.EldingHerra:			Elding Herra
+GamePlayer.RealmTitle.Male.StormurHerra:		Stormur Herra
+GamePlayer.RealmTitle.Male.Einherjar:			Einherjar
+GamePlayer.RealmTitle.Male.Herra:				Isen Einherjar
+GamePlayer.RealmTitle.Male.Hersir:				Flammen Einherjar
+GamePlayer.RealmTitle.Male.Vicomte:				Elding Einherjar
+# /Female
+GamePlayer.RealmTitle.Female.Skiltvakten:		Skiltvakten
+GamePlayer.RealmTitle.Female.IsenVakten:		Isen Vakten
+GamePlayer.RealmTitle.Female.FlammenVakten:		Flammen Vakten
+GamePlayer.RealmTitle.Female.EldingVakten:		Elding Vakten
+GamePlayer.RealmTitle.Female.StormurVakten:		Stormur Vakten
+GamePlayer.RealmTitle.Female.IsenFru:			Isen Fru
+GamePlayer.RealmTitle.Female.FlammenFru:		Flammen Fru
+GamePlayer.RealmTitle.Female.EldingFru:			Elding Fru
+GamePlayer.RealmTitle.Female.StormurFru:		Stormur Fru
+GamePlayer.RealmTitle.Female.Einherjar:			Einherjar
+GamePlayer.RealmTitle.Female.Fru:				Isen Einherjar
+GamePlayer.RealmTitle.Female.Baronsfru:			Flammen Einherjar
+GamePlayer.RealmTitle.Female.Vicomtessa:		Elding Einherjar
+# Hibernia
+# /Male
+GamePlayer.RealmTitle.Male.Savant:				Savant
+GamePlayer.RealmTitle.Male.Cosantoir:			Cosantoir
+GamePlayer.RealmTitle.Male.Brehon:				Brehon
+GamePlayer.RealmTitle.Male.GroveProtector:		Protecteur
+GamePlayer.RealmTitle.Male.RavenArdent:			Corbeau Ardent
+GamePlayer.RealmTitle.Male.SilverHand:			Main d'Argent
+GamePlayer.RealmTitle.Male.Thunderer:			Tonnant
+GamePlayer.RealmTitle.Male.GildedSpear:			Lance Dorée
+GamePlayer.RealmTitle.Male.Tiarna:				Tiarna
+GamePlayer.RealmTitle.Male.EmeraldRidere:		Cavalier d'Emeraude
+GamePlayer.RealmTitle.Male.Barun:				Sionad
+GamePlayer.RealmTitle.Male.ArdTiarna:			Triath
+GamePlayer.RealmTitle.Male.CiannCath:			Ciann Cath
+# /Female
+GamePlayer.RealmTitle.Female.Savant:			Savant
+GamePlayer.RealmTitle.Female.Cosantoir:			Cosantoir
+GamePlayer.RealmTitle.Female.Brehon:			Brehon
+GamePlayer.RealmTitle.Female.GroveProtector:	Protectrice
+GamePlayer.RealmTitle.Female.RavenArdent:		Corbeau Ardent
+GamePlayer.RealmTitle.Female.SilverHand:		Main d'Argent
+GamePlayer.RealmTitle.Female.Thunderer:			Tonnant
+GamePlayer.RealmTitle.Female.GildedSpear:		Lance Dorée
+GamePlayer.RealmTitle.Female.Bantiarna:			Tiarna
+GamePlayer.RealmTitle.Female.EmeraldRidere:		Cavalière d'Emeraude
+GamePlayer.RealmTitle.Female.Banbharun:			Ben Segr
+GamePlayer.RealmTitle.Female.ArdBantiarna:		Ben Reill
+GamePlayer.RealmTitle.Female.CiannCath:			Ciann Cath

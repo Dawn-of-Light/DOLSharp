@@ -17,3 +17,4 @@ System.LanguagesName.Czech:						Tchèque
 System.LanguagesName.Italian:					Italien 
 
 
+PlayerPickUpRequestHandler.HandlePacket.Target:		Vous devez avoir une cible valide a ramassé.

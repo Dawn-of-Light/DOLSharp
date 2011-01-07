@@ -39,18 +39,41 @@ Crafting.Name.Weaponcraft:				Forge
 Crafting.Name.Woodworking:				Menuiserie
 
 # /CraftLevelToCraftTitle
-CraftLevelToCraftTitle.Helper:				Aide
-CraftLevelToCraftTitle.JuniorApprentice:		Apprenti Débutant
-CraftLevelToCraftTitle.Apprentice:			Apprenti
-CraftLevelToCraftTitle.Neophyte:			Néophyte
-CraftLevelToCraftTitle.Assistant:			Assistant
-CraftLevelToCraftTitle.Junior:				Débutant
-CraftLevelToCraftTitle.Journeyman:			Compagnon
-CraftLevelToCraftTitle.Senior:				Expert
-CraftLevelToCraftTitle.Master:				Maître
-CraftLevelToCraftTitle.Grandmaster:			Grand Maître
-CraftLevelToCraftTitle.Legendary:			Légendaire
-CraftLevelToCraftTitle.LegendaryGrandmaster:		Grand Maître Légendaire
+CraftersTitle.Helper:				Aide {0}
+CraftersTitle.JuniorApprentice:		Apprenti Débutant {0}
+CraftersTitle.Apprentice:			Apprenti {0}
+CraftersTitle.Neophyte:			Néophyte {0}
+CraftersTitle.Assistant:			Assistant {0}
+CraftersTitle.Junior:				Débutant {0}
+CraftersTitle.Journeyman:			Compagnon {0}
+CraftersTitle.Senior:				Expert {0}
+CraftersTitle.Master:				Maître {0}
+CraftersTitle.Grandmaster:			Grand Maître {0}
+CraftersTitle.Legendary:			{0} Légendaire
+CraftersTitle.LegendaryGrandmaster:		Grand Maître Légendaire {0}
+
+CraftLevelToCraftTitle.Helper:				Aide {0}
+CraftLevelToCraftTitle.JuniorApprentice:		Apprenti Débutant {0}
+CraftLevelToCraftTitle.Apprentice:			Apprenti {0}
+CraftLevelToCraftTitle.Neophyte:			Néophyte {0}
+CraftLevelToCraftTitle.Assistant:			Assistant {0}
+CraftLevelToCraftTitle.Junior:				Débutant {0}
+CraftLevelToCraftTitle.Journeyman:			Compagnon {0}
+CraftLevelToCraftTitle.Senior:				Expert {0}
+CraftLevelToCraftTitle.Master:				Maître {0}
+CraftLevelToCraftTitle.Grandmaster:			Grand Maître {0}
+CraftLevelToCraftTitle.Legendary:			{0} Légendaire
+CraftLevelToCraftTitle.LegendaryGrandmaster:		Grand Maître Légendaire {0}
+
+# /CraftersProfession (NEW)
+CraftersProfession.Alchemist:				Alchimiste
+CraftersProfession.Armorer:					Armurier
+CraftersProfession.Spellcrafter:			Joailler
+CraftersProfession.Fletcher:				Empenneur
+CraftersProfession.Tailor:					Tailleur
+CraftersProfession.Weaponcrafter:			Forgeron
+CraftersProfession.Siegecrafter:			Ingénieur
+
 
 # /AbstractCraftingSkill
 AbstractCraftingSkill.BuildCraftedItem.BackpackFull:   Votre sac est plein. {0} est déposé sur le sol.
@@ -69,7 +92,7 @@ AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.Rawmaterial:			Impossi
 AbstractCraftingSkill.CraftItem.BeginWork:      Vous commencez à travailler sur le {0} ({1}%).
 AbstractCraftingSkill.CraftItem.ChanceToGainPoint:   Chance de gagner des points sur votre compétence primaire {0}%.
 AbstractCraftingSkill.CraftItem.CurrentlyMaking:   Artisanat en cours: {0}
-AbstractCraftingSkill.CraftItem.MoveAndInterrupt:   Vous bougez et interrompez votre travail.
+AbstractCraftingSkill.CraftItem.MoveAndInterrupt:   Vous bougez et interrompé votre travail.
 AbstractCraftingSkill.CraftItem.StopWork:      Vous arrêtez votre travail.
 AbstractCraftingSkill.LooseRawMaterial.Count:      Vous perdez ({0}) {1}.
 AbstractCraftingSkill.LooseRawMaterial.Materials:   Vous n'arrivez pas à faire le {0}, et perdez des matériaux!
@@ -77,7 +100,7 @@ AbstractCraftingSkill.MakeItem.LoseNoMaterials:      Vous n'arrivez pas à faire
 AbstractCraftingSkill.MakeItem.NotAllMaterials:      Vous n'avez pas tout les composants nécessaires à la confection de cet objet.
 
 # /AdvancedCraftingSkill
-AdvancedCraftingSkill.CombineItems.OnlyCombine:		Vous pouvez seulement combiner vos objets dans un objet!
+AdvancedCraftingSkill.CombineItems.OnlyCombine:		Vous pouvez seulement combiner vos gemmes dans un objet!
 AdvancedCraftingSkill.IsAllowedToCombine.CraftedItems:	Seulement les objets construits par des artisants peuvent être enchantés!
 AdvancedCraftingSkill.IsAllowedToCombine.Imbue:		Vous avez besoin de quelque chose pour imprégner {0}!
 AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted:	Cet objet ne peut pas être enchanté!
@@ -110,7 +133,7 @@ Repair.ProceedSiegeWeapon.FailRepair:			Vous échouez dans la réparation de {0}
 
 # /Salvage
 Salvage.BeginWork.BeginSalvage:				Vous commencez le démontage de {0}.
-Salvage.BeginWork.InterruptSalvage:			Vous bougez et interrompez votre démontage.
+Salvage.BeginWork.InterruptSalvage:			Vous bougez et interrompé votre démontage.
 Salvage.BeginWork.NoRoom:				Vous n'avez pas assez de place dans votre inventaire.
 Salvage.BeginWork.NoSalvage:				Vous ne pouvez pas démonter {0}!
 Salvage.BeginWork.Salvaging:				Démontage: {0}

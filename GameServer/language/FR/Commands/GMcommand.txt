@@ -130,7 +130,7 @@ GMCommands.GMRelicPad.Usage:				/gmrelic <magic|strength> <name> <realm>
 
 
 # /harm Command
-GMCommands.Harm.Description:				Blesse votre cible (health)
+GMCommands.Harm.Description:				Blesse votre cible
 GMCommands.Harm.Usage:						/harm <amount>
 GMCommands.Harm.InvalidTarget:				Vous n'avez pas de cible valide.
 

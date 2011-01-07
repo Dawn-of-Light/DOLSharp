@@ -19,7 +19,7 @@ Scripts.Players.Anonymous.On:				Vous êtes maintenant anonyme.
 
 # /Assist
 Scripts.Players.Assist.CantAssistYourself:	Vous ne pouvez pas vous assister vous-même.
-Scripts.Players.Assist.DoesntHaveTarget:	 n'a pas de cible actuellement.
+Scripts.Players.Assist.DoesntHaveTarget:	{0} n'a pas de cible actuellement.
 Scripts.Players.Assist.DontSee:				Vous ne voyez pas {0} aux alentours!
 Scripts.Players.Assist.NoTarget:			Vous n'avez pas de cible.
 Scripts.Players.Assist.NotValid:			La cible n'est pas valide.

@@ -1,31 +1,31 @@
-GamePlayer.CastSpell.MustWaitBeforeCast:	Vous devez attendre {0} secondes pour lancer un sort!
+﻿GamePlayer.CastSpell.MustWaitBeforeCast:	Vous devez attendre {0} secondes pour lancer un sort!
 
 # DelveInfo
+
 DelveInfo.CastingTime:					Temps d'Incantation: {0}
-DelveInfo.ConcentrationCost:				Co�ts en Concentration: {0}
-DelveInfo.Damage:					Dommage: {0}
-DelveInfo.Duration:					Dur�e: 
-DelveInfo.Focus:					C'est un sort de type Focus. S'annule a la premi�re action.
+DelveInfo.ConcentrationCost:				Coûts en Concentration: {0}
+DelveInfo.Damage:					Dommages: {0}
+DelveInfo.Duration:					Durée: 
+DelveInfo.Focus:					Sort de type Focus. S'annule a la première action.
 DelveInfo.Frequency:					Frequence: {0}
-DelveInfo.HealthReturned:				Vie retourn�e: {0}% des dommages
+DelveInfo.HealthReturned:				Vie retourné: {0}% des dommages
 DelveInfo.InstrumentRequire:				Instrument requis: {0}
-DelveInfo.PowerCost:					Co�t en mana: {0}
-DelveInfo.HealthCost:				Co�t en vie: {0}
-DelveInfo.Radius:					Radius: {0}
-DelveInfo.Range:					Port�e: {0}
-DelveInfo.RecastTime:					D�lai de r�utilisation: 
+DelveInfo.PowerCost:					Coût en mana: {0}
+DelveInfo.HealthCost:				Coût en vie: {0}
+DelveInfo.Radius:					Rayon d'Effet: {0}
+DelveInfo.Range:					Portée: {0}
+DelveInfo.RecastTime:					Délai de réutilisation: 
 DelveInfo.Target:					Cible: {0}
 DelveInfo.Value:					Valeur: {0}
-
-
+DelveInfo.ValueNegative:					Valeur: -{0}
 
 # DamageSpeedDecrease
 DamageSpeedDecrease.DelveInfo.Decrease:			Ralentissement de vitesse: {0}%
 DamageSpeedDecrease.DelveInfo.Function:			Fonction: Ralentissement de Vitesse + Dommage
 
 # ResistDebuff
-ResistDebuff.DelveInfo.Decrease:			Abaisse la r�sistance {0}: {1}
-ResistDebuff.DelveInfo.Function:			Fonction: Diminution de r�sistance
+ResistDebuff.DelveInfo.Decrease:			Abaisse la résistance {0}: {1}
+ResistDebuff.DelveInfo.Function:			Fonction: Diminution de résistance
 
 #CharmSpellHandler
 CharmSpellHandler.DelveInfo.Function:			Fonction: {0}
@@ -40,16 +40,31 @@ DamageAddAndShield.EventHandlerDS.YouHitFor:		Vous touchez {0} pour {1} points d
 DamageAddAndShield.EventHandlerDS.YourHitFor:		Votre {0} touche {1} pour {2} points de dommage additionels!
 
 # DirectDamageDebuffSpellHandler
-DirectDamageDebuffSpellHandler.DelveInfo.Decrease:	Diminution de r�sistance ({0}): {1}%
-DirectDamageDebuffSpellHandler.DelveInfo.Function:	Fonction: dommages/Diminution de r�sistance
+DirectDamageDebuffSpellHandler.DelveInfo.Decrease:	Diminution de résistance ({0}): {1}%
+DirectDamageDebuffSpellHandler.DelveInfo.Function:	Fonction: dommages/Diminution de résistance
 
 # DoTSpellHandler
 DoTSpellHandler.SendDamageMessages.YouHitFor:		Vous touchez {0} pour {1} points de dommages!
-DoTSpellHandler.SendDamageMessages.YourCriticallyHits:	Votre {0} touche critiquement {1} pour {2} points de d�gats suppl�mentaires!
+DoTSpellHandler.SendDamageMessages.YourCriticallyHits:	Votre {0} touche critiquement {1} pour {2} points de dégats supplémentaires!
 DoTSpellHandler.SendDamageMessages.YourHitsFor:		Votre {0} touche {1} pour {2} points de dommages!
 
 # NearsightSpellHandler
-NearsightSpellHandler.DelveInfo.Function:		Fonction: {0}
+NearsightSpellHandler.DelveInfo.Function:		Fonction: Réduction de Portée {0}
 
 # ProcSpellHandler
 ProcSpellHandler.DelveInfo.Function:			Fonction: {0}
+
+# SummonCommanderPet
+SummonCommanderPet.CheckBeginCast.Text:			Vous avez déjà un commmandant sous votre contrôle!
+SummonCommanderPet.DelveInfo.Text1:			Fonction: Invocation
+SummonCommanderPet.DelveInfo.Text2:			Invoque un familier Commandant.
+SummonCommanderPet.DelveInfo.Text3:			Cible: {0}
+SummonCommanderPet.DelveInfo.Text4:			Coût en mana: {0}%
+SummonCommanderPet.DelveInfo.Text5:			Temps d'Incantation: {0}
+
+#SummonMinionHandler
+SummonMinionHandler.CheckBeginCast.Text1:		Vous devez déjà posséder un commmandant sous votre contrôle pour invoquer un suivant!
+SummonMinionHandler.CheckBeginCast.Text2:		Votre Commandant dispose déjà du maximum de nombre de suivant qu'il peut contrôler!
+SummonMinionHandler.DelveInfo.Text1:			Cible: {0}
+SummonMinionHandler.DelveInfo.Text2:			Coût en mana: {0}%
+SummonMinionHandler.DelveInfo.Text3:			Temps d'Incantation: {0}

@@ -1,4 +1,4 @@
-﻿Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text1:	Bon, allez maintenant allez là-bas et finissez votre travail!
+﻿Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text1:	Bien ! Maintenant, vous pouvez partir finir votre travail !
 Alb.ToReachTheBreach.CheckPlayerAbortQuest.Text2:	Echec de la Quête {0}. Vous pouvez recommencer de nouveau si vous voulez.
 Alb.ToReachTheBreach.Conclusion.Text1:			Vous avez trouvé le chemin dans la  Demon's Breach, eh?  La marque c'est bien l'endroit, {0}, car votre assistance peut être nécessaire làbas un jour.  Nous ne pouvons pas nous permettre de permettre à des hordes de démons, Hiberniens or Midgardiens se rependre sur nos terrains.
 Alb.ToReachTheBreach.Init.Text1:			Recruit's Intelligent Belt

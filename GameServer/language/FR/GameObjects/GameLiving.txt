@@ -2,5 +2,12 @@
 # GAMELIVING
 GameLiving.ReceiveItem:							{0} ne veut pas de cet item !
 GameLiving.ReceiveMoney:						{0} ne veut pas de votre argent !
-
-
+GameLiving.Pronoun.Neutral.Objective:		il
+GameLiving.Pronoun.Neutral.Possessive:		son	
+GameLiving.Pronoun.Neutral.Subjective:		il
+GameLiving.Pronoun.Male.Objective:			son
+GameLiving.Pronoun.Male.Possessive:			son
+GameLiving.Pronoun.Male.Subjective:			il
+GameLiving.Pronoun.Female.Objective:		sa
+GameLiving.Pronoun.Female.Possessive:		sa
+GameLiving.Pronoun.Female.Subjective:		elle
