@@ -2,18 +2,18 @@
 # GAMEOBJECT
 GameObject.GetExamineMessages.YouTarget:		Vous ciblez [{0}].
 GameObject.GetName.Article1:				Le {0}
-GameObject.GetName.Article2:				Le {0}
+GameObject.GetName.Article2:				le {0}
 GameObject.GetName.Article3:				Un {0}
 GameObject.GetName.Article4:				Un {0}
-GameObject.GetName.Article5:				A {0}
-GameObject.GetName.Article6:				A {0}
+GameObject.GetName.Article5:				un {0}
+GameObject.GetName.Article6:				un {0}
 GameObject.GetPronoun.Pronoun1:				Cela
 GameObject.GetPronoun.Pronoun2:				cela
 GameObject.GetPronoun.Pronoun3:				Son
 GameObject.GetPronoun.Pronoun4:				son
 GameObject.GetPronoun.Pronoun5:				Cela
 GameObject.GetPronoun.Pronoun6:				cela
-GameObject.Interact.TooFarAway:					Vous êtes trop loin pour interagir avec {0}.
+GameObject.Interact.TooFarAway:				Vous êtes trop loin pour interagir avec {0}.
 
 
 # GAMEOBJECTS/ATLANTIS
@@ -22,4 +22,4 @@ Researcher.GetExamineMessages.YouExamine:		Vous regardez {0}. {1} est {2}.
 Researcher.GetExamineMessages.She:				elle
 Researcher.GetExamineMessages.He:				il
 
-
+GameObject.Casting.CastsASpell:				{0} lance un sort!
