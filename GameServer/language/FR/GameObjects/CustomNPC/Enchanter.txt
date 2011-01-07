@@ -1,0 +1,16 @@
+﻿Enchanter.EnchanterDialogResponse.Text1:	Objet Invalide.
+Enchanter.EnchanterDialogResponse.Text2:	J'ai besoin de {0} pour enchanter cela.
+Enchanter.EnchanterDialogResponse.Text3:	bright
+Enchanter.EnchanterDialogResponse.Text4:	Vous donnez {0} {1}.
+Enchanter.EnchanterDialogResponse.Text5:	Voilà, voici votre {0}!
+Enchanter.GetExamineMessages.Text1:		Vous ciblez {0}.
+Enchanter.GetExamineMessages.Text2:		Vous examinez {0}. {1} est {2} et est un Enchanteur.
+Enchanter.Interact.Text1:			quartz
+Enchanter.Interact.Text2:			acier
+Enchanter.Interact.Text3:			Je peus enchanté armes et armures afin de rendre leurs matériaux de meilleur qualitée. Donnez moi juste l'objet a enchanté, cela ne vous coûtera presque rien.
+Enchanter.ReceiveItem.Text1:			Cela vous coûtera {0} \x000 a pour enchanté cette objet. Accepter vous?
+Enchanter.ReceiveItem.Text2:			Cette objet est déjà enchanté!
+Enchanter.ReceiveItem.Text3:			Cette objet ne peut pas être enchanté!
+Enchanter.ReceiveItem.Text4:			Je ne peus pas enchanté cette objet.
+
+

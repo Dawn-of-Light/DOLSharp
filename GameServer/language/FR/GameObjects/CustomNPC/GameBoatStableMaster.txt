@@ -1,0 +1,6 @@
+﻿GameBoatStableMaster.ReceiveItem.Departed:		Veuillez attendre que le Bâteau à quai soit parti avant.
+GameBoatStableMaster.ReceiveItem.SummonedBoat:		{0} dit, "Un Bateau va arrivé pour vous aidés a voyager vers {1}. Vous avez 30 secondes pour embarquer a bord avant qu'il ne s'en aille."
+#----> Attention! this must ends with blank character:	"ticket vers "
+GameBoatStableMaster.ReceiveItem.TicketTo:		ticket vers 
+GameBoatStableMaster.ReceiveItem.UnknownWay:		Je ne connais pas encore la route vers {0}.
+

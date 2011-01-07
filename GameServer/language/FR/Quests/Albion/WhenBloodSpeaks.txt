@@ -1,4 +1,4 @@
-﻿Alb.WhenBloodSpeaks.CheckPlayerAbortQuest.Text1:	Bon, allez maintenant allez là-bas et finissez votre travail!
+﻿Alb.WhenBloodSpeaks.CheckPlayerAbortQuest.Text1:	Bien ! Maintenant, vous pouvez partir finir votre travail !
 Alb.WhenBloodSpeaks.CheckPlayerAbortQuest.Text2:	Echec de la Quête {0}. Vous pouvez recommencer de nouveau si vous voulez.
 Alb.WhenBloodSpeaks.Conclusion.Text1:			Ah, vous avez le  spriggarn blood, excellent! Avec optimisme c'est seulement une question de temps maintenant avant que je suis capable d'assembler les morceaux de tout cela. Merci pour votre aide, {0}!
 Alb.WhenBloodSpeaks.Init.Text1:				Recruit's Quilted Pants
@@ -9,5 +9,5 @@ Alb.WhenBloodSpeaks.Init.Text5:				Tuez 2 spriggarns
 Alb.WhenBloodSpeaks.Notify.Text1:			spriggarn
 Alb.WhenBloodSpeaks.ScriptLoaded.Text1:			Maître Kless
 Alb.WhenBloodSpeaks.Story:				Ma recherche sur les causes du changement dans la conduite de certaines des créatures de fae dans notre région va assez bien. Enfin, je ne suis parvenu à aucuns résultats concluants. Leurs pitreries malveillants ont augmenté . Je crains que si une cause ou une solution n'est pas trouvés bientôt, l'Église commencera à prendre l'affaire en mains et ce ne sera de bon augure pour aucune créature des Vieilles Voies..\n\n J'essaierais la consultation avec les membres de la foi druidic en Plaines Salisbury ,mais ils ne sont pas très social et beaucoup d'entre eux ne nous aiment pas .J'ai eu une série de rencontres malheureuses avec eux, moi-même, dans le passé.\n\nAinsi je suppose que je continuerai à m'y acharner dans l'espoirs de faire une  découverte . Si je pourrais aller chez les druides avec des preuves concrètes, ils devront écouter que je dois dire. À cette fin je pourrais utiliser vos compétances, vous être disposés à m'aider?
-Alb.WhenBloodSpeaks.Summary:				Le maître Kless a besoin spriggarn blood pour faire une potion qui aidera à déterminer s'ils sont sous une influence malveillante.  Tuez deux d'entre eux et revenez le voir avec leur sang.
+Alb.WhenBloodSpeaks.Summary:				Maître Kless a besoin de sang de spriggarn pour faire une potion qui aidera à déterminer s'ils sont sous une influence malveillante.  Tuez deux d'entre eux et revenez le voir avec leur sang.
 

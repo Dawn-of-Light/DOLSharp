@@ -1,0 +1,7 @@
+﻿Money.GetString.Text1:	0 piéces de cuivre
+Money.GetString.Text2:	mithril,
+Money.GetString.Text3:	platine,
+Money.GetString.Text4:	or,
+Money.GetString.Text5:	argent,
+Money.GetString.Text6:	cuivre,
+Money.GetString.Text7:	pieces,
