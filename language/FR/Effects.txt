@@ -79,7 +79,7 @@ Effects.ProtectEffect.YouNoProtectY:         Vous ne protégez plus {0}.
 Effects.ProtectEffect.XNoProtectYou:         {0} ne vous protège plus.
 Effects.ProtectEffect.ProtectByName:         {0} est protégé par {1}
 Effects.ProtectEffect.Name:                  Protection
-Effects.ProtectEffect.InfoEffect:            Si cette capacité réussit vous récupérez une partie de l'agressivité du monstre attaqué par votre cible.
+Effects.ProtectEffect.InfoEffect:            Si cette capacité réussit vous récupérez une partie de l'agressivité du créature attaqué par votre cible.
 Effects.ProtectEffect.XProtectingY:            {0} is protecting {1}
 
 Effects.QuickCastEffect.YouActivatedQC:         Vous avez activé votre Incantation Rapide.
@@ -104,7 +104,7 @@ Effects.StealthEffect.Name:                  Furtivité
 Effects.SureShotEffect.YouSwitchToSSMode:      Vous passez en mode Tir Assuré!
 Effects.SureShotEffect.Name:               Tir Assuré
 
-Effects.TripleWieldEffect.MBHitsExtraDamage:   Votre lame magique touche {0} pour {1} dommages supplémentaires!
-Effects.TripleWieldEffect.XMBExtraDamageToYou:  La lame magique de {0} vous touche pour {1} dommages!
+Effects.TripleWieldEffect.MBHitsExtraDamage:   Votre lame magique touche {0} pour {1} points de dommages supplémentaires!
+Effects.TripleWieldEffect.XMBExtraDamageToYou:  La lame magique de {0} vous touche pour {1} points de dommages!
 Effects.TripleWieldEffect.Name:               Lame Spectrale
 Effects.TripleWieldEffect.InfoEffect:         Lame spectrale ajoutes des dégats additionnels à vos attaques.

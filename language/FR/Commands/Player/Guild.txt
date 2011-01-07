@@ -32,7 +32,7 @@ Scripts.Player.Guild.BannerNone:			Votre guilde ne possède pas de bannière de 
 Scripts.Player.Guild.BannerNotAfford:			Vous avez besoin de 50,000 points de mérite pour acheter une bannière de guilde!
 Scripts.Player.Guild.BannerSummoned:			Vous avez invoqué votre bannière de guilde.	
 Scripts.Player.Guild.BannerUnsummoned:			Vous avez retiré votre bannière de guilde.	
-Scripts.Player.Guild.BannerNotRvR:			You need to be in an RvR zone to summon a guild banner!
+Scripts.Player.Guild.BannerNotRvR:			Vous devez vous trouvés dans une zone RvR pour invoqué une bannière!
 Scripts.Player.Guild.BuffActivated:			[Guild Buff] {0} a utilisé  1000 Points de Mérite de Guilde et a activé une Amélioration de Guilde!	
 Scripts.Player.Guild.BuffBountyPoints:			Votre guilde gagnera maintenant 5 % aux primes de royaume de plus pendant 24 heures !	
 Scripts.Player.Guild.BuffBPActivated:			[Guild Buff] Votre guilde recevra un bonus aux primes de royaume pendant 24 heures !	
@@ -82,7 +82,7 @@ Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' Réclame une tour ou un fort
 Scripts.Player.Guild.Help.GuildDecline:			'/gc decline' Décline une invitation à rejoindre la guilde.
 Scripts.Player.Guild.Help.GuildDemote:			'/gc demote <rank#> [name]' Rétrograde le joueur indiqué au rang désiré.
 Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <amount>' Dépose une somme dans la caisse de guilde.	
-Scripts.Player.Guild.Help.GuildDues:			'/gc dues <amount>' Active ou désactive le système de taxation de la guilde (2% de l'argent gagné sur des monstres).
+Scripts.Player.Guild.Help.GuildDues:			'/gc dues <amount>' Active ou désactive le système de taxation de la guilde (2% de l'argent gagné sur des créatures).
 Scripts.Player.Guild.Help.GuildEdit:			'/gc edit' Listes les parties modifiables de la structure de guilde.
 Scripts.Player.Guild.Help.GuildEditACHear:		'/gc edit <ranknum> achear <y/n>' Permet à un rang de pouvoir lire le canal d'alliance.
 Scripts.Player.Guild.Help.GuildEditACSpeak:		'/gc edit <ranknum> acspeak <y/n>' Permet à un rang de pouvoir parler sur le canal alliance.
@@ -208,3 +208,4 @@ Scripts.Players.Guild.AllianceMembers:			Membres de l'Alliance:
 Scripts.Players.Guild.AllianceMember:			{0} - {1}
 Scripts.Players.Guild.AllianceNoLeader:			Pas de chef d'Alliance
 
+Scripts.Player.Guild.InviteNotThis:			Vous ne pouvez pas inviter un membre de ce royaume dans votre guilde.

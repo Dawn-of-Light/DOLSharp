@@ -1,2 +1,2 @@
-# GAMEDOOR
+﻿# GAMEDOOR
 GameDoor.NowOpen:					La {0} porte est maintenant ouverte!

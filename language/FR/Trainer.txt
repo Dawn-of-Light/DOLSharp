@@ -4,7 +4,7 @@
 GameTrainer.AddGift.NotEnoughSpace:			Plus de place dans votre inventaire pour recevoir votre cadeau. Faites de la place !
 
 GameTrainer.GetExamineMessages.RightClick:	[Cliquez-droit pour afficher une fenêtre d'entrainement]
-GameTrainer.GetExamineMessages.YouExamine:	Vous observez {0}. {1} est {2} et entraîne les membres de la classe {3}.
+GameTrainer.GetExamineMessages.YouExamine:	Vous observez {0}. {1} est {2} et instruit les membres de la classe {3}.
 GameTrainer.GetExamineMessages.YouTarget:	Vous ciblez [{0}].
 
 GameTrainer.Interact.CaseRespecialize:			respecialiser
@@ -20,7 +20,7 @@ GameTrainer.ReceiveItem.RespecRealm:		Merci, j'ai recu une possibilité de re-sp
 GameTrainer.ReceiveItem.RespecSingle:		Merci, j'ai recu une possibilité de re-spécialisation simple. Pour l'utiliser : /respec <linename>
 
 GameTrainer.Train.WouldYouLikeTo:			Voulez-vous vous entrainer ?
-GameTrainer.Train.SeekElsewhere:			{0} dit, "Vous devez allez ailleurs pour votre entraînement."
+GameTrainer.Train.SeekElsewhere:			"Vous devez allez ailleurs pour votre entraînement."
 
 
 # /EnchanterTrainer
@@ -40,5 +40,5 @@ HeroTrainer.WhisperReceive.Text1:			Let me welcome you then, {0}. Go, honor us w
 AnimistTrainer.Interact.Text1:				{0} dit, "c'est [Path of Affinity] la voix que vous souhaitez suivre?"
 AnimistTrainer.Interact.Text2:			
 AnimistTrainer.WhisperReceiveCase.Text1:		Path of Affinity
-AnimistTrainer.WhisperReceive.Text1:			Vous etes maintenant un Animiste, {0}. bienvenue dans la voix de Affinity.
+AnimistTrainer.WhisperReceive.Text1:			Vous êtes maintenant un Animiste, {0}. bienvenue dans la voix de Affinity.
 
