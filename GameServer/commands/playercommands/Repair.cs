@@ -75,7 +75,15 @@ namespace DOL.GS.Commands
 				DisplayMessage(player, "You can't repair object while it is under attack!");
 				return false;
 			}
-
+            if (obj is GameKeepDoor)
+            {
+                GameKeepDoor doorcomponent = obj as GameKeepDoor;
+                if (doorcomponent.Component.Keep.InCombat)
+                {
+                    DisplayMessage(player, "You can't repair the keep door while keep is under attack!");
+                    return false;
+                }
+            }
 			if (obj is IKeepItem)
 			{
 				if (obj.CurrentRegion.Time - obj.LastAttackedByEnemyTick <= 60 * 1000)
