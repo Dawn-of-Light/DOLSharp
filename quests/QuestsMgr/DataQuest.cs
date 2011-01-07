@@ -1860,41 +1860,40 @@ namespace DOL.GS.Quests
 					item.Id_nb.ToLower().Contains(m_collectItems[Step - 1].ToLower()) &&
 					ExecuteCustomQuestStep(player, Step, eStepCheckType.GiveItem))
 				{
-					RemoveItem(obj, player, item, true);
-
-					// if we turn over the item then advance the step
-
-					if (item.OwnerID == null)
+					switch (StepType)
 					{
-						switch (StepType)
-						{
-							case eStepType.Deliver:
-							case eStepType.Collect:
+						case eStepType.Deliver:
+						case eStepType.Collect:
+							{
+								if (string.IsNullOrEmpty(TargetText) == false)
 								{
-									if (string.IsNullOrEmpty(TargetText) == false)
+									if (obj.Realm == eRealm.None)
 									{
-										if (obj.Realm == eRealm.None)
-										{
-											// mobs and other non realm objects send chat text and not popup text.
-											SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-										}
-										else
-										{
-											SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-										}
+										// mobs and other non realm objects send chat text and not popup text.
+										SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 									}
-
-									AdvanceQuestStep(obj);
+									else
+									{
+										SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+									}
 								}
-								break;
 
-							case eStepType.DeliverFinish:
-							case eStepType.CollectFinish:
+								if (AdvanceQuestStep(obj))
 								{
-									FinishQuest(obj, true);
+									RemoveItem(obj, player, item, true);
 								}
-								break;
-						}
+							}
+							break;
+
+						case eStepType.DeliverFinish:
+						case eStepType.CollectFinish:
+							{
+								if (FinishQuest(obj, true))
+								{
+									RemoveItem(obj, player, item, true);
+								}
+							}
+							break;
 					}
 				}
 			}
@@ -2139,15 +2138,15 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Finish the quest and update the player quest list
 		/// </summary>
-		public virtual void FinishQuest(GameObject obj, bool checkCustomStep)
+		public virtual bool FinishQuest(GameObject obj, bool checkCustomStep)
 		{
 			if (m_questPlayer == null || m_charQuest == null || m_charQuest.IsValid == false)
-				return;
+				return false;
 
 			int lastStep = Step;
 
 			if (checkCustomStep && ExecuteCustomQuestStep(QuestPlayer, Step, eStepCheckType.Finish) == false)
-				return;
+				return false;
 
 			// try rewards first
 
@@ -2186,7 +2185,7 @@ namespace DOL.GS.Quests
 				else
 				{
 					SendMessage(m_questPlayer, "Your inventory does not have enough space to finish this quest!", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					return;
+					return false;
 				}
 			}
 
@@ -2255,6 +2254,8 @@ namespace DOL.GS.Quests
 			{
 				UpdateQuestIndicator(npc, m_questPlayer);
 			}
+
+			return true;
 		}
 
 
