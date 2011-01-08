@@ -1178,11 +1178,11 @@ namespace DOL.GS
 			                                                                      "SkillBase.RegisterPropertyNames.MeleeDamage"));
 			m_propertyNames.Add(eProperty.RangedDamage, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 			                                                                       "SkillBase.RegisterPropertyNames.RangedDamage"));
-			m_propertyNames.Add(eProperty.MesmerizeDuration, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+			m_propertyNames.Add(eProperty.MesmerizeDurationReduction, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 			                                                                            "SkillBase.RegisterPropertyNames.MesmerizeDuration"));
-			m_propertyNames.Add(eProperty.StunDuration, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+			m_propertyNames.Add(eProperty.StunDurationReduction, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 			                                                                       "SkillBase.RegisterPropertyNames.StunDuration"));
-			m_propertyNames.Add(eProperty.SpeedDecreaseDuration, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
+			m_propertyNames.Add(eProperty.SpeedDecreaseDurationReduction, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 			                                                                                "SkillBase.RegisterPropertyNames.SpeedDecreaseDuration"));
 			m_propertyNames.Add(eProperty.BladeturnReinforcement, LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE,
 			                                                                                 "SkillBase.RegisterPropertyNames.BladeturnReinforcement"));

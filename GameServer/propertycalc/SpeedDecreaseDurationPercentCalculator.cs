@@ -30,7 +30,7 @@ namespace DOL.GS.PropertyCalc
 	/// BuffBonusCategory4 unused
 	/// BuffBonusMultCategory1 unused
 	/// </summary>
-	[PropertyCalculator(eProperty.SpeedDecreaseDuration)]
+	[PropertyCalculator(eProperty.SpeedDecreaseDurationReduction)]
 	public class SpeedDecreaseDurationPercentCalculator : PropertyCalculator
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 

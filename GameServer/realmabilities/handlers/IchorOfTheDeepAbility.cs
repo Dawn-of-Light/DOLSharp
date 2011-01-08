@@ -70,7 +70,7 @@ namespace DOL.GS.RealmAbilities
 
 			int primaryResistModifier = m_target.GetResist(eDamageType.Spirit);
 			int secondaryResistModifier = m_target.SpecBuffBonusCategory[(int)eProperty.Resist_Spirit];
-			int rootdet = ((m_target.GetModified(eProperty.SpeedDecreaseDuration) - 100) * -1);
+			int rootdet = ((m_target.GetModified(eProperty.SpeedDecreaseDurationReduction) - 100) * -1);
 
 			int ResistModifier = 0;
 			ResistModifier += (int)((dmgValue * (double)primaryResistModifier) * -0.01);
