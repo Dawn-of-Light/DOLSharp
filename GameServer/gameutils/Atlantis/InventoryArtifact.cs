@@ -715,7 +715,7 @@ namespace DOL.GS
 			if ((bonusType >= (int)eProperty.CriticalMeleeHitChance) &&
 			    (bonusType <= (int)eProperty.CriticalHealHitChance))
 				return true;
-			if ((bonusType >= (int)eProperty.EvadeChance) && (bonusType <= (int)eProperty.SpeedDecreaseDuration))
+			if ((bonusType >= (int)eProperty.EvadeChance) && (bonusType <= (int)eProperty.SpeedDecreaseDurationReduction))
 				return true;
 			if ((bonusType >= (int)eProperty.BountyPoints) && (bonusType <= (int)eProperty.ArcaneSyphon))
 				return true;
