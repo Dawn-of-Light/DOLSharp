@@ -741,7 +741,7 @@
     <Compile Include="gameobjects\Dragons\Gjalpinulva.cs" />
     <Compile Include="gameobjects\Dragons\Golestandt.cs" />
     <Compile Include="gameobjects\GameBoat.cs" />
-    <Compile Include="gameobjects\GameHorseBoat.cs" />
+    <Compile Include="gameobjects\GameTaxiBoat.cs" />
     <Compile Include="gameobjects\CustomNPC\CraftNPC.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -760,7 +760,7 @@
     <Compile Include="gameobjects\GameGuard.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameobjects\GameHorse.cs">
+    <Compile Include="gameobjects\GameTaxi.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameobjects\GameHouseVault.cs" />

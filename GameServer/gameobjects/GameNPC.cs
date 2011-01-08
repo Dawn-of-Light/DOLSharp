@@ -3261,7 +3261,7 @@ namespace DOL.GS
 			if (MAX_PASSENGERS > 1)
 			{
 				string name = "";
-				if (this is GameHorseBoat)
+				if (this is GameTaxiBoat)
 					name = "boat";
 				if (this is GameSiegeRam)
 					name = "ram";
