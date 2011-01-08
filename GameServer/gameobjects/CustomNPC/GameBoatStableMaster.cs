@@ -52,7 +52,7 @@ namespace DOL.GS
 				{
 					foreach (GameNPC npc in GetNPCsInRadius(1500))
 					{
-						if (npc is GameHorseBoat)
+						if (npc is GameTaxiBoat)
 						{
                             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameBoatStableMaster.ReceiveItem.Departed", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
                             return false;
@@ -66,7 +66,7 @@ namespace DOL.GS
 					{
 						player.Inventory.RemoveCountFromStack(item, 1);
 
-						GameHorseBoat boat = new GameHorseBoat();
+						GameTaxiBoat boat = new GameTaxiBoat();
 						boat.Name = "Boat to " + destination;
 						boat.Realm = source.Realm;
 						boat.X = path.X;
