@@ -194,9 +194,12 @@ namespace DOL
 			private int m_mlLevel;
 			private bool m_mlGranted;
 
-            // Should this player stats be ignored when tabulating statistics?
-            private bool m_ignoreStatistics = false;
-
+			// Should this player stats be ignored when tabulating statistics?
+			private bool m_ignoreStatistics = false;
+			
+			// What should the Herald display of this character?
+			private byte m_notDisplayedInHerald = 0;
+			
 			/// <summary>
 			/// Create the character row in table
 			/// </summary>
@@ -231,7 +234,7 @@ namespace DOL
 				m_noHelp = false;
 				m_showGuildLogins = false;
 				m_roleplay = false;
-                m_ignoreStatistics = false;
+				m_ignoreStatistics = false;
 			}
 
 			/// <summary>
@@ -2291,19 +2294,31 @@ namespace DOL
 				}
 			}
 
-            /// <summary>
-            /// Do we ignore all statistics for this player?
-            /// </summary>
-            [DataElement(AllowDbNull = true)]
-            public bool IgnoreStatistics
-            {
-                get { return m_ignoreStatistics; }
-                set 
-                { 
-                    Dirty = true; 
-                    m_ignoreStatistics = value;
-                }
-            }
+			/// <summary>
+			/// Do we ignore all statistics for this player?
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public bool IgnoreStatistics
+			{
+				get { return m_ignoreStatistics; }
+				set
+				{
+					Dirty = true;
+					m_ignoreStatistics = value;
+				}
+			}
+			
+			/// <summary>
+			/// what should we not display in Herald ?
+			/// </summary>
+			[DataElement(AllowDbNull = true)]
+			public byte NotDisplayedInHerald {
+				get { return m_notDisplayedInHerald; }
+				set {
+					Dirty = true;
+					m_notDisplayedInHerald = value;
+				}
+			}
 		}
 	}
 }

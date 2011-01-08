@@ -1750,6 +1750,16 @@ namespace DOL.GS
 					default: return 0;
 			}
 		}
+		
+		// webdisplay enums: they are processed via /webdisplay command
+		public enum eWebDisplay: byte
+		{
+			all 		= 0x00,
+			position 	= 0x01,
+			template	= 0x02,
+			equipment	= 0x04,
+			craft		= 0x08,			
+		}
 	}
 
 	public class GlobalSpells
