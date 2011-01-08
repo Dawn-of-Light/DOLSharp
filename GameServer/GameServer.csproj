@@ -239,6 +239,7 @@
     <Compile Include="commands\PlayerCommands\cancelstyle.cs" />
     <Compile Include="commands\PlayerCommands\chatgroup.cs" />
     <Compile Include="commands\PlayerCommands\checkappeal.cs" />
+    <Compile Include="commands\playercommands\webdisplay.cs" />
     <Compile Include="commands\PlayerCommands\cloak.cs" />
     <Compile Include="commands\PlayerCommands\cmdhelp.cs" />
     <Compile Include="commands\PlayerCommands\appeal.cs" />
