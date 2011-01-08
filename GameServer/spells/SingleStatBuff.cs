@@ -290,7 +290,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("MesmerizeDurationBuff")]
 	public class MesmerizeDurationBuff : SingleStatBuff
 	{
-		public override eProperty Property1 { get { return eProperty.MesmerizeDuration; } }
+		public override eProperty Property1 { get { return eProperty.MesmerizeDurationReduction; } }
 
 		/// <summary>
 		/// send updates about the changes
