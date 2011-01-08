@@ -95,7 +95,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				if (player.Steed != null && player.Steed.MAX_PASSENGERS >= 1)
 				{
-					if (player.Steed is GameHorseBoat) return;
+					if (player.Steed is GameTaxiBoat) return;
 					if (player.Steed is GameBoat)
 						// Ichi - && player.GroundTarget.Z > player.CurrentZone.ZoneRegion.WaterLevel) return;
 					{

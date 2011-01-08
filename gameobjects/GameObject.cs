@@ -996,6 +996,14 @@ namespace DOL.GS
 
 		#region Interact
 
+        /// <summary>
+        /// The distance this object can be interacted with
+        /// </summary>
+        public virtual int InteractDistance
+        {
+            get { return WorldMgr.INTERACT_DISTANCE; }
+        }
+
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler
 		/// </summary>
@@ -1003,7 +1011,7 @@ namespace DOL.GS
 		/// <returns>false if interaction is prevented</returns>
 		public virtual bool Interact(GamePlayer player)
 		{
-			if (player.Client.Account.PrivLevel == 1 && !this.IsWithinRadius(player, WorldMgr.INTERACT_DISTANCE))
+			if (player.Client.Account.PrivLevel == 1 && !this.IsWithinRadius(player, InteractDistance))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.Interact.TooFarAway", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));

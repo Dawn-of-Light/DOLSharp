@@ -64,16 +64,16 @@ namespace DOL.GS
 					{
 						player.Inventory.RemoveCountFromStack(item, 1);
 
-						GameHorse mount;
+						GameTaxi mount;
 						
 						// item.Color of ticket is used for npctemplate. defaults to standard horse if item.color is 0
 						if (item.Color > 0)
 						{
-							mount = new GameHorse(NpcTemplateMgr.GetTemplate(item.Color));
+							mount = new GameTaxi(NpcTemplateMgr.GetTemplate(item.Color));
 						}
 						else
 						{
-                            mount = new GameHorse();
+                            mount = new GameTaxi();
 
                             foreach (GameNPC npc in GetNPCsInRadius(400))
                             { 
