@@ -17,48 +17,33 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-
 using DOL.AI.Brain;
-using DOL.GS.PacketHandler;
-
-using log4net;
 
 namespace DOL.GS
 {
-	/*
-	 * These boats are very fast, and can carry up to sixteen passengers.
-	 * You have thirty seconds to board the boat before it sets sail.
-	 * You can board the boat by double clicking on it,
-	 * typing /vboard or using your `Get key' with the boat targeted. 
-	 * You will automatically leave the boat when it reaches its destination,
-	 * but if you wish to leave before then, just type `/disembark'.
-	 * or press the jump key
-	 */
-	public class GameHorseBoat : GameMovingObject
+	/// <summary>
+	/// 
+	/// </summary>
+	public class GameTaxi : GameNPC
 	{
-		public GameHorseBoat()
-			: base()
-		{
-			Model = 2650;
-			Level = 0;
-			Flags = eFlags.PEACE;
-			Name = "boat";
-			MaxSpeedBase = 1000;
+		public GameTaxi() : base()
+		{			
+			Model = 450;
+			MaxSpeedBase = 600;
+			Size = 63;
+			Level = 55;
+			Name = "horse";
 			BlankBrain brain = new BlankBrain();
 			SetOwnBrain(brain);
 		}
-
-		public override int MAX_PASSENGERS
+		
+		public GameTaxi(INpcTemplate templateid) : base(templateid)
 		{
-			get
-			{
-				return 16;
-			}
+			BlankBrain brain = new BlankBrain();
+			SetOwnBrain(brain);
 		}
-
-		public override int SLOT_OFFSET
+		
+		public override int MAX_PASSENGERS
 		{
 			get
 			{
@@ -66,11 +51,11 @@ namespace DOL.GS
 			}
 		}
 
-		public override short MaxSpeed
+		public override int SLOT_OFFSET
 		{
 			get
 			{
-				return 1000;
+				return 0;
 			}
 		}
 	}
