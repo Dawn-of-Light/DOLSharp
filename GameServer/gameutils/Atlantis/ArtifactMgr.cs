@@ -342,11 +342,14 @@ namespace DOL.GS
 
 			// Only currently equipped artifacts can gain experience.
 
-			foreach (InventoryItem item in player.Inventory.EquippedItems)
+			lock (player.Inventory)
 			{
-				if (item != null && item is InventoryArtifact)
+				foreach (InventoryItem item in player.Inventory.EquippedItems)
 				{
-					ArtifactGainedExperience(player, item as InventoryArtifact, xpAmount);
+					if (item != null && item is InventoryArtifact)
+					{
+						ArtifactGainedExperience(player, item as InventoryArtifact, xpAmount);
+					}
 				}
 			}
 		}
