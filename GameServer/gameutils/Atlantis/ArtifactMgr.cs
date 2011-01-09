@@ -91,8 +91,7 @@ namespace DOL.GS
 
 			// Install event handlers.
 
-			GameEventMgr.AddHandler(GamePlayerEvent.GainedExperience,
-			                        new DOLEventHandler(PlayerGainedExperience));
+			GameEventMgr.AddHandler(GamePlayerEvent.GainedExperience, new DOLEventHandler(PlayerGainedExperience));
 
 			log.Info(String.Format("{0} artifacts loaded", m_artifacts.Count));
 			return m_artifacts.Count;
@@ -343,11 +342,13 @@ namespace DOL.GS
 
 			// Only currently equipped artifacts can gain experience.
 
-			var equippedItems = player.Inventory.GetItemRange(eInventorySlot.MinEquipable, eInventorySlot.MaxEquipable);
-
-			foreach (InventoryItem item in equippedItems)
+			foreach (InventoryItem item in player.Inventory.EquippedItems)
+			{
 				if (item != null && item is InventoryArtifact)
+				{
 					ArtifactGainedExperience(player, item as InventoryArtifact, xpAmount);
+				}
+			}
 		}
 
 		/// <summary>
