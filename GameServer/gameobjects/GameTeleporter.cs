@@ -156,6 +156,30 @@ namespace DOL.GS
 				}
 			}
 
+			if (text.ToLower() == "guild")
+			{
+				House house = HouseMgr.GetGuildHouseByPlayer(player);
+
+				if (house == null)
+				{
+					return false;  // no teleport when guild house not found
+				}
+				else
+				{
+					IGameLocation location = house.OutdoorJumpPoint;
+					Teleport teleport = new Teleport();
+					teleport.TeleportID = "guild house";
+					teleport.Realm = (int)DestinationRealm;
+					teleport.RegionID = location.RegionID;
+					teleport.X = location.X;
+					teleport.Y = location.Y;
+					teleport.Z = location.Z;
+					teleport.Heading = location.Heading;
+					OnDestinationPicked(player, teleport);
+					return true;
+				}
+			}
+
 			// Find the teleport location in the database.
 			Teleport port = WorldMgr.GetTeleportLocation(DestinationRealm, String.Format("{0}:{1}", Type, text));
 			if (port != null)
