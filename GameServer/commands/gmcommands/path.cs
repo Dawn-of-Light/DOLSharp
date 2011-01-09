@@ -35,7 +35,7 @@ namespace DOL.GS.Commands
 		"/path travel - makes a target npc travel the current path",
 		"/path stop - clears the path for a targeted npc and tells npc to walk to spawn",
 		"/path speed [speedlimit] - sets the speed of all path nodes",
-		"/path assignhorseroute <Destination> - sets the current path as horseroute on stablemaster",
+		"/path assigntaxiroute <Destination> - sets the current path as taxiroute on stablemaster",
 		"/path hide - hides all path markers but does not delete the path",
 		"/path delete - deletes the temporary path",
 		"/path type - changes the paths type")]
@@ -52,7 +52,7 @@ namespace DOL.GS.Commands
 			//Fill the object variables
 			obj.X = pp.X;
 			obj.Y = pp.Y;
-			obj.Z = pp.Z + 2; // raise a bit off of ground level
+			obj.Z = pp.Z + 1; // raise a bit off of ground level
 			obj.CurrentRegion = client.Player.CurrentRegion;
 			obj.Heading = client.Player.Heading;
 			obj.Name = name;
@@ -197,6 +197,8 @@ namespace DOL.GS.Commands
 				pathpoint = pathpoint.Next;
 				pathpoint.MaxSpeed = speedlimit;
 			}
+
+			DisplayMessage(client, "All path points set to speed {0}!", args[2]);
 		}
 
 		private void PathTravel(GameClient client)
@@ -222,6 +224,9 @@ namespace DOL.GS.Commands
 			((GameNPC)client.Player.TargetObject).CurrentWayPoint = (PathPoint)client.Player.TempProperties.getProperty<object>(TEMP_PATH_FIRST, null);
 
 			((GameNPC)client.Player.TargetObject).MoveOnPath(speed);
+
+			DisplayMessage(client, "{0} told to travel path!", client.Player.TargetObject.Name);
+
 		}
 
 		private void PathStop(GameClient client)
@@ -235,6 +240,8 @@ namespace DOL.GS.Commands
 			// clear any current path
 			((GameNPC)client.Player.TargetObject).CurrentWayPoint = null;
 			((GameNPC)client.Player.TargetObject).WalkToSpawn();
+
+			DisplayMessage(client, "{0} told to walk to spawn!", client.Player.TargetObject.Name);
 		}
 
 		private void PathType(GameClient client, string[] args)
@@ -308,7 +315,7 @@ namespace DOL.GS.Commands
 		private void PathSave(GameClient client, string[] args)
 		{
 			PathPoint path = (PathPoint)client.Player.TempProperties.getProperty<object>(TEMP_PATH_LAST, null);
-			if (args.Length < 2)
+			if (args.Length < 3)
 			{
 				DisplayMessage(client, "Usage: /path save <pathname>");
 				return;
@@ -325,12 +332,12 @@ namespace DOL.GS.Commands
 			DisplayMessage(client, "Path saved as '{0}'", pathname);
 		}
 
-		private void PathAssignHorseroute(GameClient client, string[] args)
+		private void PathAssignTaxiRoute(GameClient client, string[] args)
 		{
 			PathPoint path = (PathPoint)client.Player.TempProperties.getProperty<object>(TEMP_PATH_LAST, null);
 			if (args.Length < 2)
 			{
-				DisplayMessage(client, "Usage: /path assignhorseroute <destination>");
+				DisplayMessage(client, "Usage: /path assigntaxiroute <destination>");
 				return;
 			}
 
@@ -347,7 +354,7 @@ namespace DOL.GS.Commands
 				merchant = client.Player.TargetObject as GameBoatStableMaster;
 			if (merchant == null)
 			{
-				DisplayMessage(client, "You must select a stable master to assign a horseroute!");
+				DisplayMessage(client, "You must select a stable master to assign a taxi route!");
 				return;
 			}
 			string target = String.Join(" ", args, 2, args.Length - 2); ;
@@ -377,6 +384,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 			MovementMgr.SavePath(pathname, path);
+			DisplayMessage(client, "Taxi route set to path '{0}'!", pathname);
 		}
 
 		public void OnCommand(GameClient client, string[] args)
@@ -429,9 +437,9 @@ namespace DOL.GS.Commands
 						PathLoad(client, args);
 						break;
 					}
-				case "assignhorseroute":
+				case "assigntaxiroute":
 					{
-						PathAssignHorseroute(client, args);
+						PathAssignTaxiRoute(client, args);
 						break;
 					}
 				case "hide":
