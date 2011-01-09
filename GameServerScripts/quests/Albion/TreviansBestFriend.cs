@@ -878,37 +878,8 @@ namespace DOL.GS.Quests.Albion
 					GameServer.Database.AddObject(bootsOfTheDevoted);
 			}
 
-			whistleReward = GameServer.Database.FindObjectByKey<ItemTemplate>("trevians_whistle");
-			if (whistleReward == null)
-			{
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find Trevian's Whistle, creating it ...");
-				whistleReward = new ItemTemplate();
-				whistleReward.Name = "Trevian's Whistle";
-				whistleReward.Level = 16;
-				whistleReward.Weight = 5;
-				whistleReward.Model = 1874;
-
-				whistleReward.Object_Type = 41; // CLoth
-				//whistleReward.Item_Type = 26; // LAYER_CLOAK
-				whistleReward.Id_nb = "trevians_whistle";
-				whistleReward.Price = 0;
-				whistleReward.IsPickable = false;
-				whistleReward.IsDropable = false;
-
-				whistleReward.Quality = 100;
-				whistleReward.Condition = 1000;
-				whistleReward.MaxCondition = 1000;
-				whistleReward.Durability = 1000;
-				whistleReward.MaxDurability = 1000;
-
-
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				
-					GameServer.Database.AddObject(whistleReward);
-			}
+			whistleReward = GameServer.Database.FindObjectByKey<ItemTemplate>("Puppy_Whistle");
+			
 
 			#endregion
 
