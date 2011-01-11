@@ -358,6 +358,9 @@ namespace DOL.GS
             merchant.Gender = (byte)Gender;
 			merchant.Flags = (uint)Flags;
 			merchant.PathID = PathID;
+			merchant.PackageID = PackageID;
+			merchant.OwnerID = OwnerID;
+
 			IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 			if (aggroBrain != null)
 			{
@@ -494,8 +497,6 @@ namespace DOL.GS
 			get { return m_moneyItem; }
 		}
 
-		protected string m_moneyItemName;
-
 		/// <summary>
 		/// The name of the money item.  Defaults to Item Name
 		/// </summary>
@@ -517,11 +518,13 @@ namespace DOL.GS
 
 			TurnTo(player, 10000);
 			string text = "";
-			if (m_moneyItem == null || m_moneyItem.Item == null || m_moneyItemName == null || m_moneyItemName == "")
+			if (m_moneyItem == null || m_moneyItem.Item == null)
+			{
 				text = LanguageMgr.GetTranslation(player.Client, "GameMerchant.GetExamineMessages.Nothing");
+			}
 			else
 			{
-				text = m_moneyItemName;
+				text = MoneyItemName;
 			}
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.GetExamineMessages.BuyItemsFor", this.Name, text), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			return true;
@@ -557,7 +560,7 @@ namespace DOL.GS
 			{
 				if (player.Inventory.CountItemTemplate(m_moneyItem.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) < totalValue)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeed2", totalValue, m_moneyItemName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.YouNeed2", totalValue, MoneyItemName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
@@ -569,9 +572,9 @@ namespace DOL.GS
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
-					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtPieces2", amountToBuy, template.GetName(1, false), totalValue, m_moneyItemName);
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.BoughtPieces2", amountToBuy, template.GetName(1, false), totalValue, MoneyItemName);
 				else
-					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.Bought2", template.GetName(1, false), totalValue, m_moneyItemName);
+					message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.Bought2", template.GetName(1, false), totalValue, MoneyItemName);
 
 				var items = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 				int removed = 0;
@@ -599,7 +602,6 @@ namespace DOL.GS
 			: base()
 		{
 			m_moneyItem = WorldInventoryItem.CreateFromTemplate("DiamondSeal");
-			m_moneyItemName = m_moneyItem.Name;
 		}
 	}
 
@@ -609,7 +611,6 @@ namespace DOL.GS
 			: base()
 		{
 			m_moneyItem = WorldInventoryItem.CreateFromTemplate("SapphireSeal");
-			m_moneyItemName = m_moneyItem.Name;
 		}
 
 	}
@@ -620,7 +621,6 @@ namespace DOL.GS
 			: base()
 		{
 			m_moneyItem = WorldInventoryItem.CreateFromTemplate("EmeraldSeal");
-			m_moneyItemName = m_moneyItem.Name;
 		}
 	}
 
@@ -630,7 +630,6 @@ namespace DOL.GS
 			: base()
 		{
 			m_moneyItem = WorldInventoryItem.CreateFromTemplate("aurulite");
-			m_moneyItemName = m_moneyItem.Name;
 		}
 	}
 }
