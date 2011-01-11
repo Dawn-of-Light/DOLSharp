@@ -2563,20 +2563,30 @@ namespace DOL.GS.Commands
 				{
 					foreach (GameNPC n in ma)
 					{
-						n.RemoveFromWorld();
-						n.LoadFromDatabase(GameServer.Database.FindObjectByKey<Mob>(n.InternalID));
-						n.AddToWorld();
-						client.Player.Out.SendMessage(n.Name + " reloaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						if (n.LoadedFromScript == false)
+						{
+							n.RemoveFromWorld();
+							n.LoadFromDatabase(GameServer.Database.FindObjectByKey<Mob>(n.InternalID));
+							n.AddToWorld();
+							client.Player.Out.SendMessage(n.Name + " reloaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
 					}
 				}
 			}
 			else if (targetMob != null)
 			{
 				// Reload the target
-				targetMob.RemoveFromWorld();
-				targetMob.LoadFromDatabase(GameServer.Database.FindObjectByKey<Mob>(targetMob.InternalID));
-				targetMob.AddToWorld();
-				client.Player.Out.SendMessage(targetMob.Name + " reloaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (targetMob.LoadedFromScript == false)
+				{
+					targetMob.RemoveFromWorld();
+					targetMob.LoadFromDatabase(GameServer.Database.FindObjectByKey<Mob>(targetMob.InternalID));
+					targetMob.AddToWorld();
+					client.Player.Out.SendMessage(targetMob.Name + " reloaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					client.Player.Out.SendMessage(targetMob.Name + " is loaded from a script and can't be reloaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 			}
 		}
 
