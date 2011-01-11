@@ -1203,7 +1203,7 @@ namespace DOL.GS
 			delve.Add("  Is tradable: " + (IsTradable ? "yes" : "no"));
 			delve.Add(" Is alwaysDUR: " + (IsNotLosingDur ? "yes" : "no"));
 			delve.Add("Is Indestruct: " + (IsIndestructible ? "yes" : "no"));
-			delve.Add(" Is stackable: " + (IsStackable ? "yes" : "no"));
+			delve.Add(" Is stackable: " + (IsStackable ? "yes (" + MaxCount + ")" : "no"));
 			delve.Add("");
 			delve.Add("  ProcSpellID: " + ProcSpellID);
 			delve.Add(" ProcSpellID1: " + ProcSpellID1);
