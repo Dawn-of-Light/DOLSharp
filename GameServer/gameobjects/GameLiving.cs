@@ -4500,6 +4500,9 @@ namespace DOL.GS
 		/// <param name="slot">the new eActiveWeaponSlot</param>
 		public virtual void SwitchWeapon(eActiveWeaponSlot slot)
 		{
+			if (Inventory == null)
+				return;
+
 			//Clean up range attack variables, no matter to what
 			//weapon we switch
 			RangedAttackState = eRangedAttackState.None;
