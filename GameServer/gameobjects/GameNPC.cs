@@ -2086,7 +2086,7 @@ namespace DOL.GS
 			IList m_models = new ArrayList();
 			IList m_sizes = new ArrayList();
 			IList m_levels = new ArrayList();
-            IList m_inventory = new ArrayList();
+            IList m_possible_inventory = new ArrayList();
 			IList m_equipLoc = new ArrayList();
 			Hashtable m_equipModel = new Hashtable();
 
@@ -2184,17 +2184,17 @@ namespace DOL.GS
 
                     foreach (string str in equipIDs)
                     {
-                        m_inventory.Add(str);
+                        m_possible_inventory.Add(str);
                     }
 
                     string equipid = "";
 
-                    if (m_inventory.Count > 0)
+                    if (m_possible_inventory.Count > 0)
                     {
-                        if (m_inventory.Count == 1)
+                        if (m_possible_inventory.Count == 1)
                             equipid = template.Inventory;
                         else
-                            equipid = (string)m_inventory[Util.Random(m_inventory.Count - 1)];
+                            equipid = (string)m_possible_inventory[Util.Random(m_inventory.Count - 1)];
                     }
                     if (equip.LoadFromDatabase(equipid))
                         equipHasItems = true;
