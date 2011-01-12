@@ -2086,6 +2086,7 @@ namespace DOL.GS
 			IList m_models = new ArrayList();
 			IList m_sizes = new ArrayList();
 			IList m_levels = new ArrayList();
+            IList m_inventory = new ArrayList();
 			IList m_equipLoc = new ArrayList();
 			Hashtable m_equipModel = new Hashtable();
 
@@ -2169,27 +2170,40 @@ namespace DOL.GS
 			this.LeftHandSwingChance = template.LeftHandSwingChance;
 			#endregion
 
-			#region Inventory
-			//Ok lets start loading the npc equipment - only if there is a value!
-			if (!Util.IsEmpty(template.Inventory))
-			{
-				bool equipHasItems = false;
-				GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
-				//First let's try to reach the npcequipment table and load that!
-				//We use a ';' split to allow npctemplates to support more than one equipmentIDs
-				string[] equipIDs = template.Inventory.SplitCSV().ToArray();
-				if (!template.Inventory.Contains(":"))
-				{
-					foreach (string str in equipIDs)
-					{
-						equipHasItems |= equip.LoadFromDatabase(str);
-					}
-				}
+            #region Inventory
+            //Ok lets start loading the npc equipment - only if there is a value!
+            if (!Util.IsEmpty(template.Inventory))
+            {
+                bool equipHasItems = false;
+                GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
+                //First let's try to reach the npcequipment table and load that!
+                //We use a ';' split to allow npctemplates to support more than one equipmentIDs
+                string[] equipIDs = template.Inventory.SplitCSV().ToArray();
+                if (!template.Inventory.Contains(":"))
+                {
 
-				#region Legacy Equipment Code
-				//Nope, nothing in the npcequipment table, lets do the crappy parsing
-				//This is legacy code
-				if (!equipHasItems)
+                    foreach (string str in equipIDs)
+                    {
+                        m_inventory.Add(str);
+                    }
+
+                    string equipid = "";
+
+                    if (m_inventory.Count > 0)
+                    {
+                        if (m_inventory.Count == 1)
+                            equipid = template.Inventory;
+                        else
+                            equipid = (string)m_inventory[Util.Random(m_inventory.Count - 1)];
+                    }
+                    if (equip.LoadFromDatabase(equipid))
+                        equipHasItems = true;
+                }
+
+                #region Legacy Equipment Code
+                //Nope, nothing in the npcequipment table, lets do the crappy parsing
+                //This is legacy code
+                if (!equipHasItems && template.Inventory.Contains(":"))
 				{
 					//Temp list to store our models
 					List<int> tempModels = new List<int>();
