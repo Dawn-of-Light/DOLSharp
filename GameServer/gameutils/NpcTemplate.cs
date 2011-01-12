@@ -273,12 +273,12 @@ namespace DOL.GS
             //return GameServer.Database.GetObjectCount<DBNpcTemplate>();
 
             var objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
-
+            
             int free_id = 1;
 
             foreach (DBNpcTemplate dbtemplate in objs)
             {
-                var obj = GameServer.Database.SelectObject<DBNpcTemplate>(" TemplateId LIKE '" + free_id + "' ");
+                var obj = GameServer.Database.SelectObject<DBNpcTemplate>(" TemplateId = '" + free_id + "' ");
                 if (dbtemplate.TemplateId >= free_id)
                 {
                     if (obj != null)
