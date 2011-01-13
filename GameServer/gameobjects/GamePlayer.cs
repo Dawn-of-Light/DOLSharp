@@ -9661,7 +9661,7 @@ namespace DOL.GS
 				return false;
 
 			IsJumping = false;
-			m_pvpInvulnerabilityTick = 0;
+			m_invulnerabilityTick = 0;
 			m_healthRegenerationTimer = new RegionTimer(this);
 			m_powerRegenerationTimer = new RegionTimer(this);
 			m_enduRegenerationTimer = new RegionTimer(this);
@@ -9726,10 +9726,10 @@ namespace DOL.GS
 
 			IsJumping = false;
 
-			if (m_pvpInvulnerabilityTimer != null)
+			if (m_invulnerabilityTimer != null)
 			{
-				m_pvpInvulnerabilityTimer.Stop();
-				m_pvpInvulnerabilityTimer = null;
+				m_invulnerabilityTimer.Stop();
+				m_invulnerabilityTimer = null;
 			}
 			Diving(waterBreath.Normal);
 			if (IsOnHorse)
@@ -9847,15 +9847,15 @@ namespace DOL.GS
 
                 IsJumping = true;
             }
-            bool HasPetToMove = false;
+            bool hasPetToMove = false;
             //Remove the last update tick property, to prevent speedhack messages during zoning and teleporting!
             LastPositionUpdateTick = 0;
 
-            if (ControlledBrain != null && ControlledBrain.WalkState != eWalkState.Stay && this.IsWithinRadius(ControlledBrain.Body, 1000))
+            if (ControlledBrain != null && ControlledBrain.WalkState != eWalkState.Stay)
             {
                 if (CharacterClass.ID != (int)eCharacterClass.Theurgist && CharacterClass.ID != (int)eCharacterClass.Animist)
                 {
-                    HasPetToMove = true;
+                    hasPetToMove = true;
                 }
             }
             //Set the new destination
@@ -9892,7 +9892,7 @@ namespace DOL.GS
                 // are we jumping far enough to force a complete refresh?
                 if (GetDistanceTo(originalPoint) > WorldMgr.REFRESH_DISTANCE)
                 {
-                    RefreshWorld();
+                    // RefreshWorld(); This does not seem to work and may be making refresh issues worse. - Tolakram
                 }
                 else
                 {
@@ -9913,7 +9913,7 @@ namespace DOL.GS
                 if (this.IsUnderwater)
                     this.IsDiving = true;
 
-                if (HasPetToMove)
+                if (hasPetToMove)
                 {
                     Point2D point = GetPointFromHeading(Heading, 64);
 
@@ -13989,7 +13989,7 @@ namespace DOL.GS
 		}
 		#endregion
 
-		#region PvP Invulnerability
+		#region Invulnerability
 
 		/// <summary>
 		/// The delegate for invulnerability expire callbacks
@@ -13998,14 +13998,14 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the invulnerability timer
 		/// </summary>
-		protected InvulnerabilityTimer m_pvpInvulnerabilityTimer;
+		protected InvulnerabilityTimer m_invulnerabilityTimer;
 		/// <summary>
 		/// Holds the invulnerability expiration tick
 		/// </summary>
-		protected long m_pvpInvulnerabilityTick;
+		protected long m_invulnerabilityTick;
 
 		/// <summary>
-		/// Sets the PvP invulnerability
+		/// Starts the Invulnerability Timer
 		/// </summary>
 		/// <param name="duration">The invulnerability duration in milliseconds</param>
 		/// <param name="callback">
@@ -14013,38 +14013,38 @@ namespace DOL.GS
 		/// not guaranteed to be called if overwriten by another invulnerability
 		/// </param>
 		/// <returns>true if invulnerability was set (smaller than old invulnerability)</returns>
-		public virtual bool SetPvPInvulnerability(int duration, InvulnerabilityExpiredCallback callback)
+		public virtual bool StartInvulnerabilityTimer(int duration, InvulnerabilityExpiredCallback callback)
 		{
 			if (duration < 1)
 				throw new ArgumentOutOfRangeException("duration", duration, "Immunity duration cannot be less than 1ms");
 
 			long newTick = CurrentRegion.Time + duration;
-			if (newTick < m_pvpInvulnerabilityTick)
+			if (newTick < m_invulnerabilityTick)
 				return false;
 
-			m_pvpInvulnerabilityTick = newTick;
-			if (m_pvpInvulnerabilityTimer != null)
-				m_pvpInvulnerabilityTimer.Stop();
+			m_invulnerabilityTick = newTick;
+			if (m_invulnerabilityTimer != null)
+				m_invulnerabilityTimer.Stop();
 
 			if (callback != null)
 			{
-				m_pvpInvulnerabilityTimer = new InvulnerabilityTimer(this, callback);
-				m_pvpInvulnerabilityTimer.Start(duration);
+				m_invulnerabilityTimer = new InvulnerabilityTimer(this, callback);
+				m_invulnerabilityTimer.Start(duration);
 			}
 			else
 			{
-				m_pvpInvulnerabilityTimer = null;
+				m_invulnerabilityTimer = null;
 			}
 
 			return true;
 		}
 
 		/// <summary>
-		/// True if player is invulnerable to PvP attacks
+		/// True if player is invulnerable to any attack
 		/// </summary>
-		public virtual bool IsPvPInvulnerability
+		public virtual bool IsInvulnerableToAttack
 		{
-			get { return m_pvpInvulnerabilityTick > CurrentRegion.Time; }
+			get { return m_invulnerabilityTick > CurrentRegion.Time; }
 		}
 
 		/// <summary>

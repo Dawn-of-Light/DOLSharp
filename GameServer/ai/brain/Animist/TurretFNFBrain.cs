@@ -70,7 +70,7 @@ namespace DOL.AI.Brain
                 if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
                     continue;
 
-                if (living.IsPvPInvulnerability)
+                if (living.IsInvulnerableToAttack)
                     continue;
 
                 if (!living.IsAlive || living.CurrentRegion != Body.CurrentRegion || living.ObjectState != GameObject.eObjectState.Active)

@@ -115,7 +115,7 @@ namespace DOL.AI.Brain
 			foreach (GamePlayer player in Body.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
                 if (player == null) continue;
-                if (GameServer.ServerRules.IsAllowedToAttack(Body, player, false)) // using group check, feat PvP rules
+                if (GameServer.ServerRules.IsAllowedToAttack(Body, player, true))
 				{
                     if ( !Body.IsWithinRadius( player, AggroRange ) )
                         continue;
@@ -155,7 +155,7 @@ namespace DOL.AI.Brain
 				if (player == null)
 					continue;
 
-				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, false))
+				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
 				{
 					if ((Body as GameKeepGuard).Component != null && !KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
 					{
