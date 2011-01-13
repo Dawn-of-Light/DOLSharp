@@ -49,17 +49,6 @@ namespace DOL.GS.Spells
 		}
 
 
-        public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
-        {
-            PlayerXEffect eff = new PlayerXEffect();
-            eff.Var1 = Spell.ID;
-            eff.Duration = e.RemainingTime;
-            eff.IsHandler = true;
-            eff.SpellLine = SpellLine.KeyName;
-            return eff;
-
-        }
-
 		/// <summary>
 		/// The spell handler constructor
 		/// </summary>
