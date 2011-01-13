@@ -138,7 +138,7 @@ namespace DOL.GS.RealmAbilities
 
 		private void DamageTarget(GameLiving target)
 		{
-			if (!GameServer.ServerRules.IsAllowedToAttack(owner, target, false))
+			if (!GameServer.ServerRules.IsAllowedToAttack(owner, target, true))
 				return;
 			if (!target.IsAlive)
 				return;
