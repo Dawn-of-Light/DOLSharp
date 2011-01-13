@@ -479,9 +479,9 @@ namespace DOL.GS.ServerProperties
 
 
 		/// <summary>
-		/// Immunity Timer length when a player logs into game
+		/// Immunity Timer length when a player logs into game or zones into a new region, in seconds
 		/// </summary>
-		[ServerProperty("world", "timer_player_init", "Immunity Timer when player logs into the game, in seconds", 15)]
+		[ServerProperty("world", "timer_player_init", "Immunity Timer length when a player logs into game or zones into a new region, in seconds", 15)]
 		public static int TIMER_PLAYER_INIT;
 
 		#endregion

@@ -141,7 +141,7 @@ namespace DOL.GS.GameEvents
 										plr.StartHealthRegeneration();
 										plr.StartPowerRegeneration();
 										plr.StartEnduranceRegeneration();
-										plr.SetPvPInvulnerability(1000, null);
+										plr.StartInvulnerabilityTimer(1000, null);
 
                                         
 										try

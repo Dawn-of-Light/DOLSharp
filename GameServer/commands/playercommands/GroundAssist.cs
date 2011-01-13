@@ -54,7 +54,7 @@ namespace DOL.GS.Commands
 				return;
 
 			// can't assist an enemy
-			if (GameServer.ServerRules.IsAllowedToAttack(client.Player, target as GameLiving, false))
+			if (GameServer.ServerRules.IsAllowedToAttack(client.Player, target as GameLiving, true))
 				return;
 
 			if (!client.Player.IsWithinRadius( target, 2048 ))

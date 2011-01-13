@@ -110,7 +110,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.StartHealthRegeneration();
 				player.StartPowerRegeneration();
 				player.StartEnduranceRegeneration();
-				player.SetPvPInvulnerability(ServerProperties.Properties.TIMER_PLAYER_INIT * 1000, null);
+				player.StartInvulnerabilityTimer(ServerProperties.Properties.TIMER_PLAYER_INIT * 1000, null);
 
 				if (player.Guild != null)
 				{

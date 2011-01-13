@@ -218,7 +218,15 @@ namespace DOL.GS.ServerRules
 			GamePlayer playerAttacker = attacker as GamePlayer;
 			GamePlayer playerDefender = defender as GamePlayer;
 
-			if (playerDefender != null && playerDefender.Client.ClientState == GameClient.eClientState.WorldEnter)
+			if (defender is GameNPC)
+			{
+				if ((defender as GameNPC).Brain is IControlledBrain)
+				{
+					playerDefender = ((defender as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+				}
+			}
+
+			if (playerDefender != null && (playerDefender.Client.ClientState == GameClient.eClientState.WorldEnter || playerDefender.IsInvulnerableToAttack))
 			{
 				if (!quiet)
 					MessageToLiving(attacker, defender.Name + " is entering the game and is temporarily immune to PvP attacks!");
@@ -228,14 +236,14 @@ namespace DOL.GS.ServerRules
 			if (playerAttacker != null && playerDefender != null)
 			{
 				// Attacker immunity
-				if (playerAttacker.IsPvPInvulnerability)
+				if (playerAttacker.IsInvulnerableToAttack)
 				{
 					if (quiet == false) MessageToLiving(attacker, "You can't attack players until your PvP invulnerability timer wears off!");
 					return false;
 				}
 
 				// Defender immunity
-				if (playerDefender.IsPvPInvulnerability)
+				if (playerDefender.IsInvulnerableToAttack)
 				{
 					if (quiet == false) MessageToLiving(attacker, defender.Name + " is temporarily immune to PvP attacks!");
 					return false;
