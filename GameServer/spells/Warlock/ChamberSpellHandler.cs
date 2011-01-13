@@ -163,14 +163,14 @@ namespace DOL.GS.Spells
 					MessageToCaster("Your target is not in view!", eChatType.CT_SpellResisted);
 					return false;
 				}
-				if (caster.IsPvPInvulnerability)
+				if (caster.IsInvulnerableToAttack)
 				{
 					MessageToCaster("Your invunerable at the momment and cannot use that spell!", eChatType.CT_System);
 					return false;
 				}
 				if (m_spellTarget is GamePlayer)
 				{
-					if ((m_spellTarget as GamePlayer).IsPvPInvulnerability)
+					if ((m_spellTarget as GamePlayer).IsInvulnerableToAttack)
 					{
 						MessageToCaster("Your target is invunerable at the momment and cannot be attacked!", eChatType.CT_System);
 						return false;

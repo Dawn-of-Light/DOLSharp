@@ -251,7 +251,7 @@ namespace DOL.GS
         /// If either Z-value is zero, the z-axis is ignored
         /// </remarks>
         /// <param name="point">Target point</param>
-        /// <returns>Distance</returns>
+        /// <returns>Distance or int.MaxValue if distance cannot be calculated</returns>
         public override int GetDistanceTo( IPoint3D point )
         {
 			GameObject obj = point as GameObject;
@@ -262,7 +262,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				return -1;
+				return int.MaxValue;
 			}
         }
 
@@ -274,7 +274,7 @@ namespace DOL.GS
         /// </remarks>
         /// <param name="point">Target point</param>
         /// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease the influence of Z-axis</param>
-        /// <returns>Adjusted distance</returns>
+        /// <returns>Adjusted distance or int.MaxValue if distance cannot be calculated</returns>
         public override int GetDistanceTo( IPoint3D point, double zfactor )
         {
 			GameObject obj = point as GameObject;
@@ -285,7 +285,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				return -1;
+				return int.MaxValue;
 			}
         }
 

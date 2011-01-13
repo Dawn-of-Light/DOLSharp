@@ -121,7 +121,7 @@ namespace DOL.GS.ServerRules
 		public virtual void SetImmunity(GamePlayer player, int duration)
 		{
 			// left for compatibility
-			player.SetPvPInvulnerability(duration, m_invExpiredCallback);
+			player.StartInvulnerabilityTimer(duration, m_invExpiredCallback);
 		}
 
 		/// <summary>
@@ -357,7 +357,7 @@ namespace DOL.GS.ServerRules
 			GamePlayer casterPlayer = caster as GamePlayer;
 			if (casterPlayer != null)
 			{
-				if (casterPlayer.IsPvPInvulnerability)
+				if (casterPlayer.IsInvulnerableToAttack)
 				{
 					// always allow selftargeted spells
 					if (spell.Target == "Self") return true;
@@ -377,7 +377,8 @@ namespace DOL.GS.ServerRules
 
 		public override bool IsSameRealm(GameLiving source, GameLiving target, bool quiet)
 		{
-			if (source == null || target == null) return false;
+			if (source == null || target == null) 
+				return false;
 
 			// if controlled NPC - do checks for owner instead
 			if (source is GameNPC)
@@ -395,6 +396,9 @@ namespace DOL.GS.ServerRules
 				if (controlled != null)
 					target = controlled.GetPlayerOwner();
 			}
+
+			if (source == target)
+				return true;
 
 			// clients with priv level > 1 are considered friendly by anyone
 			if (target is GamePlayer && ((GamePlayer)target).Client.Account.PrivLevel > 1) return true;
