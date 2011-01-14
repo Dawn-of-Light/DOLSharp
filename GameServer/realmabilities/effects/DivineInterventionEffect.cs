@@ -17,13 +17,13 @@ namespace DOL.GS.RealmAbilities
 		public DivineInterventionEffect(int value)
 			: base(DivineInterventionAbility.poolDuration)
 		{
-			poolValue = value;
+			PoolValue = value;
 		}
 
-		Group m_group;
-		public int poolValue = 0;
-		ArrayList affected = new ArrayList();
-        GamePlayer Ownereffect = null;
+		private Group m_group = null;
+		public int PoolValue = 0;
+		private ArrayList m_affected = new ArrayList();
+        private GamePlayer m_playerOwner = null;
 
 		/// <summary>
 		/// Start the effect on a living target
@@ -31,45 +31,52 @@ namespace DOL.GS.RealmAbilities
 		/// <param name="living"></param>
 		public override void Start(GameLiving living)
 		{
-			base.Start(living);
-			if (living is GamePlayer)
-				m_group = (living as GamePlayer).Group;
+			m_playerOwner = living as GamePlayer;
+
+			if (m_playerOwner == null)
+				return;
+
+			m_group = m_playerOwner.Group;
 
 			if (m_group == null)
 				return;
-			if (living is GamePlayer)
-			{
-				(living as GamePlayer).Out.SendMessage("You group is protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-				GameEventMgr.AddHandler(m_group, GroupEvent.MemberJoined, new DOLEventHandler(PlayerJoinedGroup));
-				GameEventMgr.AddHandler(m_group, GroupEvent.MemberDisbanded, new DOLEventHandler(PlayerDisbandedGroup));
-			}
 
-			foreach (GamePlayer g_player in m_group.GetPlayersInTheGroup())
+			base.Start(living);
+
+			m_playerOwner.Out.SendMessage("You group is protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+			GameEventMgr.AddHandler(m_group, GroupEvent.MemberJoined, new DOLEventHandler(PlayerJoinedGroup));
+			GameEventMgr.AddHandler(m_group, GroupEvent.MemberDisbanded, new DOLEventHandler(PlayerDisbandedGroup));
+
+			foreach (GamePlayer gp in m_group.GetPlayersInTheGroup())
 			{
-				foreach (GamePlayer t_player in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer p in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(!t_player.IsAlive) continue;
-					t_player.Out.SendSpellEffectAnimation(living, g_player, 7036, 0, false, 1);
+					if(!p.IsAlive) continue;
+					p.Out.SendSpellEffectAnimation(living, gp, 7036, 0, false, 1);
 				}
-				if (g_player == living) continue;
-				g_player.Out.SendMessage("You are protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-				affected.Add(g_player);
-				GameEventMgr.AddHandler(g_player, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
-                if (g_player.CharacterClass.ID == (int)eCharacterClass.Necromancer)
+
+				if (gp == m_playerOwner) 
+					continue;
+
+				gp.Out.SendMessage("You are protected by a pool of healing!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				m_affected.Add(gp);
+				GameEventMgr.AddHandler(gp, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
+                if (gp.CharacterClass.ID == (int)eCharacterClass.Necromancer)
                 {
-                    if (g_player.ControlledBrain != null)
+                    if (gp.ControlledBrain != null)
                     {
-                        affected.Add(g_player.ControlledBrain.Body);
-                        GameEventMgr.AddHandler(g_player.ControlledBrain.Body, GameLivingEvent.TakeDamage, new DOLEventHandler(TakeDamageNPC));
+                        m_affected.Add(gp.ControlledBrain.Body);
+                        GameEventMgr.AddHandler(gp.ControlledBrain.Body, GameLivingEvent.TakeDamage, new DOLEventHandler(TakeDamageNPC));
                     }
                 }
 			}
 		}
+
 		protected void PlayerJoinedGroup(DOLEvent e, object sender, EventArgs args)
 		{
 			MemberJoinedEventArgs pjargs = args as MemberJoinedEventArgs;
 			if (pjargs == null) return;
-			affected.Add(pjargs.Member);
+			m_affected.Add(pjargs.Member);
 			GameEventMgr.AddHandler(pjargs.Member, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
 
             if (pjargs.Member is GamePlayer)
@@ -79,17 +86,18 @@ namespace DOL.GS.RealmAbilities
                 {
                     if (((GamePlayer)pjargs.Member).ControlledBrain != null)
                     {
-                        affected.Add(((GamePlayer)pjargs.Member).ControlledBrain.Body);
+                        m_affected.Add(((GamePlayer)pjargs.Member).ControlledBrain.Body);
                         GameEventMgr.AddHandler(((GamePlayer)pjargs.Member).ControlledBrain.Body, GameLivingEvent.TakeDamage, new DOLEventHandler(TakeDamageNPC));
                     }
                 }
             }
 		}
+
 		protected void PlayerDisbandedGroup(DOLEvent e, object sender, EventArgs args)
 		{
 			MemberDisbandedEventArgs pdargs = args as MemberDisbandedEventArgs;
 			if (pdargs == null) return;
-			affected.Remove(pdargs.Member);
+			m_affected.Remove(pdargs.Member);
 			GameEventMgr.RemoveHandler(pdargs.Member, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
             if (pdargs.Member is GamePlayer)
             {
@@ -98,11 +106,12 @@ namespace DOL.GS.RealmAbilities
                 {
                     if (((GamePlayer)pdargs.Member).ControlledBrain != null)
                     {
-                        affected.Remove(((GamePlayer)pdargs.Member).ControlledBrain.Body);
+                        m_affected.Remove(((GamePlayer)pdargs.Member).ControlledBrain.Body);
                         GameEventMgr.RemoveHandler(((GamePlayer)pdargs.Member).ControlledBrain.Body, GameLivingEvent.TakeDamage, new DOLEventHandler(TakeDamageNPC));
                     }
                 }
             }
+
 			if (m_group == null)
 				Cancel(false);
 		}
@@ -124,16 +133,16 @@ namespace DOL.GS.RealmAbilities
             int healamount = 0;
 
 
-            if (poolValue <= 0)
+            if (PoolValue <= 0)
                 Cancel(false);
 
-            if (poolValue - dmgamount > 0)
+            if (PoolValue - dmgamount > 0)
             {
                 healamount = dmgamount;
             }
             else
             {
-                healamount = dmgamount - poolValue;
+                healamount = dmgamount - PoolValue;
             }
             foreach (GamePlayer t_player in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
             {
@@ -145,12 +154,12 @@ namespace DOL.GS.RealmAbilities
             if (petOwner != null)
                 petOwner.Out.SendMessage("Your " + npc.Name + " was healed by the pool of healing for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
-            Ownereffect.Out.SendMessage("Your pool of healing heal the " + npc.Name + " of " + petOwner.Name + " for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+            m_playerOwner.Out.SendMessage("Your pool of healing heals the " + npc.Name + " of " + petOwner.Name + " for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
             npc.ChangeHealth(m_owner, GameLiving.eHealthChangeType.Spell, healamount);
-            poolValue -= dmgamount;
+            PoolValue -= dmgamount;
 
-            if (poolValue <= 0)
+            if (PoolValue <= 0)
                 Cancel(false);
         }
 
@@ -173,19 +182,19 @@ namespace DOL.GS.RealmAbilities
 			int healamount = 0;
 
 
-			if (poolValue <= 0)
+			if (PoolValue <= 0)
 				Cancel(false);
 
 			if (!player.IsAlive)
 				return;
 
-			if (poolValue - dmgamount > 0)
+			if (PoolValue - dmgamount > 0)
 			{
 				healamount = dmgamount;
 			}
 			else
 			{
-				healamount = dmgamount - poolValue;
+				healamount = dmgamount - PoolValue;
 			}
 			foreach (GamePlayer t_player in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -193,11 +202,11 @@ namespace DOL.GS.RealmAbilities
 				t_player.Out.SendSpellEffectAnimation(m_owner, player, 8051, 0, false, 1);
 			}
 			player.Out.SendMessage("You are healed by the pool of healing for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-            Ownereffect.Out.SendMessage("Your pool of healing heal " + player.Name + " for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+            m_playerOwner.Out.SendMessage("Your pool of healing heals " + player.Name + " for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 			player.ChangeHealth(m_owner, GameLiving.eHealthChangeType.Spell, healamount);
-			poolValue -= dmgamount;
+			PoolValue -= dmgamount;
 
-			if (poolValue <= 0)
+			if (PoolValue <= 0)
 				Cancel(false);
 		}
 
@@ -209,12 +218,14 @@ namespace DOL.GS.RealmAbilities
 				GameEventMgr.RemoveHandler(m_group, GroupEvent.MemberDisbanded, new DOLEventHandler(PlayerDisbandedGroup));
 				GameEventMgr.RemoveHandler(m_group, GroupEvent.MemberJoined, new DOLEventHandler(PlayerJoinedGroup));
 			}
-			foreach (GamePlayer pl in affected)
+			foreach (GameLiving l in m_affected)
 			{
-				pl.Out.SendMessage("You are no longer protected by a pool of healing!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
-				GameEventMgr.RemoveHandler(pl, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
+				if (l is GamePlayer)
+					(l as GamePlayer).Out.SendMessage("You are no longer protected by a pool of healing!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
+
+				GameEventMgr.RemoveHandler(l, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
 			}
-			affected.Clear();
+			m_affected.Clear();
 			m_group = null;
 		}
 		
@@ -236,12 +247,12 @@ namespace DOL.GS.RealmAbilities
 			get
 			{
 				var delveInfoList = new List<string>();
-				delveInfoList.Add("This ability creates a pool of healing on the user, instantly healing any member of the caster's group when they go below 75% hp, until it is used up.");
+				delveInfoList.Add("This ability creates a pool of healing on the user, instantly healing any member of the caster's group when they go below 75% hp until it is used up.");
 				delveInfoList.Add(" ");
 				delveInfoList.Add("Target: Group");
 				delveInfoList.Add("Duration: 15:00 min");
 				delveInfoList.Add(" ");
-				delveInfoList.Add("Value: " + poolValue);
+				delveInfoList.Add("Value: " + PoolValue);
 				int seconds = (int)(RemainingTime / 1000);
 				if (seconds > 0)
 				{
