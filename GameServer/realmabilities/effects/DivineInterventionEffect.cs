@@ -221,9 +221,14 @@ namespace DOL.GS.RealmAbilities
 			foreach (GameLiving l in m_affected)
 			{
 				if (l is GamePlayer)
+				{
 					(l as GamePlayer).Out.SendMessage("You are no longer protected by a pool of healing!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
-
-				GameEventMgr.RemoveHandler(l, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
+					GameEventMgr.RemoveHandler(l, GamePlayerEvent.TakeDamage, new DOLEventHandler(TakeDamage));
+				}
+				else
+				{
+					GameEventMgr.RemoveHandler(l, GameLivingEvent.TakeDamage, new DOLEventHandler(TakeDamageNPC));
+				}
 			}
 			m_affected.Clear();
 			m_group = null;
