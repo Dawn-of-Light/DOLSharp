@@ -73,12 +73,12 @@ namespace DOL.Database.Handlers
 		/// Persists an object to the database.
 		/// </summary>
 		/// <param name="dataObject">the object to save to the database</param>
-		protected override void SaveObjectImpl(DataObject dataObject)
+		protected override bool SaveObjectImpl(DataObject dataObject)
 		{
 			try
 			{
 				if (dataObject.Dirty == false)
-					return;
+					return true;
 
 				DataSet dataset = GetDataSet(dataObject.TableName);
 
@@ -96,7 +96,7 @@ namespace DOL.Database.Handlers
 				dataObject.Dirty = false;
 				dataObject.IsValid = true;
 
-				return;
+				return true;
 			}
 			catch (Exception e)
 			{
@@ -108,7 +108,7 @@ namespace DOL.Database.Handlers
 		/// Deletes an object from the database.
 		/// </summary>
 		/// <param name="dataObject">the object to delete from the database</param>
-		protected override void DeleteObjectImpl(DataObject dataObject)
+		protected override bool DeleteObjectImpl(DataObject dataObject)
 		{
 			try
 			{
@@ -135,6 +135,7 @@ namespace DOL.Database.Handlers
 				DeleteObjectRelations(dataObject);
 
 				dataObject.IsDeleted = true;
+				return true;
 			}
 			catch (Exception e)
 			{

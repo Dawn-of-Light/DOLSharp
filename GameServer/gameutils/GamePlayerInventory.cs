@@ -304,6 +304,9 @@ namespace DOL.GS
 
 		protected bool AddItem(eInventorySlot slot, InventoryItem item, bool addObject)
 		{
+			int savePosition = item.SlotPosition;
+			string saveOwnerID = item.OwnerID;
+
 			if (!base.AddItem(slot, item))
 				return false;
 
@@ -313,11 +316,27 @@ namespace DOL.GS
 			{
 				if (addObject)
 				{
-					GameServer.Database.AddObject(item);
+					if (GameServer.Database.AddObject(item) == false)
+					{
+						m_player.Out.SendMessage("Error adding item to the database, item may be lost!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						Log.ErrorFormat("Error adding item {0}:{1} for player {2} into the database during AddItem!", item.Id_nb, item.Name, m_player.Name);
+						m_items.Remove(slot);
+						item.SlotPosition = savePosition;
+						item.OwnerID = saveOwnerID;
+						return false;
+					}
 				}
 				else
 				{
-					GameServer.Database.SaveObject(item);
+					if (GameServer.Database.SaveObject(item) == false)
+					{
+						m_player.Out.SendMessage("Error saving item to the database, this item may be lost!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						Log.ErrorFormat("Error saving item {0}:{1} for player {2} into the database during AddItem!", item.Id_nb, item.Name, m_player.Name);
+						m_items.Remove(slot);
+						item.SlotPosition = savePosition;
+						item.OwnerID = saveOwnerID;
+						return false;
+					}
 				}
 			}
 
@@ -362,6 +381,10 @@ namespace DOL.GS
 				return false;
 			}
 
+			int savePosition = item.SlotPosition;
+			string saveOwnerID = item.OwnerID;
+
+
 			var oldSlot = (eInventorySlot) item.SlotPosition;
 
 			if (!base.RemoveItem(item))
@@ -371,11 +394,27 @@ namespace DOL.GS
 			{
 				if (deleteObject)
 				{
-					GameServer.Database.DeleteObject(item);
+					if (GameServer.Database.DeleteObject(item) == false)
+					{
+						m_player.Out.SendMessage("Error deleting item from the database, operation aborted!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						Log.ErrorFormat("Error deleting item {0}:{1} for player {2} from the database during RemoveItem!", item.Id_nb, item.Name, m_player.Name);
+						m_items.Add(oldSlot, item);
+						item.SlotPosition = savePosition;
+						item.OwnerID = saveOwnerID;
+						return false;
+					}
 				}
 				else
 				{
-					GameServer.Database.SaveObject(item);
+					if (GameServer.Database.SaveObject(item) == false)
+					{
+						m_player.Out.SendMessage("Error saving item to the database, operation aborted!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						Log.ErrorFormat("Error saving item {0}:{1} for player {2} to the database during RemoveItem!", item.Id_nb, item.Name, m_player.Name);
+						m_items.Add(oldSlot, item);
+						item.SlotPosition = savePosition;
+						item.OwnerID = saveOwnerID;
+						return false;
+					}
 				}
 			}
 
@@ -1253,15 +1292,22 @@ namespace DOL.GS
 			bool fromSlotEquipped = IsEquippedSlot(fromSlot);
 			bool toSlotEquipped = IsEquippedSlot(toSlot);
 
-			base.ExchangeItems(fromSlot, toSlot);
+			if (base.ExchangeItems(fromSlot, toSlot) == false)
+			{
+
+			}
 
 			if (fromItem != null && fromItem.Id_nb != InventoryItem.BLANK_ITEM)
 			{
-				GameServer.Database.SaveObject(fromItem);
+				if (GameServer.Database.SaveObject(fromItem) == false)
+				{
+				}
 			}
 			if (toItem != null && toItem != fromItem && toItem.Id_nb != InventoryItem.BLANK_ITEM)
 			{
-				GameServer.Database.SaveObject(toItem);
+				if (GameServer.Database.SaveObject(toItem) == false)
+				{
+				}
 			}
 
 			// notify handlers if items changing state

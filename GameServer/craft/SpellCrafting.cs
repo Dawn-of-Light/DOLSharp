@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
@@ -104,32 +105,29 @@ namespace DOL.GS
 		#region Classic craft functions
 
 		/// <summary>
-		/// Check if  the player own all needed tools
+		/// Check if the player is near the needed tools (forge, lathe, etc)
 		/// </summary>
 		/// <param name="player">the crafting player</param>
-		/// <param name="craftItemData">the object in construction</param>
-		/// <returns>true if the player hold all needed tools</returns>
-		protected override bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
+		/// <param name="recipe">the recipe being used</param>
+		/// <param name="itemToCraft">the item to make</param>
+		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
+		/// <returns>true if required tools are found</returns>
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
-            return base.CheckForTools(player, craftItemData);
+			return base.CheckForTools(player, recipe, itemToCraft, rawMaterials);
 		}
 
 		/// <summary>
-		/// Select craft to gain point and increase it
+		/// Gain a point in the appropriate skills for a recipe and materials
 		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
-			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.SpellCrafting, 1);
-                // one of the raw materials gains the point for main skill, thats why we item.RawMaterials.Length - 1
-                for (int ii = 0; ii < item.RawMaterials.Length-1; ii++)
-                {
-                    if (player.GetCraftingSkillValue(eCraftingSkill.GemCutting) < subSkillCap)
-                        player.GainCraftingSkill(eCraftingSkill.GemCutting, 1);
-                }
+
+				if (player.GetCraftingSkillValue(eCraftingSkill.GemCutting) < subSkillCap)
+	                player.GainCraftingSkill(eCraftingSkill.GemCutting, 1);
 
 				player.Out.SendUpdateCraftingSkills();
 			}

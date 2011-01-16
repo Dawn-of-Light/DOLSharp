@@ -108,6 +108,7 @@ namespace DOL.Database
 			IsNotLosingDur = template.IsNotLosingDur;
 			PackageID = template.PackageID;
 			ClassType = template.ClassType;
+			SalvageYieldID = template.SalvageYieldID;
 		}
 	
 		public override bool Dirty {

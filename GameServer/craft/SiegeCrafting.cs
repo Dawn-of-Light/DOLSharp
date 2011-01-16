@@ -20,6 +20,7 @@ using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using System;
+using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -49,18 +50,22 @@ namespace DOL.GS
             }
         }
 
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
+		/// <summary>
+		/// Gain a point in the appropriate skills for a recipe and materials
+		/// </summary>
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
-			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.SiegeCrafting, 1);
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}
-		protected override void BuildCraftedItem(GamePlayer player, DBCraftedItem craftItemData)
+
+		protected override void BuildCraftedItem(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft)
 		{
 			GameSiegeWeapon siegeweapon = null;
-			switch ((eObjectType)craftItemData.ItemTemplate.Object_Type)
+			switch ((eObjectType)itemToCraft.Object_Type)
 			{
 				case eObjectType.SiegeBalista:
 					{
@@ -89,15 +94,15 @@ namespace DOL.GS
 					break;
 				default:
 					{
-						base.BuildCraftedItem(player, craftItemData);
+						base.BuildCraftedItem(player, recipe, itemToCraft);
 						return;
 					}
 			}
 
 			//actually stores the Id_nb of the siegeweapon
-			siegeweapon.ItemId = craftItemData.ItemTemplate.Id_nb;
+			siegeweapon.ItemId = itemToCraft.Id_nb;
 
-			siegeweapon.LoadFromDatabase(craftItemData.ItemTemplate);
+			siegeweapon.LoadFromDatabase(itemToCraft);
 			siegeweapon.CurrentRegion = player.CurrentRegion;
 			siegeweapon.Heading = player.Heading;
 			siegeweapon.X = player.X;

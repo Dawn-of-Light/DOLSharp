@@ -92,12 +92,6 @@ namespace DOL
 					m_count = value;
 				}
 			}
-
-			/// <summary>
-			/// the raw material
-			/// </summary>
-			[Relation(LocalField = "IngredientId_nb", RemoteField = "Id_nb", AutoLoad = true, AutoDelete=false)]
-			public ItemTemplate ItemTemplate;
 		}
 	}
 }
