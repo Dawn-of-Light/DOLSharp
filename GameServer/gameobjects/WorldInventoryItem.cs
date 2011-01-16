@@ -39,6 +39,12 @@ namespace DOL.GS
 		private InventoryItem m_item;
 
 		/// <summary>
+		/// Has this item been removed from the world?
+		/// </summary>
+		private bool m_isRemoved = false;
+
+
+		/// <summary>
 		/// Constructs an empty GameInventoryItem
 		/// that will disappear from the world after a certain amount of time
 		/// </summary>
@@ -187,10 +193,22 @@ namespace DOL.GS
 					(m_item as IGameInventoryItem).OnRemoveFromWorld();
 				}
 
+				m_isRemoved = true;
 				return true;
 			}
 
 			return false;
+		}
+
+		public override void Delete()
+		{
+			if (m_item != null && m_isRemoved == false && m_item.Template is ItemUnique)
+			{
+				// for world items that expire we need to delete the associated ItemUnique
+				GameServer.Database.DeleteObject(m_item.Template as ItemUnique);
+			}
+
+			base.Delete();
 		}
 
 		#region PickUpTimer
