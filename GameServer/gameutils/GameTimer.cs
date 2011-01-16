@@ -562,7 +562,7 @@ namespace DOL.GS
 				{
 					m_running = false;
 
-					if (!m_timeThread.Join(7000))
+					if (!m_timeThread.Join(10000))
 					{
 						if (log.IsErrorEnabled)
 						{

@@ -19,6 +19,7 @@
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
+using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -33,12 +34,14 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Check if  the player own all needed tools
+		/// Check if the player is near the needed tools (forge, lathe, etc)
 		/// </summary>
 		/// <param name="player">the crafting player</param>
-		/// <param name="craftItemData">the object in construction</param>
-		/// <returns>true if the player hold all needed tools</returns>
-		protected override bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
+		/// <param name="recipe">the recipe being used</param>
+		/// <param name="itemToCraft">the item to make</param>
+		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
+		/// <returns>true if required tools are found</returns>
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
@@ -46,18 +49,21 @@ namespace DOL.GS
 					return true;
 			}
 
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
-				"Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), 
-				eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, 
-				"Crafting.CheckTool.FindForge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", itemToCraft.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindForge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			if (player.Client.Account.PrivLevel > 1)
+				return true;
 
 			return false;
 		}
 
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
+		/// <summary>
+		/// Gain a point in the appropriate skills for a recipe and materials
+		/// </summary>
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
-			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
 			{
                 if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < subSkillCap)
                     player.GainCraftingSkill(eCraftingSkill.MetalWorking, 1);

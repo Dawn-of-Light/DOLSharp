@@ -298,15 +298,15 @@ namespace DOL.GS
                                 break;
                             }
                         }
-                        else if (i.Object_Type == (int)eObjectType.SpellcraftGem)
-                        {
-                            if (m_owner.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) > 0)
-                            {
-                                skill = CraftingMgr.getSkillbyEnum(eCraftingSkill.SpellCrafting);
-                                break;
-                            }
-                        }
-                    }
+						else if (i.Object_Type == (int)eObjectType.SpellcraftGem)
+						{
+							if (m_owner.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) > 0)
+							{
+								skill = CraftingMgr.getSkillbyEnum(eCraftingSkill.SpellCrafting);
+								break;
+							}
+						}
+	                }
                 }
                 // --------------------------------------------------------------
 				if(skill != null && skill is AdvancedCraftingSkill)

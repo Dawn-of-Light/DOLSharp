@@ -39,7 +39,7 @@ namespace DOL.GS.GameEvents
 {
 	public static class RegionTimersResynch
 	{
-		const int UPDATE_INTERVAL = 10 * 1000; //10sec to check freeze
+		const int UPDATE_INTERVAL = 15 * 1000; // 15 seconds to check freeze
 
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

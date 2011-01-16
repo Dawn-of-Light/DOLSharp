@@ -749,6 +749,11 @@ namespace DOL.Database
 			get { return Template.ClassType; }
 			set { Template.ClassType = value; }
 		}
+		public virtual int SalvageYieldID
+		{
+			get { return Template.SalvageYieldID; }
+			set { Template.SalvageYieldID = value; }
+		}
 
 		
 		#endregion

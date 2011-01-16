@@ -161,6 +161,8 @@ namespace DOL.Database
 		protected string m_packageID;
 		protected string m_classType;
 
+		protected int m_salvageYieldID;
+
 		public ItemTemplate()
 		{
 			AllowUpdate = false;
@@ -233,6 +235,7 @@ namespace DOL.Database
 			m_description = "";
 			m_packageID = "";
 			m_classType = "";
+			m_salvageYieldID = 0;
 		}
 
 		public ItemTemplate(ItemTemplate template)
@@ -312,6 +315,7 @@ namespace DOL.Database
 			IsNotLosingDur = template.IsNotLosingDur;
 			PackageID = template.PackageID;
 			ClassType = template.ClassType;
+			SalvageYieldID = template.SalvageYieldID;
 		}
 
 		[PrimaryKey]
@@ -1196,6 +1200,18 @@ namespace DOL.Database
 				this.m_classType = value;
 			}
 		}
+
+		[DataElement(AllowDbNull = true)]
+		public int SalvageYieldID
+		{
+			get { return this.m_salvageYieldID; }
+			set
+			{
+				Dirty = true;
+				this.m_salvageYieldID = value;
+			}
+		}
+
 
 		// Various Methods
 		public virtual byte BaseDurabilityPercent
