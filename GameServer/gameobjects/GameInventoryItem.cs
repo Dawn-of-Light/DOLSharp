@@ -1216,6 +1216,7 @@ namespace DOL.GS
 			delve.Add("   BonusLevel: " + BonusLevel);
 			delve.Add(" ");
 			delve.Add("              Flags: " + Flags);
+			delve.Add("     SalvageYieldID: " + SalvageYieldID);
 			delve.Add("          PackageID: " + PackageID);
 			delve.Add("Requested ClassType: " + ClassType);
 		}

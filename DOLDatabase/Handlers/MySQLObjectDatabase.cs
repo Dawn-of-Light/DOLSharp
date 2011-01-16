@@ -36,12 +36,15 @@ namespace DOL.Database.Handlers
 				MemberInfo[] objMembers = dataObject.GetType().GetMembers();
 				bool hasRelations = false;
 				bool usePrimary = false;
+				object primaryKey = null;
 				string primaryColumnName = "";
 				bool firstColumn = true;
 				string dateFormat = Connection.GetDBDateFormat();
 
 				for (int i = 0; i < objMembers.Length; i++)
 				{
+					bool isPrimary = false;
+
 					if (!hasRelations)
 					{
 						object[] relAttrib = GetRelationAttributes(objMembers[i]);
@@ -55,6 +58,7 @@ namespace DOL.Database.Handlers
 					{
 						usePrimary = true;
 						primaryColumnName = objMembers[i].Name;
+						isPrimary = true;
 					}
 
 					if (attrib.Length > 0 || keyAttrib.Length > 0)
@@ -103,6 +107,25 @@ namespace DOL.Database.Handlers
 						values.Append('\'');
 						values.Append(val);
 						values.Append('\'');
+
+						if (isPrimary)
+						{
+							if (val is int || val is long)
+							{
+								primaryKey = Convert.ToInt32(val);
+							}
+							else if (val is long)
+							{
+								primaryKey = Convert.ToInt64(val);
+							}
+							else
+							{
+								if (Log.IsErrorEnabled)
+									Log.Error("Error adding object into " + dataObject.TableName + ".  PrimaryKey with AutoIncrement must be of type int or long.");
+
+								return false;
+							}
+						}
 					}
 				}
 
@@ -126,26 +149,46 @@ namespace DOL.Database.Handlers
 				if (usePrimary)
 				{
 					object objID = Connection.ExecuteScalar(sql + "; SELECT LAST_INSERT_ID();");
-					int newID = Convert.ToInt32(objID);
-					if (newID == 0)
+					long newID = Convert.ToInt64(objID);
+					
+					if (primaryKey == null || (Convert.ToInt64(primaryKey) == 0 && newID == 0))
 					{
 						if (Log.IsErrorEnabled)
-							Log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId + "Query = " + sql);
+							Log.Error("Error adding object into " + dataObject.TableName + " ID=" + objID + ", UsePrimary, Query = " + sql);
 						return false;
 					}
 					else
 					{
+						if (newID == 0)
+						{
+							newID = Convert.ToInt64(primaryKey);
+						}
+
 						for (int i = 0; i < objMembers.Length; i++)
 						{
 							if (objMembers[i].Name == primaryColumnName)
 							{
 								if (objMembers[i] is PropertyInfo)
 								{
-									((PropertyInfo)objMembers[i]).SetValue(dataObject, newID, null);
+									if (primaryKey is long)
+									{
+										((PropertyInfo)objMembers[i]).SetValue(dataObject, newID, null);
+									}
+									else
+									{
+										((PropertyInfo)objMembers[i]).SetValue(dataObject, (int)newID, null);
+									}
 								}
 								else if (objMembers[i] is FieldInfo)
 								{
-									((FieldInfo)objMembers[i]).SetValue(dataObject, newID);
+									if (primaryKey is long)
+									{
+										((FieldInfo)objMembers[i]).SetValue(dataObject, newID);
+									}
+									else
+									{
+										((FieldInfo)objMembers[i]).SetValue(dataObject, (int)newID);
+									}
 								}
 
 								break;
@@ -189,7 +232,7 @@ namespace DOL.Database.Handlers
 		/// Persists an object to the database.
 		/// </summary>
 		/// <param name="dataObject">the object to save to the database</param>
-		protected override void SaveObjectImpl(DataObject dataObject)
+		protected override bool SaveObjectImpl(DataObject dataObject)
 		{
 			try
 			{
@@ -298,7 +341,7 @@ namespace DOL.Database.Handlers
 				{
 					if (Log.IsErrorEnabled)
 						Log.Error("Error modifying object " + dataObject.TableName + " ID=" + dataObject.ObjectId + " --- keyvalue changed? " + sql + " " + Environment.StackTrace);
-					return;
+					return false;
 				}
 
 				if (hasRelations)
@@ -308,19 +351,22 @@ namespace DOL.Database.Handlers
 
 				dataObject.Dirty = false;
 				dataObject.IsValid = true;
+				return true;
 			}
 			catch (Exception e)
 			{
 				if (Log.IsErrorEnabled)
 					Log.Error("Error while saving data object: " + dataObject.ToString(), e);
 			}
+
+			return false;
 		}
 
 		/// <summary>
 		/// Deletes an object from the database.
 		/// </summary>
 		/// <param name="dataObject">the object to delete from the database</param>
-		protected override void DeleteObjectImpl(DataObject dataObject)
+		protected override bool DeleteObjectImpl(DataObject dataObject)
 		{
 			try
 			{
@@ -382,6 +428,7 @@ namespace DOL.Database.Handlers
 				DeleteObjectRelations(dataObject);
 
 				dataObject.IsDeleted = true;
+				return true;
 			}
 			catch (Exception e)
 			{

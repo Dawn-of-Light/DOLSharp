@@ -18,6 +18,7 @@
  */
 using DOL.Database;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -26,15 +27,16 @@ namespace DOL.GS
 		public ClothWorking()
 		{
 			Icon = 0x08;
-			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, 
-                "Crafting.Name.Clothworking");
+			Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.Name.Clothworking");
 			eSkill = eCraftingSkill.ClothWorking;
 		}
 
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
+		/// <summary>
+		/// Gain a point in the appropriate skills for a recipe and materials
+		/// </summary>
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
-
-			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
 			{
                 if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < subSkillCap)
                 {

@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
@@ -62,9 +63,14 @@ namespace DOL.GS
 		public const string PLAYER_CRAFTER = "PLAYER_CRAFTER";
 
 		/// <summary>
-		/// The item in construction
+		/// The recipe being crafted
 		/// </summary>
-		public const string ITEM_BEING_CRAFTED = "ITEM_BEING_CRAFTED";
+		public const string RECIPE_BEING_CRAFTED = "RECIPE_BEING_CRAFTED";
+
+		/// <summary>
+		/// The list of raw materials for the recipe beign crafted
+		/// </summary>
+		public const string RECIPE_RAW_MATERIAL_LIST = "RECIPE_RAW_MATERIAL_LIST";
 
 		protected const int subSkillCap = 1300;
 
@@ -115,62 +121,65 @@ namespace DOL.GS
 		/// <summary>
 		/// Called when player tries to begin crafting an item
 		/// </summary>
-		public void CraftItem(DBCraftedItem item, GamePlayer player)
+		public virtual void CraftItem(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
-			if (!CanPlayerStartToCraftItem(item, player))
+			if (!CanPlayerStartToCraftItem(player, recipe, itemToCraft, rawMaterials))
 			{
 				return;
 			}
 
 			if (player.IsCrafting)
 			{
-				StopToCraftCurrentItem(item, player);
+				StopCraftingCurrentItem(player, itemToCraft);
 				return;
 			}
 
-			int craftingTime = GetCraftingTime(player, item);
+			int craftingTime = GetCraftingTime(player, recipe, rawMaterials);
 
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.BeginWork", item.ItemTemplate.Name, CalculateChanceToMakeItem(player, item).ToString()), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.CurrentlyMaking", item.ItemTemplate.Name), craftingTime);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.BeginWork", itemToCraft.Name, CalculateChanceToMakeItem(player, recipe).ToString()), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.CurrentlyMaking", itemToCraft.Name), craftingTime);
+
+			player.Stealth(false);
 			
-			StartCraftingTimerAndSetCallBackMethod(item, player, craftingTime);
+			StartCraftingTimerAndSetCallBackMethod(player, recipe, rawMaterials, craftingTime);
 		}
 
 
-		protected void StartCraftingTimerAndSetCallBackMethod(DBCraftedItem item, GamePlayer player, int craftingTime)
+		protected virtual void StartCraftingTimerAndSetCallBackMethod(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials, int craftingTime)
 		{
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(MakeItem);
 			player.CraftTimer.Properties.setProperty(PLAYER_CRAFTER, player);
-			player.CraftTimer.Properties.setProperty(ITEM_BEING_CRAFTED, item);
+			player.CraftTimer.Properties.setProperty(RECIPE_BEING_CRAFTED, recipe);
+			player.CraftTimer.Properties.setProperty(RECIPE_RAW_MATERIAL_LIST, rawMaterials);
 			player.CraftTimer.Start(craftingTime * 1000);
 		}
 
-		protected void StopToCraftCurrentItem(DBCraftedItem item, GamePlayer player)
+		protected virtual void StopCraftingCurrentItem(GamePlayer player, ItemTemplate itemToCraft)
 		{
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.StopWork",item.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.StopWork", itemToCraft.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
-		protected bool CanPlayerStartToCraftItem(DBCraftedItem item, GamePlayer player)
+		protected virtual bool CanPlayerStartToCraftItem(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
-			if (!GameServer.ServerRules.IsAllowedToCraft(player, item.ItemTemplate))
+			if (!GameServer.ServerRules.IsAllowedToCraft(player, itemToCraft))
 			{
 				return false;
 			}
 
-			if (!CheckForTools(player, item))
+			if (!CheckForTools(player, recipe, itemToCraft, rawMaterials))
 			{
 				return false;
 			}
 
-			if (!CheckSecondCraftingSkillRequirement(player, item))
+			if (!CheckSecondCraftingSkillRequirement(player, recipe, itemToCraft, rawMaterials))
 			{
 				return false;
 			}
 
-			if (!CheckRawMaterial(player, item))
+			if (!CheckRawMaterials(player, recipe, itemToCraft, rawMaterials))
 			{
 				return false;
 			}
@@ -190,32 +199,41 @@ namespace DOL.GS
 		protected virtual int MakeItem(RegionTimer timer)
 		{
 			GamePlayer player = timer.Properties.getProperty<GamePlayer>(PLAYER_CRAFTER, null);
-			DBCraftedItem item = timer.Properties.getProperty<DBCraftedItem>(ITEM_BEING_CRAFTED, null);
-			if (player == null || item == null)
+			DBCraftedItem recipe = timer.Properties.getProperty<DBCraftedItem>(RECIPE_BEING_CRAFTED, null);
+			IList<DBCraftedXItem> rawMaterials = timer.Properties.getProperty<IList<DBCraftedXItem>>(RECIPE_RAW_MATERIAL_LIST, null);
+
+			if (player == null || recipe == null || rawMaterials == null)
 			{
-				if (log.IsWarnEnabled)
-					log.Warn("There was a problem getting back the item to the player in craft system.");
+				if (player != null) player.Out.SendMessage("Could not find recipe or item to craft!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				log.Error("Crafting.MakeItem: Could not retrieve player, recipe, or raw materials to craft from CraftTimer.");
+				return 0;
+			}
+
+			ItemTemplate itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
+			if (itemToCraft == null)
+			{
 				return 0;
 			}
 
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
 
-			if (Util.Chance(CalculateChanceToMakeItem(player, item)))
+			if (Util.Chance(CalculateChanceToMakeItem(player, recipe)))
 			{
-				if (!RemoveUsedMaterials(player, item))
+				if (!RemoveUsedMaterials(player, recipe, rawMaterials))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.NotAllMaterials"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return 0;
+
+					if (player.Client.Account.PrivLevel == 1)
+						return 0;
 				}
 
-				BuildCraftedItem(player, item);
-
-				GainCraftingSkillPoints(player, item);
+				BuildCraftedItem(player, recipe, itemToCraft);
+				GainCraftingSkillPoints(player, recipe, rawMaterials);
 			}
 			else
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.LoseNoMaterials", item.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.LoseNoMaterials", itemToCraft.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Out.SendPlaySound(eSoundType.Craft, 0x02);
 			}
 			return 0;
@@ -226,11 +244,14 @@ namespace DOL.GS
 		#region Requirement check
 
 		/// <summary>
-		/// Check if the player owns all needed tools and is in range of lathe etc
+		/// Check if the player is near the needed tools (forge, lathe, etc)
 		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="craftItemData"></param>
-		protected virtual bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
+		/// <param name="player">the crafting player</param>
+		/// <param name="recipe">the recipe being used</param>
+		/// <param name="itemToCraft">the item to make</param>
+		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
+		/// <returns>true if required tools are found</returns>
+		protected virtual bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
 			return true;
 		}
@@ -239,31 +260,34 @@ namespace DOL.GS
 		/// Check if the player has enough secondary crafting skill to build the item
 		/// </summary>
 		/// <param name="player"></param>
-		/// <param name="craftItemData"></param>
+		/// <param name="recipe"></param>
 		/// <returns></returns>
-		public virtual bool CheckSecondCraftingSkillRequirement(GamePlayer player, DBCraftedItem craftItemData)
+		public virtual bool CheckSecondCraftingSkillRequirement(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
-			int minimumLevel = GetSecondaryCraftingSkillMinimumLevel(craftItemData);
+			int minimumLevel = GetSecondaryCraftingSkillMinimumLevel(recipe, itemToCraft);
 
 			if (minimumLevel <= 0)
 				return true; // no requirement needed
 
-			foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
+			foreach (DBCraftedXItem material in rawMaterials)
 			{
-				if (rawmaterial.ItemTemplate == null)
+				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
+
+				if (template == null)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.LoseNoMaterials", rawmaterial.IngredientId_nb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    log.Error("Cannot find rawmaterials ItemTemplate ID: " + rawmaterial.IngredientId_nb + " of CratftedItemID: " + craftItemData.CraftedItemID);
+					player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + " needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					log.Error("Cannot find raw material ItemTemplate: " + material.IngredientId_nb + " needed for recipe: " + recipe.CraftedItemID);
 					return false;
 				}
-				switch (rawmaterial.ItemTemplate.Model)
+
+				switch (template.Model)
 				{
 					case 522:	//"cloth square"
 					case 537:	//"heavy thread"
 						{
 							if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < minimumLevel)
 							{
-								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill", minimumLevel, craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill", minimumLevel, template.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
 							break;
@@ -273,7 +297,7 @@ namespace DOL.GS
 						{
 							if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < minimumLevel)
 							{
-								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill", minimumLevel, craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill", minimumLevel, template.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
 							break;
@@ -283,7 +307,7 @@ namespace DOL.GS
 						{
 							if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < minimumLevel)
 							{
-								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill", minimumLevel, craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill", minimumLevel, template.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
 							break;
@@ -293,7 +317,7 @@ namespace DOL.GS
 						{
 							if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < minimumLevel)
 							{
-								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill", minimumLevel, craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill", minimumLevel, template.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return false;
 							}
 							break;
@@ -304,30 +328,31 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// check if player have raw mateiral to make item
+		/// Verify that player has the needed materials to craft an item
 		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="craftItemData"></param>
-		/// <returns></returns>
-		public virtual bool CheckRawMaterial(GamePlayer player, DBCraftedItem craftItemData)
+		public virtual bool CheckRawMaterials(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
 			ArrayList missingMaterials = null;
 
 			lock (player.Inventory)
 			{
-				foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
+				foreach (DBCraftedXItem material in rawMaterials)
 				{
-					bool result = false;
-					if (rawmaterial.ItemTemplate == null)
+					ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
+
+					if (template == null)
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.RawMaterial", rawmaterial.IngredientId_nb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						log.Error("Cannot find an item by the ID of " + rawmaterial.IngredientId_nb);
+						player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + " needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						log.Error("Cannot find raw material ItemTemplate: " + material.IngredientId_nb + " needed for recipe: " + recipe.CraftedItemID);
 						return false;
 					}
-					int count = rawmaterial.Count;
+
+					bool result = false;
+					int count = material.Count;
+
 					foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 					{
-						if (item != null && item.Name == rawmaterial.ItemTemplate.Name)
+						if (item != null && item.Name == template.Name)
 						{
 							if (item.Count >= count)
 							{
@@ -340,81 +365,91 @@ namespace DOL.GS
 							}
 						}
 					}
+
 					if (result == false)
 					{
 						if (missingMaterials == null)
+						{
 							missingMaterials = new ArrayList(5);
-						missingMaterials.Add(rawmaterial);
+						}
+
+						missingMaterials.Add("(" + count + ") " + template.Name);
 					}
 				}
 
 				if (missingMaterials != null)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.NoIngredients", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.NoIngredients", itemToCraft.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.YouAreMissing"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					foreach (DBCraftedXItem rawmaterial in missingMaterials)
+					foreach (string materialName in missingMaterials)
 					{
-						player.Out.SendMessage("(" + rawmaterial.Count + ") " + rawmaterial.ItemTemplate.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(materialName, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
+
 					if (player.Client.Account.PrivLevel == (uint)ePrivLevel.Player) return false;
 				}
 
 				return true;
 			}
 		}
+
 		#endregion
 
 		#region Gain points
 
 		/// <summary>
-		/// Select craft to gain point and increase it
+		/// Gain a point in the appropriate skills for a recipe and materials
 		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
-		public virtual void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
+		public virtual void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
-			foreach (DBCraftedXItem rawmaterial in item.RawMaterials)
+			foreach (DBCraftedXItem material in rawMaterials)
 			{
-				switch (rawmaterial.ItemTemplate.Model)
+				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
+
+				if (template != null)
 				{
-					case 522:	//"cloth square"
-					case 537:	//"heavy thread"
-						{
-							if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < subSkillCap)
+					switch (template.Model)
+					{
+						case 522:	//"cloth square"
+						case 537:	//"heavy thread"
 							{
-								player.GainCraftingSkill(eCraftingSkill.ClothWorking, 1);
+								if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < subSkillCap)
+								{
+									player.GainCraftingSkill(eCraftingSkill.ClothWorking, 1);
+								}
+								break;
 							}
-							break;
-						}
 
-					case 521:	//"leather square"
-						{
-							if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < subSkillCap)
+						case 521:	//"leather square"
 							{
-								player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
+								if (player.GetCraftingSkillValue(eCraftingSkill.LeatherCrafting) < subSkillCap)
+								{
+									player.GainCraftingSkill(eCraftingSkill.LeatherCrafting, 1);
+								}
+								break;
 							}
-							break;
-						}
 
-					case 519:	//"metal bars"
-						{
-							if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < subSkillCap)
+						case 519:	//"metal bars"
 							{
-								player.GainCraftingSkill(eCraftingSkill.MetalWorking, 1);
+								if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < subSkillCap)
+								{
+									player.GainCraftingSkill(eCraftingSkill.MetalWorking, 1);
+								}
+								break;
 							}
-							break;
-						}
 
-					case 520:	//"wooden boards"
-						{
-							if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < subSkillCap)
+						case 520:	//"wooden boards"
 							{
-								player.GainCraftingSkill(eCraftingSkill.WoodWorking, 1);
+								if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < subSkillCap)
+								{
+									player.GainCraftingSkill(eCraftingSkill.WoodWorking, 1);
+								}
+								break;
 							}
-							break;
-						}
+					}
 				}
 			}
+
 			player.Out.SendUpdateCraftingSkills();
 		}
 		#endregion
@@ -425,20 +460,31 @@ namespace DOL.GS
 		/// Remove used raw material from player inventory
 		/// </summary>
 		/// <param name="player"></param>
-		/// <param name="craftItemData"></param>
+		/// <param name="recipe"></param>
 		/// <returns></returns>
-		public bool RemoveUsedMaterials(GamePlayer player, DBCraftedItem craftItemData)
+		public virtual bool RemoveUsedMaterials(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
 			Hashtable dataSlots = new Hashtable(10);
+
 			lock (player.Inventory)
 			{
-				foreach (DBCraftedXItem rawmaterial in craftItemData.RawMaterials)
+				foreach (DBCraftedXItem material in rawMaterials)
 				{
+					ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
+
+					if (template == null)
+					{
+						player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + " needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						log.Error("RemoveUsedMaterials: Cannot find raw material ItemTemplate: " + material.IngredientId_nb + " needed for recipe: " + recipe.CraftedItemID);
+						return false;
+					}
+
 					bool result = false;
-					int count = rawmaterial.Count;
+					int count = material.Count;
+
 					foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 					{
-						if (item != null && item.Name == rawmaterial.ItemTemplate.Name)
+						if (item != null && item.Name == template.Name)
 						{
 							if (item.Count >= count)
 							{
@@ -492,23 +538,24 @@ namespace DOL.GS
 		/// Make the crafted item and add it to player's inventory
 		/// </summary>
 		/// <param name="player"></param>
-		/// <param name="craftItemData"></param>
+		/// <param name="recipe"></param>
 		/// <returns></returns>
-		protected virtual void BuildCraftedItem(GamePlayer player, DBCraftedItem craftItemData)
+		protected virtual void BuildCraftedItem(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft)
 		{
 			Hashtable changedSlots = new Hashtable(5); // key : > 0 inventory ; < 0 groud || value: < 0 = new item count; > 0 = add to old
 
 			lock (player.Inventory)
 			{
-				int count = craftItemData.ItemTemplate.PackSize < 1 ? 1 : craftItemData.ItemTemplate.PackSize;
+				int count = itemToCraft.PackSize < 1 ? 1 : itemToCraft.PackSize;
 				foreach (InventoryItem item in player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					if (item == null)
 						continue;
+
                     //Because crafteditem is unique, we have to check by name
-                    if (item.Name != craftItemData.ItemTemplate.Name)
+					if (item.Name != itemToCraft.Name)
                         continue;
-                    if (item.Count >= craftItemData.ItemTemplate.MaxCount)
+					if (item.Count >= itemToCraft.MaxCount)
                         continue;
 
 					int countFree = item.MaxCount - item.Count;
@@ -557,12 +604,12 @@ namespace DOL.GS
 
 					// need to create a new item
 
-					ItemUnique unique = new ItemUnique(craftItemData.ItemTemplate);
+					ItemUnique unique = new ItemUnique(itemToCraft);
 					GameServer.Database.AddObject(unique);
 					newItem = GameInventoryItem.Create<ItemUnique>(unique);
 					newItem.IsCrafted = true;
 					newItem.Creator = player.Name;
-					newItem.Quality = GetQuality(player, craftItemData);
+					newItem.Quality = GetQuality(player, recipe);
 					newItem.Count = -countToAdd;
 
 					if ((int)de.Key > 0)	// Create new item in the backpack
@@ -572,13 +619,13 @@ namespace DOL.GS
 					else					// Create new item on the ground
 					{
 						player.CreateItemOnTheGround(newItem);
-						player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.BackpackFull", craftItemData.ItemTemplate.Name));
+						player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.BackpackFull", itemToCraft.Name));
 					}
 				}
 
 				player.Inventory.CommitChanges();
 
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Successfully", craftItemData.ItemTemplate.Name, newItem.Quality), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Successfully", itemToCraft.Name, newItem.Quality), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 
 				if (newItem.Quality == 100)
 				{
@@ -599,9 +646,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate chance to succes
 		/// </summary>
-		public virtual int CalculateChanceToMakeItem(GamePlayer player, DBCraftedItem item)
+		public virtual int CalculateChanceToMakeItem(GamePlayer player, DBCraftedItem recipe)
 		{
-			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
+			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), recipe.CraftingLevel);
 			if (con < -3)
 				con = -3;
 			if (con > 3)
@@ -632,9 +679,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate chance to gain point
 		/// </summary>
-		public virtual int CalculateChanceToGainPoint(GamePlayer player, DBCraftedItem item)
+		public virtual int CalculateChanceToGainPoint(GamePlayer player, DBCraftedItem recipe)
 		{
-			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), item.CraftingLevel);
+			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), recipe.CraftingLevel);
 			if (con < -3)
 				con = -3;
 			if (con > 3)
@@ -683,14 +730,14 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate crafting time
 		/// </summary>
-		public virtual int GetCraftingTime(GamePlayer player, DBCraftedItem ItemCraft)
+		public virtual int GetCraftingTime(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
-			double baseMultiplier = (ItemCraft.CraftingLevel / 100) + 1;
+			double baseMultiplier = (recipe.CraftingLevel / 100) + 1;
 
 			ushort materialsCount = 0;
-			foreach (DBCraftedXItem rawmaterial in ItemCraft.RawMaterials)
+			foreach (DBCraftedXItem material in rawMaterials)
 			{
-				materialsCount += (ushort)rawmaterial.Count;
+				materialsCount += (ushort)material.Count;
 			}
 
 			int craftingTime = (int)(baseMultiplier * materialsCount / 4);
@@ -704,7 +751,7 @@ namespace DOL.GS
 			else if (Keeps.KeepBonusMgr.RealmHasBonus(DOL.GS.Keeps.eKeepBonusType.Craft_Timers_3, (eRealm)player.Realm))
 				craftingTime = (int)(craftingTime / 1.03);
 
-			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), ItemCraft.CraftingLevel);
+			int con = GetItemCon(player.GetCraftingSkillValue(m_eskill), recipe.CraftingLevel);
 			double mod = 1.0;
 			switch (con)
 			{
@@ -741,7 +788,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate the minumum needed secondary crafting skill level to make the item
 		/// </summary>
-		public virtual int GetSecondaryCraftingSkillMinimumLevel(DBCraftedItem item)
+		public virtual int GetSecondaryCraftingSkillMinimumLevel(DBCraftedItem recipe, ItemTemplate itemToCraft)
 		{
 			return 0;
 		}

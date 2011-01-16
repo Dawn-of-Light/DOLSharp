@@ -72,13 +72,13 @@ namespace DOL.GS
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.BeginRepairing2", item.Name, CalculateSuccessChances(player, item).ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			if (tradePartner != null) tradePartner.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.BeginRepairing2", player.Name, item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-			int workDuration = GetCraftingTime(player, item);
+			int workDuration = GetRepairTime(player, item);
 			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.Repairing", item.Name), workDuration);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(Proceed);
 			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.PLAYER_CRAFTER, player);
 			player.CraftTimer.Properties.setProperty(PLAYER_PARTNER, tradePartner);
-			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.ITEM_BEING_CRAFTED, item);
+			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.RECIPE_BEING_CRAFTED, item);
 			player.CraftTimer.Start(workDuration * 1000);
 			return 1;
 		}
@@ -92,7 +92,7 @@ namespace DOL.GS
 		{
 			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(AbstractCraftingSkill.PLAYER_CRAFTER, null);
 			GamePlayer tradePartner = (GamePlayer)timer.Properties.getProperty<object>(PLAYER_PARTNER, null);
-			InventoryItem item = (InventoryItem)timer.Properties.getProperty<object>(AbstractCraftingSkill.ITEM_BEING_CRAFTED, null);
+			InventoryItem item = (InventoryItem)timer.Properties.getProperty<object>(AbstractCraftingSkill.RECIPE_BEING_CRAFTED, null);
 
 			if (player == null || item == null)
 			{
@@ -192,7 +192,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate crafting time
 		/// </summary>
-		protected static int GetCraftingTime(GamePlayer player, InventoryItem item)
+		protected static int GetRepairTime(GamePlayer player, InventoryItem item)
 		{
 			return Math.Max(1, item.Level / 2); // wrong but don't know the correct formula
 		}
@@ -241,12 +241,12 @@ namespace DOL.GS
 
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.BeginRepair", siegeWeapon.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-			int workDuration = GetCraftingTime(player, siegeWeapon);
+			int workDuration = GetRepairTime(player, siegeWeapon);
 			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client, "Repair.BeginWork.Repairing", siegeWeapon.Name), workDuration);
 			player.CraftTimer = new RegionTimer(player);
 			player.CraftTimer.Callback = new RegionTimerCallback(ProceedSiegeWeapon);
 			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.PLAYER_CRAFTER, player);
-			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.ITEM_BEING_CRAFTED, siegeWeapon);
+			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.RECIPE_BEING_CRAFTED, siegeWeapon);
 			player.CraftTimer.Start(workDuration * 1000);
 			return 1;
 		}
@@ -259,7 +259,7 @@ namespace DOL.GS
 		protected static int ProceedSiegeWeapon(RegionTimer timer)
 		{
 			GamePlayer player = (GamePlayer)timer.Properties.getProperty<object>(AbstractCraftingSkill.PLAYER_CRAFTER, null);
-			GameSiegeWeapon siegeWeapon = (GameSiegeWeapon)timer.Properties.getProperty<object>(AbstractCraftingSkill.ITEM_BEING_CRAFTED, null);
+			GameSiegeWeapon siegeWeapon = (GameSiegeWeapon)timer.Properties.getProperty<object>(AbstractCraftingSkill.RECIPE_BEING_CRAFTED, null);
 
 			if (player == null || siegeWeapon == null)
 			{
@@ -319,7 +319,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate crafting time
 		/// </summary>
-		protected static int GetCraftingTime(GamePlayer player, GameSiegeWeapon siegeWeapon)
+		protected static int GetRepairTime(GamePlayer player, GameSiegeWeapon siegeWeapon)
 		{
 			return 15; // wrong but don't know the correct formula
 		}

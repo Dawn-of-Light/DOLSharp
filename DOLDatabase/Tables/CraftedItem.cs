@@ -110,18 +110,6 @@ namespace DOL
 					m_craftingSkillType = value;
 				}
 			}
-
-			/// <summary>
-			/// List of raw material needed
-			/// </summary>
-			[Relation(LocalField = "Id_nb", RemoteField = "CraftedItemId_nb", AutoLoad = true, AutoDelete=true)]
-			public DBCraftedXItem[] RawMaterials;
-
-			/// <summary>
-			/// The item to craft
-			/// </summary>
-			[Relation(LocalField = "Id_nb", RemoteField = "Id_nb", AutoLoad = true, AutoDelete=false)]
-			public ItemTemplate ItemTemplate;
 		}
 	}
 }

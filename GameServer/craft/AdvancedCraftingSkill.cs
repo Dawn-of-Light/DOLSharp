@@ -17,6 +17,7 @@
  *
  */
 using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Collections;
 using System.Reflection;
 using DOL.Database;
@@ -34,13 +35,15 @@ namespace DOL.GS
     {
         #region Classic craft function
 
-        /// <summary>
-		/// Check if  the player own all needed tools
+		/// <summary>
+		/// Check if the player is near the needed tools (forge, lathe, etc)
 		/// </summary>
 		/// <param name="player">the crafting player</param>
-		/// <param name="craftItemData">the object in construction</param>
-		/// <returns>true if the player hold all needed tools</returns>
-		protected override bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
+		/// <param name="recipe">the recipe being used</param>
+		/// <param name="itemToCraft">the item to make</param>
+		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
+		/// <returns>true if required tools are found</returns>
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
@@ -50,19 +53,13 @@ namespace DOL.GS
 				}
 			}
 
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", craftItemData.ItemTemplate.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Crafting.CheckTool.NotHaveTools", itemToCraft.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.CheckTool.FindAlchemyTable"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			
+
+			if (player.Client.Account.PrivLevel > 1)
+				return true;
+
 			return false;
-		}
-		/// <summary>
-		/// Select craft to gain point and increase it
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
-		{
-            ;
 		}
 
 		#endregion

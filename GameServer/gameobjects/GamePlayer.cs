@@ -12623,23 +12623,23 @@ namespace DOL.GS
 		/// <summary>
 		/// Set player's stealth state
 		/// </summary>
-		/// <param name="newState">stealth state</param>
-		public virtual void Stealth(bool newState)
+		/// <param name="goStealth">true is stealthing, false if unstealthing</param>
+		public virtual void Stealth(bool goStealth)
 		{
-			if (CraftTimer != null && CraftTimer.IsAlive)
+			if (IsStealthed == goStealth)
+				return;
+
+			if (goStealth && CraftTimer != null && CraftTimer.IsAlive)
 			{
 				Out.SendMessage("You can't stealth while crafting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			if (IsStealthed == newState)
-				return;
-
 			if (IsOnHorse || IsSummoningMount)
 				IsOnHorse = false;
 
 			UncoverStealthAction action = (UncoverStealthAction)TempProperties.getProperty<object>(UNCOVER_STEALTH_ACTION_PROP, null);
-			if (newState)
+			if (goStealth)
 			{
 				//start the uncover timer
 				if (action == null)
@@ -13371,6 +13371,9 @@ namespace DOL.GS
 		{
 			if (skill == eCraftingSkill.NoCrafting) return false;
 
+			if (CraftingPrimarySkill == eCraftingSkill.NoCrafting)
+				CraftingPrimarySkill = eCraftingSkill.BasicCrafting;
+
 			lock (craftingSkills.SyncRoot)
 			{
 				if (!craftingSkills.ContainsKey((int)skill))
@@ -13466,7 +13469,9 @@ namespace DOL.GS
 		{
 			if (DBCharacter.SerializedCraftingSkills == "" || DBCharacter.CraftingPrimarySkill == 0)
 			{
-				CraftingPrimarySkill = eCraftingSkill.NoCrafting;
+				AddCraftingSkill(eCraftingSkill.BasicCrafting, 1);
+				SaveCraftingSkills();
+				Out.SendUpdateCraftingSkills();
 				return;
 			}
 			try
@@ -13497,6 +13502,7 @@ namespace DOL.GS
 									case "Fletching": i = 12; break;
 									case "SpellCrafting": i = 13; break;
 									case "WoodWorking": i = 14; break;
+									case "BasicCrafting": i = 15; break;
 
 							}
 							if (!craftingSkills.ContainsKey(i))
@@ -13540,25 +13546,24 @@ namespace DOL.GS
 		}
 
         /// <summary>
-        /// This function is called each time a player try to make a item
+        /// This function is called each time a player tries to make a item
         /// </summary>
         public void CraftItem(ushort itemID)
         {
-            DBCraftedItem craftitem = GameServer.Database.SelectObject<DBCraftedItem>("CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
-            if (craftitem != null)
+            DBCraftedItem recipe = GameServer.Database.SelectObject<DBCraftedItem>("CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
+            if (recipe != null)
             {
-
-                ItemTemplate itemtemplateverif = null;
-                itemtemplateverif = GameServer.Database.FindObjectByKey<ItemTemplate>(craftitem.ItemTemplate.Id_nb);
-                var rawmaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = '" + craftitem.ItemTemplate.Id_nb + "'");
-                if (rawmaterials.Count > 0)
+                ItemTemplate itemToCraft = null;
+                itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
+                IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = '" + recipe.Id_nb + "'");
+                if (rawMaterials.Count > 0)
                 {
-                    if (itemtemplateverif != null)
+                    if (itemToCraft != null)
                     {
-                        AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)craftitem.CraftingSkillType);
+                        AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)recipe.CraftingSkillType);
                         if (skill != null)
                         {
-                            skill.CraftItem(craftitem, this);
+							skill.CraftItem(this, recipe, itemToCraft, rawMaterials);
                         }
                         else
                         {
@@ -13567,17 +13572,17 @@ namespace DOL.GS
                     }
                     else
                     {
-                        Out.SendMessage("Crafted ItemTemplate (" + craftitem.ItemTemplate.Id_nb + ") not implented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        Out.SendMessage("Crafted ItemTemplate (" + recipe.Id_nb + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     }
                 }
                 else
                 {
-                    Out.SendMessage("Craft ItemTemplate (" + craftitem.ItemTemplate.Id_nb + ") have 0 rawmaterials, CraftedItem can't be crafted.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    Out.SendMessage("Craft recipe for (" + recipe.Id_nb + ") is missing raw materials!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 }
             }
             else
             {
-                Out.SendMessage("CraftedItemID: (" + itemID + ") not implented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                Out.SendMessage("CraftedItemID: (" + itemID + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
         }
 

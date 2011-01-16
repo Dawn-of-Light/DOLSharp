@@ -341,6 +341,9 @@
     <Compile Include="craft\ArmorCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DatabaseUpdate\SalvageYieldsUpdate.cs" />
+    <Compile Include="DatabaseUpdate\DatabaseUpdateAttribute.cs" />
+    <Compile Include="DatabaseUpdate\IDatabaseUpdater.cs" />
     <Compile Include="effects\DummyEffect.cs" />
     <Compile Include="events\gameobjects\InterruptedEventArgs.cs" />
     <Compile Include="events\gameobjects\NextCraftingTierReachedEventArgs.cs" />
@@ -407,18 +410,6 @@
     <Compile Include="craft\WoodWorking.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="dbconverters\Version004.cs" />
-    <Compile Include="dbconverters\Version003.cs" />
-    <Compile Include="dbconverters\DatabaseConverterAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="dbconverters\IDatabaseConverter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="dbconverters\Version002.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="dbconverters\Version005.cs" />
     <Compile Include="effects\BerserkEffect.cs">
       <SubType>Code</SubType>
     </Compile>

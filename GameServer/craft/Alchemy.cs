@@ -16,9 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 using DOL.Database;
 using DOL.Language;
 using System;
+using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -43,30 +45,30 @@ namespace DOL.GS
 
 		#region Classic Crafting Overrides
 
-		protected override bool CheckForTools(GamePlayer player, DBCraftedItem craftItemData)
+		/// <summary>
+		/// Check if the player is near the needed tools (forge, lathe, etc)
+		/// </summary>
+		/// <param name="player">the crafting player</param>
+		/// <param name="recipe">the recipe being used</param>
+		/// <param name="itemToCraft">the item to make</param>
+		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
+		/// <returns>true if required tools are found</returns>
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
-            return base.CheckForTools(player, craftItemData);
+			return base.CheckForTools(player, recipe, itemToCraft, rawMaterials);
 		}
 
 		/// <summary>
-		/// Select craft to gain a point in and increase it
+		/// Gain a point in the appropriate skills for a recipe and materials
 		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="item"></param>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
-			if (Util.Chance( CalculateChanceToGainPoint(player, item)))
+			if (Util.Chance( CalculateChanceToGainPoint(player, recipe)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.Alchemy, 1);
 
-                // One of the raw materials gains the point for main skill, 
-                // thats why we item.RawMaterials.Length - 1
-
-                for (int materials = 0; materials < item.RawMaterials.Length - 1; materials++)
-                {
-                    if (player.GetCraftingSkillValue(eCraftingSkill.HerbalCrafting) < subSkillCap)
-                        player.GainCraftingSkill(eCraftingSkill.HerbalCrafting, 1);
-                }
+				if (player.GetCraftingSkillValue(eCraftingSkill.HerbalCrafting) < subSkillCap)
+					player.GainCraftingSkill(eCraftingSkill.HerbalCrafting, 1);
 
 				player.Out.SendUpdateCraftingSkills();
 			}

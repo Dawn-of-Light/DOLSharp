@@ -235,24 +235,28 @@ namespace DOL.Database
 		/// Saves an object to db if saving is allowed and object is dirty
 		/// </summary>
 		/// <param name="dataObject"></param>
-		public void SaveObject(DataObject dataObject)
+		public bool SaveObject(DataObject dataObject)
 		{
 			if (dataObject.Dirty)
 			{
-				SaveObjectImpl(dataObject);
+				return SaveObjectImpl(dataObject);
 			}
+
+			return true;
 		}
 
 		/// <summary>
 		/// delete object from db
 		/// </summary>
 		/// <param name="dataObject"></param>
-		public void DeleteObject(DataObject dataObject)
+		public bool DeleteObject(DataObject dataObject)
 		{
 			if (dataObject.AllowDelete)
 			{
-				DeleteObjectImpl(dataObject);
+				return DeleteObjectImpl(dataObject);
 			}
+
+			return false;
 		}
 
 		public int GetObjectCount<TObject>()
@@ -541,13 +545,13 @@ namespace DOL.Database
 		/// Persists an object to the database.
 		/// </summary>
 		/// <param name="dataObject">the object to save to the database</param>
-		protected abstract void SaveObjectImpl(DataObject dataObject);
+		protected abstract bool SaveObjectImpl(DataObject dataObject);
 
 		/// <summary>
 		/// Deletes an object from the database.
 		/// </summary>
 		/// <param name="dataObject">the object to delete from the database</param>
-		protected abstract void DeleteObjectImpl(DataObject dataObject);
+		protected abstract bool DeleteObjectImpl(DataObject dataObject);
 
 		/// <summary>
 		/// Finds an object in the database by primary key.
