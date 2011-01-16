@@ -276,7 +276,7 @@ namespace DOL.GS
 			}
 			if (removeFromInventory)
 			{
-				lock (player.Inventory.AllItems)
+				lock (player.Inventory)
 				{
 					bool success = player.Inventory.RemoveItem(m_item);
 					log.Debug("Remove " + m_item.Name + " from " + player.Name + "'s Inventory " + ((success) ? "successfully." : "with errors."));
@@ -506,12 +506,10 @@ namespace DOL.GS
 			m_itemTemp.PackSize = 1;
 			m_itemTemp.AllowAdd = false;
 			m_itemTemp.Weight = 1000;
-			m_itemTemp.Id_nb = "ARelic";
+			m_itemTemp.Id_nb = "GameRelic";
 			m_itemTemp.IsTradable = false;
-			m_item = new InventoryItem();
-			m_item.AllowAdd = false;
-			m_item.AllowDelete = false;
-			m_item.Template = m_itemTemp;
+			m_itemTemp.ClassType = "DOL.GS.GameInventoryRelic";
+			m_item = GameInventoryItem.Create<ItemTemplate>(m_itemTemp);
 		}
 		/// <summary>
 		/// Saves the current GameRelic to the database
@@ -552,8 +550,6 @@ namespace DOL.GS
 
 		public static MiniTemp GetRelicTemplate(eRealm Realm, eRelicType RelicType)
 		{
-
-
 			MiniTemp m_template = new MiniTemp();
 			switch (Realm)
 			{
