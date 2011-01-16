@@ -207,7 +207,14 @@ namespace DOL.GS
 							if (currentItem == null)
 								continue;
 
-							if (currentItem.Id_nb == InventoryItem.BLANK_ITEM)
+							bool canPersist = true;
+							GameInventoryItem gameItem = currentItem as GameInventoryItem;
+							if (gameItem != null)
+							{
+								canPersist = gameItem.CanPersist;
+							}
+
+							if (canPersist == false)
 								continue;
 
 							if (GetValidInventorySlot((eInventorySlot) currentItem.SlotPosition) == eInventorySlot.Invalid)
@@ -312,7 +319,14 @@ namespace DOL.GS
 
 			item.OwnerID = m_player.InternalID;
 
-			if (item.Id_nb != InventoryItem.BLANK_ITEM)
+			bool canPersist = true;
+			GameInventoryItem gameItem = item as GameInventoryItem;
+			if (gameItem != null)
+			{
+				canPersist = gameItem.CanPersist;
+			}
+
+			if (canPersist)
 			{
 				if (addObject)
 				{
@@ -351,8 +365,6 @@ namespace DOL.GS
 			return true;
 		}
 
-
-
 		public override bool RemoveItem(InventoryItem item)
 		{
 			return RemoveItem(item, true);
@@ -390,7 +402,14 @@ namespace DOL.GS
 			if (!base.RemoveItem(item))
 				return false;
 
-			if (item.Id_nb != InventoryItem.BLANK_ITEM)
+			bool canPersist = true;
+			GameInventoryItem gameItem = item as GameInventoryItem;
+			if (gameItem != null)
+			{
+				canPersist = gameItem.CanPersist;
+			}
+
+			if (canPersist)
 			{
 				if (deleteObject)
 				{

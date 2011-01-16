@@ -833,15 +833,15 @@ namespace DOL.GS
 		/// Adds needed amount of items to inventory if there
 		/// is enough space else nothing is done
 		/// </summary>
-		/// <param name="template">The ItemTemplate</param>
+		/// <param name="sourceItem">The source inventory item</param>
 		/// <param name="count">The count of items to add</param>
 		/// <param name="minSlot">The first slot</param>
 		/// <param name="maxSlot">The last slot</param>
 		/// <returns>True if all items were added</returns>
-		public virtual bool AddTemplate(InventoryItem  template, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
+		public virtual bool AddTemplate(InventoryItem sourceItem, int count, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
 			// Make sure template isn't null.
-			if (template == null)
+			if (sourceItem == null)
 				return false;
 
 			// Make sure we have a positive item count.
@@ -886,7 +886,7 @@ namespace DOL.GS
 						continue;
 
 					// If slot isn't of the same type as our template, we can't stack, so skip.
-					if (curItem.Id_nb != template.Id_nb)
+					if (curItem.Id_nb != sourceItem.Id_nb)
 						continue;
 
 					// Can't add to an already maxed-out stack.
@@ -943,8 +943,8 @@ namespace DOL.GS
 						// If the max stack count is less than remaining items to add, we can only add the max
 						// stack count and must find remaining slots to allocate the rest of the items to.
 						int countAdd = count;
-						if (countAdd > template.MaxCount)
-							countAdd = template.MaxCount;
+						if (countAdd > sourceItem.MaxCount)
+							countAdd = sourceItem.MaxCount;
 
 						// Set the number of items to add to the given slot. (negative amount indicates we're adding a new item, not stacking)
 						changedSlots[curSlot] = -countAdd;
@@ -976,11 +976,11 @@ namespace DOL.GS
 
 				try
 				{
-					foreach (var de in changedSlots)
+					foreach (var slot in changedSlots)
 					{
 						InventoryItem item;
-						eInventorySlot itemSlot = de.Key;
-						int itemCount = de.Value;
+						eInventorySlot itemSlot = slot.Key;
+						int itemCount = slot.Value;
 
 						if (itemCount > 0) // existing item should be changed
 						{
@@ -991,7 +991,15 @@ namespace DOL.GS
 						}
 						else if (itemCount < 0) // new item should be added
 						{
-							item = GameInventoryItem.Create<InventoryItem>(template);
+							if (sourceItem.Template is ItemUnique)
+							{
+								item = GameInventoryItem.Create<InventoryItem>(sourceItem);
+							}
+							else
+							{
+								item = GameInventoryItem.Create<ItemTemplate>(sourceItem.Template);
+							}
+
 							item.Count = -itemCount;
 							AddItem(itemSlot, item);
 						}
