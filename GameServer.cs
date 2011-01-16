@@ -31,7 +31,7 @@ using DOL.Database.Attributes;
 using DOL.Database.Connection;
 using DOL.Events;
 using DOL.GS.Behaviour;
-using DOL.GS.DatabaseConverters;
+using DOL.GS.DatabaseUpdate;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -587,9 +587,9 @@ namespace DOL.GS
 				AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
 				//---------------------------------------------------------------
-				//Check and convert the database version if older that current
-				//if (!CheckDatabaseVersion())
-				//	return false;
+				//Check and update the database if needed
+				if (!UpdateDatabase())
+					return false;
 
 				//---------------------------------------------------------------
 				//Try to init the server port
@@ -857,95 +857,35 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Checks and convers database to newer versions
+		/// Do any required updates to the database
 		/// </summary>
 		/// <returns>true if all went fine, false if errors</returns>
-		protected virtual bool CheckDatabaseVersion()
+		protected virtual bool UpdateDatabase()
 		{
-			const string versionKey = "DatabaseVersion";
-			const string errorKey = "LastError";
-
-			var xmlConfig = new XMLConfigFile();
-			var versionFile = new FileInfo("./config/DatabaseVersion.xml");
-			int currentVersion = 1;
-
 			try
 			{
-				log.Info("Checking database version...");
+				log.Info("Checking database for updates ...");
 
-				if (versionFile.Exists)
-				{
-					xmlConfig = XMLConfigFile.ParseXMLFile(versionFile);
-					currentVersion = xmlConfig[versionKey].GetInt();
-				}
-
-				if (currentVersion < 0)
-					currentVersion = 0;
-
-				var convertersByVersion = new SortedList();
 				foreach (Type type in typeof (GameServer).Assembly.GetTypes())
 				{
 					if (!type.IsClass) continue;
-					if (!typeof (IDatabaseConverter).IsAssignableFrom(type)) continue;
-					object[] attributes = type.GetCustomAttributes(typeof (DatabaseConverterAttribute), false);
+					if (!typeof (IDatabaseUpdater).IsAssignableFrom(type)) continue;
+					object[] attributes = type.GetCustomAttributes(typeof (DatabaseUpdateAttribute), false);
 					if (attributes.Length <= 0) continue;
-					var attr = (DatabaseConverterAttribute) attributes[0];
 
-					if (convertersByVersion.ContainsKey(attr.TargetVersion))
-					{
-						log.ErrorFormat("{0}: converter to version {1} is already defined!", type.FullName, attr.TargetVersion);
-						return false;
-					}
-					if (attr.TargetVersion < 1)
-					{
-						log.ErrorFormat("{0}: converter version is {1}, should be higher than zero!", type.FullName, attr.TargetVersion);
-						return false;
-					}
-					object instance = Activator.CreateInstance(type);
-					convertersByVersion.Add(attr.TargetVersion, instance);
+					var instance = Activator.CreateInstance(type) as IDatabaseUpdater;
+					instance.Update();
 				}
-
-				int prevVersion = 1;
-				foreach (DictionaryEntry entry in convertersByVersion)
-				{
-					var converter = (IDatabaseConverter) entry.Value;
-					var version = (int) entry.Key;
-					if (prevVersion + 1 != version)
-					{
-						log.ErrorFormat(
-							"{0}: gap between database converters (prev converter version = {1}, current converter version = {2})",
-							converter.GetType().FullName, prevVersion, version);
-						return false;
-					}
-					prevVersion = version;
-				}
-
-				for (int i = currentVersion + 1;; i++)
-				{
-					var conv = (IDatabaseConverter) convertersByVersion[i];
-					if (conv == null)
-						break;
-
-					log.InfoFormat("Converting database to version {0}...", i);
-					conv.ConvertDatabase();
-
-					xmlConfig[versionKey].Set(i);
-					versionFile.Refresh();
-					xmlConfig.Save(versionFile);
-				}
-				return true;
 			}
+
 			catch (Exception e)
 			{
-				if (currentVersion == -1)
-					currentVersion = 1;
-				log.Error("Error checking/converting database version:", e);
-				xmlConfig[versionKey].Set(currentVersion);
-				xmlConfig[errorKey].Set(e.ToString());
-				versionFile.Refresh();
-				xmlConfig.Save(versionFile);
+				log.Error("Error checking/updating database: ", e);
 				return false;
 			}
+
+			log.Info("Database update complete.");
+			return true;
 		}
 
 		/// <summary>

@@ -30,6 +30,8 @@ namespace DOL.GS.Quests
 	/// </summary>
 	public class CraftTask : AbstractTask
 	{
+		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public const string RECIEVER_ZONE = "recieverZone";
 
 		//public string ItemName;
@@ -157,7 +159,8 @@ namespace DOL.GS.Quests
 			var craftitem = GameServer.Database.SelectObjects<DBCraftedItem>("CraftingSkillType=" + (int)player.CraftingPrimarySkill + " AND CraftingLevel>" + lowLevel + " AND CraftingLevel<" + highLevel);
 			int craftrnd = Util.Random(craftitem.Count);
 
-			return craftitem[craftrnd].ItemTemplate;
+			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(craftitem[craftrnd].Id_nb);
+			return template;
 		}
 
 		/// <summary>
@@ -177,20 +180,28 @@ namespace DOL.GS.Quests
 				return false;
 			}
 
-			ItemTemplate taskItems = GenerateNPCItem(player);
+			ItemTemplate taskItem = GenerateNPCItem(player);
+
+			if (taskItem == null)
+			{
+				player.Out.SendMessage("I can't think of anything for you to make, perhaps you should ask again.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				log.ErrorFormat("Craft task item is null for player {0} at level {1}.", player.Name, player.Level);
+				return false;
+			}
 
 			var craftTask = new CraftTask(player)
 								{
 									TimeOut = DateTime.Now.AddHours(2),
-									ItemName = taskItems.Name,
+									ItemName = taskItem.Name,
 									RecieverName = NPC.Name,
 									RecieverZone = NPC.CurrentZone.Description
 								};
-			craftTask.SetRewardMoney((long)(taskItems.Price * RewardMoneyRatio));
+
+			craftTask.SetRewardMoney((long)(taskItem.Price * RewardMoneyRatio));
 
 			player.Task = craftTask;
 
-			player.Out.SendMessage("Craft " + taskItems.GetName(0, false) + " for " + NPC.Name + " in " + NPC.CurrentZone.Description, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+			player.Out.SendMessage("Craft " + taskItem.GetName(0, false) + " for " + NPC.Name + " in " + NPC.CurrentZone.Description, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 			return true;
 
 		}

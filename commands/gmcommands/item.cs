@@ -75,7 +75,9 @@ namespace DOL.GS.Commands
 		 "/item levelrequired <level> <slot> - Set the required level needed to use spells and procs on this item",
 		 "/item bonuslevel <level> <slot> - Set the level required for item bonuses to effect player",
 		 "/item flags <flags> <slot> - Set the flags for this item",
-		 "/item updatetemplate <slot> - Changes to this item will also be made to the ItemTemplate and can be saved in the DB.",
+		 "/item salvageid <SalvageYield ID> <slot> - Set the SalvageYieldID for this item",
+		 "/item salvageinfo <SalvageYield ID> <slot> - Show the salvage yield for this item",
+		 "/item update <slot> - Changes to this item will also be made to the ItemTemplate and can be saved in the DB.",
 		 "/item save <TemplateID> [slot #]' - Create a new template or save an existing one",
 		 "/item addunique <id_nb> <slot> - save item as an unique one",
 		 "/item saveunique <id_nb> <slot> - update a unique item",
@@ -1485,7 +1487,139 @@ namespace DOL.GS.Commands
 							break;
 						}
 					#endregion Flags
-					#region UpdateTemplate
+					#region Salvage
+					case "salvageid":
+						{
+							int salvageID = Convert.ToInt32(args[2]);
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (args.Length == 4)
+							{
+								slot = Convert.ToInt32(args[3]);
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							item.SalvageYieldID = salvageID;
+							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
+							break;
+						}
+					case "salvageinfo":
+						{
+							int slot = (int)eInventorySlot.LastBackpack;
+
+							if (args.Length == 3)
+							{
+								slot = Convert.ToInt32(args[2]);
+							}
+
+							InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slot);
+							if (item == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							List<string> list = new List<string>();
+
+							SalvageYield salvageYield = null;
+							bool calculated = true;
+							string sql = "";
+
+							int salvageLevel = CraftingMgr.GetItemCraftLevel(item) / 100;
+							if (salvageLevel > 9) salvageLevel = 9; // max 9
+
+							if (item.SalvageYieldID == 0)
+							{
+								sql = "ObjectType=" + item.Object_Type + " AND SalvageLevel=" + salvageLevel;
+							}
+							else
+							{
+								sql = "ID=" + item.SalvageYieldID;
+								calculated = false;
+							}
+
+							if (ServerProperties.Properties.USE_SALVAGE_PER_REALM)
+							{
+								// Some items use realm, some do not, so allow a find of either a set realm, or 0
+								sql += " AND (Realm=" + item.Realm + " OR Realm=0)";
+							}
+
+							salvageYield = GameServer.Database.SelectObject<SalvageYield>(sql);
+							SalvageYield yield = null;
+
+							if (salvageYield != null)
+							{
+								yield = salvageYield.Clone() as SalvageYield;
+							}
+
+							if (yield == null || yield.PackageID == SalvageYield.LEGACY_SALVAGE_ID)
+							{
+								if (calculated == false)
+								{
+									list.Add("SalvageYield ID " + item.SalvageYieldID + " specified but not found!");
+								}
+								else if (ServerProperties.Properties.USE_NEW_SALVAGE)
+								{
+									list.Add("Calculated Values (USE_NEW_SALVAGE = True)");
+								}
+								else
+								{
+									list.Add("Calculated Values (USE_NEW_SALVAGE = False)");
+								}
+							}
+							else
+							{
+								list.Add("Using SalvageYield ID: " + yield.ID);
+							}
+
+							list.Add(" ");
+
+							ItemTemplate material = GameServer.Database.FindObjectByKey<ItemTemplate>(yield.MaterialId_nb);
+							string materialName = yield.MaterialId_nb;
+
+							if (material != null)
+							{
+								materialName = material.Name + " (" + materialName + ")";
+							}
+							else
+							{
+								materialName = "Not Found! (" + materialName + ")";
+							}
+
+							if (calculated == false)
+							{
+								if (yield != null)
+								{
+									list.Add("SalvageYield ID: " + yield.ID);
+									list.Add("       Material: " + materialName);
+									list.Add("          Count: " + yield.Count);
+									list.Add("          Realm: " + (yield.Realm == 0 ? "Any" : GlobalConstants.RealmToName((eRealm)yield.Realm)));
+									list.Add("      PackageID: " + yield.PackageID);
+								}
+							}
+							else
+							{
+								list.Add("SalvageYield ID: " + yield.ID);
+								list.Add("     ObjectType: " + yield.ObjectType);
+								list.Add("   SalvageLevel: " + yield.SalvageLevel);
+								list.Add("       Material: " + materialName);
+								list.Add("          Count: " + Salvage.GetMaterialYield(client.Player, item, yield, material));
+								list.Add("          Realm: " + (yield.Realm == 0 ? "Any" : GlobalConstants.RealmToName((eRealm)yield.Realm)));
+								list.Add("      PackageID: " + yield.PackageID);
+							}
+
+							client.Out.SendCustomTextWindow("Salvage info for " + item.Name, list);
+							break;
+						}
+					#endregion Flags
+					#region Update
+					case "update":
 					case "updatetemplate":
 						{
 							int slot = (int)eInventorySlot.LastBackpack;
@@ -1508,12 +1642,12 @@ namespace DOL.GS.Commands
 							else
 							{
 								(item.Template as ItemTemplate).AllowUpdate = true;
-								client.Out.SendMessage("** All changes made to this item will also be made to the source ItemTemplate: " + item.Template.Id_nb, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
-								DisplayMessage(client, "** All changes made to this item will also be made to the source ItemTemplate: " + item.Template.Id_nb);
+								client.Out.SendMessage("** When this item is saved all changes will also be made to the source ItemTemplate: " + item.Template.Id_nb, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+								DisplayMessage(client, "** When this item is saved all changes will also be made to the source ItemTemplate: " + item.Template.Id_nb);
 							}
 							break;
 						}
-					#endregion UpdateTemplate
+					#endregion Update
 					#region SaveUnique
 					case "saveunique":
 						{

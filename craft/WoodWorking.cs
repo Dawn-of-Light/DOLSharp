@@ -17,6 +17,7 @@
  *
  */
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
@@ -35,10 +36,12 @@ namespace DOL.GS
 			eSkill = eCraftingSkill.WoodWorking;
 		}
 
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem item)
+		/// <summary>
+		/// Gain a point in the appropriate skills for a recipe and materials
+		/// </summary>
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
-
-			if (Util.Chance(CalculateChanceToGainPoint(player, item)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
 			{
                 if (player.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < subSkillCap)
                 {
