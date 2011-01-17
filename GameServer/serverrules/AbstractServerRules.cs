@@ -556,16 +556,16 @@ namespace DOL.GS.ServerRules
 				if (!item.AllowedClasses.SplitCSV(true).Contains(player.CharacterClass.ID.ToString()))
 					return false;
 			}
-			
+
 			//armor
 			if (item.Object_Type >= (int)eObjectType._FirstArmor && item.Object_Type <= (int)eObjectType._LastArmor)
 			{
 				int armorAbility = -1;
 				switch ((eRealm)item.Realm)
 				{
-						case eRealm.Albion   : armorAbility = living.GetAbilityLevel(Abilities.AlbArmor); break;
-						case eRealm.Hibernia : armorAbility = living.GetAbilityLevel(Abilities.HibArmor); break;
-						case eRealm.Midgard  : armorAbility = living.GetAbilityLevel(Abilities.MidArmor); break;
+					case eRealm.Albion: armorAbility = living.GetAbilityLevel(Abilities.AlbArmor); break;
+					case eRealm.Hibernia: armorAbility = living.GetAbilityLevel(Abilities.HibArmor); break;
+					case eRealm.Midgard: armorAbility = living.GetAbilityLevel(Abilities.MidArmor); break;
 					default: // use old system
 						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.AlbArmor));
 						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.HibArmor));
@@ -574,15 +574,15 @@ namespace DOL.GS.ServerRules
 				}
 				switch ((eObjectType)item.Object_Type)
 				{
-						case eObjectType.GenericArmor: return armorAbility >= ArmorLevel.GenericArmor;
-						case eObjectType.Cloth       : return armorAbility >= ArmorLevel.Cloth;
-						case eObjectType.Leather     : return armorAbility >= ArmorLevel.Leather;
-					case eObjectType.Reinforced  :
-						case eObjectType.Studded     : return armorAbility >= ArmorLevel.Studded;
-					case eObjectType.Scale       :
-						case eObjectType.Chain       : return armorAbility >= ArmorLevel.Chain;
-						case eObjectType.Plate       : return armorAbility >= ArmorLevel.Plate;
-						default: return false;
+					case eObjectType.GenericArmor: return armorAbility >= ArmorLevel.GenericArmor;
+					case eObjectType.Cloth: return armorAbility >= ArmorLevel.Cloth;
+					case eObjectType.Leather: return armorAbility >= ArmorLevel.Leather;
+					case eObjectType.Reinforced:
+					case eObjectType.Studded: return armorAbility >= ArmorLevel.Studded;
+					case eObjectType.Scale:
+					case eObjectType.Chain: return armorAbility >= ArmorLevel.Chain;
+					case eObjectType.Plate: return armorAbility >= ArmorLevel.Plate;
+					default: return false;
 				}
 			}
 
@@ -591,60 +591,60 @@ namespace DOL.GS.ServerRules
 			string[] otherCheck = new string[0];
 
 			//http://dol.kitchenhost.de/files/dol/Info/itemtable.txt
-			switch((eObjectType)item.Object_Type)
+			switch ((eObjectType)item.Object_Type)
 			{
-					case eObjectType.GenericItem		: return true;
-					case eObjectType.GenericArmor		: return true;
-					case eObjectType.GenericWeapon	: return true;
-					case eObjectType.Staff				: abilityCheck = Abilities.Weapon_Staves; break;
-					case eObjectType.Fired				: abilityCheck = Abilities.Weapon_Shortbows; break;
-					case eObjectType.FistWraps		: abilityCheck = Abilities.Weapon_FistWraps; break;
-					case eObjectType.MaulerStaff	 	: abilityCheck = Abilities.Weapon_MaulerStaff; break;
+				case eObjectType.GenericItem: return true;
+				case eObjectType.GenericArmor: return true;
+				case eObjectType.GenericWeapon: return true;
+				case eObjectType.Staff: abilityCheck = Abilities.Weapon_Staves; break;
+				case eObjectType.Fired: abilityCheck = Abilities.Weapon_Shortbows; break;
+				case eObjectType.FistWraps: abilityCheck = Abilities.Weapon_FistWraps; break;
+				case eObjectType.MaulerStaff: abilityCheck = Abilities.Weapon_MaulerStaff; break;
 
-					//alb
-					case eObjectType.CrushingWeapon  : abilityCheck = Abilities.Weapon_Crushing; break;
-					case eObjectType.SlashingWeapon  : abilityCheck = Abilities.Weapon_Slashing; break;
-					case eObjectType.ThrustWeapon    : abilityCheck = Abilities.Weapon_Thrusting; break;
-					case eObjectType.TwoHandedWeapon : abilityCheck = Abilities.Weapon_TwoHanded; break;
-					case eObjectType.PolearmWeapon   : abilityCheck = Abilities.Weapon_Polearms; break;
+				//alb
+				case eObjectType.CrushingWeapon: abilityCheck = Abilities.Weapon_Crushing; break;
+				case eObjectType.SlashingWeapon: abilityCheck = Abilities.Weapon_Slashing; break;
+				case eObjectType.ThrustWeapon: abilityCheck = Abilities.Weapon_Thrusting; break;
+				case eObjectType.TwoHandedWeapon: abilityCheck = Abilities.Weapon_TwoHanded; break;
+				case eObjectType.PolearmWeapon: abilityCheck = Abilities.Weapon_Polearms; break;
 				case eObjectType.Longbow:
 					otherCheck = new string[] { Abilities.Weapon_Longbows, Abilities.Weapon_Archery };
 					break;
-					case eObjectType.Crossbow        : abilityCheck = Abilities.Weapon_Crossbow; break;
-					case eObjectType.Flexible        : abilityCheck = Abilities.Weapon_Flexible; break;
-					//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;
+				case eObjectType.Crossbow: abilityCheck = Abilities.Weapon_Crossbow; break;
+				case eObjectType.Flexible: abilityCheck = Abilities.Weapon_Flexible; break;
+				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;
 
-					//mid
-					case eObjectType.Sword           : abilityCheck = Abilities.Weapon_Swords; break;
-					case eObjectType.Hammer          : abilityCheck = Abilities.Weapon_Hammers; break;
+				//mid
+				case eObjectType.Sword: abilityCheck = Abilities.Weapon_Swords; break;
+				case eObjectType.Hammer: abilityCheck = Abilities.Weapon_Hammers; break;
 				case eObjectType.LeftAxe:
-					case eObjectType.Axe             : abilityCheck = Abilities.Weapon_Axes; break;
-					case eObjectType.Spear           : abilityCheck = Abilities.Weapon_Spears; break;
+				case eObjectType.Axe: abilityCheck = Abilities.Weapon_Axes; break;
+				case eObjectType.Spear: abilityCheck = Abilities.Weapon_Spears; break;
 				case eObjectType.CompositeBow:
 					otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Archery };
 					break;
-					case eObjectType.Thrown          : abilityCheck = Abilities.Weapon_Thrown; break;
-					case eObjectType.HandToHand      : abilityCheck = Abilities.Weapon_HandToHand; break;
+				case eObjectType.Thrown: abilityCheck = Abilities.Weapon_Thrown; break;
+				case eObjectType.HandToHand: abilityCheck = Abilities.Weapon_HandToHand; break;
 
-					//hib
+				//hib
 				case eObjectType.RecurvedBow:
 					otherCheck = new string[] { Abilities.Weapon_RecurvedBows, Abilities.Weapon_Archery };
 					break;
-					case eObjectType.Blades          : abilityCheck = Abilities.Weapon_Blades; break;
-					case eObjectType.Blunt           : abilityCheck = Abilities.Weapon_Blunt; break;
-					case eObjectType.Piercing        : abilityCheck = Abilities.Weapon_Piercing; break;
-					case eObjectType.LargeWeapons    : abilityCheck = Abilities.Weapon_LargeWeapons; break;
-					case eObjectType.CelticSpear     : abilityCheck = Abilities.Weapon_CelticSpear; break;
-					case eObjectType.Scythe          : abilityCheck = Abilities.Weapon_Scythe; break;
+				case eObjectType.Blades: abilityCheck = Abilities.Weapon_Blades; break;
+				case eObjectType.Blunt: abilityCheck = Abilities.Weapon_Blunt; break;
+				case eObjectType.Piercing: abilityCheck = Abilities.Weapon_Piercing; break;
+				case eObjectType.LargeWeapons: abilityCheck = Abilities.Weapon_LargeWeapons; break;
+				case eObjectType.CelticSpear: abilityCheck = Abilities.Weapon_CelticSpear; break;
+				case eObjectType.Scythe: abilityCheck = Abilities.Weapon_Scythe; break;
 
-					//misc
-					case eObjectType.Magical         : return true;
-					case eObjectType.Shield          : return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
-					case eObjectType.Bolt            : abilityCheck = Abilities.Weapon_Crossbow; break;
-					case eObjectType.Arrow           : otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
-					case eObjectType.Poison          : return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
-					case eObjectType.Instrument      : return living.HasAbility(Abilities.Weapon_Instruments);
-					//TODO: different shield sizes
+				//misc
+				case eObjectType.Magical: return true;
+				case eObjectType.Shield: return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
+				case eObjectType.Bolt: abilityCheck = Abilities.Weapon_Crossbow; break;
+				case eObjectType.Arrow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
+				case eObjectType.Poison: return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
+				case eObjectType.Instrument: return living.HasAbility(Abilities.Weapon_Instruments);
+				//TODO: different shield sizes
 			}
 
 			if(abilityCheck != null && living.HasAbility(abilityCheck))
