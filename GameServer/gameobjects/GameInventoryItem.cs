@@ -1227,6 +1227,7 @@ namespace DOL.GS
 			delve.Add("      SpellID1: " + SpellID1 + " (" + Charges1 + "/" + MaxCharges1 + ")");
 			delve.Add(" PoisonSpellID: " + PoisonSpellID + " (" + PoisonCharges + "/" + PoisonMaxCharges + ") ");
 			delve.Add("");
+			delve.Add("AllowedClasses: " + AllowedClasses);
 			delve.Add(" LevelRequired: " + LevelRequirement);
 			delve.Add("    BonusLevel: " + BonusLevel);
 			delve.Add(" ");
