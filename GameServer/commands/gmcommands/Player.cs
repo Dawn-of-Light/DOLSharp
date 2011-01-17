@@ -1824,7 +1824,7 @@ namespace DOL.GS.Commands
                         var targetPlayer = client.Player.TargetObject as GamePlayer;
                         GameClient targetClient = targetPlayer == null ? null : targetPlayer.Client;
 
-                        if (args[2].Length == 0 || args[2] == null || args[2] == "" || args[2] == string.Empty)
+                        if (args.Length < 3)
                         {
                             DisplayMessage(client, "/player class <list|classID>");
                             return;
