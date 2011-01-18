@@ -23,6 +23,7 @@ using DOL.GS.Styles;
 using DOL.GS.Spells;
 using log4net;
 using System.Collections;
+using System.Linq;
 
 namespace DOL.GS
 {
@@ -267,26 +268,25 @@ namespace DOL.GS
 
         protected int GetNextFreeTemplateId()
         {
-            // this is bad - IDs are all over the place; there's no guarantee that existing templates have IDs in the range 0 - (Count -1)
-            // if a proper templateID is not externally set before saving, it will overwrite any existing template with this ID
-            // TODO : change when pk is made to be int
-            //return GameServer.Database.GetObjectCount<DBNpcTemplate>();
-
             var objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
-            
             int free_id = 1;
-
-            foreach (DBNpcTemplate dbtemplate in objs)
+            int doubleidcheck = 0;
+            foreach (DBNpcTemplate dbtemplate in objs.OrderBy(x => x.TemplateId))
             {
-                var obj = GameServer.Database.SelectObject<DBNpcTemplate>(" TemplateId = '" + free_id + "' ");
-                if (dbtemplate.TemplateId >= free_id)
+                if (dbtemplate.TemplateId == free_id)
                 {
-                    if (obj != null)
-                        free_id++;
+                    doubleidcheck = dbtemplate.TemplateId;
+                    free_id++;
+                }
+                else
+                {
+                    if (dbtemplate.TemplateId == doubleidcheck)
+                        continue;
                     else
                         break;
                 }
             }
+
             return free_id;
         }
 
