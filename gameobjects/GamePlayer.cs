@@ -12295,7 +12295,7 @@ namespace DOL.GS
 					{
 						m_questList.Add((AbstractQuest)dataQuest);
 					}
-					else
+					else if (quest.Count > 0)
 					{
 						m_questListFinished.Add((AbstractQuest)dataQuest);
 					}
