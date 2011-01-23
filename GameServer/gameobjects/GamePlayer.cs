@@ -6270,6 +6270,14 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected override AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield)
 		{
+			if (IsCrafting)
+			{
+				Out.SendMessage("You interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				CraftTimer.Stop();
+				CraftTimer = null;
+				Out.SendCloseTimerWindow();
+			}
+
 			AttackData ad = base.MakeAttack(target, weapon, style, effectiveness * Effectiveness, interruptDuration, dualWield);
 
 			//Clear the styles for the next round!
@@ -6643,6 +6651,14 @@ namespace DOL.GS
 				GameSpellEffect removeEffect = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
 				if (removeEffect != null)
 					removeEffect.Cancel(false);
+			}
+
+			if (IsCrafting)
+			{
+				Out.SendMessage("Your crafting is interrupted.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				CraftTimer.Stop();
+				CraftTimer = null;
+				Out.SendCloseTimerWindow();
 			}
 		}
 
@@ -7958,6 +7974,14 @@ namespace DOL.GS
 
 		public override void CastSpell(Spell spell, SpellLine line)
 		{
+			if (IsCrafting)
+			{
+				Out.SendMessage("You interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				CraftTimer.Stop();
+				CraftTimer = null;
+				Out.SendCloseTimerWindow();
+			}
+
 			if (spell.SpellType == "StyleHandler" || spell.SpellType == "StyleHandler2" || spell.SpellType == "StyleHandler3" || spell.SpellType == "StyleHandler4" || spell.SpellType == "StyleHandler5" || spell.SpellType == "StyleHandler6")
 			{
 				Style style = SkillBase.GetStyleByID((int)spell.Value, CharacterClass.ID);
@@ -8251,6 +8275,14 @@ namespace DOL.GS
 
 		public void CastSpell(SpellCastingAbilityHandler ab)
 		{
+			if (IsCrafting)
+			{
+				Out.SendMessage("You interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				CraftTimer.Stop();
+				CraftTimer = null;
+				Out.SendCloseTimerWindow();
+			}
+
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, ab.Spell, ab.SpellLine);
 			if (spellhandler != null)
 			{

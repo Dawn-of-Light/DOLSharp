@@ -517,17 +517,24 @@ namespace DOL.GS
 				return false;
 
 			TurnTo(player, 10000);
+			SendInteractMessage(player);
+			return true;
+		}
+
+		protected virtual void SendInteractMessage(GamePlayer player)
+		{
 			string text = "";
 			if (m_moneyItem == null || m_moneyItem.Item == null)
 			{
 				text = LanguageMgr.GetTranslation(player.Client, "GameMerchant.GetExamineMessages.Nothing");
+				ChatUtil.SendDebugMessage(player, "MoneyItem is null!");
 			}
 			else
 			{
 				text = MoneyItemName;
 			}
+
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.GetExamineMessages.BuyItemsFor", this.Name, text), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			return true;
 		}
 
 		protected override void SendMerchantWindowCallback(object state)
