@@ -825,7 +825,7 @@ namespace DOL.GS
 				speed *= GetModified(eProperty.MeleeSpeed) * 0.01;
 			}
 
-			return (int)speed;
+			return (int) Math.Max(500.0, speed);
 		}
 		/// <summary>
 		/// Returns the Damage this Living does on an attack
