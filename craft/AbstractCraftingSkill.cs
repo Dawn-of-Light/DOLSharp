@@ -190,6 +190,12 @@ namespace DOL.GS
 				return false;
 			}
 
+			if (player.InCombat)
+			{
+				player.Out.SendMessage("You can't craft while in combat.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
 			return true;
 		}
 

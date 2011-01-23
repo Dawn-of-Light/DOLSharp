@@ -170,7 +170,7 @@ namespace DOL.GS.Quests
 		protected List<string> m_collectItems = new List<string>();
 		protected List<long> m_rewardXPs = new List<long>();
 		protected List<long> m_rewardMoneys = new List<long>();
-		byte m_numOptionalRewardsChoice = 1;
+		byte m_numOptionalRewardsChoice = 0;
 		protected List<ItemTemplate> m_optionalRewards = new List<ItemTemplate>();
 		protected List<ItemTemplate> m_optionalRewardChoice = new List<ItemTemplate>();
 		protected int[] m_rewardItemsChosen = null;
@@ -1517,6 +1517,7 @@ namespace DOL.GS.Quests
 						else
 						{
 							log.ErrorFormat("DataQuest ID {0}: Optional item list is empty on RewardsChosen!", ID);
+							ChatUtil.SendDebugMessage(QuestPlayer, "Optional item list is empty on RewardsChosen!");
 						}
 					}
 				}
