@@ -39,6 +39,8 @@ namespace DOL.Database
 
 		public const string BLANK_ITEM = "blank_item";
 
+		protected bool m_hasLoggedError = false;
+
 		#region Inventory fields
 
 		protected string m_ownerID; 		// owner id
@@ -250,8 +252,11 @@ namespace DOL.Database
 			{
 				if (m_item == null)
 				{
-					if (OwnerID != null && OwnerID != "")
+					if (string.IsNullOrEmpty(OwnerID) == false && m_hasLoggedError == false)
+					{
 						log.ErrorFormat("Template null for player {0} Inventory.  Can't find template {1}{2} for item in slot {3}!", OwnerID, (ITemplate_Id == null ? "" : ITemplate_Id), (UTemplate_Id == null ? "" : UTemplate_Id), m_slot_pos);
+						m_hasLoggedError = true;
+					}
 
 					return new ItemTemplate();
 				}
