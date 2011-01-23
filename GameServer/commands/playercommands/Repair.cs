@@ -127,7 +127,13 @@ namespace DOL.GS.Commands
 
 			if (player.IsSitting)
 			{
-				DisplayMessage(player, "You can't repair while sit.");
+				DisplayMessage(player, "You can't repair while sitting.");
+				return false;
+			}
+
+			if (player.InCombat)
+			{
+				DisplayMessage(player, "You can't repair while in combat.");
 				return false;
 			}
 

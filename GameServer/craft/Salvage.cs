@@ -322,13 +322,19 @@ namespace DOL.GS
 		#region Requirement check
 
 		/// <summary>
-		/// Check if the player own can enchant the item
+		/// Check if the player can begin to salvage an item
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="item"></param>
 		/// <returns></returns>
 		public static bool IsAllowedToBeginWork(GamePlayer player, InventoryItem item)
 		{
+			if (player.InCombat)
+			{
+				player.Out.SendMessage("You can't salvage while in combat.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
 			if (item.IsNotLosingDur || item.IsIndestructible)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoSalvage", item.Name + ".  This item is indestructible"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
