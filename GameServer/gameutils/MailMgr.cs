@@ -33,7 +33,7 @@ namespace DOL.Mail
 				if (file.EndsWith(".gz"))
 					continue;
 				Console.WriteLine(file);
-				if (!compressFile(file, file + ".log.gz"))
+				if (!compressFile(file, file + ".gz"))
 					return false;
 			}
 			return true;
