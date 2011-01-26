@@ -221,10 +221,10 @@ namespace DOL.GS
 				GameServer.Database.SaveObject(toItem);
 			}
 
-			player.Inventory.AddTradeItem(toSlot, fromItem);
+			InventoryItem vaultItem = GameInventoryItem.Create<InventoryItem>(fromItem);
+			player.Inventory.AddTradeItem(toSlot, vaultItem);
 
 			updateItems.Add((int) fromSlot, toItem);
-
 			return updateItems;
 		}
 

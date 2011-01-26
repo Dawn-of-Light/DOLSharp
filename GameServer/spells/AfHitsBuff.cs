@@ -39,6 +39,12 @@ namespace DOL.GS.Spells
             double bonusAF = 0;
             double bonusHP = 0;
 
+			if (effect == null || effect.Owner == null)
+			{
+				effect.Cancel(false);
+				return;
+			}
+
             foreach (InventoryItem item in effect.Owner.Inventory.EquippedItems)
             {
                 if (item.Object_Type >= (int)eObjectType._FirstArmor && item.Object_Type <= (int)eObjectType._LastArmor)
