@@ -6,9 +6,6 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Anger of the Gods RA
-	/// </summary>
 	public class EpiphanyAbility : RR5RealmAbility
 	{
 		public EpiphanyAbility(DBAbility dba, int level) : base(dba, level) { }
@@ -26,33 +23,27 @@ namespace DOL.GS.RealmAbilities
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				if (!player.InCombat)//[Shawn add] Check if player is in combat
+				if (player.Group != null)
 				{
-					if (player.Group != null)
+					SendCasterSpellEffectAndCastMessage(living, 7066, true);
+					foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
 					{
-						SendCasterSpellEffectAndCastMessage(living, 7066, true);
-						foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
+						if (!CheckPreconditions(member, DEAD) && living.IsWithinRadius(member, 2000))
 						{
-							if (!CheckPreconditions(member, DEAD) && living.IsWithinRadius(member, 2000))
-							{
-								if (restoreMana(member, player))
-									deactivate = true;
-							}
-						}
-					}
-					else
-					{
-						if (!CheckPreconditions(player, DEAD))
-						{
-							if (restoreMana(player, player))
+							if (restoreMana(member, player))
 								deactivate = true;
 						}
 					}
 				}
 				else
 				{
-					player.Out.SendMessage("You are in combat, and cannot use this ability!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);//[Send Message out if Player is In Combat]
+					if (!CheckPreconditions(player, DEAD))
+					{
+						if (restoreMana(player, player))
+							deactivate = true;
+					}
 				}
+
 				if (deactivate)
 					DisableSkill(living);
 			}
@@ -86,7 +77,7 @@ namespace DOL.GS.RealmAbilities
 
 		public override void AddEffectsInfo(IList<string> list)
 		{
-			list.Add("25% Group power refresh. Skald must be out of combat to use. (group members may be in combat)");
+			list.Add("25% Group power refresh.");
 			list.Add("");
 			list.Add("Target: Group");
 			list.Add("Casting time: instant");
