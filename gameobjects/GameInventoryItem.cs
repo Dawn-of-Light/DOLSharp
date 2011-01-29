@@ -85,6 +85,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Can player equip this item?
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public virtual bool CanEquip(GamePlayer player)
+		{
+			return GameServer.ServerRules.CheckAbilityToUseItem(player, Template);
+		}
+
+		/// <summary>
 		/// This is used to create a PlayerInventoryItem
 		/// template.ClassType will be checked and the approrpiate GameInventoryItem created
 		/// </summary>
