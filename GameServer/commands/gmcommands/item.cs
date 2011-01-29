@@ -1760,7 +1760,7 @@ namespace DOL.GS.Commands
 							{
 								if (args[1].ToLower() == "save" && item.Template is ItemUnique)
 								{
-									DisplayMessage(client, "You need to provide a new id_nb to save this ItemUnique as an ItemTemplate.");
+									DisplayMessage(client, "You need to provide a new id_nb to save this ItemUnique as an ItemTemplate.  Use saveunique to save this ItemUnique.");
 									return;
 								}
 
