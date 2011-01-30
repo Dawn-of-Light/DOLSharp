@@ -2089,78 +2089,55 @@ namespace DOL.GS
 		/// <param name="template"></param>
 		public virtual void LoadTemplate(INpcTemplate template)
 		{
-			IList m_models = new ArrayList();
-			IList m_sizes = new ArrayList();
-			IList m_levels = new ArrayList();
-            IList m_templatedInventory = new ArrayList();
+			IList m_templatedInventory = new ArrayList();
 			IList m_equipLoc = new ArrayList();
 			Hashtable m_equipModel = new Hashtable();
-
 			this.Name = template.Name;
 			this.GuildName = template.GuildName;
-
-			#region Models
-			foreach (string str in template.Model.SplitCSV(true))
+			
+			#region Models, Sizes, Levels
+			// Grav: this.Model/Size/Level accessors are triggering SendUpdate()
+			// so i must use them, and not directly use private variables
+			ushort choosenModel = 1;
+			var splitModel = template.Model.SplitCSV(true);
+			ushort.TryParse(splitModel[Util.Random(0,splitModel.Count-1)], out choosenModel);
+			this.Model = choosenModel;
+			
+			byte choosenSize = 50;
+			if (!Util.IsEmpty(template.Size))
 			{
-				if (str.Length == 0) continue;
-				ushort i = ushort.Parse(str);
-				m_models.Add(i);
+				var splitLevel = template.Level.SplitCSV(true);
+				byte.TryParse(splitLevel[Util.Random(0,splitLevel.Count-1)], out choosenSize);
 			}
-			this.Model = (ushort)m_models[Util.Random(m_models.Count - 1)];
+			this.Size = choosenSize;
+			
+			byte choosenLevel = 1;
+			if (!Util.IsEmpty(template.Level))
+			{
+				var splitLevel = template.Level.SplitCSV(true);
+				byte.TryParse(splitLevel[Util.Random(0,splitLevel.Count-1)], out choosenLevel);
+			}
+			this.Level = choosenLevel;
 			#endregion
 
-            #region Size
-            byte size = 50;
-            if (!Util.IsEmpty(template.Size))
-            {
-                string[] splitSize = template.Size.SplitCSV(true).ToArray();
-                if (splitSize.Length == 1)
-                    size = byte.Parse(splitSize[0]);
-                else byte.Parse(splitSize[Util.Random(0, splitSize.Length - 1)]);
-            }
-            else
-            {
-                this.Size = size;
-            }
-            #endregion
-
-            #region Level
-            byte level = 0;
-            bool autoset = false;
-            if (!Util.IsEmpty(template.Level))
-            {
-                string[] splitLevel = template.Level.SplitCSV().ToArray();
-                if (splitLevel.Length == 1)
-                {
-                    level = byte.Parse(splitLevel[0]);
-                }
-                else
-                {
-                    level = (byte)int.Parse(splitLevel[Util.Random(0, splitLevel.Length - 1)]);
-                    autoset = template.Strength == 0 ? true : false;
-                }
-            }
-            this.Level = level;
-            #endregion
-
-            #region Stats
-            // Stats
-            if (autoset)
-            {
-                this.AutoSetStats();
-            }
-            else
-            {
-                this.Constitution = (short)template.Constitution;
-                this.Dexterity = (short)template.Dexterity;
-                this.Strength = (short)template.Strength;
-                this.Quickness = (short)template.Quickness;
-                this.Intelligence = (short)template.Intelligence;
-                this.Piety = (short)template.Piety;
-                this.Empathy = (short)template.Empathy;
-                this.Charisma = (short)template.Charisma;
-            }
-            #endregion
+			#region Stats
+			// Stats
+			if (template.Strength==0)
+			{
+				this.AutoSetStats();
+			}
+			else
+			{
+				this.Constitution = (short)template.Constitution;
+				this.Dexterity = (short)template.Dexterity;
+				this.Strength = (short)template.Strength;
+				this.Quickness = (short)template.Quickness;
+				this.Intelligence = (short)template.Intelligence;
+				this.Piety = (short)template.Piety;
+				this.Empathy = (short)template.Empathy;
+				this.Charisma = (short)template.Charisma;
+			}
+			#endregion
 
 			#region Misc Stats
 			this.MaxDistance = template.MaxDistance;
@@ -2176,40 +2153,40 @@ namespace DOL.GS
 			this.LeftHandSwingChance = template.LeftHandSwingChance;
 			#endregion
 
-            #region Inventory
-            //Ok lets start loading the npc equipment - only if there is a value!
-            if (!Util.IsEmpty(template.Inventory))
-            {
-                bool equipHasItems = false;
-                GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
-                //First let's try to reach the npcequipment table and load that!
-                //We use a ';' split to allow npctemplates to support more than one equipmentIDs
-                string[] equipIDs = template.Inventory.SplitCSV().ToArray();
-                if (!template.Inventory.Contains(":"))
-                {
+			#region Inventory
+			//Ok lets start loading the npc equipment - only if there is a value!
+			if (!Util.IsEmpty(template.Inventory))
+			{
+				bool equipHasItems = false;
+				GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
+				//First let's try to reach the npcequipment table and load that!
+				//We use a ';' split to allow npctemplates to support more than one equipmentIDs
+				string[] equipIDs = template.Inventory.SplitCSV().ToArray();
+				if (!template.Inventory.Contains(":"))
+				{
 
-                    foreach (string str in equipIDs)
-                    {
-                        m_templatedInventory.Add(str);
-                    }
+					foreach (string str in equipIDs)
+					{
+						m_templatedInventory.Add(str);
+					}
 
-                    string equipid = "";
+					string equipid = "";
 
-                    if (m_templatedInventory.Count > 0)
-                    {
-                        if (m_templatedInventory.Count == 1)
-                            equipid = template.Inventory;
-                        else
-                            equipid = (string)m_templatedInventory[Util.Random(m_templatedInventory.Count - 1)];
-                    }
-                    if (equip.LoadFromDatabase(equipid))
-                        equipHasItems = true;
-                }
+					if (m_templatedInventory.Count > 0)
+					{
+						if (m_templatedInventory.Count == 1)
+							equipid = template.Inventory;
+						else
+							equipid = (string)m_templatedInventory[Util.Random(m_templatedInventory.Count - 1)];
+					}
+					if (equip.LoadFromDatabase(equipid))
+						equipHasItems = true;
+				}
 
-                #region Legacy Equipment Code
-                //Nope, nothing in the npcequipment table, lets do the crappy parsing
-                //This is legacy code
-                if (!equipHasItems && template.Inventory.Contains(":"))
+				#region Legacy Equipment Code
+				//Nope, nothing in the npcequipment table, lets do the crappy parsing
+				//This is legacy code
+				if (!equipHasItems && template.Inventory.Contains(":"))
 				{
 					//Temp list to store our models
 					List<int> tempModels = new List<int>();
