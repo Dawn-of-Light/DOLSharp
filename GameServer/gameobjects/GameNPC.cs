@@ -2054,7 +2054,13 @@ namespace DOL.GS
 			mob.MeleeDamageType = (int)MeleeDamageType;
 
 			if (NPCTemplate != null)
+			{
 				mob.NPCTemplateID = NPCTemplate.TemplateId;
+			}
+			else
+			{
+				mob.NPCTemplateID = -1;
+			}
 
 			mob.Race = Race;
 			mob.BodyType = BodyType;

@@ -1401,7 +1401,16 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			if (args[2].ToLower() == "create")
+			if (args[2].ToLower() == "clear")
+			{
+				targetMob.Inventory = null;
+				targetMob.EquipmentTemplateID = null;
+				targetMob.SaveIntoDatabase();
+				client.Out.SendMessage("Mob equipment cleared.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				targetMob.UpdateNPCEquipmentAppearance();
+				return;
+			}
+			else if (args[2].ToLower() == "create")
 			{
 				try
 				{
@@ -1418,8 +1427,10 @@ namespace DOL.GS.Commands
 				catch
 				{
 					DisplaySyntax(client, args[1], args[2]);
-					return;
 				}
+
+				targetMob.UpdateNPCEquipmentAppearance();
+				return;
 			}
 			else if (args[2].ToLower() == "load")
 			{
@@ -1449,14 +1460,14 @@ namespace DOL.GS.Commands
 					catch
 					{
 						DisplaySyntax(client, args[1], args[2]);
-						return;
 					}
 				}
 				else
 				{
 					DisplaySyntax(client, args[1], args[2]);
-					return;
 				}
+
+				return;
 			}
 
 			GameNpcInventoryTemplate template = targetMob.Inventory as GameNpcInventoryTemplate;
@@ -1561,15 +1572,6 @@ namespace DOL.GS.Commands
 
 						targetMob.Inventory = template.CloseTemplate();
 						client.Out.SendMessage("Inventory template closed succesfully.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					break;
-
-				case "clear":
-					{
-						targetMob.Inventory = null;
-						targetMob.EquipmentTemplateID = null;
-						targetMob.SaveIntoDatabase();
-						client.Out.SendMessage("Mob equipment cleared.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 
@@ -2267,6 +2269,16 @@ namespace DOL.GS.Commands
 			{
 				npctCreate(client, targetMob, args);
 				return;
+			}
+
+			if (args[2].ToLower().Equals("clear"))
+			{
+				if (targetMob != null)
+				{
+					targetMob.NPCTemplate = null;
+					targetMob.UpdateNPCEquipmentAppearance();
+					targetMob.SaveIntoDatabase();
+				}
 			}
 
 			int id = 0;
