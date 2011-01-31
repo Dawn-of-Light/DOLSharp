@@ -1969,6 +1969,7 @@
     <Compile Include="skillhandler\BerserkAbilityHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="skillhandler\Climbing.cs" />
     <Compile Include="skillhandler\FuryAbilityHandler.cs" />
     <Compile Include="skillhandler\MemoriesOfWar.cs" />
     <Compile Include="skillhandler\MetalGuardAbilityHandler.cs" />
@@ -2089,6 +2090,7 @@
     <Compile Include="spells\CharmSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\Fury.cs" />
     <Compile Include="spells\CombatHealSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2109,7 +2111,7 @@
     <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\FacilisSpellHandler.cs" />
     <Compile Include="spells\FocusShellHandler.cs" />
-    <Compile Include="spells\Fury.cs" />
+    <Compile Include="spells\Climbing.cs" />
     <Compile Include="spells\Hunter\SummonHunterPet.cs" />
     <Compile Include="spells\Necromancer\PowerTransfer.cs" />
     <Compile Include="spells\Necromancer\PowerDrain.cs" />

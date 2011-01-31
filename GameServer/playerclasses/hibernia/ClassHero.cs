@@ -114,6 +114,7 @@ namespace DOL.GS.PlayerClass
 			{                              
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stag, 3));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
+				player.AddAbility(SkillBase.GetAbility(Abilities.ClimbSpikes));
 			}
 			if (player.Level >= 40)
 			{

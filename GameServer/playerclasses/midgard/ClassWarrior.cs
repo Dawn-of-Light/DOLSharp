@@ -32,7 +32,7 @@ namespace DOL.GS.PlayerClass
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Axe, Specs.Hammer, Specs.Sword };
 
-		public ClassWarrior() : base() 
+		public ClassWarrior() : base()
 		{
 			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofTyr");
 			m_specializationMultiplier = 20;
@@ -42,7 +42,7 @@ namespace DOL.GS.PlayerClass
 			m_wsbase = 460;
 		}
 
-		public override string GetTitle(int level) 
+		public override string GetTitle(int level)
 		{
 			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warrior.GetTitle.50");
 			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Warrior.GetTitle.45");
@@ -66,7 +66,7 @@ namespace DOL.GS.PlayerClass
 		/// Update all skills and add new for current level
 		/// </summary>
 		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player) 
+		public override void OnLevelUp(GamePlayer player)
 		{
 			base.OnLevelUp(player);
 
@@ -79,30 +79,30 @@ namespace DOL.GS.PlayerClass
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.TauntingShout));
 			}
-			if (player.Level >= 7) 
+			if (player.Level >= 7)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
 			}
-			if (player.Level >= 10) 
+			if (player.Level >= 10)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Chain));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
 			}
-			if (player.Level >= 12) 
+			if (player.Level >= 12)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Intercept));
 			}
-			if (player.Level >= 13) 
+			if (player.Level >= 13)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
 			}
-			if (player.Level >= 15) 
+			if (player.Level >= 15)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.MetalGuard));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
 				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
 			}
-			if (player.Level >= 18) 
+			if (player.Level >= 18)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 3));
 			}
@@ -111,8 +111,9 @@ namespace DOL.GS.PlayerClass
 				player.AddAbility(SkillBase.GetAbility(Abilities.BolsteringRoar));
 			}
 			if (player.Level >= 35)
-			{                              
+			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
+				player.AddAbility(SkillBase.GetAbility(Abilities.ClimbSpikes));
 			}
 			if (player.Level >= 40)
 			{
@@ -120,8 +121,8 @@ namespace DOL.GS.PlayerClass
 			}
 			if (player.Level >= 41)
 			{
-                player.AddAbility(SkillBase.GetAbility(Abilities.MemoriesOfWar));
-                player.AddAbility(SkillBase.GetAbility(Abilities.ScarsOfBattle));
+				player.AddAbility(SkillBase.GetAbility(Abilities.MemoriesOfWar));
+				player.AddAbility(SkillBase.GetAbility(Abilities.ScarsOfBattle));
 			}
 			if (player.Level >= 50)
 			{
