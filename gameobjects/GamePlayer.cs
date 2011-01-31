@@ -9920,7 +9920,7 @@ namespace DOL.GS
                 // are we jumping far enough to force a complete refresh?
                 if (GetDistanceTo(originalPoint) > WorldMgr.REFRESH_DISTANCE)
                 {
-                    // RefreshWorld(); This does not seem to work and may be making refresh issues worse. - Tolakram
+                    RefreshWorld();
                 }
                 else
                 {
