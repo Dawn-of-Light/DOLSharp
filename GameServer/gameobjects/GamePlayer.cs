@@ -3098,29 +3098,25 @@ namespace DOL.GS
 			if (ability == null)
 				return;
 
-			if (CharacterClass.ID != 49 &&
-			    CharacterClass.ID != 23 &&
-			    CharacterClass.ID != 9 &&
-			    ability.KeyName == Abilities.DetectHidden)
-			{
+			if (CharacterClass.ID 	 != (int)eCharacterClass.Nightshade
+			    && CharacterClass.ID != (int)eCharacterClass.Infiltrator
+			    && CharacterClass.ID != (int)eCharacterClass.Shadowblade
+			    && ability.KeyName == Abilities.DetectHidden)
 				return;
-			}
 
-			if (CharacterClass.ID != 4
-			    && CharacterClass.ID != 9
-			    && CharacterClass.ID != 49
-			    && CharacterClass.ID != 23
-			    && CharacterClass.ID != 58
-			    //Heavy tanks too
-			    && CharacterClass.ID != 2
-			    && CharacterClass.ID != 44
-			    && CharacterClass.ID != 22
-			    && ability.KeyName == Abilities.Climbing) return;
-			if ((eCharacterClass)CharacterClass.ID == eCharacterClass.Infiltrator &&
-			    ability.KeyName == Abilities.Snapshot)
-			{
+			if (CharacterClass.ID 	 != (int)eCharacterClass.Nightshade
+			    && CharacterClass.ID != (int)eCharacterClass.Infiltrator
+			    && CharacterClass.ID != (int)eCharacterClass.Shadowblade
+			    && CharacterClass.ID != (int)eCharacterClass.Hero
+			    && CharacterClass.ID != (int)eCharacterClass.Armsman
+			    && CharacterClass.ID != (int)eCharacterClass.Warrior
+			    && ability.KeyName == Abilities.Climbing)
 				return;
-			}
+			
+			if (CharacterClass.ID == (int)eCharacterClass.Infiltrator
+			    && ability.KeyName == Abilities.Snapshot)
+				return;
+			
 			base.AddAbility(ability, sendUpdates);
 		}
 
