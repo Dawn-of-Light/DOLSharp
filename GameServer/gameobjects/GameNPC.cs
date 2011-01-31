@@ -2106,16 +2106,16 @@ namespace DOL.GS
 			byte choosenSize = 50;
 			if (!Util.IsEmpty(template.Size))
 			{
-				var splitLevel = template.Level.SplitCSV(true);
-				byte.TryParse(splitLevel[Util.Random(0,splitLevel.Count-1)], out choosenSize);
+				var split = template.Size.SplitCSV(true);
+				byte.TryParse(split[Util.Random(0,split.Count-1)], out choosenSize);
 			}
 			this.Size = choosenSize;
 			
 			byte choosenLevel = 1;
 			if (!Util.IsEmpty(template.Level))
 			{
-				var splitLevel = template.Level.SplitCSV(true);
-				byte.TryParse(splitLevel[Util.Random(0,splitLevel.Count-1)], out choosenLevel);
+				var split = template.Level.SplitCSV(true);
+				byte.TryParse(split[Util.Random(0,split.Count-1)], out choosenLevel);
 			}
 			this.Level = choosenLevel;
 			#endregion
