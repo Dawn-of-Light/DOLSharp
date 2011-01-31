@@ -1,6 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+# Visual Studio 2010
+# SharpDevelop 4.1.0.7258-alpha
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLBase", "DOLBase\DOLBase.csproj", "{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOLDatabase", "DOLDatabase\DOLDatabase.csproj", "{43BFC675-13B7-4AA8-97F6-6109948849CC}"
