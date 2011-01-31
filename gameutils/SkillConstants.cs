@@ -235,6 +235,10 @@ namespace DOL.GS
 		/// </summary>
 		public const string Climbing = "Climb Walls";
 		/// <summary>
+		/// Climbing Spikes Ability
+		/// </summary>
+		public const string ClimbSpikes = "Climbing Spikes";
+		/// <summary>
 		/// Danger Sense Ability
 		/// </summary>
 		public const string DangerSense = "Danger Sense";
