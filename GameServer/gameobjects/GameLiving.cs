@@ -1743,16 +1743,18 @@ namespace DOL.GS
 					ad.Target.Mana += manaconversion; if (ad.Target.Mana > ad.Target.MaxMana) ad.Target.Mana = ad.Target.MaxMana;
 				}
 
-				// patch to missed when 0 damage
+				// Tolakram - let's go ahead and make it 1 damage rather than spamming a possible error
 				if (ad.Damage == 0)
 				{
-					// log this as a possible error if we should do some damage to target
-					if (ad.Target.Level <= Level + 5 && weapon != null)
-					{
-						log.ErrorFormat("Possible Damage Error: {0} Damage = 0 -> miss vs {1}.  AttackDamage {2}, weapon name {3}", Name, (ad.Target == null ? "null" : ad.Target.Name), AttackDamage(weapon), (weapon == null ? "None" : weapon.Name));
-					}
+					ad.Damage = 1;
 
-					ad.AttackResult = eAttackResult.Missed;
+					// log this as a possible error if we should do some damage to target
+					//if (ad.Target.Level <= Level + 5 && weapon != null)
+					//{
+					//    log.ErrorFormat("Possible Damage Error: {0} Damage = 0 -> miss vs {1}.  AttackDamage {2}, weapon name {3}", Name, (ad.Target == null ? "null" : ad.Target.Name), AttackDamage(weapon), (weapon == null ? "None" : weapon.Name));
+					//}
+
+					//ad.AttackResult = eAttackResult.Missed;
 				}
 			}
 
