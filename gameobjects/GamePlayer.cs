@@ -9957,9 +9957,12 @@ namespace DOL.GS
                         {
                             foreach (IControlledBrain icb in petBody.ControlledNpcList)
                             {
-                                GameNPC petBody2 = icb.Body;
-                                if (petBody2 != null && IsWithinRadius(petBody2, 500))
-                                    petBody2.MovePet(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
+								if (icb != null && icb.Body != null)
+								{
+									GameNPC petBody2 = icb.Body;
+									if (petBody2 != null && IsWithinRadius(petBody2, 500))
+										petBody2.MovePet(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
+								}
                             }
                         }
                     }
@@ -15023,6 +15026,9 @@ namespace DOL.GS
 		{
 			try
 			{
+				if (ChampionSpells == null)
+					return;
+
 				string championSpells = ChampionSpells;
 				Hashtable championSpellsh = new Hashtable();
 				SkillBase.CleanSpellList(GlobalSpellsLines.Champion_Spells + Name);
