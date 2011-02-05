@@ -46,7 +46,7 @@ namespace DOL.GS
 			{
 				if (m_random == null)
 				{
-					m_random = new Random((int)DateTime.Now.Ticks);
+					m_random = new Random();
 				}
 
 				return m_random;

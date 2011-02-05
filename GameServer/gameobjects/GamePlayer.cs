@@ -2077,7 +2077,7 @@ namespace DOL.GS
 		{
 			if (ObjectState != eObjectState.Active) return;
 			if (m_enduRegenerationTimer.IsAlive) return;
-			m_enduRegenerationTimer.Start(m_enduRegenerationPeriod);
+			m_enduRegenerationTimer.Start(m_enduranceRegenerationPeriod);
 		}
 		/// <summary>
 		/// Stop the health regeneration.
@@ -2117,7 +2117,7 @@ namespace DOL.GS
 		{
 			// I'm not sure what the point of this is.
 			if (Client.ClientState != GameClient.eClientState.Playing)
-				return m_healthRegenerationPeriod;
+				return HealthRegenerationPeriod;
 
 			// adjust timer based on Live testing of player
 
@@ -2142,11 +2142,11 @@ namespace DOL.GS
 			if (InCombat)
 			{
 				// in combat each tic is aprox 6 seconds - tolakram
-				return m_healthRegenerationPeriod * 2;
+				return HealthRegenerationPeriod * 2;
 			}
 
 			//Heal at standard rate
-			return m_healthRegenerationPeriod;
+			return HealthRegenerationPeriod;
 		}
 
 		/// <summary>
@@ -2158,7 +2158,7 @@ namespace DOL.GS
 		protected override int PowerRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
 			if (Client.ClientState != GameClient.eClientState.Playing)
-				return m_powerRegenerationPeriod;
+				return PowerRegenerationPeriod;
 			int interval = base.PowerRegenerationTimerCallback(selfRegenerationTimer);
 			return interval;
 		}
@@ -2172,7 +2172,7 @@ namespace DOL.GS
 		protected override int EnduranceRegenerationTimerCallback(RegionTimer selfRegenerationTimer)
 		{
 			if (Client.ClientState != GameClient.eClientState.Playing)
-				return m_enduRegenerationPeriod;
+				return EnduranceRegenerationPeriod;
 
 			bool sprinting = IsSprinting;
 
@@ -2212,8 +2212,7 @@ namespace DOL.GS
 					Sprint(false);
 			}
 
-			return 500 + Util.Random(1000);
-			//return base.EnduranceRegenerationTimerCallback(selfRegenerationTimer);
+			return 500 + Util.Random(EnduranceRegenerationPeriod);
 		}
 
 		/// <summary>
@@ -7636,6 +7635,8 @@ namespace DOL.GS
 			GameServer.ServerRules.OnPlayerKilled(this, killer);
 			if (m_releaseType != eReleaseType.Duel)
 				DBCharacter.DeathTime = PlayedTime;
+
+			IsSwimming = false;
 		}
 
 		public override void EnemyKilled(GameLiving enemy)
@@ -9951,7 +9952,7 @@ namespace DOL.GS
                     {
                         GameNPC petBody = npc.Body;
 
-                        petBody.MovePet(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
+                        petBody.MoveInRegion(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
 
                         if (petBody != null && petBody.ControlledNpcList != null)
                         {
@@ -9961,7 +9962,7 @@ namespace DOL.GS
 								{
 									GameNPC petBody2 = icb.Body;
 									if (petBody2 != null && IsWithinRadius(petBody2, 500))
-										petBody2.MovePet(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
+										petBody2.MoveInRegion(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
 								}
                             }
                         }
@@ -10462,7 +10463,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets/sets the current swimming state
 		/// </summary>
-		public bool IsSwimming
+		public virtual bool IsSwimming
 		{
 			get { return m_swimming; }
 			set
@@ -10635,11 +10636,15 @@ namespace DOL.GS
 		{
 			if (!IsAlive || ObjectState != eObjectState.Active || !IsSwimming)
 				return 0;
-			if (this.Client.Account.PrivLevel == 1)
+
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.YourInLava"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.Take34%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+			if (Client.Account.PrivLevel == 1)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.YourInLava"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.Take34%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 				TakeDamage(null, eDamageType.Natural, (int)(MaxHealth * 0.34), 0);
+
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					player.Out.SendCombatAnimation(null, this, 0x0000, 0x0000, 0x00, 0x00, 0x14, HealthPercent);
 			}
 			return 2000;
 		}
