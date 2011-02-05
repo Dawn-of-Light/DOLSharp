@@ -765,7 +765,7 @@ namespace DOL.GS
 			}
 			else if (target is GameNPC)
 			{
-				(target as GameNPC).MovePet(target.CurrentRegionID, targetPosition.X, targetPosition.Y, targetPosition.Z, target.Heading, true);
+				(target as GameNPC).MoveInRegion(target.CurrentRegionID, targetPosition.X, targetPosition.Y, targetPosition.Z, target.Heading, true);
 				target.ChangeHealth(this, eHealthChangeType.Spell, (int)(target.Health * -0.35));
 			}
 		}

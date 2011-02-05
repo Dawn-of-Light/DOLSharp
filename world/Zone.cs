@@ -188,7 +188,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Does this zone contain Lava
 		/// </summary>
-		private readonly bool m_IsLava;
+		private bool m_isLava;
 
 		/// <summary>
 		/// already initialized?
@@ -228,7 +228,7 @@ namespace DOL.GS
 			m_zoneSkinID = zoneskinID;
 			m_waterlevel = waterlevel;
 			m_isDivingEnabled = isDivingEnabled;
-			m_IsLava = islava;
+			m_isLava = islava;
 
 			m_bonusXP = xpBonus;
 			m_bonusRP = rpBonus;
@@ -512,11 +512,12 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Returns 1 if this zone has lava
+		/// Is water in this zone lava?
 		/// </summary>
-		public bool IsLava
+		public virtual bool IsLava
 		{
-			get { return m_IsLava; }
+			get { return m_isLava; }
+			set { m_isLava = value; }
 		}
 
 		/// <summary>

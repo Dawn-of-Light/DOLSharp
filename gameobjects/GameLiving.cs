@@ -4931,18 +4931,46 @@ namespace DOL.GS
 		/// GameTimer used for restoring endurance
 		/// </summary>
 		protected RegionTimer m_enduRegenerationTimer;
+
 		/// <summary>
 		/// The default frequency of regenerating health in milliseconds
 		/// </summary>
 		protected const ushort m_healthRegenerationPeriod = 3000;
+
+		/// <summary>
+		/// Interval for health regeneration tics
+		/// </summary>
+		protected virtual ushort HealthRegenerationPeriod
+		{
+			get { return m_healthRegenerationPeriod; }
+		}
+
 		/// <summary>
 		/// The default frequency of regenerating power in milliseconds
 		/// </summary>
 		protected const ushort m_powerRegenerationPeriod = 3000;
+
+		/// <summary>
+		/// Interval for power regeneration tics
+		/// </summary>
+		protected virtual ushort PowerRegenerationPeriod
+		{
+			get { return m_powerRegenerationPeriod; }
+		}
+
 		/// <summary>
 		/// The default frequency of regenerating endurance in milliseconds
 		/// </summary>
-		protected const ushort m_enduRegenerationPeriod = 1000;
+		protected const ushort m_enduranceRegenerationPeriod = 1000;
+
+		/// <summary>
+		/// Interval for endurance regeneration tics
+		/// </summary>
+		protected virtual ushort EnduranceRegenerationPeriod
+		{
+			get { return m_enduranceRegenerationPeriod; }
+		}
+
 		/// <summary>
 		/// The lock object for lazy regen timers initialization
 		/// </summary>
@@ -4963,8 +4991,11 @@ namespace DOL.GS
 					m_healthRegenerationTimer.Callback = new RegionTimerCallback(HealthRegenerationTimerCallback);
 				}
 				else if (m_healthRegenerationTimer.IsAlive)
+				{
 					return;
-				m_healthRegenerationTimer.Start(m_healthRegenerationPeriod);
+				}
+
+				m_healthRegenerationTimer.Start(HealthRegenerationPeriod);
 			}
 		}
 		/// <summary>
@@ -4981,8 +5012,12 @@ namespace DOL.GS
 					m_powerRegenerationTimer = new RegionTimer(this);
 					m_powerRegenerationTimer.Callback = new RegionTimerCallback(PowerRegenerationTimerCallback);
 				}
-				else if (m_powerRegenerationTimer.IsAlive) return;
-				m_powerRegenerationTimer.Start(m_powerRegenerationPeriod);
+				else if (m_powerRegenerationTimer.IsAlive)
+				{
+					return;
+				}
+
+				m_powerRegenerationTimer.Start(PowerRegenerationPeriod);
 			}
 		}
 		/// <summary>
@@ -5003,7 +5038,7 @@ namespace DOL.GS
 				{
 					return;
 				}
-				m_enduRegenerationTimer.Start(m_enduRegenerationPeriod);
+				m_enduRegenerationTimer.Start(EnduranceRegenerationPeriod);
 			}
 		}
 		/// <summary>
@@ -5072,11 +5107,11 @@ namespace DOL.GS
 			if (InCombat)
 			{
 				// in combat each tic is aprox 15 seconds - tolakram
-				return m_healthRegenerationPeriod * 5;
+				return HealthRegenerationPeriod * 5;
 			}
 
 			//Heal at standard rate
-			return m_healthRegenerationPeriod;
+			return HealthRegenerationPeriod;
 		}
 		/// <summary>
 		/// Callback for the power regenerationTimer
@@ -5124,12 +5159,11 @@ namespace DOL.GS
 			//If we were hit before we regenerated, we regenerate slower the next time
 			if (InCombat)
 			{
-				// rate in combat is 10 seconds per tic
-				return (int)(10000);
+				return (int)(PowerRegenerationPeriod * 3.4);
 			}
 
 			//regen at standard rate
-			return m_powerRegenerationPeriod;
+			return PowerRegenerationPeriod;
 		}
 		/// <summary>
 		/// Callback for the endurance regenerationTimer
@@ -5147,9 +5181,10 @@ namespace DOL.GS
 			}
 			if (Endurance >= MaxEndurance) return 0;
 
-			return 500 + Util.Random(1000); // 1000ms +-500ms;
+			return 500 + Util.Random(EnduranceRegenerationPeriod);
 		}
 		#endregion
+
 		#region Mana/Health/Endurance/Concentration/Delete
 		/// <summary>
 		/// Amount of mana

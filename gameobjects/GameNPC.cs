@@ -2820,16 +2820,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Move a player pet a short distance.
-		/// Charmed pets are not GamePets so move is handled here instead of in GamePet.
+		/// Move an NPC within the same region without removing from world
 		/// </summary>
 		/// <param name="regionID"></param>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <param name="z"></param>
 		/// <param name="heading"></param>
-		/// <returns>true if pet was moved</returns>
-		public virtual bool MovePet(ushort regionID, int x, int y, int z, ushort heading, bool forceMove)
+		/// <param name="forceMove">Move regardless of combat check</param>
+		/// <returns>true if npc was moved</returns>
+		public virtual bool MoveInRegion(ushort regionID, int x, int y, int z, ushort heading, bool forceMove)
 		{
 			if (m_ObjectState != eObjectState.Active)
 				return false;
