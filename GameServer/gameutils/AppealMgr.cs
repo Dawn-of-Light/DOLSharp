@@ -146,14 +146,16 @@ namespace DOL.GS.Appeal
 
 			foreach (GamePlayer staffplayer in StaffList)
 			{
-				MessageToClient(staffplayer.Client, msg);
+				if (staffplayer.Client != null && staffplayer.Client.Player != null)
+					MessageToClient(staffplayer.Client, msg);
 			}
 			return;
 		}
 
 		public static void MessageToClient(GameClient client, string msg)
 		{
-			if (msg == null) { return; }
+			if (msg == null) return;
+			if (client == null || client.Player == null) return;
 			client.Player.Out.SendMessage("[Appeals]: " + msg, eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 			return;
 		}
