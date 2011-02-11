@@ -386,6 +386,9 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendDupNameCheckReply(string name, bool nameExists)
 		{
+			if (m_gameClient == null || m_gameClient.Account == null)
+				return;
+
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DupNameCheckReply)))
 			{
 				pak.FillString(name, 30);
