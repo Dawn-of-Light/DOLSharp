@@ -296,6 +296,9 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendDupNameCheckReply(string name, bool nameExists)
 		{
+			if (m_gameClient == null || m_gameClient.Account == null)
+				return;
+
 			// This presents the user with Name Not Allowed which may not be correct but at least it prevents duplicate char creation
 			// - tolakram
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DupNameCheckReply)))

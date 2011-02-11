@@ -63,6 +63,10 @@ namespace DOL.GS.ServerRules
 				return false;
 			}
 
+			// Pet release might cause one of these to be null
+			if (attacker == null || defender == null)
+				return false;
+
 			if (attacker.Realm != eRealm.None && defender.Realm != eRealm.None)
 			{
 				if (attacker is GamePlayer && ((GamePlayer)attacker).DuelTarget == defender)
