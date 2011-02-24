@@ -4452,6 +4452,7 @@ namespace DOL.GS
 		public byte VisibleActiveWeaponSlots
 		{
 			get { return m_visibleActiveWeaponSlots; }
+			set { m_visibleActiveWeaponSlots=value; }
 		}
 
 		/// <summary>

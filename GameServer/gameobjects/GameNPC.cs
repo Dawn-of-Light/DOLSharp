@@ -1945,6 +1945,7 @@ namespace DOL.GS
 			m_roamingRange = dbMob.RoamingRange;
 			m_isCloakHoodUp = dbMob.IsCloakHoodUp;
 			m_visibleActiveWeaponSlots = dbMob.VisibleWeaponSlots;
+			
 			Gender = (Gender)dbMob.Gender;
 			OwnerID = dbMob.OwnerID;
 			
@@ -2151,6 +2152,7 @@ namespace DOL.GS
 			this.EvadeChance = template.EvadeChance;
 			this.BlockChance = template.BlockChance;
 			this.LeftHandSwingChance = template.LeftHandSwingChance;
+			this.VisibleActiveWeaponSlots = template.VisibleActiveWeaponSlot;
 			#endregion
 
 			#region Inventory

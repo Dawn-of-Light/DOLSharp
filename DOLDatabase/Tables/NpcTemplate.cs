@@ -45,7 +45,7 @@ namespace DOL.Database
 		private short m_maxSpeed = 50;
 		private string m_equipmentTemplateID = "";
 		private string m_itemsListTemplateID = "";
-		private byte m_flags;
+		private ushort m_flags;
 		private byte m_meleeDamageType = 1;
 		private byte m_parryChance;
 		private byte m_evadeChance;
@@ -223,7 +223,7 @@ namespace DOL.Database
 		/// Flags
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public byte Flags
+		public ushort Flags
 		{
 			get { return m_flags; }
 			set
