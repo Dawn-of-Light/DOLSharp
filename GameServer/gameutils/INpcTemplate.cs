@@ -29,41 +29,25 @@ namespace DOL.GS
 		/// Gets the npc template ID
 		/// </summary>
 		int TemplateId { get; }
-
+		
 		/// <summary>
-		/// Gets the template npc name
+		/// Do we want the npctemplate replace db mob's values ?
+		/// </summary>
+		int ReplaceMobValues { get; }
+		
+		/// <summary>
+		/// Gets the template 'physical' attributes
 		/// </summary>
 		string Name { get; }
-
-		/// <summary>
-		/// Gets the template npc guild name
-		/// </summary>
 		string GuildName { get; }
-
-		/// <summary>
-		/// Gets the template npc model
-		/// </summary>
 		string Model { get; }
-
-		/// <summary>
-		/// Gets the template npc size
-		/// </summary>
 		string Size { get; }
-
-		/// <summary>
-		/// Gets the template npc level
-		/// </summary>
 		string Level { get;}
-
-		/// <summary>
-		/// Gets the template npc max speed
-		/// </summary>
 		short MaxSpeed { get; }
-
-		/// <summary>
-		/// Gets the template npc flags
-		/// </summary>
-		byte Flags { get; }
+		ushort Flags { get; }
+		ushort Race { get; }
+		ushort BodyType { get;}
+		byte VisibleActiveWeaponSlot { get;}
 
 		/// <summary>
 		/// Gets the template npc inventory
@@ -76,105 +60,39 @@ namespace DOL.GS
 		string ItemsListTemplateID { get; }
 
 		/// <summary>
-		/// Gets the template npc melee damage type
+		/// Gets the template combat stats
 		/// </summary>
 		eDamageType MeleeDamageType { get; }
-
-		/// <summary>
-		/// Gets the template npc parry chance
-		/// </summary>
 		byte ParryChance { get; }
-
-		/// <summary>
-		/// Gets the template npc evade chance
-		/// </summary>
 		byte EvadeChance { get; }
-
-		/// <summary>
-		/// Gets the template npc block chance
-		/// </summary>
 		byte BlockChance { get; }
-
-		/// <summary>
-		/// Gets the template npc left hand swing chance
-		/// </summary>
 		byte LeftHandSwingChance { get; }
 
 		/// <summary>
-		/// Gets the template npc spells
-		/// </summary>
-		IList Spells { get; }
-
-		/// <summary>
-		/// Gets the template npc styles
-		/// </summary>
-		IList Styles { get; }
-
-		/// <summary>
-		/// Gets the template npc spelllines
-		/// </summary>
-		IList SpellLines { get; }
-		/// <summary>
 		/// Gets the template npc abilities
 		/// </summary>
+		IList Spells { get; }
+		IList Styles { get; }
+		IList SpellLines { get; }
 		IList Abilities { get; }
 
 		/// <summary>
-		/// Gets the template npc Strength 
+		/// Gets the template npc stats
 		///</summary>
 		int Strength { get; }
-
-		/// <summary>
-		/// Gets the template npc Constitution 
-		///</summary>
 		int Constitution { get; }
-
-		/// <summary>
-		/// Gets the template npc Dexterity 
-		///</summary>
 		int Dexterity { get; }
-
-		/// <summary>
-		/// Gets the template npc Quickness 
-		///</summary>
 		int Quickness { get; }
-
-		/// <summary>
-		/// Gets the template npc Piety 
-		///</summary>
 		int Piety { get; }
-
-		/// <summary>
-		/// Gets the template npc Intelligence 
-		///</summary>
 		int Intelligence { get; }
-
-		/// <summary>
-		/// Gets the template npc Empathy 
-		///</summary>
 		int Empathy { get; }
-
-		/// <summary>
-		/// Gets the template npc Charisma 
-		///</summary>
 		int Charisma { get; }
 
 		/// <summary>
-		/// Gets the template npc aggro level
+		/// Gets the template npc aggro values
 		/// </summary>
 		byte AggroLevel { get;}
-
-		/// <summary>
-		/// Gets the template npc aggro range
-		/// </summary>
 		int AggroRange { get;}
-
-		ushort Race { get; }
-
-		/// <summary>
-		/// Gets the body type of the npc
-		/// </summary>
-		ushort BodyType { get;}
 		
 		/// <summary>
 		/// The Mob's max distance from its spawn before return automatically
@@ -191,10 +109,5 @@ namespace DOL.GS
 		/// if TetherRange less or equal 0 ... no tether check
 		/// </summary>
 		int TetherRange { get; }
-		
-		/// <summary>
-		/// Do we want the npctemplate replace db mob's values ? 
-		/// </summary>
-		int ReplaceMobValues { get; }
 	}
 }
