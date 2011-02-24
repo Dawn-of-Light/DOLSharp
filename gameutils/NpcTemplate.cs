@@ -51,7 +51,7 @@ namespace DOL.GS
 		protected byte m_evadeChance;
 		protected byte m_blockChance;
 		protected byte m_leftHandSwingChance;
-		protected byte m_flags;
+		protected ushort m_flags;
 		protected string m_inventory;
 		protected eDamageType m_meleeDamageType;
 		protected int m_strength;
@@ -73,6 +73,7 @@ namespace DOL.GS
 		protected int m_maxdistance;
 		protected int m_tetherRange;
 		protected int m_replaceMobValues;
+		protected byte m_visibleActiveWeaponSlot;
 
 		/// <summary>
 		/// Constructs a new NpcTemplate
@@ -178,6 +179,7 @@ namespace DOL.GS
 			m_bodyType = (ushort)data.BodyType;
 			m_maxdistance = data.MaxDistance;
 			m_tetherRange = data.TetherRange;
+			m_visibleActiveWeaponSlot = data.VisibleWeaponSlots;
 			
 			m_replaceMobValues = data.ReplaceMobValues;			
 		}
@@ -197,7 +199,7 @@ namespace DOL.GS
 			m_empathy = mob.Empathy;
 			m_equipmentTemplateID = mob.EquipmentTemplateID;
 			m_evadeChance = mob.EvadeChance;
-			m_flags = (byte)mob.Flags;
+			m_flags = (ushort)mob.Flags;
 			m_guildName = mob.GuildName;
 			m_intelligence = mob.Intelligence;
 			m_maxdistance = mob.MaxDistance;
@@ -376,7 +378,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc flags
 		/// </summary>
-		public byte Flags
+		public ushort Flags
 		{
 			get { return m_flags; }
 			set { m_flags = value; }
@@ -566,6 +568,11 @@ namespace DOL.GS
 			get { return m_replaceMobValues;  }
 			set { m_replaceMobValues = value; }
 		}
+
+		/// <summary>
+		/// The visible and active weapon slot
+		/// </summary>
+		public byte VisibleActiveWeaponSlot { get;set; }
 
 		public virtual void SaveIntoDatabase()
 		{
