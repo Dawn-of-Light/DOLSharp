@@ -2542,6 +2542,7 @@
     </Compile>
     <Compile Include="world\ZoneBonus.cs" />
     <Compile Include="world\ZoneData.cs" />
+    <Compile Include="world\ZonePointEffects.cs" />
     <EmbeddedResource Include="config\logconfig.xml" />
     <EmbeddedResource Include="config\regions.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

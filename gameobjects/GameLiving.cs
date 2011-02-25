@@ -909,9 +909,9 @@ namespace DOL.GS
 		{
 			int ticks = spell.CastTime;
 
-			if (spell.InstrumentRequirement != 0 || 
-				line.KeyName == GlobalSpellsLines.Item_Spells || 
-				line.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
+			if (spell.InstrumentRequirement != 0 ||
+			    line.KeyName == GlobalSpellsLines.Item_Spells ||
+			    line.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
 			{
 				return ticks;
 			}
@@ -2989,7 +2989,7 @@ namespace DOL.GS
 
 						foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 							player.Out.SendCombatAnimation(this, null, (ushort)(AttackWeapon == null ? 0 : AttackWeapon.Model),
-														   0x00, player.Out.BowPrepare, (byte)(speed / 100), 0x00, 0x00);
+							                               0x00, player.Out.BowPrepare, (byte)(speed / 100), 0x00, 0x00);
 
 						m_attackAction.Start((RangedAttackType == eRangedAttackType.RapidFire) ? speed / 2 : speed);
 					}

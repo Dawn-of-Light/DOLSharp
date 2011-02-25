@@ -570,7 +570,7 @@ namespace DOL.GS.Spells
 		}
 
 		public override void OnEffectStart(GameSpellEffect effect)
-		{	
+		{
 			m_living = m_player.ControlledBrain.Body;
 			m_living.Level += 20;
 			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += 275;
@@ -588,7 +588,7 @@ namespace DOL.GS.Spells
 			return base.OnEffectExpires(effect, noMessages);
 		}
 
-		public Convoker9Handler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) 
+		public Convoker9Handler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
 		{
 			m_player = caster as GamePlayer;
 		}
