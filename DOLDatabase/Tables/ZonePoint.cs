@@ -27,12 +27,16 @@ namespace DOL.Database
 	{
 
 		private ushort	m_id;
-		private int	m_x;
-		private int	m_y;
-		private int	m_z;
-		private ushort	m_region;
+		private int	m_targetX;
+		private int	m_targetY;
+		private int	m_targetZ;
+		private ushort	m_targetRegion;
 		private ushort	m_realm;
-		private ushort	m_heading;
+		private ushort	m_targetHeading;
+		private int m_sourceX;
+		private int m_sourceY;
+		private int m_sourceZ;
+		private ushort m_sourceRegion;
 		private string	m_classType = "";
 
 		public ZonePoint()
@@ -53,58 +57,133 @@ namespace DOL.Database
 				m_id = value;
 			}
 		}
+
 		[DataElement(AllowDbNull=true)]
-		public int X
+		public int TargetX
 		{
 			get
 			{
-				return m_x;
+				return m_targetX;
 			}
 			set
 			{
 				Dirty = true;
-				m_x = value;
+				m_targetX = value;
 			}
 		}
+
 		[DataElement(AllowDbNull=true)]
-		public int Y
+		public int TargetY
 		{
 			get
 			{
-				return m_y;
+				return m_targetY;
 			}
 			set
 			{
 				Dirty = true;
-				m_y = value;
+				m_targetY = value;
 			}
 		}
+
 		[DataElement(AllowDbNull=true)]
-		public int Z
+		public int TargetZ
 		{
 			get
 			{
-				return m_z;
+				return m_targetZ;
 			}
 			set
 			{
 				Dirty = true;
-				m_z = value;
+				m_targetZ = value;
 			}
 		}
+
 		[DataElement(AllowDbNull=true)]
-		public ushort Region
+		public ushort TargetRegion
 		{
 			get
 			{
-				return m_region;
+				return m_targetRegion;
 			}
 			set
 			{
 				Dirty = true;
-				m_region = value;
+				m_targetRegion = value;
 			}
 		}
+
+		[DataElement(AllowDbNull = true)]
+		public ushort TargetHeading
+		{
+			get
+			{
+				return m_targetHeading;
+			}
+			set
+			{
+				Dirty = true;
+				m_targetHeading = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int SourceX
+		{
+			get
+			{
+				return m_sourceX;
+			}
+			set
+			{
+				Dirty = true;
+				m_sourceX = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int SourceY
+		{
+			get
+			{
+				return m_sourceY;
+			}
+			set
+			{
+				Dirty = true;
+				m_sourceY = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int SourceZ
+		{
+			get
+			{
+				return m_sourceZ;
+			}
+			set
+			{
+				Dirty = true;
+				m_sourceZ = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public ushort SourceRegion
+		{
+			get
+			{
+				return m_sourceRegion;
+			}
+			set
+			{
+				Dirty = true;
+				m_sourceRegion = value;
+			}
+		}
+
 		[DataElement(AllowDbNull=true, Index=true)]
 		public ushort Realm
 		{
@@ -118,19 +197,7 @@ namespace DOL.Database
 				m_realm = value;
 			}
 		}
-		[DataElement(AllowDbNull=true)]
-		public ushort Heading
-		{
-			get
-			{
-				return m_heading;
-			}
-			set
-			{
-				Dirty = true;
-				m_heading = value;
-			}
-		}
+
 		[DataElement(AllowDbNull=true)]
 		public string ClassType
 		{

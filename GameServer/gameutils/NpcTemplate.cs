@@ -181,7 +181,7 @@ namespace DOL.GS
 			m_tetherRange = data.TetherRange;
 			m_visibleActiveWeaponSlot = data.VisibleWeaponSlots;
 			
-			m_replaceMobValues = data.ReplaceMobValues;			
+			m_replaceMobValues = data.ReplaceMobValues;
 		}
 
 
@@ -268,29 +268,29 @@ namespace DOL.GS
 			}
 		}
 
-        protected int GetNextFreeTemplateId()
-        {
-            var objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
-            int free_id = 1;
-            int doubleidcheck = 0;
-            foreach (DBNpcTemplate dbtemplate in objs.OrderBy(x => x.TemplateId))
-            {
-                if (dbtemplate.TemplateId == free_id)
-                {
-                    doubleidcheck = dbtemplate.TemplateId;
-                    free_id++;
-                }
-                else
-                {
-                    if (dbtemplate.TemplateId == doubleidcheck)
-                        continue;
-                    else
-                        break;
-                }
-            }
+		protected int GetNextFreeTemplateId()
+		{
+			var objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
+			int free_id = 1;
+			int doubleidcheck = 0;
+			foreach (DBNpcTemplate dbtemplate in objs.OrderBy(x => x.TemplateId))
+			{
+				if (dbtemplate.TemplateId == free_id)
+				{
+					doubleidcheck = dbtemplate.TemplateId;
+					free_id++;
+				}
+				else
+				{
+					if (dbtemplate.TemplateId == doubleidcheck)
+						continue;
+					else
+						break;
+				}
+			}
 
-            return free_id;
-        }
+			return free_id;
+		}
 
 
 		public NpcTemplate()
@@ -432,7 +432,7 @@ namespace DOL.GS
 			set { m_leftHandSwingChance = value; }
 		}
 		/// <summary>
-		/// Gets the template npc spells name array 
+		/// Gets the template npc spells name array
 		/// </summary>
 		public IList Spells
 		{
@@ -440,7 +440,7 @@ namespace DOL.GS
 			set { m_spells = value; }
 		}
 		/// <summary>
-		/// Gets the template npc styles name array 
+		/// Gets the template npc styles name array
 		/// </summary>
 		public IList Styles
 		{
@@ -537,10 +537,10 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// The Mob's max distance from its spawn before return automatically
-        /// if MaxDistance > 0 ... the amount is the normal value
-        /// if MaxDistance = 0 ... no maxdistance check
-        /// if MaxDistance less than 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
+		/// The Mob's max distance from its spawn before return automatically
+		/// if MaxDistance > 0 ... the amount is the normal value
+		/// if MaxDistance = 0 ... no maxdistance check
+		/// if MaxDistance less than 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
 		/// </summary>
 		public int MaxDistance
 		{
@@ -549,10 +549,10 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// The mob's tether range; if mob is pulled farther than this distance
-        /// it will return to its spawn point.
-        /// if TetherRange > 0 ... the amount is the normal value
-        /// if TetherRange less or equal 0 ... no tether check
+		/// The mob's tether range; if mob is pulled farther than this distance
+		/// it will return to its spawn point.
+		/// if TetherRange > 0 ... the amount is the normal value
+		/// if TetherRange less or equal 0 ... no tether check
 		/// </summary>
 		public int TetherRange
 		{
