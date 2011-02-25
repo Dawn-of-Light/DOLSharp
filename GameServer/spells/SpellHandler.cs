@@ -534,13 +534,13 @@ namespace DOL.GS.Spells
 		/// <returns>true if casting was interrupted</returns>
 		public virtual bool CasterIsAttacked(GameLiving attacker)
 		{
-            //[StephenxPimentel] Check if the necro has MoC effect before interrupting.
-            if (Caster is NecromancerPet)
-            {
-                if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof (MasteryofConcentrationEffect)) != null)
-                {
-                    return false;
-                }
+			//[StephenxPimentel] Check if the necro has MoC effect before interrupting.
+			if (Caster is NecromancerPet)
+			{
+				if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof (MasteryofConcentrationEffect)) != null)
+				{
+					return false;
+				}
 			}
 			if (Spell.Uninterruptible)
 				return false;
@@ -596,21 +596,21 @@ namespace DOL.GS.Spells
 			}
 
 
-            if (m_caster is GamePlayer)
-            {
-                long nextSpellAvailTime = m_caster.TempProperties.getProperty<long>(GamePlayer.NEXT_SPELL_AVAIL_TIME_BECAUSE_USE_POTION);
+			if (m_caster is GamePlayer)
+			{
+				long nextSpellAvailTime = m_caster.TempProperties.getProperty<long>(GamePlayer.NEXT_SPELL_AVAIL_TIME_BECAUSE_USE_POTION);
 
-                if (nextSpellAvailTime > m_caster.CurrentRegion.Time)
-                {
-                    ((GamePlayer)m_caster).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "GamePlayer.CastSpell.MustWaitBeforeCast", (nextSpellAvailTime - m_caster.CurrentRegion.Time) / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    return false;
-                }
-                if (((GamePlayer)m_caster).Steed != null && ((GamePlayer)m_caster).Steed is GameSiegeRam)
-                {
-                    if (!quiet) MessageToCaster("You can't cast in a siegeram!.", eChatType.CT_System);
-                    return false;
-                }
-            }
+				if (nextSpellAvailTime > m_caster.CurrentRegion.Time)
+				{
+					((GamePlayer)m_caster).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "GamePlayer.CastSpell.MustWaitBeforeCast", (nextSpellAvailTime - m_caster.CurrentRegion.Time) / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+				if (((GamePlayer)m_caster).Steed != null && ((GamePlayer)m_caster).Steed is GameSiegeRam)
+				{
+					if (!quiet) MessageToCaster("You can't cast in a siegeram!.", eChatType.CT_System);
+					return false;
+				}
+			}
 
 			GameSpellEffect Phaseshift = FindEffectOnTarget(Caster, "Phaseshift");
 			if (Phaseshift != null && (Spell.InstrumentRequirement == 0 || Spell.SpellType == "Mesmerize"))
@@ -1200,7 +1200,7 @@ namespace DOL.GS.Spells
 
 							if (playerChecker != null)
 							{
-								// If the area forces an LoS check then we do it, otherwise we only check 
+								// If the area forces an LoS check then we do it, otherwise we only check
 								// if caster or target is a player
 								// This will generate an interrupt if LOS check fails
 
@@ -1829,13 +1829,13 @@ return false;
 			if (Caster is GamePlayer)
 				((GamePlayer)Caster).Stealth(false);
 
-            if (Caster is GamePlayer && !HasPositiveEffect)
-            {
-                if (Caster.AttackWeapon != null && Caster.AttackWeapon is GameInventoryItem)
-                {
-                    (Caster.AttackWeapon as GameInventoryItem).OnSpellCast(Caster, target, Spell);
-                }
-            }
+			if (Caster is GamePlayer && !HasPositiveEffect)
+			{
+				if (Caster.AttackWeapon != null && Caster.AttackWeapon is GameInventoryItem)
+				{
+					(Caster.AttackWeapon as GameInventoryItem).OnSpellCast(Caster, target, Spell);
+				}
+			}
 
 			// messages
 			if (Spell.InstrumentRequirement == 0 && Spell.ClientEffect != 0 && Spell.CastTime > 0)
@@ -2002,8 +2002,8 @@ return false;
 			#region Process the targets
 			switch (modifiedTarget)
 			{
-				#region GTAoE
-				// GTAoE
+					#region GTAoE
+					// GTAoE
 				case "area":
 					//Dinberg - fix for animists turrets, where before a radius of zero meant that no targets were ever
 					//selected!
@@ -2013,44 +2013,44 @@ return false;
 					}
 					else
 						if (modifiedRadius > 0)
+					{
+						foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, modifiedRadius))
 						{
-							foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, modifiedRadius))
+							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 							{
-								if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
+								// Apply Mentalist RA5L
+								SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+								if (SelectiveBlindness != null)
 								{
-									// Apply Mentalist RA5L
-									SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
-									if (SelectiveBlindness != null)
+									GameLiving EffectOwner = SelectiveBlindness.EffectSource;
+									if (EffectOwner == player)
 									{
-										GameLiving EffectOwner = SelectiveBlindness.EffectSource;
-										if (EffectOwner == player)
-										{
-											if (Caster is GamePlayer) ((GamePlayer)Caster).Out.SendMessage(string.Format("{0} is invisible to you!", player.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-										}
-										else list.Add(player);
+										if (Caster is GamePlayer) ((GamePlayer)Caster).Out.SendMessage(string.Format("{0} is invisible to you!", player.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 									}
 									else list.Add(player);
 								}
-							}
-							foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, modifiedRadius))
-							{
-								if (npc is GameStorm)
-									list.Add(npc);
-								else if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
-								{
-									if (!npc.HasAbility("DamageImmunity")) list.Add(npc);
-								}
+								else list.Add(player);
 							}
 						}
+						foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, modifiedRadius))
+						{
+							if (npc is GameStorm)
+								list.Add(npc);
+							else if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
+							{
+								if (!npc.HasAbility("DamageImmunity")) list.Add(npc);
+							}
+						}
+					}
 					break;
-				#endregion
-				#region Corpse
+					#endregion
+					#region Corpse
 				case "corpse":
 					if (target != null && !target.IsAlive)
 						list.Add(target);
 					break;
-				#endregion
-				#region Pet
+					#endregion
+					#region Pet
 				case "pet":
 					{
 						//Start-- [Ganrod] Nidel: Can cast Pet spell on our Minion/Turret pet without ControlledNpc
@@ -2111,8 +2111,8 @@ return false;
 					}
 					//End-- [Ganrod] Nidel: Can cast Pet spell on our Minion/Turret pet without ControlledNpc
 					break;
-				#endregion
-				#region Enemy
+					#endregion
+					#region Enemy
 				case "enemy":
 					if (modifiedRadius > 0)
 					{
@@ -2167,8 +2167,8 @@ return false;
 						}
 					}
 					break;
-				#endregion
-				#region Realm
+					#endregion
+					#region Realm
 				case "realm":
 					if (modifiedRadius > 0)
 					{
@@ -2196,8 +2196,8 @@ return false;
 							list.Add(target);
 					}
 					break;
-				#endregion
-				#region Self
+					#endregion
+					#region Self
 				case "self":
 					{
 						if (modifiedRadius > 0)
@@ -2225,8 +2225,8 @@ return false;
 						}
 						break;
 					}
-				#endregion
-				#region Group
+					#endregion
+					#region Group
 				case "group":
 					{
 						Group group = m_caster.Group;
@@ -2293,8 +2293,8 @@ return false;
 
 						break;
 					}
-				#endregion
-				#region Cone AoE
+					#endregion
+					#region Cone AoE
 				case "cone":
 					{
 						target = Caster;
@@ -2328,7 +2328,7 @@ return false;
 						}
 						break;
 					}
-				#endregion
+					#endregion
 			}
 			#endregion
 			return list;
@@ -2404,29 +2404,29 @@ return false;
 				}
 			}
 
-            //[StephenxPimentel] Reduce Damage if necro is using MoC
-            if (Caster is NecromancerPet)
-            {
-                if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
-                {
-                    RealmAbility necroRA = (Caster as NecromancerPet).Owner.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+			//[StephenxPimentel] Reduce Damage if necro is using MoC
+			if (Caster is NecromancerPet)
+			{
+				if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
+				{
+					RealmAbility necroRA = (Caster as NecromancerPet).Owner.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
 					if (necroRA != null && necroRA.Level > 0)
 					{
 						effectiveness *= System.Math.Round((double)necroRA.Level * 25 / 100, 2);
 					}
-                }
-            }
+				}
+			}
 
 			if (Caster is GamePlayer && (Caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Warlock && m_spell.IsSecondary)
 			{
-                Spell uninterruptibleSpell = Caster.TempProperties.getProperty<Spell>(UninterruptableSpellHandler.WARLOCK_UNINTERRUPTABLE_SPELL);
+				Spell uninterruptibleSpell = Caster.TempProperties.getProperty<Spell>(UninterruptableSpellHandler.WARLOCK_UNINTERRUPTABLE_SPELL);
 
-                if (uninterruptibleSpell != null && uninterruptibleSpell.Value > 0)
-                {
-                    double nerf = uninterruptibleSpell.Value;
-                    effectiveness *= (1 - (nerf * 0.01));
-                    Caster.TempProperties.removeProperty(UninterruptableSpellHandler.WARLOCK_UNINTERRUPTABLE_SPELL);
-                }
+				if (uninterruptibleSpell != null && uninterruptibleSpell.Value > 0)
+				{
+					double nerf = uninterruptibleSpell.Value;
+					effectiveness *= (1 - (nerf * 0.01));
+					Caster.TempProperties.removeProperty(UninterruptableSpellHandler.WARLOCK_UNINTERRUPTABLE_SPELL);
+				}
 			}
 
 			foreach (GameLiving t in targets)

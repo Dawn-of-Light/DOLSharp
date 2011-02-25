@@ -55,7 +55,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			var zonePoint =	GameServer.Database.SelectObject<ZonePoint>("`Id` = '" + jumpSpotID + "' AND (`Realm` = '" + (byte)targetRealm +
-																		"' OR `Realm` = '0' OR `Realm` = NULL)");
+			                                                            "' OR `Realm` = '0' OR `Realm` = NULL)");
 
 			if (zonePoint == null)
 			{
@@ -75,13 +75,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				switch (client.Player.Realm)
 				{
 					case eRealm.Albion:
-						zonePoint.Region = 1;
+						zonePoint.TargetRegion = 1;
 						break;
 					case eRealm.Midgard:
-						zonePoint.Region = 100;
+						zonePoint.TargetRegion = 100;
 						break;
 					case eRealm.Hibernia:
-						zonePoint.Region = 200;
+						zonePoint.TargetRegion = 200;
 						break;
 				}
 
@@ -91,15 +91,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Account.PrivLevel > 1)
 			{
 				client.Out.SendMessage("JumpSpotID = " + jumpSpotID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("ZonePoint Region = " + zonePoint.Region + ", ClassType = '" + zonePoint.ClassType + "'", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage("ZonePoint Target: Region = " + zonePoint.TargetRegion + ", ClassType = '" + zonePoint.ClassType + "'", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
 			//Dinberg: Fix - some jump points are handled code side, such as instances.
 			//As such, region MAY be zero in the database, so this causes an issue.
 
-			if (zonePoint.Region != 0)
+			if (zonePoint.TargetRegion != 0)
 			{
-				Region reg = WorldMgr.GetRegion(zonePoint.Region);
+				Region reg = WorldMgr.GetRegion(zonePoint.TargetRegion);
 				if (reg != null)
 				{
 					// check for target region disabled if player is in a standard region
@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (client.Player.CurrentRegion.IsCustom == false && reg.IsDisabled)
 					{
 						if ((client.Player.Mission is TaskDungeonMission &&
-							 (client.Player.Mission as TaskDungeonMission).TaskRegion.Skin == reg.Skin) == false)
+						     (client.Player.Mission as TaskDungeonMission).TaskRegion.Skin == reg.Skin) == false)
 						{
 							client.Out.SendMessage("This region has been disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							if (client.Account.PrivLevel == 1)
@@ -126,11 +126,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			//check caps for battleground
-			Battleground bg = KeepMgr.GetBattleground(zonePoint.Region);
+			Battleground bg = KeepMgr.GetBattleground(zonePoint.TargetRegion);
 			if (bg != null)
 			{
 				if (client.Player.Level < bg.MinLevel && client.Player.Level > bg.MaxLevel &&
-					client.Player.RealmLevel >= bg.MaxRealmLevel)
+				    client.Player.RealmLevel >= bg.MaxRealmLevel)
 					return;
 			}
 
@@ -150,8 +150,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					//Dinberg - Instances need to use a special handler. This is because some instances will result
 					//in duplicated zonepoints, such as if Tir Na Nog were to be instanced for a quest.
 					string type = (client.Player.CurrentRegion.IsInstance)
-									? "DOL.GS.ServerRules.InstanceDoorJumpPoint"
-									: zonePoint.ClassType;
+						? "DOL.GS.ServerRules.InstanceDoorJumpPoint"
+						: zonePoint.ClassType;
 					Type t = ScriptMgr.GetType(type);
 
 					if (t == null)
@@ -161,7 +161,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					else if (!typeof(IJumpPointHandler).IsAssignableFrom(t))
 					{
 						Log.ErrorFormat("jump point {0}: class {1} must implement IJumpPointHandler interface!", zonePoint.Id,
-										zonePoint.ClassType);
+						                zonePoint.ClassType);
 					}
 					else
 					{
@@ -174,7 +174,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							customHandler = null;
 							Log.Error(
 								string.Format("jump point {0}: error creating a new instance of jump point handler {1}", zonePoint.Id,
-											  zonePoint.ClassType), e);
+								              zonePoint.ClassType), e);
 						}
 					}
 				}
@@ -230,11 +230,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				var player = (GamePlayer)m_actionSource;
 
-				Region reg = WorldMgr.GetRegion(m_zonePoint.Region);
+				Region reg = WorldMgr.GetRegion(m_zonePoint.TargetRegion);
 				if (reg != null && reg.Expansion > (int)player.Client.ClientType)
 				{
 					player.Out.SendMessage("Destination region (" + reg.Description + ") is not supported by your client type.",
-										   eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -251,12 +251,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 							Log.Error("Jump point handler (" + m_zonePoint.ClassType + ")", e);
 
 						player.Out.SendMessage("exception in jump point (" + m_zonePoint.Id + ") handler...", eChatType.CT_System,
-											   eChatLoc.CL_SystemWindow);
+						                       eChatLoc.CL_SystemWindow);
 						return;
 					}
 				}
 
-				player.MoveTo(m_zonePoint.Region, m_zonePoint.X, m_zonePoint.Y, m_zonePoint.Z, m_zonePoint.Heading);
+				//check if the zonepoint has source locations set
+				if (m_zonePoint.SourceRegion == 0)
+				{
+					m_zonePoint.SourceRegion = player.CurrentRegionID;
+					m_zonePoint.SourceX = player.X;
+					m_zonePoint.SourceY = player.Y;
+					m_zonePoint.SourceZ = player.Z;
+					GameServer.Database.SaveObject(m_zonePoint);
+				}
+
+				//move the player
+				player.MoveTo(m_zonePoint.TargetRegion, m_zonePoint.TargetX, m_zonePoint.TargetY, m_zonePoint.TargetZ, m_zonePoint.TargetHeading);
 			}
 		}
 

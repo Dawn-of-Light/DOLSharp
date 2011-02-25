@@ -43,10 +43,10 @@ namespace DOL.GS.GameEvents
 
 			if (loc != null)
 			{
-				targetPoint.X = loc.X;
-				targetPoint.Y = loc.Y;
-				targetPoint.Z = loc.Z;
-				targetPoint.Heading = (ushort)loc.Heading;
+				targetPoint.TargetX = loc.X;
+				targetPoint.TargetY = loc.Y;
+				targetPoint.TargetZ = loc.Z;
+				targetPoint.TargetHeading = (ushort)loc.Heading;
 				return true;
 			}
 
