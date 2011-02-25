@@ -68,8 +68,8 @@ namespace DOL.Database
 		private int m_bodyType = 0;
 		private int m_maxdistance = 0;
 		private int m_tetherRange = 0;
-        private byte m_visibleWeaponSlots = 0;
-        private int m_replaceMobValues =  0;
+		private byte m_visibleWeaponSlots = 0;
+		private int m_replaceMobValues =  0;
 		private string m_packageID = "";
 
 		/// <summary>
@@ -514,32 +514,32 @@ namespace DOL.Database
 			}
 		}
 
-        [DataElement(AllowDbNull = false)]
-        public byte VisibleWeaponSlots
-        {
-            get
-            {
-                return m_visibleWeaponSlots;
-            }
-            set
-            {
-                Dirty = true;
-                m_visibleWeaponSlots = value;
-            }
-        }
-        [DataElement(AllowDbNull = true)]
-        public int ReplaceMobValues
-        {
-            get
-            {
-                return m_replaceMobValues;
-            }
-            set
-            {
-                Dirty = true;
-                m_replaceMobValues = value;
-            }
-        }
+		[DataElement(AllowDbNull = false)]
+		public byte VisibleWeaponSlots
+		{
+			get
+			{
+				return m_visibleWeaponSlots;
+			}
+			set
+			{
+				Dirty = true;
+				m_visibleWeaponSlots = value;
+			}
+		}
+		[DataElement(AllowDbNull = true)]
+		public int ReplaceMobValues
+		{
+			get
+			{
+				return m_replaceMobValues;
+			}
+			set
+			{
+				Dirty = true;
+				m_replaceMobValues = value;
+			}
+		}
 
 		[DataElement(AllowDbNull = true)]
 		public string PackageID

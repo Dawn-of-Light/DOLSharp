@@ -27,7 +27,7 @@ namespace DOL.GS
 	public class GameTaxi : GameNPC
 	{
 		public GameTaxi() : base()
-		{			
+		{
 			Model = 450;
 			MaxSpeedBase = 600;
 			Size = 63;

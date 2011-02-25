@@ -61,11 +61,11 @@ namespace DOL.GS.ServerRules
 
             if (loc != null)
             {
-                targetPoint.X = loc.X;
-                targetPoint.Y = loc.Y;
-                targetPoint.Z = loc.Z;
-                targetPoint.Region = loc.RegionID;
-                targetPoint.Heading = loc.RegionID;
+                targetPoint.TargetX = loc.X;
+                targetPoint.TargetY = loc.Y;
+                targetPoint.TargetZ = loc.Z;
+                targetPoint.TargetRegion = loc.RegionID;
+                targetPoint.TargetHeading = loc.RegionID;
                 return true;
             }
 
