@@ -71,7 +71,11 @@ namespace DOL.GS.RealmAbilities
 
 			int petHealthPercent = player.ControlledBrain.Body.HealthPercent;
 			m_healthpool *= (petHealthPercent * 0.01);
-			player.ControlledBrain.Body.Die(player);
+
+            //[StephenxPimentel]
+            //1.108 - This ability will no longer stun or sacrifice the pet.
+
+			//player.ControlledBrain.Body.Die(player);
 
 			int pool = (int)m_healthpool;
 			while (pool > 0 && targets.Count > 0)

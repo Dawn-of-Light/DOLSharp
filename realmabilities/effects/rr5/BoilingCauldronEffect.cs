@@ -32,7 +32,7 @@ namespace DOL.GS.Effects
         private const int cauldronModel = 2947; 		// Model to use for cauldron
         private const int cauldronLevel = 50;			// Cauldron level		
         private const string cauldronName = "Cauldron";	// Name of cauldron
-        private const int spellDamage = 450;			// Damage inflicted
+        private const int spellDamage = 650;			// Damage inflicted
         private const ushort spellRadius = 350;			// Spell radius
 
         // Objects

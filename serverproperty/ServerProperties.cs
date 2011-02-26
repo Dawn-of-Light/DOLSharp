@@ -265,6 +265,13 @@ namespace DOL.GS.ServerProperties
 		#endregion
 		
 		#region SERVER
+
+        /// <summary>
+		/// The money drop modifier
+		/// </summary>
+		[ServerProperty("server","use_new_passives_ras_scaling", "Use new passives realmabilities scaling (1.108+) ?", false)]
+		public static bool USE_NEW_PASSIVES_RAS_SCALING;
+
 		/// <summary>
 		/// Use pre 1.105 train or livelike
 		/// </summary>
@@ -371,8 +378,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Show logins
 		/// </summary>
-		[ServerProperty("server", "show_logins", "Show login messages when players log in and out of game?", true)]
-		public static bool SHOW_LOGINS;
+        [ServerProperty("server", "show_logins", "Show login messages when players log in and out of game?", true)]
+        public static bool SHOW_LOGINS;
 
 
 		#endregion

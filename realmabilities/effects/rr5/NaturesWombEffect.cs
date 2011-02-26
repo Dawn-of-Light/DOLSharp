@@ -35,19 +35,25 @@ namespace DOL.GS.Effects
 				}
 			}
 
-			GameEventMgr.AddHandler(target, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
-			owner.IsStunned = true;
-			owner.StopAttack();
-			owner.StopCurrentSpellcast();
-			owner.DisableTurning(true);
-			if (player != null)
-			{
-				player.Out.SendUpdateMaxSpeed();
-			}
-			else
-			{
-				owner.CurrentSpeed = owner.MaxSpeed;
-			}
+            GameEventMgr.AddHandler(target, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
+
+            //[StephenxPimentel]
+            //1.108 updates this so it no longer stuns, but silences.
+            //Rest of the code is now located in SpellHandler. (Line 617)
+            owner.StopCurrentSpellcast();
+
+
+			//owner.IsStunned = true;
+			//owner.StopAttack();
+			//owner.DisableTurning(true);
+			//if (player != null)
+			//{
+			//	player.Out.SendUpdateMaxSpeed();
+			//}
+			//else
+			//{
+			//	owner.CurrentSpeed = owner.MaxSpeed;
+			//}
 		}
 
 		private void OnAttack(DOLEvent e, object sender, EventArgs arguments)

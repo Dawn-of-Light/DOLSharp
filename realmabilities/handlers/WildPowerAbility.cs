@@ -37,14 +37,33 @@ namespace DOL.GS.RealmAbilities
 		public override int GetAmountForLevel(int level)
 		{
 			if (level < 1) return 0;
-			switch (level)
+			if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
 			{
-				case 1: return 3;
-				case 2: return 9;
-				case 3: return 17;
-				case 4: return 27;
-				case 5: return 39;
-				default: return 39;
+				switch (level)
+				{
+						case 1: return 3;
+						case 2: return 6;
+						case 3: return 9;
+						case 4: return 13;
+						case 5: return 17;
+						case 6: return 22;
+						case 7: return 27;
+						case 8: return 33;
+						case 9: return 39;
+						default: return 39;
+				}
+			}
+			else
+			{
+				switch (level)
+				{
+						case 1: return 3;
+						case 2: return 9;
+						case 3: return 17;
+						case 4: return 27;
+						case 5: return 39;
+						default: return 39;
+				}
 			}
 		}
 	}
@@ -65,14 +84,33 @@ namespace DOL.GS.RealmAbilities
 		public override int GetAmountForLevel(int level)
 		{
 			if (level < 1) return 0;
-			switch (level)
+			if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
 			{
-				case 1: return 2;
-				case 2: return 4;
-				case 3: return 7;
-				case 4: return 11;
-				case 5: return 15;
-				default: return 15;
+				switch (level)
+				{
+						case 1: return 2;
+						case 2: return 3;
+						case 3: return 4;
+						case 4: return 6;
+						case 5: return 8;
+						case 6: return 10;
+						case 7: return 12;
+						case 8: return 14;
+						case 9: return 16;
+						default: return 16;
+				}
+			}
+			else
+			{
+				switch (level)
+				{
+						case 1: return 2;
+						case 2: return 4;
+						case 3: return 7;
+						case 4: return 11;
+						case 5: return 15;
+						default: return 15;
+				}
 			}
 		}
 	}
@@ -93,14 +131,33 @@ namespace DOL.GS.RealmAbilities
 		public override int GetAmountForLevel(int level)
 		{
 			if (level < 1) return 0;
-			switch (level)
+			if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
 			{
-				case 1: return 3;
-				case 2: return 9;
-				case 3: return 17;
-				case 4: return 27;
-				case 5: return 39;
-				default: return 39;
+				switch (level)
+				{
+						case 1: return 3;
+						case 2: return 6;
+						case 3: return 9;
+						case 4: return 13;
+						case 5: return 17;
+						case 6: return 22;
+						case 7: return 27;
+						case 8: return 33;
+						case 9: return 39;
+						default: return 39;
+				}
+			}
+			else
+			{
+				switch (level)
+				{
+						case 1: return 3;
+						case 2: return 9;
+						case 3: return 17;
+						case 4: return 27;
+						case 5: return 39;
+						default: return 39;
+				}
 			}
 		}
 	}
@@ -120,14 +177,33 @@ namespace DOL.GS.RealmAbilities
 		public override int GetAmountForLevel(int level)
 		{
 			if (level < 1) return 0;
-			switch (level)
+			if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
 			{
-				case 1: return 2;
-				case 2: return 5;
-				case 3: return 12;
-				case 4: return 19;
-				case 5: return 28;
-				default: return 28;
+				switch (level)
+				{
+						case 1: return 2;
+						case 2: return 4;
+						case 3: return 6;
+						case 4: return 9;
+						case 5: return 12;
+						case 6: return 16;
+						case 7: return 20;
+						case 8: return 25;
+						case 9: return 30;
+						default: return 30;
+				}
+			}
+			else
+			{
+				switch (level)
+				{
+						case 1: return 2;
+						case 2: return 5;
+						case 3: return 12;
+						case 4: return 19;
+						case 5: return 28;
+						default: return 28;
+				}
 			}
 		}
 	}
@@ -142,14 +218,33 @@ namespace DOL.GS.RealmAbilities
 		public override int GetAmountForLevel(int level)
 		{
 			if (level < 1) return 0;
-			switch (level)
+			if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
 			{
-				case 1: return 3;
-				case 2: return 9;
-				case 3: return 17;
-				case 4: return 27;
-				case 5: return 39;
-				default: return 39;
+				switch (level)
+				{
+						case 1: return 3;
+						case 2: return 6;
+						case 3: return 9;
+						case 4: return 13;
+						case 5: return 17;
+						case 6: return 22;
+						case 7: return 27;
+						case 8: return 33;
+						case 9: return 39;
+						default: return 39;
+				}
+			}
+			else
+			{
+				switch (level)
+				{
+						case 1: return 3;
+						case 2: return 9;
+						case 3: return 17;
+						case 4: return 27;
+						case 5: return 39;
+						default: return 39;
+				}
 			}
 		}
 

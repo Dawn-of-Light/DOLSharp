@@ -78,7 +78,7 @@ namespace DOL.GS.RealmAbilities
                     if (radiusPlayer == player) radiusPlayer.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
                     else radiusPlayer.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
-                    radiusPlayer.Out.SendSpellCastAnimation(player, 7059, 20);
+                    radiusPlayer.Out.SendSpellCastAnimation(player, 7059, 0);
                 }
 
                 if (player.RealmAbilityCastTimer != null)
@@ -89,28 +89,29 @@ namespace DOL.GS.RealmAbilities
                 }
 
                 targetPlayer = player.TargetObject as GamePlayer;
-                player.RealmAbilityCastTimer = new RegionTimer(player);
-                player.RealmAbilityCastTimer.Callback = new RegionTimerCallback(EndCast);
-                player.RealmAbilityCastTimer.Start(2000);
+
+                //[StephenxPimentel]
+                //1.108 - this ability is now instant cast.
+                EndCast();
             }
         }
 
-        private int EndCast(RegionTimer timer)
+        private void EndCast()
         {
-            if (player == null || !player.IsAlive) return 0;
-            if (targetPlayer == null || !targetPlayer.IsAlive) return 0;
+            if (player == null || !player.IsAlive) return;
+            if (targetPlayer == null || !targetPlayer.IsAlive) return;
 
             if (!GameServer.ServerRules.IsAllowedToAttack(player, targetPlayer, true))
             {
                 player.Out.SendMessage("This work only on enemies.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
                 player.DisableSkill(this, 3 * 1000);
-                return 0;
+                return;
             }
             if ( !player.IsWithinRadius( targetPlayer, SpellRange ) )
             {
                 player.Out.SendMessage(targetPlayer + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
                 player.DisableSkill(this, 3 * 1000);
-                return 0;
+                return;
             }
             foreach (GamePlayer radiusPlayer in targetPlayer.GetPlayersInRadius(SpellRadius))
             {
@@ -121,10 +122,6 @@ namespace DOL.GS.RealmAbilities
                 if (SelectiveBlindness != null) SelectiveBlindness.Cancel(false);
                 new SelectiveBlindnessEffect(player).Start(radiusPlayer);
             }
-            DisableSkill(player);
-            timer.Stop();
-            timer = null;
-            return 0;
         }
 
         public override int GetReUseDelay(int level)
