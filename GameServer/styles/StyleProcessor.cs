@@ -572,9 +572,13 @@ namespace DOL.GS.Styles
 		/// <returns>Endurance needed to use style</returns>
 		public static int CalculateEnduranceCost(GameLiving living, Style style, int weaponSpd)
 		{
+
+            //[StephenxPimentel]
+            //1.108 - Valhallas Blessing now has a 75% chance to not use endurance.
+
 			// Apply Valkyrie RA5L effect
 			ValhallasBlessingEffect ValhallasBlessing = (ValhallasBlessingEffect)living.EffectList.GetOfType(typeof(ValhallasBlessingEffect));
-			if (ValhallasBlessing != null && Util.Chance(10)) return 0;
+			if (ValhallasBlessing != null && Util.Chance(75)) return 0;
 
             //Camelot Herald 1.90 : Battlemaster styles will now cost a flat amount of Endurance, regardless of weapon speed
             if (style.Spec == Specs.Battlemaster)

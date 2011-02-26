@@ -40,13 +40,13 @@ namespace DOL.GS.RealmAbilities
 		public override string Name
 		{
 			get
-            {
-                //Lifeflight: Right after a RA is trained the m_name already contains the roman numerals
-                //So check to see if it ends with the correct RomanLevel, and if so just return m_name
-                if (m_name.EndsWith(getRomanLevel()))
-                    return m_name;
+			{
+				//Lifeflight: Right after a RA is trained the m_name already contains the roman numerals
+				//So check to see if it ends with the correct RomanLevel, and if so just return m_name
+				if (m_name.EndsWith(getRomanLevel()))
+					return m_name;
 				else
-                    return (Level <= 1) ? base.Name : m_name + " " + getRomanLevel();
+					return (Level <= 1) ? base.Name : m_name + " " + getRomanLevel();
 			}
 		}
 
@@ -300,14 +300,33 @@ namespace DOL.GS.RealmAbilities
 
 		public override int CostForUpgrade(int level)
 		{
-			switch (level)
+			if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
 			{
-				case 0: return 1;
-				case 1: return 3;
-				case 2: return 6;
-				case 3: return 10;
-				case 4: return 14;
-				default: return 1000;
+				switch (level)
+				{
+						case 0: return 1;
+						case 1: return 1;
+						case 2: return 2;
+						case 3: return 3;
+						case 4: return 3;
+						case 5: return 5;
+						case 6: return 5;
+						case 7: return 7;
+						case 8: return 7;
+						default: return 1000;
+				}
+			}
+			else
+			{
+				switch (level)
+				{
+						case 0: return 1;
+						case 1: return 3;
+						case 2: return 6;
+						case 3: return 10;
+						case 4: return 14;
+						default: return 1000;
+				}
 			}
 		}
 

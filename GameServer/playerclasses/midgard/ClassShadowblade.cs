@@ -113,7 +113,8 @@ namespace DOL.GS.PlayerClass
 			if (player.Level >= 50)
 			{
 				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 7));
-				player.AddAbility(SkillBase.GetAbility(Abilities.BloodRage));
+                player.AddAbility(SkillBase.GetAbility(Abilities.BloodRage));
+                player.AddAbility(SkillBase.GetAbility(Abilities.Remedy));
 			}
 		}
 

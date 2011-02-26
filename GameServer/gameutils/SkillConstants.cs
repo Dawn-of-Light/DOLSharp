@@ -361,6 +361,12 @@ namespace DOL.GS
 		/// </summary>
 		public const string TauntingShout = "Taunting Shout";
 
+        /// <summary>
+        /// Remedy Ability
+        /// </summary>
+        // [StephenxPimentel] Added as a level 50 ability as of patch 1.108
+        public const string Remedy = "Remedy";
+
 		public const string DefensiveCombatPowerRegeneration = "Defensive Combat Power Regeneration";
 		//NPC only abilities
 		/// <summary>
