@@ -156,6 +156,69 @@ namespace DOL.GS
 				}
 			}
 
+			// Yet another special case the port to the 'hearth' what means
+			// that the player will be ported to the defined house bindstone
+			if (text.ToLower() == "hearth")
+			{
+				// Check if player has set a house bind
+				if (!(player.DBCharacter.BindHouseRegion > 0))
+				{
+					SayTo(player, "Sorry, you haven't set any house bind point yet.");
+					return false;
+				}
+
+				// Check if the house at the player's house bind location still exists
+				ArrayList houses = (ArrayList)HouseMgr.GetHousesCloseToSpot((ushort)player.
+					DBCharacter.BindHouseRegion, player.DBCharacter.BindHouseXpos, player.
+					DBCharacter.BindHouseYpos, 700);
+				if (houses.Count == 0)
+				{
+					SayTo(player, "I'm afraid I can't teleport you to your hearth since the house at your " + 
+						"house bind location has been torn down.");
+					return false;
+				}
+
+				// Check if the house at the player's house bind location contains a bind stone
+				House targetHouse = (House)houses[0];
+				IDictionary<uint, DBHouseHookpointItem> hookpointItems = targetHouse.HousepointItems;
+				Boolean hasBindstone = false;
+
+				foreach (KeyValuePair<uint, DBHouseHookpointItem> targetHouseItem in hookpointItems)
+				{
+					if (((GameObject)targetHouseItem.Value.GameObject).GetName(0, false).ToLower().EndsWith("bindstone"))
+					{
+						hasBindstone = true;
+						break;
+					}
+				}
+
+				if (!hasBindstone)
+				{
+					SayTo(player, "I'm sorry to tell that the bindstone of your current house bind location " + 
+						"has been removed, so I'm not able to teleport you there.");
+					return false;
+				}
+
+				// Check if the player has the permission to bind at the house bind stone
+				if (!targetHouse.CanBindInHouse(player))
+				{
+					SayTo(player, "You're no longer allowed to bind at the house bindstone you've previously " + 
+						"chosen, hence I'm not allowed to teleport you there.");
+					return false;
+				}
+
+				Teleport teleport = new Teleport();
+				teleport.TeleportID = "hearth";
+				teleport.Realm = (int)DestinationRealm;
+				teleport.RegionID = player.DBCharacter.BindHouseRegion;
+				teleport.X = player.DBCharacter.BindHouseXpos;
+				teleport.Y = player.DBCharacter.BindHouseYpos;
+				teleport.Z = player.DBCharacter.BindHouseZpos;
+				teleport.Heading = player.DBCharacter.BindHouseHeading;
+				OnDestinationPicked(player, teleport);
+				return true;
+			}
+
 			if (text.ToLower() == "guild")
 			{
 				House house = HouseMgr.GetGuildHouseByPlayer(player);

@@ -47,7 +47,7 @@ namespace DOL.GS
 		{
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
-                if (item.Name == "alchemy table" || item.Model == 820) // Alchemy Table
+                if (item.Name.ToLower() == "alchemy table" || item.Model == 820) // Alchemy Table
                 {
 					return true;
 				}

@@ -167,7 +167,7 @@ using DOL.AI.Brain;
 			EvilThiefoftheShadowclan.Faction = FactionMgr.GetFactionByID(0);
 			EvilThiefoftheShadowclan.X = 532571;
 			EvilThiefoftheShadowclan.Y = 479055;
-			EvilThiefoftheShadowclan.Z = 0;
+			EvilThiefoftheShadowclan.Z = 2200;
 			EvilThiefoftheShadowclan.Heading = 3570;
 			EvilThiefoftheShadowclan.RespawnInterval = 0;
 			EvilThiefoftheShadowclan.BodyType = 0;
@@ -285,7 +285,8 @@ using DOL.AI.Brain;
 			    a = builder.CreateBehaviour(SirQuait,-1);
 				    a.AddTrigger(eTriggerType.Interact,null,SirQuait);
 			    a.AddRequirement(eRequirementType.QuestPending,typeof(HelpSirQuait),null,(eComparator)5);
-			    a.AddAction(eActionType.Talk,"Hello adventurer, an [evil thief] has stolen my [sword], can [you help me] get it back?",SirQuait);
+				a.AddRequirement(eRequirementType.QuestGivable, typeof(HelpSirQuait), SirQuait);
+				a.AddAction(eActionType.Talk, "Hello adventurer, an [evil thief] has stolen my [sword], can [you help me] get it back?", SirQuait);
 			    AddBehaviour(a);
 			    a = builder.CreateBehaviour(SirQuait,-1);
 				    a.AddTrigger(eTriggerType.Whisper,"sword",SirQuait);
@@ -305,7 +306,6 @@ using DOL.AI.Brain;
 			    a = builder.CreateBehaviour(SirQuait,-1);
 				    a.AddTrigger(eTriggerType.Whisper,"you help me",SirQuait);
 			    a.AddRequirement(eRequirementType.QuestPending,typeof(HelpSirQuait),null,(eComparator)5);
-			    a.AddRequirement(eRequirementType.QuestGivable,typeof(HelpSirQuait),SirQuait);
 			    a.AddAction(eActionType.OfferQuest,typeof(HelpSirQuait),"Do you want to help Sir Quait?");
 			    AddBehaviour(a);
 			    a = builder.CreateBehaviour(SirQuait,-1);
@@ -425,14 +425,16 @@ using DOL.AI.Brain;
 		
 			if (player.Level > maximumLevel || player.Level < minimumLevel )
 				return false;
-		
-			if (
-		
-			player.CharacterClass.ID != (byte) eCharacterClass.Fighter && 
-				true) {
+
+			// If you want restrict the quest to specific player classes you can do
+			// something like that
+			/*
+			if (player.CharacterClass.ID != (byte) eCharacterClass.Fighter) 
+			{
 				return false;			
 			}
-		
+			*/
+
 			return true;
 		}
 
