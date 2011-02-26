@@ -58,7 +58,7 @@ namespace DOL.GS
 			{
 				foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 				{
-					if (item.Model == 481) // Lathe
+					if (item.Name.ToLower() == "lathe" || item.Model == 481) // Lathe
 						return true;
 				}
 

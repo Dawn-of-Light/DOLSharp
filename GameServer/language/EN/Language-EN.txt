@@ -542,11 +542,15 @@ Scripts.Players.Chatgroup.NotChatGroupMember:		This player is not a member of a 
 Scripts.Players.Chatgroup.NotPublic:			This chatgroup is not public.
 Scripts.Players.Chatgroup.OnlyModerator:		Only moderator can talk on this chat group.	
 Scripts.Players.Chatgroup.OwnChatGroup:			You cannot join your own chatgroup.
-Scripts.Players.Chatgroup.Password:			Password of Chatgroup: {0}.
-Scripts.Players.Chatgroup.PasswordChanged:		You have change the password of Chatgroup to: {0}.	
+Scripts.Players.Chatgroup.Password:			The password to this chat group is currently set to {0}.
+Scripts.Players.Chatgroup.PasswordUnset:			The password to this chat group is currently unset.
+Scripts.Players.Chatgroup.PasswordChanged:		The password to this chat group is now set to {0}.	
+Scripts.Players.Chatgroup.PasswordClear:		The password for this chatgroup has been cleared.
 Scripts.Players.Chatgroup.PlayerInChatgroup:		{0} is already in a chatgroup.	
-Scripts.Players.Chatgroup.Private:			The chatgroup is now private.
-Scripts.Players.Chatgroup.Public:			The chatgroup is now public.
+Scripts.Players.Chatgroup.Private:			This is now a private chat group.
+Scripts.Players.Chatgroup.PrivateAlready:			This is already a private chat group.
+Scripts.Players.Chatgroup.Public:			This is now a public chat group.
+Scripts.Players.Chatgroup.PublicAlready:			This is already a public chat group.
 Scripts.Players.Chatgroup.Usage:			Usage: /c <text>
 Scripts.Players.Chatgroup.UsageInvite:			Usage: /cg invite <playername>"
 
