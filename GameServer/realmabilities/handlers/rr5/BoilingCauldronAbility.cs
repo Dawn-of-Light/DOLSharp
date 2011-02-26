@@ -15,6 +15,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
+ * [StephenxPimentel]
+ * 1.108 The Spill Over of this ability has been decreased to 3.5 seconds, and its damage increased to 650.
+ * 
  */
 
 using System;
@@ -25,11 +28,11 @@ using DOL.GS.Effects;
 namespace DOL.GS.RealmAbilities
 {
     /// <summary>
-    /// Minion Rescue RA
+    /// Boiling Cauldron RA
     /// </summary>
     public class BoilingCauldronAbility : RR5RealmAbility
     {
-        public const int DURATION = 6 * 1000;
+        public const int DURATION = 4500;
 
         public BoilingCauldronAbility(DBAbility dba, int level) : base(dba, level) { }
 
@@ -60,10 +63,10 @@ namespace DOL.GS.RealmAbilities
 
         public override void AddEffectsInfo(IList<string> list)
         {
-            list.Add("Summon a cauldron that boil in place for 5s before spilling and doing damage to all those nearby. 15min RUT.");
+            list.Add("Summon a cauldron that boil in place for 3.5s before spilling and doing damage to all those nearby. 15min RUT.");
             list.Add("");
             list.Add("Target: Enemy");
-            list.Add("Duration: 6s");
+            list.Add("Duration: 3.5s");
             list.Add("Casting time: Instant");
         }
 

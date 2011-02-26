@@ -33,7 +33,11 @@ namespace DOL.GS.Effects
 					p.Out.SendSpellEffectAnimation(player, player, Icon, 0, false, 1);
 				}
 			}
-			target.DebuffCategory[(int)eProperty.MissHit] -= 50;
+
+            //[StephenxPimentel]
+            //1.108 - this ability no longer reduces the users attack power by 50%
+
+			//target.DebuffCategory[(int)eProperty.MissHit] -= 50;
 			target.BuffBonusCategory4[(int)eProperty.EvadeChance] += 50;
 			target.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 0.5);
 
@@ -50,7 +54,7 @@ namespace DOL.GS.Effects
 
 		public override void Stop()
 		{
-			owner.DebuffCategory[(int)eProperty.MissHit] += 50;
+			//owner.DebuffCategory[(int)eProperty.MissHit] += 50;
 			owner.BuffBonusCategory4[(int)eProperty.EvadeChance] -= 50;
 			owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
 

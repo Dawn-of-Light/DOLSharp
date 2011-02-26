@@ -610,6 +610,14 @@ namespace DOL.GS.Spells
 					if (!quiet) MessageToCaster("You can't cast in a siegeram!.", eChatType.CT_System);
 					return false;
 				}
+				GameSpellEffect naturesWomb = FindEffectOnTarget(Caster, typeof(NaturesWombEffect));
+				if (naturesWomb != null)
+				{
+					//[StephenxPimentel]
+					//Get Correct Message for 1.108 update.
+					MessageToCaster("You are silenced and cannot cast a spell right now.", eChatType.CT_SpellResisted);
+					return false;
+				}
 			}
 
 			GameSpellEffect Phaseshift = FindEffectOnTarget(Caster, "Phaseshift");
@@ -1239,7 +1247,7 @@ namespace DOL.GS.Spells
 
 					case "pet":
 						/*
-						 * [Ganrod] Nidel: Can cast pet spell on all Pet/Turret/Minion (our pet)
+						 * Can cast pet spell on all Pet/Turret/Minion (our pet)
 						 * -If caster target's isn't own pet.
 						 *  -check if caster have controlled pet, select this automatically
 						 *  -check if target isn't null
@@ -1465,18 +1473,6 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			/*if (m_caster.Concentration < m_spell.Concentration)
-{
-MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
-return false;
-}*/
-
-			/*if (m_spell.Concentration > 0 && m_caster.ConcentrationEffects.ConcSpellsCount >= 50)
-{
-MessageToCaster("You can only cast up to 50 simultaneous concentration spells!", eChatType.CT_SpellResisted);
-return false;
-}*/
-
 			return true;
 		}
 
@@ -1495,19 +1491,19 @@ return false;
 			if (effect != null && !m_spell.IsPrimary)
 				return 0;
 
-			// Apply Valkyrie RA5L effect
+			//1.108 - Valhallas Blessing now has a 75% chance to not use power.
 			ValhallasBlessingEffect ValhallasBlessing = (ValhallasBlessingEffect)m_caster.EffectList.GetOfType(typeof(ValhallasBlessingEffect));
-			if (ValhallasBlessing != null && Util.Chance(10))
+			if (ValhallasBlessing != null && Util.Chance(75))
 				return 0;
 
-			// Apply Animist RA5L effect
+			//patch 1.108 increases the chance to not use power to 50%.
 			FungalUnionEffect FungalUnion = (FungalUnionEffect)m_caster.EffectList.GetOfType(typeof(FungalUnionEffect));
 			{
-				if (FungalUnion != null && Util.Chance(10))
+				if (FungalUnion != null && Util.Chance(50))
 					return 0;
 			}
 
-			#region [Freya] Nidel: Arcane Syphon chance
+			// Arcane Syphon chance
 			int syphon = Caster.GetModified(eProperty.ArcaneSyphon);
 			if (syphon > 0)
 			{
@@ -1516,7 +1512,6 @@ return false;
 					return 0;
 				}
 			}
-			#endregion
 
 			double basepower = m_spell.Power; //<== defined a basevar first then modified this base-var to tell %-costs from absolut-costs
 
