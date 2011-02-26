@@ -15,6 +15,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
+ * [StephenxPimentel
+ * 1.108 - Valhallas Blessing now has a 75% chance to not use power or endurance.
+ * 
+ * -Code shown in SpellHandler - Line 1510
+ * -And StyleProcessor - Line 577
+ * 
  */
 
 using System;

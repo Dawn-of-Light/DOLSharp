@@ -35,8 +35,8 @@ namespace DOL.GS.RealmAbilities
 				list.Add("");
 				for (int i = 1; i <= MaxLevel; i++)
 				{
-                    list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RAStatEnhancer.DelveInfo.Info1", i, GetAmountForLevel(i)));
-                }
+					list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RAStatEnhancer.DelveInfo.Info1", i, GetAmountForLevel(i)));
+				}
 				return list;
 			}
 		}
@@ -44,14 +44,33 @@ namespace DOL.GS.RealmAbilities
 		public virtual int GetAmountForLevel(int level)
 		{
 			if (level < 1) return 0;
-			switch (level)
+			if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
 			{
-				case 1: return 4;
-				case 2: return 12;
-				case 3: return 22;
-				case 4: return 34;
-				case 5: return 48;
-				default: return 48;
+				switch (level)
+				{
+						case 1: return 4;
+						case 2: return 8;
+						case 3: return 12;
+						case 4: return 17;
+						case 5: return 22;
+						case 6: return 28;
+						case 7: return 34;
+						case 8: return 41;
+						case 9: return 48;
+						default: return 48;
+				}
+			}
+			else
+			{
+				switch (level)
+				{
+						case 1: return 4;
+						case 2: return 12;
+						case 3: return 22;
+						case 4: return 34;
+						case 5: return 48;
+						default: return 48;
+				}
 			}
 		}
 
