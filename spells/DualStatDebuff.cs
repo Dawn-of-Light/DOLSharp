@@ -59,6 +59,19 @@ namespace DOL.GS.Spells
 		// constructor
 		public DexterityQuiDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
+	/// Dex/Con Debuff for assassin poisons
+	/// <summary>
+	/// Dex/Con stat specline debuff
+	/// </summary>
+	[SpellHandlerAttribute("DexterityConstitutionDebuff")]
+	public class DexterityConDebuff : DualStatDebuff
+	{
+		public override eProperty Property1 { get { return eProperty.Dexterity; } }
+		public override eProperty Property2 { get { return eProperty.Constitution; } }
+
+		// constructor
+		public DexterityConDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+	}
 
 	[SpellHandlerAttribute("WeaponSkillConstitutionDebuff")]
 	public class WeaponskillConDebuff : DualStatDebuff
