@@ -271,11 +271,19 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						mychatgroup.IsPublic = true;
-						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Public");
-						foreach (GamePlayer ply in mychatgroup.Members.Keys)
+						if (mychatgroup.IsPublic)
 						{
-							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PublicAlready"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						else
+						{
+							mychatgroup.IsPublic = true;
+							string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Public");
+							foreach (GamePlayer ply in mychatgroup.Members.Keys)
+							{
+								ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
+							}
 						}
 					}
 					break;
@@ -292,11 +300,19 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						mychatgroup.IsPublic = false;
-						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Private");
-						foreach (GamePlayer ply in mychatgroup.Members.Keys)
+						if (!mychatgroup.IsPublic)
 						{
-							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PrivateAlready"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+						else
+						{
+							mychatgroup.IsPublic = false;
+							string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Private");
+							foreach (GamePlayer ply in mychatgroup.Members.Keys)
+							{
+								ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
+							}
 						}
 					}
 					break;
@@ -360,16 +376,25 @@ namespace DOL.GS.Commands
 						}
 						if (args.Length < 3)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Password", mychatgroup.Password) + mychatgroup.Password, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
+							if (mychatgroup.Password.Equals(""))
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PasswordUnset", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							else
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Password", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
 						}
 						if (args[2] == "clear")
 						{
 							mychatgroup.Password = "";
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PasswordClear", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						mychatgroup.Password = args[2];
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PasswordChanged", mychatgroup.Password) + mychatgroup.Password, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PasswordChanged", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 			}

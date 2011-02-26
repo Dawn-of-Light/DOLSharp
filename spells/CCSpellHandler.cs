@@ -169,17 +169,17 @@ namespace DOL.GS.Spells
 				//[Shawn] : Added Specific Resist Effects To This Ability.
 				int basechance = base.CalculateSpellResistChance(target);
 				GameSpellEffect Nearsight = SpellHandler.FindEffectOnTarget(target, "Nearsight");
-				if (Nearsight != null)
+				if (Nearsight == null)
 				{
 					basechance += (int)Nearsight.Spell.Value;
 				}
 				GameSpellEffect Mesmerize = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
-				if (Mesmerize != null)
+                if (Mesmerize == null)
 				{
 					basechance += (int)Mesmerize.Spell.Value;
 				}
 				GameSpellEffect Stun = SpellHandler.FindEffectOnTarget(target, "Stun");
-				if (Stun != null)
+                if (Stun == null)
 				{
 					basechance += (int)Stun.Spell.Value;
 				}
