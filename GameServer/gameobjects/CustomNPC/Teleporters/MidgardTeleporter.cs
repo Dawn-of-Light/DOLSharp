@@ -141,6 +141,8 @@ namespace DOL.GS
 					break;
 				case "personal":
 					break;
+				case "hearth":
+					break;
 				case "svasud faste":
 					SayTo(player, "Svasud Faste is what you seek, and Svasud Faste is what you shall find.");
 					break;

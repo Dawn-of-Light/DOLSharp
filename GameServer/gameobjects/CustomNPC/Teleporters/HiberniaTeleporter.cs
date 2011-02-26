@@ -135,6 +135,8 @@ namespace DOL.GS
 					break;
 				case "personal":
 					break;
+				case "hearth":
+					break;
 				case "shannon estuary":
 					SayTo(player, "You shall soon arrive in the Shannon Estuary.");
 					break;

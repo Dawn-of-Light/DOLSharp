@@ -167,6 +167,8 @@ namespace DOL.GS
 					break;
 				case "personal":
 					break;
+				case "hearth":
+					break;
 				case "snowdonia fortress":
 					SayTo(player, "Snowdonia Fortress is what you seek, and Snowdonia Fortress is what you shall find.");
 					break;
