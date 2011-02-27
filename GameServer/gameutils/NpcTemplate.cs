@@ -216,6 +216,7 @@ namespace DOL.GS
 			m_size = mob.Size.ToString();
 			m_templateId = GetNextFreeTemplateId();
 			m_tetherRange = mob.TetherRange;
+			m_visibleActiveWeaponSlot = mob.VisibleActiveWeaponSlots;
 			
 			if ( mob.Abilities != null && mob.Abilities.Count > 0 )
 			{
@@ -572,7 +573,10 @@ namespace DOL.GS
 		/// <summary>
 		/// The visible and active weapon slot
 		/// </summary>
-		public byte VisibleActiveWeaponSlot { get;set; }
+		public byte VisibleActiveWeaponSlot {
+			get { return m_visibleActiveWeaponSlot; }
+			set { m_visibleActiveWeaponSlot = value; }
+		}
 
 		public virtual void SaveIntoDatabase()
 		{
