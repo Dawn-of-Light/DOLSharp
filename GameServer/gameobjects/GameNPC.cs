@@ -2152,7 +2152,6 @@ namespace DOL.GS
 			this.EvadeChance = template.EvadeChance;
 			this.BlockChance = template.BlockChance;
 			this.LeftHandSwingChance = template.LeftHandSwingChance;
-			this.VisibleActiveWeaponSlots = template.VisibleActiveWeaponSlot;
 			#endregion
 
 			#region Inventory
@@ -2232,6 +2231,9 @@ namespace DOL.GS
 					if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
 						this.SwitchWeapon(eActiveWeaponSlot.Distance);
 				}
+				
+				if (template.VisibleActiveWeaponSlot > 0)
+					this.VisibleActiveWeaponSlots = template.VisibleActiveWeaponSlot;
 			}
 			#endregion
 
