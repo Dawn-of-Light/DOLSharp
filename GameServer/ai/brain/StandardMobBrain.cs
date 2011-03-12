@@ -634,7 +634,8 @@ namespace DOL.AI.Brain
 					if (living.IsAlive == false ||
 					    living.ObjectState != GameObject.eObjectState.Active ||
 					    living.IsStealthed ||
-					    Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE)
+					    Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE ||
+						GameServer.ServerRules.IsAllowedToAttack(Body, living, true) == false)
 					{
 						removable.Add(living);
 						continue;
