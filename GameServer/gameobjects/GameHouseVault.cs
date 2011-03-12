@@ -29,6 +29,8 @@ namespace DOL.GS
 	/// <author>Aredhel</author>
 	public class GameHouseVault : GameVault, IHouseHookpointItem
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// This list holds all the players that are currently viewing
 		/// the vault; it is needed to update the contents of the vault
@@ -93,10 +95,12 @@ namespace DOL.GS
 
             var hpitem = GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + house.HouseNumber + "' AND HookpointID = '" + hookpointID + "'");
 
-            if (hpitem.Count > 0)
-                return Attach(house, hookedItem);
+			// if there isn't anything already on this hookpoint then add it to the DB
+			if (hpitem.Count == 0)
+			{
+				GameServer.Database.AddObject(hookedItem);
+			}
 
-            GameServer.Database.AddObject(hookedItem);
             // now add the vault to the house.
             return Attach(house, hookedItem);
         }
@@ -147,17 +151,16 @@ namespace DOL.GS
 				}
 
 				_observers.Clear();
-				RemoveFromWorld();
-
-				// unregister this vault from the DB.
-				GameServer.Database.DeleteObject(_hookedItem);
 				_hookedItem = null;
+
+				CurrentHouse.EmptyHookpoint(player, this, false);
 			}
 
 			return true;
 		}
 
 		#endregion
+
 
 		public override string GetOwner(GamePlayer player)
 		{
