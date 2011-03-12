@@ -729,7 +729,7 @@ namespace DOL.GS.Housing
 			return true;
 		}
 
-		public void EmptyHookpoint(GamePlayer player, GameObject obj)
+		public void EmptyHookpoint(GamePlayer player, GameObject obj, bool addToInventory = true)
 		{
 			if (player.CurrentHouse != this || CanEmptyHookpoint(player) == false)
 			{
@@ -747,24 +747,30 @@ namespace DOL.GS.Housing
 
 			string sqlWhere = string.Format("HookpointID = '{0}' AND HouseNumber = '{1}'", position, obj.CurrentHouse.HouseNumber);
 
-			var item = GameServer.Database.SelectObject<DBHouseHookpointItem>(sqlWhere);
-			if (item == null)
+			var items = GameServer.Database.SelectObjects<DBHouseHookpointItem>(sqlWhere);
+			if (items.Count == 0)
 			{
 				ChatUtil.SendSystemMessage(player, "No hookpoint item found at position " + position);
 				return;
 			}
 
+			// clear every item from this hookpoint
+			foreach (var item in items)
+			{
+				GameServer.Database.DeleteObject(item);
+			}
+
 			obj.Delete();
-			GameServer.Database.DeleteObject(item);
-
 			player.CurrentHouse.HousepointItems.Remove((uint)position);
-
 			player.CurrentHouse.SendUpdate();
 
-			var template = GameServer.Database.FindObjectByKey<ItemTemplate>(obj.OwnerID);
-			if (template != null)
+			if (addToInventory)
 			{
-				player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(template));
+				var template = GameServer.Database.FindObjectByKey<ItemTemplate>(obj.OwnerID);
+				if (template != null)
+				{
+					player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(template));
+				}
 			}
 		}
 
