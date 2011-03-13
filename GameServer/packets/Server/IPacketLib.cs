@@ -32,7 +32,7 @@ namespace DOL.GS.PacketHandler
 		InventoryUpdate = 0x02,
 		HouseUserPermissions = 0x03,
 		CharacterJump = 0x04,
-		HousingPersmissions = 0x05,
+		HousingPermissions = 0x05,
 		HouseEnter = 0x08,
 		HousingItem = 0x09,
 		HouseExit = 0x0A,

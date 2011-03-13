@@ -45,6 +45,11 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
+		public override GameTrainer.CLTrainerType ChampionTrainerType()
+		{
+			return GameTrainer.CLTrainerType.Acolyte;
+		}
+
 		public override void OnLevelUp(GamePlayer player) 
 		{
 			base.OnLevelUp(player);

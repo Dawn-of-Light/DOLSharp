@@ -37,7 +37,7 @@ namespace DOL.GS
 		private static List<string> disabled_classes = null;
 		
 		// Values from live servers
-		public enum CLTrainerTypes : int
+		public enum CLTrainerType : int
 		{
 			Acolyte = 4,
 			AlbionRogue = 2,
@@ -54,6 +54,7 @@ namespace DOL.GS
 			Seer = 8,
 			Stalker = 2,
 			Viking = 1,
+			Unknown = 0,
 		}
 		
 		// Current trainer type, 0 is for normal trainers.
@@ -153,9 +154,11 @@ namespace DOL.GS
 					player.Out.SendPlayerFreeLevelUpdate();
 				}
 			}
-			
-			if (TrainerType > 0 && player.Level >= 50)
-				player.Out.SendChampionTrainerWindow(TrainerType);
+
+			if (player.Level >= 50 && player.Champion)
+			{
+				player.Out.SendChampionTrainerWindow((int)player.CharacterClass.ChampionTrainerType());
+			}
 
 			return true;
 		}
