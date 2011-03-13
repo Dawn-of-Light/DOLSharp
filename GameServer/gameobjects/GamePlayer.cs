@@ -3754,7 +3754,7 @@ namespace DOL.GS
 		/// Gets/sets player bounty points
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public long BountyPoints
+		public virtual long BountyPoints
 		{
 			get { return DBCharacter != null ? DBCharacter.BountyPoints : 0; }
 			set { if (DBCharacter != null) DBCharacter.BountyPoints = value; }
@@ -3764,7 +3764,7 @@ namespace DOL.GS
 		/// Gets/sets player realm points
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public long RealmPoints
+		public virtual long RealmPoints
 		{
 			get { return DBCharacter != null ? DBCharacter.RealmPoints : 0; }
 			set { if (DBCharacter != null) DBCharacter.RealmPoints = value; }
@@ -3774,7 +3774,7 @@ namespace DOL.GS
 		/// Gets/sets player skill specialty points
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int SkillSpecialtyPoints
+		public virtual int SkillSpecialtyPoints
 		{
 			get { return DBCharacter != null ? DBCharacter.SkillSpecialtyPoints : 0; }
 			set { if (DBCharacter != null) DBCharacter.SkillSpecialtyPoints = value; }
@@ -3784,7 +3784,7 @@ namespace DOL.GS
 		/// Gets/sets player realm specialty points
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int RealmSpecialtyPoints
+		public virtual int RealmSpecialtyPoints
 		{
 			get { return DBCharacter != null ? DBCharacter.RealmSpecialtyPoints : 0; }
 			set { if (DBCharacter != null) DBCharacter.RealmSpecialtyPoints = value; }
@@ -3793,7 +3793,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets/sets player realm rank
 		/// </summary>
-		public int RealmLevel
+		public virtual int RealmLevel
 		{
 			get { return DBCharacter != null ? DBCharacter.RealmLevel : 0; }
 			set
@@ -5070,6 +5070,14 @@ namespace DOL.GS
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// What is the base, unmodified level of this character.
+		/// </summary>
+		public virtual byte BaseLevel
+		{
+			get { return DBCharacter != null ? (byte)DBCharacter.Level : base.Level; }
 		}
 
 		/// <summary>

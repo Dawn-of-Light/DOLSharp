@@ -1047,7 +1047,7 @@ namespace DOL.GS
 			double itemDPS = DPS_AF / 10.0;
 			double clampedDPS = Math.Min(itemDPS, 1.2 + 0.3 * player.Level);
 			double itemSPD = SPD_ABS / 10.0;
-			double effectiveDPS = itemDPS * Quality / 100.0 * Condition / MaxCondition;
+			double effectiveDPS = clampedDPS * Quality / 100.0 * Condition / MaxCondition;
 
 			delve.Add(" ");
 			delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod"));
