@@ -143,6 +143,7 @@ namespace DOL.GS
 		void Die(GameObject killer);
 		void Notify(DOLEvent e, object sender, EventArgs args);
 		bool CanChangeCastingSpeed(SpellLine line, Spell spell);
+		GameTrainer.CLTrainerType ChampionTrainerType();
 	}
 
 	/// <summary>

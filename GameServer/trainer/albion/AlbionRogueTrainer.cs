@@ -36,7 +36,7 @@ namespace DOL.GS.Trainer
 
 		public const string PRACTICE_WEAPON_ID = "practice_dirk";
 		
-		public AlbionRogueTrainer() : base((int)CLTrainerTypes.AlbionRogue)
+		public AlbionRogueTrainer() : base((int)CLTrainerType.AlbionRogue)
 		{
 		}
 

@@ -47,7 +47,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			string accountName = packet.ReadString(24);
 
-			//log.Debug("CharacterCreateRequestHandler for account " + accountName + " using version " + client.Version);
+			log.Debug("CharacterCreateRequestHandler for account " + accountName + " using version " + client.Version);
 
 			if (!accountName.StartsWith(client.Account.Name))// TODO more correctly check, client send accountName as account-S, -N, -H (if it not fit in 20, then only account)
 			{
@@ -169,8 +169,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		private void CreateCharacter(GameClient client, GSPacketIn packet, string charName, int accountSlot)
 		{
-			log.Debug("Create Character");
-
 			Account account = client.Account;
 			DOLCharacters ch = new DOLCharacters();
 			ch.AccountName = account.Name;
@@ -257,8 +255,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			ch.AccountSlot = accountSlot + ch.Realm * 100;
 
-			log.Debug("Account Slot " + accountSlot);
-
 			//The following byte contains
 			//1bit=start location ... in ShroudedIsles you can choose ...
 			//1bit=first race bit
@@ -314,12 +310,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (!ValidateCharacter.IsCharacterValid(ch))
 			{
 				if (log.IsWarnEnabled)
+				{
 					log.Warn(ch.AccountName + " tried to create invalid character:" +
-					         "\nchar name=" + ch.Name + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
-					         "\nstr=" + ch.Strength + ", con=" + ch.Constitution + ", dex=" + ch.Dexterity + ", qui=" + ch.Quickness + ", int=" + ch.Intelligence + ", pie=" + ch.Piety + ", emp=" + ch.Empathy + ", chr=" + ch.Charisma);
+							 "\nchar name=" + ch.Name + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
+							 "\nstr=" + ch.Strength + ", con=" + ch.Constitution + ", dex=" + ch.Dexterity + ", qui=" + ch.Quickness + ", int=" + ch.Intelligence + ", pie=" + ch.Piety + ", emp=" + ch.Empathy + ", chr=" + ch.Charisma);
+				}
 
-				if (client.Account.Realm == 0) client.Out.SendRealm(eRealm.None);
-				else client.Out.SendCharacterOverview((eRealm)client.Account.Realm);
+				// This is not live like but unfortunately we are missing code / packet support to stay on character create screen if something is invalid
+				client.Out.SendCharacterOverview((eRealm)ch.Realm);
 			    return;
 			}
 
@@ -954,16 +952,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (pointsUsed != 30)
 					{
 						if (log.IsWarnEnabled)
+						{
 							log.Warn("Points used: " + pointsUsed);
+						}
+
 						valid = false;
 					}
 				}
 				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
-						log.Error("CharacterCreation", e);
-					return false;
+					{
+						log.Error(string.Format("CharacterCreation error on account {0}, slot {1}.", ch.AccountName, ch.AccountSlot), e);
+					}
+
+					valid = false;
 				}
+
 				return valid;
 			}
 
@@ -977,6 +982,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 			protected static int PointsUsed(int race, int statIndex, int statValue)
 			{
 				statValue -= STARTING_STATS[race][statIndex];
+
+				// check to make sure stat is not less than racial starting stat
+				if (statValue < 0)
+				{
+					throw new Exception("Invalid starting stat, less than racial stat!");
+				}
+
 				int result = statValue; //one point used
 				result += Math.Max(0, statValue - 10); //two points used
 				result += Math.Max(0, statValue - 15); //three points used

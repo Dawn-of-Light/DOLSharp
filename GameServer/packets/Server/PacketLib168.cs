@@ -2416,6 +2416,8 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendChampionTrainerWindow(int type)
 		{
+
+
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
 			{
 				pak.WriteByte((byte) type);

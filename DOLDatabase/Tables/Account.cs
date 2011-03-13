@@ -218,13 +218,13 @@ namespace DOL
 			}
 
 			/// <summary>
-			/// List of charcter the account own
+			/// List of characters on this account
 			/// </summary>
 			[Relation(LocalField = "Name", RemoteField = "AccountName", AutoLoad = true, AutoDelete=true)]
 			public DOLCharacters[] Characters;
 
 			/// <summary>
-			/// Remove ban
+			/// List of bans on this account
 			/// </summary>
 			[Relation(LocalField = "Name", RemoteField = "Account", AutoLoad = true, AutoDelete = true)]
 			public DBBannedAccount[] BannedAccount;
