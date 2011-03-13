@@ -102,7 +102,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (skillindex < speclist.Count)
 			{
 				Specialization spec = (Specialization)speclist[skillindex];
-				if (spec.Level >= client.Player.Level)
+				if (spec.Level >= client.Player.BaseLevel)
 				{
 					client.Out.SendMessage("You can't train in this specialization again this level!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
