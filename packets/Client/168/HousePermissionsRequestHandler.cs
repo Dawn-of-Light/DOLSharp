@@ -44,7 +44,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return;
 
 			// send out the house permissions
-			using (var pak = new GSTCPPacketOut(client.Out.GetPacketCode(eServerPackets.HousingPersmissions)))
+			using (var pak = new GSTCPPacketOut(client.Out.GetPacketCode(eServerPackets.HousingPermissions)))
 			{
 				pak.WriteByte(HousingConstants.MaxPermissionLevel); // number of permissions ?
 				pak.WriteByte(0x00); // unknown

@@ -39,7 +39,7 @@ namespace DOL.GS.Trainer
 		/// </summary>
 		public const string PRACTICE_WEAPON_ID = "training_dirk";
 
-		public StalkerTrainer() : base((int)CLTrainerTypes.Stalker)
+		public StalkerTrainer() : base((int)CLTrainerType.Stalker)
 		{
 		}
 		

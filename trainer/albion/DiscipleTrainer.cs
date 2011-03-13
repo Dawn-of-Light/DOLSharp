@@ -35,7 +35,7 @@ namespace DOL.GS.Trainer
 		}
 		public const string PRACTICE_WEAPON_ID = "trimmed_branch";
 		
-		public DiscipleTrainer() : base((int)CLTrainerTypes.Disciple)
+		public DiscipleTrainer() : base((int)CLTrainerType.Disciple)
 		{
 		}
 
