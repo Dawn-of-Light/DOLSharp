@@ -248,6 +248,15 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// What Champion trainer does this class use?
+		/// </summary>
+		/// <returns></returns>
+		public virtual GameTrainer.CLTrainerType ChampionTrainerType()
+		{
+			return GameTrainer.CLTrainerType.Unknown;
+		}
+
+		/// <summary>
 		/// Add all skills and other things that are required for current level
 		/// </summary>
 		/// <param name="player">player to modify</param>

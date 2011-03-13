@@ -38,7 +38,7 @@ namespace DOL.GS.Trainer
 		public const string PRACTICE_SHIELD_ID = "small_training_shield";
 
 		public AcolyteTrainer()
-			: base((int)CLTrainerTypes.Acolyte)
+			: base((int)CLTrainerType.Acolyte)
 		{
 		}
 
