@@ -200,7 +200,7 @@ namespace DOL.GS.PacketHandler
 
 						paksub.WriteByte((byte)lss.Count);
 						if(autotrains.Contains(spc.KeyName))
-							paksub.WriteByte((byte)Math.Floor((double)m_gameClient.Player.Level / 4));
+							paksub.WriteByte((byte)Math.Floor((double)m_gameClient.Player.BaseLevel / 4));
 						else paksub.WriteByte(0);
 
 						foreach (Spell sp in lss)
@@ -235,7 +235,7 @@ namespace DOL.GS.PacketHandler
 
 							paksub.WriteByte((byte)lst.Count);
 							if(autotrains.Contains(spc.KeyName))
-								paksub.WriteByte((byte)Math.Floor((double)m_gameClient.Player.Level / 4));
+								paksub.WriteByte((byte)Math.Floor((double)m_gameClient.Player.BaseLevel / 4));
 							else paksub.WriteByte(0);
 
 							foreach (var st in lst)
@@ -265,7 +265,7 @@ namespace DOL.GS.PacketHandler
 
 						paksub.WriteByte(0);
 						if (autotrains.Contains(spc.KeyName))
-							paksub.WriteByte((byte)Math.Floor((double)m_gameClient.Player.Level / 4));
+							paksub.WriteByte((byte)Math.Floor((double)m_gameClient.Player.BaseLevel / 4));
 						else paksub.WriteByte(0);
 					}
 				}

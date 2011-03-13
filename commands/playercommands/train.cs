@@ -116,7 +116,7 @@ namespace DOL.GS.Commands
 			// Make sure the player can actually train the given specialization.
 			int currentSpecLevel = spec.Level;
 
-			if (currentSpecLevel >= client.Player.Level)
+			if (currentSpecLevel >= client.Player.BaseLevel)
 			{
 				client.Out.SendMessage(CantTrainSpec, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
@@ -141,7 +141,7 @@ namespace DOL.GS.Commands
 
 			for (int i = 0; i < level; i++)
 			{
-				if (spec.Level + specLevel >= client.Player.Level)
+				if (spec.Level + specLevel >= client.Player.BaseLevel)
 				{
 					client.Out.SendMessage(CantTrainSpec, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
