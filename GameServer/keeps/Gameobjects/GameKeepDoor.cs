@@ -220,9 +220,6 @@ namespace DOL.GS.Keeps
 			get
 			{
 				return 0;
-				//if (IsAttackableDoor)
-				//	return MaxHealth / 10;
-				//else return MaxHealth / 100;
 			}
 		}
 
@@ -465,14 +462,40 @@ namespace DOL.GS.Keeps
 			IList list = base.GetExamineMessages(player);
 			string text = "You select the " + Name + ".";
 			if (!KeepMgr.IsEnemy(this, player))
+			{
 				text = text + " It belongs to your realm.";
+			}
 			else
 			{
 				if (IsAttackableDoor)
+				{
 					text = text + " It belongs to an enemy realm and can be attacked!";
-				else text = text + " It belongs to an enemy realm!";
+				}
+				else
+				{
+					text = text + " It belongs to an enemy realm!";
+				}
 			}
+
 			list.Add(text);
+
+			ChatUtil.SendDebugMessage(player, "Health = " + Health);
+
+			if (IsAttackableDoor)
+			{
+				// Attempt to fix issue where some players see door as closed when it should be broken open
+
+				if (Health <= 0 && State != eDoorState.Open)
+				{
+					State = eDoorState.Open;
+					BroadcastDoorStatus();
+				}
+				else if (State == eDoorState.Open)
+				{
+					player.SendDoorUpdate(this);
+				}
+			}
+
 			return list;
 		}
 
@@ -691,7 +714,7 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// boradcast the door statut to all player near the door
+		/// boradcast the door status to all player near the door
 		/// </summary>
 		public virtual void BroadcastDoorStatus()
 		{
