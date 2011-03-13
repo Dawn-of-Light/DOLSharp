@@ -2879,7 +2879,6 @@ namespace DOL.GS
 		{
 			byte originalLevel = Level;
 			Level = 1;
-			m_currentXP = 0;
 			DBCharacter.Experience = 0;
 			RespecAllLines();
 			SkillSpecialtyPoints = 0;
@@ -4808,17 +4807,15 @@ namespace DOL.GS
 		};
 
 		/// <summary>
-		/// Holds how many XP this player has
-		/// </summary>
-		protected long m_currentXP;
-
-		/// <summary>
 		/// Gets or sets the current xp of this player
-		/// (TODO: Exp is setted in GainExp() and therefore NOT delegated to PlayerCharacter)  (VaNaTiC)
 		/// </summary>
 		public virtual long Experience
 		{
-			get { return m_currentXP; }
+			get { return DBCharacter.Experience; }
+			set 
+			{ 
+				DBCharacter.Experience = value;
+			}
 		}
 
 		/// <summary>
@@ -4986,12 +4983,12 @@ namespace DOL.GS
 			{
 				if (Experience + expTotal < ExperienceForCurrentLevelSecondStage)
 				{
-					expTotal = ExperienceForCurrentLevelSecondStage - m_currentXP;
+					expTotal = ExperienceForCurrentLevelSecondStage - Experience;
 				}
 			}
 			else if (Experience + expTotal < ExperienceForCurrentLevel)
 			{
-				expTotal = ExperienceForCurrentLevel - m_currentXP;
+				expTotal = ExperienceForCurrentLevel - Experience;
 			}
 
 			if (sendMessage && expTotal > 0)
@@ -5018,8 +5015,7 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainExperience.YouGet", totalExpStr) + expCampBonusStr + expGroupBonusStr, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
-			m_currentXP += expTotal; // force usage of this method, Experience property cannot be set
-			DBCharacter.Experience = m_currentXP;
+			Experience += expTotal;
 
 			if (expTotal >= 0)
 			{
@@ -12264,7 +12260,6 @@ namespace DOL.GS
 			if (MaxSpeedBase == 0)
 				MaxSpeedBase = PLAYER_BASE_SPEED;
 
-			m_currentXP = m_dbCharacter.Experience;
 			m_inventory.LoadFromDatabase(InternalID);
 
 			SwitchQuiver((eActiveQuiverSlot)(m_dbCharacter.ActiveWeaponSlot & 0xF0), false);
@@ -12276,7 +12271,6 @@ namespace DOL.GS
 				{
 					m_dbCharacter.Experience = GetExperienceNeededForLevel(Properties.STARTING_LEVEL - 1);
 					m_dbCharacter.Level = Properties.STARTING_LEVEL;
-					m_currentXP = m_dbCharacter.Experience;
 				}
 
 				Health = MaxHealth;
