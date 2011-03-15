@@ -2302,9 +2302,9 @@ namespace DOL.GS
 		/// Calculate max mana for this player based on level and mana stat level
 		/// </summary>
 		/// <param name="level"></param>
-		/// <param name="manastat"></param>
+		/// <param name="manaStat"></param>
 		/// <returns></returns>
-		public virtual int CalculateMaxMana(int level, int manastat)
+		public virtual int CalculateMaxMana(int level, int manaStat)
 		{
 			int maxpower = 0;
 
@@ -2329,8 +2329,14 @@ namespace DOL.GS
 			 */
 			if (CharacterClass.ManaStat != eStat.UNDEFINED || CharacterClass.ID == (int)eCharacterClass.Vampiir)
 			{
-				maxpower = (level * 5) + (manastat - 50);
+				maxpower = (level * 5) + (manaStat - 50);
 			}
+
+			if (CharacterClass.ManaStat == eStat.UNDEFINED && Champion && ChampionLevel > 0)
+			{
+				maxpower = 100; // This is a guess, need feedback
+			}
+
 			if (maxpower < 0)
 				maxpower = 0;
 
@@ -5248,10 +5254,10 @@ namespace DOL.GS
 			{
 				oldpow = CalculateMaxMana(previouslevel, GetBaseStat(CharacterClass.ManaStat));
 			}
-			else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel >= 1)
-			{
-				oldpow = CalculateMaxMana(previouslevel, GetBaseStat(eStat.EMP)); //We shouldn't use Emp stat, but.. it's not really important
-			}
+			//else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel >= 1)
+			//{
+			//    oldpow = CalculateMaxMana(previouslevel, GetBaseStat(eStat.EMP)); //We shouldn't use Emp stat, but.. it's not really important
+			//}
 
 			// hp upgrade
 			int newhp = CalculateMaxHealth(Level, GetBaseStat(eStat.CON));
@@ -5269,15 +5275,15 @@ namespace DOL.GS
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.PowerRaise", (newpow - oldpow)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
-			//Andraste
-			else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel >= 1)
-			{
-				int newpow = CalculateMaxMana(Level, GetBaseStat(eStat.EMP));
-				if (newpow > 0 && oldpow < newpow)
-				{
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.PowerRaise", (newpow - oldpow)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				}
-			}
+			//Andraste -- What?  Tolakram
+			//else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel >= 1)
+			//{
+			//    int newpow = CalculateMaxMana(Level, GetBaseStat(eStat.EMP));
+			//    if (newpow > 0 && oldpow < newpow)
+			//    {
+			//        Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.PowerRaise", (newpow - oldpow)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			//    }
+			//}
 
 			if (IsAlive)
 			{

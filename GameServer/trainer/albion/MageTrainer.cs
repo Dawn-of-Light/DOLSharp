@@ -36,7 +36,7 @@ namespace DOL.GS.Trainer
 
 		public const string PRACTICE_WEAPON_ID = "trimmed_branch";
 		
-		public MageTrainer() : base((int)CLTrainerType.Mage)
+		public MageTrainer() : base(eChampionTrainerType.Mage)
 		{
 		}
 

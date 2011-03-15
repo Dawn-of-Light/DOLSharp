@@ -54,9 +54,17 @@ namespace DOL.GS.PropertyCalc
 					 * This means that strength ONLY affects a Vampiir's mana pool
 					 */
 					if (player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
+					{
 						manaStat = eStat.STR;
+					}
+					else if (player.Champion && player.ChampionLevel > 0)
+					{
+						player.CalculateMaxMana(player.Level, 0);
+					}
 					else
+					{
 						return 0;
+					}
 				}
 
 				int manaBase = player.CalculateMaxMana(player.Level, player.GetModified((eProperty)manaStat));
