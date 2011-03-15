@@ -37,7 +37,7 @@ namespace DOL.GS.Trainer
 		public const string PRACTICE_WEAPON_ID = "training_sword_hib";
 		public const string PRACTICE_SHIELD_ID = "training_shield";
 
-		public GuardianTrainer() : base((int)CLTrainerType.Guardian)
+		public GuardianTrainer() : base(eChampionTrainerType.Guardian)
 		{
 		}
 

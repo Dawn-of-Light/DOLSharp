@@ -1517,13 +1517,17 @@ namespace DOL.GS.Spells
 
 			// percent of maxPower if less than zero
 			if (basepower < 0)
-				if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ManaStat != eStat.UNDEFINED)
 			{
-				GamePlayer player = Caster as GamePlayer;
-				basepower = player.CalculateMaxMana(player.Level, player.GetBaseStat(player.CharacterClass.ManaStat)) * basepower * -0.01;
+				if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ManaStat != eStat.UNDEFINED)
+				{
+					GamePlayer player = Caster as GamePlayer;
+					basepower = player.CalculateMaxMana(player.Level, player.GetBaseStat(player.CharacterClass.ManaStat)) * basepower * -0.01;
+				}
+				else
+				{
+					basepower = Caster.MaxMana * basepower * -0.01;
+				}
 			}
-			else
-				basepower = Caster.MaxMana * basepower * -0.01;
 
 			double power = basepower * 1.2; //<==NOW holding basepower*1.2 within 'power'
 

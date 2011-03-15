@@ -37,7 +37,7 @@ namespace DOL.GS
 		private static List<string> disabled_classes = null;
 		
 		// Values from live servers
-		public enum CLTrainerType : int
+		public enum eChampionTrainerType : int
 		{
 			Acolyte = 4,
 			AlbionRogue = 2,
@@ -54,11 +54,11 @@ namespace DOL.GS
 			Seer = 8,
 			Stalker = 2,
 			Viking = 1,
-			Unknown = 0,
+			None = 0,
 		}
 		
-		// Current trainer type, 0 is for normal trainers.
-		public int TrainerType = 0;
+		// What kind of Champion trainer is this
+		protected eChampionTrainerType m_championTrainerType = eChampionTrainerType.None;
 
 		public virtual eCharacterClass TrainedClass
 		{
@@ -71,12 +71,13 @@ namespace DOL.GS
 		{
 		}
 		/// <summary>
-		/// Constructs a new GameTrainer that will also train Champion level
+		/// Constructs a new GameTrainer that will also train Champion levels
 		/// </summary>
-		public GameTrainer(int CLTrainerType)
+		public GameTrainer(eChampionTrainerType championTrainerType)
 		{
-			TrainerType	= CLTrainerType;
+			m_championTrainerType = championTrainerType;
 		}
+
 		#region GetExamineMessages
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
@@ -155,9 +156,12 @@ namespace DOL.GS
 				}
 			}
 
-			if (player.Level >= 50 && player.Champion)
+			if (player.Level >= 50 && 
+				player.Champion && 
+				m_championTrainerType != eChampionTrainerType.None && 
+				m_championTrainerType != player.CharacterClass.ChampionTrainerType())
 			{
-				player.Out.SendChampionTrainerWindow((int)player.CharacterClass.ChampionTrainerType());
+				player.Out.SendChampionTrainerWindow((int)m_championTrainerType);
 			}
 
 			return true;
