@@ -36,7 +36,7 @@ namespace DOL.GS.Trainer
 			get { return eCharacterClass.Viking; }
 		}
 
-		public VikingTrainer() : base((int)CLTrainerType.Viking)
+		public VikingTrainer() : base(eChampionTrainerType.Viking)
 		{
 		}
 		
