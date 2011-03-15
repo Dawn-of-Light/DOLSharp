@@ -59,7 +59,7 @@ namespace DOL.GS.PropertyCalc
 					}
 					else if (player.Champion && player.ChampionLevel > 0)
 					{
-						player.CalculateMaxMana(player.Level, 0);
+						return player.CalculateMaxMana(player.Level, 0);
 					}
 					else
 					{
