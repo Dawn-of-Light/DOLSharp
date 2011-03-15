@@ -2331,8 +2331,7 @@ namespace DOL.GS
 			{
 				maxpower = (level * 5) + (manaStat - 50);
 			}
-
-			if (CharacterClass.ManaStat == eStat.UNDEFINED && Champion && ChampionLevel > 0)
+			else if (CharacterClass.ManaStat == eStat.UNDEFINED && Champion && ChampionLevel > 0)
 			{
 				maxpower = 100; // This is a guess, need feedback
 			}
