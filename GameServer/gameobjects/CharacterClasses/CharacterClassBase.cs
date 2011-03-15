@@ -251,9 +251,9 @@ namespace DOL.GS
 		/// What Champion trainer does this class use?
 		/// </summary>
 		/// <returns></returns>
-		public virtual GameTrainer.CLTrainerType ChampionTrainerType()
+		public virtual GameTrainer.eChampionTrainerType ChampionTrainerType()
 		{
-			return GameTrainer.CLTrainerType.Unknown;
+			return GameTrainer.eChampionTrainerType.None;
 		}
 
 		/// <summary>

@@ -46,9 +46,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.ListCaster; }
 		}
 
-		public override GameTrainer.CLTrainerType ChampionTrainerType()
+		public override GameTrainer.eChampionTrainerType ChampionTrainerType()
 		{
-			return GameTrainer.CLTrainerType.Forester;
+			return GameTrainer.eChampionTrainerType.Forester;
 		}
 
 		public override void OnLevelUp(GamePlayer player) 

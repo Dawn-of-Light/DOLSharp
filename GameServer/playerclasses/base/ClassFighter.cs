@@ -45,9 +45,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.PureTank; }
 		}
 
-		public override GameTrainer.CLTrainerType ChampionTrainerType()
+		public override GameTrainer.eChampionTrainerType ChampionTrainerType()
 		{
-			return GameTrainer.CLTrainerType.Fighter;
+			return GameTrainer.eChampionTrainerType.Fighter;
 		}
 
 		public override void OnLevelUp(GamePlayer player) 
