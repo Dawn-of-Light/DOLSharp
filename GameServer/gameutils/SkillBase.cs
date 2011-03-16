@@ -1491,6 +1491,10 @@ namespace DOL.GS
 			var specs = GameServer.Database.SelectAllObjects<DBSpecialization>();
 			if (specs != null)
 			{
+				m_specsByName.Clear();
+				m_styleLists.Clear();
+				m_stylesByIDClass.Clear();
+
 				foreach (DBSpecialization spec in specs)
 				{
 					if (spec.Styles != null)
@@ -1520,23 +1524,32 @@ namespace DOL.GS
 									}
 								}
 							}
+							
 							styleList.Add(st);
 
 							long styleKey = ((long)st.ID << 32) | (uint)style.ClassId;
 							if (!m_stylesByIDClass.ContainsKey(styleKey))
+							{
 								m_stylesByIDClass.Add(styleKey, st);
+							}
 						}
 					}
+
 					RegisterSpec(new Specialization(spec.KeyName, spec.Name, spec.Icon));
+
 					int specAbCount = 0;
 					if (m_specAbilities.ContainsKey(spec.KeyName))
+					{
 						specAbCount = m_specAbilities[spec.KeyName].Count;
+					}
 
 					if (log.IsDebugEnabled)
 					{
 						int styleCount = 0;
 						if (spec.Styles != null)
+						{
 							styleCount = spec.Styles.Length;
+						}
 						log.Debug("Specialization: " + spec.Name + ", " + styleCount + " styles, " + specAbCount + " abilities");
 					}
 				}
@@ -1547,6 +1560,13 @@ namespace DOL.GS
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Count : 0));
+		}
+
+		public static void SortStylesByLevel()
+		{
+			Dictionary<string, List<Style>>.Enumerator enumer = m_styleLists.GetEnumerator();
+			while (enumer.MoveNext())
+				enumer.Current.Value.Sort(delegate(Style style1, Style style2) { return style1.SpecLevelRequirement.CompareTo(style2.SpecLevelRequirement); });
 		}
 
 		private static void LoadAbilityHandlers()
@@ -1835,7 +1855,7 @@ namespace DOL.GS
 		/// After adding all styles call SortStyles to sort the list by level
 		/// </summary>
 		/// <param name="style"></param>
-		public static void AddStyle(Specialization spec, DBStyle style)
+		public static void AddScriptedStyle(Specialization spec, DBStyle style)
 		{
 			string hashKey = string.Format("{0}|{1}", style.SpecKeyName, style.ClassId);
 			List<Style> styleList;
@@ -1870,13 +1890,10 @@ namespace DOL.GS
 				RegisterSpec(spec);
 		}
 
-		public static void SortStylesByLevel()
-		{
-			Dictionary<string, List<Style>>.Enumerator enumer = m_styleLists.GetEnumerator();
-			while (enumer.MoveNext())
-				enumer.Current.Value.Sort(delegate(Style style1, Style style2) { return style1.SpecLevelRequirement.CompareTo(style2.SpecLevelRequirement); });
-		}
-
+		/// <summary>
+		/// Check and add this spec to m_specsByName
+		/// </summary>
+		/// <param name="spec"></param>
 		public static void RegisterSpec(Specialization spec)
 		{
 			if (m_specsByName.ContainsKey(spec.KeyName))
@@ -1996,32 +2013,48 @@ namespace DOL.GS
 				m_spellLists.Remove(spellLineID);
 		}
 
-		public static void AddSpellToList(string spellLineID, int SpellID)
-		{
-			List<Spell> list;
 
-			if (!m_spellLists.TryGetValue(spellLineID, out list))
+		/// <summary>
+		/// Add an existing spell to a spell line, adding a new line if needed.
+		/// The spell level is set based on the spell ID (why I do not know)
+		/// Primarily used for Champion spells but can be used to make any custom spell list
+		/// From spells already loaded from the DB
+		/// </summary>
+		/// <param name="spellLineID"></param>
+		/// <param name="spellID"></param>
+		public static void AddSpellToSpellLine(string spellLineID, int spellID)
+		{
+			List<Spell> spellList;
+
+			if (!m_spellLists.TryGetValue(spellLineID, out spellList))
 			{
-				list = new List<Spell>();
-				m_spellLists.Add(spellLineID, list);
+				spellList = new List<Spell>();
+				m_spellLists.Add(spellLineID, spellList);
 			}
 
-			Spell spl = GetSpellByID(SpellID);
+			Spell spell = GetSpellByID(spellID);
 
-			if (spl != null)
-				list.Add(spl);
+			if (spell != null)
+				spellList.Add(spell);
 			else
-				log.Error("Missing CL Spell: " + SpellID);
+				log.Error("Missing Spell: " + spellID);
 
-			list.Sort(delegate(Spell sp1, Spell sp2) { return sp1.ID.CompareTo(sp2.ID); });
+			spellList.Sort(delegate(Spell sp1, Spell sp2) { return sp1.ID.CompareTo(sp2.ID); });
 
-			for (int i = 0; i < list.Count; i++)
-				list[i].Level = i + 1;
+			for (int i = 0; i < spellList.Count; i++)
+				spellList[i].Level = i + 1; // Tolakram - this changes the level of this spell in all lists, not just the spell in this list.  Probably not intended!
 		}
 
-		public static bool AddSpellToSpellLine(string spellLineID, Spell spellparam)
+		/// <summary>
+		/// Add a spell to a spell line, adding a new line if needed.
+		/// The spell level is set based on the order added to the list.
+		/// </summary>
+		/// <param name="spellLineID"></param>
+		/// <param name="spellToAdd"></param>
+		/// <returns></returns>
+		public static bool AddSpellToSpellLine(string spellLineID, Spell spellToAdd)
 		{
-			if (spellparam == null)
+			if (spellToAdd == null)
 				return false;
 
 			List<Spell> list = null;
@@ -2030,7 +2063,7 @@ namespace DOL.GS
 				list = m_spellLists[spellLineID];
 
 			// Make a copy of the spell passed in, making this a unique spell so we can set the level
-			Spell newspell = spellparam.Copy();
+			Spell newspell = spellToAdd.Copy();
 
 			if (list != null)
 			{
@@ -2039,7 +2072,7 @@ namespace DOL.GS
 
 				foreach (Spell spell in list)
 				{
-					if (spell.Name == spellparam.Name)
+					if (spell.Name == spellToAdd.Name)
 						return false; // spell already in spellline
 				}
 

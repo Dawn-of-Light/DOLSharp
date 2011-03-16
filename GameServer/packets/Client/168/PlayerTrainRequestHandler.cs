@@ -81,7 +81,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						SpellLine line = new SpellLine(GlobalSpellsLines.Champion_Spells + client.Player.Name, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
 						SkillBase.RegisterSpellLine(line);
 					}
-					SkillBase.AddSpellToList(GlobalSpellsLines.Champion_Spells + client.Player.Name, spec.SpellID);
+					SkillBase.AddSpellToSpellLine(GlobalSpellsLines.Champion_Spells + client.Player.Name, spec.SpellID);
 					client.Player.ChampionSpells += spec.SpellID.ToString() + "|1;";
 
 					client.Player.AddSpellLine(sl);
