@@ -52,6 +52,11 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
+		public override GameTrainer.eChampionTrainerType ChampionTrainerType()
+		{
+			return GameTrainer.eChampionTrainerType.Guardian;
+		}
+
 		public override string GetTitle(int level)
 		{
 			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Mauler.GetTitle.50");
