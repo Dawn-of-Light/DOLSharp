@@ -15057,7 +15057,7 @@ namespace DOL.GS
 				{
 					foreach (DictionaryEntry de in championSpellsh)
 					{
-						SkillBase.AddSpellToList(GlobalSpellsLines.Champion_Spells + Name, (int)de.Value);
+						SkillBase.AddSpellToSpellLine(GlobalSpellsLines.Champion_Spells + Name, (int)de.Value);
 					}
 					AddSpellLine(line);
 				}
