@@ -24,9 +24,58 @@ namespace DOL.GS
 {
     public class ChampSpecMgr
     {
-        #region list / sorter
-        public static ArrayList ChampSpecs = new ArrayList();
-        public class Sorter : IComparer
+        public static ArrayList m_championSpecs = new ArrayList();
+
+		[ScriptLoadedEvent]
+		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
+		{
+			LoadChampionSpecs();
+		}
+
+		/// <summary>
+		/// Load or reload the champion specs from the DB
+		/// </summary>
+		public static void LoadChampionSpecs()
+		{
+			m_championSpecs.Clear();
+			var specs = GameServer.Database.SelectAllObjects<DBChampSpecs>();
+			foreach (DBChampSpecs spec in specs)
+			{
+				ChampSpec newspec = new ChampSpec(spec.IdLine, spec.SkillIndex, spec.Index, spec.Cost, spec.SpellID);
+				m_championSpecs.Add(newspec);
+			}
+		}
+
+		public static ChampSpec GetAbilityFromIndex(int idline, int row, int index)
+		{
+			IList specs = ChampSpecMgr.GetAbilityForIndex(idline, row);
+			foreach (ChampSpec spec in specs)
+			{
+				if (spec.IdLine == idline && spec.SkillIndex == row && spec.Index == index)
+				{
+					return spec;
+				}
+			}
+			return null;
+		}
+
+		public static IList GetAbilityForIndex(int idline, int skillindex)
+		{
+			ArrayList list = new ArrayList();
+
+			foreach (ChampSpec spec in m_championSpecs)
+			{
+				if (spec.IdLine == idline && spec.SkillIndex == skillindex)
+				{
+					list.Add(spec);
+					list.Sort(new Sorter());
+				}
+			}
+			return list;
+		}
+
+
+		public class Sorter : IComparer
         {
             //Lohx add - for sorting arraylist ascending
             int IComparer.Compare(object x, object y)
@@ -36,51 +85,8 @@ namespace DOL.GS
                 return spec1.Index.CompareTo(spec2.Index);
             }
         }
-        #endregion
 
-        #region load champspecs
-        [ScriptLoadedEvent]
-        public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
-        {
-            var specs = GameServer.Database.SelectAllObjects<DBChampSpecs>();
-            foreach (DBChampSpecs spec in specs)
-            {
-                ChampSpec newspec = new ChampSpec(spec.IdLine, spec.SkillIndex, spec.Index, spec.Cost, spec.SpellID);
-                ChampSpecs.Add(newspec);
-            }
 
-        }
-        #endregion
-
-        public static ChampSpec GetAbilityFromIndex(int idline, int row, int index)
-        {
-            IList specs = ChampSpecMgr.GetAbilityForIndex(idline, row);
-            foreach (ChampSpec spec in specs)
-            {
-                if (spec.IdLine == idline && spec.SkillIndex == row && spec.Index == index)
-                {
-                    return spec;
-                }
-            }
-            return null;
-        }
-
-        #region ability for index
-        public static IList GetAbilityForIndex(int idline, int skillindex)
-        {
-            ArrayList list = new ArrayList();
-
-            foreach (ChampSpec spec in ChampSpecs)
-            {
-                if (spec.IdLine == idline && spec.SkillIndex == skillindex)
-                {
-                    list.Add(spec);
-                    list.Sort(new Sorter());
-                }
-            }
-            return list;
-        }
-        #endregion
     }
 
     #region ChampSpec class
