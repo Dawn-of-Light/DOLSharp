@@ -35,6 +35,7 @@ namespace DOL.GS.Commands
 		"/player lastname <change|reset> <newLastName>",
 		"/player level <newLevel>",
 		"/player reset - Reset and re-level a player to their current level.",
+		"/player startchampion - Starts the target on the path of the Champion.",
 		"/player clearchampion - Remove all Champion XP and levels from this player.",
 		"/player realm <newRealm>",
 		"/player inventory [wear|bag|vault|house|cons]",
@@ -274,9 +275,40 @@ namespace DOL.GS.Commands
 
                 #endregion
 
-                #region Clear Champion
+				#region Start Champion
 
-                case "clearchampion":
+				case "startchampion":
+					try
+					{
+						var player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
+							player = client.Player;
+
+						if (player.Champion == false)
+						{
+							player.Champion = true;
+							player.SaveIntoDatabase();
+							client.Out.SendMessage(player.Name + " is now on the path of the Champion!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has started you on the path of the Champion!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						}
+						else
+						{
+							client.Out.SendMessage(player.Name + " is already on the path of the Champion!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						}
+
+					}
+					catch
+					{
+						DisplaySyntax(client);
+						return;
+					}
+					break;
+
+				#endregion Start Champion
+
+				#region Clear Champion
+
+				case "clearchampion":
 
                     try
                     {
@@ -616,6 +648,21 @@ namespace DOL.GS.Commands
                             player.Out.SendMessage(
                                 client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you " + amount +
                                 " Champion experience!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
+							// now see if player gained any CL and level them up
+							bool gainedLevel = false;
+							while (player.ChampionLevel < player.ChampionMaxLevel && player.ChampionExperience >= player.ChampionExperienceForNextLevel)
+							{
+								player.ChampionLevelUp();
+								gainedLevel = true;
+							}
+
+							if (gainedLevel)
+							{
+								player.Out.SendMessage("You reached champion level " + player.ChampionLevel + "!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+
+
                             player.SaveIntoDatabase();
                             player.Out.SendUpdatePlayer();
                         }

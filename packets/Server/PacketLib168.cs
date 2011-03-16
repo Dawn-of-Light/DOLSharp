@@ -2434,30 +2434,51 @@ namespace DOL.GS.PacketHandler
 
 					foreach (ChampSpec spec in specs)
 					{
-						pak.WriteByte((byte) spec.Index);
 						Spell spell = SkillBase.GetSpellByID(spec.SpellID);
-						if (spell.SpellType == "StyleHandler")
+
+						if (spell != null)
 						{
-							pak.WriteByte(1);
-						}
-						else
-						{
-							pak.WriteByte(3);
-						}
-						//Eden
-						if (spell.SpellType == "StyleHandler")
-						{
-							pak.WriteShortLowEndian((ushort) (spell.Value + 3352));
-						}
-						else pak.WriteShortLowEndian(spell.Icon);
-						pak.WritePascalString(spell.Name);
-						if (m_gameClient.Player.HaveChampionSpell(spec.SpellID))
-							pak.WriteByte(1);
-						else if (m_gameClient.Player.IsCSAvailable(type, skillindex, spec.Index))
-							pak.WriteByte(2);
-						else
+							pak.WriteByte((byte)spec.Index);
+
+							if (spell.SpellType == "StyleHandler")
+							{
+								pak.WriteByte(1);
+							}
+							else
+							{
+								pak.WriteByte(3);
+							}
+
+							if (spell.SpellType == "StyleHandler")
+							{
+								pak.WriteShortLowEndian((ushort)(spell.Value + 3352));
+							}
+							else
+							{
+								pak.WriteShortLowEndian(spell.Icon);
+							}
+
+							pak.WritePascalString(spell.Name);
+
+							if (m_gameClient.Player.HaveChampionSpell(spec.SpellID))
+							{
+								pak.WriteByte(1);
+							}
+							else if (m_gameClient.Player.IsCSAvailable(type, skillindex, spec.Index))
+							{
+								pak.WriteByte(2);
+							}
+							else
+							{
+								pak.WriteByte(0);
+							}
+
 							pak.WriteByte(0);
-						pak.WriteByte(0);
+						}
+						else
+						{
+							Log.ErrorFormat("Missing champion spell ID: {0} for ID line: {1}", spec.SpellID, spec.IdLine);
+						}
 					}
 				}
 				SendTCP(pak);

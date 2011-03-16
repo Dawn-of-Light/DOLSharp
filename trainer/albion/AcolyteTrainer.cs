@@ -76,7 +76,7 @@ namespace DOL.GS.Trainer
 			}
 			else
 			{
-				DismissPlayer(player);
+				CheckChampionTraining(player);
 			}
 			return true;
 		}

@@ -156,15 +156,23 @@ namespace DOL.GS
 				}
 			}
 
-			if (player.Level >= 50 && 
-				player.Champion && 
-				m_championTrainerType != eChampionTrainerType.None && 
-				m_championTrainerType != player.CharacterClass.ChampionTrainerType())
+			if (CanTrainChampionLevels(player))
 			{
 				player.Out.SendChampionTrainerWindow((int)m_championTrainerType);
 			}
 
 			return true;
+		}
+
+		/// <summary>
+		/// Can we offer this player training for Champion levels?
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public bool CanTrainChampionLevels(GamePlayer player)
+		{
+			return player.Level >= 50 && player.Champion && m_championTrainerType != eChampionTrainerType.None && m_championTrainerType != player.CharacterClass.ChampionTrainerType();
+
 		}
 
 		/// <summary>
@@ -374,13 +382,15 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Dismiss a player.
+		/// If we can't train champion levels then dismiss this player
 		/// </summary>
 		/// <param name="player"></param>
-		protected virtual void DismissPlayer(GamePlayer player)
+		protected virtual void CheckChampionTraining(GamePlayer player)
 		{
-			SayTo(player, eChatLoc.CL_ChatWindow,
-			      LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.SeekElsewhere"));
+			if (CanTrainChampionLevels(player) == false)
+			{
+				SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.SeekElsewhere"));
+			}
 		}
 
 		/// <summary>
@@ -389,8 +399,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		protected virtual void OfferTraining(GamePlayer player)
 		{
-			SayTo(player, eChatLoc.CL_ChatWindow,
-			      LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.WouldYouLikeTo"));
+			SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.WouldYouLikeTo"));
 		}
 		
 		/// <summary>
