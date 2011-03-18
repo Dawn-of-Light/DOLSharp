@@ -2416,8 +2416,6 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendChampionTrainerWindow(int type)
 		{
-
-
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
 			{
 				pak.WriteByte((byte) type);
@@ -2460,11 +2458,11 @@ namespace DOL.GS.PacketHandler
 
 							pak.WritePascalString(spell.Name);
 
-							if (m_gameClient.Player.HaveChampionSpell(spec.SpellID))
+							if (m_gameClient.Player.HasChampionSpell(spec.SpellID))
 							{
 								pak.WriteByte(1);
 							}
-							else if (m_gameClient.Player.IsCSAvailable(type, skillindex, spec.Index))
+							else if (m_gameClient.Player.CanTrainChampionSpell(type, skillindex, spec.Index))
 							{
 								pak.WriteByte(2);
 							}

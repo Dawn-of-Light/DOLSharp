@@ -2032,17 +2032,24 @@ namespace DOL.GS
 				m_spellLists.Add(spellLineID, spellList);
 			}
 
-			Spell spell = GetSpellByID(spellID);
+			Spell spellToAdd = GetSpellByID(spellID);
 
-			if (spell != null)
-				spellList.Add(spell);
-			else
-				log.Error("Missing Spell: " + spellID);
+			if (spellToAdd == null)
+			{
+				log.Error("Missing Spell ID: " + spellID);
+				return;
+			}
 
+			// Make a copy of the existing spell, making this a unique spell so we can set the level
+			Spell spell = spellToAdd.Copy();
+
+			spellList.Add(spell);
 			spellList.Sort(delegate(Spell sp1, Spell sp2) { return sp1.ID.CompareTo(sp2.ID); });
 
 			for (int i = 0; i < spellList.Count; i++)
-				spellList[i].Level = i + 1; // Tolakram - this changes the level of this spell in all lists, not just the spell in this list.  Probably not intended!
+			{
+				spellList[i].Level = i + 1;
+			}
 		}
 
 		/// <summary>
