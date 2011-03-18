@@ -751,7 +751,7 @@ namespace DOL.GS
 			}
 
 			// Remove champion dedicated spell line
-			SkillBase.UnRegisterSpellLine(GlobalSpellsLines.Champion_Spells + Name);
+			SkillBase.UnRegisterSpellLine(GlobalSpellsLines.Champion_Spells + ":" + InternalID);
 
 			// cancel all effects until saving of running effects is done
 			try
@@ -3422,7 +3422,6 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="line"></param>
 		/// <returns></returns>
-		/// By Stexx78 , corrected the names of spellline !
 		public virtual bool IsAdvancedSpellLine(SpellLine line)
 		{
 			// ML lines
@@ -3436,14 +3435,14 @@ namespace DOL.GS
 				case Specs.Spymaster:
 				case Specs.Battlemaster:
 				case Specs.Warlord:
+				case GlobalSpellsLines.Character_Abilities:
 					return true;
 			}
-			
-			// CL lines
-			if (line.Name == GlobalSpellsLines.Character_Abilities)
+
+			if (line.KeyName == ChampionSpellLineName)
 				return true;
-			else
-				return false;
+
+			return false;
 		}
 
 		/// <summary>
@@ -11982,6 +11981,7 @@ namespace DOL.GS
 
 			//Lohx - champion abilities
 			LoadChampionSpells();
+
 			string tmpStr;
 
 			#region Load Abilities
@@ -12091,6 +12091,12 @@ namespace DOL.GS
 						string[] values = serializedSpellLine.Split('|');
 						if (values.Length >= 2)
 						{
+							// This corrects an issue where the champion spellline used to use name instead of the Character ID
+							if (values[0] == GlobalSpellsLines.Champion_Spells + Name)
+							{
+								values[0] = ChampionSpellLineName;
+							}
+
 							SpellLine splLine = SkillBase.GetSpellLine(values[0]);
 							int level;
 							if (int.TryParse(values[1], out level))
@@ -12134,17 +12140,6 @@ namespace DOL.GS
 			RefreshSpecDependantSkills(false);
 			UpdateSpellLineLevels(false);
 		}
-
-		// seems to never be used
-		/*public virtual void WipeAllSkills()
-		{
-			m_styles.Clear();
-			m_specialization.Clear();
-			m_abilities.Clear();
-			m_disabledSkills.Clear();
-			m_spelllines.Clear();
-			m_skillList.Clear();
-		}*/
 
 
 		/// <summary>
@@ -14784,10 +14779,17 @@ namespace DOL.GS
 		#endregion
 
 		#region Champion Levels
+
+		public virtual string ChampionSpellLineName
+		{
+			get { return GlobalSpellsLines.Champion_Spells + ":" + InternalID; }
+		}
+
 		/// <summary>
 		/// The maximum champion level a player can reach
 		/// </summary>
 		public const int CL_MAX_LEVEL = 10;
+
 		/// <summary>
 		/// A table that holds the required XP/Level
 		/// </summary>
@@ -14805,6 +14807,7 @@ namespace DOL.GS
 			288000, // xp to level 9
 			320000, // xp to level 10
 		};
+
 		/// <summary>
 		/// Get the CL title string of the player
 		/// </summary>
@@ -14818,6 +14821,7 @@ namespace DOL.GS
 					return "";
 			}
 		}
+
 		/// <summary>
 		/// Is Champion level activated
 		/// </summary>
@@ -14826,6 +14830,7 @@ namespace DOL.GS
 			get { return DBCharacter != null ? DBCharacter.Champion : false; }
 			set { if (DBCharacter != null) DBCharacter.Champion = value; }
 		}
+
 		/// <summary>
 		/// Champion level
 		/// </summary>
@@ -14842,6 +14847,7 @@ namespace DOL.GS
 		{
 			get { return CL_MAX_LEVEL; }
 		}
+
 		/// <summary>
 		/// Champion Experience
 		/// </summary>
@@ -14850,6 +14856,7 @@ namespace DOL.GS
 			get { return DBCharacter != null ? DBCharacter.ChampionExperience : 0; }
 			set { if (DBCharacter != null) DBCharacter.ChampionExperience = value; }
 		}
+
 		/// <summary>
 		/// Champion Available speciality points
 		/// </summary>
@@ -14858,6 +14865,7 @@ namespace DOL.GS
 			get { return DBCharacter != null ? DBCharacter.ChampionSpecialtyPoints : 0; }
 			set { if (DBCharacter != null) DBCharacter.ChampionSpecialtyPoints = value; }
 		}
+
 		/// <summary>
 		/// Serialised Champion spells
 		/// </summary>
@@ -14866,6 +14874,7 @@ namespace DOL.GS
 			get { return DBCharacter != null ? DBCharacter.ChampionSpells : null; }
 			set { if (DBCharacter != null) DBCharacter.ChampionSpells = value; }
 		}
+
 		/// <summary>
 		/// Returns how far into the champion level we have progressed
 		/// A value between 0 and 1000 (1 bubble = 100)
@@ -14886,6 +14895,7 @@ namespace DOL.GS
 
 			}
 		}
+
 		/// <summary>
 		/// Returns the xp that are needed for the next level
 		/// </summary>
@@ -14893,6 +14903,7 @@ namespace DOL.GS
 		{
 			get { return GetChampionExperienceForLevel(ChampionLevel + 1); }
 		}
+
 		/// <summary>
 		/// Returns the xp that were needed for the current level
 		/// </summary>
@@ -14900,6 +14911,7 @@ namespace DOL.GS
 		{
 			get { return GetChampionExperienceForLevel(ChampionLevel); }
 		}
+
 		/// <summary>
 		/// Gets/Sets amount of champion skills respecs
 		/// (delegate to PlayerCharacter)
@@ -14909,6 +14921,7 @@ namespace DOL.GS
 			get { return DBCharacter != null ? DBCharacter.RespecAmountChampionSkill : 0; }
 			set { if (DBCharacter != null) DBCharacter.RespecAmountChampionSkill = value; }
 		}
+
 		/// <summary>
 		/// Returns the xp that are needed for the specified level
 		/// </summary>
@@ -14920,7 +14933,6 @@ namespace DOL.GS
 				return CLXPLevel[0];
 			return CLXPLevel[level];
 		}
-
 		
 		public void GainChampionExperience(long experience)
 		{
@@ -14979,8 +14991,8 @@ namespace DOL.GS
 			ChampionLevel = 0;
 			ChampionSpecialtyPoints = 0;
 			ChampionSpells = "";
-			RemoveSpellLine(GlobalSpellsLines.Champion_Spells + Name);
-			SkillBase.UnRegisterSpellLine(GlobalSpellsLines.Champion_Spells + Name);
+			RemoveSpellLine(ChampionSpellLineName);
+			SkillBase.UnRegisterSpellLine(ChampionSpellLineName);
 			Champion = false;
 
 			UpdateSpellLineLevels(false);
@@ -15000,8 +15012,12 @@ namespace DOL.GS
 			ChampionLevel++;
 			ChampionSpecialtyPoints++;
 
+			// If this is a pure tank then give them full power when reaching champ level 1
+			if (ChampionLevel == 1 && CharacterClass.ClassType == eClassType.PureTank)
+			{
+				Mana = CalculateMaxMana(Level, 0);
+			}
 
-			//Code for w/e happens when your CL goes up...
 			if (ChampionLevel == 3)
 			{
 				switch (Realm)
@@ -15031,6 +15047,7 @@ namespace DOL.GS
 			Out.SendUpdatePoints();
 			UpdatePlayerStatus();
 		}
+
 		/// <summary>
 		/// Load champion spells of this player
 		/// </summary>
@@ -15041,27 +15058,26 @@ namespace DOL.GS
 				if (ChampionSpells == null)
 					return;
 
-				string championSpells = ChampionSpells;
-				Hashtable championSpellsh = new Hashtable();
-				SkillBase.CleanSpellList(GlobalSpellsLines.Champion_Spells + Name);
-				SpellLine line = new SpellLine(GlobalSpellsLines.Champion_Spells + Name, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
-				line.Level = 50;
-				SkillBase.RegisterSpellLine(line);
-				foreach (string cSpell in championSpells.SplitCSV())
+				Hashtable championSpellList = new Hashtable();
+				SkillBase.CleanSpellList(ChampionSpellLineName);
+				SpellLine championPlayerSpellLine = new SpellLine(GlobalSpellsLines.Champion_Spells + ":" + InternalID, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
+				championPlayerSpellLine.Level = 50;
+				SkillBase.RegisterSpellLine(championPlayerSpellLine);
+				foreach (string cSpell in ChampionSpells.SplitCSV())
 				{
 					string[] cSpellProp = cSpell.Split('|');
 					if (cSpellProp.Length < 2) continue;
-					championSpellsh.Add(cSpellProp[0], int.Parse(cSpellProp[0]));
+					championSpellList.Add(cSpellProp[0], int.Parse(cSpellProp[0]));
 				}
-				if (championSpellsh != null)
+				if (championSpellList != null)
 				{
-					foreach (DictionaryEntry de in championSpellsh)
+					foreach (DictionaryEntry de in championSpellList)
 					{
-						SkillBase.AddSpellToSpellLine(GlobalSpellsLines.Champion_Spells + Name, (int)de.Value);
+						SkillBase.AddSpellToSpellLine(GlobalSpellsLines.Champion_Spells + ":" + InternalID, (int)de.Value);
 					}
-					AddSpellLine(line);
+					AddSpellLine(championPlayerSpellLine);
 				}
-				championSpellsh = null;
+				championSpellList = null;
 			}
 			catch (Exception ex)
 			{
@@ -15069,10 +15085,11 @@ namespace DOL.GS
 				log.Error("LoadChampionSpells", ex);
 			}
 		}
+
 		/// <summary>
 		/// Checks if player has this champion spell
 		/// </summary>
-		public virtual bool HaveChampionSpell(int spellid)
+		public virtual bool HasChampionSpell(int spellid)
 		{
 			string championSpells = ChampionSpells;
 			foreach (string cSpell in championSpells.SplitCSV())
@@ -15083,30 +15100,32 @@ namespace DOL.GS
 			}
 			return false;
 		}
+
 		/// <summary>
-		/// Returns if spell is available (for trainer window)
+		/// Can this player train this a champion spell (meets the prerequisites)
 		/// </summary>
-		public virtual bool IsCSAvailable(int idline, int skillindex, int index)
+		public virtual bool CanTrainChampionSpell(int idline, int skillindex, int index)
 		{
-			// TODO : this has to be reviewed. Original code has some problem with cross lines etc.
-			// Andraste - reviewed by Vico
+			// players can always train the first spell in the sequence
+			if (index == 1)
+				return true;
+
 			ChampSpec spec = null;
 			ChampSpec specA = null;
 			ChampSpec specB = null;
-			if (index == 1) return true;
-			else
+
+			spec = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex, index - 1);
+
+			if (spec == null)
 			{
-				spec = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex, index - 1);
-				if (spec == null)
-				{
-					specA = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex - 1, index - 1);
-					specB = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex + 1, index - 1);
-					if ((specA != null && HaveChampionSpell(specA.SpellID)) || (specB != null && HaveChampionSpell(specB.SpellID))) return true;
-					else return false;
-				}
-				else return HaveChampionSpell(spec.SpellID);
+				specA = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex - 1, index - 1);
+				specB = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex + 1, index - 1);
+				return ((specA != null && HasChampionSpell(specA.SpellID)) || (specB != null && HasChampionSpell(specB.SpellID)));
 			}
+
+			return HasChampionSpell(spec.SpellID);
 		}
+
 		#endregion
 
 		#region Master levels
