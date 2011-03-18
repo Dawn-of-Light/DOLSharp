@@ -118,8 +118,8 @@ namespace DOL.GS
 				case "respecialize":
 					if (player.Champion && player.ChampionLevel >= 5)
 					{
-						player.RemoveSpellLine(GlobalSpellsLines.Champion_Spells + player.Name);
-						SkillBase.UnRegisterSpellLine(GlobalSpellsLines.Champion_Spells + player.Name);
+						player.RemoveSpellLine(player.ChampionSpellLineName);
+						SkillBase.UnRegisterSpellLine(player.ChampionSpellLineName);
 						player.ChampionSpells = "";
 						player.ChampionSpecialtyPoints = player.ChampionLevel;
 						player.UpdateSpellLineLevels(false);

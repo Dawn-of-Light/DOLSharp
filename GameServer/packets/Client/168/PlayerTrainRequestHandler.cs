@@ -59,12 +59,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 				ChampSpec spec = ChampSpecMgr.GetAbilityFromIndex(idline, row, skillindex);
 				if (spec != null)
 				{
-					if (client.Player.HaveChampionSpell(spec.SpellID))
+					if (client.Player.HasChampionSpell(spec.SpellID))
 					{
 						client.Out.SendMessage("You already have that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					if (!client.Player.IsCSAvailable(idline, row, skillindex))
+					if (!client.Player.CanTrainChampionSpell(idline, row, skillindex))
 					{
 						client.Out.SendMessage("You do not meet the requirements for that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
