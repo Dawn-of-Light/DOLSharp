@@ -523,7 +523,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						IList styleList = client.Player.GetStyleList();
 						IList skillList = client.Player.GetNonTrainableSkillList();
 						Style style = null;
-						string temp;
 						int styleID = objectID - skillList.Count - 100;
 
 						if (styleID < 0 || styleID >= styleList.Count) break;
@@ -532,195 +531,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (style == null) break;
 
 						caption = style.Name;
-						objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.WeaponType", style.GetRequiredWeaponName()));
-						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Opening");
-						if (Style.eOpening.Offensive == style.OpeningRequirementType)
-						{
-							//attacker action result is opening
-							switch (style.AttackResultRequirement)
-							{
-								case Style.eAttackResult.Hit:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouHit");
-									break;
-								case Style.eAttackResult.Miss:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouMiss");
-									break;
-								case Style.eAttackResult.Parry:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetParrys");
-									break;
-								case Style.eAttackResult.Block:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetBlocks");
-									break;
-								case Style.eAttackResult.Evade:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetEvades");
-									break;
-								case Style.eAttackResult.Fumble:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouFumble");
-									break;
 
-								case Style.eAttackResult.Style:
-									Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, client.Player.CharacterClass.ID);
-									temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OpeningStyle") + " ";
-									if (reqStyle == null) temp += "(style not found " + style.OpeningRequirementValue + ")";
-									else temp += reqStyle.Name;
-									break;
-								default:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Any");
-									break;
-							}
-						}
-						else if (Style.eOpening.Defensive == style.OpeningRequirementType)
-						{
-							//defender action result is opening
-							switch (style.AttackResultRequirement)
-							{
-								case Style.eAttackResult.Miss:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetMisses");
-									break;
-								case Style.eAttackResult.Hit:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetHits");
-									break;
-								case Style.eAttackResult.Parry:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouParry");
-									break;
-								case Style.eAttackResult.Block:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouBlock");
-									break;
-								case Style.eAttackResult.Evade:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouEvade");
-									break;
-								case Style.eAttackResult.Fumble:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetFumbles");
-									break;
-								case Style.eAttackResult.Style:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetStyle");
-									break;
-								default:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Any");
-									break;
-							}
-						}
-						else if (Style.eOpening.Positional == style.OpeningRequirementType)
-						{
-							//attacker position to target is opening
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Positional");
-							switch (style.OpeningRequirementValue)
-							{
-								case (int)Style.eOpeningPosition.Front:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Front");
-									break;
-								case (int)Style.eOpeningPosition.Back:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Back");
-									break;
-								case (int)Style.eOpeningPosition.Side:
-									temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Side");
-									break;
-
-							}
-						}
-						objectInfo.Add(temp);
-
-						temp = "";
-						foreach (Style st in SkillBase.GetStyleList(style.Spec, client.Player.CharacterClass.ID))
-						{
-							if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
-								temp = (temp == "" ? st.Name : temp +
-										LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Or", st.Name));
-						}
-						if (temp != "")
-							objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.FollowupStyle", temp));
-						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.FatigueCost");
-						if (style.EnduranceCost < 5)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLow");
-						else if (style.EnduranceCost < 10)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Low");
-						else if (style.EnduranceCost < 15)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Medium");
-						else if (style.EnduranceCost < 20)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.High");
-						else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHigh");
-						objectInfo.Add(temp);
-
-						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Damage");
-						if (style.GrowthRate == 0)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoBonus");
-						else temp += style.GrowthRate;
-
-						objectInfo.Add(temp);
-
-						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ToHit");
-						if (style.BonusToHit <= -20)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighPenalty");
-						else if (style.BonusToHit <= -15)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighPenalty");
-						else if (style.BonusToHit <= -10)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumPenalty");
-						else if (style.BonusToHit <= -5)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowPenalty");
-						else if (style.BonusToHit < 0)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowPenalty");
-						else if (style.BonusToHit == 0)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoBonus");
-						else if (style.BonusToHit < 5)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowBonus");
-						else if (style.BonusToHit < 10)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowBonus");
-						else if (style.BonusToHit < 15)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumBonus");
-						else if (style.BonusToHit < 20)
-							temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighBonus");
-						else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
-
-						objectInfo.Add(temp);
-
-						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Defense");
-						if (style.BonusToDefense <= -20) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighPenalty");
-						else if (style.BonusToDefense <= -15) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighPenalty");
-						else if (style.BonusToDefense <= -10) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumPenalty");
-						else if (style.BonusToDefense <= -5) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowPenalty");
-						else if (style.BonusToDefense < 0) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowPenalty");
-						else if (style.BonusToDefense == 0) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoBonus");
-						else if (style.BonusToDefense < 5) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowBonus");
-						else if (style.BonusToDefense < 10) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowBonus");
-						else if (style.BonusToDefense < 15) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumBonus");
-						else if (style.BonusToDefense < 20) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighBonus");
-						else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
-
-						objectInfo.Add(temp);
-
-						if (style.Procs.Count > 0)
-						{
-							temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetEffect");
-							objectInfo.Add(temp);
-
-							SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
-							if (styleLine != null)
-							{
-								foreach (DBStyleXSpell proc in style.Procs)
-								{
-									// RR4: we added all the procs to the style, now it's time to check for class ID
-									if (proc.ClassID != 0 && proc.ClassID != client.Player.CharacterClass.ID) continue;
-
-									Spell spell = SkillBase.GetSpellByID(proc.SpellID);
-									if (spell != null)
-									{
-										ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, styleLine);
-										if (spellHandler == null)
-										{
-											temp = spell.Name + " (Not implemented yet)";
-											objectInfo.Add(temp);
-										}
-										else
-										{
-											temp = spell.Name;
-											objectInfo.Add(temp);
-											objectInfo.Add(" ");//empty line
-											objectInfo.AddRange(spellHandler.DelveInfo);
-										}
-									}
-								}
-							}
-						}
+						WriteStyleInfo(objectInfo, style, client);
 						break;
 					}
 				#endregion
@@ -1106,6 +918,199 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
+		public static void WriteStyleInfo(IList<string> objectInfo, Style style, GameClient client)
+		{
+			objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.WeaponType", style.GetRequiredWeaponName()));
+			string temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Opening");
+			if (Style.eOpening.Offensive == style.OpeningRequirementType)
+			{
+				//attacker action result is opening
+				switch (style.AttackResultRequirement)
+				{
+					case Style.eAttackResult.Hit:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouHit");
+						break;
+					case Style.eAttackResult.Miss:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouMiss");
+						break;
+					case Style.eAttackResult.Parry:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetParrys");
+						break;
+					case Style.eAttackResult.Block:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetBlocks");
+						break;
+					case Style.eAttackResult.Evade:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetEvades");
+						break;
+					case Style.eAttackResult.Fumble:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouFumble");
+						break;
+
+					case Style.eAttackResult.Style:
+						Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, client.Player.CharacterClass.ID);
+						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OpeningStyle") + " ";
+						if (reqStyle == null) temp += "(style not found " + style.OpeningRequirementValue + ")";
+						else temp += reqStyle.Name;
+						break;
+					default:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Any");
+						break;
+				}
+			}
+			else if (Style.eOpening.Defensive == style.OpeningRequirementType)
+			{
+				//defender action result is opening
+				switch (style.AttackResultRequirement)
+				{
+					case Style.eAttackResult.Miss:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetMisses");
+						break;
+					case Style.eAttackResult.Hit:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetHits");
+						break;
+					case Style.eAttackResult.Parry:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouParry");
+						break;
+					case Style.eAttackResult.Block:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouBlock");
+						break;
+					case Style.eAttackResult.Evade:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.YouEvade");
+						break;
+					case Style.eAttackResult.Fumble:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetFumbles");
+						break;
+					case Style.eAttackResult.Style:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetStyle");
+						break;
+					default:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Any");
+						break;
+				}
+			}
+			else if (Style.eOpening.Positional == style.OpeningRequirementType)
+			{
+				//attacker position to target is opening
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Positional");
+				switch (style.OpeningRequirementValue)
+				{
+					case (int)Style.eOpeningPosition.Front:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Front");
+						break;
+					case (int)Style.eOpeningPosition.Back:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Back");
+						break;
+					case (int)Style.eOpeningPosition.Side:
+						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Side");
+						break;
+
+				}
+			}
+			objectInfo.Add(temp);
+
+			temp = "";
+			foreach (Style st in SkillBase.GetStyleList(style.Spec, client.Player.CharacterClass.ID))
+			{
+				if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
+					temp = (temp == "" ? st.Name : temp +
+							LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Or", st.Name));
+			}
+			if (temp != "")
+				objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.FollowupStyle", temp));
+			temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.FatigueCost");
+			if (style.EnduranceCost < 5)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLow");
+			else if (style.EnduranceCost < 10)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Low");
+			else if (style.EnduranceCost < 15)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Medium");
+			else if (style.EnduranceCost < 20)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.High");
+			else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHigh");
+			objectInfo.Add(temp);
+
+			temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Damage");
+			if (style.GrowthRate == 0)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoBonus");
+			else temp += style.GrowthRate;
+
+			objectInfo.Add(temp);
+
+			temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.ToHit");
+			if (style.BonusToHit <= -20)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighPenalty");
+			else if (style.BonusToHit <= -15)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighPenalty");
+			else if (style.BonusToHit <= -10)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumPenalty");
+			else if (style.BonusToHit <= -5)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowPenalty");
+			else if (style.BonusToHit < 0)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowPenalty");
+			else if (style.BonusToHit == 0)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoBonus");
+			else if (style.BonusToHit < 5)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowBonus");
+			else if (style.BonusToHit < 10)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowBonus");
+			else if (style.BonusToHit < 15)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumBonus");
+			else if (style.BonusToHit < 20)
+				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighBonus");
+			else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
+
+			objectInfo.Add(temp);
+
+			temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Defense");
+			if (style.BonusToDefense <= -20) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighPenalty");
+			else if (style.BonusToDefense <= -15) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighPenalty");
+			else if (style.BonusToDefense <= -10) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumPenalty");
+			else if (style.BonusToDefense <= -5) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowPenalty");
+			else if (style.BonusToDefense < 0) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowPenalty");
+			else if (style.BonusToDefense == 0) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoBonus");
+			else if (style.BonusToDefense < 5) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLowBonus");
+			else if (style.BonusToDefense < 10) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.LowBonus");
+			else if (style.BonusToDefense < 15) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.MediumBonus");
+			else if (style.BonusToDefense < 20) temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.HighBonus");
+			else temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
+
+			objectInfo.Add(temp);
+
+			if (style.Procs.Count > 0)
+			{
+				temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.TargetEffect");
+				objectInfo.Add(temp);
+
+				SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
+				if (styleLine != null)
+				{
+					foreach (DBStyleXSpell proc in style.Procs)
+					{
+						// RR4: we added all the procs to the style, now it's time to check for class ID
+						if (proc.ClassID != 0 && proc.ClassID != client.Player.CharacterClass.ID) continue;
+
+						Spell spell = SkillBase.GetSpellByID(proc.SpellID);
+						if (spell != null)
+						{
+							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, styleLine);
+							if (spellHandler == null)
+							{
+								temp = spell.Name + " (Not implemented yet)";
+								objectInfo.Add(temp);
+							}
+							else
+							{
+								temp = spell.Name;
+								objectInfo.Add(temp);
+								objectInfo.Add(" ");//empty line
+								objectInfo.AddRange(spellHandler.DelveInfo);
+							}
+						}
+					}
+				}
+			}
+		}
+
 		public void WriteSpellInfo(IList<string> output, Spell spell, SpellLine spellLine, GameClient client)
 		{
 			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, spellLine);
@@ -1129,11 +1134,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			if (client.Account.PrivLevel > 1)
 			{
+				output.Add(" ");
 				output.Add("----------Technical informations----------");
 				output.Add("Line: " + (spellHandler == null ? spellLine.KeyName : spellHandler.SpellLine.Name));
 				output.Add("SpellID: " + spell.ID);
 				output.Add("ClientEffect: " + spell.ClientEffect);
-				output.Add("Icon: " + spell.ClientEffect);
+				output.Add("Icon: " + spell.Icon);
 				if (spellHandler != null)
 					output.Add("HasPositiveEffect: " + spellHandler.HasPositiveEffect);
 			}

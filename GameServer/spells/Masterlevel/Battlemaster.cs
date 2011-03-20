@@ -770,14 +770,6 @@ namespace DOL.GS.Spells
     #endregion
 
     //ml10 in database Type shood be RandomBuffShear
-
-    #region Stylhandler
-    [SpellHandlerAttribute("StyleHandler")]
-    public class StyleHandler : MasterlevelHandling
-    {
-        public StyleHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-    }
-    #endregion
 }
 
 #region KeepDamageCalc
