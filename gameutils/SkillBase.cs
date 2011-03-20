@@ -260,7 +260,7 @@ namespace DOL.GS
 		protected static readonly Dictionary<int, Dictionary<int, List<DBStyleXSpell>>> m_styleSpells = new Dictionary<int, Dictionary<int, List<DBStyleXSpell>>>();
 
 		// lookup table for styles
-		protected static readonly Dictionary<long, Style> m_stylesByIDClass = new Dictionary<long, Style>();
+		protected static readonly Dictionary<KeyValuePair<int, int>, Style> m_stylesByIDClass = new Dictionary<KeyValuePair<int, int>, Style>();
 
 		// class id => realm ability list
 		protected static readonly Dictionary<int, List<RealmAbility>> m_classRealmAbilities = new Dictionary<int, List<RealmAbility>>();
@@ -1527,7 +1527,7 @@ namespace DOL.GS
 							
 							styleList.Add(st);
 
-							long styleKey = ((long)st.ID << 32) | (uint)style.ClassId;
+							KeyValuePair<int, int> styleKey = new KeyValuePair<int, int>(st.ID, style.ClassId);
 							if (!m_stylesByIDClass.ContainsKey(styleKey))
 							{
 								m_stylesByIDClass.Add(styleKey, st);
@@ -1882,7 +1882,7 @@ namespace DOL.GS
 			}
 			styleList.Add(st);
 
-			long styleKey = ((long)st.ID << 32) | (uint)style.ClassId;
+			KeyValuePair<int, int> styleKey = new KeyValuePair<int, int>(st.ID, style.ClassId);
 			if (!m_stylesByIDClass.ContainsKey(styleKey))
 				m_stylesByIDClass.Add(styleKey, st);
 
@@ -2202,9 +2202,9 @@ namespace DOL.GS
 		/// <returns>style or null if not found</returns>
 		public static Style GetStyleByID(int styleID, int classId)
 		{
-			long key = ((long)styleID << 32) | (uint)classId;
+			KeyValuePair<int, int> styleKey = new KeyValuePair<int, int>(styleID, classId);
 			Style style;
-			if (m_stylesByIDClass.TryGetValue(key, out style))
+			if (m_stylesByIDClass.TryGetValue(styleKey, out style))
 				return (Style)style.Clone();
 			return null;
 		}

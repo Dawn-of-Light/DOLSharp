@@ -7994,7 +7994,7 @@ namespace DOL.GS
 				Out.SendCloseTimerWindow();
 			}
 
-			if (spell.SpellType == "StyleHandler" || spell.SpellType == "StyleHandler2" || spell.SpellType == "StyleHandler3" || spell.SpellType == "StyleHandler4" || spell.SpellType == "StyleHandler5" || spell.SpellType == "StyleHandler6")
+			if (spell.SpellType == "StyleHandler" || spell.SpellType == "MLStyleHandler")
 			{
 				Style style = SkillBase.GetStyleByID((int)spell.Value, CharacterClass.ID);
 				//Andraste - Vico : try to use classID=0 (easy way to implement CL Styles)

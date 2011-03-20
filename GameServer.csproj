@@ -2117,6 +2117,7 @@
     <Compile Include="spells\Necromancer\PowerTransfer.cs" />
     <Compile Include="spells\Necromancer\PowerDrain.cs" />
     <Compile Include="spells\NightShade\NightshadeNukeSpellhandler.cs" />
+    <Compile Include="spells\StyleHandler.cs" />
     <Compile Include="spells\SummonNoveltyPet.cs" />
     <Compile Include="spells\PetLifedrainSpellHandler.cs" />
     <Compile Include="spells\PowerDrain.cs" />
