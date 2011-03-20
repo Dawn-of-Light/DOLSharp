@@ -153,7 +153,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Array that stores ML step completition
 		/// </summary>
-		private ArrayList m_mlsteps = new ArrayList();
+		private ArrayList m_mlSteps = new ArrayList();
 
 
 		/// <summary>
@@ -2874,6 +2874,7 @@ namespace DOL.GS
 			SpellLine line = GetSpellLine(lineKeyName);
 			if (line == null)
 				return false;
+
 			return RemoveSpellLine(line);
 		}
 
@@ -9732,6 +9733,7 @@ namespace DOL.GS
 				((BaseInstance)CurrentRegion).OnPlayerEnterInstance(this);
 
 			RefreshItemBonuses();
+
 			return true;
 		}
 
@@ -12345,11 +12347,11 @@ namespace DOL.GS
 			}
 
 			// Load ML steps of player ...
-			var mlsteps = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
+			var mlsteps = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("Character_ID ='" + GameServer.Database.Escape(QuestPlayerID) + "'");
 			if (mlsteps.Count > 0)
 			{
 				foreach (DBCharacterXMasterLevel mlstep in mlsteps)
-					m_mlsteps.Add(mlstep);
+					m_mlSteps.Add(mlstep);
 			}
 
 			m_previousLoginDate = m_dbCharacter.LastPlayed;
@@ -12434,9 +12436,9 @@ namespace DOL.GS
 				}
 
 
-				if (m_mlsteps != null)
+				if (m_mlSteps != null)
 				{
-					foreach (DBCharacterXMasterLevel mlstep in m_mlsteps)
+					foreach (DBCharacterXMasterLevel mlstep in m_mlSteps)
 						if (mlstep != null)
 							GameServer.Database.SaveObject(mlstep);
 				}
@@ -14886,9 +14888,9 @@ namespace DOL.GS
 				championPlayerSpellLine = new SpellLine(ChampionSpellLineName, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
 				championPlayerSpellLine.Level = 50;
 				SkillBase.RegisterSpellLine(championPlayerSpellLine);
-				AddSpellLine(championPlayerSpellLine);
 			}
 
+			AddSpellLine(championPlayerSpellLine);
 			return championPlayerSpellLine;
 		}
 
@@ -15042,6 +15044,31 @@ namespace DOL.GS
 			Out.SendUpdatePoints();
 		}
 
+
+		/// <summary>
+		/// Reset all Champion skills for this player
+		/// </summary>
+		public virtual void RespecChampionSkills()
+		{
+			SpellLine championSpellLine = GetChampionSpellLine();
+
+			if (championSpellLine != null)
+			{
+				SkillBase.ClearSpellLine(ChampionSpellLineName);
+				RemoveSpellLine(ChampionSpellLineName);
+				ChampionSpells = "";
+				ChampionSpecialtyPoints = ChampionLevel;
+				UpdateSpellLineLevels(false);
+				RefreshSpecDependantSkills(true);
+				Out.SendUpdatePlayer();
+				Out.SendUpdatePoints();
+				Out.SendUpdatePlayerSkills();
+				UpdatePlayerStatus();
+				SaveIntoDatabase();
+			}
+		}
+
+
 		/// <summary>
 		/// Remove all Champion levels and XP from this character.
 		/// </summary>
@@ -15056,16 +15083,16 @@ namespace DOL.GS
 
 			if (championSpellLine != null)
 			{
-				// clear but do not remove the spell line.  This allows the client to update correctly
 				SkillBase.ClearSpellLine(ChampionSpellLineName);
+				RemoveSpellLine(ChampionSpellLineName);
+				UpdateSpellLineLevels(false);
+				RefreshSpecDependantSkills(true);
+				Out.SendUpdatePlayer();
+				Out.SendUpdatePoints();
+				Out.SendUpdatePlayerSkills();
+				UpdatePlayerStatus();
+				SaveIntoDatabase();
 			}
-
-			UpdateSpellLineLevels(false);
-			RefreshSpecDependantSkills(true);
-			Out.SendUpdatePlayer();
-			Out.SendUpdatePoints();
-			Out.SendUpdatePlayerSkills();
-			UpdatePlayerStatus();
 		}
 
 		/// <summary>
@@ -15205,6 +15232,7 @@ namespace DOL.GS
 		#endregion
 
 		#region Master levels
+
 		/// <summary>
 		/// The maximum ML level a player can reach
 		/// </summary>
@@ -15213,7 +15241,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Amount of MLXP required for ML validation. MLXP reset at every ML.
 		/// </summary>
-		public static readonly long[] MLXPLevel =
+		private static readonly long[] MLXPLevel =
 		{
 			0, //xp tp level 0
 			32000, //xp to level 1
@@ -15227,113 +15255,181 @@ namespace DOL.GS
 			32000, // xp to level 9
 			32000, // xp to level 10
 		};
+
 		/// <summary>
-		/// Get the ML title string of the player
+		/// Get the amount of XP needed for a ML
 		/// </summary>
-		public string MLTitle
+		/// <param name="ml"></param>
+		/// <returns></returns>
+		public virtual long GetXPForML(byte ml)
 		{
-			get
-			{
-				if (ML > 0)
-					return LanguageMgr.GetTranslation(Client, String.Format("Titles.ML.Line{0}", (int)ML));
-				else
-					return "None";
-			}
+			if (ml > MLXPLevel.Length - 1)
+				return 0;
+
+			return MLXPLevel[ml];
 		}
+
 		/// <summary>
-		/// Holds the ml line
+		/// How many steps for each Master Level
 		/// </summary>
-		public virtual byte ML
+		private static readonly byte[] MLStepsForLevel =
 		{
-			get { return DBCharacter != null ? DBCharacter.ML : (byte)0; }
-			set { if (DBCharacter != null) DBCharacter.ML = value; }
-		}
+			10, // ML0 == ML1
+			10, // ML1
+			11,
+			11,
+			11,
+			11,
+			11,
+			11,
+			11,
+			11,
+			5, // ML10
+		};
+
 		/// <summary>
-		/// Gets and sets the ML Level of this character
+		/// Get the number of steps required for a ML
 		/// </summary>
-		public virtual int MLLevel
+		/// <param name="ml"></param>
+		/// <returns></returns>
+		public virtual byte GetStepCountForML(byte ml)
 		{
-			get { return DBCharacter != null ? DBCharacter.MLLevel : 0; }
-			set { if (DBCharacter != null) DBCharacter.MLLevel = value; }
+			if (ml > MLStepsForLevel.Length - 1)
+				return 0;
+
+			return MLStepsForLevel[ml];
 		}
+
 		/// <summary>
-		/// Gets and sets ML Experience
-		/// </summary>
-		public virtual long MLExperience
-		{
-			get { return DBCharacter != null ? DBCharacter.MLExperience : 0; }
-			set { if (DBCharacter != null) DBCharacter.MLExperience = value; }
-		}
-		/// <summary>
-		/// Gets and sets the ML validated flag. This allow to get new ML to arbiter
+		/// True if player has started Master Levels
 		/// </summary>
 		public virtual bool MLGranted
 		{
 			get { return DBCharacter != null ? DBCharacter.MLGranted : false; }
 			set { if (DBCharacter != null) DBCharacter.MLGranted = value; }
 		}
+
 		/// <summary>
-		/// Check ML step completition
+		/// What ML line has this character chosen
 		/// </summary>
-		public bool HasFinishedMLStep(int mllevel, int step)
+		public virtual byte MLLine
+		{
+			get { return DBCharacter != null ? DBCharacter.ML : (byte)0; }
+			set { if (DBCharacter != null) DBCharacter.ML = value; }
+		}
+
+		/// <summary>
+		/// Gets and sets the last ML the player has completed.
+		/// MLLevel is advanced once all steps are completed.
+		/// </summary>
+		public virtual int MLLevel
+		{
+			get { return DBCharacter != null ? DBCharacter.MLLevel : 0; }
+			set { if (DBCharacter != null) DBCharacter.MLLevel = value; }
+		}
+
+		/// <summary>
+		/// Gets and sets ML Experience for the current ML level
+		/// </summary>
+		public virtual long MLExperience
+		{
+			get { return DBCharacter != null ? DBCharacter.MLExperience : 0; }
+			set { if (DBCharacter != null) DBCharacter.MLExperience = value; }
+		}
+
+		/// <summary>
+		/// Get the number of steps completed for a ML
+		/// </summary>
+		/// <param name="ml"></param>
+		/// <returns></returns>
+		public virtual byte GetCountMLStepsCompleted(byte ml)
+		{
+			byte count = 0;
+			int steps = GetStepCountForML(ml);
+
+			for (byte i = 1; i <= steps; i++)
+			{
+				if (HasFinishedMLStep(ml, i))
+				{
+					count++;
+				}
+			}
+
+			return count;
+		}
+
+		/// <summary>
+		/// Check ML step completition.
+		/// Arbiter checks this to see if player is eligible to advance to the next Master Level.
+		/// </summary>
+		public virtual bool HasFinishedMLStep(int mlLevel, int step)
 		{
 			// No steps registered so false
-			if (m_mlsteps == null) return false;
+			if (m_mlSteps == null) return false;
+
 			// Current ML Level >= required ML, so true
-			if (MLLevel >= mllevel) return true;
+			if (MLLevel >= mlLevel) return true;
 
 			// Check current registered steps
-			foreach (DBCharacterXMasterLevel mlstep in m_mlsteps)
+			foreach (DBCharacterXMasterLevel mlStep in m_mlSteps)
 			{
 				// Found so return value
-				if (mlstep.MLLevel == mllevel && mlstep.MLStep == step)
-					return mlstep.StepCompleted;
+				if (mlStep.MLLevel == mlLevel && mlStep.MLStep == step)
+					return mlStep.StepCompleted;
 			}
 
 			// Not found so false
 			return false;
 		}
+
 		/// <summary>
-		/// Set ML step completition
+		/// Sets an ML step to finished or clears it
 		/// </summary>
-		public void SetFinishedMLStep(int mllevel, int step)
+		/// <param name="mlLevel"></param>
+		/// <param name="step"></param>
+		/// <param name="setFinished">(optional) false will remove the finished entry for this step</param>
+		public virtual void SetFinishedMLStep(int mlLevel, int step, bool setFinished = true)
 		{
 			// Check current registered steps in case of previous GM rollback command
-			if (m_mlsteps != null)
+			if (m_mlSteps != null)
 			{
-				foreach (DBCharacterXMasterLevel mlstep in m_mlsteps)
+				foreach (DBCharacterXMasterLevel mlStep in m_mlSteps)
 				{
-					if (mlstep.MLLevel == mllevel && mlstep.MLStep == step)
+					if (mlStep.MLLevel == mlLevel && mlStep.MLStep == step)
 					{
-						mlstep.StepCompleted = true;
+						mlStep.StepCompleted = setFinished;
 						return;
 					}
 				}
 			}
 
-			// Register new step
-			DBCharacterXMasterLevel newstep = new DBCharacterXMasterLevel();
-			newstep.Character_ID = Name;
-			newstep.MLLevel = mllevel;
-			newstep.MLStep = step;
-			newstep.StepCompleted = true;
-			newstep.ValidationDate = DateTime.Now;
-			m_mlsteps.Add(newstep);
-
-			// Add it in DB
-			try
+			if (setFinished)
 			{
-				GameServer.Database.AddObject(newstep);
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Error adding player " + Name + " ml step!", e);
-			}
+				// Register new step
+				DBCharacterXMasterLevel newStep = new DBCharacterXMasterLevel();
+				newStep.Character_ID = QuestPlayerID;
+				newStep.MLLevel = mlLevel;
+				newStep.MLStep = step;
+				newStep.StepCompleted = true;
+				newStep.ValidationDate = DateTime.Now;
+				m_mlSteps.Add(newStep);
 
-			// Refresh Window
-			Out.SendMasterLevelWindow((byte)mllevel);
+				// Add it in DB
+				try
+				{
+					GameServer.Database.AddObject(newStep);
+				}
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("Error adding player " + Name + " ml step!", e);
+				}
+
+				// Refresh Window
+				Out.SendMasterLevelWindow((byte)mlLevel);
+			}
 		}
+
 		/// <summary>
 		/// Returns the xp that are needed for the specified level
 		/// </summary>
@@ -15345,6 +15441,57 @@ namespace DOL.GS
 				return MLXPLevel[0];
 			return MLXPLevel[level];
 		}
+
+		/// <summary>
+		/// Get the Masterlevel window text for a ML and Step
+		/// </summary>
+		/// <param name="masterLevel"></param>
+		/// <param name="step"></param>
+		/// <returns></returns>
+		public virtual string GetMLStepDescription(int masterLevel, int step)
+		{
+			string description = "Not found";
+
+			if (HasFinishedMLStep(masterLevel, step))
+			{
+				if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
+				{
+					description = LanguageMgr.GetTranslation(Client, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsComplete[masterLevel - 1, step - 1], "");
+				}
+				else
+				{
+					description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", masterLevel, step));
+				}
+			}
+			else
+			{
+				if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
+				{
+					description = LanguageMgr.GetTranslation(Client, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsUncomplete[masterLevel - 1, step - 1], "");
+				}
+				else
+				{
+					description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", masterLevel, step));
+				}
+			}
+
+			return description;
+		}
+
+		/// <summary>
+		/// Get the ML title string of the player
+		/// </summary>
+		public virtual string MLTitle
+		{
+			get
+			{
+				if (MLLine > 0)
+					return LanguageMgr.GetTranslation(Client, String.Format("Titles.ML.Line{0}", (int)MLLine));
+				else
+					return "None";
+			}
+		}
+
 		#endregion
 
 		#region Minotaur Relics

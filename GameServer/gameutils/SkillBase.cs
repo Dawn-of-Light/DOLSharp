@@ -1356,6 +1356,39 @@ namespace DOL.GS
 
 		}
 
+		public static int ReloadSpellLine(string lineName)
+		{
+			int spellsLoaded = 0;
+			var line = GameServer.Database.SelectObject<DBSpellLine>("KeyName = '" + GameServer.Database.Escape(lineName) + "'");
+
+			if (line != null)
+			{
+				RemoveSpellList(lineName);
+
+				List<Spell> spell_list = new List<Spell>();
+
+				var spells = GameServer.Database.SelectObjects<DBLineXSpell>("LineName = '" + GameServer.Database.Escape(line.KeyName) + "'");
+
+				foreach (DBLineXSpell lxs in spells)
+				{
+					DBSpell spell;
+					if (!m_dbSpells.TryGetValue(lxs.SpellID, out spell))
+					{
+						log.WarnFormat("Spell with ID {0} not found but is referenced from LineXSpell table", lxs.SpellID);
+						continue;
+					}
+					spell_list.Add(new Spell(spell, lxs.Level));
+				}
+
+				spell_list.Sort(delegate(Spell sp1, Spell sp2) { return sp1.Level.CompareTo(sp2.Level); });
+				m_spellLists.Add(line.KeyName, spell_list);
+
+				spellsLoaded = spells.Count;
+			}
+
+			return spellsLoaded;
+		}
+
 		private static void LoadAbilities()
 		{
 			// load Abilities
@@ -2057,6 +2090,16 @@ namespace DOL.GS
 			{
 				spellList.Clear();
 			}
+		}
+
+		/// <summary>
+		/// Remove a spell list
+		/// </summary>
+		/// <param name="spellLineID"></param>
+		public static void RemoveSpellList(string spellLineID)
+		{
+			if (m_spellLists.ContainsKey(spellLineID))
+				m_spellLists.Remove(spellLineID);
 		}
 
 		/// <summary>
