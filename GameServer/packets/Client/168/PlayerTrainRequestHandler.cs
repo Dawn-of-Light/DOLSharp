@@ -74,27 +74,32 @@ namespace DOL.GS.PacketHandler.Client.v168
 						client.Out.SendMessage("You do not have enough champion specialty points for that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					client.Player.ChampionSpecialtyPoints -= spec.Cost;
-					SpellLine sl = SkillBase.GetSpellLine(GlobalSpellsLines.Champion_Spells + client.Player.Name);
-					if (sl.Spec.StartsWith("?"))
-					{
-						SpellLine line = new SpellLine(GlobalSpellsLines.Champion_Spells + client.Player.Name, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
-						SkillBase.RegisterSpellLine(line);
-					}
-					SkillBase.AddSpellToSpellLine(GlobalSpellsLines.Champion_Spells + client.Player.Name, spec.SpellID);
-					client.Player.ChampionSpells += spec.SpellID.ToString() + "|1;";
 
-					client.Player.AddSpellLine(sl);
-					client.Player.UpdateSpellLineLevels(false);
-					client.Player.RefreshSpecDependantSkills(true);
-					//client.Out.SendUpdatePoints();
-					//client.Out.SendUpdatePlayer();
-					client.Out.SendMessage("You gain an ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendChampionTrainerWindow(idline);
-					client.Out.SendUpdatePlayerSkills();
+					client.Player.ChampionSpecialtyPoints -= spec.Cost;
+					SpellLine championPlayerSpellLine = client.Player.GetChampionSpellLine();
+
+					if (championPlayerSpellLine != null)
+					{
+						SkillBase.AddSpellToSpellLine(client.Player.ChampionSpellLineName, spec.SpellID);
+						client.Player.ChampionSpells += spec.SpellID.ToString() + "|1;";
+						client.Player.UpdateSpellLineLevels(false);
+						client.Player.RefreshSpecDependantSkills(true);
+						client.Out.SendMessage("You gain a Champion ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendChampionTrainerWindow(idline);
+						client.Out.SendUpdatePlayerSkills();
+					}
+					else
+					{
+						client.Out.SendMessage("Could not find Champion Spell Line!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						log.ErrorFormat("Could not find Champion Spell Line for player {0}", client.Player.Name);
+					}
 					return;
 				}
-				else { client.Out.SendMessage("Didn't find spec!", eChatType.CT_System, eChatLoc.CL_SystemWindow); }
+				else 
+				{ 
+					client.Out.SendMessage("Could not find Champion Spec!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					log.ErrorFormat("Could not find Champion Spec idline {0}, row {1}, skillindex {2}", idline, row, skillindex);
+				}
 				return;
 			}
 
