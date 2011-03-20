@@ -194,7 +194,7 @@ namespace DOL.GS
 							{
 								if (drop.MinLevel <= player.Level)
 								{
-									CharacterXOneTimeDrop hasDrop = GameServer.Database.SelectObject<CharacterXOneTimeDrop>("CharacterID = '" + GameServer.Database.Escape(player.InternalID) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(drop.ItemTemplateID) + "'");
+									CharacterXOneTimeDrop hasDrop = GameServer.Database.SelectObject<CharacterXOneTimeDrop>("CharacterID = '" + GameServer.Database.Escape(player.QuestPlayerID) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(drop.ItemTemplateID) + "'");
 
 									if (hasDrop == null)
 									{
@@ -205,7 +205,7 @@ namespace DOL.GS
 											if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(item)))
 											{
 												CharacterXOneTimeDrop charXDrop = new CharacterXOneTimeDrop();
-												charXDrop.CharacterID = player.InternalID;
+												charXDrop.CharacterID = player.QuestPlayerID;
 												charXDrop.ItemTemplateID = drop.ItemTemplateID;
 												GameServer.Database.AddObject(charXDrop);
 

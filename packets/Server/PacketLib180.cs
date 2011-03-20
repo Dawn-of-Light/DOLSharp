@@ -46,51 +46,6 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-		//Added by Stexx78 - Only for hybrids , send mls and cls spells
-		public virtual void SendToHybridMLandCL(GamePlayer player)
-		{
-			GSTCPPacketOut pak;
-			IList spelllines = m_gameClient.Player.GetSpellLines();
-			byte linenumber = 0;
-			lock (spelllines.SyncRoot)
-			{
-				foreach (SpellLine line in spelllines)
-				{
-					if (m_gameClient.Player.IsAdvancedSpellLine(line))
-					{
-						IList spells = SkillBase.GetSpellList(line.KeyName);
-						int spellcount = 0;
-						for (int i = 0; i < spells.Count; i++)
-						{
-							if (((Spell)spells[i]).Level <= line.Level)
-							{
-								spellcount++;
-							}
-						}
-						pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
-						pak.WriteByte(0x02); //subcode
-						pak.WriteByte((byte)(spellcount + 1)); //number of entry
-						pak.WriteByte(0x02); //subtype
-						pak.WriteByte(linenumber); //number of line
-						pak.WriteByte(0); // level, not used when spell line
-						pak.WriteShort(0); // icon, not used when spell line
-						pak.WritePascalString(line.Name);
-						foreach (Spell spell in spells)
-						{
-							if (spell.Level <= line.Level)
-							{
-								pak.WriteByte((byte)spell.Level);
-								pak.WriteShort(spell.Icon);
-								pak.WritePascalString(spell.Name);
-							}
-						}
-						SendTCP(pak);
-					}
-					linenumber++;
-				}
-			}
-		}
-
 		public override void SendSetControlledHorse(GamePlayer player)
 		{
 			if (player == null || player.ObjectState != GameObject.eObjectState.Active)
@@ -284,15 +239,13 @@ namespace DOL.GS.PacketHandler
 			IList specs = m_gameClient.Player.GetSpecList();
 			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
 			IList styles = m_gameClient.Player.GetStyleList();
-			List<SpellLine> spelllines = m_gameClient.Player.GetSpellLines();
+			List<SpellLine> spellLines = m_gameClient.Player.GetSpellLines();
 			Hashtable m_styleId = new Hashtable();
 			int maxSkills = 0;
 			int firstSkills = 0;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
-			bool flagSendHybrid = true;
-			if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
-				flagSendHybrid = false;
+			bool sendHybridList = m_gameClient.Player.CharacterClass.ClassType != eClassType.ListCaster;
 
 			lock (skills.SyncRoot)
 			{
@@ -303,7 +256,8 @@ namespace DOL.GS.PacketHandler
 						lock (m_gameClient.Player.lockSpellLinesList)
 						{
 							int skillCount = specs.Count + skills.Count + styles.Count;
-							if (flagSendHybrid)
+
+							if (sendHybridList)
 								skillCount += m_gameClient.Player.GetSpellCount();
 
 							pak.WriteByte(0x01); //subcode
@@ -387,19 +341,22 @@ namespace DOL.GS.PacketHandler
 								pak.WriteShort((ushort)style.Icon);
 								pak.WritePascalString(style.Name);
 							}
-							if (flagSendHybrid)
+
+							if (sendHybridList)
 							{
-								Dictionary<string, KeyValuePair<Spell, SpellLine>> spells = m_gameClient.Player.GetUsableSpells(spelllines, false);
+								Dictionary<string, KeyValuePair<Spell, SpellLine>> spells = m_gameClient.Player.GetUsableSpells(spellLines, false);
 
 								foreach (KeyValuePair<string, KeyValuePair<Spell, SpellLine>> spell in spells)
 								{
 									CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 
 									int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spell.Value.Value.Spec));
+
 									if (spec_index == -1)
 										spec_index = 0xFE; // Nightshade special value
 
 									pak.WriteByte((byte)spell.Value.Key.Level);
+
 									if (spell.Value.Key.InstrumentRequirement == 0)
 									{
 										pak.WriteByte((byte)eSkillPage.Spells);
@@ -412,17 +369,17 @@ namespace DOL.GS.PacketHandler
 										pak.WriteByte(0);
 										pak.WriteByte(0xFF);
 									}
+
 									pak.WriteByte(0);
 									pak.WriteShort(spell.Value.Key.Icon);
 									pak.WritePascalString(spell.Value.Key.Name);
 								}
-								//Added by stexx78 - Add ML and CL lines and spells.
-								SendToHybridMLandCL(m_gameClient.Player);
 							}
 						}
 					}
 				}
 			}
+
 			if (pak.Length > 7)
 			{
 				pak.Position = 4;
