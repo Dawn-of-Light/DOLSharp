@@ -733,33 +733,11 @@ namespace DOL.GS.Quests
 		/// <returns></returns>
 		public static CharacterXDataQuest GetCharacterQuest(GamePlayer player, int ID, bool create)
 		{
-			CharacterXDataQuest charQuest = GameServer.Database.SelectObject<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(player.InternalID) + "' AND DataQuestID = " + ID);
+			CharacterXDataQuest charQuest = GameServer.Database.SelectObject<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(player.QuestPlayerID) + "' AND DataQuestID = " + ID);
 
 			if (charQuest == null && create)
 			{
-				charQuest = new CharacterXDataQuest(player.InternalID, ID);
-				charQuest.Count = 0;
-				charQuest.Step = 0;
-				GameServer.Database.AddObject(charQuest);
-			}
-
-			return charQuest;
-		}
-
-		/// <summary>
-		/// Static version used for reward quest accepts
-		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="player"></param>
-		/// <param name="create"></param>
-		/// <returns></returns>
-		protected static CharacterXDataQuest GetCharacterQuest(int id, GamePlayer player, bool create)
-		{
-			CharacterXDataQuest charQuest = GameServer.Database.SelectObject<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(player.InternalID) + "' AND DataQuestID = " + id);
-
-			if (charQuest == null && create)
-			{
-				charQuest = new CharacterXDataQuest(player.InternalID, id);
+				charQuest = new CharacterXDataQuest(player.QuestPlayerID, ID);
 				charQuest.Count = 0;
 				charQuest.Step = 0;
 				GameServer.Database.AddObject(charQuest);
@@ -1544,7 +1522,7 @@ namespace DOL.GS.Quests
 				{
 					if ((quest.ID + DATAQUEST_CLIENTOFFSET) == qargs.QuestID)
 					{
-						CharacterXDataQuest charQuest = GetCharacterQuest(quest.ID, player, true);
+						CharacterXDataQuest charQuest = GetCharacterQuest(player, quest.ID, true);
 						DataQuest dq = new DataQuest(player, giver, quest, charQuest);
 						dq.Step = 1;
 						player.AddQuest(dq);

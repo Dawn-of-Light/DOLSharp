@@ -317,7 +317,6 @@ namespace DOL.GS.Commands
                             player = client.Player;
 
                         player.RemoveChampionLevels();
-
                         client.Out.SendMessage("You have cleared " + player.Name + "'s Champion levels!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                         player.Out.SendMessage(
                             client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has cleared your Champion levels!",
@@ -327,6 +326,7 @@ namespace DOL.GS.Commands
                         player.Out.SendUpdatePoints();
                         player.Out.SendCharStatsUpdate();
                         player.UpdatePlayerStatus();
+						player.Out.SendUpdatePlayerSkills();
                         player.SaveIntoDatabase();
                     }
 
@@ -659,7 +659,7 @@ namespace DOL.GS.Commands
 
 							if (gainedLevel)
 							{
-								player.Out.SendMessage("You reached champion level " + player.ChampionLevel + "!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								player.Out.SendMessage("You reached champion level " + player.ChampionLevel + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 
 

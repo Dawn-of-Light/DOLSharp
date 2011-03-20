@@ -251,8 +251,6 @@ namespace DOL.GS
 				m_lastUpdateArray = 0;
 		}
 
-
-
 		/// <summary>
 		/// Returns the GameClient of this Player
 		/// </summary>
@@ -751,7 +749,7 @@ namespace DOL.GS
 			}
 
 			// Remove champion dedicated spell line
-			SkillBase.UnRegisterSpellLine(GlobalSpellsLines.Champion_Spells + ":" + InternalID);
+			SkillBase.UnRegisterSpellLine(ChampionSpellLineName);
 
 			// cancel all effects until saving of running effects is done
 			try
@@ -1794,7 +1792,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The prefix for RR 12/13 players
 		/// </summary>
-		public string PrefixName
+		public virtual string PrefixName
 		{
 			get
 			{
@@ -2856,10 +2854,12 @@ namespace DOL.GS
 		{
 			if (!m_spellLines.Contains(line))
 				return false;
+
 			lock (lockSpellLinesList)
 			{
 				m_spellLines.Remove(line);
 			}
+
 			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.RemoveSpellLine.YouLose", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;
 		}
@@ -2884,7 +2884,7 @@ namespace DOL.GS
 		{
 			byte originalLevel = Level;
 			Level = 1;
-			DBCharacter.Experience = 0;
+			Experience = 0;
 			RespecAllLines();
 			SkillSpecialtyPoints = 0;
 
@@ -2992,6 +2992,14 @@ namespace DOL.GS
 			else specLine.Level = 1;
 
 			return specPoints;
+		}
+
+		/// <summary>
+		/// Send this players trainer window
+		/// </summary>
+		public virtual void SendTrainerWindow()
+		{
+			Out.SendTrainerWindow();
 		}
 
 		/// <summary>
@@ -3312,6 +3320,7 @@ namespace DOL.GS
 		{
 			if (line == null)
 				return;
+
 			SpellLine oldline = GetSpellLine(line.KeyName);
 			if (oldline == null)
 			{
@@ -3440,7 +3449,7 @@ namespace DOL.GS
 			}
 
 			if (line.KeyName == ChampionSpellLineName)
-				return true;
+			    return true;
 
 			return false;
 		}
@@ -3482,7 +3491,7 @@ namespace DOL.GS
 			{
 				Dictionary<string, KeyValuePair<Spell, SpellLine>> usableSpells1 = new Dictionary<string, KeyValuePair<Spell, SpellLine>>(); // highest level of spell type or group
 				Dictionary<string, KeyValuePair<Spell, SpellLine>> usableSpells2 = new Dictionary<string, KeyValuePair<Spell, SpellLine>>(); // second highest level of spell type or group
-				List<KeyValuePair<Spell, SpellLine>> spells = new List<KeyValuePair<Spell, SpellLine>>();
+				List<KeyValuePair<Spell, SpellLine>> spellList = new List<KeyValuePair<Spell, SpellLine>>();
 
 				foreach (SpellLine line in spellLines)
 				{
@@ -3492,14 +3501,17 @@ namespace DOL.GS
 						foreach (Spell spell in SkillBase.GetSpellList(line.KeyName))
 						{
 							if (spell.Level <= line.Level)
-								spells.Add(new KeyValuePair<Spell, SpellLine>(spell, line));
+							{
+								spellList.Add(new KeyValuePair<Spell, SpellLine>(spell, line));
+							}
 						}
 					}
 				}
 
-				foreach (KeyValuePair<Spell, SpellLine> spell in spells)
+				foreach (KeyValuePair<Spell, SpellLine> spell in spellList)
 				{
 					string key;
+					int counter = 0;
 
 					if (spell.Key.Group == 0)
 					{
@@ -3508,21 +3520,28 @@ namespace DOL.GS
 						// If there is a special rule for a spelltype then spells of that spelltype should be provided with
 						// a unique spellgroup number to ensure they get included in the list.
 
-						key = spell.Value.KeyName + "+" + spell.Key.SpellType + "+" + spell.Key.Target;
-
-						if (spell.Key.CastTime == 0)
+						if (spell.Value.KeyName == ChampionSpellLineName)
 						{
-							key += "+INSTANT";
+							key = (counter++).ToString("000") + ChampionSpellLineName;
 						}
-
-						if (spell.Key.Radius > 0)
+						else
 						{
-							key += "+AOE";
-						}
+							key = spell.Value.KeyName + "+" + spell.Key.SpellType + "+" + spell.Key.Target;
 
-						if (spell.Key.SubSpellID > 0)
-						{
-							key += "+SUB";
+							if (spell.Key.CastTime == 0)
+							{
+								key += "+INSTANT";
+							}
+
+							if (spell.Key.Radius > 0)
+							{
+								key += "+AOE";
+							}
+
+							if (spell.Key.SubSpellID > 0)
+							{
+								key += "+SUB";
+							}
 						}
 					}
 					else
@@ -5252,10 +5271,6 @@ namespace DOL.GS
 			{
 				oldpow = CalculateMaxMana(previouslevel, GetBaseStat(CharacterClass.ManaStat));
 			}
-			//else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel >= 1)
-			//{
-			//    oldpow = CalculateMaxMana(previouslevel, GetBaseStat(eStat.EMP)); //We shouldn't use Emp stat, but.. it's not really important
-			//}
 
 			// hp upgrade
 			int newhp = CalculateMaxHealth(Level, GetBaseStat(eStat.CON));
@@ -5273,15 +5288,6 @@ namespace DOL.GS
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.PowerRaise", (newpow - oldpow)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 			}
-			//Andraste -- What?  Tolakram
-			//else if (CharacterClass.ManaStat == eStat.UNDEFINED && ChampionLevel >= 1)
-			//{
-			//    int newpow = CalculateMaxMana(Level, GetBaseStat(eStat.EMP));
-			//    if (newpow > 0 && oldpow < newpow)
-			//    {
-			//        Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.PowerRaise", (newpow - oldpow)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			//    }
-			//}
 
 			if (IsAlive)
 			{
@@ -11379,7 +11385,7 @@ namespace DOL.GS
 			}
 		}
 
-		protected virtual void RefreshItemBonuses()
+		public virtual void RefreshItemBonuses()
 		{
 			m_itemBonus = new PropertyIndexer();
 
@@ -11979,9 +11985,6 @@ namespace DOL.GS
 			DOLCharacters character = DBCharacter; // if its derived and filled with some code
 			if (character == null) return; // no character => exit
 
-			//Lohx - champion abilities
-			LoadChampionSpells();
-
 			string tmpStr;
 
 			#region Load Abilities
@@ -12039,17 +12042,27 @@ namespace DOL.GS
 						string[] values = spec.Split('|');
 						if (values.Length >= 2)
 						{
-							Specialization tempspec = SkillBase.GetSpecialization(values[0]);
-							int level;
-							if (int.TryParse(values[1], out level))
+							Specialization tempSpec = SkillBase.GetSpecialization(values[0], false);
+
+							if (tempSpec != null)
 							{
-								tempspec.Level = level;
-								if (!HasSpecialization(values[0]))
-									AddSpecialization(tempspec);
-								CharacterClass.OnSkillTrained(this, tempspec);
+								int level;
+								if (int.TryParse(values[1], out level))
+								{
+									tempSpec.Level = level;
+									if (!HasSpecialization(values[0]))
+										AddSpecialization(tempSpec);
+									CharacterClass.OnSkillTrained(this, tempSpec);
+								}
+								else if (log.IsErrorEnabled)
+								{
+									log.Error(Name + ": error in loading specs => '" + tmpStr + "'");
+								}
 							}
 							else if (log.IsErrorEnabled)
-								log.Error(Name + ": error in loading specs => '" + tmpStr + "'");
+							{
+								log.Error(Name + ": can't find spec '" + values[0] + "'");
+							}
 						}
 					}
 				}
@@ -12082,7 +12095,6 @@ namespace DOL.GS
 			//Load the spell lines and then check to see if an spells in the spell lines should be disabled
 			lock (lockSpellLinesList)
 			{
-				m_spellLines.Clear();
 				tmpStr = character.SerializedSpellLines;
 				if (tmpStr != null && tmpStr.Length > 0)
 				{
@@ -12091,33 +12103,44 @@ namespace DOL.GS
 						string[] values = serializedSpellLine.Split('|');
 						if (values.Length >= 2)
 						{
-							// This corrects an issue where the champion spellline used to use name instead of the Character ID
-							if (values[0] == GlobalSpellsLines.Champion_Spells + Name)
-							{
-								values[0] = ChampionSpellLineName;
-							}
+							if (values[0] == ChampionSpellLineName)
+								continue; // LoadChampionSpells takes care of adding the spell line
 
-							SpellLine splLine = SkillBase.GetSpellLine(values[0]);
-							int level;
-							if (int.TryParse(values[1], out level))
-							{
-								splLine.Level = level;
-								AddSpellLine(splLine);
+							SpellLine splLine = SkillBase.GetSpellLine(values[0], false);
 
-								foreach (Spell spell in SkillBase.GetSpellList(splLine.KeyName))
+							if (splLine != null)
+							{
+								int level;
+								if (int.TryParse(values[1], out level))
 								{
-									if (disabledSpells.ContainsKey(spell.ID))
-										DisableSkill(spell, (int)disabledSpells[spell.ID]);
+									splLine.Level = level;
+									AddSpellLine(splLine);
+
+									foreach (Spell spell in SkillBase.GetSpellList(splLine.KeyName))
+									{
+										if (disabledSpells.ContainsKey(spell.ID))
+											DisableSkill(spell, (int)disabledSpells[spell.ID]);
+									}
+								}
+								else if (log.IsErrorEnabled)
+								{
+									log.Error("Error loading SpellLine '" + serializedSpellLine + "' from character '" + character.Name + "'");
 								}
 							}
 							else if (log.IsErrorEnabled)
-								log.Error("Error loading SpellLine '" + serializedSpellLine + "' from character '" + character.Name + "'");
+							{
+								log.Error("Can't find SpellLine '" + values[0] + "' for character '" + character.Name + "'");
+							}
 						}
 					}
 				}
+
+				LoadChampionSpells(disabledSpells);
 			}
 
 			#endregion
+
+
 
 			/* -- Kakuri Jan 8 2009 --
 			 * Calling OnLevelUp() when loading a character is a very poor way of loading skills and abilities.
@@ -12307,39 +12330,7 @@ namespace DOL.GS
 
 			VerifySpecPoints();
 
-			//Load the quests for this player
-			var quests = GameServer.Database.SelectObjects<DBQuest>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
-			foreach (DBQuest dbquest in quests)
-			{
-				AbstractQuest quest = AbstractQuest.LoadFromDatabase(this, dbquest);
-				if (quest != null)
-				{
-					if (quest.Step == -1)
-						m_questListFinished.Add(quest);
-					else
-						m_questList.Add(quest);
-				}
-			}
-
-			// load all the data driven quests for this player
-			var dataQuests = GameServer.Database.SelectObjects<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
-			foreach (CharacterXDataQuest quest in dataQuests)
-			{
-				DBDataQuest dbDataQuest = GameServer.Database.SelectObject<DBDataQuest>("ID = " + quest.DataQuestID);
-				if (dbDataQuest != null && dbDataQuest.StartType != (byte)DataQuest.eStartType.Collection)
-				{
-					DataQuest dataQuest = new DataQuest(this, dbDataQuest, quest);
-
-					if (quest.Step > 0)
-					{
-						m_questList.Add((AbstractQuest)dataQuest);
-					}
-					else if (quest.Count > 0)
-					{
-						m_questListFinished.Add((AbstractQuest)dataQuest);
-					}
-				}
-			}
+			LoadQuests();
 
 			// Load Task object of player ...
 			var tasks = GameServer.Database.SelectObjects<DBTask>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
@@ -13029,6 +13020,57 @@ namespace DOL.GS
 		#region Quest
 
 		/// <summary>
+		/// Get the player ID used for quests.  Usually InternalID, provided for customization
+		/// </summary>
+		public virtual string QuestPlayerID
+		{
+			get { return InternalID; }
+		}
+
+		/// <summary>
+		/// Load all the ongoing or completed quests for this player
+		/// </summary>
+		public virtual void LoadQuests()
+		{
+			m_questList.Clear();
+			m_questListFinished.Clear();
+
+			// Scripted quests
+			var quests = GameServer.Database.SelectObjects<DBQuest>("Character_ID ='" + GameServer.Database.Escape(QuestPlayerID) + "'");
+			foreach (DBQuest dbquest in quests)
+			{
+				AbstractQuest quest = AbstractQuest.LoadFromDatabase(this, dbquest);
+				if (quest != null)
+				{
+					if (quest.Step == -1)
+						m_questListFinished.Add(quest);
+					else
+						m_questList.Add(quest);
+				}
+			}
+
+			// Data driven quests for this player
+			var dataQuests = GameServer.Database.SelectObjects<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(QuestPlayerID) + "'");
+			foreach (CharacterXDataQuest quest in dataQuests)
+			{
+				DBDataQuest dbDataQuest = GameServer.Database.SelectObject<DBDataQuest>("ID = " + quest.DataQuestID);
+				if (dbDataQuest != null && dbDataQuest.StartType != (byte)DataQuest.eStartType.Collection)
+				{
+					DataQuest dataQuest = new DataQuest(this, dbDataQuest, quest);
+
+					if (quest.Step > 0)
+					{
+						m_questList.Add((AbstractQuest)dataQuest);
+					}
+					else if (quest.Count > 0)
+					{
+						m_questListFinished.Add((AbstractQuest)dataQuest);
+					}
+				}
+			}
+		}
+
+		/// <summary>
 		/// Holds all the quests currently active on this player
 		/// </summary>
 		protected List<AbstractQuest> m_questList = new List<AbstractQuest>();
@@ -13123,6 +13165,7 @@ namespace DOL.GS
 
 			return false;
 		}
+
 
 		/// <summary>
 		/// Checks if a player has done a specific quest type
@@ -14832,6 +14875,24 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Get or create the Champion spell line for this player
+		/// </summary>
+		/// <returns></returns>
+		public virtual SpellLine GetChampionSpellLine()
+		{
+			SpellLine championPlayerSpellLine = SkillBase.GetSpellLine(ChampionSpellLineName, false);
+			if (championPlayerSpellLine == null)
+			{
+				championPlayerSpellLine = new SpellLine(ChampionSpellLineName, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
+				championPlayerSpellLine.Level = 50;
+				SkillBase.RegisterSpellLine(championPlayerSpellLine);
+				AddSpellLine(championPlayerSpellLine);
+			}
+
+			return championPlayerSpellLine;
+		}
+
+		/// <summary>
 		/// Champion level
 		/// </summary>
 		public virtual int ChampionLevel
@@ -14983,7 +15044,6 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Remove all Champion levels and XP from this character.
-		/// This will not remove gained abilities
 		/// </summary>
 		public virtual void RemoveChampionLevels()
 		{
@@ -14991,9 +15051,14 @@ namespace DOL.GS
 			ChampionLevel = 0;
 			ChampionSpecialtyPoints = 0;
 			ChampionSpells = "";
-			RemoveSpellLine(ChampionSpellLineName);
-			SkillBase.UnRegisterSpellLine(ChampionSpellLineName);
-			Champion = false;
+
+			SpellLine championSpellLine = GetChampionSpellLine();
+
+			if (championSpellLine != null)
+			{
+				// clear but do not remove the spell line.  This allows the client to update correctly
+				SkillBase.ClearSpellLine(ChampionSpellLineName);
+			}
 
 			UpdateSpellLineLevels(false);
 			RefreshSpecDependantSkills(true);
@@ -15002,7 +15067,6 @@ namespace DOL.GS
 			Out.SendUpdatePlayerSkills();
 			UpdatePlayerStatus();
 		}
-
 
 		/// <summary>
 		/// Holds what happens when your champion level goes up;
@@ -15051,37 +15115,49 @@ namespace DOL.GS
 		/// <summary>
 		/// Load champion spells of this player
 		/// </summary>
-		protected virtual void LoadChampionSpells()
+		protected virtual void LoadChampionSpells(Hashtable disabledSpells)
 		{
 			try
 			{
-				if (ChampionSpells == null)
+				if (string.IsNullOrEmpty(ChampionSpells))
 					return;
 
-				Hashtable championSpellList = new Hashtable();
-				SkillBase.CleanSpellList(ChampionSpellLineName);
-				SpellLine championPlayerSpellLine = new SpellLine(GlobalSpellsLines.Champion_Spells + ":" + InternalID, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
-				championPlayerSpellLine.Level = 50;
-				SkillBase.RegisterSpellLine(championPlayerSpellLine);
+				SpellLine championPlayerSpellLine = GetChampionSpellLine();
+
+				if (championPlayerSpellLine == null)
+					return;
+
+				List<int> championSpellList = new List<int>();
+				SkillBase.ClearSpellLine(ChampionSpellLineName);
+
 				foreach (string cSpell in ChampionSpells.SplitCSV())
 				{
 					string[] cSpellProp = cSpell.Split('|');
 					if (cSpellProp.Length < 2) continue;
-					championSpellList.Add(cSpellProp[0], int.Parse(cSpellProp[0]));
+					championSpellList.Add(int.Parse(cSpellProp[0]));
 				}
+
 				if (championSpellList != null)
 				{
-					foreach (DictionaryEntry de in championSpellList)
+					foreach (int spellID in championSpellList)
 					{
-						SkillBase.AddSpellToSpellLine(GlobalSpellsLines.Champion_Spells + ":" + InternalID, (int)de.Value);
+						SkillBase.AddSpellToSpellLine(ChampionSpellLineName, spellID);
 					}
 					AddSpellLine(championPlayerSpellLine);
 				}
-				championSpellList = null;
+
+				if (disabledSpells != null)
+				{
+					foreach (Spell spell in SkillBase.GetSpellList(ChampionSpellLineName))
+					{
+						if (disabledSpells.ContainsKey(spell.ID))
+							DisableSkill(spell, (int)disabledSpells[spell.ID]);
+					}
+				}
 			}
 			catch (Exception ex)
 			{
-				log.ErrorFormat("Error loading champion spell line for player {0} ID {1}. ", Name, InternalID);
+				log.ErrorFormat("Error loading champion spell line for player {0} ID {1}. ", Name, ChampionSpellLineName);
 				log.Error("LoadChampionSpells", ex);
 			}
 		}

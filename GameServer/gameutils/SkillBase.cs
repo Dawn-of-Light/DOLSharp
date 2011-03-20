@@ -2007,13 +2007,6 @@ namespace DOL.GS
 			return null;
 		}
 
-		public static void CleanSpellList(string spellLineID)
-		{
-			if (m_spellLists.ContainsKey(spellLineID))
-				m_spellLists.Remove(spellLineID);
-		}
-
-
 		/// <summary>
 		/// Add an existing spell to a spell line, adding a new line if needed.
 		/// The spell level is set based on the spell ID (why I do not know)
@@ -2044,11 +2037,25 @@ namespace DOL.GS
 			Spell spell = spellToAdd.Copy();
 
 			spellList.Add(spell);
-			spellList.Sort(delegate(Spell sp1, Spell sp2) { return sp1.ID.CompareTo(sp2.ID); });
+			// spellList.Sort(delegate(Spell sp1, Spell sp2) { return sp1.ID.CompareTo(sp2.ID); });
 
 			for (int i = 0; i < spellList.Count; i++)
 			{
 				spellList[i].Level = i + 1;
+			}
+		}
+
+		/// <summary>
+		/// Remove all the spells from a spell line.
+		/// </summary>
+		/// <param name="spellLineID"></param>
+		public static void ClearSpellLine(string spellLineID)
+		{
+			List<Spell> spellList;
+
+			if (m_spellLists.TryGetValue(spellLineID, out spellList))
+			{
+				spellList.Clear();
 			}
 		}
 
