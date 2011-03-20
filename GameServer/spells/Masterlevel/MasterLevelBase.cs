@@ -195,6 +195,15 @@ namespace DOL.GS.Spells
     }
     #endregion
 
+	#region Stylhandler
+	[SpellHandlerAttribute("MLStyleHandler")]
+	public class MLStyleHandler : MasterlevelHandling
+	{
+		public MLStyleHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+	}
+	#endregion
+
+
     #region MasterlevelDebuff
     /// <summary>
     /// Contains all common code for Banelord Spells
