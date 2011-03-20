@@ -26,7 +26,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandler(PacketHandlerType.TCP, eClientPackets.DialogResponse, ClientStatus.PlayerInGame)]
 	public class DialogResponseHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
@@ -38,10 +38,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			new DialogBoxResponseAction(client.Player, data1, data2, data3, messageType, response).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: DialogBoxResponseAction
 
 		/// <summary>
 		/// Handles dialog responses from players
@@ -82,8 +78,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="data3">The general data field</param>
 			/// <param name="messageType">The dialog type</param>
 			/// <param name="response">The players response</param>
-			public DialogBoxResponseAction(GamePlayer actionSource, int data1, int data2, int data3, int messageType,
-			                               byte response)
+			public DialogBoxResponseAction(GamePlayer actionSource, int data1, int data2, int data3, int messageType, byte response)
 				: base(actionSource)
 			{
 				m_data1 = data1;
@@ -99,6 +94,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			protected override void OnTick()
 			{
 				var player = (GamePlayer) m_actionSource;
+
+				if (player == null)
+					return;
+
+				// log.DebugFormat("Dialog - response: {0}, messageType: {1}, data1: {2}, data2: {3}, data3: {4}", m_response, m_messageType, m_data1, m_data2, m_data3);
 
 				switch ((eDialogCode) m_messageType)
 				{
@@ -370,6 +370,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		#endregion
 	}
 }

@@ -27,7 +27,8 @@ namespace DOL.GS.Commands
 {
 	[Cmd("&Reload",
         ePrivLevel.Admin,
-		"Recharge l'element donné."
+		"Reload various elements",
+		"/reload mob|object|CL"
 		)]
 	public class ReloadCommandHandler :ICommandHandler
 	{
@@ -77,6 +78,7 @@ namespace DOL.GS.Commands
 				SendSystemMessageBase(client);
 				SendSystemMessageMob(client);
 				SendSystemMessageObject(client);
+				client.Out.SendMessage(" /reload CL ' reload all champion levels.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			else if (argLength > 1)
@@ -151,7 +153,26 @@ namespace DOL.GS.Commands
 					ReloadStaticItem (region , args[2], arg);
 				}
 			}
+
+			if (args[1].ToLower() == "cl")
+			{
+				ReloadChampionLevels(client, args);
+			}
 			return;
+		}
+
+
+		/// <summary>
+		/// Reload the champion level lines
+		/// </summary>
+		/// <param name="client"></param>
+		/// <param name="args"></param>
+		private void ReloadChampionLevels(GameClient client, string[] args)
+		{
+			int numSpells = SkillBase.ReloadSpellLine(GlobalSpellsLines.Champion_Spells);
+			DOL.GS.ChampSpecMgr.LoadChampionSpecs();
+
+			client.Out.SendMessage(numSpells + " loaded in " + GlobalSpellsLines.Champion_Spells, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 		}
 		
 		
