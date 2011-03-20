@@ -35,11 +35,9 @@ namespace DOL.GS.Commands
 		"/player lastname <change|reset> <newLastName>",
 		"/player level <newLevel>",
 		"/player reset - Reset and re-level a player to their current level.",
-		"/player startchampion - Starts the target on the path of the Champion.",
-		"/player clearchampion - Remove all Champion XP and levels from this player.",
 		"/player realm <newRealm>",
 		"/player inventory [wear|bag|vault|house|cons]",
-		"/player <rps|bps|xp|xpa|clxp> <amount>",
+		"/player <rps|bps|xp|xpa|clxp|mlxp> <amount>",
 		"/player stat <typeofStat> <value>",
 		"/player money <copp|silv|gold|plat|mith> <amount>",
 		"/player respec <all|line|realm|dol|champion> <amount=1>",
@@ -56,6 +54,12 @@ namespace DOL.GS.Commands
 		"/player location - write a location string to the chat window",
 		"/player showgroup",
 		"/player showeffects",
+		"/player startchampion - Starts the target on the path of the Champion.",
+		"/player clearchampion - Remove all Champion XP and levels from this player.",
+		"/player respecchampion - Respec this players Champion skills.",
+		"/player startml - Start this players Master Level training.",
+		"/player setml <level> - Set this players current Master Level.",
+		"/player setmlstep <level> <step> [false] - Sets a step for an ML level to finished. 0 to set as unfinished.",
 		"/player articredit <artifact>",
         "/player allchars <PlayerName>", 
         "/player class <list|classID> - view a list of classes, or change the targets class."
@@ -66,7 +70,7 @@ namespace DOL.GS.Commands
 
         public void OnCommand(GameClient client, string[] args)
         {
-            if (args.Length > 4 || args.Length == 1)
+            if (args.Length == 1)
             {
                 DisplaySyntax(client);
                 return;
@@ -306,7 +310,7 @@ namespace DOL.GS.Commands
 
 				#endregion Start Champion
 
-				#region Clear Champion
+				#region Clear / Respec Champion
 
 				case "clearchampion":
 
@@ -318,16 +322,7 @@ namespace DOL.GS.Commands
 
                         player.RemoveChampionLevels();
                         client.Out.SendMessage("You have cleared " + player.Name + "'s Champion levels!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                        player.Out.SendMessage(
-                            client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has cleared your Champion levels!",
-                            eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-
-                        player.Out.SendUpdatePlayer();
-                        player.Out.SendUpdatePoints();
-                        player.Out.SendCharStatsUpdate();
-                        player.UpdatePlayerStatus();
-						player.Out.SendUpdatePlayerSkills();
-                        player.SaveIntoDatabase();
+                        player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has cleared your Champion levels!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                     }
 
                     catch (Exception)
@@ -337,7 +332,148 @@ namespace DOL.GS.Commands
                     }
                     break;
 
-                #endregion Clear Champion
+				case "respecchampion":
+
+					try
+					{
+						var player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
+							player = client.Player;
+
+						player.RespecChampionSkills();
+						client.Out.SendMessage("You have respecced " + player.Name + "'s Champion levels!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has respecced your Champion levels!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					}
+
+					catch (Exception)
+					{
+						DisplaySyntax(client);
+						return;
+					}
+					break;
+
+                #endregion Clear / Respec Champion
+
+				#region Master Levels
+
+				case "startml":
+
+					try
+					{
+						var player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
+							player = client.Player;
+
+						if (player.MLGranted == false)
+						{
+							player.MLGranted = true;
+							player.SaveIntoDatabase();
+							client.Out.SendMessage(player.Name + " is now ready to start Master Level training!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has started your Master Level training!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						}
+						else
+						{
+							client.Out.SendMessage(player.Name + " has already started Master Level training!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						}
+					}
+					catch (Exception)
+					{
+						DisplaySyntax(client);
+						return;
+					}
+					break;
+
+				case "setml":
+
+					try
+					{
+						var player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
+							player = client.Player;
+
+						byte level = Convert.ToByte(args[2]);
+
+						if (level > GamePlayer.ML_MAX_LEVEL) level = GamePlayer.ML_MAX_LEVEL;
+
+						player.MLLevel = level;
+						player.MLExperience = 0;
+						player.SaveIntoDatabase();
+						player.Out.SendUpdatePlayer();
+						player.Out.SendMasterLevelWindow((byte)player.MLLevel);
+						client.Out.SendMessage(player.Name + " Master Level is set to " + level + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has set your Master Level to " + level + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					}
+					catch (Exception)
+					{
+						DisplaySyntax(client);
+						return;
+					}
+					break;
+
+				case "setmlstep":
+
+					try
+					{
+						var player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
+							player = client.Player;
+
+						if (player.MLLevel == GamePlayer.ML_MAX_LEVEL)
+						{
+							client.Out.SendMessage(player.Name + " has already finished all Master Levels!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return;
+						}
+
+						byte level = Convert.ToByte(args[2]);
+						if (level > GamePlayer.ML_MAX_LEVEL)
+						{
+							client.Out.SendMessage("Valid levels are 0 - " + GamePlayer.ML_MAX_LEVEL + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							return;
+						}
+
+						// Possible steps per level varies, max appears to be 11
+						byte step = Convert.ToByte(args[3]);
+
+						bool setFinished = true;
+						if (args.Length > 4)
+						{
+							setFinished = Convert.ToBoolean(args[4]);
+						}
+
+						if (setFinished && player.HasFinishedMLStep(player.MLLevel + 1, step))
+						{
+							client.Out.SendMessage(player.Name + " has already finished step " + step + " for Master Level " + (player.MLLevel + 1) + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						}
+						else if (setFinished == false && player.HasFinishedMLStep(player.MLLevel + 1, step) == false)
+						{
+							client.Out.SendMessage(player.Name + " has not yet finished step " + step + " for Master Level " + (player.MLLevel + 1) + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						}
+						else
+						{
+							player.SetFinishedMLStep(player.MLLevel + 1, step, setFinished);
+							if (setFinished)
+							{
+								client.Out.SendMessage(player.Name + " has now finished step " + step + " for Master Level " + (player.MLLevel + 1) + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has set step " + step + " completed for Master Level " + (player.MLLevel + 1) + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							}
+							else
+							{
+								client.Out.SendMessage(player.Name + " has no longer finished step " + step + " for Master Level " + (player.MLLevel + 1) + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has set step " + step + " as unfinished for Master Level " + (player.MLLevel + 1) + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							}
+							player.SaveIntoDatabase();
+							player.Out.SendMasterLevelWindow(level);
+							player.Out.SendUpdatePlayer();
+						}
+					}
+					catch (Exception)
+					{
+						DisplaySyntax(client);
+						return;
+					}
+					break;
+
+				#endregion Master Levels
 
                 #region realm
 
@@ -643,11 +779,8 @@ namespace DOL.GS.Commands
 
                             long amount = long.Parse(args[2]);
                             player.GainChampionExperience(amount, GameLiving.eXPSource.GM);
-                            client.Out.SendMessage("You gave " + player.Name + " " + amount + " Champion experience succesfully!",
-                                                   eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                            player.Out.SendMessage(
-                                client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you " + amount +
-                                " Champion experience!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                            client.Out.SendMessage("You gave " + player.Name + " " + amount + " Champion experience succesfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                            player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you " + amount + " Champion experience!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 							// now see if player gained any CL and level them up
 							bool gainedLevel = false;
@@ -659,7 +792,7 @@ namespace DOL.GS.Commands
 
 							if (gainedLevel)
 							{
-								player.Out.SendMessage("You reached champion level " + player.ChampionLevel + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage("You reached champion level " + player.ChampionLevel + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 							}
 
 
@@ -673,6 +806,50 @@ namespace DOL.GS.Commands
                         }
                     }
                     break;
+
+				case "mlxp":
+					{
+						var player = client.Player.TargetObject as GamePlayer;
+						try
+						{
+							if (args.Length != 3)
+							{
+								DisplaySyntax(client);
+								return;
+							}
+
+							if (player == null)
+								player = client.Player;
+
+							// WIP, For the moment it simply sets MLExperience - Tolakram
+
+							long amount = long.Parse(args[2]);
+
+							player.MLExperience += amount;
+							client.Out.SendMessage("You gave " + player.Name + " " + amount + " ML experience succesfully!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you " + amount + " ML experience!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
+							if (player.MLExperience > player.GetMLExperienceForLevel(player.MLLevel + 1))
+							{
+								player.MLExperience = player.GetMLExperienceForLevel(player.MLLevel + 1);
+							}
+
+							if (player.MLExperience < 0)
+							{
+								player.MLExperience = 0;
+							}
+
+							player.SaveIntoDatabase();
+							player.Out.SendUpdatePlayer();
+							player.Out.SendMasterLevelWindow((byte)player.MLLevel);
+						}
+						catch (Exception)
+						{
+							DisplaySyntax(client);
+							return;
+						}
+					}
+					break;
 
                 case "bps":
                     {
@@ -2034,8 +2211,22 @@ namespace DOL.GS.Commands
 			text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " + player.CharacterClass.Name);
 			text.Add("  - Guild : " + player.GuildName);
 			text.Add("  - XPs/RPs/BPs : " + player.Experience + " xp, " + player.RealmPoints + " rp, " + player.BountyPoints + " bp");
-			text.Add("  - MLXP/ML : " + player.MLExperience + " mlxp, ML " + player.ML + ", MLGranted: " + player.MLGranted);
-			text.Add("  - CLXP/CL : " + player.ChampionExperience + " clxp, CL " + player.ChampionLevel + ", Champion: " + player.Champion);
+			if (player.Champion)
+			{
+				text.Add("  - Champion :  CL " + player.ChampionLevel + ", " + player.ChampionExperience + " clxp");
+			}
+			else
+			{
+				text.Add("  - Champion :  Not Started");
+			}
+			if (player.MLGranted)
+			{
+				text.Add("  - Master Levels :  ML " + player.MLLevel + ", " + player.MLExperience + " mlxp , MLLine " + player.MLLine);
+			}
+			else
+			{
+				text.Add("  - Master Levels :  Not Started");
+			}
 			text.Add("  - Craftingskill : " + player.CraftingPrimarySkill + "");
 			text.Add("  - Money : " + Money.GetString(player.GetCurrentMoney()) + "");
 			text.Add("  - Model ID : " + player.Model);

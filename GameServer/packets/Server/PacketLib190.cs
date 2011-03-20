@@ -173,56 +173,46 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendMasterLevelWindow(byte ml)
 		{
-			// If required ML=0 then send current player ML data
-			byte mlrequired = (byte)(ml == 0 ? (m_gameClient.Player.MLLevel == 0 ? 1 : m_gameClient.Player.MLLevel) : ml);
+			if (m_gameClient == null || m_gameClient.Player == null)
+				return;
 
-			string description = "";
-			double MLXPpercent = 0;
+			// If required ML=0 then send current player ML data
+			byte mlToSend = (byte)(ml == 0 ? (m_gameClient.Player.MLLevel == 0 ? 1 : m_gameClient.Player.MLLevel) : ml);
+
+			if (mlToSend > GamePlayer.ML_MAX_LEVEL)
+				mlToSend = GamePlayer.ML_MAX_LEVEL;
+
+			double mlXPPercent = 0;
+			double mlStepPercent = 0;
 
 			if (m_gameClient.Player.MLLevel < 10)
-				MLXPpercent = 100.0 * (double)m_gameClient.Player.MLExperience / (double)m_gameClient.Player.GetMLExperienceForLevel((int)(m_gameClient.Player.MLLevel+1));
-			else MLXPpercent = 100.0; // ML10 has no MLXP, so always 100%
+			{
+				mlXPPercent = 100.0 * (double)m_gameClient.Player.MLExperience / (double)m_gameClient.Player.GetMLExperienceForLevel((int)(m_gameClient.Player.MLLevel + 1));
+				if (m_gameClient.Player.GetStepCountForML((byte)(m_gameClient.Player.MLLevel + 1)) > 0)
+				{
+					mlStepPercent = 100.0 * (double)m_gameClient.Player.GetCountMLStepsCompleted((byte)(m_gameClient.Player.MLLevel + 1)) / (double)m_gameClient.Player.GetStepCountForML((byte)(m_gameClient.Player.MLLevel + 1));
+				}
+			}
+			else
+			{
+				mlXPPercent = 100.0; // ML10 has no MLXP, so always 100%
+			}
 
 			GSTCPPacketOut pak = new GSTCPPacketOut((byte)eServerPackets.MasterLevelWindow);
-			pak.WriteByte((byte)MLXPpercent); // MLXP (displayed in window)
-			pak.WriteByte((byte)100);
-			pak.WriteByte((byte)(m_gameClient.Player.MLLevel+1)); // ML level + 1
+			pak.WriteByte((byte)mlXPPercent); // MLXP (blue bar)
+			pak.WriteByte((byte)Math.Min(mlStepPercent, 100)); // Step percent (red bar)
+			pak.WriteByte((byte)(m_gameClient.Player.MLLevel + 1)); // ML level + 1
 			pak.WriteByte(0);
 			pak.WriteShort((ushort)0); // exp1 ? new in 1.90
 			pak.WriteShort((ushort)0); // exp2 ? new in 1.90
-			pak.WriteByte(ml); // Required ML
-			if (mlrequired < 10)
-			{
-				// ML level completition is displayed client side (Step 11)
-				for (int i = 1; i < 11; i++)
-				{
-                    if (!m_gameClient.Player.HasFinishedMLStep((int)mlrequired, i))
-                    {
-                        if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                            //description = i.ToString() + ". " +
-                            //    LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsUncomplete[mlrequired - 1, i - 1], "");
-                            description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsUncomplete[mlrequired - 1, i - 1], "");
-                        else
-                            //description = i.ToString() + ". " +
-                            //    LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", mlrequired, i));
-                            description = LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", mlrequired, i));
-                    }
-                    else
-                    {
-                        if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                            //description = i.ToString() + ". " +
-                            //    LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsComplete[mlrequired - 1, i - 1], "");
-                            description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsComplete[mlrequired - 1, i - 1], "");
-                        else
-                            //description = i.ToString() + ". " +
-                            //    LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", mlrequired, i));
-                            description = LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", mlrequired, i));
-                    }
+			pak.WriteByte(ml); 
 
-					pak.WritePascalString(description);
-				}
+			// ML level completion is displayed client side for Step 11
+			for (int i = 1; i < 11; i++)
+			{
+				string description = m_gameClient.Player.GetMLStepDescription(mlToSend, i);
+				pak.WritePascalString(description);
 			}
-			else pak.WriteByte(0);
 
 			pak.WriteByte(0);
 			SendTCP(pak);
