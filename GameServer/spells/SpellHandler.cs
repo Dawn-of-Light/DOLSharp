@@ -3465,7 +3465,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 				spellLevel += (int)effect.Spell.Value;
 			}
 
-			if (playerCaster != null && (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName == GlobalSpellsLines.Champion_Spells))
+			if (playerCaster != null && (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells)))
 			{
 				spellLevel = Math.Min(playerCaster.MaxLevel, target.Level);
 			}

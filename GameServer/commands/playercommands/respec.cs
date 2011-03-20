@@ -250,7 +250,7 @@ namespace DOL.GS.Commands
 			player.Out.SendUpdatePlayerSkills();
 			player.Out.SendUpdatePoints();
 			player.Out.SendUpdatePlayer();
-			player.Out.SendTrainerWindow();
+			player.SendTrainerWindow();
 			player.SaveIntoDatabase();
 		}
 	}

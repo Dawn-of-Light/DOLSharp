@@ -47,7 +47,7 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Constructs a new PacketLib for Version 1.68 clients
@@ -675,16 +675,16 @@ namespace DOL.GS.PacketHandler
 			Region playerRegion = playerToCreate.CurrentRegion;
 			if (playerRegion == null)
 			{
-				if (Log.IsWarnEnabled)
-					Log.Warn("SendPlayerCreate: playerRegion == null");
+				if (log.IsWarnEnabled)
+					log.Warn("SendPlayerCreate: playerRegion == null");
 				return;
 			}
 
 			Zone playerZone = playerToCreate.CurrentZone;
 			if (playerZone == null)
 			{
-				if (Log.IsWarnEnabled)
-					Log.Warn("SendPlayerCreate: playerZone == null");
+				if (log.IsWarnEnabled)
+					log.Warn("SendPlayerCreate: playerZone == null");
 				return;
 			}
 
@@ -1263,7 +1263,7 @@ namespace DOL.GS.PacketHandler
 				slot = (steed as GameNPC).RiderSlot(rider as GamePlayer);
 			}
 			if (slot == -1)
-				Log.Error("SendRiding error, slot is -1 with rider " + rider.Name + " steed " + steed.Name);
+				log.Error("SendRiding error, slot is -1 with rider " + rider.Name + " steed " + steed.Name);
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Riding)))
 			{
 				pak.WriteShort((ushort) rider.ObjectID);
@@ -1836,8 +1836,8 @@ namespace DOL.GS.PacketHandler
 							}
 							else
 							{
-								if (Log.IsErrorEnabled)
-									Log.Error("Merchant item template '" +
+								if (log.IsErrorEnabled)
+									log.Error("Merchant item template '" +
 									          ((MerchantItem) itemsInPage[page*MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS + i]).ItemTemplateID +
 									          "' not found, abort!!!");
 								return;
@@ -2046,9 +2046,7 @@ namespace DOL.GS.PacketHandler
 
 			try
 			{
-				bool flagSendHybrid = true;
-				if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
-					flagSendHybrid = false;
+				bool sendHybridList = m_gameClient.Player.CharacterClass.ClassType != eClassType.ListCaster;
 
 				lock (skills.SyncRoot)
 				{
@@ -2059,7 +2057,8 @@ namespace DOL.GS.PacketHandler
 							lock (m_gameClient.Player.lockSpellLinesList)
 							{
 								int skillCount = specs.Count + skills.Count + styles.Count;
-								if (flagSendHybrid)
+
+								if (sendHybridList)
 									skillCount += m_gameClient.Player.GetSpellCount();
 
 								pak.WriteByte(0x01); //subcode
@@ -2143,10 +2142,9 @@ namespace DOL.GS.PacketHandler
 									pak.WriteShort((ushort) style.Icon);
 									pak.WritePascalString(style.Name);
 								}
-								if (flagSendHybrid)
+								if (sendHybridList)
 								{
-									Dictionary<string, KeyValuePair<Spell, SpellLine>> spells = m_gameClient.Player.GetUsableSpells(spelllines,
-									                                                                                                false);
+									Dictionary<string, KeyValuePair<Spell, SpellLine>> spells = m_gameClient.Player.GetUsableSpells(spelllines, false);
 
 									foreach (var spell in spells)
 									{
@@ -2199,59 +2197,60 @@ namespace DOL.GS.PacketHandler
 		}
 
 		/// <summary>
-		/// Send spell list to client.  This includes list caster spells and advanced (Champion, ML ...) spell lines
-		/// Hybrid spells are handled in SendUpdatePlayerSkills()
+		/// Send spell list to client.
 		/// </summary>
 		public virtual void SendSpellList()
 		{
-			IList spelllines = m_gameClient.Player.GetSpellLines();
-			byte linenumber = 0;
-			// by stexx78 - Changed bool var name to isPureTank because hybrid are handled totally in SendUpdatePlayerSkills()
-			bool isPureTank = true;
-			if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
-				isPureTank = false;
+			GamePlayer player = m_gameClient.Player;
+			if (player == null)
+				return;
 
-			lock (spelllines.SyncRoot)
+			IList spellLines = m_gameClient.Player.GetSpellLines();
+
+			lock (spellLines.SyncRoot)
 			{
-				foreach (SpellLine line in spelllines)
+				foreach (SpellLine line in spellLines)
 				{
-					// For Puretank only send the advanced spell lines here
-					if (isPureTank && m_gameClient.Player.IsAdvancedSpellLine(line) == false)
-						continue;
+					int lineIndex = player.GetSpellLines().IndexOf(line);
 
-					// make a copy
-					var spells = new List<Spell>(SkillBase.GetSpellList(line.KeyName));
-
-					int spellcount = 0;
-					for (int i = 0; i < spells.Count; i++)
+					// We only handle list caster spells or advanced lines here
+					if (player.CharacterClass.ClassType == eClassType.ListCaster || player.IsAdvancedSpellLine(line))
 					{
-						if ((spells[i]).Level <= line.Level)
-						{
-							spellcount++;
-						}
-					}
+						// make a copy
+						var spells = new List<Spell>(SkillBase.GetSpellList(line.KeyName));
 
-					using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
-					{
-						pak.WriteByte(0x02); //subcode
-						pak.WriteByte((byte) (spellcount + 1)); //number of entry
-						pak.WriteByte(0x02); //subtype
-						pak.WriteByte(linenumber++); //number of line
-						pak.WriteByte(0); // level, not used when spell line
-						pak.WriteShort(0); // icon, not used when spell line
-						pak.WritePascalString(line.Name);
-
-						foreach (Spell spell in spells)
+						int spellCount = 0;
+						for (int i = 0; i < spells.Count; i++)
 						{
-							if (spell.Level <= line.Level)
+							if ((spells[i]).Level <= line.Level)
 							{
-								pak.WriteByte((byte) spell.Level);
-								pak.WriteShort(spell.Icon);
-								pak.WritePascalString(spell.Name);
+								spellCount++;
 							}
 						}
 
-						SendTCP(pak);
+						using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
+						{
+							pak.WriteByte(0x02); //subcode
+							pak.WriteByte((byte)(spellCount + 1)); //number of entry
+							pak.WriteByte(0x02); //subtype
+							pak.WriteByte((byte)lineIndex); //number of line
+							pak.WriteByte(0); // level, not used when spell line
+							pak.WriteShort(0); // icon, not used when spell line
+							pak.WritePascalString(line.Name);
+
+							foreach (Spell spell in spells)
+							{
+								if (spell.Level <= line.Level)
+								{
+									// log.DebugFormat("{0} - icon {1}, {2}, level {3}", lineIndex, spell.Icon, spell.Name, spell.Level);
+									pak.WriteByte((byte)spell.Level);
+									pak.WriteShort(spell.Icon);
+									pak.WritePascalString(spell.Name);
+								}
+							}
+
+							SendTCP(pak);
+						}
 					}
 				}
 			}
@@ -2475,7 +2474,7 @@ namespace DOL.GS.PacketHandler
 						}
 						else
 						{
-							Log.ErrorFormat("Missing champion spell ID: {0} for ID line: {1}", spec.SpellID, spec.IdLine);
+							log.ErrorFormat("Missing champion spell ID: {0} for ID line: {1}", spec.SpellID, spec.IdLine);
 						}
 					}
 				}
@@ -2523,7 +2522,7 @@ namespace DOL.GS.PacketHandler
 							}
 							else
 							{
-								Log.Error("Ability " + ab.Name + " not found unexpectly");
+								log.Error("Ability " + ab.Name + " not found unexpectly");
 							}
 						}
 					}
@@ -3708,14 +3707,14 @@ namespace DOL.GS.PacketHandler
 					string desc = quest.Description;
 					if (name.Length > byte.MaxValue)
 					{
-						if (Log.IsWarnEnabled)
-							Log.Warn(quest.GetType() + ": name is too long for 1.68+ clients (" + name.Length + ") '" + name + "'");
+						if (log.IsWarnEnabled)
+							log.Warn(quest.GetType() + ": name is too long for 1.68+ clients (" + name.Length + ") '" + name + "'");
 						name = name.Substring(0, byte.MaxValue);
 					}
 					if (desc.Length > byte.MaxValue)
 					{
-						if (Log.IsWarnEnabled)
-							Log.Warn(quest.GetType() + ": description is too long for 1.68+ clients (" + desc.Length + ") '" + desc + "'");
+						if (log.IsWarnEnabled)
+							log.Warn(quest.GetType() + ": description is too long for 1.68+ clients (" + desc.Length + ") '" + desc + "'");
 						desc = desc.Substring(0, byte.MaxValue);
 					}
 					pak.WriteByte((byte) name.Length);
@@ -3770,8 +3769,8 @@ namespace DOL.GS.PacketHandler
 
 			if (name.Length > ushort.MaxValue)
 			{
-				if (Log.IsWarnEnabled)
-					Log.Warn("Task packet name is too long for 1.71 clients (" + name.Length + ") '" + name + "'");
+				if (log.IsWarnEnabled)
+					log.Warn("Task packet name is too long for 1.71 clients (" + name.Length + ") '" + name + "'");
 				name = name.Substring(0, ushort.MaxValue);
 			}
 			if (name.Length > 2048 - 10)

@@ -1071,9 +1071,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 							Spell spell = SkillBase.GetSpellByID(spec.SpellID);
 							if (spell != null)
 							{
-								SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Champion_Spells + client.Player.Name);
-								caption = spell.Name;
-								WriteSpellInfo(objectInfo, spell, spellLine, client);
+								SpellLine spellLine = client.Player.GetChampionSpellLine();
+								if (spellLine != null)
+								{
+									caption = spell.Name;
+									WriteSpellInfo(objectInfo, spell, spellLine, client);
+								}
+								else
+								{
+									objectInfo.Add("Champion spell line not found!");
+								}
 							}
 						}
 						break;
