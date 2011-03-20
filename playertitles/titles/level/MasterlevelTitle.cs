@@ -63,7 +63,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>true if the player is suitable for this title.</returns>
 		public override bool IsSuitable(GamePlayer player)
 		{
-			return player.ML > 0;
+			return player.MLLine > 0;
 		}
 		
 		/// <summary>

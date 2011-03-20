@@ -3551,59 +3551,36 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendMasterLevelWindow(byte ml)
 		{
 			// If required ML=0 then send current player ML data
-			byte mlrequired = (ml == 0
+			byte mlRequired = (ml == 0
 			                   ? ((byte) m_gameClient.Player.MLLevel == 0 ? (byte) 1 : (byte) m_gameClient.Player.MLLevel)
 			                   : ml);
 
-			double mlxpPercent = 0;
+			double mlXPPercent = 0;
 
 			if (m_gameClient.Player.MLLevel < 10)
 			{
-				mlxpPercent = 100.0*m_gameClient.Player.MLExperience/
+				mlXPPercent = 100.0*m_gameClient.Player.MLExperience/
 					m_gameClient.Player.GetMLExperienceForLevel((m_gameClient.Player.MLLevel + 1));
 			}
 			else
 			{
-				mlxpPercent = 100.0; // ML10 has no MLXP, so always 100%
+				mlXPPercent = 100.0; // ML10 has no MLXP, so always 100%
 			}
 
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MasterLevelWindow)))
 			{
-				pak.WriteByte((byte) mlxpPercent); // MLXP (displayed in window)
+				pak.WriteByte((byte) mlXPPercent); // MLXP (displayed in window)
 				pak.WriteByte(0x64);
 				pak.WriteByte((byte) (m_gameClient.Player.MLLevel + 1)); // ML level + 1
 				pak.WriteByte(0x00);
 				pak.WriteByte(ml); // Required ML
 
-				if (mlrequired < 10)
+				if (mlRequired < 10)
 				{
-					// ML level completition is displayed client side (Step 11)
+					// ML level completion is displayed client side for Step 11
 					for (int i = 1; i < 11; i++)
 					{
-						string description = "";
-                        if (!m_gameClient.Player.HasFinishedMLStep(mlrequired, i))
-                        {
-                            if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                                //description = i.ToString() + ". " +
-                                //    LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsUncomplete[mlrequired - 1, i - 1], "");
-                                description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsUncomplete[mlrequired - 1, i - 1], "");
-                            else
-                                //description = i.ToString() + ". " +
-                                //    LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", mlrequired, i));
-                                description = LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", mlrequired, i));
-                        }
-                        else
-                        {
-                            if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                                //description = i.ToString() + ". " +
-                                //    LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsComplete[mlrequired - 1, i - 1], "");
-                                description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsComplete[mlrequired - 1, i - 1], "");
-                            else
-                                //description = i.ToString() + ". " +
-                                //    LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", mlrequired, i));
-                                description = LanguageMgr.GetTranslation(m_gameClient, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", mlrequired, i));
-                        }
-
+						string description = m_gameClient.Player.GetMLStepDescription(mlRequired, i);
 						pak.WritePascalString(description);
 					}
 				}
