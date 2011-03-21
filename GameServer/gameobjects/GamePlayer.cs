@@ -3118,7 +3118,8 @@ namespace DOL.GS
 
 			if (CharacterClass.ID 	 != (int)eCharacterClass.Nightshade
 			    && CharacterClass.ID != (int)eCharacterClass.Infiltrator
-			    && CharacterClass.ID != (int)eCharacterClass.Shadowblade
+				&& CharacterClass.ID != (int)eCharacterClass.Minstrel
+				&& CharacterClass.ID != (int)eCharacterClass.Shadowblade
 				&& CharacterClass.ID != (int)eCharacterClass.Vampiir
 				&& CharacterClass.ID != (int)eCharacterClass.Hero
 			    && CharacterClass.ID != (int)eCharacterClass.Armsman
