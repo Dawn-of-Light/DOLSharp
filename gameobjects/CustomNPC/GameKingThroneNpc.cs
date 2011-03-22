@@ -56,11 +56,14 @@ namespace DOL.GS
 
 				if ( cllevel )
 				{
-					// TODO: Out.Message (MLXP)
-					// TODO: check CL message text against live
 					player.Out.SendMessage( "You reached champion level " + player.ChampionLevel + "!", eChatType.CT_System, eChatLoc.CL_PopupWindow );
-					//player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "KingNPC.WhisperReceive.NewLevelMessage"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
+
+				if (player.ChampionLevel >= 5)
+				{
+					player.Out.SendMessage("I can [respecialize] your champion skills if you so desire.", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				}
+
 			}
 
 			return true;
@@ -89,6 +92,13 @@ namespace DOL.GS
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "KingNPC.WhisperReceive.IsNowChampion"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				return true;
 			}
+
+			if (str.ToLower() == "respecialize" && player.Champion && player.ChampionLevel >= 5)
+			{
+				player.RespecChampionSkills();
+				player.Out.SendMessage("I have reset your champion skills!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
+
 			return true;
 		}
 	}
