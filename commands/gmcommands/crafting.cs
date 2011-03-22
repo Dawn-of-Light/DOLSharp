@@ -271,7 +271,7 @@ namespace DOL.GS.Commands
 									target.Out.SendUpdateCraftingSkills();
 									target.SaveIntoDatabase();
 									DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.SkillChanged", skill.Name));
-									DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.NowHasSkillPoints", target.Name, target.GetCraftingSkillValue(craftingSkillID)));
+									DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.NowHasSkillPoints", target.Name, target.GetCraftingSkillValue(craftingSkillID), (eCraftingSkill)craftingSkillID));
 								}
 							}
 							catch (Exception)
