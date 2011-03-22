@@ -33,7 +33,7 @@ namespace DOL.GS
 
         protected abstract String Profession { get; }
 
-        private static String GetTitleFormat(int skillLevel)
+        public static String GetTitleFormat(int skillLevel)
         {
             if (skillLevel < 0)
                 throw new ArgumentOutOfRangeException("crafter skill level must be >= 0");

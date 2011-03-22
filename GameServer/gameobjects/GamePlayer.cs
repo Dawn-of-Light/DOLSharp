@@ -13284,22 +13284,24 @@ namespace DOL.GS
 
 		#region Crafting
 
+		public Object CraftingLock = new Object();
+
 		/// <summary>
 		/// Store all player crafting skill and their value (eCraftingSkill => Value)
 		/// </summary>
-		private Hashtable craftingSkills = new Hashtable(6);
+		protected Dictionary<eCraftingSkill, int> m_craftingSkills = new Dictionary<eCraftingSkill, int>();
 
 		/// <summary>
 		/// Store the player primary crafting skill
 		/// </summary>
-		private eCraftingSkill m_craftingPrimarySkill = 0;
+		protected eCraftingSkill m_craftingPrimarySkill = 0;
 
 		/// <summary>
 		/// Get all player crafting skill and their value
 		/// </summary>
-		public Hashtable CraftingSkills
+		public Dictionary<eCraftingSkill, int> CraftingSkills
 		{
-			get { return craftingSkills; }
+			get { return m_craftingSkills; }
 		}
 
 		/// <summary>
@@ -13318,10 +13320,10 @@ namespace DOL.GS
 		/// <returns>the level in the specified crafting if valid and -1 if not</returns>
 		public virtual int GetCraftingSkillValue(eCraftingSkill skill)
 		{
-			lock (craftingSkills.SyncRoot)
+			lock (CraftingLock)
 			{
-				if (craftingSkills[(int)skill] == null) return -1;
-				return Convert.ToInt32(craftingSkills[(int)skill]);
+				if (m_craftingSkills[skill] == null) return -1;
+				return m_craftingSkills[skill];
 			}
 		}
 
@@ -13335,13 +13337,13 @@ namespace DOL.GS
 		{
 			if (skill == eCraftingSkill.NoCrafting) return false;
 
-			lock (craftingSkills.SyncRoot)
+			lock (CraftingLock)
 			{
 				AbstractCraftingSkill craftingSkill = CraftingMgr.getSkillbyEnum(skill);
 				if (craftingSkill != null && count >0)
 				{
-					craftingSkills[(int)skill] = count + Convert.ToInt32(craftingSkills[(int)skill]);
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainCraftingSkill.GainSkill", craftingSkill.Name, craftingSkills[(int)skill]), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					m_craftingSkills[skill] = count + m_craftingSkills[skill];
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainCraftingSkill.GainSkill", craftingSkill.Name, m_craftingSkills[skill]), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					int currentSkillLevel = GetCraftingSkillValue(skill);
 					if (HasPlayerReachedNewCraftingTitle(currentSkillLevel))
 					{
@@ -13432,7 +13434,7 @@ namespace DOL.GS
 			}
 		}
 
-		protected bool HasPlayerReachedNewCraftingTitle(int skillLevel)
+		protected virtual bool HasPlayerReachedNewCraftingTitle(int skillLevel)
 		{
 			// no titles after 1000 any more, checked in 1.97
 			if (skillLevel <= 1000)
@@ -13459,14 +13461,14 @@ namespace DOL.GS
 			if (CraftingPrimarySkill == eCraftingSkill.NoCrafting)
 				CraftingPrimarySkill = eCraftingSkill.BasicCrafting;
 
-			lock (craftingSkills.SyncRoot)
+			lock (CraftingLock)
 			{
-				if (!craftingSkills.ContainsKey((int)skill))
+				if (m_craftingSkills.ContainsKey(skill))
 				{
 					AbstractCraftingSkill craftingSkill = CraftingMgr.getSkillbyEnum(skill);
 					if (craftingSkill != null)
 					{
-						craftingSkills.Add(Convert.ToInt32(skill), startValue);
+						m_craftingSkills.Add(skill, startValue);
 						Out.SendMessage("You gain skill in " + craftingSkill.Name + "! (" + startValue + ").", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						return true;
 					}
@@ -13500,11 +13502,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the craft title string of the player
 		/// </summary>
-		public string CraftTitle
+		public virtual string CraftTitle
 		{
 			get
 			{
-				if (CraftingPrimarySkill == eCraftingSkill.NoCrafting || !craftingSkills.ContainsKey((int)CraftingPrimarySkill))
+				if (CraftingPrimarySkill == eCraftingSkill.NoCrafting || !m_craftingSkills.ContainsKey(CraftingPrimarySkill))
 				{
 					return "";
 				}
@@ -13512,15 +13514,13 @@ namespace DOL.GS
 				AbstractCraftingSkill craftingSkill = CraftingMgr.getSkillbyEnum(CraftingPrimarySkill);
 
 				return (craftingSkill is AbstractProfession)
-					? (craftingSkill as AbstractProfession).GetTitle((int)craftingSkills[(int)CraftingPrimarySkill])
+					? (craftingSkill as AbstractProfession).GetTitle((int)m_craftingSkills[CraftingPrimarySkill])
 					: "";
-
-				//return ((AbstractCraftingSkill)CraftingMgr.getSkillbyEnum(CraftingPrimarySkill)).CRAFTER_TITLE_PREFIX+" "+GlobalConstants.CraftLevelToCraftTitle((int)craftingSkills[(int)CraftingPrimarySkill]);
 			}
 		}
 
 		/// <summary>
-		/// This function save all player crafting skill in the db
+		/// This function saves all player crafting skill in the db
 		/// </summary>
 		protected void SaveCraftingSkills()
 		{
@@ -13530,13 +13530,10 @@ namespace DOL.GS
 
 			if (CraftingPrimarySkill != eCraftingSkill.NoCrafting)
 			{
-				lock (craftingSkills.SyncRoot)
+				lock (CraftingLock)
 				{
-					foreach (DictionaryEntry de in craftingSkills)
+					foreach (KeyValuePair<eCraftingSkill, int> de in m_craftingSkills)
 					{
-						//						eCraftingSkill skill = (eCraftingSkill)de.Key;
-						//						int valeur = Convert.ToInt32(de.Value);
-
 						if (cs.Length > 0) cs += ";";
 
 						cs += Convert.ToInt32(de.Key) + "|" + Convert.ToInt32(de.Value);
@@ -13563,7 +13560,7 @@ namespace DOL.GS
 			{
 				CraftingPrimarySkill = (eCraftingSkill)DBCharacter.CraftingPrimarySkill;
 
-				lock (craftingSkills.SyncRoot)
+				lock (CraftingLock)
 				{
 					foreach (string skill in DBCharacter.SerializedCraftingSkills.SplitCSV())
 					{
@@ -13590,11 +13587,11 @@ namespace DOL.GS
 									case "BasicCrafting": i = 15; break;
 
 							}
-							if (!craftingSkills.ContainsKey(i))
+							if (!m_craftingSkills.ContainsKey((eCraftingSkill)i))
 							{
-								if (isCraftingSkillInEnum(Convert.ToInt32(values[0])))
+								if (IsCraftingSkillDefined(Convert.ToInt32(values[0])))
 								{
-									craftingSkills.Add(i, Convert.ToInt32(values[1]));
+									m_craftingSkills.Add((eCraftingSkill)i, Convert.ToInt32(values[1]));
 								}
 								else
 								{
@@ -13604,11 +13601,11 @@ namespace DOL.GS
 
 						}
 						//Load by number
-						else if (!craftingSkills.ContainsKey(Convert.ToInt32(values[0])))
+						else if (!m_craftingSkills.ContainsKey((eCraftingSkill)Convert.ToInt32(values[0])))
 						{
-							if(isCraftingSkillInEnum(Convert.ToInt32(values[0])))
+							if(IsCraftingSkillDefined(Convert.ToInt32(values[0])))
 							{
-								craftingSkills.Add(Convert.ToInt32(values[0]), Convert.ToInt32(values[1]));
+								m_craftingSkills.Add((eCraftingSkill)Convert.ToInt32(values[0]), Convert.ToInt32(values[1]));
 							}
 							else
 							{
@@ -13625,7 +13622,7 @@ namespace DOL.GS
 			}
 		}
 
-		private bool isCraftingSkillInEnum(int craftingSkillToCheck)
+		private bool IsCraftingSkillDefined(int craftingSkillToCheck)
 		{
 			return Enum.IsDefined(typeof(eCraftingSkill), craftingSkillToCheck);
 		}
@@ -13633,7 +13630,7 @@ namespace DOL.GS
         /// <summary>
         /// This function is called each time a player tries to make a item
         /// </summary>
-        public void CraftItem(ushort itemID)
+        public virtual void CraftItem(ushort itemID)
         {
             DBCraftedItem recipe = GameServer.Database.SelectObject<DBCraftedItem>("CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
             if (recipe != null)
@@ -13674,7 +13671,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This function is called each time a player try to salvage a item
 		/// </summary>
-		public void SalvageItem(InventoryItem item)
+		public virtual void SalvageItem(InventoryItem item)
 		{
 			Salvage.BeginWork(this, item);
 		}
@@ -13682,7 +13679,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This function is called each time a player try to repair a item
 		/// </summary>
-		public void RepairItem(InventoryItem item)
+		public virtual void RepairItem(InventoryItem item)
 		{
 			Repair.BeginWork(this, item);
 		}
@@ -15446,33 +15443,33 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the Masterlevel window text for a ML and Step
 		/// </summary>
-		/// <param name="masterLevel"></param>
+		/// <param name="ml"></param>
 		/// <param name="step"></param>
 		/// <returns></returns>
-		public virtual string GetMLStepDescription(int masterLevel, int step)
+		public virtual string GetMLStepDescription(byte ml, int step)
 		{
-			string description = "Not found";
+			string description = " ";
 
-			if (HasFinishedMLStep(masterLevel, step))
+			if (HasFinishedMLStep(ml, step))
 			{
 				if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
 				{
-					description = LanguageMgr.GetTranslation(Client, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsComplete[masterLevel - 1, step - 1], "");
+					description = LanguageMgr.GetTranslation(Client, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsComplete[ml - 1, step - 1], "");
 				}
 				else
 				{
-					description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", masterLevel, step));
+					description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", ml, step));
 				}
 			}
 			else
 			{
 				if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
 				{
-					description = LanguageMgr.GetTranslation(Client, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsUncomplete[masterLevel - 1, step - 1], "");
+					description = LanguageMgr.GetTranslation(Client, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsUncomplete[ml - 1, step - 1], "");
 				}
 				else
 				{
-					description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", masterLevel, step));
+					description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", ml, step));
 				}
 			}
 
