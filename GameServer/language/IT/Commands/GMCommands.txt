@@ -69,8 +69,8 @@ GMCommands.Crafting.InvalidSkill:			Devi digitare un valido Id dell'abilità art
 GMCommands.Crafting.SkillAdded:				Abilità artigianale {0} aggiunti correttamente.
 GMCommands.Crafting.AlreadyHaveSkill:		{0} ha già abilità artigianale {1}.
 GMCommands.Crafting.NotHaveSkillAddIt:		{0} non ha l'abilità artigianale {1}, aggiungerla prima.
-GMCommands.Crafting.SkillChanged:			Abilità artigianale {1} cambiata correttamente.
-GMCommands.Crafting.NowHasSkillPoints:		{0} ha ora {} in {}.
+GMCommands.Crafting.SkillChanged:			Abilità artigianale {0} cambiata correttamente.
+GMCommands.Crafting.NowHasSkillPoints:		{0} ha ora {1} in {2}.
 
 
 # /debug Command

@@ -2268,7 +2268,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x03); //subtype
 				pak.WriteByte(0x00); //unk
 
-				foreach (DictionaryEntry de in (Hashtable) m_gameClient.Player.CraftingSkills.Clone())
+				foreach (KeyValuePair<eCraftingSkill, int> de in m_gameClient.Player.CraftingSkills)
 				{
 					AbstractCraftingSkill curentCraftingSkill = CraftingMgr.getSkillbyEnum((eCraftingSkill) de.Key);
 					pak.WriteShort(Convert.ToUInt16(de.Value)); //points
