@@ -55,9 +55,9 @@ GMCommands.Crafting.Description:			Change the crafting level of your target
 GMCommands.Crafting.InvalidSkill:			You must enter a valid crafting skill id, type /crafting for command overview.
 GMCommands.Crafting.NoPlayerTarget:			You must target a player to use this command.
 GMCommands.Crafting.NotHaveSkillAddIt:			{0} does not have the crafting skill {1}, add it first.
-GMCommands.Crafting.NowHasSkillPoints:			{0} now has {} in {}.
+GMCommands.Crafting.NowHasSkillPoints:			{0} now has {1} in {2}.
 GMCommands.Crafting.SkillAdded:				Crafting skill {0} correctly added.
-GMCommands.Crafting.SkillChanged:			Crafting skill {1} correctly changed.
+GMCommands.Crafting.SkillChanged:			Crafting skill {0} correctly changed.
 GMCommands.Crafting.SkillDescription:			Crafting Skill ID description:
 GMCommands.Crafting.Usage.Add:				'/crafting add <craftingSkillID> <startLevel>' To add a new crating skill to your target
 GMCommands.Crafting.Usage.Change:			'/crafting change <craftingSkillID> <amount>' To increase or decrease the crafting skill level of your target
