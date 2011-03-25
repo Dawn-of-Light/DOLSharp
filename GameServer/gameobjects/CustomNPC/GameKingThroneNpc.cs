@@ -96,7 +96,8 @@ namespace DOL.GS
 			if (str.ToLower() == "respecialize" && player.Champion && player.ChampionLevel >= 5)
 			{
 				player.RespecChampionSkills();
-				player.Out.SendMessage("I have reset your champion skills!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.SaveIntoDatabase();
+				player.Out.SendMessage("I have reset your champion skills!", eChatType.CT_Important, eChatLoc.CL_PopupWindow);
 			}
 
 			return true;

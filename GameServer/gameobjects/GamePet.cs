@@ -309,7 +309,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected override Style GetStyleToUse()
 		{
-			if (Styles.Count > 0 && Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE + Styles.Count))
+			if (Styles != null && Styles.Count > 0 && Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE + Styles.Count))
 			{
 				Style style = (Style)Styles[Util.Random(Styles.Count - 1)];
 				if (StyleProcessor.CanUseStyle(this, style, AttackWeapon))

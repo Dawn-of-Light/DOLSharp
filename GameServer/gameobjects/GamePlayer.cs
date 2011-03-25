@@ -2846,14 +2846,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Removes the existing specialization from the player, the line instance should be called with GamePlayer.GetSpellLine ONLY and NEVER SkillBase.GetSpellLine!!!!!
+		/// Removes the existing spellline from the player, the line instance should be called with GamePlayer.GetSpellLine ONLY and NEVER SkillBase.GetSpellLine!!!!!
 		/// </summary>
 		/// <param name="line">The spell line to remove</param>
 		/// <returns>true if removed</returns>
 		protected virtual bool RemoveSpellLine(SpellLine line)
 		{
 			if (!m_spellLines.Contains(line))
+			{
 				return false;
+			}
 
 			lock (lockSpellLinesList)
 			{
@@ -3522,28 +3524,21 @@ namespace DOL.GS
 						// If there is a special rule for a spelltype then spells of that spelltype should be provided with
 						// a unique spellgroup number to ensure they get included in the list.
 
-						if (spell.Value.KeyName == ChampionSpellLineName)
+						key = spell.Value.KeyName + "+" + spell.Key.SpellType + "+" + spell.Key.Target;
+
+						if (spell.Key.CastTime == 0)
 						{
-							key = (counter++).ToString("000") + ChampionSpellLineName;
+							key += "+INSTANT";
 						}
-						else
+
+						if (spell.Key.Radius > 0)
 						{
-							key = spell.Value.KeyName + "+" + spell.Key.SpellType + "+" + spell.Key.Target;
+							key += "+AOE";
+						}
 
-							if (spell.Key.CastTime == 0)
-							{
-								key += "+INSTANT";
-							}
-
-							if (spell.Key.Radius > 0)
-							{
-								key += "+AOE";
-							}
-
-							if (spell.Key.SubSpellID > 0)
-							{
-								key += "+SUB";
-							}
+						if (spell.Key.SubSpellID > 0)
+						{
+							key += "+SUB";
 						}
 					}
 					else
@@ -15052,8 +15047,10 @@ namespace DOL.GS
 
 			if (championSpellLine != null)
 			{
-				SkillBase.ClearSpellLine(ChampionSpellLineName);
 				RemoveSpellLine(ChampionSpellLineName);
+				SkillBase.ClearSpellLine(ChampionSpellLineName);
+				SkillBase.UnRegisterSpellLine(ChampionSpellLineName);
+				GetChampionSpellLine();
 				ChampionSpells = "";
 				ChampionSpecialtyPoints = ChampionLevel;
 				UpdateSpellLineLevels(false);
@@ -15062,7 +15059,6 @@ namespace DOL.GS
 				Out.SendUpdatePoints();
 				Out.SendUpdatePlayerSkills();
 				UpdatePlayerStatus();
-				SaveIntoDatabase();
 			}
 		}
 
@@ -15081,15 +15077,16 @@ namespace DOL.GS
 
 			if (championSpellLine != null)
 			{
-				SkillBase.ClearSpellLine(ChampionSpellLineName);
 				RemoveSpellLine(ChampionSpellLineName);
+				SkillBase.ClearSpellLine(ChampionSpellLineName);
+				SkillBase.UnRegisterSpellLine(ChampionSpellLineName);
 				UpdateSpellLineLevels(false);
+				GetChampionSpellLine();
 				RefreshSpecDependantSkills(true);
 				Out.SendUpdatePlayer();
 				Out.SendUpdatePoints();
-				Out.SendUpdatePlayerSkills();
 				UpdatePlayerStatus();
-				SaveIntoDatabase();
+				Out.SendUpdatePlayerSkills();
 			}
 		}
 
