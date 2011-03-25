@@ -826,6 +826,17 @@ namespace DOL.GS
 	}
 
 	/// <summary>
+	/// What buff caterogy a spell belongs too
+	/// </summary>
+	public enum eBuffBonusCategory : int
+	{
+		BaseBuff = 1,
+		SpecBuff = 2,
+		Debuff = 3,
+		Other = 4,
+	}
+
+	/// <summary>
 	/// Holds all character classes
 	/// </summary>
 	public enum eCharacterClass : byte
