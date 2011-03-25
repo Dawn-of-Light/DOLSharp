@@ -50,10 +50,10 @@ namespace DOL.GS.Spells
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			// vampiir, they cannot be buffed except with resists/armor factor/ haste / power regen
-			GamePlayer vampiir = target as GamePlayer;
-			if (vampiir!=null)
+			GamePlayer player = target as GamePlayer;
+			if (player != null)
 			{
-				if (HasPositiveEffect && vampiir.CharacterClass.ID == (int)eCharacterClass.Vampiir && m_caster != vampiir)
+				if (HasPositiveEffect && player.CharacterClass.ID == (int)eCharacterClass.Vampiir && m_caster != player)
 				{
 					//restrictions
 					//if (this is PropertyChangingSpell
@@ -71,7 +71,7 @@ namespace DOL.GS.Spells
 						{
 							caster.Out.SendMessage("Your buff has no effect on the Vampiir!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
-						vampiir.Out.SendMessage("This buff has no effect on you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage("This buff has no effect on you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
 					if (this is ArmorFactorBuff)
@@ -88,9 +88,9 @@ namespace DOL.GS.Spells
 				{
 					if (this.Spell.Frequency <= 0)
 					{
-						GameSpellEffect Matter = FindEffectOnTarget(vampiir, "MatterResistBuff");
-						GameSpellEffect Cold = FindEffectOnTarget(vampiir, "ColdResistBuff");
-						GameSpellEffect Heat = FindEffectOnTarget(vampiir, "HeatResistBuff");
+						GameSpellEffect Matter = FindEffectOnTarget(player, "MatterResistBuff");
+						GameSpellEffect Cold = FindEffectOnTarget(player, "ColdResistBuff");
+						GameSpellEffect Heat = FindEffectOnTarget(player, "HeatResistBuff");
 						if (Matter != null || Cold != null || Heat != null)
 						{
 							MessageToCaster(target.Name + " already has this effect", eChatType.CT_SpellResisted);
@@ -103,9 +103,9 @@ namespace DOL.GS.Spells
 				{
 					if (this.Spell.Frequency <= 0)
 					{
-						GameSpellEffect Body = FindEffectOnTarget(vampiir, "BodyResistBuff");
-						GameSpellEffect Spirit = FindEffectOnTarget(vampiir, "SpiritResistBuff");
-						GameSpellEffect Energy = FindEffectOnTarget(vampiir, "EnergyResistBuff");
+						GameSpellEffect Body = FindEffectOnTarget(player, "BodyResistBuff");
+						GameSpellEffect Spirit = FindEffectOnTarget(player, "SpiritResistBuff");
+						GameSpellEffect Energy = FindEffectOnTarget(player, "EnergyResistBuff");
 						if (Body != null || Spirit != null || Energy != null)
 						{
 							MessageToCaster(target.Name + " already has this effect", eChatType.CT_SpellResisted);
@@ -124,14 +124,16 @@ namespace DOL.GS.Spells
 		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
-			IPropertyIndexer bonuscat = GetBonusCategory(effect.Owner, BonusCategory1);
-
 			ApplyBonus(effect.Owner , BonusCategory1, Property1, (int) (Spell.Value*effect.Effectiveness), false);
 			ApplyBonus(effect.Owner , BonusCategory2, Property2, (int) (Spell.Value*effect.Effectiveness), false);
 			ApplyBonus(effect.Owner , BonusCategory3, Property3, (int) (Spell.Value*effect.Effectiveness), false);
 			ApplyBonus(effect.Owner , BonusCategory4, Property4, (int) (Spell.Value*effect.Effectiveness), false);
 			ApplyBonus(effect.Owner , BonusCategory5, Property5, (int) (Spell.Value*effect.Effectiveness), false);
 			ApplyBonus(effect.Owner , BonusCategory6, Property6, (int) (Spell.Value*effect.Effectiveness), false);
+			ApplyBonus(effect.Owner, BonusCategory7, Property7, (int)(Spell.Value * effect.Effectiveness), false);
+			ApplyBonus(effect.Owner, BonusCategory8, Property8, (int)(Spell.Value * effect.Effectiveness), false);
+			ApplyBonus(effect.Owner, BonusCategory9, Property9, (int)(Spell.Value * effect.Effectiveness), false);
+			ApplyBonus(effect.Owner, BonusCategory10, Property10, (int)(Spell.Value * effect.Effectiveness), false);
 			
 			// Xali: buffs/debuffs are now efficient on pets
 			#region Petbuffs
@@ -295,6 +297,10 @@ namespace DOL.GS.Spells
 			ApplyBonus(effect.Owner , BonusCategory4, Property4, (int) (Spell.Value*effect.Effectiveness), true);
 			ApplyBonus(effect.Owner , BonusCategory5, Property5, (int) (Spell.Value*effect.Effectiveness), true);
 			ApplyBonus(effect.Owner , BonusCategory6, Property6, (int) (Spell.Value*effect.Effectiveness), true);
+			ApplyBonus(effect.Owner, BonusCategory7, Property7, (int)(Spell.Value * effect.Effectiveness), true);
+			ApplyBonus(effect.Owner, BonusCategory8, Property8, (int)(Spell.Value * effect.Effectiveness), true);
+			ApplyBonus(effect.Owner, BonusCategory9, Property9, (int)(Spell.Value * effect.Effectiveness), true);
+			ApplyBonus(effect.Owner, BonusCategory10, Property10, (int)(Spell.Value * effect.Effectiveness), true);
 
 			SendUpdates(effect.Owner);
 
@@ -316,16 +322,16 @@ namespace DOL.GS.Spells
 			IPropertyIndexer bonuscat = null;
 			switch (categoryid)
 			{
-				case 1:
+				case (int)eBuffBonusCategory.BaseBuff:
 					bonuscat = target.BaseBuffBonusCategory;
 					break;
-				case 2:
+				case (int)eBuffBonusCategory.SpecBuff:
 					bonuscat = target.SpecBuffBonusCategory;
 					break;
-				case 3:
+				case (int)eBuffBonusCategory.Debuff:
 					bonuscat = target.DebuffCategory;
 					break;
-				case 4:
+				case (int)eBuffBonusCategory.Other:
 					bonuscat = target.BuffBonusCategory4;
 					break;
 				default:
@@ -379,7 +385,39 @@ namespace DOL.GS.Spells
 		{
 			get { return eProperty.Undefined; }
 		}
-		
+
+		/// <summary>
+		/// Property 7 which bonus value has to be changed
+		/// </summary>
+		public virtual eProperty Property7
+		{
+			get { return eProperty.Undefined; }
+		}
+
+		/// <summary>
+		/// Property 8 which bonus value has to be changed
+		/// </summary>
+		public virtual eProperty Property8
+		{
+			get { return eProperty.Undefined; }
+		}
+
+		/// <summary>
+		/// Property 9 which bonus value has to be changed
+		/// </summary>
+		public virtual eProperty Property9
+		{
+			get { return eProperty.Undefined; }
+		}
+
+		/// <summary>
+		/// Property 10 which bonus value has to be changed
+		/// </summary>
+		public virtual eProperty Property10
+		{
+			get { return eProperty.Undefined; }
+		}
+
 		/// <summary>
 		/// Bonus Category where to change the Property1
 		/// </summary>
@@ -427,7 +465,39 @@ namespace DOL.GS.Spells
 		{
 			get { return 1; }
 		}
-		
+
+		/// <summary>
+		/// Bonus Category where to change the Property7
+		/// </summary>
+		public virtual int BonusCategory7
+		{
+			get { return 1; }
+		}
+
+		/// <summary>
+		/// Bonus Category where to change the Property8
+		/// </summary>
+		public virtual int BonusCategory8
+		{
+			get { return 1; }
+		}
+
+		/// <summary>
+		/// Bonus Category where to change the Property9
+		/// </summary>
+		public virtual int BonusCategory9
+		{
+			get { return 1; }
+		}
+
+		/// <summary>
+		/// Bonus Category where to change the Property10
+		/// </summary>
+		public virtual int BonusCategory10
+		{
+			get { return 1; }
+		}
+
 		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
 		{
 			ApplyBonus (effect.Owner, BonusCategory1,Property1, vars[1], false);
@@ -436,6 +506,10 @@ namespace DOL.GS.Spells
 			ApplyBonus (effect.Owner, BonusCategory4,Property4, vars[1], false);
 			ApplyBonus (effect.Owner, BonusCategory5,Property5, vars[1], false);
 			ApplyBonus (effect.Owner, BonusCategory6,Property6, vars[1], false);
+			ApplyBonus(effect.Owner, BonusCategory7, Property7, vars[1], false);
+			ApplyBonus(effect.Owner, BonusCategory8, Property8, vars[1], false);
+			ApplyBonus(effect.Owner, BonusCategory9, Property9, vars[1], false);
+			ApplyBonus(effect.Owner, BonusCategory10, Property10, vars[1], false);
 
 			SendUpdates(effect.Owner);
 		}
@@ -454,6 +528,10 @@ namespace DOL.GS.Spells
 			ApplyBonus (effect.Owner, BonusCategory4,Property4, vars[1], true);
 			ApplyBonus (effect.Owner, BonusCategory5,Property5, vars[1], true);
 			ApplyBonus (effect.Owner, BonusCategory6,Property6, vars[1], true);
+			ApplyBonus(effect.Owner, BonusCategory7, Property7, vars[1], true);
+			ApplyBonus(effect.Owner, BonusCategory8, Property8, vars[1], true);
+			ApplyBonus(effect.Owner, BonusCategory9, Property9, vars[1], true);
+			ApplyBonus(effect.Owner, BonusCategory10, Property10, vars[1], true);
 
 			SendUpdates(effect.Owner);
 			return 0;

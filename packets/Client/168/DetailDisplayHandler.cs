@@ -514,6 +514,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 						caption = foundEffect.Name;
 						objectInfo.AddRange(foundEffect.DelveInfo);
 
+						if (client.Account.PrivLevel > 1 && foundEffect is GameSpellEffect)
+						{
+							if ((foundEffect as GameSpellEffect).Spell != null)
+							{
+								if (client.Account.PrivLevel > 1)
+								{
+									objectInfo.Add(" ");
+									objectInfo.Add("----------Technical informations----------");
+									objectInfo.Add("Line: " + ((foundEffect as GameSpellEffect).SpellHandler == null ? "unknown" : (foundEffect as GameSpellEffect).SpellHandler.SpellLine.Name));
+									objectInfo.Add("SpellID: " + (foundEffect as GameSpellEffect).Spell.ID);
+									objectInfo.Add("Type: " + (foundEffect as GameSpellEffect).Spell.SpellType);
+									objectInfo.Add("ClientEffect: " + (foundEffect as GameSpellEffect).Spell.ClientEffect);
+									objectInfo.Add("Icon: " + (foundEffect as GameSpellEffect).Spell.Icon);
+									if ((foundEffect as GameSpellEffect).SpellHandler != null)
+										objectInfo.Add("HasPositiveEffect: " + (foundEffect as GameSpellEffect).SpellHandler.HasPositiveEffect);
+								}
+							}
+						}
+
+
 						break;
 					}
 				#endregion
@@ -1138,6 +1158,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				output.Add("----------Technical informations----------");
 				output.Add("Line: " + (spellHandler == null ? spellLine.KeyName : spellHandler.SpellLine.Name));
 				output.Add("SpellID: " + spell.ID);
+				output.Add("Type: " + spell.SpellType);
 				output.Add("ClientEffect: " + spell.ClientEffect);
 				output.Add("Icon: " + spell.Icon);
 				if (spellHandler != null)
