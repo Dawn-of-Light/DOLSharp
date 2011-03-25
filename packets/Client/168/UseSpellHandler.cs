@@ -163,7 +163,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					if (Log.IsWarnEnabled)
 						Log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell at level " + m_spellLevel +
-						         " in spell-line " + castLine.Name);
+							" in spell-line " + ((castLine == null || castLine.Name == null) ? "unkown" : castLine.Name));
 				}
 				if (castLine == null)
 				{
