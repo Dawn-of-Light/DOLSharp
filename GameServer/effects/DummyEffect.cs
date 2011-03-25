@@ -96,7 +96,12 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public override IList<string> DelveInfo 
         {
-            get { return new string[0]; } 
+            get 
+			{
+				string[] delve = new string[1];
+				delve[0] = "Dummy Effect Icon #" + Icon;
+				return delve;
+			} 
         }
     }
 }
