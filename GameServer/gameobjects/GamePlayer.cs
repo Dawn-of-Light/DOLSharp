@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -2616,7 +2617,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all styles of the player
 		/// </summary>
-		protected readonly ArrayList m_styles = new ArrayList();
+		protected readonly Dictionary<int, Style> m_styles = new Dictionary<int, Style>();
+
+		/// <summary>
+		/// Used to lock the style list
+		/// </summary>
+		public Object lockStyleList = new Object();
 
 		/// <summary>
 		/// Holds all non trainable skills in determined order without styles
@@ -3174,31 +3180,17 @@ namespace DOL.GS
 
 		public virtual void RemoveAllSpellLines()
 		{
-			ArrayList lines = new ArrayList();
 			lock (lockSpellLinesList)
 			{
-				foreach (SpellLine line in m_spellLines)
-				{
-					lines.Add(line);
-				}
-
-				foreach (SpellLine line in lines)
-				{
-					m_spellLines.Remove(line);
-				}
+				m_spellLines.Clear();
 			}
 		}
 
 		public virtual void RemoveAllStyles()
 		{
-			ArrayList styles = new ArrayList();
-			lock (m_styles.SyncRoot)
+			lock (lockStyleList)
 			{
-				foreach (Style style in m_styles)
-					styles.Add(style);
-
-				foreach (Style style in styles)
-					m_styles.Remove(style);
+				m_styles.Clear();
 			}
 		}
 
@@ -3291,6 +3283,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override int GetModifiedSpecLevel(string keyName)
 		{
+			if (keyName == GlobalSpellsLines.Champion_Spells)
+				return 50;
+
 			Specialization spec = m_specialization[keyName] as Specialization;
 			if (spec == null)
 			{
@@ -3372,12 +3367,42 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// gets a list of available styles
-		/// lock SyncRoot to iterate in the list!
+		/// Gets a list of available styles
+		/// This creates a copy
 		/// </summary>
 		public virtual IList GetStyleList()
 		{
-			return m_styles;
+			return m_styles.Values.ToList();
+		}
+
+		/// <summary>
+		/// Get a list of Champion styles for this player
+		/// </summary>
+		/// <returns></returns>
+		public virtual List<Style> GetChampionStyleList()
+		{
+			List<Spell> champSpells = SkillBase.GetSpellList(ChampionSpellLineName);
+			List<Style> champStyles = new List<Style>();
+
+			foreach (Spell champSpell in champSpells)
+			{
+				if (champSpell.SpellType == "StyleHandler")
+				{
+					Style champStyle = SkillBase.GetStyleByID((int)champSpell.Value, CharacterClass.ID);
+					if (champStyle == null)
+					{
+						champStyle = SkillBase.GetStyleByID((int)champSpell.Value, 0);
+					}
+
+					if (champStyle != null)
+					{
+						champStyle.Level = champSpell.Level;
+						champStyles.Add(champStyle);
+					}
+				}
+			}
+
+			return champStyles;
 		}
 
 		/// <summary>
@@ -3499,15 +3524,11 @@ namespace DOL.GS
 
 				foreach (SpellLine line in spellLines)
 				{
-					// Do not place advanced spell lines in this list
-					if (IsAdvancedSpellLine(line) == false)
+					foreach (Spell spell in SkillBase.GetSpellList(line.KeyName))
 					{
-						foreach (Spell spell in SkillBase.GetSpellList(line.KeyName))
+						if (spell.Level <= line.Level && spell.SpellType != "StyleHandler")
 						{
-							if (spell.Level <= line.Level)
-							{
-								spellList.Add(new KeyValuePair<Spell, SpellLine>(spell, line));
-							}
+							spellList.Add(new KeyValuePair<Spell, SpellLine>(spell, line));
 						}
 					}
 				}
@@ -3539,6 +3560,11 @@ namespace DOL.GS
 						if (spell.Key.SubSpellID > 0)
 						{
 							key += "+SUB";
+						}
+
+						if (spell.Value.Spec == GlobalSpellsLines.Champion_Spells)
+						{
+							key += counter++;
 						}
 					}
 					else
@@ -3613,7 +3639,7 @@ namespace DOL.GS
 		public virtual void RefreshSpecDependantSkills(bool sendMessages)
 		{
 			IList newStyles = new ArrayList();
-			lock (m_styles.SyncRoot)
+			lock (lockStyleList)
 			{
 				lock (m_specList.SyncRoot)
 				{
@@ -3627,10 +3653,10 @@ namespace DOL.GS
 								continue;
 							if (style.SpecLevelRequirement <= spec.Level)
 							{
-								if (!m_styles.Contains(style))
+								if (!m_styles.ContainsKey(style.ID))
 								{
 									newStyles.Add(style);
-									m_styles.Add(style);
+									m_styles.Add(style.ID, style);
 								}
 							}
 						}
@@ -3644,6 +3670,18 @@ namespace DOL.GS
 								AddAbility(ability);	// add ability cares about all
 							}
 						}
+					}
+				}
+
+				foreach (Style style in GetChampionStyleList())
+				{
+					if (style == null)
+						continue;
+
+					if (!m_styles.ContainsKey(style.ID))
+					{
+						newStyles.Add(style);
+						m_styles.Add(style.ID, style);
 					}
 				}
 			}
@@ -6573,7 +6611,7 @@ namespace DOL.GS
 						#region Condition
 
 						// decrease condition of hitted armor piece
-						if (ad.ArmorHitLocation != eArmorSlot.UNKNOWN)
+						if (ad.ArmorHitLocation != eArmorSlot.NOTSET)
 						{
 							InventoryItem item = Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
@@ -6592,7 +6630,7 @@ namespace DOL.GS
 						#region Reactive Effects
 
 						//reactive effect
-						if (ad.ArmorHitLocation != eArmorSlot.UNKNOWN)
+						if (ad.ArmorHitLocation != eArmorSlot.NOTSET)
 						{
 							InventoryItem reactiveItem = Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
@@ -6810,7 +6848,7 @@ namespace DOL.GS
 		{
 			if (ad.Style != null)
 			{
-				if (ad.Style.ArmorHitLocation != eArmorSlot.UNKNOWN)
+				if (ad.Style.ArmorHitLocation != eArmorSlot.NOTSET)
 					return ad.Style.ArmorHitLocation;
 			}
 			int chancehit = Util.Random(1, 100);
@@ -6958,7 +6996,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override double GetArmorAF(eArmorSlot slot)
 		{
-			if (slot == eArmorSlot.UNKNOWN) return 0;
+			if (slot == eArmorSlot.NOTSET) return 0;
 			InventoryItem item = Inventory.GetItem((eInventorySlot)slot);
 			if (item == null) return 0;
 			double eaf = item.DPS_AF + BaseBuffBonusCategory[(int)eProperty.ArmorFactor]; // base AF buff
@@ -6994,7 +7032,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override double GetArmorAbsorb(eArmorSlot slot)
 		{
-			if (slot == eArmorSlot.UNKNOWN) return 0;
+			if (slot == eArmorSlot.NOTSET) return 0;
 			InventoryItem item = Inventory.GetItem((eInventorySlot)slot);
 			if (item == null) return 0;
 			// vampiir random armor debuff change ~
@@ -11918,9 +11956,9 @@ namespace DOL.GS
 					sp += spec.KeyName + "|" + spec.Level;
 				}
 			}
-			lock (m_styles.SyncRoot)
+			lock (lockStyleList)
 			{
-				foreach (Style style in m_styles)
+				foreach (Style style in m_styles.Values)
 				{
 					if (styleList.Length > 0)
 					{
@@ -12067,11 +12105,42 @@ namespace DOL.GS
 			}
 			#endregion
 
-			#region Load Spell Lines
+			LoadSpellLines();
+
+
+			/* -- Kakuri Jan 8 2009 --
+			 * Calling OnLevelUp() when loading a character is a very poor way of loading skills and abilities.
+			 * OnLevelUp() should *ONLY* be called when a character actually levels up.
+			 * Skills and abilities should perhaps have their own handler, instead of being embedded in each
+			 * class's OnLevelUp().
+			 * I'm not up for fixing it at the moment, but there is a significant bug which I'm not exactly "fixing"
+			 * but rather countering below. On PvE servers from lvls 21-50 OnLevelUp() grants the character an
+			 * extra Realm Specialization Point (see DOL.GS.CharacterClassSpec.OnLevelUp() in PlayerClass.cs).
+			 * Since OnLevelUp() is called every time the character is loaded from the database, each
+			 * time a player logs in to the game they get an extra RSP.
+			 */
+			CharacterClass.OnLevelUp(this); // load all skills from DB first to keep the order
+			if ( this.Level > 20 && GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE )
+			{
+				this.RealmSpecialtyPoints--;
+			}
+
+			CharacterClass.OnRealmLevelUp(this);
+			RefreshSpecDependantSkills(false);
+			UpdateSpellLineLevels(false);
+		}
+
+		public virtual void LoadSpellLines()
+		{
+			DOLCharacters character = DBCharacter; // if its derived and filled with some code
+			if (character == null) return; // no character => exit
+
+			RemoveAllSpellLines();
+
 			Hashtable disabledSpells = new Hashtable();
 
 			//Load the disabled spells
-			tmpStr = character.DisabledSpells;
+			string tmpStr = character.DisabledSpells;
 			if (tmpStr != null && tmpStr.Length > 0)
 			{
 				foreach (string str in tmpStr.SplitCSV())
@@ -12090,7 +12159,6 @@ namespace DOL.GS
 				}
 			}
 
-			//Load the spell lines and then check to see if an spells in the spell lines should be disabled
 			lock (lockSpellLinesList)
 			{
 				tmpStr = character.SerializedSpellLines;
@@ -12135,31 +12203,6 @@ namespace DOL.GS
 
 				LoadChampionSpells(disabledSpells);
 			}
-
-			#endregion
-
-
-
-			/* -- Kakuri Jan 8 2009 --
-			 * Calling OnLevelUp() when loading a character is a very poor way of loading skills and abilities.
-			 * OnLevelUp() should *ONLY* be called when a character actually levels up.
-			 * Skills and abilities should perhaps have their own handler, instead of being embedded in each
-			 * class's OnLevelUp().
-			 * I'm not up for fixing it at the moment, but there is a significant bug which I'm not exactly "fixing"
-			 * but rather countering below. On PvE servers from lvls 21-50 OnLevelUp() grants the character an
-			 * extra Realm Specialization Point (see DOL.GS.CharacterClassSpec.OnLevelUp() in PlayerClass.cs).
-			 * Since OnLevelUp() is called every time the character is loaded from the database, each
-			 * time a player logs in to the game they get an extra RSP.
-			 */
-			CharacterClass.OnLevelUp(this); // load all skills from DB first to keep the order
-			if ( this.Level > 20 && GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE )
-			{
-				this.RealmSpecialtyPoints--;
-			}
-
-			CharacterClass.OnRealmLevelUp(this);
-			RefreshSpecDependantSkills(false);
-			UpdateSpellLineLevels(false);
 		}
 
 
@@ -15047,14 +15090,13 @@ namespace DOL.GS
 
 			if (championSpellLine != null)
 			{
-				RemoveSpellLine(ChampionSpellLineName);
 				SkillBase.ClearSpellLine(ChampionSpellLineName);
-				SkillBase.UnRegisterSpellLine(ChampionSpellLineName);
-				GetChampionSpellLine();
+				m_usableSpells.Clear(); // clear the hybrids spell list
 				ChampionSpells = "";
 				ChampionSpecialtyPoints = ChampionLevel;
 				UpdateSpellLineLevels(false);
-				RefreshSpecDependantSkills(true);
+				RemoveAllStyles();
+				RefreshSpecDependantSkills(false);
 				Out.SendUpdatePlayer();
 				Out.SendUpdatePoints();
 				Out.SendUpdatePlayerSkills();
@@ -15078,11 +15120,13 @@ namespace DOL.GS
 			if (championSpellLine != null)
 			{
 				RemoveSpellLine(ChampionSpellLineName);
+				m_usableSpells.Clear(); // clear the hybrids spell list
 				SkillBase.ClearSpellLine(ChampionSpellLineName);
 				SkillBase.UnRegisterSpellLine(ChampionSpellLineName);
 				UpdateSpellLineLevels(false);
 				GetChampionSpellLine();
-				RefreshSpecDependantSkills(true);
+				RemoveAllStyles();
+				RefreshSpecDependantSkills(false);
 				Out.SendUpdatePlayer();
 				Out.SendUpdatePoints();
 				UpdatePlayerStatus();

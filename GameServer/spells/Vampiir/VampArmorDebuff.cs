@@ -23,7 +23,7 @@ namespace DOL.GS.Spells
 	public class VampiirArmorDebuff : SpellHandler
 	{
 		private static eArmorSlot[] slots = new eArmorSlot[] { eArmorSlot.HEAD, eArmorSlot.TORSO, eArmorSlot.LEGS,  };
-		private eArmorSlot m_slot = eArmorSlot.UNKNOWN;
+		private eArmorSlot m_slot = eArmorSlot.NOTSET;
 		public eArmorSlot Slot { get { return m_slot; } }
 		private int old_item_af = 0;
 		private int old_item_abs = 0;

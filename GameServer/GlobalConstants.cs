@@ -266,7 +266,7 @@ namespace DOL.GS
 	/// </summary>
 	public enum eArmorSlot : int
 	{
-		UNKNOWN = 0x00,
+		NOTSET = 0x00,
 		HEAD = eInventorySlot.HeadArmor,
 		HAND = eInventorySlot.HandsArmor,
 		FEET = eInventorySlot.FeetArmor,
