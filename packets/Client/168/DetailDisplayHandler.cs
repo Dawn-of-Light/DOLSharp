@@ -880,23 +880,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				#endregion
 				#region ChampionAbilities delve from trainer window
-				case 151:
-				case 152:
-				case 153:
-				case 154:
-				case 155:
-				case 156:
-				case 157:
-				case 158:
-				case 159:
-				case 160:
-				case 161:
-				case 162:
-				case 163:
-				case 164:
-				case 165:
-				case 166:
+				default:
 					{
+						// Try and handle all Champion lines, including custom lines
 						ChampSpec spec = ChampSpecMgr.GetAbilityFromIndex(objectType - 150, objectID / 256 + 1, objectID % 256 + 1);
 						if (spec != null)
 						{
@@ -915,17 +901,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 								}
 							}
 						}
+
 						break;
 					}
-				// TODO: find last CL line index
 				#endregion
-                default:
-                    {
-                        //[StephenxPimentel]: we need to find a way to delve the spells/styles as
-                        //champion abilities here. Our Champion Ability support can't handle this atm though.
-                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoInformation"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
 			}
 
 			if (objectInfo.Count > 0)
@@ -1161,7 +1140,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Account.PrivLevel > 1)
 			{
 				objectInfo.Add(" ");
-				objectInfo.Add("--- Technical Information ---");
+				objectInfo.Add("--- Style Technical Information ---");
 				objectInfo.Add(" ");
 				objectInfo.Add(string.Format("ID: {0}", style.ID));
 				objectInfo.Add(string.Format("ClassID: {0}", style.ClassID));
@@ -1229,7 +1208,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Account.PrivLevel > 1)
 			{
 				output.Add(" ");
-				output.Add("----------Technical informations----------");
+				output.Add("--- Spell Technical Information ---");
+				output.Add(" ");
 				output.Add("Line: " + (spellHandler == null ? spellLine.KeyName : spellHandler.SpellLine.Name));
 				output.Add("SpellID: " + spell.ID);
 				output.Add("Type: " + spell.SpellType);
@@ -1237,6 +1217,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				output.Add("Icon: " + spell.Icon);
 				if (spellHandler != null)
 					output.Add("HasPositiveEffect: " + spellHandler.HasPositiveEffect);
+				output.Add("SharedTimerGroup: " + spell.SharedTimerGroup);
+				output.Add("EffectGroup: " + spell.EffectGroup);
+				output.Add("SpellGroup (for hybrid grouping): " + spell.Group);
 			}
 		}
 
@@ -1248,7 +1231,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public void WriteTechnicalInfo(IList<string> output, InventoryItem item, int dur, int con)
 		{
 			output.Add(" ");
-			output.Add("--- Item technical informations ---");
+			output.Add("--- Item Technical Information ---");
 			output.Add(" ");
 			output.Add("Item Template: " + item.Id_nb);
 			output.Add("         Name: " + item.Name);
