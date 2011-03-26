@@ -201,10 +201,7 @@ namespace DOL.GS
 					if (specPoints > 0)
 					{
 						player.SkillSpecialtyPoints += specPoints;
-						lock (player.GetStyleList().SyncRoot)
-						{
-							player.GetStyleList().Clear(); // Kill styles
-						}
+						player.RemoveAllStyles(); // Kill styles
 						player.UpdateSpellLineLevels(false);
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.Interact.RegainPoints", specPoints), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}

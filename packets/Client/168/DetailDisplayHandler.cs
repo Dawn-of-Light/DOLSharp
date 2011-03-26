@@ -968,9 +968,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					case Style.eAttackResult.Style:
 						Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, client.Player.CharacterClass.ID);
+						if (reqStyle == null)
+						{
+							reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, 0);
+						}
 						temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.OpeningStyle") + " ";
-						if (reqStyle == null) temp += "(style not found " + style.OpeningRequirementValue + ")";
-						else temp += reqStyle.Name;
+						if (reqStyle == null)
+						{
+							temp += "(style not found " + style.OpeningRequirementValue + ")";
+						}
+						else
+						{
+							temp += reqStyle.Name;
+						}
 						break;
 					default:
 						temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Any");
@@ -1028,15 +1038,33 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			objectInfo.Add(temp);
 
+			if (style.OpeningRequirementValue != 0 && style.AttackResultRequirement == 0 && style.OpeningRequirementType == 0)
+			{
+				objectInfo.Add(string.Format("- Error: Opening Requirement '{0}' but requirement type is Any!", style.OpeningRequirementValue));
+			}
+
 			temp = "";
+
 			foreach (Style st in SkillBase.GetStyleList(style.Spec, client.Player.CharacterClass.ID))
 			{
 				if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
 					temp = (temp == "" ? st.Name : temp +
 							LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Or", st.Name));
 			}
+
+			if (temp == "")
+			{
+				foreach (Style st in client.Player.GetChampionStyleList())
+				{
+					if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
+						temp = (temp == "" ? st.Name : temp +
+								LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.Or", st.Name));
+				}
+			}
+
 			if (temp != "")
 				objectInfo.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.FollowupStyle", temp));
+
 			temp = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.FatigueCost");
 			if (style.EnduranceCost < 5)
 				temp += LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.VeryLow");
@@ -1127,6 +1155,52 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 						}
 					}
+				}
+			}
+
+			if (client.Account.PrivLevel > 1)
+			{
+				objectInfo.Add(" ");
+				objectInfo.Add("--- Technical Information ---");
+				objectInfo.Add(" ");
+				objectInfo.Add(string.Format("ID: {0}", style.ID));
+				objectInfo.Add(string.Format("ClassID: {0}", style.ClassID));
+				objectInfo.Add(string.Format("Icon: {0}", style.Icon));
+				objectInfo.Add(string.Format("TwoHandAnimation: {0}", style.TwoHandAnimation));
+				objectInfo.Add(string.Format("Spec: {0}", style.Spec));
+				objectInfo.Add(string.Format("SpecLevelRequirement: {0}", style.SpecLevelRequirement));
+				objectInfo.Add(string.Format("Level: {0}", style.Level));
+				objectInfo.Add(string.Format("GrowthRate: {0}", style.GrowthRate));
+				objectInfo.Add(string.Format("Endurance: {0}", style.EnduranceCost));
+				objectInfo.Add(string.Format("StealthRequirement: {0}", style.StealthRequirement));
+				objectInfo.Add(string.Format("WeaponTypeRequirement: {0}", style.WeaponTypeRequirement));
+				string indicator = "";
+				if (style.OpeningRequirementValue != 0 && style.AttackResultRequirement == 0 && style.OpeningRequirementType == 0)
+				{
+					indicator = "!!";
+				}
+				objectInfo.Add(string.Format("AttackResultRequirement: {0}({1}) {2}", style.AttackResultRequirement, (int)style.AttackResultRequirement, indicator));
+				objectInfo.Add(string.Format("OpeningRequirementType: {0}({1}) {2}", style.OpeningRequirementType, (int)style.OpeningRequirementType, indicator));
+				objectInfo.Add(string.Format("OpeningRequirementValue: {0}", style.OpeningRequirementValue));
+				objectInfo.Add(string.Format("ArmorHitLocation: {0}({1})", style.ArmorHitLocation, (int)style.ArmorHitLocation));
+				objectInfo.Add(string.Format("BonusToDefense: {0}", style.BonusToDefense));
+				objectInfo.Add(string.Format("BonusToHit: {0}", style.BonusToHit));
+
+				if (style.Procs != null && style.Procs.Count > 0)
+				{
+					objectInfo.Add(" ");
+
+					string procs = "";
+					foreach (DBStyleXSpell spell in style.Procs)
+					{
+						if (procs != "")
+							procs += ", ";
+
+						procs += spell.SpellID;
+					}
+
+					objectInfo.Add(string.Format("Procs: {0}", procs));
+					objectInfo.Add(string.Format("RandomProc: {0}", style.RandomProc));
 				}
 			}
 		}

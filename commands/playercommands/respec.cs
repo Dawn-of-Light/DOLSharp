@@ -233,10 +233,7 @@ namespace DOL.GS.Commands
 			if (specPoints > 0)
 			{
 				player.SkillSpecialtyPoints += specPoints;
-				lock (player.GetStyleList().SyncRoot)
-				{
-					player.GetStyleList().Clear(); // Kill styles
-				}
+				player.RemoveAllStyles(); // Kill styles
 				player.UpdateSpellLineLevels(false);
 				DisplayMessage(player, "You regain " + specPoints + " specialization points!");
 			}

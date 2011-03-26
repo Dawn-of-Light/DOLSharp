@@ -28,7 +28,7 @@ namespace DOL.GS.Commands
 	[Cmd("&Reload",
         ePrivLevel.Admin,
 		"Reload various elements",
-		"/reload mob|object|CL"
+		"/reload mob|object|CL|specs"
 		)]
 	public class ReloadCommandHandler :ICommandHandler
 	{
@@ -79,6 +79,7 @@ namespace DOL.GS.Commands
 				SendSystemMessageMob(client);
 				SendSystemMessageObject(client);
 				client.Out.SendMessage(" /reload CL ' reload all champion levels.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(" /reload specs ' reload all specializations.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			else if (argLength > 1)
@@ -157,6 +158,14 @@ namespace DOL.GS.Commands
 			if (args[1].ToLower() == "cl")
 			{
 				ReloadChampionLevels(client, args);
+				return;
+			}
+
+			if (args[1].ToLower() == "specs")
+			{
+				int count = SkillBase.LoadSpecializations();
+				client.Out.SendMessage(count + " specializations loaded.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				return;
 			}
 			return;
 		}

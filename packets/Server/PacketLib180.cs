@@ -238,9 +238,9 @@ namespace DOL.GS.PacketHandler
 				return;
 			IList specs = m_gameClient.Player.GetSpecList();
 			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
-			IList styles = m_gameClient.Player.GetStyleList();
+			IList styleList = m_gameClient.Player.GetStyleList();
 			List<SpellLine> spellLines = m_gameClient.Player.GetSpellLines();
-			Hashtable m_styleId = new Hashtable();
+			Hashtable styleTable = new Hashtable();
 			int maxSkills = 0;
 			int firstSkills = 0;
 
@@ -249,13 +249,13 @@ namespace DOL.GS.PacketHandler
 
 			lock (skills.SyncRoot)
 			{
-				lock (styles.SyncRoot)
+				lock (styleList.SyncRoot)
 				{
 					lock (specs.SyncRoot)
 					{
 						lock (m_gameClient.Player.lockSpellLinesList)
 						{
-							int skillCount = specs.Count + skills.Count + styles.Count;
+							int skillCount = specs.Count + skills.Count + styleList.Count;
 
 							if (sendHybridList)
 								skillCount += m_gameClient.Player.GetSpellCount();
@@ -276,10 +276,10 @@ namespace DOL.GS.PacketHandler
 								pak.WritePascalString(spec.Name);
 							}
 
-							int i = 0;
+							int count = 0;
 							foreach (Skill skill in skills)
 							{
-								i++;
+								count++;
 								CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 								pak.WriteByte(0);
 								byte type = (byte)eSkillPage.Abilities;
@@ -304,12 +304,19 @@ namespace DOL.GS.PacketHandler
 								pak.WritePascalString(skill.Name + str);
 							}
 
-							foreach (Style style in styles)
+							foreach (Style style in styleList)
 							{
-								m_styleId[(int)style.ID] = i++;
 								CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-								//DOLConsole.WriteLine("style sended "+style.Name);
-								pak.WriteByte((byte)style.SpecLevelRequirement);
+
+								styleTable[(int)style.ID] = count++;
+								if (style.Spec == GlobalSpellsLines.Champion_Spells)
+								{
+									pak.WriteByte((byte)style.Level);
+								}
+								else
+								{
+									pak.WriteByte((byte)style.SpecLevelRequirement);
+								}
 								pak.WriteByte((byte)eSkillPage.Styles);
 
 								int pre = 0;
@@ -319,7 +326,7 @@ namespace DOL.GS.PacketHandler
 										pre = 0 + (int)style.AttackResultRequirement; // last result of our attack against enemy
 										// hit, miss, target blocked, target parried, ...
 										if (style.AttackResultRequirement == Style.eAttackResult.Style)
-											pre |= ((100 + (int)m_styleId[style.OpeningRequirementValue]) << 8);
+											pre |= ((100 + (int)styleTable[style.OpeningRequirementValue]) << 8);
 										break;
 									case Style.eOpening.Defensive:
 										pre = 100 + (int)style.AttackResultRequirement; // last result of enemies attack against us
@@ -374,6 +381,8 @@ namespace DOL.GS.PacketHandler
 									pak.WriteShort(spell.Value.Key.Icon);
 									pak.WritePascalString(spell.Value.Key.Name);
 								}
+
+								CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 							}
 						}
 					}
@@ -389,8 +398,11 @@ namespace DOL.GS.PacketHandler
 				SendTCP(pak);
 			}
 
-			SendSpellList();
+			// send list casters their spell list
+			if (sendHybridList == false)
+			{
+				SendListCasterSpellList();
+			}
 		}
-
 	}
 }

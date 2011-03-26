@@ -1519,7 +1519,7 @@ namespace DOL.GS
 			}
 		}
 
-		public static void LoadSpecializations()
+		public static int LoadSpecializations()
 		{
 			var specs = GameServer.Database.SelectAllObjects<DBSpecialization>();
 			if (specs != null)
@@ -1593,6 +1593,8 @@ namespace DOL.GS
 			}
 			if (log.IsInfoEnabled)
 				log.Info("Total specializations loaded: " + ((specs != null) ? specs.Count : 0));
+
+			return (specs != null) ? specs.Count : 0;
 		}
 
 		public static void SortStylesByLevel()
@@ -2238,7 +2240,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// find style with specific id
+		/// Find style with specific id and return a copy of it
 		/// </summary>
 		/// <param name="styleID">id of style</param>
 		/// <param name="classId">ClassID for which style list is requested</param>
