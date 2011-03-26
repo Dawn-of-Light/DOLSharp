@@ -1535,7 +1535,7 @@ namespace DOL.GS
 			ad.Style = style;
 			ad.WeaponSpeed = AttackSpeed(weapon) / 100;
 			ad.DamageType = AttackDamageType(weapon);
-			ad.ArmorHitLocation = eArmorSlot.UNKNOWN;
+			ad.ArmorHitLocation = eArmorSlot.NOTSET;
 			ad.Weapon = weapon;
 			ad.IsOffHand = weapon == null ? false : weapon.Hand == 2;
 
