@@ -2186,7 +2186,7 @@ namespace DOL.GS.PacketHandler
 						SendTCP(pak);
 					}
 
-					SendSpellList();
+					SendListCasterSpellList();
 				}
 			}
 
@@ -2197,12 +2197,15 @@ namespace DOL.GS.PacketHandler
 		}
 
 		/// <summary>
-		/// Send spell list to client.
+		/// Send list caster spells and advanced spell lines
 		/// </summary>
-		public virtual void SendSpellList()
+		public virtual void SendListCasterSpellList()
 		{
 			GamePlayer player = m_gameClient.Player;
 			if (player == null)
+				return;
+
+			if (player.CharacterClass.ClassType != eClassType.ListCaster)
 				return;
 
 			IList spellLines = m_gameClient.Player.GetSpellLines();
@@ -2213,48 +2216,43 @@ namespace DOL.GS.PacketHandler
 				{
 					int lineIndex = player.GetSpellLines().IndexOf(line);
 
-					// We only handle list caster spells or advanced lines here
-					if (player.CharacterClass.ClassType == eClassType.ListCaster || player.IsAdvancedSpellLine(line))
+					var spells = new List<Spell>(SkillBase.GetSpellList(line.KeyName)); // copy
+					int spellCount = 0;
+					for (int i = 0; i < spells.Count; i++)
 					{
-						// make a copy
-						var spells = new List<Spell>(SkillBase.GetSpellList(line.KeyName));
-
-						int spellCount = 0;
-						for (int i = 0; i < spells.Count; i++)
+						if ((spells[i]).Level <= line.Level && spells[i].SpellType != "StyleHandler")
 						{
-							if ((spells[i]).Level <= line.Level)
+							spellCount++;
+						}
+					}
+
+					using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
+					{
+						pak.WriteByte(0x02); //subcode
+						pak.WriteByte((byte)(spellCount + 1)); //number of entry
+						pak.WriteByte(0x02); //subtype
+						pak.WriteByte((byte)lineIndex); //number of line
+						pak.WriteByte(0); // level, not used when spell line
+						pak.WriteShort(0); // icon, not used when spell line
+						pak.WritePascalString(line.Name);
+
+						foreach (Spell spell in spells)
+						{
+							if (spell.Level <= line.Level && spell.SpellType != "StyleHandler")
 							{
-								spellCount++;
+								// log.DebugFormat("{0} - icon {1}, {2}, level {3}", lineIndex, spell.Icon, spell.Name, spell.Level);
+								pak.WriteByte((byte)spell.Level);
+								pak.WriteShort(spell.Icon);
+								pak.WritePascalString(spell.Name);
 							}
 						}
 
-						using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
-						{
-							pak.WriteByte(0x02); //subcode
-							pak.WriteByte((byte)(spellCount + 1)); //number of entry
-							pak.WriteByte(0x02); //subtype
-							pak.WriteByte((byte)lineIndex); //number of line
-							pak.WriteByte(0); // level, not used when spell line
-							pak.WriteShort(0); // icon, not used when spell line
-							pak.WritePascalString(line.Name);
-
-							foreach (Spell spell in spells)
-							{
-								if (spell.Level <= line.Level)
-								{
-									// log.DebugFormat("{0} - icon {1}, {2}, level {3}", lineIndex, spell.Icon, spell.Name, spell.Level);
-									pak.WriteByte((byte)spell.Level);
-									pak.WriteShort(spell.Icon);
-									pak.WritePascalString(spell.Name);
-								}
-							}
-
-							SendTCP(pak);
-						}
+						SendTCP(pak);
 					}
 				}
 			}
 		}
+
 
 		public virtual void SendUpdateCraftingSkills()
 		{

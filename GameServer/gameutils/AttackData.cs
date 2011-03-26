@@ -32,7 +32,7 @@ namespace DOL.GS
 	{
 		private GameLiving m_attacker = null;
 		private GameLiving m_target = null;
-		private eArmorSlot m_hitArmorSlot = eArmorSlot.UNKNOWN;
+		private eArmorSlot m_hitArmorSlot = eArmorSlot.NOTSET;
 		private int m_damage = 0;
 		private int m_critdamage = 0;
 		private int m_uncappeddamage = 0;
