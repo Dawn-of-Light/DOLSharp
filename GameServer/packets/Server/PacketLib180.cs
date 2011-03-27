@@ -357,10 +357,14 @@ namespace DOL.GS.PacketHandler
 								{
 									CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 
-									int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spell.Value.Value.Spec));
+									int lineIndex = specs.IndexOf(m_gameClient.Player.GetSpecialization(spell.Value.Value.Spec));
 
-									if (spec_index == -1)
-										spec_index = 0xFE; // Nightshade special value
+									if (lineIndex == -1)
+									{
+										lineIndex = 0xFE; // Nightshade special value
+									}
+
+									//log.DebugFormat("{0} : {1} - icon {2}, {3}, level {4}", spell.Value.Value.Name, lineIndex, spell.Value.Key.Icon, spell.Value.Key.Name, spell.Value.Key.Level);
 
 									pak.WriteByte((byte)spell.Value.Key.Level);
 
@@ -368,7 +372,7 @@ namespace DOL.GS.PacketHandler
 									{
 										pak.WriteByte((byte)eSkillPage.Spells);
 										pak.WriteByte(0);
-										pak.WriteByte((byte)spec_index);
+										pak.WriteByte((byte)lineIndex);
 									}
 									else
 									{
@@ -381,8 +385,6 @@ namespace DOL.GS.PacketHandler
 									pak.WriteShort(spell.Value.Key.Icon);
 									pak.WritePascalString(spell.Value.Key.Name);
 								}
-
-								CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 							}
 						}
 					}
@@ -398,11 +400,7 @@ namespace DOL.GS.PacketHandler
 				SendTCP(pak);
 			}
 
-			// send list casters their spell list
-			if (sendHybridList == false)
-			{
-				SendListCasterSpellList();
-			}
+			SendNonHybridSpellLines();
 		}
 	}
 }

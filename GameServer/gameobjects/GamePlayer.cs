@@ -3477,9 +3477,6 @@ namespace DOL.GS
 					return true;
 			}
 
-			if (line.KeyName == ChampionSpellLineName)
-			    return true;
-
 			return false;
 		}
 
@@ -3524,11 +3521,14 @@ namespace DOL.GS
 
 				foreach (SpellLine line in spellLines)
 				{
-					foreach (Spell spell in SkillBase.GetSpellList(line.KeyName))
+					if (IsAdvancedSpellLine(line) == false) // don't add advanced spell lines to this list
 					{
-						if (spell.Level <= line.Level && spell.SpellType != "StyleHandler")
+						foreach (Spell spell in SkillBase.GetSpellList(line.KeyName))
 						{
-							spellList.Add(new KeyValuePair<Spell, SpellLine>(spell, line));
+							if (spell.Level <= line.Level && spell.SpellType != "StyleHandler")
+							{
+								spellList.Add(new KeyValuePair<Spell, SpellLine>(spell, line));
+							}
 						}
 					}
 				}
@@ -15091,7 +15091,7 @@ namespace DOL.GS
 			if (championSpellLine != null)
 			{
 				SkillBase.ClearSpellLine(ChampionSpellLineName);
-				m_usableSpells.Clear(); // clear the hybrids spell list
+				if (m_usableSpells != null) m_usableSpells.Clear(); // clear the hybrids spell list
 				ChampionSpells = "";
 				ChampionSpecialtyPoints = ChampionLevel;
 				UpdateSpellLineLevels(false);
@@ -15120,7 +15120,7 @@ namespace DOL.GS
 			if (championSpellLine != null)
 			{
 				RemoveSpellLine(ChampionSpellLineName);
-				m_usableSpells.Clear(); // clear the hybrids spell list
+				if (m_usableSpells != null) m_usableSpells.Clear(); // clear the hybrids spell list
 				SkillBase.ClearSpellLine(ChampionSpellLineName);
 				SkillBase.UnRegisterSpellLine(ChampionSpellLineName);
 				UpdateSpellLineLevels(false);
