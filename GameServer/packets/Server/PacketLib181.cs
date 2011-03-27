@@ -44,12 +44,12 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-		public override void SendListCasterSpellList()
+		public override void SendNonHybridSpellLines()
 		{
 			if (m_gameClient.Player == null)
 				return;
 
-			base.SendListCasterSpellList();
+			base.SendNonHybridSpellLines();
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
 			pak.WriteByte(0x02); //subcode
 			pak.WriteByte(0x00);

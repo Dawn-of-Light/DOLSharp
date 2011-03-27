@@ -663,7 +663,7 @@ namespace DOL.GS.PacketHandler
 		void SendSetControlledHorse(GamePlayer player);
 		void SendControlledHorse(GamePlayer player, bool flag);
 		void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first);
-		void SendListCasterSpellList();
+		void SendNonHybridSpellLines();
 		void SendCrash(string str);
 		void SendRegionColorSheme();
 		void SendRegionColorSheme(byte color);
