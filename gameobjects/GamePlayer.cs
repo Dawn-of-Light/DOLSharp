@@ -15664,6 +15664,16 @@ namespace DOL.GS
 			return true;
 		}
 
+		/// <summary>
+		/// Delve a weapon style for this player
+		/// </summary>
+		/// <param name="delveInfo"></param>
+		/// <param name="style"></param>
+		/// <returns></returns>
+		public virtual void DelveWeaponStyle(IList<string> delveInfo, Style style)
+		{
+			StyleProcessor.DelveWeaponStyle(delveInfo, style, this);
+		}
 
 		/// <summary>
 		/// Get a list of bonuses that effect this player

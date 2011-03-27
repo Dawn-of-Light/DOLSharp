@@ -1393,31 +1393,43 @@ namespace DOL.GS
 		{
 			// load Abilities
 			log.Info("Loading Abilities...");
+
 			var abilities = GameServer.Database.SelectAllObjects<DBAbility>();
 			if (abilities != null)
 			{
 				foreach (DBAbility dba in abilities)
 				{
-					m_abilitiesByName.Add(dba.KeyName, dba);
+					if (m_abilitiesByName.ContainsKey(dba.KeyName) == false)
+					{
+						m_abilitiesByName.Add(dba.KeyName, dba);
+					}
 
-					if (!string.IsNullOrEmpty(dba.Implementation) && !m_implementationTypeCache.ContainsKey(dba.Implementation))
+					if (string.IsNullOrEmpty(dba.Implementation) == false && m_implementationTypeCache.ContainsKey(dba.Implementation) == false)
 					{
 						Type type = ScriptMgr.GetType(dba.Implementation);
 						if (type != null)
 						{
 							Type typeCheck = new Ability(dba).GetType();
 							if (type != typeCheck && type.IsSubclassOf(typeCheck))
+							{
 								m_implementationTypeCache.Add(dba.Implementation, type);
+							}
 							else
+							{
 								log.Warn("Ability implementation " + dba.Implementation + " is not derived from Ability. Cannot be used.");
+							}
 						}
 						else
+						{
 							log.Warn("Ability implementation " + dba.Implementation + " for ability " + dba.Name + " not found");
+						}
 					}
 				}
 			}
 			if (log.IsInfoEnabled)
+			{
 				log.Info("Total abilities loaded: " + ((abilities != null) ? abilities.Count : 0));
+			}
 		}
 
 		private static void LoadClassRealmAbilities()
@@ -1437,21 +1449,33 @@ namespace DOL.GS
 						m_classRealmAbilities[cxra.CharClass] = raList;
 					}
 					else
+					{
 						raList = m_classRealmAbilities[cxra.CharClass];
+					}
 
 					Ability ab = GetAbility(cxra.AbilityKey, 1);
 
 					if (ab.Name.StartsWith("?"))
+					{
 						log.Warn("Realm Ability " + cxra.AbilityKey + " assigned to class " + cxra.CharClass + " but does not exist");
+					}
 					else
 					{
 						if (ab is RealmAbility)
-							raList.Add(ab as RealmAbility);
+						{
+							if (raList.Contains(ab as RealmAbility) == false)
+							{
+								raList.Add(ab as RealmAbility);
+							}
+						}
 						else
+						{
 							log.Warn(ab.Name + " is not a Realm Ability, this most likely is because no Implementation is set or an Implementation is set and is not a Realm Ability");
+						}
 					}
 				}
 			}
+
 			log.Info("Realm Abilities assigned to classes!");
 		}
 
@@ -1468,7 +1492,9 @@ namespace DOL.GS
 				{
 					Dictionary<int, List<DBStyleXSpell>> styleClasses;
 					if (m_styleSpells.ContainsKey(proc.StyleID))
+					{
 						styleClasses = m_styleSpells[proc.StyleID];
+					}
 					else
 					{
 						styleClasses = new Dictionary<int, List<DBStyleXSpell>>();
@@ -1477,19 +1503,26 @@ namespace DOL.GS
 
 					List<DBStyleXSpell> classSpells;
 					if (styleClasses.ContainsKey(proc.ClassID))
+					{
 						classSpells = styleClasses[proc.ClassID];
+					}
 					else
 					{
 						classSpells = new List<DBStyleXSpell>();
 						styleClasses.Add(proc.ClassID, classSpells);
 					}
 
-					classSpells.Add(proc);
+					if (classSpells.Contains(proc) == false)
+					{
+						classSpells.Add(proc);
+					}
 				}
 			}
-			if (log.IsInfoEnabled)
-				log.Info("Total procs loaded: " + ((stylespells != null) ? stylespells.Count : 0));
 
+			if (log.IsInfoEnabled)
+			{
+				log.Info("Total procs loaded: " + ((stylespells != null) ? stylespells.Count : 0));
+			}
 		}
 
 		public static void LoadSpecAbility()
