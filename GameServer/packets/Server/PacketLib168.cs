@@ -2446,15 +2446,7 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte(3);
 							}
 
-							if (spell.SpellType == "StyleHandler")
-							{
-								pak.WriteShortLowEndian((ushort)(spell.Value + 3352));
-							}
-							else
-							{
-								pak.WriteShortLowEndian(spell.Icon);
-							}
-
+							pak.WriteShortLowEndian(spell.Icon); // Icon should be style icon + 3352
 							pak.WritePascalString(spell.Name);
 
 							if (m_gameClient.Player.HasChampionSpell(spec.SpellID))
