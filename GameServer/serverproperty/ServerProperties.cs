@@ -1014,7 +1014,10 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("keeps", "automodel_guards_loaded_from_db", "Should guards loaded from db be modeled by Keepsystem? (false=load from db)", true)]
 		public static bool AUTOMODEL_GUARDS_LOADED_FROM_DB;
 
-		[ServerProperty("keeps", "pvp_unclaimed_keeps_enemy", "Are unclimed keeps considered the enemy in PvP mode?", false)]
+		/// <summary>
+		/// Are unclaimed keeps considered the enemy in PvP mode?
+		/// </summary>
+		[ServerProperty("keeps", "pvp_unclaimed_keeps_enemy", "Are unclaimed keeps considered the enemy in PvP mode?", false)]
 		public static bool PVP_UNCLAIMED_KEEPS_ENEMY;
 
 		#endregion
