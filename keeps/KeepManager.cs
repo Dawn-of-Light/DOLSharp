@@ -556,11 +556,14 @@ namespace DOL.GS.Keeps
 			switch (GameServer.Instance.Configuration.ServerType)
 			{
 				case eGameServerType.GST_Normal:
-					return keep.Realm != target.Realm;
+					{
+						return keep.Realm != target.Realm;
+					}
 				case eGameServerType.GST_PvP:
 					{
 						if (keep.Guild == null)
-							return false;
+							return ServerProperties.Properties.PVP_UNCLAIMED_KEEPS_ENEMY;
+
 						//friendly player in group
 						if (checkGroup && target.Group != null)
 						{
@@ -581,7 +584,9 @@ namespace DOL.GS.Keeps
 						return keep.Guild != target.Guild;
 					}
 				case eGameServerType.GST_PvE:
-					return !(target is GamePlayer);
+					{
+						return !(target is GamePlayer);
+					}
 			}
 			return true;
 		}

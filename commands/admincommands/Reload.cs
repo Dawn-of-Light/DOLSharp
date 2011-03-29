@@ -163,6 +163,7 @@ namespace DOL.GS.Commands
 
 			if (args[1].ToLower() == "specs")
 			{
+				SkillBase.LoadProcs();
 				int count = SkillBase.LoadSpecializations();
 				client.Out.SendMessage(count + " specializations loaded.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return;
