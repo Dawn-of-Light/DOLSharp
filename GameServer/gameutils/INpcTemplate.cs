@@ -109,5 +109,10 @@ namespace DOL.GS
 		/// if TetherRange less or equal 0 ... no tether check
 		/// </summary>
 		int TetherRange { get; }
+
+		/// <summary>
+		/// What object ClassType should this template use?
+		/// </summary>
+		string ClassType { get; }
 	}
 }
