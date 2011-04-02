@@ -5952,67 +5952,86 @@ namespace DOL.GS
 
 		#endregion
 		#region Abilities
+
 		/// <summary>
-		/// Holds all abilities of the player (KeyName -> Ability)
+		/// Holds all abilities of the living (KeyName -> Ability)
 		/// </summary>
-		protected readonly Hashtable m_abilities = new Hashtable();
+		protected readonly Dictionary<string, Ability> m_abilities = new Dictionary<string, Ability>();
+
+		/// <summary>
+		/// Holds a list of skills for this living (used by GamePlayer)
+		/// </summary>
+		protected readonly ArrayList m_skillList = new ArrayList();
+
+		protected Object m_lockAbilities = new Object();
 
 		/// <summary>
 		/// Asks for existence of specific ability
 		/// </summary>
 		/// <param name="keyName">KeyName of ability</param>
-		/// <returns>Has player this ability</returns>
+		/// <returns>Does living have this ability</returns>
 		public virtual bool HasAbility(string keyName)
 		{
-			return m_abilities[keyName] is Ability;
+			return m_abilities.ContainsKey(keyName);
 		}
 
 		/// <summary>
-		/// Adds a new Ability to the player
+		/// Add a new ability to a living
 		/// </summary>
 		/// <param name="ability"></param>
-		#region Abilities
-		protected readonly ArrayList m_skillList = new ArrayList();
 		public virtual void AddAbility(Ability ability)
 		{
 			AddAbility(ability, true);
 		}
+
+		/// <summary>
+		/// Add or update an ability for this living
+		/// </summary>
+		/// <param name="ability"></param>
+		/// <param name="sendUpdates"></param>
 		public virtual void AddAbility(Ability ability, bool sendUpdates)
 		{
-			bool newAbility = false;
-			lock (m_abilities.SyncRoot)
+			bool isNewAbility = false;
+			lock (m_lockAbilities)
 			{
-				Ability oldability = (Ability)m_abilities[ability.KeyName];
+				Ability oldAbility = null;
+				m_abilities.TryGetValue(ability.KeyName, out oldAbility);
 				lock (m_skillList.SyncRoot)
 				{
-					if (oldability == null)
+					if (oldAbility == null)
 					{
-						newAbility = true;
-						m_abilities[ability.KeyName] = ability;
+						isNewAbility = true;
+						m_abilities.Add(ability.KeyName, ability);
 						m_skillList.Add(ability);
 						ability.Activate(this, sendUpdates);
 					}
-					else if (oldability.Level < ability.Level)
+					else if (oldAbility.Level < ability.Level)
 					{
-						newAbility = true;
-						oldability.Level = ability.Level;
-						oldability.Name = ability.Name;
+						isNewAbility = true;
+						oldAbility.Level = ability.Level;
+						oldAbility.Name = ability.Name;
 					}
-					if (newAbility && (this is GamePlayer))
+					if (isNewAbility && (this is GamePlayer))
 					{
 						(this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}
 		}
+
+		/// <summary>
+		/// Remove an ability from this living
+		/// </summary>
+		/// <param name="abilityKeyName"></param>
+		/// <returns></returns>
 		public virtual bool RemoveAbility(string abilityKeyName)
 		{
 			Ability ability = null;
-			lock (m_abilities.SyncRoot)
+			lock (m_lockAbilities)
 			{
 				lock (m_skillList.SyncRoot)
 				{
-					ability = (Ability)m_abilities[abilityKeyName];
+					m_abilities.TryGetValue(abilityKeyName, out ability);
 					if (ability == null)
 						return false;
 					ability.Deactivate(this, true);
@@ -6023,17 +6042,6 @@ namespace DOL.GS
 			if (this is GamePlayer) (this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client, "GamePlayer.RemoveAbility.YouLose", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;
 		}
-		#endregion Abilities
-
-		/// <summary>
-		/// Checks if living has ability to use items of this type
-		/// </summary>
-		/// <param name="item"></param>
-		/// <returns>true if living has ability to use item</returns>
-		public virtual bool HasAbilityToUseItem(ItemTemplate item)
-		{
-			return GameServer.ServerRules.CheckAbilityToUseItem(this, item);
-		}
 
 		/// <summary>
 		/// returns ability of living or null if non existent
@@ -6042,7 +6050,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		public Ability GetAbility(string abilityKey)
 		{
-			return m_abilities[abilityKey] as Ability;
+			if (m_abilities.ContainsKey(abilityKey))
+				return m_abilities[abilityKey] as Ability;
+
+			return null;
 		}
 
 		/// <summary>
@@ -6052,7 +6063,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public Ability GetAbility(Type abilityType)
 		{
-			lock (m_abilities.SyncRoot)
+			lock (m_lockAbilities)
 			{
 				foreach (Ability ab in m_abilities.Values)
 				{
@@ -6065,18 +6076,18 @@ namespace DOL.GS
 
 		/// <summary>
 		/// returns the level of ability
-		/// if 0 is returned, the ability is non existent on player
+		/// if 0 is returned, the ability is non existent on living
 		/// </summary>
 		/// <param name="keyName"></param>
 		/// <returns></returns>
 		public int GetAbilityLevel(string keyName)
 		{
-			Ability ab = m_abilities[keyName] as Ability;
+			Ability ab = null;
+			m_abilities.TryGetValue(keyName, out ab);
 			if (ab == null)
 				return 0;
-			if (ab.Level == 0)
-				return 1; // at least level 1 if ab has level 0
-			return ab.Level;
+
+			return Math.Max(1, ab.Level);
 		}
 
 		/// <summary>
@@ -6085,12 +6096,24 @@ namespace DOL.GS
 		/// <returns></returns>
 		public IList GetAllAbilities()
 		{
-			lock (m_abilities.SyncRoot)
+			lock (m_lockAbilities)
 			{
 				ArrayList list = new ArrayList();
 				list.AddRange(m_abilities.Values);
 				return list;
 			}
+		}
+
+		#endregion Abilities
+
+		/// <summary>
+		/// Checks if living has ability to use items of this type
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns>true if living has ability to use item</returns>
+		public virtual bool HasAbilityToUseItem(ItemTemplate item)
+		{
+			return GameServer.ServerRules.CheckAbilityToUseItem(this, item);
 		}
 
 		/// <summary>
@@ -6156,7 +6179,6 @@ namespace DOL.GS
 				}
 			}
 		}
-		#endregion
 		#region Region
 
 		/// <summary>
