@@ -220,34 +220,55 @@ namespace DOL.GS
 			
 			if ( mob.Abilities != null && mob.Abilities.Count > 0 )
 			{
-				if ( m_abilities == null )
-					m_abilities = new ArrayList( mob.Abilities.Count );
-
-				foreach ( Ability mobAbility in mob.Abilities )
+				try
 				{
-					m_abilities.Add( mobAbility );
+					if (m_abilities == null)
+						m_abilities = new ArrayList(mob.Abilities.Count);
+
+					foreach (Ability mobAbility in mob.Abilities)
+					{
+						m_abilities.Add(mobAbility);
+					}
+				}
+				catch (Exception ex)
+				{
+					log.Error("Trapped Error: ", ex);
 				}
 			}
 
 			if ( mob.Spells != null && mob.Spells.Count > 0 )
 			{
-				if ( m_spells == null )
-					m_spells = new ArrayList( mob.Spells.Count );
-
-				foreach ( Spell mobSpell in mob.Spells )
+				try
 				{
-					m_spells.Add( mobSpell );
+					if (m_spells == null)
+						m_spells = new ArrayList(mob.Spells.Count);
+
+					foreach (Spell mobSpell in mob.Spells)
+					{
+						m_spells.Add(mobSpell);
+					}
+				}
+				catch (Exception ex)
+				{
+					log.Error("Trapped Error: ", ex);
 				}
 			}
 
 			if ( mob.Styles != null && mob.Styles.Count > 0 )
 			{
-				if ( m_styles == null )
-					m_styles = new ArrayList( mob.Styles.Count );
-
-				foreach ( Style mobStyle in mob.Styles )
+				try
 				{
-					m_styles.Add( mobStyle );
+					if (m_styles == null)
+						m_styles = new ArrayList(mob.Styles.Count);
+
+					foreach (Style mobStyle in mob.Styles)
+					{
+						m_styles.Add(mobStyle);
+					}
+				}
+				catch (Exception ex)
+				{
+					log.Error("Trapped Error: ", ex);
 				}
 			}
 
