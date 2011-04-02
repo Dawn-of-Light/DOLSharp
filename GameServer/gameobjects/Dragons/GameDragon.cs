@@ -182,14 +182,6 @@ namespace DOL.GS
 			else
 				log.Debug("Dragon Killed: killer is " + killer.Name + ", attackers:");
 
-			ArrayList clone = m_attackers.Clone() as ArrayList;
-
-			foreach (GameLiving attacker in clone)
-			{
-				if (attacker != null)
-					log.Debug(attacker.Name);
-			}
-
 			bool canReportNews = true;
 
 			// due to issues with attackers the following code will send a notify to all in area in order to force quest credit
