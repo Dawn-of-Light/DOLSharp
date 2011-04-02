@@ -99,7 +99,8 @@ namespace DOL.GS.Quests
 	/// 
 	/// AllowedClasses - Player classes that can get this quest
 	/// 
-	/// ClassType - Any class of type IDataQuestStep which is called on each quest step and when the quest is finished.
+	/// ClassType - Any class of type IDataQuestStep which is called on each quest step and when the quest is finished.  You can optionally include
+	/// additional data to be used by the custom step.  Example:  DOL.Storm.MyCustomStep|some_additonal_data
 	/// 
 	/// </summary>
 	public class DataQuest : AbstractQuest
@@ -177,7 +178,8 @@ namespace DOL.GS.Quests
 		protected List<ItemTemplate> m_finalRewards = new List<ItemTemplate>();
 		protected List<string> m_questDependencies = new List<string>();
 		protected List<byte> m_allowedClasses = new List<byte>();
-		string classType = "";
+		string m_classType = "";
+		string m_additionalData = "";
 
 		#region Construction
 
@@ -462,7 +464,10 @@ namespace DOL.GS.Quests
 				lastParse = m_dataQuest.ClassType;
 				if (string.IsNullOrEmpty(lastParse) == false)
 				{
-					classType = lastParse;
+					parse1 = lastParse.Split('|');
+					m_classType = parse1[0];
+					if (parse1.Length > 1)
+						m_additionalData = parse1[1];
 				}
 			}
 
@@ -720,6 +725,14 @@ namespace DOL.GS.Quests
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Additional data following ClassType 
+		/// </summary>
+		public string AdditionalData
+		{
+			get { return m_additionalData; }
 		}
 
 		#endregion Properties
@@ -1184,17 +1197,17 @@ namespace DOL.GS.Quests
 		{
 			bool canContinue = true;
 
-			if (string.IsNullOrEmpty(classType) == false)
+			if (string.IsNullOrEmpty(m_classType) == false)
 			{
 				if (m_customQuestStep == null)
 				{
 					foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 					{
-						if (assembly.GetType(classType) != null)
+						if (assembly.GetType(m_classType) != null)
 						{
 							try
 							{
-								m_customQuestStep = assembly.CreateInstance(classType, false, BindingFlags.CreateInstance, null, new object[] { }, null, null) as IDataQuestStep;
+								m_customQuestStep = assembly.CreateInstance(m_classType, false, BindingFlags.CreateInstance, null, new object[] { }, null, null) as IDataQuestStep;
 							}
 							catch (Exception)
 							{
@@ -1207,7 +1220,7 @@ namespace DOL.GS.Quests
 
 				if (m_customQuestStep == null)
 				{
-					log.ErrorFormat("Failed to construct custom DataQuest step of ClassType {0}!  Quest will continue anyway.", classType);
+					log.ErrorFormat("Failed to construct custom DataQuest step of ClassType {0}!  Quest will continue anyway.", m_classType);
 				}
 			}
 
