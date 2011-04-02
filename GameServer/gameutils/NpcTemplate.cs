@@ -191,6 +191,7 @@ namespace DOL.GS
 				throw new ArgumentNullException("data");
 
 			m_blockChance = mob.BlockChance;
+			m_race = (ushort)mob.Race;
 			m_bodyType = mob.BodyType;
 			m_charisma = mob.Charisma;
 			m_classType = mob.GetType().ToString();
@@ -225,7 +226,7 @@ namespace DOL.GS
 					if (m_abilities == null)
 						m_abilities = new ArrayList(mob.Abilities.Count);
 
-					foreach (Ability mobAbility in mob.Abilities)
+					foreach (Ability mobAbility in mob.Abilities.Values)
 					{
 						m_abilities.Add(mobAbility);
 					}

@@ -4389,7 +4389,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The Abilities for this NPC
 		/// </summary>
-		public Hashtable Abilities
+		public Dictionary<string, Ability> Abilities
 		{
 			get { return m_abilities; }
 		}
@@ -4901,7 +4901,7 @@ namespace DOL.GS
 
 			if ( Abilities != null && Abilities.Count > 0 )
 			{
-				foreach ( Ability targetAbility in Abilities )
+				foreach (Ability targetAbility in Abilities.Values)
 				{
 					if ( targetAbility != null )
 						copyTarget.AddAbility( targetAbility );
