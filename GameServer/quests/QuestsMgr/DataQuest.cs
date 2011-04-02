@@ -408,14 +408,17 @@ namespace DOL.GS.Quests
 					parse1 = lastParse.Substring(1).Split('|');
 					foreach (string str in parse1)
 					{
-						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(str);
-						if (item != null)
+						if (string.IsNullOrEmpty(str) == false)
 						{
-							m_optionalRewards.Add(item);
-						}
-						else
-						{
-							log.ErrorFormat("DataQuest: Optional reward ItemTemplate not found: {0}", str);
+							ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(str);
+							if (item != null)
+							{
+								m_optionalRewards.Add(item);
+							}
+							else
+							{
+								log.ErrorFormat("DataQuest: Optional reward ItemTemplate not found: {0}", str);
+							}
 						}
 					}
 				}
@@ -533,6 +536,7 @@ namespace DOL.GS.Quests
 		public virtual List<ItemTemplate> OptionalRewards
 		{
 			get { return m_optionalRewards; }
+			set { m_optionalRewards = value; }
 		}
 
 		/// <summary>
