@@ -673,7 +673,7 @@ namespace DOL.GS.Keeps
 				player.Out.SendMessage("You must be in a guild to claim a keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (!player.Guild.GotAccess(player, Guild.eRank.Claim))
+			if (!player.Guild.HasRank(player, Guild.eRank.Claim))
 			{
 				player.Out.SendMessage("You do not have permission to claim for your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

@@ -581,7 +581,7 @@ namespace DOL.GS.Housing
 			// 1) belongs to the guild and is 2) a GM in the guild
 			if (player.Guild != null && house.GuildHouse)
 			{
-				if (player.Guild.Name == house.GuildName && player.Guild.GotAccess(player, Guild.eRank.Leader))
+				if (player.Guild.Name == house.GuildName && player.Guild.HasRank(player, Guild.eRank.Leader))
 					return true;
 			}
 			else

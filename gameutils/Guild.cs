@@ -643,7 +643,7 @@ namespace DOL.GS
 		/// Looks up if a given client have access for the specific command in this guild
 		/// </summary>
 		/// <returns>true or false</returns>
-		public bool GotAccess(GamePlayer member, Guild.eRank rankneededforcommand)
+		public bool HasRank(GamePlayer member, Guild.eRank rankNeeded)
 		{
 			try
 			{
@@ -654,105 +654,104 @@ namespace DOL.GS
 				// If player have a privlevel above 1, it has access enough
 				if (member.Client.Account.PrivLevel > 1)
 					return true;
-				else // No guild leader, lets check if user rank is high enough in the guild
-				{
-					if (member.GuildRank == null)
-					{
-						if (log.IsWarnEnabled)
-							log.Warn("Rank not in db for player " + member.Name);
-						return false;
-					}
 
-					switch (rankneededforcommand)
-					{
-						case Guild.eRank.Emblem:
-							{
-								return member.GuildRank.Emblem;
-							}
-						case Guild.eRank.AcHear:
-							{
-								return member.GuildRank.AcHear;
-							}
-						case Guild.eRank.AcSpeak:
-							{
-								return member.GuildRank.AcSpeak;
-							}
-						case Guild.eRank.Demote:
-							{
-								return member.GuildRank.Promote;
-							}
-						case Guild.eRank.Promote:
-							{
-								return member.GuildRank.Promote;
-							}
-						case Guild.eRank.GcHear:
-							{
-								return member.GuildRank.GcHear;
-							}
-						case Guild.eRank.GcSpeak:
-							{
-								return member.GuildRank.GcSpeak;
-							}
-						case Guild.eRank.Invite:
-							{
-								return member.GuildRank.Invite;
-							}
-						case Guild.eRank.OcHear:
-							{
-								return member.GuildRank.OcHear;
-							}
-						case Guild.eRank.OcSpeak:
-							{
-								return member.GuildRank.OcSpeak;
-							}
-						case Guild.eRank.Remove:
-							{
-								return member.GuildRank.Remove;
-							}
-						case Guild.eRank.Alli:
-							{
-								return member.GuildRank.Alli;
-							}
-						case Guild.eRank.View:
-							{
-								return member.GuildRank.View;
-							}
-						case Guild.eRank.Claim:
-							{
-								return member.GuildRank.Claim;
-							}
-						case Guild.eRank.Release:
-							{
-								return member.GuildRank.Release;
-							}
-						case Guild.eRank.Upgrade:
-							{
-								return member.GuildRank.Upgrade;
-							}
-						case Guild.eRank.Dues:
-							{
-								return member.GuildRank.Dues;
-							}
-						case Guild.eRank.Withdraw:
-							{
-								return member.GuildRank.Withdraw;
-							}
-						case Guild.eRank.Leader:
-							{
-								return (member.GuildRank.RankLevel == 0);
-							}
-						case Guild.eRank.Buff:
-							{
-								return member.GuildRank.Buff;
-							}
-						default:
-							{
-								if (log.IsWarnEnabled)
-									log.Warn("Required rank not in the DB: " + rankneededforcommand);
-								return false;
-							}
-					}
-				}
+                if (member.GuildRank == null)
+                {
+                    if (log.IsWarnEnabled)
+                        log.Warn("Rank not in db for player " + member.Name);
+
+                    return false;
+                }
+
+                switch (rankNeeded)
+                {
+                    case Guild.eRank.Emblem:
+                        {
+                            return member.GuildRank.Emblem;
+                        }
+                    case Guild.eRank.AcHear:
+                        {
+                            return member.GuildRank.AcHear;
+                        }
+                    case Guild.eRank.AcSpeak:
+                        {
+                            return member.GuildRank.AcSpeak;
+                        }
+                    case Guild.eRank.Demote:
+                        {
+                            return member.GuildRank.Promote;
+                        }
+                    case Guild.eRank.Promote:
+                        {
+                            return member.GuildRank.Promote;
+                        }
+                    case Guild.eRank.GcHear:
+                        {
+                            return member.GuildRank.GcHear;
+                        }
+                    case Guild.eRank.GcSpeak:
+                        {
+                            return member.GuildRank.GcSpeak;
+                        }
+                    case Guild.eRank.Invite:
+                        {
+                            return member.GuildRank.Invite;
+                        }
+                    case Guild.eRank.OcHear:
+                        {
+                            return member.GuildRank.OcHear;
+                        }
+                    case Guild.eRank.OcSpeak:
+                        {
+                            return member.GuildRank.OcSpeak;
+                        }
+                    case Guild.eRank.Remove:
+                        {
+                            return member.GuildRank.Remove;
+                        }
+                    case Guild.eRank.Alli:
+                        {
+                            return member.GuildRank.Alli;
+                        }
+                    case Guild.eRank.View:
+                        {
+                            return member.GuildRank.View;
+                        }
+                    case Guild.eRank.Claim:
+                        {
+                            return member.GuildRank.Claim;
+                        }
+                    case Guild.eRank.Release:
+                        {
+                            return member.GuildRank.Release;
+                        }
+                    case Guild.eRank.Upgrade:
+                        {
+                            return member.GuildRank.Upgrade;
+                        }
+                    case Guild.eRank.Dues:
+                        {
+                            return member.GuildRank.Dues;
+                        }
+                    case Guild.eRank.Withdraw:
+                        {
+                            return member.GuildRank.Withdraw;
+                        }
+                    case Guild.eRank.Leader:
+                        {
+                            return (member.GuildRank.RankLevel == 0);
+                        }
+                    case Guild.eRank.Buff:
+                        {
+                            return member.GuildRank.Buff;
+                        }
+                    default:
+                        {
+                            if (log.IsWarnEnabled)
+                                log.Warn("Required rank not in the DB: " + rankNeeded);
+                            return false;
+                        }
+                }
 			}
 			catch (Exception e)
 			{
@@ -817,7 +816,7 @@ namespace DOL.GS
 			{
 				foreach (GamePlayer pl in m_guildMembers.Values)
 				{
-					if (!GotAccess(pl, Guild.eRank.GcHear))
+					if (!HasRank(pl, Guild.eRank.GcHear))
 					{
 						continue;
 					}
@@ -951,16 +950,16 @@ namespace DOL.GS
 			UpdateGuildWindow();
 		}
 
-		public void AddToDatabase()
+		public bool AddToDatabase()
 		{
-			GameServer.Database.AddObject(this.m_DBguild);
+			return GameServer.Database.AddObject(this.m_DBguild);
 		}
 		/// <summary>
 		/// Saves this guild to database
 		/// </summary>
-		public void SaveIntoDatabase()
+		public bool SaveIntoDatabase()
 		{
-			GameServer.Database.SaveObject(m_DBguild);
+			return GameServer.Database.SaveObject(m_DBguild);
 		}
 
 		private string bannerStatus;
