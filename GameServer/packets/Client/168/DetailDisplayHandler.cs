@@ -771,14 +771,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.DontBelongGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if (!client.Player.Guild.GotAccess(client.Player, Guild.eRank.GcSpeak))
+						if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.GcSpeak))
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoPermissionToSpeak"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
 						{
-							if (!client.Player.Guild.GotAccess(ply, Guild.eRank.GcHear)) continue;
+							if (!client.Player.Guild.HasRank(ply, Guild.eRank.GcHear)) continue;
 							ply.Out.SendMessage(str, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 						}
 						return;

@@ -178,7 +178,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 
 					// player needs to be a GM in the guild to xfer his personal house to the guild
-					if (!client.Player.Guild.GotAccess(client.Player, Guild.eRank.Leader))
+					if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
 					{
 						client.Out.SendInventorySlotsUpdate(new[] { slot });
 						ChatUtil.SendSystemMessage(client, "You are not the leader of a guild.");
