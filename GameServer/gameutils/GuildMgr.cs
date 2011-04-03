@@ -158,44 +158,38 @@ namespace DOL.GS
 		{
 			lock (m_guilds.SyncRoot)
 			{
-				if (m_guilds.Contains(guildName))
-					return true;
-				return false;
+                return m_guilds.Contains(guildName);
 			}
 		}
 
-		/// <summary>
-		/// Creates a new guild
-		/// </summary>
-		/// <returns>GuildEntry</returns>
-		public static Guild CreateGuild(GamePlayer creator, string guildName)
-		{
-			if (DoesGuildExist(guildName))
-			{
-				if (creator != null)
-					creator.Out.SendMessage(guildName + " already exists!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				
-				return null;
-			}
-			return CreateNewGuild(creator.Realm, guildName);
-		}
-		public static Guild CreateGuild(eRealm realm, string guildName)
-		{
-			return CreateNewGuild(realm, guildName);
-		}
 		
-		static Guild CreateNewGuild(eRealm realm, string guildName)
+		public static Guild CreateGuild(eRealm realm, string guildName, GamePlayer creator = null)
 		{
-			try
+            if (DoesGuildExist(guildName))
+            {
+                if (creator != null)
+                    creator.Out.SendMessage(guildName + " already exists!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                return null;
+            }
+
+            try
 			{
 				DBGuild dbGuild = new DBGuild();
 				dbGuild.GuildName = guildName;
 				dbGuild.GuildID = System.Guid.NewGuid().ToString();
 				dbGuild.Realm = (byte)realm;
 				Guild newguild = new Guild(dbGuild);
-				CreateRanks(newguild);
-				AddGuild(newguild);
-				newguild.AddToDatabase();
+                if (newguild.AddToDatabase() == false)
+                {
+                    if (creator != null)
+                    {
+                        creator.Out.SendMessage("Database error, unable to add a new guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
+                    return null;
+                }
+                AddGuild(newguild);
+                CreateRanks(newguild);
 				
 				if (log.IsDebugEnabled)
 					log.Debug("Create guild; guild name=\"" + guildName + "\" Realm=" + GlobalConstants.RealmToName(newguild.Realm));

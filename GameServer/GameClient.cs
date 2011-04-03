@@ -516,6 +516,10 @@ namespace DOL.GS
 		{
 			m_activeCharIndex = accountindex;
 			GamePlayer player = null;
+
+            // refreshing Account to load any changes from the DB
+            GameServer.Database.FillObjectRelations(m_account);
+
 			DOLCharacters car = m_account.Characters[m_activeCharIndex];
 
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));

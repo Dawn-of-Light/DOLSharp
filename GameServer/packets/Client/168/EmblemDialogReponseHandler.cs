@@ -31,7 +31,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			if(client.Player.Guild == null)
 				return;
-			if(!client.Player.Guild.GotAccess(client.Player, Guild.eRank.Leader))
+			if(!client.Player.Guild.HasRank(client.Player, Guild.eRank.Leader))
 				return;
 			int primarycolor = packet.ReadByte() & 0x0F; //4bits
 			int secondarycolor = packet.ReadByte() & 0x07; //3bits
