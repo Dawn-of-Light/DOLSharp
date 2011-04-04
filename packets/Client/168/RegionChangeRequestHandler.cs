@@ -57,13 +57,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			var zonePoint =	GameServer.Database.SelectObject<ZonePoint>("`Id` = '" + jumpSpotID + "' AND (`Realm` = '" + (byte)targetRealm +
 			                                                            "' OR `Realm` = '0' OR `Realm` = NULL)");
 
-			if (zonePoint == null)
+			if (zonePoint == null || zonePoint.TargetRegion == 0)
 			{
-				if (client.Account.PrivLevel > 1)
-				{
-					client.Out.SendMessage("Invalid Jump : [" + jumpSpotID + "]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-
+				ChatUtil.SendDebugMessage(client, "Invalid Jump (ZonePoint table): [" + jumpSpotID + "]" + ((zonePoint == null) ? ". Entry missing!" : ". TargetRegion is 0!"));
 				zonePoint = new ZonePoint();
 				zonePoint.Id = jumpSpotID;
 			}
