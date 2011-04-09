@@ -21,6 +21,7 @@ using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using DOL.AI.Brain;
@@ -42,8 +43,8 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static readonly ArrayList m_scripts = new ArrayList(4);
-		private static readonly Hashtable m_spellhandlerConstructorCache = new Hashtable();
+		private static Dictionary<string, Assembly> m_compiledScripts = new Dictionary<string, Assembly>();
+		private static Dictionary<string, ConstructorInfo> m_spellhandlerConstructorCache = new Dictionary<string, ConstructorInfo>();
 
 		/// <summary>
 		/// This class will hold all info about a gamecommand
@@ -58,46 +59,48 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// All commands will be stored in this hashtable
+		/// Collection of every /command
 		/// </summary>
-		private static Hashtable m_cmds =
-			//VaNaTiC->
-			//new Hashtable(CaseInsensitiveHashCodeProvider.DefaultInvariant, CaseInsensitiveComparer.DefaultInvariant);
-			new Hashtable(StringComparer.InvariantCultureIgnoreCase);
-		//VaNaTiC<-
+		private static Dictionary<string, GameCommand> m_gameCommands = new Dictionary<string, GameCommand>(StringComparer.InvariantCultureIgnoreCase);
 
 
 		/// <summary>
-		/// Gets the scripts assemblies
+		/// Get an array of all script assemblies
 		/// </summary>
 		public static Assembly[] Scripts
 		{
-			get { return (Assembly[])m_scripts.ToArray(typeof(Assembly)); }
+			get 
+			{
+				return m_compiledScripts.Values.ToArray<Assembly>();
+			}
 		}
 
 		/// <summary>
 		/// Gets the requested command if it exists
 		/// </summary>
-		/// <param name="cmd">The command to retrieve</param>
+		/// <param name="commandName">The command to retrieve</param>
 		/// <returns>Returns the command if it exists, otherwise the return value is null</returns>
-		public static GameCommand GetCommand(string cmd)
+		public static GameCommand GetCommand(string commandName)
 		{
-			return m_cmds[cmd] as GameCommand;
+			if (m_gameCommands.ContainsKey(commandName))
+				return m_gameCommands[commandName];
+
+			return null;
 		}
 
 		/// <summary>
 		/// Looking for exact match first, then, if nothing found, trying to guess command using first letters
 		/// </summary>
-		/// <param name="cmd">The command to retrieve</param>
+		/// <param name="commandName">The command to retrieve</param>
 		/// <returns>Returns the command if it exists, otherwise the return value is null</returns>
-		public static GameCommand GuessCommand(string cmd)
+		public static GameCommand GuessCommand(string commandName)
 		{
-			GameCommand myCommand = GetCommand(cmd);
+			GameCommand myCommand = GetCommand(commandName);
 			if (myCommand != null) return myCommand;
 
 			// Trying to guess the command
-			string compareCmdStr = cmd.ToLower();
-			IDictionaryEnumerator iter = m_cmds.GetEnumerator();
+			string compareCmdStr = commandName.ToLower();
+			IDictionaryEnumerator iter = m_gameCommands.GetEnumerator();
 
 			while (iter.MoveNext())
 			{
@@ -123,7 +126,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static string[] GetCommandList(ePrivLevel plvl, bool addDesc)
 		{
-			IDictionaryEnumerator iter = m_cmds.GetEnumerator();
+			IDictionaryEnumerator iter = m_gameCommands.GetEnumerator();
 
 			ArrayList list = new ArrayList();
 
@@ -184,9 +187,9 @@ namespace DOL.GS
 		/// Searches the script assembly for all command handlers
 		/// </summary>
 		/// <returns>True if succeeded</returns>
-		private static bool LoadCommands()
+		public static bool LoadCommands(bool quiet = false)
 		{
-			m_cmds.Clear();
+			m_gameCommands.Clear();
 
 			ArrayList asms = new ArrayList(Scripts);
 			asms.Add(typeof(GameServer).Assembly);
@@ -220,28 +223,32 @@ namespace DOL.GS
 									break;
 								}
 							}
+
 							if (disabled)
 								continue;
-							if (m_cmds.ContainsKey(attrib.Cmd))
+
+							if (m_gameCommands.ContainsKey(attrib.Cmd))
 							{
 								log.Info(attrib.Cmd + " from " + script.GetName() + " has been suppressed, a command of that type already exists!");
 								continue;
 							}
-							if (log.IsDebugEnabled)
+							if (log.IsDebugEnabled && quiet == false)
 								log.Debug("ScriptMgr: Command - '" + attrib.Cmd + "' - (" + attrib.Description + ") required plvl:" + attrib.Level);
-							GameCommand cmd = new GameCommand();
 
+							GameCommand cmd = new GameCommand();
 							cmd.Usage = attrib.Usage;
 							cmd.m_cmd = attrib.Cmd;
 							cmd.m_lvl = attrib.Level;
 							cmd.m_desc = attrib.Description;
 							cmd.m_cmdHandler = (ICommandHandler)Activator.CreateInstance(type);
-							m_cmds.Add(attrib.Cmd, cmd);
+							m_gameCommands.Add(attrib.Cmd, cmd);
 							if (attrib.Aliases != null)
+							{
 								foreach (string alias in attrib.Aliases)
 								{
-									m_cmds.Add(alias, cmd);
+									m_gameCommands.Add(alias, cmd);
 								}
+							}
 						}
 					}
 					catch (Exception e)
@@ -251,7 +258,7 @@ namespace DOL.GS
 					}
 				}
 			}
-			log.Info("Loaded " + m_cmds.Count + " commands!");
+			log.Info("Loaded " + m_gameCommands.Count + " commands!");
 			return true;
 		}
 
@@ -431,7 +438,7 @@ namespace DOL.GS
 				path = path + "/";
 
 			//Reset the assemblies
-			m_scripts.Clear();
+			m_compiledScripts.Clear();
 
 			//Check if there are any scripts, if no scripts exist, that is fine as well
 			ArrayList files = ParseDirectory(new DirectoryInfo(path), compileVB ? "*.vb" : "*.cs", true);
@@ -510,11 +517,10 @@ namespace DOL.GS
 				try
 				{
 					Assembly asm = Assembly.LoadFrom(dllName);
-					if (!m_scripts.Contains(asm))
-						m_scripts.Add(asm);
+					AddOrReplaceAssembly(asm);
 
 					if (log.IsDebugEnabled)
-						log.Debug("Precompiled script assembly loaded");
+						log.Debug("Precompiled script assembly loaded: " + asm.FullName);
 				}
 				catch (Exception e)
 				{
@@ -593,8 +599,7 @@ namespace DOL.GS
 					return false;
 				}
 
-				if (!m_scripts.Contains(res.CompiledAssembly))
-					m_scripts.Add(res.CompiledAssembly);
+				AddOrReplaceAssembly(res.CompiledAssembly);
 
 				if (!LoadCommands())
 				{
@@ -605,7 +610,7 @@ namespace DOL.GS
 			{
 				if (log.IsErrorEnabled)
 					log.Error("CompileScripts", e);
-				m_scripts.Clear();
+				m_compiledScripts.Clear();
 			}
 			//now notify our callbacks
 			bool ret = false;
@@ -628,6 +633,39 @@ namespace DOL.GS
 			newconfig.Save(configFile);
 
 			return true;
+		}
+
+		/// <summary>
+		/// Add or replace an assembly in the collection of compiled assemblies
+		/// </summary>
+		/// <param name="assembly"></param>
+		public static void AddOrReplaceAssembly(Assembly assembly)
+		{
+			if (m_compiledScripts.ContainsKey(assembly.FullName) == false)
+			{
+				m_compiledScripts.Add(assembly.FullName, assembly);
+			}
+			else
+			{
+				m_compiledScripts[assembly.FullName] = assembly;
+				if (log.IsDebugEnabled)
+					log.Debug("Replaced assembly " + assembly.FullName);
+			}
+		}
+
+		/// <summary>
+		/// Removes an assembly from the game servers list of usable assemblies
+		/// </summary>
+		/// <param name="fullName"></param>
+		public static bool RemoveAssembly(string fullName)
+		{
+			if (m_compiledScripts.ContainsKey(fullName))
+			{
+				m_compiledScripts.Remove(fullName);
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -864,7 +902,10 @@ namespace DOL.GS
 		{
 			if (spell == null || spell.SpellType.Length == 0) return null;
 
-			ConstructorInfo handlerConstructor = (ConstructorInfo)m_spellhandlerConstructorCache[spell.SpellType];
+			ConstructorInfo handlerConstructor = null;
+
+			if (m_spellhandlerConstructorCache.ContainsKey(spell.SpellType))
+				handlerConstructor = m_spellhandlerConstructorCache[spell.SpellType];
 
 			// try to find it in assemblies when not in cache
 			if (handlerConstructor == null)
@@ -901,13 +942,15 @@ namespace DOL.GS
 							if (log.IsErrorEnabled)
 								log.Error("CreateSpellHandler", e);
 						}
-						if (handlerConstructor != null) break;
+
+						if (handlerConstructor != null)
+							break;
 					}
 				}
 
 				if (handlerConstructor != null)
 				{
-					m_spellhandlerConstructorCache[spell.SpellType] = handlerConstructor;
+					m_spellhandlerConstructorCache.Add(spell.SpellType, handlerConstructor);
 				}
 			}
 
@@ -929,6 +972,14 @@ namespace DOL.GS
 					log.Error("Couldn't find spell handler for spell type " + spell.SpellType);
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// Clear all spell handlers from the cashe, forcing a reload when a spell is cast
+		/// </summary>
+		public static void ClearSpellHandlerCache()
+		{
+			m_spellhandlerConstructorCache.Clear();
 		}
 
 		/// <summary>
