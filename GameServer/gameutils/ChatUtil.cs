@@ -101,6 +101,16 @@ namespace DOL.GS
 			target.Out.SendMessage(translatedMsg, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 		}
 
+		public static void SendErrorMessage(GamePlayer target, string message)
+		{
+			SendErrorMessage(target.Client, message);
+		}
+
+		public static void SendErrorMessage(GameClient target, string message)
+		{
+			target.Out.SendMessage(message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+		}
+
 		public static void SendDebugMessage(GamePlayer target, string message)
 		{
 			SendDebugMessage(target.Client, message);
