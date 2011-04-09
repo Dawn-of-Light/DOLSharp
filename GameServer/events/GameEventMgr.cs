@@ -65,6 +65,17 @@ namespace DOL.Events
 		/// </summary>
 		private static readonly DOLEventHandlerCollection m_globalHandlerCollection;
 
+		/// <summary>
+		/// Get all global event handlers
+		/// </summary>
+		public static DOLEventHandlerCollection GlobalHandlerCollection
+		{
+			get { return m_globalHandlerCollection; }
+		}
+
+		/// <summary>
+		/// Get the number of global event handlers
+		/// </summary>
 		public static int NumGlobalHandlers
 		{
 			get { return m_globalHandlerCollection.Count; }

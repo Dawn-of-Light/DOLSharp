@@ -41,14 +41,39 @@ namespace DOL
 		private readonly MethodInfo _method;
 
 		/// <summary>
+		/// Method info of this delegate
+		/// </summary>
+		public MethodInfo Method
+		{
+			get { return _method; }
+		}
+
+		/// <summary>
 		/// A weak reference to the target for this delegate
 		/// </summary>
 		private readonly WeakReference _weakRef;
 
 		/// <summary>
+		/// A weak reference to the target for this delegate
+		/// </summary>
+		public WeakReference WeakRef
+		{
+			get { return _weakRef; }
+		}
+
+
+		/// <summary>
 		/// The previous weak multicast delegate in the list
 		/// </summary>
 		private WeakMulticastDelegate _prev;
+
+		/// <summary>
+		/// The previous multicast delegate in this list
+		/// </summary>
+		public WeakMulticastDelegate Previous
+		{
+			get { return _prev; }
+		}
 
 		/// <summary>
 		/// Creates a new weak multicast delegate based on
