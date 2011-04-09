@@ -47,6 +47,14 @@ namespace DOL.Events
 		/// </summary>
 		private readonly Dictionary<DOLEvent, WeakMulticastDelegate> _events;
 
+		public WeakMulticastDelegate GetEventDelegate(DOLEvent e)
+		{
+			if (_events.ContainsKey(e))
+				return _events[e];
+
+			return null;
+		}
+
 		public int Count
 		{
 			get { return _events.Count; }

@@ -2423,20 +2423,20 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0);
 				pak.WriteByte(6);
 
-				for (int skillindex = 1; skillindex < 7; skillindex++)
+				for (int skillIndex = 1; skillIndex < 7; skillIndex++)
 				{
-					IList specs = ChampSpecMgr.GetAbilityForIndex(type, skillindex);
-					pak.WriteByte((byte) skillindex);
+					IList specs = ChampSpecMgr.GetAbilityForIndex(type, skillIndex);
+					pak.WriteByte((byte) skillIndex);
 					pak.WriteByte((byte) specs.Count);
 
 					foreach (ChampSpec spec in specs)
 					{
 						Spell spell = SkillBase.GetSpellByID(spec.SpellID);
 
+						pak.WriteByte((byte)spec.Index);
+
 						if (spell != null)
 						{
-							pak.WriteByte((byte)spec.Index);
-
 							if (spell.SpellType == "StyleHandler")
 							{
 								pak.WriteByte(1);
@@ -2453,7 +2453,7 @@ namespace DOL.GS.PacketHandler
 							{
 								pak.WriteByte(1);
 							}
-							else if (m_gameClient.Player.CanTrainChampionSpell(type, skillindex, spec.Index))
+							else if (m_gameClient.Player.CanTrainChampionSpell(type, skillIndex, spec.Index))
 							{
 								pak.WriteByte(2);
 							}
@@ -2466,10 +2466,18 @@ namespace DOL.GS.PacketHandler
 						}
 						else
 						{
-							log.ErrorFormat("Missing champion spell ID: {0} for ID line: {1}", spec.SpellID, spec.IdLine);
+							log.ErrorFormat("Missing champion spell ID: {0} for ID line: {1}, SpecIndex {2}, SkillIndex {3}", spec.SpellID, spec.IdLine, spec.Index, skillIndex);
+							ChatUtil.SendDebugMessage(m_gameClient, string.Format("Missing champion spell ID: {0} for ID line: {1}, SpecIndex {2}, SkillIndex {3}", spec.SpellID, spec.IdLine, spec.Index, skillIndex));
+
+							pak.WriteByte(3);
+							pak.WriteShortLowEndian(0);
+							pak.WritePascalString("Missing Spell " + spec.SpellID);
+							pak.WriteByte(0);
+							pak.WriteByte(0);
 						}
 					}
 				}
+
 				SendTCP(pak);
 			}
 		}
