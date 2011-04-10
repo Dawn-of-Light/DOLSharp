@@ -1485,10 +1485,12 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Loading procs...");
 
-			var stylespells = GameServer.Database.SelectAllObjects<DBStyleXSpell>();
-			if (stylespells != null)
+			m_styleSpells.Clear();
+
+			var styleXSpells = GameServer.Database.SelectAllObjects<DBStyleXSpell>();
+			if (styleXSpells != null)
 			{
-				foreach (DBStyleXSpell proc in stylespells)
+				foreach (DBStyleXSpell proc in styleXSpells)
 				{
 					Dictionary<int, List<DBStyleXSpell>> styleClasses;
 					if (m_styleSpells.ContainsKey(proc.StyleID))
@@ -1521,7 +1523,7 @@ namespace DOL.GS
 
 			if (log.IsInfoEnabled)
 			{
-				log.Info("Total procs loaded: " + ((stylespells != null) ? stylespells.Count : 0));
+				log.Info("Total procs loaded: " + ((styleXSpells != null) ? styleXSpells.Count : 0));
 			}
 		}
 
@@ -1565,9 +1567,9 @@ namespace DOL.GS
 				{
 					if (spec.Styles != null)
 					{
-						foreach (DBStyle style in spec.Styles)
+						foreach (DBStyle specStyle in spec.Styles)
 						{
-							string hashKey = string.Format("{0}|{1}", style.SpecKeyName, style.ClassId);
+							string hashKey = string.Format("{0}|{1}", specStyle.SpecKeyName, specStyle.ClassId);
 							List<Style> styleList;
 							if (!m_styleLists.TryGetValue(hashKey, out styleList))
 							{
@@ -1575,28 +1577,28 @@ namespace DOL.GS
 								m_styleLists.Add(hashKey, styleList);
 							}
 
-							Style st = new Style(style);
+							Style style = new Style(specStyle);
 
 							//(procs) Add procs to the style, 0 is used for normal style
-							if (m_styleSpells.ContainsKey(st.ID))
+							if (m_styleSpells.ContainsKey(style.ID))
 							{
 								// now we add every proc to the style (even if ClassID != 0)
 								foreach (byte classID in Enum.GetValues(typeof(eCharacterClass)))
 								{
-									if (m_styleSpells[st.ID].ContainsKey(classID))
+									if (m_styleSpells[style.ID].ContainsKey(classID))
 									{
-										foreach (DBStyleXSpell styleSpells in m_styleSpells[st.ID][classID])
-											st.Procs.Add(styleSpells);
+										foreach (DBStyleXSpell styleSpells in m_styleSpells[style.ID][classID])
+											style.Procs.Add(styleSpells);
 									}
 								}
 							}
 							
-							styleList.Add(st);
+							styleList.Add(style);
 
-							KeyValuePair<int, int> styleKey = new KeyValuePair<int, int>(st.ID, style.ClassId);
+							KeyValuePair<int, int> styleKey = new KeyValuePair<int, int>(style.ID, specStyle.ClassId);
 							if (!m_stylesByIDClass.ContainsKey(styleKey))
 							{
-								m_stylesByIDClass.Add(styleKey, st);
+								m_stylesByIDClass.Add(styleKey, style);
 							}
 						}
 					}
