@@ -211,7 +211,7 @@ namespace DOL.GS.Commands
 							Guild myguild = GuildMgr.GetGuildByName(oldguildname);
 							myguild.Name = newguildname;
 							GuildMgr.AddGuild(myguild);
-							foreach (GamePlayer ply in myguild.ListOnlineMembers())
+							foreach (GamePlayer ply in myguild.GetListOfOnlineMembers())
 							{
 								ply.GuildName = newguildname;
 							}
@@ -417,7 +417,7 @@ namespace DOL.GS.Commands
 								return;
 							}
 
-							foreach (GamePlayer plyon in client.Player.Guild.ListOnlineMembers())
+							foreach (GamePlayer plyon in client.Player.Guild.GetListOfOnlineMembers())
 							{
 								plyon.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.MemberRemoved", client.Player.Name, plyName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
@@ -479,7 +479,7 @@ namespace DOL.GS.Commands
 									}
 								}
 
-								foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
+								foreach (GamePlayer ply in client.Player.Guild.GetListOfOnlineMembers())
 								{
 									ply.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.AccountRemoved", client.Player.Name, plys), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
@@ -704,7 +704,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.BannerNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							foreach (GamePlayer guildPlayer in client.Player.Guild.ListOnlineMembers())
+							foreach (GamePlayer guildPlayer in client.Player.Guild.GetListOfOnlineMembers())
 							{
 								if (guildPlayer.GuildBanner != null)
 								{
@@ -912,7 +912,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.InCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							foreach (GamePlayer player in client.Player.Guild.ListOnlineMembers())
+							foreach (GamePlayer player in client.Player.Guild.GetListOfOnlineMembers())
 							{
 								if (client.Player.Name == player.Name && player.GuildBanner != null && player.GuildBanner.BannerItem.Status == GuildBannerItem.eStatus.Active)
 								{
@@ -1031,7 +1031,7 @@ namespace DOL.GS.Commands
 								return;
 							}
 							client.Player.Guild.UpdateGuildWindow();
-							SetCmd(client, args);
+							GCEditCommand(client, args);
 						}
 						client.Player.Guild.UpdateGuildWindow();
 						break;
@@ -1184,8 +1184,6 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-
-                            Log.Debug(args.Length);
 
 							if (args.Length < 3)
 							{
@@ -1421,8 +1419,8 @@ namespace DOL.GS.Commands
 							if (args.Length == 6 && args[2] == "window")
 							{
 								//First get the sorted list
-								SortedList<string, GuildMgr.SocialWindowMember> guildMembers = GuildMgr.GetSocialWindowGuild(client.Player.GuildID);
-								if (guildMembers != null)
+								SortedList<string, GuildMgr.SocialWindowMember> sortedAllGuildMembers = GuildMgr.GetSocialWindowGuild(client.Player.GuildID);
+								if (sortedAllGuildMembers != null)
 								{
 									int sorttemp;
 									byte showtemp;
@@ -1434,7 +1432,7 @@ namespace DOL.GS.Commands
 										//The type of sorting we will be sending
 										GuildMgr.SocialWindowMember.eSocialWindowSort sort = (GuildMgr.SocialWindowMember.eSocialWindowSort)sorttemp;
 										//Let's sort the sorted list - we don't need to sort if sort = name
-										SortedList<string, GuildMgr.SocialWindowMember> sortedList = null;
+										SortedList<string, GuildMgr.SocialWindowMember> sortedWindowList = null;
 										GuildMgr.SocialWindowMember.eSocialWindowIndex index = GuildMgr.SocialWindowMember.eSocialWindowIndex.Name;
 
 										#region Sort
@@ -1470,59 +1468,62 @@ namespace DOL.GS.Commands
 										//We have to make a new sorted list if they just want online, lets do that first
 										if (!showOffline)
 										{
-											SortedList<string, GamePlayer> onlineMembers = client.Player.Guild.SortedListOnlineMembers();
-											sortedList = new SortedList<string, GuildMgr.SocialWindowMember>(onlineMembers.Count);
-											foreach (GamePlayer player in onlineMembers.Values)
+											SortedList<string, GamePlayer> sortedOnlineMembers = client.Player.Guild.GetSortedListOfOnlineMembers();
+											sortedWindowList = new SortedList<string, GuildMgr.SocialWindowMember>(sortedOnlineMembers.Count);
+											foreach (GamePlayer player in sortedOnlineMembers.Values)
 											{
-												if (guildMembers.ContainsKey(player.Name))
+												if (sortedAllGuildMembers.ContainsKey(player.Name))
 												{
-													GuildMgr.SocialWindowMember member = guildMembers[player.Name];
+													GuildMgr.SocialWindowMember member = sortedAllGuildMembers[player.Name];
 													member.UpdateMember(player);
 													string key = member[index];
-													if (sortedList.ContainsKey(key))
-														key += sortedList.Count.ToString();
+													if (sortedWindowList.ContainsKey(key))
+														key += sortedWindowList.Count.ToString();
 
-													sortedList.Add(key, member);
+													sortedWindowList.Add(key, member);
 												}
 											}
 										}
 										else if (index == GuildMgr.SocialWindowMember.eSocialWindowIndex.Name)
 										{
-											sortedList = guildMembers;
+											sortedWindowList = sortedAllGuildMembers;
 										}
-										else
-											//They sorted on something besides what we presorted on!
+										else //They sorted on something besides what we presorted on!
 										{
-											sortedList = new SortedList<string, GuildMgr.SocialWindowMember>(guildMembers.Count);
-											foreach (GuildMgr.SocialWindowMember member in guildMembers.Values)
+											foreach (GuildMgr.SocialWindowMember member in sortedAllGuildMembers.Values)
 											{
-												if (client.Player.Guild.SortedListOnlineMembers().ContainsKey(member.Name))
+												GamePlayer p = client.Player.Guild.GetOnlineMemberByName(member.Name);
+												if (p != null)
+												{
 													//Update to make sure we have the most up to date info
-													member.UpdateMember(client.Player.Guild.SortedListOnlineMembers()[member.Name]);
+													member.UpdateMember(p);
+												}
 												else
+												{
 													//Make sure that since they are offline they get the offline flag!
 													member.GroupSize = "0";
+												}
 												//Add based on the new index
 												string key = member[index];
-												if (sortedList.ContainsKey(key))
+												if (sortedWindowList.ContainsKey(key))
 												{
-													key += sortedList.Count.ToString();
+													key += sortedWindowList.Count.ToString();
 												}
 
 												try
 												{
-													sortedList.Add(key, member);
+													sortedWindowList.Add(key, member);
 												}
 												catch
 												{
 													if (Log.IsErrorEnabled)
-														Log.Error(string.Format("Sorted List duplicate entry - Key: {0} Member: {1}. Replacing - Member: {2}.  Sorted count: {3}.  Guild ID: {4}", key, member.Name, sortedList[key].Name, sortedList.Count, client.Player.GuildID));
+														Log.Error(string.Format("Sorted List duplicate entry - Key: {0} Member: {1}. Replacing - Member: {2}.  Sorted count: {3}.  Guild ID: {4}", key, member.Name, sortedWindowList[key].Name, sortedWindowList.Count, client.Player.GuildID));
 												}
 											}
 										}
 
 										//Finally lets send the list we made
-										IList<GuildMgr.SocialWindowMember> finalList = sortedList.Values;
+										IList<GuildMgr.SocialWindowMember> finalList = sortedWindowList.Values;
 										int i = 0;
 										string[] buffer = new string[10];
 										for (i = 0; i < 10 && finalList.Count > i + (page - 1) * 10; i++)
@@ -1557,9 +1558,9 @@ namespace DOL.GS.Commands
 								{
 									foreach (Guild guild in client.Player.Guild.alliance.Guilds)
 									{
-										lock (guild.ListOnlineMembers())
+										lock (guild.GetListOfOnlineMembers())
 										{
-											foreach (GamePlayer ply in guild.ListOnlineMembers())
+											foreach (GamePlayer ply in guild.GetListOfOnlineMembers())
 											{
 												if (ply.Client.IsPlaying && !ply.IsAnonymous)
 												{
@@ -1580,7 +1581,7 @@ namespace DOL.GS.Commands
 							}
 							#endregion
 							#region Who
-							IList<GamePlayer> onlineGuildMembers = client.Player.Guild.ListOnlineMembers();
+							IList<GamePlayer> onlineGuildMembers = client.Player.Guild.GetListOfOnlineMembers();
 
 							foreach (GamePlayer ply in onlineGuildMembers)
 							{
@@ -1646,7 +1647,7 @@ namespace DOL.GS.Commands
 							newLeader.GuildRank = newLeader.Guild.GetRankByID(0);
 							newLeader.SaveIntoDatabase();
 							newLeader.Out.SendMessage(LanguageMgr.GetTranslation(newLeader.Client, "Scripts.Player.Guild.MadeLeader", newLeader.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-							foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
+							foreach (GamePlayer ply in client.Player.Guild.GetListOfOnlineMembers())
 							{
 								ply.Out.SendMessage(LanguageMgr.GetTranslation(ply.Client, "Scripts.Player.Guild.MadeLeaderOther", newLeader.Name, newLeader.Guild.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 							}
@@ -2493,7 +2494,7 @@ namespace DOL.GS.Commands
 
 			string buffName = Guild.BonusTypeToName(buffType);
 
-			foreach (GamePlayer ply in player.Guild.ListOnlineMembers())
+			foreach (GamePlayer ply in player.Guild.GetListOfOnlineMembers())
 			{
 				ply.Out.SendMessage(LanguageMgr.GetTranslation(ply.Client, "Scripts.Player.Guild.BuffActivated", player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 				ply.Out.SendMessage(string.Format("Your guild now has a bonus to {0} for 24 hours!", buffName), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
@@ -2633,7 +2634,7 @@ namespace DOL.GS.Commands
 		/// <param name="client"></param>
 		/// <param name="args"></param>
 		/// <returns></returns>
-		public int SetCmd(GameClient client, string[] args)
+		public int GCEditCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 4)
 			{
@@ -2697,7 +2698,7 @@ namespace DOL.GS.Commands
 						}
 						else
 						{
-							DisplaySyntax(client);
+							DisplayEditHelp(client);
 						}
 					}
 					break;
@@ -2903,6 +2904,7 @@ namespace DOL.GS.Commands
 					break;
 				default:
 					{
+						DisplayEditHelp(client);
 						return 0;
 					}
 			} //switch
