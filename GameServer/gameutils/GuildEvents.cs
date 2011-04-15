@@ -304,7 +304,7 @@ namespace DOL.GS
 						checkGuild.SaveIntoDatabase();
 
 						string message = "[Guild Buff] Your guild buff has now worn off!";
-						foreach (GamePlayer player in checkGuild.ListOnlineMembers())
+						foreach (GamePlayer player in checkGuild.GetListOfOnlineMembers())
 						{
 							player.Out.SendMessage(message, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 						}

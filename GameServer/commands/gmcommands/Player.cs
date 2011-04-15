@@ -2209,7 +2209,7 @@ namespace DOL.GS.Commands
 			text.Add("PLAYER INFORMATION (Client # " + player.Client.SessionID + ", " + player.GetType().FullName + ")");
 			text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
 			text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " + player.CharacterClass.Name);
-			text.Add("  - Guild : " + player.GuildName);
+			text.Add("  - Guild : " + player.GuildName + " " + (player.GuildRank != null ? "Rank: " + player.GuildRank.RankLevel.ToString() : ""));
 			text.Add("  - XPs/RPs/BPs : " + player.Experience + " xp, " + player.RealmPoints + " rp, " + player.BountyPoints + " bp");
 			if (player.Champion)
 			{

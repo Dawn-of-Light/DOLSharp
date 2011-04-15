@@ -92,7 +92,7 @@ namespace DOL.GS.Commands
 			}
 
 			string message = "[Officers] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
-			foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
+			foreach (GamePlayer ply in client.Player.Guild.GetListOfOnlineMembers())
 			{
 				if (!client.Player.Guild.HasRank(ply, Guild.eRank.OcHear))
 				{
@@ -140,7 +140,7 @@ namespace DOL.GS.Commands
 			string message = "[Alliance] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
 			foreach (Guild gui in client.Player.Guild.alliance.Guilds)
 			{
-				foreach (GamePlayer ply in gui.ListOnlineMembers())
+				foreach (GamePlayer ply in gui.GetListOfOnlineMembers())
 				{
 					if (!gui.HasRank(ply, Guild.eRank.AcHear))
 					{

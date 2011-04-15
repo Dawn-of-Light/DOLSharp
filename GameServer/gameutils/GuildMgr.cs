@@ -140,7 +140,7 @@ namespace DOL.GS
 			if (guild == null)
 				return false;
 
-			guild.RemoveAllMembers();
+			guild.ClearOnlineMemberList();
 			lock (m_guilds.SyncRoot)
 			{
 				m_guilds.Remove(guild.Name);
@@ -359,9 +359,9 @@ namespace DOL.GS
 				}
 
 
-				lock (removeGuild.ListOnlineMembers())
+				lock (removeGuild.GetListOfOnlineMembers())
 				{
-					foreach (GamePlayer ply in removeGuild.ListOnlineMembers())
+					foreach (GamePlayer ply in removeGuild.GetListOfOnlineMembers())
 					{
 						ply.Guild = null;
 						ply.GuildID = "";
