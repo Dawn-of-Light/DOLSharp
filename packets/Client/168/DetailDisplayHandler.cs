@@ -776,7 +776,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.HandlePacket.NoPermissionToSpeak"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						foreach (GamePlayer ply in client.Player.Guild.ListOnlineMembers())
+						foreach (GamePlayer ply in client.Player.Guild.GetListOfOnlineMembers())
 						{
 							if (!client.Player.Guild.HasRank(ply, Guild.eRank.GcHear)) continue;
 							ply.Out.SendMessage(str, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);

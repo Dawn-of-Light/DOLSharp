@@ -111,7 +111,7 @@ namespace DOL.GS.Commands
 									}
 
 									//They are no alliance members, maybe guild members?
-									if (client.Player.Guild.GetMemberByName(assistPlayer.Name) != null)
+									if (client.Player.Guild.GetOnlineMemberByName(assistPlayer.Name) != null)
 									{
 										//We cannot assist our target when it has no target.
 										if (!HasTarget(client, assistPlayer))
@@ -264,7 +264,7 @@ namespace DOL.GS.Commands
 									}
 
 									//They are no alliance members, maybe guild members?
-									if (client.Player.Guild != null && client.Player.Guild.GetMemberByName(targetPlayer.Name) != null)
+									if (client.Player.Guild != null && client.Player.Guild.GetOnlineMemberByName(targetPlayer.Name) != null)
                                     {
                                         //We cannot assist our target when it has no target
                                         if (!HasTarget(client, targetPlayer))
@@ -342,7 +342,7 @@ namespace DOL.GS.Commands
 											}
 
 											//They are no alliance members, maybe guild members?
-											if (client.Player.Guild != null && client.Player.Guild.GetMemberByName(targetPlayer.Name) != null)
+											if (client.Player.Guild != null && client.Player.Guild.GetOnlineMemberByName(targetPlayer.Name) != null)
                                             {
                                                 //We cannot assist our target when it has no target
                                                 if (!HasTarget(client, targetPet))
