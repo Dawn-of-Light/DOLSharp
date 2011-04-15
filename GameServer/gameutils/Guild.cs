@@ -101,9 +101,14 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// This holds all players inside the guild
+		/// This holds all players inside the guild (InternalID, GamePlayer)
 		/// </summary>
-		protected readonly SortedList<string, GamePlayer> m_guildMembers = new SortedList<string, GamePlayer>();
+		protected readonly Dictionary<string, GamePlayer> m_onlineGuildMembers = new Dictionary<string, GamePlayer>();
+
+		/// <summary>
+		/// Use this object to lock the guild member list
+		/// </summary>
+		public Object m_memberListLock = new Object();
 
 		/// <summary>
 		/// This holds all players inside the guild
@@ -475,7 +480,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return m_guildMembers.Count;
+				return m_onlineGuildMembers.Count;
 			}
 		}
 
@@ -489,13 +494,14 @@ namespace DOL.GS
 		public bool AddOnlineMember(GamePlayer member)
 		{
 			if(member==null) return false;
-			lock (m_guildMembers)
+			lock (m_memberListLock)
 			{
-				if (!m_guildMembers.ContainsKey(member.Name))
+				if (!m_onlineGuildMembers.ContainsKey(member.InternalID))
 				{
 					if (!member.IsAnonymous)
 						NotifyGuildMembers(member);
-					m_guildMembers.Add(member.Name, member);
+
+					m_onlineGuildMembers.Add(member.InternalID, member);
 					return true;
 				}
 			}
@@ -505,7 +511,7 @@ namespace DOL.GS
 
 		private void NotifyGuildMembers(GamePlayer member)
 		{
-			foreach (GamePlayer player in m_guildMembers.Values)
+			foreach (GamePlayer player in m_onlineGuildMembers.Values)
 			{
 				if (player == member) continue;
 				if (player.ShowGuildLogins)
@@ -520,11 +526,11 @@ namespace DOL.GS
 		/// <returns>true if removed, false if not</returns>
 		public bool RemoveOnlineMember(GamePlayer member)
 		{
-			lock (m_guildMembers)
+			lock (m_memberListLock)
 			{
-				if (m_guildMembers.ContainsKey(member.Name))
+				if (m_onlineGuildMembers.ContainsKey(member.InternalID))
 				{
-					m_guildMembers.Remove(member.Name);
+					m_onlineGuildMembers.Remove(member.InternalID);
 					return true;
 				}
 			}
@@ -534,11 +540,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Remove all Members from memory
 		/// </summary>
-		public void RemoveAllMembers()
+		public void ClearOnlineMemberList()
 		{
-			lock (m_guildMembers)
+			lock (m_memberListLock)
 			{
-				m_guildMembers.Clear();
+				m_onlineGuildMembers.Clear();
 			}
 		}
 
@@ -546,52 +552,56 @@ namespace DOL.GS
 		/// Returns a guild according to the matching membername
 		/// </summary>
 		/// <returns>GuildMemberEntry</returns>
-		public GamePlayer GetMemberByName(string memberName)
+		public GamePlayer GetOnlineMemberByName(string memberName)
 		{
-			lock (m_guildMembers)
+			lock (m_memberListLock)
 			{
-				if (m_guildMembers.ContainsKey(memberName))
-					return m_guildMembers[memberName];
+				foreach (GamePlayer member in m_onlineGuildMembers.Values)
+				{
+					if (member.Name == memberName)
+						return member;
+				}
 			}
+
 			return null;
 		}
 
 		/// <summary>
 		/// Add a player to a guild at rank 9
 		/// </summary>
-		/// <param name="addeePlayer"></param>
+		/// <param name="addPlayer"></param>
 		/// <returns></returns>
-		public bool AddPlayer(GamePlayer addeePlayer)
+		public bool AddPlayer(GamePlayer addPlayer)
 		{
-			return AddPlayer(addeePlayer, GetRankByID(9));
+			return AddPlayer(addPlayer, GetRankByID(9));
 		}
 
 		/// <summary>
 		/// Add a player to a guild with the specified rank
 		/// </summary>
-		/// <param name="addeePlayer"></param>
+		/// <param name="addPlayer"></param>
 		/// <param name="rank"></param>
 		/// <returns></returns>
-		public bool AddPlayer(GamePlayer addeePlayer, DBRank rank)
+		public bool AddPlayer(GamePlayer addPlayer, DBRank rank)
 		{
-			if (addeePlayer == null)
+			if (addPlayer == null)
 				return false;
 			
 			if (log.IsDebugEnabled)
-				log.Debug("Adding player to the guild, guild name=\"" + Name + "\"; player name=" + addeePlayer.Name);
+				log.Debug("Adding player to the guild, guild name=\"" + Name + "\"; player name=" + addPlayer.Name);
 
 			try
 			{
-				AddOnlineMember(addeePlayer);
-				addeePlayer.GuildName = Name;
-				addeePlayer.GuildID = GuildID;
-				addeePlayer.GuildRank = rank;
-				addeePlayer.Guild = this;
-				addeePlayer.SaveIntoDatabase();
-				GuildMgr.AddPlayerToSocialWindow(addeePlayer);
-				addeePlayer.Out.SendMessage("You have agreed to join " + this.Name + "!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
-				addeePlayer.Out.SendMessage("Your current rank is " + addeePlayer.GuildRank.Title + "!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
-				SendMessageToGuildMembers(addeePlayer.Name + " has joined the guild!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
+				AddOnlineMember(addPlayer);
+				addPlayer.GuildName = Name;
+				addPlayer.GuildID = GuildID;
+				addPlayer.GuildRank = rank;
+				addPlayer.Guild = this;
+				addPlayer.SaveIntoDatabase();
+				GuildMgr.AddPlayerToSocialWindow(addPlayer);
+				addPlayer.Out.SendMessage("You have agreed to join " + this.Name + "!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
+				addPlayer.Out.SendMessage("Your current rank is " + addPlayer.GuildRank.Title + "!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
+				SendMessageToGuildMembers(addPlayer.Name + " has joined the guild!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
 			}
 			catch (Exception e)
 			{
@@ -648,8 +658,11 @@ namespace DOL.GS
 			try
 			{
 				// Is the player in the guild at all?
-				if (!m_guildMembers.ContainsKey(member.Name))
+				if (!m_onlineGuildMembers.ContainsKey(member.InternalID))
+				{
+					log.Debug("Player " + member.Name + " is not a member of guild " + Name);
 					return false;
+				}
 
 				// If player have a privlevel above 1, it has access enough
 				if (member.Client.Account.PrivLevel > 1)
@@ -749,6 +762,9 @@ namespace DOL.GS
                         {
                             if (log.IsWarnEnabled)
                                 log.Warn("Required rank not in the DB: " + rankNeeded);
+
+							ChatUtil.SendDebugMessage(member, "Required rank not in the DB: " + rankNeeded);
+
                             return false;
                         }
                 }
@@ -787,21 +803,28 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Returns a list of members by their status
+		/// Returns a list of all online members.
 		/// </summary>
 		/// <returns>ArrayList of members</returns>
-		public IList<GamePlayer> ListOnlineMembers()
+		public IList<GamePlayer> GetListOfOnlineMembers()
 		{
-			return m_guildMembers.Values;
+			return new List<GamePlayer>(m_onlineGuildMembers.Values);
 		}
 
 		/// <summary>
 		/// Return the sorted list (by name) of online guild members
 		/// </summary>
 		/// <returns></returns>
-		public SortedList<string, GamePlayer> SortedListOnlineMembers()
+		public SortedList<string, GamePlayer> GetSortedListOfOnlineMembers()
 		{
-			return m_guildMembers;
+			SortedList<string, GamePlayer> list = new SortedList<string, GamePlayer>();
+
+			foreach (GamePlayer p in GetListOfOnlineMembers())
+			{
+				list.Add(p.Name, p);
+			}
+
+			return list;
 		}
 
 		/// <summary>
@@ -812,9 +835,9 @@ namespace DOL.GS
 		/// <param name="loc">message location</param>
 		public void SendMessageToGuildMembers(string msg, PacketHandler.eChatType type, PacketHandler.eChatLoc loc)
 		{
-			lock (m_guildMembers)
+			lock (m_onlineGuildMembers)
 			{
-				foreach (GamePlayer pl in m_guildMembers.Values)
+				foreach (GamePlayer pl in m_onlineGuildMembers.Values)
 				{
 					if (!HasRank(pl, Guild.eRank.GcHear))
 					{
@@ -823,16 +846,6 @@ namespace DOL.GS
 					pl.Out.SendMessage(msg, type, loc);
 				}
 			}
-		}
-
-		/// <summary>
-		/// Checks if a player is in the guild
-		/// </summary>
-		/// <param name="memberName">GamePlayer to check</param>
-		/// <returns>true if the player is in the guild</returns>
-		public bool IsInTheGuild(string memberName)
-		{
-			return m_guildMembers.ContainsKey(memberName);
 		}
 
 		/// <summary>
@@ -971,7 +984,7 @@ namespace DOL.GS
 			{
 				if (player.Guild.GuildBanner)
 				{
-					foreach (GamePlayer plr in player.Guild.ListOnlineMembers())
+					foreach (GamePlayer plr in player.Guild.GetListOfOnlineMembers())
 					{
 						if (plr.GuildBanner != null)
 						{
@@ -1025,9 +1038,9 @@ namespace DOL.GS
 
 		public void UpdateGuildWindow()
 		{
-			lock (m_guildMembers)
+			lock (m_onlineGuildMembers)
 			{
-				foreach (GamePlayer player in m_guildMembers.Values)
+				foreach (GamePlayer player in m_onlineGuildMembers.Values)
 				{
 					player.Guild.UpdateMember(player);
 				}
