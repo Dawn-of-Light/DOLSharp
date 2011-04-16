@@ -51,50 +51,61 @@ namespace DOL.GS
 		static private readonly HybridDictionary m_guildids = new HybridDictionary();
 
 		/// <summary>
-		/// Holds all the players combined with their guilds for the social window
+		/// Holds all the players combined with their guilds for the social window.
+		/// Keys are GuildID and player InternalID
 		/// </summary>
-		/// <remarks>Sorted on the player name in order to optimize the initial refresh (sorted by name)</remarks>
-		private static readonly Dictionary<string, SortedList<string, SocialWindowMember>> m_guildXAllPlayers = new Dictionary<string, SortedList<string, SocialWindowMember>>();
+		/// <remarks>For each guild stored a dictionary of all players in guikd, unsorted</remarks>
+		private static readonly Dictionary<string, Dictionary<string, GuildMemberDisplay>> m_guildXAllMembers = new Dictionary<string, Dictionary<string, GuildMemberDisplay>>();
 
 		/// <summary>
-		/// Gets the sorted dictionary for a guild to display in the social window
+		/// Gets a copy of a dictionary of all guild members of a given guild, indexed on player InternalID
 		/// </summary>
 		/// <param name="guildID">The guild id for a player</param>
-		/// <returns>The dictionary sorted on the player's name</returns>
-		public static SortedList<string, SocialWindowMember> GetSocialWindowGuild(string guildID)
+		/// <returns>Copy of a dictionary of all guild members for the guild or null if guild is not found</returns>
+		public static Dictionary<string, GuildMemberDisplay> GetAllGuildMembers(string guildID)
 		{
-			if (m_guildXAllPlayers.ContainsKey(guildID))
-				return m_guildXAllPlayers[guildID];
+			if (m_guildXAllMembers.ContainsKey(guildID))
+			{
+				return new Dictionary<string, GuildMemberDisplay>(m_guildXAllMembers[guildID]);
+			}
+
 			return null;
 		}
 
 		/// <summary>
-		/// Add a player to the social window hash table
+		/// Add a player to the guild players dictionary list
 		/// </summary>
 		/// <param name="player">Player to add</param>
-		public static void AddPlayerToSocialWindow(GamePlayer player)
+		public static void AddPlayerToAllGuildPlayersList(GamePlayer player)
 		{
-			if (m_guildXAllPlayers.ContainsKey(player.GuildID))
+			if (m_guildXAllMembers.ContainsKey(player.GuildID))
 			{
-				if (!m_guildXAllPlayers[player.GuildID].ContainsKey(player.Name))
+				if (!m_guildXAllMembers[player.GuildID].ContainsKey(player.InternalID))
 				{
-					SortedList<string, SocialWindowMember> tempList = m_guildXAllPlayers[player.GuildID];
-					SocialWindowMember member = new SocialWindowMember(player.Name, player.Level.ToString(), player.CharacterClass.ID.ToString(), player.GuildRank.RankLevel.ToString(), player.Group != null ? player.Group.MemberCount.ToString() : "1", player.CurrentZone.Description, player.GuildNote);
-					tempList.Add(player.Name, member);
+					Dictionary<string, GuildMemberDisplay> guildMemberList = m_guildXAllMembers[player.GuildID];
+					GuildMemberDisplay member = new GuildMemberDisplay(	player.InternalID, 
+																		player.Name, 
+																		player.Level.ToString(), 
+																		player.CharacterClass.ID.ToString(), 
+																		player.GuildRank.RankLevel.ToString(), 
+																		player.Group != null ? player.Group.MemberCount.ToString() : "1", 
+																		player.CurrentZone.Description, 
+																		player.GuildNote);
+					guildMemberList.Add(player.InternalID, member);
 				}
 			}
 		}
 
 		/// <summary>
-		/// Remove a player from the social window hash table
+		/// Remove a player from the all guilds and players dictionary
 		/// </summary>
 		/// <param name="player">Player to remove</param>
 		/// <returns>True if player was removed, else false.</returns>
-		public static bool RemovePlayerFromSocialWindow(GamePlayer player)
+		public static bool RemovePlayerFromAllGuildPlayersList(GamePlayer player)
 		{
-			if (m_guildXAllPlayers.ContainsKey(player.GuildID))
+			if (m_guildXAllMembers.ContainsKey(player.GuildID))
 			{
-				return m_guildXAllPlayers[player.GuildID].Remove(player.Name);
+				return m_guildXAllMembers[player.GuildID].Remove(player.InternalID);
 			}
 			return false;
 		}
@@ -476,15 +487,22 @@ namespace DOL.GS
 				AddGuild(myguild);
 
 				var guildCharacters = GameServer.Database.SelectObjects<DOLCharacters>(string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
-				var tempList = new SortedList<string, SocialWindowMember>(guildCharacters.Count);
+				var tempList = new Dictionary<string, GuildMemberDisplay>(guildCharacters.Count);
 
 				foreach (DOLCharacters ch in guildCharacters)
 				{
-					var member = new SocialWindowMember(ch.Name, ch.Level.ToString(), ch.Class.ToString(), ch.GuildRank.ToString(), "0", ch.LastPlayed.ToShortDateString(), ch.GuildNote);
-					tempList.Add(ch.Name, member);
+					var member = new GuildMemberDisplay(ch.ObjectId, 
+														ch.Name, 
+														ch.Level.ToString(), 
+														ch.Class.ToString(), 
+														ch.GuildRank.ToString(), 
+														"0", 
+														ch.LastPlayed.ToShortDateString(), 
+														ch.GuildNote);
+					tempList.Add(ch.ObjectId, member);
 				}
 
-				m_guildXAllPlayers.Add(myguild.GuildID, tempList);
+				m_guildXAllMembers.Add(myguild.GuildID, tempList);
 			}
 
 			//load alliances
@@ -586,71 +604,88 @@ namespace DOL.GS
 			return guilds;
 		}
 
-		public class SocialWindowMember
+		/// <summary>
+		/// This class represents a guild member for the purpose of displaying in the social window
+		/// </summary>
+		public class GuildMemberDisplay
 		{
 			#region Members
+
+			string m_internalID;
+			public string InternalID
+			{
+				get { return m_internalID; }
+			}
+
 			string m_name;
 			public string Name
 			{
 				get { return m_name; }
 			}
+
 			string m_level;
 			public string Level
 			{
 				get { return m_level; }
 				set { m_level = value; }
 			}
+
 			string m_characterClassID;
 			public string ClassID
 			{
 				get { return m_characterClassID; }
 				set { m_characterClassID = value; }
 			}
+
 			string m_rank;
 			public string Rank
 			{
 				get { return m_rank; }
 				set { m_rank = value; }
 			}
-			string m_group = "0";
+
+			string m_groupSize = "0";
 			public string GroupSize
 			{
-				get { return m_group; }
-				set { m_group = value; }
+				get { return m_groupSize; }
+				set { m_groupSize = value; }
 			}
+
 			string m_zoneOnline;
 			public string ZoneOrOnline
 			{
 				get { return m_zoneOnline; }
 				set { m_zoneOnline = value; }
 			}
+
 			string m_guildNote = "";
 			public string Note
 			{
 				get { return m_guildNote; }
 				set { m_guildNote = value; }
 			}
+
 			#endregion
 
-			public string this[eSocialWindowIndex i]
+			public string this[eSocialWindowSortColumn i]
 			{
 				get
 				{
 					switch (i)
 					{
-						case eSocialWindowIndex.Name:
+						case eSocialWindowSortColumn.Name:
 							return Name;
-						case eSocialWindowIndex.ClassID:
+						case eSocialWindowSortColumn.ClassID:
 							return ClassID;
-						case eSocialWindowIndex.Group:
+						case eSocialWindowSortColumn.Group:
 							return GroupSize;
-						case eSocialWindowIndex.Level:
+						case eSocialWindowSortColumn.Level:
 							return Level;
-						case eSocialWindowIndex.Note:
+						case eSocialWindowSortColumn.Note:
 							return Note;
-						case eSocialWindowIndex.Rank:
+						case eSocialWindowSortColumn.Rank:
 							return Rank;
-						case eSocialWindowIndex.ZoneOrOnline:
+						case eSocialWindowSortColumn.ZoneOrOnline:
 							return ZoneOrOnline;
 						default:
 							return "";
@@ -658,33 +693,40 @@ namespace DOL.GS
 				}
 			}
 
-			public SocialWindowMember(string name, string level, string classID, string rank, string group, string zoneOrOnline, string note)
+			public GuildMemberDisplay(string internalID, string name, string level, string classID, string rank, string group, string zoneOrOnline, string note)
 			{
+				m_internalID = internalID;
 				m_name = name;
 				m_level = level;
 				m_characterClassID = classID;
 				m_rank = rank;
-				m_group = group;
+				m_groupSize = group;
 				m_zoneOnline = zoneOrOnline;
 				m_guildNote = note;
 			}
 
-			public SocialWindowMember(GamePlayer player)
+			public GuildMemberDisplay(GamePlayer player)
 			{
-				m_name = player.Name;
+				m_internalID = player.InternalID;
+				m_name = player.DBCharacter.Name;
 				m_level = player.Level.ToString();
 				m_characterClassID = player.CharacterClass.ID.ToString();
 				m_rank = player.GuildRank.RankLevel.ToString(); ;
-				m_group = player.Group == null ? "1" : player.Group.MemberCount.ToString();
+				m_groupSize = player.Group == null ? "1" : "2";
 				m_zoneOnline = player.CurrentZone.ToString();
 				m_guildNote = player.GuildNote;
 			}
 
-
+			/// <summary>
+			/// This is used to send the correct information to the client social window
+			/// </summary>
+			/// <param name="position"></param>
+			/// <param name="guildPop"></param>
+			/// <returns></returns>
 			public string ToString(int position, int guildPop)
 			{
 				return string.Format("E,{0},{1},{2},{3},{4},{5},{6},\"{7}\",\"{8}\"",
-				                     position, guildPop, m_name, m_level, m_characterClassID, m_rank, m_group, m_zoneOnline, m_guildNote);
+				                     position, guildPop, m_name, m_level, m_characterClassID, m_rank, m_groupSize, m_zoneOnline, m_guildNote);
 			}
 
 			public void UpdateMember(GamePlayer player)
@@ -692,7 +734,7 @@ namespace DOL.GS
 				Level = player.Level.ToString();
 				ClassID = player.CharacterClass.ID.ToString();
 				Rank = player.GuildRank.RankLevel.ToString();
-				GroupSize = player.Group == null ? "1" : player.Group.MemberCount.ToString();
+				GroupSize = player.Group == null ? "1" : "2";
 				Note = player.GuildNote;
 				ZoneOrOnline = player.CurrentZone.Description;
 			}
@@ -715,7 +757,7 @@ namespace DOL.GS
 				NoteAsc = -7
 			}
 
-			public enum eSocialWindowIndex : int
+			public enum eSocialWindowSortColumn : int
 			{
 				Name = 0,
 				Level = 1,

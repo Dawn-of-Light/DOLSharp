@@ -66,6 +66,8 @@ namespace DOL.GS.Commands
 	)]
 	public class WhoCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public const int MAX_LIST_SIZE = 26;
 		public const string MESSAGE_LIST_TRUNCATED = "(Too many matches ({0}).  List truncated.)";
 		private const string MESSAGE_NO_MATCHES = "No Matches.";
@@ -216,8 +218,8 @@ namespace DOL.GS.Commands
 
 			if (player == null)
 			{
-				if (Log.IsErrorEnabled)
-					Log.Error("null player in who command");
+				if (log.IsErrorEnabled)
+					log.Error("null player in who command");
 				return "???";
 			}
 
@@ -248,8 +250,8 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				if (Log.IsErrorEnabled)
-					Log.Error("no character class spec in who commandhandler for player " + player.Name);
+				if (log.IsErrorEnabled)
+					log.Error("no character class spec in who commandhandler for player " + player.Name);
 			}
 			if (player.CurrentZone != null)
 			{
@@ -258,8 +260,8 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				if (Log.IsErrorEnabled)
-					Log.Error("no currentzone in who commandhandler for player " + player.Name);
+				if (log.IsErrorEnabled)
+					log.Error("no currentzone in who commandhandler for player " + player.Name);
 			}
 			ChatGroup mychatgroup = (ChatGroup) player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 			if (mychatgroup != null && (mychatgroup.Members.Contains(player) || mychatgroup.IsPublic && (bool)mychatgroup.Members[player] == true))

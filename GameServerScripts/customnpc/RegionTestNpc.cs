@@ -92,6 +92,8 @@ namespace DOL.GS.Commands
 	              "/npcdebug")] //usage
 	public class NpcDebugHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public void OnCommand(GameClient client, string[] args)
 		{
 			int index = 0;
@@ -100,8 +102,8 @@ namespace DOL.GS.Commands
 				if (npc == null)
 					continue;
 
-				Log.Warn(index + ": Object name=" + npc.Name + ", {X/Y/Z} H =  { " + npc.X + " / " + npc.Y + " / " + npc.Z + " }  " + npc.Heading + ".");
-				Log.Warn("Zone, zoneID " + npc.CurrentZone.ID + " (" + npc.CurrentZone.Description + "), zoneSkinID = " + npc.CurrentZone.ZoneSkinID + ".");
+				log.Warn(index + ": Object name=" + npc.Name + ", {X/Y/Z} H =  { " + npc.X + " / " + npc.Y + " / " + npc.Z + " }  " + npc.Heading + ".");
+				log.Warn("Zone, zoneID " + npc.CurrentZone.ID + " (" + npc.CurrentZone.Description + "), zoneSkinID = " + npc.CurrentZone.ZoneSkinID + ".");
 			}
 		}
 	}
