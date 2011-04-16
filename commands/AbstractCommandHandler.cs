@@ -26,7 +26,7 @@ namespace DOL.GS.Commands
 	/// </summary>
 	public abstract class AbstractCommandHandler
 	{
-		protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace DOL.GS.Commands
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="commandName"></param>
-		/// <param name="delay">How long is the spam delay</param>
+		/// <param name="delay">How long is the spam delay in milliseconds</param>
 		/// <returns>true if less than spam protection interval</returns>
 		public bool IsSpammingCommand(GamePlayer player, string commandName, int delay)
 		{

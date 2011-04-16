@@ -29,6 +29,8 @@ namespace DOL.GS.Commands
 		"/repair")]
 	public class RepairCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (IsSpammingCommand(client.Player, "repair"))
@@ -181,8 +183,8 @@ namespace DOL.GS.Commands
 
 			if (player == null || obj == null)
 			{
-				if (Log.IsWarnEnabled)
-					Log.Warn("There was a problem getting back the target or player in door/component repair!");
+				if (log.IsWarnEnabled)
+					log.Warn("There was a problem getting back the target or player in door/component repair!");
 				return 0;
 			}
 
