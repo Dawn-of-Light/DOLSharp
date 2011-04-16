@@ -28,6 +28,8 @@ namespace DOL.GS.Commands
 		"/webdisplay <position|template|equipment|craft> [on|off]")]
 	public class WebDisplayCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length == 1)
@@ -62,7 +64,7 @@ namespace DOL.GS.Commands
 					player.DBCharacter.NotDisplayedInHerald &= (byte)~category;
 			}
 			
-			Log.Debug("Player " + player.Name + ": WD = " + player.DBCharacter.NotDisplayedInHerald);
+			log.Debug("Player " + player.Name + ": WD = " + player.DBCharacter.NotDisplayedInHerald);
 		}
 
 		// Display the informations
