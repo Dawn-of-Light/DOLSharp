@@ -35,6 +35,8 @@ namespace DOL.GS.Commands
 		"AdminCommands.Code.Usage")]
 	public class DynCodeCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public static void ExecuteCode(GameClient client, string code)
 		{
 			CodeDomProvider provider = new CSharpCodeProvider(new Dictionary<string, string> { { "CompilerVersion", "v4.0" } });
@@ -88,7 +90,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-					Log.Debug("Error compiling code.");
+					log.Debug("Error compiling code.");
 				}
 
 
@@ -108,7 +110,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-					Log.Debug("Code Executed.");
+					log.Debug("Code Executed.");
 				}
 
 			}
@@ -122,7 +124,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-					Log.Debug("Error during execution.");
+					log.Debug("Error during execution.");
 				}
 			}
 		}

@@ -37,6 +37,8 @@ namespace DOL.GS.Commands
 	)]
 	public class BanCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 3)
@@ -151,14 +153,14 @@ namespace DOL.GS.Commands
 				GameServer.Database.AddObject(b);
 				GameServer.Database.SaveObject(b);
 
-				if (Log.IsInfoEnabled)
-					Log.Info("Ban added [" + args[1].ToLower() + "]: " + accname + "(" + accip + ")");
+				if (log.IsInfoEnabled)
+					log.Info("Ban added [" + args[1].ToLower() + "]: " + accname + "(" + accip + ")");
 				return;
 			}
 			catch (Exception e)
 			{
-				if (Log.IsErrorEnabled)
-					Log.Error("/ban Exception", e);
+				if (log.IsErrorEnabled)
+					log.Error("/ban Exception", e);
 			}
 
 			// if not returned here, there is an error

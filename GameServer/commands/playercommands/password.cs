@@ -21,6 +21,8 @@ namespace DOL.GS.Commands
 		"/password <current_password> <new_password>")]
 	public class PasswordCommand : AbstractCommandHandler, ICommandHandler
 	{
+		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		#region ICommandHandler Members
 
 		public void OnCommand(GameClient client, string[] args)
@@ -48,8 +50,8 @@ namespace DOL.GS.Commands
 				{
 					client.Out.SendMessage("Your current password was incorrect.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
-					if (Log.IsInfoEnabled)
-						Log.Info(client.Player.Name + " (" + client.Account.Name + ") attempted to change password but failed!");
+					if (log.IsInfoEnabled)
+						log.Info(client.Player.Name + " (" + client.Account.Name + ") attempted to change password but failed!");
 
 					return;
 				}
@@ -80,8 +82,8 @@ namespace DOL.GS.Commands
 			// Log change
 			AuditMgr.AddAuditEntry(player, AuditType.Account, AuditSubtype.AccountPasswordChange, "", player.Name);
 
-			if (Log.IsInfoEnabled)
-				Log.Info(player.Name + " (" + player.Client.Account.Name + ") changed password.");
+			if (log.IsInfoEnabled)
+				log.Info(player.Name + " (" + player.Client.Account.Name + ") changed password.");
 		}
 	}
 }

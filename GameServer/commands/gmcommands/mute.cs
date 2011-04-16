@@ -30,6 +30,8 @@ namespace DOL.GS.Commands
 		"/mute <playername or #ClientID> remove - remove all mutes from this players account")]
 	public class MuteCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
@@ -115,7 +117,7 @@ namespace DOL.GS.Commands
 					client.Player.Out.SendMessage("This action was done to the players account.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				}
 
-				Log.Warn(client.Player.Name + " muted " + playerClient.Player.Name);
+				log.Warn(client.Player.Name + " muted " + playerClient.Player.Name);
 			}
 			else
 			{
@@ -126,7 +128,7 @@ namespace DOL.GS.Commands
 					client.Player.Out.SendMessage("This action was done to the players account.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				}
 
-				Log.Warn(client.Player.Name + " un-muted " + playerClient.Player.Name);
+				log.Warn(client.Player.Name + " un-muted " + playerClient.Player.Name);
 			}
 			return;
 		}

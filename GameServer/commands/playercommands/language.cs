@@ -29,6 +29,8 @@ namespace DOL.GS.Commands
 		"/language <EN|IT|FR|DE|CU>")]
 	public class LanguageCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (IsSpammingCommand(client.Player, "language"))
@@ -90,9 +92,9 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Set", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				GameServer.Database.SaveObject(client.Account);
 
-				if (Log.IsInfoEnabled)
+				if (log.IsInfoEnabled)
 				{
-					Log.Info(client.Player.Name + " (" + client.Account.Name + ") changed language.");
+					log.Info(client.Player.Name + " (" + client.Account.Name + ") changed language.");
 				}
 			}
 		}

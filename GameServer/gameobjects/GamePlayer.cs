@@ -2328,7 +2328,7 @@ namespace DOL.GS
 			 */
 			if (CharacterClass.ManaStat != eStat.UNDEFINED || CharacterClass.ID == (int)eCharacterClass.Vampiir)
 			{
-				maxpower = (level * 5) + (manaStat - 50);
+				maxpower = Math.Max(5, (level * 5) + (manaStat - 50));
 			}
 			else if (CharacterClass.ManaStat == eStat.UNDEFINED && Champion && ChampionLevel > 0)
 			{
@@ -10112,10 +10112,12 @@ namespace DOL.GS
 			get { return m_guild; }
 			set
 			{
-				if (m_guild != null)
+				if (value == null)
 				{
+					// remove this player from the online list of their current guild
 					m_guild.RemoveOnlineMember(this);
 				}
+
 				m_guild = value;
 
 				//update guild name for all players if client is playing
