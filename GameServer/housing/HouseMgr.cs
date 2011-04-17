@@ -636,8 +636,13 @@ namespace DOL.GS.Housing
 		public static House GetGuildHouseByPlayer(GamePlayer p)
 		{
 			// make sure player is in a guild
-			if (p.Guild == null)
+			if (p.Guild == null || p.Guild.GuildOwnsHouse == false)
 				return null;
+
+			var house = GetHouse(p.Guild.GuildHouseNumber);
+
+			if (house != null)
+				return house;
 
 			// check every house in every region until we find
 			// a house that belongs to the same guild as the player
@@ -645,9 +650,9 @@ namespace DOL.GS.Housing
 			{
 				foreach (var entry in regs.Value)
 				{
-					var house = entry.Value;
+					house = entry.Value;
 
-					if (house.DatabaseItem.GuildName == p.Guild.GuildID)
+					if (house.DatabaseItem.GuildName == p.Guild.Name)
 						return house;
 				}
 			}

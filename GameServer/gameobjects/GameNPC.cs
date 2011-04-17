@@ -3340,9 +3340,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="target"></param>
 		/// <param name="message"></param>
-		public virtual void SayTo(GamePlayer target, string message)
+		public virtual void SayTo(GamePlayer target, string message, bool announce = true)
 		{
-			SayTo(target, eChatLoc.CL_PopupWindow, message);
+			SayTo(target, eChatLoc.CL_PopupWindow, message, announce);
 		}
 
 		/// <summary>
@@ -3351,7 +3351,7 @@ namespace DOL.GS
 		/// <param name="target"></param>
 		/// <param name="loc">chat location of the message</param>
 		/// <param name="message"></param>
-		public virtual void SayTo(GamePlayer target, eChatLoc loc, string message)
+		public virtual void SayTo(GamePlayer target, eChatLoc loc, string message, bool announce = true)
 		{
 			if (target == null)
 				return;
@@ -3362,7 +3362,10 @@ namespace DOL.GS
 			{
 				case eChatLoc.CL_PopupWindow:
 					target.Out.SendMessage(resultText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					Message.ChatToArea(this, LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.SpeaksTo", GetName(0, true), target.GetName(0, false)), eChatType.CT_System, WorldMgr.SAY_DISTANCE, target);
+					if (announce)
+					{
+						Message.ChatToArea(this, LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.SpeaksTo", GetName(0, true), target.GetName(0, false)), eChatType.CT_System, WorldMgr.SAY_DISTANCE, target);
+					}
 					break;
 				case eChatLoc.CL_ChatWindow:
 					target.Out.SendMessage(resultText, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
