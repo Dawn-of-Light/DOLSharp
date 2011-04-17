@@ -520,16 +520,13 @@ namespace DOL.GS
             // refreshing Account to load any changes from the DB
             GameServer.Database.FillObjectRelations(m_account);
 
-			DOLCharacters car = m_account.Characters[m_activeCharIndex];
+			DOLCharacters dolChar = m_account.Characters[m_activeCharIndex];
 
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 
 			try
 			{
-				player =
-					(GamePlayer)
-					gasm.CreateInstance(playerClass, false, BindingFlags.CreateInstance, null,
-										new object[] { this, car }, null, null);
+				player = (GamePlayer)gasm.CreateInstance(playerClass, false, BindingFlags.CreateInstance, null, new object[] { this, dolChar }, null, null);
 			}
 			catch (Exception e)
 			{
@@ -543,10 +540,7 @@ namespace DOL.GS
 				{
 					try
 					{
-						player =
-							(GamePlayer)
-							asm.CreateInstance(playerClass, false, BindingFlags.CreateInstance, null,
-											   new object[] { this, car }, null, null);
+						player = (GamePlayer)asm.CreateInstance(playerClass, false, BindingFlags.CreateInstance, null, new object[] { this, dolChar }, null, null);
 					}
 					catch (Exception e)
 					{
@@ -560,7 +554,8 @@ namespace DOL.GS
 
 			if (player == null)
 			{
-				player = new GamePlayer(this, car);
+				log.ErrorFormat("Could not instantiate player class '{0}', using GamePlayer instead!", playerClass);
+				player = new GamePlayer(this, dolChar);
 			}
 
 			Thread.MemoryBarrier();
