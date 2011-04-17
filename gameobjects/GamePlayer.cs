@@ -1847,6 +1847,23 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Male or Female (from DBCharacter)
+		/// </summary>
+		public override Gender Gender
+		{
+			get
+			{
+				if (DBCharacter.Gender == 0)
+					return GS.Gender.Male;
+
+				return GS.Gender.Female;
+			}
+			set
+			{
+			}
+		}
+
 
 		public enum eSize : ushort
 		{

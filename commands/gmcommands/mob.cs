@@ -2040,12 +2040,37 @@ namespace DOL.GS.Commands
 
 			GameNPC mob = null;
 
-			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+			try
 			{
-				mob = assembly.CreateInstance(args[2], true) as GameNPC;
+				foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+				{
+					mob = assembly.CreateInstance(args[2], true) as GameNPC;
 
-				if (mob != null)
-					break;
+					if (mob != null)
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error("/mob class - mob", ex);
+			}
+
+			if (mob == null)
+			{
+				try
+				{
+					foreach (Assembly assembly in ScriptMgr.Scripts)
+					{
+						mob = assembly.CreateInstance(args[2], true) as GameNPC;
+
+						if (mob != null)
+							break;
+					}
+				}
+				catch (Exception ex)
+				{
+					Log.Error("/mob class - mob", ex);
+				}
 			}
 
 			if (mob == null)
@@ -2089,11 +2114,36 @@ namespace DOL.GS.Commands
 				mob.SwitchWeapon(targetMob.ActiveWeaponSlot);
 
 			ABrain brain = null;
-			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+			try
 			{
-				brain = (ABrain)assembly.CreateInstance(targetMob.Brain.GetType().FullName, true);
-				if (brain != null)
-					break;
+				foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+				{
+					brain = (ABrain)assembly.CreateInstance(targetMob.Brain.GetType().FullName, true);
+					if (brain != null)
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error("/mob class - brain", ex);
+			}
+
+			if (brain == null)
+			{
+				try
+				{
+					foreach (Assembly assembly in ScriptMgr.Scripts)
+					{
+						brain = assembly.CreateInstance(targetMob.Brain.GetType().FullName, true) as ABrain;
+
+						if (brain != null)
+							break;
+					}
+				}
+				catch (Exception ex)
+				{
+					Log.Error("/mob class - brain", ex);
+				}
 			}
 
 			if (brain == null)
