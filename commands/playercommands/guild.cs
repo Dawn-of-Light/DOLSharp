@@ -1014,18 +1014,19 @@ namespace DOL.GS.Commands
 						// --------------------------------------------------------------------------------
 					case "list":
 						{
-							ICollection guildList = GuildMgr.ListGuild();
-							lock (guildList.SyncRoot)
+							// Changing this to list online only, not sure if this is live like or not but list can be huge
+							// and spam client.  - Tolakram
+							List<Guild> guildList = GuildMgr.GetAllGuilds();
+							foreach (Guild guild in guildList)
 							{
-								foreach (Guild gui in guildList)
+								if (guild.MemberOnlineCount > 0)
 								{
-									string mesg = gui.Name + "  " + gui.MemberOnlineCount + " members ";
+									string mesg = guild.Name + "  " + guild.MemberOnlineCount + " members ";
 									client.Out.SendMessage(mesg, eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 								}
-								client.Player.Guild.UpdateGuildWindow();
 							}
+							client.Player.Guild.UpdateGuildWindow();
 						}
-						client.Player.Guild.UpdateGuildWindow();
 						break;
 						#endregion
 						#region Edit
