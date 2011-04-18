@@ -438,15 +438,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Returns a list of guilds by their status
-		/// </summary>
-		/// <returns>ArrayList of guilds</returns>
-		public static ICollection ListGuild()
-		{
-			return m_guilds.Values;
-		}
-
-		/// <summary>
 		/// Load all guilds and alliances from the database
 		/// </summary>
 		public static bool LoadAllGuilds()
@@ -590,9 +581,14 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Get a list of all guilds (creates a copy)
+		/// </summary>
+		/// <returns></returns>
 		public static List<Guild> GetAllGuilds()
 		{
 			var guilds = new List<Guild>(m_guilds.Count);
+
 			lock (m_guilds.SyncRoot)
 			{
 				foreach (Guild guild in m_guilds.Values)
