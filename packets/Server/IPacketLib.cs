@@ -612,7 +612,7 @@ namespace DOL.GS.PacketHandler
 		void SendChangeGroundTarget(Point3D newTarget);
 		void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState);
 		void SendPlaySound(eSoundType soundType, ushort soundID);
-		void SendNPCsQuestEffect(GameNPC npc, bool flag);
+		void SendNPCsQuestEffect(GameNPC npc, eQuestIndicator indicator);
 		void SendMasterLevelWindow(byte ml);
 		void SendHexEffect(GamePlayer player, byte effect1, byte effect2, byte effect3, byte effect4, byte effect5);
 		void SendRvRGuildBanner(GamePlayer player, bool show);

@@ -982,6 +982,13 @@ namespace DOL.GS
 		Labyrinth = 6
 	}
 
+    public enum eQuestIndicator : byte
+    {
+        None = 0x00,
+        Available = 0x01,
+        Finish = 0x02
+    }
+
 	/// <summary>
 	/// strong name constants of spell line used in the world (poison, proc ect ...)
 	/// </summary>
