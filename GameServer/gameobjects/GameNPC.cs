@@ -2449,7 +2449,7 @@ namespace DOL.GS
 				if (newQuest != null && player.AddQuest(newQuest))
 				{
 					if (!CanGiveOneQuest(player))
-						player.Out.SendNPCsQuestEffect(this, false);
+						player.Out.SendNPCsQuestEffect(this, eQuestIndicator.None);
 					return true;
 				}
 			}

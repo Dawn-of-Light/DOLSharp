@@ -188,7 +188,7 @@ namespace DOLGameServerConsole
 		public void SendClearKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex) { }
 		public void SendHookPointStore(GameKeepHookPoint hookPoint) { }
 		public void SendPlaySound(eSoundType soundType, ushort soundID) { }
-		public void SendNPCsQuestEffect(GameNPC npc, bool flag) { }
+        public void SendNPCsQuestEffect(GameNPC npc, eQuestIndicator indicator) { }
 		public void SendMasterLevelWindow(byte ml) { }
 		public void SendHexEffect(GamePlayer player, byte effect1, byte effect2, byte effect3, byte effect4, byte effect5) { }
 
