@@ -255,8 +255,10 @@ namespace DOL.GS.Quests
 				{
 					GiveItem(QuestPlayer, optionalReward);
 				}
-
-				QuestPlayer.Out.SendNPCsQuestEffect(QuestGiver, QuestGiver.CanGiveOneQuest(QuestPlayer));
+                eQuestIndicator indicator = eQuestIndicator.None;
+                if (QuestGiver.CanGiveOneQuest(QuestPlayer))
+                    indicator = eQuestIndicator.Available;
+				QuestPlayer.Out.SendNPCsQuestEffect(QuestGiver, indicator);
 			}
 			else
 			{

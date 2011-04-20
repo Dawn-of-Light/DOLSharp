@@ -3354,7 +3354,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendNPCsQuestEffect(GameNPC npc, bool flag)
+		public virtual void SendNPCsQuestEffect(GameNPC npc, eQuestIndicator indicator)
 		{
 		}
 
