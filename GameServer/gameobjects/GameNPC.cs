@@ -2373,6 +2373,23 @@ namespace DOL.GS
 			return 0;
 		}
 
+		/// <summary>
+		/// Return the proper indicator for quest
+		/// TODO: check when finish indicator is set
+		/// * when you have done the NPC quest
+		/// * when you are at the last step
+		/// </summary>
+		/// <param name="questType">Type of quest</param>
+		/// <param name="player">player requesting the quest</param>
+		/// <returns></returns>
+		public eQuestIndicator SetQuestIndicator(Type questType, GamePlayer player)
+		{
+			if (CanGiveOneQuest(player)) return eQuestIndicator.Available;
+			if (player.HasFinishedQuest(questType)>0) return eQuestIndicator.Finish;
+			return eQuestIndicator.None;
+		}
+		
+		
 		protected GameNPC m_teleporterIndicator = null;
 
 		/// <summary>
