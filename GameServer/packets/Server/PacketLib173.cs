@@ -523,7 +523,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public override void SendNPCsQuestEffect(GameNPC npc, bool flag)
+        public override void SendNPCsQuestEffect(GameNPC npc, eQuestIndicator indicator)
 		{
 			if (m_gameClient.Player == null || npc == null)
 				return;
@@ -532,7 +532,7 @@ namespace DOL.GS.PacketHandler
 
 			pak.WriteShort((ushort)npc.ObjectID);
 			pak.WriteByte(0x7); // Quest visual effect
-			pak.WriteByte((byte)(flag ? 1 : 0));
+			pak.WriteByte((byte)indicator);
 			pak.WriteInt(0);
 
 			SendTCP(pak);

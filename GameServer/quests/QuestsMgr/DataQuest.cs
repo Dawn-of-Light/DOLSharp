@@ -870,7 +870,12 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		public virtual void UpdateQuestIndicator(GameNPC npc, GamePlayer player)
 		{
-			player.Out.SendNPCsQuestEffect(npc, npc.ShowQuestIndicator(player));
+
+            eQuestIndicator indicator = eQuestIndicator.None;
+            if (npc.ShowQuestIndicator(player))
+                indicator = eQuestIndicator.Available;
+
+			player.Out.SendNPCsQuestEffect(npc, indicator);
 		}
 
 
@@ -1545,7 +1550,11 @@ namespace DOL.GS.Quests
 						player.AddQuest(dq);
 						if (giver is GameNPC)
 						{
-							player.Out.SendNPCsQuestEffect(giver as GameNPC, (giver as GameNPC).ShowQuestIndicator(player));
+
+                            eQuestIndicator indicator = eQuestIndicator.None;
+                            if ((giver as GameNPC).ShowQuestIndicator(player))
+                                indicator = eQuestIndicator.Available;
+							player.Out.SendNPCsQuestEffect(giver as GameNPC, indicator);
 						}
 						player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
 						break;
