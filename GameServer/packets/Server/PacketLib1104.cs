@@ -65,9 +65,15 @@ namespace DOL.GS.PacketHandler
 				string itemQuery = "(";
 				foreach (DOLCharacters c in m_gameClient.Account.Characters)
 				{
-					charsBySlot.Add(c.AccountSlot, c);
-
-					itemQuery += "OwnerID = '" + c.ObjectId + "' OR ";
+					try
+					{
+						charsBySlot.Add(c.AccountSlot, c);
+						itemQuery += "OwnerID = '" + c.ObjectId + "' OR ";
+					}
+					catch (Exception ex)
+					{
+						log.Error("SendCharacterOverview - Duplicate char in slot? Slot: " + c.AccountSlot + ", Account: " + c.AccountName, ex);
+					}
 				}
 				itemQuery = itemQuery.Substring(0, itemQuery.Length - 4); //remove last OR
 				itemQuery += ") AND SlotPosition >= " + ((int)eInventorySlot.MinEquipable) + " AND SlotPosition <= " + ((int)eInventorySlot.MaxEquipable);
