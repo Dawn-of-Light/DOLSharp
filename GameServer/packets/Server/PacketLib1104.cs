@@ -133,23 +133,26 @@ namespace DOL.GS.PacketHandler
 
 						string locationDescription = "";
 						Region region = WorldMgr.GetRegion((ushort)c.Region);
-						Zone zone = null;
-						if ((zone = region.GetZone(c.Xpos, c.Ypos)) != null)
+						if (region != null)
 						{
-							IList areas = zone.GetAreasOfSpot(c.Xpos, c.Ypos, c.Zpos);
-
-							foreach (AbstractArea area in areas)
+							Zone zone = null;
+							if ((zone = region.GetZone(c.Xpos, c.Ypos)) != null)
 							{
-								if (!area.DisplayMessage)
-									continue;
+								IList areas = zone.GetAreasOfSpot(c.Xpos, c.Ypos, c.Zpos);
 
-								locationDescription = area.Description;
-								break;
-							}
+								foreach (AbstractArea area in areas)
+								{
+									if (!area.DisplayMessage)
+										continue;
 
-							if (locationDescription == "")
-							{
-								locationDescription = zone.Description;
+									locationDescription = area.Description;
+									break;
+								}
+
+								if (locationDescription == "")
+								{
+									locationDescription = zone.Description;
+								}
 							}
 						}
 						pak.FillString(locationDescription, 24);
