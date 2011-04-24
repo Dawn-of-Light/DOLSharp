@@ -82,10 +82,17 @@ namespace DOL.GS.PacketHandler
 				var allItems = (InventoryItem[])GameServer.Database.SelectObjects<InventoryItem>(itemQuery);
 				foreach (InventoryItem item in allItems)
 				{
-					if (!itemsByOwnerID.ContainsKey(item.OwnerID))
-						itemsByOwnerID.Add(item.OwnerID, new Dictionary<eInventorySlot, InventoryItem>());
+                    try
+                    {
+                        if (!itemsByOwnerID.ContainsKey(item.OwnerID))
+                            itemsByOwnerID.Add(item.OwnerID, new Dictionary<eInventorySlot, InventoryItem>());
 
-					itemsByOwnerID[item.OwnerID].Add((eInventorySlot)item.SlotPosition, item);
+                        itemsByOwnerID[item.OwnerID].Add((eInventorySlot)item.SlotPosition, item);
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Error("SendCharacterOverview - Duplicate item on character? OwnerID: " + item.OwnerID + ", SlotPosition: " + item.SlotPosition + ", Account: " + m_gameClient.Account.Name, ex);
+                    }
 				}
 
 				for (int i = firstSlot; i < (firstSlot + 10); i++)
