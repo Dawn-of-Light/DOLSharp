@@ -262,7 +262,16 @@ namespace DOL.GS
 				ApplySpellcraftGems(player, item);
 			}
 
-			GameServer.Database.SaveObject(item);
+			if (item.Template is ItemUnique)
+			{
+				GameServer.Database.SaveObject(item);
+				GameServer.Database.SaveObject(item.Template as ItemUnique);
+			}
+			else
+			{
+				ChatUtil.SendErrorMessage(player, "Spellcrafting error: Item was not an ItemUnique, crafting changes not saved to DB!");
+				log.ErrorFormat("Spellcrafting error: Item {0} was not an ItemUnique for player {1}, crafting changes not saved to DB!", item.Id_nb, player.Name);
+			}
 		}
 
 		/// <summary>
