@@ -295,7 +295,7 @@ namespace DOL.GS
 
 		#endregion	
 
-		#region AcceptTrade/CloseTraide
+		#region AcceptTrade/CloseTrade
 		
 		/// <summary>
 		/// Called each time a player push the accept button to accept the trade
