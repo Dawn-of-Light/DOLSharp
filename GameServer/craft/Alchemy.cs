@@ -151,7 +151,16 @@ namespace DOL.GS
 
 			player.Inventory.RemoveCountFromStack(tincture, 1);
 
-			GameServer.Database.SaveObject(item);
+			if (item.Template is ItemUnique)
+			{
+				GameServer.Database.SaveObject(item);
+				GameServer.Database.SaveObject(item.Template as ItemUnique);
+			}
+			else
+			{
+				ChatUtil.SendErrorMessage(player, "Alchemy crafting error: Item was not an ItemUnique, crafting changes not saved to DB!");
+				log.ErrorFormat("Alchemy crafting error: Item {0} was not an ItemUnique for player {1}, crafting changes not saved to DB!", item.Id_nb, player.Name);
+			}
 		}
 
 		#endregion
