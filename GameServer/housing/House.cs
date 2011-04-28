@@ -725,8 +725,13 @@ namespace DOL.GS.Housing
 					}
 			}
 
-			HousepointItems[position].GameObject = hookpointObject;
-			return true;
+			if (hookpointObject != null)
+			{
+				HousepointItems[position].GameObject = hookpointObject;
+				return true;
+			}
+
+			return false;
 		}
 
 		public void EmptyHookpoint(GamePlayer player, GameObject obj, bool addToInventory = true)
