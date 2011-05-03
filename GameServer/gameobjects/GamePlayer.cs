@@ -14911,7 +14911,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the CL title string of the player
 		/// </summary>
-		public string CLTitle
+		public virtual string CLTitle
 		{
 			get
 			{
