@@ -50,24 +50,53 @@ namespace DOL.GS.PacketHandler
 				return;
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TradeWindow));
-
 			lock (m_gameClient.Player.TradeWindow.Sync)
 			{
 				foreach (InventoryItem item in m_gameClient.Player.TradeWindow.TradeItems)
 				{
 					pak.WriteByte((byte)item.SlotPosition);
-					WriteItemData(pak, item);
 				}
+				pak.Fill(0x00, 10 - m_gameClient.Player.TradeWindow.TradeItems.Count);
 
-				if (m_gameClient.Player.TradeWindow.Partner != null)
+				pak.WriteShort(0x0000);
+				pak.WriteShort((ushort)Money.GetMithril(m_gameClient.Player.TradeWindow.TradeMoney));
+				pak.WriteShort((ushort)Money.GetPlatinum(m_gameClient.Player.TradeWindow.TradeMoney));
+				pak.WriteShort((ushort)Money.GetGold(m_gameClient.Player.TradeWindow.TradeMoney));
+				pak.WriteShort((ushort)Money.GetSilver(m_gameClient.Player.TradeWindow.TradeMoney));
+				pak.WriteShort((ushort)Money.GetCopper(m_gameClient.Player.TradeWindow.TradeMoney));
+
+				pak.WriteShort(0x0000);
+				pak.WriteShort((ushort)Money.GetMithril(m_gameClient.Player.TradeWindow.PartnerTradeMoney));
+				pak.WriteShort((ushort)Money.GetPlatinum(m_gameClient.Player.TradeWindow.PartnerTradeMoney));
+				pak.WriteShort((ushort)Money.GetGold(m_gameClient.Player.TradeWindow.PartnerTradeMoney));
+				pak.WriteShort((ushort)Money.GetSilver(m_gameClient.Player.TradeWindow.PartnerTradeMoney));
+				pak.WriteShort((ushort)Money.GetCopper(m_gameClient.Player.TradeWindow.PartnerTradeMoney));
+
+				pak.WriteShort(0x0000);
+				ArrayList items = m_gameClient.Player.TradeWindow.PartnerTradeItems;
+				if (items != null)
 				{
-					pak.WritePascalString("Trading with " + m_gameClient.Player.GetName(m_gameClient.Player.TradeWindow.Partner)); // transaction with ...
+					pak.WriteByte((byte)items.Count);
+					pak.WriteByte(0x01);
 				}
 				else
 				{
-					pak.WritePascalString("Selfcrafting"); // transaction with ...
+					pak.WriteShort(0x0000);
 				}
-
+				pak.WriteByte((byte)(m_gameClient.Player.TradeWindow.Repairing ? 0x01 : 0x00));
+				pak.WriteByte((byte)(m_gameClient.Player.TradeWindow.Combine ? 0x01 : 0x00));
+				if (items != null)
+				{
+					foreach (InventoryItem item in items)
+					{
+						pak.WriteByte((byte)item.SlotPosition);
+						WriteItemData(pak, item);
+					}
+				}
+				if (m_gameClient.Player.TradeWindow.Partner != null)
+					pak.WritePascalString("Trading with " + m_gameClient.Player.GetName(m_gameClient.Player.TradeWindow.Partner)); // transaction with ...
+				else
+					pak.WritePascalString("Selfcrafting"); // transaction with ...
 				SendTCP(pak);
 			}
 		}
