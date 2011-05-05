@@ -1467,9 +1467,9 @@ namespace DOL.GS
         /// <summary>
         /// All objects are neutral.
         /// </summary>
-        public virtual Gender Gender
+        public virtual eGender Gender
         {
-            get { return Gender.Neutral; }
+            get { return eGender.Neutral; }
             set { }
         }
 
