@@ -77,9 +77,9 @@ namespace DOL.GS.GameEvents
 			DOLCharacters ch = chArgs.Character;
 			try
 			{
-				StartLocation loc = null;
+				StartLocation startLocation = null;
 				GameClient client = chArgs.GameClient;
-				StartupLocation mySL = null;
+				StartupLocation dbStartupLocation = null;
 				
 				// do we have custom locations into the DB ?
 				if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS)
@@ -88,7 +88,7 @@ namespace DOL.GS.GameEvents
 					var startupLocations = GameServer.Database.SelectObjects<StartupLocation>("ClassIDs LIKE '%" + GlobalConstants.RealmToName((eRealm)ch.Realm).Substring(0,3) + "%'");
 					if (startupLocations.Count > 0)
 					{
-						mySL = startupLocations[0];
+						dbStartupLocation = startupLocations[0];
 					}
 					else
 						// find class-based SL
@@ -102,24 +102,24 @@ namespace DOL.GS.GameEvents
 								int.TryParse(classID, out charClass);
 								if (charClass == ch.Class)
 								{
-									mySL = curSL;
+									dbStartupLocation = curSL;
 									break;
 								}
 							}
-							if (mySL != null) break;
+							if (dbStartupLocation != null) break;
 						}
 					}
 					
 					// fill loc with our found SL
-					if (mySL != null)
+					if (dbStartupLocation != null)
 					{
-						loc = new StartLocation(mySL.XPos, mySL.YPos, mySL.ZPos, mySL.Heading);
-						ch.Region = mySL.Region;
+						startLocation = new StartLocation(dbStartupLocation.XPos, dbStartupLocation.YPos, dbStartupLocation.ZPos, dbStartupLocation.Heading);
+						ch.Region = dbStartupLocation.Region;
 					}
 				}
 				
 				// no custom SL or custom SL not found
-				if (mySL == null)
+				if (dbStartupLocation == null)
 				{
 					// tutorial all realms use the same region
 					// except if disabled in SP, v1.93+ start is in tutorial zone
@@ -128,13 +128,13 @@ namespace DOL.GS.GameEvents
 						switch (ch.Realm)
 						{
 							case 1: // alb
-								loc = new StartLocation(95644, 101313, 5340, 1024);
+								startLocation = new StartLocation(95644, 101313, 5340, 1024);
 								break;
 							case 2: // mid
-								loc = new StartLocation(226716, 232385, 5340, 1024);
+								startLocation = new StartLocation(226716, 232385, 5340, 1024);
 								break;
 							case 3: // hib
-								loc = new StartLocation(357788, 363457, 5340, 1024);
+								startLocation = new StartLocation(357788, 363457, 5340, 1024);
 								break;
 						}
 					}
@@ -144,27 +144,27 @@ namespace DOL.GS.GameEvents
 						switch (ch.Realm)
 						{
 							case 1: // alb
-								loc = new StartLocation(562418, 512268, 2500, 2980);
+								startLocation = new StartLocation(562418, 512268, 2500, 2980);
 								break;
 							case 2: // mid
-								loc = new StartLocation(802869, 726016, 4699, 1399);
+								startLocation = new StartLocation(802869, 726016, 4699, 1399);
 								break;
 							case 3: // hib
-								loc = new StartLocation(347279, 489681, 5200, 2332);
+								startLocation = new StartLocation(347279, 489681, 5200, 2332);
 								break;
 						}
 					}
 					else if ((int)client.Version >= (int)GameClient.eClientVersion.Version180)
 					{
-						loc = (StartLocation)MainTownStartingLocations[ch.Class];
+						startLocation = (StartLocation)MainTownStartingLocations[ch.Class];
 					}
 					else if (ch.Region == 1 || ch.Region == 100 || ch.Region == 200) // all classic regions
 					{
-						loc = (StartLocation) ClassicLocations[ch.Race][ch.Class];
+						startLocation = (StartLocation) ClassicLocations[ch.Race][ch.Class];
 					}
 					else if (ch.Region == 51 || ch.Region == 151 || ch.Region == 181) // all ShroudedIsles regions
 					{
-						loc = (StartLocation) ShroudedIslesLocations[ch.Race][ch.Class];
+						startLocation = (StartLocation) ShroudedIslesLocations[ch.Race][ch.Class];
 					}
 					else
 					{
@@ -175,20 +175,20 @@ namespace DOL.GS.GameEvents
 								case 2: ch.Region = 100; break;
 								case 3: ch.Region = 200; break;
 						}
-						loc = (StartLocation)ClassicLocations[ch.Race][ch.Class];
+						startLocation = (StartLocation)ClassicLocations[ch.Race][ch.Class];
 					}
 				}
 				
-				if (loc == null)
+				if (startLocation == null)
 				{
 					log.Warn("startup location not found: account=" + ch.AccountName + "; char name=" + ch.Name + "; region=" + ch.Region + "; realm=" + ch.Realm + "; class=" + ch.Class + " (" + (eCharacterClass) ch.Class + "); race=" + ch.Race + " (" + (eRace)ch.Race + ")");
 				}
 				else
 				{
-					ch.Xpos = loc.X;
-					ch.Ypos = loc.Y;
-					ch.Zpos = loc.Z;
-					ch.Direction = loc.Heading;
+					ch.Xpos = startLocation.X;
+					ch.Ypos = startLocation.Y;
+					ch.Zpos = startLocation.Z;
+					ch.Direction = startLocation.Heading;
 				}
 
 				BindCharacter(ch);
