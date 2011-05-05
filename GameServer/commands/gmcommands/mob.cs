@@ -1020,6 +1020,17 @@ namespace DOL.GS.Commands
 			info.Add(" + Realm: " + GlobalConstants.RealmToName(targetMob.Realm));
 			info.Add(" + Level: " + targetMob.Level);
 			info.Add(" + Brain: " + (targetMob.Brain == null ? "(null)" : targetMob.Brain.GetType().ToString()));
+			if (targetMob.Brain != null && targetMob.Brain is IControlledBrain)
+			{
+				try
+				{
+					info.Add(" + -- Owner: " + (targetMob.Brain as IControlledBrain).GetPlayerOwner().Name);
+				}
+				catch
+				{
+					info.Add(" + -- Owner: Not found!");
+				}
+			}
 			if (targetMob.NPCTemplate != null)
 			{
 				info.Add(" + NPCTemplate: " + "[" + targetMob.NPCTemplate.TemplateId + "] " + targetMob.NPCTemplate.Name);
@@ -2268,6 +2279,7 @@ namespace DOL.GS.Commands
 			mob.GuildName = targetMob.GuildName;
 			mob.Size = targetMob.Size;
 			mob.NPCTemplate = targetMob.NPCTemplate;
+			mob.Race = targetMob.Race;
 
 			mob.Inventory = targetMob.Inventory;
 			if (mob.Inventory != null)
@@ -2309,6 +2321,11 @@ namespace DOL.GS.Commands
 			mob.LoadedFromScript = false;
 			mob.SaveIntoDatabase();
 			client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if ((mob.Flags & GameNPC.eFlags.PEACE) != 0)
+			{
+				// because copying 100 mobs with their peace flag set is not fun
+				client.Out.SendMessage("This mobs PEACE flag is set!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			}
 		}
 
 		private void npctemplate(GameClient client, GameNPC targetMob, string[] args)
@@ -2567,7 +2584,7 @@ namespace DOL.GS.Commands
 					return;
 				}
 
-				targetMob.Gender = (Gender)gender;
+				targetMob.Gender = (eGender)gender;
 				targetMob.SaveIntoDatabase();
 				client.Out.SendMessage(String.Format("Mob gender changed to {0}.",
 				                                     targetMob.Gender.ToString().ToLower()),

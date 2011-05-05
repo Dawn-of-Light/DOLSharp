@@ -679,7 +679,7 @@ namespace DOL.GS.Keeps
 				default:
 					{
 						// Subjective
-						if (Gender == GS.Gender.Male)
+						if (Gender == GS.eGender.Male)
                             s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.He");
                         else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.She");
 						if (!firstLetterUppercase)
@@ -689,7 +689,7 @@ namespace DOL.GS.Keeps
 				case 1:
 					{
 						// Possessive
-                        if (Gender == Gender.Male)
+                        if (Gender == eGender.Male)
                             s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.His");
                         else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Hers");
 						if (!firstLetterUppercase)
@@ -699,7 +699,7 @@ namespace DOL.GS.Keeps
 				case 2:
 					{
 						// Objective
-                        if (Gender == Gender.Male)
+                        if (Gender == eGender.Male)
                             s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Him");
                         else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Her");
 						if (!firstLetterUppercase)
