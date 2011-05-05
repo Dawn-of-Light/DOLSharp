@@ -1946,7 +1946,7 @@ namespace DOL.GS
 			m_isCloakHoodUp = dbMob.IsCloakHoodUp;
 			m_visibleActiveWeaponSlots = dbMob.VisibleWeaponSlots;
 			
-			Gender = (Gender)dbMob.Gender;
+			Gender = (eGender)dbMob.Gender;
 			OwnerID = dbMob.OwnerID;
 			
 			if (npcTemplate != null && npcTemplate.ReplaceMobValues > 0)
@@ -3137,7 +3137,7 @@ namespace DOL.GS
 
 			switch (Gender)
 			{
-				case Gender.Male:
+				case eGender.Male:
 					switch (form)
 					{
 						case 1:
@@ -3151,7 +3151,7 @@ namespace DOL.GS
 							                                                         "GameLiving.Pronoun.Male.Subjective"));
 					}
 
-				case Gender.Female:
+				case eGender.Female:
 					switch (form)
 					{
 						case 1:
@@ -4854,7 +4854,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gender of this NPC.
 		/// </summary>
-		public override Gender Gender { get; set; }
+		public override eGender Gender { get; set; }
 
 		public GameNPC Copy()
 		{

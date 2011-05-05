@@ -277,7 +277,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			ch.Gender = ((startRaceGender >> 4) & 0x01);
-			//DOLConsole.WriteLine("startRaceGender="+startRaceGender+"; Race="+ch.Race+"; Gender="+ch.Gender);
 
 			bool siStartLocation = ((startRaceGender >> 7) != 0);
 
@@ -312,7 +311,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (log.IsWarnEnabled)
 				{
 					log.Warn(ch.AccountName + " tried to create invalid character:" +
-							 "\nchar name=" + ch.Name + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
+							 "\nchar name=" + ch.Name + ", gender=" + ch.Gender + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
 							 "\nstr=" + ch.Strength + ", con=" + ch.Constitution + ", dex=" + ch.Dexterity + ", qui=" + ch.Quickness + ", int=" + ch.Intelligence + ", pie=" + ch.Piety + ", emp=" + ch.Empathy + ", chr=" + ch.Charisma);
 				}
 
@@ -958,6 +957,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						valid = false;
 					}
+
+					if (ch.Gender > 0 && (ch.Race == (byte)eRace.AlbionMinotaur || ch.Race == (byte)eRace.MidgardMinotaur || ch.Race == (byte)eRace.HiberniaMinotaur))
+					{
+						log.Warn("Wrong minotaur gender: " + ch.Gender + ", race: " + ch.Race);
+						valid = false;
+					}
+
+					if (ch.Gender == 0 && (ch.Class == (int)eCharacterClass.Bainshee || ch.Class == (int)eCharacterClass.Valkyrie))
+					{
+						log.Warn("Wrong class gender: " + ch.Gender + ", class:" + ch.Class);
+						valid = false;
+					}
+
 				}
 				catch (Exception e)
 				{

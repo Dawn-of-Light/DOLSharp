@@ -1849,15 +1849,18 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Male or Female (from DBCharacter)
+		/// Note: DB Gender is 0=male, 1=female while enum is 0=neutral, 1=male, 2=female
 		/// </summary>
-		public override Gender Gender
+		public override eGender Gender
 		{
 			get
 			{
 				if (DBCharacter.Gender == 0)
-					return GS.Gender.Male;
+				{
+					return eGender.Male;
+				}
 
-				return GS.Gender.Female;
+				return eGender.Female;
 			}
 			set
 			{
