@@ -965,7 +965,7 @@ namespace DOL.GS
 	/// <summary>
 	/// The gender.
 	/// </summary>
-	public enum Gender : byte
+	public enum eGender : byte
 	{
 		Neutral = 0,
 		Male = 1,

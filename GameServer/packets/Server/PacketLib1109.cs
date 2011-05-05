@@ -42,6 +42,35 @@ namespace DOL.GS.PacketHandler
 
         }
 
+		public override void SendTradeWindow()
+		{
+			if (m_gameClient.Player == null)
+				return;
+			if (m_gameClient.Player.TradeWindow == null)
+				return;
+
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TradeWindow));
+
+			lock (m_gameClient.Player.TradeWindow.Sync)
+			{
+				foreach (InventoryItem item in m_gameClient.Player.TradeWindow.TradeItems)
+				{
+					pak.WriteByte((byte)item.SlotPosition);
+					WriteItemData(pak, item);
+				}
+
+				if (m_gameClient.Player.TradeWindow.Partner != null)
+				{
+					pak.WritePascalString("Trading with " + m_gameClient.Player.GetName(m_gameClient.Player.TradeWindow.Partner)); // transaction with ...
+				}
+				else
+				{
+					pak.WritePascalString("Selfcrafting"); // transaction with ...
+				}
+
+				SendTCP(pak);
+			}
+		}
 
 		/// <summary>
 		/// 1.109 items have an additional byte prior to item.Weight

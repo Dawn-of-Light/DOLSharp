@@ -134,17 +134,17 @@ namespace DOL.GS.Keeps
 			//portal keep guards are always male
 			if (guard.IsPortalKeepGuard)
 			{
-                guard.Gender = Gender.Male;
+                guard.Gender = eGender.Male;
 			}
 			else
 			{
 				if (Util.Chance(50))
 				{
-					guard.Gender = Gender.Male;
+					guard.Gender = eGender.Male;
 				}
 				else
 				{
-                    guard.Gender = Gender.Female;
+                    guard.Gender = eGender.Female;
 				}
 			}
 		}
@@ -250,7 +250,7 @@ namespace DOL.GS.Keeps
 					{
 						if (guard is GuardArcher)
 						{
-							if (guard.Gender == Gender.Male)
+							if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 3))
 								{
@@ -273,7 +273,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardCaster)
 						{
-							if (guard.Gender == Gender.Male)
+							if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 2))
 								{
@@ -294,7 +294,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardFighter)
 						{
-							if (guard.Gender == Gender.Male)
+							if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 6))
 								{
@@ -322,7 +322,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardHealer)
 						{
-							if (guard.Gender == Gender.Male)
+							if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 2))
 								{
@@ -343,7 +343,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardLord || guard is MissionMaster)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 3))
 								{
@@ -365,7 +365,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardStealther)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 2))
 								{
@@ -392,7 +392,7 @@ namespace DOL.GS.Keeps
 					{
 						if (guard is GuardArcher)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 4))
 								{
@@ -417,7 +417,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardCaster)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 3))
 								{
@@ -440,7 +440,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardFighter)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 5))
 								{
@@ -466,7 +466,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardHealer)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 2))
 								{
@@ -487,7 +487,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardLord || guard is MissionMaster)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 4))
 								{
@@ -511,7 +511,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardStealther)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 2))
 								{
@@ -538,7 +538,7 @@ namespace DOL.GS.Keeps
 					{
 						if (guard is GuardArcher)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 3))
 								{
@@ -561,7 +561,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardCaster)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 1))
 								{
@@ -580,7 +580,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardFighter)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 4))
 								{
@@ -604,7 +604,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardHealer)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 2))
 								{
@@ -625,7 +625,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardLord || guard is MissionMaster)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 4))
 								{
@@ -649,7 +649,7 @@ namespace DOL.GS.Keeps
 						}
 						else if (guard is GuardStealther)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
 							{
 								switch (Util.Random(0, 1))
 								{
@@ -766,7 +766,7 @@ namespace DOL.GS.Keeps
                             }
 							else
 							{
-                                if (guard.Gender == Gender.Male)
+                                if (guard.Gender == eGender.Male)
                                     guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Armsman");
                                 else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Armswoman");
 							}
@@ -777,7 +777,7 @@ namespace DOL.GS.Keeps
                         }
 						else if (guard is GuardLord)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
                                 guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lord", GetKeepShortName(guard.Component.Keep.Name));
                             else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lady", GetKeepShortName(guard.Component.Keep.Name));
 						}
@@ -859,7 +859,7 @@ namespace DOL.GS.Keeps
                         }
 						else if (guard is GuardLord)
 						{
-                            if (guard.Gender == Gender.Male)
+                            if (guard.Gender == eGender.Male)
                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftain", GetKeepShortName(guard.Component.Keep.Name));
                             else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftess", GetKeepShortName(guard.Component.Keep.Name));
                         }
