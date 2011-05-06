@@ -320,21 +320,29 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte((byte)eSkillPage.Styles);
 
 								int pre = 0;
-								switch (style.OpeningRequirementType)
+
+								try
 								{
-									case Style.eOpening.Offensive:
-										pre = 0 + (int)style.AttackResultRequirement; // last result of our attack against enemy
-										// hit, miss, target blocked, target parried, ...
-										if (style.AttackResultRequirement == Style.eAttackResult.Style)
-											pre |= ((100 + (int)styleTable[style.OpeningRequirementValue]) << 8);
-										break;
-									case Style.eOpening.Defensive:
-										pre = 100 + (int)style.AttackResultRequirement; // last result of enemies attack against us
-										// hit, miss, you block, you parry, ...
-										break;
-									case Style.eOpening.Positional:
-										pre = 200 + style.OpeningRequirementValue;
-										break;
+									switch (style.OpeningRequirementType)
+									{
+										case Style.eOpening.Offensive:
+											pre = 0 + (int)style.AttackResultRequirement; // last result of our attack against enemy
+											// hit, miss, target blocked, target parried, ...
+											if (style.AttackResultRequirement == Style.eAttackResult.Style)
+												pre |= ((100 + (int)styleTable[style.OpeningRequirementValue]) << 8);
+											break;
+										case Style.eOpening.Defensive:
+											pre = 100 + (int)style.AttackResultRequirement; // last result of enemies attack against us
+											// hit, miss, you block, you parry, ...
+											break;
+										case Style.eOpening.Positional:
+											pre = 200 + style.OpeningRequirementValue;
+											break;
+									}
+								}
+								catch (Exception ex)
+								{
+									log.Error("Error loading style " + style.ID + " for player " + m_gameClient.Player.Name + ", openingrequirementvalue = " + style.OpeningRequirementValue, ex);
 								}
 
 								// style required?
