@@ -3336,64 +3336,7 @@ namespace DOL.GS
 
 				if( Util.ChanceDouble( blockChance ) )
 				{
-					if( Inventory != null && Inventory.GetItem( eInventorySlot.LeftHandWeapon ) != null )
-					{
-						InventoryItem reactiveItem = Inventory.GetItem( eInventorySlot.LeftHandWeapon );
-
-						if(reactiveItem != null && reactiveItem.Object_Type == (int)eObjectType.Shield)
-						{
-							int requiredLevel = reactiveItem.Template.LevelRequirement > 0 ? reactiveItem.Template.LevelRequirement : Math.Min(50, reactiveItem.Level);
-
-							if (requiredLevel <= Level)
-							{
-								bool useProc1 = reactiveItem.ProcSpellID != 0;
-								bool useProc2 = reactiveItem.ProcSpellID1 != 0;
-
-								if (useProc1 || useProc2)
-								{
-									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-
-									if (reactiveEffectLine != null)
-									{
-										if (useProc1)
-										{
-											Spell spell = SkillBase.FindSpell(reactiveItem.SpellID, reactiveEffectLine);
-
-											if (spell != null)
-											{
-												if (Util.Chance(reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10))
-												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-													if (spellHandler != null)
-													{
-														spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target, reactiveItem);
-													}
-												}
-											}
-										}
-
-										if (useProc2)
-										{
-											Spell spell = SkillBase.FindSpell(reactiveItem.SpellID1, reactiveEffectLine);
-
-											if (spell != null)
-											{
-												if (Util.Chance(reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10))
-												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-													if (spellHandler != null)
-													{
-														spellHandler.StartSpell(spell.Target == "Enemy" ? ad.Attacker : ad.Target, reactiveItem);
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-
+					// reactive effects on block moved to GamePlayer
 					return eAttackResult.Blocked;
 				}
 			}

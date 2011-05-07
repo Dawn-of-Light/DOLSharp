@@ -6628,85 +6628,35 @@ namespace DOL.GS
 
 						#endregion
 
-						#region Condition
-
 						// decrease condition of hitted armor piece
 						if (ad.ArmorHitLocation != eArmorSlot.NOTSET)
 						{
 							InventoryItem item = Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
 
-							// Condition percent can reach 70%
-							// Durability percent can reach zero
-							// If item durability reachs 0, item is useless and become broken item
-
-							if (item != null && item is GameInventoryItem)
+							if (item != null)
 							{
-								(item as GameInventoryItem).OnStruckByEnemy(this, ad.Attacker);
-							}
-						}
+								TryReactiveEffect(item, ad.Attacker);
 
-						#endregion
-
-						#region Reactive Effects
-
-						//reactive effect
-						if (ad.ArmorHitLocation != eArmorSlot.NOTSET)
-						{
-							InventoryItem reactiveItem = Inventory.GetItem((eInventorySlot)ad.ArmorHitLocation);
-
-							if (reactiveItem != null)
-							{
-								int requiredLevel = reactiveItem.Template.LevelRequirement > 0 ? reactiveItem.Template.LevelRequirement : Math.Min(MaxLevel, reactiveItem.Level);
-
-								if (requiredLevel <= Level)
+								if (item is GameInventoryItem)
 								{
-									SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-
-									if (reactiveEffectLine != null)
-									{
-										if (reactiveItem.ProcSpellID != 0)
-										{
-											Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID, reactiveEffectLine);
-
-											if (spell != null)
-											{
-												int chance = reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10;
-
-												if (Util.Chance(chance))
-												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-													if (spellHandler != null)
-													{
-														spellHandler.StartSpell(ad.Attacker, reactiveItem);
-													}
-												}
-											}
-										}
-
-										if (reactiveItem.ProcSpellID1 != 0)
-										{
-											Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID1, reactiveEffectLine);
-
-											if (spell != null)
-											{
-												int chance = reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10;
-
-												if (Util.Chance(chance))
-												{
-													ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-													if (spellHandler != null)
-													{
-														spellHandler.StartSpell(ad.Attacker, reactiveItem);
-													}
-												}
-											}
-										}
-									}
+									(item as GameInventoryItem).OnStruckByEnemy(this, ad.Attacker);
 								}
 							}
 						}
+						break;
+					}
+				case eAttackResult.Blocked:
+					{
+						InventoryItem reactiveItem = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+						if (reactiveItem != null && reactiveItem.Object_Type == (int)eObjectType.Shield)
+						{
+							TryReactiveEffect(reactiveItem, ad.Attacker);
 
-						#endregion
+							if (reactiveItem is GameInventoryItem)
+							{
+								(reactiveItem as GameInventoryItem).OnStruckByEnemy(this, ad.Attacker);
+							}
+						}
 						break;
 					}
 			}
@@ -6724,6 +6674,66 @@ namespace DOL.GS
 				CraftTimer.Stop();
 				CraftTimer = null;
 				Out.SendCloseTimerWindow();
+			}
+		}
+
+
+		/// <summary>
+		/// Launch any reactive effect on an item
+		/// </summary>
+		/// <param name="reactiveItem"></param>
+		/// <param name="target"></param>
+		protected virtual void TryReactiveEffect(InventoryItem reactiveItem, GameLiving target)
+		{
+			if (reactiveItem != null)
+			{
+				int requiredLevel = reactiveItem.Template.LevelRequirement > 0 ? reactiveItem.Template.LevelRequirement : Math.Min(MaxLevel, reactiveItem.Level);
+
+				if (requiredLevel <= Level)
+				{
+					SpellLine reactiveEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+
+					if (reactiveEffectLine != null)
+					{
+						if (reactiveItem.ProcSpellID != 0)
+						{
+							Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID, reactiveEffectLine);
+
+							if (spell != null)
+							{
+								int chance = reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10;
+
+								if (Util.Chance(chance))
+								{
+									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+									if (spellHandler != null)
+									{
+										spellHandler.StartSpell(target, reactiveItem);
+									}
+								}
+							}
+						}
+
+						if (reactiveItem.ProcSpellID1 != 0)
+						{
+							Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID1, reactiveEffectLine);
+
+							if (spell != null)
+							{
+								int chance = reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10;
+
+								if (Util.Chance(chance))
+								{
+									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
+									if (spellHandler != null)
+									{
+										spellHandler.StartSpell(target, reactiveItem);
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
