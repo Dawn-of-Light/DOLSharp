@@ -3553,10 +3553,11 @@ namespace DOL.GS
 					}
 				}
 
+				int counter = 0;
+
 				foreach (KeyValuePair<Spell, SpellLine> spell in spellList)
 				{
 					string key;
-					int counter = 0;
 
 					if (spell.Key.Group == 0)
 					{

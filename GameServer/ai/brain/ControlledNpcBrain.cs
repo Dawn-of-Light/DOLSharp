@@ -48,24 +48,24 @@ namespace DOL.AI.Brain
 		public static readonly short MIN_ENEMY_FOLLOW_DIST = 90;
 		public static readonly short MAX_ENEMY_FOLLOW_DIST = 512;
 
-		private int m_tempX = 0;
-		private int m_tempY = 0;
-		private int m_tempZ = 0;
+		protected int m_tempX = 0;
+		protected int m_tempY = 0;
+		protected int m_tempZ = 0;
 
 		/// <summary>
 		/// Holds the controlling player of this brain
 		/// </summary>
-		readonly GameLiving m_owner;
+		protected readonly GameLiving m_owner;
 
 		/// <summary>
 		/// Holds the walk state of the brain
 		/// </summary>
-		private eWalkState m_walkState;
+		protected eWalkState m_walkState;
 
 		/// <summary>
 		/// Holds the aggression level of the brain
 		/// </summary>
-		private eAggressionState m_aggressionState;
+		protected eAggressionState m_aggressionState;
 
 		/// <summary>
 		/// Constructs new controlled npc brain
@@ -84,15 +84,15 @@ namespace DOL.AI.Brain
 			m_aggroMaxRange = 1500;
 		}
 
-		private bool m_ismainpet = true;
+		protected bool m_isMainPet = true;
 
 		/// <summary>
 		/// Checks if this NPC is a permanent/charmed or timed pet
 		/// </summary>
 		public bool IsMainPet
 		{
-			get { return m_ismainpet; }
-			set { m_ismainpet = value; }
+			get { return m_isMainPet; }
+			set { m_isMainPet = value; }
 		}
 
 		/// <summary>
