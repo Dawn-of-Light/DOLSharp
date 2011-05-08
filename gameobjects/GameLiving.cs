@@ -2112,6 +2112,22 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Does an attacker interrupt this livings cast?
+		/// </summary>
+		/// <param name="attacker"></param>
+		/// <returns></returns>
+		public virtual bool ChanceSpellInterrupt(GameLiving attacker)
+		{
+			double mod = GetConLevel(attacker);
+			double chance = BaseInterruptChance;
+			chance += mod * 10;
+			chance = Math.Max(1, chance);
+			chance = Math.Min(99, chance);
+			if (attacker is GamePlayer) chance = 99;
+			return Util.Chance((int)chance);
+		}
+
+		/// <summary>
 		/// Does needed interrupt checks and interrupts this living
 		/// </summary>
 		/// <param name="attacker">the attacker that is interrupting</param>
