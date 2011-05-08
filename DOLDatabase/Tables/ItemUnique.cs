@@ -35,7 +35,14 @@ namespace DOL.Database
 
 		public ItemUnique(ItemTemplate template) : base()
 		{
-			m_id_nb = template.Id_nb + "_" + UniqueID.IDGenerator.GenerateID();
+			if (template is ItemUnique)
+			{
+				m_id_nb = "Unique_" + UniqueID.IDGenerator.GenerateID();
+			}
+			else
+			{
+				m_id_nb = template.Id_nb + "_" + UniqueID.IDGenerator.GenerateID();
+			}
 			Name = template.Name;
 			Bonus = template.Bonus;
 			Bonus1 = template.Bonus1;

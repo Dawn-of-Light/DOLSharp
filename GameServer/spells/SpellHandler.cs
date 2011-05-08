@@ -552,14 +552,7 @@ namespace DOL.GS.Spells
 				return false;
 			if (IsCasting && Stage < 2)
 			{
-				double mod = Caster.GetConLevel(attacker);
-				double chance = Caster.BaseInterruptChance;
-				chance += mod * 10;
-				chance = Math.Max(1, chance);
-				chance = Math.Min(99, chance);
-				if(attacker is GamePlayer) chance=99;
-
-				if (Util.Chance((int)chance))
+				if (Caster.ChanceSpellInterrupt(attacker))
 				{
 					Caster.LastInterruptMessage = attacker.GetName(0, true) + " attacks you and your spell is interrupted!";
 					MessageToLiving(Caster, Caster.LastInterruptMessage, eChatType.CT_SpellResisted);
