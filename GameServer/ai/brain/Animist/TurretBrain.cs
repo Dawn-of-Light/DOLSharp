@@ -23,16 +23,16 @@ namespace DOL.AI.Brain
 {
 	public class TurretBrain : ControlledNpcBrain
 	{
-		private readonly List<GameLiving> listDefensiveTarget;
+		protected readonly List<GameLiving> m_listDefensiveTarget;
 
 		public TurretBrain(GameLiving owner) : base(owner)
 		{
-			listDefensiveTarget = new List<GameLiving>();
+			m_listDefensiveTarget = new List<GameLiving>();
 		}
 
 		public List<GameLiving> ListDefensiveTarget
 		{
-			get { return listDefensiveTarget; }
+			get { return m_listDefensiveTarget; }
 		}
 
 		public override int ThinkInterval
