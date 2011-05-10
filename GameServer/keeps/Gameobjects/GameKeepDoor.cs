@@ -484,6 +484,7 @@ namespace DOL.GS.Keeps
 			if (IsAttackableDoor)
 			{
 				// Attempt to fix issue where some players see door as closed when it should be broken open
+				// if you target a door it will re-broadcast it's state
 
 				if (Health <= 0 && State != eDoorState.Open)
 				{
@@ -492,7 +493,7 @@ namespace DOL.GS.Keeps
 				}
 				else if (State == eDoorState.Open)
 				{
-					player.SendDoorUpdate(this);
+					player.SendDoorUpdate(this, true);
 				}
 			}
 

@@ -106,7 +106,12 @@ namespace DOL.GS
 
 		protected ushort m_doorUpdateRegionID;
 
-		public void SendDoorUpdate(IDoor door)
+		/// <summary>
+		/// Send a door state to this client
+		/// </summary>
+		/// <param name="door">the door</param>
+		/// <param name="forceUpdate">force a send of the door state regardless of status</param>
+		public void SendDoorUpdate(IDoor door, bool forceUpdate = false)
 		{
 			Out.SendObjectCreate(door as GameObject);
 
@@ -117,13 +122,10 @@ namespace DOL.GS
 				m_doorUpdateList.Add(door.ObjectID, door.State);
 				Out.SendDoorState(CurrentRegion, door);
 			}
-			else
+			else if (forceUpdate || m_doorUpdateList.ContainsKey(door.ObjectID) == false || m_doorUpdateList[door.ObjectID] != door.State)
 			{
-				if (m_doorUpdateList.ContainsKey(door.ObjectID) == false || m_doorUpdateList[door.ObjectID] != door.State)
-				{
-					Out.SendDoorState(CurrentRegion, door);
-					m_doorUpdateList[door.ObjectID] = door.State;
-				}
+				Out.SendDoorState(CurrentRegion, door);
+				m_doorUpdateList[door.ObjectID] = door.State;
 			}
 
 			Out.SendObjectUpdate(door as GameObject);
