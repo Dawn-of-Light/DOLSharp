@@ -27,7 +27,7 @@ namespace DOL.GS.Effects
 	/// The effect associated with the UniPortal teleport spell.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class UniPortalEffect : GameSpellEffect
+	public class UniPortalEffect : GameSpellEffect
 	{
 		/// <summary>
 		/// Create a new portal effect.
