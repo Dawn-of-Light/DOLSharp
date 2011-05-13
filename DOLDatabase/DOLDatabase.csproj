@@ -135,6 +135,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tables\CharacterXDataQuest.cs" />
+    <Compile Include="Tables\Regions.cs" />
     <Compile Include="Tables\SalvageYield.cs" />
     <Compile Include="Tables\DropTemplateXItemTemplate.cs" />
     <Compile Include="Tables\LanguageArea.cs" />
