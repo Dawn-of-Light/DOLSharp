@@ -355,7 +355,6 @@ namespace DOL.GS
 			log.Debug("loading mobs from DB...");
 
 			var mobList = new List<Mob>();
-
 			if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
 			{
 				foreach (string loadRegion in ServerProperties.Properties.DEBUG_LOAD_REGIONS.SplitCSV(true))
@@ -382,46 +381,63 @@ namespace DOL.GS
 				list.Add(mob);
 			}
 
+            if (GameServer.Database.GetObjectCount<DBRegions>() < regionCfg.Children.Count)
+            {
+                foreach (var entry in regionCfg.Children)
+                {
+                    ConfigElement config = entry.Value;
+
+                    DBRegions dbRegion = GameServer.Database.FindObjectByKey<DBRegions>(config[ENTRY_REG_ID].GetInt());
+                    if (dbRegion == null)
+                    {
+                        dbRegion = new DBRegions();
+
+                        dbRegion.RegionID = (ushort)config[ENTRY_REG_ID].GetInt();
+                        dbRegion.Name = entry.Key;
+                        dbRegion.Description = config[ENTRY_REG_DESC].GetString();
+                        dbRegion.IP = config[ENTRY_REG_IP].GetString();
+                        dbRegion.Port = (ushort)config[ENTRY_REG_PORT].GetInt();
+                        dbRegion.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
+                        dbRegion.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
+                        dbRegion.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
+                        dbRegion.WaterLevel = config[ENTRY_REG_WATER_LEVEL].GetInt();
+
+                        log.Debug(string.Format("Region {0} was not found in the database. Added!", dbRegion.RegionID));
+                        GameServer.Database.AddObject(dbRegion);
+                    }
+                }
+            }
+
 			var regions = new List<RegionData>(512);
-			foreach (var entry in regionCfg.Children)
-			{
-				string name = entry.Key;
-				ConfigElement config = entry.Value;
+            foreach (DBRegions dbRegion in GameServer.Database.SelectAllObjects<DBRegions>())
+            {
+                RegionData data = new RegionData();
 
-				RegionData data = new RegionData();
-				data.Id = (ushort)config[ENTRY_REG_ID].GetInt();
-				data.Name = name;
-				data.Description = config[ENTRY_REG_DESC].GetString();
-				data.Ip = config[ENTRY_REG_IP].GetString();
-				data.Port = (ushort)config[ENTRY_REG_PORT].GetInt();
-				data.WaterLevel = config[ENTRY_REG_WATER_LEVEL].GetInt();
-				data.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
-				data.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
-				data.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
+                data.Id = dbRegion.RegionID;
+                data.Name = dbRegion.Name;
+                data.Description = dbRegion.Description;
+                data.Ip = dbRegion.IP;
+                data.Port = dbRegion.Port;
+                data.Expansion = dbRegion.Expansion;
+                data.HousingEnabled = dbRegion.HousingEnabled;
+                data.DivingEnabled = dbRegion.DivingEnabled;
+                data.WaterLevel = dbRegion.WaterLevel;
 
-				List<Mob> mobs;
+                List<Mob> mobs;
 
-				if (!mobsByRegionId.TryGetValue(data.Id, out mobs))
-				{
-					data.Mobs = new Mob[0];
-				}
-				else
-				{
-					data.Mobs = mobs.ToArray();
-				}
+                if (!mobsByRegionId.TryGetValue(data.Id, out mobs))
+                    data.Mobs = new Mob[0];
+                else
+                    data.Mobs = mobs.ToArray();
 
-				regions.Add(data);
+                regions.Add(data);
 
-				//Dinberg - save the data by ID.
-				if (m_regionData.ContainsKey(data.Id))
-				{
-					log.Error("Duplicate key in region table - " + data.Id + ", EarlyInit in WorldMgr failed.");
-				}
-				else
-				{
-					m_regionData.Add(data.Id, data);
-				}
-			}
+                //Dinberg - save the data by ID.
+                if (m_regionData.ContainsKey(data.Id))
+                    log.Error("Duplicate key in region table - " + data.Id + ", EarlyInit in WorldMgr failed.");
+                else
+                    m_regionData.Add(data.Id, data);
+            }
 
 			regions.Sort();
 
@@ -482,9 +498,7 @@ namespace DOL.GS
 						GameServer.Database.AddObject(dbZone);
 					}
 				}
-			}
-
-			
+			}			
 
 			foreach (Zones dbZone in GameServer.Database.SelectAllObjects<Zones>())
 			{
