@@ -821,8 +821,6 @@ namespace DOL.GS
 		AlbionMinotaur = 19,
 		MidgardMinotaur = 20,
 		HiberniaMinotaur = 21,
-
-		_Last = 21,
 	}
 
 	/// <summary>
