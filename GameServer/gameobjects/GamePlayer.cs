@@ -2399,15 +2399,6 @@ namespace DOL.GS
 		public override int MaxMana
 		{
 			get { return GetModified(eProperty.MaxMana); }
-			//			set
-			//			{
-			//				//If it is already set, don't do anything
-			//				if (MaxMana == value)
-			//					return;
-			//				base.MaxMana = value;
-			//				m_character.MaxMana = base.m_maxMana;
-			//				UpdatePlayerStatus();
-			//			}
 		}
 
 		/// <summary>
@@ -2480,34 +2471,6 @@ namespace DOL.GS
 		#endregion
 
 		#region Class/Race
-		///// <summary>
-		///// All possible player races
-		///// </summary>
-		//public static readonly string[] RACENAMES = new string[]
-		//{
-		//    "Unknown",
-		//    "Briton",
-		//    "Avalonian",
-		//    "Highlander",
-		//    "Saracen",
-		//    "Norseman",
-		//    "Troll",
-		//    "Dwarf",
-		//    "Kobold",
-		//    "Celt",
-		//    "Firbolg",
-		//    "Elf",
-		//    "Lurikeen",
-		//    "Inconnu",
-		//    "Valkyn",
-		//    "Sylvan",
-		//    "Half Ogre",
-		//    "Frostalf",
-		//    "Shar",
-		//    "Korazh",//albion minotaur
-		//    "Deifang",//midgard minotaur
-		//    "Graoch"//hibernia minotaur
-		//};
 
 		/// <summary>
 		/// Returns localized race names
@@ -2536,9 +2499,8 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets/sets the player's race name
 		/// </summary>
-		public string RaceName
+		public virtual string RaceName
 		{
-			//get { return RACENAMES[Race]; }
 			get { return RACENAMES(Client, DBCharacter.Race, DBCharacter.Gender); }
 		}
 

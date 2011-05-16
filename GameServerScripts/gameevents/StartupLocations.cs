@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
@@ -242,7 +243,7 @@ namespace DOL.GS.GameEvents
 		{
 			try
 			{
-				int size = (int) eRace._Last + 1;
+				int size = (int)(Enum.GetValues(typeof(eRace)).Cast<eRace>().Max()) + 1;
 
 				ClassicLocations = new HybridDictionary[size];
 				ShroudedIslesLocations = new HybridDictionary[size];
