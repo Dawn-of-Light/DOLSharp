@@ -1225,6 +1225,25 @@ namespace DOL.GS.Quests
 							break;
 						}
 					}
+
+					if (m_customQuestStep == null)
+					{
+						foreach (Assembly assembly in ScriptMgr.Scripts)
+						{
+							if (assembly.GetType(m_classType) != null)
+							{
+								try
+								{
+									m_customQuestStep = assembly.CreateInstance(m_classType, false, BindingFlags.CreateInstance, null, new object[] { }, null, null) as IDataQuestStep;
+								}
+								catch (Exception)
+								{
+								}
+
+								break;
+							}
+						}
+					}
 				}
 
 				if (m_customQuestStep == null)
