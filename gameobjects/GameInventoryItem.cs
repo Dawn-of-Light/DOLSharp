@@ -130,6 +130,25 @@ namespace DOL.GS
 							break;
 						}
 					}
+
+					if (playerItem == null)
+					{
+						foreach (Assembly assembly in ScriptMgr.Scripts)
+						{
+							if (assembly.GetType(classType) != null)
+							{
+								try
+								{
+									playerItem = assembly.CreateInstance(classType, false, BindingFlags.CreateInstance, null, new object[] { item }, null, null) as GameInventoryItem;
+								}
+								catch (Exception)
+								{
+								}
+
+								break;
+							}
+						}
+					}
 				}
 			}
 			else
