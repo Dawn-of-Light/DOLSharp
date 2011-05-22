@@ -68,6 +68,7 @@ namespace DOL.GS.Commands
 		 "GMCommands.Item.Usage.Spell1",
 		 "GMCommands.Item.Usage.Proc",
 		 "GMCommands.Item.Usage.Proc1",
+		 "/item procchance <chance>",
 		 "GMCommands.Item.Usage.Poison",
 		 "GMCommands.Item.Usage.Realm",
 		 "/item classtype <ClassType> <slot> - Set this items ClassType",
