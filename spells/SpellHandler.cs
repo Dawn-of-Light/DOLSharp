@@ -99,7 +99,22 @@ namespace DOL.GS.Spells
 			get { return true; }
 		}
 
-
+		/// <summary>
+		/// Does this spell break stealth on start of cast?
+		/// </summary>
+		public virtual bool UnstealthCasterOnStart
+		{
+			get { return true; }
+		}
+		
+		/// <summary>
+		/// Does this spell break stealth on Finish of cast?
+		/// </summary>
+		public virtual bool UnstealthCasterOnFinish
+		{
+			get { return true; }
+		}
+		
 		protected InventoryItem m_spellItem = null;
 
 		/// <summary>
@@ -374,7 +389,8 @@ namespace DOL.GS.Spells
 
 			Caster.Notify(GameLivingEvent.CastStarting, m_caster, new CastingEventArgs(this));
 
-			if (Caster is GamePlayer && Spell.SpellType != "Archery")
+			//[Stryve]: Do not break stealth if spell can be cast without breaking stealth.
+			if (Caster is GamePlayer && UnstealthCasterOnStart)
 				((GamePlayer)Caster).Stealth(false);
 
 			if (Caster.IsEngaging)
@@ -1810,17 +1826,18 @@ namespace DOL.GS.Spells
 		{
 			//turn into wraith
 			if (m_caster is GamePlayer
-				&& ((m_caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Bainshee)
-				&& (m_caster as GamePlayer).InWraithForm == false
-				&& !HasPositiveEffect)
+			    && ((m_caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Bainshee)
+			    && (m_caster as GamePlayer).InWraithForm == false
+			    && !HasPositiveEffect)
 			{
 				(m_caster as GamePlayer).InWraithForm = true;
 			}
 
 			if (Caster is GamePlayer && ((GamePlayer)Caster).IsOnHorse && !HasPositiveEffect)
 				((GamePlayer)Caster).IsOnHorse = false;
-
-			if (Caster is GamePlayer)
+			
+			//[Stryve]: Do not break stealth if spell never breaks stealth.
+			if ((Caster is GamePlayer) && UnstealthCasterOnFinish )
 				((GamePlayer)Caster).Stealth(false);
 
 			if (Caster is GamePlayer && !HasPositiveEffect)
@@ -1848,8 +1865,10 @@ namespace DOL.GS.Spells
 				PulsingSpellEffect pulseeffect = new PulsingSpellEffect(this);
 				pulseeffect.Start();
 				// show animation on caster for positive spells, negative shows on every StartSpell
-				if (m_spell.Target == "Self" || m_spell.Target == "Group" || m_spell.Target == "Pet")
+				if (m_spell.Target == "Self" || m_spell.Target == "Group")
 					SendEffectAnimation(Caster, 0, false, 1);
+				if (m_spell.Target == "Pet")
+					SendEffectAnimation(target, 0, false,1);
 			}
 
 			StartSpell(target); // and action

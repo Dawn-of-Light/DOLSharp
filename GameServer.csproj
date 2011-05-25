@@ -345,6 +345,7 @@
     <Compile Include="DatabaseUpdate\DatabaseUpdateAttribute.cs" />
     <Compile Include="DatabaseUpdate\IDatabaseUpdater.cs" />
     <Compile Include="effects\DummyEffect.cs" />
+    <Compile Include="events\gameobjects\ExecuteCommandEventArgs.cs" />
     <Compile Include="events\gameobjects\InterruptedEventArgs.cs" />
     <Compile Include="events\gameobjects\NextCraftingTierReachedEventArgs.cs" />
     <Compile Include="events\gameobjects\SwitchedTargetEventArgs.cs" />
