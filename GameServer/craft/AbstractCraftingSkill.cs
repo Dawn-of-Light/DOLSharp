@@ -200,7 +200,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Make the item when craft time is finished 
+		/// Make the item when craft time is finished
 		/// </summary>
 		protected virtual int MakeItem(RegionTimer timer)
 		{
@@ -386,10 +386,10 @@ namespace DOL.GS
 				if (missingMaterials != null)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.NoIngredients", itemToCraft.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.YouAreMissing"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CheckRawMaterial.YouAreMissing", itemToCraft.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					foreach (string materialName in missingMaterials)
 					{
-						player.Out.SendMessage(materialName, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(materialName, eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					}
 
 					if (player.Client.Account.PrivLevel == (uint)ePrivLevel.Player) return false;
@@ -558,11 +558,11 @@ namespace DOL.GS
 					if (item == null)
 						continue;
 
-                    //Because crafteditem is unique, we have to check by name
+					//Because crafteditem is unique, we have to check by name
 					if (item.Name != itemToCraft.Name)
-                        continue;
+						continue;
 					if (item.Count >= itemToCraft.MaxCount)
-                        continue;
+						continue;
 
 					int countFree = item.MaxCount - item.Count;
 					if (count > countFree)
@@ -662,7 +662,7 @@ namespace DOL.GS
 
 			switch (con)
 			{
-				// Chance to MAKE ! (100 - chance to fail)
+					// Chance to MAKE ! (100 - chance to fail)
 				case -3:
 					return 100;
 				case -2:

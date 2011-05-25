@@ -121,7 +121,7 @@ namespace DOL.GS.Commands
 	    )]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		private static readonly new log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		private const ushort AUTOSELECT_RADIUS = 100; // /mob select command
 
