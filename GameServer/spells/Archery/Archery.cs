@@ -41,6 +41,14 @@ namespace DOL.GS.Spells
 			Rapid = 4
 		}
 
+		/// <summary>
+		/// Does this spell break stealth on start?
+		/// </summary>
+		public override bool UnstealthCasterOnStart
+		{
+			get { return false; }
+		}
+
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (m_caster.ObjectState != GameLiving.eObjectState.Active)	return false;

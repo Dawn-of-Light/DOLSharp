@@ -139,18 +139,18 @@ namespace DOL.Events
 		/// The QuestRewardChosen event is fired whenever the player finishes a RewardQuest.
 		/// </summary>
 		public static readonly GamePlayerEvent QuestRewardChosen = new GamePlayerEvent("GamePlayer.QuestRewardChosen");
-        /// <summary>
-        /// The ModelChanged event is fired whenever the player model changes.
-        /// </summary>
-        public static readonly GamePlayerEvent ModelChanged = new GamePlayerEvent("GamePlayer.ModelChanged");
-        /// <summary>
-        /// The AcceptGroup event is fired whenever the player accept a Group invitation.
-        /// </summary>
-        public static readonly GamePlayerEvent AcceptGroup = new GamePlayerEvent("GamePlayer.AcceptGroup");
-        /// <summary>
-        /// The LeaveGroup event is fired when the player disbands/is removed from a group.
-        /// </summary>
-        public static readonly GamePlayerEvent LeaveGroup = new GamePlayerEvent("GamePlayer.LeaveGroup");
+		/// <summary>
+		/// The ModelChanged event is fired whenever the player model changes.
+		/// </summary>
+		public static readonly GamePlayerEvent ModelChanged = new GamePlayerEvent("GamePlayer.ModelChanged");
+		/// <summary>
+		/// The AcceptGroup event is fired whenever the player accept a Group invitation.
+		/// </summary>
+		public static readonly GamePlayerEvent AcceptGroup = new GamePlayerEvent("GamePlayer.AcceptGroup");
+		/// <summary>
+		/// The LeaveGroup event is fired when the player disbands/is removed from a group.
+		/// </summary>
+		public static readonly GamePlayerEvent LeaveGroup = new GamePlayerEvent("GamePlayer.LeaveGroup");
 
 		public static readonly GamePlayerEvent NextCraftingTierReached = new GamePlayerEvent("GamePlayer.ReachedNewCraftTitle");
 
@@ -158,6 +158,11 @@ namespace DOL.Events
 		/// The ChangeTarget event is fired when a player changes target
 		/// </summary>
 		public static readonly GamePlayerEvent ChangeTarget = new GamePlayerEvent("GamePlayer.ChangeTarget");
+
+		/// <summary>
+		/// The ExecuteCommand event is fired when a player executes a command!
+		/// </summary>
+		public static readonly GamePlayerEvent ExecuteCommand = new GamePlayerEvent("GamePlayer.ExecuteCommand");
 
 		#region Statistics
 

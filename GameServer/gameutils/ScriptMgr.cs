@@ -30,6 +30,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.ServerRules;
 using DOL.GS.Spells;
 using DOL.GS.Commands;
+using DOL.Events;
 using log4net;
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
@@ -51,7 +52,7 @@ namespace DOL.GS
 		/// </summary>
 		public class GameCommand
 		{
-            public String[] Usage { get; set; }
+			public String[] Usage { get; set; }
 			public string m_cmd;
 			public uint m_lvl;
 			public string m_desc;
@@ -69,7 +70,7 @@ namespace DOL.GS
 		/// </summary>
 		public static Assembly[] Scripts
 		{
-			get 
+			get
 			{
 				return m_compiledScripts.Values.ToArray<Assembly>();
 			}
@@ -420,7 +421,10 @@ namespace DOL.GS
 				GameServer.Instance.LogGMAction("Command: " + playerName + "(" + accountName + ") -> " + targetName + " - \"/" + commandText.Remove(0, 1) + "\"");
 
 			}
-
+			if (client.Player != null)
+			{
+				client.Player.Notify(DOL.Events.GamePlayerEvent.ExecuteCommand, new ExecuteCommandEventArgs(client.Player, myCommand, pars));
+			}
 			myCommand.m_cmdHandler.OnCommand(client, pars);
 		}
 
@@ -482,7 +486,7 @@ namespace DOL.GS
 						foreach (FileInfo finfo in files)
 						{
 							if (config[finfo.FullName]["size"].GetInt(0) != finfo.Length
-								|| config[finfo.FullName]["lastmodified"].GetLong(0) != finfo.LastWriteTime.ToFileTime())
+							    || config[finfo.FullName]["lastmodified"].GetLong(0) != finfo.LastWriteTime.ToFileTime())
 							{
 								//Recompile required
 								recompileRequired = true;
@@ -556,15 +560,15 @@ namespace DOL.GS
 				
 				// Graveen: allow script compilation in debug or release mode
 				#if DEBUG
-					CompilerParameters param = new CompilerParameters(asm_names, dllName, true);
+				CompilerParameters param = new CompilerParameters(asm_names, dllName, true);
 				#else
-					CompilerParameters param = new CompilerParameters(asm_names, dllName, false);
+				CompilerParameters param = new CompilerParameters(asm_names, dllName, false);
 				#endif
 				param.GenerateExecutable = false;
 				param.GenerateInMemory = false;
 				param.WarningLevel = 2;
 				param.CompilerOptions = @"/lib:." + Path.DirectorySeparatorChar + "lib";
-			    param.ReferencedAssemblies.Add("System.Core.dll");
+				param.ReferencedAssemblies.Add("System.Core.dll");
 
 				string[] filepaths = new string[files.Count];
 				for (int i = 0; i < files.Count; i++)
@@ -1117,10 +1121,10 @@ namespace DOL.GS
 
 			foreach (Assembly asm in asms)
 				foreach (Type t in asm.GetTypes())
-				{
-					if (t.IsClass && baseType.IsAssignableFrom(t))
-						types.Add(t);
-				}
+			{
+				if (t.IsClass && baseType.IsAssignableFrom(t))
+					types.Add(t);
+			}
 
 			return (Type[])types.ToArray(typeof(Type));
 		}
