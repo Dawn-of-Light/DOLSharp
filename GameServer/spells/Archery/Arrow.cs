@@ -34,6 +34,14 @@ namespace DOL.GS.Spells
 	public class ArrowSpellHandler : SpellHandler
 	{
 		/// <summary>
+		/// Does this spell break stealth on start?
+		/// </summary>
+		public override bool UnstealthCasterOnStart
+		{
+			get { return false; }
+		}
+
+		/// <summary>
 		/// Fire arrow
 		/// </summary>
 		/// <param name="target"></param>
@@ -47,6 +55,7 @@ namespace DOL.GS.Spells
 			//}
 			base.FinishSpellCast(target);
 		}
+		
 
 		#region LOS Checks for Keeps
 		/// <summary>
@@ -155,15 +164,15 @@ namespace DOL.GS.Spells
 				// add defence bonus from last executed style if any
 				AttackData targetAD = (AttackData)target.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null);
 				if (targetAD != null
-					&& targetAD.AttackResult == GameLiving.eAttackResult.HitStyle
-					&& targetAD.Style != null)
+				    && targetAD.AttackResult == GameLiving.eAttackResult.HitStyle
+				    && targetAD.Style != null)
 				{
 					missrate += targetAD.Style.BonusToDefense;
 				}
 
 				// half of the damage is magical
 				// subtract any spelldamage bonus and re-calculate after half damage is calculated
-				AttackData ad = m_handler.CalculateDamageToTarget(target, 0.5 - (caster.GetModified(eProperty.SpellDamage) * 0.01)); 
+				AttackData ad = m_handler.CalculateDamageToTarget(target, 0.5 - (caster.GetModified(eProperty.SpellDamage) * 0.01));
 
 				// check for bladeturn miss
 				if (ad.AttackResult == GameLiving.eAttackResult.Missed)
@@ -212,7 +221,7 @@ namespace DOL.GS.Spells
 								EngageEffect engage = (EngageEffect)target.EffectList.GetOfType(typeof(EngageEffect));
 								if (engage != null && target.AttackState && engage.EngageTarget == caster)
 								{
-									// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate							
+									// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate
 									// You cannot engage a mob that was attacked within the last X seconds...
 									if (engage.EngageTarget.LastAttackedByEnemyTick > engage.EngageTarget.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK)
 									{
@@ -287,8 +296,8 @@ namespace DOL.GS.Spells
 						ad.Damage = (int)((double)ad.Damage * Math.Min(1.0, (double)caster.AttackWeapon.Condition / (double)caster.AttackWeapon.MaxCondition));
 
 						// Patch Note:  http://support.darkageofcamelot.com/kb/article.php?id=931
-						// - The Damage Per Second (DPS) of your bow will have an effect on your damage for archery shots. If the effective DPS 
-						//   of your equipped bow is less than that of your max DPS for the level of archery shot you are using, the damage of your 
+						// - The Damage Per Second (DPS) of your bow will have an effect on your damage for archery shots. If the effective DPS
+						//   of your equipped bow is less than that of your max DPS for the level of archery shot you are using, the damage of your
 						//   shot will be reduced. Max DPS for a particular level can be found by using this equation: (.3 * level) + 1.2
 
 						int spellRequiredDPS = 12 + 3 * m_handler.Spell.Level;

@@ -34,7 +34,7 @@ namespace DOL.GS.Commands
 		"GMCommands.Cast.Usage")]
 	public class CastCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		private new static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public void OnCommand(GameClient client, string[] args)
 		{

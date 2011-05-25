@@ -85,6 +85,16 @@ namespace DOL.GS.Spells
 		bool CanQueue { get; }
 
 		/// <summary>
+		/// Does this spell break stealth on start of cast?
+		/// </summary>
+		bool UnstealthCasterOnStart {get; }
+
+		/// <summary>
+		/// Does this spell break stealth on Finish of cast?
+		/// </summary>
+		bool UnstealthCasterOnFinish { get; }
+		
+		/// <summary>
 		/// Should we start the reuse timer (spell successful)?
 		/// </summary>
 		bool StartReuseTimer { get; }
@@ -96,12 +106,12 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		bool HasPositiveEffect { get; }
 
-        /// <summary>
-        /// Gets wether this spellis Purgeable or not
-        /// important for Masterlevels since they aren't purgeable
-        /// </summary>
-        /// <returns></returns>
-        bool IsUnPurgeAble { get; }
+		/// <summary>
+		/// Gets wether this spellis Purgeable or not
+		/// important for Masterlevels since they aren't purgeable
+		/// </summary>
+		/// <returns></returns>
+		bool IsUnPurgeAble { get; }
 
 		/// <summary>
 		/// Determines wether new spell is better than existing one
@@ -165,12 +175,12 @@ namespace DOL.GS.Spells
 		/// </summary>
 		GameLiving Caster { get; }
 
-        /// <summary>
-        /// The power cost for this spell.
-        /// </summary>
-        /// <param name="caster"></param>
-        /// <returns></returns>
-        int PowerCost(GameLiving caster);
+		/// <summary>
+		/// The power cost for this spell.
+		/// </summary>
+		/// <param name="caster"></param>
+		/// <returns></returns>
+		int PowerCost(GameLiving caster);
 
 		/// <summary>
 		/// The ability casting the spell
