@@ -1262,7 +1262,7 @@ namespace DOL.GS
 				itemCount = fromItem.Count > 0 ? fromItem.Count : 1;
 			}
 
-			if (toItem != null && toItem.Id_nb.Equals(fromItem.Id_nb) && toItem.IsStackable)
+			if (toItem != null && toItem.IsStackable && toItem.Id_nb.Equals(fromItem.Id_nb))
 			{
 				if (fromItem.Count + toItem.Count > fromItem.MaxCount)
 				{

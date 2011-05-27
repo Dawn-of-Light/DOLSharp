@@ -281,8 +281,8 @@ namespace DOL.GS
 
 				if (template == null)
 				{
-					player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + " needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					log.Error("Cannot find raw material ItemTemplate: " + material.IngredientId_nb + " needed for recipe: " + recipe.CraftedItemID);
+					player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + ") needed for recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					log.Error("Cannot find raw material ItemTemplate: " + material.IngredientId_nb + ") needed for recipe: " + recipe.CraftedItemID);
 					return false;
 				}
 
@@ -348,8 +348,8 @@ namespace DOL.GS
 
 					if (template == null)
 					{
-						player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + " needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						log.Error("Cannot find raw material ItemTemplate: " + material.IngredientId_nb + " needed for recipe: " + recipe.CraftedItemID);
+						player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + ") needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						log.Error("Cannot find raw material ItemTemplate: " + material.IngredientId_nb + ") needed for recipe: " + recipe.CraftedItemID);
 						return false;
 					}
 
@@ -480,7 +480,7 @@ namespace DOL.GS
 
 					if (template == null)
 					{
-						player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + " needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + ") needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						log.Error("RemoveUsedMaterials: Cannot find raw material ItemTemplate: " + material.IngredientId_nb + " needed for recipe: " + recipe.CraftedItemID);
 						return false;
 					}
@@ -548,7 +548,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected virtual void BuildCraftedItem(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft)
 		{
-			Hashtable changedSlots = new Hashtable(5); // key : > 0 inventory ; < 0 groud || value: < 0 = new item count; > 0 = add to old
+			Hashtable changedSlots = new Hashtable(5); // key : > 0 inventory ; < 0 ground || value: < 0 = new item count; > 0 = add to old
 
 			lock (player.Inventory)
 			{
@@ -558,9 +558,9 @@ namespace DOL.GS
 					if (item == null)
 						continue;
 
-					//Because crafteditem is unique, we have to check by name
-					if (item.Name != itemToCraft.Name)
+					if (item.Id_nb.Equals(itemToCraft.Id_nb) == false)
 						continue;
+
 					if (item.Count >= itemToCraft.MaxCount)
 						continue;
 
@@ -595,12 +595,13 @@ namespace DOL.GS
 				InventoryItem newItem = null;
 
 				player.Inventory.BeginChanges();
-				foreach (DictionaryEntry de in changedSlots)
+
+				foreach (DictionaryEntry slot in changedSlots)
 				{
-					int countToAdd = (int)de.Value;
+					int countToAdd = (int)slot.Value;
 					if (countToAdd > 0)	// Add to exiting item
 					{
-						newItem = player.Inventory.GetItem((eInventorySlot)de.Key);
+						newItem = player.Inventory.GetItem((eInventorySlot)slot.Key);
 						if (newItem != null && player.Inventory.AddCountToStack(newItem, countToAdd))
 						{
 							// count incremented, continue with next change
@@ -608,19 +609,25 @@ namespace DOL.GS
 						}
 					}
 
-					// need to create a new item
+					if (recipe.MakeTemplated)
+					{
+						newItem = GameInventoryItem.Create<ItemTemplate>(itemToCraft);
+					}
+					else
+					{
+						ItemUnique unique = new ItemUnique(itemToCraft);
+						GameServer.Database.AddObject(unique);
+						newItem = GameInventoryItem.Create<ItemUnique>(unique);
+						newItem.Quality = GetQuality(player, recipe);
+					}
 
-					ItemUnique unique = new ItemUnique(itemToCraft);
-					GameServer.Database.AddObject(unique);
-					newItem = GameInventoryItem.Create<ItemUnique>(unique);
 					newItem.IsCrafted = true;
 					newItem.Creator = player.Name;
-					newItem.Quality = GetQuality(player, recipe);
 					newItem.Count = -countToAdd;
 
-					if ((int)de.Key > 0)	// Create new item in the backpack
+					if ((int)slot.Key > 0)	// Create new item in the backpack
 					{
-						player.Inventory.AddItem((eInventorySlot)de.Key, newItem);
+						player.Inventory.AddItem((eInventorySlot)slot.Key, newItem);
 					}
 					else					// Create new item on the ground
 					{
@@ -633,7 +640,7 @@ namespace DOL.GS
 
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Successfully", itemToCraft.Name, newItem.Quality), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 
-				if (newItem.Quality == 100)
+				if (recipe.MakeTemplated == false && newItem.Quality == 100)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.BuildCraftedItem.Masterpiece"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					player.Out.SendPlaySound(eSoundType.Craft, 0x04);

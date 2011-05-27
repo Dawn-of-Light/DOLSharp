@@ -26,8 +26,10 @@ namespace DOL.Database
 	[DataTable(TableName = "ItemUnique", PreCache = false)]
 	public class ItemUnique : ItemTemplate
 	{
-		public ItemUnique():base()
-			
+		public const string UNIQUE_SEPARATOR = "#";
+
+		public ItemUnique()
+			: base()
 		{
 			m_id_nb = "Unique_" + UniqueID.IDGenerator.GenerateID();
 			m_name = "(blank item)";
@@ -41,7 +43,7 @@ namespace DOL.Database
 			}
 			else
 			{
-				m_id_nb = template.Id_nb + "_" + UniqueID.IDGenerator.GenerateID();
+				m_id_nb = template.Id_nb + UNIQUE_SEPARATOR + UniqueID.IDGenerator.GenerateID();
 			}
 			Name = template.Name;
 			Bonus = template.Bonus;
