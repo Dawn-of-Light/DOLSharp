@@ -34,12 +34,12 @@ namespace DOL.Database
 
 		/// <summary>
 		/// Default-Construktor that generates a new Object-ID and set
-		/// Dirty and Valid to <c>false</c>
+		/// Dirty and Persisted to <c>false</c>
 		/// </summary>
 		protected DataObject()
 		{
 			ObjectId = IDGenerator.GenerateID();
-			IsValid = false;
+			IsPersisted = false;
 			AllowAdd = true;
 			AllowDelete = true;
 			IsDeleted = false;
@@ -72,10 +72,10 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Is object valid
+		/// Is this object also in the database?
 		/// </summary>
 		[Browsable(false)]
-		public bool IsValid { get; set; }
+		public bool IsPersisted { get; set; }
 
 		/// <summary>
 		/// Can this object added to the DB?

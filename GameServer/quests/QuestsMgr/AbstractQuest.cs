@@ -154,7 +154,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void SaveIntoDatabase()
 		{
-			if(m_dbQuest.IsValid)
+			if(m_dbQuest.IsPersisted)
 				GameServer.Database.SaveObject(m_dbQuest);
 			else
 				GameServer.Database.AddObject(m_dbQuest);
@@ -165,7 +165,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void DeleteFromDatabase()
 		{
-			if(!m_dbQuest.IsValid) return;
+			if(!m_dbQuest.IsPersisted) return;
 
 			DBQuest dbQuest = (DBQuest) GameServer.Database.FindObjectByKey<DBQuest>(m_dbQuest.ObjectId);
 			if(dbQuest!=null)
