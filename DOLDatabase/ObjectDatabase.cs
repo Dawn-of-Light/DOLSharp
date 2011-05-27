@@ -123,7 +123,7 @@ namespace DOL.Database
 				FillLazyObjectRelations(dataObject, true);
 			}
 
-			dataObject.IsValid = true;
+			dataObject.IsPersisted = true;
 		}
 
 		protected void FillRowWithObject(DataObject dataObject, DataRow row)
@@ -1064,7 +1064,7 @@ namespace DOL.Database
 				FillObjectWithRow(ref ret, row, true);
 
 				dataObject.Dirty = false;
-				dataObject.IsValid = true;
+				dataObject.IsPersisted = true;
 
 				return ret;
 			}

@@ -1717,7 +1717,7 @@ namespace DOL.GS.Commands
 					dropCount = 1;
 
 				mxlt.DropCount = dropCount;
-				if (!mxlt.IsValid)
+				if (!mxlt.IsPersisted)
 					GameServer.Database.AddObject(mxlt);
 				else
 					GameServer.Database.SaveObject(mxlt);

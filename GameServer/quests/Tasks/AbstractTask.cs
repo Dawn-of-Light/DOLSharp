@@ -239,7 +239,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void SaveIntoDatabase()
 		{
-			if(m_dbTask.IsValid)
+			if(m_dbTask.IsPersisted)
 				GameServer.Database.SaveObject(m_dbTask);
 			else
 				GameServer.Database.AddObject(m_dbTask);
@@ -250,7 +250,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual void DeleteFromDatabase()
 		{
-			if(!m_dbTask.IsValid) return;
+			if(!m_dbTask.IsPersisted) return;
 
 			DBTask dbTask = (DBTask) GameServer.Database.FindObjectByKey<DBTask>(m_dbTask.ObjectId);
 			if(dbTask!=null)

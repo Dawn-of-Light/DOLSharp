@@ -49,7 +49,7 @@ namespace DOL.Database.Handlers
 				dataObject.ObjectId = row[tableName + "_ID"].ToString();
 
 				dataObject.Dirty = false;
-				dataObject.IsValid = true;
+				dataObject.IsPersisted = true;
 				dataObject.IsDeleted = false;
 
 				return true;
@@ -94,7 +94,7 @@ namespace DOL.Database.Handlers
 				}
 
 				dataObject.Dirty = false;
-				dataObject.IsValid = true;
+				dataObject.IsPersisted = true;
 
 				return true;
 			}
@@ -129,7 +129,7 @@ namespace DOL.Database.Handlers
 					row.Delete();
 				}
 
-				dataObject.IsValid = false;
+				dataObject.IsPersisted = false;
 
 				DeleteFromCache(dataObject.TableName, dataObject);
 				DeleteObjectRelations(dataObject);
