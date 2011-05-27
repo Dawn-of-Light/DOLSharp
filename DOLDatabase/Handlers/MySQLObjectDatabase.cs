@@ -214,7 +214,7 @@ namespace DOL.Database.Handlers
 				}
 
 				dataObject.Dirty = false;
-				dataObject.IsValid = true;
+				dataObject.IsPersisted = true;
 				dataObject.IsDeleted = false;
 
 				return true;
@@ -350,7 +350,7 @@ namespace DOL.Database.Handlers
 				}
 
 				dataObject.Dirty = false;
-				dataObject.IsValid = true;
+				dataObject.IsPersisted = true;
 				return true;
 			}
 			catch (Exception e)
@@ -422,7 +422,7 @@ namespace DOL.Database.Handlers
 						Log.Error("Deleting " + dataObject.ToString() + " object failed!" + " " + Environment.StackTrace);
 				}
 
-				dataObject.IsValid = false;
+				dataObject.IsPersisted = false;
 
 				DeleteFromCache(dataObject.TableName, dataObject);
 				DeleteObjectRelations(dataObject);
@@ -684,7 +684,7 @@ namespace DOL.Database.Handlers
 						FillLazyObjectRelations(obj, true);
 					}
 
-					obj.IsValid = true;
+					obj.IsPersisted = true;
 				}
 			}
 			, isolation);
@@ -841,7 +841,7 @@ namespace DOL.Database.Handlers
 														FillLazyObjectRelations(obj, true);
 													}
 
-													obj.IsValid = true;
+													obj.IsPersisted = true;
 												}
 											}
 				, isolation);

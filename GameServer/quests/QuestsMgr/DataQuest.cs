@@ -2164,7 +2164,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual bool FinishQuest(GameObject obj, bool checkCustomStep)
 		{
-			if (m_questPlayer == null || m_charQuest == null || m_charQuest.IsValid == false)
+			if (m_questPlayer == null || m_charQuest == null || m_charQuest.IsPersisted == false)
 				return false;
 
 			int lastStep = Step;
@@ -2307,7 +2307,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public override void AbortQuest()
 		{
-			if (m_questPlayer == null || m_charQuest == null || m_charQuest.IsValid == false) return;
+			if (m_questPlayer == null || m_charQuest == null || m_charQuest.IsPersisted == false) return;
 
 			if (m_questPlayer.QuestList.Contains(this))
 			{
@@ -2346,7 +2346,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public override void DeleteFromDatabase()
 		{
-			if (m_charQuest == null || m_charQuest.IsValid == false) return;
+			if (m_charQuest == null || m_charQuest.IsPersisted == false) return;
 
 			CharacterXDataQuest charQuest = GameServer.Database.FindObjectByKey<CharacterXDataQuest>(m_charQuest.ID);
 			if (charQuest != null)
