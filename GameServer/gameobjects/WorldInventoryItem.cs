@@ -54,7 +54,7 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Constructs a GameInventoryItem based on an
-		/// InventoryItem. Will disappear after 3 minutes if
+		/// InventoryItem. Will disappear after WORLD_ITEM_DECAY_TIME if
 		/// added to the world
 		/// </summary>
 		/// <param name="item">the InventoryItem to put into this class</param>
@@ -63,23 +63,16 @@ namespace DOL.GS
 			m_item = item;
 			m_item.SlotPosition = 0;
 			m_item.OwnerID = null;
+			m_item.AllowAdd = true;
 			this.Level = (byte)item.Level;
 			this.Model = (ushort)item.Model;
 			this.Emblem = item.Emblem;
 			this.Name = item.Name;
-			if (item.Template is ItemUnique)
-			{
-				ItemUnique unique = new ItemUnique(item.Template);
-				GameServer.Database.AddObject(unique);
-				m_item.Template = unique;
-				m_item.UTemplate_Id = unique.Id_nb;
-			}
-			else
-			{
-				m_item.Template = item.Template;
-			}
 
-			m_item.AllowAdd = true;
+			if (item.Template is ItemUnique && item.Template.IsPersisted == false)
+			{
+				GameServer.Database.AddObject(item.Template as ItemUnique);
+			}
 		}
 
 		/// <summary>
