@@ -34,6 +34,7 @@ namespace DOL
 			private int m_craftinglevel;
 			private string m_id_nb;
 			private int m_craftingSkillType;
+			private bool m_makeTemplated;
 
 			/// <summary>
 			/// Create an crafted item
@@ -108,6 +109,23 @@ namespace DOL
 				{
 					Dirty = true;
 					m_craftingSkillType = value;
+				}
+			}
+
+			/// <summary>
+			/// Do we create a templated item or do we create an ItemUnique?
+			/// </summary>
+			[DataElement(AllowDbNull = false)]
+			public bool MakeTemplated
+			{
+				get
+				{
+					return m_makeTemplated;
+				}
+				set
+				{
+					Dirty = true;
+					m_makeTemplated = value;
 				}
 			}
 		}

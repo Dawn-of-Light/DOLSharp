@@ -23,7 +23,7 @@ namespace DOL.GS
 	/// <summary>
 	/// Holds a static item in the world that will disappear after some interval
 	/// </summary>
-	public class GameStaticItemTimed:GameStaticItem
+	public class GameStaticItemTimed : GameStaticItem
 	{
 		/// <summary>
 		/// How long this object can stay in the world without being removed
