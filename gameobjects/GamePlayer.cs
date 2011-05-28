@@ -7848,7 +7848,7 @@ namespace DOL.GS
 			}
 
 			// Duel should end if players join group and trys to attack
-			if (ad.Attacker.Group.IsInTheGroup(ad.Target))
+			if (ad.Attacker.Group != null && ad.Attacker.Group.IsInTheGroup(ad.Target))
 			{
 				DuelStop();
 			}
