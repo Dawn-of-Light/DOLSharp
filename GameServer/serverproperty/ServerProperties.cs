@@ -381,6 +381,12 @@ namespace DOL.GS.ServerProperties
         [ServerProperty("server", "show_logins", "Show login messages when players log in and out of game?", true)]
         public static bool SHOW_LOGINS;
 
+		/// <summary>
+		/// Show logins channel
+		/// </summary>
+		[ServerProperty("server", "show_logins_channel", "What channel should be used for login messages? See eChatType, default is System.", (byte)0)]
+		public static byte SHOW_LOGINS_CHANNEL;
+
 
 		#endregion
 

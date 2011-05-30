@@ -69,8 +69,11 @@ namespace DOL.GS.GameEvents
 					continue;
 
 				string message = LanguageMgr.GetTranslation(pclient, "Scripts.Events.PlayerEnterExit.Entered", player.Name);
+
 				if (player.Client.Account.PrivLevel > 1)
+				{
 					message = LanguageMgr.GetTranslation(pclient, "Scripts.Events.PlayerEnterExit.Staff", message);
+				}
 				else
 				{
 					string realm = "";
@@ -80,7 +83,13 @@ namespace DOL.GS.GameEvents
 					}
 					message = realm + message;
 				}
-				pclient.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				eChatType chatType = eChatType.CT_System;
+
+				if (Enum.IsDefined(typeof(eChatType), ServerProperties.Properties.SHOW_LOGINS_CHANNEL))
+					chatType = (eChatType)ServerProperties.Properties.SHOW_LOGINS_CHANNEL;
+
+				pclient.Out.SendMessage(message, chatType, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -105,8 +114,11 @@ namespace DOL.GS.GameEvents
 					continue;
 
 				string message = LanguageMgr.GetTranslation(pclient, "Scripts.Events.PlayerEnterExit.Left", player.Name);
+
 				if (player.Client.Account.PrivLevel > 1)
+				{
 					message = LanguageMgr.GetTranslation(pclient, "Scripts.Events.PlayerEnterExit.Staff", message);
+				}
 				else
 				{
 					string realm = "";
@@ -116,7 +128,13 @@ namespace DOL.GS.GameEvents
 					}
 					message = realm + message;
 				}
-				pclient.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				eChatType chatType = eChatType.CT_System;
+
+				if (Enum.IsDefined(typeof(eChatType), ServerProperties.Properties.SHOW_LOGINS_CHANNEL))
+					chatType = (eChatType)ServerProperties.Properties.SHOW_LOGINS_CHANNEL;
+
+				pclient.Out.SendMessage(message, chatType, eChatLoc.CL_SystemWindow);
 			}
 		}
 	}
