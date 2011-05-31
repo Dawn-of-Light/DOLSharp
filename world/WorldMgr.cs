@@ -2271,7 +2271,7 @@ namespace DOL.GS
 
 			if (data == null)
 			{
-				log.Warn("Data for region " + skinID + " not found on instance create!");
+				log.Error("Data for region " + skinID + " not found on instance create!");
 				return null;
 			}
 

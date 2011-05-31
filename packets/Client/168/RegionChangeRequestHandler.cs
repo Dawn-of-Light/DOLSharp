@@ -38,7 +38,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// Holds jump point types
 		/// </summary>
-		protected readonly Hashtable m_instanceByName = new Hashtable();
+		protected readonly Hashtable m_customJumpPointHandlers = new Hashtable();
 
 		#region IPacketHandler Members
 
@@ -133,7 +133,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			IJumpPointHandler customHandler = null;
 			if (string.IsNullOrEmpty(zonePoint.ClassType) == false)
 			{
-				customHandler = (IJumpPointHandler)m_instanceByName[zonePoint.ClassType];
+				customHandler = (IJumpPointHandler)m_customJumpPointHandlers[zonePoint.ClassType];
 
 				// check for db change to update cached handler
 				if (customHandler != null && customHandler.GetType().FullName != zonePoint.ClassType)
@@ -177,7 +177,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (customHandler != null)
 				{
-					m_instanceByName[zonePoint.ClassType] = customHandler;
+					m_customJumpPointHandlers[zonePoint.ClassType] = customHandler;
 				}
 			}
 
@@ -234,6 +234,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return;
 				}
 
+				//check if the zonepoint has source locations set  Check prior to any zonepoint modification by handlers
+				if (m_zonePoint.SourceRegion == 0)
+				{
+					m_zonePoint.SourceRegion = player.CurrentRegionID;
+					m_zonePoint.SourceX = player.X;
+					m_zonePoint.SourceY = player.Y;
+					m_zonePoint.SourceZ = player.Z;
+					GameServer.Database.SaveObject(m_zonePoint);
+				}
+
 				if (m_checkHandler != null)
 				{
 					try
@@ -250,16 +260,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						                       eChatLoc.CL_SystemWindow);
 						return;
 					}
-				}
-
-				//check if the zonepoint has source locations set
-				if (m_zonePoint.SourceRegion == 0)
-				{
-					m_zonePoint.SourceRegion = player.CurrentRegionID;
-					m_zonePoint.SourceX = player.X;
-					m_zonePoint.SourceY = player.Y;
-					m_zonePoint.SourceZ = player.Z;
-					GameServer.Database.SaveObject(m_zonePoint);
 				}
 
 				//move the player
