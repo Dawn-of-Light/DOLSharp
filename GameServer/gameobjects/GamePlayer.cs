@@ -13363,7 +13363,7 @@ namespace DOL.GS
 		{
 			lock (CraftingLock)
 			{
-				if (m_craftingSkills[skill] == null) return -1;
+				if (!m_craftingSkills.ContainsKey(skill)) return -1;
 				return m_craftingSkills[skill];
 			}
 		}
@@ -14739,9 +14739,9 @@ namespace DOL.GS
 				get
 				{
 					if (m_level <= 35)
-						return 135;
+						return ServerProperties.Properties.MOUNT_UNDER_LEVEL_35_SPEED;
 					else
-						return 145;
+						return ServerProperties.Properties.MOUNT_OVER_LEVEL_35_SPEED;
 				}
 			}
 
