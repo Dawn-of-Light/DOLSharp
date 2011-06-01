@@ -64,10 +64,14 @@ namespace DOL.GS.PropertyCalc
 				double horseSpeed = (player.IsOnHorse ? player.ActiveHorse.Speed * 0.01 : 1.0);
 				if (speed > horseSpeed)
 					horseSpeed = 1.0;
-				if (speed == 1 && !player.InCombat && !player.IsStealthed && !player.CurrentRegion.IsRvR)
-					speed *= 1.25; // new run speed is 125% when no buff
 
-				if (player.IsOverencumbered && player.Client.Account.PrivLevel < 2)
+				if (ServerProperties.Properties.ENABLE_PVE_SPEED)
+				{
+					if (speed == 1 && !player.InCombat && !player.IsStealthed && !player.CurrentRegion.IsRvR)
+						speed *= 1.25; // new run speed is 125% when no buff
+				}
+
+				if (player.IsOverencumbered && player.Client.Account.PrivLevel < 2 && ServerProperties.Properties.ENABLE_ENCUMBERANCE_SPEED_LOSS)
 				{
 					double Enc = player.Encumberance; // calculating player.Encumberance is a bit slow with all those locks, don't call it much
 					if (Enc > player.MaxEncumberance)
