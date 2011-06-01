@@ -62,13 +62,13 @@ namespace DOL.GS.SkillHandler
 
 		public override void Activate(GameLiving living, bool sendUpdates)
 		{
-			if (activeOnLiving == null)
+			if (m_activeLiving == null)
 			{
 				foreach (eProperty property in m_property)
 				{
-					living.AbilityBonus[(int)property] += GetAmountForLevel(living.Level);
+					living.AbilityBonus[(int)property] += GetAmountForLevel(living.CalculateSkillLevel(this));
 				}
-				activeOnLiving = living;
+				m_activeLiving = living;
 				if (sendUpdates) SendUpdates(living);
 			}
 			else
@@ -79,14 +79,14 @@ namespace DOL.GS.SkillHandler
 
 		public override void Deactivate(GameLiving living, bool sendUpdates)
 		{
-			if (activeOnLiving != null)
+			if (m_activeLiving != null)
 			{
 				foreach (eProperty property in m_property)
 				{
-					living.AbilityBonus[(int)property] -= GetAmountForLevel(Level);
+					living.AbilityBonus[(int)property] -= GetAmountForLevel(living.CalculateSkillLevel(this));
 				}
 				if (sendUpdates) SendUpdates(living);
-				activeOnLiving = null;
+				m_activeLiving = null;
 			}
 			else
 			{
@@ -98,9 +98,9 @@ namespace DOL.GS.SkillHandler
 		{
 			foreach (eProperty property in m_property)
 			{
-				activeOnLiving.AbilityBonus[(int)property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
+				m_activeLiving.AbilityBonus[(int)property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
 			}
-			SendUpdates(activeOnLiving);
+			SendUpdates(m_activeLiving);
 		}
 	}
 

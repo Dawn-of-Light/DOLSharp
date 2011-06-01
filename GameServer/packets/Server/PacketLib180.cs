@@ -291,17 +291,7 @@ namespace DOL.GS.PacketHandler
 								pak.WriteShort(0);
 								pak.WriteByte(0);
 								pak.WriteShort(skill.ID);
-								string str = "";
-								if (m_gameClient.Player.CharacterClass.ID == (int)eCharacterClass.Vampiir)
-								{
-									if (skill.Name == Abilities.VampiirConstitution ||
-									    skill.Name == Abilities.VampiirDexterity ||
-									    skill.Name == Abilities.VampiirStrength)
-										str = " +" + ((m_gameClient.Player.Level - 5) * 3).ToString();
-									else if (skill.Name == Abilities.VampiirQuickness)
-										str = " +" + ((m_gameClient.Player.Level - 5) * 2).ToString();
-								}
-								pak.WritePascalString(skill.Name + str);
+								pak.WritePascalString(m_gameClient.Player.GetSkillName(skill));
 							}
 
 							foreach (Style style in styleList)
