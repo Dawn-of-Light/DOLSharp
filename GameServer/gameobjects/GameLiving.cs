@@ -5497,6 +5497,23 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// What is the base, unmodified level of this living
+		/// </summary>
+		public virtual byte BaseLevel
+		{
+			get { return Level; }
+		}
+
+		/// <summary>
+		/// Calculates the level of a skill on this living.  Generally this is simply the level of the skill.
+		/// </summary>
+		public virtual int CalculateSkillLevel(Skill skill)
+		{
+			return skill.Level;
+		}
+
+
 		#endregion
 		#region Movement
 		/// <summary>

@@ -104,10 +104,10 @@ namespace DOL.GS.RealmAbilities
 
 		public override void Activate(GameLiving living, bool sendUpdates)
 		{
-			if (activeOnLiving == null)
+			if (m_activeLiving == null)
 			{
 				living.AbilityBonus[(int)m_property] += GetAmountForLevel(Level);
-				activeOnLiving = living;
+				m_activeLiving = living;
 				if (sendUpdates) SendUpdates(living);
 			}
 			else
@@ -118,11 +118,11 @@ namespace DOL.GS.RealmAbilities
 
 		public override void Deactivate(GameLiving living, bool sendUpdates)
 		{
-			if (activeOnLiving != null)
+			if (m_activeLiving != null)
 			{
 				living.AbilityBonus[(int)m_property] -= GetAmountForLevel(Level);
 				if (sendUpdates) SendUpdates(living);
-				activeOnLiving = null;
+				m_activeLiving = null;
 			}
 			else
 			{
@@ -132,8 +132,8 @@ namespace DOL.GS.RealmAbilities
 
 		public override void OnLevelChange(int oldLevel)
 		{
-			activeOnLiving.AbilityBonus[(int)m_property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
-			SendUpdates(activeOnLiving);
+			m_activeLiving.AbilityBonus[(int)m_property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
+			SendUpdates(m_activeLiving);
 		}
 	}
 
