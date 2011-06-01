@@ -51,7 +51,7 @@ namespace DOL.GS
 		protected string m_serializedNames;
 		protected string m_description;
 		protected int m_speclevel;
-		protected GameLiving activeOnLiving = null;
+		protected GameLiving m_activeLiving = null;
 
 
 		public Ability(DBAbility dba)
@@ -123,7 +123,7 @@ namespace DOL.GS
 		/// <param name="sendUpdates"></param>
 		public virtual void Activate(GameLiving living, bool sendUpdates)
 		{
-			activeOnLiving = living;
+			m_activeLiving = living;
 		}
 
 		/// <summary>
@@ -182,7 +182,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// set is disabled
+		/// Set the level of an ability
 		/// </summary>
 		public override int Level
 		{
@@ -191,7 +191,7 @@ namespace DOL.GS
 			{
 				int oldLevel = m_level;
 				m_level = value;
-				if (activeOnLiving != null) OnLevelChange(oldLevel);
+				if (m_activeLiving != null) OnLevelChange(oldLevel);
 			}
 		}
 
@@ -260,11 +260,11 @@ namespace DOL.GS
 
 		public override void Activate(GameLiving living, bool sendUpdates)
 		{
-			if (activeOnLiving == null)
+			if (m_activeLiving == null)
 			{
 				foreach (eProperty property in m_properties)
 					living.AbilityBonus[(int)property] += Amount;
-				activeOnLiving = living;
+				m_activeLiving = living;
 				if (sendUpdates) SendUpdates(living);
 			}
 			else
@@ -275,12 +275,12 @@ namespace DOL.GS
 
 		public override void Deactivate(GameLiving living, bool sendUpdates)
 		{
-			if (activeOnLiving != null)
+			if (m_activeLiving != null)
 			{
 				foreach (eProperty property in m_properties)
 					living.AbilityBonus[(int)property] -= Amount;
 				if (sendUpdates) SendUpdates(living);
-				activeOnLiving = null;
+				m_activeLiving = null;
 			}
 			else
 			{

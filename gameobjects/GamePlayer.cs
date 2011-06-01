@@ -2207,7 +2207,7 @@ namespace DOL.GS
 					//TODO : cache LongWind level when char is loaded and on train ability
 					LongWindAbility ra = GetAbility(typeof(LongWindAbility)) as LongWindAbility;
 					if (ra != null)
-						longwind = 5 - (ra.GetAmountForLevel(ra.Level)*5/100);
+						longwind = 5 - (ra.GetAmountForLevel(CalculateSkillLevel(ra)) * 5 / 100);
 
 					regen -= longwind;
 					if (Endurance + regen > MaxEndurance - longwind)
@@ -2622,6 +2622,48 @@ namespace DOL.GS
 		/// Temporary Stats Boni in percent
 		/// </summary>
 		protected readonly int[] m_statBonusPercent = new int[8];
+
+
+		/// <summary>
+		/// Get the name associated with a skill.  Some skills, like vampiir abilities, add text to the skill name when displayed
+		/// </summary>
+		/// <param name="skill"></param>
+		/// <returns></returns>
+		public virtual string GetSkillName(Skill skill)
+		{
+			string name = skill.Name;
+
+			if (skill.Name == Abilities.VampiirConstitution ||
+				skill.Name == Abilities.VampiirDexterity ||
+				skill.Name == Abilities.VampiirStrength)
+			{
+				name += " +" + ((CalculateSkillLevel(skill) - 5) * 3).ToString();
+			}
+			else if (skill.Name == Abilities.VampiirQuickness)
+			{
+				name += " +" + ((CalculateSkillLevel(skill) - 5) * 2).ToString();
+			}
+
+			return name;
+		}
+
+		/// <summary>
+		/// Calculate the level of a skill.  Generally the skill.Level except for Vampiir skills
+		/// </summary>
+		/// <param name="skill"></param>
+		/// <returns></returns>
+		public override int CalculateSkillLevel(Skill skill)
+		{
+			if (skill.Name == Abilities.VampiirConstitution ||
+				skill.Name == Abilities.VampiirDexterity ||
+				skill.Name == Abilities.VampiirStrength ||
+				skill.Name == Abilities.VampiirQuickness)
+			{
+				return Level;
+			}
+
+			return base.CalculateSkillLevel(skill);
+		}
 
 		/// <summary>
 		/// Gets/Sets amount of full skill respecs
@@ -5118,9 +5160,9 @@ namespace DOL.GS
 		/// <summary>
 		/// What is the base, unmodified level of this character.
 		/// </summary>
-		public virtual byte BaseLevel
+		public override byte BaseLevel
 		{
-			get { return DBCharacter != null ? (byte)DBCharacter.Level : base.Level; }
+			get { return DBCharacter != null ? (byte)DBCharacter.Level : base.BaseLevel; }
 		}
 
 		/// <summary>
@@ -12964,7 +13006,7 @@ namespace DOL.GS
 			RAPropertyEnhancer mos = GetAbility(typeof(MasteryOfStealthAbility)) as RAPropertyEnhancer;
 			if (mos != null && !enemyHasCamouflage)
 				if (!HasAbility(Abilities.DetectHidden) || !enemy.HasAbility(Abilities.DetectHidden))
-					range += mos.GetAmountForLevel(mos.Level);
+					range += mos.GetAmountForLevel(CalculateSkillLevel(mos));
 			
 			range += BaseBuffBonusCategory[(int)eProperty.Skill_Stealth];
 
