@@ -341,9 +341,15 @@
     <Compile Include="craft\ArmorCrafting.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DatabaseUpdate\SalvageYieldsUpdate.cs" />
-    <Compile Include="DatabaseUpdate\DatabaseUpdateAttribute.cs" />
-    <Compile Include="DatabaseUpdate\IDatabaseUpdater.cs" />
+    <Compile Include="database\converters\DatabaseConverterAttribute.cs" />
+    <Compile Include="database\converters\IDatabaseConverter.cs" />
+    <Compile Include="database\converters\Version002.cs" />
+    <Compile Include="database\converters\Version003.cs" />
+    <Compile Include="database\converters\Version004.cs" />
+    <Compile Include="database\converters\Version005.cs" />
+    <Compile Include="database\updaters\DatabaseUpdateAttribute.cs" />
+    <Compile Include="database\updaters\IDatabaseUpdater.cs" />
+    <Compile Include="database\updaters\SalvageYieldsUpdate.cs" />
     <Compile Include="effects\DummyEffect.cs" />
     <Compile Include="events\gameobjects\ExecuteCommandEventArgs.cs" />
     <Compile Include="events\gameobjects\InterruptedEventArgs.cs" />
@@ -2750,6 +2756,9 @@
     <Content Include="language\IT\GameObject\GameGuard.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="database" />
+    <Folder Include="database\converters" />
+    <Folder Include="database\updaters" />
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
   </ItemGroup>
