@@ -266,7 +266,7 @@ namespace DOL.GS.ServerProperties
 		
 		#region SERVER
 
-        /// <summary>
+		/// <summary>
 		/// The money drop modifier
 		/// </summary>
 		[ServerProperty("server","use_new_passives_ras_scaling", "Use new passives realmabilities scaling (1.108+) ?", false)]
@@ -319,7 +319,6 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("server","use_custom_start_locations", "Set to true if you will use another script to set your start locations", false)]
 		public static bool USE_CUSTOM_START_LOCATIONS;
-
 
 		/// <summary>
 		/// Death Messages All Realms
@@ -378,8 +377,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Show logins
 		/// </summary>
-        [ServerProperty("server", "show_logins", "Show login messages when players log in and out of game?", true)]
-        public static bool SHOW_LOGINS;
+		[ServerProperty("server", "show_logins", "Show login messages when players log in and out of game?", true)]
+		public static bool SHOW_LOGINS;
 
 		/// <summary>
 		/// Show logins channel
@@ -387,6 +386,17 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server", "show_logins_channel", "What channel should be used for login messages? See eChatType, default is System.", (byte)0)]
 		public static byte SHOW_LOGINS_CHANNEL;
 
+		/// <summary>
+		/// Enable PvE Speed
+		/// </summary>
+		[ServerProperty("server", "enable_pve_speed", "Set to true if you wish to enable the extra 25% increase to speed when not in combat or an RvR zone", true)]
+		public static bool ENABLE_PVE_SPEED;
+
+		/// <summary>
+		/// Enable Encumberance Speed loss
+		/// </summary>
+		[ServerProperty("server", "enable_encumberance_speed_loss", "Set to true if you wish to enable the encumberance speed loss", true)]
+		public static bool ENABLE_ENCUMBERANCE_SPEED_LOSS;
 
 		#endregion
 
@@ -655,7 +665,17 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("rates", "item_condition_loss_chance", "What chance does armor or weapon have to lose condition?", 5)]
 		public static int ITEM_CONDITION_LOSS_CHANCE;
 
-
+		/// <summary>
+		/// Under level 35 mount speed, live like = 135
+		/// </summary>
+		[ServerProperty("rates", "mount_under_level_35_speed", "What is the speed of player controlled mounts under level 35?", (short)135)]
+		public static short MOUNT_UNDER_LEVEL_35_SPEED = 135;
+		
+		/// <summary>
+		/// Over level 35 mount speed, live like = 145
+		/// </summary>
+		[ServerProperty("rates", "mount_over_level_35_speed", "What is the speed of player controlled mounts over level 35?", (short)145)]
+		public static short MOUNT_OVER_LEVEL_35_SPEED = 145;
 
 		#endregion
 
@@ -1135,11 +1155,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("housing", "rent_lockbox_payments", "How many rent payments can be stored in the lockbox?", 4)]
 		public static int RENT_LOCKBOX_PAYMENTS;
 
-        /// <summary>
-        /// The worth of 1 (one) bounty point in gold (e.g. 1 bp = 1g -> 10000, 1bp = 10g -> 100000)
-        /// </summary>
-        [ServerProperty("housing", "rent_bounty_point_to_gold", "The worth of 1 (one) bounty point in gold (e.g. 1 bp = 1g -> 10000, 1bp = 10g -> 100000)", 10000)]
-        public static long RENT_BOUNTY_POINT_TO_GOLD;
+		/// <summary>
+		/// The worth of 1 (one) bounty point in gold (e.g. 1 bp = 1g -> 10000, 1bp = 10g -> 100000)
+		/// </summary>
+		[ServerProperty("housing", "rent_bounty_point_to_gold", "The worth of 1 (one) bounty point in gold (e.g. 1 bp = 1g -> 10000, 1bp = 10g -> 100000)", 10000)]
+		public static long RENT_BOUNTY_POINT_TO_GOLD;
 
 		#endregion
 		
@@ -1391,7 +1411,7 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("salvage", "use_salvage_per_realm", "Enable to get back material to use in chars realm. Disable to get back the same material in all realms.", false)]
 		public static bool USE_SALVAGE_PER_REALM;
 
-        /// <summary>
+		/// <summary>
 		/// Use salvage per realm and get back material to use in chars realm
 		/// </summary>
 		[ServerProperty("salvage", "use_new_salvage", "Enable to use a new system calcul of salvage count based on object_type.", false)]
@@ -1433,23 +1453,23 @@ namespace DOL.GS.ServerProperties
 
 		#endregion
 
-        #region Language
+		#region LANGUAGE
 
-        /// <summary>
-        /// Holds all custom language keys that are allowed to use on the server, separated by semi-colon (DE; FR; IT etc.). There is no need to add english (EN), it's supported by default.
-        /// </summary>
-        [ServerProperty("language", "allowed_custom_language_keys", "Holds all custom language keys that are allowed to use on the server, separated by semi-colon (DE; FR; IT etc.). There is no need to add english (EN), it's supported by default.", "CU; DE; FR; IT")]
-        public static string ALLOWED_CUSTOM_LANGUAGE_KEYS;
+		/// <summary>
+		/// Holds all custom language keys that are allowed to use on the server, separated by semi-colon (DE; FR; IT etc.). There is no need to add english (EN), it's supported by default.
+		/// </summary>
+		[ServerProperty("language", "allowed_custom_language_keys", "Holds all custom language keys that are allowed to use on the server, separated by semi-colon (DE; FR; IT etc.). There is no need to add english (EN), it's supported by default.", "CU; DE; FR; IT")]
+		public static string ALLOWED_CUSTOM_LANGUAGE_KEYS;
 
-        /// <summary>
-        /// Should we use the new language system? True = yes, False = no | Default: false
-        /// </summary>
-        [ServerProperty("language", "use_new_language_system", "Should we use the new language system? True = yes, False = no", false)]
-        public static bool USE_NEW_LANGUAGE_SYSTEM;
+		/// <summary>
+		/// Should we use the new language system? True = yes, False = no | Default: false
+		/// </summary>
+		[ServerProperty("language", "use_new_language_system", "Should we use the new language system? True = yes, False = no", false)]
+		public static bool USE_NEW_LANGUAGE_SYSTEM;
 
-        #endregion
+		#endregion
 
-        /// <summary>
+		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
 		/// type of the default value
