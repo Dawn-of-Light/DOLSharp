@@ -66,6 +66,11 @@ namespace DOL.AI.Brain
 		/// Holds the aggression level of the brain
 		/// </summary>
 		protected eAggressionState m_aggressionState;
+		
+		/// <summary>
+		/// Allows to check if your target is stealthing - trying to escape your pet
+		/// </summary>
+		protected bool previousIsStealthed;
 
 		/// <summary>
 		/// Constructs new controlled npc brain
@@ -202,7 +207,9 @@ namespace DOL.AI.Brain
 				UpdatePetWindow();
 			}
 			m_orderAttackTarget = target as GameLiving;
-
+			previousIsStealthed = false;
+			if (target is GamePlayer) 
+				previousIsStealthed = (target as GamePlayer).IsStealthed;
 			AttackMostWanted();
 		}
 
@@ -356,14 +363,22 @@ namespace DOL.AI.Brain
 				CheckNPCAggro();
 				AttackMostWanted();
 			}
-			// Do not discover stealthed players
-			if ( Body.TargetObject != null)
-				if (Body.TargetObject is GamePlayer)
-					if (Body.IsAttacking && (Body.TargetObject as GamePlayer).IsStealthed)
-					{
-						Body.StopAttack();
-						FollowOwner();
-					}
+			
+			// Stop hunting player entering in steath
+			if ( Body.TargetObject != null && Body.TargetObject is GamePlayer)
+			{
+				GamePlayer player = Body.TargetObject as GamePlayer;
+				if (Body.IsAttacking && player.IsStealthed && !previousIsStealthed)
+				{
+					Body.StopAttack();
+					Body.StopCurrentSpellcast();
+					RemoveFromAggroList(player);
+					Body.TargetObject = null;
+					FollowOwner();
+				}
+				previousIsStealthed = player.IsStealthed;
+			}
+
 		}
 
 		/// <summary>
@@ -468,7 +483,7 @@ namespace DOL.AI.Brain
 
 			switch (spell.SpellType)
 			{
-				#region Buffs
+					#region Buffs
 				case "StrengthConstitutionBuff":
 				case "DexterityQuicknessBuff":
 				case "StrengthBuff":
@@ -558,9 +573,9 @@ namespace DOL.AI.Brain
 						}
 					}
 					break;
-				#endregion Buffs
+					#endregion Buffs
 
-				#region Disease Cure/Poison Cure/Summon
+					#region Disease Cure/Poison Cure/Summon
 				case "CureDisease":
 					//Cure self
 					if (Body.IsDiseased)
@@ -630,7 +645,7 @@ namespace DOL.AI.Brain
 					break;
 					#endregion
 
-				#region Heals
+					#region Heals
 				case "Heal":
 					//Heal self
 					if (Body.HealthPercent < 75)
@@ -704,16 +719,14 @@ namespace DOL.AI.Brain
 		/// <param name="aggroamount"></param>
 		public override void AddToAggroList(GameLiving living, int aggroamount)
 		{
-			if (living == Owner)
-				return;
-			if (living.IsStealthed) return;
+			if (living == Owner) return;
 			base.AddToAggroList(living, aggroamount);
 		}
 
 		public override int CalculateAggroLevelToTarget(GameLiving target)
 		{
 			// only attack if target is green+ to OWNER; always attack higher levels regardless of CON
-			if (GameServer.ServerRules.IsAllowedToAttack(Body, target, true) == false || Owner.IsObjectGreyCon(target)) 
+			if (GameServer.ServerRules.IsAllowedToAttack(Body, target, true) == false || Owner.IsObjectGreyCon(target))
 				return 0;
 
 			return AggroLevel > 100 ? 100 : AggroLevel;
@@ -731,9 +744,8 @@ namespace DOL.AI.Brain
 			if (m_orderAttackTarget != null)
 			{
 				if (m_orderAttackTarget.IsAlive &&
-					m_orderAttackTarget.ObjectState == GameObject.eObjectState.Active &&
-					!m_orderAttackTarget.IsStealthed &&
-					GameServer.ServerRules.IsAllowedToAttack(this.Body, m_orderAttackTarget, true))
+				    m_orderAttackTarget.ObjectState == GameObject.eObjectState.Active &&
+				    GameServer.ServerRules.IsAllowedToAttack(this.Body, m_orderAttackTarget, true))
 				{
 					return m_orderAttackTarget;
 				}
@@ -750,11 +762,10 @@ namespace DOL.AI.Brain
 					GameLiving living = (GameLiving)aggros.Key;
 
 					if (living.IsMezzed ||
-						living.IsStealthed || 
-						living.IsAlive == false || 
-						living.ObjectState != GameObject.eObjectState.Active ||
-						Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE ||
-						GameServer.ServerRules.IsAllowedToAttack(this.Body, living, true) == false)
+					    living.IsAlive == false ||
+					    living.ObjectState != GameObject.eObjectState.Active ||
+					    Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE ||
+					    GameServer.ServerRules.IsAllowedToAttack(this.Body, living, true) == false)
 					{
 						removable.Add(living);
 					}
@@ -788,7 +799,6 @@ namespace DOL.AI.Brain
 
 			if (target != null)
 			{
-				//if (!Body.AttackState || target != Body.TargetObject)
 				if (!Body.IsAttacking || target != Body.TargetObject)
 				{
 					Body.TargetObject = target;
