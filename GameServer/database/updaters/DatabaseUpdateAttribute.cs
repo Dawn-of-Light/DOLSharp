@@ -27,7 +27,7 @@ namespace DOL.GS.DatabaseUpdate
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
 	public class DatabaseUpdateAttribute : Attribute
 	{
-		private int m_targetVersion;
+		//private int m_targetVersion;
 
 		/// <summary>
 		/// Constructs new attribute for database updater classes
