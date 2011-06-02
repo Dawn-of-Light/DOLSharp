@@ -3517,10 +3517,7 @@ namespace DOL.GS
 				GamePlayer owner = null;
 
                 if ((owner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
-                {
-                    if (owner.CharacterClass.ID != (int)eCharacterClass.Hunter) // the Hunter is the only class capable of this.
                         owner.Stealth(false);
-                }
 			}
 
 			SetLastMeleeAttackTick();
