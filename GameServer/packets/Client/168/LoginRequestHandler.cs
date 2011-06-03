@@ -136,6 +136,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (GameServer.Instance.ServerStatus == eGameServerStatus.GSS_Closed)
 			{
 				client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
+				Log.Info(ipAddress + " disconnected because game is closed!");
 				GameServer.Instance.Disconnect(client);
 
 				return;
