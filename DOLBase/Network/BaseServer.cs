@@ -230,11 +230,8 @@ namespace DOL.Network
 
 				try
 				{
-					if (Log.IsInfoEnabled)
-					{
-						string ip = sock.Connected ? sock.RemoteEndPoint.ToString() : "socket disconnected";
-						Log.Info("Incoming connection from " + ip);
-					}
+					string ip = sock.Connected ? sock.RemoteEndPoint.ToString() : "socket disconnected";
+					Log.Info("Incoming connection from " + ip);
 
 					baseClient = GetNewClient();
 					baseClient.Socket = sock;
@@ -247,13 +244,13 @@ namespace DOL.Network
 				}
 				catch (SocketException)
 				{
+					Log.Error("BaseServer SocketException");
 					if (baseClient != null)
 						Disconnect(baseClient);
 				}
 				catch (Exception e)
 				{
-					if (Log.IsErrorEnabled)
-						Log.Error("Client creation", e);
+					Log.Error("Client creation", e);
 
 					if (baseClient != null)
 						Disconnect(baseClient);
@@ -261,6 +258,8 @@ namespace DOL.Network
 			}
 			catch
 			{
+				Log.Error("AcceptCallback: Catch");
+
 				if (sock != null) // don't leave the socket open on exception
 				{
 					try

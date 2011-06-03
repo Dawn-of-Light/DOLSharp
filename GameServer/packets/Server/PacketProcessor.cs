@@ -387,10 +387,12 @@ namespace DOL.GS.PacketHandler
 			}
 			catch (ObjectDisposedException)
 			{
+				log.Error("Packet processor: ObjectDisposedException");
 				GameServer.Instance.Disconnect(client);
 			}
 			catch (SocketException)
 			{
+				log.Error("Packet processor: SocketException");
 				GameServer.Instance.Disconnect(client);
 			}
 			catch (Exception e)
