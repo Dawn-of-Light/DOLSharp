@@ -54,7 +54,7 @@ namespace DOL.GS.Quests
 	/// have serialized values, separated by | for each Step, including Step 1.  If the last value for any step is empty then the string should
 	/// end with a double pipe |
 	/// 
-	/// SourceName - UNUSED
+	/// SourceName - RESERVED FOR OTHER USE
 	/// 
 	/// SourceText - What is said to the player when beginning a step.  If a target starting the next step has no text then an empty 
 	/// string can be provided using || with nothing between the pipes.
@@ -158,8 +158,6 @@ namespace DOL.GS.Quests
 			Unknown = 255
 		}
 
-		//protected List<string> m_sourceNames = new List<string>();
-		//protected List<ushort> m_sourceRegions = new List<ushort>();
 		protected List<string> m_sourceTexts = new List<string>();
 		protected List<string> m_targetNames = new List<string>();
 		protected List<ushort> m_targetRegions = new List<ushort>();
@@ -267,27 +265,6 @@ namespace DOL.GS.Quests
 			try
 			{
 				string[] parse1;
-
-				//lastParse = m_dataQuest.SourceName;
-				//if (string.IsNullOrEmpty(lastParse) == false)
-				//{
-				//    parse1 = lastParse.Split('|');
-				//    foreach (string str in parse1)
-				//    {
-				//        if (str == string.Empty)
-				//        {
-				//            // if there's not npc for this step then empty is ok
-				//            m_sourceNames.Add("");
-				//            m_sourceRegions.Add(0);
-				//        }
-				//        else
-				//        {
-				//            string[] parse2 = str.Split(';');
-				//            m_sourceNames.Add(parse2[0]);
-				//            m_sourceRegions.Add(Convert.ToUInt16(parse2[1]));
-				//        }
-				//    }
-				//}
 
 				lastParse = m_dataQuest.SourceText;
 				if (string.IsNullOrEmpty(lastParse) == false)
@@ -881,44 +858,16 @@ namespace DOL.GS.Quests
 
 
 		/// <summary>
-		/// Source name for the current step
+		/// Reserved for other use
 		/// </summary>
-		//protected string SourceName
-		//{
-		//    get
-		//    {
-		//        try
-		//        {
-		//            return m_sourceNames[Step - 1];
-		//        }
-		//        catch (Exception ex)
-		//        {
-		//            log.Error("DataQuest [" + ID + "] SourceName error for Step " + Step, ex);
-		//        }
+		protected string SourceName
+		{
+			get
+			{
+				return m_dataQuest.SourceName;
+			}
+		}
 
-		//        return "";
-		//    }
-		//}
-
-		/// <summary>
-		/// Source region for the current step
-		/// </summary>
-		//protected ushort SourceRegion
-		//{
-		//    get
-		//    {
-		//        try
-		//        {
-		//            return m_sourceRegions[Step - 1];
-		//        }
-		//        catch (Exception ex)
-		//        {
-		//            log.Error("DataQuest [" + ID + "] SourceRegion error for Step " + Step, ex);
-		//        }
-
-		//        return 0;
-		//    }
-		//}
 
 		/// <summary>
 		/// Source text for the current step
