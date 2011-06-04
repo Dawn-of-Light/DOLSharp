@@ -39,7 +39,7 @@ namespace DOL.GS.SkillHandler
 		/// <param name="living"></param>
         public void Execute(Ability ab, GamePlayer player)
 		{
-            if (player.IsAlive || player.IsSitting || player.IsMezzed || player.IsStunned)
+            if (!player.IsAlive || player.IsSitting || player.IsMezzed || player.IsStunned)
                 return;
 
 			if (player != null)
