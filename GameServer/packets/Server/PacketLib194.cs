@@ -88,19 +88,17 @@ namespace DOL.GS.PacketHandler
 				pak.WritePascalString(String.Format("{0}\r", text));
 			}
 			pak.WriteInt((uint)(0));
-			//	pak.WriteByte((byte)quest.Level);
-			//	pak.WriteByte((byte)quest.Rewards.MoneyPercent);
 			pak.WriteByte((byte)0);
 			pak.WriteByte((byte)quest.FinalRewards.Count);
 			foreach (ItemTemplate reward in quest.FinalRewards)
 			{
-				WriteTemplateData(pak, reward, 1);
+				WriteItemData(pak, GameInventoryItem.Create<ItemTemplate>(reward));
 			}
 			pak.WriteByte((byte)quest.NumOptionalRewardsChoice);
 			pak.WriteByte((byte)quest.OptionalRewards.Count);
 			foreach (ItemTemplate reward in quest.OptionalRewards)
 			{
-				WriteTemplateData(pak, reward, 1);
+				WriteItemData(pak, GameInventoryItem.Create<ItemTemplate>(reward));
 			}
 			SendTCP(pak);
 		}
@@ -144,16 +142,18 @@ namespace DOL.GS.PacketHandler
 				pak.WritePascalString(String.Format("{0}\r", goal.Description));
 			}
 			pak.WriteInt((uint)(quest.Rewards.Money)); // unknown, new in 1.94
-		//	pak.WriteByte((byte)quest.Level);
-		//	pak.WriteByte((byte)quest.Rewards.MoneyPercent);
 			pak.WriteByte((byte)quest.Rewards.ExperiencePercent(player));
 			pak.WriteByte((byte)quest.Rewards.BasicItems.Count);
 			foreach (ItemTemplate reward in quest.Rewards.BasicItems)
-				WriteTemplateData(pak, reward, 1);
+			{
+				WriteItemData(pak, GameInventoryItem.Create<ItemTemplate>(reward));
+			}
 			pak.WriteByte((byte)quest.Rewards.ChoiceOf);
 			pak.WriteByte((byte)quest.Rewards.OptionalItems.Count);
 			foreach (ItemTemplate reward in quest.Rewards.OptionalItems)
-				WriteTemplateData(pak, reward, 1);
+			{
+				WriteItemData(pak, GameInventoryItem.Create<ItemTemplate>(reward));
+			}
 			SendTCP(pak);
 		}
 

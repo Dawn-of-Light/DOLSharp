@@ -531,14 +531,6 @@ namespace DOL.AI.Brain
 					}
 
 				}
-
-				if (DOL.GS.ServerProperties.Properties.ENABLE_DEBUG && (this is IControlledBrain) == false)
-				{
-					foreach (GameLiving aliv in m_aggroTable.Keys)
-					{
-						Body.Yell(aliv.Name + ": " + m_aggroTable[aliv]);
-					}
-				}
 			}
 		}
 

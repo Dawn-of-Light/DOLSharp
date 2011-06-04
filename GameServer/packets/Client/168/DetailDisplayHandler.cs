@@ -345,7 +345,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						break;
 					}
 					#endregion
-					#region Merchant
+					#region Merchant / RewardQuest
 				case 4: //Display Infos on Merchant objects
 				case 19: //Display Info quest reward
 					{
@@ -366,6 +366,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							ushort questID = (ushort)((extraID << 12) | (ushort)(objectID >> 4));
 							int index = objectID & 0x0F;
+
+							GameLiving questGiver = null;
+							if (client.Player.TargetObject != null && client.Player.TargetObject is GameLiving)
+								questGiver = (GameLiving)client.Player.TargetObject;
+
+							ChatUtil.SendDebugMessage(client, "Quest ID: " + questID);
+
 							if (questID == 0)
 								return; // questID == 0, wrong ID ?
 							
@@ -374,7 +381,27 @@ namespace DOL.GS.PacketHandler.Client.v168
 								AbstractQuest q = client.Player.IsDoingQuest(QuestMgr.GetQuestTypeForID(questID));
 
 								if (q == null)
-									return;// player not doing this quest
+								{
+									// player not doing quest, most likely on offer screen
+									if (questGiver != null)
+									{
+										try
+										{
+											q = (AbstractQuest)Activator.CreateInstance(QuestMgr.GetQuestTypeForID(questID), new object[] { client.Player, 1 });
+										}
+										catch
+										{
+											// we tried!
+										}
+									}
+
+									if (q == null)
+									{
+										ChatUtil.SendDebugMessage(client, "Can't find or create quest!");
+										return;
+									}
+								}
+
 								if (!(q is RewardQuest))
 									return; // this is not new quest
 
