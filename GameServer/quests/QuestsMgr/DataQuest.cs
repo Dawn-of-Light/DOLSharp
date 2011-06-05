@@ -1479,14 +1479,9 @@ namespace DOL.GS.Quests
 								QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 								return;
 							}
+						}
 
-							FinishQuest(null, false);
-						}
-						else
-						{
-							log.ErrorFormat("DataQuest ID {0}: Optional item list is empty on RewardsChosen!", ID);
-							ChatUtil.SendDebugMessage(QuestPlayer, "Optional item list is empty on RewardsChosen!");
-						}
+						FinishQuest(null, false);
 					}
 				}
 			}
