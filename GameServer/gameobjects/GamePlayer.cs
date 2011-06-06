@@ -11329,11 +11329,6 @@ namespace DOL.GS
 			int prevSlot = (int)((ItemUnequippedArgs)arguments).PreviousSlotPosition;
 			if (item == null) return;
 
-			if (item is IGameInventoryItem)
-			{
-				(item as IGameInventoryItem).OnUnEquipped(this);
-			}
-
 			if (item.Item_Type >= Slot.RIGHTHAND && item.Item_Type <= Slot.RANGED)
 			{
 				if (item.Hand == 1) // 2h
@@ -11439,6 +11434,11 @@ namespace DOL.GS
 				ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
 				//if (item.ExtraBonusType < 20)
 				//Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.ExtraBonusType))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+			}
+
+			if (item is IGameInventoryItem)
+			{
+				(item as IGameInventoryItem).OnUnEquipped(this);
 			}
 
 			if (ObjectState == eObjectState.Active)
