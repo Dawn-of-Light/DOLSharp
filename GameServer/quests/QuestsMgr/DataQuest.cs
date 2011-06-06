@@ -2141,13 +2141,19 @@ namespace DOL.GS.Quests
 					if (m_rewardXPs.Count > 0)
 					{
 						long rewardXP = m_rewardXPs[lastStep - 1];
-						m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
+						if (rewardXP > 0)
+						{
+							m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
+						}
 					}
 
 					if (m_rewardMoneys.Count > 0)
 					{
 						long rewardMoney = m_rewardMoneys[lastStep - 1];
-						m_questPlayer.AddMoney(rewardMoney, "You are awarded {0}!");
+						if (rewardMoney > 0)
+						{
+							m_questPlayer.AddMoney(rewardMoney, "You are awarded {0}!");
+						}
 					}
 				}
 				else
