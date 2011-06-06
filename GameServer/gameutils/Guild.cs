@@ -262,7 +262,7 @@ namespace DOL.GS
 		}
 		public void WithdrawGuildBank(GamePlayer withdraw, double amount)
 		{
-            if ((withdraw.Guild.GetGuildBank() + amount) >= 1000000001 || amount < 0)
+            if (amount < 0)
 			{
 				withdraw.Out.SendMessage(LanguageMgr.GetTranslation(withdraw.Client, "Scripts.Player.Guild.WithdrawInvalid"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 				return;
