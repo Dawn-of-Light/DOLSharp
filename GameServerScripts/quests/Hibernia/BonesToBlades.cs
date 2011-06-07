@@ -120,7 +120,7 @@ namespace DOL.GS.Quests.Hibernia
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + questGiver.Name + ", creating her ...");
+					log.Warn("Could not find " + questGiverName + ", creating her ...");
 
 				questGiver = new GameNPC();
 				questGiver.Name = questGiverName;
