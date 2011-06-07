@@ -175,7 +175,7 @@ namespace DOL.GS.Commands
         private void NotSameRealm(GameClient client, int sourceSlot, int targetSlot)
         {
             client.Out.SendMessage("You cannot set a slot to a different realm! (source realm = " + GetRealmBySlotIndex(sourceSlot) +
-                                   ", target realm = " + GetRealmBySlotIndex(targetSlot).ToString() + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                   ", target realm = " + GetRealmBySlotIndex(targetSlot) + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
 
         private void SlotChanged(GameClient client, string name, int oldSlot, int newSlot)
@@ -218,7 +218,7 @@ namespace DOL.GS.Commands
 
                         try
                         {
-                            slots.Add(System.Convert.ToInt32("-" + firstSlot), "\n");
+                            slots.Add(Convert.ToInt32("-" + firstSlot), "\n");
                         }
                         catch (Exception e)
                         {
@@ -259,13 +259,13 @@ namespace DOL.GS.Commands
             {
                 if (source == null)
                 {
-                    if (int.Equals(character.AccountSlot, sourceSlot))
+                    if (character.AccountSlot == sourceSlot)
                         source = character;
                 }
 
                 if (target == null)
                 {
-                    if (int.Equals(character.AccountSlot, targetSlot))
+                    if (character.AccountSlot == targetSlot)
                         target = character;
                 }
 
@@ -303,10 +303,6 @@ namespace DOL.GS.Commands
                 source.AccountSlot = targetSlot;
                 if (target != null)
                     target.AccountSlot = sourceSlot;
-
-                // Update the current logged in characters account slot when it equals with the source slot / target slot.
-                if (int.Equals(client.Player.DBCharacter.AccountSlot, sourceSlot) || int.Equals(client.Player.DBCharacter.AccountSlot, targetSlot))
-                    client.Player.DBCharacter.AccountSlot = (int.Equals(client.Player.DBCharacter.AccountSlot, sourceSlot) ? targetSlot : sourceSlot);
 
                 GameServer.Database.AddObject(source);
                 if (target != null)
