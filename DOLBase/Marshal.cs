@@ -38,9 +38,9 @@ namespace DOL
 			for (int i = 0; i < cstyle.Length; i++)
 			{
 				if (cstyle[i] == 0)
-					return Encoding.Default.GetString(cstyle, 0, i);
+					return Constants.DefaultEncoding.GetString(cstyle, 0, i);
 			}
-			return Encoding.Default.GetString(cstyle);
+			return Constants.DefaultEncoding.GetString(cstyle);
 		}
 
 		/// <summary>
