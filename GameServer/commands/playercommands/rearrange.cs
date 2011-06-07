@@ -304,6 +304,10 @@ namespace DOL.GS.Commands
                 if (target != null)
                     target.AccountSlot = sourceSlot;
 
+                // Update the current logged in characters account slot when it equals with the source slot / target slot.
+                if (int.Equals(client.Player.DBCharacter.AccountSlot, sourceSlot) || int.Equals(client.Player.DBCharacter.AccountSlot, targetSlot))
+                    client.Player.DBCharacter.AccountSlot = (int.Equals(client.Player.DBCharacter.AccountSlot, sourceSlot) ? targetSlot : sourceSlot);
+
                 GameServer.Database.AddObject(source);
                 if (target != null)
                     GameServer.Database.AddObject(target);
