@@ -1999,6 +1999,7 @@ namespace DOL.GS
 			return ad;
 		}
 
+
 		private RegionAction InterruptTimer { get; set; }
 
 		/// <summary>
@@ -2400,20 +2401,6 @@ namespace DOL.GS
 					}
 					interruptDuration = owner.AttackSpeed(attackWeapon);
 
-					// calculate LA damage reduction
-					if (owner is GamePlayer)
-					{
-						if (owner.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield
-						    && attackWeapon != null && (attackWeapon.Item_Type == Slot.RIGHTHAND || attackWeapon.Item_Type == Slot.LEFTHAND))
-						{
-							leftHandSwingCount = owner.CalculateLeftHandSwingCount();
-
-							int LASpec = ((GamePlayer)owner).GetModifiedSpecLevel(Specs.Left_Axe);
-							if (LASpec > 0)
-								effectiveness *= 0.625 + 0.0034 * LASpec;
-						}
-					}
-
 					// Damage is doubled on sitting players
 					// but only with melee weapons; arrows and magic does normal damage.
 					if (attackTarget is GamePlayer && ((GamePlayer)attackTarget).IsSitting)
@@ -2433,7 +2420,7 @@ namespace DOL.GS
 					return;
 				}
 				
-				new WeaponOnTargetAction(owner, attackTarget, attackWeapon, leftWeapon, leftHandSwingCount, effectiveness, interruptDuration, combatStyle).Start(ticksToTarget);  // really start the attack
+				new WeaponOnTargetAction(owner, attackTarget, attackWeapon, leftWeapon, effectiveness, interruptDuration, combatStyle).Start(ticksToTarget);  // really start the attack
 
 				//Are we inactive?
 				if (owner.ObjectState != eObjectState.Active)
@@ -2549,11 +2536,6 @@ namespace DOL.GS
 			protected readonly InventoryItem m_leftWeapon;
 
 			/// <summary>
-			/// The number of swing witch must be done by the left weapon
-			/// </summary>
-			protected readonly int m_leftHandSwingCount;
-
-			/// <summary>
 			/// The effectiveness of the attack
 			/// </summary>
 			protected readonly double m_effectiveness;
@@ -2579,13 +2561,12 @@ namespace DOL.GS
 			/// <param name="leftHandSwingCount">the left hand swing count</param>
 			/// <param name="leftWeapon">the left hand weapon used to attack</param>
 			/// <param name="target">the target of the attack</param>
-			public WeaponOnTargetAction(GameLiving owner, GameObject target, InventoryItem attackWeapon, InventoryItem leftWeapon, int leftHandSwingCount, double effectiveness, int interruptDuration, Style combatStyle)
+			public WeaponOnTargetAction(GameLiving owner, GameObject target, InventoryItem attackWeapon, InventoryItem leftWeapon, double effectiveness, int interruptDuration, Style combatStyle)
 				: base(owner)
 			{
 				m_target = target;
 				m_attackWeapon = attackWeapon;
 				m_leftWeapon = leftWeapon;
-				m_leftHandSwingCount = leftHandSwingCount;
 				m_effectiveness = effectiveness;
 				m_interruptDuration = interruptDuration;
 				m_combatStyle = combatStyle;
@@ -2598,11 +2579,22 @@ namespace DOL.GS
 			{
 				GameLiving owner = (GameLiving)m_actionSource;
 				Style style = m_combatStyle;
-				int leftHandSwingCount = m_leftHandSwingCount;
+				int leftHandSwingCount = 0;
 				AttackData mainHandAD = null;
 				AttackData leftHandAD = null;
 				InventoryItem mainWeapon = m_attackWeapon;
 				InventoryItem leftWeapon = m_leftWeapon;
+				double leftHandEffectiveness = m_effectiveness;
+				double mainHandEffectiveness = m_effectiveness;
+
+				mainHandEffectiveness *= owner.CalculateMainHandEffectiveness(mainWeapon, leftWeapon);
+				leftHandEffectiveness *= owner.CalculateLeftHandEffectiveness(mainWeapon, leftWeapon);
+
+				if (owner.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield
+					&& mainWeapon != null && (mainWeapon.Item_Type == Slot.RIGHTHAND || mainWeapon.Item_Type == Slot.LEFTHAND))
+				{
+					leftHandSwingCount = owner.CalculateLeftHandSwingCount();
+				}
 
 				// CMH
 				// 1.89
@@ -2633,13 +2625,13 @@ namespace DOL.GS
 				    || leftWeapon.Object_Type == (int)eObjectType.Shield)
 				{
 					// no left hand used, all is simple here
-					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, m_effectiveness, m_interruptDuration, false);
+					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, mainHandEffectiveness, m_interruptDuration, false);
 					leftHandSwingCount = 0;
 				}
 				else if (leftHandSwingCount > 0)
 				{
 					// both hands are used for attack
-					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, m_effectiveness, m_interruptDuration, true);
+					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, mainHandEffectiveness, m_interruptDuration, true);
 					if (style == null)
 					{
 						mainHandAD.AnimationId = -2; // virtual code for both weapons swing animation
@@ -2647,16 +2639,16 @@ namespace DOL.GS
 				}
 				else
 				{
-					// one of two hands is used for attack if no style
+					// one of two hands is used for attack if no style, treated as a main hand attack
 					if (style == null && Util.Chance(50))
 					{
 						mainWeapon = leftWeapon;
-						mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, m_effectiveness, m_interruptDuration, true);
+						mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, mainHandEffectiveness, m_interruptDuration, true);
 						mainHandAD.AnimationId = -1; // virtual code for left weapons swing animation
 					}
 					else
 					{
-						mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, m_effectiveness, m_interruptDuration, true);
+						mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, mainHandEffectiveness, m_interruptDuration, true);
 					}
 				}
 
@@ -2739,9 +2731,9 @@ namespace DOL.GS
 
 								// Savage swings - main,left,main,left.
 								if ( i % 2 == 0 )
-									leftHandAD = owner.MakeAttack( m_target, leftWeapon, null, m_effectiveness, m_interruptDuration, true );
+									leftHandAD = owner.MakeAttack( m_target, leftWeapon, null, leftHandEffectiveness, m_interruptDuration, true );
 								else
-									leftHandAD = owner.MakeAttack( m_target, mainWeapon, null, m_effectiveness, m_interruptDuration, true );
+									leftHandAD = owner.MakeAttack(m_target, mainWeapon, null, leftHandEffectiveness, m_interruptDuration, true);
 
 								//Notify the target of our attack (sends damage messages, should be before damage)
 								if (leftHandAD.Target != null)
@@ -2805,7 +2797,7 @@ namespace DOL.GS
 							{
 								if (brain.GetAggroAmountForLiving(npc) > 0)
 								{
-									new WeaponOnTargetAction(owner, npc, mainWeapon, leftWeapon, leftHandSwingCount, 1, owner.AttackSpeed(mainWeapon, leftWeapon), style);
+									new WeaponOnTargetAction(owner, npc, mainWeapon, leftWeapon, 1.0, owner.AttackSpeed(mainWeapon, leftWeapon), style);
 									hit = true;
 									break;
 								}
@@ -2818,7 +2810,7 @@ namespace DOL.GS
 							{
 								if (brain.GetAggroAmountForLiving(player) > 0)
 								{
-									new WeaponOnTargetAction(owner, player, mainWeapon, leftWeapon, leftHandSwingCount, 1, owner.AttackSpeed(mainWeapon, leftWeapon), style);
+									new WeaponOnTargetAction(owner, player, mainWeapon, leftWeapon, 1.0, owner.AttackSpeed(mainWeapon, leftWeapon), style);
 									hit = true;
 									break;
 								}
@@ -4398,6 +4390,24 @@ namespace DOL.GS
 		public virtual int CalculateLeftHandSwingCount()
 		{
 			return 0;
+		}
+
+		/// <summary>
+		/// Returns a multiplier used to reduce left hand damage
+		/// </summary>
+		/// <returns></returns>
+		public virtual double CalculateLeftHandEffectiveness(InventoryItem mainWeapon, InventoryItem leftWeapon)
+		{
+			return 1.0;
+		}
+
+		/// <summary>
+		/// Returns a multiplier used to reduce right hand damage
+		/// </summary>
+		/// <returns></returns>
+		public virtual double CalculateMainHandEffectiveness(InventoryItem mainWeapon, InventoryItem leftWeapon)
+		{
+			return 1.0;
 		}
 
 		/// <summary>
