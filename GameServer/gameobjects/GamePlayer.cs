@@ -3252,9 +3252,9 @@ namespace DOL.GS
 			if (GetBaseSpecLevel(Specs.Left_Axe) > 0)
 				return 1; // always use left axe
 
-			// DW/FW chance
 			int specLevel = Math.Max(GetModifiedSpecLevel(Specs.Celtic_Dual), GetModifiedSpecLevel(Specs.Dual_Wield));
-			if (specLevel > 0 || GetBaseSpecLevel(Specs.Fist_Wraps) > 0)
+			specLevel = Math.Max(specLevel, GetModifiedSpecLevel(Specs.Fist_Wraps));
+			if (specLevel > 0)
 			{
 				return Util.Chance(25 + (specLevel - 1) * 68 / 100) ? 1 : 0;
 			}
@@ -3286,6 +3286,50 @@ namespace DOL.GS
 
 			return 0;
 		}
+
+		/// <summary>
+		/// Returns a multiplier to adjust left hand damage
+		/// </summary>
+		/// <returns></returns>
+		public override double CalculateLeftHandEffectiveness(InventoryItem mainWeapon, InventoryItem leftWeapon)
+		{
+			double effectiveness = 1.0;
+
+			if (CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type == (int)eObjectType.LeftAxe && mainWeapon != null &&
+				(mainWeapon.Item_Type == Slot.RIGHTHAND || mainWeapon.Item_Type == Slot.LEFTHAND))
+			{
+				int LASpec = GetModifiedSpecLevel(Specs.Left_Axe);
+				if (LASpec > 0)
+				{
+					effectiveness = 0.625 + 0.0034 * LASpec;
+				}
+			}
+
+			return effectiveness;
+		}
+
+		/// <summary>
+		/// Returns a multiplier to adjust right hand damage
+		/// </summary>
+		/// <param name="leftWeapon"></param>
+		/// <returns></returns>
+		public override double CalculateMainHandEffectiveness(InventoryItem mainWeapon, InventoryItem leftWeapon)
+		{
+			double effectiveness = 1.0;
+
+			if (CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type == (int)eObjectType.LeftAxe && mainWeapon != null &&
+				(mainWeapon.Item_Type == Slot.RIGHTHAND || mainWeapon.Item_Type == Slot.LEFTHAND))
+			{
+				int LASpec = GetModifiedSpecLevel(Specs.Left_Axe);
+				if (LASpec > 0)
+				{
+					effectiveness = 0.625 + 0.0034 * LASpec;
+				}
+			}
+
+			return effectiveness;
+		}
+
 
 		/// <summary>
 		/// returns the level of a specialization
@@ -6475,7 +6519,7 @@ namespace DOL.GS
 										{
 											effectiveness *= 2;
 										}
-										new WeaponOnTargetAction(this, obj as GameObject, attackWeapon, leftWeapon, CalculateLeftHandSwingCount(), effectiveness, AttackSpeed(attackWeapon), null).Start(1);  // really start the attack
+										new WeaponOnTargetAction(this, obj as GameObject, attackWeapon, leftWeapon, effectiveness, AttackSpeed(attackWeapon), null).Start(1);  // really start the attack
 									}
 								}
 							}
