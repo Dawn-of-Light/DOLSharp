@@ -76,6 +76,11 @@ namespace DOL.GS
 		FirstBagHorse	= 80,
 		LastBagHorse	= 95,
 
+		LeftFrontSaddleBag	= 96,
+		RightFrontSaddleBag = 97,
+		LeftRearSaddleBag	= 98,
+		RightRearSaddleBag	= 99,
+
 		PlayerPaperDoll   = 100,
 		
 		Mithril			  = 101,

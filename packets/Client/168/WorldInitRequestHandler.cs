@@ -197,6 +197,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//WARNING: This would change problems if a scripter changed the values for plvl
 				//GSMessages.SendDebugMode(client,client.Account.PrivLevel>1);
 				player.Stealth(false);
+				player.Out.SendSetControlledHorse(player);
 				//check item at world load
 				if (log.IsDebugEnabled)
 					log.DebugFormat("Client {0}({1} PID:{2} OID:{3}) entering Region {4}(ID:{5})", player.Client.Account.Name, player.Name, player.Client.SessionID, player.ObjectID, player.CurrentRegion.Description, player.CurrentRegionID);

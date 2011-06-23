@@ -1661,7 +1661,7 @@ namespace DOL.GS.PacketHandler
 			// so we send big updates in parts
 			if (slots == null || slots.Count <= ServerProperties.Properties.MAX_ITEMS_PER_PACKET)
 			{
-				SendInventorySlotsUpdateBase(slots, 0);
+				SendInventorySlotsUpdateRange(slots, 0);
 			}
 			else
 			{
@@ -1671,12 +1671,12 @@ namespace DOL.GS.PacketHandler
 					updateSlots.Add(slot);
 					if (updateSlots.Count >= ServerProperties.Properties.MAX_ITEMS_PER_PACKET)
 					{
-						SendInventorySlotsUpdateBase(updateSlots, 0);
+						SendInventorySlotsUpdateRange(updateSlots, 0);
 						updateSlots.Clear();
 					}
 				}
 				if (updateSlots.Count > 0)
-					SendInventorySlotsUpdateBase(updateSlots, 0);
+					SendInventorySlotsUpdateRange(updateSlots, 0);
 			}
 		}
 
@@ -1699,7 +1699,7 @@ namespace DOL.GS.PacketHandler
 				return;
 			if (itemsToUpdate == null)
 			{
-				SendInventorySlotsUpdateBase(null, preAction);
+				SendInventorySlotsUpdateRange(null, preAction);
 				return;
 			}
 
@@ -1714,14 +1714,14 @@ namespace DOL.GS.PacketHandler
 				slotsToUpdate.Add(item.SlotPosition);
 				if (slotsToUpdate.Count >= ServerProperties.Properties.MAX_ITEMS_PER_PACKET)
 				{
-					SendInventorySlotsUpdateBase(slotsToUpdate, preAction);
+					SendInventorySlotsUpdateRange(slotsToUpdate, preAction);
 					slotsToUpdate.Clear();
 					preAction = 0;
 				}
 			}
 			if (slotsToUpdate.Count > 0)
 			{
-				SendInventorySlotsUpdateBase(slotsToUpdate, preAction);
+				SendInventorySlotsUpdateRange(slotsToUpdate, preAction);
 			}
 		}
 
@@ -3821,7 +3821,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		protected virtual void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
+		protected virtual void SendInventorySlotsUpdateRange(ICollection<int> slots, byte preAction)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate)))
 			{

@@ -84,7 +84,7 @@ namespace DOL.GS.PacketHandler
 			//			pak.WriteShort((byte) (m_gameClient.Player.IsAlive ? 0x00 : 0x0f)); // 0x0F if dead ??? where it now ?
 			pak.WriteByte(0);// unk
 			pak.WriteShort((ushort)m_gameClient.Player.MaxMana);
-			pak.WriteShort(100); // MaxEndurance // TODO MaxEndurance when GamePlayer will have +Endurance bonuses
+			pak.WriteShort((ushort)m_gameClient.Player.MaxEndurance);
 			pak.WriteShort((ushort)m_gameClient.Player.MaxConcentration);
 			pak.WriteShort((ushort)m_gameClient.Player.MaxHealth);
 			pak.WriteShort((ushort)m_gameClient.Player.Health);

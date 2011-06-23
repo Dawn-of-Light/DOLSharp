@@ -146,6 +146,8 @@ namespace DOL.GS.PacketHandler
 		/// <param name="windowType"></param>
 		protected override void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType)
 		{
+			//ChatUtil.SendDebugMessage(m_gameClient, string.Format("SendItemsPartialUpdate: windowType: {0}, {1}", windowType, items == null ? "nothing" : items[0].Name));
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
 			GameVault houseVault = m_gameClient.Player.ActiveVault;
 			pak.WriteByte((byte)(items.Count));
@@ -172,20 +174,27 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		/// <param name="slots"></param>
 		/// <param name="preAction"></param>
-		protected override void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
+		protected override void SendInventorySlotsUpdateRange(ICollection<int> slots, byte preAction)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
 			GameVault houseVault = m_gameClient.Player.ActiveVault;
+
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
 			pak.WriteByte(0); // CurrentSpeed & 0xFF (not used for player, only for NPC)
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
+
 			if (preAction == 0x04 && houseVault != null)
+			{
 				pak.WriteByte((byte)(houseVault.Index + 1));	// Add the vault number to the window caption
+			}
 			else
+			{
 				pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
-			// ^ in 1.89b+, 0 bit - showing hooded cloack, if not hooded not show cloack at all ?
+			}
+
 			pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
 			pak.WriteByte(preAction); //preAction (0x00 - Do nothing)
+
 			if (slots != null)
 			{
 				foreach (int updatedSlot in slots)
@@ -196,10 +205,14 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte((byte)(updatedSlot - (int)eInventorySlot.Consignment_First + (int)eInventorySlot.HousingInventory_First));
 					}
 					else
+					{
 						pak.WriteByte((byte)(updatedSlot));
+					}
+
 					WriteItemData(pak, m_gameClient.Player.Inventory.GetItem((eInventorySlot)(updatedSlot)));
 				}
 			}
+
 			SendTCP(pak);
 		}
 
@@ -217,6 +230,7 @@ namespace DOL.GS.PacketHandler
 
 			int value1; // some object types use this field to display count
 			int value2; // some object types use this field to display count
+
 			switch (item.Object_Type)
 			{
 				case (int)eObjectType.GenericItem:
@@ -267,13 +281,21 @@ namespace DOL.GS.PacketHandler
 					value2 = item.SPD_ABS;
 					break;
 			}
+
 			pak.WriteByte((byte)value1);
 			pak.WriteByte((byte)value2);
 
+			// ChatUtil.SendDebugMessage(m_gameClient, string.Format("WriteItemDate189: name {0}, level {1}, object {2}, value1 {3}, value2 {4}", item.Id_nb, item.Level, item.Object_Type, value1, value2));
+
 			if (item.Object_Type == (int)eObjectType.GardenObject)
+			{
 				pak.WriteByte((byte)(item.DPS_AF));
+			}
 			else
+			{
 				pak.WriteByte((byte)(item.Hand << 6));
+			}
+
 			pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
 			pak.WriteShort((ushort)item.Weight);
 			pak.WriteByte(item.ConditionPercent); // % of con
@@ -282,6 +304,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)item.Bonus); // % bonus
 			pak.WriteShort((ushort)item.Model);
 			pak.WriteByte((byte)item.Extension);
+
 			int flag = 0;
 			if (item.Emblem != 0)
 			{
@@ -289,16 +312,23 @@ namespace DOL.GS.PacketHandler
 				flag |= (item.Emblem & 0x010000) >> 16; // = 1 for newGuildEmblem
 			}
 			else
+			{
 				pak.WriteShort((ushort)item.Color);
-			//						flag |= 0x01; // newGuildEmblem
+			}
+
 			flag |= 0x02; // enable salvage button
+
 			AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_gameClient.Player.CraftingPrimarySkill);
 			if (skill != null && skill is AdvancedCraftingSkill/* && ((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_gameClient.Player, item)*/)
+			{
 				flag |= 0x04; // enable craft button
+			}
+
 			ushort icon1 = 0;
 			ushort icon2 = 0;
 			string spell_name1 = "";
 			string spell_name2 = "";
+
 			if (item.Object_Type != (int)eObjectType.AlchemyTincture)
 			{
 				SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
@@ -327,21 +357,30 @@ namespace DOL.GS.PacketHandler
 					}
 				}
 			}
+
 			pak.WriteByte((byte)flag);
+
 			if ((flag & 0x08) == 0x08)
 			{
 				pak.WriteShort((ushort)icon1);
 				pak.WritePascalString(spell_name1);
 			}
+
 			if ((flag & 0x10) == 0x10)
 			{
 				pak.WriteShort((ushort)icon2);
 				pak.WritePascalString(spell_name2);
 			}
+
 			pak.WriteByte((byte)item.Effect);
+
 			string name = item.Name;
+
 			if (item.Count > 1)
+			{
 				name = item.Count + " " + name;
+			}
+
             if (item.SellPrice > 0)
             {
                 if (ConsignmentMoney.UseBP)

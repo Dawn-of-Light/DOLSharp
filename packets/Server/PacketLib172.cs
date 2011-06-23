@@ -105,7 +105,7 @@ namespace DOL.GS.PacketHandler
 			SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 		}
 
-		protected override void SendInventorySlotsUpdateBase(ICollection<int> slots, byte preAction)
+		protected override void SendInventorySlotsUpdateRange(ICollection<int> slots, byte preAction)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
