@@ -1279,25 +1279,29 @@ namespace DOL.GS
 		{
 			switch (slotID)
 			{
-					case 0x0A: return "righthand";
-					case 0x0B: return "lefthand";
-					case 0x0C: return "twohanded";
-					case 0x0D: return "distance";
-					case 0x15: return "head";
-					case 0x16: return "hand";
-					case 0x17: return "feet";
-					case 0x18: return "jewel";
-					case 0x19: return "torso";
-					case 0x1A: return "cloak";
-					case 0x1B: return "legs";
-					case 0x1C: return "arms";
-					case 0x1D: return "neck";
-					case 0x20: return "belt";
-					case 0x21: return "leftbracer";
-					case 0x22: return "rightbracer";
-					case 0x23: return "leftring";
-					case 0x24: return "rightring";
-					case 0x25: return "mythirian";
+				case 0x0A: return "righthand";
+				case 0x0B: return "lefthand";
+				case 0x0C: return "twohanded";
+				case 0x0D: return "distance";
+				case 0x15: return "head";
+				case 0x16: return "hand";
+				case 0x17: return "feet";
+				case 0x18: return "jewel";
+				case 0x19: return "torso";
+				case 0x1A: return "cloak";
+				case 0x1B: return "legs";
+				case 0x1C: return "arms";
+				case 0x1D: return "neck";
+				case 0x20: return "belt";
+				case 0x21: return "leftbracer";
+				case 0x22: return "rightbracer";
+				case 0x23: return "leftring";
+				case 0x24: return "rightring";
+				case 0x25: return "mythirian";
+				case 96: return "leftfront saddlebag";
+				case 97: return "rightfront saddlebag";
+				case 98: return "leftrear saddlebag";
+				case 99: return "rightrear saddlebag";
 			}
 			return "generic inventory";
 		}

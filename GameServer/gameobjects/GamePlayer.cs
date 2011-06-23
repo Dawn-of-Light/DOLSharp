@@ -8771,6 +8771,7 @@ namespace DOL.GS
 		{
 			UseSlot((int)slot, (int)type);
 		}
+
 		public virtual void UseSlot(int slot, int type)
 		{
 			if (!IsAlive)
@@ -8804,6 +8805,12 @@ namespace DOL.GS
 					{
 						return;
 					}
+				}
+
+				if (useItem.Item_Type >= (int)eInventorySlot.LeftFrontSaddleBag && useItem.Item_Type <= (int)eInventorySlot.RightRearSaddleBag)
+				{
+					UseSaddleBag(useItem);
+					return;
 				}
 
 				if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
@@ -9168,6 +9175,144 @@ namespace DOL.GS
 				// notify event handlers about used slot
 				Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
 			}
+		}
+
+		/// <summary>
+		/// Player is using a saddle bag to open up slots on a mount
+		/// </summary>
+		/// <param name="useItem"></param>
+		protected virtual void UseSaddleBag(InventoryItem useItem)
+		{
+			eHorseSaddleBag bag = eHorseSaddleBag.None;
+
+			switch ((eInventorySlot)useItem.Item_Type)
+			{
+				case eInventorySlot.LeftFrontSaddleBag:
+					if (ChampionLevel >= 2)
+					{
+						bag = eHorseSaddleBag.LeftFront;
+					}
+					else
+					{
+						Out.SendMessage("This saddlebag requires Champion Level 2!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					}
+					break;
+				case eInventorySlot.RightFrontSaddleBag:
+					if (ChampionLevel >= 3)
+					{
+						bag = eHorseSaddleBag.RightFront;
+					}
+					else
+					{
+						Out.SendMessage("This saddlebag requires Champion Level 3!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					}
+					break;
+				case eInventorySlot.LeftRearSaddleBag:
+					if (ChampionLevel >= 4)
+					{
+						bag = eHorseSaddleBag.LeftRear;
+					}
+					else
+					{
+						Out.SendMessage("This saddlebag requires Champion Level 4!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					}
+					break;
+				case eInventorySlot.RightRearSaddleBag:
+					if (ChampionLevel >= 5)
+					{
+						bag = eHorseSaddleBag.RightRear;
+					}
+					else
+					{
+						Out.SendMessage("This saddlebag requires Champion Level 5!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					}
+					break;
+			}
+
+			if (bag != eHorseSaddleBag.None)
+			{
+				if ((DBCharacter.ActiveSaddleBags & (byte)bag) == 0)
+				{
+					if (Inventory.RemoveItem(useItem))
+					{
+						DBCharacter.ActiveSaddleBags |= (byte)bag;
+						Out.SendSetControlledHorse(this);
+						Out.SendMessage("You've activated a saddlebag!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						SaveIntoDatabase();
+					}
+					else
+					{
+						Out.SendMessage("An error occurred while trying to activate this saddlebag!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+					}
+				}
+				else
+				{
+					Out.SendMessage("You've already activated this saddlebag!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				}
+			}
+		}
+
+		private const int NUM_SLOTS_PER_SADDLEBAG = 4;
+
+		/// <summary>
+		/// Can player use this horse inventory slot
+		/// </summary>
+		/// <param name="slot"></param>
+		/// <returns></returns>
+		public virtual bool CanUseHorseInventorySlot(int slot)
+		{
+			if (Inventory.GetItem(eInventorySlot.Horse) == null)
+			{
+				Out.SendMessage("You must be equipped with a horse.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			if (IsOnHorse == false)
+			{
+				Out.SendMessage("You must be on your horse to use this inventory.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			if (ChampionLevel == 0)
+			{
+				Out.SendMessage("You must be a champion to use this inventory.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			if (slot < (int)eInventorySlot.FirstBagHorse || slot > (int)eInventorySlot.LastBagHorse || (ChampionLevel >= 5 && ActiveSaddleBags == (byte)eHorseSaddleBag.All))
+			{
+				return true;
+			}
+
+			try
+			{
+				eHorseSaddleBag saddleBagRequired = (eHorseSaddleBag)Enum.GetValues(typeof(eHorseSaddleBag)).GetValue(((slot / NUM_SLOTS_PER_SADDLEBAG) - 19)); // 1, 2, 3, or 4
+
+				// ChatUtil.SendDebugMessage(this, string.Format("Check slot {0} if between {1} and {2}.  CL is {3}, ActiveSaddleBags is {4}, Required Bag is {5}", slot, (int)eInventorySlot.FirstBagHorse, (int)eInventorySlot.LastBagHorse, ChampionLevel, ActiveSaddleBags, saddleBagRequired));
+
+				if ((ActiveSaddleBags & (byte)saddleBagRequired) > 0)
+				{
+					if (ChampionLevel >= 2 && slot < (int)eInventorySlot.FirstBagHorse + NUM_SLOTS_PER_SADDLEBAG)
+					{
+						return true;
+					}
+					else if (ChampionLevel >= 3 && slot < (int)eInventorySlot.FirstBagHorse + NUM_SLOTS_PER_SADDLEBAG * 2)
+					{
+						return true;
+					}
+					else if (ChampionLevel >= 4 && slot < (int)eInventorySlot.FirstBagHorse + NUM_SLOTS_PER_SADDLEBAG * 3)
+					{
+						return true;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				ChatUtil.SendDebugMessage(this, "CanSeeInventory: " + ex.Message);
+			}
+
+			Out.SendMessage("You can't use this inventory.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			return false;
 		}
 
 
@@ -14694,6 +14839,25 @@ namespace DOL.GS
 			return 0;
 		}
 
+		public enum eHorseSaddleBag : byte
+		{
+			None = 0x00,
+			LeftFront = 0x01,
+			RightFront = 0x02,
+			LeftRear = 0x04,
+			RightRear = 0x08,
+			All = 0x0F
+		}
+
+		/// <summary>
+		/// What horse saddle bags are active on this player?
+		/// </summary>
+		public virtual byte ActiveSaddleBags
+		{
+			get { return DBCharacter.ActiveSaddleBags; }
+			set { DBCharacter.ActiveSaddleBags = value; }
+		}
+
 		public ControlledHorse ActiveHorse
 		{
 			get { return m_controlledHorse; }
@@ -14701,35 +14865,35 @@ namespace DOL.GS
 
 		public class ControlledHorse
 		{
-			protected byte h_id;
-			protected byte h_bardingId;
-			protected ushort h_bardingColor;
-			protected byte h_saddleId;
-			protected byte h_saddleColor;
-			protected byte h_slots;
-			protected byte h_armor;
-			protected string h_name;
+			protected byte m_id;
+			protected byte m_bardingId;
+			protected ushort m_bardingColor;
+			protected byte m_saddleId;
+			protected byte m_saddleColor;
+			protected byte m_slots;
+			protected byte m_armor;
+			protected string m_name;
 			protected int m_level;
-			protected GamePlayer h_player;
+			protected GamePlayer m_player;
 
 			public ControlledHorse(GamePlayer player)
 			{
-				h_name = "";
-				h_player = player;
+				m_name = "";
+				m_player = player;
 			}
 
 			public byte ID
 			{
-				get { return h_id; }
+				get { return m_id; }
 				set
 				{
-					h_id = value;
-					InventoryItem item = h_player.Inventory.GetItem(eInventorySlot.Horse);
+					m_id = value;
+					InventoryItem item = m_player.Inventory.GetItem(eInventorySlot.Horse);
 					if (item != null)
 						m_level = item.Level;
 					else
 						m_level = 35;//base horse by default
-					h_player.Out.SendSetControlledHorse(h_player);
+					m_player.Out.SendSetControlledHorse(m_player);
 				}
 			}
 
@@ -14737,15 +14901,15 @@ namespace DOL.GS
 			{
 				get
 				{
-					InventoryItem barding = h_player.Inventory.GetItem(eInventorySlot.HorseBarding);
+					InventoryItem barding = m_player.Inventory.GetItem(eInventorySlot.HorseBarding);
 					if (barding != null)
 						return (byte)barding.DPS_AF;
-					return h_bardingId;
+					return m_bardingId;
 				}
 				set
 				{
-					h_bardingId = value;
-					h_player.Out.SendSetControlledHorse(h_player);
+					m_bardingId = value;
+					m_player.Out.SendSetControlledHorse(m_player);
 				}
 			}
 
@@ -14753,15 +14917,15 @@ namespace DOL.GS
 			{
 				get
 				{
-					InventoryItem barding = h_player.Inventory.GetItem(eInventorySlot.HorseBarding);
+					InventoryItem barding = m_player.Inventory.GetItem(eInventorySlot.HorseBarding);
 					if (barding != null)
 						return (ushort)barding.Color;
-					return h_bardingColor;
+					return m_bardingColor;
 				}
 				set
 				{
-					h_bardingColor = value;
-					h_player.Out.SendSetControlledHorse(h_player);
+					m_bardingColor = value;
+					m_player.Out.SendSetControlledHorse(m_player);
 				}
 			}
 
@@ -14769,15 +14933,15 @@ namespace DOL.GS
 			{
 				get
 				{
-					InventoryItem armor = h_player.Inventory.GetItem(eInventorySlot.HorseArmor);
+					InventoryItem armor = m_player.Inventory.GetItem(eInventorySlot.HorseArmor);
 					if (armor != null)
 						return (byte)armor.DPS_AF;
-					return h_saddleId;
+					return m_saddleId;
 				}
 				set
 				{
-					h_saddleId = value;
-					h_player.Out.SendSetControlledHorse(h_player);
+					m_saddleId = value;
+					m_player.Out.SendSetControlledHorse(m_player);
 				}
 			}
 
@@ -14785,38 +14949,38 @@ namespace DOL.GS
 			{
 				get
 				{
-					InventoryItem armor = h_player.Inventory.GetItem(eInventorySlot.HorseArmor);
+					InventoryItem armor = m_player.Inventory.GetItem(eInventorySlot.HorseArmor);
 					if (armor != null)
 						return (byte)armor.Color;
-					return h_saddleColor;
+					return m_saddleColor;
 				}
 				set
 				{
-					h_saddleColor = value;
-					h_player.Out.SendSetControlledHorse(h_player);
+					m_saddleColor = value;
+					m_player.Out.SendSetControlledHorse(m_player);
 				}
 			}
 
 			public byte Slots
 			{
-				get { return h_slots; }
+				get { return m_player.ActiveSaddleBags; }
 			}
 
 			public byte Armor
 			{
-				get { return h_armor; }
+				get { return m_armor; }
 			}
 
 			public string Name
 			{
-				get { return h_name; }
+				get { return m_name; }
 				set
 				{
-					h_name = value;
-					InventoryItem item = h_player.Inventory.GetItem(eInventorySlot.Horse);
+					m_name = value;
+					InventoryItem item = m_player.Inventory.GetItem(eInventorySlot.Horse);
 					if (item != null)
 						item.Creator = Name;
-					h_player.Out.SendSetControlledHorse(h_player);
+					m_player.Out.SendSetControlledHorse(m_player);
 				}
 			}
 
