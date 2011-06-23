@@ -593,13 +593,11 @@ namespace DOL.GS
 			{
 				fromSlot = GetValidInventorySlot(fromSlot);
 				toSlot = GetValidInventorySlot(toSlot);
+
 				if (fromSlot == eInventorySlot.Invalid || toSlot == eInventorySlot.Invalid)
 				{
-					if (m_player.Client.Account.PrivLevel > 1)
-					{
-						m_player.Out.SendMessage("Invalid slot.", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-					}
-
+					ChatUtil.SendDebugMessage(m_player, string.Format("Invalid slot from: {0}, to: {1}!", fromSlot, toSlot));
+					m_player.Out.SendInventorySlotsUpdate(null);
 					return false;
 				}
 
@@ -632,26 +630,22 @@ namespace DOL.GS
 					valid = false;
 				
 				/*************** Horse Inventory **************/
-				if (m_player.Client.Account.PrivLevel == 1 &&
-				    ((toSlot >= eInventorySlot.FirstBagHorse && toSlot <= eInventorySlot.LastBagHorse) ||
+				if (((toSlot >= eInventorySlot.FirstBagHorse && toSlot <= eInventorySlot.LastBagHorse) ||
 				     (fromSlot >= eInventorySlot.FirstBagHorse && fromSlot <= eInventorySlot.LastBagHorse)))
 				{
-					
-					if (m_player.Inventory.GetItem(eInventorySlot.Horse) == null)
+					if (fromSlot == eInventorySlot.Horse)
 					{
-						m_player.Out.SendMessage("You must be equipped with a horse.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						// don't let player move active horse to a horse bag, which will disable all bags!
+						m_player.Out.SendMessage("You can't move your active horse into a saddlebag!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						valid = false;
+					}
 
-					}
-					if (!m_player.IsOnHorse)
+					if (valid && m_player.Client.Account.PrivLevel == 1)
 					{
-						m_player.Out.SendMessage("You must be on your horse to use this inventory.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						valid = false;
-					}
-					if (m_player.ChampionLevel == 0)
-					{
-						m_player.Out.SendMessage("You must be a champion to use this inventory.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-						valid = false;
+						if (m_player.CanUseHorseInventorySlot((int)fromSlot) == false || m_player.CanUseHorseInventorySlot((int)toSlot) == false)
+						{
+							valid = false;
+						}
 					}
 				}
 				/***********************************************/
