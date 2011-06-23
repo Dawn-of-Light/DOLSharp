@@ -44,8 +44,7 @@ namespace DOL.GS.Commands
 		"/player model <reset|[change]> <modelid>",
 		"/player friend <list|playerName>",
 		"/player <rez|kill> <albs|mids|hibs|self|all>", // if realm not specified, it will rez target.
-		"/player jump <group|guild|cg|bg> <name>",
-		// to jump a group to you, just type in a player's name and his or her entire group will come with.
+		"/player jump <group|guild|cg|bg> <name>", // to jump a group to you, just type in a player's name and his or her entire group will come with.
 		"/player kick <all>",
 		"/player save <all>",
 		"/player purge",
@@ -57,6 +56,7 @@ namespace DOL.GS.Commands
 		"/player startchampion - Starts the target on the path of the Champion.",
 		"/player clearchampion - Remove all Champion XP and levels from this player.",
 		"/player respecchampion - Respec this players Champion skills.",
+		"/player saddlebags <0 - 15> - Set what horse saddlebags are active on this player",
 		"/player startml - Start this players Master Level training.",
 		"/player setml <level> - Set this players current Master Level.",
 		"/player setmlstep <level> <step> [false] - Sets a step for an ML level to finished. 0 to set as unfinished.",
@@ -1879,9 +1879,51 @@ namespace DOL.GS.Commands
 
                 #endregion
 
-                #region info
+				#region Saddlebags
 
-                case "info":
+				case "saddlebags":
+					{
+						var player = client.Player.TargetObject as GamePlayer;
+
+						if (args.Length != 3)
+						{
+							DisplaySyntax(client);
+							return;
+						}
+
+						if (player == null)
+							player = client.Player;
+
+						byte activeBags = 0;
+
+						if (byte.TryParse(args[2], out activeBags))
+						{
+							if (activeBags <= 0x0F)
+							{
+								player.ActiveSaddleBags = activeBags;
+								player.SaveIntoDatabase();
+								client.Player.Out.SendMessage(string.Format("{0}'s active saddlebags set to 0x{1:X2}!", player.Name, player.ActiveSaddleBags), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(string.Format("Your active saddlebags have been set to 0x{0:X2} by {1}!", player.ActiveSaddleBags, client.Player.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								player.Out.SendSetControlledHorse(player);
+							}
+							else
+							{
+								DisplayMessage(client, "Valid saddlebag values are between 0 and 15!");
+							}
+						}
+						else
+						{
+							DisplaySyntax(client);
+						}
+
+					}
+					break;
+
+				#endregion Saddlebags
+
+				#region info
+
+				case "info":
                     {
                         var player = client.Player.TargetObject as GamePlayer;
 
@@ -2214,6 +2256,50 @@ namespace DOL.GS.Commands
 			if (player.Champion)
 			{
 				text.Add("  - Champion :  CL " + player.ChampionLevel + ", " + player.ChampionExperience + " clxp");
+
+				string activeBags = "None";
+				if (player.ActiveSaddleBags != 0)
+				{
+					if (player.ActiveSaddleBags == (byte)GamePlayer.eHorseSaddleBag.All)
+					{
+						activeBags = "All";
+					}
+					else
+					{
+						activeBags = "";
+
+						if ((player.ActiveSaddleBags & (byte)GamePlayer.eHorseSaddleBag.LeftFront) > 0)
+						{
+							if (activeBags != "")
+								activeBags += ", ";
+
+							activeBags += "LeftFront";
+						}
+						if ((player.ActiveSaddleBags & (byte)GamePlayer.eHorseSaddleBag.RightFront) > 0)
+						{
+							if (activeBags != "")
+								activeBags += ", ";
+
+							activeBags += "RightFront";
+						}
+						if ((player.ActiveSaddleBags & (byte)GamePlayer.eHorseSaddleBag.LeftRear) > 0)
+						{
+							if (activeBags != "")
+								activeBags += ", ";
+
+							activeBags += "LeftRear";
+						}
+						if ((player.ActiveSaddleBags & (byte)GamePlayer.eHorseSaddleBag.RightRear) > 0)
+						{
+							if (activeBags != "")
+								activeBags += ", ";
+
+							activeBags += "RightRear";
+						}
+					}
+				}
+
+				text.Add(string.Format("  - ActiveSaddleBags : {0} (0x{1:X2})", activeBags, player.ActiveSaddleBags));
 			}
 			else
 			{

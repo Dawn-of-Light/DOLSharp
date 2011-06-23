@@ -50,7 +50,9 @@ namespace DOL.GS.PacketHandler
 		{
 			if (player == null || player.ObjectState != GameObject.eObjectState.Active)
 				return;
+
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ControlledHorse));
+
 			if (player.HasHorse)
 			{
 				pak.WriteShort(0); // for set self horse OID must be zero
@@ -68,7 +70,7 @@ namespace DOL.GS.PacketHandler
 				}
 				pak.WriteByte(player.ActiveHorse.Saddle);
 				pak.WriteByte(player.ActiveHorse.SaddleColor);
-				pak.WriteByte(player.ActiveHorse.Slots); // 0 - no slots aviable
+				pak.WriteByte(player.ActiveHorse.Slots);
 				pak.WriteByte(player.ActiveHorse.Armor);
 				pak.WritePascalString(player.ActiveHorse.Name == null ? "" : player.ActiveHorse.Name);
 			}

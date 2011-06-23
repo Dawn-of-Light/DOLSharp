@@ -199,6 +199,8 @@ namespace DOL
 			
 			// What should the Herald display of this character?
 			private byte m_notDisplayedInHerald = 0;
+
+			private byte m_activeSaddleBags = 0;
 			
 			/// <summary>
 			/// Create the character row in table
@@ -2312,11 +2314,24 @@ namespace DOL
 			/// what should we not display in Herald ?
 			/// </summary>
 			[DataElement(AllowDbNull = true)]
-			public byte NotDisplayedInHerald {
+			public byte NotDisplayedInHerald 
+			{
 				get { return m_notDisplayedInHerald; }
-				set {
+				set 
+				{
 					Dirty = true;
 					m_notDisplayedInHerald = value;
+				}
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public byte ActiveSaddleBags
+			{
+				get { return m_activeSaddleBags; }
+				set
+				{
+					Dirty = true;
+					m_activeSaddleBags = value;
 				}
 			}
 		}
