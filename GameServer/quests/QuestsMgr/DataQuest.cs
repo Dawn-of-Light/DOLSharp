@@ -1864,6 +1864,48 @@ namespace DOL.GS.Quests
 							break;
 					}
 				}
+				else if (m_stepItemTemplates.Count >= Step &&
+					string.IsNullOrEmpty(m_stepItemTemplates[Step - 1]) == false &&
+					item.Id_nb.ToLower().Contains(m_stepItemTemplates[Step - 1].ToLower()) &&
+					ExecuteCustomQuestStep(player, Step, eStepCheckType.GiveItem))
+				{
+					// Current step must be a delivery so take the item and advance the quest
+					if (StepType == eStepType.Deliver)
+					{
+						if (string.IsNullOrEmpty(TargetText) == false)
+						{
+							if (obj.Realm == eRealm.None)
+							{
+								// mobs and other non realm objects send chat text and not popup text.
+								SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+							}
+							else
+							{
+								SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
+						}
+
+						if (AdvanceQuestStep(obj))
+						{
+							RemoveItem(obj, player, item, true);
+						}
+					}
+					else if (StepType == eStepType.DeliverFinish)
+					{
+						if (FinishQuest(obj, true))
+						{
+							RemoveItem(obj, player, item, true);
+						}
+					}
+					else
+					{
+						ChatUtil.SendDebugMessage(player, "Received item in StepItemTemplates but current step is not deliver or deliver finish.");
+					}
+				}
+				else
+				{
+					ChatUtil.SendDebugMessage(player, "Received item not in Collect or Step item list.");
+				}
 			}
 		}
 
