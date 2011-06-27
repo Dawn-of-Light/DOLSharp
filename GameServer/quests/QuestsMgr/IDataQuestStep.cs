@@ -11,6 +11,7 @@ namespace DOL.GS.Quests
 		Step,
 		Finish,
 		RewardsChosen,
+		PostFinish,
 	}
 
 	public interface IDataQuestStep
