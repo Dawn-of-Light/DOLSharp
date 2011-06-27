@@ -2209,6 +2209,9 @@ namespace DOL.GS.Quests
 			m_charQuest.Count++;
 			GameServer.Database.SaveObject(m_charQuest);
 
+			// Now that quest is finished do any post finished custom steps
+			ExecuteCustomQuestStep(QuestPlayer, Step, eStepCheckType.PostFinish);
+
 			m_questPlayer.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(m_questPlayer.Client, "AbstractQuest.FinishQuest.Completed", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 			m_questPlayer.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(m_questPlayer.Client, "AbstractQuest.FinishQuest.Completed", Name)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
