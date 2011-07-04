@@ -1182,6 +1182,24 @@ namespace DOL.GS
 			}
 		}
 
+        /// <summary>
+        /// Check this flag to see if this living has been involved in combat in the given milliseconds
+        /// </summary>
+        public virtual bool InCombatInLast(int milliseconds)
+        {
+            if ((InCombatPvEInLast(milliseconds) || InCombatPvPInLast(milliseconds)) == false)
+            {
+                if (Attackers.Count > 0)
+                {
+                    Attackers.Clear();
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
 		/// <summary>
 		/// checks if the living is involved in pvp combat
 		/// </summary>
@@ -1199,6 +1217,21 @@ namespace DOL.GS
 				return LastCombatTickPvP + 10000 >= region.Time;
 			}
 		}
+
+        /// <summary>
+        /// checks if the living is involved in pvp combat in the given milliseconds
+        /// </summary>
+        public virtual bool InCombatPvPInLast(int milliseconds)
+        {
+            Region region = CurrentRegion;
+            if (region == null)
+                return false;
+
+            if (LastCombatTickPvP == 0)
+                return false;
+
+            return LastCombatTickPvP + milliseconds >= region.Time;
+        }
 
 		/// <summary>
 		/// checks if the living is involved in pve combat
@@ -1220,6 +1253,24 @@ namespace DOL.GS
 				return LastCombatTickPvE + 10000 >= region.Time;
 			}
 		}
+
+        /// <summary>
+        /// checks if the living is involved in pve combat in the given milliseconds
+        /// </summary>
+        public virtual bool InCombatPvEInLast(int milliseconds)
+        {
+            Region region = CurrentRegion;
+            if (region == null)
+                return false;
+
+            if (LastCombatTickPvE == 0)
+                return false;
+
+            //if (LastCombatTickPvE + 10000 - region.Time > 0 && this is GameNPC && (this as GameNPC).Brain is IControlledBrain)
+            //	log.Debug(Name + " in combat " + (LastCombatTickPvE + 10000 - region.Time));
+
+            return LastCombatTickPvE + milliseconds >= region.Time;
+        }
 
 		/// <summary>
 		/// Returns the amount of experience this living is worth
