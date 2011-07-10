@@ -39,9 +39,6 @@ namespace DOL.GS.GameEvents
 	/// </summary>
 	public class StartupLocations
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private static HybridDictionary[] ClassicLocations = null;
@@ -49,11 +46,10 @@ namespace DOL.GS.GameEvents
 		public static HybridDictionary MainTownStartingLocations = null;
 
 		[ScriptLoadedEvent]
-		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
+		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
 			GameEventMgr.AddHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
-			if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS) return;
-			bool result = InitLocationTables();
+			InitOldStartLocations();
 			if (log.IsInfoEnabled)
 				log.Info("StartupLocations initialized");
 		}
@@ -62,7 +58,6 @@ namespace DOL.GS.GameEvents
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
 			GameEventMgr.RemoveHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
-			if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS) return;
 			ClassicLocations = null;
 			ShroudedIslesLocations = null;
 		}
@@ -82,32 +77,41 @@ namespace DOL.GS.GameEvents
 				GameClient client = chArgs.GameClient;
 				StartupLocation dbStartupLocation = null;
 				
-				// do we have custom locations into the DB ?
+				// do we have custom locations in the DB ?
 				if (ServerProperties.Properties.USE_CUSTOM_START_LOCATIONS)
 				{
-					// find realm-based SL
-					var startupLocations = GameServer.Database.SelectObjects<StartupLocation>("ClassIDs LIKE '%" + GlobalConstants.RealmToName((eRealm)ch.Realm).Substring(0,3) + "%'");
+					// First try to find an ALL entry
+					var startupLocations = GameServer.Database.SelectObjects<StartupLocation>("ClassIDs = 'ALL'");
 					if (startupLocations.Count > 0)
 					{
 						dbStartupLocation = startupLocations[0];
 					}
 					else
-						// find class-based SL
 					{
-						startupLocations = GameServer.Database.SelectObjects<StartupLocation>("ClassIDs LIKE '%" + ch.Class+ "%'");
-						foreach (var curSL in startupLocations)
+						// find realm-based SL
+						startupLocations = GameServer.Database.SelectObjects<StartupLocation>("ClassIDs LIKE '%" + GlobalConstants.RealmToName((eRealm)ch.Realm).Substring(0, 3) + "%'");
+						if (startupLocations.Count > 0)
 						{
-							foreach (var classID in curSL.ClassIDs.Split(new char[]{';'},StringSplitOptions.RemoveEmptyEntries))
+							dbStartupLocation = startupLocations[0];
+						}
+						else
+						{
+							// find class-based SL
+							startupLocations = GameServer.Database.SelectObjects<StartupLocation>("ClassIDs LIKE '%" + ch.Class + "%'");
+							foreach (var curSL in startupLocations)
 							{
-								int charClass = 0;
-								int.TryParse(classID, out charClass);
-								if (charClass == ch.Class)
+								foreach (var classID in curSL.ClassIDs.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
 								{
-									dbStartupLocation = curSL;
-									break;
+									int charClass = 0;
+									int.TryParse(classID, out charClass);
+									if (charClass == ch.Class)
+									{
+										dbStartupLocation = curSL;
+										break;
+									}
 								}
+								if (dbStartupLocation != null) break;
 							}
-							if (dbStartupLocation != null) break;
 						}
 					}
 					
@@ -236,10 +240,10 @@ namespace DOL.GS.GameEvents
 		}
 
 		/// <summary>
-		/// Initializes location tables
+		/// Fills dictionaries with the old start locations
 		/// </summary>
 		/// <returns>true if no errors</returns>
-		protected static bool InitLocationTables()
+		protected static bool InitOldStartLocations()
 		{
 			try
 			{
@@ -410,7 +414,7 @@ namespace DOL.GS.GameEvents
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("InitLocationTables", e);
+					log.Error("InitOldStartLocations", e);
 				return false;
 			}
 
