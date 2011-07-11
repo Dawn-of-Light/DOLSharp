@@ -204,7 +204,8 @@ GamePlayer.GainRealmPoints.GainBonus:		Ottieni un bonus di +{0} in tutte le spec
 GamePlayer.GainRealmPoints.GainedLevel:		Hai ottenuto un livello reame!
 GamePlayer.GainRealmPoints.GainedRank:		Hai ottenuto un nuovo rango e titolo reame!
 GamePlayer.GainRealmPoints.NewRealmTitle:	Il tuo nuovo titolo reame e' {0}!
-GamePlayer.GainRealmPoints.ReachedRank:		{0} ha raggiunto il rango reame {1:#L#} a {2}!
+GamePlayer.GainRealmPoints.ReachedRank:			You reached realm rank {0}L0!
+GamePlayer.GainRealmPoints.ReachedRankNews:		{0} ha raggiunto il rango reame {1:#L#} a {2}!
 GamePlayer.GainRealmPoints.YouGet:			Ottieni {0} punti reame!
 GamePlayer.GetExamineMessages.EnemyRealmMember:		Esamini {0}. {1} e' un membro di un reame nemico!
 GamePlayer.GetExamineMessages.NeutralMember:		Esamini {0}. {1} e' un membro neutrale senza alleanza di gilda.

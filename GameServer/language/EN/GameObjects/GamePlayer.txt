@@ -92,7 +92,8 @@ GamePlayer.GainRealmPoints.GainBonus:			You gain a +{0} bonus to all specializat
 GamePlayer.GainRealmPoints.GainedLevel:			You have gained a realm level!		
 GamePlayer.GainRealmPoints.GainedRank:			You have gained a new rank and a new realm title!		
 GamePlayer.GainRealmPoints.NewRealmTitle:		Your new realm title is {0}!			
-GamePlayer.GainRealmPoints.ReachedRank:			{0} reached realm rank {1:#L#} in {2}!		
+GamePlayer.GainRealmPoints.ReachedRank:			You reached realm rank {0}L0!
+GamePlayer.GainRealmPoints.ReachedRankNews:			{0} reached realm rank {1:#L#} in {2}!		
 GamePlayer.GainRealmPoints.YouGet:				You get {0} realm points!		
 GamePlayer.GetExamineMessages.EnemyRealmMember:		You examine {0}. {1} is a member of an enemy realm!
 GamePlayer.GetExamineMessages.NeutralMember:		You examine {0}. {1} is a neutral member with no guild allegiance.
