@@ -1142,7 +1142,11 @@ namespace DOL.GS.Keeps
 			//we reset the guards
 			foreach (GameKeepGuard guard in Guards.Values)
 			{
-				if (guard is GuardLord == false)
+				if (guard is GuardLord && guard.IsAlive )
+				{
+					this.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { guard });
+				}
+				else if (guard is GuardLord == false)
 				{
 					guard.Die(guard);
 				}

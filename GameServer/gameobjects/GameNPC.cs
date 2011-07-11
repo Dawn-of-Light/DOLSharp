@@ -4151,10 +4151,10 @@ namespace DOL.GS
 		public virtual void DropLoot(GameObject killer)
 		{
 			// TODO: mobs drop "a small chest" sometimes
-			ArrayList dropMessages = new ArrayList();
+			ArrayList droplist = new ArrayList();
 			ArrayList autolootlist = new ArrayList();
 			ArrayList aplayer = new ArrayList();
-			String message;
+
 			lock (m_xpGainers.SyncRoot)
 			{
 				if (m_xpGainers.Keys.Count == 0) return;
@@ -4267,9 +4267,8 @@ namespace DOL.GS
 					}
 					if (playerAttacker == null) return; // no loot if mob kills another mob
 
-					message = String.Format(LanguageMgr.GetTranslation(playerAttacker.Client, "GameNPC.DropLoot.Drops", GetName(0, true), loot.GetName(1, false)));
-
-					dropMessages.Add(message);
+					
+					droplist.Add(loot.GetName(1, false));
 					loot.AddToWorld();
 
 					foreach (GameObject gainer in m_xpGainers.Keys)
@@ -4288,7 +4287,7 @@ namespace DOL.GS
 				}
 			}
 
-			BroadcastLoot(dropMessages);
+			BroadcastLoot(droplist);
 
 			if (autolootlist.Count > 0)
 			{
@@ -4828,26 +4827,25 @@ namespace DOL.GS
 		/// Broadcast loot to the raid.
 		/// </summary>
 		/// <param name="dropMessages">List of drop messages to broadcast.</param>
-		protected virtual void BroadcastLoot(ArrayList dropMessages)
+        protected virtual void BroadcastLoot(ArrayList droplist)
 		{
-			if (dropMessages.Count > 0)
-			{
-				String lastMessage;
-				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-				{
-					lastMessage = "";
-					foreach (string str in dropMessages)
-					{
-						// Suppress identical messages (multiple item drops).
-
-						if (str != lastMessage)
-						{
-							player.Out.SendMessage(str, eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-							lastMessage = str;
-						}
-					}
-				}
-			}
+            if (droplist.Count > 0)
+            {
+                String lastloot;
+                foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+                {
+                    lastloot = "";
+                    foreach (string str in droplist)
+                    {
+                        // Suppress identical messages (multiple item drops).
+                        if (str != lastloot)
+                        {
+                            player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "GameNPC.DropLoot.Drops", GetName(0, true), str)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                            lastloot = str;
+                        }
+                    }
+                }
+            }
 		}
 
 
