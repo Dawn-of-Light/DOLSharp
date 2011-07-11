@@ -98,7 +98,8 @@ GamePlayer.GainRealmPoints.GainBonus:		Vous gagnez un bonus de +{0} dans toutes 
 GamePlayer.GainRealmPoints.GainedLevel:		Vous avez gagné un niveau de royaume !
 GamePlayer.GainRealmPoints.GainedRank:		Vous avez gagné un nouveau rang et un nouveau titre de royaume !
 GamePlayer.GainRealmPoints.NewRealmTitle:	Votre nouveau titre de royaume est {0}
-GamePlayer.GainRealmPoints.ReachedRank:		{0} a atteint le rang de royaume {1:#L#} dans {2}!
+GamePlayer.GainRealmPoints.ReachedRank:		Vous venez d'atteindre le Rang de Royaume {0}L0!
+GamePlayer.GainRealmPoints.ReachedRankNews:		{0} a atteint le rang de royaume {1:#L#} dans {2}!
 GamePlayer.GainRealmPoints.YouGet:			Vous gagnez {0} points de royaume !
 GamePlayer.GetExamineMessages.EnemyRealmMember:	Vous observez {0}. {1} est membre d'un royaume ennemi !
 GamePlayer.GetExamineMessages.NeutralMember:	Vous observez {0}. {1} ne fait partie d'aucune guilde.

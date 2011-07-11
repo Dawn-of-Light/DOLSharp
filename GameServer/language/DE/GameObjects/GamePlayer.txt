@@ -92,7 +92,8 @@ GamePlayer.GainRealmPoints.GainBonus:			Ihr erhaltet einen +{0}-Bonus auf alle S
 GamePlayer.GainRealmPoints.GainedLevel:			Ihr habt eine Reichsstufe erreicht!		
 GamePlayer.GainRealmPoints.GainedRank:			Ihr habt einen neuen Rang und einen neuen Reichstitel erhalten!		
 GamePlayer.GainRealmPoints.NewRealmTitle:		Euer neuer Reichstitel lautet "{0}" !			
-GamePlayer.GainRealmPoints.ReachedRank:			{0} erreicht Reichsrang {1:#L#} in {2} !		
+GamePlayer.GainRealmPoints.ReachedRank:			You reached realm rank {0}L0!
+GamePlayer.GainRealmPoints.ReachedRankNews:			{0} erreicht Reichsrang {1:#L#} in {2} !		
 GamePlayer.GainRealmPoints.YouGet:			Ihr erhaltet {0} Reichspunkte!		
 GamePlayer.GetExamineMessages.EnemyRealmMember:		Es interessiert Euch {0}. {1} gehört einem feindlichen Reich an!
 GamePlayer.GetExamineMessages.NeutralMember:		Es interessiert Euch {0}. {1} gehört keiner Gilde an.
