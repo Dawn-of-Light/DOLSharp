@@ -156,7 +156,8 @@ GamePlayer.GainRealmPoints.GainBonus:		Ziskal jsi +{0} bonus ke vsem dovednostem
 GamePlayer.GainRealmPoints.GainedLevel:		Ziskal jsi realm uroven!
 GamePlayer.GainRealmPoints.GainedRank:		Ziskal jsi novou hodnost a novy titul!
 GamePlayer.GainRealmPoints.NewRealmTitle:	Tvuj novy titul je {0}!
-GamePlayer.GainRealmPoints.ReachedRank:		{0} dosahl hodnosti {1:#L#} v {2}!
+GamePlayer.GainRealmPoints.ReachedRank:			You reached realm rank {0}L0!
+GamePlayer.GainRealmPoints.ReachedRankNews:		{0} dosahl hodnosti {1:#L#} v {2}!
 GamePlayer.GainRealmPoints.YouGet:			Dostal jsi {0} realm bodu!
 GamePlayer.GetExamineMessages.EnemyRealmMember:      Prozkoumavas {0}. {1} je to clen nepratelskeho realmu !
 GamePlayer.GetExamineMessages.NeutralMember:      Prozkoumavas {0}. {1} je to neutralni clen bez gildovni prislusnosti.

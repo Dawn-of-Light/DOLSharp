@@ -74,7 +74,8 @@ GamePlayer.GainRealmPoints.GainedLevel:		 Has avanzado un nivel de reino!
 GamePlayer.GainRealmPoints.GainedRank:		Has alcanzado un nuevo rango de reino y un nuevo título!
 GamePlayer.GainRealmPoints.NewRealmTitle:	Tu nuevo título de reino es {0}!
 GamePlayer.GainRealmPoints.GainBonus:		Consigues un +{0} bonificaciones a todas las especializaciones!
-GamePlayer.GainRealmPoints.ReachedRank:		{0} Ha alcanzado el nivel de reino {1:#L#} en {2}!
+GamePlayer.GainRealmPoints.ReachedRank:		You reached realm rank {0}L0!
+GamePlayer.GainRealmPoints.ReachedRankNews:		{0} Ha alcanzado el nivel de reino {1:#L#} en {2}!
 GamePlayer.GainRealmPoints.Earned:			{0} Ha conseguido 1,000,000 puntos de reino en {1}
 GamePlayer.GainBountyPoints.YouGet:			 Consigues {0} puntos de recompensa!
 GamePlayer.GainExperience.YouGet:			Consigues {0} puntos de experiencia.

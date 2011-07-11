@@ -1700,6 +1700,7 @@ namespace DOL.GS
 		public virtual void OnRevive(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = (GamePlayer)sender;
+            if (player.IsUnderwater && player.CanBreathUnderWater == false) player.Diving(waterBreath.Holding);
 			if (player.Level > 5)
 			{
 				SpellLine Line = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
@@ -4439,7 +4440,8 @@ namespace DOL.GS
 				{
 					Out.SendUpdatePlayerSkills();
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.GainedRank"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.NewRealmTitle", RealmTitle), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRank", (RealmLevel / 10) + 1), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.NewRealmTitle", RealmTitle), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.GainBonus", RealmLevel / 10), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						plr.Out.SendLivingDataUpdate(this, true);
@@ -4449,8 +4451,8 @@ namespace DOL.GS
 					Notify(GamePlayerEvent.RLLevelUp, this);
 				if (CanGenerateNews && ((RealmLevel >= 40 && RealmLevel % 10 == 0) || RealmLevel >= 60))
 				{
-					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRank", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
-					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.ReachedRank", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
+					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRankNews", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
+					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.ReachedRankNews", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
 					NewsMgr.CreateNews(newsmessage, this.Realm, eNewsType.RvRLocal, true);
 				}
 				if (CanGenerateNews && RealmPoints >= 1000000 && RealmPoints - amount < 1000000)
@@ -12055,10 +12057,12 @@ namespace DOL.GS
 						{
 							if (eligibleMember.Guild != null && eligibleMember.Guild.IsGuildDuesOn())
 							{
-								double moneyToGuild = moneyObject.TotalCopper / eligibleMembers.Count * eligibleMember.Guild.GetGuildDuesPercent() / 100;
-								long moneyToPlayer = (moneyObject.TotalCopper / eligibleMembers.Count) - (long)moneyToGuild;
-								eligibleMember.Guild.SetGuildBank(eligibleMember, moneyToGuild);
-								eligibleMember.AddMoney(moneyToPlayer, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
+                                double moneyToGuild = (moneyObject.TotalCopper / eligibleMembers.Count) * eligibleMember.Guild.GetGuildDuesPercent() / 100;
+                                if (eligibleMember.Guild.GetGuildDuesPercent() != 100)
+                                    eligibleMember.AddMoney((moneyObject.TotalCopper / eligibleMembers.Count), LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString((moneyObject.TotalCopper / eligibleMembers.Count))));
+                                else
+                                    eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count);
+                                eligibleMember.Guild.SetGuildBank(eligibleMember, moneyToGuild);
 							}
 							else
 								eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
@@ -12069,10 +12073,12 @@ namespace DOL.GS
 						//Add money only to picking player
 						if (this != null && Guild != null && Guild.IsGuildDuesOn() && moneyObject!=null && moneyObject.TotalCopper > 0 && Client!=null && Client.Player!=null && Client.Player.Guild!=null && Client.Player.Guild.GetGuildDuesPercent() > 0 )
 						{
-							double moneyToGuild = moneyObject.TotalCopper * Client.Player.Guild.GetGuildDuesPercent() / 100;
-							long MoneyToPlayer = moneyObject.TotalCopper - (long)moneyToGuild;
-							Client.Player.Guild.SetGuildBank(Client.Player, moneyToGuild);
-							Client.Player.AddMoney(MoneyToPlayer, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", MoneyToPlayer.ToString()));
+                            double moneyToGuild = moneyObject.TotalCopper * Client.Player.Guild.GetGuildDuesPercent() / 100;
+                            if (Client.Player.Guild.GetGuildDuesPercent() != 100)
+                                Client.Player.AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
+                            else
+                                Client.Player.AddMoney(moneyObject.TotalCopper);
+                            Client.Player.Guild.SetGuildBank(Client.Player, moneyToGuild);
 						}
 						else
 							AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
