@@ -110,10 +110,12 @@ namespace DOL.GS.Behaviour.Actions
                 if (de.Value == null)
                 {
                     playerInventory.RemoveItem((InventoryItem)de.Key);
+                    InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, ((InventoryItem)de.Key).Template, ((InventoryItem)de.Key).Count);
                 }
                 else
                 {
                     playerInventory.RemoveCountFromStack((InventoryItem)de.Key, (int)de.Value);
+                    InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, ((InventoryItem)de.Key).Template, (int)de.Value);
                 }
             }
             playerInventory.CommitChanges();

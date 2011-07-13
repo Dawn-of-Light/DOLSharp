@@ -993,6 +993,7 @@ namespace DOL.GS.Quests.Albion
 				GiveItem(masterFrederick, player, noteFormColm);
 				GiveItem(masterFrederick, player, fairyPlans);
 				player.AddMoney(Money.GetMoney(0, 0, 0, 6, 0), "You recieve {0} for the ride to Castle Sauvage");
+                InventoryLogging.LogInventoryAction("(QUEST;" + quest.Name + ")", player, eInventoryActionType.Quest, 600);
 			}
 		}
 
@@ -1107,6 +1108,7 @@ namespace DOL.GS.Quests.Albion
 			if (Step < 3 && m_questPlayer.Inventory.GetFirstItemByID(dragonflyTicket.Id_nb, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
 			{
 				m_questPlayer.RemoveMoney(Money.GetMoney(0, 0, 0, 6, 0), null);
+                InventoryLogging.LogInventoryAction(m_questPlayer, "(QUEST;" + Name + ")", eInventoryActionType.Quest, 600);
 			}
 
 			RemoveItem(m_questPlayer, dragonflyTicket, false);
@@ -1128,7 +1130,9 @@ namespace DOL.GS.Quests.Albion
 				GiveItem(masterFrederick, m_questPlayer, recruitsPants);
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 240, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 5, Util.Random(50)), "You recieve {0} as a reward.");
+            long money = Money.GetMoney(0, 0, 0, 5, Util.Random(50));
+			m_questPlayer.AddMoney(money, "You recieve {0} as a reward.");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 
 		}
 

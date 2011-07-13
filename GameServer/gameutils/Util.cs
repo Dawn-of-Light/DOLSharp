@@ -310,5 +310,11 @@ namespace DOL.GS
 				list.Add(item);
 			}
 		}
+
+        public static void ForEach<T>(this IEnumerable<T> array, Action<T> action)
+        {
+            foreach (var cur in array)
+                action(cur);
+        }
 	}
 }

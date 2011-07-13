@@ -70,6 +70,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                 {
 					ChatUtil.SendMerchantMessage(client, "GameMerchant.OnPlayerWithdraw", Money.GetString(totalConMoney));
 					client.Player.AddMoney(totalConMoney);
+					InventoryLogging.LogInventoryAction(con, client.Player, eInventoryActionType.Merchant, totalConMoney);
                 }
 
 				con.TotalMoney -= totalConMoney;

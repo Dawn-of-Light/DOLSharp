@@ -977,7 +977,9 @@ namespace DOL.GS.Quests.Midgard
 
 			//Give reward to player here ...              
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 507, true);
-            m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 7, Util.Random(50)), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.FinishQuest.Text1"));
+            long money = Money.GetMoney(0, 0, 0, 7, Util.Random(50));
+            m_questPlayer.AddMoney(money, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.FinishQuest.Text1"));
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}

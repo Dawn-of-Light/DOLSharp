@@ -92,6 +92,11 @@ namespace DOL.GS
 		/// </summary>
 		protected ILog m_gmLog;
 
+        /// <summary>
+        /// The textwrite for log operations
+        /// </summary>
+        protected ILog m_inventoryLog;
+
 		/// <summary>
 		/// Contains a list of invalid names
 		/// </summary>
@@ -1118,6 +1123,15 @@ namespace DOL.GS
 			log.Debug(text);
 		}
 
+        /// <summary>
+        /// Writes a line to the inventory log file
+        /// </summary>
+        /// <param name="text">the text to log</param>
+        public void LogInventoryAction(string text)
+        {
+            m_inventoryLog.Logger.Log(typeof(GameServer), Level.Alert, text, null);
+        }
+
 		#endregion
 
 		#region Database
@@ -1244,6 +1258,7 @@ namespace DOL.GS
 		{
 			m_gmLog = LogManager.GetLogger(Configuration.GMActionsLoggerName);
 			m_cheatLog = LogManager.GetLogger(Configuration.CheatLoggerName);
+		    m_inventoryLog = LogManager.GetLogger(Configuration.InventoryLoggerName);
 
 			if (log.IsDebugEnabled)
 			{

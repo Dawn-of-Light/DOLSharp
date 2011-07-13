@@ -371,6 +371,8 @@ namespace DOL.GS.ServerRules
 				return isAllowed;
 			}
 
+
+
 			return true;
 		}
 
@@ -1419,7 +1421,8 @@ namespace DOL.GS.ServerRules
 							money += 20 * money / 100;
 						}
 						//long money = (long)(Money.GetMoney(0, 0, 17, 85, 0) * damagePercent * killedPlayer.Level / 50);
-						((GamePlayer)living).AddMoney(money, "You recieve {0}");
+						player.AddMoney(money, "You recieve {0}");
+                        InventoryLogging.LogInventoryAction(killer, player, eInventoryActionType.Other, money);
 					}
 
 					if (killedPlayer.ReleaseType != GamePlayer.eReleaseType.Duel && expGainPlayer != null)

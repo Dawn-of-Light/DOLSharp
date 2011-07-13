@@ -647,6 +647,7 @@ namespace DOL.GS.Quests.Albion
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, m_questPlayer.Level * 10, true);
 			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 35 + m_questPlayer.Level), "You are awarded "+(35+m_questPlayer.Level)+" copper!");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, 35 + m_questPlayer.Level);
 		
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));

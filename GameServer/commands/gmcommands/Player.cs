@@ -618,6 +618,7 @@ namespace DOL.GS.Commands
                                     {
                                         long amount = long.Parse(args[3]);
                                         player.AddMoney(amount);
+                                        InventoryLogging.LogInventoryAction(client.Player, player, eInventoryActionType.Other, amount);
                                         client.Out.SendMessage("You gave " + player.Name + " copper successfully!", eChatType.CT_Important,
                                                                eChatLoc.CL_SystemWindow);
                                         player.Out.SendMessage(
@@ -631,6 +632,7 @@ namespace DOL.GS.Commands
                                     {
                                         long amount = long.Parse(args[3]) * 100;
                                         player.AddMoney(amount);
+                                        InventoryLogging.LogInventoryAction(client.Player, player, eInventoryActionType.Other, amount);
                                         client.Out.SendMessage("You gave " + player.Name + " silver successfully!", eChatType.CT_Important,
                                                                eChatLoc.CL_SystemWindow);
                                         player.Out.SendMessage(
@@ -643,6 +645,7 @@ namespace DOL.GS.Commands
                                     {
                                         long amount = long.Parse(args[3]) * 100 * 100;
                                         player.AddMoney(amount);
+                                        InventoryLogging.LogInventoryAction(client.Player, player, eInventoryActionType.Other, amount);
                                         client.Out.SendMessage("You gave " + player.Name + " gold successfully!", eChatType.CT_Important,
                                                                eChatLoc.CL_SystemWindow);
                                         player.Out.SendMessage(
@@ -655,6 +658,7 @@ namespace DOL.GS.Commands
                                     {
                                         long amount = long.Parse(args[3]) * 100 * 100 * 1000;
                                         player.AddMoney(amount);
+                                        InventoryLogging.LogInventoryAction(client.Player, player, eInventoryActionType.Other, amount);
                                         client.Out.SendMessage("You gave " + player.Name + " platinum successfully!", eChatType.CT_Important,
                                                                eChatLoc.CL_SystemWindow);
                                         player.Out.SendMessage(
@@ -667,6 +671,7 @@ namespace DOL.GS.Commands
                                     {
                                         long amount = long.Parse(args[3]) * 100 * 100 * 1000 * 1000;
                                         player.AddMoney(amount);
+                                        InventoryLogging.LogInventoryAction(client.Player, player, eInventoryActionType.Other, amount);
                                         client.Out.SendMessage("You gave " + player.Name + " mithril successfully!", eChatType.CT_Important,
                                                                eChatLoc.CL_SystemWindow);
                                         player.Out.SendMessage(

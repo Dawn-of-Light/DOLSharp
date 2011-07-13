@@ -187,6 +187,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					HouseMgr.HouseTransferToGuild(client.Player);
 					client.Player.Inventory.RemoveItem(orgitem);
+					InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 					client.Player.Guild.UpdateGuildWindow();
 					return;
 				}
@@ -316,6 +317,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							// remove the item from the player's inventory
 							client.Player.Inventory.RemoveItem(orgitem);
+							InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 
 							//add item to outdooritems
 							house.OutdoorItems.Add(pos, oitem);
@@ -407,6 +409,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								//its a housing item, so lets take it!
 								client.Player.Inventory.RemoveItem(orgitem);
+								InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 
 								//set right base item, so we can recreate it on take.
 								if (orgitem.Id_nb.Contains("GuildBanner"))
@@ -464,6 +467,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									{
 										// remove the original item from the player's inventory
 										client.Player.Inventory.RemoveItem(orgitem);
+										InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 									}
 									else
 									{
@@ -477,6 +481,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									{
 										// remove the original item from the player's inventory
 										client.Player.Inventory.RemoveItem(orgitem);
+										InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 									}
 									else
 									{
@@ -499,6 +504,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 										{
 											// remove the original item from the player's inventory
 											client.Player.Inventory.RemoveItem(orgitem);
+											InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 										}
 										else
 										{
@@ -594,6 +600,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								// remove the original item from the player's inventory
 								client.Player.Inventory.RemoveItem(orgitem);
+								InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 
 								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointAdded", null);
 
@@ -624,24 +631,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 								house.OutdoorGuildBanner = true;
 								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.OutdoorBannersAdded", null);
 								client.Player.Inventory.RemoveItem(orgitem);
+								InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 							}
 							else if (objType == 58) // We have outdoor shield
 							{
 								house.OutdoorGuildShield = true;
 								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.OutdoorShieldsAdded", null);
 								client.Player.Inventory.RemoveItem(orgitem);
+								InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 							}
 							else if (objType == 66) // We have indoor banner
 							{
 								house.IndoorGuildBanner = true;
 								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.InteriorBannersAdded", null);
 								client.Player.Inventory.RemoveItem(orgitem);
+								InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 							}
 							else if (objType == 67) // We have indoor shield
 							{
 								house.IndoorGuildShield = true;
 								ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.InteriorShieldsAdded", null);
 								client.Player.Inventory.RemoveItem(orgitem);
+								InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 							}
 							else
 							{
@@ -725,6 +736,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							// remove the original item from the player's inventory
 							client.Player.Inventory.RemoveItem(orgitem);
+							InventoryLogging.LogInventoryAction(client.Player, "(HOUSE;" + housenumber + ")", eInventoryActionType.Other, orgitem.Template, orgitem.Count);
 
 							// save the house and broadcast uodates
 							house.SaveIntoDatabase();
@@ -918,6 +930,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			player.Inventory.RemoveItem(item);
+			InventoryLogging.LogInventoryAction(player, "(HOUSE;" + house.HouseNumber + ")", eInventoryActionType.Other, item.Template, item.Count);
 			HouseMgr.RemoveHouse(house);
 
 			ChatUtil.SendSystemMessage(player, "Scripts.Player.Housing.HouseRemoved");
@@ -949,7 +962,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			if (HouseMgr.UpgradeHouse(house, item))
+			{
 				player.Inventory.RemoveItem(item);
+				InventoryLogging.LogInventoryAction(player, "(HOUSE;" + house.HouseNumber + ")", eInventoryActionType.Other, item.Template, item.Count);
+			}
 		}
 	}
 }

@@ -166,6 +166,7 @@ namespace DOL.GS
 
 			if (!player.RemoveMoney(item.RepairCost))
 			{
+                InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.RepairCost);
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client,
 				                                                  "Scripts.Blacksmith.NotEnoughMoney"), eChatType.CT_System,
 				                       eChatLoc.CL_SystemWindow);

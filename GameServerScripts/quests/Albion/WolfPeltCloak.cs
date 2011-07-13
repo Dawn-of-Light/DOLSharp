@@ -752,7 +752,9 @@ namespace DOL.GS.Quests.Albion
 			GiveItem(lynnet, m_questPlayer, wolfPeltCloak);
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 50, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 30 + Util.Random(50)), "You recieve {0} for your service.");
+		    long money = Money.GetMoney(0, 0, 0, 0, 30 + Util.Random(50));
+			m_questPlayer.AddMoney(money, "You recieve {0} for your service.");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 
 		}
 

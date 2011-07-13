@@ -109,6 +109,7 @@ namespace DOL.GS
             long totalCost = restorePoints * cost;
             if (player.RemoveMoney(totalCost))
             {
+                InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalCost);
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.HealerDialogResponse.Text3", this.Name, Money.GetString(totalCost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 player.TotalConstitutionLostAtDeath -= restorePoints;
                 player.Out.SendCharStatsUpdate();

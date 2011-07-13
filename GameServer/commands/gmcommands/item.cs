@@ -114,6 +114,7 @@ namespace DOL.GS.Commands
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Blank.ItemCreated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								InventoryLogging.LogInventoryAction(client.Player, client.Player, eInventoryActionType.Other, item.Template, item.Count);
 							}
 							else
 							{
@@ -132,7 +133,10 @@ namespace DOL.GS.Commands
 								return;
 							}
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, scroll.Item))
+							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Scroll.Created", scroll.Item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								InventoryLogging.LogInventoryAction(client.Player, client.Player, eInventoryActionType.Other, scroll.Item.Template, scroll.Item.Count);
+							}
 							break;
 						}
 					#endregion Scroll
@@ -169,6 +173,7 @@ namespace DOL.GS.Commands
 								if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 								{
 									client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Create.Created", item.Level, item.GetName(0, false), count), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									InventoryLogging.LogInventoryAction(client.Player, client.Player, eInventoryActionType.Other, item.Template, item.Count);
 								}
 							}
 							break;
@@ -1789,7 +1794,8 @@ namespace DOL.GS.Commands
 										Log.Debug("Added New Item Template: " + itemTemplate.Id_nb);
 										DisplayMessage(client, "Added New Item Template: " + itemTemplate.Id_nb);
 										GameInventoryItem newItem = GameInventoryItem.Create<ItemTemplate>(itemTemplate);
-										client.Player.Inventory.AddItem((eInventorySlot)slot, newItem);
+										if (client.Player.Inventory.AddItem((eInventorySlot)slot, newItem))
+											InventoryLogging.LogInventoryAction(client.Player, client.Player, eInventoryActionType.Other, newItem.Template, newItem.Count);
 									}
 									catch (Exception ex)
 									{
@@ -1808,7 +1814,8 @@ namespace DOL.GS.Commands
 										Log.Debug("Added New ItemUnique: " + unique.Id_nb + " (" + unique.ObjectId + ")");
 										DisplayMessage(client, "Added New ItemUnique: " + unique.Id_nb + " (" + unique.ObjectId + ")");
 										GameInventoryItem newItem = GameInventoryItem.Create<ItemUnique>(unique);
-										client.Player.Inventory.AddItem((eInventorySlot)slot, newItem);
+										if (client.Player.Inventory.AddItem((eInventorySlot)slot, newItem))
+											InventoryLogging.LogInventoryAction(client.Player, client.Player, eInventoryActionType.Other, newItem.Template, newItem.Count);
 									}
 									catch (Exception ex)
 									{

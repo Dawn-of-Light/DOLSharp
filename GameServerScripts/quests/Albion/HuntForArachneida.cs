@@ -885,7 +885,9 @@ namespace DOL.GS.Quests.Albion
 
 			//Give reward to player here ...
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 40050, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 22, Util.Random(50)), "You recieve {0} for your service.");
+            long money = Money.GetMoney(0, 0, 0, 22, Util.Random(50));
+			m_questPlayer.AddMoney(money, "You recieve {0} for your service.");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 
 			if (m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Wizard ||
 				m_questPlayer.CharacterClass.ID == (byte) eCharacterClass.Sorcerer ||

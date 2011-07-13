@@ -61,7 +61,7 @@ public class MobXAmbientBehaviour : DataObject
 		m_voice = voice;
 	}
 
-	[DataElement(AllowDbNull = false)]
+	[DataElement(AllowDbNull = false, Index = true)]
 	public string Source
 	{
 		get { return m_source; }

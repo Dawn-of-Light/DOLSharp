@@ -103,17 +103,15 @@ namespace DOL.GS
             {
 				if (ArtifactMgr.GrantArtifactBountyCredit(player, item.Name))
 				{
-					lock (player.Inventory)
-						player.Inventory.RemoveItem(item);
-
+                    player.Inventory.RemoveItem(item);
+                    InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template, item.Count);
 					return true;
 				}
 				else
 				{
 					// refund bounty points
-
-					lock (player.Inventory)
-						player.Inventory.RemoveItem(item);
+                    player.Inventory.RemoveItem(item);
+                    InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template, item.Count);
 
 					long totalValue = item.Price;
 					player.BountyPoints += totalValue;

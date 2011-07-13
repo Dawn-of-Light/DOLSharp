@@ -45,6 +45,7 @@ namespace DOL.GS.Behaviour.Actions
         {
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
             player.AddMoney(P);
+            InventoryLogging.LogInventoryAction(NPC, player, eInventoryActionType.Quest, P);
         }
     }
 }

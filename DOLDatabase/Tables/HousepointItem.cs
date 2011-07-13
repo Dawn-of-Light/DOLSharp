@@ -51,7 +51,7 @@ namespace DOL.Database
 		}
 
 
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int HouseNumber
 		{
 			get { return m_houseNumber; }

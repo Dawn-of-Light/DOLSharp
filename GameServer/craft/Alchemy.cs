@@ -150,6 +150,7 @@ namespace DOL.GS
 			}
 
 			player.Inventory.RemoveCountFromStack(tincture, 1);
+			InventoryLogging.LogInventoryAction(player, "(craft)", eInventoryActionType.Craft, tincture.Template);
 
 			if (item.Template is ItemUnique)
 			{

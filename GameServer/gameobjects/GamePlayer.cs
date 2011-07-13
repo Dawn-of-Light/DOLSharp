@@ -9082,6 +9082,7 @@ namespace DOL.GS
 														if (useItem.Count > 1)
 														{
 															Inventory.RemoveCountFromStack(useItem, 1);
+															InventoryLogging.LogInventoryAction(this, "(potion)", eInventoryActionType.Other, useItem.Template);
 														}
 														else
 														{
@@ -9089,6 +9090,7 @@ namespace DOL.GS
 															if (useItem.Charges < 1)
 															{
 																Inventory.RemoveCountFromStack(useItem, 1);
+																InventoryLogging.LogInventoryAction(this, "(potion)", eInventoryActionType.Other, useItem.Template);
 															}
 														}
 														Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.Used", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -9237,6 +9239,7 @@ namespace DOL.GS
 				{
 					if (Inventory.RemoveItem(useItem))
 					{
+                        InventoryLogging.LogInventoryAction(this, "(HorseSaddleBag)", eInventoryActionType.Other, useItem.Template, useItem.Count);
 						DBCharacter.ActiveSaddleBags |= (byte)bag;
 						Out.SendSetControlledHorse(this);
 						Out.SendMessage("You've activated a saddlebag!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -9558,6 +9561,7 @@ namespace DOL.GS
 				toItem.PoisonSpellID = poisonPotion.Template.PoisonSpellID;
 			}
 			Inventory.RemoveCountFromStack(poisonPotion, 1);
+			InventoryLogging.LogInventoryAction(this, "(poison)", eInventoryActionType.Other, poisonPotion.Template);
 			Out.SendMessage(string.Format("You apply {0} to {1}.", poisonPotion.GetName(0, false), toItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;
 		}
@@ -11772,6 +11776,7 @@ namespace DOL.GS
 
 			if (!Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 				return false;
+			InventoryLogging.LogInventoryAction(source, this, eInventoryActionType.Trade, item.Template, item.Count);
 
 			if (source == null)
 			{
@@ -11833,6 +11838,7 @@ namespace DOL.GS
 					}
 
 					if (!Inventory.RemoveItem(item)) return false;
+					InventoryLogging.LogInventoryAction(this, "(ground)", eInventoryActionType.Other, item.Template, item.Count);
 
 					droppedItem = CreateItemOnTheGround(item);
 
@@ -11940,7 +11946,7 @@ namespace DOL.GS
 					if (mybattlegroup != null && mybattlegroup.GetBGLootType() == true && mybattlegroup.GetBGTreasurer() != null)
 					{
 						GamePlayer theTreasurer = mybattlegroup.GetBGTreasurer();
-						if (theTreasurer.CanSeeObject(mybattlegroup.GetBGTreasurer(), floorObject))
+						if (theTreasurer.CanSeeObject(floorObject))
 						{
 							bool good = false;
 							if (floorItem.Item.IsStackable)
@@ -11955,6 +11961,7 @@ namespace DOL.GS
 							}
 							theTreasurer.Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouGet", floorItem.Item.GetName(1, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
+							InventoryLogging.LogInventoryAction("(ground)", this, eInventoryActionType.Loot, floorItem.Item.Template, floorItem.Item.IsStackable ? floorItem.Item.Count : 1);
 						}
 						else
 						{
@@ -11968,7 +11975,7 @@ namespace DOL.GS
 						foreach (GamePlayer ply in group.GetPlayersInTheGroup())
 						{
 							if (ply.IsAlive
-							    && ply.CanSeeObject(ply, floorObject)
+							    && ply.CanSeeObject(floorObject)
 							    && this.IsWithinRadius( ply, WorldMgr.MAX_EXPFORKILL_DISTANCE )
 							    && (ply.ObjectState == eObjectState.Active)
 							    && (ply.AutoSplitLoot)
@@ -12002,6 +12009,7 @@ namespace DOL.GS
 							}
 							Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
 							group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.Autosplit", floorItem.Item.GetName(1, true), eligibleMember.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							InventoryLogging.LogInventoryAction("(ground)", this, eInventoryActionType.Loot, floorItem.Item.Template, floorItem.Item.IsStackable ? floorItem.Item.Count : 1);
 						}
 					}
 					else
@@ -12019,6 +12027,7 @@ namespace DOL.GS
 						}
 						Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouGet", floorItem.Item.GetName(1, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.GroupMemberPicksUp", Name, floorItem.Item.GetName(1, false)), eChatType.CT_System);
+						InventoryLogging.LogInventoryAction("(ground)", this, eInventoryActionType.Loot, floorItem.Item.Template, floorItem.Item.IsStackable ? floorItem.Item.Count : 1);
 					}
 					floorItem.RemoveFromWorld();
 				}
@@ -12032,56 +12041,57 @@ namespace DOL.GS
 					if (moneyObject.ObjectState != eObjectState.Active)
 						return false;
 
-					Group group = Group;
-					if (group != null && group.AutosplitCoins)
+					if (Group != null && Group.AutosplitCoins)
 					{
 						//Spread the money in the group
-						ArrayList eligibleMembers = new ArrayList(8);
-
-						foreach (GamePlayer ply in group.GetPlayersInTheGroup())
-						{
-							if (ply.IsAlive
-							    && ply.CanSeeObject(ply, floorObject)
-							    && (ply.ObjectState == eObjectState.Active))
-							{
-								eligibleMembers.Add(ply);
-							}
-						}
-						if (eligibleMembers.Count <= 0)
+						var eligibleMembers = from p in Group.GetPlayersInTheGroup()
+							where p.IsAlive && p.CanSeeObject(floorObject) && p.ObjectState == eObjectState.Active
+							select p;
+						if (!eligibleMembers.Any())
 						{
 							Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.NoOneGroupWantsMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
 						}
 
+						long moneyToPlayer = moneyObject.TotalCopper / eligibleMembers.Count();
 						foreach (GamePlayer eligibleMember in eligibleMembers)
 						{
 							if (eligibleMember.Guild != null && eligibleMember.Guild.IsGuildDuesOn())
 							{
-                                double moneyToGuild = (moneyObject.TotalCopper / eligibleMembers.Count) * eligibleMember.Guild.GetGuildDuesPercent() / 100;
-                                if (eligibleMember.Guild.GetGuildDuesPercent() != 100)
-                                    eligibleMember.AddMoney((moneyObject.TotalCopper / eligibleMembers.Count), LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString((moneyObject.TotalCopper / eligibleMembers.Count))));
-                                else
-                                    eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count);
-                                eligibleMember.Guild.SetGuildBank(eligibleMember, moneyToGuild);
+								long moneyToGuild = moneyToPlayer * eligibleMember.Guild.GetGuildDuesPercent() / 100;
+								if (eligibleMember.Guild.GetGuildDuesPercent() != 100)
+									eligibleMember.AddMoney(moneyToPlayer, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyToPlayer)));
+								else
+									eligibleMember.AddMoney(moneyToPlayer);
+
+								InventoryLogging.LogInventoryAction("(ground)", eligibleMember, eInventoryActionType.Loot, moneyToPlayer);
+								eligibleMember.Guild.SetGuildBank(eligibleMember, moneyToGuild);
 							}
 							else
-								eligibleMember.AddMoney(moneyObject.TotalCopper / eligibleMembers.Count, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyObject.TotalCopper / eligibleMembers.Count)));
+							{
+								eligibleMember.AddMoney(moneyToPlayer, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyToPlayer)));
+								InventoryLogging.LogInventoryAction("(ground)", eligibleMember, eInventoryActionType.Loot, moneyToPlayer);
+							}
 						}
 					}
 					else
 					{
 						//Add money only to picking player
-						if (this != null && Guild != null && Guild.IsGuildDuesOn() && moneyObject!=null && moneyObject.TotalCopper > 0 && Client!=null && Client.Player!=null && Client.Player.Guild!=null && Client.Player.Guild.GetGuildDuesPercent() > 0 )
+						if (Guild != null && Guild.IsGuildDuesOn() && moneyObject.TotalCopper > 0 && Guild.GetGuildDuesPercent() > 0)
 						{
-                            double moneyToGuild = moneyObject.TotalCopper * Client.Player.Guild.GetGuildDuesPercent() / 100;
-                            if (Client.Player.Guild.GetGuildDuesPercent() != 100)
-                                Client.Player.AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
-                            else
-                                Client.Player.AddMoney(moneyObject.TotalCopper);
-                            Client.Player.Guild.SetGuildBank(Client.Player, moneyToGuild);
+							long moneyToGuild = moneyObject.TotalCopper * Guild.GetGuildDuesPercent() / 100;
+							if (Guild.GetGuildDuesPercent() != 100)
+								AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
+							else
+								AddMoney(moneyObject.TotalCopper);
+							InventoryLogging.LogInventoryAction("(ground)", this, eInventoryActionType.Loot, moneyObject.TotalCopper);
+							Guild.SetGuildBank(Client.Player, moneyToGuild);
 						}
 						else
+						{
 							AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
+							InventoryLogging.LogInventoryAction("(ground)", this, eInventoryActionType.Loot, moneyObject.TotalCopper);
+						}
 					}
 					moneyObject.Delete();
 					return true;
@@ -12107,6 +12117,7 @@ namespace DOL.GS
 				{
 					ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(houseVault.TemplateID);
 					Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(template));
+					InventoryLogging.LogInventoryAction("(HOUSE;" + floorObject.CurrentHouse.HouseNumber + ")", this, eInventoryActionType.Other, template);
 				}
 				return true;
 			}
@@ -12125,18 +12136,22 @@ namespace DOL.GS
 		/// <summary>
 		/// Checks to see if an object is viewable from the players perspective
 		/// </summary>
+		/// <param name="obj">The Object to be seen</param>
+		/// <returns>True/False</returns>
+		public bool CanSeeObject(GameObject obj)
+		{
+			return IsWithinRadius(obj, WorldMgr.VISIBILITY_DISTANCE);
+		}
+
+		/// <summary>
+		/// Checks to see if an object is viewable from the players perspective
+		/// </summary>
 		/// <param name="player">The Player that can see</param>
 		/// <param name="obj">The Object to be seen</param>
 		/// <returns>True/False</returns>
-		public bool CanSeeObject(GamePlayer player, GameObject obj)
+		public static bool CanSeeObject(GamePlayer player, GameObject obj)
 		{
-			foreach (GamePlayer plr in obj.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				if (plr == null) continue;
-				if (plr == player)
-					return true;
-			}
-			return false;
+			return player.IsWithinRadius(obj, WorldMgr.VISIBILITY_DISTANCE);
 		}
 
 		#endregion

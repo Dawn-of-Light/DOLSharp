@@ -89,6 +89,21 @@
 		</Layout>
 	</appender>
 
+	<!-- Define our Inventories Action Logger -->
+	<logger name="inventories">
+		<additivity value="false" />
+		<level value="ALL" />
+		<appender-ref ref="InventoryFileAppender" />
+	</logger>
+	<!-- Define our file output -->
+	<appender name="InventoryFileAppender" type="log4net.Appender.RollingFileAppender" >
+		<appendtofile value="true" />
+		<file value="./logs/Inventories.log" />
+		<Layout type="log4net.Layout.PatternLayout">
+			<param name="ConversionPattern" value="%d - %m%n" />
+		</Layout>
+	</appender>
+
 	<!-- We set the log level for some lowlevel loggers so it won't clutter our output -->
 	<logger name="DOL.GS.PacketHandler.PacketProcessor">
 		<level value="INFO" />
