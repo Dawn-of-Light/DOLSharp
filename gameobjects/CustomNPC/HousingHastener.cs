@@ -76,6 +76,7 @@ namespace DOL.GS
 				TargetObject = player;
 				CastSpell(SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
 				player.Inventory.RemoveItem(item);
+                InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template, item.Count);
 			}
 			return true;
 		}

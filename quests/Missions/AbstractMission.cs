@@ -209,10 +209,13 @@ namespace DOL.GS.Quests
 				if (RewardXP > 0)
 					player.GainExperience(GameLiving.eXPSource.Mission, RewardXP);
 
-				if (RewardMoney > 0)
-					player.AddMoney(RewardMoney, "You recieve {0} for completing your task.");
+                if (RewardMoney > 0)
+                {
+                    player.AddMoney(RewardMoney, "You recieve {0} for completing your task.");
+                    InventoryLogging.LogInventoryAction("(MISSION;" + MissionType + ")", player, eInventoryActionType.Quest, RewardMoney);
+                }
 
-				if (RewardRealmPoints > 0)
+			    if (RewardRealmPoints > 0)
 					player.GainRealmPoints(RewardRealmPoints);
 
 				player.Out.SendMessage("You finish the " + Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

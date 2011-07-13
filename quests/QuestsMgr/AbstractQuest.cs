@@ -483,6 +483,7 @@ namespace DOL.GS.Quests
 				if (item != null)
 				{
 					player.Inventory.RemoveItem(item);
+                    InventoryLogging.LogInventoryAction(player, target, eInventoryActionType.Quest, item.Template, item.Count);
 					if (target != null)
 					{
 						player.Out.SendMessage("You give the " + itemTemplate.Name + " to " + target.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -507,6 +508,7 @@ namespace DOL.GS.Quests
 				if (item != null)
 				{
 					player.Inventory.RemoveItem(item);
+                    InventoryLogging.LogInventoryAction(player, target, eInventoryActionType.Quest, item.Template, item.Count);
 					if (target != null)
 					{
 						player.Out.SendMessage("You give the " + item.Name + " to " + target.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -535,6 +537,7 @@ namespace DOL.GS.Quests
 				while (item != null)
 				{
 					player.Inventory.RemoveItem(item);
+                    InventoryLogging.LogInventoryAction(player, target, eInventoryActionType.Quest, item.Template, item.Count);
 					itemsRemoved++;
 					item = player.Inventory.GetFirstItemByID(itemTemplate.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 				}

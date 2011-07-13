@@ -277,6 +277,7 @@ namespace DOL.GS
 					case "respec_single":
 						{
 							player.Inventory.RemoveCountFromStack(item, 1);
+							InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);
 							player.RespecAmountSingleSkill++;
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecSingle"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
@@ -284,6 +285,7 @@ namespace DOL.GS
 					case "respec_full":
 						{
 							player.Inventory.RemoveCountFromStack(item, 1);
+							InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);
 							player.RespecAmountAllSkill++;
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecFull", item.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
@@ -291,6 +293,7 @@ namespace DOL.GS
 					case "respec_realm":
 						{
 							player.Inventory.RemoveCountFromStack(item, 1);
+							InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);
 							player.RespecAmountRealmSkill++;
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecRealm"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
@@ -374,6 +377,7 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
+				InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Other, temp);
 			}
 			return true;
 		}

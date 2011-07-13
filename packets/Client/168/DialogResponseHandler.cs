@@ -313,6 +313,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								// take the money from the player
 								if (!player.RemoveMoney(moneyToAdd))
 									return;
+								InventoryLogging.LogInventoryAction(player, "(HOUSE;" + house.HouseNumber + ")", eInventoryActionType.Other, moneyToAdd);
 
 								// add the money to the lockbox
 								house.KeptMoney += moneyToAdd;

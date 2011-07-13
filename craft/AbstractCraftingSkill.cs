@@ -533,6 +533,7 @@ namespace DOL.GS
 					{
 						player.Inventory.RemoveCountFromStack(item, (int)de.Value);
 					}
+					InventoryLogging.LogInventoryAction(player, "(craft)", eInventoryActionType.Craft, item.Template, (de.Value is int ? (int)de.Value : item.Count));
 				}
 			}
 			player.Inventory.CommitChanges();
@@ -604,6 +605,7 @@ namespace DOL.GS
 						newItem = player.Inventory.GetItem((eInventorySlot)slot.Key);
 						if (newItem != null && player.Inventory.AddCountToStack(newItem, countToAdd))
 						{
+							InventoryLogging.LogInventoryAction("(craft)", player, eInventoryActionType.Other, newItem.Template, countToAdd);
 							// count incremented, continue with next change
 							continue;
 						}
@@ -628,6 +630,7 @@ namespace DOL.GS
 					if ((int)slot.Key > 0)	// Create new item in the backpack
 					{
 						player.Inventory.AddItem((eInventorySlot)slot.Key, newItem);
+						InventoryLogging.LogInventoryAction("(craft)", player, eInventoryActionType.Craft, newItem.Template, newItem.Count);
 					}
 					else					// Create new item on the ground
 					{

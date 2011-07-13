@@ -1289,6 +1289,7 @@ namespace DOL.GS.Quests
 					if (RewardMoney > 0)
 					{
 						m_questPlayer.AddMoney(RewardMoney, "You are awarded {0}!");
+                        InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, RewardMoney);
 					}
 
 					if (RewardXP > 0)
@@ -1589,6 +1590,7 @@ namespace DOL.GS.Quests
 							if (m_rewardMoneys.Count > 0 && m_rewardMoneys[0] > 0)
 							{
 								player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
+                                InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", player, eInventoryActionType.Quest, m_rewardMoneys[0]);
 							}
 
 							charQuest.Count++;
@@ -2059,6 +2061,7 @@ namespace DOL.GS.Quests
 								if (m_rewardMoneys.Count > 0 && m_rewardMoneys[0] > 0)
 								{
 									player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
+                                    InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", player, eInventoryActionType.Quest, m_rewardMoneys[0]);
 								}
 
 								charQuest.Count++;
@@ -2195,6 +2198,7 @@ namespace DOL.GS.Quests
 						if (rewardMoney > 0)
 						{
 							m_questPlayer.AddMoney(rewardMoney, "You are awarded {0}!");
+                            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, rewardMoney);
 						}
 					}
 				}

@@ -2090,9 +2090,10 @@ namespace DOL.GS
 		/// <param name="template"></param>
 		public virtual void LoadTemplate(INpcTemplate template)
 		{
+			if (template == null)
+				return;
+
 			IList m_templatedInventory = new ArrayList();
-			IList m_equipLoc = new ArrayList();
-			Hashtable m_equipModel = new Hashtable();
 			this.Name = template.Name;
 			this.GuildName = template.GuildName;
 			
@@ -2253,10 +2254,12 @@ namespace DOL.GS
 			BuffBonusCategory4[(int)eStat.EMP] += template.Empathy;
 			BuffBonusCategory4[(int)eStat.CHR] += template.Charisma;
 
-			m_ownBrain = new StandardMobBrain();
-			m_ownBrain.Body = this;
-			(m_ownBrain as StandardMobBrain).AggroLevel = template.AggroLevel;
-			(m_ownBrain as StandardMobBrain).AggroRange = template.AggroRange;
+			m_ownBrain = new StandardMobBrain
+				{
+					Body = this,
+					AggroLevel = template.AggroLevel,
+					AggroRange = template.AggroRange
+				};
 			this.NPCTemplate = template as NpcTemplate;
 		}
 
@@ -4177,9 +4180,11 @@ namespace DOL.GS
 							int zoneBonus = (((int)value * ZoneBonus.GetCoinBonus(killerPlayer) / 100));
 							if (zoneBonus > 0)
 							{
-								killerPlayer.AddMoney((long)zoneBonus * (long)ServerProperties.Properties.MONEY_DROP,
-								                      ZoneBonus.GetBonusMessage(killerPlayer, (int)(zoneBonus * ServerProperties.Properties.MONEY_DROP), ZoneBonus.eZoneBonusType.COIN),
-								                      eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								long amount = (long)(zoneBonus * ServerProperties.Properties.MONEY_DROP);
+								killerPlayer.AddMoney(amount,
+									ZoneBonus.GetBonusMessage(killerPlayer, (int)(zoneBonus * ServerProperties.Properties.MONEY_DROP), ZoneBonus.eZoneBonusType.COIN),
+									eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								InventoryLogging.LogInventoryAction(this, killerPlayer, eInventoryActionType.Loot, amount);
 							}
 						}
 
