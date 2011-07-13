@@ -65,6 +65,7 @@ namespace DOL.GS
                     if ((path != null) && ((Math.Abs(path.X - this.X)) < 500) && ((Math.Abs(path.Y - this.Y)) < 500))
 					{
 						player.Inventory.RemoveCountFromStack(item, 1);
+                        InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);
 
 						GameTaxiBoat boat = new GameTaxiBoat();
 						boat.Name = "Boat to " + destination;

@@ -1716,6 +1716,7 @@ namespace DOL.GS.Quests.Midgard
             //k109: xp and money Rewards...
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 2, true);
             m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), LanguageMgr.GetTranslation(m_questPlayer.Client, "ChildsPlay.FinishQuest.Text1"));
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, 67);
         }
     }
 }

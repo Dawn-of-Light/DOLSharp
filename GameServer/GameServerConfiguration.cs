@@ -351,6 +351,7 @@ namespace DOL.GS
 
 			m_cheatLoggerName = "cheats";
 			m_gmActionsLoggerName = "gmactions";
+		    InventoryLoggerName = "inventories";
 			m_invalidNamesFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "invalidnames.txt";
 
 			m_dbType = ConnectionType.DATABASE_XML;
@@ -501,6 +502,11 @@ namespace DOL.GS
 			get { return m_cheatLoggerName; }
 			set { m_cheatLoggerName = value; }
 		}
+
+        /// <summary>
+        /// Gets or sets the trade logger name
+        /// </summary>
+        public string InventoryLoggerName { get; set; }
 
 		/// <summary>
 		/// Gets or sets the invalid name filename

@@ -518,7 +518,9 @@ namespace DOL.GS.Quests.Albion
 							if (quest.Step == 2)
 							{
 								player.GainExperience(GameLiving.eXPSource.Quest, 10, true);
-								player.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You are awarded 2 silver and some copper!");
+                                long money = Money.GetMoney(0, 0, 0, 2, Util.Random(50));
+								player.AddMoney(money, "You are awarded 2 silver and some copper!");
+                                InventoryLogging.LogInventoryAction("(QUEST;" + quest.Name + ")", player, eInventoryActionType.Quest, money);
 
 								// give letter                
 								GiveItem(elvarTambor, player, letterToYdenia);
@@ -701,7 +703,9 @@ namespace DOL.GS.Quests.Albion
 			GiveItem(ydeniaPhilpott, m_questPlayer, silverRingOfHealth);
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 20 + (m_questPlayer.Level - 1) * 5, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 5, Util.Random(50)), "You are awarded 5 silver and some copper!");
+            long money = Money.GetMoney(0, 0, 0, 5, Util.Random(50));
+			m_questPlayer.AddMoney(money, "You are awarded 5 silver and some copper!");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 		}
 	}
 }

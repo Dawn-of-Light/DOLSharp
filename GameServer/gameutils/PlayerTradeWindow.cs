@@ -457,20 +457,26 @@ namespace DOL.GS
 					{
 						//Reset the money if we don't have enough
 						TradeMoney = 0;
-						if (partnerEnoughMoney)
-							partner.AddMoney(m_partnerWindow.TradeMoney);
+                        if (partnerEnoughMoney)
+                        {
+                            partner.AddMoney(m_partnerWindow.TradeMoney);
+                            InventoryLogging.LogInventoryAction(partner, m_owner, eInventoryActionType.Trade, m_partnerWindow.TradeMoney);
+                        }
 
-						m_owner.Out.SendMessage("You don't have enough money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+					    m_owner.Out.SendMessage("You don't have enough money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 						partner.Out.SendMessage(m_owner.Name + " doesn't have enough money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 					}
 					if (!partnerEnoughMoney)
 					{
 						//Reset the money if our partner doesn't have enough
 						m_partnerWindow.TradeMoney = 0;
-						if (enoughMoney)
-							m_owner.AddMoney(TradeMoney);
+                        if (enoughMoney)
+                        {
+                            m_owner.AddMoney(TradeMoney);
+                            InventoryLogging.LogInventoryAction(m_owner, partner, eInventoryActionType.Trade, TradeMoney);
+                        }
 
-						partner.Out.SendMessage("You don't have enough money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+					    partner.Out.SendMessage("You don't have enough money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 						m_owner.Out.SendMessage(partner.Name + " doesn't have enough money.", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 					}
 
@@ -627,9 +633,13 @@ namespace DOL.GS
 						{
 							log.Error("Trade item was not added to Partner first free slot.  Owner = " + m_owner.Name + ", Partner = " + partner.Name + "; Item = " + item.Id_nb);
 						}
-						else if (logTrade)
+						else
 						{
-							GameServer.Instance.LogGMAction("   Item: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+                            InventoryLogging.LogInventoryAction(m_owner, partner, eInventoryActionType.Trade, item.Template, item.Count);
+						    if (logTrade)
+						    {
+						        GameServer.Instance.LogGMAction("   Item: " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") -> " + partner.Name + "(" + partner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+						    }
 						}
 					}
 
@@ -655,9 +665,13 @@ namespace DOL.GS
 						{
 							log.Error("Trade item was not added to Owner first free slot.  Owner = " + m_owner.Name + ", Partner = " + partner.Name + "; Item = " + item.Id_nb);
 						}
-						else if (logTrade)
+						else
 						{
-							GameServer.Instance.LogGMAction("   Item: " + partner.Name + "(" + partner.Client.Account.Name + ") -> " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+                            InventoryLogging.LogInventoryAction(partner, m_owner, eInventoryActionType.Trade, item.Template, item.Count);
+						    if (logTrade)
+						    {
+						        GameServer.Instance.LogGMAction("   Item: " + partner.Name + "(" + partner.Client.Account.Name + ") -> " + m_owner.Name + "(" + m_owner.Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+						    }
 						}
 					}
 
@@ -686,6 +700,8 @@ namespace DOL.GS
 					//Now add the money
 					m_owner.AddMoney(m_partnerWindow.TradeMoney, "You get {0}.");
 					partner.AddMoney(TradeMoney, "You get {0}.");
+                    InventoryLogging.LogInventoryAction(m_owner, partner, eInventoryActionType.Trade, TradeMoney);
+                    InventoryLogging.LogInventoryAction(partner, m_owner, eInventoryActionType.Trade, m_partnerWindow.TradeMoney);
 					m_owner.SaveIntoDatabase();
 					partner.SaveIntoDatabase();
 				}

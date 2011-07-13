@@ -330,6 +330,7 @@ namespace DOL.GS
 
 					}
 					player.Inventory.RemoveCountFromStack(gemme, 1);
+					InventoryLogging.LogInventoryAction(player, "(craft)", eInventoryActionType.Craft, gemme.Template);
 				}
 			}
 
@@ -384,6 +385,7 @@ namespace DOL.GS
 							item.Bonus4 = gem.Bonus1;
 						}
 						player.Inventory.RemoveCountFromStack(gem, 1);
+						InventoryLogging.LogInventoryAction(player, "(craft)", eInventoryActionType.Craft, gem.Template);
 					}
 					player.Inventory.CommitChanges();
 				}
@@ -406,7 +408,10 @@ namespace DOL.GS
                     foreach (InventoryItem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
                     {
                         if (gem.Object_Type == (int)eObjectType.SpellcraftGem)
+						{
                             player.Inventory.RemoveCountFromStack(gem, 1);
+							InventoryLogging.LogInventoryAction(player, "(craft)", eInventoryActionType.Craft, gem.Template);
+						}
                     }
                     player.Inventory.CommitChanges();
 				}

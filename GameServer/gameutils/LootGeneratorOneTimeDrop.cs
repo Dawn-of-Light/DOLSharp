@@ -210,6 +210,7 @@ namespace DOL.GS
 												GameServer.Database.AddObject(charXDrop);
 
 												player.Out.SendMessage(string.Format("You receive {0} from {1}!", item.GetName(1, false), mob.GetName(1, false)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                                                InventoryLogging.LogInventoryAction(mob, player, eInventoryActionType.Loot, item);
 											}
 											else
 											{

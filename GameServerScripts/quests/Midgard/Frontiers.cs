@@ -937,6 +937,7 @@ namespace DOL.GS.Quests.Midgard
 				GiveItem(dalikor, player, noteForNjiedi);
 				GiveItem(dalikor, player, askefruerPlans);
                 player.AddMoney(Money.GetMoney(0, 0, 0, 6, 0), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.CheckPlayerAcceptQuest.Text3"));
+                InventoryLogging.LogInventoryAction("(QUEST;" + quest.Name + ")", player, eInventoryActionType.Quest, 600);
             }
 		}
 
@@ -1056,6 +1057,7 @@ namespace DOL.GS.Quests.Midgard
 			if (Step < 3 && m_questPlayer.Inventory.GetFirstItemByID(ticketToSvasudFaste.Id_nb, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
 			{
 				m_questPlayer.RemoveMoney(Money.GetMoney(0, 0, 0, 6, 0), null);
+                InventoryLogging.LogInventoryAction(m_questPlayer, "(QUEST;" + Name + ")", eInventoryActionType.Quest, 600);
 			}
 
 			RemoveItem(m_questPlayer, ticketToSvasudFaste, false);
@@ -1076,7 +1078,9 @@ namespace DOL.GS.Quests.Midgard
 				GiveItem(dalikor, m_questPlayer, recruitsPants);
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 240, true);
-            m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 5, Util.Random(50)), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.FinishQuest.Text1"));
+            long money = Money.GetMoney(0, 0, 0, 5, Util.Random(50));
+            m_questPlayer.AddMoney(money, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.FinishQuest.Text1"));
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 		}
 
 	}

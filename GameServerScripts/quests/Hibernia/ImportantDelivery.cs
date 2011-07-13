@@ -878,7 +878,9 @@ namespace DOL.GS.Quests.Hibernia
 			GiveItem(freagus, m_questPlayer, recruitsCloak);
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 12);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 1, Util.Random(50)), LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.FinishQuest.RecieveReward"));
+            long money = Money.GetMoney(0, 0, 0, 1, Util.Random(50));
+			m_questPlayer.AddMoney(money, LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.FinishQuest.RecieveReward"));
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 		}
 	}
 }

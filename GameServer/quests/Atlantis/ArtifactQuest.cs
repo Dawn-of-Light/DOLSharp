@@ -289,8 +289,12 @@ namespace DOL.GS.Quests.Atlantis
 		/// <returns></returns>
 		public virtual bool RemoveItem(GamePlayer player, InventoryItem item)
 		{
-			lock (player.Inventory)
-				return player.Inventory.RemoveItem(item);
+            lock (player.Inventory)
+            {
+                if (player.Inventory.RemoveItem(item))
+                    InventoryLogging.LogInventoryAction(player, "(ARTIFACT;" + Name + ")", eInventoryActionType.Quest, item.Template, item.Count);
+            }
+		    return false;
 		}
 
 		/// <summary>

@@ -157,10 +157,13 @@ namespace DOL.GS.Commands
 			}
 
 			/* Remove money only if your lastname is not blank and is different from the previous one */
-			if (player.LastName != "" && player.LastName != NewLastName)
-				player.RemoveMoney(Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0), null);
+            if (player.LastName != "" && player.LastName != NewLastName)
+            {
+                player.RemoveMoney(Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0), null);
+                InventoryLogging.LogInventoryAction(player, player.TargetObject, eInventoryActionType.Merchant, LASTNAME_FEE * 10000);
+            }
 
-			/* Set the new lastname */
+		    /* Set the new lastname */
 			player.LastName = NewLastName;
 			player.Out.SendMessage("Your last name has been " + (NewLastName != "" ? ("set to " + NewLastName) : "cleared") + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}

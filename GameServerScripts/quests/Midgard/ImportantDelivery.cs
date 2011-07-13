@@ -845,7 +845,9 @@ namespace DOL.GS.Quests.Midgard
 			GiveItem(harlfug, m_questPlayer, recruitsCloak);
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 12, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 1, Util.Random(50)), "You recieve {0} as a reward.");
+            long money = Money.GetMoney(0, 0, 0, 1, Util.Random(50));
+			m_questPlayer.AddMoney(money, "You recieve {0} as a reward.");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 
 		}
 

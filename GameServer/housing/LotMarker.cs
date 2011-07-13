@@ -110,9 +110,11 @@ namespace DOL.GS.Housing
 					return;
 				}
 
-				if (player.RemoveMoney(HouseTemplateMgr.GetLotPrice(DatabaseItem), "You just bought this lot for {0}.",
+			    long totalCost = HouseTemplateMgr.GetLotPrice(DatabaseItem);
+				if (player.RemoveMoney(totalCost, "You just bought this lot for {0}.",
 				                       eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 				{
+                    InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalCost);
 					DatabaseItem.LastPaid = DateTime.Now;
 					DatabaseItem.OwnerID = player.DBCharacter.ObjectId;
 					CreateHouse(player, 0);
@@ -179,6 +181,7 @@ namespace DOL.GS.Housing
 				}
 
 				player.Inventory.RemoveItem(item);
+			    InventoryLogging.LogInventoryAction(player, "(HOUSE;" + CurrentHouse.HouseNumber + ")", eInventoryActionType.Other, item.Template, item.Count);
 
 				return true;
 			}

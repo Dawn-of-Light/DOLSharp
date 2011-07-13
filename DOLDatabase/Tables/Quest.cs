@@ -90,7 +90,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Character Name
 		/// </summary>
-		[DataElement(AllowDbNull=false,Unique=false)]
+		[DataElement(AllowDbNull=false,Unique=false,Index=true)]
 		public string Character_ID
 		{
 			get

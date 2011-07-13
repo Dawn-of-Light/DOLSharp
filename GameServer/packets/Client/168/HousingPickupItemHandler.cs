@@ -70,7 +70,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						// return indoor item into inventory item, add to player inventory
 						var invitem = GameInventoryItem.Create<ItemTemplate>((house.OutdoorItems[i]).BaseItem);
-						client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
+						if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem))
+							InventoryLogging.LogInventoryAction("(HOUSE;" + house.HouseNumber + ")", client.Player, eInventoryActionType.Other, invitem.Template, invitem.Count);
 						house.OutdoorItems.Remove(i);
 
 						// update garden
@@ -112,6 +113,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								                                  (method == 2 ? "wall surface" : "floor"));
 
 								ChatUtil.SendSystemMessage(client, removalMsg);
+								InventoryLogging.LogInventoryAction("(HOUSE;" + house.HouseNumber + ")", client.Player, eInventoryActionType.Other, item.Template, item.Count);
 							}
 							else
 							{
@@ -155,6 +157,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							                              (method == 2 ? "wall surface" : "floor"));
 
 							ChatUtil.SendSystemMessage(client, invMsg);
+							InventoryLogging.LogInventoryAction("(HOUSE;" + house.HouseNumber + ")", client.Player, eInventoryActionType.Other, inv.Template, inv.Count);
 						}
 						else
 						{

@@ -251,12 +251,18 @@ namespace DOL.GS
 				return;
 			}
 
+            if (!donating.RemoveMoney(long.Parse(amount.ToString())))
+            {
+                donating.Out.SendMessage("You don't have this amount of money !", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
 			donating.Out.SendMessage(LanguageMgr.GetTranslation(donating.Client, "Scripts.Player.Guild.DepositAmount", Money.GetString(long.Parse(amount.ToString()))), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 
 			donating.Guild.UpdateGuildWindow();
 			m_DBguild.Bank += amount;
 
-            donating.RemoveMoney(long.Parse(amount.ToString()));
+            InventoryLogging.LogInventoryAction(donating, "(GUILD;" + Name + ")", eInventoryActionType.Other, long.Parse(amount.ToString()));
             donating.Out.SendUpdatePlayer();
 			return;
 		}
@@ -277,7 +283,9 @@ namespace DOL.GS
 			withdraw.Guild.UpdateGuildWindow();
 			m_DBguild.Bank -= amount;
 
-            withdraw.AddMoney(long.Parse(amount.ToString()));
+		    var amt = long.Parse(amount.ToString());
+            withdraw.AddMoney(amt);
+            InventoryLogging.LogInventoryAction("(GUILD;" + Name + ")", withdraw, eInventoryActionType.Other, amt);
             withdraw.Out.SendUpdatePlayer();
             withdraw.SaveIntoDatabase();
             withdraw.Guild.SaveIntoDatabase();

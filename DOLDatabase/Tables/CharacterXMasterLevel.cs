@@ -40,7 +40,7 @@ namespace DOL.Database
 		}
 
 		// Owner ID
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public string Character_ID
 		{
 			get { return m_character_id; }
