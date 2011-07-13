@@ -129,6 +129,7 @@ namespace DOL.GS
             player.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text4", GetName(0, false), Money.GetString(Fee)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             player.RemoveMoney(Fee, null);
+            InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, Fee);
             SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text5", item.GetName(1, false)));
             return;
 		}

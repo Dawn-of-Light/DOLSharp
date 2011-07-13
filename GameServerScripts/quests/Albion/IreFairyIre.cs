@@ -1032,7 +1032,9 @@ namespace DOL.GS.Quests.Albion
 
 			//Give reward to player here ...              
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 507, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 7, Util.Random(50)), "You recieve {0} as a reward.");
+            long money = Money.GetMoney(0, 0, 0, 7, Util.Random(50));
+			m_questPlayer.AddMoney(money, "You recieve {0} as a reward.");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 		}
 
 	}

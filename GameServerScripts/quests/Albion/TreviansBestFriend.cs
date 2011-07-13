@@ -1381,6 +1381,7 @@ namespace DOL.GS.Quests.Albion
 			{
 				if (player.RemoveMoney(Money.GetMoney(0, 0, 50, 0, 0)))
 				{
+                    InventoryLogging.LogInventoryAction(player, "(QUEST;" + quest.Name + ")", eInventoryActionType.Quest, 50 * 10000);
 					banditAbductorLeader.SayTo(player, "Well lets call it a deal. Let her free, she wasn't any good anyway.");
 					quest.AddLilybet();
 				}
@@ -1628,7 +1629,9 @@ namespace DOL.GS.Quests.Albion
 			RemoveItem(trevian, m_questPlayer, treviansHoodedCloak);
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 500000, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, Util.Random(10) + 40, Util.Random(50)), "You recieve {0} as a reward for helping Trevian.");
+            long money = Money.GetMoney(0, 0, 0, Util.Random(10) + 40, Util.Random(50));
+			m_questPlayer.AddMoney(money, "You recieve {0} as a reward for helping Trevian.");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 
 		}
 

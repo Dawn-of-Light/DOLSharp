@@ -58,11 +58,12 @@ namespace DOL.GS.Behaviour.Actions
                 else
                 {
                     player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.GiveItemAction.YouReceiveItem", inventoryItem.GetName(0, false)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                    InventoryLogging.LogInventoryAction(Q, player, eInventoryActionType.Quest, inventoryItem.Template, inventoryItem.Count);
                 }
             }
             else
             {                
-                player.ReceiveItem(Q, inventoryItem);                
+                player.ReceiveItem(Q, inventoryItem);
             }            
         }
     }

@@ -145,6 +145,7 @@ namespace DOL.GS
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.RechargerDialogResponse.NotMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+            InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, cost);
 
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.RechargerDialogResponse.GiveMoney", GetName(0, false), Money.GetString((long)cost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			item.Charges = item.MaxCharges;

@@ -189,7 +189,7 @@ namespace DOL.GS
         {
             lock (m_battlegroupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
             {
-                foreach (GamePlayer player in m_battlegroupMembers)
+                foreach (GamePlayer player in m_battlegroupMembers.Keys)
                 {
                     player.Out.SendMessage(msg, type, loc);
                 }

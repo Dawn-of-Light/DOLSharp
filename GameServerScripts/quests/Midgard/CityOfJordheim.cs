@@ -1143,7 +1143,9 @@ namespace DOL.GS.Quests.Midgard
 				GiveItem(dalikor, m_questPlayer, recruitsBracer);
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 26, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 2, Util.Random(50)), "You recieve {0} as a reward.");
+            long money = Money.GetMoney(0, 0, 0, 2, Util.Random(50));
+			m_questPlayer.AddMoney(money, "You recieve {0} as a reward.");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.UseSlot, new DOLEventHandler(PlayerUseSlot));
 			GameEventMgr.RemoveHandler(m_questPlayer, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));

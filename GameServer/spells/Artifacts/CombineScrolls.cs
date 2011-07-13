@@ -123,8 +123,11 @@ namespace DOL.GS.Spells
 			}
 
 			if (player.ReceiveItem(player, combinedScroll))
-				foreach (InventoryItem item in removeItems)
-					player.Inventory.RemoveItem(item);
+                foreach (InventoryItem item in removeItems)
+                {
+                    player.Inventory.RemoveItem(item);
+                    InventoryLogging.LogInventoryAction(player, "(ARTIFACT;CombineScrolls)", eInventoryActionType.Quest, item.Template, item.Count);
+                }
         }
     }
 }

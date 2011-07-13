@@ -143,6 +143,7 @@ namespace DOL.GS.Quests
 				if(player.Task.RecieverName == target.Name && item.Name == player.Task.ItemName)
 				{
 					player.Inventory.RemoveItem(item);
+                    InventoryLogging.LogInventoryAction(player, target, eInventoryActionType.Quest, item.Template, item.Count);
 					FinishTask();
 				}
 			}	

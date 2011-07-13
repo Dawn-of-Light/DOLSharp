@@ -1482,6 +1482,7 @@ namespace DOL.GS
 				objectToDye.Color = dye.Color;
 				objectToDye.Emblem = 0;
 				RemoveCountFromStack(dye, 1);
+                InventoryLogging.LogInventoryAction(m_player, "(dye)", eInventoryActionType.Other, dye.Template);
 			}
 
 			return canApply;

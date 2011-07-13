@@ -1206,7 +1206,9 @@ namespace DOL.GS.Quests.Midgard
 			ResetMasterBriedi();
 			//Give reward to player here ...              
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 1012, true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 9, Util.Random(50)), "You recieve {0} as a reward.");
+            long money = Money.GetMoney(0, 0, 0, 9, Util.Random(50));
+			m_questPlayer.AddMoney(money, "You recieve {0} as a reward.");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 			if (m_questPlayer.HasAbilityToUseItem(recruitsGauntlets))
 			{
 				GiveItem(dalikor, m_questPlayer, recruitsGauntlets);

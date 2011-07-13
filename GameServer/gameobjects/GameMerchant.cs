@@ -151,7 +151,7 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
-
+				InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
@@ -164,6 +164,7 @@ namespace DOL.GS
 				{
 					throw new Exception("Money amount changed while adding items.");
 				}
+				InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalValue);
 			}
 		}
 
@@ -209,7 +210,7 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
-
+				InventoryLogging.LogInventoryAction("(TRADEITEMS;" + TradeItems.ItemsListID + ")", player, eInventoryActionType.Merchant, template, amountToBuy);
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
@@ -222,6 +223,7 @@ namespace DOL.GS
 				{
 					throw new Exception("Money amount changed while adding items.");
 				}
+				InventoryLogging.LogInventoryAction(player, "(TRADEITEMS;" + TradeItems.ItemsListID + ")", eInventoryActionType.Merchant, totalValue);
 			}
 		}
 		
@@ -258,6 +260,8 @@ namespace DOL.GS
 			{
 				string message = LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerSell.GivesYou", GetName(0, true), Money.GetString(itemValue), item.GetName(0, false));
 				player.AddMoney(itemValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template, item.Count);
+				InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, itemValue);
 				return;
 			}
 			else
@@ -450,6 +454,7 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
+				InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
 				//Generate the buy message
 				string message;
 				if (number > 1)
@@ -576,6 +581,7 @@ namespace DOL.GS
 
 					return;
 				}
+				InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
@@ -592,6 +598,7 @@ namespace DOL.GS
 						continue;
 					int remFromStack = Math.Min(item.Count, (int)(totalValue - removed));
 					player.Inventory.RemoveCountFromStack(item, remFromStack);
+					InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template, remFromStack);
 					removed += remFromStack;
 					if (removed == totalValue)
 						break;

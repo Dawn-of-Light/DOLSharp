@@ -1206,6 +1206,7 @@ namespace DOL.GS.Spells
                 GamePlayer targetPlayer = target as GamePlayer;
                 if (targetPlayer.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
                 {
+                    InventoryLogging.LogInventoryAction(Caster, targetPlayer, eInventoryActionType.Other, item.Template, item.Count);
                     targetPlayer.Out.SendMessage("Item created: " + item.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 }
             }

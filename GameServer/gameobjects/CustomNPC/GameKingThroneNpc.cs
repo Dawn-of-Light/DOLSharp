@@ -159,6 +159,7 @@ namespace DOL.GS
 					case "respec_cl":
 						{
 							player.Inventory.RemoveCountFromStack(item, 1);
+                            InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Other, item.Template);
 							player.RespecAmountChampionSkill++;
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "CLWeaponNPC.ReceiveItem.RespecCL"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;

@@ -2247,6 +2247,9 @@ namespace DOL.GS.Commands
 				}
 			}
 
+			// Load NPCTemplate before overriding NPCTemplate's variables
+			mob.LoadTemplate(targetMob.NPCTemplate);
+
 			//Fill the object variables
 			mob.X = client.Player.X;
 			mob.Y = client.Player.Y;
@@ -2261,6 +2264,8 @@ namespace DOL.GS.Commands
 			mob.MeleeDamageType = targetMob.MeleeDamageType;
 			mob.RespawnInterval = targetMob.RespawnInterval;
 			mob.RoamingRange = targetMob.RoamingRange;
+			mob.MaxDistance = targetMob.MaxDistance;
+			mob.BodyType = targetMob.BodyType;
 
 			// also copies the stats
 
@@ -2278,7 +2283,6 @@ namespace DOL.GS.Commands
 			mob.MaxSpeedBase = targetMob.MaxSpeedBase;
 			mob.GuildName = targetMob.GuildName;
 			mob.Size = targetMob.Size;
-			mob.NPCTemplate = targetMob.NPCTemplate;
 			mob.Race = targetMob.Race;
 
 			mob.Inventory = targetMob.Inventory;
@@ -2289,7 +2293,7 @@ namespace DOL.GS.Commands
 
 			if (mob is GameMerchant)
 			{
-				(mob as GameMerchant).TradeItems = (targetMob as GameMerchant).TradeItems;
+				((GameMerchant)mob).TradeItems = ((GameMerchant)targetMob).TradeItems;
 			}
 
 			ABrain brain = null;

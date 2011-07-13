@@ -213,6 +213,7 @@ namespace DOL.GS
 					error = true;
 					break;
 				}
+				InventoryLogging.LogInventoryAction("(salvage)", player, eInventoryActionType.Craft, item.Template, item.Count);
 			}
 
 			if (error)
@@ -257,7 +258,13 @@ namespace DOL.GS
 			player.CraftTimer.Stop();
 			player.Out.SendCloseTimerWindow();
 
-			player.Inventory.RemoveItem(itemToSalvage); // clean the free of the item to salvage
+			if (!player.Inventory.RemoveItem(itemToSalvage)) // clean the free of the item to salvage
+			{
+				player.Out.SendMessage("Error finding the item to salvage!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				return 0;
+			}
+
+			InventoryLogging.LogInventoryAction(player, "(salvage)", eInventoryActionType.Craft, itemToSalvage.Template, itemToSalvage.Count);
 			
 			Hashtable changedSlots = new Hashtable(5); // value: < 0 = new item count; > 0 = add to old
 			lock(player.Inventory)
@@ -302,12 +309,14 @@ namespace DOL.GS
 				{
 					newItem = player.Inventory.GetItem((eInventorySlot)de.Key);
 					player.Inventory.AddCountToStack(newItem, countToAdd);
+					InventoryLogging.LogInventoryAction("(salvage)", player, eInventoryActionType.Craft, newItem.Template, countToAdd);
 				}
 				else
 				{
 					newItem = GameInventoryItem.Create<ItemTemplate>(rawMaterial);
 					newItem.Count = -countToAdd;
 					player.Inventory.AddItem((eInventorySlot)de.Key, newItem);
+					InventoryLogging.LogInventoryAction("(salvage)", player, eInventoryActionType.Craft, newItem.Template, newItem.Count);
 				}
 			}
 

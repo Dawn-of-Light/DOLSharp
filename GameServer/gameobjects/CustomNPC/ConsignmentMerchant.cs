@@ -61,6 +61,47 @@ namespace DOL.GS
 
         #region Token return
 
+        private static readonly Dictionary<string, GameLocation> _itemXdestination =
+            new Dictionary<string, GameLocation>
+                {
+                    // Item Id_nb, new Tuple<>(Region, X, Y, Z, Heading)
+                    // ALBION
+                    {"entrancehousingalb", new GameLocation("", 2, 584832, 561279, 3576, 2144)},
+                    {"marketcaerwent", new GameLocation("", 2, 557035, 560048, 3624, 1641)},
+                    {"marketrilan", new GameLocation("", 2, 559906, 491141, 3392, 1829)},
+                    {"marketbrisworthy", new GameLocation("", 2, 489474, 489323, 3600, 3633)},
+                    {"marketstoneleigh", new GameLocation("", 2, 428964, 490962, 3624, 1806)},
+                    {"marketchiltern", new GameLocation("", 2, 428128, 557606, 3624, 3888)},
+                    {"marketsherborne", new GameLocation("", 2, 428840, 622221, 3248, 1813)},
+                    {"marketaylesbury", new GameLocation("", 2, 492794, 621373, 3624, 1643)},
+                    {"marketoldsarum", new GameLocation("", 2, 560030, 622022, 3624, 1819)},
+                    {"marketdalton", new GameLocation("", 2, 489334, 559242, 3720, 1821)},
+
+                    // MIDGARD
+                    {"entrancehousingmid", new GameLocation("", 102, 526881, 561661, 3633, 80)},
+                    {"marketerikstaad", new GameLocation("", 102, 554099, 565239, 3624, 504)},
+                    {"marketarothi", new GameLocation("", 102, 558093, 485250, 3488, 1231)},
+                    {"marketkaupang", new GameLocation("", 102, 625574, 483303, 3592, 2547)},
+                    {"marketstavgaard", new GameLocation("", 102, 686901, 490396, 3744, 332)},
+                    {"marketcarlingford", new GameLocation("", 102, 625056, 557887, 3696, 1366)},
+                    {"marketholmestrand", new GameLocation("", 102, 686903, 556050, 3712, 313)},
+                    {"marketnittedal", new GameLocation("", 102, 689199, 616329, 3488, 1252)},
+                    {"marketfrisia", new GameLocation("", 102, 622620, 615491, 3704, 804)},
+                    {"marketwyndham", new GameLocation("", 102, 555839, 621432, 3744, 314)},
+
+                    // HIBERNIA
+                    {"entrancehousinghib", new GameLocation("", 202, 555246, 526470, 3008, 1055)},
+                    {"marketmeath", new GameLocation("", 202, 564448, 559995, 3008, 1024)},
+                    {"marketkilcullen", new GameLocation("", 202, 618653, 561227, 3032, 3087)},
+                    {"marketaberillan", new GameLocation("", 202, 615145, 619457, 3008, 3064)},
+                    {"markettorrylin", new GameLocation("", 202, 566890, 620027, 3008, 1500)},
+                    {"markettullamore", new GameLocation("", 202, 560999, 692301, 3032, 1030)},
+                    {"marketbroughshane", new GameLocation("", 202, 618653, 692296, 3032, 3090)},
+                    {"marketmoycullen", new GameLocation("", 202, 495552, 686733, 2960, 1077)},
+                    {"marketsaeranthal", new GameLocation("", 202, 493148, 620361, 2952, 2471)},
+                    {"marketdunshire", new GameLocation("", 202, 495494, 555646, 2960, 1057)},
+                };
+
         public override bool ReceiveItem(GameLiving source, InventoryItem item)
         {
             GamePlayer player = source as GamePlayer;
@@ -76,252 +117,13 @@ namespace DOL.GS
 
             if (item != null)
             {
-                // ALBION
-                if (item.Id_nb == "entrancehousingalb")
+                GameLocation destination;
+                if (_itemXdestination.TryGetValue(item.Id_nb, out destination))
                 {
-                    player.MoveTo(2, 584832, 561279, 3576, 2144);
+                    player.MoveTo(destination);
                     player.Inventory.RemoveItem(item);
+                    InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template, item.Count);
                     player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketcaerwent")
-                {
-                    player.MoveTo(2, 557035, 560048, 3624, 1641);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketrilan")
-                {
-                    player.MoveTo(2, 559906, 491141, 3392, 1829);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketbrisworthy")
-                {
-                    player.MoveTo(2, 489474, 489323, 3600, 3633);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketstoneleigh")
-                {
-                    player.MoveTo(2, 428964, 490962, 3624, 1806);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketchiltern")
-                {
-                    player.MoveTo(2, 428128, 557606, 3624, 3888);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketsherborne")
-                {
-                    player.MoveTo(2, 428840, 622221, 3248, 1813);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketaylesbury")
-                {
-                    player.MoveTo(2, 492794, 621373, 3624, 1643);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketoldsarum")
-                {
-                    player.MoveTo(2, 560030, 622022, 3624, 1819);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketdalton")
-                {
-                    player.MoveTo(2, 489334, 559242, 3720, 1821);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-                    return true;
-                }
-
-                // MIDGARD
-                else if (item.Id_nb == "entrancehousingmid")
-                {
-                    player.MoveTo(102, 526881, 561661, 3633, 80);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-
-                else if (item.Id_nb == "marketerikstaad")
-                {
-                    player.MoveTo(102, 554099, 565239, 3624, 504);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-
-                else if (item.Id_nb == "marketarothi")
-                {
-                    player.MoveTo(102, 558093, 485250, 3488, 1231);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketkaupang")
-                {
-                    TargetObject = this;
-                    player.MoveTo(102, 625574, 483303, 3592, 2547);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketstavgaard")
-                {
-                    player.MoveTo(102, 686901, 490396, 3744, 332);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketcarlingford")
-                {
-                    player.MoveTo(102, 625056, 557887, 3696, 1366);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketholmestrand")
-                {
-                    player.MoveTo(102, 686903, 556050, 3712, 313);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketnittedal")
-                {
-                    player.MoveTo(102, 689199, 616329, 3488, 1252);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketfrisia")
-                {
-                    player.MoveTo(102, 622620, 615491, 3704, 804);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketwyndham")
-                {
-                    player.MoveTo(102, 555839, 621432, 3744, 314);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-
-                // HIBERNIA
-                else if (item.Id_nb == "entrancehousinghib")
-                {
-                    player.MoveTo(202, 555246, 526470, 3008, 1055);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketmeath")
-                {
-                    player.MoveTo(202, 564448, 559995, 3008, 1024);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-
-                else if (item.Id_nb == "marketkilcullen")
-                {
-                    player.MoveTo(202, 618653, 561227, 3032, 3087);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketaberillan")
-                {
-                    player.MoveTo(202, 615145, 619457, 3008, 3064);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "markettorrylin")
-                {
-                    player.MoveTo(202, 566890, 620027, 3008, 1500);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "markettullamore")
-                {
-                    player.MoveTo(202, 560999, 692301, 3032, 1030);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketbroughshane")
-                {
-                    player.MoveTo(202, 618653, 692296, 3032, 3090);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketmoycullen")
-                {
-                    player.MoveTo(202, 495552, 686733, 2960, 1077);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketsaeranthal")
-                {
-                    player.MoveTo(202, 493148, 620361, 2952, 2471);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
-                    return true;
-                }
-                else if (item.Id_nb == "marketdunshire")
-                {
-                    player.MoveTo(202, 495494, 555646, 2960, 1057);
-                    player.Inventory.RemoveItem(item);
-                    player.SaveIntoDatabase();
-
                     return true;
                 }
             }
@@ -483,6 +285,7 @@ namespace DOL.GS
             if (toItem != null)
             {
                 playerInventory.RemoveItem(toItem);
+                InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, toItem.Template, toItem.Count);
                 toItem.SlotPosition = fromItem.SlotPosition;
                 GameServer.Database.AddObject(toItem);
             }
@@ -500,7 +303,8 @@ namespace DOL.GS
             }
 
             fromItem.OwnerLot = 0;
-            playerInventory.AddItem(toSlot, fromItem);
+            if (playerInventory.AddItem(toSlot, fromItem))
+                InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, fromItem.Template, fromItem.Count);
             updateItems.Add((int)fromSlot, toItem);
 
             return updateItems;
@@ -574,13 +378,15 @@ namespace DOL.GS
             IDictionary<int, InventoryItem> updateItems = new Dictionary<int, InventoryItem>(1);
 
             playerInventory.RemoveItem(fromItem);
+            InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, fromItem.Template, fromItem.Count);
 
             if (inventory.ContainsKey((int)toSlot))
             {
                 InventoryItem toItem = inventory[(int)toSlot];
                 GameServer.Database.DeleteObject(toItem);
 
-                playerInventory.AddItem(fromSlot, toItem);
+                if (playerInventory.AddItem(fromSlot, toItem))
+                    InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Other, toItem.Template, toItem.Count);
             }
 
             House house = HouseMgr.GetHouse(HouseNumber);
@@ -680,6 +486,7 @@ namespace DOL.GS
                 {
                     if (player.RemoveMoney(totalValue))
                     {
+                        InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalValue);
                         ChatUtil.SendMerchantMessage(player, "GameMerchant.OnPlayerBuy.Bought", fromItem.GetName(1, false),
                                                      Money.GetString(totalValue));
                     }
