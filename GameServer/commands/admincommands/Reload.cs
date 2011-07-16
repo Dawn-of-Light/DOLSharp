@@ -28,7 +28,7 @@ namespace DOL.GS.Commands
 	[Cmd("&Reload",
         ePrivLevel.Admin,
 		"Reload various elements",
-		"/reload mob|object|CL|specs"
+		"/reload mob|object|CL|specs|spells"
 		)]
 	public class ReloadCommandHandler :ICommandHandler
 	{
@@ -167,6 +167,12 @@ namespace DOL.GS.Commands
 				int count = SkillBase.LoadSpecializations();
 				client.Out.SendMessage(count + " specializations loaded.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return;
+			}
+			if (args[1].ToLower() == "spells")
+			{
+				SkillBase.LoadSpells();
+				SkillBase.LoadSpellLines();
+				ChatUtil.SendSystemMessage(client, "Reloaded all spells and spell lines!");
 			}
 			return;
 		}
