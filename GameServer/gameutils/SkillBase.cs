@@ -244,7 +244,7 @@ namespace DOL.GS
 		protected static readonly Dictionary<string, Type> m_specActionHandler = new Dictionary<string, Type>();
 
 		// global table for spellLine => List of spells
-		protected static readonly Dictionary<string, List<Spell>> m_spellLists = new Dictionary<string, List<Spell>>();
+		protected static Dictionary<string, List<Spell>> m_spellLists = new Dictionary<string, List<Spell>>();
 
 		// global table for spec => List of styles
 		protected static readonly Dictionary<string, List<Style>> m_styleLists = new Dictionary<string, List<Style>>();
@@ -266,7 +266,7 @@ namespace DOL.GS
 		protected static readonly Dictionary<int, List<RealmAbility>> m_classRealmAbilities = new Dictionary<int, List<RealmAbility>>();
 
 		// all spells by id
-		protected static readonly Dictionary<int, Spell> m_spells = new Dictionary<int, Spell>(5000);
+		protected static Dictionary<int, Spell> m_spells = new Dictionary<int, Spell>(5000);
 
 		// all DB Spells by id
 		protected static Dictionary<int, DBSpell> m_dbSpells = new Dictionary<int, DBSpell>();
@@ -1304,6 +1304,7 @@ namespace DOL.GS
 			var spelldb = GameServer.Database.SelectAllObjects<DBSpell>();
 
 			m_dbSpells = new Dictionary<int, DBSpell>(spelldb.Count);
+			m_spells = new Dictionary<int, Spell>();
 
 			foreach (DBSpell spell in spelldb)
 			{
@@ -1326,7 +1327,7 @@ namespace DOL.GS
 		{
 			// load all spell lines
 			var dbo = GameServer.Database.SelectAllObjects<DBSpellLine>();
-
+			m_spellLists = new Dictionary<string, List<Spell>>();
 			foreach (DBSpellLine line in dbo)
 			{
 				List<Spell> spell_list = new List<Spell>();
