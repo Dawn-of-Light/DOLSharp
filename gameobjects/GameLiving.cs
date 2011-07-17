@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Reflection;
 
 using DOL.AI.Brain;
@@ -1067,7 +1068,7 @@ namespace DOL.GS
 			{
 				return (IsAlive &&
 				        !IsStealthed &&
-				        EffectList.GetOfType(typeof(NecromancerShadeEffect)) == null &&
+						EffectList.GetOfType<NecromancerShadeEffect>() == null &&
 				        ObjectState == GameObject.eObjectState.Active);
 			}
 		}
@@ -1657,7 +1658,7 @@ namespace DOL.GS
 			}
 
 			// Apply Mentalist RA5L
-			SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+			SelectiveBlindnessEffect SelectiveBlindness = EffectList.GetOfType<SelectiveBlindnessEffect>();
 			if (SelectiveBlindness != null)
 			{
 				GameLiving EffectOwner = SelectiveBlindness.EffectSource;
@@ -1739,7 +1740,7 @@ namespace DOL.GS
 				damage *= (GetWeaponSkill(weapon) + 90.68) / (ad.Target.GetArmorAF(ad.ArmorHitLocation) + 20 * 4.67);
 
 				// Badge Of Valor Calculation 1+ absorb or 1- absorb
-				if (ad.Attacker.EffectList.GetOfType(typeof(BadgeOfValorEffect)) != null)
+				if (ad.Attacker.EffectList.GetOfType<BadgeOfValorEffect>() != null)
 				{
 					damage *= 1.0 + Math.Min(0.85, ad.Target.GetArmorAbsorb(ad.ArmorHitLocation));
 				}
@@ -2724,7 +2725,7 @@ namespace DOL.GS
 						if (mainHandAD.Target is GameLiving)
 						{
 							GameLiving living = mainHandAD.Target as GameLiving;
-							RealmAbilities.L3RAPropertyEnhancer ra = living.GetAbility(typeof(RealmAbilities.ReflexAttackAbility)) as RealmAbilities.L3RAPropertyEnhancer;
+							RealmAbilities.L3RAPropertyEnhancer ra = living.GetAbility<RealmAbilities.ReflexAttackAbility>();
 							if (ra != null && Util.Chance(ra.Amount))
 							{
 								AttackData ReflexAttackAD = living.MakeAttack(owner, living.AttackWeapon, null, 1, m_interruptDuration, false, true);
@@ -2950,7 +2951,7 @@ namespace DOL.GS
 
 			if (weapon.PoisonSpellID != 0)
 			{
-				if (ad.Target.EffectList.GetOfType(typeof(RemedyEffect)) != null)
+				if (ad.Target.EffectList.GetOfType<RemedyEffect>() != null)
 				{
 					if (this is GamePlayer)
 						(this as GamePlayer).Out.SendMessage("Your target is protected against your poison by a magical effect.",
@@ -3073,7 +3074,7 @@ namespace DOL.GS
 		/// </summary>
 		private void CancelEngageEffect()
 		{
-			EngageEffect effect = (EngageEffect)EffectList.GetOfType(typeof(EngageEffect));
+			EngageEffect effect = EffectList.GetOfType<EngageEffect>();
 
 			if (effect != null)
 				effect.Cancel(false);
@@ -3167,7 +3168,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return EffectList.GetAllOfType(typeof(NecromancerShadeEffect)).Count <= 0;
+				return EffectList.CountOfType<NecromancerShadeEffect>() <= 0;
 			}
 		}
 
@@ -3691,7 +3692,9 @@ namespace DOL.GS
 
 			if( player != null )
 			{
-				if( player.HasAbility( Abilities.Advanced_Evade ) || player.EffectList.GetOfType( typeof( CombatAwarenessEffect ) ) != null || player.EffectList.GetOfType( typeof( RuneOfUtterAgilityEffect ) ) != null )
+				if (player.HasAbility(Abilities.Advanced_Evade) ||
+					player.EffectList.GetOfType<CombatAwarenessEffect>() != null ||
+					player.EffectList.GetOfType<RuneOfUtterAgilityEffect>() != null)
 					evadeChance = GetModified( eProperty.EvadeChance );
 				else if( IsObjectInFront( ad.Attacker, 180 ) && ( evadeBuff != null || player.HasAbility( Abilities.Evade ) ) )
 				{
@@ -3761,7 +3764,7 @@ namespace DOL.GS
 				if( player != null )
 				{
 					//BladeBarrier overwrites all parrying, 90% chance to parry any attack, does not consider other bonuses to parry
-					BladeBarrier = (BladeBarrierEffect)player.EffectList.GetOfType( typeof( BladeBarrierEffect ) );
+					BladeBarrier = player.EffectList.GetOfType<BladeBarrierEffect>();
 					//They still need an active weapon to parry with BladeBarrier
 					if( BladeBarrier != null && ( AttackWeapon != null ) )
 					{
@@ -3931,7 +3934,7 @@ namespace DOL.GS
 			if (attackerPlayer != null && attackerPlayer != this)
 			{
 				// Apply Mauler RA5L
-				GiftOfPerizorEffect GiftOfPerizor = (GiftOfPerizorEffect)this.EffectList.GetOfType(typeof(GiftOfPerizorEffect));
+				GiftOfPerizorEffect GiftOfPerizor = EffectList.GetOfType<GiftOfPerizorEffect>();
 				if (GiftOfPerizor != null)
 				{
 					int difference = (int)(0.25 * damageDealt); // RA absorb 25% damage
@@ -6087,10 +6090,20 @@ namespace DOL.GS
 		/// <returns></returns>
 		public Ability GetAbility(string abilityKey)
 		{
-			if (m_abilities.ContainsKey(abilityKey))
-				return m_abilities[abilityKey] as Ability;
+		    Ability ab;
+            return m_abilities.TryGetValue(abilityKey, out ab) ? ab : null;
+		}
 
-			return null;
+		/// <summary>
+		/// returns ability of living or null if no existant
+		/// </summary>
+		/// <returns></returns>
+		public T GetAbility<T>() where T : Ability
+		{
+			lock (m_lockAbilities)
+			{
+				return (T) m_abilities.Values.Where(a => a.GetType().Equals(typeof (T))).FirstOrDefault();
+			}
 		}
 
 		/// <summary>
@@ -6098,6 +6111,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="abilityType"></param>
 		/// <returns></returns>
+		[Obsolete("Use GetAbility<T>() instead")]
 		public Ability GetAbility(Type abilityType)
 		{
 			lock (m_lockAbilities)

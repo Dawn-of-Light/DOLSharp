@@ -48,7 +48,7 @@ namespace DOL.GS.RealmAbilities
                 GameNPC pet = player.ControlledBrain.Body as GameNPC;
                 if (pet.IsAlive)
                 {
-                    SearingPetEffect SearingPet = (SearingPetEffect)pet.EffectList.GetOfType(typeof(SearingPetEffect));
+					SearingPetEffect SearingPet = pet.EffectList.GetOfType<SearingPetEffect>();
                     if (SearingPet != null) SearingPet.Cancel(false);
                     new SearingPetEffect(player).Start(pet);
                 }

@@ -64,7 +64,7 @@ namespace DOL.GS.Effects
 
         public override void Stop()
         {
-            if (m_player.EffectList.GetOfType(typeof(SputinsLegacyEffect)) != null) m_player.EffectList.Remove(this);
+			if (m_player.EffectList.GetOfType<SputinsLegacyEffect>() != null) m_player.EffectList.Remove(this);
             GameEventMgr.RemoveHandler(m_player, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
             GameEventMgr.RemoveHandler(m_player, GameLivingEvent.Dying, new DOLEventHandler(OnRemove));
             GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(OnRemove));

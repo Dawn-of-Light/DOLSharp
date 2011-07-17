@@ -118,7 +118,7 @@ namespace DOL.GS.Effects
             if (args.AttackData == null) return;
             if (!args.AttackData.IsMeleeAttack) return;
 			//FIXME: [WARN] this has been commented out, it should be handled somewhere
-			if (args.AttackData.Attacker.EffectList.GetOfType(typeof(ChargeEffect)) != null || args.AttackData.Attacker.TempProperties.getProperty("Charging", false))
+			if (args.AttackData.Attacker.EffectList.GetOfType<ChargeEffect>() != null || args.AttackData.Attacker.TempProperties.getProperty("Charging", false))
 				return;
             if ( !owner.IsWithinRadius( args.AttackData.Attacker, 300 ) ) return;
             if (Util.Chance(50))

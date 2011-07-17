@@ -141,7 +141,7 @@ namespace DOL.GS.RealmAbilities
 				return 0;
 			}
 
-			if (living.EffectList.GetOfType(typeof(ChargeEffect)) == null && living.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) != null)
+			if (living.EffectList.GetOfType<ChargeEffect>() == null && living.EffectList.GetOfType<SpeedOfSoundEffect>() != null)
 			{
 				living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
 				m_rootExpire = new RegionTimer(living, new RegionTimerCallback(RootExpires), duration);
@@ -168,7 +168,7 @@ namespace DOL.GS.RealmAbilities
 				
 				mob.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
 
-				if (mob.EffectList.GetOfType(typeof(ChargeEffect)) == null && mob.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) == null)
+				if (mob.EffectList.GetOfType<ChargeEffect>() == null && mob.EffectList.GetOfType<SpeedOfSoundEffect>() == null)
 				{
 					mob.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
 					m_rootExpire = new RegionTimer(mob, new RegionTimerCallback(RootExpires), duration);
@@ -195,7 +195,7 @@ namespace DOL.GS.RealmAbilities
 				aeplayer.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
 				aeplayer.StartInterruptTimer(3000, AttackData.eAttackType.Spell, caster);
 
-				if (aeplayer.EffectList.GetOfType(typeof(ChargeEffect)) == null && aeplayer.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) == null)
+				if (aeplayer.EffectList.GetOfType<ChargeEffect>() == null && aeplayer.EffectList.GetOfType<SpeedOfSoundEffect>() == null)
 				{
 					(aeplayer as GameLiving).BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
 					m_rootExpire = new RegionTimer(aeplayer, new RegionTimerCallback(RootExpires), duration);

@@ -37,7 +37,7 @@ namespace DOL.GS.Spells
 				MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
 				return;
 			}
-			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null)
+			if (target.EffectList.GetOfType<ChargeEffect>() != null)
 			{
 				MessageToCaster(target.Name + " is moving to fast for this spell to have any effect!", eChatType.CT_SpellResisted);
 				return;

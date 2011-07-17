@@ -77,7 +77,7 @@ namespace DOL.GS.RealmAbilities
 			target.OnAttackedByEnemy(ad);
 			caster.DealDamage(ad);
 
-			if ((WhirlingStaffEffect)target.EffectList.GetOfType(typeof(WhirlingStaffEffect)) == null)
+			if (target.EffectList.GetOfType<WhirlingStaffEffect>() == null)
 			{
 				WhirlingStaffEffect effect = new WhirlingStaffEffect();
 				effect.Start(target);

@@ -124,7 +124,7 @@ namespace DOL.GS
 
                         if (effect != null)
                         {
-							GuildBannerEffect oldEffect = player.EffectList.GetOfType(effect.GetType()) as GuildBannerEffect;
+                            GuildBannerEffect oldEffect = player.EffectList.GetOfType(effect.GetType()) as GuildBannerEffect;
 							if (oldEffect == null)
 							{
 								effect.Start(player);

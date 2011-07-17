@@ -92,7 +92,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override int CalculateCastingTime()
 		{
-			if (Caster.EffectList.GetOfType(typeof(CallOfDarknessEffect)) != null)
+			if (Caster.EffectList.GetOfType<CallOfDarknessEffect>() != null)
 				return 3000;
 
 			return base.CalculateCastingTime();

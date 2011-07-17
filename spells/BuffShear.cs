@@ -165,7 +165,7 @@ namespace DOL.GS.Spells
 			}
 
 			//check for spell.
-			foreach(GameSpellEffect effect in target.EffectList.GetAllOfType(typeof(GameSpellEffect)))
+			foreach (GameSpellEffect effect in target.EffectList.GetAllOfType<GameSpellEffect>())
 			{
 				if (effect.Spell.SpellType == ShearSpellType)
 				{
@@ -291,7 +291,7 @@ namespace DOL.GS.Spells
 			}
 
 			//check for spell.
-			foreach (GameSpellEffect effect in target.EffectList.GetAllOfType(typeof(GameSpellEffect)))
+			foreach (GameSpellEffect effect in target.EffectList.GetAllOfType<GameSpellEffect>())
 			{
 				foreach (Type buffType in buffs)
 				{

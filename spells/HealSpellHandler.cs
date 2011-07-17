@@ -134,11 +134,11 @@ namespace DOL.GS.Spells
             amount = (int)(amount * 1.00);
             //moc heal decrease
             double mocFactor = 1.0;
-            Effects.MasteryofConcentrationEffect moc = (Effects.MasteryofConcentrationEffect)Caster.EffectList.GetOfType(typeof(Effects.MasteryofConcentrationEffect));
+        	MasteryofConcentrationEffect moc = Caster.EffectList.GetOfType<MasteryofConcentrationEffect>();
             if (moc != null)
             {
                 GamePlayer playerCaster = Caster as GamePlayer;
-                RealmAbility ra = playerCaster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+                RealmAbility ra = playerCaster.GetAbility<MasteryofConcentrationAbility>();
                 if (ra != null)
                     mocFactor = System.Math.Round((double)ra.Level * 25 / 100, 2);
                 amount = (int)Math.Round(amount * mocFactor);

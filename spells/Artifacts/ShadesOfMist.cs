@@ -37,7 +37,7 @@ namespace DOL.GS.Spells
             base.OnEffectStart(effect);
 
             GamePlayer player = effect.Owner as GamePlayer;
-            foreach (GameSpellEffect Effect in player.EffectList.GetAllOfType(typeof(GameSpellEffect)))
+            foreach (GameSpellEffect Effect in player.EffectList.GetAllOfType<GameSpellEffect>())
             {
                 if (Effect.SpellHandler.Spell.SpellType.Equals("TraitorsDaggerProc") ||
                     Effect.SpellHandler.Spell.SpellType.Equals("DreamMorph") ||
