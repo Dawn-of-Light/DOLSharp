@@ -44,7 +44,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			GamePlayer player = (GamePlayer)sender;
 
-			AdrenalineRushEffect SPEffect = (AdrenalineRushEffect)player.EffectList.GetOfType(typeof(AdrenalineRushEffect));
+			AdrenalineRushEffect SPEffect = player.EffectList.GetOfType<AdrenalineRushEffect>();
 			if (SPEffect != null)
 			{
 				SPEffect.Cancel(false);

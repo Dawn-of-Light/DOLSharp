@@ -279,7 +279,7 @@ namespace DOL.GS.Styles
 						if (living.IsEngaging)
 						{
 							// cancel engage effect if exist
-							EngageEffect effect = (EngageEffect)living.EffectList.GetOfType(typeof(EngageEffect));
+							EngageEffect effect = living.EffectList.GetOfType<EngageEffect>();
 							if (effect != null)
 								effect.Cancel(false);
 						}
@@ -577,7 +577,7 @@ namespace DOL.GS.Styles
             //1.108 - Valhallas Blessing now has a 75% chance to not use endurance.
 
 			// Apply Valkyrie RA5L effect
-			ValhallasBlessingEffect ValhallasBlessing = (ValhallasBlessingEffect)living.EffectList.GetOfType(typeof(ValhallasBlessingEffect));
+			ValhallasBlessingEffect ValhallasBlessing = living.EffectList.GetOfType<ValhallasBlessingEffect>();
 			if (ValhallasBlessing != null && Util.Chance(75)) return 0;
 
             //Camelot Herald 1.90 : Battlemaster styles will now cost a flat amount of Endurance, regardless of weapon speed

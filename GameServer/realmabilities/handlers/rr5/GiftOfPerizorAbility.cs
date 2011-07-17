@@ -61,7 +61,7 @@ namespace DOL.GS.RealmAbilities
 				{
 					//send spelleffect
 					if (!target.IsAlive) continue;
-					GiftOfPerizorEffect GiftOfPerizor = (GiftOfPerizorEffect)target.EffectList.GetOfType(typeof(GiftOfPerizorEffect));
+					GiftOfPerizorEffect GiftOfPerizor = target.EffectList.GetOfType<GiftOfPerizorEffect>();
 					if (GiftOfPerizor != null) GiftOfPerizor.Cancel(false);
 					target.TempProperties.setProperty("GiftOfPerizorOwner", player);
 					new GiftOfPerizorEffect().Start(target);

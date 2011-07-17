@@ -298,8 +298,8 @@ namespace DOL.AI.Brain
 				{
 					GameLiving living = dictEntry.Key as GameLiving;
 					if (living != null && 
-						living.IsAlive && 
-						living.EffectList.GetOfType(typeof(NecromancerShadeEffect)) == null && 
+						living.IsAlive &&
+						living.EffectList.GetOfType<NecromancerShadeEffect>() == null && 
 						!dragon.IsWithinRadius(living, dragon.AttackRange))
 					{
 						inRangeLiving.Add(living);
@@ -331,7 +331,7 @@ namespace DOL.AI.Brain
 			ArrayList inRangeLiving = new ArrayList();
 			foreach (GamePlayer player in dragon.GetPlayersInRadius((ushort)dragon.AttackRange))
 			{
-				if (player.IsAlive && player.EffectList.GetOfType(typeof(NecromancerShadeEffect)) == null)
+				if (player.IsAlive && player.EffectList.GetOfType<NecromancerShadeEffect>() == null)
 				{
 					inRangeLiving.Add(player);
 				}

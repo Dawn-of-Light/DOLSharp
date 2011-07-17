@@ -80,7 +80,7 @@ namespace DOL.GS.SkillHandler
 			}
 
 			//Cancel old berserk effects on player
-			BerserkEffect berserk = (BerserkEffect) player.EffectList.GetOfType(typeof(BerserkEffect));
+			BerserkEffect berserk = player.EffectList.GetOfType<BerserkEffect>();
 			if (berserk!=null)
 			{
 				berserk.Cancel(false);

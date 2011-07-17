@@ -218,7 +218,7 @@ namespace DOL.GS.Spells
 
 							if (target.IsEngaging)
 							{
-								EngageEffect engage = (EngageEffect)target.EffectList.GetOfType(typeof(EngageEffect));
+								EngageEffect engage = target.EffectList.GetOfType<EngageEffect>();
 								if (engage != null && target.AttackState && engage.EngageTarget == caster)
 								{
 									// Engage raised block change to 85% if attacker is engageTarget and player is in attackstate

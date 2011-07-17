@@ -57,7 +57,7 @@ namespace DOL.GS.RealmAbilities
 			}
 
 
-			if ((EntwiningSnakesEffect)target.EffectList.GetOfType(typeof(EntwiningSnakesEffect)) == null)
+			if (target.EffectList.GetOfType<EntwiningSnakesEffect>() == null)
 			{
 				EntwiningSnakesEffect effect = new EntwiningSnakesEffect();
 				effect.Start(target);

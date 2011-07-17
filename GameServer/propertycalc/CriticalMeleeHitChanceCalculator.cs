@@ -40,7 +40,7 @@ namespace DOL.GS.PropertyCalc
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
 			// no berserk for ranged weapons
-			IGameEffect berserk = living.EffectList.GetOfType(typeof(BerserkEffect));
+			IGameEffect berserk = living.EffectList.GetOfType<BerserkEffect>();
 			if (berserk != null)
 			{
 				return 100;
@@ -54,14 +54,14 @@ namespace DOL.GS.PropertyCalc
 				GamePlayer player = ((living as GameNPC).Brain as AI.Brain.IControlledBrain).GetPlayerOwner();
 				if (player != null)
 				{
-					RealmAbilities.WildMinionAbility ab = player.GetAbility(typeof(RealmAbilities.WildMinionAbility)) as RealmAbilities.WildMinionAbility;
+					RealmAbilities.WildMinionAbility ab = player.GetAbility<RealmAbilities.WildMinionAbility>();
 					if (ab != null)
 					{
 						chance += ab.Amount;
 					}
 					if (living is NecromancerPet)
 					{
-						RealmAbilities.MasteryOfPain mop = player.GetAbility(typeof(RealmAbilities.MasteryOfPain)) as RealmAbilities.MasteryOfPain;
+						RealmAbilities.MasteryOfPain mop = player.GetAbility<RealmAbilities.MasteryOfPain>();
 						if (mop != null)
 						{
 							chance += mop.Amount;

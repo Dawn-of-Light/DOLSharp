@@ -31,7 +31,7 @@ namespace DOL.GS.SkillHandler
 		public void Execute(Ability ab, GamePlayer player)
 		{
 
-			RapidFireEffect rapidFire = (RapidFireEffect)player.EffectList.GetOfType(typeof(RapidFireEffect));
+			RapidFireEffect rapidFire = player.EffectList.GetOfType<RapidFireEffect>();
 			if (rapidFire!=null)
 			{
 				rapidFire.Cancel(false);
@@ -44,11 +44,11 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			SureShotEffect sureShot = (SureShotEffect)player.EffectList.GetOfType(typeof(SureShotEffect));
+			SureShotEffect sureShot = player.EffectList.GetOfType<SureShotEffect>();
 			if (sureShot != null)
 				sureShot.Cancel(false);
 
-			TrueshotEffect trueshot = (TrueshotEffect)player.EffectList.GetOfType(typeof(TrueshotEffect));
+			TrueshotEffect trueshot = player.EffectList.GetOfType<TrueshotEffect>();
 			if (trueshot != null)
 				trueshot.Cancel(false);
 

@@ -395,7 +395,7 @@ namespace DOL.GS.Spells
 
 			if (Caster.IsEngaging)
 			{
-				EngageEffect effect = (EngageEffect)Caster.EffectList.GetOfType(typeof(EngageEffect));
+				EngageEffect effect = Caster.EffectList.GetOfType<EngageEffect>();
 
 				if (effect != null)
 					effect.Cancel(false);
@@ -553,18 +553,14 @@ namespace DOL.GS.Spells
 			//[StephenxPimentel] Check if the necro has MoC effect before interrupting.
 			if (Caster is NecromancerPet)
 			{
-				if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof (MasteryofConcentrationEffect)) != null)
+				if ((Caster as NecromancerPet).Owner.EffectList.GetOfType<MasteryofConcentrationEffect>() != null)
 				{
 					return false;
 				}
 			}
 			if (Spell.Uninterruptible)
 				return false;
-			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null)
-				return false;
-			if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
-				return false;
-			if (Caster.EffectList.GetOfType(typeof(FacilitatePainworkingEffect)) != null)
+			if (Caster.EffectList.CountOfType(typeof(QuickCastEffect), typeof(MasteryofConcentrationEffect), typeof(FacilitatePainworkingEffect)) > 0)
 				return false;
 			if (IsCasting && Stage < 2)
 			{
@@ -639,7 +635,7 @@ namespace DOL.GS.Spells
 			// Apply Mentalist RA5L
 			if (Spell.Range>0)
 			{
-				SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+				SelectiveBlindnessEffect SelectiveBlindness = Caster.EffectList.GetOfType<SelectiveBlindnessEffect>();
 				if (SelectiveBlindness != null)
 				{
 					GameLiving EffectOwner = SelectiveBlindness.EffectSource;
@@ -685,7 +681,8 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null && m_caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) == null)
+			if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer &&
+				m_caster.EffectList.GetOfType<QuickCastEffect>() == null && m_caster.EffectList.GetOfType<MasteryofConcentrationEffect>() == null)
 			{
 				if (Caster.InterruptAction > 0 && Caster.InterruptAction + Caster.SpellInterruptRecastTime > Caster.CurrentRegion.Time)
 				{
@@ -858,7 +855,7 @@ namespace DOL.GS.Spells
 			// Cancel engage if user starts attack
 			if (m_caster.IsEngaging)
 			{
-				EngageEffect engage = (EngageEffect)m_caster.EffectList.GetOfType(typeof(EngageEffect));
+				EngageEffect engage = m_caster.EffectList.GetOfType<EngageEffect>();
 				if (engage != null)
 				{
 					engage.Cancel(false);
@@ -1121,7 +1118,8 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null && m_caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) == null)
+			if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer &&
+				m_caster.EffectList.GetOfType<QuickCastEffect>() == null && m_caster.EffectList.GetOfType<MasteryofConcentrationEffect>() == null)
 			{
 				if(Caster.InterruptTime > 0 && Caster.InterruptTime > m_started)
 				{
@@ -1324,7 +1322,8 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer && m_caster.EffectList.GetOfType(typeof(QuickCastEffect)) == null && m_caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) == null)
+			if (!m_spell.Uninterruptible && m_spell.CastTime > 0 && m_caster is GamePlayer &&
+				m_caster.EffectList.GetOfType<QuickCastEffect>() == null && m_caster.EffectList.GetOfType<MasteryofConcentrationEffect>() == null)
 			{
 				if (Caster.InterruptTime > 0 && Caster.InterruptTime > m_started)
 				{
@@ -1501,12 +1500,12 @@ namespace DOL.GS.Spells
 				return 0;
 
 			//1.108 - Valhallas Blessing now has a 75% chance to not use power.
-			ValhallasBlessingEffect ValhallasBlessing = (ValhallasBlessingEffect)m_caster.EffectList.GetOfType(typeof(ValhallasBlessingEffect));
+			ValhallasBlessingEffect ValhallasBlessing = m_caster.EffectList.GetOfType<ValhallasBlessingEffect>();
 			if (ValhallasBlessing != null && Util.Chance(75))
 				return 0;
 
 			//patch 1.108 increases the chance to not use power to 50%.
-			FungalUnionEffect FungalUnion = (FungalUnionEffect)m_caster.EffectList.GetOfType(typeof(FungalUnionEffect));
+			FungalUnionEffect FungalUnion = m_caster.EffectList.GetOfType<FungalUnionEffect>();
 			{
 				if (FungalUnion != null && Util.Chance(50))
 					return 0;
@@ -1564,7 +1563,7 @@ namespace DOL.GS.Spells
 				power -= basepower * specBonus;
 			}
 			// doubled power usage if quickcasting
-			if (Caster.EffectList.GetOfType(typeof(QuickCastEffect)) != null && Spell.CastTime > 0)
+			if (Caster.EffectList.GetOfType<QuickCastEffect>() != null && Spell.CastTime > 0)
 				power *= 2;
 			return (int)power;
 		}
@@ -1905,7 +1904,7 @@ namespace DOL.GS.Spells
 			//set the time when casting to can not quickcast during a minimum time
 			if (m_caster is GamePlayer)
 			{
-				QuickCastEffect quickcast = (QuickCastEffect)m_caster.EffectList.GetOfType(typeof(QuickCastEffect));
+				QuickCastEffect quickcast = m_caster.EffectList.GetOfType<QuickCastEffect>();
 				if (quickcast != null && Spell.CastTime > 0)
 				{
 					m_caster.TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.CurrentRegion.Time);
@@ -2032,7 +2031,7 @@ namespace DOL.GS.Spells
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 							{
 								// Apply Mentalist RA5L
-								SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+								SelectiveBlindnessEffect SelectiveBlindness = Caster.EffectList.GetOfType<SelectiveBlindnessEffect>();
 								if (SelectiveBlindness != null)
 								{
 									GameLiving EffectOwner = SelectiveBlindness.EffectSource;
@@ -2136,7 +2135,7 @@ namespace DOL.GS.Spells
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 							{
-								SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+								SelectiveBlindnessEffect SelectiveBlindness = Caster.EffectList.GetOfType<SelectiveBlindnessEffect>();
 								if (SelectiveBlindness != null)
 								{
 									GameLiving EffectOwner = SelectiveBlindness.EffectSource;
@@ -2164,7 +2163,7 @@ namespace DOL.GS.Spells
 							// Apply Mentalist RA5L
 							if (Spell.Range > 0)
 							{
-								SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+								SelectiveBlindnessEffect SelectiveBlindness = Caster.EffectList.GetOfType<SelectiveBlindnessEffect>();
 								if (SelectiveBlindness != null)
 								{
 									GameLiving EffectOwner = SelectiveBlindness.EffectSource;
@@ -2408,9 +2407,9 @@ namespace DOL.GS.Spells
 
 			double effectiveness = Caster.Effectiveness;
 
-			if (Caster.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
+			if (Caster.EffectList.GetOfType<MasteryofConcentrationEffect>() != null)
 			{
-				RealmAbility ra = Caster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+				RealmAbility ra = Caster.GetAbility<MasteryofConcentrationAbility>();
 				if (ra != null && ra.Level > 0)
 				{
 					effectiveness *= System.Math.Round((double)ra.Level * 25 / 100, 2);
@@ -2420,9 +2419,9 @@ namespace DOL.GS.Spells
 			//[StephenxPimentel] Reduce Damage if necro is using MoC
 			if (Caster is NecromancerPet)
 			{
-				if ((Caster as NecromancerPet).Owner.EffectList.GetOfType(typeof(MasteryofConcentrationEffect)) != null)
+				if ((Caster as NecromancerPet).Owner.EffectList.GetOfType<MasteryofConcentrationEffect>() != null)
 				{
-					RealmAbility necroRA = (Caster as NecromancerPet).Owner.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+					RealmAbility necroRA = (Caster as NecromancerPet).Owner.GetAbility<MasteryofConcentrationAbility>();
 					if (necroRA != null && necroRA.Level > 0)
 					{
 						effectiveness *= System.Math.Round((double)necroRA.Level * 25 / 100, 2);

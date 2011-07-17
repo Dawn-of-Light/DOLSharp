@@ -378,7 +378,7 @@ namespace DOL.GS
 		/// </summary>
 		private void ToggleTauntMode()
 		{
-			TauntEffect tauntEffect = EffectList.GetOfType(typeof(TauntEffect)) as TauntEffect;
+			TauntEffect tauntEffect = EffectList.GetOfType<TauntEffect>();
 			GamePlayer owner = (Brain as IControlledBrain).Owner as GamePlayer;
 
 			if (tauntEffect != null)

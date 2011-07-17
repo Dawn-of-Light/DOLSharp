@@ -39,7 +39,7 @@ namespace DOL.GS.RealmAbilities
 			if (player == null)
 				return;
 
-			MasteryofConcentrationEffect MoCEffect = (MasteryofConcentrationEffect)player.EffectList.GetOfType(typeof(MasteryofConcentrationEffect));
+			MasteryofConcentrationEffect MoCEffect = player.EffectList.GetOfType<MasteryofConcentrationEffect>();
 			if (MoCEffect != null)
 			{
 				MoCEffect.Cancel(false);
@@ -47,18 +47,7 @@ namespace DOL.GS.RealmAbilities
 			}
 			
 			// Check for the RA5L on the Sorceror: he cannot cast MoC when the other is up
-			ShieldOfImmunityEffect ra5l = null;
-			lock (player.EffectList)
-			{
-				foreach (object effect in player.EffectList)
-				{
-					if (effect is ShieldOfImmunityEffect)
-					{
-						ra5l = effect as ShieldOfImmunityEffect;
-						break;
-					}
-				}
-			}
+			ShieldOfImmunityEffect ra5l = player.EffectList.GetOfType<ShieldOfImmunityEffect>();
 			if (ra5l != null)
 			{
 				player.Out.SendMessage("You cannot currently use this ability", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);

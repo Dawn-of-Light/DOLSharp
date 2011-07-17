@@ -44,7 +44,7 @@ namespace DOL.GS.Spells
                 MessageToCaster("You must be under water to use this ability.", eChatType.CT_SpellResisted);
                 return;
             }
-            foreach (GameSpellEffect Effect in targetPlayer.EffectList.GetAllOfType(typeof(GameSpellEffect)))
+			foreach (GameSpellEffect Effect in targetPlayer.EffectList.GetAllOfType<GameSpellEffect>())
             {
                 if (
                     Effect.SpellHandler.Spell.SpellType.Equals("ShadesOfMist") || 

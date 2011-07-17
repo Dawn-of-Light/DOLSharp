@@ -47,7 +47,7 @@ namespace DOL.GS.RealmAbilities
             GamePlayer player = living as GamePlayer;
             if (player != null)
             {
-                BoilingCauldronEffect BoilingCauldron = (BoilingCauldronEffect)player.EffectList.GetOfType(typeof(BoilingCauldronEffect));
+            	BoilingCauldronEffect BoilingCauldron = player.EffectList.GetOfType<BoilingCauldronEffect>();
                 if (BoilingCauldron != null)
                     BoilingCauldron.Cancel(false);
 

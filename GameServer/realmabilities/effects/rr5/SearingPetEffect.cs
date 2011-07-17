@@ -129,7 +129,7 @@ namespace DOL.GS.Effects
             if (player != null && player.ControlledBrain != null && player.ControlledBrain.Body != null)
             {
                 GameNPC pet = player.ControlledBrain.Body as GameNPC;
-                SearingPetEffect SearingPet = (SearingPetEffect)pet.EffectList.GetOfType(typeof(SearingPetEffect));
+				SearingPetEffect SearingPet = pet.EffectList.GetOfType<SearingPetEffect>();
                 if (SearingPet != null)
                     SearingPet.Cancel(false);
             }

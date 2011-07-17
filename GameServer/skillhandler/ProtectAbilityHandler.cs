@@ -51,7 +51,7 @@ namespace DOL.GS.SkillHandler
 			GameObject targetObject = player.TargetObject;
 			if (targetObject == null)
 			{
-				foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof (ProtectEffect)))
+				foreach (ProtectEffect protect in player.EffectList.GetAllOfType<ProtectEffect>())
 				{
 					if (protect.ProtectSource == player)
 						protect.Cancel(false);
@@ -78,7 +78,7 @@ namespace DOL.GS.SkillHandler
 			}
 
 			// check if someone is protecting the target
-			foreach (ProtectEffect protect in protectTarget.EffectList.GetAllOfType(typeof (ProtectEffect)))
+			foreach (ProtectEffect protect in protectTarget.EffectList.GetAllOfType<ProtectEffect>())
 			{
 				if (protect.ProtectTarget != protectTarget)
 					continue;
@@ -92,7 +92,7 @@ namespace DOL.GS.SkillHandler
 			}
 
 			// cancel all guard effects by this player before adding a new one
-			foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof (ProtectEffect)))
+			foreach (ProtectEffect protect in player.EffectList.GetAllOfType<ProtectEffect>())
 			{
 				if (protect.ProtectSource == player)
 					protect.Cancel(false);

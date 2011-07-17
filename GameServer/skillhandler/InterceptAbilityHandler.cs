@@ -61,7 +61,7 @@ namespace DOL.GS.SkillHandler
 			GameObject targetObject = player.TargetObject;
 			if (targetObject == null)
 			{
-				foreach (InterceptEffect intercept in player.EffectList.GetAllOfType(typeof (InterceptEffect)))
+				foreach (InterceptEffect intercept in player.EffectList.GetAllOfType<InterceptEffect>())
 				{
 					if (intercept.InterceptSource != player)
 						continue;
@@ -82,7 +82,7 @@ namespace DOL.GS.SkillHandler
 			}
 
 			// check if someone is already intercepting for that target
-			foreach (InterceptEffect intercept in interceptTarget.EffectList.GetAllOfType(typeof (InterceptEffect)))
+			foreach (InterceptEffect intercept in interceptTarget.EffectList.GetAllOfType<InterceptEffect>())
 			{
 				if (intercept.InterceptTarget != interceptTarget)
 					continue;
@@ -94,7 +94,7 @@ namespace DOL.GS.SkillHandler
 			}
 
 			// cancel all intercepts by this player
-			foreach (InterceptEffect intercept in player.EffectList.GetAllOfType(typeof (InterceptEffect)))
+			foreach (InterceptEffect intercept in player.EffectList.GetAllOfType<InterceptEffect>())
 			{
 				if (intercept.InterceptSource != player)
 					continue;
