@@ -47,7 +47,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 
-			QuickCastEffect quickcast = (QuickCastEffect)player.EffectList.GetOfType(typeof(QuickCastEffect));
+			QuickCastEffect quickcast = player.EffectList.GetOfType<QuickCastEffect>();
 			if (quickcast!=null)
 			{
 				quickcast.Cancel(false);

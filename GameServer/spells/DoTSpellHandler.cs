@@ -82,7 +82,7 @@ namespace DOL.GS.Spells
 			AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
             if (this.SpellLine.KeyName == GlobalSpellsLines.Mundane_Poisons)
             {
-                RealmAbilities.L3RAPropertyEnhancer ra = Caster.GetAbility(typeof(RealmAbilities.ViperAbility)) as RealmAbilities.L3RAPropertyEnhancer;
+                RealmAbilities.L3RAPropertyEnhancer ra = Caster.GetAbility<RealmAbilities.ViperAbility>();
 				if (ra != null)
 				{
 					int additional = (int)((float)ad.Damage * ((float)ra.Amount / 100));

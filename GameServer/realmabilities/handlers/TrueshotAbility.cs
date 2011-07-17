@@ -21,11 +21,11 @@ namespace DOL.GS.RealmAbilities
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				SureShotEffect sureShot = (SureShotEffect)player.EffectList.GetOfType(typeof(SureShotEffect));
+				SureShotEffect sureShot = player.EffectList.GetOfType<SureShotEffect>();
 				if (sureShot != null)
 					sureShot.Cancel(false);
 
-				RapidFireEffect rapidFire = (RapidFireEffect)player.EffectList.GetOfType(typeof(RapidFireEffect));
+				RapidFireEffect rapidFire = player.EffectList.GetOfType<RapidFireEffect>();
 				if (rapidFire != null)
 					rapidFire.Cancel(false);
 

@@ -199,9 +199,9 @@ namespace DOL.GS.Spells
 				foreach (GameObject attacker in attackers)
 				{
 					if (attacker is GameLiving && attacker != living.TargetObject)
-						((GameLiving)attacker).Notify(
+						attacker.Notify(
 							GameLivingEvent.EnemyHealed,
-							(GameLiving)attacker,
+							attacker,
 							new EnemyHealedEventArgs(living, m_caster, GameLiving.eHealthChangeType.Spell, living.Health));
 				}
 

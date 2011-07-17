@@ -40,6 +40,7 @@ using DOL.GS.ServerProperties;
 using DOL.GS.SkillHandler;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
+using DOL.GS.Utils;
 using DOL.Language;
 using log4net;
 
@@ -2206,7 +2207,7 @@ namespace DOL.GS
 				if (sprinting && IsMoving)
 				{
 					//TODO : cache LongWind level when char is loaded and on train ability
-					LongWindAbility ra = GetAbility(typeof(LongWindAbility)) as LongWindAbility;
+					LongWindAbility ra = GetAbility<LongWindAbility>();
 					if (ra != null)
 						longwind = 5 - (ra.GetAmountForLevel(CalculateSkillLevel(ra)) * 5 / 100);
 
@@ -2245,9 +2246,7 @@ namespace DOL.GS
 			get { return DBCharacter != null ? DBCharacter.Health : base.Health; }
 			set
 			{
-				//DOLConsole.WriteSystem("Health="+value);
-				value = Math.Min(value, MaxHealth);
-				value = Math.Max(value, 0);
+				value = value.Clamp(0, MaxHealth);
 				//If it is already set, don't do anything
 				if (Health == value)
 				{
@@ -2256,9 +2255,9 @@ namespace DOL.GS
 				}
 
 				int oldPercent = HealthPercent;
+                if (DBCharacter != null)
+                    DBCharacter.Health = value;
 				base.Health = value;
-				if (DBCharacter != null)
-					DBCharacter.Health = value;
 				if (oldPercent != HealthPercent)
 				{
 					if (Group != null)
@@ -2266,23 +2265,6 @@ namespace DOL.GS
 					UpdatePlayerStatus();
 				}
 			}
-		}
-
-		/// <summary>
-		/// Gets/sets the object max health
-		/// </summary>
-		public override int MaxHealth
-		{
-			get { return base.MaxHealth; }
-			//			set
-			//			{
-			//				//If it is already set, don't do anything
-			//				if (MaxHealth == value)
-			//					return;
-			//				base.MaxHealth = value;
-			//				m_character.MaxHealth = base.MaxHealth;
-			//				UpdatePlayerStatus();
-			//			}
 		}
 
 		/// <summary>
@@ -3133,13 +3115,13 @@ namespace DOL.GS
 			}
 		}
 
+		#region Abilities
+
 		/// <summary>
 		/// Adds a new Ability to the player
 		/// </summary>
 		/// <param name="ability"></param>
 		/// <param name="sendUpdates"></param>
-		#region Abilities
-
 		public override void AddAbility(Ability ability, bool sendUpdates)
 		{
 			if (ability == null)
@@ -3169,10 +3151,6 @@ namespace DOL.GS
 			base.AddAbility(ability, sendUpdates);
 		}
 
-		public override bool RemoveAbility(string abilityKeyName)
-		{
-			return base.RemoveAbility(abilityKeyName);
-		}
 		#endregion Abilities
 
 		public virtual void RemoveAllSkills()
@@ -5978,7 +5956,7 @@ namespace DOL.GS
 			else
 			{
 				// Bard RR5 ability must drop when the player starts a melee attack
-				IGameEffect DreamweaverRR5 = EffectList.GetOfType(typeof(DreamweaverEffect));
+				IGameEffect DreamweaverRR5 = EffectList.GetOfType<DreamweaverEffect>();
 				if (DreamweaverRR5 != null)
 					DreamweaverRR5.Cancel(false);
 			}
@@ -6457,7 +6435,7 @@ namespace DOL.GS
 					//Camouflage
 					if (target is GamePlayer && HasAbility(Abilities.Camouflage))
 					{
-						CamouflageEffect camouflage = (CamouflageEffect)EffectList.GetOfType(typeof(CamouflageEffect));
+						CamouflageEffect camouflage = EffectList.GetOfType<CamouflageEffect>();
 						if (camouflage != null)
 						{
 							DisableSkill(SkillBase.GetAbility(Abilities.Camouflage), CamouflageSpecHandler.DISABLE_DURATION);
@@ -6585,11 +6563,11 @@ namespace DOL.GS
 			if (Util.Chance(AttackCriticalChance(weapon)))
 			{
 				// triple wield prevents critical hits
-				if (ad.Target.EffectList.GetOfType(typeof(TripleWieldEffect)) != null) return 0;
+				if (ad.Target.EffectList.GetOfType<TripleWieldEffect>() != null) return 0;
 
 				int critMin;
 				int critMax;
-				BerserkEffect berserk = (BerserkEffect)EffectList.GetOfType(typeof(BerserkEffect));
+				BerserkEffect berserk = EffectList.GetOfType<BerserkEffect>();
 
 				if (berserk != null)
 				{
@@ -7885,7 +7863,7 @@ namespace DOL.GS
 			if (target == null)
 				return;
 
-			foreach (GameSpellEffect effect in EffectList.GetAllOfType(typeof(GameSpellEffect)))
+			foreach (GameSpellEffect effect in EffectList.GetAllOfType<GameSpellEffect>())
 			{
 				if (effect.SpellHandler.Caster == target && !effect.SpellHandler.HasPositiveEffect)
 					effect.Cancel(false);
@@ -8457,7 +8435,7 @@ namespace DOL.GS
 			if (CharacterClass.CanChangeCastingSpeed(line, spell) == false)
 				return ticks;
 
-			if (EffectList.GetOfType(typeof(QuickCastEffect)) != null)
+			if (EffectList.GetOfType<QuickCastEffect>() != null)
 			{
 				// Most casters have access to the Quickcast ability (or the Necromancer equivalent, Facilitate Painworking).
 				// This ability will allow you to cast a spell without interruption.
@@ -11244,7 +11222,7 @@ namespace DOL.GS
 			get
 			{
 				double enc = (double)Strength;
-				RAPropertyEnhancer ab = GetAbility(typeof(LifterAbility)) as RAPropertyEnhancer;
+				RAPropertyEnhancer ab = GetAbility<LifterAbility>();
 				if (ab != null)
 					enc *= 1 + ((double)ab.Amount / 100);
 
@@ -11255,7 +11233,7 @@ namespace DOL.GS
 				}
 
 				// Apply Walord effect
-				GameSpellEffect iBaneLordEffect = SpellHandler.FindEffectOnTarget((GameLiving)this, "Oppression");
+				GameSpellEffect iBaneLordEffect = SpellHandler.FindEffectOnTarget(this, "Oppression");
 				if (iBaneLordEffect != null)
 					enc *= 1.00 - (iBaneLordEffect.Spell.Value * 0.01);
 
@@ -13001,7 +12979,7 @@ namespace DOL.GS
 				if (ObjectState == eObjectState.Active)
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Stealth.NoLongerHidden"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-				CamouflageEffect cam = (CamouflageEffect)EffectList.GetOfType(typeof(CamouflageEffect));
+				CamouflageEffect cam = EffectList.GetOfType<CamouflageEffect>();
 				if (cam != null)
 				{
 					cam.Stop();
@@ -13087,7 +13065,7 @@ namespace DOL.GS
 					double detectRadius = 125.0 + ((npcLevel - stealthLevel) * 20.0);
 
 					// we have detect hidden and enemy don't = higher range
-					if (npc.HasAbility(Abilities.DetectHidden) && player.EffectList.GetOfType(typeof(CamouflageEffect)) == null)
+					if (npc.HasAbility(Abilities.DetectHidden) && player.EffectList.GetOfType<CamouflageEffect>() == null)
 					{
 						detectRadius += 125;
 					}
@@ -13178,7 +13156,7 @@ namespace DOL.GS
 				return false;
 			if (!IsAlive)
 				return false;
-			if (enemy.EffectList.GetOfType(typeof(VanishEffect)) != null)
+			if (enemy.EffectList.GetOfType<VanishEffect>() != null)
 				return false;
 			if (this.Client.Account.PrivLevel > 1)
 				return true;
@@ -13201,7 +13179,7 @@ namespace DOL.GS
 			if (levelDiff < 0) levelDiff = 0;
 
 			int range;
-			bool enemyHasCamouflage = enemy.EffectList.GetOfType(typeof(CamouflageEffect)) != null;
+			bool enemyHasCamouflage = enemy.EffectList.GetOfType<CamouflageEffect>() != null;
 			if (HasAbility(Abilities.DetectHidden) && !enemy.HasAbility(Abilities.DetectHidden) && !enemyHasCamouflage)
 			{
 				// we have detect hidden and enemy don't = higher range
@@ -13213,7 +13191,7 @@ namespace DOL.GS
 			}
 
 			// Mastery of Stealth Bonus
-			RAPropertyEnhancer mos = GetAbility(typeof(MasteryOfStealthAbility)) as RAPropertyEnhancer;
+		    RAPropertyEnhancer mos = GetAbility<MasteryOfStealthAbility>();
 			if (mos != null && !enemyHasCamouflage)
 				if (!HasAbility(Abilities.DetectHidden) || !enemy.HasAbility(Abilities.DetectHidden))
 					range += mos.GetAmountForLevel(CalculateSkillLevel(mos));
@@ -16168,7 +16146,7 @@ namespace DOL.GS
 			if (evade == null)
 				evade = SpellHandler.FindEffectOnTarget(this, "SavageEvadeBuff");
 
-			if (HasAbility(Abilities.Advanced_Evade) || EffectList.GetOfType(typeof(CombatAwarenessEffect)) != null || EffectList.GetOfType(typeof(RuneOfUtterAgilityEffect)) != null)
+			if (HasAbility(Abilities.Advanced_Evade) || EffectList.GetOfType<CombatAwarenessEffect>() != null || EffectList.GetOfType<RuneOfUtterAgilityEffect>() != null)
 				evadeChance = GetModified(eProperty.EvadeChance);
 			else if (evade != null || HasAbility(Abilities.Evade))
 			{
@@ -16223,7 +16201,7 @@ namespace DOL.GS
 			
 			if ((HasSpecialization(Specs.Parry) || parry != null) && (AttackWeapon != null))
 				parryChance = GetModified(eProperty.ParryChance);
-			else if (EffectList.GetOfType(typeof(BladeBarrierEffect)) != null)
+			else if (EffectList.GetOfType<BladeBarrierEffect>() != null)
 				parryChance = GetModified(eProperty.ParryChance);
 
 			if (parryChance > 0)
@@ -16259,13 +16237,9 @@ namespace DOL.GS
 		{
 			get
 			{
-				IList bodyguardEffects = EffectList.GetAllOfType(typeof(BodyguardEffect));
+				var bodyguardEffects = EffectList.GetAllOfType<BodyguardEffect>();
 
-				if (bodyguardEffects.Count <= 0)
-					return null;
-
-				BodyguardEffect bodyguardEffect = bodyguardEffects[0] as BodyguardEffect;
-
+				BodyguardEffect bodyguardEffect = bodyguardEffects.FirstOrDefault();
 				if (bodyguardEffect == null || bodyguardEffect.GuardTarget != this)
 					return null;
 

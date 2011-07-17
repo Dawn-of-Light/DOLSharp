@@ -118,7 +118,7 @@ namespace DOL.GS.RealmAbilities
                 if (!GameServer.ServerRules.IsAllowedToAttack(player, radiusPlayer, true))
                     continue;
 
-                SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)radiusPlayer.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+				SelectiveBlindnessEffect SelectiveBlindness = radiusPlayer.EffectList.GetOfType<SelectiveBlindnessEffect>();
                 if (SelectiveBlindness != null) SelectiveBlindness.Cancel(false);
                 new SelectiveBlindnessEffect(player).Start(radiusPlayer);
             }

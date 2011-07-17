@@ -28,7 +28,7 @@ namespace DOL.GS.RealmAbilities
 			GamePlayer player = living as GamePlayer;
 			if (player == null) return;
 			if (CheckPreconditions(living, DEAD | SITTING | STUNNED | MEZZED | NOTINGROUP)) return;
-			AmelioratingMelodiesEffect ameffect = (AmelioratingMelodiesEffect)player.EffectList.GetOfType(typeof(AmelioratingMelodiesEffect));
+			AmelioratingMelodiesEffect ameffect = player.EffectList.GetOfType<AmelioratingMelodiesEffect>();
 			if (ameffect != null)
 			{
 				ameffect.Cancel(false);

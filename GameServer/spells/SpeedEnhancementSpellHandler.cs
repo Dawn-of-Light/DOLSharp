@@ -48,16 +48,16 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null)
+			if (target.EffectList.GetOfType<ChargeEffect>() != null)
 				return;
 
 			if (target.TempProperties.getProperty("Charging", false))
 				return;
 
-			if (target.EffectList.GetOfType(typeof(ArmsLengthEffect)) != null)
+			if (target.EffectList.GetOfType<ArmsLengthEffect>() != null)
 				return;
 
-			if (target.EffectList.GetOfType(typeof(SpeedOfSoundEffect)) != null)
+			if (target.EffectList.GetOfType<SpeedOfSoundEffect>() != null)
 				return;
 
 			if (target is GamePlayer && (target as GamePlayer).IsRiding)

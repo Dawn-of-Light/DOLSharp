@@ -49,7 +49,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (!target.IsAlive)
 				return;
-			if ((BlindingDustEffect)target.EffectList.GetOfType(typeof(BlindingDustEffect)) == null)
+			if (target.EffectList.GetOfType<BlindingDustEffect>() == null)
 			{
 				BlindingDustEffect effect = new BlindingDustEffect();
 				effect.Start(target);

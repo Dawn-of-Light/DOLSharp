@@ -34,7 +34,7 @@ namespace DOL.GS.RealmAbilities
 
 			foreach (GamePlayer groupMember in playerGroup.GetPlayersInTheGroup())
 			{
-				DivineInterventionEffect DIEffect = (DivineInterventionEffect)groupMember.EffectList.GetOfType(typeof(DivineInterventionEffect));
+				DivineInterventionEffect DIEffect = groupMember.EffectList.GetOfType<DivineInterventionEffect>();
 				if (DIEffect != null)
 				{
 					player.Out.SendMessage("You are already protected by a pool of healing", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);

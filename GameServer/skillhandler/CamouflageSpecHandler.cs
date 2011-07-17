@@ -61,7 +61,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 			#endregion
-			CamouflageEffect camouflage = (CamouflageEffect)player.EffectList.GetOfType(typeof(CamouflageEffect));
+			CamouflageEffect camouflage = player.EffectList.GetOfType<CamouflageEffect>();
 			if (camouflage != null)
 			{
 				camouflage.Cancel(false);

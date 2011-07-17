@@ -67,7 +67,7 @@ namespace DOL.GS.RealmAbilities
                 {
                     //send spelleffect
                     if (!target.IsAlive) continue;
-                    ValhallasBlessingEffect ValhallasBlessing = (ValhallasBlessingEffect)target.EffectList.GetOfType(typeof(ValhallasBlessingEffect));
+					ValhallasBlessingEffect ValhallasBlessing = target.EffectList.GetOfType<ValhallasBlessingEffect>();
                     if (ValhallasBlessing != null)
                         ValhallasBlessing.Cancel(false);
                     new ValhallasBlessingEffect().Start(target);

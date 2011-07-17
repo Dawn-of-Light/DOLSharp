@@ -32,7 +32,7 @@ namespace DOL.GS.RealmAbilities
 					SendCasterSpellEffectAndCastMessage(living, 7071, true);
 					foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
 					{
-						RestorativeMindEffect aog = (RestorativeMindEffect)member.EffectList.GetOfType(typeof(RestorativeMindEffect));
+						RestorativeMindEffect aog = member.EffectList.GetOfType<RestorativeMindEffect>();
 						if (!CheckPreconditions(member, DEAD) && aog == null
 							&& living.IsWithinRadius( member, 2000 ))
 						{
@@ -44,7 +44,7 @@ namespace DOL.GS.RealmAbilities
 				}
 				else
 				{
-					RestorativeMindEffect aog = (RestorativeMindEffect)player.EffectList.GetOfType(typeof(RestorativeMindEffect));
+					RestorativeMindEffect aog = player.EffectList.GetOfType<RestorativeMindEffect>();
 					if (!CheckPreconditions(player, DEAD) && aog == null)
 					{
 						RestorativeMindEffect effect = new RestorativeMindEffect();

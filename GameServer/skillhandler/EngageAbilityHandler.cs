@@ -107,7 +107,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 			//Cancel old engage effects on player
-			foreach (EngageEffect engage in player.EffectList.GetAllOfType(typeof(EngageEffect)))
+			foreach (EngageEffect engage in player.EffectList.GetAllOfType<EngageEffect>())
 			{
 
 				if (engage != null)

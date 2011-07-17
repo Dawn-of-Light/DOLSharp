@@ -77,7 +77,7 @@ namespace DOL.GS.SkillHandler
 				return;
 			}
 			//Cancel old stag effects on player
-			StagEffect stag = (StagEffect)player.EffectList.GetOfType(typeof(StagEffect));
+			StagEffect stag = player.EffectList.GetOfType<StagEffect>();
 			if (stag != null)
 			{
 				player.Out.SendMessage("That ability is already active, wait until it expires.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

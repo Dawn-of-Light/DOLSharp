@@ -141,7 +141,7 @@ namespace DOL.GS.Effects
 			if (atkArgs.AttackData.IsOffHand) return; // only react to main hand
 			if (atkArgs.AttackData.Weapon == null) return; // no weapon attack
 
-			DTdetrimentalEffect dt = (DTdetrimentalEffect)target.EffectList.GetOfType(typeof(DTdetrimentalEffect));
+			DTdetrimentalEffect dt = target.EffectList.GetOfType<DTdetrimentalEffect>();
 			if (dt == null)
 			{
 				new DTdetrimentalEffect().Start(target);

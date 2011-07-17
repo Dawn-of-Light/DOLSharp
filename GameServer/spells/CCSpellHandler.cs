@@ -43,7 +43,7 @@ namespace DOL.GS.Spells
 				MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
 				return;
 			}
-			if (target.EffectList.GetOfType(typeof(ChargeEffect)) != null || target.TempProperties.getProperty("Charging", false))
+			if (target.EffectList.GetOfType<ChargeEffect>() != null || target.TempProperties.getProperty("Charging", false))
 			{
 				MessageToCaster(target.Name + " is moving too fast for this spell to have any effect!", eChatType.CT_SpellResisted);
 				return;
@@ -121,10 +121,10 @@ namespace DOL.GS.Spells
 		{
 			double duration = base.CalculateEffectDuration(target, effectiveness);
 			double mocFactor = 1.0;
-			Effects.MasteryofConcentrationEffect moc = (Effects.MasteryofConcentrationEffect)Caster.EffectList.GetOfType(typeof(Effects.MasteryofConcentrationEffect));
+			MasteryofConcentrationEffect moc = Caster.EffectList.GetOfType<MasteryofConcentrationEffect>();
 			if (moc != null)
 			{
-				RealmAbility ra = Caster.GetAbility(typeof(MasteryofConcentrationAbility)) as RealmAbility;
+				RealmAbility ra = Caster.GetAbility<MasteryofConcentrationAbility>();
 				if (ra != null)
 					mocFactor = System.Math.Round((double)ra.Level * 25 / 100, 2);
 				duration = (double)Math.Round(duration * mocFactor);
@@ -163,8 +163,8 @@ namespace DOL.GS.Spells
 			{
 				resist += (int)fury.Spell.Value;
 			}
-			
-			if (target.EffectList.GetOfType(typeof(AllureofDeathEffect)) != null)
+
+			if (target.EffectList.GetOfType<AllureofDeathEffect>() != null)
 			{
 				//[Shawn] : Added Specific Resist Effects To This Ability.
 				int basechance = base.CalculateSpellResistChance(target);

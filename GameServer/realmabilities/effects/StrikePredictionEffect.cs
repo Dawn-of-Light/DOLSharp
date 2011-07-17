@@ -49,7 +49,7 @@ namespace DOL.GS.Effects
         {
             GamePlayer player = (GamePlayer)sender;
 
-            StrikePredictionEffect SPEffect = (StrikePredictionEffect)player.EffectList.GetOfType(typeof(StrikePredictionEffect));
+        	StrikePredictionEffect SPEffect = player.EffectList.GetOfType<StrikePredictionEffect>();
             if (SPEffect != null)
             {
                 SPEffect.Cancel(false);

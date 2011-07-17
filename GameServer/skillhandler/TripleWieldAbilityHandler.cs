@@ -58,7 +58,7 @@ namespace DOL.GS.SkillHandler
 				player.Out.SendMessage("You must be standing to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			TripleWieldEffect tw = (TripleWieldEffect)player.EffectList.GetOfType(typeof(TripleWieldEffect));
+			TripleWieldEffect tw = player.EffectList.GetOfType<TripleWieldEffect>();
 			if (tw != null)
 			{
 				player.Out.SendMessage("That ability is already active, wait until it expires.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

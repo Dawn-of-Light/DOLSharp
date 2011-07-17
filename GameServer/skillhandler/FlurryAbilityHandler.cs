@@ -109,7 +109,7 @@ namespace DOL.GS.SkillHandler
 			}
 			if(player.TargetObject is GamePlayer)
 			{
-                SputinsLegacyEffect SputinLegacy = (SputinsLegacyEffect)(player.TargetObject as GamePlayer).EffectList.GetOfType(typeof(SputinsLegacyEffect));
+				SputinsLegacyEffect SputinLegacy = (player.TargetObject as GamePlayer).EffectList.GetOfType<SputinsLegacyEffect>();
 				if(SputinLegacy != null)
 				{
                     player.Out.SendMessage(player.TargetObject.Name + " is under Sputin Legacy effect and can't be attacked!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);

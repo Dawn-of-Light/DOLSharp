@@ -113,7 +113,7 @@ namespace DOL.GS.Spells
 				ISpellHandler spellhandler2 = null;
 				ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
 				GameSpellEffect PhaseShift = SpellHandler.FindEffectOnTarget(m_spellTarget, "Phaseshift");
-				SelectiveBlindnessEffect SelectiveBlindness = (SelectiveBlindnessEffect)Caster.EffectList.GetOfType(typeof(SelectiveBlindnessEffect));
+				SelectiveBlindnessEffect SelectiveBlindness = Caster.EffectList.GetOfType<SelectiveBlindnessEffect>();
 				spellhandler = ScriptMgr.CreateSpellHandler(caster, chamber.PrimarySpell, chamber.PrimarySpellLine);
 
 				#region Pre-checks
@@ -282,11 +282,11 @@ namespace DOL.GS.Spells
 			//set the time when casting to can not quickcast during a minimum time
 			if (m_caster is GamePlayer)
 			{
-				QuickCastEffect quickcast = (QuickCastEffect) m_caster.EffectList.GetOfType(typeof (QuickCastEffect));
+				QuickCastEffect quickcast = m_caster.EffectList.GetOfType<QuickCastEffect>();
 				if (quickcast != null && Spell.CastTime > 0)
 				{
-					((GamePlayer) m_caster).TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.CurrentRegion.Time);
-					((GamePlayer) m_caster).DisableSkill(SkillBase.GetAbility(Abilities.Quickcast), QuickCastAbilityHandler.DISABLE_DURATION);
+					m_caster.TempProperties.setProperty(GamePlayer.QUICK_CAST_CHANGE_TICK, m_caster.CurrentRegion.Time);
+					m_caster.DisableSkill(SkillBase.GetAbility(Abilities.Quickcast), QuickCastAbilityHandler.DISABLE_DURATION);
 					quickcast.Cancel(false);
 				}
 			}
