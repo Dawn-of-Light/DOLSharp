@@ -406,7 +406,7 @@ namespace DOL.GS.Effects
 			{
 				_list = list;
 				_enumerator = _list.m_effects.GetEnumerator();
-				Monitor.Enter(_list.m_effects);
+				//Monitor.Enter(_list.m_effects);
 			}
 
 			public void Dispose()
@@ -417,7 +417,7 @@ namespace DOL.GS.Effects
 				}
 				finally 
 				{
-					Monitor.Exit(_list.m_effects);
+					//Monitor.Exit(_list.m_effects);
 				}
 			}
 
