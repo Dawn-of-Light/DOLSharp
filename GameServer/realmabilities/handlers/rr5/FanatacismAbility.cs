@@ -53,7 +53,7 @@ namespace DOL.GS.RealmAbilities
 			
 			foreach (GamePlayer target in targets)
 			{
-                FanatacismEffect Fanatacism = (FanatacismEffect)target.EffectList.GetOfType(typeof(FanatacismEffect));
+				FanatacismEffect Fanatacism = target.EffectList.GetOfType<FanatacismEffect>();
                 if (Fanatacism != null)
                     Fanatacism.Cancel(false);
 

@@ -51,7 +51,7 @@ namespace DOL.GS.PropertyCalc
 			if (living.RangedAttackType == GameLiving.eRangedAttackType.Long)
 			{
 				ra = 50;
-				IGameEffect effect = living.EffectList.GetOfType(typeof(TrueshotEffect));
+				IGameEffect effect = living.EffectList.GetOfType<TrueshotEffect>();
 				if (effect != null)
 					effect.Cancel(false);
 			}

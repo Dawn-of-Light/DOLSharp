@@ -70,7 +70,7 @@ namespace DOL.GS.Effects
 		{
 			GamePlayer player = (GamePlayer)sender;
 
-			SoldiersBarricadeEffect SBEffect = (SoldiersBarricadeEffect)player.EffectList.GetOfType(typeof(SoldiersBarricadeEffect));
+			SoldiersBarricadeEffect SBEffect = player.EffectList.GetOfType<SoldiersBarricadeEffect>();
 			if (SBEffect != null)
 			{
 				SBEffect.Cancel(false);

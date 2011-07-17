@@ -54,7 +54,7 @@ namespace DOL.GS.Effects
 				//cancel if the effectowner casts a non-positive spell
 				if (!cfea.SpellHandler.HasPositiveEffect)
 				{
-					SpeedOfSoundEffect effect = (SpeedOfSoundEffect)player.EffectList.GetOfType(typeof(SpeedOfSoundEffect));
+					SpeedOfSoundEffect effect = player.EffectList.GetOfType<SpeedOfSoundEffect>();
 					if (effect != null)
 						effect.Cancel(false);
 				}
@@ -77,7 +77,7 @@ namespace DOL.GS.Effects
 					case GameLiving.eAttackResult.Fumbled:
 					case GameLiving.eAttackResult.Missed:
 					case GameLiving.eAttackResult.Parried:
-						SpeedOfSoundEffect effect = (SpeedOfSoundEffect)player.EffectList.GetOfType(typeof(SpeedOfSoundEffect));
+						SpeedOfSoundEffect effect = player.EffectList.GetOfType<SpeedOfSoundEffect>();
 						if (effect != null)
 							effect.Cancel(false);
 						break;

@@ -51,7 +51,7 @@ namespace DOL.GS.RealmAbilities
 
 			foreach (GamePlayer target in targets)
 			{
-                MarkofPreyEffect MarkOfPrey = (MarkofPreyEffect)target.EffectList.GetOfType(typeof(MarkofPreyEffect));
+				MarkofPreyEffect MarkOfPrey = target.EffectList.GetOfType<MarkofPreyEffect>();
                 if (MarkOfPrey != null)
                     MarkOfPrey.Cancel(false);
 

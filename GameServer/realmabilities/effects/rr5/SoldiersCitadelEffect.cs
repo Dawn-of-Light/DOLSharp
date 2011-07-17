@@ -79,7 +79,7 @@ namespace DOL.GS.Effects
         {
 			GamePlayer player = sender as GamePlayer;
 
-			SoldiersCitadelEffect SoldiersCitadel = (SoldiersCitadelEffect)player.EffectList.GetOfType(typeof(SoldiersCitadelEffect));
+			SoldiersCitadelEffect SoldiersCitadel = player.EffectList.GetOfType<SoldiersCitadelEffect>();
 			if (SoldiersCitadel != null)
 				SoldiersCitadel.Cancel(false);
 		}
@@ -146,7 +146,7 @@ namespace DOL.GS.Effects
         {
             GamePlayer player = sender as GamePlayer;
 
-            SoldiersCitadelSecondaryEffect SoldiersCitadel = (SoldiersCitadelSecondaryEffect)player.EffectList.GetOfType(typeof(SoldiersCitadelSecondaryEffect));
+			SoldiersCitadelSecondaryEffect SoldiersCitadel = player.EffectList.GetOfType<SoldiersCitadelSecondaryEffect>();
             if (SoldiersCitadel != null)
                 SoldiersCitadel.Cancel(false);
        }

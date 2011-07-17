@@ -26,6 +26,7 @@ using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Effects;
 using DOL.GS.Housing;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
@@ -4645,7 +4646,7 @@ namespace DOL.GS
 
 				GameLiving living = TargetObject as GameLiving;
 
-				if (living != null && living.EffectList.GetOfType(typeof(DOL.GS.Effects.NecromancerShadeEffect)) != null)
+				if (living != null && living.EffectList.GetOfType<NecromancerShadeEffect>() != null)
 				{
 					if (living is GamePlayer && (living as GamePlayer).ControlledBrain != null)
 					{

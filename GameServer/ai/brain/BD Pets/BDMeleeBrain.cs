@@ -64,7 +64,7 @@ namespace DOL.AI.Brain
 						case Abilities.ChargeAbility:
 							if (!Body.IsWithinRadius(Body.TargetObject, 500 ))
 							{
-								ChargeAbility charge = Body.GetAbility(typeof(ChargeAbility)) as ChargeAbility;
+								ChargeAbility charge = Body.GetAbility<ChargeAbility>();
 								if (charge != null && Body.GetSkillDisabledDuration(charge) <= 0)
 								{
 									charge.Execute(Body);

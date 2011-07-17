@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.Database;
@@ -414,8 +415,9 @@ namespace DOL.GS
 			
 			int delay = ActionDelay[(int)action];
 			//TODO: better to use a property here - discuss to implement one? dunnow if siegespeed is used at another place.
-			if (Owner != null && Owner.EffectList.CountOfType(typeof(Effects.BannerOfBesiegingEffect)) > 0) {
-				Effects.BannerOfBesiegingEffect eff = (Effects.BannerOfBesiegingEffect)Owner.EffectList.GetOfType(typeof(Effects.BannerOfBesiegingEffect));
+			if (Owner != null && Owner.EffectList.CountOfType<BannerOfBesiegingEffect>() > 0)
+			{
+				BannerOfBesiegingEffect eff = Owner.EffectList.GetOfType<BannerOfBesiegingEffect>();
 				if (eff != null)
 					delay = (int)(delay * (1 - 0.06 * eff.Effectiveness));
 

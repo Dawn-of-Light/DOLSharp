@@ -242,7 +242,7 @@ namespace DOL.AI.Brain
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true)) continue;
 				// Don't aggro on immune players.
 
-				if (player.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
+				if (player.EffectList.GetOfType<NecromancerShadeEffect>() != null)
 					continue;
 
 				int aggrolevel = 0;
@@ -460,7 +460,7 @@ namespace DOL.AI.Brain
 				}
 
 				//ProtectEffect protect = (ProtectEffect) player.EffectList.GetOfType(typeof(ProtectEffect));
-				foreach (ProtectEffect protect in player.EffectList.GetAllOfType(typeof(ProtectEffect)))
+				foreach (ProtectEffect protect in player.EffectList.GetAllOfType<ProtectEffect>())
 				{
 					// if no aggro left => break
 					if (aggroamount <= 0) break;
@@ -634,7 +634,7 @@ namespace DOL.AI.Brain
 					}
 
 					// Don't bother about necro shade, can't attack it anyway.
-					if (living.EffectList.GetOfType(typeof(NecromancerShadeEffect)) != null)
+					if (living.EffectList.GetOfType<NecromancerShadeEffect>() != null)
 						continue;
 					
 					long amount = (long)aggros.Value;

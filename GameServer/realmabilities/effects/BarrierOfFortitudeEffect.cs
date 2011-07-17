@@ -60,7 +60,7 @@ namespace DOL.GS.Effects
 		{
 			GamePlayer player = (GamePlayer)sender;
 
-			BarrierOfFortitudeEffect BoFEffect = (BarrierOfFortitudeEffect)player.EffectList.GetOfType(typeof(BarrierOfFortitudeEffect));
+			BarrierOfFortitudeEffect BoFEffect = player.EffectList.GetOfType<BarrierOfFortitudeEffect>();
 			if (BoFEffect != null)
 			{
 				BoFEffect.Cancel(false);

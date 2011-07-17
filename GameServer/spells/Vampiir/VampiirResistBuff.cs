@@ -115,8 +115,8 @@ namespace DOL.GS.Spells
 			base.OnEffectStart(effect);
 			GamePlayer player = effect.Owner as GamePlayer;
             GameLiving living = effect.Owner as GameLiving;
-			
-			BedazzlingAuraEffect boad = (BedazzlingAuraEffect)player.EffectList.GetOfType(typeof(BedazzlingAuraEffect));
+
+			BedazzlingAuraEffect boad = player.EffectList.GetOfType<BedazzlingAuraEffect>();
 			if (boad != null) boad.Cancel(false);
 			
             int value = (int)Spell.Value;

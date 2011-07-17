@@ -14,7 +14,7 @@ namespace DOL.GS.Spells
 			if(effect.Owner is GamePlayer)
 			{
 				GamePlayer player=effect.Owner as GamePlayer;
-                foreach (GameSpellEffect Effect in player.EffectList.GetAllOfType(typeof(GameSpellEffect)))
+				foreach (GameSpellEffect Effect in player.EffectList.GetAllOfType<GameSpellEffect>())
                 {
                     if (Effect.SpellHandler.Spell.SpellType.Equals("ShadesOfMist") ||
                         Effect.SpellHandler.Spell.SpellType.Equals("TraitorsDaggerProc") ||
