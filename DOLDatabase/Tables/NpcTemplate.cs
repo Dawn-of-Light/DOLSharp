@@ -34,11 +34,16 @@ namespace DOL.Database
 	/// </summary>
 	[DataTable(TableName = "NpcTemplate")]
 	public class DBNpcTemplate : DataObject
-	{
-		private int m_templateId;
+    {
+        #region Variables
+        private int m_templateId;
+        private string m_translationId = string.Empty;
 		private string m_name = "";
+        private string m_suffix = string.Empty;
 		private string m_classType = "";
 		private string m_guildName = "";
+        private string m_examineArticle = string.Empty;
+        private string m_messageArticle = string.Empty;
 		private string m_model;
 		private string m_size = "50";
 		private string m_level = "0";
@@ -71,15 +76,17 @@ namespace DOL.Database
 		private byte m_visibleWeaponSlots = 0;
 		private int m_replaceMobValues =  0;
 		private string m_packageID = "";
+        #endregion Variables
 
-		/// <summary>
+        /// <summary>
 		/// Constructor
 		/// </summary>
 		public DBNpcTemplate()
 		{
 		}
 
-		/// <summary>
+        #region Properties
+        /// <summary>
 		/// Template ID
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
@@ -92,6 +99,20 @@ namespace DOL.Database
 				m_templateId = value;
 			}
 		}
+
+        /// <summary>
+        /// Gets or sets the translation id
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public string TranslationId
+        {
+            get { return m_translationId; }
+            set
+            {
+                Dirty = true;
+                m_translationId = value;
+            }
+        }
 
 		/// <summary>
 		/// Name
@@ -106,6 +127,24 @@ namespace DOL.Database
 				m_name = value;
 			}
 		}
+
+        /// <summary>
+        /// Gets or sets the name suffix (currently used by necromancer pets).
+        /// 
+        /// The XYZ spell is no longer in the Death Servant's queue.
+        /// 
+        /// 's = the suffix.
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public string Suffix
+        {
+            get { return m_suffix; }
+            set
+            {
+                Dirty = true;
+                m_suffix = value;
+            }
+        }
 
 		/// <summary>
 		/// Class Type
@@ -134,6 +173,42 @@ namespace DOL.Database
 				m_guildName = value;
 			}
 		}
+
+        /// <summary>
+        /// Gets or sets the examine article.
+        /// 
+        /// You examine the Tree.
+        /// 
+        /// the = the examine article.
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public string ExamineArticle
+        {
+            get { return m_examineArticle; }
+            set
+            {
+                Dirty = true;
+                m_examineArticle = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the message article.
+        /// 
+        /// GamePlayer has been killed by a Tree.
+        /// 
+        /// a = the message article.
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public string MessageArticle
+        {
+            get { return m_messageArticle; }
+            set
+            {
+                Dirty = true;
+                m_messageArticle = value;
+            }
+        }
 
 		/// <summary>
 		/// Model
@@ -550,6 +625,7 @@ namespace DOL.Database
 				Dirty = true;
 				m_packageID = value;
 			}
-		}
-	}
+        }
+        #endregion Properties
+    }
 }

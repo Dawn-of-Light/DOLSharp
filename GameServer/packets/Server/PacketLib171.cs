@@ -21,6 +21,7 @@
 using System;
 using System.Reflection;
 
+using DOL.Database;
 using DOL.AI.Brain;
 using DOL.GS.Keeps;
 using DOL.GS.Quests;
@@ -200,7 +201,9 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0x00); // new in 1.71
 			pak.WriteByte(0x00); // new in 1.71 (region instance ID from StoC_0x20)
 
-			string name = GameServer.ServerRules.GetNPCName(m_gameClient.Player, npc);
+            DBLanguageNPC translation = npc.GetTranslation(m_gameClient);
+
+            string name = translation.Name;/*GameServer.ServerRules.GetNPCName(m_gameClient.Player, npc);*/
 			if (name.Length + add.Length + 2 > 47) // clients crash with too long names
 				name = name.Substring(0, 47 - add.Length - 2);
 			if (add.Length > 0)
@@ -208,7 +211,7 @@ namespace DOL.GS.PacketHandler
 
 			pak.WritePascalString(name);
 
-			string l_npcGuildname = GameServer.ServerRules.GetNPCGuildName(m_gameClient.Player, npc);;
+            string l_npcGuildname = translation.GuildName;/*GameServer.ServerRules.GetNPCGuildName(m_gameClient.Player, npc);;*/
 			if (l_npcGuildname.Length > 47)
 				pak.WritePascalString(l_npcGuildname.Substring(0, 47));
 			else pak.WritePascalString(l_npcGuildname);

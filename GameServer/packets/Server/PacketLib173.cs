@@ -336,20 +336,14 @@ namespace DOL.GS.PacketHandler
 								{
 									if (!area.DisplayMessage)
                                         continue;
-                                    if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                                        description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Area_Description, area.Description, "");
-                                    else
-                                        description = area.Description;
+                                    
+                                    description = area.Description;
 									break;
 								}
 
 								if (description == "")
-                                {
-                                    if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                                        description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Zone_Description, zon.Description, "");
-                                    else
-                                        description = zon.Description;
-                                }
+                                    description = zon.Description;
+
 								pak.FillString(description, 24);
 							}
 							else
@@ -687,7 +681,10 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0); // SiegeHelperTimer ?
 			pak.WriteShort(0); // SiegeTimer ?
 			pak.WriteShort((ushort)siegeWeapon.ObjectID);
-			pak.WritePascalString(siegeWeapon.Name + " (" + siegeWeapon.CurrentState.ToString() + ")");
+
+            DBLanguageNPC translation = siegeWeapon.GetTranslation(m_gameClient);
+
+            pak.WritePascalString(translation.Name + " (" + siegeWeapon.CurrentState.ToString() + ")");
 			foreach (InventoryItem item in siegeWeapon.Ammo)
 			{
 				pak.WriteByte((byte)item.SlotPosition);
