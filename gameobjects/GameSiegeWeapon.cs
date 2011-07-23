@@ -496,8 +496,14 @@ namespace DOL.GS
 			base.LoadFromDatabase(obj);
 			if (!(obj is ItemTemplate)) return;
 			ItemTemplate item = (ItemTemplate)obj;
+            this.TranslationId = item.TranslationId;
 			this.Name = item.Name;
+            this.ExamineArticle = item.ExamineArticle;
+            this.MessageArticle = item.MessageArticle;
 			this.Model = (ushort)item.Model;
+
+            if (!Util.IsEmpty(TranslationId))
+                RefreshTranslation(null, TranslationId);
 		}
 
 		public bool EnableToMove
