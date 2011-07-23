@@ -29,6 +29,11 @@ namespace DOL.GS
 		/// Gets the npc template ID
 		/// </summary>
 		int TemplateId { get; }
+
+        /// <summary>
+        /// Gets the translation id.
+        /// </summary>
+        string TranslationId { get; }
 		
 		/// <summary>
 		/// Do we want the npctemplate replace db mob's values ?
@@ -39,7 +44,11 @@ namespace DOL.GS
 		/// Gets the template 'physical' attributes
 		/// </summary>
 		string Name { get; }
+
+        string Suffix { get; }
 		string GuildName { get; }
+        string ExamineArticle { get; }
+        string MessageArticle { get; }
 		string Model { get; }
 		string Size { get; }
 		string Level { get;}

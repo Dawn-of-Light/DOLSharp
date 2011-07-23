@@ -21,13 +21,19 @@ using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using System.Linq;
+using DOL.GS.Keeps;
 
 namespace DOL.GS.Commands
 {
 	[CmdAttribute("&translate", ePrivLevel.GM,
 	              "'/translate <TranslationID> <text in your actual language>' : translate the string in current language",
 	              "'/translate showid <sentence>' : show the TranslationID related to the sentence",
-	              "example : '/translate Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!'")]
+	              "example : '/translate Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!'",
+                  "'/translate name <language> <name>' to add or change the name of your target.",
+                  "'/translate suffix <language> <suffix>' to add or change the suffix of your target.",
+                  "'/translate guildname <language> <guild name> to add or change the guild name of your target.",
+                  "'/translate examinearticle <language> <examine article>' to add or change the examine article of your target.",
+                  "'/translate messagearticle <language> <message article>' to add or change the message article of your target.")]
 	public class GMLanguageBaseCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -37,6 +43,62 @@ namespace DOL.GS.Commands
 				DisplaySyntax(client);
 				return;
 			}
+
+            GameObject target = null;
+
+            if (client.Player.TargetObject != null && client.Player.TargetObject is GameObject)
+                target = (GameObject)client.Player.TargetObject;
+
+            switch (args[1].ToLower())
+            {
+                case "name":
+                    {
+                        if (target == null || target is IDoor)
+                            client.Out.SendMessage("You need a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        else
+                            name(client, target, args);
+
+                        return;
+                    }
+                case "suffix":
+                    {
+                        if (target == null || target is IDoor)
+                            client.Out.SendMessage("You need a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        else
+                            suffix(client, target, args);
+
+                        return;
+                    }
+                case "guildname":
+                    {
+                        if (target == null || target is IDoor)
+                            client.Out.SendMessage("You need a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        else
+                            guildname(client, target, args);
+
+                        return;
+                    }
+                case "examinearticle":
+                    {
+                        if (target == null || target is IDoor)
+                            client.Out.SendMessage("You need a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        else
+                            examinearticle(client, target, args);
+
+                        return;
+                    }
+                case "messagearticle":
+                    {
+                        if (target == null || target is IDoor)
+                            client.Out.SendMessage("You need a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        else
+                            messagearticle(client, target, args);
+
+                        return;
+                    }
+                default:
+                    break;
+            }
 
 			string lang = Language.LanguageMgr.LangsToName(client.Account.Language);
 			
@@ -119,5 +181,305 @@ namespace DOL.GS.Commands
 			DisplayMessage(player.Client, "The Translation [" + id + "] [" + lang + "] is now <" + sentence + "> (" + (create ? "created" : "updated") + ") !");
 			LanguageMgr.Refresh(id);
 		}
+
+        private void name(GameClient client, GameObject target, string[] args)
+        {
+            if (args.Length < 4)
+            {
+                DisplaySyntax(client, args[1]);
+                return;
+            }
+
+            if (target is GameStaticItem)
+            {
+                client.Out.SendMessage("Not supported yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            if (target is GameNPC)
+            {
+                GameNPC npc = (GameNPC)target;
+                if (Util.IsEmpty(npc.TranslationId))
+                {
+                    client.Out.SendMessage("Your target doesn't have a translation id, please use '/mob translationid <translation id>' first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+
+                DBLanguageNPC result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(npc.TranslationId) +
+                                                                                       "' and Language = '" + args[2].ToUpper() + "'");
+                if (result != null)
+                    GameServer.Database.DeleteObject(result);
+                else
+                {
+                    result = new DBLanguageNPC();
+                    result.TranslationId = npc.TranslationId;
+                    result.Suffix = string.Empty;
+                    result.GuildName = string.Empty;
+                    result.ExamineArticle = string.Empty;
+                    result.MessageArticle = string.Empty;
+                    result.Language = args[2].ToUpper();
+                }
+
+                if (args.Length > 4)
+                    result.Name = string.Join(" ", args, 3, args.Length - 3);
+                else
+                    result.Name = args[3];
+
+                GameServer.Database.AddObject(result);
+
+                if (!(npc is GameMovingObject) && !(npc is GamePet) && client.Account.Language.ToUpper() == args[2].ToUpper())
+                {
+                    npc.RemoveFromWorld();
+                    GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
+                    npc.AddToWorld();
+                }
+                else
+                    GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
+
+                client.Out.SendMessage("Name for language '" + args[2].ToUpper() + "' changed to: " + result.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            DisplaySyntax(client, args[1]);
+        }
+
+        private void suffix(GameClient client, GameObject target, string[] args)
+        {
+            if (args.Length < 4)
+            {
+                DisplaySyntax(client, args[1]);
+                return;
+            }
+
+            if (target is GameStaticItem)
+            {
+                client.Out.SendMessage("GameStaticItems don't have a suffix!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            if (target is GameNPC)
+            {
+                GameNPC npc = (GameNPC)target;
+                if (Util.IsEmpty(npc.TranslationId))
+                {
+                    client.Out.SendMessage("Your target doesn't have a translation id, please use '/mob translationid <translation id>' first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+
+                if (target is GameMovingObject)
+                {
+                    client.Out.SendMessage("You cannot set a suffix for GameMovingObjects.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+                else // GameNPC, GamePet etc.
+                {
+                    DBLanguageNPC result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(npc.TranslationId) +
+                                                       "' and Language = '" + args[2].ToUpper() + "'");
+                    if (result != null)
+                        GameServer.Database.DeleteObject(result);
+                    else
+                    {
+                        result = new DBLanguageNPC();
+                        result.TranslationId = npc.TranslationId;
+                        result.Name = string.Empty;
+                        result.GuildName = string.Empty;
+                        result.ExamineArticle = string.Empty;
+                        result.MessageArticle = string.Empty;
+                        result.Language = args[2].ToUpper();
+                    }
+
+                    if (args.Length > 4)
+                        result.Suffix = string.Join(" ", args, 3, args.Length - 3);
+                    else
+                        result.Suffix = args[3];
+
+                    GameServer.Database.AddObject(result);
+                    GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
+                    client.Out.SendMessage("Suffix for language '" + args[2].ToUpper() + "' changed to: " + result.Suffix, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+            }
+
+            DisplaySyntax(client, args[1]);
+        }
+
+        private void guildname(GameClient client, GameObject target, string[] args)
+        {
+            if (args.Length < 4)
+            {
+                DisplaySyntax(client, args[1]);
+                return;
+            }
+
+            if (target is GameStaticItem)
+            {
+                client.Out.SendMessage("GameStaticObjects don't have a guild name!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            if (target is GameNPC)
+            {
+                if (target is GameKeepGuard)
+                {
+                    client.Out.SendMessage("You cannot translate the guild name of a GameKeepGuard!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+
+                if (target is GameMovingObject)
+                {
+                    client.Out.SendMessage("GameMovingObjects don't have a guild name!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+
+                // Not sure if we should allow (or not) guild name translations for GamePets.
+
+                GameNPC npc = (GameNPC)target;
+                if (Util.IsEmpty(npc.TranslationId))
+                {
+                    client.Out.SendMessage("Your target doesn't have a translation id, please use '/mob translationid <translation id>' first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+
+                DBLanguageNPC result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(npc.TranslationId) +
+                                                                                       "' and Language = '" + args[2].ToUpper() + "'");
+                if (result != null)
+                    GameServer.Database.DeleteObject(result);
+                else
+                {
+                    result = new DBLanguageNPC();
+                    result.TranslationId = npc.TranslationId;
+                    result.Name = string.Empty;
+                    result.Suffix = string.Empty;
+                    result.ExamineArticle = string.Empty;
+                    result.MessageArticle = string.Empty;
+                    result.Language = args[2].ToUpper();
+                }
+
+                if (args.Length > 4)
+                    result.GuildName = string.Join(" ", args, 3, args.Length - 3);
+                else
+                    result.GuildName = args[3];
+
+                GameServer.Database.AddObject(result);
+
+                if (!(npc is GameMovingObject) && !(npc is GamePet) && client.Account.Language.ToUpper() == args[2].ToUpper())
+                {
+                    npc.RemoveFromWorld();
+                    GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
+                    npc.AddToWorld();
+                }
+                else
+                    GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
+
+                client.Out.SendMessage("Guild name for language '" + args[2].ToUpper() + "' changed to: " + result.GuildName, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            DisplaySyntax(client, args[1]);
+        }
+
+        private void examinearticle(GameClient client, GameObject target, string[] args)
+        {
+            if (args.Length < 4)
+            {
+                DisplaySyntax(client, args[1]);
+                return;
+            }
+
+            if (target is GameStaticItem)
+            {
+                client.Out.SendMessage("Not supported yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            if (target is GameNPC)
+            {
+                GameNPC npc = (GameNPC)target;
+                if (Util.IsEmpty(npc.TranslationId))
+                {
+                    client.Out.SendMessage("Your target doesn't have a translation id, please use '/mob translationid <translation id>' first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+
+                DBLanguageNPC result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(npc.TranslationId) +
+                                                                                       "' and Language = '" + args[2].ToUpper() + "'");
+                if (result != null)
+                    GameServer.Database.DeleteObject(result);
+                else
+                {
+                    result = new DBLanguageNPC();
+                    result.TranslationId = npc.TranslationId;
+                    result.Name = string.Empty;
+                    result.Suffix = string.Empty;
+                    result.GuildName = string.Empty;
+                    result.MessageArticle = string.Empty;
+                    result.Language = args[2].ToUpper();
+                }
+
+                if (args.Length > 4)
+                    result.ExamineArticle = string.Join(" ", args, 3, args.Length - 3);
+                else
+                    result.ExamineArticle = args[3];
+
+                GameServer.Database.AddObject(result);
+                GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
+                client.Out.SendMessage("Examine article for language '" + args[2].ToUpper() + "' changed to: " + result.ExamineArticle, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            DisplaySyntax(client, args[1]);
+        }
+
+        private void messagearticle(GameClient client, GameObject target, string[] args)
+        {
+            if (args.Length < 4)
+            {
+                DisplaySyntax(client, args[1]);
+                return;
+            }
+
+            if (target is GameStaticItem)
+            {
+                client.Out.SendMessage("Not supported yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            if (target is GameNPC)
+            {
+                GameNPC npc = (GameNPC)target;
+                if (Util.IsEmpty(npc.TranslationId))
+                {
+                    client.Out.SendMessage("Your target doesn't have a translation id, please use '/mob translationid <translation id>' first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+
+                DBLanguageNPC result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(npc.TranslationId) +
+                                                                                       "' and Language = '" + args[2].ToUpper() + "'");
+                if (result != null)
+                    GameServer.Database.DeleteObject(result);
+                else
+                {
+                    result = new DBLanguageNPC();
+                    result.TranslationId = npc.TranslationId;
+                    result.Name = string.Empty;
+                    result.Suffix = string.Empty;
+                    result.GuildName = string.Empty;
+                    result.ExamineArticle = string.Empty;
+                    result.Language = args[2].ToUpper();
+                }
+
+                if (args.Length > 4)
+                    result.MessageArticle = string.Join(" ", args, 3, args.Length - 3);
+                else
+                    result.MessageArticle = args[3];
+
+                GameServer.Database.AddObject(result);
+                GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
+                client.Out.SendMessage("Message article for language '" + args[2].ToUpper() + "' changed to: " + result.MessageArticle, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            DisplaySyntax(client, args[1]);
+        }
 	}
 }

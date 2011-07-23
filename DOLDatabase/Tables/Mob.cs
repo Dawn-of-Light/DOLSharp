@@ -29,10 +29,15 @@ namespace DOL.Database
 	/// </summary>
 	[DataTable(TableName = "Mob")]
 	public class Mob : DataObject
-	{
-		private string m_type;
+    {
+        #region Variables
+        private string m_type;
+        private string m_translationId = string.Empty;
 		private string m_name;
+        private string m_suffix = string.Empty;
 		private string m_guild;
+        private string m_examineArticle = string.Empty;
+        private string m_messageArticle = string.Empty;
 		private int m_x;
 		private int m_y;
 		private int m_z;
@@ -73,8 +78,9 @@ namespace DOL.Database
 		private byte m_visibleWeaponSlots;
 
 		public static readonly string DEFAULT_NPC_CLASSTYPE = "DOL.GS.GameNPC";
+        #endregion Variables
 
-		/// <summary>
+        /// <summary>
 		/// The Constructor
 		/// </summary>
 		public Mob()
@@ -103,7 +109,8 @@ namespace DOL.Database
 			m_gender = 0;
 		}
 
-		/// <summary>
+        #region Properties
+        /// <summary>
 		/// The Mob's ClassType
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -119,6 +126,20 @@ namespace DOL.Database
 				m_type = value;
 			}
 		}
+
+        /// <summary>
+        /// Gets or sets the translation id of the mob
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public string TranslationId
+        {
+            get { return m_translationId; }
+            set
+            {
+                Dirty = true;
+                m_translationId = value;
+            }
+        }
 
 		/// <summary>
 		/// The Mob's Name
@@ -137,6 +158,24 @@ namespace DOL.Database
 			}
 		}
 
+        /// <summary>
+        /// Gets or sets the name suffix (currently used by necromancer pets).
+        /// 
+        /// The XYZ spell is no longer in the Death Servant's queue.
+        /// 
+        /// 's = the suffix.
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public string Suffix
+        {
+            get { return m_suffix; }
+            set
+            {
+                Dirty = true;
+                m_suffix = value;
+            }
+        }
+
 		/// <summary>
 		/// The Mob's Guild Name
 		/// </summary>
@@ -153,6 +192,42 @@ namespace DOL.Database
 				m_guild = value;
 			}
 		}
+
+        /// <summary>
+        /// Gets or sets the examine article.
+        /// 
+        /// You examine the Tree.
+        /// 
+        /// the = the examine article.
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public string ExamineArticle
+        {
+            get { return m_examineArticle; }
+            set
+            {
+                Dirty = true;
+                m_examineArticle = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the message article.
+        /// 
+        /// GamePlayer has been killed by a Tree.
+        /// 
+        /// a = the message article.
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public string MessageArticle
+        {
+            get { return m_messageArticle; }
+            set
+            {
+                Dirty = true;
+                m_messageArticle = value;
+            }
+        }
 
 		/// <summary>
 		/// The Mob's X Position
@@ -758,8 +833,9 @@ namespace DOL.Database
 				this.m_visibleWeaponSlots = value;
 				this.Dirty = true;
 			}
-		}
-	}
+        }
+        #endregion Properties
+    }
 }
 
 

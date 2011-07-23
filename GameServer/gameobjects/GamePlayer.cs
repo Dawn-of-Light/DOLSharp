@@ -15744,27 +15744,9 @@ namespace DOL.GS
 			string description = " ";
 
 			if (HasFinishedMLStep(ml, step))
-			{
-				if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-				{
-					description = LanguageMgr.GetTranslation(Client, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsComplete[ml - 1, step - 1], "");
-				}
-				else
-				{
-					description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", ml, step));
-				}
-			}
+                description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", ml, step));
 			else
-			{
-				if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-				{
-					description = LanguageMgr.GetTranslation(Client, eTranslationKey.MasterLevelStep, LanguageMgr.MasterLevelStepsUncomplete[ml - 1, step - 1], "");
-				}
-				else
-				{
-					description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", ml, step));
-				}
-			}
+                description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", ml, step));
 
 			return description;
 		}

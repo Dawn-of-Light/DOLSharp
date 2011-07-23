@@ -230,21 +230,14 @@ namespace DOL.GS.PacketHandler
 								{
 									if (!area.DisplayMessage)
                                         continue;
-
-                                    if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                                        description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Area_Description, area.Description, "");
-                                    else
-                                        description = area.Description;
+                                    
+                                    description = area.Description;
 									break;
 								}
 
                                 if (description == "")
-                                {
-                                    if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                                        description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Zone_Description, zon.Description, "");
-                                    else
-                                        description = zon.Description;
-                                }
+                                    description = zon.Description;
+
 								pak.FillString(description, 24);
 							}
 							else
@@ -1046,7 +1039,10 @@ namespace DOL.GS.PacketHandler
 					if ((npc.Flags & GameNPC.eFlags.DONTSHOWNAME) != 0)
 						add += "-NON"; // indicates NON flag for GMs
 				}
-				string name = npc.Name;
+
+                DBLanguageNPC translation = npc.GetTranslation(m_gameClient);
+
+                string name = translation.Name;/*npc.Name;*/
 				if (name.Length + add.Length + 2 > 47) // clients crash with too long names
 					name = name.Substring(0, 47 - add.Length - 2);
 				if (add.Length > 0)
@@ -1054,11 +1050,17 @@ namespace DOL.GS.PacketHandler
 
 				pak.WritePascalString(name);
 
-				if (npc.GuildName.Length > 47)
-					pak.WritePascalString(npc.GuildName.Substring(0, 47));
-				else pak.WritePascalString(npc.GuildName);
+                //if (npc.GuildName.Length > 47)
+                //    pak.WritePascalString(npc.GuildName.Substring(0, 47));
+                //else pak.WritePascalString(npc.GuildName);
 
+                string guildName = translation.GuildName;
+                if (guildName.Length > 47)
+                    guildName = guildName.Substring(0, 47);
+
+                pak.WritePascalString(guildName);
 				pak.WriteByte(0x00);
+
 				SendTCP(pak);
 			}
 		}
@@ -3241,7 +3243,10 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort(obj.Emblem); //emblem
 				pak.WriteShort(0);
 				pak.WriteInt(0);
-				pak.WritePascalString(obj.Name);
+
+                DBLanguageNPC translation = obj.GetTranslation(m_gameClient);
+
+                pak.WritePascalString(translation.Name);/*pak.WritePascalString(obj.Name);*/
 				pak.WriteByte(0); // trailing ?
 				SendTCP(pak);
 			}
@@ -3263,7 +3268,9 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort) time); // time (?)
 				pak.WriteInt((uint) siegeWeapon.ObjectID);
 
-				pak.WritePascalString(siegeWeapon.Name + " (" + siegeWeapon.CurrentState + ")");
+                DBLanguageNPC translation = siegeWeapon.GetTranslation(m_gameClient);
+
+                pak.WritePascalString(translation.Name + " (" + siegeWeapon.CurrentState + ")");
 				foreach (InventoryItem item in siegeWeapon.Ammo)
 				{
 					pak.WriteByte((byte) item.SlotPosition);
