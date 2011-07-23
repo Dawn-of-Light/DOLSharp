@@ -44,8 +44,12 @@ namespace DOL.GS.Commands
 	     "'/mob nrandcreate <number> [radius(50)]' to create multiple random mobs within radius",
 	     "'/mob model <ModelID> [OID]' to set the mob's model, optionally using OID if mob isn't targeted",
 	     "'/mob size <size>' to set the mob's size (1..255)",
+         "'/mob translationid <translation id>' to set the mob's translation id",
 	     "'/mob name <name>' to set the mob's name",
+         "'/mob suffix <suffix>' to set the mob's suffix",
 	     "'/mob guild <guild name>' to set the mob's guild name (blank to remove)",
+         "'/mob examinearticle <examine article>' to set the mob's examine article",
+         "'/mob messagearticle <message article>' to set the mob's message article",
 	     "'/mob peace' toggle whether the mob can be attacked",
 	     "'/mob aggro <level>' to set mob's aggro level (0..100)%",
 	     "'/mob range <distance>' to set mob's aggro range",
@@ -174,8 +178,12 @@ namespace DOL.GS.Commands
 					case "nrandcreate": nrandcreate(client, args); break;
 					case "model": model(client, targetMob, args); break;
 					case "size": size(client, targetMob, args); break;
+                    case "translationid": translationid(client, targetMob, args); break;
 					case "name": name(client, targetMob, args); break;
+                    case "suffix": suffix(client, targetMob, args); break;
 					case "guild": guild(client, targetMob, args); break;
+                    case "examinearticle": examinearticle(client, targetMob, args); break;
+                    case "messagearticle": messagearticle(client, targetMob, args); break;
 					case "peace": peace(client, targetMob, args); break;
 					case "aggro": aggro(client, targetMob, args); break;
 					case "range": range(client, targetMob, args); break;
@@ -622,6 +630,37 @@ namespace DOL.GS.Commands
 			}
 		}
 
+        private void translationid(GameClient client, GameNPC targetMob, string[] args)
+        {
+            if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
+            {
+                // Can be funny when we remove (e.g.) a ram or a boat (why are we dropped on the sea???) from the world. ;-)
+                client.Out.SendMessage("The selected object is type of GameMovingObject and it's translation id cannot be changed " +
+                                       "via command. Please change the translation id in your code / database.",
+                                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            string id = "";
+
+            if (args.Length > 2)
+                id = String.Join("", args, 2, args.Length - 2);
+
+            if (id != "")
+            {
+                targetMob.TranslationId = id;
+                targetMob.SaveIntoDatabase();
+
+                targetMob.RemoveFromWorld();
+                GameNPC.RefreshTranslation(null, id);
+                targetMob.AddToWorld();
+
+                client.Out.SendMessage("Mob translation id changed to: " + id, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            else
+                DisplaySyntax(client, args[1]);
+        }
+
 		private void name(GameClient client, GameNPC targetMob, string[] args)
 		{
 			string mobName = "";
@@ -640,6 +679,29 @@ namespace DOL.GS.Commands
 				DisplaySyntax(client, args[1]);
 			}
 		}
+
+        private void suffix(GameClient client, GameNPC targetMob, string[] args)
+        {
+            if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
+            {
+                client.Out.SendMessage("You cannot set a suffix for GameMovingObjects.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            string suf = "";
+
+            if (args.Length > 2)
+                suf = String.Join(" ", args, 2, args.Length - 2);
+
+            if (suf != "")
+            {
+                targetMob.Suffix = suf;
+                targetMob.SaveIntoDatabase();
+                client.Out.SendMessage("Mob suffix changed to: " + suf, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            else
+                DisplaySyntax(client, args[1]);
+        }
 
 		private void guild(GameClient client, GameNPC targetMob, string[] args)
 		{
@@ -666,6 +728,56 @@ namespace DOL.GS.Commands
 					DisplaySyntax(client, args[1]);
 			}
 		}
+
+        private void examinearticle(GameClient client, GameNPC targetMob, string[] args)
+        {
+            if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
+            {
+                client.Out.SendMessage("Please change the default language examine article for GameMovingObjects in your code / database. If you want to set a " +
+                                       "examine article for other languages, please use '/translate examinearticle <language> <examine article>'.",
+                                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            string exa = "";
+
+            if (args.Length > 2)
+                exa = String.Join(" ", args, 2, args.Length - 2);
+
+            if (exa != "")
+            {
+                targetMob.ExamineArticle = exa;
+                targetMob.SaveIntoDatabase();
+                client.Out.SendMessage("Mob examine article changed to: " + exa, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            else
+                DisplaySyntax(client, args[1]);
+        }
+
+        private void messagearticle(GameClient client, GameNPC targetMob, string[] args)
+        {
+            if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
+            {
+                client.Out.SendMessage("Please change the default language message article for GameMovingObjects in your code / database. If you want to set a " +
+                                       "message article for other languages, please use '/translate messagearticle <language> <message article>'.",
+                                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            string msg = "";
+
+            if (args.Length > 2)
+                msg = String.Join(" ", args, 2, args.Length - 2);
+
+            if (msg != "")
+            {
+                targetMob.Suffix = msg;
+                targetMob.SaveIntoDatabase();
+                client.Out.SendMessage("Mob message article changed to: " + msg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            else
+                DisplaySyntax(client, args[1]);
+        }
 
 		private void peace(GameClient client, GameNPC targetMob, string[] args)
 		{

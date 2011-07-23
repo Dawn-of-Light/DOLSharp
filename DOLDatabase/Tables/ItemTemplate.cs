@@ -69,7 +69,10 @@ namespace DOL.Database
 		public static string m_blankItem = "Item_Template";
 		
 		protected string m_id_nb;
+        protected string m_translationId;
 		protected string m_name;
+        protected string m_examineArticle;
+        protected string m_messageArticle;
 		protected int m_level;
 		
 		// dur_con
@@ -168,7 +171,10 @@ namespace DOL.Database
 			AllowUpdate = false;
 
 			m_id_nb = m_blankItem;
+            m_translationId = string.Empty;
 			m_name = "(blank item)";
+            m_examineArticle = string.Empty;
+            m_messageArticle = string.Empty;
 			m_level = 0;
 			m_durability = m_maxdurability = 1;
 			m_condition  = m_maxcondition = 1;
@@ -243,7 +249,10 @@ namespace DOL.Database
 			AllowUpdate = false;
 
 			m_id_nb = template.Id_nb;
+            TranslationId = template.TranslationId;
 			Name = template.Name;
+            ExamineArticle = template.ExamineArticle;
+            MessageArticle = template.MessageArticle;
 			Bonus = template.Bonus;
 			Bonus1 = template.Bonus1;
 			Bonus2 = template.Bonus2;
@@ -328,6 +337,17 @@ namespace DOL.Database
 			}
 		}
 
+        [DataElement(AllowDbNull = true)]
+        public string TranslationId
+        {
+            get { return m_translationId; }
+            set
+            {
+                Dirty = true;
+                m_translationId = value;
+            }
+        }
+
 		[DataElement(AllowDbNull = false)]
 		public string Name
 		{
@@ -338,6 +358,28 @@ namespace DOL.Database
 				m_name = value;
 			}
 		}
+
+        [DataElement(AllowDbNull = true)]
+        public string ExamineArticle
+        {
+            get { return m_examineArticle; }
+            set
+            {
+                Dirty = true;
+                m_examineArticle = value;
+            }
+        }
+
+        [DataElement(AllowDbNull = true)]
+        public string MessageArticle
+        {
+            get { return m_messageArticle; }
+            set
+            {
+                Dirty = true;
+                m_messageArticle = value;
+            }
+        }
 
 		[DataElement(AllowDbNull = false)]
 		public int Level

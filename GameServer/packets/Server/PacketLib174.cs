@@ -126,21 +126,14 @@ namespace DOL.GS.PacketHandler
 								{
 									if (!area.DisplayMessage)
                                         continue;
-
-                                    if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                                        description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Area_Description, area.Description, "");
-                                    else
-                                        description = area.Description;
+                                    
+                                    description = area.Description;
 									break;
 								}
 
                                 if (description == "")
-                                {
-                                    if (ServerProperties.Properties.USE_NEW_LANGUAGE_SYSTEM)
-                                        description = LanguageMgr.GetTranslation(m_gameClient, eTranslationKey.Zone_Description, zon.Description, "");
-                                    else
-                                        description = zon.Description;
-                                }
+                                    description = zon.Description;
+
 								pak.FillString(description, 24);
 							}
 							else
