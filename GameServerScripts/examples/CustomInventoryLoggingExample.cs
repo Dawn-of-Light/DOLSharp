@@ -19,8 +19,8 @@ namespace DOL.GS.Scripts.Examples
 			InventoryLogging.ActionXformat[eInventoryActionType.Craft] = "Craft: {0} gives {2} to {1}.";
 			InventoryLogging.ActionXformat[eInventoryActionType.Other] = "Other: {0} gives {2} to {1}.";
 
-			InventoryLogging.GetGameObjectString = obj => obj.Name;
-			InventoryLogging.GetItemString = (item, amount) => amount + " " + item.Name;
+			InventoryLogging.GetGameObjectString = obj => obj == null ? "(null)" : obj.Name;
+			InventoryLogging.GetItemString = (item, amount) => item == null ? "(null)" : (amount + " " + item.Name);
 			InventoryLogging.GetMoneyString = Money.GetString;
 		}
 	}

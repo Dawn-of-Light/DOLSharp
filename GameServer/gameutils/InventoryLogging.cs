@@ -53,10 +53,10 @@ namespace DOL.GS
                 };
 
 		public static Func<GameObject, string> GetGameObjectString = obj =>
-			"(" + obj.Name + ";" + obj.GetType() + ";" + obj.X + ";" + obj.Y + ";" + obj.Z + ";" + obj.CurrentRegionID + ")";
+			obj == null ? "(null)" : ("(" + obj.Name + ";" + obj.GetType() + ";" + obj.X + ";" + obj.Y + ";" + obj.Z + ";" + obj.CurrentRegionID + ")");
 
 		public static Func<ItemTemplate, int, string> GetItemString = (item, count) =>
-			"(" + count + ";" + item.Name + ";" + item.Id_nb + ")";
+			item == null ? "(null)" : ("(" + count + ";" + item.Name + ";" + item.Id_nb + ")");
 
 		public static Func<long, string> GetMoneyString = amount =>
 			"(MONEY;" + amount + ")";
