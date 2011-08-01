@@ -193,8 +193,8 @@ namespace DOL.GS.Spells
                 RezDmgImmunityEffect rezImmune = new RezDmgImmunityEffect();
                 rezImmune.Start(player);
 
-				IList attackers;
-				lock (player.Attackers.SyncRoot) { attackers = (IList)(player.Attackers as ArrayList).Clone(); }
+				IList<GameObject> attackers;
+				lock (player.Attackers) { attackers = new List<GameObject>(player.Attackers); }
 
 				foreach (GameObject attacker in attackers)
 				{
