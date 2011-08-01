@@ -359,11 +359,10 @@ namespace DOL.GS.Spells
 					}
 
 					// remove NPC with new brain from all attackers aggro list
-					ArrayList attackers;
-					lock (npc.Attackers.SyncRoot)
-					{
-						attackers = new ArrayList(npc.Attackers);
-					}
+					List<GameObject> attackers;
+					lock (npc.Attackers)
+						attackers = new List<GameObject>(npc.Attackers);
+
 					foreach (GameObject obj in attackers)
 					{
 						GameNPC npcAttacker = obj as GameNPC;

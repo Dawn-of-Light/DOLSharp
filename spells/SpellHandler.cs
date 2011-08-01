@@ -3408,7 +3408,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 					spellDamage = CapPetSpellDamage(spellDamage, player);
 				}
 
-				if (this.SpellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+				if (SpellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
 				{
 					double WeaponSkill = player.GetWeaponSkill(player.AttackWeapon);
 					WeaponSkill /= 5;
@@ -3416,9 +3416,9 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 				}
 
 				if (player.CharacterClass.ManaStat != eStat.UNDEFINED
-				    && this.SpellLine.KeyName != GlobalSpellsLines.Combat_Styles_Effect
-				    && this.m_spellLine.KeyName != GlobalSpellsLines.Mundane_Poisons
-				    && this.SpellLine.KeyName != GlobalSpellsLines.Item_Effects
+				    && SpellLine.KeyName != GlobalSpellsLines.Combat_Styles_Effect
+				    && m_spellLine.KeyName != GlobalSpellsLines.Mundane_Poisons
+				    && SpellLine.KeyName != GlobalSpellsLines.Item_Effects
 				    && player.CharacterClass.ID != (int)eCharacterClass.MaulerAlb
 				    && player.CharacterClass.ID != (int)eCharacterClass.MaulerMid
 				    && player.CharacterClass.ID != (int)eCharacterClass.MaulerHib
@@ -3430,7 +3430,9 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 			}
 			else if (Caster is GameNPC)
 			{
-				spellDamage = CapNPCSpellDamage(spellDamage, Caster as GameNPC);
+				var npc = (GameNPC) Caster;
+				int manaStatValue = npc.GetModified(eProperty.Intelligence);
+				spellDamage = CapNPCSpellDamage(spellDamage, npc)*(manaStatValue + 200)/275.0;
 			}
 
 			if (spellDamage < 0)
