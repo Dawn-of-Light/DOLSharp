@@ -150,24 +150,23 @@ namespace DOL.GS
 				if (Player.ControlledBrain != null && Player.ControlledBrain.Body != null)
 				{
 					GameNPC pet = Player.ControlledBrain.Body;
-					ArrayList attackerList = (ArrayList)((ArrayList)Player.Attackers).Clone();
+					List<GameObject> attackerList;
+					lock (Player.Attackers)
+						attackerList = new List<GameObject>(Player.Attackers);
 
-					if (pet != null)
+					foreach (GameObject obj in attackerList)
 					{
-						foreach (GameObject obj in attackerList)
+						if (obj is GameNPC)
 						{
-							if (obj is GameNPC)
+							GameNPC npc = (GameNPC) obj;
+							if (npc.TargetObject == Player && npc.AttackState)
 							{
-								GameNPC npc = (GameNPC)obj;
-								if (npc.TargetObject == Player && npc.AttackState)
+								IOldAggressiveBrain brain = npc.Brain as IOldAggressiveBrain;
+								if (brain != null)
 								{
-									IOldAggressiveBrain brain = npc.Brain as IOldAggressiveBrain;
-									if (brain != null)
-									{
-										(npc).AddAttacker(pet);
-										npc.StopAttack();
-										brain.AddToAggroList(pet, (int)(brain.GetAggroAmountForLiving(Player) + 1));
-									}
+									npc.AddAttacker(pet);
+									npc.StopAttack();
+									brain.AddToAggroList(pet, (int) (brain.GetAggroAmountForLiving(Player) + 1));
 								}
 							}
 						}

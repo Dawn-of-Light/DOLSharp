@@ -230,7 +230,7 @@ namespace DOL.GS.Keeps
 				if (result == eAttackResult.OutOfRange)
 				{
 					guard.StopAttack();
-					lock (guard.Attackers.SyncRoot)
+					lock (guard.Attackers)
 					{
 						foreach (GameLiving living in guard.Attackers)
 						{

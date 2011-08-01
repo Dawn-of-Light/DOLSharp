@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using System.Collections;
@@ -140,7 +141,7 @@ namespace DOL.GS.SkillHandler
 			}
 			//since 1.88 (?), players which stealth, doesn't be followed by mobs [by Suncheck]
 			//TODO: Some further checks need?
-			ArrayList attackers = new ArrayList();
+			var attackers = new List<GameObject>();
 			attackers.AddRange(player.Attackers);
 			foreach (GameLiving attacker in attackers)
 			{

@@ -53,8 +53,9 @@ namespace DOL.GS.RealmAbilities
 				}
 			}
 
-			ArrayList attackers = new ArrayList();
-			attackers.AddRange(living.Attackers);
+			var attackers = new List<GameObject>();
+			lock (living.Attackers)
+				attackers.AddRange(living.Attackers);
 			foreach (GameLiving attacker in attackers)
 			{
 				if (attacker.TargetObject == living)
