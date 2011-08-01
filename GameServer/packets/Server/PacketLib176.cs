@@ -274,13 +274,9 @@ namespace DOL.GS.PacketHandler
 				{
 					ushort model = (ushort)(item.Model & 0x1FFF);
 					int slot = item.SlotPosition;
-					int texture = item.Color;
-					if (item.Emblem != 0)
-					{
-						texture = (ushort)item.Emblem;
-						if (item.SlotPosition == Slot.LEFTHAND || item.SlotPosition == Slot.CLOAK) // for test only cloack and shield
-							slot = slot | ((item.Emblem & 0x010000) >> 9); // slot & 0x80 if new emblem
-					}
+					int texture = (item.Emblem != 0) ? item.Emblem : item.Color;
+					if (item.SlotPosition == Slot.LEFTHAND || item.SlotPosition == Slot.CLOAK) // for test only cloack and shield
+						slot = slot | ((texture & 0x010000) >> 9); // slot & 0x80 if new emblem
 					pak.WriteByte((byte)slot);
 					if ((texture & ~0xFF) != 0)
 						model |= 0x8000;

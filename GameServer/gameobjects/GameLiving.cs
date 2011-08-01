@@ -579,7 +579,8 @@ namespace DOL.GS
 		/// To be more exact, the objects that are in combat
 		/// and have this living as target.
 		/// </summary>
-		protected readonly ArrayList m_attackers;
+		protected readonly List<GameObject> m_attackers;
+
 		/// <summary>
 		/// Returns the current active weapon slot of this living
 		/// </summary>
@@ -2267,9 +2268,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected virtual AttackAction CreateAttackAction()
 		{
-			return (m_attackAction == null)
-				? new AttackAction(this)
-				: m_attackAction;
+			return m_attackAction ?? new AttackAction(this);
 		}
 
 		/// <summary>
@@ -4164,14 +4163,14 @@ namespace DOL.GS
 			//natural regeneration, this allows for aggro on healers!
 			if (healthChanged > 0 && healthChangeType != eHealthChangeType.Regenerate)
 			{
-				IList attackers;
-				lock (m_attackers.SyncRoot) { attackers = (IList)m_attackers.Clone(); }
+				IList<GameObject> attackers;
+				lock (Attackers) { attackers = new List<GameObject>(m_attackers); }
 				EnemyHealedEventArgs args = new EnemyHealedEventArgs(this, changeSource, healthChangeType, healthChanged);
 				foreach (GameObject attacker in attackers)
 				{
 					if (attacker is GameLiving)
 					{
-						(attacker as GameLiving).Notify(GameLivingEvent.EnemyHealed, (GameLiving)attacker, args);
+						(attacker as GameLiving).Notify(GameLivingEvent.EnemyHealed, attacker, args);
 						(attacker as GameLiving).AddXPGainer(changeSource, healthChanged);
 					}
 				}
@@ -4224,17 +4223,18 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the list of attackers
 		/// </summary>
-		public virtual IList Attackers
+		public List<GameObject> Attackers
 		{
 			get { return m_attackers; }
 		}
+
 		/// <summary>
 		/// Adds an attacker to the attackerlist
 		/// </summary>
 		/// <param name="attacker">the attacker to add</param>
 		public virtual void AddAttacker(GameObject attacker)
 		{
-			lock (m_attackers.SyncRoot)
+			lock (Attackers)
 			{
 				if (attacker == this) return;
 				if (m_attackers.Contains(attacker)) return;
@@ -4249,12 +4249,9 @@ namespace DOL.GS
 		{
 			//			log.Warn(Name + ": RemoveAttacker "+attacker.Name);
 			//			log.Error(Environment.StackTrace);
-			lock (m_attackers.SyncRoot)
+			lock (Attackers)
 			{
-				if (m_attackers.Contains(attacker))
-				{
-					m_attackers.Remove(attacker);
-				}
+				m_attackers.Remove(attacker);
 			}
 		}
 		/// <summary>
@@ -4270,10 +4267,13 @@ namespace DOL.GS
 
 			StopAttack();
 
-			if (m_attackers.Contains(killer) == false)
-				m_attackers.Add(killer);
-
-			ArrayList clone = m_attackers.Clone() as ArrayList;
+			List<GameObject> clone;
+			lock (Attackers)
+			{
+				if (m_attackers.Contains(killer) == false)
+					m_attackers.Add(killer);
+				clone = new List<GameObject>(m_attackers);
+			}
 			List<GamePlayer> playerAttackers = null;
 
 			foreach (GameObject obj in clone)
@@ -6254,15 +6254,13 @@ namespace DOL.GS
 			if (!base.RemoveFromWorld()) return false;
 
 			StopAttack();
-			ArrayList temp;
-			lock (m_attackers.SyncRoot)
+			List<GameObject> temp;
+			lock (Attackers)
 			{
-				temp = (ArrayList)m_attackers.Clone();
+				temp = new List<GameObject>(m_attackers);
 				m_attackers.Clear();
 			}
-			foreach (GameObject obj in temp)
-				if (obj is GameLiving)
-					((GameLiving)obj).EnemyKilled(this);
+			temp.OfType<GameLiving>().ForEach(o => o.EnemyKilled(this));
 			StopHealthRegeneration();
 			StopPowerRegeneration();
 			StopEnduranceRegeneration();
@@ -6613,7 +6611,7 @@ namespace DOL.GS
 			m_xpGainers = new HybridDictionary();
 			m_effects = CreateEffectsList();
 			m_concEffects = new ConcentrationList(this);
-			m_attackers = new ArrayList(1);
+			m_attackers = new List<GameObject>();
 
 			m_health = 1;
 			m_mana = 1;
