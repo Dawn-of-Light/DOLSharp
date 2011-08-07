@@ -292,7 +292,10 @@ namespace DOL.GS.Quests.Atlantis
             lock (player.Inventory)
             {
                 if (player.Inventory.RemoveItem(item))
+                {
                     InventoryLogging.LogInventoryAction(player, "(ARTIFACT;" + Name + ")", eInventoryActionType.Quest, item.Template, item.Count);
+                    return true;
+                }
             }
 		    return false;
 		}
