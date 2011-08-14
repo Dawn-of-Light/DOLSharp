@@ -32,8 +32,10 @@ using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 using DOL.GS.Spells;
+using DOL.GS.Styles;
 using DOL.GS.Utils;
 using DOL.Language;
+using DOL.GS.ServerProperties;
 
 namespace DOL.GS
 {
@@ -431,15 +433,18 @@ namespace DOL.GS
 
 		public virtual void AutoSetStats()
 		{
-			Strength = (short)( 20 + Level * 6 );
-			Constitution = 30;
-			Dexterity = 30;
-			Quickness = 30;
+            // Values changed by Argo, based on Tolakrams Advice for how to change the Multiplier for Autoset str
 
-			Intelligence = 30;
-			Empathy = 30;
-			Piety = 30;
-			Charisma = 30;
+            Strength = (short)(Properties.MOB_AUTOSET_STR_BASE + Level * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
+            Constitution = (short)(Properties.MOB_AUTOSET_CON_BASE + Level * Properties.MOB_AUTOSET_CON_MULTIPLIER);
+            Quickness = (short)(Properties.MOB_AUTOSET_QUI_BASE + Level * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
+            Dexterity = (short)(Properties.MOB_AUTOSET_DEX_BASE + Level * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
+            
+			Intelligence = (short)(30);
+            Empathy = (short)(30);
+            Piety = (short)(30);
+            Charisma = (short)(30);
+             
 		}
 
 		/// <summary>
@@ -3505,7 +3510,21 @@ namespace DOL.GS
 					}
 			}
 		}
+        /// <summary>
+        /// Pick a random style for now.
+        /// </summary>
+        /// <returns></returns>
+        protected override Style GetStyleToUse()
+        {
+            if (Styles != null && Styles.Count > 0 && Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE + Styles.Count))
+            {
+                Style style = (Style)Styles[Util.Random(Styles.Count - 1)];
+                if (StyleProcessor.CanUseStyle(this, style, AttackWeapon))
+                    return style;
+            }
 
+            return base.GetStyleToUse();
+        }
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
 		/// </summary>
