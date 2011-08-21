@@ -45,19 +45,26 @@ namespace DOL.GS.Keeps
 
 		public static void SendChangeLevelTimeMessage(AbstractGameKeep keep)
 		{
-			string message;
-			string changeleveltext = "";
-			int nextlevel = 0;
-			if (10 > keep.Level)
-			{
-				changeleveltext = "upgrade";
-				nextlevel = keep.Level + 1;
-			}
-			else
-			{
-				changeleveltext = "downgrade";
-				nextlevel = keep.Level - 1;
-			}
+            string message;
+            string changeleveltext = "";
+            int nextlevel = 0;
+
+            byte maxlevel = (byte)ServerProperties.Properties.MAX_KEEP_LEVEL;
+
+            if (keep.Level < maxlevel)
+            {
+                changeleveltext = "upgrade";
+                nextlevel = keep.Level + 1;
+            }
+            else if (keep.Level > maxlevel)
+            {
+                changeleveltext = "downgrade";
+                nextlevel = keep.Level - 1;
+            }
+            else
+            {
+                return;
+            }
 			message = "Your guild is starting to " + changeleveltext + " its area " + keep.Name + " to level 10.";
 			TimeSpan time = keep.ChangeLevelTimeRemaining;
 			message += " It will take ";
