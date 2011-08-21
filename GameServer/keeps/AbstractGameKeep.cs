@@ -1057,10 +1057,19 @@ namespace DOL.GS.Keeps
 						return 5 * 60 * 1000;
 				}
 			}
-			if (Level < 10 && m_guild != null)
-				ChangeLevel((byte)(this.Level + 1));
-			else if (Level > 1 && m_guild == null)
-				ChangeLevel((byte)(this.Level - 1));
+            byte maxlevel = 0;
+            if (m_guild != null)
+                maxlevel = (byte)ServerProperties.Properties.MAX_KEEP_LEVEL;
+            else
+                maxlevel = (byte)ServerProperties.Properties.STARTING_KEEP_LEVEL;
+
+
+            if (Level < maxlevel && m_guild != null)
+            {
+                ChangeLevel((byte)(this.Level + 1));
+            }
+            else if (Level > maxlevel && m_guild == null)
+                ChangeLevel((byte)(this.Level - 1));
 
 			if (this.Level != 10 && this.Level != 1)
 			{
