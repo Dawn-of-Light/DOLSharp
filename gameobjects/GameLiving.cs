@@ -3728,7 +3728,10 @@ namespace DOL.GS
 				else if( evadeChance > 0.995 )
 					evadeChance = 0.995;
 			}
-
+			if (ad.AttackType == AttackData.eAttackType.MeleeDualWield)
+			{
+				evadeChance = Math.Max(evadeChance - 0.25, 0);
+			}
 			return evadeChance;
 		}
 
@@ -3894,7 +3897,10 @@ namespace DOL.GS
 						engage.Cancel( false );
 				}
 			}
-
+			if (ad.AttackType == AttackData.eAttackType.MeleeDualWield)
+			{
+				blockChance = Math.Max(blockChance - 0.25, 0);
+			}
 			return blockChance;
 		}
 
