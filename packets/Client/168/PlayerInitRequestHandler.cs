@@ -73,7 +73,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.LastWorldUpdate = Environment.TickCount;
 				player.CurrentUpdateArray.SetAll(false);
 				// update the region color scheme which may be wrong due to ALLOW_ALL_REALMS support
-				player.Out.SendRegionColorSheme();
+				player.Out.SendRegionColorScheme();
 				player.CurrentRegion.Notify(RegionEvent.PlayerEnter, player.CurrentRegion, new RegionPlayerEventArgs(player));
 				int mobs = SendMobsAndMobEquipmentToPlayer(player);
 				player.Out.SendTime();

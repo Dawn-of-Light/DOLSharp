@@ -683,8 +683,8 @@ namespace DOL.GS.PacketHandler
 		void CheckLengthHybridSkillsPacket(ref GSTCPPacketOut pak, ref int maxSkills, ref int first);
 		void SendNonHybridSpellLines();
 		void SendCrash(string str);
-		void SendRegionColorSheme();
-		void SendRegionColorSheme(byte color);
+		void SendRegionColorScheme();
+		void SendRegionColorScheme(byte color);
 		void SendVampireEffect(GameLiving living, bool show);
 		void SendXFireInfo(byte flag);
 		void SendMinotaurRelicMapRemove(byte id);
