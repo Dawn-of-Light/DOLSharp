@@ -349,7 +349,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		public override void SendRegionColorSheme(byte color)
+		public override void SendRegionColorScheme(byte color)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 			pak.WriteShort(0); // not used
