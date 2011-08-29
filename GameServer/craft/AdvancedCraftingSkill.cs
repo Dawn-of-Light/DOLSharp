@@ -125,6 +125,9 @@ namespace DOL.GS
                     case 0: //Type damage 0 = armors
                         if (!GlobalConstants.IsArmor(item.Object_Type))
                         {
+                            if (item.Object_Type == (int)eObjectType.Shield) // think shield can do armor and weapon ? not verified.
+                                return true;
+
                             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             return false;
                         }
