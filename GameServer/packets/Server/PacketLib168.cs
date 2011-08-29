@@ -3429,13 +3429,13 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-		public virtual void SendRegionColorSheme(byte color)
+		public virtual void SendRegionColorScheme(byte color)
 		{
 		}
 
-		public virtual void SendRegionColorSheme()
+		public virtual void SendRegionColorScheme()
 		{
-			SendRegionColorSheme(GameServer.ServerRules.GetColorHandling(m_gameClient));
+			SendRegionColorScheme(GameServer.ServerRules.GetColorHandling(m_gameClient));
 		}
 
 		public virtual void SendVampireEffect(GameLiving living, bool show)
