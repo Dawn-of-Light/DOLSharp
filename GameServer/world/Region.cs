@@ -171,7 +171,7 @@ namespace DOL.GS
 
 			m_timeManager = time;
 
-			List<string> list = null; 
+			List<string> list = null;
 
 			if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
 				list = ServerProperties.Properties.DEBUG_LOAD_REGIONS.SplitCSV(true);
@@ -285,7 +285,7 @@ namespace DOL.GS
 					default:
 						return false;
 				}
-			} 
+			}
 		}
 
 		/// <summary>
@@ -347,7 +347,7 @@ namespace DOL.GS
 		{
 			get { return m_regionData.Name; }
 		}
-        //Dinberg: Changed this to virtual, so that Instances can take a unique Name, for things like quest instances.
+		//Dinberg: Changed this to virtual, so that Instances can take a unique Name, for things like quest instances.
 
 		/// <summary>
 		/// The Regi on Description eg. Cursed Forest
@@ -356,8 +356,8 @@ namespace DOL.GS
 		{
 			get { return m_regionData.Description; }
 		}
-        //Dinberg: Virtual, so that we can change this if need be, for quests eg 'Hermit Dinbargs Cave'
-        //or for the hell of it, eg Jordheim (Instance).
+		//Dinberg: Virtual, so that we can change this if need be, for quests eg 'Hermit Dinbargs Cave'
+		//or for the hell of it, eg Jordheim (Instance).
 
 		/// <summary>
 		/// The ID of the Region eg. 21
@@ -366,7 +366,7 @@ namespace DOL.GS
 		{
 			get { return m_regionData.Id; }
 		}
-        //Dinberg: Changed this to virtual, so that Instances can take a unique ID.
+		//Dinberg: Changed this to virtual, so that Instances can take a unique ID.
 
 		/// <summary>
 		/// The Region Server IP ... for future use
@@ -485,11 +485,11 @@ namespace DOL.GS
 		}
 
 		//Dinberg: Added this for instances.
-        /// <summary>
-        /// Added to allow instances; the 'appearance' of the region, the map the GameClient uses.
-        /// </summary>
-        public virtual ushort Skin
-        { 
+		/// <summary>
+		/// Added to allow instances; the 'appearance' of the region, the map the GameClient uses.
+		/// </summary>
+		public virtual ushort Skin
+		{
 			get { return ID; }
 		}
 
@@ -582,7 +582,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// Loads the region from database
+		/// Loads the region from database
 		/// </summary>
 		/// <param name="mobObjs"></param>
 		/// <param name="mobCount"></param>
@@ -1083,10 +1083,10 @@ namespace DOL.GS
 			{
 				switch (this.ID)
 				{
-					case 10: return true; // Camelot City
-					case 101: return true; // Jordheim
-					case 201: return true; // Tir na Nog
-					default: return false;
+						case 10: return true; // Camelot City
+						case 101: return true; // Jordheim
+						case 201: return true; // Tir na Nog
+						default: return false;
 				}
 			}
 		}
@@ -1101,23 +1101,23 @@ namespace DOL.GS
 			{
 				switch (this.ID)
 				{
-					case 2: return true; 	// Housing alb
-					case 102: return true; 	// Housing mid
-					case 202: return true; 	// Housing hib
-					default: return false;
+						case 2: return true; 	// Housing alb
+						case 102: return true; 	// Housing mid
+						case 202: return true; 	// Housing hib
+						default: return false;
 				}
 			}
 		}
 
-        /// <summary>
-        /// Check if the given region is Atlantis.
-        /// </summary>
-        /// <param name="regionId"></param>
-        /// <returns></returns>
-        public static bool IsAtlantis(int regionId)
-        {
-            return (regionId == 30 || regionId == 73 || regionId == 130);
-        }
+		/// <summary>
+		/// Check if the given region is Atlantis.
+		/// </summary>
+		/// <param name="regionId"></param>
+		/// <returns></returns>
+		public static bool IsAtlantis(int regionId)
+		{
+			return (regionId == 30 || regionId == 73 || regionId == 130);
+		}
 
 		#endregion
 
@@ -1210,7 +1210,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-        /// Gets the areas for a certain spot
+		/// Gets the areas for a certain spot
 		/// </summary>
 		/// <param name="zone"></param>
 		/// <param name="p"></param>
@@ -1332,8 +1332,8 @@ namespace DOL.GS
 				{
 					currentZone = (Zone)m_Zones[i];
 					if ((currentZone != startingZone)
-						&& (currentZone.TotalNumberOfObjects > 0)
-						&& CheckShortestDistance(currentZone, x, y, sqRadius))
+					    && (currentZone.TotalNumberOfObjects > 0)
+					    && CheckShortestDistance(currentZone, x, y, sqRadius))
 					{
 						res = currentZone.GetObjectsInRadius(type, x, y, z, radius, res, ignoreZ);
 					}
@@ -1363,7 +1363,10 @@ namespace DOL.GS
 				}
 				else
 				{
-					tmp = new ObjectEnumerator(res);
+					if (res.Count > 0)
+						tmp = new ObjectEnumerator(res);
+					else
+						tmp = new EmptyEnumerator();
 				}
 				return tmp;
 			}
@@ -1639,7 +1642,7 @@ namespace DOL.GS
 				get
 				{
 					GamePlayer obj = (GamePlayer)m_currentObj;
-                    return new PlayerDistEntry( obj, obj.GetDistanceTo( new Point3D( m_X, m_Y, m_Z ) ) );
+					return new PlayerDistEntry( obj, obj.GetDistanceTo( new Point3D( m_X, m_Y, m_Z ) ) );
 				}
 			}
 		}
@@ -1659,7 +1662,7 @@ namespace DOL.GS
 				get
 				{
 					GameNPC obj = (GameNPC)m_currentObj;
-                    return new NPCDistEntry( obj, obj.GetDistanceTo( new Point3D( m_X, m_Y, m_Z ) ) );
+					return new NPCDistEntry( obj, obj.GetDistanceTo( new Point3D( m_X, m_Y, m_Z ) ) );
 				}
 			}
 		}
@@ -1679,7 +1682,7 @@ namespace DOL.GS
 				get
 				{
 					GameStaticItem obj = (GameStaticItem)m_currentObj;
-                    return new ItemDistEntry( obj, obj.GetDistanceTo( new Point3D( m_X, m_Y, m_Z ) ) );
+					return new ItemDistEntry( obj, obj.GetDistanceTo( new Point3D( m_X, m_Y, m_Z ) ) );
 				}
 			}
 		}
@@ -1699,7 +1702,7 @@ namespace DOL.GS
 				get
 				{
 					IDoor obj = (IDoor)m_currentObj;
-                    return new DoorDistEntry( obj, obj.GetDistance( new Point3D( m_X, m_Y, m_Z ) ) );
+					return new DoorDistEntry( obj, obj.GetDistance( new Point3D( m_X, m_Y, m_Z ) ) );
 				}
 			}
 		}
