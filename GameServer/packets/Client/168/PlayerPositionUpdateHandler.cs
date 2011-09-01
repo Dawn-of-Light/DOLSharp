@@ -16,9 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 //#define OUTPUT_DEBUG_INFO
-
 using System;
 using System.Collections;
 using System.Net;
@@ -627,131 +625,126 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			//**************//
 
-			var playersInVisibilityRange = client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE);
-			if (!(playersInVisibilityRange is DOL.GS.Region.EmptyEnumerator))
+			byte[] con168 = packet.ToArray();
+			//Riding is set here!
+			if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
 			{
+				client.Player.Heading = client.Player.Steed.Heading;
 
-				byte[] con168 = packet.ToArray();
-				//Riding is set here!
-				if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
+				con168[2] = 0x18; // Set ride flag 00011000
+				con168[3] = 0; // player speed = 0 while ride
+				con168[12] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
+				con168[13] = (byte)(client.Player.Steed.ObjectID & 0xFF);
+				con168[14] = (byte)0;
+				con168[15] = (byte)(client.Player.Steed.RiderSlot(client.Player)); // there rider slot this player
+			}
+			else if (!client.Player.IsAlive)
+			{
+				con168[2] &= 0xE3; //11100011
+				con168[2] |= 0x14; //Set dead flag 00010100
+			}
+			//diving is set here
+			con168[16] &= 0xFB; //11 11 10 11
+			if ((con168[16] & 0x02) != 0x00)
+			{
+				client.Player.IsDiving = true;
+				con168[16] |= 0x04;
+			}
+			else
+				client.Player.IsDiving = false;
+
+			con168[16] &= 0xFC; //11 11 11 00 cleared Wireframe & Stealth bits
+			if (client.Player.IsWireframe)
+			{
+				con168[16] |= 0x01;
+			}
+			//stealth is set here
+			if (client.Player.IsStealthed)
+			{
+				con168[16] |= 0x02;
+			}
+
+			con168[17] = (byte)((con168[17] & 0x80) | client.Player.HealthPercent);
+			// zone ID has changed in 1.72, fix bytes 11 and 12
+			byte[] con172 = (byte[])con168.Clone();
+			if (packetVersion == 168)
+			{
+				// client sent v168 pos update packet, fix 172 version
+				con172[10] = 0;
+				con172[11] = con168[10];
+			}
+			else
+			{
+				// client sent v172 pos update packet, fix 168 version
+				con168[10] = con172[11];
+				con168[11] = 0;
+			}
+
+			GSUDPPacketOut outpak168 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
+			//Now copy the whole content of the packet
+			outpak168.Write(con168, 0, 18/*con168.Length*/);
+			outpak168.WritePacketLength();
+
+			GSUDPPacketOut outpak172 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
+			//Now copy the whole content of the packet
+			outpak172.Write(con172, 0, 18/*con172.Length*/);
+			outpak172.WritePacketLength();
+
+			//			byte[] pak168 = outpak168.GetBuffer();
+			//			byte[] pak172 = outpak172.GetBuffer();
+			//			outpak168 = null;
+			//			outpak172 = null;
+			GSUDPPacketOut outpak190 = null;
+
+			foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if (player == null)
+					continue;
+				//No position updates for ourselves
+				if (player == client.Player)
+					continue;
+				//no position updates in different houses
+				if ((client.Player.InHouse || player.InHouse) && player.CurrentHouse != client.Player.CurrentHouse)
+					continue;
+
+				if (client.Player.MinotaurRelic != null)
 				{
-					client.Player.Heading = client.Player.Steed.Heading;
-
-					con168[2] = 0x18; // Set ride flag 00011000
-					con168[3] = 0; // player speed = 0 while ride
-					con168[12] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
-					con168[13] = (byte)(client.Player.Steed.ObjectID & 0xFF);
-					con168[14] = (byte)0;
-					con168[15] = (byte)(client.Player.Steed.RiderSlot(client.Player)); // there rider slot this player
-				}
-				else if (!client.Player.IsAlive)
-				{
-					con168[2] &= 0xE3; //11100011
-					con168[2] |= 0x14; //Set dead flag 00010100
-				}
-				//diving is set here
-				con168[16] &= 0xFB; //11 11 10 11
-				if ((con168[16] & 0x02) != 0x00)
-				{
-					client.Player.IsDiving = true;
-					con168[16] |= 0x04;
-				}
-				else
-					client.Player.IsDiving = false;
-
-				con168[16] &= 0xFC; //11 11 11 00 cleared Wireframe & Stealth bits
-				if (client.Player.IsWireframe)
-				{
-					con168[16] |= 0x01;
-				}
-				//stealth is set here
-				if (client.Player.IsStealthed)
-				{
-					con168[16] |= 0x02;
-				}
-
-				con168[17] = (byte)((con168[17] & 0x80) | client.Player.HealthPercent);
-				// zone ID has changed in 1.72, fix bytes 11 and 12
-				byte[] con172 = (byte[])con168.Clone();
-				if (packetVersion == 168)
-				{
-					// client sent v168 pos update packet, fix 172 version
-					con172[10] = 0;
-					con172[11] = con168[10];
-				}
-				else
-				{
-					// client sent v172 pos update packet, fix 168 version
-					con168[10] = con172[11];
-					con168[11] = 0;
-				}
-
-				GSUDPPacketOut outpak168 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
-				//Now copy the whole content of the packet
-				outpak168.Write(con168, 0, 18/*con168.Length*/);
-				outpak168.WritePacketLength();
-
-				GSUDPPacketOut outpak172 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
-				//Now copy the whole content of the packet
-				outpak172.Write(con172, 0, 18/*con172.Length*/);
-				outpak172.WritePacketLength();
-
-				//			byte[] pak168 = outpak168.GetBuffer();
-				//			byte[] pak172 = outpak172.GetBuffer();
-				//			outpak168 = null;
-				//			outpak172 = null;
-				GSUDPPacketOut outpak190 = null;
-
-				foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					if (player == null)
-						continue;
-					//No position updates for ourselves
-					if (player == client.Player)
-						continue;
-					//no position updates in different houses
-					if ((client.Player.InHouse || player.InHouse) && player.CurrentHouse != client.Player.CurrentHouse)
-						continue;
-
-					if (client.Player.MinotaurRelic != null)
+					MinotaurRelic relic = client.Player.MinotaurRelic;
+					if (!relic.Playerlist.Contains(player) && player != client.Player)
 					{
-						MinotaurRelic relic = client.Player.MinotaurRelic;
-						if (!relic.Playerlist.Contains(player) && player != client.Player)
-						{
-							relic.Playerlist.Add(player);
-							player.Out.SendMinotaurRelicWindow(client.Player, client.Player.MinotaurRelic.Effect, true);
-						}
+						relic.Playerlist.Add(player);
+						player.Out.SendMinotaurRelicWindow(client.Player, client.Player.MinotaurRelic.Effect, true);
 					}
+				}
 
-					if (!client.Player.IsStealthed || player.CanDetect(client.Player))
+				if (!client.Player.IsStealthed || player.CanDetect(client.Player))
+				{
+					//forward the position packet like normal!
+					if (player.Client.Version >= GameClient.eClientVersion.Version190)
 					{
-						//forward the position packet like normal!
-						if (player.Client.Version >= GameClient.eClientVersion.Version190)
+						if (outpak190 == null)
 						{
-							if (outpak190 == null)
-							{
-								outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
-								outpak190.Write(con172, 0, 18/*con172.Length*/);
-								outpak190.WriteByte(client.Player.ManaPercent);
-								outpak190.WriteByte(client.Player.EndurancePercent);
-								outpak190.FillString(client.Player.CharacterClass.Name, 32);
-								// roleplay flag, if == 1, show name (RP) with gray color
-								if (client.Player.RPFlag)
-									outpak190.WriteByte(1);
-								else outpak190.WriteByte(0);
-								outpak190.WriteByte((con168.Length == 54) ? con168[53] : (byte)0); // send last byte for 190+ packets
-								outpak190.WritePacketLength();
-							}
-							player.Out.SendUDPRaw(outpak190);
+							outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
+							outpak190.Write(con172, 0, 18/*con172.Length*/);
+							outpak190.WriteByte(client.Player.ManaPercent);
+							outpak190.WriteByte(client.Player.EndurancePercent);
+							outpak190.FillString(client.Player.CharacterClass.Name, 32);
+							// roleplay flag, if == 1, show name (RP) with gray color
+							if (client.Player.RPFlag)
+								outpak190.WriteByte(1);
+							else outpak190.WriteByte(0);
+							outpak190.WriteByte((con168.Length == 54) ? con168[53] : (byte) 0); // send last byte for 190+ packets
+							outpak190.WritePacketLength();
 						}
-						else if (player.Client.Version >= GameClient.eClientVersion.Version172)
-							player.Out.SendUDPRaw(outpak172);
-						else
-							player.Out.SendUDPRaw(outpak168);
+						player.Out.SendUDPRaw(outpak190);
 					}
+					else if (player.Client.Version >= GameClient.eClientVersion.Version172)
+						player.Out.SendUDPRaw(outpak172);
 					else
-						player.Out.SendObjectDelete(client.Player); //remove the stealthed player from view
+						player.Out.SendUDPRaw(outpak168);
 				}
+				else
+					player.Out.SendObjectDelete(client.Player); //remove the stealthed player from view
 			}
 
 			if (client.Player.CharacterClass.ID == (int)eCharacterClass.Warlock)
