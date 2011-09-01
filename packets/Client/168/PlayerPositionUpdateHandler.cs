@@ -57,7 +57,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			//Tiv: in very rare cases client send 0xA9 packet before sending S<=C 0xE8 player world initialize
 			if ((client.Player.ObjectState != GameObject.eObjectState.Active) ||
-				(client.ClientState != GameClient.eClientState.Playing))
+			    (client.ClientState != GameClient.eClientState.Playing))
 				return;
 
 			int environmentTick = Environment.TickCount;
@@ -112,21 +112,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 
-            //Dinberg - Instance considerations.
-            //Now this gets complicated, so listen up! We have told the client a lie when it comes to the zoneID.
-            //As a result, every movement update, they are sending a lie back to us. Two liars could get confusing!
+			//Dinberg - Instance considerations.
+			//Now this gets complicated, so listen up! We have told the client a lie when it comes to the zoneID.
+			//As a result, every movement update, they are sending a lie back to us. Two liars could get confusing!
 
-            //BUT, the lie we sent has a truth to it - the geometry and layout of the zone. As a result, the zones
-            //x and y offsets will still actually be relevant to our current zone. And for the clones to have been
-            //created, there must have been a real zone to begin with, of id == instanceZone.SkinID.
+			//BUT, the lie we sent has a truth to it - the geometry and layout of the zone. As a result, the zones
+			//x and y offsets will still actually be relevant to our current zone. And for the clones to have been
+			//created, there must have been a real zone to begin with, of id == instanceZone.SkinID.
 
-            //So, although our client is lying to us, and thinks its in another zone, that zone happens to coincide
-            //exactly with the zone we are instancing - and so all the positions still ring true.
+			//So, although our client is lying to us, and thinks its in another zone, that zone happens to coincide
+			//exactly with the zone we are instancing - and so all the positions still ring true.
 
-            //Philosophically speaking, its like looking in a mirror and saying 'Am I a reflected, or reflector?'
-            //What it boils down to has no bearing whatsoever on the result of anything, so long as someone sitting
-            //outside of the unvierse knows not to listen to whether you say which you are, and knows the truth to the
-            //answer. Then, he need only know what you are doing ;)
+			//Philosophically speaking, its like looking in a mirror and saying 'Am I a reflected, or reflector?'
+			//What it boils down to has no bearing whatsoever on the result of anything, so long as someone sitting
+			//outside of the unvierse knows not to listen to whether you say which you are, and knows the truth to the
+			//answer. Then, he need only know what you are doing ;)
 
 			Zone newZone = WorldMgr.GetZone(currentZoneID);
 			if (newZone == null)
@@ -153,7 +153,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Player.DBCharacter.BindYpos,
 					(ushort)client.Player.DBCharacter.BindZpos,
 					(ushort)client.Player.DBCharacter.BindHeading
-					);
+				);
 				return;
 			}
 
@@ -177,9 +177,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				 * "Current area is adjusted for one level 1 player."
 				 * "Current area has a 50% instance bonus."
 				 */
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Entered", newZone.Description),
-                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                client.Out.SendMessage(newZone.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Entered", newZone.Description),
+				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(newZone.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 
 				client.Player.LastPositionUpdateZone = newZone;
 			}
@@ -286,8 +286,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 								GameServer.Database.SaveObject(b);
 
 								string message = "";
-                                
-                                message = "You have been auto kicked and banned due to movement hack detection!";
+								
+								message = "You have been auto kicked and banned due to movement hack detection!";
 								for (int i = 0; i < 8; i++)
 								{
 									client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
@@ -301,8 +301,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 							else
 							{
 								string message = "";
-							    
-                                message = "You have been auto kicked due to movement hack detection!";
+								
+								message = "You have been auto kicked due to movement hack detection!";
 								for (int i = 0; i < 8; i++)
 								{
 									client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
@@ -350,7 +350,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				IList oldAreas = client.Player.CurrentAreas;
 
-				// Because we may be in an instance we need to do the area check from the current region 
+				// Because we may be in an instance we need to do the area check from the current region
 				// rather than relying on the zone which is in the skinned region.  - Tolakram
 
 				IList newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player);
@@ -412,7 +412,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (SHcount > 1 && client.Account.PrivLevel > 1)
 						{
-                            //Apo: ?? no idea how to name the first parameter for language translation: 1: ??, 2: {detected} ?, 3: {count} ?
+							//Apo: ?? no idea how to name the first parameter for language translation: 1: ??, 2: {detected} ?, 3: {count} ?
 							client.Out.SendMessage(string.Format("SH: ({0}) detected: {1}, count {2}", 500 / (environmentTick - SHlastTick), environmentTick - SHlastTick, SHcount), eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 						}
 
@@ -433,10 +433,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							if (client.Account.PrivLevel > 1)
 							{
-                                client.Out.SendMessage("SH: Logging SH cheat.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("SH: Logging SH cheat.", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
-                                if (SHcount >= ServerProperties.Properties.SPEEDHACK_TOLERANCE)
-                                    client.Out.SendMessage("SH: Player would have been banned!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+								if (SHcount >= ServerProperties.Properties.SPEEDHACK_TOLERANCE)
+									client.Out.SendMessage("SH: Player would have been banned!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 							}
 
 							if ((client.Account.PrivLevel == 1) && SHcount >= ServerProperties.Properties.SPEEDHACK_TOLERANCE)
@@ -453,9 +453,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 									GameServer.Database.AddObject(b);
 									GameServer.Database.SaveObject(b);
 
-                                    string message = "";
-                                    
-                                    message = "You have been auto kicked and banned for speed hacking!";
+									string message = "";
+									
+									message = "You have been auto kicked and banned for speed hacking!";
 									for (int i = 0; i < 8; i++)
 									{
 										client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
@@ -468,9 +468,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 								}
 								else
 								{
-                                    string message = "";
-                                    
-                                    message = "You have been auto kicked for speed hacking!";
+									string message = "";
+									
+									message = "You have been auto kicked for speed hacking!";
 									for (int i = 0; i < 8; i++)
 									{
 										client.Out.SendMessage(message, eChatType.CT_Help, eChatLoc.CL_SystemWindow);
@@ -526,9 +526,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 						GameServer.Database.AddObject(b);
 						GameServer.Database.SaveObject(b);
 					}
-                    string message = "";
-                    
-                    message = "Client Hack Detected!";
+					string message = "";
+					
+					message = "Client Hack Detected!";
 					for (int i = 0; i < 6; i++)
 					{
 						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -583,35 +583,35 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					if (fallSpeed > fallMinSpeed)
 					{
-                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallingDamage"),
-                                eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallingDamage"),
+						                       eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
 						int fallPercent = Math.Min(99, (fallSpeed - (fallMinSpeed + 1)) / fallDivide);
 						if (fallPercent > 0)
 						{
-                            if (safeFallLevel > 0)
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.SafeFall"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-                            
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallPercent", fallPercent),
-                                    eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+							if (safeFallLevel > 0)
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.SafeFall"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+							
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallPercent", fallPercent),
+							                       eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
 							client.Player.Endurance -= client.Player.MaxEndurance * fallPercent / 100;
-						    double damage = (0.01 * fallPercent * (client.Player.MaxHealth - 1));
-                            // [Freya] Nidel: CloudSong falling damage reduction
-						    Effects.GameSpellEffect cloudSongFall = Spells.SpellHandler.FindEffectOnTarget(client.Player, "CloudsongFall");
-                            if(cloudSongFall != null)
-                            {
-                                damage -= (damage * cloudSongFall.Spell.Value ) * 0.01;
-                            }
+							double damage = (0.01 * fallPercent * (client.Player.MaxHealth - 1));
+							// [Freya] Nidel: CloudSong falling damage reduction
+							Effects.GameSpellEffect cloudSongFall = Spells.SpellHandler.FindEffectOnTarget(client.Player, "CloudsongFall");
+							if(cloudSongFall != null)
+							{
+								damage -= (damage * cloudSongFall.Spell.Value ) * 0.01;
+							}
 							client.Player.TakeDamage(null, eDamageType.Falling, (int)damage, 0);
 
 							//Update the player's health to all other players around
 							foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 								player.Out.SendCombatAnimation(null, client.Player, 0, 0, 0, 0, 0, client.Player.HealthPercent);
 						}
-                        
-                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Endurance"),
-                                eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+						
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Endurance"),
+						                       eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 					}
 					client.Player.MaxLastZ = client.Player.Z;
 				}
@@ -627,126 +627,131 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			//**************//
 
-			byte[] con168 = packet.ToArray();
-			//Riding is set here!
-			if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
+			var playersInVisibilityRange = client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE);
+			if (!(playersInVisibilityRange is DOL.GS.Region.EmptyEnumerator))
 			{
-				client.Player.Heading = client.Player.Steed.Heading;
 
-				con168[2] = 0x18; // Set ride flag 00011000
-				con168[3] = 0; // player speed = 0 while ride
-				con168[12] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
-				con168[13] = (byte)(client.Player.Steed.ObjectID & 0xFF);
-				con168[14] = (byte)0;
-				con168[15] = (byte)(client.Player.Steed.RiderSlot(client.Player)); // there rider slot this player
-			}
-			else if (!client.Player.IsAlive)
-			{
-				con168[2] &= 0xE3; //11100011
-				con168[2] |= 0x14; //Set dead flag 00010100
-			}
-			//diving is set here
-			con168[16] &= 0xFB; //11 11 10 11
-			if ((con168[16] & 0x02) != 0x00)
-			{
-				client.Player.IsDiving = true;
-				con168[16] |= 0x04;
-			}
-			else
-				client.Player.IsDiving = false;
-
-			con168[16] &= 0xFC; //11 11 11 00 cleared Wireframe & Stealth bits
-			if (client.Player.IsWireframe)
-			{
-				con168[16] |= 0x01;
-			}
-			//stealth is set here
-			if (client.Player.IsStealthed)
-			{
-				con168[16] |= 0x02;
-			}
-
-			con168[17] = (byte)((con168[17] & 0x80) | client.Player.HealthPercent);
-			// zone ID has changed in 1.72, fix bytes 11 and 12
-			byte[] con172 = (byte[])con168.Clone();
-			if (packetVersion == 168)
-			{
-				// client sent v168 pos update packet, fix 172 version
-				con172[10] = 0;
-				con172[11] = con168[10];
-			}
-			else
-			{
-				// client sent v172 pos update packet, fix 168 version
-				con168[10] = con172[11];
-				con168[11] = 0;
-			}
-
-			GSUDPPacketOut outpak168 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
-			//Now copy the whole content of the packet
-			outpak168.Write(con168, 0, 18/*con168.Length*/);
-			outpak168.WritePacketLength();
-
-			GSUDPPacketOut outpak172 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
-			//Now copy the whole content of the packet
-			outpak172.Write(con172, 0, 18/*con172.Length*/);
-			outpak172.WritePacketLength();
-
-			//			byte[] pak168 = outpak168.GetBuffer();
-			//			byte[] pak172 = outpak172.GetBuffer();
-			//			outpak168 = null;
-			//			outpak172 = null;
-			GSUDPPacketOut outpak190 = null;
-
-			foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				if (player == null)
-					continue;
-				//No position updates for ourselves
-				if (player == client.Player)
-					continue;
-				//no position updates in different houses
-				if ((client.Player.InHouse || player.InHouse) && player.CurrentHouse != client.Player.CurrentHouse)
-					continue;
-
-                if (client.Player.MinotaurRelic != null)
-                {
-                    MinotaurRelic relic = client.Player.MinotaurRelic;
-                    if (!relic.Playerlist.Contains(player) && player != client.Player)
-                    {
-                        relic.Playerlist.Add(player);
-                        player.Out.SendMinotaurRelicWindow(client.Player, client.Player.MinotaurRelic.Effect, true);
-                    }
-                }
-
-				if (!client.Player.IsStealthed || player.CanDetect(client.Player))
+				byte[] con168 = packet.ToArray();
+				//Riding is set here!
+				if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
 				{
-					//forward the position packet like normal!
-					if (player.Client.Version >= GameClient.eClientVersion.Version190)
-					{
-						if (outpak190 == null)
-						{
-							outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
-							outpak190.Write(con172, 0, 18/*con172.Length*/);
-							outpak190.WriteByte(client.Player.ManaPercent);
-							outpak190.WriteByte(client.Player.EndurancePercent);
-							outpak190.FillString(client.Player.CharacterClass.Name, 32);
-							// roleplay flag, if == 1, show name (RP) with gray color
-							if (client.Player.RPFlag)
-								outpak190.WriteByte(1);
-							else outpak190.WriteByte(0);
-							outpak190.WriteByte((con168.Length == 54) ? con168[53] : (byte) 0); // send last byte for 190+ packets
-							outpak190.WritePacketLength();
-						}
-						player.Out.SendUDPRaw(outpak190);
-					}
-					else if (player.Client.Version >= GameClient.eClientVersion.Version172)
-						player.Out.SendUDPRaw(outpak172);
-					else
-						player.Out.SendUDPRaw(outpak168);
+					client.Player.Heading = client.Player.Steed.Heading;
+
+					con168[2] = 0x18; // Set ride flag 00011000
+					con168[3] = 0; // player speed = 0 while ride
+					con168[12] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
+					con168[13] = (byte)(client.Player.Steed.ObjectID & 0xFF);
+					con168[14] = (byte)0;
+					con168[15] = (byte)(client.Player.Steed.RiderSlot(client.Player)); // there rider slot this player
+				}
+				else if (!client.Player.IsAlive)
+				{
+					con168[2] &= 0xE3; //11100011
+					con168[2] |= 0x14; //Set dead flag 00010100
+				}
+				//diving is set here
+				con168[16] &= 0xFB; //11 11 10 11
+				if ((con168[16] & 0x02) != 0x00)
+				{
+					client.Player.IsDiving = true;
+					con168[16] |= 0x04;
 				}
 				else
-					player.Out.SendObjectDelete(client.Player); //remove the stealthed player from view
+					client.Player.IsDiving = false;
+
+				con168[16] &= 0xFC; //11 11 11 00 cleared Wireframe & Stealth bits
+				if (client.Player.IsWireframe)
+				{
+					con168[16] |= 0x01;
+				}
+				//stealth is set here
+				if (client.Player.IsStealthed)
+				{
+					con168[16] |= 0x02;
+				}
+
+				con168[17] = (byte)((con168[17] & 0x80) | client.Player.HealthPercent);
+				// zone ID has changed in 1.72, fix bytes 11 and 12
+				byte[] con172 = (byte[])con168.Clone();
+				if (packetVersion == 168)
+				{
+					// client sent v168 pos update packet, fix 172 version
+					con172[10] = 0;
+					con172[11] = con168[10];
+				}
+				else
+				{
+					// client sent v172 pos update packet, fix 168 version
+					con168[10] = con172[11];
+					con168[11] = 0;
+				}
+
+				GSUDPPacketOut outpak168 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
+				//Now copy the whole content of the packet
+				outpak168.Write(con168, 0, 18/*con168.Length*/);
+				outpak168.WritePacketLength();
+
+				GSUDPPacketOut outpak172 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
+				//Now copy the whole content of the packet
+				outpak172.Write(con172, 0, 18/*con172.Length*/);
+				outpak172.WritePacketLength();
+
+				//			byte[] pak168 = outpak168.GetBuffer();
+				//			byte[] pak172 = outpak172.GetBuffer();
+				//			outpak168 = null;
+				//			outpak172 = null;
+				GSUDPPacketOut outpak190 = null;
+
+				foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					if (player == null)
+						continue;
+					//No position updates for ourselves
+					if (player == client.Player)
+						continue;
+					//no position updates in different houses
+					if ((client.Player.InHouse || player.InHouse) && player.CurrentHouse != client.Player.CurrentHouse)
+						continue;
+
+					if (client.Player.MinotaurRelic != null)
+					{
+						MinotaurRelic relic = client.Player.MinotaurRelic;
+						if (!relic.Playerlist.Contains(player) && player != client.Player)
+						{
+							relic.Playerlist.Add(player);
+							player.Out.SendMinotaurRelicWindow(client.Player, client.Player.MinotaurRelic.Effect, true);
+						}
+					}
+
+					if (!client.Player.IsStealthed || player.CanDetect(client.Player))
+					{
+						//forward the position packet like normal!
+						if (player.Client.Version >= GameClient.eClientVersion.Version190)
+						{
+							if (outpak190 == null)
+							{
+								outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
+								outpak190.Write(con172, 0, 18/*con172.Length*/);
+								outpak190.WriteByte(client.Player.ManaPercent);
+								outpak190.WriteByte(client.Player.EndurancePercent);
+								outpak190.FillString(client.Player.CharacterClass.Name, 32);
+								// roleplay flag, if == 1, show name (RP) with gray color
+								if (client.Player.RPFlag)
+									outpak190.WriteByte(1);
+								else outpak190.WriteByte(0);
+								outpak190.WriteByte((con168.Length == 54) ? con168[53] : (byte)0); // send last byte for 190+ packets
+								outpak190.WritePacketLength();
+							}
+							player.Out.SendUDPRaw(outpak190);
+						}
+						else if (player.Client.Version >= GameClient.eClientVersion.Version172)
+							player.Out.SendUDPRaw(outpak172);
+						else
+							player.Out.SendUDPRaw(outpak168);
+					}
+					else
+						player.Out.SendObjectDelete(client.Player); //remove the stealthed player from view
+				}
 			}
 
 			if (client.Player.CharacterClass.ID == (int)eCharacterClass.Warlock)
