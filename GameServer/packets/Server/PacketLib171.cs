@@ -194,12 +194,26 @@ namespace DOL.GS.PacketHandler
 			if( ( npc.Flags & GameNPC.eFlags.STEALTH ) > 0 )
 				flags2 |= 0x04;
 
-			if( npc.ShowQuestIndicator( m_gameClient.Player ) )
-				flags2 |= 0x08;
+            eQuestIndicator questIndicator = npc.GetQuestIndicator(m_gameClient.Player);
 
-			pak.WriteByte(flags2); // 4 high bits seems unused (new in 1.71)
-			pak.WriteShort(0x00); // new in 1.71
-			pak.WriteByte(0x00); // new in 1.71 (region instance ID from StoC_0x20)
+            if (questIndicator == eQuestIndicator.Available)
+                flags2 |= 0x08;//hex 8 - quest available
+            if (questIndicator == eQuestIndicator.Finish)
+                flags2 |= 0x10;//hex 16 - quest finish
+            //flags2 |= 0x20;//hex 32 - water mob?
+            //flags2 |= 0x40;//hex 64 - unknown
+            //flags2 |= 0x80;//hex 128 - has owner
+ 
+
+			pak.WriteByte(flags2); // flags 2
+
+            byte flags3 = 0x00;
+            if (questIndicator == eQuestIndicator.Lesson)
+                flags3 |= 0x01;
+            if (questIndicator == eQuestIndicator.Lore)
+                flags3 |= 0x02;
+            pak.WriteByte(flags3); // new in 1.71 (region instance ID from StoC_0x20) OR flags 3?
+			pak.WriteShort(0x00); // new in 1.71 unknown
 
             DBLanguageNPC translation = npc.GetTranslation(m_gameClient);
 

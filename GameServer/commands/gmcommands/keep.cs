@@ -2181,6 +2181,8 @@ namespace DOL.GS.Commands
 								c.Out.SendKeepComponentInfo(keepComponent);
 							}
 						}
+
+                        KeepMgr.RegisterKeep(k.KeepID, k);
 						break;
 					}
 					#endregion Create

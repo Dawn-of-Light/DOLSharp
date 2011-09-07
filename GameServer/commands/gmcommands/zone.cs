@@ -59,7 +59,7 @@ namespace DOL.GS.Commands
 					info.Add(string.Format(" Objects in zone: {0}, Total allowed for region: {1}", client.Player.CurrentZone.TotalNumberOfObjects, ServerProperties.Properties.REGION_MAX_OBJECTS));
 					info.Add(" ");
 					info.Add(" Zone Description: " + client.Player.CurrentZone.Description);
-					info.Add(" Zone Realm: " + GlobalConstants.RealmToName(client.Player.CurrentZone.GetRealm()));
+					info.Add(" Zone Realm: " + GlobalConstants.RealmToName(client.Player.CurrentZone.Realm));
 					info.Add(" Zone ID: " + client.Player.CurrentZone.ID);
 					info.Add(" Zone IsDungeon: " + client.Player.CurrentZone.IsDungeon);
 					info.Add(" Zone SkinID: " + client.Player.CurrentZone.ZoneSkinID);

@@ -51,7 +51,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Player.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis)
 			{
 				// if we are in TrialsOfAtlantis then base the target jump on the current region realm instead of the players realm
-				targetRealm = client.Player.CurrentZone.GetRealm();
+                targetRealm = client.Player.CurrentZone.Realm;
 			}
 
 			var zonePoint =	GameServer.Database.SelectObject<ZonePoint>("`Id` = '" + jumpSpotID + "' AND (`Realm` = '" + (byte)targetRealm +

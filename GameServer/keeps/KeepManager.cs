@@ -121,7 +121,7 @@ namespace DOL.GS.Keeps
 					}
 
 					keep.Load(datakeep);
-					m_keeps.Add(datakeep.KeepID, keep);
+                    RegisterKeep(datakeep.KeepID, keep);
 				}
 
 				// This adds owner keeps to towers / portal keeps
@@ -266,7 +266,13 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		/// <summary>
+        public static void RegisterKeep(int keepID, AbstractGameKeep keep)
+        {
+            m_keeps.Add(keepID, keep);
+            Logger.Info("Registered Keep: " + keep.Name);
+        }
+
+        /// <summary>
 		/// get keep by ID
 		/// </summary>
 		/// <param name="id">id of keep</param>
