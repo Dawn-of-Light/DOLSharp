@@ -66,7 +66,7 @@ namespace DOL.GS.DatabaseConverters
 					Zone zone = region.GetZone(mob.X, mob.Y);
 					if (zone != null)
 					{
-						mob.Realm = (byte)zone.GetRealm();
+						mob.Realm = (byte)zone.Realm;
 					}
 				}
 

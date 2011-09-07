@@ -61,7 +61,7 @@ namespace DOL.GS.Keeps
 			}
 			else
 			{
-				guard.Realm = guard.CurrentZone.GetRealm();
+				guard.Realm = guard.CurrentZone.Realm;
 				guard.ModelRealm = guard.Realm;
 			}
 		}

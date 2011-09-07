@@ -610,11 +610,11 @@ namespace DOL.GS.Commands
 				if (!client.Player.InHouse)
 				{
 					string realm = " other realm";
-					if((byte)client.Player.CurrentZone.GetRealm() == 1)
+					if(client.Player.CurrentZone.Realm == eRealm.Albion)
 						realm = " Albion";
-					if((byte)client.Player.CurrentZone.GetRealm() == 2)
+					if(client.Player.CurrentZone.Realm == eRealm.Midgard)
 						realm = " Midgard";
-					if((byte)client.Player.CurrentZone.GetRealm() == 3)
+					if(client.Player.CurrentZone.Realm == eRealm.Hibernia)
 						realm = " Hibernia";
 					
 					info.Add(" Time In Game: \t"+ hour.ToString() + ":" + minute.ToString());

@@ -2718,8 +2718,7 @@ namespace DOL.GS
 			if (CanGiveOneQuest(player)) return eQuestIndicator.Available;
 			if (player.HasFinishedQuest(questType)>0) return eQuestIndicator.Finish;
 			return eQuestIndicator.None;
-		}
-		
+		}		
 		
 		protected GameNPC m_teleporterIndicator = null;
 
@@ -2737,9 +2736,12 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns>True if the NPC should show quest indicator, false otherwise</returns>
-		public virtual bool ShowQuestIndicator(GamePlayer player)
+		public virtual eQuestIndicator GetQuestIndicator(GamePlayer player)
 		{
-			return CanGiveOneQuest(player);
+            if (CanGiveOneQuest(player))
+                return eQuestIndicator.Available;
+
+            return eQuestIndicator.None;
 		}
 
 		/// <summary>

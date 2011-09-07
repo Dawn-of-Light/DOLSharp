@@ -1470,11 +1470,7 @@ namespace DOL.GS.Commands
 				targetMob.LoadDataQuests();
 				foreach (GamePlayer player in targetMob.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                 {
-
-                    eQuestIndicator indicator = eQuestIndicator.None;
-                    if (targetMob.ShowQuestIndicator(player))
-                        indicator = eQuestIndicator.Available;
-					player.Out.SendNPCsQuestEffect(targetMob, indicator);
+					player.Out.SendNPCsQuestEffect(targetMob, targetMob.GetQuestIndicator(player));
 				}
 				client.Out.SendMessage(targetMob.DataQuestList.Count + " Data Quests loaded for this mob.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
