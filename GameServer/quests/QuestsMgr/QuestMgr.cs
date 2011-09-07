@@ -28,6 +28,7 @@ using log4net;
 using DOL.GS.Behaviour.Attributes;
 using DOL.GS.Behaviour;
 using DOL.GS.Quests.Atlantis;
+using System.Collections.Generic;
 
 namespace DOL.GS.Quests
 {
@@ -65,10 +66,13 @@ namespace DOL.GS.Quests
 
         public static bool Init()
         {
+            List<Assembly> assemblies = new List<Assembly>();
+            assemblies.Add(Assembly.GetAssembly(typeof(GameServer)));
+            assemblies.AddRange(ScriptMgr.Scripts);
             //We will search our assemblies for Quests by reflection so
             //it is not neccessary anymore to register new quests with the
             //server, it is done automatically!
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (Assembly assembly in assemblies)
             {
                 // Walk through each type in the assembly
                 foreach (Type type in assembly.GetTypes())
@@ -337,7 +341,29 @@ namespace DOL.GS.Quests
 
             if (CanGiveQuest(questType, player, source) > 0)
             {
-                player.Out.SendQuestSubscribeCommand(source, QuestMgr.GetIDForQuestType(questType), sentence);
+                if (questType.IsSubclassOf(typeof(RewardQuest)))
+                {
+                    RewardQuest rquest = null;
+                    foreach (Assembly asm in ScriptMgr.Scripts)
+                    {
+                        try
+                        {
+                            rquest = (RewardQuest)asm.CreateInstance(questType.FullName, false, BindingFlags.CreateInstance, null, new object[] { }, null, null);
+                        }
+                        catch (Exception e)
+                        {
+                            if (log.IsErrorEnabled)
+                                log.Error("ProposeQuestToPlayer.RewardQuest", e);
+                        }
+                        if (rquest != null)
+                            break;
+                    }
+                    player.Out.SendQuestOfferWindow(source, player, rquest);
+                }
+                else
+                {
+                    player.Out.SendQuestSubscribeCommand(source, QuestMgr.GetIDForQuestType(questType), sentence);
+                }
                 return true;
             }
             else

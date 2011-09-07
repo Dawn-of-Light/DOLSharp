@@ -132,7 +132,7 @@ namespace DOL.GS
 			{
 				ItemTemplate[] itemTemplates = null;
 
-				switch (mob.CurrentZone.GetRealm())
+				switch (mob.CurrentZone.Realm)
 				{
 					case eRealm.Albion:
 						{
