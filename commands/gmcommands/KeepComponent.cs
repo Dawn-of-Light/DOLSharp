@@ -233,6 +233,28 @@ namespace DOL.GS.Commands
 
 					} break;
 				#endregion Delete
+                case "reload":
+                    {
+
+                        GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
+                        if (component == null)
+                        {
+                            DisplaySyntax(client);
+                            return;
+                        }
+
+
+
+                        DBKeepComponent dbcomponent = GameServer.Database.SelectObject<DBKeepComponent>("`KeepID` = '" + component.Keep.KeepID + "' AND `ID` = '" + component.ID + "'");
+                        component.ComponentX = dbcomponent.X;
+                        component.ComponentY = dbcomponent.Y;
+                        component.ComponentHeading = dbcomponent.Heading;
+
+                        client.Out.SendKeepComponentInfo(component);
+
+                        client.Out.SendMessage("Component Reloaded", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        break;
+                    }
 				#region Default
 				default:
 					{

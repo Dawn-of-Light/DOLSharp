@@ -514,7 +514,7 @@ namespace DOL.GS
 				zoneData.DivingFlag = dbZone.DivingFlag;
 				zoneData.IsLava = dbZone.IsLava;
 				RegisterZone(zoneData, zoneData.ZoneID, zoneData.RegionID, zoneData.Description,
-				             dbZone.Experience, dbZone.Realmpoints, dbZone.Bountypoints, dbZone.Coin);
+				             dbZone.Experience, dbZone.Realmpoints, dbZone.Bountypoints, dbZone.Coin, dbZone.Realm);
 
 				//Save the zonedata.
 				if (!m_zonesData.ContainsKey(zoneData.RegionID))
@@ -1112,7 +1112,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Registers a Zone into a Region
 		/// </summary>
-		public static void RegisterZone(ZoneData zoneData, ushort zoneID, ushort regionID, string zoneName, int xpBonus, int rpBonus, int bpBonus, int coinBonus)
+		public static void RegisterZone(ZoneData zoneData, ushort zoneID, ushort regionID, string zoneName, int xpBonus, int rpBonus, int bpBonus, int coinBonus, byte realm)
 		{
 			Region region = GetRegion(regionID);
 			if (region == null)
@@ -1151,7 +1151,8 @@ namespace DOL.GS
 			                     xpBonus,
 			                     rpBonus,
 			                     bpBonus,
-			                     coinBonus);
+			                     coinBonus,
+                                 realm);
 
 			//Dinberg:Instances
 			//ZoneID will always be constant as last parameter, because ZoneSkinID will effectively be a bluff, to remember
@@ -2381,7 +2382,7 @@ namespace DOL.GS
 						log.Error("Zone limit reached in instance creation!");
 
 					//create a zone of this ID.
-					RegisterZone(dat, zoneID, ID, dat.Description + " (Instance)", 0, 0, 0, 0);
+					RegisterZone(dat, zoneID, ID, dat.Description + " (Instance)", 0, 0, 0, 0, 0);
 				}
 			}
 

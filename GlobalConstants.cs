@@ -984,7 +984,9 @@ namespace DOL.GS
     {
         None = 0x00,
         Available = 0x01,
-        Finish = 0x02
+        Finish = 0x02,
+        Lesson = 0x04,
+        Lore = 0x08,
     }
 
 	/// <summary>
