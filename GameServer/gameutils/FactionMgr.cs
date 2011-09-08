@@ -114,7 +114,7 @@ namespace DOL.GS
 		public static bool CanLivingAttack(GameLiving attacker, GameLiving defender)
 		{
 			// someone who cares about factions should write this
-			return false;
+			return true;//false;
 		}
 	}
 }

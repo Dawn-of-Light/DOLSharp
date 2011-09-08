@@ -36,7 +36,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBFaction()
 		{
-			AllowAdd = false;
+			AllowAdd = true;//Sinswolf 08.2011 false;
 			ID = 0;
 			m_baseAggroLevel = 0;
 			m_name = String.Empty;
