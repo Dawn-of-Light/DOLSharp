@@ -40,7 +40,7 @@ namespace DOL.Database
 			m_factionID = 0;
 			m_linkedFactionID = 0;
 			m_friend = true;
-			AllowAdd = false;
+			AllowAdd = true;//Sinswolf 26.08.2011
 		}
 
 		/// <summary>
