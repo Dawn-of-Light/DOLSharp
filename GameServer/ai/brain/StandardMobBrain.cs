@@ -627,7 +627,7 @@ namespace DOL.AI.Brain
 					    living.ObjectState != GameObject.eObjectState.Active ||
 					    living.IsStealthed ||
 					    Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE ||
-						GameServer.ServerRules.IsAllowedToAttack(Body, living, true) == false)
+					    GameServer.ServerRules.IsAllowedToAttack(Body, living, true) == false)
 					{
 						removable.Add(living);
 						continue;
@@ -700,7 +700,22 @@ namespace DOL.AI.Brain
 				GamePlayer player = (GamePlayer)target;
 				AggroLevel = Body.Faction.GetAggroToFaction(player);
 			}
+			else if(Body.Faction != null && target is GameNPC && target.Realm == eRealm.None)
+			{
+				GameNPC npc = (GameNPC)target;
+				if (npc.Faction != null)
+				{
+					if(Body.Faction.EnemyFactions.Contains(npc.Faction))
+						return 100; //Enemy faction found we will aggro to them
+				}
+			}
+			
+			//we put this here to prevent aggroing non-factions npcs
+			if(target.Realm == eRealm.None && target is GameNPC)
+				return 0;
+
 			if (AggroLevel >= 100) return 100;
+			
 			return AggroLevel;
 		}
 
@@ -1073,7 +1088,7 @@ namespace DOL.AI.Brain
 			Body.TargetObject = null;
 			switch (spell.SpellType)
 			{
-				#region Buffs
+					#region Buffs
 				case "StrengthConstitutionBuff":
 				case "DexterityQuicknessBuff":
 				case "StrengthBuff":
@@ -1113,9 +1128,9 @@ namespace DOL.AI.Brain
 						}
 						break;
 					}
-				#endregion Buffs
+					#endregion Buffs
 
-				#region Disease Cure/Poison Cure/Summon
+					#region Disease Cure/Poison Cure/Summon
 				case "CureDisease":
 					if (!Body.IsDiseased)
 						break;
@@ -1149,9 +1164,9 @@ namespace DOL.AI.Brain
 					}
 					Body.TargetObject = Body;
 					break;
-				#endregion Disease Cure/Poison Cure/Summon
+					#endregion Disease Cure/Poison Cure/Summon
 
-				#region Heals
+					#region Heals
 				case "Heal":
 					// Chance to heal self when dropping below 30%, do NOT spam it.
 
@@ -1349,7 +1364,7 @@ namespace DOL.AI.Brain
 			{
 				if (!DOL.GS.ServerProperties.Properties.ALLOW_ROAM)
 					return false;
-				if (Body.RoamingRange == 0)
+				if (Body.RoamingRange <= 0 || string.IsNullOrEmpty(Body.PathID))
 					return false;
 				return true;
 			}
