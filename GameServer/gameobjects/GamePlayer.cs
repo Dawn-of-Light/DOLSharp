@@ -7162,7 +7162,6 @@ namespace DOL.GS
 				if (DPS > cap)
 					DPS = cap;
 
-				double effectiveness = 1.00;
 				double result = DPS * weapon.SPD_ABS * 0.03 * (0.94 + 0.003 * weapon.SPD_ABS);
 
 				if (weapon.Hand == 1) //2h
@@ -7193,7 +7192,6 @@ namespace DOL.GS
 					{
 						result += GetModified(eProperty.RangedDamage) * 0.01;
 					}
-
 					else if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
 					{
 						result += GetModified(eProperty.SpellDamage) * 0.01;
@@ -7217,7 +7215,6 @@ namespace DOL.GS
 				return AttackDamage(weapon) * 3 * (1 + (AttackSpeed(weapon) * 0.001 - 2) * .03);
 			}
 		}
-
 
 		/// <summary>
 		/// Can this player cast the given spell while in combat?
