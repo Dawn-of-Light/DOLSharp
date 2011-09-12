@@ -1701,7 +1701,7 @@ namespace DOL.GS
 		public virtual void OnRevive(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = (GamePlayer)sender;
-            if (player.IsUnderwater && player.CanBreathUnderWater == false) player.Diving(waterBreath.Holding);
+			if (player.IsUnderwater && player.CanBreathUnderWater == false) player.Diving(waterBreath.Holding);
 			if (player.Level > 5)
 			{
 				SpellLine Line = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
@@ -2255,8 +2255,8 @@ namespace DOL.GS
 				}
 
 				int oldPercent = HealthPercent;
-                if (DBCharacter != null)
-                    DBCharacter.Health = value;
+				if (DBCharacter != null)
+					DBCharacter.Health = value;
 				base.Health = value;
 				if (oldPercent != HealthPercent)
 				{
@@ -2617,8 +2617,8 @@ namespace DOL.GS
 			string name = skill.Name;
 
 			if (skill.Name == Abilities.VampiirConstitution ||
-				skill.Name == Abilities.VampiirDexterity ||
-				skill.Name == Abilities.VampiirStrength)
+			    skill.Name == Abilities.VampiirDexterity ||
+			    skill.Name == Abilities.VampiirStrength)
 			{
 				name += " +" + ((CalculateSkillLevel(skill) - 5) * 3).ToString();
 			}
@@ -2638,9 +2638,9 @@ namespace DOL.GS
 		public override int CalculateSkillLevel(Skill skill)
 		{
 			if (skill.Name == Abilities.VampiirConstitution ||
-				skill.Name == Abilities.VampiirDexterity ||
-				skill.Name == Abilities.VampiirStrength ||
-				skill.Name == Abilities.VampiirQuickness)
+			    skill.Name == Abilities.VampiirDexterity ||
+			    skill.Name == Abilities.VampiirStrength ||
+			    skill.Name == Abilities.VampiirQuickness)
 			{
 				return Level;
 			}
@@ -3275,7 +3275,7 @@ namespace DOL.GS
 			double effectiveness = 1.0;
 
 			if (CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type == (int)eObjectType.LeftAxe && mainWeapon != null &&
-				(mainWeapon.Item_Type == Slot.RIGHTHAND || mainWeapon.Item_Type == Slot.LEFTHAND))
+			    (mainWeapon.Item_Type == Slot.RIGHTHAND || mainWeapon.Item_Type == Slot.LEFTHAND))
 			{
 				int LASpec = GetModifiedSpecLevel(Specs.Left_Axe);
 				if (LASpec > 0)
@@ -3297,7 +3297,7 @@ namespace DOL.GS
 			double effectiveness = 1.0;
 
 			if (CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type == (int)eObjectType.LeftAxe && mainWeapon != null &&
-				(mainWeapon.Item_Type == Slot.RIGHTHAND || mainWeapon.Item_Type == Slot.LEFTHAND))
+			    (mainWeapon.Item_Type == Slot.RIGHTHAND || mainWeapon.Item_Type == Slot.LEFTHAND))
 			{
 				int LASpec = GetModifiedSpecLevel(Specs.Left_Axe);
 				if (LASpec > 0)
@@ -4418,8 +4418,8 @@ namespace DOL.GS
 				{
 					Out.SendUpdatePlayerSkills();
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.GainedRank"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRank", (RealmLevel / 10) + 1), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.NewRealmTitle", RealmTitle), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRank", (RealmLevel / 10) + 1), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.NewRealmTitle", RealmTitle), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.GainBonus", RealmLevel / 10), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						plr.Out.SendLivingDataUpdate(this, true);
@@ -5859,11 +5859,7 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CannotMelee"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			//			if(attackTarget!=null && attackTarget is GamePlayer && ((GamePlayer)attackTarget).IsShade)
-			//			{
-			//				Out.SendMessage("You cannot attack shaded player!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-			//				return;
-			//			}
+
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
 				if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
@@ -5926,10 +5922,8 @@ namespace DOL.GS
 
 				if (IsStealthed)
 				{
-					/*
-					 * -Chance to unstealth while nocking an arrow = stealth spec / level
-					 * -Chance to unstealth nocking a crit = stealth / level  0.20
-					 */
+					// -Chance to unstealth while nocking an arrow = stealth spec / level
+					// -Chance to unstealth nocking a crit = stealth / level  0.20
 					int stealthSpec = GetModifiedSpecLevel(Specs.Stealth);
 					int stayStealthed = stealthSpec * 100 / Level;
 					if (RangedAttackType == eRangedAttackType.Critical)
@@ -5946,7 +5940,7 @@ namespace DOL.GS
 				else
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.StartAttack.CombatTarget", attackTarget.GetName(0, false)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
-			// vampiir
+
 			if (CharacterClass is PlayerClass.ClassVampiir)
 			{
 				GameSpellEffect removeEffect = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
@@ -7098,11 +7092,6 @@ namespace DOL.GS
 			if (item == null) return 0;
 			// vampiir random armor debuff change ~
 			double eaf = (item.SPD_ABS + GetModified(eProperty.ArmorAbsorption)) * 0.01;
-			/*GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, typeof(VampiirArmorDebuff));
-			if (effect != null && slot == (effect.SpellHandler as VampiirArmorDebuff).Slot)
-			{
-				eaf -= (int)(effect.SpellHandler as VampiirArmorDebuff).Spell.Value;
-			}*/
 			return eaf;
 		}
 
@@ -7172,10 +7161,10 @@ namespace DOL.GS
 					cap += 3;
 				if (DPS > cap)
 					DPS = cap;
-				//				double result = (DPS*0.1 * weapon.SPD_ABS*0.1 * 3 * (1 + (weapon.SPD_ABS*0.1 - 2) * .03));
+
+				double effectiveness = 1.00;
 				double result = DPS * weapon.SPD_ABS * 0.03 * (0.94 + 0.003 * weapon.SPD_ABS);
 
-				// TODO: ToA damage bonus
 				if (weapon.Hand == 1) //2h
 				{
 					result *= 1.1 + (WeaponSpecLevel(weapon) - 1) * 0.005;
@@ -7188,16 +7177,39 @@ namespace DOL.GS
 						{
 							switch ((RangeAttackAmmo.SPD_ABS) & 0x3)
 							{
-									case 0: ammoDamageBonus = 0.85; break; //Blunt       (light) -15%
-									case 1: ammoDamageBonus = 1; break; //Bodkin     (medium)   0%
-									case 2: ammoDamageBonus = 1.15; break; //doesn't exist on live
-									case 3: ammoDamageBonus = 1.25; break; //Broadhead (X-heavy) +25%
+									case 0: ammoDamageBonus = 0.85; break; 	//Blunt       (light) -15%
+									case 1: ammoDamageBonus = 1; break; 	//Bodkin     (medium)   0%
+									case 2: ammoDamageBonus = 1.15; break; 	//doesn't exist on live
+									case 3: ammoDamageBonus = 1.25; break; 	//Broadhead (X-heavy) +25%
 							}
 						}
 						result *= ammoDamageBonus;
 					}
 				}
+				
+				if (weapon.Item_Type == Slot.RANGED && (weapon.Object_Type == (int)eObjectType.Longbow || weapon.Object_Type == (int)eObjectType.RecurvedBow || weapon.Object_Type == (int)eObjectType.CompositeBow))
+				{
+					if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
+					{
+						result += GetModified(eProperty.RangedDamage) * 0.01;
+					}
 
+					else if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
+					{
+						result += GetModified(eProperty.SpellDamage) * 0.01;
+						result += GetModified(eProperty.RangedDamage) * 0.01;
+					}
+				}
+				else if (weapon.Item_Type == Slot.RANGED)
+				{
+					//Ranged damage buff,debuff,Relic,RA
+					result += GetModified(eProperty.RangedDamage) * 0.01;
+				}
+				else if (weapon.Item_Type == Slot.RIGHTHAND || weapon.Item_Type == Slot.LEFTHAND || weapon.Item_Type == Slot.TWOHAND)
+				{
+					result += GetModified(eProperty.MeleeDamage) * 0.01;
+				}
+				
 				return result;
 			}
 			else
@@ -7282,16 +7294,16 @@ namespace DOL.GS
 		/// Returns the AttackRange of this living
 		/// </summary>
 		public override int AttackRange
-		{ /*
-		tested with:
-		staff					= 125-130
-		sword			   		= 126-128.06
-		shield (Numb style)		= 127-129
-		polearm	(Impale style)	= 127-130
-		mace (Daze style)		= 127.5-128.7
+		{
+			/* tested with:
+			staff					= 125-130
+			sword			   		= 126-128.06
+			shield (Numb style)		= 127-129
+			polearm	(Impale style)	= 127-130
+			mace (Daze style)		= 127.5-128.7
 
-		Think it's safe to say that it never changes; different with mobs.
-			 */
+			Think it's safe to say that it never changes; different with mobs. */
+
 			get
 			{
 				GameLiving livingTarget = TargetObject as GameLiving;
@@ -7448,7 +7460,7 @@ namespace DOL.GS
 			{
 				// twohanded used weapons get 2H-Bonus = 10% + (Skill / 2)%
 				int spec = WeaponSpecLevel(weapon) - 1;
-				damage *= 1.2 + spec * 0.005;
+				damage *= 1.1 + spec * 0.005;
 			}
 
 			if (weapon.Item_Type == Slot.RANGED)
@@ -7564,17 +7576,6 @@ namespace DOL.GS
 
 			DuelStop();
 
-			/*
-			1.65 Release Notes
-			- We now, by default, display RvR combat deaths in the color of the realm scoring the kill.
-
-			Example:
-
-			(green text)Midchar was just killed by Hibchar!
-			(blue text)Albchar was just killed by Midchar!
-			(red text) HibChar was just killed by Albion Keep Lord!
-			 */
-
 			eChatType messageType;
 			if (m_releaseType == eReleaseType.Duel)
 				messageType = eChatType.CT_Emote;
@@ -7659,7 +7660,6 @@ namespace DOL.GS
 				m_automaticRelease = m_releaseType == eReleaseType.Duel;
 				m_releasePhase = 0;
 				m_deathTick = Environment.TickCount; // we use realtime, because timer window is realtime
-				//UpdatePlayerStatus();
 
 				Out.SendTimerWindow(LanguageMgr.GetTranslation(Client, "System.ReleaseTimer"), (m_automaticRelease ? RELEASE_MINIMUM_WAIT : RELEASE_TIME));
 				m_releaseTimer = new RegionTimer(this);
@@ -7733,7 +7733,6 @@ namespace DOL.GS
 
 			// sent after buffs drop
 			// GamePlayer.Die.CorpseLies:		{0} just died. {1} corpse lies on the ground.
-			//Message.SystemToOthers(this, GetName(0, true) + " just died.  " + GetPronoun(1, true) + " corpse lies on the ground.", eChatType.CT_PlayerDied);
 			Message.SystemToOthers2(this, eChatType.CT_PlayerDied, "GamePlayer.Die.CorpseLies", GetName(0, true), GetPronoun(this.Client, 1, true));
 			if (m_releaseType == eReleaseType.Duel)
 			{
@@ -9217,7 +9216,7 @@ namespace DOL.GS
 				{
 					if (Inventory.RemoveItem(useItem))
 					{
-                        InventoryLogging.LogInventoryAction(this, "(HorseSaddleBag)", eInventoryActionType.Other, useItem.Template, useItem.Count);
+						InventoryLogging.LogInventoryAction(this, "(HorseSaddleBag)", eInventoryActionType.Other, useItem.Template, useItem.Count);
 						DBCharacter.ActiveSaddleBags |= (byte)bag;
 						Out.SendSetControlledHorse(this);
 						Out.SendMessage("You've activated a saddlebag!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -13191,7 +13190,7 @@ namespace DOL.GS
 			}
 
 			// Mastery of Stealth Bonus
-		    RAPropertyEnhancer mos = GetAbility<MasteryOfStealthAbility>();
+			RAPropertyEnhancer mos = GetAbility<MasteryOfStealthAbility>();
 			if (mos != null && !enemyHasCamouflage)
 				if (!HasAbility(Abilities.DetectHidden) || !enemy.HasAbility(Abilities.DetectHidden))
 					range += mos.GetAmountForLevel(CalculateSkillLevel(mos));
@@ -15744,9 +15743,9 @@ namespace DOL.GS
 			string description = " ";
 
 			if (HasFinishedMLStep(ml, step))
-                description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", ml, step));
+				description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Complete.ML{0}.Step{1}", ml, step));
 			else
-                description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", ml, step));
+				description = LanguageMgr.GetTranslation(Client, String.Format("SendMasterLevelWindow.Uncomplete.ML{0}.Step{1}", ml, step));
 
 			return description;
 		}
@@ -16047,26 +16046,6 @@ namespace DOL.GS
 
 		protected virtual string ItemBonusDescription(int iBonus, int iBonusType)
 		{
-			/*Not needed.
-			string BonusName;
-			if (iBonusType == (int)eProperty.Stat_First)
-				BonusName = "Strength";
-			else if (iBonusType == (int)eProperty.Stat_Last)
-				BonusName = "Charisma";
-			else if (iBonusType == (int)eProperty.Resist_First)
-				BonusName = "Resist Body";
-			else if (iBonusType == (int)eProperty.Resist_Last)
-				BonusName = "Resist Thrust";
-			else if (iBonusType == (int)eProperty.Skill_First)
-				BonusName = "Two Handed";
-			else if (iBonusType == (int)eProperty.Skill_Last)
-				BonusName = "Scythe";
-			else if (!Enum.IsDefined(typeof(eProperty), (eProperty)iBonusType)) BonusName = iBonusType.ToString();
-            
-			string BonusName = ((eProperty)iBonusType).ToString();
-			string str = BonusName.ToString().Replace("_", " ") + ": ";
-			return str + iBonus + (((iBonusType < 20) && (iBonusType > 10)) ? "%" : "");
-			 */
 			//This displays the bonuses just like the Live servers. there is a check against the pts/% differences
 			string str = ((iBonusType == 150) | (iBonusType == 210) | (iBonusType == 10) | (iBonusType == 151) | (iBonusType == 186)) ? "pts of " : "% to ";  //150(Health Regen) 151(PowerRegen) and 186(Style reductions) need the prefix of "pts of " to be correct
 
