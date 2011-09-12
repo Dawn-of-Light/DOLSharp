@@ -107,11 +107,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Parse a string in CSV mode: handle ';'
-		/// In case of int value
+		/// Parse a string in CSV mode with separator ';'
 		/// </summary>
-		/// <param name="str"></param>
-		/// <returns></returns>
+		/// <param name="str">the string to parse</param>
+		/// <param name="rangeCheck">the ranges are burst and put into the list</param>
+		/// <returns>a List of strings with the values parsed</string></returns>a></returns>
 		public static List<string> SplitCSV (this string str, bool rangeCheck = false)
 		{
 			char primarySeparator = ';';
