@@ -1362,9 +1362,17 @@ namespace DOL.AI.Brain
 		{
 			get
 			{
+				/* Roaming:
+				   <0 means random range
+				   0 means no roaming
+				   >0 means range of roaming
+				   defaut roaming range is defined in CanRandomWalk method
+				*/
 				if (!DOL.GS.ServerProperties.Properties.ALLOW_ROAM)
 					return false;
-				if (Body.RoamingRange <= 0 || string.IsNullOrEmpty(Body.PathID))
+				if (Body.RoamingRange == 0)
+					return false;
+				if (!string.IsNullOrWhiteSpace(Body.PathID))
 					return false;
 				return true;
 			}
