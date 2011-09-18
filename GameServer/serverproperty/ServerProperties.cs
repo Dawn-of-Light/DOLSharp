@@ -721,54 +721,54 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("rates", "mount_over_level_35_speed", "What is the speed of player controlled mounts over level 35?", (short)145)]
 		public static short MOUNT_OVER_LEVEL_35_SPEED;
 
-        /// <summary>
-        /// Base Value to use when auto-setting STR stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_str_base", "Base Value to use when auto-setting STR stat. ", 30.0)]
-        public static double MOB_AUTOSET_STR_BASE;
-        
-        /// <summary>
-        /// Multiplier to use when auto-setting STR stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_str_multiplier", "Multiplier to use when auto-setting STR stat. ", 1.0)]
-        public static double MOB_AUTOSET_STR_MULTIPLIER;
+		/// <summary>
+		/// Base Value to use when auto-setting STR stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_str_base", "Base Value to use when auto-setting STR stat. ", 30.0)]
+		public static double MOB_AUTOSET_STR_BASE;
+		
+		/// <summary>
+		/// Multiplier to use when auto-setting STR stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_str_multiplier", "Multiplier to use when auto-setting STR stat. ", 1.0)]
+		public static double MOB_AUTOSET_STR_MULTIPLIER;
 
-        /// <summary>
-        /// Base Value to use when auto-setting CON stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_con_base", "Base Value to use when auto-setting CON stat. ", 30.0)]
-        public static double MOB_AUTOSET_CON_BASE;
+		/// <summary>
+		/// Base Value to use when auto-setting CON stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_con_base", "Base Value to use when auto-setting CON stat. ", 30.0)]
+		public static double MOB_AUTOSET_CON_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting CON stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_con_multiplier", "Multiplier to use when auto-setting CON stat. ", 1.0)]
-        public static double MOB_AUTOSET_CON_MULTIPLIER;
+		/// <summary>
+		/// Multiplier to use when auto-setting CON stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_con_multiplier", "Multiplier to use when auto-setting CON stat. ", 1.0)]
+		public static double MOB_AUTOSET_CON_MULTIPLIER;
 
-        /// <summary>
-        /// Base Value to use when auto-setting QUI stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", 30.0)]
-        public static double MOB_AUTOSET_QUI_BASE;
+		/// <summary>
+		/// Base Value to use when auto-setting QUI stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", 30.0)]
+		public static double MOB_AUTOSET_QUI_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting QUI stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_qui_multiplier", "Multiplier to use when auto-setting QUI stat. ", 1.0)]
-        public static double MOB_AUTOSET_QUI_MULTIPLIER;
+		/// <summary>
+		/// Multiplier to use when auto-setting QUI stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_qui_multiplier", "Multiplier to use when auto-setting QUI stat. ", 1.0)]
+		public static double MOB_AUTOSET_QUI_MULTIPLIER;
 
-        /// <summary>
-        /// Base Value to use when auto-setting DEX stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", 30.0)]
-        public static double MOB_AUTOSET_DEX_BASE;
+		/// <summary>
+		/// Base Value to use when auto-setting DEX stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", 30.0)]
+		public static double MOB_AUTOSET_DEX_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting DEX stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_dex_multiplier", "Multiplier to use when auto-setting DEX stat. ", 1.0)]
-        public static double MOB_AUTOSET_DEX_MULTIPLIER;
-        #endregion
+		/// <summary>
+		/// Multiplier to use when auto-setting DEX stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_dex_multiplier", "Multiplier to use when auto-setting DEX stat. ", 1.0)]
+		public static double MOB_AUTOSET_DEX_MULTIPLIER;
+		#endregion
 
 		#region NPCs
 		/// <summary>
@@ -1570,7 +1570,7 @@ namespace DOL.GS.ServerProperties
 		public static object Load(ServerPropertyAttribute attrib)
 		{
 			string key = attrib.Key;
-			ServerProperty property = GameServer.Database.SelectObject<ServerProperty>("`Key` = '" + GameServer.Database.Escape(key) + "'") as ServerProperty;
+			ServerProperty property = GameServer.Database.SelectObject<ServerProperty>("`Key` = '" + GameServer.Database.Escape(key) + "'") ;
 			if (property == null)
 			{
 				property = new ServerProperty();
@@ -1583,6 +1583,7 @@ namespace DOL.GS.ServerProperties
 				log.Debug("Cannot find server property " + key + " creating it");
 			}
 			log.Debug("Loading " + key + " Value is " + property.Value);
+					
 			try
 			{
 				//we do this because we need "1.0" to be considered double sometimes its "1,0" in other countries
@@ -1614,6 +1615,18 @@ namespace DOL.GS.ServerProperties
 					continue;
 				ServerPropertyAttribute attrib = (ServerPropertyAttribute)attribs[0];
 				f.SetValue(null, Load(attrib));
+
+				#warning Graveen: some databases have bad default values, when culture sets decimal point to ','. Please update yours ! This piece of code will be removed in future releases
+				if (f.FieldType == typeof(System.Double))
+				{
+					if (attrib.DefaultValue.ToString().Contains(","))
+					{
+						ServerProperty property = GameServer.Database.SelectObject<ServerProperty>("`Key` = '" + GameServer.Database.Escape(attrib.Key) + "'");
+						property.DefaultValue = property.DefaultValue.Replace(',','.');
+						GameServer.Database.SaveObject(property);
+					}
+				}
+				
 			}
 		}
 
