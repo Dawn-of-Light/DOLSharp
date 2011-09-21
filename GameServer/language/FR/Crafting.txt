@@ -74,6 +74,30 @@ CraftersProfession.Tailor:					Tailleur
 CraftersProfession.Weaponcrafter:			Forgeron
 CraftersProfession.Siegecrafter:			Ingénieur
 
+# /CraftMaster
+TailorsMaster.AcceptedByOrderName:			Tailleurs
+TailorsMaster.GuildOrder:				Tailleurs
+TailorsMaster.InitialEntersentence:			Voulez-vous rejoindre la loge des [Tailleurs]? En tant que Tailleur, vous pourrez tisser du cuir et du tissu. Quand bien même vous excellerez en tissage, et que vous serez bon en empennage, vous devez vous attendre à de grosses difficultés pour ce qui est de la Forge d'Armes et de l'Armurerie. Un Tailleur bien entrainé peut également faire de la construction d'armes de sièges en cas de besoin.
+SpellCraftingMaster.AcceptedByOrderName:		Alchimistes
+SpellCraftingMaster.GuildOrder:				Alchimistes
+SpellCraftingMaster.InitialEntersentence:		Voulez-vous rejoindre l'Ordre des [Alchimistes]? Vous pourrez alors concocter des pigments, des poisons, et diverses potions, mais aussi des teintures magiques qui augmenteront le potentiel offensif et défensif des objets façonnés. Vous apprendrez un peu d'Enchantement des Arcanes et vous vous spécialiserez en joaillerie.
+SiegecraftingMaster.AcceptedByOrderName:		Ingénieurs
+SiegecraftingMaster.GuildOrder:				Ingénieurs
+SiegecraftingMaster.InitialEntersentence:		Aimeriez-vous rejoindre l'Ordre des [Ingénieurs]? Cela vous permettra de construire des machines de guerre élaborées pour défendre notre royaume.
+FletchingMaster.AcceptedByOrderName:			Empenneurs
+FletchingMaster.GuildOrder:				Empenneurs
+FletchingMaster.InitialEntersentence:			Voulez-vous rejoindre la loge des [Empenneurs]? En tant qu'Empenneur, vous pourrez créez arcs, flèches et bâtons. Quand bien même vous excellerez en empennage, et que vous serez bon en Forge d'Armes, vous devez vous attendre à de grosses difficultés pour ce qui est du Tissage et de l'Armurerie. Un Empenneur bien entrainé peut également faire de la construction d'armes de sièges en cas de besoin.
+BasicCraftingMaster.AcceptedByOrderName:		Basic Crafting
+BasicCraftingMaster.GuildOrder:				Basic Crafting
+ArmorCraftingMaster.AcceptedByOrderName:		Armuriers
+ArmorCraftingMaster.GuildOrder:				Armuriers
+ArmorCraftingMaster.InitialEntersentence:		Voulez-vous rejoindre la loge des [Armuriers]? En tant qu'Armurier, vous pourrez confectionner toutes sortes d'armure, du cuir à la maille. Quand bien même vous excellerez en armurerie, et que vous serez bon en Tissage et en Forge d'Armes, vous devez vous attendre à de grosses difficultés pour ce qui est de l'Empennage. Un Armurier bien entrainé peut également faire de la construction d'armes de sièges en cas de besoin.
+AlchemistsMaster.AcceptedByOrderName:			Alchimistes
+AlchemistsMaster.GuildOrder:				Alchimistes
+AlchemistsMaster.InitialEntersentence:			Voulez-vous rejoindre l'Ordre des [Alchimistes]? Vous pourrez alors concocter des pigments, des poisons, et diverses potions, mais aussi des teintures magiques qui augmenteront le potentiel offensif et défensif des objets façonnés. Vous apprendrez un peu d'Enchantement des Arcanes et vous vous spécialiserez en joaillerie.
+WeaponCraftingMaster.AcceptedByOrderName:		Forgerons
+WeaponCraftingMaster.GuildOrder:			Forgerons
+WeaponCraftingMaster.InitialEntersentence:	Voulez-vous rejoindre la loge des [Forgerons]? En tant que forgeron, vous pourrez forger épées, haches, marteaux et lances. Quand bien même vous excellerez en forge d'armes, et que vous serez bon en armurerie, vous devez vous attendre à de grosses difficultés pour ce qui est du Tissage et de l'Empennage. Un Forgeron bien entrainé peut également faire de la construction d'armes de sièges en cas de besoin.
 
 # /AbstractCraftingSkill
 AbstractCraftingSkill.BuildCraftedItem.BackpackFull:   Votre sac est plein. {0} est déposé sur le sol.
