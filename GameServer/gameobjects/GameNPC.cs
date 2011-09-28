@@ -2488,7 +2488,7 @@ namespace DOL.GS
 				GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
 				//First let's try to reach the npcequipment table and load that!
 				//We use a ';' split to allow npctemplates to support more than one equipmentIDs
-				string[] equipIDs = template.Inventory.SplitCSV().ToArray();
+				var equipIDs = template.Inventory.SplitCSV();
 				if (!template.Inventory.Contains(":"))
 				{
 
