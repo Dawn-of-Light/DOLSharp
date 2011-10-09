@@ -234,15 +234,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return;
 				}
 
-				//check if the zonepoint has source locations set  Check prior to any zonepoint modification by handlers
-				if (m_zonePoint.SourceRegion == 0)
+				try
 				{
-					m_zonePoint.SourceRegion = player.CurrentRegionID;
-					m_zonePoint.SourceX = player.X;
-					m_zonePoint.SourceY = player.Y;
-					m_zonePoint.SourceZ = player.Z;
-					GameServer.Database.SaveObject(m_zonePoint);
+
+					//check if the zonepoint has source locations set  Check prior to any zonepoint modification by handlers
+					if (m_zonePoint.SourceRegion == 0)
+					{
+						m_zonePoint.SourceRegion = player.CurrentRegionID;
+						m_zonePoint.SourceX = player.X;
+						m_zonePoint.SourceY = player.Y;
+						m_zonePoint.SourceZ = player.Z;
+						GameServer.Database.SaveObject(m_zonePoint);
+					}
+
 				}
+				catch (Exception ex)
+				{
+					Log.Error("Can't save updated ZonePoint with source info.", ex);
+				}
+
+			
 
 				if (m_checkHandler != null)
 				{
