@@ -48,9 +48,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			eRealm targetRealm = client.Player.Realm;
 
-			if (client.Player.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis)
+			if (client.Player.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis && client.Player.CurrentZone.Realm != eRealm.None)
 			{
 				// if we are in TrialsOfAtlantis then base the target jump on the current region realm instead of the players realm
+				// this is only used if zone table has the proper realms defined, otherwise it reverts to old behavior - Tolakram
                 targetRealm = client.Player.CurrentZone.Realm;
 			}
 
