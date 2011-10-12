@@ -120,32 +120,43 @@ namespace DOL.GS
 
             if (itemToCombine.Object_Type == (int)eObjectType.AlchemyTincture)
             {
-                switch (itemToCombine.Type_Damage)
+                if (item.Object_Type != (int)eObjectType.Instrument) // Only check for non instruments
                 {
-                    case 0: //Type damage 0 = armors
-                        if (!GlobalConstants.IsArmor(item.Object_Type))
-                        {
-                            if (item.Object_Type == (int)eObjectType.Shield) // think shield can do armor and weapon ? not verified.
-                                return true;
+                    switch (itemToCombine.Type_Damage)
+                    {
+                        case 0: //Type damage 0 = armors
+                            if (!GlobalConstants.IsArmor(item.Object_Type))
+                            {
+                                if (item.Object_Type == (int)eObjectType.Shield) // think shield can do armor and weapon ? not verified.
+                                    return true;
 
-                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return false;
+                            }
+                            break;
+                        case 1: //Type damage 1 = weapons
+                            if (!GlobalConstants.IsWeapon(item.Object_Type))
+                            {
+                                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return false;
+                            }
+                            break;
+                        default:
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.ProblemCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             return false;
-                        }
-                        break;
-                    case 1: //Type damage 1 = weapons
-                        if (!GlobalConstants.IsWeapon(item.Object_Type))
-                        {
-                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            return false;
-                        }
-                        break;
-                    default:
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.ProblemCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
+                }
+                else // Instrument
+                {
+                    if (itemToCombine.Type_Damage != 0) //think instrument can do only armorproc ? not verified.
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         return false;
+                    }
                 }
             }
 
-			if (!GlobalConstants.IsArmor(item.Object_Type) && !GlobalConstants.IsWeapon(item.Object_Type))
+            if (!GlobalConstants.IsArmor(item.Object_Type) && !GlobalConstants.IsWeapon(item.Object_Type) && item.Object_Type != (int)eObjectType.Instrument)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;	
