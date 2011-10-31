@@ -26,7 +26,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Spells
 {
 	/// <summary>
-	/// Reduce range needed to cast the sepll
+	/// Simulates disarming a target by stopping their attack
 	/// </summary>
 	[SpellHandler("Disarm")]
 	public class DisarmSpellHandler : SpellHandler
