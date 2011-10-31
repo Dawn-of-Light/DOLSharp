@@ -29,7 +29,7 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Show various housing information"
 		)]
-	public class HouseCommanHandler : AbstractCommandHandler, ICommandHandler
+	public class HouseCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -64,6 +64,28 @@ namespace DOL.GS.Commands
 				{
 					DisplayMessage(client, "You do not own a house.");
 					return;
+				}
+
+				if (house.RegionID == client.Player.CurrentRegionID && client.Player.InHouse == false)
+				{
+					// let's force update their house to make sure they can see it
+
+					client.Out.SendHouse(house);
+					client.Out.SendGarden(house);
+
+					if (house.IsOccupied)
+					{
+						client.Out.SendHouseOccupied(house, true);
+					}
+
+					try
+					{
+						client.Player.HousingUpdateArray[house.UniqueID] = true;
+					}
+					catch (Exception ex)
+					{
+						log.Error("Error in /house trying to update player housing array.", ex);
+					}
 				}
 
 				house.SendHouseInfo(client.Player);
