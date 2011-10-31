@@ -252,7 +252,15 @@ namespace DOL.GS
 		public override void WalkToSpawn()
 		{
 			EvadeChance = 100;
-			base.WalkToSpawn();
+			WalkToSpawn(MaxSpeed);
+		}
+
+		public override void OnAttackedByEnemy(AttackData ad)
+		{
+			if (EvadeChance == 100)
+				return;
+
+			base.OnAttackedByEnemy(ad);
 		}
 
 		/// <summary>
@@ -850,7 +858,7 @@ namespace DOL.GS
 			return false;
 		}
 
-		private void PrepareToStun()
+		public void PrepareToStun()
 		{
 			// No announcement for this seemingly.
 			new RegionTimer(this, new RegionTimerCallback(CastStun), 5000);
