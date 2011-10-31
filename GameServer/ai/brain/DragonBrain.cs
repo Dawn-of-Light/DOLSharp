@@ -85,8 +85,14 @@ namespace DOL.AI.Brain
  
             if (CheckTether())
             {
-                Body.StopFollowing();
-                ClearAggroList();
+				Body.StopFollowing();
+				GameDragon dragon = Body as GameDragon;
+				if (dragon != null)
+				{
+					dragon.PrepareToStun();
+				}
+
+                // ClearAggroList();
                 Body.WalkToSpawn();
                 return;
             }
