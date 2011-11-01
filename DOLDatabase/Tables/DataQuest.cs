@@ -48,6 +48,9 @@ namespace DOL.Database
 		private byte m_maxLevel;
 		private string m_rewardMoney;
 		private string m_rewardXP;
+		private string m_rewardCLXP;
+		private string m_rewardRP;
+		private string m_rewardBP;
 		private string m_optionalRewardItemTemplates;
 		private string m_finalRewardItemTemplates;
 		private string m_finishText;
@@ -276,6 +279,39 @@ namespace DOL.Database
 		{
 			get { return m_rewardXP; }
 			set { m_rewardXP = value; Dirty = true; }
+		}
+		
+		/// <summary>
+		/// Reward CLXP to give at each step, 0 for none
+		/// Format: 123456789|99876543|0|10000000
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string RewardCLXP
+		{
+			get { return m_rewardCLXP; }
+			set { m_rewardCLXP = value; Dirty = true; }
+		}
+		
+		/// <summary>
+		/// Reward RP to give at each step, 0 for none
+		/// Format: 123456789|99876543|0|10000000
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string RewardRP
+		{
+			get { return m_rewardRP; }
+			set { m_rewardRP = value; Dirty = true; }
+		}
+		
+		/// <summary>
+		/// Reward BP to give at each step, 0 for none
+		/// Format: 123456789|99876543|0|10000000
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string RewardBP
+		{
+			get { return m_rewardBP; }
+			set { m_rewardBP = value; Dirty = true; }
 		}
 
 		/// <summary>
