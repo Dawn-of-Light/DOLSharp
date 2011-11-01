@@ -85,6 +85,12 @@ namespace DOL.GS.Quests
 	/// 
 	/// RewardXP - Serialized list of XP rewarded each step.  All steps must have a value, 0 is ok.
 	/// 
+	/// RewardCLXP - Serialized list of CLXP rewarded each step.  All steps must have a value, 0 is ok.
+	/// 
+	/// RewardRP - Serialized list of RP rewarded each step.  All steps must have a value, 0 is ok.
+	/// 
+	/// RewardBP - Serialized list of XP rewarded each step.  All steps must have a value, 0 is ok.
+	/// 
 	/// OptionalRewardItemTemplates - A serialized list of optional rewards to be presented to the player at the end of a Reward quest.
 	/// The first value must be a number from 0 to 8 followed by the item list.  ex: 2id_nb|id_nb  For quests without optional rewards
 	/// this field can be null.
@@ -168,6 +174,12 @@ namespace DOL.GS.Quests
 		protected List<string> m_advanceTexts = new List<string>();
 		protected List<string> m_collectItems = new List<string>();
 		protected List<long> m_rewardXPs = new List<long>();
+		// CLXP added
+		protected List<long> m_rewardCLXPs = new List<long>();
+		// RP added
+		protected List<long> m_rewardRPs = new List<long>();
+		// BP added
+		protected List<long> m_rewardBPs = new List<long>();
 		protected List<long> m_rewardMoneys = new List<long>();
 		byte m_numOptionalRewardsChoice = 0;
 		protected List<ItemTemplate> m_optionalRewards = new List<ItemTemplate>();
@@ -377,7 +389,37 @@ namespace DOL.GS.Quests
 						m_rewardXPs.Add(Convert.ToInt64(str));
 					}
 				}
-
+				
+				lastParse = m_dataQuest.RewardCLXP;
+				if (string.IsNullOrEmpty(lastParse) == false)
+				{
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
+					{
+						m_rewardCLXPs.Add(Convert.ToInt64(str));
+					}
+				}
+				
+				lastParse = m_dataQuest.RewardRP;
+				if (string.IsNullOrEmpty(lastParse) == false)
+				{
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
+					{
+						m_rewardRPs.Add(Convert.ToInt64(str));
+					}
+				}
+				
+				lastParse = m_dataQuest.RewardBP;
+				if (string.IsNullOrEmpty(lastParse) == false)
+				{
+					parse1 = lastParse.Split('|');
+					foreach (string str in parse1)
+					{
+						m_rewardBPs.Add(Convert.ToInt64(str));
+					}
+				}
+				
 				lastParse = m_dataQuest.OptionalRewardItemTemplates;
 				if (string.IsNullOrEmpty(lastParse) == false)
 				{
@@ -1145,7 +1187,73 @@ namespace DOL.GS.Quests
 				return 0;
 			}
 		}
+		
+		protected long RewardCLXP
+		{
+			get
+			{
+				try
+				{
+					if (m_rewardCLXPs.Count == 0)
+					{
+						return 0;
+					}
 
+					return m_rewardCLXPs[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] RewardCLXP error for Step " + Step, ex);
+				}
+
+				return 0;
+			}
+		}
+		
+		protected long RewardRP
+		{
+			get
+			{
+				try
+				{
+					if (m_rewardRPs.Count == 0)
+					{
+						return 0;
+					}
+
+					return m_rewardRPs[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] RewardRP error for Step " + Step, ex);
+				}
+
+				return 0;
+			}
+		}
+		
+		protected long RewardBP
+		{
+			get
+			{
+				try
+				{
+					if (m_rewardBPs.Count == 0)
+					{
+						return 0;
+					}
+
+					return m_rewardBPs[Step - 1];
+				}
+				catch (Exception ex)
+				{
+					log.Error("DataQuest [" + ID + "] RewardBP error for Step " + Step, ex);
+				}
+
+				return 0;
+			}
+		}
+		
 		protected virtual bool ExecuteCustomQuestStep(GamePlayer player, int step, eStepCheckType stepCheckType)
 		{
 			bool canContinue = true;
@@ -1291,7 +1399,22 @@ namespace DOL.GS.Quests
 					{
 						m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, RewardXP);
 					}
-
+					
+					if (RewardCLXP > 0)
+					{
+						m_questPlayer.GainChampionExperience(RewardCLXP, GameLiving.eXPSource.Quest);
+					}
+					
+					if (RewardRP > 0)
+					{
+						m_questPlayer.GainRealmPoints(RewardRP);
+					}
+					
+					if (RewardBP > 0)
+					{
+						m_questPlayer.GainBountyPoints(RewardBP);
+					}
+					
 					// Then advance step
 
 					Step++;
@@ -1578,7 +1701,22 @@ namespace DOL.GS.Quests
 							{
 								player.GainExperience(GameLiving.eXPSource.Quest, m_rewardXPs[0]);
 							}
-
+							
+							if (m_rewardCLXPs.Count > 0 && m_rewardCLXPs[0] > 0)
+							{
+								player.GainChampionExperience(m_rewardCLXPs[0], GameLiving.eXPSource.Quest);
+							}
+							
+							if (m_rewardRPs.Count > 0 && m_rewardRPs[0] > 0)
+							{
+								player.GainRealmPoints(m_rewardRPs[0]);
+							}
+							
+							if (m_rewardBPs.Count > 0 && m_rewardBPs[0] > 0)
+							{
+								player.GainBountyPoints(m_rewardBPs[0]);
+							}
+							
 							if (m_rewardMoneys.Count > 0 && m_rewardMoneys[0] > 0)
 							{
 								player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
@@ -2049,7 +2187,22 @@ namespace DOL.GS.Quests
 								{
 									player.GainExperience(GameLiving.eXPSource.Quest, m_rewardXPs[0]);
 								}
-
+								
+								if (m_rewardCLXPs.Count > 0 && m_rewardCLXPs[0] > 0)
+								{
+									player.GainChampionExperience(m_rewardCLXPs[0], GameLiving.eXPSource.Quest);
+								}
+								
+								if (m_rewardRPs.Count > 0 && m_rewardRPs[0] > 0)
+								{
+									player.GainRealmPoints(m_rewardRPs[0]);
+								}
+								
+								if (m_rewardBPs.Count > 0 && m_rewardBPs[0] > 0)
+								{
+									player.GainBountyPoints(m_rewardBPs[0]);
+								}
+								
 								if (m_rewardMoneys.Count > 0 && m_rewardMoneys[0] > 0)
 								{
 									player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
@@ -2183,7 +2336,34 @@ namespace DOL.GS.Quests
 							m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
 						}
 					}
-
+					
+					if (m_rewardCLXPs.Count > 0)
+					{
+						long rewardCLXP = m_rewardCLXPs[lastStep - 1];
+						if (rewardCLXP > 0)
+						{
+							m_questPlayer.GainChampionExperience(rewardCLXP, GameLiving.eXPSource.Quest);
+						}
+					}
+					
+					if (m_rewardRPs.Count > 0)
+					{
+						long rewardRP = m_rewardRPs[lastStep - 1];
+						if (rewardRP > 0)
+						{
+							m_questPlayer.GainRealmPoints(rewardRP);
+						}
+					}
+					
+					if (m_rewardBPs.Count > 0)
+					{
+						long rewardBP = m_rewardBPs[lastStep - 1];
+						if (rewardBP > 0)
+						{
+							m_questPlayer.GainBountyPoints(rewardBP);
+						}
+					}
+					
 					if (m_rewardMoneys.Count > 0)
 					{
 						long rewardMoney = m_rewardMoneys[lastStep - 1];

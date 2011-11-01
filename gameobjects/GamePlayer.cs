@@ -15306,7 +15306,7 @@ namespace DOL.GS
 			if (!Champion || ChampionLevel == CL_MAX_LEVEL || experience <= 0 || IsPraying)
 				return;
 
-			if (source != eXPSource.GM)
+			if (source != eXPSource.GM && source != eXPSource.Quest)
 			{
 				double modifier = ServerProperties.Properties.CL_XP_RATE;
 
