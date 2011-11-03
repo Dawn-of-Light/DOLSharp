@@ -161,7 +161,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				short str = (short)(20 + Level * 6);
+                short str = (short)(Properties.PET_AUTOSET_STR_BASE + Level * 10 * Properties.PET_AUTOSET_STR_MULTIPLIER);
 				if (base.Strength > 0)
 				{
 					str = (short)(str * base.Strength * .01);
@@ -171,46 +171,46 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Base constitution.
-		/// </summary>
-		public override short Constitution
-		{
-			get
-			{
-				if (base.Constitution == 0)
-					return 30;
-				else
-					return base.Constitution;
-			}
-		}
+        /// <summary>
+        /// Pet Base constitution.
+        /// </summary>
+        public override short Constitution
+        {
+            get
+            {
+                if (base.Constitution == 0)
+                    return 30;
+                else
+                    return (short)(Properties.PET_AUTOSET_CON_BASE + Level * Properties.PET_AUTOSET_CON_MULTIPLIER);
+            }
+        }
 
-		/// <summary>
-		/// Base dexterity.
+        /// <summary>
+		/// Pet Base dexterity.
 		/// </summary>
 		public override short Dexterity
 		{
 			get
 			{
 				if (base.Dexterity == 0)
-					return 30;
+                    return 30;
 				else
-					return base.Dexterity;
-			}
+                    return (short)(Properties.PET_AUTOSET_DEX_BASE + Level * Properties.PET_AUTOSET_DEX_MULTIPLIER);
+            }
 		}
 
 		/// <summary>
-		/// Base quickness.
+		/// Pet Base quickness.
 		/// </summary>
 		public override short Quickness
 		{
 			get
 			{
 				if (base.Quickness == 0)
-					return 30;
+                    return 30;
 				else
-					return base.Quickness;
-			}
+                    return (short)(Properties.PET_AUTOSET_QUI_BASE + Level * Properties.PET_AUTOSET_QUI_MULTIPLIER);
+            }
 		}
 
 		public override int MaxHealth

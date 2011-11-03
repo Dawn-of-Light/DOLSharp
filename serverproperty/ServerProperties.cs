@@ -721,57 +721,103 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("rates", "mount_over_level_35_speed", "What is the speed of player controlled mounts over level 35?", (short)145)]
 		public static short MOUNT_OVER_LEVEL_35_SPEED;
 
-		/// <summary>
-		/// Base Value to use when auto-setting STR stat.
-		/// </summary>
-		[ServerProperty("npc", "mob_autoset_str_base", "Base Value to use when auto-setting STR stat. ", 30.0)]
-		public static double MOB_AUTOSET_STR_BASE;
-		
-		/// <summary>
-		/// Multiplier to use when auto-setting STR stat.
-		/// </summary>
-		[ServerProperty("npc", "mob_autoset_str_multiplier", "Multiplier to use when auto-setting STR stat. ", 1.0)]
-		public static double MOB_AUTOSET_STR_MULTIPLIER;
-
-		/// <summary>
-		/// Base Value to use when auto-setting CON stat.
-		/// </summary>
-		[ServerProperty("npc", "mob_autoset_con_base", "Base Value to use when auto-setting CON stat. ", 30.0)]
-		public static double MOB_AUTOSET_CON_BASE;
-
-		/// <summary>
-		/// Multiplier to use when auto-setting CON stat.
-		/// </summary>
-		[ServerProperty("npc", "mob_autoset_con_multiplier", "Multiplier to use when auto-setting CON stat. ", 1.0)]
-		public static double MOB_AUTOSET_CON_MULTIPLIER;
-
-		/// <summary>
-		/// Base Value to use when auto-setting QUI stat.
-		/// </summary>
-		[ServerProperty("npc", "mob_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", 30.0)]
-		public static double MOB_AUTOSET_QUI_BASE;
-
-		/// <summary>
-		/// Multiplier to use when auto-setting QUI stat.
-		/// </summary>
-		[ServerProperty("npc", "mob_autoset_qui_multiplier", "Multiplier to use when auto-setting QUI stat. ", 1.0)]
-		public static double MOB_AUTOSET_QUI_MULTIPLIER;
-
-		/// <summary>
-		/// Base Value to use when auto-setting DEX stat.
-		/// </summary>
-		[ServerProperty("npc", "mob_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", 30.0)]
-		public static double MOB_AUTOSET_DEX_BASE;
-
-		/// <summary>
-		/// Multiplier to use when auto-setting DEX stat.
-		/// </summary>
-		[ServerProperty("npc", "mob_autoset_dex_multiplier", "Multiplier to use when auto-setting DEX stat. ", 1.0)]
-		public static double MOB_AUTOSET_DEX_MULTIPLIER;
 		#endregion
 
 		#region NPCs
-		/// <summary>
+        /// <summary>
+        /// Base Value to use when auto-setting STR stat.
+        /// </summary>
+        [ServerProperty("npc", "mob_autoset_str_base", "Base Value to use when auto-setting STR stat. ", 30.0)]
+        public static double MOB_AUTOSET_STR_BASE;
+
+        /// <summary>
+        /// Multiplier to use when auto-setting STR stat.
+        /// </summary>
+        [ServerProperty("npc", "mob_autoset_str_multiplier", "Multiplier to use when auto-setting STR stat. ", 1.0)]
+        public static double MOB_AUTOSET_STR_MULTIPLIER;
+
+        /// <summary>
+        /// Base Value to use when auto-setting CON stat.
+        /// </summary>
+        [ServerProperty("npc", "mob_autoset_con_base", "Base Value to use when auto-setting CON stat. ", 30.0)]
+        public static double MOB_AUTOSET_CON_BASE;
+
+        /// <summary>
+        /// Multiplier to use when auto-setting CON stat.
+        /// </summary>
+        [ServerProperty("npc", "mob_autoset_con_multiplier", "Multiplier to use when auto-setting CON stat. ", 1.0)]
+        public static double MOB_AUTOSET_CON_MULTIPLIER;
+
+        /// <summary>
+        /// Base Value to use when auto-setting QUI stat.
+        /// </summary>
+        [ServerProperty("npc", "mob_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", 30.0)]
+        public static double MOB_AUTOSET_QUI_BASE;
+
+        /// <summary>
+        /// Multiplier to use when auto-setting QUI stat.
+        /// </summary>
+        [ServerProperty("npc", "mob_autoset_qui_multiplier", "Multiplier to use when auto-setting QUI stat. ", 1.0)]
+        public static double MOB_AUTOSET_QUI_MULTIPLIER;
+
+        /// <summary>
+        /// Base Value to use when auto-setting DEX stat.
+        /// </summary>
+        [ServerProperty("npc", "mob_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", 30.0)]
+        public static double MOB_AUTOSET_DEX_BASE;
+
+        /// <summary>
+        /// Multiplier to use when auto-setting DEX stat.
+        /// </summary>
+        [ServerProperty("npc", "mob_autoset_dex_multiplier", "Multiplier to use when auto-setting DEX stat. ", 1.0)]
+        public static double MOB_AUTOSET_DEX_MULTIPLIER;
+
+        /// <summary>
+        /// Base Value to use when auto-setting pet STR stat.
+        /// </summary>
+        [ServerProperty("npc", "pet_autoset_str_base", "Base Value to use when auto-setting Pet STR stat. ", 20.0)]
+        public static double PET_AUTOSET_STR_BASE;
+
+        /// <summary>
+        /// Multiplier to use when auto-setting pet STR stat.
+        /// </summary>
+        [ServerProperty("npc", "pet_autoset_str_multiplier", "Multiplier to use when auto-setting Pet STR stat. ", 6.0)]
+        public static double PET_AUTOSET_STR_MULTIPLIER;
+        
+        /// Base Value to use when auto-setting pet CON stat.
+        /// </summary>
+        [ServerProperty("npc", "pet_autoset_con_base", "Base Value to use when auto-setting Pet CON stat. ", 30.0)]
+        public static double PET_AUTOSET_CON_BASE;
+
+        /// <summary>
+        /// Multiplier to use when auto-setting pet CON stat.
+        /// </summary>
+        [ServerProperty("npc", "pet_autoset_con_multiplier", "Multiplier to use when auto-setting Pet CON stat. ", 1.0)]
+        public static double PET_AUTOSET_CON_MULTIPLIER;
+
+        /// Base Value to use when auto-setting Pet DEX stat.
+        /// </summary>
+        [ServerProperty("npc", "pet_autoset_dex_base", "Base Value to use when auto-setting Pet DEX stat. ", 30.0)]
+        public static double PET_AUTOSET_DEX_BASE;
+
+        /// <summary>
+        /// Multiplier to use when auto-setting pet DEX stat.
+        /// </summary>
+        [ServerProperty("npc", "pet_autoset_dex_multiplier", "Multiplier to use when auto-setting Pet DEX stat. ", 1.0)]
+        public static double PET_AUTOSET_DEX_MULTIPLIER;
+
+        /// Base Value to use when auto-setting Pet QUI stat.
+        /// </summary>
+        [ServerProperty("npc", "pet_autoset_qui_base", "Base Value to use when auto-setting Pet QUI stat. ", 30.0)]
+        public static double PET_AUTOSET_QUI_BASE;
+
+        /// <summary>
+        /// Multiplier to use when auto-setting pet QUI stat.
+        /// </summary>
+        [ServerProperty("npc", "pet_autoset_qui_multiplier", "Multiplier to use when auto-setting Pet QUI stat. ", 1.0)]
+        public static double PET_AUTOSET_QUI_MULTIPLIER;
+        
+        /// <summary>
 		/// What level to start increasing mob damage
 		/// </summary>
 		[ServerProperty("npc", "mob_damage_increase_startlevel", "What level to start increasing mob damage.", 30)]
