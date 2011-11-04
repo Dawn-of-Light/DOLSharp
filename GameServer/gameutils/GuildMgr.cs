@@ -579,6 +579,20 @@ namespace DOL.GS
 					item.Emblem = newemblem;
 					GameServer.Database.SaveObject(item);
 				}
+
+				// change guild house emblem
+
+				if (player.Guild.GuildOwnsHouse && player.Guild.GuildHouseNumber > 0)
+				{
+					Housing.House guildHouse = Housing.HouseMgr.GetHouse(player.Guild.GuildHouseNumber);
+
+					if (guildHouse != null)
+					{
+						guildHouse.Emblem = player.Guild.Emblem;
+						guildHouse.SaveIntoDatabase();
+						guildHouse.SendUpdate();
+					}
+				}
 			}
 		}
 
