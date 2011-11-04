@@ -60,35 +60,62 @@ namespace DOL.GS.Commands
 				}
 
 				House house = HouseMgr.GetHouseByPlayer(client.Player);
-				if (house == null)
+
+				if (house != null)
+				{
+					if (client.Player.Guild != null)
+					{
+						// check to see if guild emblem is current
+						if (house.Emblem != client.Player.Guild.Emblem)
+						{
+							house.Emblem = client.Player.Guild.Emblem;
+							house.SaveIntoDatabase();
+						}
+					}
+
+					if (house.RegionID == client.Player.CurrentRegionID && client.Player.InHouse == false)
+					{
+						// let's force update their house to make sure they can see it
+
+						client.Out.SendHouse(house);
+						client.Out.SendGarden(house);
+
+						if (house.IsOccupied)
+						{
+							client.Out.SendHouseOccupied(house, true);
+						}
+
+						try
+						{
+							client.Player.HousingUpdateArray[house.UniqueID] = true;
+						}
+						catch (Exception ex)
+						{
+							log.Error("Error in /house trying to update player housing array.", ex);
+						}
+					}
+
+					// Send the house info dialog
+					house.SendHouseInfo(client.Player);
+				}
+				else
 				{
 					DisplayMessage(client, "You do not own a house.");
-					return;
 				}
 
-				if (house.RegionID == client.Player.CurrentRegionID && client.Player.InHouse == false)
+				// now check for a guild house and update emblem if needed
+
+				if (client.Player.Guild != null && client.Player.Guild.GuildOwnsHouse && client.Player.Guild.GuildHouseNumber > 0)
 				{
-					// let's force update their house to make sure they can see it
+					House guildHouse = HouseMgr.GetHouse(client.Player.Guild.GuildHouseNumber);
 
-					client.Out.SendHouse(house);
-					client.Out.SendGarden(house);
-
-					if (house.IsOccupied)
+					if (guildHouse != null && guildHouse.Emblem != client.Player.Guild.Emblem)
 					{
-						client.Out.SendHouseOccupied(house, true);
-					}
-
-					try
-					{
-						client.Player.HousingUpdateArray[house.UniqueID] = true;
-					}
-					catch (Exception ex)
-					{
-						log.Error("Error in /house trying to update player housing array.", ex);
+						guildHouse.Emblem = client.Player.Guild.Emblem;
+						guildHouse.SaveIntoDatabase();
+						guildHouse.SendUpdate();
 					}
 				}
-
-				house.SendHouseInfo(client.Player);
 			}
 			catch
 			{
