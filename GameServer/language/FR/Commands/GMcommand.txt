@@ -20,7 +20,7 @@ GMCommands.Announce.Usage:					/announce <log|window|send|center|confirm> <messa
 GMCommands.Announce.LogAnnounce:			[Announce]: {0}
 GMCommands.Announce.WindowAnnounce:			Annonce de {0}
 GMCommands.Announce.SendAnnounce:			[Announce]: {0}
-GMCommands.Announce.ConfirmAnnounce:		Annonce dem {0}: {1}
+GMCommands.Announce.ConfirmAnnounce:		Annonce de {0}: {1}
 
 
 # /area Command

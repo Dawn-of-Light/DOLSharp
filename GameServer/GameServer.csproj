@@ -2744,6 +2744,7 @@
     <Content Include="language\DE\GameObjects\GameGuard.txt" />
     <Content Include="language\DE\PlayerRealmTitles.txt" />
     <Content Include="language\DE\Quests\Hibernia\WingsOfTheIsle.txt" />
+    <Content Include="language\EN\Commands\PlayerCommands.txt" />
     <Content Include="language\EN\GameObjects\GameDoor.txt" />
     <Content Include="language\EN\GameObjects\GameGuard.txt" />
     <Content Include="language\EN\PlayerRealmTitles.txt" />
