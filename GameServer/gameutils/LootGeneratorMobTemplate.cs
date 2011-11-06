@@ -182,6 +182,8 @@ namespace DOL.GS
 				lock (m_mobXLootTemplates)
 				{
 					foreach (MobDropTemplate mxlt in mxlts)
+						m_mobXLootTemplates.Remove(mxlt.MobName.ToLower());
+					foreach (MobDropTemplate mxlt in mxlts)
 					{
 						List<MobDropTemplate> mobxLootTemplates;
 						if (!m_mobXLootTemplates.TryGetValue(mxlt.MobName.ToLower(), out mobxLootTemplates))
@@ -207,27 +209,15 @@ namespace DOL.GS
 
 		protected void RefreshLootTemplate(string templateName)
 		{
-			lock (m_lootTemplates)
-			{
-				if (m_lootTemplates.ContainsKey(templateName.ToLower()))
-				{
-					m_lootTemplates.Remove(templateName.ToLower());
-				}
-			}
-
-			IList<DropTemplateXItemTemplate> lootTemplates = GameServer.Database.SelectObjects<DropTemplateXItemTemplate>("TemplateName = '" + GameServer.Database.Escape(templateName) + "'");
+			var lootTemplates = GameServer.Database.SelectObjects<DropTemplateXItemTemplate>("TemplateName = '" + GameServer.Database.Escape(templateName) + "'");
 
 			if (lootTemplates != null)
 			{
 				lock (m_lootTemplates)
 				{
-					if (m_lootTemplates.ContainsKey(templateName.ToLower()))
-					{
-						m_lootTemplates.Remove(templateName.ToLower());
-					}
+					m_lootTemplates.Remove(templateName.ToLower());
 
-					Dictionary<string, DropTemplateXItemTemplate> lootList = new Dictionary<string, DropTemplateXItemTemplate>();
-
+					var lootList = new Dictionary<string, DropTemplateXItemTemplate>();
 					foreach (DropTemplateXItemTemplate lt in lootTemplates)
 					{
 						if (lootList.ContainsKey(lt.ItemTemplateID.ToLower()) == false)

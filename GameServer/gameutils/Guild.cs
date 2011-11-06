@@ -598,7 +598,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool AddPlayer(GamePlayer addPlayer, DBRank rank)
 		{
-			if (addPlayer == null)
+			if (addPlayer == null || addPlayer.Guild != null)
 				return false;
 			
 			if (log.IsDebugEnabled)
