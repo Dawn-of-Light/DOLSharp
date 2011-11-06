@@ -92,7 +92,7 @@ namespace DOL.GS.Commands
 	     "'/mob dropcount [number]' to set the max number of drops for mob (omit number to view current value)",
 		 "'/mob dropcount2 [number]' same as '/mob dropcount' but for the 'MobDrop' generator",
 	     "'/mob addloot <ItemTemplateID> <chance> [count]' to add loot to the mob's unique drop table.  Optionally specify count of how many to drop if chance = 100%",
-		 "'/mob addloot2 <ItemTemplateID> <chance> [count]' same as '/mob addloot' but for the 'MobDrop' generator",
+		 "'/mob addloot2 <ItemTemplateID> <chance> [count]' to add loot to the mob's drop table. Optionally specify count of how many item to drop if chance < 100%",
 	     "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob.",
 	     "'/mob viewloot [random] [inv]' to view the selected mob's loot table.  Use random to simulate a kill drop, random inv to simulate and generate the loots",
 	     "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
@@ -1794,13 +1794,6 @@ namespace DOL.GS.Commands
 			T mxlt =
 				GameServer.Database.SelectObject<T>("MobName = '" + GameServer.Database.Escape(targetMob.Name) +
 					"' AND LootTemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
-
-			if (mxlt == null && args.Length < 3)
-			{
-				DisplayMessage(client,
-					"Mob '" + targetMob.Name + "' does not have a MobXLootTemplate, use /mob addmobxlt <max drop count> to add one.");
-				return;
-			}
 
 			if (args.Length < 3)
 			{

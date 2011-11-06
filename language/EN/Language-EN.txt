@@ -414,6 +414,7 @@ Scripts.Players.Battlegroup.OwnBattleGroup:		You cannot join your own battlegrou
 Scripts.Players.Battlegroup.Password:			Password of battlegroup: {0}.
 Scripts.Players.Battlegroup.PasswordChanged:		You have change the password of Battlegroup to: {0}.	
 Scripts.Players.Battlegroup.PlayerInBattlegroup:	{0} is already in a battlegroup.	
+Scripts.Players.Battlegroup.AlreadyInBattlegroup:	You are already in a battlegroup.
 Scripts.Players.Battlegroup.Private:			The battlegroup is now private.
 Scripts.Players.Battlegroup.Public:			The battlegroup is now public.
 Scripts.Players.Battlegroup.Usage:			Usage: /bg <text>

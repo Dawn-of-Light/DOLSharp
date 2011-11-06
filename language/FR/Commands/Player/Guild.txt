@@ -151,7 +151,7 @@ Scripts.Player.Guild.LevelUp:				[Guild] Votre guilde a atteint le niveau {0}!
 Scripts.Player.Guild.LoginsOff:				Vous avez désactivé la fonction qui vous permet de voir les membres de la guilde se connecter, tappez /gc logins pour activer la fonction.	
 Scripts.Player.Guild.LoginsOn:				Vous avez activé la fonction qui vous permet de voir les membres de la guilde se connecter, tapper /gc logins pour désactiver la fonction.
 Scripts.Player.Guild.MadeLeader:			Vous êtes désormais le chef de {0}.	
-Scripts.Player.Guild.MadeLeaderOther:			{0} a promu {1} comme nouveau chef de guilde.	
+Scripts.Player.Guild.MadeLeaderOther:			{0} a été promu nouveau chef de la guilde {1}.
 Scripts.Player.Guild.MemberLogin:			{0} est maintenant connecté(e).	
 Scripts.Player.Guild.MemberLogoff:			{0} est maintenant déconnecté(e).	
 Scripts.Player.Guild.MemberRemoved:			{0} a retiré {1} de la guilde.	
