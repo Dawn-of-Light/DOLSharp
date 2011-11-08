@@ -380,7 +380,7 @@ namespace DOL.Language
 			}
 			catch
 			{
-				log.ErrorFormat("LanguageMGR: Parameter number incorrect: {0} for language {1}, Arg count = {2}", TranslationID, lang, args.Length);
+				log.ErrorFormat("LanguageMGR: Parameter number incorrect: {0} for language {1}, Arg count = {2}, sentence = '{3}', args[0] = '{4}'", TranslationID, lang, args.Length, translated, args.Length > 0 ? args[0] : "null");
 			}
 
 			return translated;
