@@ -37,7 +37,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if(target==null)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn(string.Format("Client {0} requested invalid client {1}",client.SessionID,id));
+					log.Warn(string.Format("Client {0} requested invalid client {1} --- disconnecting", client.SessionID,id));
+
+				client.Disconnect();
 				return;
 			}
 
