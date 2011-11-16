@@ -97,6 +97,14 @@ namespace DOL.GS
 				X, Y, 0, LairRadius + 200));
 		}
 
+		public override bool HasAbility(string keyName)
+		{
+			if (IsReturningHome && keyName == DOL.GS.Abilities.CCImmunity)
+				return true;
+
+			return base.HasAbility(keyName);
+		}
+
 		public override int AttackRange
 		{
 			get { return 400; }
