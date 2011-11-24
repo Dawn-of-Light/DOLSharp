@@ -16096,7 +16096,7 @@ namespace DOL.GS
 
 
 
-		public double GetEvadeChance()
+        public virtual double GetEvadeChance()
 		{
 			double evadeChance = 0;
 
@@ -16123,7 +16123,7 @@ namespace DOL.GS
 			}
 			return Math.Round(evadeChance*10000)/100;
 		}
-		public double GetBlockChance()
+        public virtual double GetBlockChance()
 		{
 			double blockChance = 0;
 			InventoryItem lefthand = null;
@@ -16149,7 +16149,7 @@ namespace DOL.GS
 
 			return Math.Round(blockChance*10000)/100;
 		}
-		public double GetParryChance()
+        public virtual double GetParryChance()
 		{
 			double parryChance = 0;
 			
