@@ -1543,6 +1543,12 @@ namespace DOL.GS.ServerProperties
 		public static double CAPITAL_CITY_CRAFTING_SPEED_BONUS;
 
 		/// <summary>
+		/// Allow any realm to craft items with a realm of 0 (no realm)
+		/// </summary>
+		[ServerProperty("craft", "allow_craft_norealm_items", "Allow any realm to craft items with 0 (no) realm.", false)]
+		public static bool ALLOW_CRAFT_NOREALM_ITEMS;
+
+		/// <summary>
 		/// Use salvage per realm and get back material to use in chars realm
 		/// </summary>
 		[ServerProperty("salvage", "use_salvage_per_realm", "Enable to get back material to use in chars realm. Disable to get back the same material in all realms.", false)]
