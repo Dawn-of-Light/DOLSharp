@@ -120,9 +120,6 @@ namespace DOL.GS.Commands
 			if (IsSpammingCommand(client.Player, "duel"))
 				return;
 
-			if (client.Player.IsMuted)
-				return;
-
 			switch (client.Player.CurrentRegionID)
 			{
 				case 10:
