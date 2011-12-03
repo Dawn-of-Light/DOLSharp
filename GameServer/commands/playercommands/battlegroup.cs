@@ -37,12 +37,6 @@ namespace DOL.GS.Commands
 			if (IsSpammingCommand(client.Player, "battlechat"))
 				return;
 
-			if (client.Player.IsMuted)
-			{
-				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
 			BattleGroup mybattlegroup = client.Player.TempProperties.getProperty<BattleGroup>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 			if (mybattlegroup == null)
 			{

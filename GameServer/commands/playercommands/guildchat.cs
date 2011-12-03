@@ -41,11 +41,6 @@ namespace DOL.GS.Commands
 				DisplayMessage(client, "You don't have permission to speak on the on guild line.");
 				return;
 			}
-			if (client.Player.IsMuted)
-			{
-				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
-				return;
-			}
 
 			if (IsSpammingCommand(client.Player, "guildchat", 500))
 			{
@@ -77,11 +72,6 @@ namespace DOL.GS.Commands
 			if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.OcSpeak))
 			{
 				DisplayMessage(client, "You don't have permission to speak on the officer line.");
-				return;
-			}
-			if (client.Player.IsMuted)
-			{
-				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
