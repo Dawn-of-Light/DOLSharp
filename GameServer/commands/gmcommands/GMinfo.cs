@@ -36,6 +36,7 @@ using DOL.GS.PacketHandler.Client.v168;
 using DOL.GS.Quests;
 using DOL.GS.Utils;
 using DOL.Language;
+using System.Reflection;
 
 namespace DOL.GS.Commands
 {
@@ -51,8 +52,10 @@ namespace DOL.GS.Commands
 				
 			string name = "(NoName)";
 			var info = new List<string>();
-			info.Add( "          Votre Region : " + client.Player.CurrentRegionID );
+			info.Add("        Current Region : " + client.Player.CurrentRegionID );
 			info.Add(" ");
+			Type regionType = client.Player.CurrentRegion.GetType();
+			info.Add("       Region ClassType: " + regionType.FullName);
 			
 			if (client.Player.TargetObject != null)
 			{
