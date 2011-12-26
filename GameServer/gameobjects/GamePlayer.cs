@@ -14296,12 +14296,13 @@ namespace DOL.GS
 						case 2:  return (ushort)(DBCharacter.Gender + 1359); //Avalonian
 						case 3:  return (ushort)(DBCharacter.Gender + 1355); //Highlander
 						case 4:  return (ushort)(DBCharacter.Gender + 1357); //Saracen
-						case 5:  return (ushort)(DBCharacter.Gender + 1365); //Norseman
+						
 						case 16: return (ushort)(DBCharacter.Gender + 1361); //HalfOgre
 
 						// Midgard Models.
 						case 6:  return (ushort)(DBCharacter.Gender + 1363); //Troll
-						case 7:  return (ushort)(DBCharacter.Gender + 1365); //Dwarf
+						case 7:  return (ushort)(DBCharacter.Gender + 1369); //Dwarf
+                        case 5: return (ushort)(DBCharacter.Gender + 1365); //Norseman
 						case 8:  return (ushort)(DBCharacter.Gender + 1367); //Kobold
 						case 14: return (ushort)(DBCharacter.Gender + 1371); //Valkyn
 						case 17: return (ushort)(DBCharacter.Gender + 1373); //Frostalf
