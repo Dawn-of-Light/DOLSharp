@@ -1126,7 +1126,7 @@ namespace DOL.GS.Spells
     #endregion
 
     #region Stormbase
-    public class StormSpellHandler : DoTSpellHandler
+    public class StormSpellHandler : SpellHandler
     {
         protected GameStorm storm;
         protected DBSpell dbs;
@@ -1146,9 +1146,24 @@ namespace DOL.GS.Spells
             {
                 return;
             }
-            foreach (GamePlayer player in storm.GetPlayersInRadius(sRadius))
+            int ranged = storm.GetDistanceTo(new Point3D((int)effect.Owner.X, (int)effect.Owner.Y, (int)effect.Owner.Z));
+            if (ranged > 3000) return;
+
+            if (s.Name == "Dazzling Array")
             {
-                if (player.IsAlive) tempest.StartSpell(player);
+                foreach (GamePlayer player in storm.GetPlayersInRadius(sRadius))
+                {
+                    tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+                    if ((player.IsAlive) && (GameServer.ServerRules.IsSameRealm(storm, player, true))) tempest.StartSpell((GameLiving)player);
+                }
+            }
+            else
+            {
+                foreach (GamePlayer player in storm.GetPlayersInRadius(sRadius))
+                {
+                    tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+                    if ((player.IsAlive) && (GameServer.ServerRules.IsAllowedToAttack(storm, player, true))) tempest.StartSpell((GameLiving)player);
+                }
             }
         }
 
@@ -1156,7 +1171,7 @@ namespace DOL.GS.Spells
         {
             GameSpellEffect neweffect = CreateSpellEffect(target, effectiveness);
             storm.AddToWorld();
-            neweffect.Start(storm);
+            neweffect.Start(storm.Owner);
         }
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)

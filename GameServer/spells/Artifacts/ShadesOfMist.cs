@@ -16,7 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
+using System;
 using DOL.GS.Effects;
+using DOL.Events;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
@@ -25,58 +29,112 @@ namespace DOL.GS.Spells
     /// a defensive proc (200 pt. melee health buffer).
     /// </summary>
     /// <author>Aredhel</author>
-    [SpellHandler("ShadesOfMist")]
-    public class ShadesOfMist : DefensiveProcSpellHandler
+    [SpellHandlerAttribute("ShadesOfMist")]
+    public class ShadeOfMistDefensiveProcSpellHandler : SpellHandler
     {
-        /// <summary>
-        /// Effect starting.
-        /// </summary>
-        /// <param name="effect"></param>
+        private int ablativehp = 0;
         public override void OnEffectStart(GameSpellEffect effect)
         {
-            base.OnEffectStart(effect);
 
-            GamePlayer player = effect.Owner as GamePlayer;
-            foreach (GameSpellEffect Effect in player.EffectList.GetAllOfType<GameSpellEffect>())
+            base.OnEffectStart(effect);
+            if (effect.Owner is GamePlayer)
             {
-                if (Effect.SpellHandler.Spell.SpellType.Equals("TraitorsDaggerProc") ||
-                    Effect.SpellHandler.Spell.SpellType.Equals("DreamMorph") ||
-                    Effect.SpellHandler.Spell.SpellType.Equals("DreamGroupMorph") ||
-                    Effect.SpellHandler.Spell.SpellType.Equals("MaddeningScalars") ||
-                    Effect.SpellHandler.Spell.SpellType.Equals("AtlantisTabletMorph") ||
-                    Effect.SpellHandler.Spell.SpellType.Equals("AlvarusMorph"))
+                GamePlayer player = effect.Owner as GamePlayer;
+                foreach (GameSpellEffect Effect in player.EffectList.GetAllOfType<GameSpellEffect>())
                 {
-                    player.Out.SendMessage("You already have an active morph!", DOL.GS.PacketHandler.eChatType.CT_SpellResisted, DOL.GS.PacketHandler.eChatLoc.CL_ChatWindow);
-                    return;
+                    if (Effect.SpellHandler.Spell.SpellType.Equals("TraitorsDaggerProc") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("DreamMorph") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("DreamGroupMorph") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("MaddeningScalars") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("AtlantisTabletMorph") ||
+                        Effect.SpellHandler.Spell.SpellType.Equals("AlvarusMorph"))
+                    {
+                        player.Out.SendMessage("You already have an active morph!", DOL.GS.PacketHandler.eChatType.CT_SpellResisted, DOL.GS.PacketHandler.eChatLoc.CL_ChatWindow);
+                        return;
+                    }
                 }
+                player.Model = player.ShadeModel;
+                player.Out.SendUpdatePlayer();
+                GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(EventHandler));
             }
-            if (player != null)
-                player.Model = player.ShadeModel;        
         }
 
-        /// <summary>
-        /// Effect expiring (duration spells only).
-        /// </summary>
-        /// <param name="effect"></param>
-        /// <param name="noMessages"></param>
-        /// <returns>Immunity duration in milliseconds.</returns>
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            GamePlayer player = effect.Owner as GamePlayer;
-
-            if (player != null)
-                player.Model = player.CreationModel;      
-      
+            if (effect.Owner is GamePlayer)
+            {
+                GamePlayer player = effect.Owner as GamePlayer;
+                player.Model = player.CreationModel;
+                player.Out.SendUpdatePlayer();
+            }
+            GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(EventHandler));
             return base.OnEffectExpires(effect, noMessages);
+            
         }
 
-        /// <summary>
-        /// Creates a new ShadesOfMist spell handler.
-        /// </summary>
-        /// <param name="caster"></param>
-        /// <param name="spell"></param>
-        /// <param name="line"></param>
-        public ShadesOfMist(GameLiving caster, Spell spell, SpellLine line)
-            : base(caster, spell, line) { }
+        public void EventHandler(DOLEvent e, object sender, EventArgs arguments)
+        {
+            AttackedByEnemyEventArgs args = arguments as AttackedByEnemyEventArgs;
+            if (args == null) return;
+            
+            if (args.AttackData == null) return;
+            if (args.AttackData.SpellHandler != null) return;
+            if (args.AttackData.AttackResult != GameLiving.eAttackResult.HitUnstyled
+                && args.AttackData.AttackResult != GameLiving.eAttackResult.HitStyle)
+                return;
+
+            int baseChance = Spell.Frequency / 100;
+            if (baseChance < 1)
+                baseChance = 1;
+
+            if (Util.Chance(baseChance))
+            {
+                ablativehp = 200;
+                GamePlayer player = sender as GamePlayer;
+                foreach (GamePlayer players in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                    players.Out.SendSpellEffectAnimation(player, player, 9103, 0, false, 1);
+            }
+
+            if (ablativehp != 0)
+            {
+                AttackData ad = args.AttackData;
+                GameLiving living = sender as GameLiving;
+                if (living == null) return;
+                if (!MatchingDamageType(ref ad)) return;
+
+                double absorbPercent = 100;
+
+                int damageAbsorbed = (int)(0.01 * absorbPercent * (ad.Damage + ad.CriticalDamage));
+                if (damageAbsorbed > ablativehp)
+                    damageAbsorbed = ablativehp;
+                ablativehp -= damageAbsorbed;
+                ad.Damage -= damageAbsorbed;
+                OnDamageAbsorbed(ad, damageAbsorbed);
+
+                //TODO correct messages
+                MessageToLiving(ad.Target, string.Format("Your ablative absorbs {0} damage!", damageAbsorbed), eChatType.CT_Spell);//since its not always Melee absorbing
+                MessageToLiving(ad.Attacker, string.Format("A barrier absorbs {0} damage of your attack!", damageAbsorbed), eChatType.CT_Spell);  
+            }
+            
+        }
+
+        protected virtual void OnDamageAbsorbed(AttackData ad, int DamageAmount)
+        {
+        }
+
+        // Check if Melee
+        protected virtual bool MatchingDamageType(ref AttackData ad)
+        {
+
+            if (ad == null || (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
+                return false;
+            if (!ad.IsMeleeAttack && ad.AttackType != AttackData.eAttackType.Ranged)
+                return false;
+
+            return true;
+        }
+
+        public ShadeOfMistDefensiveProcSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
+
 }
