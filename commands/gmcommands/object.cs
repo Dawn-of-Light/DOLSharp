@@ -34,6 +34,8 @@ namespace DOL.GS.Commands
 	              "'/object create [ObjectClassName]' to create a default object",
 	              "'/object fastcreate [name] [modelID]' to create the specified object",
 	              "'/object model <newModel>' to set the model to newModel",
+	              "'/object modelinc' Increment the object model by 1",
+	              "'/object modeldec' Decrement the object model by 1",
 	              "'/object emblem <newEmblem>' to set the emblem to newEmblem",
 	              "'/object realm <0/1/2/3>' to set the targeted object realm",
 	              "'/object name <newName>' to set the targeted object name to newName",
@@ -163,6 +165,54 @@ namespace DOL.GS.Commands
 							targetObject.Model = model;
 							targetObject.SaveIntoDatabase();
 							DisplayMessage(client, "Object model changed to: " + targetObject.Model);
+						}
+						catch (Exception)
+						{
+							DisplayMessage(client, "Type /object for command overview");
+							return;
+						}
+						break;
+					}
+				case "modelinc":
+					{
+						ushort model = targetObject.Model;
+						try
+						{
+							if (model < 4249)
+							{
+							model++;
+							targetObject.Model = model;
+							targetObject.SaveIntoDatabase();
+							DisplayMessage(client, "Object model changed to: " + targetObject.Model);
+							}
+							else
+							{
+								DisplayMessage(client, "Highest object model reached!");
+							}
+						}
+						catch (Exception)
+						{
+							DisplayMessage(client, "Type /object for command overview");
+							return;
+						}
+						break;
+					}
+				case "modeldec":
+					{
+						ushort model = targetObject.Model;
+						try
+						{
+							if (model != 1)
+							{
+								model--;
+								targetObject.Model = model;
+								targetObject.SaveIntoDatabase();
+								DisplayMessage(client, "Object model changed to: " + targetObject.Model);
+							}
+							else
+							{
+								DisplayMessage(client, "Object model cannot be 0!");
+							}
 						}
 						catch (Exception)
 						{
