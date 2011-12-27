@@ -43,13 +43,15 @@ namespace DOL.GS.Commands
 	     "'/mob nfastcreate <ModelID> <level> <number> [radius(10)] [name]' to create multiple mobs within radius",
 	     "'/mob nrandcreate <number> [radius(50)]' to create multiple random mobs within radius",
 	     "'/mob model <ModelID> [OID]' to set the mob's model, optionally using OID if mob isn't targeted",
+	     "'/mob modelinc <#> Increments the mob model by 1",
+	     "'/mob modeldec <#> Decrements the mob model by 1",
 	     "'/mob size <size>' to set the mob's size (1..255)",
-         "'/mob translationid <translation id>' to set the mob's translation id",
+	     "'/mob translationid <translation id>' to set the mob's translation id",
 	     "'/mob name <name>' to set the mob's name",
-         "'/mob suffix <suffix>' to set the mob's suffix",
+	     "'/mob suffix <suffix>' to set the mob's suffix",
 	     "'/mob guild <guild name>' to set the mob's guild name (blank to remove)",
-         "'/mob examinearticle <examine article>' to set the mob's examine article",
-         "'/mob messagearticle <message article>' to set the mob's message article",
+	     "'/mob examinearticle <examine article>' to set the mob's examine article",
+	     "'/mob messagearticle <message article>' to set the mob's message article",
 	     "'/mob peace' toggle whether the mob can be attacked",
 	     "'/mob aggro <level>' to set mob's aggro level (0..100)%",
 	     "'/mob range <distance>' to set mob's aggro range",
@@ -88,15 +90,15 @@ namespace DOL.GS.Commands
 	     "'/mob equiptemplate clear' to remove the inventory template from mob",
 	     "'/mob equiptemplate save <EquipmentTemplateID> [replace]' to save the inventory template with a new name",
 	     "'/mob equiptemplate close' to finish the inventory template you are creating",
-		 "'/mob visibleslot <slot>' to set the visible weapon slot.  use slot names (left, right, two, distance)",
+	     "'/mob visibleslot <slot>' to set the visible weapon slot.  use slot names (left, right, two, distance)",
 	     "'/mob dropcount [number]' to set the max number of drops for mob (omit number to view current value)",
-		 "'/mob dropcount2 [number]' same as '/mob dropcount' but for the 'MobDrop' generator",
+	     "'/mob dropcount2 [number]' same as '/mob dropcount' but for the 'MobDrop' generator",
 	     "'/mob addloot <ItemTemplateID> <chance> [count]' to add loot to the mob's unique drop table.  Optionally specify count of how many to drop if chance = 100%",
-		 "'/mob addloot2 <ItemTemplateID> <chance> [count]' to add loot to the mob's drop table. Optionally specify count of how many item to drop if chance < 100%",
+	     "'/mob addloot2 <ItemTemplateID> <chance> [count]' to add loot to the mob's drop table. Optionally specify count of how many item to drop if chance < 100%",
 	     "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob.",
 	     "'/mob viewloot [random] [inv]' to view the selected mob's loot table.  Use random to simulate a kill drop, random inv to simulate and generate the loots",
 	     "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
-		 "'/mob removeloot2 <ItemTemplateID>' same as '/mob removeloot' but for the 'MobDrop' generator",
+	     "'/mob removeloot2 <ItemTemplateID>' same as '/mob removeloot' but for the 'MobDrop' generator",
 	     "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table",
 	     "'/mob refreshloot' to refresh all loot generators for this mob",
 	     "'/mob copy [name]' copies a mob exactly and places it at your location",
@@ -119,8 +121,8 @@ namespace DOL.GS.Commands
 	     "'/mob reload <name>' reload the targetted or named mob(s) from the database",
 	     "'/mob findname <name> <#>' search for a mob with a name like <name> with maximum <#> (def. 10) matches",
 	     "'/mob trigger <type> <chance> <emote> <text>' adds a trigger to targeted mob class.  Use '/mob trigger help' for more info.",
-         "'/mob trigger info' Give trigger informations",
-         "'/mob trigger remove <id>' Remove a trigger",
+	     "'/mob trigger info' Give trigger informations",
+	     "'/mob trigger remove <id>' Remove a trigger",
 	     "'/mob ownerid <id>' Sets and saves the OwnerID for this mob."
 	    )]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -149,6 +151,8 @@ namespace DOL.GS.Commands
 				    && args[1] != "nfastcreate"
 				    && args[1] != "npctemplate"
 				    && args[1] != "model"
+				    && args[1] != "modelinc"
+				    && args[1] != "modeldec"
 				    && args[1] != "copy"
 				    && args[1] != "select"
 				    && args[1] != "reload"
@@ -172,70 +176,72 @@ namespace DOL.GS.Commands
 
 				switch (args[1])
 				{
-					case "create": create(client, args); break;
-					case "fastcreate": fastcreate(client, args); break;
-					case "nfastcreate": nfastcreate(client, args); break;
-					case "nrandcreate": nrandcreate(client, args); break;
-					case "model": model(client, targetMob, args); break;
-					case "size": size(client, targetMob, args); break;
-                    case "translationid": translationid(client, targetMob, args); break;
-					case "name": name(client, targetMob, args); break;
-                    case "suffix": suffix(client, targetMob, args); break;
-					case "guild": guild(client, targetMob, args); break;
-                    case "examinearticle": examinearticle(client, targetMob, args); break;
-                    case "messagearticle": messagearticle(client, targetMob, args); break;
-					case "peace": peace(client, targetMob, args); break;
-					case "aggro": aggro(client, targetMob, args); break;
-					case "range": range(client, targetMob, args); break;
-					case "distance": distance(client, targetMob, args); break;
-					case "roaming": roaming(client, targetMob, args); break;
-					case "damagetype": damagetype(client, targetMob, args); break;
-					case "movehere": movehere(client, targetMob, args); break;
-					case "location": location(client, targetMob, args); break;
-					case "remove": remove(client, targetMob, args); break;
+						case "create": create(client, args); break;
+						case "fastcreate": fastcreate(client, args); break;
+						case "nfastcreate": nfastcreate(client, args); break;
+						case "nrandcreate": nrandcreate(client, args); break;
+						case "model": model(client, targetMob, args); break;
+						case "modelinc": modelinc(client, targetMob, args); break;
+						case "modeldec": modeldec(client, targetMob, args); break;
+						case "size": size(client, targetMob, args); break;
+						case "translationid": translationid(client, targetMob, args); break;
+						case "name": name(client, targetMob, args); break;
+						case "suffix": suffix(client, targetMob, args); break;
+						case "guild": guild(client, targetMob, args); break;
+						case "examinearticle": examinearticle(client, targetMob, args); break;
+						case "messagearticle": messagearticle(client, targetMob, args); break;
+						case "peace": peace(client, targetMob, args); break;
+						case "aggro": aggro(client, targetMob, args); break;
+						case "range": range(client, targetMob, args); break;
+						case "distance": distance(client, targetMob, args); break;
+						case "roaming": roaming(client, targetMob, args); break;
+						case "damagetype": damagetype(client, targetMob, args); break;
+						case "movehere": movehere(client, targetMob, args); break;
+						case "location": location(client, targetMob, args); break;
+						case "remove": remove(client, targetMob, args); break;
 					case "transparent": // deprecated, use "ghost"
-					case "ghost": ghost(client, targetMob, args); break;
-					case "stealth": stealth(client, targetMob, args); break;
-					case "torch": torch(client, targetMob, args); break;
-					case "statue": statue(client, targetMob, args); break;
-					case "fly": fly(client, targetMob, args); break;
-					case "swimming": swimming(client, targetMob, args); break;
-					case "noname": noname(client, targetMob, args); break;
-					case "notarget": notarget(client, targetMob, args); break;
-					case "kill": kill(client, targetMob, args); break;
-					case "flags": flags(client, targetMob, args); break;
+						case "ghost": ghost(client, targetMob, args); break;
+						case "stealth": stealth(client, targetMob, args); break;
+						case "torch": torch(client, targetMob, args); break;
+						case "statue": statue(client, targetMob, args); break;
+						case "fly": fly(client, targetMob, args); break;
+						case "swimming": swimming(client, targetMob, args); break;
+						case "noname": noname(client, targetMob, args); break;
+						case "notarget": notarget(client, targetMob, args); break;
+						case "kill": kill(client, targetMob, args); break;
+						case "flags": flags(client, targetMob, args); break;
 					case "regen":  // deprecated, use "heal"
-					case "heal": heal(client, targetMob, args); break;
-					case "attack": attack(client, targetMob, args); break;
-					case "info": info(client, targetMob, args); break;
-					case "stats": stats(client, targetMob, args); break;
-					case "state": state(client, targetMob); break;
-					case "realm": realm(client, targetMob, args); break;
-					case "speed": speed(client, targetMob, args); break;
-					case "level": level(client, targetMob, args); break;
-					case "levela": levela(client, targetMob, args); break;
-					case "brain": brain(client, targetMob, args); break;
-					case "respawn": respawn(client, targetMob, args); break;
-					case "questinfo": questinfo(client, targetMob, args); break;
-					case "refreshquests": refreshquests(client, targetMob, args); break;
-					case "equipinfo": equipinfo(client, targetMob, args); break;
-					case "equiptemplate": equiptemplate(client, targetMob, args); break;
-					case "visibleslot": visibleslot(client, targetMob, args); break;
-					case "dropcount": dropcount<MobXLootTemplate>(client, targetMob, args); break;
-					case "dropcount2": dropcount<MobDropTemplate>(client, targetMob, args); break;
-					case "addloot": addloot<MobXLootTemplate, LootTemplate>(client, targetMob, args); break;
-					case "addloot2": addloot<MobDropTemplate, DropTemplateXItemTemplate>(client, targetMob, args); break;
-					case "addotd": addotd(client, targetMob, args); break;
-					case "viewloot": viewloot(client, targetMob, args); break;
-					case "removeloot": removeloot<LootTemplate>(client, targetMob, args); break;
-					case "removeloot2": removeloot<DropTemplateXItemTemplate>(client, targetMob, args); break;
-					case "removeotd": removeotd(client, targetMob, args); break;
-					case "refreshloot": refreshloot(client, targetMob, args); break;
-					case "copy": copy(client, targetMob, args); break;
-					case "npctemplate": npctemplate(client, targetMob, args); break;
-					case "class": setClass(client, targetMob, args); break;
-					case "path": path(client, targetMob, args); break;
-					case "house": house(client, targetMob, args); break;
+						case "heal": heal(client, targetMob, args); break;
+						case "attack": attack(client, targetMob, args); break;
+						case "info": info(client, targetMob, args); break;
+						case "stats": stats(client, targetMob, args); break;
+						case "state": state(client, targetMob); break;
+						case "realm": realm(client, targetMob, args); break;
+						case "speed": speed(client, targetMob, args); break;
+						case "level": level(client, targetMob, args); break;
+						case "levela": levela(client, targetMob, args); break;
+						case "brain": brain(client, targetMob, args); break;
+						case "respawn": respawn(client, targetMob, args); break;
+						case "questinfo": questinfo(client, targetMob, args); break;
+						case "refreshquests": refreshquests(client, targetMob, args); break;
+						case "equipinfo": equipinfo(client, targetMob, args); break;
+						case "equiptemplate": equiptemplate(client, targetMob, args); break;
+						case "visibleslot": visibleslot(client, targetMob, args); break;
+						case "dropcount": dropcount<MobXLootTemplate>(client, targetMob, args); break;
+						case "dropcount2": dropcount<MobDropTemplate>(client, targetMob, args); break;
+						case "addloot": addloot<MobXLootTemplate, LootTemplate>(client, targetMob, args); break;
+						case "addloot2": addloot<MobDropTemplate, DropTemplateXItemTemplate>(client, targetMob, args); break;
+						case "addotd": addotd(client, targetMob, args); break;
+						case "viewloot": viewloot(client, targetMob, args); break;
+						case "removeloot": removeloot<LootTemplate>(client, targetMob, args); break;
+						case "removeloot2": removeloot<DropTemplateXItemTemplate>(client, targetMob, args); break;
+						case "removeotd": removeotd(client, targetMob, args); break;
+						case "refreshloot": refreshloot(client, targetMob, args); break;
+						case "copy": copy(client, targetMob, args); break;
+						case "npctemplate": npctemplate(client, targetMob, args); break;
+						case "class": setClass(client, targetMob, args); break;
+						case "path": path(client, targetMob, args); break;
+						case "house": house(client, targetMob, args); break;
 					case "str":
 					case "con":
 					case "dex":
@@ -243,20 +249,20 @@ namespace DOL.GS.Commands
 					case "int":
 					case "emp":
 					case "pie":
-					case "cha": stat(client, targetMob, args); break;
-					case "tether": tether(client, targetMob, args); break;
-					case "hood": hood(client, targetMob, args); break;
-					case "cloak": cloak(client, targetMob, args); break;
-					case "bodytype": bodytype(client, targetMob, args); break;
-					case "race": race(client, targetMob, args); break;
-					case "gender": gender(client, targetMob, args); break;
-					case "packageid": packageid(client, targetMob, args); break;
-					case "ownerid": ownerid(client, targetMob, args); break;
-					case "select": select(AUTOSELECT_RADIUS, client); break;
-					case "load": load(client, args); break;
-					case "reload": reload(client, targetMob, args); break;
-					case "findname": findname(client, args); break;
-					case "trigger": trigger(client, targetMob, args); break;
+						case "cha": stat(client, targetMob, args); break;
+						case "tether": tether(client, targetMob, args); break;
+						case "hood": hood(client, targetMob, args); break;
+						case "cloak": cloak(client, targetMob, args); break;
+						case "bodytype": bodytype(client, targetMob, args); break;
+						case "race": race(client, targetMob, args); break;
+						case "gender": gender(client, targetMob, args); break;
+						case "packageid": packageid(client, targetMob, args); break;
+						case "ownerid": ownerid(client, targetMob, args); break;
+						case "select": select(AUTOSELECT_RADIUS, client); break;
+						case "load": load(client, args); break;
+						case "reload": reload(client, targetMob, args); break;
+						case "findname": findname(client, args); break;
+						case "trigger": trigger(client, targetMob, args); break;
 					default:
 						DisplaySyntax(client);
 						return;
@@ -547,7 +553,95 @@ namespace DOL.GS.Commands
 
 			client.Out.SendMessage("Created " + number + " mobs", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
+		
+		#region auto increment/decrement model display
+		// List of non-displayed models
+		// used with modelinc and modeldec
+		List<ushort> invmodel = new List<ushort>() { 3, 4, 604, 666, 1000, 1001, 1002, 1003, 1004, 1237, 1238, 1239, 1240, 1241, 1242, 1243, 1244, 1245, 1246,
+			1247, 1248, 1249, 1250, 1251, 1252, 1253, 1254, 1275, 1391, 1392, 1393, 1441, 1442, 1443, 1444, 1445, 1446, 1447, 1448, 1449,
+			1450, 1451, 1452, 1453, 1454, 1455, 1456, 1457, 1458, 1459, 1460, 1461, 1462, 1463, 1464, 1465, 1466, 1467, 1468, 1469, 1470,
+			1471, 1472, 1473, 1474, 1475, 1476, 1477, 1478, 1479, 1480, 1481, 1482, 1483, 1484, 1485, 1486, 1487, 1488, 1489, 1490, 1491,
+			1492, 1493, 1494, 1495, 1496, 1497, 1498, 1499, 1500, 1501, 1502, 1503, 1504, 1505, 1506, 1507, 1508, 1509, 1510, 1511, 1512,
+			1513, 1514, 1515, 1516, 1517, 1518, 1519, 1520, 1521, 1522, 1523, 1524, 1525, 1526, 1527, 1528, 1529, 1530, 1531, 1532, 1533,
+			1534, 1535, 1536, 1537, 1538, 1539, 1540, 1541, 1542, 1543, 1544, 1545, 1546, 1547, 1548, 1549, 1550, 1551, 1552, 1553, 1554,
+			1555, 1556, 1557, 1558, 1559, 1560, 1561, 1562, 1567, 1568, 1569, 1570, 1571, 1572, 1573, 1587, 1588, 1589, 1590, 1591, 1592,
+			1593, 1594, 1595, 1598, 1599, 1600, 1601, 1602, 1603, 1604, 1605, 1608, 1609, 1610, 1611, 1612, 1613, 1614, 1615, 1616, 1617,
+			1618, 1619, 1620, 1621, 1622, 1624, 1626, 1627, 1628, 1629, 1630, 1631, 1632, 1633, 1634, 1635, 1636, 1637, 1638, 1639, 1640,
+			1641, 1643, 1644, 1645, 1646, 1671, 1673, 1674, 1675, 1677, 1678, 1679, 1680, 1682, 1683, 1684, 1685, 1686, 1737, 1738, 1739,
+			1761, 1762,	1763, 1764, 1765, 1766, 1767, 1768, 1769, 1822, 1871, 1872, 1873, 1874, 1875, 1876, 1877, 1880, 1881, 1882, 1886,
+			1907, 1923,	1926, 1927, 1928, 1943, 2004, 2005, 2006, 2007, 2008, 2019, 2067, 2068, 2069, 2070, 2071, 2072, 2073, 2280, 2281,
+			2282, 2283,	2284, 2285, 2286, 2287, 2288, 2289, 2290, 2291, 2292, 2293, 2294, 2299, 2300, 2302, 2305, 2319, 2333, 2334, 2335,
+			2336, 2337,	2338, 2364 };
+		
+		private void modelinc(GameClient client, GameNPC targetMob, string[] args)
+		{
+			if (targetMob == null)
+			{
+				DisplaySyntax(client, args[1]);
+				return;
+			}
+			
+			if (targetMob.Model >= 2363)
+			{
+				client.Out.SendMessage("Highest mob model reached!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			
+			ushort model = targetMob.Model;
+			model++;
+			
+			//Some models are not used, or cannot be targetted, i.e. ambient mobs and some invisible mobs, don't set mobs to these models
+			while (invmodel.Contains(model))
+				model++;
+			
+			try
+			{
+				targetMob.Model = model;
+				targetMob.SaveIntoDatabase();
+				client.Out.SendMessage("Mob model changed to: " + targetMob.Model, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			catch (Exception)
+			{
+				DisplaySyntax(client, args[1]);
+				return;
+			}
+		}
 
+		private void modeldec(GameClient client, GameNPC targetMob, string[] args)
+		{
+			if (targetMob == null)
+			{
+				DisplaySyntax(client, args[1]);
+				return;
+			}
+			
+			if (targetMob.Model == 1)
+			{
+				client.Out.SendMessage("Mob model cannot be 0!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			
+			ushort model = targetMob.Model;
+			model--;
+			
+			//Some models are not used, or cannot be targetted, i.e. ambient mobs and some invisible mobs, don't set mobs to these models
+			while (invmodel.Contains(model))
+				model--;
+			
+			try
+			{
+				targetMob.Model = model;
+				targetMob.SaveIntoDatabase();
+				client.Out.SendMessage("Mob model changed to: " + targetMob.Model, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			catch (Exception)
+			{
+				DisplaySyntax(client, args[1]);
+				return;
+			}
+		}
+		#endregion
+		
 		private void model(GameClient client, GameNPC targetMob, string[] args)
 		{
 			if (args.Length == 4)
@@ -630,36 +724,36 @@ namespace DOL.GS.Commands
 			}
 		}
 
-        private void translationid(GameClient client, GameNPC targetMob, string[] args)
-        {
-            if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
-            {
-                // Can be funny when we remove (e.g.) a ram or a boat (why are we dropped on the sea???) from the world. ;-)
-                client.Out.SendMessage("The selected object is type of GameMovingObject and it's translation id cannot be changed " +
-                                       "via command. Please change the translation id in your code / database.",
-                                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return;
-            }
+		private void translationid(GameClient client, GameNPC targetMob, string[] args)
+		{
+			if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
+			{
+				// Can be funny when we remove (e.g.) a ram or a boat (why are we dropped on the sea???) from the world. ;-)
+				client.Out.SendMessage("The selected object is type of GameMovingObject and it's translation id cannot be changed " +
+				                       "via command. Please change the translation id in your code / database.",
+				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-            string id = "";
+			string id = "";
 
-            if (args.Length > 2)
-                id = String.Join("", args, 2, args.Length - 2);
+			if (args.Length > 2)
+				id = String.Join("", args, 2, args.Length - 2);
 
-            if (id != "")
-            {
-                targetMob.TranslationId = id;
-                targetMob.SaveIntoDatabase();
+			if (id != "")
+			{
+				targetMob.TranslationId = id;
+				targetMob.SaveIntoDatabase();
 
-                targetMob.RemoveFromWorld();
-                GameNPC.RefreshTranslation(null, id);
-                targetMob.AddToWorld();
+				targetMob.RemoveFromWorld();
+				GameNPC.RefreshTranslation(null, id);
+				targetMob.AddToWorld();
 
-                client.Out.SendMessage("Mob translation id changed to: " + id, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            }
-            else
-                DisplaySyntax(client, args[1]);
-        }
+				client.Out.SendMessage("Mob translation id changed to: " + id, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			else
+				DisplaySyntax(client, args[1]);
+		}
 
 		private void name(GameClient client, GameNPC targetMob, string[] args)
 		{
@@ -680,28 +774,28 @@ namespace DOL.GS.Commands
 			}
 		}
 
-        private void suffix(GameClient client, GameNPC targetMob, string[] args)
-        {
-            if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
-            {
-                client.Out.SendMessage("You cannot set a suffix for GameMovingObjects.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return;
-            }
+		private void suffix(GameClient client, GameNPC targetMob, string[] args)
+		{
+			if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
+			{
+				client.Out.SendMessage("You cannot set a suffix for GameMovingObjects.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-            string suf = "";
+			string suf = "";
 
-            if (args.Length > 2)
-                suf = String.Join(" ", args, 2, args.Length - 2);
+			if (args.Length > 2)
+				suf = String.Join(" ", args, 2, args.Length - 2);
 
-            if (suf != "")
-            {
-                targetMob.Suffix = suf;
-                targetMob.SaveIntoDatabase();
-                client.Out.SendMessage("Mob suffix changed to: " + suf, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            }
-            else
-                DisplaySyntax(client, args[1]);
-        }
+			if (suf != "")
+			{
+				targetMob.Suffix = suf;
+				targetMob.SaveIntoDatabase();
+				client.Out.SendMessage("Mob suffix changed to: " + suf, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			else
+				DisplaySyntax(client, args[1]);
+		}
 
 		private void guild(GameClient client, GameNPC targetMob, string[] args)
 		{
@@ -729,55 +823,55 @@ namespace DOL.GS.Commands
 			}
 		}
 
-        private void examinearticle(GameClient client, GameNPC targetMob, string[] args)
-        {
-            if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
-            {
-                client.Out.SendMessage("Please change the default language examine article for GameMovingObjects in your code / database. If you want to set a " +
-                                       "examine article for other languages, please use '/translate examinearticle <language> <examine article>'.",
-                                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return;
-            }
+		private void examinearticle(GameClient client, GameNPC targetMob, string[] args)
+		{
+			if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
+			{
+				client.Out.SendMessage("Please change the default language examine article for GameMovingObjects in your code / database. If you want to set a " +
+				                       "examine article for other languages, please use '/translate examinearticle <language> <examine article>'.",
+				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-            string exa = "";
+			string exa = "";
 
-            if (args.Length > 2)
-                exa = String.Join(" ", args, 2, args.Length - 2);
+			if (args.Length > 2)
+				exa = String.Join(" ", args, 2, args.Length - 2);
 
-            if (exa != "")
-            {
-                targetMob.ExamineArticle = exa;
-                targetMob.SaveIntoDatabase();
-                client.Out.SendMessage("Mob examine article changed to: " + exa, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            }
-            else
-                DisplaySyntax(client, args[1]);
-        }
+			if (exa != "")
+			{
+				targetMob.ExamineArticle = exa;
+				targetMob.SaveIntoDatabase();
+				client.Out.SendMessage("Mob examine article changed to: " + exa, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			else
+				DisplaySyntax(client, args[1]);
+		}
 
-        private void messagearticle(GameClient client, GameNPC targetMob, string[] args)
-        {
-            if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
-            {
-                client.Out.SendMessage("Please change the default language message article for GameMovingObjects in your code / database. If you want to set a " +
-                                       "message article for other languages, please use '/translate messagearticle <language> <message article>'.",
-                                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return;
-            }
+		private void messagearticle(GameClient client, GameNPC targetMob, string[] args)
+		{
+			if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
+			{
+				client.Out.SendMessage("Please change the default language message article for GameMovingObjects in your code / database. If you want to set a " +
+				                       "message article for other languages, please use '/translate messagearticle <language> <message article>'.",
+				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-            string msg = "";
+			string msg = "";
 
-            if (args.Length > 2)
-                msg = String.Join(" ", args, 2, args.Length - 2);
+			if (args.Length > 2)
+				msg = String.Join(" ", args, 2, args.Length - 2);
 
-            if (msg != "")
-            {
-                targetMob.Suffix = msg;
-                targetMob.SaveIntoDatabase();
-                client.Out.SendMessage("Mob message article changed to: " + msg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            }
-            else
-                DisplaySyntax(client, args[1]);
-        }
+			if (msg != "")
+			{
+				targetMob.Suffix = msg;
+				targetMob.SaveIntoDatabase();
+				client.Out.SendMessage("Mob message article changed to: " + msg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			else
+				DisplaySyntax(client, args[1]);
+		}
 
 		private void peace(GameClient client, GameNPC targetMob, string[] args)
 		{
@@ -1469,7 +1563,7 @@ namespace DOL.GS.Commands
 				GameObject.FillDataQuestCache();
 				targetMob.LoadDataQuests();
 				foreach (GamePlayer player in targetMob.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                {
+				{
 					player.Out.SendNPCsQuestEffect(targetMob, targetMob.GetQuestIndicator(player));
 				}
 				client.Out.SendMessage(targetMob.DataQuestList.Count + " Data Quests loaded for this mob.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1793,7 +1887,7 @@ namespace DOL.GS.Commands
 		{
 			T mxlt =
 				GameServer.Database.SelectObject<T>("MobName = '" + GameServer.Database.Escape(targetMob.Name) +
-					"' AND LootTemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
+				                                    "' AND LootTemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
 
 			if (args.Length < 3)
 			{
@@ -1849,13 +1943,13 @@ namespace DOL.GS.Commands
 				if (item == null)
 				{
 					DisplayMessage(client,
-						"You cannot add the " + lootTemplateID + " to the " + targetMob.Name + " because the item does not exist.");
+					               "You cannot add the " + lootTemplateID + " to the " + targetMob.Name + " because the item does not exist.");
 					return;
 				}
 
 				var template =
 					GameServer.Database.SelectObjects<LootTemplateType>("TemplateName = '" + GameServer.Database.Escape(name) +
-						"' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
+					                                                    "' AND ItemTemplateID = '" + GameServer.Database.Escape(lootTemplateID) + "'");
 				if (template != null)
 				{
 					foreach (var loot in template)
@@ -1904,16 +1998,16 @@ namespace DOL.GS.Commands
 
 				MobXLootType mxlt =
 					GameServer.Database.SelectObject<MobXLootType>("MobName = '" + GameServer.Database.Escape(targetMob.Name) +
-						"' AND LootTemplateName = '" + GameServer.Database.Escape(name) + "'");
+					                                               "' AND LootTemplateName = '" + GameServer.Database.Escape(name) + "'");
 				if (mxlt == null)
 				{
 					DisplayMessage(client,
-						"If you need to limit max number of drops per kill for this mob then use /mob addmobxlt <max num drops> to add a MobXLootTemplate entry.");
+					               "If you need to limit max number of drops per kill for this mob then use /mob addmobxlt <max num drops> to add a MobXLootTemplate entry.");
 				}
 				else
 				{
 					DisplayMessage(client,
-						"A MobXLootTemplate entry exists for this mob and limits the total drops per kill to " + mxlt.DropCount);
+					               "A MobXLootTemplate entry exists for this mob and limits the total drops per kill to " + mxlt.DropCount);
 				}
 
 			}
@@ -2051,8 +2145,8 @@ namespace DOL.GS.Commands
 					from loot in template
 					let drop = GameServer.Database.FindObjectByKey<ItemTemplate>(loot.ItemTemplateID)
 					select "- " + (drop == null ? "(Template Not Found)" : drop.Name) +
-						" (" + loot.ItemTemplateID + ") Count: " + loot.Count + " Chance: " + loot.Chance
-					);
+					" (" + loot.ItemTemplateID + ") Count: " + loot.Count + " Chance: " + loot.Chance
+				);
 			}
 			if (!didDefault)
 			{
@@ -2063,8 +2157,8 @@ namespace DOL.GS.Commands
 					from loot in template
 					let drop = GameServer.Database.FindObjectByKey<ItemTemplate>(loot.ItemTemplateID)
 					select "- " + (drop == null ? "(Template Not Found)" : drop.Name) +
-						" (" + loot.ItemTemplateID + ") Count: " + loot.Count + " Chance: " + loot.Chance
-					);
+					" (" + loot.ItemTemplateID + ") Count: " + loot.Count + " Chance: " + loot.Chance
+				);
 			}
 		}
 
