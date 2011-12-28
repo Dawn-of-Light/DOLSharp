@@ -718,6 +718,8 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
+							
+							updateAllowed(item, client);
 							int con = Convert.ToInt32(args[2]);
 							int maxcon = Convert.ToInt32(args[3]);
 							item.Condition = con;
@@ -751,6 +753,8 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
+							
+							updateAllowed(item, client);
 							int Dur = Convert.ToInt32(args[2]);
 							int MaxDur = Convert.ToInt32(args[3]);
 							item.Durability = Dur;
@@ -1664,16 +1668,7 @@ namespace DOL.GS.Commands
 								return;
 							}
 
-							if (item.Template is ItemUnique)
-							{
-								DisplayMessage(client, "This command is only applicable for items based on an ItemTemplate");
-							}
-							else
-							{
-								(item.Template as ItemTemplate).AllowUpdate = true;
-								client.Out.SendMessage("** When this item is saved all changes will also be made to the source ItemTemplate: " + item.Template.Id_nb, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
-								DisplayMessage(client, "** When this item is saved all changes will also be made to the source ItemTemplate: " + item.Template.Id_nb);
-							}
+							updateAllowed(item, client);
 							break;
 						}
 						#endregion Update
@@ -1987,7 +1982,22 @@ namespace DOL.GS.Commands
 				DisplaySyntax(client);
 			}
 		}
-
+		
+		private void updateAllowed(InventoryItem item, GameClient client)
+		{
+			if (item.Template is ItemUnique)
+			{
+				DisplayMessage(client, "This command is only applicable for items based on an ItemTemplate");
+				return;
+			}
+			else
+			{
+				(item.Template as ItemTemplate).AllowUpdate = true;
+				client.Out.SendMessage("** When this item is saved all changes will also be made to the source ItemTemplate: " + item.Template.Id_nb, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				DisplayMessage(client, "** When this item is saved all changes will also be made to the source ItemTemplate: " + item.Template.Id_nb);
+			}
+		}
+		
 		private void LoadSpell(GameClient client, int spellID)
 		{
 			if (spellID != 0)
