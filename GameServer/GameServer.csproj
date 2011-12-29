@@ -2072,6 +2072,7 @@
     </Compile>
     <Compile Include="spells\Artifacts\TartarosGift.cs" />
     <Compile Include="spells\Artifacts\TraitorsDagger.cs" />
+    <Compile Include="spells\Artifacts\Traldor.cs" />
     <Compile Include="spells\AstralPetSummon.cs" />
     <Compile Include="spells\Bainshee\BainsheePulseDmgSpellHandler.cs" />
     <Compile Include="spells\Bainshee\BeFriendSpellHandler.cs" />
