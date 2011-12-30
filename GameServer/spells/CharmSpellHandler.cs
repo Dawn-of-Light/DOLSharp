@@ -113,7 +113,7 @@ namespace DOL.GS.Spells
 			}
 			if (selectedTarget is GameNPC == false)
 			{//proper message?
-				MessageToCaster("This spell works only on NPC.", eChatType.CT_SpellResisted);
+				MessageToCaster("This spell works only on NPCs.", eChatType.CT_SpellResisted);
 				return false;
 			}
 
