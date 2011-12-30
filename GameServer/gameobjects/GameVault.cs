@@ -103,7 +103,7 @@ namespace DOL.GS
 			}
 
 			player.ActiveVault = this;
-			player.Out.SendInventoryItemsUpdate(GetVaultInventory(player), 0x04);
+			player.Out.SendInventoryItemsUpdate(GetVaultInventory(player), eInventoryWindowType.HouseVault);
 
 			return true;
 		}
@@ -305,7 +305,7 @@ namespace DOL.GS
 		/// <param name="updateItems"></param>
 		protected virtual void NotifyObservers(GamePlayer player, IDictionary<int, InventoryItem> updateItems)
 		{
-			player.Client.Out.SendInventoryItemsUpdate(updateItems, 0);
+			player.Client.Out.SendInventoryItemsUpdate(updateItems, eInventoryWindowType.Update);
 		}
 
 		/// <summary>

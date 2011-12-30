@@ -19,6 +19,7 @@
 //							Written by Doulbousiouf (01/11/2004)					//
 using System.Collections;
 using DOL.Language;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -64,16 +65,8 @@ namespace DOL.GS
 			if (!base.Interact(player))
 				return false;
 			TurnTo(player, 10000);
-			// Affiche tous les objets dans le coffre
 			var items = player.Inventory.GetItemRange(eInventorySlot.FirstVault, eInventorySlot.LastVault);
-			if (items.Count == 0)
-			{
-				player.Out.SendInventoryItemsUpdate(0x03, null);
-			}
-			else
-			{
-				player.Out.SendInventoryItemsUpdate(0x03, items);
-			}
+			player.Out.SendInventoryItemsUpdate(eInventoryWindowType.PlayerVault, items.Count > 0 ? items : null);
 			return true;
 		}
 
