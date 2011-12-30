@@ -330,7 +330,6 @@ namespace DOL.GS
         public Spell(DBSpell dbspell, int requiredLevel, bool minotaur)
 			: base(dbspell.Name, (ushort)dbspell.SpellID, requiredLevel)
 		{
-
 			m_description = dbspell.Description;
 			m_target = dbspell.Target;
 			m_spelltype = dbspell.Type;
@@ -371,7 +370,61 @@ namespace DOL.GS
             m_sharedtimergroup = dbspell.SharedTimerGroup;
             m_minotaurspell = minotaur;
 		}
-		// add for warlocks
+
+		/// <summary>
+		/// Make a copy of a spell but change the spell type
+		/// Usefull for customization of spells by providing custom spell handelers
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <param name="spellType"></param>
+		public Spell(Spell spell, string spellType) :
+			base(spell.Name, (ushort)spell.ID, spell.Level)
+		{
+			m_description = spell.Description;
+			m_target = spell.Target;
+			m_spelltype = spellType; // replace SpellType
+			m_range = spell.Range;
+			m_radius = spell.Radius;
+			m_value = spell.Value;
+			m_damage = spell.Damage;
+			m_damageType = spell.DamageType;
+			m_concentration = spell.Concentration;
+			m_duration = spell.Duration;
+			m_frequency = spell.Frequency;
+			m_pulse = spell.Pulse;
+			m_pulse_power = spell.PulsePower;
+			m_power = spell.Power;
+			m_casttime = spell.CastTime;
+			m_recastdelay = spell.RecastDelay;
+			m_reshealth = spell.ResurrectHealth;
+			m_resmana = spell.ResurrectMana;
+			m_lifedrain_return = spell.LifeDrainReturn;
+			m_amnesia_chance = spell.AmnesiaChance;
+			m_message1 = spell.Message1;
+			m_message2 = spell.Message2;
+			m_message3 = spell.Message3;
+			m_message4 = spell.Message4;
+			m_effectID = spell.ClientEffect;
+			m_icon = spell.Icon;
+			m_instrumentRequirement = spell.InstrumentRequirement;
+			m_spellGroup = spell.Group;
+			m_effectGroup = spell.EffectGroup;
+			m_subSpellID = spell.SubSpellID;
+			m_moveCast = spell.MoveCast;
+			m_uninterruptible = spell.Uninterruptible;
+			m_isfocus = spell.IsFocus;
+			m_isprimary = spell.IsPrimary;
+			m_issecondary = spell.IsSecondary;
+			m_allowbolt = spell.AllowBolt;
+			m_sharedtimergroup = spell.SharedTimerGroup;
+			m_minotaurspell = spell.m_minotaurspell;
+		}
+
+		/// <summary>
+		/// Make a shallow copy of this spell
+		/// Always make a copy before attempting to modify any of the spell values
+		/// </summary>
+		/// <returns></returns>
 		public virtual Spell Copy()
 		{
 			return (Spell)MemberwiseClone();
