@@ -522,7 +522,7 @@ namespace DOL.GS
                     continue;
                 }
 
-                observer.Client.Out.SendInventoryItemsUpdate(updateItems, 0);
+                observer.Client.Out.SendInventoryItemsUpdate(updateItems, eInventoryWindowType.Update);
             }
 
             // Now remove all inactive observers.
@@ -579,7 +579,7 @@ namespace DOL.GS
 
             if (h.CanUseConsignmentMerchant(player, ConsignmentPermissions.Any))
             {
-                player.Out.SendInventoryItemsUpdate(ConInventory, 0x05);
+                player.Out.SendInventoryItemsUpdate(ConInventory, eInventoryWindowType.ConsignmentOwner);
 
                 long amount = m_totalMoney;
                 player.Out.SendConsignmentMerchantMoney(amount);
@@ -592,7 +592,7 @@ namespace DOL.GS
             }
             else
             {
-                player.Out.SendInventoryItemsUpdate(ConInventory, 0x06);
+                player.Out.SendInventoryItemsUpdate(ConInventory, eInventoryWindowType.ConsignmentViewer);
             }
 
             return true;

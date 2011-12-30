@@ -133,9 +133,9 @@ namespace DOLGameServerConsole
 		public void SendGroupMembersUpdate(bool updateIcons) { }
 		public void SendInventoryItemsUpdate(ICollection<InventoryItem> itemsToUpdate) { }
 		public void SendInventorySlotsUpdate(ICollection<int> slots) { }
-		public void SendInventoryItemsUpdate(byte preAction, ICollection<InventoryItem> itemsToUpdate) { }
-		public void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, byte windowType) { }
-		public void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType) { }
+		public void SendInventoryItemsUpdate(eInventoryWindowType windowType, ICollection<InventoryItem> itemsToUpdate) { }
+		public void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, eInventoryWindowType windowType) { }
+		public void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, eInventoryWindowType windowType) { }
 		public void SendDoorState(Region region, IDoor door) { }
 		public void SendMerchantWindow(MerchantTradeItems itemlist, eMerchantWindowType windowType) { }
 		public void SendTradeWindow() { }

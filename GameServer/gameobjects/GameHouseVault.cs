@@ -218,7 +218,7 @@ namespace DOL.GS
 						continue;
 					}
 
-					observer.Client.Out.SendInventoryItemsUpdate(updateItems, 0);
+					observer.Client.Out.SendInventoryItemsUpdate(updateItems, PacketHandler.eInventoryWindowType.Update);
 				}
 
 				// now remove all inactive observers.

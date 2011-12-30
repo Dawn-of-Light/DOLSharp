@@ -1682,26 +1682,26 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, byte windowType)
+		public virtual void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, eInventoryWindowType windowType)
 		{
 		}
 
-		protected virtual void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType)
+		protected virtual void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, eInventoryWindowType windowType)
 		{
 		}
 
 		public virtual void SendInventoryItemsUpdate(ICollection<InventoryItem> itemsToUpdate)
 		{
-			SendInventoryItemsUpdate(0, itemsToUpdate);
+			SendInventoryItemsUpdate(eInventoryWindowType.Update, itemsToUpdate);
 		}
 
-		public virtual void SendInventoryItemsUpdate(byte preAction, ICollection<InventoryItem> itemsToUpdate)
+		public virtual void SendInventoryItemsUpdate(eInventoryWindowType windowType, ICollection<InventoryItem> itemsToUpdate)
 		{
 			if (m_gameClient.Player == null)
 				return;
 			if (itemsToUpdate == null)
 			{
-				SendInventorySlotsUpdateRange(null, preAction);
+				SendInventorySlotsUpdateRange(null, windowType);
 				return;
 			}
 
@@ -1716,14 +1716,14 @@ namespace DOL.GS.PacketHandler
 				slotsToUpdate.Add(item.SlotPosition);
 				if (slotsToUpdate.Count >= ServerProperties.Properties.MAX_ITEMS_PER_PACKET)
 				{
-					SendInventorySlotsUpdateRange(slotsToUpdate, preAction);
+					SendInventorySlotsUpdateRange(slotsToUpdate, windowType);
 					slotsToUpdate.Clear();
-					preAction = 0;
+					windowType = eInventoryWindowType.Update;
 				}
 			}
 			if (slotsToUpdate.Count > 0)
 			{
-				SendInventorySlotsUpdateRange(slotsToUpdate, preAction);
+				SendInventorySlotsUpdateRange(slotsToUpdate, windowType);
 			}
 		}
 
@@ -3828,7 +3828,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		protected virtual void SendInventorySlotsUpdateRange(ICollection<int> slots, byte preAction)
+		protected virtual void SendInventorySlotsUpdateRange(ICollection<int> slots, eInventoryWindowType windowType)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate)))
 			{
@@ -3837,7 +3837,7 @@ namespace DOL.GS.PacketHandler
 					(byte) ((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int) m_gameClient.Player.ActiveQuiverSlot));
 				//bit0 is hood up bit4 to 7 is active quiver
 				pak.WriteByte(m_gameClient.Player.VisibleActiveWeaponSlots);
-				pak.WriteByte(preAction); //preAction (0x00 - Do nothing)
+				pak.WriteByte((byte)windowType); //preAction (0x00 - Do nothing)
 				if (slots != null)
 				{
 					foreach (int updatedSlot in slots)
@@ -3925,7 +3925,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendInventoryItemsPartialUpdate(List<InventoryItem> items, byte windowType)
+		public virtual void SendInventoryItemsPartialUpdate(List<InventoryItem> items, eInventoryWindowType windowType)
 		{
 		}
 

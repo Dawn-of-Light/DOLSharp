@@ -134,13 +134,13 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-		protected override void SendInventorySlotsUpdateRange(ICollection<int> slots, byte preAction)
+		protected override void SendInventorySlotsUpdateRange(ICollection<int> slots, eInventoryWindowType windowType)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
 			pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
-			pak.WriteByte(preAction); //preAction (0x00 - Do nothing)
+			pak.WriteByte((byte)windowType); //preAction (0x00 - Do nothing)
 			if (slots != null)
 			{
 				foreach (int updatedSlot in slots)

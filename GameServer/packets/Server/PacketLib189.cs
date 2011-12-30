@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		/// <param name="updateItems"></param>
 		/// <param name="windowType"></param>
-		public override void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, byte windowType)
+		public override void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, eInventoryWindowType windowType)
 		{
 			if (m_gameClient.Player == null)
 				return;
@@ -127,7 +127,7 @@ namespace DOL.GS.PacketHandler
 				{
 					SendInventoryItemsPartialUpdate(items, windowType);
 					items.Clear();
-					windowType = 0;
+					windowType = eInventoryWindowType.Update;
 				}
 			}
 
@@ -140,7 +140,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		/// <param name="items"></param>
 		/// <param name="windowType"></param>
-		protected override void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, byte windowType)
+		protected override void SendInventoryItemsPartialUpdate(IDictionary<int, InventoryItem> items, eInventoryWindowType windowType)
 		{
 			//ChatUtil.SendDebugMessage(m_gameClient, string.Format("SendItemsPartialUpdate: windowType: {0}, {1}", windowType, items == null ? "nothing" : items[0].Name));
 
@@ -149,13 +149,13 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)(items.Count));
 			pak.WriteByte(0x00); // new in 189b+, show shield in left hand
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
-			if (windowType == 0x04 && houseVault != null)
+			if (windowType == eInventoryWindowType.HouseVault && houseVault != null)
 				pak.WriteByte((byte)(houseVault.Index + 1));	// Add the vault number to the window caption
 			else
 				pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
 			// ^ in 1.89b+, 0 bit - showing hooded cloack, if not hooded not show cloack at all ?
 			pak.WriteByte(m_gameClient.Player.VisibleActiveWeaponSlots);
-			pak.WriteByte(windowType); //preAction (0x00 - Do nothing)
+			pak.WriteByte((byte)windowType);
 			foreach (var entry in items)
 			{
 				pak.WriteByte((byte)(entry.Key));
@@ -170,7 +170,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		/// <param name="slots"></param>
 		/// <param name="preAction"></param>
-		protected override void SendInventorySlotsUpdateRange(ICollection<int> slots, byte preAction)
+		protected override void SendInventorySlotsUpdateRange(ICollection<int> slots, eInventoryWindowType windowType)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
 			GameVault houseVault = m_gameClient.Player.ActiveVault;
@@ -179,7 +179,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0); // CurrentSpeed & 0xFF (not used for player, only for NPC)
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
 
-			if (preAction == 0x04 && houseVault != null)
+			if (windowType == eInventoryWindowType.HouseVault && houseVault != null)
 			{
 				pak.WriteByte((byte)(houseVault.Index + 1));	// Add the vault number to the window caption
 			}
@@ -189,7 +189,7 @@ namespace DOL.GS.PacketHandler
 			}
 
 			pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
-			pak.WriteByte(preAction); //preAction (0x00 - Do nothing)
+			pak.WriteByte((byte)windowType);
 
 			if (slots != null)
 			{
