@@ -36,8 +36,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort localPort = packet.ReadShort();
 			client.LocalIP = localIP;
 			client.Out.SendUDPInitReply();
-		    if (client.Account.PrivLevel > 1 && ServerProperties.Properties.ENABLE_DEBUG)
-		        client.Out.SendDebugMessage("local IP:{0} port:{1}", localIP, localPort);
 		}
 	}
 }
