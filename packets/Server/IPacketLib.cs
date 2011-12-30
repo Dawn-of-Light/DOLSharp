@@ -375,6 +375,43 @@ namespace DOL.GS.PacketHandler
 		HousingGuildTicket = 0x0D,
 	}
 
+
+	/// <summary>
+	/// The type of inventory window to show the client.  
+	/// Update (0) for updating the inventory on the client without displaying a window
+	/// </summary>
+	public enum eInventoryWindowType : byte
+	{
+		/// <summary>
+		/// 0x00: Send an inventory update to the client, no window
+		/// </summary>
+		Update = 0x00,
+		/// <summary>
+		/// 0x01: Send all equippable slots
+		/// </summary>
+		Equipment = 0x01,
+		/// <summary>
+		/// 0x02: Send all non equippable slots
+		/// </summary>
+		Inventory = 0x02,
+		/// <summary>
+		/// 0x03: Send player vault window
+		/// </summary>
+		PlayerVault = 0x03,
+		/// <summary>
+		/// 0x04: Send housing vault window
+		/// </summary>
+		HouseVault = 0x04,
+		/// <summary>
+		/// 0x05: Send Consignment window in owner mode showing consignment money
+		/// </summary>
+		ConsignmentOwner = 0x05,
+		/// <summary>
+		/// 0x06: Send Consignment window in viewer / buy mode
+		/// </summary>
+		ConsignmentViewer = 0x06,
+	}
+
 	/// <summary>
 	/// The RegionEntry structure
 	/// </summary>
@@ -589,8 +626,8 @@ namespace DOL.GS.PacketHandler
 		void SendGroupMembersUpdate(bool updateIcons);
 		void SendInventoryItemsUpdate(ICollection<InventoryItem> itemsToUpdate);
 		void SendInventorySlotsUpdate(ICollection<int> slots);
-		void SendInventoryItemsUpdate(byte preAction, ICollection<InventoryItem> itemsToUpdate);
-		void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, byte windowType);
+		void SendInventoryItemsUpdate(eInventoryWindowType windowType, ICollection<InventoryItem> itemsToUpdate);
+		void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, eInventoryWindowType windowType);
 		void SendDoorState(Region region, IDoor door);
 		void SendMerchantWindow(MerchantTradeItems itemlist, eMerchantWindowType windowType);
 		void SendTradeWindow();
