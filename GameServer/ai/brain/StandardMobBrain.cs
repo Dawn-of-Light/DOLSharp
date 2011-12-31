@@ -141,7 +141,7 @@ namespace DOL.AI.Brain
 				}
 			}
 			//If the npc can move, and the npc is not casting, not moving, and not attacking or in combat
-			else if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat)
+			else if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath)
 			{
 				//If the npc is not at it's spawn position, we tell it to walk to it's spawn position
 				//Satyr: If we use a tolerance to stop their Way back home we also need the same
@@ -172,7 +172,7 @@ namespace DOL.AI.Brain
 			}
 
 			//If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
-			if( !Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && Body.IsWithinRadius( Body.SpawnPoint, 500 ) == false )
+			if( !Body.IsMovingOnPath && !Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && Body.IsWithinRadius( Body.SpawnPoint, 500 ) == false )
 			{
 				Body.WalkToSpawn(); // Mobs do not walk back at 2x their speed..
 				Body.IsReturningHome = false; // We are returning to spawn but not the long walk home, so aggro still possible
