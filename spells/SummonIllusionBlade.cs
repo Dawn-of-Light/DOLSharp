@@ -46,9 +46,9 @@ namespace DOL.GS.Spells
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 
 			IControlledBrain brain = GetPetBrain(Caster);
-			pet = GetGamePet(template);
+			m_pet = GetGamePet(template);
 			//brain.WalkState = eWalkState.Stay;
-			pet.SetOwnBrain(brain as AI.ABrain);
+			m_pet.SetOwnBrain(brain as AI.ABrain);
 
 			int x, y, z;
 			ushort heading;
@@ -56,16 +56,16 @@ namespace DOL.GS.Spells
 
 			GetPetLocation(out x, out y, out z, out heading, out region);
 
-			pet.X = x;
-			pet.Y = y;
-			pet.Z = z;
-			pet.Heading = heading;
-			pet.CurrentRegion = region;
+			m_pet.X = x;
+			m_pet.Y = y;
+			m_pet.Z = z;
+			m_pet.Heading = heading;
+			m_pet.CurrentRegion = region;
 
-			pet.CurrentSpeed = 0;
-			pet.Realm = Caster.Realm;
-			pet.Level = Caster.Level;
-			pet.AddToWorld();
+			m_pet.CurrentSpeed = 0;
+			m_pet.Realm = Caster.Realm;
+			m_pet.Level = Caster.Level;
+			m_pet.AddToWorld();
 			//Check for buffs
 			if (brain is ControlledNpcBrain)
 				(brain as ControlledNpcBrain).CheckSpells(StandardMobBrain.eCheckSpellType.Defensive);
@@ -73,9 +73,9 @@ namespace DOL.GS.Spells
 			AddHandlers();
 
 			SetBrainToOwner(brain);
-			pet.AutoSetStats();
+			m_pet.AutoSetStats();
 
-			effect.Start(pet);
+			effect.Start(m_pet);
 
 			
 			
@@ -86,7 +86,7 @@ namespace DOL.GS.Spells
 		protected override GamePet GetGamePet(INpcTemplate template) { return new IllusionBladePet(template); }
 		protected override IControlledBrain GetPetBrain(GameLiving owner) { return new ProcPetBrain(owner); }
 		protected override void SetBrainToOwner(IControlledBrain brain) { }
-		protected override void AddHandlers() { GameEventMgr.AddHandler(pet, GameLivingEvent.AttackFinished, EventHandler); }
+		protected override void AddHandlers() { GameEventMgr.AddHandler(m_pet, GameLivingEvent.AttackFinished, EventHandler); }
 
 		protected void EventHandler(DOLEvent e, object sender, EventArgs arguments)
 		{

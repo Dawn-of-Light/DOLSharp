@@ -12876,7 +12876,14 @@ namespace DOL.GS
 		}
 
 		#endregion
+
+		#region Stealth / Wireframe
+
 		bool m_isWireframe = false;
+
+		/// <summary>
+		/// Player is drawn as a Wireframe.  Not sure why or when this is used.  -- Tolakram
+		/// </summary>
 		public bool IsWireframe
 		{
 			get { return m_isWireframe; }
@@ -12886,14 +12893,12 @@ namespace DOL.GS
 				m_isWireframe = value;
 				if (needUpdate && ObjectState == eObjectState.Active)
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					if (player == null) continue;
-					player.Out.SendPlayerModelTypeChange(this, (byte)(value ? 1 : 0));
-				}
+					{
+						if (player == null) continue;
+						player.Out.SendPlayerModelTypeChange(this, (byte)(value ? 1 : 0));
+					}
 			}
 		}
-
-		#region Stealth
 
 		/// <summary>
 		/// Property that holds tick when stealth state was changed last time

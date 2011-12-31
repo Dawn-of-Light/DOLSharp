@@ -109,21 +109,21 @@ namespace DOL.GS.Spells
 
 			base.ApplyEffectOnTarget(target, effectiveness);
 
-			if (pet.Brain is BDArcherBrain)
+			if (m_pet.Brain is BDArcherBrain)
 			{
 				ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>("BD_Archer_Distance_bow") as ItemTemplate;
 				if (temp == null)
 					log.Error("Unable to find Bonedancer Archer's Bow");
 				else
 				{
-					if (pet.Inventory == null)
-						pet.Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
+					if (m_pet.Inventory == null)
+						m_pet.Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
 					else
-						pet.Inventory.RemoveItem(pet.Inventory.GetItem(eInventorySlot.DistanceWeapon));
+						m_pet.Inventory.RemoveItem(m_pet.Inventory.GetItem(eInventorySlot.DistanceWeapon));
 
-					pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, GameInventoryItem.Create<ItemTemplate>(temp));
+					m_pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, GameInventoryItem.Create<ItemTemplate>(temp));
 				}
-				pet.UpdateNPCEquipmentAppearance();
+				m_pet.UpdateNPCEquipmentAppearance();
 			}
 		}
 
@@ -215,7 +215,7 @@ namespace DOL.GS.Spells
 			//edit for BD
 			//Patch 1.87: subpets have been increased by one level to make them blue
 			//to a level 50
-			if (level == 37 && (pet.Brain as IControlledBrain).Owner.Level >= 41)
+			if (level == 37 && (m_pet.Brain as IControlledBrain).Owner.Level >= 41)
 				level = 41;
 
 			return level;
