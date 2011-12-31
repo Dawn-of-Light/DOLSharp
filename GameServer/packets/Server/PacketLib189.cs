@@ -136,7 +136,9 @@ namespace DOL.GS.PacketHandler
 		}
 
 		/// <summary>
-		/// New inventory update.
+		/// Sends inventory items to the client.  If windowType is one of the client inventory windows then the client
+		/// will display the window.  Once the window is displayed to the client all handling of items in the window
+		/// is done in the move item request handlers
 		/// </summary>
 		/// <param name="items"></param>
 		/// <param name="windowType"></param>

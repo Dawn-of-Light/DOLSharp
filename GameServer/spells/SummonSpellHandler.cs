@@ -42,7 +42,7 @@ namespace DOL.GS.Spells
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		protected GamePet pet = null;
+		protected GamePet m_pet = null;
 
 		/// <summary>
 		/// Is a summon of this pet silent (no message to caster, or ambient texts)?
@@ -66,14 +66,14 @@ namespace DOL.GS.Spells
 
 			base.FinishSpellCast(target);
 
-			if (pet == null)
+			if (m_pet == null)
 				return;
 
 			if (Spell.Message1 == string.Empty)
 			{
 				if (m_isSilent == false)
 				{
-					MessageToCaster(String.Format("The {0} is now under your control.", pet.Name), eChatType.CT_Spell);
+					MessageToCaster(String.Format("The {0} is now under your control.", m_pet.Name), eChatType.CT_Spell);
 				}
 			}
 			else
@@ -96,7 +96,7 @@ namespace DOL.GS.Spells
 
 		protected virtual GamePet GetGamePet(INpcTemplate template)
 		{
-			return new GamePet(template);
+			return Caster.CreateGamePet(template);
 		}
 
 		protected virtual IControlledBrain GetPetBrain(GameLiving owner)
@@ -126,7 +126,7 @@ namespace DOL.GS.Spells
 
 		protected virtual void AddHandlers()
 		{
-			GameEventMgr.AddHandler(pet, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
+			GameEventMgr.AddHandler(m_pet, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
 		}
 
 		#endregion
@@ -150,9 +150,9 @@ namespace DOL.GS.Spells
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 
 			IControlledBrain brain = GetPetBrain(Caster);
-			pet = GetGamePet(template);
+			m_pet = GetGamePet(template);
 			//brain.WalkState = eWalkState.Stay;
-			pet.SetOwnBrain(brain as AI.ABrain);
+			m_pet.SetOwnBrain(brain as AI.ABrain);
 
 			int x, y, z;
 			ushort heading;
@@ -160,20 +160,20 @@ namespace DOL.GS.Spells
 
 			GetPetLocation(out x, out y, out z, out heading, out region);
 
-			pet.X = x;
-			pet.Y = y;
-			pet.Z = z;
-			pet.Heading = heading;
-			pet.CurrentRegion = region;
+			m_pet.X = x;
+			m_pet.Y = y;
+			m_pet.Z = z;
+			m_pet.Heading = heading;
+			m_pet.CurrentRegion = region;
 
-			pet.CurrentSpeed = 0;
-			pet.Realm = Caster.Realm;
-			pet.Level = GetPetLevel();
+			m_pet.CurrentSpeed = 0;
+			m_pet.Realm = Caster.Realm;
+			m_pet.Level = GetPetLevel();
 
 			if (m_isSilent)
-				pet.IsSilent = true;
+				m_pet.IsSilent = true;
 
-			pet.AddToWorld();
+			m_pet.AddToWorld();
 			
 			//Check for buffs
 			if (brain is ControlledNpcBrain)
@@ -183,9 +183,9 @@ namespace DOL.GS.Spells
 
 			SetBrainToOwner(brain);
 
-			effect.Start(pet);
+			effect.Start(m_pet);
 
-			Caster.OnPetSummoned(pet);
+			Caster.OnPetSummoned(m_pet);
 		}
 
 		public override int CalculateSpellResistChance(GameLiving target)
@@ -213,7 +213,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected virtual void RemoveHandlers()
 		{
-			GameEventMgr.RemoveAllHandlersForObject(pet);
+			GameEventMgr.RemoveAllHandlersForObject(m_pet);
 		}
 
 		/// <summary>

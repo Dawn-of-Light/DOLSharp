@@ -603,6 +603,16 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Create a pet for this living
+		/// </summary>
+		/// <param name="template"></param>
+		/// <returns></returns>
+		public virtual GamePet CreateGamePet(INpcTemplate template)
+		{
+			return new GamePet(template);
+		}
+
+		/// <summary>
 		/// A new pet has been summoned, do we do anything?
 		/// </summary>
 		/// <param name="pet"></param>

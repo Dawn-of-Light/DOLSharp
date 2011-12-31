@@ -45,12 +45,12 @@ namespace DOL.GS.Spells
         {
             base.ApplyEffectOnTarget(target, effectiveness);
 
-			if (pet != null)
+			if (m_pet != null)
 			{
-				pet.Flags |= GameNPC.eFlags.PEACE; //must be peace!
+				m_pet.Flags |= GameNPC.eFlags.PEACE; //must be peace!
 
 				//No brain for now, so just follow owner.
-				pet.Follow(Caster, 100, WorldMgr.VISIBILITY_DISTANCE);
+				m_pet.Follow(Caster, 100, WorldMgr.VISIBILITY_DISTANCE);
 
 				Caster.TempProperties.setProperty(NoveltyPetBrain.HAS_PET, true);
 			}
