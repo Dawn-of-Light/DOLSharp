@@ -1312,16 +1312,36 @@ namespace DOL.GS.Commands
 			if (targetMob.BodyType > 0)
 				info.Add(" + Body Type:  " + targetMob.BodyType);
 
-			info.Add(" + Resist Crush/Slash/Thrust:  " + targetMob.GetDamageResist(eProperty.Resist_Crush)
+			info.Add(" ");
+
+			info.Add("Race Resists:");
+			info.Add(" +  -- Crush/Slash/Thrust:  " + targetMob.GetDamageResist(eProperty.Resist_Crush)
 			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Slash)
 			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Thrust));
-			info.Add(" +  -- Heat/Cold/Matter/Natural:  " + targetMob.GetDamageResist(eProperty.Resist_Heat)
+			info.Add(" +  -- Heat/Cold/Matter:  " + targetMob.GetDamageResist(eProperty.Resist_Heat)
 			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Cold)
-			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Matter)
-			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Natural));
+			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Matter));
 			info.Add(" +  -- Body/Spirit/Energy:  " + targetMob.GetDamageResist(eProperty.Resist_Body)
 			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Spirit)
 			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Energy));
+			info.Add(" +  -- Natural:  " + targetMob.GetDamageResist(eProperty.Resist_Natural));
+
+			info.Add(" ");
+
+			info.Add("Current Resists:");
+			info.Add(" +  -- Crush/Slash/Thrust:  " + targetMob.GetModified(eProperty.Resist_Crush)
+					 + " / " + targetMob.GetModified(eProperty.Resist_Slash)
+					 + " / " + targetMob.GetModified(eProperty.Resist_Thrust));
+			info.Add(" +  -- Heat/Cold/Matter:  " + targetMob.GetModified(eProperty.Resist_Heat)
+					 + " / " + targetMob.GetModified(eProperty.Resist_Cold)
+					 + " / " + targetMob.GetModified(eProperty.Resist_Matter));
+			info.Add(" +  -- Body/Spirit/Energy:  " + targetMob.GetModified(eProperty.Resist_Body)
+					 + " / " + targetMob.GetModified(eProperty.Resist_Spirit)
+					 + " / " + targetMob.GetModified(eProperty.Resist_Energy));
+			info.Add(" +  -- Natural:  " + targetMob.GetModified(eProperty.Resist_Natural));
+
+			info.Add(" ");
+
 			info.Add(" + Position (X, Y, Z, H):  " + targetMob.X + ", " + targetMob.Y + ", " + targetMob.Z + ", " + targetMob.Heading);
 
 			if (targetMob.GuildName != null && targetMob.GuildName.Length > 0)

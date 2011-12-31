@@ -27,13 +27,16 @@ using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x75^168,"Player move item")]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerMoveItem, ClientStatus.PlayerInGame)]
 	public class PlayerMoveItemRequestHandler : IPacketHandler
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			if (client.Player == null)
+				return;
+
 			ushort id		= packet.ReadShort();
 			ushort toSlot	= packet.ReadShort();
 			ushort fromSlot = packet.ReadShort();

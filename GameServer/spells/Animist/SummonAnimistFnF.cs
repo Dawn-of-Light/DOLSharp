@@ -70,15 +70,15 @@ namespace DOL.GS.Spells
 
 			if (Spell.SubSpellID > 0 && SkillBase.GetSpellByID(Spell.SubSpellID) != null)
 			{
-				pet.Spells.Add(SkillBase.GetSpellByID(Spell.SubSpellID));
+				m_pet.Spells.Add(SkillBase.GetSpellByID(Spell.SubSpellID));
 			}
 
-			(pet.Brain as TurretBrain).IsMainPet = false;
+			(m_pet.Brain as TurretBrain).IsMainPet = false;
 
-			(pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
-			(pet.Brain as TurretBrain).Think();
+			(m_pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
+			(m_pet.Brain as TurretBrain).Think();
 			//[Ganrod] Nidel: Set only one spell.
-			(pet as TurretPet).TurretSpell = pet.Spells[0] as Spell;
+			(m_pet as TurretPet).TurretSpell = m_pet.Spells[0] as Spell;
 			Caster.PetCount++;
 		}
 
@@ -94,11 +94,11 @@ namespace DOL.GS.Spells
 		/// <param name="arguments"></param>
 		protected override void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
 		{
-			pet = sender as GamePet;
-			if (pet == null)
+			m_pet = sender as GamePet;
+			if (m_pet == null)
 				return;
 
-			if ((pet.Brain as TurretFNFBrain) == null)
+			if ((m_pet.Brain as TurretFNFBrain) == null)
 				return;
 
 			if (Caster.ControlledBrain == null)
@@ -106,9 +106,9 @@ namespace DOL.GS.Spells
 				((GamePlayer)Caster).Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
 			}
 
-			GameEventMgr.RemoveHandler(pet, GameLivingEvent.PetReleased, OnNpcReleaseCommand);
+			GameEventMgr.RemoveHandler(m_pet, GameLivingEvent.PetReleased, OnNpcReleaseCommand);
 
-			GameSpellEffect effect = FindEffectOnTarget(pet, this);
+			GameSpellEffect effect = FindEffectOnTarget(m_pet, this);
 			if (effect != null)
 				effect.Cancel(false);
 		}

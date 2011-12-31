@@ -545,7 +545,7 @@ namespace DOL.GS.Spells
 		/// <param name="Property"></param>
 		/// <param name="Value"></param>
 		/// <param name="IsSubstracted"></param>
-		private void ApplyBonus(GameLiving owner,  int BonusCat, eProperty Property, int Value, bool IsSubstracted)
+		protected void ApplyBonus(GameLiving owner,  int BonusCat, eProperty Property, int Value, bool IsSubstracted)
 		{
 			IPropertyIndexer tblBonusCat;
 			if (Property != eProperty.Undefined)

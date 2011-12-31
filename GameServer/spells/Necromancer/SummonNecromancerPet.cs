@@ -155,7 +155,7 @@ namespace DOL.GS.Spells
 			if (Spell.Damage < 0)
 			{
 				double petLevel = Caster.Level * Spell.Damage * -0.01 + 1;
-				level = (byte)((pet.Name == "minor zombie servant")	? Math.Min(2, petLevel) : petLevel);
+				level = (byte)((m_pet.Name == "minor zombie servant")	? Math.Min(2, petLevel) : petLevel);
 			}
 			else
 			{
