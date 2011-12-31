@@ -168,6 +168,7 @@ namespace DOL.GS.PacketHandler
 		PlayerDismountRequest = 0xC8,		// 0x60 ^ 168
 		PlayerHeadingUpdate = 0xBA,			// 0x12 ^ 168  also known as Short State
 		PlayerPickupHouseItem = 0x0D,
+		PlayerMoveItem = 0x75 ^ 168,
 	}
 
 	/// <summary>

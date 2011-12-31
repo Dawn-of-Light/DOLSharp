@@ -90,11 +90,11 @@ namespace DOL.GS.Spells
     {
       base.ApplyEffectOnTarget(target, effectiveness);
 
-      pet.Name = Spell.Name;
+      m_pet.Name = Spell.Name;
       //[Ganrod] Nidel: Set only one spell.
-      if(pet.Spells != null && pet.Spells.Count > 0)
+      if(m_pet.Spells != null && m_pet.Spells.Count > 0)
       {
-        (pet as TurretPet).TurretSpell = pet.Spells[0] as Spell;
+        (m_pet as TurretPet).TurretSpell = m_pet.Spells[0] as Spell;
       }
     }
 

@@ -55,21 +55,21 @@ namespace DOL.GS.Spells
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
             base.ApplyEffectOnTarget(target, effectiveness);
-            pet.TempProperties.setProperty(BOMBERTARGET, target);
-            pet.Name = Spell.Name;
-			pet.Flags ^= GameNPC.eFlags.DONTSHOWNAME;
-			pet.FixedSpeed = true;
-            pet.Follow(target, 5, Spell.Range * 5); // with Toa bonus, if the bomber was fired > Spell.Range base, it didnt move..
+            m_pet.TempProperties.setProperty(BOMBERTARGET, target);
+            m_pet.Name = Spell.Name;
+			m_pet.Flags ^= GameNPC.eFlags.DONTSHOWNAME;
+			m_pet.FixedSpeed = true;
+            m_pet.Follow(target, 5, Spell.Range * 5); // with Toa bonus, if the bomber was fired > Spell.Range base, it didnt move..
         }
 
         protected override void AddHandlers()
         {
-            GameEventMgr.AddHandler(pet, GameNPCEvent.ArriveAtTarget, BomberArriveAtTarget);
+            GameEventMgr.AddHandler(m_pet, GameNPCEvent.ArriveAtTarget, BomberArriveAtTarget);
         }
 
         protected override void RemoveHandlers()
         {
-            GameEventMgr.RemoveHandler(pet, GameNPCEvent.ArriveAtTarget, BomberArriveAtTarget);
+            GameEventMgr.RemoveHandler(m_pet, GameNPCEvent.ArriveAtTarget, BomberArriveAtTarget);
         }
 
         protected override byte GetPetLevel()
@@ -96,12 +96,12 @@ namespace DOL.GS.Spells
             GameNPC bomber = sender as GameNPC;
 
             //[Ganrod] Nidel: Prevent NPE
-            if (bomber == null || pet == null || bomber != pet)
+            if (bomber == null || m_pet == null || bomber != m_pet)
                 return;
 
             //[Ganrod] Nidel: Abort and delete bomber if Spell or Target is NULL
             Spell subspell = SkillBase.GetSpellByID(m_spell.SubSpellID);
-            GameLiving living = pet.TempProperties.getProperty<object>(BOMBERTARGET, null) as GameLiving;
+            GameLiving living = m_pet.TempProperties.getProperty<object>(BOMBERTARGET, null) as GameLiving;
 
             if (subspell == null || living == null)
             {

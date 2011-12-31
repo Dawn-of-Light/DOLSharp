@@ -62,9 +62,9 @@ namespace DOL.GS.Spells
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
 
-            pet.TempProperties.setProperty("target", target);
-            (pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
-			(pet.Brain as TheurgistPetBrain).Think();
+            m_pet.TempProperties.setProperty("target", target);
+            (m_pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
+			(m_pet.Brain as TheurgistPetBrain).Think();
 
 			Caster.PetCount++;
 		}
