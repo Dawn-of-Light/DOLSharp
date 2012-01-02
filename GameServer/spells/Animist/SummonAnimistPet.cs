@@ -27,95 +27,100 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-  /// <summary>
-  /// Summon an animist pet.
-  /// </summary>
-  public abstract class SummonAnimistPet : SummonSpellHandler
-  {
-    public SummonAnimistPet(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
-    {
-    }
+	/// <summary>
+	/// Summon an animist pet.
+	/// </summary>
+	public abstract class SummonAnimistPet : SummonSpellHandler
+	{
+		public SummonAnimistPet(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
+		{
+		}
 
-    /// <summary>
-    /// Check whether it's possible to summon a pet.
-    /// </summary>
-    /// <param name="selectedTarget"></param>
-    /// <returns></returns>
-    public override bool CheckBeginCast(GameLiving selectedTarget)
-    {
-      if(Caster.GroundTarget == null)
-      {
-          MessageToCaster("You have to set a ground target for this Spell.", eChatType.CT_SpellResisted);
-        return false;
-      }
+		/// <summary>
+		/// Check whether it's possible to summon a pet.
+		/// </summary>
+		/// <param name="selectedTarget"></param>
+		/// <returns></returns>
+		public override bool CheckBeginCast(GameLiving selectedTarget)
+		{
+			if (Caster.GroundTarget == null)
+			{
+				MessageToCaster("You have to set a ground target for this Spell.", eChatType.CT_SpellResisted);
+				return false;
+			}
 
-      if(!Caster.GroundTargetInView)
-      {
-          MessageToCaster("Your ground target is not in view.", eChatType.CT_SpellResisted);
-        return false;
-      }
+			if (!Caster.GroundTargetInView)
+			{
+				MessageToCaster("Your ground target is not in view.", eChatType.CT_SpellResisted);
+				return false;
+			}
 
-      if(!Caster.IsWithinRadius( Caster.GroundTarget, CalculateSpellRange() ))
-      {
-        MessageToCaster("You have to select a closer ground target.", eChatType.CT_SpellResisted);
-        return false;
-      }
+			if (!Caster.IsWithinRadius(Caster.GroundTarget, CalculateSpellRange()))
+			{
+				MessageToCaster("You have to select a closer ground target.", eChatType.CT_SpellResisted);
+				return false;
+			}
 
-      return base.CheckBeginCast(selectedTarget);
-    }
-    public override void FinishSpellCast(GameLiving target)
-    {
-        if (Caster.GroundTarget == null)
-        {
-            MessageToCaster("You have to set a ground target for this Spell.", eChatType.CT_SpellResisted);
-            return;
-        }
+			return base.CheckBeginCast(selectedTarget);
+		}
+		public override void FinishSpellCast(GameLiving target)
+		{
+			if (Caster.GroundTarget == null)
+			{
+				MessageToCaster("You have to set a ground target for this Spell.", eChatType.CT_SpellResisted);
+				return;
+			}
 
-        if (!Caster.GroundTargetInView)
-        {
-            MessageToCaster("Your ground target is not in view.", eChatType.CT_SpellResisted);
-            return;
-        }
+			if (!Caster.GroundTargetInView)
+			{
+				MessageToCaster("Your ground target is not in view.", eChatType.CT_SpellResisted);
+				return;
+			}
 
-        if (!Caster.IsWithinRadius(Caster.GroundTarget, CalculateSpellRange()))
-        {
-            MessageToCaster("You have to select a closer ground target.", eChatType.CT_SpellResisted);
-            return;
-        }
+			if (!Caster.IsWithinRadius(Caster.GroundTarget, CalculateSpellRange()))
+			{
+				MessageToCaster("You have to select a closer ground target.", eChatType.CT_SpellResisted);
+				return;
+			}
 
-        base.FinishSpellCast(target);
-    }
+			base.FinishSpellCast(target);
+		}
 
-    public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
-    {
-      base.ApplyEffectOnTarget(target, effectiveness);
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		{
+			base.ApplyEffectOnTarget(target, effectiveness);
 
-      m_pet.Name = Spell.Name;
-      //[Ganrod] Nidel: Set only one spell.
-      if(m_pet.Spells != null && m_pet.Spells.Count > 0)
-      {
-        (m_pet as TurretPet).TurretSpell = m_pet.Spells[0] as Spell;
-      }
-    }
+			m_pet.Name = Spell.Name;
 
-    //[Ganrod] Nidel: use TurretPet
-    protected override GamePet GetGamePet(INpcTemplate template)
-    {
-      return new TurretPet(template);
-    }
+			if (m_pet is TurretPet)
+			{
+				//[Ganrod] Nidel: Set only one spell.
+				if (m_pet.Spells != null && m_pet.Spells.Count > 0)
+				{
+					(m_pet as TurretPet).TurretSpell = m_pet.Spells[0] as Spell;
+				}
+			}
+		}
 
-    protected override IControlledBrain GetPetBrain(GameLiving owner)
-    {
-      return new TurretBrain(owner);
-    }
+		//[Ganrod] Nidel: use TurretPet
+		protected override GamePet GetGamePet(INpcTemplate template)
+		{
+			return new TurretPet(template);
+		}
 
-    protected override void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
-    {
-      x = Caster.GroundTarget.X;
-      y = Caster.GroundTarget.Y;
-      z = Caster.GroundTarget.Z;
-      heading = Caster.Heading;
-      region = Caster.CurrentRegion;
-    }
-  }
+		protected override IControlledBrain GetPetBrain(GameLiving owner)
+		{
+			return new TurretBrain(owner);
+		}
+
+		protected override void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
+		{
+			x = Caster.GroundTarget.X;
+			y = Caster.GroundTarget.Y;
+			z = Caster.GroundTarget.Z;
+			heading = Caster.Heading;
+			region = Caster.CurrentRegion;
+		}
+	}
 }
