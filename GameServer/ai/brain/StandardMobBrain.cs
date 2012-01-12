@@ -27,6 +27,7 @@ using DOL.GS.Effects;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
+using DOL.GS.Keeps;
 using DOL.Language;
 using log4net;
 
@@ -103,7 +104,8 @@ namespace DOL.AI.Brain
 				Body.WalkToSpawn();
 				return;
 			}
-
+			// If the NPC is Moving on path, it can detect closed doors and open them
+			if(Body.IsMovingOnPath)DetectDoor();	
 			//Instead - lets just let CheckSpells() make all the checks for us
 			//Check for just positive spells
 			CheckSpells(eCheckSpellType.Defensive);
@@ -1400,6 +1402,30 @@ namespace DOL.AI.Brain
 			return new Point3D( (int)targetX, (int)targetY, Body.SpawnPoint.Z );
 		}
 
+		#endregion
+		#region DetectDoor
+		public virtual void DetectDoor()
+		{
+			ushort range= (ushort)((ThinkInterval/800)*Body.CurrentWayPoint.MaxSpeed);
+			
+			foreach (IDoor door in Body.CurrentRegion.GetDoorsInRadius(Body.X, Body.Y, Body.Z, range, false))
+			{
+				if (door is GameKeepDoor)
+					{
+						if (Body.Realm != door.Realm) return;
+						door.Open();
+						//Body.Say("GameKeep Door is near by");
+						//somebody can insert here another action for GameKeep Doors
+						return;
+ 					}
+				else
+					{
+						door.Open();
+						return ;	
+					}
+			}
+		return;
+		}
 		#endregion
 	}
 }
