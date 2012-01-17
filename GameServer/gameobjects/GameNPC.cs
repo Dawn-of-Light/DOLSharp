@@ -43,7 +43,7 @@ namespace DOL.GS
 	/// This class is the baseclass for all Non Player Characters like
 	/// Monsters, Merchants, Guards, Steeds ...
 	/// </summary>
-	public class GameNPC : GameLiving
+	public class GameNPC : GameLiving, ITranslatableObject
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -55,236 +55,6 @@ namespace DOL.GS
 		/// Tested - min distance for mob sticking within combat range to player is 25
 		/// </remarks>
 		public const int CONST_WALKTOTOLERANCE = 25;
-
-        #region Multi-Language support
-        /// <summary>
-        /// Holds the translation id.
-        /// </summary>
-        protected string m_translationId = string.Empty;
-
-        /// <summary>
-        /// Holds the name (name, suffix, guild, examine article and message article) translations of ALL npcs.
-        /// </summary>
-        protected static readonly Dictionary<string, Dictionary<string, DBLanguageNPC>> m_nameTranslations = new Dictionary<string, Dictionary<string, DBLanguageNPC>>();
-
-        /// <summary>
-        /// Gets or sets the translation id.
-        /// </summary>
-        public string TranslationId
-        {
-            get { return m_translationId; }
-            set
-            {
-                if (value == null)
-                    m_translationId = string.Empty;
-                else
-                {
-                    if (value == m_translationId)
-                        return;
-                    else
-                        m_translationId = value;
-                }
-            }
-        }
-
-        #region RefreshTranslation
-        public static void RefreshTranslation(string lang, string id)
-        {
-            if (!Util.IsEmpty(lang) && lang.ToLower().Equals(ServerProperties.Properties.SERV_LANGUAGE.ToLower()))
-                return;
-
-            lock (m_nameTranslations)
-            {
-                if (!Util.IsEmpty(lang) && !Util.IsEmpty(id)) // Refresh the given id within the given language.
-                {
-                    log.Info("entering block #1");
-                    var result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(id) +
-                                                                                 "' and Language = '" + lang + "'");
-                    if (result != null)
-                    {
-                        log.Info("block #1 result was not null");
-                        if (!m_nameTranslations.ContainsKey(result.Language))
-                            m_nameTranslations.Add(lang, new Dictionary<string, DBLanguageNPC>());
-
-                        if (m_nameTranslations[lang].ContainsKey(result.TranslationId))
-                            m_nameTranslations[lang].Remove(result.TranslationId);
-
-                        m_nameTranslations[lang].Add(result.TranslationId, result);
-                    }
-                    else
-                        log.Info("block #1 result was null");
-                }
-                else if (Util.IsEmpty(lang) && !Util.IsEmpty(id)) // Refresh the given id within all known languages.
-                {
-                    log.Info("entering block #2");
-                    var result = GameServer.Database.SelectObjects<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(id) + "'");
-                    if (result.Count > 0)
-                    {
-                        log.Info("block #2 result was not null");
-                        List<string> updated = new List<string>();
-
-                        foreach (DBLanguageNPC entry in result)
-                        {
-                            if (!m_nameTranslations.ContainsKey(entry.Language))
-                                m_nameTranslations.Add(entry.Language, new Dictionary<string, DBLanguageNPC>());
-
-                            if (m_nameTranslations[entry.Language].ContainsKey(entry.TranslationId))
-                                m_nameTranslations[entry.Language].Remove(entry.TranslationId);
-
-                            m_nameTranslations[entry.Language].Add(entry.TranslationId, entry);
-
-                            if (!updated.Contains(entry.Language))
-                                updated.Add(entry.Language);
-                        }
-
-                        // Remove all unused entries
-                        foreach (string language in m_nameTranslations.Keys)
-                        {
-                            if (updated.Contains(language))
-                                continue;
-
-                            if (m_nameTranslations[language].ContainsKey(id))
-                                m_nameTranslations[language].Remove(id);
-                        }
-                    }
-                    else
-                        log.Info("block #2 result was null");
-                }
-                else if (!Util.IsEmpty(lang) && Util.IsEmpty(id)) // Refresh all entrys within the given language.
-                {
-                    log.Info("entering block #3");
-                    if (!m_nameTranslations.ContainsKey(lang))
-                        m_nameTranslations.Add(lang, new Dictionary<string, DBLanguageNPC>());
-
-                    var result = GameServer.Database.SelectObjects<DBLanguageNPC>("Language = '" + lang + "'");
-                    if (result.Count > 0)
-                    {
-                        log.Info("block #3 result was not null");
-                        m_nameTranslations[lang].Clear();
-
-                        foreach (DBLanguageNPC entry in result)
-                        {
-                            if (m_nameTranslations[lang].ContainsKey(entry.TranslationId))
-                                continue;
-
-                            m_nameTranslations[lang].Add(entry.TranslationId, entry);
-                        }
-                    }
-                    else
-                        log.Info("block #3 result was null");
-                }
-                else // Refresh all.
-                {
-                    log.Info("entering block #4");
-                    var result = GameServer.Database.SelectAllObjects<DBLanguageNPC>();
-                    if (result.Count > 0)
-                    {
-                        log.Info("block #4 result was not null");
-                        m_nameTranslations.Clear();
-
-                        foreach (DBLanguageNPC entry in result)
-                        {
-                            if (!m_nameTranslations.ContainsKey(entry.Language))
-                            {
-                                Dictionary<string, DBLanguageNPC> col = new Dictionary<string, DBLanguageNPC>();
-                                col.Add(entry.TranslationId, entry);
-
-                                m_nameTranslations.Add(entry.Language, col);
-                            }
-                            else
-                            {
-                                if (m_nameTranslations[entry.Language].ContainsKey(entry.TranslationId))
-                                    continue;
-
-                                m_nameTranslations[entry.Language].Add(entry.TranslationId, entry);
-                            }
-                        }
-                    }
-                    else
-                        log.Info("block #4 result was null");
-
-                    foreach (string language in m_nameTranslations.Keys)
-                    {
-                        if (m_nameTranslations[language].Count == 0)
-                            m_nameTranslations.Remove(language); // Save memory.
-                    }
-                }
-            }
-        }
-        #endregion RefreshTranslation
-
-        #region Translation methods
-        public DBLanguageNPC GetTranslation(GameClient client)
-        {
-            if (client == null)
-                return new DBLanguageNPC();
-
-            return GetTranslation(client.Account.Language, this);
-        }
-
-        public DBLanguageNPC GetTranslation(string lang)
-        {
-            return GetTranslation(lang, this);
-        }
-
-        public static DBLanguageNPC GetTranslation(GameClient client, GameNPC npc)
-        {
-            return GetTranslation(client.Account.Language, npc);
-        }
-
-        #region GetTranslation
-        public static DBLanguageNPC GetTranslation(string lang, GameNPC npc)
-        {
-            DBLanguageNPC result = null;
-
-            if (npc == null)
-            {
-                result = new DBLanguageNPC();
-                result.Name = "NoTranslation";
-                return result;
-            }
-
-            string id = string.Empty;
-
-            lock (npc.TranslationId)
-                id = npc.TranslationId;
-
-            if (!Util.IsEmpty(id) && !Util.IsEmpty(lang) && !lang.ToLower().Equals(ServerProperties.Properties.SERV_LANGUAGE.ToLower()))
-            {
-                lock (m_nameTranslations)
-                {
-                    if (m_nameTranslations.ContainsKey(lang))
-                    {
-                        if (m_nameTranslations[lang].ContainsKey(id))
-                            result = m_nameTranslations[lang][id];
-                    }
-                }
-            }
-
-            if (result != null)
-            {
-                if (Util.IsEmpty(result.Name))
-                    result.Name = npc.Name; // Get sure we have a name. Doesn't matter when we set it to default because it's not saved.
-            }
-            else
-            {
-                result = new DBLanguageNPC();
-
-                result.TranslationId = npc.TranslationId;
-                result.Name = npc.Name;
-                result.Suffix = npc.Suffix;
-                result.GuildName = npc.GuildName;
-                result.ExamineArticle = npc.ExamineArticle;
-                result.MessageArticle = npc.MessageArticle;
-            }
-
-            return result;
-        }
-        #endregion GetTranslation
-
-        #endregion Translation methods
-
-        #endregion Multi-Language support
 
         #region Formations/Spacing
 
@@ -365,6 +135,20 @@ namespace DOL.GS
 				}
 			}
 		}
+
+        /// <summary>
+        /// Holds the translation id.
+        /// </summary>
+        protected string m_translationId = "";
+
+        /// <summary>
+        /// Gets or sets the translation id.
+        /// </summary>
+        public string TranslationId
+        {
+            get { return m_translationId; }
+            set { m_translationId = (value == null ? "" : value); }
+        }
 
 		/// <summary>
 		/// Gets or sets the model of this npc
@@ -2262,14 +2046,7 @@ namespace DOL.GS
 			OwnerID = dbMob.OwnerID;
 
             if (npcTemplate != null && npcTemplate.ReplaceMobValues > 0)
-            {
                 LoadTemplate(npcTemplate);
-            }
-            else
-            {
-                if (!Util.IsEmpty(TranslationId))
-                    RefreshTranslation(null, TranslationId);
-            }
 		}
 
 		/// <summary>
@@ -2586,9 +2363,6 @@ namespace DOL.GS
 					AggroRange = template.AggroRange
 				};
 			this.NPCTemplate = template as NpcTemplate;
-
-            if (!Util.IsEmpty(TranslationId))
-                RefreshTranslation(null, TranslationId);
 		}
 
 		/// <summary>
@@ -5361,9 +5135,6 @@ namespace DOL.GS
 				m_ownBrain = new StandardMobBrain();
 				m_ownBrain.Body = this;
 			}
-
-            if (!Util.IsEmpty(TranslationId))
-                RefreshTranslation(null, TranslationId);
 		}
 
 		INpcTemplate m_template = null;

@@ -883,6 +883,7 @@
     <Compile Include="keeps\Managers\Spell Manager.cs" />
     <Compile Include="keeps\Relics\GameRelic.cs" />
     <Compile Include="keeps\Relics\GameRelicPad.cs" />
+    <Compile Include="language\ITranslatableObject.cs" />
     <Compile Include="language\LanguageMgr.cs" />
     <Compile Include="minotaurrelics\MinotaurRelic.cs" />
     <Compile Include="minotaurrelics\MinotaurRelicManager.cs" />

@@ -501,9 +501,6 @@ namespace DOL.GS
             this.ExamineArticle = item.ExamineArticle;
             this.MessageArticle = item.MessageArticle;
 			this.Model = (ushort)item.Model;
-
-            if (!Util.IsEmpty(TranslationId))
-                RefreshTranslation(null, TranslationId);
 		}
 
 		public bool EnableToMove
