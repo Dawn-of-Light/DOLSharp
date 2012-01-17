@@ -22,7 +22,7 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
     [DataTable(TableName = "LanguageZone")]
-    public class DBLanguageZone : DataObject
+    public class DBLanguageZone : DataObject, ILanguageTable
     {
         private string m_id;
         private string m_description;

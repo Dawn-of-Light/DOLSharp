@@ -236,7 +236,16 @@ namespace DOL.GS.PacketHandler
 								}
 
                                 if (description == "")
+                                {
                                     description = zon.Description;
+
+                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, zon);
+                                    if (translation != null)
+                                    {
+                                        if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription)) // Thats correct!
+                                            description = ((DBLanguageZone)translation).ScreenDescription;
+                                    }
+                                }
 
 								pak.FillString(description, 24);
 							}
@@ -1040,27 +1049,32 @@ namespace DOL.GS.PacketHandler
 						add += "-NON"; // indicates NON flag for GMs
 				}
 
-                DBLanguageNPC translation = npc.GetTranslation(m_gameClient);
+                string name = npc.Name;
+                string guildName = npc.GuildName;
 
-                string name = translation.Name;/*npc.Name;*/
-				if (name.Length + add.Length + 2 > 47) // clients crash with too long names
-					name = name.Substring(0, 47 - add.Length - 2);
-				if (add.Length > 0)
-					name = string.Format("[{0}]{1}", name, add);
+                DataObject translation = LanguageMgr.GetTranslation(m_gameClient, npc);
+                if (translation != null)
+                {
+                    if(!Util.IsEmpty(((DBLanguageNPC)translation).Name))
+                        name = ((DBLanguageNPC)translation).Name;
 
-				pak.WritePascalString(name);
+                    if (!Util.IsEmpty(((DBLanguageNPC)translation).GuildName))
+                        guildName = ((DBLanguageNPC)translation).GuildName;
+                }
 
-                //if (npc.GuildName.Length > 47)
-                //    pak.WritePascalString(npc.GuildName.Substring(0, 47));
-                //else pak.WritePascalString(npc.GuildName);
+                if (name.Length + add.Length + 2 > 47) // clients crash with too long names
+                    name = name.Substring(0, 47 - add.Length - 2);
+                if (add.Length > 0)
+                    name = string.Format("[{0}]{1}", name, add);
 
-                string guildName = translation.GuildName;
+                pak.WritePascalString(name);
+
                 if (guildName.Length > 47)
                     guildName = guildName.Substring(0, 47);
 
                 pak.WritePascalString(guildName);
-				pak.WriteByte(0x00);
 
+				pak.WriteByte(0x00);
 				SendTCP(pak);
 			}
 		}
@@ -3244,9 +3258,16 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort(0);
 				pak.WriteInt(0);
 
-                DBLanguageNPC translation = obj.GetTranslation(m_gameClient);
+                string name = obj.Name;
 
-                pak.WritePascalString(translation.Name);/*pak.WritePascalString(obj.Name);*/
+                DataObject translation = LanguageMgr.GetTranslation(m_gameClient, obj);
+                if (translation != null)
+                {
+                    if (!Util.IsEmpty(((DBLanguageNPC)translation).Name))
+                        name = ((DBLanguageNPC)translation).Name;
+                }
+
+                pak.WritePascalString(name);/*pak.WritePascalString(obj.Name);*/
 				pak.WriteByte(0); // trailing ?
 				SendTCP(pak);
 			}
@@ -3268,9 +3289,16 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort) time); // time (?)
 				pak.WriteInt((uint) siegeWeapon.ObjectID);
 
-                DBLanguageNPC translation = siegeWeapon.GetTranslation(m_gameClient);
+                string name = siegeWeapon.Name;
 
-                pak.WritePascalString(translation.Name + " (" + siegeWeapon.CurrentState + ")");
+                DataObject translation = LanguageMgr.GetTranslation(m_gameClient, siegeWeapon);
+                if (translation != null)
+                {
+                    if (!Util.IsEmpty(((DBLanguageNPC)translation).Name))
+                        name = ((DBLanguageNPC)translation).Name;
+                }
+
+                pak.WritePascalString(name + " (" + siegeWeapon.CurrentState + ")");
 				foreach (InventoryItem item in siegeWeapon.Ammo)
 				{
 					pak.WriteByte((byte) item.SlotPosition);

@@ -130,7 +130,11 @@
     <Compile Include="Handlers\XMLObjectDatabase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ILanguageTable.cs" />
     <Compile Include="Tables\CharacterXDataQuest.cs" />
+    <Compile Include="Tables\LanguageDoor.cs" />
+    <Compile Include="Tables\LanguageGameObject.cs" />
+    <Compile Include="Tables\LanguageItem.cs" />
     <Compile Include="Tables\LanguageNPC.cs" />
     <Compile Include="Tables\Regions.cs" />
     <Compile Include="Tables\SalvageYield.cs" />

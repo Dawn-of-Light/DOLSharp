@@ -132,7 +132,16 @@ namespace DOL.GS.PacketHandler
 								}
 
                                 if (description == "")
+                                {
                                     description = zon.Description;
+
+                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, zon);
+                                    if (translation != null)
+                                    {
+                                        if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription)) // Thats correct!
+                                            description = ((DBLanguageZone)translation).ScreenDescription;
+                                    }
+                                }
 
 								pak.FillString(description, 24);
 							}
