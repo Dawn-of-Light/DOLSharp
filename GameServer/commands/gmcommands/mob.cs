@@ -184,7 +184,7 @@ namespace DOL.GS.Commands
 						case "modelinc": modelinc(client, targetMob, args); break;
 						case "modeldec": modeldec(client, targetMob, args); break;
 						case "size": size(client, targetMob, args); break;
-						case "translationid": translationid(client, targetMob, args); break;
+						//case "translationid": translationid(client, targetMob, args); break;
 						case "name": name(client, targetMob, args); break;
 						case "suffix": suffix(client, targetMob, args); break;
 						case "guild": guild(client, targetMob, args); break;
@@ -724,36 +724,36 @@ namespace DOL.GS.Commands
 			}
 		}
 
-		private void translationid(GameClient client, GameNPC targetMob, string[] args)
-		{
-			if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
-			{
-				// Can be funny when we remove (e.g.) a ram or a boat (why are we dropped on the sea???) from the world. ;-)
-				client.Out.SendMessage("The selected object is type of GameMovingObject and it's translation id cannot be changed " +
-				                       "via command. Please change the translation id in your code / database.",
-				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
+        //private void translationid(GameClient client, GameNPC targetMob, string[] args)
+        //{
+        //    if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
+        //    {
+        //        // Can be funny when we remove (e.g.) a ram or a boat (why are we dropped on the sea???) from the world. ;-)
+        //        client.Out.SendMessage("The selected object is type of GameMovingObject and it's translation id cannot be changed " +
+        //                               "via command. Please change the translation id in your code / database.",
+        //                               eChatType.CT_System, eChatLoc.CL_SystemWindow);
+        //        return;
+        //    }
 
-			string id = "";
+        //    string id = "";
 
-			if (args.Length > 2)
-				id = String.Join("", args, 2, args.Length - 2);
+        //    if (args.Length > 2)
+        //        id = String.Join("", args, 2, args.Length - 2);
 
-			if (id != "")
-			{
-				targetMob.TranslationId = id;
-				targetMob.SaveIntoDatabase();
+        //    if (id != "")
+        //    {
+        //        targetMob.TranslationId = id;
+        //        targetMob.SaveIntoDatabase();
 
-				targetMob.RemoveFromWorld();
-				GameNPC.RefreshTranslation(null, id);
-				targetMob.AddToWorld();
+        //        targetMob.RemoveFromWorld();
+        //        GameNPC.RefreshTranslation(null, id);
+        //        targetMob.AddToWorld();
 
-				client.Out.SendMessage("Mob translation id changed to: " + id, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-			else
-				DisplaySyntax(client, args[1]);
-		}
+        //        client.Out.SendMessage("Mob translation id changed to: " + id, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+        //    }
+        //    else
+        //        DisplaySyntax(client, args[1]);
+        //}
 
 		private void name(GameClient client, GameNPC targetMob, string[] args)
 		{

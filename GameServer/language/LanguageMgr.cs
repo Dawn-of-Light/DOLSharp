@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -24,13 +25,14 @@ using System.Text;
 
 using DOL.Database;
 using DOL.GS;
+using DOL.GS.Quests;
 using log4net;
 
 namespace DOL.Language
 {
 	public class LanguageMgr
-	{
-		/// <summary>
+    {
+        /// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -42,12 +44,32 @@ namespace DOL.Language
 
 		// All the sentence ID's found in any language files
 		private static IList<string> m_listSentenceIDsFromFiles;
-		
-		/// <summary>
-		/// Give a way to change or relocate the lang files
-		/// </summary>
-		private static string LangPath = Path.Combine(GameServer.Instance.Configuration.RootDirectory ,"languages");
-		public static void SetLangPath(string path)
+
+        private enum eObjColKey
+        {
+            eNULL,
+            eArea,
+            eDoor,
+            eItem,
+            eMission,
+            eNPC,
+            eQuest,
+            eStaticObject,
+            eTask,
+            eZone
+        }
+
+        /// <summary>
+        /// Holds all object translations.
+        /// </summary>
+        private static Dictionary<eObjColKey, Dictionary<string, Dictionary<string, DataObject>>> m_objectTranslations;
+        //                                              language      translation id, translation
+
+        /// <summary>
+        /// Give a way to change or relocate the lang files
+        /// </summary>
+        private static string LangPath = Path.Combine(GameServer.Instance.Configuration.RootDirectory, "languages");
+        public static void SetLangPath(string path)
 		{
 			LangPath = path;
 		}
@@ -188,15 +210,72 @@ namespace DOL.Language
 			return true;
 		}
 
-		/// <summary>
-		/// Translation ID for the sentence, array position 0
-		/// </summary>
-		private const int ID = 0;
+        #region AddObjectTranslation
+        private static void AddObjectTranslation(eObjColKey key, ILanguageTable dbo)
+        {
+            if (dbo == null || key == eObjColKey.eNULL || Util.IsEmpty(dbo.Language) || Util.IsEmpty(dbo.TranslationId) || !(dbo is DataObject))
+                return;
 
-		/// <summary>
-		/// The translated sentence, array position 1
-		/// </summary>
-		private const int TEXT = 1;
+            if (!m_objectTranslations.ContainsKey(key))
+            {
+                Dictionary<string, Dictionary<string, DataObject>> lngCol = new Dictionary<string, Dictionary<string, DataObject>>();
+                Dictionary<string, DataObject> objCol = new Dictionary<string, DataObject>();
+                objCol.Add(dbo.TranslationId, (DataObject)dbo);
+                lngCol.Add(dbo.Language.ToUpper(), objCol);
+                m_objectTranslations.Add(key, lngCol);
+                return;
+            }
+
+            if (!m_objectTranslations[key].ContainsKey(dbo.Language.ToUpper()))
+            {
+                Dictionary<string, DataObject> objCol = new Dictionary<string, DataObject>();
+                objCol.Add(dbo.TranslationId, (DataObject)dbo);
+                m_objectTranslations[key].Add(dbo.Language.ToUpper(), objCol);
+                return;
+            }
+
+            if (!m_objectTranslations[key][dbo.Language.ToUpper()].ContainsKey(dbo.TranslationId))
+            {
+                m_objectTranslations[key][dbo.Language.ToUpper()].Add(dbo.TranslationId, (DataObject)dbo);
+                return;
+            }
+        }
+
+        private static void AddObjectTranslation(eObjColKey key, IList<DataObject> dbos)
+        {
+            if (dbos == null || dbos.Count < 1 || key == eObjColKey.eNULL)
+                return;
+
+            foreach (DataObject obj in dbos)
+            {
+                if (obj.GetType().GetInterface(typeof(ILanguageTable).Name, false) == null)
+                    continue;
+
+                AddObjectTranslation(key, (ILanguageTable)obj);
+            }
+        }
+        #endregion AddObjectTranslation
+
+        private static void LoadObjectTranslations()
+        {
+            List<DataObject> dbo = new List<DataObject>();
+            dbo.AddRange(GameServer.Database.SelectAllObjects<DBLanguageNPC>());
+            AddObjectTranslation(eObjColKey.eNPC, dbo);
+
+            dbo.Clear();
+            dbo.AddRange(GameServer.Database.SelectAllObjects<DBLanguageZone>());
+            AddObjectTranslation(eObjColKey.eZone, dbo);
+        }
+
+        /// <summary>
+        /// Translation ID for the sentence, array position 0
+        /// </summary>
+        private const int ID = 0;
+
+        /// <summary>
+        /// The translated sentence, array position 1
+        /// </summary>
+        private const int TEXT = 1;
 
 		private static void CheckFromFiles(string languageShortName)
 		{
@@ -287,8 +366,10 @@ namespace DOL.Language
 		public static bool Init()
 		{
 			IDSentences = new Dictionary<string, Dictionary<string, string>>();
+            m_objectTranslations = new Dictionary<eObjColKey, Dictionary<string, Dictionary<string, DataObject>>>();
 			
 			LoadLanguages();
+            LoadObjectTranslations();
 
 			return true;
 		}
@@ -365,7 +446,41 @@ namespace DOL.Language
 
 			return lang + " Error";
 		}
-		
+
+        /// <summary>
+        /// Returns a translation for the given client of the given translatable object.
+        /// </summary>
+        /// <param name="obj">The object you request a translation for.</param>
+        /// <param name="client">The client you want the translation for.</param>
+        /// <returns>DataObject or 'null' if nothing was found.</returns>
+        public static DataObject GetTranslation(GameClient client, ITranslatableObject obj)
+        {
+
+            if (client == null || obj == null)
+                return null;
+
+            DataObject result = null;
+            if (!Util.IsEmpty(obj.TranslationId))
+            {
+                eObjColKey key = eObjColKey.eNULL;
+
+                if (obj is GameNPC)
+                    key = eObjColKey.eNPC;
+                else if (obj is Zone)
+                    key = eObjColKey.eZone;
+
+                // No more checks, get the result as quick as possible - if exist
+                // and all parameters / variables are valid!
+                try
+                {
+                    result = m_objectTranslations[key][client.Account.Language.ToUpper()][obj.TranslationId];
+                }
+                catch
+                {
+                }
+            }
+            return result;
+        }
 
 		/// <summary>
 		/// Translate the sentence

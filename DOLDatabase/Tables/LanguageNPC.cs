@@ -1,19 +1,38 @@
-﻿using DOL.Database.Attributes;
+﻿/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
+using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
     [DataTable(TableName = "LanguageNPC")]
-    public class DBLanguageNPC : DataObject
+    public class DBLanguageNPC : DataObject, ILanguageTable
     {
         #region Variables
-        private string m_translationId = string.Empty;
-        private string m_name = string.Empty;
-        private string m_suffix = string.Empty;
-        private string m_guildName = string.Empty;
-        private string m_examineArticle = string.Empty;
-        private string m_messageArticle = string.Empty;
-        private string m_language = string.Empty;
-        private string m_tag = string.Empty;
+        private string m_translationId = "";
+        private string m_name = "";
+        private string m_suffix = "";
+        private string m_guildName = "";
+        private string m_examineArticle = "";
+        private string m_messageArticle = "";
+        private string m_language = "";
+        private string m_tag = "";
         #endregion Variables
 
         public DBLanguageNPC() { }
