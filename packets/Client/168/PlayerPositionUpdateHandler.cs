@@ -175,9 +175,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 				 * "Current area is adjusted for one level 1 player."
 				 * "Current area has a 50% instance bonus."
 				 */
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Entered", newZone.Description),
+
+                string description = newZone.Description;
+                string screenDescription = description;
+
+                DataObject translation = LanguageMgr.GetTranslation(client, newZone);
+                if (translation != null)
+                {
+                    if (!Util.IsEmpty(((DBLanguageZone)translation).Description))
+                        description = ((DBLanguageZone)translation).Description;
+
+                    if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription))
+                        screenDescription = ((DBLanguageZone)translation).ScreenDescription;
+                }
+
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Entered", description),
 				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage(newZone.Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(screenDescription, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 
 				client.Player.LastPositionUpdateZone = newZone;
 			}

@@ -158,7 +158,14 @@ namespace DOL.GS.PacketHandler
 
 								if (locationDescription == "")
 								{
-									locationDescription = zone.Description;
+                                    locationDescription = zone.Description;
+
+                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, zone);
+                                    if (translation != null)
+                                    {
+                                        if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription)) // Thats correct!
+                                            locationDescription = ((DBLanguageZone)translation).ScreenDescription;
+                                    }
 								}
 							}
 						}

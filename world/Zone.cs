@@ -22,9 +22,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 
+using DOL.Database;
+using DOL.Language;
 using DOL.GS.Utils;
 using log4net;
-using DOL.Database;
 
 namespace DOL.GS
 {
@@ -32,7 +33,7 @@ namespace DOL.GS
 	/// This class represents one Zone in DAOC. It holds all relevant information
 	/// that is needed to do different calculations.
 	/// </summary>
-	public class Zone
+	public class Zone : ITranslatableObject
 	{
 		/* 
         This file has been extensively modified for the new subzone management system
@@ -287,6 +288,11 @@ namespace DOL.GS
 		#endregion
 
 		#region properties
+        public string TranslationId
+        {
+            get { return ID.ToString(); }
+            set { }
+        }
 
         public eRealm Realm
         {
