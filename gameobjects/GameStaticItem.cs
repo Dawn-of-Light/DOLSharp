@@ -27,7 +27,7 @@ namespace DOL.GS
 	/// <summary>
 	/// This class represents a static Item in the gameworld
 	/// </summary>
-	public class GameStaticItem : GameObject
+	public class GameStaticItem : GameObject , ITranslatableObject
 	{
 		/// <summary>
 		/// The emblem of the Object
@@ -88,6 +88,20 @@ namespace DOL.GS
 			}
 		}
 
+        /// <summary>
+        /// The translation id
+        /// </summary>
+        protected string m_translationId = "";
+
+        /// <summary>
+        /// Gets or sets the translation id
+        /// </summary>
+        public string TranslationId
+        {
+            get { return m_translationId; }
+            set { m_translationId = (value == null ? "" : value); }
+        }
+
 		/// <summary>
 		/// Gets or sets the name of this item
 		/// </summary>
@@ -107,6 +121,19 @@ namespace DOL.GS
 				}
 			}
 		}
+
+        /// <summary>
+        /// Holds the examine article
+        /// </summary>
+        private string m_examineArticle = "";
+        /// <summary>
+        /// Gets or sets the examine article
+        /// </summary>
+        public string ExamineArticle
+        {
+            get { return m_examineArticle; }
+            set { m_examineArticle = (value == null ? "" : value); }
+        }
 		
 		private bool m_loadedFromScript = true;
 		public bool LoadedFromScript
@@ -164,7 +191,9 @@ namespace DOL.GS
 			
 			m_loadedFromScript = false;
 			CurrentRegionID = item.Region;
+            TranslationId = item.TranslationId;
 			Name = item.Name;
+            ExamineArticle = item.ExamineArticle;
 			Model = item.Model;
 			Emblem = item.Emblem;
 			Realm = (eRealm)item.Realm;
@@ -242,7 +271,9 @@ namespace DOL.GS
 					return;
 				}
 			}
+            obj.TranslationId = TranslationId;
 			obj.Name = Name;
+            obj.ExamineArticle = ExamineArticle;
 			obj.Model = Model;
 			obj.Emblem = Emblem;
 			obj.Realm = (byte)Realm;

@@ -128,6 +128,13 @@ namespace DOL.GS.PacketHandler
 										continue;
                                     
                                     description = area.Description;
+
+                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, area);
+                                    if (translation != null)
+                                    {
+                                        if (!Util.IsEmpty(((DBLanguageArea)translation).ScreenDescription)) // Thats correct!
+                                            description = ((DBLanguageArea)translation).ScreenDescription;
+                                    }
 									break;
 								}
 

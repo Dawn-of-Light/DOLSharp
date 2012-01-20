@@ -18,12 +18,15 @@
  */
 #define NOENCRYPTION
 using System;
-using System.Reflection;
 using System.Collections;
-using DOL.Database;
-using DOL.GS.Housing;
-using log4net;
 using System.Collections.Generic;
+using System.Reflection;
+
+using DOL.Database;
+using DOL.Language;
+using DOL.GS.Housing;
+
+using log4net;
 
 namespace DOL.GS.PacketHandler
 {
@@ -124,7 +127,28 @@ namespace DOL.GS.PacketHandler
 				pak.WriteInt((uint)newEmblemBitMask);//TODO other bits
 			}
 			else pak.WriteInt(0);
-			pak.WritePascalString(obj.Name.Length > 48 ? obj.Name.Substring(0,48) : obj.Name);
+
+            string name = obj.Name;
+            DataObject translation = null;
+            if (obj is GameStaticItem)
+            {
+                translation = LanguageMgr.GetTranslation(m_gameClient, (GameStaticItem)obj);
+                if (translation != null)
+                {
+                    if (obj is WorldInventoryItem)
+                    {
+                        //if (!Util.IsEmpty(((DBLanguageItem)translation).Name))
+                        //    name = ((DBLanguageItem)translation).Name;
+                    }
+                    else
+                    {
+                        if (!Util.IsEmpty(((DBLanguageGameObject)translation).Name))
+                            name = ((DBLanguageGameObject)translation).Name;
+                    }
+                }
+            }
+            pak.WritePascalString(name.Length > 48 ? name.Substring(0, 48) : name);
+
 			if (obj is IDoor)
 			{
 				pak.WriteByte(4);
