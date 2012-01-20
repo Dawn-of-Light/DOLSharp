@@ -7,6 +7,7 @@ namespace DOL.Database
 	[DataTable(TableName = "Area")]
 	public class DBArea : DataObject
 	{
+        private string m_translationId;
 		private string m_description;
 		private int m_x;
 		private int m_y;
@@ -22,6 +23,17 @@ namespace DOL.Database
 		public DBArea()
 		{
 		}
+
+        [DataElement(AllowDbNull = true)]
+        public string TranslationId
+        {
+            get { return m_translationId; }
+            set
+            {
+                Dirty = true;
+                m_translationId = value;
+            }
+        }
 
 		[DataElement(AllowDbNull = false)]
 		public string Description

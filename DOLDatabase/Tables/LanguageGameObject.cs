@@ -21,11 +21,15 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-    // data table attribute not set until game (static) object translations are supported.
-    class LanguageGameObject : DataObject, ILanguageTable
+    [DataTable(TableName = "LanguageGameObject")]
+    public class DBLanguageGameObject : DataObject, ILanguageTable
     {
         private string m_id = "";
+        private string m_name = "";
+        private string m_examineArticle = "";
         private string m_language = "";
+
+        public DBLanguageGameObject() { }
 
         /// <summary>
         /// The translation id
@@ -38,6 +42,38 @@ namespace DOL.Database
             {
                 Dirty = true;
                 m_id = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the translated name.
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public string Name
+        {
+            get { return m_name; }
+            set
+            {
+                Dirty = true;
+                m_name = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the translated examine article.
+        /// 
+        /// You examine the Forge.
+        /// 
+        /// the = the examine article.
+        /// </summary>
+        [DataElement(AllowDbNull = true)]
+        public string ExamineArticle
+        {
+            get { return m_examineArticle; }
+            set
+            {
+                Dirty = true;
+                m_examineArticle = value;
             }
         }
 
