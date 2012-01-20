@@ -20,9 +20,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Linq;
 
 using DOL.Database;
 using DOL.Language;
@@ -35,6 +35,7 @@ using DOL.GS.Quests;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
+
 using log4net;
 
 namespace DOL.GS.PacketHandler
@@ -232,6 +233,13 @@ namespace DOL.GS.PacketHandler
                                         continue;
                                     
                                     description = area.Description;
+
+                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, area);
+                                    if (translation != null)
+                                    {
+                                        if (!Util.IsEmpty(((DBLanguageArea)translation).ScreenDescription)) // Thats correct!
+                                            description = ((DBLanguageArea)translation).ScreenDescription;
+                                    }
 									break;
 								}
 
@@ -936,7 +944,28 @@ namespace DOL.GS.PacketHandler
 				    (obj as GameStaticItemTimed).IsOwner(m_gameClient.Player))
 					flag |= 0x04;
 				pak.WriteShort((ushort) flag);
-				pak.WritePascalString(obj.Name);
+
+                string name = obj.Name;
+                DataObject translation = null;
+                if (obj is GameStaticItem)
+                {
+                    translation = LanguageMgr.GetTranslation(m_gameClient, (GameStaticItem)obj);
+                    if (translation != null)
+                    {
+                        if (obj is WorldInventoryItem)
+                        {
+                            //if (!Util.IsEmpty(((DBLanguageItem)translation).Name))
+                            //    name = ((DBLanguageItem)translation).Name;
+                        }
+                        else
+                        {
+                            if (!Util.IsEmpty(((DBLanguageGameObject)translation).Name))
+                                name = ((DBLanguageGameObject)translation).Name;
+                        }
+                    }
+                }
+                pak.WritePascalString(name);
+
 				if (obj is IDoor)
 				{
 					pak.WriteByte(4);

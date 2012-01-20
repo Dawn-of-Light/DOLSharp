@@ -108,7 +108,28 @@ namespace DOL.GS.PacketHandler
 				flag |= 0x04;
 			pak.WriteShort((ushort)flag);
 			pak.WriteInt(0x0); //TODO: unknown, new in 1.71
-			pak.WritePascalString(obj.Name);
+
+            string name = obj.Name;
+            DataObject translation = null;
+            if (obj is GameStaticItem)
+            {
+                translation = LanguageMgr.GetTranslation(m_gameClient, (GameStaticItem)obj);
+                if (translation != null)
+                {
+                    if (obj is WorldInventoryItem)
+                    {
+                        //if (!Util.IsEmpty(((DBLanguageItem)translation).Name))
+                        //    name = ((DBLanguageItem)translation).Name;
+                    }
+                    else
+                    {
+                        if (!Util.IsEmpty(((DBLanguageGameObject)translation).Name))
+                            name = ((DBLanguageGameObject)translation).Name;
+                    }
+                }
+            }
+            pak.WritePascalString(name);
+
 			if (obj is IDoor)
 			{
 				pak.WriteByte(4);

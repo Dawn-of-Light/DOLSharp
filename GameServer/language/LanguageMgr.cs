@@ -258,13 +258,21 @@ namespace DOL.Language
 
         private static void LoadObjectTranslations()
         {
-            List<DataObject> dbo = new List<DataObject>();
-            dbo.AddRange(GameServer.Database.SelectAllObjects<DBLanguageNPC>());
-            AddObjectTranslation(eObjColKey.eNPC, dbo);
+            List<DataObject> dbos = new List<DataObject>();
+            dbos.AddRange(GameServer.Database.SelectAllObjects<DBLanguageArea>());
+            AddObjectTranslation(eObjColKey.eArea, dbos);
 
-            dbo.Clear();
-            dbo.AddRange(GameServer.Database.SelectAllObjects<DBLanguageZone>());
-            AddObjectTranslation(eObjColKey.eZone, dbo);
+            dbos.Clear();
+            dbos.AddRange(GameServer.Database.SelectAllObjects<DBLanguageGameObject>());
+            AddObjectTranslation(eObjColKey.eStaticObject, dbos);
+
+            dbos.Clear();
+            dbos.AddRange(GameServer.Database.SelectAllObjects<DBLanguageNPC>());
+            AddObjectTranslation(eObjColKey.eNPC, dbos);
+
+            dbos.Clear();
+            dbos.AddRange(GameServer.Database.SelectAllObjects<DBLanguageZone>());
+            AddObjectTranslation(eObjColKey.eZone, dbos);
         }
 
         /// <summary>
@@ -464,7 +472,16 @@ namespace DOL.Language
             {
                 eObjColKey key = eObjColKey.eNULL;
 
-                if (obj is GameNPC)
+                if (obj is AbstractArea)
+                    key = eObjColKey.eArea;
+                else if (obj is GameStaticItem)
+                {
+                    if (obj is WorldInventoryItem)
+                        return result; // Not supported yet
+                    else
+                        key = eObjColKey.eStaticObject;
+                }
+                else if (obj is GameNPC)
                     key = eObjColKey.eNPC;
                 else if (obj is Zone)
                     key = eObjColKey.eZone;
