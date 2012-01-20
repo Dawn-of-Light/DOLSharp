@@ -17,10 +17,11 @@
  *
  */
 using System;
+
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.Language;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -28,7 +29,7 @@ namespace DOL.GS
 	/// AbstractArea extend this if you wish to implement e new custom area.
 	/// For examples see Area.Cricle, Area.Square
 	/// </summary>
-	public abstract class AbstractArea : IArea
+	public abstract class AbstractArea : IArea, ITranslatableObject
 	{
 		protected DBArea m_dbArea = null;
 		protected bool m_canBroadcast = false;
@@ -82,6 +83,11 @@ namespace DOL.GS
 		/// </summary>
 		protected ushort m_ID;
 
+        /// <summary>
+        /// Holds the translation id
+        /// </summary>
+        protected string m_translationId;
+
 		/// <summary>
 		/// The description of the Area eg. "Camelot Hills"
 		/// </summary>
@@ -114,6 +120,15 @@ namespace DOL.GS
 			get { return m_ID; }
 			set { m_ID = value; }
 		}
+
+        /// <summary>
+        /// Gets or sets the translation id
+        /// </summary>
+        public string TranslationId
+        {
+            get { return m_translationId; }
+            set { m_translationId = (value == null ? "" : value); }
+        }
 
 		/// <summary>
 		/// Return the description of this Area
@@ -196,12 +211,25 @@ namespace DOL.GS
 		{
 			if (m_displayMessage && Description != null && Description != "")
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractArea.Entered", Description),
+                string description = Description;
+                string screenDescription = description;
+
+                DataObject translation = LanguageMgr.GetTranslation(player.Client, this);
+                if (translation != null)
+                {
+                    if (!Util.IsEmpty(((DBLanguageArea)translation).Description))
+                        description = ((DBLanguageArea)translation).Description;
+
+                    if (!Util.IsEmpty(((DBLanguageArea)translation).ScreenDescription))
+                        screenDescription = ((DBLanguageArea)translation).ScreenDescription;
+                }
+
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractArea.Entered", description),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				//Changed by Apo 9. August 2010: Areas never send an screen description, but we will support it with an server property
                 if (ServerProperties.Properties.DISPLAY_AREA_ENTER_SCREEN_DESC)
-                    player.Out.SendMessage(Description, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(screenDescription, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 			}
 			if (Sound != 0)
 			{
