@@ -2201,7 +2201,8 @@ namespace DOL.GS
 
 			if (Endurance < MaxEndurance || sprinting)
 			{
-				int regen = GetModified(eProperty.EnduranceRegenerationRate);
+				int regen = GetModified(eProperty.EnduranceRegenerationRate);  //default is 1
+				int endchant = GetModified(eProperty.FatigueConsumption);      //Pull chant/buff value
 
 				int longwind = 5;
 				if (sprinting && IsMoving)
@@ -2212,6 +2213,8 @@ namespace DOL.GS
 						longwind = 5 - (ra.GetAmountForLevel(CalculateSkillLevel(ra)) * 5 / 100);
 
 					regen -= longwind;
+					
+					if (endchant > 1) regen = (int)Math.Ceiling(regen * endchant * 0.01);
 					if (Endurance + regen > MaxEndurance - longwind)
 					{
 						regen -= (Endurance + regen) - (MaxEndurance - longwind);
