@@ -672,7 +672,7 @@ namespace DOL.GS
 		Focus_CreepingPath = 143,
 		Focus_Arboreal = 144,
 		MaxSpeed = 145,
-		// 146 Available
+		CombatFatigueConsumption = 146,
 		MaxConcentration = 147,
 		ArmorFactor = 148,
 		ArmorAbsorption = 149,
