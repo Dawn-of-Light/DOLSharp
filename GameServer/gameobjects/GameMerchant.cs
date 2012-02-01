@@ -646,4 +646,22 @@ namespace DOL.GS
 			m_moneyItem = WorldInventoryItem.CreateFromTemplate("aurulite");
 		}
 	}
+	
+	public class GameAtlanteanGlassMerchant : GameItemCurrencyMerchant
+	{
+		public GameAtlanteanGlassMerchant()
+			: base()
+		{
+			m_moneyItem = WorldInventoryItem.CreateFromTemplate("atlanteanglass");
+		}
+	}
+	
+	public class GameDragonMerchant : GameItemCurrencyMerchant
+	{
+		public GameDragonMerchant()
+			: base()
+		{
+			m_moneyItem = WorldInventoryItem.CreateFromTemplate("dragonscales");
+		}
+	}
 }
