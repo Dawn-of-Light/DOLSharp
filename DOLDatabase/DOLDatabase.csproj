@@ -65,13 +65,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <Name>log4net</Name>
       <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="MySql.Data">
       <HintPath>..\sharedModules\MySQL\MySql.Data.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
