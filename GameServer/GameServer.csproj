@@ -365,6 +365,7 @@
     <Compile Include="gameobjects\CharacterClasses\ICharacterClass.cs" />
     <Compile Include="gameobjects\CharacterClasses\CharacterClassBase.cs" />
     <Compile Include="gameobjects\CharacterClasses\Midgard\CharacterClassBoneDancer.cs" />
+    <Compile Include="gameobjects\CustomNPC\LiveLikeBB.cs" />
     <Compile Include="gameutils\InventoryLogging.cs" />
     <Compile Include="keeps\Relics\GameInventoryRelic.cs" />
     <Compile Include="gameobjects\CustomNPC\RoyalTreasuryClerk.cs" />
@@ -1064,7 +1065,6 @@
     <Compile Include="playertitles\titles\time\account\ElderTitle.cs" />
     <Compile Include="playertitles\titles\time\char\VeteranTitle.cs" />
     <Compile Include="propertycalc\ArcaneSyphonCalculator.cs" />
-    <Compile Include="propertycalc\CombatFatigueConsumptionPercentCalculator.cs" />
     <Compile Include="propertycalc\ConversionPercentCalculator.cs" />
     <Compile Include="propertycalc\BountyPointsCalculator.cs" />
     <Compile Include="propertycalc\RealmPointsCalculator.cs" />
