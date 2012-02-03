@@ -263,26 +263,6 @@ namespace DOL.GS.Spells
 		// constructor
 		public FatigueConsumptionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
-
-	/// <summary>
-	/// Combat only Fatigue reduction buff
-	/// </summary>
-	[SpellHandlerAttribute("CombatFatigueConsumptionBuff")]
-	public class CombatFatigueConsumptionBuff : SingleStatBuff
-	{
-		public override eProperty Property1 { get { return eProperty.CombatFatigueConsumption; } }
-
-		/// <summary>
-		/// send updates about the changes
-		/// </summary>
-		/// <param name="target"></param>
-		protected override void SendUpdates(GameLiving target)
-		{
-		}
-
-		// constructor
-		public CombatFatigueConsumptionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-	}
 	
 	/// <summary>
 	/// Melee damage buff
