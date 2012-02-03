@@ -71,12 +71,9 @@
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\sharedModules\ICSharpCode.SharpZLib\ICSharpCode.SharpZipLib.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="log4net">
-      <Name>log4net</Name>
       <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
