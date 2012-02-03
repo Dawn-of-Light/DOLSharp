@@ -82,9 +82,7 @@
       <Private>True</Private>
     </ProjectReference>
     <Reference Include="log4net">
-      <Name>log4net</Name>
       <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="nunit.core">
       <Name>nunit.core</Name>
