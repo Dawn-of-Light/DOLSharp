@@ -133,13 +133,15 @@ namespace DOL.GS
 			Version1101 = 1101,
 			Version1102 = 1102,
 			Version1103 = 1103,
-           Version1104 = 1104,
+			Version1104 = 1104,
 			Version1105 = 1105,
 			Version1106 = 1106,
 			Version1107 = 1107,
 			Version1108 = 1108,
-            Version1109 = 1109,
-			_LastVersion = 1109,
+			Version1109 = 1109,
+			Version1110 = 1110,
+			Version1111 = 1111,
+			_LastVersion = 1111,
 		}
 
 		#endregion
@@ -254,7 +256,7 @@ namespace DOL.GS
 
 				// refresh ping timeouts immediately when we change into playing state or charscreen
 				if ((oldState != eClientState.Playing && value == eClientState.Playing) ||
-					(oldState != eClientState.CharScreen && value == eClientState.CharScreen))
+				    (oldState != eClientState.CharScreen && value == eClientState.CharScreen))
 				{
 					PingTime = DateTime.Now.Ticks;
 				}
@@ -518,8 +520,8 @@ namespace DOL.GS
 			m_activeCharIndex = accountindex;
 			GamePlayer player = null;
 
-            // refreshing Account to load any changes from the DB
-            GameServer.Database.FillObjectRelations(m_account);
+			// refreshing Account to load any changes from the DB
+			GameServer.Database.FillObjectRelations(m_account);
 
 			DOLCharacters dolChar = m_account.Characters[m_activeCharIndex];
 
@@ -620,7 +622,7 @@ namespace DOL.GS
 					if (m_sessionID != 0)
 					{
 						if (oldClientState == eClientState.Playing || oldClientState == eClientState.WorldEnter ||
-							oldClientState == eClientState.Linkdead)
+						    oldClientState == eClientState.Linkdead)
 						{
 							try
 							{
