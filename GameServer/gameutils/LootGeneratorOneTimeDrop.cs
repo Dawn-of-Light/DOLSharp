@@ -31,6 +31,8 @@ namespace DOL.GS
 	/// </summary>
 	public class LootGeneratorOneTimeDrop : LootGeneratorBase
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		///
 		/// </summary>
