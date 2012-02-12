@@ -816,8 +816,14 @@ namespace DOL.GS.ServerProperties
         /// </summary>
         [ServerProperty("npc", "pet_autoset_qui_multiplier", "Multiplier to use when auto-setting Pet QUI stat. ", 1.0)]
         public static double PET_AUTOSET_QUI_MULTIPLIER;
-        
-        /// <summary>
+
+		/// <summary>
+		/// How often should pets think?  Default 1500 or 1.5 seconds
+		/// </summary>
+		[ServerProperty("npc", "pet_think_interval", "How often should pets think?  Default 1500 (1.5 seconds)", 1500)]
+		public static int PET_THINK_INTERVAL;
+
+		/// <summary>
 		/// What level to start increasing mob damage
 		/// </summary>
 		[ServerProperty("npc", "mob_damage_increase_startlevel", "What level to start increasing mob damage.", 30)]
@@ -1297,6 +1303,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("housing", "rent_bounty_point_to_gold", "The worth of 1 (one) bounty point in gold (e.g. 1 bp = 1g -> 10000, 1bp = 10g -> 100000)", 10000)]
 		public static long RENT_BOUNTY_POINT_TO_GOLD;
+
+		/// <summary>
+		/// Do housing consignment merchants use BP instead of money?
+		/// </summary>
+		[ServerProperty("housing", "consignment_use_bp", "If true the housing consignment merchants use BP instead of money.", false)]
+		public static bool CONSIGNMENT_USE_BP;
+
 
 		#endregion
 
