@@ -6797,10 +6797,11 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets the effective AF of this living
+		/// Gets the effective AF of this living.  This is used for the overall AF display
+		/// on the character but not used in any damage equations.
 		/// </summary>
 		public override int EffectiveOverallAF
-		{ // TODO: consider player level against armor level
+		{ 
 			get
 			{
 				int eaf = 0;

@@ -266,12 +266,17 @@ namespace DOL.GS
 			if (weapons != null)
 			{
 				foreach (InventoryItem item in weapons)
-					if (item != null)
-						weaponSpeed += item.SPD_ABS;
-					else
 				{
-					weaponSpeed += 34;
+					if (item != null)
+					{
+						weaponSpeed += item.SPD_ABS;
+					}
+					else
+					{
+						weaponSpeed += 34;
+					}
 				}
+
 				weaponSpeed = (weapons.Length > 0) ? weaponSpeed / weapons.Length : 34.0;
 			}
 			else
@@ -280,8 +285,28 @@ namespace DOL.GS
 			}
 
 			double speed = 100 * weaponSpeed * (1.0 - (GetModified(eProperty.Quickness) - 60) / 500.0);
-			return (int)(speed * GetModified(eProperty.MeleeSpeed) * 0.01);
+			return (int)Math.Max(500.0, (speed * (double)GetModified(eProperty.MeleeSpeed) * 0.01)); // no bonus is 100%, opposite how players work
 		}
+
+		/// <summary>
+		/// Calculate how fast this pet can cast a given spell
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public override int CalculateCastingTime(SpellLine line, Spell spell)
+		{
+			int ticks = spell.CastTime;
+
+			double percent = DexterityCastTimeReduction;
+			percent -= GetModified(eProperty.CastingSpeed) * .01;
+
+			ticks = (int)(ticks * Math.Max(CastingSpeedReductionCap, percent));
+			if (ticks < MinimumCastingSpeed)
+				ticks = MinimumCastingSpeed;
+
+			return ticks;
+		}
+
 
 		/// <summary>
 		/// Whether or not pet can use left hand weapon.
