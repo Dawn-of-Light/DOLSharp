@@ -15904,6 +15904,20 @@ namespace DOL.GS
 			return true;
 		}
 
+
+		/// <summary>
+		/// Player is delving a spell
+		/// </summary>
+		/// <param name="output"></param>
+		/// <param name="spell"></param>
+		/// <param name="spellLine"></param>
+		/// <returns>false if not handled here, use default delve</returns>
+		public virtual bool DelveSpell(IList<string> output, Spell spell, SpellLine spellLine)
+		{
+			return false;
+		}
+
+
 		/// <summary>
 		/// Delve a weapon style for this player
 		/// </summary>

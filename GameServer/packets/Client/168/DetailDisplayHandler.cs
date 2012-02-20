@@ -971,8 +971,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Player.DelveWeaponStyle(objectInfo, style);
 		}
 
+		/// <summary>
+		/// Write a formatted description of a spell
+		/// </summary>
+		/// <param name="output"></param>
+		/// <param name="spell"></param>
+		/// <param name="spellLine"></param>
+		/// <param name="client"></param>
 		public void WriteSpellInfo(IList<string> output, Spell spell, SpellLine spellLine, GameClient client)
 		{
+			if (client == null || client.Player == null)
+				return;
+
+			// check to see if player class handles delve
+			if (client.Player.DelveSpell(output, spell, spellLine))
+				return;
+
 			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, spellLine);
 			if (spellHandler == null)
 			{
@@ -998,6 +1012,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				output.Add("--- Spell Technical Information ---");
 				output.Add(" ");
 				output.Add("Line: " + (spellHandler == null ? spellLine.KeyName : spellHandler.SpellLine.Name));
+				output.Add("Type: " + spell.SpellType);
+				output.Add(" ");
 				output.Add("SpellID: " + spell.ID);
 				output.Add("Icon: " + spell.Icon);
 				output.Add("Type: " + spell.SpellType);
