@@ -11642,12 +11642,62 @@ namespace DOL.GS
 		public virtual void RefreshItemBonuses()
 		{
 			m_itemBonus = new PropertyIndexer();
+            string slotToLoad = "";
+            switch (VisibleActiveWeaponSlots)
+            {
+                case 16: slotToLoad = "rightandleftHandSlot"; break;
+                case 18: slotToLoad = "leftandtwoHandSlot"; break;
+                case 31: slotToLoad = "leftHandSlot"; break;
+                case 34: slotToLoad = "twoHandSlot"; break;
+                case 51: slotToLoad = "distanceSlot"; break;
+                case 240: slotToLoad = "righttHandSlot"; break;
+                case 242: slotToLoad = "twoHandSlot"; break;
+                default: break;
+            }
 
-			foreach (InventoryItem item in Inventory.EquippedItems)
-			{
-				if (item == null)
-					continue;
+            //log.Debug("VisibleActiveWeaponSlots= " + VisibleActiveWeaponSlots);
+            foreach (InventoryItem item in Inventory.EquippedItems)
+            {
+                if (item == null)
+                    continue;
+                // skip weapons. only active weapons should fire equip event, done in player.SwitchWeapon
+                bool add = true;
+                if (slotToLoad != "")
+                {
+                    switch (item.SlotPosition)
+                    {
 
+                        case Slot.TWOHAND:
+                            if (slotToLoad.Contains("twoHandSlot") == false)
+                            {
+                                add = false;
+                            }
+                            break;
+
+                        case Slot.RIGHTHAND:
+                            if (slotToLoad.Contains("right") == false)
+                            {
+                                add = false;
+                            }
+                            break;
+                        case Slot.SHIELD:
+                        case Slot.LEFTHAND:
+                            if (slotToLoad.Contains("left") == false)
+                            {
+                                add = false;
+                            }
+                            break;
+                        case Slot.RANGED:
+                            if (slotToLoad != "distanceSlot")
+                            {
+                                add = false;
+                            }
+                            break;
+                        default: break;
+                    }
+                }
+
+                if (!add) continue;
 				if (item is IGameInventoryItem)
 				{
 					(item as IGameInventoryItem).CheckValid(this);
