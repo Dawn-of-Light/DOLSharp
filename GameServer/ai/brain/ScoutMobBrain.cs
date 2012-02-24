@@ -74,7 +74,14 @@ namespace DOL.AI.Brain
 
 			if (!IsScouting)
 			{
-				if (!IsGettingHelp) base.CheckPlayerAggro();
+				if (!IsGettingHelp)
+				{
+					base.CheckPlayerAggro();
+					m_targetList.Clear();
+					foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
+						if (!m_targetList.Contains(player))
+						IsScouting=true;//if there is no player in AggroRange Start Scouting
+				}	
 				return;
 			}
 
