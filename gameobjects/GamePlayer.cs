@@ -12109,11 +12109,15 @@ namespace DOL.GS
 						{
 							long moneyToGuild = moneyObject.TotalCopper * Guild.GetGuildDuesPercent() / 100;
 							if (Guild.GetGuildDuesPercent() != 100)
+							{
 								AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
+							}
 							else
+							{
 								AddMoney(moneyObject.TotalCopper);
+							}
 							InventoryLogging.LogInventoryAction("(ground)", this, eInventoryActionType.Loot, moneyObject.TotalCopper);
-							Guild.SetGuildBank(Client.Player, moneyToGuild);
+							Guild.SetGuildBank(this, moneyToGuild);
 						}
 						else
 						{
