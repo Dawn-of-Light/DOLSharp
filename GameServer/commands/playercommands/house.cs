@@ -103,17 +103,24 @@ namespace DOL.GS.Commands
 					DisplayMessage(client, "You do not own a house.");
 				}
 
-				// now check for a guild house and update emblem if needed
+				// now check for a guild house and update emblem if needed, then force update
 
 				if (client.Player.Guild != null && client.Player.Guild.GuildOwnsHouse && client.Player.Guild.GuildHouseNumber > 0)
 				{
 					House guildHouse = HouseMgr.GetHouse(client.Player.Guild.GuildHouseNumber);
 
-					if (guildHouse != null && guildHouse.Emblem != client.Player.Guild.Emblem)
+					if (guildHouse != null)
 					{
-						guildHouse.Emblem = client.Player.Guild.Emblem;
-						guildHouse.SaveIntoDatabase();
-						guildHouse.SendUpdate();
+						if (guildHouse.Emblem != client.Player.Guild.Emblem)
+						{
+							guildHouse.Emblem = client.Player.Guild.Emblem;
+							guildHouse.SaveIntoDatabase();
+							guildHouse.SendUpdate(); // forces refresh
+						}
+						else if (guildHouse.RegionID == client.Player.CurrentRegionID)
+						{
+							guildHouse.SendUpdate(); // forces refresh
+						}
 					}
 				}
 			}
