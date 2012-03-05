@@ -367,6 +367,7 @@ namespace DOL.Database
 			m_poisonMaxCharges = template.PoisonMaxCharges ;
 			m_poisonSpellID = template.PoisonSpellID;
 			m_experience = template.Experience;
+			m_ownerLot = template.OwnerLot;
 		}
 
 		public virtual void SetCooldown()
