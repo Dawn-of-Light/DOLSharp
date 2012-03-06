@@ -109,6 +109,7 @@
     </Compile>
     <Compile Include="behaviour\examples\TestBehaviour.cs" />
     <Compile Include="commands\serverinfo.cs" />
+    <Compile Include="commands\SwitchCommandHandler.cs" />
     <Compile Include="commands\version.cs" />
     <Compile Include="customnpc\RegionTestNpc.cs" />
     <Compile Include="customnpc\TownCrier.cs">
