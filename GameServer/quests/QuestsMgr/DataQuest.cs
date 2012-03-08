@@ -1327,6 +1327,18 @@ namespace DOL.GS.Quests
 
 				if (ExecuteCustomQuestStep(QuestPlayer, Step, eStepCheckType.Step))
 				{
+					if (RewardXP > 0 && m_questPlayer.GainXP == false)
+					{
+						QuestPlayer.Out.SendMessage("Your XP is turned off, you must turn it on to complete this quest step!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+						return false;
+					}
+
+					if (RewardRP > 0 && m_questPlayer.GainRP == false)
+					{
+						QuestPlayer.Out.SendMessage("Your RP is turned off, you must turn it on to complete this quest step!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+						return false;
+					}
+
 					advance = true;
 					List<string> stepTemplates = new List<string>();
 
@@ -1389,25 +1401,25 @@ namespace DOL.GS.Quests
 				{
 					// Since we can advance first give any rewards for the current step
 
+					if (RewardXP > 0)
+					{
+						m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, RewardXP);
+					}
+
+					if (RewardRP > 0)
+					{
+						m_questPlayer.GainRealmPoints(RewardRP);
+					}
+					
 					if (RewardMoney > 0)
 					{
 						m_questPlayer.AddMoney(RewardMoney, "You are awarded {0}!");
                         InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, RewardMoney);
 					}
 
-					if (RewardXP > 0)
-					{
-						m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, RewardXP);
-					}
-					
 					if (RewardCLXP > 0)
 					{
 						m_questPlayer.GainChampionExperience(RewardCLXP, GameLiving.eXPSource.Quest);
-					}
-					
-					if (RewardRP > 0)
-					{
-						m_questPlayer.GainRealmPoints(RewardRP);
 					}
 					
 					if (RewardBP > 0)
@@ -2312,6 +2324,49 @@ namespace DOL.GS.Quests
 			{
 				if (m_questPlayer.Inventory.IsSlotsFree(m_finalRewards.Count + m_optionalRewardChoice.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
+					long rewardXP = 0;
+					long rewardRP = 0;
+
+					if (m_rewardXPs.Count > 0)
+					{
+						rewardXP = m_rewardXPs[lastStep - 1];
+					}
+
+					if (m_rewardRPs.Count > 0)
+					{
+						rewardRP = m_rewardRPs[lastStep - 1];
+					}
+
+					string xpError = "Your XP is turned off, you must turn it on to complete this quest!";
+					string rpError = "Your RP is turned off, you must turn it on to complete this quest!";
+
+					if (rewardXP > 0)
+					{
+						if (m_questPlayer.GainXP == false)
+						{
+							QuestPlayer.Out.SendMessage(xpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+							return false;
+						}
+						else if (rewardRP > 0 && m_questPlayer.GainRP == false)
+						{
+							QuestPlayer.Out.SendMessage(rpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+							return false;
+						}
+
+						m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
+					}
+
+					if (rewardRP > 0)
+					{
+						if (m_questPlayer.GainRP == false)
+						{
+							QuestPlayer.Out.SendMessage(rpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+							return false;
+						}
+
+						m_questPlayer.GainRealmPoints(rewardRP);
+					}
+
 					foreach (ItemTemplate item in m_finalRewards)
 					{
 						if (item != null)
@@ -2328,30 +2383,12 @@ namespace DOL.GS.Quests
 						}
 					}
 
-					if (m_rewardXPs.Count > 0)
-					{
-						long rewardXP = m_rewardXPs[lastStep - 1];
-						if (rewardXP > 0)
-						{
-							m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
-						}
-					}
-					
 					if (m_rewardCLXPs.Count > 0)
 					{
 						long rewardCLXP = m_rewardCLXPs[lastStep - 1];
 						if (rewardCLXP > 0)
 						{
 							m_questPlayer.GainChampionExperience(rewardCLXP, GameLiving.eXPSource.Quest);
-						}
-					}
-					
-					if (m_rewardRPs.Count > 0)
-					{
-						long rewardRP = m_rewardRPs[lastStep - 1];
-						if (rewardRP > 0)
-						{
-							m_questPlayer.GainRealmPoints(rewardRP);
 						}
 					}
 					
