@@ -113,7 +113,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (m_skin == (int)eComponentSkin.Wall)
+                if (m_skin == (int)eComponentSkin.Wall && !this.Keep.IsPortalKeep)
 					return true;
 				return false;
 			}
