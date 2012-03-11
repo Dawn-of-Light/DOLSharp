@@ -45,12 +45,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			if (client == null) return;
-			uint extraID = 0;
+			if (client == null || client.Player == null) 
+				return;
+
 			ushort objectType = packet.ReadShort();
+
+			uint extraID = 0;
 			if (client.Version >= GameClient.eClientVersion.Version186)
+			{
 				extraID = packet.ReadInt();
+			}
+
 			ushort objectID = packet.ReadShort();
+
 			string caption = "";
 			var objectInfo = new List<string>();
 
@@ -82,9 +89,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						if (objectType == 1)
 						{
-							invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+							// first check to see if this is a GameInventoryObject
+							if (client.Player.TargetObject is IGameInventoryObject)
+							{
+								(client.Player.TargetObject as IGameInventoryObject).GetClientInventory(client.Player).TryGetValue(objectID, out invItem);
+							}
+
 							if (invItem == null)
 							{
+								invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+							}
+
+							if (invItem == null)
+							{
+								// Old direct access method in cast the above fails.  Probably not used and may be removed.
 								if (client.Player.ActiveConMerchant != null)
 								{
 									GameConsignmentMerchant con = client.Player.ActiveConMerchant;
