@@ -294,7 +294,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Add an item to this object
 		/// </summary>
-		public virtual bool AddItem(GamePlayer player, InventoryItem item)
+		public virtual bool OnAddItem(GamePlayer player, InventoryItem item)
 		{
 			return false;
 		}
@@ -302,7 +302,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Remove an item from this object
 		/// </summary>
-		public virtual bool RemoveItem(GamePlayer player, InventoryItem item)
+		public virtual bool OnRemoveItem(GamePlayer player, InventoryItem item)
 		{
 			return false;
 		}
@@ -311,7 +311,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Not applicable for vaults
 		/// </summary>
-		public virtual bool OnAddItem(GamePlayer player, ushort clientSlot, uint price)
+		public virtual bool SetSellPrice(GamePlayer player, ushort clientSlot, uint price)
 		{
 			return false;
 		}

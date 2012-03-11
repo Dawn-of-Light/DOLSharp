@@ -67,20 +67,43 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((offer) ? (byte)0x02 : (byte)0x01); // Accept/Decline or Finish/Not Yet
 			pak.WriteByte(0x01); // Wrap
 			pak.WritePascalString(quest.Name);
+
 			if (quest.Summary.Length > 255)
-				pak.WritePascalString(quest.Summary.Substring(0,255));
+			{
+				pak.WritePascalString(quest.Summary.Substring(0, 255));
+			}
 			else
+			{
 				pak.WritePascalString(quest.Summary);
+			}
+
 			if (offer)
 			{
-				pak.WriteShort((ushort)quest.Story.Length);
-				pak.WriteStringBytes(quest.Story);
+				if (quest.Story.Length > 255)
+				{
+					pak.WriteShort(255);
+					pak.WriteStringBytes(quest.Story.Substring(0, 255));
+				}
+				else
+				{
+					pak.WriteShort((ushort)quest.Story.Length);
+					pak.WriteStringBytes(quest.Story);
+				}
 			}
 			else
 			{
-				pak.WriteShort((ushort)quest.Conclusion.Length);
-				pak.WriteStringBytes(quest.Conclusion);
+				if (quest.Conclusion.Length > 255)
+				{
+					pak.WriteShort(255);
+					pak.WriteStringBytes(quest.Conclusion.Substring(0, 255));
+				}
+				else
+				{
+					pak.WriteShort((ushort)quest.Conclusion.Length);
+					pak.WriteStringBytes(quest.Conclusion);
+				}
 			}
+
 			pak.WriteShort(QuestID);
 			pak.WriteByte((byte)quest.Goals.Count); // #goals count
 			foreach (RewardQuest.QuestGoal goal in quest.Goals)
