@@ -773,6 +773,7 @@ Scripts.Player.Guild.PlayerNotFound:			That player could not be found in the gam
 Scripts.Player.Guild.PromotedOther:			{0} has been promoted to {1}.	
 Scripts.Player.Guild.PromotedSelf:			You have been promoted to {0}.	
 Scripts.Player.Guild.PromoteHigherThanPlayer:		You can only promote to ranks below your own.	
+Scripts.Player.Guild.PromoteHaveToUseDemote:	You can't demote the GuildRank of this players with promote commands. Use /demote <ranklevel> players.
 Scripts.Player.Guild.Purged:				{0} has been purged.	
 Scripts.Player.Guild.RankACHearSet:			You have {0} the ACHear of the rank {1}.	
 Scripts.Player.Guild.RankACSpeakSet:			You have {0} the ACSpeak of the rank {1}.	
