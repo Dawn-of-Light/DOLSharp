@@ -34,6 +34,7 @@ namespace DOL.GS.PacketHandler
 
         /// <summary>
         /// Constructs a new PacketLib for Client Version 1.110
+		/// --- Untested ---
         /// </summary>
         /// <param name="client">the gameclient this lib is associated with</param>
         public PacketLib1110(GameClient client)
@@ -41,5 +42,7 @@ namespace DOL.GS.PacketHandler
         {
 
         }
+
+
     }
 }

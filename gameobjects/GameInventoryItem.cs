@@ -1179,6 +1179,13 @@ namespace DOL.GS
 			delve.Add("         Name: " + Name);
 			delve.Add("    ClassType: " + this.GetType().FullName);
 			delve.Add("");
+			delve.Add(" SlotPosition: " + SlotPosition);
+			if (OwnerLot != 0 || SellPrice != 0)
+			{
+				delve.Add("    Owner Lot: " + OwnerLot);
+				delve.Add("   Sell Price: " + SellPrice);
+			}
+			delve.Add("");
 			delve.Add("        Level: " + Level);
 			delve.Add("       Object: " + GlobalConstants.ObjectTypeToName(Object_Type) + " (" + Object_Type + ")");
 			delve.Add("         Type: " + GlobalConstants.SlotToName(Item_Type) + " (" + Item_Type + ")");
@@ -1233,6 +1240,14 @@ namespace DOL.GS
 				delve.Add("");
 				delve.Add("   Instrument: " + GlobalConstants.InstrumentTypeToName(DPS_AF));
 			}
+
+			if (OwnerLot != 0)
+			{
+				delve.Add("");
+				delve.Add("   Owner Lot#: " + OwnerLot);
+				delve.Add("   Sell Price: " + SellPrice);
+			}
+
 			delve.Add("");
 			delve.Add("   Value/Price: " + Money.GetShortString(Price) + " / " + Money.GetShortString((long)(Price * (long)ServerProperties.Properties.ITEM_SELL_RATIO * .01)));
 			delve.Add("Count/MaxCount: " + Count + " / " + MaxCount);

@@ -402,12 +402,12 @@ namespace DOL.GS.Housing
 				player.LeaveHouse();
 			}
 
-			// if there is a consignment merchant, we have to readd him since we changed the house
-			var merchant = GameServer.Database.SelectObject<DBHouseMerchant>("HouseNumber = '" + house.HouseNumber + "'");
-			int oldMerchantMoney = 0;
+			// if there is a consignment merchant, we have to re-initialize since we changed the house
+			var merchant = GameServer.Database.SelectObject<HouseConsignmentMerchant>("HouseNumber = '" + house.HouseNumber + "'");
+			long oldMerchantMoney = 0;
 			if (merchant != null)
 			{
-				oldMerchantMoney = merchant.Quantity;
+				oldMerchantMoney = merchant.Money;
 			}
 
 			RemoveHouseItems(house);
@@ -477,7 +477,7 @@ namespace DOL.GS.Housing
 
 		public static void RemoveHouseItems(House house)
 		{
-			house.RemoveConsignment();
+			house.RemoveConsignmentMerchant();
 
 			IList<DBHouseIndoorItem> iobjs = GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = " + house.HouseNumber);
 			foreach (DBHouseIndoorItem item in iobjs)
@@ -662,20 +662,48 @@ namespace DOL.GS.Housing
 			return null;
 		}
 
-		public static void HouseTransferToGuild(GamePlayer plr)
+		/// <summary>
+		/// Transfer a house to a guild house
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="house"></param>
+		/// <returns></returns>
+		public static bool HouseTransferToGuild(GamePlayer player, House house)
 		{
 			// player must be in a guild
-			if (plr.Guild == null)
-				return;
+			if (player.Guild == null)
+				return false;
 
 			// player's guild can't already have a guild house
-			if (plr.Guild.GuildOwnsHouse)
-				return;
+			if (player.Guild.GuildOwnsHouse)
+				return false;
+
+			// player needs to own the house to be able to xfer it
+			if (house.HasOwnerPermissions(player) == false)
+			{
+				ChatUtil.SendSystemMessage(player, "You do not own this house!");
+				return false;
+			}
+
+			// player needs to be a GM in the guild to xfer his personal house to the guild
+			if (player.Guild.HasRank(player, Guild.eRank.Leader) == false)
+			{
+				ChatUtil.SendSystemMessage(player, "You are not the leader of a guild!");
+				return false;
+			}
+
+			// Demand any consignment merchant inventory is removed before allowing a transfer
+			var consignmentMerchant = house.ConsignmentMerchant;
+			if (consignmentMerchant != null && (consignmentMerchant.DBItems().Count > 0 || consignmentMerchant.TotalMoney > 0))
+			{
+				ChatUtil.SendSystemMessage(player, "All items and money must be removed from your consigmment merchant in order to transfer this house!");
+				return false;
+			}
 
 			// send house xfer prompt to player
-			plr.Out.SendCustomDialog(LanguageMgr.GetTranslation(plr.Client, "Scripts.Player.Housing.TransferToGuild", plr.Guild.Name), MakeGuildLot);
+			player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.TransferToGuild", player.Guild.Name), MakeGuildLot);
 
-			return;
+			return true;
 		}
 
 		private static void MakeGuildLot(GamePlayer player, byte response)
