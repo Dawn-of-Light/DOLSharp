@@ -709,7 +709,7 @@ namespace DOL.GS.PacketHandler
 		void SendRentReminder(House house);
 		void SendMarketExplorerWindow(IList<InventoryItem> items, byte page, byte maxpage);
 		void SendMarketExplorerWindow();
-		void SendConsignmentMerchantMoney(long copper);
+		void SendConsignmentMerchantMoney(long money);
 		void SendHouseUsersPermissions(House house);
 
 		void SendStarterHelp();

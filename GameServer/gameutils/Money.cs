@@ -33,29 +33,32 @@ namespace DOL.GS
 		{
 		}
 
+		// 11111111111
+		// 550000000   // 11111111111
+
 		public static int GetMithril(long money)
 		{
-			return (int) (money/100L/100L/1000L/1000L);
+			return (int)(money / 100L / 100L / 1000L / 1000L % 1000L);
 		}
 
 		public static int GetPlatinum(long money)
 		{
-			return (int) (money/100L/100L/1000L%1000L);
+			return (int)(money / 100L / 100L / 1000L % 1000L);
 		}
 
 		public static int GetGold(long money)
 		{
-			return (int) (money/100L/100L%1000L);
+			return (int)(money / 100L / 100L % 1000L);
 		}
 
 		public static int GetSilver(long money)
 		{
-			return (int) (money/100L%100L);
+			return (int)(money / 100L % 100L);
 		}
 
 		public static int GetCopper(long money)
 		{
-			return (int) (money%100L);
+			return (int)(money % 100L);
 		}
 
 		public static long GetMoney(int mithril, int platinum, int gold, int silver, int copper)
@@ -176,17 +179,17 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static long SetAutoPrice(int level, int quality)
 		{
-			int levelmod = level*level*level;
+			int levelmod = level * level * level;
 
-			double dCopper = (levelmod/0.6); // level 50, 100 quality; worth aprox 20 gold, sells for 10 gold
-			double dQuality = quality/100.0;
+			double dCopper = (levelmod / 0.6); // level 50, 100 quality; worth aprox 20 gold, sells for 10 gold
+			double dQuality = quality / 100.0;
 
-			dCopper = dCopper*dQuality*dQuality*dQuality*dQuality*dQuality*dQuality;
+			dCopper = dCopper * dQuality * dQuality * dQuality * dQuality * dQuality * dQuality;
 
 			if (dCopper < 2)
 				dCopper = 2;
 
-			return (long) dCopper;
+			return (long)dCopper;
 		}
 	}
 }

@@ -1310,6 +1310,35 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("housing", "consignment_use_bp", "If true the housing consignment merchants use BP instead of money.", false)]
 		public static bool CONSIGNMENT_USE_BP;
 
+		/// <summary>
+		/// Enable consignment merchants and market cache
+		/// </summary>
+		[ServerProperty("housing", "market_enabled", "If true the market explorers are enabled and the cache is initialized on server start.", true)]
+		public static bool MARKET_ENABLED;
+
+		/// <summary>
+		/// Enable consignment merchants and market cache
+		/// </summary>
+		[ServerProperty("housing", "market_enable", "If true the market explorers are enabled and the cache is initialized on server start.", true)]
+		public static bool MARKET_ENABLE;
+
+		/// <summary>
+		/// Enable logging of all market activity
+		/// </summary>
+		[ServerProperty("housing", "market_enable_log", "Enable debug logging of all market activity", true)]
+		public static bool MARKET_ENABLE_LOG;
+
+		/// <summary>
+		/// What is the additional fee (%) charged to players using the market explorer?
+		/// </summary>
+		[ServerProperty("housing", "market_fee_percent", "What is the additional fee (%) charged to players using the market explorer?", 20)]
+		public static int MARKET_FEE_PERCENT;
+
+		/// <summary>
+		/// How many items can the market search return?
+		/// </summary>
+		[ServerProperty("housing", "market_search_limit", "How many items can the market search return?", 300)]
+		public static int MARKET_SEARCH_LIMIT;
 
 		#endregion
 

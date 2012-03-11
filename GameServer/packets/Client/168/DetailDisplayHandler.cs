@@ -88,14 +88,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (client.Player.ActiveConMerchant != null)
 								{
 									GameConsignmentMerchant con = client.Player.ActiveConMerchant;
-									invItem = con.ConInventory[objectID];
+									invItem = con.GetClientInventory(client.Player)[objectID];
 									if (invItem == null)
 										return;
 								}
 								else if (client.Player.ActiveVault != null)
 								{
 									GameVault vault = client.Player.ActiveVault;
-									invItem = vault.GetVaultInventory(client.Player)[objectID];
+									invItem = vault.GetClientInventory(client.Player)[objectID];
 									if (invItem == null)
 										return;
 								}
@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else if (objectType == 10)
 						{
-							List<InventoryItem> list = client.Player.TempProperties.getProperty<object>(DOL.GS.PacketHandler.Client.v168.PlayerMarketSearchRequestHandler.EXPLORER_LIST, null) as List<InventoryItem>;
+							List<InventoryItem> list = client.Player.TempProperties.getProperty<object>(MarketExplorer.EXPLORER_ITEM_LIST, null) as List<InventoryItem>;
 							if (list == null)
 							{
 								list = client.Player.TempProperties.getProperty<object>("TempSearchKey", null) as List<InventoryItem>;

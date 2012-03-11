@@ -3515,102 +3515,97 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMarketExplorerWindow(IList<InventoryItem> items, byte page, byte maxpage)
 		{
+			if (m_gameClient == null || m_gameClient.Player == null)
+				return;
+
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MarketExplorerWindow)))
 			{
-				pak.WriteByte((byte) (page < items.Count/20 ? 20 : items.Count%20));
+				pak.WriteByte((byte)items.Count);
 				pak.WriteByte(page);
 				pak.WriteByte(maxpage);
 				pak.WriteByte(0);
-
-				InventoryItem item;
-
-				int lastindex = 19 + (page*20);
-				for (int index = 0 + (page*20); index < lastindex; index++)
+				foreach (InventoryItem item in items)
 				{
-					if (items[index] != null)
+					pak.WriteByte((byte)items.IndexOf(item));
+					pak.WriteByte((byte)item.Level);
+					int value1; // some object types use this field to display count
+					int value2; // some object types use this field to display count
+					switch (item.Object_Type)
 					{
-						item = items[index];
-						pak.WriteByte((byte) index);
-						pak.WriteByte((byte) item.Level);
-						int value1; // some object types use this field to display count
-						int value2; // some object types use this field to display count
-						switch (item.Object_Type)
-						{
-							case (int) eObjectType.Arrow:
-							case (int) eObjectType.Bolt:
-							case (int) eObjectType.Poison:
-							case (int) eObjectType.GenericItem:
-								value1 = item.PackSize;
-								value2 = item.SPD_ABS;
-								break;
-							case (int) eObjectType.Thrown:
-								value1 = item.DPS_AF;
-								value2 = item.PackSize;
-								break;
-							case (int) eObjectType.Instrument:
-								value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF); // 0x00 = Lute ; 0x01 = Drum ; 0x03 = Flute
-								value2 = 0;
-								break; // unused
-							case (int) eObjectType.Shield:
-								value1 = item.Type_Damage;
-								value2 = item.DPS_AF;
-								break;
-							case (int) eObjectType.GardenObject:
-							case (int) eObjectType.HouseWallObject:
-							case (int) eObjectType.HouseFloorObject:
-								value1 = 0;
-								value2 = item.SPD_ABS;
-								break;
-							default:
-								value1 = item.DPS_AF;
-								value2 = item.SPD_ABS;
-								break;
-						}
-						pak.WriteByte((byte) value1);
-						pak.WriteByte((byte) value2);
-						if (items[index].Object_Type == (int) eObjectType.GardenObject)
-							pak.WriteByte((byte) (item.DPS_AF));
-						else
-							pak.WriteByte((byte) (item.Hand << 6));
-						pak.WriteByte((byte) ((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
-						pak.WriteByte((byte) (m_gameClient.Player.HasAbilityToUseItem(item.Template) ? 0 : 1));
-						pak.WriteShort((ushort) (item.PackSize > 1 ? item.Weight*item.PackSize : item.Weight));
-						pak.WriteByte(item.ConditionPercent);
-						pak.WriteByte(item.DurabilityPercent);
-						pak.WriteByte((byte) item.Quality);
-						pak.WriteByte((byte) item.Bonus);
-						pak.WriteShort((ushort) item.Model);
-						if (item.Emblem != 0)
-							pak.WriteShort((ushort) item.Emblem);
-						else
-							pak.WriteShort((ushort) item.Color);
-						pak.WriteShort((byte) item.Effect);
-						pak.WriteShort(item.OwnerLot); //lot
-						pak.WriteInt((uint) item.SellPrice);
+						case (int)eObjectType.Arrow:
+						case (int)eObjectType.Bolt:
+						case (int)eObjectType.Poison:
+						case (int)eObjectType.GenericItem:
+							value1 = item.PackSize;
+							value2 = item.SPD_ABS; break;
+						case (int)eObjectType.Thrown:
+							value1 = item.DPS_AF;
+							value2 = item.PackSize; break;
+						case (int)eObjectType.Instrument:
+							value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF); // 0x00 = Lute ; 0x01 = Drum ; 0x03 = Flute
+							value2 = 0; break; // unused
+						case (int)eObjectType.Shield:
+							value1 = item.Type_Damage;
+							value2 = item.DPS_AF; break;
+						case (int)eObjectType.GardenObject:
+						case (int)eObjectType.HouseWallObject:
+						case (int)eObjectType.HouseFloorObject:
+							value1 = 0;
+							value2 = item.SPD_ABS; break;
+						default:
+							value1 = item.DPS_AF;
+							value2 = item.SPD_ABS; break;
+					}
+					pak.WriteByte((byte)value1);
+					pak.WriteByte((byte)value2);
+					if (item.Object_Type == (int)eObjectType.GardenObject)
+						pak.WriteByte((byte)(item.DPS_AF));
+					else
+						pak.WriteByte((byte)(item.Hand << 6));
+					pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
+					pak.WriteByte((byte)(m_gameClient.Player.HasAbilityToUseItem(item.Template) ? 0 : 1));
+					pak.WriteShort((ushort)(item.PackSize > 1 ? item.Weight * item.PackSize : item.Weight));
+					pak.WriteByte((byte)item.ConditionPercent);
+					pak.WriteByte((byte)item.DurabilityPercent);
+					pak.WriteByte((byte)item.Quality);
+					pak.WriteByte((byte)item.Bonus);
+					pak.WriteShort((ushort)item.Model);
+					if (item.Emblem != 0)
+						pak.WriteShort((ushort)item.Emblem);
+					else
+						pak.WriteShort((ushort)item.Color);
+					pak.WriteShort((byte)item.Effect);
+					pak.WriteShort(item.OwnerLot);//lot
+					pak.WriteInt((uint)item.SellPrice);
 
-						if (ConsignmentMoney.UseBP)
-						{
-							string bpPrice = "";
-							if (item.SellPrice > 0)
-								bpPrice = "[" + item.SellPrice + " BP";
-							if (item.PackSize > 1)
-								pak.WritePascalString(item.PackSize + " " + item.Name + bpPrice);
-							else
-								pak.WritePascalString(item.Name + bpPrice);
-						}
+					if (ServerProperties.Properties.CONSIGNMENT_USE_BP)
+					{
+						string bpPrice = "";
+						if (item.SellPrice > 0)
+							bpPrice = "[" + item.SellPrice.ToString() + " BP";
+
+						if (item.Count > 1)
+							pak.WritePascalString(item.Count + " " + item.Name);
+						else if (item.PackSize > 1)
+							pak.WritePascalString(item.PackSize + " " + item.Name + bpPrice);
 						else
-						{
-							if (item.PackSize > 1)
-								pak.WritePascalString(item.PackSize + " " + item.Name);
-							else
-								pak.WritePascalString(item.Name);
-						}
+							pak.WritePascalString(item.Name + bpPrice);
+					}
+					else
+					{
+						if (item.Count > 1)
+							pak.WritePascalString(item.Count + " " + item.Name);
+						else if (item.PackSize > 1)
+							pak.WritePascalString(item.PackSize + " " + item.Name);
+						else
+							pak.WritePascalString(item.Name);
 					}
 				}
 
 				SendTCP(pak);
 			}
 		}
+
 
 		public virtual void SendMasterLevelWindow(byte ml)
 		{
@@ -3658,15 +3653,18 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendConsignmentMerchantMoney(long copper)
+		public virtual void SendConsignmentMerchantMoney(long money)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ConsignmentMerchantMoney)))
 			{
-				pak.WriteByte((byte)Money.GetCopper(copper));
-				pak.WriteByte((byte)Money.GetSilver(copper));
-				pak.WriteShort((ushort)Money.GetGold(copper));
-				pak.WriteShort((ushort)Money.GetPlatinum(copper));
-				pak.WriteShort((ushort)Money.GetMithril(copper));
+				pak.WriteByte((byte)Money.GetCopper(money));
+				pak.WriteByte((byte)Money.GetSilver(money));
+				pak.WriteShort((ushort)Money.GetGold(money));
+
+				// Yes, these are sent in reverse order! - tolakram confirmed 1.98 - 1.109
+				pak.WriteShort((ushort)Money.GetMithril(money));
+				pak.WriteShort((ushort)Money.GetPlatinum(money));
+
 				SendTCP(pak);
 			}
 		}
@@ -3970,7 +3968,7 @@ namespace DOL.GS.PacketHandler
 							name = item.Count + " " + name;
 						if (item.SellPrice > 0)
 						{
-							if (ConsignmentMoney.UseBP)
+							if (ServerProperties.Properties.CONSIGNMENT_USE_BP)
 								name += "[" + item.SellPrice + " BP]";
 							else
 								name += "[" + Money.GetString(item.SellPrice) + "]";

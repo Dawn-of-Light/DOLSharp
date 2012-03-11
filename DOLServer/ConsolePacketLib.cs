@@ -232,7 +232,7 @@ namespace DOLGameServerConsole
 		public void SendXFireInfo(byte flag) { }
 		public void SendMarketExplorerWindow() { }
 		public void SendMarketExplorerWindow(IList<InventoryItem> items, byte page, byte maxpage) { }
-		public void SendConsignmentMerchantMoney(long copper) { }
+		public void SendConsignmentMerchantMoney(long money) { }
         public void SendMinotaurRelicMapRemove(byte id) { }
         public void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z) { }
         public virtual void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag) { }

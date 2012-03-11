@@ -129,6 +129,7 @@
     </Compile>
     <Compile Include="ILanguageTable.cs" />
     <Compile Include="Tables\CharacterXDataQuest.cs" />
+    <Compile Include="Tables\HousingConsignmentMerchant.cs" />
     <Compile Include="Tables\LanguageDoor.cs" />
     <Compile Include="Tables\LanguageGameObject.cs" />
     <Compile Include="Tables\LanguageItem.cs" />
@@ -179,7 +180,6 @@
     <Compile Include="Tables\Language.cs" />
     <Compile Include="Tables\PvPKillsLog.cs" />
     <Compile Include="Tables\HouseHookpointOffset.cs" />
-    <Compile Include="Tables\DBHouseMerchant.cs" />
     <Compile Include="Tables\InstanceXElement.cs" />
     <Compile Include="Tables\MinotaurRelic.cs" />
     <Compile Include="Tables\KeepCaptureLog.cs" />
