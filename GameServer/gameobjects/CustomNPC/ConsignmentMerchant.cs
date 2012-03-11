@@ -348,7 +348,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Add an item to this object
 		/// </summary>
-		public virtual bool AddItem(GamePlayer player, InventoryItem item)
+		public virtual bool OnAddItem(GamePlayer player, InventoryItem item)
 		{
 			if (ServerProperties.Properties.MARKET_ENABLE_LOG)
 			{
@@ -360,7 +360,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Remove an item from this object
 		/// </summary>
-		public virtual bool RemoveItem(GamePlayer player, InventoryItem item)
+		public virtual bool OnRemoveItem(GamePlayer player, InventoryItem item)
 		{
 			if (ServerProperties.Properties.MARKET_ENABLE_LOG)
 			{
@@ -379,7 +379,7 @@ namespace DOL.GS
 		/// <param name="clientSlot"></param>
 		/// <param name="price"></param>
 		/// <returns></returns>
-		public virtual bool OnAddItem(GamePlayer player, ushort clientSlot, uint price)
+		public virtual bool SetSellPrice(GamePlayer player, ushort clientSlot, uint price)
 		{
 			GameConsignmentMerchant conMerchant = player.ActiveConMerchant;
 			if (conMerchant == null)

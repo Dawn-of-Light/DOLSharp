@@ -72,15 +72,31 @@ namespace DOL.GS.PacketHandler
 
 			if (offer)
 			{
-				//String personalizedStory = BehaviourUtils.GetPersonalizedMessage(quest.Story, player);
-				pak.WriteShort((ushort)quest.Story.Length);
-				pak.WriteStringBytes(quest.Story);
+				if (quest.Story.Length > 255)
+				{
+					pak.WriteShort(255);
+					pak.WriteStringBytes(quest.Story.Substring(0, 255));
+				}
+				else
+				{
+					pak.WriteShort((ushort)quest.Story.Length);
+					pak.WriteStringBytes(quest.Story);
+				}
 			}
 			else
 			{
-				pak.WriteShort((ushort)quest.FinishText.Length);
-				pak.WriteStringBytes(quest.FinishText);
+				if (quest.FinishText.Length > 255)
+				{
+					pak.WriteShort(255);
+					pak.WriteStringBytes(quest.FinishText.Substring(0, 255));
+				}
+				else
+				{
+					pak.WriteShort((ushort)quest.FinishText.Length);
+					pak.WriteStringBytes(quest.FinishText);
+				}
 			}
+
 			pak.WriteShort(QuestID);
 			pak.WriteByte((byte)quest.StepTexts.Count); // #goals count
 			foreach (string text in quest.StepTexts)
@@ -124,17 +140,36 @@ namespace DOL.GS.PacketHandler
 				pak.WritePascalString(personalizedSummary.Substring(0, 255)); // Summary is max 255 bytes !
 			else
 				pak.WritePascalString(personalizedSummary);
+
 			if (offer)
 			{
 				String personalizedStory = BehaviourUtils.GetPersonalizedMessage(quest.Story, player);
-				pak.WriteShort((ushort)personalizedStory.Length);
-				pak.WriteStringBytes(personalizedStory);
+
+				if (personalizedStory.Length > 255)
+				{
+					pak.WriteShort(255);
+					pak.WriteStringBytes(personalizedStory.Substring(0, 255));
+				}
+				else
+				{
+					pak.WriteShort((ushort)personalizedStory.Length);
+					pak.WriteStringBytes(personalizedStory);
+				}
 			}
 			else
 			{
-				pak.WriteShort((ushort)quest.Conclusion.Length);
-				pak.WriteStringBytes(quest.Conclusion);
+				if (quest.Conclusion.Length > 255)
+				{
+					pak.WriteShort(255);
+					pak.WriteStringBytes(quest.Conclusion.Substring(0, 255));
+				}
+				else
+				{
+					pak.WriteShort((ushort)quest.Conclusion.Length);
+					pak.WriteStringBytes(quest.Conclusion);
+				}
 			}
+
 			pak.WriteShort(QuestID);
 			pak.WriteByte((byte)quest.Goals.Count); // #goals count
 			foreach (RewardQuest.QuestGoal goal in quest.Goals)

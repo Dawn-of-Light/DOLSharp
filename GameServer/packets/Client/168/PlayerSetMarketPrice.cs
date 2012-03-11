@@ -48,7 +48,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Player.TargetObject == null || (client.Player.TargetObject is IGameInventoryObject) == false)
 				return;
 
-			(client.Player.TargetObject as IGameInventoryObject).OnAddItem(client.Player, (ushort)slot, price);
+			(client.Player.TargetObject as IGameInventoryObject).SetSellPrice(client.Player, (ushort)slot, price);
         }
     }
 }
