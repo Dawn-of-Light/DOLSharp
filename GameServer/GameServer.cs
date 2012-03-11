@@ -675,6 +675,11 @@ namespace DOL.GS
 					return false;
 
 				//---------------------------------------------------------------
+				//Create the market cache
+				if (!InitComponent(MarketCache.Initialize(), "Market Cache"))
+					return false;
+
+				//---------------------------------------------------------------
 				//Load the region managers
 				if (!InitComponent(WorldMgr.StartRegionMgrs(), "Region Managers"))
 					return false;

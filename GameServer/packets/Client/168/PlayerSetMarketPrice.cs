@@ -31,36 +31,24 @@ namespace DOL.GS.PacketHandler.Client.v168
         /// Defines a logger for this class.
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        public const string NEW_PRICE = "newPrice";
+
         public void HandlePacket(GameClient client, GSPacketIn packet)
         {
-            if (client.Player == null)
+            if (client == null || client.Player == null)
                 return;
 
-            int slot = packet.ReadByte();
-            int unk1 = packet.ReadByte();
-            ushort unk2 = packet.ReadShort();
-            uint price = packet.ReadInt();
-            GameConsignmentMerchant con = client.Player.ActiveConMerchant;
-            House house = HouseMgr.GetHouse(con.HouseNumber);
-            if (house == null)
-                return;
-            if (!house.HasOwnerPermissions(client.Player))
-                return;
-            int dbSlot = (int)eInventorySlot.Consignment_First + slot;
-            InventoryItem item = GameServer.Database.SelectObject<InventoryItem>("OwnerID = '" + client.Player.DBCharacter.ObjectId + "' AND SlotPosition = '" + dbSlot.ToString() + "'");
-            if (item != null)
-            {
-                item.SellPrice = (int)price;
-                GameServer.Database.SaveObject(item);
-            }
-            else
-            {
-                client.Player.TempProperties.setProperty(NEW_PRICE, (int)price);
-            }
+			int slot = packet.ReadByte();
+			int unk1 = packet.ReadByte();
+			ushort unk2 = packet.ReadShort();
+			uint price = packet.ReadInt();
 
-            // another update required here,currently the player needs to reopen the window to see the price, thats why we msg him
-            client.Out.SendMessage("New price set! (open the merchant window again to see the price)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			// ChatUtil.SendDebugMessage(client.Player, "PlayerSetMarketPriceHandler");
+
+			// only IGameInventoryObjects can handle set price commands
+			if (client.Player.TargetObject == null || (client.Player.TargetObject is IGameInventoryObject) == false)
+				return;
+
+			(client.Player.TargetObject as IGameInventoryObject).OnAddItem(client.Player, (ushort)slot, price);
         }
     }
 }

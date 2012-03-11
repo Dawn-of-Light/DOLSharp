@@ -2020,6 +2020,19 @@ namespace DOL.GS.ServerRules
 
 			return hookpointObject;
 		}
+
+		/// <summary>
+		/// This creates the housing consignment merchant attached to a house.
+		/// You can override this to create your own consignment merchant derived from the standard merchant
+		/// </summary>
+		/// <returns></returns>
+		public virtual GameConsignmentMerchant CreateHousingConsignmentMerchant(House house)
+		{
+			var m = new GameConsignmentMerchant();
+			m.Name = "Consignment Merchant";
+			return m;
+		}
+
 		
 		#region MessageToLiving
 		/// <summary>
