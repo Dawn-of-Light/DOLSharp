@@ -169,6 +169,7 @@ Scripts.Player.Guild.PlayerNotFound:			Ce joueur n'est pas en ligne ou se trouve
 Scripts.Player.Guild.PromotedOther:			{0} est promu(e) au rang {1}.	
 Scripts.Player.Guild.PromotedSelf:			Vous êtes promu(e) au rang {0}.	
 Scripts.Player.Guild.PromoteHigherThanPlayer:		Vous pouvez seulement promouvoir un joueur à un rang inférieur au votre.	
+Scripts.Player.Guild.PromoteHaveToUseDemote:	Vous ne pouvez pas rétrograder le rank de ce joueur avec la commande promote. Utiliser /demote <rankLevel> player.
 Scripts.Player.Guild.Purged:				{0} est purgé.	
 Scripts.Player.Guild.RankACHearSet:			Vous avez {0} l'accés à ACHear au rang {1}.	
 Scripts.Player.Guild.RankACSpeakSet:			Vous avez {0} l'ACSpeak au rang {1}.	
