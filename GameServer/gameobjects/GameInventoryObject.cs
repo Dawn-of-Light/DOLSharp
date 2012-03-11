@@ -42,9 +42,9 @@ namespace DOL.GS
 		Dictionary<int, InventoryItem> GetClientInventory(GamePlayer player);
 		bool CanHandleMove(GamePlayer player, ushort fromClientSlot, ushort toClientSlot);
 		bool MoveItem(GamePlayer player, ushort fromClientSlot, ushort toClientSlot);
-		bool AddItem(GamePlayer player, InventoryItem item);
-		bool RemoveItem(GamePlayer player, InventoryItem item);
-		bool OnAddItem(GamePlayer player, ushort clientSlot, uint sellPrice);
+		bool OnAddItem(GamePlayer player, InventoryItem item);
+		bool OnRemoveItem(GamePlayer player, InventoryItem item);
+		bool SetSellPrice(GamePlayer player, ushort clientSlot, uint sellPrice);
 		bool SearchInventory(GamePlayer player, MarketSearch.SearchData searchData);
 	}
 
@@ -124,12 +124,16 @@ namespace DOL.GS
 					player.Inventory.RemoveTradeItem(toItem);
 					toItem.SlotPosition = fromItem.SlotPosition;
 					toItem.OwnerID = thisObject.GetOwner(player);
-					thisObject.AddItem(player, toItem);
+					thisObject.OnAddItem(player, toItem);
 					GameServer.Database.SaveObject(toItem);
 				}
 
-				thisObject.RemoveItem(player, fromItem);
-				player.Inventory.AddTradeItem(toClientSlot, fromItem);
+				// Create the GameInventoryItem from this InventoryItem.  This simply wraps the InventoryItem, 
+				// which is still updated when this item is moved around
+				InventoryItem objectItem = GameInventoryItem.Create<InventoryItem>(fromItem);
+
+				thisObject.OnRemoveItem(player, fromItem);
+				player.Inventory.AddTradeItem(toClientSlot, objectItem);
 
 				var updateItems = new Dictionary<int, InventoryItem>(1);
 				updateItems.Add((int)fromClientSlot, toItem);
@@ -163,13 +167,13 @@ namespace DOL.GS
 				if (inventory.ContainsKey((int)toClientSlot))
 				{
 					InventoryItem toItem = inventory[(int)toClientSlot];
-					thisObject.RemoveItem(player, toItem);
+					thisObject.OnRemoveItem(player, toItem);
 					player.Inventory.AddTradeItem(fromClientSlot, toItem);
 				}
 
 				fromItem.OwnerID = thisObject.GetOwner(player);
 				fromItem.SlotPosition = (int)(toClientSlot) - (int)(thisObject.FirstClientSlot) + thisObject.FirstDBSlot;
-				thisObject.AddItem(player, fromItem);
+				thisObject.OnAddItem(player, fromItem);
 				GameServer.Database.SaveObject(fromItem);
 
 				var updateItems = new Dictionary<int, InventoryItem>(1);
