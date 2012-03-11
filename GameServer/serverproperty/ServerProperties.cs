@@ -69,6 +69,13 @@ namespace DOL.GS.ServerProperties
 		public static bool IGNORE_TOO_LONG_OUTCOMING_PACKET;
 
 		/// <summary>
+		/// Maximum length for reward quest description text to prevent client crashes
+		/// </summary>
+		[ServerProperty("system", "max_quest_description_length", "Maximum length for reward quest description text to prevent client crashes.", 200)]
+		public static int MAX_REWARDQUEST_DESCRIPTION_LENGTH;
+
+
+		/// <summary>
 		/// If the server should only accept connections from staff
 		/// </summary>
 		[ServerProperty("system", "staff_login", "Staff Login Only - Edit this to set weather you wish staff to be the only ones allowed to Log in values True,False", false)]
