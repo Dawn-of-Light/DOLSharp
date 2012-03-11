@@ -162,7 +162,7 @@ namespace DOL.GS
 		#endregion
 
 
-		public override string GetOwner(GamePlayer player)
+		public override string GetOwner(GamePlayer player = null)
 		{
 			return CurrentHouse.DatabaseItem.OwnerID;
 		}
@@ -199,6 +199,7 @@ namespace DOL.GS
 		protected override void NotifyObservers(GamePlayer player, IDictionary<int, InventoryItem> updateItems)
 		{
 			var inactiveList = new List<string>();
+			bool hasUpdatedPlayer = false;
 
 			lock (_vaultLock)
 			{
@@ -219,12 +220,21 @@ namespace DOL.GS
 					}
 
 					observer.Client.Out.SendInventoryItemsUpdate(updateItems, PacketHandler.eInventoryWindowType.Update);
+
+					if (observer == player)
+						hasUpdatedPlayer = true;
 				}
 
 				// now remove all inactive observers.
 				foreach (string observerName in inactiveList)
 				{
 					_observers.Remove(observerName);
+				}
+
+				// The above code is suspect, it seems to work 80% of the time, so let's make sure we update the player doing the move - Tolakram
+				if (hasUpdatedPlayer == false)
+				{
+					player.Client.Out.SendInventoryItemsUpdate(updateItems, PacketHandler.eInventoryWindowType.Update);
 				}
 			}
 		}

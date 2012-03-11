@@ -381,7 +381,7 @@ namespace DOL.GS.PacketHandler
 
             if (item.SellPrice > 0)
             {
-                if (ConsignmentMoney.UseBP)
+				if (ServerProperties.Properties.CONSIGNMENT_USE_BP)
                     name += "[" + item.SellPrice.ToString() + " BP]";
                 else
                     name += "[" + Money.GetShortString(item.SellPrice) + "]";
