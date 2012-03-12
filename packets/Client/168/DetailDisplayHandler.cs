@@ -89,10 +89,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						if (objectType == 1)
 						{
-							// first check to see if this is a GameInventoryObject
-							if (client.Player.TargetObject is IGameInventoryObject)
+							IGameInventoryObject invObject = client.Player.TargetObject as IGameInventoryObject;
+							if (invObject != null && invObject.GetClientInventory(client.Player) != null)
 							{
-								(client.Player.TargetObject as IGameInventoryObject).GetClientInventory(client.Player).TryGetValue(objectID, out invItem);
+								invObject.GetClientInventory(client.Player).TryGetValue(objectID, out invItem);
 							}
 
 							if (invItem == null)
