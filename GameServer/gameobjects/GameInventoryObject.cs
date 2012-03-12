@@ -128,11 +128,12 @@ namespace DOL.GS
 					GameServer.Database.SaveObject(toItem);
 				}
 
+				thisObject.OnRemoveItem(player, fromItem);
+
 				// Create the GameInventoryItem from this InventoryItem.  This simply wraps the InventoryItem, 
 				// which is still updated when this item is moved around
 				InventoryItem objectItem = GameInventoryItem.Create<InventoryItem>(fromItem);
 
-				thisObject.OnRemoveItem(player, fromItem);
 				player.Inventory.AddTradeItem(toClientSlot, objectItem);
 
 				var updateItems = new Dictionary<int, InventoryItem>(1);
