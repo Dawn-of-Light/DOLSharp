@@ -125,7 +125,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					client.Player.TempProperties.setProperty(DeedWeak, new WeakRef(orgitem));
 					client.Player.TempProperties.setProperty(TargetHouse, house);
-					client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HouseRemoveOffer"), HouseRemovalDialogue);
+					client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "WARNING: You are about to delete this house and all indoor and outdoor items attached to it!"), HouseRemovalDialog);
 
 					return;
 				}
@@ -146,7 +146,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Player.TempProperties.setProperty(DeedWeak, new WeakRef(orgitem));
 					client.Player.TempProperties.setProperty(TargetHouse, house);
 					client.Player.Out.SendMessage("Warning:\n This will remove *all* items from your current house!", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-					client.Player.Out.SendCustomDialog("Are you sure you want to upgrade your House?", HouseUpgradeDialogue);
+					client.Player.Out.SendCustomDialog("Are you sure you want to upgrade your House?", HouseUpgradeDialog);
 
 					return;
 				}
@@ -917,7 +917,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		private static void HouseRemovalDialogue(GamePlayer player, byte response)
+		private static void HouseRemovalDialog(GamePlayer player, byte response)
 		{
 			if (response != 0x01)
 				return;
@@ -938,7 +938,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
 				|| item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
-				ChatUtil.SendSystemMessage(player, "You need a House removal Deed for this.");
+				ChatUtil.SendSystemMessage(player, "You need a House Removal Deed for this.");
 				return;
 			}
 
@@ -948,18 +948,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 			var consignmentMerchant = house.ConsignmentMerchant;
 			if (consignmentMerchant != null && (consignmentMerchant.DBItems(player).Count > 0 || consignmentMerchant.TotalMoney > 0))
 			{
-				ChatUtil.SendSystemMessage(player, "All items and money must be removed from your consigmment merchant in order to remove this house!");
+				ChatUtil.SendSystemMessage(player, "All items and money must be removed from your consignment merchant in order to remove this house!");
 				return;
 			}
 
 			player.Inventory.RemoveItem(item);
+			log.WarnFormat("HOUSING: {0}:{1} is removing house from lot {2} owned by {3}", player.Name, player.Client.Account.Name, house.HouseNumber, house.OwnerID);
 			InventoryLogging.LogInventoryAction(player, "(HOUSE;" + house.HouseNumber + ")", eInventoryActionType.Other, item.Template, item.Count);
 			HouseMgr.RemoveHouse(house);
 
-			ChatUtil.SendSystemMessage(player, "Scripts.Player.Housing.HouseRemoved");
+			ChatUtil.SendSystemMessage(player, "Your house has been removed!");
 		}
 
-		private static void HouseUpgradeDialogue(GamePlayer player, byte response)
+		private static void HouseUpgradeDialog(GamePlayer player, byte response)
 		{
 			if (response != 0x01)
 				return;
