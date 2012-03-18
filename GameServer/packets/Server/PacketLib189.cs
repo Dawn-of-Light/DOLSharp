@@ -147,7 +147,7 @@ namespace DOL.GS.PacketHandler
 			//ChatUtil.SendDebugMessage(m_gameClient, string.Format("SendItemsPartialUpdate: windowType: {0}, {1}", windowType, items == null ? "nothing" : items[0].Name));
 
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
-			GameVault houseVault = m_gameClient.Player.ActiveVault;
+			GameVault houseVault = m_gameClient.Player.ActiveInventoryObject as GameVault;
 			pak.WriteByte((byte)(items.Count));
 			pak.WriteByte(0x00); // new in 189b+, show shield in left hand
 			pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
@@ -175,7 +175,7 @@ namespace DOL.GS.PacketHandler
 		protected override void SendInventorySlotsUpdateRange(ICollection<int> slots, eInventoryWindowType windowType)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
-			GameVault houseVault = m_gameClient.Player.ActiveVault;
+			GameVault houseVault = m_gameClient.Player.ActiveInventoryObject as GameVault;
 
 			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
 			pak.WriteByte(0); // CurrentSpeed & 0xFF (not used for player, only for NPC)
@@ -223,6 +223,9 @@ namespace DOL.GS.PacketHandler
 				pak.Fill(0x00, 19);
 				return;
 			}
+
+			// Create a GameInventoryItem so item will display correctly in inventory window
+			item = GameInventoryItem.Create<InventoryItem>(item);
 
 			pak.WriteByte((byte)item.Level);
 

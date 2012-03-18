@@ -236,13 +236,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 
-			//Do we want to move an item from inventory/vault/quiver into inventory/vault/quiver?
+			// Now we check for activated InventoryObjects even if the player does not have one targeted
+
+			if (client.Player.ActiveInventoryObject != null && client.Player.ActiveInventoryObject.MoveItem(client.Player, fromClientSlot, toClientSlot))
+			{
+				// Object handled the move so stop processing
+				return;
+			}
+
+			//Do we want to move an item from immediate inventory to immediate inventory or drop on the ground
 			if (((fromClientSlot >= (ushort)eInventorySlot.Ground && fromClientSlot <= (ushort)eInventorySlot.LastBackpack)
 				|| (fromClientSlot >= (ushort)eInventorySlot.FirstVault && fromClientSlot <= (ushort)eInventorySlot.LastVault)
 				|| (fromClientSlot >= (ushort)eInventorySlot.FirstBagHorse && fromClientSlot <= (ushort)eInventorySlot.LastBagHorse))
 				&& ((toClientSlot >= (ushort)eInventorySlot.Ground && toClientSlot <= (ushort)eInventorySlot.LastBackpack)
 				|| (toClientSlot >= (ushort)eInventorySlot.FirstVault && toClientSlot <= (ushort)eInventorySlot.LastVault)
-				|| (toClientSlot >= (ushort)eInventorySlot.HousingInventory_First && toClientSlot <= (ushort)eInventorySlot.HousingInventory_Last)
 				|| (toClientSlot >= (ushort)eInventorySlot.FirstBagHorse && toClientSlot <= (ushort)eInventorySlot.LastBagHorse)))
 			{
 				//We want to drop the item

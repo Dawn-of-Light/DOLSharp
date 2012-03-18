@@ -40,7 +40,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                 return;
 
 			// active consignment merchant is null, return
-            GameConsignmentMerchant conMerchant = client.Player.ActiveConMerchant;
+            GameConsignmentMerchant conMerchant = client.Player.ActiveInventoryObject as GameConsignmentMerchant;
             if (conMerchant == null)
                 return;
 

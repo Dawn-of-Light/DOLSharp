@@ -239,7 +239,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool CanHandleMove(GamePlayer player, ushort fromClientSlot, ushort toClientSlot)
 		{
-			if (player == null || player.ActiveConMerchant == null)
+			if (player == null || player.ActiveInventoryObject != this)
 				return false;
 
 			return this.CanHandleRequest(player, fromClientSlot, toClientSlot);
@@ -381,7 +381,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool SetSellPrice(GamePlayer player, ushort clientSlot, uint price)
 		{
-			GameConsignmentMerchant conMerchant = player.ActiveConMerchant;
+			GameConsignmentMerchant conMerchant = player.ActiveInventoryObject as GameConsignmentMerchant;
 			if (conMerchant == null)
 			{
 				return false;
@@ -663,7 +663,7 @@ namespace DOL.GS
 
             foreach (GamePlayer observer in _observers.Values)
             {
-				if (observer.ActiveConMerchant != this)
+				if (observer.ActiveInventoryObject != this)
                 {
 					inactiveList.Add(observer.Name);
                     continue;
@@ -671,7 +671,7 @@ namespace DOL.GS
 
                 if ((observer.TargetObject is MarketExplorer) == false && observer.IsWithinRadius(this, WorldMgr.INTERACT_DISTANCE) == false)
                 {
-					observer.ActiveConMerchant = null;
+					observer.ActiveInventoryObject = null;
 					inactiveList.Add(observer.Name);
                     continue;
                 }
@@ -704,13 +704,15 @@ namespace DOL.GS
 
 			CheckInventory();
 
-            if (player.ActiveVault != null)
-            {
-                player.ActiveVault = null;
-            }
+			if (player.ActiveInventoryObject != null)
+			{
+				player.ActiveInventoryObject.RemoveObserver(player);
+				player.ActiveInventoryObject = null;
+			}
+
+			player.ActiveInventoryObject = this;
 
 			AddObserver(player);
-            player.ActiveConMerchant = this;
 
             House house = HouseMgr.GetHouse(CurrentRegionID, HouseNumber);
             if (house == null)

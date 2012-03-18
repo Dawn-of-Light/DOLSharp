@@ -33,6 +33,13 @@ namespace DOL.GS
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
+		/// This list holds all the players that are currently viewing
+		/// the vault; it is needed to update the contents of the vault
+		/// for any one observer if there is a change.
+		/// </summary>
+		protected readonly Dictionary<string, GamePlayer> _observers = new Dictionary<string, GamePlayer>();
+
+		/// <summary>
 		/// Number of items a single vault can hold.
 		/// </summary>
 		private const int VAULT_SIZE = 100;
@@ -159,12 +166,12 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (player.ActiveConMerchant != null)
+			if (player.ActiveInventoryObject != null)
 			{
-				player.ActiveConMerchant = null;
+				player.ActiveInventoryObject.RemoveObserver(player);
 			}
 
-			player.ActiveVault = this;
+			player.ActiveInventoryObject = this;
 			player.Out.SendInventoryItemsUpdate(GetClientInventory(player), eInventoryWindowType.HouseVault);
 
 			return true;
@@ -188,7 +195,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool CanHandleMove(GamePlayer player, ushort fromSlot, ushort toSlot)
 		{
-			if (player == null || player.ActiveVault == null)
+			if (player == null || player.ActiveInventoryObject != this)
 				return false;
 
 			bool canHandle = false;
@@ -226,7 +233,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			GameVault gameVault = player.ActiveVault;
+			GameVault gameVault = player.ActiveInventoryObject as GameVault;
 			if (gameVault == null)
 			{
 				player.Out.SendMessage("You are not actively viewing a vault!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -355,6 +362,22 @@ namespace DOL.GS
 		public virtual bool CanRemoveItems(GamePlayer player)
 		{
 			return true;
+		}
+
+		public virtual void AddObserver(GamePlayer player)
+		{
+			if (_observers.ContainsKey(player.Name) == false)
+			{
+				_observers.Add(player.Name, player);
+			}
+		}
+
+		public virtual void RemoveObserver(GamePlayer player)
+		{
+			if (_observers.ContainsKey(player.Name))
+			{
+				_observers.Remove(player.Name);
+			}
 		}
 	}
 }
