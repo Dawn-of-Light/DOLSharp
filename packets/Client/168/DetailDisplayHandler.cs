@@ -90,38 +90,33 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (objectType == 1)
 						{
 							IGameInventoryObject invObject = client.Player.TargetObject as IGameInventoryObject;
+
+							// First try target object, this allows for InventoryObjects to use Immediate Windows like Player Vault
 							if (invObject != null && invObject.GetClientInventory(client.Player) != null)
 							{
 								invObject.GetClientInventory(client.Player).TryGetValue(objectID, out invItem);
 							}
 
+							// next try direct inventory access
 							if (invItem == null)
 							{
 								invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 							}
 
+							// finally try active inventory object
 							if (invItem == null)
 							{
-								// Old direct access method in cast the above fails.  Probably not used and may be removed.
-								if (client.Player.ActiveConMerchant != null)
+								if (client.Player.ActiveInventoryObject != null)
 								{
-									GameConsignmentMerchant con = client.Player.ActiveConMerchant;
-									invItem = con.GetClientInventory(client.Player)[objectID];
-									if (invItem == null)
-										return;
-								}
-								else if (client.Player.ActiveVault != null)
-								{
-									GameVault vault = client.Player.ActiveVault;
-									invItem = vault.GetClientInventory(client.Player)[objectID];
-									if (invItem == null)
-										return;
-								}
-								else
-								{
-									return;
+									invObject = client.Player.ActiveInventoryObject;
+									invObject.GetClientInventory(client.Player).TryGetValue(objectID, out invItem);
 								}
 							}
+								
+							// Failed to get any inventor
+							if (invItem == null)
+								return;
+
 						}
 						else if (objectType == 10)
 						{

@@ -1077,11 +1077,11 @@ namespace DOL.GS
 		/// Check if this region is a capital city
 		/// </summary>
 		/// <returns>True, if region is a capital city, else false</returns>
-		public bool IsCapitalCity
+		public virtual bool IsCapitalCity
 		{
 			get
 			{
-				switch (this.ID)
+				switch (this.Skin)
 				{
 						case 10: return true; // Camelot City
 						case 101: return true; // Jordheim
@@ -1095,11 +1095,11 @@ namespace DOL.GS
 		/// Check if this region is a housing zone
 		/// </summary>
 		/// <returns>True, if region is a housing zone, else false</returns>
-		public bool IsHousing
+		public virtual bool IsHousing
 		{
 			get
 			{
-				switch (this.ID)
+				switch (this.Skin) // use the skin of the region
 				{
 						case 2: return true; 	// Housing alb
 						case 102: return true; 	// Housing mid

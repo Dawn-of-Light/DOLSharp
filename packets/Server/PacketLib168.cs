@@ -3134,11 +3134,15 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendExitHouse(House house, ushort unknown = 0)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseExit)))
+			// do not send anything if client is leaving house due to linkdeath
+			if (m_gameClient != null && m_gameClient.Player != null && m_gameClient.ClientState != GameClient.eClientState.Linkdead)
 			{
-				pak.WriteShort((ushort) house.HouseNumber);
-				pak.WriteShort(unknown);
-				SendTCP(pak);
+				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseExit)))
+				{
+					pak.WriteShort((ushort)house.HouseNumber);
+					pak.WriteShort(unknown);
+					SendTCP(pak);
+				}
 			}
 		}
 

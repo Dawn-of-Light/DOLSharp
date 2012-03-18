@@ -46,6 +46,8 @@ namespace DOL.GS
 		bool OnRemoveItem(GamePlayer player, InventoryItem item);
 		bool SetSellPrice(GamePlayer player, ushort clientSlot, uint sellPrice);
 		bool SearchInventory(GamePlayer player, MarketSearch.SearchData searchData);
+		void AddObserver(GamePlayer player);
+		void RemoveObserver(GamePlayer player);
 	}
 
 	/// <summary>
