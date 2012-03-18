@@ -483,6 +483,9 @@ namespace DOL.GS.ServerRules
 			if (player.Client.Account.PrivLevel > 1)
 				return false;
 
+			if (player.CurrentRegion.IsHousing)
+				return false; // Workaround: falling from houses should not produce damage
+
 			return true;
 		}
 

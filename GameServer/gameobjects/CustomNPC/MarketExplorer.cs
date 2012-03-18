@@ -29,13 +29,11 @@ namespace DOL.GS
             if (!base.Interact(player))
                 return false;
 
-			if (player.ActiveConMerchant != null)
+			if (player.ActiveInventoryObject != null)
 			{
-				player.ActiveConMerchant.RemoveObserver(player);
-				player.ActiveConMerchant = null;
+				player.ActiveInventoryObject.RemoveObserver(player);
+				player.ActiveInventoryObject = null;
 			}
-
-            player.ActiveVault = null;
 
 			if (ServerProperties.Properties.MARKET_ENABLE)
 			{
@@ -157,18 +155,17 @@ namespace DOL.GS
 			if (player == null || player.TargetObject == null || (player.TargetObject is MarketExplorer) == false)
 				return false;
 
-			if (player.ActiveVault != null)
-				return false;
-
-			if (player.ActiveConMerchant != null)
+			if (player.ActiveInventoryObject is GameConsignmentMerchant)
 			{
-				return player.ActiveConMerchant.CanHandleMove(player, fromClientSlot, toClientSlot);
+				// transfer control to active consignment merchant
+				return player.ActiveInventoryObject.CanHandleMove(player, fromClientSlot, toClientSlot);
 			}
 
 			bool canHandle = false;
 
 			if (fromClientSlot >= FirstClientSlot && toClientSlot >= (int)eInventorySlot.FirstBackpack && toClientSlot <= (ushort)eInventorySlot.LastBackpack)
 			{
+				// buy request
 				canHandle = true;
 			}
 
@@ -185,16 +182,16 @@ namespace DOL.GS
 		public virtual bool MoveItem(GamePlayer player, ushort fromClientSlot, ushort toClientSlot)
 		{
 			// if we've activated a CM then let them handle all the moves
-			if (player.ActiveConMerchant != null)
+			if (player.ActiveInventoryObject is GameConsignmentMerchant)
 			{
-				return player.ActiveConMerchant.MoveItem(player, fromClientSlot, toClientSlot);
+				return player.ActiveInventoryObject.MoveItem(player, fromClientSlot, toClientSlot);
 			}
 
 			// this move represents a buy item request
 			if (fromClientSlot >= (ushort)eInventorySlot.MarketExplorerFirst && 
 				toClientSlot >= (ushort)eInventorySlot.FirstBackpack && 
-				toClientSlot <= (ushort)eInventorySlot.LastBackpack && 
-				player.ActiveVault == null)
+				toClientSlot <= (ushort)eInventorySlot.LastBackpack &&
+				player.ActiveInventoryObject == null)
 			{
 				if (player.TargetObject == null)
 					return false;
@@ -252,9 +249,19 @@ namespace DOL.GS
 				return;
 			}
 
-			player.ActiveConMerchant = cm; // activate the target con merchant
+			player.ActiveInventoryObject = cm; // activate the target con merchant
 			player.Out.SendInventoryItemsUpdate(cm.GetClientInventory(player), eInventoryWindowType.ConsignmentViewer);
 			cm.AddObserver(player);
+		}
+
+		public virtual void AddObserver(GamePlayer player)
+		{
+			// not applicable
+		}
+
+		public virtual void RemoveObserver(GamePlayer player)
+		{
+			// not applicable
 		}
     }
 }

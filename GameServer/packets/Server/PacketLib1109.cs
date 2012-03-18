@@ -114,6 +114,9 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 
+			// Create a GameInventoryItem so item will display correctly in inventory window
+			item = GameInventoryItem.Create<InventoryItem>(item);
+
 			pak.WriteByte((byte)item.Level);
 
 			int value1; // some object types use this field to display count

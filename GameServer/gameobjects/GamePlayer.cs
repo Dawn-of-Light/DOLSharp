@@ -174,6 +174,19 @@ namespace DOL.GS
 			}
 		}
 
+		public override GameObject TargetObject
+		{
+			get
+			{
+				return base.TargetObject;
+			}
+			set
+			{
+				ActiveInventoryObject = null; // windows close on change target so also clear any active inventory objects
+				base.TargetObject = value;
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets the targetObject's visibility
 		/// </summary>
@@ -623,6 +636,8 @@ namespace DOL.GS
 			}
 
 			UpdateEquipmentAppearance();
+
+			LeaveHouse();
 
 			SaveIntoDatabase();
 
@@ -8489,25 +8504,16 @@ namespace DOL.GS
 
 		#region Vault/Money/Items/Trading/UseSlot/ApplyPoison
 
-		private GameVault m_activeVault;
-		private GameConsignmentMerchant m_activeConMerchant;
+		private IGameInventoryObject m_activeInventoryObject;
 
 		/// <summary>
-		/// The currently active house vault.
+		/// The currently active InventoryObject
+		/// This is new and will probably replace the above Active methods in time.
 		/// </summary>
-		public GameVault ActiveVault
+		public IGameInventoryObject ActiveInventoryObject
 		{
-			get { return m_activeVault; }
-			set { m_activeVault = value; }
-		}
-
-		/// <summary>
-		/// The currently active Consignment Merchant
-		/// </summary>
-		public GameConsignmentMerchant ActiveConMerchant
-		{
-			get { return m_activeConMerchant; }
-			set { m_activeConMerchant = value; }
+			get { return m_activeInventoryObject; }
+			set	{ m_activeInventoryObject = value; }
 		}
 
 		/// <summary>
@@ -15926,6 +15932,7 @@ namespace DOL.GS
 		{
 			m_inventory = new GamePlayerInventory(this);
 		}
+
 
 		/// <summary>
 		/// Player is delving an item
