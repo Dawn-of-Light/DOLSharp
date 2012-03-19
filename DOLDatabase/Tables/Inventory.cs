@@ -76,7 +76,7 @@ namespace DOL.Database
 		
 		protected bool m_iscrafted;			// iscrafted or looted ?
 		[DataElement(AllowDbNull = true)]
-		public bool IsCrafted {
+		public virtual bool IsCrafted {
 			get { return m_iscrafted; }
 			set { Dirty = true; m_iscrafted = value; }
 		}
@@ -91,7 +91,7 @@ namespace DOL.Database
 		
 		protected int m_slot_pos;			// slot in inventory
 		[DataElement(AllowDbNull = true, Index = true)]
-		public int SlotPosition
+		public virtual int SlotPosition
 		{
 			get{return m_slot_pos;}
 			set{Dirty = true;m_slot_pos = value;}
