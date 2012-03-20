@@ -834,12 +834,17 @@ namespace DOL.GS
 		}
         #endregion
 
+        private bool isBounty;
+        
         public override bool Interact(GamePlayer player)
 		{
+        	TradeItems = new MerchantTradeItems("BuffTokens");
 			if (!base.Interact(player)) return false;
-			TurnTo(player.X, player.Y);
+			TurnTo(player, 10000);
 			player.Out.SendMessage("Greetings, " + player.Name + ". The King has instructed me to strengthen you so that you may defend the lands with valor. Simply hand me the token for the enhancement you desire, and I will empower you accordingly. Do you wish to purchase tokens with [Gold] or [Bounty Points]?", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-            return true;
+			isBounty = false;
+			SendMerchantWindow(player);
+			return true;
         }
 
         public override bool WhisperReceive(GameLiving source, string str)
@@ -853,7 +858,7 @@ namespace DOL.GS
             {
                 case "Gold":
                 {
-                    TurnTo(player.X, player.Y);
+                    TurnTo(player, 10000);
                     isBounty = false;
                     TradeItems = new MerchantTradeItems("BuffTokens");
                     SendMerchantWindow(player);
@@ -861,7 +866,7 @@ namespace DOL.GS
                 break;
                 case "Bounty Points":
                 {
-                    TurnTo(player.X, player.Y);
+                    TurnTo(player, 10000);
                     isBounty = true;
                     TradeItems = new MerchantTradeItems("BPBuffTokens");
                     player.Out.SendMerchantWindow(TradeItems, eMerchantWindowType.Bp);
@@ -870,8 +875,6 @@ namespace DOL.GS
             }
             return true;
 		}
-
-        public bool isBounty;
 
         public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
         {
