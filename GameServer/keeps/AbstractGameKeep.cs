@@ -374,7 +374,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// The Keep Name linked to the DBKeep
 		/// </summary>
-		public string Name
+		public virtual string Name
 		{
 			get	
 			{
@@ -582,7 +582,7 @@ namespace DOL.GS.Keeps
 			}
 
 			RemoveFromDatabase();
-			KeepMgr.Keeps[KeepID] = null;
+			GameServer.KeepManager.Keeps[KeepID] = null;
 		}
 
 		/// <summary>
@@ -715,7 +715,7 @@ namespace DOL.GS.Keeps
 				int count = 0;
 				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 				{
-					if (KeepMgr.getKeepCloseToSpot(p.CurrentRegionID, p, WorldMgr.VISIBILITY_DISTANCE) == this)
+					if (GameServer.KeepManager.GetKeepCloseToSpot(p.CurrentRegionID, p, WorldMgr.VISIBILITY_DISTANCE) == this)
 						count++;
 				}
 
@@ -1169,7 +1169,7 @@ namespace DOL.GS.Keeps
 
 			//update guard level for every keep
 			if (!IsPortalKeep && ServerProperties.Properties.USE_KEEP_BALANCING)
-				KeepMgr.UpdateBaseLevels();
+				GameServer.KeepManager.UpdateBaseLevels();
 
 			//update the counts of keeps for the bonuses
 			if (ServerProperties.Properties.USE_LIVE_KEEP_BONUSES)
@@ -1220,7 +1220,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			//calculate target height
-			int height = KeepMgr.GetHeightFromLevel(this.Level);
+			int height = GameServer.KeepManager.GetHeightFromLevel(this.Level);
 
 			//predict Z
 			DBKeepHookPoint hp = GameServer.Database.SelectObject<DBKeepHookPoint>("HookPointID = '97' and Height = '" + height + "'");

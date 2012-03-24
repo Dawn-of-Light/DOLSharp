@@ -75,7 +75,7 @@ namespace DOL.GS.Commands
 			string albKeeps = "";
 			string midKeeps = "";
 			string hibKeeps = "";
-			ICollection<AbstractGameKeep> keepList = KeepMgr.GetNFKeeps();
+			ICollection<AbstractGameKeep> keepList = GameServer.KeepManager.GetFrontierKeeps();
 			foreach (AbstractGameKeep keep in keepList)
 			{
 				if (keep is GameKeep)

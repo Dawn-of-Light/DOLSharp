@@ -111,7 +111,7 @@ namespace DOL.GS
 								}
 								else
 								{
-									AbstractGameKeep portalKeep = KeepMgr.GetBGPK(player);
+									AbstractGameKeep portalKeep = GameServer.KeepManager.GetBGPK(player);
 									if (portalKeep != null)
 									{
 										player.MoveTo((ushort)portalKeep.Region, portalKeep.X, portalKeep.Y, portalKeep.Z, (ushort)portalKeep.Heading);

@@ -24,9 +24,9 @@ namespace DOL.GS.Quests
 
 			ICollection<AbstractGameKeep> keeps;
 			if (owner is Group)
-				keeps = KeepMgr.GetKeepsOfRegion((owner as Group).Leader.CurrentRegionID);
+				keeps = GameServer.KeepManager.GetKeepsOfRegion((owner as Group).Leader.CurrentRegionID);
 			else if (owner is GamePlayer)
-				keeps = KeepMgr.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
+				keeps = GameServer.KeepManager.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
 			else keeps = new List<AbstractGameKeep>();
 
 			foreach (AbstractGameKeep keep in keeps)

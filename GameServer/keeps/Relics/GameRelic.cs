@@ -209,7 +209,7 @@ namespace DOL.GS
 
 			if (IsMounted)
 			{
-				AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(m_currentRelicPad.CurrentRegionID, m_currentRelicPad, WorldMgr.VISIBILITY_DISTANCE);
+				AbstractGameKeep keep = GameServer.KeepManager.GetKeepCloseToSpot(m_currentRelicPad.CurrentRegionID, m_currentRelicPad, WorldMgr.VISIBILITY_DISTANCE);
 
 				log.DebugFormat("keep {0}", keep);
 
@@ -383,9 +383,9 @@ namespace DOL.GS
 
 			// check to make sure relic is in a legal region and still in the players backpack
 
-			if (CurrentRegionID != DOL.GS.Keeps.KeepMgr.NEW_FRONTIERS)
+			if (GameServer.KeepManager.FrontierRegionsList.Contains(CurrentRegionID) == false)
 			{
-				log.DebugFormat("{0} taken out of New Frontiers, relic returned to previous pad.", Name);
+				log.DebugFormat("{0} taken out of frontiers, relic returned to previous pad.", Name);
 				RelicPadTakesOver(ReturnRelicPad, true);
 				SaveIntoDatabase();
 				AddToWorld();

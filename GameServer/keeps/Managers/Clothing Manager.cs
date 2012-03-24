@@ -559,7 +559,7 @@ namespace DOL.GS.Keeps
 			}
 			if (guard.Inventory == null)
 			{
-				KeepMgr.Logger.Warn("Clothing Manager: Guard Inventory is null for " + guard.GetType().ToString());
+				GameServer.KeepManager.Log.Warn("Clothing Manager: Guard Inventory is null for " + guard.GetType().ToString());
 				return;
 			}
 			GameNpcInventoryTemplate template = guard.Inventory as GameNpcInventoryTemplate;

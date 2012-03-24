@@ -33,7 +33,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort responce = packet.ReadShort();
 			int HPindex = packet.ReadShort();
 
-			AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
+			AbstractGameKeep keep = GameServer.KeepManager.GetKeepByID(keepId);
 
 			if (keep == null || !(GameServer.ServerRules.IsSameRealm(client.Player, (GameKeepComponent)keep.KeepComponents[wallId], true) || client.Account.PrivLevel > 1))
 				return;

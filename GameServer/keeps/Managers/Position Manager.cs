@@ -230,7 +230,7 @@ namespace DOL.GS.Keeps
 
 		public static void AddPosition(DBKeepPosition position)
 		{
-			foreach (AbstractGameKeep keep in KeepMgr.GetAllKeeps())
+			foreach (AbstractGameKeep keep in GameServer.KeepManager.GetAllKeeps())
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
@@ -248,7 +248,7 @@ namespace DOL.GS.Keeps
 
 		public static void RemovePosition(DBKeepPosition position)
 		{
-			foreach (AbstractGameKeep keep in KeepMgr.GetAllKeeps())
+			foreach (AbstractGameKeep keep in GameServer.KeepManager.GetAllKeeps())
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
@@ -267,7 +267,7 @@ namespace DOL.GS.Keeps
 
 		public static void FillPositions()
 		{
-			foreach (AbstractGameKeep keep in KeepMgr.GetAllKeeps())
+			foreach (AbstractGameKeep keep in GameServer.KeepManager.GetAllKeeps())
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
@@ -385,7 +385,7 @@ namespace DOL.GS.Keeps
 			int componentID = (doorID / 100) % 100;
 			int doorIndex = doorID % 10;
 
-			AbstractGameKeep keep = KeepMgr.getKeepByID(keepID);
+			AbstractGameKeep keep = GameServer.KeepManager.GetKeepByID(keepID);
 			if (keep == null)
 			{
 				player.Out.SendMessage("Cannot create door as keep is null!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

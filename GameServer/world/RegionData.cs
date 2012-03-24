@@ -66,6 +66,14 @@ namespace DOL.GS
 		/// The region mobs
 		/// </summary>
 		public Mob[] Mobs;
+		/// <summary>
+		/// The class type of this region, blank for default
+		/// </summary>
+		public string ClassType;
+		/// <summary>
+		/// Should this region be treated as part of the Frontier?
+		/// </summary>
+		public bool IsFrontier;
 
 		/// <summary>
 		/// Compares 2 objects

@@ -81,7 +81,7 @@ namespace DOL.GS.Keeps
 				return;
 			foreach (int keepid in chain)
 			{
-				AbstractGameKeep keep = KeepMgr.getKeepByID(keepid);
+				AbstractGameKeep keep = GameServer.KeepManager.GetKeepByID(keepid);
 				if (keep == null)
 					continue;
 
