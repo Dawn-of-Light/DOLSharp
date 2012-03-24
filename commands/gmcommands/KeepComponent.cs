@@ -44,7 +44,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			AbstractGameKeep myKeep = KeepMgr.getKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, WorldMgr.OBJ_UPDATE_DISTANCE);
+			AbstractGameKeep myKeep = GameServer.KeepManager.GetKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, WorldMgr.OBJ_UPDATE_DISTANCE);
 			switch (args[1])
 			{
 				#region Create
@@ -91,7 +91,7 @@ namespace DOL.GS.Commands
 							try
 							{
 								keepid = Convert.ToInt32(args[3]);
-								myKeep = KeepMgr.getKeepByID(keepid);
+								myKeep = GameServer.KeepManager.GetKeepByID(keepid);
 							}
 							catch
 							{

@@ -123,7 +123,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			//check caps for battleground
-			Battleground bg = KeepMgr.GetBattleground(zonePoint.TargetRegion);
+			Battleground bg = GameServer.KeepManager.GetBattleground(zonePoint.TargetRegion);
 			if (bg != null)
 			{
 				if (client.Player.Level < bg.MinLevel && client.Player.Level > bg.MaxLevel &&

@@ -47,9 +47,11 @@ namespace DOL.GS.Commands
 			info.Add(" ");
 			Type regionType = client.Player.CurrentRegion.GetType();
 			info.Add("       Region ClassType: " + regionType.FullName);
+			info.Add(" ");
 			
 			if (client.Player.TargetObject != null)
 			{
+				#region Mob
 				/********************* MOB ************************/
 				if (client.Player.TargetObject is GameNPC)
 				{
@@ -315,7 +317,10 @@ namespace DOL.GS.Commands
 						info.Add("- " + message);
 					}
 				}
-				
+
+				#endregion Mob
+
+				#region Player
 				/********************* PLAYER ************************/
 				if (client.Player.TargetObject is GamePlayer)
 				{
@@ -413,7 +418,11 @@ namespace DOL.GS.Commands
 						info.Add(" [" + GlobalConstants.SlotToName(item.Item_Type) + "] " + item.Name);
 					info.Add(" ");
 				}
-				
+
+				#endregion Player
+
+				#region StaticItem
+
 				/********************* OBJECT ************************/
 				if (client.Player.TargetObject is GameStaticItem)
 				{
@@ -444,7 +453,11 @@ namespace DOL.GS.Commands
 					info.Add(" ");
 					info.Add(" Location: X= " + target.X + " ,Y= " + target.Y + " ,Z= " + target.Z);
 				}
-				
+
+				#endregion StaticItem
+
+				#region Door
+
 				/********************* DOOR ************************/
 				if (client.Player.TargetObject is GameDoor)
 				{
@@ -492,7 +505,11 @@ namespace DOL.GS.Commands
 					info.Add(" + Z : " + target.Z);
 					info.Add(" + Heading : " + target.Heading);
 				}
-				
+
+				#endregion Door
+
+				#region Keep
+
 				/********************* KEEP ************************/
 				if (client.Player.TargetObject is GameKeepComponent)
 				{
@@ -535,18 +552,37 @@ namespace DOL.GS.Commands
 					info.Add( " + RealmPointsValue : " + target.RealmPointsValue);
 					info.Add( " + ExperienceValue : " + target.ExperienceValue);
 					info.Add( " + AttackRange : " + target.AttackRange);
+					info.Add(" ");
+					if (GameServer.KeepManager.GetFrontierKeeps().Contains(target.Keep))
+					{
+						info.Add(" + Keep Manager : " + GameServer.KeepManager.GetType().FullName);
+						info.Add(" + Frontiers");
+					}
+					else if (GameServer.KeepManager.GetBattleground(target.CurrentRegionID) != null)
+					{
+						info.Add(" + Keep Manager : " + GameServer.KeepManager.GetType().FullName);
+						Battleground bg = GameServer.KeepManager.GetBattleground(client.Player.CurrentRegionID);
+						info.Add(" + Battleground (" + bg.MinLevel + " to " + bg.MaxLevel + ", max RL: " + bg.MaxRealmLevel + ")");
+					}
+					else
+					{
+						info.Add(" + Keep Manager :  Not Managed");
+					}
 				}
-				
+
+				#endregion Keep
+
 				client.Out.SendCustomTextWindow("[ " + name + " ]", info);
+				return;
 			}
 			
 			if (client.Player.TargetObject == null)
 			{
-			
 				/*********************** HOUSE *************************/
 				if (client.Player.InHouse)
 				{
-						
+					#region House
+
 					House house = client.Player.CurrentHouse as House;
 					
 					name = house.Name;
@@ -598,10 +634,11 @@ namespace DOL.GS.Commands
 					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)));
 					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
 
+					#endregion House
+
 					client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.HouseOwner", name), info);
 				}
-				
-				if (!client.Player.InHouse)
+				else // No target and not in a house
 				{
 					string realm = " other realm";
 					if(client.Player.CurrentZone.Realm == eRealm.Albion)
@@ -611,16 +648,35 @@ namespace DOL.GS.Commands
 					if(client.Player.CurrentZone.Realm == eRealm.Hibernia)
 						realm = " Hibernia";
 					
-					info.Add(" Time In Game: \t"+ hour.ToString() + ":" + minute.ToString());
+					info.Add(" Game Time: \t"+ hour.ToString() + ":" + minute.ToString());
                     info.Add(" ");
-                    info.Add(" Server player: " + WorldMgr.GetAllPlayingClientsCount());
+					info.Add(" Server Rules: " + GameServer.ServerRules.GetType().FullName);
+
+					if (GameServer.KeepManager.FrontierRegionsList.Contains(client.Player.CurrentRegionID))
+					{
+						info.Add(" Keep Manager: " + GameServer.KeepManager.GetType().FullName);
+						info.Add(" Frontiers");
+					}
+					else if (GameServer.KeepManager.GetBattleground(client.Player.CurrentRegionID) != null)
+					{
+						info.Add(" Keep Manager: " + GameServer.KeepManager.GetType().FullName);
+						Battleground bg = GameServer.KeepManager.GetBattleground(client.Player.CurrentRegionID);
+						info.Add(" Battleground (" + bg.MinLevel + " to " + bg.MaxLevel + ", max RL: " + bg.MaxRealmLevel + ")");
+					}
+					else
+					{
+						info.Add(" Keep Manager :  None for this region");
+					}
+
+					info.Add(" ");
+					info.Add(" Server players: " + WorldMgr.GetAllPlayingClientsCount());
                     info.Add(" ");
-                    info.Add(" Region Player:");
-                    info.Add(" All player: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID));
+                    info.Add(" Region Players:");
+                    info.Add(" All players: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID));
                     info.Add(" ");
-                    info.Add(" Alb player: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID, eRealm.Albion));
-                    info.Add(" Hib player: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID, eRealm.Hibernia));
-                    info.Add(" Mid player: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID, eRealm.Midgard));
+                    info.Add(" Alb players: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID, eRealm.Albion));
+                    info.Add(" Hib players: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID, eRealm.Hibernia));
+                    info.Add(" Mid players: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID, eRealm.Midgard));
 
                     info.Add(" ");
                     info.Add(" NPC in zone:");
@@ -649,8 +705,9 @@ namespace DOL.GS.Commands
 					info.Add(" Region ID: "+ client.Player.CurrentRegion.ID);
                     info.Add(" Region Expansion: " + client.Player.CurrentRegion.Expansion);
 					info.Add(" Region IsRvR: "+ client.Player.CurrentRegion.IsRvR);
-					info.Add(" Region IsDungeon: "+ client.Player.CurrentRegion.IsDungeon);
-                    info.Add(" Zone in Region: " + client.Player.CurrentRegion.Zones.Count);
+					info.Add(" Region IsFrontier: " + client.Player.CurrentRegion.IsFrontier);
+					info.Add(" Region IsDungeon: " + client.Player.CurrentRegion.IsDungeon);
+					info.Add(" Zone in Region: " + client.Player.CurrentRegion.Zones.Count);
                     info.Add(" Region WaterLevel: " + client.Player.CurrentRegion.WaterLevel);
                     info.Add(" Region HousingEnabled: " + client.Player.CurrentRegion.HousingEnabled);
                     info.Add(" Region IsDisabled: " + client.Player.CurrentRegion.IsDisabled);

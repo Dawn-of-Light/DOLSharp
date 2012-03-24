@@ -482,7 +482,7 @@ namespace DOL.GS.PacketHandler
 			int HibKeeps = 0;
 			int OwnerDFTowers = 0;
 			eRealm OwnerDF = eRealm.None;
-			foreach (AbstractGameKeep keep in KeepMgr.GetNFKeeps())
+			foreach (AbstractGameKeep keep in GameServer.KeepManager.GetFrontierKeeps())
 			{
 
 				switch ((eRealm)keep.Realm)

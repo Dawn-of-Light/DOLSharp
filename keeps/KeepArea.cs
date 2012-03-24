@@ -35,7 +35,7 @@ namespace DOL.GS.Keeps
 
 		public void ChangeRadius(int newRadius)
 		{
-			KeepMgr.Logger.Debug("ChangeRadius called for " + Keep.Name + " currently is " + m_Radius + " changing to " + newRadius);
+			GameServer.KeepManager.Log.Debug("ChangeRadius called for " + Keep.Name + " currently is " + m_Radius + " changing to " + newRadius);
 
 			//setting radius to default
 			if (newRadius == 0 && m_Radius != 0)
@@ -77,8 +77,8 @@ namespace DOL.GS.Keeps
 		public override void LoadFromDatabase(DBArea area)
 		{
 			base.LoadFromDatabase(area);
-			KeepMgr.Logger.Debug("KeepArea " + area.Description + " LoadFromDatabase called");
-			KeepMgr.Logger.Debug("X: " + area.X + "(" + m_X + ") Y: " + area.Y + "(" + m_Y + ") Region:" + area.Region + " Radius: " + m_Radius);
+			GameServer.KeepManager.Log.Debug("KeepArea " + area.Description + " LoadFromDatabase called");
+			GameServer.KeepManager.Log.Debug("X: " + area.X + "(" + m_X + ") Y: " + area.Y + "(" + m_Y + ") Region:" + area.Region + " Radius: " + m_Radius);
 		}
 	}
 }

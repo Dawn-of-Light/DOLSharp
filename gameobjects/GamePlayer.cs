@@ -677,8 +677,8 @@ namespace DOL.GS
 
 		private void CheckIfNearEnemyKeepAndAddToRvRLinkDeathListIfNecessary()
 		{
-			AbstractGameKeep keep = KeepMgr.getKeepCloseToSpot(this.CurrentRegionID, this, WorldMgr.VISIBILITY_DISTANCE);
-			if(keep != null && this.Client.Account.PrivLevel == 1 && KeepMgr.IsEnemy(keep, this))
+			AbstractGameKeep keep = GameServer.KeepManager.GetKeepCloseToSpot(this.CurrentRegionID, this, WorldMgr.VISIBILITY_DISTANCE);
+			if(keep != null && this.Client.Account.PrivLevel == 1 && GameServer.KeepManager.IsEnemy(keep, this))
 			{
 				if(WorldMgr.RvRLinkDeadPlayers.ContainsKey(this.m_InternalID))
 				{
@@ -758,12 +758,16 @@ namespace DOL.GS
 			}
 			
 			//check for battleground caps
-			Battleground bg = KeepMgr.GetBattleground(CurrentRegionID);
+			Battleground bg = GameServer.KeepManager.GetBattleground(CurrentRegionID);
 			if (bg != null)
 			{
 				if (Level > bg.MaxLevel || RealmLevel >= bg.MaxRealmLevel)
 				{
-					KeepMgr.ExitBattleground(this);
+					// Only kick players out
+					if (Client.Account.PrivLevel == (int)ePrivLevel.Player)
+					{
+						GameServer.KeepManager.ExitBattleground(this);
+					}
 				}
 			}
 
@@ -1151,7 +1155,7 @@ namespace DOL.GS
 			}
 			
 			//battlegrounds caps
-			Battleground bg = KeepMgr.GetBattleground(CurrentRegionID);
+			Battleground bg = GameServer.KeepManager.GetBattleground(CurrentRegionID);
 			if (bg != null && releaseCommand == eReleaseType.RvR)
 			{
 				if (Level > bg.MaxLevel)
@@ -1266,7 +1270,7 @@ namespace DOL.GS
 					}
 				case eReleaseType.RvR:
 					{
-						foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
+						foreach (AbstractGameKeep keep in GameServer.KeepManager.GetKeepsOfRegion(CurrentRegionID))
 						{
 							if (keep.IsPortalKeep && keep.OriginalRealm == Realm)
 							{
@@ -1281,7 +1285,7 @@ namespace DOL.GS
 						if (relX == 0)
 						{
 							relRegion = CurrentRegion.ID;
-							KeepMgr.GetBorderKeepLocation(((byte)Realm * 2) / 1, out relX, out relY, out relZ, out relHeading);
+							GameServer.KeepManager.GetBorderKeepLocation(((byte)Realm * 2) / 1, out relX, out relY, out relZ, out relHeading);
 						}
 						break;
 					}
@@ -1337,7 +1341,7 @@ namespace DOL.GS
 								{
 									//get the bg cap
 									byte cap = 50;
-									foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
+									foreach (AbstractGameKeep keep in GameServer.KeepManager.GetKeepsOfRegion(CurrentRegionID))
 									{
 										if (keep.DBKeep.BaseLevel < cap)
 										{
@@ -1346,7 +1350,7 @@ namespace DOL.GS
 										}
 									}
 									//get the portal location
-									foreach (AbstractGameKeep keep in KeepMgr.GetKeepsOfRegion(CurrentRegionID))
+									foreach (AbstractGameKeep keep in GameServer.KeepManager.GetKeepsOfRegion(CurrentRegionID))
 									{
 										if (keep.DBKeep.BaseLevel > 50 && keep.Realm == Realm)
 										{
@@ -1369,17 +1373,17 @@ namespace DOL.GS
 										{
 											case eRealm.Albion:
 												{
-													KeepMgr.GetBorderKeepLocation(1, out relX, out relY, out relZ, out relHeading);
+													GameServer.KeepManager.GetBorderKeepLocation(1, out relX, out relY, out relZ, out relHeading);
 													break;
 												}
 											case eRealm.Midgard:
 												{
-													KeepMgr.GetBorderKeepLocation(3, out relX, out relY, out relZ, out relHeading);
+													GameServer.KeepManager.GetBorderKeepLocation(3, out relX, out relY, out relZ, out relHeading);
 													break;
 												}
 											case eRealm.Hibernia:
 												{
-													KeepMgr.GetBorderKeepLocation(5, out relX, out relY, out relZ, out relHeading);
+													GameServer.KeepManager.GetBorderKeepLocation(5, out relX, out relY, out relZ, out relHeading);
 													break;
 												}
 										}
