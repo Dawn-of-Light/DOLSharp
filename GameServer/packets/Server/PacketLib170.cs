@@ -369,7 +369,7 @@ namespace DOL.GS.PacketHandler
 				}
 				else
 				{
-					if (m_gameClient.Player.CurrentRegionID == KeepMgr.NEW_FRONTIERS && m_gameClient.Player.Realm == keep.Realm)
+					if (GameServer.KeepManager.FrontierRegionsList.Contains(m_gameClient.Player.CurrentRegionID) && m_gameClient.Player.Realm == keep.Realm)
 					{
 						GameKeep theKeep = keep as GameKeep;
 						if (theKeep != null)
@@ -404,7 +404,7 @@ namespace DOL.GS.PacketHandler
 			int OwnerDFTowers = 0;
 			eRealm OwnerDF = eRealm.None;
 
-			foreach (AbstractGameKeep keep in KeepMgr.GetNFKeeps())
+			foreach (AbstractGameKeep keep in GameServer.KeepManager.GetFrontierKeeps())
 			{
 				if (keep is GameKeep)
 				{

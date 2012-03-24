@@ -108,6 +108,11 @@ namespace DOL.GS
 		protected IServerRules m_serverRules;
 
 		/// <summary>
+		/// Holds the instance of the current keep manager
+		/// </summary>
+		protected IKeepManager m_keepManager;
+
+		/// <summary>
 		/// Holds the startSystemTick when server is up.
 		/// </summary>
 		protected int m_startTick;
@@ -190,6 +195,23 @@ namespace DOL.GS
 					}
 				}
 				return Instance.m_serverRules;
+			}
+		}
+
+		public static IKeepManager KeepManager
+		{
+			get
+			{
+				if (Instance.m_keepManager == null)
+				{
+					Instance.StartKeepManager();
+					if (Instance.m_keepManager == null && log.IsErrorEnabled)
+					{
+						log.Error("Could not get or start Keep Manager!");
+					}
+				}
+
+				return Instance.m_keepManager;
 			}
 		}
 
@@ -628,20 +650,15 @@ namespace DOL.GS
 				//Init the mail manager
 				InitComponent(MailMgr.Init(), "Mail Manager Initialization");
 
-
 				//---------------------------------------------------------------
-				//Load artifact manager
-				InitComponent(ArtifactMgr.Init(), "Artifact Manager");
+				//Try to compile the Scripts
+				if (!InitComponent(CompileScripts(), "Script compilation"))
+					return false;
 
 				//---------------------------------------------------------------
 				//Try to initialize the WorldMgr in early state
 				RegionData[] regionsData;
 				if (!InitComponent(WorldMgr.EarlyInit(out regionsData), "World Manager PreInitialization"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Try to compile the Scripts
-				if (!InitComponent(RecompileScripts(), "Script compilation"))
 					return false;
 
 				//---------------------------------------------------------------
@@ -653,6 +670,10 @@ namespace DOL.GS
 				//Load all faction managers
 				if (!InitComponent(FactionMgr.Init(), "Faction Managers"))
 					return false;
+
+				//---------------------------------------------------------------
+				//Load artifact manager
+				InitComponent(ArtifactMgr.Init(), "Artifact Manager");
 
 				//---------------------------------------------------------------
 				//Load all calculators
@@ -712,7 +733,7 @@ namespace DOL.GS
 
 				//---------------------------------------------------------------
 				//Load the keep manager
-				if (!InitComponent(KeepMgr.Load(), "Keep Manager"))
+				if (!InitComponent(StartKeepManager(), "Keep Manager"))
 					return false;
 
 				//---------------------------------------------------------------
@@ -809,10 +830,10 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Recomiples the scripts dll
+		/// Recompiles or loads the scripts dll
 		/// </summary>
 		/// <returns></returns>
-		public bool RecompileScripts()
+		public bool CompileScripts()
 		{
 			string scriptDirectory = Configuration.RootDirectory + Path.DirectorySeparatorChar + "scripts";
 			if (!Directory.Exists(scriptDirectory))
@@ -864,6 +885,106 @@ namespace DOL.GS
 			}
 			//---------------------------------------------------------------
 			return true;
+		}
+
+		/// <summary>
+		/// Find the keep manager and start it
+		/// </summary>
+		/// <returns></returns>
+		protected bool StartKeepManager()
+		{
+			Type keepManager = null;
+
+			// first search in scripts
+			foreach (Assembly script in ScriptMgr.Scripts)
+			{
+				foreach (Type type in script.GetTypes())
+				{
+					if (type.IsClass == false) continue;
+					if (type.GetInterface("DOL.GS.Keeps.IKeepManager") == null) continue;
+
+					// look for attribute
+					try
+					{
+						object[] objs = type.GetCustomAttributes(typeof(KeepManagerAttribute), false);
+						if (objs.Length == 0) continue;
+
+						// found a keep manager, use it
+						keepManager = type;
+						break;
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("StartKeepManager, Script Search", e);
+					}
+
+					if (keepManager != null) break;
+				}
+			}
+
+			if (keepManager == null)
+			{
+				// second search in gameserver
+				foreach (Type type in Assembly.GetAssembly(typeof(GameServer)).GetTypes())
+				{
+					if (type.IsClass == false) continue;
+					if (type.GetInterface("DOL.GS.Keeps.IKeepManager") == null) continue;
+
+					// look for attribute
+					try
+					{
+						object[] objs = type.GetCustomAttributes(typeof(KeepManagerAttribute), false);
+						if (objs.Length == 0) continue;
+
+						// found a keep manager, use it
+						keepManager = type;
+						break;
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("StartKeepManager, GameServer Search", e);
+					}
+					if (keepManager != null) break;
+				}
+
+			}
+
+			if (keepManager != null)
+			{
+				try
+				{
+					IKeepManager manager = Activator.CreateInstance(keepManager, null) as IKeepManager;
+
+					if (log.IsInfoEnabled)
+						log.Info("Found KeepManager " + manager.GetType().FullName);
+
+					m_keepManager = manager;
+				}
+				catch (Exception e)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("StartKeepManager, CreateInstance", e);
+				}
+			}
+
+			if (m_keepManager == null)
+			{
+				m_keepManager = new DefaultKeepManager();
+
+				if (m_keepManager != null)
+				{
+					log.Warn("No Keep manager found, using " + m_keepManager.GetType().FullName);
+				}
+				else
+				{
+					log.Error("Cannot create Keep manager!");
+					return false;
+				}
+			}
+
+			return m_keepManager.Load();
 		}
 
 		/// <summary>

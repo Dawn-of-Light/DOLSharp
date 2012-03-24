@@ -119,7 +119,7 @@ namespace DOL.AI.Brain
 				{
                     if ( !Body.IsWithinRadius( player, AggroRange ) )
                         continue;
-                    if ((Body as GameKeepGuard).Component != null && !KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
+                    if ((Body as GameKeepGuard).Component != null && !GameServer.KeepManager.IsEnemy(Body as GameKeepGuard, player, true))
 						continue;
 					if (Body is GuardStealther == false && player.IsStealthed)
 						continue;
@@ -157,7 +157,7 @@ namespace DOL.AI.Brain
 
 				if (GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
 				{
-					if ((Body as GameKeepGuard).Component != null && !KeepMgr.IsEnemy(Body as GameKeepGuard, player, true))
+					if ((Body as GameKeepGuard).Component != null && !GameServer.KeepManager.IsEnemy(Body as GameKeepGuard, player, true))
 					{
 						continue;
 					}
@@ -184,7 +184,7 @@ namespace DOL.AI.Brain
 				checkPlayer = target as GamePlayer;
 			if (checkPlayer == null)
 				return 0;
-			if (KeepMgr.IsEnemy(Body as GameKeepGuard, checkPlayer, true))
+			if (GameServer.KeepManager.IsEnemy(Body as GameKeepGuard, checkPlayer, true))
 				return AggroLevel;
 			return 0;
 		}

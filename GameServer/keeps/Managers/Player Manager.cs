@@ -159,7 +159,7 @@ namespace DOL.GS.Keeps
 					{
 						if (keep.Guild != null)
 							return false;
-						foreach (AbstractGameKeep k in KeepMgr.GetAllKeeps())
+						foreach (AbstractGameKeep k in GameServer.KeepManager.GetAllKeeps())
 						{
 							if (k.Guild == player.Guild)
 								return false;

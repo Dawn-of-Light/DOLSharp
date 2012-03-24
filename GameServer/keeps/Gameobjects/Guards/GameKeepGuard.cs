@@ -519,7 +519,7 @@ namespace DOL.GS.Keeps
 			{
 				if (this.Component != null)
 				{
-					if (KeepMgr.IsEnemy(this.Component.Keep, NearbyPlayers))
+					if (GameServer.KeepManager.IsEnemy(this.Component.Keep, NearbyPlayers))
 						inArea++;
 				}
 				else

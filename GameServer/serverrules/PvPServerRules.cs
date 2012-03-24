@@ -325,7 +325,7 @@ namespace DOL.GS.ServerRules
 
 			//player vs guard
 			if (defender is GameKeepGuard && attacker is GamePlayer
-				&& KeepMgr.IsEnemy(defender as GameKeepGuard, attacker as GamePlayer) == false)
+				&& GameServer.KeepManager.IsEnemy(defender as GameKeepGuard, attacker as GamePlayer) == false)
 			{
 				if (quiet == false) MessageToLiving(attacker, "You can't attack a friendly NPC!");
 				return false;
@@ -333,7 +333,7 @@ namespace DOL.GS.ServerRules
 
 			//guard vs player
 			if (attacker is GameKeepGuard && defender is GamePlayer
-				&& KeepMgr.IsEnemy(attacker as GameKeepGuard, defender as GamePlayer) == false)
+				&& GameServer.KeepManager.IsEnemy(attacker as GameKeepGuard, defender as GamePlayer) == false)
 			{
 				return false;
 			}
@@ -411,26 +411,26 @@ namespace DOL.GS.ServerRules
 			//keep guards
 			if (source is GameKeepGuard && target is GamePlayer)
 			{
-				if (!KeepMgr.IsEnemy(source as GameKeepGuard, target as GamePlayer))
+				if (!GameServer.KeepManager.IsEnemy(source as GameKeepGuard, target as GamePlayer))
 					return true;
 			}
 
 			if (target is GameKeepGuard && source is GamePlayer)
 			{
-				if (!KeepMgr.IsEnemy(target as GameKeepGuard, source as GamePlayer))
+				if (!GameServer.KeepManager.IsEnemy(target as GameKeepGuard, source as GamePlayer))
 					return true;
 			}
 
 			//doors need special handling
 			if (target is GameKeepDoor && source is GamePlayer)
-				return KeepMgr.IsEnemy(target as GameKeepDoor, source as GamePlayer);
+				return GameServer.KeepManager.IsEnemy(target as GameKeepDoor, source as GamePlayer);
 
 			if (source is GameKeepDoor && target is GamePlayer)
-				return KeepMgr.IsEnemy(source as GameKeepDoor, target as GamePlayer);
+				return GameServer.KeepManager.IsEnemy(source as GameKeepDoor, target as GamePlayer);
 
 			//components need special handling
 			if (target is GameKeepComponent && source is GamePlayer)
-				return KeepMgr.IsEnemy(target as GameKeepComponent, source as GamePlayer);
+				return GameServer.KeepManager.IsEnemy(target as GameKeepComponent, source as GamePlayer);
 
 			//Peace flag NPCs are same realm
 			if (target is GameNPC)

@@ -25,6 +25,7 @@ using System.Threading;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Events;
+using DOL.GS.Keeps;
 using DOL.GS.Utils;
 using DOL.GS.ServerProperties;
 using log4net;
@@ -121,12 +122,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Contains the # of players in the region
 		/// </summary>
-		protected int m_numPlrs = 0;
+		protected int m_numPlayer = 0;
 
 		/// <summary>
 		/// last relocation time
 		/// </summary>
-		private long m_lastRelocation = 0;
+		private long m_lastRelocationTime = 0;
 
 		/// <summary>
 		/// The region time manager
@@ -142,6 +143,58 @@ namespace DOL.GS
 		{
 			get { return m_regionData; }
 			protected set { m_regionData = value; }
+		}
+
+		/// <summary>
+		/// Factory method to create regions.  Will create a region of data.ClassType, or default to Region if 
+		/// an error occurs or ClassType is not specified
+		/// </summary>
+		/// <param name="time"></param>
+		/// <param name="data"></param>
+		/// <returns></returns>
+		public static Region Create(GameTimer.TimeManager time, RegionData data)
+		{
+			try
+			{
+				Type t = typeof(Region);
+
+				if (string.IsNullOrEmpty(data.ClassType) == false)
+				{
+					t = Type.GetType(data.ClassType);
+
+					if (t == null)
+					{
+						t = ScriptMgr.GetType(data.ClassType);
+					}
+
+					if (t != null)
+					{
+						ConstructorInfo info = t.GetConstructor(new Type[] { typeof(GameTimer.TimeManager), typeof(RegionData) });
+
+						Region r = (Region)info.Invoke(new object[] { time, data });
+
+						if (r != null)
+						{
+							// Success with requested classtype
+							log.InfoFormat("Created Region {0} using ClassType '{1}'", r.ID, data.ClassType);
+							return r;
+						}
+
+						log.ErrorFormat("Failed to Invoke Region {0} using ClassType '{1}'", r.ID, data.ClassType);
+					}
+					else
+					{
+						log.ErrorFormat("Failed to find ClassType '{0}' for region {1}!", data.ClassType, data.Id);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				log.ErrorFormat("Failed to start region {0} with requested classtype: {1}.  Exception: {2}!", data.Id, data.ClassType, ex.Message);
+			}
+
+			// Create region using default type
+			return new Region(time, data);
 		}
 
 		/// <summary>
@@ -288,6 +341,12 @@ namespace DOL.GS
 			}
 		}
 
+		public virtual bool IsFrontier
+		{
+			get { return m_regionData.IsFrontier; }
+			set { m_regionData.IsFrontier = value; }
+		}
+
 		/// <summary>
 		/// Is the Region a temporary instance
 		/// </summary>
@@ -337,7 +396,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int NumPlayers
 		{
-			get { return m_numPlrs; }
+			get { return m_numPlayer; }
 		}
 
 		/// <summary>
@@ -445,15 +504,15 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets last relocation time
 		/// </summary>
-		public long LastRelocation
+		public long LastRelocationTime
 		{
-			get { return m_lastRelocation; }
+			get { return m_lastRelocationTime; }
 		}
 
 		/// <summary>
 		/// Gets the region time manager
 		/// </summary>
-		public GameTimer.TimeManager TimeManager
+		public virtual GameTimer.TimeManager TimeManager
 		{
 			get { return m_timeManager; }
 		}
@@ -461,7 +520,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the current region time in milliseconds
 		/// </summary>
-		public long Time
+		public virtual long Time
 		{
 			get { return m_timeManager.CurrentTime; }
 		}
@@ -535,6 +594,33 @@ namespace DOL.GS
 			WeatherMgr.SendWeather(WeatherMgr.GetWeatherForRegion(ID), player);
 		}
 
+		/// <summary>
+		/// Create the appropriate GameKeep for this region
+		/// </summary>
+		/// <returns></returns>
+		public virtual AbstractGameKeep CreateGameKeep()
+		{
+			return new GameKeep();
+		}
+
+		/// <summary>
+		/// Create the appropriate GameKeepTower for this region
+		/// </summary>
+		/// <returns></returns>
+		public virtual AbstractGameKeep CreateGameKeepTower()
+		{
+			return new GameKeepTower();
+		}
+
+		/// <summary>
+		/// Create the appropriate GameKeepComponent for this region
+		/// </summary>
+		/// <returns></returns>
+		public virtual GameKeepComponent CreateGameKeepComponent()
+		{
+			return new GameKeepComponent();
+		}
+
 
 		#endregion
 
@@ -562,7 +648,7 @@ namespace DOL.GS
 		/// Reallocates objects array with given size
 		/// </summary>
 		/// <param name="count">The size of new objects array, limited by MAXOBJECTS</param>
-		public void PreAllocateRegionSpace(int count)
+		public virtual void PreAllocateRegionSpace(int count)
 		{
 			if (count > Properties.REGION_MAX_OBJECTS)
 				count = Properties.REGION_MAX_OBJECTS;
@@ -589,7 +675,7 @@ namespace DOL.GS
 		/// <param name="merchantCount"></param>
 		/// <param name="itemCount"></param>
 		/// <param name="bindCount"></param>
-		public void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
+		public virtual void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
 		{
 			if (!LoadObjects)
 				return;
@@ -918,7 +1004,7 @@ namespace DOL.GS
 
 					if (obj is GamePlayer)
 					{
-						++m_numPlrs;
+						++m_numPlayer;
 					}
 					else
 					{
@@ -959,7 +1045,7 @@ namespace DOL.GS
 
 				if (obj is GamePlayer)
 				{
-					--m_numPlrs;
+					--m_numPlayer;
 				}
 				else
 				{
@@ -1718,7 +1804,7 @@ namespace DOL.GS
 				{
 					((Zone)m_Zones[i]).Relocate(null);
 				}
-				m_lastRelocation = DateTime.Now.Ticks / (10 * 1000);
+				m_lastRelocationTime = DateTime.Now.Ticks / (10 * 1000);
 			}
 		}
 

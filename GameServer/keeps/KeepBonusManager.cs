@@ -61,9 +61,9 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public static void UpdateCounts()
 		{
-			albCount = KeepMgr.GetKeepCountByRealm(eRealm.Albion);
-			midCount = KeepMgr.GetKeepCountByRealm(eRealm.Midgard);
-			hibCount = KeepMgr.GetKeepCountByRealm(eRealm.Hibernia);
+			albCount = GameServer.KeepManager.GetKeepCountByRealm(eRealm.Albion);
+			midCount = GameServer.KeepManager.GetKeepCountByRealm(eRealm.Midgard);
+			hibCount = GameServer.KeepManager.GetKeepCountByRealm(eRealm.Hibernia);
 		}
 	}
 }

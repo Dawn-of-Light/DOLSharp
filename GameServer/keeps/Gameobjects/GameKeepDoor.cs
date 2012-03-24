@@ -383,7 +383,7 @@ namespace DOL.GS.Keeps
 			}
 
 
-			if (!KeepMgr.IsEnemy(this, player) || player.Client.Account.PrivLevel != 1)
+			if (!GameServer.KeepManager.IsEnemy(this, player) || player.Client.Account.PrivLevel != 1)
 			{
 				int keepz = Z, distance = 0;
 
@@ -461,7 +461,7 @@ namespace DOL.GS.Keeps
 
 			IList list = base.GetExamineMessages(player);
 			string text = "You select the " + Name + ".";
-			if (!KeepMgr.IsEnemy(this, player))
+			if (!GameServer.KeepManager.IsEnemy(this, player))
 			{
 				text = text + " It belongs to your realm.";
 			}
