@@ -69,9 +69,9 @@ namespace DOL.GS.ServerRules
 		
 		private static void CheckDFOwner()
 		{
-			int albcount = KeepMgr.GetTowerCountByRealm(eRealm.Albion);
-			int midcount = KeepMgr.GetTowerCountByRealm(eRealm.Midgard);
-			int hibcount = KeepMgr.GetTowerCountByRealm(eRealm.Hibernia);
+			int albcount = GameServer.KeepManager.GetTowerCountByRealm(eRealm.Albion);
+			int midcount = GameServer.KeepManager.GetTowerCountByRealm(eRealm.Midgard);
+			int hibcount = GameServer.KeepManager.GetTowerCountByRealm(eRealm.Hibernia);
 
 			if (albcount > midcount && albcount > hibcount)
 			{
@@ -99,8 +99,8 @@ namespace DOL.GS.ServerRules
 			eRealm realm = (eRealm) args.Keep.Realm ;
 			if (realm != DarknessFallOwner )
 			{
-				int currentDFOwnerTowerCount = KeepMgr.GetTowerCountByRealm(DarknessFallOwner);
-				int challengerOwnerTowerCount = KeepMgr.GetTowerCountByRealm(realm);
+				int currentDFOwnerTowerCount = GameServer.KeepManager.GetTowerCountByRealm(DarknessFallOwner);
+				int challengerOwnerTowerCount = GameServer.KeepManager.GetTowerCountByRealm(realm);
 				if (currentDFOwnerTowerCount < challengerOwnerTowerCount)
 					DarknessFallOwner = realm;
 			}

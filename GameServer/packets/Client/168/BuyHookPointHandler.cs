@@ -35,7 +35,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int unk3 = packet.ReadByte();
 			int unk4 = packet.ReadByte();
 //			client.Player.Out.SendMessage("x="+unk2+"y="+unk3+"z="+unk4,eChatType.CT_Say,eChatLoc.CL_SystemWindow);
-			AbstractGameKeep keep = KeepMgr.getKeepByID(keepId);
+			AbstractGameKeep keep = GameServer.KeepManager.GetKeepByID(keepId);
 			if (keep == null) return;
 			GameKeepComponent component = keep.KeepComponents[wallId] as GameKeepComponent;
 			if (component == null) return;

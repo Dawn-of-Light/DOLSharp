@@ -96,7 +96,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public int Height
 		{
-			get { return KeepMgr.GetHeightFromLevel(this.Keep.Level); }
+			get { return GameServer.KeepManager.GetHeightFromLevel(this.Keep.Level); }
 		}
 
 		/// <summary>
@@ -337,7 +337,7 @@ namespace DOL.GS.Keeps
 				region = (CurrentRegion as BaseInstance).Skin;
 			}
 
-            Battleground bg = KeepMgr.GetBattleground(region);
+            Battleground bg = GameServer.KeepManager.GetBattleground(region);
 
 			this.Positions.Clear();
 
