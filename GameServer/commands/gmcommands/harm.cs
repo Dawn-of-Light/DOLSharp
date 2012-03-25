@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -48,9 +49,11 @@ namespace DOL.GS.Commands
 				else
 					DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Harm.InvalidTarget"));
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				DisplaySyntax(client);
+				List<string> list = new List<string>();
+				list.Add(ex.ToString());
+				client.Out.SendCustomTextWindow("Exception", list);
 			}
 		}
 	}
