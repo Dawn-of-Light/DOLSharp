@@ -2447,6 +2447,7 @@ namespace DOL.GS.Commands
 							try
 							{
 								mob = (GameNPC)script.CreateInstance(dbMob.ClassType, false);
+								targetMob = (GameNPC)script.CreateInstance(dbMob.ClassType, false);
 
 								if (mob != null)
 									break;
