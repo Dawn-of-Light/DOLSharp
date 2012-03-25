@@ -268,8 +268,9 @@ namespace DOL.GS.Commands
 						return;
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
+				client.Out.SendMessage(ex.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				DisplaySyntax(client);
 			}
 		}
@@ -1240,6 +1241,21 @@ namespace DOL.GS.Commands
 			if (targetMob.NPCTemplate != null)
 			{
 				info.Add(" + NPCTemplate: " + "[" + targetMob.NPCTemplate.TemplateId + "] " + targetMob.NPCTemplate.Name);
+			}
+
+			if (targetMob is Keeps.IKeepItem)
+			{
+				info.Add(" ");
+				Keeps.IKeepItem keepItem = targetMob as Keeps.IKeepItem;
+				if (keepItem.Component != null && keepItem.Component.Keep != null)
+				{
+					info.Add(" + KeepItem: " + keepItem.Component.Keep.Name);
+				}
+				else
+				{
+					info.Add(" + KeepItem:  No Component or Keep found!");
+				}
+				info.Add(" ");
 			}
 
 			IOldAggressiveBrain aggroBrain = targetMob.Brain as IOldAggressiveBrain;
@@ -2423,13 +2439,22 @@ namespace DOL.GS.Commands
 					}
 					else
 					{
-						foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-						{
-							targetMob = (GameNPC)assembly.CreateInstance(dbMob.ClassType, true);
-							mob = (GameNPC)assembly.CreateInstance(dbMob.ClassType, true);
+						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
+						asms.Add(typeof(GameServer).Assembly);
 
-							if (mob != null)
-								break;
+						foreach (Assembly script in asms)
+						{
+							try
+							{
+								mob = (GameNPC)script.CreateInstance(dbMob.ClassType, false);
+
+								if (mob != null)
+									break;
+							}
+							catch (Exception e)
+							{
+								client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							}
 						}
 					}
 
