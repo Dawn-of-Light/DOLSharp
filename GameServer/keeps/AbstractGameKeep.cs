@@ -737,7 +737,7 @@ namespace DOL.GS.Keeps
 		/// claim the keep to a guild
 		/// </summary>
 		/// <param name="player">the player who have claim the keep</param>
-		public void Claim(GamePlayer player)
+		public virtual void Claim(GamePlayer player)
 		{
 			this.m_guild = player.Guild;
 			player.Guild.ClaimedKeeps.Add(this);
@@ -820,7 +820,7 @@ namespace DOL.GS.Keeps
 
 		#region Release
 
-		public bool CheckForRelease(GamePlayer player)
+		public virtual bool CheckForRelease(GamePlayer player)
 		{
 			if (InCombat)
 			{
@@ -835,7 +835,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// released the keep of the guild
 		/// </summary>
-		public void Release()
+		public virtual void Release()
 		{
 			this.Guild.ClaimedKeeps.Remove(this);
 			PlayerMgr.BroadcastRelease(this);
@@ -864,7 +864,7 @@ namespace DOL.GS.Keeps
 		/// upgrade keep to a target level
 		/// </summary>
 		/// <param name="targetLevel">the target level</param>
-		public void ChangeLevel(byte targetLevel)
+		public virtual void ChangeLevel(byte targetLevel)
 		{
 			this.Level = targetLevel;
 
