@@ -14323,10 +14323,14 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets flag indication whether player is in shade mode
 		/// </summary>
-		public bool IsShade
-		{
-			get { return m_ShadeEffect != null; }
-		}
+        public bool IsShade
+        {
+            get
+            {
+                bool shadeModel = Model == ShadeModel;
+                return m_ShadeEffect != null ? true : shadeModel;
+            }
+        }
 
 		/// <summary>
 		/// Create a shade effect for this player.
