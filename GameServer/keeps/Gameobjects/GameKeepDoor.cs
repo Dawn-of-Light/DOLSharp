@@ -302,6 +302,10 @@ namespace DOL.GS.Keeps
 
 		public override void ModifyAttack(AttackData attackData)
 		{
+			// Allow a GM to use commands to damage components, regardless of toughness setting
+			if (attackData.DamageType == eDamageType.GM)
+				return;
+
 			int toughness = ServerProperties.Properties.SET_KEEP_DOOR_TOUGHNESS;
 			int baseDamage = attackData.Damage;
 			int styleDamage = attackData.StyleDamage;

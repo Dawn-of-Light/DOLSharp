@@ -57,6 +57,7 @@ namespace DOL.GS
 		/// </summary>
 		protected GameObject[] m_objects;
 
+
 		/// <summary>
 		/// Object to lock when changing objects in the array
 		/// </summary>
@@ -66,6 +67,14 @@ namespace DOL.GS
 		/// This holds a counter with the absolute count of all objects that are actually in this region
 		/// </summary>
 		protected int m_objectsInRegion;
+
+		/// <summary>
+		/// Total number of objects in this region
+		/// </summary>
+		public int TotalNumberOfObjects
+		{
+			get { return m_objectsInRegion; }
+		}
 
 		/// <summary>
 		/// This array holds a bitarray
