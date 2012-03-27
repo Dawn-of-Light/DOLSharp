@@ -522,7 +522,7 @@ namespace DOL.GS.Keeps
 			{
 				GameServer.Database.AddObject(obj);
 				InternalID = obj.ObjectId;
-				log.DebugFormat("Added new component for keep ID {0} health {1}", Keep.KeepID, Health);
+				log.DebugFormat("Added new component {0} for keep ID {1}, skin {2}, health {3}", ID, Keep.KeepID, Skin, Health);
 			}
 			else
 			{
