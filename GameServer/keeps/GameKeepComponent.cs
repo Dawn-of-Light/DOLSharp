@@ -545,6 +545,7 @@ namespace DOL.GS.Keeps
 					foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
 					{
 						client.Out.SendObjectUpdate(this);
+						client.Out.SendKeepComponentDetailUpdate(this); // I knwo this works, not sure if ObjectUpdate is needed - Tolakram
 					}
 				}
 			}
@@ -553,13 +554,16 @@ namespace DOL.GS.Keeps
 
 		public override void ModifyAttack(AttackData attackData)
 		{
+			// Allow a GM to use commands to damage components, regardless of toughness setting
+			if (attackData.DamageType == eDamageType.GM)
+				return;
+
 			int toughness = ServerProperties.Properties.SET_STRUCTURES_TOUGHNESS;
 			int baseDamage = attackData.Damage;
 			int styleDamage = attackData.StyleDamage;
 			int criticalDamage = 0;
 
 			GameLiving source = attackData.Attacker;
-
 
 			if (source is GamePlayer)
 			{

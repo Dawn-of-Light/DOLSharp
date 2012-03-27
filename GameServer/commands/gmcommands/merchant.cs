@@ -34,6 +34,7 @@ namespace DOL.GS.Commands
 		 "GMCommands.Merchant.Usage.CreateType",
 		 "GMCommands.Merchant.Usage.Info",
 		 "GMCommands.Merchant.Usage.Save",
+		 "'/merchant savelist <newname>' to saves this merchants items list under a new name",
 		 "GMCommands.Merchant.Usage.Remove",
 		 "GMCommands.Merchant.Usage.Sell",
 		 "GMCommands.Merchant.Usage.SellRemove",
@@ -141,6 +142,27 @@ namespace DOL.GS.Commands
 						break;
 					}
 				#endregion Save
+				#region SaveList
+				case "savelist":
+					{
+						string currentID = targetMerchant.TradeItems.ItemsListID;
+
+						var itemList = GameServer.Database.SelectObjects<MerchantItem>("ItemListID = '" + currentID + "'");
+						foreach (MerchantItem merchantItem in itemList)
+						{
+							MerchantItem item = new MerchantItem();
+							item.ItemListID = GameServer.Database.Escape(args[2]);
+							item.ItemTemplateID = merchantItem.ItemTemplateID;
+							item.PageNumber = merchantItem.PageNumber;
+							item.SlotPosition = merchantItem.SlotPosition;
+							GameServer.Database.AddObject(item);
+						}
+
+						DisplayMessage(client, "New MerchantItems list saved as '" + GameServer.Database.Escape(args[2]) + "'");
+
+						break;
+					}
+				#endregion SaveList
 				#region Remove
 				case "remove":
 					{
