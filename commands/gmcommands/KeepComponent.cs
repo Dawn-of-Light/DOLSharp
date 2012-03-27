@@ -31,6 +31,7 @@ namespace DOL.GS.Commands
 		 "GMCommands.KeepComponents.Usage.Create.TID",
 		 "GMCommands.KeepComponents.Usage.Create.T",
 		 "GMCommands.KeepComponents.Usage.Skin",
+		 "'/keepcomponent save' to save the component and current health into the DB",
 		 "GMCommands.KeepComponents.Usage.Delete")]
 	public class KeepComponentCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -233,7 +234,21 @@ namespace DOL.GS.Commands
 
 					} break;
 				#endregion Delete
-                case "reload":
+				#region Save
+				case "save":
+					{
+						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
+						if (component == null)
+						{
+							DisplaySyntax(client);
+							return;
+						}
+						component.SaveIntoDatabase();
+						client.Out.SendMessage("Saved Keep Component ID: " + component.ID + " with Health = " + component.HealthPercent + "%", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+					} break;
+				#endregion Save
+				case "reload":
                     {
 
                         GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
