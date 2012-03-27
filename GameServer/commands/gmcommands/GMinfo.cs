@@ -527,20 +527,23 @@ namespace DOL.GS.Commands
 					if((byte)target.Realm == 3)
 						realm = " Hibernia";
 						
-					info.Add("  ------- KEEP ------\n");
+					info.Add( "  ------- KEEP ------\n");
 					info.Add( " + Name : " + target.Name);
+					info.Add( " + KeepID : " + target.Keep.KeepID);
 					info.Add( " + Level : " + target.Level);
+					info.Add( " + BaseLevel : " + target.Keep.BaseLevel);
 					info.Add( " + Realm : " + realm);
-					info.Add( " + Health : " + target.Health);
-					info.Add( " + Height : " + target.Height);
 					info.Add( " ");
 					info.Add( " + Model : " + target.Model);
 					info.Add( " + Skin : " + target.Skin);
+					info.Add( " + Height : " + target.Height);
 					info.Add( " + ID : " + target.ID);
 					info.Add( " ");
-					info.Add( " + Climbing : " + target.Climbing);
+					info.Add( " + Health : " + target.Health);
 					info.Add( " + IsRaized : " + target.IsRaized);
 					info.Add( " + Status : " + target.Status);
+					info.Add( " ");
+					info.Add( " + Climbing : " + target.Climbing);
 					info.Add( " ");
 					info.Add( " + ComponentX : " + target.ComponentX);
 					info.Add( " + ComponentY : " + target.ComponentY);
@@ -678,15 +681,18 @@ namespace DOL.GS.Commands
                     info.Add(" Hib players: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID, eRealm.Hibernia));
                     info.Add(" Mid players: " + WorldMgr.GetClientsOfRegionCount(client.Player.CurrentRegion.ID, eRealm.Midgard));
 
+					info.Add(" ");
+					info.Add(" Total objects in region: " + client.Player.CurrentRegion.TotalNumberOfObjects);
+
                     info.Add(" ");
-                    info.Add(" NPC in zone:");
+					info.Add(" NPC in zone:");
                     info.Add(" Alb : " + client.Player.CurrentZone.GetNPCsOfZone(eRealm.Albion).Count);
                     info.Add(" Hib : " + client.Player.CurrentZone.GetNPCsOfZone(eRealm.Hibernia).Count);
                     info.Add(" Mid: " + client.Player.CurrentZone.GetNPCsOfZone(eRealm.Midgard).Count);
                     info.Add(" None : " + client.Player.CurrentZone.GetNPCsOfZone(eRealm.None).Count);
                     info.Add(" ");
-                    info.Add(" Objects in zone: " + client.Player.CurrentZone.TotalNumberOfObjects);
-                    info.Add(" ");
+					info.Add(" Total objects in zone: " + client.Player.CurrentZone.TotalNumberOfObjects);
+					info.Add(" ");
 					info.Add(" Zone Description: "+ client.Player.CurrentZone.Description);
 					info.Add(" Zone Realm: "+ realm);
 					info.Add(" Zone ID: "+ client.Player.CurrentZone.ID);

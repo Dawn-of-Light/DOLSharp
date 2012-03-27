@@ -309,7 +309,13 @@ namespace DOL.GS
 		Matter = 14,
 		Spirit = 15,
 		_LastResist = 15,
-
+		/// <summary>
+		/// Damage is from a GM via a command
+		/// </summary>
+		GM = 254,
+		/// <summary>
+		/// Player is taking falling damage
+		/// </summary>
 		Falling = 255,
 	}
 

@@ -313,7 +313,7 @@ namespace DOL.GS
 		{
 			base.LoadTemplate(template);
 
-			if (string.IsNullOrEmpty(template.ItemsListTemplateID) == false)
+			if (template != null && string.IsNullOrEmpty(template.ItemsListTemplateID) == false)
 			{
 				TradeItems = new MerchantTradeItems(template.ItemsListTemplateID);
 			}
