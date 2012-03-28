@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
@@ -83,6 +84,18 @@ namespace DOL.GS.Spells
 			if (ad.Damage > 0)
 				MessageToLiving(ad.Target, string.Format("You convert {0} damage into " + damageConverted + " Health.", damageConverted), eChatType.CT_Spell);
 			MessageToLiving(ad.Attacker, string.Format("A magical spell absorbs {0} damage of your attack!", damageConverted), eChatType.CT_Spell);
+
+            #region PVP DOMMAGES
+
+            if (ad.Target is NecromancerPet &&
+                ((ad.Target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null
+                || ad.Target is GamePlayer)
+            {
+                if (ad.Target.DamageRvRMemory > 0)
+                    ad.Target.DamageRvRMemory -= (long)Math.Max(damageConverted, 0);
+            }
+
+            #endregion PVP DOMMAGES
 
 			if (Caster.Health != Caster.MaxHealth)
 			{

@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
+using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
@@ -87,6 +88,20 @@ namespace DOL.GS.Spells
 			double heal = Spell.Value * effectiveness;
 			
 			target.Health += (int)heal;
+
+            #region PVP DOMMAGES
+
+            if (target.DamageRvRMemory > 0 &&
+                (target is NecromancerPet &&
+                ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null
+                || target is GamePlayer))
+            {
+                if (target.DamageRvRMemory > 0)
+                    target.DamageRvRMemory -= (long)Math.Max(heal, 0);
+            }
+
+            #endregion PVP DOMMAGES
+
 			//"You feel calm and healthy."
 			MessageToLiving(target, Spell.Message1, eChatType.CT_Spell);
 		}
