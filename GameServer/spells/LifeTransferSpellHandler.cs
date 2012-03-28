@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
@@ -132,24 +133,91 @@ namespace DOL.GS.Spells
 			}
 
 
-			int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);			
+			int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);
+
+            #region PVP DOMMAGES
+
+            long healedrp = 0;
+
+            if (m_caster is NecromancerPet &&
+                ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null
+                || m_caster is GamePlayer)
+            {
+
+                if (target is NecromancerPet && ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
+                {
+                    if (target.DamageRvRMemory > 0)
+                    {
+                        healedrp = (long)Math.Max(heal, 0);
+                        target.DamageRvRMemory -= healedrp;
+                    }
+                }
+            }
+
+            if (healedrp > 0 && m_caster != target && m_spellLine.KeyName != GlobalSpellsLines.Item_Spells &&
+                m_caster.CurrentRegionID != 242 && m_spell.Pulse == 0) // On Exclu zone COOP
+            {
+                GamePlayer joueur_a_considerer = (m_caster is NecromancerPet ? ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() : m_caster as GamePlayer);
+
+                int POURCENTAGE_SOIN_RP = ServerProperties.Properties.HEAL_PVP_DAMAGE_VALUE_RP; // ...% de bonus RP pour les soins effectués
+                long Bonus_RP_Soin = Convert.ToInt64((double)healedrp * POURCENTAGE_SOIN_RP / 100);
+
+                if (Bonus_RP_Soin >= 1)
+                {
+                    PlayerStatistics stats = joueur_a_considerer.Statistics as PlayerStatistics;
+
+                    if (stats != null)
+                    {
+                        //stats.RPEarnedFromHitPointsHealed += (uint)Bonus_RP_Soin;
+                        stats.HitPointsHealed += (uint)healedrp;
+                    }
+
+                    joueur_a_considerer.GainRealmPoints(Bonus_RP_Soin, false);
+                    joueur_a_considerer.Out.SendMessage("Vous gagnez " + Bonus_RP_Soin.ToString() + " points de royaume pour avoir soigné un membre de votre royaume.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                }
+            }
+
+            #endregion PVP DOMMAGES
 
 			if (heal == 0) 
 			{
 				if (Spell.Pulse == 0)
 				{
 					MessageToCaster(target.GetName(0, true)+" is fully healed.", eChatType.CT_SpellResisted);
-				}
+                }
 
-				return false;
+                #region PVP DOMMAGES
+
+                if (target is NecromancerPet && ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
+                {
+                    if (target.DamageRvRMemory > 0)
+                        target.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                }
+
+                #endregion PVP DOMMAGES
+                
+                return false;
 			}
 
 			
 			MessageToCaster("You heal " + target.GetName(0, false) + " for " + heal + " hit points!", eChatType.CT_Spell);
 			MessageToLiving(target, "You are healed by " + m_caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
-			if(heal < amount)
-					MessageToCaster(target.GetName(0, true)+" is fully healed.", eChatType.CT_Spell);
 
+            if (heal < amount)
+            {
+                MessageToCaster(target.GetName(0, true) + " is fully healed.", eChatType.CT_Spell);
+                
+                #region PVP DOMMAGES
+
+                if (target is NecromancerPet && ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
+                {
+                    if (target.DamageRvRMemory > 0)
+                        target.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                }
+
+                #endregion PVP DOMMAGES
+
+            }
 			return true;
 		}
 	}

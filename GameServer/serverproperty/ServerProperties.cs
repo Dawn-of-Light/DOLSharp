@@ -566,6 +566,12 @@ namespace DOL.GS.ServerProperties
 		#endregion
 
 		#region RATES
+
+        /// <summary>
+        /// The Damage RvR Heal value(% of heal) RP.
+        /// </summary>
+        [ServerProperty("rates", "heal_pvp_damage_value_rp", "How many % of heal final value is obtained in rps?", 5)]
+        public static int HEAL_PVP_DAMAGE_VALUE_RP;
 		/// <summary>
 		/// Xp Cap for a player.  Given in percent of level.  Default is 125%
 		/// </summary>
