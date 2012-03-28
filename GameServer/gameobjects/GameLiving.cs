@@ -46,6 +46,23 @@ namespace DOL.GS
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Combat
+
+        /// <summary>
+        /// damage RvR Value
+        /// </summary>
+        protected long m_damageRvRMemory;
+        /// <summary>
+        /// gets the Rps HealValue of this living
+        /// </summary>
+        public virtual long DamageRvRMemory
+        {
+            get { return 0; }
+            set
+            {
+                m_damageRvRMemory = 0;
+            }
+        }
+
 		/// <summary>
 		/// Holds the AttackData object of last attack
 		/// </summary>
@@ -3938,6 +3955,26 @@ namespace DOL.GS
 
 			double damageDealt = damageAmount + criticalAmount;
 
+            #region PVP DOMMAGES
+
+            // Players behind the source?
+            if (source is GamePlayer || (source is GameNPC && (source as GameNPC).Brain is IControlledBrain && ((source as GameNPC).Brain as IControlledBrain).GetPlayerOwner() != null))
+            {
+				// Only on Necromancer Pet
+                if (this is NecromancerPet)
+                {
+                    GamePlayer this_pl = null;
+					// Players behind the target?
+                    if (this is GameNPC && (this as GameNPC).Brain is IControlledBrain)
+                        this_pl = ((this as GameNPC).Brain as IControlledBrain).GetPlayerOwner(); // on choisit le joueur responsable
+
+                    if (this_pl != null && this_pl.Realm != source.Realm && source.Realm != 0)
+                        DamageRvRMemory += (long)damageDealt + (long)criticalAmount;
+                }
+            }
+
+            #endregion PVP DOMMAGES
+
 			if (source is GameNPC)
 			{
 				IControlledBrain brain = ((GameNPC)source).Brain as IControlledBrain;
@@ -5131,9 +5168,33 @@ namespace DOL.GS
 				ChangeHealth(this, eHealthChangeType.Regenerate, GetModified(eProperty.HealthRegenerationRate));
 			}
 
+            #region PVP DOMMAGES
+
+            GamePlayer playerOwner = null;
+            if (this is NecromancerPet)
+            {
+                playerOwner = ((this as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner();
+
+                if (DamageRvRMemory > 0 && playerOwner != null)
+                    DamageRvRMemory -= (long)Math.Max(GetModified(eProperty.HealthRegenerationRate), 0);
+            }
+
+            #endregion PVP DOMMAGES
+
 			//If we are fully healed, we stop the timer
 			if (Health >= MaxHealth)
 			{
+
+                #region PVP DOMMAGES
+
+                if (this is NecromancerPet)
+                {
+                    if (DamageRvRMemory > 0 && playerOwner != null)
+                        DamageRvRMemory = 0;
+                }
+
+                #endregion PVP DOMMAGES
+
 				//We clean all damagedealers if we are fully healed,
 				//no special XP calculations need to be done
 				lock (m_xpGainers.SyncRoot)
