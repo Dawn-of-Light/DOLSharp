@@ -319,6 +319,7 @@ namespace DOL.GS
 					spell.SpellID = 88003;
 					spell.Target = "Realm";
 					spell.Type = "ConstitutionBuff";
+					spell.EffectGroup = 201;
 
 					m_basecon = new Spell(spell, 50);
 				}
@@ -348,6 +349,7 @@ namespace DOL.GS
 					spell.SpellID = 89003;
 					spell.Target = "Realm";
 					spell.Type = "ConstitutionBuff";
+					spell.EffectGroup = 201;
 
 					m_casterbasecon = new Spell(spell, 50);
 				}
@@ -372,11 +374,12 @@ namespace DOL.GS
 					spell.Duration = 9600;
 					spell.Value = 74; //effective buff 55
 					spell.Name = "Dexterity of the Realm";
-					spell.Description = "Increases target's Dexterity.";
+					spell.Description = "Increases Dexterity for a character.";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 88004;
 					spell.Target = "Realm";
 					spell.Type = "DexterityBuff";
+					spell.EffectGroup = 202;
 
 					m_basedex = new Spell(spell, 50);
 				}
@@ -401,11 +404,12 @@ namespace DOL.GS
 					spell.Duration = 7200;
 					spell.Value = 55; //effective buff 55
 					spell.Name = "Dexterity of the Realm";
-					spell.Description = "Increases target's Dexterity.";
+					spell.Description = "Increases Dexterity for a character.";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 89004;
 					spell.Target = "Realm";
 					spell.Type = "DexterityBuff";
+					spell.EffectGroup = 202;
 
 					m_casterbasedex = new Spell(spell, 50);
 				}
@@ -435,6 +439,7 @@ namespace DOL.GS
 					spell.SpellID = 88005;
 					spell.Target = "Realm";
 					spell.Type = "StrengthConstitutionBuff";
+					spell.EffectGroup = 204;
 
 					m_strcon = new Spell(spell, 50);
 				}
@@ -464,6 +469,7 @@ namespace DOL.GS
 					spell.SpellID = 89005;
 					spell.Target = "Realm";
 					spell.Type = "StrengthConstitutionBuff";
+					spell.EffectGroup = 204;
 
 					m_casterstrcon = new Spell(spell, 50);
 				}
@@ -488,11 +494,12 @@ namespace DOL.GS
 					spell.Duration = 9600;
 					spell.Value = 114; //effective buff 85
 					spell.Name = "Deftness of the Realm";
-					spell.Description = "Decreases Dexterity and Quickness for a character.";
+					spell.Description = "Increases Dexterity and Quickness for a character.";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 88006;
 					spell.Target = "Realm";
 					spell.Type = "DexterityQuicknessBuff";
+					spell.EffectGroup = 203;
 
 					m_dexqui = new Spell(spell, 50);
 				}
@@ -517,11 +524,12 @@ namespace DOL.GS
 					spell.Duration = 7200;
 					spell.Value = 85; //effective buff 85
 					spell.Name = "Deftness of the Realm";
-					spell.Description = "Decreases Dexterity and Quickness for a character.";
+					spell.Description = "Increases Dexterity and Quickness for a character.";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 89006;
 					spell.Target = "Realm";
 					spell.Type = "DexterityQuicknessBuff";
+					spell.EffectGroup = 203;
 
 					m_casterdexqui = new Spell(spell, 50);
 				}
@@ -551,6 +559,7 @@ namespace DOL.GS
 					spell.SpellID = 88007;
 					spell.Target = "Realm";
 					spell.Type = "AcuityBuff";
+					spell.EffectGroup = 200;
 
 					m_acuity = new Spell(spell, 50);
 				}
@@ -580,6 +589,7 @@ namespace DOL.GS
 					spell.SpellID = 89007;
 					spell.Target = "Realm";
 					spell.Type = "AcuityBuff";
+					spell.EffectGroup = 200;
 
 					m_casteracuity = new Spell(spell, 50);
 				}
@@ -609,6 +619,7 @@ namespace DOL.GS
 					spell.SpellID = 88014;
 					spell.Target = "Realm";
 					spell.Type = "ArmorFactorBuff";
+					spell.EffectGroup = 2;
 
 					m_specaf = new Spell(spell, 50);
 				}
@@ -638,6 +649,7 @@ namespace DOL.GS
 					spell.SpellID = 89014;
 					spell.Target = "Realm";
 					spell.Type = "ArmorFactorBuff";
+					spell.EffectGroup = 2;
 
 					m_casterspecaf = new Spell(spell, 50);
 				}
@@ -667,6 +679,8 @@ namespace DOL.GS
 					spell.SpellID = 88010;
 					spell.Target = "Realm";
 					spell.Type = "CombatSpeedBuff";
+					spell.EffectGroup = 100;
+					
 					m_haste = new Spell(spell, 50);
 				}
 				return m_haste;
