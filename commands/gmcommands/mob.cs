@@ -1227,10 +1227,6 @@ namespace DOL.GS.Commands
 			info.Add(" + Realm: " + GlobalConstants.RealmToName(targetMob.Realm));
 			info.Add(" + Level: " + targetMob.Level);
 			info.Add(" + Brain: " + (targetMob.Brain == null ? "(null)" : targetMob.Brain.GetType().ToString()));
-
-            if (targetMob.DamageRvRMemory > 0)
-                info.Add("  - RvR Damage Value : " + targetMob.DamageRvRMemory);
-
 			if (targetMob.Brain != null && targetMob.Brain is IControlledBrain)
 			{
 				try
