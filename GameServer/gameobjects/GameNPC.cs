@@ -3527,8 +3527,11 @@ namespace DOL.GS
 		/// </summary>
 		public const int CHARMED_NOEXP_TIMEOUT = 60000;
 
-		public const string Last_LOS_Target_Property = "last_LOS_checkTarget";
-		public const string Last_LOS_Tick_Property = "last_LOS_checkTick";
+		public const string LAST_LOS_TARGET_PROPERTY = "last_LOS_checkTarget";
+		public const string LAST_LOS_TICK_PROPERTY = "last_LOS_checkTick";
+		public const string NUM_LOS_CHECKS_INPROGRESS = "num_LOS_progress";
+
+		protected object LOS_LOCK = new object();
 
 		protected GameObject m_targetLOSObject = null;
 
@@ -3543,15 +3546,16 @@ namespace DOL.GS
 
 			TargetObject = target;
 
+			long lastTick = this.TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
+
 			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
 			    Brain != null &&
 			    Brain is IControlledBrain &&
 			    (target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain != null && (target as GameNPC).Brain is IControlledBrain)))
 			{
-				GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(Last_LOS_Target_Property, null);
+				GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
 				if (lastTarget != null && lastTarget == target)
 				{
-					long lastTick = this.TempProperties.getProperty<long>(Last_LOS_Tick_Property);
 					if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
 						return;
 				}
@@ -3580,15 +3584,34 @@ namespace DOL.GS
 					return;
 				}
 
-				this.TempProperties.setProperty(Last_LOS_Target_Property, target);
-				this.TempProperties.setProperty(Last_LOS_Tick_Property, CurrentRegion.Time);
-				m_targetLOSObject = target;
-				losChecker.Out.SendCheckLOS(this, target, new CheckLOSResponse(this.NPCStartAttackCheckLOS));
-				if (ServerProperties.Properties.ENABLE_DEBUG)
+				lock (LOS_LOCK)
 				{
-					log.Debug(Name + " sent LOS check to player " + losChecker.Name);
+					int count = TempProperties.getProperty<int>(NUM_LOS_CHECKS_INPROGRESS, 0);
+
+					if (count > 10)
+					{
+						log.DebugFormat("{0} LOS count check exceeds 10, aborting LOS check!", Name);
+
+						// Now do a safety check.  If it's been a while since we sent any check we should clear count
+						if (lastTick == 0 || CurrentRegion.Time - lastTick > ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
+						{
+							log.Debug("LOS count reset!");
+							TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, 0);
+						}
+
+						return;
+					}
+
+					count++;
+					TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, count);
+
+					TempProperties.setProperty(LAST_LOS_TARGET_PROPERTY, target);
+					TempProperties.setProperty(LAST_LOS_TICK_PROPERTY, CurrentRegion.Time);
+					m_targetLOSObject = target;
+
 				}
 
+				losChecker.Out.SendCheckLOS(this, target, new CheckLOSResponse(this.NPCStartAttackCheckLOS));
 				return;
 			}
 
@@ -3603,6 +3626,13 @@ namespace DOL.GS
 		/// <param name="targetOID"></param>
 		public void NPCStartAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
+			lock (LOS_LOCK)
+			{
+				int count = TempProperties.getProperty<int>(NUM_LOS_CHECKS_INPROGRESS, 0);
+				count--;
+				TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, Math.Max(0, count));
+			}
+
 			if ((response & 0x100) == 0x100)
 			{
 				// make sure we didn't switch targets
@@ -3611,11 +3641,6 @@ namespace DOL.GS
 			}
 			else
 			{
-				if (ServerProperties.Properties.ENABLE_DEBUG)
-				{
-					log.Debug(Name + " FAILED start attack LOS check to player " + player.Name);
-				}
-
 				if (m_targetLOSObject != null && m_targetLOSObject is GameLiving && Brain != null && Brain is IOldAggressiveBrain)
 				{
 					// there will be a think delay before mob attempts to attack next target
