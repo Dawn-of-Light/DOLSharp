@@ -293,7 +293,6 @@ namespace DOL.GS.Keeps
 		/// <param name="attackTarget"></param>
 		public override void StartAttack(GameObject attackTarget)
 		{
-			log.DebugFormat("{0} begins attack on {1}", Name, attackTarget.Name);
 			if (IsPortalKeepGuard)
 			{
 				base.StartAttack(attackTarget);
@@ -313,11 +312,13 @@ namespace DOL.GS.Keeps
 			if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
 				return;
 
-			//Prevent spam for LOS checks multiple times..
-			GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(Last_LOS_Target_Property, null);
+			//Prevent spam for LOS to same target multiple times
+
+			GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
+			long lastTick = this.TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
+
 			if (lastTarget != null && lastTarget == attackTarget)
 			{
-				long lastTick = this.TempProperties.getProperty<long>(Last_LOS_Tick_Property);
 				if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.KEEP_GUARD_LOS_CHECK_TIME * 1000)
 					return;
 			}
@@ -341,21 +342,38 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-
-
 			if (LOSChecker == null)
 			{
-				log.DebugFormat("{0} can't find LOS checker!", Name);
 				return;
 			}
 
-			log.DebugFormat("{0} sending LOS check to {1}", Name, LOSChecker.Name);
+			lock (LOS_LOCK)
+			{
+				int count = TempProperties.getProperty<int>(NUM_LOS_CHECKS_INPROGRESS, 0);
 
-			this.TempProperties.setProperty(Last_LOS_Target_Property, attackTarget);
-			this.TempProperties.setProperty(Last_LOS_Tick_Property, CurrentRegion.Time);
-			TargetObject = attackTarget;
+				if (count > 10)
+				{
+					log.DebugFormat("{0} LOS count check exceeds 10, aborting LOS check!", Name);
+
+					// Now do a safety check.  If it's been a while since we sent any check we should clear count
+					if (lastTick == 0 || CurrentRegion.Time - lastTick > ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
+					{
+						log.Debug("LOS count reset!");
+						TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, 0);
+					}
+
+					return;
+				}
+
+				count++;
+				TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, count);
+
+				TempProperties.setProperty(LAST_LOS_TARGET_PROPERTY, attackTarget);
+				TempProperties.setProperty(LAST_LOS_TICK_PROPERTY, CurrentRegion.Time);
+				TargetObject = attackTarget;
+			}
+
 			LOSChecker.Out.SendCheckLOS(this, attackTarget, new CheckLOSResponse(this.GuardStartAttackCheckLOS));
-
 		}
 
 		/// <summary>
@@ -366,10 +384,15 @@ namespace DOL.GS.Keeps
 		/// <param name="targetOID"></param>
 		public void GuardStartAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
+			lock (LOS_LOCK)
+			{
+				int count = TempProperties.getProperty<int>(NUM_LOS_CHECKS_INPROGRESS, 0);
+				count--;
+				TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, Math.Max(0, count));
+			}
+
 			if ((response & 0x100) == 0x100)
 			{
-				log.DebugFormat("{0} LOS check succeeded from player {1}!", Name, player.Name);
-
 				if (this is GuardArcher || this is GuardLord)
 				{
 					if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
@@ -379,13 +402,10 @@ namespace DOL.GS.Keeps
 					}
 				}
 
-				log.DebugFormat("{0} StartAttack!", Name);
-
 				base.StartAttack(TargetObject);
 			}
 			else if (TargetObject != null && TargetObject is GameLiving)
 			{
-				log.DebugFormat("{0} LOS failed from {1};  remove from aggro list", Name, player.Name);
 				(this.Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
 			}
 		}
@@ -404,7 +424,6 @@ namespace DOL.GS.Keeps
 
 				if (TargetObject != null && TargetPosition is GameLiving)
 				{
-					log.DebugFormat("{0} StopAttack from {1};  remove from aggro list", Name, player.Name);
 					(this.Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
 				}
 			}
