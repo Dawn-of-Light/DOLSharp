@@ -141,16 +141,6 @@ namespace DOL.AI.Brain
 					CheckSpellQueue();
 				}
 			}
-            else if (e == GameLivingEvent.Dying)
-            {
-                //On Pet die we transfer the DamageRvRMemory to the owner.
-                GamePlayer playerowner = GetPlayerOwner();
-                if (playerowner != null && Body.DamageRvRMemory > 0)
-                {
-                    playerowner.DamageRvRMemory = Body.DamageRvRMemory;
-                }
-                return;
-            }
             else if (e == GameLivingEvent.CastFinished)
             {
                 // Remove the spell that has finished casting from the queue, if
