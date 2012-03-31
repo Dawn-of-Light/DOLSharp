@@ -293,6 +293,7 @@ namespace DOL.GS.Keeps
 		/// <param name="attackTarget"></param>
 		public override void StartAttack(GameObject attackTarget)
 		{
+			log.DebugFormat("{0} begins attack on {1}", Name, attackTarget.Name);
 			if (IsPortalKeepGuard)
 			{
 				base.StartAttack(attackTarget);
@@ -344,8 +345,11 @@ namespace DOL.GS.Keeps
 
 			if (LOSChecker == null)
 			{
+				log.DebugFormat("{0} can't find LOS checker!", Name);
 				return;
 			}
+
+			log.DebugFormat("{0} sending LOS check to {1}", Name, LOSChecker.Name);
 
 			this.TempProperties.setProperty(Last_LOS_Target_Property, attackTarget);
 			this.TempProperties.setProperty(Last_LOS_Tick_Property, CurrentRegion.Time);
@@ -364,6 +368,8 @@ namespace DOL.GS.Keeps
 		{
 			if ((response & 0x100) == 0x100)
 			{
+				log.DebugFormat("{0} LOS check succeeded from player {1}!", Name, player.Name);
+
 				if (this is GuardArcher || this is GuardLord)
 				{
 					if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
@@ -373,10 +379,13 @@ namespace DOL.GS.Keeps
 					}
 				}
 
+				log.DebugFormat("{0} StartAttack!", Name);
+
 				base.StartAttack(TargetObject);
 			}
-			else if (TargetObject != null && TargetPosition is GameLiving)
+			else if (TargetObject != null && TargetObject is GameLiving)
 			{
+				log.DebugFormat("{0} LOS failed from {1};  remove from aggro list", Name, player.Name);
 				(this.Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
 			}
 		}
@@ -395,6 +404,7 @@ namespace DOL.GS.Keeps
 
 				if (TargetObject != null && TargetPosition is GameLiving)
 				{
+					log.DebugFormat("{0} StopAttack from {1};  remove from aggro list", Name, player.Name);
 					(this.Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
 				}
 			}
