@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
@@ -57,18 +56,6 @@ namespace DOL.GS.Spells
             }
             if (heal <= 0) return;
             heal = m_caster.ChangeHealth(m_caster, GameLiving.eHealthChangeType.Spell, heal);
-
-            #region PVP DOMMAGES
-
-            if (m_caster is NecromancerPet &&
-                ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null
-                || m_caster is GamePlayer)
-            {
-                if (m_caster.DamageRvRMemory > 0)
-                    m_caster.DamageRvRMemory -= (long)Math.Max(heal, 0);
-            }
-
-            #endregion PVP DOMMAGES
 
             if (heal > 0)
             {
