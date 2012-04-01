@@ -49,9 +49,9 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Guardian;
 		}
 
-		public override void OnLevelUp(GamePlayer player) 
+		public override void OnLevelUp(GamePlayer player, int previousLevel)
 		{
-			base.OnLevelUp(player);
+			base.OnLevelUp(player, previousLevel);
 
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blades));
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blunt));

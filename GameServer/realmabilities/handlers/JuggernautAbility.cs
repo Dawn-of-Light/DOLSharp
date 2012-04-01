@@ -10,6 +10,8 @@ namespace DOL.GS.RealmAbilities
 {
 	public class JuggernautAbility : TimedRealmAbility
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public JuggernautAbility(DBAbility dba, int level) : base(dba, level) { }
 
 		int m_range = 1500;

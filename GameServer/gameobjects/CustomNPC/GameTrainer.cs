@@ -333,7 +333,7 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.PromotePlayer.Says", this.Name, messageToPlayer), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.PromotePlayer.Upgraded", player.CharacterClass.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
-				player.CharacterClass.OnLevelUp(player);
+				player.CharacterClass.OnLevelUp(player, player.Level);
 				player.UpdateSpellLineLevels(true);
 				player.RefreshSpecDependantSkills(true);
 				player.StartPowerRegeneration();

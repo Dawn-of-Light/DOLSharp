@@ -50,9 +50,9 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Seer;
 		}
 
-		public override void OnLevelUp(GamePlayer player) 
+		public override void OnLevelUp(GamePlayer player, int previousLevel)
 		{
-			base.OnLevelUp(player);
+			base.OnLevelUp(player, previousLevel);
 
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mending));
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Augmentation));

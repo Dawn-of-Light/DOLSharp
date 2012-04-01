@@ -260,7 +260,7 @@ namespace DOL.GS
 		/// Add all skills and other things that are required for current level
 		/// </summary>
 		/// <param name="player">player to modify</param>
-		public virtual void OnLevelUp(GamePlayer player)
+		public virtual void OnLevelUp(GamePlayer player, int previousLevel)
 		{
 			// Grav: autotrain in player.OnLevelUp()
 			// If this is a PvE server, issue one realm specialty point
@@ -271,7 +271,9 @@ namespace DOL.GS
 				// is being assigned at lvl 20 already (I don't know where that's
 				// coming from).  That's why the following is <= 20 and not just < 20.
 				if (player.Level <= 20) return;
-				player.RealmSpecialtyPoints++;
+
+				int newPoints = player.Level - previousLevel;
+				player.RealmSpecialtyPoints += newPoints;
 				player.SaveIntoDatabase();
 			}
 		}
