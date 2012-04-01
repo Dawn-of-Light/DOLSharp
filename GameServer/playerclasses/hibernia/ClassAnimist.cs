@@ -65,9 +65,9 @@ namespace DOL.GS.PlayerClass
 		/// Update all skills and add new for current level
 		/// </summary>
 		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player)
+		public override void OnLevelUp(GamePlayer player, int previousLevel)
 		{
-			base.OnLevelUp(player);
+			base.OnLevelUp(player, previousLevel);
 
 			// Forester
 

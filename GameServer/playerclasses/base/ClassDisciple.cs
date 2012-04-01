@@ -51,9 +51,9 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Disciple;
 		}
 
-		public override void OnLevelUp(GamePlayer player) 
+		public override void OnLevelUp(GamePlayer player, int previousLevel)
 		{
-			base.OnLevelUp(player);
+			base.OnLevelUp(player, previousLevel);
 
 			// Specialization
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Deathsight));

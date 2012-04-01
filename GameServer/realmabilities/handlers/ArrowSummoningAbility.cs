@@ -28,6 +28,8 @@ namespace DOL.GS.RealmAbilities
 {
     public class ArrowSummoningAbility : TimedRealmAbility
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public ArrowSummoningAbility(DBAbility dba, int level) : base(dba, level) { }
         public override void Execute(GameLiving living)
 		{

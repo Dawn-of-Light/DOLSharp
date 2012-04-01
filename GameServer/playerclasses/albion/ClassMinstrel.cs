@@ -69,9 +69,9 @@ namespace DOL.GS.PlayerClass
 			return AutotrainableSkills;
 		}
 
-		public override void OnLevelUp(GamePlayer player) 
+		public override void OnLevelUp(GamePlayer player, int previousLevel)
 		{
-			base.OnLevelUp(player);
+			base.OnLevelUp(player, previousLevel);
 
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Instruments));
 			player.AddSpellLine(SkillBase.GetSpellLine("Instruments"));

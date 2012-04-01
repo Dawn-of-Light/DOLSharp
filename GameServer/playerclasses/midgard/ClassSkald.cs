@@ -61,10 +61,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override void OnLevelUp(GamePlayer player)
+		public override void OnLevelUp(GamePlayer player, int previousLevel)
 		{
-
-			base.OnLevelUp(player);
+			base.OnLevelUp(player, previousLevel);
 
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Battlesongs));
 			player.AddSpellLine(SkillBase.GetSpellLine("Battlesongs"));

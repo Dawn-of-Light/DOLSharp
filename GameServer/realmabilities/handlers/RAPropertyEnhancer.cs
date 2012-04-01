@@ -13,6 +13,8 @@ namespace DOL.GS.RealmAbilities
 	/// </summary>
 	public abstract class RAPropertyEnhancer : L5RealmAbility
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		// property to modify
 		eProperty[] m_property;
 
@@ -111,11 +113,14 @@ namespace DOL.GS.RealmAbilities
 			}
 		}
 
-		public override void OnLevelChange(int oldLevel)
+		public override void OnLevelChange(int oldLevel, int newLevel = 0)
 		{
+			if (newLevel == 0)
+				newLevel = Level;
+
 			foreach (eProperty property in m_property)
 			{
-				m_activeLiving.AbilityBonus[(int)property] += GetAmountForLevel(Level) - GetAmountForLevel(oldLevel);
+				m_activeLiving.AbilityBonus[(int)property] += GetAmountForLevel(newLevel) - GetAmountForLevel(oldLevel);
 			}
 			SendUpdates(m_activeLiving);
 		}

@@ -118,7 +118,7 @@ namespace DOL.GS
 		}
 
 		string GetTitle(int level);
-		void OnLevelUp(GamePlayer player);
+		void OnLevelUp(GamePlayer player, int previousLevel);
 		void OnRealmLevelUp(GamePlayer player);
 		void OnSkillTrained(GamePlayer player, Specialization skill);
 		bool CanUseLefthandedWeapon(GamePlayer player);
