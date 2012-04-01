@@ -53,9 +53,9 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
 		}
 
-		public override void OnLevelUp(GamePlayer player) 
+		public override void OnLevelUp(GamePlayer player, int previousLevel)
 		{
-			base.OnLevelUp(player);
+			base.OnLevelUp(player, previousLevel);
 
 			// Specializations
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mind_Magic));			

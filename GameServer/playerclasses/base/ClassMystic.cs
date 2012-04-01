@@ -51,9 +51,9 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Mystic;
 		}
 
-		public override void OnLevelUp(GamePlayer player) 
+		public override void OnLevelUp(GamePlayer player, int previousLevel)
 		{
-			base.OnLevelUp(player);
+			base.OnLevelUp(player, previousLevel);
 
 			if (this is ClassWarlock == false)
 			{
