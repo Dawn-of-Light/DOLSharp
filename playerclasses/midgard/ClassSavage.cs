@@ -59,10 +59,9 @@ namespace DOL.GS.PlayerClass
 			return true;
 		}
 
-		public override void OnLevelUp(GamePlayer player)
+		public override void OnLevelUp(GamePlayer player, int previousLevel)
 		{
-
-			base.OnLevelUp(player);
+			base.OnLevelUp(player, previousLevel);
 
 			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_HandToHand));
 			player.AddSpecialization(SkillBase.GetSpecialization(Specs.HandToHand));
