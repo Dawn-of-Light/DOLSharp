@@ -2925,7 +2925,6 @@ namespace DOL.GS
 			byte originalLevel = Level;
 			Level = 1;
 			Experience = 0;
-			CharacterClass.OnLevelUp(this, originalLevel);
 			RespecAllLines();
 			SkillSpecialtyPoints = 0;
 
@@ -2947,6 +2946,8 @@ namespace DOL.GS
 					}
 				}
 			}
+
+			CharacterClass.OnLevelUp(this, originalLevel);
 		}
 
 		public virtual int RespecAll()
