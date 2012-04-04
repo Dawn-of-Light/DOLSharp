@@ -385,21 +385,21 @@ namespace DOL.GS.PacketHandler
 				if (took > 100 && log.IsWarnEnabled)
 					log.WarnFormat("AsyncTcpSendCallback.BeginSend took {0}ms! (TCP to client: {1})", took, client.ToString());
 			}
-			catch (ObjectDisposedException)
+			catch (ObjectDisposedException ex)
 			{
-				log.Error("Packet processor: ObjectDisposedException");
+				log.Error("Packet processor: ObjectDisposedException", ex);
 				GameServer.Instance.Disconnect(client);
 			}
-			catch (SocketException)
+			catch (SocketException ex)
 			{
-				log.Error("Packet processor: SocketException");
+				log.Error("Packet processor: SocketException", ex);
 				GameServer.Instance.Disconnect(client);
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
 				// assure that no exception is thrown into the upper layers and interrupt game loops!
 				if (log.IsErrorEnabled)
-					log.Error("AsyncSendCallback. client: " + client, e);
+					log.Error("AsyncSendCallback. client: " + client, ex);
 				GameServer.Instance.Disconnect(client);
 			}
 		}
