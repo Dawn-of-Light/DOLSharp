@@ -345,7 +345,7 @@ namespace DOL.GS
 				foreach (DBCraftedXItem material in rawMaterials)
 				{
 					ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
-
+					
 					if (template == null)
 					{
 						player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + ") needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -613,7 +613,16 @@ namespace DOL.GS
 
 					if (recipe.MakeTemplated)
 					{
-						newItem = GameInventoryItem.Create<ItemTemplate>(itemToCraft);
+						string adjItem = itemToCraft.Id_nb+(GetQuality(player, recipe).ToString());
+						ItemTemplate adjItemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(adjItem);
+						if (adjItemToCraft != null)
+						{
+							newItem = GameInventoryItem.Create<ItemTemplate>(adjItemToCraft);
+						}
+						else
+						{
+							newItem = GameInventoryItem.Create<ItemTemplate>(itemToCraft);
+						}
 					}
 					else
 					{
