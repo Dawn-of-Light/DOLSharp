@@ -38,6 +38,8 @@ namespace DOL.GS.Commands
 		"/instance exit")]
     public class InstanceCommandHandler : AbstractCommandHandler, ICommandHandler
     {
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public const string INSTANCE_KEY = "INSTANCE_KEY_TEMP";
 
         public void OnCommand(GameClient client, string[] args)
@@ -76,90 +78,111 @@ namespace DOL.GS.Commands
                 #region Create Entry
                 case "entry":
                     {
-                        if (args.Length < 3)
-                        {
-                            DisplaySyntax(client);
-                            return;
-                        }
+						try
+						{
+							if (args.Length < 3)
+							{
+								DisplaySyntax(client);
+								return;
+							}
 
-                        //Create the database entry...
-                        DBInstanceXElement element = new DBInstanceXElement();
-                        element.Heading = client.Player.Heading;
-                        element.X = client.Player.X;
-                        element.Y = client.Player.Y;
-                        element.Z = client.Player.Z;
-                        element.InstanceID = key;
-                        element.ClassType = args[2];
+							//Create the database entry...
+							DBInstanceXElement element = new DBInstanceXElement();
+							element.Heading = client.Player.Heading;
+							element.X = client.Player.X;
+							element.Y = client.Player.Y;
+							element.Z = client.Player.Z;
+							element.InstanceID = key;
+							element.ClassType = args[2];
 
-                        int npctemplate = 0;
+							int npctemplate = 0;
 
-                        try { npctemplate = int.Parse(args[3]); }
-                        catch { }
+							try { npctemplate = int.Parse(args[3]); }
+							catch { }
 
-                        element.NPCTemplate = npctemplate.ToString();
+							element.NPCTemplate = npctemplate.ToString();
 
-                        //Save the element to database!
-                        GameServer.Database.AddObject(element);
-                        GameServer.Database.SaveObject(element);
+							if (npctemplate > 0)
+							{
+								// reload all templates to grab any new ones
+								NpcTemplateMgr.Reload();
+							}
 
-                        //Dinberg: place a marker at this spot!
-                        string theType = args[2];
 
-                        SendMessage(client, "Created an element here! Use your memory for now, I sure as hell dont have anything else to show you where it is ^^");
+							//Save the element to database!
+							GameServer.Database.AddObject(element);
+							GameServer.Database.SaveObject(element);
 
-                        //Only create ones that have namespaces (signified by '.')
-                        if (theType.Contains("."))
-                        {
-                            SendMessage(client, "theType suspected to be a ClassType - attempting to invoke a marker of this class.");
-                            GameObject obj = null;
+							//Dinberg: place a marker at this spot!
+							string theType = args[2];
 
-                            //Now we have the classtype to create, create it thus!
-                            ArrayList asms = new ArrayList();
-                            asms.Add(typeof(GameServer).Assembly);
-                            asms.AddRange(ScriptMgr.Scripts);
+							SendMessage(client, "Created an element here! Use your memory for now, I sure as hell dont have anything else to show you where it is ^^");
 
-                            //This is required to ensure we check scripts for the space aswell, such as quests!
-                            foreach (Assembly asm in asms)
-                            {
-                                obj = (GameObject)(asm.CreateInstance(theType, false));
-                                if (obj != null)
-                                    break;
-                            }
+							//Only create ones that have namespaces (signified by '.')
+							if (theType.Contains("."))
+							{
+								SendMessage(client, "theType suspected to be a ClassType - attempting to invoke a marker of this class.");
+								GameObject obj = null;
 
-                            if (args.Length == 4)
-                            {
-                                int templateID = 0;
-                                try { templateID = int.Parse(args[3]); }
-                                catch { }
-                                //If its an npc, load from the npc template about now.
-                                //By default, we ignore npctemplate if its set to 0.
-                                if ((GameNPC)obj != null && templateID != 0)
-                                {
-                                    INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(templateID);
-                                    //we only want to load the template if one actually exists, or there could be trouble!
-                                    if (npcTemplate != null)
-                                    {
-                                        ((GameNPC)obj).LoadTemplate(npcTemplate);
-                                    }
-                                }
-                            }
+								//Now we have the classtype to create, create it thus!
+								ArrayList asms = new ArrayList();
+								asms.Add(typeof(GameServer).Assembly);
+								asms.AddRange(ScriptMgr.Scripts);
 
-                            //Add to world...
-                            obj.Name = element.ObjectId.Substring(0, 18);
-                            obj.GuildName = element.ObjectId.Substring(18);
+								//This is required to ensure we check scripts for the space aswell, such as quests!
+								foreach (Assembly asm in asms)
+								{
+									obj = (GameObject)(asm.CreateInstance(theType, false));
+									if (obj != null)
+										break;
+								}
 
-                            obj.X = element.X;
-                            obj.Y = element.Y;
-                            obj.Z = element.Z;
-                            obj.Heading = element.Heading;
+								if (args.Length == 4)
+								{
+									int templateID = 0;
+									try { templateID = int.Parse(args[3]); }
+									catch { }
+									//If its an npc, load from the npc template about now.
+									//By default, we ignore npctemplate if its set to 0.
+									if ((GameNPC)obj != null && templateID != 0)
+									{
+										INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(templateID);
+										//we only want to load the template if one actually exists, or there could be trouble!
+										if (npcTemplate != null)
+										{
+											((GameNPC)obj).LoadTemplate(npcTemplate);
+										}
+									}
+								}
 
-                            obj.CurrentRegion = client.Player.CurrentRegion;
+								//Add to world...
+								obj.Name = element.ObjectId.Substring(0, 18);
+								obj.GuildName = element.ObjectId.Substring(18);
 
-                            if (!obj.AddToWorld())
-                                client.Out.SendMessage("Object not added to world correctly.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-                            else
-                                client.Out.SendMessage("Object added!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-                        }
+								obj.X = element.X;
+								obj.Y = element.Y;
+								obj.Z = element.Z;
+								obj.Heading = element.Heading;
+
+								obj.CurrentRegion = client.Player.CurrentRegion;
+
+								// now make sure model is visible
+								if (obj is GameNPC && obj.Model == 0)
+									obj.Model = 408; // red ball
+								else if (obj is GameStaticItem && obj.Model == 0)
+									obj.Model = 100; // bag
+
+								if (!obj.AddToWorld())
+									client.Out.SendMessage("Error: Object not added to world correctly!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								else
+									client.Out.SendMessage("Object added!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+							}
+						}
+						catch (Exception ex)
+						{
+							client.Out.SendMessage("An Exception has occurred when trying to add object, review server error logs! Exception: " + ex.Message, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							log.Error("Instance Entry Error", ex);
+						}
                     }
                     break;
 				#endregion
