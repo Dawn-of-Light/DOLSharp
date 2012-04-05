@@ -1256,7 +1256,7 @@ namespace DOL.GS
 				itemCount = fromItem.Count > 0 ? fromItem.Count : 1;
 			}
 
-			if (toItem != null && toItem.IsStackable && toItem.Id_nb.Equals(fromItem.Id_nb))
+			if (toItem != null && toItem.IsStackable && toItem.Name.Equals(fromItem.Name))
 			{
 				if (fromItem.Count + toItem.Count > fromItem.MaxCount)
 				{
