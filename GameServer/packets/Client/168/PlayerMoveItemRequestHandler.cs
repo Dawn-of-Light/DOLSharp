@@ -42,7 +42,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort fromClientSlot = packet.ReadShort();
 			ushort itemCount = packet.ReadShort();
 
-			ChatUtil.SendDebugMessage(client, "GM: MoveItem; id=" + id.ToString() + " client fromSlot=" + fromClientSlot.ToString() + " client toSlot=" + toClientSlot.ToString() + " itemCount=" + itemCount.ToString());
+			//ChatUtil.SendDebugMessage(client, "GM: MoveItem; id=" + id.ToString() + " client fromSlot=" + fromClientSlot.ToString() + " client toSlot=" + toClientSlot.ToString() + " itemCount=" + itemCount.ToString());
 
 			// If our toSlot is > 1000 then target is a game object (not a window) with an ObjectID of toSlot - 1000
 
@@ -228,7 +228,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (client.Player.ActiveInventoryObject != null && client.Player.ActiveInventoryObject.MoveItem(client.Player, fromClientSlot, toClientSlot))
 			{
-				// Object handled the move so stop processing
+				//ChatUtil.SendDebugMessage(client, "ActiveInventoryObject handled move");
 				return;
 			}
 
@@ -239,7 +239,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if ((client.Player.TargetObject as IGameInventoryObject).MoveItem(client.Player, fromClientSlot, toClientSlot))
 				{
-					// Object handled the move so stop processing
+					//ChatUtil.SendDebugMessage(client, "IGameInventoryObject target handled move");
 					return;
 				}
 			}
@@ -283,8 +283,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return;
 				}
 
-				//We want to move the item in inventory
 				client.Player.Inventory.MoveItem((eInventorySlot)fromClientSlot, (eInventorySlot)toClientSlot, itemCount);
+				//ChatUtil.SendDebugMessage(client, "Player.Inventory handled move");
 				return;
 			}
 
@@ -324,6 +324,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 
 				client.Player.Inventory.MoveItem((eInventorySlot)fromClientSlot, (eInventorySlot)toClientSlot, itemCount);
+				//ChatUtil.SendDebugMessage(client, "Player.Inventory handled move (2)");
 				return;
 			}
 
